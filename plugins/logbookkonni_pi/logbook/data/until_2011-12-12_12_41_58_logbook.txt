@@ -1,0 +1,4 @@
+#1.2#
+Route1 	11	09	2011 	12	00	00 	 	 	0.00 sm 	      0.00 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:00 h 	00000:00 h 	0.00 Liter 	      0.00 Liter 	 	 	0.00 Liter 	      0.00 Liter 	  
+Route1 	11	11	2011 	20	23	07 	 	 	0.00 sm 	     0.00 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:00 h 	00000:00 h 	0.00 Liter 	      0.00 Liter 	 	 	0.00 Liter 	      0.00 Liter 	  
+Route1 	11	12	2011 	10	27	54 	 	 	0.00 sm 	     0.00 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:00 h 	00000:00 h 	0.00 Liter 	      0.00 Liter 	 	 	0.00 Liter 	      0.00 Liter 	  

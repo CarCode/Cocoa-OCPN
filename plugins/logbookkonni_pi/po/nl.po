@@ -1,0 +1,3875 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: logbookkonni_pi\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-09-27 21:21+0200\n"
+"PO-Revision-Date: 2012-04-14 17:50+0100\n"
+"Last-Translator: Konni <konnibe@hotmail.de>\n"
+"Language-Team: rider2@kpnmail.nl <rider2@kpnmail.nl>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Language: Dutch\n"
+"X-Poedit-Country: NETHERLANDS\n"
+"X-Poedit-SearchPath-0: .\n"
+#
+#, fuzzy, c-format
+msgid ""
+"\n"
+"Name of Waypoint: %s\n"
+"%s %s"
+msgstr ""
+"\n"
+"Naam routepunt: %s"
+#
+msgid ""
+"\n"
+"not found in layoutfile "
+msgstr ""
+"\n"
+"niet in opmaakstijlen-bestand gevonden"
+#
+msgid "     Winddirection set to:"
+msgstr "           Windindicatie instellen als:"
+#
+msgid " - Full Hour Timer"
+msgstr ""
+#
+msgid " - Individual Timer"
+msgstr ""
+#
+#, fuzzy
+msgid " - Normal Timer - Interval: "
+msgstr "- Timer Aan - Tijdinterval:"
+#
+msgid " Direction "
+msgstr "Indicatie"
+#
+msgid ""
+"!\n"
+"\n"
+"Did you forget to add this line in your layout ?"
+msgstr ""
+"!\n"
+"\n"
+"Bent u vergeten deze regel op te nemen in uw opmaakstijl?"
+#
+msgid "\""
+msgstr "\""
+#
+#
+#
+#
+#
+#, fuzzy
+msgid "#1 Total"
+msgstr "Ttl water"
+#
+#
+#
+#
+#
+#, fuzzy
+msgid "#2 Total"
+msgstr "Ttl water"
+#
+msgid "%E Week(s) %D Day(s) %H:%M "
+msgstr ""
+#
+#, c-format
+msgid "%i Year(s) %i Month(s) %i Day(s)"
+msgstr ""
+#
+msgid "'"
+msgstr "'"
+#
+msgid "(Unnamed Route)"
+msgstr ""
+#
+msgid ""
+"*Optional* Prepend a * to a member to make this member static to a watch / "
+"Click Calculate"
+msgstr ""
+#
+#, fuzzy
+msgid "+ Minutes"
+msgstr "Minuten:"
+#
+msgid "-Plugin"
+msgstr "-PlugIn"
+#
+#, fuzzy
+msgid "1. Watch"
+msgstr "Wacht"
+#
+msgid "12 Hour Format"
+msgstr ""
+#
+msgid "24 Hour Format"
+msgstr ""
+#
+msgid "AH #1 Total"
+msgstr ""
+#
+msgid "AH #2 Total"
+msgstr ""
+#
+msgid "AM"
+msgstr ""
+#
+msgid "AM/PM"
+msgstr ""
+#
+msgid "Abbreviations"
+msgstr "Eenheden en afkortingen"
+#
+msgid "Active"
+msgstr "Actief"
+#
+msgid "Active Logbook"
+msgstr "Actief journaal"
+#
+msgid "Actuell Logbook"
+msgstr "Actuele journaal"
+#
+msgid "Add Crew"
+msgstr ""
+"Toevoegen\n"
+"bemanning"
+#
+msgid "Add Equipment"
+msgstr "Toevoegen apparatuur"
+#
+#, fuzzy
+msgid "Add Item"
+msgstr ""
+"Toevoegen\n"
+"bemanning"
+#
+msgid "Add Line"
+msgstr "Toevoegen regel"
+#
+#, fuzzy
+msgid "Add Treenode"
+msgstr ""
+"Toevoegen\n"
+"bemanning"
+#
+msgid "Add a new Crewmember"
+msgstr "Toevoegen nieuw bemanningslid"
+#
+msgid "Add a new line"
+msgstr "Toevoegen nieuwe regel"
+#
+msgid "Administrator (Sudo) Password:"
+msgstr ""
+#
+# used in ODT-Layout
+msgid "Adress"
+msgstr "Adres"
+#
+msgid "Air"
+msgstr "Lucht"
+#
+msgid "All Logbooks"
+msgstr "Alle journaals"
+#
+msgid "All changes depending to this day only."
+msgstr ""
+#
+msgid "Alter watchtimes as desired / Drag 'n Drop members from the Crewlist"
+msgstr ""
+#
+msgid "Ampere"
+msgstr ""
+#
+msgid "Are you sure ?"
+msgstr "Bent u hier zeker van?"
+#
+msgid "At"
+msgstr "Uitgevoerd op"
+#
+msgid ""
+"Automatic line by timer\n"
+"\n"
+"You can set/unset a timer-interval\n"
+"or change this text in Toolbox/Plugins/Logbook\n"
+"\n"
+"Shift+Enter appends a new line"
+msgstr ""
+"Automatische regelinvoer per tijdinterval\n"
+"U kunt dit Aan en Uit zetten en de instellingen ervan aanpassen in Toolbox/"
+"Plugins/Logbook. SHIFTt+ENTER voegt een nieuwe regel toe."
+#
+msgid "Bank #1"
+msgstr ""
+#
+msgid "Bank #1 gen."
+msgstr ""
+#
+msgid "Bank #1 used"
+msgstr ""
+#
+msgid "Bank #2"
+msgstr ""
+#
+msgid "Bank #2 gen."
+msgstr ""
+#
+msgid "Bank #2 used"
+msgstr ""
+#
+msgid "Barometer"
+msgstr "Luchtdruk"
+#
+#, fuzzy
+msgid "Battery"
+msgstr "Categorie"
+#
+msgid "Beam"
+msgstr "Breedte"
+#
+msgid "Behavior"
+msgstr "Instellingen"
+#
+msgid "Best Dist. p. Day"
+msgstr ""
+"Max. verheid\n"
+"per dag"
+#
+msgid "Birthname"
+msgstr "Meisjesnaam"
+#
+msgid "Boat"
+msgstr "Vaartuig"
+#
+msgid "Builder"
+msgstr "Bouwer"
+#
+# En FR je pense le terme plus approprié
+msgid "Buy Parts"
+msgstr "Te kopen onderdelen"
+#
+msgid "Buy parts for this repair"
+msgstr "Te kopen onderdelen voor deze reparatie"
+#
+msgid "Buy parts for this service"
+msgstr "Te kopen onderdelen voor dit onderhoud"
+#
+msgid "C/Strength"
+msgstr ""
+"Stroom-\n"
+"sterkte"
+#
+msgid "COG (T)"
+msgstr "COG"
+#
+msgid "Calculate"
+msgstr ""
+#
+msgid "Calculate the watches with the members entered in the columns"
+msgstr ""
+#
+msgid "Callsign"
+msgstr "Roepnaam"
+#
+msgid "Capacity"
+msgstr "Voorraad"
+#
+msgid "Category"
+msgstr "Categorie"
+#
+msgid "Clear"
+msgstr ""
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+# Me semble plus approprié que le terme :
+# Sélectionner la route du fait du contexte d'affichage
+#, fuzzy
+msgid "Clear all"
+msgstr "Selecteer datum"
+#
+msgid "Clear all data"
+msgstr ""
+#
+msgid "Clouds"
+msgstr "Bewolking"
+#
+msgid "Confirm"
+msgstr "Accepteer"
+#
+msgid "Construction"
+msgstr "Constructie"
+#
+msgid "Copy to watch"
+msgstr ""
+#
+msgid "Country"
+msgstr "Land"
+#
+#, fuzzy
+msgid "Course"
+msgstr "Bewolking"
+#
+#, fuzzy
+msgid "Course changes"
+msgstr "Bij koersverandering > (graden):"
+#
+msgid ""
+"Create a new logbook\n"
+"the active logbook is saved with today's date\n"
+"and can be viewed with Button \"Select Logbook\""
+msgstr ""
+"Maak een nieuw journaal\n"
+"Het actieve journaal wordt opgeslagen met de datum van vandaag\n"
+"en kan dan worden bekeken via de knop \"Selecteer journaal\"."
+#
+msgid "Crewlist"
+msgstr "Bemanningslijst"
+#
+msgid "Current"
+msgstr "Stroom"
+#
+msgid "Current Avg."
+msgstr ""
+"Stroomsterkte\n"
+"(gem.)"
+#
+msgid "Current Max."
+msgstr ""
+"Stroomsterkte\n"
+"(max.)"
+#
+msgid "Currentdirection Avg."
+msgstr ""
+"Stroom\n"
+"(gem.)"
+#
+msgid "Date"
+msgstr "Datum"
+#
+msgid "Date + Days"
+msgstr "Datum + Dagen"
+#
+msgid "Date + Month"
+msgstr "Datum + Maand"
+#
+msgid "Date + Weeks"
+msgstr "Datum + Weken"
+#
+msgid "Date Launched"
+msgstr "Datum te water"
+#
+msgid "Date of Birth"
+msgstr "Geboortedatum"
+#
+msgid "Date of Issue"
+msgstr "Datum van uitgifte"
+#
+msgid "Date-Format:"
+msgstr ""
+#
+#, fuzzy
+msgid "Day"
+msgstr "Dag(en)"
+#
+msgid "Day backward"
+msgstr ""
+#
+msgid "Day forward"
+msgstr ""
+#
+msgid "Day(s)"
+msgstr "Dag(en)"
+#
+#, fuzzy
+msgid "Day:"
+msgstr "Dag(en)"
+#
+#, fuzzy
+msgid "Days"
+msgstr "Dag(en)"
+#
+msgid "Degres"
+msgstr "Graden:"
+#
+#, fuzzy
+msgid "Delete Crewmembers"
+msgstr "Regel verwijderen"
+#
+#, fuzzy
+msgid "Delete Item"
+msgstr "Verwijder opmaakstijl"
+#
+msgid "Delete Layout"
+msgstr "Verwijder opmaakstijl"
+#
+msgid "Delete Row"
+msgstr "Regel verwijderen"
+#
+#, c-format
+msgid "Delete Row Nr. %i ?"
+msgstr "Regelnr. %i verwijderen?"
+#
+#, fuzzy
+msgid "Delete Rows"
+msgstr "Regel verwijderen"
+#
+#, fuzzy
+msgid "Delete Treenode"
+msgstr "Regel verwijderen"
+#
+msgid "Demo Engine stopped"
+msgstr ""
+#
+#, fuzzy
+msgid "Demo Sails up"
+msgstr "Details"
+#
+msgid "Depth"
+msgstr "Diepte"
+#
+msgid "Description"
+msgstr "Beschrijving"
+#
+msgid "Designer"
+msgstr "Ontwerper"
+#
+msgid "Details"
+msgstr "Details"
+#
+msgid "Displacement"
+msgstr "Waterverplaatsing"
+#
+#, fuzzy
+msgid "Display"
+msgstr "Waterverplaatsing"
+#
+msgid "Distance"
+msgstr "Verheid"
+#
+msgid "Distance p. Day"
+msgstr ""
+"Verheid\n"
+"per dag"
+#
+msgid "DistanceTotal"
+msgstr "Ttl verheid"
+#
+msgid "Draft"
+msgstr "Diepgang"
+#
+msgid "E"
+msgstr "A"
+#
+msgid "Edit Layout"
+msgstr "Aanpassen opmaakstijl"
+#
+msgid "Edit Layouts"
+msgstr "Aanpassen opmaakstijlen"
+#
+#
+#
+#
+msgid "End"
+msgstr "Einde"
+#
+#, fuzzy
+msgid "Engine "
+msgstr "Motor"
+#
+#, fuzzy
+msgid "Engine #1"
+msgstr "Motor"
+#
+#, fuzzy
+msgid "Engine #2"
+msgstr "Motor"
+#
+msgid ""
+"Engine stopped\n"
+"\n"
+"Demo - Rightclick-Menu 'use Testextblocks' for help"
+msgstr ""
+#
+msgid ""
+"Enter default watchtime e.g. 3.30 / available formats are 3.30, 3,30, 3:30, "
+"0330 for 3 hours 30 minutes"
+msgstr ""
+#
+msgid "Equipment"
+msgstr "Apparatuur"
+#
+msgid "Event"
+msgstr ""
+#
+msgid ""
+"Event/s running\n"
+"Click the button to suspend or a bullet to stop"
+msgstr ""
+#
+msgid ""
+"Event/s suspended\n"
+"Click the button to restart all events"
+msgstr ""
+#
+msgid "Events"
+msgstr ""
+#
+msgid "Export"
+msgstr "Exporteren"
+#
+msgid "F"
+msgstr "C"
+#
+msgid "Fathom"
+msgstr "vadem"
+#
+msgid "Feet"
+msgstr "voet"
+#
+msgid "Filter Layout by"
+msgstr "Filter opmaakstijl door"
+#
+msgid "Firstname"
+msgstr "Voornaam"
+#
+#, fuzzy
+msgid "Firstname only"
+msgstr "Voornaam"
+#
+msgid "Fix Date"
+msgstr "Stel datum in"
+#
+msgid "Flip Day<->Month"
+msgstr ""
+#
+msgid "Fuel"
+msgstr "Brandstof"
+#
+msgid "Fuel/Water"
+msgstr "Brandstof/Water"
+#
+#
+#
+#
+#
+msgid "FuelTotal"
+msgstr "Ttl brandstof"
+#
+msgid "Full Hour Timer"
+msgstr ""
+#
+msgid "GPS Auto"
+msgstr "GPS automatisch"
+#
+msgid "Gen. total"
+msgstr ""
+#
+#, fuzzy
+msgid "Generator"
+msgstr "Temperatuur"
+#
+msgid "Go to date/time now"
+msgstr ""
+#
+msgid "Goto Route"
+msgstr "Ga naar route"
+#
+msgid "Greatest Width of Hull"
+msgstr ""
+"Grootste breedte\n"
+"van romp"
+#
+msgid "HIN-Nr."
+msgstr "Rompnr."
+#
+msgid "HTML"
+msgstr ""
+#
+msgid ""
+"Have You forgotten to enclose the Header with [[ and ]]\n"
+" or Data with {{ and }} ?"
+msgstr ""
+"Bent u vergeten the 'header' te omsluiten met  [[ en ]],\n"
+"of de gegevens met {{  en  }}?"
+#
+msgid "Heading"
+msgstr "Koers"
+#
+msgid "Help"
+msgstr ""
+#
+msgid ""
+"Help\n"
+"-----\n"
+"\n"
+"Open treenode\n"
+"  'Texts when using this Dialog only'\n"
+"  and select e.g. 'Remarks'\n"
+"\n"
+"Rightclick in TreeView for menu\n"
+"\n"
+"Add a item and rename it\n"
+"   USE UNIQUE NAMES FOR ITEMS !\n"
+"\n"
+"Insert text\n"
+"\n"
+"In 'Texts when using this Dialog only' you can insert/delete treenodes only\n"
+"\n"
+"Use Drag 'n Drop to move item from/to menu\n"
+"\n"
+"see next treenodes for more help"
+msgstr ""
+#
+msgid "Hide Equipment"
+msgstr "Verberg apparatuur"
+#
+msgid "Hide column"
+msgstr "Kolom verbergen"
+#
+msgid "Homeport"
+msgstr "Thuishaven"
+#
+msgid "Hour"
+msgstr ""
+#
+msgid "Hull"
+msgstr "Romp"
+#
+msgid "Hull Identification No."
+msgstr "Rompnr."
+#
+#, fuzzy
+msgid "Hygrometer"
+msgstr "Luchtvochtigheid"
+#
+msgid "If"
+msgstr "Als"
+#
+msgid "If GPS off use for manual entry"
+msgstr "Als de GPS niet functioneert, onderstaande velden met de hand invullen."
+#
+msgid ""
+"If You have created Your own Layouts\n"
+"prepend them with e.g. My_ \n"
+"The _ is important"
+msgstr ""
+"Als u uw eigen opmaakstijl maakt, laat\n"
+"dan de naam ervan starten met bijv. :  Mijn_ .\n"
+"Het teken \" _\" is noodzakelijk!"
+#
+msgid ""
+"If You have created Your own layouts\n"
+"with prefix e.g. My_"
+msgstr ""
+"Aanvinken als u uw eigen opmaakstijl heeft gemaakt,\n"
+"waarvan de naam start met bijv. Mijn_."
+#
+msgid "In Column"
+msgstr "In kolom"
+#
+msgid "Individual"
+msgstr ""
+#
+msgid "Individual Timer"
+msgstr ""
+#
+msgid "Information"
+msgstr "Informatie"
+#
+msgid "Install"
+msgstr "Installeer"
+#
+msgid "Install Languages"
+msgstr "Installeer talen"
+#
+msgid "Install Layouts"
+msgstr "Installeer opmaakstijlen"
+#
+msgid "Install OpenCPN_Logbook_Languages.zip"
+msgstr "Installeer OpenCPN_Logbook_Layouts.zip"
+#
+msgid "Install OpenCPN_Logbook_Layouts.zip"
+msgstr "Installeer OpenCPN_Logbook_Layouts.zip"
+#
+msgid "Install single Layout"
+msgstr "Installeer enkele opmaakstijl"
+#
+msgid "Insurance"
+msgstr "Verzekering"
+#
+msgid "Issued in"
+msgstr "Uitgegeven in"
+#
+msgid ""
+"It's not allowed to append Data to a old Logbook\n"
+"\n"
+"OpenCPN switchs to actuell logbook"
+msgstr ""
+"Het is niet toegestaan om gegevens toe te voegen aan een oud journaal\n"
+"OpenCPN kiest nu het actuele journaal."
+#
+msgid "LOA"
+msgstr "LOA"
+#
+msgid "LOD"
+msgstr "Lengte over dek"
+#
+msgid "LWL"
+msgstr "LWL"
+#
+#, fuzzy, c-format
+msgid ""
+"Languages installed at\n"
+"\n"
+"%s"
+msgstr "Taalbestanden geïnstalleerd"
+#
+#, c-format
+msgid ""
+"Languages not installed at\n"
+"\n"
+"%s\n"
+"\n"
+"Click Help Options/Behavoir in the image the button 'Install Languages'"
+msgstr ""
+#
+msgid "Last Logbook is\n"
+msgstr "Het voorgaande journaal is:\n"
+#
+msgid "Last line from Logbook\n"
+msgstr "Laatste regel in journaal\n"
+#
+msgid "Last waypoint of the Route"
+msgstr ""
+#
+msgid "Lastname only"
+msgstr ""
+#
+#, fuzzy, c-format
+msgid ""
+"Layouts %sinstalled at\n"
+"\n"
+"%s\n"
+"%s\n"
+"%s\n"
+"%s"
+msgstr "Opmaakstijlen geïnstalleerd"
+#
+msgid "Length in Waterline"
+msgstr "Lengte over waterlijn"
+#
+msgid "Length of your sailing trip"
+msgstr ""
+#
+msgid "Length over Deck"
+msgstr "Lengte over dek"
+#
+msgid "Length over all"
+msgstr "Lengte over alles"
+#
+msgid "Local = UTC"
+msgstr "LT = UTC"
+#
+msgid "Local Format"
+msgstr ""
+#
+msgid "Logbook"
+msgstr "Journaal"
+#
+msgid "Logbook Preferences"
+msgstr "Journaalvoorkeuren"
+#
+msgid "Logbook Total"
+msgstr "Totaal Journaal"
+#
+msgid "Logbook for OpenCPN"
+msgstr "Journaal voor OpenCPN"
+#
+#, fuzzy
+msgid ""
+"Logbook for OpenCPN\n"
+"\n"
+"Thanks's to the community for their helpfull suggestions.\n"
+"\n"
+"If You find a bug post it on\n"
+"http://www.cruisersforum.com/forums/f134/logbook-konni-for-opencpn-68945."
+"html\n"
+"Helpfull Videos are at Youtube, search for LogbookKonni."
+msgstr ""
+"Journaal voor OpenCPN\n"
+"\n"
+"\t- Automatische (NMEA) of handmatige invoer\n"
+"\t- Timer voor automatische invoer van regels\n"
+"\t- Bestandsuitvoer in ODS, HTML, XM l(Windows seulement) en CSV\n"
+"\t- Meerdere opmaakstijlen\n"
+"\t- Aan te passen opmaakstijl\n"
+"\n"
+"Met dank aan de OpenCPN community voor alle suggesties.\n"
+"\n"
+"Als u een bug ontdekt, meld die dan bij:\n"
+"http://www.cruisersforum.com/forums/f134/logbook-konni-for-opencpn-68945."
+"html .\n"
+"Gebruikersvideo's zijn beschikbaar op Youtube (zoek naar LogbookKonni)."
+#
+#, c-format
+msgid "Logbook from %s to %s"
+msgstr "Journaal van %s tot %s"
+#
+msgid "Logbook until "
+msgstr "Journaal tot "
+#
+msgid "MMSI"
+msgstr "MMSI"
+#
+msgid "Magnetic"
+msgstr "magnetisch"
+#
+msgid "Maintenance"
+msgstr "Onderhoud"
+#
+#, fuzzy
+msgid "Member"
+msgstr "meter"
+#
+#, fuzzy
+msgid "Merge Watches"
+msgstr "Pas wachtinstelling toe"
+#
+#, fuzzy
+msgid "Meteo"
+msgstr "meter"
+#
+msgid "Meter"
+msgstr "meter"
+#
+msgid "Minutes"
+msgstr "Minuten:"
+#
+msgid "Minutes greater than 59"
+msgstr "Aantal minuten meer dan 59"
+#
+#
+#
+#
+msgid "Month"
+msgstr "Maand"
+#
+#
+#
+#
+#, fuzzy
+msgid "Month "
+msgstr "Maand"
+#
+msgid "Motor Hours"
+msgstr "Draaiuren motor"
+#
+msgid "Motor/Sails"
+msgstr "Voortstuwing"
+#
+msgid "NM"
+msgstr "NM"
+#
+msgid "Name"
+msgstr "Naam"
+#
+msgid "Name      "
+msgstr "Naam"
+#
+msgid "Name in full"
+msgstr ""
+#
+msgid "Nationality"
+msgstr "Nationaliteit"
+#
+msgid "Navigation"
+msgstr "Navigatie"
+#
+#, c-format
+msgid "New Item%i"
+msgstr ""
+#
+msgid "New Logbook"
+msgstr "Nieuw journaal"
+#
+#, c-format
+msgid "New Node%i"
+msgstr ""
+#
+msgid "Next WP Name: "
+msgstr ""
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "No"
+msgstr "Nee"
+#
+msgid "No GPS-Signal !"
+msgstr "Geen GPS-signaal!"
+#
+msgid ""
+"No Path set to HTML-Editor\n"
+"in ToolBox/Plugins/LogbookKonni/Preferences"
+msgstr ""
+"Geen pad beschikbaar naar HTML-applicatie\n"
+"in Toolbox/Plugins/Logbook/Voorkeuren/Paden"
+#
+msgid ""
+"No Path set to HTML-Editor\n"
+"in Toolbox/Plugins/LogbookKonni/Preferences"
+msgstr ""
+"Geen pad beschikbaar naar HTML-applicatie\n"
+"in Toolbox/Plugins/Logbook/Voorkeuren/Paden"
+#
+#, fuzzy
+msgid "No Seconds"
+msgstr "Seconden:"
+#
+#, fuzzy
+msgid "Normal Timer"
+msgstr "Ttl tijd"
+#
+#, fuzzy
+msgid ""
+"Normal Timer has 0 h 0 Min.\n"
+"\n"
+"Please change settings (Timer-Interval)"
+msgstr ""
+"Timer: 0h 0m 0s\n"
+"Instellingen wijzigen in Toolbox/Plugins/Logbook/Voorkeuren/Instellingen/"
+"Timerinstellingen"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+msgid "Now"
+msgstr "Nee"
+#
+#, fuzzy
+msgid "ODT"
+msgstr "Lengte over dek"
+#
+#, c-format
+msgid "Old Logbook until %s"
+msgstr "Oud journaal tot %s"
+#
+msgid "Onboard"
+msgstr ""
+#
+msgid "Only Layouts with prefix:"
+msgstr "alleen opmaak startend met:"
+#
+msgid ""
+"Only used when you enter 1/2, 1/4 ... in a total-field, or to calculate the "
+"watermaker\n"
+msgstr ""
+#
+msgid ""
+"Opendocument SpreadSheet(*.ods)|*.ods|Excel 2003 Format(*.xml)|*.xml|CSV "
+"Format OpenOffice(*.csv)|*.csv|Backup Logbook(*.txt)|*.txt"
+msgstr ""
+"Opendocument SpreadSheet(*.ods)|*.ods|Excel 2003 Format(*.xml)|*.xml|CSV "
+"Format OpenOffice(*.csv)|*.csv|Backup Logbook(*.txt)|*.txt"
+#
+msgid "Overview"
+msgstr "Overzicht"
+#
+msgid "Owner"
+msgstr "Eigenaar"
+#
+msgid "PM"
+msgstr ""
+#
+msgid "Passport-Nr"
+msgstr "Paspoortnr."
+#
+msgid "Path"
+msgstr "Pad"
+#
+msgid "Path to Datamanager"
+msgstr "Pad naar browser applicatie:"
+#
+msgid ""
+"Path to HTML-Editor\n"
+"(optional)"
+msgstr ""
+"Pad naar HTML-appplicatie:\n"
+"(optioneel)"
+#
+msgid "Path to MailClient"
+msgstr "Pad naar e-mail applicatie:"
+#
+msgid "Path to ODT-Editor"
+msgstr "Pad naar tekstbewerker (ODT):"
+#
+msgid "Paths"
+msgstr "Paden"
+#
+msgid "Place of Birth"
+msgstr "Gebooorteplaats"
+#
+msgid ""
+"Please enter 05445.1234n03012.0504e for\n"
+"054Deg 45.1234Min N 030Deg 12.0504Min E"
+msgstr ""
+"Voer 05445.1234n03012.0504e in voor\n"
+"054g 45.1234m N\n"
+"030g 12.0504m E"
+#
+msgid ""
+"Please enter 0544512.15n0301205.15e for\n"
+"054Deg 45Min 12.15Sec N 030Deg 12Min 05.15Sec E"
+msgstr ""
+"Voer 0544512.15n0301205.15e in voor\n"
+"054g 45m 12.15s N\n"
+"030g 12m 05.15s E"
+#
+#, c-format
+msgid ""
+"Please enter the Date in the format:\n"
+"      %s"
+msgstr ""
+"Voer datum in met format:\n"
+"    %s"
+#
+#, fuzzy, c-format
+msgid ""
+"Please enter the Time in the format:\n"
+"   %s"
+msgstr ""
+"Voer datum in met format:\n"
+"   "
+#
+msgid "Please fill in one character in Degrees, Minutes and Seconds"
+msgstr "Voer graden, minuten, seconden in"
+#
+msgid "Please fill in one character in Degrees, Minuts and Seconds"
+msgstr "Voer graden, minuten , seconden in"
+#
+msgid "Policy"
+msgstr "Polisnr."
+#
+msgid "Popup logbook on event"
+msgstr ""
+#
+msgid "Position"
+msgstr "Positie"
+#
+msgid "Priority"
+msgstr "Prio"
+#
+msgid "R"
+msgstr "H"
+#
+#
+#
+#
+#
+msgid "Reef"
+msgstr "Aantal riffen"
+#
+msgid "Registration"
+msgstr "Registratie"
+#
+msgid "Relative"
+msgstr "relatief"
+#
+msgid "Reload Layouts"
+msgstr "Herlaad opmaakstijlen"
+#
+msgid "Remarks"
+msgstr "Opmerkingen"
+#
+#, fuzzy
+msgid "Reminder"
+msgstr "Ontwerper"
+#
+#, fuzzy
+msgid "Rename Item"
+msgstr "Hernoem opmaakstijl"
+#
+msgid "Rename Layout"
+msgstr "Hernoem opmaakstijl"
+#
+msgid "Repair done"
+msgstr "Reparatie uitgevoerd"
+#
+msgid "Repairs"
+msgstr "Reparaties"
+#
+msgid "RepairsTODO"
+msgstr "Uit te voeren reparaties"
+#
+#, fuzzy
+msgid "Reset"
+msgstr "voet"
+#
+# En conception logicielle au peu aussi utiliser :
+# Réinitialiser
+# Effacer
+msgid "Reset Paths"
+msgstr "Oorspronkelijke paden"
+#
+msgid "Reset all Values to zero ?"
+msgstr "Alle waarden instellen op nul?"
+#
+msgid "Reset data to edit-level"
+msgstr ""
+#
+msgid "Route"
+msgstr "Route"
+#
+msgid "SOG"
+msgstr "SOG"
+#
+msgid "STW"
+msgstr "STW"
+#
+msgid "Sail-Nr."
+msgstr "Zeilnr."
+#
+#
+#
+#
+#
+msgid "Sails"
+msgstr "Zeilvoering"
+#
+msgid ""
+"Sails up\n"
+"Engine stopped\n"
+"\n"
+"Demo - Rightclick-Menu 'use Testextblocks' for help"
+msgstr ""
+#
+msgid "Sails used mostly"
+msgstr ""
+"Zeilvoering\n"
+"(meest gebruikt)"
+#
+msgid "Save Boat File"
+msgstr "Opslaan vaartuigbestand"
+#
+msgid "Save BuyParts File"
+msgstr "Opslaan te_kopen_onderdelen-bestand"
+#
+msgid "Save CrewList File"
+msgstr "Opslaan bemanningslijst-bestand"
+#
+msgid "Save Logbook File"
+msgstr "Journaalbestand opslaan"
+#
+msgid "Save Overview File"
+msgstr "Opslaan overzichtbestand"
+#
+msgid "Save Repairs File"
+msgstr "Opslaan reparatiebestand"
+#
+msgid "Save Service File"
+msgstr "Opslaan onderhoudbestand"
+#
+msgid "Search in"
+msgstr "Zoek in"
+#
+msgid "Search in Logbook"
+msgstr "Zoek in journaal ..."
+#
+msgid "Searchstring"
+msgstr "Zoekstring"
+#
+msgid "Seconds"
+msgstr "Seconden:"
+#
+# Me semble plus approprié que le terme :
+# Sélectionner la route du fait du contexte d'affichage
+msgid "Select"
+msgstr "Selecteer datum"
+#
+msgid "Select Layout:"
+msgstr "Selecteer opmaakstijl:"
+#
+msgid "Select Layout: "
+msgstr "Selecteer opmaakstijl: "
+#
+msgid "Select Logbook"
+msgstr "Selecteer journaal"
+#
+# Me semble plus approprié que le terme :
+# Sélectionner la route du fait du contexte d'affichage
+msgid "Select Route"
+msgstr "Selecteer route"
+#
+# Me semble plus approprié que le terme :
+# Sélectionner la route du fait du contexte d'affichage
+#, fuzzy
+msgid "Select a date"
+msgstr "Selecteer route"
+#
+msgid ""
+"Select a layout which is displayed\n"
+"with button \"View\""
+msgstr ""
+"Selecteer te gebruiken opmaakstijl\n"
+"met de knop \"Toon\""
+#
+msgid ""
+"Select a old logbook\n"
+"Everytime a new logbook is created, you'll \n"
+"find the active logbook as old logbook here"
+msgstr ""
+"Selecteer een oud journaal\n"
+"Elke keer als een nieuw journaal is gemaakt,\n"
+"kunt u voorgaande journaals hier vinden."
+#
+msgid "Select one of the old logbooks"
+msgstr "Selecteer één van de oude journaals"
+#
+msgid "Select zipped Languages-Files"
+msgstr "Selecteer de taalbestanden (zip)"
+#
+msgid "Select zipped Layout-Files"
+msgstr "Selecteer de opmaakbestanden (zip)"
+#
+msgid "Send Layout by email"
+msgstr "Verstuur opmaakstijl e-mail "
+#
+#, fuzzy
+msgid "Separator"
+msgstr "Temperatuur"
+#
+msgid "Serial-Nr."
+msgstr "Serienr."
+#
+msgid "Service"
+msgstr "Onderhoud"
+#
+msgid "Service TODO"
+msgstr "Uit te voeren onderhoud"
+#
+msgid "Service done"
+msgstr "Onderhoud uitgevoerd"
+#
+msgid "Set Path to DataManager"
+msgstr "Geef pad aan naar browser applicatie"
+#
+msgid "Set Path to HTML-Editor"
+msgstr "Geef pad aan naar HTML-applicatie "
+#
+msgid "Set Path to MailClient"
+msgstr "Geef pad aan naar e-mail applicatie"
+#
+msgid "Set Path to ODT-Editor"
+msgstr "Geef pad aan naar tekstbewerker (ODT)"
+#
+#, fuzzy
+msgid "Set Timer"
+msgstr "Timerinstellingen"
+#
+#, fuzzy
+msgid "Set Timer Interval"
+msgstr "- Timer Aan - Tijdinterval:"
+#
+#, fuzzy
+msgid "Set Watchtimes"
+msgstr "Pas wachtinstelling toe"
+#
+#, fuzzy
+msgid "Set as Watchbase"
+msgstr "Zelfde wacht als"
+#
+msgid ""
+"Set desired Degrees\n"
+"if the course changes by this amount\n"
+"a course-changed-event occurs"
+msgstr ""
+#
+msgid ""
+"Set desired delay in minutes\n"
+"It's a good idea to set here a value > 0\n"
+"to find the right wind."
+msgstr ""
+#
+msgid "Set gal/liter in Abbreviations "
+msgstr ""
+#
+msgid ""
+"Set the desired distance in NM\n"
+" = (Track made good)"
+msgstr ""
+#
+msgid "Set the interval for the timer"
+msgstr ""
+#
+msgid "Set the startdate of the sailing trip"
+msgstr ""
+#
+msgid "Set the starttime of your sailing trip"
+msgstr ""
+#
+msgid "Show Depth in"
+msgstr "Toon dieptes in:"
+#
+msgid "Show Equipment"
+msgstr "Toon apparatuur"
+#
+msgid "Show Logbook Icon"
+msgstr "Toon Logbook icoon"
+#
+# Used in Options
+msgid "Show Position Fomat"
+msgstr "      Positieweergave als:"
+#
+#
+#
+#
+#
+msgid "Show ToolTips"
+msgstr "Toon ToolTips"
+#
+msgid "Show Wave/Swell in"
+msgstr "Toon golfhoogtes in:"
+#
+msgid "Show all Layouts"
+msgstr "Toon alle opmaakstijlen"
+#
+#, fuzzy
+msgid "Show all entries"
+msgstr "Toon alle opmaakstijlen"
+#
+msgid "Show hidden columns"
+msgstr "Toon verborgen kolommen"
+#
+#, fuzzy
+msgid "Show onboard only"
+msgstr "Toon Logbook icoon"
+#
+msgid "Show/Hide Equipmentgrid"
+msgstr "Toon/Verberg apparatuurgrid"
+#
+msgid "Show/Hide Statusbar"
+msgstr ""
+#
+msgid ""
+"Shows/Sets the day\n"
+"Displays the data in your ODT/Browser-program from this day to end"
+msgstr ""
+#
+#, fuzzy
+msgid "Shutdown Logbook"
+msgstr "Toon Logbook icoon"
+#
+msgid "Sign"
+msgstr "Paraaf"
+#
+msgid "Sorry, Logbook has no lines"
+msgstr "Fout: het journaal bevat geen regel(s)!"
+#
+msgid "Sorry, Your Logbook has no lines"
+msgstr "Fout: het journaal bevat geen regel(s)!"
+#
+msgid "Sorry, no Layout installed"
+msgstr "Fout: geen opmaakstijlen geïnstalleerd!"
+#
+msgid "Sort ascending"
+msgstr ""
+#
+msgid "Sort descending"
+msgstr ""
+#
+msgid "Speed"
+msgstr "Vaart"
+#
+msgid "Speed Avg."
+msgstr ""
+"Vaart\n"
+"(gem.)"
+#
+msgid "Speed Max."
+msgstr ""
+"Vaart\n"
+"(max.)"
+#
+#, fuzzy
+msgid "Split Watch"
+msgstr "Pas wachtinstelling toe"
+#
+msgid "Start"
+msgstr "Start"
+#
+#, c-format
+msgid ""
+"Start converting to new Date/Time-Format\n"
+"and backup all datafiles from version 1.1 to\n"
+"\n"
+"%s"
+msgstr ""
+#
+msgid "Startvalue"
+msgstr "Startwaarde"
+#
+# means
+# Logbook from date to date
+#, fuzzy
+msgid "Stop"
+msgstr "tot"
+#
+msgid "Street"
+msgstr "Straat"
+#
+msgid "Suspend/Resume running event/s"
+msgstr ""
+#
+#, fuzzy
+msgid "Swap two Watches"
+msgstr "Pas wachtinstelling toe"
+#
+msgid "Swell"
+msgstr "Deining"
+#
+msgid "Swell Avg."
+msgstr ""
+"Deining\n"
+"(gem.)"
+#
+msgid "Swell Max."
+msgstr ""
+"Deining\n"
+"(max.)"
+#
+msgid "Tank"
+msgstr ""
+#
+msgid "Telephone"
+msgstr "Telefoon"
+#
+msgid "Temperature"
+msgstr "Temperatuur"
+#
+msgid "Text"
+msgstr ""
+#
+msgid "Textblocks"
+msgstr ""
+#
+msgid "Textblocks Dialog"
+msgstr ""
+#
+msgid "Texts for Rightclick-Menu"
+msgstr ""
+#
+msgid "Texts when using this Dialog only"
+msgstr ""
+#
+msgid ""
+"The itemname is shown in the rightcklick-menu of the following Columns\n"
+"By clicking on it the text is inserted\n"
+"\n"
+msgstr ""
+#
+msgid ""
+"These texts are inserted into the grid-colmn\n"
+"by calling this dialog\n"
+"\n"
+"Select Item\n"
+"Click OK-Button\n"
+"\n"
+"Use Drag 'n Drop to place a item in menu"
+msgstr ""
+#
+msgid "Time"
+msgstr "Tijd"
+#
+msgid "Time-Format:"
+msgstr ""
+#
+msgid "Timer"
+msgstr "Timerinstellingen"
+#
+msgid "Title"
+msgstr "Titel"
+#
+msgid "Total Time"
+msgstr "Ttl tijd"
+#
+msgid "Town"
+msgstr "Woonplaats"
+#
+#, c-format
+msgid ""
+"Tried to install Languages at\n"
+"\n"
+"%s\n"
+"\n"
+"On Windows Vista/7/8 you need administrator rights.\n"
+"If no languages installed please restart OpenCPN as admin.\n"
+"(Rightclick on the icon and select \"Run as administrator\")\n"
+"\n"
+"After installation restart as normal user.\n"
+"\n"
+"The dialog 'Logbook Preferences' is closed now."
+msgstr ""
+#
+msgid "True"
+msgstr "waar"
+#
+msgid "Type"
+msgstr "Type"
+#
+msgid "UTC"
+msgstr "UTC"
+#
+msgid ""
+"Uncheck if You have no GPS\n"
+"If GPS is out of order, uncheck to\n"
+"prevent that the message repeats."
+msgstr ""
+"Niet aanvinken als u geen GPS heeft of \n"
+"als uw GPS niet functioneert om te voor-\n"
+"komen dat de melding zich blijft herhalen."
+#
+msgid "Uninstall"
+msgstr "Verwijderen"
+#
+msgid "Uninstall Logbook"
+msgstr "Verwijder Logbook PlugIn"
+#
+msgid ""
+"Uninstalls\n"
+"Logbook-Plugin,\n"
+"all Logbook-Data,\n"
+"all Logbook-Layouts,\n"
+"all Logbook-Languages\n"
+"and cleans the OpenCPN.ini"
+msgstr ""
+"Verwijderen van:\n"
+"  Logbook PlugIn,\n"
+"  alle journaalgegevens,\n"
+"  alle journaal opmaakstijlen,\n"
+"  alle Logbook taalbestanden\n"
+"Opschonen van het bestand OpenCPN.ini."
+#
+msgid "Urgentvalue"
+msgstr "Urgentiewaarde"
+#
+msgid ""
+"Used for ODT/Browser-program\n"
+"One Row for the day + selected days = Days displayed"
+msgstr ""
+#
+# Textfield for userlabel in boat
+msgid "UserLabel"
+msgstr "ExtraVeld"
+#
+msgid "View"
+msgstr "Toon"
+#
+msgid "View data in browser (HTML) or Openoffice/LibreOffice (ODT)"
+msgstr "Bekijk gegevens in browser (HTML) of in OpenOffice/LibreOffice (ODT)"
+#
+msgid "Visibility"
+msgstr "Zicht"
+#
+msgid "W-Output"
+msgstr ""
+#
+#
+#
+#
+#
+#, fuzzy
+msgid "W-Total"
+msgstr "Ttl water"
+#
+msgid "W/Strength"
+msgstr ""
+"Wind-\n"
+"kracht"
+#
+msgid "Warnvalue"
+msgstr "Alarmwaarde"
+#
+msgid "Watch"
+msgstr "Wacht"
+#
+#, fuzzy
+msgid "Watchtime"
+msgstr "Wacht"
+#
+msgid "Water"
+msgstr "Water"
+#
+#, fuzzy
+msgid "Water used"
+msgstr "Water"
+#
+#
+#
+#
+#
+msgid "WaterTotal"
+msgstr "Ttl water"
+#
+msgid "Waterm. Outp"
+msgstr ""
+#
+#, fuzzy
+msgid "Watermaker"
+msgstr "Water"
+#
+msgid "Wave"
+msgstr "Golven"
+#
+msgid "Wave Avg."
+msgstr ""
+"Golfhoogte\n"
+"(gem.)"
+#
+msgid "Wave Max."
+msgstr ""
+"Golfhoogte\n"
+"(max.)"
+#
+msgid "WayPoint arrived"
+msgstr "Routepunt bereikt"
+#
+#, fuzzy
+msgid "Waypoint"
+msgstr "Routepunt geschrapt"
+#
+msgid "Waypoint skipped"
+msgstr "Routepunt geschrapt"
+#
+msgid "Weather"
+msgstr "Weer"
+#
+msgid "Week(s)"
+msgstr "Week(en)"
+#
+msgid "Weeks(s)"
+msgstr "Week(en)"
+#
+msgid "Wind"
+msgstr "Wind"
+#
+msgid "Wind Avg."
+msgstr ""
+"Windkracht\n"
+"(gem.)"
+#
+msgid "Wind Max."
+msgstr ""
+"Windkracht\n"
+"(max.)"
+#
+msgid ""
+"Wind is set to Heading,\n"
+"but GPS sends no Heading Data.\n"
+"Wind is set now to Realative to boat\n"
+"\n"
+msgstr ""
+"Windindicatie was ingesteld op Ware Wind,\n"
+"maar de GPS geeft geen koerinformatie.\n"
+"Windindicatie is nu ingesteld op Schijnbare Wind.\n"
+"\n"
+#
+msgid "Winddirection Avg."
+msgstr ""
+"Wind\n"
+"(gem.)"
+#
+msgid "Windspeed"
+msgstr "Windsnelheid"
+#
+msgid "Windspeed "
+msgstr "Windsnelheid"
+#
+msgid "Write warning \"No GPS\""
+msgstr "Toon waarschuwing \"Geen GPS\""
+#
+msgid ""
+"Writes this text to the logbook when the event occurs, alter texts as desired"
+msgstr ""
+#
+msgid "Yard-Nr."
+msgstr "Bouwnr."
+#
+msgid "Year"
+msgstr ""
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Yes"
+msgstr "Ja"
+#
+#, c-format
+msgid ""
+"You cannot set this dateformat.\n"
+"\n"
+"%s%s%s%s%s\n"
+"\n"
+"Please use a different Dateformat in all three Choiceboxes."
+msgstr ""
+#
+msgid ""
+"Your Country has 24 Hour Format.\n"
+"In this case the OS doen't serve AM/PM-Strings.\n"
+msgstr ""
+#
+#, fuzzy, c-format
+msgid ""
+"Your Logbook has %i lines\n"
+"\n"
+"You should create a new logbook to minimize loadingtime."
+msgstr ""
+"Journaal heeft 800 regels of meer.\n"
+"Maak een nieuw journaal om de laadtijd te bekorten.\n"
+"Als u automatische invoer gebruikt, wordt die nu gestopt!"
+#
+msgid "Your Logbook has no lines ?"
+msgstr "Journaal bevat geen regels!"
+#
+msgid "Zip"
+msgstr "Postcode"
+#
+#, fuzzy
+msgid "add a line to the end of your logbook"
+msgstr "Toevoegen regel aan het einde van het journaal"
+#
+msgid "add the equipment of your boat"
+msgstr "Voeg de apparatuur van uw vaartuig toe"
+#
+# Sur une version FR l'utilisateur souhaitera plus saisir des Litres.
+#, fuzzy
+msgid "all"
+msgstr "ltr"
+#
+msgid ""
+"automatic line\n"
+"Distance > "
+msgstr ""
+"Automatische regelinvoer bij:\n"
+"Afgelegde Verheid >"
+#
+#, fuzzy
+msgid ""
+"automatic line\n"
+"Waypoint arrived:"
+msgstr ""
+"Automatische regelinvoer bij:\n"
+"Aankomst Routepunt"
+#
+msgid ""
+"automatic line\n"
+"change of course >"
+msgstr ""
+"Automatische regelinvoer bij:\n"
+"Koersverandering >"
+#
+msgid ""
+"automatic line\n"
+"change of guards"
+msgstr ""
+"Automatische regelinvoer bij:\n"
+"Wisseling Wacht"
+#
+#, fuzzy
+msgid "automatic line Waypoint arrived"
+msgstr ""
+"Automatische regelinvoer bij:\n"
+"Aankomst Routepunt"
+#
+#, fuzzy
+msgid ""
+"automatic line by timer\n"
+"You can set/unset a timer\n"
+" by clicking the bullet\n"
+"Change this text in options"
+msgstr ""
+"Automatische regel per tijdinterval:\n"
+"U kunt dit Aan en Uit zetten en de instellingen ervan aanpasen in Toolbox/"
+"Plugins/Logbook"
+#
+msgid "day(s)"
+msgstr "dag(en)"
+#
+msgid "default"
+msgstr "standaard"
+#
+msgid ""
+"default = Relative to Boat\n"
+"Heading = Actual wind direction"
+msgstr ""
+"standaard = Schijnbare Wind\n"
+"koers = Ware Wind"
+#
+#, fuzzy
+msgid "every"
+msgstr "meter"
+#
+msgid "every 15 Degrees +/- 1 hour"
+msgstr "Elke 15 graden +/- 1 uur"
+#
+msgid "export your BuyParts-data as HTML or ODT"
+msgstr "Exporteer gegevens van te kopen onderdelen met format HTML of ODT"
+#
+msgid "export your Overview-data as HTML or ODT"
+msgstr "Exporteer overzichtgegevens met format HTML of ODT."
+#
+msgid "export your Repairs-data as HTML or ODT"
+msgstr "Exporteer reparatiegegevens met format HTML of ODT"
+#
+msgid "export your Service-data as HTML or ODT"
+msgstr "Exporteer onderhoudsgegevens met format HTML of ODT"
+#
+msgid ""
+"export your boat/equipment-data as:\n"
+"      HTML, ODT,  ODS, XML, CSV"
+msgstr ""
+"Exporteer scheeps- en apparatuurgegevens\n"
+"met format : HTML, ODT,  ODS, XML, CSV"
+#
+msgid ""
+"export your crew-data as:\n"
+"HTML, ODT,  ODS, XML, CSV"
+msgstr ""
+"Exporteer bemanninggegevens met\n"
+"format : HTML, ODT,  ODS, XML, CSV"
+#
+msgid ""
+"export your logbook-data as:\n"
+"HTML, ODT,  ODS, XML, CSV"
+msgstr ""
+"Exporteer het journaal met format:\n"
+"HTML, ODT,  ODS, XML, CSV"
+#
+msgid "fm"
+msgstr "fm"
+#
+msgid "from"
+msgstr "van"
+#
+msgid "from "
+msgstr "van "
+#
+msgid "ft"
+msgstr "vt"
+#
+msgid "fth"
+msgstr "vdm"
+#
+# Sur une version FR l'utilisateur souhaitera plus saisir des Litres.
+msgid "gal"
+msgstr "ltr"
+#
+msgid ""
+"green = Event is running\n"
+"red = Event is stopped\n"
+"yellow = Event is suspended. Restart event with Start-Button"
+msgstr ""
+#
+msgid "h"
+msgstr "u"
+#
+msgid "km/h"
+msgstr "km/h"
+#
+msgid "kts"
+msgstr "knp"
+#
+msgid "m"
+msgstr "m"
+#
+msgid "m/s"
+msgstr "m/s"
+#
+msgid "mb"
+msgstr "Hp"
+#
+msgid "month"
+msgstr "maand"
+#
+msgid ""
+"no Event/s\n"
+"Click one or more bullets to start"
+msgstr ""
+#
+msgid "none"
+msgstr "niets"
+#
+msgid "this day"
+msgstr ""
+#
+# means
+# Logbook from date to date
+msgid "to"
+msgstr "tot"
+#
+#, c-format
+msgid ""
+"to use MS-Word, append %s like this:\n"
+"\"C:\\yourPathToWinword\\WINWORD.EXE\" %s"
+msgstr ""
+#
+msgid "use Textblocks..."
+msgstr ""
+#
+msgid "week(s)"
+msgstr "week(en)"
+#
+msgid "write your own label"
+msgstr "Maak eigen veldnaam"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "\n"
+#~ msgstr "\n"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "\n"
+#~ "Name of Waypoint: %s\n"
+#~ "True bearing to destination: %4.1f%s\n"
+#~ "Range to destination: %4.2f%s"
+#~ msgstr ""
+#~ "\n"
+#~ "Naam routepunt  : %s\n"
+#~ "Ware Koers          : %4.1f%s\n"
+#~ "Verheid                 : %4.2f%s"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "      Course- Message after Minutes"
+#~ msgstr "               Koersbericht na (minuten):"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "&Cut"
+#~ msgstr "Land"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "0"
+#~ msgstr "0"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "1. Watch of 1. Person"
+#~ msgstr "1e Wacht van 1e persoon"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "10"
+#~ msgstr "0"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid ":0"
+#~ msgstr "0"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Add to Watchlist"
+#~ msgstr "Toevoegen aan wachtlijst"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Add to Watchlist same as"
+#~ msgstr "Toevoegen aan wachtlijst zoals"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Append Line every Nm"
+#~ msgstr "Regel toevoegen na elke (NM):"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Delete"
+#~ msgstr "Regel verwijderen"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Drag 'n Drop to change the order in the list"
+#~ msgstr "Verslepen om de volgorde in de lijst te veranderen."
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 1.Watch"
+#~ msgstr ""
+#~ "1e Wacht:\n"
+#~ "eind"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 2.Watch"
+#~ msgstr ""
+#~ "2e Wacht:\n"
+#~ "eind"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 3.Watch"
+#~ msgstr ""
+#~ "3e Wacht:\n"
+#~ "eind"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 4.Watch"
+#~ msgstr ""
+#~ "4e Wacht:\n"
+#~ "eind"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 5.Watch"
+#~ msgstr ""
+#~ "5e Wacht:\n"
+#~ "eind"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 6.Watch"
+#~ msgstr ""
+#~ "6e Wacht:\n"
+#~ "eind"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "EngineTotal"
+#~ msgstr "Ttl motor"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "If Watch changed"
+#~ msgstr "Regel toevoegen bij wisseling van de wacht"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "If Waypoint arrived"
+#~ msgstr "Regel toevoegen bij aankomst routepunt"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Install OpenCPN_Mac_Logbook_Languages.zip"
+#~ msgstr "Installeer OpenCPN_Mac_Logbook_Languages.zip (MAC versie)"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Interval:"
+#~ msgstr "Tijdinterval:"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+# Textfield for userlabel in boat
+#, fuzzy
+#~ msgid "Label_"
+#~ msgstr "ExtraVeld"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "No. Watches"
+#~ msgstr "Aantal wachten"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Paste"
+#~ msgstr "Datum"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Person:"
+#~ msgstr "Persoon:"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Persons:"
+#~ msgstr "Personen:"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Please enter 4 digits in 24h-Format like 1545 = 03:45 PM"
+#~ msgstr "Voer 4 cijfers in 24-uur format in, zoals: 1545 = 03:45 PM"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "Please enter like 1.30 or 1,30 or 1:30\n"
+#~ "for 1:30h"
+#~ msgstr ""
+#~ "Voer 1.30 of 1,30 of 1:30\n"
+#~ "in voor 01:30 u"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "Please enter the Time in the format:\n"
+#~ "   12:30:00PM"
+#~ msgstr ""
+#~ "Voer tijd in met format:\n"
+#~ "    12:30:00PM"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Sorry, 0 Hrs 0 Min 0 Sec are not possible"
+#~ msgstr "Fout: 0 u 0 m 0 s is niet mogelijk!"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Speed STW Avg."
+#~ msgstr ""
+#~ "STW\n"
+#~ "(gem.)"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Speed STW Max."
+#~ msgstr ""
+#~ "STW\n"
+#~ "(max.)"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 1.Watch"
+#~ msgstr ""
+#~ "1e Wacht:\n"
+#~ "start"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 2.Watch"
+#~ msgstr ""
+#~ "2e Wacht:\n"
+#~ "start"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 3.Watch"
+#~ msgstr ""
+#~ "3e Wacht:\n"
+#~ "start"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 4.Watch"
+#~ msgstr ""
+#~ "4e Wacht:\n"
+#~ "start"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 5.Watch"
+#~ msgstr ""
+#~ "5e Wacht:\n"
+#~ "start"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 6.Watch"
+#~ msgstr ""
+#~ "6e Wacht:\n"
+#~ "start"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Static Watchtimes"
+#~ msgstr "Pas wachtinstelling toe"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Timer "
+#~ msgstr "Timer"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Timer on/off"
+#~ msgstr "Timer Aan/Uit"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "delay to find the right course to the wind"
+#~ msgstr "Vertraging om de juiste koers t.o.v. de wind te vinden."
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "s"
+#~ msgstr "s"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "same watch as"
+#~ msgstr "Zelfde wacht als"

@@ -1,0 +1,252 @@
+@@ -3478,6 +3478,11 @@ void MyFrame::ActivateMOB( void )
+ 
+         if( g_pRouteMan->GetpActiveRoute() ) g_pRouteMan->DeactivateRoute();
+         g_pRouteMan->ActivateRoute( temp_route, pWP_MOB );
++
++    wxJSONValue v;
++    v[_T("GUID")] = temp_route->m_GUID;
++    wxString msg_id( _T("OCPN_MAN_OVERBOARD") );
++    g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
+     }
+ 
+     if( pRouteManagerDialog && pRouteManagerDialog->IsShown() ) {
+@@ -3507,11 +3512,37 @@ void MyFrame::TrackOn( void )
+ 
+     if( g_toolbar ) g_toolbar->ToggleTool( ID_TRACK, g_bTrackActive );
+ 
++    if( pRouteManagerDialog && pRouteManagerDialog->IsShown() ) {
++        pRouteManagerDialog->UpdateTrkListCtrl();
++        pRouteManagerDialog->UpdateRouteListCtrl();
++    }
++
++  wxJSONValue v;
++  wxDateTime now;
++  now = now.Now().ToUTC();
++  wxString name = g_pActiveTrack->m_RouteNameString;
++  if(name.IsEmpty())
++  {
++    RoutePoint *rp = g_pActiveTrack->GetPoint( 1 );
++    if( rp && rp->m_CreateTime.IsValid() ) name = rp->m_CreateTime.FormatISODate() + _T(" ")
++      + rp->m_CreateTime.FormatISOTime();   
++    else
++      name = _("(Unnamed Track)");
++  }
++  v[_T("Name")] = name;
++  v[_T("GUID")] = g_pActiveTrack->m_GUID;
++  wxString msg_id( _T("OCPN_TRK_ACTIVATED") );
++  g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
+ }
+ 
+ void MyFrame::TrackOff( bool do_add_point )
+ {
+     if( g_pActiveTrack ) {
++    wxJSONValue v;
++    wxString msg_id( _T("OCPN_TRK_DEACTIVATED") );
++    v[_T("GUID")] = g_pActiveTrack->m_GUID;
++    g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
++
+         g_pActiveTrack->Stop( do_add_point );
+ 
+         if( g_pActiveTrack->GetnPoints() < 2 ) g_pRouteMan->DeleteRoute( g_pActiveTrack );
+@@ -3519,7 +3550,6 @@ void MyFrame::TrackOff( bool do_add_point )
+             if( g_bTrackDaily ) {
+                 if( g_pActiveTrack->DoExtendDaily() ) g_pRouteMan->DeleteRoute( g_pActiveTrack );
+             }
+-
+     }
+ 
+     g_pActiveTrack = NULL;
+@@ -6362,6 +6392,193 @@ void MyFrame::OnEvtPlugInMessage( OCPN_MsgEvent & event )
+             gVar = decl_val;
+         }
+     }
++
++  if(message_ID == _T("OCPN_TRACK_REQUEST")) {
++    wxJSONValue  root;
++    wxJSONReader reader;
++    wxString trk_id = wxEmptyString;
++
++    int numErrors = reader.Parse( message_JSONText, &root );
++    if ( numErrors > 0 )  {
++      return;
++    }
++
++    if(root.HasMember(_T("Track_ID")))
++      trk_id = root[_T("Track_ID")].AsString();
++
++    for(RouteList::iterator it = pRouteList->begin(); it != pRouteList->end(); it++)
++    {
++      wxString name = wxEmptyString;
++      if((*it)->IsTrack() && (*it)->m_GUID == trk_id)
++      {
++        name = (*it)->m_RouteNameString;
++        if(name.IsEmpty())
++          {
++            RoutePoint *rp = (*it)->GetPoint( 1 );
++            if( rp && rp->m_CreateTime.IsValid() ) name = rp->m_CreateTime.FormatISODate() + _T(" ")
++              + rp->m_CreateTime.FormatISOTime();   
++            else
++              name = _("(Unnamed Track)");
++          }
++
++/*        Tracks can be huge e.g merged tracks. On Compüters with small memory this can produce a crash by insufficient memory !!
++
++        wxJSONValue v; unsigned long i = 0;
++        for(RoutePointList::iterator itp = (*it)->pRoutePointList->begin(); itp != (*it)->pRoutePointList->end(); itp++)
++        {
++          v[i][0] = (*itp)->m_lat;
++          v[i][1] = (*itp)->m_lon;
++          i++;          
++        }
++            wxString msg_id( _T("OCPN_TRACKPOINTS_COORDS") );
++          g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
++      }
++*/
++/*        To avoid memory problems send a single trackpoint. It's up to the plugin to collect the data. */
++        int i = 1;   wxJSONValue v;
++        for(RoutePointList::iterator itp = (*it)->pRoutePointList->begin(); itp != (*it)->pRoutePointList->end(); itp++)
++        {
++          v[_T("lat")] = (*itp)->m_lat;
++          v[_T("lon")] = (*itp)->m_lon;
++          v[_T("TotalNodes")] = (*it)->pRoutePointList->GetCount();
++          v[_T("NodeNr")] = i;
++          v[_T("error")] = false;
++          i++;
++            wxString msg_id( _T("OCPN_TRACKPOINTS_COORDS") );
++          g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
++        }
++      }
++      else
++      {
++          wxJSONValue v;
++          v[_T("error")] = true;
++
++            wxString msg_id( _T("OCPN_TRACKPOINTS_COORDS") );
++          g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
++      }
++    }
++  }
++  else if(message_ID == _T("OCPN_ROUTE_REQUEST")) {
++    wxJSONValue  root;
++    wxJSONReader reader;
++    wxString route_id = wxEmptyString;
++
++    int numErrors = reader.Parse( message_JSONText, &root );
++    if ( numErrors > 0 )  {
++      return;
++    }
++
++    if(root.HasMember(_T("Route_ID")))
++      route_id = root[_T("Route_ID")].AsString();
++
++    for(RouteList::iterator it = pRouteList->begin(); it != pRouteList->end(); it++)
++    {
++      wxString name = wxEmptyString;
++      wxJSONValue v;
++
++      if(!(*it)->IsTrack() && (*it)->m_GUID == route_id)
++      {
++        name = (*it)->m_RouteNameString;
++        if(name.IsEmpty())
++              name = _("(Unnamed Route)");
++
++        v[_T("Name")] = name;
++
++        wxJSONValue v; int i = 0;
++        for(RoutePointList::iterator itp = (*it)->pRoutePointList->begin(); itp != (*it)->pRoutePointList->end(); itp++)
++        {
++          v[i][_T("error")] = false;
++          v[i][_T("lat")] = (*itp)->m_lat;
++          v[i][_T("lon")] = (*itp)->m_lon;
++          v[i][_T("WPName")] = (*itp)->GetName();
++          v[i][_T("WPDescription")] = (*itp)->GetDescription();
++          wxHyperlinkListNode *node = (*itp)->m_HyperlinkList->GetFirst();
++          if(node)
++          {
++            int n = 1;
++            while(node)
++            {
++              Hyperlink *httpLink = node->GetData();
++              v[i][_T("WPLink")+wxString::Format(_T("%d"),n)] = httpLink->Link;
++              v[i][_T("WPLinkDesciption")+wxString::Format(_T("%d"),n++)] = httpLink->DescrText;
++              node = node->GetNext();
++            }
++          }
++          
++          i++;          
++        }
++            wxString msg_id( _T("OCPN_ROUTE_RESPONSE") );
++          g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
++      }
++      else
++      {
++          wxJSONValue v;
++          v[0][_T("error")] = true;
++
++            wxString msg_id( _T("OCPN_ROUTE_RESPONSE") );
++          g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
++      }
++    }
++  }
++  else if(message_ID == _T("OCPN_ROUTELIST_REQUEST")) {
++    wxJSONValue  root;
++    wxJSONReader reader;
++    bool mode = true, error = false;
++
++    int numErrors = reader.Parse( message_JSONText, &root );
++    if ( numErrors > 0 )  {
++      return;
++    }
++
++    if(root.HasMember(_T("mode")))
++    {
++      wxString str = root[_T("mode")].AsString();
++      if( str == _T("Track")) mode = false;
++
++      wxJSONValue v; int i = 1;
++      for(RouteList::iterator it = pRouteList->begin(); it != pRouteList->end(); it++)
++      {
++        if((*it)->IsTrack())
++          if(mode == true) continue;
++        if(!(*it)->IsTrack())
++          if(mode == false) continue;
++        v[0][_T("isTrack")] = !mode;
++        
++        wxString name = (*it)->m_RouteNameString;
++        if(name.IsEmpty() && !mode)
++          {
++            RoutePoint *rp = (*it)->GetPoint( 1 );
++            if( rp && rp->m_CreateTime.IsValid() ) name = rp->m_CreateTime.FormatISODate() + _T(" ")
++              + rp->m_CreateTime.FormatISOTime();   
++            else
++              name = _("(Unnamed Track)");
++          }
++        else if(name.IsEmpty() && mode)
++            name = _("(Unnamed Route)");
++          
++
++        v[i][_T("error")] = false;
++        v[i][_T("name")] = name;
++        v[i][_T("GUID")] = (*it)->m_GUID;
++        bool l = (*it)->IsTrack();
++        if(g_pActiveTrack == (*it) && !mode)
++          v[i][_T("active")] = true;
++        else
++          v[i][_T("active")] = (*it)->IsActive();
++        i++;
++
++      }
++      wxString msg_id( _T("OCPN_ROUTELIST_RESPONSE") );
++      g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
++    }
++    else
++    {
++      wxJSONValue v;
++      v[0][_T("error")] = true;
++      wxString msg_id( _T("OCPN_ROUTELIST_RESPONSE") );
++      g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
++    }
++  }
+ }
+ 
+ void MyFrame::OnEvtTHREADMSG( wxCommandEvent & event ) 

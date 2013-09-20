@@ -1,0 +1,5 @@
+ 	30.11.2011 	21:19:35 	 	 	0.00 sm 	      0.00 sm 	 	 	 	 	 	1000.00 m 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:00 h 	00000:00 h 	0.00 Liter 	      0.00 Liter 	 	 	0.00 Liter 	      0.00 Liter 	  
+ 	30.11.2011 	21:20:35 	 	 	0.00 sm 	     0.00 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:00 h 	00000:00 h 	0.00 Liter 	      0.00 Liter 	 	 	0.00 Liter 	      0.00 Liter 	  
+ 	30.11.2011 	21:21:35 	 	 	0.00 sm 	     0.00 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:00 h 	00000:00 h 	0.00 Liter 	      0.00 Liter 	 	 	0.00 Liter 	      0.00 Liter 	  
+ 	30.11.2011 	21:22:35 	 	 	0.00 sm 	     0.00 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:00 h 	00000:00 h 	0.00 Liter 	      0.00 Liter 	 	 	0.00 Liter 	      0.00 Liter 	  
+ 	30.11.2011 	21:23:35 	 	 	0.00 sm 	     0.00 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:00 h 	00000:00 h 	0.00 Liter 	      0.00 Liter 	 	 	0.00 Liter 	      0.00 Liter 	  

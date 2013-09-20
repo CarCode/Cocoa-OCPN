@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>&Uuml;bersicht</title>
+<style type="text/css">
+<!--
+.table {
+	font-family: "Times New Roman", Times, serif;
+	padding-right: 5px;
+	padding-left: 5px;
+}
+-->
+</style>
+</head>
+
+<body>
+<div align="center">
+  <table width="80%" border="1" cellpadding="0" cellspacing="0">
+    <!-- Repeat -->
+    <tr bgcolor="#CCCCCC">
+      <td width="240" class="table"><strong>Active Logbook </strong> </td>
+      <td colspan="6" class="table"><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+          <strong>: Start 07.12.0011 / Ende 07.12.0011</strong></td>
+    </tr>
+    <tr>
+      <td width="240" rowspan="7" class="table">&nbsp;</td>
+      <td width="170" class="table"><strong>Distanz</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 sm</div></td>
+      <td width="170" class="table"><strong>Wind von</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 °</div></td>
+      <td width="170" class="table"><strong>Wellenhöhe Ø</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 m</div></td>
+    </tr>
+    <tr>
+      <td width="170" class="table"><strong>Distanz p. Tag</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 sm</div></td>
+      <td width="170" class="table"><strong>Windstärke Ø</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 kts</div></td>
+      <td width="170" class="table"><strong>Wellen max.</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 m</div></td>
+    </tr>
+    <tr>
+      <td width="170" class="table"><strong>Beste Dist. p. Tag</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 sm</div></td>
+      <td width="170" class="table"><strong>Wind max.</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 kts</div></td>
+      <td width="170" class="table">&nbsp;</td>
+      <td width="100" class="table"><div align="right"></div></td>
+    </tr>
+    <tr>
+      <td width="170" class="table">&nbsp;</td>
+      <td width="100" class="table"><div align="right"></div></td>
+      <td width="170" class="table">&nbsp;</td>
+      <td width="100" class="table"><div align="right"></div></td>
+      <td width="170" class="table">&nbsp;</td>
+      <td width="100" class="table"><div align="right"></div></td>
+    </tr>
+    <tr>
+      <td width="170" class="table"><strong>Maschine</strong></td>
+      <td width="100" class="table"><div align="right">00:00 h</div></td>
+      <td width="170" class="table"><strong>Strom von</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 °</div></td>
+      <td width="170" class="table"><strong>Swell Ø</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 m</div></td>
+    </tr>
+    <tr>
+      <td width="170" class="table"><strong>Treibstoff</strong></td>
+      <td width="100" class="table"><div align="right">3971534642392899866461726609519091202542400300389248639195702344926010973721945968441568818912739817301816587132073633165711425178769112610142647639479808215398872226378804162355402262946492254859059277299204519053431030004136494726312458472752625670687069029615110060366764926042112.00 sm</div></td>
+      <td width="170" class="table"><strong>Strom Ø</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 m</div></td>
+      <td width="170" class="table"><strong>Swell max.</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 m</div></td>
+    </tr>
+    <tr>
+      <td width="170" class="table"><strong>Wasser</strong></td>
+      <td width="100" class="table"><div align="right">3971534642392899866461726609519091202542400300389248639195702344926010973721945968441568818912739817301816587132073633165711425178769112610142647639479808215398872226378804162355402262946492254859059277299204519053431030004136494726312458472752625670687069029615110060366764926042112.00 sm</div></td>
+      <td width="170" class="table"><strong>Strom max.</strong></td>
+      <td width="100" class="table"><div align="right">  0.00 m</div></td>
+      <td width="170" class="table"><strong>Segel meistens</strong></td>
+      <td width="100" class="table"><div align="left"></div></td>
+    </tr>
+
+    
+  </table>
+</div>
+</body>
+</html>

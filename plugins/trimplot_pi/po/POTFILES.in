@@ -1,0 +1,8 @@
+src/TrimPlotDialog.cpp
+src/TrimPlotDialog.h
+src/PreferencesDialog.cpp
+src/PreferencesDialog.h
+src/TrimPlotUI.cpp
+src/TrimPlotUI.h
+src/trimplot_pi.cpp
+src/trimplot_pi.h

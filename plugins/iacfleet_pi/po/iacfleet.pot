@@ -1,0 +1,68 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-12-29 17:39+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Carcode <carcode@me.com>\n"
+"Language-Team: Carcode <carcode@me.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/iacfleet_pi.cpp:103 src/iacfleet_pi.cpp:149
+msgid "IACFleet"
+msgstr ""
+
+#: src/iacfleet_pi.cpp:154
+msgid "IACFleet PlugIn for OpenCPN"
+msgstr ""
+
+#: src/iacfleet_pi.cpp:160
+msgid ""
+"IACFleet PlugIn for OpenCPN\n"
+"Display IAC Fleet Code information provided by NADI.\n"
+"Information can be received by email by sending an email with the contents\n"
+"\"Send fleet.nadi\" to \"query@saildocs.com\"\n"
+"Save the EMail you get as response and open it with this\n"
+"Plugin to see the decoded text and a graphic overlay\n"
+msgstr ""
+
+#: src/iacfleet_pi.cpp:170
+msgid "IACFleet Preferences"
+msgstr ""
+
+#: src/iacfleet_pi.cpp:194 src/iacfleet.h:70
+msgid "IACFleet Display Control"
+msgstr ""
+
+#: src/iacfleet.cpp:181
+msgid "Select IACFleet Directory"
+msgstr ""
+
+#: src/iacfleet.cpp:205
+msgid "IACFleet File Directory"
+msgstr ""
+
+#: src/iacfleet.cpp:225
+msgid "Files"
+msgstr ""
+
+#: src/iacfleet.cpp:238
+msgid "Text"
+msgstr ""
+
+#: src/iacfleet.cpp:253
+msgid "Raw"
+msgstr ""
+
+#: src/iacfleet.cpp:287
+msgid "&Close"
+msgstr ""

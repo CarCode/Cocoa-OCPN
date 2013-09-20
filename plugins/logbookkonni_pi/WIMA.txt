@@ -1,0 +1,86 @@
+ Re: LogBook Plugin - Can't get Baro Pressure to parse
+As i develop my program from sensor (bmp0885) with arduino I adapted the program. See below :
+
+A part of my code :
+Code:
+
+        char tramenmea;
+     
+      // set the cursor to column 0, line 1
+      // (note: line 1 is the second row, since counting begins with 0):
+      lcd.setCursor(0, 0);                            //Position du curseur au début de la ligne 1
+      //----------- Température ------------------
+      lcd.print("Temp. Air :");                         // Affiche le mot Température :
+      double val_temperature = bmp.readTemperature();   // Déclaration de la variable val_temperature dans laquelle on va stocker la valeur lue
+      lcd.print(bmp.readTemperature());                 // Affiche la valeure de la température à la suite de 'Temp. Air :'
+     //Serial.println(bmp.readTemperature());            // Envoi température sur port série
+    
+ 
+      //------------- Pression ---------------------
+      lcd.setCursor(0,1);                                    // Positionne le curseur de l'écran colonne 6, ligne 2
+      lcd.print("hPa :");                                    // Affiche le mot hPa :
+      float val_pression = bmp.readPressure();                 // Déclaration de la variable val_pression dans laquelle on va stocker la valeur lue sous forme d'un nombre entier correspondant au Pascal
+      lcd.print((val_pression/100)+55);                // Affiche la valeure de la Pression en Hpa à la suite de 'hPa :'
+      //Serial.println(bmp.readPressure()+58);                 // Envoi la valeur de la pression sur port série
+    
+/*   
+    // Calculate altitude assuming 'standard' barometric
+    // pressure of 1013.25 millibar = 101325 Pascal
+    Serial.print("Altitude = ");
+    Serial.print(bmp.readAltitude());
+    Serial.println(" metres");
+    Serial.println();
+    Serial.print("Altitude réelle = ");
+    Serial.print(bmp.readAltitude(101800));
+    Serial.println(" metres");
+    Serial.println();
+*/  
+    /*-------------------------------------------------- Trame NMEA --------------------------------------------------
+        Toutes les données : Température air, Pression barométrique, Humiditée ... sont contenues dans une seule trame WIMDA
+    Exemple de trame :
+    $WIMDA,<1>,<2>,<3>,<4>,<5>,<6>,<7>,<8>,<9>,<10>,<11>,<12>,<13>,<14>,<15>,<16>,<17>,<18>,<19>,<20>*hh<CR><LF>
+        <1> Barometric pressure, inches of mercury, to the nearest 0.01 inch
+        <2> I = inches of mercury
+        <3> Barometric pressure, bars, to the nearest .001 bar
+        <4> B = bars
+        <5> Air temperature, degrees C, to the nearest 0.1 degree C
+        <6> C = degrees C
+        <7> Water temperature, degrees C (this field left blank by WeatherStation instrument)
+        <8> C = degrees C (this field left blank by WeatherStation instrument)
+        <9> Relative humidity, percent, to the nearest 0.1 percent
+        <10> Absolute humidity, percent (this field left blank by WeatherStation instrument)
+        <11> Dew point, degrees C, to the nearest 0.1 degree C
+        <12> C = degrees C
+        <13> Wind direction, degrees True, to the nearest 0.1 degree
+        <14> T = true
+        <15> Wind direction, degrees Magnetic, to the nearest 0.1 degree
+        <16> M = magnetic
+        <17> Wind speed, knots, to the nearest 0.1 knot
+        <18> N = knots
+        <19> Wind speed, meters per second, to the nearest 0.1 m/s
+        <20> M = meters per second
+*/
+    /* ********************* TEST d'intégrité sur calcul checksum *********************
+    // Trame de test avec vrai valeure de checksum :
+    // With checksum:    $WIMDA,,I,101325,B,20.55,C,,C,,,,C,,T,,M,,N,,M*2C  
+    */
+     //nmea="WIMDA,,I,101325,B,20.55,C,,C,,,,C,,T,,M,,N,,M";
+    // nmea="WIMDA,,I,"+(bmp.readPressure()+55)+",B,"+(bmp.readTemperature())+",C,,C,,,,C,,T,,M,,N,,M"; 
+    // 55 = Ecart entre la donnée brute du capteur et la valeure affichée sur le site Météo France pour Annecy
+    long baro = (bmp.readPressure()/100)+55;
+    float temp = bmp.readTemperature();
+    
+    char buffer[82];
+    char ctemp[9];
+    
+    dtostrf(temp, 8, 2, ctemp);
+    sprintf(buffer, "$WIMDA,,I,%ld,B,%s,C,,C,,,,C,,T,,M,,N,,M*", baro, ctemp);
+   
+    //Serial.println(ctemp);
+    Serial.print(buffer);
+    Serial.println(getCheckSum(buffer), HEX);
+
+As you can see in this code I divide Pressure by 100 because sensor give pressure in millibars
+Sentence NMEA (wimda) is in bar not millibar :
+<3> Barometric pressure, bars, to the nearest .001 bar
+<4> B = bars 

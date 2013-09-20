@@ -1,0 +1,21 @@
+ 	02.12.2011 	22:35:25 	 	 	0.00 sm 	      0.00 sm 	 	 	 	 	 	 	das letzte Logbuch ist \nuntil_2011-12-02_22_35_25_logbook.txt 	1030 mb 	21,0° T 	3.00 ktn 	180,0° 	0.20 ktn 	0.80 m 	0.70 m 	Gut 	Cirrus 	Gut 	1020:00 h 	01020:00 h 	80.00 Liter 	     80.00 Liter 	 	 	240.00 Liter 	    240.00 Liter 	  
+Testroute 	04.12.2011 	00:44:36 	 	Gerhard Müller 	0.20 sm 	      0.20 sm 	043° 23.1829' N\n004° 48.3874' E 	73.00° 	73.00° T 	2.00 ktn 	2.00 ktn 	12.00 m 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:01 h 	01020:01 h 	-0.10 Liter 	     79.90 Liter 	 	 	0.00 Liter 	    240.00 Liter 	  
+ 	04.12.2011 	00:54:36 	 	 	2.00 sm 	      2.20 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:01 h 	01020:02 h 	-0.10 Liter 	     79.80 Liter 	 	 	0.00 Liter 	    240.00 Liter 	  
+ 	04.12.2011 	01:04:36 	 	 	1.00 sm 	      3.20 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:01 h 	01020:03 h 	-0.10 Liter 	     79.70 Liter 	 	 	-10.00 Liter 	    230.00 Liter 	  
+ 	04.12.2011 	01:14:36 	 	 	1.50 sm 	      4.70 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:01 h 	01020:04 h 	-0.10 Liter 	     79.60 Liter 	 	 	0.00 Liter 	    230.00 Liter 	  
+ 	04.12.2011 	01:24:36 	 	 	0.50 sm 	      5.20 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:01 h 	01020:05 h 	-0.10 Liter 	     79.50 Liter 	 	 	0.00 Liter 	    230.00 Liter 	  
+ 	04.12.2011 	01:34:36 	 	 	0.60 sm 	      5.80 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:01 h 	01020:06 h 	-0.10 Liter 	     79.40 Liter 	 	 	0.00 Liter 	    230.00 Liter 	  
+ 	04.12.2011 	23:23:01 	 	 	0.20 sm 	      6.00 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:01 h 	01020:07 h 	-0.10 Liter 	     79.30 Liter 	 	 	0.00 Liter 	    230.00 Liter 	  
+ 	04.12.2011 	23:23:26 	 	 	1.00 sm 	      7.00 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:10 h 	01020:17 h 	-0.30 Liter 	     79.00 Liter 	 	 	0.00 Liter 	    230.00 Liter 	  
+ 	05.12.2011 	00:00:03 	 	 	2.00 sm 	      9.00 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:10 h 	01020:27 h 	-0.30 Liter 	     78.70 Liter 	 	 	0.00 Liter 	    230.00 Liter 	  
+ 	05.12.2011 	00:00:25 	 	 	1.00 sm 	     10.00 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:01 h 	01020:28 h 	-0.30 Liter 	     78.40 Liter 	 	 	-0.50 Liter 	    229.50 Liter 	  
+ 	05.12.2011 	00:05:50 	 	 	0.30 sm 	     10.30 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:10 h 	01020:38 h 	-0.30 Liter 	     78.10 Liter 	 	 	0.00 Liter 	    229.50 Liter 	  
+ 	05.12.2011 	01:14:39 	 	 	0.80 sm 	     11.10 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:10 h 	01020:48 h 	-0.30 Liter 	     77.80 Liter 	 	 	0.00 Liter 	    229.50 Liter 	  
+ 	05.12.2011 	11:30:59 	 	 	0.40 sm 	     11.50 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:10 h 	01020:58 h 	-0.30 Liter 	     77.50 Liter 	 	 	0.00 Liter 	    229.50 Liter 	  
+ 	05.12.2011 	11:31:09 	 	 	0.30 sm 	     11.80 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:10 h 	01021:08 h 	-0.30 Liter 	     77.20 Liter 	 	 	0.00 Liter 	    229.50 Liter 	  
+ 	05.12.2011 	11:32:00 	 	 	0.03 sm 	     11.83 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:10 h 	01021:18 h 	-0.30 Liter 	     76.90 Liter 	 	 	-10.00 Liter 	    219.50 Liter 	  
+ 	05.12.2011 	11:32:10 	 	 	0.90 sm 	     12.73 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:10 h 	01021:28 h 	-0.30 Liter 	     76.60 Liter 	 	 	0.00 Liter 	    219.50 Liter 	  
+ 	05.12.2011 	11:32:20 	 	 	0.40 sm 	     13.13 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:10 h 	01021:38 h 	-0.30 Liter 	     76.30 Liter 	 	 	0.00 Liter 	    219.50 Liter 	  
+ 	05.12.2011 	23:29:32 	 	 	0.00 sm 	    13.13 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:00 h 	01021:38 h 	0.00 Liter 	     76.30 Liter 	 	 	0.00 Liter 	    219.50 Liter 	  
+ 	05.12.2011 	23:29:55 	 	 	0.00 sm 	    13.13 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:00 h 	01021:38 h 	0.00 Liter 	     76.30 Liter 	 	 	0.00 Liter 	    219.50 Liter 	  
+ 	12.06.2011 	11:50:46 	 	 	0.00 sm 	    13.13 sm 	 	 	 	 	 	 	kein GPS-Signal 	 	 	 	 	 	 	 	 	 	 	00:00 h 	01021:38 h 	0.00 Liter 	     76.30 Liter 	 	 	0.00 Liter 	    219.50 Liter 	  

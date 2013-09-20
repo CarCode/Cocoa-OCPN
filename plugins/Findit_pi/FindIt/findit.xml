@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FindItData>
+    <!-- Locations-Grid -->
+    <LocationsColumnWidth>
+        <Locations c0="117" c1="145" c2="158" c3="163" c4="142" c5="80" />
+    </LocationsColumnWidth>
+    <!-- Data for Locations-Grid -->
+    <LocationsRowData>
+        <Data c0="Vorschiff" c1="Backbord" c2="Platte" c3="vorn" c4="" c5="" />
+        <Data c0="Bad" c1="Steuerbord" c2="Backskiste" c3="mitte" c4="" c5="" />
+        <Data c0="Schrank" c1="vorn" c2="Schiebeschrank" c3="achtern" c4="" c5="" />
+        <Data c0="Salon" c1="mitte" c2="Polsterlehne" c3="" c4="" c5="" />
+        <Data c0="Cockpit" c1="achtern" c2="Seite-Bb" c3="" c4="" c5="" />
+        <Data c0="Achterkajüte" c1="Boden" c2="Seite-Stb" c3="" c4="" c5="" />
+        <Data c0="Motorraum" c1="" c2="" c3="" c4="" c5="" />
+    </LocationsRowData>
+    <!-- Units-Grid -->
+    <UnitsColumnWidth>
+        <Units c0="82" />
+    </UnitsColumnWidth>
+    <!-- Data for Units-Grid -->
+    <UnitsRowData>
+        <Data c0="Stück" />
+        <Data c0="Flasche" />
+        <Data c0="Dose" />
+        <Data c0="Liter" />
+        <Data c0="Kiste" />
+        <Data c0="Packet" />
+        <Data c0="Kanister" />
+        <Data c0="Kilogramm" />
+    </UnitsRowData>
+    <!-- Material-Grid -->
+    <MaterialColumnWidth>
+        <Material c0="50" c1="50" c2="50" c3="45" c4="50" c5="80" c6="80" c7="121" c8="80" c9="80" c10="80" c11="80" c12="80" />
+    </MaterialColumnWidth>
+    <!-- Data for Material-Grid -->
+    <MaterialRowData>
+        <Data c0="" c1="0" c2="1" c3="1" c4="" c5="Stück" c6="Ölfilter" c7="" c8="" c9="" c10="" c11="" c12="" />
+        <Data c0="" c1="0" c2="1" c3="1" c4="" c5="" c6="Dieselfilter" c7="" c8="" c9="" c10="" c11="" c12="" />
+    </MaterialRowData>
+    <!-- Food-Grid -->
+    <ProvisionsColumnWidth>
+        <Provisions c0="50" c1="50" c2="50" c3="80" c4="50" c5="80" c6="80" c7="80" c8="80" c9="80" c10="80" c11="80" c12="80" />
+    </ProvisionsColumnWidth>
+    <!-- Data for Provisions-Grid -->
+    <ProvisionsRowData>
+        <Data c0="" c1="0" c2="1" c3="1" c4="" c5="Kilogramm" c6="Reis" c7="" c8="" c9="" c10="" c11="" c12="" />
+    </ProvisionsRowData>
+</FindItData>

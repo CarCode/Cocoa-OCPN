@@ -1,0 +1,63 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gradar_pi 3.4.64\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-08-06 15:34+0200\n"
+"PO-Revision-Date: 2013-08-06 15:45+0100\n"
+"Last-Translator: CarCode <carcode@me.com>\n"
+"Language-Team: CarCode <carcode@me.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: ../src/gradar_pi.cpp:715
+msgid "Radar Control Garmin"
+msgstr "Radar Control Garmin"
+
+#: ../src/gradar_pi.cpp:829
+msgid "Garmin Radar PlugIn for OpenCPN"
+msgstr "Garmin Radar PlugIn für OpenCPN"
+
+#: ../src/gradar_pi.cpp:834
+msgid "Garmin Radar PlugIn for OpenCPN\n"
+msgstr "Garmin Radar PlugIn für OpenCPN\n"
+
+#: ../src/gradar_pi.cpp:995
+msgid "No scanner activity, continuing search\n"
+msgstr "Keine Scanner Aktivität, suche weiter\n"
+
+#: ../src/gradar_pi.cpp:1028
+msgid "No scanner activity, reverting to search\n"
+msgstr "Keine Scanner Aktivität, kehre zurück zur Suche\n"
+
+#: ../src/gradar_pi.cpp:2341
+msgid ""
+"The Radar Overlay PlugIn requires OpenGL mode to be activated in Toolbox-"
+">Settings"
+msgstr ""
+"Das Radar Overlay PlugIn erfordert OpenGL Modus, zu aktivieren in Optionen/"
+"Einstellungen"
+
+#: ../src/gradar_pi.cpp:2354
+msgid ""
+"The Radar Overlay PlugIn is unable to\n"
+"directly control the radar scanner.\n"
+"\n"
+msgstr ""
+"Das Radar Overlay PlugIn kann nicht\n"
+"direkt den Radar Scanner kontrollieren.\n"
+"\n"
+
+#: ../src/gradar_pi.cpp:2355
+msgid "Scanner is located at ip address: "
+msgstr "Scanner lokalisiert an IP Adresse: "
+
+#: ../src/gradar_pi.cpp:2358
+msgid "Interfaces available on this computer are:\n"
+msgstr "Verfügbare Interfaces bei diesem Computer sind:\n"

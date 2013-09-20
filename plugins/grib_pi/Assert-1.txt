@@ -1,0 +1,5 @@
+0   libgrib_pi.dylib              	0x000000010df1b108 ArrayOfGribRecordSets::Item(unsigned long) const + 40 (GribUIDialog.h:58)
+1   libgrib_pi.dylib              	0x000000010df190aa GRIBUIDialog::GetTimeLineRecordSet(wxDateTime) + 282 (GribUIDialog.cpp:886)
+2   libgrib_pi.dylib              	0x000000010df188c0 GRIBUIDialog::TimelineChanged(bool) + 96 (GribUIDialog.cpp:816)
+3   libgrib_pi.dylib              	0x000000010df187e7 GRIBUIDialog::OnSettings(wxCommandEvent&) + 263 (GribUIDialog.cpp:758)
+4   libwx_baseu-2.9.dylib         	0x00000001008f473d wxAppConsoleBase::HandleEvent(wxEvtHandler*, void (wxEvtHandler::*)(wxEvent&), wxEvent&) const + 127 (appbase.cpp:593)

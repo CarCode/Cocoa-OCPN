@@ -1,0 +1,201 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Polar\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-06-15 20:07+0200\n"
+"PO-Revision-Date: 2013-05-12 17:10+0100\n"
+"Last-Translator: Konni <konnibe@hotmail.de>\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+#
+msgid "Calculate speed-bullets for x degrees "
+msgstr ""
+#
+msgid "Clear Data"
+msgstr ""
+#
+msgid "Collecting Data from: "
+msgstr ""
+#
+msgid "Collecting: "
+msgstr ""
+#
+msgid "Create"
+msgstr ""
+#
+msgid "Current <"
+msgstr ""
+#
+msgid "Data from Logbooks"
+msgstr ""
+#
+msgid "Data from NMEA"
+msgstr ""
+#
+msgid "Data from VDR"
+msgstr ""
+#
+msgid "Degrees:"
+msgstr ""
+#
+msgid "Edit manuell"
+msgstr ""
+#
+msgid "Engine started / Recording is stopped"
+msgstr ""
+#
+msgid ""
+"Example:\n"
+"Max-Speed = 2,5 kts\n"
+"Selected 10 % = 0,25 kts\n"
+"Range from 2,25 to 2,5 kts"
+msgstr ""
+#
+msgid "Filter"
+msgstr ""
+#
+msgid "Filtered by:"
+msgstr ""
+#
+msgid "GPS"
+msgstr ""
+#
+msgid "Load"
+msgstr ""
+#
+msgid "Mode:"
+msgstr ""
+#
+msgid "MyLabel"
+msgstr ""
+#
+msgid "Please wait."
+msgstr ""
+#
+msgid "Polar"
+msgstr ""
+#
+msgid "Polar Diagram"
+msgstr ""
+#
+msgid "Polar Filter"
+msgstr ""
+#
+msgid "Polar PlugIn for OpenCPN"
+msgstr ""
+#
+msgid "Polar PlugIn for OpenCPN\n"
+msgstr ""
+#
+msgid "Polar Preferences"
+msgstr ""
+#
+msgid "Range"
+msgstr ""
+#
+msgid "Range from maximum speed to minus"
+msgstr ""
+#
+msgid "Record "
+msgstr ""
+#
+msgid "Record Start"
+msgstr ""
+#
+msgid "Rings:"
+msgstr ""
+#
+msgid "Sails"
+msgstr ""
+#
+msgid "Save"
+msgstr ""
+#
+msgid "Save Polar File"
+msgstr ""
+#
+msgid "Select a Polar-File"
+msgstr ""
+#
+msgid "Select a VDR-File"
+msgstr ""
+#
+msgid "Set diagramm to x knots"
+msgstr ""
+#
+msgid "Show Polar icon"
+msgstr ""
+#
+msgid "Show metres/sec for Wind Speed"
+msgstr ""
+#
+msgid "Source:"
+msgstr ""
+#
+msgid "Speedo"
+msgstr ""
+#
+msgid ""
+"Speedo uses column STW\n"
+"GPS uses column SOG"
+msgstr ""
+#
+msgid "Start"
+msgstr ""
+#
+msgid "Stop"
+msgstr ""
+#
+msgid "Testing, work in progress..."
+msgstr ""
+#
+msgid ""
+"The plugin logbookkonni isn't installed\n"
+"\n"
+"It's needed to collect wind/speed-data from all available logbooks\n"
+"\n"
+"The create-button is hidden"
+msgstr ""
+#
+msgid "Use Average from all speed-data"
+msgstr ""
+#
+msgid "Wavehight"
+msgstr ""
+#
+msgid "Wavehight from"
+msgstr ""
+#
+msgid "Wind:"
+msgstr ""
+#
+msgid "Work in progess"
+msgstr ""
+#
+msgid "Work in progress"
+msgstr ""
+#
+msgid "any"
+msgstr ""
+#
+msgid "kts"
+msgstr ""
+#
+msgid "less than 3 entries found"
+msgstr ""
+#
+msgid "less than 5 entries found"
+msgstr ""
+#
+msgid "more than 10 entries found"
+msgstr ""
+#
+msgid "to"
+msgstr ""

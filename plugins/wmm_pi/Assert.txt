@@ -1,0 +1,15 @@
+2   libwx_baseu-2.9.dylib         	0x00000001008f0a59 wxDefaultAssertHandler(wxString const&, int, wxString const&, wxString const&, wxString const&) + 297 (appbase.cpp:1058)
+3   libwx_baseu-2.9.dylib         	0x00000001008f154d wxOnAssert(char const*, int, char const*, char const*, char const*) + 253 (appbase.cpp:1150)
+4   OpenCPN                       	0x000000010003c4ef wxArgNormalizer<unsigned long>::wxArgNormalizer(unsigned long, wxFormatString const*, unsigned int) + 143 (strvararg.h:452)
+5   OpenCPN                       	0x000000010003c456 wxArgNormalizerWchar<unsigned long>::wxArgNormalizerWchar(unsigned long, wxFormatString const*, unsigned int) + 54 (strvararg.h:472)
+6   OpenCPN                       	0x000000010003c3eb wxArgNormalizerWchar<unsigned long>::wxArgNormalizerWchar(unsigned long, wxFormatString const*, unsigned int) + 43 (strvararg.h:472)
+7   OpenCPN                       	0x00000001002c4c6d int wxString::Printf<wxCStrData, int, unsigned long>(wxFormatString const&, wxCStrData, int, unsigned long) + 173 (string.h:2350)
+8   libwmm_pi.dylib               	0x000000010df24096 wxJSONValue::GetInfo() const + 326 (jsonval.cpp:2330)
+9   libwmm_pi.dylib               	0x000000010df23ae0 wxJSONValue::Item(wxString const&) + 800 (jsonval.cpp:1818)
+10  libwmm_pi.dylib               	0x000000010df24c2d wxJSONValue::operator[](wxString const&) + 29 (jsonval.cpp:1912)
+11  libwmm_pi.dylib               	0x000000010def4b62 wmm_pi::SendCursorVariation() + 82 (wmm_pi.cpp:577)
+
+
+Fehler nicht gefunden. Zur Zeit gelöst durch Abschalten von Assert: wxDisableAsserts(); und Wiederanschalten: wxSetDefaultAssertHandler(); bei Beginn bzw. Ende der Funktion z.B. SendCursorVariation. Auch im OCPN Plugin-Manager!
+
+Lösung: In jsonval.cpp auskommentieren: wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str());

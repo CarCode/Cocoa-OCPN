@@ -1,0 +1,224 @@
+#ifndef WX_PRECOMP
+      #include <wx/wx.h>
+#endif
+#include "FastComboEditor.h"
+//#ifndef __WXOSX__
+#ifdef __WXGTK__
+#include <gtk/gtk.h>
+#endif
+//#endif //__WXOSX__
+#include <wx/tokenzr.h>
+#include "EzGrid.h"
+
+
+wxSComboBox::wxSComboBox(wxWindow *parent, wxWindowID id,
+		const wxString& value,
+		const wxPoint& pos,
+		const wxSize& size,
+		int n, const wxString choices[],
+		long style,
+		const wxValidator& validator,
+		const wxString& name)
+{
+	Create(parent, id, value, pos, size, n, choices, style, validator, name);
+}
+
+wxSComboBox::wxSComboBox() : m_pGrid(NULL)
+{ 
+}
+
+BEGIN_EVENT_TABLE(wxSComboBox, wxComboBox)
+   EVT_COMBOBOX(-1, wxSComboBox::OnChange)
+END_EVENT_TABLE()
+
+void wxSComboBox::OnChange(wxCommandEvent& event)
+{
+	if (m_pGrid) 
+	{
+//		m_pGrid->GetTable()->SetValue(m_nRow, m_nCol, event.GetString());
+		m_pGrid->SetCellValue(m_nRow, m_nCol, event.GetString());
+
+		wxGridEvent gridEvt(m_pGrid->GetId(),
+			wxEVT_GRID_CELL_CHANGE, m_pGrid, m_nRow, m_nCol);
+		gridEvt.SetString(event.GetString());
+		GetEventHandler()->ProcessEvent(gridEvt);
+	}
+	event.Skip();
+}
+
+wxFastComboEditor::wxFastComboEditor(size_t count, const wxString choices[], bool allowOthers)
+					  : m_allowOthers(allowOthers)
+{
+	SetClientData((void*)&m_pointActivate);
+	if ( count )
+	{
+		m_choices.Alloc(count);
+		for (size_t n = 0; n < count; n++ )
+		{
+			m_choices.Add(choices[n]);
+		}
+	}
+}
+
+wxString wxFastComboEditor::GetValue() const
+{
+    return Combo()->GetValue();   
+}
+
+wxGridCellEditor *wxFastComboEditor::Clone() const
+{
+/*	wxFastComboEditor *editor = new wxFastComboEditor;
+	editor->m_allowOthers = m_allowOthers;
+	editor->m_choices = m_choices;
+	return editor;*/
+	return 0;
+}
+
+void wxFastComboEditor::Create(wxWindow* parent, wxWindowID id, wxEvtHandler* evtHandler)
+{
+	size_t count = m_choices.GetCount();
+	wxString *choices = new wxString[count];
+	for ( size_t n = 0; n < count; n++ )
+	{
+	  choices[n] = m_choices[n];
+	}
+	m_control = new wxSComboBox(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize,
+					count, choices,	 m_allowOthers ? 0 : wxCB_READONLY);
+	delete [] choices;
+	wxGridCellEditor::Create(parent, id, evtHandler);
+}
+/*
+#ifdef __WXOSX__
+void wxGridCellEditor::PaintBackground(wxDC& dc, const wxRect& rectCell, const wxGridCellAttr&  attr)
+{
+	wxFastComboEditor::PaintBackground(rectCell, attr);
+}
+#else
+void wxFastComboEditor::PaintBackground(const wxRect& rectCell, wxGridCellAttr * attr)
+{
+	wxGridCellEditor::PaintBackground(rectCell, attr);
+}
+#endif
+*/
+void wxFastComboEditor::ApplyEdit(int row, int col, wxGrid* grid)
+{
+    
+}
+void wxFastComboEditor::BeginEdit(int row, int col, wxGrid* grid)
+{
+	wxASSERT_MSG(m_control,
+				 wxT("The wxGridCellEditor must be Created first!"));
+
+	EzGrid* pEzGrid = (EzGrid*)grid;
+	pEzGrid->RevertSel();
+
+	m_startValue = grid->GetCellValue(row, col);
+
+	if (m_allowOthers)
+		Combo()->SetValue(m_startValue);
+	else
+	{
+		// find the right position, or default to the first if not found
+		int pos = Combo()->FindString(m_startValue);
+		if (pos == -1)
+			pos = 0;
+		Combo()->SetSelection(pos);
+	}
+	Combo()->SetInsertionPointEnd();
+	Combo()->SetFocus();
+	Combo()->SetCellData(row, col, grid);
+	if (m_pointActivate.x > -1 && m_pointActivate.y > -1)
+	{
+		m_pointActivate = Combo()->ScreenToClient(m_pointActivate);
+#ifdef __WXMSW__
+		SendMessage((HWND)Combo()->GetHandle(), WM_LBUTTONDOWN, 0,
+			MAKELPARAM(m_pointActivate.x, m_pointActivate.y));
+		SendMessage((HWND)Combo()->GetHandle(), WM_LBUTTONUP, 0,
+			MAKELPARAM(m_pointActivate.x, m_pointActivate.y));
+#else
+/*		GtkCombo *combo = GTK_COMBO(Combo()->m_widget);
+		combo->current_button = 0;
+		GtkWidget *button = GTK_COMBO(Combo()->m_widget)->button;
+		GdkEventButton eventb;
+		memset(&event, 0, sizeof(event));
+		gdk_window_ref (button->window);
+		// to do: only call when the click point is on the button
+//		event.x = m_pointActivate.x;
+//		event.y = m_pointActivate.y;
+		eventb.x = 0;
+		eventb.y = 0;
+		event.deviceid = GDK_CORE_POINTER;
+		event.type = GDK_BUTTON_PRESS;
+		event.source = GDK_SOURCE_MOUSE;
+		event.time = 0; 
+		event.window = button->window;
+		event.send_event = TRUE;
+		event.button = 1;
+		gtk_widget_event (button, (GdkEvent *)&event);
+		gdk_window_unref (button->window);
+		while (gtk_events_pending())
+			gtk_main_iteration(); */
+#endif
+	}
+//	Combo()->SetSelection(0);
+}
+#ifdef __WXOSX__
+bool wxFastComboEditor::EndEdit(int row, int col, const wxGrid *grid, const wxString &oldval, wxString *newval)
+#else
+bool wxFastComboEditor::EndEdit(int row, int col, wxGrid* grid)
+#endif
+{
+	wxString value = Combo()->GetValue();
+	bool changed = value != grid->GetCellValue(row, col);
+
+	if ( changed )
+#ifdef __WXOSX__
+        m_startValue = wxEmptyString;
+	if (m_allowOthers)
+		Combo()->SetValue(m_startValue);
+	else
+		Combo()->SetSelection(0);
+#else
+		grid->SetCellValue(row, col, value);
+#endif
+/*	m_startValue = wxEmptyString;
+	if (m_allowOthers)
+		Combo()->SetValue(m_startValue);
+	else
+		Combo()->SetSelection(0);
+*/
+	return changed;
+}
+
+void wxFastComboEditor::Reset()
+{
+	Combo()->SetValue(m_startValue);
+	Combo()->SetInsertionPointEnd();
+}
+
+void wxFastComboEditor::SetParameters(const wxString& params)
+{
+	if ( !params )
+	{
+		return;
+	}
+	m_choices.Empty();
+	wxStringTokenizer tk(params, _T(','));
+	while ( tk.HasMoreTokens() )
+	{
+		m_choices.Add(tk.GetNextToken());
+	}
+}
+
+void wxFastComboEditor::SetParameters(size_t count, const wxString choices[])
+{
+	m_choices.Empty();
+	if ( count )
+	{
+		m_choices.Alloc(count);
+		for ( size_t n = 0; n < count; n++ )
+		{
+			m_choices.Add(choices[n]);
+		}
+	}
+}

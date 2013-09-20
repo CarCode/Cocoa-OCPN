@@ -1,0 +1,147 @@
+Assert:
+
+Thread 0 Crashed:: Dispatch queue: com.apple.main-thread
+0   libweather_routing_pi.dylib   	0x000000010b676e2f WeatherRouting::UpdateItem(long) + 31 (WeatherRouting.cpp:917)
+1   libweather_routing_pi.dylib   	0x000000010b672271 WeatherRouting::AddConfiguration(RouteMapConfiguration) + 321 (WeatherRouting.cpp:835)
+2   libweather_routing_pi.dylib   	0x000000010b66ee89 WeatherRouting::WeatherRouting(wxWindow*, weather_routing_pi&) + 3481 (WeatherRouting.cpp:139)
+3   libweather_routing_pi.dylib   	0x000000010b66cbac weather_routing_pi::OnToolbarToolCallback(int) + 60 (weather_routing_pi.cpp:253)
+4   OpenCPN                       	0x0000000101d125a1 MyFrame::OnToolLeftClick(wxCommandEvent&) + 4433 (chart1.cpp:3574)
+
+und/oder:
+0   libweather_routing_pi.dylib   	0x000000010d862d6f WeatherRouting::UpdateItem(long) + 31 (WeatherRouting.cpp:922)
+1   libweather_routing_pi.dylib   	0x000000010d85e1b1 WeatherRouting::AddConfiguration(RouteMapConfiguration) + 321 (WeatherRouting.cpp:840)
+
+und/oder:
+7   libwx_osx_cocoau_core-2.9.dylib	0x0000000101d2666b wxListMainWindow::InsertItem(wxListItem&) + 321 (listctrl.cpp:4183)
+8   libwx_osx_cocoau_core-2.9.dylib	0x0000000101d26b30 wxGenericListCtrl::InsertItem(wxListItem&) + 42 (listctrl.cpp:5091)
+9   libweather_routing_pi.dylib   	0x000000010a6dd1a6 WeatherRouting::AddConfiguration(RouteMapConfiguration) + 310 (WeatherRouting.cpp:840)
+
+zuletzt:
+0   libweather_routing_pi.dylib   	0x000000010af51d5f WeatherRouting::UpdateItem(long) + 31
+1   libweather_routing_pi.dylib   	0x000000010af4d321 WeatherRouting::AddConfiguration(RouteMapConfiguration) + 321
+
+
+0   libstdc++.6.dylib             	0x00007fff83e86584 std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >::assign(std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > const&) + 14
+1   libwx_osx_cocoau_core-2.9.dylib	0x000000010b3904d0 wxString::operator=(wxString const&) + 48 (string.h:1934)
+2   libwx_osx_cocoau_core-2.9.dylib	0x000000010b4cbf11 wxGenericListCtrl::SetItem(long, int, wxString const&, int) + 87 (listctrl.cpp:4744)
+3   libweather_routing_pi.dylib   	0x0000000113e46e7d WeatherRouting::UpdateItem(long) + 61 (WeatherRouting.cpp:918)
+4   libweather_routing_pi.dylib   	0x0000000113e422a1 WeatherRouting::AddConfiguration(RouteMapConfiguration) + 321 (WeatherRouting.cpp:833)
+
+Fehler bei UpdateItem() ???
+SetItem(long index, int col, const wxString& label, int imageId)
+Ist das wxString: weatherroute->Start	weatherroute->StartTime	weatherroute->End	weatherroute->Time	weatherroute->Distance	weatherroute->AvgSpeed	weatherroute->State
+Antwort: Ja?, siehe class WeatherRoute
+Also Fehler mit string.h ???
+Aus wx:
+void wxListMainWindow::SetItem( wxListItem &item )
+{
+    long id = item.m_itemId;
+    wxCHECK_RET( id >= 0 && (size_t)id < GetItemCount(),
+                 wxT("invalid item index in SetItem") );
+
+void wxListMainWindow::InsertItem( wxListItem &item )
+{
+    wxASSERT_MSG( !IsVirtual(), wxT("can't be used with virtual control") );
+
+    int count = GetItemCount();
+    wxCHECK_RET( item.m_itemId >= 0, wxT("invalid item index") );
+
+    if (item.m_itemId > count)
+        item.m_itemId = count;
+
+Beispiele für SetItem:
+
+SightList::iterator it;
+    wxListItem item;
+    int index = 0;
+
+    for (it = m_SightList.begin(); it != m_SightList.end(); ++it, ++index)
+    {
+        item.SetId(index);
+        item.SetImage((*it)->IsVisible() ? 0 : -1);
+        item.SetData(index);
+        
+        long idx = m_lSights->InsertItem(item);
+        m_lSights->SetItemImage(index, (*it)->IsVisible() ? 0 : -1);
+        m_lSights->SetItem(idx, rmTYPE, (*it)->m_Type ? _("Azimuth") : _("Altitude"));
+        m_lSights->SetItem(idx, rmBODY, (*it)->m_Body);
+        m_lSights->SetItem(idx, rmTIME, (*it)->m_DateTime.Format());
+        m_lSights->SetItem(idx, rmMEASUREMENT, wxString::Format(_T("%.4f"), (*it)->m_Measurement));
+        
+        m_lSights->SetItem(idx, rmCOLOR,
+                           wxString::Format(_T("0x%hhx%hhx%hhx"),
+                                            (*it)->m_Colour.Red(),
+                                            (*it)->m_Colour.Green(),
+                                            (*it)->m_Colour.Blue()));
+    }
+    
+    m_lSights->SetColumnWidth(1, wxLIST_AUTOSIZE);
+    m_lSights->SetColumnWidth(2, wxLIST_AUTOSIZE);
+    
+    if(m_lSights->GetColumnWidth(1) < 20)
+        m_lSights->SetColumnWidth(1, 50);
+
+    if(m_lSights->GetColumnWidth(2) < 20)
+        m_lSights->SetColumnWidth(2, 50);
+    
+    m_lSights->SortItems(SortSights, (long)m_lSights);
+    
+    // restore selection if possible
+    // NOTE this will select a different item, if one is deleted
+    // (the next sight will get that index).
+    if (selected_id > -1)
+    {
+        selected_index = m_lSights->FindItem(-1, selected_id);
+        m_lSights->SetItemState(selected_index, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+    }
+    
+    UpdateButtons();
+    UpdateFix();
+}
+
+----------
+void options::FillSourceList()
+{
+    m_buttonRemove->Enable(false);
+    m_lcSources->DeleteAllItems();
+    for (size_t i = 0; i < g_pConnectionParams->Count(); i++)
+    {
+        wxListItem li;
+        li.SetId( i );
+        li.SetImage( g_pConnectionParams->Item(i)->bEnabled ? 1 : 0  );
+        li.SetData( i );
+        li.SetText( _T("") );
+
+        long itemIndex = m_lcSources->InsertItem( li );
+
+        m_lcSources->SetItem(itemIndex, 1, g_pConnectionParams->Item(i)->GetSourceTypeStr());
+        m_lcSources->SetItem(itemIndex, 2, g_pConnectionParams->Item(i)->GetAddressStr());
+        wxString prio_str;
+        prio_str.Printf(_T("%d"), g_pConnectionParams->Item(i)->Priority );
+        m_lcSources->SetItem(itemIndex, 3, prio_str);
+        m_lcSources->SetItem(itemIndex, 4, g_pConnectionParams->Item(i)->GetParametersStr());
+        m_lcSources->SetItem(itemIndex, 5, g_pConnectionParams->Item(i)->GetOutputValueStr());
+        m_lcSources->SetItem(itemIndex, 6, g_pConnectionParams->Item(i)->GetFiltersStr());
+    }
+
+
+
+
+WeatherRouting::AddPosition  // Test WXOSX
+
+weather_routing_pi::StandardPath()
+
+for( size_t i = 0; i < cont->m_aInstrumentList.GetCount(); i++ ) {
+            wxListItem item;
+            getListItemForInstrument( item, cont->m_aInstrumentList.Item( i ) );
+            item.SetId( m_pListCtrlInstruments->GetItemCount() );
+            m_pListCtrlInstruments->InsertItem( item );
+        }
+
+
+wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
+#ifdef __WXOSX__
+	wxString stdPath  = std_path.GetUserConfigDir();   // should be ~/Library/Preferences	
+#endifBeim ersten Start muß Grib Plugin offen sein!?
+
+georef.c ändern in georef.cpp ??? Prüfen!!!

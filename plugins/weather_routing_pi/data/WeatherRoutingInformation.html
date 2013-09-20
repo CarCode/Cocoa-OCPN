@@ -1,0 +1,153 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <title>Wetter Routing Plugin f&uuml;r OpenCPN</title>
+  </head>
+<body alink="#ff0000" bgcolor="#ffffff" link="#0000e2" text="#000000" vlink="#bb0000">
+    <center><h1><u>Wetter Routing</u></h1></center>
+    <hr>
+    <h3><u>Einf&uuml;hrung</u></h3>
+
+<p>Das Wetter Routing Plugin wurde entworfen, um wiederholt Positionen zu berechnen, die das Boot in einer bestimmten Zeit m&ouml;glicherweise machen kann. Mit der
+   Zusammenlegung der Ergebnisse vieler Berechnungen ist es m&ouml;glich, auf einer Karte die schnellste Route zu einem angegebenen Ort auf der Karte zu
+   bestimmen.</p>
+<h3><u>Schnell-Start</u></h3>
+<p>&Ouml;ffne den Wetter Routing Dialog, dann Rechtsklick auf die Karte und w&auml;hle "Wetter Route Position", erzeuge Positionen f&uuml;r Start und Ende. Als
+   N&auml;chstes w&auml;hle vom Konfigurations Men&uuml; (neben Datei) "Neu" und Doppelklick diese Konfiguration in der Liste zum Editieren. Gebe korrekte
+   Parameter ein und falls erforderlich editiere das Boot. Wenn erledigt, kann das Fenster geschlossen und auf "Start" geklickt werden.</p>
+
+<h3><u>Warnung</u></h3>
+<p>Seit dem 2. Juli 2013 enth&auml;lt der Algorithmus einige M&auml;ngel, die zu weniger optimalen Routen f&uuml;hren k&ouml;nnen. Versuchen Sie den Zeitschritt zu
+   vergr&ouml;&szlig;ern und/oder deaktivieren Sie Str&ouml;mungen, um das zu mildern.</p>
+
+  <h3><u>Hintergrund</u></h3>
+
+<p>Die Zusammenarbeit mit dem Grib Plugin (Version 2.1 oder sp&auml;ter) sorgt f&uuml;r die Kentnis der Wetter Konditionen. Das Klima Plugin kann f&uuml;r l&auml;ngere
+   Reisen auch Daten bereit stellen. Sind Daten von beiden Quellen vorhanden, wird Grib benutzt. Sind Str&ouml;mungsdaten vom Klima Plugin verf&uuml;gbar und nur Wind
+   von Grib, dann wird der Grib Wind mit Klima Strom verwendet.</p>
+
+<p>Die auf der Zeitschiene gew&auml;hlte Grib Zeit zu dem Zeitpunkt, an dem die Berechnung startet, kann synchronisiert werden. Von da an werden die Grib Daten zeitlich
+   mit dem Berechnungs-Fortschritt verwendet. Ist eine Berechnung fertig, kann Kurs und Position des Bootes, wie es segelt, w&auml;hrend des Grib Playback angesehen
+   werden.</p>
+
+<p>Wind, Str&ouml;mung und Wellenh&ouml;he Daten werden aus der Grib Datei gelesen. Sind Str&ouml;mung oder Wellenh&ouml;he nicht verf&uuml;gbar, werden sie als 0 
+   angenommen.</p>
+
+<p>Die unterst&uuml;tzten Optionen umfassen:
+<ul>
+  <li><b>Grad Schritt</b> Differenz in Grad zwischen versuchten Kursen. Weniger als 3 Grad zwischen den Schritten f&uuml;hrt gew&ouml;hnlich zu einer langen Berechnungszeit
+      und es ist normalerweise besser, stattdessen einen k&uuml;rzeren Zeit Schritt zu nehmen.</li>
+  <li><b>Zeit Schritt</b> Zeit in Sekunden zu segeln, bevor ein Kurswechsel versucht wird.</li>
+  <li><b>Max. abgelenkter Kurs</b> Maximaler Kursfehler vom Versuch, die Zielrichtung zu erreichen. Wenn auf 180 gesetzt, wird die Karte in alle Richtungen erweitert und
+      kann zum Finden mehrerer Ziele von einer gegebenen Quelle verwendet werden. Wenn unter 180 gesetzt, wird die Berechnungszeit reduziert (da die erweiterte Karte viel
+      Zeit ben&ouml;tigt), aber m&ouml;gliche Kurse, die zu weit von der naheliegendsten Gro&szlig;kreis-Route liegen (selbst bei einer Iteration), werden verloren sein
+      und daher wird nicht die optimalste Route gefunden.</li>
+  <li><b>Max. Wind Knoten</b> Nicht in Bereichen navigieren mit mehr Wind als dieser Wert.</li>
+  <li><b>Max. Schwell Meter</b> Versucht, nicht in Bereichen zu navigieren mit gr&ouml;&szlig:erer durchschnittlicher Wellenh&ouml;he als dieser Wert.</li>
+  <li><b>Max. Breite</b> Nicht &uuml;ber (oder unter) dieser Breite navigieren.</li>
+  <li><b>Wende Zeit</b> Abschlag f&uuml;r Kurs&auml;nderung von einer Wende zur anderen in Sekunden. Das ist normalerweise irrelevant au&szlig;er f&uuml;r sehr nahe
+      Isochrone. Auf 0 setzen vermeidet diese Berechnung.</li>
+  <li><b>Erkenne Land</b> Verwende K&uuml;stenlinie-Daten zur Vermeidung durch Land zu segeln.</li>
+  <li><b>Invertierte Bereiche</b> Das ist relativ selten, aber in einigen F&auml;llen kann es vorkommen, ein Ziel weiter entfernt von zwei oder mehr unterschiedlichen
+      Pfaden zu erreichen, die an jeder Seite einer n&auml;heren Position vorbei f&uuml;hren. Das kann beim Routing um eine Insel oder beim Routing um ein Drucksystem
+      passieren. Das Programm mu&szlig; innerhalb dieses invertierten Bereichs arbeiten, um ein m&ouml;gliches Ziel zu erreichen, wenn invertiert, wird die Fl&auml;che
+      ignoriert.</li>
+  <li><b>Ankern</b> In einigen F&auml;llen ist es ratsam zu ankern (vorausgesetzt es ist nicht zu tief) statt zu navigieren, wenn es gegen einen starken Strom geht, da man
+      das Ziel eher erreicht, wenn man die Str&ouml;mungsumkehr   abwartet.</li>
+  <li><b>Erlaube unzureichende Daten</b> Navigiere weiter mit den zuletzt g&uuml;ltigen Wind-Daten, auch wenn keine g&uuml;ltigen Wind-Daten in dem Bereich/Zeitraum mehr
+      da sind.</li>
+</ul></p>
+
+<H3>Boot</H3>
+
+<p>Der Boot-Dialog zeigt den Polar-Plot der Bootsgeschwindigkeit gegen&uuml;ber der Windrichtung als auch einige andere Details. Es werden zwei Datenformate
+   unterst&uuml;tzt: CSV (wie bei qtVlm) und bin&aumL;r, das speziell f&uuml;r dieses Plugin ist. Das Bin&auml;r-Format enth&auml;lt sehr viel mehr Daten.</p>
+
+<p>Die VMG Lasche zeigt die besten Kurse f&uuml;r vor und raumen Wind auf jedem Bug. Optimiere Kreuzen ber&uuml;cksichtigt das Polar bei Wende-Optionen mit
+   den relevanten Kursen. Ist diese Option gew&auml;hlt, dann wird f&uuml;r das Boot die M&ouml;glichkeit des Segelns in diesen Winkeln angenommen (es werden
+   periodische Wenden zum Halten dieses Kurses angenommen). Wird Kreuzen nicht optimiert, dann wird Wetter Routing nat&uuml;rlich nur auf Isochronen wenden
+   mit dem Ergebnis, da&szlig; alternative Routen &uuml;berlappen mit potentiell weniger optimalen Kursen (aber es wird speziell angezeigt, wo zu wenden ist).
+   Die Kursberechnung kann bei zerfurchten K&uuml;stenlinien auch signifikant l&auml;nger dauern. Daher wird Optimiere Kreuzen empfohlen.</p>
+
+<p>Die Boot Konfiguration erlaubt die Eingabe von Parametern, die die Leistung eines Bootes spezifizieren. Zur Zeit unterst&uuml;tzte Polar Dateien sind csv (gleiches Format wie qtVlm)
+   und bin&auml;re Dateien in diesem Format (speziell f&uuml;r dieses Plugin). Diese Dateien spezifizieren die Segel-Geschwindigkeit bei jeder Wind-Geschwindigkeit
+   und -Richtung.</p>
+
+<p>Es ist auch m&ouml;glich, das Boot Polar von einer erweiterten Segelbot-Transformations-Berechnung zu berechnen. Die originale Segelboot-Transformation:
+<pre>
+                                2
+                  /  sin(A/2)  \
+   sin(W) sin(A) |  ----------  | = VW eta
+                  \ sin(W - A) /
+
+W ist der wahre Windwinkel
+A ist der scheinbare Windwinkel
+VW ist die wahre Windgeschwindigkeit
+eta ist eine Boot-spezifische Konstante f&uuml;r seine Segel-Effizienz.
+</pre></p>
+<p>Aufgel&ouml;st nach Bootsgeschwindigkeit auf Grund des scheinbaren Winds erhalten wir:
+<pre>
+                      __
+                A    /VA
+VB(inf) =  sin (-)  /---
+                2 \/ eta
+</pre>
+<p>Diese Berechnung ist sehr n&uuml;tzlich f&uuml;r das Standard Rigg, aber ist in vielen F&auml;llen nicht wirklich korrekt anwendbar. Da es nur eine Konstante hat, bildet es
+   einen weiten Bereich von Variabelen nicht wirklich ab.</p>
+
+<p>Ich habe die Segelboot-Transformation erweitert, um auch zwei Arten des Widerstandes zu ber&uuml;cksichtigen in der Hoffnung, da&szlig; dies den Segel-Eigenschaften von
+   mehr Booten n&auml;her kommt. Damit wird die Rumpfgeschwindigkeit besser ber&uuml;cksichtigt und f&uuml;r Boote mit Planungsm&ouml;glichkeiten erhalten Sie die
+   richtigen Ergebnisse, wenn die korrekten Werte benutzt werden.</p>
+
+<p>Der Reibungs-Widerstand vermindert die maximale Geschwindigkeit quadratisch. Die Sog-Widerstand Komponente verwendet eine komplexe Formel zur Berechnung der verlorenen
+   Energie durch den Sog:
+<pre>
+                                       2
+                 /      sin(Pi - F^-2)      \
+   Widerstand = |  -----------------------   |
+                 \ (Pi - F^-2) (1 + Pi F^2) /
+
+              ___
+    V = F * \/g l
+
+    F = sqrt(g * l) / V;
+
+    g = 9.8 (Schwerkraft Konstante)
+    l ist die L&auml;nge des Bootes in Meter
+    V in Meter pro Sekunde
+
+    Erreicht einen Peak bei F=Pi^-.5 was etwa .56 ist
+
+    Der gr&ouml;&szlig;te Anstieg beginnt bei F = .4  (normale Rumpfgeschw. Einstellung)
+    
+    Interessant auch festzustellen, da&szlig; bei 80% der normalen Rumpfgeschwindigkeit
+    der Wellen-Widerstand auch Null ist, aber der erste Buckel zwischen .32 und .4
+    auftritt und daher mehr Widerstand erzeugt als genau bei .4.
+
+    Das funktioniert f&uuml;r den gesamten Bereich von Verdr&auml;ngung bis Planungs-Modus.
+</pre>
+
+<p>F&uuml;r viele Anwender ist es einfacher, gemessene Werte im csv Format einzugeben anstatt zu versuchen, sie zu berechnen. Eventuell kann es auch m&ouml;glich sein, Polar Werte
+   aus GPS mit dem Plugin w&auml;hrend einer Passage zu erhalten (falls ausreichend unterschiedliche Windst&auml;rken vorhanden). Eventuell wird auch die &Uuml;berlagerung
+   der erhaltenen Daten mit der Transformations-Berechnung unterst&uuml;tzt, um die Koeffzienten zur Berechnung besser optimieren zu k&ouml;nnen.</p>
+
+<p>Das Basis Polar mit der Beschreibung der Boots-Geschwindigkeit bei verschiedenen Wind-Einstellungen versagt auf vielen Fronten. Erstens werden verschiedene Segel-Kombinationen
+   bei gewissen See-Zust&auml;nden unpraktisch, sogar wenn die aktuelle Windgeschwindigkeit gleich ist. Auch segelt das Boot nicht die gleiche Geschwindigkeit in diesen F&auml;llen,
+   so da&szlig; die aktuelle Boots-Geschwindigkeit stark variiert mit identischen Wind-, Geschwindigkeits- und/oder Richtungs-Werten in verschiedenen Zust&auml;nden. Zweitens
+   ist der Wind drei-dimensional und hat in Landn&auml;he oft eine starke vertikale Komponente. Drittens kann es bestimmte Gebiets-Konditionen oder Zeiten geben, in denen
+   der Anwender ein anderes Polar-Diagramm verwenden m&ouml;chte (Segelplan, Navigation bei Nebel oder Eis, Nacht gegen&uuml;ber Tag, Autopilot gegen&uuml;ber Windfahne).
+   Viertens kann sich die aktuelle Boots-Geschwindigkeit durch verschiedene Parameter &auml;ndern, neben Str&ouml;mung, Wind, See-Zustand aus den unterschiedlichsten Gr&uuml;nden
+   (mehr dazu unten). F&uuml;nftens, Moment, ich habe bestimmt 10 davon, aber ich h&ouml;re auf.</p>
+
+<p>Es gibt die M&ouml;glichkeit zur Erweiterung um andere Antriebsarten neben Windkraft (namentlich Solarzellen Elektrik), die in Verbindung mit Segeln benutzt werden kann.
+   Diese Antriebsart f&auml;llt unter die Kategorie Wetter Routing, da sie von der Sonnen-Einstrahlung abh&auml;ngig ist. Schlie&szlig;lich k&ouml;nnte man etwas von der
+   Einstrahlung speichern (w&auml;hrend des Tages mit Sonne und Wind) oder im Fall des Ankerns im gegenl&auml;ufigen Strom mit einem Hydro-Generator in Form von Batterien,
+   die sp&auml;ter (bei Nacht oder bei richtiger Tide) in einem elektrischen Antrieb zur Erreichung des Ziels in einer schnelleren Zeit als jede andere Methode genutzt werden kann.
+   (All dies ist meist noch nicht implementiert, aber es gibt einiges an C++ Code dazu.)</p>
+
+<p>Es w&auml;re auch m&ouml;glich, Faktoren bei langsamen &Auml;nderungen zu ber&uuml;cksichtigen, wie z.B. der Rumpf-Bewuchs und seine Erh&ouml;hung bei gegebenen Segel-Kurs
+   und verschiedenen Parametern. Damit k&ouml;nnte man absch&auml;tzen, ob es sinnvoll w&auml;re, den Rumpf zu streichen oder ob man (wie ich) zu tauchen und jede Woche oder
+   zwei mitten im Ozean den Rumpf abzukratzen. Damit k&ouml;nnte man die gesparte Zeit bestimmen (vermutlich mehr als die beim Tauchen aufgewendete Zeit). Es gibt auch den
+   Fall, wo Segel ihr Profil verlieren und bei langen Raumkursen uneffektiver werden.</p>
+
+<p><h4>Das Wetter Routing Plugin wurde von Sean D'Epagnier geschrieben.</h4>
+</body></html>

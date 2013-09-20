@@ -1,0 +1,98 @@
+Calculator Plugin for OpenCPN by SaltyPaws aka Walbert Schulpen
+=======================================
+
+This is a light weight yet powerful calculator plugin for OpenCPN.  Would you like to know your hull speed?
+
+Key features are:
+* Storing results in variables
+* Shows historic calculations
+* Full scientific functions
+* Screen footprint can be optimised & minimised as required
+
+Help
+=========
+Type help in the calculator to get these instructions.
+
+Examples of expression that work in the calculator are: (comments are in brackets, some results depend on other example calculations):
+=========
+Hull speed:
+	LWL=48			(water line lenght in feet)
+	vhull=1.34*LWL^(1/2)	(hull speed in knots)
+
+Conversions:
+	ftm=0.3048			(feet to meters)
+	km_to_nm=0.539957		(Kilometers to nautical Mile)
+	ftm*LWL			(waterline length in meters)
+
+Distance to horizon
+	R=6378.1*1000		(Radius of the earth in m)
+	H=2.5			(Height of the eye above sea-level in m)
+	d = R * acos(R/(R + h))	(Distance to horizon in m)   
+	ans*km_to_nm		(Distance to horizon in nm)
+
+Distance to lighthouse
+	H1=200			(height of lighthouse in m)
+	d1 = R*acos(R/(R + H1))	(Distance to horizon in m)
+	distance=d1+d		(visibility range of lighthouse in m)
+
+Operators:
+	+ - * / ^ (NB use ^(1/2) for square root)         
+	% & | << >> = <> < > <= >= ||
+	! (Factorial)
+ 
+Functions:
+	Abs, Exp, Sign, Sqrt, Log, Log10
+	Sin, Cos, Tan, ASin, ACos, Atan (default entry is in radians use e.g. sin(dtr*90) to calculate in degree)
+	Factorial
+ 
+Variables:
+	Pi, e
+	Ans is the result of the previous calulation
+	dtr is the conversion factor from degrees to radians		
+	you can define your own variables (e.g. myvariable=10/8*cos(dtr*90) or yourvariable=Ans)
+	clear removes results in the history, but leaves your defined variables in tact
+
+User Interface - type these commands in the command window:
+	history - Toggle the history panel
+	showhelp - Show/Hide the Help button
+	showcalculate - Show/Hide the Calculate button
+	showhistory - Show/Hide the history toggle
+	help - show the help menu
+
+Settings/Plugins/Preferences:
+	Show/Hide Calculate, Help and History toggle buttons
+	History Settings: max Results - History will be cleared after this many results have been stored to save memory. Max 30000.
+	Show history window: Show/Hide default state
+	Capture when hidden: disable capturing of history when history panel is hidden - this will save some memory
+	Log to opencpn: Enable/Disable logging of results to opencpn logfile.
+ 
+Other:
+	Scientific notation supported
+	Error handling supported
+
+
+Compiling
+=========
+You have to be able to compile OpenCPN itself - Get the info at http://opencpn.org/ocpn/developers_manual
+
+* go to the plugin subdirectory in your OpenCPN source tree
+* git clone https://github.com/SaltyPaws/calculator_pi.git
+
+Build as normally:
+
+* cd ..
+* cd build
+* cmake ../
+* make
+* sudo make install
+
+Executables
+=========
+Compiled library files can be downloaded/uploaded here.
+https://sourceforge.net/projects/opencpnplugins/
+
+License
+=======
+The plugin is licensed under the terms of GPL v2 or, at your will, later. 
+The expression_parser library is by Jos the Jong and under apache license: http://www.apache.org/licenses/LICENSE-2.0
+

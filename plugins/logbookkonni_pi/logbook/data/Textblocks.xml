@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<TextblocksXML Name="Textblöcke" Helptext="Hilfe&#x0A;------&#x0A;&#x0A;Öffne den Knoten&#x0A;  &apos;Texte nur mit diesem Dialog&apos;&#x0A;  und wähle z.B. &apos;Notizen&apos;&apos;&#x0A;&#x0A;Rechtsklick auf diesen Knoten für Menue &#x0A;&#x0A;wähle &apos;Eintrag einfügen&apos; und vergib einen neuen Namen&#x0A;   BITTE KEINE DOPPELTEN NAMEN VERGEBEN !&#x0A;&#x0A;Gib den Text ein&#x0A;&#x0A;Nur in &apos;Texte nur mit diesem Dialog&apos; können Knoten eingefügt/gelöscht werden.&#x0A;&#x0A;Nutze Drag &apos;n Drop um einen Eintrag ins Menue zu verschieben&#x0A;&#x0A;Für mehr Hilfe klicke auf die nächsten Knoten">
+    <NODE>
+        <Type>0</Type>
+        <Name>Texte für das Rechtsklick-Menue</Name>
+        <Text>Der Name des Eintrags wird im Rechtsklickmenue der folgenden Spalten angezeigt.&#x0A;Wenn der Name angeklickt wird, wird der entsprechende Text eingefügt.&#x0A;&#x0A;Notizen&#x0A;N&#x0A;P&#x0A;Gen. gesamt&#x0A;Bank #1&#x0A;W</Text>
+        <GUID></GUID>
+        <Route></Route>
+        <GUIDWP></GUIDWP>
+        <WP></WP>
+        <Grid>-1</Grid>
+        <Column>0</Column>
+        <Deleteable>false</Deleteable>
+        <Add>false</Add>
+        <Menu>true</Menu>
+        <NODE>
+            <Type>0</Type>
+            <Name>Notizen (Navigation)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>0</Grid>
+            <Column>13</Column>
+            <Deleteable>false</Deleteable>
+            <Add>false</Add>
+            <Menu>true</Menu>
+            <ITEM>
+                <Type>1</Type>
+                <Name>Demo Segel rauf</Name>
+                <Text>Segel rauf&#x0A;Maschine gestoppt&#x0A;&#x0A;Demo - klicke im Rechtsklickmenu &apos;nutze Textblocks für Hilfe&apos;</Text>
+                <GUID></GUID>
+                <Route></Route>
+                <GUIDWP></GUIDWP>
+                <WP></WP>
+                <Grid>0</Grid>
+                <Column>13</Column>
+                <Deleteable>true</Deleteable>
+                <Add>false</Add>
+                <Menu>true</Menu>
+            </ITEM>
+        </NODE>
+        <NODE>
+            <Type>0</Type>
+            <Name>Wetter (Wetter)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>1</Grid>
+            <Column>10</Column>
+            <Deleteable>false</Deleteable>
+            <Add>false</Add>
+            <Menu>true</Menu>
+        </NODE>
+        <NODE>
+            <Type>0</Type>
+            <Name>Sicht (Wetter)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>1</Grid>
+            <Column>12</Column>
+            <Deleteable>false</Deleteable>
+            <Add>false</Add>
+            <Menu>true</Menu>
+        </NODE>
+        <NODE>
+            <Type>0</Type>
+            <Name>Segel (Maschine/Segel)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>2</Grid>
+            <Column>6</Column>
+            <Deleteable>false</Deleteable>
+            <Add>false</Add>
+            <Menu>true</Menu>
+        </NODE>
+        <NODE>
+            <Type>0</Type>
+            <Name>Reff (Maschine/Segel)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>2</Grid>
+            <Column>7</Column>
+            <Deleteable>false</Deleteable>
+            <Add>false</Add>
+            <Menu>true</Menu>
+        </NODE>
+        <NODE>
+            <Type>0</Type>
+            <Name>Notizen (Maschine/Segel)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>2</Grid>
+            <Column>19</Column>
+            <Deleteable>false</Deleteable>
+            <Add>false</Add>
+            <Menu>true</Menu>
+        </NODE>
+    </NODE>
+    <NODE>
+        <Type>0</Type>
+        <Name>Texte nur mit diesem Dialog</Name>
+        <Text>Diese Texte werden in die entsprechende Grid-Spalte eingefügt&#x0A;wenn dieser Dialog aufgerufen wird.&#x0A;&#x0A;Wähle einen Eintrag&#x0A;Klicke den OK-Button&#x0A;&#x0A;Nutze Drag &apos;n Drop um einen Eintrag ins Menue zu verschieben.</Text>
+        <GUID></GUID>
+        <Route></Route>
+        <GUIDWP></GUIDWP>
+        <WP></WP>
+        <Grid>-2</Grid>
+        <Column>0</Column>
+        <Deleteable>false</Deleteable>
+        <Add>false</Add>
+        <Menu>false</Menu>
+        <NODE>
+            <Type>0</Type>
+            <Name>Notizen (Navigation)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>0</Grid>
+            <Column>13</Column>
+            <Deleteable>false</Deleteable>
+            <Add>true</Add>
+            <Menu>false</Menu>
+            <ITEM>
+                <Type>1</Type>
+                <Name>Demo Maschine gestartet</Name>
+                <Text>Maschine gestoppt&#x0A;&#x0A;Demo - klicke im Rechtsklickmenu &apos;nutze Textblocks für Hilfe&apos;</Text>
+                <GUID></GUID>
+                <Route></Route>
+                <GUIDWP></GUIDWP>
+                <WP></WP>
+                <Grid>0</Grid>
+                <Column>13</Column>
+                <Deleteable>true</Deleteable>
+                <Add>true</Add>
+                <Menu>false</Menu>
+            </ITEM>
+        </NODE>
+        <NODE>
+            <Type>0</Type>
+            <Name>Wetter (Wetter)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>1</Grid>
+            <Column>10</Column>
+            <Deleteable>false</Deleteable>
+            <Add>true</Add>
+            <Menu>false</Menu>
+        </NODE>
+        <NODE>
+            <Type>0</Type>
+            <Name>Sicht (Wetter)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>1</Grid>
+            <Column>12</Column>
+            <Deleteable>false</Deleteable>
+            <Add>true</Add>
+            <Menu>false</Menu>
+        </NODE>
+        <NODE>
+            <Type>0</Type>
+            <Name>Segel (Maschine/Segel)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>2</Grid>
+            <Column>6</Column>
+            <Deleteable>false</Deleteable>
+            <Add>true</Add>
+            <Menu>false</Menu>
+        </NODE>
+        <NODE>
+            <Type>0</Type>
+            <Name>Reff (Maschine/Segel)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>2</Grid>
+            <Column>7</Column>
+            <Deleteable>false</Deleteable>
+            <Add>true</Add>
+            <Menu>false</Menu>
+        </NODE>
+        <NODE>
+            <Type>0</Type>
+            <Name>Notizen (Maschine/Segel)</Name>
+            <Text></Text>
+            <GUID></GUID>
+            <Route></Route>
+            <GUIDWP></GUIDWP>
+            <WP></WP>
+            <Grid>2</Grid>
+            <Column>19</Column>
+            <Deleteable>false</Deleteable>
+            <Add>true</Add>
+            <Menu>false</Menu>
+        </NODE>
+    </NODE>
+</TextblocksXML>

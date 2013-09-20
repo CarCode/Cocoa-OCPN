@@ -1,0 +1,259 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: polar_pi 3.3.604\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-06-16 23:45+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/PolarGui.h:98
+msgid "Polar Diagram"
+msgstr ""
+
+#: src/PolarGui.cpp:25
+msgid "Mode:"
+msgstr ""
+
+#: src/PolarGui.cpp:29
+msgid "Data from Logbooks"
+msgstr ""
+
+#: src/PolarGui.cpp:29
+msgid "Data from NMEA"
+msgstr ""
+
+#: src/PolarGui.cpp:29
+msgid "Data from VDR"
+msgstr ""
+
+#: src/PolarGui.cpp:29
+msgid "Edit manuell"
+msgstr ""
+
+#: src/PolarGui.cpp:35
+msgid "Rings:"
+msgstr ""
+
+#: src/PolarGui.cpp:43
+msgid "Set diagramm to x knots"
+msgstr ""
+
+#: src/PolarGui.cpp:47
+msgid "Degrees:"
+msgstr ""
+
+#: src/PolarGui.cpp:55
+msgid "Calculate speed-bullets for x degrees "
+msgstr ""
+
+#: src/PolarGui.cpp:59 src/Polar.cpp:1364
+msgid "Wind:"
+msgstr ""
+
+#: src/PolarGui.cpp:63 src/PolarGui.cpp:90 src/Polar.cpp:1384
+#: src/Polar.cpp:1397
+msgid "any"
+msgstr ""
+
+#: src/PolarGui.cpp:72
+msgid "Source:"
+msgstr ""
+
+#: src/PolarGui.cpp:76
+msgid "Speedo"
+msgstr ""
+
+#: src/PolarGui.cpp:76
+msgid "GPS"
+msgstr ""
+
+#: src/PolarGui.cpp:80
+msgid ""
+"Speedo uses column STW\n"
+"GPS uses column SOG"
+msgstr ""
+
+#: src/PolarGui.cpp:84
+msgid "Current <"
+msgstr ""
+
+#: src/PolarGui.cpp:98
+msgid "Filter"
+msgstr ""
+
+#: src/PolarGui.cpp:104
+msgid "Create"
+msgstr ""
+
+#: src/PolarGui.cpp:110
+msgid "Save"
+msgstr ""
+
+#: src/PolarGui.cpp:113
+msgid "Load"
+msgstr ""
+
+#: src/PolarGui.cpp:212
+msgid "Clear Data"
+msgstr ""
+
+#: src/PolarGui.cpp:215
+msgid "Record Start"
+msgstr ""
+
+#: src/polar_pi.cpp:121 src/polar_pi.cpp:183 src/polar_pi.cpp:209
+#: src/polar_pi.cpp:231 src/polar_pi.cpp:260
+msgid "Polar"
+msgstr ""
+
+#: src/polar_pi.cpp:189
+msgid "Polar PlugIn for OpenCPN"
+msgstr ""
+
+#: src/polar_pi.cpp:195
+msgid "Polar PlugIn for OpenCPN\n"
+msgstr ""
+
+#: src/polar_pi.cpp:222
+msgid "Polar Preferences"
+msgstr ""
+
+#: src/polar_pi.cpp:235
+msgid "Show Polar icon"
+msgstr ""
+
+#: src/polar_pi.cpp:238
+msgid "Show metres/sec for Wind Speed"
+msgstr ""
+
+#: src/PolarDialog.cpp:38
+msgid "Start"
+msgstr ""
+
+#: src/PolarDialog.cpp:38
+msgid "Stop"
+msgstr ""
+
+#: src/PolarDialog.cpp:40
+msgid "Record "
+msgstr ""
+
+#: src/PolarDialog.cpp:167
+msgid ""
+"The plugin logbookkonni isn't installed\n"
+"\n"
+"It's needed to collect wind/speed-data from all available logbooks\n"
+"\n"
+"The create-button is hidden and the mode isn't useable"
+msgstr ""
+
+#: src/Polar.h:190
+msgid "Polar Filter"
+msgstr ""
+
+#: src/Polar.cpp:63
+msgid "Max. only"
+msgstr ""
+
+#: src/Polar.cpp:184
+msgid "Engine started / Recording is stopped"
+msgstr ""
+
+#: src/Polar.cpp:201
+msgid "Select a VDR-File"
+msgstr ""
+
+#: src/Polar.cpp:214 src/Polar.cpp:394
+msgid "Please wait."
+msgstr ""
+
+#: src/Polar.cpp:316
+msgid "less than 3 entries found"
+msgstr ""
+
+#: src/Polar.cpp:319
+msgid "less than 5 entries found"
+msgstr ""
+
+#: src/Polar.cpp:322
+msgid "more than 10 entries found"
+msgstr ""
+
+#: src/Polar.cpp:365
+msgid "Filtered by:"
+msgstr ""
+
+#: src/Polar.cpp:401
+msgid "Collecting: "
+msgstr ""
+
+#: src/Polar.cpp:818
+msgid "Save Polar File"
+msgstr ""
+
+#: src/Polar.cpp:992
+msgid "Select a Polar-File"
+msgstr ""
+
+#: src/Polar.cpp:1217
+msgid "Use Max-Speed only"
+msgstr ""
+
+#: src/Polar.cpp:1224
+msgid "Use Average from all speed-data"
+msgstr ""
+
+#: src/Polar.cpp:1230
+msgid "Range from maximum speed to minus"
+msgstr ""
+
+#: src/Polar.cpp:1231
+msgid ""
+"Example:\n"
+"Max-Speed = 2,5 kts\n"
+"Selected 10 % = 0,25 kts\n"
+"Range from 2,25 to 2,5 kts"
+msgstr ""
+
+#: src/Polar.cpp:1248
+msgid "Range"
+msgstr ""
+
+#: src/Polar.cpp:1270
+msgid "Sails"
+msgstr ""
+
+#: src/Polar.cpp:1281
+msgid "MyLabel"
+msgstr ""
+
+#: src/Polar.cpp:1295
+msgid "Wavehight"
+msgstr ""
+
+#: src/Polar.cpp:1372
+msgid "kts"
+msgstr ""
+
+#: src/Polar.cpp:1379
+msgid "Wavehight from"
+msgstr ""
+
+#: src/Polar.cpp:1392
+msgid "to"
+msgstr ""
+
+#: src/Polar.cpp:1452
+msgid "Collecting Data from: "
+msgstr ""

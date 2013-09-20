@@ -1,0 +1,5 @@
+Falls die libpcap.so.0.9 nicht gefunden wird:
+
+/usr/lib:
+
+ln -s libpcap.so.1.1.1 libpcap.so.0.9

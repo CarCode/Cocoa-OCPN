@@ -1,0 +1,8 @@
+../src/gradar_pi.cpp
+../src/gradar_pi.h
+../src/gradardialog.cpp
+../src/gradardialog.h
+../src/GRadarUI.cpp
+../src/GRadarUI.h
+../src/icons.cpp
+../src/icons.h

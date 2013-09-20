@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "LogbookDialog::LogbookDialog(logbookkonni_pi*, wxTimer*, LogbookTimer*, wxWindow*, int, wxString const&amp;, wxPoint const&amp;, wxSize const&amp;, long):LogbookDialog.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "(const wxBitmap *)_img_Bullet_red">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

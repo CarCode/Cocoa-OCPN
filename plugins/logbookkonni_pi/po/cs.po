@@ -1,0 +1,8729 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: logbookkonni_pi 2.5.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-09-27 21:21+0200\n"
+"PO-Revision-Date: 2012-06-20 11:53+0100\n"
+"Last-Translator: Konni <konnibe@hotmail.de>\n"
+"Language-Team: Pavel Kalian <pavel@kalian.cz>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Czech\n"
+"X-Poedit-Country: CZECH REPUBLIC\n"
+"X-Poedit-SourceCharset: utf-8\n"
+#
+#, c-format
+msgid ""
+"\n"
+"Name of Waypoint: %s\n"
+"%s %s"
+msgstr ""
+"\n"
+"Jméno bodu: %s\n"
+"%s %s"
+#
+msgid ""
+"\n"
+"not found in layoutfile "
+msgstr ""
+"\n"
+"nenalezeno v souboru rozvržení"
+#
+msgid "     Winddirection set to:"
+msgstr "     Směr větru nastaven na:"
+#
+msgid " - Full Hour Timer"
+msgstr ""
+#
+msgid " - Individual Timer"
+msgstr ""
+#
+#, fuzzy
+msgid " - Normal Timer - Interval: "
+msgstr " - Časovač běží - Interval:"
+#
+#
+msgid " Direction "
+msgstr " Směr"
+#
+msgid ""
+"!\n"
+"\n"
+"Did you forget to add this line in your layout ?"
+msgstr ""
+"!\n"
+"\n"
+"Nezapomněl's přidat tuto řádku v rozvržení?"
+#
+msgid "\""
+msgstr ""
+#
+#
+#
+#
+#
+#, fuzzy
+msgid "#1 Total"
+msgstr "Palivo celkem"
+#
+#
+#
+#
+#
+#, fuzzy
+msgid "#2 Total"
+msgstr "Palivo celkem"
+#
+msgid "%E Week(s) %D Day(s) %H:%M "
+msgstr ""
+#
+#, c-format
+msgid "%i Year(s) %i Month(s) %i Day(s)"
+msgstr ""
+#
+msgid "'"
+msgstr ""
+#
+msgid "(Unnamed Route)"
+msgstr "(Nepojmenovaná trasa)"
+#
+msgid ""
+"*Optional* Prepend a * to a member to make this member static to a watch / "
+"Click Calculate"
+msgstr ""
+#
+#
+#, fuzzy
+msgid "+ Minutes"
+msgstr "Minuty"
+#
+msgid "-Plugin"
+msgstr "-Doplněk"
+#
+#, fuzzy
+msgid "1. Watch"
+msgstr "Hlídka"
+#
+msgid "12 Hour Format"
+msgstr ""
+#
+msgid "24 Hour Format"
+msgstr ""
+#
+msgid "AH #1 Total"
+msgstr ""
+#
+msgid "AH #2 Total"
+msgstr ""
+#
+msgid "AM"
+msgstr ""
+#
+msgid "AM/PM"
+msgstr ""
+#
+#
+msgid "Abbreviations"
+msgstr "Zkratky"
+#
+msgid "Active"
+msgstr "Aktivní"
+#
+msgid "Active Logbook"
+msgstr "Aktivní  lodní deník"
+#
+msgid "Actuell Logbook"
+msgstr "Aktuální deník"
+#
+msgid "Add Crew"
+msgstr "Přidej posádku"
+#
+msgid "Add Equipment"
+msgstr "Přidat vybavení"
+#
+msgid "Add Item"
+msgstr "Přidej položku"
+#
+msgid "Add Line"
+msgstr "Přidat záznam"
+#
+msgid "Add Treenode"
+msgstr "Přidej uzel stromu"
+#
+msgid "Add a new Crewmember"
+msgstr "P5idat člena posádky"
+#
+msgid "Add a new line"
+msgstr "Přidat nový záznam"
+#
+msgid "Administrator (Sudo) Password:"
+msgstr ""
+#
+msgid "Adress"
+msgstr "Adresa"
+#
+msgid "Air"
+msgstr "Vzduch"
+#
+msgid "All Logbooks"
+msgstr "Všechny deníky"
+#
+msgid "All changes depending to this day only."
+msgstr ""
+#
+msgid "Alter watchtimes as desired / Drag 'n Drop members from the Crewlist"
+msgstr ""
+#
+msgid "Ampere"
+msgstr ""
+#
+msgid "Are you sure ?"
+msgstr "Jsi si jist?"
+#
+msgid "At"
+msgstr "U"
+#
+msgid ""
+"Automatic line by timer\n"
+"\n"
+"You can set/unset a timer-interval\n"
+"or change this text in Toolbox/Plugins/Logbook\n"
+"\n"
+"Shift+Enter appends a new line"
+msgstr ""
+"Automatický záznam časovače\n"
+"\n"
+"Můžeš nastavit nebo zrušit interval časovače\n"
+"nebo změnit tento text v Nástroje/Zásuvné moduly/Lodní deník\n"
+"\n"
+"Shift+Enter přidá nový záznam"
+#
+msgid "Bank #1"
+msgstr ""
+#
+msgid "Bank #1 gen."
+msgstr ""
+#
+msgid "Bank #1 used"
+msgstr ""
+#
+msgid "Bank #2"
+msgstr ""
+#
+msgid "Bank #2 gen."
+msgstr ""
+#
+msgid "Bank #2 used"
+msgstr ""
+#
+msgid "Barometer"
+msgstr "Barometr"
+#
+#, fuzzy
+msgid "Battery"
+msgstr "Kategorie"
+#
+msgid "Beam"
+msgstr "Šířka"
+#
+msgid "Behavior"
+msgstr "Chování"
+#
+msgid "Best Dist. p. Day"
+msgstr "Nej upluto za den"
+#
+msgid "Birthname"
+msgstr "Rodné příjmení"
+#
+msgid "Boat"
+msgstr "Loď"
+#
+msgid "Builder"
+msgstr "Stavitel"
+#
+msgid "Buy Parts"
+msgstr "Koupit díly"
+#
+msgid "Buy parts for this repair"
+msgstr "Koupit díly na tuto opravu"
+#
+msgid "Buy parts for this service"
+msgstr "Koupit díly na tento servis"
+#
+msgid "C/Strength"
+msgstr "P/Síla"
+#
+msgid "COG (T)"
+msgstr ""
+#
+msgid "Calculate"
+msgstr ""
+#
+msgid "Calculate the watches with the members entered in the columns"
+msgstr ""
+#
+msgid "Callsign"
+msgstr "Volací znak"
+#
+#
+msgid "Capacity"
+msgstr "Kapacita"
+#
+msgid "Category"
+msgstr "Kategorie"
+#
+msgid "Clear"
+msgstr ""
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+msgid "Clear all"
+msgstr "Vyber"
+#
+msgid "Clear all data"
+msgstr ""
+#
+msgid "Clouds"
+msgstr "Mraky"
+#
+msgid "Confirm"
+msgstr "Potvrdit"
+#
+msgid "Construction"
+msgstr "Konstrukce"
+#
+msgid "Copy to watch"
+msgstr ""
+#
+msgid "Country"
+msgstr "Stát"
+#
+#, fuzzy
+msgid "Course"
+msgstr "Mraky"
+#
+#, fuzzy
+msgid "Course changes"
+msgstr "Pokud se kurs změní o více než"
+#
+msgid ""
+"Create a new logbook\n"
+"the active logbook is saved with today's date\n"
+"and can be viewed with Button \"Select Logbook\""
+msgstr ""
+"Vytvořit nový deník\n"
+"aktivní deník je uložen s aktuálním datem\n"
+"a může být zobrazen tlačítkem \"Vyber deník\""
+#
+msgid "Crewlist"
+msgstr "Seznam posádky"
+#
+msgid "Current"
+msgstr "Proud"
+#
+msgid "Current Avg."
+msgstr "Proud prům."
+#
+#
+#
+#
+msgid "Current Max."
+msgstr "Max proud"
+#
+msgid "Currentdirection Avg."
+msgstr "Prům. směr proudu"
+#
+msgid "Date"
+msgstr "Datum"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Date + Days"
+msgstr "Datum + dny"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Date + Month"
+msgstr "Datum + měsíce"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Date + Weeks"
+msgstr "Datum + týdny"
+#
+msgid "Date Launched"
+msgstr "Datum spuštění"
+#
+msgid "Date of Birth"
+msgstr "Datum narození"
+#
+msgid "Date of Issue"
+msgstr "Datum vydání"
+#
+msgid "Date-Format:"
+msgstr ""
+#
+#, fuzzy
+msgid "Day"
+msgstr "Dny"
+#
+msgid "Day backward"
+msgstr ""
+#
+msgid "Day forward"
+msgstr ""
+#
+msgid "Day(s)"
+msgstr "Dny"
+#
+#, fuzzy
+msgid "Day:"
+msgstr "Dny"
+#
+#, fuzzy
+msgid "Days"
+msgstr "Dny"
+#
+#
+msgid "Degres"
+msgstr "Stupně"
+#
+#, fuzzy
+msgid "Delete Crewmembers"
+msgstr "Smaž uzel stromu"
+#
+msgid "Delete Item"
+msgstr "Smaž položku"
+#
+msgid "Delete Layout"
+msgstr "Smaž rozvržení"
+#
+msgid "Delete Row"
+msgstr "Smaž záznam"
+#
+#, c-format
+msgid "Delete Row Nr. %i ?"
+msgstr "Smazat řádku č. %i ?"
+#
+#, fuzzy
+msgid "Delete Rows"
+msgstr "Smaž záznam"
+#
+msgid "Delete Treenode"
+msgstr "Smaž uzel stromu"
+#
+msgid "Demo Engine stopped"
+msgstr "Demo Motor zastaven"
+#
+msgid "Demo Sails up"
+msgstr "Demo Plachty vytaženy"
+#
+msgid "Depth"
+msgstr "Hloubka"
+#
+msgid "Description"
+msgstr "Popis"
+#
+msgid "Designer"
+msgstr "Designer"
+#
+msgid "Details"
+msgstr "Detaily"
+#
+msgid "Displacement"
+msgstr "Výtlak"
+#
+#, fuzzy
+msgid "Display"
+msgstr "Výtlak"
+#
+msgid "Distance"
+msgstr "Vzdálenost"
+#
+msgid "Distance p. Day"
+msgstr "Vzdálenost za den"
+#
+msgid "DistanceTotal"
+msgstr "Celková vzdálenost"
+#
+msgid "Draft"
+msgstr "Ponor"
+#
+msgid "E"
+msgstr ""
+#
+msgid "Edit Layout"
+msgstr "Editovat rozvržení"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Edit Layouts"
+msgstr "Uprav rozvržení"
+#
+#
+#
+#
+msgid "End"
+msgstr "Konec"
+#
+#, fuzzy
+msgid "Engine "
+msgstr "Motor"
+#
+msgid "Engine #1"
+msgstr "Motor #1"
+#
+msgid "Engine #2"
+msgstr "Motor #2"
+#
+msgid ""
+"Engine stopped\n"
+"\n"
+"Demo - Rightclick-Menu 'use Testextblocks' for help"
+msgstr ""
+"Motor zastaven\n"
+"\n"
+"Demo - kontextová nabídka 'použij Testextblocks' pro nápovědu"
+#
+msgid ""
+"Enter default watchtime e.g. 3.30 / available formats are 3.30, 3,30, 3:30, "
+"0330 for 3 hours 30 minutes"
+msgstr ""
+#
+msgid "Equipment"
+msgstr "Vybavení"
+#
+msgid "Event"
+msgstr ""
+#
+msgid ""
+"Event/s running\n"
+"Click the button to suspend or a bullet to stop"
+msgstr ""
+#
+msgid ""
+"Event/s suspended\n"
+"Click the button to restart all events"
+msgstr ""
+#
+msgid "Events"
+msgstr ""
+#
+msgid "Export"
+msgstr "Exportovat"
+#
+msgid "F"
+msgstr ""
+#
+#
+msgid "Fathom"
+msgstr "Fathomy"
+#
+#
+msgid "Feet"
+msgstr "Stopy"
+#
+msgid "Filter Layout by"
+msgstr "Filtr rozvržení podle"
+#
+msgid "Firstname"
+msgstr "Jméno"
+#
+#, fuzzy
+msgid "Firstname only"
+msgstr "Jméno"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Fix Date"
+msgstr "Fix datum"
+#
+msgid "Flip Day<->Month"
+msgstr ""
+#
+msgid "Fuel"
+msgstr "Palivo"
+#
+#
+msgid "Fuel/Water"
+msgstr "Palivo/voda"
+#
+#
+#
+#
+#
+msgid "FuelTotal"
+msgstr "Palivo celkem"
+#
+msgid "Full Hour Timer"
+msgstr ""
+#
+msgid "GPS Auto"
+msgstr ""
+#
+msgid "Gen. total"
+msgstr ""
+#
+#, fuzzy
+msgid "Generator"
+msgstr "Teplota"
+#
+msgid "Go to date/time now"
+msgstr ""
+#
+msgid "Goto Route"
+msgstr "Jít na trasu"
+#
+msgid "Greatest Width of Hull"
+msgstr "Největší šířka trupu"
+#
+msgid "HIN-Nr."
+msgstr "Č. trupu"
+#
+msgid "HTML"
+msgstr ""
+#
+msgid ""
+"Have You forgotten to enclose the Header with [[ and ]]\n"
+" or Data with {{ and }} ?"
+msgstr ""
+"Nezapomněl's uzavřít hlavičku do [[ a ]]\n"
+" nebo Data do {{ a }} ?"
+#
+msgid "Heading"
+msgstr "Směr"
+#
+msgid "Help"
+msgstr ""
+#
+msgid ""
+"Help\n"
+"-----\n"
+"\n"
+"Open treenode\n"
+"  'Texts when using this Dialog only'\n"
+"  and select e.g. 'Remarks'\n"
+"\n"
+"Rightclick in TreeView for menu\n"
+"\n"
+"Add a item and rename it\n"
+"   USE UNIQUE NAMES FOR ITEMS !\n"
+"\n"
+"Insert text\n"
+"\n"
+"In 'Texts when using this Dialog only' you can insert/delete treenodes only\n"
+"\n"
+"Use Drag 'n Drop to move item from/to menu\n"
+"\n"
+"see next treenodes for more help"
+msgstr ""
+"Nápověda\n"
+"------------\n"
+"\n"
+"Otevři uzel stromu\n"
+"  'Texty pouze při použití tohoto dialogu'\n"
+"  a a vyber třeba 'Poznámky'\n"
+"\n"
+"Klikni pravým tlačítkem na strom pro nabídku\n"
+"\n"
+"Přidej položku a přejmenuj ji\n"
+"   POUŽÍVEJ UNIKÁTNÍ NÁZVY !\n"
+"\n"
+"Vložit text\n"
+"\n"
+"V 'Texty pouze při použití tohoto dialogu' můžeš jen vkládat/mazt uzly "
+"stromu\n"
+"\n"
+"Přetáhni a pusť položku do/z nabídky\n"
+"\n"
+"Podívej se na ostatní uzly stromu pro další nápovědu"
+#
+msgid "Hide Equipment"
+msgstr "Schovat vybavení"
+#
+msgid "Hide column"
+msgstr "Schovat sloupec"
+#
+msgid "Homeport"
+msgstr "Domovský přístav"
+#
+msgid "Hour"
+msgstr ""
+#
+msgid "Hull"
+msgstr "Trup"
+#
+msgid "Hull Identification No."
+msgstr "Identifikační číslo trupu"
+#
+msgid "Hygrometer"
+msgstr "Hygrometer"
+#
+msgid "If"
+msgstr "Pokud"
+#
+msgid "If GPS off use for manual entry"
+msgstr "Pokud je vypnutá GPS, použij pro ruční vstup"
+#
+msgid ""
+"If You have created Your own Layouts\n"
+"prepend them with e.g. My_ \n"
+"The _ is important"
+msgstr ""
+"Pokud sis vytvořil vlastní rozvržení\n"
+"pojmenuj je s předponou např My_ \n"
+"\"_\" je dúležité"
+#
+msgid ""
+"If You have created Your own layouts\n"
+"with prefix e.g. My_"
+msgstr ""
+"pokud sis vytvořil vlastní rozvržení\n"
+"s prefixem např. My_"
+#
+msgid "In Column"
+msgstr "Ve sloupci"
+#
+msgid "Individual"
+msgstr ""
+#
+msgid "Individual Timer"
+msgstr ""
+#
+msgid "Information"
+msgstr "Informace"
+#
+#
+msgid "Install"
+msgstr "Instalovat"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Install Languages"
+msgstr "Instalovat jazyky"
+#
+#
+msgid "Install Layouts"
+msgstr "Instalovat rozvržení"
+#
+#
+msgid "Install OpenCPN_Logbook_Languages.zip"
+msgstr "Nainstalovat OpenCPN_Logbook_Languages.zip"
+#
+#
+msgid "Install OpenCPN_Logbook_Layouts.zip"
+msgstr "Nainstalovat OpenCPN_Logbook_Layouts.zip"
+#
+msgid "Install single Layout"
+msgstr "Nainstaluj jedno rozvržení"
+#
+msgid "Insurance"
+msgstr "Pojištění"
+#
+msgid "Issued in"
+msgstr "Vydán v"
+#
+msgid ""
+"It's not allowed to append Data to a old Logbook\n"
+"\n"
+"OpenCPN switchs to actuell logbook"
+msgstr ""
+"Není povoleno přidávat data do starého deníku\n"
+"\n"
+"OpenCPN přepne na aktuální deník"
+#
+msgid "LOA"
+msgstr ""
+#
+msgid "LOD"
+msgstr ""
+#
+msgid "LWL"
+msgstr ""
+#
+#, fuzzy, c-format
+msgid ""
+"Languages installed at\n"
+"\n"
+"%s"
+msgstr "Jazyky instalovány"
+#
+#, c-format
+msgid ""
+"Languages not installed at\n"
+"\n"
+"%s\n"
+"\n"
+"Click Help Options/Behavoir in the image the button 'Install Languages'"
+msgstr ""
+#
+msgid "Last Logbook is\n"
+msgstr "Poslední lodní deník je\n"
+#
+msgid "Last line from Logbook\n"
+msgstr "Poslední řádka lodního deníku\n"
+#
+msgid "Last waypoint of the Route"
+msgstr "Poslední bod trasy"
+#
+msgid "Lastname only"
+msgstr ""
+#
+#, fuzzy, c-format
+msgid ""
+"Layouts %sinstalled at\n"
+"\n"
+"%s\n"
+"%s\n"
+"%s\n"
+"%s"
+msgstr "Rozvržení instalovány"
+#
+msgid "Length in Waterline"
+msgstr "Délka vodorysky"
+#
+msgid "Length of your sailing trip"
+msgstr ""
+#
+msgid "Length over Deck"
+msgstr "Délka přes palubu"
+#
+msgid "Length over all"
+msgstr "Celková délka"
+#
+#
+msgid "Local = UTC"
+msgstr "Lokální = UTC"
+#
+msgid "Local Format"
+msgstr ""
+#
+msgid "Logbook"
+msgstr "Lodní deník"
+#
+msgid "Logbook Preferences"
+msgstr "Nastavení lodného deníku"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Logbook Total"
+msgstr "Deník celkem"
+#
+msgid "Logbook for OpenCPN"
+msgstr "Lodní deník pro OpenCPN"
+#
+#, fuzzy
+msgid ""
+"Logbook for OpenCPN\n"
+"\n"
+"Thanks's to the community for their helpfull suggestions.\n"
+"\n"
+"If You find a bug post it on\n"
+"http://www.cruisersforum.com/forums/f134/logbook-konni-for-opencpn-68945."
+"html\n"
+"Helpfull Videos are at Youtube, search for LogbookKonni."
+msgstr ""
+"Lodní deník pro OpenCPN\n"
+"\n"
+"\t- automatický (NMEA) nebo manuální vstup\n"
+"\t- Časovač pro automatické záznamy\n"
+"\t- Export do ODS, HTML, XML(jen pod Windows), CSV\n"
+"\t- Několik rozvržení\n"
+"\t- Přizpůsobitelné rozvržení\n"
+"\n"
+"Díky komunitě za podnětné připomínky.\n"
+"\n"
+"Pokud najdeš chybu, popiš ji na\n"
+"http://www.cruisersforum.com/forums/f134/logbook-konni-for-opencpn-68945."
+"html\n"
+"Na Youtube je pár videí, která Ti v začátku pomůžou, hledej \"LogbookKonni\"."
+#
+#, c-format
+msgid "Logbook from %s to %s"
+msgstr "Deník od %s do %s"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Logbook until "
+msgstr "Deník do"
+#
+msgid "MMSI"
+msgstr ""
+#
+#
+msgid "Magnetic"
+msgstr "Magnetický"
+#
+msgid "Maintenance"
+msgstr "Údržba"
+#
+#
+#, fuzzy
+msgid "Member"
+msgstr "Metry"
+#
+#, fuzzy
+msgid "Merge Watches"
+msgstr "Nastav hlídky"
+#
+#
+#, fuzzy
+msgid "Meteo"
+msgstr "Metry"
+#
+#
+msgid "Meter"
+msgstr "Metry"
+#
+#
+msgid "Minutes"
+msgstr "Minuty"
+#
+msgid "Minutes greater than 59"
+msgstr "Minuty větší než 59"
+#
+#
+#
+#
+#
+msgid "Month"
+msgstr "Měsíc"
+#
+#
+#
+#
+#
+#, fuzzy
+msgid "Month "
+msgstr "Měsíc"
+#
+#
+msgid "Motor Hours"
+msgstr "Motohodiny"
+#
+msgid "Motor/Sails"
+msgstr "Motor/Plachty"
+#
+msgid "NM"
+msgstr ""
+#
+msgid "Name"
+msgstr "Příjmení"
+#
+msgid "Name      "
+msgstr "Jméno"
+#
+msgid "Name in full"
+msgstr ""
+#
+msgid "Nationality"
+msgstr "Národnost"
+#
+msgid "Navigation"
+msgstr "Navigace"
+#
+#, c-format
+msgid "New Item%i"
+msgstr "Nová položka%i"
+#
+msgid "New Logbook"
+msgstr "Nový lodní deník"
+#
+#, c-format
+msgid "New Node%i"
+msgstr "Nový uzel%i"
+#
+msgid "Next WP Name: "
+msgstr "Jméno příštího WP:"
+#
+#
+#
+msgid "No"
+msgstr "Ne"
+#
+msgid "No GPS-Signal !"
+msgstr "Není GPS signál"
+#
+msgid ""
+"No Path set to HTML-Editor\n"
+"in ToolBox/Plugins/LogbookKonni/Preferences"
+msgstr ""
+"Není nastavena cesta k editoru HTML\n"
+"v Nástroje/Zásuvné moduly/LogbookKonni/Nastavení"
+#
+msgid ""
+"No Path set to HTML-Editor\n"
+"in Toolbox/Plugins/LogbookKonni/Preferences"
+msgstr ""
+"Není nastavena cesta k editoru HTML\n"
+"v Nástroje/Zásuvné moduly/LogbookKonni/Nastavení"
+#
+#
+#, fuzzy
+msgid "No Seconds"
+msgstr "Sekundy"
+#
+#, fuzzy
+msgid "Normal Timer"
+msgstr "Celkový čas"
+#
+#, fuzzy
+msgid ""
+"Normal Timer has 0 h 0 Min.\n"
+"\n"
+"Please change settings (Timer-Interval)"
+msgstr ""
+"Časovač má 0h 0m 0s\n"
+"\n"
+"Prosím změň hodnoty v nastavení"
+#
+#
+#
+#, fuzzy
+msgid "Now"
+msgstr "Ne"
+#
+msgid "ODT"
+msgstr ""
+#
+#, c-format
+msgid "Old Logbook until %s"
+msgstr "Starý deník do %s"
+#
+msgid "Onboard"
+msgstr "Na palubě"
+#
+#
+msgid "Only Layouts with prefix:"
+msgstr "Pouze rozložení s prefixem:"
+#
+msgid ""
+"Only used when you enter 1/2, 1/4 ... in a total-field, or to calculate the "
+"watermaker\n"
+msgstr ""
+#
+msgid ""
+"Opendocument SpreadSheet(*.ods)|*.ods|Excel 2003 Format(*.xml)|*.xml|CSV "
+"Format OpenOffice(*.csv)|*.csv|Backup Logbook(*.txt)|*.txt"
+msgstr ""
+#
+msgid "Overview"
+msgstr "Přehled"
+#
+msgid "Owner"
+msgstr "Majitel"
+#
+msgid "PM"
+msgstr ""
+#
+msgid "Passport-Nr"
+msgstr "Číslo pasu"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Path"
+msgstr "Cesta"
+#
+msgid "Path to Datamanager"
+msgstr "Cesta k manažeru dat"
+#
+#
+msgid ""
+"Path to HTML-Editor\n"
+"(optional)"
+msgstr ""
+"Cesta k editoru HTML\n"
+"(volitelné)"
+#
+msgid "Path to MailClient"
+msgstr "Cesta k poštovnímu programu"
+#
+msgid "Path to ODT-Editor"
+msgstr "Cesta k editoru ODT"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Paths"
+msgstr "Cesty"
+#
+msgid "Place of Birth"
+msgstr "Místo narození"
+#
+msgid ""
+"Please enter 05445.1234n03012.0504e for\n"
+"054Deg 45.1234Min N 030Deg 12.0504Min E"
+msgstr ""
+"Prosím zadej 05445.1234n03012.0504e pro\n"
+"054Deg 45Min 12Sec N 030Deg 12Min 05Sec E"
+#
+msgid ""
+"Please enter 0544512.15n0301205.15e for\n"
+"054Deg 45Min 12.15Sec N 030Deg 12Min 05.15Sec E"
+msgstr ""
+"Prosím zadej  0544512.15n0301205.15e pro\n"
+"054Deg 45Min 12Sec N 030Deg 12Min 05Sec E"
+#
+#, c-format
+msgid ""
+"Please enter the Date in the format:\n"
+"      %s"
+msgstr ""
+"Prosím vlož datum ve formátu: \n"
+"      %s"
+#
+#, fuzzy, c-format
+msgid ""
+"Please enter the Time in the format:\n"
+"   %s"
+msgstr ""
+"Prosím vlož datum ve formátu: \n"
+"   "
+#
+msgid "Please fill in one character in Degrees, Minutes and Seconds"
+msgstr "Prosím, vyplň jeden znak do stupňů, minut a sekund"
+#
+msgid "Please fill in one character in Degrees, Minuts and Seconds"
+msgstr "Prosím, vyplň jeden znak do stupňů, minut a sekund"
+#
+msgid "Policy"
+msgstr "Podmínky"
+#
+msgid "Popup logbook on event"
+msgstr ""
+#
+msgid "Position"
+msgstr "Pozice"
+#
+msgid "Priority"
+msgstr "Priorita"
+#
+msgid "R"
+msgstr ""
+#
+#
+#
+#
+#
+msgid "Reef"
+msgstr "Ref"
+#
+msgid "Registration"
+msgstr "Registrace"
+#
+#
+msgid "Relative"
+msgstr "Relativní"
+#
+msgid "Reload Layouts"
+msgstr "Nahrát rozvržení"
+#
+msgid "Remarks"
+msgstr "Poznámky"
+#
+#, fuzzy
+msgid "Reminder"
+msgstr "Designer"
+#
+msgid "Rename Item"
+msgstr "Přejmenovat  položku"
+#
+msgid "Rename Layout"
+msgstr "Přejmenovat  rozvržení"
+#
+msgid "Repair done"
+msgstr "Oprava provedena"
+#
+msgid "Repairs"
+msgstr "Opravy"
+#
+msgid "RepairsTODO"
+msgstr "Co opravit"
+#
+#
+#, fuzzy
+msgid "Reset"
+msgstr "Stopy"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Reset Paths"
+msgstr "Reset cest"
+#
+msgid "Reset all Values to zero ?"
+msgstr "Resetovat všechny hodnoty na nulu"
+#
+msgid "Reset data to edit-level"
+msgstr ""
+#
+msgid "Route"
+msgstr "Trasa"
+#
+msgid "SOG"
+msgstr ""
+#
+msgid "STW"
+msgstr ""
+#
+msgid "Sail-Nr."
+msgstr "Č. plachty"
+#
+#
+#
+#
+#
+msgid "Sails"
+msgstr "Plachty"
+#
+msgid ""
+"Sails up\n"
+"Engine stopped\n"
+"\n"
+"Demo - Rightclick-Menu 'use Testextblocks' for help"
+msgstr ""
+"Plachty vytaženy\n"
+"Motor zastaven\n"
+"\n"
+"Demo - kontextová nabídka 'použij Testextblocks' pro nápovědu"
+#
+msgid "Sails used mostly"
+msgstr "Nejpoužívanější plachty"
+#
+msgid "Save Boat File"
+msgstr "Ulož soubor lodi"
+#
+msgid "Save BuyParts File"
+msgstr "Ulož soubor nákupního seznamu"
+#
+msgid "Save CrewList File"
+msgstr "Ulož soubor seznamu posádky"
+#
+msgid "Save Logbook File"
+msgstr "Ulož soubor deníku"
+#
+msgid "Save Overview File"
+msgstr "Ulož soubor přehledu"
+#
+msgid "Save Repairs File"
+msgstr "Ulož soubor oprav"
+#
+msgid "Save Service File"
+msgstr "Ulož soubor servisu"
+#
+msgid "Search in"
+msgstr "Hledej v"
+#
+msgid "Search in Logbook"
+msgstr "Hledej v lodním deníku"
+#
+msgid "Searchstring"
+msgstr "Hledaný řetězec"
+#
+#
+msgid "Seconds"
+msgstr "Sekundy"
+#
+msgid "Select"
+msgstr "Vyber"
+#
+msgid "Select Layout:"
+msgstr "Vyber rozložení:"
+#
+msgid "Select Layout: "
+msgstr "Vybrat rozvržení:"
+#
+msgid "Select Logbook"
+msgstr "Vybrat lodní deník"
+#
+msgid "Select Route"
+msgstr "Vyber trasu"
+#
+#, fuzzy
+msgid "Select a date"
+msgstr "Vyber trasu"
+#
+msgid ""
+"Select a layout which is displayed\n"
+"with button \"View\""
+msgstr ""
+"Vyber rozvržení, které je zobrazeno\n"
+"tlačítkem \"Zobrazit\""
+#
+msgid ""
+"Select a old logbook\n"
+"Everytime a new logbook is created, you'll \n"
+"find the active logbook as old logbook here"
+msgstr ""
+"Vyber starý deník\n"
+"Pokaždé, když je vytvořen nový deník,  \n"
+"najdeš aktivní deník jako starší deník zde"
+#
+msgid "Select one of the old logbooks"
+msgstr "Vyber jeden ze starších deníků"
+#
+msgid "Select zipped Languages-Files"
+msgstr "Vyber zabalené soubory s překlady"
+#
+msgid "Select zipped Layout-Files"
+msgstr "Vyber zabalené šablony"
+#
+msgid "Send Layout by email"
+msgstr "Odešli rozložení e-mailem"
+#
+#, fuzzy
+msgid "Separator"
+msgstr "Teplota"
+#
+msgid "Serial-Nr."
+msgstr "Cériové č."
+#
+msgid "Service"
+msgstr "Servis"
+#
+msgid "Service TODO"
+msgstr "Co servisovat"
+#
+msgid "Service done"
+msgstr "Servis proveden"
+#
+msgid "Set Path to DataManager"
+msgstr "Nastavit cestu k manažeru dat"
+#
+msgid "Set Path to HTML-Editor"
+msgstr "Nastavit cestu k editoru HTML"
+#
+msgid "Set Path to MailClient"
+msgstr "Nastavit cestu k poštovnímu programu"
+#
+msgid "Set Path to ODT-Editor"
+msgstr "Nastavit cestu k editoru ODT"
+#
+#
+#, fuzzy
+msgid "Set Timer"
+msgstr "Časovač"
+#
+#, fuzzy
+msgid "Set Timer Interval"
+msgstr " - Časovač běží - Interval:"
+#
+#, fuzzy
+msgid "Set Watchtimes"
+msgstr "Nastav hlídky"
+#
+#, fuzzy
+msgid "Set as Watchbase"
+msgstr "Stejná hlídka jako"
+#
+msgid ""
+"Set desired Degrees\n"
+"if the course changes by this amount\n"
+"a course-changed-event occurs"
+msgstr ""
+#
+msgid ""
+"Set desired delay in minutes\n"
+"It's a good idea to set here a value > 0\n"
+"to find the right wind."
+msgstr ""
+#
+msgid "Set gal/liter in Abbreviations "
+msgstr ""
+#
+msgid ""
+"Set the desired distance in NM\n"
+" = (Track made good)"
+msgstr ""
+#
+msgid "Set the interval for the timer"
+msgstr ""
+#
+msgid "Set the startdate of the sailing trip"
+msgstr ""
+#
+msgid "Set the starttime of your sailing trip"
+msgstr ""
+#
+#
+msgid "Show Depth in"
+msgstr "Zobraz hloubku v"
+#
+msgid "Show Equipment"
+msgstr "Ukaž vybavení"
+#
+#
+msgid "Show Logbook Icon"
+msgstr "Zobraz ikonu deníku"
+#
+msgid "Show Position Fomat"
+msgstr "Zobraz formát pozice"
+#
+#
+#
+#
+#
+msgid "Show ToolTips"
+msgstr "Zobraz tooltipy"
+#
+#
+msgid "Show Wave/Swell in"
+msgstr "Zobraz vlny/příboj v"
+#
+#
+msgid "Show all Layouts"
+msgstr "Zobraz všechna rozvržení"
+#
+#, fuzzy
+msgid "Show all entries"
+msgstr "Ukaž všechny záznamy posádky"
+#
+msgid "Show hidden columns"
+msgstr "Zobrazit schované sloupce"
+#
+#
+msgid "Show onboard only"
+msgstr "Zobraz pouze naloděné"
+#
+msgid "Show/Hide Equipmentgrid"
+msgstr "Ukaž/Schovej tab. vybavení"
+#
+msgid "Show/Hide Statusbar"
+msgstr ""
+#
+msgid ""
+"Shows/Sets the day\n"
+"Displays the data in your ODT/Browser-program from this day to end"
+msgstr ""
+#
+#
+#, fuzzy
+msgid "Shutdown Logbook"
+msgstr "Zobraz ikonu deníku"
+#
+msgid "Sign"
+msgstr "Značka"
+#
+msgid "Sorry, Logbook has no lines"
+msgstr "Promiň, deník nemá žádné záznamy"
+#
+msgid "Sorry, Your Logbook has no lines"
+msgstr "Promiň, Tvůj deník nemá žádné řádky"
+#
+msgid "Sorry, no Layout installed"
+msgstr "Promiň, není instalováno žádné rozvržení"
+#
+msgid "Sort ascending"
+msgstr ""
+#
+msgid "Sort descending"
+msgstr ""
+#
+msgid "Speed"
+msgstr "Rychlost"
+#
+msgid "Speed Avg."
+msgstr "Prúm. Rychlost"
+#
+#
+#
+#
+msgid "Speed Max."
+msgstr "Max rychlost"
+#
+#, fuzzy
+msgid "Split Watch"
+msgstr "Nastav hlídky"
+#
+#
+#
+#
+msgid "Start"
+msgstr "Start"
+#
+#, c-format
+msgid ""
+"Start converting to new Date/Time-Format\n"
+"and backup all datafiles from version 1.1 to\n"
+"\n"
+"%s"
+msgstr ""
+#
+msgid "Startvalue"
+msgstr "Počáteční hodnota"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+msgid "Stop"
+msgstr "do"
+#
+msgid "Street"
+msgstr "Ulice"
+#
+msgid "Suspend/Resume running event/s"
+msgstr ""
+#
+#, fuzzy
+msgid "Swap two Watches"
+msgstr "Nastav hlídky"
+#
+msgid "Swell"
+msgstr "Příboj"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Swell Avg."
+msgstr "Příboj prům."
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Swell Max."
+msgstr "Příboj max"
+#
+msgid "Tank"
+msgstr ""
+#
+msgid "Telephone"
+msgstr "Telefon"
+#
+msgid "Temperature"
+msgstr "Teplota"
+#
+msgid "Text"
+msgstr ""
+#
+msgid "Textblocks"
+msgstr ""
+#
+msgid "Textblocks Dialog"
+msgstr ""
+#
+msgid "Texts for Rightclick-Menu"
+msgstr "Texty pro kontextovou nabídku"
+#
+msgid "Texts when using this Dialog only"
+msgstr "Texty pouze při použití tohoto dialogu"
+#
+msgid ""
+"The itemname is shown in the rightcklick-menu of the following Columns\n"
+"By clicking on it the text is inserted\n"
+"\n"
+msgstr ""
+"Název položky je zobrazen v kontextové nabídce následujících sloupců\n"
+"Po kliknutí na ně je text vložen\n"
+"\n"
+#
+msgid ""
+"These texts are inserted into the grid-colmn\n"
+"by calling this dialog\n"
+"\n"
+"Select Item\n"
+"Click OK-Button\n"
+"\n"
+"Use Drag 'n Drop to place a item in menu"
+msgstr ""
+"Tyto texty jsou vloženy do do sloupce tabulky\n"
+"vyvoláním tohoto dialogu\n"
+"\n"
+"Vyber položku\n"
+"Klikni na tlačítko OK\n"
+"\n"
+"Táhni a pusť pro přidání položky do nabídky"
+#
+msgid "Time"
+msgstr "Čas"
+#
+msgid "Time-Format:"
+msgstr ""
+#
+#
+msgid "Timer"
+msgstr "Časovač"
+#
+msgid "Title"
+msgstr "Titul"
+#
+msgid "Total Time"
+msgstr "Celkový čas"
+#
+msgid "Town"
+msgstr "Město"
+#
+#, c-format
+msgid ""
+"Tried to install Languages at\n"
+"\n"
+"%s\n"
+"\n"
+"On Windows Vista/7/8 you need administrator rights.\n"
+"If no languages installed please restart OpenCPN as admin.\n"
+"(Rightclick on the icon and select \"Run as administrator\")\n"
+"\n"
+"After installation restart as normal user.\n"
+"\n"
+"The dialog 'Logbook Preferences' is closed now."
+msgstr ""
+#
+#
+msgid "True"
+msgstr "Skutečný"
+#
+msgid "Type"
+msgstr "Typ"
+#
+msgid "UTC"
+msgstr ""
+#
+msgid ""
+"Uncheck if You have no GPS\n"
+"If GPS is out of order, uncheck to\n"
+"prevent that the message repeats."
+msgstr ""
+"Odškrtni, pokud nemáš GPS\n"
+"Pokud GPS není v pořádku, odškrtni\n"
+"aby se zpráva neopakovala."
+#
+msgid "Uninstall"
+msgstr "Odinstalovat"
+#
+msgid "Uninstall Logbook"
+msgstr "Odinstalovat Logbook"
+#
+msgid ""
+"Uninstalls\n"
+"Logbook-Plugin,\n"
+"all Logbook-Data,\n"
+"all Logbook-Layouts,\n"
+"all Logbook-Languages\n"
+"and cleans the OpenCPN.ini"
+msgstr ""
+"Odinstaluje\n"
+"Logbook-Plugin,\n"
+"všechna Logbook Data,\n"
+"všechna Logbook rozvržení,\n"
+"všechny Logbook překlady\n"
+"a vyčistí OpenCPN.ini"
+#
+msgid "Urgentvalue"
+msgstr "Urgentní hodnota"
+#
+msgid ""
+"Used for ODT/Browser-program\n"
+"One Row for the day + selected days = Days displayed"
+msgstr ""
+#
+# Textfield for userlabel in boat
+msgid "UserLabel"
+msgstr "VlastPopis"
+#
+msgid "View"
+msgstr "Zobrazit"
+#
+msgid "View data in browser (HTML) or Openoffice/LibreOffice (ODT)"
+msgstr "Zobrazit data v prohlížeči (HTML) nebo Openoffice/LibreOffice (ODT)"
+#
+msgid "Visibility"
+msgstr "Viditelnost"
+#
+msgid "W-Output"
+msgstr ""
+#
+#
+#
+#
+#
+#, fuzzy
+msgid "W-Total"
+msgstr "Palivo celkem"
+#
+msgid "W/Strength"
+msgstr "V/Síla"
+#
+msgid "Warnvalue"
+msgstr "Hodnota varování"
+#
+msgid "Watch"
+msgstr "Hlídka"
+#
+#, fuzzy
+msgid "Watchtime"
+msgstr "Hlídka"
+#
+msgid "Water"
+msgstr "Voda"
+#
+#, fuzzy
+msgid "Water used"
+msgstr "Voda"
+#
+#, fuzzy
+msgid "WaterTotal"
+msgstr "Voda"
+#
+msgid "Waterm. Outp"
+msgstr ""
+#
+#, fuzzy
+msgid "Watermaker"
+msgstr "Voda"
+#
+msgid "Wave"
+msgstr "Vlna"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Wave Avg."
+msgstr "Vlna prům."
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Wave Max."
+msgstr "Vlna max"
+#
+msgid "WayPoint arrived"
+msgstr "Bod dosažen"
+#
+#, fuzzy
+msgid "Waypoint"
+msgstr "Bod vynechán"
+#
+msgid "Waypoint skipped"
+msgstr "Bod vynechán"
+#
+msgid "Weather"
+msgstr "Počasí"
+#
+#
+#
+#
+#
+msgid "Week(s)"
+msgstr "Týdny"
+#
+#
+#
+#
+#
+msgid "Weeks(s)"
+msgstr "Týdny"
+#
+msgid "Wind"
+msgstr "Vítr"
+#
+msgid "Wind Avg."
+msgstr "Vítr prům."
+#
+#
+#
+#
+msgid "Wind Max."
+msgstr "Max vítr"
+#
+msgid ""
+"Wind is set to Heading,\n"
+"but GPS sends no Heading Data.\n"
+"Wind is set now to Realative to boat\n"
+"\n"
+msgstr ""
+"Vítr je nastaven na směr plavby,\n"
+"ale GPS neposílá žádné směrové data\n"
+"Vítr je nastaven na relativní k lodi\n"
+"\n"
+#
+msgid "Winddirection Avg."
+msgstr "Prům. směr větru"
+#
+#
+msgid "Windspeed"
+msgstr "Rychlost větru"
+#
+#
+msgid "Windspeed "
+msgstr "Rychlost větru"
+#
+#
+msgid "Write warning \"No GPS\""
+msgstr "Vypisuj varování \"Není GPS\""
+#
+msgid ""
+"Writes this text to the logbook when the event occurs, alter texts as desired"
+msgstr ""
+#
+msgid "Yard-Nr."
+msgstr "Č. doku"
+#
+msgid "Year"
+msgstr ""
+#
+#
+#
+msgid "Yes"
+msgstr "Ano"
+#
+#, c-format
+msgid ""
+"You cannot set this dateformat.\n"
+"\n"
+"%s%s%s%s%s\n"
+"\n"
+"Please use a different Dateformat in all three Choiceboxes."
+msgstr ""
+#
+msgid ""
+"Your Country has 24 Hour Format.\n"
+"In this case the OS doen't serve AM/PM-Strings.\n"
+msgstr ""
+#
+#, fuzzy, c-format
+msgid ""
+"Your Logbook has %i lines\n"
+"\n"
+"You should create a new logbook to minimize loadingtime."
+msgstr ""
+"Tvůj lodní deník má víc než 800 řádků\n"
+"\n"
+"Please create a new logbook to minimize the loadingtime.\n"
+"\n"
+"If you have a running timer, it's stopped now !!!"
+#
+msgid "Your Logbook has no lines ?"
+msgstr "Tvůj lodní deník nemá žádné řádky?"
+#
+msgid "Zip"
+msgstr "PSČ"
+#
+#, fuzzy
+msgid "add a line to the end of your logbook"
+msgstr "Přidat řádku na konec deníku"
+#
+msgid "add the equipment of your boat"
+msgstr "přidat vybavení na loď"
+#
+#
+#, fuzzy
+msgid "all"
+msgstr "Instalovat"
+#
+msgid ""
+"automatic line\n"
+"Distance > "
+msgstr ""
+"automatický záznam\n"
+"Vzdálenost > "
+#
+#, fuzzy
+msgid ""
+"automatic line\n"
+"Waypoint arrived:"
+msgstr "automatický záznam, bod dosažen"
+#
+msgid ""
+"automatic line\n"
+"change of course >"
+msgstr ""
+"automatický záznam\n"
+"změna kurzu >"
+#
+msgid ""
+"automatic line\n"
+"change of guards"
+msgstr ""
+"automatický záznam\n"
+"změna hlídky"
+#
+msgid "automatic line Waypoint arrived"
+msgstr "automatický záznam, bod dosažen"
+#
+#
+#, fuzzy
+msgid ""
+"automatic line by timer\n"
+"You can set/unset a timer\n"
+" by clicking the bullet\n"
+"Change this text in options"
+msgstr ""
+"Automatický záznam časovače\n"
+"\n"
+"Můžeš nastavit nebo zrušit interval časovače\n"
+"nebo změnit tento text v Nástroje/Zásuvné moduly/Lodní deník"
+#
+msgid "day(s)"
+msgstr "dny"
+#
+msgid "default"
+msgstr "výchozí"
+#
+msgid ""
+"default = Relative to Boat\n"
+"Heading = Actual wind direction"
+msgstr ""
+"výchozí = Relativní k lodi\n"
+"Směr = Skutečný směr větru"
+#
+#
+#, fuzzy
+msgid "every"
+msgstr "Metry"
+#
+msgid "every 15 Degrees +/- 1 hour"
+msgstr "každých 15 stupňů +/- 1 hour"
+#
+msgid "export your BuyParts-data as HTML or ODT"
+msgstr "exportuj seznam nákupu dílů jako HTML nebo ODT"
+#
+msgid "export your Overview-data as HTML or ODT"
+msgstr "exportovat tvá přehledová data jako HTML or ODT"
+#
+msgid "export your Repairs-data as HTML or ODT"
+msgstr "exportuj data o opravách jako HTML nebo ODT"
+#
+msgid "export your Service-data as HTML or ODT"
+msgstr "exportuj data o servisu jako HTML nebo ODT"
+#
+msgid ""
+"export your boat/equipment-data as:\n"
+"      HTML, ODT,  ODS, XML, CSV"
+msgstr ""
+"exportovat data o lodi/vybavení jako:\n"
+"      HTML, ODT,  ODS, XML, CSV"
+#
+msgid ""
+"export your crew-data as:\n"
+"HTML, ODT,  ODS, XML, CSV"
+msgstr ""
+"exportovat data posádky jako:\n"
+"HTML, ODT,  ODS, XML, CSV"
+#
+msgid ""
+"export your logbook-data as:\n"
+"HTML, ODT,  ODS, XML, CSV"
+msgstr ""
+"export dat deníku jako:\n"
+"HTML, ODT,  ODS, XML, CSV"
+#
+msgid "fm"
+msgstr ""
+#
+#
+#
+#
+msgid "from"
+msgstr "z"
+#
+#
+#
+#
+msgid "from "
+msgstr "z "
+#
+msgid "ft"
+msgstr ""
+#
+msgid "fth"
+msgstr ""
+#
+msgid "gal"
+msgstr ""
+#
+msgid ""
+"green = Event is running\n"
+"red = Event is stopped\n"
+"yellow = Event is suspended. Restart event with Start-Button"
+msgstr ""
+#
+msgid "h"
+msgstr ""
+#
+msgid "km/h"
+msgstr ""
+#
+msgid "kts"
+msgstr ""
+#
+msgid "m"
+msgstr ""
+#
+msgid "m/s"
+msgstr ""
+#
+msgid "mb"
+msgstr ""
+#
+#
+#
+#
+msgid "month"
+msgstr "měsíc"
+#
+msgid ""
+"no Event/s\n"
+"Click one or more bullets to start"
+msgstr ""
+#
+msgid "none"
+msgstr "nic"
+#
+msgid "this day"
+msgstr ""
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "to"
+msgstr "do"
+#
+#, c-format
+msgid ""
+"to use MS-Word, append %s like this:\n"
+"\"C:\\yourPathToWinword\\WINWORD.EXE\" %s"
+msgstr ""
+"pro použití MS-Word, připoj %s jako:\n"
+"\"C:\\yourPathToWinword\\WINWORD.EXE\" %s"
+#
+msgid "use Textblocks..."
+msgstr "použij Textblocks..."
+#
+msgid "week(s)"
+msgstr "týdny"
+#
+msgid "write your own label"
+msgstr "Napiš vlastní popis"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "\n"
+#~ "Name of Waypoint: %s\n"
+#~ "True bearing to destination: %4.1f%s\n"
+#~ "Range to destination: %4.2f%s"
+#~ msgstr ""
+#~ "\n"
+#~ "Jméno trasového bodut: %s\n"
+#~ "Skutečný směr k cíli: %4.1f%s\n"
+#~ "Vzdálenost k cíli: %4.2f%s"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "      Course- Message after Minutes"
+#~ msgstr "      Záznam kurzu po minutách"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "&Cut"
+#~ msgstr "Stát"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "1. Watch of 1. Person"
+#~ msgstr "1. Hlídka 1. Osoby"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Add to Watchlist"
+#~ msgstr "Přidat do hlídek"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Add to Watchlist same as"
+#~ msgstr "Přidej do seznamu hlídek stejně jako"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Append Line every Nm"
+#~ msgstr "Přidej záznam každých Nm"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Best Etmal"
+#~ msgstr "Max NM/24h"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "BuyParts"
+#~ msgstr "Koupit díly"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "CrewList"
+#~ msgstr "Seznam posádky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "Crewmember is not onboard\n"
+#~ "\n"
+#~ "Please set column 'Onboard' to Yes\n"
+#~ "(click the column twice)"
+#~ msgstr ""
+#~ "Člen posádky není na palubě\n"
+#~ "\n"
+#~ "Prosím nastav sloupec 'Na palubě' na Ano\n"
+#~ "(dvakrát klikni na sloupec)"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Current from"
+#~ msgstr "Proud z"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Delete"
+#~ msgstr "Smaž záznam"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Drag 'n Drop to change the order in the list"
+#~ msgstr "Přetáhni myší pro změnu pořadí seznamu"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 1.Watch"
+#~ msgstr "Konec 1. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 2.Watch"
+#~ msgstr "Konec 2. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 3.Watch"
+#~ msgstr "Konec 3. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 4.Watch"
+#~ msgstr "Konec 4. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 5.Watch"
+#~ msgstr "Konec 5. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 6.Watch"
+#~ msgstr "Konec 6. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "EngineTotal"
+#~ msgstr "Motor celkem"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Etmal "
+#~ msgstr "NM/24h"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "FirstName"
+#~ msgstr "Jméno"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "GPS Auto (Ocean Crossing)"
+#~ msgstr "GPS Auto (přejezd oceánu)"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "GrossTonnage"
+#~ msgstr "Celková registrovaná prostornost"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "If Watch changed"
+#~ msgstr "Pokud je změněna hlídka"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "If Waypoint arrived"
+#~ msgstr "Pokud je dosažen bod"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Install OpenCPN_Mac_Logbook_Languages.zip"
+#~ msgstr "Nainstalovat OpenCPN_Mac_Logbook_Languages.zip"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Interval:"
+#~ msgstr "Interval:"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+# Textfield for userlabel in boat
+#, fuzzy
+#~ msgid "Label_"
+#~ msgstr "VlastPopis"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Logbook Konni"
+#~ msgstr "Konniho lodní deník"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Logbook files (*.txt)|*.txt"
+#~ msgstr "Soubory deníku (*.txt)|*.txt"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "NetTonnage"
+#~ msgstr "Čistá registrovaná prostornost"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "No. Watches"
+#~ msgstr "Poč. hlídek"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Not implemented yet"
+#~ msgstr "zatím neimplementováno"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Paste"
+#~ msgstr "Datum"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Path to HTML-Editor (optional)"
+#~ msgstr "Cesta k editoru HTML (volitelné)"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Person:"
+#~ msgstr "Osoba:"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Persons:"
+#~ msgstr "Osoby:"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Please enter 4 digits in 24h-Format like 1545 = 03:45 PM"
+#~ msgstr "Prosím, vlož 4 číslice ve 24h formátu jako 1545 = 15:45:00"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "Please enter like 1.30 or 1,30 or 1:30\n"
+#~ "for 1:30h"
+#~ msgstr ""
+#~ "Prosím zadej jako 1.30 nebo 1,30 nebo 1:30\n"
+#~ "pro 1:30h"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "Please enter the Time in the format:\n"
+#~ "   12:30:00PM"
+#~ msgstr ""
+#~ "Prosím vlož datum ve formátu: \n"
+#~ "   12:30:00PM"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Save"
+#~ msgstr "Uložit"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Schedule"
+#~ msgstr "Rozvrh"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Search.."
+#~ msgstr "Vybrat lodní deník"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Select boat-layout to view"
+#~ msgstr "Vybrat rozvržení:"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Show Maintence Rows coloured"
+#~ msgstr "Zobraz řádky údržby v barvě"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Sorry, 0 Hrs 0 Min 0 Sec are not possible"
+#~ msgstr "Promiň, 0h 0m 0s není možné"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Speed STW Avg."
+#~ msgstr "Prům. Rychlost vodou"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Speed STW Max."
+#~ msgstr "Max rychlost vodou"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 1.Watch"
+#~ msgstr "Začátek 1. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 2.Watch"
+#~ msgstr "Začátek 2. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 3.Watch"
+#~ msgstr "Začátek 3. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 4.Watch"
+#~ msgstr "Začátek 4. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 5.Watch"
+#~ msgstr "Začátek 5. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 6.Watch"
+#~ msgstr "Začátek 6. hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Static Watchtimes"
+#~ msgstr "Nastav hlídky"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Swell Peak"
+#~ msgstr "Max příboj"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Timer "
+#~ msgstr "Časovač"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Timer on/off"
+#~ msgstr "Časovač zap./vyp."
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Today"
+#~ msgstr "Dnes"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Traditional-Style"
+#~ msgstr "Národnost"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "View "
+#~ msgstr "Zobrazit"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "delay to find the right course to the wind"
+#~ msgstr "prodleva k nalezení správného kurzu k větru"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "s"
+#~ msgstr "s"
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "same watch as"
+#~ msgstr "Stejná hlídka jako"

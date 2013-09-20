@@ -1,0 +1,10 @@
+src/factory.h
+src/kmloverlay_pi.cpp
+src/factory.cpp
+src/ui.h
+src/prefdlg.h
+src/prefdlg.cpp
+src/icons.h
+src/ui.cpp
+src/kmloverlay_pi.h
+src/icons.cpp

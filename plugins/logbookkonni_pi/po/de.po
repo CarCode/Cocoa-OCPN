@@ -1,0 +1,5614 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-14 16:22+0200\n"
+"PO-Revision-Date: 2013-05-15 20:50+0100\n"
+"Last-Translator: CarCode <carcode@me.com>\n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: C:\\Dokumente und Einstellungen\\Konni.MICKY-6B710455C"
+"\\Eigene Dateien\\Visual Studio 2008\\Projects\\opencpn\\plugins"
+"\\LogbookKonni_pi\\src\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-SearchPath-0: .\n"
+
+msgid ""
+"\n"
+"Engine #2 running"
+msgstr ""
+"\n"
+"Motor #2 läuft"
+
+msgid ""
+"\n"
+"Engine #2 stopped"
+msgstr ""
+"\n"
+"Motor #2 gestoppt"
+
+#
+#, c-format
+msgid ""
+"\n"
+"Name of Waypoint: %s\n"
+"%s %s"
+msgstr ""
+"\n"
+"Wegpunkt-Name: %s\n"
+"%s %s"
+
+#
+msgid ""
+"\n"
+"not found in layoutfile "
+msgstr ""
+"\n"
+"nicht gefunden im Layoutfile"
+
+#
+msgid "     Winddirection set to:"
+msgstr "     Windrichtung bezogen auf:"
+
+#
+msgid " - Full Hour Timer"
+msgstr "- Stunden Timer"
+
+#
+msgid " - Individual Timer"
+msgstr "- Individueller Timer"
+
+#
+msgid " - Normal Timer - Interval: "
+msgstr "- Normaler Timer - Intervall:"
+
+#
+#
+msgid " Direction "
+msgstr "Richtung"
+
+msgid " off"
+msgstr "Aus"
+
+msgid " on"
+msgstr "An"
+
+#
+msgid ""
+"!\n"
+"\n"
+"Did you forget to add this line in your layout ?"
+msgstr ""
+"!\n"
+"\n"
+"Haben Sie diese Zeile im Layout vergessen  ?"
+
+#
+msgid "\""
+msgstr "\""
+
+#
+#
+#
+#
+#
+msgid "#1 Total"
+msgstr "#1 gesamt"
+
+#
+#
+#
+#
+#
+msgid "#2 Total"
+msgstr "#2 gesamt"
+
+#
+msgid "%E Week(s) %D Day(s) %H:%M "
+msgstr "%E Woche(n) %D Tag(e) %H:%M "
+
+#
+#, c-format
+msgid "%i Year(s) %i Month(s) %i Day(s)"
+msgstr "%i Jahr(e) %i Monat(e) %i Tage(s)"
+
+#
+msgid "'"
+msgstr "'"
+
+msgid "*** MAN OVERBOARD ***\n"
+msgstr "*** Mann über Bord ***\n"
+
+#
+msgid ""
+"*Optional* Prepend a * to a member to make this member static to a watch / "
+"Click Calculate"
+msgstr ""
+"*Optional* Setzte ein '*'-Zeichen voran, und das Mitglied wird dieser Wache "
+"statisch zugewiesen. (Hat immer diese Wache)"
+
+#
+#
+msgid "+ Minutes"
+msgstr "+ Minuten"
+
+#
+msgid "-Plugin"
+msgstr "-Plugin"
+
+msgid "1"
+msgstr "1"
+
+#
+msgid "1. Watch"
+msgstr "1.Wache"
+
+#
+msgid "12 Hour Format"
+msgstr "12 Stunden Format"
+
+msgid "2"
+msgstr "2"
+
+#
+msgid "24 Hour Format"
+msgstr "24 Stunden Format"
+
+msgid "4"
+msgstr "4"
+
+msgid "<<  Back"
+msgstr "<<  Zurück"
+
+msgid "?"
+msgstr "?"
+
+#
+msgid "AH #1 Total"
+msgstr "Ah #1 gesamt"
+
+#
+msgid "AH #2 Total"
+msgstr "Ah #2 gesamt"
+
+msgid "AM"
+msgstr "AM"
+
+msgid "AM/PM"
+msgstr "AM/PM"
+
+#
+#
+msgid "Abbreviations"
+msgstr "Abkürzungen"
+
+msgid ""
+"Abbreviations are shown in the Sails-Checkboxes\n"
+"The Name is used for the column \"Sails\" when added a new entry"
+msgstr ""
+"Abkürzungen gezeigt in den Segel-Checkboxen\n"
+"Der Name wird in der Spalte \"Segel\" beim Zufügen eines neuen Eintrags "
+"benutzt"
+
+#
+msgid "Active"
+msgstr "Aktiv"
+
+#
+msgid "Active Logbook"
+msgstr "Aktives Logbuch"
+
+#
+msgid "Actuell Logbook"
+msgstr "Aktuelles Logbuch"
+
+#
+msgid "Add Crew"
+msgstr "neues Crewmitglied"
+
+#
+msgid "Add Equipment"
+msgstr "Zubehör hinzufügen"
+
+#
+msgid "Add Item"
+msgstr "Neuen Eintrag einfügen"
+
+#
+msgid "Add Line"
+msgstr "Neue Zeile"
+
+#
+msgid "Add Treenode"
+msgstr "Neuen Knoten einfügen"
+
+#
+msgid "Add a new Crewmember"
+msgstr "Fügt ein neues Crewmitglied hinzu"
+
+#
+msgid "Add a new line"
+msgstr "Neue Zeile"
+
+#
+msgid "Administrator (Sudo) Password:"
+msgstr "Administrator (Sudo) Passwort:"
+
+#
+msgid "Adress"
+msgstr "Adresse"
+
+#
+msgid "Air"
+msgstr "Luft"
+
+#
+msgid "All Logbooks"
+msgstr "Alle Logbücher"
+
+#
+msgid "All changes depending to this day only."
+msgstr "Alle Änderungen betreffen nur diesen Tag"
+
+#
+msgid "Alter watchtimes as desired / Drag 'n Drop members from the Crewlist"
+msgstr ""
+"Ändere die Wachzeiten nach Wunsch / Drag 'n Drop Crewmitglieder aus der "
+"Crewliste"
+
+msgid "Ampere"
+msgstr "Ampere"
+
+#
+msgid "Are you sure ?"
+msgstr "Sind Sie sicher ?"
+
+#
+msgid "At"
+msgstr "bei"
+
+#
+msgid ""
+"Automatic line by timer\n"
+"\n"
+"You can set/unset a timer-interval\n"
+"or change this text in Toolbox/Plugins/Logbook\n"
+"\n"
+"Shift+Enter appends a new line"
+msgstr ""
+"Automatischer Eintrag durch Timer\n"
+"\n"
+"Sie können ein Timer-Intervall setzen\n"
+"oder diesen Text ändern unter Toolbox/Plugins/Logbook\n"
+"\n"
+"Shift+Enter = Zeilenumbruch"
+
+msgid "Back to Sailnames"
+msgstr "Zurück zu Segelnamen"
+
+msgid "Bank #1"
+msgstr "Bank #1"
+
+msgid "Bank #1 gen."
+msgstr "Bank #1 ges."
+
+#
+msgid "Bank #1 used"
+msgstr "Bank #1 Verbrauch"
+
+msgid "Bank #2"
+msgstr "Bank #2"
+
+msgid "Bank #2 gen."
+msgstr "Bank #2 ges."
+
+#
+msgid "Bank #2 used"
+msgstr "Bank #2 Verbrauch"
+
+msgid "Barometer"
+msgstr "Barometer"
+
+#
+msgid "Battery"
+msgstr "Batterie"
+
+#
+msgid "Beam"
+msgstr "Breite"
+
+#
+#
+msgid "Behavior"
+msgstr "Verhalten"
+
+#
+msgid "Best Dist. p. Day"
+msgstr "Beste Dist. p. Tag"
+
+#
+msgid "Birthname"
+msgstr "Geburtsname"
+
+#
+msgid "Boat"
+msgstr "Boot"
+
+#
+msgid "Builder"
+msgstr "Hersteller"
+
+#
+msgid "Buy Parts"
+msgstr "Zubehör kaufen"
+
+#
+msgid "Buy parts for this repair"
+msgstr "kaufe Zubehör für diese Reparatur"
+
+#
+msgid "Buy parts for this service"
+msgstr "kaufe Zubehör für diesen Service"
+
+#
+msgid "C/Strength"
+msgstr "Stromstärke"
+
+#
+msgid "COG (T)"
+msgstr "KüG"
+
+#
+msgid "Calculate"
+msgstr "Berechne"
+
+#
+msgid "Calculate the watches with the members entered in the columns"
+msgstr ""
+"Berechene die Wachzeiten mit den in den Spalten eingegebenen Mitgliedern"
+
+#
+msgid "Callsign"
+msgstr "Rufzeichen"
+
+#
+#
+msgid "Capacity"
+msgstr "Kapazität"
+
+#
+msgid "Category"
+msgstr "Kategory"
+
+msgid "Check"
+msgstr "Check"
+
+msgid "Checkbox Space  >>"
+msgstr "Checkbox Leerz.  >>"
+
+#
+msgid "Clear"
+msgstr "Löschen"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Clear all"
+msgstr "Lösche alles"
+
+#
+msgid "Clear all data"
+msgstr "Löscht alle Daten"
+
+#
+msgid "Clouds"
+msgstr "Wolken"
+
+msgid "Column +"
+msgstr "Spalte +"
+
+msgid "Column -"
+msgstr "Spalte -"
+
+#
+msgid "Confirm"
+msgstr "Bestätige"
+
+#
+msgid "Construction"
+msgstr "Konstruktion"
+
+#
+msgid "Copy to watch"
+msgstr "In die Wachliste kopieren"
+
+#
+msgid "Country"
+msgstr "Land"
+
+#
+msgid "Course"
+msgstr "Kurs"
+
+#
+#
+msgid "Course changes"
+msgstr "Kursänderung"
+
+#
+msgid ""
+"Create a new logbook\n"
+"the active logbook is saved with today's date\n"
+"and can be viewed with Button \"Select Logbook\""
+msgstr ""
+"Erstellt ein neues Logbuch\n"
+"das active Logbuch wird mit dem heutigen Datum gespeichert\n"
+"und kann über den Button \"Wähle Logbuch\" angezeigt werden."
+
+#
+msgid "Crewlist"
+msgstr "Crewliste"
+
+#
+msgid "Current"
+msgstr "Strom"
+
+#
+msgid "Current Avg."
+msgstr "Strom durchsch."
+
+#
+msgid "Current Max."
+msgstr "Strom max."
+
+#
+msgid "Currentdirection Avg."
+msgstr "Stromrichtung durchsch."
+
+#
+msgid "Date"
+msgstr "Datum"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Date + Days"
+msgstr "Datum + Tage"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Date + Month"
+msgstr "Datum + Monat(e)"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Date + Weeks"
+msgstr "Datum + Woche(n)"
+
+#
+msgid "Date Launched"
+msgstr "Stapellauf"
+
+#
+msgid "Date of Birth"
+msgstr "Geburtstag"
+
+#
+msgid "Date of Issue"
+msgstr "ausgegeben am"
+
+#
+msgid "Date-Format:"
+msgstr "Datums-Format:"
+
+#
+#
+msgid "Day"
+msgstr "Tag"
+
+#
+msgid "Day backward"
+msgstr "Tag zurück"
+
+#
+msgid "Day forward"
+msgstr "Tag vorwärts"
+
+#
+#
+msgid "Day(s)"
+msgstr "Tag(e)"
+
+#
+#
+msgid "Day:"
+msgstr "Tag:"
+
+#
+#
+msgid "Days"
+msgstr "Tag(e)"
+
+#
+#
+msgid "Degres"
+msgstr "Grad"
+
+#
+msgid "Delete Crewmembers"
+msgstr "Lösche Crewmitglieder"
+
+#
+msgid "Delete Item"
+msgstr "Lösche Eintrag"
+
+#
+msgid "Delete Layout"
+msgstr "Lösche Layout"
+
+#
+msgid "Delete Row"
+msgstr "Lösche Zeile"
+
+#
+#, c-format
+msgid "Delete Row Nr. %i ?"
+msgstr "Lösche Zeile Nr. %i ?"
+
+#
+msgid "Delete Rows"
+msgstr "Lösche Zeile/n"
+
+#
+msgid "Delete Treenode"
+msgstr "Knoten löschen"
+
+#
+msgid "Demo Engine stopped"
+msgstr "Demo Maschine gestartet"
+
+#
+msgid "Demo Sails up"
+msgstr "Demo Segel rauf"
+
+#
+msgid "Depth"
+msgstr "Tiefe"
+
+#
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Designer"
+msgstr "Designer"
+
+msgid "Details"
+msgstr "Details"
+
+#
+msgid "Displacement"
+msgstr "Verdrängung"
+
+#
+msgid "Display"
+msgstr "Anzeige"
+
+#
+msgid "Distance"
+msgstr "Distanz"
+
+#
+msgid "Distance p. Day"
+msgstr "Distanz p. Tag"
+
+#
+msgid "DistanceTotal"
+msgstr "Distanz gesamt"
+
+#
+msgid "Draft"
+msgstr "Tiefgang"
+
+#
+msgid "E"
+msgstr "E"
+
+#
+msgid "Edit Layout"
+msgstr "Layout editieren"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Edit Layouts"
+msgstr "Layout editieren"
+
+#
+msgid "End"
+msgstr "Ende"
+
+msgid "Engine"
+msgstr "Motor"
+
+#
+msgid "Engine "
+msgstr "Maschine"
+
+#
+msgid "Engine #1"
+msgstr "Maschine #1"
+
+msgid "Engine #1 running"
+msgstr "Motor #1 läuft"
+
+msgid "Engine #1 started"
+msgstr "Motor #1 gestartet"
+
+msgid "Engine #1 stopped"
+msgstr "Motor #1 gestoppt"
+
+#
+msgid "Engine #2"
+msgstr "Maschine #2"
+
+msgid "Engine #2 running"
+msgstr "Motor #2 läuft"
+
+msgid "Engine #2 started"
+msgstr "Motor #2 gestartet"
+
+msgid "Engine #2 stopped"
+msgstr "Motor #2 gestoppt"
+
+#
+msgid ""
+"Engine stopped\n"
+"\n"
+"Demo - Rightclick-Menu 'use Testextblocks' for help"
+msgstr ""
+"Maschine gestoppt\n"
+"\n"
+"Demo - klicke im Rechtsklickmenu 'nutze Textblocks für Hilfe'"
+
+msgid "Engine-No. corresponds with column Engine #1"
+msgstr "Motor-Nr. entspricht Spalte Motor #1"
+
+msgid "Engine-No. corresponds with column Engine #2"
+msgstr "Motor-Nr. entspricht Spalte Motor #2"
+
+#
+msgid ""
+"Enter default watchtime e.g. 3.30 / available formats are 3.30, 3,30, 3:30, "
+"0330 for 3 hours 30 minutes"
+msgstr ""
+"Geben Sie eine Wachzeit ein, z.B. 3.30 / verfügbare Eingabeformate sind: "
+"3.30, 3,30, 3:30, 0330 für 3 Std 30 Min"
+
+#
+msgid "Equipment"
+msgstr "Zubehör"
+
+#
+msgid "Event"
+msgstr "Ereignis"
+
+#
+msgid ""
+"Event/s running\n"
+"Click the button to suspend or a bullet to stop"
+msgstr ""
+"Ereignis/se gestartet\n"
+"Klick auf den Stop-Button unterbricht, auf einen Knopf (grün) stoppt "
+
+#
+msgid ""
+"Event/s suspended\n"
+"Click the button to restart all events"
+msgstr ""
+"Ereignis/se unterbrochen\n"
+"Klicke den Start-Button für Wiederaufnahme aller Ereignisse"
+
+#
+msgid "Events"
+msgstr "Ereignisse"
+
+msgid "Export"
+msgstr "Export"
+
+#
+msgid "F"
+msgstr "C"
+
+#
+#
+msgid "Fathom"
+msgstr "Faden"
+
+#
+#
+msgid "Feet"
+msgstr "Fuß"
+
+#
+msgid "File"
+msgstr "Datei"
+
+#
+msgid "Filter Layout by"
+msgstr "Filtere Layout nach"
+
+#
+msgid "First/Last Entry"
+msgstr "Erster/Letzter Eintrag"
+
+#
+msgid "Firstname"
+msgstr "Vorname"
+
+#
+msgid "Firstname only"
+msgstr "nur Vorname"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Fix Date"
+msgstr "fixes Datum"
+
+#
+msgid "Flip Day<->Month"
+msgstr "Tausche Tag<->Monat"
+
+msgid "Fo1"
+msgstr "Fo1"
+
+msgid "Fo2"
+msgstr "Fo2"
+
+msgid "Fo3"
+msgstr "Fo3"
+
+msgid "Fock 1"
+msgstr "Fock 1"
+
+msgid "Fock 2"
+msgstr "Fock 2"
+
+msgid "Fock 3"
+msgstr "Fock 3"
+
+msgid "For Barometer, Air Temerature and rel. Humidity"
+msgstr "Für Barometer, Lufttemperatur und rel. Feuchte"
+
+#
+msgid "Fuel"
+msgstr "Treibstoff"
+
+#
+#
+msgid "Fuel/Water"
+msgstr "Treibstoff/Wasser"
+
+#
+#
+#
+#
+#
+msgid "FuelTotal"
+msgstr "Treibstoff gesamt"
+
+#
+msgid "Full Hour Timer"
+msgstr "Stunden Timer"
+
+msgid "GPS Auto"
+msgstr "GPS Auto"
+
+msgid "GUID"
+msgstr "GUID"
+
+msgid "Ge1"
+msgstr "Ge1"
+
+msgid "Ge2"
+msgstr "Ge2"
+
+msgid "Ge3"
+msgstr "Ge3"
+
+#
+msgid "Gen. total"
+msgstr "Gen. gesamt"
+
+#
+msgid "Generator"
+msgstr "Generator"
+
+msgid "Genoa 1"
+msgstr "Genua 1"
+
+msgid "Genoa 2"
+msgstr "Genua 2"
+
+msgid "Genoa 3"
+msgstr "Genua 3"
+
+#
+msgid "Go to date/time now"
+msgstr "Springe zur jetzigen Wache"
+
+#
+msgid "Goto Route"
+msgstr "Gehe zu Route"
+
+#
+msgid "Greatest Width of Hull"
+msgstr "Größte Breite des Rumpfes"
+
+msgid "HIN-Nr."
+msgstr "HIN-Nr."
+
+msgid "HTML"
+msgstr "HTML"
+
+#
+msgid ""
+"Have You forgotten to enclose the Header with [[ and ]]\n"
+" or Data with {{ and }} ?"
+msgstr ""
+"Haben Sie vergessen den Header mit [[ und ]]\n"
+"oder Daten mit {{ und }} einzuschließen ?"
+
+#
+msgid "Heading"
+msgstr "KdW"
+
+#
+msgid "Help"
+msgstr "Hilfe"
+
+#
+msgid ""
+"Help\n"
+"-----\n"
+"\n"
+"Open treenode\n"
+"  'Texts when using this Dialog only'\n"
+"  and select e.g. 'Remarks'\n"
+"\n"
+"Rightclick in TreeView for menu\n"
+"\n"
+"Add a item and rename it\n"
+"   USE UNIQUE NAMES FOR ITEMS !\n"
+"\n"
+"Insert text\n"
+"\n"
+"In 'Texts when using this Dialog only' you can insert/delete treenodes only\n"
+"\n"
+"Use Drag 'n Drop to move item from/to menu\n"
+"\n"
+"see next treenodes for more help"
+msgstr ""
+"Hilfe\n"
+"------\n"
+"\n"
+"Öffne den Knoten\n"
+"  'Texte nur mit diesem Dialog'\n"
+"  und wähle z.B. 'Notizen''\n"
+"\n"
+"Rechtsklick auf diesen Knoten für Menue \n"
+"\n"
+"wähle 'Eintrag einfügen' und vergib einen neuen Namen\n"
+"   BITTE KEINE DOPPELTEN NAMEN VERGEBEN !\n"
+"\n"
+"Gib den Text ein\n"
+"\n"
+"Nur in 'Texte nur mit diesem Dialog' können Knoten eingefügt/gelöscht "
+"werden.\n"
+"\n"
+"Nutze Drag 'n Drop um einen Eintrag ins Menue zu verschieben\n"
+"\n"
+"Für mehr Hilfe klicke auf die nächsten Knoten"
+
+#
+msgid "Hide Equipment"
+msgstr "Verstecke Zubehör"
+
+#
+msgid "Hide column"
+msgstr "Spalte ausblenden"
+
+#
+msgid "Homeport"
+msgstr "Heimathafen"
+
+#
+msgid "Hour"
+msgstr "Stunde"
+
+#
+msgid "Hull"
+msgstr "Rumpf"
+
+#
+msgid "Hull Identification No."
+msgstr "Rumpf Identifikations-Nr."
+
+msgid "Hygrometer"
+msgstr "Hygrometer"
+
+#
+msgid "If"
+msgstr "Wenn"
+
+#
+msgid "If GPS off use for manual entry"
+msgstr "Wenn GPS nicht eingeschaltet ist benutze"
+
+#
+msgid "In Column"
+msgstr "In Spalte"
+
+#
+msgid "Individual"
+msgstr "Individuell"
+
+#
+msgid "Individual Timer"
+msgstr "Individueller Timer"
+
+#
+msgid "Information"
+msgstr "Info"
+
+#
+#
+msgid "Install"
+msgstr "Installiere"
+
+#
+#
+msgid "Install Languages"
+msgstr "Installiere Sprach-Dateien"
+
+#
+msgid "Install Layouts"
+msgstr "Installiere ein Layout"
+
+#
+#
+msgid "Install OpenCPN_Logbook_Languages.zip"
+msgstr "Installiere OpenCPN_Logbook_Languages.zip"
+
+#
+#
+msgid "Install OpenCPN_Logbook_Layouts.zip"
+msgstr "Installiere OpenCPN_Logbook_Layouts.zip"
+
+#
+msgid "Install single Layout"
+msgstr "Installiere ein Layout"
+
+#
+msgid "Insurance"
+msgstr "Versicherung"
+
+#
+msgid "Issued in"
+msgstr "ausgestellt in"
+
+#
+msgid ""
+"It's not allowed to append Data to a old Logbook\n"
+"\n"
+"OpenCPN switchs to actuell logbook"
+msgstr ""
+"Es ist nicht gestattet einem alten Logbuch\n"
+"Daten hinzuzufügen\n"
+"\n"
+"Aktuelles Logbuch wird benutzt ! "
+
+msgid "Ji"
+msgstr "Ji"
+
+msgid "Jib"
+msgstr "Jib"
+
+msgid "KML"
+msgstr "KML"
+
+msgid "LOA"
+msgstr "LOA"
+
+msgid "LOD"
+msgstr "LOD"
+
+msgid "LWL"
+msgstr "LWL"
+
+#
+#, c-format
+msgid ""
+"Languages installed at\n"
+"\n"
+"%s"
+msgstr ""
+"Spachen installiert im Verzeichnis:\n"
+"\n"
+"%s"
+
+#
+#, c-format
+msgid ""
+"Languages not installed at\n"
+"\n"
+"%s\n"
+"\n"
+"Click Help Options/Behavoir in the image the button 'Install Languages'"
+msgstr ""
+"Sprachen wirden nicht installiert in\n"
+"\n"
+"%s\n"
+"\n"
+"Klicke Help Options/Verhalten, im Bild auf 'Installiere Sprach-Dateien'"
+
+#
+msgid "Last Logbook is\n"
+msgstr "letzte Logbuch-Datei ist\n"
+
+#
+msgid "Last line from Logbook\n"
+msgstr "Letzte Zeile aus Logbuch\n"
+
+#
+msgid "Last waypoint of the Route"
+msgstr "Letzter Wegpunkt in der Route"
+
+#
+msgid "Lastname only"
+msgstr "nur Nachname"
+
+#
+#, c-format
+msgid ""
+"Layouts %sinstalled at\n"
+"\n"
+"%s\n"
+"%s\n"
+"%s\n"
+"%s"
+msgstr ""
+"Layouts %sinstallliert in Verzeichnisse:\n"
+"\n"
+"%s\n"
+"%s\n"
+"%s\n"
+"%s"
+
+#
+msgid "Length in Waterline"
+msgstr "Länge in der Wasserlinie"
+
+#
+msgid "Length of your sailing trip"
+msgstr "Dauer des Törns"
+
+#
+msgid "Length over Deck"
+msgstr "Länge über Deck"
+
+#
+msgid "Length over all"
+msgstr "Länge über alles"
+
+msgid "Local = UTC"
+msgstr "Lokal = UTC"
+
+#
+msgid "Local Format"
+msgstr "Locales Format"
+
+#
+msgid "Logbook"
+msgstr "Logbuch"
+
+#
+msgid "Logbook Preferences"
+msgstr "Logbuch Optionen"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Logbook Total"
+msgstr "Logbuch gesamt"
+
+#
+msgid "Logbook for OpenCPN"
+msgstr "Logbuch für OpenCPN"
+
+#
+msgid ""
+"Logbook for OpenCPN\n"
+"\n"
+"Thanks's to the community for their helpfull suggestions.\n"
+"\n"
+"If You find a bug post it on\n"
+"http://www.cruisersforum.com/forums/f134/logbook-konni-for-opencpn-68945."
+"html\n"
+"Helpfull Videos are at Youtube, search for LogbookKonni."
+msgstr ""
+"Logbuch für OpenCPN\n"
+"\n"
+"Dank an die Community für ihre Ünterstützung \n"
+"\n"
+"Wenn Sie einen Bug finden, bitte posten unter:\n"
+"http://www.cruisersforum.com/forums/f134/logbook-konni-for-opencpn-68945."
+"html\n"
+"Hilfreiche Videos unter Youtube, suche  LogbookKonni."
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Logbook until "
+msgstr "Altes Logbuch bis "
+
+msgid "MMSI"
+msgstr "MMSI"
+
+msgid "Ma"
+msgstr "Ma"
+
+#
+#
+msgid "Magnetic"
+msgstr "Magnet"
+
+msgid "Main"
+msgstr "Groß"
+
+#
+msgid "Maintenance"
+msgstr "Instandhaltung"
+
+#
+msgid "Member"
+msgstr "Mitglied"
+
+#
+msgid "Merge Watches"
+msgstr "Verbinde Wachzeiten"
+
+#
+msgid "Meteo"
+msgstr "Wetter"
+
+#
+msgid "Meter"
+msgstr "Meter"
+
+msgid "Mi"
+msgstr "Mi"
+
+#
+#
+msgid "Minutes"
+msgstr "Minuten"
+
+#
+msgid "Minutes greater than 59"
+msgstr "Minuten sind größer als 59"
+
+msgid "Miscellaneous"
+msgstr "Sonstiges"
+
+msgid "Mizzen"
+msgstr "Mizzen"
+
+msgid "Mizzen Storm"
+msgstr "Mizzen Sturm"
+
+#
+#
+msgid "Month"
+msgstr "Monat"
+
+#
+# This 'Month ' has a appended blank
+# to show in foreign languages the
+# singular !
+msgid "Month "
+msgstr "Monat(e)"
+
+#
+#
+msgid "Motor Hours"
+msgstr "Motor Stunden"
+
+#
+msgid "Motor/Sails"
+msgstr "Maschine/Segel"
+
+msgid "Mt"
+msgstr "Mt"
+
+msgid "NM"
+msgstr "NM"
+
+msgid "NMEA"
+msgstr "NMEA"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Name      "
+msgstr "Name      "
+
+#
+msgid "Name in full"
+msgstr "Vor- und Zuname"
+
+#
+msgid "Nationality"
+msgstr "Nationalität"
+
+msgid "Navigation"
+msgstr "Navigation"
+
+#
+#, c-format
+msgid "New Item%i"
+msgstr "Neuer Eintrag%i"
+
+#
+msgid "New Logbook"
+msgstr "Neues Logbuch"
+
+#
+#, c-format
+msgid "New Node%i"
+msgstr "Neuer Knoten%i"
+
+#
+msgid "Next WP Name: "
+msgstr "Nächster WP Name:"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "No"
+msgstr "Nein"
+
+#
+msgid "No GPS-Signal !"
+msgstr "kein GPS-Signal"
+
+#
+msgid ""
+"No Path set to HTML-Editor\n"
+"in ToolBox/Plugins/LogbookKonni/Preferences"
+msgstr ""
+"kein Pfad zum HTML-Editor\n"
+"in ToolBox/Plugins/LogbookKonni/Preferences gesetzt "
+
+#
+msgid ""
+"No Path set to HTML-Editor\n"
+"in Toolbox/Plugins/LogbookKonni/Preferences"
+msgstr ""
+"kein Pfad zum HTML-Editor\n"
+"in ToolBox/Plugins/LogbookKonni/Preferences gesetzt "
+
+#
+#
+msgid "No Seconds"
+msgstr "keine Sekunden"
+
+msgid "No. of Inboard Engines"
+msgstr "Anzahl Motoren"
+
+#
+msgid "Normal Timer"
+msgstr "Normaler Timer"
+
+#
+msgid ""
+"Normal Timer has 0 h 0 Min.\n"
+"\n"
+"Please change settings (Timer-Interval)"
+msgstr ""
+"Normaler Timer hat 0 h 0Min 0 sec.\n"
+"\n"
+"Bitte ändern Sie die Werte"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Now"
+msgstr "Jetzt"
+
+msgid "ODT"
+msgstr "ODT"
+
+#
+#, c-format
+msgid "Old Logbook until %s"
+msgstr "Altes Logbuch bis %s"
+
+msgid "On engine start set always all sails down"
+msgstr "Bei Motorstart immer Segel runter"
+
+#
+msgid "Onboard"
+msgstr "an Bord"
+
+#
+msgid ""
+"Only used when you enter 1/2, 1/4 ... in a total-field, or to calculate the "
+"watermaker\n"
+msgstr ""
+"Wird zwingend benötigt bei einer Eingabe von 1/2, 1/4....\n"
+"in einem Gesamt-Feld (z.B. Wasser gesamt)\n"
+"oder um den Watermaker zu berechnen\n"
+
+#
+msgid ""
+"Opendocument SpreadSheet(*.ods)|*.ods|Excel 2003 Format(*.xml)|*.xml|CSV "
+"Format OpenOffice(*.csv)|*.csv|Backup Logbook(*.txt)|*.txt"
+msgstr ""
+"Opendocument Tabellenkalkulation(*.ods)|*.ods|Excel 2003 Format(*.xml)|*.xml|"
+"CSV Format OpenOffice(*.csv)|*.csv|Backup Logbook(*.txt)|*.txt"
+
+#
+msgid "Overview"
+msgstr "Übersicht"
+
+#
+msgid "Owner"
+msgstr "Eigner"
+
+msgid "PM"
+msgstr "PM"
+
+#
+msgid "Passport-Nr"
+msgstr "Pass-Nr."
+
+#
+msgid "Path"
+msgstr "Pfade"
+
+#
+msgid "Path to Datamanager"
+msgstr "Pfad zum Dateimanager"
+
+#
+#
+msgid ""
+"Path to HTML-Editor\n"
+"(optional)"
+msgstr ""
+"Pfad zum HTML-Editor\n"
+"(optional)"
+
+#
+msgid "Path to MailClient"
+msgstr "Pfad zum Mail-Programm"
+
+#
+msgid "Path to ODT-Editor"
+msgstr "Pfad zum ODT-Editor"
+
+#
+msgid "Paths"
+msgstr "Pfade"
+
+#
+msgid "Place of Birth"
+msgstr "Geburtsort"
+
+#
+msgid ""
+"Please enter 05445.1234n03012.0504e for\n"
+"054Deg 45.1234Min N 030Deg 12.0504Min E"
+msgstr ""
+"Bitte geben Sie 05445.1234n03012.0504e für\n"
+"054° 45,1234' N \n"
+"030°12,0504' E ein"
+
+#
+msgid ""
+"Please enter 0544512.15n0301205.15e for\n"
+"054Deg 45Min 12.15Sec N 030Deg 12Min 05.15Sec E"
+msgstr ""
+"Bitte geben Sie 0544512.15n0301205.15e für\n"
+"054° 45' 12.15\" N \n"
+"030°12' 05.15\" E ein"
+
+#
+#, c-format
+msgid ""
+"Please enter the Date in the format:\n"
+"      %s"
+msgstr ""
+"Bitte geben Sie das Datum im Format:\n"
+"      %s"
+
+#
+#, c-format
+msgid ""
+"Please enter the Time in the format:\n"
+"   %s"
+msgstr ""
+"Bitte geben Sie die Zeit im diesem Format ein:\n"
+"   %s"
+
+#
+msgid "Please fill in one character in Degrees, Minutes and Seconds"
+msgstr "Bitte ein Zeichen für Grad, Minuten, Sekunden einfügen"
+
+#
+msgid "Please fill in one character in Degrees, Minuts and Seconds"
+msgstr "Bitte ein Zeichen für Grad, Minuten, Sekunden einfügen"
+
+#
+msgid "Policy"
+msgstr "Police"
+
+#
+msgid "Popup logbook on event"
+msgstr "Zeige Logbuch bei einem Ereignis an (Popup)"
+
+msgid "Position"
+msgstr "Position"
+
+#
+msgid "Priority"
+msgstr "Priorität"
+
+msgid "PropShaft"
+msgstr "Propwelle"
+
+#
+msgid "R"
+msgstr "R"
+
+msgid "RPM"
+msgstr "U/min"
+
+#
+#
+#
+#
+#
+msgid "Reef"
+msgstr "Reff"
+
+#
+msgid "Registration"
+msgstr "Register-Nr."
+
+#
+#
+msgid "Relative"
+msgstr "Relativ"
+
+#
+msgid "Reload Layouts"
+msgstr "Layouts neu laden"
+
+#
+msgid "Remarks"
+msgstr "Notizen"
+
+#
+msgid "Reminder"
+msgstr "Erinnerung"
+
+#
+msgid "Rename Item"
+msgstr "Eintrag umbenennen"
+
+#
+msgid "Rename Layout"
+msgstr "Layout umbenennen"
+
+#
+msgid "Repair done"
+msgstr "Reparatur erledigt"
+
+#
+msgid "Repairs"
+msgstr "Reparaturen"
+
+#
+msgid "RepairsTODO"
+msgstr "Reparaturen zu erlegigen"
+
+#
+#
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+#
+msgid "Reset Paths"
+msgstr "Pfade zurücksetzen"
+
+#
+msgid "Reset all Values to zero ?"
+msgstr "alle Werte zurücksetzen ?"
+
+#
+msgid "Reset data to edit-level"
+msgstr "Zurücksetzen der Daten"
+
+msgid "Revolutions"
+msgstr "Umdrehungen"
+
+msgid "Route"
+msgstr "Route"
+
+msgid "RouteID"
+msgstr "RouteID"
+
+msgid "Routepoints"
+msgstr "Routenpunkte"
+
+msgid "Row +"
+msgstr "Zeile +"
+
+msgid "Row -"
+msgstr "Zeile -"
+
+msgid "S"
+msgstr "S"
+
+#
+msgid "SOG"
+msgstr "FüG"
+
+#
+msgid "STW"
+msgstr "FdW"
+
+#
+msgid "Sail-Nr."
+msgstr "Segel-Nr."
+
+#
+#
+#
+#
+#
+msgid "Sails"
+msgstr "Segel"
+
+msgid "Sails Messages"
+msgstr "Segel Nachricht"
+
+msgid "Sails changed"
+msgstr "Segel gewechselt"
+
+msgid "Sails down"
+msgstr "Segel runter"
+
+msgid "Sails hoisted"
+msgstr "Segel hoch"
+
+#
+msgid ""
+"Sails up\n"
+"Engine stopped\n"
+"\n"
+"Demo - Rightclick-Menu 'use Testextblocks' for help"
+msgstr ""
+"Segel rauf\n"
+"Maschine gestoppt\n"
+"\n"
+"Demo - klicke im Rechtsklickmenu 'nutze Textblocks für Hilfe'"
+
+#
+msgid "Sails used mostly"
+msgstr "Segel meistens"
+
+#
+msgid "Save Boat File"
+msgstr "Boot Datei speichern"
+
+#
+msgid "Save BuyParts File"
+msgstr "Kaufe-Zubehör-Datei speichern"
+
+#
+msgid "Save CrewList File"
+msgstr "Crewliste speichern"
+
+#
+msgid "Save Logbook File"
+msgstr "Logbuchdatei speichern"
+
+#
+msgid "Save Overview File"
+msgstr "Übersicht-Datei speichern"
+
+#
+msgid "Save Repairs File"
+msgstr "Raparaturen-Datei speichern"
+
+#
+msgid "Save Service File"
+msgstr "Service-Datei speichern"
+
+#
+msgid "Search in"
+msgstr "Suche in"
+
+#
+msgid "Search in Logbook"
+msgstr "Suche in Logbuch"
+
+#
+msgid "Searchstring"
+msgstr "Sucheingabe"
+
+#
+#
+msgid "Seconds"
+msgstr "Sekunden"
+
+#
+msgid "Select"
+msgstr "Wähle"
+
+#
+msgid "Select Layout:"
+msgstr "Wähle Layout:"
+
+#
+msgid "Select Layout: "
+msgstr "Wähle Layout"
+
+#
+msgid "Select Logbook"
+msgstr "Wähle Logbuch"
+
+#
+msgid "Select Route"
+msgstr "Wähle Route"
+
+msgid "Select Track"
+msgstr "Wähle Track"
+
+#
+msgid "Select a date"
+msgstr "Wähle ein Datum"
+
+#
+msgid ""
+"Select a layout which is displayed\n"
+"with button \"View\""
+msgstr ""
+"Wählt ein Layout, das angezeit wird \n"
+"mit dem Button \"Ansehen\""
+
+#
+msgid ""
+"Select a old logbook\n"
+"Everytime a new logbook is created, you'll \n"
+"find the active logbook as old logbook here"
+msgstr ""
+"Wählen Sie ein altes Logbuch aus.\n"
+"Immer wenn ein neues Logbuch erstellt wird,\n"
+"finden das aktive Logbuch als neues Logbuch hier "
+
+#
+msgid "Select one of the old logbooks"
+msgstr "Wählen Sie eines der alten Logbücher"
+
+#
+msgid "Select zipped Languages-Files"
+msgstr "Wähle gezippte Sprach-Dateien"
+
+#
+msgid "Select zipped Layout-Files"
+msgstr "Wähle gezippte Layout-Dateien"
+
+#
+msgid "Send Layout by email"
+msgstr "Sende Layout via Email"
+
+#
+msgid "Separator"
+msgstr "Separator"
+
+#
+msgid "Serial-Nr."
+msgstr "Serien-Nr."
+
+msgid "Service"
+msgstr "Service"
+
+#
+msgid "Service TODO"
+msgstr "Service zu erledigen"
+
+#
+msgid "Service done"
+msgstr "Service erledigt"
+
+msgid "Set Linewidth to"
+msgstr "Setze Zeilenbreite auf"
+
+#
+msgid "Set Path to DataManager"
+msgstr "Pfad zum Dateimanager"
+
+#
+msgid "Set Path to HTML-Editor"
+msgstr "Pfad zum HTML-Editor"
+
+#
+msgid "Set Path to MailClient"
+msgstr "Pfad zum Mail-Program"
+
+#
+msgid "Set Path to ODT-Editor"
+msgstr "Pfad zum ODT-Editor"
+
+msgid "Set Route-Linecolor to"
+msgstr "Setze Routen-Linienfarbe auf"
+
+#
+msgid "Set Timer"
+msgstr "Timerintervall"
+
+#
+msgid "Set Timer Interval"
+msgstr "Setze das Timer-Intervall"
+
+msgid "Set Track-Linecolor to"
+msgstr "Setze Track-Linienfarbe auf"
+
+msgid "Set Transparency to"
+msgstr "Setze Transparenz auf"
+
+#
+msgid "Set Watchtimes"
+msgstr "Wachzeiten setzen"
+
+#
+msgid "Set as Watchbase"
+msgstr "Setze als Wachzeiten-Basis"
+
+#
+msgid ""
+"Set desired Degrees\n"
+"if the course changes by this amount\n"
+"a course-changed-event occurs"
+msgstr ""
+"Setze gewünschte Gradzahl ein\n"
+"Wenn sich der Kurs um diesen Betrag ändert\n"
+"erfolgt ein Logbucheintrag (course-change-event)."
+
+#
+msgid ""
+"Set desired delay in minutes\n"
+"It's a good idea to set here a value > 0\n"
+"to find the right wind."
+msgstr ""
+"Setze die gewünschte Verzögerung in Minuten\n"
+"Es ist immer ratsam hier einnen Wert > 0 einzusetzen,\n"
+"um z.B. den richtigen Kurs zum Wind zu finden. "
+
+#
+msgid "Set gal/liter in Abbreviations "
+msgstr "gal/l kann in Abkürzungen gesetzt werden"
+
+#
+msgid ""
+"Set the desired distance in NM\n"
+" = (Track made good)"
+msgstr ""
+"Setze die gewünschte Distanz in NM ein\n"
+" = (Track made good)"
+
+#
+msgid "Set the interval for the timer"
+msgstr "Timerintervall für den Timer setzen"
+
+#
+msgid "Set the startdate of the sailing trip"
+msgstr "Setze das Startdatum des Törns ein"
+
+#
+msgid "Set the starttime of your sailing trip"
+msgstr "Setze die Startzeit des Törns ein"
+
+msgid "Show"
+msgstr "Zeige"
+
+#
+#
+msgid "Show Depth in"
+msgstr "Tiefe in"
+
+msgid "Show Engines/Sails Mode"
+msgstr "Zeige Motor/Segel Modus"
+
+#
+msgid "Show Equipment"
+msgstr "Zeige Zubehör"
+
+msgid "Show Layout Selection Mode"
+msgstr "Zeige Layout Auswahl Modus"
+
+#
+#
+msgid "Show Logbook Icon"
+msgstr "Zeige Logbuch-Icon"
+
+#
+msgid "Show Position Fomat"
+msgstr "Zeige Position im Format"
+
+#
+#
+#
+#
+#
+msgid "Show ToolTips"
+msgstr "Zeige Tooltips"
+
+#
+#
+msgid "Show Wave/Swell in"
+msgstr "Welle/Swell in"
+
+#
+msgid "Show all entries"
+msgstr "Zeige alle Einträge"
+
+#
+msgid "Show hidden columns"
+msgstr "Zeige versteckte Spalten"
+
+#
+#
+msgid "Show onboard only"
+msgstr "Zeige nur Crew an Bord"
+
+#
+msgid "Show/Hide Equipmentgrid"
+msgstr "Zeige/Verstecke Zubehör"
+
+#
+msgid "Show/Hide Statusbar"
+msgstr "Ein-/Ausblenden der Statuszeile"
+
+#
+msgid ""
+"Shows/Sets the day\n"
+"Displays the data in your ODT/Browser-program from this day to end"
+msgstr ""
+"Zeigt oder setzt den Tag\n"
+"Anzeige der Daten von diesem Tag bis Ende im ODT/Browser-Pragramm"
+
+#
+#
+msgid "Shutdown Logbook"
+msgstr "Logbuch schliessen"
+
+#
+msgid "Sign"
+msgstr "Zeichen"
+
+#
+msgid "Sorry, Logbook has no lines"
+msgstr "Sorry, Logbuch hat keine Einträge"
+
+#
+msgid "Sorry, no Layout installed"
+msgstr "Sorry, kein Layout installiert"
+
+#
+msgid "Sort ascending"
+msgstr "Sortierung aufsteigend"
+
+#
+msgid "Sort descending"
+msgstr "Sortierung absteigend"
+
+msgid "Sp"
+msgstr "Sp"
+
+#
+msgid "Speed"
+msgstr "Fahrt"
+
+#
+msgid "Speed Avg."
+msgstr "Fahrt durchsch."
+
+#
+msgid "Speed Max."
+msgstr "Fahrt max."
+
+msgid "Spinnacker"
+msgstr "Spinnacker"
+
+#
+msgid "Split Watch"
+msgstr "Teile Wachzeiten"
+
+msgid "St"
+msgstr "St"
+
+#
+msgid "Start"
+msgstr "Start"
+
+#
+#, c-format
+msgid ""
+"Start converting to new Date/Time-Format\n"
+"and backup all datafiles from version 1.1 to\n"
+"\n"
+"%s"
+msgstr ""
+"Starte Konvertierung in neues Datumsformat und\n"
+"erstelle ein Backup aller Daten der Version 1.1 im Verzeichnis\n"
+"\n"
+"%s"
+
+msgid ""
+"Start your engine(s) and hit the button.\n"
+"You should see the ERRPM-Sentence\n"
+"left to the button"
+msgstr ""
+"Starte Motor(en) und klick den Button.\n"
+"Es soll die ERRPM-Sequenz links vom Button\n"
+"zu sehen sein"
+
+#
+msgid "Startvalue"
+msgstr "Startbetrag"
+
+msgid "Staysail"
+msgstr "Stagsegel"
+
+#
+msgid "Stop"
+msgstr "Stop"
+
+#
+msgid "Street"
+msgstr "Strasse"
+
+#
+msgid "Suspend/Resume running event/s"
+msgstr "Unterbrechen/Wiederaufnehmen von Ereignissen"
+
+#
+msgid "Swap two Watches"
+msgstr "Tausche zwei Wachzeiten"
+
+msgid "Swell"
+msgstr "Schwell"
+
+#
+msgid "Swell Avg."
+msgstr "Swell durchsch."
+
+#
+msgid "Swell Max."
+msgstr "Swell max."
+
+msgid "Tank"
+msgstr "Tank"
+
+#
+msgid "Telephone"
+msgstr "Telefon"
+
+#
+msgid "Temperature"
+msgstr "Temperatur"
+
+msgid "Text"
+msgstr "Text"
+
+#
+msgid "Textblocks"
+msgstr "Textblöcke"
+
+#
+msgid "Textblocks Dialog"
+msgstr "Textblöcke Dialog"
+
+#
+msgid "Texts for Rightclick-Menu"
+msgstr "Texte für das Rechtsklick-Menue"
+
+#
+msgid "Texts when using this Dialog only"
+msgstr "Texte nur mit diesem Dialog"
+
+#
+msgid ""
+"The itemname is shown in the rightcklick-menu of the following Columns\n"
+"By clicking on it the text is inserted\n"
+"\n"
+msgstr ""
+"Der Name des Eintrags wird im Rechtsklickmenue der folgenden Spalten "
+"angezeigt.\n"
+"Wenn der Name angeklickt wird, wird der entsprechende Text eingefügt.\n"
+"\n"
+
+#
+msgid ""
+"These texts are inserted into the grid-colmn\n"
+"by calling this dialog\n"
+"\n"
+"Select Item\n"
+"Click OK-Button\n"
+"\n"
+"Use Drag 'n Drop to place a item in menu"
+msgstr ""
+"Diese Texte werden in die entsprechende Grid-Spalte eingefügt\n"
+"wenn dieser Dialog aufgerufen wird.\n"
+"\n"
+"Wähle einen Eintrag\n"
+"Klicke den OK-Button\n"
+"\n"
+"Nutze Drag 'n Drop um einen Eintrag ins Menue zu verschieben."
+
+#
+msgid "Time"
+msgstr "Zeit"
+
+#
+msgid "Time-Format:"
+msgstr "Zeit-Format:"
+
+#
+msgid "Timer"
+msgstr "Timer an/aus"
+
+#
+msgid "Title"
+msgstr "Titel"
+
+#
+msgid "Total Time"
+msgstr "Reisezeit"
+
+#
+msgid "Town"
+msgstr "Stadt"
+
+msgid "Tr"
+msgstr "Tr"
+
+msgid "Track"
+msgstr "Track"
+
+msgid "Track "
+msgstr "Track "
+
+msgid "TrackID"
+msgstr "TrackID"
+
+#
+#, c-format
+msgid ""
+"Tried to install Languages at\n"
+"\n"
+"%s\n"
+"\n"
+"On Windows Vista/7/8 you need administrator rights.\n"
+"If no languages installed please restart OpenCPN as admin.\n"
+"(Rightclick on the icon and select \"Run as administrator\")\n"
+"\n"
+"After installation restart as normal user.\n"
+"\n"
+"The dialog 'Logbook Preferences' is closed now."
+msgstr ""
+"Versuche Dateien zu installieren in\n"
+"\n"
+"%s\n"
+"\n"
+"Windows Vista/7/8 benötigt Administrator-Rechte.\n"
+"Falls keine Sprachen installiert wurden, bitte OpenCPN als Admin erneut "
+"starten.\n"
+"(Rechtsklick auf das Icon und wähle \"Als Aldminitrator ausführen\")\n"
+"\n"
+"Nach erfolgter Installation OpenCPN als normaler Benutzer erneut starten.\n"
+"\n"
+"Der Dialog 'Logbuch Optionen' wird geschlossen."
+
+#
+#
+msgid "True"
+msgstr "Wahr"
+
+msgid "Try"
+msgstr "Try"
+
+#
+msgid "Type"
+msgstr "Typ"
+
+msgid "UTC"
+msgstr "UTC"
+
+msgid ""
+"Uncheck for Motorboats\n"
+"Sets \"Sails hoisted\" or \"Sails changed\" or \"Sails down\" messages\n"
+"\n"
+"Set/unset checkmarks in the sail-checkboxes BEFORE you start/stop the "
+"engine !"
+msgstr ""
+"Deaktiviere für Motorboote\n"
+"Setze \"Segel hoch\" oder \"Segel gewechselt\" oder \"Segel runter\" "
+"Nachrichten\n"
+"\n"
+"Aktiviere/deaktiviere Marke in den Segel-Checkboxen BEVOR Start/Stop des "
+"Motors !"
+
+msgid "Uncheck for Motorboats."
+msgstr "Deaktiviere für Motorboote."
+
+#
+msgid ""
+"Uncheck if You have no GPS\n"
+"If GPS is out of order, uncheck to\n"
+"prevent that the message repeats."
+msgstr ""
+"kein Haken, wenn Sie kein GPS benutzen\n"
+"oder es defekt ist. Es verhindert, dass die\n"
+"Nachricht permanent wiederholt wird."
+
+msgid "Uncheck if you are motorsailing"
+msgstr "Deaktiviere bei Motorsegeln"
+
+#
+msgid "Uninstall"
+msgstr "Deinstalliere"
+
+#
+msgid "Uninstall Logbook"
+msgstr "Deinstalliere Logbuch"
+
+#
+msgid ""
+"Uninstalls\n"
+"Logbook-Plugin,\n"
+"all Logbook-Data,\n"
+"all Logbook-Layouts,\n"
+"all Logbook-Languages\n"
+"and cleans the OpenCPN.ini"
+msgstr ""
+"Deinstalliert\n"
+"Logbuch-Plugin\n"
+"alle Logbuchdaten\n"
+"alle Logbuchlayouts\n"
+"alle Logbuchsprachen\n"
+"und bereinigt OpenCPN.ini"
+
+#
+msgid "Urgentvalue"
+msgstr "Dringendbetrag"
+
+msgid "Use ERRPM-Sentence (see help)"
+msgstr "Verwende ERRPM-Sequenz (siehe Hilfe)"
+
+msgid "Use ERRPM-Sentence to calculate the engine-hours"
+msgstr "Verwende ERRPM-Sequenz zur Berechnung Motorstunden"
+
+msgid "Use WIMDA-Sentence from the weatherstation"
+msgstr "Verwende WIMDA-Sequenz von Wetterstation"
+
+#
+msgid ""
+"Used for ODT/Browser-program\n"
+"One Row for the day + selected days = Days displayed"
+msgstr ""
+"Zeigt im ODT/Browser-Programm die Daten ab dem im Textfeld\n"
+"eingegeben Tag an plus der gewählten Tage"
+
+msgid "Usefull for Tablet-PC's"
+msgstr "Nützlich für Tablet-PC's"
+
+# Textfield for userlabel in boat
+msgid "UserLabel"
+msgstr "Anwender-Label"
+
+#
+msgid "View"
+msgstr "Ansehen"
+
+#
+msgid "View data in browser (HTML) or Openoffice/LibreOffice (ODT)"
+msgstr "Sehen Sie Ihre Daten im Browser(HTML) oder Open/Libreoffice (ODT) an"
+
+#
+msgid "Visibility"
+msgstr "Sicht"
+
+#
+msgid "W-Output"
+msgstr "W-Ausstoß"
+
+#
+#
+#
+#
+#
+msgid "W-Total"
+msgstr "W-Gesamt"
+
+#
+msgid "W/Strength"
+msgstr "Windstärke"
+
+#
+msgid "Warnvalue"
+msgstr "Warnbetrag"
+
+#
+msgid "Watch"
+msgstr "Wache"
+
+#
+msgid "Watchtime"
+msgstr "Wachdauer"
+
+#
+msgid "Water"
+msgstr "Wasser"
+
+#
+msgid "Water used"
+msgstr "Wasserverbrauch"
+
+#
+#
+#
+#
+#
+msgid "WaterTotal"
+msgstr "Wasser gesamt"
+
+#
+msgid "Waterm. Outp"
+msgstr "Waterm. Ausst."
+
+#
+msgid "Watermaker"
+msgstr "Watermaker"
+
+#
+msgid "Wave"
+msgstr "Wellenhöhe"
+
+#
+msgid "Wave Avg."
+msgstr "Wellenhöhe durchschn."
+
+#
+msgid "Wave Max."
+msgstr "Wellen max."
+
+#
+msgid "WayPoint arrived"
+msgstr "Wegpunkt erreicht"
+
+#
+msgid "Waypoint"
+msgstr "Wegpunkt"
+
+#
+msgid "Waypoint skipped"
+msgstr "Wegpunkt übersprungen"
+
+#
+msgid "Weather"
+msgstr "Wetter"
+
+#
+#
+msgid "Week(s)"
+msgstr "Woche(n)"
+
+#
+#
+msgid "Weeks(s)"
+msgstr "Woche(n)"
+
+#
+msgid "Wind"
+msgstr "Wind"
+
+#
+msgid "Wind Avg."
+msgstr "Windstärke durchschn."
+
+#
+msgid "Wind Max."
+msgstr "Wind max."
+
+#
+msgid ""
+"Wind is set to Heading,\n"
+"but GPS sends no Heading Data.\n"
+"Wind is set now to Realative to boat\n"
+"\n"
+msgstr ""
+"Windrichtung wurde auf \"KdW\" gesetzt,\n"
+"erhalte aber keine Daten.\n"
+"Windrichtung wurde auf \"default\" zurückgesetzt\n"
+"\n"
+
+#
+msgid "Winddirection Avg."
+msgstr "Windrichtung durchschn."
+
+#
+#
+msgid "Windspeed"
+msgstr "Windstärke"
+
+#
+#
+msgid "Windspeed "
+msgstr "Windstärke"
+
+msgid "Write message \"Engine runnung\""
+msgstr "Schreibe Nachricht \"Motor läuft\""
+
+#
+#
+msgid "Write warning \"No GPS\""
+msgstr "schreibe Warnung  \"No GPS\""
+
+#
+msgid ""
+"Writes this text to the logbook when the event occurs, alter texts as desired"
+msgstr ""
+"Schreibt diesen Text in das Logbuch, wenn ein Ereignis auftritt. Ändere den "
+"Text nach Wunsch"
+
+#
+msgid "Yard-Nr."
+msgstr "Marina-Nr."
+
+#
+msgid "Year"
+msgstr "Jahr"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+msgid "Yes"
+msgstr "Ja"
+
+msgid ""
+"You can change the abreviations and the names of the sails\n"
+"in Options/Miscellaneous/Sails"
+msgstr ""
+"Abkürzungen und Segelnamen können geändert werden\n"
+"in Optionen/Sonstiges/Segel"
+
+#
+#, c-format
+msgid ""
+"You cannot set this dateformat.\n"
+"\n"
+"%s%s%s%s%s\n"
+"\n"
+"Please use a different Dateformat in all three Choiceboxes."
+msgstr ""
+"Sie können dieses Datumsformat nicht nutzen.\n"
+"\n"
+"%s%s%s%s%s\n"
+"\n"
+"Bitte setzen Sie in den drei Auswahlboxen unterschiedliche Daten."
+
+#
+msgid ""
+"Your Country has 24 Hour Format.\n"
+"In this case the OS doen't serve AM/PM-Strings.\n"
+msgstr ""
+"In Ihrem Land wird das 24 Stunden Format verwendet.\n"
+"In diesem Fall stellt das Betriebssytem keine AM/PM-Strings zur Verfügung. \n"
+
+msgid ""
+"Your Engine(s) running in manually mode.\n"
+"\n"
+"Engine(s) stopped now."
+msgstr ""
+"Motor(en) laufen im manuellen Modus.\n"
+"\n"
+"Motor(en) jetzt gestoppt."
+
+#
+#, c-format
+msgid ""
+"Your Logbook has %i lines\n"
+"\n"
+"You should create a new logbook to minimize loadingtime."
+msgstr ""
+"Ihr Logbuch hat %i Zeilen\n"
+"\n"
+"Sie sollten ein neues Logbuch erstellen, um Ladezeiten zu verringern."
+
+#
+msgid "Your Logbook has no lines ?"
+msgstr "Ihr Logbuch hat keine Zeilen ?"
+
+msgid ""
+"Your engine(s) are still running\n"
+"\n"
+"Stop engine(s) ?"
+msgstr ""
+"Motor(en) laufen noch\n"
+"\n"
+"Stoppe Motor(en) ?"
+
+#
+msgid "Zip"
+msgstr "PLZ"
+
+#
+msgid "add a line to the end of your logbook"
+msgstr "Fügt eine Zeile am Ende des Logbuchs hinzu"
+
+#
+msgid "add the equipment of your boat"
+msgstr "fügen Sie die Ausrüstung Ihres Bootes hinzu"
+
+#
+msgid "all"
+msgstr "alle"
+
+#
+msgid ""
+"automatic line\n"
+"Distance > "
+msgstr ""
+"automatische Zeile\n"
+"Distanz > "
+
+#
+msgid ""
+"automatic line\n"
+"Waypoint arrived:"
+msgstr ""
+"automatische Zeile\n"
+"Wegpunlt erreicht"
+
+#
+msgid ""
+"automatic line\n"
+"change of course >"
+msgstr ""
+"automatische Zeile\n"
+"Kursänderung > "
+
+#
+msgid ""
+"automatic line\n"
+"change of guards"
+msgstr ""
+"automatische Zeile\n"
+"Wachwechsel"
+
+#
+msgid "automatic line Waypoint arrived"
+msgstr ""
+"automatische Zeile\n"
+"Wegpunlt erreicht"
+
+#
+#
+msgid ""
+"automatic line by timer\n"
+"You can set/unset a timer\n"
+" by clicking the bullet\n"
+"Change this text in options"
+msgstr ""
+"Automatischer Eintrag durch Timerr\n"
+"Sie können einen Timer ein- oder ausschalten\n"
+"durch klicken auf den Timer-Bullet.\n"
+"Ändere diesen Text in Options"
+
+msgid "black"
+msgstr "schwarz"
+
+#
+msgid "day(s)"
+msgstr "Tag(e)"
+
+msgid "default"
+msgstr "default"
+
+#
+#
+msgid ""
+"default = Relative to Boat\n"
+"Heading = Actual wind direction"
+msgstr ""
+"default = Relativ zum Schiff\n"
+"KdW = Aktuelle Windrichtung"
+
+#
+msgid "every"
+msgstr "jede"
+
+#
+#
+msgid "every 15 Degrees +/- 1 hour"
+msgstr "je 15 Grad +/- 1 Stunde"
+
+#
+msgid "export your BuyParts-data as HTML or ODT"
+msgstr "Exportieren Sie Ihre \"Kaufe-Zubehör\"-Daten in HTML oder ODT"
+
+#
+msgid "export your Overview-data as HTML or ODT"
+msgstr "Exportieren Sie Ihre \"Übersichtr\"-Daten in HTML oder ODT"
+
+#
+msgid "export your Repairs-data as HTML or ODT"
+msgstr "Exportieren Sie Ihre \"Reparatur\"-Daten in HTML oder ODT"
+
+#
+msgid "export your Service-data as HTML or ODT"
+msgstr "Exportieren Sie Ihre \"Servicer\"-Daten in HTML oder ODT"
+
+#
+msgid ""
+"export your boat/equipment-data as:\n"
+"      HTML, ODT,  ODS, XML, CSV"
+msgstr ""
+"Exportieren Sie Ihre \"Boots/Ausrüstungs\"-Daten in:\n"
+"           HTML, ODT,  ODS, XML, CSV"
+
+#
+msgid ""
+"export your crew-data as:\n"
+"HTML, ODT,  ODS, XML, CSV"
+msgstr ""
+"Exportieren Sie Ihre \"Crew\"-Daten in:\n"
+"        HTML, ODT,  ODS, XML, CSV"
+
+#
+msgid ""
+"export your logbook-data as:\n"
+"HTML, ODT,  ODS, XML, CSV"
+msgstr ""
+"Exportieren Sie Ihre  \"Logbuch\"-Daten in:\n"
+"   HTML, ODT,  ODS, XML, CSV"
+
+msgid "fm"
+msgstr "fm"
+
+#
+msgid "from"
+msgstr "vom"
+
+#
+msgid "from "
+msgstr "vom "
+
+msgid "ft"
+msgstr "ft"
+
+msgid "fth"
+msgstr "fth"
+
+#
+msgid "gal"
+msgstr "l"
+
+#
+msgid ""
+"green = Event is running\n"
+"red = Event is stopped\n"
+"yellow = Event is suspended. Restart event with Start-Button"
+msgstr ""
+"grün = Ereignis läuft\n"
+"rot = Ereignis gestoppt\n"
+"gelb = Ereignis pausiert. Wiederaufnahme mit Start-Button"
+
+msgid "h"
+msgstr "h"
+
+msgid "km/h"
+msgstr "km/h"
+
+msgid "kts"
+msgstr "kn"
+
+msgid "m"
+msgstr "m"
+
+msgid "m/s"
+msgstr "m/s"
+
+#
+msgid "mb"
+msgstr "hPa"
+
+#
+msgid "month"
+msgstr "Monat(e)"
+
+#
+msgid ""
+"no Event/s\n"
+"Click one or more bullets to start"
+msgstr ""
+"keine Ereignisse\n"
+"Ein Klick auf einen (roten) Knopf startet es, mehrere Events möglich"
+
+#
+msgid "none"
+msgstr "kein"
+
+msgid "red"
+msgstr "rot"
+
+msgid "solid"
+msgstr "solid"
+
+#
+msgid "this day"
+msgstr "dieser Tag"
+
+#
+msgid "to"
+msgstr "bis"
+
+#
+#, c-format
+msgid ""
+"to use MS-Word, append %s like this:\n"
+"\"C:\\yourPathToWinword\\WINWORD.EXE\" %s"
+msgstr ""
+"damit MS-Word richtig started, bitte ein %s anhängen:\n"
+"\"C:\\DeinPfadzuWinword\\WINWORD.EXE\" %s"
+
+msgid "transparent"
+msgstr "transparent"
+
+msgid "unnamed Route"
+msgstr "unbenannte Route"
+
+#
+msgid "use Textblocks..."
+msgstr "nutze Textblöcke..."
+
+#
+msgid "week(s)"
+msgstr "Woche(n)"
+
+msgid "white"
+msgstr "weiß"
+
+#
+msgid "write your own label"
+msgstr "schreiben Sie Ihr eigenes Label"
+
+msgid "yellow"
+msgstr "gelb"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "\n"
+#~ "Name of Waypoint: %s\n"
+#~ "True bearing to destination: %4.1f%s\n"
+#~ "Range to destination: %4.2f%s"
+#~ msgstr ""
+#~ "\n"
+#~ "Wegpunkt-Name: %s\n"
+#~ "Wahre Peilung zum Ziel: %4.1f%s\n"
+#~ "Distanz zum Ziel: %4.2f%s"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "      Course- Message after Minutes"
+#~ msgstr "     Kurs-Mitteilung nach Minuten"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "&Cut"
+#~ msgstr "Ausschneiden"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "1. Watch of 1. Person"
+#~ msgstr "1. Wache der 1. Person"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Add to Watchlist"
+#~ msgstr "zur Wachliste hinzufügen"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Add to Watchlist same as"
+#~ msgstr "zur Wachliste hinzufügen wie.."
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "AllLogbooks"
+#~ msgstr "Alle Logbücher"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Append Line every Nm"
+#~ msgstr "Füge Zeile hinzu je Nm"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Automatic Watch Interval"
+#~ msgstr "Automatisches Wachinterval"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "BuyParts"
+#~ msgstr "Zubehör kaufen"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Copy"
+#~ msgstr "Kopieren"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "CrewList"
+#~ msgstr "Crewliste"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "Crewmember is not onboard\n"
+#~ "\n"
+#~ "Please set column 'Onboard' to Yes\n"
+#~ "(click the column twice)"
+#~ msgstr ""
+#~ "Crewmitglied befindet sich nicht an Bord\n"
+#~ "\n"
+#~ "Bitte setzte das Feld 'an Bord' auf 'Ja'\n"
+#~ "(klicke zweimal in das Feld)"
+
+#
+#
+#, fuzzy
+#~ msgid "Current <"
+#~ msgstr "Strom"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Current from"
+#~ msgstr "Strom von"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Delete"
+#~ msgstr "Löschen"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Drag 'n Drop to change the order in the list"
+#~ msgstr "Drag 'n Drop um die Reihenfolge der Listeneinträge zu ändern"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 1.Watch"
+#~ msgstr "Ende 1. Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 2.Watch"
+#~ msgstr "Ende 2. Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 3.Watch"
+#~ msgstr "Ende 3. Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 4.Watch"
+#~ msgstr "Ende 4. Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 5.Watch"
+#~ msgstr "Ende 5. Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "End 6.Watch"
+#~ msgstr "Ende 6. Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "EngineTotal"
+#~ msgstr "Maschine gesamt"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "FirstName"
+#~ msgstr "Vorname"
+
+#
+#
+#, fuzzy
+#~ msgid "HardWeather"
+#~ msgstr "Wetter"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "If Waypoint arrived"
+#~ msgstr "Wenn Wegpunkt erreicht"
+
+#
+#
+#
+#
+#~ msgid ""
+#~ "If You have created Your own Layouts\n"
+#~ "prepend them with e.g. My_ \n"
+#~ "The _ is important"
+#~ msgstr ""
+#~ "Wenn Sie ein eigenes Layout erstellt haben\n"
+#~ "stellen Sie bitte z,b. Mein_ voran\n"
+#~ "Der Unterstrich _ ist wichtig !"
+
+#
+#
+#
+#
+#~ msgid ""
+#~ "If You have created Your own layouts\n"
+#~ "with prefix e.g. My_"
+#~ msgstr ""
+#~ "Wen Sie ein Layout mit dem Prefix\n"
+#~ "z.B. Mein_ erstellt haben"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Install OpenCPN_Mac_Logbook_Languages.zip"
+#~ msgstr "Installiere OpenCPN_Mac__Logbook_Languages.zip"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Interval:"
+#~ msgstr "Interval:"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "Languages not installed at\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Spachen nicht installiert im Verzeichnis:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+
+#
+#
+#, fuzzy
+#~ msgid "LightWeather"
+#~ msgstr "Wetter"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Logbook Konni"
+#~ msgstr "Logbuch Konni"
+
+#
+#
+#
+#
+#
+#~ msgid "Logbook from %s to %s"
+#~ msgstr "Logbuch vom %s bis %s"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "No Events running"
+#~ msgstr "keine laufenden Ereignisse"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "No. Watches"
+#~ msgstr "Anzahl Wachen"
+
+#
+#
+#
+#
+#
+#~ msgid "Only Layouts with prefix:"
+#~ msgstr "nur Layouts mit Prefix:"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Paste"
+#~ msgstr "Einfügen"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Path to HTML-Editor (optional)"
+#~ msgstr "Pfad zum HTML-Editor (optional)"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Person:"
+#~ msgstr "Person:"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Persons:"
+#~ msgstr "Personen:"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Please enter 4 digits in 24h-Format like 1545 = 03:45 PM"
+#~ msgstr "Bitte 4 Zahlen im 24h-Format eingeben z.B. 1545 = 15:45"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "Please enter like 1.30 or 1,30 or 1:30\n"
+#~ "for 1:30h"
+#~ msgstr ""
+#~ "Bitte geben Sie 1.30 oder 1,30 oder 1:30\n"
+#~ "für 1:30h ein."
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid ""
+#~ "Please enter the Time in the format:\n"
+#~ "   12:30:00PM"
+#~ msgstr ""
+#~ "Bitte geben Sie die Zeit im Format:\n"
+#~ "   12:30:00 ein."
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Redo"
+#~ msgstr "Wiederholen"
+
+#
+#
+#, fuzzy
+#~ msgid "RoughWeather"
+#~ msgstr "Wetter"
+
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Sails ="
+#~ msgstr "Segel"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Save"
+#~ msgstr "Speichern"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Search.."
+#~ msgstr "Suche.."
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Select boat-layout to view"
+#~ msgstr "Wähle Route"
+
+#
+#
+#
+#
+#
+#~ msgid "Show all Layouts"
+#~ msgstr "zeige alle Layouts"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Sorry, 0 Hrs 0 Min 0 Sec are not possible"
+#~ msgstr "Sorry, 0 Hrs 0 Min 0 Sec ist nicht möglich"
+
+#
+#
+#
+#
+#~ msgid "Sorry, Your Logbook has no lines"
+#~ msgstr "Sorry, Ihr Logbuch hat keine Zeilen"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Speed STW Avg."
+#~ msgstr "Fahrt d.W. durchsch."
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Speed STW Max."
+#~ msgstr "Fahrt d.W. max."
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 1.Watch"
+#~ msgstr "Start 1.Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 2.Watch"
+#~ msgstr "Start 2.Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 3.Watch"
+#~ msgstr "Start 3.Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 4.Watch"
+#~ msgstr "Start 4.Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 5.Watch"
+#~ msgstr "Start 5.Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Start 6.Watch"
+#~ msgstr "Start 6.Wache"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "Static Watchtimes"
+#~ msgstr "Wachzeiten setzen"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Timer "
+#~ msgstr "Timer an/aus"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Timer on/off"
+#~ msgstr "Timer an/aus"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#~ msgid "Undo"
+#~ msgstr "Rückgängig"
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#, fuzzy
+#~ msgid "View "
+#~ msgstr "Ansehen"

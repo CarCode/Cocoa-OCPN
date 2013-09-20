@@ -1,0 +1,268 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: watchman_pi 3.4.64\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-07-25 15:11+0200\n"
+"PO-Revision-Date: 2013-07-25 15:37+0100\n"
+"Last-Translator: CarCode <carcode@me.com>\n"
+"Language-Team: de_DE <carcode@me.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+msgid "3"
+msgstr "3"
+
+msgid "ALARM!!!!"
+msgstr "ALARM!!!!"
+
+msgid "About"
+msgstr "Über"
+
+msgid "About Watchman"
+msgstr "Über Watchman"
+
+msgid "Alarm Action"
+msgstr "Alarm Aktion"
+
+msgid "Anchor Watch"
+msgstr "Anker Wache"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Command"
+msgstr "Befehl"
+
+msgid "Course Error"
+msgstr "Kurs-Fehler"
+
+msgid "Current Course"
+msgstr "Aktueller Kurs"
+
+msgid "Days "
+msgstr "Tage "
+
+msgid "Deadman Alarm"
+msgstr "Totermann Alarm"
+
+msgid "Degrees"
+msgstr "Grad"
+
+msgid "Distance to Anchor"
+msgstr "Distanz zum Anker"
+
+msgid "Donate"
+msgstr "Spenden"
+
+msgid ""
+"Each alarm is enabled/disabled with a check box.\n"
+"\n"
+"Most alarms should be self-explanatory, however the AIS alarm may be only "
+"useful in areas where AIS traffic is known to regularly occur, or from a "
+"reciever on a ship which also has an active transmitter.  Otherwise an alarm "
+"will occur if there are no ships\n"
+"\n"
+"Alarm action:\n"
+"\n"
+"Normally a sound is played, however you can execute any command you like.  "
+"On linux for example, builtin sound playing can block, so instead consider a "
+"command of:\n"
+"\"aplay /usr/local/share/opencpn/sounds/2bells.wav\""
+msgstr ""
+"Jeder Alarm kann mit einer Checkbox aktiviert/deaktiviert werden.\n"
+"\n"
+"Die meisten Alarme sind selbst-erklärend, der AIS Alarm ist jedoch nur in "
+"Gebieten nützlich, wo AIS Verkehr regelmäßig vorkommt oder von einem "
+"Receiver im Boot, der auch einen aktiven Transmitter hat. Sonst gibt es "
+"einen Alarm, wenn kein Schiff da ist.\n"
+"\n"
+"Alarm Aktion:\n"
+"\n"
+"Normalerweise wird ein Ton erzeugt, es kann jedoch jeder beliebige Befehl "
+"ausgeführt werden. Bei Linux kann beispielsweise das Tonabspielen "
+"blockieren, somit ist stattdessen folgender Befehl denkbar:\n"
+"\"aplay /usr/local/share/opencpn/sounds/2bells.wav\""
+
+msgid "Enabled"
+msgstr "Aktiviert"
+
+msgid "Hours "
+msgstr "Stunden "
+
+msgid "If GPS fix is <"
+msgstr "Wenn GPS Fix ist <"
+
+msgid "Information"
+msgstr "Information"
+
+msgid "LandFall Detected"
+msgstr "LandFall detektiert"
+
+msgid "LandFall not Detected"
+msgstr "LandFall nicht detektiert"
+
+msgid "Landfall Alarm"
+msgstr "Landfall Alarm"
+
+msgid "Last AIS Sentence"
+msgstr "Letzte AIS Sequenz"
+
+msgid "Last GPS Update"
+msgstr "Letztes GPS Update"
+
+msgid "Last activity"
+msgstr "Letzte Aktivität"
+
+msgid "Latitude"
+msgstr "Breite"
+
+msgid "Longitude"
+msgstr "Länge"
+
+msgid "Message Box"
+msgstr "Nachrichten Box"
+
+msgid "Minutes "
+msgstr "Minuten "
+
+msgid "NMEA Data Alarm"
+msgstr "NMEA-Daten Alarm"
+
+msgid "Next LandFall in"
+msgstr "Nächster LandFall in"
+
+msgid "No AIS for >"
+msgstr "Kein AIS für >"
+
+msgid "No GPS for >"
+msgstr "Kein GPS für >"
+
+msgid "No NMEA Messages"
+msgstr "Keine NMEA Nachrichten"
+
+msgid "No Updates"
+msgstr "Keine Updates"
+
+msgid "No User Activity for"
+msgstr "Keine Anwender Aktivität für"
+
+msgid "Off Course Alarm"
+msgstr "Kurs-Abw. Alarm"
+
+msgid "Off Course By >"
+msgstr "Kurs-Abw. mit >"
+
+msgid "Preferences"
+msgstr "Einstellungen"
+
+msgid "Radius (m)"
+msgstr "Radius (m)"
+
+msgid "Seconds"
+msgstr "Sekunden"
+
+msgid "Select a file"
+msgstr "Wähle eine Datei"
+
+msgid "Sound"
+msgstr "Ton"
+
+msgid "Sync to Boat"
+msgstr "Sync zum Boot"
+
+msgid "Test Alarm"
+msgstr "Test Alarm"
+
+msgid ""
+"The watchman plugin for opencpn is made to add a range of alarms based on "
+"various conditions.\n"
+"\n"
+"Only a very small fraction of possible alarms are implemented,\n"
+"patches are welcome.\n"
+"\n"
+"License: GPLv3+\n"
+"\n"
+"Source Code:\n"
+"https://github.com/seandepagnier/watchman_pi\n"
+"\n"
+"Author:\n"
+"Sean D'Epagnier\n"
+"\n"
+"Many thanks to all of the translators and testers."
+msgstr ""
+"Das Watchman Plugin für OpenCPN wurde zum Hinzufügen von Alarmen bei "
+"verschiedenen Situationen gemacht.\n"
+"\n"
+"Es sind nur wenige mögliche Alarme implementiert,\n"
+"Erweiterungen sind willkommen.\n"
+"\n"
+"Lizenz: GPLv3+\n"
+"\n"
+"Source Code:\n"
+"https://github.com/seandepagnier/watchman_pi\n"
+"\n"
+"Author:\n"
+"Sean D'Epagnier\n"
+"\n"
+"Vielen Dank allen Übersetzern und Testern."
+
+msgid "Watch Man"
+msgstr "Watch Man"
+
+msgid "Watchman"
+msgstr "Watchman"
+
+msgid "Watchman Anchor Watch"
+msgstr "Watchman Ankerwache"
+
+msgid ""
+"Watchman Fax PlugIn for OpenCPN\n"
+"Alarm user of possible dangerous situations. \n"
+"\n"
+"The Watchman plugin was written by Sean D'Epagnier\n"
+msgstr ""
+"Watchman PlugIn für OpenCPN\n"
+"Alarmiert Anwender bei möglichen gefährlichen Situationen. \n"
+"Verschiedene Situationen programmierbar. \n"
+"\n"
+"Das Watchman Plugin wude geschrieben von Sean D'Epagnier\n"
+
+msgid "Watchman Information"
+msgstr "Watchman Information"
+
+msgid "Watchman PlugIn for OpenCPN"
+msgstr "Watchman PlugIn für OpenCPN"
+
+msgid "Watchman Preferences"
+msgstr "Watchman Einstellungen"
+
+msgid "With Course Of"
+msgstr "Mit Kurs von"
+
+msgid "degrees(s)"
+msgstr "Grad"
+
+msgid "from coastline"
+msgstr "von Küstenlinie"
+
+msgid "meter(s)"
+msgstr "Meter"
+
+msgid "min"
+msgstr "min"
+
+msgid "nm"
+msgstr "sm"
+
+msgid "second(s)"
+msgstr "Sekunden"
+
+msgid "seconds"
+msgstr "Sekunden"

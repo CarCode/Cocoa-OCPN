@@ -1,0 +1,32 @@
+Tools 	Nähmaschine 220V 	 	Achterkabine Stb. 	
+Tools 	Bohrmaschine Bosch 220V 	 	Achterkabine Stb. 	
+Tools 	Stichsäge Bosch 220V 	 	Achterkabine Stb. 	
+Tools 	Flex Bosch 220V 	 	Achterkabine Bb. 	
+Tools 	Dremel Universalmaschine 220V 	 	Salon Bb.-Mitte 	
+Tools 	Kompressor 12V 	 	Vorderkabine Stb. 	
+Tools 	Bohrmaschine 12V 	 	Salon Bb.-Mitte 	
+Tools 	Lötkolben 220V 10W 	 	Salon Bb.-Mitte 	
+Tools 	Lötkolben 220V 20W 	 	Salon Bb.-Mitte 	
+Tools 	Lötpistole 220V 	 	Salon Bb.-Mitte 	
+Equipment portable 	Haarfön 220V 	 	Salon Bb.-Achtern 	
+Equipment portable 	Zahnbürste 220V 	 	Salon Bb.-Achtern 	
+Equipment portable 	Spannungswandler 12V-220V 100W 	 	Salon Bb.-Achtern 	
+Equipment portable 	Scheinwerfer 12V 	 	Salon Bb.-Achtern 	
+Equipment portable 	Ladegerät Fotobatterie 12V 	 	Salon Bb.-Achtern 	
+Equipment portable 	Ladegerät GPS-Maus 12V 	 	Salon Bb.-Achtern 	
+Equipment portable 	Ankerlampe 12V 	 	Salon Bb.-Achtern 	
+Equipment portable 	Ladegerät Rasierer 12V 	 	Bad Bb. 	
+Equipment portable 	Rasierapparat 	 	Bad Bb. 	
+Equipment portable 	Ladegerät Computer 12V 	 	Salon Bb.-Achtern 	
+Equipment portable 	Schlauchboot 	 	Heck 	
+Equipment portable 	Außenborder Johnson 4PS 	 	Heck 	
+Equipment portable 	Klappfahrrad 	 	  	
+Equipment portable 	Drucker HP PSC1400 	 	Salon Bb.-Achtern 	
+Equipment portable 	Netzteil Drucker 220V 	 	Salon Bb.-Achtern 	
+Equipment portable 	PoI Injector 220V 	 	Salon Bb.-Achtern 	
+Equipment portable 	GPS Maus 	 	Salon Bb.-Achtern 	
+Equipment portable 	Computer MacbookPro 17" 	 	Salon Bb.-Achtern 	
+Equipment portable 	Kamera Canon Eos 	 	Salon Bb.-Achtern 	
+Equipment portable 	CellPhone iPhone 3G 	 	Salon Bb.-Achtern 	
+Equipment fixed 	VHF 	 	Salon Bb.-Achtern 	
+Equipment fixed 	GPS Philips 	 	Salon Bb.-Achtern 	

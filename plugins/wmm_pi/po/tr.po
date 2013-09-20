@@ -1,0 +1,219 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: opencpn\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-25 14:51+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Hasan Çetin <boraxtr@yahoo.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
+
+#: src/wmm_pi.cpp:130
+#: src/wmm_pi.cpp:197
+#: src/WmmUIDialog.h:75
+msgid "WMM"
+msgstr "Manyetik Sapma (WMM)"
+
+#
+#: src/wmm_pi.cpp:203
+msgid "World Magnetic Model PlugIn for OpenCPN"
+msgstr "OpenCPN Dünya Manyetik Sapma Modeli (WMM) Eklentisi"
+
+#: src/wmm_pi.cpp:208
+msgid ""
+"World Magnetic Model PlugIn for OpenCPN\n"
+"Implements the NOAA World Magnetic Model\n"
+"More information: http://www.ngdc.noaa.gov/geomag/WMM/\n"
+"The bundled WMM2010 model expires on December 31, 2014.\n"
+"After then, if new version of the plugin will not be released\n"
+"in time, get a new WMM.COF from NOAA and place it to the\n"
+"location you can find in the OpenCPN logfile."
+msgstr ""
+"OpenCPN Dünya Manyetik Sapma Modeli (WMM) Eklentisi\n"
+"Model NOAA Dünya Manyetik Sapma Modelini uyguluyor.\n"
+"Daha fazla bilgi için :  http://www.ngdc.noaa.gov/geomag/WMM/\n"
+"WMM2010'in dağıtımı 31 Aralık 2014 tarihinde sona erecektir.\n"
+"Bu tarihten sonra, eklentinin yeni sürümü yayınlanmazsa,\n"
+"yeni WMM.COF'yı NOAA dan aldıktan sonra, OpenCPN'in\n"
+"'opencpn.ini' dosyasının bulunduğu klasöre yerleştirin."
+
+#
+#: src/wmm_pi.cpp:298
+#: src/wmm_pi.cpp:367
+msgid "Error, see log."
+msgstr "Hata. kütüğe bakın."
+
+#
+#: src/wmm_pi.cpp:316
+#: src/wmm_pi.cpp:317
+#: src/wmm_pi.cpp:318
+#: src/wmm_pi.cpp:319
+#: src/wmm_pi.cpp:320
+#: src/wmm_pi.cpp:370
+#: src/wmm_pi.cpp:371
+#: src/wmm_pi.cpp:372
+#: src/wmm_pi.cpp:373
+#: src/wmm_pi.cpp:374
+#, c-format
+msgid "%-9.1lf nT"
+msgstr "%-9.1lf nT"
+
+#
+#: src/wmm_pi.cpp:321
+#, c-format
+msgid "%-5.1lf\\u00B0 (%s)"
+msgstr "%-5.1lf\\u00B0 (%s)"
+
+#
+#: src/wmm_pi.cpp:322
+#, c-format
+msgid "%-5.1lf\\u00B0"
+msgstr "%-5.1lf\\u00B0"
+
+#: src/wmm_pi.cpp:357
+#, c-format
+msgid "%-5.1lf"
+msgstr "%-5.1lf"
+
+#
+#: src/wmm_pi.cpp:502
+#, c-format
+msgid "%u\\u00B0%u' W"
+msgstr "%u\\u00B0%u' O"
+
+#
+#: src/wmm_pi.cpp:504
+#, c-format
+msgid "%u\\u00B0%u' E"
+msgstr "%u\\u00B0%u' E"
+
+#
+#: src/wmm_pi.cpp:561
+#: src/WmmUIDialog.h:98
+msgid "WMM Preferences"
+msgstr "WMM Seçenekleri"
+
+#: src/WmmUIDialog.cpp:19
+msgid "Boat"
+msgstr "Tekne"
+
+#: src/WmmUIDialog.cpp:26
+#: src/WmmUIDialog.cpp:112
+msgid "F"
+msgstr "Toplam:"
+
+#
+#: src/WmmUIDialog.cpp:28
+#: src/WmmUIDialog.cpp:114
+msgid "Total Intensity"
+msgstr "Toplam Yoğunluk"
+
+#
+#: src/WmmUIDialog.cpp:35
+#: src/WmmUIDialog.cpp:121
+msgid "H"
+msgstr "Yatay:"
+
+#
+#: src/WmmUIDialog.cpp:37
+#: src/WmmUIDialog.cpp:123
+msgid "Horizontal Intensity"
+msgstr "Yatay Yoğunluk"
+
+#
+#: src/WmmUIDialog.cpp:44
+#: src/WmmUIDialog.cpp:130
+msgid "X"
+msgstr "X"
+
+#
+#: src/WmmUIDialog.cpp:46
+#: src/WmmUIDialog.cpp:132
+msgid "North Component"
+msgstr "Kuzey Bileşeni"
+
+#
+#: src/WmmUIDialog.cpp:53
+#: src/WmmUIDialog.cpp:139
+msgid "Y"
+msgstr "Y"
+
+#
+#: src/WmmUIDialog.cpp:55
+#: src/WmmUIDialog.cpp:141
+msgid "East Component"
+msgstr "Doğu Bileşeni"
+
+#
+#: src/WmmUIDialog.cpp:62
+#: src/WmmUIDialog.cpp:148
+msgid "Z"
+msgstr "Z"
+
+#
+#: src/WmmUIDialog.cpp:64
+#: src/WmmUIDialog.cpp:150
+msgid "Vertical Component"
+msgstr "Dikey Bileşen"
+
+#
+#
+#: src/WmmUIDialog.cpp:71
+#: src/WmmUIDialog.cpp:157
+msgid "Incl"
+msgstr "Sapma"
+
+#
+#: src/WmmUIDialog.cpp:73
+#: src/WmmUIDialog.cpp:159
+msgid "(DIP) - Geomagnetic Inclination "
+msgstr "DIP : Coğrafi Sapma"
+
+#
+#: src/WmmUIDialog.cpp:89
+#: src/WmmUIDialog.cpp:175
+msgid "Vari"
+msgstr "Sapma"
+
+#
+#: src/WmmUIDialog.cpp:91
+#: src/WmmUIDialog.cpp:177
+msgid "Magnetic Variation"
+msgstr "Manyetik Sapma"
+
+#: src/WmmUIDialog.cpp:105
+msgid "Cursor"
+msgstr "Fare"
+
+#
+#: src/WmmUIDialog.cpp:208
+msgid "Extended"
+msgstr "Uzatılmış"
+
+#
+#: src/WmmUIDialog.cpp:208
+msgid "Variation only"
+msgstr "Sadece Sapma"
+
+#: src/WmmUIDialog.cpp:210
+msgid "Display mode"
+msgstr "Gösterim şekli"
+
+#
+#: src/WmmUIDialog.cpp:214
+msgid "Show also data at cursor position"
+msgstr "Veriyi, farenin ucunda da göster"
+
+#: src/WmmUIDialog.cpp:217
+msgid "Show data in toolbar icon"
+msgstr "Veriyi, araç çubuğunda göster"
+
+#
+#: src/WmmUIDialog.cpp:221
+msgid "Window transparency"
+msgstr "Pencere geçirgenliği"
+

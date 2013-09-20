@@ -1,0 +1,302 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>BoatAll</title>
+<style type="text/css">
+<!--
+#container {position:relative;
+width:640px;
+margin-left:auto;
+margin-right:auto;
+}
+.style1 {
+	font-size: 24px;
+	font-weight: bold;
+}
+.noBorder {
+}
+.withBorder {
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-width: thin;
+	border-right-width: thin;
+	border-bottom-width: thin;
+	border-left-width: thin;
+}
+.tr_border {
+	border-bottom-style: solid;
+	border-top-color: #000000;
+	border-right-color: #000000;
+	border-bottom-color: #000000;
+	border-left-color: #000000;
+	border-top-width: thin;
+	border-right-width: thin;
+	border-bottom-width: thin;
+	border-left-width: thin;
+}
+-->
+</style>
+</head>
+<body>
+<p>&nbsp;</p>
+<div id="container">
+
+  <table width="100%" cellpadding="0" cellspacing="0" bordercolor="#000000" class="withBorder" >
+      <tr>
+      <td height="34" colspan="6"><div align="center"><span class="style1">#TYPE# &quot;#BOATNAME#&quot;</span></div></td>
+    </tr>
+    <tr>
+      <td height="34" colspan="6" class="tr_border"><div align="center"><strong>Homeport: #HOMEPORT#</strong></div></td>
+    </tr>
+    <tr>
+      <td height="34" colspan="6">&nbsp;</td>
+    </tr>
+    <tr>
+      <td width="26%">&nbsp;</td>
+      <td width="29%" height="19"><strong>Registration:............................</strong></td>
+      <td width="31%">#REGISTRATION#      </td>
+      <td width="13%">&nbsp;</td>
+      <td width="1%" colspan="2" rowspan="34">&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>CallSign :................................</strong></td>
+      <td>#CALLSIGN# </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>HIN-Number:........................</strong></td>
+      <td>#HIN#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>MMSI-Numer:..</strong>......................</td>
+      <td>#MMSI#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Sail-Number...........................</strong></td>
+      <td>#SAILNO# </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Insurance:................................</strong></td>
+      <td>#INSURANCE# </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Policy:.....................................</strong></td>
+      <td>#POLICY#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Type:......................................</strong></td>
+      <td>#TYPE#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Builder:...................................</strong></td>
+      <td>#BUILDER# </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Designer:................................</strong></td>
+      <td>#DESIGNER#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Hull:.......................................</strong></td>
+      <td>#HULL# </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Construction:..........................</strong></td>
+      <td>#CONSTRUCT#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Date launched: .......................</strong></td>
+      <td>#LAUNCHED#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Yard Number: ....................... </strong></td>
+      <td>#YARDNO#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Length over all: ..................... </strong></td>
+      <td>#LOA#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Length over Deck: ................ </strong></td>
+      <td>#LOD#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Length in Waterline: ............. </strong></td>
+      <td>#LWL#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Beam:......................................</strong></td>
+      <td>#BEAM#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Draft:.......................................</strong></td>
+      <td>#DRAFT#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Gross Tonnage:.......................</strong></td>
+      <td>#GRT#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Net Tonnage: ......................... </strong></td>
+      <td>#NRT#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Thames Tonnage:....................</strong></td>
+      <td>#THAMES#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Displacement:..........................</strong></td>
+      <td>#DISPL# </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Owner:....................................</strong></td>
+      <td>#OFIRST# #ONAME# </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong>Adress:...................................</strong></td>
+      <td>#STREET#</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>#ZIP# #TOWN# </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>#TELEPHONE#</td>
+      <td>&nbsp;</td>
+    </tr>
+    
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<table width="100%" cellpadding="0" cellspacing="0" class="noBorder">
+  <tr>
+    <td width="50%">..................................................................</td>
+    <td width="50%"><div align="right">.........................................................................</div></td>
+  </tr>
+  <tr>
+    <td><div align="center">Date</div></td>
+    <td><div align="center">Signature</div></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#CCCCCC">
+  <tr>
+    <td colspan="4"><div align="right">
+      <h3 align="center">Equipment</h3>
+    </div></td>
+    </tr>
+      <tr>
+        <td bgcolor="#CCCCCC"><div align="center">Type</div></td>
+        <td bgcolor="#CCCCCC"><div align="center">Discription</div></td>
+        <td bgcolor="#CCCCCC"><div align="center">Serial-Number</div></td>
+        <td bgcolor="#CCCCCC"><div align="center">Remarks</div></td>
+      </tr>
+	  <!--Repeat -->	  
+    <tr>
+    <td width="16%">#ETYPE#</td>
+    <td width="32%">#DISCRIPTION#</td>
+    <td width="21%">#SERIAL#</td>
+    <td width="31%">#REMARKS#</td>
+  </tr>
+    <!--Repeat End -->
+</table>
+</div>
+<p>&nbsp;</p>
+</body>
+</html>

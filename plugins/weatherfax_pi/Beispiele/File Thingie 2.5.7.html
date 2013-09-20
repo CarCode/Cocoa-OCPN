@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>File Thingie 2.5.7</title>
+	<link rel="author" href="http://www.solitude.dk/" title="Andreas Haugstrup Pedersen">
+	<link rel="home" href="http://www.tgp-architects.com/Ocpn/ft2.php" title="Go to home folder">
+	<link rel="help" href="http://www.solitude.dk/filethingie/documentation" title="Online documentation">
+
+<script type="text/javascript" charset="utf-8" src="File%20Thingie%202.5.7-Dateien/jquery-1.js"></script>
+<script type="text/javascript" charset="utf-8" src="File%20Thingie%202.5.7-Dateien/filethingie.js"></script>
+
+  <script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		// Set focus on login username.
+		if (document.getElementById("ft_user")) {
+			document.getElementById("ft_user").focus();
+		}
+		// Set global object.
+		var ft = {fileactions:{}};
+		// Prep upload section.
+		$('#uploadsection').parent().ft_upload({
+		  header:"Files for upload:",
+		  cancel: "Cancel upload of this file",
+		  upload: "Now uploading files. Please wait..."
+		});
+		// Prep file actions.
+		$('#filelist').ft_filelist({
+		  fileactions: ft.fileactions,
+		  rename_link: "Rename",
+		  move_link: "Move",
+		  del_link: "Delete",
+		  duplicate_link: "Duplicate",
+		  unzip_link: "Unzip",
+		  chmod_link: "chmod",
+		  symlink_link: "Symlink",
+		  rename: "Rename to:",
+      move: "Move to folder:",
+      del: "Do you really want to delete file?",
+      del_warning: "You can only delete empty folders.",
+      del_button: "Yes, delete it",
+      duplicate: "Duplicate to file:",
+      unzip: "Do you really want to unzip file?",
+      unzip_button: "Yes, unzip it",
+      chmod: "Set permissions to:",
+      symlink: "Create symlink called:",
+		  directory: "/Wx-Fax",
+		  ok: "Ok",
+		  formpost: "ft2.php",
+		  advancedactions: "false"
+		});
+
+		// Sort select box.
+		$('#sort').change(function(){
+		  $('#sort_form').submit();
+		});
+		// Label highlight in 'create' box.
+    $('#new input[type=radio]').change(function(){
+      $('label').removeClass('label_highlight');
+      $('label[@for='+$(this).attr('id')+']').addClass('label_highlight');
+    });
+$('#searchform').ft_search({
+	directory: '/Wx-Fax',
+	formpost: 'ft2.php',
+	header: 'Results',
+	loading: 'Fetching results&hellip;'
+});
+ft.fileactions.edit = {type: "sendoff", link: "Edit", text: "Do you want to edit this file?", button: "Yes, edit file"};	});
+	</script>
+	<style type="text/css">
+	  @import "css/ft.css";
+    	</style>
+</head>
+<body>
+
+	<h1 id="title"><a href="http://www.tgp-architects.com/Ocpn/ft2.php" title="Go to home folder">Home</a> /<a href="http://www.tgp-architects.com/Ocpn/ft2.php?dir=%2FWx-Fax" title="Go to folder">Wx-Fax</a></h1><div id="logout"><p>Logged in as rguser <a href="http://www.tgp-architects.com/Ocpn/ft2.php?act=logout" title="Logout of File Thingie">[logout]</a></p><div id="secondary_menu"></div></div><div id="sidebar">
+    	<div class="section" id="create">
+    		<h2>Upload files</h2>
+    		<form action="ft2.php" method="post" enctype="multipart/form-data">
+    			<div id="uploadsection">
+    				<input name="MAX_FILE_SIZE" value="70000000" type="hidden">
+    				<input class="upload" name="localfile" id="localfile-0" size="12" type="file">
+    				<input name="act" value="upload" type="hidden">
+    				<input name="dir" value="/Wx-Fax" type="hidden">
+    			</div>
+    			<div id="uploadbutton">
+    				<input name="submit" value="Upload" type="submit">
+    			</div>
+          <div class="info">Max: <strong>24&nbsp;MB / 24&nbsp;MB</strong></div>
+      		<div style="clear:both;"></div>
+    		</form>
+    	</div>
+	<div class="section" id="new">
+		<h2>Create folder</h2>
+		<form action="ft2.php" method="post">
+		<div>
+		  <input name="type" value="folder" id="type-folder" checked="checked" type="radio"> <label for="type-folder" class="label_highlight">Folder</label>
+		  <input name="type" value="file" id="type-file" type="radio"> <label for="type-file">File</label>
+		  <input name="type" value="url" id="type-url" type="radio"> <label for="type-url">From URL</label>
+		</div>
+			<div>
+				<input name="newdir" id="newdir" size="16" type="text">
+				<input name="act" value="createdir" type="hidden">
+				<input name="dir" value="/Wx-Fax" type="hidden">
+				<input id="mkdirsubmit" name="submit" value="Ok" type="submit">
+			</div>
+		</form>
+	</div><div class="section">
+  		<h2>Search files &amp; folders</h2>
+  		<form action="" method="post" id="searchform">
+  			<div>
+  				<input name="q" id="q" size="16" type="text">
+  				<input id="dosearch" value="Search" type="button">
+  			</div>
+  			<div id="searchoptions">
+  				<input name="type" id="type" checked="checked" type="checkbox"> <label for="type">Search only this folder and below</label>
+  			</div>
+  			<div id="searchresults"></div>
+  		</form>
+  	</div></div><div id="status" class="hidden"></div><table id="filelist"><thead><tr class=""><th colspan="4"><div style="float:left;">Files</div><form action="ft2.php" id="sort_form" method="get"><div><!--<label for='sort'>Sort by: </label>--><select id="sort" name="sort"><option value="name" selected="selected">Sort by name</option><option value="size">Sort by size</option><option value="type">Sort by type</option><option value="date">Sort by date</option></select><input name="dir" value="/Wx-Fax" type="hidden"></div></form></th></tr></thead><tbody><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/00_UKMet_Boden%2B00-Polar.gif" title="Show 00_UKMet_Boden+00-Polar.gif">00_UKMet_Boden+00-Polar.gif</a></td><td class="size">82&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/0992.jpg" title="Show 0992.jpg">0992.jpg</a></td><td class="size">29&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/100_20010820.1531.gms-5.IR.MODEL_cuaviet.jpg" title="Show 100_20010820.1531.gms-5.IR.MODEL_cuaviet.jpg">100_20010820.1531.gms-5.IR.MODEL_cuaviet.jpg</a></td><td class="size">100&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/13021903-Polar.png" title="Show 13021903-Polar.png">13021903-Polar.png</a></td><td class="size">60&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/24hTfcst.kap" title="Show 24hTfcst.kap">24hTfcst.kap</a></td><td class="size">104&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/24hTwwfcst.kap" title="Show 24hTwwfcst.kap">24hTwwfcst.kap</a></td><td class="size">146&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/48h500fcst.kap" title="Show 48h500fcst.kap">48h500fcst.kap</a></td><td class="size">173&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/48HrSurface_Valid201302011200.mp3" title="Show 48HrSurface_Valid201302011200.mp3">48HrSurface_Valid201302011200.mp3</a></td><td class="size">2.94&nbsp;MB</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/48HrWindWave_Valid201302011200.mp3" title="Show 48HrWindWave_Valid201302011200.mp3">48HrWindWave_Valid201302011200.mp3</a></td><td class="size">1.99&nbsp;MB</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/48hsrfcst.kap" title="Show 48hsrfcst.kap">48hsrfcst.kap</a></td><td class="size">192&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/48hTfcst.kap" title="Show 48hTfcst.kap">48hTfcst.kap</a></td><td class="size">109&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/48hTwwfcst.kap" title="Show 48hTwwfcst.kap">48hTwwfcst.kap</a></td><td class="size">143&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file rowhover"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/48hwwfcst.kap" title="Show 48hwwfcst.kap">48hwwfcst.kap</a></td><td class="size">179&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/A_sfcbw.gif" title="Show A_sfcbw.gif">A_sfcbw.gif</a></td><td class="size">87&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/APT%20Weather%20Fax%20-%20George%20Smart%27s%20Wiki.URL" title="Show APT Weather Fax - George Smart's Wiki.URL">APT Weather Fax - George Smart's Wiki.URL</a></td><td class="size">231&nbsp;b</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/ATSA_00Z.gif" title="Show ATSA_00Z.gif">ATSA_00Z.gif</a></td><td class="size">12&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/bracknell%2B24.gif" title="Show bracknell+24.gif">bracknell+24.gif</a></td><td class="size">83&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/Decoding%20HF%20WEFAX%20transmissions.URL" title="Show Decoding HF WEFAX transmissions.URL">Decoding HF WEFAX transmissions.URL</a></td><td class="size">231&nbsp;b</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/desktop.ini" title="Show desktop.ini">desktop.ini</a></td><td class="size">47&nbsp;b</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/Digital%A0Modes%A0Samples.URL" title="Show Digital�Modes�Samples.URL">Digital�Modes�Samples.URL</a></td><td class="size">211&nbsp;b</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/eatl_sfcbw.gif" title="Show eatl_sfcbw.gif">eatl_sfcbw.gif</a></td><td class="size">80&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/EPac_24h_srfcst.kap" title="Show EPac_24h_srfcst.kap">EPac_24h_srfcst.kap</a></td><td class="size">106&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/EPac_48h_srfcst.kap" title="Show EPac_48h_srfcst.kap">EPac_48h_srfcst.kap</a></td><td class="size">106&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/Fiji0640.gif" title="Show Fiji0640.gif">Fiji0640.gif</a></td><td class="size">24&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/IDD67950.jpg" title="Show IDD67950.jpg">IDD67950.jpg</a></td><td class="size">188&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/IDD80100.png" title="Show IDD80100.png">IDD80100.png</a></td><td class="size">57&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/IDY00030.201302181800-Polar.png" title="Show IDY00030.201302181800-Polar.png">IDY00030.201302181800-Polar.png</a></td><td class="size">62&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/image01.gif" title="Show image01.gif">image01.gif</a></td><td class="size">114&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/image02.gif" title="Show image02.gif">image02.gif</a></td><td class="size">115&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/image03.gif" title="Show image03.gif">image03.gif</a></td><td class="size">113&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/ma_sy-Polar.jpg" title="Show ma_sy-Polar.jpg">ma_sy-Polar.jpg</a></td><td class="size">430&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/mauritius.jpg" title="Show mauritius.jpg">mauritius.jpg</a></td><td class="size">63&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/mode-fax-meteosat.mp3" title="Show mode-fax-meteosat.mp3">mode-fax-meteosat.mp3</a></td><td class="size">120&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/NPac12Z48hsrfcst.kap" title="Show NPac12Z48hsrfcst.kap">NPac12Z48hsrfcst.kap</a></td><td class="size">181&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/NPac12Z50048h.kap" title="Show NPac12Z50048h.kap">NPac12Z50048h.kap</a></td><td class="size">154&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/P_sfcbw.gif" title="Show P_sfcbw.gif">P_sfcbw.gif</a></td><td class="size">83&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/PolarSU1.JPG" title="Show PolarSU1.JPG">PolarSU1.JPG</a></td><td class="size">172&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/preiso36.jpg" title="Show preiso36.jpg">preiso36.jpg</a></td><td class="size">49&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/PWAM99.TIF" title="Show PWAM99.TIF">PWAM99.TIF</a></td><td class="size">15&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/PWAM99.TIF.doc" title="Show PWAM99.TIF.doc">PWAM99.TIF.doc</a></td><td class="size">15&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/Samples.7z" title="Show Samples.7z">Samples.7z</a></td><td class="size">488&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/srfanal_E.kap" title="Show srfanal_E.kap">srfanal_E.kap</a></td><td class="size">208&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/srfanal_W.kap" title="Show srfanal_W.kap">srfanal_W.kap</a></td><td class="size">240&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/straightened-rfax.png" title="Show straightened-rfax.png">straightened-rfax.png</a></td><td class="size">188&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file "><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/TEST-ppam50bw.gif" title="Show TEST-ppam50bw.gif">TEST-ppam50bw.gif</a></td><td class="size">70&nbsp;Kb</td><td class="date">2013-05-08</td></tr><tr class="file odd"><td class="details"><span class="show writeable   perm-666 ">◊</span><span class="hide" style="display:none;">◊</span></td><td class="name"><a href="http://www.tgp-architects.com/Ocpn/DATA/Wx-Fax/wpac_sfcbw.gif" title="Show wpac_sfcbw.gif">wpac_sfcbw.gif</a></td><td class="size">82&nbsp;Kb</td><td class="date">2013-05-08</td></tr></tbody><tfoot><tr><td colspan="4">0 folders - 46 files (9.84&nbsp;MB)</td></tr></tfoot></table><div id="footer"><p><a href="http://www.solitude.dk/filethingie/" target="_BLANK">File Thingie • PHP File Manager</a> © <!-- Copyright --> 2003-2013 <a href="http://www.solitude.dk/" target="_BLANK">Andreas Haugstrup Pedersen</a>.</p><p><a href="http://www.solitude.dk/filethingie/documentation" target="_BLANK">Online documentation</a></p></div>  
+  
+
+</body></html>
