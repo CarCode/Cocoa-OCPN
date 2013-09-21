@@ -1,3 +1,0 @@
-#1.2#
-5 	Ãlwechsel 	Maschine#1 gesamt + 	  100  h 	  100  h 	00009:00 h 	Ja 
-5 	Test 	Distanz gesamt + 	    1  sm 	    1  sm 	      nan sm 	Ja 

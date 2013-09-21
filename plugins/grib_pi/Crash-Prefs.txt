@@ -1,125 +1,0 @@
-Prefs Dialog crashed bei grib_pi in GribPreferencesDialog()
---------------------------------
-VM Region Summary:
-ReadOnly portion of Libraries: Total=235.1M resident=140.2M(60%) swapped_out_or_unallocated=94.9M(40%)
-Writable regions: Total=169.9M written=83.1M(49%) resident=121.0M(71%) swapped_out=0K(0%) unallocated=49.0M(29%)
- 
-REGION TYPE                      VIRTUAL
-===========                      =======
-CG backing stores                  10.2M
-CG image                             80K
-CG shared images                   1216K
-CoreServices                       4716K
-IOKit                               544K
-IOKit (reserved)                      8K        reserved VM address space (unallocated)
-MALLOC                            127.3M
-MALLOC guard page                    48K
-MALLOC_LARGE (reserved)            2880K        reserved VM address space (unallocated)
-Memory tag=240                        4K
-Memory tag=242                       12K
-STACK GUARD                        56.0M
-Stack                              9752K
-VM_ALLOCATE                        16.3M
-__DATA                             35.5M
-__IMAGE                             528K
-__LINKEDIT                         69.9M
-__TEXT                            165.2M
-__UNICODE                           544K
-mapped file                        45.2M
-shared memory                       308K
-===========                      =======
-TOTAL                             545.7M
-TOTAL, minus reserved VM space    542.9M
-
------------------------------------------------------------------------
-Muster von weatherfax_pi:
-
-void weatherfax_pi::ShowPreferencesDialog( wxWindow* parent )
-{
-    WeatherFaxPrefsDialog *dialog =
-        new WeatherFaxPrefsDialog( parent, wxID_ANY, _("WeatherFax Preferences"),
-                                   wxPoint( m_weatherfax_dialog_x, m_weatherfax_dialog_y),
-                                   wxDefaultSize, wxDEFAULT_DIALOG_STYLE );
-    
-    dialog->m_sImageWidth->SetValue(m_ImageWidth);
-	usw.
-    
-    dialog->Fit();
-    wxColour cl;
-    GetGlobalColor(_T("DILG1"), &cl);
-    dialog->SetBackgroundColour(cl);
-    
-    if(dialog->ShowModal() == wxID_OK)
-	delete dialog;
-}
-
-WeatherFaxUI.cpp:
-WeatherFaxPrefsDialog::WeatherFaxPrefsDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
-{
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-diverse Sizer...
-	
-	this->Centre( wxBOTH );
-}
-
-WeatherFaxPrefsDialog::~WeatherFaxPrefsDialog()
-{
-}
-
-WeatherFaxUI.h:
-class WeatherFaxPrefsDialog : public wxDialog <------------ hier wxDialog!!!!!!{	private:		protected:		wxStaticText* m_staticText29;		wxStaticText* m_staticText30;		wxStaticText* m_staticText31;		wxStaticText* m_staticText32;		wxStaticText* m_staticText33;		wxStdDialogButtonSizer* m_sdbSizer1;		wxButton* m_sdbSizer1OK;		wxButton* m_sdbSizer1Cancel;		public:		wxSpinCtrl* m_sImageWidth;		wxSpinCtrl* m_sBitsPerPixel;		wxSpinCtrl* m_sCarrier;		wxSpinCtrl* m_sDeviation;		wxChoice* m_cFilter;		wxCheckBox* m_cbSkip;		wxCheckBox* m_cbInclude;				WeatherFaxPrefsDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Weather Fax Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE ); 		~WeatherFaxPrefsDialog();	};--------------------------------------------------------------
-Aber in Grib_pi:
-void grib_pi::ShowPreferencesDialog( wxWindow* parent )
-{
-    GribPreferencesDialog *Pref = new GribPreferencesDialog(parent);
-
-in grib_pi.h:
-class GribPreferencesDialog : public GribPreferencesDialogBase
-{
-public:
-    GribPreferencesDialog( wxWindow *pparent)
-    : GribPreferencesDialogBase(pparent) {}
-    ~GribPreferencesDialog() {}
-};
---------------------
-in GribUIDialogBase.cpp:
-GribPreferencesDialogBase::GribPreferencesDialogBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
-{
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-usw.
-und:
-GribPreferencesDialogBase::~GribPreferencesDialogBase()
-{
-}
---------------------
-in GribUIDialogBase.h:
-class GribPreferencesDialogBase : public wxDialog 
-{
-	private:
-	
-	protected:
-	
-	public:
-		wxCheckBox* m_cbUseHiDef;
-		wxCheckBox* m_cbUseGradualColors;
-		wxCheckBox* m_cbCopyFirstCumulativeRecord;
-		wxCheckBox* m_cbCopyMissingWaveRecord;
-        wxRadioBox* m_rbStartOptions;
-        wxRadioBox* m_rbTimeFormat;
-		
-		GribPreferencesDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Grib Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(-1,-1), long style = wxDEFAULT_DIALOG_STYLE );
-		~GribPreferencesDialogBase();
-	
-};
--------------------
-wxString pPointStyleStrings[] = { _("Paper Chart"), _("Simplified"), };
-    pPointStyle = new wxRadioBox( ps57Ctl, ID_RADARDISTUNIT, _("Points"), wxDefaultPosition,
-            wxDefaultSize, 2, pPointStyleStrings, 1, wxRA_SPECIFY_COLS );
-    styleSizer->Add( pPointStyle, 0, wxALL | wxEXPAND, group_item_spacing );
------------
-
-Fehler ist in grib_pi.cpp Zeile 208:
-Pref->m_cbCopyMissingWaveRecord->SetValue(m_bCopyMissWaveRec);
-Fehlte in GribUIDialogBase.cpp !!!
-
-Noch alle anderen Änderungen wieder zurück setzen!!!

@@ -1,7 +1,0 @@
-0 	Motor 	 	www.wismet.de Nr.: WOS18164 	4/16/2011 	www.wismet.de 
-0 	Motor 	 	Original Basis-Motor: Perkins Prima 50 des MD22\n Volvo-Penta 	 	 
-0 	Motor 	Dieselfilter, Original Volvo-Penta Nr.: 384 0 335 	 	 	 
-0 	Motor 	Keilriemen: 9,5 x 975 x La 	 	 	 
-0 	Motor 	Diesel-Vorfilter Wasserabscheider Vetus, lang: RTBAF 100 	 	 	 
-0 	Tools 	 	 	 	 
-0 	Tools 	Takelgarn, Segelreparaturset 	 	 	 
