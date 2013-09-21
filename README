@@ -27,4 +27,26 @@ a.  Opencpn was built with the following objectives in mind.
     Opencpn is in primary daily use as the navigation package aboard
     M/V Dyad, a 48 ft trawler yacht cruising from Newfoundland to the
     Bahamas yearly.
+----------------------------------------------------------------------
+2. Eigene Bemerkungen
+----------------------------------------------------------------------
+a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
+   Mountain-Lion (10.8) und höher. Es soll soweit wie möglich das Mac
+   OS X Betriebssystem unterstützt werden, einschl. Mac Menüs, Mac Hilfe
+   usw.
+
+b. Zur Zeit basiert diese Version noch auf Beta-Version von wxWidgets
+   2.9.5 mit entsprechenden dylibs vom 18. August 2013. Inzwischen wurde
+   diese Version in 3.0.0 umgenannt und es soll versucht werden, wxWidgets
+   nicht mehr als dynamisch sondern als statisch zu linken.
+
+c. In einem weiteren Schritt soll mit Veröffentlichung einer Binär-Version
+   von OCPN für Mac ein automatischer Update-Service mit Sparkle eingeführt
+   werden.
+
+d. Nicht alle Plugins laufen bisher problemlos. Einige wurden noch nicht
+   compiliert, andere haben noch Fehler.
+
+-----------------------------------------------------------------------
+21. September 2013
 
