@@ -439,8 +439,13 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
             wxDefaultSize, 0 );
     boxSizer02->Add( m_pStaticTextRange, 0, wxALL, 0 );
     boxSizer02->AddSpacer( 2 );
+#ifdef __WXOSX__
+    m_pSpinCtrlRange = new wxSpinCtrl( this, wxID_ANY, wxString::Format(wxT("%i"),g_AisTargetList_range), wxDefaultPosition,
+                                      wxSize( 50, -1 ), wxSP_ARROW_KEYS, 1, 20000  );
+#else
     m_pSpinCtrlRange = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-            wxSize( 50, -1 ), wxSP_ARROW_KEYS, 1, 20000, g_AisTargetList_range );
+                                      wxSize( 50, -1 ), wxSP_ARROW_KEYS, 1, 20000, g_AisTargetList_range );
+#endif
     m_pSpinCtrlRange->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED,
             wxCommandEventHandler( AISTargetListDialog::OnLimitRange ), NULL, this );
     m_pSpinCtrlRange->Connect( wxEVT_COMMAND_TEXT_UPDATED,
@@ -698,9 +703,10 @@ void AISTargetListDialog::UpdateAISTargetList( void )
 
             if( NULL != pAISTarget ) {
                 if( ( pAISTarget->b_positionOnceValid )
-                        && ( pAISTarget->Range_NM <= g_AisTargetList_range ) ) m_pMMSI_array->Add(
-                        pAISTarget->MMSI );
-                else if( !pAISTarget->b_positionOnceValid ) m_pMMSI_array->Add( pAISTarget->MMSI );
+                        && ( pAISTarget->Range_NM <= g_AisTargetList_range ) )
+                    m_pMMSI_array->Add( pAISTarget->MMSI );
+                else if( !pAISTarget->b_positionOnceValid )
+                    m_pMMSI_array->Add( pAISTarget->MMSI );
             }
         }
 
