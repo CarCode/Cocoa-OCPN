@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenCPN 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-21 13:36+0200\n"
-"PO-Revision-Date: 2013-08-21 15:12+0100\n"
+"POT-Creation-Date: 2013-09-23 14:34+0200\n"
+"PO-Revision-Date: 2013-09-23 14:37+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -258,6 +258,9 @@ msgstr "Schriftfamilie:"
 
 msgid "&Go To"
 msgstr "Gehe zu"
+
+msgid "&Help"
+msgstr "Hilfe"
 
 msgid "&Jump To"
 msgstr "Gehe zu"
@@ -580,6 +583,9 @@ msgstr "Alle verfügbaren Karten"
 msgid "All Charts"
 msgstr "Alle Karten"
 
+msgid "Alte Log-Datei wurde verschoben nach opencpn.log.log"
+msgstr "Alte Log-Datei wurde verschoben nach opencpn.log.log"
+
 msgid ""
 "An NMEA sentence is generally 3 characters long (like RMC, GGA etc.) It can "
 "also have a two letter prefix identifying the source, or TALKER, of the "
@@ -650,6 +656,9 @@ msgstr "Sind Sie sicher, daß Sie den Wegpunkt löschen wollen?"
 msgid "Assumed 1 Mile Point"
 msgstr "Angenommener 1 Meilen-Punkt"
 
+msgid "Assumed Magnetic Variation, deg."
+msgstr "Angenommene magn. Variation, Grad"
+
 msgid "At Anchor"
 msgstr "vor Anker liegend"
 
@@ -704,6 +713,9 @@ msgstr "Bake, an Steuerbord"
 msgid "Bearing"
 msgstr "Peilung"
 
+msgid "Bearing (M)"
+msgstr "Peilung (M)"
+
 msgid "Black"
 msgstr "Schwarz"
 
@@ -715,6 +727,9 @@ msgstr "Kartengrenzen"
 
 msgid "Brg"
 msgstr "Peilung"
+
+msgid "Broken plugin detected..."
+msgstr "Defektes Plugin gefunden..."
 
 msgid "Buddy"
 msgstr "Buddy"
@@ -1037,6 +1052,9 @@ msgstr "Kopiere als KML..."
 msgid "Course"
 msgstr "Kurs"
 
+msgid "Course (M)"
+msgstr "Kurs (M)"
+
 msgid "Course UP Mode"
 msgstr "Kurs-Voraus Modus"
 
@@ -1099,6 +1117,9 @@ msgstr "Datenquelle :"
 
 msgid "DataPort"
 msgstr "Daten-Port"
+
+msgid "Daytime"
+msgstr "Tagzeit"
 
 msgid "De-Cluttered Text"
 msgstr "Text \"aufräumen\" (exp.)"
@@ -1352,6 +1373,9 @@ msgstr "Fehler!"
 msgid "Estimated time : "
 msgstr "Geschätzte Gesamtzeit:"
 
+msgid "EvTwilight"
+msgstr "Abenddämmerung"
+
 msgid "Export"
 msgstr "Export"
 
@@ -1477,6 +1501,9 @@ msgstr "AIS-Ziele verstecken"
 
 msgid "Hide Target CPA"
 msgstr "Verstecke Ziel CPA"
+
+msgid "Hide Target Track"
+msgstr "Verstecke Ziel Track"
 
 msgid "Hide This Chart"
 msgstr "Diese Karte ausblenden"
@@ -1810,6 +1837,9 @@ msgstr "Min. Bildschirm (mm)"
 msgid "Miscellaneous Options"
 msgstr "Verschiedene Optionen"
 
+msgid "MoTwilight"
+msgstr "Morgendämmerung"
+
 msgid "Moored"
 msgstr "festgemacht"
 
@@ -1875,6 +1905,9 @@ msgstr "vor"
 
 msgid "Next tide event"
 msgstr "Nächstes HW/NW"
+
+msgid "Nighttime"
+msgstr "Nachtzeit"
 
 msgid "No"
 msgstr "Nein"
@@ -2075,6 +2108,26 @@ msgstr ""
 
 msgid "Pleasure craft"
 msgstr "Sportfahrzeug"
+
+#, c-format
+msgid ""
+"Plugin %s (%s), version %i.%i was detected. This version is known to be "
+"unstable and will not be loaded, please go to the opencpn.org plugin "
+"downloads page and get the latest stable version of this plugin available."
+msgstr ""
+"Plugin %s (%s), Version %i.%i gefunden. Diese Version ist bekanntermaßen "
+"instabil. Bitte gehen Sie zur opencpn.org Plugin Download-Seite und laden "
+"Sie die neueste verfügbare stabile Version dieses Plugins."
+
+#, c-format
+msgid ""
+"Plugin %s (%s), version %i.%i was detected. This version is known to be "
+"unstable, please go to the opencpn.org plugin downloads page and get the "
+"latest stable version of this plugin available."
+msgstr ""
+"Plugin %s (%s), Version %i.%i gefunden. Diese Version ist bekanntermaßen "
+"instabil. Bitte gehen Sie zur opencpn.org Plugin Download-Seite und laden "
+"Sie die neueste verfügbare stabile Version dieses Plugins."
 
 msgid "Plugins"
 msgstr "Plugins"
@@ -2507,6 +2560,9 @@ msgstr "Zeige Wegbahn"
 msgid "Show Lat/Long as"
 msgstr "Breiten- und Längenangaben anzeigen als"
 
+msgid "Show Magnetic bearings and headings"
+msgstr "Zeige magn. Peilungen und Kurse"
+
 msgid "Show NMEA Debug Window"
 msgstr "Zeige NMEA-Datenfluß"
 
@@ -2518,6 +2574,9 @@ msgstr "Statusleiste anzeigen"
 
 msgid "Show Target CPA"
 msgstr "Zeige Ziel CPA"
+
+msgid "Show Target Track"
+msgstr "Zeige Ziel Track"
 
 msgid "Show This Chart"
 msgstr "Zeige diese Karte"
@@ -2641,6 +2700,12 @@ msgstr "Stil"
 
 msgid "Style:"
 msgstr "Stil:"
+
+msgid "Sunrise"
+msgstr "Sonnenaufgang"
+
+msgid "Sunset"
+msgstr "Sonnenuntergang"
 
 msgid "Supress Alerts for anchored/moored targets"
 msgstr "Alarm für festgemachte/vor Anker liegende Ziele unterdrücken"
@@ -3005,6 +3070,9 @@ msgstr "Warnung, wenn CPA geringer ist als (sm)"
 msgid "Waypoint"
 msgstr "Wegpunkt"
 
+msgid "Waypoint Arrival Circle Radius (NMi)"
+msgstr "Wegpunkt Ankunftsradius (sm)"
+
 msgid "Waypoint Information"
 msgstr "Wegpunkt Information"
 
@@ -3171,9 +3239,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "\n"
 #~ msgstr "\n"
 
+#
+#
 #
 #
 #
@@ -3241,6 +3313,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "      COG arrow predictor length (Minutes):"
 #~ msgstr "    Länge Voraus-Anzeige COG-Pfeil (Minuten):"
 
@@ -3263,9 +3337,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "      Max moored target speed (Kts.):"
 #~ msgstr "    max. Geschwindigkeit für festgemachte Ziele (kn):"
 
+#
+#
 #
 #
 #
@@ -3320,9 +3398,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "   Chart projection is UNKNOWN, assuming Mercator: "
 #~ msgstr "   Kartenprojektion ist UNBEKANNT, nehme Mercator an: "
 
+#
+#
 #
 #
 #
@@ -3406,9 +3488,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "   PlugInManager: Cannot load symbol create_pi: "
 #~ msgstr "Plugin-Manager: Kann Symbol create_pi nicht laden:"
 
+#
+#
 #
 #
 #
@@ -3470,9 +3556,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "  Could not open AIS serial port '"
 #~ msgstr "Die seriellle AIS-Schnittstelle konnte  nicht geöffnet werden: '"
 
+#
+#
 #
 #
 #
@@ -3482,9 +3572,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid " </b>in<b> "
 #~ msgstr " </b>in<b> "
 
+#
+#
 #
 #
 #
@@ -3510,9 +3604,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid " COG: %03d Deg."
 #~ msgstr "COG: %03d Deg."
 
+#
+#
 #
 #
 #
@@ -3578,15 +3676,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "&Close"
 #~ msgstr "Schließen"
 
 #
 #
 #
+#
+#
 #~ msgid "&Export Track..."
 #~ msgstr "Track exportieren..."
 
+#
+#
 #
 #
 #
@@ -3651,6 +3755,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid ""
 #~ "'\n"
 #~ " Suggestion: Try 'xxx.xxx.xxx.xxx' notation"
@@ -3661,9 +3767,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "---"
 #~ msgstr "---"
 
+#
+#
 #
 #
 #
@@ -3708,6 +3818,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #, fuzzy
 #~ msgid ""
 #~ ":               Unavailable\n"
@@ -3718,15 +3830,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "A"
 #~ msgstr "A"
 
 #
 #
 #
+#
+#
 #~ msgid "AIS Alert"
 #~ msgstr "AIS Alarm"
 
+#
+#
 #
 #
 #
@@ -3767,9 +3885,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "AISRollover"
 #~ msgstr "AIS Kurzübersicht"
 
+#
+#
 #
 #
 #
@@ -3820,6 +3942,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Activate Route"
 #~ msgstr "Route aktivieren"
 
@@ -3842,9 +3966,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Add Selection"
 #~ msgstr "Auswahl hinzufügen"
 
+#
+#
 #
 #
 #
@@ -3901,15 +4029,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Additional information"
 #~ msgstr "Zusätzliche Informationen"
 
 #
 #
 #
+#
+#
 #~ msgid "Aid to Navigation"
 #~ msgstr "Navigationshilfe"
 
+#
+#
 #
 #
 #
@@ -3975,9 +4109,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Attempting to load libgps.so"
 #~ msgstr "Versuche libgps.so zu laden"
 
+#
+#
 #
 #
 #
@@ -4018,9 +4156,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Available Chart Directories"
 #~ msgstr "Verzeichnis-Auswahlfenster"
 
+#
+#
 #
 #
 #
@@ -4030,15 +4172,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Barge, tanker, chemical"
 #~ msgstr "Tankleichter, chemische Stoffe"
 
 #
 #
 #
+#
+#
 #~ msgid "Base Station"
 #~ msgstr "Basis Station"
 
+#
+#
 #
 #
 #
@@ -4102,9 +4250,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Bearing:                %03d Deg.\n"
 #~ msgstr "Peilung:                %03d Grad\n"
 
+#
+#
 #
 #
 #
@@ -4131,9 +4283,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Bulk carrier maritime"
 #~ msgstr "Massengutfrachter (See)"
 
+#
+#
 #
 #
 #
@@ -4159,9 +4315,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "CM93"
 #~ msgstr "CM93"
 
+#
+#
 #
 #
 #
@@ -4203,6 +4363,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "CM93 Offset Display"
 #~ msgstr "CM93 Versatz (Offset) Anzeige"
 
@@ -4225,9 +4387,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "CM93 Offsets"
 #~ msgstr "CM93 Versatz (Offsets)"
 
+#
+#
 #
 #
 #
@@ -4270,9 +4436,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "CPA:       \n"
 #~ msgstr "CPA:       \n"
 
+#
+#
 #
 #
 #
@@ -4339,9 +4509,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "CallSign:  "
 #~ msgstr "Rufzeichen:  "
 
+#
+#
 #
 #
 #
@@ -4375,10 +4549,14 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Can't send waypoint. Found no serial data port with output defined."
 #~ msgstr ""
 #~ "Kann Wegpunkt nicht senden. Kein serieller Ausgangs-Datenport gefunden."
 
+#
+#
 #
 #
 #
@@ -4435,9 +4613,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Chart Display Filters"
 #~ msgstr "Kartendarstellungs-Filter"
 
+#
+#
 #
 #
 #
@@ -4460,6 +4642,8 @@ msgstr "wxFB Website"
 #~ msgid "Chart Position"
 #~ msgstr "Position"
 
+#
+#
 #
 #
 #
@@ -4549,6 +4733,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #, fuzzy
 #~ msgid "Class:     "
 #~ msgstr ""
@@ -4575,15 +4761,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Class:                "
 #~ msgstr "Klasse:                 "
 
 #
 #
 #
+#
+#
 #~ msgid "Clear"
 #~ msgstr "Abwählen"
 
+#
+#
 #
 #
 #
@@ -4608,15 +4800,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Could not resolve TCP/IP host '"
 #~ msgstr "Der TCP/IP Host konnte nicht ermittelt werden: '"
 
 #
 #
 #
+#
+#
 #~ msgid "Couldn't load sound data from '%s'."
 #~ msgstr "Keine Warnton-Daten geladen von '%s'."
 
+#
+#
 #
 #
 #
@@ -4660,9 +4858,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Course:                 000 Deg.\n"
 #~ msgstr "Kurs:                   000 Deg.\n"
 
+#
+#
 #
 #
 #
@@ -4689,6 +4891,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Cruise ship"
 #~ msgstr "Kabinenschiff"
 
@@ -4711,9 +4915,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Cursor: "
 #~ msgstr "Cursor: "
 
+#
+#
 #
 #
 #
@@ -4776,10 +4984,14 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #, fuzzy
 #~ msgid "Default dataset"
 #~ msgstr "Standardfarbe"
 
+#
+#
 #
 #
 #
@@ -4831,9 +5043,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Delete Mark"
 #~ msgstr "Markierung löschen"
 
+#
+#
 #
 #
 #
@@ -4875,6 +5091,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Delete Selection"
 #~ msgstr "Auswahl löschen"
 
@@ -4897,9 +5115,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Delete Track"
 #~ msgstr "Track löschen"
 
+#
+#
 #
 #
 #
@@ -4942,9 +5164,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Destination:          "
 #~ msgstr "Bestimmungsort:         "
 
+#
+#
 #
 #
 #
@@ -4973,9 +5199,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "E&xport All..."
 #~ msgstr "Alle exportieren..."
 
+#
+#
 #
 #
 #
@@ -5018,9 +5248,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "ETA:"
 #~ msgstr "ETA:"
 
+#
+#
 #
 #
 #
@@ -5084,9 +5318,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "ETE/Timestamp"
 #~ msgstr "ETE/ Zeitstempel"
 
+#
+#
 #
 #
 #
@@ -5130,9 +5368,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Enable Wheel-Zoom-to-Cursor"
 #~ msgstr "Mausrad-Zoom auf Cursorposition aktivieren"
 
+#
+#
 #
 #
 #
@@ -5158,9 +5400,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Fast ship"
 #~ msgstr "Schnelles Schiff"
 
+#
+#
 #
 #
 #
@@ -5170,9 +5416,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Fishing boat"
 #~ msgstr "Fischereifahrzeug"
 
+#
+#
 #
 #
 #
@@ -5182,9 +5432,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Freightbarge with containers"
 #~ msgstr "Frachtkahn mit Containern"
 
+#
+#
 #
 #
 #
@@ -5227,9 +5481,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "GPS"
 #~ msgstr "GPS"
 
+#
+#
 #
 #
 #
@@ -5254,9 +5512,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "GPSGate Buddy"
 #~ msgstr "GPSGate Buddy"
 
+#
+#
 #
 #
 #
@@ -5266,9 +5528,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "General cargo Vessel maritime"
 #~ msgstr "Frachtschiff (See)"
 
+#
+#
 #
 #
 #
@@ -5319,9 +5585,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Go To Mark/WP"
 #~ msgstr "Gehe zu Markierung/ Wegpunkt"
 
+#
+#
 #
 #
 #
@@ -5348,15 +5618,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Heading:                %03d Deg.\n"
 #~ msgstr "Kurs:                   %03d Grad\n"
 
 #
 #
 #
+#
+#
 #~ msgid "Hydrofoil"
 #~ msgstr "Tragflächenboot"
 
+#
+#
 #
 #
 #
@@ -5383,15 +5659,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "IMO:                 %8d\n"
 #~ msgstr " IMO:                   %8d\n"
 
 #
 #
 #
+#
+#
 #~ msgid "Inland Blue Flag"
 #~ msgstr "Binnen: Blaue Tafel"
 
+#
+#
 #
 #
 #
@@ -5434,9 +5716,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Jump To"
 #~ msgstr "Hinspringen"
 
+#
+#
 #
 #
 #
@@ -5487,9 +5773,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Jump To Position..."
 #~ msgstr "Springe zu Position ..."
 
+#
+#
 #
 #
 #
@@ -5545,9 +5835,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Language/Fonts"
 #~ msgstr "Sprache/Schrift"
 
+#
+#
 #
 #
 #
@@ -5576,9 +5870,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Left"
 #~ msgstr "Links"
 
+#
+#
 #
 #
 #
@@ -5604,6 +5902,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Liquified gas tanker"
 #~ msgstr "Gastanker (See)"
 
@@ -5626,9 +5926,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "META Objects"
 #~ msgstr "META-Objekte anzeigen"
 
+#
+#
 #
 #
 #
@@ -5702,9 +6006,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Mark Icon"
 #~ msgstr "Symbol der Markierung"
 
+#
+#
 #
 #
 #
@@ -5749,9 +6057,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Mark Properties"
 #~ msgstr "Markierungs-Eigenschaften"
 
+#
+#
 #
 #
 #
@@ -5812,9 +6124,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Measure....."
 #~ msgstr "Mess-Werkzeug einschalten"
 
+#
+#
 #
 #
 #
@@ -5840,9 +6156,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Motor freighter"
 #~ msgstr "Frachtmotorschiff"
 
+#
+#
 #
 #
 #
@@ -5852,9 +6172,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Motor freighter pushing one or more freighters"
 #~ msgstr "Schubverband, GMS mit einem oder mehr Leichter(n)"
 
+#
+#
 #
 #
 #
@@ -5864,9 +6188,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Motor freighter with tanker"
 #~ msgstr "Gekoppelte Fahrzeuge, mind. 1 TMS"
 
+#
+#
 #
 #
 #
@@ -5876,9 +6204,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Motor tanker"
 #~ msgstr "Tankmotorschiff"
 
+#
+#
 #
 #
 #
@@ -5888,15 +6220,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Motor tanker, liquid cargo, type C"
 #~ msgstr "Tankmotorschiff, Flüssigfracht, Typ C"
 
 #
 #
 #
+#
+#
 #~ msgid "Motor tanker, liquid cargo, type N"
 #~ msgstr "Tankmotorschiff, Flüssigfracht, Typ N"
 
+#
+#
 #
 #
 #
@@ -5921,9 +6259,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "NMEA Data Source"
 #~ msgstr "NMEA-Datenquelle"
 
+#
+#
 #
 #
 #
@@ -5966,9 +6308,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Name:  "
 #~ msgstr "Name: "
 
+#
+#
 #
 #
 #
@@ -6030,9 +6376,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "New Mark"
 #~ msgstr "Neue Markierung"
 
+#
+#
 #
 #
 #
@@ -6058,15 +6408,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Object, not otherwise specified"
 #~ msgstr "Objekt, nicht näher bezeichnet"
 
 #
 #
 #
+#
+#
 #~ msgid "Object, towed, not otherwise specified"
 #~ msgstr "Geschlepptes Objekt, nicht weiter bezeichnet"
 
+#
+#
 #
 #
 #
@@ -6150,6 +6506,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid ""
 #~ "OpenCPN PlugIn Base Class\n"
 #~ "PlugInManager created this base class"
@@ -6160,9 +6518,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Other"
 #~ msgstr "Sonstige"
 
+#
+#
 #
 #
 #
@@ -6188,15 +6550,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Passenger ship without accomodation"
 #~ msgstr "Personen-Ausflugsschiff ohne Kabinen"
 
 #
 #
 #
+#
+#
 #~ msgid "Passenger ship, ferry, cruise ship, red cross ship"
 #~ msgstr "Fahrgastschiff, Fähre, Kreuzfahrer, Rotes-Kreuz-Schiff"
 
+#
+#
 #
 #
 #
@@ -6237,10 +6605,14 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #, fuzzy
 #~ msgid "Place Trackpoints at time interval (sec)"
 #~ msgstr "Tracking-Punkte im Zeitintervall setzen (Sekunden):"
 
+#
+#
 #
 #
 #
@@ -6250,9 +6622,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Pleasure craft, longer than 20 metres"
 #~ msgstr "Sportboot > 20m"
 
+#
+#
 #
 #
 #
@@ -6336,9 +6712,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "PlugInManager: Deactivating PlugIn: "
 #~ msgstr "Plugin-Manager: Deaktiviere Plugin: "
 
+#
+#
 #
 #
 #
@@ -6422,9 +6802,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "PlugInManager: Loading PlugIn: "
 #~ msgstr "Plugin-Manager: Lade Plugin:"
 
+#
+#
 #
 #
 #
@@ -6508,9 +6892,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "PlugInManager: Unloading PlugIn with invalid API version %d.%d: "
 #~ msgstr "Plugin-Manager: Entlade Plugin mit ungültiger API version %d.%d: "
 
+#
+#
 #
 #
 #
@@ -6538,6 +6926,8 @@ msgstr "wxFB Website"
 #~ "Alter der Meldung:      %3d Sek.\n"
 #~ "\n"
 
+#
+#
 #
 #
 #
@@ -6612,6 +7002,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid ""
 #~ "Possible libgps API version mismatch.\n"
 #~ "libgps did not reasonably respond to version request\n"
@@ -6626,9 +7018,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Pushboat, single"
 #~ msgstr "Schubschiff, einzeln"
 
+#
+#
 #
 #
 #
@@ -6638,9 +7034,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Pushtow, eight cargo barges"
 #~ msgstr "Schubschiff mit 8 Frachtschubleichtern"
 
+#
+#
 #
 #
 #
@@ -6650,9 +7050,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Pushtow, five cargo barges"
 #~ msgstr "Schubschiff mit 5 Frachtschubleichtern"
 
+#
+#
 #
 #
 #
@@ -6662,9 +7066,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Pushtow, four cargo barges"
 #~ msgstr "Schubschiff mit 4 Frachtschubleichtern"
 
+#
+#
 #
 #
 #
@@ -6674,9 +7082,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Pushtow, nine or more barges at least one tanker or gas barge"
 #~ msgstr "Schubschiff mit 9 oder mehr SL - min. 1 TSL/GSL"
 
+#
+#
 #
 #
 #
@@ -6686,9 +7098,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Pushtow, one tank/gas barge"
 #~ msgstr "Schubschiff mit 1 TSL/GSL"
 
+#
+#
 #
 #
 #
@@ -6698,9 +7114,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Pushtow, seven cargo barges"
 #~ msgstr "Schubschiff mit 7 Frachtschubleichtern"
 
+#
+#
 #
 #
 #
@@ -6710,9 +7130,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Pushtow, six cargo barges"
 #~ msgstr "Schubschiff mit 6 Frachtschubleichtern"
 
+#
+#
 #
 #
 #
@@ -6722,15 +7146,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Pushtow, three cargo barges"
 #~ msgstr "Schubschiff mit 3 Frachtschubleichtern"
 
 #
 #
 #
+#
+#
 #~ msgid "Pushtow, two barges at least one tanker or gas barge"
 #~ msgstr "Schubschiff mit 2 SL - 1 TSL/GSL"
 
+#
+#
 #
 #
 #
@@ -6755,9 +7185,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Radar rings"
 #~ msgstr "Radar-Ringe"
 
+#
+#
 #
 #
 #
@@ -6801,6 +7235,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Range:                %5.1f NM\n"
 #~ msgstr "Entfernung:             %5.1f sm.\n"
 
@@ -6823,9 +7259,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Raster"
 #~ msgstr "Rasterkarten"
 
+#
+#
 #
 #
 #
@@ -6869,9 +7309,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Rate Of Turn            %3d Deg./Min. Right\n"
 #~ msgstr "Drehgeschw./-richtung:  %3d Grad/ Min. Rechts\n"
 
+#
+#
 #
 #
 #
@@ -6915,9 +7359,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Rate Of Turn:       > 5 Deg./30 s. Left\n"
 #~ msgstr "Drehgeschw./-richtung:  > 5 Grad/ 30s Links\n"
 
+#
+#
 #
 #
 #
@@ -6944,9 +7392,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Red cross ship"
 #~ msgstr "Rot Kreuz Schiff"
 
+#
+#
 #
 #
 #
@@ -6987,9 +7439,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Remove this chart from quilt."
 #~ msgstr "Karte aus dem Patchwork entfernen"
 
+#
+#
 #
 #
 #
@@ -7006,9 +7462,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Report Age"
 #~ msgstr "Berichts-Alter"
 
+#
+#
 #
 #
 #
@@ -7043,15 +7503,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Reverse Route"
 #~ msgstr "Route umkehren"
 
 #
 #
 #
+#
+#
 #~ msgid "Right"
 #~ msgstr "Rechts"
 
+#
+#
 #
 #
 #
@@ -7094,6 +7560,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #, fuzzy
 #~ msgid "Route/Track"
 #~ msgstr "Route aus Track"
@@ -7101,9 +7569,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "SART"
 #~ msgstr "SART"
 
+#
+#
 #
 #
 #
@@ -7129,9 +7601,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Select Chart Types for Quilting"
 #~ msgstr "Kartentypen für \"Patchwork\" Anzeige auswählen"
 
+#
+#
 #
 #
 #
@@ -7144,9 +7620,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Send to GPS ( "
 #~ msgstr "An GPS senden ( "
 
+#
+#
 #
 #
 #
@@ -7156,9 +7636,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Set"
 #~ msgstr "Setzen"
 
+#
+#
 #
 #
 #
@@ -7209,6 +7693,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Settings"
 #~ msgstr "Grundeinstellungen"
 
@@ -7231,9 +7717,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Show ATON labels"
 #~ msgstr "ATON (Seezeichen) Namen anzeigen"
 
+#
+#
 #
 #
 #
@@ -7299,6 +7789,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Show Track icon"
 #~ msgstr "Track-Symbol anzeigen"
 
@@ -7321,9 +7813,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Show layers initially"
 #~ msgstr "Layer direkt anzeigen"
 
+#
+#
 #
 #
 #
@@ -7371,6 +7867,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid ""
 #~ "Size:                 %dm x %dm x %4.1fm\n"
 #~ "\n"
@@ -7378,6 +7876,8 @@ msgstr "wxFB Website"
 #~ "Größe:                  %dm x %dm x %4.1fm\n"
 #~ "\n"
 
+#
+#
 #
 #
 #
@@ -7425,6 +7925,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid ""
 #~ "Size:                 ---m x ---m x %4.1fm\n"
 #~ "\n"
@@ -7432,6 +7934,8 @@ msgstr "wxFB Website"
 #~ "Größe:                  ---m x ---m x %4.1fm\n"
 #~ "\n"
 
+#
+#
 #
 #
 #
@@ -7479,6 +7983,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid ""
 #~ "Size:               %5.1fm x %4.1fm x %4.1fm\n"
 #~ "\n"
@@ -7486,6 +7992,8 @@ msgstr "wxFB Website"
 #~ "Größe:                  %5.1fm x %4.1fm x %4.1fm\n"
 #~ "\n"
 
+#
+#
 #
 #
 #
@@ -7516,9 +8024,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Sound file '%s' is in unsupported format."
 #~ msgstr "Warnton-Datei '%s' Format nicht unterstützt."
 
+#
+#
 #
 #
 #
@@ -7562,6 +8074,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Speed:                %5.2f Kts.\n"
 #~ msgstr "Geschwindigkeit:        %5.2f kn\n"
 
@@ -7584,9 +8098,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "TCP/IP WiFi Data Server"
 #~ msgstr "TCP/IP WLAN-Datenserver"
 
+#
+#
 #
 #
 #
@@ -7630,9 +8148,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "TCPA:                 %02d:%02d Hr:Min\n"
 #~ msgstr "TCPA:                   %02d:%02d h:min\n"
 
+#
+#
 #
 #
 #
@@ -7642,9 +8164,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Tankbarge, dry cargo as if liquid (e.g. cement)"
 #~ msgstr "Tankkahn/Tankleichter, Trockenfracht"
 
+#
+#
 #
 #
 #
@@ -7654,9 +8180,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Tankbarge, liquid cargo, type C"
 #~ msgstr "Tankkahn/Tankleichter (TSL), Flüssigfracht, Typ C"
 
+#
+#
 #
 #
 #
@@ -7682,9 +8212,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Text Element"
 #~ msgstr "Textelement"
 
+#
+#
 #
 #
 #
@@ -7727,10 +8261,14 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #, fuzzy
 #~ msgid "Tide/Current Data Selector"
 #~ msgstr "Kurzinfo Gezeiten- und Strömungskurve"
 
+#
+#
 #
 #
 #
@@ -7756,9 +8294,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "ToolBox"
 #~ msgstr "Einstellungen"
 
+#
+#
 #
 #
 #
@@ -7801,9 +8343,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "TrueScale: %8.0f             "
 #~ msgstr "Maßstab: %8.0f             "
 
+#
+#
 #
 #
 #
@@ -7813,9 +8359,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Tug, assisting a vessel or linked combination"
 #~ msgstr "Schlepper assistierend"
 
+#
+#
 #
 #
 #
@@ -7825,9 +8375,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Tug, freighter/tanker, coupled"
 #~ msgstr "Gekoppeltes Schlepp-Schiff, min. 1 Schl.TS"
 
+#
+#
 #
 #
 #
@@ -7837,9 +8391,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Tug, single"
 #~ msgstr "Schlepper"
 
+#
+#
 #
 #
 #
@@ -7849,9 +8407,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Turn Rate"
 #~ msgstr "Drehrate"
 
+#
+#
 #
 #
 #
@@ -7895,6 +8457,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "UN Ship Type:         "
 #~ msgstr "UN Schiffstyp:          "
 
@@ -7908,9 +8472,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Unavailable"
 #~ msgstr "nicht verfügbar"
 
+#
+#
 #
 #
 #
@@ -7935,9 +8503,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Units"
 #~ msgstr "Maßeinheit"
 
+#
+#
 #
 #
 #
@@ -7963,9 +8535,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "Use SCAMIN"
 #~ msgstr "SCAMIN (Scale Minimum) verwenden"
 
+#
+#
 #
 #
 #
@@ -7975,11 +8551,15 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid ""
 #~ "Vessel, work maintainance craft, floating derrick, cable-ship, buoy-ship, "
 #~ "dredge"
 #~ msgstr "Arbeitsfahrzeug"
 
+#
+#
 #
 #
 #
@@ -8021,6 +8601,8 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "WiFi Options"
 #~ msgstr "WLAN-Optionen"
 
@@ -8043,9 +8625,13 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "X Offset (Positive moves map to East) (NMi Projected) :"
 #~ msgstr "X Versatz (pos. Werte verschieben die Karte nach Osten) "
 
+#
+#
 #
 #
 #
@@ -8089,15 +8675,21 @@ msgstr "wxFB Website"
 #
 #
 #
+#
+#
 #~ msgid "cm93 Detail"
 #~ msgstr "CM93 Details"
 
 #
 #
 #
+#
+#
 #~ msgid "in"
 #~ msgstr "in"
 
+#
+#
 #
 #
 #
