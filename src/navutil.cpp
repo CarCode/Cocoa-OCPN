@@ -3971,8 +3971,11 @@ wxString toSDMM( int NEflag, double a, bool hi_precision )
             }
         } else
             if( NEflag == 2 ) {
+#ifdef __WXOSX__
+                c = 'O';
+#else
                 c = 'E';
-
+#endif
                 if( neg ) {
                     d = -d;
                     c = 'W';

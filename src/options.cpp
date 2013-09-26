@@ -39,7 +39,7 @@
 #include <wx/display.h>
 #include <wx/choice.h>
 #include <wx/dirdlg.h>
-#if wxCHECK_VERSION(2,9,5) /* does this work in 2.8 too.. do we need a test? */
+#if wxCHECK_VERSION(2,9,0) /* does this work in 2.8 too.. do we need a test? */
 #include <wx/renderer.h>
 #endif
 #ifdef __WXGTK__
@@ -2428,7 +2428,7 @@ ConnectionParams *options::CreateConnectionParamsFromSelectedItem()
         pConnectionParams->OutputSentenceListType = WHITELIST;
     else
         pConnectionParams->OutputSentenceListType = BLACKLIST;
-    pConnectionParams->Port = m_comboPort->GetValue();
+    pConnectionParams->Port = m_comboPort->GetValue().BeforeFirst(' ');
     pConnectionParams->Protocol = PROTO_NMEA0183;
 
     pConnectionParams->bEnabled = m_connection_enabled;
