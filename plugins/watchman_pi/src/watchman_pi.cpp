@@ -358,8 +358,11 @@ void watchman_pi::OnTimer( wxTimerEvent & )
 
     if(m_bOverSpeedAlarm && sog > m_dOverSpeed)
         m_iAlarm |= OVERSPEED;
-
+#ifdef __WXOSX__
+      courseerror = heading_resolve(cog - m_dCourseDegrees);
+#else
     courseerror = fabs(heading_resolve(cog - m_dCourseDegrees));
+#endif
     if(m_bOffCourseAlarm && courseerror > m_dOffCourseDegrees)
         m_iAlarm |= OFFCOURSE;
 
