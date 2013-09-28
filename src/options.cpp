@@ -1483,6 +1483,10 @@ void options::CreatePanel_AIS( size_t parent, int border_size, int group_item_sp
             wxSize( -1, -1 ) );
     pCPAGrid->Add( m_pText_CPA_Warn, 0, wxALL | wxALIGN_RIGHT, group_item_spacing );
 
+    m_pCheck_CPA_Warn->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED,
+                               wxCommandEventHandler( options::OnCPAWarnClick ), NULL, this );
+
+
     m_pCheck_CPA_WarnT = new wxCheckBox( panelAIS, -1,
             _("...and TCPA is less than (min)") );
     pCPAGrid->Add( m_pCheck_CPA_WarnT, 0, wxALL, group_item_spacing );
@@ -2043,7 +2047,13 @@ void options::SetInitialSettings()
     s.Printf( _T("%4.1f"), g_CPAWarn_NM );
     m_pText_CPA_Warn->SetValue( s );
 
-    m_pCheck_CPA_WarnT->SetValue( g_bTCPA_Max );
+    if(  m_pCheck_CPA_Warn->GetValue() ) {
+        m_pCheck_CPA_WarnT->Enable();
+        m_pCheck_CPA_WarnT->SetValue( g_bTCPA_Max );
+    }
+    else
+        m_pCheck_CPA_WarnT->Disable();
+
 
     s.Printf( _T("%4.0f"), g_TCPA_Max );
     m_pText_CPA_WarnT->SetValue( s );
@@ -2193,6 +2203,16 @@ void options::SetInitialSettings()
     }
 #endif
 
+}
+
+void options::OnCPAWarnClick( wxCommandEvent& event )
+{
+    if( m_pCheck_CPA_Warn->GetValue() ) {
+        m_pCheck_CPA_WarnT->Enable();
+    } else {
+        m_pCheck_CPA_WarnT->SetValue( false );
+        m_pCheck_CPA_WarnT->Disable();
+    }
 }
 
 void options::OnShowGpsWindowCheckboxClick( wxCommandEvent& event )

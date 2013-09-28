@@ -47,6 +47,11 @@ c. In einem weiteren Schritt soll mit Veröffentlichung einer Binär-Version
 d. Nicht alle Plugins laufen bisher problemlos. Einige wurden noch nicht
    compiliert, andere haben noch Fehler.
 
+Compiler:
+Xcode 5.0
+Apple LLVM version 5.0 (clang-500.2.75) (based on LLVM 3.3svn)
+Target: x86_64-apple-darwin12.5.0
+Thread model: posix
 -----------------------------------------------------------------------
 21. September 2013
 
