@@ -1166,10 +1166,10 @@ bool MyApp::OnInit()
     wxString wxver(wxVERSION_STRING);
     wxver.Prepend( _T("wxWidgets version: ") );
     wxLogMessage( wxver );
-
+#ifndef __WXOSX__
     wxLogMessage( _T("MemoryStatus:  mem_total: %d mb,  mem_initial: %d mb"), g_mem_total / 1024,
             g_mem_initial / 1024 );
-
+#endif
     //    Initialize embedded PNG icon graphics
     ::wxInitAllImageHandlers();
 
@@ -3218,7 +3218,7 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
             //    First, delete any single anchorage waypoint closer than 0.25 NM from this point
             //    This will prevent clutter and database congestion....
 
-            wxRoutePointListNode *node = pWayPointMan->m_pWayPointList->GetFirst();
+            wxRoutePointListNode *node = pWayPointMan->GetWaypointList()->GetFirst();
             while( node ) {
                 RoutePoint *pr = node->GetData();
                 if( pr->GetName().StartsWith( _T("Anchorage") ) ) {
@@ -5131,6 +5131,9 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
             AnchorAlertOn2 = false;
     } else
         AnchorAlertOn2 = false;
+
+    if( (pAnchorWatchPoint1 || pAnchorWatchPoint2) && !bGPSValid )
+        AnchorAlertOn1 = true;
 
 //  Send current nav status data to log file on every half hour   // pjotrc 2010.02.09
 
