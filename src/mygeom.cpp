@@ -1,11 +1,11 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Tesselated Polygon Object
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,11 +20,9 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
+
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
 
@@ -414,10 +412,21 @@ PolyTessGeo::PolyTessGeo(unsigned char *polybuf, int nrecl, int index)
             //  Read the triangle primitive bounding box as lat/lon
             tp->p_bbox = new wxBoundingBox;
             double *pbb = (double *)m_buf_ptr;
+
+#ifdef ARMHF
+            double abox[4];
+            memcpy(&abox[0], pbb, 4 * sizeof(double));
+            double minx = abox[0];
+            double maxx = abox[1];
+            double miny = abox[2];
+            double maxy = abox[3];
+#else
             double minx = *pbb++;
             double maxx = *pbb++;
             double miny = *pbb++;
-            double maxy = *pbb++;
+            double maxy = *pbb;
+#endif
+
             tp->p_bbox->SetMin(minx, miny);
             tp->p_bbox->SetMax(maxx, maxy);
 
