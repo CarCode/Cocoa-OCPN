@@ -78,6 +78,8 @@ enum { rmVISIBLE = 0, rmTYPE, rmBODY, rmTIME, rmMEASUREMENT, rmCOLOR };// RMColu
 // sort callback. Sort by body.
 #if wxCHECK_VERSION(2, 9, 0)
 int wxCALLBACK SortSights(long item1, long item2, wxIntPtr list)
+#elif wxCHECK_VERSION(3, 0, 0)
+int wxCALLBACK SortSights(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortSights(long item1, long item2, long list)
 #endif            

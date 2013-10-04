@@ -38,6 +38,8 @@
 
 #if wxCHECK_VERSION(2, 9, 0)
 #include <wx/dialog.h>
+#elif wxCHECK_VERSION(3, 0, 0)
+#include <wx/dialog.h>
 #else
 #include "scrollingdialog.h"
 #endif
@@ -177,7 +179,7 @@ enum {
 
 WX_DECLARE_OBJARRAY(wxGenericDirCtrl *, ArrayOfDirCtrls);
 
-#ifndef bert// wxCHECK_VERSION(2, 9, 0)
+#ifndef bert// wxCHECK_VERSION(2, 9, 0)  What is bert???
 class options: public wxDialog
 #else
 class options: public wxScrollingDialog

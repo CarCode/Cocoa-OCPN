@@ -1022,10 +1022,13 @@ ChartCanvas::ChartCanvas ( wxFrame *frame ) :
         wxLogMessage( _T("Creating glChartCanvas") );
         m_glcc = new glChartCanvas(this);
             
-    #if wxCHECK_VERSION(2, 9, 0)
+#if wxCHECK_VERSION(2, 9, 0)
         m_pGLcontext = new wxGLContext(m_glcc);
         m_glcc->SetContext(m_pGLcontext);
-    #else
+#elif wxCHECK_VERSION(3, 0, 0)
+        m_pGLcontext = new wxGLContext(m_glcc);
+        m_glcc->SetContext(m_pGLcontext);
+#else
         m_pGLcontext = m_glcc->GetContext();
     #endif
     }
@@ -10558,6 +10561,11 @@ void DimeControl( wxWindow* ctrl, wxColour col, wxColour col1, wxColour back_col
         ctrl->SetBackgroundColour( back_color );
     else
         ctrl->SetBackgroundColour( wxColour( 0xff, 0xff, 0xff ));
+#elif wxCHECK_VERSION(3, 0, 0)
+    if( cs != GLOBAL_COLOR_SCHEME_DAY && cs != GLOBAL_COLOR_SCHEME_RGB )
+        ctrl->SetBackgroundColour( back_color );
+    else
+        ctrl->SetBackgroundColour( wxColour( 0xff, 0xff, 0xff ));
 #endif
 #endif
 
@@ -10580,6 +10588,9 @@ void DimeControl( wxWindow* ctrl, wxColour col, wxColour col1, wxColour back_col
 
         else if( win->IsKindOf( CLASSINFO(wxBitmapComboBox) ) ) {
 #if wxCHECK_VERSION(2,9,0)
+            if( ( ( wxBitmapComboBox*) win )->GetTextCtrl() )
+                ( (wxBitmapComboBox*) win )->GetTextCtrl()->SetBackgroundColour(col);
+#elif wxCHECK_VERSION(3, 0, 0)
             if( ( ( wxBitmapComboBox*) win )->GetTextCtrl() )
                 ( (wxBitmapComboBox*) win )->GetTextCtrl()->SetBackgroundColour(col);
 #else

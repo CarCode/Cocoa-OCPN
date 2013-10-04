@@ -55,6 +55,8 @@
 
 #if wxCHECK_VERSION(2, 9, 0)
 #include <wx/dialog.h>
+#elif wxCHECK_VERSION(3, 0, 0)
+#include <wx/dialog.h>
 #else
 #include "scrollingdialog.h"
 #endif

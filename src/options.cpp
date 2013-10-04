@@ -41,6 +41,8 @@
 #include <wx/dirdlg.h>
 #if wxCHECK_VERSION(2,9,0) /* does this work in 2.8 too.. do we need a test? */
 #include <wx/renderer.h>
+#elif wxCHECK_VERSION(3, 0, 0)
+#include <wx/renderer.h>
 #endif
 #ifdef __WXGTK__
 #include <wx/colordlg.h>
@@ -204,6 +206,8 @@ IMPLEMENT_DYNAMIC_CLASS( options, wxDialog )
 
 // sort callback for Connections list  Sort by priority.
 #if wxCHECK_VERSION(2, 9, 0)
+int wxCALLBACK SortConnectionOnPriority(long item1, long item2, wxIntPtr list)
+#elif wxCHECK_VERSION(3, 0, 0)
 int wxCALLBACK SortConnectionOnPriority(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortConnectionOnPriority(long item1, long item2, long list)
@@ -1827,7 +1831,7 @@ void options::CreateControls()
     m_topImgList->Add( style->GetIcon( _T("Ship") ) );
     m_topImgList->Add( style->GetIcon( _T("UI") ) );
     m_topImgList->Add( style->GetIcon( _T("Plugins") ) );
-#else
+#else  // so it works for 3.0.0 as well?
     wxBitmap bmp;
     wxImage img;
     bmp = style->GetIcon( _T("Display") ); img = bmp.ConvertToImage(); img.ConvertAlphaToMask(128);

@@ -1879,12 +1879,16 @@ bool s52plib::RenderHPGL( ObjRazRules *rzRules, Rule *prule, wxPoint &r, ViewPor
         HPGL->Render( str, col, r, pivot, (double) rot_angle );
 
     } else {
-
+// Has worked with 2.9.5 somehow, why?
 #if (( defined(__WXGTK__) || defined(__WXMAC__) ) && !wxCHECK_VERSION(2,9,4))
+        wxBitmap *pbm = new wxBitmap( width, height );
+#elif (( defined(__WXGTK__) || defined(__WXMAC__) ) && !wxCHECK_VERSION(3, 0, 0))
         wxBitmap *pbm = new wxBitmap( width, height );
 #else
         wxBitmap *pbm = new wxBitmap( width, height, 32 );
 # if !wxCHECK_VERSION(2,9,4)
+        pbm->UseAlpha();
+#elif !wxCHECK_VERSION(3, 0, 0)
         pbm->UseAlpha();
 #endif
 #endif
@@ -1917,8 +1921,12 @@ bool s52plib::RenderHPGL( ObjRazRules *rzRules, Rule *prule, wxPoint &r, ViewPor
         wxGCDC targetGcdc( targetDc );
 
         targetDc.Blit( 0, 0, bm_width, bm_height, m_pdc, screenOriginX, screenOriginY );
-
+// Has worked with 2.9.5 somehow, why?
 #if (( defined(__WXGTK__) || defined(__WXMAC__) ) && !wxCHECK_VERSION(2,9,4))
+        r0 -= wxPoint( bm_orgx, bm_orgy );
+        HPGL->SetTargetGCDC( &targetGcdc );
+        HPGL->Render( str, col, r0, pivot, (double) rot_angle );
+#elif (( defined(__WXGTK__) || defined(__WXMAC__) ) && !wxCHECK_VERSION(3, 0, 0))
         r0 -= wxPoint( bm_orgx, bm_orgy );
         HPGL->SetTargetGCDC( &targetGcdc );
         HPGL->Render( str, col, r0, pivot, (double) rot_angle );

@@ -506,6 +506,8 @@ void glChartCanvas::OnPaint( wxPaintEvent &event )
 
 #if wxCHECK_VERSION(2, 9, 0)
     SetCurrent(*m_pcontext);
+#elif wxCHECK_VERSION(3, 0, 0)
+    SetCurrent(*m_pcontext);
 #else
     SetCurrent();
 #endif

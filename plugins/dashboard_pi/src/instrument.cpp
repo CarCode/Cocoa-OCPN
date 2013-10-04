@@ -86,6 +86,8 @@ void DashboardInstrument::OnPaint( wxPaintEvent& WXUNUSED(event) )
     wxBitmap bm( size.x, size.y, 32 );
 #if !wxCHECK_VERSION(2,9,4)
     bm.UseAlpha();
+#elif !wxCHECK_VERSION(3, 0, 0)  // Do we need this? 2.9.5 has worked.
+    bm.UseAlpha();
 #endif
     wxMemoryDC mdc( bm );
     wxGCDC dc( mdc );

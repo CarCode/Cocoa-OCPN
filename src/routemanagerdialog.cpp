@@ -139,6 +139,8 @@ extern wxString         g_default_wp_icon;
 int sort_route_name_dir;
 #if wxCHECK_VERSION(2, 9, 0)
 int wxCALLBACK SortRoutesOnName(long item1, long item2, wxIntPtr list)
+#elif wxCHECK_VERSION(3, 0, 0)
+int wxCALLBACK SortRoutesOnName(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortRoutesOnName(long item1, long item2, long list)
 #endif
@@ -168,6 +170,8 @@ int wxCALLBACK SortRoutesOnName(long item1, long item2, long list)
 int sort_route_to_dir;
 #if wxCHECK_VERSION(2, 9, 0)
 int wxCALLBACK SortRoutesOnTo(long item1, long item2, wxIntPtr list)
+#elif wxCHECK_VERSION(3, 0, 0)
+int wxCALLBACK SortRoutesOnTo(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortRoutesOnTo(long item1, long item2, long list)
 #endif
@@ -195,6 +199,8 @@ int wxCALLBACK SortRoutesOnTo(long item1, long item2, long list)
 // sort callback. Sort by track name.
 int sort_track_name_dir;
 #if wxCHECK_VERSION(2, 9, 0)
+int wxCALLBACK SortTracksOnName(long item1, long item2, wxIntPtr list)
+#elif wxCHECK_VERSION(3, 0, 0)
 int wxCALLBACK SortTracksOnName(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortTracksOnName(long item1, long item2, long list)
@@ -224,6 +230,8 @@ int wxCALLBACK SortTracksOnName(long item1, long item2, long list)
 // sort callback. Sort by track length.
 int sort_track_len_dir;
 #if wxCHECK_VERSION(2, 9, 0)
+int wxCALLBACK SortTracksOnDistance(long item1, long item2, wxIntPtr list)
+#elif wxCHECK_VERSION(3, 0, 0)
 int wxCALLBACK SortTracksOnDistance(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortTracksOnDistance(long item1, long item2, long list)
@@ -264,6 +272,8 @@ int sort_wp_key;
 int sort_wp_name_dir;
 #if wxCHECK_VERSION(2, 9, 0)
 int wxCALLBACK SortWaypointsOnName(long item1, long item2, wxIntPtr list)
+#elif wxCHECK_VERSION(3, 0, 0)
+int wxCALLBACK SortWaypointsOnName(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortWaypointsOnName(long item1, long item2, long list)
 #endif
@@ -288,6 +298,8 @@ int wxCALLBACK SortWaypointsOnName(long item1, long item2, long list)
 // sort callback. Sort by wpt distance.
 int sort_wp_len_dir;
 #if wxCHECK_VERSION(2, 9, 0)
+int wxCALLBACK SortWaypointsOnDistance(long item1, long item2, wxIntPtr list)
+#elif wxCHECK_VERSION(3, 0, 0)
 int wxCALLBACK SortWaypointsOnDistance(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortWaypointsOnDistance(long item1, long item2, long list)
@@ -327,6 +339,8 @@ int wxCALLBACK SortWaypointsOnDistance(long item1, long item2, long list)
 int sort_layer_name_dir;
 #if wxCHECK_VERSION(2, 9, 0)
 int wxCALLBACK SortLayersOnName(long item1, long item2, wxIntPtr list)
+#elif wxCHECK_VERSION(3, 0, 0)
+int wxCALLBACK SortLayersOnName(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortLayersOnName(long item1, long item2, long list)
 #endif
@@ -355,6 +369,8 @@ int wxCALLBACK SortLayersOnName(long item1, long item2, long list)
 // sort callback. Sort by layer size.
 int sort_layer_len_dir;
 #if wxCHECK_VERSION(2, 9, 0)
+int wxCALLBACK SortLayersOnSize(long item1, long item2, wxIntPtr list)
+#elif wxCHECK_VERSION(3, 0, 0)
 int wxCALLBACK SortLayersOnSize(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortLayersOnSize(long item1, long item2, long list)

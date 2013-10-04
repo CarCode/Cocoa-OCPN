@@ -104,6 +104,8 @@ wxString toMailFormat ( int NEflag, int a )
 
 #if !wxCHECK_VERSION(2,9,5) /* to work with wx 2.8 */
 #define SetBitmap SetBitmapLabel
+#elif !wxCHECK_VERSION(3, 0, 0)
+#define SetBitmap SetBitmapLabel
 #endif
 
 //---------------------------------------------------------------------------------------

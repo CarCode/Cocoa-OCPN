@@ -526,6 +526,8 @@ void TCWin::OnPaint( wxPaintEvent& event )
         //    Draw the Value curve
 #if wxCHECK_VERSION(2, 9, 0)
         wxPointList *list = (wxPointList *)&m_sList;
+#elif wxCHECK_VERSION(3, 0, 0)
+        wxPointList *list = (wxPointList *)&m_sList;
 #else
         wxList *list = (wxList *) &m_sList;
 #endif

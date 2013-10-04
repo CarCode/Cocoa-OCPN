@@ -472,6 +472,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	
 #if wxCHECK_VERSION(2, 9, 0)
 	m_bpButtonTimer = new myBitmapButton( Statusbar, wxID_ANY, _("Timer"),*_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
+#elif wxCHECK_VERSION(3, 0, 0)
+    m_bpButtonTimer = new myBitmapButton( Statusbar, wxID_ANY, _("Timer"),*_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
 #else
 	m_staticText1241 = new wxStaticText( Statusbar, wxID_ANY, _("Timer"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1241->Wrap( -1 );
@@ -484,6 +486,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	
 #if wxCHECK_VERSION(2, 9, 0)
 	m_bpButtonWatch = new myBitmapButton( Statusbar, wxID_ANY, _("Watch"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
+#elif wxCHECK_VERSION(3, 0, 0)
+    m_bpButtonWatch = new myBitmapButton( Statusbar, wxID_ANY, _("Watch"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
 #else
 	m_staticText12411 = new wxStaticText( Statusbar, wxID_ANY, _("Watch"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText12411->Wrap( -1 );
@@ -498,6 +502,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	
 #if wxCHECK_VERSION(2, 9, 0)
 	m_bpButton8Waypoint = new myBitmapButton( Statusbar, wxID_ANY,  _("Waypoint"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
+#elif wxCHECK_VERSION(3, 0, 0)
+    m_bpButton8Waypoint = new myBitmapButton( Statusbar, wxID_ANY,  _("Waypoint"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
 #else
 	m_staticText124111 = new wxStaticText( Statusbar, wxID_ANY, _("Waypoint"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText124111->Wrap( -1 );
@@ -511,6 +517,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 
 #if wxCHECK_VERSION(2, 9, 0)
 	m_bpButtonDistance = new myBitmapButton( Statusbar, wxID_ANY,  _("Distance"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
+#elif wxCHECK_VERSION(3, 0, 0)
+    m_bpButtonDistance = new myBitmapButton( Statusbar, wxID_ANY,  _("Distance"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
 #else
 	m_staticText12411 = new wxStaticText( Statusbar, wxID_ANY, _("Distance"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText12411->Wrap( -1 );
@@ -530,6 +538,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	
 #if wxCHECK_VERSION(2, 9, 0)
 	m_bpButtonCourse = new myBitmapButton( Statusbar, wxID_ANY, _("Course"),  *_img_Bullet_red );
+#elif wxCHECK_VERSION(3, 0, 0)
+    m_bpButtonCourse = new myBitmapButton( Statusbar, wxID_ANY, _("Course"),  *_img_Bullet_red );
 #else
 	m_staticText1241 = new wxStaticText( Statusbar, wxID_ANY, _("Course"), wxDefaultPosition, wxDefaultSize, 0  );
 	m_staticText1241->Wrap( -1 );
@@ -3007,6 +3017,8 @@ void LogbookDialog::setBulletColorAllStates(myBitmapButton* button, wxBitmap bmp
 		button->SetBitmapSelected(bmp);
 #if wxCHECK_VERSION(2, 9, 0)
 		button->SetBitmapCurrent(bmp);
+#elif wxCHECK_VERSION(3, 0, 0)
+        button->SetBitmapCurrent(bmp);
 #endif
 		button->SetBitmapFocus(bmp);
 }

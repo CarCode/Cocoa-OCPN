@@ -1157,6 +1157,22 @@ public:
 
 	int state;
 };
+#elif wxCHECK_VERSION(3, 0, 0)
+class myBitmapButton : public wxButton
+{
+public:
+	myBitmapButton( wxWindow* Statusbar, wxWindowID id = wxID_ANY, wxString text = wxEmptyString, const wxBitmap bm = wxBitmap(), const wxPoint& pos = wxDefaultPosition,
+                   const wxSize& size = wxSize( -1,20 ), long style = wxBU_AUTODRAW, int state = 0 ) : wxButton( Statusbar, id, text, pos, size, style )
+	{
+		this->state = state;
+		this->SetBitmapLabel(bm);
+		this->SetBitmapHover(bm);
+		this->SetBitmapPosition(wxRIGHT);
+	}
+	~myBitmapButton(){}
+    
+	int state;
+};
 #else
 class myBitmapButton : public wxBitmapButton
 {
