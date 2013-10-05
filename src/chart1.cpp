@@ -605,6 +605,7 @@ MyDialogPtrArray          g_MacShowDialogArray;
 
 bool                      g_bShowMag;
 double                    g_UserVar;
+bool                      g_bMagneticAPB;
 
 //                        OpenGL Globals
 int                       g_GPU_MemSize;

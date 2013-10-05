@@ -71,6 +71,8 @@ extern wxString         g_PrivateDataDir;
 extern double           gLat, gLon, gSog, gCog;
 extern double           gVar;
 
+extern bool             g_bMagneticAPB;
+
 extern RoutePoint       *pAnchorWatchPoint1;
 extern RoutePoint       *pAnchorWatchPoint2;
 
@@ -655,24 +657,38 @@ bool Routeman::UpdateAutopilot()
             //  We never pass the perpendicular, since we declare arrival before reaching this point
             m_NMEA0183.Apb.IsPerpendicular = NFalse;
             
+            m_NMEA0183.Apb.To = pActivePoint->GetName().Truncate( 6 );
+
             double brg1, dist1;
             DistanceBearingMercator( pActivePoint->m_lat, pActivePoint->m_lon,
                                      pActiveRouteSegmentBeginPoint->m_lat, pActiveRouteSegmentBeginPoint->m_lon,
                                      &brg1,
                                      &dist1 );
             
-            m_NMEA0183.Apb.BearingOriginToDestination = brg1;
-            m_NMEA0183.Apb.BearingOriginToDestinationUnits = _("T");
+            if( g_bMagneticAPB && !wxIsNaN(gVar) ) {
 
-            m_NMEA0183.Apb.To = pActivePoint->GetName().Truncate( 6 );
-            
-            m_NMEA0183.Apb.BearingPresentPositionToDestination = CurrentBrgToActivePoint;
-            m_NMEA0183.Apb.BearingPresentPositionToDestinationUnits = _("T");
-            
-            m_NMEA0183.Apb.To = pActivePoint->GetName().Truncate( 6 );
+                double brg1m = ((brg1 + gVar) >= 0.) ? (brg1 + gVar) : (brg1 + gVar + 360.);
+                double bapm = ((CurrentBrgToActivePoint + gVar) >= 0.) ? (CurrentBrgToActivePoint + gVar) : (CurrentBrgToActivePoint + gVar + 360.);
 
-            m_NMEA0183.Apb.HeadingToSteer = CurrentBrgToActivePoint;
-            m_NMEA0183.Apb.HeadingToSteerUnits = _("T");
+                m_NMEA0183.Apb.BearingOriginToDestination = brg1m;
+                m_NMEA0183.Apb.BearingOriginToDestinationUnits = _T("M");
+
+                m_NMEA0183.Apb.BearingPresentPositionToDestination = bapm;
+                m_NMEA0183.Apb.BearingPresentPositionToDestinationUnits = _T("M");
+
+                m_NMEA0183.Apb.HeadingToSteer = bapm;
+                m_NMEA0183.Apb.HeadingToSteerUnits = _T("M");
+            }
+            else {
+                m_NMEA0183.Apb.BearingOriginToDestination = brg1;
+                m_NMEA0183.Apb.BearingOriginToDestinationUnits = _T("T");
+
+                m_NMEA0183.Apb.BearingPresentPositionToDestination = CurrentBrgToActivePoint;
+                m_NMEA0183.Apb.BearingPresentPositionToDestinationUnits = _T("T");
+            
+                m_NMEA0183.Apb.HeadingToSteer = CurrentBrgToActivePoint;
+                m_NMEA0183.Apb.HeadingToSteerUnits = _T("T");
+            }
             
             m_NMEA0183.Apb.Write( snt );
             g_pMUX->SendNMEAMessage( snt.Sentence );
