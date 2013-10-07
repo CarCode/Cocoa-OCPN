@@ -1769,12 +1769,9 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
         break;
 #endif
     case WXK_F12: {
-        if( m_modkeys == wxMOD_ALT )
-#ifdef __WXOSX__
-            m_nMeasureState = 0;
-#else
-            m_nMeasureState = *(int *)(0);          // generate a fault for testing
-#endif
+//        if( m_modkeys == wxMOD_ALT )
+//            m_nMeasureState = *(int *)(0);          // generate a fault for testing
+
         parent_frame->ToggleChartOutlines();
         break;
     }
@@ -7621,7 +7618,11 @@ void ChartCanvas::PopupMenuHandler( wxCommandEvent& event )
                 pRoutePropDialog->UpdateProperties();
             }
 
-            if( pRouteManagerDialog && pRouteManagerDialog->IsShown() ) pRouteManagerDialog->UpdateWptListCtrl();
+            if( pRouteManagerDialog && pRouteManagerDialog->IsShown() ) {
+                pRouteManagerDialog->UpdateWptListCtrl();
+                pRouteManagerDialog->UpdateRouteListCtrl();
+            }
+
         }
 
         break;
