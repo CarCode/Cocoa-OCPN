@@ -76,6 +76,7 @@ public:
 
     void SetMessage( wxString message ) { m_Message = message; }
     void SetTimeZone( int TimeZone ) { m_TimeZone = TimeZone; }
+    void SetParentSize( int w, int h ) { m_ParentSize.SetWidth(w) ; m_ParentSize.SetHeight(h) ;}
 
     void SetGribTimelineRecordSet( GribTimelineRecordSet *pGribTimelineRecordSet1 );
     bool RenderGribOverlay( wxDC &dc, PlugIn_ViewPort *vp );
@@ -131,6 +132,7 @@ private:
 
     wxString m_Message;
     int  m_TimeZone;
+    wxSize  m_ParentSize;
 
     wxDC *m_pdc;
     wxGraphicsContext *m_gdc;
