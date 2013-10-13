@@ -2358,7 +2358,7 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         }
     } else // OpenGL mode
     {
-        //glPushAttrib( GL_COLOR_BUFFER_BIT | GL_LINE_BIT | GL_HINT_BIT | GL_ENABLE_BIT ); //Save state
+        glPushAttrib( GL_COLOR_BUFFER_BIT | GL_LINE_BIT | GL_HINT_BIT | GL_ENABLE_BIT ); //Save state
 
         glColor3ub( c->R, c->G, c->B );
 
@@ -2666,7 +2666,7 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
                     free( ptp );
                 }
 
-//    if( !m_pdc ) glPopAttrib();
+    if( !m_pdc ) glPopAttrib();
 
     if(pdotpen) {
         pdotpen->SetDashes( 1, NULL );

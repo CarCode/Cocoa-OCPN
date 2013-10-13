@@ -512,9 +512,11 @@ bool PlugInManager::CheckBlacklistedPlugin(opencpn_plugin* plugin)
             ( !PluginBlacklist[i].all_lower && name.EndsWith(PluginBlacklist[i].name) && PluginBlacklist[i].version_major == major && PluginBlacklist[i].version_minor == minor ) )
         {
             if ( PluginBlacklist[i].hard )
-                    wxMessageBox(wxString::Format(_("Plugin %s (%s), version %i.%i was detected. This version is known to be unstable and will not be loaded, please go to the opencpn.org plugin downloads page and get the latest stable version of this plugin available."), PluginBlacklist[i].name.c_str(), plugin->GetCommonName().c_str(), major, minor), _("Broken plugin detected..."));
+                wxMessageBox(wxString::Format(_("PlugIn %s (%s), version %i.%i was detected.\n This version is known to be unstable and will not be loaded.\n Please update this PlugIn at the opencpn.org website."),
+                    PluginBlacklist[i].name.c_str(), plugin->GetCommonName().c_str(), major, minor), _("Blacklisted plugin detected..."));
             else
-                    wxMessageBox(wxString::Format(_("Plugin %s (%s), version %i.%i was detected. This version is known to be unstable, please go to the opencpn.org plugin downloads page and get the latest stable version of this plugin available."), PluginBlacklist[i].name.c_str(), plugin->GetCommonName().c_str(), major, minor), _("Broken plugin detected..."));
+                wxMessageBox(wxString::Format(_("PlugIn %s (%s), version %i.%i was detected.\n This version is known to be unstable.\n Please update this PlugIn at the opencpn.org website."),
+                    PluginBlacklist[i].name.c_str(), plugin->GetCommonName().c_str(), major, minor), _("Blacklisted plugin detected..."));
             return PluginBlacklist[i].hard;
         }
     }
@@ -1138,14 +1140,15 @@ int PlugInManager::AddToolbarTool(wxString label, wxBitmap *bitmap, wxBitmap *bm
         pttc->bitmap_day = new wxBitmap( style->GetIcon( _T("default_pi") ));
     } else {
         //  Force a non-reference copy of the bitmap from the PlugIn
-        wxRect rb(0, 0, bitmap->GetWidth(), bitmap->GetHeight());
-        pttc->bitmap_day = new wxBitmap(rb.width, rb.height, -1);
-        *pttc->bitmap_day = bitmap->GetSubBitmap( rb );
+        pttc->bitmap_day = new wxBitmap(*bitmap);
+        pttc->bitmap_day->UnShare();
     }
 
+    pttc->bitmap_Rollover = new wxBitmap(*pttc->bitmap_day);
+    pttc->bitmap_Rollover->UnShare();
+    
     pttc->bitmap_dusk = BuildDimmedToolBitmap(pttc->bitmap_day, 128);
     pttc->bitmap_night = BuildDimmedToolBitmap(pttc->bitmap_day, 32);
-    pttc->bitmap_Rollover = new wxBitmap(*pttc->bitmap_day);
 
     pttc->kind = kind;
     pttc->shortHelp = shortHelp;
@@ -1236,14 +1239,21 @@ void PlugInManager::SetToolbarItemBitmaps(int item, wxBitmap *bitmap, wxBitmap *
                     pttc->bitmap_day = new wxBitmap( style->GetIcon( _T("default_pi") ));
                 } else {
                     //  Force a non-reference copy of the bitmap from the PlugIn
-                    wxRect rb(0, 0, bitmap->GetWidth(), bitmap->GetHeight());
-                    pttc->bitmap_day = new wxBitmap(rb.width, rb.height, -1);
-                    *pttc->bitmap_day = bitmap->GetSubBitmap( rb );
+                    pttc->bitmap_day = new wxBitmap(*bitmap);
+                    pttc->bitmap_day->UnShare();
                 }
 
-                pttc->bitmap_dusk = BuildDimmedToolBitmap(bitmap, 128);
-                pttc->bitmap_night = BuildDimmedToolBitmap(bitmap, 32);
-                pttc->bitmap_Rollover = new wxBitmap(*bmpRollover);
+                if( !bmpRollover->IsOk() ) {
+                    ocpnStyle::Style*style = g_StyleManager->GetCurrentStyle();
+                    pttc->bitmap_Rollover = new wxBitmap( style->GetIcon( _T("default_pi") ));
+                } else {
+                    //  Force a non-reference copy of the bitmap from the PlugIn
+                    pttc->bitmap_Rollover = new wxBitmap(*bmpRollover);
+                    pttc->bitmap_Rollover->UnShare();
+                }
+
+                pttc->bitmap_dusk = BuildDimmedToolBitmap(pttc->bitmap_day, 128);
+                pttc->bitmap_night = BuildDimmedToolBitmap(pttc->bitmap_day, 32);
 
                 pParent->SetToolbarItemBitmaps(item, pttc->bitmap_day, pttc->bitmap_Rollover);
                 break;
