@@ -20,9 +20,9 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
+ *                                                                         *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -119,7 +119,11 @@ void LONGITUDE::Write( SENTENCE& sentence )
 
    if ( Easting == East )
    {
+#ifdef __WXOSX__
+       sentence += _T("O");
+#else
        sentence += _T("E");
+#endif
    }
    else if ( Easting == West )
    {

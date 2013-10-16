@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  * $Id: gps.cpp, v1.0 2010/08/26 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -6,7 +6,7 @@
  * Author:   Jean-Eudes Onfray
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #include "gps.h"
 
@@ -101,6 +100,8 @@ void DashboardInstrument_GPS::Draw(wxGCDC* dc)
 
 void DashboardInstrument_GPS::DrawFrame(wxGCDC* dc)
 {
+      AddLocaleCatalog( _T("opencpn-dashboard_pi") );
+    
       wxSize size = GetClientSize();
       wxColour cb;
 

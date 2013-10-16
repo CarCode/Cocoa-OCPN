@@ -22,7 +22,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
+ *                                                                         *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *

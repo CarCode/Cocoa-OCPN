@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  * $Id: wind.cpp, v1.0 2010/08/05 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -6,7 +6,7 @@
  * Author:   Jean-Eudes Onfray
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #include "wind.h"
 
@@ -60,6 +59,7 @@ void DashboardInstrument_Wind::DrawBackground(wxGCDC* dc)
 DashboardInstrument_WindCompass::DashboardInstrument_WindCompass( wxWindow *parent, wxWindowID id, wxString title, int cap_flag ) :
       DashboardInstrument_Dial( parent, id, title, cap_flag, 0, 360, 0, 360 )
 {
+      AddLocaleCatalog( _T("opencpn-dashboard_pi") );
       SetOptionMarker(5, DIAL_MARKER_SIMPLE, 2);
       wxString labels[] = {_("N"), _("NE"), _("E"), _("SE"), _("S"), _("SW"), _("W"), _("NW")};
       SetOptionLabel(45, DIAL_LABEL_HORIZONTAL, wxArrayString(8, labels));

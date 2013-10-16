@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  * $Id: wind_history.cpp, v1.0 2010/08/30 tom-r Exp $
  *
  * Project:  OpenCPN
@@ -6,7 +6,7 @@
  * Author:   Thomas Rauch
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #include "wind_history.h"
 
@@ -395,6 +394,8 @@ void DashboardInstrument_WindDirHistory::DrawBackground(wxGCDC* dc)
 //***********************************************************************************
 wxString DashboardInstrument_WindDirHistory::GetWindDirStr(wxString WindDir)
 {
+    AddLocaleCatalog( _T("opencpn-dashboard_pi") );
+    
    if ( WindDir == _T("0.0") || WindDir == _T("360.0") )
      return _("N");
    else

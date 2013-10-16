@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  * $Id: instrument.cpp, v1.0 2010/08/30 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -22,9 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
-
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -371,8 +369,11 @@ wxString toSDMM ( int NEflag, double a )
             }
             else if ( NEflag == 2 )
             {
+#ifdef __WXOSX__
+                  char c = 'O';
+#else
                   char c = 'E';
-
+#endif
                   if ( neg )
                   {
                         d = -d;

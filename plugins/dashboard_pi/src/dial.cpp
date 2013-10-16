@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  * $Id: dial.cpp, v1.0 2010/08/05 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -7,7 +7,7 @@
  *           (Inspired by original work from Andreas Heiming)
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,9 +22,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #include "dial.h"
 
@@ -498,11 +497,12 @@ void DashboardInstrument_Dial::DrawForeground(wxGCDC* dc)
 /* Shared functions */
 void DrawCompassRose(wxGCDC* dc, int cx, int cy, int radius, int startangle, bool showlabels)
 {
+      AddLocaleCatalog( _T("opencpn-dashboard_pi") );
+    
       wxPoint pt, points[3];
       wxString Value;
       int width, height;
       wxString CompassArray[] = {_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
-
       dc->SetFont(*g_pFontSmall);
 
       wxColour cl;
