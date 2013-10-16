@@ -39,6 +39,9 @@ b. Zur Zeit basiert diese Version noch auf Beta-Version von wxWidgets
    2.9.5 mit entsprechenden dylibs vom 18. August 2013. Inzwischen wurde
    diese Version in 3.0.0 umgenannt und es soll versucht werden, wxWidgets
    nicht mehr als dynamisch sondern als statisch zu linken.
+	Diese Idee wurde jetzt verworfen, da auch die Plugins die statischen
+	Libraries enthalten würden und so das Gesamt-Paket unnötig aufblähen
+	würden.
 
 c. In einem weiteren Schritt soll mit Veröffentlichung einer Binär-Version
    von OCPN für Mac ein automatischer Update-Service mit Sparkle eingeführt
@@ -47,11 +50,17 @@ c. In einem weiteren Schritt soll mit Veröffentlichung einer Binär-Version
 d. Nicht alle Plugins laufen bisher problemlos. Einige wurden noch nicht
    compiliert, andere haben noch Fehler.
 
+e. Außer dem o.g. Problem, wegen der Plugins nur die dynamischen Libraries von
+   wxWidgets zu verwenden, hat das Plugin-Konzept noch weitere Nachteile
+   offenbart: Zur Laufzeit werden die verschiedenen Locale-Dateien von OCPN
+   und den Plugins verbunden, so daß gleichartige Strings mit unterschiedlichen
+   Übersetzungen zu Fehlern führen.
+
 Compiler:
 Xcode 5.0
 Apple LLVM version 5.0 (clang-500.2.75) (based on LLVM 3.3svn)
 Target: x86_64-apple-darwin12.5.0
 Thread model: posix
 -----------------------------------------------------------------------
-21. September 2013
+16. Oktober 2013
 

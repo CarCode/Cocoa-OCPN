@@ -72,6 +72,7 @@ class M_COVR_Desc
       double      m_covr_lon_max;
       double      user_xoff;
       double      user_yoff;
+      double      m_centerlat_cos;
 
       wxBoundingBox m_covr_bbox;
       bool        m_buser_offsets;
@@ -549,6 +550,7 @@ class CM93OffsetDialog: public wxDialog
             int               m_selected_object_id;
             int               m_selected_subcell;
             int               m_selected_list_index;
+            double            m_centerlat_cos;
 
 };
 
