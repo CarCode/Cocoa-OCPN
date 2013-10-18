@@ -1,0 +1,436 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Index</title>
+  <link href="../css/common.css" rel="StyleSheet" type="text/css" />
+  <script language="JavaScript1.2">
+  <!--
+    function disableSelection(target){
+      if (typeof target.onselectstart!="undefined") //IE route
+        target.onselectstart=function(){return false}
+      else if (typeof target.style.MozUserSelect!="undefined") //Firefox route
+        target.style.MozUserSelect="none"
+      else //All other route (ie: Opera)
+        target.onmousedown=function(){return false}
+      target.style.cursor = "default"
+    };
+    function accordion(ul, span){
+	ul.style.display = (ul.style.display == "none") ? "block" : "none";
+        span.className = (ul.style.display == "none") ? "collapsed" : "expanded";
+    }
+    this.sitemapstyler = function(){
+      var sitemap = document.getElementById("sitemap")
+      if(sitemap){
+        this.listItem = function(li){
+          if(li.getElementsByTagName("ul").length > 0){
+            var ul = li.getElementsByTagName("ul")[0];
+            ul.style.display = "none";
+            var parent = li.getElementsByTagName("a")[0];
+            var span = document.createElement("span");
+            span.className = "collapsed";
+            span.onclick = function(){
+              accordion(ul, this);
+            };
+            parent.onclick = function() {
+              if(li.className == "accordion") {
+                accordion(ul, span);
+              }
+            }
+            li.appendChild(span);
+          };
+        };
+        var items = sitemap.getElementsByTagName("li");
+        for(var i=0;i<items.length;i++){
+          listItem(items[i]);
+        };
+      };
+    };
+    window.onload = sitemapstyler;
+  //-->
+  </script>
+  <style>
+    #sitemap, #sitemap ul, #sitemap li{
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    #sitemap li{
+      line-height:20px;
+      margin-top:1px;
+      position:relative;
+      width:100%;
+    }
+    /* IE leaves a blank space where span is added so this is to avoid that */
+    * html #sitemap li{
+     float:left;
+     display:inline;
+    }
+    #sitemap li a{padding-left:28px;}
+    #sitemap li span{float:left;position:absolute;top:5px;left:5px;width:13px;height:13px;cursor:auto;font-size:0;}
+    #sitemap li span, #sitemap li span.collapsed{background:url(collapsed.gif) no-repeat 0 0;}
+    #sitemap li span.expanded{background:url(expanded.gif) no-repeat 0 0;}
+    /* sub levels */
+    #sitemap li ul{
+      margin-left:16px;
+    }
+    /* float fix */
+    #sitemap:after, #sitemap ul:after{
+      content: ".";
+      display: block;
+      height: 0;
+      clear: both;
+      visibility: hidden;
+    }
+    #sitemap, #sitemap ul{display:block;}
+    #sitemap, #sitemap ul{min-height:1%;}
+    * html #sitemap, * html #sitemap ul{height:1%;}
+    #sitemap ul{display:none;}
+    #container{
+      margin:0 auto;
+      width:100%;
+      background:#fff;
+      padding-bottom:10px;
+    }
+    #content{margin:0 20px;}
+    p{
+      margin:0 auto;
+      width:100%;
+      padding:1em 0;
+    }
+    #sitemap li a.letterhead {
+      font-size: 23px;
+      position: relative;
+      left: -24px;
+    }
+    #sitemap li.letterhead {
+      margin-top:18px;
+    }
+    #alphabox {
+      position: fixed;
+      top: 21;
+      left: 0px;
+      width: 100%;
+      height: 20px;
+      float: left;
+      padding-top: -2px;
+      border-bottom: 1px solid #939393;
+      background-color: #dddddd;
+      z-index: 99;
+    }
+    #alphaleftbox {
+      float: left;
+      position: relative;
+      top: 1px;
+      margin-right: 0px;
+      font-size: 10px;
+      font-family: 'Lucida Grande', Arial, sans-serif;
+      line-height: 18px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    #mainbox {
+      clear: both;
+      position: relative;
+      left: 0px;
+      margin-top: 42px;
+      margin-left: 0px;
+      margin-right: 0px;
+      margin-bottom: 60px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<div id="navbox" class="gradient">
+  <a name="access"></a><a name="iclMM"></a><a name="MM"></a>
+  <div id="navleftbox"><a class="navlink_left" href="../OpenCPN-Hilfe.html">Startseite</a> <a class="navlink_left" href="content.html">Inhalt</a> <a class="navlink_left" href="index.html">Index</a></div>
+  </div><!--closes navbox-->
+<div id="mainbox">
+
+<div id="alphabox" class="gradient">
+<div id="alphaleftbox"><span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID1')">&#65;</a></span> <!-- A -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID2')">&#66;</a></span> <!-- B -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID3')">&#67;</a></span> <!-- C -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID4')">&#68;</a></span> <!-- D -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID5')">&#69;</a></span> <!-- E -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID6')">&#70;</a></span> <!-- F -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID7')">&#71;</a></span> <!-- G -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID8')">&#72;</a></span> <!-- H -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID9')">&#73;</a></span> <!-- I -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID10')">&#74;</a></span> <!-- J -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID11')">&#75;</a></span> <!-- K -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID12')">&#76;</a></span> <!-- L -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID13')">&#77;</a></span> <!-- M -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID14')">&#78;</a></span> <!-- N -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID15')">&#79;</a></span> <!-- O -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID16')">&#80;</a></span> <!-- P -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID17')">&#81;</a></span> <!-- Q -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID18')">&#82;</a></span> <!-- R -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID19')">&#83;</a></span> <!-- S -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID20')">&#84;</a></span> <!-- T -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID21')">&#85;</a></span> <!-- U -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID22')">&#86;</a></span> <!-- V -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID23')">&#87;</a></span> <!-- W -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID24')">&#88;</a></span> <!-- X -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID25')">&#89;</a></span> <!-- Y -->
+<span class="alphaletters"><a href="javascript:go('#ANCHOR_LETTERINDEX_ID26')">&#90;</a></span></div> <!-- Z -->
+</div>
+<div id="mainbox">
+
+  <script>
+  <!--
+    function go(target)
+    {
+      window.location = target;
+      window.scrollBy(0,-60);
+    }
+  //-->
+  </script>
+  <div id="container">
+    <h1>Index</h1>
+    <div id="content">
+      <noscript><p><strong>Sorry, this page needs JavaScript to make any sense at all</strong></p></noscript>
+      <ul id=sitemap>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID1">&#65;</a></li>
+  <li class="accordion"><a >AIS</a>
+    <ul>
+      <li><a href="../html/ais.html">AIS</a></li>
+      <li><a href="../html/beisais.html">Beispiele über Ziel-CPA</a></li>
+      <li><a href="../html/buddy.html">DSC und Buddy über AIS</a></li>
+      <li><a href="../html/aisgebiet.html">Gebietsnachrichten über AIS</a></li>
+      <li><a href="../html/ais-sart.html"> SART AIS</a></li>
+    </ul>
+  </li>
+  <li class="accordion"><a >Ankerwache</a>
+    <ul>
+      <li><a href="../html/anwa.html">Anker Wache</a></li>
+      <li><a href="../html/watchpg.html">Anker Wache mit Watchman Plugin</a></li>
+    </ul>
+  </li>
+  <li class="accordion"><a >Astro-Navigation</a>
+    <ul>
+      <li><a href="../html/astro.html">Astro-Navigation</a></li>
+      <li><a href="../html/celnpg.html">Celestial Plugin</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID2">&#66;</a></li>
+  <li class="accordion"><a >Buchstabier-Alphabet</a>
+    <ul>
+      <li><a href="../html/anhang.html#kleinhelf">Buchstabier-Alphabet</a></li>
+    </ul>
+  </li>
+  <li class="accordion"><a >Buddy</a>
+    <ul>
+      <li><a href="../html/buddy.html">Buddy über AIS</a></li>
+    </ul>
+  </li>
+  <li class="accordion"><a >Buttons</a>
+    <ul>
+      <li><a href="../html/webu.html">Werkzeugleiste Buttons</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID3">&#67;</a></li>
+  <li class="accordion"><a >CPA</a>
+    <ul>
+      <li><a href="../html/beisais.html">Beispiele über Ziel-CPA</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID4">&#68;</a></li>
+  <li class="accordion"><a >Daten</a>
+    <ul>
+      <li><a href="../html/routmanimex.html">Daten Import/Export mit Routenmanager</a></li>
+      <li><a href="../html/plada.html">Planung von Daten</a></li>
+    </ul>
+  </li>
+  <li class="accordion"><a >Dashboard</a>
+    <ul>
+      <li><a href="../html/dash.html">Dashboard Plugin</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID5">&#69;</a></li>
+  <li class="accordion"><a >Einführung</a>
+    <ul>
+      <li><a href="../OpenCPN-Hilfe.html">Einführung</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID6">&#70;</a></li>
+  <li class="accordion"><a >Formate</a>
+    <ul>
+      <li><a href="../html/chartformats.html">Formate Karten</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID7">&#71;</a></li>
+  <li class="accordion"><a >Grundfunktionen</a>
+    <ul>
+      <li><a href="../html/grundfunk.html">Grundfunktionen</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID8">&#72;</a></li>
+  <li class="accordion"><a >Hardware</a>
+    <ul>
+      <li><a href="../html/hardware.html">Hardware</a></li>
+    </ul>
+  </li>
+  <li class="accordion"><a >Hilfe</a>
+    <ul>
+      <li><a href="../OpenCPN-Hilfe.html">OpenCPN-Hilfe</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID9">&#73;</a></li>
+  <li class="accordion"><a >Installation</a>
+    <ul>
+      <li><a href="../html/install.html">Installation</a></li>
+      <li><a href="../html/gpseinr.html">Installation von GPS</a></li>
+      <li><a href="../html/installcharts.html">Installation von Karten</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID10">&#74;</a></li>
+  <li class="accordion"><a >J</a>
+    <ul>
+      <li><a href="../html/index.html">Noch kein J-Index</a></li>
+    </ul>
+  </li>
+    <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID11">&#75;</a></li>
+  <li class="accordion"><a >Karten</a>
+    <ul>
+      <li><a href="../html/installcharts.html">Karten installieren</a></li>
+      <li><a href="../html/chartformats.html">Karten Formate</a></li>
+      <li><a href="../html/kagrup.html">Karten Gruppen</a></li>
+      <li><a href="../html/kartenkonv.html">Karten Konvertierung</a></li>
+      <li><a href="../html/chartsource.html">Karten Quellen</a></li>
+      <li><a href="../html/kaquilt.html">Karten Quilting</a></li>
+      <li><a href="../html/skaka.html">Karten skalieren</a></li>
+      <li><a href="../html/seekar.html">Seekarten</a></li>
+      <li><a href="../html/vekanz.html">Vektor Karten Anzeige</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID12">&#76;</a></li>
+  <li class="accordion"><a >Layer</a>
+    <ul>
+      <li><a href="../html/anhang.html#layer">Layer</a></li>
+    </ul>
+  </li>
+  <li class="accordion"><a >Leisten</a>
+    <ul>
+      <li><a href="../html/stalei.html">Statusleiste</a></li>
+      <li><a href="../html/webu.html">Werkzeugleiste</a></li>
+    </ul>
+  </li>
+  <li class="accordion"><a >Lizenz</a>
+    <ul>
+      <li><a href="../html/liz.html">Lizenz</a></li>
+    </ul>
+  </li>
+  <li class="accordion"><a >Logbuch</a>
+    <ul>
+      <li><a href="../html/lbkonni.html">Logbuch Plugin</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID13">&#77;</a></li>
+  <li class="accordion"><a >Mann über Bord</a>
+    <ul>
+      <li><a href="../html/manub.html">Mann über Bord</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID14">&#78;</a></li>
+  <li class="accordion"><a >NMEA</a>
+    <ul>
+      <li><a href="../html/nmeaseq.html">NMEA Sequenzen</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID15">&#79;</a></li>
+  <li class="accordion"><a >Oberfläche</a>
+    <ul>
+      <li><a href="../oberfla.html">Oberfläche</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID16">&#80;</a></li>
+  <li class="accordion"><a >Plugins</a>
+    <ul>
+      <li><a href="../html/plugins.html">Plugins</a></li>
+      <li><a href="../html/plugis.html">Einstellungen Plugins</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID17">&#81;</a></li>
+  <li class="accordion"><a >Quilting</a>
+    <ul>
+      <li><a href="../html/kaquilt.html">Quilting</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID18">&#82;</a></li>
+  <li class="accordion"><a >Rechts-Klick</a>
+    <ul>
+      <li><a href="../html/reclimen.html">Rechts-Klick Menü</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID19">&#83;</a></li>
+  <li class="accordion"><a >Seekarten</a>
+    <ul>
+      <li><a href="../html/seekar.html">Skalierung der Karten</a></li>
+    </ul>
+  </li>
+  <li class="accordion"><a >Skalierung</a>
+    <ul>
+      <li><a href="../html/skaka.html">Skalierung der Karten</a></li>
+    </ul>
+  </li>
+  <li class="accordion"><a >Status</a>
+    <ul>
+      <li><a href="../html/gpsstat.html">GPS Status</a></li>
+      <li><a href="../html/stalei.html">Status-Leiste</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID20">&#84;</a></li>
+  <li class="accordion"><a >Track</a>
+    <ul>
+      <li><a href="../html/schitra.html">Schiffs Track</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID21">&#85;</a></li>
+  <li class="accordion"><a >U</a>
+    <ul>
+      <li><a href="../html/index.html">Noch kein U-Index</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID22">&#86;</a></li>
+  <li class="accordion"><a >VDR Plugin</a>
+    <ul>
+      <li><a href="../html/vdrpg.html">VDR Plugin</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID23">&#87;</a></li>
+  <li class="accordion"><a >Werkzeugleiste</a>
+    <ul>
+      <li><a href="../html/webu.html">Werkzeugleiste</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID24">&#88;</a></li>
+  <li class="accordion"><a >X</a>
+    <ul>
+      <li><a href="../html/index.html">Noch kein X-Index</a></li>
+    </ul>
+  </li>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID25">&#89;</a></li>
+  <li class="accordion"><a >Y</a>
+    <ul>
+      <li><a href="../html/index.html">Noch kein Y-Index</a></li>
+    </ul>
+  <li class="letterhead"><a class="letterhead" name="ANCHOR_LETTERINDEX_ID26">&#90;</a></li>
+  <li class="accordion"><a >Zoom</a>
+    <ul>
+      <li><a href="../html/zea.html">Zoom Ein/Aus</a></li>
+    </ul>
+  </li>
+      </ul>
+    </div>
+  </div>
+  <script type="text/javascript">
+  <!--
+    var somediv=document.getElementById("container")
+    disableSelection(somediv) //disable text selection within DIV with id="mydiv"
+  //-->
+  </script>
+</div>
+</body>
+</html>
