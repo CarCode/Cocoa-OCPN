@@ -390,7 +390,11 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
 	m_sButton = new wxStdDialogButtonSizer();
     m_sButtonOK = new wxButton( this, wxID_OK );
     m_sButton->AddButton( m_sButtonOK );
+#ifdef __WXOSX__
+    m_sButtonApply = new wxButton( this, wxID_APPLY, _("Apply"));
+#else
     m_sButtonApply = new wxButton( this, wxID_APPLY );
+#endif
     m_sButton->AddButton( m_sButtonApply );
     m_sButtonCancel = new wxButton( this, wxID_CANCEL );
     m_sButton->AddButton( m_sButtonCancel );
@@ -717,7 +721,11 @@ GribRequestSettingBase::GribRequestSettingBase( wxWindow* parent, wxWindowID id,
     m_rButton = new wxStdDialogButtonSizer();
     m_rButtonYes = new wxButton( this, wxID_YES );
     m_rButton->AddButton( m_rButtonYes );
+#ifdef __WXOSX__
+    m_rButtonApply = new wxButton( this, wxID_APPLY, _("Apply"));
+#else
     m_rButtonApply = new wxButton( this, wxID_APPLY );
+#endif
     m_rButton->AddButton( m_rButtonApply );
     m_rButtonCancel = new wxButton( this, wxID_CANCEL );
     m_rButton->AddButton( m_rButtonCancel );
