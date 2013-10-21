@@ -1468,6 +1468,8 @@ bool MyApp::OnInit()
         OCPNMessageBox ( NULL, large_log_message, wxString( _("OpenCPN Info") ), wxICON_INFORMATION | wxOK );
 
     //  Validate OpenGL functionality, if selected
+#ifdef ocpnUSE_GL
+
 #ifdef __WXMSW__
     if( /*g_bopengl &&*/ !g_bdisable_opengl ) {
         wxFileName fn(std_path.GetExecutablePath());
@@ -1478,6 +1480,10 @@ bool MyApp::OnInit()
 
         g_bdisable_opengl = !b_test_result;
     }
+#endif
+
+#else
+    g_bdisable_opengl = true;;
 #endif
 
 
@@ -2183,6 +2189,7 @@ if( 0 == g_memCacheLimit )
     //  We need a deferred resize to get glDrawPixels() to work right.
     //  So we set a trigger to generate a resize after 5 seconds....
     //  See the "UniChrome" hack elsewhere
+#ifdef ocpnUSE_GL
     if ( !g_bdisable_opengl )
     {
         glChartCanvas *pgl = (glChartCanvas *) cc1->GetglCanvas();
@@ -2194,7 +2201,7 @@ if( 0 == g_memCacheLimit )
             gFrame->m_bdefer_resize = true;
         }
     }
-
+#endif
     g_pi_manager->CallLateInit();
 
     if ( g_start_fullscreen )
@@ -7959,6 +7966,7 @@ void MyPrintout::DrawPageOne( wxDC *dc )
 //  Get the latest bitmap as rendered by the ChartCanvas
 
     if(g_bopengl) {
+#ifdef ocpnUSE_GL
         int gsx = cc1->GetglCanvas()->GetSize().x;
         int gsy = cc1->GetglCanvas()->GetSize().y;
 
@@ -7972,6 +7980,7 @@ void MyPrintout::DrawPageOne( wxDC *dc )
         mdc.SelectObject( bmp );
         dc->Blit( 0, 0, bmp.GetWidth(), bmp.GetHeight(), &mdc, 0, 0 );
         mdc.SelectObject( wxNullBitmap );
+#endif
     }
     else {
 

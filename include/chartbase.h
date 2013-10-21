@@ -5,7 +5,7 @@
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,7 +31,9 @@
 #include "bbox.h"
 #include "ocpn_types.h"
 
+#ifdef ocpnUSE_GL
 #include <wx/glcanvas.h>
+#endif
 
 //----------------------------------------------------------------------------
 //  Forward Declarations

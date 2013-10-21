@@ -51,10 +51,15 @@
 #include "CM93DSlide.h"
 #include "RolloverWin.h"
 #include "AISTargetQueryDialog.h"
-#include "glChartCanvas.h"
 #include "TCWin.h"
 #include "timers.h"
 #include "emboss_data.h"
+
+class wxGLContext;
+
+#ifdef ocpnUSE_GL
+#include "glChartCanvas.h"
+#endif
 
 //    Useful static routines
 void ShowAISTargetQueryDialog(wxWindow *parent, int mmsi);
@@ -203,7 +208,6 @@ public:
       ChartBase* GetChartAtCursor();
       ChartBase* GetOverlayChartAtCursor();
 
-      glChartCanvas *GetglCanvas(){ return m_glcc; }
       GSHHSChart* GetWorldBackgroundChart() { return pWorldBackgroundChart; }
 
       void  SetbTCUpdate(bool f){ m_bTCupdate = f;}
@@ -270,7 +274,10 @@ public:
 
       void RemovePointFromRoute( RoutePoint* point, Route* route );
 
-
+#ifdef ocpnUSE_GL
+      glChartCanvas *GetglCanvas(){ return m_glcc; }
+#endif
+    
 private:
       ViewPort    VPoint;
       void        PositionConsole(void);
@@ -542,8 +549,10 @@ private:
       bool        m_bzooming;
       IDX_entry   *m_pIDXCandidate;
 
+//#ifdef ocpnUSE_GL
       glChartCanvas *m_glcc;
       wxGLContext   *m_pGLcontext;
+//#endif
 
       //Smooth zoom member variables
       wxTimer     m_zoom_timer;
