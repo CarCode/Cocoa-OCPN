@@ -853,8 +853,8 @@ void GRIBOverlayFactory::RenderGribOverlayMap( int settings, GribRecord **pGR, P
                 DrawGLTexture( pGO->m_iTexture, pGO->m_width, pGO->m_height,
                                porg.x, porg.y, grib_pixel_size );
             else
-                DrawMessageWindow( _("Please Zoom or Scale Out to view suppressed ")
-                                   + GribOverlaySettings::NameFromIndex(settings) + _(" data"),
+                DrawMessageWindow( _("Please Zoom or Scale Out to view invisible overlay: ")
+                                   + GribOverlaySettings::NameFromIndex(settings),
                                    vp->pix_width, vp->pix_height, m_dFont_map );
         }
         else        //DC mode
@@ -872,8 +872,8 @@ void GRIBOverlayFactory::RenderGribOverlayMap( int settings, GribRecord **pGR, P
             if( pGO->m_pDCBitmap )
                 m_pdc->DrawBitmap( *( pGO->m_pDCBitmap ), porg.x, porg.y, true );
             else
-                DrawMessageWindow( _("Please Zoom or Scale Out to view suppressed ")
-                                   + GribOverlaySettings::NameFromIndex(settings) + _(" data"),
+                DrawMessageWindow( _("Please Zoom or Scale Out to view invisible overlay: ")
+                                   + GribOverlaySettings::NameFromIndex(settings),
                                    vp->pix_width, vp->pix_height, m_dFont_map );
         }
     }

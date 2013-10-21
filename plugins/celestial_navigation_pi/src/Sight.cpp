@@ -137,8 +137,8 @@ void Sight::BodyLocation(wxDateTime time, double *lat, double *lon, double *ghaa
 {
 #ifdef __WXOSX__
     wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
-    astrolabe::globals::vsop87d_text_path = std_path.GetUserConfigDir();   // should be ~/Library/
-    astrolabe::globals::vsop87d_text_path.append("opencpn/plugins/celestial_navigation/data/");
+    astrolabe::globals::vsop87d_text_path = std_path.GetUserConfigDir();   // should be ~/Library/Preferences
+    astrolabe::globals::vsop87d_text_path.append("/opencpn/plugins/celestial_navigation/data/");
     astrolabe::globals::vsop87d_text_path.append("vsop87d.txt");
 #else
     astrolabe::globals::vsop87d_text_path = (const char *)GetpSharedDataLocation()->mb_str();
