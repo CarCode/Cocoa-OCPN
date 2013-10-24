@@ -20,9 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #ifndef _WEATHER_ROUTING_SETTINGS_H_
 #define _WEATHER_ROUTING_SETTINGS_H_
@@ -40,6 +39,12 @@ public:
 
     void LoadSettings();
     void SaveSettings();
+
+    void OnUpdate( wxColourPickerEvent& event ) { OnUpdate(); }
+    void OnUpdate( wxSpinEvent& event ) { OnUpdate(); }
+    void OnUpdate( wxCommandEvent& event ) { OnUpdate(); }
+    void OnUpdate( );
+    void OnHelp( wxCommandEvent& event );
 };
 
 #endif

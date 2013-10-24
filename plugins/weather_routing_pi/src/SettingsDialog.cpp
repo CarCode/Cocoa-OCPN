@@ -21,9 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
 
 #include <wx/wx.h>
 
@@ -32,7 +30,10 @@
 #include <time.h>
 
 #include "SettingsDialog.h"
+#include "Boat.h"
+#include "RouteMapOverlay.h"
 #include "weather_routing_pi.h"
+#include "WeatherRouting.h"
 
 #include "Utilities.h"
 
@@ -74,6 +75,10 @@ void SettingsDialog::LoadSettings()
     pConf->Read( _T("SquaresAtSailChanges"), &SquaresAtSailChanges, SquaresAtSailChanges);
     m_cbSquaresAtSailChanges->SetValue(SquaresAtSailChanges);
 
+    bool FilterbyClimatology = m_cbFilterbyClimatology->GetValue();
+    pConf->Read( _T("FilterbyClimatology"), &FilterbyClimatology, FilterbyClimatology);
+    m_cbFilterbyClimatology->SetValue(FilterbyClimatology);
+
     int ConcurrentThreads = m_sConcurrentThreads->GetValue();
     pConf->Read( _T("ConcurrentThreads"), &ConcurrentThreads, ConcurrentThreads);
     m_sConcurrentThreads->SetValue(ConcurrentThreads);
@@ -110,10 +115,27 @@ void SettingsDialog::SaveSettings( )
     bool SquaresAtSailChanges = m_cbSquaresAtSailChanges->GetValue();
     pConf->Write( _T("SquaresAtSailChanges"), SquaresAtSailChanges);
 
+    bool FilterbyClimatology = m_cbFilterbyClimatology->GetValue();
+    pConf->Write( _T("FilterbyClimatology"), FilterbyClimatology);
+
     bool ConcurrentThreads = m_sConcurrentThreads->GetValue();
     pConf->Write( _T("ConcurrentThreads"), ConcurrentThreads);
 
     wxPoint p = GetPosition();
     pConf->Write ( _T ( "SettingsDialogX" ), p.x);
     pConf->Write ( _T ( "SettingsDialogY" ), p.y);
+}
+
+void SettingsDialog::OnUpdate( )
+{
+    WeatherRouting *weather_routing = dynamic_cast<WeatherRouting*>(GetParent());
+    if(weather_routing)
+        weather_routing->UpdateDisplaySettings();
+}
+
+void SettingsDialog::OnHelp( wxCommandEvent& event )
+{
+    wxMessageDialog mdlg(this, _("help text goes here"),
+                        _("Weather Routing"), wxOK | wxICON_INFORMATION);
+    mdlg.ShowModal();
 }

@@ -20,9 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #ifndef _BOAT_DIALOG_H_
 #define _BOAT_DIALOG_H_
@@ -53,7 +52,7 @@ private:
     void Save();
     void OnSaveAs( wxCommandEvent& event );
     void OnSave( wxCommandEvent& event );
-    void OnCancel( wxCommandEvent& event );
+    void OnClose( wxCommandEvent& event );
     void OnOpenCSV( wxCommandEvent& event );
     void OnSaveCSV( wxCommandEvent& event );
     void OnRecompute( wxSpinEvent& event ) { StoreBoatParameters(); Compute(); UpdateStats(); }
