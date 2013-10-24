@@ -71,7 +71,7 @@ static const char * check_xpm[] = {
 
 InternetRetrievalDialog::InternetRetrievalDialog( weatherfax_pi &_weatherfax_pi, wxWindow* parent)
     : InternetRetrievalDialogBase( parent ), m_weatherfax_pi(_weatherfax_pi),
-      m_bLoaded(false), m_bDisableFilter(false), m_bRebuilding(false)
+      m_bLoaded(false), m_bDisableFilter(true), m_bRebuilding(false)
 {
 }
 
@@ -126,20 +126,11 @@ void InternetRetrievalDialog::Load()
     wxString servers;
     pConf->Read ( _T ( "Servers" ), &servers, _T(""));
 
-    if(!servers.empty()) {
-        /* split at each ; to get all the names in a list */
-        std::list<wxString> serverlist;
-        while(servers.size()) {
-            serverlist.push_back(servers.BeforeFirst(';'));
-            servers = servers.AfterFirst(';');
-        }
-
-        m_lServers->DeselectAll();
-        for(unsigned int i=0; i < m_lServers->GetCount(); i++)
-            for(std::list<wxString>::iterator it = serverlist.begin();
-                it != serverlist.end(); it++)
-                if(m_lServers->GetString(i) == *it)
-                    m_lServers->SetSelection(i);
+    /* split at each ; to get all the names in a list */
+    std::list<wxString> serverlist;
+    while(servers.size()) {
+        serverlist.push_back(servers.BeforeFirst(';'));
+        servers = servers.AfterFirst(';');
     }
 
     s = wxFileName::GetPathSeparator();
@@ -153,6 +144,14 @@ void InternetRetrievalDialog::Load()
             + s + _T("weatherfax") + s + _T("data") + s
             + _T("WeatherFaxInternetRetrieval.xml"));
 #endif
+    m_lServers->DeselectAll();
+    for(unsigned int i=0; i < m_lServers->GetCount(); i++)
+        for(std::list<wxString>::iterator it = serverlist.begin();
+            it != serverlist.end(); it++)
+            if(m_lServers->GetString(i) == *it)
+                m_lServers->SetSelection(i);
+
+    m_bDisableFilter = false;
     Filter();
 }
 
@@ -426,6 +425,9 @@ void InternetRetrievalDialog::RebuildList()
 {
     /* as we have a progress dialog, calling update calls event loop which
        can cause recursion here and problems */
+#ifdef __WXOSX__
+    // Crash
+#else
     if(m_bRebuilding)
         return;
     m_bRebuilding = true;
@@ -447,6 +449,7 @@ void InternetRetrievalDialog::RebuildList()
         }
     }
     m_bRebuilding = false;
+#endif
 }
 
 void InternetRetrievalDialog::UpdateItem(long index)

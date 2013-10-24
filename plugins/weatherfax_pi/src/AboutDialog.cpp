@@ -21,9 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
 
 #include <wx/wx.h>
 
@@ -33,6 +31,12 @@
 
 #include "AboutDialog.h"
 #include "weatherfax_pi.h"
+
+AboutDialog::    AboutDialog( wxWindow *parent ) : AboutDialogBase(parent)
+{
+    m_stVersion->SetLabel(wxString::Format(_T("%d.%d"),
+                                                +                                           PLUGIN_VERSION_MAJOR, PLUGIN_VERSION_MINOR));
+}
 
 void AboutDialog::OnDonate( wxCommandEvent& event )
 {

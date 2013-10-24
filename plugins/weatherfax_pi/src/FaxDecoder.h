@@ -78,7 +78,7 @@ public:
     wxMutex m_DecoderMutex;
 
     wxUint8 *imgdata;
-    int line, imageline;
+    int imageline;
     int blocksize;
     int m_imagewidth;
     double minus_saturation_threshold;

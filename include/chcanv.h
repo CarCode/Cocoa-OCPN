@@ -565,6 +565,7 @@ private:
       bool        m_benable_autopan;
       bool        m_b_paint_enable;
 
+      int         m_AISRollover_MMSI;
 
 DECLARE_EVENT_TABLE()
 };

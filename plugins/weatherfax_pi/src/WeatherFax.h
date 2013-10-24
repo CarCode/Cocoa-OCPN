@@ -68,6 +68,7 @@ public:
     ~WeatherFax();
 
     void EnableDisplayControls(bool enable);
+    void OnClose( wxCloseEvent& event ) { Hide(); }
     void OnFaxes( wxCommandEvent& event );
     void OnFaxesToggled( wxCommandEvent& event );
     void TransparencyChanged( wxScrollEvent& event );
@@ -76,6 +77,8 @@ public:
     void OnOpen( wxCommandEvent& event );
     void OnEdit( wxCommandEvent& event );
     void OnDelete( wxCommandEvent& event );
+    void OnExport( wxCommandEvent& event );
+    void OnPreferences( wxCommandEvent& event ) { m_weatherfax_pi.ShowPreferencesDialog( this ); }
     void OnClose( wxCommandEvent& event ) { Show(false); }
     void OnCapture( wxCommandEvent& event );
     void OnSchedules( wxCommandEvent& event );
@@ -84,6 +87,7 @@ public:
 
     void OpenWav(wxString filename, wxString station=_T(""), wxString area=_T(""));
     void OpenImage(wxString filename);
+    void Export(wxString filename);
 
     void UpdateMenuStates();
 

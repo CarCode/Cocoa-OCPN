@@ -72,7 +72,7 @@ static const char * check_xpm[] = {
 SchedulesDialog::SchedulesDialog( weatherfax_pi &_weatherfax_pi, wxWindow* parent)
     : SchedulesDialogBase( parent ), m_weatherfax_pi(_weatherfax_pi),
       m_ExternalCaptureProcess(NULL), m_CurrentSchedule(NULL),
-      m_bLoaded(false), m_bDisableFilter(false), m_bKilled(false), m_bRebuilding(false)
+      m_bLoaded(false), m_bDisableFilter(true), m_bKilled(false), m_bRebuilding(false)
 {
 }
 
@@ -117,6 +117,12 @@ SchedulesDialog::~SchedulesDialog()
     pConf->Write ( _T ( "externalcapturecommand" ), m_tExternalCapture->GetValue() );
     pConf->Write ( _T ( "manualcapture" ), m_rbExternalCapture->GetValue() );
     pConf->Write ( _T ( "noaction" ), m_rbNoAction->GetValue() );
+
+    wxString captures;
+    for(std::list<Schedule*>::iterator it = m_CaptureSchedules.begin();
+        it != m_CaptureSchedules.end(); it++)
+        captures += wxString::Format(_T("%.1f,%04d;"), (*it)->Frequency, (*it)->Time);
+    pConf->Write ( _T ( "captures" ), captures );
 }
 
 void SchedulesDialog::Load()
@@ -164,20 +170,11 @@ void SchedulesDialog::Load()
     wxString stations;
     pConf->Read ( _T ( "Stations" ), &stations, _T(""));
 
-    if(!stations.empty()) {
-        /* split at each ; to get all the names in a list */
-        std::list<wxString> stationlist;
-        while(stations.size()) {
-            stationlist.push_back(stations.BeforeFirst(';'));
-            stations = stations.AfterFirst(';');
-        }
-
-        m_lStations->DeselectAll();
-        for(unsigned int i=0; i < m_lStations->GetCount(); i++)
-            for(std::list<wxString>::iterator it = stationlist.begin();
-                it != stationlist.end(); it++)
-                if(m_lStations->GetString(i) == *it)
-                    m_lStations->SetSelection(i);
+    std::list<wxString> stationlist;
+    /* split at each ; to get all the names in a list */
+    while(stations.size()) {
+        stationlist.push_back(stations.BeforeFirst(';'));
+        stations = stations.AfterFirst(';');
     }
 
     int i;
@@ -210,6 +207,15 @@ void SchedulesDialog::Load()
     pConf->Read ( _T ( "noaction" ), &b, true );
     m_rbNoAction->SetValue(b);
 
+    wxString captures;
+    pConf->Read ( _T ( "captures" ), &captures, _T("") );
+    std::list<wxString> capturelist;
+    /* split at each ; to get all the names in a list */
+    while(captures.size()) {
+        capturelist.push_back(captures.BeforeFirst(';'));
+        captures = captures.AfterFirst(';');
+    }
+
     s = wxFileName::GetPathSeparator();
 #ifdef __WXOSX__
     wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
@@ -221,6 +227,30 @@ void SchedulesDialog::Load()
             + s + _T("weatherfax") + s + _T("data") + s
             + _T("WeatherFaxSchedules.xml"));
 #endif
+    m_lStations->DeselectAll();
+    for(unsigned int i=0; i < m_lStations->GetCount(); i++)
+        for(std::list<wxString>::iterator it = stationlist.begin();
+            it != stationlist.end(); it++)
+            if(m_lStations->GetString(i) == *it)
+                m_lStations->SetSelection(i);
+
+    for(std::list<wxString>::iterator it = capturelist.begin();
+        it != capturelist.end(); it++) {
+        double freq;
+        (*it).BeforeFirst(',').ToDouble(&freq);
+        long time;
+        (*it).AfterFirst(',').ToLong(&time);
+
+        for(std::list<Schedule*>::iterator it2 = m_Schedules.begin();
+            it2 != m_Schedules.end(); it2++)
+            if(floor(freq) == floor((*it2)->Frequency) && time == (*it2)->Time) {
+                AddScheduleToCapture(*it2);
+                break;
+            }
+        }
+        UpdateProgress();
+
+    m_bDisableFilter = false;
     Filter();
 }
 
@@ -393,11 +423,10 @@ void SchedulesDialog::OnSchedulesLeftDown( wxMouseEvent& event )
         // Process the clicked item
         Schedule *schedule =
             reinterpret_cast<Schedule*>(wxUIntToPtr(m_lSchedules->GetItemData(index)));
-        schedule->Capture = !schedule->Capture;
         if(schedule->Capture)
-            AddScheduleToCapture(schedule);
-        else
             RemoveScheduleToCapture(schedule);
+        else
+            AddScheduleToCapture(schedule);
 
         m_lSchedules->SetItemImage(index, schedule->Capture ? 0 : -1);
         UpdateProgress();
@@ -431,6 +460,9 @@ int wxCALLBACK SortSchedules(long item1, long item2, long list)
     lc->GetItem(it1);
     lc->GetItem(it2);
     
+    if(sortcol == SchedulesDialog::CAPTURE) {
+        return sortorder * (it1.GetImage() > it2.GetImage() ? 1 : -1);
+    } else
     if(sortcol == SchedulesDialog::FREQUENCY ||
        sortcol == SchedulesDialog::TIME ||
        sortcol == SchedulesDialog::VALID_TIME ||
@@ -438,8 +470,7 @@ int wxCALLBACK SortSchedules(long item1, long item2, long list)
         double a, b;
         it1.GetText().ToDouble(&a);
         it2.GetText().ToDouble(&b);
-        return sortorder * ((a > b) ? 1 : -1)
-;
+        return sortorder * ((a > b) ? 1 : -1);
     } else
         return sortorder * it1.GetText().Cmp(it2.GetText());
 }
@@ -449,8 +480,8 @@ void SchedulesDialog::OnSchedulesSort( wxListEvent& event )
     sortcol = event.GetColumn();
     sortorder = -sortorder;
 
-    if(sortcol == 0) {
 #if 0
+    if(sortcol == 0) {
         m_CaptureSchedules.clear();
         for(std::list<Schedule*>::iterator it = m_Schedules.begin();
             it != m_Schedules.end(); it++) {
@@ -460,8 +491,8 @@ void SchedulesDialog::OnSchedulesSort( wxListEvent& event )
         }
 
         RebuildList();
-#endif
     } else
+#endif
         if(m_lSchedules->GetItemCount() > 500)  {
             wxMessageDialog mdlg(this, _("Sorting this many schedules might take too long"),
                                  _("weatherfax"), wxOK | wxICON_ERROR);
@@ -504,15 +535,6 @@ void SchedulesDialog::OnAllFrequencies( wxCommandEvent& event )
     m_skhzmin->SetValue(0);
     m_skhzmax->SetValue(30000);
     Filter();
-}
-
-void SchedulesDialog::OnInformation( wxCommandEvent& event )
-{
-    wxMessageDialog mdlg(this, _("\
-Select fax images by clicking in the capture (first) column\n\
-Schedules can be filtered to reduce number of stations, and sorted by clicking the header column\n"),
-                            _("weatherfax schedules"), wxOK | wxICON_INFORMATION);
-    mdlg.ShowModal();
 }
 
 void SchedulesDialog::OnClose( wxCommandEvent& event )
@@ -591,7 +613,7 @@ void SchedulesDialog::UpdateItem(long index)
     m_lSchedules->SetItem(index, STATION, schedule->Station);
     m_lSchedules->SetColumnWidth(STATION, 100 /*wxLIST_AUTOSIZE*/);
 
-    m_lSchedules->SetItem(index, FREQUENCY, wxString::Format(_T("%.3f"), schedule->Frequency));
+    m_lSchedules->SetItem(index, FREQUENCY, wxString::Format(_T("%.1f"), schedule->Frequency));
 //    m_lSchedules->SetColumnWidth(FREQUENCY, wxLIST_AUTOSIZE);
 
     m_lSchedules->SetItem(index, TIME, wxString::Format(_T("%04d"),schedule->Time));
@@ -629,10 +651,8 @@ void SchedulesDialog::AddScheduleToCapture(Schedule *s)
                 }
                 it = m_CaptureSchedules.erase(it);
                 continue;
-            } else {
-                s->Capture = false;
+            } else
                 return;
-            }
         }
 
         if(start < itstart) {
@@ -642,6 +662,7 @@ void SchedulesDialog::AddScheduleToCapture(Schedule *s)
         it++;
     }
 
+    s->Capture = true;
     m_CaptureSchedules.insert(itp, s);
     if(s == m_CaptureSchedules.front())
         UpdateTimer();
@@ -649,6 +670,7 @@ void SchedulesDialog::AddScheduleToCapture(Schedule *s)
 
 void SchedulesDialog::RemoveScheduleToCapture(Schedule *s)
 {
+    s->Capture = false;
     for(std::list<Schedule*>::iterator it = m_CaptureSchedules.begin();
         it != m_CaptureSchedules.end(); it++)
         if(*it == s) {
@@ -769,6 +791,10 @@ void SchedulesDialog::OnCaptureTimer( wxTimerEvent & )
 void SchedulesDialog::OnEndCaptureTimer( wxTimerEvent & )
 {
     StopExternalProcess();
+
+    if(!m_CurrentSchedule)
+        return;
+
     wxString filename;
     if(m_rbExternalCapture->GetValue())
         filename = m_ExternalCaptureFilename;
