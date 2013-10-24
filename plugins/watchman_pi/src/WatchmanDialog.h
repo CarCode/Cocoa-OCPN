@@ -39,7 +39,7 @@ public:
     void OnPreferences( wxCommandEvent& event );
     void OnResetLastAlarm( wxCommandEvent& event );
     void OnClose( wxCommandEvent& event ) { Hide(); }
-    void UpdateLandFallTime(PlugIn_Position_Fix_Ex &pfix);
+    void UpdateLandFallTime();
     void UpdateAnchorDistance(double distance);
     void UpdateGPSTime(double seconds);
     void UpdateAISTime(double seconds);
