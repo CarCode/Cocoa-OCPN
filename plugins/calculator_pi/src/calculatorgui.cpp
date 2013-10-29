@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "calculatorgui.h"
-
+#include "calculator_pi.h"
 ///////////////////////////////////////////////////////////////////////////
 
 DlgDef::DlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
@@ -99,7 +99,9 @@ DlgDef::~DlgDef()
 
 CfgDlgDef::CfgDlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	AddLocaleCatalog( _T("opencpn-calculator_pi") );
+    
+    this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
