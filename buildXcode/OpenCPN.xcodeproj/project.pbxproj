@@ -482,6 +482,8 @@
 		A60F748C17A0304A00A6160F /* variablelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F748B17A0304900A6160F /* variablelist.cpp */; };
 		A60F748D17A030F800A6160F /* calculator_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F747517A02EB700A6160F /* calculator_pi.cpp */; };
 		A60F748E17A0312200A6160F /* calculatorgui_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F747717A02EE600A6160F /* calculatorgui_impl.cpp */; };
+		A61367DD17F31C9500F0ADA1 /* opencpn.icns in Resources */ = {isa = PBXBuildFile; fileRef = C2CC9DD1B6214260BB9E03FF /* opencpn.icns */; };
+		A61AD26C181884A7007A45D8 /* wximgkap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A61AD26B181884A7007A45D8 /* wximgkap.cpp */; };
 		A61FF9DB17D4E4F6004ACC5D /* WeatherFax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A61FF9DA17D4E4F6004ACC5D /* WeatherFax.cpp */; };
 		A61FF9DD17D4E521004ACC5D /* InternetRetrievalDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A61FF9DC17D4E521004ACC5D /* InternetRetrievalDialog.cpp */; };
 		A635C8A517C16E1D00B3E5E9 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8A417C16E1D00B3E5E9 /* tinyxml.cpp */; };
@@ -512,11 +514,6 @@
 		A67A0F1D178C3B540056F9C0 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F1C178C3B540056F9C0 /* pugixml.cpp */; };
 		A67A0F1F178C3B7F0056F9C0 /* OCPNRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F1E178C3B7F0056F9C0 /* OCPNRegion.cpp */; };
 		A67A0F22178C3C5D0056F9C0 /* NMEALogWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F21178C3C5D0056F9C0 /* NMEALogWindow.cpp */; };
-		A6912F43179FEC4500C4AFA6 /* Celestial Navigation Basics.html in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6912F3D179FEA6600C4AFA6 /* Celestial Navigation Basics.html */; };
-		A6912F44179FEC4500C4AFA6 /* IGRF11.COF in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6912F3E179FEAA600C4AFA6 /* IGRF11.COF */; };
-		A6912F45179FEC4500C4AFA6 /* vsop87d.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6912F3F179FEAC500C4AFA6 /* vsop87d.txt */; };
-		A6912F47179FECFE00C4AFA6 /* EGM9615.BIN in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6912F40179FEB5E00C4AFA6 /* EGM9615.BIN */; };
-		A6912F48179FECFE00C4AFA6 /* WMM.COF in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6912F41179FEB8300C4AFA6 /* WMM.COF */; };
 		A69CD17717E34BEC00B2C059 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = A69CD17617E34BEC00B2C059 /* dsa_pub.pem */; };
 		A6AC8E7117EC64FC00872D7E /* libcelestial_navigation_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5BBA00018468491EB9978049 /* libcelestial_navigation_pi.dylib */; };
 		A6AC8E7217EC64FC00872D7E /* libdashboard_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = DBF97DEBFD0C4783B8DA7D0E /* libdashboard_pi.dylib */; };
@@ -1068,29 +1065,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A6912F42179FEBD300C4AFA6 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = ../SharedSupport/plugins/celestial_navigation/data;
-			dstSubfolderSpec = 6;
-			files = (
-				A6912F43179FEC4500C4AFA6 /* Celestial Navigation Basics.html in CopyFiles */,
-				A6912F44179FEC4500C4AFA6 /* IGRF11.COF in CopyFiles */,
-				A6912F45179FEC4500C4AFA6 /* vsop87d.txt in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A6912F46179FEC6800C4AFA6 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = ../SharedSupport/plugins/wmm/data;
-			dstSubfolderSpec = 6;
-			files = (
-				A6912F47179FECFE00C4AFA6 /* EGM9615.BIN in CopyFiles */,
-				A6912F48179FECFE00C4AFA6 /* WMM.COF in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -1138,7 +1112,6 @@
 		0E682744C1CD4EC892AE7DC2 /* SelectItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectItem.cpp; path = src/SelectItem.cpp; sourceTree = SOURCE_ROOT; };
 		0E7221DA6C6549F5BEEE6CEF /* 8bells.wav */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = 8bells.wav; path = data/sounds/8bells.wav; sourceTree = SOURCE_ROOT; };
 		0F1BE0C80497474CBE3BABBB /* Hyperlink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hyperlink.h; path = include/Hyperlink.h; sourceTree = SOURCE_ROOT; };
-		0F719FA9D70C41C3A86FB8FE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text.plist; name = Info.plist; path = buildXcode/CMakeFiles/OpenCPN.dir/Info.plist; sourceTree = SOURCE_ROOT; };
 		0FF4A7782BA64FDFB98CB748 /* s57featuredefns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = s57featuredefns.cpp; path = src/mygdal/s57featuredefns.cpp; sourceTree = SOURCE_ROOT; };
 		1117C343543345669AE26E54 /* gps.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gps.cpp; path = plugins/dashboard_pi/src/gps.cpp; sourceTree = SOURCE_ROOT; };
 		114312ACFC5845AFAAB29D48 /* wpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = wpl.hpp; path = src/nmea0183/wpl.hpp; sourceTree = SOURCE_ROOT; };
@@ -1574,6 +1547,8 @@
 		A60F748917A0302F00A6160F /* parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = parser.cpp; path = plugins/calculator_pi/src/expression_parser/parser.cpp; sourceTree = "<group>"; };
 		A60F748B17A0304900A6160F /* variablelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = variablelist.cpp; path = plugins/calculator_pi/src/expression_parser/variablelist.cpp; sourceTree = "<group>"; };
 		A60F749717A0338600A6160F /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = parser.h; path = plugins/calculator_pi/src/expression_parser/parser.h; sourceTree = "<group>"; };
+		A61AD26A18188468007A45D8 /* wximgkap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wximgkap.h; path = plugins/weatherfax_pi/src/wximgkap.h; sourceTree = "<group>"; };
+		A61AD26B181884A7007A45D8 /* wximgkap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wximgkap.cpp; path = plugins/weatherfax_pi/src/wximgkap.cpp; sourceTree = "<group>"; };
 		A61FF9D817D4E495004ACC5D /* WeatherFax.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherFax.h; path = plugins/weatherfax_pi/src/WeatherFax.h; sourceTree = "<group>"; };
 		A61FF9D917D4E4CD004ACC5D /* InternetRetrievalDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InternetRetrievalDialog.h; path = plugins/weatherfax_pi/src/InternetRetrievalDialog.h; sourceTree = "<group>"; };
 		A61FF9DA17D4E4F6004ACC5D /* WeatherFax.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WeatherFax.cpp; path = plugins/weatherfax_pi/src/WeatherFax.cpp; sourceTree = "<group>"; };
@@ -1599,6 +1574,7 @@
 		A647084C17A14A7B00A16918 /* WatchmanDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WatchmanDialog.cpp; path = plugins/watchman_pi/src/WatchmanDialog.cpp; sourceTree = "<group>"; };
 		A647084E17A14A9500A16918 /* WatchmanPrefsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WatchmanPrefsDialog.cpp; path = plugins/watchman_pi/src/WatchmanPrefsDialog.cpp; sourceTree = "<group>"; };
 		A647085017A14AB200A16918 /* WatchmanUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WatchmanUI.cpp; path = plugins/watchman_pi/src/WatchmanUI.cpp; sourceTree = "<group>"; };
+		A64FA6FF17EDB7D600710E97 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = buildosx/Info.plist; sourceTree = "<group>"; };
 		A65009C617DB5C2200FD3148 /* de.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = de.lproj; sourceTree = "<group>"; };
 		A660FE5617E49BE500BD0587 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		A6632EE317E50BF4002001B9 /* osx_helpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = osx_helpers.mm; path = src/osx_helpers.mm; sourceTree = "<group>"; };
@@ -1621,6 +1597,7 @@
 		A6912F41179FEB8300C4AFA6 /* WMM.COF */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = WMM.COF; path = plugins/wmm_pi/WMM.COF; sourceTree = "<group>"; };
 		A69CD17617E34BEC00B2C059 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		A69CD17817E36A6600B2C059 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = SOURCE_ROOT; };
+		A69F7CAB18159C5300B1F0E9 /* chartbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartbase.h; path = include/chartbase.h; sourceTree = "<group>"; };
 		A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libweather_routing_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6B4A53E17A5174300E3A5D0 /* weather_routing_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = weather_routing_pi.h; path = plugins/weather_routing_pi/src/weather_routing_pi.h; sourceTree = "<group>"; };
 		A6B4A53F17A5177500E3A5D0 /* WeatherRouting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherRouting.h; path = plugins/weather_routing_pi/src/WeatherRouting.h; sourceTree = "<group>"; };
@@ -1993,6 +1970,7 @@
 				A6D0E73017A914730031E658 /* AboutDialog.h */,
 				A6D0E73117A9149B0031E658 /* icons.h */,
 				A6BFE97817D5F4A9007433A2 /* defs.h */,
+				A61AD26A18188468007A45D8 /* wximgkap.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -2592,6 +2570,7 @@
 				0CBEDB517AD84E4F8497C8B1 /* chartdbs.h */,
 				05FFAE19741A447C93A805B3 /* chartimg.h */,
 				4D9ACE3617454C4498D83023 /* chcanv.h */,
+				A69F7CAB18159C5300B1F0E9 /* chartbase.h */,
 				06F8AF8BD0564049B4406E9E /* timers.h */,
 				FF3FB69CB14248B0AAB80905 /* emboss_data.h */,
 				7C5F297D2FD84442BC5ABC1B /* AISTargetQueryDialog.h */,
@@ -3197,7 +3176,7 @@
 		D095671CECBC4E0088EAEAA4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				0F719FA9D70C41C3A86FB8FE /* Info.plist */,
+				A64FA6FF17EDB7D600710E97 /* Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -3306,6 +3285,7 @@
 				261F475E34AE4BA195959B50 /* PCM.cpp */,
 				B7A21B6E4FD4437791417307 /* RebufferModule.cpp */,
 				1C595FCA35154621B7C424B5 /* SimpleModule.cpp */,
+				A61AD26B181884A7007A45D8 /* wximgkap.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3594,7 +3574,6 @@
 			buildConfigurationList = 6436A51C989B4966A3DCBE14 /* Build configuration list for PBXNativeTarget "celestial_navigation_pi" */;
 			buildPhases = (
 				4F8AB70367F9476492605F0D /* Sources */,
-				A6912F42179FEBD300C4AFA6 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -3739,7 +3718,6 @@
 			buildConfigurationList = 5DB7E0A6309246629BDEC376 /* Build configuration list for PBXNativeTarget "wmm_pi" */;
 			buildPhases = (
 				F806D8EBAC44432BB0B2D7A8 /* Sources */,
-				A6912F46179FEC6800C4AFA6 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -3860,6 +3838,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A61367DD17F31C9500F0ADA1 /* opencpn.icns in Resources */,
 				A65009C717DB5C2200FD3148 /* de.lproj in Resources */,
 				A69CD17717E34BEC00B2C059 /* dsa_pub.pem in Resources */,
 			);
@@ -4168,6 +4147,7 @@
 				A6D0E73317A915000031E658 /* SchedulesDialog.cpp in Sources */,
 				A6D0E73517A915330031E658 /* AboutDialog.cpp in Sources */,
 				A6D0E73717A9155C0031E658 /* icons.cpp in Sources */,
+				A61AD26C181884A7007A45D8 /* wximgkap.cpp in Sources */,
 				A61FF9DB17D4E4F6004ACC5D /* WeatherFax.cpp in Sources */,
 				A61FF9DD17D4E521004ACC5D /* InternetRetrievalDialog.cpp in Sources */,
 			);
@@ -4656,8 +4636,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -4710,6 +4690,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -4718,8 +4699,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -4732,7 +4713,7 @@
 					"\"$(SRCROOT)/Sparkle.framework/Headers\"",
 					"/Users/heidi/devel/Cocoa-OCPN/Sparkle.framework",
 				);
-				INFOPLIST_FILE = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/CMakeFiles/OpenCPN.dir/Info.plist";
+				INFOPLIST_FILE = "/Users/heidi/devel/Cocoa-OCPN/buildosx/Info.plist";
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
@@ -4744,7 +4725,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -4756,7 +4736,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -4779,21 +4758,22 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_osx_cocoau_xrc-3.0",
+					"-lwx_osx_cocoau_webview-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_qa-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libNMEA0183.a",
 					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libS57ENC.a",
 					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libGARMINHOST.a",
 					"-framework",
 					AGL,
-					"-framework",
-					OpenGL,
 					/usr/lib/libbz2.dylib,
 					/usr/lib/libz.dylib,
 					"-ldl",
@@ -4838,8 +4818,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -4902,8 +4882,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -4956,6 +4936,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -4964,8 +4945,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -4978,7 +4959,7 @@
 					"\"$(SRCROOT)/Sparkle.framework/Headers\"",
 					"/Users/heidi/devel/Cocoa-OCPN/Sparkle.framework",
 				);
-				INFOPLIST_FILE = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/CMakeFiles/OpenCPN.dir/Info.plist";
+				INFOPLIST_FILE = "/Users/heidi/devel/Cocoa-OCPN/buildosx/Info.plist";
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
@@ -4990,7 +4971,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -5002,7 +4982,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -5084,8 +5063,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5150,8 +5129,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5204,6 +5183,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -5211,8 +5191,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5230,7 +5210,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -5242,7 +5221,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -5282,8 +5260,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5338,6 +5316,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -5350,8 +5329,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5361,7 +5340,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/grib_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -5371,7 +5350,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -5387,7 +5365,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -5411,14 +5388,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -5460,8 +5437,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5529,8 +5506,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5540,7 +5517,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/Findit_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -5550,7 +5527,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -5566,7 +5542,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -5638,8 +5613,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5707,8 +5682,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5718,7 +5693,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/vdr_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -5728,7 +5703,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-fvisibility=hidden",
@@ -5743,7 +5717,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-fvisibility=hidden",
@@ -5766,14 +5739,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = vdr_pi;
@@ -5819,8 +5792,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5830,7 +5803,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/gradar_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -5840,7 +5813,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -5856,7 +5828,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -5880,14 +5851,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 					"-framework",
 					AGL,
 				);
@@ -5923,6 +5894,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -5935,8 +5907,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5946,7 +5918,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/wmm_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -5956,7 +5928,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-fvisibility=hidden",
@@ -5971,7 +5942,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-fvisibility=hidden",
@@ -6038,8 +6008,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6093,8 +6063,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6148,8 +6118,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6185,9 +6155,10 @@
 		62D78DB5E13C4CDFB66C5D4C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SYMROOT = "/Users/heidi/devel/Cocoa-OCPN/buildXcode";
@@ -6211,6 +6182,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -6218,8 +6190,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6237,7 +6209,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -6249,7 +6220,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -6294,8 +6264,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6365,8 +6335,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6377,7 +6347,7 @@
 					/usr/X11/include/GL,
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/dashboard_pi/src/nmea0183",
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/dashboard_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -6387,7 +6357,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -6403,7 +6372,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -6525,8 +6493,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6585,8 +6553,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6604,7 +6572,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -6616,7 +6583,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -6656,8 +6622,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6722,8 +6688,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6733,7 +6699,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/iacfleet_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -6743,7 +6709,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -6759,7 +6724,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -6783,14 +6747,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = iacfleet_pi;
@@ -6831,8 +6795,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6891,8 +6855,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6944,6 +6908,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -6951,8 +6916,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6972,21 +6937,123 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
 				OTHER_CPLUSPLUSFLAGS = (
-					"-I/usr/local/include/wx-2.9",
 					"-arch",
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-2.9",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
+					"-g",
+					"-fno-strict-aliasing",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = celestial_navigation_pi;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/heidi/devel/Cocoa-OCPN/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		8AF2104D6A88480BA6EDD258 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					celestial_navigation_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_GL,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
+					"/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
+					/opt/local/include,
+					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
+					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-2.9",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -7021,111 +7088,6 @@
 				PRODUCT_NAME = celestial_navigation_pi;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "/Users/heidi/devel/Cocoa-OCPN/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
-		8AF2104D6A88480BA6EDD258 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_COMPATIBILITY_VERSION = "";
-				DYLIB_CURRENT_VERSION = "";
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .dylib;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					celestial_navigation_pi_EXPORTS,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/celestial_navigation_pi/Release";
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
-				LIBRARY_STYLE = DYNAMIC;
-				OTHER_CFLAGS = (
-					"-arch",
-					x86_64,
-					"-fPIC",
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"-arch",
-					x86_64,
-					"-Wno-deprecated",
-					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
-					"-fPIC",
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-				);
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-					"-dynamiclib",
-					"-headerpad_max_install_names",
-					"-L/usr/local/lib",
-					"-framework",
-					IOKit,
-					"-framework",
-					Carbon,
-					"-framework",
-					Cocoa,
-					"-framework",
-					AudioToolbox,
-					"-framework",
-					System,
-					"-framework",
-					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
-				);
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = celestial_navigation_pi;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/celestial_navigation_pi";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -7166,8 +7128,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7178,7 +7140,7 @@
 					/usr/X11/include/GL,
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/logbookkonni_pi/src/nmea0183",
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/logbookkonni_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -7188,7 +7150,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -7204,7 +7165,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -7228,14 +7188,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = logbookkonni_pi;
@@ -7276,8 +7236,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7340,8 +7300,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7410,8 +7370,8 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/calculator_pi/src/expression_parser",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7421,7 +7381,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/calculator_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -7431,7 +7391,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -7447,7 +7406,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -7471,14 +7429,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 					"-framework",
 					AGL,
 				);
@@ -7529,8 +7487,8 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/calculator_pi/src/expression_parser",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7540,7 +7498,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/calculator_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -7550,7 +7508,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -7566,7 +7523,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -7642,8 +7598,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7706,8 +7662,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7770,8 +7726,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7834,8 +7790,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7891,6 +7847,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -7905,8 +7862,8 @@
 				HEADER_SEARCH_PATHS = (
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/weather_routing_pi/src",
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/grib_pi/src",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7916,7 +7873,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/weather_routing_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -7926,7 +7883,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -7942,7 +7898,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -7966,14 +7921,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 					"-framework",
 					AGL,
 				);
@@ -8009,6 +7964,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -8023,8 +7979,8 @@
 				HEADER_SEARCH_PATHS = (
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/weather_routing_pi/src",
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/grib_pi/src",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8034,7 +7990,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/weather_routing_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -8044,7 +8000,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -8060,7 +8015,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -8127,6 +8081,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -8141,8 +8096,8 @@
 				HEADER_SEARCH_PATHS = (
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src",
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src/libaudiofile",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8152,7 +8107,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/watchman_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -8202,14 +8157,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 					"-framework",
 					AGL,
 				);
@@ -8245,6 +8200,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -8259,8 +8215,8 @@
 				HEADER_SEARCH_PATHS = (
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src",
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src/libaudiofile",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8270,7 +8226,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/watchman_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -8370,8 +8326,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8434,8 +8390,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8498,8 +8454,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8556,6 +8512,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -8568,8 +8525,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8580,7 +8537,7 @@
 					/usr/X11/include/GL,
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/weatherfax_pi/./src/libaudiofile",
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/weatherfax_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -8590,7 +8547,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -8606,7 +8562,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -8630,14 +8585,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -8676,8 +8631,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8707,7 +8662,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -8757,8 +8711,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8768,7 +8722,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/Findit_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -8778,7 +8732,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -8794,7 +8747,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -8818,14 +8770,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = findit_pi;
@@ -8843,9 +8795,10 @@
 		BDBE4E068AAE47C9AE8BBD8F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SYMROOT = "/Users/heidi/devel/Cocoa-OCPN/buildXcode";
@@ -8879,8 +8832,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8948,8 +8901,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8959,7 +8912,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/vdr_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -8969,7 +8922,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-fvisibility=hidden",
@@ -8984,7 +8936,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-fvisibility=hidden",
@@ -9055,8 +9006,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9114,8 +9065,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9169,8 +9120,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9229,8 +9180,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9299,8 +9250,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9310,7 +9261,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/iacfleet_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -9320,7 +9271,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -9336,7 +9286,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -9401,6 +9350,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -9413,8 +9363,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9424,7 +9374,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/grib_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -9434,7 +9384,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -9450,7 +9399,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -9520,8 +9468,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9551,7 +9499,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -9601,8 +9548,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9613,7 +9560,7 @@
 					/usr/X11/include/GL,
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/logbookkonni_pi/src/nmea0183",
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/logbookkonni_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -9623,7 +9570,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -9639,7 +9585,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -9716,8 +9661,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9728,7 +9673,7 @@
 					/usr/X11/include/GL,
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/dashboard_pi/src/nmea0183",
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/dashboard_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -9738,7 +9683,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -9754,7 +9698,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -9778,14 +9721,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = dashboard_pi;
@@ -9826,8 +9769,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9896,8 +9839,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9907,7 +9850,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/gradar_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -9917,7 +9860,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -9933,7 +9875,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O3",
@@ -10000,6 +9941,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -10012,8 +9954,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -10023,7 +9965,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/wmm_pi/Debug";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -10033,7 +9975,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-fvisibility=hidden",
@@ -10048,7 +9989,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-fvisibility=hidden",
@@ -10071,14 +10011,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.0",
+					"-lwx_osx_cocoau_core-3.0",
+					"-lwx_baseu_net-3.0",
+					"-lwx_baseu_xml-3.0",
+					"-lwx_osx_cocoau_html-3.0",
+					"-lwx_osx_cocoau_adv-3.0",
+					"-lwx_osx_cocoau_aui-3.0",
+					"-lwx_osx_cocoau_gl-3.0",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -10117,8 +10057,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -10136,7 +10076,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -10148,7 +10087,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 				);
@@ -10243,8 +10181,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -10304,8 +10242,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -10361,6 +10299,7 @@
 					__WXMAC__,
 					__WXOSX__,
 					__WXOSX_COCOA__,
+					ocpnUSE_GL,
 					USE_GLU_TESS,
 					TIXML_USE_STL,
 					USE_S57,
@@ -10373,8 +10312,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -10385,7 +10324,7 @@
 					/usr/X11/include/GL,
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/weatherfax_pi/./src/libaudiofile",
 				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/weatherfax_pi/Release";
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -10395,7 +10334,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -10411,7 +10349,6 @@
 					"-Wall",
 					"-Wno-unused",
 					"-fexceptions",
-					"-rdynamic",
 					"-g",
 					"-fno-strict-aliasing",
 					"-O0",
@@ -10484,8 +10421,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"/usr/local/include/wx-3.0",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
