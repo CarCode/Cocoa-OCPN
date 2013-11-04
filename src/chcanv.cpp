@@ -2237,7 +2237,7 @@ void ChartCanvas::ShowBrightnessLevelTimedPopup( int brightness, int min, int ma
 
     m_pBrightPopup->SetBitmap( bmp );
     m_pBrightPopup->Show();
-//   m_pBrightPopup->Refresh();
+    m_pBrightPopup->Refresh();
 
 
 }
@@ -8867,16 +8867,19 @@ void ChartCanvas::Refresh( bool eraseBackground, const wxRect *rect )
         //  We need to selectively Refresh some child windows, if they are visible.
         //  Note that some children are refreshed elsewhere on timer ticks, so don't need attention here.
 
+        //      Thumbnail chart
+        if( pthumbwin && pthumbwin->IsShown() ) {
+            pthumbwin->Raise();
+            pthumbwin->Refresh( false );
+        }
+
         //      ChartInfo window
         if( m_pCIWin && m_pCIWin->IsShown() ) {
             m_pCIWin->Raise();
             m_pCIWin->Refresh( false );
         }
 
-        if( pthumbwin && pthumbwin->IsShown() ) {
-            pthumbwin->Raise();
-            pthumbwin->Refresh( false );
-        }
+
 
     } else
 #endif
