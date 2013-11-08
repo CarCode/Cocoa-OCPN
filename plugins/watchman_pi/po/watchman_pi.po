@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: watchman_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-03 11:13+0200\n"
-"PO-Revision-Date: 2013-08-03 11:28+0100\n"
+"POT-Creation-Date: 2013-11-08 17:15+0100\n"
+"PO-Revision-Date: 2013-11-08 17:39+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: de_DE <carcode@me.com>\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,9 @@ msgstr "Alarm Aktion"
 
 msgid "Anchor Watch"
 msgstr "Anker Wache"
+
+msgid "Automatically  Reset"
+msgstr "Automatischer Reset"
 
 msgid "Close"
 msgstr "Schließen"
@@ -93,17 +96,23 @@ msgstr ""
 msgid "Enabled"
 msgstr "Aktiviert"
 
+msgid "GPS fix crosses land in <"
+msgstr "GPS Fix kreuzt Land in <"
+
+msgid "GPS fix is <"
+msgstr "GPS Fix ist <"
+
 msgid "Hours "
 msgstr "Stunden "
-
-msgid "If GPS fix is <"
-msgstr "Wenn GPS Fix ist <"
 
 msgid "Information"
 msgstr "Information"
 
-msgid "LandFall Detected"
-msgstr "LandFall detektiert"
+msgid "Land Distance >"
+msgstr "Land-Entfernung >"
+
+msgid "LandFall in"
+msgstr "LandFall in"
 
 msgid "LandFall not Detected"
 msgstr "LandFall nicht detektiert"
@@ -134,9 +143,6 @@ msgstr "Minuten "
 
 msgid "NMEA Data Alarm"
 msgstr "NMEA-Daten Alarm"
-
-msgid "Next LandFall in"
-msgstr "Nächster LandFall in"
 
 msgid "No AIS for >"
 msgstr "Kein AIS für >"
@@ -270,9 +276,6 @@ msgstr "Mit Kurs von"
 msgid "degrees(s)"
 msgstr "Grad"
 
-msgid "from coastline"
-msgstr "von Küstenlinie"
-
 msgid "knots"
 msgstr "Knoten"
 
@@ -282,8 +285,11 @@ msgstr "Meter"
 msgid "minute(s)"
 msgstr "Minute(n) "
 
-msgid "nm"
-msgstr "sm"
+msgid "minutes"
+msgstr "Minute(n)"
+
+msgid "nm from coastline"
+msgstr "sm von Küstenlinie"
 
 msgid "second(s)"
 msgstr "Sekunden"

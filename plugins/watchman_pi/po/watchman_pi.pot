@@ -8,48 +8,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: watchman_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-03 11:13+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2013-11-08 17:15+0100\n"
+"PO-Revision-Date: 2013-11-08 17:15+0100\n"
+"Last-Translator: CarCode <carcode@me.com>\n"
+"Language-Team: CarCode <carcode@me.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/WatchmanDialog.cpp:82
-msgid "Days "
-msgstr ""
-
-#: ../src/WatchmanDialog.cpp:84
-msgid "Hours "
-msgstr ""
-
-#: ../src/WatchmanDialog.cpp:86
-msgid "Minutes "
-msgstr ""
-
-#: ../src/WatchmanDialog.cpp:88
-msgid "Seconds"
-msgstr ""
-
-#: ../src/WatchmanDialog.cpp:104
-msgid "LandFall Detected"
-msgstr ""
-
-#: ../src/WatchmanDialog.cpp:106
+#: ../src/WatchmanDialog.cpp:73
 msgid "LandFall not Detected"
 msgstr ""
 
-#: ../src/WatchmanDialog.cpp:119
+#: ../src/WatchmanDialog.cpp:76
+msgid "Days "
+msgstr ""
+
+#: ../src/WatchmanDialog.cpp:78
+msgid "Hours "
+msgstr ""
+
+#: ../src/WatchmanDialog.cpp:80
+msgid "Minutes "
+msgstr ""
+
+#: ../src/WatchmanDialog.cpp:82
+msgid "Seconds"
+msgstr ""
+
+#: ../src/WatchmanDialog.cpp:102
 msgid "meter(s)"
 msgstr ""
 
-#: ../src/WatchmanDialog.cpp:161 ../src/WatchmanDialog.cpp:173
+#: ../src/WatchmanDialog.cpp:144 ../src/WatchmanDialog.cpp:156
 msgid "second(s)"
 msgstr ""
 
-#: ../src/WatchmanDialog.cpp:207
+#: ../src/WatchmanDialog.cpp:190
 msgid "degrees(s)"
 msgstr ""
 
@@ -75,202 +71,214 @@ msgid "Watchman Information"
 msgstr ""
 
 #: ../src/WatchmanUI.cpp:29
-msgid "Next LandFall in"
+msgid "LandFall in"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:33
+#: ../src/WatchmanUI.cpp:33 ../src/WatchmanUI.cpp:41
 msgid "No NMEA Messages"
 msgstr ""
 
 #: ../src/WatchmanUI.cpp:37
-msgid "Last activity"
-msgstr ""
-
-#: ../src/WatchmanUI.cpp:41
-msgid "No Updates"
+msgid "Land Distance >"
 msgstr ""
 
 #: ../src/WatchmanUI.cpp:45
-msgid "Distance to Anchor"
+msgid "Last activity"
+msgstr ""
+
+#: ../src/WatchmanUI.cpp:49
+msgid "No Updates"
 msgstr ""
 
 #: ../src/WatchmanUI.cpp:53
-msgid "Last GPS Update"
+msgid "Distance to Anchor"
 msgstr ""
 
 #: ../src/WatchmanUI.cpp:61
-msgid "Last AIS Sentence"
+msgid "Last GPS Update"
 msgstr ""
 
 #: ../src/WatchmanUI.cpp:69
-msgid "Under Speed"
+msgid "Last AIS Sentence"
 msgstr ""
 
 #: ../src/WatchmanUI.cpp:77
-msgid "Over Speed"
+msgid "Under Speed"
 msgstr ""
 
 #: ../src/WatchmanUI.cpp:85
+msgid "Over Speed"
+msgstr ""
+
+#: ../src/WatchmanUI.cpp:93
 msgid "Course Error"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:101
+#: ../src/WatchmanUI.cpp:109
 msgid "Preferences"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:104
+#: ../src/WatchmanUI.cpp:112
 msgid "Reset Last Alarm"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:107 ../src/WatchmanUI.cpp:461
+#: ../src/WatchmanUI.cpp:115 ../src/WatchmanUI.cpp:483
 msgid "Close"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:145
+#: ../src/WatchmanUI.cpp:153
 msgid "Landfall Alarm"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:152
-msgid "If GPS fix is <"
+#: ../src/WatchmanUI.cpp:160
+msgid "GPS fix crosses land in <"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:155
+#: ../src/WatchmanUI.cpp:166
+msgid "minutes"
+msgstr ""
+
+#: ../src/WatchmanUI.cpp:178
+msgid "GPS fix is <"
+msgstr ""
+
+#: ../src/WatchmanUI.cpp:181
 msgid "3"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:158
-msgid "nm"
+#: ../src/WatchmanUI.cpp:184
+msgid "nm from coastline"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:165
-msgid "from coastline"
-msgstr ""
-
-#: ../src/WatchmanUI.cpp:176
+#: ../src/WatchmanUI.cpp:195
 msgid "Deadman Alarm"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:183
+#: ../src/WatchmanUI.cpp:202
 msgid "No User Activity for"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:189
+#: ../src/WatchmanUI.cpp:208
 msgid "minute(s)"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:200
+#: ../src/WatchmanUI.cpp:219
 msgid "NMEA Data Alarm"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:207
+#: ../src/WatchmanUI.cpp:226
 msgid "No GPS for >"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:213 ../src/WatchmanUI.cpp:223
+#: ../src/WatchmanUI.cpp:232 ../src/WatchmanUI.cpp:242
 msgid "seconds"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:217
+#: ../src/WatchmanUI.cpp:236
 msgid "No AIS for >"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:234
+#: ../src/WatchmanUI.cpp:253
 msgid "Anchor Watch"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:241
+#: ../src/WatchmanUI.cpp:260
 msgid "Enabled"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:244
+#: ../src/WatchmanUI.cpp:263
 msgid "Sync to Boat"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:247
+#: ../src/WatchmanUI.cpp:266
 msgid "Radius (m)"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:254
+#: ../src/WatchmanUI.cpp:273
 msgid "Latitude"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:261
+#: ../src/WatchmanUI.cpp:280
 msgid "Longitude"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:275
+#: ../src/WatchmanUI.cpp:294
 msgid "Speed Alarm"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:282
+#: ../src/WatchmanUI.cpp:301
 msgid "Speed over ground <"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:288 ../src/WatchmanUI.cpp:298
+#: ../src/WatchmanUI.cpp:307 ../src/WatchmanUI.cpp:317
 msgid "knots"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:292
+#: ../src/WatchmanUI.cpp:311
 msgid "Speed over ground >"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:309
+#: ../src/WatchmanUI.cpp:328
 msgid "Off Course Alarm"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:316
+#: ../src/WatchmanUI.cpp:335
 msgid "Off Course By >"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:322
+#: ../src/WatchmanUI.cpp:341
 msgid "Degrees"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:326
+#: ../src/WatchmanUI.cpp:345
 msgid "With Course Of"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:333
+#: ../src/WatchmanUI.cpp:352
 msgid "Current Course"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:342
+#: ../src/WatchmanUI.cpp:361
 msgid "Alarm Action"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:350
+#: ../src/WatchmanUI.cpp:369
 msgid "Sound"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:353
+#: ../src/WatchmanUI.cpp:372
 msgid "Select a file"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:356
+#: ../src/WatchmanUI.cpp:375
 msgid "Command"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:362
+#: ../src/WatchmanUI.cpp:381
 msgid "Message Box"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:368
+#: ../src/WatchmanUI.cpp:387
 msgid "Repeat Alarm after seconds"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:374
-msgid "Test Alarm"
-msgstr ""
-
 #: ../src/WatchmanUI.cpp:393
-msgid "Information"
+msgid "Automatically  Reset"
 msgstr ""
 
 #: ../src/WatchmanUI.cpp:396
+msgid "Test Alarm"
+msgstr ""
+
+#: ../src/WatchmanUI.cpp:415
+msgid "Information"
+msgstr ""
+
+#: ../src/WatchmanUI.cpp:418
 msgid "About"
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:449
+#: ../src/WatchmanUI.cpp:471
 msgid ""
 "The watchman plugin for opencpn is made to add a range of alarms based on "
 "various conditions.\n"
@@ -289,24 +297,24 @@ msgid ""
 "Many thanks to all of the translators and testers."
 msgstr ""
 
-#: ../src/WatchmanUI.cpp:458
+#: ../src/WatchmanUI.cpp:480
 msgid "Donate"
 msgstr ""
 
-#: ../src/WatchmanUI.h:69
+#: ../src/WatchmanUI.h:71
 msgid "Watch Man"
 msgstr ""
 
-#: ../src/WatchmanUI.h:139
+#: ../src/WatchmanUI.h:144
 msgid "Watchman Preferences"
 msgstr ""
 
-#: ../src/WatchmanUI.h:163
+#: ../src/WatchmanUI.h:168
 msgid "About Watchman"
 msgstr ""
 
 #: ../src/watchman_pi.cpp:105 ../src/watchman_pi.cpp:179
-#: ../src/watchman_pi.cpp:493
+#: ../src/watchman_pi.cpp:525
 msgid "Watchman"
 msgstr ""
 
@@ -326,6 +334,6 @@ msgid ""
 "The Watchman plugin was written by Sean D'Epagnier\n"
 msgstr ""
 
-#: ../src/watchman_pi.cpp:492
+#: ../src/watchman_pi.cpp:524
 msgid "ALARM!!!!"
 msgstr ""
