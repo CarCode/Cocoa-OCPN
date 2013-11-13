@@ -35,13 +35,10 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    OS X Betriebssystem unterstützt werden, einschl. Mac Menüs, Mac Hilfe
    usw.
 
-b. Zur Zeit basiert diese Version noch auf Beta-Version von wxWidgets
-   2.9.5 mit entsprechenden dylibs vom 18. August 2013. Inzwischen wurde
-   diese Version in 3.0.0 umgenannt und es soll versucht werden, wxWidgets
-   nicht mehr als dynamisch sondern als statisch zu linken.
-	Diese Idee wurde jetzt verworfen, da auch die Plugins die statischen
-	Libraries enthalten würden und so das Gesamt-Paket unnötig aufblähen
-	würden.
+b. Diese Version basiert auf Release-Version von wxWidgets 3.0.0 mit
+   entsprechenden dylibs vom 31. Oktober 2013. Di Einbindung der Libs als
+   statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
+   werden würde.
 
 c. In einem weiteren Schritt soll mit Veröffentlichung einer Binär-Version
    von OCPN für Mac ein automatischer Update-Service mit Sparkle eingeführt
@@ -60,7 +57,8 @@ Compiler:
 Xcode 5.0
 Apple LLVM version 5.0 (clang-500.2.75) (based on LLVM 3.3svn)
 Target: x86_64-apple-darwin12.5.0
+SDK 10.9 Mavericks
 Thread model: posix
 -----------------------------------------------------------------------
-16. Oktober 2013
+11. November 2013
 

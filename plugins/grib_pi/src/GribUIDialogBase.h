@@ -71,6 +71,7 @@ class GRIBUIDialogBase : public wxDialog
 		wxTextCtrl* m_tcCloud;
 		wxTextCtrl* m_tcAirTemperature;
 		wxTextCtrl* m_tcSeaTemperature;
+        wxTextCtrl* m_tcCAPE;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -98,6 +99,7 @@ class GRIBUIDialogBase : public wxDialog
 		wxCheckBox* m_cbCloud;
 		wxCheckBox* m_cbAirTemperature;
 		wxCheckBox* m_cbSeaTemperature;
+        wxCheckBox* m_cbCAPE;
 		
 		GRIBUIDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("GRIB Display Control"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxCLOSE_BOX|wxDIALOG_NO_PARENT|wxRESIZE_BORDER|wxSYSTEM_MENU );
 		~GRIBUIDialogBase();
@@ -227,6 +229,7 @@ public:
     wxCheckBox* m_pAirTemp;
     wxCheckBox* m_pSeaTemp;
     wxCheckBox* m_pCurrent;
+    wxCheckBox* m_pCAPE;
     wxCheckBox* m_pWaves;
     wxChoice* m_pWModel;
     wxStdDialogButtonSizer* m_rButton;

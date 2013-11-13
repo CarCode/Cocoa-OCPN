@@ -1,11 +1,11 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  GRIB Plugin Friends
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,8 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "GribRecord.h"
 
@@ -34,7 +33,7 @@ enum { Idx_WIND_VX, Idx_WIND_VY, Idx_WIND_GUST, Idx_PRESSURE, Idx_HTSIGW, Idx_WV
        Idx_SEACURRENT_VX, Idx_SEACURRENT_VY,
        Idx_PRECIP_TOT, Idx_CLOUD_TOT,
        Idx_AIR_TEMP_2M, Idx_SEA_TEMP,
-       Idx_COUNT };
+       Idx_CAPE, Idx_COUNT };
 
 class GribRecordSet {
 public:

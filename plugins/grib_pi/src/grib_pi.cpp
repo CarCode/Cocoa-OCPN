@@ -208,12 +208,12 @@ void grib_pi::ShowPreferencesDialog( wxWindow* parent )
 #ifdef __WXOSX__
     Pref->Fit();
 #endif
-    // TODO: update m_bMailToAdresses
-
      if( Pref->ShowModal() == wxID_OK ) {
          m_bGRIBUseHiDef= Pref->m_cbUseHiDef->GetValue();
          m_bGRIBUseGradualColors= Pref->m_cbUseGradualColors->GetValue();
          m_bLoadLastOpenFile= Pref->m_rbStartOptions->GetSelection();
+         if( m_pGRIBOverlayFactory )
+            m_pGRIBOverlayFactory->SetSettings( m_bGRIBUseHiDef, m_bGRIBUseGradualColors );
 
          int updatelevel = 0;
 
@@ -239,13 +239,13 @@ void grib_pi::ShowPreferencesDialog( wxWindow* parent )
              case 3:
                  //rebuild current activefile with new parameters and rebuild data list with current index
                  m_pGribDialog->CreateActiveFileFromName( m_pGribDialog->m_bGRIBActiveFile->GetFileName() );
-                 m_pGribDialog->PopulateComboDataList( 0 );  // *m_pGribDialog->GetActiveForecastIndex()
-                 m_pGribDialog->DisplayDataGRS();
+                 m_pGribDialog->PopulateComboDataList();
+                 m_pGribDialog->TimelineChanged();
                  break;
              case 2 :
                  //only rebuild  data list with current index and new timezone
-                 m_pGribDialog->PopulateComboDataList( 0 );  // m_pGribDialog->GetActiveForecastIndex()
-                 m_pGribDialog->DisplayDataGRS();
+                 m_pGribDialog->PopulateComboDataList();
+                 m_pGribDialog->TimelineChanged();
                  break;
              }
          }
@@ -271,7 +271,6 @@ void grib_pi::OnToolbarToolCallback(int id)
         m_pGRIBOverlayFactory->SetTimeZone( m_bTimeZone );
         m_pGRIBOverlayFactory->SetParentSize( m_display_width, m_display_height);
         m_pGRIBOverlayFactory->SetSettings( m_bGRIBUseHiDef, m_bGRIBUseGradualColors );
-        m_pGribDialog->TimelineChanged();
 
         m_pGribDialog->OpenFile( m_bLoadLastOpenFile == 0 );
     }
@@ -321,7 +320,6 @@ void grib_pi::OnToolbarToolCallback(int id)
       //    Toggle dialog?
       if(m_bShowGrib) {
           m_pGribDialog->Show();
-          m_pGribDialog->DisplayDataGRS();
       } else
           m_pGribDialog->Hide();
 
@@ -441,7 +439,7 @@ bool grib_pi::LoadConfig(void)
     pConf->Read ( _T( "GRIBTimeZone" ), &m_bTimeZone, 1 );
     pConf->Read ( _T( "CopyFirstCumulativeRecord" ), &m_bCopyFirstCumRec, 1 );
     pConf->Read ( _T( "CopyMissingWaveRecord" ), &m_bCopyMissWaveRec, 1 );
-    pConf->Read ( _T( "MailRequestConfig" ), &m_RequestConfig, _T( "000220XX......." ) );
+    pConf->Read ( _T( "MailRequestConfig" ), &m_RequestConfig, _T( "000220XX........" ) );
     pConf->Read ( _T( "MailSenderAddress" ), &m_bMailFromAddress, _T("") );
     pConf->Read ( _T( "MailRequestAddresses" ), &m_bMailToAddresses, _T("query@saildocs.com;gribauto@zygrib.org") );
     pConf->Read ( _T( "ZyGribLogin" ), &m_ZyGribLogin, _T("") );
@@ -449,8 +447,8 @@ bool grib_pi::LoadConfig(void)
 
 
     //if GriDataConfig has been corrupted , take the standard one to fix a crash
-    if( m_RequestConfig.Len() != wxString (_T( "000220XX......." ) ).Len() )
-        m_RequestConfig = _T( "000220XX......." );
+    if( m_RequestConfig.Len() != wxString (_T( "000220XX........" ) ).Len() )
+        m_RequestConfig = _T( "000220XX........" );
 
     m_grib_dialog_sx = pConf->Read ( _T ( "GRIBDialogSizeX" ), 300L );
     m_grib_dialog_sy = pConf->Read ( _T ( "GRIBDialogSizeY" ), 540L );
