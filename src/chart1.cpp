@@ -48,14 +48,6 @@
 #include <wx/dialog.h>
 #include <wx/progdlg.h>
 
-#if wxCHECK_VERSION(2, 9, 0)
-#include <wx/dialog.h>
-#elif wxCHECK_VERSION(3, 0, 0)
-#include <wx/dialog.h>
-#else
-//  #include "scrollingdialog.h"
-#endif
-
 #include "dychart.h"
 
 #ifdef __WXMSW__
@@ -2367,8 +2359,8 @@ EVT_MENU(ID_STKUP, MyFrame::onStackup)
 EVT_MENU(ID_STKDN, MyFrame::onStackdown)
 EVT_MENU(ID_FOLLOW, MyFrame::onFollow)
 EVT_MENU(ID_TEXT, MyFrame::onText)
-EVT_MENU(ID_AIS, MyFrame::onAis)
-EVT_MENU(ID_CURRENT, MyFrame::onCurrent)
+//EVT_MENU(ID_AIS, MyFrame::onAis)  // Race-Condition Toolbar?
+//EVT_MENU(ID_CURRENT, MyFrame::onCurrent) // dito?
 //EVT_MENU(ID_TIDE, MyFrame::onTide)  // Race-Condition Toolbar?
 #endif
 EVT_MENU(wxID_EXIT, MyFrame::OnExit)
@@ -3847,6 +3839,7 @@ void MyFrame::ToggleColorScheme()
 void MyFrame::ToggleFullScreen()
 {
     bool to = !IsFullScreen();
+
     long style = wxFULLSCREEN_NOBORDER | wxFULLSCREEN_NOCAPTION | wxFULLSCREEN_NOMENUBAR;
 
     if( g_FloatingToolbarDialog ) g_FloatingToolbarDialog->Show( g_bFullscreenToolbar | !to );
@@ -8888,7 +8881,7 @@ void SetSystemColors( ColorScheme cs )
 #endif
 }
 
-class  OCPNMessageDialog: public wxDialog
+class OCPNMessageDialog: public wxDialog
 {
 
 public:
@@ -8965,10 +8958,11 @@ OCPNMessageDialog::OCPNMessageDialog( wxWindow *parent,
     #endif // wxUSE_STATTEXT
 
     // 3) buttons
+    int AllButtonSizerFlags = wxOK|wxCANCEL|wxYES|wxNO|wxHELP|wxNO_DEFAULT;
     int center_flag = wxEXPAND;
     if (style & wxYES_NO)
         center_flag = wxALIGN_CENTRE;
-    wxSizer *sizerBtn = CreateSeparatedButtonSizer(style /*& ButtonSizerFlags*/);  // What's that???
+    wxSizer *sizerBtn = CreateSeparatedButtonSizer(style & AllButtonSizerFlags);
     if ( sizerBtn )
         topsizer->Add(sizerBtn, 0, center_flag | wxALL, 10 );
 
@@ -9078,15 +9072,15 @@ int OCPNMessageBox( wxWindow *parent, const wxString& message, const wxString& c
     if( stats )
         stats->Hide();
 #endif
-
+#ifdef __WXOSX__  // Test
     int ret =  wxID_OK;
 
     TimedMessageBox tbox(parent, message, caption, style, timeout_sec, wxPoint( x, y )  );
     ret = tbox.GetRetVal() ;
-
-//    wxMessageDialog dlg( parent, message, caption, style | wxSTAY_ON_TOP, wxPoint( x, y ) );
-//    int ret = dlg.ShowModal();
-
+#else
+    wxMessageDialog dlg( parent, message, caption, style | wxSTAY_ON_TOP, wxPoint( x, y ) );
+    int ret = dlg.ShowModal();
+#endif
 #ifdef __WXOSX__
     if(gFrame)
         gFrame->SurfaceToolbar();

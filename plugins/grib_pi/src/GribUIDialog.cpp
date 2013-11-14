@@ -651,10 +651,10 @@ void GRIBUIDialog::OnRequest(  wxCommandEvent& event )
     GribRequestSetting *req_Dialog = new GribRequestSetting( this, pPlugIn->GetRequestConfig(), latmaxi, latmini, lonmini, lonmaxi,
         pPlugIn->GetMailFromAddress(), pPlugIn->GetMailToAddresses(), pPlugIn->GetZyGribLogin(), pPlugIn->GetZyGribCode() );
     wxString s1[] = {_T("GFS"),_T("COAMPS"),_T("RTOFS")};
-    for( int i= 0;  i<(sizeof(s1) / sizeof(wxString));i++)
+    for( unsigned int i= 0;  i<(sizeof(s1) / sizeof(wxString));i++)
         req_Dialog->m_pModel->Append( s1[i] );
     wxString s2[] = {_T("Saildocs"),_T("zyGrib")};
-    for( int i= 0;  i<(sizeof(s2) / sizeof(wxString));i++)
+    for( unsigned int i= 0;  i<(sizeof(s2) / sizeof(wxString));i++)
         req_Dialog->m_pMailTo->Append( s2[i] );
     for( double i=0.5; i<3; i*=2)
         req_Dialog->m_pResolution->Append( wxString::Format(_T("%0.1f"), i));
@@ -663,7 +663,7 @@ void GRIBUIDialog::OnRequest(  wxCommandEvent& event )
     for( int i=2; i<9; i++)
         req_Dialog->m_pTimeRange->Append( wxString::Format(_T("%d"), i));
     wxString s3[] = {_T("WW3-GLOBAL"),_T("WW3-MEDIT")};
-    for( int i= 0;  i<(sizeof(s3) / sizeof(wxString));i++)
+    for( unsigned int i= 0;  i<(sizeof(s3) / sizeof(wxString));i++)
         req_Dialog->m_pWModel->Append( s3[i] );
     req_Dialog->m_rButtonYes->SetLabel(_("Send"));
     req_Dialog->m_rButtonApply->SetLabel(_("Save"));
@@ -906,7 +906,11 @@ void GRIBUIDialog::CreateActiveFileFromName( wxString filename )
 void GRIBUIDialog::PopulateComboDataList()
 {
     int index = 0;
+#if wxCHECK_VERSION(3,0,0)
+    if (!m_cRecordForecast->IsListEmpty() ){
+#else
     if( !m_cRecordForecast->IsEmpty() ){
+#endif
         index = m_cRecordForecast->GetCurrentSelection();
         m_cRecordForecast->Clear();
     }
