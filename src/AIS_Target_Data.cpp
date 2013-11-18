@@ -337,7 +337,12 @@ wxString AIS_Target_Data::BuildQueryResult( void )
         html << rowEnd << _T("<tr><td colspan=2>") << _T("<b>") << sizeString << rowEnd;
     }
 
-    else if( ( Class != AIS_ATON ) && ( Class != AIS_BASE ) && ( Class != AIS_DSC ) ) {
+    else if( Class == AIS_ATON )  {
+        html << _T("<tr><td colspan=2>") << _T("<b>") << navStatStr;
+        html << rowEnd << _T("<tr><td colspan=2>") << _T("<b>") << sizeString << rowEnd;
+    }
+
+    else if( ( Class != AIS_BASE ) && ( Class != AIS_DSC ) ) {
         html << _T("<tr><td colspan=2>") << _T("<b>") << AISTypeStr;
         if( navStatStr.Length() )
             html << _T(", ") << navStatStr;
@@ -459,6 +464,16 @@ wxString AIS_Target_Data::BuildQueryResult( void )
             << vertSpacer;
         turnRateHdr = _("Turn Rate");
     }
+#ifdef __WXOSX__
+    html << _T("<tr><td colspan=2><table width=100% border=0 cellpadding=0 cellspacing=0>")
+    << rowStart <<_("Entfernung") << _T("</font></td><td>&nbsp;</td><td><font size=-2>")
+    << _("Bearing") << _T("</font></td><td>&nbsp;</td><td align=right><font size=-2>")
+    << turnRateHdr << _T("</font></td></tr>")
+    << rowStartH << _T("<b>") << rngStr << _T("</b></td><td>&nbsp;</td><td><b>")
+    << brgStr << _T("</b></td><td>&nbsp;</td><td align=right><b>")
+    << rotStr << rowEnd << _T("</table></td></tr>")
+    << vertSpacer;
+#else
     html << _T("<tr><td colspan=2><table width=100% border=0 cellpadding=0 cellspacing=0>")
         << rowStart <<_("Range") << _T("</font></td><td>&nbsp;</td><td><font size=-2>")
         << _("Bearing") << _T("</font></td><td>&nbsp;</td><td align=right><font size=-2>")
@@ -467,7 +482,7 @@ wxString AIS_Target_Data::BuildQueryResult( void )
         << brgStr << _T("</b></td><td>&nbsp;</td><td align=right><b>")
         << rotStr << rowEnd << _T("</table></td></tr>")
         << vertSpacer;
-
+#endif
     wxString tcpaStr;
     if( bCPA_Valid ) tcpaStr << _(" </b>in<b> ") << FormatTimeAdaptive( (int)(TCPA*60.) );
 

@@ -513,6 +513,7 @@ private:
 
       wxImage     *m_pos_image_user;
       wxImage     *m_pos_image_user_grey;
+      wxImage     *m_pos_image_user_yellow;
 
       wxImage     *m_pos_image_user_day;
       wxImage     *m_pos_image_user_dusk;
@@ -520,6 +521,9 @@ private:
       wxImage     *m_pos_image_user_grey_day;
       wxImage     *m_pos_image_user_grey_dusk;
       wxImage     *m_pos_image_user_grey_night;
+      wxImage     *m_pos_image_user_yellow_day;
+      wxImage     *m_pos_image_user_yellow_dusk;
+      wxImage     *m_pos_image_user_yellow_night;
 
       wxImage     m_ship_pix_image;             //cached ship draw image for high overzoom
       int         m_cur_ship_pix;
