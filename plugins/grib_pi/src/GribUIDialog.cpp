@@ -706,6 +706,7 @@ void GRIBUIDialog::OnPlayStopTimer( wxTimerEvent & )
         }
     } else
         m_sTimeline->SetValue(m_sTimeline->GetValue() + 1);
+
     if(!m_InterpolateMode) m_cRecordForecast->SetSelection( m_sTimeline->GetValue() );
     TimelineChanged();
 }
@@ -985,6 +986,7 @@ void GRIBUIDialog::SetFactoryOptions( bool set_val )
 GRIBFile::GRIBFile( const wxString file_name, bool CumRec, bool WaveRec )
 {
     m_bOK = true;           // Assume ok until proven otherwise
+    m_pGribReader = NULL;
 
     if( !::wxFileExists( file_name ) ) {
         m_last_message = _( "Error:  File does not exist!" );

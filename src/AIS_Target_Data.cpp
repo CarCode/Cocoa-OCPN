@@ -484,7 +484,7 @@ wxString AIS_Target_Data::BuildQueryResult( void )
         << vertSpacer;
 #endif
     wxString tcpaStr;
-    if( bCPA_Valid ) tcpaStr << _(" </b>in<b> ") << FormatTimeAdaptive( (int)(TCPA*60.) );
+    if( bCPA_Valid ) tcpaStr << _T("/<b> ") << _("in") << _T("<b>") << FormatTimeAdaptive( (int)(TCPA*60.) );
 
     if( bCPA_Valid ) {
         html<< vertSpacer << rowStart << _("CPA") << rowEnd
