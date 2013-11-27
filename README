@@ -35,8 +35,8 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    das Mac OS X Betriebssystem unterstützt werden, einschl. Mac Menüs,
    Mac Hilfe usw.
 
-b. Diese Version basiert auf Release-Version von wxWidgets 3.0.0 mit
-   entsprechenden dylibs vom 31. Oktober 2013. Die Einbindung der Libs als
+b. Diese Version basiert auf Release-Version von wxWidgets 3.1.0 mit
+   entsprechenden dylibs vom 27. November 2013. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -60,5 +60,5 @@ Target: x86_64-apple-darwin12.5.0
 SDK 10.9 Mavericks
 Thread model: posix
 -----------------------------------------------------------------------
-11. November 2013
+27. November 2013
 

@@ -23,6 +23,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				A6B158201829915400B18B37 /* PBXTargetDependency */,
 			);
 			name = "celestial_navigation-i18n";
 			productName = "celestial_navigation-i18n";
@@ -31,7 +32,6 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 9A06621A266C447BAB1DE588 /* Build configuration list for PBXAggregateTarget "i18n" */;
 			buildPhases = (
-				7E421867C05846C593DD2D3A /* CMake Rules */,
 			);
 			dependencies = (
 				43CB8F738129439D86E8716F /* PBXTargetDependency */,
@@ -53,7 +53,6 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 7578D6A8C24A49B39B055B4D /* Build configuration list for PBXAggregateTarget "po-update" */;
 			buildPhases = (
-				7DDEC199CE8544D286B1B858 /* CMake Rules */,
 			);
 			dependencies = (
 				43CB8F738129439D86E8716F /* PBXTargetDependency */,
@@ -75,7 +74,6 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 6B4B7D401D3645D2A815D901 /* Build configuration list for PBXAggregateTarget "pot-update" */;
 			buildPhases = (
-				0E12C297821B4421BAAAE9F0 /* CMake Rules */,
 			);
 			dependencies = (
 				43CB8F738129439D86E8716F /* PBXTargetDependency */,
@@ -157,7 +155,6 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 0F88EFB11CF345ACACED14E2 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
 			buildPhases = (
-				D0372EBBD29147ABB6C8D520 /* CMake Rules */,
 			);
 			dependencies = (
 				EAAB4E87696645CDAEA03510 /* PBXTargetDependency */,
@@ -499,35 +496,41 @@
 		A647084F17A14A9500A16918 /* WatchmanPrefsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084E17A14A9500A16918 /* WatchmanPrefsDialog.cpp */; };
 		A647085117A14AB200A16918 /* WatchmanUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647085017A14AB200A16918 /* WatchmanUI.cpp */; };
 		A65009C717DB5C2200FD3148 /* de.lproj in Resources */ = {isa = PBXBuildFile; fileRef = A65009C617DB5C2200FD3148 /* de.lproj */; };
-		A660FE4E17E49B9200BD0587 /* libwx_baseu_net-2.9.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A60A5F3817C6AB6D00416857 /* libwx_baseu_net-2.9.dylib */; };
-		A660FE4F17E49B9200BD0587 /* libwx_baseu_xml-2.9.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A60A5F3917C6AB6D00416857 /* libwx_baseu_xml-2.9.dylib */; };
-		A660FE5017E49B9200BD0587 /* libwx_baseu-2.9.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A60A5F3A17C6AB6D00416857 /* libwx_baseu-2.9.dylib */; };
-		A660FE5117E49B9200BD0587 /* libwx_osx_cocoau_adv-2.9.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A60A5F3B17C6AB6D00416857 /* libwx_osx_cocoau_adv-2.9.dylib */; };
-		A660FE5217E49B9200BD0587 /* libwx_osx_cocoau_aui-2.9.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A60A5F3C17C6AB6D00416857 /* libwx_osx_cocoau_aui-2.9.dylib */; };
-		A660FE5317E49B9200BD0587 /* libwx_osx_cocoau_core-2.9.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A60A5F3D17C6AB6D00416857 /* libwx_osx_cocoau_core-2.9.dylib */; };
-		A660FE5417E49B9200BD0587 /* libwx_osx_cocoau_gl-2.9.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A60A5F3E17C6AB6D00416857 /* libwx_osx_cocoau_gl-2.9.dylib */; };
-		A660FE5517E49B9200BD0587 /* libwx_osx_cocoau_html-2.9.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A60A5F3F17C6AB6D00416857 /* libwx_osx_cocoau_html-2.9.dylib */; };
-		A660FE5717E49BE500BD0587 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A660FE5617E49BE500BD0587 /* Sparkle.framework */; };
 		A6632EE417E50BF4002001B9 /* osx_helpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6632EE317E50BF4002001B9 /* osx_helpers.mm */; };
 		A66FE65E1797E1CC00A2DD0D /* TrackPropDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66FE65D1797E1CC00A2DD0D /* TrackPropDlg.cpp */; };
 		A66FE6601797E1F600A2DD0D /* LinkPropDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66FE65F1797E1F600A2DD0D /* LinkPropDlg.cpp */; };
 		A67A0F1D178C3B540056F9C0 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F1C178C3B540056F9C0 /* pugixml.cpp */; };
 		A67A0F1F178C3B7F0056F9C0 /* OCPNRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F1E178C3B7F0056F9C0 /* OCPNRegion.cpp */; };
 		A67A0F22178C3C5D0056F9C0 /* NMEALogWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F21178C3C5D0056F9C0 /* NMEALogWindow.cpp */; };
+		A696D345182FB0F300A5A92A /* jsonreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A696D344182FB0F300A5A92A /* jsonreader.cpp */; };
+		A696D347182FB11800A5A92A /* jsonval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A696D346182FB11800A5A92A /* jsonval.cpp */; };
+		A696D349182FB13C00A5A92A /* jsonwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A696D348182FB13C00A5A92A /* jsonwriter.cpp */; };
 		A69CD17717E34BEC00B2C059 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = A69CD17617E34BEC00B2C059 /* dsa_pub.pem */; };
-		A6AC8E7117EC64FC00872D7E /* libcelestial_navigation_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5BBA00018468491EB9978049 /* libcelestial_navigation_pi.dylib */; };
-		A6AC8E7217EC64FC00872D7E /* libdashboard_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = DBF97DEBFD0C4783B8DA7D0E /* libdashboard_pi.dylib */; };
-		A6AC8E7317EC64FC00872D7E /* libfindit_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = BA5FCE7351DB46DE9D6CAB1A /* libfindit_pi.dylib */; };
-		A6AC8E7417EC64FC00872D7E /* libgradar_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5C558B3FC699406D90E39C97 /* libgradar_pi.dylib */; };
-		A6AC8E7517EC64FC00872D7E /* libgrib_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = AAE2DE3B032C4875BA82104B /* libgrib_pi.dylib */; };
-		A6AC8E7617EC64FC00872D7E /* libiacfleet_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 180F5510063547B7B6AB4538 /* libiacfleet_pi.dylib */; };
-		A6AC8E7717EC64FC00872D7E /* liblogbookkonni_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40B45FF31B5B4B1392FAB3EB /* liblogbookkonni_pi.dylib */; };
-		A6AC8E7817EC64FC00872D7E /* libvdr_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBF04BFDA1054AD0BF36AED9 /* libvdr_pi.dylib */; };
-		A6AC8E7917EC64FC00872D7E /* libweatherfax_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = E267273284874D9283C4E4A5 /* libweatherfax_pi.dylib */; };
-		A6AC8E7A17EC64FC00872D7E /* libwmm_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 77C6E38DCF7B4BADA941B142 /* libwmm_pi.dylib */; };
-		A6AC8E7B17EC64FC00872D7E /* libcalculator_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A60F746517A0217D00A6160F /* libcalculator_pi.dylib */; };
-		A6AC8E7C17EC64FC00872D7E /* libwatchman_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6D583A617A141110094D709 /* libwatchman_pi.dylib */; };
-		A6AC8E7D17EC64FC00872D7E /* libweather_routing_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */; };
+		A6AC8E7117EC64FC00872D7E /* libcelestial_navigation_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 5BBA00018468491EB9978049 /* libcelestial_navigation_pi.dylib */; };
+		A6AC8E7217EC64FC00872D7E /* libdashboard_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = DBF97DEBFD0C4783B8DA7D0E /* libdashboard_pi.dylib */; };
+		A6AC8E7317EC64FC00872D7E /* libfindit_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = BA5FCE7351DB46DE9D6CAB1A /* libfindit_pi.dylib */; };
+		A6AC8E7417EC64FC00872D7E /* libgradar_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 5C558B3FC699406D90E39C97 /* libgradar_pi.dylib */; };
+		A6AC8E7517EC64FC00872D7E /* libgrib_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = AAE2DE3B032C4875BA82104B /* libgrib_pi.dylib */; };
+		A6AC8E7617EC64FC00872D7E /* libiacfleet_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 180F5510063547B7B6AB4538 /* libiacfleet_pi.dylib */; };
+		A6AC8E7717EC64FC00872D7E /* liblogbookkonni_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 40B45FF31B5B4B1392FAB3EB /* liblogbookkonni_pi.dylib */; };
+		A6AC8E7817EC64FC00872D7E /* libvdr_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = EBF04BFDA1054AD0BF36AED9 /* libvdr_pi.dylib */; };
+		A6AC8E7917EC64FC00872D7E /* libweatherfax_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = E267273284874D9283C4E4A5 /* libweatherfax_pi.dylib */; };
+		A6AC8E7A17EC64FC00872D7E /* libwmm_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 77C6E38DCF7B4BADA941B142 /* libwmm_pi.dylib */; };
+		A6AC8E7B17EC64FC00872D7E /* libcalculator_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A60F746517A0217D00A6160F /* libcalculator_pi.dylib */; };
+		A6AC8E7C17EC64FC00872D7E /* libwatchman_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6D583A617A141110094D709 /* libwatchman_pi.dylib */; };
+		A6AC8E7D17EC64FC00872D7E /* libweather_routing_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */; };
+		A6B1581318297AAC00B18B37 /* libwx_baseu_net-3.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B15807182941C800B18B37 /* libwx_baseu_net-3.0.dylib */; };
+		A6B1581418297AAC00B18B37 /* libwx_baseu_xml-3.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B15808182941C800B18B37 /* libwx_baseu_xml-3.0.dylib */; };
+		A6B1581518297AAC00B18B37 /* libwx_baseu-3.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B15809182941C800B18B37 /* libwx_baseu-3.0.dylib */; };
+		A6B1581618297AAC00B18B37 /* libwx_osx_cocoau_adv-3.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B1580A182941C800B18B37 /* libwx_osx_cocoau_adv-3.0.dylib */; };
+		A6B1581718297AAC00B18B37 /* libwx_osx_cocoau_aui-3.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B1580B182941C800B18B37 /* libwx_osx_cocoau_aui-3.0.dylib */; };
+		A6B1581818297AAC00B18B37 /* libwx_osx_cocoau_core-3.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B1580C182941C800B18B37 /* libwx_osx_cocoau_core-3.0.dylib */; };
+		A6B1581918297AAC00B18B37 /* libwx_osx_cocoau_gl-3.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B1580D182941C800B18B37 /* libwx_osx_cocoau_gl-3.0.dylib */; };
+		A6B1581A18297AAC00B18B37 /* libwx_osx_cocoau_html-3.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B1580E182941C800B18B37 /* libwx_osx_cocoau_html-3.0.dylib */; };
+		A6B1581B18297AAC00B18B37 /* libwx_osx_cocoau_qa-3.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B1581018297A7F00B18B37 /* libwx_osx_cocoau_qa-3.0.dylib */; };
+		A6B1581C18297AAC00B18B37 /* libwx_osx_cocoau_webview-3.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B1581118297A7F00B18B37 /* libwx_osx_cocoau_webview-3.0.dylib */; };
+		A6B1581D18297AAC00B18B37 /* libwx_osx_cocoau_xrc-3.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B1581218297A7F00B18B37 /* libwx_osx_cocoau_xrc-3.0.dylib */; };
+		A6B1581E18297AAC00B18B37 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6B1580F182941C800B18B37 /* Sparkle.framework */; };
 		A6B4A55417A51C6F00E3A5D0 /* weather_routing_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55317A51C6F00E3A5D0 /* weather_routing_pi.cpp */; };
 		A6B4A55617A51CA000E3A5D0 /* WeatherRouting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55517A51CA000E3A5D0 /* WeatherRouting.cpp */; };
 		A6B4A55817A51CC800E3A5D0 /* ConfigurationDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55717A51CC800E3A5D0 /* ConfigurationDialog.cpp */; };
@@ -550,9 +553,6 @@
 		A6B4A57A17A51F1D00E3A5D0 /* georef.c in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A57917A51F1C00E3A5D0 /* georef.c */; };
 		A6B4A58617A528B400E3A5D0 /* GribRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4B971ABE521C41EEB917EC81 /* GribRecord.cpp */; };
 		A6B4A58717A528FF00E3A5D0 /* zuFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86FBC046FFA345A98B9D5612 /* zuFile.cpp */; };
-		A6B4A58817A5295100E3A5D0 /* jsonwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10DE3F6258C496FAA2ABFCD /* jsonwriter.cpp */; };
-		A6B4A58917A5295100E3A5D0 /* jsonreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED5915231E834652B74BAD1F /* jsonreader.cpp */; };
-		A6B4A58A17A5295100E3A5D0 /* jsonval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 55D2E40920FE4245AF3D7CBD /* jsonval.cpp */; };
 		A6BE1130178C99A4001B4E60 /* vlw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6BE112F178C99A4001B4E60 /* vlw.cpp */; };
 		A6BE1134178C9BCE001B4E60 /* gradardialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6BE1133178C9BCE001B4E60 /* gradardialog.cpp */; };
 		A6BE1136178C9BE9001B4E60 /* GRadarUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6BE1135178C9BE9001B4E60 /* GRadarUI.cpp */; };
@@ -849,6 +849,13 @@
 			remoteGlobalIDString = A6D583A717A141220094D709;
 			remoteInfo = "watchman-i18n";
 		};
+		A6B1581F1829915400B18B37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A87580D1DD2B4F81B39F3B5A;
+			remoteInfo = ZERO_CHECK;
+		};
 		A6B4A58217A5229300E3A5D0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
@@ -1031,38 +1038,42 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				A660FE5717E49BE500BD0587 /* Sparkle.framework in CopyFiles */,
-				A660FE4E17E49B9200BD0587 /* libwx_baseu_net-2.9.dylib in CopyFiles */,
-				A660FE4F17E49B9200BD0587 /* libwx_baseu_xml-2.9.dylib in CopyFiles */,
-				A660FE5017E49B9200BD0587 /* libwx_baseu-2.9.dylib in CopyFiles */,
-				A660FE5117E49B9200BD0587 /* libwx_osx_cocoau_adv-2.9.dylib in CopyFiles */,
-				A660FE5217E49B9200BD0587 /* libwx_osx_cocoau_aui-2.9.dylib in CopyFiles */,
-				A660FE5317E49B9200BD0587 /* libwx_osx_cocoau_core-2.9.dylib in CopyFiles */,
-				A660FE5417E49B9200BD0587 /* libwx_osx_cocoau_gl-2.9.dylib in CopyFiles */,
-				A660FE5517E49B9200BD0587 /* libwx_osx_cocoau_html-2.9.dylib in CopyFiles */,
+				A6B1581318297AAC00B18B37 /* libwx_baseu_net-3.0.dylib in CopyFiles */,
+				A6B1581418297AAC00B18B37 /* libwx_baseu_xml-3.0.dylib in CopyFiles */,
+				A6B1581518297AAC00B18B37 /* libwx_baseu-3.0.dylib in CopyFiles */,
+				A6B1581618297AAC00B18B37 /* libwx_osx_cocoau_adv-3.0.dylib in CopyFiles */,
+				A6B1581718297AAC00B18B37 /* libwx_osx_cocoau_aui-3.0.dylib in CopyFiles */,
+				A6B1581818297AAC00B18B37 /* libwx_osx_cocoau_core-3.0.dylib in CopyFiles */,
+				A6B1581918297AAC00B18B37 /* libwx_osx_cocoau_gl-3.0.dylib in CopyFiles */,
+				A6B1581A18297AAC00B18B37 /* libwx_osx_cocoau_html-3.0.dylib in CopyFiles */,
+				A6B1581B18297AAC00B18B37 /* libwx_osx_cocoau_qa-3.0.dylib in CopyFiles */,
+				A6B1581C18297AAC00B18B37 /* libwx_osx_cocoau_webview-3.0.dylib in CopyFiles */,
+				A6B1581D18297AAC00B18B37 /* libwx_osx_cocoau_xrc-3.0.dylib in CopyFiles */,
+				A6B1581E18297AAC00B18B37 /* Sparkle.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A68ADCA0179891DB003CAB88 /* CopyFiles */ = {
+		A68ADCA0179891DB003CAB88 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				A6AC8E7117EC64FC00872D7E /* libcelestial_navigation_pi.dylib in CopyFiles */,
-				A6AC8E7217EC64FC00872D7E /* libdashboard_pi.dylib in CopyFiles */,
-				A6AC8E7317EC64FC00872D7E /* libfindit_pi.dylib in CopyFiles */,
-				A6AC8E7417EC64FC00872D7E /* libgradar_pi.dylib in CopyFiles */,
-				A6AC8E7517EC64FC00872D7E /* libgrib_pi.dylib in CopyFiles */,
-				A6AC8E7617EC64FC00872D7E /* libiacfleet_pi.dylib in CopyFiles */,
-				A6AC8E7717EC64FC00872D7E /* liblogbookkonni_pi.dylib in CopyFiles */,
-				A6AC8E7817EC64FC00872D7E /* libvdr_pi.dylib in CopyFiles */,
-				A6AC8E7917EC64FC00872D7E /* libweatherfax_pi.dylib in CopyFiles */,
-				A6AC8E7A17EC64FC00872D7E /* libwmm_pi.dylib in CopyFiles */,
-				A6AC8E7B17EC64FC00872D7E /* libcalculator_pi.dylib in CopyFiles */,
-				A6AC8E7C17EC64FC00872D7E /* libwatchman_pi.dylib in CopyFiles */,
-				A6AC8E7D17EC64FC00872D7E /* libweather_routing_pi.dylib in CopyFiles */,
+				A6AC8E7117EC64FC00872D7E /* libcelestial_navigation_pi.dylib in Copy Files */,
+				A6AC8E7217EC64FC00872D7E /* libdashboard_pi.dylib in Copy Files */,
+				A6AC8E7317EC64FC00872D7E /* libfindit_pi.dylib in Copy Files */,
+				A6AC8E7417EC64FC00872D7E /* libgradar_pi.dylib in Copy Files */,
+				A6AC8E7517EC64FC00872D7E /* libgrib_pi.dylib in Copy Files */,
+				A6AC8E7617EC64FC00872D7E /* libiacfleet_pi.dylib in Copy Files */,
+				A6AC8E7717EC64FC00872D7E /* liblogbookkonni_pi.dylib in Copy Files */,
+				A6AC8E7817EC64FC00872D7E /* libvdr_pi.dylib in Copy Files */,
+				A6AC8E7917EC64FC00872D7E /* libweatherfax_pi.dylib in Copy Files */,
+				A6AC8E7A17EC64FC00872D7E /* libwmm_pi.dylib in Copy Files */,
+				A6AC8E7B17EC64FC00872D7E /* libcalculator_pi.dylib in Copy Files */,
+				A6AC8E7C17EC64FC00872D7E /* libwatchman_pi.dylib in Copy Files */,
+				A6AC8E7D17EC64FC00872D7E /* libweather_routing_pi.dylib in Copy Files */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -1077,7 +1088,7 @@
 		014BB7B8D4614F27A590EC41 /* jsonreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsonreader.h; path = plugins/Findit_pi/src/jsonreader.h; sourceTree = SOURCE_ROOT; };
 		018897BEC35B4FDAA93DC628 /* jsonval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsonval.h; path = plugins/logbookkonni_pi/src/jsonval.h; sourceTree = SOURCE_ROOT; };
 		01B6C11A8E5F43938E948329 /* wdb_borders_c.b */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = wdb_borders_c.b; path = data/gshhs/wdb_borders_c.b; sourceTree = SOURCE_ROOT; };
-		01FEDD7A85E04F02AA3C5E97 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text; name = CMakeLists.txt; path = plugins/logbookkonni_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		01FEDD7A85E04F02AA3C5E97 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = "/Users/heidi/devel/Cocoa-OCPN/plugins/logbookkonni_pi/CMakeLists.txt"; sourceTree = "<absolute>"; };
 		0203ACF37908445999E243DA /* gpsdatum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpsdatum.h; path = src/garmin/jeeps/gpsdatum.h; sourceTree = SOURCE_ROOT; };
 		020767C550534051812132B1 /* sentence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sentence.cpp; path = plugins/logbookkonni_pi/src/nmea0183/sentence.cpp; sourceTree = SOURCE_ROOT; };
 		02E95DA0EF204C3886D0FBD6 /* 7bells.wav */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = 7bells.wav; path = data/sounds/7bells.wav; sourceTree = SOURCE_ROOT; };
@@ -1163,7 +1174,7 @@
 		2088412A7E56400EB514948B /* format.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = format.cpp; path = plugins/weatherfax_pi/src/libaudiofile/format.cpp; sourceTree = SOURCE_ROOT; };
 		2125E170781E457CA814CF93 /* compression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = compression.cpp; path = plugins/weatherfax_pi/src/libaudiofile/compression.cpp; sourceTree = SOURCE_ROOT; };
 		216FC547C15F4B8F8F356CF8 /* MagneticPlotMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MagneticPlotMap.cpp; path = plugins/wmm_pi/src/MagneticPlotMap.cpp; sourceTree = SOURCE_ROOT; };
-		21BE6AC427084D7ABD1A4B32 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text; name = CMakeLists.txt; path = plugins/wmm_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		21BE6AC427084D7ABD1A4B32 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = "/Users/heidi/devel/Cocoa-OCPN/plugins/wmm_pi/CMakeLists.txt"; sourceTree = "<absolute>"; };
 		21D5B009B0924364BEFE50A1 /* OCPNSoundData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCPNSoundData.h; path = include/OCPNSoundData.h; sourceTree = SOURCE_ROOT; };
 		22A7067747484FFCBA547832 /* rastersymbols-dark.png */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = image; name = "rastersymbols-dark.png"; path = "data/s57data/rastersymbols-dark.png"; sourceTree = SOURCE_ROOT; };
 		22B55AEE91AB4527837A8C9A /* s52utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = s52utils.h; path = include/s52utils.h; sourceTree = SOURCE_ROOT; };
@@ -1246,7 +1257,7 @@
 		3F61E6B4A09D44559917BC31 /* wmm_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wmm_pi.h; path = plugins/wmm_pi/src/wmm_pi.h; sourceTree = SOURCE_ROOT; };
 		3F848221968342248B44FC73 /* vwt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vwt.hpp; path = plugins/dashboard_pi/src/nmea0183/vwt.hpp; sourceTree = SOURCE_ROOT; };
 		3FB96992210A4652ABE62F0C /* ddfrecordindex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ddfrecordindex.cpp; path = src/mygdal/ddfrecordindex.cpp; sourceTree = SOURCE_ROOT; };
-		3FDF1C8E12A342F89D6B881F /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text; name = CMakeLists.txt; path = plugins/grib_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		3FDF1C8E12A342F89D6B881F /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = "/Users/heidi/devel/Cocoa-OCPN/plugins/grib_pi/CMakeLists.txt"; sourceTree = "<absolute>"; };
 		3FE33973DE48409FB648BFBD /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/dashboard_pi/src/icons.h; sourceTree = SOURCE_ROOT; };
 		4027B2CC43294CED9E284476 /* iso8211.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iso8211.h; path = src/mygdal/iso8211.h; sourceTree = SOURCE_ROOT; };
 		40B45FF31B5B4B1392FAB3EB /* liblogbookkonni_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = liblogbookkonni_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1279,7 +1290,7 @@
 		4BF87B89EA1E43AA8F49A8CE /* TCDataFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TCDataFactory.cpp; path = src/TCDataFactory.cpp; sourceTree = SOURCE_ROOT; };
 		4C35A477DFD84215A0393E7D /* S57QueryDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = S57QueryDialog.cpp; path = src/S57QueryDialog.cpp; sourceTree = SOURCE_ROOT; };
 		4CBA6033F17C481F8BBDAEE3 /* mtw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mtw.cpp; path = plugins/dashboard_pi/src/nmea0183/mtw.cpp; sourceTree = SOURCE_ROOT; };
-		4CFF951BE199409183C36ABE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text; name = CMakeLists.txt; path = plugins/celestial_navigation_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		4CFF951BE199409183C36ABE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = "/Users/heidi/devel/Cocoa-OCPN/plugins/celestial_navigation_pi/CMakeLists.txt"; sourceTree = "<absolute>"; };
 		4D06095FD964498BB821A6CD /* gpsproj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpsproj.h; path = src/garmin/jeeps/gpsproj.h; sourceTree = SOURCE_ROOT; };
 		4D7108BD0FDA4C34A127F2DD /* cpl_vsisimple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpl_vsisimple.cpp; path = src/mygdal/cpl_vsisimple.cpp; sourceTree = SOURCE_ROOT; };
 		4D9ACE3617454C4498D83023 /* chcanv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chcanv.h; path = include/chcanv.h; sourceTree = SOURCE_ROOT; };
@@ -1334,7 +1345,7 @@
 		62DD913DE72348A4BD177011 /* cpl_port.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpl_port.h; path = src/mygdal/cpl_port.h; sourceTree = SOURCE_ROOT; };
 		62E271547AB44CCDB2E98ED1 /* ogrmultipolygon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ogrmultipolygon.cpp; path = src/mygdal/ogrmultipolygon.cpp; sourceTree = SOURCE_ROOT; };
 		62F01A0B32D1400299CA0649 /* S57ClassRegistrar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = S57ClassRegistrar.h; path = include/S57ClassRegistrar.h; sourceTree = SOURCE_ROOT; };
-		631C321E2E4B44F887BEF2DB /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text; name = CMakeLists.txt; path = plugins/iacfleet_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		631C321E2E4B44F887BEF2DB /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = "/Users/heidi/devel/Cocoa-OCPN/plugins/iacfleet_pi/CMakeLists.txt"; sourceTree = "<absolute>"; };
 		6324503B2058401981B47EF5 /* Route.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Route.h; path = include/Route.h; sourceTree = SOURCE_ROOT; };
 		632B0CFD4AD64F378FFA8A21 /* statwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = statwin.cpp; path = src/statwin.cpp; sourceTree = SOURCE_ROOT; };
 		64214A29EA854C03B90E8B6B /* chartsymbols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartsymbols.h; path = include/chartsymbols.h; sourceTree = SOURCE_ROOT; };
@@ -1352,7 +1363,7 @@
 		66E36B5994014A458268AE12 /* wind_history.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wind_history.cpp; path = plugins/dashboard_pi/src/wind_history.cpp; sourceTree = SOURCE_ROOT; };
 		67CD93EF03BE43CFBEB8DA6F /* vhw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vhw.cpp; path = plugins/logbookkonni_pi/src/nmea0183/vhw.cpp; sourceTree = SOURCE_ROOT; };
 		680DB42110B547EA8EC7EA9B /* jsonwriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonwriter.cpp; path = plugins/Findit_pi/src/jsonwriter.cpp; sourceTree = SOURCE_ROOT; };
-		6864BB473B5441C8B17ACDD2 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text; name = CMakeLists.txt; path = plugins/gradar_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		6864BB473B5441C8B17ACDD2 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = "/Users/heidi/devel/Cocoa-OCPN/plugins/gradar_pi/CMakeLists.txt"; sourceTree = "<absolute>"; };
 		68C478155BD3464E817D87CF /* LogbookHTML.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LogbookHTML.cpp; path = plugins/logbookkonni_pi/src/LogbookHTML.cpp; sourceTree = SOURCE_ROOT; };
 		68CC2B03C84B4549B7632EFC /* ocpndc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ocpndc.cpp; path = src/ocpndc.cpp; sourceTree = SOURCE_ROOT; };
 		694DB5D66DB541BD87090417 /* GPwpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GPwpl.hpp; path = src/nmea0183/GPwpl.hpp; sourceTree = SOURCE_ROOT; };
@@ -1441,7 +1452,7 @@
 		879D9EF1B2AA4D5BA0B9F599 /* gsv.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = gsv.hpp; path = plugins/dashboard_pi/src/nmea0183/gsv.hpp; sourceTree = SOURCE_ROOT; };
 		88198CE91A4D41B4804D84F9 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/iacfleet_pi/src/icons.cpp; sourceTree = SOURCE_ROOT; };
 		88BF8696A6B144DB8B33760F /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/wmm_pi/src/icons.cpp; sourceTree = SOURCE_ROOT; };
-		88C0B8B3B682475CBC0E3329 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text; name = CMakeLists.txt; path = plugins/weatherfax_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		88C0B8B3B682475CBC0E3329 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = "/Users/heidi/devel/Cocoa-OCPN/plugins/weatherfax_pi/CMakeLists.txt"; sourceTree = "<absolute>"; };
 		88C7F944718345E0BA9AC28C /* IDX_entry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IDX_entry.cpp; path = src/IDX_entry.cpp; sourceTree = SOURCE_ROOT; };
 		88CA97D8783B40C79417745A /* gpssend.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gpssend.c; path = src/garmin/jeeps/gpssend.c; sourceTree = SOURCE_ROOT; };
 		88D9BF4EE40C454AA50A8785 /* nmea0183.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nmea0183.cpp; path = src/nmea0183/nmea0183.cpp; sourceTree = SOURCE_ROOT; };
@@ -1516,14 +1527,6 @@
 		A5812B7D2C484810831FA320 /* cplgetsymbol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cplgetsymbol.cpp; path = src/mygdal/cplgetsymbol.cpp; sourceTree = SOURCE_ROOT; };
 		A5EB8D8576AE4373B945506A /* TCWin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCWin.h; path = include/TCWin.h; sourceTree = SOURCE_ROOT; };
 		A6034DFB56444882ADAF221E /* WMM_COF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WMM_COF.h; path = plugins/wmm_pi/src/WMM_COF.h; sourceTree = SOURCE_ROOT; };
-		A60A5F3817C6AB6D00416857 /* libwx_baseu_net-2.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_baseu_net-2.9.dylib"; sourceTree = "<group>"; };
-		A60A5F3917C6AB6D00416857 /* libwx_baseu_xml-2.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_baseu_xml-2.9.dylib"; sourceTree = "<group>"; };
-		A60A5F3A17C6AB6D00416857 /* libwx_baseu-2.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_baseu-2.9.dylib"; sourceTree = "<group>"; };
-		A60A5F3B17C6AB6D00416857 /* libwx_osx_cocoau_adv-2.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_osx_cocoau_adv-2.9.dylib"; sourceTree = "<group>"; };
-		A60A5F3C17C6AB6D00416857 /* libwx_osx_cocoau_aui-2.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_osx_cocoau_aui-2.9.dylib"; sourceTree = "<group>"; };
-		A60A5F3D17C6AB6D00416857 /* libwx_osx_cocoau_core-2.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_osx_cocoau_core-2.9.dylib"; sourceTree = "<group>"; };
-		A60A5F3E17C6AB6D00416857 /* libwx_osx_cocoau_gl-2.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_osx_cocoau_gl-2.9.dylib"; sourceTree = "<group>"; };
-		A60A5F3F17C6AB6D00416857 /* libwx_osx_cocoau_html-2.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_osx_cocoau_html-2.9.dylib"; sourceTree = "<group>"; };
 		A60F746517A0217D00A6160F /* libcalculator_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libcalculator_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A60F746917A02D1500A6160F /* calculator_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = calculator_pi.h; path = plugins/calculator_pi/src/calculator_pi.h; sourceTree = "<group>"; };
 		A60F746B17A02D5100A6160F /* calculatorgui_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = calculatorgui_impl.h; path = plugins/calculator_pi/src/calculatorgui_impl.h; sourceTree = "<group>"; };
@@ -1547,6 +1550,7 @@
 		A60F748917A0302F00A6160F /* parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = parser.cpp; path = plugins/calculator_pi/src/expression_parser/parser.cpp; sourceTree = "<group>"; };
 		A60F748B17A0304900A6160F /* variablelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = variablelist.cpp; path = plugins/calculator_pi/src/expression_parser/variablelist.cpp; sourceTree = "<group>"; };
 		A60F749717A0338600A6160F /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = parser.h; path = plugins/calculator_pi/src/expression_parser/parser.h; sourceTree = "<group>"; };
+		A612804B183393AF00EFF67B /* GribRecordSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribRecordSet.h; path = plugins/grib_pi/src/GribRecordSet.h; sourceTree = "<group>"; };
 		A61AD26A18188468007A45D8 /* wximgkap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wximgkap.h; path = plugins/weatherfax_pi/src/wximgkap.h; sourceTree = "<group>"; };
 		A61AD26B181884A7007A45D8 /* wximgkap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wximgkap.cpp; path = plugins/weatherfax_pi/src/wximgkap.cpp; sourceTree = "<group>"; };
 		A61FF9D817D4E495004ACC5D /* WeatherFax.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherFax.h; path = plugins/weatherfax_pi/src/WeatherFax.h; sourceTree = "<group>"; };
@@ -1576,7 +1580,6 @@
 		A647085017A14AB200A16918 /* WatchmanUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WatchmanUI.cpp; path = plugins/watchman_pi/src/WatchmanUI.cpp; sourceTree = "<group>"; };
 		A64FA6FF17EDB7D600710E97 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = buildosx/Info.plist; sourceTree = "<group>"; };
 		A65009C617DB5C2200FD3148 /* de.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = de.lproj; sourceTree = "<group>"; };
-		A660FE5617E49BE500BD0587 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		A6632EE317E50BF4002001B9 /* osx_helpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = osx_helpers.mm; path = src/osx_helpers.mm; sourceTree = "<group>"; };
 		A665CBED17CF33C00007CDB7 /* s52s57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = s52s57.h; path = include/s52s57.h; sourceTree = "<group>"; };
 		A66FE65B1797DF9400A2DD0D /* TrackPropDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackPropDlg.h; path = include/TrackPropDlg.h; sourceTree = "<group>"; };
@@ -1595,9 +1598,28 @@
 		A6912F3F179FEAC500C4AFA6 /* vsop87d.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vsop87d.txt; path = plugins/celestial_navigation_pi/data/vsop87d.txt; sourceTree = "<group>"; };
 		A6912F40179FEB5E00C4AFA6 /* EGM9615.BIN */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = EGM9615.BIN; path = plugins/wmm_pi/EGM9615.BIN; sourceTree = "<group>"; };
 		A6912F41179FEB8300C4AFA6 /* WMM.COF */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = WMM.COF; path = plugins/wmm_pi/WMM.COF; sourceTree = "<group>"; };
+		A696D33F182FAE8F00A5A92A /* jsonval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsonval.h; path = include/wx/jsonval.h; sourceTree = "<group>"; };
+		A696D340182FAFB500A5A92A /* json_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = json_defs.h; path = plugins/weather_routing_pi/src/json_defs.h; sourceTree = "<group>"; };
+		A696D341182FAFEA00A5A92A /* jsonreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsonreader.h; path = plugins/weather_routing_pi/src/jsonreader.h; sourceTree = "<group>"; };
+		A696D342182FB07100A5A92A /* jsonval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsonval.h; path = plugins/weather_routing_pi/src/jsonval.h; sourceTree = "<group>"; };
+		A696D343182FB09100A5A92A /* jsonwriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsonwriter.h; path = plugins/weather_routing_pi/src/jsonwriter.h; sourceTree = "<group>"; };
+		A696D344182FB0F300A5A92A /* jsonreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonreader.cpp; path = plugins/weather_routing_pi/src/jsonreader.cpp; sourceTree = "<group>"; };
+		A696D346182FB11800A5A92A /* jsonval.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonval.cpp; path = plugins/weather_routing_pi/src/jsonval.cpp; sourceTree = "<group>"; };
+		A696D348182FB13C00A5A92A /* jsonwriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonwriter.cpp; path = plugins/weather_routing_pi/src/jsonwriter.cpp; sourceTree = "<group>"; };
 		A69CD17617E34BEC00B2C059 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
-		A69CD17817E36A6600B2C059 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = SOURCE_ROOT; };
 		A69F7CAB18159C5300B1F0E9 /* chartbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartbase.h; path = include/chartbase.h; sourceTree = "<group>"; };
+		A6B15807182941C800B18B37 /* libwx_baseu_net-3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libwx_baseu_net-3.0.dylib"; path = "Frameworks/libwx_baseu_net-3.0.dylib"; sourceTree = "<group>"; };
+		A6B15808182941C800B18B37 /* libwx_baseu_xml-3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libwx_baseu_xml-3.0.dylib"; path = "Frameworks/libwx_baseu_xml-3.0.dylib"; sourceTree = "<group>"; };
+		A6B15809182941C800B18B37 /* libwx_baseu-3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libwx_baseu-3.0.dylib"; path = "Frameworks/libwx_baseu-3.0.dylib"; sourceTree = "<group>"; };
+		A6B1580A182941C800B18B37 /* libwx_osx_cocoau_adv-3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libwx_osx_cocoau_adv-3.0.dylib"; path = "Frameworks/libwx_osx_cocoau_adv-3.0.dylib"; sourceTree = "<group>"; };
+		A6B1580B182941C800B18B37 /* libwx_osx_cocoau_aui-3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libwx_osx_cocoau_aui-3.0.dylib"; path = "Frameworks/libwx_osx_cocoau_aui-3.0.dylib"; sourceTree = "<group>"; };
+		A6B1580C182941C800B18B37 /* libwx_osx_cocoau_core-3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libwx_osx_cocoau_core-3.0.dylib"; path = "Frameworks/libwx_osx_cocoau_core-3.0.dylib"; sourceTree = "<group>"; };
+		A6B1580D182941C800B18B37 /* libwx_osx_cocoau_gl-3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libwx_osx_cocoau_gl-3.0.dylib"; path = "Frameworks/libwx_osx_cocoau_gl-3.0.dylib"; sourceTree = "<group>"; };
+		A6B1580E182941C800B18B37 /* libwx_osx_cocoau_html-3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libwx_osx_cocoau_html-3.0.dylib"; path = "Frameworks/libwx_osx_cocoau_html-3.0.dylib"; sourceTree = "<group>"; };
+		A6B1580F182941C800B18B37 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
+		A6B1581018297A7F00B18B37 /* libwx_osx_cocoau_qa-3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libwx_osx_cocoau_qa-3.0.dylib"; path = "Frameworks/libwx_osx_cocoau_qa-3.0.dylib"; sourceTree = "<group>"; };
+		A6B1581118297A7F00B18B37 /* libwx_osx_cocoau_webview-3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libwx_osx_cocoau_webview-3.0.dylib"; path = "Frameworks/libwx_osx_cocoau_webview-3.0.dylib"; sourceTree = "<group>"; };
+		A6B1581218297A7F00B18B37 /* libwx_osx_cocoau_xrc-3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libwx_osx_cocoau_xrc-3.0.dylib"; path = "Frameworks/libwx_osx_cocoau_xrc-3.0.dylib"; sourceTree = "<group>"; };
 		A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libweather_routing_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6B4A53E17A5174300E3A5D0 /* weather_routing_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = weather_routing_pi.h; path = plugins/weather_routing_pi/src/weather_routing_pi.h; sourceTree = "<group>"; };
 		A6B4A53F17A5177500E3A5D0 /* WeatherRouting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherRouting.h; path = plugins/weather_routing_pi/src/WeatherRouting.h; sourceTree = "<group>"; };
@@ -1654,7 +1676,7 @@
 		A6D0E73617A9155C0031E658 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/weatherfax_pi/src/icons.cpp; sourceTree = "<group>"; };
 		A6D583A617A141110094D709 /* libwatchman_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libwatchman_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A76934330B0A4AF2877C4238 /* gpxdocument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gpxdocument.cpp; path = src/gpxdocument.cpp; sourceTree = SOURCE_ROOT; };
-		A785AF65547B4A8C8665D093 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text; name = CMakeLists.txt; path = plugins/dashboard_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		A785AF65547B4A8C8665D093 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = "/Users/heidi/devel/Cocoa-OCPN/plugins/dashboard_pi/CMakeLists.txt"; sourceTree = "<absolute>"; };
 		A86A7B6BAC6146688E379079 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlerror.cpp; path = plugins/logbookkonni_pi/src/tinyxml/tinyxmlerror.cpp; sourceTree = SOURCE_ROOT; };
 		A8CB7EA0F7D54C8BA1AD0EDA /* bbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bbox.cpp; path = src/bbox.cpp; sourceTree = SOURCE_ROOT; };
 		A8E0DEAB602C4C2881731A87 /* TC_Error_Code.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TC_Error_Code.h; path = include/TC_Error_Code.h; sourceTree = SOURCE_ROOT; };
@@ -1757,7 +1779,7 @@
 		C827A52DC43E467CAC233693 /* response.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = response.cpp; path = src/nmea0183/response.cpp; sourceTree = SOURCE_ROOT; };
 		C8D14110DFBF43AFB525F86F /* cpl_vsi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpl_vsi.h; path = src/mygdal/cpl_vsi.h; sourceTree = SOURCE_ROOT; };
 		C9349DD80C00423383FB544C /* Logbook.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logbook.cpp; path = plugins/logbookkonni_pi/src/Logbook.cpp; sourceTree = SOURCE_ROOT; };
-		C94D4AFD5DB24E71B42FB4F9 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text; name = CMakeLists.txt; path = plugins/Findit_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		C94D4AFD5DB24E71B42FB4F9 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = "/Users/heidi/devel/Cocoa-OCPN/plugins/Findit_pi/CMakeLists.txt"; sourceTree = "<absolute>"; };
 		C97B73DCCA444448A16A96BF /* Logbook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logbook.h; path = plugins/logbookkonni_pi/src/Logbook.h; sourceTree = SOURCE_ROOT; };
 		C994B806FEDB443F9D48C920 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = plugins/logbookkonni_pi/src/tinyxml/tinyxml.cpp; sourceTree = SOURCE_ROOT; };
 		C9FD9CF4F9E6403EA39AE7A9 /* jsonreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonreader.cpp; path = plugins/logbookkonni_pi/src/jsonreader.cpp; sourceTree = SOURCE_ROOT; };
@@ -1793,7 +1815,7 @@
 		D35307FCD4B243938F34D3E2 /* AISTargetListDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISTargetListDialog.h; path = include/AISTargetListDialog.h; sourceTree = SOURCE_ROOT; };
 		D4135324F380411AB6FD2AC4 /* hdm.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = hdm.hpp; path = plugins/logbookkonni_pi/src/nmea0183/hdm.hpp; sourceTree = SOURCE_ROOT; };
 		D478F1CF663C400BAD070646 /* OCPNListCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCPNListCtrl.h; path = include/OCPNListCtrl.h; sourceTree = SOURCE_ROOT; };
-		D4B509862B194E7C95B21F1F /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text; name = CMakeLists.txt; path = plugins/vdr_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		D4B509862B194E7C95B21F1F /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = "/Users/heidi/devel/Cocoa-OCPN/plugins/vdr_pi/CMakeLists.txt"; sourceTree = "<absolute>"; };
 		D6DD870959BA41EB953A1099 /* options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = options.h; path = include/options.h; sourceTree = SOURCE_ROOT; };
 		D70A9AFD9E94423ABF1F9F7F /* geodesic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geodesic.h; path = include/geodesic.h; sourceTree = SOURCE_ROOT; };
 		D76684A6B5DD448FB5296DF8 /* poly-l-1.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = "poly-l-1.dat"; path = "data/gshhs/poly-l-1.dat"; sourceTree = SOURCE_ROOT; };
@@ -1926,7 +1948,6 @@
 				692ADED67AA1434A9A9368DE /* Header Files */,
 				53D51C88ACD1488287FB8729 /* Source Files */,
 				E6C757C9367D498A8E1E3210 /* RMC.HPP */,
-				A785AF65547B4A8C8665D093 /* CMakeLists.txt */,
 			);
 			name = dashboard_pi;
 			sourceTree = "<group>";
@@ -1978,7 +1999,6 @@
 		0CB9363A7A684266B6485C1D /* celestial_navigation-i18n */ = {
 			isa = PBXGroup;
 			children = (
-				A71B1D6A91F1483599E533AA /* CMake Rules */,
 				4CFF951BE199409183C36ABE /* CMakeLists.txt */,
 			);
 			name = "celestial_navigation-i18n";
@@ -1989,6 +2009,7 @@
 			children = (
 				FE0FAA3114BA4CEEA957D949 /* grib_pi.h */,
 				34EF752638764A1EA6CE8A94 /* GribOverlayFactory.h */,
+				A612804B183393AF00EFF67B /* GribRecordSet.h */,
 				EBEECFBBBA7A4F9CAADDAA46 /* GribUIDialogBase.h */,
 				49C8FF5269504C99BF9D39DC /* GribUIDialog.h */,
 				E0D69407F58245CFA8E0265B /* GribSettingsDialog.h */,
@@ -1997,13 +2018,6 @@
 				6CAB5A51E9E3449C89D41F40 /* email.h */,
 			);
 			name = "Header Files";
-			sourceTree = "<group>";
-		};
-		164F388DD14B47EAAE9CEF09 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
 		18272963BC804A9D9FBB57B6 /* Source Files */ = {
@@ -2062,23 +2076,14 @@
 		187FC46D3A994140A7E0D78E /* findit-i18n */ = {
 			isa = PBXGroup;
 			children = (
-				1F5A9724EFF24AED9DD8DCAF /* CMake Rules */,
 				C94D4AFD5DB24E71B42FB4F9 /* CMakeLists.txt */,
 			);
 			name = "findit-i18n";
 			sourceTree = "<group>";
 		};
-		1F5A9724EFF24AED9DD8DCAF /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
 		1FEAD586B575410AAE3615F8 /* gradar-i18n */ = {
 			isa = PBXGroup;
 			children = (
-				E93CC7F3AB164CA7ABE427F8 /* CMake Rules */,
 				6864BB473B5441C8B17ACDD2 /* CMakeLists.txt */,
 			);
 			name = "gradar-i18n";
@@ -2090,7 +2095,6 @@
 				A9DFE84696B94EA5B2A4099C /* Header Files */,
 				F4B7E9955EB24178A46AB2BD /* Source Files */,
 				42FBAEF0BD5D4FF0B5161BBF /* RMC.HPP */,
-				01FEDD7A85E04F02AA3C5E97 /* CMakeLists.txt */,
 			);
 			name = logbookkonni_pi;
 			sourceTree = "<group>";
@@ -2098,7 +2102,6 @@
 		2460FC44FDDD495AAD837DC6 /* wmm-i18n */ = {
 			isa = PBXGroup;
 			children = (
-				39F4C52CCC3E41EC98BBA679 /* CMake Rules */,
 				21BE6AC427084D7ABD1A4B32 /* CMakeLists.txt */,
 			);
 			name = "wmm-i18n";
@@ -2107,8 +2110,6 @@
 		288D9AAFB67C433994D580B9 /* i18n */ = {
 			isa = PBXGroup;
 			children = (
-				398946C074F340B3837A2E65 /* CMake Rules */,
-				90C03B0053BA4D9DAB6D131C /* CMakeLists.txt */,
 			);
 			name = i18n;
 			sourceTree = "<group>";
@@ -2118,7 +2119,6 @@
 			children = (
 				12F1B40629F946D0AFE59BDD /* Header Files */,
 				7801A2C16E2F4F3C98D86D6B /* Source Files */,
-				3FDF1C8E12A342F89D6B881F /* CMakeLists.txt */,
 			);
 			name = grib_pi;
 			sourceTree = "<group>";
@@ -2126,7 +2126,6 @@
 		2C0162869B38442DA31B3E61 /* po-update */ = {
 			isa = PBXGroup;
 			children = (
-				B46AE56E42DB401B9507DA64 /* CMake Rules */,
 			);
 			name = "po-update";
 			sourceTree = "<group>";
@@ -2141,24 +2140,9 @@
 			name = GARMINHOST;
 			sourceTree = "<group>";
 		};
-		398946C074F340B3837A2E65 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
-		39F4C52CCC3E41EC98BBA679 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
 		3A7326A6F584450BBC3C6414 /* ALL_BUILD */ = {
 			isa = PBXGroup;
 			children = (
-				50A08C175FAD45DE897C68F2 /* CMake Rules */,
 				90C03B0053BA4D9DAB6D131C /* CMakeLists.txt */,
 			);
 			name = ALL_BUILD;
@@ -2178,7 +2162,6 @@
 			children = (
 				5F3885F3C075438DA8567DD7 /* Header Files */,
 				D02AD7C92F5641948A9AEB96 /* Source Files */,
-				4CFF951BE199409183C36ABE /* CMakeLists.txt */,
 				A6912F3D179FEA6600C4AFA6 /* Celestial Navigation Basics.html */,
 				A6912F3E179FEAA600C4AFA6 /* IGRF11.COF */,
 				A6912F3F179FEAC500C4AFA6 /* vsop87d.txt */,
@@ -2201,7 +2184,6 @@
 			children = (
 				E196DA9AF0C44890A52BDED7 /* Header Files */,
 				D10B409286274C4EA2145B64 /* Source Files */,
-				21BE6AC427084D7ABD1A4B32 /* CMakeLists.txt */,
 				A6912F40179FEB5E00C4AFA6 /* EGM9615.BIN */,
 				A6912F41179FEB8300C4AFA6 /* WMM.COF */,
 			);
@@ -2251,16 +2233,8 @@
 			children = (
 				66739DBC928742349D1D5176 /* Header Files */,
 				DD0640A49D8D41AE89579C9C /* Source Files */,
-				6864BB473B5441C8B17ACDD2 /* CMakeLists.txt */,
 			);
 			name = gradar_pi;
-			sourceTree = "<group>";
-		};
-		50A08C175FAD45DE897C68F2 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
 		50B36C5F45E64F4CB9BF2026 /* Source Files */ = {
@@ -2466,13 +2440,6 @@
 			name = Sources;
 			sourceTree = "<group>";
 		};
-		5FA1CEC60ECB4D4596F85CE2 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
 		66739DBC928742349D1D5176 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -2488,7 +2455,6 @@
 			children = (
 				CF5545451FBB4D9DB52C925B /* Header Files */,
 				9EBA5EAAF5F34BF2B9DFDBEF /* Source Files */,
-				631C321E2E4B44F887BEF2DB /* CMakeLists.txt */,
 			);
 			name = iacfleet_pi;
 			sourceTree = "<group>";
@@ -2544,7 +2510,6 @@
 			children = (
 				C3E099BC0177452F8D02530F /* Header Files */,
 				3CEF9E89F3254B688E59DD27 /* Source Files */,
-				D4B509862B194E7C95B21F1F /* CMakeLists.txt */,
 			);
 			name = vdr_pi;
 			sourceTree = "<group>";
@@ -2552,7 +2517,6 @@
 		73819D4B3EDA48BCB3B2A5B2 /* ZERO_CHECK */ = {
 			isa = PBXGroup;
 			children = (
-				8E5275A710B54215A4D4B654 /* CMake Rules */,
 				90C03B0053BA4D9DAB6D131C /* CMakeLists.txt */,
 			);
 			name = ZERO_CHECK;
@@ -2643,6 +2607,7 @@
 				3CFAFEFA3A7149AF89C08118 /* ocpn_plugin.h */,
 				2631CC7EBF3C4B9CBA22CAD1 /* gpxdocument.h */,
 				AFC79FB9632E4F1B9B7AC7DA /* json_defs.h */,
+				A696D33F182FAE8F00A5A92A /* jsonval.h */,
 				82B2587C5EDE47C8B760F0E0 /* jsonwriter.h */,
 				0DA24D3E84D644AFA970CF98 /* jsonreader.h */,
 				A635C8AA17C16ED600B3E5E9 /* tinyxml.h */,
@@ -2706,13 +2671,6 @@
 			name = "Source Files";
 			sourceTree = "<group>";
 		};
-		8621BD69EA5E41C28CD450F9 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
 		8853BEBD8FCD40EBA4BCA799 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -2740,31 +2698,15 @@
 			isa = PBXGroup;
 			children = (
 				A60A5F3717C6AA3600416857 /* Frameworks */,
-				A660FE5617E49BE500BD0587 /* Sparkle.framework */,
 				5F860F0DD27F480B9FC13E58 /* Sources */,
 				EE0FFA2E87AD472A8F55180B /* Resources */,
 				D098CF19F8CA4BF48D113DDD /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		8E5275A710B54215A4D4B654 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
-		910CCFDC7DFA407597136350 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
 		921E3A10C8974074A0DEC263 /* pot-update */ = {
 			isa = PBXGroup;
 			children = (
-				D14843D010174F5B97FE3479 /* CMake Rules */,
 			);
 			name = "pot-update";
 			sourceTree = "<group>";
@@ -2800,15 +2742,18 @@
 		A60A5F3717C6AA3600416857 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A60A5F3817C6AB6D00416857 /* libwx_baseu_net-2.9.dylib */,
-				A60A5F3917C6AB6D00416857 /* libwx_baseu_xml-2.9.dylib */,
-				A60A5F3A17C6AB6D00416857 /* libwx_baseu-2.9.dylib */,
-				A60A5F3B17C6AB6D00416857 /* libwx_osx_cocoau_adv-2.9.dylib */,
-				A60A5F3C17C6AB6D00416857 /* libwx_osx_cocoau_aui-2.9.dylib */,
-				A60A5F3D17C6AB6D00416857 /* libwx_osx_cocoau_core-2.9.dylib */,
-				A60A5F3E17C6AB6D00416857 /* libwx_osx_cocoau_gl-2.9.dylib */,
-				A60A5F3F17C6AB6D00416857 /* libwx_osx_cocoau_html-2.9.dylib */,
-				A69CD17817E36A6600B2C059 /* Sparkle.framework */,
+				A6B15807182941C800B18B37 /* libwx_baseu_net-3.0.dylib */,
+				A6B15808182941C800B18B37 /* libwx_baseu_xml-3.0.dylib */,
+				A6B15809182941C800B18B37 /* libwx_baseu-3.0.dylib */,
+				A6B1580A182941C800B18B37 /* libwx_osx_cocoau_adv-3.0.dylib */,
+				A6B1580B182941C800B18B37 /* libwx_osx_cocoau_aui-3.0.dylib */,
+				A6B1580C182941C800B18B37 /* libwx_osx_cocoau_core-3.0.dylib */,
+				A6B1580D182941C800B18B37 /* libwx_osx_cocoau_gl-3.0.dylib */,
+				A6B1580E182941C800B18B37 /* libwx_osx_cocoau_html-3.0.dylib */,
+				A6B1581018297A7F00B18B37 /* libwx_osx_cocoau_qa-3.0.dylib */,
+				A6B1581118297A7F00B18B37 /* libwx_osx_cocoau_webview-3.0.dylib */,
+				A6B1581218297A7F00B18B37 /* libwx_osx_cocoau_xrc-3.0.dylib */,
+				A6B1580F182941C800B18B37 /* Sparkle.framework */,
 			);
 			name = Frameworks;
 			path = "/Users/heidi/devel/Cocoa-OCPN";
@@ -2892,6 +2837,10 @@
 				A6B4A55017A51B9E00E3A5D0 /* icons.h */,
 				A6B4A55117A51BC100E3A5D0 /* georef.h */,
 				A635C8A317C16DD000B3E5E9 /* tinyxml.h */,
+				A696D340182FAFB500A5A92A /* json_defs.h */,
+				A696D341182FAFEA00A5A92A /* jsonreader.h */,
+				A696D342182FB07100A5A92A /* jsonval.h */,
+				A696D343182FB09100A5A92A /* jsonwriter.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -2922,6 +2871,9 @@
 				A635C8A417C16E1D00B3E5E9 /* tinyxml.cpp */,
 				A635C8A617C16E4500B3E5E9 /* tinyxmlerror.cpp */,
 				A635C8A717C16E4500B3E5E9 /* tinyxmlparser.cpp */,
+				A696D344182FB0F300A5A92A /* jsonreader.cpp */,
+				A696D346182FB11800A5A92A /* jsonval.cpp */,
+				A696D348182FB13C00A5A92A /* jsonwriter.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -2959,13 +2911,6 @@
 				A647085017A14AB200A16918 /* WatchmanUI.cpp */,
 			);
 			name = "Source Files";
-			sourceTree = "<group>";
-		};
-		A71B1D6A91F1483599E533AA /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
 		A9DFE84696B94EA5B2A4099C /* Header Files */ = {
@@ -3020,7 +2965,6 @@
 		AB01852AFF5A410482A1255F /* logbookkonni-i18n */ = {
 			isa = PBXGroup;
 			children = (
-				CA3495B849DD444F8A5703E5 /* CMake Rules */,
 				01FEDD7A85E04F02AA3C5E97 /* CMakeLists.txt */,
 			);
 			name = "logbookkonni-i18n";
@@ -3029,17 +2973,9 @@
 		B36B63B7F4414C8C952598EA /* grib-i18n */ = {
 			isa = PBXGroup;
 			children = (
-				910CCFDC7DFA407597136350 /* CMake Rules */,
 				3FDF1C8E12A342F89D6B881F /* CMakeLists.txt */,
 			);
 			name = "grib-i18n";
-			sourceTree = "<group>";
-		};
-		B46AE56E42DB401B9507DA64 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
 		BAEF057CB9D547249F4426BB /* weatherfax_pi */ = {
@@ -3047,7 +2983,6 @@
 			children = (
 				0AF4884F58B9488AAA53F0F2 /* Header Files */,
 				D64D87D8395348D4978A9B5E /* Source Files */,
-				88C0B8B3B682475CBC0E3329 /* CMakeLists.txt */,
 			);
 			name = weatherfax_pi;
 			sourceTree = "<group>";
@@ -3111,17 +3046,9 @@
 		C8FABBD57384476A8419D3C0 /* weatherfax-i18n */ = {
 			isa = PBXGroup;
 			children = (
-				8621BD69EA5E41C28CD450F9 /* CMake Rules */,
 				88C0B8B3B682475CBC0E3329 /* CMakeLists.txt */,
 			);
 			name = "weatherfax-i18n";
-			sourceTree = "<group>";
-		};
-		CA3495B849DD444F8A5703E5 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
 		CD113B3A09BD4020A8BFB595 /* NMEA0183 */ = {
@@ -3220,13 +3147,6 @@
 			name = "Source Files";
 			sourceTree = "<group>";
 		};
-		D14843D010174F5B97FE3479 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
 		D64D87D8395348D4978A9B5E /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -3295,7 +3215,6 @@
 			children = (
 				97913B593DF245A09C5087DD /* Header Files */,
 				7B9D8561DC74459D84272626 /* Source Files */,
-				C94D4AFD5DB24E71B42FB4F9 /* CMakeLists.txt */,
 			);
 			name = findit_pi;
 			sourceTree = "<group>";
@@ -3342,7 +3261,6 @@
 		DEB45E3ACA8846D0B5F72958 /* vdr-i18n */ = {
 			isa = PBXGroup;
 			children = (
-				5FA1CEC60ECB4D4596F85CE2 /* CMake Rules */,
 				D4B509862B194E7C95B21F1F /* CMakeLists.txt */,
 			);
 			name = "vdr-i18n";
@@ -3359,13 +3277,6 @@
 				A6034DFB56444882ADAF221E /* WMM_COF.h */,
 			);
 			name = "Header Files";
-			sourceTree = "<group>";
-		};
-		E93CC7F3AB164CA7ABE427F8 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
 		EC64FBC2CB6B4295A282F064 /* Source Files */ = {
@@ -3409,7 +3320,6 @@
 		EE6657A52EBF4DDBBD47045F /* IACFleet-i18n */ = {
 			isa = PBXGroup;
 			children = (
-				F4EB0BFAF1844469B2A9AB14 /* CMake Rules */,
 				631C321E2E4B44F887BEF2DB /* CMakeLists.txt */,
 			);
 			name = "IACFleet-i18n";
@@ -3418,7 +3328,6 @@
 		F3435C5EDDEF4050817FF762 /* dashboard-i18n */ = {
 			isa = PBXGroup;
 			children = (
-				164F388DD14B47EAAE9CEF09 /* CMake Rules */,
 				A785AF65547B4A8C8665D093 /* CMakeLists.txt */,
 			);
 			name = "dashboard-i18n";
@@ -3477,13 +3386,6 @@
 				2786851D391B45F7AC3EE91E /* rsa.cpp */,
 			);
 			name = "Source Files";
-			sourceTree = "<group>";
-		};
-		F4EB0BFAF1844469B2A9AB14 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3742,7 +3644,7 @@
 				3B5296F4970E4372ACC86314 /* CopyFiles */,
 				3C080A65A5AE40DDA3718AF1 /* CopyFiles */,
 				F5DA126B17E74064BB52EF4E /* Sources */,
-				A68ADCA0179891DB003CAB88 /* CopyFiles */,
+				A68ADCA0179891DB003CAB88 /* Copy Files */,
 			);
 			buildRules = (
 			);
@@ -3845,53 +3747,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		0E12C297821B4421BAAAE9F0 /* CMake Rules */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "CMake Rules";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make -C /Users/heidi/devel/Cocoa-OCPN/buildXcode -f /Users/heidi/devel/Cocoa-OCPN/buildXcode/CMakeScripts/pot-update_cmakeRulesBuildPhase.make$CONFIGURATION all";
-			showEnvVarsInLog = 0;
-		};
-		7DDEC199CE8544D286B1B858 /* CMake Rules */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "CMake Rules";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make -C /Users/heidi/devel/Cocoa-OCPN/buildXcode -f /Users/heidi/devel/Cocoa-OCPN/buildXcode/CMakeScripts/po-update_cmakeRulesBuildPhase.make$CONFIGURATION all";
-			showEnvVarsInLog = 0;
-		};
-		7E421867C05846C593DD2D3A /* CMake Rules */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "CMake Rules";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make -C /Users/heidi/devel/Cocoa-OCPN/buildXcode -f /Users/heidi/devel/Cocoa-OCPN/buildXcode/CMakeScripts/i18n_cmakeRulesBuildPhase.make$CONFIGURATION all";
-			showEnvVarsInLog = 0;
-		};
-		D0372EBBD29147ABB6C8D520 /* CMake Rules */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "CMake Rules";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make -C /Users/heidi/devel/Cocoa-OCPN/buildXcode -f /Users/heidi/devel/Cocoa-OCPN/buildXcode/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		06DFCC6C4CB846C6A9CF1C9B /* Sources */ = {
@@ -4282,15 +4137,15 @@
 				A6B4A56E17A51E4400E3A5D0 /* Boat.cpp in Sources */,
 				A6B4A57017A51E6600E3A5D0 /* RouteMap.cpp in Sources */,
 				A6B4A57217A51E8600E3A5D0 /* RouteMapOverlay.cpp in Sources */,
+				A696D349182FB13C00A5A92A /* jsonwriter.cpp in Sources */,
 				A6B4A57417A51EAB00E3A5D0 /* Utilities.cpp in Sources */,
+				A696D347182FB11800A5A92A /* jsonval.cpp in Sources */,
 				A6B4A57617A51ED000E3A5D0 /* WeatherRoutingUI.cpp in Sources */,
 				A6B4A57817A51EF300E3A5D0 /* icons.cpp in Sources */,
 				A6B4A57A17A51F1D00E3A5D0 /* georef.c in Sources */,
 				A6B4A58617A528B400E3A5D0 /* GribRecord.cpp in Sources */,
 				A6B4A58717A528FF00E3A5D0 /* zuFile.cpp in Sources */,
-				A6B4A58817A5295100E3A5D0 /* jsonwriter.cpp in Sources */,
-				A6B4A58917A5295100E3A5D0 /* jsonreader.cpp in Sources */,
-				A6B4A58A17A5295100E3A5D0 /* jsonval.cpp in Sources */,
+				A696D345182FB0F300A5A92A /* jsonreader.cpp in Sources */,
 				A635C8A517C16E1D00B3E5E9 /* tinyxml.cpp in Sources */,
 				A635C8A817C16E4500B3E5E9 /* tinyxmlerror.cpp in Sources */,
 				A635C8A917C16E4500B3E5E9 /* tinyxmlparser.cpp in Sources */,
@@ -4557,6 +4412,11 @@
 			target = A6D583A717A141220094D709 /* watchman-i18n */;
 			targetProxy = A647085417A14B1100A16918 /* PBXContainerItemProxy */;
 		};
+		A6B158201829915400B18B37 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A87580D1DD2B4F81B39F3B5A /* ZERO_CHECK */;
+			targetProxy = A6B1581F1829915400B18B37 /* PBXContainerItemProxy */;
+		};
 		A6B4A58317A5229300E3A5D0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A6B4A52F17A515FA00E3A5D0 /* weather_routing_pi */;
@@ -4636,8 +4496,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -4699,8 +4559,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -4758,17 +4618,17 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_osx_cocoau_xrc-3.0",
-					"-lwx_osx_cocoau_webview-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_qa-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_osx_cocoau_xrc-3.1",
+					"-lwx_osx_cocoau_webview-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_qa-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libNMEA0183.a",
 					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libS57ENC.a",
 					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libGARMINHOST.a",
@@ -4818,8 +4678,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -4882,8 +4742,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -4945,8 +4805,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5004,14 +4864,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release/libNMEA0183.a",
 					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release/libS57ENC.a",
 					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release/libGARMINHOST.a",
@@ -5063,8 +4923,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5129,8 +4989,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5191,8 +5051,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5260,8 +5120,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5329,8 +5189,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5388,14 +5248,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -5437,8 +5297,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5506,8 +5366,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5565,14 +5425,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = findit_pi;
@@ -5613,8 +5473,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5682,8 +5542,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5739,14 +5599,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = vdr_pi;
@@ -5792,8 +5652,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5851,14 +5711,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					"-framework",
 					AGL,
 				);
@@ -5907,8 +5767,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -5964,14 +5824,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -6008,8 +5868,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6063,8 +5923,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6118,8 +5978,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6190,8 +6050,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6264,8 +6124,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6335,8 +6195,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6395,14 +6255,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = dashboard_pi;
@@ -6438,8 +6298,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6493,8 +6353,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6553,8 +6413,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6622,8 +6482,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6688,8 +6548,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6747,14 +6607,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = iacfleet_pi;
@@ -6795,8 +6655,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6855,8 +6715,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6916,8 +6776,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -6971,14 +6831,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = celestial_navigation_pi;
@@ -7020,8 +6880,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7075,14 +6935,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = celestial_navigation_pi;
@@ -7128,8 +6988,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7188,14 +7048,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = logbookkonni_pi;
@@ -7236,8 +7096,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7300,8 +7160,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7370,8 +7230,8 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/calculator_pi/src/expression_parser",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7429,14 +7289,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					"-framework",
 					AGL,
 				);
@@ -7487,8 +7347,8 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/calculator_pi/src/expression_parser",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7546,14 +7406,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					"-framework",
 					AGL,
 				);
@@ -7598,8 +7458,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7662,8 +7522,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7726,8 +7586,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7790,8 +7650,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -7921,14 +7781,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					"-framework",
 					AGL,
 				);
@@ -8038,14 +7898,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					"-framework",
 					AGL,
 				);
@@ -8096,8 +7956,8 @@
 				HEADER_SEARCH_PATHS = (
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src",
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src/libaudiofile",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8157,14 +8017,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					"-framework",
 					AGL,
 				);
@@ -8215,8 +8075,8 @@
 				HEADER_SEARCH_PATHS = (
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src",
 					"/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src/libaudiofile",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8276,14 +8136,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					"-framework",
 					AGL,
 				);
@@ -8326,8 +8186,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8390,8 +8250,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8454,8 +8314,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8525,8 +8385,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8585,14 +8445,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -8631,8 +8491,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8711,8 +8571,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8770,14 +8630,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = findit_pi;
@@ -8832,8 +8692,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8901,8 +8761,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -8958,14 +8818,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = vdr_pi;
@@ -9006,8 +8866,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9065,8 +8925,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9120,8 +8980,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9180,8 +9040,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9250,8 +9110,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9309,14 +9169,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = iacfleet_pi;
@@ -9363,8 +9223,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9422,14 +9282,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -9468,8 +9328,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9548,8 +9408,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9608,14 +9468,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = logbookkonni_pi;
@@ -9661,8 +9521,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9721,14 +9581,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = dashboard_pi;
@@ -9769,8 +9629,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9839,8 +9699,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -9898,14 +9758,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					"-framework",
 					AGL,
 				);
@@ -9954,8 +9814,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -10011,14 +9871,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_aui-3.0",
-					"-lwx_osx_cocoau_gl-3.0",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -10057,8 +9917,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -10126,8 +9986,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-2.9",
-					"/usr/local/include/wx-2.9",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -10181,8 +10041,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -10242,8 +10102,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -10312,8 +10172,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
@@ -10372,14 +10232,14 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_baseu-2.9",
-					"-lwx_osx_cocoau_core-2.9",
-					"-lwx_baseu_net-2.9",
-					"-lwx_baseu_xml-2.9",
-					"-lwx_osx_cocoau_html-2.9",
-					"-lwx_osx_cocoau_adv-2.9",
-					"-lwx_osx_cocoau_aui-2.9",
-					"-lwx_osx_cocoau_gl-2.9",
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -10421,8 +10281,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
-					"/usr/local/include/wx-3.0",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
 					"/Users/heidi/devel/Cocoa-OCPN/include",
 					"/Users/heidi/devel/Cocoa-OCPN/src",
 					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
