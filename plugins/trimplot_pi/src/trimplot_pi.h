@@ -92,7 +92,7 @@ class ocpnDC;
 class TrimPlotDialog;
 class PreferencesDialog;
 
-class trimplot_pi : public wxEvtHandler, public opencpn_plugin_18
+class trimplot_pi : public wxEvtHandler, public opencpn_plugin_110
 {
 public:
       trimplot_pi(void *ppimgr);

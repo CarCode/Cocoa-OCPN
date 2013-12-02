@@ -69,7 +69,7 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 //---------------------------------------------------------------------------------------------------------
 
 trimplot_pi::trimplot_pi(void *ppimgr)
-    : opencpn_plugin_18(ppimgr)
+    : opencpn_plugin_110(ppimgr)
 {
     // Create the PlugIn icons
     initialize_images();
@@ -87,9 +87,13 @@ int trimplot_pi::Init(void)
 
     //    Get a pointer to the opencpn display canvas, to use as a parent for the POI Manager dialog
     m_parent_window = GetOCPNCanvasWindow();
-
+#ifdef __WXOSX__
+//    m_Preferences = new PreferencesDialog( *this, m_parent_window);
+#else
     m_Preferences = new PreferencesDialog(m_parent_window, *this);
-    
+    m_Preferences->Fit();
+    m_Preferences->Show();
+#endif
     LoadConfig(); //    And load the configuration items
     
     m_leftclick_tool_id  = InsertPlugInTool
@@ -331,6 +335,7 @@ void trimplot_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix)
 
 void trimplot_pi::ShowPreferencesDialog( wxWindow* parent )
 {
+    m_Preferences = new PreferencesDialog(m_parent_window, *this);
     m_Preferences->Show();
 }
 

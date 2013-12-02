@@ -1,0 +1,141 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: trimplot_pi 3.4.64\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-12-01 11:02+0100\n"
+"PO-Revision-Date: 2013-12-01 11:02+0100\n"
+"Last-Translator: CarCode <carcode@me.com>\n"
+"Language-Team: CarCode <carcode@me.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/TrimPlotUI.cpp:35 ../src/TrimPlotUI.cpp:43 ../src/TrimPlotUI.cpp:51
+#: ../src/TrimPlotUI.cpp:59
+msgid "N/A"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:47
+msgid "Speed via Position"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:55
+msgid "Speed Percentage vs Straight course"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:102
+msgid "Speed"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:109 ../src/TrimPlotUI.cpp:155
+#: ../src/TrimPlotUI.cpp:201
+msgid "Enable"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:119 ../src/TrimPlotUI.cpp:165
+msgid "Scale"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:123
+msgid "3"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:126
+msgid "knots"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:130 ../src/TrimPlotUI.cpp:176
+#: ../src/TrimPlotUI.cpp:222
+msgid "Using"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:137 ../src/TrimPlotUI.cpp:183
+#: ../src/TrimPlotUI.cpp:229
+msgid "seconds"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:148
+msgid "Course"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:169
+msgid "20"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:172
+msgid "degrees"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:194
+msgid "Course Prediction Display"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:211
+msgid "Length"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:218
+msgid "minutes"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:244
+msgid "About"
+msgstr ""
+
+#: ../src/TrimPlotUI.cpp:288
+msgid ""
+"The trimplot plugin for opencpn is\n"
+"designed to monitor speed and course to make the results of changes to sail "
+"trim obvious. \n"
+"\n"
+"For example, tightening a vang or adjusting a traveler may produce such a "
+"slight result it is difficult to gauge the outcome without feedback.\n"
+"\n"
+"The predictor line allows setting the sample time for smoother prediction "
+"than the builtin predictor.\n"
+"\n"
+"License: GPLv3+\n"
+"\n"
+"Source Code:\n"
+"https://github.com/seandepagnier/trimplot_pi\n"
+"\n"
+"Author:\n"
+"Sean D'Epagnier\n"
+"\n"
+"Many thanks to all of the translators and testers."
+msgstr ""
+
+#: ../src/TrimPlotUI.h:57
+msgid "Trim Plot"
+msgstr ""
+
+#: ../src/TrimPlotUI.h:102
+msgid "TrimPlot Preferences"
+msgstr ""
+
+#: ../src/TrimPlotUI.h:121
+msgid "About TrimPlot"
+msgstr ""
+
+#: ../src/trimplot_pi.cpp:97 ../src/trimplot_pi.cpp:158
+msgid "TrimPlot"
+msgstr ""
+
+#: ../src/trimplot_pi.cpp:164
+msgid "TrimPlot PlugIn for OpenCPN"
+msgstr ""
+
+#: ../src/trimplot_pi.cpp:169
+msgid ""
+"TrimPlot PlugIn for OpenCPN\n"
+"Plot trim and course over ground to make the result of small sail trim "
+"changes evident.\n"
+"The TrimPlot plugin was written by Sean D'Epagnier\n"
+msgstr ""

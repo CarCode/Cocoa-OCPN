@@ -36,7 +36,7 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    Mac Hilfe usw.
 
 b. Diese Version basiert auf Release-Version von wxWidgets 3.1.0 mit
-   entsprechenden dylibs vom 27. November 2013. Die Einbindung der Libs als
+   entsprechenden dylibs vom 02. Dezember 2013. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -59,6 +59,26 @@ Apple LLVM version 5.0 (clang-500.2.75) (based on LLVM 3.3svn)
 Target: x86_64-apple-darwin12.5.0
 SDK 10.9 Mavericks
 Thread model: posix
+
+wxWidgets Direktive:
+Sourcen holen von https://github.com/wxWidgets/wxWidgets.git branch master
+Ich verwende die GitHub.app für Mac OS X.
+
+Im Sourcen-Tree neues Verzeichnis erstellen z.B. "build-cocoa-debug".
+Im Terminal in dies Verzeichnis wechseln und konfigurieren mit:
+
+../configure --with-osx_cocoa --enable-debug --enable-shared --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk --with-macosx-version-min=10.8 --enable-unicode --enable-mimetype=yes
+
+Dann Eingabe von: make
+und schließlich Eingabe von: sudo make install
+
+Die dylibs und Header werden installiert in: /usr/local/Lib/
+bzw. /usr/local/include/wx-3.1
+
+Um eine eigenständige OpenCPN-Version zu erhalten, müssen OpenCPN und die
+dylibs (im Contents/Frameworks/ Verzeichnis bzw. Contents/Plugins/ Verzeichnis)
+mit "install_name_tool -change" bearbeitet werden!
+Siehe batch.sh und batchwx.sh
 -----------------------------------------------------------------------
-27. November 2013
+02. Dezember 2013
 

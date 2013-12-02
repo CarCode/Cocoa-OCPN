@@ -1,0 +1,163 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: trimplot_pi 3.4.64\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-12-01 11:02+0100\n"
+"PO-Revision-Date: 2013-12-01 18:48+0100\n"
+"Last-Translator: CarCode <carcode@me.com>\n"
+"Language-Team: CarCode <carcode@me.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: ../src/TrimPlotUI.cpp:35 ../src/TrimPlotUI.cpp:43 ../src/TrimPlotUI.cpp:51
+#: ../src/TrimPlotUI.cpp:59
+msgid "N/A"
+msgstr "N/A"
+
+#: ../src/TrimPlotUI.cpp:47
+msgid "Speed via Position"
+msgstr "Geschw. von Pos.-Daten"
+
+#: ../src/TrimPlotUI.cpp:55
+msgid "Speed Percentage vs Straight course"
+msgstr "Geschw.-Änderung prozentual zu geradem Kurs"
+
+#: ../src/TrimPlotUI.cpp:102
+msgid "Speed"
+msgstr "Geschw."
+
+#: ../src/TrimPlotUI.cpp:109 ../src/TrimPlotUI.cpp:155
+#: ../src/TrimPlotUI.cpp:201
+msgid "Enable"
+msgstr "Aktiviere"
+
+#: ../src/TrimPlotUI.cpp:119 ../src/TrimPlotUI.cpp:165
+msgid "Scale"
+msgstr "Skalierung"
+
+#: ../src/TrimPlotUI.cpp:123
+msgid "3"
+msgstr "3"
+
+#: ../src/TrimPlotUI.cpp:126
+msgid "knots"
+msgstr "Knoten"
+
+#: ../src/TrimPlotUI.cpp:130 ../src/TrimPlotUI.cpp:176
+#: ../src/TrimPlotUI.cpp:222
+msgid "Using"
+msgstr "Verwende"
+
+#: ../src/TrimPlotUI.cpp:137 ../src/TrimPlotUI.cpp:183
+#: ../src/TrimPlotUI.cpp:229
+msgid "seconds"
+msgstr "Sekunden"
+
+#: ../src/TrimPlotUI.cpp:148
+msgid "Course"
+msgstr "Kurs"
+
+#: ../src/TrimPlotUI.cpp:169
+msgid "20"
+msgstr "20"
+
+#: ../src/TrimPlotUI.cpp:172
+msgid "degrees"
+msgstr "Grad"
+
+#: ../src/TrimPlotUI.cpp:194
+msgid "Course Prediction Display"
+msgstr "Kurs Vorhersage Anzeige"
+
+#: ../src/TrimPlotUI.cpp:211
+msgid "Length"
+msgstr "Länge"
+
+#: ../src/TrimPlotUI.cpp:218
+msgid "minutes"
+msgstr "Minuten"
+
+#: ../src/TrimPlotUI.cpp:244
+msgid "About"
+msgstr "Über"
+
+#: ../src/TrimPlotUI.cpp:288
+msgid ""
+"The trimplot plugin for opencpn is\n"
+"designed to monitor speed and course to make the results of changes to sail "
+"trim obvious. \n"
+"\n"
+"For example, tightening a vang or adjusting a traveler may produce such a "
+"slight result it is difficult to gauge the outcome without feedback.\n"
+"\n"
+"The predictor line allows setting the sample time for smoother prediction "
+"than the builtin predictor.\n"
+"\n"
+"License: GPLv3+\n"
+"\n"
+"Source Code:\n"
+"https://github.com/seandepagnier/trimplot_pi\n"
+"\n"
+"Author:\n"
+"Sean D'Epagnier\n"
+"\n"
+"Many thanks to all of the translators and testers."
+msgstr ""
+"Das Trimplot Plugin für OpenCPN ist dazu gedacht,\n"
+"Geschwindigkeit und Kurs zu überwachen, um Änderungen des Segeltrimms zu "
+"bemerken. \n"
+"\n"
+"Es ist z.B. schwierig, das Resultat beim Straffen des Baumniederholers oder "
+"der Traveller-Justierung ohne Rückmeldung zu erkennen.\n"
+"\n"
+"Mit der Vorhersage-Linie kann die Daten-Aufnahmezeit eingestellt werden, um "
+"eine weichere Vorhersage zu bekommen als die eingebaute Vorhersage.\n"
+"\n"
+"Lizenz: GPLv3+\n"
+"\n"
+"Quell-Code:\n"
+"https://github.com/seandepagnier/trimplot_pi\n"
+"\n"
+"Autor:\n"
+"Sean D'Epagnier\n"
+"\n"
+"Danke an die Übersetzer und Tester."
+
+#: ../src/TrimPlotUI.h:57
+msgid "Trim Plot"
+msgstr "Trim Plot"
+
+#: ../src/TrimPlotUI.h:102
+msgid "TrimPlot Preferences"
+msgstr "TrimPlot Einstellungen"
+
+#: ../src/TrimPlotUI.h:121
+msgid "About TrimPlot"
+msgstr "Über TrimPlot"
+
+#: ../src/trimplot_pi.cpp:97 ../src/trimplot_pi.cpp:158
+msgid "TrimPlot"
+msgstr "TrimPlot"
+
+#: ../src/trimplot_pi.cpp:164
+msgid "TrimPlot PlugIn for OpenCPN"
+msgstr "TrimPlot PlugIn für OpenCPN"
+
+#: ../src/trimplot_pi.cpp:169
+msgid ""
+"TrimPlot PlugIn for OpenCPN\n"
+"Plot trim and course over ground to make the result of small sail trim "
+"changes evident.\n"
+"The TrimPlot plugin was written by Sean D'Epagnier\n"
+msgstr ""
+"TrimPlot PlugIn für OpenCPN\n"
+"Plottet Trimm und Kurs über Grund, um kleine Segeltrimm-Änderungen bemerkbar "
+"zu machen.\n"
+"Das TrimPlot Plugin wurde von Sean D'Epagnier geschrieben\n"

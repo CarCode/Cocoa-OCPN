@@ -111,6 +111,16 @@
 			name = "calculator-i18n";
 			productName = "calculator-i18n";
 		};
+		A68FF3D4184A625D00C65557 /* trimplot-i18n */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = A68FF3D5184A625D00C65557 /* Build configuration list for PBXAggregateTarget "trimplot-i18n" */;
+			buildPhases = (
+			);
+			dependencies = (
+			);
+			name = "trimplot-i18n";
+			productName = "gradar-i18n";
+		};
 		A6B4A52B17A5143700E3A5D0 /* weather_routing-i18n */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = A6B4A52C17A5143700E3A5D0 /* Build configuration list for PBXAggregateTarget "weather_routing-i18n" */;
@@ -157,6 +167,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				A68FF415184A686400C65557 /* PBXTargetDependency */,
 				EAAB4E87696645CDAEA03510 /* PBXTargetDependency */,
 				785D38FA2EB248D992323ED9 /* PBXTargetDependency */,
 				71ADD26CEFF44A5FB372EE29 /* PBXTargetDependency */,
@@ -513,6 +524,12 @@
 		A67A0F1D178C3B540056F9C0 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F1C178C3B540056F9C0 /* pugixml.cpp */; };
 		A67A0F1F178C3B7F0056F9C0 /* OCPNRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F1E178C3B7F0056F9C0 /* OCPNRegion.cpp */; };
 		A67A0F22178C3C5D0056F9C0 /* NMEALogWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F21178C3C5D0056F9C0 /* NMEALogWindow.cpp */; };
+		A68FF40B184A673D00C65557 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF40A184A673D00C65557 /* icons.cpp */; };
+		A68FF40D184A676100C65557 /* PreferencesDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF40C184A676100C65557 /* PreferencesDialog.cpp */; };
+		A68FF40F184A679200C65557 /* trimplot_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF40E184A679200C65557 /* trimplot_pi.cpp */; };
+		A68FF411184A67B300C65557 /* TrimPlotDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF410184A67B300C65557 /* TrimPlotDialog.cpp */; };
+		A68FF413184A67E800C65557 /* TrimPlotUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF412184A67E800C65557 /* TrimPlotUI.cpp */; };
+		A68FF416184A7B4D00C65557 /* libtrimplot_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68FF3FB184A62A700C65557 /* libtrimplot_pi.dylib */; };
 		A696D345182FB0F300A5A92A /* jsonreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A696D344182FB0F300A5A92A /* jsonreader.cpp */; };
 		A696D347182FB11800A5A92A /* jsonval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A696D346182FB11800A5A92A /* jsonval.cpp */; };
 		A696D349182FB13C00A5A92A /* jsonwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A696D348182FB13C00A5A92A /* jsonwriter.cpp */; };
@@ -849,6 +866,20 @@
 			remoteGlobalIDString = A6D583A717A141220094D709;
 			remoteInfo = "watchman-i18n";
 		};
+		A68FF3FC184A632B00C65557 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A68FF3D4184A625D00C65557;
+			remoteInfo = "trimplot-i18n";
+		};
+		A68FF414184A686400C65557 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A68FF3D8184A62A700C65557;
+			remoteInfo = trimplot_pi;
+		};
 		A6B1581F1829915400B18B37 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
@@ -1059,6 +1090,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				A68FF416184A7B4D00C65557 /* libtrimplot_pi.dylib in Copy Files */,
 				A6AC8E7117EC64FC00872D7E /* libcelestial_navigation_pi.dylib in Copy Files */,
 				A6AC8E7217EC64FC00872D7E /* libdashboard_pi.dylib in Copy Files */,
 				A6AC8E7317EC64FC00872D7E /* libfindit_pi.dylib in Copy Files */,
@@ -1604,6 +1636,17 @@
 		A67A0F1E178C3B7F0056F9C0 /* OCPNRegion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OCPNRegion.cpp; path = src/OCPNRegion.cpp; sourceTree = "<group>"; };
 		A67A0F20178C3C0C0056F9C0 /* NMEALogWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NMEALogWindow.h; path = include/NMEALogWindow.h; sourceTree = "<group>"; };
 		A67A0F21178C3C5D0056F9C0 /* NMEALogWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NMEALogWindow.cpp; path = src/NMEALogWindow.cpp; sourceTree = "<group>"; };
+		A68FF3FB184A62A700C65557 /* libtrimplot_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libtrimplot_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A68FF405184A669700C65557 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/trimplot_pi/src/icons.h; sourceTree = "<group>"; };
+		A68FF406184A66B900C65557 /* PreferencesDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesDialog.h; path = plugins/trimplot_pi/src/PreferencesDialog.h; sourceTree = "<group>"; };
+		A68FF407184A66DD00C65557 /* trimplot_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = trimplot_pi.h; path = plugins/trimplot_pi/src/trimplot_pi.h; sourceTree = "<group>"; };
+		A68FF408184A66FA00C65557 /* TrimPlotDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrimPlotDialog.h; path = plugins/trimplot_pi/src/TrimPlotDialog.h; sourceTree = "<group>"; };
+		A68FF409184A671700C65557 /* TrimPlotUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrimPlotUI.h; path = plugins/trimplot_pi/src/TrimPlotUI.h; sourceTree = "<group>"; };
+		A68FF40A184A673D00C65557 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/trimplot_pi/src/icons.cpp; sourceTree = "<group>"; };
+		A68FF40C184A676100C65557 /* PreferencesDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferencesDialog.cpp; path = plugins/trimplot_pi/src/PreferencesDialog.cpp; sourceTree = "<group>"; };
+		A68FF40E184A679200C65557 /* trimplot_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = trimplot_pi.cpp; path = plugins/trimplot_pi/src/trimplot_pi.cpp; sourceTree = "<group>"; };
+		A68FF410184A67B300C65557 /* TrimPlotDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrimPlotDialog.cpp; path = plugins/trimplot_pi/src/TrimPlotDialog.cpp; sourceTree = "<group>"; };
+		A68FF412184A67E800C65557 /* TrimPlotUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrimPlotUI.cpp; path = plugins/trimplot_pi/src/TrimPlotUI.cpp; sourceTree = "<group>"; };
 		A6912F3D179FEA6600C4AFA6 /* Celestial Navigation Basics.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "Celestial Navigation Basics.html"; path = "plugins/celestial_navigation_pi/data/Celestial Navigation Basics.html"; sourceTree = "<group>"; };
 		A6912F3E179FEAA600C4AFA6 /* IGRF11.COF */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = IGRF11.COF; path = plugins/celestial_navigation_pi/data/IGRF11.COF; sourceTree = "<group>"; };
 		A6912F3F179FEAC500C4AFA6 /* vsop87d.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vsop87d.txt; path = plugins/celestial_navigation_pi/data/vsop87d.txt; sourceTree = "<group>"; };
@@ -2430,6 +2473,7 @@
 				2451BD609F1942A79B83145C /* logbookkonni_pi */,
 				DEB45E3ACA8846D0B5F72958 /* vdr-i18n */,
 				6F9B0090875E48649E9DB0A1 /* vdr_pi */,
+				A68FF402184A660100C65557 /* trimplot_pi */,
 				A6D583AB17A141880094D709 /* watchman_pi */,
 				A6B4A53A17A5163C00E3A5D0 /* weather_routing_pi */,
 				C8FABBD57384476A8419D3C0 /* weatherfax-i18n */,
@@ -2698,8 +2742,8 @@
 			isa = PBXGroup;
 			children = (
 				A60A5F3717C6AA3600416857 /* Frameworks */,
-				5F860F0DD27F480B9FC13E58 /* Sources */,
 				EE0FFA2E87AD472A8F55180B /* Resources */,
+				5F860F0DD27F480B9FC13E58 /* Sources */,
 				D098CF19F8CA4BF48D113DDD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -2802,6 +2846,39 @@
 				A60F747417A02E8C00A6160F /* variablelist.h */,
 			);
 			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		A68FF402184A660100C65557 /* trimplot_pi */ = {
+			isa = PBXGroup;
+			children = (
+				A68FF403184A661100C65557 /* Header Files */,
+				A68FF404184A662A00C65557 /* Source Files */,
+			);
+			name = trimplot_pi;
+			sourceTree = "<group>";
+		};
+		A68FF403184A661100C65557 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				A68FF409184A671700C65557 /* TrimPlotUI.h */,
+				A68FF408184A66FA00C65557 /* TrimPlotDialog.h */,
+				A68FF407184A66DD00C65557 /* trimplot_pi.h */,
+				A68FF406184A66B900C65557 /* PreferencesDialog.h */,
+				A68FF405184A669700C65557 /* icons.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		A68FF404184A662A00C65557 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				A68FF412184A67E800C65557 /* TrimPlotUI.cpp */,
+				A68FF410184A67B300C65557 /* TrimPlotDialog.cpp */,
+				A68FF40E184A679200C65557 /* trimplot_pi.cpp */,
+				A68FF40C184A676100C65557 /* PreferencesDialog.cpp */,
+				A68FF40A184A673D00C65557 /* icons.cpp */,
+			);
+			name = "Source Files";
 			sourceTree = "<group>";
 		};
 		A6B4A53A17A5163C00E3A5D0 /* weather_routing_pi */ = {
@@ -3128,6 +3205,7 @@
 				A60F746517A0217D00A6160F /* libcalculator_pi.dylib */,
 				A6D583A617A141110094D709 /* libwatchman_pi.dylib */,
 				A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */,
+				A68FF3FB184A62A700C65557 /* libtrimplot_pi.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3551,6 +3629,22 @@
 			productReference = A60F746517A0217D00A6160F /* libcalculator_pi.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		A68FF3D8184A62A700C65557 /* trimplot_pi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A68FF3F8184A62A700C65557 /* Build configuration list for PBXNativeTarget "trimplot_pi" */;
+			buildPhases = (
+				A68FF3DB184A62A700C65557 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A68FF3FD184A632B00C65557 /* PBXTargetDependency */,
+			);
+			name = trimplot_pi;
+			productName = gradar_pi;
+			productReference = A68FF3FB184A62A700C65557 /* libtrimplot_pi.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		A6B4A52F17A515FA00E3A5D0 /* weather_routing_pi */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A6B4A53617A515FA00E3A5D0 /* Build configuration list for PBXNativeTarget "weather_routing_pi" */;
@@ -3731,6 +3825,8 @@
 				A6D5839C17A141110094D709 /* watchman_pi */,
 				A6B4A52B17A5143700E3A5D0 /* weather_routing-i18n */,
 				A6B4A52F17A515FA00E3A5D0 /* weather_routing_pi */,
+				A68FF3D4184A625D00C65557 /* trimplot-i18n */,
+				A68FF3D8184A62A700C65557 /* trimplot_pi */,
 			);
 		};
 /* End PBXProject section */
@@ -4117,6 +4213,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A68FF3DB184A62A700C65557 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A68FF40F184A679200C65557 /* trimplot_pi.cpp in Sources */,
+				A68FF413184A67E800C65557 /* TrimPlotUI.cpp in Sources */,
+				A68FF40D184A676100C65557 /* PreferencesDialog.cpp in Sources */,
+				A68FF411184A67B300C65557 /* TrimPlotDialog.cpp in Sources */,
+				A68FF40B184A673D00C65557 /* icons.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A6B4A53217A515FA00E3A5D0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4412,6 +4520,16 @@
 			target = A6D583A717A141220094D709 /* watchman-i18n */;
 			targetProxy = A647085417A14B1100A16918 /* PBXContainerItemProxy */;
 		};
+		A68FF3FD184A632B00C65557 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A68FF3D4184A625D00C65557 /* trimplot-i18n */;
+			targetProxy = A68FF3FC184A632B00C65557 /* PBXContainerItemProxy */;
+		};
+		A68FF415184A686400C65557 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A68FF3D8184A62A700C65557 /* trimplot_pi */;
+			targetProxy = A68FF414184A686400C65557 /* PBXContainerItemProxy */;
+		};
 		A6B158201829915400B18B37 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A87580D1DD2B4F81B39F3B5A /* ZERO_CHECK */;
@@ -4600,7 +4718,6 @@
 					"-fno-strict-aliasing",
 				);
 				OTHER_LDFLAGS = (
-					"-O2",
 					"-arch",
 					x86_64,
 					"-Wl,-search_paths_first",
@@ -5181,11 +5298,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -5220,7 +5332,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -5358,11 +5470,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -5397,7 +5504,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -5534,11 +5641,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -5572,7 +5674,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -5644,11 +5746,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -5683,7 +5780,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -5759,11 +5856,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -5797,7 +5889,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -6187,11 +6279,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -6227,7 +6314,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -6540,11 +6627,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -6579,7 +6661,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -6805,7 +6887,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -6909,7 +6991,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -6980,11 +7062,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -7020,7 +7097,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -7221,11 +7298,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -7261,7 +7333,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -7338,11 +7410,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -7378,7 +7445,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -7560,6 +7627,356 @@
 			};
 			name = Release;
 		};
+		A68FF3D6184A625D00C65557 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
+					/opt/local/include,
+					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
+					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = "";
+				OTHER_CFLAGS = (
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-rdynamic",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wall",
+					"-O3",
+					"-fexceptions",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "weather_routing-i18n copy";
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/gradar_pi";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		A68FF3D7184A625D00C65557 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
+					/opt/local/include,
+					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
+					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = "";
+				OTHER_CFLAGS = (
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-rdynamic",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wall",
+					"-O3",
+					"-fexceptions",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "weather_routing-i18n copy";
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/gradar_pi";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
+		A68FF3F9184A62A700C65557 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					trimplot_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_GL,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-OCPN/plugins/trimplot_pi/src",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
+					/opt/local/include,
+					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
+					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+					"-framework",
+					AGL,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = trimplot_pi;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/heidi/devel/Cocoa-OCPN/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		A68FF3FA184A62A700C65557 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					trimplot_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_GL,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-OCPN/plugins/trimplot_pi/src",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
+					/opt/local/include,
+					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
+					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+					"-framework",
+					AGL,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = trimplot_pi;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/plugins/trimplot_pi";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
 		A6B4A52D17A5143700E3A5D0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -7712,11 +8129,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -7753,7 +8165,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -7829,11 +8241,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -7870,7 +8277,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -7946,11 +8353,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -7988,7 +8390,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -8065,11 +8467,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -8107,7 +8504,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -8377,11 +8774,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -8417,7 +8809,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -8563,11 +8955,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -8602,7 +8989,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -8753,11 +9140,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -8791,7 +9173,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -9102,11 +9484,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -9141,7 +9518,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -9215,11 +9592,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -9254,7 +9626,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -9400,11 +9772,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -9440,7 +9807,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -9513,11 +9880,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -9553,7 +9915,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -9691,11 +10053,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -9730,7 +10087,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -9806,11 +10163,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -9844,7 +10196,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -10164,11 +10516,6 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -10204,7 +10551,7 @@
 					x86_64,
 					"-Wno-deprecated",
 					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-2.9",
+					"-I/usr/local/include/wx-3.1",
 					"-fPIC",
 					"-Wall",
 					"-Wno-unused",
@@ -10516,6 +10863,24 @@
 			buildConfigurations = (
 				A60F749117A0319F00A6160F /* Debug */,
 				A60F749217A0319F00A6160F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A68FF3D5184A625D00C65557 /* Build configuration list for PBXAggregateTarget "trimplot-i18n" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A68FF3D6184A625D00C65557 /* Debug */,
+				A68FF3D7184A625D00C65557 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A68FF3F8184A62A700C65557 /* Build configuration list for PBXNativeTarget "trimplot_pi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A68FF3F9184A62A700C65557 /* Debug */,
+				A68FF3FA184A62A700C65557 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
