@@ -55,8 +55,8 @@ e. Außer dem o.g. Problem, wegen der Plugins nur die dynamischen Libraries von
 
 Compiler:
 Xcode 5.0.2
-Apple LLVM version 5.0 (clang-500.2.75) (based on LLVM 3.3svn)
-Target: x86_64-apple-darwin12.5.0
+Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)
+Target: x86_64-apple-darwin13.0.0
 SDK 10.9 Mavericks
 Thread model: posix
 
