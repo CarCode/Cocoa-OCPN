@@ -164,8 +164,8 @@ bool IACFile::ReadHeader(void){
                   wxString timestr=tokenFind(_T("0????"));
                   if(! timestr.IsEmpty()){
                         // parse time, format 0DDHH, DD=date, HH=UTC hours
-                        m_issueDate = _T("Day ") + timestr.Mid(1,2) +
-                                      _T(" Hour ")+ timestr.Mid(3,2) +
+                        m_issueDate = _("Day ") + timestr.Mid(1,2) +
+                                      _(" Hour ")+ timestr.Mid(3,2) +
                                       _T(" UTC");
                         return true;
                   }
@@ -444,13 +444,17 @@ wxString IACFile::ReadToken(wxInputStream &file){
       // 1 = read digits until no digit
       // 2 = token found
       wxString token = wxEmptyString;
-      int c;
+#ifdef __WXOSX__
+      char c;
+#else
+    int c;
+#endif
       int mode = 0;
 
       while((file.IsOk()) && (mode != 2) ){
             c=file.GetC();
-#ifdef __WXOSX_COCOA__
-//          m_RawData.Append((const wchar_t) c);
+#ifdef __WXOSX__
+          if( c != wxEOF) m_RawData.Append(c);
 #else
             m_RawData.Append(c);
 #endif
@@ -458,21 +462,15 @@ wxString IACFile::ReadToken(wxInputStream &file){
                   switch(mode){
                         case 0:
                               if (isdigit(c)){
-#ifdef __WXOSX_COCOA__
-//                                  token.Append((const wchar_t) c);
-#else
                                     token.Append(c);
-#endif
                                     mode = 1;
                               }
                               break;
                         case 1:     
                               if (isdigit(c)){
-#ifdef __WXOSX_COCOA__
-//                                  token.Append((const wchar_t) c);
-#else
-                                    token.Append(c);
-#endif
+
+                                  token.Append(c);
+
                               }else{
                                     if(token.Len() == 5 ){
                                           // token found!!

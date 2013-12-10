@@ -276,7 +276,7 @@ void IACFleetUIDialog::CreateControls()
       wxBoxSizer* tmsizer = new wxBoxSizer(wxHORIZONTAL);
 
        wxStaticText *pIssueDate = new wxStaticText( this, 
-            wxID_ANY, wxT("IssueDate:"),
+            wxID_ANY, _("IssueDate:"),
             wxDefaultPosition,wxDefaultSize,
             wxALIGN_LEFT
                  );

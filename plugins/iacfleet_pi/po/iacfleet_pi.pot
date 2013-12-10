@@ -6,26 +6,34 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: iacfleet_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-29 17:39+0100\n"
+"POT-Creation-Date: 2013-12-10 15:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Carcode <carcode@me.com>\n"
-"Language-Team: Carcode <carcode@me.com>\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/iacfleet_pi.cpp:103 src/iacfleet_pi.cpp:149
+#: ../src/iacfile.cpp:167
+msgid "Day "
+msgstr ""
+
+#: ../src/iacfile.cpp:168
+msgid " Hour "
+msgstr ""
+
+#: ../src/iacfleet_pi.cpp:102 ../src/iacfleet_pi.cpp:157
 msgid "IACFleet"
 msgstr ""
 
-#: src/iacfleet_pi.cpp:154
+#: ../src/iacfleet_pi.cpp:162
 msgid "IACFleet PlugIn for OpenCPN"
 msgstr ""
 
-#: src/iacfleet_pi.cpp:160
+#: ../src/iacfleet_pi.cpp:168
 msgid ""
 "IACFleet PlugIn for OpenCPN\n"
 "Display IAC Fleet Code information provided by NADI.\n"
@@ -35,34 +43,38 @@ msgid ""
 "Plugin to see the decoded text and a graphic overlay\n"
 msgstr ""
 
-#: src/iacfleet_pi.cpp:170
+#: ../src/iacfleet_pi.cpp:178
 msgid "IACFleet Preferences"
 msgstr ""
 
-#: src/iacfleet_pi.cpp:194 src/iacfleet.h:70
+#: ../src/iacfleet_pi.cpp:203 ../src/iacfleet.h:70
 msgid "IACFleet Display Control"
 msgstr ""
 
-#: src/iacfleet.cpp:181
+#: ../src/iacfleet.cpp:183
 msgid "Select IACFleet Directory"
 msgstr ""
 
-#: src/iacfleet.cpp:205
+#: ../src/iacfleet.cpp:207
 msgid "IACFleet File Directory"
 msgstr ""
 
-#: src/iacfleet.cpp:225
+#: ../src/iacfleet.cpp:227
 msgid "Files"
 msgstr ""
 
-#: src/iacfleet.cpp:238
+#: ../src/iacfleet.cpp:247
 msgid "Text"
 msgstr ""
 
-#: src/iacfleet.cpp:253
+#: ../src/iacfleet.cpp:262
 msgid "Raw"
 msgstr ""
 
-#: src/iacfleet.cpp:287
+#: ../src/iacfleet.cpp:279
+msgid "IssueDate:"
+msgstr ""
+
+#: ../src/iacfleet.cpp:296
 msgid "&Close"
 msgstr ""

@@ -5,26 +5,42 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: iacfleet_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-29 17:39+0100\n"
-"PO-Revision-Date: 2013-03-30 21:43+0100\n"
+"POT-Creation-Date: 2013-12-10 15:44+0100\n"
+"PO-Revision-Date: 2013-12-10 15:50+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
-"Language-Team: Carcode <carcode@me.com>\n"
+"Language-Team: CarCode <carcode@me.com>\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.6.2\n"
 
-#: src/iacfleet_pi.cpp:103 src/iacfleet_pi.cpp:149
+msgid " Hour "
+msgstr " Stunde "
+
+msgid "&Close"
+msgstr "Schließen"
+
+msgid "Day "
+msgstr "Tag "
+
+msgid "Files"
+msgstr "Dateien"
+
 msgid "IACFleet"
 msgstr "IACFleet"
 
-#: src/iacfleet_pi.cpp:154
+msgid "IACFleet Display Control"
+msgstr "IACFleet Anzeige-Kontrolle"
+
+msgid "IACFleet File Directory"
+msgstr "IACFleet Datei-Verzeichnis"
+
 msgid "IACFleet PlugIn for OpenCPN"
 msgstr "IACFleet PlugIn für OpenCPN"
 
-#: src/iacfleet_pi.cpp:160
 msgid ""
 "IACFleet PlugIn for OpenCPN\n"
 "Display IAC Fleet Code information provided by NADI.\n"
@@ -36,38 +52,21 @@ msgstr ""
 "IACFleet PlugIn für OpenCPN\n"
 "Zeigt IAC Fleet Code Information von NADI.\n"
 "Information kann per Email erhalten werden mit Senden des Mail-Inhalts\n"
-"\"Send fleet.nadi\" an \"query@saildocs.com\"\n"
+"“Send fleet.nadi“ an “query@saildocs.com“\n"
 "Speichern der erhaltenen Antwort-Mail und sie mit diesem Plugin öffnen,\n"
 "um den dekodierten Text und die grafische Anzeige zu sehen.\n"
 
-#: src/iacfleet_pi.cpp:170
 msgid "IACFleet Preferences"
-msgstr "IACFleet Preferences"
+msgstr "IACFleet Einstellungen"
 
-#: src/iacfleet_pi.cpp:194 src/iacfleet.h:70
-msgid "IACFleet Display Control"
-msgstr "IACFleet Anzeige-Kontrolle"
+msgid "IssueDate:"
+msgstr "Ausgabedatum:"
 
-#: src/iacfleet.cpp:181
-msgid "Select IACFleet Directory"
-msgstr "Wähle IACFleet Verzeichnis"
-
-#: src/iacfleet.cpp:205
-msgid "IACFleet File Directory"
-msgstr "IACFleet Datei-Verzeichnis"
-
-#: src/iacfleet.cpp:225
-msgid "Files"
-msgstr "Dateien"
-
-#: src/iacfleet.cpp:238
-msgid "Text"
-msgstr "Text"
-
-#: src/iacfleet.cpp:253
 msgid "Raw"
 msgstr "Roh"
 
-#: src/iacfleet.cpp:287
-msgid "&Close"
-msgstr "Beenden"
+msgid "Select IACFleet Directory"
+msgstr "Wähle IACFleet Verzeichnis"
+
+msgid "Text"
+msgstr "Text"

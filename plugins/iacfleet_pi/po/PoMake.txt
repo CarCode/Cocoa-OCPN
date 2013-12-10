@@ -1,6 +1,13 @@
 Potfile bzw. po erzeugen:
 
 Im Terminal (xgettext -h):
- xgettext --from-code=utf-8 --force-po --output=iacfleet.pot --keyword=_ --files-from=/Users/heidi/Documents/sw/Cocoa-OCPN/opencpn/OpenCPN-2.5.0/opencpn/plugins/iacfleet_pi/POTFILES.in
+
+Wechseln in ~/devel/Cocoa-OCPN/plugins/iacfleet_pi/po (cd oder OpenTerminalHere)
+
+/opt/local/bin/xgettext --force-po --package-name=iacfleet_pi --package-version=3.4.64 --output=iacfleet_pi.pot --keyword=_ --width=80 --files-from=POTFILES.in
+
+/opt/local/bin/msgmerge --width=80 --strict --quiet --update --backup=none --no-location -s /Users/heidi/devel/Cocoa-OCPN/plugins/iacfleet_pi/po/iacfleet_pi.po /Users/heidi/devel/Cocoa-OCPN/plugins/iacfleet_pi/po/iacfleet_pi.pot
+
+
 
 Poedit aufrufen.
