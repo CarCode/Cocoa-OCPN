@@ -151,6 +151,7 @@ wxLog                     *Oldlogger;
 bool                      g_bFirstRun;
 wxString                  glog_file;
 wxString                  gConfig_File;
+wxString                  gExe_path;
 
 int                       g_unit_test_1;
 bool                      g_start_fullscreen;
@@ -1100,6 +1101,8 @@ bool MyApp::OnInit()
     wxStandardPathsBase& std_path = wxApp::GetTraits()->GetStandardPaths();
     std_path.Get();
 
+    gExe_path = std_path.GetExecutablePath();
+
     pHome_Locn = new wxString;
 #ifdef __WXMSW__
     pHome_Locn->Append( std_path.GetConfigDir() );   // on w98, produces "/windows/Application Data"
@@ -1157,7 +1160,12 @@ bool MyApp::OnInit()
             wxString oldlog = glog_file;                      // pjotrc 2010.02.09
             oldlog.Append( _T(".log") );
             //  Defer the showing of this messagebox until the system locale is established.
+            //  Funktioniert aber so nicht, daher:
+#ifdef __WXOSX__
+            large_log_message = ( _("Altes Log verschoben nach opencpn.log.log") );
+#else
             large_log_message = ( _("Old log will be moved to opencpn.log.log") );
+#endif
             ::wxRenameFile( glog_file, oldlog );
         }
     }
@@ -1434,6 +1442,9 @@ bool MyApp::OnInit()
     // No problem if the file doesn't exist
     // as this case is handled by wxWidgets
     if( plocale_def_lang ) plocale_def_lang->AddCatalog( loc_lang_filename );
+#ifdef __WXOSX__
+    if( plocale_def_lang ) plocale_def_lang->AddCatalog("wxstd");
+#endif
 
     //    Always use dot as decimal
     setlocale( LC_NUMERIC, "C" );
@@ -2104,6 +2115,8 @@ if( 0 == g_memCacheLimit )
 
     stats->Show( true );
 
+    Yield();
+
     gFrame->DoChartUpdate();
 
     g_FloatingToolbarDialog->LockPosition(false);
@@ -2499,6 +2512,9 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
 
     g_sticky_chart = -1;
 #ifdef __WXOSX__ // Test WXOSX
+//    wxApp::s_macHelpMenuTitleName = "Hilfe";
+// Geht auch nicht
+
     mac_menu = NULL;
     // neue Menü Bar
 
@@ -3350,7 +3366,7 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
         g_pAISTargetList->Destroy();
     }
 
-    g_FloatingCompassDialog->Destroy();
+    if( g_FloatingCompassDialog ) g_FloatingCompassDialog->Destroy();
     g_FloatingCompassDialog = NULL;
 
     //      Delete all open charts in the cache
@@ -5858,6 +5874,9 @@ void MyFrame::SelectQuiltRefdbChart( int db_index )
         double best_scale = GetBestVPScale( pc );
         cc1->SetVPScale( best_scale );
     }
+    else
+        cc1->SetQuiltRefChart( -1 );
+
 
 }
 

@@ -325,6 +325,7 @@ options::~options()
     groupsPanel->EmptyChartGroupArray( m_pGroupArray );
     delete m_pGroupArray;
     m_pGroupArray = NULL;
+    m_groupsPage = NULL;
     g_pOptions = NULL;
     if( m_topImgList ) delete m_topImgList;
 }
@@ -1260,13 +1261,13 @@ void options::CreatePanel_ChartGroups( size_t parent, int border_size, int group
     // Special case for adding the tab here. We know this page has multiple tabs,
     // and we have the actual widgets in a separate class (because of its complexity)
 
-    wxNotebookPage* page = m_pListbook->GetPage( parent );
-    groupsPanel = new ChartGroupsUI( page );
+    m_groupsPage = m_pListbook->GetPage( parent );
+    groupsPanel = new ChartGroupsUI( m_groupsPage );
 
     groupsPanel->CreatePanel( parent, border_size, group_item_spacing, small_button_size );
-    ((wxNotebook *)page)->AddPage( groupsPanel, _("Chart Groups") );
+    ((wxNotebook *)m_groupsPage)->AddPage( groupsPanel, _("Chart Groups") );
 
-    page->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxListbookEventHandler( options::OnChartsPageChange ), NULL, this );
+    m_groupsPage->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxListbookEventHandler( options::OnChartsPageChange ), NULL, this );
 
 }
 
@@ -1900,7 +1901,7 @@ void options::CreateControls()
     //      Build the PlugIn Manager Panel
     m_pPlugInCtrl = new PluginListPanel( itemPanelPlugins, ID_PANELPIM, wxDefaultPosition,
             wxDefaultSize, g_pi_manager->GetPlugInArray() );
-    m_pPlugInCtrl->SetScrollRate( 5, 5 );
+    m_pPlugInCtrl->SetScrollRate( 15, 15 );
 
     itemBoxSizerPanelPlugins->Add( m_pPlugInCtrl, 1, wxEXPAND|wxALL, border_size );
 
@@ -2968,6 +2969,9 @@ void options::OnDebugcheckbox1Click( wxCommandEvent& event )
 void options::OnCancelClick( wxCommandEvent& event )
 {
     //  Required to avoid intermittent crash on wxGTK
+    if(m_groupsPage)
+        m_groupsPage->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxListbookEventHandler( options::OnChartsPageChange ), NULL, this );
+
     m_pListbook->ChangeSelection(0);
     delete pActiveChartsList;
     delete ps57CtlListBox;

@@ -90,6 +90,8 @@ class ViewPort
             void SetProjectionType(int type){ m_projection_type = type; }
 
             LLBBox &GetBBox() { return vpBBox; }
+            void SetBBoxDirect( double latmin, double lonmin, double latmax, double lonmax);
+
 //  Generic
             double   clat;                   // center point
             double   clon;
