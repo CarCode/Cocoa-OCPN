@@ -102,7 +102,7 @@ public:
         int         nVert;
         double      *p_vertex;              //  Pointer to vertex array, x,y,x,y.....
 
-        wxBoundingBox *p_bbox;
+        double      minx, miny, maxx, maxy;
 
         TriPrim     *p_next;                // chain link
 };
