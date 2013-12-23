@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: opencpn 3.3.719\n"
+"Project-Id-Version: opencpn 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-18 13:19+0100\n"
-"PO-Revision-Date: 2013-11-18 13:28+0100\n"
+"POT-Creation-Date: 2013-12-23 14:47+0100\n"
+"PO-Revision-Date: 2013-12-23 15:05+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.3\n"
 
 msgid " (Max size )"
 msgstr " (Max Größe)"
@@ -27,8 +27,18 @@ msgstr " MB )"
 msgid "( Max "
 msgstr "( Max "
 
+msgid "00N  00W"
+msgstr "00N  00W"
+
 msgid "Address used to send request eMail. (Mandatory for LINUX)"
 msgstr "Verwendete Addresse zum eMail-Anfrage-Senden. (Erforderlich bei LINUX)"
+
+msgid ""
+"Air\n"
+"Temperature"
+msgstr ""
+"Luft\n"
+"Temperatur"
 
 msgid "Air Temp"
 msgstr "Luft-Temp."
@@ -45,6 +55,9 @@ msgstr "Erlaube Interpolation-Start bei aktueller Zeit"
 msgid "Barbed Arrows"
 msgstr "Pfeil-Federn"
 
+msgid "Beaufort"
+msgstr "Beaufort"
+
 msgid ""
 "Before sending an email to Zygrib you have to enter your Login and Code.\n"
 "Please visit www.zygrib.org/ and follow instructions..."
@@ -60,6 +73,12 @@ msgstr "CAPE"
 
 msgid "Celsius"
 msgstr "Celsius"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Cloud"
+msgstr "Bewölkung"
 
 msgid "Cloud Cover"
 msgstr "Bewölkung"
@@ -78,6 +97,9 @@ msgstr "Kopiere fehlende Wellen-Daten"
 
 msgid "Current"
 msgstr "Strömung"
+
+msgid "Data at Cursor Position:"
+msgstr "Grib Daten am Cursor:"
 
 msgid "Data available"
 msgstr "Daten verfügbar"
@@ -173,6 +195,9 @@ msgstr "Holen Sie Ihren Code vom zyGrib-Forum ( Das ist nicht Ihr Paßwort! )"
 
 msgid "Grib"
 msgstr "Grib"
+
+msgid "Grib Data Table"
+msgstr "Grib Datentabelle"
 
 msgid "Grib Preferences"
 msgstr "Grib Einstellungen"
@@ -299,6 +324,13 @@ msgstr "Auflösung"
 msgid "Save"
 msgstr "Speichern"
 
+msgid ""
+"Sea\n"
+"Temperature"
+msgstr ""
+"See\n"
+"Temperatur"
+
 msgid "Sea Temp"
 msgstr "Wassertemp."
 
@@ -312,7 +344,7 @@ msgid "Send"
 msgstr "Senden"
 
 msgid "Sender eMail Address"
-msgstr "Sender eMail Addresse"
+msgstr "Sender eMail Adresse"
 
 msgid "Settings"
 msgstr "Einstellungen"
@@ -400,6 +432,9 @@ msgstr "Wellen"
 msgid "WavesModel"
 msgstr "Wellen-Modell"
 
+msgid "Weather table"
+msgstr "Wetter-Tabelle"
+
 msgid "Wind"
 msgstr "Wind"
 
@@ -419,6 +454,17 @@ msgstr ""
 "interpoliert!"
 
 msgid ""
+"You request a forecast for more than 8 days horizon.\n"
+"This is conflicting with Wave data which will be removed from your request.\n"
+"Don't forget that beyond the first 8 days, the resolution will be only "
+"2.5\\u00B0x2.5\\u00B0 and the time intervall 12 hours."
+msgstr ""
+"Sie fragen nach einer Vorhersage von mehr als 8 Tagen.\n"
+"Dadurch werden Wellen-Daten von Ihrer Anfrage entfernt.\n"
+"Beachten Sie, daß nach den ersten 8 Tagen die Auflösung nur "
+"2.5\\u00B0x2.5\\u00B0 und das Zeitintervall 12 Stunden ist."
+
+msgid ""
 "Your request is ready. An email is prepared in your email environment. \n"
 "You have just to verify and send it...\n"
 "Save or Cancel to finish...or Continue..."
@@ -435,6 +481,9 @@ msgstr ""
 "Ihre Anfrage wurde gesendet \n"
 "(wenn Ihr System einen MTA konfiguriert hat und Mail senden kann).\n"
 "Weiter mit Speichern oder Abbr. ... oder Weiter..."
+
+msgid "Zoom To Center"
+msgstr "Zoom zur Mitte"
 
 msgid "eMail error"
 msgstr "eMail Fehler"

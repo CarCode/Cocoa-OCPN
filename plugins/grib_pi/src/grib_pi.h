@@ -76,6 +76,7 @@ public:
 //    The override PlugIn Methods
       bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
       void SetCursorLatLon(double lat, double lon);
+      void OnContextMenuItemCallback(int id);
       void SetPluginMessage(wxString &message_id, wxString &message_body);
       bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
       void SendTimelineMessage(wxDateTime time);
@@ -98,7 +99,10 @@ public:
       bool GetCopyFirstCumRec() { return  m_bCopyFirstCumRec; }
       bool GetCopyMissWaveRec() { return  m_bCopyMissWaveRec; }
 
+      GRIBOverlayFactory *m_pGRIBOverlayFactory;
       GRIBOverlayFactory *GetGRIBOverlayFactory(){ return m_pGRIBOverlayFactory; }
+
+      int   m_MenuItem;
 
 private:
       bool LoadConfig(void);
@@ -108,7 +112,6 @@ private:
       wxWindow          *m_parent_window;
 
       GRIBUIDialog      *m_pGribDialog;
-      GRIBOverlayFactory    *m_pGRIBOverlayFactory;
 
       int               m_display_width, m_display_height;
       int               m_leftclick_tool_id;
@@ -137,8 +140,6 @@ private:
       wxString          m_ZyGribCode;
 
       bool              m_bGRIBShowIcon;
-
-      int               m_height;
 
       bool              m_bShowGrib;
 };

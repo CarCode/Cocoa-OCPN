@@ -11,6 +11,8 @@
 ../src/GribRecordSet.h
 ../src/GribSettingsDialog.cpp
 ../src/GribSettingsDialog.h
+../src/GribTable.cpp
+../src/GribTable.h
 ../src/GribUIDialog.cpp
 ../src/GribUIDialog.h
 ../src/GribUIDialogBase.cpp
