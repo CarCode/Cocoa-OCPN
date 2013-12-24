@@ -959,13 +959,13 @@ void RouteProp::SetRouteAndUpdate( Route *pR )
     m_tz_selection = 1;
 
     if( pR == m_pRoute ) {
-        m_starttime = g_StartTime;    // war //-auskommentiert
-        // tz_selection = g_StartTimeTZ; // dito
         gStart_LMT_Offset = 0;
+        if( !pR->m_PlannedDeparture.IsValid() )
+            m_tz_selection = 0;
+
     } else {
         g_StartTime = wxInvalidDateTime;
         g_StartTimeTZ = 1;
-        /*  Test WXOSX  Erledigt mit Änderung vom 25.07.2013 ??? */
         if( pR->m_PlannedDeparture.IsValid() )
             m_starttime = pR->m_PlannedDeparture;
         else
@@ -2478,8 +2478,11 @@ void MarkInfoImpl::OnMarkInfoCancelClick( wxCommandEvent& event )
         m_pRoutePoint->ReLoadIcon();
 
         m_pRoutePoint->m_HyperlinkList->Clear();
-
+#ifdef __WXOSX__  // Test OSX
+       size_t NbrOfLinks = m_pMyLinkList->GetCount();
+#else
         int NbrOfLinks = m_pMyLinkList->GetCount();
+#endif
         if( NbrOfLinks > 0 ) {
             wxHyperlinkListNode *linknode = m_pMyLinkList->GetFirst();
             while( linknode ) {
