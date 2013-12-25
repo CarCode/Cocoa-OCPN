@@ -85,13 +85,13 @@ static wxString MToString( int DataCenterModel )
 }
 #if 0
 static wxString TToString( const wxDateTime date_time, const int time_zone )
-{  
+{
     wxDateTime t( date_time );
     t.MakeFromTimezone( wxDateTime::UTC );
     if( t.IsDST() ) t.Subtract( wxTimeSpan( 1, 0, 0, 0 ) );
     switch( time_zone ) {
         case 0: return t.Format( _T(" %a %d-%b-%Y  %H:%M "), wxDateTime::Local ) + _T("LOC");//:%S
-        case 1: 
+        case 1:
         default: return t.Format( _T(" %a %d-%b-%Y %H:%M  "), wxDateTime::UTC ) + _T("UTC");
     }
 }
@@ -220,7 +220,7 @@ bool GRIBOverlayFactory::DoRenderGribOverlay( PlugIn_ViewPort *vp )
     //     render each type of record
     GribRecord **pGR = m_pGribTimelineRecordSet->m_GribRecordPtrArray;
     wxArrayPtrVoid **pIA = m_pGribTimelineRecordSet->m_IsobarArray;
-    
+
     for(int overlay = 1; overlay >= 0; overlay--)
     for(int i=0; i<GribOverlaySettings::SETTINGS_COUNT; i++) {
         if((i == GribOverlaySettings::WIND            && !m_dlg.m_cbWind->GetValue()) ||
@@ -250,13 +250,36 @@ bool GRIBOverlayFactory::DoRenderGribOverlay( PlugIn_ViewPort *vp )
 }
 
 bool GRIBOverlayFactory::CreateGribGLTexture( GribOverlay *pGO, int settings, GribRecord *pGR,
-                                              PlugIn_ViewPort *vp, int grib_pixel_size,
-                                              const wxPoint &porg )
+                                              PlugIn_ViewPort *vp, int grib_pixel_size )
 {
+    //  We need a vp without rotation
+    PlugIn_ViewPort uvp;
+    uvp.clat =                   vp->clat;                   // center point
+    uvp.clon =                   vp->clon;
+    uvp.view_scale_ppm =         vp->view_scale_ppm;
+    uvp.skew =                   vp->skew;
+    uvp.rotation =               0;
+    uvp.chart_scale =            vp->chart_scale;
+    uvp.pix_width =              vp->pix_width;
+    uvp.pix_height =             vp->pix_height;
+    uvp.rv_rect =                vp->rv_rect;
+    uvp.b_quilt =                vp->b_quilt;
+    uvp.m_projection_type =      vp->m_projection_type;
+
+    uvp.lat_min =                vp->lat_min;
+    uvp.lat_max =                vp->lat_max;
+    uvp.lon_min =                vp->lon_min;
+    uvp.lon_max =                vp->lon_max;
+
+    uvp.bValid =                 vp->bValid;                 // This VP is valid
+
+    wxPoint porg;
+    GetCanvasPixLL( &uvp, &porg, pGR->getLatMax(), pGR->getLonMin() );
+
     wxPoint pmin;
-    GetCanvasPixLL( vp, &pmin, pGR->getLatMin(), pGR->getLonMin() );
+    GetCanvasPixLL( &uvp, &pmin, pGR->getLatMin(), pGR->getLonMin() );
     wxPoint pmax;
-    GetCanvasPixLL( vp, &pmax, pGR->getLatMax(), pGR->getLonMax() );
+    GetCanvasPixLL( &uvp, &pmax, pGR->getLatMax(), pGR->getLonMax() );
 
     int width = abs( pmax.x - pmin.x );// /grib_pixel_size;
     int height = abs( pmax.y - pmin.y );// /grib_pixel_size;
@@ -274,7 +297,7 @@ bool GRIBOverlayFactory::CreateGribGLTexture( GribOverlay *pGO, int settings, Gr
             p.y = grib_pixel_size*jpix + porg.y;
 
             double lat, lon;
-            GetCanvasLLPix( vp, p, &lat, &lon );
+            GetCanvasLLPix( &uvp, p, &lat, &lon );
 
             double v = pGR->getInterpolatedValue(lon, lat);
             unsigned char r, g, b, a;
@@ -355,16 +378,16 @@ wxImage GRIBOverlayFactory::CreateGribImage( int settings, GribRecord *pGR,
             p.x = ipix + porg.x;
             p.y = jpix + porg.y;
             GetCanvasLLPix( vp, p, &lat, &lon );
-            
+
             double v = pGR->getInterpolatedValue(lon, lat);
             if( v != GRIB_NOTDEF ) {
                 v = m_Settings.CalibrateValue(settings, v);
                 wxColour c = GetGraphicColor(settings, v);
-                
+
                 unsigned char r = c.Red();
                 unsigned char g = c.Green();
                 unsigned char b = c.Blue();
-                
+
                 for( int xp = 0; xp < grib_pixel_size; xp++ )
                     for( int yp = 0; yp < grib_pixel_size; yp++ ) {
                         gr_image.SetRGB( ipix + xp, jpix + yp, r, g, b );
@@ -377,7 +400,7 @@ wxImage GRIBOverlayFactory::CreateGribImage( int settings, GribRecord *pGR,
             }
         }
     }
-    
+
     return gr_image.Blur( 4 );
 }
 
@@ -475,7 +498,7 @@ wxColour GRIBOverlayFactory::GetGraphicColor(int settings, double val_in)
         map = AirTempMap;
         maplen = (sizeof AirTempMap) / (sizeof *AirTempMap);
         break;
-    case SEATEMP_GRAPHIC_INDEX: 
+    case SEATEMP_GRAPHIC_INDEX:
         map = SeaTempMap;
         maplen = (sizeof SeaTempMap) / (sizeof *SeaTempMap);
         break;
@@ -549,13 +572,13 @@ wxImage &GRIBOverlayFactory::getLabel(double value, int settings)
     mdc.SetBrush(backBrush);
     mdc.SetTextForeground(text_color);
     mdc.SetTextBackground(back_color);
-          
+
     int xd = 0;
     int yd = 0;
 //    mdc.DrawRoundedRectangle(xd, yd, w+(label_offset * 2), h+2, -.25);
     mdc.DrawRectangle(xd, yd, w+(label_offset * 2), h+2);
     mdc.DrawText(labels, label_offset + xd, yd+1);
-          
+
     mdc.SelectObject(wxNullBitmap);
 
     m_labelCache[value] = bm.ConvertToImage();
@@ -610,12 +633,15 @@ void GRIBOverlayFactory::RenderGribBarbedArrows( int settings, GribRecord **pGR,
     bool barbs = true;
 
     //    Set minimum spacing between wind arrows
-    int space;
+    double space;
 
-    if( barbs )
-        space = 30;
-    else
-        space = 20;
+    if( barbs ) {
+        space = fabs(30 * cos(vp->rotation));
+    }
+
+    else {
+        space = fabs(20 * cos(vp->rotation));
+    }
 
     int oldx = -1000;
     int oldy = -1000;
@@ -649,7 +675,7 @@ void GRIBOverlayFactory::RenderGribBarbedArrows( int settings, GribRecord **pGR,
                             vx *= 3.6/1.852;            //always in knots to respect the standard
                             vy *= 3.6/1.852;
 
-                            drawWindArrowWithBarbs( settings, p.x, p.y, vx, vy, polar, ( lat < 0. ), colour );
+                            drawWindArrowWithBarbs( settings, p.x, p.y, vx, vy, polar, ( lat < 0. ), colour, vp->rotation );
                         }
                     }
                 }
@@ -763,8 +789,8 @@ void GRIBOverlayFactory::RenderGribDirectionArrows( int settings, GribRecord **p
     int jmax = pGRX->getNj();                  // Latitude
 
     //    Set minimum spacing between arrows
-    int space;
-    space = 60;
+    double space;
+    space = fabs(60 * cos(vp->rotation));
 
     int oldx = -1000;
     int oldy = -1000;
@@ -778,7 +804,7 @@ void GRIBOverlayFactory::RenderGribDirectionArrows( int settings, GribRecord **p
         wxPoint pl;
         GetCanvasPixLL( vp, &pl, latl, lonl );
 
-        if( abs( pl.x - oldx ) >= space ) {
+        if( abs( pl.x - oldx ) >= (int)space ) {
             oldx = pl.x;
             for( int j = 0; j < jmax; j++ ) {
                 double lon = pGRX->getX( i );
@@ -786,18 +812,21 @@ void GRIBOverlayFactory::RenderGribDirectionArrows( int settings, GribRecord **p
                 wxPoint p;
                 GetCanvasPixLL( vp, &p, lat, lon );
 
-                if( abs( p.y - oldy ) >= space ) {
+                if( abs( p.y - oldy ) >= (int)space ) {
                     oldy = p.y;
 
                     if( PointInLLBox( vp, lon, lat ) || PointInLLBox( vp, lon - 360., lat ) ) {
                         if(polar) {
                             double dir = pGRX->getValue( i, j );
                             if( dir != GRIB_NOTDEF )
-                                drawWaveArrow( p.x, p.y, (dir - 90) * M_PI / 180, colour );
+                                drawWaveArrow( p.x, p.y, ((dir - 90) * M_PI / 180) + vp->rotation, colour );
                         } else {
                             double vx = pGRX->getValue( i,j ), vy = pGRY->getValue( i,j );
-                            if( vx != GRIB_NOTDEF || vy != GRIB_NOTDEF )
-                                drawWaveArrow( p.x, p.y, atan2(vy, -vx), colour );
+                            if( vx != GRIB_NOTDEF || vy != GRIB_NOTDEF ) {
+                                double dir = atan2(vy, -vx);
+                                dir += vp->rotation;
+                                drawWaveArrow( p.x, p.y, dir, colour );
+                            }
                         }
                     }
                 }
@@ -851,11 +880,11 @@ void GRIBOverlayFactory::RenderGribOverlayMap( int settings, GribRecord **pGR, P
         {
             if( !pGO->m_iTexture )
                 CreateGribGLTexture( pGO, settings, pGRA, vp,
-                                     grib_pixel_size, porg);
+                                     grib_pixel_size);
 
             if( pGO->m_iTexture )
                 DrawGLTexture( pGO->m_iTexture, pGO->m_width, pGO->m_height,
-                               porg.x, porg.y, grib_pixel_size );
+                               porg.x, porg.y, grib_pixel_size, vp );
             else
                 m_Message_Hiden.IsEmpty()?
                     m_Message_Hiden.Append(_("Please Zoom or Scale Out to view invisible overlays:"))
@@ -864,23 +893,27 @@ void GRIBOverlayFactory::RenderGribOverlayMap( int settings, GribRecord **pGR, P
         }
         else        //DC mode
         {
-            if( !pGO->m_pDCBitmap ) {
-                wxImage bl_image = CreateGribImage( settings, pGRA, vp, grib_pixel_size, porg );
-                if( bl_image.IsOk() ) {
-                    //    Create a Bitmap
-                    pGO->m_pDCBitmap = new wxBitmap( bl_image );
-                    wxMask *gr_mask = new wxMask( *( pGO->m_pDCBitmap ), wxColour( 0, 0, 0 ) );
-                    pGO->m_pDCBitmap->SetMask( gr_mask );
-                }
+            if(fabs(vp->rotation) > 0.1){
+                m_Message_Hiden.Append(_("Rotated overlays suppressed in DC mode"));
             }
-
-            if( pGO->m_pDCBitmap )
-                m_pdc->DrawBitmap( *( pGO->m_pDCBitmap ), porg.x, porg.y, true );
-            else
-                m_Message_Hiden.IsEmpty()?
+            else {
+                if( !pGO->m_pDCBitmap ) {
+                    wxImage bl_image = CreateGribImage( settings, pGRA, vp, grib_pixel_size, porg );
+                    if( bl_image.IsOk() ) {
+                    //    Create a Bitmap
+                        pGO->m_pDCBitmap = new wxBitmap( bl_image );
+                        wxMask *gr_mask = new wxMask( *( pGO->m_pDCBitmap ), wxColour( 0, 0, 0 ) );
+                        pGO->m_pDCBitmap->SetMask( gr_mask );
+                    }
+                }
+                if( pGO->m_pDCBitmap )
+                    m_pdc->DrawBitmap( *( pGO->m_pDCBitmap ), porg.x, porg.y, true );
+                else
+                    m_Message_Hiden.IsEmpty()?
                     m_Message_Hiden.Append(_("Please Zoom or Scale Out to view invisible overlays:"))
                     .Append(_T(" ")).Append(GribOverlaySettings::NameFromIndex(settings))
                     : m_Message_Hiden.Append(_T(",")).Append(GribOverlaySettings::NameFromIndex(settings));
+            }
         }
     }
 
@@ -1076,7 +1109,8 @@ void GRIBOverlayFactory::drawSingleArrow( int i, int j, double ang, wxColour arr
 }
 
 void GRIBOverlayFactory::drawWindArrowWithBarbs( int settings, int i, int j, double vx, double vy,
-                                                 bool polar, bool south, wxColour arrowColor )
+                                                bool polar, bool south, wxColour arrowColor,
+                                                double rotate_angle )
 {
     double vkn, ang;
 
@@ -1088,6 +1122,7 @@ void GRIBOverlayFactory::drawWindArrowWithBarbs( int settings, int i, int j, dou
         ang = atan2( vy, -vx );
     }
 
+    ang += rotate_angle;
     double si = sin( ang ), co = cos( ang );
 
     wxPen pen( arrowColor, 2 );
@@ -1366,8 +1401,8 @@ void GRIBOverlayFactory::DrawGLImage( wxImage *pimage, wxCoord xd, wxCoord yd, b
 }
 
 void GRIBOverlayFactory::DrawGLTexture( GLuint texture, int width, int height,
-                                        int xd, int yd, int grib_pixel_size )
-{ 
+                                       int xd, int yd, int grib_pixel_size, PlugIn_ViewPort *vp )
+{
     glEnable(GL_TEXTURE_RECTANGLE_ARB);
     glBindTexture(GL_TEXTURE_RECTANGLE_ARB, texture);
 
@@ -1385,17 +1420,35 @@ void GRIBOverlayFactory::DrawGLTexture( GLuint texture, int width, int height,
 
     glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
     
+    //    Adjust for rotation
+    glPushMatrix();
+    if( fabs( vp->rotation ) > 0.01 ) {
+
+        //    Rotations occur around 0,0, so calculate a post-rotate translation factor
+        double angle = vp->rotation;
+        angle -= vp->skew;
+
+        double ddx = -xd + ( xd * cos( -angle ) - yd * sin( -angle ) ) ;
+        double ddy = -yd + ( yd * cos( -angle ) + xd * sin( -angle ) ) ;
+
+        glRotatef( angle * 180. / PI, 0, 0, 1 );
+
+        glTranslatef( ddx, ddy, 0 );                 // post rotate translation
+    }
+
     int x = xd, y = yd, w = width*grib_pixel_size, h = height*grib_pixel_size;
-    
+
     glBegin(GL_QUADS);
     glTexCoord2i(0, 0),          glVertex2i(x, y);
     glTexCoord2i(width, 0),      glVertex2i(x+w, y);
     glTexCoord2i(width, height), glVertex2i(x+w, y+h);
     glTexCoord2i(0, height),     glVertex2i(x, y+h);
     glEnd();
-    
+
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_RECTANGLE_ARB);
+
+    glPopMatrix();
 }
 
 void GRIBOverlayFactory::DrawGLRGBA( unsigned char *pRGBA, int width, int height, int xd,
