@@ -335,6 +335,8 @@ class ChartPlugInWrapper : public ChartBase
 
             virtual double GetNearestPreferredScalePPM(double target_scale_ppm);
 
+            virtual PlugInChartBase *GetPlugInChart(void){ return m_ppicb; }
+
             virtual int GetCOVREntries();
             virtual int GetCOVRTablePoints(int iTable);
             virtual int GetCOVRTablenPoints(int iTable);
