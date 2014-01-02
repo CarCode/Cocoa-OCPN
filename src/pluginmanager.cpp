@@ -77,6 +77,7 @@ extern s52plib         *ps52plib;
 extern wxString        *pChartListFileName;
 extern wxString         gExe_path;
 extern bool             g_b_useStencil;
+extern wxString         g_Plugin_Dir;
 
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(Plugin_WaypointList);
@@ -2258,7 +2259,7 @@ bool AddPlugInRoute( PlugIn_Route *proute, bool b_permanent )
 
 
 
-bool DeletePluginRoute( wxString& GUID )
+bool DeletePlugInRoute( wxString& GUID )
 {
     bool b_found = false;
 
@@ -3398,6 +3399,25 @@ wxString PlugInChartBaseGL::CreateObjDescriptions( ListOfPI_S57Obj* obj_list )
     return _T("");
 }
 
+int PlugInChartBaseGL::GetNoCOVREntries()
+{
+    return 0;
+}
+
+int PlugInChartBaseGL::GetNoCOVRTablePoints(int iTable)
+{
+    return 0;
+}
+
+int  PlugInChartBaseGL::GetNoCOVRTablenPoints(int iTable)
+{
+    return 0;
+}
+
+float *PlugInChartBaseGL::GetNoCOVRTableHead(int iTable)
+{
+    return 0;
+}
 
 // ----------------------------------------------------------------------------
 // ChartPlugInWrapper Implementation
@@ -3506,21 +3526,45 @@ float *ChartPlugInWrapper::GetCOVRTableHead(int iTable)
 //      and use some kind of RTTI to figure out which class to call.
 int ChartPlugInWrapper::GetNoCOVREntries()
 {
+    if(m_ppicb) {
+        PlugInChartBaseGL *ppicbgl = dynamic_cast<PlugInChartBaseGL *>(m_ppicb);
+        if(ppicbgl){
+            return ppicbgl->GetNoCOVREntries();
+        }
+    }
     return 0;
 }
 
 int ChartPlugInWrapper::GetNoCOVRTablePoints(int iTable)
 {
+    if(m_ppicb) {
+        PlugInChartBaseGL *ppicbgl = dynamic_cast<PlugInChartBaseGL *>(m_ppicb);
+        if(ppicbgl){
+            return ppicbgl->GetNoCOVRTablePoints(iTable);
+        }
+    }
     return 0;
 }
 
 int  ChartPlugInWrapper::GetNoCOVRTablenPoints(int iTable)
 {
+    if(m_ppicb) {
+        PlugInChartBaseGL *ppicbgl = dynamic_cast<PlugInChartBaseGL *>(m_ppicb);
+        if(ppicbgl){
+            return ppicbgl->GetNoCOVRTablenPoints(iTable);
+        }
+    }
     return 0;
 }
 
 float *ChartPlugInWrapper::GetNoCOVRTableHead(int iTable)
 {
+    if(m_ppicb) {
+        PlugInChartBaseGL *ppicbgl = dynamic_cast<PlugInChartBaseGL *>(m_ppicb);
+        if(ppicbgl){
+            return ppicbgl->GetNoCOVRTableHead(iTable);
+        }
+    }
     return 0;
 }
 
@@ -3775,6 +3819,11 @@ int OCPNMessageBox_PlugIn(wxWindow *parent,
 wxString GetOCPN_ExePath( void )
 {
     return gExe_path;
+}
+
+wxString *GetpPlugInLocation()
+{
+    return &g_Plugin_Dir;
 }
 
 //      API 1.11 Access to Vector PlugIn charts

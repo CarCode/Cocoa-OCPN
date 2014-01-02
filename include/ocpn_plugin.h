@@ -700,6 +700,7 @@ extern DECL_EXP wxString toSDMM_PlugIn(int NEflag, double a, bool hi_precision =
 
 extern "C"  DECL_EXP wxString *GetpPrivateApplicationDataLocation();
 extern  DECL_EXP wxString GetOCPN_ExePath( void );
+extern "C"  DECL_EXP wxString *GetpPlugInLocation();
 
 extern "C"  DECL_EXP int AddChartToDBInPlace( wxString &full_path, bool b_ProgressDialog );
 extern "C"  DECL_EXP int RemoveChartFromDBInPlace( wxString &full_path );
@@ -728,6 +729,11 @@ public:
 
     virtual ListOfPI_S57Obj *GetObjRuleListAtLatLon(float lat, float lon, float select_radius, PlugIn_ViewPort *VPoint);
     virtual wxString CreateObjDescriptions( ListOfPI_S57Obj* obj_list );
+
+    virtual int GetNoCOVREntries();
+    virtual int GetNoCOVRTablePoints(int iTable);
+    virtual int  GetNoCOVRTablenPoints(int iTable);
+    virtual float *GetNoCOVRTableHead(int iTable);
 
 };
 
