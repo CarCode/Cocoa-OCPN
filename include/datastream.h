@@ -52,6 +52,7 @@
 #undef GSocket
 #else
 #include "wx/socket.h"
+#include <netinet/in.h>
 #endif
 
 #ifndef __WXMSW__
@@ -65,7 +66,6 @@
 #include <winioctl.h>
 #include <initguid.h>
 #endif
-
 #include <string>
 #include "ConnectionParams.h"
 #include "dsPortType.h"
@@ -224,6 +224,8 @@ private:
     wxIPV4address       m_addr;
     wxSocketBase        *m_sock;
     wxSocketBase        *m_tsock;
+    bool                m_is_multicast;
+    struct ip_mreq      m_mrq;      // mreq rather than mreqn for windows
 
     //  TCP Server support
     void OnServerSocketEvent(wxSocketEvent& event);             // The listener
