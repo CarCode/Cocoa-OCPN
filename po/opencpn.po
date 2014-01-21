@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenCPN 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-11-03 13:47+0100\n"
-"PO-Revision-Date: 2013-11-03 14:53+0100\n"
+"POT-Creation-Date: 2014-01-21 11:53+0100\n"
+"PO-Revision-Date: 2014-01-21 13:14+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.3\n"
 
 msgid ""
 "\n"
@@ -165,9 +165,6 @@ msgstr " - "
 msgid " -- [Portable(-p) executing from "
 msgstr " -- [Portabel(-p) ausgeführt von "
 
-msgid " </b>in<b> "
-msgstr " </b>in<b> "
-
 msgid " COG Unavailable"
 msgstr " COG nicht verfügbar"
 
@@ -207,10 +204,6 @@ msgstr " Aktualisiert:     "
 
 msgid " for details."
 msgstr " für Details."
-
-#, c-format
-msgid " is %5g"
-msgstr " ist %5g"
 
 msgid ""
 " shorter than rhumbline.\n"
@@ -585,14 +578,29 @@ msgstr "Neu hinzu"
 msgid "Address"
 msgstr "Adresse"
 
+msgid "Adelie Land"
+msgstr "Adelie Land"
+
 msgid "Advanced"
 msgstr "Erweitert"
+
+msgid "Afghanistan"
+msgstr "Afghanistan"
 
 msgid "Aground"
 msgstr "auf Grund gelaufen"
 
 msgid "Aid to Navigation"
 msgstr "Navigationshilfe"
+
+msgid "Alaska"
+msgstr "Alaska"
+
+msgid "Albania"
+msgstr "Albanien"
+
+msgid "Algeria"
+msgstr "Algerien"
 
 msgid "All"
 msgstr "Alle"
@@ -605,6 +613,15 @@ msgstr "Alle verfügbaren Karten"
 
 msgid "All Charts"
 msgstr "Alle Karten"
+
+msgid "Altes Log verschoben nach opencpn.log.log"
+msgstr "Altes Log verschoben nach opencpn.log.log"
+
+msgid "Altitude"
+msgstr "Höhe"
+
+msgid "American Samoa"
+msgstr "Amerikan. Samoa"
 
 msgid ""
 "An NMEA sentence is generally 3 characters long (like RMC, GGA etc.) It can "
@@ -640,11 +657,23 @@ msgstr "Ankerplatz: Für Schiffsverladungen"
 msgid "Anchorage created "
 msgstr "Ankerplatz erzeugt"
 
+msgid "Andorra"
+msgstr "Andorra"
+
+msgid "Angola"
+msgstr "Angola"
+
+msgid "Anguilla"
+msgstr "Anguilla"
+
 msgid "Answering 'No' will create a new waypoint at the same location."
 msgstr "Antwort 'Nein' erzeugt neuen Wegpunkt am gleichen Ort."
 
 msgid "Answering 'No' will create all new waypoints for this route."
 msgstr "Antwort 'Nein' erzeugt alle Wegpunkte neu für diese Route."
+
+msgid "Antigua and Barbuda"
+msgstr "Antigua und Barbuda"
 
 msgid "Append Waypoint"
 msgstr "Wegpunkt anhängen"
@@ -673,6 +702,18 @@ msgstr "Sind Sie sicher, daß Sie diesen Track löschen möchten?"
 msgid "Are you sure you want to remove this waypoint?"
 msgstr "Sind Sie sicher, daß Sie den Wegpunkt löschen wollen?"
 
+msgid "Argentine Republic"
+msgstr "Argentinien"
+
+msgid "Armenia"
+msgstr "Armenien"
+
+msgid "Aruba"
+msgstr "Aruba"
+
+msgid "Ascension Island"
+msgstr "Ascension Insel"
+
 msgid "Assumed 1 Mile Point"
 msgstr "Angenommener 1 Meilen-Punkt"
 
@@ -684,6 +725,12 @@ msgstr "vor Anker liegend"
 
 msgid "AtoN"
 msgstr "AtoN"
+
+msgid "Australia"
+msgstr "Australien"
+
+msgid "Austria"
+msgstr "Österreich"
 
 msgid "Authors"
 msgstr "Autoren"
@@ -700,8 +747,26 @@ msgstr "Automatische tägliche Tracks"
 msgid "Avg. speed"
 msgstr "Durchschnittsgeschw."
 
+msgid "Azerbaijani Republic"
+msgstr "Azerbaijan Republik"
+
+msgid "Azores"
+msgstr "Azoren"
+
 msgid "B"
 msgstr "B"
+
+msgid "Bahamas"
+msgstr "Bahamas"
+
+msgid "Bahrain"
+msgstr "Bahrain"
+
+msgid "Bangladesh"
+msgstr "Bangladesh"
+
+msgid "Barbados"
+msgstr "Barbados"
 
 msgid "Barge, tanker, chemical"
 msgstr "Leichter, Tanker, Chemiekalien"
@@ -745,6 +810,24 @@ msgstr "Peilung"
 msgid "Bearing (M)"
 msgstr "Peilung (M)"
 
+msgid "Belarus"
+msgstr "Belarus"
+
+msgid "Belgium"
+msgstr "Belgien"
+
+msgid "Belize"
+msgstr "Belize"
+
+msgid "Benin"
+msgstr "Benin"
+
+msgid "Bermuda"
+msgstr "Bermuda"
+
+msgid "Bhutan"
+msgstr "Bhutan"
+
 msgid "Black"
 msgstr "Schwarz"
 
@@ -754,14 +837,35 @@ msgstr "Defektes Plugin gefunden..."
 msgid "Blue"
 msgstr "Blau"
 
+msgid "Bolivia"
+msgstr "Bolivien"
+
+msgid "Bosnia and Herzegovina"
+msgstr "Bosnien und Herzegovina"
+
+msgid "Botswana"
+msgstr "Botswana"
+
 msgid "Boundaries"
 msgstr "Kartengrenzen"
+
+msgid "Brazil"
+msgstr "Brasilien"
 
 msgid "Brg"
 msgstr "Peilung"
 
+msgid "British Virgin Islands"
+msgstr "British Virgin Islands"
+
+msgid "Brunei Darussalam"
+msgstr "Brunei Darussalam"
+
 msgid "Buddy"
 msgstr "Buddy"
+
+msgid "Bulgaria"
+msgstr "Bulgarien"
 
 msgid "Bulk carrier maritime"
 msgstr "Massengutschiff"
@@ -771,6 +875,12 @@ msgstr "Bunkerschiff"
 
 msgid "Buoy/Light Labels"
 msgstr "Bojen/Feuer Kennungen"
+
+msgid "Burkina Faso"
+msgstr "Burkina Faso"
+
+msgid "Burundi"
+msgstr "Burundi"
 
 msgid "C&olour:"
 msgstr "Farbe:"
@@ -810,11 +920,23 @@ msgstr ""
 "\n"
 "gpsd Host ist: "
 
+msgid "Cambodia"
+msgstr "Kambotschia"
+
+msgid "Cameroon"
+msgstr "Kamerun"
+
+msgid "Canada"
+msgstr "Kanada"
+
 msgid "Cancel"
 msgstr "Abbrechen"
 
 msgid "Cancellation - cancel area as identified by Message Linkage ID"
 msgstr "Löschung - Bereich identifiziert von verknüpfter Nachrichten-ID"
+
+msgid "Cape Verde"
+msgstr "Kap Verde"
 
 msgid "Card. E"
 msgstr "Kard. O"
@@ -922,6 +1044,9 @@ msgstr "Vorsichtszone: Unterwasser-Arbeiten"
 msgid "Caution Area: Underwater vehicle operation"
 msgstr "Vorsichtszone: U-Boot Gebiet"
 
+msgid "Cayman Islands"
+msgstr "Cayman Inseln"
+
 msgid "Cell"
 msgstr "Zelle"
 
@@ -933,6 +1058,12 @@ msgstr "Ziel Ansicht"
 
 msgid "Center View..."
 msgstr "Gehe zu Position..."
+
+msgid "Central African Republic"
+msgstr "Zentral Afrikan. Republik"
+
+msgid "Chad"
+msgstr "Chad"
 
 msgid "Change Color Scheme"
 msgstr "Farbschema wechseln"
@@ -1003,6 +1134,12 @@ msgstr "Kartentexte"
 msgid "Charts"
 msgstr "Seekarten"
 
+msgid "Chile"
+msgstr "Chile"
+
+msgid "China"
+msgstr "China"
+
 msgid "Choose Font Color..."
 msgstr "Schriftfarbe auswählen..."
 
@@ -1014,6 +1151,9 @@ msgstr "Wähle Format für Kopie"
 
 msgid "Choose a file"
 msgstr "Wähle Datei"
+
+msgid "Christmas Island"
+msgstr "Weihnachtsinsel"
 
 msgid "Class"
 msgstr "Klasse"
@@ -1042,6 +1182,12 @@ msgstr "Schließen"
 msgid "CoG"
 msgstr "COG"
 
+msgid "Cocos"
+msgstr "Cocos"
+
+msgid "Colombia"
+msgstr "Colombien"
+
 msgid "Color"
 msgstr "Farbe"
 
@@ -1054,8 +1200,14 @@ msgstr "Farben"
 msgid "Combo!"
 msgstr "Combo!"
 
+msgid "Comoros"
+msgstr "Comoren"
+
 msgid "Confirm deletion of tracks and routes"
 msgstr "Bestätigung f. Löschen Tracks und Routen"
+
+msgid "Congo"
+msgstr "Kongo"
 
 msgid "Connections"
 msgstr "Verbindungen"
@@ -1075,6 +1227,9 @@ msgstr "Containerschiff"
 msgid "Control checksum"
 msgstr "Prüfe Checksumme"
 
+msgid "Cook Islands"
+msgstr "Cook Inseln"
+
 msgid "Copy As KML"
 msgstr "Kopiere als KML"
 
@@ -1089,6 +1244,12 @@ msgstr "Kopiere als KML"
 
 msgid "Copy as KML..."
 msgstr "Kopiere als KML..."
+
+msgid "Costa Rica"
+msgstr "Costa Rica"
+
+msgid "Cote d'Ivoire"
+msgstr "Elfenbein-Küste"
 
 #, c-format
 msgid "Couldn't load sound data from '%s'."
@@ -1118,8 +1279,17 @@ msgstr "Erzeuge WPT"
 msgid "Create Waypoint"
 msgstr "Wegpunkt erzeugen"
 
+msgid "Croatia"
+msgstr "Kroatien"
+
+msgid "Crozet Archipelago"
+msgstr "Crozet Archipelago"
+
 msgid "Cruise ship"
 msgstr "Kreuzfahrtschiff"
+
+msgid "Cuba"
+msgstr "Kuba"
 
 msgid "Current"
 msgstr "Gezeitenstrom"
@@ -1129,6 +1299,12 @@ msgstr "Gezeitenstrom"
 
 msgid "Cyan"
 msgstr "Cyan"
+
+msgid "Cyprus"
+msgstr "Zypern"
+
+msgid "Czech Republic"
+msgstr "Tschechische Rep."
 
 msgid "D/V"
 msgstr "D/V"
@@ -1235,6 +1411,12 @@ msgstr "Wegpunkt löschen"
 msgid "Delete..."
 msgstr "Löschen..."
 
+msgid "Dem Rep.of the Congo"
+msgstr "Dem. Rep. Kongo"
+
+msgid "Denmark"
+msgstr "Dänemark"
+
 msgid "Depart From"
 msgstr "Start"
 
@@ -1328,11 +1510,20 @@ msgstr "Notfall-Bereich: Schiff sinkend"
 msgid "Distress Area: Vessel under assault"
 msgstr "Notfall-Bereich: Schiff unter Überfall"
 
+msgid "Djibouti"
+msgstr "Djibouti"
+
 msgid ""
 "Do you also want to make the shared waypoints being part of this route "
 "invisible?"
 msgstr ""
 "Soll auch die Sichtbarkeit der gemeinsamen WPs dieser Route geändert werden?"
+
+msgid "Dominica"
+msgstr "Dominica"
+
+msgid "Dominican Republic"
+msgstr "Dominikan. Republik"
 
 msgid "Done."
 msgstr "Fertig."
@@ -1373,8 +1564,17 @@ msgstr "ETE"
 msgid "ETE/ETD"
 msgstr "ETE/ETD"
 
+msgid "Ecuador"
+msgstr "Ecuador"
+
 msgid "Edit"
 msgstr "Editiere"
+
+msgid "Egypt"
+msgstr "Ägypten"
+
+msgid "El Salvador"
+msgstr "El Salvador"
 
 msgid "Elapsed time : "
 msgstr "Vergangene Zeit:"
@@ -1438,6 +1638,12 @@ msgstr "Umweltbedingter Vorsichtsbereich: Sturm Warnung (Sturmgebiet)"
 msgid "Environmental Caution Area: Strong currents"
 msgstr "Umweltbedingter Vorsichtsbereich: Starke Strömungen"
 
+msgid "Equatorial Guinea"
+msgstr "Äquatorial Guinea"
+
+msgid "Eritrea"
+msgstr "Eritrea"
+
 msgid "Error on Route Upload.  Please check logfiles..."
 msgstr "Fehler beim Hochladen der Route. Bitte prüfen Sie die Log-Dateien..."
 
@@ -1450,6 +1656,12 @@ msgstr "Fehler!"
 
 msgid "Estimated time : "
 msgstr "Geschätzte Gesamtzeit:"
+
+msgid "Estonia"
+msgstr "Estonia"
+
+msgid "Ethiopia"
+msgstr "Äthiopien"
 
 msgid "EvTwilight"
 msgstr "Abenddämmerung"
@@ -1487,6 +1699,12 @@ msgstr "Fischer"
 msgid "Failed to initialize the user interface. "
 msgstr "Fehler Initialisierung Oberfläche."
 
+msgid "Falkland Islands"
+msgstr "Falkland Inseln"
+
+msgid "Faroe Islands"
+msgstr "Faroer Inseln"
+
 msgid "Fast ship"
 msgstr "Schnelles Schiff"
 
@@ -1499,6 +1717,9 @@ msgstr "Fuß"
 msgid "Ferry"
 msgstr "Fähre"
 
+msgid "Fiji"
+msgstr "Fiji"
+
 msgid "Filter NMEA Course and Speed data"
 msgstr "NMEA Kurs- und Geschwindigkeitsdaten filtern"
 
@@ -1508,6 +1729,9 @@ msgstr "Filterperiode (s)"
 msgid "Filters"
 msgstr "Filter"
 
+msgid "Finland"
+msgstr "Finland"
+
 msgid "Fishing boat"
 msgstr "Fischerboot"
 
@@ -1516,6 +1740,9 @@ msgstr "Fest.Seez."
 
 msgid "Fixed Structure"
 msgstr "festes Seezeichen"
+
+msgid "Flag"
+msgstr "Flagge"
 
 msgid "Fonts"
 msgstr "Schriften"
@@ -1529,11 +1756,20 @@ msgstr "Gesamte Datenbank neu aufbauen"
 msgid "Format uploads for Furuno GP3X"
 msgstr "Upload-Format für Furuno GP3X"
 
+msgid "France"
+msgstr "Frankreich"
+
 msgid "Freightbarge"
 msgstr "Frachtleichter"
 
 msgid "Freightbarge with containers"
 msgstr "Frachtleichter mit Containern"
+
+msgid "French Guina"
+msgstr "Franz. Guyana"
+
+msgid "French Polynesia"
+msgstr "Franz. Polynesien"
 
 msgid "From"
 msgstr "Von"
@@ -1562,6 +1798,12 @@ msgstr "GPX"
 msgid "GUID"
 msgstr "GUID"
 
+msgid "Gabonese Republic"
+msgstr "Gabonesische Republik"
+
+msgid "Gambia"
+msgstr "Gambia"
+
 msgid "Gas tanker"
 msgstr "Gas-Tanker"
 
@@ -1574,23 +1816,65 @@ msgstr "Allgemeine Optionen"
 msgid "General cargo Vessel maritime"
 msgstr "Allg. Frachtschiff"
 
+msgid "Georgia"
+msgstr "Georgien"
+
+msgid "Germany"
+msgstr "Deutschland"
+
+msgid "Ghana"
+msgstr "Ghana"
+
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
 msgid "Go to "
 msgstr "Gehe zu"
 
 msgid "GpsGate Buddy"
 msgstr "GpsGate Buddy"
 
+msgid "Great Britain"
+msgstr "Großbritannien"
+
+msgid "Greece"
+msgstr "Griechenland"
+
 msgid "Green"
 msgstr "Grün"
 
+msgid "Greenland"
+msgstr "Grönland"
+
+msgid "Grenada"
+msgstr "Grenada"
+
 msgid "Group \""
 msgstr "Gruppe \""
+
+msgid "Guadeloupe"
+msgstr "Guadeloupe"
+
+msgid "Guatemala"
+msgstr "Guatemala"
+
+msgid "Guinea"
+msgstr "Guinea"
+
+msgid "Guinea-Bissau"
+msgstr "Guinea-Bissau"
+
+msgid "Gyana"
+msgstr "Guyana"
 
 msgid "HSC"
 msgstr "HSC"
 
 msgid "HW"
 msgstr "HW"
+
+msgid "Haiti"
+msgstr "Haiti"
 
 msgid "Heading"
 msgstr "Richtung"
@@ -1631,6 +1915,15 @@ msgstr "Hochgeschwindigkeitsfahrzeug"
 msgid "Highlight Tracks"
 msgstr "Tracks markieren"
 
+msgid "Honduras"
+msgstr "Honduras"
+
+msgid "Hong Kong"
+msgstr "Hong-Kong"
+
+msgid "Hungary"
+msgstr "Ungarn"
+
 msgid "Hydrofoil"
 msgstr "Tragflächenboot"
 
@@ -1639,6 +1932,9 @@ msgstr "I&mportiere GPX..."
 
 msgid "IMO"
 msgstr "IMO"
+
+msgid "Iceland"
+msgstr "Island"
 
 msgid "Icon"
 msgstr "Symbol"
@@ -1663,6 +1959,12 @@ msgstr "Eingang"
 
 msgid "In: None"
 msgstr "Eingang: Kein"
+
+msgid "India"
+msgstr "Indien"
+
+msgid "Indonesia"
+msgstr "Indonesien"
 
 msgid "Information: Icebreaker waiting area"
 msgstr "Information: Eisbrecher Wartebereich"
@@ -1702,11 +2004,35 @@ msgstr "Anweisung: An diesem Punkt/Stelle VTS kontaktieren"
 msgid "Instruction: Do not proceed beyond this point/juncture"
 msgstr "Anweisung: Nicht über diesen Punkt/Stelle hinausfahren"
 
+msgid "Iran"
+msgstr "Iran"
+
+msgid "Iraq"
+msgstr "Irak"
+
+msgid "Ireland"
+msgstr "Irland"
+
 msgid "Isol. Dngr"
 msgstr "Isol. Gefahr"
 
 msgid "Isolated Danger"
 msgstr "Einzelgefahrenstelle"
+
+msgid "Israel"
+msgstr "Israel"
+
+msgid "Italy"
+msgstr "Italien"
+
+msgid "Jamaica"
+msgstr "Jamaica"
+
+msgid "Japan"
+msgstr "Japan"
+
+msgid "Jordan"
+msgstr "Jordanien"
 
 msgid "KML Standard (Google Earth and others)"
 msgstr "KML Standard (Google-Earth und andere)"
@@ -1717,11 +2043,29 @@ msgstr "KML mit erweiterten Wegpunkt-Daten (QtVlm)"
 msgid "Karte drucken"
 msgstr "Karte drucken"
 
+msgid "Kazakhstan"
+msgstr "Kazakhstan"
+
+msgid "Kenya"
+msgstr "Kenya"
+
 msgid "Kilometers"
 msgstr "Kilometer"
 
+msgid "Kiribati"
+msgstr "Kiribati"
+
 msgid "Knots"
 msgstr "Knoten"
+
+msgid "Korea"
+msgstr "Korea"
+
+msgid "Kuwait"
+msgstr "Kuwait"
+
+msgid "Kyrgyz Republic"
+msgstr "Kyrgyz Republik"
 
 msgid "LE/V"
 msgstr "LE/V"
@@ -1735,8 +2079,14 @@ msgstr "NW"
 msgid "Language"
 msgstr "Sprache"
 
+msgid "Lao People's Dem. Rep."
+msgstr "Laos Volksrepublik"
+
 msgid "Latitude"
 msgstr "Breitengrad"
+
+msgid "Latvia"
+msgstr "Latvia"
 
 msgid "Law Enforcement Vessel"
 msgstr "Polizeifahrzeug"
@@ -1774,6 +2124,9 @@ msgstr "Richtfeuer (vorderes) - Unterfeuer"
 msgid "Leading Light Rear"
 msgstr "Richtfeuer (hinteres) - Oberfeuer"
 
+msgid "Lebanon"
+msgstr "Libanon"
+
 msgid "Left"
 msgstr "Links"
 
@@ -1792,8 +2145,20 @@ msgstr "Länge"
 msgid "Length Over All (m)"
 msgstr "Länge über alles (m)"
 
+msgid "Lesotho"
+msgstr "Lesotho"
+
+msgid "Liberia"
+msgstr "Liberia"
+
+msgid "Libya"
+msgstr "Libyen"
+
 msgid "License"
 msgstr "Lizenz"
+
+msgid "Liechtenstein"
+msgstr "Liechtenstein"
 
 msgid "Light"
 msgstr "Leuchtfeuer"
@@ -1843,6 +2208,9 @@ msgstr "Flüssiggastanker"
 msgid "List contents"
 msgstr "Elemente auflisten"
 
+msgid "Lithuania"
+msgstr "Litauen"
+
 msgid "Loaded Charts"
 msgstr "Geladene Karten"
 
@@ -1882,6 +2250,9 @@ msgstr "Lt sect."
 msgid "LtV/Rig"
 msgstr "LtV/Rig"
 
+msgid "Luxembourg"
+msgstr "Luxembourg"
+
 msgid "M/T"
 msgstr "M/T"
 
@@ -1897,8 +2268,35 @@ msgstr "MMSI"
 msgid "M_COVR ID"
 msgstr "M_COVR ID"
 
+msgid "Macao"
+msgstr "Macao"
+
+msgid "Macedonia"
+msgstr "Macedonien"
+
+msgid "Madagascar"
+msgstr "Madagaskar"
+
+msgid "Madeira"
+msgstr "Madeira"
+
 msgid "Magenta"
 msgstr "Magenta"
+
+msgid "Malawi"
+msgstr "Malawi"
+
+msgid "Malaysia"
+msgstr "Malaysia"
+
+msgid "Maldives"
+msgstr "Maldiven"
+
+msgid "Mali"
+msgstr "Mali"
+
+msgid "Malta"
+msgstr "Malta"
 
 msgid "Mariner's Standard"
 msgstr "Benutzerdef. Auswahl"
@@ -1911,6 +2309,18 @@ msgstr "Ziele als verloren markieren nach (Minuten)"
 
 msgid "Marks"
 msgstr "Markierungen"
+
+msgid "Marshall Islands"
+msgstr "Marshall Inseln"
+
+msgid "Martinique"
+msgstr "Martinique"
+
+msgid "Mauritania"
+msgstr "Mauritanien"
+
+msgid "Mauritius"
+msgstr "Mauritius"
 
 msgid "Max Detail Here"
 msgstr "max. Vergrößerung hier"
@@ -1948,6 +2358,12 @@ msgstr "Nachricht gefiltert und verworfen"
 msgid "Meters"
 msgstr "Meter"
 
+msgid "Mexico"
+msgstr "Mexico"
+
+msgid "Micronesia"
+msgstr "Micronesien"
+
 msgid "Mil/V"
 msgstr "Mil/V"
 
@@ -1963,8 +2379,26 @@ msgstr "Verschiedene Optionen"
 msgid "MoTwilight"
 msgstr "Morgendämmerung"
 
+msgid "Moldova"
+msgstr "Moldavien"
+
+msgid "Monaco"
+msgstr "Monaco"
+
+msgid "Mongolia"
+msgstr "Mongolei"
+
+msgid "Montenegro"
+msgstr "Montenegro"
+
+msgid "Montserrat"
+msgstr "Montserrat"
+
 msgid "Moored"
 msgstr "festgemacht"
+
+msgid "Morocco"
+msgstr "Marokko"
 
 msgid "Motor freighter"
 msgstr "Motorleichter"
@@ -2005,8 +2439,14 @@ msgstr "Bootsposition hierhin verschieben"
 msgid "Move Waypoint"
 msgstr "Verschiebe Wegpunkt"
 
+msgid "Mozambique"
+msgstr "Mozambique"
+
 msgid "Mph"
 msgstr "Mph"
+
+msgid "Myanmar"
+msgstr "Myanmar"
 
 msgid "NMEA"
 msgstr "NMEA"
@@ -2026,8 +2466,14 @@ msgstr "sm"
 msgid "Name"
 msgstr "Name"
 
+msgid "Namibia"
+msgstr "Namibia"
+
 msgid "National text on chart"
 msgstr "Nationaler Text in Karte"
+
+msgid "Nauru"
+msgstr "Nauru"
 
 msgid "Nautical Miles"
 msgstr "Seemeilen"
@@ -2044,11 +2490,23 @@ msgstr "Navigiere hierhin"
 msgid "Navigate To This"
 msgstr "Navigiere dahin"
 
+msgid "Nepal"
+msgstr "Nepal"
+
 msgid "Net"
 msgstr "Netz"
 
+msgid "Netherlands"
+msgstr "Niederlande"
+
+msgid "Netherlands Antilles"
+msgstr "Niederländische Antillen"
+
 msgid "Network"
 msgstr "Netzwerk"
+
+msgid "New Caledonia"
+msgstr "Neukaledonien"
 
 msgid "New Chart Group"
 msgstr "Neue Karten-Gruppe"
@@ -2056,14 +2514,29 @@ msgstr "Neue Karten-Gruppe"
 msgid "New Group..."
 msgstr "Neue Gruppe..."
 
+msgid "New Zealand"
+msgstr "Neuseeland"
+
 msgid "Next"
 msgstr "vor"
 
 msgid "Next tide event"
 msgstr "Nächstes HW/NW"
 
+msgid "Nicaragua"
+msgstr "Nicaragua"
+
+msgid "Niger"
+msgstr "Niger"
+
+msgid "Nigeria"
+msgstr "Nigeria"
+
 msgid "Nighttime"
 msgstr "Nachtzeit"
+
+msgid "Niue"
+msgstr "Niue"
 
 msgid "No"
 msgstr "Nein"
@@ -2096,6 +2569,12 @@ msgstr "Kein"
 msgid "North Up Mode"
 msgstr "Genordeter Modus"
 
+msgid "Northern Mariana Islands"
+msgstr "Nord Mariana Inseln"
+
+msgid "Norway"
+msgstr "Norwegen"
+
 msgid "Not Under Command"
 msgstr "manövrierunfähig"
 
@@ -2122,6 +2601,9 @@ msgstr "OK"
 
 msgid "Old log will be moved to opencpn.log.log"
 msgstr "Altes Log verschoben nach opencpn.log.log"
+
+msgid "Oman"
+msgstr "Oman"
 
 msgid "OpenCPN AIS Alert"
 msgstr "OpenCPN AIS-Alarm"
@@ -2222,8 +2704,26 @@ msgstr "P/V"
 msgid "PC/V"
 msgstr "PC/V"
 
+msgid "Pakistan"
+msgstr "Pakistan"
+
+msgid "Palau"
+msgstr "Palau"
+
+msgid "Palestine"
+msgstr "Palästina"
+
+msgid "Panama"
+msgstr "Panama"
+
 msgid "Paper Chart"
 msgstr "Papierkarte"
+
+msgid "Papua New Guinea"
+msgstr "Papua Neu Guinea"
+
+msgid "Paraguay"
+msgstr "Paraguay"
 
 msgid "Parameters"
 msgstr "Parameter"
@@ -2252,8 +2752,20 @@ msgstr "Wegpunkt einfügen"
 msgid "Pause"
 msgstr "Pause"
 
+msgid "People's Rep. of Korea"
+msgstr "Volksrepublik Korea"
+
+msgid "Peru"
+msgstr "Peru"
+
+msgid "Philippines"
+msgstr "Philippinen"
+
 msgid "Pilot Vessel"
 msgstr "Lotsenboot"
+
+msgid "Pitcairn Island"
+msgstr "Pitcairn Insel"
 
 msgid "Plain"
 msgstr "Schlicht"
@@ -2306,6 +2818,9 @@ msgstr "Plugins"
 msgid "Points"
 msgstr "Punkte"
 
+msgid "Poland"
+msgstr "Polen"
+
 msgid "Pollution Control Vessel"
 msgstr "Gewässerschutz-Fahrzeug"
 
@@ -2323,6 +2838,9 @@ msgstr "Schifffahrtszeichen Backbord"
 
 msgid "Port Tender"
 msgstr "Hafen Taxi"
+
+msgid "Portugal"
+msgstr "Portugal"
 
 msgid "Position"
 msgstr "Position"
@@ -2390,6 +2908,9 @@ msgstr "Eigenschaften..."
 msgid "Protocol"
 msgstr "Protokoll"
 
+msgid "Puerto Rico"
+msgstr "Puerto Rico"
+
 msgid "Pushboat, single"
 msgstr "Schubboot, einzeln"
 
@@ -2446,6 +2967,9 @@ msgstr "Schubverband, 2 Leichter davon 1 Tanker oder Gasleichter"
 
 msgid "Pushtow, two cargo barges"
 msgstr "Schubverband, 2 Frachtleichter"
+
+msgid "Qatar"
+msgstr "Qatar"
 
 msgid "Question"
 msgstr "Frage"
@@ -2589,6 +3113,9 @@ msgstr ""
 msgid "Retrieving initial language selection from Windows Registry"
 msgstr "Rufe die ursprüngliche Sprachauswahl aus der Windows Registrierung ab"
 
+msgid "Reunion"
+msgstr "Reunion"
+
 msgid "Reverse..."
 msgstr "Umkehren..."
 
@@ -2600,6 +3127,9 @@ msgstr "Verdächtiges Schiff"
 
 msgid "Rollover"
 msgstr "Kurzübersicht"
+
+msgid "Romania"
+msgstr "Romänien"
 
 msgid "Route"
 msgstr "Route"
@@ -2643,6 +3173,12 @@ msgstr "Routenmanager"
 msgid "Routes"
 msgstr "Routen"
 
+msgid "Russia"
+msgstr "Russland"
+
+msgid "Rwanda"
+msgstr "Rwanda"
+
 msgid "S/V"
 msgstr "S/V"
 
@@ -2666,6 +3202,36 @@ msgstr "Sicherheitstiefe"
 
 msgid "Sailing Vessel"
 msgstr "Segelschiff"
+
+msgid "Saint Helena"
+msgstr "Saint Helena"
+
+msgid "Saint Kitts and Nevis"
+msgstr "Saint Kitts und Nevis"
+
+msgid "Saint Lucia"
+msgstr "Saint Lucia"
+
+msgid "Saint Paul"
+msgstr "Saint Paul"
+
+msgid "Saint Pierre and Miquelon"
+msgstr "Saint Pierre und Miquelon"
+
+msgid "Saint Vincent and Grenadines"
+msgstr "Sankt Vincent und Grenadinen"
+
+msgid "Samoa"
+msgstr "Samoa"
+
+msgid "San Marino"
+msgstr "San Marino"
+
+msgid "Sao Tome and Principe"
+msgstr "Sao Tome und Principe"
+
+msgid "Saudi Arabia"
+msgstr "Saudi Arabien"
 
 #, c-format
 msgid "Scale %4.0f"
@@ -2737,8 +3303,14 @@ msgstr "An GPS senden..."
 msgid "Send to GPS"
 msgstr "An GPS senden"
 
+msgid "Senegal"
+msgstr "Senegal"
+
 msgid "Sentence Filter"
 msgstr "Sequenz-Filter"
+
+msgid "Serbia"
+msgstr "Serbien"
 
 msgid "Serial"
 msgstr "Seriell"
@@ -2751,6 +3323,9 @@ msgstr "Setzen"
 
 msgid "Set Anchor Watch"
 msgstr "Ankerwache einstellen"
+
+msgid "Seychelles"
+msgstr "Seychellen"
 
 msgid "Shallow Depth"
 msgstr "Flachwassergrenze"
@@ -2890,8 +3465,20 @@ msgstr "Zeige Tracks für Ziele, Länge (Minuten)"
 msgid "Shows the font preview."
 msgstr "Zeigt die Schriftvorschau."
 
+msgid "Sierra Leone"
+msgstr "Sierra Leone"
+
 msgid "Simplified"
 msgstr "Vereinfacht"
+
+msgid "Singapore"
+msgstr "Singapur"
+
+msgid "Slovak Republic"
+msgstr "Slowakische Republik"
+
+msgid "Slovenia"
+msgstr "Slowenien"
 
 msgid "Smooth Panning / Zooming"
 msgstr "Weiches Schwenken/Zoomen"
@@ -2902,9 +3489,24 @@ msgstr "SOG"
 msgid "Solid"
 msgstr "Solid"
 
+msgid "Solomon Islands"
+msgstr "Solomon Inseln"
+
+msgid "Somali Democratic Republic"
+msgstr "Somalia Demokr. Republik"
+
 #, c-format
 msgid "Sound file '%s' is in unsupported format."
 msgstr "Tondatei '%s' hat nicht unterstütztes Format."
+
+msgid "South Africa"
+msgstr "Süd-Afrika"
+
+msgid "South Sudan (Republic of)"
+msgstr "Republik Süd Sudan"
+
+msgid "Spain"
+msgstr "Spanien"
 
 msgid "Spare"
 msgstr "<frei> - nicht verwendet"
@@ -2914,6 +3516,9 @@ msgstr "Spezial"
 
 msgid "Special Mark"
 msgstr "Spezielle Markierung (?)"
+
+msgid "Special Position Report"
+msgstr "Spezieller Positionsbericht"
 
 msgid "Speed"
 msgstr "Geschwindigkeit"
@@ -2929,6 +3534,9 @@ msgstr "Route splitten"
 
 msgid "Split Track"
 msgstr "Track splitten"
+
+msgid "Sri Lanka"
+msgstr "Sri Lanka"
 
 msgid "Standard"
 msgstr "Standard"
@@ -2960,6 +3568,9 @@ msgstr "Stil"
 msgid "Style:"
 msgstr "Stil:"
 
+msgid "Sudan"
+msgstr "Sudan"
+
 msgid "Sunrise"
 msgstr "Sonnenaufgang"
 
@@ -2969,14 +3580,35 @@ msgstr "Sonnenuntergang"
 msgid "Supress Alerts for anchored/moored targets"
 msgstr "Alarm für festgemachte/vor Anker liegende Ziele unterdrücken"
 
+msgid "Suriname"
+msgstr "Surinam"
+
+msgid "Swaziland"
+msgstr "Swaziland"
+
+msgid "Sweden"
+msgstr "Schweden"
+
+msgid "Switzerland"
+msgstr "Schweiz"
+
 msgid "Symbolized"
 msgstr "Symbolisch"
+
+msgid "Syrian Arab Republic"
+msgstr "Syrische Arabische Republik"
 
 msgid "TCP"
 msgstr "TCP"
 
 msgid "TCPA"
 msgstr "TCPA"
+
+msgid "Taiwan"
+msgstr "Taiwan"
+
+msgid "Tajikistan"
+msgstr "Tajikistan"
 
 msgid "Tankbarge"
 msgstr "Tankleichter"
@@ -2995,6 +3627,9 @@ msgstr "Tankleichter, Flüssigkeit, Typ N"
 
 msgid "Tanker"
 msgstr "Tanker"
+
+msgid "Tanzania"
+msgstr "Tanzania"
 
 msgid "Target Count"
 msgstr "Anzahl Ziele"
@@ -3028,6 +3663,9 @@ msgstr "Testend"
 
 msgid "Text anzeigen\tT"
 msgstr "Text anzeigen\tT"
+
+msgid "Thailand"
+msgstr "Thailand"
 
 msgid ""
 "The Man Over Board button could be an important safety feature.\n"
@@ -3163,8 +3801,14 @@ msgstr "heute"
 msgid "Toggle Tracking"
 msgstr "Tracking an-/ausschalten"
 
+msgid "Togolese Republic"
+msgstr "Togolesische Republik"
+
 msgid "Tomorrow"
 msgstr "morgen"
+
+msgid "Tonga"
+msgstr "Tonga"
 
 msgid "ToolTips"
 msgstr "Tool Tipps"
@@ -3176,7 +3820,7 @@ msgid "Total Distance"
 msgstr "Gesamtentfernung"
 
 msgid "Total Length: "
-msgstr "Ganze Länge:"
+msgstr "Ganze Länge: "
 
 msgid "Total distance"
 msgstr "Gesamtentfernung"
@@ -3218,6 +3862,9 @@ msgstr "transversale Mercator-Projektion"
 msgid "Treat WPL sentences as APRS position reports"
 msgstr "Behandele WPL Sequenzen als APRS Positions-Bericht"
 
+msgid "Trinidad and Tobago"
+msgstr "Trinidad und Tobago"
+
 msgid "Tug"
 msgstr "Schlepper"
 
@@ -3242,8 +3889,23 @@ msgstr "Schlepper, einzeln"
 msgid "Tug, tanker"
 msgstr "Schlepper, Tanker"
 
+msgid "Tunisia"
+msgstr "Tunesien"
+
+msgid "Turkey"
+msgstr "Turkei"
+
+msgid "Turkmenistan"
+msgstr "Turkmenistan"
+
+msgid "Turks and Caicos Islands"
+msgstr "Turks und Caicos Inseln"
+
 msgid "Turn Rate"
 msgstr "Drehrate"
+
+msgid "Tuvalu"
+msgstr "Tuvalu"
 
 msgid "Type"
 msgstr "Typ"
@@ -3256,6 +3918,12 @@ msgstr "URL"
 
 msgid "UTC"
 msgstr "UTC"
+
+msgid "Uganda"
+msgstr "Uganda"
+
+msgid "Ukraine"
+msgstr "Ukraine"
 
 msgid ""
 "Unable to initialize libgps.\n"
@@ -3287,6 +3955,15 @@ msgstr "Undo"
 msgid "Unit carrier maritime"
 msgstr "Transporter Maritim"
 
+msgid "United Arab Emirates"
+msgstr "Vereinigte Arabische Emirate"
+
+msgid "United States Virgin Islands"
+msgstr "Jungfrau Inseln"
+
+msgid "United States of America"
+msgstr "Vereinigte Staaten"
+
 msgid "Unk"
 msgstr "Unbek."
 
@@ -3301,6 +3978,9 @@ msgstr "nicht spezifiziert"
 
 msgid "Update Control"
 msgstr "Aktualisierungseinstellung"
+
+msgid "Uruguay"
+msgstr "Uruguay"
 
 msgid "Use Accelerated Graphics (OpenGL)"
 msgstr "Verwende beschleunigte Grafik (OpenGL)"
@@ -3332,11 +4012,23 @@ msgstr "Benutzer Y Offset"
 msgid "User Y Offset (Metres)"
 msgstr "Benutzer Y Offset (Meter)"
 
+msgid "Uzbekistan"
+msgstr "Uzbekistan"
+
 msgid "VTS active target"
 msgstr "VTS aktives Ziel"
 
+msgid "Vanuatu"
+msgstr "Vanuatu"
+
+msgid "Vatican City State"
+msgstr "Vatikan Stadt"
+
 msgid "Vector Charts"
 msgstr "Vektorkarten"
+
+msgid "Venezuela"
+msgstr "Venezuela"
 
 msgid "Vessel Diving"
 msgstr "Tauchboot"
@@ -3364,6 +4056,9 @@ msgid ""
 "dredge"
 msgstr "Schiff, Arbeitsgerät, Kran, Kabel-, Bagger-Schiff, Tonnenleger"
 
+msgid "Viet Nam"
+msgstr "Vietnam"
+
 msgid "Virtual"
 msgstr "Virtuell"
 
@@ -3378,6 +4073,9 @@ msgstr "Sichtbare Buttons"
 
 msgid "WAV files (*.wav)|*.wav|All files (*.*)|*.*"
 msgstr "WAV-Dateien (*.wav)|*.wav|Alle Dateien (*.*)|*.*"
+
+msgid "Wallis and Futuna Islands"
+msgstr "Wallis und Futuna Inseln"
 
 msgid "Warn if CPA less than (NMi)"
 msgstr "Warnung, wenn CPA geringer ist als (sm)"
@@ -3456,6 +4154,9 @@ msgstr "Yat"
 msgid "Yellow"
 msgstr "Gelb"
 
+msgid "Yemen"
+msgstr "Yemen"
+
 msgid "Yes"
 msgstr "Ja"
 
@@ -3474,6 +4175,12 @@ msgstr "Adresse muß eingegeben werden..."
 
 msgid "You must select or enter the port..."
 msgstr "Port wählen oder eingeben..."
+
+msgid "Zambia"
+msgstr "Zambia"
+
+msgid "Zimbabwe"
+msgstr "Zimbawne"
 
 msgid "Zoom In"
 msgstr "Hineinzoomen"
