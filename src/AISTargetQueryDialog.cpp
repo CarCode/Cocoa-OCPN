@@ -211,7 +211,7 @@ void AISTargetQueryDialog::UpdateText()
             wxSize sz;
             if( ! IsShown() ) {
                 sz = m_pQueryTextCtl->GetVirtualSize();
-                sz.x = 300;
+                sz.x = 325;
                 m_pQueryTextCtl->SetSize( sz );
             }
             m_pQueryTextCtl->Layout();
