@@ -23,8 +23,10 @@
 
 #include "wx/wxprec.h"
 #include <wx/tokenzr.h>
+//#include <wx/glcanvas.h>
 
 #include "GL/gl.h"
+#include "GL/glext.h"
 
 #include "glChartCanvas.h"
 #include "glTextureDescriptor.h"
@@ -59,7 +61,7 @@ extern ChartBase *Current_Ch;
 extern ColorScheme global_color_scheme;
 extern bool g_bquiting;
 extern ThumbWin         *pthumbwin;
-
+#ifdef __WXOSX__
 extern PFNGLGENFRAMEBUFFERSEXTPROC         s_glGenFramebuffersEXT;
 extern PFNGLGENRENDERBUFFERSEXTPROC        s_glGenRenderbuffersEXT;
 extern PFNGLFRAMEBUFFERTEXTURE2DEXTPROC    s_glFramebufferTexture2DEXT;
@@ -70,7 +72,7 @@ extern PFNGLBINDRENDERBUFFEREXTPROC        s_glBindRenderbufferEXT;
 extern PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC  s_glCheckFramebufferStatusEXT;
 extern PFNGLDELETEFRAMEBUFFERSEXTPROC      s_glDeleteFramebuffersEXT;
 extern PFNGLDELETERENDERBUFFERSEXTPROC     s_glDeleteRenderbuffersEXT;
-
+#endif
 #ifdef __WXMSW__
 HINSTANCE s_hGL_DLL;                   // Handle to DLL
 #endif
@@ -316,9 +318,20 @@ static bool GetglEntryPoints( void )
     s_glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC) GetProcAddress( s_hGL_DLL,
                                  "glDeleteRenderbuffersEXT" );
 
-#elif defined(__WXMAC__)
+#elif defined(__WXOSX__)
+//#define GL_GLEXT_FUNCTION_POINTERS 1
     return false;
-
+//    s_glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)glXGetProcAddress((const GLubyte *)"glGenFramebuffersEXT");
+//    s_glGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXTPROC)glXGetProcAddress((const GLubyte *)"glGenRenderbuffersEXT");
+//    s_glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)glXGetProcAddress((const GLubyte *)"glFramebufferTexture2DEXT");
+//    s_glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC)glXGetProcAddress((const GLubyte *)"glBindFramebufferEXT");
+//    s_glFramebufferRenderbufferEXT = (PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)glXGetProcAddress((const GLubyte *)"glFramebufferRenderbufferEXT");
+//    s_glRenderbufferStorageEXT = (PFNGLRENDERBUFFERSTORAGEEXTPROC)glXGetProcAddress((const GLubyte *)"glRenderbufferStorageEXT");
+//    s_glBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXTPROC)glXGetProcAddress((const GLubyte *)"glBindRenderbufferEXT");
+//    s_glCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)glXGetProcAddress((const GLubyte *)"glCheckFramebufferStatusEXT");
+//    s_glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)glXGetProcAddress((const GLubyte *)"glDeleteFramebuffersEXT");
+//    s_glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC)glXGetProcAddress((const GLubyte *)"glDeleteRenderbuffersEXT");
+    
 #else
 
     s_glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)glXGetProcAddress((const GLubyte *)"glGenFramebuffersEXT");
@@ -332,7 +345,18 @@ static bool GetglEntryPoints( void )
     s_glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)glXGetProcAddress((const GLubyte *)"glDeleteFramebuffersEXT");
     s_glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC)glXGetProcAddress((const GLubyte *)"glDeleteRenderbuffersEXT");
 #endif
-
+#ifndef __WXOSX__
+    if( NULL == glGenFramebuffersEXT ) return false;
+    if( NULL == glGenRenderbuffersEXT ) return false;
+    if( NULL == glFramebufferTexture2DEXT ) return false;
+    if( NULL == glBindFramebufferEXT ) return false;
+    if( NULL == glFramebufferRenderbufferEXT ) return false;
+    if( NULL == glRenderbufferStorageEXT ) return false;
+    if( NULL == glBindRenderbufferEXT ) return false;
+    if( NULL == glCheckFramebufferStatusEXT ) return false;
+    if( NULL == glDeleteFramebuffersEXT ) return false;
+    if( NULL == glDeleteRenderbuffersEXT ) return false;
+#else
     if( NULL == s_glGenFramebuffersEXT ) return false;
     if( NULL == s_glGenRenderbuffersEXT ) return false;
     if( NULL == s_glFramebufferTexture2DEXT ) return false;
@@ -343,7 +367,7 @@ static bool GetglEntryPoints( void )
     if( NULL == s_glCheckFramebufferStatusEXT ) return false;
     if( NULL == s_glDeleteFramebuffersEXT ) return false;
     if( NULL == s_glDeleteRenderbuffersEXT ) return false;
-
+#endif
     return true;
 }
 
@@ -357,9 +381,15 @@ BEGIN_EVENT_TABLE ( glChartCanvas, wxGLCanvas ) EVT_PAINT ( glChartCanvas::OnPai
 END_EVENT_TABLE()
 
 glChartCanvas::glChartCanvas( wxWindow *parent ) :
+#ifdef __WXOSX__
+    wxGLCanvas(parent, wxID_ANY,attribs,wxDefaultPosition, wxSize(256,256),
+               wxFULL_REPAINT_ON_RESIZE | wxBG_STYLE_CUSTOM, _T(""), wxNullPalette ), m_cacheinvalid(
+                    1 ), m_data( NULL ), m_datasize( 0 ), m_bsetup( false )
+#else
     wxGLCanvas( parent, wxID_ANY, wxDefaultPosition, wxSize( 256, 256 ),
                 wxFULL_REPAINT_ON_RESIZE | wxBG_STYLE_CUSTOM, _T(""), attribs ), m_cacheinvalid(
                     1 ), m_data( NULL ), m_datasize( 0 ), m_bsetup( false )
+#endif
 {
     m_ntex = 0;
     m_b_paint_enable = true;
@@ -416,8 +446,9 @@ void glChartCanvas::OnSize( wxSizeEvent& event )
     }
 
     // this is also necessary to update the context on some platforms
+#ifndef __WXOSX__
     wxGLCanvas::OnSize( event );
-
+#endif
     /* expand opengl widget to fill viewport */
     ViewPort &VP = cc1->GetVP();
     if( GetSize().x != VP.pix_width || GetSize().y != VP.pix_height ) {

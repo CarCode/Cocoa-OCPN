@@ -5226,7 +5226,7 @@ bool ChartCanvas::CheckEdgePan( int x, int y, bool bdragging )
     //    Of course, if dragging, and the mouse left button is not down, we must stop the event injection
     if( bdragging ) {
         wxMouseState state = ::wxGetMouseState();
-        if( !state.LeftDown() ) bft = false;
+        if( !state.LeftIsDown() ) bft = false;
     }
 
     if( ( bft ) && !pPanTimer->IsRunning() ) {
@@ -6541,7 +6541,11 @@ void ChartCanvas::CanvasPopupMenu( int x, int y, int seltype )
         {
             if( pimis->b_viz ) {
                 wxMenuItem *pmi = new wxMenuItem( contextMenu, pimis->id,
+#ifdef __WXOSX__
+                                                 pimis->pmenu_item->GetItemLabel(), pimis->pmenu_item->GetHelp(),
+#else
                                                   pimis->pmenu_item->GetLabel(), pimis->pmenu_item->GetHelp(),
+#endif
                                                   pimis->pmenu_item->GetKind(), pimis->pmenu_item->GetSubMenu() );
                 contextMenu->Append( pmi );
                 contextMenu->Enable( pimis->id, !pimis->b_grey );

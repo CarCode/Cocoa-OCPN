@@ -2520,8 +2520,6 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
 
     g_sticky_chart = -1;
 #ifdef __WXOSX__ // Test WXOSX
-//    wxApp::s_macHelpMenuTitleName = "Hilfe";
-// Geht auch nicht
 
     mac_menu = NULL;
     // neue Menü Bar
@@ -2553,7 +2551,6 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     wxMenu* helpMenu = new wxMenu;
     helpMenu->Append(wxID_ABOUT, _T("Über OpenCPN"));
     helpMenu->Append(wxID_HELP, _T("&Hilfe  \u2318J"));               // macht neuen Menüpunkt
-//    helpMenu->Append(wxID_EXIT, _T("OpenCPN beenden"));   Text will nicht
 
     wxMenuBar* mac_menu = new wxMenuBar( wxMB_DOCKABLE );
     mac_menu->Append(appMenu, _T("Karte"));
@@ -2565,9 +2562,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     appMenu->Check(ID_AIS, true);
     appMenu->Check(ID_CURRENT, false);
     appMenu->Check(ID_TIDE, false);
-// wxMenuBar::
-//    MacSetCommonMenuBar(mac_menu);
-//    wxApp::s_macHelpMenuTitleName = _("&Hilfe"); //woher ist das?
+
     SetMenuBar(mac_menu);
 #endif
 }
@@ -2687,7 +2682,7 @@ void MyFrame::OnActivate( wxActivateEvent& event )
 //    Code carefully in this method.
 //    It is called in some unexpected places,
 //    such as on closure of dialogs, etc.
-
+// Test OS X
     if( cc1 ) cc1->SetFocus();       // This seems to be needed for MSW, to get key and wheel events
                                      // after minimize/maximize.
 

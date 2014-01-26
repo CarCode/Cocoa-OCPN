@@ -1177,27 +1177,39 @@ void options::CreatePanel_VectorCharts( size_t parent, int border_size, int grou
     vectorPanel->Add( depthsSizer, 0, wxALL | wxEXPAND, border_size );
 
     wxStaticText* itemStaticText4 = new wxStaticText( ps57Ctl, wxID_STATIC, _("Shallow Depth") );
+#ifdef __WXOSX__
+    depthsSizer->Add( itemStaticText4, 0,
+                     wxLEFT | wxRIGHT | wxTOP, group_item_spacing );
+#else
     depthsSizer->Add( itemStaticText4, 0,
             wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, group_item_spacing );
-
+#endif
     m_ShallowCtl = new wxTextCtrl( ps57Ctl, ID_TEXTCTRL, _T(""), wxDefaultPosition,
             wxSize( 120, -1 ), 0 );
     depthsSizer->Add( m_ShallowCtl, 0, wxLEFT | wxRIGHT | wxBOTTOM,
             group_item_spacing );
 
     wxStaticText* itemStaticText5 = new wxStaticText( ps57Ctl, wxID_STATIC, _("Safety Depth") );
+#ifdef __WXOSX__
+    depthsSizer->Add( itemStaticText5, 0,
+                     wxLEFT | wxRIGHT | wxTOP, group_item_spacing );
+#else
     depthsSizer->Add( itemStaticText5, 0,
             wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, group_item_spacing );
-
+#endif
     m_SafetyCtl = new wxTextCtrl( ps57Ctl, ID_TEXTCTRL, _T(""), wxDefaultPosition,
             wxSize( 120, -1 ), 0 );
     depthsSizer->Add( m_SafetyCtl, 0, wxLEFT | wxRIGHT | wxBOTTOM,
             group_item_spacing );
 
     wxStaticText* itemStaticText6 = new wxStaticText( ps57Ctl, wxID_STATIC, _("Deep Depth") );
+#ifdef __WXOSX__
+    depthsSizer->Add( itemStaticText6, 0,
+                     wxLEFT | wxRIGHT | wxTOP, group_item_spacing );
+#else
     depthsSizer->Add( itemStaticText6, 0,
             wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, group_item_spacing );
-
+#endif
     m_DeepCtl = new wxTextCtrl( ps57Ctl, ID_TEXTCTRL, _T(""), wxDefaultPosition, wxSize( 120, -1 ),
             0 );
     depthsSizer->Add( m_DeepCtl, 0, wxLEFT | wxRIGHT | wxBOTTOM,
@@ -1388,9 +1400,12 @@ void options::CreatePanel_Display( size_t parent, int border_size, int group_ite
 
     wxStaticText* itemStaticTextCOGUPFilterSecs = new wxStaticText( itemPanelUI, wxID_STATIC,
             _("Course-Up Mode Display Update Period (sec)") );
+#ifdef __WXOSX__
+    pCOGUPFilterGrid->Add( itemStaticTextCOGUPFilterSecs, 0, 0, border_size );
+#else
     pCOGUPFilterGrid->Add( itemStaticTextCOGUPFilterSecs, 0, wxADJUST_MINSIZE,
             border_size );
-
+#endif
     pCOGUPUpdateSecs = new wxTextCtrl( itemPanelUI, ID_TEXTCTRL, _T(""), wxDefaultPosition,
             wxDefaultSize );
     pCOGUPFilterGrid->Add( pCOGUPUpdateSecs, 0, wxALIGN_RIGHT | wxALL, border_size );
@@ -1455,9 +1470,12 @@ void options::CreatePanel_Display( size_t parent, int border_size, int group_ite
 
     wxStaticText* itemStaticTextUserVar = new wxStaticText( itemPanelUI, wxID_STATIC,
                                                             _("Assumed Magnetic Variation, deg.") );
+#ifdef __WXOSX__
+    pUserVarGrid->Add( itemStaticTextUserVar, 0, 0, border_size );
+#else
     pUserVarGrid->Add( itemStaticTextUserVar, 0, wxADJUST_MINSIZE,
                         border_size );
-
+#endif
     pMagVar = new wxTextCtrl( itemPanelUI, ID_TEXTCTRL, _T(""), wxDefaultPosition,
                                 wxDefaultSize );
     pUserVarGrid->Add( pMagVar, 0, wxALIGN_RIGHT | wxALL, border_size );
@@ -1733,9 +1751,13 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
 
     wxStaticText* itemStaticTextSDMMFormat = new wxStaticText( itemPanelFont, wxID_STATIC,
             _("Show Lat/Long as") );
+#ifdef __WXOSX__
+    pFormatGrid->Add( itemStaticTextSDMMFormat, 0,
+                     wxLEFT | wxRIGHT | wxTOP, border_size );
+#else
     pFormatGrid->Add( itemStaticTextSDMMFormat, 0,
             wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, border_size );
-
+#endif
     wxString pSDMMFormats[] = { _("Degrees, Decimal Minutes"), _("Decimal Degrees"),
             _("Degrees, Minutes, Seconds") };
     int m_SDMMFormatsNChoices = sizeof( pSDMMFormats ) / sizeof(wxString);
@@ -1745,9 +1767,13 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
 
     wxStaticText* itemStaticTextDistanceFormat = new wxStaticText( itemPanelFont, wxID_STATIC,
             _("Show distance as") );
+#ifdef __WXOSX__
+    pFormatGrid->Add( itemStaticTextDistanceFormat, 0,
+                     wxLEFT | wxRIGHT | wxTOP, border_size );
+#else
     pFormatGrid->Add( itemStaticTextDistanceFormat, 0,
             wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, border_size );
-
+#endif
     wxString pDistanceFormats[] = { _("Nautical miles"), _("Statute miles"),
             _("Kilometers"), _("Meters") };
     int m_DistanceFormatsNChoices = sizeof( pDistanceFormats ) / sizeof(wxString);
@@ -1757,9 +1783,13 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
 
     wxStaticText* itemStaticTextSpeedFormat = new wxStaticText( itemPanelFont, wxID_STATIC,
             _("Show speed as") );
+#ifdef __WXOSX__
+    pFormatGrid->Add( itemStaticTextSpeedFormat, 0,
+                     wxLEFT | wxRIGHT | wxTOP, border_size );
+#else
     pFormatGrid->Add( itemStaticTextSpeedFormat, 0,
             wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, border_size );
-
+#endif
     wxString pSpeedFormats[] = { _("Knots"), _("Mph"),
             _("km/h"), _("m/s") };
     int m_SpeedFormatsNChoices = sizeof( pSpeedFormats ) / sizeof(wxString);
@@ -2233,8 +2263,9 @@ void options::OnShowGpsWindowCheckboxClick( wxCommandEvent& event )
         NMEALogWindow::Get().DestroyWindow();
     } else {
         NMEALogWindow::Get().Create(pParent, 35);
-#ifdef __WXOSX__
         Raise();
+#ifdef __WXOSX__
+        Show();
 #endif
     }
 }

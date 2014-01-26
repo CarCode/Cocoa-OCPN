@@ -641,9 +641,13 @@ void RouteProp::CreateControls()
 
     wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC, _("Name"),
             wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    itemStaticBoxSizer3->Add( itemStaticText4, 0,
+                             wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
+#else
     itemStaticBoxSizer3->Add( itemStaticText4, 0,
             wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
-
+#endif
     m_RouteNameCtl = new wxTextCtrl( itemDialog1, ID_TEXTCTRL, _T(""), wxDefaultPosition,
             wxSize( 710, -1 ), 0 );
     itemStaticBoxSizer3->Add( m_RouteNameCtl, 0,
@@ -677,28 +681,44 @@ void RouteProp::CreateControls()
 
     wxStaticText* itemStaticText11 = new wxStaticText( itemDialog1, wxID_STATIC,
             _("Total Distance"), wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    itemFlexGridSizer6a->Add( itemStaticText11, 0,
+                             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP, 5 );
+#else
     itemFlexGridSizer6a->Add( itemStaticText11, 0,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
             5 );
-
+#endif
     m_PlanSpeedLabel = new wxStaticText( itemDialog1, wxID_STATIC, _("Plan Speed"),
             wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    itemFlexGridSizer6a->Add( m_PlanSpeedLabel, 0,
+                             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP, 5 );
+#else
     itemFlexGridSizer6a->Add( m_PlanSpeedLabel, 0,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
             5 );
-
+#endif
     wxStaticText* itemStaticText12a = new wxStaticText( itemDialog1, wxID_STATIC, _("Time Enroute"),
             wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    itemFlexGridSizer6a->Add( itemStaticText12a, 0,
+                             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP, 5 );
+#else
     itemFlexGridSizer6a->Add( itemStaticText12a, 0,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
             5 );
-
+#endif
     m_StartTimeLabel = new wxStaticText( itemDialog1, wxID_STATIC, _("Departure Time (m/d/y h:m)"),
             wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    itemFlexGridSizer6a->Add( m_StartTimeLabel, 0,
+                             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP, 5 );
+#else
     itemFlexGridSizer6a->Add( m_StartTimeLabel, 0,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
             5 );
-
+#endif
     m_TotalDistCtl = new wxTextCtrl( itemDialog1, ID_TEXTCTRL3, _T(""), wxDefaultPosition,
             wxDefaultSize, wxTE_READONLY );
     itemFlexGridSizer6a->Add( m_TotalDistCtl, 0,
@@ -2478,11 +2498,8 @@ void MarkInfoImpl::OnMarkInfoCancelClick( wxCommandEvent& event )
         m_pRoutePoint->ReLoadIcon();
 
         m_pRoutePoint->m_HyperlinkList->Clear();
-#ifdef __WXOSX__  // Test OSX
-       size_t NbrOfLinks = m_pMyLinkList->GetCount();
-#else
         int NbrOfLinks = m_pMyLinkList->GetCount();
-#endif
+// WXOSX: Crash mit GetCount() ???
         if( NbrOfLinks > 0 ) {
             wxHyperlinkListNode *linknode = m_pMyLinkList->GetFirst();
             while( linknode ) {
