@@ -56,7 +56,11 @@ enum
     DISTANCE_NMI = 0,
     DISTANCE_MI,
     DISTANCE_KM,
-    DISTANCE_M
+    DISTANCE_M,
+    DISTANCE_FT,
+    DISTANCE_FA,
+    DISTANCE_IN,
+    DISTANCE_CM
 };
 
 enum
@@ -332,5 +336,10 @@ extern "C" pVector2D vAddVectors(pVector2D v0, pVector2D v1, pVector2D v);
 extern "C" pVector2D vSubtractVectors(pVector2D v0, pVector2D v1, pVector2D v);
 extern "C" double vVectorMagnitude(pVector2D v0);
 extern "C" double vVectorSquared(pVector2D v0);
+
+//      Simple and fast CRC32 calculator
+
+extern "C" unsigned int crc32buf(unsigned char *buf, size_t len);
+
 
 #endif

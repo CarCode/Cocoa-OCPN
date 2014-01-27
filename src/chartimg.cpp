@@ -5031,6 +5031,8 @@ int   ChartBaseBSB::AnalyzeRefpoints(void)
                     wxString msg = _("   Result: OK, Internal georef solution used.");
 
                     wxLogMessage(msg);
+
+                    m_ExtraInfo = _T("");
               }
 
         }

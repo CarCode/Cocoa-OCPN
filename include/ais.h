@@ -66,7 +66,8 @@
 #define ID_JUMPTO             10004
 
 enum {
-    tlNAME = 0,
+    tlTRK = 0,
+    tlNAME,
     tlCALL,
     tlMMSI,
     tlCLASS,

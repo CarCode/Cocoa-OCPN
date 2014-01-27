@@ -43,6 +43,7 @@ bool GetDoubleAttr(S57Obj *obj, const char *AttrName, double &val);
 
 #define UNKNOWN 1e6 //HUGE_VAL   // INFINITY/NAN
 
+WX_DEFINE_ARRAY_DOUBLE(double, ArrayOfSortedDoubles);
 
 // size of attributes value list buffer
 #define LISTSIZE   16   // list size
@@ -823,21 +824,23 @@ static void *DEPCNT02 (void *param)
 
             if (drval1 <= safety_contour)
             {
-                  if (drval2 >= safety_contour)
+                if (drval2 >= safety_contour)
                         safe = TRUE;
             }
             else
             {
-                  double next_safe_contour;
-                  if( obj->m_chart_context->chart ){
-                    if(obj->m_chart_context->chart->GetNearestSafeContour(safety_contour, next_safe_contour))
-                    {
-                        if (drval1 == next_safe_contour)
-                              safe = TRUE;
-                    }
+                double next_safe_contour = 1e6;
+                if( obj->m_chart_context->chart ){
+                    next_safe_contour = obj->m_chart_context->chart->GetCalculatedSafetyContour();
+                    if (drval1 == next_safe_contour)
+                            safe = TRUE;
                 }
-                else
-                    safe = true;              //TODO fix for PlugIn chart
+                else {
+                    next_safe_contour = obj->m_chart_context->safety_contour;
+
+                    if (fabs(drval1 - next_safe_contour) < 1e-4)
+                        safe = true;
+                }
 
 //                  safe = FALSE;            //for debug
                               /*
@@ -885,15 +888,18 @@ static void *DEPCNT02 (void *param)
                   safe = TRUE;   // this is useless !?!?
             else
             {
-                  double next_safe_contour;
+                  double next_safe_contour = 1e6;
                   if( obj->m_chart_context->chart ){
-                    if(obj->m_chart_context->chart->GetNearestSafeContour(safety_contour, next_safe_contour)) {
-                        if (valdco == next_safe_contour)
+                      next_safe_contour = obj->m_chart_context->chart->GetCalculatedSafetyContour();
+                      if (valdco == next_safe_contour)
                               safe = TRUE;
-                        }
                   }
-                  else
-                    safe = TRUE;              // TODO fix for PlugIn
+                  else{
+                    next_safe_contour = obj->m_chart_context->safety_contour;
+
+                    if (fabs(valdco - next_safe_contour) < 1e-4)
+                            safe = true;
+                }
 
 /*
                   if (valdco > safety_contour)

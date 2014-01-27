@@ -2467,6 +2467,11 @@ ConnectionParams *options::CreateConnectionParamsFromSelectedItem()
         pConnectionParams->Type = SERIAL;
     else
         pConnectionParams->Type = NETWORK;
+
+    //  Save the existing addr/port to allow closing of existing port
+    pConnectionParams->LastNetworkAddress = pConnectionParams->NetworkAddress;
+    pConnectionParams->LastNetworkPort = pConnectionParams->NetworkPort;
+
     pConnectionParams->NetworkAddress = m_tNetAddress->GetValue();
     pConnectionParams->NetworkPort = wxAtoi(m_tNetPort->GetValue());
     if ( m_rbNetProtoTCP->GetValue() )
@@ -2706,6 +2711,19 @@ void options::OnApplyClick( wxCommandEvent& event )
     // NMEA Source
     long itemIndex = m_lcSources->GetNextItem( -1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
 
+    //  If the stream selected exists, capture some of its existing parameters
+    //  to facility identification and allow stop and restart of the stream
+    wxString lastAddr;
+    int lastPort;
+    if(itemIndex >=0){
+        int params_index = m_lcSources->GetItemData( itemIndex );
+        ConnectionParams *cpo = g_pConnectionParams->Item(params_index);
+        if(cpo){
+            lastAddr = cpo->NetworkAddress;
+            lastPort = cpo->NetworkPort;
+        }
+    }
+
     if(!connectionsaved)
     {
         ConnectionParams * cp = CreateConnectionParamsFromSelectedItem();
@@ -2722,12 +2740,18 @@ void options::OnApplyClick( wxCommandEvent& event )
                 g_pConnectionParams->Add(cp);
                 itemIndex = g_pConnectionParams->Count() - 1;
             }
+
+            //  Record the previous parameters, if any
+            cp->LastNetworkAddress = lastAddr;
+            cp->LastNetworkPort = lastPort;
+
             FillSourceList();
             m_lcSources->SetItemState(itemIndex, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
             m_lcSources->Refresh();
             connectionsaved = true;
         }
     }
+
 
     //Recreate datastreams that are new, or have been edited
     for ( size_t i = 0; i < g_pConnectionParams->Count(); i++ )
@@ -2737,6 +2761,11 @@ void options::OnApplyClick( wxCommandEvent& event )
 
             // Terminate and remove any existing stream with the same port name
             DataStream *pds_existing = g_pMUX->FindStream( cp->GetDSPort() );
+            if(pds_existing)
+                g_pMUX->StopAndRemoveStream( pds_existing );
+
+            //  Try to stop any previous stream to avoid orphans
+            pds_existing = g_pMUX->FindStream( cp->GetLastDSPort() );
             if(pds_existing)
                 g_pMUX->StopAndRemoveStream( pds_existing );
 

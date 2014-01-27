@@ -54,6 +54,7 @@
 #include "OCPNRegion.h"
 #include "s52plib.h"
 #include "ocpn_pixel.h"
+#include "s52utils.h"
 
 extern MyConfig        *pConfig;
 extern wxString        g_SData_Locn;
@@ -4121,6 +4122,11 @@ PI_DisCat PI_GetObjectDisplayCategory( PI_S57Obj *pObj )
     }
     return (PI_DisCat)(-1);
 
+}
+
+double PI_GetPLIBMarinerSafetyContour()
+{
+    return S52_getMarinerParam(S52_MAR_SAFETY_CONTOUR);
 }
 
 void PI_PLIBSetLineFeaturePriority( PI_S57Obj *pObj, int prio )
