@@ -77,8 +77,8 @@ wxString OCPNListCtrl::GetTargetColumnData( AIS_Target_Data *pAISTarget, long co
                 break;
 
             case tlNAME:
-                if( ( pAISTarget->Class == AIS_BASE ) || ( pAISTarget->Class == AIS_SART ) ) ret =
-                        _("-");
+                if( ( pAISTarget->Class == AIS_BASE ) || ( pAISTarget->Class == AIS_SART ) || pAISTarget->b_SarAircraftPosnReport)
+                    ret = _("-");
                 else {
                     wxString uret = trimAISField( pAISTarget->ShipName );
                     if( uret == _T("Unknown") ) ret = wxGetTranslation( uret );
@@ -102,12 +102,15 @@ wxString OCPNListCtrl::GetTargetColumnData( AIS_Target_Data *pAISTarget, long co
                 break;
 
             case tlCLASS:
-                ret = wxGetTranslation( pAISTarget->Get_class_string( true ) );
+                if(pAISTarget->b_SarAircraftPosnReport)
+                    ret = _("SAR Aircraft");
+                else
+                    ret = wxGetTranslation( pAISTarget->Get_class_string( true ) );
                 break;
 
             case tlTYPE:
-                if( ( pAISTarget->Class == AIS_BASE ) || ( pAISTarget->Class == AIS_SART ) ) ret =
-                        _("-");
+                if( ( pAISTarget->Class == AIS_BASE ) || ( pAISTarget->Class == AIS_SART ) ||  pAISTarget->b_SarAircraftPosnReport)
+                    ret = _("-");
                 else
                     ret = wxGetTranslation( pAISTarget->Get_vessel_type_string( false ) );
                 break;
@@ -125,7 +128,8 @@ wxString OCPNListCtrl::GetTargetColumnData( AIS_Target_Data *pAISTarget, long co
                 }
 
                 if( ( pAISTarget->Class == AIS_ATON ) || ( pAISTarget->Class == AIS_BASE )
-                        || ( pAISTarget->Class == AIS_CLASS_B ) ) ret = _("-");
+                   || ( pAISTarget->Class == AIS_CLASS_B ) || pAISTarget->b_SarAircraftPosnReport)
+                    ret = _("-");
                 break;
             }
 
@@ -154,7 +158,7 @@ wxString OCPNListCtrl::GetTargetColumnData( AIS_Target_Data *pAISTarget, long co
             }
 
             case tlSOG: {
-                if( ( pAISTarget->SOG > 100. ) || ( pAISTarget->Class == AIS_ATON )
+                if( (( pAISTarget->SOG > 100. ) && !pAISTarget->b_SarAircraftPosnReport) || ( pAISTarget->Class == AIS_ATON )
                         || ( pAISTarget->Class == AIS_BASE ) ) ret = _("-");
                 else
                     ret.Printf( _T("%5.1f"), toUsrSpeed( pAISTarget->SOG ) );

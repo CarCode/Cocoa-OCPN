@@ -50,6 +50,7 @@ extern ChartCanvas *cc1;
 extern wxString g_default_wp_icon;
 extern Select *pSelect;
 extern RouteManagerDialog *pRouteManagerDialog;
+extern bool g_bAISShowTracks;
 
 IMPLEMENT_CLASS ( AISTargetListDialog, wxPanel )
 

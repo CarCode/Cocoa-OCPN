@@ -59,6 +59,10 @@
 #include "OCPN_Sound.h"
 #include "NMEALogWindow.h"
 
+#include "ais.h"
+#include "AIS_Decoder.h"
+#include "AIS_Target_Data.h"
+
 #include "navutil.h"
 
 #ifdef USE_S57
@@ -197,6 +201,8 @@ extern wxArrayString *EnumerateSerialPorts(void);           // in chart1.cpp
 
 extern wxArrayString    TideCurrentDataSet;
 extern wxString         g_TCData_Dir;
+
+extern AIS_Decoder      *g_pAIS;
 
 options                *g_pOptions;
 
@@ -2679,6 +2685,16 @@ void options::OnApplyClick( wxCommandEvent& event )
     //      Display
     g_bShowCOG = m_pCheck_Show_COG->GetValue();
     m_pText_COG_Predictor->GetValue().ToDouble( &g_ShowCOG_Mins );
+
+    //  Update all the current targets
+    AIS_Target_Hash::iterator it;
+    AIS_Target_Hash *current_targets = g_pAIS->GetTargetList();
+    for( it = ( *current_targets ).begin(); it != ( *current_targets ).end(); ++it ) {
+        AIS_Target_Data *pAISTarget = it->second;
+        if( NULL != pAISTarget ) {
+            pAISTarget->b_show_track = g_bAISShowTracks;
+        }
+    }
 
     g_bAISShowTracks = m_pCheck_Show_Tracks->GetValue();
     m_pText_Track_Length->GetValue().ToDouble( &g_AISShowTracks_Mins );

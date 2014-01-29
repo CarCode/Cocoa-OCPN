@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenCPN 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-21 11:53+0100\n"
-"PO-Revision-Date: 2014-01-21 13:14+0100\n"
+"POT-Creation-Date: 2014-01-29 14:15+0100\n"
+"PO-Revision-Date: 2014-01-29 14:22+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -1888,6 +1888,9 @@ msgstr "urspr. Position"
 msgid "Hide AIS Targets"
 msgstr "AIS-Ziele verstecken"
 
+msgid "Hide All Tracks"
+msgstr "Verstecke alle Tracks"
+
 msgid "Hide Target CPA"
 msgstr "Verstecke Ziel CPA"
 
@@ -2072,6 +2075,9 @@ msgstr "LE/V"
 
 msgid "LMT @ Location"
 msgstr "LMT Ort/Position"
+
+msgid "LMT @ Track Start"
+msgstr "LMT @ Track Start"
 
 msgid "LW"
 msgstr "NW"
@@ -3182,6 +3188,9 @@ msgstr "Rwanda"
 msgid "S/V"
 msgstr "S/V"
 
+msgid "SAR Aircraft"
+msgstr "SAR Luftfahrzg."
+
 msgid "SAR/V"
 msgstr "SAR/V"
 
@@ -3360,6 +3369,9 @@ msgstr "AIS-Ziele anzeigen"
 msgid "Show AIS targets real size"
 msgstr "Zeige reale Größe AIS-Ziele"
 
+msgid "Show All Tracks"
+msgstr "Zeige alle Tracks"
+
 msgid "Show CPA/TCPA Alert Dialog"
 msgstr "CPA/TCPA-Alarmfenster anzeigen"
 
@@ -3516,9 +3528,6 @@ msgstr "Spezial"
 
 msgid "Special Mark"
 msgstr "Spezielle Markierung (?)"
-
-msgid "Special Position Report"
-msgstr "Spezieller Positionsbericht"
 
 msgid "Speed"
 msgstr "Geschwindigkeit"
@@ -3780,6 +3789,9 @@ msgstr "Reisezeit"
 msgid "Time enroute"
 msgstr "Reisezeit"
 
+msgid "Time shown as"
+msgstr "Zeitangaben in"
+
 msgid "Times shown as"
 msgstr "Zeitangaben in"
 
@@ -3800,6 +3812,9 @@ msgstr "heute"
 
 msgid "Toggle Tracking"
 msgstr "Tracking an-/ausschalten"
+
+msgid "Toggle track"
+msgstr "Tracking umschalten"
 
 msgid "Togolese Republic"
 msgstr "Togolesische Republik"
@@ -3864,6 +3879,9 @@ msgstr "Behandele WPL Sequenzen als APRS Positions-Bericht"
 
 msgid "Trinidad and Tobago"
 msgstr "Trinidad und Tobago"
+
+msgid "Trk"
+msgstr "Track"
 
 msgid "Tug"
 msgstr "Schlepper"
@@ -3944,7 +3962,7 @@ msgid "Undefined (default)"
 msgstr "Undefiniert (Standard)"
 
 msgid "Under way sailing"
-msgstr "in Fahrt (segelnd?)"
+msgstr "in Fahrt"
 
 msgid "Underway"
 msgstr "in Fahrt befindlich"
@@ -4208,6 +4226,15 @@ msgstr "_B"
 
 msgid "_plus"
 msgstr "_plus"
+
+msgid "cm"
+msgstr "cm"
+
+msgid "fa"
+msgstr "fa"
+
+msgid "ft"
+msgstr "Fuß"
 
 msgid "in"
 msgstr "in"
