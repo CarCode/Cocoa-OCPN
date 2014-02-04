@@ -5449,16 +5449,16 @@ double MyFrame::GetTrueOrMag(double a)
 {
     if( g_bShowMag ){
         if(!wxIsNaN(gVar)){
-            if((a + gVar) >360.)
-                return (a + gVar - 360.);
+            if((a - gVar) >360.)
+                return (a - gVar - 360.);
             else
-                return ((a + gVar) >= 0.) ? (a + gVar) : (a + gVar + 360.);
+                return ((a - gVar) >= 0.) ? (a - gVar) : (a - gVar + 360.);
         }
         else{
-            if((a + g_UserVar) >360.)
-                return (a + g_UserVar - 360.);
+            if((a - g_UserVar) >360.)
+                return (a - g_UserVar - 360.);
             else
-                return ((a + g_UserVar) >= 0.) ? (a + g_UserVar) : (a + g_UserVar + 360.);
+                return ((a - g_UserVar) >= 0.) ? (a - g_UserVar) : (a - g_UserVar + 360.);
         }
     }
     else
@@ -8919,14 +8919,14 @@ public:
 
 private:
     int m_style;
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 };
 
-BEGIN_EVENT_TABLE(OCPNMessageDialog, wxDialog)
+wxBEGIN_EVENT_TABLE(OCPNMessageDialog, wxDialog)
 EVT_BUTTON(wxID_YES, OCPNMessageDialog::OnYes)
 EVT_BUTTON(wxID_NO, OCPNMessageDialog::OnNo)
 EVT_BUTTON(wxID_CANCEL, OCPNMessageDialog::OnCancel)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 
 OCPNMessageDialog::OCPNMessageDialog( wxWindow *parent,
@@ -9043,12 +9043,12 @@ public:
     OCPNMessageDialog *dlg;
     int         ret_val;
 
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 };
 
-BEGIN_EVENT_TABLE(TimedMessageBox, wxEvtHandler)
+wxBEGIN_EVENT_TABLE(TimedMessageBox, wxEvtHandler)
 EVT_TIMER(-1, TimedMessageBox::OnTimer)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 TimedMessageBox::TimedMessageBox(wxWindow* parent, const wxString& message,
                                 const wxString& caption, long style, int timeout_sec, const wxPoint& pos )

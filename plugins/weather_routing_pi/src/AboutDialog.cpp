@@ -21,9 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
 
 #include <wx/wx.h>
 
@@ -36,7 +34,7 @@
 
 #include "Utilities.h"
 
-void AboutDialog::OnDonate( wxCommandEvent& event )
+void AboutDialog::OnAboutAuthor( wxCommandEvent& event )
 {
-      wxLaunchDefaultBrowser(_T("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=sean%40depagnier%2ecom&lc=US&item_name=weather_routing&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest"));
+      wxLaunchDefaultBrowser(_T(ABOUT_AUTHOR_URL));
 }

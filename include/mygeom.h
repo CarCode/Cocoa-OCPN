@@ -194,6 +194,7 @@ class PolyTessGeo
 
     private:
         int BuildTessGL(void);
+        int BuildTessTri(void);
         int PolyTessGeoGL(OGRPolygon *poly, bool bSENC_SM, double ref_lat, double ref_lon);
         int PolyTessGeoTri(OGRPolygon *poly, bool bSENC_SM, double ref_lat, double ref_lon);
         int my_bufgets( char *buf, int buf_len_max );

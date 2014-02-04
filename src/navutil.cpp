@@ -2240,7 +2240,7 @@ void MyConfig::UpdateSettings()
     Write( _T ( "CourseUpMode" ), g_bCourseUp );
     Write( _T ( "LookAheadMode" ), g_bLookAhead );
     Write( _T ( "COGUPAvgSeconds" ), g_COGAvgSec );
-    Write( _T ( "ShowMag" ), g_bMagneticAPB );
+    Write( _T ( "UseMagAPB" ), g_bMagneticAPB );
 
     Write( _T ( "OwnshipCOGPredictorMinutes" ), g_ownship_predictor_minutes );
     Write( _T ( "OwnshipCOGPredictorWidth" ), g_cog_predictor_width );
@@ -3022,7 +3022,7 @@ public:
 
 private:
     void OnPaint ( wxPaintEvent& event );
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 };
 
 BEGIN_EVENT_TABLE ( MyFontPreviewer, wxWindow )

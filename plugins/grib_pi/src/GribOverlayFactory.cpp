@@ -252,6 +252,7 @@ bool GRIBOverlayFactory::DoRenderGribOverlay( PlugIn_ViewPort *vp )
     return true;
 }
 
+#ifdef ocpnUSE_GL
 bool GRIBOverlayFactory::CreateGribGLTexture( GribOverlay *pGO, int settings, GribRecord *pGR,
                                               PlugIn_ViewPort *vp, int grib_pixel_size )
 {
@@ -352,6 +353,7 @@ bool GRIBOverlayFactory::CreateGribGLTexture( GribOverlay *pGO, int settings, Gr
 
     return true;
 }
+#endif
 
 wxImage GRIBOverlayFactory::CreateGribImage( int settings, GribRecord *pGR,
                                              PlugIn_ViewPort *vp, int grib_pixel_size,
@@ -881,6 +883,7 @@ void GRIBOverlayFactory::RenderGribOverlayMap( int settings, GribRecord **pGR, P
 
         if( !m_pdc )       //OpenGL mode
         {
+#ifdef ocpnUSE_GL
             if( !pGO->m_iTexture )
                 CreateGribGLTexture( pGO, settings, pGRA, vp,
                                      grib_pixel_size);
@@ -893,6 +896,7 @@ void GRIBOverlayFactory::RenderGribOverlayMap( int settings, GribRecord **pGR, P
                     m_Message_Hiden.Append(_("Please Zoom or Scale Out to view invisible overlays:"))
                     .Append(_T(" ")).Append(GribOverlaySettings::NameFromIndex(settings))
                     : m_Message_Hiden.Append(_T(",")).Append(GribOverlaySettings::NameFromIndex(settings));
+#endif
         }
         else        //DC mode
         {
@@ -985,6 +989,7 @@ void GRIBOverlayFactory::RenderGribNumbers( int settings, GribRecord **pGR, Plug
                             if( m_pdc ) {
                                 m_pdc->DrawBitmap(label, p.x, p.y, true);
                             } else {
+#ifdef ocpnUSE_GL
                                 int w = label.GetWidth(), h = label.GetHeight();
 #if 0 /* this way is more work on our part.. try it for debugging purposes */
                                 unsigned char *d = label.GetData(), *a = label.GetAlpha();
@@ -1026,6 +1031,7 @@ void GRIBOverlayFactory::RenderGribNumbers( int settings, GribRecord **pGR, Plug
                                 glTexCoord2i(0, h), glVertex2i(p.x,   p.y+h);
                                 glEnd();
                                 glDisable(GL_TEXTURE_RECTANGLE_ARB);
+#endif
 #endif
                             }
                         }
@@ -1143,12 +1149,14 @@ void GRIBOverlayFactory::drawWindArrowWithBarbs( int settings, int i, int j, dou
         if( m_pdc )
             m_pdc->DrawCircle( i, j, r );
         else {
+#ifdef ocpnUSE_GL
             double w = pen.GetWidth(), s = 2 * M_PI / 10;
             if( m_hiDefGraphics ) w *= 0.75;
             wxColour c = pen.GetColour();
             glColor4ub( c.Red(), c.Green(), c.Blue(), 255);
             for( double a = 0; a < 2 * M_PI; a += s )
                 DrawGLLine( i + r*sin(a), j + r*cos(a), i + r*sin(a+s), j + r*cos(a+s), w );
+#endif
         }
     } else {
         // Arrange for arrows to be centered on origin
@@ -1240,11 +1248,13 @@ void GRIBOverlayFactory::drawTransformedLine( wxPen pen, double si, double co, i
         m_pdc->DrawLine(ii, jj, kk, ll);
 #endif
     } else {                       // OpenGL mode
+#ifdef ocpnUSE_GL
         wxColour c = pen.GetColour();
         glColor4ub( c.Red(), c.Green(), c.Blue(), 255);
         double w = pen.GetWidth();
         if( m_hiDefGraphics ) w *= 0.75;
         DrawGLLine( fi, fj, fk, fl, w );
+#endif
     }
 }
 
@@ -1277,6 +1287,7 @@ void GRIBOverlayFactory::drawTriangle( wxPen pen, bool south, double si, double 
     }
 }
 
+#ifdef ocpnUSE_GL
 void GRIBOverlayFactory::DrawGLLine( double x1, double y1, double x2, double y2, double width )
 {
     {
@@ -1300,6 +1311,7 @@ void GRIBOverlayFactory::DrawGLLine( double x1, double y1, double x2, double y2,
         glPopAttrib();
     }
 }
+#endif
 
 void GRIBOverlayFactory::DrawOLBitmap( const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usemask )
 {
@@ -1321,6 +1333,7 @@ void GRIBOverlayFactory::DrawOLBitmap( const wxBitmap &bitmap, wxCoord x, wxCoor
     if( m_pdc )
         m_pdc->DrawBitmap( bmp, x, y, usemask );
     else {
+#ifdef ocpnUSE_GL
         wxImage image = bmp.ConvertToImage();
         int w = image.GetWidth(), h = image.GetHeight();
 
@@ -1368,6 +1381,7 @@ void GRIBOverlayFactory::DrawOLBitmap( const wxBitmap &bitmap, wxCoord x, wxCoor
             glDrawPixels( w, h, GL_RGB, GL_UNSIGNED_BYTE, image.GetData() );
             glPixelZoom( 1, 1 );
         }
+#endif
     }
 }
 
@@ -1399,10 +1413,13 @@ void GRIBOverlayFactory::DrawGLImage( wxImage *pimage, wxCoord xd, wxCoord yd, b
             }
     }
 
+#ifdef ocpnUSE_GL
     DrawGLRGBA( e, w, h, xd, yd );
+#endif
     delete[] e;
 }
 
+#ifdef ocpnUSE_GL
 void GRIBOverlayFactory::DrawGLTexture( GLuint texture, int width, int height,
                                        int xd, int yd, int grib_pixel_size, PlugIn_ViewPort *vp )
 {
@@ -1453,6 +1470,7 @@ void GRIBOverlayFactory::DrawGLTexture( GLuint texture, int width, int height,
 
     glPopMatrix();
 }
+#endif
 
 void GRIBOverlayFactory::DrawGLRGBA( unsigned char *pRGBA, int width, int height, int xd,
         int yd )

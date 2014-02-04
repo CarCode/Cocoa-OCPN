@@ -41,7 +41,9 @@ public:
     ~GribOverlay( void )
     {
         if(m_iTexture)
+#ifdef ocpnUSE_GL
           glDeleteTextures( 1, &m_iTexture );
+#endif
         delete m_pDCBitmap, delete[] m_pRGBA;
     }
 
@@ -119,10 +121,12 @@ private:
 
     wxImage &getLabel(double value, int settings);
 
+#ifdef ocpnUSE_GL
     void DrawGLTexture( GLuint texture, int width, int height, int xd, int yd, int grib_pixel_size, PlugIn_ViewPort *vp );
     void DrawGLRGBA( unsigned char *pRGBA, int RGBA_width, int RGBA_height, int xd, int yd );
     bool CreateGribGLTexture( GribOverlay *pGO, int config, GribRecord *pGR,
                               PlugIn_ViewPort *vp, int grib_pixel_size );
+#endif
     wxImage CreateGribImage( int config, GribRecord *pGR, PlugIn_ViewPort *vp,
                              int grib_pixel_size, const wxPoint &porg );
 
