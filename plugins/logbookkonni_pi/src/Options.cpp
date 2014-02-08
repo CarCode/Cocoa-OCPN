@@ -48,20 +48,20 @@ Options::Options(void)
     engineMessageRunning = false;
     engineAllwaysSailsDown = false;
 
-    abrSails.Add(_("Ma"));
-    abrSails.Add(_("Tr"));
-    abrSails.Add(_("Ge1"));
-    abrSails.Add(_("Ge2"));
-    abrSails.Add(_("Ge3"));
-    abrSails.Add(_("Fo1"));
-    abrSails.Add(_("Fo2"));
-    abrSails.Add(_("Fo3"));
-    abrSails.Add(_("Ji"));
-    abrSails.Add(_("Mi"));
-    abrSails.Add(_("Mt"));
-    abrSails.Add(_("St"));
-    abrSails.Add(_("Sp"));
-    abrSails.Add(_("?"));
+    abrSails.Add(_("Ma"),0);
+    abrSails.Add(_("Tr"),1);
+    abrSails.Add(_("Ge1"),2);
+    abrSails.Add(_("Ge2"),3);
+    abrSails.Add(_("Ge3"),4);
+    abrSails.Add(_("Fo1"),5);
+    abrSails.Add(_("Fo2"),6);
+    abrSails.Add(_("Fo3"),7);
+    abrSails.Add(_("Ji"),8);
+    abrSails.Add(_("Mi"),9);
+    abrSails.Add(_("Mt"),10);
+    abrSails.Add(_("St"),11);
+    abrSails.Add(_("Sp"),12);
+    abrSails.Add(_("?"),13);
 
     sailsName.Add(_("Main"));
     sailsName.Add(_("Try"));
@@ -76,7 +76,7 @@ Options::Options(void)
     sailsName.Add(_("Mizzen Storm"));
     sailsName.Add(_("Staysail"));
     sailsName.Add(_("Spinnacker"));
-    sailsName.Add(_("You can change the abreviations and the names of the sails\nin Options/Miscellaneous/Sails"));
+    sailsName.Add(_("Eigener Eintrag"));
 
     rowGap = 0;
     colGap = 0;

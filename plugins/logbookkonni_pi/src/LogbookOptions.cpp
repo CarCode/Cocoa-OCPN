@@ -264,7 +264,7 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
 	
 	fgSizer29->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	m_checkBoxEngineRunning = new wxCheckBox( m_panel15, wxID_ANY, _("Write message \"Engine running"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxEngineRunning = new wxCheckBox( m_panel15, wxID_ANY, _("Write message \"Engine running\""), wxDefaultPosition, wxDefaultSize, 0 );
 	m_checkBoxEngineRunning->SetValue(true); 
 	fgSizer29->Add( m_checkBoxEngineRunning, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
 	
@@ -2064,12 +2064,21 @@ void LogbookOptions::setValues()
     m_checkBoxNMEAUseRPM->SetValue(opt->NMEAUseERRPM);
     m_checkBoxNMEAUseWIMDA->SetValue(opt->NMEAUseWIMDA);
 
-	int row = 0;
+#ifdef __WXOSX__
+    int row = 0;
+    for(unsigned int col = 0; col < 14; col++)
+    {
+        m_gridSailNames->SetCellValue(row,0,opt->abrSails.Item(col));
+        m_gridSailNames->SetCellValue(row++,1,opt->sailsName.Item(col));
+    }
+#else
+    int row = 0;
     for(unsigned int col = 0; col < opt->abrSails.Count(); col++)
     {
         m_gridSailNames->SetCellValue(row,0,opt->abrSails.Item(col));
         m_gridSailNames->SetCellValue(row++,1,opt->sailsName.Item(col));
     }
+#endif
 }
 
 void LogbookOptions::OnChoiceNoEngines( wxCommandEvent& event )

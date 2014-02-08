@@ -2123,7 +2123,6 @@ void  Logbook::getModifiedCellValue(int grid, int row, int selCol, int col)
 
 		s.Replace(_T("."),dialog->decimalPoint);
 		dialog->logGrids[grid]->SetCellValue(row,col,s);
-
 		computeCell(grid, row, col, s, true);
 		if(row == dialog->m_gridGlobal->GetNumberRows()-1)
 			dialog->maintenance->checkService(row);
@@ -2695,9 +2694,8 @@ wxString Logbook::computeCell(int grid, int row, int col, wxString s, bool mode)
 	wxString abrev;
 
 	s.Replace(_T(","),_T("."));
-
 	if(col == DISTANCE)
-		abrev = opt->distance; 
+		abrev = opt->distance;
 	else if(col == LogbookHTML::MOTOR || col == LogbookHTML::MOTOR1 ||
 		col == LogbookHTML::GENE || col == LogbookHTML::WATERM)
 		abrev = opt->motorh; 
@@ -2737,7 +2735,6 @@ wxString Logbook::computeCell(int grid, int row, int col, wxString s, bool mode)
 			s = dialog->logGrids[grid]->GetCellValue(i,col);
 			s.Replace(_T(","),_T("."));
 			s.ToDouble(&t);
-
 			if(col == LogbookHTML::WATERMO)
 			{
 				s = dialog->logGrids[grid]->GetCellValue(i,LogbookHTML::WATER);
@@ -2757,7 +2754,6 @@ wxString Logbook::computeCell(int grid, int row, int col, wxString s, bool mode)
 				s = dialog->logGrids[grid]->GetCellValue(i,LogbookHTML::WATERMO);
 				s.Replace(_T(","),_T("."));
 				s.ToDouble(&t1);
-
 				if(i == 0)
 				{
 					s = dialog->logGrids[grid]->GetCellValue(i,LogbookHTML::WATERT);
@@ -2810,13 +2806,13 @@ wxString Logbook::computeCell(int grid, int row, int col, wxString s, bool mode)
 			minLast  += minCur;
 			if(minLast >= 60) { hourLast++; minLast -= 60; }
 #ifdef __WXOSX__
-			s = wxString::Format(_T("%05ld:%02ld %s"),(wchar_t)hourLast,(wchar_t)minLast,abrev.c_str());
+			s = wxString::Format(_T("%05d:%02d %s"),(wchar_t)hourLast,(wchar_t)minLast,abrev);
 #else
 			s = wxString::Format(_T("%05ld:%02ld %s"),hourLast,minLast,abrev.c_str());
 #endif
 			dialog->logGrids[grid]->SetCellValue(i,col+1,s);
 #ifdef __WXOSX__
-			cur = wxString::Format(_T("%02ld:%02ld %s"),(wchar_t)hourCur,(wchar_t)minCur,abrev.c_str());
+			cur = wxString::Format(_T("%02d:%02d %s"),(wchar_t)hourCur,(wchar_t)minCur,abrev);
 #else
 			cur = wxString::Format(_T("%02ld:%02ld %s"),hourCur,minCur,abrev.c_str());
 #endif

@@ -7,11 +7,11 @@
 // Copyright:   (c) 2007 Luciano Cattani
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
-#ifndef __WXOSX__
-#ifdef __GNUG__
-    #pragma implementation "jsonval.cpp"
-#endif
-#endif
+
+//#ifdef __GNUG__
+//    #pragma implementation "jsonval.cpp"
+//#endif
+
 
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
@@ -960,7 +960,7 @@ wxJSONValue::AsString() const
         case wxJSONTYPE_CSTRING :
             s.assign( data->m_value.m_valCString);
             break;
- /*       case wxJSONTYPE_INT :
+        case wxJSONTYPE_INT :
             #if defined( wxJSON_64BIT_INT )
                   s.Printf( _T("%") wxLongLongFmtSpec _T("i"),
                         data->m_value.m_valInt64 );
@@ -975,7 +975,7 @@ wxJSONValue::AsString() const
             #else
             s.Printf( _T("%lu"), data->m_value.m_valULong );
             #endif
-            break;*/
+            break;
         case wxJSONTYPE_DOUBLE :
             s.Printf( _T("%.10g"), data->m_value.m_valDouble );
             break;
@@ -2325,15 +2325,29 @@ wxJSONValue::GetInfo() const
 
     wxString s;
 #if defined( WXJSON_USE_VALUE_CONTER )
+#ifdef __WXOSX__
+    s.Printf( _T("Object: Progr=%ld Type=%s Size=%ld comments=%ld\n"),
+             data->m_progr,
+             wxJSONValue::TypeToString( data->m_type ).c_str(),
+             Size(),
+             data->m_comments.GetCount() );
+#else
     s.Printf( _T("Object: Progr=%d Type=%s Size=%d comments=%d\n"),
             data->m_progr,
             wxJSONValue::TypeToString( data->m_type ).c_str(),
             Size(),
             data->m_comments.GetCount() );
+#endif
+#else
+#ifdef __WXOSX__
+    s.Printf( _T("Object: Type=%s Size=%ld comments=%ld\n"),
+             wxJSONValue::TypeToString( data->m_type ).c_str(),
+             Size(), data->m_comments.GetCount() );
 #else
     s.Printf( _T("Object: Type=%s Size=%d comments=%d\n"),
             wxJSONValue::TypeToString( data->m_type ).c_str(),
             Size(), data->m_comments.GetCount() );
+#endif
 #endif
     if ( data->m_type == wxJSONTYPE_OBJECT ) {
         wxArrayString arr = GetMemberNames();

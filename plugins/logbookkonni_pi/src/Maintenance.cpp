@@ -589,7 +589,7 @@ void Maintenance::checkService(int row)
 				{
 					border = 2;
 					rowBack = red;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(red,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,red);
 					break;
 				}
 				else if(distanceTotal >= startValue+warnValue)
@@ -597,14 +597,14 @@ void Maintenance::checkService(int row)
 					if(border != 2)
 						border = 1;
 					rowBack = yellow;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(yellow,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,yellow);
 					break;
 				}
 				else
 				{
 					rowBack = green;
 					for(int i = 0; i < dialog->m_gridGlobal->GetNumberRows(); i++)
-						dialog->m_gridMotorSails->SetCellBackgroundColour(white,i,col);
+						dialog->m_gridMotorSails->SetCellBackgroundColour(i,col,white);
 				}
 				break;
 			case 1: // Engine #1
@@ -612,7 +612,7 @@ void Maintenance::checkService(int row)
 				{
 					border = 2;
 					rowBack = red;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(red,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,red);
 					break;
 				}
 				else if(motorTotal >= startValue+warnValue)
@@ -620,14 +620,14 @@ void Maintenance::checkService(int row)
 					if(border != 2)
 						border = 1;
 					rowBack = yellow;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(yellow,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,yellow);
 					break;
 				}
 				else
 				{
 					rowBack = green;
 					for(int i = 0; i < dialog->m_gridMotorSails->GetNumberRows(); i++)
-						dialog->m_gridMotorSails->SetCellBackgroundColour(white,i,col);
+						dialog->m_gridMotorSails->SetCellBackgroundColour(i,col,white);
 				}
 				break;
 			case 2: // Engine #2
@@ -635,7 +635,7 @@ void Maintenance::checkService(int row)
 				{
 					border = 2;
 					rowBack = red;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(red,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,red);
 					break;
 				}
 				else if(motorTotal2 >= startValue+warnValue)
@@ -643,14 +643,14 @@ void Maintenance::checkService(int row)
 					if(border != 2)
 						border = 1;
 					rowBack = yellow;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(yellow,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,yellow);
 					break;
 				}
 				else
 				{
 					rowBack = green;
 					for(int i = 0; i < dialog->m_gridMotorSails->GetNumberRows(); i++)
-						dialog->m_gridMotorSails->SetCellBackgroundColour(white,i,col);
+						dialog->m_gridMotorSails->SetCellBackgroundColour(i,col,white);
 				}
 				break;
 			case 3: // Generator
@@ -658,7 +658,7 @@ void Maintenance::checkService(int row)
 				{
 					border = 2;
 					rowBack = red;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(red,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,red);
 					break;
 				}
 				else if(generator >= startValue+warnValue)
@@ -666,14 +666,14 @@ void Maintenance::checkService(int row)
 					if(border != 2)
 						border = 1;
 					rowBack = yellow;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(yellow,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,yellow);
 					break;
 				}
 				else
 				{
 					rowBack = green;
 					for(int i = 0; i < dialog->m_gridMotorSails->GetNumberRows(); i++)
-						dialog->m_gridMotorSails->SetCellBackgroundColour(white,i,col);
+						dialog->m_gridMotorSails->SetCellBackgroundColour(i,col,white);
 				}
 				break;
 			case 4: // Bank #1
@@ -681,7 +681,7 @@ void Maintenance::checkService(int row)
 				{
 					border = 2;
 					rowBack = red;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(red,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,red);
 					break;
 				}
 				else if(bank1 <= warnValue)
@@ -689,14 +689,14 @@ void Maintenance::checkService(int row)
 					if(border != 2)
 						border = 1;
 					rowBack = yellow;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(yellow,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,yellow);
 					break;
 				}
 				else
 				{
 					rowBack = green;
 					for(int i = 0; i < dialog->m_gridMotorSails->GetNumberRows(); i++)
-						dialog->m_gridMotorSails->SetCellBackgroundColour(white,i,col);
+						dialog->m_gridMotorSails->SetCellBackgroundColour(i,col,white);
 				}
 				break;
 			case 5: // Bank #2
@@ -704,7 +704,7 @@ void Maintenance::checkService(int row)
 				{
 					border = 2;
 					rowBack = red;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(red,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,red);
 					break;
 				}
 				else if(bank2 <= warnValue)
@@ -712,14 +712,14 @@ void Maintenance::checkService(int row)
 					if(border != 2)
 						border = 1;
 					rowBack = yellow;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(yellow,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,yellow);
 					break;
 				}
 				else
 				{
 					rowBack = green;
 					for(int i = 0; i < dialog->m_gridMotorSails->GetNumberRows(); i++)
-						dialog->m_gridMotorSails->SetCellBackgroundColour(white,i,col);
+						dialog->m_gridMotorSails->SetCellBackgroundColour(i,col,white);
 				}
 				break;
 			case 6: // WaterMaker
@@ -727,7 +727,7 @@ void Maintenance::checkService(int row)
 				{
 					border = 2;
 					rowBack = red;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(red,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,red);
 					break;
 				}
 				else if(watermaker >= startValue+warnValue)
@@ -735,13 +735,13 @@ void Maintenance::checkService(int row)
 					if(border != 2)
 						border = 1;
 					rowBack = yellow;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(yellow,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,yellow);
 					break;
 				}
 				{
 					rowBack = green;
 					for(int i = 0; i < dialog->m_gridMotorSails->GetNumberRows(); i++)
-						dialog->m_gridMotorSails->SetCellBackgroundColour(white,i,col);
+						dialog->m_gridMotorSails->SetCellBackgroundColour(i,col,white);
 				}
 				break;
 			case 7: //Sign
@@ -749,13 +749,13 @@ void Maintenance::checkService(int row)
 				{
 					border = 2;
 					rowBack = red;
-					dialog->m_gridMotorSails->SetCellBackgroundColour(red,row,col);
+					dialog->m_gridMotorSails->SetCellBackgroundColour(row,col,red);
 					break;
 				}
 				{
 					rowBack = green;
 					for(int i = 0; i < dialog->m_gridMotorSails->GetNumberRows(); i++)
-						dialog->m_gridMotorSails->SetCellBackgroundColour(white,i,col);
+						dialog->m_gridMotorSails->SetCellBackgroundColour(i,col,white);
 				}
 				break;
 			case 8:	
@@ -889,7 +889,7 @@ void Maintenance::checkService(int row)
 		{
 			setRowBackground(r,white);
 			for(int i = 0; i < dialog->m_gridMotorSails->GetNumberRows(); i++)
-						dialog->m_gridMotorSails->SetCellBackgroundColour(white,i,col);
+						dialog->m_gridMotorSails->SetCellBackgroundColour(i,col,white);
 		}
 		setBuyPartsPriority(grid,r,PRIORITY,TEXT);
 	}

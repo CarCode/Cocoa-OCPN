@@ -281,9 +281,11 @@ void logbookkonni_pi::SetPluginMessage(wxString &message_id, wxString &message_b
 			if(prText[i] != wxEmptyString)
 			{
 				m_plogbook_window->maintenance->addLineBuyParts();
-
+#ifdef __WXOSX__
+                int lastRow = m_plogbook_window->m_gridMaintenanceBuyParts->GetNumberRows()-1;
+#else
 				int lastRow = m_plogbook_window->m_gridMaintenanceBuyParts->GetRows()-1;
-
+#endif
 				m_plogbook_window->m_gridMaintenanceBuyParts->SetCellValue(lastRow,0,wxString::Format(_T("%i"),i));
 				m_plogbook_window->m_gridMaintenanceBuyParts->SetCellValue(lastRow,1,category);
 				m_plogbook_window->m_gridMaintenanceBuyParts->SetCellValue(lastRow,2,title);
@@ -307,8 +309,11 @@ void logbookkonni_pi::SetPluginMessage(wxString &message_id, wxString &message_b
 			startLogbook();
 
 		m_plogbook_window->logbook->appendRow(false);
+#ifdef __WXOSX__
+        int lastRow = m_plogbook_window->m_gridGlobal->GetNumberRows()-1;
+#else
 		int lastRow = m_plogbook_window->m_gridGlobal->GetRows()-1;
-
+#endif
 		m_plogbook_window->m_gridGlobal->SetCellValue(lastRow,13,data.Item(_T("Remarks")).AsString());
 		m_plogbook_window->m_gridMotorSails->SetCellValue(lastRow,8,data.Item(_T("MotorRemarks")).AsString());
 		return;
@@ -615,7 +620,12 @@ void logbookkonni_pi::dialogDimmer(PI_ColorScheme cs,wxWindow* ctrl,wxColour col
 					  ((wxGrid*)win)->SetDefaultCellTextColour(uitext);
 					  ((wxGrid*)win)->SetLabelBackgroundColour(col);
 					  ((wxGrid*)win)->SetLabelTextColour(uitext);
+#ifdef __WXOSX__
+                      // in wx 3.1: deprecated, neu?:     void SetDividerPen(const wxPen& WXUNUSED(pen)) { }
+                      //                                  wxPen& GetDividerPen() const;
+#else
 					  ((wxGrid*)win)->SetDividerPen(wxPen(col));
+#endif
 					  ((wxGrid*)win)->SetGridLineColour(gridline);
 					  
 				  }
