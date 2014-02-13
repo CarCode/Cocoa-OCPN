@@ -147,6 +147,7 @@ public:
       void ShowDashboard( size_t id, bool visible );
       int GetToolbarItemId(){ return m_toolbar_item_id; }
       int GetDashboardWindowShownCount();
+      void SetPluginMessage(wxString &message_id, wxString &message_body);
 
 private:
       bool LoadConfig(void);
@@ -176,6 +177,7 @@ private:
       int                  mHDx_Watchdog;
       int                  mHDT_Watchdog;
       int                  mGPS_Watchdog;
+      int                  mVar_Watchdog;
 
 //protected:
 //      DECLARE_EVENT_TABLE();

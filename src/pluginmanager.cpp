@@ -79,6 +79,8 @@ extern wxString        *pChartListFileName;
 extern wxString         gExe_path;
 extern bool             g_b_useStencil;
 extern wxString         g_Plugin_Dir;
+extern bool             g_boptionsactive;
+extern options         *g_options;
 
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(Plugin_WaypointList);
@@ -213,6 +215,7 @@ PlugInManager::~PlugInManager()
 bool PlugInManager::LoadAllPlugIns(const wxString &plugin_dir)
 {
     m_plugin_location = plugin_dir;
+//    m_plugin_location = _T("/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/");
 // for debug one plugin at a time: m_plugin_location = _T("C:\\a\\directory\\where\\my\\debug\\plugin\\dll\\is\\built\\");
     wxString msg(_T("PlugInManager searching for PlugIns in location "));
     msg += m_plugin_location;
@@ -1705,10 +1708,8 @@ int AddChartToDBInPlace( wxString &full_path, bool b_ProgressDialog )
             ChartData = new ChartDB( gFrame );
             ChartData->LoadBinary(*pChartListFileName, XnewChartDirArray);
 
-            ChartTableEntry *pcte;
-            for(int i=0 ; i<ChartData->GetChartTableEntries() ; i++){
-                pcte = ChartData->GetpChartTableEntry(i);
-                int yyp = 5;
+            if(g_boptionsactive){
+                g_options->UpdateDisplayedChartDirList(ChartData->GetChartDirArray());
             }
 
             ViewPort vp;
@@ -1736,6 +1737,10 @@ int RemoveChartFromDBInPlace( wxString &full_path )
         delete ChartData;
         ChartData = new ChartDB( gFrame );
         ChartData->LoadBinary(*pChartListFileName, XnewChartDirArray);
+
+        if(g_boptionsactive){
+            g_options->UpdateDisplayedChartDirList(ChartData->GetChartDirArray());
+        }
 
         ViewPort vp;
         gFrame->ChartsRefresh(-1, vp);
@@ -3392,7 +3397,7 @@ int OCPNMessageBox_PlugIn(wxWindow *parent,
                             const wxString& caption,
                             int style, int x, int y)
 {
-    return OCPNMessageBox( parent, message, caption, style, 10, x, y );
+    return OCPNMessageBox( parent, message, caption, style, 100, x, y );
 }
 
 wxString GetOCPN_ExePath( void )

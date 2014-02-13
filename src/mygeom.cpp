@@ -229,6 +229,9 @@ bool ispolysame(polyout *p1, polyout *p2)
 {
     int i2;
 
+    if(p1->index_hash != p2->index_hash)
+        return false;
+
     if(p1->nvert != p2->nvert)
         return false;
 
@@ -326,10 +329,10 @@ PolyTessGeo::PolyTessGeo(OGRPolygon *poly, bool bSENC_SM, double ref_lat, double
     }
     else {
 #ifdef USE_GLU_TESS
-printf("USE_GLU_TESS tess\n");
+//printf("USE_GLU_TESS tess\n");
 ErrorCode = PolyTessGeoGL(poly, bSENC_SM, ref_lat, ref_lon);
 #else
-printf("PolyTessGeoTri tess\n");
+//printf("PolyTessGeoTri tess\n");
 ErrorCode = PolyTessGeoTri(poly, bSENC_SM, ref_lat, ref_lon);
 #endif
     }
@@ -1573,7 +1576,7 @@ PolyTessGeo::~PolyTessGeo()
 
 int PolyTessGeo::BuildDeferredTess(void)
 {
-#ifdef USE_GLU_TESS
+#ifdef xUSE_GLU_TESS
     return BuildTessGL();
 #else
     return BuildTessTri();

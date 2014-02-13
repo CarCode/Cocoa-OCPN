@@ -204,7 +204,7 @@ class MyApp: public wxApp
 #ifndef __WXOSX__
     wxSingleInstanceChecker *m_checker;
 #endif
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 
 };
 
@@ -377,7 +377,7 @@ class MyFrame: public wxFrame
     void ApplyGlobalColorSchemetoStatusBar(void);
     void PostProcessNNEA(bool pos_valid, const wxString &sfixtime);
 
-    void ScrubGroupArray();
+    bool ScrubGroupArray();
     wxString GetGroupName(int igroup);
     void LoadHarmonics();
 
@@ -424,7 +424,7 @@ class MyFrame: public wxFrame
 
     time_t              m_fixtime;
 
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 };
 
 //--------------------------------------------------------------------
@@ -502,7 +502,7 @@ public:
       int         m_mouse_wheel_oneshot;
       int         m_last_wheel_dir;
 
-      DECLARE_EVENT_TABLE()
+      wxDECLARE_EVENT_TABLE();
 };
 
 
@@ -537,7 +537,7 @@ private:
     int m_timeout_sec;
     bool isActive;
 
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 };
 
 #endif

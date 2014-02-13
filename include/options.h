@@ -187,7 +187,7 @@ class options: public wxScrollingDialog
 #endif
 {
     DECLARE_DYNAMIC_CLASS( options )
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 
 public:
     options();
@@ -229,6 +229,9 @@ public:
     {
         return m_pWorkDirList;
     }
+
+    void UpdateDisplayedChartDirList(ArrayOfCDI p);
+
 
     void SetConfigPtr( MyConfig *p )
     {
@@ -558,9 +561,9 @@ private:
     wxNotebookPage*             m_groupsPage;
 };
 
-class ChartGroupsUI: public wxScrolledWindow {
-
-    DECLARE_EVENT_TABLE()
+class ChartGroupsUI: public wxScrolledWindow
+{
+    wxDECLARE_EVENT_TABLE();
 
 public:
     ChartGroupsUI( wxWindow* parent );
