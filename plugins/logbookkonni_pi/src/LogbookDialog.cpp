@@ -470,10 +470,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	
 	bSizer39->Add( m_buttonSetTimer, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 0 );
 	
-#if wxCHECK_VERSION(2, 9, 0)
+#if wxCHECK_VERSION(3, 0, 0)
 	m_bpButtonTimer = new myBitmapButton( Statusbar, wxID_ANY, _("Timer"),*_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
-#elif wxCHECK_VERSION(3, 0, 0)
-    m_bpButtonTimer = new myBitmapButton( Statusbar, wxID_ANY, _("Timer"),*_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
 #else
 	m_staticText1241 = new wxStaticText( Statusbar, wxID_ANY, _("Timer"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1241->Wrap( -1 );
@@ -484,10 +482,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticline40 = new wxStaticLine( Statusbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer39->Add( m_staticline40, 0, wxEXPAND | wxALL, 5 );
 	
-#if wxCHECK_VERSION(2, 9, 0)
+#if wxCHECK_VERSION(3, 0, 0)
 	m_bpButtonWatch = new myBitmapButton( Statusbar, wxID_ANY, _("Watch"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
-#elif wxCHECK_VERSION(3, 0, 0)
-    m_bpButtonWatch = new myBitmapButton( Statusbar, wxID_ANY, _("Watch"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
 #else
 	m_staticText12411 = new wxStaticText( Statusbar, wxID_ANY, _("Watch"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText12411->Wrap( -1 );
@@ -500,10 +496,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticline41 = new wxStaticLine( Statusbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer39->Add( m_staticline41, 0, wxEXPAND | wxALL, 5 );
 	
-#if wxCHECK_VERSION(2, 9, 0)
+#if wxCHECK_VERSION(3, 0, 0)
 	m_bpButton8Waypoint = new myBitmapButton( Statusbar, wxID_ANY,  _("Waypoint"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
-#elif wxCHECK_VERSION(3, 0, 0)
-    m_bpButton8Waypoint = new myBitmapButton( Statusbar, wxID_ANY,  _("Waypoint"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
 #else
 	m_staticText124111 = new wxStaticText( Statusbar, wxID_ANY, _("Waypoint"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText124111->Wrap( -1 );
@@ -515,10 +509,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticline42 = new wxStaticLine( Statusbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer39->Add( m_staticline42, 0, wxEXPAND | wxALL, 5 );
 
-#if wxCHECK_VERSION(2, 9, 0)
+#if wxCHECK_VERSION(3, 0, 0)
 	m_bpButtonDistance = new myBitmapButton( Statusbar, wxID_ANY,  _("Distance"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
-#elif wxCHECK_VERSION(3, 0, 0)
-    m_bpButtonDistance = new myBitmapButton( Statusbar, wxID_ANY,  _("Distance"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
 #else
 	m_staticText12411 = new wxStaticText( Statusbar, wxID_ANY, _("Distance"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText12411->Wrap( -1 );
@@ -536,10 +528,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticline43 = new wxStaticLine( Statusbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer39->Add( m_staticline43, 0, wxEXPAND | wxALL, 5 );
 	
-#if wxCHECK_VERSION(2, 9, 0)
+#if wxCHECK_VERSION(3, 0, 0)
 	m_bpButtonCourse = new myBitmapButton( Statusbar, wxID_ANY, _("Course"),  *_img_Bullet_red );
-#elif wxCHECK_VERSION(3, 0, 0)
-    m_bpButtonCourse = new myBitmapButton( Statusbar, wxID_ANY, _("Course"),  *_img_Bullet_red );
 #else
 	m_staticText1241 = new wxStaticText( Statusbar, wxID_ANY, _("Course"), wxDefaultPosition, wxDefaultSize, 0  );
 	m_staticText1241->Wrap( -1 );
@@ -2465,7 +2455,7 @@ LogbookDialog::~LogbookDialog()
 	delete m_menu71; 
 	delete m_menu711;
 
-	delete maintenance;  //still a warning with Mac OS C Xcode here: "Delete called on 'Maintenance' that has virtual functions but non-virtual destructor"
+	delete maintenance;
 	delete crewList;
 	delete boat;
 	delete logbook;
@@ -2865,7 +2855,17 @@ void LogbookDialog::OnTextEnterStatusMinutes( wxCommandEvent& event )
 void LogbookDialog::OnButtonClickStatusTimer( wxCommandEvent& event )
 {
 	TimerInterval* ti = new TimerInterval(this,logbookPlugIn->opt);
+    
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
+
 	ti->ShowModal();
+
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
+
 	delete ti;
 }
 
@@ -3020,10 +3020,8 @@ void LogbookDialog::setBulletColorAllStates(myBitmapButton* button, wxBitmap bmp
 		button->SetBitmapLabel(bmp);
 		button->SetBitmapHover(bmp);
 		button->SetBitmapSelected(bmp);
-#if wxCHECK_VERSION(2, 9, 0)
+#if wxCHECK_VERSION(3, 0, 0)
 		button->SetBitmapCurrent(bmp);
-#elif wxCHECK_VERSION(3, 0, 0)
-        button->SetBitmapCurrent(bmp);
 #endif
 		button->SetBitmapFocus(bmp);
 }
@@ -6480,7 +6478,7 @@ bool LogbookDialog::myParseDate(wxString s, wxDateTime &dt)
 	unsigned int i;
 
 	if(s.IsEmpty()) return false;
-//	wxMessageBox(s+LogbookDialog::datePattern);
+
 	for(i = 0; i < s.Length(); i++)
 	{
 		if(s.at(i) < '0' || s.at(i) > '9')
@@ -6530,7 +6528,7 @@ bool LogbookDialog::myParseDate(wxString s, wxDateTime &dt)
 #else
 	s = wxString::Format(_T("%i/%i/%i"),(int)month,(int)day,(int)year);
 #endif
-//	wxMessageBox(s+_T("\n")+LogbookDialog::datePattern);
+
     wxString::const_iterator end;
     if(!dt.ParseFormat(s, "%m/%d/%Y", &end))
 		return false;

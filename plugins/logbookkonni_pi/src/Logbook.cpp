@@ -3139,7 +3139,7 @@ NoAppendDialog::~NoAppendDialog()
 }
 
 ////////////////////////////
-// PVBE-DIALOG
+// PBVE-DIALOG
 ////////////////////////////
 PBVEDialog::PBVEDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {

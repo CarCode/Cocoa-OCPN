@@ -519,10 +519,10 @@ void OverView::loadLogbookData(wxString logbook, bool colour)
 										{
 											t_coll.insert(pair(s,1)); 
 											wxString result;
-										for(it = t_coll.begin(); it != t_coll.end(); ++it)
-										{
-											result = it->first;
-										}
+                                            for(it = t_coll.begin(); it != t_coll.end(); ++it)
+                                            {
+                                                result = it->first;
+                                            }
 										}
 									}
 				break;
@@ -866,11 +866,20 @@ void OverView::writeSumColumn(int row, wxString logbook, wxString path, bool col
 	int max = 0; 
 	wxString result;
 	collection::iterator it;
-
+#ifdef __WXOSX__
+    for(it = t_coll.begin(); it != t_coll.end(); ++it)
+		if(it->second >= max)  { sail = it->first; max = it->second; }
+    
+//    wxMessageBox("vorher "+sail);
+    temp = wxString(sail.To8BitData(), wxConvUTF8);
+//    temp = wxString::Format(_T("%s"),sail.utf8_str());
+//    wxMessageBox("nachher "+temp);
+	grid->SetCellValue(row,FSAILS,temp);
+#else
 	for(it = t_coll.begin(); it != t_coll.end(); ++it)
 		if(it->second >= max)  { sail = it->first; max = it->second; }
-	grid->SetCellValue(row,FSAILS,sail);
-
+	grid->SetCellValue(row,FSAILS,sail); //war: sail
+#endif
 	if(colour)
 		for(int i = 0; i < grid->GetNumberCols(); i++)
 			grid->SetCellBackgroundColour(row,i,wxColour(230,230,230));
@@ -1095,11 +1104,20 @@ ay=cy-by;
 	int max = 0; 
 	wxString result;
 	collection::iterator it;
-
+#ifdef __WXOSX__
+    for(it = t_coll.begin(); it != t_coll.end(); ++it)
+		if(it->second >= max)  { sail = it->first; max = it->second; }
+    
+//    wxMessageBox("vorher2 "+sail);
+    temp = wxString(sail.To8BitData(), wxConvUTF8);
+//    temp = wxString::Format(_T("%s"),sail.utf8_str());
+//    wxMessageBox("nachher2 "+temp);
+	grid->SetCellValue(row,FSAILS,temp);
+#else
 	for(it = t_coll.begin(); it != t_coll.end(); ++it)
 		if(it->second >= max)  { sail = it->first; max = it->second; }
-	grid->SetCellValue(row,FSAILS,sail);
-
+	grid->SetCellValue(row,FSAILS,sail);  //war: sail ToUTF8() ???
+#endif
 	if(colour)
 		for(int i = 0; i < grid->GetNumberCols(); i++)
 			grid->SetCellBackgroundColour(row,i,wxColour(230,230,230));

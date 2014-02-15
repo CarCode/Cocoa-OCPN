@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  * $Id: logbookkonni_pi.h,v 1.8 2010/06/21 01:54:37 bdbcat Exp $
  *
  * Project:  OpenCPN
@@ -6,8 +6,8 @@
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
- *   $EMAIL$   *
+ *   Copyright (C) 2010 by David S. Register                               *
+ *   $EMAIL$                                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,9 +22,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #ifndef _LOGBOOKPIKONNI_H_
 #define _LOGBOOKPIKONNI_H_
@@ -36,7 +35,7 @@
 #endif //precompiled headers
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    1957
+#define     PLUGIN_VERSION_MINOR    2
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    7
@@ -79,21 +78,21 @@ public:
     logbookkonni_pi(void *ppimgr);
     ~logbookkonni_pi();
 
-    bool				dlgShow;
-    LogbookTimer		*timer;
-    wxWindow          *m_parent_window;
-    LogbookDialog     *m_plogbook_window;
-    LogbookOptions    *optionsDialog;
-    wxFileConfig		*m_pconfig;
-    Options			*opt;
-    wxTimer 		    *m_timer;
-    wxColour			col,col1,gridline,uitext,udkrd,back_color,text_color;
-    wxColour			mcol,mcol1,mgridline, muitext,mudkrd,mback_color,mtext_color;
-    wxString			lastWaypointInRoute;
+    bool            dlgShow;
+    LogbookTimer    *timer;
+    wxWindow        *m_parent_window;
+    LogbookDialog   *m_plogbook_window;
+    LogbookOptions  *optionsDialog;
+    wxFileConfig    *m_pconfig;
+    Options         *opt;
+    wxTimer         *m_timer;
+    wxColour        col,col1,gridline,uitext,udkrd,back_color,text_color;
+    wxColour        mcol,mcol1,mgridline, muitext,mudkrd,mback_color,mtext_color;
+    wxString        lastWaypointInRoute;
 
-    wxLocale*			local;
-    int				state;
-    bool				eventsEnabled;
+    wxLocale*       local;
+    int             state;
+    bool            eventsEnabled;
 
     //    The required PlugIn Methods
     int Init(void);
@@ -137,21 +136,21 @@ public:
     void shutdown(bool menu);
 
 private:
-    void					OnTimer(wxTimerEvent& ev);
-    void					SaveConfig();
-    void					LoadConfig();
-    ArrayOfGridColWidth	readCols(ArrayOfGridColWidth ar, wxString str);
-    void					writeCols(wxFileConfig *pConf, ArrayOfGridColWidth ar, wxString entry);
-    ArrayOfGridColWidth	readColsOld(wxFileConfig *pConf, ArrayOfGridColWidth ar, wxString entry);
-    void					dialogDimmer(PI_ColorScheme cs,wxWindow* ctrl,wxColour col,wxColour col1, wxColour back_color,wxColour text_color, wxColour uitext, wxColour udkrd);
-    wxAuiManager     *m_pauimgr;
+    void                    OnTimer(wxTimerEvent& ev);
+    void                    SaveConfig();
+    void                    LoadConfig();
+    ArrayOfGridColWidth     readCols(ArrayOfGridColWidth ar, wxString str);
+    void                    writeCols(wxFileConfig *pConf, ArrayOfGridColWidth ar, wxString entry);
+    ArrayOfGridColWidth     readColsOld(wxFileConfig *pConf, ArrayOfGridColWidth ar, wxString entry);
+    void                    dialogDimmer(PI_ColorScheme cs,wxWindow* ctrl,wxColour col,wxColour col1, wxColour back_color,wxColour text_color, wxColour uitext, wxColour udkrd);
+    wxAuiManager            *m_pauimgr;
 
-    int               m_show_id;
-    int               m_hide_id;
-    bool				show;
-    int				m_leftclick_tool_id;
+    int                     m_show_id;
+    int                     m_hide_id;
+    bool                    show;
+    int                     m_leftclick_tool_id;
 
-    bool              m_bLOGShowIcon;
+    bool                    m_bLOGShowIcon;
 };
 
 
@@ -171,7 +170,7 @@ public:
 
 #ifdef __WXGTK__
 ///////////////////////////////////////////////////////////////////////////////
-/// Class PWDialog
+/// Class PWDialog, only for Password
 ///////////////////////////////////////////////////////////////////////////////
 class PWDialog : public wxDialog 
 {

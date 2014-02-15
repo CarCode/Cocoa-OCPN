@@ -622,7 +622,6 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
 	fgSizer91->Add( m_staticText31, 0, wxALIGN_CENTER_VERTICAL, 5 );
 #ifdef __WXOSX__
     m_sDeg = new wxTextCtrl( m_panel16, wxID_ANY, _T("\xA1"), wxDefaultPosition, wxSize( 40,-1 ), 0 ); 
-	// don't know if \xA1 is correct, cannot compile for apple
 #else
 	m_sDeg = new wxTextCtrl( m_panel16, wxID_ANY, _T("\xB0"), wxDefaultPosition, wxSize( 40,-1 ), 0 );
 #endif

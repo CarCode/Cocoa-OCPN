@@ -324,7 +324,7 @@ or change this text in Toolbox/Plugins/Logbook\n\nShift+Enter appends a new line
 	htmlEditor = _T("libreoffice");
 	htmlEditorReset = htmlEditor;
 #endif
-#ifdef __WXOSW__
+#ifdef __WXOSW__   // Finder
 	dataManager = _T("");
 	dataManagerReset = dataManagerReset; 
 #endif

@@ -608,7 +608,7 @@ wxString LogbookHTML::replacePlaceholder(wxString html,wxString htmlHeader,int g
 	else 
 	{
 #ifdef __WXOSX__
-               wxString str(html.wx_str(), wxConvUTF8);
+        wxString str(html.wx_str(), wxConvUTF8);
 #else
 		wxString str(html.wx_str(),wxConvUTF8);
 #endif
@@ -1313,59 +1313,59 @@ void LogbookHTML::writeRouteToKML(wxJSONValue data)
     *kmlFile << parent->kmlEndFolder;
 }
 /*
-          +void LogbookHTML::createJumpTable()
-          +{
-          +	wxString path  = parent->basePath+_T("navobj.xml");
-          +	wxString patho = parent->basePath+_T("navobj.xml.changes");
-          +
-          +	offsetChanges.clear();
-          +	offsetNavobj.clear();
-          +
-          +	if(wxFile::Exists(patho))
-          +		insertTracks(patho,&offsetChanges,&offsetChangesGuid);		
-          +	else
-          +		insertTracks(path,&offsetNavobj,&offsetNavobjGuid);
-          +	
-          +}
-          +
-          +void LogbookHTML::insertTracks(wxString file, std::map<wxString,long> *navobj, std::map<wxString,long> *navobjgui )
-          +{
-          +	wxString temp;
-          +
-          +	wxFileInputStream in(file);
-          +	wxTextInputStream xml(in);
-          +
-          +	long i = -1, n = 0;
-          +	while(!in.Eof())
-          +	{
-          +		temp = xml.ReadLine();
-          +		i++;
-          +		if(temp.Contains(_T("<trk>")))
-          +		{
-          +			n = i;
-          +			temp = xml.ReadLine();
-          +			i++;
-          +			if(temp.Contains(_T("<name>")))
-          +			{
-          +				temp.Trim(false);
-          +				temp.Replace(_T("<name>"),_T(""));
-          +				temp.Replace(_T("</name>"),_T(""));
-          +				navobj->insert(pair(temp,n));			
-          +			}
-          +
-          +			do{
-          +				temp = xml.ReadLine();
-          +				i++;
-          +			}while(!temp.Contains(_T("<opencpn:guid>")));
-          +
-          +			temp.Trim(false);
-          +			temp = temp.AfterFirst('>'); 
-          +			temp = temp.BeforeFirst('<');
-          +			navobjgui->insert(pair(temp,n));
-          +		}
-          +	}
-          +}
-          +*/
+void LogbookHTML::createJumpTable()
+{
+    wxString path  = parent->basePath+_T("navobj.xml");
+    wxString patho = parent->basePath+_T("navobj.xml.changes");
+
+    offsetChanges.clear();
+    offsetNavobj.clear();
+
+    if(wxFile::Exists(patho))
+        insertTracks(patho,&offsetChanges,&offsetChangesGuid);
+    else
+        insertTracks(path,&offsetNavobj,&offsetNavobjGuid);
+
+}
+
+void LogbookHTML::insertTracks(wxString file, std::map<wxString,long> *navobj, std::map<wxString,long> *navobjgui )
+{
+    wxString temp;
+
+    wxFileInputStream in(file);
+    wxTextInputStream xml(in);
+
+    long i = -1, n = 0;
+    while(!in.Eof())
+    {
+        temp = xml.ReadLine();
+        i++;
+        if(temp.Contains(_T("<trk>")))
+        {
+            n = i;
+            temp = xml.ReadLine();
+            i++;
+            if(temp.Contains(_T("<name>")))
+            {
+                temp.Trim(false);
+                temp.Replace(_T("<name>"),_T(""));
+                temp.Replace(_T("</name>"),_T(""));
+                navobj->insert(pair(temp,n));
+            }
+
+            do{
+                temp = xml.ReadLine();
+                i++;
+                }while(!temp.Contains(_T("<opencpn:guid>")));
+
+                    temp.Trim(false);
+                    temp = temp.AfterFirst('>');
+          			temp = temp.BeforeFirst('<');
+          			navobjgui->insert(pair(temp,n));
+        }
+    }
+}
+*/
 wxString LogbookHTML::replaceKMLCharacters(wxString e)
 {
     e.Replace(_T("\""),_T("&quot;"));
@@ -1377,102 +1377,102 @@ wxString LogbookHTML::replaceKMLCharacters(wxString e)
     return e;
 }
 /*
-          +wxString LogbookHTML::findTrackInXML(wxDateTime dt, wxString file, wxString *name, wxString route, wxString trackguid, long offset, bool f, bool mode)
-          +{
-          +	wxString temp,lat,lon,track = wxEmptyString, trkguid = wxEmptyString;
-          +	bool first = true;
-          +
-          +	wxString path = parent->basePath + file;
-          +	if(f ==	0)
-          +			if(!wxFile::Exists(path)) return wxEmptyString;
-          +
-          +		wxTextFile in(path);
-          +		in.Open();
-          +		in.GoToLine(offset);
-          +			while(!in.Eof())
-          +			{
-          +				temp = in.GetLine(offset);
-          +				if(temp.Contains(_T("<trk>")))
-          +				{
-          +					temp = in.GetNextLine();
-          +					if(mode)
-          +					{
-          +					if(temp.Contains(_T("<name>")))
-          +						{
-          +							temp.Trim(false);
-          +							temp = temp.AfterFirst('>'); 
-          +							temp = temp.BeforeFirst('<');	
-          +							*name = temp;
-          +						}
-          +					}
-          +					else
-          +					{
-          +						do{
-          +							temp = in.GetNextLine();
-          +						}while(!temp.Contains(_T("<opencpn:guid>")));
-          +						temp.Trim(false);
-          +						temp = temp.AfterFirst('>'); 
-          +						trkguid = temp.BeforeFirst('<');	
-          +					}
-          +
-          +					do
-          +					{
-          +						temp = in.GetNextLine();
-          +						if(temp.Contains(_T("</trk>"))) return track;
-          +
-          +						if(temp.Contains(_T("<trkpt")))
-          +						{
-          +							temp.Trim(false);
-          +							temp.Replace(_T("<trkpt lat="),_T(""));
-          +							temp.Replace(_T("lon="),_T(""));
-          +							temp.Replace(_T("\""),_T(""));
-          +							wxStringTokenizer tkz(temp,_T(" "));
-          +							lon = tkz.GetNextToken();
-          +							lat = tkz.GetNextToken().RemoveLast();
-          +						}
-          +
-          +						if(temp.Contains(_T("<time>")))
-          +						{
-          +							temp.Trim(false);
-          +							temp = temp.AfterFirst('>'); 
-          +							temp = temp.BeforeFirst('<');
-          +							temp.Replace(_T("T"),_T(" "));
-          +
-          +							wxDateTime dtt;
-          +							dtt.ParseDateTime(temp.RemoveLast());
-          +							//wxMessageBox(dtt.FormatDate()+_T(" ")+dtt.FormatTime());
-          +						}
-          +
-          +							if(*name == route || trkguid == trackguid)
-          +								track += lat+_T(",")+lon+_T("\n");
-          +					}while(!in.Eof());
-          +				}
-          +			}
-          +	in.Close();
-          +	return track;
-          +}
-          +
-          +wxString LogbookHTML::getPathFromTrack(wxDateTime dt, wxString route, wxString trackguid, long offset, bool ind, bool mode)
-          +{
-          +	wxString name = wxEmptyString;
-          +	wxString kmlData = wxEmptyString;
-          +	wxString header = parent->kmlPathHeader;
-          +
-          +	if(!ind)
-          +		kmlData = findTrackInXML(dt, _T("navobj.xml.changes"), &name, route, trackguid, offset, ind, mode);
-          +	else
-          +		kmlData = findTrackInXML(dt, _T("navobj.xml"), &name, route, trackguid, offset, ind, mode);
-          +
-          +	name = route;
-          +	if(!kmlData.IsEmpty())
-          +	{
-          +		header.Replace(_T("#NAME#"),name);
-          +		return header+kmlData+parent->kmlPathFooter;
-          +	}
-          +	else
-          +		return wxEmptyString;
-          +}
-          +*/
+wxString LogbookHTML::findTrackInXML(wxDateTime dt, wxString file, wxString *name, wxString route, wxString trackguid, long offset, bool f, bool mode)
+{
+    wxString temp,lat,lon,track = wxEmptyString, trkguid = wxEmptyString;
+    bool first = true;
+
+    wxString path = parent->basePath + file;
+    if(f ==	0)
+        if(!wxFile::Exists(path)) return wxEmptyString;
+
+        wxTextFile in(path);
+        in.Open();
+        in.GoToLine(offset);
+        while(!in.Eof())
+        {
+            temp = in.GetLine(offset);
+            if(temp.Contains(_T("<trk>")))
+            {
+                temp = in.GetNextLine();
+                if(mode)
+                {
+                    if(temp.Contains(_T("<name>")))
+                    {
+                        temp.Trim(false);
+                        temp = temp.AfterFirst('>');
+                        temp = temp.BeforeFirst('<');
+                        *name = temp;
+                    }
+                }
+                else
+                {
+                    do{
+                        temp = in.GetNextLine();
+                        }while(!temp.Contains(_T("<opencpn:guid>")));
+          						temp.Trim(false);
+          						temp = temp.AfterFirst('>');
+          						trkguid = temp.BeforeFirst('<');
+                }
+
+                do
+                {
+                    temp = in.GetNextLine();
+                    if(temp.Contains(_T("</trk>"))) return track;
+
+                        if(temp.Contains(_T("<trkpt")))
+                        {
+                            temp.Trim(false);
+                            temp.Replace(_T("<trkpt lat="),_T(""));
+                            temp.Replace(_T("lon="),_T(""));
+                            temp.Replace(_T("\""),_T(""));
+                            wxStringTokenizer tkz(temp,_T(" "));
+                            lon = tkz.GetNextToken();
+                            lat = tkz.GetNextToken().RemoveLast();
+                        }
+
+                        if(temp.Contains(_T("<time>")))
+                        {
+                            temp.Trim(false);
+                            temp = temp.AfterFirst('>');
+                            temp = temp.BeforeFirst('<');
+                            temp.Replace(_T("T"),_T(" "));
+
+                            wxDateTime dtt;
+                            dtt.ParseDateTime(temp.RemoveLast());
+                            //wxMessageBox(dtt.FormatDate()+_T(" ")+dtt.FormatTime());
+                        }
+
+                        if(*name == route || trkguid == trackguid)
+                                track += lat+_T(",")+lon+_T("\n");
+                    }while(!in.Eof());
+                }
+            }
+        in.Close();
+        return track;
+}
+
+wxString LogbookHTML::getPathFromTrack(wxDateTime dt, wxString route, wxString trackguid, long offset, bool ind, bool mode)
+{
+    wxString name = wxEmptyString;
+    wxString kmlData = wxEmptyString;
+    wxString header = parent->kmlPathHeader;
+
+    if(!ind)
+        kmlData = findTrackInXML(dt, _T("navobj.xml.changes"), &name, route, trackguid, offset, ind, mode);
+    else
+        kmlData = findTrackInXML(dt, _T("navobj.xml"), &name, route, trackguid, offset, ind, mode);
+
+    name = route;
+    if(!kmlData.IsEmpty())
+    {
+        header.Replace(_T("#NAME#"),name);
+        return header+kmlData+parent->kmlPathFooter;
+    }
+    else
+        return wxEmptyString;
+}
+*/
 wxString LogbookHTML::convertPositionToDecimalDegrees(wxString str)
 {
     wxString pos;

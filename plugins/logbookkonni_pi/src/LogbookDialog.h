@@ -623,8 +623,11 @@ enum FORMAT {HTML,ODT};
 		wxButton* m_buttonViewBuyParts;
 		wxGrid* m_gridMaintenanceBuyParts;
         wxPanel* m_panelPolar;
-
-		LogbookDialog( logbookkonni_pi* d, wxTimer* t, LogbookTimer* lt, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Active Logbook"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1010,535 ), long style = wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER);
+#ifdef __WXOSX__
+		LogbookDialog( logbookkonni_pi* d, wxTimer* t, LogbookTimer* lt, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Active Logbook"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1010,535 ), long style = wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER|wxSTAY_ON_TOP);
+#else
+        LogbookDialog( logbookkonni_pi* d, wxTimer* t, LogbookTimer* lt, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Active Logbook"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1010,535 ), long style = wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER);
+#endif
 		~LogbookDialog();
 		
 		void m_gridGlobalOnContextMenu( wxMouseEvent &event )
@@ -1141,7 +1144,7 @@ class PositionDlg : public wxDialog
 		wxString retstr;
 };
 
-#if wxCHECK_VERSION(2, 9, 0)
+#if wxCHECK_VERSION(3, 0, 0)
 class myBitmapButton : public wxButton
 {
 public:
@@ -1155,22 +1158,6 @@ public:
 	}
 	~myBitmapButton(){}
 
-	int state;
-};
-#elif wxCHECK_VERSION(3, 0, 0)
-class myBitmapButton : public wxButton
-{
-public:
-	myBitmapButton( wxWindow* Statusbar, wxWindowID id = wxID_ANY, wxString text = wxEmptyString, const wxBitmap bm = wxBitmap(), const wxPoint& pos = wxDefaultPosition,
-                   const wxSize& size = wxSize( -1,20 ), long style = wxBU_AUTODRAW, int state = 0 ) : wxButton( Statusbar, id, text, pos, size, style )
-	{
-		this->state = state;
-		this->SetBitmapLabel(bm);
-		this->SetBitmapHover(bm);
-		this->SetBitmapPosition(wxRIGHT);
-	}
-	~myBitmapButton(){}
-    
 	int state;
 };
 #else

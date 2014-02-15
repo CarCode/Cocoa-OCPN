@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
 * $Id: logbookkonni_pi.cpp,v 1.8 2010/06/21 01:54:37 bdbcat Exp $
 *
 * Project:  OpenCPN
@@ -6,8 +6,8 @@
 * Author:   David Register
 *
 ***************************************************************************
-*   Copyright (C) 2010 by David S. Register   *
-*   $EMAIL$   *
+*   Copyright (C) 2010 by David S. Register                               *
+*   $EMAIL$                                                               *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
 *   it under the terms of the GNU General Public License as published by  *
@@ -22,10 +22,8 @@
 *   You should have received a copy of the GNU General Public License     *
 *   along with this program; if not, write to the                         *
 *   Free Software Foundation, Inc.,                                       *
-*   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
-***************************************************************************
-*/
-//#define _2_9_x_ // uncomment this to compile for 2.9.x
+*   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+***************************************************************************/
 
 #ifndef  WX_PRECOMP
 #include "wx/wx.h"
@@ -765,7 +763,7 @@ void logbookkonni_pi::ShowPreferencesDialog( wxWindow* parent )
 	optionsDialog = new LogbookOptions(parent, opt, this, -1, _("Logbook Preferences"), wxDefaultPosition,  wxSize( 692,660  ),
 		wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 #elif defined __WXOSX__
-    optionsDialog = new LogbookOptions(parent, opt, this, -1, _("Logbook Preferences"), wxDefaultPosition,  wxSize( 710,685 ) ,
+    optionsDialog = new LogbookOptions(parent, opt, this, -1, _("Logbook Preferences"), wxDefaultPosition,  wxSize( 770,685 ) ,
 		wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 #else
 	optionsDialog = new LogbookOptions(parent, opt, this, -1, _("Logbook Preferences"), wxDefaultPosition,  wxSize( 740,700 ) ,
