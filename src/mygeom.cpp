@@ -1576,7 +1576,7 @@ PolyTessGeo::~PolyTessGeo()
 
 int PolyTessGeo::BuildDeferredTess(void)
 {
-#ifdef xUSE_GLU_TESS
+#ifdef USE_GLU_TESS
     return BuildTessGL();
 #else
     return BuildTessTri();
