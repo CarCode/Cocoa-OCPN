@@ -23,25 +23,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-// For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
-
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#endif
-
-#include <wx/listimpl.cpp>    // toh, 2009.02.22
-
-#include "wx/wxprec.h"
-
-
-#ifndef WX_PRECOMP
 #include <wx/wx.h>
-#endif
+#include <wx/listimpl.cpp>    // toh, 2009.02.22
 
 #include "wx/notebook.h"
 #include "wx/datetime.h"
 #include "wx/colordlg.h"
+#include "wx/fileconf.h"
 
 #include "../../../include/ocpn_plugin.h"
 
@@ -147,7 +135,7 @@ SightDialog::SightDialog( wxWindow* parent, Sight &s)
    m_sCertaintySeconds->SetValue(m_Sight.m_TimeCertainty);
 
    m_sTransparency->SetValue(m_Sight.m_Colour.Alpha());
-   m_sEyeHeight->SetValue(m_Sight.m_EyeHeight);
+   m_tEyeHeight->SetValue(wxString::Format(_T("%.1f"), m_Sight.m_EyeHeight));
    m_sTemperature->SetValue(m_Sight.m_Temperature);
    m_sPressure->SetValue(m_Sight.m_Pressure);
    m_tIndexError->SetValue(wxString::Format(_T("%.5f"), m_Sight.m_IndexError));
@@ -225,10 +213,17 @@ wxDateTime SightDialog::DateTime()
 
 void SightDialog::OnSetDefaults( wxCommandEvent& event )
 {
-    Sight::default_eye_height = m_Sight.m_EyeHeight = m_sEyeHeight->GetValue();
-    Sight::default_temperature = m_Sight.m_Temperature;
-    Sight::default_pressure = m_Sight.m_Pressure;
-    Sight::default_index_error = m_Sight.m_IndexError;
+    wxFileConfig *pConf = GetOCPNConfigObject();
+    pConf->SetPath( _T("/PlugIns/CelestialNavigation") );
+
+    double eyeheight;
+    m_tEyeHeight->GetValue().ToDouble(&eyeheight);
+    pConf->Write( _T("DefaultEyeHeight"), eyeheight );
+    pConf->Write( _T("DefaultTemperature"), m_sTemperature->GetValue() );
+    pConf->Write( _T("DefaultPressure"), m_sPressure->GetValue() );
+    double indexerror;
+    m_tIndexError->GetValue().ToDouble(&indexerror);
+    pConf->Write( _T("DefaultIndexError"), indexerror );
 }
 
 void SightDialog::Recompute( wxCommandEvent& event )
@@ -271,7 +266,7 @@ void SightDialog::RecomputeSight()
    m_Sight.m_BodyLimb = (Sight::BodyLimb)m_cLimb->GetSelection();
    m_Sight.m_DateTime = DateTime();
    m_Sight.m_TimeCertainty = m_sCertaintySeconds->GetValue();
-   m_Sight.m_EyeHeight = m_sEyeHeight->GetValue();
+   m_tEyeHeight->GetValue().ToDouble(&m_Sight.m_EyeHeight);
    m_Sight.m_Temperature = m_sTemperature->GetValue();
    m_Sight.m_Pressure = m_sPressure->GetValue();
    m_tIndexError->GetValue().ToDouble(&m_Sight.m_IndexError);
