@@ -59,7 +59,7 @@
 #include "depth.h"
 #include "clock.h"
 #include "wind_history.h"
-
+#include "baro_history.h"
 
 class DashboardWindow;
 class DashboardWindowContainer;
