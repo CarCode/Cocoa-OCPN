@@ -51,6 +51,7 @@ struct GribOverlaySettings
     // settings options
     bool m_bInterpolate;
     bool m_bLoopMode;
+    int m_LoopStartPoint;
     int m_SlicesPerUpdate;
     int m_UpdatesPerSecond;
     int m_HourDivider;

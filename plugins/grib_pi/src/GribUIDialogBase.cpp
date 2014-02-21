@@ -147,10 +147,10 @@ GRIBUIDialogBase::GRIBUIDialogBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_fgTrackingControls->Add( 0, 0, 1, wxEXPAND, 1 );
 
 	m_cbAirTemperature = new wxCheckBox( this, ID_CB_AIR_TEMP, _("Air Temp"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_fgTrackingControls->Add( m_cbAirTemperature, 0, wxALL, 1 );
+	m_fgTrackingControls->Add( m_cbAirTemperature, 0, wxALL, 5 );
 
 	m_tcAirTemperature = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_READONLY );
-	m_fgTrackingControls->Add( m_tcAirTemperature, 0, wxALL, 5 );
+	m_fgTrackingControls->Add( m_tcAirTemperature, 0, wxALL, 1 );
 
 
 	m_fgTrackingControls->Add( 0, 0, 1, wxEXPAND, 1 );
@@ -272,13 +272,26 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
 	m_cLoopMode = new wxCheckBox( this, wxID_ANY, _("Loop Mode"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer13->Add( m_cLoopMode, 0, wxALL, 5 );
 
+    m_staticText26 = new wxStaticText( this, wxID_ANY, _("Loop Start"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_staticText26->Wrap( -1 );
+    fgSizer13->Add( m_staticText26, 0, wxALL, 5 );
+
+    wxString m_cLoopStartPointChoices[] = { _("Top of Grib File"), _("Current time forecast") };
+    int m_cLoopStartPointNChoices = sizeof( m_cLoopStartPointChoices ) / sizeof( wxString );
+    m_cLoopStartPoint = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_cLoopStartPointNChoices, m_cLoopStartPointChoices, 0 );
+    m_cLoopStartPoint->SetSelection( 0 );
+    fgSizer13->Add( m_cLoopStartPoint, 0, wxALL|wxEXPAND, 5 );
+
+
+    fgSizer13->Add( 0, 0, 1, wxEXPAND, 5 );
+
     wxStaticText* m_staticText4;
     m_staticText4 = new wxStaticText( this, wxID_ANY, _("Updates per Second"), wxDefaultPosition, wxDefaultSize, 0 );
     m_staticText4->Wrap( -1 );
     fgSizer13->Add( m_staticText4, 0, wxALL, 5 );
 
     m_sUpdatesPerSecond = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 60, 4 );
-    fgSizer13->Add( m_sUpdatesPerSecond, 0, wxALL, 5 );
+    fgSizer13->Add( m_sUpdatesPerSecond, 0, wxALL|wxEXPAND, 5 );
 
 	m_cInterpolate = new wxCheckBox( this, wxID_ANY, _("Interpolate between gribs"), wxDefaultPosition, wxDefaultSize, 0 );
     fgSizer13->Add( m_cInterpolate, 0, wxALL, 5 );
@@ -288,7 +301,7 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
     fgSizer13->Add( m_tSlicesPerUpdate, 0, wxALL, 5 );
 
 	m_sSlicesPerUpdate = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 100, 2 );
-	fgSizer13->Add( m_sSlicesPerUpdate, 0, wxALL, 5 );
+	fgSizer13->Add( m_sSlicesPerUpdate, 0, wxALL|wxEXPAND, 5 );
 
 
     fgSizer13->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -298,13 +311,13 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
     fgSizer13->Add( m_tHourDivider, 0, wxALL, 5 );
 
 	m_sHourDivider = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 20, 2 );
-	fgSizer13->Add( m_sHourDivider, 1, wxALL, 5 );
+	fgSizer13->Add( m_sHourDivider, 1, wxALL|wxEXPAND, 5 );
 
 
 	sbSizer4->Add( fgSizer13, 1, wxEXPAND, 5 );
 
 
-	fgSizer4->Add( sbSizer4, 1, 0, 5 );
+	fgSizer4->Add( sbSizer4, 1, wxEXPAND, 5 );
 
 	wxStaticBoxSizer* sbSizer5;
 	sbSizer5 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Display") ), wxVERTICAL );
@@ -361,7 +374,7 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
 
     fgSizer15->Add( m_fIsoBarSpacing, 1, wxALL|wxEXPAND, 5 );
 
-    m_fIsoBarVisibility = new wxFlexGridSizer( 0, 2, 0, 0 );
+    m_fIsoBarVisibility = new wxFlexGridSizer( 0, 1, 0, 0 );
     m_fIsoBarVisibility->SetFlexibleDirection( wxBOTH );
     m_fIsoBarVisibility->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
@@ -522,8 +535,8 @@ GribPreferencesDialogBase::GribPreferencesDialogBase( wxWindow* parent, wxWindow
     fgSizer6->Add( m_rbStartOptions, 0, wxALL|wxEXPAND, 5 );
 
     wxString m_rbTimeFormatChoices[] = { _("Local Time"), _("UTC") };
-//    int m_rbTimeFormatNChoices = sizeof( m_rbTimeFormatChoices ) / sizeof( wxString );
-    m_rbTimeFormat = new wxRadioBox( this, wxID_ANY, _("Time Options"), wxDefaultPosition, wxDefaultSize, 2, m_rbTimeFormatChoices, 1, wxRA_SPECIFY_COLS );
+    int m_rbTimeFormatNChoices = sizeof( m_rbTimeFormatChoices ) / sizeof( wxString );
+    m_rbTimeFormat = new wxRadioBox( this, wxID_ANY, _("Time Options"), wxDefaultPosition, wxDefaultSize,  m_rbTimeFormatNChoices, m_rbTimeFormatChoices, 1, wxRA_SPECIFY_COLS );
     m_rbTimeFormat->SetSelection( 0 );
     fgSizer6->Add( m_rbTimeFormat, 0, wxALL|wxEXPAND, 5 );
 

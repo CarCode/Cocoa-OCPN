@@ -10,6 +10,7 @@
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
+#include <wx/intl.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
@@ -28,8 +29,8 @@
 #include <wx/statbox.h>
 #include <wx/dialog.h>
 #include <wx/stattext.h>
-#include <wx/spinctrl.h>
 #include <wx/choice.h>
+#include <wx/spinctrl.h>
 #include <wx/statline.h>
 #include <wx/radiobox.h>
 #include <wx/grid.h>
@@ -122,11 +123,12 @@ class GribSettingsDialogBase : public wxDialog
 	private:
 	
 	protected:
-		wxSpinCtrl* m_sUpdatesPerSecond;
+        wxStaticText* m_staticText26;
+        wxChoice* m_cLoopStartPoint;
+        wxSpinCtrl* m_sUpdatesPerSecond;
         wxStaticText* m_tSlicesPerUpdate;
         wxSpinCtrl* m_sSlicesPerUpdate;
         wxStaticText* m_tHourDivider;
-		wxStaticText* m_staticText4;
 		wxChoice* m_cDataType;
 		wxChoice* m_cDataUnits;
 		wxCheckBox* m_cbBarbedArrows;
