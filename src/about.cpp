@@ -57,7 +57,7 @@ extern ocpnStyle::StyleManager* g_StyleManager;
 char AboutText[] =
 {
   "\n                                         OpenCPN\n\n\
-                       (c) 2000-2013 Die OpenCPN Autoren\n"
+                       (c) 2000-2014 Die OpenCPN Autoren\n"
 };
 
 char OpenCPNInfo[] = {"\n\n\
@@ -467,8 +467,8 @@ void about::OnPageChange( wxNotebookEvent& event )
         }
     }
 #else
-    wxString msg1( _("Für Hilfe verwenden Sie bitte das Menü Hilfe"));
-//    OCPNMessageBox ( NULL, wxString( _("Für Hilfe verwenden Sie bitte das Menü Hilfe.")), wxString( _("OpenCPN Info") ),
+    wxString msg1( _T("Für Hilfe verwenden Sie bitte das Menü Hilfe"));
+//    OCPNMessageBox ( NULL, wxString( _T("Für Hilfe verwenden Sie bitte das Menü Hilfe.")), wxString( _("OpenCPN Info") ),
 //                    wxICON_INFORMATION | wxOK );
 #endif
 }

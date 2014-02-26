@@ -115,7 +115,7 @@ private:
 
     void OnZoomToCenterClick( wxCommandEvent& event );
     void OnPrev( wxCommandEvent& event );
-    void OnRecordForecast( wxCommandEvent& event ) { m_InterpolateMode = false; TimelineChanged(); }
+    void OnRecordForecast( wxCommandEvent& event ) { m_InterpolateMode = false; m_pNowMode = false; TimelineChanged(); }
     void OnNext( wxCommandEvent& event );
     void OnNow( wxCommandEvent& event ) { ComputeBestForecastForNow(); }
     void OnOpenFile( wxCommandEvent& event );
@@ -129,6 +129,7 @@ private:
     void SetGribTimelineRecordSet(GribTimelineRecordSet *pTimelineSet);
     int GetNearestIndex(wxDateTime time, int model);
     int GetNearestValue(wxDateTime time, int model);
+    bool GetGribZoneLimits(GribTimelineRecordSet *timelineSet, double *latmin, double *latmax, double *lonmin, double *lonmax);
     wxDateTime GetNow();
 
     //    Data
@@ -141,6 +142,7 @@ private:
     int m_TimeLineHours;
     bool m_InterpolateMode;
     bool m_pNowMode;
+    bool m_pMovingGrib;
 
     wxString         m_file_name;   /* selected file */
     wxString         m_grib_dir;
@@ -222,6 +224,7 @@ private:
     bool EstimateFileSize();
 
     void OnTopChange(wxCommandEvent &event);
+    void OnMovingGribButtonClick( wxCommandEvent& event );
     void OnAnyChange( wxCommandEvent& event );
     void OnTimeRangeChange( wxCommandEvent& event );
     void OnSendMaiL( wxCommandEvent& event );
@@ -230,8 +233,26 @@ private:
     int  m_MailError_Nb;
     int  m_SendMethod;
     bool m_AllowSend;
+    bool m_MovingGribEnabled;
+    int m_MovingSpeed;
+    int m_MovingCourse;
 };
 
+//----------------------------------------------------------------------------------------------------------
+//    Moving Grib setting Specification
+//----------------------------------------------------------------------------------------------------------
+class GribMovingSetting : public GribMovingSettingBase
+{
+public:
+    GribMovingSetting( wxWindow *parent, int movingenabled, int movingspeed, int movingcourse )
+        : GribMovingSettingBase(parent) {};
+
+    ~GribMovingSetting() {}
+
+    bool GetMovingGribEnabled() { return m_cMovingGribEnabled->GetValue(); }
+    int GetMovingSpeed() { return m_sMovingSpeed->GetValue(); }
+    int GetMovingCourse() { return m_sMovingCourse->GetValue(); }
+};
 
 #endif
 
