@@ -1339,7 +1339,7 @@ void CrewList::dayNow(bool mode)
 
 		dtend.Add(df);
 		dtend.Subtract(ed);
-//		wxMessageBox(dtstart.FormatDate()+_T(" ")+dtstart.FormatTime()+_T("\n")+now.FormatDate()+_T(" ")+now.FormatTime()+_T("\n")+dtend.FormatDate()+_T(" ")+dtend.FormatTime());
+//		wxMessageBox(dtstart.FormatDate()+_T(" ")+dtstart.FormatTime()+_T("\n")+now.FormatDate()+_T(" ")+now.FormatTime()+_T("\n")+dtend.FormatDate()+_T(" ")+dtend.FormatTime());  // WXOSX ???
 		str = tkz.GetNextToken();
 		if(now.IsBetween(dtstart,dtend))
 		{

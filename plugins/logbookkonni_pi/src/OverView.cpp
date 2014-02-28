@@ -870,15 +870,13 @@ void OverView::writeSumColumn(int row, wxString logbook, wxString path, bool col
     for(it = t_coll.begin(); it != t_coll.end(); ++it)
 		if(it->second >= max)  { sail = it->first; max = it->second; }
     
-//    wxMessageBox("vorher "+sail);
-    temp = wxString(sail.To8BitData(), wxConvUTF8);
-//    temp = wxString::Format(_T("%s"),sail.utf8_str());
-//    wxMessageBox("nachher "+temp);
-	grid->SetCellValue(row,FSAILS,temp);
+        temp = wxString(sail.To8BitData(), wxConvUTF8);
+        grid->SetCellValue(row,FSAILS,temp);
 #else
 	for(it = t_coll.begin(); it != t_coll.end(); ++it)
 		if(it->second >= max)  { sail = it->first; max = it->second; }
-	grid->SetCellValue(row,FSAILS,sail); //war: sail
+    
+        grid->SetCellValue(row,FSAILS,sail);
 #endif
 	if(colour)
 		for(int i = 0; i < grid->GetNumberCols(); i++)
@@ -1108,15 +1106,13 @@ ay=cy-by;
     for(it = t_coll.begin(); it != t_coll.end(); ++it)
 		if(it->second >= max)  { sail = it->first; max = it->second; }
     
-//    wxMessageBox("vorher2 "+sail);
-    temp = wxString(sail.To8BitData(), wxConvUTF8);
-//    temp = wxString::Format(_T("%s"),sail.utf8_str());
-//    wxMessageBox("nachher2 "+temp);
-	grid->SetCellValue(row,FSAILS,temp);
+        temp = wxString(sail.To8BitData(), wxConvUTF8);
+        grid->SetCellValue(row,FSAILS,temp);
 #else
 	for(it = t_coll.begin(); it != t_coll.end(); ++it)
 		if(it->second >= max)  { sail = it->first; max = it->second; }
-	grid->SetCellValue(row,FSAILS,sail);  //war: sail ToUTF8() ???
+    
+        grid->SetCellValue(row,FSAILS,sail);
 #endif
 	if(colour)
 		for(int i = 0; i < grid->GetNumberCols(); i++)

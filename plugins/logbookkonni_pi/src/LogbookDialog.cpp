@@ -13,9 +13,9 @@
 #include "Options.h"
 #include "tinyxml/tinyxml.h"
 #include "icons.h"
-//#ifdef __WXOSX__
+#ifdef __WXOSX__
 	#include "MessageBoxOSX.h"
-//#endif
+#endif
 
 #include <wx/string.h>
 #include <wx/button.h>
@@ -202,8 +202,11 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_bpButtonShowHideStatusGlobal->SetToolTip( _("Show/Hide Statusbar") );
 	
 	bSizer6->Add( m_bpButtonShowHideStatusGlobal, 0, wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_bpButtonHelpGlobal = new wxBitmapButton( m_panel2, wxID_ANY, wxArtProvider::GetBitmap( wxART_HELP_BOOK, wxART_BUTTON ), wxDefaultPosition, wxSize( -1,-1 ), wxBU_AUTODRAW );
+#ifdef __WXOSX__
+	m_bpButtonHelpGlobal = new wxBitmapButton( m_panel2, wxID_ANY, wxArtProvider::GetBitmap( wxART_HELP, wxART_BUTTON ), wxDefaultPosition, wxSize( 28,-1 ), wxBORDER_NONE );
+#else
+    m_bpButtonHelpGlobal = new wxBitmapButton( m_panel2, wxID_ANY, wxArtProvider::GetBitmap( wxART_HELP_BOOK, wxART_BUTTON ), wxDefaultPosition, wxSize( -1,-1 ), wxBU_AUTODRAW );
+#endif
 	m_bpButtonHelpGlobal->SetToolTip( _("Help") );
 	
 	bSizer6->Add( m_bpButtonHelpGlobal, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5 );
@@ -590,21 +593,15 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	bSizer361->Fit( m_panel2 );
 	m_logbook->AddPage( m_panel2, _("Logbook"), true );
 	m_panel142 = new wxPanel( m_logbook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+
 	wxFlexGridSizer* fgSizer251;
-#ifdef __WXOSX__
-    fgSizer251 = new wxFlexGridSizer( 3, 1, 0, 0 );
-	fgSizer251->AddGrowableCol( 0 );
-	fgSizer251->AddGrowableRow( 2 );  // Übersicht???
-	fgSizer251->SetFlexibleDirection( wxBOTH );
-	fgSizer251->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-#else
 	fgSizer251 = new wxFlexGridSizer( 3, 1, 0, 0 );
 	fgSizer251->AddGrowableCol( 0 );
 	fgSizer251->AddGrowableRow( 2 );
 	fgSizer251->SetFlexibleDirection( wxBOTH );
 	fgSizer251->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-#endif
-	fgSizer251->SetMinSize( wxSize( -1,400 ) ); 
+	fgSizer251->SetMinSize( wxSize( -1,400 ) );
+
 	wxBoxSizer* bSizer51;
 	bSizer51 = new wxBoxSizer( wxVERTICAL );
 	
@@ -1944,7 +1941,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	wxMenuItem* m_menuItem1311;
 	m_menuItem1311 = new wxMenuItem( m_menu711, wxID_ANY, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu711->Append( m_menuItem1311 );
-// Menü ist GANZ unten außerhalb Fenster, warum????
+// WXOSX: Menü ist GANZ unten außerhalb Fenster, warum????
 	
 	bSizer121->Add( m_gridMaintenanceBuyParts, 1, wxALL|wxEXPAND, 5 );
 
@@ -2104,7 +2101,6 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	this->Connect( m_menuItem9->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( LogbookDialog::onMenuSelectionServiceOK ) );
 	this->Connect( m_menuItem92->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( LogbookDialog::onMenuSelectionServiceBuyParts ) );
 
-//	m_gridMaintanence->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( LogbookDialog::onGridCellLeftClickService ), NULL, this );
 	m_gridMaintanence->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( LogbookDialog::onGridCellLeftClickService ), NULL, this );
 	m_gridMaintanence->Connect( wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler( LogbookDialog::onGridCellRightClickService ), NULL, this );
 	m_buttonAddLineBuyParts->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::onButtobClickAddLineBuyParts ), NULL, this );
@@ -3358,7 +3354,15 @@ void LogbookDialog::newLogbookOnButtonClick( wxCommandEvent& ev )
 
 void LogbookDialog::selLogbookOnButtonClick( wxCommandEvent& ev )
 {
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
+
 	logbook->selectLogbook();
+
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 }
 
 void LogbookDialog::onButtonReloadLayoutLogbook(wxCommandEvent & ev)
@@ -3376,8 +3380,14 @@ void LogbookDialog::onButtonClickEditLayoutLogbook(wxCommandEvent & ev)
 	else
 		format = HTML;
 
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 	showLayoutDialog(LogbookDialog::LOGBOOK, logbookChoice,logbook->layout_locn, format);
 	logGrids[m_logbook->GetSelection()]->SetFocus();
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 }
 
 int LogbookDialog::showLayoutDialog(int grid, wxChoice *choice, wxString location, int format)
@@ -3404,9 +3414,14 @@ int LogbookDialog::showLayoutDialog(int grid, wxChoice *choice, wxString locatio
 	{
         wxFileName fn(files[r]);
         wxString g = fn.GetName();
+#ifdef __WXOSX__
+        if(g.Contains(_T(".DS_Store"))) continue;
+#endif
         if(!g.Contains(_T("_"))) continue;
+#ifndef __WXOSX__
         if(m_logbook->GetSelection() == 0)
             g.Remove(0,1);
+#endif
 		g = g.substr(0,g.find_first_of('_')+1);
 
 		if(!isInArrayString(ar,g))
@@ -3415,14 +3430,14 @@ int LogbookDialog::showLayoutDialog(int grid, wxChoice *choice, wxString locatio
 
 	dlg->m_choice15->Clear();
 	dlg->m_choice15->Append(ar);
-    for(unsigned int i = 0; i < dlg->m_choice15->GetCount(); i++)
+    for(unsigned int i = 0; i < dlg->m_choice15->GetCount(); i++)   // Hier ist der Wurm: filterSel ist immer 0 ???
         if(dlg->m_choice15->GetString(i) == logbookPlugIn->opt->layoutPrefix[grid])
         {
             filterSel = i;
             break;
         }
-
-/*	if(filterSel == 0)
+/*
+	if(filterSel == 0)
 {
     logbookPlugIn->opt->filterLayout[grid] = false;
     dlg->m_choice15->SetSelection(0);
@@ -3434,16 +3449,16 @@ else
 }
 */
     dlg->m_choice15->SetSelection(filterSel);
-
+#ifndef __WXOSX__
     if(filterSel != 0 && logbookPlugIn->opt->filterLayout)
         layout.Prepend(logbookPlugIn->opt->layoutPrefix[grid]);
-
+#endif
     dlg->m_textCtrlRename->SetValue(layout);
     dlg->m_radioBtnEdit->SetValue(true);
-
+#ifndef __WXOSX__
     if(m_logbook->GetSelection() == 0 && filterSel != 0)
         layout.Prepend(logbookPlugIn->opt->engineStr[logbookPlugIn->opt->engines]);
-
+#endif
 
     layout = location + layout + fmt;
 
@@ -3453,14 +3468,14 @@ else
 	if (dlg->ShowModal() == wxID_CANCEL)
             return -1;
 	
-	if(dlg->m_radioBtnEdit->GetValue())
+	if(dlg->m_radioBtnEdit->GetValue())  // 1. Layout editieren
 	{
 		if(m_radioBtnODT->GetValue())
 			startApplication(layout,fmt);
 		else
 			startApplication(layout, fmt);
 	}
-	else if(dlg->m_radioBtnFilter->GetValue())
+	else if(dlg->m_radioBtnFilter->GetValue())  // 2. Layout filtern nach "Auswahl"
 	{
 		if((filterSel = dlg->m_choice15->GetSelection()) != 0)
 		{
@@ -3476,22 +3491,26 @@ else
 		loadLayoutChoice(grid,location,choice,logbookPlugIn->opt->layoutPrefix[grid]);
         return 1;
 	}
-	else if(dlg->m_radioBtnRename->GetValue())
+	else if(dlg->m_radioBtnRename->GetValue())  // 3. Layout umbenennen nach "Feldname"
 	{
 		wxString t = dlg->m_textCtrlRename->GetValue();
+#ifdef __WXOSX__
+        wxRenameFile(layout,location+fmt);
+#else
         if(m_logbook->GetSelection() == 0 && (t.GetChar(0) !=  '1' && t.GetChar(0) != '2'))
             t.Prepend(logbookPlugIn->opt->engineStr[logbookPlugIn->opt->engines]);
         wxRenameFile(layout,location+t+fmt);
+#endif
         loadLayoutChoice(grid,location,choice,logbookPlugIn->opt->layoutPrefix[grid]);
 		return 2;
 	}
-	else if(dlg->m_radioBtnDelete->GetValue())
+	else if(dlg->m_radioBtnDelete->GetValue())  // 4. Layout löschen
 	{
 		::wxRemoveFile(layout);
 		loadLayoutChoice(grid,location,choice,logbookPlugIn->opt->layoutPrefix[grid]);
 		return 3;
 	}
-	else if(dlg->m_radioBtnEmail->GetValue())
+	else if(dlg->m_radioBtnEmail->GetValue())  // 5. Layout per Email versenden
 	{
 		wxString command = logbookPlugIn->opt->mailClient;
 #ifdef __WXMSW__		
@@ -3504,12 +3523,12 @@ else
 		wxExecute(logbookPlugIn->opt->dataManager+_T(" ")+layout);		
 #endif
 #ifdef __WXOSX__
-// worked in Mac-OS X
-        wxExecute(command + _T(" mailto:carcode@me.com?subject=LogbookKonni-Layout&body=Drag-And-Drop-File-Here"));
+// worked in Mac-OS X Mavericks
+        wxExecute(command + _T(" mailto:carcode@me.com?subject=LogbookKonni-Layout&body=Ziehe-Layout-Datei-hierhin"));
 #endif
 		return 4;
 	}
-	else if(dlg->m_radioBtnInstall->GetValue())
+	else if(dlg->m_radioBtnInstall->GetValue())  // 6. Layout installieren
 	{
 		if(!dlg->layoutFileName.IsEmpty())
 		{
@@ -4668,32 +4687,39 @@ void LogbookDialog::LogbookDialogOnClose( wxCloseEvent& ev )
 void LogbookDialog::loadLayoutChoice(int grid, wxString path, wxChoice* choice, wxString filter)
 {
 	wxArrayString files;
-    //	wxString filter = logbookPlugIn->opt->layoutPrefix;
+    // wxString filter = logbookPlugIn->opt->layoutPrefix;  // logbookPlugin Problem mit c_str hier
+#ifndef __WXOSX__
     wxFileName fn(path);
 
     wxString e;
     e = path.SubString(path.Len()-8,path.Len());
     if(e.Contains(_T("logbook")))
-        filter.Prepend(logbookPlugIn->opt->engineStr[logbookPlugIn->opt->engines]);
-
+        filter.Prepend(logbookPlugIn->opt->engineStr[logbookPlugIn->opt->engines]); // war "1" der "2" vorangestellt
+#endif
 	int i = wxDir::GetAllFiles(path,&files);
 	choice->Clear();
 
 	for(int n = 0; n < i; n++)
 	{
 		if(wxFileName(files[n]).GetExt().Upper() != _T("ODT") && wxFileName(files[n]).GetExt().Upper() != _T("HTML")) continue;
-
+#ifdef __WXOSX__
+        if(logbookPlugIn->opt->filterLayout[grid])
+		{
+			if(wxFileName(files[n]).GetName().Contains(filter))
+                choice->Append(wxFileName(files[n]).GetName());
+		}
+#else
 		if(logbookPlugIn->opt->filterLayout[grid])
 		{
 			if(wxFileName(files[n]).GetName().Contains(filter))
                 choice->Append(wxFileName(files[n]).GetName().Remove(0,filter.Len()));
 		}
+#endif
 		else
 			choice->Append(wxFileName(files[n]).GetName());
 	}
 	choice->SetSelection(0);
 }
-
 
 void LogbookDialog::setEqualRowHeight(int row)
 {
@@ -4769,11 +4795,17 @@ void LogbookDialog::startApplication(wxString filename, wxString ext)
 #endif
 		wxExecute(command);		
 	}
-	else
+	else  // html
 	{
-		if(!logbookPlugIn->opt->htmlEditor.IsEmpty())
-			wxExecute(wxString::Format(wxT("%s \"%s\" "),logbookPlugIn->opt->htmlEditor.c_str(),filename.c_str()));
-		else
+		if(!logbookPlugIn->opt->htmlEditor.IsEmpty()){
+#ifdef __WXOSX__
+            wxString command = _T("/bin/bash -c \"open -a ") + logbookPlugIn->opt->htmlEditor + _T(" \"") + filename;
+            wxExecute(command);
+#else
+			wxExecute(wxString::Format(wxT("%s \"%s\" "),logbookPlugIn->opt->htmlEditor.c_str(),filename.c_str()),wxEXEC_ASYNC,NULL,NULL);
+#endif
+        }
+		else  // No HTML-Editor
 #ifdef __WXOSX__
             MessageBoxOSX(NULL,_("No Path set to HTML-Editor\nin Toolbox/Plugins/LogbookKonni/Preferences"),_T("Information"),wxID_OK);
 #else
@@ -5233,7 +5265,13 @@ void LogbookDialog::onButtonClickEditLayoutCrew(wxCommandEvent &ev)
 	else
 		format = HTML;
 
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 	showLayoutDialog(LogbookDialog::CREW,crewChoice,crewList->layout_locn, format);
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 }
 
 void LogbookDialog::onRadioButtonHTMLCrew(wxCommandEvent &ev)
@@ -5577,7 +5615,13 @@ void LogbookDialog::onButtonClickEditLayoutBoat(wxCommandEvent &ev)
 	else
 		format = HTML;
 
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 	showLayoutDialog(LogbookDialog::BOAT,boatChoice,boat->layout_locn, format);
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 }
 
 void LogbookDialog::onRadioButtonHTMLBoat(wxCommandEvent &ev)
@@ -5761,7 +5805,13 @@ void LogbookDialog::onButtonClickEditLayoutODTService(wxCommandEvent &ev)
 	else
 		format = HTML;
 
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 	showLayoutDialog(LogbookDialog::GSERVICE,m_choiceSelectLayoutService,maintenance->layout_locnService, format);
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 }
 
 void LogbookDialog::onGridCellServiceChange( wxGridEvent& ev )
@@ -5980,7 +6030,13 @@ void LogbookDialog::onButtonClickEditLayoutODTRepairs( wxCommandEvent& event )
 	else
 		format = HTML;
 
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 	showLayoutDialog(LogbookDialog::GREPAIRS,m_choiceSelectLayoutRepairs,maintenance->layout_locnRepairs, format);
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 }
 
 void LogbookDialog::onRadioButtonHTMLRepairs( wxCommandEvent& event )
@@ -6196,7 +6252,13 @@ void LogbookDialog::onButtonClickEditLayoutODTBuyParts( wxCommandEvent& event )
 	else
 		format = HTML;
 
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 	showLayoutDialog(LogbookDialog::GBUYPARTS,m_choiceSelectLayoutBuyParts,maintenance->layout_locnBuyParts, format);
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 }
 
 void LogbookDialog::onRadioButtonHTMLBuyParts( wxCommandEvent& event )
@@ -6303,7 +6365,15 @@ void LogbookDialog::onGridEditorShow( wxGridEvent& ev )
 ////////////////////////////////////////////////////////////
 void LogbookDialog::onButtonClickSelectLogbook(wxCommandEvent & ec)
 {
-	overview->selectLogbook();		
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
+
+	overview->selectLogbook();
+
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 }
 
 void LogbookDialog::OnChoiceBoatOverview( wxCommandEvent& event )
@@ -6418,8 +6488,13 @@ void LogbookDialog::onButtonClickEditLayoutOverview( wxCommandEvent& ev )
 		format = ODT;
 	else
 		format = HTML;
-
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 	showLayoutDialog(LogbookDialog::OVERVIEW,overviewChoice,overview->layout_locn, format);
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 }
 
 void LogbookDialog::onRadioButtonHTMLOverview( wxCommandEvent& ev )

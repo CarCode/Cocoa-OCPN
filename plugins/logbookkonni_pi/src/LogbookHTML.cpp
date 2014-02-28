@@ -200,6 +200,7 @@ void LogbookHTML::setPlaceholders()
 
 void LogbookHTML::viewHTML(wxString path, wxString layout, bool mode)
 {
+wxMessageBox("viewHTML Zeile 213 "+ layout);
 	if(layout.Contains(_T("Help")))
 	{
 		path = layout_locn+layout+_T(".html");
@@ -208,8 +209,11 @@ void LogbookHTML::viewHTML(wxString path, wxString layout, bool mode)
 	}
 
 	setSelection();
-
+#ifdef __WXOSX__
+    wxString prefix = logbook->opt->layoutPrefix[LogbookDialog::LOGBOOK];
+#else
 	wxString prefix = logbook->opt->engineStr[logbook->opt->engines]+logbook->opt->layoutPrefix[LogbookDialog::LOGBOOK];
+#endif
     if(logbook->opt->filterLayout)
         layout.Prepend(prefix);
     wxString file = toHTML(path, layout, mode);
@@ -607,11 +611,7 @@ wxString LogbookHTML::replacePlaceholder(wxString html,wxString htmlHeader,int g
 		return html;
 	else 
 	{
-#ifdef __WXOSX__
         wxString str(html.wx_str(), wxConvUTF8);
-#else
-		wxString str(html.wx_str(),wxConvUTF8);
-#endif
 		return str;
 	}
 }
@@ -643,7 +643,6 @@ wxString LogbookHTML::readLayoutFile(wxString layout)
 
 	wxString filename = layout_locn + layout + _T(".html");
 	wxTextFile *layoutfile = new wxTextFile(filename);
-
 	if(wxFileExists(filename))
 	{
 		layoutfile->Open();
