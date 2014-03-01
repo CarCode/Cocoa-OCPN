@@ -43,6 +43,7 @@ struct GribOverlaySettings
     double CalibrationFactor(int settings, double input, bool reverse = false);
     double CalibrateValue(int settings, double input)
         { return (input+CalibrationOffset(settings))*CalibrationFactor(settings, input); }
+    int GetMinFromIndex( int index);
     double GetmstobfFactor(double input);
     double GetbftomsFactor(double input);
     wxString GetUnitSymbol(int settings);
@@ -54,7 +55,6 @@ struct GribOverlaySettings
     int m_LoopStartPoint;
     int m_SlicesPerUpdate;
     int m_UpdatesPerSecond;
-    int m_HourDivider;
     int m_iOverlayTransparency;
 
     enum SettingsType {WIND, WIND_GUST, PRESSURE, WAVE, CURRENT, PRECIPITATION, CLOUD, 
@@ -91,7 +91,7 @@ class GRIBUIDialog;
 class GribSettingsDialog : public GribSettingsDialogBase
 {
 public:
-    GribSettingsDialog(GRIBUIDialog &parent, GribOverlaySettings &extSettings, int &lastdatatype);
+    GribSettingsDialog(GRIBUIDialog &parent, GribOverlaySettings &extSettings, int &lastdatatype, int fileIntervalIndex);
     void WriteSettings();
 
 private:

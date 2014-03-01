@@ -203,8 +203,11 @@ extern wxArrayString    TideCurrentDataSet;
 extern wxString         g_TCData_Dir;
 
 extern AIS_Decoder      *g_pAIS;
+extern bool             g_bserial_access_checked;
 
 options                *g_pOptions;
+
+extern "C" bool CheckSerialAccess( void );
 
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(ArrayOfDirCtrls);
@@ -3936,6 +3939,14 @@ void options::OnConnValChange( wxCommandEvent& event )
 
 void options::OnTypeSerialSelected( wxCommandEvent& event )
 {
+#ifdef __WXGTK__
+    if( ! g_bserial_access_checked ){
+        if( !CheckSerialAccess() ){
+        }
+        g_bserial_access_checked = true;
+    }
+#endif
+
     OnConnValChange(event);
     SetNMEAFormToSerial();
 }
@@ -4191,7 +4202,15 @@ void options::SetDefaultConnectionParams()
     //    m_choiceSerialProtocol->Select(cp->Protocol); //TODO
     m_choicePriority->Select(m_choicePriority->FindString(_T("1")));
 
-    m_rbTypeSerial->SetValue( true );
+    bool bserial = true;
+#ifdef __WXGTK__
+    if(!g_bserial_access_checked)
+        bserial = false;
+#endif
+    
+    m_rbTypeSerial->SetValue( bserial );
+    m_rbTypeNet->SetValue( !bserial );
+
     SetNMEAFormToSerial();
     m_connection_enabled = true;
 }

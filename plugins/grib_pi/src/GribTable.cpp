@@ -33,6 +33,9 @@
 #include <wx/graphics.h>
 #include <wx/progdlg.h>
 #include "GribTable.h"
+#ifdef __WXOSX__
+#include "GribUIDialog.h"
+#endif
 
 //----------------------------------------------------------------------------------------------------------
 //          GRIB Table Implementation
@@ -105,8 +108,11 @@ void GRIBTable::InitGribTable( int zone, ArrayOfGribRecordSets *rsa )
         time = rsa->Item(i).m_Reference_Time;
    
         //populate 'time' row
+#ifdef __WXOSX__
+        m_pGribTable->SetCellValue(1,i, GetTimeRowsStrings( rsa->Item(i).m_Reference_Time, zone , 0) );
+#else
         m_pGribTable->SetCellValue(GetTimeRowsStrings( rsa->Item(i).m_Reference_Time, zone , 0), 1, i );
-        
+#endif
         nrows = 2;
 
         m_pTimeset = m_pGDialog->GetTimeLineRecordSet(time);
@@ -278,7 +284,11 @@ void GRIBTable::AutoSizeDataRows()
         m_pGribTable->AutoSizeRow(i, false);
         int h = m_pGribTable->GetRowHeight(i);
         h += 10;
+#ifdef __WXOSX__
+        m_pGribTable->SetRowSize(i, h);
+#else
         m_pGribTable->SetRowHeight(i, h);
+#endif
     }
 }
 
@@ -361,24 +371,29 @@ wxString GRIBTable::GetWindGust(GribRecord **recordarray)
 wxString GRIBTable::GetWaves(GribRecord **recordarray)
 {
     wxString skn(wxEmptyString);
-    if( recordarray[Idx_WVDIR] ) {
-        double direction = recordarray[Idx_WVDIR]->
-            getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
-        if( direction != GRIB_NOTDEF ){
-            skn.Printf(wxString::Format( _T("%03d\u00B0"), (int)direction ));
-        }
-    }
     if( recordarray[Idx_HTSIGW] ) {
         double height = recordarray[Idx_HTSIGW]->
             getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
-
         if( height != GRIB_NOTDEF ) {
-
-            if(!skn.IsEmpty()) skn.Append(_T("\n\n"));
-
             height = m_pGDialog->m_OverlaySettings.CalibrateValue(GribOverlaySettings::WAVE, height);
-            skn.Append( wxString::Format( _T("%4.1f ") + m_pGDialog->m_OverlaySettings.GetUnitSymbol(GribOverlaySettings::WAVE), height ));
+            skn.Printf( wxString::Format( _T("%4.1f ") + m_pGDialog->m_OverlaySettings.GetUnitSymbol(GribOverlaySettings::WAVE), height ));
             m_pDataCellsColour = m_pGDialog->pPlugIn->m_pGRIBOverlayFactory->GetGraphicColor(GribOverlaySettings::WAVE, height);
+
+            if( recordarray[Idx_WVDIR] ) {
+                double direction = recordarray[Idx_WVDIR]->
+                getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
+                if( direction != GRIB_NOTDEF ){
+                    skn.Prepend(wxString::Format( _T("%03d\u00B0\n\n"), (int)direction ));
+                    
+                    if( recordarray[Idx_WVPER] ) {
+                        double period = recordarray[Idx_WVPER]->
+                        getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
+                        if( period != GRIB_NOTDEF ) {
+                            skn.Append( wxString::Format( _T("\n%01ds") , (int) (period + 0.5)) );
+                        }
+                    }
+                }
+            }
         }
     }
     return skn;
