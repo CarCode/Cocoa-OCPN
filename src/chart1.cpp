@@ -2548,25 +2548,25 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
 
     wxMenu* appMenu = new wxMenu;
     
-    appMenu->Append(ID_ZOOMIN, _("Zoom In\t+"));
-    appMenu->Append(ID_ZOOMOUT, _("Zoom Out\t-"));
-    appMenu->Append(ID_STKUP, _("Shift to Larger Scale Chart\tfn-F7"));
-    appMenu->Append(ID_STKDN, _("Shift to Smaller Scale Chart\tfn-F8"));
+    appMenu->Append(ID_ZOOMIN, _T("Vergrößern  (+)"));  // RaceCondition mit Logbook: \t+
+    appMenu->Append(ID_ZOOMOUT, _T("Verkleinern  (-)"));  // RaceCondition mit Logbook: \t-
+    appMenu->Append(ID_STKUP, _T("Kartenwechsel größerer Maßstab  (fn-F7)"));
+    appMenu->Append(ID_STKDN, _("Kartenwechsel kleinerer Maßstab  (fn-F8)"));
     appMenu->AppendSeparator();
-    appMenu->AppendCheckItem(ID_FOLLOW, _("Auto Follow\tfn-F2")); // Schiff autom. zentriert
-    appMenu->AppendCheckItem(ID_TEXT, _("Text anzeigen\tT"));
+    appMenu->AppendCheckItem(ID_FOLLOW, _T("Schiff zentriert  (fn-F2)")); // Schiff autom. zentriert
+    appMenu->AppendCheckItem(ID_TEXT, _T("Text anzeigen  (t)"));  // RaceCondition mit Logbook: \tT
     appMenu->AppendSeparator();
-    appMenu->AppendCheckItem(ID_AIS, _("AIS-Ziele"));
-    appMenu->AppendCheckItem(ID_CURRENT, _("Currents"));
-    appMenu->AppendCheckItem(ID_TIDE, _("Tiden-Referenzorte"));
+    appMenu->AppendCheckItem(ID_AIS, _T("AIS-Ziele"));
+    appMenu->AppendCheckItem(ID_CURRENT, _T("Strömungen"));
+    appMenu->AppendCheckItem(ID_TIDE, _T("Tiden-Referenzorte"));
     appMenu->AppendSeparator();
-    appMenu->Append(ID_PRINT, _("Karte drucken"));
+    appMenu->Append(ID_PRINT, _T("Karte drucken"));
     
     appMenu->Append(wxID_PREFERENCES, _T("Einstellungen"));
     
     wxMenu* routMenu = new wxMenu;
-    routMenu->Append(ID_ROUTEMANAGER, _("Routen-Manager"));
-    routMenu->Append(ID_TRACK, _("Tracking"), false);
+    routMenu->Append(ID_ROUTEMANAGER, _T("Routen-Manager"));
+    routMenu->Append(ID_TRACK, _T("Tracking"), false);
     routMenu->AppendSeparator();
     routMenu->Append(ID_ROUTE, _T("&Route erstellen  \u2318R"));
     
