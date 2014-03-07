@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OCPN Logbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-08 17:59+0100\n"
-"PO-Revision-Date: 2014-02-15 21:26+0100\n"
+"POT-Creation-Date: 2014-03-05 19:48+0100\n"
+"PO-Revision-Date: 2014-03-05 19:51+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -492,6 +492,9 @@ msgstr "Layout editieren"
 msgid "Edit Layouts"
 msgstr "Layout editieren"
 
+msgid "Eigener Eintrag"
+msgstr "Eigener Eintrag"
+
 msgid "End"
 msgstr "Ende"
 
@@ -572,6 +575,9 @@ msgstr "Ereignisse"
 
 msgid "Export"
 msgstr "Export"
+
+msgid "External Generator: "
+msgstr "Externer Generator: "
 
 msgid "F"
 msgstr "C"
@@ -1052,8 +1058,8 @@ msgstr ""
 msgid "No Seconds"
 msgstr "keine Sekunden"
 
-msgid "No. of Inboard Engines"
-msgstr "Anzahl Motoren"
+msgid "No. of Inboard Engines: "
+msgstr "Anzahl Motoren: "
 
 msgid "Normal Timer"
 msgstr "Normaler Timer"
@@ -1486,8 +1492,8 @@ msgstr "Zeige Layout Auswahl Modus"
 msgid "Show Logbook Icon"
 msgstr "Zeige Logbuch-Icon"
 
-msgid "Show Position Fomat"
-msgstr "Zeige Position im Format"
+msgid "Show Position Fomat: "
+msgstr "Zeige Position im Format: "
 
 msgid "Show ToolTips"
 msgstr "Zeige Tooltips"
@@ -1825,6 +1831,9 @@ msgstr "Wasserm. Ausst."
 msgid "Watermaker"
 msgstr "Wassermacher"
 
+msgid "Watermaker: "
+msgstr "Wassermacher: "
+
 msgid "Wave"
 msgstr "Wellenhöhe"
 
@@ -1901,13 +1910,6 @@ msgstr "Jahr"
 
 msgid "Yes"
 msgstr "Ja"
-
-msgid ""
-"You can change the abreviations and the names of the sails\n"
-"in Options/Miscellaneous/Sails"
-msgstr ""
-"Abkürzungen und Segelnamen können geändert werden\n"
-"in Optionen/Sonstiges/Segel"
 
 #, c-format
 msgid ""
@@ -2244,6 +2246,7 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid ""
 #~ "\n"
 #~ "Name of Waypoint: %s\n"
@@ -2255,6 +2258,7 @@ msgstr "gelb"
 #~ "Wahre Peilung zum Ziel: %4.1f%s\n"
 #~ "Distanz zum Ziel: %4.2f%s"
 
+#
 #
 #
 #
@@ -2310,10 +2314,12 @@ msgstr "gelb"
 #
 #
 #
+#
 #, fuzzy
 #~ msgid "&Cut"
 #~ msgstr "Ausschneiden"
 
+#
 #
 #
 #
@@ -2357,6 +2363,7 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Add to Watchlist"
 #~ msgstr "zur Wachliste hinzufügen"
 
@@ -2380,9 +2387,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Add to Watchlist same as"
 #~ msgstr "zur Wachliste hinzufügen wie.."
 
+#
 #
 #
 #
@@ -2496,6 +2505,7 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Append Line every Nm"
 #~ msgstr "Füge Zeile hinzu je Nm"
 
@@ -2519,9 +2529,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Automatic Watch Interval"
 #~ msgstr "Automatisches Wachinterval"
 
+#
 #
 #
 #
@@ -2687,9 +2699,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Copy"
 #~ msgstr "Kopieren"
 
+#
 #
 #
 #
@@ -2844,6 +2858,7 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid ""
 #~ "Crewmember is not onboard\n"
 #~ "\n"
@@ -2858,10 +2873,12 @@ msgstr "gelb"
 #
 #
 #
+#
 #, fuzzy
 #~ msgid "Current <"
 #~ msgstr "Strom"
 
+#
 #
 #
 #
@@ -3000,9 +3017,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Delete"
 #~ msgstr "Löschen"
 
+#
 #
 #
 #
@@ -3046,9 +3065,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "End 1.Watch"
 #~ msgstr "Ende 1. Wache"
 
+#
 #
 #
 #
@@ -3092,9 +3113,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "End 3.Watch"
 #~ msgstr "Ende 3. Wache"
 
+#
 #
 #
 #
@@ -3138,6 +3161,7 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "End 5.Watch"
 #~ msgstr "Ende 5. Wache"
 
@@ -3161,9 +3185,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "End 6.Watch"
 #~ msgstr "Ende 6. Wache"
 
+#
 #
 #
 #
@@ -3320,9 +3346,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "FirstName"
 #~ msgstr "Vorname"
 
+#
 #
 #
 #
@@ -3330,6 +3358,7 @@ msgstr "gelb"
 #~ msgid "HardWeather"
 #~ msgstr "Wetter"
 
+#
 #
 #
 #
@@ -3358,6 +3387,7 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid ""
 #~ "If You have created Your own Layouts\n"
 #~ "prepend them with e.g. My_ \n"
@@ -3372,6 +3402,7 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid ""
 #~ "If You have created Your own layouts\n"
 #~ "with prefix e.g. My_"
@@ -3379,6 +3410,7 @@ msgstr "gelb"
 #~ "Wen Sie ein Layout mit dem Prefix\n"
 #~ "z.B. Mein_ erstellt haben"
 
+#
 #
 #
 #
@@ -3424,9 +3456,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Interval:"
 #~ msgstr "Interval:"
 
+#
 #
 #
 #
@@ -3449,10 +3483,12 @@ msgstr "gelb"
 #
 #
 #
+#
 #, fuzzy
 #~ msgid "LightWeather"
 #~ msgstr "Wetter"
 
+#
 #
 #
 #
@@ -3588,9 +3624,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Logbook from %s to %s"
 #~ msgstr "Logbuch vom %s bis %s"
 
+#
 #
 #
 #
@@ -3631,6 +3669,7 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "No. Watches"
 #~ msgstr "Anzahl Wachen"
 
@@ -3640,9 +3679,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Only Layouts with prefix:"
 #~ msgstr "nur Layouts mit Prefix:"
 
+#
 #
 #
 #
@@ -3806,9 +3847,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Path to HTML-Editor (optional)"
 #~ msgstr "Pfad zum HTML-Editor (optional)"
 
+#
 #
 #
 #
@@ -3852,6 +3895,7 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Persons:"
 #~ msgstr "Personen:"
 
@@ -3875,9 +3919,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Please enter 4 digits in 24h-Format like 1545 = 03:45 PM"
 #~ msgstr "Bitte 4 Zahlen im 24h-Format eingeben z.B. 1545 = 15:45"
 
+#
 #
 #
 #
@@ -3972,6 +4018,7 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid ""
 #~ "Please enter the Time in the format:\n"
 #~ "   12:30:00PM"
@@ -4010,9 +4057,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Redo"
 #~ msgstr "Wiederholen"
 
+#
 #
 #
 #
@@ -4020,6 +4069,7 @@ msgstr "gelb"
 #~ msgid "RoughWeather"
 #~ msgstr "Wetter"
 
+#
 #
 #
 #
@@ -4167,9 +4217,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Save"
 #~ msgstr "Speichern"
 
+#
 #
 #
 #
@@ -4424,10 +4476,12 @@ msgstr "gelb"
 #
 #
 #
+#
 #, fuzzy
 #~ msgid "Select boat-layout to view"
 #~ msgstr "Wähle Route"
 
+#
 #
 #
 #
@@ -4457,6 +4511,7 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Sorry, 0 Hrs 0 Min 0 Sec are not possible"
 #~ msgstr "Sorry, 0 Hrs 0 Min 0 Sec ist nicht möglich"
 
@@ -4465,9 +4520,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Sorry, Your Logbook has no lines"
 #~ msgstr "Sorry, Ihr Logbuch hat keine Zeilen"
 
+#
 #
 #
 #
@@ -4593,9 +4650,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Speed STW Max."
 #~ msgstr "Fahrt d.W. max."
 
+#
 #
 #
 #
@@ -4639,9 +4698,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Start 2.Watch"
 #~ msgstr "Start 2.Wache"
 
+#
 #
 #
 #
@@ -4685,9 +4746,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Start 4.Watch"
 #~ msgstr "Start 4.Wache"
 
+#
 #
 #
 #
@@ -4731,9 +4794,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Start 6.Watch"
 #~ msgstr "Start 6.Wache"
 
+#
 #
 #
 #
@@ -4784,9 +4849,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Timer "
 #~ msgstr "Timer an/aus"
 
+#
 #
 #
 #
@@ -4812,6 +4879,7 @@ msgstr "gelb"
 #~ msgstr "Timer an/aus"
 
 #
+#
 #~ msgid ""
 #~ "Uncheck for Motorboats\n"
 #~ "Sets \"Sails hoisted\" or \"Sails changed\" or \"Sails down\" messages\n"
@@ -4827,9 +4895,11 @@ msgstr "gelb"
 #~ "Motors !"
 
 #
+#
 #~ msgid "Uncheck for Motorboats."
 #~ msgstr "Deaktiviere für Motorboote."
 
+#
 #
 #~ msgid "Uncheck if you are motorsailing"
 #~ msgstr "Deaktiviere bei Motorsegeln"
@@ -4865,9 +4935,11 @@ msgstr "gelb"
 #
 #
 #
+#
 #~ msgid "Undo"
 #~ msgstr "Rückgängig"
 
+#
 #
 #
 #

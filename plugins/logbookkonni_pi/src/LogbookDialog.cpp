@@ -4054,11 +4054,51 @@ void LogbookDialog::setToNumberEngine()
     }
     else
     {
+#ifdef __WXOSX__
+        m_gridMotorSails->ShowCol(LogbookHTML::MOTOR1);
+        m_gridMotorSails->ShowCol(LogbookHTML::MOTOR1T);
+        m_gridMotorSails->ShowCol(LogbookHTML::RPM2);
+#else
         m_gridMotorSails->AutoSizeColumn(LogbookHTML::MOTOR1,false);
         m_gridMotorSails->AutoSizeColumn(LogbookHTML::MOTOR1T,false);
         m_gridMotorSails->AutoSizeColumn(LogbookHTML::RPM2,false);
+#endif
         m_toggleBtnEngine1->Enable(true);
         m_toggleBtnEngine2->Enable(true);
+    }
+    m_panel2->Layout();
+    Refresh();
+}
+
+void LogbookDialog::setNoGenerator()
+{
+    if(logbookPlugIn->opt->generatoris == 0)
+    {
+        m_gridMotorSails->HideCol(LogbookHTML::GENE);
+        m_gridMotorSails->HideCol(LogbookHTML::GENET);
+    }
+    else
+    {
+        m_gridMotorSails->ShowCol(LogbookHTML::GENE);
+        m_gridMotorSails->ShowCol(LogbookHTML::GENET);
+    }
+    m_panel2->Layout();
+    Refresh();
+}
+
+void LogbookDialog::setNoWatermaker()
+{
+    if(logbookPlugIn->opt->watermakeris == 0)
+    {
+        m_gridMotorSails->HideCol(LogbookHTML::WATERM);
+        m_gridMotorSails->HideCol(LogbookHTML::WATERMT);
+        m_gridMotorSails->HideCol(LogbookHTML::WATERMO);
+    }
+    else
+    {
+        m_gridMotorSails->ShowCol(LogbookHTML::WATERM);
+        m_gridMotorSails->ShowCol(LogbookHTML::WATERMT);
+        m_gridMotorSails->ShowCol(LogbookHTML::WATERMO);
     }
     m_panel2->Layout();
     Refresh();
@@ -4312,7 +4352,7 @@ void LogbookDialog::OnMenuSelectionShowHiddenCols(wxCommandEvent &ev)
             else
 #ifdef __WXOSX__
             {
-                logGrids[selGrid]->AutoSizeColumn(i);
+                logGrids[selGrid]->ShowCol(i);
             }
 #else
                 logGrids[selGrid]->AutoSizeColumn(i);
@@ -4325,6 +4365,12 @@ void LogbookDialog::OnMenuSelectionShowHiddenCols(wxCommandEvent &ev)
     if(logbookPlugIn->opt->engines == 0)
         setToNumberEngine();
 
+    if(logbookPlugIn->opt->generatoris == 0)
+        setNoGenerator();
+
+    if(logbookPlugIn->opt->watermakeris == 0)
+        setNoWatermaker();
+
 	logGrids[selGrid]->Refresh();
 }
 
@@ -4332,7 +4378,11 @@ void LogbookDialog::OnMenuSelectionShowHiddenColsOverview(wxCommandEvent &ev)
 {
 	for(int i = 0; i < m_gridOverview->GetNumberCols()-1; i++)
 		if(m_gridOverview->GetColSize(i) == 0)
+#ifdef __WXOSX__
+            m_gridOverview->ShowCol(i);
+#else
 			m_gridOverview->AutoSizeColumn(i,false);
+#endif
 
 	m_gridOverview->Refresh();
 }

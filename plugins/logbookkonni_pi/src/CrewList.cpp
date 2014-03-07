@@ -2124,9 +2124,10 @@ wxString CrewList::readLayout(wxString layoutFileName)
 
 void CrewList::viewHTML(wxString path, wxString layout)
 {
+#ifndef __WXOSX__
 	if(opt->filterLayout)
         layout.Prepend(opt->layoutPrefix[LogbookDialog::CREW]);
-
+#endif
     saveHTML(path, layout, true);
 
 	if(layout != _T("") && wxFile::Exists(html_locn))

@@ -200,7 +200,6 @@ void LogbookHTML::setPlaceholders()
 
 void LogbookHTML::viewHTML(wxString path, wxString layout, bool mode)
 {
-wxMessageBox("viewHTML Zeile 213 "+ layout);
 	if(layout.Contains(_T("Help")))
 	{
 		path = layout_locn+layout+_T(".html");
@@ -214,8 +213,10 @@ wxMessageBox("viewHTML Zeile 213 "+ layout);
 #else
 	wxString prefix = logbook->opt->engineStr[logbook->opt->engines]+logbook->opt->layoutPrefix[LogbookDialog::LOGBOOK];
 #endif
+#ifndef __WXOSX__
     if(logbook->opt->filterLayout)
         layout.Prepend(prefix);
+#endif
     wxString file = toHTML(path, layout, mode);
 	if(file != wxT(""))
 		parent->startBrowser(file);

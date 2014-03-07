@@ -144,9 +144,9 @@ private:
     ArrayOfGridColWidth     readColsOld(wxFileConfig *pConf, ArrayOfGridColWidth ar, wxString entry);
     void                    dialogDimmer(PI_ColorScheme cs,wxWindow* ctrl,wxColour col,wxColour col1, wxColour back_color,wxColour text_color, wxColour uitext, wxColour udkrd);
     wxAuiManager            *m_pauimgr;
-
-    int                     m_show_id;
-    int                     m_hide_id;
+// not used
+//    int                     m_show_id;
+//    int                     m_hide_id;
     bool                    show;
     int                     m_leftclick_tool_id;
 

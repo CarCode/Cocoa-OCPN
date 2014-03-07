@@ -33,6 +33,8 @@ public:
     bool		layoutShow;
 	bool		statusbarWatch;
     int			engines;
+    int         generatoris;
+    int         watermakeris;
     bool		toggleEngine1;
     bool		toggleEngine2;
     wxDateTime	dtEngine1On;

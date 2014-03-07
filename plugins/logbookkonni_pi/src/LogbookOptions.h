@@ -236,6 +236,8 @@ class LogbookOptions : public wxDialog
         virtual void onChoicePositionFormat( wxCommandEvent& event );
         virtual void onCheckBoxToolTips( wxCommandEvent& event );
         virtual void OnChoiceNoEngines( wxCommandEvent& event );
+        virtual void OnChoiceNoGenerator( wxCommandEvent& event );
+        virtual void OnChoiceNoWatermaker( wxCommandEvent& event );
         virtual void OnCheckBoxEngineMessage( wxCommandEvent& event );
         virtual void OnCheckBoxEngineRunning( wxCommandEvent& event );
         virtual void onCheckBoNoGPS( wxCommandEvent& event );
@@ -276,6 +278,8 @@ class LogbookOptions : public wxDialog
         wxChoice* m_choicePositionFormat;
 		wxCheckBox* m_checkBoxToolTips;
         wxChoice* m_choiceNoEngines;
+        wxChoice* m_choiceNoWatermaker;
+        wxChoice* m_choiceNoGenerator;
 		wxCheckBox* m_checkBoxShowAllLayouts;
 		wxTextCtrl* m_textCtrlLayoutPrefix;
 		wxCheckBox* m_checkBoxNoGPS;

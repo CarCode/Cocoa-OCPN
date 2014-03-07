@@ -31,6 +31,8 @@ Options::Options(void)
     kmlColor.Add(_T("0000FF"));
     kmlColor.Add(_T("14F0FF"));
     engines = 0;
+    generatoris = 0;
+    watermakeris = 0;
     toggleEngine1 = false;
     toggleEngine2 = false;
     dtEngine1On = -1;
@@ -91,11 +93,9 @@ Options::Options(void)
 
 #ifdef __WXMSW__
 	firstTime = false;
-#endif
-#ifdef __WXOSX__ 
+#elif defined __WXOSX__
 	firstTime = false;
-#endif
-#ifdef __POSIX__
+#elif defined __POSIX__
 	firstTime = true;
 #endif
 	dlgWidth = 1010;

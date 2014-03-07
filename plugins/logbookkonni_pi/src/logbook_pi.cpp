@@ -875,6 +875,8 @@ void logbookkonni_pi::SaveConfig()
 			pConf->Write ( _T ( "Date2" ), opt->date2);
 			pConf->Write ( _T ( "Date3" ), opt->date3 );
             pConf->Write ( _T ( "NoEngines" ), opt->engines );
+            pConf->Write ( _T ( "GeneratorIs" ), opt->generatoris);
+            pConf->Write ( _T ( "WatermakerIs" ), opt->watermakeris);
 
 			pConf->Write ( _T ( "TimeFormat" ), opt->timeformat );
 			pConf->Write ( _T ( "NoSeconds" ), opt->noseconds );
@@ -1071,6 +1073,8 @@ void logbookkonni_pi::LoadConfig()
 			pConf->Read ( _T ( "Date2" ), &opt->date2,1 );
 			pConf->Read ( _T ( "Date3" ), &opt->date3,2 );
             pConf->Read ( _T ( "NoEngines" ), &opt->engines,0 );
+            pConf->Read ( _T ( "GeneratorIs" ), &opt->generatoris,0);
+            pConf->Read ( _T ( "WatermakerIs" ), &opt->watermakeris,0);
 
 			pConf->Read ( _T ( "TimeFormat" ), &opt->timeformat, -1 );
 			pConf->Read ( _T ( "NoSeconds" ), &opt->noseconds );

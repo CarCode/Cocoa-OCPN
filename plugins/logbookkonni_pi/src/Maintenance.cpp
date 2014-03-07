@@ -246,7 +246,6 @@ void Maintenance::setAlignmentRepairs()
 	repairs->SetCellAlignment(lastRowRepairs,RPRIORITY,wxALIGN_CENTER, wxALIGN_TOP);
 	repairs->SetCellAlignment(lastRowRepairs,RTEXT,wxALIGN_LEFT, wxALIGN_TOP);
 	repairs->SetCellEditor(lastRowRepairs,RTEXT,new wxGridCellAutoWrapStringEditor);
-
 	repairs->SetCellEditor(lastRowRepairs,RPRIORITY,new myGridCellChoiceEditor(6,m_Priority,false));
 }
 
@@ -346,11 +345,7 @@ void Maintenance::loadData()
 							break;
 			case PCATEGORY:	buyparts->SetCellValue(row,PCATEGORY,s);
 							break;
-			case TITLE:
-#ifdef __WXOSX__
-                            s = wxString(s.To8BitData(), wxConvUTF8);
-#endif
-                            buyparts->SetCellValue(row,TITLE,s);
+			case TITLE:     buyparts->SetCellValue(row,TITLE,s);
 							break;
 			case PARTS   :
 #ifdef __WXOSX__
@@ -395,7 +390,7 @@ void Maintenance::loadData()
 							break;
 			case RTEXT:
 #ifdef __WXOSX__
-                    s = wxString(s.To8BitData(), wxConvUTF8);
+//                    s = wxString(s.To8BitData(), wxConvUTF8);
 #endif
                     repairs->SetCellValue(row,RTEXT,s);
 							break;
@@ -1423,22 +1418,28 @@ void Maintenance::viewHTML(int tab,wxString path,wxString layout,int mode)
 	  {
 	    locn = layout_locnService;
 	    fn = data_locn;
+#ifndef __WXOSX__
           if(opt->filterLayout)
               layout.Prepend(opt->layoutPrefix[LogbookDialog::GSERVICE]);
+#endif
 	  }
 	else if(tab == dialog->REPAIRS)
 	{
 	    locn = layout_locnRepairs;
 	    fn = data_locnRepairs;
+#ifndef __WXOSX__
         if(opt->filterLayout)
             layout.Prepend(opt->layoutPrefix[LogbookDialog::GREPAIRS]);
+#endif
 	}
 	else if(tab == dialog->BUYPARTS)
 	{
 	    locn = this->layout_locnBuyParts;
 	    fn = data_locnBuyParts;
+#ifndef __WXOSX__
         if(opt->filterLayout)
             layout.Prepend(opt->layoutPrefix[LogbookDialog::GBUYPARTS]);
+#endif
 	}
 
 	toHTML(tab,locn, layout, mode);

@@ -681,6 +681,8 @@ enum FORMAT {HTML,ODT};
 		void deselectAllLogbookGrids();
         void writeToRouteDlg(wxJSONValue data);
         void setToNumberEngine();
+        void setNoGenerator();
+        void setNoWatermaker();
         void resetSails();
         void setCheckboxLabels();
         void setSailsGap();

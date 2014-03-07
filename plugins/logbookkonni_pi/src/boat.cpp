@@ -783,9 +783,10 @@ wxString Boat::repeatArea(wxString html)
 
 void Boat::viewHTML(wxString path, wxString layout, bool mode)
 {
+#ifndef __WXOSX__
 	if(parent->logbookPlugIn->opt->filterLayout)
         layout.Prepend(parent->logbookPlugIn->opt->layoutPrefix[LogbookDialog::BOAT]);
-
+#endif
     toHTML(path, layout, mode);
 	if(layout != _T(""))
 	{
