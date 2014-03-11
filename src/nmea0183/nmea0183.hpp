@@ -92,7 +92,7 @@
 #include "hdg.hpp"
 #include "hdt.hpp"
 #include "RMB.hpp"
-#include "RMC.HPP"
+#include "RMC.hpp"
 #include "wpl.hpp"
 #include "rte.hpp"
 #include "gll.hpp"

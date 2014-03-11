@@ -435,17 +435,17 @@ public:
 class VE_Element
 {
 public:
-      int         index;
-      int         nCount;
-      double      *pPoints;
-      int         max_priority;
+    unsigned int    index;
+    unsigned int    nCount;
+    double          *pPoints;
+    int             max_priority;
 };
 
 class VC_Element
 {
 public:
-      int         index;
-      double      *pPoint;
+    unsigned int    index;
+    double          *pPoint;
 };
 
 

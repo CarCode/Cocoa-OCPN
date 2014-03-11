@@ -224,7 +224,7 @@ class S57Reader
     int                 GetCSCL() { return nCSCL; }
 
     int                 Ingest(CallBackFunction pcallback = NULL);
-    int                 ApplyUpdates( DDFModule * );
+    int                 ApplyUpdates( DDFModule *, int );
     int                 FindAndApplyUpdates( const char *pszPath=NULL );
 
     void                Rewind();
