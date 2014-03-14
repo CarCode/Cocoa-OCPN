@@ -23,14 +23,15 @@ ControlDialog::~ControlDialog( )
     this->Disconnect( wxEVT_MOVE, wxMoveEventHandler( ControlDialog::OnMove ) );
 }
 
-extern bool g_bmaster;
-extern int g_updatemode;
-extern double g_overlay_transparency;
+
+
+
 extern bool b_enable_log;
+extern int g_updatemode;
 
 void ControlDialog::Init( )
 {
-    if(g_bmaster)
+    if(pPlugIn->m_bmaster)
         pOperatingMode->SetSelection(0);
     else
         pOperatingMode->SetSelection(1);
@@ -40,7 +41,7 @@ void ControlDialog::Init( )
     else
         pUpdateMode->SetSelection(0);
 
-    pTranSlider->SetValue(g_overlay_transparency * 100);
+    pTranSlider->SetValue(pPlugIn->m_overlay_transparency * 100);
     pCB_Log->SetValue(b_enable_log);
 }
 
@@ -70,7 +71,7 @@ void ControlDialog::OnOperatingModeClick(wxCommandEvent &event)
     pPlugIn->SetOperatingMode(pOperatingMode->GetSelection());
 
     //  The PlugIn may override the selection and prevent Master Mode
-    if(g_bmaster)
+    if(pPlugIn->m_bmaster)
         pOperatingMode->SetSelection(0);
     else
         pOperatingMode->SetSelection(1);
@@ -84,8 +85,13 @@ void ControlDialog::OnUpdateModeClick(wxCommandEvent &event)
 
 void ControlDialog::OnUpdateTranSlider(wxScrollEvent &event)
 {
-    g_overlay_transparency = ((double)pTranSlider->GetValue()) / 100.;
+    pPlugIn->m_overlay_transparency = ((double)pTranSlider->GetValue()) / 100.;
     pPlugIn->UpdateDisplayParameters();
+}
+
+void ControlDialog::OnColorChanged( wxColourPickerEvent& event )
+{
+    pPlugIn->SetScanColor( scancolorpicker->GetColour());
 }
 
 void ControlDialog::OnLogModeClicked(wxCommandEvent &event)
@@ -106,6 +112,11 @@ void ControlDialog::OnNoiseDialogClick(wxCommandEvent& event)
 void ControlDialog::OnDomeDialogClick(wxCommandEvent& event)
 {
     pPlugIn->OnDomeDialogClicked();
+}
+
+void ControlDialog::OnSentryDialogClick(wxCommandEvent& event)
+{
+    pPlugIn->OnSentryDialogClicked();
 }
 
 void ControlDialog::OnIdOKClick ( wxCommandEvent& event )
@@ -136,18 +147,15 @@ RangeDialog::~RangeDialog( )
     this->Disconnect( wxEVT_MOVE, wxMoveEventHandler( RangeDialog::OnMove ) );
 }
 
-extern int g_manual_range;
-extern int g_range_control_mode;
-
 void RangeDialog::Init()
 {
-    pRangeSelect->SetSelection(g_manual_range);
+    pRangeSelect->SetSelection(pPlugIn->m_manual_range);
 }
 
 void RangeDialog::OnClose ( wxCloseEvent& event )
 {
     pPlugIn->OnRangeDialogClose();
-    pRangeSelect->SetSelection(g_manual_range);
+    pRangeSelect->SetSelection(pPlugIn->m_manual_range);
     event.Skip();
 }
 
@@ -177,8 +185,8 @@ void RangeDialog::OnRangeSelectClick( wxCommandEvent& event )
     pPlugIn->SetManualRange( pRangeSelect->GetSelection());
 }
 
-extern int g_gain_level;
-extern int g_gain_control_mode;
+
+
 extern int g_scan_gain_level;
 extern int g_scan_gain_mode;
 
@@ -186,7 +194,7 @@ void RangeDialog::OnGainModeClick( wxCommandEvent& event )
 {
     pPlugIn->SetGainControlMode(GainControlSelect->GetSelection());
     if(GainControlSelect->GetSelection() == 0)
-        GainLevel->SetValue(g_gain_level);
+        GainLevel->SetValue(pPlugIn->m_gain_level);
 }
 
 void RangeDialog::OnUpdateGainSlider( wxScrollEvent& event )
@@ -194,26 +202,26 @@ void RangeDialog::OnUpdateGainSlider( wxScrollEvent& event )
     if(GainControlSelect->GetSelection() != 0)
         pPlugIn->SetGainLevel(GainLevel->GetValue());
     else
-        GainLevel->SetValue(g_gain_level);
+        GainLevel->SetValue(pPlugIn->m_gain_level);
 }
 
 void RangeDialog::OnRangeCloseClick ( wxCommandEvent& event )
 {
-    pRangeSelect->SetSelection(g_manual_range);
+    pRangeSelect->SetSelection(pPlugIn->m_manual_range);
     pPlugIn->OnRangeDialogClose();
 }
 
 void RangeDialog::RangeDialogShow()
 {
-    pRangeControl->SetSelection(g_range_control_mode);
-    pRangeSelect->SetSelection(g_manual_range);
-    g_gain_level = g_scan_gain_level;
+    pRangeControl->SetSelection(pPlugIn->m_range_control_mode);
+    pRangeSelect->SetSelection(pPlugIn->m_manual_range);
+    pPlugIn->m_gain_level = g_scan_gain_level;
 
-    if (g_scan_gain_mode == 1) g_gain_control_mode = 0;
-    else g_gain_control_mode = 1;
+    if (g_scan_gain_mode == 1) pPlugIn->m_gain_control_mode = 0;
+    else pPlugIn->m_gain_control_mode = 1;
 
-    GainLevel->SetValue(g_gain_level);
-    GainControlSelect->SetSelection(g_gain_control_mode);
+    GainLevel->SetValue(pPlugIn->m_gain_level);
+    GainControlSelect->SetSelection(pPlugIn->m_gain_control_mode);
     Show();
 }
 
@@ -295,11 +303,7 @@ void NoiseDialog::OnNoiseCloseClick( wxCommandEvent& event )
     pPlugIn->OnNoiseDialogClose();
 }
 
-extern int g_sea_clutter_mode;
-extern int g_sea_clutter_level;
-extern int g_rain_clutter_level;
-extern int g_FTC_mode;
-extern int g_crosstalk_mode;
+
 extern int g_scan_sea_clutter_mode;
 extern int g_scan_sea_clutter_level;
 extern int g_scan_rain_clutter_level;
@@ -308,16 +312,16 @@ extern int g_scan_crosstalk_mode;
 
 void NoiseDialog::NoiseDialogShow()
 {
-    g_sea_clutter_mode = g_scan_sea_clutter_mode;
-    SeaClutterModeSelect->SetSelection(g_sea_clutter_mode);
-    g_sea_clutter_level = g_scan_sea_clutter_level;
-    SeaClutterLevel->SetValue(g_sea_clutter_level);
-    g_FTC_mode = g_scan_FTC_mode;
-    FTCModeSelect->SetSelection(g_FTC_mode);
-    g_rain_clutter_level = g_scan_rain_clutter_level;
-    RainClutterLevel->SetValue(g_rain_clutter_level);
-    g_crosstalk_mode = g_scan_crosstalk_mode;
-    CrosstalkOnOff->SetSelection(g_crosstalk_mode);
+    pPlugIn->m_sea_clutter_mode = g_scan_sea_clutter_mode;
+    SeaClutterModeSelect->SetSelection(pPlugIn->m_sea_clutter_mode);
+    pPlugIn->m_sea_clutter_level = g_scan_sea_clutter_level;
+    SeaClutterLevel->SetValue(pPlugIn->m_sea_clutter_level);
+    pPlugIn->m_FTC_mode = g_scan_FTC_mode;
+    FTCModeSelect->SetSelection(pPlugIn->m_FTC_mode);
+    pPlugIn->m_rain_clutter_level = g_scan_rain_clutter_level;
+    RainClutterLevel->SetValue(pPlugIn->m_rain_clutter_level);
+    pPlugIn->m_crosstalk_mode = g_scan_crosstalk_mode;
+    CrosstalkOnOff->SetSelection(pPlugIn->m_crosstalk_mode);
 
     Show();
 }
@@ -385,20 +389,240 @@ void DomeDialog::OnDomeCloseClick( wxCommandEvent& event )
     pPlugIn->OnDomeDialogClose();
 }
 
-extern int g_dome_offset;
+
 extern int g_scan_dome_offset;
-extern int g_dome_speed;
 extern int g_scan_dome_speed;
 
 void DomeDialog::DomeDialogShow()
 {
-    g_dome_offset = g_scan_dome_offset;
-    DomeOffsetSelect->SetValue(g_dome_offset);
+    pPlugIn->m_dome_offset = g_scan_dome_offset;
+    DomeOffsetSelect->SetValue(pPlugIn->m_dome_offset);
 
-    if (g_scan_dome_speed == 0) g_dome_speed = 0;
-    else g_dome_speed = 1;
-    DomeSpeedSelect->SetSelection(g_dome_speed);
+    if (g_scan_dome_speed == 0) pPlugIn->m_dome_speed = 0;
+    else pPlugIn->m_dome_speed = 1;
+    DomeSpeedSelect->SetSelection(pPlugIn->m_dome_speed);
 
+    Show();
+}
+
+
+
+//////////////////////////SentryDialog////////////////////////////////
+
+
+SentryDialog::SentryDialog( gradar_pi * ppi, wxWindow* parent)
+    : SentryDialogBase( parent )
+{
+    pPlugIn = ppi;
+    pParent = parent;
+
+    this->Connect( wxEVT_MOVE, wxMoveEventHandler( SentryDialog::OnMove ) );
+
+    Init();
+}
+
+
+SentryDialog::~SentryDialog( )
+{
+    this->Disconnect( wxEVT_MOVE, wxMoveEventHandler( SentryDialog::OnMove ) );
+}
+
+void SentryDialog::Init()
+{
+     pGZTranSlider->SetValue(pPlugIn->m_guardzone_transparency * 100);
+     AlarmSensitivitySlider->SetValue(pPlugIn->m_sentry_alarm_sensitivity);
+}
+
+void SentryDialog::OnClose( wxCloseEvent& event )
+{
+    pPlugIn->OnSentryDialogClose();
+    event.Skip();
+}
+
+void SentryDialog::OnSize( wxSizeEvent& event )
+{
+    wxSize p = GetSize();
+    pPlugIn->SetSentryDialogSizeX(p.x);
+    pPlugIn->SetSentryDialogSizeY(p.y);
+    event.Skip();
+}
+
+void SentryDialog::OnMove ( wxMoveEvent& event )
+{
+    wxPoint p = GetPosition();
+    pPlugIn->SetSentryDialogX(p.x);
+    pPlugIn->SetSentryDialogY(p.y);
+    event.Skip();
+}
+
+void SentryDialog::OnTimedTransmitClick( wxCommandEvent& event )
+{
+    pPlugIn->SetTimedTransmitMode(TimedTransmit->GetSelection());
+}
+
+void SentryDialog::OnUpdateStandbyMinutes( wxSpinEvent& event )
+{
+    pPlugIn->SetStandbyMinutes(StandbyMinutes->GetValue());
+}
+
+void SentryDialog::OnUpdateTransmitMinutes( wxSpinEvent& event )
+{
+    pPlugIn->SetTransmitMinutes(TransmitMinutes->GetValue());
+}
+
+void SentryDialog::OnGuardZoneClick( wxCommandEvent& event )
+{
+    pPlugIn->SetGuardZoneMode(GuardZoneOnOff->GetSelection());
+    pPlugIn->SetGuardZoneColor( m_colorpicker->GetColour());
+}
+
+void SentryDialog::OnUpdateOuterRange( wxSpinEvent& event )
+{
+    int iran = InnerRange->GetValue();
+    int oran = OuterRange->GetValue();
+    if (oran < iran)
+        oran = iran;
+    OuterRange->SetValue(oran);
+    pPlugIn->SetOuterRange(oran);
+}
+
+
+void SentryDialog::OnUpdateInnerRange( wxSpinEvent& event )
+{
+    int iran = InnerRange->GetValue();
+    int oran = OuterRange->GetValue();
+    if (iran > oran)
+        iran = oran;
+    InnerRange->SetValue(iran);
+    pPlugIn->SetInnerRange(iran);
+}
+
+
+void SentryDialog::OnPartialArcClick( wxCommandEvent& event )
+{
+    pPlugIn->SetPartialArcMode(PartialArcNoYes->GetSelection());
+}
+
+
+void SentryDialog::OnUpdateStartAngle( wxSpinEvent& event )
+{
+    int vale = EndAngle->GetValue();
+    int vals = StartAngle->GetValue();
+    if (vale < vals)
+        vals = vale;
+    if ((vale - vals)>360)
+        vals = vale - 360;
+    StartAngle->SetValue(vals);
+
+    pPlugIn->SetStartAngle(vals);    
+}
+
+
+void SentryDialog::OnUpdateEndAngle( wxSpinEvent& event )
+{
+    int vale = EndAngle->GetValue();
+    int vals = StartAngle->GetValue();
+    if (vale < vals)
+        vale = vals;
+    if ((vale - vals)>360)
+        vale = 360 + vals;
+    EndAngle->SetValue(vale);
+
+    pPlugIn->SetEndAngle(vale);
+}
+
+
+void SentryDialog::OnColorChanged( wxColourPickerEvent& event )
+{
+    pPlugIn->SetGuardZoneColor( m_colorpicker->GetColour());
+}
+
+void SentryDialog::OnUpdateTranSlider(wxScrollEvent &event)
+{
+    pPlugIn->m_guardzone_transparency = ((double)pGZTranSlider->GetValue()) / 100.;
+    pPlugIn->UpdateDisplayParameters();
+}
+
+void SentryDialog::OnUpdateSensitivitySlider(wxScrollEvent &event)
+{
+    pPlugIn->m_sentry_alarm_sensitivity = AlarmSensitivitySlider->GetValue();
+}
+
+
+void SentryDialog::OnSentryCloseClick( wxCommandEvent& event )
+{
+    pPlugIn->OnSentryDialogClose();
+}
+
+extern int g_scan_timed_transmit_mode;
+extern int g_scan_timed_transmit_standby;
+extern int g_scan_timed_transmit_transmit;
+
+void SentryDialog::SentryDialogShow()
+{
+    pPlugIn->m_timedtransmit_mode = g_scan_timed_transmit_mode;
+    TimedTransmit->SetSelection(pPlugIn->m_timedtransmit_mode);
+    pPlugIn->m_standby_minutes = g_scan_timed_transmit_standby;
+    StandbyMinutes->SetValue(pPlugIn->m_standby_minutes);
+    pPlugIn->m_transmit_minutes = g_scan_timed_transmit_transmit;
+    TransmitMinutes->SetValue(pPlugIn->m_transmit_minutes);
+
+    Show();
+}
+
+
+//////////////////////////SentryAlarmDialog////////////////////////////////
+
+
+SentryAlarmDialog::SentryAlarmDialog( gradar_pi * ppi, wxWindow* parent)
+    : SentryAlarmDialogBase( parent )
+{
+    pPlugIn = ppi;
+    pParent = parent;
+
+    this->Connect( wxEVT_MOVE, wxMoveEventHandler( SentryAlarmDialog::OnMove ) );
+
+    Init();
+}
+
+SentryAlarmDialog::~SentryAlarmDialog( )
+{
+    this->Disconnect( wxEVT_MOVE, wxMoveEventHandler( SentryAlarmDialog::OnMove ) );
+}
+
+void SentryAlarmDialog::Init()
+{
+}
+
+void SentryAlarmDialog::OnClose( wxCloseEvent& event )
+{
+    pPlugIn->OnSentryAlarmDialogClose();
+    event.Skip();
+}
+
+void SentryAlarmDialog::OnSize( wxSizeEvent& event )
+{
+    wxSize p = GetSize();
+    pPlugIn->SetSentryAlarmDialogSizeX(p.x);
+    pPlugIn->SetSentryAlarmDialogSizeY(p.y);
+    event.Skip();
+}
+
+void SentryAlarmDialog::OnMove ( wxMoveEvent& event )
+{
+    wxPoint p = GetPosition();
+    pPlugIn->SetSentryAlarmDialogX(p.x);
+    pPlugIn->SetSentryAlarmDialogY(p.y);
+    event.Skip();
+}
+
+void SentryAlarmDialog::OnAlarmCloseClick( wxCommandEvent& event )
+{
+    pPlugIn->OnSentryAlarmDialogClose();
+}
+
+void SentryAlarmDialog::SentryAlarmDialogShow()
+{
     Show();
 }
 
