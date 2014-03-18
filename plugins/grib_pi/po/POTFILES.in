@@ -9,6 +9,7 @@
 ../src/GribRecord.cpp
 ../src/GribRecord.h
 ../src/GribRecordSet.h
+../src/GribRequestDialog.cpp
 ../src/GribSettingsDialog.cpp
 ../src/GribSettingsDialog.h
 ../src/GribTable.cpp
