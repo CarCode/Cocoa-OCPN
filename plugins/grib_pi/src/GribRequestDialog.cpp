@@ -5,7 +5,7 @@
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
 
 #include "wx/wx.h"
 
@@ -84,10 +82,14 @@ void GribRequestSetting::InitRequestConfig()
     m_rButtonYes->SetLabel(_("Send"));
     m_rButtonApply->SetLabel(_("Save"));
     m_tResUnit->SetLabel(wxString::Format( _T("\u00B0")));
+    m_sCourseUnit->SetLabel(wxString::Format( _T("\u00B0")));
 
+    //add tooltips
     m_pSenderAddress->SetToolTip(_("Address used to send request eMail. (Mandatory for LINUX)"));
     m_pLogin->SetToolTip(_("This is your zyGrib's forum access Login"));
     m_pCode->SetToolTip(_("Get this Code in zyGrib's forum ( This is not your password! )"));
+    m_sMovingSpeed->SetToolTip(_("Enter your forescasted Speed (in Knots)"));
+    m_sMovingCourse->SetToolTip(_("Enter your forecasted Course"));
 
     long i,j,k;
     ( (wxString) m_RequestConfigBase.GetChar(0) ).ToLong( &i );             //MailTo

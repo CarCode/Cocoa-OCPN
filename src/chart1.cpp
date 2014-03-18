@@ -4315,7 +4315,12 @@ void MyFrame::JumpToPosition( double lat, double lon, double scale )
     cc1->m_bFollow = false;
     DoChartUpdate();
 
-    cc1->SetViewPoint( lat, lon, scale, 0, cc1->GetVPRotation() );
+    if( !cc1->GetQuiltMode() ) {
+        cc1->SetViewPoint( lat, lon, scale, Current_Ch->GetChartSkew() * PI / 180., cc1->GetVPRotation() );
+    } else {
+        cc1->SetViewPoint( lat, lon, scale, 0, cc1->GetVPRotation() );
+    }
+
     cc1->ReloadVP();
 
     SetToolbarItemState( ID_FOLLOW, false );
@@ -5148,10 +5153,9 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
     if( gGPS_Watchdog <= 0 ) {
         bGPSValid = false;
 #ifdef __WXOSX__
-        if( g_nNMEADebug && ( gGPS_Watchdog == 0 ) ) {wxLogMessage(                                                                  _T("   ***GPS Watchdog timeout...") );}
+        if( g_nNMEADebug && ( gGPS_Watchdog == 0 ) ) {wxLogMessage( _T("   ***GPS Watchdog timeout...") );}
 #else
-        if( g_nNMEADebug && ( gGPS_Watchdog == 0 ) ) wxLogMessage(
-                _T("   ***GPS Watchdog timeout...") );
+        if( g_nNMEADebug && ( gGPS_Watchdog == 0 ) ) wxLogMessage( _T("   ***GPS Watchdog timeout...") );
 #endif
         gSog = NAN;
         gCog = NAN;
@@ -5162,10 +5166,9 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
     if( gHDx_Watchdog <= 0 ) {
         gHdm = NAN;
 #ifdef __WXOSX__
-        if( g_nNMEADebug && ( gHDx_Watchdog == 0 ) ) {wxLogMessage(                                                                  _T("   ***HDx Watchdog timeout...") );}
+        if( g_nNMEADebug && ( gHDx_Watchdog == 0 ) ) {wxLogMessage( _T("   ***HDx Watchdog timeout...") );}
 #else
-        if( g_nNMEADebug && ( gHDx_Watchdog == 0 ) ) wxLogMessage(
-                _T("   ***HDx Watchdog timeout...") );
+        if( g_nNMEADebug && ( gHDx_Watchdog == 0 ) ) wxLogMessage( _T("   ***HDx Watchdog timeout...") );
 #endif
     }
 
@@ -5175,10 +5178,9 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
         g_bHDT_Rx = false;
         gHdt = NAN;
 #ifdef __WXOSX__
-        if( g_nNMEADebug && ( gHDT_Watchdog == 0 ) ) {wxLogMessage(                                                                  _T("   ***HDT Watchdog timeout...") );}
+        if( g_nNMEADebug && ( gHDT_Watchdog == 0 ) ) {wxLogMessage( _T("   ***HDT Watchdog timeout...") );}
 #else
-        if( g_nNMEADebug && ( gHDT_Watchdog == 0 ) ) wxLogMessage(
-                _T("   ***HDT Watchdog timeout...") );
+        if( g_nNMEADebug && ( gHDT_Watchdog == 0 ) ) wxLogMessage( _T("   ***HDT Watchdog timeout...") );
 #endif
     }
 
@@ -5187,10 +5189,9 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
     if( gVAR_Watchdog <= 0 ) {
         g_bVAR_Rx = false;
 #ifdef __WXOSX__
-        if( g_nNMEADebug && ( gVAR_Watchdog == 0 ) ) {wxLogMessage(                                                                  _T("   ***VAR Watchdog timeout...") );}
+        if( g_nNMEADebug && ( gVAR_Watchdog == 0 ) ) {wxLogMessage( _T("   ***VAR Watchdog timeout...") );}
 #else
-        if( g_nNMEADebug && ( gVAR_Watchdog == 0 ) ) wxLogMessage(
-            _T("   ***VAR Watchdog timeout...") );
+        if( g_nNMEADebug && ( gVAR_Watchdog == 0 ) ) wxLogMessage( _T("   ***VAR Watchdog timeout...") );
 #endif
     }
     //  Update and check watchdog timer for GSV (Satellite data)
@@ -5199,10 +5200,9 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
         g_bSatValid = false;
         g_SatsInView = 0;
 #ifdef __WXOSX__
-        if( g_nNMEADebug && ( gSAT_Watchdog == 0 ) ) {wxLogMessage(                                                                  _T("   ***SAT Watchdog timeout...") );}
+        if( g_nNMEADebug && ( gSAT_Watchdog == 0 ) ) {wxLogMessage( _T("   ***SAT Watchdog timeout...") );}
 #else
-        if( g_nNMEADebug && ( gSAT_Watchdog == 0 ) ) wxLogMessage(
-                _T("   ***SAT Watchdog timeout...") );
+        if( g_nNMEADebug && ( gSAT_Watchdog == 0 ) ) wxLogMessage( _T("   ***SAT Watchdog timeout...") );
 #endif
     }
 

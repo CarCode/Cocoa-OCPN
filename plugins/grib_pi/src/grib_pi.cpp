@@ -174,16 +174,24 @@ wxString grib_pi::GetShortDescription()
 wxString grib_pi::GetLongDescription()
 {
       return _("GRIB PlugIn for OpenCPN\n\
-Provides basic GRIB file overlay capabilities for several GRIB file types.\n\n\
-Supported GRIB file types include:\n\
-- wind direction and speed\n\
-- significant wave height\n\
+Provides basic GRIB file overlay capabilities for several GRIB file types\n\
+and a request function to get GRIB files by eMail.\n\n\
+Supported GRIB data include:\n\
+- wind direction and speed (at 10 m)\n\
+- wind gust\n\
+- surface pressure\n\
+- rainfall\n\
+- cloud cover\n\
+- significant wave height and direction\n\
+- air surface temperature (at 2 m)\n\
 - sea surface temperature\n\
-- surface current direction and speed.");
+- surface current direction and speed\n\
+- Convective Available Potential Energy (CAPE)\n\
+- wind, altitude, temperature and relative humidity at 300, 500, 700, 850 hPa." );
 
 }
 
-
+\
 void grib_pi::SetDefaults(void)
 {
 }
@@ -367,6 +375,8 @@ void grib_pi::OnGribDialogClose()
 
     SaveConfig();
 
+    SetCanvasContextMenuItemViz(m_MenuItem, false);
+
     RequestRefresh(m_parent_window); // refresh main window
 
 }
@@ -423,7 +433,7 @@ void grib_pi::SetPluginMessage(wxString &message_id, wxString &message_body)
     }
     if(message_id == _T("GRIB_TIMELINE_REQUEST"))
     {
-        SendTimelineMessage(m_pGribDialog->TimelineTime());
+        SendTimelineMessage(m_pGribDialog ? m_pGribDialog->TimelineTime() : wxDateTime::Now());
     }
     if(message_id == _T("GRIB_TIMELINE_RECORD_REQUEST"))
     {
