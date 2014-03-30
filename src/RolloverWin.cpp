@@ -34,11 +34,11 @@
 #include "navutil.h"
 #include "FontMgr.h"
 
-BEGIN_EVENT_TABLE(RolloverWin, wxWindow) EVT_PAINT(RolloverWin::OnPaint)
+wxBEGIN_EVENT_TABLE(RolloverWin, wxWindow) EVT_PAINT(RolloverWin::OnPaint)
     EVT_TIMER(ROLLOVER_TIMER, RolloverWin::OnTimer)
     EVT_MOUSE_EVENTS ( RolloverWin::OnMouseEvent )
 
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // Define a constructor
 RolloverWin::RolloverWin( wxWindow *parent, int timeout ) :

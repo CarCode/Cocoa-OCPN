@@ -769,8 +769,8 @@ int CALLBACK CrashCallback(CR_CRASH_CALLBACK_INFO* pInfo)
 //------------------------------------------------------------------------------
 
 IMPLEMENT_APP( MyApp )
-BEGIN_EVENT_TABLE(MyApp, wxApp) EVT_ACTIVATE_APP(MyApp::OnActivateApp)
-END_EVENT_TABLE()
+wxBEGIN_EVENT_TABLE(MyApp, wxApp) EVT_ACTIVATE_APP(MyApp::OnActivateApp)
+wxEND_EVENT_TABLE()
 
 #include "wx/dynlib.h"
 
@@ -2380,7 +2380,7 @@ void MyApp::TrackOff( void )
 // MyFrame
 //------------------------------------------------------------------------------
 //      Frame implementation
-BEGIN_EVENT_TABLE(MyFrame, wxFrame) EVT_CLOSE(MyFrame::OnCloseWindow)
+wxBEGIN_EVENT_TABLE(MyFrame, wxFrame) EVT_CLOSE(MyFrame::OnCloseWindow)
 #ifdef __WXOSX__
 EVT_MENU(wxID_ABOUT, MyFrame::onAbout)
 EVT_MENU(wxID_PREFERENCES, MyFrame::onEinst)
@@ -2407,7 +2407,7 @@ EVT_ACTIVATE(MyFrame::OnActivate)
 EVT_MAXIMIZE(MyFrame::OnMaximize)
 EVT_COMMAND(wxID_ANY, wxEVT_COMMAND_TOOL_RCLICKED, MyFrame::RequestNewToolbarArgEvent)
 EVT_ERASE_BACKGROUND(MyFrame::OnEraseBackground)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // My frame constructor
 MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, const wxSize& size,
@@ -9307,10 +9307,10 @@ double AnchorDistFix( double const d, double const AnchorPointMinDist,
 
 //      Auto timed popup Window implementation
 
-BEGIN_EVENT_TABLE(TimedPopupWin, wxWindow) EVT_PAINT(TimedPopupWin::OnPaint)
+wxBEGIN_EVENT_TABLE(TimedPopupWin, wxWindow) EVT_PAINT(TimedPopupWin::OnPaint)
 EVT_TIMER(POPUP_TIMER, TimedPopupWin::OnTimer)
 
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // Define a constructor
 TimedPopupWin::TimedPopupWin( wxWindow *parent, int timeout ) :

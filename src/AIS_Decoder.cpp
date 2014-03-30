@@ -77,10 +77,10 @@ extern double gVar;
 extern bool g_bAIS_CPA_Alert;
 extern bool g_bAIS_CPA_Alert_Audio;
 
-BEGIN_EVENT_TABLE(AIS_Decoder, wxEvtHandler)
+wxBEGIN_EVENT_TABLE(AIS_Decoder, wxEvtHandler)
     EVT_TIMER(TIMER_AIS1, AIS_Decoder::OnTimerAIS)
     EVT_TIMER(TIMER_AISAUDIO, AIS_Decoder::OnTimerAISAudio)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 static int n_msgs;
 static int n_msg1;

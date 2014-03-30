@@ -869,7 +869,7 @@ void ViewPort::SetBBoxDirect( double latmin, double lonmin, double latmax, doubl
 //------------------------------------------------------------------------------
 //    ChartCanvas Implementation
 //------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE ( ChartCanvas, wxWindow )
+wxBEGIN_EVENT_TABLE ( ChartCanvas, wxWindow )
     EVT_PAINT ( ChartCanvas::OnPaint )
     EVT_ACTIVATE ( ChartCanvas::OnActivate )
     EVT_SIZE ( ChartCanvas::OnSize )
@@ -951,7 +951,7 @@ BEGIN_EVENT_TABLE ( ChartCanvas, wxWindow )
     EVT_MENU ( ID_DEF_MENU_TIDEINFO,        ChartCanvas::PopupMenuHandler )
     EVT_MENU ( ID_DEF_MENU_CURRENTINFO,     ChartCanvas::PopupMenuHandler )
     EVT_MENU ( ID_DEF_MENU_GROUPBASE,       ChartCanvas::PopupMenuHandler )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // Define a constructor for my canvas
 ChartCanvas::ChartCanvas ( wxFrame *frame ) :
@@ -10312,8 +10312,8 @@ public:
 
 IMPLEMENT_CLASS ( ocpnCurtain, wxDialog )
 
-BEGIN_EVENT_TABLE(ocpnCurtain, wxDialog)
-END_EVENT_TABLE()
+wxBEGIN_EVENT_TABLE(ocpnCurtain, wxDialog)
+wxEND_EVENT_TABLE()
 
 ocpnCurtain::ocpnCurtain( wxWindow *parent, wxPoint position, wxSize size, long wstyle )
 {

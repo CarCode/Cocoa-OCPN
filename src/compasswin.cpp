@@ -32,8 +32,8 @@
 #include "compasswin.h"
 #include "chcanv.h"
 #include "styles.h"
-BEGIN_EVENT_TABLE(ocpnFloatingCompassWindow, wxWindow) EVT_PAINT ( ocpnFloatingCompassWindow::OnPaint )
-END_EVENT_TABLE()
+wxBEGIN_EVENT_TABLE(ocpnFloatingCompassWindow, wxWindow) EVT_PAINT ( ocpnFloatingCompassWindow::OnPaint )
+wxEND_EVENT_TABLE()
 
 extern ocpnStyle::StyleManager* g_StyleManager;
 extern ChartCanvas *cc1;

@@ -37,6 +37,9 @@
 #include "styles.h"
 #include "dychart.h"
 #include "navutil.h"
+#ifdef __WXOSX__
+#include "chart1.h"
+#endif
 #include "routeprop.h"
 #include "routeman.h"
 #include "georef.h"
@@ -134,6 +137,9 @@ extern double           gLat, gLon;
 extern double           gCog, gSog;
 extern bool             g_bShowLayers;
 extern wxString         g_default_wp_icon;
+#ifdef __WXOSX__
+extern RouteManagerDialog *pRouteManagerDialog;
+#endif
 
 // sort callback. Sort by route name.
 int sort_route_name_dir;
@@ -407,9 +413,9 @@ int wxCALLBACK SortLayersOnSize(long item1, long item2, long list)
 
 // event table. Empty, because I find it much easier to see what is connected to what
 // using Connect() where possible, so that it is visible in the code.
-BEGIN_EVENT_TABLE(RouteManagerDialog, wxDialog)
+wxBEGIN_EVENT_TABLE(RouteManagerDialog, wxDialog)
 EVT_NOTEBOOK_PAGE_CHANGED(wxID_ANY, RouteManagerDialog::OnTabSwitch) // This should work under Windows :-(
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 void RouteManagerDialog::OnTabSwitch( wxNotebookEvent &event )
 {
@@ -2030,6 +2036,7 @@ void RouteManagerDialog::OnWptNewClick( wxCommandEvent &event )
     pWP->m_bIsolatedMark = true;                      // This is an isolated mark
     pSelect->AddSelectableRoutePoint( gLat, gLon, pWP );
     pConfig->AddNewWayPoint( pWP, -1 );    // use auto next num
+#ifndef __WXOSX__
     cc1->Refresh( false );      // Needed for MSW, why not GTK??
 
     if( NULL == pMarkPropDialog )          // There is one global instance of the MarkProp Dialog
@@ -2039,6 +2046,13 @@ void RouteManagerDialog::OnWptNewClick( wxCommandEvent &event )
     pMarkPropDialog->UpdateProperties();
 
     WptShowPropertiesDialog( pWP, GetParent() );
+#else
+    if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
+        pRouteManagerDialog->UpdateWptListCtrl();
+    cc1->undo->BeforeUndoableAction( Undo_CreateWaypoint, pWP, Undo_HasParent, NULL );
+    cc1->undo->AfterUndoableAction( NULL );
+    Refresh( false );
+#endif
 }
 
 void RouteManagerDialog::OnWptPropertiesClick( wxCommandEvent &event )

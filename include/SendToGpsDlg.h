@@ -57,8 +57,8 @@ class RoutePoint;
  */
 class SendToGpsDlg : public wxDialog
 {
-      DECLARE_DYNAMIC_CLASS( SendToGpsDlg )
-      DECLARE_EVENT_TABLE()
+    wxDECLARE_DYNAMIC_CLASS( SendToGpsDlg );
+      wxDECLARE_EVENT_TABLE();
 
  public:
        SendToGpsDlg();

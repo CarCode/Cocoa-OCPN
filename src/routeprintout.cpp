@@ -48,9 +48,7 @@ using namespace std;
 #include <wx/colour.h>
 
 
-#if wxCHECK_VERSION( 2, 9, 0 )
-#include <wx/dialog.h>
-#elif wxCHECK_VERSION(3, 0, 0)
+#if wxCHECK_VERSION( 3, 0, 0 )
 #include <wx/dialog.h>
 #else
 //  #include "scrollingdialog.h"
@@ -286,10 +284,10 @@ IMPLEMENT_DYNAMIC_CLASS( RoutePrintSelection, wxDialog )
  * RouteProp event table definition
  */
 
-BEGIN_EVENT_TABLE( RoutePrintSelection, wxDialog )
+wxBEGIN_EVENT_TABLE( RoutePrintSelection, wxDialog )
 EVT_BUTTON( ID_ROUTEPRINT_SELECTION_CANCEL, RoutePrintSelection::OnRoutepropCancelClick )
 EVT_BUTTON( ID_ROUTEPRINT_SELECTION_OK, RoutePrintSelection::OnRoutepropOkClick )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 /*!
  * RouteProp constructors

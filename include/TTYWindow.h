@@ -33,8 +33,8 @@ class WindowDestroyListener;
 
 class TTYWindow : public wxDialog
 {
-    DECLARE_DYNAMIC_CLASS( TTYWindow )
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_DYNAMIC_CLASS( TTYWindow );
+    wxDECLARE_EVENT_TABLE();
 
     public:
         TTYWindow();

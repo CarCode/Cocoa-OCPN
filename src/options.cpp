@@ -249,7 +249,7 @@ int wxCALLBACK SortConnectionOnPriority(long item1, long item2, long list)
 
 
 
-BEGIN_EVENT_TABLE( options, wxDialog )
+wxBEGIN_EVENT_TABLE( options, wxDialog )
     EVT_CHECKBOX( ID_DEBUGCHECKBOX1, options::OnDebugcheckbox1Click )
     EVT_BUTTON( ID_BUTTONADD, options::OnButtonaddClick )
     EVT_BUTTON( ID_BUTTONDELETE, options::OnButtondeleteClick )
@@ -272,7 +272,7 @@ BEGIN_EVENT_TABLE( options, wxDialog )
     EVT_CHOICE( ID_SHIPICONTYPE, options::OnShipTypeSelect )
     EVT_CHOICE( ID_RADARRINGS, options::OnRadarringSelect )
     EVT_CHAR_HOOK( options::OnCharHook )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 options::options()
 {
@@ -3489,14 +3489,14 @@ void ChartGroupsUI::EmptyChartGroupArray( ChartGroupArray* s )
 
 //    Chart Groups dialog implementation
 
-BEGIN_EVENT_TABLE( ChartGroupsUI, wxScrolledWindow )
+wxBEGIN_EVENT_TABLE( ChartGroupsUI, wxScrolledWindow )
     EVT_TREE_ITEM_EXPANDED( wxID_TREECTRL, ChartGroupsUI::OnNodeExpanded )
     EVT_BUTTON( ID_GROUPINSERTDIR, ChartGroupsUI::OnInsertChartItem )
     EVT_BUTTON( ID_GROUPREMOVEDIR, ChartGroupsUI::OnRemoveChartItem )
     EVT_NOTEBOOK_PAGE_CHANGED(ID_GROUPNOTEBOOK, ChartGroupsUI::OnGroupPageChange)
     EVT_BUTTON( ID_GROUPNEWGROUP, ChartGroupsUI::OnNewGroup )
     EVT_BUTTON( ID_GROUPDELETEGROUP, ChartGroupsUI::OnDeleteGroup )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 ChartGroupsUI::ChartGroupsUI( wxWindow* parent )
 {

@@ -48,11 +48,11 @@ extern MyFrame *gFrame;
 //------------------------------------------------------------------------------
 //    StatWin Implementation
 //------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(StatWin, wxDialog)
+wxBEGIN_EVENT_TABLE(StatWin, wxDialog)
     EVT_PAINT(StatWin::OnPaint)
     EVT_SIZE(StatWin::OnSize)
     EVT_MOUSE_EVENTS(StatWin::MouseEvent)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 StatWin::StatWin( wxWindow *win )
 {
@@ -167,10 +167,10 @@ void StatWin::SetColorScheme( ColorScheme cs )
 //------------------------------------------------------------------------------
 //          TextStat Window Implementation
 //------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(TStatWin, wxWindow)
+wxBEGIN_EVENT_TABLE(TStatWin, wxWindow)
     EVT_PAINT(TStatWin::OnPaint)
     EVT_SIZE(TStatWin::OnSize)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 TStatWin::TStatWin( wxFrame *frame ) :
         wxWindow( frame, wxID_ANY, wxPoint( 20, 20 ), wxSize( 5, 5 ), wxSIMPLE_BORDER )
@@ -204,11 +204,11 @@ void TStatWin::TextDraw( const wxString& text )
 //------------------------------------------------------------------------------
 //          Piano Window Implementation
 //------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(PianoWin, wxWindow)
+wxBEGIN_EVENT_TABLE(PianoWin, wxWindow)
     EVT_PAINT(PianoWin::OnPaint)
     EVT_SIZE(PianoWin::OnSize)
     EVT_MOUSE_EVENTS(PianoWin::MouseEvent)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // Define a constructor
 PianoWin::PianoWin( wxFrame *frame ) :

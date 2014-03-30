@@ -315,7 +315,7 @@ IMPLEMENT_DYNAMIC_CLASS( RouteProp, wxDialog )
  * RouteProp event table definition
  */
 
-BEGIN_EVENT_TABLE( RouteProp, wxDialog )
+wxBEGIN_EVENT_TABLE( RouteProp, wxDialog )
     EVT_TEXT( ID_PLANSPEEDCTL, RouteProp::OnPlanSpeedCtlUpdated )
     EVT_TEXT_ENTER( ID_STARTTIMECTL, RouteProp::OnStartTimeCtlUpdated )
     EVT_RADIOBOX ( ID_TIMEZONESEL, RouteProp::OnTimeZoneSelected )
@@ -326,7 +326,7 @@ BEGIN_EVENT_TABLE( RouteProp, wxDialog )
     EVT_BUTTON( ID_ROUTEPROP_SPLIT, RouteProp::OnRoutepropSplitClick )
     EVT_BUTTON( ID_ROUTEPROP_EXTEND, RouteProp::OnRoutepropExtendClick )
     EVT_BUTTON( ID_ROUTEPROP_PRINT, RouteProp::OnRoutepropPrintClick )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 /*!
  * RouteProp constructors
@@ -449,7 +449,6 @@ void RouteProp::OnRoutepropSplitClick( wxCommandEvent& event )
 // slot on pressed button "Print Route" with selection of the route properties to print
 void RouteProp::OnRoutepropPrintClick( wxCommandEvent& event )
 {
-
   if (pRoutePrintSelection == NULL)
     pRoutePrintSelection = new RoutePrintSelection( GetParent(), m_pRoute );
 
@@ -1732,11 +1731,11 @@ const wxEventType EVT_LLCHANGE = wxNewEventType();
 //------------------------------------------------------------------------------
 //    LatLonTextCtrl Window Implementation
 //------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(LatLonTextCtrl, wxWindow)
+wxBEGIN_EVENT_TABLE(LatLonTextCtrl, wxWindow)
 
 EVT_KILL_FOCUS(LatLonTextCtrl::OnKillFocus)
 
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // constructor
 LatLonTextCtrl::LatLonTextCtrl( wxWindow* parent, wxWindowID id, const wxString& value,

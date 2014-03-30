@@ -151,7 +151,7 @@ class Track : public wxEvtHandler, public Route
             std::deque<vector2D> skipPoints;
             std::deque<wxDateTime> skipTimes;
 
-DECLARE_EVENT_TABLE()
+            wxDECLARE_EVENT_TABLE();
 };
 
 //----------------------------------------------------------------------------
@@ -322,8 +322,8 @@ class WXDLLEXPORT X11FontPicker : public wxFontDialogBase
             wxFont            *pPreviewFont;
 
     //  static bool fontDialogCancelled;
-            DECLARE_EVENT_TABLE()
-                        DECLARE_DYNAMIC_CLASS(X11FontPicker)
+            wxDECLARE_EVENT_TABLE();
+            wxDECLARE_DYNAMIC_CLASS(X11FontPicker);
 };
 
 //---------------------------------------------------------------------------------

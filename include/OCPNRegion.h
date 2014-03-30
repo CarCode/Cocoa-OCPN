@@ -456,7 +456,7 @@ protected:
 #endif
     
 private:
-    DECLARE_DYNAMIC_CLASS(OCPNRegion)
+    wxDECLARE_DYNAMIC_CLASS(OCPNRegion);
 };
 
 // ----------------------------------------------------------------------------

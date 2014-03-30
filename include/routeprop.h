@@ -39,9 +39,7 @@
 #include <wx/filesys.h>
 #include "LinkPropDlg.h"
 
-#if wxCHECK_VERSION(2, 9, 0)
-#include <wx/dialog.h>
-#elif wxCHECK_VERSION(3, 0, 0)
+#if wxCHECK_VERSION(3, 0, 0)
 #include <wx/dialog.h>
 #else
 #include "scrollingdialog.h"
@@ -126,8 +124,8 @@ class   HyperlinkList;
 
 class RouteProp: public wxDialog
 {
-    DECLARE_DYNAMIC_CLASS( RouteProp )
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_DYNAMIC_CLASS( RouteProp );
+    wxDECLARE_EVENT_TABLE();
 
 public:
     /// Constructors
@@ -235,7 +233,7 @@ extern /*expdecl*/ const wxEventType EVT_LLCHANGE;
 class LatLonTextCtrl: public wxTextCtrl
 {
 //    DECLARE_DYNAMIC_CLASS( LatLonTextCtrl )
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 
 public:
       LatLonTextCtrl(wxWindow* parent, wxWindowID id, const wxString& value = _T(""),

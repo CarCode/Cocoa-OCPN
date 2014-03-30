@@ -150,13 +150,13 @@ char AuthorText[] =
 
 IMPLEMENT_DYNAMIC_CLASS( about, wxDialog )
 
-BEGIN_EVENT_TABLE( about, wxDialog )
+wxBEGIN_EVENT_TABLE( about, wxDialog )
     EVT_BUTTON( xID_OK, about::OnXidOkClick )
     EVT_NOTEBOOK_PAGE_CHANGED(ID_NOTEBOOK_HELP, about::OnPageChange)
     EVT_BUTTON( ID_DONATE, about::OnDonateClick)
     EVT_BUTTON( ID_COPYINI, about::OnCopyClick)
     EVT_BUTTON( ID_COPYLOG, about::OnCopyClick)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 about::about( )
 {

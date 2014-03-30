@@ -28,10 +28,10 @@
 #include "ChInfoWin.h"
 #include "chart1.h"
 
-BEGIN_EVENT_TABLE(ChInfoWin, wxWindow)
+wxBEGIN_EVENT_TABLE(ChInfoWin, wxWindow)
     EVT_PAINT ( ChInfoWin::OnPaint )
     EVT_ERASE_BACKGROUND(ChInfoWin::OnEraseBackground)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // Define a constructor
 ChInfoWin::ChInfoWin( wxWindow *parent ) :

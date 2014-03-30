@@ -31,7 +31,7 @@ enum
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST( SplineList );
 
-BEGIN_EVENT_TABLE ( TCWin, wxWindow ) EVT_PAINT ( TCWin::OnPaint )
+wxBEGIN_EVENT_TABLE ( TCWin, wxWindow ) EVT_PAINT ( TCWin::OnPaint )
     EVT_SIZE ( TCWin::OnSize )
     EVT_MOTION ( TCWin::MouseEvent )
     EVT_BUTTON ( wxID_OK, TCWin::OKEvent )
@@ -39,7 +39,7 @@ BEGIN_EVENT_TABLE ( TCWin, wxWindow ) EVT_PAINT ( TCWin::OnPaint )
     EVT_BUTTON ( ID_TCWIN_PR, TCWin::PREvent )
     EVT_CLOSE ( TCWin::OnCloseWindow )
     EVT_TIMER ( TCWININF_TIMER, TCWin::OnTCWinPopupTimerEvent )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // Define a constructor
 TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
@@ -145,10 +145,13 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
     int bsx, bsy, bpx, bpy;
     PR_button->GetSize( &bsx, &bsy );
     PR_button->GetPosition( &bpx, &bpy );
-
+#ifdef __WXOSX__
+    NX_button = new wxButton( this, ID_TCWIN_NX, _T( "vor" ), wxPoint( bpx + bsx + 5, bpy ),
+                             wxSize( 60, -1 ) );
+#else
     NX_button = new wxButton( this, ID_TCWIN_NX, _( "Next" ), wxPoint( bpx + bsx + 5, bpy ),
                               wxSize( 60, -1 ) );
-
+#endif
     m_TCWinPopupTimer.SetOwner( this, TCWININF_TIMER );
 
 

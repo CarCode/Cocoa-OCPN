@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 #include <wx/sizer.h>
@@ -44,7 +43,8 @@ extern MyFrame *gFrame;
 IMPLEMENT_DYNAMIC_CLASS( GoToPositionDialog, wxDialog )
 /*!
  * GoToPositionDialog event table definition
- */BEGIN_EVENT_TABLE( GoToPositionDialog, wxDialog )
+ */
+wxBEGIN_EVENT_TABLE( GoToPositionDialog, wxDialog )
 
 ////@begin GoToPositionDialog event table entries
 
@@ -55,7 +55,7 @@ IMPLEMENT_DYNAMIC_CLASS( GoToPositionDialog, wxDialog )
 
 ////@end GoToPositionDialog event table entries
 
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 /*!
  * GoToPositionDialog constructors

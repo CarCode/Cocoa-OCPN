@@ -36,7 +36,7 @@ extern int g_cm93detail_dialog_x;
 extern int g_cm93detail_dialog_y;
 extern ChartCanvas *cc1;
 
-BEGIN_EVENT_TABLE(CM93DSlide, wxDialog)
+wxBEGIN_EVENT_TABLE(CM93DSlide, wxDialog)
     EVT_MOVE( CM93DSlide::OnMove )
     EVT_COMMAND_SCROLL_THUMBRELEASE(-1, CM93DSlide::OnChangeValue)
     EVT_COMMAND_SCROLL_LINEUP(-1, CM93DSlide::OnChangeValue)
@@ -46,7 +46,7 @@ BEGIN_EVENT_TABLE(CM93DSlide, wxDialog)
     EVT_COMMAND_SCROLL_BOTTOM(-1, CM93DSlide::OnChangeValue)
     EVT_COMMAND_SCROLL_TOP(-1, CM93DSlide::OnChangeValue)
     EVT_CLOSE( CM93DSlide::OnClose )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 CM93DSlide::CM93DSlide( wxWindow *parent, wxWindowID id, int value, int minValue, int maxValue,
                         const wxPoint& pos, const wxSize& size, long style, const wxString& title )

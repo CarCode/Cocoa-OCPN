@@ -34,9 +34,9 @@
 
 IMPLEMENT_DYNAMIC_CLASS( TTYWindow, wxDialog )
 
-BEGIN_EVENT_TABLE( TTYWindow, wxDialog )
+wxBEGIN_EVENT_TABLE( TTYWindow, wxDialog )
 	EVT_CLOSE(TTYWindow::OnCloseWindow)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 TTYWindow::TTYWindow()
     : m_window_destroy_listener(NULL)
@@ -49,7 +49,7 @@ TTYWindow::TTYWindow(wxWindow *parent, int n_lines, WindowDestroyListener * list
     , m_pScroll(NULL)
 {
 #ifdef __WXOSX__
-    wxDialog::Create( parent, -1, _T("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxSTAY_ON_TOP );
+    wxDialog::Create( parent, -1, _T("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxSTAY_ON_TOP );
 #else
     wxDialog::Create( parent, -1, _T("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
 #endif

@@ -54,9 +54,9 @@ extern bool g_bAISShowTracks;
 
 IMPLEMENT_CLASS ( AISTargetListDialog, wxPanel )
 
-BEGIN_EVENT_TABLE(AISTargetListDialog, wxPanel)
+wxBEGIN_EVENT_TABLE(AISTargetListDialog, wxPanel)
     EVT_CLOSE(AISTargetListDialog::OnClose)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 static int ItemCompare( AIS_Target_Data *pAISTarget1, AIS_Target_Data *pAISTarget2 )
 {
@@ -94,10 +94,18 @@ static int ItemCompare( AIS_Target_Data *pAISTarget1, AIS_Target_Data *pAISTarge
 
         case tlNAME:
             s1 = trimAISField( t1->ShipName );
+#ifdef __WXOSX__
+            if( t1->Class == AIS_SART ) s1 = _T("-");
+#else
             if( ( t1->Class == AIS_BASE ) || ( t1->Class == AIS_SART ) ) s1 = _T("-");
+#endif
 
             s2 = trimAISField( t2->ShipName );
+#ifdef __WXOSX__
+            if( t2->Class == AIS_SART ) s2 = _T("-");
+#else
             if( ( t2->Class == AIS_BASE ) || ( t2->Class == AIS_SART ) ) s2 = _T("-");
+#endif
             break;
 
         case tlCALL:

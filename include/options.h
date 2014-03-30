@@ -36,9 +36,7 @@
 
 #include "pluginmanager.h"
 
-#if wxCHECK_VERSION(2, 9, 0)
-#include <wx/dialog.h>
-#elif wxCHECK_VERSION(3, 0, 0)
+#if wxCHECK_VERSION(3, 0, 0)
 #include <wx/dialog.h>
 #else
 #include "scrollingdialog.h"
@@ -186,7 +184,7 @@ class options: public wxDialog
 class options: public wxScrollingDialog
 #endif
 {
-    DECLARE_DYNAMIC_CLASS( options )
+    wxDECLARE_DYNAMIC_CLASS( options );
     wxDECLARE_EVENT_TABLE();
 
 public:

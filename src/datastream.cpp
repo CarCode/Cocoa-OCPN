@@ -69,14 +69,14 @@ const wxEventType wxEVT_OCPN_DATASTREAM = wxNewEventType();
 //    DataStream Implementation
 //------------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(DataStream, wxEvtHandler)
+wxBEGIN_EVENT_TABLE(DataStream, wxEvtHandler)
 
     EVT_SOCKET(DS_SOCKET_ID, DataStream::OnSocketEvent)
     EVT_SOCKET(DS_SERVERSOCKET_ID, DataStream::OnServerSocketEvent)
     EVT_SOCKET(DS_ACTIVESERVERSOCKET_ID, DataStream::OnActiveServerEvent)
     EVT_TIMER(TIMER_SOCKET, DataStream::OnTimerSocket)
     EVT_TIMER(TIMER_SOCKET + 1, DataStream::OnSocketReadWatchdogTimer)
-  END_EVENT_TABLE()
+  wxEND_EVENT_TABLE()
 
 // constructor
 DataStream::DataStream(wxEvtHandler *input_consumer,
@@ -810,9 +810,9 @@ le_read32(const void *addr)
 
 
 
-BEGIN_EVENT_TABLE(GarminProtocolHandler, wxEvtHandler)
+wxBEGIN_EVENT_TABLE(GarminProtocolHandler, wxEvtHandler)
 EVT_TIMER(TIMER_GARMIN1, GarminProtocolHandler::OnTimerGarmin1)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 
 GarminProtocolHandler::GarminProtocolHandler(DataStream *parent, wxEvtHandler *MessageTarget, bool bsel_usb)

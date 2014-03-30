@@ -24,10 +24,13 @@
 #include "wx/wxprec.h"
 #include <wx/tokenzr.h>
 //#include <wx/glcanvas.h>
-
+#ifndef __WXOSX__
+#include "OpenGL/gl.h"
+#include "OpenGL/glext.h"
+#else
 #include "GL/gl.h"
 #include "GL/glext.h"
-
+#endif
 #include "glChartCanvas.h"
 #include "glTextureDescriptor.h"
 #include "chcanv.h"
@@ -62,6 +65,17 @@ extern ColorScheme global_color_scheme;
 extern bool g_bquiting;
 extern ThumbWin         *pthumbwin;
 #ifdef __WXOSX__
+extern PFNGLGENFRAMEBUFFERSEXTPROC         s_glGenFramebuffersEXT;
+extern PFNGLGENRENDERBUFFERSEXTPROC        s_glGenRenderbuffersEXT;
+extern PFNGLFRAMEBUFFERTEXTURE2DEXTPROC    s_glFramebufferTexture2DEXT;
+extern PFNGLBINDFRAMEBUFFEREXTPROC         s_glBindFramebufferEXT;
+extern PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC s_glFramebufferRenderbufferEXT;
+extern PFNGLRENDERBUFFERSTORAGEEXTPROC     s_glRenderbufferStorageEXT;
+extern PFNGLBINDRENDERBUFFEREXTPROC        s_glBindRenderbufferEXT;
+extern PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC  s_glCheckFramebufferStatusEXT;
+extern PFNGLDELETEFRAMEBUFFERSEXTPROC      s_glDeleteFramebuffersEXT;
+extern PFNGLDELETERENDERBUFFERSEXTPROC     s_glDeleteRenderbuffersEXT;
+#else
 extern PFNGLGENFRAMEBUFFERSEXTPROC         s_glGenFramebuffersEXT;
 extern PFNGLGENRENDERBUFFERSEXTPROC        s_glGenRenderbuffersEXT;
 extern PFNGLFRAMEBUFFERTEXTURE2DEXTPROC    s_glFramebufferTexture2DEXT;
@@ -321,6 +335,8 @@ static bool GetglEntryPoints( void )
 #elif defined(__WXOSX__)
 //#define GL_GLEXT_FUNCTION_POINTERS 1
     return false;
+//    s_glGenFramebuffersEXT = glGenFramebuffersEXT(GLsizei n, GLuint *framebuffers);
+    
 //    s_glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)glXGetProcAddress((const GLubyte *)"glGenFramebuffersEXT");
 //    s_glGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXTPROC)glXGetProcAddress((const GLubyte *)"glGenRenderbuffersEXT");
 //    s_glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)glXGetProcAddress((const GLubyte *)"glFramebufferTexture2DEXT");
@@ -373,12 +389,12 @@ static bool GetglEntryPoints( void )
 
 // This attribute set works OK with vesa software only OpenGL renderer
 int attribs[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, WX_GL_STENCIL_SIZE, 8, 0 };
-BEGIN_EVENT_TABLE ( glChartCanvas, wxGLCanvas ) EVT_PAINT ( glChartCanvas::OnPaint )
+wxBEGIN_EVENT_TABLE ( glChartCanvas, wxGLCanvas ) EVT_PAINT ( glChartCanvas::OnPaint )
     EVT_ACTIVATE ( glChartCanvas::OnActivate )
     EVT_SIZE ( glChartCanvas::OnSize )
     EVT_MOUSE_EVENTS ( glChartCanvas::MouseEvent )
     EVT_ERASE_BACKGROUND(glChartCanvas::OnEraseBG)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 glChartCanvas::glChartCanvas( wxWindow *parent ) :
 #ifdef __WXOSX__
@@ -625,6 +641,7 @@ void glChartCanvas::OnPaint( wxPaintEvent &event )
                 wxLogMessage( msg );
                 m_b_useFBO = false;
             }
+                
         }
 
         if( m_b_useFBO && !m_b_useFBOStencil ) g_b_useStencil = false;

@@ -55,9 +55,9 @@ extern ChartCanvas      *cc1;
 //------------------------------------------------------------------------------
 //    Thumbwin Implementation
 //------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(ThumbWin, wxWindow)
+wxBEGIN_EVENT_TABLE(ThumbWin, wxWindow)
   EVT_PAINT(ThumbWin::OnPaint)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // Define a constructor
 

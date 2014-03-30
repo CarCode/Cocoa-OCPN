@@ -54,9 +54,9 @@ extern bool                       g_bPermanentMOBIcon;
 //----------------------------------------------------------------------------
 // GrabberWindow Implementation
 //----------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(GrabberWin, wxPanel) EVT_MOUSE_EVENTS ( GrabberWin::MouseEvent )
+wxBEGIN_EVENT_TABLE(GrabberWin, wxPanel) EVT_MOUSE_EVENTS ( GrabberWin::MouseEvent )
 EVT_PAINT ( GrabberWin::OnPaint )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 GrabberWin::GrabberWin( wxWindow *parent )
 {
@@ -159,12 +159,12 @@ void GrabberWin::MouseEvent( wxMouseEvent& event )
 //---------------------------------------------------------------------------------------
 //          ocpnFloatingToolbarDialog Implementation
 //---------------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(ocpnFloatingToolbarDialog, wxDialog)
+wxBEGIN_EVENT_TABLE(ocpnFloatingToolbarDialog, wxDialog)
     EVT_MOUSE_EVENTS ( ocpnFloatingToolbarDialog::MouseEvent )
     EVT_MENU(wxID_ANY, ocpnFloatingToolbarDialog::OnToolLeftClick)
     EVT_TIMER ( FADE_TIMER, ocpnFloatingToolbarDialog::FadeTimerEvent )
     EVT_WINDOW_CREATE(ocpnFloatingToolbarDialog::OnWindowCreate)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 ocpnFloatingToolbarDialog::ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint position,
         long orient )
@@ -617,7 +617,8 @@ void ocpnFloatingToolbarDialog::DestroyToolBar()
 //----------------------------------------------------------------------------
 // Toolbar Tooltip Popup Window Definition
 //----------------------------------------------------------------------------
-class ToolTipWin: public wxDialog {
+class ToolTipWin: public wxDialog
+{
 public:
     ToolTipWin( wxWindow *parent );
     ~ToolTipWin();
@@ -644,16 +645,16 @@ private:
     wxColour m_back_color;
     wxColour m_text_color;
 
-DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 };
 //-----------------------------------------------------------------------
 //
 //    Toolbar Tooltip window implementation
 //
 //-----------------------------------------------------------------------
-BEGIN_EVENT_TABLE(ToolTipWin, wxDialog) EVT_PAINT(ToolTipWin::OnPaint)
+wxBEGIN_EVENT_TABLE(ToolTipWin, wxDialog) EVT_PAINT(ToolTipWin::OnPaint)
 
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // Define a constructor
 ToolTipWin::ToolTipWin( wxWindow *parent ) :
@@ -805,13 +806,13 @@ public:
 };
 
 // ----------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(ocpnToolBarSimple, wxControl) EVT_SIZE(ocpnToolBarSimple::OnSize)
+wxBEGIN_EVENT_TABLE(ocpnToolBarSimple, wxControl) EVT_SIZE(ocpnToolBarSimple::OnSize)
 EVT_PAINT(ocpnToolBarSimple::OnPaint)
 EVT_KILL_FOCUS(ocpnToolBarSimple::OnKillFocus)
 EVT_MOUSE_EVENTS(ocpnToolBarSimple::OnMouseEvent)
 EVT_TIMER(TOOLTIPON_TIMER, ocpnToolBarSimple::OnToolTipTimerEvent)
 
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // ============================================================================
 // implementation

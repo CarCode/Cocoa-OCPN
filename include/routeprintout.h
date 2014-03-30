@@ -98,9 +98,10 @@ protected:
 #define ID_ROUTEPRINT_SELECTION_CANCEL 9002
 
 
-class RoutePrintSelection : public wxDialog {
-    DECLARE_DYNAMIC_CLASS( RoutePrintSelection )
-    DECLARE_EVENT_TABLE()
+class RoutePrintSelection : public wxDialog
+{
+    wxDECLARE_DYNAMIC_CLASS( RoutePrintSelection );
+    wxDECLARE_EVENT_TABLE();
 
 public:
     // Constructors

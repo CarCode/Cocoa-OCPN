@@ -62,14 +62,14 @@ enum eMenuItems {
 //------------------------------------------------------------------------------
 //    ConsoleCanvas Implementation
 //------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(ConsoleCanvas, wxWindow)
+wxBEGIN_EVENT_TABLE(ConsoleCanvas, wxWindow)
     EVT_PAINT(ConsoleCanvas::OnPaint)
     EVT_SHOW(ConsoleCanvas::OnShow)
     EVT_CONTEXT_MENU(ConsoleCanvas::OnContextMenu)
     EVT_MENU(ID_NAVLEG, ConsoleCanvas::OnContextMenuSelection)
     EVT_MENU(ID_NAVROUTE, ConsoleCanvas::OnContextMenuSelection)
     EVT_MENU(ID_NAVHIGHWAY, ConsoleCanvas::OnContextMenuSelection)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 // Define a constructor for my canvas
 ConsoleCanvas::ConsoleCanvas( wxWindow *frame )
@@ -419,8 +419,8 @@ void ConsoleCanvas::UpdateFonts( void )
 //------------------------------------------------------------------------------
 //    AnnunText Implementation
 //------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(AnnunText, wxWindow) EVT_PAINT(AnnunText::OnPaint)
-END_EVENT_TABLE()
+wxBEGIN_EVENT_TABLE(AnnunText, wxWindow) EVT_PAINT(AnnunText::OnPaint)
+wxEND_EVENT_TABLE()
 
 AnnunText::AnnunText( wxWindow *parent, wxWindowID id, const wxString& LegendElement,
         const wxString& ValueElement ) :
@@ -547,8 +547,8 @@ void AnnunText::OnPaint( wxPaintEvent& event )
 //------------------------------------------------------------------------------
 //    CDI Implementation
 //------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(CDI, wxWindow) EVT_PAINT(CDI::OnPaint)
-END_EVENT_TABLE()
+wxBEGIN_EVENT_TABLE(CDI, wxWindow) EVT_PAINT(CDI::OnPaint)
+wxEND_EVENT_TABLE()
 
 CDI::CDI( wxWindow *parent, wxWindowID id, long style, const wxString& name ) :
         wxWindow( parent, id, wxDefaultPosition, wxDefaultSize, style, name )

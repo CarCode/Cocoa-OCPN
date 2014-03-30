@@ -34,10 +34,10 @@ extern int g_S57_dialog_sy;
 
 IMPLEMENT_CLASS ( S57QueryDialog, wxDialog )
 // S57QueryDialog event table definition
-BEGIN_EVENT_TABLE ( S57QueryDialog, wxDialog )  //ws wxDialog
+wxBEGIN_EVENT_TABLE ( S57QueryDialog, wxDialog )  //ws wxDialog
     EVT_SIZE ( S57QueryDialog::OnSize )
     EVT_CLOSE( S57QueryDialog::OnClose)
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 S57QueryDialog::S57QueryDialog()
 {

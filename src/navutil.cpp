@@ -325,9 +325,9 @@ extern bool             portaudio_initialized;
 
 #define TIMER_TRACK1           778
 
-BEGIN_EVENT_TABLE ( Track, wxEvtHandler )
+wxBEGIN_EVENT_TABLE ( Track, wxEvtHandler )
     EVT_TIMER ( TIMER_TRACK1, Track::OnTimerTrack )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 Track::Track( void )
 {
@@ -3026,9 +3026,9 @@ private:
     wxDECLARE_EVENT_TABLE();
 };
 
-BEGIN_EVENT_TABLE ( MyFontPreviewer, wxWindow )
+wxBEGIN_EVENT_TABLE ( MyFontPreviewer, wxWindow )
 EVT_PAINT ( MyFontPreviewer::OnPaint )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 void MyFontPreviewer::OnPaint ( wxPaintEvent& WXUNUSED ( event ) )
 {
@@ -3061,7 +3061,7 @@ void MyFontPreviewer::OnPaint ( wxPaintEvent& WXUNUSED ( event ) )
 
 IMPLEMENT_DYNAMIC_CLASS ( X11FontPicker, wxDialog )
 
-BEGIN_EVENT_TABLE ( X11FontPicker, wxDialog )
+wxBEGIN_EVENT_TABLE ( X11FontPicker, wxDialog )
 EVT_CHECKBOX ( wxID_FONT_UNDERLINE, X11FontPicker::OnChangeFont )
 EVT_CHOICE ( wxID_FONT_STYLE, X11FontPicker::OnChangeFont )
 EVT_CHOICE ( wxID_FONT_WEIGHT, X11FontPicker::OnChangeFont )
@@ -3070,7 +3070,7 @@ EVT_CHOICE ( wxID_FONT_COLOUR, X11FontPicker::OnChangeFont )
 EVT_CHOICE ( wxID_FONT_SIZE, X11FontPicker::OnChangeFont )
 
 EVT_CLOSE ( X11FontPicker::OnCloseWindow )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 #define SCALEABLE_SIZES 11
 static wxString scaleable_pointsize[SCALEABLE_SIZES] =

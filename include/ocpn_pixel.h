@@ -302,7 +302,7 @@ protected:
 
 private:
 
-    DECLARE_DYNAMIC_CLASS(ocpnBitmap)
+    wxDECLARE_DYNAMIC_CLASS(ocpnBitmap);
 };
 
 
@@ -336,7 +336,7 @@ class /*WXDLLEXPORT*/ ocpnMemDC : public wxMemoryDC
       wxDIB *m_pselectedDIB;
 #endif
 
-   DECLARE_DYNAMIC_CLASS(ocpnMemDC)
+    wxDECLARE_DYNAMIC_CLASS(ocpnMemDC);
 };
 
 #endif  // _OCPN_PIXEL_H_

@@ -49,8 +49,8 @@ extern int g_ais_alert_dialog_sy;
 
 IMPLEMENT_CLASS ( OCPN_AlertDialog, wxDialog )
 
-BEGIN_EVENT_TABLE ( OCPN_AlertDialog, wxDialog )
-END_EVENT_TABLE()
+wxBEGIN_EVENT_TABLE ( OCPN_AlertDialog, wxDialog )
+wxEND_EVENT_TABLE()
 
 OCPN_AlertDialog::OCPN_AlertDialog()
 {
@@ -100,14 +100,14 @@ bool OCPN_AlertDialog::Create( wxWindow *parent, wxWindowID id,
 
 IMPLEMENT_CLASS ( AISTargetAlertDialog, wxDialog )
 
-BEGIN_EVENT_TABLE ( AISTargetAlertDialog, wxDialog )
+wxBEGIN_EVENT_TABLE ( AISTargetAlertDialog, wxDialog )
     EVT_CLOSE(AISTargetAlertDialog::OnClose)
     EVT_BUTTON( ID_ACKNOWLEDGE, AISTargetAlertDialog::OnIdAckClick )
     EVT_BUTTON( ID_SILENCE, AISTargetAlertDialog::OnIdSilenceClick )
     EVT_BUTTON( ID_JUMPTO, AISTargetAlertDialog::OnIdJumptoClick )
     EVT_MOVE( AISTargetAlertDialog::OnMove )
     EVT_SIZE( AISTargetAlertDialog::OnSize )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 AISTargetAlertDialog::AISTargetAlertDialog()
 {

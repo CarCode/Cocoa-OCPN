@@ -50,8 +50,8 @@
  */
 class GoToPositionDialog: public wxDialog
 {
-      DECLARE_DYNAMIC_CLASS( GoToPositionDialog )
-      DECLARE_EVENT_TABLE()
+    wxDECLARE_DYNAMIC_CLASS( GoToPositionDialog );
+      wxDECLARE_EVENT_TABLE();
 
       public:
     /// Constructors

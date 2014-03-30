@@ -50,12 +50,12 @@ extern ChartCanvas *cc1;
 #define xID_WPT_CREATE 10010
 IMPLEMENT_CLASS ( AISTargetQueryDialog, wxDialog )
 // AISTargetQueryDialog event table definition
-BEGIN_EVENT_TABLE ( AISTargetQueryDialog, wxDialog )
+wxBEGIN_EVENT_TABLE ( AISTargetQueryDialog, wxDialog )
     EVT_BUTTON( xID_OK, AISTargetQueryDialog::OnIdOKClick )
     EVT_BUTTON( xID_WPT_CREATE, AISTargetQueryDialog::OnIdWptCreateClick )
     EVT_CLOSE(AISTargetQueryDialog::OnClose)
     EVT_MOVE( AISTargetQueryDialog::OnMove )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 AISTargetQueryDialog::AISTargetQueryDialog()
 {

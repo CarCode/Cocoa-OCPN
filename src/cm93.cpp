@@ -6350,7 +6350,6 @@ OCPNOffsetListCtrl::~OCPNOffsetListCtrl()
 
 wxString  OCPNOffsetListCtrl::OnGetItemText ( long item, long column ) const
 {
-
       wxString ret;
       M_COVR_Desc *pmcd = m_parent->m_pcovr_array.Item ( item );
 
@@ -6358,7 +6357,11 @@ wxString  OCPNOffsetListCtrl::OnGetItemText ( long item, long column ) const
       {
             case tlCELL:
             {
+#ifdef __WXOSX__
+                  ret.Printf ( wxString( "%d", wxConvUTF8 ), (int)pmcd->m_cell_index );
+#else
                   ret.Printf ( _T ( "%d" ), pmcd->m_cell_index );
+#endif
                   if ( ( ( int ) '0' ) == pmcd->m_subcell )
                         ret.Prepend ( _T ( "0" ) );
                   else
@@ -6366,7 +6369,7 @@ wxString  OCPNOffsetListCtrl::OnGetItemText ( long item, long column ) const
                         char t = ( char ) pmcd->m_subcell;
                         wxString p;
 #ifdef __WXOSX__
-                      p.Printf ( _T ( "%lc" ), t );
+                      p.Printf ( wxString( "%c", wxConvUTF8 ), (wchar_t)t );
 #else
                         p.Printf ( _T ( "%c" ), t );
 #endif
@@ -6376,7 +6379,11 @@ wxString  OCPNOffsetListCtrl::OnGetItemText ( long item, long column ) const
                   break;
             }
             case tlMCOVR:
+#ifdef __WXOSX__
+                  ret.Printf ( wxString( "%d", wxConvUTF8 ), (int)pmcd->m_object_id );
+#else
                   ret.Printf ( _T ( "%d" ), pmcd->m_object_id );
+#endif
                   break;
 
             case tlSCALE:
@@ -6384,19 +6391,35 @@ wxString  OCPNOffsetListCtrl::OnGetItemText ( long item, long column ) const
                   break;
 
             case tlXOFF:
+#ifdef __WXOSX__
+                  ret.Printf ( wxString( "%g", wxConvUTF8), (double)pmcd->transform_WGS84_offset_x );
+#else
                   ret.Printf ( _T ( "%g" ), pmcd->transform_WGS84_offset_x );
+#endif
                   break;
 
             case tlYOFF:
+#ifdef __WXOSX__
+                  ret.Printf ( wxString( "%g", wxConvUTF8), (double)pmcd->transform_WGS84_offset_y );
+#else
                   ret.Printf ( _T ( "%g" ), pmcd->transform_WGS84_offset_y );
+#endif
                   break;
 
             case tlUXOFF:
+#ifdef __WXOSX__
+                  ret.Printf ( wxString( "%6.0f", wxConvUTF8 ), (double)pmcd->user_xoff * (double)pmcd->m_centerlat_cos );
+#else
                   ret.Printf ( _T ( "%6.0f" ), pmcd->user_xoff * pmcd->m_centerlat_cos );
+#endif
                   break;
 
             case tlUYOFF:
+#ifdef __WXOSX__
+                  ret.Printf ( wxString( "%6.0f", wxConvUTF8 ), (double)pmcd->user_yoff * (double)pmcd->m_centerlat_cos );
+#else
                   ret.Printf ( _T ( "%6.0f" ), pmcd->user_yoff * pmcd->m_centerlat_cos );
+#endif
                   break;
 
             default:
@@ -6419,9 +6442,9 @@ int OCPNOffsetListCtrl::OnGetItemColumnImage ( long item, long column ) const
 
 IMPLEMENT_CLASS ( CM93OffsetDialog, wxDialog )
 
-BEGIN_EVENT_TABLE ( CM93OffsetDialog, wxDialog )
+wxBEGIN_EVENT_TABLE ( CM93OffsetDialog, wxDialog )
       EVT_CLOSE ( CM93OffsetDialog::OnClose )
-END_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 
 CM93OffsetDialog::CM93OffsetDialog ( wxWindow *parent, cm93compchart *pchart )
@@ -6654,13 +6677,9 @@ void CM93OffsetDialog::UpdateMCOVRList ( const ViewPort &vpt )
                               if ( cell_array.Item ( icell ) == mcd->m_cell_index )
                               {
                                     wxPoint *pwp = pchart->GetDrawBuffer ( mcd->m_nvertices );
-#ifndef __WXOSX__
                                     OCPNRegion rgn = mcd->GetRegion ( vp_positive, pwp );
-#endif
 //                                    if(_OUT != vp_positive.GetBBox().Intersect(mcd->m_covr_bbox))
-#ifndef __WXOSX__
                                     if ( rgn.Contains ( 0, 0, vpt.pix_width, vpt.pix_height ) != wxOutRegion )
-#endif
                                           m_pcovr_array.Add ( mcd );
                               }
                         }
