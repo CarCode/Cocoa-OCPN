@@ -141,22 +141,19 @@ OCPNRegion::OCPNRegion( const wxRect& rect ) : wxRegion(rect.x, rect.y, rect.wid
 {
 }
 
-#ifdef __WXOSX__
-OCPNRegion::OCPNRegion( size_t n, const wxPoint *points, int fillStyle ) : wxRegion(n, points, (wxPolygonFillMode)fillStyle)
-{
-}
-
-#else
-OCPNRegion::OCPNRegion( size_t n, const wxPoint *points, int fillStyle ) : wxRegion(n, points, fillStyle)
-{
-}
+OCPNRegion::OCPNRegion( size_t n, const wxPoint *points, int fillStyle )
+: wxRegion(n, points,
+#if wxCHECK_VERSION(3,1,0)
+           (wxPolygonFillMode)
 #endif
+           fillStyle)
+{
+}
 
 wxRegion &OCPNRegion::ConvertTowxRegion()
 {
     return *(wxRegion *)this;
 }
-
 
 #endif    
 

@@ -206,6 +206,9 @@ void grib_pi::ShowPreferencesDialog( wxWindow* parent )
 {
     GribPreferencesDialog *Pref = new GribPreferencesDialog(parent);
 
+#ifndef __WXOSX__
+    DimeWindow( Pref );                                     //aplly global colours scheme
+#endif
     Pref->m_cbUseHiDef->SetValue(m_bGRIBUseHiDef);
     Pref->m_cbUseGradualColors->SetValue(m_bGRIBUseGradualColors);
     Pref->m_cbCopyFirstCumulativeRecord->SetValue(m_bCopyFirstCumRec);
@@ -520,6 +523,12 @@ void grib_pi::SetColorScheme(PI_ColorScheme cs)
 #ifndef __WXOSX__
     DimeWindow(m_pGribDialog);
 #endif
+    if( m_pGribDialog ) {
+        if( m_pGRIBOverlayFactory ) m_pGRIBOverlayFactory->ClearCachedLabel();
+        if(m_pGribDialog->pReq_Dialog) m_pGribDialog->pReq_Dialog->Refresh();
+        m_pGribDialog->Refresh();
+        m_pGribDialog->SetDataBackGroundColor();
+    }
 }
 
 void grib_pi::SendTimelineMessage(wxDateTime time)

@@ -70,6 +70,7 @@ private:
       void OnSaveMail( wxCommandEvent& event );
 
       bool IsZYGRIB;
+      bool IsGFS;
       int  m_MailError_Nb;
       int  m_SendMethod;
       bool m_AllowSend;
