@@ -846,9 +846,7 @@ bool GPXCreateRoute( pugi::xml_node node, Route *pRoute )
         s.Printf(_T("%.2f"), pRoute->m_PlannedSpeed);
         child.append_child(pugi::node_pcdata).set_value(s.mb_str());
     }
-/* // Test WXOSX (wenn m_PlannedDeparture KEIN undefiniertes Datum)
-   // und wieso FormatISODate() und ..Time() ???
-   // was soll "T" und "Z" ???  Erledigt mit Änderung vom 25.07.2013 ??? */
+
     if( pRoute->m_PlannedDeparture.IsValid() ) {
         child = child_ext.append_child("opencpn:planned_departure");
         wxString t = pRoute->m_PlannedDeparture.FormatISODate().Append(_T("T")).Append(pRoute->m_PlannedDeparture.FormatISOTime()).Append(_T("Z"));
@@ -911,7 +909,9 @@ void InsertRouteA( Route *pTentRoute )
                         //Now also change guids for the routepoints
                         wxRoutePointListNode *pthisnode = ( pTentRoute->pRoutePointList )->GetFirst();
                         while( pthisnode ) {
-                            pthisnode->GetData()->m_GUID = pWayPointMan->CreateGUID( NULL );
+                            RoutePoint *pR =  pthisnode->GetData();
+                            if( pR && pR->m_bIsolatedMark )
+                                pR->m_GUID = pWayPointMan->CreateGUID( NULL );
                             pthisnode = pthisnode->GetNext();
                             //FIXME: !!!!!! the shared waypoint gets part of both the routes -> not  goood at all
                         }

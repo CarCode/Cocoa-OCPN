@@ -2273,7 +2273,7 @@ void RouteManagerDialog::OnWptDeleteAllClick( wxCommandEvent &event )
     }
     else
     {
-        prompt = _("There are some waypoints used in routes or anchor alarms. Do you want to delete them as well? This will change the routes and disable the anchor alarms. Answering No keeps the waypoints used in routes or alarms.");
+        prompt = _("There are some waypoints used in routes or anchor alarms.\n Do you want to delete them as well?\n This will change the routes and disable the anchor alarms.\n Answering No keeps the waypoints used in routes or alarms.");
         buttons = wxYES_NO | wxCANCEL;
         type = 2;
     }
@@ -2409,6 +2409,11 @@ void RouteManagerDialog::OnLayDeleteClick( wxCommandEvent &event )
     Layer *layer = pLayerList->Item( m_pLayListCtrl->GetItemData( item ) )->GetData();
 
     if( !layer ) return;
+
+    wxString prompt = _("Are you sure you want to delete this layer and <ALL> of its contents?");
+    int answer = OCPNMessageBox( this, prompt, wxString( _("OpenCPN Alert") ), wxYES_NO );
+    if ( answer == wxID_NO )
+        return;
 
     // Process Tracks and Routes in this layer
     wxRouteListNode *node1 = pRouteList->GetFirst();
