@@ -94,18 +94,12 @@ static int ItemCompare( AIS_Target_Data *pAISTarget1, AIS_Target_Data *pAISTarge
 
         case tlNAME:
             s1 = trimAISField( t1->ShipName );
-#ifdef __WXOSX__
-            if( t1->Class == AIS_SART ) s1 = _T("-");
-#else
-            if( ( t1->Class == AIS_BASE ) || ( t1->Class == AIS_SART ) ) s1 = _T("-");
-#endif
+            if( (!t1->b_nameValid && ( t1->Class == AIS_BASE )) || ( t1->Class == AIS_SART ) )
+                s1 = _T("-");
 
             s2 = trimAISField( t2->ShipName );
-#ifdef __WXOSX__
-            if( t2->Class == AIS_SART ) s2 = _T("-");
-#else
-            if( ( t2->Class == AIS_BASE ) || ( t2->Class == AIS_SART ) ) s2 = _T("-");
-#endif
+            if( (!t2->b_nameValid && ( t2->Class == AIS_BASE )) || ( t2->Class == AIS_SART ) )
+                s2 = _T("-");
             break;
 
         case tlCALL:
