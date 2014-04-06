@@ -293,9 +293,9 @@ bool Multiplexer::CreateAndRestoreSavedStreamProperties()
 }
 
 
-bool Multiplexer::SendRouteToGPS(Route *pr, const wxString &com_name, bool bsend_waypoints, wxGauge *pProgress)
+int Multiplexer::SendRouteToGPS(Route *pr, const wxString &com_name, bool bsend_waypoints, wxGauge *pProgress)
 {
-    bool ret_bool = false;
+    int ret_val = 0;
     DataStream *old_stream = FindStream( com_name );
     if( old_stream ) {
         SaveStreamProperties( old_stream );
@@ -321,7 +321,7 @@ bool Multiplexer::SendRouteToGPS(Route *pr, const wxString &com_name, bool bsend
             msg += GetLastGarminError();
             wxLogMessage(msg);
 
-            ret_bool = false;
+            ret_val = ERR_GARMIN_INITIALIZE;
         }
         else
         {
@@ -343,10 +343,10 @@ bool Multiplexer::SendRouteToGPS(Route *pr, const wxString &com_name, bool bsend
                 msg += GetLastGarminError();
                 wxLogMessage(msg);
 
-                ret_bool = false;
+                ret_val = ERR_GARMIN_GENERAL;
             }
             else
-                ret_bool = true;
+                ret_val = 0;
         }
 
 //        if(m_pdevmon)
@@ -358,7 +358,7 @@ bool Multiplexer::SendRouteToGPS(Route *pr, const wxString &com_name, bool bsend
 
     if(g_bGarminHostUpload)
     {
-        int ret_val;
+        int lret_val;
         if ( pProgress )
         {
             pProgress->SetValue ( 20 );
@@ -382,7 +382,7 @@ bool Multiplexer::SendRouteToGPS(Route *pr, const wxString &com_name, bool bsend
 
             wxLogMessage(msg);
 
-            ret_bool = false;
+            ret_val = ERR_GARMIN_INITIALIZE;
             goto ret_point;
         }
         else
@@ -403,8 +403,8 @@ bool Multiplexer::SendRouteToGPS(Route *pr, const wxString &com_name, bool bsend
             pProgress->Update();
         }
 
-        ret_val = Garmin_GPS_SendRoute(short_com, pr, pProgress);
-        if(ret_val != 1)
+        lret_val = Garmin_GPS_SendRoute(short_com, pr, pProgress);
+        if(lret_val != 1)
         {
             wxString msg(_T("Error Sending Route to Garmin GPS on port: "));
             msg +=short_com;
@@ -417,11 +417,11 @@ bool Multiplexer::SendRouteToGPS(Route *pr, const wxString &com_name, bool bsend
             msg += err;
             wxLogMessage(msg);
 
-            ret_bool = false;
+            ret_val = ERR_GARMIN_GENERAL;
             goto ret_point;
         }
         else
-            ret_bool = true;
+            ret_val = 0;
 
 ret_point:
 
@@ -790,7 +790,7 @@ ret_point:
 
             wxMilliSleep ( progress_stall );
 
-            ret_bool = true;
+            ret_val = 0;
 
             //  All finished with the temp port
             dstr->Close();
@@ -802,13 +802,13 @@ ret_point_1:
     if( old_stream )
         CreateAndRestoreSavedStreamProperties();
 
-    return ret_bool;
+    return ret_val;
 }
 
 
-bool Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, wxGauge *pProgress)
+int Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, wxGauge *pProgress)
 {
-    bool ret_bool = false;
+    int ret_val = 0;
     DataStream *old_stream = FindStream( com_name );
     if( old_stream ) {
         SaveStreamProperties( old_stream );
@@ -834,7 +834,7 @@ bool Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, w
             msg += GetLastGarminError();
             wxLogMessage(msg);
 
-            ret_bool = false;
+            ret_val = ERR_GARMIN_INITIALIZE;
         }
         else
         {
@@ -861,16 +861,16 @@ bool Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, w
                 msg += GetLastGarminError();
                 wxLogMessage(msg);
 
-                ret_bool = false;
+                ret_val = ERR_GARMIN_GENERAL;
             }
             else
-                ret_bool = true;
+                ret_val = 0;
         }
 
 //        if(m_pdevmon)
 //            m_pdevmon->RestartIOThread();
 
-        return ret_bool;
+        return ret_val;
     }
 #endif
 
@@ -896,7 +896,7 @@ bool Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, w
 
             wxLogMessage(msg);
 
-            ret_bool = false;
+            ret_val = ERR_GARMIN_INITIALIZE;
             goto ret_point;
         }
         else
@@ -926,11 +926,11 @@ bool Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, w
 
             wxLogMessage(msg);
 
-            ret_bool = false;
+            ret_val = ERR_GARMIN_GENERAL;
             goto ret_point;
         }
         else
-            ret_bool = true;
+            ret_val = 0;
 
         goto ret_point;
     }
@@ -1049,7 +1049,7 @@ bool Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, w
         //  All finished with the temp port
         dstr->Close();
         
-        ret_bool = true;
+        ret_val = 0;
     }
 
 ret_point:
@@ -1057,6 +1057,6 @@ ret_point:
     if( old_stream )
         CreateAndRestoreSavedStreamProperties();
 
-    return ret_bool;
+    return ret_val;
 }
 

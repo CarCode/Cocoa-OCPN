@@ -274,6 +274,8 @@ public:
 
       void RemovePointFromRoute( RoutePoint* point, Route* route );
 
+      void        FinishRoute(void);
+
 #ifdef ocpnUSE_GL
       glChartCanvas *GetglCanvas(){ return m_glcc; }
 #endif
@@ -281,7 +283,6 @@ public:
 private:
       ViewPort    VPoint;
       void        PositionConsole(void);
-      void        FinishRoute(void);
       wxString    FindValidUploadPort();
       
 
@@ -571,7 +572,7 @@ private:
 
       int         m_AISRollover_MMSI;
 
-DECLARE_EVENT_TABLE()
+      wxDECLARE_EVENT_TABLE();
 };
 
 /*!

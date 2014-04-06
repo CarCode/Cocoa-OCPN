@@ -29,7 +29,8 @@
 // GrabberWindow Definition
 //----------------------------------------------------------------------------
 
-class GrabberWin: public wxPanel {
+class GrabberWin: public wxPanel
+{
 public:
       GrabberWin( wxWindow *parent );
       void OnPaint( wxPaintEvent& event );
@@ -41,7 +42,7 @@ public:
       bool m_bRightDown;
       ocpnStyle::Style* m_style;
 
-DECLARE_EVENT_TABLE()
+      wxDECLARE_EVENT_TABLE();
 };
 
 
@@ -55,7 +56,8 @@ class ocpnToolBarTool;
 //    Adapted from wxToolBarSimple( deprecated )
 // ----------------------------------------------------------------------------
 
-class ocpnToolBarSimple: public wxControl {
+class ocpnToolBarSimple: public wxControl
+{
 public:
       // ctors and dtor
       ocpnToolBarSimple() {
@@ -285,7 +287,7 @@ protected:
       ocpnStyle::Style* m_style;
 
 private:
-DECLARE_EVENT_TABLE()
+      wxDECLARE_EVENT_TABLE();
 };
 
 //----------------------------------------------------------------------------------------------------------
@@ -294,8 +296,9 @@ DECLARE_EVENT_TABLE()
 
 #define FADE_TIMER 2
 
-class ocpnFloatingToolbarDialog: public wxDialog {
-DECLARE_EVENT_TABLE()
+class ocpnFloatingToolbarDialog: public wxDialog
+{
+      wxDECLARE_EVENT_TABLE();
 
 public:
       ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint position, long orient );
@@ -357,6 +360,9 @@ private:
       int m_dock_y;
       ocpnStyle::Style* m_style;
       bool m_block;
+
+    bool m_marginsInvisible;
+
 };
 
 //---------------------------------------------------------------------------

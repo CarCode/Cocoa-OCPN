@@ -29,6 +29,9 @@ LinkPropDlgDef::LinkPropDlgDef( wxWindow* parent, wxWindowID id, const wxString&
         const wxPoint& pos, const wxSize& size, long style ) :
         wxDialog( parent, id, title, pos, size, style )
 {
+    wxFont *qFont = GetOCPNScaledFont(_T("Dialog"), 12);
+    SetFont( *qFont );
+
     this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
     wxBoxSizer* bSizerMain;
@@ -73,6 +76,7 @@ LinkPropDlgDef::LinkPropDlgDef( wxWindow* parent, wxWindowID id, const wxString&
 
     this->SetSizer( bSizerMain );
     this->Layout();
+    Fit();
 
     this->Centre( wxBOTH );
 

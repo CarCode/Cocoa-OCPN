@@ -913,7 +913,6 @@ void InsertRouteA( Route *pTentRoute )
                             if( pR && pR->m_bIsolatedMark )
                                 pR->m_GUID = pWayPointMan->CreateGUID( NULL );
                             pthisnode = pthisnode->GetNext();
-                            //FIXME: !!!!!! the shared waypoint gets part of both the routes -> not  goood at all
                         }
             }
 
