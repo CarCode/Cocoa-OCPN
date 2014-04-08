@@ -1,5 +1,6 @@
 #!/bin/bash
-EXECFILES="libcalculator_pi.dylib libcelestial_navigation_pi.dylib libdashboard_pi.dylib libfindit_pi.dylib libgradar_pi.dylib libgrib_pi.dylib libiacfleet_pi.dylib liblogbookkonni_pi.dylib libvdr_pi.dylib libwatchman_pi.dylib libweather_routing_pi.dylib libweatherfax_pi.dylib libwmm_pi.dylib libtrimplot_pi.dylib OpenCPN"
+# verzeichnis cd otool
+EXECFILES="libcalculator_pi.dylib libcelestial_navigation_pi.dylib libdashboard_pi.dylib libfindit_pi.dylib libgradar_pi.dylib libgrib_pi.dylib libiacfleet_pi.dylib liblogbookkonni_pi.dylib libvdr_pi.dylib libwatchman_pi.dylib libweather_routing_pi.dylib libweatherfax_pi.dylib libwmm_pi.dylib libs63_pi.dylib libtrimplot_pi.dylib OpenCPN"
 LIBPATH="../Frameworks"
 NEWLIBPATH="@executable_path/../Frameworks"
 
@@ -11,6 +12,8 @@ for TARGET in ${TARGETS} ; do
 NEWTARGETID=${NEWLIBPATH}/${TARGET}
 
 install_name_tool -change /usr/local/lib/${TARGET} ${NEWTARGETID} ${EXECFILE}
+# klartext: ... /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib libcalculator_pi.dylib
+
 done
 done
 

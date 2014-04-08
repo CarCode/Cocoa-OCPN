@@ -31,12 +31,11 @@ a.  Opencpn was built with the following objectives in mind.
 2. Eigene Bemerkungen
 ----------------------------------------------------------------------
 a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
-   Mountain-Lion (10.8) und Mavericks (10.9. Es soll soweit wie möglich
-   das Mac OS X Betriebssystem unterstützt werden, einschl. Mac Menüs,
-   Mac Hilfe usw.
+   Mavericks (10.9). Es soll soweit wie möglich das Mac OS X Betriebssystem
+   unterstützt werden, einschl. Mac Menüs, Mac Hilfe usw.
 
 b. Diese Version basiert auf Release-Version von wxWidgets 3.1.0 mit
-   entsprechenden dylibs vom 02. Dezember 2013. Die Einbindung der Libs als
+   entsprechenden dylibs vom 13. März 2014. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -54,7 +53,7 @@ e. Außer dem o.g. Problem, wegen der Plugins nur die dynamischen Libraries von
    Übersetzungen zu Fehlern führen.
 
 Compiler:
-Xcode 5.0.2
+Xcode 5.1
 Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)
 Target: x86_64-apple-darwin13.0.0
 SDK 10.9 Mavericks
@@ -80,5 +79,5 @@ dylibs (im Contents/Frameworks/ Verzeichnis bzw. Contents/Plugins/ Verzeichnis)
 mit "install_name_tool -change" bearbeitet werden!
 Siehe batch.sh und batchwx.sh
 -----------------------------------------------------------------------
-02. Dezember 2013
+08. April 2014
 
