@@ -53,7 +53,7 @@ e. Außer dem o.g. Problem, wegen der Plugins nur die dynamischen Libraries von
    Übersetzungen zu Fehlern führen.
 
 Compiler:
-Xcode 5.1
+Xcode 5.1.1
 Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)
 Target: x86_64-apple-darwin13.0.0
 SDK 10.9 Mavericks

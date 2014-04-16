@@ -2302,7 +2302,12 @@ bool GetUserpermitDialog::Create( wxWindow* parent, wxWindowID id, const wxStrin
                                   const wxPoint& pos, const wxSize& size, long style )
 {
      SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
-     wxDialog::Create( parent, id, caption, pos, size, style );
+    long wstyle = style;
+#ifdef __WXOSX__
+    wstyle |= wxSTAY_ON_TOP;
+#endif
+    
+    wxDialog::Create( parent, id, caption, pos, size, wstyle );
 
      CreateControls();
      GetSizer()->SetSizeHints( this );
@@ -2517,7 +2522,12 @@ bool GetInstallpermitDialog::Create( wxWindow* parent, wxWindowID id, const wxSt
                                     const wxPoint& pos, const wxSize& size, long style )
 {
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
-    wxDialog::Create( parent, id, caption, pos, size, style );
+    long wstyle = style;
+#ifdef __WXOSX__
+    wstyle |= wxSTAY_ON_TOP;
+#endif
+    
+    wxDialog::Create( parent, id, caption, pos, size, wstyle );
 
     CreateControls();
     GetSizer()->SetSizeHints( this );
