@@ -21,8 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/datetime.h"
 
@@ -66,6 +65,7 @@ public:
     Position *prev, *next; /* doubly linked circular list of positions */
 
     bool propagated;
+    bool drawn;
 };
 
 /* circular skip list of positions which point to where we
@@ -172,8 +172,7 @@ struct RouteMapConfiguration {
 
     bool (*Climatology())(int setting, wxDateTime &, double, double, double &, double &);
 
-/* computed values */
-    double StartLat, StartLon, EndLat, EndLon;
+    double StartLat, StartLon, EndLat, EndLon; /* computed values */
 
     double StartEndBearing; /* calculated from start and end */
     bool positive_longitudes; /* longitudes are either 0 to 360 or -180 to 180,
@@ -192,7 +191,7 @@ public:
 
     static void PositionLatLon(wxString Name, double &lat, double &lon);
 
-    void Reset();
+    wxString Reset();
 
 #define LOCKING_ACCESSOR(name, flag) bool name() { Lock(); bool ret = flag; Unlock(); return ret; }
     LOCKING_ACCESSOR(Finished, m_bFinished)
@@ -204,7 +203,7 @@ public:
 
     bool Empty() { Lock(); bool empty = origin.size() == 0; Unlock(); return empty; }
     bool NeedsGrib() { Lock(); bool needsgrib = m_bNeedsGrib; Unlock(); return needsgrib; }
-    void SetNewGrib(GribRecordSet *grib) { Lock(); m_bNeedsGrib = !(m_NewGrib = grib); Unlock(); }
+    void SetNewGrib(GribRecordSet *grib);
     wxDateTime NewTime() { Lock(); wxDateTime time =  m_NewTime; Unlock(); return time; }
     wxDateTime StartTime() { Lock(); wxDateTime time; if(origin.size()) time = origin.front()->time;
         Unlock(); return time; }
@@ -236,9 +235,10 @@ protected:
     GribRecordSet *m_NewGrib;
 
 private:
+
     RouteMapConfiguration m_Configuration;
-    bool m_bFinished, m_bValid,
-        m_bReachedDestination, m_bGribFailed, m_bClimatologyFailed, m_bNoData;
+    bool m_bFinished, m_bValid;
+    bool m_bReachedDestination, m_bGribFailed, m_bClimatologyFailed, m_bNoData;
 
     wxDateTime m_NewTime;
 };

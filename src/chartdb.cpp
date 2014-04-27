@@ -221,6 +221,8 @@ ChartDB::ChartDB(MyFrame *parent)
       SetValid(false);                           // until loaded or created
       UnLockCache();
 
+      m_b_busy = false;
+
       //    Report cache policy
       if(g_memCacheLimit)
       {
@@ -867,6 +869,8 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
 
       if(!bInCache)                    // not in cache
       {
+            m_b_busy = true;
+
             //    Use memory limited cache policy, if defined....
             if(g_memCacheLimit)
             {
@@ -1190,6 +1194,8 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
 
             }
 
+
+            m_b_busy = false;
 
             return Ch;
       }

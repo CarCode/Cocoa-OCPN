@@ -280,9 +280,9 @@ void Sight::BodyLocation(wxDateTime time, double *lat, double *lon, double *ghaa
           goto notplanet;
        }
        geocentric_planet(jdd, planet, deltaPsi, eps, days_per_second, ra, dec);
-    notplanet:;
+//    notplanet:;
     }
-
+notplanet:
     // account for earth's hour angle
 
     double gmst = sidereal_time_greenwich(jdu);

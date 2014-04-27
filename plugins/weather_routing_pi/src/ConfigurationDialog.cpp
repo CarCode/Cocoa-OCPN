@@ -21,9 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
 
 #include <wx/wx.h>
 
@@ -31,7 +29,7 @@
 #include <math.h>
 #include <time.h>
 
-#include "../../../include/tinyxml.h"
+#include "tinyxml/tinyxml.h"
 
 #include "Utilities.h"
 #include "Boat.h"
@@ -63,6 +61,19 @@ ConfigurationDialog::~ConfigurationDialog( )
     pConf->Write ( _T ( "ConfigurationY" ), p.y);
 }
 
+void ConfigurationDialog::EditBoat( )
+{
+    BoatDialog boatdlg(this, m_fpBoat->GetPath());
+    int updated = boatdlg.ShowModal();
+    m_fpBoat->SetPath(boatdlg.m_boatpath);
+
+    if(updated == wxID_OK) {
+        /* update any configurations that use this boat */
+        m_WeatherRouting->UpdateBoatFilename(Configuration());
+        Update();
+    }
+}
+
 void ConfigurationDialog::OnGribTime( wxCommandEvent& event )
 {
     SetStartDateTime(m_GribTimelineTime);
@@ -72,13 +83,6 @@ void ConfigurationDialog::OnGribTime( wxCommandEvent& event )
 void ConfigurationDialog::OnCurrentTime( wxCommandEvent& event )
 {
     SetStartDateTime(wxDateTime::Now());
-    Update();
-}
-
-void ConfigurationDialog::OnEditBoat ( wxCommandEvent& event )
-{
-    BoatDialog boatdlg(this, m_fpBoat->GetPath());
-    boatdlg.ShowModal();
     Update();
 }
 
@@ -274,5 +278,5 @@ void ConfigurationDialog::SetStartDateTime(wxDateTime datetime)
 
 void ConfigurationDialog::Update()
 {
-    m_WeatherRouting->UpdateCurrentItem(Configuration());
+    m_WeatherRouting->SetConfigurationCurrentRoute(Configuration());
 }

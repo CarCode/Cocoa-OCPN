@@ -1,15 +1,15 @@
-/***************************************************************************
+/******************************************************************************
  *
- * Project:  OpenCPN Weather Routing plugin
- * Author:   Sean D'Epagnier
+ * Project:  OpenCPN
+ * Purpose:  GRIB Plugin Friends
+ * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
- *   sean@depagnier.com                                                    *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 3 of the License, or     *
+ *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
@@ -20,34 +20,29 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
  */
 
-#include <wx/fileconf.h>
+#include "GribRecord.h"
 
-#include "WeatherRoutingUI.h"
+WX_DECLARE_OBJARRAY( GribRecord *, ArrayOfGribRecordPtrs );
 
-class weather_routing_pi;
+    // These are indexes into the array
+enum { Idx_WIND_VX, Idx_WIND_VY, Idx_WIND_GUST, Idx_PRESSURE, Idx_HTSIGW, Idx_WVDIR, Idx_WVPER,
+       Idx_WINDSCAT_VY, Idx_WINDSCAT_VX,
+       Idx_SEACURRENT_VX, Idx_SEACURRENT_VY,
+       Idx_PRECIP_TOT, Idx_CLOUD_TOT,
+       Idx_AIR_TEMP_2M, Idx_SEA_TEMP,
+       Idx_CAPE, Idx_COUNT };
 
-class BoatPlanDialog : public BoatPlanDialogBase
-{
+class GribRecordSet {
 public:
+    GribRecordSet() {
+        for(int i=0; i<Idx_COUNT; i++)
+            m_GribRecordPtrArray[i] = NULL;
+    }
 
-    BoatPlanDialog( wxWindow *parent, BoatPlan &BoatPlan, std::vector<wxString> &PlanNames);
-    ~BoatPlanDialog();
-
-    void OnMouseEventsPlot( wxMouseEvent& event );
-    void OnPaintPlot(wxPaintEvent& event);
-
-    void OnNewSwitchPlanRule( wxCommandEvent& event );
-    void OnEditSwitchPlanRule( wxCommandEvent& event );
-    void OnDeleteSwitchPlanRule( wxCommandEvent& event );
-    void OnDone( wxCommandEvent& event );
-
-private:
-    void PopulatePlans();
-
-    BoatPlan &m_BoatPlan;
-    std::vector<wxString> &m_PlanNames;
+    time_t m_Reference_Time;
+    GribRecord *m_GribRecordPtrArray[Idx_COUNT];
 };

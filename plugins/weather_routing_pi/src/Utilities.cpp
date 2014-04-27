@@ -21,13 +21,12 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include <stdlib.h>
 #include <math.h>
 
-#include "../../../include/tinyxml.h"
+#include "tinyxml/tinyxml.h"
 
 #include "Utilities.h"
 double deg2rad(double degrees)
@@ -110,3 +109,25 @@ bool AttributeBool(TiXmlElement *e, const char *name, bool def)
 {
     return AttributeInt(e, name, def);
 }
+
+#ifdef __MINGW32__
+char *strtok_r(char *str, const char *delim, char **save)
+{
+    char *res, *last;
+    
+    if( !save )
+        return strtok(str, delim);
+    if( !str && !(str = *save) )
+        return NULL;
+    last = str + strlen(str);
+    if( (*save = res = strtok(str, delim)) )
+    {
+        *save += strlen(res);
+        if( *save < last )
+            (*save)++;
+        else
+            *save = NULL;
+    }
+    return res;
+}
+#endif

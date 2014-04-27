@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN Weather Routing plugin
  * Author:   Sean D'Epagnier
@@ -21,8 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include <wx/wx.h>
 
@@ -64,11 +63,15 @@ bool BoatSpeedTable::Open(const char *filename, int &wind_speed_step, int &wind_
         return false;
 
     char line[1024];
-    
+
     char *token, *saveptr;
     if(!fgets(line, sizeof line, f))
         goto failed; /* error here too */
     token = strtok_r(line, ";", &saveptr);
+
+    /* chomp invisible bytes */
+    while(*token < 0) token++;
+
     if(strcasecmp(token, "twa/tws") && strcasecmp(token, "twa\\tws"))
         goto failed; /* unrecognized format */
     
@@ -276,7 +279,14 @@ double BoatPlan::VelocityBoat(double A, double VA)
     if(eta <= 0) /* not ideal but prevent nans */
         return 0;
 
-    return sin(A/2) * sqrt(VA / eta);
+    double val = sin(A/2) * sqrt(VA / eta);
+    
+    /* for wing on wing, increase speed when wind is behind
+     reaching 50% speed increase when dead downwind */
+    if(wing_wing_running && A > deg2rad(90))
+        val += val*sin(A - deg2rad(90))/2;
+    
+    return val;
 }
 
 /* Now that we can convert the wind speed in gribs correctly
@@ -792,7 +802,7 @@ double BoatPlan::Speed(double W, double VW)
 
 SailingVMG BoatPlan::GetVMG(double VW)
 {
-    int VW2i = ClosestVWi(VW), VW1i = VW2i > 0 ? VW2i - 1 : 0;
+    int VW2i = ClosestVWi(VW), VW1i = VW2i > 1 ? VW2i - 1 : 1;
     SailingVMG vmg, vmg1 = VMG[VW1i], vmg2 = VMG[VW2i];
     double VW1 = wind_speeds[VW1i], VW2 = wind_speeds[VW2i];
 

@@ -63,6 +63,7 @@ bool                            g_bsuppress_log;
 wxProgressDialog                *g_pprog;
 wxString                        g_old_installpermit;
 wxString                        g_old_userpermit;
+bool                            g_benable_screenlog;
 
 
 //      A prototype of the default IHO.PUB public key file
@@ -213,6 +214,10 @@ int s63_pi::Init(void)
         file.Close();
     }
 
+    wxLogMessage(_T("Path to OCPNsenc is: ") + g_sencutil_bin);
+    
+    g_benable_screenlog = false;
+
     return (INSTALLS_PLUGIN_CHART_GL | INSTALLS_TOOLBOX_PAGE | WANTS_PLUGIN_MESSAGING);
 
 }
@@ -289,7 +294,19 @@ void s63_pi::OnSetupOptions()
 
     //  Create the S63 Options panel, and load it
 
-    m_s63chartPanelWin = AddOptionsPage( PI_OPTIONS_PARENT_CHARTS, _("S63 Charts") );
+    m_s63chartPanelWinTop = AddOptionsPage( PI_OPTIONS_PARENT_CHARTS, _("S63 Charts") );
+    
+    wxBoxSizer *chartPanelTopSizer = new wxBoxSizer( wxHORIZONTAL );
+    m_s63chartPanelWinTop->SetSizer( chartPanelTopSizer );
+    
+    wxBoxSizer* chartPanelTopSizerV = new wxBoxSizer( wxVERTICAL );
+    chartPanelTopSizer->Add(chartPanelTopSizerV, wxEXPAND);
+    
+    m_s63NB = new wxNotebook( m_s63chartPanelWinTop, ID_NOTEBOOK, wxDefaultPosition, wxDefaultSize, wxNB_TOP );
+    chartPanelTopSizerV->Add( m_s63NB, 0, wxEXPAND, 0 );
+    
+    m_s63chartPanelWin = new wxPanel(m_s63NB, wxID_ANY);
+    m_s63NB->AddPage(m_s63chartPanelWin, _("Charts"), true );
 
     wxBoxSizer *chartPanelSizer = new wxBoxSizer( wxVERTICAL );
     m_s63chartPanelWin->SetSizer( chartPanelSizer );
@@ -347,12 +364,39 @@ void s63_pi::OnSetupOptions()
     chartPanelSizer->AddSpacer( 5 );
 
 
+    if(g_pScreenLog) {
+        g_pScreenLog->Close();
+        delete g_pScreenLog;
+        g_pScreenLog = NULL;
+    }
+    
+    wxStaticBoxSizer* sbSizerSL= new wxStaticBoxSizer( new wxStaticBox( m_s63chartPanelWin, wxID_ANY, _("S63_pi Log") ), wxVERTICAL );
+    
+    g_backchannel_port++;
+    g_pPanelScreenLog = new S63ScreenLog( m_s63chartPanelWin );
+    sbSizerSL->Add( g_pPanelScreenLog, 1, wxEXPAND, 5 );
+    
+    chartPanelSizer->Add( sbSizerSL, 0, wxEXPAND, 5 );
+    
+    g_pPanelScreenLog->SetMinSize(wxSize(-1, 200));
+    
+    m_s63chartPanelWin->Layout();
+    
+    
+    //  Build the "Keys/Permits" tab
+    
+    m_s63chartPanelKeys = new wxPanel(m_s63NB, wxID_ANY);
+    m_s63NB->AddPage(m_s63chartPanelKeys, _("Keys/Permits"), false );
+    
+    wxBoxSizer *chartPanelSizerKeys = new wxBoxSizer( wxVERTICAL );
+    m_s63chartPanelKeys->SetSizer( chartPanelSizerKeys );
+
     //  Certificate listbox, etc
-    wxStaticBoxSizer* sbSizerLBCert= new wxStaticBoxSizer( new wxStaticBox( m_s63chartPanelWin, wxID_ANY, _("Installed S63 Certificates/Keys") ), wxVERTICAL );
+    wxStaticBoxSizer* sbSizerLBCert= new wxStaticBoxSizer( new wxStaticBox( m_s63chartPanelKeys, wxID_ANY, _("Installed S63 Certificates/Keys") ), wxVERTICAL );
 
     wxBoxSizer* bSizer17C = new wxBoxSizer( wxHORIZONTAL );
 
-    m_cert_list = new OCPNCertificateList( m_s63chartPanelWin );
+    m_cert_list = new OCPNCertificateList( m_s63chartPanelKeys );
 
     wxListItem col0c;
     col0c.SetId(0);
@@ -379,65 +423,51 @@ void s63_pi::OnSetupOptions()
 
     wxBoxSizer* bSizer18C = new wxBoxSizer( wxVERTICAL );
 
-    m_buttonImportCert = new wxButton( m_s63chartPanelWin, wxID_ANY, _("Import Certificate..."), wxDefaultPosition, wxDefaultSize, 0 );
+    m_buttonImportCert = new wxButton( m_s63chartPanelKeys, wxID_ANY, _("Import Certificate..."), wxDefaultPosition, wxDefaultSize, 0 );
     bSizer18C->Add( m_buttonImportCert, 0, wxALL, 5 );
 
     bSizer17C->Add( bSizer18C, 0, wxEXPAND, 5 );
     sbSizerLBCert->Add( bSizer17C, 1, wxEXPAND, 5 );
 
-    chartPanelSizer->Add( sbSizerLBCert, 0, wxEXPAND, 5 );
-    chartPanelSizer->AddSpacer( 5 );
+    chartPanelSizerKeys->Add( sbSizerLBCert, 0, wxEXPAND, 5 );
+    chartPanelSizerKeys->AddSpacer( 5 );
 
     //  User Permit
-    wxStaticBoxSizer* sbSizerUP= new wxStaticBoxSizer( new wxStaticBox( m_s63chartPanelWin, wxID_ANY, _("UserPermit") ), wxHORIZONTAL );
-    m_up_text = new wxStaticText(m_s63chartPanelWin, wxID_ANY, _T(""));
+    wxStaticBoxSizer* sbSizerUP= new wxStaticBoxSizer( new wxStaticBox( m_s63chartPanelKeys, wxID_ANY, _("UserPermit") ), wxHORIZONTAL );
+    m_up_text = new wxStaticText(m_s63chartPanelKeys, wxID_ANY, _T(""));
 
     if(g_userpermit.Len())
         m_up_text->SetLabel( GetUserpermit() );
     sbSizerUP->Add(m_up_text, wxEXPAND);
 
-    m_buttonNewUP = new wxButton( m_s63chartPanelWin, wxID_ANY, _("New Userpermit..."), wxDefaultPosition, wxDefaultSize, 0 );
+    m_buttonNewUP = new wxButton( m_s63chartPanelKeys, wxID_ANY, _("New Userpermit..."), wxDefaultPosition, wxDefaultSize, 0 );
     sbSizerUP->Add( m_buttonNewUP, 0, wxALL | wxALIGN_RIGHT, 5 );
 
-    chartPanelSizer->AddSpacer( 5 );
-    chartPanelSizer->Add( sbSizerUP, 0, wxEXPAND, 5 );
+    chartPanelSizerKeys->AddSpacer( 5 );
+    chartPanelSizerKeys->Add( sbSizerUP, 0, wxEXPAND, 5 );
 
     //  Install Permit
-    wxStaticBoxSizer* sbSizerIP= new wxStaticBoxSizer( new wxStaticBox( m_s63chartPanelWin, wxID_ANY, _("InstallPermit") ), wxHORIZONTAL );
-    m_ip_text = new wxStaticText(m_s63chartPanelWin, wxID_ANY, _T(""));
+    wxStaticBoxSizer* sbSizerIP= new wxStaticBoxSizer( new wxStaticBox( m_s63chartPanelKeys, wxID_ANY, _("InstallPermit") ), wxHORIZONTAL );
+    m_ip_text = new wxStaticText(m_s63chartPanelKeys, wxID_ANY, _T(""));
 
     if(g_installpermit.Len())
         m_ip_text->SetLabel( GetInstallpermit() );
     sbSizerIP->Add(m_ip_text, wxEXPAND);
 
-    m_buttonNewIP = new wxButton( m_s63chartPanelWin, wxID_ANY, _("New Installpermit..."), wxDefaultPosition, wxDefaultSize, 0 );
+    m_buttonNewIP = new wxButton( m_s63chartPanelKeys, wxID_ANY, _("New Installpermit..."), wxDefaultPosition, wxDefaultSize, 0 );
     sbSizerIP->Add( m_buttonNewIP, 0, wxALL | wxALIGN_RIGHT, 5 );
 
-    chartPanelSizer->AddSpacer( 5 );
-    chartPanelSizer->Add( sbSizerIP, 0, wxEXPAND, 5 );
+    chartPanelSizerKeys->AddSpacer( 5 );
+    chartPanelSizerKeys->Add( sbSizerIP, 0, wxEXPAND, 5 );
 
-    chartPanelSizer->AddSpacer( 15 );
-    wxStaticLine *psl = new wxStaticLine(m_s63chartPanelWin, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-    chartPanelSizer->Add( psl, 0, wxEXPAND, 5 );
-    chartPanelSizer->AddSpacer( 15 );
-
-
-    if(g_pScreenLog) {
-        g_pScreenLog->Close();
-        delete g_pScreenLog;
-        g_pScreenLog = NULL;
-    }
-
-    wxStaticBoxSizer* sbSizerSL= new wxStaticBoxSizer( new wxStaticBox( m_s63chartPanelWin, wxID_ANY, _("S63_pi Log") ), wxVERTICAL );
-
-    g_backchannel_port++;
-    g_pPanelScreenLog = new S63ScreenLog( m_s63chartPanelWin );
-    sbSizerSL->Add( g_pPanelScreenLog, 1, wxEXPAND, 5 );
-
-    chartPanelSizer->Add( sbSizerSL, 1, wxEXPAND, 5 );
-
+    chartPanelSizerKeys->AddSpacer( 15 );
+    wxStaticLine *psl = new wxStaticLine(m_s63chartPanelKeys, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+    chartPanelSizerKeys->Add( psl, 0, wxEXPAND, 5 );
+    chartPanelSizerKeys->AddSpacer( 15 );
+    
     m_cert_list->SetMinSize(wxSize(-1, 80));
-    m_s63chartPanelWin->Layout();
+    m_s63chartPanelKeys->Layout();
+
 
 
     //  Connect to Events
@@ -462,6 +492,7 @@ void s63_pi::OnSetupOptions()
     m_buttonImportCert->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
                                     wxCommandEventHandler(s63_pi_event_handler::OnImportCertClick), NULL, m_event_handler );
 
+    g_benable_screenlog = true;
 }
 
 void s63_pi::OnCloseToolboxPanel(int page_sel, int ok_apply_cancel)
@@ -477,6 +508,7 @@ void s63_pi::OnCloseToolboxPanel(int page_sel, int ok_apply_cancel)
     g_pScreenLog = new S63ScreenLogContainer( GetOCPNCanvasWindow() );
     g_pScreenLog->Centre();
 
+    g_benable_screenlog = false;
 }
 
 wxString s63_pi::GetPermitDir()
@@ -579,11 +611,12 @@ int s63_pi::ImportCells( void )
     msg += _("Create eSENCs on Import?\n");
 
 
-    int dret = OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
+    int dret = OCPNMessageBox_PlugIn(NULL,
                         msg,
                         _T("s63_pi Message"),  wxYES_NO, -1, -1);
 
     bool bSENC = (dret == wxID_YES);
+
 
     //  Read the SERIAL.ENC file to absolutlely identify the Data Server ID
     wxString data_server_string;
@@ -665,11 +698,21 @@ int s63_pi::ImportCells( void )
         return 0;
     }
 
+    //  The eSENC Progress dialog is not reliable on OSX or Windows...
+#if 0
+    long wstyle = wxPD_CAN_ABORT | wxPD_AUTO_HIDE;
+    wxWindow *pprogress_parent = g_pScreenLog;
+    
+#ifdef __WXMAC__
+    wstyle |= wxSTAY_ON_TOP;
+    pprogress_parent = m_s63chartPanelWin;
+#endif
+
     if(bSENC){
         g_pprog = new wxProgressDialog(_T("s63_pi"), _("Creating eSenc"), unique_cellname_array.Count(),
-                                        g_pScreenLog,  wxPD_CAN_ABORT | wxPD_AUTO_HIDE );
+                                        pprogress_parent,  wstyle );
     }
-
+#endif
     unsigned int nproc = 0;
 
     for(unsigned int i=0 ; i < unique_cellname_array.Count() ; i++){
@@ -1745,6 +1788,9 @@ void s63_pi_event_handler::OnImportCertClick( wxCommandEvent &event )
 //      Private logging functions
 void ScreenLogMessage(wxString s)
 {
+    if(!g_benable_screenlog)
+        return;
+
     if(!g_pScreenLog && !g_pPanelScreenLog){
         g_pScreenLog = new S63ScreenLogContainer( GetOCPNCanvasWindow() );
         g_pScreenLog->Centre();
@@ -1780,6 +1826,116 @@ void ClearScreenLog(void)
     }
 
 }
+
+BEGIN_EVENT_TABLE(InfoWin, wxWindow)
+EVT_PAINT ( InfoWin::OnPaint )
+EVT_ERASE_BACKGROUND(InfoWin::OnEraseBackground)
+EVT_TIMER(-1, InfoWin::OnTimer)
+END_EVENT_TABLE()
+
+// Define a constructor
+InfoWin::InfoWin( wxWindow *parent, const wxString&s, bool show_gauge ) :
+wxWindow( parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRAISED_BORDER )
+{
+    int ststyle = wxALIGN_LEFT | wxST_NO_AUTORESIZE;
+    m_pInfoTextCtl = new wxStaticText( this, -1, _T ( "" ), wxDefaultPosition, wxDefaultSize,
+                                        ststyle );
+
+
+    m_pGauge = NULL;
+    m_bGauge = show_gauge;
+    SetString( s );
+
+    if(m_bGauge) {
+        m_timer.SetOwner( this, -1 );
+        m_timer.Start( 100 );
+    }
+
+
+    Hide();
+}
+
+InfoWin::~InfoWin()
+{
+    delete m_pInfoTextCtl;
+}
+
+void InfoWin::OnTimer(wxTimerEvent &evt)
+{
+    if(m_pGauge)
+        m_pGauge->Pulse();
+}
+
+
+void InfoWin::OnEraseBackground( wxEraseEvent& event )
+{
+}
+
+void InfoWin::OnPaint( wxPaintEvent& event )
+{
+    int width, height;
+    GetClientSize( &width, &height );
+    wxPaintDC dc( this );
+
+    wxColour c;
+
+    GetGlobalColor( _T ( "UIBCK" ), &c );
+    dc.SetBrush( wxBrush( c ) );
+
+    GetGlobalColor( _T ( "UITX1" ), &c );
+    dc.SetPen( wxPen( c ) );
+
+    dc.DrawRectangle( 0, 0, width, height );
+}
+
+void InfoWin::Realize()
+{
+    wxColour c;
+
+    GetGlobalColor( _T ( "UIBCK" ), &c );
+    SetBackgroundColour( c );
+
+    GetGlobalColor( _T ( "UIBCK" ), &c );
+    m_pInfoTextCtl->SetBackgroundColour( c );
+
+    GetGlobalColor( _T ( "UITX1" ), &c );
+    m_pInfoTextCtl->SetForegroundColour( c );
+
+    int x;
+    GetTextExtent(m_string, &x, NULL);
+
+    m_pInfoTextCtl->SetSize( (m_size.x - x)/2, 4, m_size.x - 2, m_size.y - 2 );
+    m_pInfoTextCtl->SetLabel( m_string );
+
+    if(m_bGauge){
+        if(m_pGauge)
+            delete m_pGauge;
+        m_pGauge = new wxGauge(this, -1, 10, wxPoint(10, 20), wxSize(m_size.x - 20, 20),  wxGA_HORIZONTAL | wxGA_SMOOTH);
+    }
+
+    SetSize( m_position.x, m_position.y, m_size.x, m_size.y );
+
+    Show();
+}
+
+void InfoWin::SetString(const wxString &s)
+{
+    m_string = s;
+
+    wxSize size;
+
+    size.x = GetCharWidth() * m_string.Len();
+    size.y = GetCharHeight()+10;
+
+    if(m_bGauge)
+        size.y += 30;
+
+    SetWinSize( size );
+
+}
+
+
+
 
 
 
@@ -2044,7 +2200,7 @@ void S63ScreenLog::OnSocketEvent(wxSocketEvent& event)
 
 OCPNPermitList::OCPNPermitList(wxWindow *parent)
 {
-    Create( parent, -1, wxDefaultPosition, wxSize(-1, 150), wxLC_REPORT | wxLC_HRULES );
+    Create( parent, -1, wxDefaultPosition, wxSize(-1, 200), wxLC_REPORT | wxLC_HRULES );
 
 }
 
@@ -2146,7 +2302,7 @@ void OCPNPermitList::BuildList( const wxString &permit_dir )
 
 OCPNCertificateList::OCPNCertificateList(wxWindow *parent)
 {
-    Create( parent, -1, wxDefaultPosition, wxSize(-1, 150), wxLC_REPORT | wxLC_HRULES);
+    Create( parent, -1, wxDefaultPosition, wxSize(-1, 100), wxLC_REPORT | wxLC_HRULES);
 
 }
 

@@ -21,9 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
 
 #include <wx/wx.h>
 
@@ -34,32 +32,39 @@
 #include "BoatPlan.h"
 #include "SwitchPlanDialog.h"
 
-SwitchPlanDialog::SwitchPlanDialog( wxWindow *parent, SwitchPlan &p, std::vector<wxString> plans )
+SwitchPlanDialog::SwitchPlanDialog( wxWindow *parent, SwitchPlan &p,
+                                   const std::vector<BoatPlan> &plans )
     : SwitchPlanDialogBase(parent), plan(p)
 {
     if(!isnan(plan.MaxWindSpeed))
-        m_cbMaxWindSpeed->SetValue(true), m_sMaxWindSpeed->SetValue(plan.MaxWindSpeed);
+        m_cbMaxWindSpeed->SetValue(true),
+        m_sMaxWindSpeed->SetValue(plan.MaxWindSpeed);
 
     if(!isnan(plan.MinWindSpeed))
-        m_cbMinWindSpeed->SetValue(true), m_sMinWindSpeed->SetValue(plan.MinWindSpeed);
+        m_cbMinWindSpeed->SetValue(true),
+        m_sMinWindSpeed->SetValue(plan.MinWindSpeed);
 
     if(!isnan(plan.MaxWindDirection))
-        m_cbMaxWindDirection->SetValue(true), m_sMaxWindDirection->SetValue(plan.MaxWindDirection);
+        m_cbMaxWindDirection->SetValue(true),
+        m_sMaxWindDirection->SetValue(plan.MaxWindDirection);
 
     if(!isnan(plan.MinWindDirection))
-        m_cbMinWindDirection->SetValue(true), m_sMinWindDirection->SetValue(plan.MinWindDirection);
+        m_cbMinWindDirection->SetValue(true),
+        m_sMinWindDirection->SetValue(plan.MinWindDirection);
 
     if(!isnan(plan.MaxWaveHeight))
-        m_cbMaxWaveHeight->SetValue(true), m_sMaxWaveHeight->SetValue(plan.MaxWaveHeight);
+        m_cbMaxWaveHeight->SetValue(true),
+        m_sMaxWaveHeight->SetValue(plan.MaxWaveHeight);
 
     if(!isnan(plan.MinWaveHeight))
-        m_cbMinWaveHeight->SetValue(true), m_sMinWaveHeight->SetValue(plan.MinWaveHeight);
+        m_cbMinWaveHeight->SetValue(true),
+        m_sMinWaveHeight->SetValue(plan.MinWaveHeight);
 
     m_cbDayTime->SetValue(plan.DayTime);
     m_cbNightTime->SetValue(plan.NightTime);
 
-    for(std::vector<wxString>::iterator it = plans.begin(); it != plans.end(); it++)
-        m_cPlans->Append(*it);
+    for(std::vector<BoatPlan>::const_iterator it = plans.begin(); it != plans.end(); it++)
+        m_cPlans->Append((*it).Name);
 
     int index = m_cPlans->FindString(plan.Name);
     if(index == wxNOT_FOUND) {

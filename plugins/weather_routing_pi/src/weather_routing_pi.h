@@ -27,15 +27,15 @@
 #define _WEATHER_ROUTINGPI_H_
 
 #define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    9
+#define     PLUGIN_VERSION_MINOR    10
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    10
 
 #define ABOUT_AUTHOR_URL "http://seandepagnier.users.sourceforge.net"
 
-#include "../../../include/ocpn_plugin.h"
-#include "../../../include/ocpndc.h"
+#include "ocpn_plugin.h"
+#include "ocpndc.h"
 
 /* make some warnings go away */
 #ifdef MIN
@@ -46,8 +46,8 @@
 #undef MAX
 #endif
 
-#include "../../../include/wx/jsonreader.h"
-#include "../../../include/wx/jsonwriter.h"
+#include "wxJSON/jsonreader.h"
+#include "wxJSON/jsonwriter.h"
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
@@ -57,7 +57,7 @@
 
 class WeatherRouting;
 
-class weather_routing_pi : public opencpn_plugin_110
+class weather_routing_pi : public wxEvtHandler, public opencpn_plugin_110
 {
 public:
       weather_routing_pi(void *ppimgr);
@@ -83,6 +83,7 @@ public:
       int GetToolbarToolCount(void);
 
       void SetCursorLatLon(double lat, double lon);
+
       void SetPluginMessage(wxString &message_id, wxString &message_body);
       void SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix);
       void ShowPreferencesDialog( wxWindow* parent );
@@ -97,6 +98,8 @@ public:
       double m_boat_lat, m_boat_lon;
 
 private:
+      void OnCursorLatLonTimer( wxTimerEvent & );
+
       bool LoadConfig(void);
       bool SaveConfig(void);
 
@@ -110,6 +113,7 @@ private:
       int              m_leftclick_tool_id;
       int              m_position_menu_id;
 
+      wxTimer m_tCursorLatLon;
       double m_cursor_lat, m_cursor_lon;
 };
 

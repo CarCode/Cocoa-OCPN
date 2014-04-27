@@ -4,7 +4,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2014 by Sean D'Epagnier                                 *
  *   sean@depagnier.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -40,6 +40,7 @@ public:
     ~BoatDialog();
 
     Boat m_Boat;
+    wxString m_boatpath;
 
 private:
     void OnMouseEventsPlot( wxMouseEvent& event );
@@ -51,18 +52,22 @@ private:
     void OnOpen( wxCommandEvent& event );
     void Save();
     void OnSaveAs( wxCommandEvent& event );
-    void OnSave( wxCommandEvent& event );
+    void OnSave( wxCommandEvent& event ) { Save(); }
     void OnClose( wxCommandEvent& event );
-    void OnOpenCSV( wxCommandEvent& event );
+    void LoadCSV( );
     void OnSaveCSV( wxCommandEvent& event );
-    void OnRecompute( wxSpinEvent& event ) { StoreBoatParameters(); Compute(); UpdateStats(); }
+    void OnPolarCSVFile( wxFileDirPickerEvent& event );
+    void OnRecompute( );
+    void OnRecomputeSpin( wxSpinEvent& event ) { OnRecompute(); }
+    void OnRecompute( wxCommandEvent& event ) { OnRecompute(); }
     void OnOptimizeTacking( wxCommandEvent& event );
     void OnResetOptimalTackingSpeed( wxCommandEvent& event );
     void OnUpdateStatistics( wxCommandEvent& event ) { StoreBoatParameters(); UpdateStats(); }
-    void OnUpdateStatistics( wxSpinEvent& event ) { StoreBoatParameters(); UpdateStats(); }
+    void OnUpdateStatisticsSpin( wxSpinEvent& event ) { StoreBoatParameters(); UpdateStats(); }
     void OnRecomputeDrag( wxCommandEvent& event );
     void OnDragInfo( wxCommandEvent& event );
     void OnSailPlanSelected( wxListEvent& event );
+    void OnPolarMode( wxCommandEvent& event );
     void OnEta( wxScrollEvent& event );
     void OnNewBoatPlan( wxCommandEvent& event );
     void OnEditBoatPlan( wxCommandEvent& event );
@@ -72,10 +77,15 @@ private:
     void RepopulatePlans();
     void Compute();
     void UpdateTrackingControls();
+
+    void OnNewSwitchPlanRule( wxCommandEvent& event );
+    void OnEditSwitchPlanRule( wxCommandEvent& event );
+    void OnDeleteSwitchPlanRule( wxCommandEvent& event );
+    void PopulatePlans();
+
     void UpdateVMG();
     void UpdateStats();
 
-    wxString m_boatpath;    
     double m_PlotScale;
     int m_MouseW;
 

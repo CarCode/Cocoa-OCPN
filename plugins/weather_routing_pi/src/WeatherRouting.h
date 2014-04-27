@@ -35,6 +35,7 @@
 #include "ConfigurationBatchDialog.h"
 #include "SettingsDialog.h"
 #include "StatisticsDialog.h"
+#include "ReportDialog.h"
 #include "FilterRoutesDialog.h"
 
 class weather_routing_pi;
@@ -66,7 +67,11 @@ public:
     ConfigurationDialog m_ConfigurationDialog;
     ConfigurationBatchDialog m_ConfigurationBatchDialog;
 
-    void UpdateCurrentItem(RouteMapConfiguration configuration);
+    void SetConfigurationRoute(RouteMapConfiguration configuration,
+                               WeatherRoute *weatherroute);
+    void SetConfigurationCurrentRoute(RouteMapConfiguration configuration);
+    void UpdateBoatFilename(RouteMapConfiguration configuration);
+    
     void UpdateStates();
     RouteMapOverlay *CurrentRouteMap(bool messagedialog = false), *m_RouteMapOverlayNeedingGrib;
 
@@ -84,39 +89,49 @@ public:
 
 private:
 
-    void OnAddAtBoat( wxCommandEvent& event );
+    void OnNewPosition( wxCommandEvent& event );
+    void OnUpdateBoat( wxCommandEvent& event );
+//    void OnListLabelEdit( wxListEvent& event );
     void OnRemovePosition( wxCommandEvent& event );
     void OnClearPositions( wxCommandEvent& event );
-    void OnClose( wxCloseEvent& event );
     void OnEditConfiguration();
-    void OnEditConfiguration( wxMouseEvent& event ) { OnEditConfiguration(); }
-    void OnWeatherRouteSort( wxListEvent& event );
-    void OnWeatherRouteSelected( wxListEvent& event );
-    void OnWeatherRoutesListLeftDown(wxMouseEvent &event);
-    void OnCompute( wxCommandEvent& event );
     void OnOpen( wxCommandEvent& event );
     void OnSave( wxCommandEvent& event );
     void OnClose( wxCommandEvent& event );
     void OnNew( wxCommandEvent& event );
+    void OnEditConfigurationClick( wxMouseEvent& event ) { OnEditConfiguration(); }
+    void OnWeatherRouteSort( wxListEvent& event );
+    void OnWeatherRouteSelected( wxListEvent& event );
+    void OnWeatherRoutesListLeftDown(wxMouseEvent &event);
+    void UpdateComputeState();
+    void OnCompute( wxCommandEvent& event );
+    void OnComputeAll( wxCommandEvent& event );
+    void OnResetAll( wxCommandEvent& event );
     void OnPositions( wxCommandEvent& event );
     void OnBatch( wxCommandEvent& event );
     void OnEditConfiguration( wxCommandEvent& event ) { OnEditConfiguration(); }
-    void OnExport( wxCommandEvent& event );
+    void OnGoTo( wxCommandEvent& event );
     void OnDelete( wxCommandEvent& event );
-    void OnFilter( wxCommandEvent& event );
-    void OnReset( wxCommandEvent& event );
-    void OnExportAll( wxCommandEvent& event );
     void OnDeleteAll( wxCommandEvent& event );
+    void OnFilter( wxCommandEvent& event );
+    void OnExport( wxCommandEvent& event );
+    void OnExportAll( wxCommandEvent& event );
     void OnSettings( wxCommandEvent& event );
     void OnStatistics( wxCommandEvent& event );
+    void OnReport( wxCommandEvent& event );
     void OnPlot( wxCommandEvent& event );
     void OnInformation( wxCommandEvent& event );
     void OnAbout( wxCommandEvent& event );
 
     void OnComputationTimer( wxTimerEvent & );
+    void OnHideConfigurationTimer( wxTimerEvent & );
 
     bool OpenXML(wxString filename, bool reportfailure = true);
     void SaveXML(wxString filename);
+
+    void SetEnableConfigurationMenu();
+
+    void UpdateConfigurations();
 
     void AddConfiguration(RouteMapConfiguration configuration);
     void UpdateRouteMap(RouteMapOverlay *routemapoverlay);
@@ -125,7 +140,8 @@ private:
     RouteMap *SelectedRouteMap();
     void Export(RouteMapOverlay &routemapoverlay);
 
-    void Start();
+    void Start(RouteMapOverlay *routemapoverlay);
+    void StartAll();
     void Stop();
 
     void DeleteRouteMap(RouteMapOverlay *routemapoverlay);
@@ -133,11 +149,12 @@ private:
 
     SettingsDialog m_SettingsDialog;
     StatisticsDialog m_StatisticsDialog;
+    ReportDialog m_ReportDialog;
     FilterRoutesDialog m_FilterRoutesDialog;
 
     bool m_bComputing;
 
-    wxTimer m_tCompute;
+    wxTimer m_tCompute, m_tHideConfiguration;
 
     bool m_bRunning;
     wxTimeSpan m_RunTime;
@@ -149,7 +166,7 @@ private:
     bool m_bSkipUpdateCurrentItem;
 
     bool m_bShowConfiguration, m_bShowConfigurationBatch;
-    bool m_bShowSettings, m_bShowStatistics, m_bShowFilter;
+    bool m_bShowSettings, m_bShowStatistics, m_bShowReport, m_bShowFilter;
 
     weather_routing_pi &m_weather_routing_pi;
 };

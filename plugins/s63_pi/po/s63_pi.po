@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: s63_pi 0.4.0\n"
+"Project-Id-Version: s63_pi 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-09 12:43+0200\n"
-"PO-Revision-Date: 2014-04-09 12:49+0100\n"
+"POT-Creation-Date: 2014-04-25 14:03+0200\n"
+"PO-Revision-Date: 2014-04-25 14:07+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: CarCode <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -31,6 +31,9 @@ msgstr ""
 "Ein gültiges Zertifikat erhält man von der IHO Website oder Ihrem Karten-"
 "Händler.\n"
 
+msgid "Building eSENC"
+msgstr "Erzeuge eSENC"
+
 msgid "Cancel"
 msgstr "Abbruch"
 
@@ -51,6 +54,9 @@ msgstr "Zertifikat Schlüssel Import erfolgreich\n"
 
 msgid "Certificate Name"
 msgstr "Zertifikat Name"
+
+msgid "Charts"
+msgstr "Karten"
 
 msgid "Create eSENCs on Import?\n"
 msgstr "Erzeuge eSENCs bei Import?\n"
@@ -103,6 +109,9 @@ msgstr "Installierte S63 Zertifikate/Schlüssel"
 
 msgid "Invalid cell permit starts with "
 msgstr "Ungültiger Zellen Permit startet mit "
+
+msgid "Keys/Permits"
+msgstr "Keys/Permits"
 
 msgid "New Installpermit..."
 msgstr "Neuer InstallPermit..."

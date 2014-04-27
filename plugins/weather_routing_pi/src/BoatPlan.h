@@ -21,8 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 static const int wind_speeds[] = {0, 2, 4, 6, 8, 10, 12, 15, 18, 21, 24, 28, 32, 36, 40, 45, 50, 55, 60};
 static const int num_wind_speeds = (sizeof wind_speeds) / (sizeof *wind_speeds);
@@ -118,6 +117,7 @@ public:
 
     /* if computed */
     double eta, luff_angle;
+    bool wing_wing_running;
 
     /* if not computed (csv table) */
     wxString csvFileName;

@@ -20,9 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #ifndef _WEATHER_ROUTING_CONFIGURATION_DIALOG_H_
 #define _WEATHER_ROUTING_CONFIGURATION_DIALOG_H_
@@ -42,6 +41,7 @@ public:
     ConfigurationDialog(WeatherRouting *weatherrouting);
     ~ConfigurationDialog();
 
+    void EditBoat( );
     void SetConfiguration(RouteMapConfiguration configuration);
     void Update();
 
@@ -55,12 +55,12 @@ public:
 
 protected:
     void OnUpdate( wxCommandEvent& event ) { Update(); }
-    void OnUpdate( wxDateEvent& event ) { Update(); }
+    void OnUpdateDate( wxDateEvent& event ) { Update(); }
     void OnGribTime( wxCommandEvent& event );
     void OnCurrentTime( wxCommandEvent& event );
-    void OnUpdate( wxSpinEvent& event ) { Update(); }
-    void OnUpdate( wxFileDirPickerEvent& event ) { Update(); }
-    void OnEditBoat( wxCommandEvent& event );
+    void OnUpdateSpin( wxSpinEvent& event ) { Update(); }
+    void OnUpdateFile( wxFileDirPickerEvent& event ) { Update(); }
+    void OnEditBoat( wxCommandEvent& event ) { EditBoat(); }
     void OnAddDegreeStep( wxCommandEvent& event );
     void OnRemoveDegreeStep( wxCommandEvent& event );
     void OnClearDegreeSteps( wxCommandEvent& event );

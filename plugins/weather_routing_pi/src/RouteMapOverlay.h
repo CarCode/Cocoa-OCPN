@@ -21,8 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "RouteMap.h"
 
@@ -63,6 +62,7 @@ public:
     void RouteInfo(double &distance, double &avgspeed, double &percentage_upwind);
 
     bool Updated();
+    void UpdateCursorPosition();
     void UpdateDestination();
 
     virtual void Clear();
@@ -89,13 +89,9 @@ private:
     void DrawLine(Position *p1, Position *p2,
                   ocpnDC &dc, PlugIn_ViewPort &vp);
 
+    double last_cursor_lat, last_cursor_lon;
     Position *last_cursor_position, *destination_position, *last_destination_position;
     bool m_bUpdated;
 
     int m_overlaylist;
-    double m_scale, m_clat, m_clon;
-    wxPoint m_point;
-    bool m_scale_changed;
-    double m_lastscale;
-    wxPoint m_lastpoint;
 };

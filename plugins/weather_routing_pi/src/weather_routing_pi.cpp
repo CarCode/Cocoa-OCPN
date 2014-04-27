@@ -4,7 +4,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2014 by Sean D'Epagnier                                 *
  *   sean@depagnier.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -51,6 +51,9 @@ weather_routing_pi::weather_routing_pi(void *ppimgr)
 {
       // Create the PlugIn icons
       initialize_images();
+
+    m_tCursorLatLon.Connect(wxEVT_TIMER, wxTimerEventHandler
+                            ( weather_routing_pi::OnCursorLatLonTimer ), NULL, this);
 }
 
 weather_routing_pi::~weather_routing_pi(void)
@@ -140,11 +143,10 @@ wxString weather_routing_pi::GetShortDescription()
 
 wxString weather_routing_pi::GetLongDescription()
 {
-    return _("Weather Routing PlugIn for OpenCPN\n\n\
-Provides Weather routing features include:\n\
-  automatic routing subject to various constraints.\n\
-          optimal speed based on wind and currents\n\
-          boat speed calculation\n\
+    return _("\
+Weather Routing features include:\n\
+    optimal routing subject to various constraints based on weather data\n\
+    automatic boat polar computation\n\
 ");
 }
 
@@ -159,9 +161,8 @@ int weather_routing_pi::GetToolbarToolCount(void)
 
 void weather_routing_pi::SetCursorLatLon(double lat, double lon)
 {
-    if(m_pWeather_Routing && m_pWeather_Routing->CurrentRouteMap() &&
-       m_pWeather_Routing->CurrentRouteMap()->SetCursorLatLon(lat, lon))
-        RequestRefresh(m_parent_window);
+    if(m_pWeather_Routing && m_pWeather_Routing->CurrentRouteMap() && !m_tCursorLatLon.IsRunning())
+        m_tCursorLatLon.Start(50, true);
 
     m_cursor_lat = lat;
     m_cursor_lon = lon;
@@ -291,6 +292,13 @@ bool weather_routing_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort 
         return true;
     }
     return false;
+}
+
+void weather_routing_pi::OnCursorLatLonTimer( wxTimerEvent & )
+{
+    RouteMapOverlay *crm = m_pWeather_Routing->CurrentRouteMap();
+    if(crm && crm->SetCursorLatLon(m_cursor_lat, m_cursor_lon))
+        RequestRefresh(m_parent_window);
 }
 
 bool weather_routing_pi::LoadConfig(void)

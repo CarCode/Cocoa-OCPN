@@ -999,15 +999,33 @@ MyConfig::MyConfig( const wxString &appName, const wxString &vendorName,
 
 void MyConfig::CreateRotatingNavObjBackup()
 {
-    //Rotate navobj backups
+    //Rotate navobj backups, but just in case there are some changes in the current version to prevent the user trying to "fix" the problem by continuously starting the application to overwrite all of his good backups...
     if( g_navobjbackups > 0 ) {
-        for( int i = g_navobjbackups - 1; i >= 1; i-- )
-            if( wxFile::Exists( wxString::Format( _T("%s.%d"), m_sNavObjSetFile.c_str(), i ) ) ) wxCopyFile(
-                    wxString::Format( _T("%s.%d"), m_sNavObjSetFile.c_str(), i ),
-                    wxString::Format( _T("%s.%d"), m_sNavObjSetFile.c_str(), i + 1 ) );
+        wxFile f;
+        wxString oldname = m_sNavObjSetFile;
+        wxString newname = wxString::Format( _T("%s.1"), m_sNavObjSetFile.c_str() );
+        f.Open(oldname);
+        wxFileOffset s_diff = f.Length();
+        f.Close();
+        f.Open(newname);
+        s_diff -= f.Length();
+        f.Close();
+        if ( s_diff != 0 )
+        {
+            for( int i = g_navobjbackups - 1; i >= 1; i-- )
+            {
+                oldname = wxString::Format( _T("%s.%d"), m_sNavObjSetFile.c_str(), i );
+                newname = wxString::Format( _T("%s.%d"), m_sNavObjSetFile.c_str(), i + 1 );
+                if( wxFile::Exists( oldname ) )
+                    wxCopyFile( oldname, newname );
+            }
 
-        if( wxFile::Exists( m_sNavObjSetFile ) ) wxCopyFile( m_sNavObjSetFile,
-                wxString::Format( _T("%s.1"), m_sNavObjSetFile.c_str() ) );
+            if( wxFile::Exists( m_sNavObjSetFile ) )
+            {
+                newname = wxString::Format( _T("%s.1"), m_sNavObjSetFile.c_str() );
+                wxCopyFile( m_sNavObjSetFile, newname );
+            }
+        }
     }
     //try to clean the backups the user doesn't want - breaks if he deleted some by hand as it tries to be effective...
     for( int i = g_navobjbackups + 1; i <= 99; i++ )
@@ -1917,9 +1935,13 @@ bool MyConfig::LoadLayers(wxString &path)
                         pSet->load_file(file_path.fn_str());
                         long nItems = pSet->LoadAllGPXObjectsAsLayer(l->m_LayerID, bLayerViz);
                         l->m_NoOfItems += nItems;
-                        
+
                         wxString objmsg;
+#ifdef __WXOSX__
+                        objmsg.Printf( wxT("Loaded GPX file %s with %d items."), file_path.c_str(), (int)nItems );
+#else
                         objmsg.Printf( wxT("Loaded GPX file %s with %d items."), file_path.c_str(), nItems );
+#endif
                         wxLogMessage( objmsg );
 
                         delete pSet;
