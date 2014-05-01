@@ -637,7 +637,8 @@ double g_GLMinLineWidth;
 int n_NavMessageShown;
 wxString g_config_version_string;
 
-bool             g_bmobile;
+bool             g_btouch;
+bool             g_bresponsive;
 
 #ifndef __WXMSW__
 sigjmp_buf env;                    // the context saved by sigsetjmp();
@@ -1408,7 +1409,7 @@ bool MyApp::OnInit()
     pConfig->LoadMyConfig( 0 );
 
 
-    if(g_bmobile){
+    if(g_btouch){
         int SelectPixelRadius = 50;
         
         pSelect->SetSelectPixelRadius(SelectPixelRadius);
@@ -1940,7 +1941,7 @@ if( 0 == g_memCacheLimit )
 
     if( g_bframemax ) gFrame->Maximize( true );
 
-    if( g_bmobile  && ( g_pix_per_mm > 4.0))
+    if( g_bresponsive  && ( g_pix_per_mm > 4.0))
         gFrame->Maximize( true );
 
     stats = new StatWin( cc1 );
@@ -3695,12 +3696,12 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
 
     switch( event.GetId() ){
         case ID_STKUP:
-            DoStackUp();
+            DoStackDelta( 1 );
             DoChartUpdate();
             break;
 
         case ID_STKDN:
-            DoStackDown();
+            DoStackDelta( -1 );
             DoChartUpdate();
             break;
 
@@ -4424,7 +4425,7 @@ int MyFrame::DoOptionsDialog()
     if( options_lastPage >= 0 )
         g_options->m_pListbook->SetSelection( options_lastPage );
     
-    if(!g_bmobile){
+    if(!g_bresponsive){
         g_options->lastWindowPos = options_lastWindowPos;
         if( options_lastWindowPos != wxPoint(0,0) ) {
             g_options->Move( options_lastWindowPos );
@@ -4994,43 +4995,85 @@ void MyFrame::ClearRouteTool()
 
 void MyFrame::DoStackDown( void )
 {
-    int current_stack_index = pCurrentStack->CurrentStackEntry;
-
-    if( 0 == current_stack_index ) return;
-
-    if( !cc1->GetQuiltMode() ) SelectChartFromStack( current_stack_index - 1 );
-    else {
-        int new_dbIndex = pCurrentStack->GetDBIndex( current_stack_index - 1 );
-
-        if( !cc1->IsChartQuiltableRef( new_dbIndex ) ) {
-            ToggleQuiltMode();
-            SelectChartFromStack( current_stack_index - 1 );
-        } else
-            SelectQuiltRefChart( current_stack_index - 1 );
-
-    }
-
-    cc1->SetQuiltChartHiLiteIndex( -1 );
-
-    cc1->ReloadVP();
+    DoStackDelta( -1 );
 }
 
 void MyFrame::DoStackUp( void )
 {
-    int current_stack_index = pCurrentStack->CurrentStackEntry;
+    DoStackDelta( 1 );
+}
 
-    if( current_stack_index >= pCurrentStack->nEntry - 1 ) return;
+void MyFrame::DoStackDelta( int direction )
+{
 
     if( !cc1->GetQuiltMode() ) {
-        SelectChartFromStack( current_stack_index + 1 );
+        int current_stack_index = pCurrentStack->CurrentStackEntry;
+        if( (current_stack_index + direction) >= pCurrentStack->nEntry )
+            return;
+        if( (current_stack_index + direction) < 0 )
+            return;
+        
+        if( m_bpersistent_quilt && g_bQuiltEnable ) {
+            int new_dbIndex = pCurrentStack->GetDBIndex(current_stack_index + direction );
+            
+            if( cc1->IsChartQuiltableRef( new_dbIndex ) ) {
+                ToggleQuiltMode();
+                SelectQuiltRefdbChart( new_dbIndex );
+                m_bpersistent_quilt = false;
+            }
+        }
+        else {
+            SelectChartFromStack( current_stack_index + direction );
+        }
     } else {
-        int new_dbIndex = pCurrentStack->GetDBIndex( current_stack_index + 1 );
+        ArrayOfInts piano_chart_index_array = cc1->GetQuiltExtendedStackdbIndexArray();
+        int refdb = cc1->GetQuiltRefChartdbIndex();
+        
+        //      Find the ref chart in the stack
+        int current_index = -1;
+        for(unsigned int i=0 ; i < piano_chart_index_array.Count() ; i++){
+            if(refdb == piano_chart_index_array.Item( i )){
+                current_index = i;
+                break;
+            }
+        }
+        if(current_index == -1)
+            return;
+        
+        const ChartTableEntry &ctet = ChartData->GetChartTableEntry( refdb );
+        int target_family= ctet.GetChartFamily();
+        
+        int new_index = -1;
+        int check_index = current_index + direction;
+        bool found = false;
+        int check_dbIndex = -1;
+        int new_dbIndex = -1;
+        
+        //      When quilted. switch within the same chart family
+        while(!found && (unsigned int)check_index < piano_chart_index_array.Count() && (check_index >= 0)){
+            check_dbIndex = piano_chart_index_array.Item( check_index );
+            const ChartTableEntry &cte = ChartData->GetChartTableEntry( check_dbIndex );
+            if(target_family == cte.GetChartFamily()){
+                found = true;
+                new_index = check_index;
+                new_dbIndex = check_dbIndex;
+                break;
+            }
+            
+            check_index += direction;
+        }
+        
+        if(!found)
+            return;
+
 
         if( !cc1->IsChartQuiltableRef( new_dbIndex ) ) {
             ToggleQuiltMode();
-            SelectChartFromStack( current_stack_index + 1 );
-        } else
-            SelectQuiltRefChart( current_stack_index + 1 );
+            SelectdbChart( new_dbIndex );
+            m_bpersistent_quilt = true;
+        } else {
+            SelectQuiltRefChart( new_index );
+        }
     }
 
     cc1->SetQuiltChartHiLiteIndex( -1 );
@@ -9529,7 +9572,7 @@ wxFont *GetOCPNScaledFont( wxString item, int default_size )
 {
     wxFont *dFont = FontMgr::Get().GetFont( item, default_size );
     
-    if( g_bmobile ){
+    if( g_bresponsive ){
         if(dFont->GetPointSize() < 20) {
             wxFont *qFont = wxTheFontList->FindOrCreateFont( 20,
                                                             dFont->GetFamily(),

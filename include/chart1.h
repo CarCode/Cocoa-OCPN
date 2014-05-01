@@ -240,6 +240,7 @@ class MyFrame: public wxFrame
     void ClearRouteTool();
     void DoStackUp(void);
     void DoStackDown(void);
+    void DoStackDelta( int direction );
 
     void MouseEvent(wxMouseEvent& event);
     void SelectChartFromStack(int index,  bool bDir = false,  ChartTypeEnum New_Type = CHART_TYPE_DONTCARE, ChartFamilyEnum New_Family = CHART_FAMILY_DONTCARE);
