@@ -1726,7 +1726,6 @@ int AddChartToDBInPlace( wxString &full_path, bool b_RefreshCanvas )
                 g_options->UpdateDisplayedChartDirList(ChartData->GetChartDirArray());
             }
 
-
             if(b_RefreshCanvas) {
                 ViewPort vp;
                 gFrame->ChartsRefresh(-1, vp);

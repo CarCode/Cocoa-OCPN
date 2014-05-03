@@ -6948,7 +6948,6 @@ bool s57_CheckExtendedLightSectors( int mx, int my, ViewPort& viewport, std::vec
             Chs57 = dynamic_cast<s57chart*>( target_chart );
     }
 
-
     cc1->GetCanvasPixPoint ( mx, my, cursor_lat, cursor_lon );
 
     if( lastLat == cursor_lat && lastLon == cursor_lon ) return false;
@@ -6965,9 +6964,9 @@ bool s57_CheckExtendedLightSectors( int mx, int my, ViewPort& viewport, std::vec
     if( cc1->GetColorScheme() == GLOBAL_COLOR_SCHEME_NIGHT) opacity = 20;
 
     int yOpacity = (float)opacity*1.3; // Matched perception of white/yellow with red/green
+
     if( target_plugin_chart || Chs57  ) {
         // Go get the array of all objects at the cursor lat/lon
-
         float selectRadius = 16 / ( viewport.view_scale_ppm * 1852 * 60 );
 
         ListOfObjRazRules* rule_list = NULL;
@@ -7043,6 +7042,7 @@ bool s57_CheckExtendedLightSectors( int mx, int my, ViewPort& viewport, std::vec
                 
                 if( curr_att ) {
                     bool bviz = true;
+                    
                     attrCounter = 0;
                     int noAttr = 0;
                     bool inDepthRange = false;
@@ -7079,7 +7079,7 @@ bool s57_CheckExtendedLightSectors( int mx, int my, ViewPort& viewport, std::vec
                                 color = wxColor( 0, 255, 0, opacity );
                                 sector.iswhite = false;
                                 bhas_red_green = true;
-                            }
+                                }
                         }
 
                         if( curAttrName == _T("EXCLIT") ) {
@@ -7096,7 +7096,7 @@ bool s57_CheckExtendedLightSectors( int mx, int my, ViewPort& viewport, std::vec
                     }
                     
                     if( ( sectr1 >= 0 ) && ( sectr2 >= 0 ) ) {
-                        if( sectr1 > sectr2 ) {             // normalize
+                            if( sectr1 > sectr2 ) {             // normalize
                                 sectr2 += 360.0;
                             }
 
@@ -7124,9 +7124,9 @@ bool s57_CheckExtendedLightSectors( int mx, int my, ViewPort& viewport, std::vec
                                sectorlegs[i].sector2 == sector.sector2 ) {
                                 newsector = false;
                             
-                                //  In the case of duplicate sectors, choose the instance with largest range.
-                                //  This applies to the case where day and night VALNMR are different, and so
-                                //  makes the vector result independent of the order of day/night light features.
+                            //  In the case of duplicate sectors, choose the instance with largest range.
+                            //  This applies to the case where day and night VALNMR are different, and so
+                            //  makes the vector result independent of the order of day/night light features.
                                 sectorlegs[i].range = wxMax(sectorlegs[i].range, sector.range);
                             }
                         }
@@ -7141,7 +7141,7 @@ bool s57_CheckExtendedLightSectors( int mx, int my, ViewPort& viewport, std::vec
                     }
                 }
             }
- 
+
             if(Chs57)
                 snode = snode->GetPrevious();
             else if( target_plugin_chart )
@@ -7159,6 +7159,7 @@ bool s57_CheckExtendedLightSectors( int mx, int my, ViewPort& viewport, std::vec
             delete pi_rule_list;
         }
     }
+
 #if 0
     //  Work with the sector legs vector to identify  and mark "Leading Lights"
     int ns = sectorlegs.size();

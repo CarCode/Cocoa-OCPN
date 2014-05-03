@@ -1245,7 +1245,6 @@ char *_getParamVal( ObjRazRules *rzRules, char *str, char *buf, int bsz )
 
         // special case when ENC returns an index for particular attribute types
         if( !strncmp( buf, "NATSUR", 6 ) ) {
-
             wxString natsur_att( _T ( "NATSUR" ) );
             wxString result;
             wxString svalue = value;
@@ -1260,9 +1259,13 @@ char *_getParamVal( ObjRazRules *rzRules, char *str, char *buf, int bsz )
                 long i;
                 if( token.ToLong(&i) ){
                     wxString nat;
-                    if( rzRules->obj->m_chart_context->chart ){
-                        nat = rzRules->obj->m_chart_context->chart->GetAttributeDecode( natsur_att, (int)i );
+                    if( !ps52plib->m_natsur_hash[i].IsEmpty() )            // entry available?
+                        nat = ps52plib->m_natsur_hash[i];
+                    else {
+                        nat = s57chart::GetAttributeDecode( natsur_att, (int)i );
+                        ps52plib->m_natsur_hash[i] = nat;            // cache the entry
                     }
+
                     if( !nat.IsEmpty() )
                         result += nat; // value from ENC
                     else
@@ -2276,7 +2279,7 @@ int s52plib::RenderSY( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 // Line Simple Style
 int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 {
-
+// return 0;
     wxPoint *ptp;
     int npt;
     S52color *c;
@@ -2424,8 +2427,9 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
             //  Get the edge
             unsigned int enode = *index_run++;
-            VE_Element *pedge;
-            pedge = (*ve_hash)[enode];
+            VE_Element *pedge = 0;
+            if(enode)
+                pedge = (*ve_hash)[enode];
 
             int nls = 0;
             
@@ -2743,8 +2747,9 @@ int s52plib::RenderLC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
             //  Get the edge
             unsigned int enode = *index_run++;
-            VE_Element *pedge;
-            pedge = (*ve_hash)[enode];
+            VE_Element *pedge = 0;
+            if(enode)
+                pedge = (*ve_hash)[enode];
 
             int nls = 0;
             if(pedge){
@@ -3963,10 +3968,12 @@ int s52plib::PrioritizeLineFeature( ObjRazRules *rzRules, int npriority )
             //  Get first connected node
             int inode = *index_run++;
 
+            VE_Element *pedge = 0;
             //  Get the edge
             int enode = *index_run++;
+            if(enode)
+                pedge = (*edge_hash)[enode];
 
-            VE_Element *pedge = (*edge_hash)[enode];
 
             //    Set priority
             if(pedge)
@@ -6100,7 +6107,7 @@ bool s52plib::ObjectRenderCheckPos( ObjRazRules *rzRules, ViewPort *vp )
 //    if((rzRules->obj->Index == 3868) || (rzRules->obj->Index == 3870))
 //        return false;
 
-//    if(rzRules->obj->Index != 3)
+//    if(rzRules->obj->Index == 0)
 //        return false;
 
     // Of course, the object must be at least partly visible in the viewport
