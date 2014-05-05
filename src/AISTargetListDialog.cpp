@@ -287,7 +287,7 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
     m_pAuiManager = auimgr;
     m_pdecoder = pdecoder;
 
-    wxFont *qFont = GetOCPNScaledFont(_T("Dialog"), 12);
+    wxFont *qFont = GetOCPNScaledFont(_("Dialog"), 10);
     SetFont( *qFont );
     
     //  Make an estimate of the default dialog size
@@ -634,11 +634,11 @@ void AISTargetListDialog::OnCloseButton( wxCommandEvent& event )
         Destroy();
     }
 #else
-    if( g_pAISTargetList ) {
-        wxAuiPaneInfo &pane = m_pAuiManager->GetPane( g_pAISTargetList );
-        g_AisTargetList_perspective = m_pAuiManager->SavePaneInfo( pane );
-        m_pAuiManager->DetachPane( g_pAISTargetList );
-    }
+//    if( g_pAISTargetList ) {
+//        wxAuiPaneInfo &pane = m_pAuiManager->GetPane( g_pAISTargetList );
+//        g_AisTargetList_perspective = m_pAuiManager->SavePaneInfo( pane );
+//        m_pAuiManager->DetachPane( g_pAISTargetList );
+//    }
 #endif
 }
 

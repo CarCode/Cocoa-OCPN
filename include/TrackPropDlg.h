@@ -53,9 +53,7 @@
 #include <wx/tglbtn.h>
 #include <wx/notebook.h>
 
-#if wxCHECK_VERSION(2, 9, 0)
-#include <wx/dialog.h>
-#elif wxCHECK_VERSION(3, 0, 0)
+#if wxCHECK_VERSION(3, 0, 0)
 #include <wx/dialog.h>
 #else
 #include "scrollingdialog.h"
@@ -104,7 +102,7 @@ private:
 	
 protected:
         wxNotebook* m_notebook1;
-        wxPanel* m_panelBasic;
+        wxScrolledWindow* m_panelBasic;
         wxStaticText* m_stName;
         wxTextCtrl* m_tName;
         wxStaticText* m_stFrom;
@@ -129,7 +127,7 @@ protected:
         wxRadioButton* m_rbShowTimePC;
         wxRadioButton* m_rbShowTimeLocal;
         OCPNTrackListCtrl *m_lcPoints;
-        wxPanel* m_panelAdvanced;
+        wxScrolledWindow* m_panelAdvanced;
         wxStaticText* m_stDescription;
         wxTextCtrl* m_tDescription;
         wxScrolledWindow* m_scrolledWindowLinks;

@@ -62,6 +62,7 @@ extern ChartCanvas        *cc1;
 extern Select             *pSelect;
 extern Routeman           *g_pRouteMan;
 extern RouteManagerDialog *pRouteManagerDialog;
+extern RouteProp          *pRoutePropDialog;
 extern Track              *g_pActiveTrack;
 extern RouteList          *pRouteList;
 extern PlugInManager      *g_pi_manager;
@@ -351,9 +352,9 @@ RouteProp::RouteProp( wxWindow* parent, wxWindowID id, const wxString& caption, 
     wstyle |= wxSTAY_ON_TOP;
 #endif
 
-    wxFont *qFont = GetOCPNScaledFont(_T("Dialog"), 12);
+    wxFont *qFont = GetOCPNScaledFont(_("Dialog"), 10);
     SetFont( *qFont );
-    
+
     Create( parent, id, caption, pos, size, wstyle );
 
     //  Make an estimate of the dialog size, without scrollbars showing
@@ -626,7 +627,7 @@ void RouteProp::CreateControls()
     itemDialog1 = new wxScrolledWindow( this, wxID_ANY,
                                        wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
     itemDialog1->SetScrollRate(5, 5);
-    
+
     itemBoxSizer1->Add( itemDialog1, 1, wxEXPAND | wxALL, 0 );
 
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -791,7 +792,7 @@ void RouteProp::CreateControls()
 
     wxBoxSizer* itemBoxSizerAux = new wxBoxSizer( wxHORIZONTAL );
     itemBoxSizer2->Add( itemBoxSizerAux, 0, wxALIGN_LEFT | wxALL, 5 );
-    
+
     m_PrintButton = new wxButton( itemDialog1, ID_ROUTEPROP_PRINT, _("Print Route"),
             wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizerAux->Add( m_PrintButton, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
@@ -809,7 +810,7 @@ void RouteProp::CreateControls()
 
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
     itemBoxSizer1->Add( itemBoxSizer16, 0, wxALIGN_RIGHT | wxALL, 5 );
-    
+
     m_CancelButton = new wxButton( this, ID_ROUTEPROP_CANCEL, _("Cancel"), wxDefaultPosition,
             wxDefaultSize, 0 );
     itemBoxSizer16->Add( m_CancelButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
@@ -831,7 +832,7 @@ void RouteProp::CreateControls()
             wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxLC_EDIT_LABELS );
 
     int char_size = GetCharWidth();
-    
+
     m_wpList->InsertColumn( 0, _("Leg"), wxLIST_FORMAT_LEFT, char_size * 6 );
     m_wpList->InsertColumn( 1, _("To Waypoint"), wxLIST_FORMAT_LEFT, char_size * 14 );
     m_wpList->InsertColumn( 2, _("Distance"), wxLIST_FORMAT_RIGHT, char_size * 9 );
@@ -852,7 +853,7 @@ void RouteProp::CreateControls()
     else
         m_wpList->InsertColumn( 10, _("Course"), wxLIST_FORMAT_LEFT, char_size * 10 );
     //    m_wpList->Hide();
-    
+
     m_pListSizer->Add( m_wpList, 2, wxEXPAND | wxALL, 5 );
 
     Connect( wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK,
@@ -927,8 +928,6 @@ void RouteProp::OnRoutePropMenuSelected( wxCommandEvent& event )
                 wp = (RoutePoint *) m_wpList->GetItemData( item );
 
                 cc1->RemovePointFromRoute( wp, m_pRoute );
-
-                SetRouteAndUpdate( m_pRoute );
             }
             break;
         }
@@ -943,8 +942,6 @@ void RouteProp::OnRoutePropMenuSelected( wxCommandEvent& event )
             if( !wp ) break;
 
             RouteManagerDialog::WptShowPropertiesDialog( wp, this );
-
-            UpdateProperties();
             break;
         }
     }
@@ -971,82 +968,85 @@ void RouteProp::SetDialogTitle(const wxString & title)
     SetTitle(title);
 }
 
-void RouteProp::SetRouteAndUpdate( Route *pR )
+void RouteProp::SetRouteAndUpdate( Route *pR, bool only_points )
 {
     if( NULL == pR )
         return;
 
     //  Fetch any config file values
+    if ( !only_points )
+    {
+        //      long LMT_Offset = 0;                    // offset in seconds from UTC for given location (-1 hr / 15 deg W)
+        m_tz_selection = 1;
 
-    //      long LMT_Offset = 0;                    // offset in seconds from UTC for given location (-1 hr / 15 deg W)
-    m_tz_selection = 1;
-
-    if( pR == m_pRoute ) {
-        gStart_LMT_Offset = 0;
-        if( !pR->m_PlannedDeparture.IsValid() )
-            m_tz_selection = 0;
-
-    } else {
-        g_StartTime = wxInvalidDateTime;
-        g_StartTimeTZ = 1;
-        if( pR->m_PlannedDeparture.IsValid() )
-            m_starttime = pR->m_PlannedDeparture;
-        else
-            m_starttime = g_StartTime;
-        if( pR->m_TimeDisplayFormat == RTE_TIME_DISP_UTC)
-            m_tz_selection = 0;
-        else if( pR->m_TimeDisplayFormat == RTE_TIME_DISP_LOCAL )
-            m_tz_selection = 2;
-        else
-            m_tz_selection = g_StartTimeTZ;
-        gStart_LMT_Offset = 0;
-        m_pEnroutePoint = NULL;
-        m_bStartNow = false;
-        m_planspeed = pR->m_PlannedSpeed;
-    }
-
-    m_pRoute = pR;
-
-    pDispTz->SetSelection( m_tz_selection );
-
-    if( m_pRoute ) {
-        //    Calculate  LMT offset from the first point in the route
-        if( m_pEnroutePoint && m_bStartNow ) gStart_LMT_Offset = long(
-                ( m_pEnroutePoint->m_lon ) * 3600. / 15. );
-        else
-            gStart_LMT_Offset = long(
-                    ( m_pRoute->pRoutePointList->GetFirst()->GetData()->m_lon ) * 3600. / 15. );
-    }
-
-    // Reorganize dialog for route or track display
-    if( m_pRoute ) {
-        if( m_pRoute->m_bIsTrack ) {
-            m_PlanSpeedLabel->SetLabel( _("Avg. speed") );
-            m_PlanSpeedCtl->SetEditable( false );
-            m_ExtendButton->SetLabel( _("Extend Track") );
-            m_SplitButton->SetLabel( _("Split Track") );
+        if( pR == m_pRoute ) {
+            gStart_LMT_Offset = 0;
+            if( pR->m_PlannedDeparture.IsValid() )
+                m_starttime = pR->m_PlannedDeparture;
+            else
+                m_starttime = g_StartTime;
 
         } else {
-            m_PlanSpeedLabel->SetLabel( _("Plan speed") );
-            m_PlanSpeedCtl->SetEditable( true );
-            m_ExtendButton->SetLabel( _("Extend Route") );
-            m_SplitButton->SetLabel( _("Split Route") );
+            g_StartTime = wxInvalidDateTime;
+            g_StartTimeTZ = 1;
+            if( pR->m_PlannedDeparture.IsValid() )
+                m_starttime = pR->m_PlannedDeparture;
+            else
+                m_starttime = g_StartTime;
+            if( pR->m_TimeDisplayFormat == RTE_TIME_DISP_UTC)
+                m_tz_selection = 0;
+            else if( pR->m_TimeDisplayFormat == RTE_TIME_DISP_LOCAL )
+                m_tz_selection = 2;
+            else
+                m_tz_selection = g_StartTimeTZ;
+            gStart_LMT_Offset = 0;
+            m_pEnroutePoint = NULL;
+            m_bStartNow = false;
+            m_planspeed = pR->m_PlannedSpeed;
         }
 
-        //    Fill in some top pane properties from the Route member elements
-        m_RouteNameCtl->SetValue( m_pRoute->m_RouteNameString );
-        m_RouteStartCtl->SetValue( m_pRoute->m_RouteStartString );
-        m_RouteDestCtl->SetValue( m_pRoute->m_RouteEndString );
+        m_pRoute = pR;
 
-        m_RouteNameCtl->SetFocus();
-    } else {
-        m_RouteNameCtl->Clear();
-        m_RouteStartCtl->Clear();
-        m_RouteDestCtl->Clear();
-        m_PlanSpeedCtl->Clear();
-        m_StartTimeCtl->Clear();
+        pDispTz->SetSelection( m_tz_selection );
+
+        if( m_pRoute ) {
+            //    Calculate  LMT offset from the first point in the route
+            if( m_pEnroutePoint && m_bStartNow ) gStart_LMT_Offset = long(
+                    ( m_pEnroutePoint->m_lon ) * 3600. / 15. );
+            else
+                gStart_LMT_Offset = long(
+                    ( m_pRoute->pRoutePointList->GetFirst()->GetData()->m_lon ) * 3600. / 15. );
+        }
+
+        // Reorganize dialog for route or track display
+        if( m_pRoute ) {
+            if( m_pRoute->m_bIsTrack ) {
+                m_PlanSpeedLabel->SetLabel( _("Avg. speed") );
+                m_PlanSpeedCtl->SetEditable( false );
+                m_ExtendButton->SetLabel( _("Extend Track") );
+                m_SplitButton->SetLabel( _("Split Track") );
+
+            } else {
+                m_PlanSpeedLabel->SetLabel( _("Plan speed") );
+                m_PlanSpeedCtl->SetEditable( true );
+                m_ExtendButton->SetLabel( _("Extend Route") );
+                m_SplitButton->SetLabel( _("Split Route") );
+            }
+
+            //    Fill in some top pane properties from the Route member elements
+            m_RouteNameCtl->SetValue( m_pRoute->m_RouteNameString );
+            m_RouteStartCtl->SetValue( m_pRoute->m_RouteStartString );
+            m_RouteDestCtl->SetValue( m_pRoute->m_RouteEndString );
+
+            m_RouteNameCtl->SetFocus();
+        } else {
+            m_RouteNameCtl->Clear();
+            m_RouteStartCtl->Clear();
+            m_RouteDestCtl->Clear();
+            m_PlanSpeedCtl->Clear();
+            m_StartTimeCtl->Clear();
+        }
     }
-
     //      if(m_pRoute)
     //            m_pRoute->UpdateSegmentDistances(m_planspeed);           // to interpret ETD properties
 
@@ -1063,17 +1063,17 @@ void RouteProp::SetRouteAndUpdate( Route *pR )
 //    GetSizer()->Fit( this );
     GetSizer()->Layout();
 #endif
-    
+
     InitializeList();
 
     UpdateProperties();
 
     if( m_pRoute )
         m_wpList->Show();
-    
+
     //    GetSizer()->Fit( this );
     //    GetSizer()->Layout();
-    
+
     Refresh( false );
 
 }
@@ -1800,7 +1800,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     wstyle |= wxSTAY_ON_TOP;
 #endif
 
-    wxFont *qFont = GetOCPNScaledFont(_T("Dialog"), 12);
+    wxFont *qFont = GetOCPNScaledFont(_("Dialog"), 10);
     SetFont( *qFont );
 
     Create( parent, id, title, pos, size, wstyle );
@@ -1809,13 +1809,13 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     bSizer1 = new wxBoxSizer( wxVERTICAL );
     SetSizer( bSizer1 );
     bSizer1->SetSizeHints( this );   // set size hints to honour minimum size
-    
+
     m_notebookProperties = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 
     m_panelBasicProperties = new wxScrolledWindow( m_notebookProperties, wxID_ANY,
                                                   wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL | wxTAB_TRAVERSAL);
     //    m_panelBasicProperties->SetScrollRate(5, 5);
-    
+
     m_notebookProperties->AddPage( m_panelBasicProperties, _("Basic"), true );
 
     wxBoxSizer* bSizerBasicProperties;
@@ -1880,6 +1880,8 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     bSizer8->Add( m_bcomboBoxIcon, 1, wxALL, 5 );
 
     bSizerTextProperties->Add( bSizer8, 0, wxEXPAND, 5 );
+
+    bSizerTextProperties->AddSpacer(15);
 
     wxBoxSizer* bSizerLatLon;
     bSizerLatLon = new wxBoxSizer( wxHORIZONTAL );
@@ -2058,7 +2060,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     SetClientSize(sz);
     m_defaultClientSize = sz;
     m_panelBasicProperties->SetScrollRate(5, 5);
-    
+
     Centre( wxBOTH );
 
     // Connect Events
@@ -2406,7 +2408,6 @@ void MarkInfoImpl::OnAddLink( wxCommandEvent& event )
 
         bSizerLinks->Add( ctrl, 0, wxALL, 5 );
         bSizerLinks->Fit( m_scrolledWindowLinks );
-        this->Fit();
 
         Hyperlink* h = new Hyperlink();
         h->DescrText = m_pLinkProp->m_textCtrlLinkDescription->GetValue();
@@ -2522,6 +2523,9 @@ void MarkInfoImpl::OnMarkInfoOKClick( wxCommandEvent& event )
 
     if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
         pRouteManagerDialog->UpdateWptListCtrl();
+
+    if( pRoutePropDialog && pRoutePropDialog->IsShown() )
+        pRoutePropDialog->UpdateProperties();
 
     SetClientSize(m_defaultClientSize);
     event.Skip();
