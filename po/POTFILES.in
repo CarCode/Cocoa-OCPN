@@ -97,6 +97,7 @@
 ../include/TCDS_Binary_Harmonic.h
 ../include/tcmgr.h
 ../include/TCWin.h
+../include/TexFont.h
 ../include/thumbwin.h
 ../include/tide_time.h
 ../include/timers.h
@@ -305,6 +306,7 @@
 ../src/TCDS_Binary_Harmonic.cpp
 ../src/tcmgr.cpp
 ../src/TCWin.cpp
+../src/TexFont.cpp
 ../src/thumbwin.cpp
 ../src/tinyxml.cpp
 ../src/tinyxmlerror.cpp

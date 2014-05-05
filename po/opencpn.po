@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenCPN 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-29 14:15+0100\n"
-"PO-Revision-Date: 2014-01-29 14:22+0100\n"
+"POT-Creation-Date: 2014-05-05 10:38+0200\n"
+"PO-Revision-Date: 2014-05-05 10:55+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.6.3\n"
+"X-Generator: Poedit 1.6.5\n"
 
 msgid ""
 "\n"
@@ -506,9 +506,6 @@ msgstr "AIS-Ziele"
 msgid "AIS target list"
 msgstr "Liste AIS-Ziele"
 
-msgid "AIS-Ziele"
-msgstr "AIS-Ziele"
-
 msgid "AISRollover"
 msgstr "AIS-Kurzinfo"
 
@@ -693,6 +690,10 @@ msgstr "Sind Sie sicher, daß Sie <ALLE> Wegpunkte löschen wollen?"
 msgid "Are you sure you want to delete the selected object(s)"
 msgstr "Sind Sie sicher, daß Sie gewählte Objekt(e) löschen wollen?"
 
+msgid "Are you sure you want to delete this layer and <ALL> of its contents?"
+msgstr ""
+"Sind Sie sicher, daß Sie diesen Layer und <ALLEN> Inhalt löschen wollen?"
+
 msgid "Are you sure you want to delete this route?"
 msgstr "Sind Sie sicher, daß Sie diese Route löschen wollen?"
 
@@ -737,9 +738,6 @@ msgstr "Autoren"
 
 msgid "Auto Follow"
 msgstr "Schiff autom. zentriert"
-
-msgid "Auto Follow\tfn-F2"
-msgstr "Schiff zentriert\tfn-F2"
 
 msgid "Automatic Daily Tracks"
 msgstr "Automatische tägliche Tracks"
@@ -1294,9 +1292,6 @@ msgstr "Kuba"
 msgid "Current"
 msgstr "Gezeitenstrom"
 
-msgid "Currents"
-msgstr "Gezeitenstrom"
-
 msgid "Cyan"
 msgstr "Cyan"
 
@@ -1435,6 +1430,9 @@ msgstr "Beschreibung"
 msgid "Destination"
 msgstr "Ziel"
 
+msgid "Dialog"
+msgstr "Dialog"
+
 msgid "Directories"
 msgstr "Verzeichnisse"
 
@@ -1558,6 +1556,9 @@ msgstr "ETA"
 msgid "ETA          "
 msgstr "ETA          "
 
+msgid "ETA (UTC)"
+msgstr "ETA (UTC)"
+
 msgid "ETE"
 msgstr "ETE"
 
@@ -1588,8 +1589,14 @@ msgstr "Aktivieren"
 msgid "Enable Chart Quilting"
 msgstr "\"Patchwork\" Kartenanzeige aktivieren"
 
+msgid "Enable Responsive graphics interface"
+msgstr "Aktivierung Aktive-Grafik-Anzeige"
+
 msgid "Enable Target Alert Acknowledge timeout (min)"
 msgstr "Aktiviere max. Zeitdauer für Ziel-Alarmquittierung (Minuten)"
+
+msgid "Enable Touchscreen/Tablet interface"
+msgstr "Aktivierung Touchscreen/Tablett Bedienung"
 
 msgid "Enable Transparent Toolbar"
 msgstr "Transparente Symbolleiste "
@@ -1644,8 +1651,14 @@ msgstr "Äquatorial Guinea"
 msgid "Eritrea"
 msgstr "Eritrea"
 
+msgid "Error on Route Upload.  Garmin GPS not connected"
+msgstr "Fehler beim Hochladen der Route. Garmin GPS nicht angeschlossen."
+
 msgid "Error on Route Upload.  Please check logfiles..."
 msgstr "Fehler beim Hochladen der Route. Bitte prüfen Sie die Log-Dateien..."
+
+msgid "Error on Waypoint Upload.  Garmin GPS not connected"
+msgstr "Fehler beim Hochladen der Wegpunkte. Garmin GPS nicht angeschlossen."
 
 msgid "Error on Waypoint Upload.  Please check logfiles..."
 msgstr ""
@@ -2042,9 +2055,6 @@ msgstr "KML Standard (Google-Earth und andere)"
 
 msgid "KML with extended waypoint data (QtVlm)"
 msgstr "KML mit erweiterten Wegpunkt-Daten (QtVlm)"
-
-msgid "Karte drucken"
-msgstr "Karte drucken"
 
 msgid "Kazakhstan"
 msgstr "Kazakhstan"
@@ -2674,6 +2684,31 @@ msgstr "OpenCPN kann nicht starten"
 msgid "OpenCPN info"
 msgstr "OpenCPN info"
 
+msgid ""
+"OpenCPN requires access to serial ports to use serial NMEA data.\n"
+"                         You currently do not have permission to access the "
+"serial ports on this system.\n"
+"\n"
+"                         It is suggested that you exit OpenCPN now,\n"
+"                         and add yourself to the correct group to enable "
+"serial port access.\n"
+"\n"
+"                         You may do so by executing the following command "
+"from the linux command line:\n"
+"\n"
+"                         sudo usermod -a -G "
+msgstr ""
+"OpenCPN braucht Zugang zu ser. Ports zur Verwendung ser. NMEA Daten.\n"
+"Sie haben im Moment keine Berechtigung zum Zugang ser. Ports in diesem "
+"System.\n"
+"\n"
+"Empfohlen wird OpenCPN jetzt zu verlassen,\n"
+"um sich zur richtigen Gruppe zum Zugang ser. Ports anzumelden.\n"
+"\n"
+"Das kann mit folgendem Befehl in der Linux Kommandozeile geschehen:\n"
+"\n"
+"                sudo usermod -a -G "
+
 msgid "Options"
 msgstr "Optionen"
 
@@ -3173,9 +3208,6 @@ msgstr "Route: Empfohlene Route durch Eis"
 msgid "RouteLegInfoRollover"
 msgstr "Kurzinfo Route/Routenabschnitt"
 
-msgid "Routen-Manager"
-msgstr "Routenmanager"
-
 msgid "Routes"
 msgstr "Routen"
 
@@ -3342,14 +3374,8 @@ msgstr "Flachwassergrenze"
 msgid "Shift to Larger Scale Chart"
 msgstr "Auf Karte mit größerem Maßstab wechseln"
 
-msgid "Shift to Larger Scale Chart\tfn-F7"
-msgstr "Wechsel zu großem Maßstab\tfn-F7"
-
 msgid "Shift to Smaller Scale Chart"
 msgstr "Auf Karte mit kleinerem Maßstab wechseln"
-
-msgid "Shift to Smaller Scale Chart\tfn-F8"
-msgstr "Wechsel zu kleinem Maßstab\tfn-F8"
 
 msgid "Ship Icon Type"
 msgstr "Boot-Symbol Type"
@@ -3670,9 +3696,6 @@ msgstr "Warnton testen"
 msgid "Testing"
 msgstr "Testend"
 
-msgid "Text anzeigen\tT"
-msgstr "Text anzeigen\tT"
-
 msgid "Thailand"
 msgstr "Thailand"
 
@@ -3741,12 +3764,14 @@ msgstr ""
 "\n"
 
 msgid ""
-"There are some waypoints used in routes or anchor alarms. Do you want to "
-"delete them as well? This will change the routes and disable the anchor "
-"alarms. Answering No keeps the waypoints used in routes or alarms."
+"There are some waypoints used in routes or anchor alarms.\n"
+" Do you want to delete them as well?\n"
+" This will change the routes and disable the anchor alarms.\n"
+" Answering No keeps the waypoints used in routes or alarms."
 msgstr ""
-"Es gibt einige Wegpunkte in Routen oder Ankeralarmen. Sollen die auch "
-"gelöscht werden? Damit werden die Routen geändert oder Ankeralarme gelöscht. "
+"Es gibt einige Wegpunkte in Routen oder Ankeralarmen.\n"
+"Sollen die auch gelöscht werden?\n"
+"Damit werden die Routen geändert oder Ankeralarme gelöscht.\n"
 "Antwort Nein erhält die Wegpunkte in Routen oder Alarmen."
 
 msgid ""
@@ -3776,9 +3801,6 @@ msgstr "Tide"
 
 msgid "TideCurrentGraphRollover"
 msgstr "Tide/Strom/Grafikinfo"
-
-msgid "Tiden-Referenzorte"
-msgstr "Tiden-Referenzorte"
 
 msgid "Tides && Currents"
 msgstr "Tiden + Strömungen"
@@ -3856,9 +3878,6 @@ msgstr "Track-Eigenschaften"
 msgid "Track Properties, Layer: %d"
 msgstr "Track Eigenschaften, Layer: %d"
 
-msgid "Tracking"
-msgstr "Tracking"
-
 msgid "Tracking Precision"
 msgstr "Tracking-Genauigkeit"
 
@@ -3911,7 +3930,7 @@ msgid "Tunisia"
 msgstr "Tunesien"
 
 msgid "Turkey"
-msgstr "Turkei"
+msgstr "Türkei"
 
 msgid "Turkmenistan"
 msgstr "Turkmenistan"
@@ -4203,14 +4222,8 @@ msgstr "Zimbawne"
 msgid "Zoom In"
 msgstr "Hineinzoomen"
 
-msgid "Zoom In\t+"
-msgstr "Zoom Ein\t+"
-
 msgid "Zoom Out"
 msgstr "Herauszoomen"
-
-msgid "Zoom Out\t-"
-msgstr "Zoom Aus\t-"
 
 msgid "Zoom to Cursor"
 msgstr "Zoom zum Cursor"
