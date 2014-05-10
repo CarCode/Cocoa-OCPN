@@ -122,7 +122,6 @@ protected:
 #if  wxUSE_GRAPHICS_CONTEXT
      wxGraphicsContext *pgc;
 #endif
-     unsigned int tex;
 };
 
 #endif
