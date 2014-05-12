@@ -890,22 +890,24 @@ int Quilt::AdjustRefOnZoomIn( double proposed_scale_onscreen )
 #endif
                 int target_stack_index_check = m_extended_stack_array.Index( current_db_index ); // Lookup
 
-                if( wxNOT_FOUND != target_stack_index_check ) target_stack_index =
-                        target_stack_index_check;
-
-                while( ( proposed_scale_onscreen < min_ref_scale ) && ( target_stack_index > 0 ) ) {
-                    target_stack_index--;
-                    int test_db_index = m_extended_stack_array.Item( target_stack_index );
-
-                    if( pCurrentStack->DoesStackContaindbIndex( test_db_index ) ) {
-                        if( ( current_family == ChartData->GetDBChartFamily( test_db_index ) )
-                                && IsChartQuiltableRef( test_db_index ) ) {
-
-                            //    open the target, and check the min_scale
-                            ChartBase *ptest_chart = ChartData->OpenChartFromDB( test_db_index,
-                                                     FULL_INIT );
-                            if( ptest_chart ) min_ref_scale = ptest_chart->GetNormalScaleMin(
-                                                                      m_canvas_scale_factor, false );
+                if( wxNOT_FOUND != target_stack_index_check )
+                    target_stack_index = target_stack_index_check;
+                
+                if(pCurrentStack) {
+                    while( ( proposed_scale_onscreen < min_ref_scale ) && ( target_stack_index > 0 ) ) {
+                        target_stack_index--;
+                        int test_db_index = m_extended_stack_array.Item( target_stack_index );
+                        
+                        if( pCurrentStack->DoesStackContaindbIndex( test_db_index ) ) {
+                            if( ( current_family == ChartData->GetDBChartFamily( test_db_index ) )
+                               && IsChartQuiltableRef( test_db_index ) ) {
+                                
+                                //    open the target, and check the min_scale
+                                ChartBase *ptest_chart = ChartData->OpenChartFromDB( test_db_index,
+                                                                                    FULL_INIT );
+                                if( ptest_chart ) min_ref_scale = ptest_chart->GetNormalScaleMin(
+                                                                                                 m_canvas_scale_factor, false );
+                            }
                         }
                     }
                 }
@@ -1722,21 +1724,16 @@ bool Quilt::Compose( const ViewPort &vp_in )
     //  We will (always??) get a refresh on the new Quilt anyway...
     cc1->EnablePaint(false);
 
-    bool b_stop_ap = false;
     for( ir = 0; ir < m_pcandidate_array->GetCount(); ir++ ) {
         QuiltCandidate *pqc = m_pcandidate_array->Item( ir );
         if( ( pqc->b_include ) && ( !pqc->b_eclipsed ) )
-            if( !ChartData->IsChartInCache( pqc->dbIndex ) ) {
-                cc1->EnableAutoPan(false);
-                b_stop_ap = true;
-            }
+//         I am fairly certain this test can now be removed
+//            with improved smooth movement logic
+//            if( !ChartData->IsChartInCache( pqc->dbIndex ) )
+//                b_stop_movement = true;
+
             ChartData->OpenChartFromDB( pqc->dbIndex, FULL_INIT );
         }
-
-        if(b_stop_ap) {
-            cc1->EnableAutoPan(false);
-            cc1->EnableAutoPan(true);
-    }
 
     cc1->EnablePaint(true);
 

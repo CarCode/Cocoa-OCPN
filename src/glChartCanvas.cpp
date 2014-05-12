@@ -684,6 +684,8 @@ void glChartCanvas::OnPaint( wxPaintEvent &event )
     if( s_in_glpaint ) return;
     s_in_glpaint++;
 
+    cc1->DoTimedMovement();
+
     render();
 
     s_in_glpaint--;

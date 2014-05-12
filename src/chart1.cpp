@@ -195,7 +195,7 @@ GoToPositionDialog        *pGoToPositionDialog;
 
 double                    gLat, gLon, gCog, gSog, gHdt, gHdm, gVar;
 double                    vLat, vLon;
-double                    initial_scale_ppm;
+double                    initial_scale_ppm, initial_rotation;
 
 int                       g_nbrightness;
 
@@ -937,8 +937,11 @@ bool MyApp::OnInit()
     wxString version_crash = str_version_major + _T(".") + str_version_minor + _T(".") + str_version_patch;
     info.pszAppVersion = version_crash.c_str();
 
-    info.uMiniDumpType = MiniDumpWithDataSegs;  // Include the data sections from all loaded modules.
+    int type = MiniDumpWithDataSegs;  // Include the data sections from all loaded modules.
                                                 // This results in the inclusion of global variables
+
+    type |=  MiniDumpNormal | MiniDumpWithPrivateReadWriteMemory | MiniDumpWithIndirectlyReferencedMemory;
+    info.uMiniDumpType = (MINIDUMP_TYPE)type;
 
     // URL for sending error reports over HTTP.
     info.pszEmailTo = _T("opencpn@bigdumboat.com");
@@ -1894,7 +1897,7 @@ if( 0 == g_memCacheLimit )
 
     cc1->SetQuiltMode( g_bQuiltEnable );                     // set initial quilt mode
     cc1->m_bFollow = pConfig->st_bFollow;               // set initial state
-    cc1->SetViewPoint( vLat, vLon, initial_scale_ppm, 0., 0. );
+    cc1->SetViewPoint( vLat, vLon, initial_scale_ppm, 0., initial_rotation );
 
     gFrame->Enable();
 
@@ -2179,7 +2182,8 @@ if( 0 == g_memCacheLimit )
     gFrame->FrameTimer1.Start( TIMER_GFRAME_1, wxTIMER_CONTINUOUS );
 
 //      Start up the ViewPort Rotation angle Averaging Timer....
-    gFrame->FrameCOGTimer.Start( 10, wxTIMER_CONTINUOUS );
+    if(g_bCourseUp)
+        gFrame->FrameCOGTimer.Start( 10, wxTIMER_CONTINUOUS );
 
 //        gFrame->MemFootTimer.Start(wxMax(g_MemFootSec * 1000, 60 * 1000), wxTIMER_CONTINUOUS);
 //        gFrame->MemFootTimer.Start(1000, wxTIMER_CONTINUOUS);
@@ -2680,12 +2684,12 @@ void MyFrame::startHelp(void)
 }
 void MyFrame::onZoomin(wxCommandEvent& event)
 {
-    cc1->ZoomCanvasIn( 2.0 );
+    cc1->DoZoomCanvas( 2.0 );
     DoChartUpdate();
 }
 void MyFrame::onZoomout(wxCommandEvent& event)
 {
-    cc1->ZoomCanvasOut( 2.0 );
+    cc1->DoZoomCanvas( 0.5 );
     DoChartUpdate();
 }
 void MyFrame::onStackup(wxCommandEvent& event)
@@ -3706,13 +3710,13 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             break;
 
         case ID_ZOOMIN: {
-            cc1->ZoomCanvasIn( 2.0 );
+            cc1->DoZoomCanvas( 2.0 );
             DoChartUpdate();
             break;
         }
 
         case ID_ZOOMOUT: {
-            cc1->ZoomCanvasOut( 2.0 );
+            cc1->DoZoomCanvas( 0.5 );
             DoChartUpdate();
             break;
         }
@@ -4124,7 +4128,9 @@ void MyFrame::ToggleCourseUp( void )
                 COGTable[i] = stuff;
         }
         g_COGAvg = stuff;
-    }
+        gFrame->FrameCOGTimer.Start( 100, wxTIMER_CONTINUOUS );
+    } else
+        cc1->SetVPRotation(0); /* reset to north up */
 
     DoCOGSet();
     UpdateGPSCompassStatusBox( true );
@@ -4574,9 +4580,7 @@ int MyFrame::ProcessOptionsDialog( int rr, options* dialog )
 
         g_COGAvg = stuff;
 
-        //    Short circuit the COG timer to force immediate refresh of canvas in case COGUp is selected
-        FrameCOGTimer.Stop();
-        FrameCOGTimer.Start( 100, wxTIMER_CONTINUOUS );
+        DoCOGSet();
     }
 
     //    Stuff the Filter tables
@@ -5689,34 +5693,32 @@ void MyFrame::OnFrameTCTimer( wxTimerEvent& event )
 //    Keep and update the Viewport rotation angle according to average COG for COGUP mode
 void MyFrame::OnFrameCOGTimer( wxTimerEvent& event )
 {
-//      return;
-    FrameCOGTimer.Stop();
-
     DoCOGSet();
 
-    //    Restart the timer, max frequency is 10 hz.
-    if( g_COGAvgSec > 0 )
-        FrameCOGTimer.Start( g_COGAvgSec * 1000, wxTIMER_CONTINUOUS );
-    else
-        FrameCOGTimer.Start( 100, wxTIMER_CONTINUOUS );
+    if(!g_bCourseUp)
+        return;
 
+    //    Restart the timer, max frequency is 10 hz.
+    int period_ms = 100;
+    if( g_COGAvgSec > 0 )
+        period_ms = g_COGAvgSec * 1000;
+    FrameCOGTimer.Start( period_ms, wxTIMER_CONTINUOUS );
 }
 
 void MyFrame::DoCOGSet( void )
 {
-    double old_VPRotate = g_VPRotate;
+    if( !g_bCourseUp )
+        return;
 
-    if( g_bCourseUp ) g_VPRotate = -g_COGAvg * PI / 180.;
-    else
-        g_VPRotate = 0.;
+    double old_VPRotate = g_VPRotate;
+    g_VPRotate = -g_COGAvg * PI / 180.;
+    if(!g_bskew_comp)
+        g_VPRotate += cc1->GetVPSkew();
 
     if( cc1 ) cc1->SetVPRotation( g_VPRotate );
+    bool bnew_chart = DoChartUpdate();
 
-    if( g_bCourseUp ) {
-        bool bnew_chart = DoChartUpdate();
-
-        if( ( bnew_chart ) || ( old_VPRotate != g_VPRotate ) ) if( cc1 ) cc1->ReloadVP();
-    }
+    if( ( bnew_chart ) || ( old_VPRotate != g_VPRotate ) ) if( cc1 ) cc1->ReloadVP();
 }
 
 void RenderShadowText( wxDC *pdc, wxFont *pFont, wxString& str, int x, int y )
