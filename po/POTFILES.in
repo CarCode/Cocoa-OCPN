@@ -20,6 +20,7 @@
 ../include/compasswin.h
 ../include/concanv.h
 ../include/ConnectionParams.h
+../include/crashprint.h
 ../include/cutil.h
 ../include/datastream.h
 ../include/dsPortType.h
@@ -134,6 +135,7 @@
 ../src/compasswin.cpp
 ../src/concanv.cpp
 ../src/ConnectionParams.cpp
+../src/crashprint.cpp
 ../src/cutil.cpp
 ../src/datastream.cpp
 ../src/FontDesc.cpp
@@ -219,7 +221,6 @@
 ../src/myiso8211/ddfutils.cpp
 ../src/NavObjectCollection.cpp
 ../src/navutil.cpp
-../src/nmea.cpp
 ../src/nmea0183/apb.cpp
 ../src/nmea0183/apb.hpp
 ../src/nmea0183/expid.cpp
@@ -314,7 +315,6 @@
 ../src/toolbar.cpp
 ../src/TrackPropDlg.cpp
 ../src/tri.c
-../src/TrackPropDlg.cpp
 ../src/TTYScroll.cpp
 ../src/TTYWindow.cpp
 ../src/undo.cpp
