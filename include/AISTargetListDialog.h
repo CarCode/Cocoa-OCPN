@@ -25,6 +25,7 @@
 #define __AISTARGETLISTDIALOG_H__
 
 #include <wx/panel.h>
+#include <wx/checkbox.h>
 
 class OCPNListCtrl;
 class AIS_Decoder;
@@ -76,6 +77,7 @@ class AISTargetListDialog: public wxPanel
             void OnToggleTrack( wxCommandEvent& event );
             void OnLimitRange( wxCommandEvent& event );
             void OnCloseButton( wxCommandEvent& event );
+            void OnAutosortCB( wxCommandEvent &event );
 
             wxWindow          *m_pparent;
             wxAuiManager      *m_pAuiManager;
@@ -90,6 +92,9 @@ class AISTargetListDialog: public wxPanel
             wxStaticText      *m_pStaticTextCount;
             wxTextCtrl        *m_pTextTargetCount;
             wxButton          *m_pButtonOK;
+            wxCheckBox        *m_pCBAutosort;
+
+            bool              m_bautosort_force;
 
             wxDECLARE_EVENT_TABLE();
 

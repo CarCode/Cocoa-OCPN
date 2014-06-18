@@ -42,7 +42,7 @@
 //#include <math.h>
 #include <time.h>
 #include <locale>
-#include <deque>
+#include <list>
 
 #include <wx/listimpl.cpp>
 #include <wx/progdlg.h>
@@ -321,6 +321,15 @@ extern bool             portaudio_initialized;
 
 extern bool             g_btouch;
 extern bool             g_bresponsive;
+
+#ifdef ocpnUSE_GL
+extern ocpnGLOptions g_GLOptions;
+#endif
+
+#if !defined(NAN)
+static const long long lNaN = 0xfff8000000000000;
+#define NAN (*(double*)&lNaN)
+#endif
 
 //---------------------------------------------------------------------------------
 //    Track Implementation
@@ -658,18 +667,26 @@ void Track::Draw( ocpnDC& dc, ViewPort &VP )
         col = basic_colour;
     } else {
         for( unsigned int i = 0; i < sizeof( ::GpxxColorNames ) / sizeof(wxString); i++ ) {
-                if( m_Colour == ::GpxxColorNames[i] ) {
-                    col = ::GpxxColors[i];
-                    break;
-                }
+            if( m_Colour == ::GpxxColorNames[i] ) {
+                col = ::GpxxColors[i];
+                break;
             }
+        }
     }
     dc.SetPen( *wxThePenList->FindOrCreatePen( col, width, style ) );
     dc.SetBrush( *wxTheBrushList->FindOrCreateBrush( col, wxSOLID ) );
 
+    std::list< std::list<wxPoint> > pointlists;
+    std::list<wxPoint> pointlist;
+    
+    //    Get the dc boundary
+    int sx, sy;
+    dc.GetSize( &sx, &sy );
+
     //  Draw the first point
-    wxPoint rpt, rptn;
+    wxPoint rpt;
     DrawPointWhich( dc, 1, &rpt );
+    pointlist.push_back(rpt);
 
     node = node->GetNext();
     while( node ) {
@@ -681,25 +698,58 @@ void Track::Draw( ocpnDC& dc, ViewPort &VP )
         //  We do inline decomposition of the line segments, in a simple minded way
         //  If the line segment length is less than approximately 2 pixels, then simply don't render it,
         //  but continue on to the next point.
-        if((abs(r.x - rpt.x) > 1) || (abs(r.y- rpt.y) > 1) ){
-            prp->Draw( dc, &rptn );
+        int x0 = r.x, y0 = r.y, x1 = rpt.x, y1= rpt.y;
+        if((abs(r.x - rpt.x) > 1) || (abs(r.y - rpt.y) > 1) ||
+           cohen_sutherland_line_clip_i( &x0, &y0, &x1, &y1, 0, sx, 0, sy ) != Visible ) {
+            prp->Draw( dc, &rpt );
 
-            if( ToSegNo == FromSegNo )
-                RenderSegment( dc, rpt.x, rpt.y, rptn.x, rptn.y, VP, false, (int) radius ); // no arrows, with hilite
-
-            rpt = rptn;
+            pointlist.push_back(rpt);
+            if( ToSegNo != FromSegNo ) {
+                if(pointlist.size()) {
+                    pointlists.push_back(pointlist);
+                    pointlist.clear();
+                }
+            }
         }
         node = node->GetNext();
         FromSegNo = ToSegNo;          
-
     }
 
-    //    Draw last segment, dynamically, maybe.....
-
+    //    Add last segment, dynamically, maybe.....
     if( m_bRunning ) {
-        wxPoint r;
-        cc1->GetCanvasPointPix( gLat, gLon, &r );
-        RenderSegment( dc, rpt.x, rpt.y, r.x, r.y, VP, false, (int) radius ); // no arrows, with hilite
+        cc1->GetCanvasPointPix( gLat, gLon, &rpt );
+        pointlist.push_back(rpt);
+    }
+    pointlists.push_back(pointlist);
+    
+    for(std::list< std::list<wxPoint> >::iterator lines = pointlists.begin();
+        lines != pointlists.end(); lines++) {
+        wxPoint *points = new wxPoint[lines->size()];
+        int i = 0;
+        for(std::list<wxPoint>::iterator line = lines->begin();
+            line != lines->end(); line++) {
+            points[i] = *line;
+            i++;
+        }
+
+        int hilite_width = radius;
+        if( hilite_width ) {
+            wxPen psave = dc.GetPen();
+            
+            dc.StrokeLines( i, points );
+            
+            wxColour y = GetGlobalColor( _T ( "YELO1" ) );
+            wxColour hilt( y.Red(), y.Green(), y.Blue(), 128 );
+            
+            wxPen HiPen( hilt, hilite_width, wxSOLID );
+            dc.SetPen( HiPen );
+            
+            dc.StrokeLines( i, points );
+            
+            dc.SetPen( psave );
+        } else
+            dc.StrokeLines( i, points );
+            delete [] points;
     }
 }
 
@@ -1005,12 +1055,18 @@ void MyConfig::CreateRotatingNavObjBackup()
         wxFile f;
         wxString oldname = m_sNavObjSetFile;
         wxString newname = wxString::Format( _T("%s.1"), m_sNavObjSetFile.c_str() );
-        f.Open(oldname);
-        wxFileOffset s_diff = f.Length();
-        f.Close();
-        f.Open(newname);
-        s_diff -= f.Length();
-        f.Close();
+
+        wxFileOffset s_diff = 0;
+        if( f.Open(oldname) ){
+            wxFileOffset s_diff = f.Length();
+            f.Close();
+        }
+
+        if( f.Open(newname) ){
+            s_diff -= f.Length();
+            f.Close();
+        }
+
         if ( s_diff != 0 )
         {
             for( int i = g_navobjbackups - 1; i >= 1; i-- )
@@ -1132,8 +1188,16 @@ int MyConfig::LoadMyConfig( int iteration )
 
     Read( _T ( "ActiveChartGroup" ), &g_GroupIndex, 0 );
 
-    Read( _T ( "GPUMemorySize" ), &g_GPU_MemSize, 256 );
-
+    /* opengl options */
+#ifdef ocpnUSE_GL
+    Read( _T ( "UseAcceleratedPanning" ), &g_GLOptions.m_bUseAcceleratedPanning, true );
+    
+    Read( _T ( "GPUTextureCompression" ), &g_GLOptions.m_bTextureCompression, 0);
+    Read( _T ( "GPUTextureCompressionCaching" ), &g_GLOptions.m_bTextureCompressionCaching, 0);
+    
+    Read( _T ( "GPUTextureDimension" ), &g_GLOptions.m_iTextureDimension, 512 );
+    Read( _T ( "GPUTextureMemSize" ), &g_GLOptions.m_iTextureMemorySize, 64 );
+#endif
     Read( _T ( "SmoothPanZoom" ), &g_bsmoothpanzoom, 0 );
 
     Read( _T ( "ToolbarX"), &g_toolbar_x, 0 );
@@ -1170,7 +1234,8 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "SkewCompUpdatePeriod" ), &g_SkewCompUpdatePeriod, 10 );
 
     Read( _T ( "SetSystemTime" ), &s_bSetSystemTime, 0 );
-    Read( _T ( "ShowDebugWindows" ), &m_bShowDebugWindows, 1 );
+    Read( _T ( "ShowStatusBar" ), &m_bShowStatusBar, 1 );
+    Read( _T ( "ShowCompassWindow" ), &m_bShowCompassWin, 1 );
     Read( _T ( "ShowGrid" ), &g_bDisplayGrid, 0 );
     Read( _T ( "PlayShipsBells" ), &g_bPlayShipsBells, 0 );
     Read( _T ( "FullscreenToolbar" ), &g_bFullscreenToolbar, 1 );
@@ -1467,6 +1532,11 @@ int MyConfig::LoadMyConfig( int iteration )
     for (size_t i = 0; i < confs.Count(); i++)
     {
         ConnectionParams * prm = new ConnectionParams(confs[i]);
+        if (!prm->Valid) {
+            wxLogMessage( _T( "Skipped invalid DataStream config") );
+            delete prm;
+            continue;
+        }
         g_pConnectionParams->Add(prm);
     }
 
@@ -1589,12 +1659,12 @@ int MyConfig::LoadMyConfig( int iteration )
                 prm->Port = port;
                 prm->OutputSentenceListType = WHITELIST;
                 prm->OutputSentenceList.Add( _T("RMB") );
-                prm->Output = true;
+                prm->IOSelect = DS_TYPE_INPUT_OUTPUT;
 
                 g_pConnectionParams->Add(prm);
             }
             else {                                  // port was found, so make sure it is set for output
-                cp->Output = true;
+                cp->IOSelect = DS_TYPE_INPUT_OUTPUT;
                 cp->OutputSentenceListType = WHITELIST;
                 cp->OutputSentenceList.Add( _T("RMB") );
             }
@@ -1881,7 +1951,7 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "NavObjectFileName" ), m_sNavObjSetFile );
 
     Read( _T ( "RouteLineWidth" ), &g_route_line_width, 2 );
-    Read( _T ( "TrackLineWidth" ), &g_track_line_width, 3 );
+    Read( _T ( "TrackLineWidth" ), &g_track_line_width, 2 );
     Read( _T ( "CurrentArrowScale" ), &g_current_arrow_scale, 100 );
     Read( _T ( "DefaultWPIcon" ), &g_default_wp_icon, _T("triangle") );
 
@@ -1948,11 +2018,7 @@ bool MyConfig::LoadLayers(wxString &path)
                         l->m_NoOfItems += nItems;
 
                         wxString objmsg;
-#ifdef __WXOSX__
-                        objmsg.Printf( wxT("Loaded GPX file %s with %d items."), file_path.c_str(), (int)nItems );
-#else
-                        objmsg.Printf( wxT("Loaded GPX file %s with %d items."), file_path.c_str(), nItems );
-#endif
+                        objmsg.Printf( wxT("Loaded GPX file %s with %ld items."), file_path.c_str(), nItems );
                         wxLogMessage( objmsg );
 
                         delete pSet;
@@ -2247,7 +2313,8 @@ void MyConfig::UpdateSettings()
     Write( _T ( "UIStyle" ), g_StyleManager->GetStyleNextInvocation() );
     Write( _T ( "ChartNotRenderScaleFactor" ), g_ChartNotRenderScaleFactor );
 
-    Write( _T ( "ShowDebugWindows" ), m_bShowDebugWindows );
+    Write( _T ( "ShowStatusBar" ), m_bShowStatusBar );
+    Write( _T ( "ShowCompassWindow" ), m_bShowCompassWin );
     Write( _T ( "SetSystemTime" ), s_bSetSystemTime );
     Write( _T ( "ShowGrid" ), g_bDisplayGrid );
     Write( _T ( "PlayShipsBells" ), g_bPlayShipsBells );
@@ -2278,6 +2345,16 @@ void MyConfig::UpdateSettings()
 
     Write( _T ( "SkewToNorthUp" ), g_bskew_comp );
     Write( _T ( "OpenGL" ), g_bopengl );
+
+#ifdef ocpnUSE_GL
+    /* opengl options */
+    Write( _T ( "UseAcceleratedPanning" ), g_GLOptions.m_bUseAcceleratedPanning );
+    
+    Write( _T ( "GPUTextureCompression" ), g_GLOptions.m_bTextureCompression);
+    Write( _T ( "GPUTextureCompressionCaching" ), g_GLOptions.m_bTextureCompressionCaching);
+    Write( _T ( "GPUTextureDimension" ), g_GLOptions.m_iTextureDimension );
+    Write( _T ( "GPUTextureMemSize" ), g_GLOptions.m_iTextureMemorySize );
+#endif
     Write( _T ( "SmoothPanZoom" ), g_bsmoothpanzoom );
 
     Write( _T ( "UseRasterCharts" ), g_bUseRaster );
@@ -2586,12 +2663,10 @@ void MyConfig::UpdateNavObj( void )
     pNavObjectSet->SaveFile( m_sNavObjSetFile );
 
     delete pNavObjectSet;
-#ifdef __WXOSX__
+
     if( ::wxFileExists( m_sNavObjSetChangesFile ) )
         wxRemoveFile( m_sNavObjSetChangesFile );
-#else
-    wxRemoveFile( m_sNavObjSetChangesFile );
-#endif
+
     delete m_pNavObjectChangesSet;
     m_pNavObjectChangesSet = new NavObjectChanges();
 
@@ -3862,7 +3937,7 @@ bool LogMessageOnce(const wxString &msg)
 /**************************************************************************/
 double toUsrDistance( double nm_distance, int unit  )
 {
-    double ret;
+    double ret = NAN;
     if ( unit == -1 )
         unit = g_iDistanceFormat;
     switch( unit ){
@@ -3899,7 +3974,7 @@ double toUsrDistance( double nm_distance, int unit  )
 /**************************************************************************/
 double fromUsrDistance( double usr_distance, int unit )
 {
-    double ret;
+    double ret = NAN;
     if ( unit == -1 )
         unit = g_iDistanceFormat;
         switch( unit ){
@@ -3961,7 +4036,7 @@ wxString getUsrDistanceUnit( int unit )
 /**************************************************************************/
 double toUsrSpeed( double kts_speed, int unit )
 {
-    double ret;
+    double ret = NAN;
     if ( unit == -1 )
         unit = g_iSpeedFormat;
         switch( unit )
@@ -3987,7 +4062,7 @@ double toUsrSpeed( double kts_speed, int unit )
 /**************************************************************************/
 double fromUsrSpeed( double usr_speed, int unit )
 {
-    double ret;
+    double ret = NAN;
     if ( unit == -1 )
         unit = g_iSpeedFormat;
         switch( unit )

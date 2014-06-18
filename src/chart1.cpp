@@ -37,6 +37,10 @@
 #include "CrashRpt.h"
 #endif
 
+#ifdef LINUX_CRASHRPT
+#include "crashprint.h"
+#endif
+
 #include "wx/print.h"
 #include "wx/printdlg.h"
 #include "wx/artprov.h"
@@ -583,6 +587,7 @@ int                       g_AisTargetList_sortColumn;
 bool                      g_bAisTargetList_sortReverse;
 wxString                  g_AisTargetList_column_spec;
 int                       g_AisTargetList_count;
+bool                      g_bAisTargetList_autosort;
 
 bool                      g_bGarminHostUpload;
 
@@ -602,6 +607,7 @@ int                       g_toolbar_x;
 int                       g_toolbar_y;
 long                      g_toolbar_orient;
 wxRect                    g_last_tb_rect;
+float                     g_toolbar_scalefactor;
 
 MyDialogPtrArray          g_MacShowDialogArray;
 
@@ -611,7 +617,6 @@ bool                      g_bMagneticAPB;
 
 //                        OpenGL Globals
 int                       g_GPU_MemSize;
-bool                      g_b_useStencil;
 
 bool                      g_bserial_access_checked;
 
@@ -632,13 +637,17 @@ int               g_sticky_chart;
 
 extern wxString OpenCPNVersion; //Gunther
 
-double g_GLMinLineWidth;
+float g_GLMinLineWidth;
 
 int n_NavMessageShown;
 wxString g_config_version_string;
 
 bool             g_btouch;
 bool             g_bresponsive;
+
+#ifdef LINUX_CRASHRPT
+wxCrashPrint g_crashprint;
+#endif
 
 #ifndef __WXMSW__
 sigjmp_buf env;                    // the context saved by sigsetjmp();
@@ -940,7 +949,7 @@ bool MyApp::OnInit()
     int type = MiniDumpWithDataSegs;  // Include the data sections from all loaded modules.
                                                 // This results in the inclusion of global variables
 
-    type |=  MiniDumpNormal | MiniDumpWithPrivateReadWriteMemory | MiniDumpWithIndirectlyReferencedMemory;
+    type |=  MiniDumpNormal;// | MiniDumpWithPrivateReadWriteMemory | MiniDumpWithIndirectlyReferencedMemory;
     info.uMiniDumpType = (MINIDUMP_TYPE)type;
 
     // URL for sending error reports over HTTP.
@@ -997,6 +1006,11 @@ bool MyApp::OnInit()
     crAddFile2( log_crash.c_str(), NULL, NULL, CR_AF_MISSING_FILE_OK | CR_AF_ALLOW_DELETE );
 
 #endif    
+#endif
+
+#ifdef LINUX_CRASHRPT
+    // fatal exceptions handling
+    wxHandleFatalExceptions (true);
 #endif
 
     //  Seed the random number generator
@@ -1132,8 +1146,14 @@ bool MyApp::OnInit()
     temp_font.SetDefaultEncoding( wxFONTENCODING_SYSTEM );
 
 //      Establish a "home" location
-    wxStandardPathsBase& std_path = wxApp::GetTraits()->GetStandardPaths();
-    std_path.Get();
+    wxStandardPaths& std_path = *dynamic_cast<wxStandardPaths*>(&wxApp::GetTraits()->GetStandardPaths());
+    
+    //TODO  Why is the following preferred?  Will not compile with gcc...
+    //    wxStandardPaths& std_path = wxApp::GetTraits()->GetStandardPaths();
+
+#ifdef __WXGTK__
+    std_path.SetInstallPrefix(wxString(PREFIX, wxConvUTF8));
+#endif
 
     gExe_path = std_path.GetExecutablePath();
 
@@ -1769,19 +1789,31 @@ if( 0 == g_memCacheLimit )
 
     //  Check the global Tide/Current data source array
     //  If empty, preset one default (US) Ascii data source
+    wxString default_tcdata =  ( g_SData_Locn + _T("tcdata") +
+                                wxFileName::GetPathSeparator() + _T("HARMONIC.IDX"));
+    wxFileName fdefault( default_tcdata );
     if(!TideCurrentDataSet.GetCount()) {
-        wxString default_tcdata =  ( g_SData_Locn + _T("tcdata") +
-            wxFileName::GetPathSeparator() +
-            _T("HARMONIC.IDX"));
-
-
-    if( g_bportable ) {
-        wxFileName f( default_tcdata );
-        f.MakeRelativeTo( g_PrivateDataDir );
-        TideCurrentDataSet.Add( f.GetFullPath() );
+        if( g_bportable ) {
+            fdefault.MakeRelativeTo( g_PrivateDataDir );
+            TideCurrentDataSet.Add( fdefault.GetFullPath() );
     }
     else
         TideCurrentDataSet.Add( default_tcdata );
+    }
+    else {
+        wxString first_tide = TideCurrentDataSet.Item(0);
+        wxFileName ft(first_tide);
+        if(!ft.FileExists()){
+            TideCurrentDataSet.RemoveAt(0);
+            TideCurrentDataSet.Insert( default_tcdata, 0 );
+        }
+        else {
+            wxString first_path(ft.GetPath());
+            if(fdefault.GetPath() != first_path){
+                TideCurrentDataSet.RemoveAt(0);
+                TideCurrentDataSet.Insert( default_tcdata, 0 );
+            }
+        }
     }
 
     //  Check the global AIS alarm sound file
@@ -1907,7 +1939,7 @@ if( 0 == g_memCacheLimit )
 
     pthumbwin = new ThumbWin( cc1 );
 
-    gFrame->ApplyGlobalSettings( 1, false );               // done once on init with resize
+    gFrame->ApplyGlobalSettings( false, false );               // done once on init with resize
 
     g_toolbar_x = wxMax(g_toolbar_x, 0);
     g_toolbar_y = wxMax(g_toolbar_y, 0);
@@ -1915,11 +1947,7 @@ if( 0 == g_memCacheLimit )
     g_toolbar_x = wxMin(g_toolbar_x, cw);
     g_toolbar_y = wxMin(g_toolbar_y, ch);
 
-    g_FloatingToolbarDialog = new ocpnFloatingToolbarDialog( cc1,
-            wxPoint( g_toolbar_x, g_toolbar_y ), g_toolbar_orient );
-    g_FloatingToolbarDialog->LockPosition(true);
-
-    gFrame->SetAndApplyColorScheme( global_color_scheme );
+    gFrame->SetToolbarScale();
 
     //  The position and size of the static frame children (i.e. the canvas, and the status bar) are now set
     //  So now we can establish the AUI panes for them.
@@ -1935,12 +1963,14 @@ if( 0 == g_memCacheLimit )
 
 //      Load and initialize any PlugIns
     g_pi_manager = new PlugInManager( gFrame );
-    g_pi_manager->LoadAllPlugIns( g_Plugin_Dir );
+    g_pi_manager->LoadAllPlugIns( g_Plugin_Dir, true );
 
 // Show the frame
 
     gFrame->ClearBackground();
     gFrame->Show( TRUE );
+
+    gFrame->SetAndApplyColorScheme( global_color_scheme );
 
     if( g_bframemax ) gFrame->Maximize( true );
 
@@ -2174,7 +2204,7 @@ if( 0 == g_memCacheLimit )
 
     gFrame->DoChartUpdate();
 
-    g_FloatingToolbarDialog->LockPosition(false);
+//    g_FloatingToolbarDialog->LockPosition(false);
 
     gFrame->RequestNewToolbar();
 
@@ -2234,8 +2264,12 @@ if( 0 == g_memCacheLimit )
 
     cc1->ReloadVP();                  // once more, and good to go
 
-    g_FloatingCompassDialog = new ocpnFloatingCompassWindow( cc1 );
-    if( g_FloatingCompassDialog ) g_FloatingCompassDialog->UpdateStatus( true );
+    //  Some window managers get confused about z-order of Compass Window, and other windows not children of gFrame.
+    //  We need to defer their creation until here.
+    if( pConfig->m_bShowCompassWin ) {
+        g_FloatingCompassDialog = new ocpnFloatingCompassWindow( cc1 );
+        if( g_FloatingCompassDialog ) g_FloatingCompassDialog->UpdateStatus( true );
+    }
 
     g_FloatingToolbarDialog->Raise();
     g_FloatingToolbarDialog->Show();
@@ -2398,6 +2432,12 @@ int MyApp::OnExit()
     return TRUE;
 }
 
+#ifdef LINUX_CRASHRPT
+void MyApp::OnFatalException () {
+    g_crashprint.Report();
+}
+#endif
+
 void MyApp::TrackOff( void )
 {
     if( gFrame ) gFrame->TrackOff();
@@ -2515,11 +2555,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
             }
 #endif
 
-            dsPortType port_type;
-            if (cp->Output)
-                port_type = DS_TYPE_INPUT_OUTPUT;
-            else
-                port_type = DS_TYPE_INPUT;
+            dsPortType port_type = cp->IOSelect;
             DataStream *dstr = new DataStream( g_pMUX,
                                            cp->GetDSPort(),
                                            wxString::Format(wxT("%i"),cp->Baudrate),
@@ -2621,6 +2657,8 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     appMenu->Check(ID_AIS, true);
     appMenu->Check(ID_CURRENT, false);
     appMenu->Check(ID_TIDE, false);
+
+    EnableFullScreenView();
 
     SetMenuBar(mac_menu);
 #endif
@@ -2810,10 +2848,6 @@ void MyFrame::SetAndApplyColorScheme( ColorScheme cs )
     g_StyleManager->GetCurrentStyle()->SetColorScheme( cs );
     cc1->GetWorldBackgroundChart()->SetColorScheme( cs );
 
-#ifdef USE_S57
-    if( ps52plib ) ps52plib->SetPLIBColorScheme( SchemeName );
-#endif
-
     //Search the user color table array to find the proper hash table
     Usercolortable_index = 0;
     for( unsigned int i = 0; i < UserColorTableArray->GetCount(); i++ ) {
@@ -2823,6 +2857,8 @@ void MyFrame::SetAndApplyColorScheme( ColorScheme cs )
             break;
         }
     }
+
+    if( ps52plib ) ps52plib->SetPLIBColorScheme( SchemeName );
 
     //    Set up a pointer to the proper hash table
     pcurrent_user_color_hash = (wxColorHashMap *) UserColourHashTableArray->Item(
@@ -2924,8 +2960,10 @@ ocpnToolBarSimple *MyFrame::CreateAToolbar()
     ocpnToolBarSimple *tb = NULL;
     wxToolBarToolBase* newtool;
 
-    if( g_FloatingToolbarDialog ) tb = g_FloatingToolbarDialog->GetToolbar();
-    if( !tb ) return 0;
+    if( g_FloatingToolbarDialog )
+        tb = g_FloatingToolbarDialog->GetToolbar();
+    if( !tb )
+        return 0;
 
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
 
@@ -3204,9 +3242,26 @@ bool MyFrame::AddDefaultPositionPlugInTools( ocpnToolBarSimple *tb )
 
 void MyFrame::RequestNewToolbar()
 {
+    bool b_reshow = true;
     if( g_FloatingToolbarDialog ) {
-        bool b_reshow = g_FloatingToolbarDialog->IsShown();
-        if( g_FloatingToolbarDialog->IsToolbarShown() ) DestroyMyToolbar();
+        b_reshow = g_FloatingToolbarDialog->IsShown();
+
+        float ff = fabs(g_FloatingToolbarDialog->GetScaleFactor() - g_toolbar_scalefactor);
+        if(ff > 0.01f){
+            DestroyMyToolbar();
+            delete g_FloatingToolbarDialog;
+            g_FloatingToolbarDialog = NULL;
+        }
+    }
+
+    if( !g_FloatingToolbarDialog ) {
+        g_FloatingToolbarDialog = new ocpnFloatingToolbarDialog( cc1,
+                                                                wxPoint( g_toolbar_x, g_toolbar_y ), g_toolbar_orient, g_toolbar_scalefactor );
+    }
+
+    if( g_FloatingToolbarDialog ) {
+        if( g_FloatingToolbarDialog->IsToolbarShown() )
+            DestroyMyToolbar();
 
         g_toolbar = CreateAToolbar();
         g_FloatingToolbarDialog->RePosition();
@@ -3259,6 +3314,26 @@ void MyFrame::EnableToolbar( bool newstate )
         g_toolbar->EnableTool( ID_ROUTEMANAGER, newstate );
         g_toolbar->EnableTool( ID_TRACK, newstate );
         g_toolbar->EnableTool( ID_AIS, newstate );
+    }
+}
+
+void MyFrame::SetToolbarScale()
+{
+    //  Get the basic size of a tool icon
+    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+    wxSize style_tool_size = style->GetToolSize();
+    
+    g_toolbar_scalefactor = 1.0;
+    if(g_bresponsive ){
+        //      Adjust the scale factor so that the basic tool size is xx millimetres, assumed square
+        float target_size = 9.0;                // mm
+        
+        float basic_tool_size_mm = style_tool_size.x / cc1->GetPixPerMM();
+        g_toolbar_scalefactor =  target_size / basic_tool_size_mm;
+        g_toolbar_scalefactor = wxMax(g_toolbar_scalefactor, 1.0);
+        
+        //  Round to the nearest "quarter", to avoid rendering artifacts
+        g_toolbar_scalefactor = wxRound( g_toolbar_scalefactor * 4.0 )/ 4.0;
     }
 }
 
@@ -3377,6 +3452,7 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     }
 
     FrameTimer1.Stop();
+    FrameCOGTimer.Stop();
 
     g_bframemax = IsMaximized();
 
@@ -3437,6 +3513,11 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     SetStatusBar( NULL );
     stats = NULL;
 
+    if( pRouteManagerDialog ) {
+        pRouteManagerDialog->Destroy();
+        pRouteManagerDialog = NULL;
+    }
+
     cc1->Destroy();
     cc1 = NULL;
 
@@ -3475,9 +3556,9 @@ void MyFrame::OnMove( wxMoveEvent& event )
 {
     if( g_FloatingToolbarDialog ) g_FloatingToolbarDialog->RePosition();
 
-    if( stats ) stats->RePosition();
+    if( stats && stats->IsVisible()) stats->RePosition();
 
-    UpdateGPSCompassStatusBox( true );
+    UpdateGPSCompassStatusBox( );
 
     if( console && console->IsShown() ) PositionConsole();
 
@@ -3504,7 +3585,7 @@ void MyFrame::ProcessCanvasResize( void )
 
     }
 
-    UpdateGPSCompassStatusBox( true );
+    UpdateGPSCompassStatusBox( );
 
     if( console->IsShown() ) PositionConsole();
 }
@@ -3710,13 +3791,13 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             break;
 
         case ID_ZOOMIN: {
-            cc1->DoZoomCanvas( 2.0 );
+            cc1->DoZoomCanvas( 2.0, false );
             DoChartUpdate();
             break;
         }
 
         case ID_ZOOMOUT: {
-            cc1->DoZoomCanvas( 0.5 );
+            cc1->DoZoomCanvas( 0.5, false );
             DoChartUpdate();
             break;
         }
@@ -4290,6 +4371,10 @@ void MyFrame::ToggleChartOutlines( void )
 
     cc1->Refresh( false );
 
+#ifdef ocpnUSE_GL         // opengl renders chart outlines as part of the chart this needs a full refresh
+    if( g_bopengl )
+        cc1->GetglCanvas()->Invalidate();
+#endif
 }
 
 void MyFrame::SetToolbarItemState( int tool_id, bool state )
@@ -4315,7 +4400,7 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
     UseNativeStatusBar( false );              // better for MSW, undocumented in frame.cpp
 #endif
 
-    if( pConfig->m_bShowDebugWindows ) {
+    if( pConfig->m_bShowStatusBar ) {
         if( !m_pStatusBar ) {
             m_pStatusBar = CreateStatusBar( m_StatusBarFieldCount, 0 );   // No wxST_SIZEGRIP needed
             ApplyGlobalColorSchemetoStatusBar();
@@ -4330,6 +4415,18 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
 
             SendSizeEvent();                        // seem only needed for MSW...
             Refresh( false );
+        }
+    }
+
+    if( bFlyingUpdate ) {
+        if( pConfig->m_bShowCompassWin ) {
+            if(!g_FloatingCompassDialog) {
+                g_FloatingCompassDialog = new ocpnFloatingCompassWindow( cc1 );
+                if( g_FloatingCompassDialog ) g_FloatingCompassDialog->UpdateStatus( true );
+            }
+        } else if(g_FloatingCompassDialog) {
+            g_FloatingCompassDialog->Destroy();
+            g_FloatingCompassDialog = NULL;
         }
     }
 
@@ -4487,6 +4584,9 @@ int MyFrame::DoOptionsDialog()
 
     delete pWorkDirArray;
 
+    SetToolbarScale();
+    RequestNewToolbar();
+
     bDBUpdateInProgress = false;
     if( g_FloatingToolbarDialog ) {
         if( IsFullScreen() && !g_bFullscreenToolbar )
@@ -4527,6 +4627,13 @@ int MyFrame::ProcessOptionsDialog( int rr, options* dialog )
     UpdateChartDatabaseInplace( *pWorkDirArray, ( ( rr & FORCE_UPDATE ) == FORCE_UPDATE ),
                 true, *pChartListFileName );
 
+#ifdef ocpnUSE_GL
+        extern ocpnGLOptions g_GLOptions;
+        
+        if(g_bopengl && g_GLOptions.m_bTextureCompression &&
+           g_GLOptions.m_bTextureCompressionCaching)
+            BuildCompressedCache();
+#endif
         //    Re-open the last open chart
         int dbii = ChartData->FinddbIndex( chart_file_name );
         ChartsRefresh( dbii, cc1->GetVP() );
@@ -4599,7 +4706,7 @@ int MyFrame::ProcessOptionsDialog( int rr, options* dialog )
         SetChartUpdatePeriod( cc1->GetVP() );              // Pick up changes to skew compensator
 
     if(rr & GL_CHANGED){
-        //    Refreseh the chart display, after flushing cache.
+        //    Refresh the chart display, after flushing cache.
         //      This will allow all charts to recognise new OpenGL configuration, if any
         int dbii = ChartData->FinddbIndex( chart_file_name );
         ChartsRefresh( dbii, cc1->GetVP(), true );
@@ -4717,6 +4824,7 @@ void MyFrame::ChartsRefresh( int dbi_hint, ViewPort &vp, bool b_purge )
             pTentative_Chart = ChartData->OpenChartFromDB( dbi_hint, FULL_INIT );
 
             if( pTentative_Chart ) {
+                /* Current_Ch is always NULL here, (set above) should this go before that? */
                 if( Current_Ch ) Current_Ch->Deactivate();
 
                 Current_Ch = pTentative_Chart;
@@ -4754,7 +4862,7 @@ void MyFrame::ChartsRefresh( int dbi_hint, ViewPort &vp, bool b_purge )
 
     UpdateControlBar();
 
-    UpdateGPSCompassStatusBox( true );
+    UpdateGPSCompassStatusBox( );
 
     cc1->SetCursor( wxCURSOR_ARROW );
 
@@ -5455,25 +5563,12 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
     }
 
     if( cc1 ) {
+#ifndef __WXGTK__
         double cursor_lat, cursor_lon;
         cc1->GetCursorLatLon( &cursor_lat, &cursor_lon );
 
-        wxString s1;
-        s1 += _T(" ");
-        s1 += toSDMM( 1, cursor_lat );
-        s1 += _T("   ");
-        s1 += toSDMM( 2, cursor_lon );
-        if( GetStatusBar() ) SetStatusText( s1, STAT_FIELD_CURSOR_LL );
-
-        double brg, dist;
-        DistanceBearingMercator( cursor_lat, cursor_lon, gLat, gLon, &brg, &dist );
-        wxString s;
-        if( g_bShowMag )
-            s.Printf( wxString("%03d°(M)  ", wxConvUTF8 ), (int)GetTrueOrMag( brg ) );
-        else
-            s.Printf( wxString("%03d°  ", wxConvUTF8 ), (int)GetTrueOrMag( brg ) );
-        s << cc1->FormatDistanceAdaptive( dist );
-        if( GetStatusBar() ) SetStatusText( s, STAT_FIELD_CURSOR_BRGRNG );
+        cc1->SetCursorStatus(cursor_lat, cursor_lon);
+#endif
     }
 
 //      Update the chart database and displayed chart
@@ -5486,18 +5581,22 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
         m_ChartUpdatePeriod = g_ChartUpdatePeriod;
     }
 
+    nBlinkerTick++;
+    if( cc1 )
+        cc1->DrawBlinkObjects();
+
 //      Update the active route, if any
     if( g_pRouteMan->UpdateProgress() ) {
-        nBlinkerTick++;
         //    This RefreshRect will cause any active routepoint to blink
         if( g_pRouteMan->GetpActiveRoute() ) cc1->RefreshRect( g_blink_rect, false );
     }
-
-//  Possibly save the current configuration
+#if 0 // too slow, my computer hiccups, this takes nearly a second on some machines.
+    //  Instead we should save the current configuration only when it needs to be saved.
     if( 0 == ( g_tick % ( g_nautosave_interval_seconds ) ) ) {
         pConfig->UpdateSettings();
         pConfig->UpdateNavObj();
     }
+#endif
 
 //  Force own-ship drawing parameters
     cc1->SetOwnShipState( SHIP_NORMAL );
@@ -5512,13 +5611,13 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
         }
     }
 
-    if( !bGPSValid ) {
+    if( !bGPSValid )
         cc1->SetOwnShipState( SHIP_INVALID );
-        if( cc1->m_bFollow ) cc1->UpdateShips();
-    }
 
     if( bGPSValid != m_last_bGPSValid ) {
-        cc1->UpdateShips();
+        if(!g_bopengl)
+            cc1->UpdateShips();
+
         bnew_view = true;                  // force a full Refresh()
         m_last_bGPSValid = bGPSValid;
     }
@@ -5537,28 +5636,36 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
                 }
             }
         }
-    }
-
-    if( brq_dynamic ) {
-        cc1->Refresh();
-        bnew_view = true;
+        if( brq_dynamic )
+            bnew_view = true;
     }
 
     FrameTimer1.Start( TIMER_GFRAME_1, wxTIMER_CONTINUOUS );
 
+    if(g_bopengl) {
+#ifdef ocpnUSE_GL
+        if(m_fixtime - cc1->GetglCanvas()->m_last_render_time > 0)
+            bnew_view = true;
+        
+        if(bnew_view) /* full frame in opengl mode */
+            cc1->Refresh(false);
+#endif
+    } else {
 //  Invalidate the ChartCanvas window appropriately
 //    In non-follow mode, invalidate the rectangles containing the AIS targets and the ownship, etc...
 //    In follow mode, if there has already been a full screen refresh, there is no need to check ownship or AIS,
 //       since they will be always drawn on the full screen paint.
-    if( ( !cc1->m_bFollow ) || g_bCourseUp ) {
-        cc1->UpdateShips();
-        cc1->UpdateAIS();
-        cc1->UpdateAlerts();
-    } else {
-        if( !bnew_view )                    // There has not been a Refresh() yet.....
-        {
+
+        if( ( !cc1->m_bFollow ) || g_bCourseUp ) {
+            cc1->UpdateShips();
             cc1->UpdateAIS();
             cc1->UpdateAlerts();
+        } else {
+            if( !bnew_view )                    // There has not been a Refresh() yet.....
+            {
+                cc1->UpdateAIS();
+                cc1->UpdateAlerts();
+            }
         }
     }
 
@@ -5710,15 +5817,19 @@ void MyFrame::DoCOGSet( void )
     if( !g_bCourseUp )
         return;
 
+    if(!cc1)
+        return;
+
     double old_VPRotate = g_VPRotate;
     g_VPRotate = -g_COGAvg * PI / 180.;
     if(!g_bskew_comp)
         g_VPRotate += cc1->GetVPSkew();
 
-    if( cc1 ) cc1->SetVPRotation( g_VPRotate );
+    cc1->SetVPRotation( g_VPRotate );
     bool bnew_chart = DoChartUpdate();
 
-    if( ( bnew_chart ) || ( old_VPRotate != g_VPRotate ) ) if( cc1 ) cc1->ReloadVP();
+    if( ( bnew_chart ) || ( old_VPRotate != g_VPRotate ) )
+        cc1->ReloadVP();
 }
 
 void RenderShadowText( wxDC *pdc, wxFont *pFont, wxString& str, int x, int y )
@@ -5772,30 +5883,29 @@ void MyFrame::UpdateGPSCompassStatusBox( bool b_force_new )
 
         tentative_rect = wxRect( tentative_pt_in_screen.x, tentative_pt_in_screen.y, size_x, size_y );
 
-    }
+        //  If the toolbar location has changed, or the proposed compassDialog location has changed
+        if( (g_FloatingToolbarDialog->GetScreenRect() != g_last_tb_rect) ||
+           (tentative_rect != g_FloatingCompassDialog->GetScreenRect()) ) {
 
-    //  If the toolbar location has changed, or the proposed compassDialog location has changed
-    if( (g_FloatingToolbarDialog->GetScreenRect() != g_last_tb_rect) ||
-        (tentative_rect != g_FloatingCompassDialog->GetScreenRect()) ) {
+            wxRect tb_rect = g_FloatingToolbarDialog->GetScreenRect();
 
-        wxRect tb_rect = g_FloatingToolbarDialog->GetScreenRect();
+            //    if they would not intersect, go ahead and move it to the upper right
+            //      Else it has to be on lower right
+            if( !tb_rect.Intersects( tentative_rect ) ) {
+                g_FloatingCompassDialog->Move( tentative_pt_in_screen );
+            }
+            else {
+                wxPoint posn_in_canvas =
+                wxPoint( cc1->GetSize().x - size_x - x_offset - cc1_edge_comp,
+                        cc1->GetSize().y - ( size_y + y_offset + cc1_edge_comp ) );
+                g_FloatingCompassDialog->Move( cc1->ClientToScreen( posn_in_canvas ) );
+            }
+            
+            b_update = true;
 
-        //    if they would not intersect, go ahead and move it to the upper right
-        //      Else it has to be on lower right
-        if( !tb_rect.Intersects( tentative_rect ) ) {
-            g_FloatingCompassDialog->Move( tentative_pt_in_screen );
+            g_last_tb_rect = tb_rect;
+
         }
-        else {
-            wxPoint posn_in_canvas =
-            wxPoint( cc1->GetSize().x - size_x - x_offset - cc1_edge_comp,
-                    cc1->GetSize().y - ( size_y + y_offset + cc1_edge_comp ) );
-            g_FloatingCompassDialog->Move( cc1->ClientToScreen( posn_in_canvas ) );
-        }
-
-        b_update = true;
-
-        g_last_tb_rect = tb_rect;
-
     }
 
     if( g_FloatingCompassDialog && g_FloatingCompassDialog->IsShown()) {
@@ -6505,7 +6615,7 @@ bool MyFrame::DoChartUpdate( void )
 
 //    If the current viewpoint is invalid, set the default scale to something reasonable.
         double set_scale = cc1->GetVPScale();
-        if( !cc1->GetVP().IsValid() ) set_scale = 1. / 200000.;
+        if( !cc1->GetVP().IsValid() ) set_scale = 1. / 20000.;
 
         bNewView |= cc1->SetViewPoint( tLat, tLon, set_scale, 0, cc1->GetVPRotation() );
 
@@ -6620,7 +6730,7 @@ bool MyFrame::DoChartUpdate( void )
 
 //    If the current viewpoint is invalid, set the default scale to something reasonable.
             if( !cc1->GetVP().IsValid() )
-                set_scale = 1. / 200000.;
+                set_scale = 1. / 20000.;
             else {                                    // otherwise, match scale if elected.
                 double proposed_scale_onscreen;
 
@@ -6687,6 +6797,13 @@ bool MyFrame::DoChartUpdate( void )
     //  If we need a Refresh(), do it here...
     //  But don't duplicate a Refresh() done by SetViewPoint()
     if( bNewChart && !bNewView ) cc1->Refresh( false );
+
+#ifdef ocpnUSE_GL
+    // If a new chart, need to invalidate gl viewport for refresh
+    // so the fbo gets flushed
+    if(g_bopengl & bNewChart)
+        cc1->GetglCanvas()->Invalidate();
+#endif
 
     return bNewChart | bNewView;
 }
@@ -7356,7 +7473,7 @@ void MyFrame::OnEvtOCPN_NMEA( OCPN_DataStreamEvent & event )
 
     if( event.GetStream() )
     {
-        if(!event.GetStream()->ChecksumOK(str_buf) )
+        if(!event.GetStream()->ChecksumOK(event.GetNMEAString()) )
         {
             if( g_nNMEADebug && ( g_total_NMEAerror_messages < g_nNMEADebug ) )
             {
@@ -8472,6 +8589,8 @@ wxArrayString *EnumerateSerialPorts( void )
         preturn->Add( _T("/dev/ttyS1"));
         preturn->Add( _T("/dev/ttyUSB0"));
         preturn->Add( _T("/dev/ttyUSB1"));
+        preturn->Add( _T("/dev/ttyACM0"));
+        preturn->Add( _T("/dev/ttyACM1"));
     }
 
 //    Clean up the temporary files created by helper.
@@ -8754,29 +8873,46 @@ bool CheckSerialAccess( void )
 #endif
     
     //  Who owns /dev/ttyS0?
+    bret = false;
     
     wxArrayString result1;
     wxExecute(_T("stat -c %G /dev/ttyS0"), result1);
-    
-    wxString group = result1[0];
-    
+    if(!result1.size())
+        wxExecute(_T("stat -c %G /dev/ttyUSB0"), result1);
+
+    if(!result1.size())
+        wxExecute(_T("stat -c %G /dev/ttyACM0"), result1);
+
+    wxString msg1 = _("OpenCPN requires access to serial ports to use serial NMEA data.\n");
+    if(!result1.size()) {
+        wxString msg = msg1 + _("No Serial Ports can be found on this system.\n\
+                                You must install a serial port (modprobe correct kernel module) or plug in a usb serial device.\n");
+
+        OCPNMessageBox ( NULL, msg, wxString( _("OpenCPN Info") ), wxICON_INFORMATION | wxOK, 30 );
+        return false;
+    }
+
     //  Is the current user in this group?
-    wxString user = wxGetUserId();
+    wxString user = wxGetUserId(), group = result1[0];
+
     wxArrayString result2;
     wxExecute(_T("groups ") + user, result2);
     
-    wxString user_groups = result2[0];
+    if(result2.size()) {
+        wxString user_groups = result2[0];
     
-    if(user_groups.Find(group) == wxNOT_FOUND)
-        bret = false;
+        if(user_groups.Find(group) != wxNOT_FOUND)
+            bret = true;
+    }
     
     if(!bret){
-        wxString msg = _("OpenCPN requires access to serial ports to use serial NMEA data.\n\
-                         You currently do not have permission to access the serial ports on this system.\n\n\
-                         It is suggested that you exit OpenCPN now,\n\
-                         and add yourself to the correct group to enable serial port access.\n\n\
-                         You may do so by executing the following command from the linux command line:\n\n\
-                         sudo usermod -a -G ");
+
+        wxString msg = msg1 + _("\
+You do currently not have permission to access the serial ports on this system.\n\n\
+It is suggested that you exit OpenCPN now,\n\
+and add yourself to the correct group to enable serial port access.\n\n\
+You may do so by executing the following command from the linux command line:\n\n\
+sudo usermod -a -G ");
         
         msg += group;
         msg += _T(" ");
@@ -9575,8 +9711,13 @@ wxFont *GetOCPNScaledFont( wxString item, int default_size )
     wxFont *dFont = FontMgr::Get().GetFont( item, default_size );
     
     if( g_bresponsive ){
-        if(dFont->GetPointSize() < 20) {
-            wxFont *qFont = wxTheFontList->FindOrCreateFont( 20,
+        //      Adjust font size to be reasonably readable, but no smaller than the default specified
+        double scaled_font_size = (double)default_size;
+        
+        if( cc1) {
+            scaled_font_size = 2.5 * cc1->GetPixPerMM();
+            int nscaled_font_size = wxMax( wxRound(scaled_font_size), default_size );
+            wxFont *qFont = wxTheFontList->FindOrCreateFont( nscaled_font_size,
                                                             dFont->GetFamily(),
                                                             dFont->GetStyle(),
                                                             dFont->GetWeight());

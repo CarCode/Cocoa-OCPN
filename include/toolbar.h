@@ -284,6 +284,8 @@ protected:
       int m_one_shot;
       bool m_btooltip_show;
 
+      bool m_btoolbar_is_zooming;
+
       ocpnStyle::Style* m_style;
 
 private:
@@ -298,10 +300,10 @@ private:
 
 class ocpnFloatingToolbarDialog: public wxDialog
 {
-      wxDECLARE_EVENT_TABLE();
+wxDECLARE_EVENT_TABLE();
 
 public:
-      ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint position, long orient );
+      ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint position, long orient, float size_factor );
       ~ocpnFloatingToolbarDialog();
 
       void OnClose( wxCloseEvent& event );
@@ -309,9 +311,8 @@ public:
       void OnToolLeftClick( wxCommandEvent& event );
       void MouseEvent( wxMouseEvent& event );
       void FadeTimerEvent( wxTimerEvent& event );
-      bool IsToolbarShown() {
-            return ( m_ptoolbar != 0 );
-      }
+      bool IsToolbarShown() { return ( m_ptoolbar != 0 ); }
+      float GetScaleFactor() { return m_sizefactor; }
       void Realize();
       ocpnToolBarSimple *GetToolbar();
       void Submerge();
@@ -361,7 +362,8 @@ private:
       ocpnStyle::Style* m_style;
       bool m_block;
 
-    bool m_marginsInvisible;
+      bool m_marginsInvisible;
+      float m_sizefactor;
 
 };
 

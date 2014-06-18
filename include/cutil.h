@@ -43,12 +43,13 @@ typedef struct {
 } float_2Dpt;
 
 #ifdef __cplusplus
-      extern "C" int G_PtInPolygon(MyPoint *, int, float, float) ;
-      extern "C" int G_PtInPolygon_FL(float_2Dpt *, int, float, float) ;
-      extern "C" int mysnprintf( char *buffer, int count, const char *format, ... );
+    extern "C" int G_PtInPolygon(MyPoint *, int, float, float) ;
+    extern "C" int G_PtInPolygon_FL(float_2Dpt *, int, float, float) ;
+    extern "C" int mysnprintf( char *buffer, int count, const char *format, ... );
+    extern "C" int NextPow2(int size);
 #else /* __cplusplus */
-      extern int G_PtInPolygon(MyPoint *, int, float, float) ;
-      extern int mysnprintf( char *buffer, int count, const char *format, ... );
+    extern int G_PtInPolygon(MyPoint *, int, float, float) ;
+    extern int mysnprintf( char *buffer, int count, const char *format, ... );
 #endif
 
 

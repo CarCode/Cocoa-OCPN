@@ -77,7 +77,7 @@ enum {
     ID_DBP_I_DPT, ID_DBP_D_DPT, ID_DBP_I_TMP, ID_DBP_I_VMG, ID_DBP_D_VMG, ID_DBP_I_RSA,
     ID_DBP_D_RSA, ID_DBP_I_SAT, ID_DBP_D_GPS, ID_DBP_I_PTR, ID_DBP_I_CLK, ID_DBP_I_SUN,
     ID_DBP_D_MON, ID_DBP_I_ATMP, ID_DBP_I_AWA, ID_DBP_I_TWA, ID_DBP_I_TWD, ID_DBP_I_TWS,
-    ID_DBP_D_TWD, ID_DBP_I_HDM, ID_DBP_D_HDT, ID_DBP_D_WDH, ID_DBP_I_VLW1, ID_DBP_I_VLW2, ID_DBP_D_MDA, ID_DBP_I_MDA,ID_DBP_D_BPH,
+    ID_DBP_D_TWD, ID_DBP_I_HDM, ID_DBP_D_HDT, ID_DBP_D_WDH, ID_DBP_I_VLW1, ID_DBP_I_VLW2, ID_DBP_D_MDA, ID_DBP_I_MDA,ID_DBP_D_BPH, ID_DBP_I_FOS,
     ID_DBP_LAST_ENTRY //this has a reference in one of the routines; defining a "LAST_ENTRY" and setting the reference to it, is one codeline less to change (and find) when adding new instruments :-)
 };
 
@@ -168,6 +168,8 @@ wxString getInstrumentCaption( unsigned int id )
             return _("Trip Log");
         case ID_DBP_I_VLW2:
             return _("Sum Log");
+        case ID_DBP_I_FOS:
+            return _("From Ownship");
     }
     return _T("");
 }
@@ -200,6 +202,7 @@ void getListItemForInstrument( wxListItem &item, unsigned int id )
         case ID_DBP_I_SUN:
         case ID_DBP_I_VLW1:
         case ID_DBP_I_VLW2:
+        case ID_DBP_I_FOS:
             item.SetImage( 0 );
             break;
         case ID_DBP_D_SOG:
@@ -2264,10 +2267,14 @@ void DashboardWindow::SetInstrumentList( wxArrayInt list )
             case ID_DBP_D_WDH:
                 instrument = new DashboardInstrument_WindDirHistory(this, wxID_ANY,
                         getInstrumentCaption( id ) );
-                  break;
+                break;
             case ID_DBP_D_BPH:
                 instrument = new DashboardInstrument_BaroHistory(this, wxID_ANY,
                         getInstrumentCaption( id ) );
+                break;
+            case ID_DBP_I_FOS:
+                instrument = new DashboardInstrument_FromOwnship( this, wxID_ANY,
+                                                                 getInstrumentCaption( id ) );
                 break;
         }
         if( instrument ) {

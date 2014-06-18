@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __MARKICON_H__
 #define __MARKICON_H__
@@ -34,6 +33,8 @@ public:
     wxBitmap *picon_bitmap;
     wxString icon_name;
     wxString icon_description;
+
+    unsigned int icon_texture, tex_w, tex_h;
 };
 
 #endif

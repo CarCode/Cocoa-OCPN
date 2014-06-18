@@ -51,7 +51,6 @@ extern wxMenu*                    g_FloatingToolbarConfigMenu;
 extern wxString                   g_toolbarConfig;
 extern bool                       g_bPermanentMOBIcon;
 extern bool                       g_btouch;
-extern bool                       g_bresponsive;
 extern bool                       g_bsmoothpanzoom;
 
 //----------------------------------------------------------------------------
@@ -243,7 +242,7 @@ wxBEGIN_EVENT_TABLE(ocpnFloatingToolbarDialog, wxDialog)
 wxEND_EVENT_TABLE()
 
 ocpnFloatingToolbarDialog::ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint position,
-        long orient )
+                                                     long orient, float size_factor )
 {
     m_pparent = parent;
     long wstyle = wxNO_BORDER | wxFRAME_NO_TASKBAR;
@@ -270,6 +269,7 @@ ocpnFloatingToolbarDialog::ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint 
 
     m_position = position;
     m_orient = orient;
+    m_sizefactor = size_factor;
 
     m_style = g_StyleManager->GetCurrentStyle();
 
@@ -284,7 +284,7 @@ ocpnFloatingToolbarDialog::ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint 
 
     m_marginsInvisible = m_style->marginsInvisible;
     
-    if(g_bresponsive )
+    if(m_sizefactor > 1.0 )
         m_marginsInvisible = true;
 
     Hide();
@@ -332,11 +332,10 @@ void ocpnFloatingToolbarDialog::SetGeometry()
 
     if( m_ptoolbar ) {
         wxSize style_tool_size = m_style->GetToolSize();
-        if(g_bresponsive ){
-            style_tool_size.x *= 2;
-            style_tool_size.y *= 2;
-        }
-        
+
+        style_tool_size.x *= m_sizefactor;
+        style_tool_size.y *= m_sizefactor;
+
         m_ptoolbar->SetToolBitmapSize( style_tool_size );
 
         wxSize tool_size = m_ptoolbar->GetToolBitmapSize();
@@ -404,35 +403,25 @@ void ocpnFloatingToolbarDialog::ShowTooltips()
 
 void ocpnFloatingToolbarDialog::ToggleOrientation()
 {
-    wxPoint old_screen_pos = m_pparent->ClientToScreen( m_position );
-
-    if( m_orient == wxTB_HORIZONTAL ) {
+    if( m_orient == wxTB_HORIZONTAL )
         m_orient = wxTB_VERTICAL;
-        m_ptoolbar->SetWindowStyleFlag( m_ptoolbar->GetWindowStyleFlag() & ~wxTB_HORIZONTAL );
-        m_ptoolbar->SetWindowStyleFlag( m_ptoolbar->GetWindowStyleFlag() | wxTB_VERTICAL );
-    } else {
+    else
         m_orient = wxTB_HORIZONTAL;
-        m_ptoolbar->SetWindowStyleFlag( m_ptoolbar->GetWindowStyleFlag() & ~wxTB_VERTICAL );
-        m_ptoolbar->SetWindowStyleFlag( m_ptoolbar->GetWindowStyleFlag() | wxTB_HORIZONTAL );
-    }
-
-    wxPoint grabber_point_abs = ClientToScreen( m_pGrabberwin->GetPosition() );
 
     m_style->SetOrientation( m_orient );
-    m_ptoolbar->InvalidateBitmaps();
 
-    SetGeometry();
-    Realize();
+    wxPoint old_screen_pos = m_pparent->ClientToScreen( m_position );
+    wxPoint grabber_point_abs = ClientToScreen( m_pGrabberwin->GetPosition() );
+
+    gFrame->RequestNewToolbar();
 
     wxPoint pos_abs = grabber_point_abs;
     pos_abs.x -= m_pGrabberwin->GetPosition().x;
     MoveDialogInScreenCoords( pos_abs, old_screen_pos );
 
-    RePosition();
 
     Show();   // this seems to be necessary on GTK to kick the sizer into gear...(FS#553)
     Refresh();
-    //GetParent()->Refresh( false );
 }
 
 void ocpnFloatingToolbarDialog::MouseEvent( wxMouseEvent& event )
@@ -642,10 +631,8 @@ void ocpnFloatingToolbarDialog::Realize()
                                              m_style->GetToolbarCornerRadius() );
                 }
             }
-
-#ifndef __WXMAC__
-            SetShape( wxRegion( shape, *wxWHITE, 10 ) );
-#endif
+            if(shape.GetWidth() && shape.GetHeight())
+                SetShape( wxRegion( shape, *wxWHITE, 10 ) );
         }
     }
 }
@@ -900,6 +887,8 @@ void ocpnToolBarSimple::Init()
     m_toolOutlineColour.Set( _T("BLACK") );
     m_pToolTipWin = NULL;
     m_last_ro_tool = NULL;
+
+    m_btoolbar_is_zooming = false;
 
     EnableTooltips();
 }
@@ -1362,6 +1351,22 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
 
     m_last_ro_tool = tool;
 
+    // allow smooth zooming while toolbutton is held down
+    if(g_bsmoothpanzoom && !g_btouch) {
+        if(event.LeftUp() && m_btoolbar_is_zooming) {
+            cc1->StopMovement();
+            m_btoolbar_is_zooming = false;
+            return;
+        }
+
+        if( event.LeftDown() && tool &&
+           (tool->GetId() == ID_ZOOMIN || tool->GetId() == ID_ZOOMOUT) ) {
+            cc1->ZoomCanvas( tool->GetId() == ID_ZOOMIN ? 2.0 : .5, false, false );
+            m_btoolbar_is_zooming = true;
+            return;
+        }
+    }
+
     if( !tool ) {
         if( m_currentTool > -1 ) {
             if( event.LeftIsDown() ) SpringUpButton( m_currentTool );
@@ -1412,17 +1417,6 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
         if( event.RightDown() ) {
             OnRightClick( tool->GetId(), x, y );
         }
-
-    // allow smooth zooming while toolbutton is held down
-    if((tool->GetId() == ID_ZOOMIN || tool->GetId() == ID_ZOOMOUT)
-       && g_bsmoothpanzoom && !g_btouch) {
-        if(event.LeftDown())
-            cc1->ZoomCanvas( tool->GetId() == ID_ZOOMIN ? 2.0 : .5 );
-        else if(event.LeftUp())
-            cc1->StopMovement();
-        
-        return; // do no more processing
-    }
 
     // Left Button Released.  Only this action confirms selection.
     // If the button is enabled and it is not a toggle tool and it is
@@ -1683,11 +1677,10 @@ bool ocpnToolBarSimple::GetToolEnabled( int id ) const
 void ocpnToolBarSimple::ToggleTool( int id, bool toggle )
 {
     wxToolBarToolBase *tool = FindById( id );
-    if( tool ) {
-        tool->Toggle( toggle );
+    if( tool && tool->Toggle( toggle ) ) {
         DoToggleTool( tool, toggle );
+        if( g_toolbar ) g_toolbar->Refresh();
     }
-    if( g_toolbar ) g_toolbar->Refresh();
 }
 
 wxObject *ocpnToolBarSimple::GetToolClientData( int id ) const

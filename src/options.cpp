@@ -50,6 +50,7 @@
 
 #include "dychart.h"
 #include "chart1.h"
+#include "glChartCanvas.h"
 #include "chartdbs.h"
 #include "options.h"
 #include "styles.h"
@@ -190,9 +191,12 @@ extern wxString         g_locale;
 extern bool             g_bportable;
 extern bool             g_bdisable_opengl;
 extern wxString         *pHome_Locn;
+extern wxString         g_Plugin_Dir;
 
 extern ChartGroupArray  *g_pGroupArray;
 extern ocpnStyle::StyleManager* g_StyleManager;
+
+extern ocpnGLOptions g_GLOptions;
 
 //    Some constants
 #define ID_CHOICE_NMEA  wxID_HIGHEST + 1
@@ -206,6 +210,7 @@ extern AIS_Decoder      *g_pAIS;
 extern bool             g_bserial_access_checked;
 
 options                *g_pOptions;
+bool                    g_bLoadedDisabledPlugins;
 
 extern bool             g_btouch;
 extern bool             g_bresponsive;
@@ -262,9 +267,12 @@ wxBEGIN_EVENT_TABLE( options, wxDialog )
     EVT_BUTTON( xID_OK, options::OnXidOkClick )
     EVT_BUTTON( wxID_CANCEL, options::OnCancelClick )
     EVT_BUTTON( ID_BUTTONFONTCHOOSE, options::OnChooseFont )
+    EVT_CLOSE( options::OnClose)
+
 #ifdef __WXGTK__
     EVT_BUTTON( ID_BUTTONFONTCOLOR, options::OnChooseFontColor )
 #endif
+    EVT_BUTTON( ID_OPENGLOPTIONS, options::OnOpenGLOptions )
     EVT_RADIOBOX(ID_RADARDISTUNIT, options::OnDisplayCategoryRadioButton )
     EVT_BUTTON( ID_CLEARLIST, options::OnButtonClearClick )
     EVT_BUTTON( ID_SELECTLIST, options::OnButtonSelectClick )
@@ -326,6 +334,7 @@ options::~options()
     m_rbIIgnore->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( options::OnRbIgnoreInput ), NULL, this );
     m_tcInputStc->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( options::OnValChange ), NULL, this );
     m_btnInputStcList->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( options::OnBtnIStcs ), NULL, this );
+    m_cbInput->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( options::OnCbInput ), NULL, this );
     m_cbOutput->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( options::OnCbOutput ), NULL, this );
     m_rbOAccept->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( options::OnRbOutput ), NULL, this );
     m_rbOIgnore->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( options::OnRbOutput ), NULL, this );
@@ -346,7 +355,8 @@ void options::Init()
 {
     m_pWorkDirList = NULL;
 
-    pDebugShowStat = NULL;
+    pShowStatusBar = NULL;
+    pShowCompassWin = NULL;
     pSelCtl = NULL;
     pActiveChartsList = NULL;
     ps57CtlListBox = NULL;
@@ -706,6 +716,12 @@ void options::CreatePanel_NMEA( size_t parent, int border_size, int group_item_s
     m_cbGarminHost->SetValue(false);
     fgSizer5->Add( m_cbGarminHost, 0, wxALL, 5 );
 
+    m_cbInput = new wxCheckBox( m_pNMEAForm, wxID_ANY, _("Receive Input on this Port"), wxDefaultPosition, wxDefaultSize, 0 );
+    fgSizer5->Add( m_cbInput, 0, wxALL, 5 );
+    
+    m_cbOutput = new wxCheckBox( m_pNMEAForm, wxID_ANY, _("Output on this port ( as Autopilot or NMEA Repeater)"), wxDefaultPosition, wxDefaultSize, 0 );
+    fgSizer5->Add( m_cbOutput, 0, wxALL, 5 );
+
     sbSizerConnectionProps->Add( gSizerSerProps, 0, wxEXPAND, 5 );
     sbSizerConnectionProps->Add( fgSizer5, 0, wxEXPAND, 5 );
 
@@ -735,10 +751,6 @@ void options::CreatePanel_NMEA( size_t parent, int border_size, int group_item_s
     sbSizerInFilter->Add( bSizer11, 0, wxEXPAND, 5 );
 
     sbSizerConnectionProps->Add( sbSizerInFilter, 0, wxEXPAND, 5 );
-
-
-    m_cbOutput = new wxCheckBox( m_pNMEAForm, wxID_ANY, _("Output on this port ( as Autopilot or NMEA Repeater)"), wxDefaultPosition, wxDefaultSize, 0 );
-    sbSizerConnectionProps->Add( m_cbOutput, 0, wxALL, 5 );
 
     sbSizerOutFilter = new wxStaticBoxSizer( new wxStaticBox( m_pNMEAForm, wxID_ANY, _("Output filtering") ), wxVERTICAL );
 
@@ -796,6 +808,7 @@ void options::CreatePanel_NMEA( size_t parent, int border_size, int group_item_s
     m_rbIIgnore->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( options::OnRbIgnoreInput ), NULL, this );
     m_tcInputStc->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( options::OnConnValChange ), NULL, this );
     m_btnInputStcList->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( options::OnBtnIStcs ), NULL, this );
+    m_cbInput->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( options::OnCbInput ), NULL, this );
     m_cbOutput->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( options::OnCbOutput ), NULL, this );
     m_rbOAccept->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( options::OnRbOutput ), NULL, this );
     m_rbOIgnore->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( options::OnRbOutput ), NULL, this );
@@ -835,7 +848,7 @@ void options::CreatePanel_NMEA( size_t parent, int border_size, int group_item_s
 
     wxListItem col5;
     col5.SetId(5);
-    col5.SetText( _("Output") );
+    col5.SetText( _("Connection") );
     m_lcSources->InsertColumn(5, col5);
 
     wxListItem col6;
@@ -1432,15 +1445,27 @@ void options::CreatePanel_Display( size_t parent, int border_size, int group_ite
     //  Depth Unit checkbox
     pSDepthUnits = new wxCheckBox( itemPanelUI, ID_SHOWDEPTHUNITSBOX1, _("Show Depth Units") );
     itemStaticBoxSizerCDO->Add( pSDepthUnits, 1, wxALL, border_size );
+#ifndef __WXOSX__
+    //  OpenGL Render checkbox and button
+    wxBoxSizer* OpenGLSizer = new wxBoxSizer( wxHORIZONTAL );
+    itemStaticBoxSizerCDO->Add( OpenGLSizer, 1, wxALL, border_size );
 
+    pOpenGL = new wxCheckBox( itemPanelUI, ID_OPENGLBOX, _("Use Accelerated Graphics (OpenGL)") );
+    OpenGLSizer->Add( pOpenGL, 1, wxALL, border_size );
+    pOpenGL->Enable(!g_bdisable_opengl);
+
+    wxButton *bOpenGL = new wxButton( itemPanelUI, ID_OPENGLOPTIONS, _("Options ...") );
+    OpenGLSizer->Add( bOpenGL, 1, wxALL, border_size );
+    bOpenGL->Enable(!g_bdisable_opengl);
+#else
     //  OpenGL Render checkbox
     pOpenGL = new wxCheckBox( itemPanelUI, ID_OPENGLBOX, _("Use Accelerated Graphics (OpenGL)") );
     itemStaticBoxSizerCDO->Add( pOpenGL, 1, wxALL, border_size );
     pOpenGL->Enable(!g_bdisable_opengl);
-
-    //  Smooth Pan/Zoom checkbox
+#endif
+    // Smooth Pan/Zoom checkbox
     pSmoothPanZoom = new wxCheckBox( itemPanelUI, ID_SMOOTHPANZOOMBOX,
-            _("Smooth Panning / Zooming") );
+                                    _("Smooth Panning / Zooming") );
     itemStaticBoxSizerCDO->Add( pSmoothPanZoom, 1, wxALL, border_size );
 
     pEnableZoomToCursor = new wxCheckBox( itemPanelUI, ID_ZTCCHECKBOX,
@@ -1750,9 +1775,13 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
     wxStaticBoxSizer* miscOptions = new wxStaticBoxSizer( miscOptionsBox, wxVERTICAL );
     m_itemBoxSizerFontPanel->Add( miscOptions, 0, wxALL | wxEXPAND, border_size );
 
-    pDebugShowStat = new wxCheckBox( itemPanelFont, ID_DEBUGCHECKBOX1, _("Show Status Bar") );
-    pDebugShowStat->SetValue( FALSE );
-    miscOptions->Add( pDebugShowStat, 0, wxALL, border_size );
+    pShowStatusBar = new wxCheckBox( itemPanelFont, ID_DEBUGCHECKBOX1, _("Show Status Bar") );
+    pShowStatusBar->SetValue( FALSE );
+    miscOptions->Add( pShowStatusBar, 0, wxALL, border_size );
+    
+    pShowCompassWin = new wxCheckBox( itemPanelFont, wxID_ANY, _("Show Compass/GPS Status Window") );
+    pShowCompassWin->SetValue( FALSE );
+    miscOptions->Add( pShowCompassWin, 0, wxALL, border_size );
 
     pFullScreenToolbar = new wxCheckBox( itemPanelFont, ID_FSTOOLBARCHECKBOX,
             _("Show Toolbar in Fullscreen Mode") );
@@ -1957,6 +1986,14 @@ void options::CreateControls()
     wxBoxSizer* itemBoxSizerPanelPlugins = new wxBoxSizer( wxVERTICAL );
     itemPanelPlugins->SetSizer( itemBoxSizerPanelPlugins );
 
+    // load the disabled plugins finally because the user might want to enable them
+    // I would prefer to change this so the plugins are only loaded if and when
+    // they select the plugin page
+    if(!g_bLoadedDisabledPlugins) {
+        g_pi_manager->LoadAllPlugIns( g_Plugin_Dir, false );
+        g_bLoadedDisabledPlugins = true;
+    }
+
     //      Build the PlugIn Manager Panel
     m_pPlugInCtrl = new PluginListPanel( itemPanelPlugins, ID_PANELPIM, wxDefaultPosition,
             wxDefaultSize, g_pi_manager->GetPlugInArray() );
@@ -1966,8 +2003,6 @@ void options::CreateControls()
 
     //      PlugIns can add panels, too
     if( g_pi_manager ) g_pi_manager->NotifySetupOptions();
-
-    pSettingsCB1 = pDebugShowStat;
 
     SetColorScheme( (ColorScheme) 0 );
 
@@ -2022,7 +2057,10 @@ void options::SetInitialSettings()
         groupsPanel->SetInitialSettings();
     }
 
-    if( m_pConfig ) pSettingsCB1->SetValue( m_pConfig->m_bShowDebugWindows );
+    if( m_pConfig ) {
+        pShowStatusBar->SetValue( m_pConfig->m_bShowStatusBar );
+        pShowCompassWin->SetValue( m_pConfig->m_bShowCompassWin );
+    }
 
     m_cbNMEADebug->SetValue(NMEALogWindow::Get().Active());
 /*TODO
@@ -2044,13 +2082,15 @@ void options::SetInitialSettings()
     pMobile->SetValue( g_btouch );
     pResponsive->SetValue( g_bresponsive );
 
+
     pOpenGL->SetValue( g_bopengl );
     pSmoothPanZoom->SetValue( g_bsmoothpanzoom );
+#if 0
     if( g_bEnableZoomToCursor || pEnableZoomToCursor->GetValue() ) {
         pSmoothPanZoom->SetValue( false );
         pSmoothPanZoom->Disable();
     }
-
+#endif
     m_cbAPBMagnetic->SetValue(g_bMagneticAPB);
     pCBMagShow->SetValue( g_bShowMag );
 
@@ -2090,12 +2130,13 @@ void options::SetInitialSettings()
     pConfirmObjectDeletion->SetValue( g_bConfirmObjectDelete );
 
     pEnableZoomToCursor->SetValue( g_bEnableZoomToCursor );
+#if 0
     if( pEnableZoomToCursor->GetValue() ) {
         pSmoothPanZoom->Disable();
     } else {
         pSmoothPanZoom->Enable();
     }
-
+#endif
     pPreserveScale->SetValue( g_bPreserveScaleOnX );
     pPlayShipsBells->SetValue( g_bPlayShipsBells );
     pFullScreenToolbar->SetValue( g_bFullscreenToolbar );
@@ -2304,11 +2345,13 @@ void options::OnShowGpsWindowCheckboxClick( wxCommandEvent& event )
 
 void options::OnZTCCheckboxClick( wxCommandEvent& event )
 {
+#if 0
     if( pEnableZoomToCursor->GetValue() ) {
         pSmoothPanZoom->Disable();
     } else {
         pSmoothPanZoom->Enable();
     }
+#endif
 }
 
 void options::OnShipTypeSelect( wxCommandEvent& event )
@@ -2337,6 +2380,26 @@ void options::OnRadarringSelect( wxCommandEvent& event )
     itemPanelShip->Layout();
     itemPanelShip->Refresh();
     event.Skip();
+}
+
+void options::OnOpenGLOptions( wxCommandEvent& event )
+{
+#ifdef ocpnUSE_GL
+    OpenGLOptionsDlg dlg(this);
+    
+    if(dlg.ShowModal() == wxID_OK) {
+        g_GLOptions.m_bUseAcceleratedPanning = dlg.m_cbUseAcceleratedPanning->GetValue();
+        
+        if(g_GLOptions.m_bTextureCompression != dlg.m_cbTextureCompression->GetValue()) {
+            cc1->GetglCanvas()->ClearAllRasterTextures();
+            g_GLOptions.m_bTextureCompression = dlg.m_cbTextureCompression->GetValue();
+            cc1->GetglCanvas()->SetupCompression();
+        }
+        
+        g_GLOptions.m_bTextureCompressionCaching = dlg.m_cbTextureCompressionCaching->GetValue();
+        g_GLOptions.m_iTextureMemorySize = dlg.m_sTextureMemorySize->GetValue();
+    }
+#endif
 }
 
 void options::OnDisplayCategoryRadioButton( wxCommandEvent& event )
@@ -2490,20 +2553,38 @@ ConnectionParams *options::CreateConnectionParamsFromSelectedItem()
     if ( m_rbTypeSerial->GetValue() && m_comboPort->GetValue() == _T("Deleted" ))
         return NULL;
 
+    //  DataStreams should be Input, Output, or Both
+    if (!(m_cbInput->GetValue() || m_cbOutput->GetValue())) {
+        wxMessageBox( _("Data connection must be input, output or both"), _("Error!") );
+        return NULL;
+    }
+
     if ( m_rbTypeSerial->GetValue() && m_comboPort->GetValue() == wxEmptyString )
     {
         wxMessageBox( _("You must select or enter the port..."), _("Error!") );
         return NULL;
     }
-    //  TCP (I/O), GPSD (Input) and UDP (Output) ports require address field to be set
-    else if ( m_rbTypeNet->GetValue() && m_tNetAddress->GetValue() == wxEmptyString ) {
-        if( m_rbNetProtoTCP->GetValue() ||
-            m_rbNetProtoGPSD->GetValue() ||
-            ( m_rbNetProtoUDP->GetValue() &&  m_cbOutput->GetValue()) )
+    //  TCP, GPSD and UDP require port field to be set.
+    //  TCP clients, GPSD and UDP output sockets require an address
+    else if ( m_rbTypeNet->GetValue()) {
+        if (wxAtoi(m_tNetPort->GetValue()) == 0)
+        {
+            wxMessageBox( _("You must enter a port..."), _("Error!") );
+            return NULL;
+        }
+        if (m_rbNetProtoUDP->GetValue() && (!m_cbOutput->GetValue())) {
+            m_tNetAddress->SetValue(_T("0.0.0.0"));
+        }
+        else if (((m_rbNetProtoGPSD->GetValue()) ||
+             (m_rbNetProtoUDP->GetValue() && m_cbOutput->GetValue())) &&
+            wxStrpbrk(m_tNetAddress->GetValue(),_T("123456789")) == NULL )
         {
             wxMessageBox( _("You must enter the address..."), _("Error!") );
             return NULL;
         }
+
+        if (!m_tNetAddress->GetValue())
+            m_tNetAddress->SetValue(_T("0.0.0.0"));
     }
 
     ConnectionParams * pConnectionParams = new ConnectionParams();
@@ -2536,7 +2617,15 @@ ConnectionParams *options::CreateConnectionParamsFromSelectedItem()
        pConnectionParams->InputSentenceListType = WHITELIST;
     else
         pConnectionParams->InputSentenceListType = BLACKLIST;
-    pConnectionParams->Output = m_cbOutput->GetValue();
+    if (m_cbInput->GetValue()) {
+        if (m_cbOutput->GetValue()) {
+            pConnectionParams->IOSelect = DS_TYPE_INPUT_OUTPUT;
+        } else {
+            pConnectionParams->IOSelect = DS_TYPE_INPUT;
+        }
+    } else
+        pConnectionParams->IOSelect = DS_TYPE_OUTPUT;
+
     pConnectionParams->OutputSentenceList = wxStringTokenize( m_tcOutputStc->GetValue(), _T(",") );
     if ( m_rbOAccept->GetValue() )
         pConnectionParams->OutputSentenceListType = WHITELIST;
@@ -2648,14 +2737,21 @@ void options::OnApplyClick( wxCommandEvent& event )
 
     // Handle Settings Tab
 
-    if( m_pConfig ) m_pConfig->m_bShowDebugWindows = pSettingsCB1->GetValue();
+    if( m_pConfig ) {
+        m_pConfig->m_bShowStatusBar = pShowStatusBar->GetValue();
+        m_pConfig->m_bShowCompassWin = pShowCompassWin->GetValue();
+    }
 
 //TODO    g_bGarminHost = pGarminHost->GetValue();
 
     g_bShowOutlines = pCDOOutlines->GetValue();
     g_bDisplayGrid = pSDisplayGrid->GetValue();
 
-    g_bQuiltEnable = pCDOQuilting->GetValue();
+    bool temp_bquilting = pCDOQuilting->GetValue();
+    if(!g_bQuiltEnable && temp_bquilting)
+        cc1->ReloadVP(); /* compose the quilt */
+    g_bQuiltEnable = temp_bquilting;
+
     g_bFullScreenQuilt = !pFullScreenQuilt->GetValue();
 
     g_bShowDepthUnits = pSDepthUnits->GetValue();
@@ -2663,7 +2759,9 @@ void options::OnApplyClick( wxCommandEvent& event )
     g_btouch = pMobile->GetValue();
     g_bresponsive = pResponsive->GetValue();
 
-    bool temp_bopengl = pOpenGL->GetValue();
+    bool bopengl_changed = g_bopengl != pOpenGL->GetValue();
+    g_bopengl = pOpenGL->GetValue();
+
     g_bsmoothpanzoom = pSmoothPanZoom->GetValue();
 
     g_bfilter_cogsog = m_cbFilterSogCog->GetValue();
@@ -2678,7 +2776,9 @@ void options::OnApplyClick( wxCommandEvent& event )
     pCOGUPUpdateSecs->GetValue().ToLong( &update_val );
     g_COGAvgSec = wxMin((int)update_val, MAX_COG_AVERAGE_SECONDS);
 
-    g_bCourseUp = pCBCourseUp->GetValue();
+    if(g_bCourseUp != pCBCourseUp->GetValue())
+        gFrame->ToggleCourseUp();
+
     g_bLookAhead = pCBLookAhead->GetValue();
 
     g_bShowMag = pCBMagShow->GetValue();
@@ -2773,7 +2873,7 @@ void options::OnApplyClick( wxCommandEvent& event )
     //  If the stream selected exists, capture some of its existing parameters
     //  to facility identification and allow stop and restart of the stream
     wxString lastAddr;
-    int lastPort;
+    int lastPort = 0;
     if(itemIndex >=0){
         int params_index = m_lcSources->GetItemData( itemIndex );
         ConnectionParams *cpo = g_pConnectionParams->Item(params_index);
@@ -2808,6 +2908,9 @@ void options::OnApplyClick( wxCommandEvent& event )
             m_lcSources->SetItemState(itemIndex, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
             m_lcSources->Refresh();
             connectionsaved = true;
+        } else {
+            ::wxEndBusyCursor();
+            event.SetInt (wxID_STOP );
         }
     }
 
@@ -2829,11 +2932,7 @@ void options::OnApplyClick( wxCommandEvent& event )
                 g_pMUX->StopAndRemoveStream( pds_existing );
 
             if( cp->bEnabled ) {
-                dsPortType port_type;
-                if (cp->Output)
-                    port_type = DS_TYPE_INPUT_OUTPUT;
-                else
-                    port_type = DS_TYPE_INPUT;
+                dsPortType port_type = cp->IOSelect;
                 DataStream *dstr = new DataStream( g_pMUX,
                                             cp->GetDSPort(),
                                             wxString::Format(wxT("%i"), cp->Baudrate),
@@ -2880,14 +2979,13 @@ void options::OnApplyClick( wxCommandEvent& event )
     }
 
     if( ps52plib ) {
-        if( temp_bopengl != g_bopengl ) {
+        if( bopengl_changed ) {
             //    We need to do this now to handle the screen refresh that
             //    is automatically generated on Windows at closure of the options dialog...
             ps52plib->FlushSymbolCaches();
             ps52plib->ClearCNSYLUPArray();      // some CNSY depends on renderer (e.g. CARC)
             ps52plib->GenerateStateHash();
 
-            g_bopengl = temp_bopengl;
             m_returnChanges |= GL_CHANGED;
         }
 
@@ -3098,6 +3196,26 @@ void options::OnCancelClick( wxCommandEvent& event )
 
     lastWindowPos = GetPosition();
     lastWindowSize = GetSize();
+    EndModal(0);
+}
+
+void options::OnClose( wxCloseEvent& event )
+{
+    //      PlugIns may have added panels
+    if( g_pi_manager )
+        g_pi_manager->CloseAllPlugInPanels( (int) wxOK );
+    
+    //  Required to avoid intermittent crash on wxGTK
+    if(m_groupsPage)
+        m_groupsPage->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxListbookEventHandler( options::OnChartsPageChange ), NULL, this );
+    
+    m_pListbook->ChangeSelection(0);
+    delete pActiveChartsList;
+    delete ps57CtlListBox;
+    
+    lastWindowPos = GetPosition();
+    lastWindowSize = GetSize();
+    
     EndModal(0);
 }
 
@@ -4007,6 +4125,7 @@ void options::ShowNMEACommon(bool visible)
         m_btnInputStcList->Show();
         m_tcOutputStc->Show();
         m_btnOutputStcList->Show();
+        m_cbInput->Show();
         m_cbOutput->Show();
         m_choicePriority->Show();
         m_stPriority->Show();
@@ -4024,6 +4143,7 @@ void options::ShowNMEACommon(bool visible)
         m_btnInputStcList->Hide();
         m_tcOutputStc->Hide();
         m_btnOutputStcList->Hide();
+        m_cbInput->Hide();
         m_cbOutput->Hide();
         m_choicePriority->Hide();
         m_stPriority->Hide();
@@ -4137,27 +4257,31 @@ wxString StringArrayToString(wxArrayString arr)
 
 void options::SetDSFormRWStates()
 {
-    if (m_rbNetProtoGPSD->GetValue() && !m_rbTypeSerial->GetValue())
+    if (m_rbTypeSerial->GetValue())
+    {
+        m_cbInput->Enable(false);
+        m_cbOutput->Enable(true);
+        m_rbOAccept->Enable(true);
+        m_rbOIgnore->Enable(true);
+        m_btnOutputStcList->Enable(true);
+    }
+    else if (m_rbNetProtoGPSD->GetValue())
     {
         if (m_tNetPort->GetValue() == wxEmptyString)
             m_tNetPort->SetValue(_T("2947"));
+        m_cbInput->SetValue(true);
+        m_cbInput->Enable(false);
         m_cbOutput->SetValue(false);
         m_cbOutput->Enable(false);
         m_rbOAccept->Enable(false);
         m_rbOIgnore->Enable(false);
         m_btnOutputStcList->Enable(false);
     }
-    else if (m_rbNetProtoUDP->GetValue() && !m_rbTypeSerial->GetValue())
+    else
     {
         if (m_tNetPort->GetValue() == wxEmptyString)
             m_tNetPort->SetValue(_T("10110"));
-        m_cbOutput->Enable(true);
-        m_rbOAccept->Enable(true);
-        m_rbOIgnore->Enable(true);
-        m_btnOutputStcList->Enable(true);
-    }
-    else
-    {
+        m_cbInput->Enable(true);
         m_cbOutput->Enable(true);
         m_rbOAccept->Enable(true);
         m_rbOIgnore->Enable(true);
@@ -4171,7 +4295,8 @@ void options::SetConnectionParams(ConnectionParams *cp)
     m_comboPort->SetValue(cp->Port);
     m_cbCheckCRC->SetValue(cp->ChecksumCheck);
     m_cbGarminHost->SetValue(cp->Garmin);
-    m_cbOutput->SetValue(cp->Output);
+    m_cbInput->SetValue(!(cp->IOSelect == DS_TYPE_OUTPUT));
+    m_cbOutput->SetValue(!(cp->IOSelect == DS_TYPE_INPUT));
     if(cp->InputSentenceListType == WHITELIST)
         m_rbIAccept->SetValue(true);
     else
@@ -4220,6 +4345,7 @@ void options::SetDefaultConnectionParams()
     m_comboPort->SetValue(_T(""));
     m_cbCheckCRC->SetValue(true);
     m_cbGarminHost->SetValue(false);
+    m_cbInput->SetValue(true);
     m_cbOutput->SetValue(false);
     m_rbIAccept->SetValue(true);
     m_rbOAccept->SetValue(true);
@@ -4283,7 +4409,7 @@ void options::FillSourceList()
         prio_str.Printf(_T("%d"), g_pConnectionParams->Item(i)->Priority );
         m_lcSources->SetItem(itemIndex, 3, prio_str);
         m_lcSources->SetItem(itemIndex, 4, g_pConnectionParams->Item(i)->GetParametersStr());
-        m_lcSources->SetItem(itemIndex, 5, g_pConnectionParams->Item(i)->GetOutputValueStr());
+        m_lcSources->SetItem(itemIndex, 5, g_pConnectionParams->Item(i)->GetIOTypeValueStr());
         m_lcSources->SetItem(itemIndex, 6, g_pConnectionParams->Item(i)->GetFiltersStr());
     }
 
@@ -4376,6 +4502,11 @@ void options::OnNetProtocolSelected( wxCommandEvent& event )
         if (m_tNetPort->GetValue() == wxEmptyString)
             m_tNetPort->SetValue(_T("10110"));
     }
+    else if (m_rbNetProtoTCP->GetValue())
+    {
+        if (m_tNetPort->GetValue() == wxEmptyString)
+            m_tNetPort->SetValue(_T("10110"));
+    }
 
     SetDSFormRWStates();
     OnConnValChange(event);
@@ -4391,6 +4522,16 @@ void options::OnRbIgnoreInput( wxCommandEvent& event )
 }
 
 void options::OnRbOutput( wxCommandEvent& event )
+{
+    OnConnValChange(event);
+}
+
+void options::OnCbInput( wxCommandEvent& event )
+{
+    OnConnValChange(event);
+}
+
+void options::OnCbOutput( wxCommandEvent& event )
 {
     OnConnValChange(event);
 }
@@ -4662,3 +4803,69 @@ void SentenceListDlg::SetType(int io, ListType type)
 void SentenceListDlg::OnCancelClick( wxCommandEvent& event ) { event.Skip(); }
 void SentenceListDlg::OnOkClick( wxCommandEvent& event ) { event.Skip(); }
 
+//OpenGLOptionsDlg
+
+OpenGLOptionsDlg::OpenGLOptionsDlg( wxWindow* parent ) :
+wxDialog( parent, wxID_ANY, _T("OpenGL Options"), wxDefaultPosition )
+{
+#ifdef ocpnUSE_GL
+    m_bSizer1 = new wxFlexGridSizer( 2 );
+    this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+    
+    m_cbUseAcceleratedPanning = new wxCheckBox(this, wxID_ANY, _("Use Accelerated Panning") );
+    m_bSizer1->Add(m_cbUseAcceleratedPanning, 0, wxALL | wxEXPAND, 5);
+    if( cc1->GetglCanvas()->CanAcceleratePanning() ) {
+        m_cbUseAcceleratedPanning->Enable();
+        m_cbUseAcceleratedPanning->SetValue(g_GLOptions.m_bUseAcceleratedPanning);
+    } else {
+        m_cbUseAcceleratedPanning->SetValue(false);
+        m_cbUseAcceleratedPanning->Disable();
+    }
+    
+    m_bSizer1->AddSpacer(1);
+    
+    m_cbTextureCompression = new wxCheckBox(this, wxID_ANY, _("Texture Compression") );
+    m_cbTextureCompression->SetValue(g_GLOptions.m_bTextureCompression);
+    m_bSizer1->Add(m_cbTextureCompression, 0, wxALL | wxEXPAND, 5);
+    
+    m_cbTextureCompressionCaching = new wxCheckBox(this, wxID_ANY, _("Texture Compression Caching") );
+    m_cbTextureCompressionCaching->SetValue(g_GLOptions.m_bTextureCompressionCaching);
+    
+    /* disable caching if unsupported */
+    extern PFNGLCOMPRESSEDTEXIMAGE2DPROC s_glCompressedTexImage2D;
+    if(!s_glCompressedTexImage2D) {
+        g_GLOptions.m_bTextureCompressionCaching = false;
+        m_cbTextureCompressionCaching->Disable();
+    }
+    
+    m_bSizer1->Add(m_cbTextureCompressionCaching, 0, wxALL | wxEXPAND, 5);
+    
+    wxStaticText* stTextureMemorySize =
+    new wxStaticText( this, wxID_STATIC, _("Texture Memory Size (MB)") );
+#ifdef __WXOSX__
+    m_bSizer1->Add( stTextureMemorySize, 0, wxLEFT | wxRIGHT | wxTOP, 5 );
+#else
+    m_bSizer1->Add( stTextureMemorySize, 0, wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
+#endif
+    m_sTextureMemorySize = new wxSpinCtrl( this );
+    m_sTextureMemorySize->SetRange(1, 16384 );
+    m_sTextureMemorySize->SetValue(g_GLOptions.m_iTextureMemorySize);
+    m_bSizer1->Add(m_sTextureMemorySize, 0, wxALL | wxEXPAND, 5);
+    
+    wxStdDialogButtonSizer * m_sdbSizer4 = new wxStdDialogButtonSizer();
+    wxButton *bOK = new wxButton( this, wxID_OK );
+    m_sdbSizer4->AddButton( bOK );
+    wxButton *bCancel = new wxButton( this, wxID_CANCEL );
+    m_sdbSizer4->AddButton( bCancel );
+    m_sdbSizer4->Realize();
+    
+    m_bSizer1->Add( m_sdbSizer4, 0, wxALL|wxEXPAND, 5 );
+    
+    this->SetSizer( m_bSizer1 );
+    this->Layout();
+    
+    this->Centre( wxBOTH );
+    
+    Fit();
+#endif
+}

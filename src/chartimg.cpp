@@ -147,8 +147,6 @@ opncpnPalette::~opncpnPalette()
 // ============================================================================
 ChartBase::ChartBase()
 {
-      pcached_bitmap = NULL;
-
       m_depth_unit_id = DEPTH_UNIT_UNKNOWN;
 
       pThumbData = new ThumbData;
@@ -180,9 +178,6 @@ ChartBase::ChartBase()
 
 ChartBase::~ChartBase()
 {
-      if(pcached_bitmap)
-             delete pcached_bitmap;
-
       delete pThumbData;
 
       //    Free the COVR tables
@@ -2488,18 +2483,16 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, int &pixx, int &pixy
 
           if(1)
           {
-                /* change longitude phase (CPH) */
-                double lonp = (alon < 0) ? alon + m_cph : alon - m_cph;
-                double xd = polytrans( wpx, lonp, alat );
-                double yd = polytrans( wpy, lonp, alat );
-                px = (int)(xd + 0.5);
-                py = (int)(yd + 0.5);
+              /* change longitude phase (CPH) */
+              double lonp = (alon < 0) ? alon + m_cph : alon - m_cph;
+              double xd = polytrans( wpx, lonp, alat );
+              double yd = polytrans( wpy, lonp, alat );
 
 
-                double raster_scale = GetPPM() / vp.view_scale_ppm;
+              double raster_scale = GetPPM() / vp.view_scale_ppm;
 
-                pixx = (int)(((px - Rsrc.x) / raster_scale) + 0.5);
-                pixy = (int)(((py - Rsrc.y) / raster_scale) + 0.5);
+              pixx = wxRound((xd - Rsrc.x) / raster_scale);
+              pixy = wxRound((yd - Rsrc.y) / raster_scale);
 
             return 0;
           }
@@ -2531,142 +2524,142 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, int &pixx, int &pixy
 
           if(m_projection == PROJECTION_TRANSVERSE_MERCATOR)
           {
-                //      Use Projected Polynomial algorithm
+              //      Use Projected Polynomial algorithm
 
-                alon = lon + m_lon_datum_adjust;
-                alat = lat + m_lat_datum_adjust;
+              alon = lon + m_lon_datum_adjust;
+              alat = lat + m_lat_datum_adjust;
 
-                //      Get e/n from TM Projection
-                toTM(alat, alon, m_proj_lat, m_proj_lon, &easting, &northing);
+              //      Get e/n from TM Projection
+              toTM(alat, alon, m_proj_lat, m_proj_lon, &easting, &northing);
 
-                //      Apply poly solution to target point
-                double xd = polytrans( cPoints.wpx, easting, northing );
-                double yd = polytrans( cPoints.wpy, easting, northing );
+              //      Apply poly solution to target point
+              double xd = polytrans( cPoints.wpx, easting, northing );
+              double yd = polytrans( cPoints.wpy, easting, northing );
 
-                //      Apply poly solution to vp center point
-                toTM(vp.clat + m_lat_datum_adjust, vp.clon + m_lon_datum_adjust, m_proj_lat, m_proj_lon, &easting, &northing);
-                double xc = polytrans( cPoints.wpx, easting, northing );
-                double yc = polytrans( cPoints.wpy, easting, northing );
+              //      Apply poly solution to vp center point
+              toTM(vp.clat + m_lat_datum_adjust, vp.clon + m_lon_datum_adjust, m_proj_lat, m_proj_lon, &easting, &northing);
+              double xc = polytrans( cPoints.wpx, easting, northing );
+              double yc = polytrans( cPoints.wpy, easting, northing );
 
-                //      Calculate target point relative to vp center
-                double raster_scale = GetPPM() / vp.view_scale_ppm;
+              //      Calculate target point relative to vp center
+              double raster_scale = GetPPM() / vp.view_scale_ppm;
 
-                int xs = (int)xc - (int)(vp.pix_width  * raster_scale / 2);
-                int ys = (int)yc - (int)(vp.pix_height * raster_scale / 2);
+              double xs = xc - vp.pix_width  * raster_scale / 2;
+              double ys = yc - vp.pix_height * raster_scale / 2;
 
-                int pixx_p = (int)(((xd - xs) / raster_scale) + 0.5);
-                int pixy_p = (int)(((yd - ys) / raster_scale) + 0.5);
+              int pixx_p = (int)(((xd - xs) / raster_scale) + 0.5);
+              int pixy_p = (int)(((yd - ys) / raster_scale) + 0.5);
 
 //                printf("  %d  %d  %d  %d\n", pixx, pixx_p, pixy, pixy_p);
 
-                pixx = pixx_p;
-                pixy = pixy_p;
+              pixx = pixx_p;
+              pixy = pixy_p;
 
           }
           else if(m_projection == PROJECTION_MERCATOR)
           {
-                //      Use Projected Polynomial algorithm
+              //      Use Projected Polynomial algorithm
 
-                alon = lon + m_lon_datum_adjust;
-                alat = lat + m_lat_datum_adjust;
+              alon = lon + m_lon_datum_adjust;
+              alat = lat + m_lat_datum_adjust;
 
-                //      Get e/n from  Projection
-                xlon = alon;
-                if(m_bIDLcross)
-                {
-                      if(xlon < 0.)
+              //      Get e/n from  Projection
+              xlon = alon;
+              if(m_bIDLcross)
+              {
+                    if(xlon < 0.)
                             xlon += 360.;
-                }
-                toSM_ECC(alat, xlon, m_proj_lat, m_proj_lon, &easting, &northing);
+              }
+              toSM_ECC(alat, xlon, m_proj_lat, m_proj_lon, &easting, &northing);
 
-                //      Apply poly solution to target point
-                double xd = polytrans( cPoints.wpx, easting, northing );
-                double yd = polytrans( cPoints.wpy, easting, northing );
+              //      Apply poly solution to target point
+              double xd = polytrans( cPoints.wpx, easting, northing );
+              double yd = polytrans( cPoints.wpy, easting, northing );
 
-                //      Apply poly solution to vp center point
-                double xlonc = vp.clon;
-                if(m_bIDLcross)
-                {
-                      if(xlonc < 0.)
+              //      Apply poly solution to vp center point
+              double xlonc = vp.clon;
+              if(m_bIDLcross)
+              {
+                    if(xlonc < 0.)
                             xlonc += 360.;
-                }
+              }
 
-                toSM_ECC(vp.clat + m_lat_datum_adjust, xlonc + m_lon_datum_adjust, m_proj_lat, m_proj_lon, &easting, &northing);
-                double xc = polytrans( cPoints.wpx, easting, northing );
-                double yc = polytrans( cPoints.wpy, easting, northing );
+              toSM_ECC(vp.clat + m_lat_datum_adjust, xlonc + m_lon_datum_adjust, m_proj_lat, m_proj_lon, &easting, &northing);
+              double xc = polytrans( cPoints.wpx, easting, northing );
+              double yc = polytrans( cPoints.wpy, easting, northing );
 
-                //      Calculate target point relative to vp center
-                double raster_scale = GetPPM() / vp.view_scale_ppm;
+              //      Calculate target point relative to vp center
+              double raster_scale = GetPPM() / vp.view_scale_ppm;
 
-                int xs = (int)xc - (int)(vp.pix_width  * raster_scale / 2);
-                int ys = (int)yc - (int)(vp.pix_height * raster_scale / 2);
+              double xs = xc - vp.pix_width  * raster_scale / 2;
+              double ys = yc - vp.pix_height * raster_scale / 2;
 
-                int pixx_p = (int)(((xd - xs) / raster_scale) + 0.5);
-                int pixy_p = (int)(((yd - ys) / raster_scale) + 0.5);
+              int pixx_p = (int)(((xd - xs) / raster_scale) + 0.5);
+              int pixy_p = (int)(((yd - ys) / raster_scale) + 0.5);
 
-                pixx = pixx_p;
-                pixy = pixy_p;
+              pixx = pixx_p;
+              pixy = pixy_p;
 
           }
           else if(m_projection == PROJECTION_POLYCONIC)
           {
-                //      Use Projected Polynomial algorithm
+              //      Use Projected Polynomial algorithm
 
-                alon = lon + m_lon_datum_adjust;
-                alat = lat + m_lat_datum_adjust;
+              alon = lon + m_lon_datum_adjust;
+              alat = lat + m_lat_datum_adjust;
 
-                //      Get e/n from  Projection
-                xlon = alon;
-                if(m_bIDLcross)
-                {
-                      if(xlon < 0.)
+              //      Get e/n from  Projection
+              xlon = alon;
+              if(m_bIDLcross)
+              {
+                    if(xlon < 0.)
                             xlon += 360.;
-                }
-                toPOLY(alat, xlon, m_proj_lat, m_proj_lon, &easting, &northing);
+              }
+              toPOLY(alat, xlon, m_proj_lat, m_proj_lon, &easting, &northing);
 
-                //      Apply poly solution to target point
-                double xd = polytrans( cPoints.wpx, easting, northing );
-                double yd = polytrans( cPoints.wpy, easting, northing );
+              //      Apply poly solution to target point
+              double xd = polytrans( cPoints.wpx, easting, northing );
+              double yd = polytrans( cPoints.wpy, easting, northing );
 
-                //      Apply poly solution to vp center point
-                double xlonc = vp.clon;
-                if(m_bIDLcross)
-                {
-                      if(xlonc < 0.)
+              //      Apply poly solution to vp center point
+              double xlonc = vp.clon;
+              if(m_bIDLcross)
+              {
+                    if(xlonc < 0.)
                             xlonc += 360.;
-                }
+              }
 
-                toPOLY(vp.clat + m_lat_datum_adjust, xlonc + m_lon_datum_adjust, m_proj_lat, m_proj_lon, &easting, &northing);
-                double xc = polytrans( cPoints.wpx, easting, northing );
-                double yc = polytrans( cPoints.wpy, easting, northing );
+              toPOLY(vp.clat + m_lat_datum_adjust, xlonc + m_lon_datum_adjust, m_proj_lat, m_proj_lon, &easting, &northing);
+              double xc = polytrans( cPoints.wpx, easting, northing );
+              double yc = polytrans( cPoints.wpy, easting, northing );
 
-                //      Calculate target point relative to vp center
-                double raster_scale = GetPPM() / vp.view_scale_ppm;
+              //      Calculate target point relative to vp center
+              double raster_scale = GetPPM() / vp.view_scale_ppm;
 
-                int xs = (int)xc - (int)(vp.pix_width  * raster_scale / 2);
-                int ys = (int)yc - (int)(vp.pix_height * raster_scale / 2);
+              double xs = xc - vp.pix_width  * raster_scale / 2;
+              double ys = yc - vp.pix_height * raster_scale / 2;
 
-                int pixx_p = (int)(((xd - xs) / raster_scale) + 0.5);
-                int pixy_p = (int)(((yd - ys) / raster_scale) + 0.5);
+              int pixx_p = (int)(((xd - xs) / raster_scale) + 0.5);
+              int pixy_p = (int)(((yd - ys) / raster_scale) + 0.5);
 
-                pixx = pixx_p;
-                pixy = pixy_p;
+              pixx = pixx_p;
+              pixy = pixy_p;
 
           }
           else
           {
-                toSM_ECC(lat, xlon, vp.clat, vp.clon, &easting, &northing);
+              toSM_ECC(lat, xlon, vp.clat, vp.clon, &easting, &northing);
 
-                double epix = easting  * vp.view_scale_ppm;
-                double npix = northing * vp.view_scale_ppm;
+              double epix = easting  * vp.view_scale_ppm;
+              double npix = northing * vp.view_scale_ppm;
 
-                double dx = epix * cos ( vp.skew ) + npix * sin ( vp.skew );
-                double dy = npix * cos ( vp.skew ) - epix * sin ( vp.skew );
+              double dx = epix * cos ( vp.skew ) + npix * sin ( vp.skew );
+              double dy = npix * cos ( vp.skew ) - epix * sin ( vp.skew );
 
-                pixx = ( int ) /*rint*/( ( vp.pix_width  / 2 ) + dx );
-                pixy = ( int ) /*rint*/( ( vp.pix_height / 2 ) - dy );
+              pixx = ( int ) ( ( (double)vp.pix_width  / 2 ) + dx + 0.5 );
+              pixy = ( int ) ( ( (double)vp.pix_height / 2 ) - dy + 0.5 );
           }
-                return 0;
+              return 0;
     }
 
     return 1;
@@ -2843,26 +2836,33 @@ void ChartBaseBSB::chartpix_to_latlong(double pixx, double pixy, double *plat, d
 
 }
 
-void ChartBaseBSB::ComputeSourceRectangle(const ViewPort &vp, wxRect *pSourceRect)
+void ChartBaseBSB::ComputeSourceRectangle(const ViewPort &vp, wxRealPoint *pPos, wxRealPoint *pSize)
 {
 
     //      This funny contortion is necessary to allow scale factors < 1, i.e. overzoom
-      double binary_scale_factor = (wxRound(100000 * GetPPM() / vp.view_scale_ppm)) / 100000.;
+    double binary_scale_factor = (wxRound(100000 * GetPPM() / vp.view_scale_ppm)) / 100000.;
 
-      m_raster_scale_factor = binary_scale_factor;
+    m_raster_scale_factor = binary_scale_factor;
 
-      double xd, yd;
-      latlong_to_chartpix(vp.clat, vp.clon, xd, yd);
+    double xd, yd;
+    latlong_to_chartpix(vp.clat, vp.clon, xd, yd);
 
 
-      pSourceRect->x = wxRound(xd - (vp.pix_width  * binary_scale_factor / 2));
-      pSourceRect->y = wxRound(yd - (vp.pix_height * binary_scale_factor / 2));
+    pPos->x = xd - (vp.pix_width  * binary_scale_factor / 2);
+    pPos->y = yd - (vp.pix_height * binary_scale_factor / 2);
 
-      pSourceRect->width =  (int)wxRound(vp.pix_width  * binary_scale_factor) ;
-      pSourceRect->height = (int)wxRound(vp.pix_height * binary_scale_factor) ;
+    pSize->x = vp.pix_width  * binary_scale_factor;
+    pSize->y = vp.pix_height * binary_scale_factor;
 
 //    printf("Compute Rsrc:  vp.clat:  %g  clon: %g     Rsrc.y: %d  Rsrc.x:  %d\n", vp.clat, vp.clon, pSourceRect->y, pSourceRect->x);
 
+}
+
+void ChartBaseBSB::ComputeSourceRectangle(const ViewPort &vp, wxRect *pSourceRect)
+{
+    wxRealPoint pos, size;
+    ComputeSourceRectangle(vp, &pos, &size);
+    *pSourceRect = wxRect(wxRound(pos.x), wxRound(pos.y), wxRound(size.x), wxRound(size.y));
 }
 
 #if 0
@@ -3084,26 +3084,12 @@ void ChartBaseBSB::GetValidCanvasRegion(const ViewPort& VPoint, OCPNRegion *pVal
       double raster_scale =  VPoint.view_scale_ppm / GetPPM();
 
       int rxl, rxr;
-      if(Rsrc.x < 0)
-            rxl = (int)(-Rsrc.x * raster_scale);
-      else
-            rxl = 0;
-
-      if(((Size_X - Rsrc.x) * raster_scale) < VPoint.pix_width)
-            rxr = (int)((Size_X - Rsrc.x) * raster_scale);
-      else
-            rxr = VPoint.pix_width;
-
       int ryb, ryt;
-      if(Rsrc.y < 0)
-            ryt = (int)(-Rsrc.y * raster_scale);
-      else
-            ryt = 0;
+      rxl = wxMax(-Rsrc.x * raster_scale, VPoint.rv_rect.x);
+      rxr = wxMin((Size_X - Rsrc.x) * raster_scale, VPoint.rv_rect.width + VPoint.rv_rect.x);
 
-      if(((Size_Y - Rsrc.y) * raster_scale) < VPoint.pix_height)
-            ryb = (int)((Size_Y - Rsrc.y) * raster_scale);
-      else
-            ryb = VPoint.pix_height;
+      ryt = wxMax(-Rsrc.y * raster_scale, VPoint.rv_rect.y);
+      ryb = wxMin((Size_Y - Rsrc.y) * raster_scale, VPoint.rv_rect.height + VPoint.rv_rect.y);
 
       pValidRegion->Clear();
       pValidRegion->Union(rxl, ryt, rxr - rxl, ryb - ryt);
@@ -4469,6 +4455,8 @@ bool ChartBaseBSB::AnalyzeSkew(void)
         }
     }
 
+    double apparent_skew =  0;
+
     if(m_projection == PROJECTION_MERCATOR)
     {
         double easting0, easting1, northing0, northing1;
@@ -4479,7 +4467,7 @@ bool ChartBaseBSB::AnalyzeSkew(void)
         double skew_proj = atan2( (easting1-easting0), (northing1 - northing0) ) * 180./PI;
         double skew_points = atan2( (pRefTable[jmax].yr - pRefTable[imax].yr), (pRefTable[jmax].xr - pRefTable[imax].xr) ) * 180./PI;
 
-        double apparent_skew =  skew_points - skew_proj + 90.;
+        apparent_skew =  skew_points - skew_proj + 90.;
 
         // normalize to +/- 180.
         if(fabs(apparent_skew) > 180.){
@@ -4488,8 +4476,31 @@ bool ChartBaseBSB::AnalyzeSkew(void)
             else
                 apparent_skew -= 360.;
         }
+    }
+    
+    else if(m_projection == PROJECTION_TRANSVERSE_MERCATOR)
+    {
+        double easting0, easting1, northing0, northing1;
+        //  Get the TMerc projection of the two REF points
+        toTM(pRefTable[imax].latr, pRefTable[imax].lonr, m_proj_lat, m_proj_lon, &easting0, &northing0);
+        toTM(pRefTable[jmax].latr, pRefTable[jmax].lonr, m_proj_lat, m_proj_lon, &easting1, &northing1);
 
-        if(fabs( apparent_skew - m_Chart_Skew ) > 2) {           // measured skew is more than 2 degrees
+        double skew_proj = atan2( (easting1-easting0), (northing1 - northing0) ) * 180./PI;
+        double skew_points = atan2( (pRefTable[jmax].yr - pRefTable[imax].yr), (pRefTable[jmax].xr - pRefTable[imax].xr) ) * 180./PI;
+        
+        apparent_skew =  skew_points - skew_proj + 90.;
+        
+        // normalize to +/- 180.
+        if(fabs(apparent_skew) > 180.){
+            if(apparent_skew < 0.)
+                apparent_skew += 360.;
+            else
+                apparent_skew -= 360.;
+        }
+        
+    }
+    
+    if(fabs( apparent_skew - m_Chart_Skew ) > 2) {           // measured skew is more than 2 degrees
             m_Chart_Skew = apparent_skew;                         // different from stated skew
 
             wxString msg = _T("   Warning: Skew override on chart ");
@@ -4502,7 +4513,6 @@ bool ChartBaseBSB::AnalyzeSkew(void)
 
             return false;
 
-        }
     }
 
     return true;

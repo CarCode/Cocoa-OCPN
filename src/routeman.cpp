@@ -51,6 +51,7 @@
 #include "pluginmanager.h"
 #include "multiplexer.h"
 #include "MarkIcon.h"
+#include "cutil.h"
 
 #include <wx/dir.h>
 #include <wx/filename.h>
@@ -492,7 +493,7 @@ void Routeman::DoAdvance(void)
         Route *pthis_route = pActiveRoute;
         DeactivateRoute( true );                  // this is an arrival
 
-        if( pthis_route->m_bDeleteOnArrival ) {
+        if( pthis_route->m_bDeleteOnArrival && !pthis_route->m_bIsBeingEdited) {
             pConfig->DeleteConfigRoute( pthis_route );
             DeleteRoute( pthis_route );
             if( pRoutePropDialog ) {
@@ -1177,9 +1178,11 @@ void WayPointman::ProcessIcon( wxBitmap pimage, const wxString & key, const wxSt
         m_pIconArray->Add( (void *) pmi );
         pmi->icon_name = key;
         pmi->icon_description = description;
+        pmi->icon_texture = 0;
     }
 
     pmi->picon_bitmap = new wxBitmap( pimage );
+    pmi->icon_texture = 0; /* invalidate */
 }
 
 wxImageList *WayPointman::Getpmarkicon_image_list( void )
@@ -1356,6 +1359,66 @@ wxBitmap *WayPointman::GetIconBitmap( const wxString& icon_key )
     pret = pmi->picon_bitmap;
 
     return pret;
+}
+
+unsigned int WayPointman::GetIconTexture( const wxBitmap *pbm, int &glw, int &glh )
+{
+#ifdef ocpnUSE_GL
+    int index = GetIconIndex( pbm );
+    MarkIcon *pmi = (MarkIcon *) m_pIconArray->Item( index );
+
+    if(!pmi->icon_texture) {
+        /* make rgba texture */
+        glGenTextures(1, &pmi->icon_texture);
+        glBindTexture(GL_TEXTURE_2D, pmi->icon_texture);
+
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+
+
+        wxImage image = pbm->ConvertToImage();
+        int w = image.GetWidth(), h = image.GetHeight();
+
+        pmi->tex_w = NextPow2(w);
+        pmi->tex_h = NextPow2(h);
+
+        unsigned char *d = image.GetData();
+        unsigned char *a = image.GetAlpha();
+
+        unsigned char mr, mg, mb;
+        image.GetOrFindMaskColour( &mr, &mg, &mb );
+
+        unsigned char *e = new unsigned char[4 * w * h];
+        for( int y = 0; y < h; y++ )
+            for( int x = 0; x < w; x++ ) {
+                unsigned char r, g, b;
+                int off = ( y * image.GetWidth() + x );
+                r = d[off * 3 + 0];
+                g = d[off * 3 + 1];
+                b = d[off * 3 + 2];
+                
+                e[off * 4 + 0] = r;
+                e[off * 4 + 1] = g;
+                e[off * 4 + 2] = b;
+                
+                e[off * 4 + 3] =  a ? a[off] : ( ( r == mr ) && ( g == mg ) && ( b == mb ) ? 0 : 255 );
+            }
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pmi->tex_w, pmi->tex_h,
+                     0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h,
+                        GL_RGBA, GL_UNSIGNED_BYTE, e);
+        
+        delete [] e;
+    }
+    
+    glw = pmi->tex_w;
+    glh = pmi->tex_h;
+    
+    return pmi->icon_texture;
+#else
+    return 0;
+#endif
 }
 
 wxBitmap *WayPointman::GetIconBitmap( int index )

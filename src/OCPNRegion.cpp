@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 /////////////////////////////////////////////////////////////////////////////
 // Name:        src/gtk/region.cpp
@@ -66,6 +65,8 @@ GdkOverlapType gdk_region_rect_in         (const GdkRegion    *region,
 void           gdk_region_offset          (GdkRegion          *region,
                                            int                dx,
                                            int                dy);
+void            gdk_region_union_with_rect (GdkRegion          *region,
+                            const GdkRectangle *rect);
 void           gdk_region_union           (GdkRegion          *source1,
                                            const GdkRegion    *source2);
 void           gdk_region_intersect       (GdkRegion          *source1,
@@ -141,6 +142,10 @@ OCPNRegion::OCPNRegion( const wxRect& rect ) : wxRegion(rect.x, rect.y, rect.wid
 {
 }
 
+OCPNRegion::OCPNRegion( const wxRegion& region ) : wxRegion(region)
+{
+}
+
 OCPNRegion::OCPNRegion( size_t n, const wxPoint *points, int fillStyle )
 : wxRegion(n, points,
 #if wxCHECK_VERSION(3,1,0)
@@ -173,6 +178,22 @@ OCPNRegion::OCPNRegion( const wxPoint& topLeft, const wxPoint& bottomRight )
 OCPNRegion::OCPNRegion( const wxRect& rect )
 {
     InitRect(rect.x, rect.y, rect.width, rect.height);
+}
+
+OCPNRegion::OCPNRegion( const wxRegion& region )
+{
+    wxRegionIterator ri(region);
+    if(!ri.HaveRects())
+        return;
+    
+    wxRect rect = ri.GetRect();
+    InitRect(rect.x, rect.y, rect.width, rect.height);
+    ri++;
+    
+    while(ri.HaveRects()) {
+        Union(ri.GetRect());
+        ri++;
+    }
 }
 
 void OCPNRegion::InitRect(wxCoord x, wxCoord y, wxCoord w, wxCoord h)
@@ -279,7 +300,7 @@ bool OCPNRegion::ODoUnionWithRect(const wxRect& r)
         rect.width = r.width;
         rect.height = r.height;
 
-///        gdk_region_union_with_rect( M_REGIONDATA->m_region, &rect );
+        gdk_region_union_with_rect( M_REGIONDATA->m_region, &rect );
     }
 
     return true;
@@ -337,6 +358,7 @@ bool OCPNRegion::ODoSubtract( const OCPNRegion& region )
     return true;
 }
 
+#if 0
 bool OCPNRegion::DoXor( const OCPNRegion& region )
 {
     wxCHECK_MSG( region.Ok(), false, _T("invalid region") );
@@ -352,6 +374,7 @@ bool OCPNRegion::DoXor( const OCPNRegion& region )
 
     return true;
 }
+#endif
 
 bool OCPNRegion::ODoOffset( wxCoord x, wxCoord y )
 {
@@ -489,6 +512,16 @@ OCPNRegionIterator::~OCPNRegionIterator()
     delete m_ri;
 }
 
+void OCPNRegionIterator::Reset()
+{
+    m_ri->Reset();
+}
+
+void OCPNRegionIterator::Reset(const OCPNRegion& region)
+{
+    m_ri->Reset(region);
+}
+
 wxRect OCPNRegionIterator::GetRect() const
 {
     return m_ri->GetRect();
@@ -504,10 +537,6 @@ void OCPNRegionIterator::NextRect()
     ++(*m_ri);
 }
 
-
-void OCPNRegionIterator::Init()
-{
-}
 
 #endif
 
@@ -535,6 +564,11 @@ void OCPNRegionIterator::Init()
 OCPNRegionIterator::~OCPNRegionIterator()
 {
     wxDELETEA(m_rects);
+}
+
+void OCPNRegionIterator::Reset()
+{
+    m_current = 0u;
 }
 
 void OCPNRegionIterator::NextRect()
@@ -859,7 +893,7 @@ gdk_region_union_with_rect (GdkRegion          *region,
     tmp_region.extents.y2 = rect->y + rect->height;
     tmp_region.size = 1;
     
-///    gdk_region_union (region, &tmp_region);
+    gdk_region_union (region, &tmp_region);
 }
 
 /*-

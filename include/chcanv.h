@@ -161,8 +161,9 @@ public:
 
       void CancelMouseRoute();
 
-      bool SetViewPoint(double lat, double lon, double scale_ppm, double skew, double rotation, bool b_adjust = true);
-      bool SetVPScale(double sc);
+      bool SetViewPoint(double lat, double lon, double scale_ppm, double skew, double rotation,
+                      bool b_adjust = true, bool b_refresh = true);
+      bool SetVPScale(double sc, bool b_refresh = true);
       bool SetViewPoint ( double lat, double lon);
       void ReloadVP ( bool b_adjust = true );
       void LoadVP ( ViewPort &vp, bool b_adjust = true );
@@ -188,7 +189,7 @@ public:
 
       int GetNextContextMenuId();
 
-      bool StartTimedMovement( );
+      bool StartTimedMovement( bool stoptimer=true );
       void DoTimedMovement( );
       void DoMovement( long dt );
       void StopMovement( );
@@ -222,13 +223,14 @@ public:
       double GetPixPerMM(){ return m_pix_per_mm;}
 
       void SetOwnShipState(ownship_state_t state){ m_ownship_state = state;}
+      void SetCursorStatus( double cursor_lat, double cursor_lon );
       void GetCursorLatLon(double *lat, double *lon);
 
       bool PanCanvas(int dx, int dy);
       void StopAutoPan(void);
 
-      void ZoomCanvas(double factor);
-      void DoZoomCanvas(double factor);
+      void ZoomCanvas(double factor, bool can_zoom_to_cursor=true, bool stoptimer=true );
+      void DoZoomCanvas(double factor,  bool can_zoom_to_cursor = true);
 
       void RotateCanvas( double dir );
       void DoRotateCanvas( double rotation );
@@ -278,306 +280,324 @@ public:
 
       void RemovePointFromRoute( RoutePoint* point, Route* route );
 
-      void        FinishRoute(void);
+      void DrawBlinkObjects( void );
+      void FinishRoute(void);
 
 #ifdef ocpnUSE_GL
       glChartCanvas *GetglCanvas(){ return m_glcc; }
 #endif
     
 private:
-      ViewPort    VPoint;
-      void        PositionConsole(void);
-      wxString    FindValidUploadPort();
+    ViewPort    VPoint;
+    void        PositionConsole(void);
+    wxString    FindValidUploadPort();
       
+    wxColour PredColor();
+    wxColour ShipColor();
+    
+    void ComputeShipScaleFactor(float icon_hdt,
+                                int ownShipWidth, int ownShipLength,
+                                wxPoint &lShipMidPoint,
+                                wxPoint &GpsOffsetPixels, wxPoint lGPSPoint,
+                                float &scale_factor_x, float &scale_factor_y);
+    
+    void ShipDrawLargeScale( ocpnDC& dc, wxPoint lShipMidPoint );
+    void ShipIndicatorsDraw( ocpnDC& dc, float lpp,
+                            wxPoint GPSOffsetPixels,
+                            wxPoint lGPSPoint, wxPoint lHeadPoint,
+                            float img_height, float cog_rad,
+                            wxPoint lPredPoint, bool b_render_hdt,
+                            wxPoint lShipMidPoint);
+    ChInfoWin   *m_pCIWin;
 
-      ChInfoWin   *m_pCIWin;
+    bool        m_bShowCurrent;
+    bool        m_bShowTide;
+    int         cursor_region;
+    bool        m_bTCupdate;
 
-      bool        m_bShowCurrent;
-      bool        m_bShowTide;
-      int         cursor_region;
-      bool        m_bTCupdate;
+    wxRect      bbRect;
 
-      wxRect      bbRect;
+    wxPoint     LastShipPoint;
+    wxPoint     LastPredPoint;
+    bool        m_bDrawingRoute;
+    bool        m_bRouteEditing;
+    bool        m_bMarkEditing;
+    RoutePoint  *m_pRoutePointEditTarget;
+    SelectItem  *m_pFoundPoint;
+    bool        m_bChartDragging;
+    wxString    m_active_upload_port;
+    Route       *m_pMouseRoute;
+    Route       *m_pSelectedRoute;
+    Route       *m_pSelectedTrack;
+    wxArrayPtrVoid *m_pEditRouteArray;
+    RoutePoint  *m_pFoundRoutePoint;
+    RoutePoint  *m_pFoundRoutePointSecond;
 
-      wxPoint     LastShipPoint;
-      wxPoint     LastPredPoint;
-      bool        m_bDrawingRoute;
-      bool        m_bRouteEditing;
-      bool        m_bMarkEditing;
-      RoutePoint  *m_pRoutePointEditTarget;
-      SelectItem  *m_pFoundPoint;
-      bool        m_bChartDragging;
-      wxString    m_active_upload_port;
-      Route       *m_pMouseRoute;
-      Route       *m_pSelectedRoute;
-      Route       *m_pSelectedTrack;
-      wxArrayPtrVoid *m_pEditRouteArray;
-      RoutePoint  *m_pFoundRoutePoint;
-      RoutePoint  *m_pFoundRoutePointSecond;
+    int         m_FoundAIS_MMSI;
 
-      int         m_FoundAIS_MMSI;
+    wxCursor    *pCursorLeft;
+    wxCursor    *pCursorRight;
+    wxCursor    *pCursorUp;
+    wxCursor    *pCursorDown;
 
-      wxCursor    *pCursorLeft;
-      wxCursor    *pCursorRight;
-      wxCursor    *pCursorUp;
-      wxCursor    *pCursorDown;
+    wxCursor    *pCursorUpLeft;
+    wxCursor    *pCursorUpRight;
+    wxCursor    *pCursorDownLeft;
+    wxCursor    *pCursorDownRight;
 
-      wxCursor    *pCursorUpLeft;
-      wxCursor    *pCursorUpRight;
-      wxCursor    *pCursorDownLeft;
-      wxCursor    *pCursorDownRight;
+    int         popx, popy;
+    bool        m_bAppendingRoute;
 
-      int         popx, popy;
-      bool        m_bAppendingRoute;
+    wxBitmap    *pThumbDIBShow;
+    wxBitmap    *pThumbShowing;
 
-      wxBitmap    *pThumbDIBShow;
-      wxBitmap    *pThumbShowing;
+    bool        bShowingCurrent;
+    bool        bShowingTide;
 
-      bool        bShowingCurrent;
-      bool        bShowingTide;
+    double       m_canvas_scale_factor;    // converter....
+                                            // useage....
+                                            // true_chart_scale_on_display = m_canvas_scale_factor / pixels_per_meter of displayed chart
+                                            // also may be considered as the "pixels-per-meter" of the canvas on-screen
+    double      m_absolute_min_scale_ppm;
 
-      double       m_canvas_scale_factor;    // converter....
-                                             // useage....
-                                             // true_chart_scale_on_display = m_canvas_scale_factor / pixels_per_meter of displayed chart
-                                             // also may be considered as the "pixels-per-meter" of the canvas on-screen
-      double      m_absolute_min_scale_ppm;
+    bool singleClickEventIsValid;
+    wxMouseEvent singleClickEvent;
 
-      bool singleClickEventIsValid;
-      wxMouseEvent singleClickEvent;
+    std::vector<s57Sector_t> extendedSectorLegs;
 
-      std::vector<s57Sector_t> extendedSectorLegs;
+    //    Methods
+    void OnActivate(wxActivateEvent& event);
+    void OnSize(wxSizeEvent& event);
+    void MouseTimedEvent(wxTimerEvent& event);
+    void MouseEvent(wxMouseEvent& event);
+    void ShipDraw(ocpnDC& dc);
+    void DrawArrow(ocpnDC& dc, int x, int y, double rot_angle, double scale);
+    void OnRolloverPopupTimerEvent ( wxTimerEvent& event );
+    void FindRoutePointsAtCursor( float selectRadius, bool setBeingEdited );
 
-      //    Methods
-      void OnActivate(wxActivateEvent& event);
-      void OnSize(wxSizeEvent& event);
-      void MouseTimedEvent(wxTimerEvent& event);
-      void MouseEvent(wxMouseEvent& event);
-      void ShipDraw(ocpnDC& dc);
-      void DrawArrow(ocpnDC& dc, int x, int y, double rot_angle, double scale);
-      void OnRolloverPopupTimerEvent ( wxTimerEvent& event );
-      void FindRoutePointsAtCursor( float selectRadius, bool setBeingEdited );
+    void RotateTimerEvent(wxTimerEvent& event);
+    void PanTimerEvent(wxTimerEvent& event);
+    void MovementTimerEvent(wxTimerEvent& );
+    void MovementStopTimerEvent( wxTimerEvent& );
+    bool CheckEdgePan(int x, int y, bool bdragging);
+    void OnCursorTrackTimerEvent(wxTimerEvent& event);
 
-      void RotateTimerEvent(wxTimerEvent& event);
-      void PanTimerEvent(wxTimerEvent& event);
-      void MovementTimerEvent(wxTimerEvent& );
-      void MovementStopTimerEvent( wxTimerEvent& );
-      bool CheckEdgePan(int x, int y, bool bdragging);
-      void OnCursorTrackTimerEvent(wxTimerEvent& event);
+    void DrawAllRoutesInBBox(ocpnDC& dc, LLBBox& BltBBox, const wxRegion& clipregion);
+    void DrawAllWaypointsInBBox(ocpnDC& dc, LLBBox& BltBBox, const wxRegion& clipregion, bool bDrawMarksOnly);
+    void DrawAnchorWatchPoints( ocpnDC& dc );
+    double GetAnchorWatchRadiusPixels(RoutePoint *pAnchorWatchPoint);
 
-      void DrawAllRoutesInBBox(ocpnDC& dc, LLBBox& BltBBox, const wxRegion& clipregion);
-      void DrawAllWaypointsInBBox(ocpnDC& dc, LLBBox& BltBBox, const wxRegion& clipregion, bool bDrawMarksOnly);
-      double GetAnchorWatchRadiusPixels(RoutePoint *pAnchorWatchPoint);
-
-      void DrawAllTidesInBBox(ocpnDC& dc, LLBBox& BBox, bool bRebuildSelList, bool bforce_redraw_tides,
+    void DrawAllTidesInBBox(ocpnDC& dc, LLBBox& BBox, bool bRebuildSelList, bool bforce_redraw_tides,
                         bool bdraw_mono = false);
-      void DrawAllCurrentsInBBox(ocpnDC& dc, LLBBox& BBox,
+    void DrawAllCurrentsInBBox(ocpnDC& dc, LLBBox& BBox,
                            bool bRebuildSelList, bool bforce_redraw_currents, bool bdraw_mono = false);
-      void DrawTCWindow(int x, int y, void *pIDX);
+    void DrawTCWindow(int x, int y, void *pIDX);
 
-      void RenderAllChartOutlines(ocpnDC &dc, ViewPort& vp);
-      void RenderChartOutline(ocpnDC &dc, int dbIndex, ViewPort& vp);
-      void RenderRouteLegs ( ocpnDC &dc );
+    void RenderAllChartOutlines(ocpnDC &dc, ViewPort& vp);
+    void RenderChartOutline(ocpnDC &dc, int dbIndex, ViewPort& vp);
+    void RenderRouteLegs ( ocpnDC &dc );
 
-      wxBitmap *DrawTCCBitmap( wxDC *pbackground_dc, bool bAddNewSelpoints = true);
+    wxBitmap *DrawTCCBitmap( wxDC *pbackground_dc, bool bAddNewSelpoints = true);
 
-      void AISDraw(ocpnDC& dc);
-      void AISDrawAreaNotices (ocpnDC& dc );
-      void AISDrawTarget (AIS_Target_Data *td, ocpnDC& dc );
+    void AISDraw(ocpnDC& dc);
+    void AISDrawAreaNotices (ocpnDC& dc );
+    void AISDrawTarget (AIS_Target_Data *td, ocpnDC& dc );
 
 
-      void AlertDraw(ocpnDC& dc);                // pjotrc 2010.02.22
+    void AlertDraw(ocpnDC& dc);                // pjotrc 2010.02.22
 
-      void TargetFrame(ocpnDC &dc, wxPen pen, int x, int y, int radius);   // pjotrc 2010.02.01
-      void AtoN_Diamond(ocpnDC &dc, wxPen pen, int x, int y, int radius, bool b_virtual);  // pjotrc 2010.02.01
-      void Base_Square(ocpnDC &dc, wxPen pen, int x, int y, int radius);
-      void SART_Render(ocpnDC &dc, wxPen pen, int x, int y, int radius);
+    void TargetFrame(ocpnDC &dc, wxPen pen, int x, int y, int radius);   // pjotrc 2010.02.01
+    void AtoN_Diamond(ocpnDC &dc, wxPen pen, int x, int y, int radius, bool b_virtual);  // pjotrc 2010.02.01
+    void Base_Square(ocpnDC &dc, wxPen pen, int x, int y, int radius);
+    void SART_Render(ocpnDC &dc, wxPen pen, int x, int y, int radius);
 
-      void GridDraw(ocpnDC& dc); // Display lat/lon Grid in chart display
-      void ScaleBarDraw( ocpnDC& dc );
+    void GridDraw(ocpnDC& dc); // Display lat/lon Grid in chart display
+    void ScaleBarDraw( ocpnDC& dc );
 
-      void DrawOverlayObjects ( ocpnDC &dc, const wxRegion& ru );
+    void DrawOverlayObjects ( ocpnDC &dc, const wxRegion& ru );
 
-      void EmbossDepthScale(ocpnDC &dc );
-      emboss_data *CreateEmbossMapData(wxFont &font, int width, int height, const wxChar *str, ColorScheme cs);
-      void CreateDepthUnitEmbossMaps(ColorScheme cs);
-      wxBitmap CreateDimBitmap(wxBitmap &Bitmap, double factor);
+    emboss_data *EmbossDepthScale();
+    emboss_data *CreateEmbossMapData(wxFont &font, int width, int height, const wxChar *str, ColorScheme cs);
+    void CreateDepthUnitEmbossMaps(ColorScheme cs);
+    wxBitmap CreateDimBitmap(wxBitmap &Bitmap, double factor);
 
-      void CreateOZEmbossMapData(ColorScheme cs);
-      void EmbossOverzoomIndicator ( ocpnDC &dc);
+    void CreateOZEmbossMapData(ColorScheme cs);
+    emboss_data *EmbossOverzoomIndicator ( ocpnDC &dc);
 
 //      void CreateCM93OffsetEmbossMapData(ColorScheme cs);
 //      void EmbossCM93Offset ( wxMemoryDC *pdc);
 
-      void EmbossCanvas ( ocpnDC &dc, emboss_data *pemboss, int x, int y);
+    void DrawEmboss ( ocpnDC &dc, emboss_data *pemboss );
 
-      void JaggyCircle(ocpnDC &dc, wxPen pen, int x, int y, int radius);
-      void ShowObjectQueryWindow( int x, int y, float zlat, float zlon);
-      void ShowMarkPropertiesDialog( RoutePoint* markPoint );
-      void ShowRoutePropertiesDialog(wxString title, Route* selected);
-      void ShowTrackPropertiesDialog( Route* selected );
+    void JaggyCircle(ocpnDC &dc, wxPen pen, int x, int y, int radius);
+    void ShowObjectQueryWindow( int x, int y, float zlat, float zlon);
+    void ShowMarkPropertiesDialog( RoutePoint* markPoint );
+    void ShowRoutePropertiesDialog(wxString title, Route* selected);
+    void ShowTrackPropertiesDialog( Route* selected );
 
-      void ShowBrightnessLevelTimedPopup( int brightness, int min, int max );
+    void ShowBrightnessLevelTimedPopup( int brightness, int min, int max );
 
-      //    Data
-      int         m_canvas_width, m_canvas_height;
+    //    Data
+    int         m_canvas_width, m_canvas_height;
 
-      int         xr_margin;                          // chart scroll margins, control cursor, etc.
-      int         xl_margin;
-      int         yt_margin;
-      int         yb_margin;
+    int         xr_margin;                          // chart scroll margins, control cursor, etc.
+    int         xl_margin;
+    int         yt_margin;
+    int         yb_margin;
 
-      MyFrame     *parent_frame;
+    MyFrame     *parent_frame;
 
-      wxPoint     last_drag;
+    wxPoint     last_drag;
 
-      wxMemoryDC  *pmemdc;
+    wxMemoryDC  *pmemdc;
 
-      int         warp_x, warp_y;
-      bool        warp_flag;
-
-
-      float       current_draw_scaler;
+    int         warp_x, warp_y;
+    bool        warp_flag;
 
 
-      wxTimer     *pPanTimer;       // This timer used for auto panning on route creation and edit
-      wxTimer     *pMovementTimer;       // This timer used for smooth movement in non-opengl mode
-      wxTimer     *pMovementStopTimer; // This timer used to stop movement if a keyup event is lost
-      wxTimer     *pCurTrackTimer;  // This timer used to update the status window on mouse idle
-      wxTimer     *pRotDefTimer;    // This timer used to control rotaion rendering on mouse moves
-      wxTimer     *pPanKeyTimer;    // This timer used to update pan key actions
-      wxTimer     *m_DoubleClickTimer;
-
-      wxTimer     m_MouseWheelTimer;
-      wxTimer     m_RolloverPopupTimer;
-
-      int         m_mouse_wheel_oneshot;
-      int         m_last_wheel_dir;
-
-      int         m_curtrack_timer_msec;
-      int         m_rollover_popup_timer_msec;
-
-      GSHHSChart  *pWorldBackgroundChart;
-
-      ChartBaseBSB *pCBSB;
-      wxBitmap    *pss_overlay_bmp;
-      wxMask      *pss_overlay_mask;
-
-      wxRect      ship_draw_rect;
-      wxRect      ship_draw_last_rect;
-      wxRect      ais_draw_rect;
-      wxRect      alert_draw_rect;          // pjotrc 2010.02.22
-
-      wxBitmap    *proute_bm;          // a bitmap and dc used to calculate route bounding box
-      wxMemoryDC  m_dc_route;         // seen in mouse->edit->route
+    float       current_draw_scaler;
 
 
-      emboss_data *m_pEM_Feet;                // maps for depth unit emboss pattern
-      emboss_data *m_pEM_Meters;
-      emboss_data *m_pEM_Fathoms;
+    wxTimer     *pPanTimer;       // This timer used for auto panning on route creation and edit
+    wxTimer     *pMovementTimer;       // This timer used for smooth movement in non-opengl mode
+    wxTimer     *pMovementStopTimer; // This timer used to stop movement if a keyup event is lost
+    wxTimer     *pCurTrackTimer;  // This timer used to update the status window on mouse idle
+    wxTimer     *pRotDefTimer;    // This timer used to control rotaion rendering on mouse moves
+    wxTimer     *m_DoubleClickTimer;
 
-      emboss_data *m_pEM_OverZoom;
+    wxTimer     m_RolloverPopupTimer;
+
+    int         m_wheelzoom_stop_oneshot;
+    int         m_last_wheel_dir;
+    wxStopWatch m_wheelstopwatch;
+    double      m_zoom_target;
+
+    int         m_curtrack_timer_msec;
+    int         m_rollover_popup_timer_msec;
+
+    GSHHSChart  *pWorldBackgroundChart;
+
+    ChartBaseBSB *pCBSB;
+    wxBitmap    *pss_overlay_bmp;
+    wxMask      *pss_overlay_mask;
+
+    wxRect      ship_draw_rect;
+    wxRect      ship_draw_last_rect;
+    wxRect      ais_draw_rect;
+    wxRect      alert_draw_rect;          // pjotrc 2010.02.22
+
+    wxBitmap    *proute_bm;          // a bitmap and dc used to calculate route bounding box
+    wxMemoryDC  m_dc_route;         // seen in mouse->edit->route
+
+
+    emboss_data *m_pEM_Feet;                // maps for depth unit emboss pattern
+    emboss_data *m_pEM_Meters;
+    emboss_data *m_pEM_Fathoms;
+
+    emboss_data *m_pEM_OverZoom;
 //      emboss_data *m_pEM_CM93Offset;	// Flav
 
 
-      double      m_pix_per_mm;     // pixels per millimeter on the screen
+    double      m_pix_per_mm;     // pixels per millimeter on the screen
 
-      double      m_true_scale_ppm;
+    double      m_true_scale_ppm;
 
-      ownship_state_t   m_ownship_state;
+    ownship_state_t   m_ownship_state;
 
-      ColorScheme m_cs;
-      bool        m_bMeasure_Active;
-      int         m_nMeasureState;
-      Route       *m_pMeasureRoute;
+    ColorScheme m_cs;
+    bool        m_bMeasure_Active;
+    int         m_nMeasureState;
+    Route       *m_pMeasureRoute;
 
-      wxBitmap    m_bmTideDay;
-      wxBitmap    m_bmTideDusk;
-      wxBitmap    m_bmTideNight;
-      wxBitmap    m_bmCurrentDay;
-      wxBitmap    m_bmCurrentDusk;
-      wxBitmap    m_bmCurrentNight;
+    wxBitmap    m_bmTideDay;
+    wxBitmap    m_bmTideDusk;
+    wxBitmap    m_bmTideNight;
+    wxBitmap    m_bmCurrentDay;
+    wxBitmap    m_bmCurrentDusk;
+    wxBitmap    m_bmCurrentNight;
 
-      RolloverWin *m_pRouteRolloverWin;
-      RolloverWin *m_pAISRolloverWin;
+    RolloverWin *m_pRouteRolloverWin;
+    RolloverWin *m_pAISRolloverWin;
 
-      TimedPopupWin *m_pBrightPopup;
+    TimedPopupWin *m_pBrightPopup;
 
-      wxImage     m_os_image_red_day;
-      wxImage     m_os_image_red_dusk;
-      wxImage     m_os_image_red_night;
-      wxImage     m_os_image_grey_day;
-      wxImage     m_os_image_grey_dusk;
-      wxImage     m_os_image_grey_night;
-      wxImage     m_os_image_yellow_day;
-      wxImage     m_os_image_yellow_dusk;
-      wxImage     m_os_image_yellow_night;
+    wxImage     m_os_image_red_day;
+    wxImage     m_os_image_red_dusk;
+    wxImage     m_os_image_red_night;
+    wxImage     m_os_image_grey_day;
+    wxImage     m_os_image_grey_dusk;
+    wxImage     m_os_image_grey_night;
+    wxImage     m_os_image_yellow_day;
+    wxImage     m_os_image_yellow_dusk;
+    wxImage     m_os_image_yellow_night;
 
-      wxImage     *m_pos_image_red;
-      wxImage     *m_pos_image_grey;
-      wxImage     *m_pos_image_yellow;
+    wxImage     *m_pos_image_red;
+    wxImage     *m_pos_image_grey;
+    wxImage     *m_pos_image_yellow;
 
-      wxImage     *m_pos_image_user;
-      wxImage     *m_pos_image_user_grey;
-      wxImage     *m_pos_image_user_yellow;
+    wxImage     *m_pos_image_user;
+    wxImage     *m_pos_image_user_grey;
+    wxImage     *m_pos_image_user_yellow;
 
-      wxImage     *m_pos_image_user_day;
-      wxImage     *m_pos_image_user_dusk;
-      wxImage     *m_pos_image_user_night;
-      wxImage     *m_pos_image_user_grey_day;
-      wxImage     *m_pos_image_user_grey_dusk;
-      wxImage     *m_pos_image_user_grey_night;
-      wxImage     *m_pos_image_user_yellow_day;
-      wxImage     *m_pos_image_user_yellow_dusk;
-      wxImage     *m_pos_image_user_yellow_night;
+    wxImage     *m_pos_image_user_day;
+    wxImage     *m_pos_image_user_dusk;
+    wxImage     *m_pos_image_user_night;
+    wxImage     *m_pos_image_user_grey_day;
+    wxImage     *m_pos_image_user_grey_dusk;
+    wxImage     *m_pos_image_user_grey_night;
+    wxImage     *m_pos_image_user_yellow_day;
+    wxImage     *m_pos_image_user_yellow_dusk;
+    wxImage     *m_pos_image_user_yellow_night;
 
-      wxImage     m_ship_pix_image;             //cached ship draw image for high overzoom
-      int         m_cur_ship_pix;
-      bool        m_cur_ship_pix_isgrey;
-      ColorScheme m_ship_cs;
+    wxImage     m_ship_pix_image;             //cached ship draw image for high overzoom
+    int         m_cur_ship_pix;
+    bool        m_cur_ship_pix_isgrey;
+    ColorScheme m_ship_cs;
 
-      Quilt       *m_pQuilt;
+    Quilt       *m_pQuilt;
 
-      ViewPort    m_cache_vp;
-      wxBitmap    *m_prot_bm;
-      wxPoint     m_roffset;
+    ViewPort    m_cache_vp;
+    wxBitmap    *m_prot_bm;
+    wxPoint     m_roffset;
 
-      bool        m_b_rot_hidef;
+    bool        m_b_rot_hidef;
 
-      SelectItem  *m_pRolloverRouteSeg;
+    SelectItem  *m_pRolloverRouteSeg;
 
-      double      m_wheel_lat, m_wheel_lon;
-      int         m_wheel_x,m_wheel_y;
+    double      m_wheel_lat, m_wheel_lon;
+    int         m_wheel_x,m_wheel_y;
 
-      ViewPort    m_bm_cache_vp;
-      wxBitmap    m_working_bm;           // Used to build quilt in OnPaint()
-      wxBitmap    m_cached_chart_bm;      // A cached copy of the fully drawn quilt
+    ViewPort    m_bm_cache_vp;
+    wxBitmap    m_working_bm;           // Used to build quilt in OnPaint()
+    wxBitmap    m_cached_chart_bm;      // A cached copy of the fully drawn quilt
 
-      bool        m_bbrightdir;
-      int         m_brightmod;
+    bool        m_bbrightdir;
+    int         m_brightmod;
 
-      bool        m_bzooming;
-      IDX_entry   *m_pIDXCandidate;
+    bool        m_bzooming, m_bzooming_to_cursor;
+    IDX_entry   *m_pIDXCandidate;
 
 //#ifdef ocpnUSE_GL
-      glChartCanvas *m_glcc;
-      wxGLContext   *m_pGLcontext;
+    glChartCanvas *m_glcc;
+    wxGLContext   *m_pGLcontext;
 //#endif
 
-      //Smooth movement member variables
-      int         m_panx, m_pany, m_modkeys;
-      double      m_panspeed;
-      bool        m_bmouse_key_mod;
-      double      m_zoom_factor, m_rotation_speed;
-      int         m_mustmove;
+    //Smooth movement member variables
+    int         m_panx, m_pany, m_modkeys;
+    double      m_panspeed;
+    bool        m_bmouse_key_mod;
+    double      m_zoom_factor, m_rotation_speed;
+    int         m_mustmove;
 
 
     wxDateTime m_last_movement_time;
 
-      bool        m_b_paint_enable;
+    bool        m_b_paint_enable;
 
-      int         m_AISRollover_MMSI;
+    int         m_AISRollover_MMSI;
+    bool        m_bsectors_shown;
 
-      wxDECLARE_EVENT_TABLE();
+wxDECLARE_EVENT_TABLE();
 };
 
 /*!

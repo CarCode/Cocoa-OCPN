@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __GLTEXTUREDESCRIPTOR_H__
 #define __GLTEXTUREDESCRIPTOR_H__
@@ -34,11 +33,7 @@ public:
     ~glTextureDescriptor();
 
     GLuint tex_name;
-    int tex_mult;
     int level_min;
-    int level_max;
-    int base_size;
-    int GPU_base;
 
     unsigned char *map_array[10];
 };

@@ -344,6 +344,11 @@ class cm93chart : public s57chart
 
             OCPNRegion          m_render_region;
 
+#ifdef ocpnUSE_GL
+    unsigned int m_outline_display_list;
+#endif
+    wxBoundingBox      m_covr_bbox; /* bounding box for entire covr_set */
+
       private:
             InitReturn CreateHeaderDataFromCM93Cell(void);
             int read_header_and_populate_cib(header_struct *ph, Cell_Info_Block *pCIB);
@@ -472,12 +477,14 @@ class cm93compchart : public s57chart
             InitReturn CreateHeaderData();
             cm93_dictionary *FindAndLoadDictFromDir(const wxString &dir);
             void FillScaleArray(double lat, double lon);
-            int PrepareChartScale(const ViewPort &vpt, int cmscale);
+            int PrepareChartScale(const ViewPort &vpt, int cmscale, bool bOZ_protect = true);
             int GetCMScaleFromVP(const ViewPort &vpt);
             bool DoRenderRegionViewOnDC(wxMemoryDC& dc, const ViewPort& VPoint, const OCPNRegion &Region);
 
             bool DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPort& VPoint, const OCPNRegion &Region );
 
+            bool RenderCellOutlinesOnDC( ocpnDC &dc, ViewPort& vp, wxPoint *pwp, M_COVR_Desc *mcd );
+            void RenderCellOutlinesOnGL( ViewPort& vp, M_COVR_Desc *mcd );
 
             //    Data members
 
@@ -504,6 +511,7 @@ class cm93compchart : public s57chart
 
             CM93OffsetDialog  *m_pOffsetDialog;
 
+            cm93chart *m_last_cell_adjustvp;
 };
 
 
@@ -514,7 +522,7 @@ class OCPNOffsetListCtrl;
 class CM93OffsetDialog: public wxDialog
 {
       DECLARE_CLASS( CM93OffsetDialog )
-      DECLARE_EVENT_TABLE()
+      wxDECLARE_EVENT_TABLE();
 
       public:
             CM93OffsetDialog( wxWindow *parent, cm93compchart *pchart );

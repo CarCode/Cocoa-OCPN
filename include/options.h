@@ -109,6 +109,7 @@ enum {
     ID_METACHECKBOX,
     ID_NOTEBOOK,
     ID_OPENGLBOX,
+    ID_OPENGLOPTIONS,
     ID_SHIPICONTYPE,
     ID_OUTLINECHECKBOX1,
     ID_PANEL,
@@ -205,6 +206,7 @@ public:
     void Init();
 
     wxWindow* GetContentWindow() const;
+    void OnClose( wxCloseEvent& event );
 
     void CreateControls();
     size_t CreatePanel(const wxString & title);
@@ -252,6 +254,7 @@ public:
 #ifdef __WXGTK__
     void OnChooseFontColor( wxCommandEvent& event );
 #endif
+    void OnOpenGLOptions( wxCommandEvent& event );
     void OnDisplayCategoryRadioButton( wxCommandEvent& event );
     void OnButtonClearClick( wxCommandEvent& event );
     void OnButtonSelectClick( wxCommandEvent& event );
@@ -286,7 +289,8 @@ public:
     int                     m_groups_changed;
 
 //    For General Options
-    wxCheckBox              *pDebugShowStat;
+    wxCheckBox              *pShowStatusBar;
+    wxCheckBox              *pShowCompassWin;
     wxCheckBox              *pPrintShowIcon;
     wxCheckBox              *pCDOOutlines;
     wxCheckBox              *pSDepthUnits;
@@ -350,6 +354,7 @@ public:
     wxRadioButton* m_rbIIgnore;
     wxTextCtrl* m_tcInputStc;
     wxButton* m_btnInputStcList;
+    wxCheckBox* m_cbInput;
     wxCheckBox* m_cbOutput;
     wxRadioButton* m_rbOAccept;
     wxRadioButton* m_rbOIgnore;
@@ -379,7 +384,8 @@ public:
     void OnRbAcceptInput( wxCommandEvent& event );
     void OnRbIgnoreInput( wxCommandEvent& event );
     void OnBtnIStcs( wxCommandEvent& event );
-    void OnCbOutput( wxCommandEvent& event ) { OnConnValChange(event); }
+    void OnCbInput( wxCommandEvent& event );
+    void OnCbOutput( wxCommandEvent& event );
     void OnRbOutput( wxCommandEvent& event );
     void OnBtnOStcs( wxCommandEvent& event );
     void OnConnValChange( wxCommandEvent& event );
@@ -505,8 +511,6 @@ public:
     wxChoice                *pTrackPrecision;
     wxTextCtrl              *m_pText_TP_Secs;
     wxTextCtrl              *m_pText_TP_Dist;
-
-    wxCheckBox*             pSettingsCB1;
 
     ArrayOfCDI              m_CurrentDirList;
     ArrayOfCDI              *m_pWorkDirList;
@@ -912,5 +916,26 @@ class SentenceListDlg : public wxDialog
     void BuildSentenceArray();
     void SetType(int io, ListType type);
 };
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class OpenGLOptionsDlg
+///////////////////////////////////////////////////////////////////////////////
+class OpenGLOptionsDlg : public wxDialog
+{
+public:
+    wxGridSizer *m_bSizer1;
+    wxBoxSizer *m_bSizer2;
+    
+    wxCheckBox *m_cbUseAcceleratedPanning;
+    
+    wxCheckBox *m_cbTextureCompression, *m_cbTextureCompressionCaching;
+    
+    wxSpinCtrl *m_sTextureDimension;
+    wxSpinCtrl *m_sTextureMemorySize;
+    
+    OpenGLOptionsDlg( wxWindow* parent );
+};
+
 #endif
     // _OPTIONS_H_

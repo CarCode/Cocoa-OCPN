@@ -37,9 +37,9 @@
 #include "wx/wx.h"
 #endif //precompiled headers
 
-#ifdef __WXOSX__
+//#ifdef __WXOSX__
 #define USE_NEW_REGION
-#endif
+//#endif
 
 
 typedef enum
@@ -366,7 +366,12 @@ if (pAET->ymax == y) {          /* leaving this edge */ \
 // OCPNRegion
 // ----------------------------------------------------------------------------
 
-class OCPNRegion : public wxRegion 
+class OCPNRegion : public
+#ifdef USE_NEW_REGION
+wxObject
+#else
+wxRegion
+#endif
 {
 public:
     OCPNRegion() { }
@@ -374,6 +379,7 @@ public:
     OCPNRegion( wxCoord x, wxCoord y, wxCoord w, wxCoord h );
     OCPNRegion( const wxPoint& topLeft, const wxPoint& bottomRight );
     OCPNRegion( const wxRect& rect );
+    OCPNRegion( const wxRegion& region );
     OCPNRegion( size_t n, const wxPoint *points, int fillStyle = wxODDEVEN_RULE );
     
     virtual ~OCPNRegion(){}
@@ -427,6 +433,8 @@ public:
 
     GdkRegion *GetRegion() const;
 
+    bool Offset(wxCoord x, wxCoord y)   { return ODoOffset(x, y); }
+    bool Offset(const wxPoint& pt)      { return ODoOffset(pt.x, pt.y); }
     bool Intersect(const OCPNRegion& region) { return ODoIntersect(region); }
     bool Union(const OCPNRegion& region) { return ODoUnionWithRegion(region); }
     bool Union(wxCoord x, wxCoord y, wxCoord w, wxCoord h) { return ODoUnionWithRect(wxRect(x, y, w, h)); }
@@ -449,8 +457,7 @@ protected:
     virtual bool ODoUnionWithRegion(const OCPNRegion& region);
     virtual bool ODoIntersect(const OCPNRegion& region);
     virtual bool ODoSubtract(const OCPNRegion& region);
-    virtual bool DoXor(const OCPNRegion& region);
-    using wxRegion::DoXor;
+//    virtual bool DoXor(const OCPNRegion& region);
     
 
 #endif
@@ -470,7 +477,7 @@ public:
     OCPNRegionIterator(const OCPNRegion& region);
     virtual ~OCPNRegionIterator();
 
-    void Reset() { m_current = 0u; }
+    void Reset();
     void Reset(const OCPNRegion& region);
 
     bool HaveRects() const;
@@ -478,6 +485,7 @@ public:
     wxRect GetRect() const;
 
 private:
+#ifdef USE_NEW_REGION
     void Init();
     void CreateRects( const OCPNRegion& r );
 
@@ -486,9 +494,9 @@ private:
 
     wxRect *m_rects;
     size_t  m_numRects;
-
+#else
     wxRegionIterator *m_ri;
-    
+#endif
 };
 
 

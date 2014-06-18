@@ -269,12 +269,8 @@ private:
       int GetUpdateFileArray(const wxFileName file000, wxArrayString *UpFiles);
 
 
-//#ifdef ocpnUSE_GL
       bool DoRenderRectOnGL(const wxGLContext &glc, const ViewPort& VPoint, wxRect &rect);
       bool DoRenderRegionViewOnGL(const wxGLContext &glc, const ViewPort& VPoint, const OCPNRegion &Region, bool b_overlay);
-      void SetClipRegionGL(const wxGLContext &glc, const ViewPort& VPoint, const wxRect &Rect, bool b_render_nodta = true);
-      void SetClipRegionGL(const wxGLContext &glc, const ViewPort& VPoint, const OCPNRegion &Region, bool b_render_nodta = true);
-//#endif
 
  // Private Data
       char        *hdr_buf;

@@ -216,8 +216,6 @@ protected:
 
       wxDateTime        m_EdDate;
 
-      wxBitmap          *pcached_bitmap;
-
       ThumbData         *pThumbData;
 
       ColorScheme       m_global_color_scheme;

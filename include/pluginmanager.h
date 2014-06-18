@@ -82,6 +82,7 @@ typedef struct {
 const BlackListedPlugin PluginBlacklist[] = {
     { _T("aisradar_pi"), 0, 95, true, true },
     { _T("radar_pi"), 0, 95, true, true },             // GCC alias for aisradar_pi
+    { _T("watchdog_pi"), 1, 00, false, true }
 };
 
 //----------------------------------------------------------------------------
@@ -142,6 +143,7 @@ class PlugInContainer
             bool              m_bToolboxPanel;
             int               m_cap_flag;             // PlugIn Capabilities descriptor
             wxString          m_plugin_file;          // The full file path
+            wxString          m_plugin_filename;          // The short file path
             destroy_t         *m_destroy_fn;
             wxDynamicLibrary  *m_plibrary;
             wxString          m_common_name;            // A common name string for the plugin
@@ -214,7 +216,7 @@ public:
       PlugInManager(MyFrame *parent);
       virtual ~PlugInManager();
 
-      bool LoadAllPlugIns(const wxString &plugin_dir);
+      bool LoadAllPlugIns(const wxString &plugin_dir, bool enabled_plugins);
       bool UnLoadAllPlugIns();
       bool DeactivateAllPlugIns();
       bool UpdatePlugIns();
@@ -357,6 +359,7 @@ public:
         CSrules = NULL;
         FText = NULL;
         ChildRazRules = NULL;
+        MPSRulesList = NULL;
         };
 
     ~S52PLIB_Context(){};
@@ -373,7 +376,7 @@ public:
 
     LUPrec                  *LUP;
     ObjRazRules             *ChildRazRules;
-    
+    mps_container           *MPSRulesList;
 };
 
 

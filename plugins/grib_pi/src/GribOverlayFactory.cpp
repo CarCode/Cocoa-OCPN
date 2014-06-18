@@ -340,8 +340,8 @@ bool GRIBOverlayFactory::CreateGribGLTexture( GribOverlay *pGO, int settings, Gr
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_RECTANGLE_ARB, texture);
 
-    glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP );
-    glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP );
+    glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 
@@ -530,6 +530,8 @@ wxColour GRIBOverlayFactory::GetGraphicColor(int settings, double val_in)
         map = CloudMap;
         maplen = (sizeof CloudMap) / (sizeof *CloudMap);
         break;
+    default:
+        return *wxBLACK;
     }
 
     /* normalize map from 0 to 1 */
@@ -590,20 +592,19 @@ wxImage &GRIBOverlayFactory::getLabel(double value, int settings, wxColour back_
 
     wxBrush backBrush(back_color);
 
-    wxMemoryDC mdc(wxNullBitmap);
-
     wxFont mfont( 9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
-    mdc.SetFont( mfont );
 
+    wxScreenDC sdc;
     int w, h;
-    mdc.GetTextExtent(labels, &w, &h);
+    sdc.GetTextExtent(labels, &w, &h, NULL, NULL, &mfont);
 
     int label_offset = 5;
 
     wxBitmap bm(w +  label_offset*2, h + 2);
-    mdc.SelectObject(bm);
+    wxMemoryDC mdc(bm);
     mdc.Clear();
 
+    mdc.SetFont( mfont );
     mdc.SetPen(penText);
     mdc.SetBrush(backBrush);
     mdc.SetTextForeground(text_color);
@@ -925,7 +926,7 @@ void GRIBOverlayFactory::RenderGribOverlayMap( int settings, GribRecord **pGR, P
         else        //DC mode
         {
             if(fabs(vp->rotation) > 0.1){
-                m_Message_Hiden.Append(_("Rotated overlays suppressed in DC mode"));
+                m_Message_Hiden.Append(_("overlays suppressed if not north-up in DC mode (enable OpenGL)"));
             }
             else {
                 if( !pGO->m_pDCBitmap ) {

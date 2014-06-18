@@ -231,7 +231,7 @@ public:
 
 
 //    These members are set/reset in Options dialog
-      bool  m_bShowDebugWindows;
+      bool  m_bShowStatusBar, m_bShowCompassWin;
 
 };
 

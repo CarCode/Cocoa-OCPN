@@ -874,6 +874,7 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
             //    Use memory limited cache policy, if defined....
             if(g_memCacheLimit)
             {
+                /* TODO: this is broken in quilted mode */
 
           //    Check memory status to see if enough room to open another chart
                   int mem_total, mem_used;
@@ -909,6 +910,7 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                               if(Current_Ch == pDeleteCandidate)
                               {
                                     wxLogMessage(_T("...However, it is Current_Ch"));
+                                    break;
                               }
                               else
                               {
@@ -1006,7 +1008,8 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                                           pthumbwin->pThumbChart = NULL;
                               }
 
-                        }
+                        } else
+                            break;
                         nCache = pChartCache->GetCount();
                   }
             }

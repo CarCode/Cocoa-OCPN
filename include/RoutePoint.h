@@ -128,6 +128,18 @@ public:
 
       HyperlinkList     *m_HyperlinkList;
       bool              m_btemp;
+
+#ifdef ocpnUSE_GL
+    void DrawGL( ViewPort &vp, OCPNRegion &region );
+    unsigned int m_iTextTexture;
+    int m_iTextTextureWidth, m_iTextTextureHeight;
+
+    LLBBox m_wpBBox;
+    double m_wpBBox_chart_scale, m_wpBBox_rotation;
+
+    static bool s_bUpdateWaypointsDisplayList;
+#endif
+
 #ifdef __WXOSX__
     wxDateTime        m_CreateTimeX;
 

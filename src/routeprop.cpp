@@ -2256,6 +2256,9 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
             }
         }
 
+        // Integrate all of the rebuilt hyperlink controls
+        bSizerLinks->Layout();
+
         //      Iterate on the Icon Descriptions, filling in the control
         int iconToSelect = 0;
         bool fillCombo = m_bcomboBoxIcon->GetCount() == 0;
@@ -2495,7 +2498,7 @@ bool MarkInfoImpl::SaveChanges()
             if( pEditRouteArray ) {
                 for( unsigned int ir = 0; ir < pEditRouteArray->GetCount(); ir++ ) {
                     Route *pr = (Route *) pEditRouteArray->Item( ir );
-                    pr->CalculateBBox();
+                    pr->FinalizeForRendering();
                     pr->UpdateSegmentDistances();
 
                     pConfig->UpdateRoute( pr );
