@@ -281,6 +281,7 @@ int                     g_navobjbackups;
 
 extern bool             g_bQuiltEnable;
 extern bool             g_bFullScreenQuilt;
+extern double           g_bQuiltMinFrag;           // for DutchENC
 extern bool             g_bQuiltStart;
 
 extern int              g_SkewCompUpdatePeriod;
@@ -1170,6 +1171,7 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "WindowsComPortMax" ), &g_nCOMPortCheck, 32 );
 
     Read( _T ( "ChartQuilting" ), &g_bQuiltEnable, 0 );
+    Read( _T ( "ChartQuiltingMinFrag" ), &g_bQuiltMinFrag, 0 );     // for DutchENC
     Read( _T ( "ChartQuiltingInitial" ), &g_bQuiltStart, 0 );
 
     Read( _T ( "UseRasterCharts" ), &g_bUseRaster, 1 );             // default is true......
@@ -2381,6 +2383,7 @@ void MyConfig::UpdateSettings()
     Write( _T ( "RouteArrivalCircleRadius" ), wxString::Format( _T("%.2f"), g_n_arrival_circle_radius ));
 
     Write( _T ( "ChartQuilting" ), g_bQuiltEnable );
+    Write( _T ( "ChartQuiltingMinFrag" ), wxString::Format( _T("%1.1f"), g_bQuiltMinFrag ) );      // for DutchENC
     Write( _T ( "FullScreenQuilt" ), g_bFullScreenQuilt );
 
     if( cc1 ) Write( _T ( "ChartQuiltingInitial" ), cc1->GetQuiltMode() );

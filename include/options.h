@@ -289,6 +289,7 @@ public:
     int                     m_groups_changed;
 
 //    For General Options
+    wxScrolledWindow        *pDisplayPanel;
     wxCheckBox              *pShowStatusBar;
     wxCheckBox              *pShowCompassWin;
     wxCheckBox              *pPrintShowIcon;
@@ -297,6 +298,7 @@ public:
     wxCheckBox              *pSDisplayGrid;
     wxCheckBox              *pAutoAnchorMark;
     wxCheckBox              *pCDOQuilting;
+    wxTextCtrl              *pCDOQuiltingMinFrag;   // for DutchENC
     wxCheckBox              *pCBRaster;
     wxCheckBox              *pCBVector;
     wxCheckBox              *pCBCM93;

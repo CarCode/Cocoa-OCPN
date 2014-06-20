@@ -256,6 +256,7 @@ public:
       int GetCanvasChartNativeScale();
       int FindClosestCanvasChartdbIndex(int scale);
       void UpdateCanvasOnGroupChange(void);
+      int AdjustQuiltRefChart( void );
 
 
       void ShowChartInfoWindow(int x, int y, int dbIndex);
