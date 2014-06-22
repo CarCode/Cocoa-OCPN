@@ -203,7 +203,7 @@ void GRIBUIDialog::OpenFile(bool newestFile)
     SetCanvasContextMenuItemViz( pPlugIn->m_MenuItem, m_TimeLineHours != 0);
     if(m_pMovingGrib) {
         wxMessageDialog mes(this, _("The Grib file you are opening contains a moving Grib Zone.\nInterpolation is not supported for this type of file"),
-                                    _("Warning!"), wxOK);
+                            _("Warning!"), wxOK);
         mes.ShowModal();
     }
 }
@@ -621,24 +621,24 @@ void GRIBUIDialog::UpdateTrackingControls( void )
     int altitude = pPlugIn->GetGRIBOverlayFactory()->m_Altitude;
     if( RecordArray[Idx_WIND_VX + altitude] && RecordArray[Idx_WIND_VY + altitude] ) {
         double vx = RecordArray[Idx_WIND_VX + altitude]->
-            getInterpolatedValue(m_cursor_lon, m_cursor_lat, true );
+        getInterpolatedValue(m_cursor_lon, m_cursor_lat, true );
         double vy = RecordArray[Idx_WIND_VY + altitude]->
-            getInterpolatedValue(m_cursor_lon, m_cursor_lat, true );
-
+        getInterpolatedValue(m_cursor_lon, m_cursor_lat, true );
+        
         if( ( vx != GRIB_NOTDEF ) && ( vy != GRIB_NOTDEF ) ) {
             /*in case of beaufort scale unit, it's better to calculate vkn before calibrate value to maintain precision*/
             double vkn = sqrt( vx * vx + vy * vy ),vk;
             vk = m_OverlaySettings.CalibrateValue(GribOverlaySettings::WIND, vkn);
             m_tcWindSpeed->SetValue( wxString::Format( _T("%3d ") + m_OverlaySettings.GetUnitSymbol(GribOverlaySettings::WIND) , (int)round( vk )) );
-
+            
             //wind is a special case: if current unit is not bf ==> double speed display (current unit + bf)
             if(m_OverlaySettings.Settings[GribOverlaySettings::WIND].m_Units != GribOverlaySettings::BFS) {
                 vk = m_OverlaySettings.GetmstobfFactor(vkn)* vkn;
                 m_tcWindSpeed->SetValue(m_tcWindSpeed->GetValue().Append(_T(" - ")).
-                    Append(wxString::Format( _T("%2d bf"), (int)round( vk ))));
+                                        Append(wxString::Format( _T("%2d bf"), (int)round( vk ))));
             }
             //
-
+            
             double ang = 90. + ( atan2( vy, -vx ) * 180. / PI );
             if( ang > 360. ) ang -= 360.;
             if( ang < 0. ) ang += 360.;
@@ -706,16 +706,17 @@ void GRIBUIDialog::UpdateTrackingControls( void )
     //    Update the Current control
     if( RecordArray[Idx_SEACURRENT_VX] && RecordArray[Idx_SEACURRENT_VY] ) {
         double vx = RecordArray[Idx_SEACURRENT_VX]->
-            getInterpolatedValue(m_cursor_lon, m_cursor_lat, true );
+        getInterpolatedValue(m_cursor_lon, m_cursor_lat, true );
         double vy = RecordArray[Idx_SEACURRENT_VY]->
-            getInterpolatedValue(m_cursor_lon, m_cursor_lat, true );
-
+        getInterpolatedValue(m_cursor_lon, m_cursor_lat, true );
+        
         if( ( vx != GRIB_NOTDEF ) && ( vy != GRIB_NOTDEF ) ) {
             vx = m_OverlaySettings.CalibrateValue(GribOverlaySettings::CURRENT, vx);
             vy = m_OverlaySettings.CalibrateValue(GribOverlaySettings::CURRENT, vy);
 
             double vkn = sqrt( vx * vx + vy * vy );
             m_tcCurrentVelocity->SetValue( wxString::Format( _T("%4.1f ") + m_OverlaySettings.GetUnitSymbol(GribOverlaySettings::CURRENT), vkn ) );
+
 
             double ang = 90. + ( atan2( -vy, vx ) * 180. / PI );
             if( ang > 360. ) ang -= 360.;

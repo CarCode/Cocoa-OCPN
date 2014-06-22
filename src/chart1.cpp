@@ -1994,9 +1994,6 @@ if( 0 == g_memCacheLimit )
     stats->pPiano->SetPolyIcon( new wxBitmap( style->GetIcon( _T("polyprj") ) ) );
     stats->pPiano->SetSkewIcon( new wxBitmap( style->GetIcon( _T("skewprj") ) ) );
 
-    //  Yield to pick up the OnSize() calls that result from Maximize()
-    Yield();
-
     wxString perspective;
     pConfig->SetPath( _T ( "/AUI" ) );
     pConfig->Read( _T ( "AUIPerspective" ), &perspective );
@@ -2201,8 +2198,6 @@ if( 0 == g_memCacheLimit )
     }
 
     stats->Show( true );
-
-    Yield();
 
     gFrame->DoChartUpdate();
 

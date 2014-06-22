@@ -297,9 +297,9 @@ wxString GRIBTable::GetWind(GribRecord **recordarray)
     wxString skn(wxEmptyString);
     if( recordarray[Idx_WIND_VX] && recordarray[Idx_WIND_VY] ) {
         double vx = recordarray[Idx_WIND_VX]->
-            getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
+        getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
         double vy = recordarray[Idx_WIND_VY]->
-            getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
+        getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
 
         if( ( vx != GRIB_NOTDEF ) && ( vy != GRIB_NOTDEF ) ) {
             double ang = 90. + ( atan2( vy, -vx ) * 180. / PI );
@@ -323,17 +323,17 @@ wxString GRIBTable::GetWindBf(GribRecord **recordarray)
     wxString skn(wxEmptyString);
     if( recordarray[Idx_WIND_VX] && recordarray[Idx_WIND_VY] ) {
         double vx = recordarray[Idx_WIND_VX]->
-            getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
+        getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
         double vy = recordarray[Idx_WIND_VY]->
-            getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
-
+        getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
+        
         if( ( vx != GRIB_NOTDEF ) && ( vy != GRIB_NOTDEF ) ) {
             double vkn = sqrt( vx * vx + vy * vy );
             vkn = m_pGDialog->m_OverlaySettings.GetmstobfFactor(vkn)* vkn;
             skn.Printf( wxString::Format( _T("%2d bf"), (int)wxRound( vkn )) );
         }
     }
-     return skn;
+    return skn;
 }
 
 wxString GRIBTable::GetPressure(GribRecord **recordarray)
@@ -486,21 +486,21 @@ wxString GRIBTable::GetCurrent(GribRecord **recordarray)
     wxString skn(wxEmptyString);
     if( recordarray[Idx_SEACURRENT_VX] && recordarray[Idx_SEACURRENT_VY] ) {
         double vx = recordarray[Idx_SEACURRENT_VX]->
-            getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
+        getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
         double vy = recordarray[Idx_SEACURRENT_VY]->
-            getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
-
+        getInterpolatedValue(m_pGDialog->m_cursor_lon, m_pGDialog->m_cursor_lat, true );
+        
         if( ( vx != GRIB_NOTDEF ) && ( vy != GRIB_NOTDEF ) ) {
             vx = m_pGDialog->m_OverlaySettings.CalibrateValue(GribOverlaySettings::CURRENT, vx);
             vy = m_pGDialog->m_OverlaySettings.CalibrateValue(GribOverlaySettings::CURRENT, vy);
-
+            
             double ang = 90. + ( atan2( -vy, vx ) * 180. / PI );
             if( ang > 360. ) ang -= 360.;
             if( ang < 0. ) ang += 360.;
             skn.Printf( _T("%03d\u00B0"), (int) ( ang ) );
-
+            
             skn.Append(_T("\n\n"));
-
+            
             double vkn = sqrt( vx * vx + vy * vy );
             skn.Append( wxString::Format( _T("%4.1f ") + m_pGDialog->m_OverlaySettings.GetUnitSymbol(GribOverlaySettings::CURRENT), vkn ) );
             m_pDataCellsColour = m_pGDialog->pPlugIn->m_pGRIBOverlayFactory->GetGraphicColor(GribOverlaySettings::CURRENT, vkn);

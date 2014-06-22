@@ -275,7 +275,7 @@ GribRecord::GribRecord(const GribRecord &rec)
 GribRecord::GribRecord(const GribRecord &rec1, const GribRecord &rec2, double d)
 {
     *this = rec1;
-
+    
     /* TODO: for wave direction we need to do something else because 360 wraps will mess it up */
     // recopie les champs de bits
     if (rec1.data && rec2.data && rec1.Ni == rec2.Ni && rec1.Nj == rec2.Nj) {
@@ -292,15 +292,16 @@ GribRecord::GribRecord(const GribRecord &rec1, const GribRecord &rec2, double d)
 
     if (rec1.BMSbits != NULL && rec2.BMSbits != NULL) {
         if(rec1.sectionSize3 == rec2.sectionSize3) {
-        int size = rec1.sectionSize3-6;
-        this->BMSbits = new zuchar[size];
+            int size = rec1.sectionSize3-6;
+            this->BMSbits = new zuchar[size];
         for (int i=0; i<size; i++)
             this->BMSbits[i] = rec1.BMSbits[i] & rec2.BMSbits[i];
         } else
             ok = false;
-    }
+                }
 
     /* should maybe update strCurDate ? */
+
 }
 
 GribRecord *GribRecord::MagnitudeRecord(const GribRecord &rec1, const GribRecord &rec2)
@@ -928,6 +929,7 @@ double GribRecord::getInterpolatedValue(double px, double py, bool numericalInte
     if (!ok || Di==0 || Dj==0) {
         return GRIB_NOTDEF;
     }
+
     if (!isPointInMap(px,py)) {
         px += 360.0;               // tour du monde à droite ?
         if (!isPointInMap(px,py)) {
@@ -964,11 +966,11 @@ double GribRecord::getInterpolatedValue(double px, double py, bool numericalInte
     if (nbval <3) {
         return GRIB_NOTDEF;
     }
-
+    
     // distances to 00
     double dx = pi-i0;
     double dy = pj-j0;
-
+    
 	if (! numericalInterpolation)
 	{
 		if (dx < 0.5) {
@@ -985,7 +987,6 @@ double GribRecord::getInterpolatedValue(double px, double py, bool numericalInte
 		}
 		return val;
 	}
-
     dx = (3.0 - 2.0*dx)*dx*dx;   // pseudo hermite interpolation
     dy = (3.0 - 2.0*dy)*dy*dy;
 
@@ -1058,10 +1059,3 @@ double GribRecord::getInterpolatedValue(double px, double py, bool numericalInte
     }
     return val;
 }
-
-
-
-
-
-
-

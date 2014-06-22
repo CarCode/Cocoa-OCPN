@@ -732,6 +732,7 @@ bool PlugInManager::RenderAllCanvasOverlayPlugIns( ocpnDC &dc, const ViewPort &v
                     case 108:
                     case 109:
                     case 110:
+                    case 111:
                     {
                         opencpn_plugin_18 *ppi = dynamic_cast<opencpn_plugin_18 *>(pic->m_pplugin);
                         if(ppi)
@@ -785,6 +786,7 @@ bool PlugInManager::RenderAllCanvasOverlayPlugIns( ocpnDC &dc, const ViewPort &v
                     case 108:
                     case 109:
                     case 110:
+                    case 111:
                         {
                         opencpn_plugin_18 *ppi = dynamic_cast<opencpn_plugin_18 *>(pic->m_pplugin);
                         if(ppi)
@@ -846,6 +848,7 @@ bool PlugInManager::RenderAllGLCanvasOverlayPlugIns( wxGLContext *pcontext, cons
                 case 108:
                 case 109:
                 case 110:
+                case 111:
                 {
                     opencpn_plugin_18 *ppi = dynamic_cast<opencpn_plugin_18 *>(pic->m_pplugin);
                     if(ppi)
@@ -1541,6 +1544,22 @@ void RequestRefresh(wxWindow *win)
 {
     if(win)
         win->Refresh();
+}
+
+void GetDoubleCanvasPixLL(PlugIn_ViewPort *vp, wxPoint2DDouble *pp, double lat, double lon)
+{
+    //    Make enough of an application viewport to run its method....
+    ViewPort ocpn_vp;
+    ocpn_vp.clat = vp->clat;
+    ocpn_vp.clon = vp->clon;
+    ocpn_vp.m_projection_type = vp->m_projection_type;
+    ocpn_vp.view_scale_ppm = vp->view_scale_ppm;
+    ocpn_vp.skew = vp->skew;
+    ocpn_vp.rotation = vp->rotation;
+    ocpn_vp.pix_width = vp->pix_width;
+    ocpn_vp.pix_height = vp->pix_height;
+    
+    *pp = ocpn_vp.GetDoublePixFromLL(lat, lon);
 }
 
 void GetCanvasPixLL(PlugIn_ViewPort *vp, wxPoint *pp, double lat, double lon)
@@ -2420,6 +2439,7 @@ void PlugInNormalizeViewport ( PlugIn_ViewPort *vp )
 #ifdef ocpnUSE_GL
     vp->clat = vp->clon = 0;
     vp->view_scale_ppm = 1;
+    vp->pix_width = vp->pix_height = 0;
     vp->rotation = vp->skew = 0;
 #endif
 }

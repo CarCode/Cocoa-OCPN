@@ -514,6 +514,7 @@ void UploadTexture( glTextureDescriptor *ptd, int base_level,
                                          dim, dim, 0, size, ptd->map_array[level] );
                 uploadcomp_tt_total += sw.Time();
                 
+                free(ptd->map_array[level]);
                 ptd->map_array[level] = NULL;
                 
                 g_tex_mem_used += size;
@@ -1408,18 +1409,18 @@ void glChartCanvas::OnPaint( wxPaintEvent &event )
 {
     wxPaintDC dc( this );
 
+    Show( g_bopengl );
+    if( !g_bopengl ) {
+        event.Skip();
+        return;
+    }
+
 #if wxCHECK_VERSION(3, 0, 0)
     SetCurrent(*m_pcontext);
 #else
     SetCurrent();
 #endif
 
-    Show( g_bopengl );
-    if( !g_bopengl ) {
-        event.Skip();
-        return;
-    }
-    
     if( !m_bsetup ) {
         SetupOpenGL();
 
@@ -1619,7 +1620,7 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
     glColor3ub(color.Red(), color.Green(), color.Blue());
-    glLineWidth(1.3);
+    SetSmoothLineWidth();
     
     //        Are there any aux ply entries?
     int nAuxPlyEntries = ChartData->GetnAuxPlyEntries( dbIndex ), nPly;
@@ -1707,21 +1708,15 @@ void glChartCanvas::GridDraw( )
     glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND );
     
     glColor3ub(GridColor.Red(), GridColor.Green(), GridColor.Blue());
     
-    GLfloat parf;
-    glGetFloatv(  GL_SMOOTH_LINE_WIDTH_GRANULARITY, &parf );
-    
-    float width = wxMax(1.3, 1.0 + parf);
+    SetSmoothLineWidth();
 
     // Render in two passes, lines then text is much more efficient for opengl
     for( int pass=0; pass<2; pass++ ) {
-        if(pass == 0) {
-            glLineWidth(width);
+        if(pass == 0)
             glBegin(GL_LINES);
-        }
         
         // calculate position of first major latitude grid line
         lat = ceil( slat / gridlatMajor ) * gridlatMajor;
@@ -2396,6 +2391,14 @@ void glChartCanvas::DisableClipRegion()
     glDisable( GL_SCISSOR_TEST );
     glDisable( GL_STENCIL_TEST );
     glDisable( GL_DEPTH_TEST );
+}
+
+void glChartCanvas::SetSmoothLineWidth()
+{
+    GLfloat parf;
+    glGetFloatv(  GL_SMOOTH_LINE_WIDTH_GRANULARITY, &parf );
+    float width = wxMax(1.5, 1.0 + parf);
+    glLineWidth(width);
 }
 
 void glChartCanvas::Invalidate()
