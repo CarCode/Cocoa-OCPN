@@ -2082,7 +2082,7 @@ void options::SetInitialSettings()
 
     pCDOOutlines->SetValue( g_bShowOutlines );
     pCDOQuilting->SetValue( g_bQuiltEnable );
-    s.Printf( _T("%1.1f"), g_bQuiltMinFrag);     // for DutchENC
+    s.Printf( _T("%1.2f"), g_bQuiltMinFrag);     // for DutchENC
     pCDOQuiltingMinFrag->SetValue(s);
 
     pFullScreenQuilt->SetValue( !g_bFullScreenQuilt );

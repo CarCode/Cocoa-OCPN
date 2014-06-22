@@ -2383,7 +2383,7 @@ void MyConfig::UpdateSettings()
     Write( _T ( "RouteArrivalCircleRadius" ), wxString::Format( _T("%.2f"), g_n_arrival_circle_radius ));
 
     Write( _T ( "ChartQuilting" ), g_bQuiltEnable );
-    Write( _T ( "ChartQuiltingMinFrag" ), wxString::Format( _T("%1.1f"), g_bQuiltMinFrag ) );      // for DutchENC
+    Write( _T ( "ChartQuiltingMinFrag" ), wxString::Format( _T("%1.2f"), g_bQuiltMinFrag ) );      // for DutchENC
     Write( _T ( "FullScreenQuilt" ), g_bFullScreenQuilt );
 
     if( cc1 ) Write( _T ( "ChartQuiltingInitial" ), cc1->GetQuiltMode() );
