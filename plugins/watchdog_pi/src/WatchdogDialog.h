@@ -1,13 +1,16 @@
 /***************************************************************************
  *
  * Project:  OpenCPN
+ * Purpose:  watchdog Plugin
+ * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by David S. Register                               *
+ *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   sean at depagnier dot com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
@@ -21,25 +24,23 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
-#ifndef __GLTEXTUREDESCRIPTOR_H__
-#define __GLTEXTUREDESCRIPTOR_H__
+#include "WatchdogUI.h"
 
-#include "dychart.h"
+class watchdog_pi;
 
-class glTextureDescriptor
+class WatchdogDialog: public WatchdogDialogBase
 {
 public:
-    glTextureDescriptor();
-    ~glTextureDescriptor();
+    WatchdogDialog( watchdog_pi &_watchdog_pi, wxWindow* parent);
+    ~WatchdogDialog();
 
-    GLuint tex_name;
-    int level_min;
-    int x;
-    int y;
+    void UpdateAlarms();
 
-    unsigned char *map_array[10];
-    unsigned char *comp_array[10];
+    void OnDisableAllAlarms( wxCommandEvent& event );
+    void OnPreferences( wxCommandEvent& event );
+    void OnReset( wxCommandEvent& event );
+    void OnClose( wxCommandEvent& event ) { Hide(); }
+
+private:
+    watchdog_pi &m_watchdog_pi;
 };
-
-
-#endif

@@ -1,13 +1,16 @@
 /***************************************************************************
  *
  * Project:  OpenCPN
+ * Purpose:  watchdog Plugin
+ * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by David S. Register                               *
+ *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   sean at depagnier dot com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
@@ -21,25 +24,46 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
-#ifndef __GLTEXTUREDESCRIPTOR_H__
-#define __GLTEXTUREDESCRIPTOR_H__
+#include "watchdog_pi.h"
+#include "WatchdogDialog.h"
 
-#include "dychart.h"
-
-class glTextureDescriptor
+WatchdogDialog::WatchdogDialog( watchdog_pi &_watchdog_pi, wxWindow* parent)
+    : WatchdogDialogBase( parent ), m_watchdog_pi(_watchdog_pi)
 {
-public:
-    glTextureDescriptor();
-    ~glTextureDescriptor();
+    wxFileConfig *pConf = GetOCPNConfigObject();
+    pConf->SetPath ( _T( "/Settings/Watchdog" ) );
+    m_cbDisableAllAlarms->SetValue(pConf->Read ( _T ( "DisableAllAlarms" ), 0L ));
+}
 
-    GLuint tex_name;
-    int level_min;
-    int x;
-    int y;
+WatchdogDialog::~WatchdogDialog()
+{
+}
 
-    unsigned char *map_array[10];
-    unsigned char *comp_array[10];
-};
+void WatchdogDialog::UpdateAlarms()
+{
+    if(IsShown())
+        Alarm::UpdateStatusAll();
+    else
+        m_fgAlarms->Show(false);
 
+    Fit();
+    Refresh();
+}
 
-#endif
+void WatchdogDialog::OnDisableAllAlarms( wxCommandEvent& event )
+{
+    wxFileConfig *pConf = GetOCPNConfigObject();
+    pConf->SetPath ( _T( "/Settings/Watchdog" ) );
+    pConf->Write ( _T ( "DisableAllAlarms" ), m_cbDisableAllAlarms->GetValue());
+}
+
+void WatchdogDialog::OnPreferences( wxCommandEvent& event )
+{
+    m_watchdog_pi.ShowPreferencesDialog( this );
+}
+
+void WatchdogDialog::OnReset( wxCommandEvent& event )
+{
+    Alarm::ResetAll();
+    UpdateAlarms();
+}

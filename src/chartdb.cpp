@@ -266,11 +266,12 @@ void ChartDB::PurgeCache()
       {
             CacheEntry *pce = (CacheEntry *)(pChartCache->Item(i));
             ChartBase *Ch = (ChartBase *)pce->pChart;
-            delete Ch;
 
             //    The glCanvas may be cacheing some information for this chart
             if(g_bopengl && cc1)
                   cc1->PurgeGLCanvasChartCache(Ch);
+
+            delete Ch;
 
             delete pce;
       }
@@ -925,12 +926,13 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                                                 pthumbwin->pThumbChart = NULL;
                                     }
 
-                                    //    Delete the chart
-                                    delete pDeleteCandidate;
 
                                     //    The glCanvas may be cacheing some information for this chart
                                     if(g_bopengl && cc1)
                                           cc1->PurgeGLCanvasChartCache(pDeleteCandidate);
+
+                                    //    Delete the chart
+                                    delete pDeleteCandidate;
 
                                     //remove the cache entry
                                     pChartCache->Remove(pce);
@@ -992,14 +994,15 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                               }
 
                               wxLogMessage(pDeleteCandidate->GetFullPath());
-                        //    Delete the chart
-                              delete pDeleteCandidate;
 
                         //    The glCanvas may be cacheing some information for this chart
                               if(g_bopengl && cc1)
                                   cc1->PurgeGLCanvasChartCache(pDeleteCandidate);
 
-                        //remove the cache entry
+                            //    Delete the chart
+                            delete pDeleteCandidate;
+                            
+                            //remove the cache entry
                               pChartCache->Remove(pce);
 
                               if(pthumbwin)
@@ -1232,7 +1235,11 @@ bool ChartDB::DeleteCacheChart(ChartBase *pDeleteCandidate)
                               pthumbwin->pThumbChart = NULL;
                   }
 
-                        //    Delete the chart
+                //    The glCanvas may be cacheing some information for this chart
+                if(g_bopengl && cc1)
+                    cc1->PurgeGLCanvasChartCache(pDeleteCandidate);
+                
+                //    Delete the chart
                   delete pDeleteCandidate;
 
                         //remove the cache entry

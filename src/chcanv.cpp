@@ -77,6 +77,11 @@
 #include "SendToGpsDlg.h"
 #include "compasswin.h"
 #include "OCPNRegion.h"
+#include "gshhs.h"
+
+#ifdef ocpnUSE_GL
+#include "glChartCanvas.h"
+#endif
 
 #ifdef USE_S57
 #include "cm93.h"                   // for chart outline draw
@@ -1479,6 +1484,12 @@ ChartCanvas::ChartCanvas ( wxFrame *frame ) :
 
     m_pBrightPopup = NULL;
     m_pQuilt = new Quilt();
+
+#ifdef ocpnUSE_GL
+    if ( !g_bdisable_opengl )
+        m_pQuilt->EnableHighDefinitionZoom( true );
+#endif
+
 }
 
 ChartCanvas::~ChartCanvas()
@@ -3114,6 +3125,75 @@ void ChartCanvas::SetQuiltRefChart( int dbIndex )
     m_pQuilt->Invalidate();
 }
 
+//      Verify and adjust the current reference chart,
+//      so that it will not lead to excessive overzoom or underzoom onscreen
+int ChartCanvas::AdjustQuiltRefChart( void )
+{
+    int ret = -1;
+    if(m_pQuilt){
+        ChartBase *pc = ChartData->OpenChartFromDB( m_pQuilt->GetRefChartdbIndex(), FULL_INIT );
+        if( pc ) {
+            double min_ref_scale = pc->GetNormalScaleMin( m_canvas_scale_factor, false );
+            double max_ref_scale = pc->GetNormalScaleMax( m_canvas_scale_factor, m_canvas_width );
+            
+            if( VPoint.chart_scale < min_ref_scale )  {
+                ret = m_pQuilt->AdjustRefOnZoomIn( VPoint.chart_scale );
+            }
+            else if( VPoint.chart_scale > max_ref_scale )  {
+                ret = m_pQuilt->AdjustRefOnZoomOut( VPoint.chart_scale );
+            }
+            else {
+                bool brender_ok = IsChartLargeEnoughToRender( pc, VPoint );
+                
+                int ref_family = pc->GetChartFamily();
+                
+                if( !brender_ok ) {
+                    unsigned int target_stack_index = 0;
+                    int target_stack_index_check = m_pQuilt->GetExtendedStackIndexArray().Index(  m_pQuilt->GetRefChartdbIndex() ); // Lookup
+                    
+                    if( wxNOT_FOUND != target_stack_index_check )
+                        target_stack_index = target_stack_index_check;
+                    
+                    int extended_array_count = m_pQuilt->GetExtendedStackIndexArray().GetCount();
+                    while( ( !brender_ok )  && ( (int)target_stack_index < ( extended_array_count - 1 ) ) ) {
+                        target_stack_index++;
+                        int test_db_index = m_pQuilt->GetExtendedStackIndexArray().Item( target_stack_index );
+                        
+                        if( ( ref_family == ChartData->GetDBChartFamily( test_db_index ) )
+                           && IsChartQuiltableRef( test_db_index ) ) {
+                            //    open the target, and check the min_scale
+                            ChartBase *ptest_chart = ChartData->OpenChartFromDB( test_db_index, FULL_INIT );
+                            if( ptest_chart ){
+                                brender_ok = IsChartLargeEnoughToRender( ptest_chart, VPoint );
+                            }
+                        }
+                    }
+                    
+                    if(brender_ok){             // found a better reference chart
+                        int new_db_index = m_pQuilt->GetExtendedStackIndexArray().Item( target_stack_index );
+                        if( ( ref_family == ChartData->GetDBChartFamily( new_db_index ) )
+                           && IsChartQuiltableRef( new_db_index ) ) {
+                            m_pQuilt->SetReferenceChart( new_db_index );
+                            ret = new_db_index;
+                        }
+                        else
+                            ret =m_pQuilt->GetRefChartdbIndex();
+                    }
+                    else
+                        ret = m_pQuilt->GetRefChartdbIndex();
+                    
+                }
+                else
+                    ret = m_pQuilt->GetRefChartdbIndex();
+            }
+        }
+        else
+            ret = -1;
+    }
+    
+    return ret;
+}
+
 void ChartCanvas::UpdateCanvasOnGroupChange( void )
 {
     delete pCurrentStack;
@@ -3663,7 +3743,7 @@ void ChartCanvas::ShipDraw( ocpnDC& dc )
 
     float cog_rad = atan2f( (float) ( lPredPoint.y - lShipMidPoint.y ),
                            (float) ( lPredPoint.x - lShipMidPoint.x ) );
-    cog_rad += PI;
+    cog_rad += (float)PI;
 
     float lpp = sqrtf( powf( (float) (lPredPoint.x - lShipMidPoint.x), 2) +
                       powf( (float) (lPredPoint.y - lShipMidPoint.y), 2) );
@@ -3690,7 +3770,7 @@ void ChartCanvas::ShipDraw( ocpnDC& dc )
 
     float icon_rad = atan2f( (float) ( osd_head_point.y - lShipMidPoint.y ),
                             (float) ( osd_head_point.x - lShipMidPoint.x ) );
-    icon_rad += PI;
+    icon_rad += (float)PI;
 
     if( pSog < 0.2 ) icon_rad = ( ( icon_hdt + 90. ) * PI / 180. ) + GetVP().rotation;
 
@@ -3898,23 +3978,23 @@ void CalcGridSpacing( float WindowDegrees, float& MajorSpacing, float&MinorSpaci
     // [0] width or height of the displayed chart in degrees
     // [1] spacing between major grid lines in degrees
     // [2] spacing between minor grid lines in degrees
-    const float lltab[][3] = { { 180.0, 90.0, 30.0 }, { 90.0, 45.0, 15.0 }, { 60.0, 30.0, 10.0 }, {
-            20.0, 10.0, 2.0
-        }, { 10.0, 5.0, 1.0 }, { 4.0, 2.0, 30.0 / 60.0 }, {
-            2.0, 1.0, 20.0
-            / 60.0
-        }, { 1.0, 0.5, 10.0 / 60.0 }, { 30.0 / 60.0, 15.0 / 60.0, 5.0 / 60.0 }, {
-            20.0
-            / 60.0, 10.0 / 60.0, 2.0 / 60.0
-        }, { 10.0 / 60.0, 5.0 / 60.0, 1.0 / 60.0 }, {
-            4.0
-            / 60.0, 2.0 / 60.0, 0.5 / 60.0
-        }, { 2.0 / 60.0, 1.0 / 60.0, 0.2 / 60.0 }, {
-            1.0 / 60.0,
-            0.5 / 60.0, 0.1 / 60.0
-        }, { 0.4 / 60.0, 0.2 / 60.0, 0.05 / 60.0 }, {
-            0.0, 0.1 / 60.0,
-            0.02 / 60.0
+    const float lltab[][3] = { { 180.0f, 90.0f, 30.0f }, { 90.0f, 45.0f, 15.0f }, { 60.0f, 30.0f, 10.0f }, {
+        20.0f, 10.0f, 2.0f
+    }, { 10.0f, 5.0f, 1.0f }, { 4.0f, 2.0f, 30.0f / 60.0f }, {
+        2.0f, 1.0f, 20.0f
+        / 60.0f
+    }, { 1.0f, 0.5f, 10.0f / 60.0f }, { 30.0f / 60.0f, 15.0f / 60.0f, 5.0f / 60.0f }, {
+        20.0f
+        / 60.0f, 10.0f / 60.0f, 2.0f / 60.0f
+    }, { 10.0f / 60.0f, 5.0f / 60.0f, 1.0f / 60.0f }, {
+        4.0f
+        / 60.0f, 2.0f / 60.0f, 0.5f / 60.0f
+    }, { 2.0f / 60.0f, 1.0f / 60.0f, 0.2f / 60.0f }, {
+        1.0f / 60.0f,
+        0.5f / 60.0f, 0.1f / 60.0f
+    }, { 0.4f / 60.0f, 0.2f / 60.0f, 0.05f / 60.0f }, {
+        0.0f, 0.1f / 60.0f,
+        0.02f / 60.0f
         } // indicates last entry
     };
 
@@ -6937,25 +7017,29 @@ wxString _menuText( wxString name, wxString shortcut ) {
 void MenuPrepend( wxMenu *menu, int id, wxString label)
 {
     wxMenuItem *item = new wxMenuItem(menu, id, label);
-    wxFont *qFont = GetOCPNScaledFont(_T("Menu"), 10);
-    if(g_bresponsive){
 #ifdef __WXMSW__
-        item->SetFont(*qFont);
+    wxFont *qFont = GetOCPNScaledFont(_T("Menu"), 10);
+    item->SetFont(*qFont);
 #endif
-    }
     menu->Prepend(item);
 }
 
 void MenuAppend( wxMenu *menu, int id, wxString label)
 {
     wxMenuItem *item = new wxMenuItem(menu, id, label);
-    wxFont *qFont = GetOCPNScaledFont(_("Dialog"), 10);
-    if(g_bresponsive){
 #ifdef __WXMSW__
-        item->SetFont(*qFont);
+    wxFont *qFont = GetOCPNScaledFont(_("Menu"), 10);
+    item->SetFont(*qFont);
 #endif
-    }
     menu->Append(item);
+}
+
+void SetMenuItemFont(wxMenuItem *item)
+{
+#ifdef __WXMSW__
+    wxFont *qFont = GetOCPNScaledFont(_("Menu"), 10);
+    item->SetFont(*qFont);
+#endif
 }
 
 void ChartCanvas::CanvasPopupMenu( int x, int y, int seltype )
@@ -7152,8 +7236,11 @@ void ChartCanvas::CanvasPopupMenu( int x, int y, int seltype )
 
     //  ChartGroup SubMenu
     wxMenuItem* subItemChart = contextMenu->AppendSubMenu( subMenuChart, _("Chart Groups") );
+    SetMenuItemFont(subItemChart);
+
     if( g_pGroupArray->GetCount() ) {
-        subMenuChart->AppendRadioItem( ID_DEF_MENU_GROUPBASE, _("All Active Charts") );
+        wxMenuItem* subItem0 = subMenuChart->AppendRadioItem( ID_DEF_MENU_GROUPBASE, _("All Active Charts") );
+        SetMenuItemFont(subItem0);
 
         for( unsigned int i = 0; i < g_pGroupArray->GetCount(); i++ ) {
             subMenuChart->AppendRadioItem( ID_DEF_MENU_GROUPBASE + i + 1,
@@ -7545,7 +7632,23 @@ void ChartCanvas::ShowObjectQueryWindow( int x, int y, float zlat, float zlon )
                         bg.Green(), fg.Red(), fg.Blue(), fg.Green() );
         objText += _T("\"");
         objText += face;
-        objText += _T("\">");
+        objText += _T("\" ");
+        
+        int points = dFont->GetPointSize();
+        wxString ss;
+        switch (points){
+            case 8:  ss = _T("size=\"2\""); break;
+            case 10: ss = _T("size=\"3\""); break;
+            case 12: ss = _T("size=\"3\""); break;
+            case 14: ss = _T("size=\"4\""); break;
+            case 16: ss = _T("size=\"4\""); break;
+            case 18: ss = _T("size=\"5\""); break;
+            case 20: ss = _T("size=\"6\""); break;
+            default: ss = _T(" "); break;
+        }
+        
+        objText += ss;
+        objText += _T(">");
 
         if( overlay_rule_list && CHs57_Overlay) {
             objText << CHs57_Overlay->CreateObjDescriptions( overlay_rule_list );
@@ -11342,10 +11445,13 @@ void DimeControl( wxWindow* ctrl, wxColour col, wxColour col1, wxColour back_col
                   wxColour text_color, wxColour uitext, wxColour udkrd, wxColour gridline )
 {
     ColorScheme cs = cc1->GetColorScheme();
-    if( cs != GLOBAL_COLOR_SCHEME_DAY && cs != GLOBAL_COLOR_SCHEME_RGB ) ctrl->SetBackgroundColour(
-            back_color );
-    else
-        ctrl->SetBackgroundColour( wxNullColour );
+
+    //  If the color scheme is DAY or RGB, use the default platform native colour for backgrounds
+    wxColour window_back_color = wxNullColour;
+    if( cs != GLOBAL_COLOR_SCHEME_DAY && cs != GLOBAL_COLOR_SCHEME_RGB )
+        window_back_color = back_color;
+
+    ctrl->SetBackgroundColour( window_back_color );
 
 #ifdef __WXMAC__
 #if wxCHECK_VERSION(2,9,0)
@@ -11394,7 +11500,7 @@ void DimeControl( wxWindow* ctrl, wxColour col, wxColour col1, wxColour back_col
             ( (wxComboBox*) win )->SetBackgroundColour( col );
 
         else if( win->IsKindOf( CLASSINFO(wxScrolledWindow) ) )
-            ( (wxScrolledWindow*) win )->SetBackgroundColour( col1 );
+            ( (wxScrolledWindow*) win )->SetBackgroundColour( window_back_color );
 
         else if( win->IsKindOf( CLASSINFO(wxGenericDirCtrl) ) )
             ( (wxGenericDirCtrl*) win )->SetBackgroundColour( col1 );
@@ -11406,7 +11512,7 @@ void DimeControl( wxWindow* ctrl, wxColour col, wxColour col1, wxColour back_col
             ( (wxTreeCtrl*) win )->SetBackgroundColour( col );
 
         else if( win->IsKindOf( CLASSINFO(wxRadioButton) ) )
-            ( (wxRadioButton*) win )->SetBackgroundColour( col1 );
+            ( (wxRadioButton*) win )->SetBackgroundColour( window_back_color );
 
         else if( win->IsKindOf( CLASSINFO(wxNotebook) ) ) {
             ( (wxNotebook*) win )->SetBackgroundColour( col1 );
@@ -11418,7 +11524,7 @@ void DimeControl( wxWindow* ctrl, wxColour col, wxColour col1, wxColour back_col
         }
 
         else if( win->IsKindOf( CLASSINFO(wxToggleButton) ) ) {
-            ( (wxToggleButton*) win )->SetBackgroundColour( col1 );
+            ( (wxToggleButton*) win )->SetBackgroundColour( window_back_color );
         }
 
         else if( win->IsKindOf( CLASSINFO(wxPanel) ) ) {

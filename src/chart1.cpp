@@ -97,10 +97,14 @@
 #include "AIS_Decoder.h"
 #include "OCP_DataStreamInput_Thread.h"
 #include "TrackPropDlg.h"
-
+#include "gshhs.h"
 #include "cutil.h"
 #include "routemanagerdialog.h"
 #include "pluginmanager.h"
+
+#ifdef ocpnUSE_GL
+#include "glChartCanvas.h"
+#endif
 
 #include <wx/image.h>
 #include "wx/apptrait.h"
@@ -159,6 +163,7 @@ wxString                  gExe_path;
 
 int                       g_unit_test_1;
 bool                      g_start_fullscreen;
+bool                      g_rebuild_gl_cache;
 
 MyFrame                   *gFrame;
 
@@ -799,6 +804,7 @@ void MyApp::OnInitCmdLine( wxCmdLineParser& parser )
     parser.AddSwitch( _T("p") );
     parser.AddSwitch( _T("no_opengl") );
     parser.AddSwitch( _T("fullscreen") );
+    parser.AddSwitch( _T("rebuild_gl_raster_cache") );
 }
 
 bool MyApp::OnCmdLineParsed( wxCmdLineParser& parser )
@@ -807,6 +813,7 @@ bool MyApp::OnCmdLineParsed( wxCmdLineParser& parser )
     g_bportable = parser.Found( _T("p") );
     g_bdisable_opengl = parser.Found( _T("no_opengl") );
     g_start_fullscreen = parser.Found( _T("fullscreen") );
+    g_rebuild_gl_cache = parser.Found( _T("rebuild_gl_raster_cache") );
 
     return true;
 }
@@ -1994,6 +2001,9 @@ if( 0 == g_memCacheLimit )
     stats->pPiano->SetPolyIcon( new wxBitmap( style->GetIcon( _T("polyprj") ) ) );
     stats->pPiano->SetSkewIcon( new wxBitmap( style->GetIcon( _T("skewprj") ) ) );
 
+    //  Yield to pick up the OnSize() calls that result from Maximize()
+    Yield();
+
     wxString perspective;
     pConfig->SetPath( _T ( "/AUI" ) );
     pConfig->Read( _T ( "AUIPerspective" ), &perspective );
@@ -2164,6 +2174,26 @@ if( 0 == g_memCacheLimit )
 
 //      All set to go.....
 
+    // Process command line option to rebuild cache
+#ifdef ocpnUSE_GL
+    extern ocpnGLOptions g_GLOptions;
+    
+    if(g_rebuild_gl_cache && g_bopengl &&
+       g_GLOptions.m_bTextureCompression && g_GLOptions.m_bTextureCompressionCaching ) {
+        
+        cc1->ReloadVP();                  //  Get a nice chart background loaded
+
+        //      Turn off the toolbar as a clear signal that the system is busy right now.
+        if( g_FloatingToolbarDialog )
+            g_FloatingToolbarDialog->Hide();
+
+
+        BuildCompressedCache();
+        
+    }
+#endif
+
+
 //      establish GPS timeout value as multiple of frame timer
 //      This will override any nonsense or unset value from the config file
     if( ( gps_watchdog_timeout_ticks > 60 ) || ( gps_watchdog_timeout_ticks <= 0 ) ) gps_watchdog_timeout_ticks =
@@ -2198,6 +2228,8 @@ if( 0 == g_memCacheLimit )
     }
 
     stats->Show( true );
+
+    Yield();
 
     gFrame->DoChartUpdate();
 
@@ -3373,8 +3405,9 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     if( cc1 ) {
         cc1->SetCursor( wxCURSOR_WAIT );
 
-        cc1->Refresh( false );
+        cc1->Refresh( true );
         cc1->Update();
+        wxYield();
     }
 
     //   Save the saved Screen Brightness
@@ -3721,10 +3754,32 @@ void MyFrame::UpdateAllFonts()
         PositionConsole();
     }
 
+    //  Close and destroy any persistent dialogs, so that new fonts will be utilized
     if( g_pais_query_dialog_active ) {
         g_pais_query_dialog_active->Destroy();
         g_pais_query_dialog_active = NULL;
     }
+
+    if( pRoutePropDialog ) {
+        pRoutePropDialog->Destroy();
+        pRoutePropDialog = NULL;
+    }
+    
+    if( pTrackPropDialog ) {
+        pTrackPropDialog->Destroy();
+        pTrackPropDialog = NULL;
+    }
+    
+    if( pMarkInfoDialog ) {
+        pMarkInfoDialog->Destroy();
+        pMarkInfoDialog = NULL;
+    }
+    
+    if( g_pObjectQueryDialog ) {
+        g_pObjectQueryDialog->Destroy();
+        g_pObjectQueryDialog = NULL;
+    }
+
 
     if( pWayPointMan ) pWayPointMan->ClearRoutePointFonts();
 
@@ -4624,13 +4679,6 @@ int MyFrame::ProcessOptionsDialog( int rr, options* dialog )
     UpdateChartDatabaseInplace( *pWorkDirArray, ( ( rr & FORCE_UPDATE ) == FORCE_UPDATE ),
                 true, *pChartListFileName );
 
-#ifdef ocpnUSE_GL
-        extern ocpnGLOptions g_GLOptions;
-        
-        if(g_bopengl && g_GLOptions.m_bTextureCompression &&
-           g_GLOptions.m_bTextureCompressionCaching)
-            BuildCompressedCache();
-#endif
         //    Re-open the last open chart
         int dbii = ChartData->FinddbIndex( chart_file_name );
         ChartsRefresh( dbii, cc1->GetVP() );

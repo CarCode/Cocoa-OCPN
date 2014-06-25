@@ -411,7 +411,7 @@ bool grib_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
 
 void grib_pi::SetCursorLatLon(double lat, double lon)
 {
-    if(m_pGribDialog)
+    if(m_pGribDialog && m_pGribDialog->IsShown())
         m_pGribDialog->SetCursorLatLon(lat, lon);
 }
 
@@ -450,11 +450,16 @@ void grib_pi::SetPluginMessage(wxString &message_id, wxString &message_body)
                         v[_T("Minute")].AsInt(),
                         v[_T("Second")].AsInt());
 
+        if(!m_pGribDialog)
+            OnToolbarToolCallback(0);
+
         GribTimelineRecordSet *set = m_pGribDialog ? m_pGribDialog->GetTimeLineRecordSet(time) : NULL;
 
         char ptr[64];
         snprintf(ptr, sizeof ptr, "%p", set);
 
+        v[_T("GribVersionMajor")] = PLUGIN_VERSION_MAJOR;
+        v[_T("GribVersionMinor")] = PLUGIN_VERSION_MINOR;
         v[_T("TimelineSetPtr")] = wxString::From8BitData(ptr);
 
         wxJSONWriter w;

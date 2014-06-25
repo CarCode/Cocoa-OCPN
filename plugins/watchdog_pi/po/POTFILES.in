@@ -1,0 +1,10 @@
+../src/Alarm.cpp
+../src/Alarm.h
+../src/WatchdogDialog.cpp
+../src/WatchdogDialog.h
+../src/WatchdogPrefsDialog.cpp
+../src/WatchdogPrefsDialog.h
+../src/WatchdogUI.cpp
+../src/WatchdogUI.h
+../src/watchdog_pi.cpp
+../src/watchdog_pi.h

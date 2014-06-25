@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -81,8 +80,7 @@ bool S57QueryDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
 
     if( !wxDialog::Create( parent, id, caption, pos, size, wstyle ) ) return false;
 
-    wxFont *dFont = wxTheFontList->FindOrCreateFont( 10, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL,
-                    wxFONTWEIGHT_NORMAL );
+    wxFont *dFont = GetOCPNScaledFont(_("Dialog"), 10);
 
     SetFont( *dFont );
     CreateControls();
