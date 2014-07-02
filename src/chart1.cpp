@@ -1702,7 +1702,11 @@ bool MyApp::OnInit()
 if( 0 == g_memCacheLimit )
     g_memCacheLimit = (int) ( g_mem_total * 0.5 );
     g_memCacheLimit = wxMin(g_memCacheLimit, 1024 * 1024); // math in kBytes
+#else
+    g_memCacheLimit = (int) ( (g_mem_total - g_mem_initial) * 0.5 );
 #endif
+
+
 
 //      Establish location and name of chart database
 #ifdef __WXMSW__
@@ -2184,9 +2188,10 @@ if( 0 == g_memCacheLimit )
         cc1->ReloadVP();                  //  Get a nice chart background loaded
 
         //      Turn off the toolbar as a clear signal that the system is busy right now.
-        if( g_FloatingToolbarDialog )
-            g_FloatingToolbarDialog->Hide();
-
+        // Note: I commented this out because the toolbar never comes back for me
+        // and is unusable until I restart opencpn without generating the cache
+//        if( g_FloatingToolbarDialog )
+//            g_FloatingToolbarDialog->Hide();
 
         BuildCompressedCache();
         
@@ -3666,11 +3671,6 @@ void MyFrame::DoSetSize( void )
     int ccch = y;
 
     if( cc1 ) {
-        cccw = x * 10 / 10;               // constrain to mod 4
-        int wr = cccw / 4;
-        cccw = wr * 4;
-        cccw += 2;                              // account for simple border
-
         int cur_width, cur_height;
         cc1->GetSize( &cur_width, &cur_height );
         if( ( cur_width != cccw ) || ( cur_height != ccch ) ) {

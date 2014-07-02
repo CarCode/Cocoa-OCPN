@@ -463,31 +463,13 @@ class MyPrintout: public wxPrintout
 
 
 //      A global definition for window, timer and other ID's as needed.
-#ifdef __WXOSX__
 enum {
     ID_NMEA_WINDOW      = wxID_HIGHEST,
     ID_AIS_WINDOW,
     FRAME_TIMER_1,
     FRAME_TIMER_2,
     TIMER_AIS1,
-    TIMER_AISAUDIO,
-    AIS_SOCKET_ID,
-    FRAME_TIMER_DOG,
-    FRAME_TC_TIMER,
-    FRAME_COG_TIMER,
-    MEMORY_FOOTPRINT_TIMER,
-    ID_NMEA_THREADMSG,
-    TIMER_WIFI1,
-    WIFI_SOCKET_ID
-};
-
-#else
-enum {
-    ID_NMEA_WINDOW      = wxID_HIGHEST,
-    ID_AIS_WINDOW,
-    FRAME_TIMER_1,
-    FRAME_TIMER_2,
-    TIMER_AIS1,
+    TIMER_DSC,
     TIMER_AISAUDIO,
     AIS_SOCKET_ID,
     FRAME_TIMER_DOG,
@@ -495,9 +477,8 @@ enum {
     FRAME_COG_TIMER,
     MEMORY_FOOTPRINT_TIMER,
     ID_NMEA_THREADMSG
-
 };
-#endif
+
 //-----------------------------------------------------------------------
 //          Dummy Text Control for global key events
 //-----------------------------------------------------------------------

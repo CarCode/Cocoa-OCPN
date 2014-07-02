@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  * $Id: wmm_pi.cpp,v 1.0 2011/02/26 01:54:37 nohal Exp $
  *
  * Project:  OpenCPN
@@ -6,8 +6,8 @@
  * Author:   Pavel Kalian
  *
  ***************************************************************************
- *   Copyright (C) 2011 by Pavel Kalian   *
- *   $EMAIL$   *
+ *   Copyright (C) 2011 by Pavel Kalian                                    *
+ *   $EMAIL$                                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,10 +22,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
-
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -421,13 +419,13 @@ void wmm_pi::SetCursorLatLon(double lat, double lon)
 	WMM_Geomag(Ellip, CoordSpherical, CoordGeodetic, TimedMagneticModel, &GeoMagneticElements);   /* Computes the geoMagnetic field elements and their time change*/
 	WMM_CalculateGridVariation(CoordGeodetic,&GeoMagneticElements);
 	//WMM_PrintUserData(GeoMagneticElements,CoordGeodetic, UserDate, TimedMagneticModel, &Geoid);     /* Print the results */
-	m_pWmmDialog->m_tcF->SetValue(wxString::Format(_("%-9.1lf nT"), GeoMagneticElements.F));
-	m_pWmmDialog->m_tcH->SetValue(wxString::Format(_("%-9.1lf nT"), GeoMagneticElements.H));
-	m_pWmmDialog->m_tcX->SetValue(wxString::Format(_("%-9.1lf nT"), GeoMagneticElements.X));
-	m_pWmmDialog->m_tcY->SetValue(wxString::Format(_("%-9.1lf nT"), GeoMagneticElements.Y));
-	m_pWmmDialog->m_tcZ->SetValue(wxString::Format(_("%-9.1lf nT"), GeoMagneticElements.Z));
-	m_pWmmDialog->m_tcD->SetValue(wxString::Format(_("%-5.1lf\u00B0 (%s)"), GeoMagneticElements.Decl, AngleToText(GeoMagneticElements.Decl).c_str()));
-	m_pWmmDialog->m_tcI->SetValue(wxString::Format(_("%-5.1lf\u00B0"), GeoMagneticElements.Incl));
+	m_pWmmDialog->m_tcF->SetValue(wxString::Format(_T("%-9.1lf nT"), GeoMagneticElements.F));
+	m_pWmmDialog->m_tcH->SetValue(wxString::Format(_T("%-9.1lf nT"), GeoMagneticElements.H));
+	m_pWmmDialog->m_tcX->SetValue(wxString::Format(_T("%-9.1lf nT"), GeoMagneticElements.X));
+	m_pWmmDialog->m_tcY->SetValue(wxString::Format(_T("%-9.1lf nT"), GeoMagneticElements.Y));
+	m_pWmmDialog->m_tcZ->SetValue(wxString::Format(_T("%-9.1lf nT"), GeoMagneticElements.Z));
+	m_pWmmDialog->m_tcD->SetValue(wxString::Format(_T("%-5.1lf\u00B0 (%s)"), GeoMagneticElements.Decl, AngleToText(GeoMagneticElements.Decl).c_str()));
+	m_pWmmDialog->m_tcI->SetValue(wxString::Format(_T("%-5.1lf\u00B0"), GeoMagneticElements.Incl));
 
 	m_cursorVariation = GeoMagneticElements;
 	SendCursorVariation();
@@ -453,7 +451,7 @@ void wmm_pi::SetPositionFix(PlugIn_Position_Fix &pfix)
 	m_boatVariation = GeoMagneticElements;
 	SendBoatVariation();
 
-	wxString NewVal = wxString::Format(_("%.1f"), GeoMagneticElements.Decl);
+	wxString NewVal = wxString::Format(_T("%.1f"), GeoMagneticElements.Decl);
 	if(m_bShowLiveIcon && m_LastVal != NewVal)
 	{
 		m_LastVal = NewVal;
@@ -476,11 +474,11 @@ void wmm_pi::SetPositionFix(PlugIn_Position_Fix &pfix)
 		m_pWmmDialog->m_tbD->SetValue(_("Error, see log."));
 		return;
 	}
-	m_pWmmDialog->m_tbF->SetValue(wxString::Format(_("%-9.1lf nT"), GeoMagneticElements.F));
-	m_pWmmDialog->m_tbH->SetValue(wxString::Format(_("%-9.1lf nT"), GeoMagneticElements.H));
-	m_pWmmDialog->m_tbX->SetValue(wxString::Format(_("%-9.1lf nT"), GeoMagneticElements.X));
-	m_pWmmDialog->m_tbY->SetValue(wxString::Format(_("%-9.1lf nT"), GeoMagneticElements.Y));
-	m_pWmmDialog->m_tbZ->SetValue(wxString::Format(_("%-9.1lf nT"), GeoMagneticElements.Z));
+	m_pWmmDialog->m_tbF->SetValue(wxString::Format(_T("%-9.1lf nT"), GeoMagneticElements.F));
+	m_pWmmDialog->m_tbH->SetValue(wxString::Format(_T("%-9.1lf nT"), GeoMagneticElements.H));
+	m_pWmmDialog->m_tbX->SetValue(wxString::Format(_T("%-9.1lf nT"), GeoMagneticElements.X));
+	m_pWmmDialog->m_tbY->SetValue(wxString::Format(_T("%-9.1lf nT"), GeoMagneticElements.Y));
+	m_pWmmDialog->m_tbZ->SetValue(wxString::Format(_T("%-9.1lf nT"), GeoMagneticElements.Z));
 	m_pWmmDialog->m_tbD->SetValue(wxString::Format(_T("%-5.1lf\u00B0 (%s)"), GeoMagneticElements.Decl, AngleToText(GeoMagneticElements.Decl).c_str()));
 	m_pWmmDialog->m_tbI->SetValue(wxString::Format(_T("%-5.1lf\u00B0"), GeoMagneticElements.Incl));
 }
@@ -608,9 +606,13 @@ wxString wmm_pi::AngleToText(double angle)
 	int deg = abs(angle);
 	int min = (fabs(angle) - deg) * 60;
 	if (angle < 0)
-		return wxString::Format(_("%u\u00B0%u' W"), deg, min);
+		return wxString::Format(_T("%u\u00B0%u' W"), deg, min);
 	else
-		return wxString::Format(_("%u\u00B0%u' E"), deg, min);
+#ifdef __WXOSX__
+        return wxString::Format(_T("%u\u00B0%u' O"), deg, min);
+#else
+		return wxString::Format(_T("%u\u00B0%u' E"), deg, min);
+#endif
 }
 
 bool wmm_pi::LoadConfig(void)

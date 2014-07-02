@@ -26,13 +26,19 @@
 
 #include <wx/dialog.h>
 
+#define ID_ACKNOWLEDGE        10001
+#define ID_SILENCE            10002
+#define ID_JUMPTO             10004
+#define ID_WPT_CREATE         10005
+
+
 class AIS_Decoder;
 class wxHtmlWindow;
 
 class OCPN_AlertDialog: public wxDialog
 {
     DECLARE_CLASS( OCPN_AlertDialog )
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 public:
 
     OCPN_AlertDialog( );
@@ -64,13 +70,14 @@ private:
 class AISTargetAlertDialog: public OCPN_AlertDialog
 {
       DECLARE_CLASS( AISTargetAlertDialog )
-                  DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
       public:
 
            AISTargetAlertDialog( );
 
             ~AISTargetAlertDialog( );
-            bool Create( int target_mmsi, wxWindow *parent, AIS_Decoder *pdecoder,bool b_jumpto,
+            bool Create( int target_mmsi, wxWindow *parent, AIS_Decoder *pdecoder,
+                            bool b_jumpto, bool b_createWP, bool b_ack,
                             wxWindowID id = wxID_ANY,
                             const wxString& caption = _("OpenCPN AIS Alert"),
                             const wxPoint& pos = wxDefaultPosition,
@@ -90,6 +97,7 @@ class AISTargetAlertDialog: public OCPN_AlertDialog
             void OnSize( wxSizeEvent& event );
             void OnIdSilenceClick( wxCommandEvent& event );
             void OnIdJumptoClick( wxCommandEvent& event );
+            void OnIdCreateWPClick( wxCommandEvent& event );
 
 
             wxHtmlWindow      *m_pAlertTextCtl;
@@ -98,6 +106,8 @@ class AISTargetAlertDialog: public OCPN_AlertDialog
             wxFont            *m_pFont;
             wxString          m_alert_text;
             bool              m_bjumpto;
+            bool              m_back;
+            bool              m_bcreateWP;
 
 };
 

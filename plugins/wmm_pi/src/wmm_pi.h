@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  * $Id: wmm_pi.h,v 1.0 2011/02/26 01:54:37 nohal Exp $
  *
  * Project:  OpenCPN
@@ -6,8 +6,8 @@
  * Author:   Pavel Kalian
  *
  ***************************************************************************
- *   Copyright (C) 2011 by Pavel Kalian   *
- *   $EMAIL$   *
+ *   Copyright (C) 2011 by Pavel Kalian                                    *
+ *   $EMAIL$                                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,9 +22,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #ifndef _WMMPI_H_
 #define _WMMPI_H_
@@ -64,7 +63,7 @@ class wmm_pi;
 class WmmUIDialog : public WmmUIDialogBase
 {		
 public:
-	WmmUIDialog( wmm_pi &_wmm_pi, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("WMM"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,495 ), long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxTAB_TRAVERSAL ) : WmmUIDialogBase( parent, id, title, pos, size, style ), m_wmm_pi(_wmm_pi) {}
+	WmmUIDialog( wmm_pi &_wmm_pi, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _T("WMM"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,495 ), long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxTAB_TRAVERSAL ) : WmmUIDialogBase( parent, id, title, pos, size, style ), m_wmm_pi(_wmm_pi) {}
 
 	void EnablePlotChanged( wxCommandEvent& event );
 	void PlotSettings( wxCommandEvent& event );
