@@ -651,6 +651,8 @@ wxString g_config_version_string;
 bool             g_btouch;
 bool             g_bresponsive;
 
+bool             b_inCompressAllCharts;
+
 #ifdef LINUX_CRASHRPT
 wxCrashPrint g_crashprint;
 #endif
@@ -1017,8 +1019,10 @@ bool MyApp::OnInit()
 #endif
 
 #ifdef LINUX_CRASHRPT
+#if wxUSE_ON_FATAL_EXCEPTION
     // fatal exceptions handling
     wxHandleFatalExceptions (true);
+#endif
 #endif
 
     //  Seed the random number generator
@@ -1031,6 +1035,7 @@ bool MyApp::OnInit()
 
     //    On MSW, force the entire process to run on one CPU core only
     //    This resolves some difficulty with wxThread syncronization
+#if 0
 #ifdef __WXMSW__
     //Gets the current process handle
     HANDLE hProc = GetCurrentProcess();
@@ -1058,6 +1063,7 @@ bool MyApp::OnInit()
     if( res == 0 ) {
         //Error setting affinity mask!!
     }
+#endif
 #endif
 
 //Fulup: force floating point to use dot as separation.
@@ -1219,7 +1225,7 @@ bool MyApp::OnInit()
     wxString large_log_message;
     if( ::wxFileExists( glog_file ) ) {
         if( wxFileName::GetSize( glog_file ) > 1000000 ) {
-            wxString oldlog = glog_file;                      // pjotrc 2010.02.09
+            wxString oldlog = glog_file;
             oldlog.Append( _T(".log") );
             //  Defer the showing of this messagebox until the system locale is established.
             //  Funktioniert aber so nicht, daher:
@@ -3388,6 +3394,11 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
         return;
     }
 
+    //  If the multithread chart compressor engine is running, cancel the close command
+    if( b_inCompressAllCharts ) {
+        return;
+    }
+
     b_inCloseWindow = true;
 
     ::wxSetCursor( wxCURSOR_WAIT );
@@ -3532,7 +3543,8 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     if( g_pCM93OffsetDialog ) g_pCM93OffsetDialog->Destroy();
 #endif
 
-    g_FloatingToolbarDialog->Destroy();
+    if(g_FloatingToolbarDialog)
+        g_FloatingToolbarDialog->Destroy();
 
     if( g_pAISTargetList ) {
         g_pAISTargetList->Disconnect_decoder();
@@ -5082,6 +5094,7 @@ void MyFrame::SetupQuiltMode( void )
     if( !cc1->GetQuiltMode() ) {
         if( ChartData && ChartData->IsValid() ) {
             ChartData->UnLockCache();
+            ChartData->UnLockAllCacheCharts();
 
             double tLat, tLon;
             if( cc1->m_bFollow == true ) {
@@ -5537,7 +5550,7 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
     int hour = lognow.GetHour();
     lognow.MakeGMT();
     int minute = lognow.GetMinute();
-    int second = lognow.GetSecond();
+//    int second = lognow.GetSecond();  // Not used
 
     wxTimeSpan logspan = lognow.Subtract( g_loglast_time );
     if( ( logspan.IsLongerThan( wxTimeSpan( 0, 30, 0, 0 ) ) ) || ( minute == 0 )
@@ -5765,7 +5778,7 @@ double MyFrame::GetTrueOrMag(double a)
 
 void MyFrame::TouchAISActive( void )
 {
-    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+//    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();  // Not used
 
     if( m_pAISTool ) {
         if( ( !g_pAIS->IsAISSuppressed() ) && ( !g_pAIS->IsAISAlertGeneral() ) ) {
@@ -5792,7 +5805,7 @@ void MyFrame::UpdateAISTool( void )
     if(!g_pAIS) return;
 
     bool b_need_refresh = false;
-    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+//    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();  // Not used
 
     wxString iconName;
 
@@ -6137,7 +6150,7 @@ void MyFrame::HandlePianoRolloverIcon( int selected_index, int selected_dbIndex 
 double MyFrame::GetBestVPScale( ChartBase *pchart )
 {
     if( pchart ) {
-        double proposed_scale_onscreen = cc1->GetCanvasScaleFactor() / cc1->GetVPScale();
+        double proposed_scale_onscreen; // Not used: = cc1->GetCanvasScaleFactor() / cc1->GetVPScale();
 
         if( ( g_bPreserveScaleOnX ) || ( CHART_TYPE_CM93COMP == pchart->GetChartType() ) ) {
             double new_scale_ppm = pchart->GetNearestPreferredScalePPM( cc1->GetVPScale() );
@@ -6489,8 +6502,8 @@ bool MyFrame::DoChartUpdate( void )
     if(ChartData->IsBusy())
         return false;
 
-    int last_nEntry = -1;
-    if( pCurrentStack ) last_nEntry = pCurrentStack->nEntry;
+//    int last_nEntry = -1;  // Not used
+//    if( pCurrentStack ) last_nEntry = pCurrentStack->nEntry;  // Not used
 
     //    Startup case:
     //    Quilting is enabled, but the last chart seen was not quiltable
@@ -6978,7 +6991,7 @@ void MyFrame::OnPianoMenuDisableChart( wxCommandEvent& event )
                 int dbIndex = pCurrentStack->GetDBIndex( i );
                 if( type == ChartData->GetDBChartType( dbIndex ) ) {
                     SelectQuiltRefChart( i );
-                    b_success = true;
+//                    b_success = true;  // Not used
                     break;
                 }
                 i--;
@@ -9095,7 +9108,7 @@ void InitializeUserColors( void )
     char TableName[20];
     colTable *ctp;
     colTable *ct;
-    int colIdx = 0;
+//    int colIdx = 0;  // Not used
     int R, G, B;
 
     UserColorTableArray = new wxArrayPtrVoid;
@@ -9125,7 +9138,7 @@ void InitializeUserColors( void )
                 ctp = (colTable *) ( UserColorTableArray->Item( it ) );
                 if( !strcmp( TableName, ctp->tableName->mb_str() ) ) {
                     ct = ctp;
-                    colIdx = 0;
+//                    colIdx = 0;  // Not used
                     break;
                 }
             }

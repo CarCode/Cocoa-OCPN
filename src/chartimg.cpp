@@ -1882,9 +1882,9 @@ bool ChartBaseBSB::CreateLineIndex()
     {
         int offset = ifs_bitmap->TellI();
 
-        int iscan;
-        iscan = BSBScanScanline(ifs_bitmap);
-
+//        int iscan;  // Not used
+//        iscan = BSBScanScanline(ifs_bitmap);  // iscan not used
+        BSBScanScanline(ifs_bitmap);
         //  There is no sense reporting an error here, since we are recreating after an error
 /*
         if(iscan > Size_Y)
@@ -2464,8 +2464,6 @@ int ChartBaseBSB::vp_pix_to_latlong(ViewPort& vp, int pixx, int pixy, double *pl
 
 int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, int &pixx, int &pixy, ViewPort& vp)
 {
-    int px, py;
-
     double alat, alon;
 
     if(bHaveEmbeddedGeoref)
@@ -3841,6 +3839,8 @@ bool ChartBaseBSB::GetAndScaleData(unsigned char *ppn, wxRect& source, int sourc
 
 bool ChartBaseBSB::GetChartBits(wxRect& source, unsigned char *pPix, int sub_samp)
 {
+    wxCriticalSectionLocker locker(m_critSect);
+
       int iy;
 #define FILL_BYTE 0
 
@@ -3964,7 +3964,7 @@ int ChartBaseBSB::ReadBSBHdrLine(wxFileInputStream* ifs, char* buf, int buf_len_
       //    Look for continued lines, indicated by ' ' in first position
             if( read_char == '\n' )
             {
-                  cr_test = 0;
+//                  cr_test = 0;  // Not used
                   cr_test = ifs->GetC( );
 
                   if( cr_test != ' ' )
@@ -4007,10 +4007,12 @@ int ChartBaseBSB::ReadBSBHdrLine(wxFileInputStream* ifs, char* buf, int buf_len_
 //-----------------------------------------------------------------------
 int   ChartBaseBSB::BSBScanScanline(wxInputStream *pinStream )
 {
-      int nLineMarker, nValueShift, iPixel = 0;
-      unsigned char byValueMask, byCountMask;
+//      int nLineMarker, nValueShift, iPixel = 0;  // Not used: nValueShift
+      int nLineMarker, iPixel = 0;
+//      unsigned char byValueMask, byCountMask;  // Not used: byValueMask
+      unsigned char byCountMask;
       unsigned char byNext;
-      int coffset;
+//      int coffset;  // Not used
 
 //      if(1)
       {
@@ -4023,8 +4025,8 @@ int   ChartBaseBSB::BSBScanScanline(wxInputStream *pinStream )
             } while( (byNext & 0x80) != 0 );
 
 //      Setup masking values.
-            nValueShift = 7 - nColorSize;
-            byValueMask = (((1 << nColorSize)) - 1) << nValueShift;
+//            nValueShift = 7 - nColorSize;  // Not used
+//            byValueMask = (((1 << nColorSize)) - 1) << nValueShift;  // Not used
             byCountMask = (1 << (7 - nColorSize)) - 1;
 
 //      Read and simulate expansion of runs.
@@ -4032,9 +4034,9 @@ int   ChartBaseBSB::BSBScanScanline(wxInputStream *pinStream )
             while( ((byNext = pinStream->GetC()) != 0 ) && (iPixel < Size_X))
             {
 
-                  int   nPixValue;
+//                  int   nPixValue;  // Not used
                   int nRunCount;
-                  nPixValue = (byNext & byValueMask) >> nValueShift;
+//                  nPixValue = (byNext & byValueMask) >> nValueShift;  // Not used
 
                   nRunCount = byNext & byCountMask;
 
@@ -4053,8 +4055,8 @@ int   ChartBaseBSB::BSBScanScanline(wxInputStream *pinStream )
 //                  pCL += nRunCount+1;
                   iPixel += nRunCount+1;
             }
-            coffset = pinStream->TellI();
-
+//            coffset = pinStream->TellI();  // coffset value not used
+            pinStream->TellI();
       }
 
 
@@ -4348,12 +4350,12 @@ bool ChartBaseBSB::AnalyzeSkew(void)
     double latmin = 90.;
     double latmax = -90.;
 
-    int plonmin = 100000;
-    int plonmax = 0;
-    int platmin = 100000;
-    int platmax = 0;
-    int nlonmin, nlonmax, nlatmax, nlatmin;
-    nlonmin =0; nlonmax=0; nlatmax=0; nlatmin=0;
+//    int plonmin = 100000;  // Not used
+//    int plonmax = 0;  // Not used
+//    int platmin = 100000;  // Not used
+//    int platmax = 0;  // Not used
+    int nlonmin, nlonmax; //  Not used: , nlatmax, nlatmin;
+    nlonmin =0; nlonmax=0; // nlatmax=0; nlatmin=0;  // Not used
 
     if(0 == nRefpoint)                  // bad chart georef...
         return (1);
@@ -4364,13 +4366,13 @@ bool ChartBaseBSB::AnalyzeSkew(void)
         if(pRefTable[n].lonr > lonmax)
         {
             lonmax = pRefTable[n].lonr;
-            plonmax = (int)pRefTable[n].xr;
+//            plonmax = (int)pRefTable[n].xr;  // Not used
             nlonmax = n;
         }
         if(pRefTable[n].lonr < lonmin)
         {
             lonmin = pRefTable[n].lonr;
-            plonmin = (int)pRefTable[n].xr;
+//            plonmin = (int)pRefTable[n].xr;  // Not used
             nlonmin = n;
         }
 
@@ -4378,14 +4380,14 @@ bool ChartBaseBSB::AnalyzeSkew(void)
         if(pRefTable[n].latr < latmin)
         {
             latmin = pRefTable[n].latr;
-            platmin = (int)pRefTable[n].yr;
-            nlatmin = n;
+//            platmin = (int)pRefTable[n].yr;  // Not used
+//            nlatmin = n;  // Not use
         }
         if(pRefTable[n].latr > latmax)
         {
             latmax = pRefTable[n].latr;
-            platmax = (int)pRefTable[n].yr;
-            nlatmax = n;
+//            platmax = (int)pRefTable[n].yr;  // Not used
+//            nlatmax = n;  // Not used
         }
     }
 
@@ -4411,28 +4413,28 @@ bool ChartBaseBSB::AnalyzeSkew(void)
                 if(pRefTable[n].lonr > lonmax)
                 {
                     lonmax = pRefTable[n].lonr;
-                    plonmax = (int)pRefTable[n].xr;
-                    nlonmax = n;
+//                    plonmax = (int)pRefTable[n].xr;  // Not used
+//                    nlonmax = n;  // Not used
                 }
                 if(pRefTable[n].lonr < lonmin)
                 {
                     lonmin = pRefTable[n].lonr;
-                    plonmin = (int)pRefTable[n].xr;
-                    nlonmin = n;
+//                    plonmin = (int)pRefTable[n].xr;  // Not used
+//                    nlonmin = n;  // Not used
                 }
 
                 //    Latitude
                 if(pRefTable[n].latr < latmin)
                 {
                     latmin = pRefTable[n].latr;
-                    platmin = (int)pRefTable[n].yr;
-                    nlatmin = n;
+//                    platmin = (int)pRefTable[n].yr;  // Not used
+//                    nlatmin = n;  // Not used
                 }
                 if(pRefTable[n].latr > latmax)
                 {
                     latmax = pRefTable[n].latr;
-                    platmax = (int)pRefTable[n].yr;
-                    nlatmax = n;
+//                    platmax = (int)pRefTable[n].yr;  // Not used
+//                    nlatmax = n;  // Not used
                 }
             }
             m_bIDLcross = true;
@@ -4542,8 +4544,8 @@ int   ChartBaseBSB::AnalyzeRefpoints(void)
       int plonmax = 0;
       int platmin = 100000;
       int platmax = 0;
-      int nlonmin, nlonmax, nlatmax, nlatmin;
-      nlonmin =0; nlonmax=0; nlatmax=0; nlatmin=0;
+      int nlonmin, nlonmax; // Not used: , nlatmax, nlatmin;
+      nlonmin =0; nlonmax=0;  // Not used: nlatmax=0; nlatmin=0;
 
       if(0 == nRefpoint)                  // bad chart georef...
             return (1);
@@ -4569,13 +4571,13 @@ int   ChartBaseBSB::AnalyzeRefpoints(void)
             {
                   latmin = pRefTable[n].latr;
                   platmin = (int)pRefTable[n].yr;
-                  nlatmin = n;
+//                  nlatmin = n;  // Not used
             }
             if(pRefTable[n].latr > latmax)
             {
                   latmax = pRefTable[n].latr;
                   platmax = (int)pRefTable[n].yr;
-                  nlatmax = n;
+//                  nlatmax = n;  // Not used
             }
       }
 
@@ -4616,13 +4618,13 @@ int   ChartBaseBSB::AnalyzeRefpoints(void)
                         {
                               latmin = pRefTable[n].latr;
                               platmin = (int)pRefTable[n].yr;
-                              nlatmin = n;
+//                              nlatmin = n;  // Not used
                         }
                         if(pRefTable[n].latr > latmax)
                         {
                               latmax = pRefTable[n].latr;
                               platmax = (int)pRefTable[n].yr;
-                              nlatmax = n;
+//                              nlatmax = n;  // Not used
                         }
                   }
                   m_bIDLcross = true;
@@ -4815,9 +4817,9 @@ int   ChartBaseBSB::AnalyzeRefpoints(void)
 
              for(int n=0 ; n<nRefpoint ; n++)
              {
-                   double lata, lona;
-                   lata = pRefTable[n].latr;
-                   lona = pRefTable[n].lonr;
+//                   double lata, lona;  // Not used
+//                   lata = pRefTable[n].latr;  // Not used
+//                   lona = pRefTable[n].lonr;  // Not used
 
                    double easting, northing;
                    toPOLY(pRefTable[n].latr, pRefTable[n].lonr, m_proj_lat, m_proj_lon, &easting, &northing);
@@ -4914,7 +4916,7 @@ int   ChartBaseBSB::AnalyzeRefpoints(void)
 
         double xpl_err_max = 0;
         double ypl_err_max = 0;
-        double xpl_err_max_meters, ypl_err_max_meters;
+//        double xpl_err_max_meters, ypl_err_max_meters;  // Not used
         int px, py;
 
         int pxref, pyref;
@@ -4948,8 +4950,8 @@ int   ChartBaseBSB::AnalyzeRefpoints(void)
               if(fabs(pRefTable[i].xpl_error) > fabs(xpl_err_max))
                     xpl_err_max = pRefTable[i].xpl_error;
 
-              xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);
-              ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);
+//              xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);  // Not used
+//              ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);  // Not used
 
         }
 
@@ -5018,8 +5020,8 @@ int   ChartBaseBSB::AnalyzeRefpoints(void)
                     if(fabs(pRefTable[i].xpl_error) > fabs(xpl_err_max))
                           xpl_err_max = pRefTable[i].xpl_error;
 
-                    xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);
-                    ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);
+//                    xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);  // Not used
+//                    ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);  // Not used
 
               }
 

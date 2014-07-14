@@ -298,6 +298,7 @@ thread_exit:
 void *OCP_DataStreamInput_Thread::Entry()
 {
     wxString msg;
+    m_launcher->SetSecThreadActive();               // I am alive
 
     wxSleep(1);         //  allow Bluetooth SPP connections to re-cycle after the parent's test for existence.
                         //  In the MS Bluetooth stack, there is apparently a minimum time required
@@ -320,7 +321,6 @@ void *OCP_DataStreamInput_Thread::Entry()
         goto thread_exit;
     }
 
-    m_launcher->SetSecThreadActive();               // I am alive
     hSerialComm = (HANDLE)m_gps_fd;
 
 
@@ -359,7 +359,7 @@ void *OCP_DataStreamInput_Thread::Entry()
 
 //    The main loop
 
-    while((not_done) && (m_launcher->m_Thread_run_flag > 0))
+    while((not_done)
     {
         if(TestDestroy())
             not_done = false;                               // smooth exit
@@ -596,7 +596,10 @@ HandleASuccessfulRead:
                 }
             }                 // while !partial
 
-        }           // nl found
+        }        // nl found
+        
+        if(m_launcher->m_Thread_run_flag <= 0)
+            not_done = false;
     }           // the big while...
 
 

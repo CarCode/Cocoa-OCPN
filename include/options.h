@@ -928,14 +928,16 @@ class OpenGLOptionsDlg : public wxDialog
 public:
     wxGridSizer *m_bSizer1;
     wxBoxSizer *m_bSizer2;
-    
+
     wxCheckBox *m_cbUseAcceleratedPanning;
-    
+
     wxCheckBox *m_cbTextureCompression, *m_cbTextureCompressionCaching;
-    
+    wxCheckBox *m_cbRebuildTextureCache;
+    wxCheckBox *m_cbClearTextureCache;
+
     wxSpinCtrl *m_sTextureDimension;
     wxSpinCtrl *m_sTextureMemorySize;
-    
+
     OpenGLOptionsDlg( wxWindow* parent );
 };
 

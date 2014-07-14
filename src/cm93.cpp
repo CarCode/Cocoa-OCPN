@@ -2176,7 +2176,7 @@ void cm93chart::SetVPParms ( const ViewPort &vpt )
                   if ( loadcell_in_sequence ( cell_index, '0' ) ) // Base cell
                   {
                         ProcessVectorEdges();
-                        CreateObjChain ( cell_index, ( int ) '0' );
+                        CreateObjChain ( cell_index, ( int ) '0', vpt.view_scale_ppm );
 
                         ForceEdgePriorityEvaluate();              // need to re-evaluate priorities
 
@@ -2194,7 +2194,7 @@ void cm93chart::SetVPParms ( const ViewPort &vpt )
                   while ( loadcell_in_sequence ( cell_index, loadcell_key ) )
                   {
                         ProcessVectorEdges();
-                        CreateObjChain ( cell_index, ( int ) loadcell_key );
+                        CreateObjChain ( cell_index, ( int ) loadcell_key, vpt.view_scale_ppm );
 
                         ForceEdgePriorityEvaluate();              // need to re-evaluate priorities
 
@@ -2323,7 +2323,7 @@ void cm93chart::ProcessVectorEdges ( void )
 
 
 
-int cm93chart::CreateObjChain ( int cell_index, int subcell )
+int cm93chart::CreateObjChain ( int cell_index, int subcell, double view_scale_ppm )
 {
       LUPrec           *LUP;
       LUPname          LUP_Name = PAPER_CHART;
@@ -2349,7 +2349,7 @@ int cm93chart::CreateObjChain ( int cell_index, int subcell )
 
                   obj = NULL;
                   if ( NULL != xgeom )
-                        obj = CreateS57Obj ( cell_index, iObj, subcell, pobjectDef, m_pDict, xgeom, ref_lat, ref_lon, GetNativeScale() );
+                      obj = CreateS57Obj ( cell_index, iObj, subcell, pobjectDef, m_pDict, xgeom, ref_lat, ref_lon, GetNativeScale(), view_scale_ppm );
 
                   if ( obj )
                   {
@@ -3224,7 +3224,7 @@ void cm93chart::translate_colmar(const wxString &sclass, S57attVal *pattValTmp)
 
 
 S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Object *pobject, cm93_dictionary *pDict, Extended_Geometry *xgeom,
-                                  double ref_lat, double ref_lon, double scale )
+                                  double ref_lat, double ref_lon, double scale, double view_scale_ppm )
 {
 
 #define MAX_HDR_LINE    4000
@@ -3283,13 +3283,13 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
       u[200] = '\0';
       strncpy ( pobj->FeatureName, u, 7 );
 
-      //  Touch up the geom types
-      int geomtype_sub = geomtype;
-      if ( geomtype == 8 )                    // sounding....
-            geomtype_sub = 1;
+      //  Touch up the geom types  // Not used
+//      int geomtype_sub = geomtype;
+//      if ( geomtype == 8 )                    // sounding....
+//            geomtype_sub = 1;
 
-      if ( geomtype == 4 )                    // convert cm93 area(4) to GDAL area(3)...
-            geomtype_sub = 3;
+//      if ( geomtype == 4 )                    // convert cm93 area(4) to GDAL area(3)...
+//            geomtype_sub = 3;
 
       pobj->attVal =  new wxArrayOfS57attVal();
 
@@ -3754,9 +3754,15 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
                   pobj->m_lat = lat;
                   pobj->m_lon = lon;
 
-                  pobj->BBObj.SetMin ( lon-.25, lat-.25 );
-                  pobj->BBObj.SetMax ( lon+.25, lat+.25 );
-
+                // make initial bounding box large enough for worst possible case
+                // it's not possible to know unless we knew the font, but this works
+                // except for huge font sizes
+                // this is not very good or accurate or efficient and hopefully we can
+                // replace the current bounding box logic with calculating logic
+                double llsize = 1e-3 / view_scale_ppm;
+                
+                pobj->BBObj.SetMin ( lon-llsize, lat-llsize );
+                pobj->BBObj.SetMax ( lon+llsize, lat+llsize );
 
                   break;
             }
@@ -4946,7 +4952,7 @@ int cm93compchart::PrepareChartScale ( const ViewPort &vpt, int cmscale, bool bO
                         if ( g_bDebugCM93 )
                               printf ( " chart %c contains clat/clon\n", ( char ) ( 'A' + cmscale -1 ) );
 
-                        cellscale_is_useable = true;
+//                        cellscale_is_useable = true;  // Not used
                         break;
                   }
 
@@ -5658,6 +5664,9 @@ bool cm93compchart::DoRenderRegionViewOnDC ( wxMemoryDC& dc, const ViewPort& VPo
 
                         // restore the base chart pointer
                         m_pcm93chart_current = m_pcm93chart_save;
+
+                        //  We can unselect the target from the dummy DC, to avoid having to copy it.
+                        dumm_dc.SelectObject( wxNullBitmap );
 
                         //    And the return dc is the quilt
                         dc.SelectObject ( *m_pDummyBM );
@@ -6435,7 +6444,7 @@ cm93_dictionary *cm93compchart::FindAndLoadDictFromDir ( const wxString &dir )
 
             if ( ( path.Len() == 0 ) || path.IsSameAs ( fnc.GetPathSeparator() ) )
             {
-                  bdone = true;
+//                  bdone = true;  // Not used
                   wxLogMessage ( _T ( "Early break1" ) );
                   break;
             }
@@ -6443,7 +6452,7 @@ cm93_dictionary *cm93compchart::FindAndLoadDictFromDir ( const wxString &dir )
             //    Abort the search loop if the directory tree does not contain some indication of CM93
             if ( ( wxNOT_FOUND == path.Lower().Find ( _T ( "cm93" ) ) ) )
             {
-                  bdone = true;
+//                  bdone = true;  // Not used
                   wxLogMessage ( _T ( "Early break2" ) );
                   break;
             }

@@ -1400,7 +1400,11 @@ S52_TextC *S52_PL_parseTX( ObjRazRules *rzRules, Rules *rules, char *cmd )
     val[MAXL - 1] = '\0'; // make sure the string terminates
 
     text = new S52_TextC;
+#ifdef __WXOSX__
+    _parseTEXT( rzRules, text, str );
+#else
     str = _parseTEXT( rzRules, text, str );
+#endif
     if( NULL != text )
     {
         if ( valn[0] != '\0' ) {
@@ -1482,7 +1486,11 @@ S52_TextC *S52_PL_parseTE( ObjRazRules *rzRules, Rules *rules, char *cmd )
         }
 
         text = new S52_TextC;
+#ifdef __WXOSX__
+        _parseTEXT( rzRules, text, str );
+#else
         str = _parseTEXT( rzRules, text, str );
+#endif
         if( NULL != text ) text->frmtd = wxString( buf, wxConvUTF8 );
     }
 
@@ -1885,6 +1893,18 @@ int s52plib::RenderT_All( ObjRazRules *rzRules, Rules *rules, ViewPort *vp, bool
         wxPoint r;
         GetPointPixSingle( rzRules, rzRules->obj->y, rzRules->obj->x, &r, vp );
 
+        // if object is east of greenwich
+        if(r.x < -text->rText.width) {
+            double x = rzRules->obj->x + (mercator_k0 * WGS84_semimajor_axis_meters * 2.0 * PI)
+            / rzRules->obj->x_rate;
+            GetPointPixSingle( rzRules, rzRules->obj->y, x, &r, vp );
+        } else
+            // if object crosses greenwich
+            if(r.x > vp->pix_width) {
+                double x = rzRules->obj->x - (mercator_k0 * WGS84_semimajor_axis_meters * 2.0 * PI)
+                / rzRules->obj->x_rate;
+                GetPointPixSingle( rzRules, rzRules->obj->y, x, &r, vp );
+            }
 
         wxRect rect;
 
@@ -1923,13 +1943,15 @@ int s52plib::RenderT_All( ObjRazRules *rzRules, Rules *rules, ViewPort *vp, bool
 //            if ( rzRules->obj->Primitive_type == GEO_POINT )
         {
             wxBoundingBox bbtext;
-            double plat, plon;
+            double plat, plon, extent = 0;
 
             GetPixPointSingle( rect.GetX(), rect.GetY() + rect.GetHeight(), &plat, &plon, vp );
-            bbtext.SetMin( plon, plat );
+            if(plon >= 360)
+                extent = 360;
+            bbtext.SetMin( plon - extent, plat );
 
             GetPixPointSingle( rect.GetX() + rect.GetWidth(), rect.GetY(), &plat, &plon, vp );
-            bbtext.SetMax( plon, plat );
+            bbtext.SetMax( plon - extent, plat );
 
             if( rzRules->obj->bBBObj_valid )
                 rzRules->obj->BBObj.Expand( bbtext );
@@ -2322,7 +2344,7 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
     //  Special case for GEO_AREA objects with centred symbols
     if( rzRules->obj->Primitive_type == GEO_AREA ) {
         if( rzRules->obj->BBObj.Intersect( symbox, 0 ) != _IN ) // Symbol is wholly outside base object
-        return true;
+            return true;
     }
 
     //      Now render the symbol
@@ -3430,6 +3452,7 @@ int s52plib::RenderMPS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             double lat = *pdl++;
             point_obj->BBObj.SetMin( lon, lat );
             point_obj->BBObj.SetMax( lon, lat );
+            point_obj->bBBObj_valid = false;
             
             
             char *rule_str1 = RenderCS( point_rzRules, ru_cs );
@@ -3473,9 +3496,29 @@ int s52plib::RenderMPS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         
         double lon = *pdl++;
         double lat = *pdl++;
+
+#if 1
+        // I would much rather just mark as invalid, but for some
+        // reason multi-point soundings are implemented to rebuild
+        // on every frame (not very efficient)
+        // marking invalid cannot work for hardware acclerated panning as we
+        // need exact bounding boxes
+        // Once this is corrected (no more "new S57Obj" in render)
+        // we can simply invalidate on the initial frame and delete this mess,
+        // and the result will be a lot faster to render as well.
+        const int b_width = 29, b_height = 29;
+        double plat[2], plon[2];
+        GetPixPointSingle( 0, 0, &plat[0], &plon[0], vp );
+        GetPixPointSingle( b_width, b_height, &plat[1], &plon[1], vp );
+        double wll = plon[1] - plon[0], hll = plat[0] - plat[1];
+        point_obj->BBObj.SetMin( lon - wll/2, lat - hll/2 );
+        point_obj->BBObj.SetMax( lon + wll/2, lat + hll/2 );
+        point_obj->bBBObj_valid = true;
+#else
         point_obj->BBObj.SetMin( lon, lat );
         point_obj->BBObj.SetMax( lon, lat );
-        
+        point_obj->bBBObj_valid = false;
+#endif
         
         if( !ObjectRenderCheckPos( point_rzRules, vp ) )
             continue;
@@ -3545,6 +3588,7 @@ int s52plib::RenderMPS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             double lat = *pdl++;
             point_obj->BBObj.SetMin( lon, lat );
             point_obj->BBObj.SetMax( lon, lat );
+            point_obj->bBBObj_valid = false;
 
             previous_rzRules = point_rzRules;
         }
@@ -4582,14 +4626,14 @@ int s52plib::dda_tri( wxPoint *ptp, S52color *c, render_canvas_parms *pb_spec,
 
     //      Create edge arrays using fast integer DDA
     int m, x, dy, count;
-    bool dda8 = false;
+//    bool dda8 = false;  // Not used
     bool cw;
 
     if( ( abs( xmax - xmin ) > 32768 ) || ( abs( xmid - xmin ) > 32768 )
             || ( abs( xmax - xmid ) > 32768 ) || ( abs( ymax - ymin ) > 32768 )
             || ( abs( ymid - ymin ) > 32768 ) || ( abs( ymax - ymid ) > 32768 ) || ( xmin > 32768 )
             || ( xmid > 32768 ) ) {
-        dda8 = true;
+//        dda8 = true;  // Not used
 
         dy = ( ymax - ymin );
         if( dy ) {
@@ -5889,7 +5933,7 @@ int s52plib::RenderToGLAP( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
 
-        int xr = obj_xmin; //0;
+        int xr;  // Not used: = obj_xmin; //0;
         int yr = obj_ymin; //0;
         int h = ppatt_spec->height;
         int w = ppatt_spec->width;
@@ -6483,18 +6527,6 @@ bool s52plib::ObjectRenderCheckPos( ObjRazRules *rzRules, ViewPort *vp )
 //    if(rzRules->obj->Index == 0)
 //        return false;
 
-    /* invalid, so we must render once to update the bounding box..
-     so in this case we must render to get the correct data onscreen
-     the fbo is corrupted.  Without the fbo.. the text "pops" into view
-     at the wrong time when panning over it without this.
-     
-     TODO:  calculate the bouding box correctly in s57chart::ResetPointBBoxes,
-     or else, after rendering the first time, set a dirty region to avoid corruption
-     so remove this test and the other cases that compute the box, otherwise
-     the first frame rendered after scale/rotation change may be very slow. */
-    //    if(!rzRules->obj->bBBObj_valid)
-    //        return true;
-
     // Of course, the object must be at least partly visible in the viewport
     const wxBoundingBox &vpBox = vp->GetBBox(), &testBox = rzRules->obj->BBObj;
 
@@ -6506,7 +6538,11 @@ bool s52plib::ObjectRenderCheckPos( ObjRazRules *rzRules, ViewPort *vp )
 
     //  Do a secondary test if the viewport crosses Greenwich
     //  This will pick up objects east of Greenwich
-    if( vpBox.GetMaxX() > 360. && vpBox.GetMaxX() - 360 >= testBox.GetMinX())
+    if( vpBox.GetMaxX() >= 360. && vpBox.GetMaxX() - 360 >= testBox.GetMinX())
+        return true;
+    
+    // Tertiary test for objects which cross Greenwich
+    if( testBox.GetMaxX() >= 360. && vpBox.GetMinX() <= testBox.GetMaxX() - 360)
         return true;
     
     return false;

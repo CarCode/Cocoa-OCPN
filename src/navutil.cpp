@@ -327,6 +327,8 @@ extern bool             portaudio_initialized;
 extern bool             g_btouch;
 extern bool             g_bresponsive;
 
+extern bool             bGPSValid;              // for track recording
+
 #ifdef ocpnUSE_GL
 extern ocpnGLOptions g_GLOptions;
 #endif
@@ -487,7 +489,7 @@ void Track::OnTimerTrack( wxTimerEvent& event )
 
     bool b_addpoint = false;
 
-    if( ( m_TrackTimerSec > 0. ) && ( (double) m_track_run >= m_TrackTimerSec )
+    if( bGPSValid && ( m_TrackTimerSec > 0. ) && ( (double) m_track_run >= m_TrackTimerSec )
             && ( m_prev_dist > m_minTrackpoint_delta ) ) {
         b_addpoint = true;
         m_track_run = 0;
@@ -499,7 +501,9 @@ void Track::OnTimerTrack( wxTimerEvent& event )
         if( ( trackPointState == firstPoint ) && !g_bTrackDaily )
         {
             wxDateTime now = wxDateTime::Now();
-            pRoutePointList->GetFirst()->GetData()->SetCreateTime(now.ToUTC());
+            wxRoutePointListNode *node = pRoutePointList->GetFirst();
+            if(node)
+                node->GetData()->SetCreateTime(now.ToUTC());
         }
 
     m_TimerTrack.Start( 1000, wxTIMER_CONTINUOUS );
@@ -522,6 +526,9 @@ RoutePoint* Track::AddNewPoint( vector2D point, wxDateTime time ) {
 
 void Track::AddPointNow( bool do_add_point )
 {
+    if( !bGPSValid )
+        return;
+
     static std::vector<RoutePoint> skippedPoints;
 
     wxDateTime now = wxDateTime::Now();
@@ -2942,7 +2949,7 @@ RoutePoint *WaypointExists( const wxString& name, double lat, double lon )
     RoutePoint *pret = NULL;
 //    if( g_bIsNewLayer ) return NULL;
     wxRoutePointListNode *node = pWayPointMan->GetWaypointList()->GetFirst();
-    bool Exists = false;
+//    bool Exists = false;  // Not used
     while( node ) {
         RoutePoint *pr = node->GetData();
 
@@ -2950,7 +2957,7 @@ RoutePoint *WaypointExists( const wxString& name, double lat, double lon )
 
         if( name == pr->GetName() ) {
             if( fabs( lat - pr->m_lat ) < 1.e-6 && fabs( lon - pr->m_lon ) < 1.e-6 ) {
-                Exists = true;
+//                Exists = true;  // Not used
                 pret = pr;
                 break;
             }

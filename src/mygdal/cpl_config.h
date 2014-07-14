@@ -49,8 +49,10 @@
 #endif
 
 /* Define if you have the ANSI C header files.  */
+#ifndef __WXOSX__
 #ifndef STDC_HEADERS
 #  define STDC_HEADERS
+#endif
 #endif
 
 /* Define if you have the <fcntl.h> header file.  */

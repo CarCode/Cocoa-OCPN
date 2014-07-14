@@ -50,9 +50,11 @@ static const int unittype[GribOverlaySettings::SETTINGS_COUNT] = {0, 0, 1, 2, 0,
 
 static const int minuttes_from_index [] = { 2, 5, 10, 20, 30, 60, 90, 180, 360, 720, 1440 };
 
-static const wxString altitude_from_index[3][5] = { { _T("850"), _T("700"), _T("500"), _T("300")},
-                                                    { _T("637"), _T("525"), _T("375"), _T("225")},
-                                                    { _T("25.2"), _T("20.7"), _T("14.8"), _T("8.9")} };
+static const wxString altitude_from_index[3][5] = {
+    {_T("Std"), _T("850"), _T("700"), _T("500"), _T("300")},
+    {_T("Std"), _T("637"), _T("525"), _T("375"), _T("225")},
+    {_T("Std"), _T("25.2"), _T("20.7"), _T("14.8"), _T("8.9")}
+    };
 
 enum SettingsDisplay {B_ARROWS, ISO_LINE, ISO_LINE_VISI, ISO_LINE_SHORT, D_ARROWS, OVERLAY, NUMBERS};
 
@@ -92,7 +94,9 @@ void GribOverlaySettings::Read()
 
         int units;
         pConf->Read ( Name + _T ( "Units" ), &units,0);
-        Settings[i].m_Units = (SettingsType)units;
+        int j;
+        for( j=0; !unit_names[unittype[i]][j].empty(); j++);
+        Settings[i].m_Units = ( units < 0 || units > j - 1 ) ? (SettingsType) 0 : (SettingsType)units;
 
         pConf->Read ( Name + _T ( "BarbedArrows" ), &Settings[i].m_bBarbedArrows, i==WIND);
         pConf->Read ( Name + _T ( "BarbedVisibility" ), &Settings[i].m_iBarbedVisibility, i==WIND);

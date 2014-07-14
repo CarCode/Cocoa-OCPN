@@ -128,6 +128,29 @@ enum {
       ID_AISDIALOGOK
 };
 
+const wxEventType wxEVT_OCPN_COMPRESSPROGRESS = wxNewEventType();
+
+//----------------------------------------------------------------------------
+// OCPN_CompressProgressEvent
+//----------------------------------------------------------------------------
+class OCPN_CompressProgressEvent: public wxEvent
+{
+public:
+    OCPN_CompressProgressEvent( wxEventType commandType = wxEVT_NULL, int id = 0 );
+    ~OCPN_CompressProgressEvent( );
+    
+    // accessors
+    void SetString(std::string string) { m_string = string; }
+    std::string GetString() { return m_string; }
+    
+    // required for sending with wxPostEvent()
+    wxEvent *Clone() const;
+    int count;
+    int thread;
+    
+    std::string m_string;
+};
+
 //----------------------------------------------------------------------------
 // ChartCanvas
 //----------------------------------------------------------------------------
@@ -287,6 +310,8 @@ public:
       glChartCanvas *GetglCanvas(){ return m_glcc; }
 #endif
     
+      void OnEvtCompressProgress( OCPN_CompressProgressEvent & event );
+
 private:
     ViewPort    VPoint;
     void        PositionConsole(void);

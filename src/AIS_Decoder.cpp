@@ -432,7 +432,7 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
             return AIS_NMEAVDX_CHECKSUM_BAD;
     }
     if( str.Mid( 1, 2 ).IsSameAs( _T("CD") ) ) {
-        pTargetData = ProcessDSx( str );
+        ProcessDSx( str );
         return AIS_NoError;
     }
     else if( str.Mid( 3, 3 ).IsSameAs( _T("TTM") ) ) {
@@ -950,11 +950,8 @@ AIS_Target_Data *AIS_Decoder::ProcessDSx( const wxString& str, bool b_take_dsc )
     int dsc_mmsi = 0;
     int dse_mmsi = 0;
     int mmsi = 0;
-#ifdef __WXOSX__
+
     AIS_Target_Data *pTargetData = NULL;
-#else
-    AIS_Target_Data *pTargetData;
-#endif
     AIS_Target_Data *pStaleTarget = NULL;
     
     // parse a DSC Position message            $CDDSx,.....
@@ -2126,7 +2123,7 @@ void AIS_Decoder::OnTimerAIS( wxTimerEvent& event )
 
             bool b_jumpto = (palert_target->Class == AIS_SART) || (palert_target->Class == AIS_DSC);
             bool b_createWP = palert_target->Class == AIS_DSC;
-            bool b_ack = palert_target->Class == !AIS_DSC;
+            bool b_ack = palert_target->Class != AIS_DSC;
 
         //    Show the Alert dialog
 
