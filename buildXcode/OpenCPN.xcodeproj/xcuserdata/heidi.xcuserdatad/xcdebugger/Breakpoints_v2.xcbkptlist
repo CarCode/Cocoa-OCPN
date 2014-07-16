@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "plugins/logbookkonni_pi/src/Maintenance.h"
-            timestampString = "391783080.632965"
+            filePath = "plugins/Findit_pi/src/findit.cpp"
+            timestampString = "413316201.720237"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "158"
-            endingLineNumber = "158"
-            landmarkName = "StartingClick()"
+            startingLineNumber = "637"
+            endingLineNumber = "637"
+            landmarkName = "MainDialog::renameMaterialAndFood(wxArrayString&amp; arr, int col, wxString str)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -25,13 +25,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "plugins/logbookkonni_pi/src/Maintenance.cpp"
-            timestampString = "391783186.386221"
+            filePath = "plugins/Findit_pi/src/findit.cpp"
+            timestampString = "413329418.5551"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
-            landmarkName = "Maintenance::addLine()"
+            startingLineNumber = "288"
+            endingLineNumber = "288"
+            landmarkName = "MainDialog::reloadData()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -41,13 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "plugins/logbookkonni_pi/src/Logbook.cpp"
-            timestampString = "393440360.270161"
+            filePath = "plugins/Findit_pi/src/findit.cpp"
+            timestampString = "413329465.125524"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2127"
-            endingLineNumber = "2127"
-            landmarkName = "Logbook::getModifiedCellValue(int grid, int row, int selCol, int col)"
+            startingLineNumber = "482"
+            endingLineNumber = "482"
+            landmarkName = "MainDialog::OnGridCellLeftClickMaterial( wxGridEvent&amp; event )"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -57,13 +57,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "plugins/logbookkonni_pi/src/Logbook.cpp"
-            timestampString = "393440382.386918"
+            filePath = "plugins/Findit_pi/src/findit.cpp"
+            timestampString = "413329501.977553"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2441"
-            endingLineNumber = "2441"
-            landmarkName = "Logbook::getModifiedCellValue(int grid, int row, int selCol, int col)"
+            startingLineNumber = "541"
+            endingLineNumber = "541"
+            landmarkName = "MainDialog::OnGridCellLeftClickUnits( wxGridEvent&amp; event )"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -73,13 +73,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "plugins/logbookkonni_pi/src/Logbook.cpp"
-            timestampString = "393440393.297626"
+            filePath = "plugins/Findit_pi/src/findit.cpp"
+            timestampString = "413329506.474626"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2494"
-            endingLineNumber = "2494"
-            landmarkName = "Logbook::getModifiedCellValue(int grid, int row, int selCol, int col)"
+            startingLineNumber = "548"
+            endingLineNumber = "548"
+            landmarkName = "MainDialog::OnGridCellLeftClickLocations( wxGridEvent&amp; event )"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -89,13 +89,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "plugins/logbookkonni_pi/src/Logbook.cpp"
-            timestampString = "393440400.893662"
+            filePath = "plugins/Findit_pi/src/findit.cpp"
+            timestampString = "413329526.975058"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2507"
-            endingLineNumber = "2507"
-            landmarkName = "Logbook::getModifiedCellValue(int grid, int row, int selCol, int col)"
+            startingLineNumber = "625"
+            endingLineNumber = "625"
+            landmarkName = "MainDialog::renameMaterialAndFood(wxArrayString&amp; arr, int col, wxString str)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -105,13 +105,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "plugins/logbookkonni_pi/src/Logbook.cpp"
-            timestampString = "393440410.145069"
+            filePath = "plugins/Findit_pi/src/findit.cpp"
+            timestampString = "415471414.686228"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2567"
-            endingLineNumber = "2567"
-            landmarkName = "Logbook::getModifiedCellValue(int grid, int row, int selCol, int col)"
+            startingLineNumber = "630"
+            endingLineNumber = "630"
+            landmarkName = "MainDialog::renameMaterialAndFood(wxArrayString&amp; arr, int col, wxString str)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -121,13 +121,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "plugins/logbookkonni_pi/src/Logbook.cpp"
-            timestampString = "393440422.810245"
+            filePath = "src/routeprop.cpp"
+            timestampString = "426270448.47819"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2601"
-            endingLineNumber = "2601"
-            landmarkName = "Logbook::getModifiedCellValue(int grid, int row, int selCol, int col)"
+            startingLineNumber = "2371"
+            endingLineNumber = "2371"
+            landmarkName = "MarkInfoImpl::OnDeleteLink( wxCommandEvent&amp; event )"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

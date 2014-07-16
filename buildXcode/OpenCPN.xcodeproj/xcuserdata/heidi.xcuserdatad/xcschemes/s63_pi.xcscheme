@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0500"
+   LastUpgradeVersion = "0600"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3F0B8E62E65247A49A27D31D"
-               BuildableName = "dummy"
-               BlueprintName = "dummy"
+               BlueprintIdentifier = "A68EAB01188739ED00893250"
+               BuildableName = "libs63_pi.dylib"
+               BlueprintName = "s63_pi"
                ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -39,6 +39,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A68EAB01188739ED00893250"
+            BuildableName = "libs63_pi.dylib"
+            BlueprintName = "s63_pi"
+            ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
