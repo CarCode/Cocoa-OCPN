@@ -35,7 +35,7 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    unterstützt werden, einschl. Mac Menüs, Mac Hilfe usw.
 
 b. Diese Version basiert auf Release-Version von wxWidgets 3.1.0 mit
-   entsprechenden dylibs vom 13. März 2014. Die Einbindung der Libs als
+   entsprechenden dylibs vom 06. Juni 2014. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -46,14 +46,21 @@ c. In einem weiteren Schritt soll mit Veröffentlichung einer Binär-Version
 d. Nicht alle Plugins laufen bisher problemlos. Einige wurden noch nicht
    compiliert, andere haben noch Fehler.
 
-e. Außer dem o.g. Problem, wegen der Plugins nur die dynamischen Libraries von
+e. Außer dem o.g. Problem, wegen dem Plugins nur die dynamischen Libraries von
    wxWidgets zu verwenden, hat das Plugin-Konzept noch weitere Nachteile
    offenbart: Zur Laufzeit werden die verschiedenen Locale-Dateien von OCPN
    und den Plugins verbunden, so daß gleichartige Strings mit unterschiedlichen
    Übersetzungen zu Fehlern führen.
 
+f. Das von den OCPN Programmierern gewünschte Konzept, die Plugins als
+   Stand-Alone zu compilieren, wurde wieder verlassen, da es zu größeren
+   Plugin Dateien führt und nur Vorteile bietet, wenn Plugins mit verschiedenen
+   OCPN Versionen laufen sollen. Außerdem wird es umständlicher, Code-
+   Änderungen an mehreren Stellen nachzuhalten wie z.B. bei den wxJSON
+   Dateien.
+
 Compiler:
-Xcode 5.1.1
+Xcode 6 Beta
 Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)
 Target: x86_64-apple-darwin13.0.0
 SDK 10.9 Mavericks
@@ -61,7 +68,7 @@ Thread model: posix
 
 wxWidgets Direktive:
 Sourcen holen von https://github.com/wxWidgets/wxWidgets.git branch master
-Ich verwende die GitHub.app für Mac OS X.
+Ich verwende die SourceTree.app für Mac OS X.
 
 Im Sourcen-Tree neues Verzeichnis erstellen z.B. "build-cocoa-debug".
 Im Terminal in dies Verzeichnis wechseln und konfigurieren mit:
@@ -79,5 +86,5 @@ dylibs (im Contents/Frameworks/ Verzeichnis bzw. Contents/Plugins/ Verzeichnis)
 mit "install_name_tool -change" bearbeitet werden!
 Siehe batch.sh und batchwx.sh
 -----------------------------------------------------------------------
-08. April 2014
+17. Juli 2014
 
