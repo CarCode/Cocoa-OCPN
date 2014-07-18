@@ -2134,6 +2134,8 @@ void cm93chart::SetVPParms ( const ViewPort &vpt )
 
       toSM ( vpt.clat, vpt.clon, ref_lat, ref_lon, &m_easting_vp_center, &m_northing_vp_center );
 
+      vp_transform.easting_vp_center = m_easting_vp_center;
+      vp_transform.northing_vp_center = m_northing_vp_center;
 
       if ( g_bDebugCM93 )
       {
@@ -5580,7 +5582,7 @@ bool cm93compchart::DoRenderRegionViewOnDC ( wxMemoryDC& dc, const ViewPort& VPo
 #else
                         wxMemoryDC temp_dc;
 #endif
-                        render_return = m_pcm93chart_current->RenderRegionViewOnDC ( temp_dc, vp_positive, chart_region );
+//                        render_return = m_pcm93chart_current->RenderRegionViewOnDC ( temp_dc, vp_positive, chart_region );  // Not used
 
                         //    Save the current cm93 chart pointer for restoration later
                         cm93chart *m_pcm93chart_save = m_pcm93chart_current;

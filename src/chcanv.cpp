@@ -2436,8 +2436,10 @@ void ChartCanvas::SetColorScheme( ColorScheme cs )
     CreateOZEmbossMapData( cs );
 
 #ifdef ocpnUSE_GL
-    if( g_bopengl && m_glcc )
+    if( g_bopengl && m_glcc ){
         m_glcc->ClearAllRasterTextures();
+        m_glcc->FlushFBO();
+    }
 #endif
 
     SetbTCUpdate( true );                        // force re-render of tide/current locators
@@ -3870,7 +3872,7 @@ void ChartCanvas::ShipDraw( ocpnDC& dc )
                 pos_image = m_pos_image_user_grey->Copy();
         }
 
-        img_height = pos_image.GetHeight();
+//        img_height = pos_image.GetHeight();  // Not used
 
         if( g_n_ownship_beam_meters > 0.0 &&
            g_n_ownship_length_meters > 0.0 &&
@@ -3903,7 +3905,7 @@ void ChartCanvas::ShipDraw( ocpnDC& dc )
 
                 int w = os_bm.GetWidth();
                 int h = os_bm.GetHeight();
-                img_height = h;
+//                img_height = h;  // Not used
 
                 dc.DrawBitmap( os_bm, lShipMidPoint.x - w / 2, lShipMidPoint.y - h / 2, true );
 
@@ -6448,8 +6450,8 @@ void ChartCanvas::MouseEvent( wxMouseEvent& event )
                 double rlat, rlon;
 
                 SetCursor( *pCursorPencil );
-                rlat = m_cursor_lat;
-                rlon = m_cursor_lon;
+//                rlat = m_cursor_lat;  // Not used
+//                rlon = m_cursor_lon;  // Not used
 
                 if( m_nMeasureState == 1 ) {
                     m_pMeasureRoute = new Route();
@@ -7825,8 +7827,8 @@ void ChartCanvas::ShowRoutePropertiesDialog(wxString title, Route* selected)
         pRoutePropDialog->SetSize( fitted_size );
         pRoutePropDialog->Centre();
 
-        int xp = (canvas_size.x - fitted_size.x)/2;
-        int yp = (canvas_size.y - fitted_size.y)/2;
+//        int xp = (canvas_size.x - fitted_size.x)/2;  // Not used
+//        int yp = (canvas_size.y - fitted_size.y)/2;  // Not used
 
         wxPoint xxp = ClientToScreen(canvas_pos);
         //        pRoutePropDialog->Move(xxp.x + xp, xxp.y + yp);
@@ -7865,8 +7867,11 @@ void ChartCanvas::ShowTrackPropertiesDialog( Route* selected )
 void pupHandler_PasteWaypoint() {
     Kml* kml = new Kml();
     ::wxBeginBusyCursor();
-
+#ifdef __WXOSX__
+    kml->ParsePasteBuffer();
+#else
     int pasteBuffer = kml->ParsePasteBuffer();
+#endif
     RoutePoint* pasted = kml->GetParsedRoutePoint();
 
     int nearby_sel_rad_pix = 8;
@@ -7907,8 +7912,11 @@ void pupHandler_PasteWaypoint() {
 void pupHandler_PasteRoute() {
     Kml* kml = new Kml();
     ::wxBeginBusyCursor();
-
+#ifdef __WXOSX__
+    kml->ParsePasteBuffer();
+#else
     int pasteBuffer = kml->ParsePasteBuffer();
+#endif
     Route* pasted = kml->GetParsedRoute();
     if( ! pasted ) return;
 
@@ -8027,8 +8035,11 @@ void pupHandler_PasteRoute() {
 void pupHandler_PasteTrack() {
     Kml* kml = new Kml();
     ::wxBeginBusyCursor();
-
+#ifdef __WXOSX__
+    kml->ParsePasteBuffer();
+#else
     int pasteBuffer = kml->ParsePasteBuffer();
+#endif
     Track* pasted = kml->GetParsedTrack();
     if( ! pasted ) return;
 
@@ -9116,10 +9127,10 @@ void ChartCanvas::RenderRouteLegs( ocpnDC &dc )
 
         if( m_pMeasureRoute ) {
             route = m_pMeasureRoute;
-            state = m_nMeasureState;
+//            state = m_nMeasureState;  // Not used
         } else {
             route = m_pMouseRoute;
-            state = parent_frame->nRoute_State;
+//            state = parent_frame->nRoute_State;  // Not used
         }
 
         double brg = rhumbBearing;
@@ -10746,8 +10757,8 @@ void ChartCanvas::DrawAllCurrentsInBBox( ocpnDC& dc, LLBBox& BBox, bool bRebuild
                          wxSOLID );
     wxBrush *porange_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFO" ) ),
                              wxSOLID );
-    wxBrush *pgray_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UIBDR" ) ),
-                           wxSOLID );
+//    wxBrush *pgray_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UIBDR" ) ),
+//                           wxSOLID );  // Not used
     wxBrush *pblack_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFD" ) ),
                             wxSOLID );
 
@@ -10768,7 +10779,7 @@ void ChartCanvas::DrawAllCurrentsInBBox( ocpnDC& dc, LLBBox& BBox, bool bRebuild
         pblack_pen = (wxPen *) pmono_pen;
         porange_pen = (wxPen *) pmono_pen;
         porange_brush = (wxBrush *) pmono_brush;
-        pgray_brush = (wxBrush *) pmono_brush;
+//        pgray_brush = (wxBrush *) pmono_brush;  // Not used
     }
 
     pTCFont = FontMgr::Get().GetFont( _("CurrentValue"), 12 );

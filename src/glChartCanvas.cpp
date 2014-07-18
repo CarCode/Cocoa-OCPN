@@ -114,6 +114,8 @@ extern bool             b_inCompressAllCharts;
 
 ocpnGLOptions g_GLOptions;
 
+//    For VBO(s)
+bool         g_b_EnableVBO;
 
 PFNGLGENFRAMEBUFFERSEXTPROC         s_glGenFramebuffers;
 PFNGLGENRENDERBUFFERSEXTPROC        s_glGenRenderbuffers;
@@ -130,6 +132,12 @@ PFNGLGENERATEMIPMAPEXTPROC          s_glGenerateMipmap;
 
 PFNGLCOMPRESSEDTEXIMAGE2DPROC s_glCompressedTexImage2D;
 PFNGLGETCOMPRESSEDTEXIMAGEPROC s_glGetCompressedTexImage;
+
+//      Vertex Buffer Object (VBO) support
+PFNGLGENBUFFERSPROC                 s_glGenBuffers;
+PFNGLBINDBUFFERPROC                 s_glBindBuffer;
+PFNGLBUFFERDATAPROC                 s_glBufferData;
+PFNGLDELETEBUFFERSPROC              s_glDeleteBuffers;
 
 #include <wx/arrimpl.cpp>
 //WX_DEFINE_OBJARRAY( ArrayOfTexDescriptors );
@@ -568,6 +576,17 @@ static void GetglEntryPoints( void )
         ocpnGetProcAddress( "glDeleteRenderbuffers", extensions[i]);
         s_glGenerateMipmap = (PFNGLGENERATEMIPMAPEXTPROC)
         ocpnGetProcAddress( "glGenerateMipmap", extensions[i]);
+
+        //VBO
+        s_glGenBuffers = (PFNGLGENBUFFERSPROC)
+        ocpnGetProcAddress( "glGenBuffers", extensions[i]);
+        s_glBindBuffer = (PFNGLBINDBUFFERPROC)
+        ocpnGetProcAddress( "glBindBuffer", extensions[i]);
+        s_glBufferData = (PFNGLBUFFERDATAPROC)
+        ocpnGetProcAddress( "glBufferData", extensions[i]);
+        s_glDeleteBuffers = (PFNGLDELETEBUFFERSPROC)
+        ocpnGetProcAddress( "glDeleteBuffers", extensions[i]);
+
     }
     for(i=0; i<(sizeof extensions) / (sizeof *extensions); i++) {
         if((s_glCompressedTexImage2D = (PFNGLCOMPRESSEDTEXIMAGE2DPROC)
@@ -624,6 +643,12 @@ glChartCanvas::~glChartCanvas()
     free( m_data );
 
     ClearAllRasterTextures();
+}
+
+void glChartCanvas::FlushFBO( void )
+{
+    if(m_bsetup)
+        BuildFBO();
 }
 
 void glChartCanvas::ClearAllRasterTextures( void )
@@ -802,6 +827,16 @@ void glChartCanvas::SetupOpenGL()
        !s_glBindRenderbuffer || !s_glCheckFramebufferStatus  || !s_glDeleteFramebuffers   ||
        !s_glDeleteRenderbuffers )
         m_b_DisableFBO = true;
+
+    g_b_EnableVBO = true;
+    if( !s_glBindBuffer || !s_glBufferData || !s_glGenBuffers || !s_glDeleteBuffers )
+        g_b_EnableVBO = false;
+    
+    if(g_b_EnableVBO)
+        wxLogMessage( _T("OpenGL-> Using Vetexbuffer Objects") );
+    else
+        wxLogMessage( _T("OpenGL-> Vertexbuffer Objects unavailable") );
+
 
     //      Can we use the stencil buffer in a FBO?
 #ifdef ocpnUSE_GLES /* gles requires all levels */

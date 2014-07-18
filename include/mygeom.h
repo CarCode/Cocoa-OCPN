@@ -53,6 +53,8 @@
 
 //  Some external prototypes
 
+#define DATA_TYPE_FLOAT         0
+#define DATA_TYPE_DOUBLE        1
 
 //--------------------------------------------------------------------------------------------------
 //
@@ -93,6 +95,7 @@ class TriPrim
 public:
         TriPrim();
         ~TriPrim();
+        void FreeMem(void);
 
         unsigned int type;                  // Type of triangle primitive
                                             //  May be PTG_TRIANGLES
@@ -105,6 +108,7 @@ public:
         double      minx, miny, maxx, maxy;
 
         TriPrim     *p_next;                // chain link
+
 };
 
 
@@ -122,6 +126,10 @@ public:
 
         TriPrim         *tri_prim_head;         // head of linked list of TriPrims
         bool            m_bSMSENC;
+        bool            bsingle_alloc;
+        unsigned char   *single_buffer;
+        int             single_buffer_size;
+        int             data_type;              //  p_vertex in TriPrim chain is FLOAT or DOUBLE
 
     private:
         int my_bufgets( char *buf, int buf_len_max );
@@ -190,6 +198,8 @@ class PolyTessGeo
         PolyTriGroup *Get_PolyTriGroup_head(){ return m_ppg_head;}
         int GetnVertexMax(){ return m_nvertex_max; }
         int     ErrorCode;
+        void Set_PolyTriGroup_head( PolyTriGroup *head ){ m_ppg_head = head;}
+        void Set_OK( bool bok ){ m_bOK = bok;}
 
 
     private:

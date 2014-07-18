@@ -164,6 +164,8 @@ S57Obj::S57Obj()
     y_rate = 1.0;
     x_origin = 0.0;
     y_origin = 0.0;
+
+    Parm0 = 0;
 }
 
 //----------------------------------------------------------------------------------
@@ -208,6 +210,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
     att_array = NULL;
     attVal = NULL;
     n_attr = 0;
+    Parm0 = 0;
 
     pPolyTessGeo = NULL;
     pPolyTrapGeo = NULL;
@@ -238,7 +241,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
 
     int MAX_LINE = 499999;
     char *buf = (char *) malloc( MAX_LINE + 1 );
-    int llmax = 0;
+//    int llmax = 0;  // Not used
 
     char szFeatureName[20];
 
@@ -284,7 +287,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                     int nrl = my_bufgetl( mybuf_ptr, hdr_end, buf, MAX_LINE );
                     mybuf_ptr += nrl;
                     if( 0 == nrl ) {
-                        attdun = 1;
+//                        attdun = 1;  // Not used, break
                         my_fgets( buf, MAX_LINE, *pfpx );     // this will be PolyGeo
                         break;
                     }
@@ -311,14 +314,14 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                 }
 
                 else if( !strncmp( buf, geoMatch, 6 ) ) {
-                    attdun = 1;
+//                    attdun = 1;  // Not used, break
                     break;
                 }
 
                 else if( !strncmp( buf, "  MULT", 6 ) )         // Special multipoint
                         {
                     bMulti = true;
-                    attdun = 1;
+//                    attdun = 1;  // Not used, break
                     break;
                 }
 
@@ -654,8 +657,8 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                     if( !strncmp( FeatureName, "DEPARE", 6 )
                             || !strncmp( FeatureName, "DRGARE", 6 ) ) bIsAssociable = true;
 
-                    int ll = strlen( buf );
-                    if( ll > llmax ) llmax = ll;
+//                    int ll = strlen( buf );  // Not used
+//                    if( ll > llmax ) llmax = ll;  // Not used
 
                     my_fgets( buf, MAX_LINE, *pfpx );     // this will be "  POLYTESSGEO"
 
@@ -1305,6 +1308,9 @@ void s57chart::SetVPParms( const ViewPort &vpt )
     m_view_scale_ppm = vpt.view_scale_ppm;
 
     toSM( vpt.clat, vpt.clon, ref_lat, ref_lon, &m_easting_vp_center, &m_northing_vp_center );
+
+    vp_transform.easting_vp_center = m_easting_vp_center;
+    vp_transform.northing_vp_center = m_northing_vp_center;
 }
 
 bool s57chart::AdjustVP( ViewPort &vp_last, ViewPort &vp_proposed )
@@ -1592,7 +1598,13 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
                     (ViewPort *) &VPoint );
 
             if( temp_lon_right < temp_lon_left )        // presumably crossing Greenwich
-            temp_lon_right += 360.;
+                temp_lon_right += 360.;
+            else if(temp_vp.GetBBox().GetMaxX() > 360){
+                if(temp_lon_left < 180.) {
+                    temp_lon_left += 360.;
+                    temp_lon_right += 360.;
+                }
+            }
 
             temp_vp.GetBBox().SetMin( temp_lon_left, temp_lat_bot );
             temp_vp.GetBBox().SetMax( temp_lon_right, temp_lat_top );
@@ -1628,7 +1640,13 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
                 (ViewPort *) &VPoint );
 
         if( temp_lon_right < temp_lon_left )        // presumably crossing Greenwich
-        temp_lon_right += 360.;
+            temp_lon_right += 360.;
+        else if(temp_vp.GetBBox().GetMaxX() > 360){
+            if(temp_lon_left < 180.) {
+                temp_lon_left += 360.;
+                temp_lon_right += 360.;
+            }
+        }
 
         temp_vp.GetBBox().SetMin( temp_lon_left, temp_lat_bot );
         temp_vp.GetBBox().SetMax( temp_lon_right, temp_lat_top );
@@ -1673,6 +1691,7 @@ bool s57chart::DoRenderRectOnGL( const wxGLContext &glc, const ViewPort& VPoint,
         while( top != NULL ) {
             crnt = top;
             top = top->next;               // next object
+            crnt->sm_transform_parms = &vp_transform;
             ps52plib->RenderAreaToGL( glc, crnt, &tvp, rect );
         }
     }
@@ -1685,6 +1704,7 @@ bool s57chart::DoRenderRectOnGL( const wxGLContext &glc, const ViewPort& VPoint,
         while( top != NULL ) {
             crnt = top;
             top = top->next;               // next object
+            crnt->sm_transform_parms = &vp_transform;
             ps52plib->RenderObjectToGL( glc, crnt, &tvp, rect );
         }
 
@@ -1692,6 +1712,7 @@ bool s57chart::DoRenderRectOnGL( const wxGLContext &glc, const ViewPort& VPoint,
         while( top != NULL ) {
             ObjRazRules *crnt = top;
             top = top->next;
+            crnt->sm_transform_parms = &vp_transform;
             ps52plib->RenderObjectToGL( glc, crnt, &tvp, rect );
         }
 
@@ -1702,6 +1723,7 @@ bool s57chart::DoRenderRectOnGL( const wxGLContext &glc, const ViewPort& VPoint,
         while( top != NULL ) {
             crnt = top;
             top = top->next;
+            crnt->sm_transform_parms = &vp_transform;
             ps52plib->RenderObjectToGL( glc, crnt, &tvp, rect );
         }
 
@@ -1845,7 +1867,7 @@ bool s57chart::DoRenderViewOnDC( wxMemoryDC& dc, const ViewPort& VPoint, RenderT
     double easting_ul, northing_ul;
     double easting_lr, northing_lr;
     double prev_easting_ul = 0., prev_northing_ul = 0.;
-    double prev_easting_lr, prev_northing_lr;
+//    double prev_easting_lr, prev_northing_lr;  // Not used
 
     if( ps52plib->GetPLIBColorScheme() != m_lastColorScheme ) bReallyNew = true;
     m_lastColorScheme = ps52plib->GetPLIBColorScheme();
@@ -1886,8 +1908,8 @@ bool s57chart::DoRenderViewOnDC( wxMemoryDC& dc, const ViewPort& VPoint, RenderT
                 - ( ( m_last_vp.pix_width / 2 ) / m_view_scale_ppm );
         prev_northing_ul = last_northing_vp_center
                 + ( ( m_last_vp.pix_height / 2 ) / m_view_scale_ppm );
-        prev_easting_lr = easting_ul + ( m_last_vp.pix_width / m_view_scale_ppm );
-        prev_northing_lr = northing_ul - ( m_last_vp.pix_height / m_view_scale_ppm );
+//        prev_easting_lr = easting_ul + ( m_last_vp.pix_width / m_view_scale_ppm );  // Not used
+//        prev_northing_lr = northing_ul - ( m_last_vp.pix_height / m_view_scale_ppm );  // Not used
 
         double dx = ( easting_ul - prev_easting_ul ) * m_view_scale_ppm;
         double dy = ( prev_northing_ul - northing_ul ) * m_view_scale_ppm;
@@ -2117,6 +2139,7 @@ int s57chart::DCRenderRect( wxMemoryDC& dcinput, const ViewPort& vp, wxRect* rec
         while( top != NULL ) {
             crnt = top;
             top = top->next;               // next object
+            crnt->sm_transform_parms = &vp_transform;
             ps52plib->RenderAreaToDC( &dcinput, crnt, &tvp, &pb_spec );
         }
     }
@@ -2178,6 +2201,7 @@ bool s57chart::DCRenderLPB( wxMemoryDC& dcinput, const ViewPort& vp, wxRect* rec
         while( top != NULL ) {
             crnt = top;
             top = top->next;               // next object
+            crnt->sm_transform_parms = &vp_transform;
             ps52plib->RenderObjectToDC( &dcinput, crnt, &tvp );
         }
 
@@ -2185,6 +2209,7 @@ bool s57chart::DCRenderLPB( wxMemoryDC& dcinput, const ViewPort& vp, wxRect* rec
         while( top != NULL ) {
             ObjRazRules *crnt = top;
             top = top->next;
+            crnt->sm_transform_parms = &vp_transform;
             ps52plib->RenderObjectToDC( &dcinput, crnt, &tvp );
         }
 
@@ -2195,6 +2220,7 @@ bool s57chart::DCRenderLPB( wxMemoryDC& dcinput, const ViewPort& vp, wxRect* rec
         while( top != NULL ) {
             crnt = top;
             top = top->next;
+            crnt->sm_transform_parms = &vp_transform;
             ps52plib->RenderObjectToDC( &dcinput, crnt, &tvp );
         }
 
@@ -2275,8 +2301,11 @@ InitReturn s57chart::Init( const wxString& name, ChartInitFlag flags )
     if( flags == HEADER_ONLY ) {
         if( fn.GetExt() == _T("000") ) {
             if( !GetBaseFileAttr( fn ) ) ret_value = INIT_FAIL_REMOVE;
-
+#ifdef __WXOSX__
+            else if( !CreateHeaderDataFromENC() ) ret_value = INIT_FAIL_REMOVE;
+#else
             if( !CreateHeaderDataFromENC() ) ret_value = INIT_FAIL_REMOVE;
+#endif
             else
                 ret_value = INIT_OK;
         } else if( fn.GetExt() == _T("S57") ) {
@@ -2387,12 +2416,12 @@ InitReturn s57chart::FindOrCreateSenc( const wxString& name )
 
                 while( !dun ) {
                     if( my_fgets( pbuf, 256, *pfpx ) == 0 ) {
-                        dun = 1;
+//                        dun = 1;  // Not used, break
                         force_make_senc = 1;
                         break;
                     } else {
                         if( !strncmp( pbuf, "OGRF", 4 ) ) {
-                            dun = 1;
+//                            dun = 1;  // Not used, break
                             break;
                         }
 
@@ -2986,12 +3015,12 @@ bool s57chart::CreateHeaderDataFromSENC( void )
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-            dun = 1;
+//            dun = 1;  // Not used, break
             break;
         }
 
         if( !strncmp( buf, "OGRF", 4 ) ) {
-            dun = 1;
+//            dun = 1;  // Not used, break
             break;
         }               //OGRF
 
@@ -3003,7 +3032,7 @@ bool s57chart::CreateHeaderDataFromSENC( void )
                 msg.Append( m_SENCFileName.GetFullPath() );
                 wxLogMessage( msg );
 
-                dun = 1;
+//                dun = 1;  // Not used, break
                 ret_val = false;                   // error
                 break;
             }
@@ -3619,7 +3648,7 @@ int s57chart::BuildSENCFile( const wxString& FullPath000, const wxString& SENCFi
 
     int nProg = 0;
     wxString nice_name;
-    int bbad_update = false;
+//    int bbad_update = false;  // Not used
 
     wxString msg0( _T("Building SENC file for ") );
     msg0.Append( FullPath000 );
@@ -3750,7 +3779,7 @@ int s57chart::BuildSENCFile( const wxString& FullPath000, const wxString& SENCFi
 
     int open_return = poS57DS->Open( m_tmpup_array->Item( 0 ).mb_str(), TRUE, NULL/*&s_ProgressCallBack*/ ); ///172
     if( open_return == BAD_UPDATE )         ///172
-    bbad_update = true;
+//    bbad_update = true;  // Not used
 
     bcont = s_ProgDialog->Update( 2, _T("") );
     if( !bcont ) goto abort_point;
@@ -3966,7 +3995,7 @@ int s57chart::BuildRAZFromSENCFile( const wxString& FullPath )
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-            dun = 1;
+//            dun = 1;  // Not used, break
             break;
         }
 
@@ -4468,17 +4497,19 @@ void s57chart::ResetPointBBoxes( const ViewPort &vp_last, const ViewPort &vp_thi
                         double minx = top->obj->BBObj.GetMinX();
                         double maxx = top->obj->BBObj.GetMaxX();
                         
+                        //      Not sure what problems these longitude adjustments are trying to fix
+                        //      but certainly breaks point object display in western hemisphere S57 ENCs
                         if(lon - minx > 180) {
-                            minx += 360;
-                            maxx += 360;
+//                            minx += 360;
+//                            maxx += 360;
                         }
                         
                         double lon1 = (lon - minx) * d;
                         double lon2 = (lon - maxx) * d;
                         
                         if(lon - lon1 < 0) {
-                            lon1 -= 360;
-                            lon2 -= 360;
+//                            lon1 -= 360;
+//                            lon2 -= 360;
                         }
                         
                         top->obj->BBObj.SetMin( lon - lon1, lat - lat1 );
@@ -4833,14 +4864,14 @@ void s57chart::CreateSENCRecord( OGRFeature *pFeature, FILE * fpOut, int mode, S
 
 //    Capture the Vector Table geometry indices
                 int *pNAME_RCID;
-                int *pORNT;
+//                int *pORNT;  // Not used
                 int nEdgeVectorRecords;
                 OGRFeature *pEdgeVectorRecordFeature;
 
                 pNAME_RCID = (int *) pFeature->GetFieldAsIntegerList( "NAME_RCID",
                         &nEdgeVectorRecords );
 
-                pORNT = (int *) pFeature->GetFieldAsIntegerList( "ORNT", NULL );
+//                pORNT = (int *) pFeature->GetFieldAsIntegerList( "ORNT", NULL );  // Not used
 
                 fprintf( fpOut, "LSINDEXLIST %d\n", nEdgeVectorRecords );
 //                    fwrite(pNAME_RCID, 1, nEdgeVectorRecords * sizeof(int), fpOut);
@@ -4991,7 +5022,7 @@ void s57chart::CreateSENCRecord( OGRFeature *pFeature, FILE * fpOut, int mode, S
 
                 memcpy( pd, ps, 9 );                                  // byte order, type, count
 
-                ps += 9;
+//                ps += 9;  // Not used
                 pd += 9;
 
                 pdf = (float *) pd;
@@ -5372,6 +5403,8 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
         //  For single Point objects, the integral object bounding box contains the lat/lon of the object,
         //  possibly expanded by text or symbol rendering
         case GEO_POINT: {
+            if( !obj->bBBObj_valid ) return false;
+
             if( 1 == obj->npt ) {
                 //  Special case for LIGHTS
                 //  Sector lights have had their BBObj expanded to include the entire drawn sector
@@ -5793,12 +5826,12 @@ bool s57chart::InitFromSENCMinimal( const wxString &FullPath )
 
             while( !dun ) {
                 if( my_fgets( pbuf, 256, *pfpx ) == 0 ) {
-                    dun = 1;
+//                    dun = 1;  // Not used, break
                     ret_val = false;
                     break;
                 } else {
                     if( !strncmp( pbuf, "OGRF", 4 ) ) {
-                        dun = 1;
+//                        dun = 1;  // Not used, break
                         break;
                     } else if( !strncmp( pbuf, "UPDT", 4 ) ) {
                         sscanf( pbuf, "UPDT=%i", &last_update );
