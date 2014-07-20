@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  trimplot Plugin
@@ -22,8 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "trimplot_pi.h"
 #include "PreferencesDialog.h"
@@ -36,7 +35,7 @@ PreferencesDialog::PreferencesDialog(wxWindow* parent, trimplot_pi &_trimplot_pi
     if(!pConf)
         return;
 
-    pConf->SetPath ( _T ( "/Settings/TrimPlot" ) );
+    pConf->SetPath ( _T( "/Settings/TrimPlot" ) );
 
     bool bvalue;
     double dvalue;
@@ -51,7 +50,6 @@ PreferencesDialog::PreferencesDialog(wxWindow* parent, trimplot_pi &_trimplot_pi
     pConf->Read(_T("SpeedSeconds"), &ivalue, 10);
     m_sSpeedSeconds->SetValue(ivalue);
 
-
     pConf->Read(_T("CoursePlot"), &bvalue, true);
     m_cbCourse->SetValue(bvalue);
 
@@ -60,7 +58,6 @@ PreferencesDialog::PreferencesDialog(wxWindow* parent, trimplot_pi &_trimplot_pi
 
     pConf->Read(_T("CourseSeconds"), &ivalue, 10);
     m_sCourseSeconds->SetValue(ivalue);
-
 
     pConf->Read(_T("CoursePrediction"), &bvalue, false);
     m_cbCoursePrediction->SetValue(bvalue);
@@ -79,19 +76,17 @@ PreferencesDialog::~PreferencesDialog()
     if(!pConf)
         return;
 
-    pConf->SetPath ( _T ( "/Settings/TrimPlot" ) );
+    pConf->SetPath ( _T( "/Settings/TrimPlot" ) );
 
     double dvalue;
 
     pConf->Write(_T("SpeedPlot"), m_cbSpeed->GetValue());
-    m_tSpeedScale->GetValue().ToDouble(&dvalue);
-    pConf->Write(_T("SpeedScale"), dvalue);
-    pConf->Write(_T("SpeedSeconds"), m_tSpeedScale->GetValue());
+    pConf->Write(_T("SpeedScale"), m_tSpeedScale->GetValue());
+    pConf->Write(_T("SpeedSeconds"), m_sSpeedSeconds->GetValue());
 
     pConf->Write(_T("CoursePlot"), m_cbCourse->GetValue());
-    m_tCourseScale->GetValue().ToDouble(&dvalue);
-    pConf->Write(_T("CourseScale"), dvalue);
-    pConf->Write(_T("CourseSeconds"), m_tCourseScale->GetValue());
+    pConf->Write(_T("CourseScale"), m_tCourseScale->GetValue());
+    pConf->Write(_T("CourseSeconds"), m_sCourseSeconds->GetValue());
 
     pConf->Write(_T("CoursePrediction"), m_cbCoursePrediction->GetValue());
     pConf->Write(_T("CoursePredictionLength"), m_sCoursePredictionLength->GetValue());

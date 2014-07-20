@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  trimplot Plugin
@@ -22,8 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef _TRIMPLOTPI_H_
 #define _TRIMPLOTPI_H_
@@ -38,8 +37,8 @@
 
 #include <wx/fileconf.h>
 
-#define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    2
+#define     PLUGIN_VERSION_MAJOR    1
+#define     PLUGIN_VERSION_MINOR    0
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    10
@@ -92,7 +91,11 @@ class ocpnDC;
 class TrimPlotDialog;
 class PreferencesDialog;
 
+#ifdef __WXOSX__
+class trimplot_pi : public opencpn_plugin_110
+#else
 class trimplot_pi : public wxEvtHandler, public opencpn_plugin_110
+#endif
 {
 public:
       trimplot_pi(void *ppimgr);
@@ -124,6 +127,8 @@ public:
 //    Other public methods
       void SetTrimPlotDialogX    (int x){ m_trimplot_dialog_x = x;}
       void SetTrimPlotDialogY    (int x){ m_trimplot_dialog_y = x;}
+      void SetTrimPlotDialogWidth    (int x){ m_trimplot_dialog_w = x;}
+      void SetTrimPlotDialogHeight    (int x){ m_trimplot_dialog_h = x;}
 
       void ShowPreferencesDialog( wxWindow* parent );
       void RepopulatePlots();
@@ -134,7 +139,7 @@ public:
       PreferencesDialog *m_Preferences;
 
 private:
-
+      wxFileConfig      *m_pconfig;
       bool    LoadConfig(void);
       bool    SaveConfig(void);
 

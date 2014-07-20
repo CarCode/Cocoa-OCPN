@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  trimplot Plugin
@@ -22,8 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -87,21 +86,28 @@ int trimplot_pi::Init(void)
 
     //    Get a pointer to the opencpn display canvas, to use as a parent for the POI Manager dialog
     m_parent_window = GetOCPNCanvasWindow();
-#ifdef __WXOSX__
-//    m_Preferences = new PreferencesDialog( *this, m_parent_window);
-#else
+
     m_Preferences = new PreferencesDialog(m_parent_window, *this);
-    m_Preferences->Fit();
-    m_Preferences->Show();
+//    m_Preferences->Fit();
+//    m_Preferences->Show();
+
+#ifdef __WXOSX__
+    //    Get a pointer to the opencpn configuration object
+    m_pconfig = GetOCPNConfigObject();
+    // Set some default private member parameters
+    m_trimplot_dialog_x = 0;
+    m_trimplot_dialog_y = 0;
+    m_trimplot_dialog_w = 200;
+    m_trimplot_dialog_h = 200;
 #endif
     LoadConfig(); //    And load the configuration items
-    
+
     m_leftclick_tool_id  = InsertPlugInTool
         (_T(""), _img_trimplot, _img_trimplot, wxITEM_NORMAL,
          _("TrimPlot"), _T(""), NULL, TRIMPLOT_TOOL_POSITION, 0, this);
-    
+
     m_pTrimPlotDialog = NULL;
-    
+
     return (WANTS_OVERLAY_CALLBACK |
             WANTS_OPENGL_OVERLAY_CALLBACK |
             WANTS_TOOLBAR_CALLBACK    |
@@ -112,20 +118,16 @@ int trimplot_pi::Init(void)
 
 bool trimplot_pi::DeInit(void)
 {
-    //    Record the dialog position
-    if (m_pTrimPlotDialog)
+    //    Record the dialog position + size
+    if (NULL !=m_pTrimPlotDialog)
     {
-        wxPoint p = m_pTrimPlotDialog->GetPosition();
-        SetTrimPlotDialogX(p.x);
-        SetTrimPlotDialogY(p.y);
-        
+        SaveConfig();
         m_pTrimPlotDialog->Close();
         delete m_pTrimPlotDialog;
         m_pTrimPlotDialog = NULL;
     }
-    SaveConfig();
 
-    delete m_Preferences;
+    if (NULL !=m_Preferences) delete m_Preferences;
 
     RemovePlugInTool(m_leftclick_tool_id);
 
@@ -162,7 +164,6 @@ wxString trimplot_pi::GetCommonName()
     return _("TrimPlot");
 }
 
-
 wxString trimplot_pi::GetShortDescription()
 {
     return _("TrimPlot PlugIn for OpenCPN");
@@ -170,10 +171,7 @@ wxString trimplot_pi::GetShortDescription()
 
 wxString trimplot_pi::GetLongDescription()
 {
-    return _("TrimPlot PlugIn for OpenCPN\n\
-Plot trim and course over ground to make the result of \
-small sail trim changes evident.\n\
-The TrimPlot plugin was written by Sean D'Epagnier\n");
+    return _("TrimPlot PlugIn for OpenCPN\n Plot trim and course over ground to make the result of small sail trim changes evident.\n The TrimPlot plugin was written by Sean D'Epagnier\n");
 }
 
 int trimplot_pi::GetToolbarToolCount(void)
@@ -185,8 +183,9 @@ void trimplot_pi::SetColorScheme(PI_ColorScheme cs)
 {
     if (NULL == m_pTrimPlotDialog)
         return;
-
+#ifndef __WXOSX__
     DimeWindow(m_pTrimPlotDialog);
+#endif
 }
 
 void trimplot_pi::RearrangeWindow()
@@ -212,7 +211,9 @@ void trimplot_pi::OnToolbarToolCallback(int id)
     m_pTrimPlotDialog->Show(!m_pTrimPlotDialog->IsShown());
 
     wxPoint p = m_pTrimPlotDialog->GetPosition();
+#ifndef __WXOSX__
     m_pTrimPlotDialog->Move(0, 0);        // workaround for gtk autocentre dialog behavior
+#endif
     m_pTrimPlotDialog->Move(p);
 }
 
@@ -256,7 +257,7 @@ void trimplot_pi::Render(ocpnDC &dc, PlugIn_ViewPort &vp)
     wxPoint r1, r2;
     GetCanvasPixLL(&vp, &r1, current.Lat, current.Lon);
     GetCanvasPixLL(&vp, &r2, dlat, dlon);
-    
+
     dc.SetPen(wxPen(*wxRED, 3));
     dc.DrawLine( r1.x, r1.y, r2.x, r2.y);
 }
@@ -269,7 +270,7 @@ bool trimplot_pi::LoadConfig(void)
         return false;
 
     pConf->SetPath ( _T( "/Settings/TrimPlot" ) );
-    
+
     m_trimplot_dialog_x =  pConf->Read ( _T ( "DialogPosX" ), 20L );
     m_trimplot_dialog_y =  pConf->Read ( _T ( "DialogPosY" ), 20L );
     m_trimplot_dialog_w =  pConf->Read ( _T ( "DialogW" ), 300L );
@@ -280,24 +281,34 @@ bool trimplot_pi::LoadConfig(void)
 
 bool trimplot_pi::SaveConfig(void)
 {
+#ifdef __WXOSX__
+    wxFileConfig *pConf = (wxFileConfig *)m_pconfig;
+#else
     wxFileConfig *pConf = GetOCPNConfigObject();
 
     if(!pConf)
         return false;
+#endif
 
-    pConf->SetPath ( _T ( "/Settings/TrimPlot" ) );
-
-    if(m_pTrimPlotDialog) {
+    if(pConf)
+    {
         wxPoint p = m_pTrimPlotDialog->GetPosition();
+        SetTrimPlotDialogX(p.x);
+        SetTrimPlotDialogY(p.y);
         wxSize s = m_pTrimPlotDialog->GetSize();
+        SetTrimPlotDialogWidth(s.x);
+        SetTrimPlotDialogHeight(s.y);
 
+        pConf->SetPath ( _T ( "/Settings/TrimPlot" ) );
         pConf->Write ( _T ( "DialogPosX" ), p.x);
         pConf->Write ( _T ( "DialogPosY" ), p.y);
         pConf->Write ( _T ( "DialogW" ), s.x);
         pConf->Write ( _T ( "DialogH" ), s.y);
+        
+        return true;
     }
-    
-    return true;
+    else
+        return false;
 }
 
 void trimplot_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix)
@@ -336,7 +347,11 @@ void trimplot_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix)
 void trimplot_pi::ShowPreferencesDialog( wxWindow* parent )
 {
     m_Preferences = new PreferencesDialog(m_parent_window, *this);
+#ifdef __WXOSX__
+    if(m_Preferences->ShowModal() == wxID_OK) m_Preferences->Show(false);
+#else
     m_Preferences->Show();
+#endif
 }
 
 void trimplot_pi::ComputeBearingDistance(double seconds, double &bearing, double &distance)
@@ -355,7 +370,7 @@ void trimplot_pi::ComputeBearingDistance(double seconds, double &bearing, double
             d = (current.FixTime - (*it).FixTime) / seconds;
             break;
         }
-    
+
     DistanceBearingMercator_Plugin(current.Lat, current.Lon, (*it).Lat, (*it).Lon, &bearing, &distance);
     distance *= d;
 }
@@ -373,7 +388,7 @@ double trimplot_pi::ComputeAvgSog(double seconds)
         total += (*it).Sog;
         count++;
     }
-    
+
     return total / count;
 }
 

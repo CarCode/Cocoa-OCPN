@@ -50,7 +50,11 @@
 
 #include "dychart.h"
 #include "chart1.h"
+
+#ifdef ocpnUSE_GL
 #include "glChartCanvas.h"
+#endif
+
 #include "chartdbs.h"
 #include "options.h"
 #include "styles.h"
@@ -198,7 +202,9 @@ extern wxString         g_Plugin_Dir;
 extern ChartGroupArray  *g_pGroupArray;
 extern ocpnStyle::StyleManager* g_StyleManager;
 
+#ifdef ocpnUSE_GL
 extern ocpnGLOptions g_GLOptions;
+#endif
 
 //    Some constants
 #define ID_CHOICE_NMEA  wxID_HIGHEST + 1
@@ -1882,7 +1888,7 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
 void options::CreateControls()
 {
     int border_size = 4;
-    int check_spacing = 2;
+//    int check_spacing = 2;  // Not used
     int group_item_spacing = 2;           // use for items within one group, with Add(...wxALL)
 
     int font_size_y, font_descent, font_lead;
@@ -1901,7 +1907,7 @@ void options::CreateControls()
     if(!g_bresponsive){
         if( height <= 800 ) {
             border_size = 2;
-            check_spacing = 2;
+//            check_spacing = 2;  // Not used
             group_item_spacing = 1;
         }
     }

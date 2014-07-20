@@ -35,28 +35,28 @@
 class TrimPlotDialogBase : public wxDialog 
 {
 	private:
-	
+
 	protected:
 		wxScrolledWindow* m_swSpeed;
 		wxScrolledWindow* m_swCourse;
 		wxStaticText* m_staticText16;
 		wxStaticText* m_staticText18;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnSize( wxSizeEvent& event ) { event.Skip(); }
 		virtual void OnDoubleClick( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnPaint( wxPaintEvent& event ) { event.Skip(); }
-		
-	
+
+
 	public:
 		wxStaticText* m_stSpeed;
 		wxStaticText* m_stCourse;
 		wxStaticText* m_stPositionSpeed;
 		wxStaticText* m_stSpeedPercentage;
-		
+
 		TrimPlotDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Trim Plot"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxTAB_TRAVERSAL ); 
 		~TrimPlotDialogBase();
-	
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ class TrimPlotDialogBase : public wxDialog
 class PreferencesDialogBase : public wxDialog 
 {
 	private:
-	
+
 	protected:
 		wxStaticText* m_staticText14;
 		wxStaticText* m_staticText15;
@@ -82,12 +82,12 @@ class PreferencesDialogBase : public wxDialog
 		wxButton* m_bAbout;
 		wxStdDialogButtonSizer* m_sdbSizer1;
 		wxButton* m_sdbSizer1OK;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnPlotChange( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
-		
-	
+
+
 	public:
 		wxCheckBox* m_cbSpeed;
 		wxTextCtrl* m_tSpeedScale;
@@ -98,10 +98,13 @@ class PreferencesDialogBase : public wxDialog
 		wxCheckBox* m_cbCoursePrediction;
 		wxSpinCtrl* m_sCoursePredictionLength;
 		wxSpinCtrl* m_sCoursePredictionSeconds;
-		
-		PreferencesDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("TrimPlot Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE ); 
+#ifndef __WXOSX__  // wxSTAY_ON_TOP|
+        PreferencesDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("TrimPlot Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+#else
+		PreferencesDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("TrimPlot Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE );
+#endif
 		~PreferencesDialogBase();
-	
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -110,17 +113,17 @@ class PreferencesDialogBase : public wxDialog
 class AboutDialog : public wxDialog 
 {
 	private:
-	
+
 	protected:
 		wxStaticText* m_staticText110;
 		wxStdDialogButtonSizer* m_sdbSizer2;
 		wxButton* m_sdbSizer2OK;
-	
+
 	public:
-		
+
 		AboutDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("About TrimPlot"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
 		~AboutDialog();
-	
+
 };
 
 #endif //__TRIMPLOTUI_H__
