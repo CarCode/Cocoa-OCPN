@@ -1,16 +1,15 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Georef utility
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 3 of the License, or     *
+ *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
@@ -21,35 +20,25 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
 
  ***************************************************************************
  *  Parts of this file were adapted from source code found in              *
  *  John F. Waers (jfwaers@csn.net) public domain program MacGPS45         *
- ***************************************************************************
-
- * $Log: georef.h,v $
- * Revision 1.13  2010/04/27 01:44:56  bdbcat
- * Build 426
- *
- * Revision 1.12  2010/03/29 02:59:02  bdbcat
- * 2.1.0 Beta Initial
- *
-
- */
+ ***************************************************************************/
 
 #ifndef     __GEOREF_H__
 #define     __GEOREF_H__
 
 #include <stdio.h>
 #include <string.h>
-#include <math.h>
+//#include <math.h>
 #include <ctype.h>
 
 //------------------------
 struct DATUM {
-        char *name;
+        const char *name;
         short ellipsoid;
         double dx;
         double dy;
@@ -57,7 +46,7 @@ struct DATUM {
 };
 
 struct ELLIPSOID {
-        char *name;             // name of ellipsoid
+        const char *name;             // name of ellipsoid
         double a;               // semi-major axis, meters
         double invf;            // 1/f
 };
@@ -128,6 +117,9 @@ extern "C" void fromPOLY(double x, double y, double lat0, double lon0, double *l
 extern "C" void ll_gc_ll(double lat, double lon, double crs, double dist, double *dlat, double *dlon);
 extern "C" void ll_gc_ll_reverse(double lat1, double lon1, double lat2, double lon2,
                                 double *bearing, double *dist);
+
+extern "C" void PositionBearingDistanceMercator(double lat, double lon, double brg, double dist,
+                                                double *dlat, double *dlon);
 
 extern "C" double DistGreatCircle(double slat, double slon, double dlat, double dlon);
 
@@ -219,8 +211,8 @@ void lm_lmdif( int m, int n, double* x, double* fvec, double ftol, double xtol,
 
 
 #ifndef _LMDIF
-extern char *lm_infmsg[];
-extern char *lm_shortmsg[];
+extern const char *lm_infmsg[];
+extern const char *lm_shortmsg[];
 #endif
 
 //      This is an opaque (to lmfit) structure set up before the call to lmfit()
@@ -232,6 +224,7 @@ typedef struct {
     int     print_flag;
     int     n_par;
 } lm_data_type;
+
 
 
 #endif
