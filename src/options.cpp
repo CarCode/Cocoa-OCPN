@@ -2865,12 +2865,14 @@ void options::OnApplyClick( wxCommandEvent& event )
     m_pText_COG_Predictor->GetValue().ToDouble( &g_ShowCOG_Mins );
 
     //  Update all the current targets
-    AIS_Target_Hash::iterator it;
-    AIS_Target_Hash *current_targets = g_pAIS->GetTargetList();
-    for( it = ( *current_targets ).begin(); it != ( *current_targets ).end(); ++it ) {
-        AIS_Target_Data *pAISTarget = it->second;
-        if( NULL != pAISTarget ) {
-            pAISTarget->b_show_track = g_bAISShowTracks;
+    if( g_pAIS ){
+        AIS_Target_Hash::iterator it;
+        AIS_Target_Hash *current_targets = g_pAIS->GetTargetList();
+        for( it = ( *current_targets ).begin(); it != ( *current_targets ).end(); ++it ) {
+            AIS_Target_Data *pAISTarget = it->second;
+            if( NULL != pAISTarget ) {
+                pAISTarget->b_show_track = g_bAISShowTracks;
+            }
         }
     }
 
@@ -4841,7 +4843,7 @@ void SentenceListDlg::OnOkClick( wxCommandEvent& event ) { event.Skip(); }
 //OpenGLOptionsDlg
 
 OpenGLOptionsDlg::OpenGLOptionsDlg( wxWindow* parent ) :
-wxDialog( parent, wxID_ANY, _T("OpenGL Options"), wxDefaultPosition )
+wxDialog( parent, wxID_ANY, _("OpenGL Options"), wxDefaultPosition )
 {
 #ifdef ocpnUSE_GL
     m_bSizer1 = new wxFlexGridSizer( 2 );

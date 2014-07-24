@@ -97,61 +97,64 @@ class NavObjectChanges;
 //----------------------------------------------------------------------------
 class Track : public wxEvtHandler, public Route
 {
-      public:
-            Track(void);
-            ~Track(void);
+public:
+    Track(void);
+    ~Track(void);
 
-            void SetPrecision(int precision);
+    void SetPrecision(int precision);
 
-            void Start(void);
-            void Stop(bool do_add_point = false);
-            Track *DoExtendDaily(void);
-            bool IsRunning(){ return m_bRunning; }
-            void Draw(ocpnDC& dc, ViewPort &VP);
+    void Start(void);
+    void Stop(bool do_add_point = false);
+    Track *DoExtendDaily(void);
+    bool IsRunning(){ return m_bRunning; }
+    void Draw(ocpnDC& dc, ViewPort &VP);
 
-            RoutePoint* AddNewPoint( vector2D point, wxDateTime time );
-            Route *RouteFromTrack(wxProgressDialog *pprog);
+    RoutePoint* AddNewPoint( vector2D point, wxDateTime time );
+    Route *RouteFromTrack(wxProgressDialog *pprog);
 
-            void DouglasPeuckerReducer( std::vector<RoutePoint*>& list, int from, int to, double delta );
-            int Simplify( double maxDelta );
-            double GetXTE(RoutePoint *fm1, RoutePoint *fm2, RoutePoint *to);
-            double GetXTE( double fm1Lat, double fm1Lon, double fm2Lat, double fm2Lon, double toLat, double toLon  );
+    void DouglasPeuckerReducer( std::vector<RoutePoint*>& list, int from, int to, double delta );
+    int Simplify( double maxDelta );
+    double GetXTE(RoutePoint *fm1, RoutePoint *fm2, RoutePoint *to);
+    double GetXTE( double fm1Lat, double fm1Lon, double fm2Lat, double fm2Lon, double toLat, double toLon  );
+    int GetCurrentTrackSeg(){ return m_CurrentTrackSeg; }
+    void SetCurrentTrackSeg(int seg){ m_CurrentTrackSeg = seg; }
 
-            void AdjustCurrentTrackPoint( RoutePoint *prototype );
+    void AdjustCurrentTrackPoint( RoutePoint *prototype );
 
-      private:
-            void OnTimerTrack(wxTimerEvent& event);
-            void AddPointNow(bool do_add_point = false);
+private:
+    void OnTimerTrack(wxTimerEvent& event);
+    void AddPointNow(bool do_add_point = false);
 
-            bool              m_bRunning;
-            wxTimer           m_TimerTrack;
+    bool              m_bRunning;
+    wxTimer           m_TimerTrack;
 
-            int               m_nPrecision;
-            double            m_TrackTimerSec;
-            double            m_allowedMaxXTE;
-            double            m_allowedMaxAngle;
+    int               m_nPrecision;
+    double            m_TrackTimerSec;
+    double            m_allowedMaxXTE;
+    double            m_allowedMaxAngle;
 
-            vector2D          m_lastAddedPoint;
-            double            m_prev_dist;
-            wxDateTime        m_prev_time;
+    vector2D          m_lastAddedPoint;
+    double            m_prev_dist;
+    wxDateTime        m_prev_time;
 
-            RoutePoint        *m_lastStoredTP;
-            RoutePoint        *m_removeTP;
-            RoutePoint        *m_prevFixedTP;
-            RoutePoint        *m_fixedTP;
-            int               m_track_run;
-            double            m_minTrackpoint_delta;
+    RoutePoint        *m_lastStoredTP;
+    RoutePoint        *m_removeTP;
+    RoutePoint        *m_prevFixedTP;
+    RoutePoint        *m_fixedTP;
+    int               m_track_run;
+    double            m_minTrackpoint_delta;
+    int               m_CurrentTrackSeg;
 
-            enum eTrackPointState {
-                firstPoint,
-                secondPoint,
-                potentialPoint
-            } trackPointState;
+    enum eTrackPointState {
+        firstPoint,
+        secondPoint,
+        potentialPoint
+    } trackPointState;
 
-            std::deque<vector2D> skipPoints;
-            std::deque<wxDateTime> skipTimes;
+    std::deque<vector2D> skipPoints;
+    std::deque<wxDateTime> skipTimes;
 
-            wxDECLARE_EVENT_TABLE();
+    wxDECLARE_EVENT_TABLE();
 };
 
 //----------------------------------------------------------------------------
@@ -195,6 +198,7 @@ public:
       virtual bool AddNewWayPoint(RoutePoint *pWP, int ConfigRouteNum = -1);
       virtual bool UpdateWayPoint(RoutePoint *pWP);
       virtual bool DeleteWayPoint(RoutePoint *pWP);
+      virtual bool AddNewTrackPoint( RoutePoint *pWP, const wxString& parent_GUID );
 
       virtual void CreateConfigGroups ( ChartGroupArray *pGroupArray );
       virtual void DestroyConfigGroups ( void );
@@ -205,7 +209,6 @@ public:
       virtual bool LoadChartDirArray(ArrayOfCDI &ChartDirArray);
       virtual void UpdateSettings();
       virtual void UpdateNavObj();
-      virtual void StoreNavObjChanges();
 
       bool LoadLayers(wxString &path);
 
@@ -275,12 +278,14 @@ enum
 
 class WXDLLEXPORT X11FontPicker : public wxFontDialogBase
 {
-      public:
-            X11FontPicker() { Init(); }
-            X11FontPicker(wxWindow *parent, const wxFontData& data)  : wxFontDialogBase(parent, data) { Init(); }
-            virtual ~X11FontPicker();
+    wxDECLARE_DYNAMIC_CLASS(X11FontPicker);
 
-            virtual int ShowModal();
+public:
+    X11FontPicker() { Init(); }
+    X11FontPicker(wxWindow *parent, const wxFontData& data)  : wxFontDialogBase(parent, data) { Init(); }
+    virtual ~X11FontPicker();
+
+    virtual int ShowModal();
 
 
     // deprecated, for backwards compatibility only
@@ -288,42 +293,41 @@ class WXDLLEXPORT X11FontPicker : public wxFontDialogBase
 //      : wxFontDialogBase(parent, data) { Init(); }
 
     // Internal functions
-            void OnCloseWindow(wxCloseEvent& event);
+    void OnCloseWindow(wxCloseEvent& event);
 
-            virtual void CreateWidgets();
-            virtual void InitializeFont();
+    virtual void CreateWidgets();
+    virtual void InitializeFont();
 
-            void OnChangeFont(wxCommandEvent& event);
-            void OnChangeFace(wxCommandEvent& event);
+    void OnChangeFont(wxCommandEvent& event);
+    void OnChangeFace(wxCommandEvent& event);
 
-      protected:
+protected:
     // common part of all ctors
-            void Init();
+    void Init();
 
-            virtual bool DoCreate(wxWindow *parent);
-            void InitializeAllAvailableFonts();
-            void SetChoiceOptionsFromFacename(const wxString &facename);
-            void DoFontChange(void);
+    virtual bool DoCreate(wxWindow *parent);
+    void InitializeAllAvailableFonts();
+    void SetChoiceOptionsFromFacename(const wxString &facename);
+    void DoFontChange(void);
 
-            wxFont dialogFont;
+    wxFont      dialogFont;
 
-            wxChoice    *familyChoice;
-            wxChoice    *styleChoice;
-            wxChoice    *weightChoice;
-            wxChoice    *colourChoice;
-            wxCheckBox  *underLineCheckBox;
-            wxChoice    *pointSizeChoice;
+    wxChoice    *familyChoice;
+    wxChoice    *styleChoice;
+    wxChoice    *weightChoice;
+    wxChoice    *colourChoice;
+    wxCheckBox  *underLineCheckBox;
+    wxChoice    *pointSizeChoice;
 
-            MyFontPreviewer *m_previewer;
-            bool        m_useEvents;
+    MyFontPreviewer *m_previewer;
+    bool        m_useEvents;
 
-            wxArrayString     *pFaceNameArray;
+    wxArrayString     *pFaceNameArray;
 
-            wxFont            *pPreviewFont;
+    wxFont            *pPreviewFont;
 
     //  static bool fontDialogCancelled;
-            wxDECLARE_EVENT_TABLE();
-            wxDECLARE_DYNAMIC_CLASS(X11FontPicker);
+    wxDECLARE_EVENT_TABLE();
 };
 
 //---------------------------------------------------------------------------------
