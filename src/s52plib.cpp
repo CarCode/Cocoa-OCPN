@@ -370,7 +370,7 @@ void s52plib::SetGLRendererString(const wxString &renderer)
     //    Some GL renderers do a poor job of Anti-aliasing very narrow line widths.
     //    Detect this case, and adjust the render parameters.
 
-    if( renderer.Upper().Find( _T("MESA") ) != wxNOT_FOUND ) g_GLMinLineWidth = 1.2;
+    if( renderer.Upper().Find( _T("MESA") ) != wxNOT_FOUND ) g_GLMinLineWidth = 1.2f;
 }
 
 /*
@@ -2388,14 +2388,8 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
             glBindTexture(g_texture_rectangle_format, texture);
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
             
-            glPushMatrix();
-            
-            glTranslatef(r.x, r.y, 0);
-            glRotatef(vp->rotation * 180/PI, 0, 0, -1);
-            glTranslatef(-pivot_x, -pivot_y, 0);
-            
             int w = texrect.width, h = texrect.height;
-            
+
             float tx1 = texrect.x, ty1 = texrect.y;
             float tx2 = tx1 + w, ty2 = ty1 + h;
             
@@ -2405,14 +2399,32 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
                 ty1 /= size.y, ty2 /= size.y;
             }
             
-            glBegin(GL_QUADS);
-            glTexCoord2f(tx1, ty1);    glVertex2i( 0, 0);
-            glTexCoord2f(tx2, ty1);    glVertex2i( w, 0);
-            glTexCoord2f(tx2, ty2);    glVertex2i( w, h);
-            glTexCoord2f(tx1, ty2);    glVertex2i( 0, h);
-            glEnd();
+            if(fabs( vp->rotation ) > .01){
+                glPushMatrix();
+
+                glTranslatef(r.x, r.y, 0);
+                glRotatef(vp->rotation * 180/PI, 0, 0, -1);
+                glTranslatef(-pivot_x, -pivot_y, 0);
             
-            glPopMatrix();
+                glBegin(GL_QUADS);
+                glTexCoord2f(tx1, ty1);    glVertex2i( 0, 0);
+                glTexCoord2f(tx2, ty1);    glVertex2i( w, 0);
+                glTexCoord2f(tx2, ty2);    glVertex2i( w, h);
+                glTexCoord2f(tx1, ty2);    glVertex2i( 0, h);
+                glEnd();
+                
+                glPopMatrix();
+            }
+            else {
+                float ddx = pivot_x;
+                float ddy = pivot_y;
+                glBegin(GL_QUADS);
+                glTexCoord2f(tx1, ty1);    glVertex2i(  r.x - ddx, r.y - ddy );
+                glTexCoord2f(tx2, ty1);    glVertex2i(  r.x - ddx + w, r.y - ddy );
+                glTexCoord2f(tx2, ty2);    glVertex2i(  r.x - ddx + w, r.y - ddy + h );
+                glTexCoord2f(tx1, ty2);    glVertex2i(  r.x - ddx, r.y - ddy + h);
+                glEnd();
+            }
             
             glPopAttrib();
         } else { /* this is only for legacy mode, or systems without NPOT textures */
@@ -2423,10 +2435,14 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
             
             glColor4f( 1, 1, 1, 1 );
             
-            glRasterPos2f( r.x - ddx, r.y - ddy );
-            glPixelZoom( 1, -1 );
-            glDrawPixels( b_width, b_height, GL_RGBA, GL_UNSIGNED_BYTE, prule->pixelPtr );
-            glPixelZoom( 1, 1 );
+            //  Since draw pixels is so slow, lets not draw anything we don't have to
+            wxRect sym_rect(r.x - ddx, r.y - ddy, b_width, b_height);
+            if(vp->rv_rect.Intersects(sym_rect) ) {
+                glRasterPos2f( r.x - ddx, r.y - ddy );
+                glPixelZoom( 1, -1 );
+                glDrawPixels( b_width, b_height, GL_RGBA, GL_UNSIGNED_BYTE, prule->pixelPtr );
+                glPixelZoom( 1, 1 );
+            }
         }
 
         glDisable( GL_BLEND );
@@ -3534,9 +3550,11 @@ int s52plib::RenderMPS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         double lat = *pdl++;
 
         wxPoint r = vp_local.GetPixFromLL( lat, lon );
+        //      Use estimated symbol size
+        wxRect rr(r.x-16, r.y-16, 32, 32);
         
         //      The render inclusion test is trivial....
-        if(!vp->rv_rect.Contains(r))
+        if(!vp->rv_rect.Intersects(rr))
             continue;
 
         double angle = 0;
@@ -5690,11 +5708,8 @@ int s52plib::RenderToGLAC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
         wxBoundingBox tp_box;
         TriPrim *p_tp = ppg->tri_prim_head;
-#ifdef __WXOSX__
-        size_t vbo_offset = 0;
-#else
-        int vbo_offset = 0;
-#endif
+        GLintptr vbo_offset = 0;
+
         glEnableClientState(GL_VERTEX_ARRAY);             // activate vertex coords array
 
         //      Set up the stride sizes for the array
@@ -5723,7 +5738,7 @@ int s52plib::RenderToGLAC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
             if( b_greenwich || ( BBView.Intersect( tp_box, margin ) != _OUT ) ) {
                 if(b_useVBO){
-                    glVertexPointer(2, array_gl_type, 2 * array_data_size, (void *)(vbo_offset));
+                    glVertexPointer(2, array_gl_type, 2 * array_data_size, (GLvoid *)(vbo_offset));
                     glDrawArrays(p_tp->type, 0, p_tp->nVert);
                 }
                 else{

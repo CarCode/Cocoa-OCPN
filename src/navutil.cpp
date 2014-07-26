@@ -2592,7 +2592,7 @@ void MyConfig::UpdateSettings()
     }
     SetPath( _T ( "/Directories" ) );
     Write( _T ( "S57DataLocation" ), _T("") );
-    Write( _T ( "SENCFileLocation" ), _T("") );
+//    Write( _T ( "SENCFileLocation" ), _T("") );
 
 #endif
 
@@ -4324,13 +4324,9 @@ void AlphaBlending( ocpnDC &dc, int x, int y, int size_x, int size_y, float radi
         //    Create destination image
         wxBitmap olbm( size_x, size_y );
         wxMemoryDC oldc( olbm );
-#ifdef __WXOSX__
-//        if(!olbm)
-//            return;
-#else
-        if(!oldc.Ok())
+        if(!oldc.IsOk())
             return;
-#endif
+
         oldc.SetBackground( *wxBLACK_BRUSH );
         oldc.SetBrush( *wxWHITE_BRUSH );
         oldc.Clear();
