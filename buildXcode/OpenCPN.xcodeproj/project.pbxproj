@@ -310,7 +310,6 @@
 		39BC987F29A843C4BFB92EE7 /* ddfsubfielddefn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4808EDE352BD450CB81704A3 /* ddfsubfielddefn.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		3ABA3F740739488BAFDF9335 /* ograssemblepolygon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A3CD60871A55454294CA277A /* ograssemblepolygon.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		3AD5E7B3CD854BAF8093DB30 /* TTYScroll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AFB43114E6E6491BAD245E93 /* TTYScroll.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		3BA8A63EA68D4BFCA2B6E71A /* 4bells.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7E3A1E7209304621B22D713B /* 4bells.wav */; settings = {COMPILER_FLAGS = ""; }; };
 		3C099ED4D4AC4E39BC133198 /* AIS_Bitstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7ED670B5E8BF4EDFB12AA26A /* AIS_Bitstring.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		3CBEBEC63EDE45F6A7CFFC0B /* poly-l-1.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = D76684A6B5DD448FB5296DF8 /* poly-l-1.dat */; settings = {COMPILER_FLAGS = ""; }; };
 		3CFCFD4F054545D69E57E403 /* findit_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D24C82F466BC44F382A93073 /* findit_pi.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -343,7 +342,6 @@
 		4D44974D8CCA40F59C15C82A /* dashboard_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F7BC3BCE7BA4448A245AEEB /* dashboard_pi.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		4DC09F059FA24519BE5A089F /* chartsymbols.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9F941902EF4414C80E777F6 /* chartsymbols.xml */; settings = {COMPILER_FLAGS = ""; }; };
 		4F5D14F97FF84ED58C19D20B /* gpsmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 34AC03CC44A648528053F3C7 /* gpsmem.c */; settings = {COMPILER_FLAGS = ""; }; };
-		4FC129F5CCEA4B0087E76E52 /* 7bells.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = 02E95DA0EF204C3886D0FBD6 /* 7bells.wav */; settings = {COMPILER_FLAGS = ""; }; };
 		4FC16599EB6A4E198F78C4C7 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1A994AB7764429A83F4ABA0 /* tinyxmlparser.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		4FDF04F7115A4CDD920BE944 /* WeatherFaxWizard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62A789ECCBC44B0C9E1877BE /* WeatherFaxWizard.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		50C9F46D0DC542C5AD40AD0F /* s52cnsy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9C7C9E754134BBDA63A8157 /* s52cnsy.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -362,7 +360,6 @@
 		5F44EE365D7C42EC882E2575 /* bbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A8CB7EA0F7D54C8BA1AD0EDA /* bbox.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		5F9AAAF0A510447FBA719779 /* latlong.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DE543489CE37492A88D9CD70 /* latlong.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		5FAD431712FB430A90D42DA9 /* CelestialNavigationDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4947B55956B42BC85C41FC6 /* CelestialNavigationDialog.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		5FC0A2494EFE4EFDB5BE2835 /* 8bells.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0E7221DA6C6549F5BEEE6CEF /* 8bells.wav */; settings = {COMPILER_FLAGS = ""; }; };
 		5FDC1FE8DB634993A871F058 /* gpssend.c in Sources */ = {isa = PBXBuildFile; fileRef = 88CA97D8783B40C79417745A /* gpssend.c */; settings = {COMPILER_FLAGS = ""; }; };
 		5FF5DA75EDC044B8A82115B3 /* OCPNSoundData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F4C46A2984E84BC6A20B526A /* OCPNSoundData.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		60B1B083A6A9435D9A41F32A /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64AC0FE418BF4FC8ADB3BC73 /* util.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -408,7 +405,6 @@
 		793DACC96C624C3DBE3A76AF /* RoutePoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B8B7EE91BA740D282905D97 /* RoutePoint.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		79F72176D97C4533B67E235E /* mwv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8F90B32B7F83415BB587AC60 /* mwv.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		7A5847A1DB9C4CC695088B42 /* vwt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7C716FD2A7184F4389667CE8 /* vwt.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		7C3BD364832E4EB48F4046E4 /* 3bells.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0BE4BFAE46DC4691A09C7750 /* 3bells.wav */; settings = {COMPILER_FLAGS = ""; }; };
 		7D13E1293591440295E4F6B3 /* hdm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 852591E703FF4A82B26A49CB /* hdm.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		7DA7375B4D11439AAFFB0A4F /* gradar_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 661C4CD8A6FF4F2D927D5D06 /* gradar_pi.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		7EACA98E65374614B0B82C79 /* TTYWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE996846CB004999A2C7CE77 /* TTYWindow.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -431,7 +427,6 @@
 		875E563AEF24447699279F44 /* Track.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFF06E212B740F6A3D40E04 /* Track.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		875EDB02E57A46C1AC1A60D4 /* chart1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB17F660A3D74672A428F377 /* chart1.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		87CC46FF1A9741399C4E5077 /* s52utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6F2A920AD1947128A95DADA /* s52utils.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		87F09F1757DB48CDA772209D /* 6bells.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = 37BBBF1764144559AE4E6422 /* 6bells.wav */; settings = {COMPILER_FLAGS = ""; }; };
 		8889F018FA04479DACCC1161 /* S52RAZDS.RLE in CopyFiles */ = {isa = PBXBuildFile; fileRef = 277E0E08A4264941B8E6744C /* S52RAZDS.RLE */; settings = {COMPILER_FLAGS = ""; }; };
 		88A02E4431334098AA06ECC5 /* WeatherFaxUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 438F3F8EA0DE463593377A9A /* WeatherFaxUI.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		88E041FA2EA74CDEA7A14838 /* GribSettingsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 898716A444C2454498EA8862 /* GribSettingsDialog.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -584,6 +579,7 @@
 		A68FF416184A7B4D00C65557 /* libtrimplot_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68FF3FB184A62A700C65557 /* libtrimplot_pi.dylib */; };
 		A69CD17717E34BEC00B2C059 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = A69CD17617E34BEC00B2C059 /* dsa_pub.pem */; };
 		A69FCA10194F4A5700E613B8 /* from_ownship.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69FCA0F194F4A5700E613B8 /* from_ownship.cpp */; };
+		A6A82077197D3C7100D249BB /* georef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6A82076197D3C7100D249BB /* georef.cpp */; };
 		A6A94A5A18CF397E00FD56EE /* GribRequestDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6A94A5918CF397E00FD56EE /* GribRequestDialog.cpp */; };
 		A6AC8E7117EC64FC00872D7E /* libcelestial_navigation_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 5BBA00018468491EB9978049 /* libcelestial_navigation_pi.dylib */; };
 		A6AC8E7217EC64FC00872D7E /* libdashboard_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = DBF97DEBFD0C4783B8DA7D0E /* libdashboard_pi.dylib */; };
@@ -617,7 +613,6 @@
 		A6B4A57417A51EAB00E3A5D0 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A57317A51EAA00E3A5D0 /* Utilities.cpp */; };
 		A6B4A57617A51ED000E3A5D0 /* WeatherRoutingUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A57517A51ED000E3A5D0 /* WeatherRoutingUI.cpp */; };
 		A6B4A57817A51EF300E3A5D0 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A57717A51EF200E3A5D0 /* icons.cpp */; };
-		A6B4A57A17A51F1D00E3A5D0 /* georef.c in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A57917A51F1C00E3A5D0 /* georef.c */; };
 		A6B4A58617A528B400E3A5D0 /* GribRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4B971ABE521C41EEB917EC81 /* GribRecord.cpp */; };
 		A6B4A58717A528FF00E3A5D0 /* zuFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86FBC046FFA345A98B9D5612 /* zuFile.cpp */; };
 		A6B83E3C195A1E0E00788044 /* glTexCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B83E3B195A1E0E00788044 /* glTexCache.cpp */; };
@@ -770,7 +765,6 @@
 		DCD9244408CD461A9D54E7D3 /* vwr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6D30DEACE42483B96F9310F /* vwr.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		DDC905E11A254E169E65CB1C /* nmea0183.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9F214FC3EE984863902440B7 /* nmea0183.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		DDDEDD9EC87140EBB7FAB978 /* glTextureDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7961547BD20E4797B3ABCDD1 /* glTextureDescriptor.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		DE0A7C16B11A476B930F7C8A /* 5bells.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3471B56ED69946D18313BB8E /* 5bells.wav */; settings = {COMPILER_FLAGS = ""; }; };
 		DE384C3E7F7542A08DDC9FCA /* AISTargetListDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3F98C2E3C4A4D6688FB8DD4 /* AISTargetListDialog.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		DF97DCC75D53429B8042BAF1 /* README.harmonics in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6960D9DF1FF34A09B2018C8C /* README.harmonics */; settings = {COMPILER_FLAGS = ""; }; };
 		E0E71080870F4A34B63C798A /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C126D0AD6C6847ED99FA28DD /* icons.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -1123,12 +1117,6 @@
 			files = (
 				C1587CB5CE9C4E859C8846A3 /* 1bells.wav in CopyFiles */,
 				1F07934C9655447E9FC48A88 /* 2bells.wav in CopyFiles */,
-				7C3BD364832E4EB48F4046E4 /* 3bells.wav in CopyFiles */,
-				3BA8A63EA68D4BFCA2B6E71A /* 4bells.wav in CopyFiles */,
-				DE0A7C16B11A476B930F7C8A /* 5bells.wav in CopyFiles */,
-				87F09F1757DB48CDA772209D /* 6bells.wav in CopyFiles */,
-				4FC129F5CCEA4B0087E76E52 /* 7bells.wav in CopyFiles */,
-				5FC0A2494EFE4EFDB5BE2835 /* 8bells.wav in CopyFiles */,
 				63D70F692DD545EF8831E4B8 /* README.bells in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1901,6 +1889,7 @@
 		A69F7CAB18159C5300B1F0E9 /* chartbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartbase.h; path = include/chartbase.h; sourceTree = "<group>"; };
 		A69FCA0E194F4A3400E613B8 /* from_ownship.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = from_ownship.h; path = plugins/dashboard_pi/src/from_ownship.h; sourceTree = "<group>"; };
 		A69FCA0F194F4A5700E613B8 /* from_ownship.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = from_ownship.cpp; path = plugins/dashboard_pi/src/from_ownship.cpp; sourceTree = "<group>"; };
+		A6A82076197D3C7100D249BB /* georef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = georef.cpp; path = plugins/weather_routing_pi/src/georef.cpp; sourceTree = "<group>"; };
 		A6A94A5918CF397E00FD56EE /* GribRequestDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GribRequestDialog.cpp; path = plugins/grib_pi/src/GribRequestDialog.cpp; sourceTree = "<group>"; };
 		A6A94A5B18CF39B900FD56EE /* GribRequestDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribRequestDialog.h; path = plugins/grib_pi/src/GribRequestDialog.h; sourceTree = "<group>"; };
 		A6B1580F182941C800B18B37 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
@@ -1942,7 +1931,6 @@
 		A6B4A57317A51EAA00E3A5D0 /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = plugins/weather_routing_pi/src/Utilities.cpp; sourceTree = "<group>"; };
 		A6B4A57517A51ED000E3A5D0 /* WeatherRoutingUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WeatherRoutingUI.cpp; path = plugins/weather_routing_pi/src/WeatherRoutingUI.cpp; sourceTree = "<group>"; };
 		A6B4A57717A51EF200E3A5D0 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/weather_routing_pi/src/icons.cpp; sourceTree = "<group>"; };
-		A6B4A57917A51F1C00E3A5D0 /* georef.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = georef.c; path = plugins/weather_routing_pi/src/georef.c; sourceTree = "<group>"; };
 		A6B83E3A195A1DD800788044 /* glTexCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glTexCache.h; path = include/glTexCache.h; sourceTree = "<group>"; };
 		A6B83E3B195A1E0E00788044 /* glTexCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = glTexCache.cpp; path = src/glTexCache.cpp; sourceTree = "<group>"; };
 		A6BE112D178C9953001B4E60 /* vlw.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vlw.hpp; path = plugins/dashboard_pi/src/nmea0183/vlw.hpp; sourceTree = "<group>"; };
@@ -3398,7 +3386,7 @@
 				A6B4A57317A51EAA00E3A5D0 /* Utilities.cpp */,
 				A6B4A57517A51ED000E3A5D0 /* WeatherRoutingUI.cpp */,
 				A6B4A57717A51EF200E3A5D0 /* icons.cpp */,
-				A6B4A57917A51F1C00E3A5D0 /* georef.c */,
+				A6A82076197D3C7100D249BB /* georef.cpp */,
 				A6520DF419013B49006FB056 /* tinystr.cpp */,
 				A6520DC619003965006FB056 /* tinyxml.cpp */,
 				A6520DC819003986006FB056 /* tinyxmlerror.cpp */,
@@ -4858,6 +4846,7 @@
 				A6B4A56C17A51E2500E3A5D0 /* BoatPlan.cpp in Sources */,
 				A6B4A56E17A51E4400E3A5D0 /* Boat.cpp in Sources */,
 				A6B4A57017A51E6600E3A5D0 /* RouteMap.cpp in Sources */,
+				A6A82077197D3C7100D249BB /* georef.cpp in Sources */,
 				A6520DE41901386D006FB056 /* blocksort.c in Sources */,
 				A6520DF019013947006FB056 /* randtable.c in Sources */,
 				A6B4A57217A51E8600E3A5D0 /* RouteMapOverlay.cpp in Sources */,
@@ -4868,7 +4857,6 @@
 				A6520DEE1901392B006FB056 /* huffman.c in Sources */,
 				A6520DE8190138AD006FB056 /* compress.c in Sources */,
 				A6520DEA190138CB006FB056 /* crctable.c in Sources */,
-				A6B4A57A17A51F1D00E3A5D0 /* georef.c in Sources */,
 				A6520DCB190039A3006FB056 /* tinyxmlparser.cpp in Sources */,
 				A6B4A58617A528B400E3A5D0 /* GribRecord.cpp in Sources */,
 				A6B4A58717A528FF00E3A5D0 /* zuFile.cpp in Sources */,

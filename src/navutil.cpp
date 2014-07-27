@@ -1995,6 +1995,9 @@ bool MyConfig::LoadLayers(wxString &path)
                 wxDir dir( filename );
                 if( dir.IsOpened() ){
                     nfiles = dir.GetAllFiles( filename, &file_array, wxT("*.gpx") );      // layers subdirectory set
+                    wxString dirmsg;
+                    dirmsg.Printf(wxT("Found GPX %d files."),nfiles);
+                    wxLogMessage(dirmsg);
                 }
             }
 
@@ -2169,6 +2172,9 @@ bool MyConfig::AddNewWayPoint( RoutePoint *pWP, int crm )
 bool MyConfig::UpdateWayPoint( RoutePoint *pWP )
 {
     if( pWP->m_bIsInLayer )
+        return true;
+
+    if(!pWP->m_bIsolatedMark)
         return true;
 
     if( !m_bSkipChangeSetUpdate ) {

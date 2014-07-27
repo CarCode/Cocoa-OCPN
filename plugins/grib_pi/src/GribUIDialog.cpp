@@ -342,6 +342,7 @@ GRIBUIDialog::GRIBUIDialog(wxWindow *parent, grib_pi *ppi)
     //connect events have not been done in dialog base
     this->Connect( wxEVT_MOVE, wxMoveEventHandler( GRIBUIDialog::OnMove ) );
     m_tPlayStop.Connect(wxEVT_TIMER, wxTimerEventHandler( GRIBUIDialog::OnPlayStopTimer ), NULL, this);
+    m_tCursorTrackTimer.Connect(wxEVT_TIMER, wxTimerEventHandler( GRIBUIDialog::OnCursorTrackTimer ), NULL, this);
 
     m_OverlaySettings.Read();
 #ifndef __WXOSX__
@@ -388,8 +389,13 @@ GRIBUIDialog::~GRIBUIDialog()
 
 void GRIBUIDialog::SetCursorLatLon( double lat, double lon )
 {
+    if(!m_tCursorTrackTimer.IsRunning()) m_tCursorTrackTimer.Start(50, wxTIMER_ONE_SHOT );
     m_cursor_lon = lon;
     m_cursor_lat = lat;
+}
+
+void GRIBUIDialog::OnCursorTrackTimer( wxTimerEvent & event)
+{
 #ifdef __WXOSX__
     if(!m_pTimelineSet)
         return;
@@ -406,7 +412,7 @@ void GRIBUIDialog::ContextMenuItemCallback(int id)
 {
     wxFileConfig *pConf = GetOCPNConfigObject();
 #ifdef __WXOSX__
-    int x = 0,y,w = 0,h = 0;
+    int x = 0,y = 0,w = 0,h = 0;
 #else
     int x,y,w,h;
 #endif
@@ -893,7 +899,7 @@ void GRIBUIDialog::OnPlayStop( wxCommandEvent& event )
     m_InterpolateMode = m_OverlaySettings.m_bInterpolate;
 }
 
-void GRIBUIDialog::OnPlayStopTimer( wxTimerEvent & )
+void GRIBUIDialog::OnPlayStopTimer( wxTimerEvent & event )
 {
     if( m_bPlay->IsSameAs( m_bpPlay->GetBitmapLabel()) ) {
         m_bpPlay->SetToolTip( _("Play") );
