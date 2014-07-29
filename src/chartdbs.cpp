@@ -169,6 +169,8 @@ ChartTableEntry::ChartTableEntry(ChartBase &theChart)
 
     m_pfilename = new wxString;           // create and populate helper members
     *m_pfilename = fn.GetFullName();
+    m_psFullPath = new wxString;
+    *m_psFullPath = theChart.GetFullPath();
 
     Extent ext;
     theChart.GetChartExtent(&ext);
@@ -275,6 +277,7 @@ ChartTableEntry::~ChartTableEntry()
     }
     
     delete m_pfilename;
+    delete m_psFullPath;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -368,6 +371,8 @@ bool ChartTableEntry::Read(const ChartDatabase *pDb, wxInputStream &is)
         wxString fullfilename(pFullPath, wxConvUTF8);
         wxFileName fn(fullfilename);
         *m_pfilename = fn.GetFullName();
+        m_psFullPath = new wxString;
+        *m_psFullPath = fullfilename;
         
         // Read the table entry
         ChartTableEntry_onDisk_18 cte;
@@ -442,6 +447,8 @@ bool ChartTableEntry::Read(const ChartDatabase *pDb, wxInputStream &is)
         wxString fullfilename(pFullPath, wxConvUTF8);
         wxFileName fn(fullfilename);
         *m_pfilename = fn.GetFullName();
+        m_psFullPath = new wxString;
+        *m_psFullPath = fullfilename;
         
         // Read the table entry
         ChartTableEntry_onDisk_17 cte;
@@ -516,6 +523,8 @@ bool ChartTableEntry::Read(const ChartDatabase *pDb, wxInputStream &is)
           wxString fullfilename(pFullPath, wxConvUTF8);
           wxFileName fn(fullfilename);
           *m_pfilename = fn.GetFullName();
+          m_psFullPath = new wxString;
+          *m_psFullPath = fullfilename;
 
       // Read the table entry
           ChartTableEntry_onDisk_16 cte;
@@ -1449,8 +1458,7 @@ bool ChartDatabase::IsChartDirUsed(const wxString &theDir)
 
     dir.Append(wxT("*"));
     for (UINT32 i = 0; i < chartTable.GetCount(); i++) {
-        wxString chartPath(chartTable[i].GetpFullPath(), wxConvUTF8);
-        if (chartPath.Matches(dir))
+        if (chartTable[i].GetpsFullPath()->Matches(dir))
             return true;
     }
     return false;
@@ -1879,7 +1887,7 @@ bool ChartDatabase::AddChart( wxString &chartfilename, ChartClassDescriptor &cha
     pnewChart = CreateChartTableEntry(full_name, chart_desc);
     if(!pnewChart)
     {
-        bAddFinal = false;
+//        bAddFinal = false;  // Not used
         wxString msg = _T("   CreateChartTableEntry() failed for file: ");
         msg.Append(full_name);
         wxLogMessage(msg);
@@ -1890,10 +1898,10 @@ bool ChartDatabase::AddChart( wxString &chartfilename, ChartClassDescriptor &cha
                 int nEntry = chartTable.GetCount();
                 for(int i=0 ; i<nEntry ; i++)
                 {
-                    wxString table_file_name(chartTable[isearch].GetpFullPath(), wxConvUTF8);
+                    wxString *ptable_file_name = chartTable[isearch].GetpsFullPath();
 
                     //    If the chart full file paths are exactly the same, select the newer one
-                    if(bthis_dir_in_dB && full_name.IsSameAs(table_file_name))
+                    if(bthis_dir_in_dB && full_name.IsSameAs(*ptable_file_name))
                     {
                         b_add_msg++;
 
@@ -1922,7 +1930,7 @@ bool ChartDatabase::AddChart( wxString &chartfilename, ChartClassDescriptor &cha
                     //  Look at the chart file name (without directory prefix) for a further check for duplicates
                     //  This catches the case in which the "same" chart is in different locations,
                     //  and one may be newer than the other.
-                    wxFileName table_file(table_file_name);
+                    wxFileName table_file(*ptable_file_name);
 
                     if( table_file.GetFullName() == file_name )
                     {
@@ -1997,7 +2005,7 @@ bool ChartDatabase::AddChart( wxString &chartfilename, ChartClassDescriptor &cha
     return rv;
 }
 
-bool ChartDatabase::AddSingleChart( wxString &ChartFullPath )
+bool ChartDatabase::AddSingleChart( wxString &ChartFullPath, bool b_force_full_search )
 {
     //  Find a relevant chart class descriptor
     wxFileName fn(ChartFullPath);
@@ -2028,8 +2036,13 @@ bool ChartDatabase::AddSingleChart( wxString &ChartFullPath )
         }
     }
 
+    //  If we know that we need to do a full recursive search of the db,
+    //  then there is no need to verify it by doing a directory match
+    bool b_recurse = true;
+    if(!b_force_full_search)
+        b_recurse = IsChartDirUsed(dir_name);
 
-    bool rv = AddChart( ChartFullPath, desc, NULL, 0,  IsChartDirUsed(dir_name) );
+    bool rv = AddChart( ChartFullPath, desc, NULL, 0,  b_recurse );
 
     //  remove duplicates marked in AddChart()
     
