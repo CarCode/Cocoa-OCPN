@@ -217,7 +217,7 @@ void AIS_Decoder::OnEvtAIS( OCPN_DataStreamEvent& event )
 {
     wxString message = wxString(event.GetNMEAString().c_str(), wxConvUTF8);
 
-    int nr = 0;
+//    int nr = 0;  // Not used
     if( !message.IsEmpty() )
     {
         if( message.Mid( 3, 3 ).IsSameAs( _T("VDM") ) ||
@@ -229,7 +229,11 @@ void AIS_Decoder::OnEvtAIS( OCPN_DataStreamEvent& event )
             message.Mid( 3, 3 ).IsSameAs( _T("OSD") ) ||
             ( g_bWplIsAprsPosition && message.Mid( 3, 3 ).IsSameAs( _T("WPL") ) ) )
         {
+#ifdef __WXOSX__
+                Decode( message );
+#else
                 nr = Decode( message );
+#endif
                 gFrame->TouchAISActive();
         }
     }
@@ -768,10 +772,10 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
             if( pStaleTarget )
                 pSelectAIS->DeleteSelectablePoint( (void *) mmsi_long, SELTYPE_AISTARGET );
             
-            bool bhad_name = false;
-            if( pStaleTarget ) bhad_name = pStaleTarget->b_nameValid;
+//            bool bhad_name = false;  // Not used
+//            if( pStaleTarget ) bhad_name = pStaleTarget->b_nameValid;  // Not used
             
-                if( gpsg_mmsi ) {
+            if( gpsg_mmsi && pTargetData ) {
                     pTargetData->PositionReportTicks = now.GetTicks();
                     pTargetData->StaticReportTicks = now.GetTicks();
                     pTargetData->m_utc_hour = gpsg_utc_hour;
@@ -793,7 +797,7 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
                     pTargetData->b_lost = false;
                     
                     bdecode_result = true;
-                } else if( arpa_mmsi ) {
+            } else if( arpa_mmsi && pTargetData ) {
                     pTargetData->m_utc_hour = arpa_utc_hour;
                     pTargetData->m_utc_min = arpa_utc_min;
                     pTargetData->m_utc_sec = arpa_utc_sec;
@@ -832,7 +836,7 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
                     pTargetData->b_lost = arpa_nottracked;
                     
                     bdecode_result = true;
-                } else if( aprs_mmsi ) {
+            } else if( aprs_mmsi && pTargetData ) {
                     pTargetData->m_utc_hour = now.GetHour();
                     pTargetData->m_utc_min = now.GetMinute();
                     pTargetData->m_utc_sec = now.GetSecond();
@@ -862,7 +866,8 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
                     bdecode_result = Parse_VDXBitstring( &strbit, pTargetData );       // Parse the new data
 
             //     Update the most recent report period
-            pTargetData->RecentPeriod = pTargetData->PositionReportTicks - last_report_ticks;
+            if( pTargetData )
+                pTargetData->RecentPeriod = pTargetData->PositionReportTicks - last_report_ticks;
             ret = AIS_NoError;
             
         } else{
@@ -1026,7 +1031,7 @@ AIS_Target_Data *AIS_Decoder::ProcessDSx( const wxString& str, bool b_take_dsc )
         mmsi = (int) dse_mmsi;
     }
     
-    long mmsi_long = mmsi;
+    long mmsi_long; //  = mmsi; Not used
 
     //  Get the last report time for this target, if it exists
     wxDateTime now = wxDateTime::Now();

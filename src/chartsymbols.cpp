@@ -35,6 +35,10 @@
 
 extern bool g_bopengl;
 
+#ifdef ocpnUSE_GL
+extern GLenum       g_texture_rectangle_format;
+#endif
+
 //--------------------------------------------------------------------------------------
 // The below data is global since there will ever only be one ChartSymbols instance,
 // and some methods+data of class S52plib are needed inside ChartSymbol, and s2plib
@@ -811,15 +815,23 @@ void ChartSymbols::SetColorTableIndex( int index )
     ColorTableIndex = index;
 }
 
+
 int ChartSymbols::LoadRasterFileForColorTable( int tableNo, bool flush, bool dcmode )
 {
 
-    if( tableNo == rasterSymbolsLoadedColorMapNumber && !flush && (!dcmode || rasterSymbols.IsOk())){
-        if(!dcmode && g_bopengl && rasterSymbolsTexture)
-            return true;
+    if( tableNo == rasterSymbolsLoadedColorMapNumber && !flush ){
+        if(!dcmode && g_bopengl) {
+            if(rasterSymbolsTexture)
+                return true;
+            else if( !g_texture_rectangle_format && rasterSymbols.IsOk())
+                return true;
+        }
         if(dcmode && rasterSymbols.IsOk())
             return true;
     }
+
+    if(g_bopengl && !g_texture_rectangle_format)
+        wxLogMessage(_("Warning: unable to use NPOT texture for chart symbols"));
 
     colTable* coltab = (colTable *) colorTables->Item( tableNo );
 
@@ -830,7 +842,6 @@ int ChartSymbols::LoadRasterFileForColorTable( int tableNo, bool flush, bool dcm
     if( rasterFileImg.LoadFile( filename, wxBITMAP_TYPE_PNG ) ) {
 #ifdef ocpnUSE_GL
         /* for opengl mode, load the symbols into a texture */
-        extern GLenum       g_texture_rectangle_format;
         if(!dcmode && g_bopengl && g_texture_rectangle_format) {
             rasterSymbols = wxNullBitmap; /* free data loaded from non-gl mode */
             
@@ -872,8 +883,6 @@ int ChartSymbols::LoadRasterFileForColorTable( int tableNo, bool flush, bool dcm
         } else
 #endif
         {
-            if(!dcmode && g_bopengl)
-                wxLogMessage(_("Warning: unable to use texture for chart symbols"));
             rasterSymbols = wxBitmap( rasterFileImg, -1/*32*/);
         }
 
@@ -940,8 +949,7 @@ wxImage ChartSymbols::GetImage( const char* symbolName )
      (the first time an s57 chart is ever loaded, it renders to memory dc to cache
      a thumbnail so needs the ram version.  Eventually we can render to video memory
      read it back for this case instead. */
-//    if((!rasterSymbols.IsOk()) || ( ColorTableIndex != rasterSymbolsLoadedColorMapNumber) )
-        LoadRasterFileForColorTable(ColorTableIndex, false, true);
+    LoadRasterFileForColorTable(ColorTableIndex, false, true);
 
     wxRect bmArea = ( *symbolGraphicLocations )[HashKey( symbolName )];
     wxBitmap bitmap = rasterSymbols.GetSubBitmap( bmArea );
@@ -950,8 +958,7 @@ wxImage ChartSymbols::GetImage( const char* symbolName )
 
 unsigned int ChartSymbols::GetGLTextureRect( wxRect &rect, const char* symbolName )
 {
-//    if( ColorTableIndex != rasterSymbolsLoadedColorMapNumber)
-        LoadRasterFileForColorTable(ColorTableIndex);
+    LoadRasterFileForColorTable(ColorTableIndex);
     rect = ( *symbolGraphicLocations )[HashKey( symbolName )];
     return rasterSymbolsTexture;
 }

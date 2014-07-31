@@ -2744,6 +2744,8 @@ void PolyTessGeoTrap::BuildTess()
             m_ptg_head->ntrap_count = nvtrap;
 
       //    Allocate enough memory
+          if(0 == nvtrap)
+              nvtrap = 1;             // avoid zero malloc
             m_ptg_head->trap_array = (trapz_t *)malloc(nvtrap * sizeof(trapz_t));
 
       //    Iterate again and capture the valid trapezoids

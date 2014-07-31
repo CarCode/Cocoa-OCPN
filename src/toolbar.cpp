@@ -1193,7 +1193,8 @@ bool ocpnToolBarSimple::Realize()
         lastTool = tool;
         node = node->GetNext();
     }
-    if( m_LineCount > 1 || IsVertical() ) lastTool->lastInLine = true;
+    if( lastTool && (m_LineCount > 1 || IsVertical()) )
+        lastTool->lastInLine = true;
 
     if( GetWindowStyleFlag() & wxTB_HORIZONTAL ) m_maxHeight += toolSize.y;
     else

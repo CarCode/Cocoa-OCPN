@@ -135,6 +135,9 @@
  */
 
 #include <ctype.h>
+#ifdef __WXOSX__
+#include <assert.h>
+#endif
 #include "cpl_minixml.h"
 #include "cpl_error.h"
 #include "cpl_conv.h"
@@ -336,8 +339,11 @@ static TokenType ReadToken( ParseContext *psContext )
              && psContext->pszInput[psContext->nInputOffset] == '>' )
     {
         chNext = ReadChar( psContext );
+#ifdef __WXOSX__
+        assert( chNext == '>' );
+#else
         CPLAssert( chNext == '>' );
-
+#endif
         psContext->eTokenType = TSlashClose;
         psContext->bInElement = FALSE;
     }
@@ -348,9 +354,11 @@ static TokenType ReadToken( ParseContext *psContext )
              && psContext->pszInput[psContext->nInputOffset] == '>' )
     {
         chNext = ReadChar( psContext );
-
+#ifdef __WXOSX__
+        assert( chNext == '>' );
+#else
         CPLAssert( chNext == '>' );
-
+#endif
         psContext->eTokenType = TQuestionClose;
         psContext->bInElement = FALSE;
     }
@@ -1434,6 +1442,9 @@ int CPLSetXMLValue( CPLXMLNode *psRoot,  const char *pszPath,
                     const char *pszValue )
 
 {
+    if( psRoot == NULL )
+        return FALSE;
+
     char        **papszTokens;
     int         iToken = 0;
 
@@ -1479,17 +1490,22 @@ int CPLSetXMLValue( CPLXMLNode *psRoot,  const char *pszPath,
 /* -------------------------------------------------------------------- */
 /*      Now set a value node under this node.                           */
 /* -------------------------------------------------------------------- */
-    if( psRoot->psChild == NULL )
-        CPLCreateXMLNode( psRoot, CXT_Text, pszValue );
-    else if( psRoot->psChild->eType != CXT_Text )
-        return FALSE;
-    else
-    {
-        CPLFree( psRoot->psChild->pszValue );
-        psRoot->psChild->pszValue = CPLStrdup( pszValue );
+    if( psRoot ){
+        if( psRoot->psChild == NULL )
+            CPLCreateXMLNode( psRoot, CXT_Text, pszValue );
+        else if( psRoot->psChild->eType != CXT_Text )
+            return FALSE;
+        else
+        {
+            CPLFree( psRoot->psChild->pszValue );
+            psRoot->psChild->pszValue = CPLStrdup( pszValue );
+        }
+        
+        return TRUE;
     }
-
-    return TRUE;
+    else {
+        return FALSE;
+    }
 }
 
 /************************************************************************/

@@ -536,21 +536,22 @@ bool TrackPropDlg::UpdateProperties()
     RoutePoint *first_point = m_pRoute->GetPoint( 1 );
     double total_seconds = 0.;
 
-    if( last_point->GetCreateTime().IsValid() && first_point->GetCreateTime().IsValid() ) {
-        total_seconds =
-                last_point->GetCreateTime().Subtract( first_point->GetCreateTime() ).GetSeconds().ToDouble();
-        if( total_seconds != 0. ) {
-            m_avgspeed = m_pRoute->m_route_length / total_seconds * 3600;
-        } else {
-            m_avgspeed = 0;
+    wxString speed( _T("--") );
+    
+    if(last_point && first_point){
+        if( last_point->GetCreateTime().IsValid() && first_point->GetCreateTime().IsValid() ) {
+            total_seconds =
+            last_point->GetCreateTime().Subtract( first_point->GetCreateTime() ).GetSeconds().ToDouble();
+            if( total_seconds != 0. ) {
+                m_avgspeed = m_pRoute->m_route_length / total_seconds * 3600;
+            } else {
+                m_avgspeed = 0;
+            }
+            speed.Printf( _T("%5.2f"), toUsrSpeed( m_avgspeed ) );
         }
-        wxString s;
-        s.Printf( _T("%5.2f"), toUsrSpeed( m_avgspeed ) );
-        m_tAvgSpeed->SetValue( s );
-    } else {
-        wxString s( _T("--") );
-        m_tAvgSpeed->SetValue( s );
     }
+
+    m_tAvgSpeed->SetValue( speed );
 
     //  Total length
     wxString slen;
@@ -644,11 +645,14 @@ bool TrackPropDlg::IsThisTrackExtendable()
         Route *proute = route_node->GetData();
         if( proute->m_bIsTrack && proute->IsVisible() && ( proute->m_GUID != m_pRoute->m_GUID ) ) {
             RoutePoint *track_node = proute->GetLastPoint();
-            if( track_node->GetCreateTime().IsValid() ) {
-                if( track_node->GetCreateTime() <= pLastPoint->GetCreateTime() )
-                    if( !m_pExtendPoint || track_node->GetCreateTime() > m_pExtendPoint->GetCreateTime() ) {
-                    m_pExtendPoint = track_node;
-                    m_pExtendRoute = proute;
+            if( track_node ){
+                if( track_node->GetCreateTime().IsValid() ) {
+                    if( track_node->GetCreateTime() <= pLastPoint->GetCreateTime() ) {
+                        if( !m_pExtendPoint || track_node->GetCreateTime() > m_pExtendPoint->GetCreateTime() ) {
+                            m_pExtendPoint = track_node;
+                            m_pExtendRoute = proute;
+                        }
+                    }
                 }
             }
         }
@@ -707,9 +711,7 @@ void TrackPropDlg::OnSplitBtnClick( wxCommandEvent& event )
         pSelect->DeleteAllSelectableRouteSegments( m_pRoute );
         g_pRouteMan->DeleteRoute( m_pRoute );
         pSelect->AddAllSelectableTrackSegments( m_pTail );
-        pSelect->AddAllSelectableRoutePoints( m_pTail );
         pSelect->AddAllSelectableTrackSegments( m_pHead );
-        pSelect->AddAllSelectableRoutePoints( m_pHead );
 
         SetTrackAndUpdate( m_pTail );
         UpdateProperties();
@@ -777,7 +779,9 @@ void TrackPropDlg::OnTrackPropRightClick( wxListEvent &event )
     wxMenu menu;
 
     wxMenuItem* copyItem = menu.Append( ID_RCLK_MENU_COPY_TEXT, _("&Copy all as text") );
-
+#ifdef __WXOSX__
+    copyItem->Enable(true);
+#endif
     PopupMenu( &menu );
 }
 
@@ -1033,6 +1037,9 @@ void TrackPropDlg::OnShowTimeTZ ( wxCommandEvent &event )
 
 bool TrackPropDlg::SaveChanges( void )
 {
+#ifdef __WXOSX__
+    assert(m_pRoute);
+#endif
     if( m_pRoute && !m_pRoute->m_bIsInLayer ) {
         //  Get User input Text Fields
         m_pRoute->m_RouteNameString = m_tName->GetValue();
