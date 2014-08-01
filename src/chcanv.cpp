@@ -1541,8 +1541,14 @@ ChartCanvas::~ChartCanvas()
 void ChartCanvas::OnEvtCompressProgress( OCPN_CompressProgressEvent & event )
 {
     wxString msg(event.m_string.c_str(), wxConvUTF8);
-    compress_msg_array.RemoveAt(event.thread);
-    compress_msg_array.Insert( msg, event.thread);
+    if(compress_msg_array.GetCount() > (unsigned int)event.thread )
+    {
+        compress_msg_array.RemoveAt(event.thread);
+        compress_msg_array.Insert( msg, event.thread);
+    }
+    else
+        compress_msg_array.Add(msg);
+
     
     wxString combined_msg;
     for(unsigned int i=0 ; i < compress_msg_array.GetCount() ; i++) {
@@ -1760,9 +1766,11 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
 {
 
     m_modkeys = event.GetModifiers();
-
+//#ifdef __WXOSX__
+//    int panspeed = m_modkeys == wxMOD_CONTROL ? 2 : 100;
+//#else
     int panspeed = m_modkeys == wxMOD_ALT ? 2 : 100;
-
+//#endif
     // HOTKEYS
     switch( event.GetKeyCode() ) {
         case WXK_ALT:
@@ -2313,7 +2321,11 @@ void ChartCanvas::DoMovement( long dt )
 
     if(m_panx || m_pany) {
         const double slowpan = .1, maxpan = 2;
+#ifdef __WXOSX__
+        if( m_modkeys == wxMOD_CONTROL )
+#else
         if( m_modkeys == wxMOD_ALT )
+#endif
             m_panspeed = slowpan;
         else {
             m_panspeed += (double)dt/500; /* apply acceleration */
@@ -2325,8 +2337,11 @@ void ChartCanvas::DoMovement( long dt )
     if(m_zoom_factor != 1) {
         double alpha = 400, beta = 1.5;
         double zoom_factor = (exp(dt / alpha) - 1) / beta + 1;
-        
+#ifdef __WXOSX__
+        if( m_modkeys == wxMOD_CONTROL )
+#else
         if( m_modkeys == wxMOD_ALT )
+#endif
             zoom_factor = pow(zoom_factor, .15);
 
         if(m_zoom_factor < 1)
@@ -2879,7 +2894,11 @@ void ChartCanvas::ZoomCanvas( double factor, bool can_zoom_to_cursor, bool stopt
         }
         m_zoom_target =  VPoint.chart_scale / factor;
     } else {
+#ifdef __WXOSX__
+        if( m_modkeys == wxMOD_CONTROL )
+#else
         if( m_modkeys == wxMOD_ALT )
+#endif
             factor = pow(factor, .15);
         
         DoZoomCanvas( factor );
@@ -4785,8 +4804,8 @@ void ChartCanvas::MouseEvent( wxMouseEvent& event )
         }
 
         //      Double tap with selected RoutePoint or Mark
-        bool bt1 = m_bMarkEditing;
-        RoutePoint *pp = m_pRoutePointEditTarget;
+//        bool bt1 = m_bMarkEditing;  // Not used
+//        RoutePoint *pp = m_pRoutePointEditTarget;  // Not used
         
         if(m_pRoutePointEditTarget){
             if( b_onRPtarget ) {

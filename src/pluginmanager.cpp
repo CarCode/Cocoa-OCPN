@@ -3602,7 +3602,8 @@ bool PI_PLIBObjectRenderCheck( PI_S57Obj *pObj, PlugIn_ViewPort *vp )
     if(ps52plib) {
         //  Create and populate a compatible s57 Object
         S57Obj cobj;
-        CreateCompatibleS57Object( pObj, &cobj );
+        chart_context ctx;
+        CreateCompatibleS57Object( pObj, &cobj, &ctx );
 
         ViewPort cvp = CreateCompatibleViewport( *vp );
 
@@ -3631,7 +3632,7 @@ int PI_GetPLIBStateHash()
         return 0;
 }
 
-void CreateCompatibleS57Object( PI_S57Obj *pObj, S57Obj *cobj )
+void CreateCompatibleS57Object( PI_S57Obj *pObj, S57Obj *cobj, chart_context *pctx )
 {
     strncpy(cobj->FeatureName, pObj->FeatureName, 8);
     cobj->Primitive_type = (GeoPrim_t)pObj->Primitive_type;
@@ -3689,6 +3690,21 @@ void CreateCompatibleS57Object( PI_S57Obj *pObj, S57Obj *cobj )
 
     cobj->bIsClone = true;              // Protect cloned object pointers in S57Obj dtor
 
+    if(pctx){
+        cobj->m_chart_context = pctx;
+        chart_context *ppctx = (chart_context *)pObj->m_chart_context;
+        
+        if( ppctx ){
+            cobj->m_chart_context->m_pvc_hash = ppctx->m_pvc_hash;
+            cobj->m_chart_context->m_pve_hash = ppctx->m_pve_hash;
+            cobj->m_chart_context->ref_lat = ppctx->ref_lat;
+            cobj->m_chart_context->ref_lon = ppctx->ref_lon;
+            cobj->m_chart_context->pFloatingATONArray = ppctx->pFloatingATONArray;
+            cobj->m_chart_context->pRigidATONArray = ppctx->pRigidATONArray;
+            cobj->m_chart_context->safety_contour = ppctx->safety_contour;
+        }
+        cobj->m_chart_context->chart = 0;           // note bene
+    }
 }
 
 
@@ -3703,7 +3719,7 @@ bool PI_PLIBSetContext( PI_S57Obj *pObj )
     ctx = (S52PLIB_Context *)pObj->S52_Context;
 
     S57Obj cobj;
-    CreateCompatibleS57Object( pObj, &cobj );
+    CreateCompatibleS57Object( pObj, &cobj, NULL );
 
     LUPname LUP_Name;
 
@@ -3854,8 +3870,8 @@ void PI_PLIBSetLineFeaturePriority( PI_S57Obj *pObj, int prio )
 {
     //  Create and populate a compatible s57 Object
     S57Obj cobj;
-
-    CreateCompatibleS57Object( pObj, &cobj );
+    chart_context ctx;
+    CreateCompatibleS57Object( pObj, &cobj, &ctx );
 
     S52PLIB_Context *pContext = (S52PLIB_Context *)pObj->S52_Context;
 
@@ -3925,8 +3941,8 @@ int PI_PLIBRenderObjectToDC( wxDC *pdc, PI_S57Obj *pObj, PlugIn_ViewPort *vp )
 {
     //  Create and populate a compatible s57 Object
     S57Obj cobj;
-
-    CreateCompatibleS57Object( pObj, &cobj );
+    chart_context ctx;
+    CreateCompatibleS57Object( pObj, &cobj, &ctx );
 
     S52PLIB_Context *pContext = (S52PLIB_Context *)pObj->S52_Context;
 
@@ -3978,8 +3994,8 @@ int PI_PLIBRenderAreaToDC( wxDC *pdc, PI_S57Obj *pObj, PlugIn_ViewPort *vp, wxRe
 
     //  Create and populate a compatible s57 Object
     S57Obj cobj;
-
-    CreateCompatibleS57Object( pObj, &cobj );
+    chart_context ctx;
+    CreateCompatibleS57Object( pObj, &cobj, &ctx );
 
     S52PLIB_Context *pContext = (S52PLIB_Context *)pObj->S52_Context;
 
@@ -3999,21 +4015,21 @@ int PI_PLIBRenderAreaToDC( wxDC *pdc, PI_S57Obj *pObj, PlugIn_ViewPort *vp, wxRe
     ViewPort cvp = CreateCompatibleViewport( *vp );
 
     //  Build a new style PTG
-    if(!pObj->geoPtMulti){
-        PolyTessGeo *tess = (PolyTessGeo *)pObj->pPolyTessGeo;
+    //  Try to detect if the PlugIn version is too early to use single-buffer geometry description
+    if( ((chart_context *)pObj->m_chart_context)->chart == NULL){
+        if(!pObj->geoPtMulti){          // do this only once
+            PolyTessGeo *tess = (PolyTessGeo *)pObj->pPolyTessGeo;
         
-        PolyTriGroup *ptgo = tess->Get_PolyTriGroup_head();
-        TriPrim *tph = ptgo->tri_prim_head;
+            PolyTriGroup *ptg = new PolyTriGroup;
+            ptg->tri_prim_head = tess->Get_PolyTriGroup_head()->tri_prim_head; //tph;
+            ptg->bsingle_alloc = false;
+            ptg->data_type = DATA_TYPE_DOUBLE;
+            tess->Set_PolyTriGroup_head(ptg);
         
-        PolyTriGroup *ptg = new PolyTriGroup;
-        ptg->tri_prim_head = tph;
-        ptg->bsingle_alloc = false;
-        ptg->data_type = DATA_TYPE_DOUBLE;
-        tess->Set_PolyTriGroup_head(ptg);
-        
-        double *pd = (double *)malloc(sizeof(double));
-        pObj->geoPtMulti = pd;  //Hack hack
-        
+            double *pd = (double *)malloc(sizeof(double));
+            pObj->geoPtMulti = pd;  //Hack hack
+            
+        }
     }
 
     //  Do the render
@@ -4030,38 +4046,39 @@ int PI_PLIBRenderAreaToGL( const wxGLContext &glcc, PI_S57Obj *pObj, PlugIn_View
 #ifdef ocpnUSE_GL
     //  Create and populate a compatible s57 Object
     S57Obj cobj;
-
-    CreateCompatibleS57Object( pObj, &cobj );
+    chart_context ctx;
+    CreateCompatibleS57Object( pObj, &cobj, &ctx );
 
     //  For vbo support
     //  Build a new style PTG
-    if(!pObj->geoPtMulti){
-        PolyTessGeo *tess = (PolyTessGeo *)pObj->pPolyTessGeo;
-        
-        PolyTriGroup *ptgo = tess->Get_PolyTriGroup_head();
-        TriPrim *tph = ptgo->tri_prim_head;
-        
-        PolyTriGroup *ptg = new PolyTriGroup;
-        ptg->tri_prim_head = tph;
-        ptg->bsingle_alloc = false;
-        ptg->data_type = DATA_TYPE_DOUBLE;
-        tess->Set_PolyTriGroup_head(ptg);
-        
-        double *pd = (double *)malloc(sizeof(double));
-        pObj->geoPtMulti = pd;  //Hack hack
-        
-    }
 
     //  Try to detect if the PlugIn version is too early to use single-buffer VBOs
     //  Please note that this cast is a little scary, since the chart context in the PI_S57Obj
     //  is assumed to be the same layout as "chart_context", defined in the core....
-    if( ((chart_context *)pObj->m_chart_context)->chart == NULL){
-        cobj.auxParm0 = -6;         // signal that this render cannot use VBO
-        cobj.auxParm1 = -1;         // signal that this render cannot use single buffer conversion
+    chart_context *pct = (chart_context *)pObj->m_chart_context;
+    
+    if( ((chart_context *)pObj->m_chart_context)->chart == NULL ){
+        if(!pObj->geoPtMulti ){                          // only do this once
+            PolyTessGeo *tess = (PolyTessGeo *)pObj->pPolyTessGeo;
+            
+            PolyTriGroup *ptg = new PolyTriGroup;       // this will leak a little, but is POD
+            ptg->tri_prim_head = tess->Get_PolyTriGroup_head()->tri_prim_head;
+            ptg->bsingle_alloc = false;
+            ptg->data_type = DATA_TYPE_DOUBLE;
+            tess->Set_PolyTriGroup_head(ptg);
+            
+            //  Mark this object using geoPtMulti
+            //  The malloc will get free'ed when the object is deleted.
+            double *pd = (double *)malloc(sizeof(double));
+            pObj->geoPtMulti = pd;  //Hack hack
+        }
+        cobj.auxParm0 = -6;         // signal that this object render cannot use VBO
+        cobj.auxParm1 = -1;         // signal that this object render cannot have single buffer conversion done
     }
-    else {
-        //    cobj.auxParm0 = -5;         // signal that this render is to use a temporary VBO
+    else {              // it is a newer PLugIn, so can do single buffer conversion and VBOs
+        cobj.auxParm0 = -5;         // signal that this object render must use a temporary VBO
     }
+
 
     S52PLIB_Context *pContext = (S52PLIB_Context *)pObj->S52_Context;
 
@@ -4097,8 +4114,8 @@ int PI_PLIBRenderObjectToGL( const wxGLContext &glcc, PI_S57Obj *pObj,
 {
     //  Create and populate a compatible s57 Object
     S57Obj cobj;
-
-    CreateCompatibleS57Object( pObj, &cobj );
+    chart_context ctx;
+    CreateCompatibleS57Object( pObj, &cobj, &ctx );
 
     S52PLIB_Context *pContext = (S52PLIB_Context *)pObj->S52_Context;
 

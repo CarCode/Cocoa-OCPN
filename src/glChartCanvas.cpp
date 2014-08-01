@@ -292,8 +292,6 @@ public:
     int m_thread;
 };
 
-#include <wx/arrimpl.cpp>
-
 WX_DEFINE_SORTED_ARRAY_INT(int, MySortedArrayInt);
 int CompareInts(int n1, int n2)
 {
@@ -312,9 +310,24 @@ int CompareInts(int n1, int n2)
 
 MySortedArrayInt idx_sorted_by_distance(CompareInts);
 
+class compress_target
+{
+public:
+    wxString chart_path;
+    double distance;
+};
+
+WX_DECLARE_OBJARRAY(compress_target, ArrayOfCompressTargets);
+WX_DEFINE_OBJARRAY(ArrayOfCompressTargets);
+
+#include <wx/arrimpl.cpp>
+
+
 void BuildCompressedCache()
 {
     b_inCompressAllCharts = true;
+
+    idx_sorted_by_distance.Clear();
 
     // Building the cache may take a long time....
     // Be a little smarter.
@@ -342,6 +355,29 @@ void BuildCompressedCache()
 
     if(count == 0)
         return;
+
+    //  Build another array of sorted compression targets.
+    //  We need to do this, as the chart table will not be invariant
+    //  after the compression threads start, so our index array will be invalid.
+    
+    ArrayOfCompressTargets ct_array;
+    for(unsigned int j = 0; j<idx_sorted_by_distance.GetCount(); j++) {
+        
+        int i = idx_sorted_by_distance.Item(j);
+        
+        const ChartTableEntry &cte = ChartData->GetChartTableEntry(i);
+        float clon = (cte.GetLonMax() + cte.GetLonMin())/2;
+        float clat = (cte.GetLatMax() + cte.GetLatMin())/2;
+        double distance = DistGreatCircle(clat, clon, gLat, gLon);
+        
+        wxString filename(cte.GetpFullPath(), wxConvUTF8);
+        
+        compress_target *pct = new compress_target;
+        pct->distance = distance;
+        pct->chart_path = filename;
+        
+        ct_array.Add(pct);
+    }
 
     /* do we compress in ram using builtin libraries, or do we
      upload to the gpu and use the driver to perform compression?
@@ -400,23 +436,17 @@ void BuildCompressedCache()
 
     // build cached compressed charts
     count = 0;
-    for(unsigned int j = 0; j<idx_sorted_by_distance.GetCount(); j++) {
+    for(unsigned int j = 0; j<ct_array.GetCount(); j++) {
         if(b_skipout)
             break;
 
-        int i = idx_sorted_by_distance.Item(j);
-
-        const ChartTableEntry &cte = ChartData->GetChartTableEntry(i);
-        float clon = (cte.GetLonMax() + cte.GetLonMin())/2;
-        float clat = (cte.GetLatMax() + cte.GetLatMin())/2;
-        double distance = DistGreatCircle(clat, clon, gLat, gLon);
-
-        wxString filename(cte.GetpFullPath(), wxConvUTF8);
-        wxString CompressedCacheFilePath = CompressedCachePath(filename);
-
         count++;
 
-        ChartBase *pchart = ChartData->OpenChartFromDB( i, FULL_INIT );
+        wxString filename = ct_array.Item(j).chart_path;
+        wxString CompressedCacheFilePath = CompressedCachePath(filename);
+        double distance = ct_array.Item(j).distance;
+
+        ChartBase *pchart = ChartData->OpenChartFromDB( filename, FULL_INIT );
         if(!pchart) /* probably a corrupt chart */
             continue;
         
@@ -425,20 +455,28 @@ void BuildCompressedCache()
         msg.Printf( _("Distance from Ownship:  %4.0f NMi      Chart: "), distance);
         msg += pchart->GetFullPath();
         
-        pprog->Update(count-1, _T("0000/0000 \n") + msg, &skip );
+        if(!ramonly)
+            pprog->Update(count-1, _T("0000/0000 \n") + msg, &skip );
+
         if(skip)
             break;
 
         if(ramonly) {
+            wxString msgt;
             int t = 0;
             for(;;) {
                 if(!workers[t]) {
                     workers[t] = new CompressedCacheWorkerThread
                     (pchart, CompressedCacheFilePath, filename, msg, count, t);
                     
+                    msgt.Printf( _T("Starting chart compression on thread %d, count %d  "), t, count);
+                    msgt += filename;
+                    wxLogMessage(msgt);
                     workers[t]->Run();
                     break;
                 } else if(!workers[t]->IsRunning()) {
+                    msgt.Printf( _T("Finished chart compression on thread %d  "), t);
+                    wxLogMessage(msgt);
                     ChartData->DeleteCacheChart(workers[t]->pchart);
                     delete workers[t];
                     workers[t] = NULL;

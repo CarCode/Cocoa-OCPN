@@ -47,6 +47,7 @@ public:
 
 
 #define TOOLTIPON_TIMER       10000
+#define TOOLTIPOFF_TIMER      10001
 
 class ToolTipWin;
 class ocpnToolBarTool;
@@ -66,7 +67,7 @@ public:
 
       ocpnToolBarSimple( wxWindow *parent, wxWindowID winid, const wxPoint& pos = wxDefaultPosition,
                   const wxSize& size = wxDefaultSize, long style = wxNO_BORDER | wxTB_HORIZONTAL,
-                  const wxString& name = wxToolBarNameStr ) : m_one_shot(500) {
+                  const wxString& name = wxToolBarNameStr ) : m_one_shot(500)  {
             Init();
 
             Create( parent, winid, pos, size, style, name );
@@ -93,6 +94,7 @@ public:
       void OnMouseEvent( wxMouseEvent& event );
       void OnKillFocus( wxFocusEvent& event );
       void OnToolTipTimerEvent( wxTimerEvent& event );
+      void OnToolTipOffTimerEvent( wxTimerEvent& event );
 
       wxToolBarToolBase *AddTool( int toolid, const wxString& label, const wxBitmap& bitmap,
                   const wxBitmap& bmpDisabled, wxItemKind kind = wxITEM_NORMAL,
@@ -282,6 +284,8 @@ protected:
 
       wxTimer m_tooltip_timer;
       int m_one_shot;
+      wxTimer m_tooltipoff_timer;
+      int m_tooltip_off;
       bool m_btooltip_show;
 
       bool m_btoolbar_is_zooming;
@@ -300,7 +304,6 @@ private:
 
 class ocpnFloatingToolbarDialog: public wxDialog
 {
-wxDECLARE_EVENT_TABLE();
 
 public:
       ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint position, long orient, float size_factor );
@@ -364,6 +367,8 @@ private:
 
       bool m_marginsInvisible;
       float m_sizefactor;
+
+    wxDECLARE_EVENT_TABLE();
 
 };
 
