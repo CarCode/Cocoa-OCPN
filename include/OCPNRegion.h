@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 /////////////////////////////////////////////////////////////////////////////
 // Author:      Robert Roebling
@@ -383,9 +382,9 @@ public:
     OCPNRegion( size_t n, const wxPoint *points, int fillStyle = wxODDEVEN_RULE );
     
     virtual ~OCPNRegion(){}
-//    void InitRect(wxCoord x, wxCoord y, wxCoord w, wxCoord h);
     
     wxRegion &ConvertTowxRegion();
+    wxRegion *GetNew_wxRegion();
     
     
 #ifdef USE_NEW_REGION    
@@ -429,9 +428,9 @@ public:
     bool Empty() const { return IsEmpty(); }
     
 public:
-    OCPNRegion( GdkRegion *region );
+//    OCPNRegion( GdkRegion *region );
 
-    GdkRegion *GetRegion() const;
+    void *GetRegion() const;
 
     bool Offset(wxCoord x, wxCoord y)   { return ODoOffset(x, y); }
     bool Offset(const wxPoint& pt)      { return ODoOffset(pt.x, pt.y); }
