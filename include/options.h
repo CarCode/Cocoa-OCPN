@@ -189,7 +189,6 @@ class options: public wxScrollingDialog
 #endif
 {
     wxDECLARE_DYNAMIC_CLASS( options );
-    wxDECLARE_EVENT_TABLE();
 
 public:
     options();
@@ -568,11 +567,13 @@ private:
     ConnectionParams *CreateConnectionParamsFromSelectedItem();
 
     wxNotebookPage*             m_groupsPage;
+
+    wxDECLARE_EVENT_TABLE();
+
 };
 
 class ChartGroupsUI: public wxScrolledWindow
 {
-    wxDECLARE_EVENT_TABLE();
 
 public:
     ChartGroupsUI( wxWindow* parent );
@@ -635,6 +636,9 @@ private:
     ArrayOfDirCtrls m_DirCtrlArray;
 
     ChartGroupArray *m_pGroupArray;
+
+    wxDECLARE_EVENT_TABLE();
+
 };
 
 static int lang_list[] = {

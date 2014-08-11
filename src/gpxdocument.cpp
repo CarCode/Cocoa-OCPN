@@ -684,7 +684,7 @@ void GpxTrkElement::SetProperty(const wxString &name, const wxString &value)
       //FIXME: can be reused for route and track
       GpxSimpleElement *element = new GpxSimpleElement(name, value);
       TiXmlElement *curelement = FirstChildElement();
-      bool found = false;
+//      bool found = false;  // Not used
       while(curelement)
       {
             if((const char *)curelement->Value() == (const char *)name.ToUTF8())
@@ -696,8 +696,8 @@ void GpxTrkElement::SetProperty(const wxString &name, const wxString &value)
             }
             curelement = curelement->NextSiblingElement();
       }
-      if (!found)
-            LinkEndChild(element);
+//      if (!found)  // Not used
+//            LinkEndChild(element);  // Not used
 }
 
 GpxTrksegElement::GpxTrksegElement(ListOfGpxWpts *waypoints, GpxExtensionsElement *extensions) : TiXmlElement("trkseg")

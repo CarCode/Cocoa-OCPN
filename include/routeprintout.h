@@ -101,7 +101,6 @@ protected:
 class RoutePrintSelection : public wxDialog
 {
     wxDECLARE_DYNAMIC_CLASS( RoutePrintSelection );
-    wxDECLARE_EVENT_TABLE();
 
 public:
     // Constructors
@@ -153,6 +152,9 @@ public:
     wxCheckBox* m_checkBoxWPDescription;
 
     Route*      route;
+
+    wxDECLARE_EVENT_TABLE();
+
 };
 
 #endif

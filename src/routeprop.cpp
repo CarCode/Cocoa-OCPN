@@ -359,8 +359,13 @@ RouteProp::RouteProp( wxWindow* parent, wxWindowID id, const wxString& caption, 
 
     //  Make an estimate of the dialog size, without scrollbars showing
     wxSize esize;
+#ifdef __WXOSX__
+    esize.x = GetCharWidth() * 125;
+    esize.y = GetCharHeight() * 44;
+#else
     esize.x = GetCharWidth() * 110;
     esize.y = GetCharHeight() * 40;
+#endif
     SetSize( esize );
     Centre();
 }
@@ -382,7 +387,9 @@ void RouteProp::OnRoutePropRightClick( wxListEvent &event )
     }
 
     wxMenuItem* copyItem = menu.Append( ID_RCLK_MENU_COPY_TEXT, _("&Copy all as text") );
-
+#ifdef __WXOSX__
+    copyItem->Enable( m_wpList->GetSelectedItemCount() > 0 );
+#endif
     PopupMenu( &menu );
 }
 
@@ -1242,7 +1249,7 @@ bool RouteProp::UpdateProperties()
         }
 
         m_pRoute->UpdateSegmentDistances( m_planspeed );           // get segment and total distance
-        double leg_speed = m_planspeed;
+        double leg_speed; // Not used  = m_planspeed;
         wxTimeSpan stopover_time( 0 ); // time spent waiting for ETD
         wxTimeSpan joining_time( 0 );   // time spent before reaching first waypoint
 
@@ -1330,8 +1337,8 @@ bool RouteProp::UpdateProperties()
 
         wxString nullify = _T("----");
 
-        int i_prev_point = -1;
-        RoutePoint *prev_route_point = NULL;
+//        int i_prev_point = -1;  // Not used
+//        RoutePoint *prev_route_point = NULL;  // Not used
 
         while( node ) {
             RoutePoint *prp = node->GetData();
@@ -1345,7 +1352,7 @@ bool RouteProp::UpdateProperties()
 
             //  Mark Name
             if( arrival ) m_wpList->SetItem( item_line_index, 1, prp->GetName() );
-	    // Store Description
+            // Store Description
             if( arrival ) m_wpList->SetItem( item_line_index, 9, prp->GetDescription() );
 
             //  Distance
@@ -1552,8 +1559,8 @@ bool RouteProp::UpdateProperties()
                 node = node->GetNext();
 
                 //    Record this point info for use as previous point in next iteration.
-                i_prev_point = i - 1;
-                prev_route_point = prp;
+//                i_prev_point = i - 1;  // Not used
+//                prev_route_point = prp;  // Not used
             }
         }
     }
@@ -1614,7 +1621,9 @@ wxString RouteProp::MakeTideInfo( int jx, time_t tm, int tz_selection, long LMT_
 
 bool RouteProp::SaveChanges( void )
 {
-
+#ifdef __WXOSX__
+    if( NULL == m_pRoute ) return false;
+#endif
     //  Save the current planning speed
     g_PlanSpeed = m_planspeed;
     g_StartTime = m_starttime;	// both always UTC
@@ -1981,32 +1990,28 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
             wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL );
     m_scrolledWindowLinks->SetScrollRate( 5, 5 );
     bSizerLinks = new wxBoxSizer( wxVERTICAL );
-
+#ifndef __WXOSX__
     m_hyperlink17 = new wxHyperlinkCtrl( m_scrolledWindowLinks, wxID_ANY, _("wxFB Website"),
             wxT("file:///C:\\ProgramData\\opencpn\\opencpn.log"), wxDefaultPosition,
             wxDefaultSize, wxHL_DEFAULT_STYLE );
-
+#endif
     m_menuLink = new wxMenu();
     wxMenuItem* m_menuItemDelete;
-    m_menuItemDelete = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Delete") ), wxEmptyString,
-            wxITEM_NORMAL );
+    m_menuItemDelete = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Delete") ), wxEmptyString, wxITEM_NORMAL );
     m_menuLink->Append( m_menuItemDelete );
 
     wxMenuItem* m_menuItemEdit;
-    m_menuItemEdit = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Edit") ), wxEmptyString,
-            wxITEM_NORMAL );
+    m_menuItemEdit = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Edit") ), wxEmptyString, wxITEM_NORMAL );
     m_menuLink->Append( m_menuItemEdit );
 
     wxMenuItem* m_menuItemAdd;
-    m_menuItemAdd = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Add new") ), wxEmptyString,
-            wxITEM_NORMAL );
+    m_menuItemAdd = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Add new") ), wxEmptyString, wxITEM_NORMAL );
     m_menuLink->Append( m_menuItemAdd );
-
-    m_hyperlink17->Connect( wxEVT_RIGHT_DOWN,
-            wxMouseEventHandler( MarkInfoDef::m_hyperlink17OnContextMenu ), NULL, this );
+#ifndef __WXOSX__
+    m_hyperlink17->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( MarkInfoDef::m_hyperlink17OnContextMenu ), NULL, this );
 
     bSizerLinks->Add( m_hyperlink17, 0, wxALL, 5 );
-
+#endif
     m_scrolledWindowLinks->SetSizer( bSizerLinks );
     sbSizerLinks->Add( m_scrolledWindowLinks, 1, wxEXPAND | wxALL, 5 );
 
@@ -2106,75 +2111,46 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     Centre( wxBOTH );
 
     // Connect Events
-    m_textLatitude->Connect( wxEVT_COMMAND_TEXT_ENTER,
-            wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-    m_textLongitude->Connect( wxEVT_COMMAND_TEXT_ENTER,
-            wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+    m_textLatitude->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+    m_textLongitude->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
 
-    m_textLatitude->Connect( wxEVT_CONTEXT_MENU,
-            wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
-    m_textLongitude->Connect( wxEVT_CONTEXT_MENU,
-            wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
+    m_textLatitude->Connect( wxEVT_CONTEXT_MENU, wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
+    m_textLongitude->Connect( wxEVT_CONTEXT_MENU, wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
 
-    m_textDescription->Connect( wxEVT_COMMAND_TEXT_UPDATED,
-            wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
-    m_buttonExtDescription->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( MarkInfoDef::OnExtDescriptionClick ), NULL, this );
+    m_textDescription->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
+    m_buttonExtDescription->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnExtDescriptionClick ), NULL, this );
 
-    this->Connect( m_menuItemDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( MarkInfoDef::OnDeleteLink ) );
-    this->Connect( m_menuItemEdit->GetId(), wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( MarkInfoDef::OnEditLink ) );
-    this->Connect( m_menuItemAdd->GetId(), wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( MarkInfoDef::OnAddLink ) );
-    this->Connect( ID_RCLK_MENU_COPY, wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
-    this->Connect( ID_RCLK_MENU_COPY_LL, wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
-    this->Connect( ID_RCLK_MENU_PASTE, wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
-    this->Connect( ID_RCLK_MENU_PASTE_LL, wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
+    this->Connect( m_menuItemDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnDeleteLink ) );
+    this->Connect( m_menuItemEdit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnEditLink ) );
+    this->Connect( m_menuItemAdd->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnAddLink ) );
+    this->Connect( ID_RCLK_MENU_COPY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
+    this->Connect( ID_RCLK_MENU_COPY_LL, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
+    this->Connect( ID_RCLK_MENU_PASTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
+    this->Connect( ID_RCLK_MENU_PASTE_LL, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
 
-    m_buttonAddLink->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( MarkInfoDef::OnAddLink ), NULL, this );
-    m_toggleBtnEdit->Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED,
-            wxCommandEventHandler( MarkInfoDef::OnEditLinkToggle ), NULL, this );
-    m_textCtrlExtDescription->Connect( wxEVT_COMMAND_TEXT_UPDATED,
-            wxCommandEventHandler( MarkInfoDef::OnDescChangedExt ), NULL, this );
-    m_sdbSizerButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( MarkInfoDef::OnMarkInfoCancelClick ), NULL, this );
-    m_sdbSizerButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( MarkInfoDef::OnMarkInfoOKClick ), NULL, this );
+    m_buttonAddLink->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnAddLink ), NULL, this );
+    m_toggleBtnEdit->Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnEditLinkToggle ), NULL, this );
+    m_textCtrlExtDescription->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnDescChangedExt ), NULL, this );
+    m_sdbSizerButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnMarkInfoCancelClick ), NULL, this );
+    m_sdbSizerButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnMarkInfoOKClick ), NULL, this );
 }
 
 MarkInfoDef::~MarkInfoDef()
 {
     // Disconnect Events
-    m_textLatitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER,
-            wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-    m_textLongitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER,
-            wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-    m_textDescription->Disconnect( wxEVT_COMMAND_TEXT_UPDATED,
-            wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
-    m_buttonExtDescription->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( MarkInfoDef::OnExtDescriptionClick ), NULL, this );
-    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( MarkInfoDef::OnDeleteLink ) );
-    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( MarkInfoDef::OnEditLink ) );
-    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( MarkInfoDef::OnAddLink ) );
-    m_buttonAddLink->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( MarkInfoDef::OnAddLink ), NULL, this );
-    m_toggleBtnEdit->Disconnect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED,
-            wxCommandEventHandler( MarkInfoDef::OnEditLinkToggle ), NULL, this );
-    m_textCtrlExtDescription->Disconnect( wxEVT_COMMAND_TEXT_UPDATED,
-            wxCommandEventHandler( MarkInfoDef::OnDescChangedExt ), NULL, this );
-    m_sdbSizerButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( MarkInfoDef::OnMarkInfoCancelClick ), NULL, this );
-    m_sdbSizerButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( MarkInfoDef::OnMarkInfoOKClick ), NULL, this );
+    m_textLatitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+    m_textLongitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+
+    m_textDescription->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
+    m_buttonExtDescription->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnExtDescriptionClick ), NULL, this );
+    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnDeleteLink ) );
+    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnEditLink ) );
+    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnAddLink ) );
+    m_buttonAddLink->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnAddLink ), NULL, this );
+    m_toggleBtnEdit->Disconnect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnEditLinkToggle ), NULL, this );
+    m_textCtrlExtDescription->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnDescChangedExt ), NULL, this );
+    m_sdbSizerButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnMarkInfoCancelClick ), NULL, this );
+    m_sdbSizerButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnMarkInfoOKClick ), NULL, this );
 
     delete m_menuLink;
 }
@@ -2183,7 +2159,11 @@ MarkInfoImpl::MarkInfoImpl( wxWindow* parent, wxWindowID id, const wxString& tit
         const wxPoint& pos, const wxSize& size, long style ) :
         MarkInfoDef( parent, id, title, pos, size, style )
 {
+#ifdef __WXOSX__
+    m_pLinkProp = new LinkPropImpl( parent );
+#else
     m_pLinkProp = new LinkPropImpl( this );
+#endif
     m_pMyLinkList = NULL;
     m_staticTextGpx->Show( false );
     m_textCtrlGpx->Show( false );
@@ -2359,7 +2339,10 @@ void MarkInfoImpl::m_hyperlinkContextMenu( wxMouseEvent &event )
 }
 
 void MarkInfoImpl::OnDeleteLink( wxCommandEvent& event )
-{
+{/*
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif*/
     wxHyperlinkListNode* nodeToDelete = NULL;
     wxString findurl = m_pEditedLink->GetURL();
     wxString findlabel = m_pEditedLink->GetLabel();
@@ -2373,9 +2356,8 @@ void MarkInfoImpl::OnDeleteLink( wxCommandEvent& event )
             Hyperlink *link = linknode->GetData();
             wxString Link = link->Link;
             wxString Descr = link->DescrText;
-            if( Link == findurl
-                    && ( Descr == findlabel || ( Link == findlabel && Descr == wxEmptyString ) ) ) nodeToDelete =
-                    linknode;
+            if( Link == findurl && ( Descr == findlabel || ( Link == findlabel && Descr == wxEmptyString ) ) )
+                nodeToDelete = linknode;
             else {
                 wxHyperlinkCtrl* ctrl = new wxHyperlinkCtrl( m_scrolledWindowLinks, wxID_ANY, Descr,
                         Link, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE );
@@ -2387,17 +2369,24 @@ void MarkInfoImpl::OnDeleteLink( wxCommandEvent& event )
                 bSizerLinks->Add( ctrl, 0, wxALL, 5 );
             }
             linknode = linknode->GetNext();
-        }
+        }  // while
     }
-    if( nodeToDelete ) hyperlinklist->DeleteNode( nodeToDelete );
+    if( nodeToDelete )
+        hyperlinklist->DeleteNode( nodeToDelete );
     m_scrolledWindowLinks->InvalidateBestSize();
     m_scrolledWindowLinks->Layout();
     sbSizerLinks->Layout();
-    event.Skip();
+    event.Skip();/*
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif*/
 }
 
 void MarkInfoImpl::OnEditLink( wxCommandEvent& event )
 {
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
     wxString findurl = m_pEditedLink->GetURL();
     wxString findlabel = m_pEditedLink->GetLabel();
     m_pLinkProp->m_textCtrlLinkDescription->SetValue( findlabel );
@@ -2434,10 +2423,16 @@ void MarkInfoImpl::OnEditLink( wxCommandEvent& event )
         event.Skip();
     }
     event.Skip();
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 }
 
 void MarkInfoImpl::OnAddLink( wxCommandEvent& event )
 {
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
     m_pLinkProp->m_textCtrlLinkDescription->SetValue( wxEmptyString );
     m_pLinkProp->m_textCtrlLinkUrl->SetValue( wxEmptyString );
     if( m_pLinkProp->ShowModal() == wxID_OK ) {
@@ -2464,6 +2459,9 @@ void MarkInfoImpl::OnAddLink( wxCommandEvent& event )
     sbSizerLinks->Layout();
 
     event.Skip();
+#ifdef __WXOSX__
+    ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 }
 
 void MarkInfoImpl::OnEditLinkToggle( wxCommandEvent& event )
@@ -2630,10 +2628,10 @@ void MarkInfoImpl::OnPositionCtlUpdated( wxCommandEvent& event )
 void MarkInfoImpl::OnRightClick( wxCommandEvent& event )
 {
     wxMenu* popup = new wxMenu();
-    popup->Append( ID_RCLK_MENU_COPY, _T("Copy") );
-    popup->Append( ID_RCLK_MENU_COPY_LL, _T("Copy lat/long") );
-    popup->Append( ID_RCLK_MENU_PASTE, _T("Paste") );
-    popup->Append( ID_RCLK_MENU_PASTE_LL, _T("Paste lat/long") );
+    popup->Append( ID_RCLK_MENU_COPY, _("Copy") );
+    popup->Append( ID_RCLK_MENU_COPY_LL, _("Copy lat/long") );
+    popup->Append( ID_RCLK_MENU_PASTE, _("Paste") );
+    popup->Append( ID_RCLK_MENU_PASTE_LL, _("Paste lat/long") );
     m_contextObject = event.GetEventObject();
     PopupMenu( popup );
     delete popup;

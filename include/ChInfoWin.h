@@ -61,7 +61,7 @@ private:
     wxSize m_size;
     wxPoint m_position;
 
-    DECLARE_EVENT_TABLE()
+    wxDECLARE_EVENT_TABLE();
 };
 
 

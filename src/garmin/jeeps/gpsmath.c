@@ -756,7 +756,7 @@ void GPS_Math_Cassini_LatLon_To_EN(double phi, double lambda, double *E,
 				   double E0, double N0, double a, double b)
 {
     double p2;
-    double po2;
+//    double po2;  // Not used
     double a2;
     double b2;
     double e2;
@@ -768,21 +768,21 @@ void GPS_Math_Cassini_LatLon_To_EN(double phi, double lambda, double *E,
     double c2;
     double c3;
     double om0;
-    double A0;
-    double A1;
-    double A2;
-    double A3;
+//    double A0;  // Not used
+//    double A1;  // Not used
+//    double A2;  // Not used
+//    double A3;  // Not used
     double j;
     double te4;
     double phi0s2;
     double phi0s4;
     double phi0s6;
     double lat;
-    double x;
-    double E1;
-    double E2;
-    double E3;
-    double E4;
+//    double x;  // Not used
+//    double E1;  // Not used
+//    double E2;  // Not used
+//    double E3;  // Not used
+//    double E4;  // Not used
 
     double phis;
     double phic;
@@ -810,7 +810,7 @@ void GPS_Math_Cassini_LatLon_To_EN(double phi, double lambda, double *E,
 
 
     p2 = (double)GPS_PI * (double)2.;
-    po2 = (double)GPS_PI / (double)2.;
+//    po2 = (double)GPS_PI / (double)2.;  // Not used
 
     a2 = a*a;
     b2 = b*b;
@@ -832,15 +832,15 @@ void GPS_Math_Cassini_LatLon_To_EN(double phi, double lambda, double *E,
     AM0 = a * (lat-phi0s2+phi0s4-phi0s6);
 
     om0 = (double)1.0 - e2;
-    x = pow(om0,(double)0.5);
-    E1 = ((double)1.0 - x) / ((double)1.0 + x);
-    E2 = E1*E1;
-    E3 = E1*E2;
-    E4 = E1*E3;
-    A0 = (double)3.*E1/(double)2.-(double)27.*E3/(double)32.;
-    A1 = (double)21.*E2/(double)16.-(double)55.*E4/(double)32.;
-    A2 = (double)151.*E3/(double)96.;
-    A3 = (double)1097.*E4/(double)512.;
+//    x = pow(om0,(double)0.5);  // Not used
+//    E1 = ((double)1.0 - x) / ((double)1.0 + x);  // Not used
+//    E2 = E1*E1;  // Not used
+//    E3 = E1*E2;  // Not used
+//    E4 = E1*E3;  // Not used
+//    A0 = (double)3.*E1/(double)2.-(double)27.*E3/(double)32.;  // Not used
+//    A1 = (double)21.*E2/(double)16.-(double)55.*E4/(double)32.;  // Not used
+//    A2 = (double)151.*E3/(double)96.;  // Not used
+//    A3 = (double)1097.*E4/(double)512.;  // Not used
 
 
     dlam = lambda - M0;
@@ -2490,7 +2490,7 @@ void GPS_Math_UTM_EN_to_LatLon(int ReferenceEllipsoid,
 	double eccPrimeSquared;
 	double e1;
 	double N1, T1, C1, R1, D, M;
-	double mu, phi1, phi1Rad;
+	double mu, phi1Rad;  // Not used: phi1,
 	double x, y;
 
 	a = GPS_Ellipse[ReferenceEllipsoid].a;
@@ -2509,7 +2509,7 @@ void GPS_Math_UTM_EN_to_LatLon(int ReferenceEllipsoid,
 	phi1Rad = mu+ (3*e1/2-27*e1*e1*e1/32)*sin(2*mu) +
 		(21*e1*e1/16-55*e1*e1*e1*e1/32)*sin(4*mu) +
 		(151*e1*e1*e1/96)*sin(6*mu);
-	phi1 = GPS_Math_Rad_To_Deg(phi1Rad);
+//	phi1 = GPS_Math_Rad_To_Deg(phi1Rad);  // Not used
 
 	N1 = a/sqrt(1-eccSquared*sin(phi1Rad)*sin(phi1Rad));
 	T1 = tan(phi1Rad)*tan(phi1Rad);

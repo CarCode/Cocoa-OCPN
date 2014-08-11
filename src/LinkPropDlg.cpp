@@ -76,35 +76,28 @@ LinkPropDlgDef::LinkPropDlgDef( wxWindow* parent, wxWindowID id, const wxString&
 
     this->SetSizer( bSizerMain );
     this->Layout();
+    this->Centre( wxBOTH );
     Fit();
 
-    this->Centre( wxBOTH );
-
     // Connect Events
-    m_buttonBrowseLocal->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( LinkPropDlgDef::OnLocalFileClick ), NULL, this );
-    m_sdbSizerButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( LinkPropDlgDef::OnCancelClick ), NULL, this );
-    m_sdbSizerButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( LinkPropDlgDef::OnOkClick ), NULL, this );
+    m_buttonBrowseLocal->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LinkPropDlgDef::OnLocalFileClick ), NULL, this );
+    m_sdbSizerButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LinkPropDlgDef::OnCancelClick ), NULL, this );
+    m_sdbSizerButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LinkPropDlgDef::OnOkClick ), NULL, this );
 }
 
 LinkPropDlgDef::~LinkPropDlgDef()
 {
     // Disconnect Events
-    m_buttonBrowseLocal->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( LinkPropDlgDef::OnLocalFileClick ), NULL, this );
-    m_sdbSizerButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( LinkPropDlgDef::OnCancelClick ), NULL, this );
-    m_sdbSizerButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
-            wxCommandEventHandler( LinkPropDlgDef::OnOkClick ), NULL, this );
+    m_buttonBrowseLocal->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LinkPropDlgDef::OnLocalFileClick ), NULL, this );
+    m_sdbSizerButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LinkPropDlgDef::OnCancelClick ), NULL, this );
+    m_sdbSizerButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LinkPropDlgDef::OnOkClick ), NULL, this );
 }
 
 LinkPropImpl::LinkPropImpl( wxWindow* parent, wxWindowID id, const wxString& title,
         const wxPoint& pos, const wxSize& size, long style ) :
         LinkPropDlgDef( parent, id, title, pos, size, style )
 {
-    m_parent = parent;
+//    m_parent = parent;
 #ifndef __WXOSX__
     DimeControl( this );
 #endif

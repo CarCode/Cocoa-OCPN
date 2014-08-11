@@ -1306,7 +1306,11 @@ wxJSONValue::AsCString( wxChar* ch ) const
 {
     bool r = IsCString();
     if ( r )    {
+#ifdef __WXOSX__
+        (wxChar*) AsCString();
+#else
         ch = (wxChar*) AsCString();
+#endif
     }
     return r;
 }
@@ -2284,7 +2288,7 @@ wxJSONValue::Dump( bool deep, int indent ) const
     switch ( type )    {
         case wxJSONTYPE_OBJECT :
             map = AsMap();
-            size = Size();
+//            size = Size();  // Not used
             for ( it = map->begin(); it != map->end(); ++it )  {
                 const wxJSONValue& v = it->second;
                 sub = v.Dump( true, indent );
@@ -2817,7 +2821,9 @@ wxJSONValue::ClearComments()
 wxJSONRefData*
 wxJSONValue::SetType( wxJSONType type )
 {
-    wxJSONRefData* data = GetRefData();
+#ifndef __WXOSX__
+    wxJSONRefData* data = GetRefData();  // Not used: data
+#endif
     wxJSONType oldType = GetType();
 
     // check that type is within the allowed range
@@ -2833,8 +2839,11 @@ wxJSONValue::SetType( wxJSONType type )
     // wxJSONValue object.
     // If we would delete the structure using 'Unref()' we loose the
     // comments
+#ifdef __WXOSX__
+    wxJSONRefData* data = COW();
+#else
     data = COW();
-
+#endif
     // do nothing if the actual type is the same as 'type'
     if ( type == oldType )  {
         return data;
@@ -3002,8 +3011,11 @@ wxJSONValue::GetRefData() const
 wxJSONRefData*
 wxJSONValue::CloneRefData( const wxJSONRefData* otherData ) const
 {
+#ifdef __WXOSX__
+    assert(otherData);
+#else
     wxJSON_ASSERT( otherData );
-
+#endif
     // make a static cast to pointer-to-wxJSONRefData
     const wxJSONRefData* other = otherData;
 

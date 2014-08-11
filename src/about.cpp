@@ -405,7 +405,7 @@ void about::OnCopyClick( wxCommandEvent& event )
     }
 
     file.Close();
-    int length = fileContent.Length();
+//    int length = fileContent.Length();  // Not used
 
     if( event.GetId() == ID_COPYLOG ) {
         wxString lastLogs = fileContent;

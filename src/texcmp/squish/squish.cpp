@@ -23,7 +23,7 @@
 	
    -------------------------------------------------------------------------- */
    
-#include <squish.h>
+#include "squish.h"
 #include "colourset.h"
 #include "maths.h"
 #include "rangefit.h"
@@ -293,13 +293,13 @@ void CompressImageRGB_Flatten_Flip_Throttle( u8 const* rgb, int width, int heigh
                             *targetPixel++ = sourcePixel[2] & r_flat_mask;
                             *targetPixel++ = sourcePixel[1] & g_flat_mask;
                             *targetPixel++ = sourcePixel[0] & b_flat_mask;
-                            sourcePixel += 3;
+//                            sourcePixel += 3;  // Not used
                         }
                         else {
                             *targetPixel++ = sourcePixel[0] & r_flat_mask;
                             *targetPixel++ = sourcePixel[1] & g_flat_mask;
                             *targetPixel++ = sourcePixel[2] & b_flat_mask;
-                            sourcePixel += 3;
+//                            sourcePixel += 3;  // Not used
                         }
                         
                         

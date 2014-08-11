@@ -5,7 +5,7 @@
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -54,7 +54,7 @@ private:
       int m_xoffset;
       int m_yoffset;
 
-      DECLARE_EVENT_TABLE()
+      wxDECLARE_EVENT_TABLE();
 };
 
 

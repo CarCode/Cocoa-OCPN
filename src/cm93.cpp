@@ -5593,8 +5593,11 @@ bool cm93compchart::DoRenderRegionViewOnDC ( wxMemoryDC& dc, const ViewPort& VPo
 #else
                         wxMemoryDC temp_dc;
 #endif
-//                        render_return = m_pcm93chart_current->RenderRegionViewOnDC ( temp_dc, vp_positive, chart_region );  // Not used
-
+#ifdef __WXOSX__
+                      m_pcm93chart_current->RenderRegionViewOnDC ( temp_dc, vp_positive, chart_region );
+#else
+                        render_return = m_pcm93chart_current->RenderRegionViewOnDC ( temp_dc, vp_positive, chart_region );
+#endif
                         //    Save the current cm93 chart pointer for restoration later
                         cm93chart *m_pcm93chart_save = m_pcm93chart_current;
 

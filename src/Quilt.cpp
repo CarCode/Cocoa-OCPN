@@ -789,7 +789,7 @@ int Quilt::AdjustRefOnZoomOut( double proposed_scale_onscreen )
     //  Reset "lost" chart logic
     m_lost_refchart_dbIndex = -1;
 
-    int new_db_index = m_refchart_dbIndex;
+    int new_db_index; // Not used: = m_refchart_dbIndex;
 
     unsigned int extended_array_count = m_extended_stack_array.GetCount();
 
@@ -883,7 +883,7 @@ int Quilt::AdjustRefOnZoomIn( double proposed_scale_onscreen )
             zoom_def = 3.0;
     }
 
-    int new_db_index = m_refchart_dbIndex;
+    int new_db_index; // Not used: = m_refchart_dbIndex;
     int current_db_index = m_refchart_dbIndex;
     int current_family = m_reference_family;
 
@@ -1026,7 +1026,7 @@ bool Quilt::BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_
 
     int reference_scale = 1.;
     int reference_type = -1;
-    int reference_family;
+//    int reference_family;  // Not used
     int quilt_proj = PROJECTION_UNKNOWN;
 
     if( ref_db_index >= 0 ) {
@@ -1034,7 +1034,7 @@ bool Quilt::BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_
         reference_scale = cte_ref.GetScale();
         reference_type = cte_ref.GetChartType();
         quilt_proj = ChartData->GetDBChartProj( ref_db_index );
-        reference_family = cte_ref.GetChartFamily();
+//        reference_family = cte_ref.GetChartFamily();  // Not used
     }
 
     bool b_need_resort = false;
@@ -1773,7 +1773,11 @@ bool Quilt::Compose( const ViewPort &vp_in )
     for( unsigned int k = 0; k < kl; k++ ) {
         wxPatchListNode *cnode = m_PatchList.Item( ( kl - k ) - 1 );
         m_index_array.Add( cnode->GetData()->dbIndex );
+#ifdef __WXOSX__
+        cnode->GetNext();
+#else
         cnode = cnode->GetNext();
+#endif
     }
 
     //    Walk the patch list again, checking the depth units

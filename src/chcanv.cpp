@@ -4096,7 +4096,7 @@ void ChartCanvas::GridDraw( ocpnDC& dc )
     wxCoord w, h;
     wxPen GridPen( GetGlobalColor( _T ( "SNDG1" ) ), 1, wxSOLID );
 #ifdef __WXOSX__
-    wxFont *font = wxTheFontList->FindOrCreateFont( 10, wxFONTFAMILY_SWISS, wxNORMAL,
+    wxFont *font = wxTheFontList->FindOrCreateFont( 12, wxFONTFAMILY_SWISS, wxNORMAL,
                                                    wxFONTWEIGHT_NORMAL, FALSE, wxString( _T ( "Arial" ) ) );
 #else
     wxFont *font = wxTheFontList->FindOrCreateFont( 8, wxFONTFAMILY_SWISS, wxNORMAL,

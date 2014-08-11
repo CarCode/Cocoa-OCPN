@@ -539,8 +539,8 @@ SelectItem *Select::FindSelection( float slat, float slon, int fseltype )
                 case SELTYPE_TIDEPOINT:
                 case SELTYPE_CURRENTPOINT:
                 case SELTYPE_AISTARGET:
-                    a = fabs( slat - pFindSel->m_slat );
-                    b = fabs( slon - pFindSel->m_slon );
+//                    a = fabs( slat - pFindSel->m_slat );  // Not used
+//                    b = fabs( slon - pFindSel->m_slon );  // Not used
 
                     if( ( fabs( slat - pFindSel->m_slat ) < selectRadius )
                             && ( fabs( slon - pFindSel->m_slon ) < selectRadius ) ) goto find_ok;

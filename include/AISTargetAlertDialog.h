@@ -38,7 +38,6 @@ class wxHtmlWindow;
 class OCPN_AlertDialog: public wxDialog
 {
     DECLARE_CLASS( OCPN_AlertDialog )
-    wxDECLARE_EVENT_TABLE();
 public:
 
     OCPN_AlertDialog( );
@@ -64,52 +63,54 @@ public:
 private:
     wxWindow          *m_pparent;
 
+    wxDECLARE_EVENT_TABLE();
+
 };
 
 
 class AISTargetAlertDialog: public OCPN_AlertDialog
 {
-      DECLARE_CLASS( AISTargetAlertDialog )
+    DECLARE_CLASS( AISTargetAlertDialog )
+public:
+
+    AISTargetAlertDialog( );
+
+    ~AISTargetAlertDialog( );
+    bool Create( int target_mmsi, wxWindow *parent, AIS_Decoder *pdecoder,
+                    bool b_jumpto, bool b_createWP, bool b_ack,
+                    wxWindowID id = wxID_ANY,
+                    const wxString& caption = _("OpenCPN AIS Alert"),
+                    const wxPoint& pos = wxDefaultPosition,
+                    const wxSize& size = wxDefaultSize,
+                    long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU );
+    void Init();
+
+    int Get_Dialog_MMSI(void){ return m_target_mmsi; }
+    void UpdateText();
+
+private:
+    void CreateControls();
+    bool GetAlertText(void);
+    void OnClose(wxCloseEvent& event);
+    void OnIdAckClick( wxCommandEvent& event );
+    void OnMove( wxMoveEvent& event );
+    void OnSize( wxSizeEvent& event );
+    void OnIdSilenceClick( wxCommandEvent& event );
+    void OnIdJumptoClick( wxCommandEvent& event );
+    void OnIdCreateWPClick( wxCommandEvent& event );
+
+
+    wxHtmlWindow      *m_pAlertTextCtl;
+    int               m_target_mmsi;
+    AIS_Decoder       *m_pdecoder;
+    wxFont            *m_pFont;
+    wxString          m_alert_text;
+    bool              m_bjumpto;
+    bool              m_back;
+    bool              m_bcreateWP;
+    
     wxDECLARE_EVENT_TABLE();
-      public:
-
-           AISTargetAlertDialog( );
-
-            ~AISTargetAlertDialog( );
-            bool Create( int target_mmsi, wxWindow *parent, AIS_Decoder *pdecoder,
-                            bool b_jumpto, bool b_createWP, bool b_ack,
-                            wxWindowID id = wxID_ANY,
-                            const wxString& caption = _("OpenCPN AIS Alert"),
-                            const wxPoint& pos = wxDefaultPosition,
-                            const wxSize& size = wxDefaultSize,
-                            long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU );
-            void Init();
-
-           int Get_Dialog_MMSI(void){ return m_target_mmsi; }
-           void UpdateText();
-
-      private:
-            void CreateControls();
-            bool GetAlertText(void);
-            void OnClose(wxCloseEvent& event);
-            void OnIdAckClick( wxCommandEvent& event );
-            void OnMove( wxMoveEvent& event );
-            void OnSize( wxSizeEvent& event );
-            void OnIdSilenceClick( wxCommandEvent& event );
-            void OnIdJumptoClick( wxCommandEvent& event );
-            void OnIdCreateWPClick( wxCommandEvent& event );
-
-
-            wxHtmlWindow      *m_pAlertTextCtl;
-            int               m_target_mmsi;
-            AIS_Decoder       *m_pdecoder;
-            wxFont            *m_pFont;
-            wxString          m_alert_text;
-            bool              m_bjumpto;
-            bool              m_back;
-            bool              m_bcreateWP;
 
 };
-
 
 #endif

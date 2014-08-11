@@ -1273,13 +1273,21 @@ void glChartCanvas::GridDraw( )
     float dlat, dlon;
     float gridlatMajor, gridlatMinor, gridlonMajor, gridlonMinor;
     wxCoord w, h;
+#ifdef __WXOSX__
+    wxColour GridColor = GetGlobalColor( _T ( "CHBLK" ) );
     
+    static TexFont s_texfont;
+    wxFont *font = wxTheFontList->FindOrCreateFont
+    ( 12, wxFONTFAMILY_SWISS, wxNORMAL,
+     wxFONTWEIGHT_NORMAL, FALSE, wxString( _T ( "Arial" ) ) );
+#else
     wxColour GridColor = GetGlobalColor( _T ( "SNDG1" ) );
     
     static TexFont s_texfont;
     wxFont *font = wxTheFontList->FindOrCreateFont
     ( 8, wxFONTFAMILY_SWISS, wxNORMAL,
      wxFONTWEIGHT_NORMAL, FALSE, wxString( _T ( "Arial" ) ) );
+#endif
     s_texfont.Build(*font);
     
     w = cc1->m_canvas_width;

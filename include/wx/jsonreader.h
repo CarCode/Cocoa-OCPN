@@ -31,8 +31,8 @@
 #endif
 
 
-#include "json_defs.h"
-#include "jsonval.h"
+#include "wx/json_defs.h"
+#include "wx/jsonval.h"
 
 // The flags of the parser
 enum {

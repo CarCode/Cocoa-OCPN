@@ -4393,7 +4393,11 @@ void GPS_D311_Get(GPS_PTrack *trk, UC *s)
     p=s;
 
     /* Forerunner */
+#ifdef __WXOSX__
+    identifier = GPS_Util_Get_Short(p);
+#else
     identifier = GPS_Util_Get_Short(s);
+#endif
     sprintf((*trk)->trk_ident, "%d", identifier);
 
     return;
@@ -5171,26 +5175,26 @@ int32 GPS_A500_Get(const char *port, GPS_PAlmanac **alm)
     int32 i, n;
 
     if (gps_almanac_transfer == -1)
-	return GPS_UNSUPPORTED;
+        return GPS_UNSUPPORTED;
 
     if(!GPS_Device_On(port, &fd))
-	return gps_errno;
+        return gps_errno;
 
     if (!(trapkt = GPS_Packet_New() ) || !(recpkt = GPS_Packet_New()))
-	return MEMORY_ERROR;
+        return MEMORY_ERROR;
 
     GPS_Util_Put_Short(data,
 		       COMMAND_ID[gps_device_command].Cmnd_Transfer_Alm);
     GPS_Make_Packet(&trapkt, LINK_ID[gps_link_type].Pid_Command_Data,
 		    data,2);
     if(!GPS_Write_Packet(fd,trapkt))
-	return gps_errno;
+        return gps_errno;
     if(!GPS_Get_Ack(fd, &trapkt, &recpkt))
-	return gps_errno;
+        return gps_errno;
     if(!GPS_Packet_Read(fd, &recpkt))
-	return gps_errno;
+        return gps_errno;
     if(!GPS_Send_Ack(fd, &trapkt, &recpkt))
-	return gps_errno;
+        return gps_errno;
 
     n = GPS_Util_Get_Short(recpkt->data);
 
@@ -5214,48 +5218,48 @@ int32 GPS_A500_Get(const char *port, GPS_PAlmanac **alm)
 
 		switch(gps_almanac_type) {
     case pD500:
-	GPS_A500_Translate(recpkt->data, &((*alm)[i]));
-	break;
+                GPS_A500_Translate(recpkt->data, &((*alm)[i]));
+                break;
     case pD501:
-	GPS_A500_Translate(recpkt->data, &((*alm)[i]));
-	(*alm)[i]->hlth=recpkt->data[42];
-	break;
+                GPS_A500_Translate(recpkt->data, &((*alm)[i]));
+                (*alm)[i]->hlth=recpkt->data[42];
+                break;
     case pD550:
-	(*alm)[i]->svid = recpkt->data[0];
-	GPS_A500_Translate(recpkt->data+1, &((*alm)[i]));
-	break;
+                (*alm)[i]->svid = recpkt->data[0];
+                GPS_A500_Translate(recpkt->data+1, &((*alm)[i]));
+                break;
     case pD551:
-	(*alm)[i]->svid = recpkt->data[0];
-	GPS_A500_Translate(recpkt->data+1, &((*alm)[i]));
-	(*alm)[i]->hlth = recpkt->data[43];
-	break;
+                (*alm)[i]->svid = recpkt->data[0];
+                GPS_A500_Translate(recpkt->data+1, &((*alm)[i]));
+                (*alm)[i]->hlth = recpkt->data[43];
+                break;
     default:
-	GPS_Error("A500_GET: Unknown almanac protocol");
-	return PROTOCOL_ERROR;
+                GPS_Error("A500_GET: Unknown almanac protocol");
+                return PROTOCOL_ERROR;
     }
 		/* Cheat and don't _really_ pass the trkpt back */
 /*		cb(n, NULL);*/
 	}
 
     if(!GPS_Packet_Read(fd, &recpkt))
-	return gps_errno;
+        return gps_errno;
     if(!GPS_Send_Ack(fd, &trapkt, &recpkt))
-	return gps_errno;
+        return gps_errno;
     if(recpkt->type != LINK_ID[gps_link_type].Pid_Xfer_Cmplt) {
-	GPS_Error("A500_Get: Error transferring almanac");
-	return FRAMING_ERROR;
+        GPS_Error("A500_Get: Error transferring almanac");
+        return FRAMING_ERROR;
     }
 
     if(i != n) {
-	GPS_Error("A500_GET: Almanac entry number mismatch");
-	return FRAMING_ERROR;
+        GPS_Error("A500_GET: Almanac entry number mismatch");
+        return FRAMING_ERROR;
     }
 
     GPS_Packet_Del(&trapkt);
     GPS_Packet_Del(&recpkt);
 
     if(!GPS_Device_Off(fd))
-	return gps_errno;
+        return gps_errno;
 
     return n;
 }

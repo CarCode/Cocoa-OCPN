@@ -847,14 +847,14 @@ GarminProtocolHandler::GarminProtocolHandler(DataStream *parent, wxEvtHandler *M
     m_busb = bsel_usb;
     
     //      Connect(wxEVT_OCPN_GARMIN, (wxObjectEventFunction)(wxEventFunction)&GarminProtocolHandler::OnEvtGarmin);
-    
+#ifdef __WXMSW__  // ??? Not used
     char  pvt_on[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};
     
     char  pvt_off[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 50, 0};
-    
-#ifdef __WXMSW__    
+#endif
+#ifdef __WXMSW__
     if(m_busb) {
         m_usb_handle = INVALID_HANDLE_VALUE;
     
@@ -977,9 +977,10 @@ void GarminProtocolHandler::RestartIOThread(void)
 
 void GarminProtocolHandler::OnTimerGarmin1(wxTimerEvent& event)
 {
+#ifdef __WXMSW__
     char  pvt_on[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};
-    
+#endif
     TimerGarmin1.Stop();
     
     if(m_busb) {
@@ -1497,7 +1498,7 @@ void *GARMIN_Serial_Thread::Entry()
     while((not_done) && (m_parent->m_Thread_run_flag > 0)) {
 
         if(TestDestroy()) {
-            not_done = false;                               // smooth exit
+//            not_done = false;                               // smooth exit  Not used
             goto thread_exit;
         }
 

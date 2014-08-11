@@ -32,7 +32,7 @@
 #endif
 
 
-#include "json_defs.h"
+#include "wx/json_defs.h"
 
 // forward declarations
 class WXDLLIMPEXP_JSON wxJSONReader;

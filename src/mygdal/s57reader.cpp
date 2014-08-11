@@ -2318,7 +2318,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
 /* -------------------------------------------------------------------- */
     if( poUpdate->FindField( "ATTF" ) != NULL )
     {
-        DDFSubfieldDefn *poSrcATVLDefn;
+//        DDFSubfieldDefn *poSrcATVLDefn;  // Not used
         DDFField *poSrcATTF = poUpdate->FindField( "ATTF" );
         DDFField *poDstATTF = poTarget->FindField( "ATTF" );
 
@@ -2332,7 +2332,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
 
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
 
-        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );
+//        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );  // Not used
 
         for( int iAtt = 0; iAtt < nRepeatCount; iAtt++ )
         {
@@ -2357,7 +2357,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
     if( poUpdate->FindField( "NATF" ) != NULL )
     {
         bool b_newField = false;
-        DDFSubfieldDefn *poSrcATVLDefn;
+//        DDFSubfieldDefn *poSrcATVLDefn;  // Not used
         DDFField *poSrcATTF = poUpdate->FindField( "NATF" );
         DDFField *poDstATTF = poTarget->FindField( "NATF" );
         
@@ -2384,7 +2384,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
         
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
         
-        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );
+//        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );  // Not used
         
         for( int iAtt = 0; iAtt < nRepeatCount; iAtt++ )
         {

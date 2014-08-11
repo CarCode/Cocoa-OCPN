@@ -154,7 +154,7 @@ int RazdsParser::ParseCOLS( FILE *fp )
 
 int RazdsParser::ParseLUPT( FILE *fp )
 {
-    int ret;
+//    int ret;  // Not used
 
     bool inserted = FALSE;
 
@@ -173,7 +173,8 @@ int RazdsParser::ParseLUPT( FILE *fp )
     LUP->RPRI = (enum _RadPrio) pBuf[31];
     LUP->TNAM = (enum _LUPname) pBuf[36];
 
-    ret = ReadS52Line( pBuf, NEWLN, 0, fp );
+//    ret = ReadS52Line( pBuf, NEWLN, 0, fp );  // ret not used
+    ReadS52Line( pBuf, NEWLN, 0, fp );
 
     do {
         MOD_REC ( ATTC ) {
@@ -235,7 +236,8 @@ int RazdsParser::ParseLUPT( FILE *fp )
 
         } // MOD_REC
 
-        ret = ReadS52Line( pBuf, NEWLN, 0, fp );
+//        ret = ReadS52Line( pBuf, NEWLN, 0, fp );  // ret not used
+        ReadS52Line( pBuf, NEWLN, 0, fp );
 
     } while( inserted == FALSE );
 
@@ -259,7 +261,8 @@ int RazdsParser::ParseLNST( FILE *fp )
 
     sscanf( pBuf + 11, "%d", &lnst->RCID );
 
-    ret = ReadS52Line( pBuf, NEWLN, 0, fp );
+//    ret = ReadS52Line( pBuf, NEWLN, 0, fp );  // value sored to ret not used
+    ReadS52Line( pBuf, NEWLN, 0, fp );
     do {
         MOD_REC ( LIND ) {
             strncpy( lnst->name.LINM, pBuf + 9, 8 ); // could be empty!
@@ -322,8 +325,8 @@ int RazdsParser::ParsePATT( FILE *fp )
 
     sscanf( pBuf + 11, "%d", &patt->RCID );
 
-    ret = ReadS52Line( pBuf, NEWLN, 0, fp );
-
+//    ret = ReadS52Line( pBuf, NEWLN, 0, fp );  // value stored to ret not used
+    ReadS52Line( pBuf, NEWLN, 0, fp );
     do {
         MOD_REC ( PATD ) {
             strncpy( patt->name.PANM, pBuf + 9, 8 );

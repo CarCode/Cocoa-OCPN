@@ -29,8 +29,8 @@
     #include <wx/string.h>
 #endif
 
-#include "json_defs.h"
-#include "jsonval.h"
+#include "wx/json_defs.h"
+#include "wx/jsonval.h"
 
 enum {
     wxJSONWRITER_NONE            = 0,

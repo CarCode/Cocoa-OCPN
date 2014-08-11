@@ -444,7 +444,11 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
                 return lastChar;
             }
             if ( lastChar != '\n' )   {
+#ifdef __WXOSX__
+                WriteSeparator( os );
+#else
                 lastChar = WriteSeparator( os );
+#endif
             }
         }
         else   {    // comment is not to be printed inline, so write a LF
@@ -492,7 +496,11 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
             }
         }
         else   {
+#ifdef __WXOSX__
+            WriteSeparator( os );
+#else
             lastChar = WriteSeparator( os );
+#endif
         }
 
         map = value.AsMap();
@@ -913,16 +921,16 @@ wxJSONWriter::WriteIntValue( wxOutputStream& os, const wxJSONValue& value )
     size_t len;
 
     wxJSONRefData* data = value.GetRefData();
+#ifdef __WXOSX__
+    assert(data);
+#else
     wxASSERT( data );
-
+#endif
 #if defined( wxJSON_64BIT_INT )
-    #if wxCHECK_VERSION(2, 9, 0 ) || !defined( wxJSON_USE_UNICODE )
+    #if wxCHECK_VERSION(3, 1, 0 ) || !defined( wxJSON_USE_UNICODE )
         // this is fine for wxW 2.9 and for wxW 2.8 ANSI
         snprintf( buffer, 32, "%" wxLongLongFmtSpec "d",
         		data->m_value.m_valInt64 );
-    #elif wxCHECK_VERSION(3, 0, 0) || !defined( wxJSON_USE_UNICODE )
-        snprintf( buffer, 32, "%" wxLongLongFmtSpec "d",
-             data->m_value.m_valInt64 );
     #else
         // this is for wxW 2.8 Unicode: in order to use the cross-platform
         // format specifier, we use the wxString's sprintf() function and then
@@ -970,16 +978,16 @@ wxJSONWriter::WriteUIntValue( wxOutputStream& os, const wxJSONValue& value )
 
     char buffer[32];        // need to store 64-bits integers (max 20 digits)
     wxJSONRefData* data = value.GetRefData();
+#ifdef __WXOSX__
+    assert(data);
+#else
     wxASSERT( data );
-
+#endif
 #if defined( wxJSON_64BIT_INT )
-    #if wxCHECK_VERSION(2, 9, 0 ) || !defined( wxJSON_USE_UNICODE )
+    #if wxCHECK_VERSION(3, 1, 0 ) || !defined( wxJSON_USE_UNICODE )
         // this is fine for wxW 2.9 and for wxW 2.8 ANSI
         snprintf( buffer, 32, "%" wxLongLongFmtSpec "u",
                 data->m_value.m_valUInt64 );
-    #elif wxCHECK_VERSION(3, 0, 0) || !defined( wxJSON_USE_UNICODE )
-        snprintf( buffer, 32, "%" wxLongLongFmtSpec "u",
-             data->m_value.m_valUInt64 );
     #else
         // this is for wxW 2.8 Unicode: in order to use the cross-platform
         // format specifier, we use the wxString's sprintf() function and then
@@ -1024,7 +1032,11 @@ wxJSONWriter::WriteDoubleValue( wxOutputStream& os, const wxJSONValue& value )
 
     char buffer[32];
     wxJSONRefData* data = value.GetRefData();
+#ifdef __WXOSX__
+    assert(data);
+#else
     wxASSERT( data );
+#endif
     snprintf( buffer, 32, m_fmt, data->m_value.m_valDouble );
     size_t len = strlen( buffer );
     os.Write( buffer, len );
@@ -1047,8 +1059,11 @@ wxJSONWriter::WriteBoolValue( wxOutputStream& os, const wxJSONValue& value )
     int r = 0;
     const char* f = "false"; const char* t = "true";
     wxJSONRefData* data = value.GetRefData();
+#ifdef __WXOSX__
+    assert(data);
+#else
     wxASSERT( data );
-
+#endif
     const char* c = f;    // defaults to FALSE
 
     if ( data->m_value.m_valBool )    {
@@ -1137,7 +1152,11 @@ wxJSONWriter::WriteMemoryBuff( wxOutputStream& os, const wxMemoryBuffer& buff )
 
     size_t buffLen = buff.GetDataLen();
     unsigned char* ptr = (unsigned char*) buff.GetData();
+#ifdef __WXOSX__
+    assert(ptr);
+#else
     wxASSERT( ptr );
+#endif
     char openChar = '\'';
     char closeChar = '\'';
     bool asArray = false;

@@ -376,11 +376,11 @@ void toSM_ECC(double lat, double lon, double lat0, double lon0, double *x, doubl
 
 // y =.5 ln( (1 + sin t) / (1 - sin t) )
       const double s = sin(lat * DEGREE);
-      const double y3 = (.5 * log((1 + s) / (1 - s))) * z;
+//      const double y3 = (.5 * log((1 + s) / (1 - s))) * z;  // Not used
 
       const double s0 = sin(lat0 * DEGREE);
-      const double y30 = (.5 * log((1 + s0) / (1 - s0))) * z;
-      const double y4 = y3 - y30;
+//      const double y30 = (.5 * log((1 + s0) / (1 - s0))) * z;  // Not used
+//      const double y4 = y3 - y30;  // Not used
 
     //Add eccentricity terms
 
@@ -638,8 +638,8 @@ void MolodenskyTransform (double lat, double lon, double *to_lat, double *to_lon
 
       const double dlon = (-dx * slon + dy * clon) / ((rn + from_h) * clat);
 
-      const double dh = (dx * clat * clon) + (dy * clat * slon) + (dz * slat)
-                  - (da * (from_a / rn)) + ((df * rn * ssqlat) / adb);
+//      const double dh = (dx * clat * clon) + (dy * clat * slon) + (dz * slat)  // Not used
+//                  - (da * (from_a / rn)) + ((df * rn * ssqlat) / adb);         // Not used
 
       *to_lon = lon + dlon/DEGREE;
       *to_lat = lat + dlat/DEGREE;
@@ -743,9 +743,9 @@ void ll_gc_ll(double lat, double lon, double brg, double dist, double *dlat, dou
         es = 2 * f - f * f;
         onef = sqrt(1. - es);
         geod_f = 1 - onef;
-        f2 = geod_f/2;
+//        f2 = geod_f/2;  // Not used
         f4 = geod_f/4;
-        f64 = geod_f*geod_f/64;
+//        f64 = geod_f*geod_f/64;  // Not used
 
         al12 = adjlon(al12); /* reduce to  +- 0-PI */
         signS = fabs(al12) > HALFPI ? 1 : 0;
@@ -809,7 +809,7 @@ void ll_gc_ll(double lat, double lon, double brg, double dist, double *dlat, dou
         if (merid) {
             phi2 = atan( tan(HALFPI + s1 - ds) / onef);
             if (al21 > 0.) {
-                al21 = PI;
+//                al21 = PI;  // Not used
                 if (signS)
                     de = PI;
                 else {
@@ -817,7 +817,7 @@ void ll_gc_ll(double lat, double lon, double brg, double dist, double *dlat, dou
                     de = 0.;
                     }
                 } else {
-                    al21 = 0.;
+//                    al21 = 0.;  // Not used
                     if (signS) {
                         phi2 = - phi2;
                         de = 0;
@@ -908,7 +908,7 @@ void ll_gc_ll_reverse(double lat1, double lon1, double lat2, double lon2,
         dthm = .5 * (th2 - th1);
         dlamm = .5 * ( dlam = adjlon(lam2 - lam1) );
         if (fabs(dlam) < DTOL && fabs(dthm) < DTOL) {
-            al12 =  al21 = geod_S = 0.;
+//            al12 =  al21 = geod_S = 0.;  // Not used
             if(bearing)
                 *bearing = 0.;
             if(dist)
@@ -947,7 +947,7 @@ void ll_gc_ll_reverse(double lat1, double lon1, double lat2, double lon2,
         u = atan2(sindthm , (tandlammp * costhm));
         v = atan2(cosdthm , (tandlammp * sinthm));
         al12 = adjlon(TWOPI + v - u);
-        al21 = adjlon(TWOPI - v - u);
+//        al21 = adjlon(TWOPI - v - u);  // Not used
     }
 
     if(al12 < 0)
@@ -979,8 +979,8 @@ double DistGreatCircle(double slat, double slon, double dlat, double dlon)
 //    int merid, signS;
 
     /*   Input/Output from geodesic functions   */
-    double al12;           /* Forward azimuth */
-    double al21;           /* Back azimuth    */
+//    double al12;           /* Forward azimuth */
+//    double al21;           /* Back azimuth    */
     double geod_S;         /* Distance        */
     double phi1, lam1, phi2, lam2;
 
@@ -1012,7 +1012,7 @@ double DistGreatCircle(double slat, double slon, double dlat, double dlon)
         es = 2 * f - f * f;
         onef = sqrt(1. - es);
         geod_f = 1 - onef;
-        f2 = geod_f/2;
+//        f2 = geod_f/2;
         f4 = geod_f/4;
         f64 = geod_f*geod_f/64;
 
@@ -1028,7 +1028,7 @@ double DistGreatCircle(double slat, double slon, double dlat, double dlon)
         dthm = .5 * (th2 - th1);
         dlamm = .5 * ( dlam = adjlon(lam2 - lam1) );
         if (fabs(dlam) < DTOL && fabs(dthm) < DTOL) {
-            al12 =  al21 = geod_S = 0.;
+//            al12 =  al21 = geod_S = 0.;  // Not used
             return 0.0;
         }
         sindlamm = sin(dlamm);
@@ -1053,17 +1053,17 @@ double DistGreatCircle(double slat, double slon, double dlat, double dlon)
             geod_S = geod_a * sind * (T - f4 * (T * X - Y) +
                                     f64 * (X * (A + (T - .5 * (A - E)) * X) -
                                     Y * (B + E * Y) + D * X * Y));
-            tandlammp = tan(.5 * (dlam - .25 * (Y + Y - E * (4. - X)) *
-                                    (f2 * T + f64 * (32. * T - (20. * T - A)
-                                    * X - (B + 4.) * Y)) * tan(dlam)));
+//            tandlammp = tan(.5 * (dlam - .25 * (Y + Y - E * (4. - X)) *
+//                                    (f2 * T + f64 * (32. * T - (20. * T - A)
+//                                    * X - (B + 4.) * Y)) * tan(dlam)));
         } else {
             geod_S = geod_a * d;
-            tandlammp = tan(dlamm);
+//            tandlammp = tan(dlamm);
         }
-        u = atan2(sindthm , (tandlammp * costhm));
-        v = atan2(cosdthm , (tandlammp * sinthm));
-        al12 = adjlon(TWOPI + v - u);
-        al21 = adjlon(TWOPI - v - u);
+//        u = atan2(sindthm , (tandlammp * costhm));
+//        v = atan2(cosdthm , (tandlammp * sinthm));
+//        al12 = adjlon(TWOPI + v - u);
+//        al21 = adjlon(TWOPI - v - u);
     }
 
     d5 = geod_S / 1852.0;
@@ -1290,7 +1290,7 @@ int Georef_Calculate_Coefficients(struct GeoRef *cp, int nlin_lon)
                                          0.0);
 
     //      if blin_lon > 0, force cross terms in latitude equation coefficients to be zero by making ty not dependent on lon,
-    px = nlin_lon ? &pnull[0] : cp->lon;
+//    px = nlin_lon ? &pnull[0] : cp->lon;  // Not used
 
     int r4 = Georef_Calculate_Coefficients_Onedir(cp->count, mp_lat, &pnull[0]/*cp->lon*/, cp->lat, cp->ty, cp->wpy,
                                          cp->tymin - ((cp->tymax - cp->tymin) * cp->latmin / (cp->latmax - cp->latmin)),

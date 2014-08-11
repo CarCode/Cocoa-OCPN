@@ -128,7 +128,6 @@ class   HyperlinkList;
 class RouteProp: public wxDialog
 {
     wxDECLARE_DYNAMIC_CLASS( RouteProp );
-    wxDECLARE_EVENT_TABLE();
 
 public:
     /// Constructors
@@ -231,6 +230,8 @@ private:
     wxRadioButton  *m_prb_tzLocal;
     wxRadioButton  *m_prb_tzLMT;
 
+    wxDECLARE_EVENT_TABLE();
+
 };
 
 //    LatLonTextCtrl Specification
@@ -244,18 +245,18 @@ extern /*expdecl*/ const wxEventType EVT_LLCHANGE;
 class LatLonTextCtrl: public wxTextCtrl
 {
 //    DECLARE_DYNAMIC_CLASS( LatLonTextCtrl )
-    wxDECLARE_EVENT_TABLE();
 
 public:
-      LatLonTextCtrl(wxWindow* parent, wxWindowID id, const wxString& value = _T(""),
+    LatLonTextCtrl(wxWindow* parent, wxWindowID id, const wxString& value = _T(""),
             const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
             long style = 0, const wxValidator& validator = wxDefaultValidator,
             const wxString& name = wxTextCtrlNameStr);
 
-      void OnKillFocus(wxFocusEvent &event);
+    void OnKillFocus(wxFocusEvent &event);
 
+    wxEvtHandler *m_pParentEventHandler;
 
-      wxEvtHandler *m_pParentEventHandler;
+    wxDECLARE_EVENT_TABLE();
 
 };
 
@@ -322,10 +323,12 @@ class MarkInfoDef : public wxDialog
     
         MarkInfoDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Waypoint Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1, -1 ), long style = wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxRESIZE_BORDER );
         ~MarkInfoDef();
-    
+ 
         void m_hyperlink17OnContextMenu( wxMouseEvent &event )
         {
+
             m_hyperlink17->PopupMenu( m_menuLink, event.GetPosition() );
+
         }
 
 };

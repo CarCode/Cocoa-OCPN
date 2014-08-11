@@ -182,9 +182,11 @@ int FindSerialPortNames(char** pNames, int iMaxNames)
     kern_return_t	kernResult; // on PowerPC this is an int (4 bytes)
 
     io_iterator_t	serialPortIterator;
-
+#if wxCHECK_VERSION(3,1,0)
+    FindSerialPorts(&serialPortIterator);
+#else
     kernResult = FindSerialPorts(&serialPortIterator);
-
+#endif
     iActiveNameCount = GetSerialPortPath(serialPortIterator, pNames, iMaxNames, MAXPATHLEN);
 
     IOObjectRelease(serialPortIterator);	// Release the iterator.

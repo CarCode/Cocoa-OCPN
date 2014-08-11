@@ -346,7 +346,7 @@ void FontMgr::ScrubList( )
         wxString candidate = FontCandidates[i];
         if(candidate == _T("END_OF_LIST") ) {
             done = true;
-            break;
+//            break;  // bool done or break?
         }
         
         MyFontDesc *pmfd;

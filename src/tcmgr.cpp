@@ -982,10 +982,18 @@ int TCMgr::GetNextBigEvent(time_t *tm, int idx)
     bool ret;
     double p, q;
     int flags = 0, slope = 0;
+#ifdef __WXOSX__
+    GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+#else
     ret = GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+#endif
     p = tcvalue[0];
     *tm += 60;
+#ifdef __WXOSX__
+    GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+#else
     ret = GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+#endif
     q = tcvalue[0];
     *tm += 60;
     if (p < q)
@@ -1002,7 +1010,11 @@ int TCMgr::GetNextBigEvent(time_t *tm, int idx)
             return flags;
         }
         p = q;
+#ifdef __WXOSX__
+        GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+#else
         ret = GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+#endif
         q = tcvalue[0];
         *tm += 60;
     }
@@ -1016,7 +1028,7 @@ int TCMgr::GetStationIDXbyName(const wxString & prefix, double xlat, double xlon
     wxString locn;
     double distx = 100000.;
 
-    int jmax = Get_max_IDX();
+//    int jmax = Get_max_IDX();  // Not used
 
     for ( int j=1 ; j<Get_max_IDX() +1 ; j++ ) {
         lpIDX = GetIDX_entry ( j );
@@ -1047,7 +1059,7 @@ int TCMgr::GetStationIDXbyNameType(const wxString & prefix, double xlat, double 
 
     // if (prp->m_MarkName.Find(_T("@~~")) != wxNOT_FOUND) {
     //tide_form = prp->m_MarkName.Mid(prp->m_MarkName.Find(_T("@~~"))+3);
-    int jmax = Get_max_IDX();
+//    int jmax = Get_max_IDX();  // Not used
 
     for ( int j=1 ; j<Get_max_IDX() +1 ; j++ ) {
         lpIDX = GetIDX_entry ( j );

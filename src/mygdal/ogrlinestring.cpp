@@ -686,9 +686,11 @@ OGRErr OGRLineString::importFromWkb( unsigned char * pabyData,
         eGeometryType = (OGRwkbGeometryType) pabyData[4];
         bIs3D = pabyData[1] & 0x80 || pabyData[3] & 0x80;
     }
-
+#ifdef __WXOSX__
+    assert( eGeometryType == wkbLineString );
+#else
     CPLAssert( eGeometryType == wkbLineString );
-
+#endif
 /* -------------------------------------------------------------------- */
 /*      Get the vertex count.                                           */
 /* -------------------------------------------------------------------- */
