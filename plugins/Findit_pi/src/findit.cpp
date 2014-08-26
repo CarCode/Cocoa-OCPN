@@ -16,7 +16,7 @@
 
 #include "findit.h"
 #include "findit_pi.h"
-#include "tinyxml/tinyxml.h"
+#include "../../../include/tinyxml.h"
 
 #include <wx/tokenzr.h>
 #include "wx/stdpaths.h"
@@ -28,8 +28,8 @@
 #include <wx/generic/grideditors.h>
 #endif
 
-#include "jsonval.h"
-#include "jsonwriter.h"
+#include "../../../include/wx/jsonval.h"
+#include "../../../include/wx/jsonwriter.h"
 
 
 MainDialog::MainDialog(wxWindow* parent,findit_pi *p) : FindItDialog( parent )
@@ -69,16 +69,18 @@ void MainDialog::OnInit( wxInitDialogEvent& event )
 	for(int i = 0; i < this->m_gridMaterial->GetNumberCols(); i++)
 		material->SetColLabelValue(i,this->m_gridMaterial->GetColLabelValue(i));
 	this->m_gridMaterial->SetTable(material,true);
+    this->m_gridMaterial->SetTabBehaviour(wxGrid::Tab_Wrap);
 	this->m_gridMaterial->DeleteRows();
 
 	myGridStringTable* food = new myGridStringTable(1,this->m_gridFood->GetNumberCols());
 	for(int i = 0; i < this->m_gridFood->GetNumberCols(); i++)
 		food->SetColLabelValue(i,this->m_gridFood->GetColLabelValue(i));
 	this->m_gridFood->SetTable(food,true);
+    this->m_gridFood->SetTabBehaviour(wxGrid::Tab_Wrap);
 	this->m_gridFood->DeleteRows();
-
+#ifndef __WXOSX__
 	unit.Add(_T(""));
-
+#endif
 	prioritystr.Add(_T("0"));
 	prioritystr.Add(_T("1"));
 	prioritystr.Add(_T("2"));
@@ -121,8 +123,9 @@ void MainDialog::OnInit( wxInitDialogEvent& event )
 	loadData();
 
 	this->m_notebook1->SetSelection(0);
-	this->m_textCtrl1->SetFocus();
-
+#ifndef __WXOSX__
+	this->m_textCtrl1->SetFocus();  // Such-Funktion aktivieren
+#endif
 	setLogbookColumns(pPlugin->isLogbookReady);
 }
 
@@ -139,8 +142,8 @@ void MainDialog::setLogbookColumns(bool logbookReady)
 		for(int col = BUY; col < UNIT; col++)
 		{
 			if(col == ACTUELL) continue;
-			m_gridMaterial->SetColumnWidth(col,0);
-			m_gridFood->SetColumnWidth(col,0);
+			m_gridMaterial->SetColSize( col, 0 );
+			m_gridFood->SetColSize( col, 0 );
 		}
 	}
 	else
@@ -148,8 +151,8 @@ void MainDialog::setLogbookColumns(bool logbookReady)
 		for(int col = BUY; col < UNIT; col++)
 		{
 			if(col == ACTUELL) continue;
-			m_gridMaterial->SetColumnWidth(col,50);
-			m_gridFood->SetColumnWidth(col,50);
+			m_gridMaterial->SetColSize(col,50);
+			m_gridFood->SetColSize(col,50);
 		}
 	}
 
@@ -476,8 +479,8 @@ void MainDialog::OnButtonClickAddLineFood( wxCommandEvent& event )
 void MainDialog::OnGridCellLeftClickMaterial( wxGridEvent& event )
 {
 	this->lastRowSelectedMaterial = event.GetRow();
-	this->lastColSelectedMaterial = event.GetCol();	
-    event.Skip();	
+	this->lastColSelectedMaterial = event.GetCol();
+    event.Skip();
 }
 
 void MainDialog::OnGridCellLeftClickFood( wxGridEvent& event )
@@ -562,7 +565,7 @@ bool MainDialog::deleteGridRow(int key, wxGrid* grid)
 	else if(grid == this->m_gridLocations)
 		{ lastRow = &lastRowSelectedLocations; col = lastColSelectedLocations; }
 
-	if( grid->GetNumberRows() > 0)
+	if( grid->GetNumberRows() > 0 && lastRow > 0)
 	{
 		grid->DeleteRows(*lastRow);
 
@@ -578,7 +581,6 @@ bool MainDialog::deleteGridRow(int key, wxGrid* grid)
 void MainDialog::OnGridCellChangeUnits( wxGridEvent& event )
 {
 	wxString str = this->m_gridUnits->GetCellValue(event.GetRow(),event.GetCol());
-	
 	renameMaterialAndFood(unit,0, str);
 }	
 
@@ -586,7 +588,6 @@ void MainDialog::OnGridCellChangeLocations( wxGridEvent& event )
 {
     int i = event.GetCol();
 	wxString str = this->m_gridLocations->GetCellValue(event.GetRow(),event.GetCol());
-
 	switch(i)
 	{
 		case 0: renameMaterialAndFood(location1,0, str); break; 
@@ -615,19 +616,21 @@ void MainDialog::renameMaterialAndFood(wxArrayString& arr, int col, wxString str
 				arr.Add(this->m_gridUnits->GetCellValue(i,0));
 		col = UNIT-LOC1;
 	}
-	
+//// Aktualisiert nur die vorhandenen Location-Material Zellen mit den Daten aus m_gridLocations //////
 	for(int i = 0; i < this->m_gridMaterial->GetNumberRows(); i++)
 	{
-		if(this->m_gridMaterial->GetCellValue(i,col+LOC1) == oldCellValue)
+        if(this->m_gridMaterial->GetCellValue(i,col+LOC1) == oldCellValue)
 			this->m_gridMaterial->SetCellValue(i,col+LOC1,str);
-        this->m_gridMaterial->SetCellEditor(i,col+LOC1,new wxGridCellChoiceEditor(arr,false));
+
+        this->m_gridMaterial->SetCellEditor(i,col+LOC1,new wxGridCellChoiceEditor(arr,true));
 	}
 			
 	for(int i = 0; i < this->m_gridFood->GetNumberRows(); i++)
 	{
 		if(this->m_gridFood->GetCellValue(i,col+LOC1) == oldCellValue)
 			this->m_gridFood->SetCellValue(i,col+LOC1,str);
-		this->m_gridFood->SetCellEditor(i,col+LOC1,new wxGridCellChoiceEditor(arr,false));
+        
+		this->m_gridFood->SetCellEditor(i,col+LOC1,new wxGridCellChoiceEditor(arr,true));
 	}
 
 	this->Refresh();
@@ -640,7 +643,7 @@ void MainDialog::onEditorShownUnits( wxGridEvent& event )
 
 void MainDialog::onEditorShownLocations( wxGridEvent& event )
 {
-	this->oldCellValue = this->m_gridLocations->GetCellValue(event.GetRow(),event.GetCol());	
+	this->oldCellValue = this->m_gridLocations->GetCellValue(event.GetRow(),event.GetCol());
 }
 
 void MainDialog::OnTextMaterial( wxCommandEvent& event )
@@ -676,7 +679,7 @@ void MainDialog::searchItem(wxGrid* grid, wxString str)
 			{
 				grid->SetRowMinimalAcceptableHeight(0);
 				grid->SetRowMinimalHeight(i,0);
-				grid->SetRowHeight(i,0);
+				grid->SetRowSize(i,0);
 				break;
 			}
 	   }   
@@ -687,12 +690,11 @@ void MainDialog::searchItem(wxGrid* grid, wxString str)
 void MainDialog::resetRowHeight(wxGrid* grid)
 {
 	for(int i = 0; i < grid->GetNumberRows(); i++)
-		grid->SetRowHeight(i,20);
+		grid->SetRowSize(i,20);
 }
 
 int MainDialog::addLineFood()
 {
-#ifdef __WXOSX__
     combo  = new wxGridCellChoiceEditor(location1,true);
 	combo1 = new wxGridCellChoiceEditor(location2,true);
 	combo2 = new wxGridCellChoiceEditor(location3,true);
@@ -701,16 +703,6 @@ int MainDialog::addLineFood()
 	combo5 = new wxGridCellChoiceEditor(location6,true);
 	comboUnit = new wxGridCellChoiceEditor(unit,true);
 	comboPriority = new wxGridCellChoiceEditor(prioritystr,true);
-#else
-	combo  = new wxGridCellChoiceEditor(location1,false);
-	combo1 = new wxGridCellChoiceEditor(location2,false);
-	combo2 = new wxGridCellChoiceEditor(location3,false);
-	combo3 = new wxGridCellChoiceEditor(location4,false);
-	combo4 = new wxGridCellChoiceEditor(location5,false);
-	combo5 = new wxGridCellChoiceEditor(location6,false);
-	comboUnit = new wxGridCellChoiceEditor(unit,false);
-	comboPriority = new wxGridCellChoiceEditor(prioritystr,false);
-#endif
     
 	boolEditor = new wxGridCellBoolEditor();
 	if(!pPlugin->buyNo)
@@ -733,38 +725,26 @@ int MainDialog::addLineFood()
 	
 	lastRow = this->m_gridFood->GetNumberRows()-1;
 	
-	this->m_gridFood->SetCellAlignment(wxALIGN_CENTER,lastRow,BUY);
-	this->m_gridFood->SetCellAlignment(wxALIGN_CENTER,lastRow,PRIORITY);
-	this->m_gridFood->SetCellAlignment(wxALIGN_RIGHT,lastRow,QUOTA);
-	this->m_gridFood->SetCellAlignment(wxALIGN_RIGHT,lastRow,ACTUELL);
-	this->m_gridFood->SetCellAlignment(wxALIGN_RIGHT,lastRow,TOBUY);
+	this->m_gridFood->SetCellAlignment(lastRow,BUY,wxALIGN_CENTER,wxALIGN_CENTER);
+	this->m_gridFood->SetCellAlignment(lastRow,PRIORITY,wxALIGN_CENTER,wxALIGN_CENTER);
+	this->m_gridFood->SetCellAlignment(lastRow,QUOTA,wxALIGN_RIGHT,wxALIGN_RIGHT);
+	this->m_gridFood->SetCellAlignment(lastRow,ACTUELL,wxALIGN_RIGHT,wxALIGN_RIGHT);
+	this->m_gridFood->SetCellAlignment(lastRow,TOBUY,wxALIGN_RIGHT,wxALIGN_RIGHT);
 
 	return lastRow;	
 }
 
 int MainDialog::addLineMaterial()
 {
-#ifdef __WXOSX__
-    combo  = new wxGridCellChoiceEditor(location1,true);
-	combo1 = new wxGridCellChoiceEditor(location2,true);
-	combo2 = new wxGridCellChoiceEditor(location3,true);
-	combo3 = new wxGridCellChoiceEditor(location4,true);
-	combo4 = new wxGridCellChoiceEditor(location5,true);
-	combo5 = new wxGridCellChoiceEditor(location6,true);
-	comboUnit = new wxGridCellChoiceEditor(unit,true);
+    combo  = new wxGridCellChoiceEditor(location1,1);
+	combo1 = new wxGridCellChoiceEditor(location2,1);
+	combo2 = new wxGridCellChoiceEditor(location3,1);
+	combo3 = new wxGridCellChoiceEditor(location4,1);
+	combo4 = new wxGridCellChoiceEditor(location5,1);
+	combo5 = new wxGridCellChoiceEditor(location6,1);
+	comboUnit = new wxGridCellChoiceEditor(unit,1);
 	boolEditor = new wxGridCellBoolEditor();
-	comboPriority = new wxGridCellChoiceEditor(prioritystr,true);
-#else
-	combo  = new wxGridCellChoiceEditor(location1,false);
-	combo1 = new wxGridCellChoiceEditor(location2,false);
-	combo2 = new wxGridCellChoiceEditor(location3,false);
-	combo3 = new wxGridCellChoiceEditor(location4,false);
-	combo4 = new wxGridCellChoiceEditor(location5,false);
-	combo5 = new wxGridCellChoiceEditor(location6,false);
-	comboUnit = new wxGridCellChoiceEditor(unit,false);
-	boolEditor = new wxGridCellBoolEditor();
-	comboPriority = new wxGridCellChoiceEditor(prioritystr,false);
-#endif
+	comboPriority = new wxGridCellChoiceEditor(prioritystr,1);
 
 	if(!pPlugin->buyNo)
 		boolEditor->UseStringValues(_("Yes"));
@@ -776,21 +756,21 @@ int MainDialog::addLineMaterial()
 
 	this->m_gridMaterial->SetCellEditor(lastRow,BUY,boolEditor);
 	this->m_gridMaterial->SetCellEditor(lastRow,PRIORITY,comboPriority);
-	this->m_gridMaterial->SetCellEditor(lastRow,UNIT,comboUnit);	
+	this->m_gridMaterial->SetCellEditor(lastRow,UNIT,comboUnit);
 	this->m_gridMaterial->SetCellEditor(lastRow,LOC1,combo);
 	this->m_gridMaterial->SetCellEditor(lastRow,LOC2,combo1);
 	this->m_gridMaterial->SetCellEditor(lastRow,LOC3,combo2);
 	this->m_gridMaterial->SetCellEditor(lastRow,LOC4,combo3);
 	this->m_gridMaterial->SetCellEditor(lastRow,LOC5,combo4);
-	this->m_gridMaterial->SetCellEditor(lastRow,LOC6,combo5);	
-	
+	this->m_gridMaterial->SetCellEditor(lastRow,LOC6,combo5);
+
 	lastRow = this->m_gridMaterial->GetNumberRows()-1;
 	
-	this->m_gridMaterial->SetCellAlignment(wxALIGN_CENTER,lastRow,BUY);
-	this->m_gridMaterial->SetCellAlignment(wxALIGN_CENTER,lastRow,PRIORITY);
-	this->m_gridMaterial->SetCellAlignment(wxALIGN_RIGHT,lastRow,QUOTA);
-	this->m_gridMaterial->SetCellAlignment(wxALIGN_RIGHT,lastRow,ACTUELL);
-	this->m_gridMaterial->SetCellAlignment(wxALIGN_RIGHT,lastRow,TOBUY);
+	this->m_gridMaterial->SetCellAlignment(lastRow,BUY,wxALIGN_CENTER,wxALIGN_CENTER);
+	this->m_gridMaterial->SetCellAlignment(lastRow,PRIORITY,wxALIGN_CENTER,wxALIGN_CENTER);
+	this->m_gridMaterial->SetCellAlignment(lastRow,QUOTA,wxALIGN_RIGHT,wxALIGN_RIGHT);
+	this->m_gridMaterial->SetCellAlignment(lastRow,ACTUELL,wxALIGN_RIGHT,wxALIGN_RIGHT);
+	this->m_gridMaterial->SetCellAlignment(lastRow,TOBUY,wxALIGN_RIGHT,wxALIGN_RIGHT);
 
 	return lastRow;	
 }
@@ -820,7 +800,7 @@ void MainDialog::saveData()
 	node->LinkEndChild( node1 ); 
 	
 	for(int i = 0; i < this->m_gridLocations->GetNumberCols(); i++)
-		node1->SetAttribute(wxString::Format(wxT("c%d"), (int)i).mb_str(), this->m_gridLocations->GetColumnWidth(i));
+		node1->SetAttribute(wxString::Format(wxT("c%d"), (int)i).mb_str(), this->m_gridLocations->GetColSize(i));
 			
 	comment = new TiXmlComment();
 	s=" Data for Locations-Grid ";
@@ -853,7 +833,7 @@ void MainDialog::saveData()
 	node->LinkEndChild( node1 ); 
 	
 	for(int i = 0; i < this->m_gridUnits->GetNumberCols(); i++)
-		node1->SetAttribute(wxString::Format(wxT("c%d"), (int)i).mb_str(), this->m_gridUnits->GetColumnWidth(i));
+		node1->SetAttribute(wxString::Format(wxT("c%d"), (int)i).mb_str(), this->m_gridUnits->GetColSize(i));
 			
 	comment = new TiXmlComment();
 	s=" Data for Units-Grid ";
@@ -883,7 +863,7 @@ void MainDialog::saveData()
 	node->LinkEndChild( node1 ); 
 	
 	for(int i = 0; i < this->m_gridMaterial->GetNumberCols(); i++)
-		node1->SetAttribute(wxString::Format(wxT("c%d"), (int)i).mb_str(), this->m_gridMaterial->GetColumnWidth(i));
+		node1->SetAttribute(wxString::Format(wxT("c%d"), (int)i).mb_str(), this->m_gridMaterial->GetColSize(i));
 			
 	comment = new TiXmlComment();
 	s=" Data for Material-Grid ";
@@ -916,7 +896,7 @@ void MainDialog::saveData()
 	node->LinkEndChild( node1 ); 
 	
 	for(int i = 0; i < this->m_gridFood->GetNumberCols(); i++)
-		node1->SetAttribute(wxString::Format(wxT("c%d"), (int)i).mb_str(), this->m_gridFood->GetColumnWidth(i));
+		node1->SetAttribute(wxString::Format(wxT("c%d"), (int)i).mb_str(), this->m_gridFood->GetColSize(i));
 			
 	comment = new TiXmlComment();
 	s=" Data for Provisions-Grid ";
@@ -965,7 +945,7 @@ void MainDialog::loadData()
 			for(int i = 0; i < this->m_gridLocations->GetNumberCols(); i++)
 			{
 				pnode->QueryIntAttribute(wxString::Format(_T("c%i"),i).mb_str(), &colWidth); 
-				this->m_gridLocations->SetColumnWidth(i,colWidth);
+				this->m_gridLocations->SetColSize(i,colWidth);
 			}
 		}	
 
@@ -1000,17 +980,19 @@ void MainDialog::loadData()
 				}
 			}		
 		}
+#ifndef __WXOSX__
 		location1.Add(wxEmptyString);
 		location2.Add(wxEmptyString);
 		location3.Add(wxEmptyString);
 		location4.Add(wxEmptyString);
 		location5.Add(wxEmptyString);
-		location6.Add(wxEmptyString);	
-/////////// Units //////////////	
+		location6.Add(wxEmptyString);
+#endif
+/////////// Units //////////////
 	pnode  =  hRoot.FirstChild( "UnitsColumnWidth" ).FirstChild().Element();
 
 	pnode->QueryIntAttribute("c0", &colWidth); 
-	this->m_gridUnits->SetColumnWidth(0,colWidth);
+	this->m_gridUnits->SetColSize(0,colWidth);
 
 	pnode  =  hRoot.FirstChild( "UnitsRowData" ).FirstChild().Element();
 
@@ -1032,7 +1014,7 @@ void MainDialog::loadData()
 			for(int i = 0; i < this->m_gridMaterial->GetNumberCols(); i++)
 			{
 				pnode->QueryIntAttribute(wxString::Format(_T("c%i"),i).mb_str(), &colWidth); 
-				this->m_gridMaterial->SetColumnWidth(i,colWidth);
+				this->m_gridMaterial->SetColSize(i,colWidth);
 			}
 		}	
 
@@ -1081,7 +1063,7 @@ void MainDialog::loadData()
 			for(int i = 0; i < this->m_gridFood->GetNumberCols(); i++)
 			{
 				pnode->QueryIntAttribute(wxString::Format(_T("c%i"),i).mb_str(), &colWidth); 
-				this->m_gridFood->SetColumnWidth(i,colWidth);
+				this->m_gridFood->SetColSize(i,colWidth);
 			}
 		}	
 

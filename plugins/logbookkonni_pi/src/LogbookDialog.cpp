@@ -11,7 +11,7 @@
 #include "Logbook.h"
 #include "logbook_pi.h"
 #include "Options.h"
-#include "tinyxml/tinyxml.h"
+#include "../../../include/tinyxml.h"
 #include "icons.h"
 #ifdef __WXOSX__
 	#include "MessageBoxOSX.h"
@@ -2197,7 +2197,6 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_textCtrlStatusDistance->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LogbookDialog::OnTextEnterStatusDistance ), NULL, this );
 	m_textCtrlStatusCourseDeg->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LogbookDialog::OnTextEnterStatusCourseDeg ), NULL, this );
 	m_textCtrlStatusCourseMin->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( LogbookDialog::OnTextEnterStatusMinutes ), NULL, this );
-// WXOSX: Events warum: wxEVT_GRID_CELL_CHANGE und nicht in wxEVT_GRID_CELL_CHANGED oder .._CHANGING ???
 
 	this->Connect( wxEVT_IDLE, wxIdleEventHandler( LogbookDialog::OnIdleMainDialog ) );
 
@@ -8962,7 +8961,7 @@ void TimerInterval::setCellValue(wxGrid* grid, int row, int col)
 		int min = wxAtoi(s);
 		if(min < 0 || min > 59)
 		{
-			min = 0;
+//			min = 0;  // Not used
 			grid->SetCellValue(row,col,_T(""));
 			return;
 		}
@@ -8972,7 +8971,7 @@ void TimerInterval::setCellValue(wxGrid* grid, int row, int col)
 		int hr = wxAtoi(s);
 		if((opt->timeformat == 0 && (hr < 0 || hr > 23))) 
 		{
-			hr = 0;
+//			hr = 0;  // Not used
 			grid->SetCellValue(row,col,_T(""));
 			return;
 		}

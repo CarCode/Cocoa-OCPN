@@ -258,10 +258,8 @@
 		14CAF838354C473C849D0551 /* Layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B57B58D9D64443499D881F8 /* Layer.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		15B6519E2CFC4B39BB274261 /* ogrlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7706582338480EB92E64F4 /* ogrlayer.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		160F4FFE6F0E4507BA9DBECC /* ocpndc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68CC2B03C84B4549B7632EFC /* ocpndc.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		165CEACD43434DBCAF0232A2 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC43FA019CA64EF986B77802 /* tinystr.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		1730DA834D0F4FC2B8EF4060 /* gpscom.c in Sources */ = {isa = PBXBuildFile; fileRef = B93334B1DF944E26A9D61F74 /* gpscom.c */; settings = {COMPILER_FLAGS = ""; }; };
 		17DCF40B24E84C03B85C919C /* UUID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9F767AE0B1484009AC8444C3 /* UUID.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		192ECA21CEFB44D78BAE69F5 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BB28027225D47FD8C3E11F5 /* tinyxmlparser.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		198024939D4642568F3CB538 /* cplgetsymbol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A5812B7D2C484810831FA320 /* cplgetsymbol.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		19897A3FCBC54BE185884270 /* rmc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E8E9A9E40444B37B64738A0 /* rmc.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		1990BA253787459BA76DB003 /* gpsserial.c in Sources */ = {isa = PBXBuildFile; fileRef = 0528D3F5808A4F19AF24A655 /* gpsserial.c */; settings = {COMPILER_FLAGS = ""; }; };
@@ -278,7 +276,6 @@
 		21D7520CC5F44140B44B3DA5 /* GribRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4B971ABE521C41EEB917EC81 /* GribRecord.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		22210F85CA394578BBC99C13 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BB06E60FB8DF4DE0A95509D4 /* icons.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		2395960E2AA64CE2B47A4BEE /* email.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4BC9DDD7B256485D81BC7FB4 /* email.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		23D8089A2CF444FF82D849C9 /* jsonreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5171F8EDDB994E82B2222EA7 /* jsonreader.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		24BDEEA7B4F5428C935B60A2 /* aupv.c in Sources */ = {isa = PBXBuildFile; fileRef = B4B633AEA8D24BAFB805F8A6 /* aupv.c */; settings = {COMPILER_FLAGS = ""; }; };
 		2574098634D24906886279F6 /* ogrs57datasource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551CE7F5D954F3EB22E3181 /* ogrs57datasource.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		258A849E859E44868EEB23B0 /* sentence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7C47F15913466383F427C8 /* sentence.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -342,7 +339,6 @@
 		4D44974D8CCA40F59C15C82A /* dashboard_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F7BC3BCE7BA4448A245AEEB /* dashboard_pi.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		4DC09F059FA24519BE5A089F /* chartsymbols.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = F9F941902EF4414C80E777F6 /* chartsymbols.xml */; settings = {COMPILER_FLAGS = ""; }; };
 		4F5D14F97FF84ED58C19D20B /* gpsmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 34AC03CC44A648528053F3C7 /* gpsmem.c */; settings = {COMPILER_FLAGS = ""; }; };
-		4FC16599EB6A4E198F78C4C7 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1A994AB7764429A83F4ABA0 /* tinyxmlparser.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		4FDF04F7115A4CDD920BE944 /* WeatherFaxWizard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62A789ECCBC44B0C9E1877BE /* WeatherFaxWizard.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		50C9F46D0DC542C5AD40AD0F /* s52cnsy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9C7C9E754134BBDA63A8157 /* s52cnsy.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		511B1D5F9F5244DAA7264A85 /* options.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545E80ACB44349559F9A871E /* options.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -352,7 +348,6 @@
 		55CBDC4CE8C34172AD6115AE /* rmc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCF961DDD1EC450FA4A4A05F /* rmc.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		5629E1D11EDA461BBC82ABB0 /* Logbook.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9349DD80C00423383FB544C /* Logbook.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		580D13B90F524D4DAE51E213 /* hdt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCB0B9E25C40469C92C57E36 /* hdt.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		581E43D302864F7C8B0C5009 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA294AEC4DF34011918C35FF /* tinystr.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		590DDC3DF80E47C586B3F277 /* gpsprot.c in Sources */ = {isa = PBXBuildFile; fileRef = 7569C66B26214E4D92971929 /* gpsprot.c */; settings = {COMPILER_FLAGS = ""; }; };
 		5932DDAE448A4B24AF18CA89 /* chartdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0357D7B4A94491482161D6B /* chartdb.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		5AFA0052DF2F4A09BAFDCB29 /* iacfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 145C862AB35B4DC28B20DE47 /* iacfile.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -414,7 +409,6 @@
 		816AB23653D442B3B9A8E2CA /* sun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D11FBB404657A433178C /* sun.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		81A0E6E57B0946939C3BEE23 /* Select.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C8D5213566942DAAE65C52B /* Select.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		820C38CC8DDC4CEC81EC8B10 /* dpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 482C7667CA014C5182F2CB7A /* dpt.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		823EF5DAFDB044819583F291 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A86A7B6BAC6146688E379079 /* tinyxmlerror.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		82D5224EB0E94078B00FD74A /* OCPN_Sound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23FAFA307F3D45C69F09F182 /* OCPN_Sound.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		844D8868C32B4E6F8FA44C74 /* depth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE2152729E354B7BB27D2D68 /* depth.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		84B794224D4A4DA39F72FB93 /* Marker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E83B879ADE6D4290A9C63F2A /* Marker.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -747,11 +741,9 @@
 		D206F104537E40F4B7464213 /* ConnectionParams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4FE2D2F6FC48D5975C8833 /* ConnectionParams.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		D2C3A7380EE84E4D90753CDD /* gui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C2C7BD64A9C408F8E75168A /* gui.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		D3DE169D47384202B1BCB6B9 /* rsa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2786851D391B45F7AC3EE91E /* rsa.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		D3FD90EADEB44730BDF756CC /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F316D2B935A64D58A53CC543 /* tinyxml.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		D535B2BE6F464834A44A9584 /* tri.c in Sources */ = {isa = PBXBuildFile; fileRef = 6C3B06DFD83543DBBE989763 /* tri.c */; settings = {COMPILER_FLAGS = ""; }; };
 		D53F24A332B442EC806F343F /* chartimg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F201F1E16B4C7EA2FCD360 /* chartimg.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		D578D1B5F56D46268737F795 /* rastersymbols-day.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 372741C87C404AA9A94BBD57 /* rastersymbols-day.png */; settings = {COMPILER_FLAGS = ""; }; };
-		D58DC0710C094CAC918A12F2 /* jsonwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 680DB42110B547EA8EC7EA9B /* jsonwriter.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		D7AB2BD19F1147779E2355E8 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBED0B1C0B36431295C53C8D /* icons.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		D82B97E6E156429983F459E0 /* WAVE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C6939F9B9CC49598FFF1DE5 /* WAVE.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		D8F65AD1E7864DC3B4FA0BE8 /* dynamical.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2D63175AAB447A2999376DD /* dynamical.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -761,7 +753,6 @@
 		DA4226DAE7E3441A9500C94D /* expid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 825E5CB7F84F4A6D9A50094D /* expid.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		DAA39EAEBD34480CA1670480 /* zda.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ACF1759D04A439185F45CA0 /* zda.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		DAAAC494E0EA45AFA6708053 /* garmin_wrapper_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 805CF35E5E0344A5B0CCCFC0 /* garmin_wrapper_utils.c */; settings = {COMPILER_FLAGS = ""; }; };
-		DB8E2D9A5650456581F8FA1E /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C994B806FEDB443F9D48C920 /* tinyxml.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		DCA80F53D5E445EC868065F7 /* geodesic.c in Sources */ = {isa = PBXBuildFile; fileRef = BB4C98E559C94299B383B646 /* geodesic.c */; settings = {COMPILER_FLAGS = ""; }; };
 		DCC97E8CBF0246A8AD40E6F4 /* iacfleet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 500853BE5273487CAD3ABF7F /* iacfleet.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		DCD9244408CD461A9D54E7D3 /* vwr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6D30DEACE42483B96F9310F /* vwr.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -786,7 +777,6 @@
 		EA05187B6A2C44198FD330BF /* cpl_conv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 132725BF57894FED9150AA6A /* cpl_conv.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		EA368358194D405CBFE82A24 /* rmc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A1C55B5493846D19B354FF4 /* rmc.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		EA44B15BAB99463CAFDB709E /* macutils.c in Sources */ = {isa = PBXBuildFile; fileRef = CB0A56F93BB7449AA4740078 /* macutils.c */; settings = {COMPILER_FLAGS = ""; }; };
-		EACE0CE1B413476A989F28CE /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2780201DCB4445BE8B4E58 /* tinyxmlerror.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		EBB65549E3304B6FA66FAB23 /* CAF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B553F7CF61DA43A291CCE7F9 /* CAF.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		EC14563FD6AE4F209361D4E1 /* Export.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AEFC33CB454444FFB9B76956 /* Export.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		EC5213CAC35B426B829C1A04 /* gpsdevice_ser.c in Sources */ = {isa = PBXBuildFile; fileRef = D337DCEF556C43ADAF3E0340 /* gpsdevice_ser.c */; settings = {COMPILER_FLAGS = ""; }; };
@@ -1243,7 +1233,6 @@
 		00917CE78E104AD398380F51 /* gga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gga.cpp; path = plugins/logbookkonni_pi/src/nmea0183/gga.cpp; sourceTree = SOURCE_ROOT; };
 		00C6CC892889408ABF6C31FE /* AIS_Target_Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIS_Target_Data.h; path = include/AIS_Target_Data.h; sourceTree = SOURCE_ROOT; };
 		011010C3D37E4750BF3D7582 /* cutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cutil.cpp; path = src/cutil.cpp; sourceTree = SOURCE_ROOT; };
-		014BB7B8D4614F27A590EC41 /* jsonreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsonreader.h; path = plugins/Findit_pi/src/jsonreader.h; sourceTree = SOURCE_ROOT; };
 		01B6C11A8E5F43938E948329 /* wdb_borders_c.b */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = wdb_borders_c.b; path = data/gshhs/wdb_borders_c.b; sourceTree = SOURCE_ROOT; };
 		0203ACF37908445999E243DA /* gpsdatum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpsdatum.h; path = src/garmin/jeeps/gpsdatum.h; sourceTree = SOURCE_ROOT; };
 		020767C550534051812132B1 /* sentence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sentence.cpp; path = plugins/logbookkonni_pi/src/nmea0183/sentence.cpp; sourceTree = SOURCE_ROOT; };
@@ -1264,7 +1253,6 @@
 		06E375D5992E42F6A6160B24 /* ogr_spatialref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ogr_spatialref.h; path = src/mygdal/ogr_spatialref.h; sourceTree = SOURCE_ROOT; };
 		06F8AF8BD0564049B4406E9E /* timers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = timers.h; path = include/timers.h; sourceTree = SOURCE_ROOT; };
 		073A0C6C47414CB9BF44B3BE /* latlong.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = latlong.cpp; path = plugins/logbookkonni_pi/src/nmea0183/latlong.cpp; sourceTree = SOURCE_ROOT; };
-		09A960ED363B4AD09F3C012A /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinystr.h; path = plugins/logbookkonni_pi/src/tinyxml/tinystr.h; sourceTree = SOURCE_ROOT; };
 		09C0F31E85D24D5789780B29 /* tide_time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tide_time.h; path = include/tide_time.h; sourceTree = SOURCE_ROOT; };
 		09DC31F5663A4B50B8717794 /* s57objectclasses.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = s57objectclasses.csv; path = data/s57data/s57objectclasses.csv; sourceTree = SOURCE_ROOT; };
 		0AD01A0CEA184B828CF1E994 /* navutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = navutil.cpp; path = src/navutil.cpp; sourceTree = SOURCE_ROOT; };
@@ -1351,7 +1339,6 @@
 		28B3DEB7A5B649B68A110FC9 /* riseset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = riseset.cpp; path = plugins/celestial_navigation_pi/src/astrolabe/riseset.cpp; sourceTree = SOURCE_ROOT; };
 		28F2AA7E7E63477A9859F90C /* iacfleet_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iacfleet_pi.cpp; path = plugins/iacfleet_pi/src/iacfleet_pi.cpp; sourceTree = SOURCE_ROOT; };
 		294ED6B16303401DB3EA961D /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/celestial_navigation_pi/src/icons.h; sourceTree = SOURCE_ROOT; };
-		296AD0BD6B054205AB1C62B0 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = plugins/Findit_pi/src/tinyxml/tinyxml.h; sourceTree = SOURCE_ROOT; };
 		2A01BF311D60476890C8883C /* instrument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = instrument.h; path = plugins/dashboard_pi/src/instrument.h; sourceTree = SOURCE_ROOT; };
 		2A09C85CFAC64F4B9F1FCB52 /* depth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = depth.h; path = plugins/dashboard_pi/src/depth.h; sourceTree = SOURCE_ROOT; };
 		2A7706582338480EB92E64F4 /* ogrlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ogrlayer.cpp; path = src/mygdal/ogrlayer.cpp; sourceTree = SOURCE_ROOT; };
@@ -1446,8 +1433,6 @@
 		500653108B7C4178941EF8F4 /* RMB.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = RMB.hpp; path = plugins/logbookkonni_pi/src/nmea0183/RMB.hpp; sourceTree = SOURCE_ROOT; };
 		500853BE5273487CAD3ABF7F /* iacfleet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iacfleet.cpp; path = plugins/iacfleet_pi/src/iacfleet.cpp; sourceTree = SOURCE_ROOT; };
 		50BF39F1FA2C40BA864FD245 /* calendar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = calendar.cpp; path = plugins/celestial_navigation_pi/src/astrolabe/calendar.cpp; sourceTree = SOURCE_ROOT; };
-		5171F8EDDB994E82B2222EA7 /* jsonreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonreader.cpp; path = plugins/Findit_pi/src/jsonreader.cpp; sourceTree = SOURCE_ROOT; };
-		524AD46C8CD64B908BFB00FB /* jsonval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsonval.h; path = plugins/Findit_pi/src/jsonval.h; sourceTree = SOURCE_ROOT; };
 		5287D81B98FE443997382C46 /* garmin_gps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = garmin_gps.h; path = src/garmin/jeeps/garmin_gps.h; sourceTree = SOURCE_ROOT; };
 		532F17C5173643EBB8ADB4E5 /* Route.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Route.cpp; path = src/Route.cpp; sourceTree = SOURCE_ROOT; };
 		53E4A9A1B23646C689AF44D2 /* rudder_angle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rudder_angle.h; path = plugins/dashboard_pi/src/rudder_angle.h; sourceTree = SOURCE_ROOT; };
@@ -1461,16 +1446,13 @@
 		57664A5AEAEA425F8B47FED3 /* rte.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rte.cpp; path = plugins/logbookkonni_pi/src/nmea0183/rte.cpp; sourceTree = SOURCE_ROOT; };
 		586A569F83E7459B90A1A4F5 /* gga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gga.cpp; path = src/nmea0183/gga.cpp; sourceTree = SOURCE_ROOT; };
 		58AB168AEC804AD58CAE14C3 /* hdg.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = hdg.hpp; path = plugins/logbookkonni_pi/src/nmea0183/hdg.hpp; sourceTree = SOURCE_ROOT; };
-		597F3F5EFC9C4A64ABA09BC1 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = plugins/logbookkonni_pi/src/tinyxml/tinyxml.h; sourceTree = SOURCE_ROOT; };
 		59ECDB51596146DCAEDB8CEF /* vwr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vwr.hpp; path = plugins/dashboard_pi/src/nmea0183/vwr.hpp; sourceTree = SOURCE_ROOT; };
 		5A2148A197B0413BAD4A3E2E /* nmea0183.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nmea0183.cpp; path = plugins/logbookkonni_pi/src/nmea0183/nmea0183.cpp; sourceTree = SOURCE_ROOT; };
 		5B24FB44475C41F28887A129 /* ocpn_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ocpn_types.h; path = include/ocpn_types.h; sourceTree = SOURCE_ROOT; };
-		5BB28027225D47FD8C3E11F5 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlparser.cpp; path = plugins/Findit_pi/src/tinyxml/tinyxmlparser.cpp; sourceTree = SOURCE_ROOT; };
 		5BBA00018468491EB9978049 /* libcelestial_navigation_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libcelestial_navigation_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C558B3FC699406D90E39C97 /* libgradar_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libgradar_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C8D5213566942DAAE65C52B /* Select.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Select.cpp; path = src/Select.cpp; sourceTree = SOURCE_ROOT; };
 		5CA9F9E92F5142D689A8F15E /* garminusb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = garminusb.h; path = src/garmin/jeeps/garminusb.h; sourceTree = SOURCE_ROOT; };
-		5CCB59A16B8541DEB01FB0BF /* jsonwriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsonwriter.h; path = plugins/Findit_pi/src/jsonwriter.h; sourceTree = SOURCE_ROOT; };
 		5D00D59E8A904783B8FDF26F /* weatherfax_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = weatherfax_pi.cpp; path = plugins/weatherfax_pi/src/weatherfax_pi.cpp; sourceTree = SOURCE_ROOT; };
 		5DBA2BBAF5214524A5FD45CF /* gpsusbcommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpsusbcommon.h; path = src/garmin/jeeps/gpsusbcommon.h; sourceTree = SOURCE_ROOT; };
 		5DE94639561D47E8B1D7B8A3 /* wpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wpl.cpp; path = src/nmea0183/wpl.cpp; sourceTree = SOURCE_ROOT; };
@@ -1503,14 +1485,12 @@
 		66815A6D70AC4DC581B67E13 /* mygeom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mygeom.h; path = include/mygeom.h; sourceTree = SOURCE_ROOT; };
 		66E36B5994014A458268AE12 /* wind_history.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wind_history.cpp; path = plugins/dashboard_pi/src/wind_history.cpp; sourceTree = SOURCE_ROOT; };
 		67CD93EF03BE43CFBEB8DA6F /* vhw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vhw.cpp; path = plugins/logbookkonni_pi/src/nmea0183/vhw.cpp; sourceTree = SOURCE_ROOT; };
-		680DB42110B547EA8EC7EA9B /* jsonwriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonwriter.cpp; path = plugins/Findit_pi/src/jsonwriter.cpp; sourceTree = SOURCE_ROOT; };
 		68C478155BD3464E817D87CF /* LogbookHTML.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LogbookHTML.cpp; path = plugins/logbookkonni_pi/src/LogbookHTML.cpp; sourceTree = SOURCE_ROOT; };
 		68CC2B03C84B4549B7632EFC /* ocpndc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ocpndc.cpp; path = src/ocpndc.cpp; sourceTree = SOURCE_ROOT; };
 		694DB5D66DB541BD87090417 /* GPwpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GPwpl.hpp; path = src/nmea0183/GPwpl.hpp; sourceTree = SOURCE_ROOT; };
 		69523FB04C7A41199729849B /* rte.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = rte.hpp; path = plugins/logbookkonni_pi/src/nmea0183/rte.hpp; sourceTree = SOURCE_ROOT; };
 		6960D9DF1FF34A09B2018C8C /* README.harmonics */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = README.harmonics; path = data/tcdata/README.harmonics; sourceTree = SOURCE_ROOT; };
 		698F9C18F0E84E058F0F2756 /* toolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = toolbar.h; path = include/toolbar.h; sourceTree = SOURCE_ROOT; };
-		6A2780201DCB4445BE8B4E58 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlerror.cpp; path = plugins/Findit_pi/src/tinyxml/tinyxmlerror.cpp; sourceTree = SOURCE_ROOT; };
 		6A34D3BDAF9D408F9D08642A /* lat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lat.cpp; path = src/nmea0183/lat.cpp; sourceTree = SOURCE_ROOT; };
 		6AB5968B9CAB468D838AEF5A /* NavObjectCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavObjectCollection.h; path = include/NavObjectCollection.h; sourceTree = SOURCE_ROOT; };
 		6C18645090474D4984AFAB68 /* gll.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = gll.hpp; path = plugins/dashboard_pi/src/nmea0183/gll.hpp; sourceTree = SOURCE_ROOT; };
@@ -2003,7 +1983,6 @@
 		A6FABA6318CDE02200922E48 /* RMC.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = RMC.hpp; path = plugins/dashboard_pi/src/nmea0183/RMC.hpp; sourceTree = "<group>"; };
 		A6FABA6418CDE07200922E48 /* RMC.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = RMC.hpp; path = plugins/logbookkonni_pi/src/nmea0183/RMC.hpp; sourceTree = "<group>"; };
 		A76934330B0A4AF2877C4238 /* gpxdocument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gpxdocument.cpp; path = src/gpxdocument.cpp; sourceTree = SOURCE_ROOT; };
-		A86A7B6BAC6146688E379079 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlerror.cpp; path = plugins/logbookkonni_pi/src/tinyxml/tinyxmlerror.cpp; sourceTree = SOURCE_ROOT; };
 		A8CB7EA0F7D54C8BA1AD0EDA /* bbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bbox.cpp; path = src/bbox.cpp; sourceTree = SOURCE_ROOT; };
 		A8E0DEAB602C4C2881731A87 /* TC_Error_Code.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TC_Error_Code.h; path = include/TC_Error_Code.h; sourceTree = SOURCE_ROOT; };
 		A9C613C8C2754BF8943886FC /* hdt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hdt.cpp; path = src/nmea0183/hdt.cpp; sourceTree = SOURCE_ROOT; };
@@ -2070,7 +2049,6 @@
 		BB87349EF124488D9FE54143 /* FontDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontDesc.h; path = include/FontDesc.h; sourceTree = SOURCE_ROOT; };
 		BBB537F806AC4F1E91F75713 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/grib_pi/src/icons.cpp; sourceTree = SOURCE_ROOT; };
 		BBF192D09E654FD78EC8E990 /* cpl_odbc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpl_odbc.h; path = src/mygdal/cpl_odbc.h; sourceTree = SOURCE_ROOT; };
-		BC43FA019CA64EF986B77802 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinystr.cpp; path = plugins/logbookkonni_pi/src/tinyxml/tinystr.cpp; sourceTree = SOURCE_ROOT; };
 		BC440262FF3548E2904D4448 /* hdm.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = hdm.hpp; path = src/nmea0183/hdm.hpp; sourceTree = SOURCE_ROOT; };
 		BC45B5B1F30744BE99718841 /* dbt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dbt.cpp; path = plugins/dashboard_pi/src/nmea0183/dbt.cpp; sourceTree = SOURCE_ROOT; };
 		BCB8DB31678E4C6183DD7F57 /* ogr_geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ogr_geometry.h; path = src/mygdal/ogr_geometry.h; sourceTree = SOURCE_ROOT; };
@@ -2105,8 +2083,6 @@
 		C8D14110DFBF43AFB525F86F /* cpl_vsi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpl_vsi.h; path = src/mygdal/cpl_vsi.h; sourceTree = SOURCE_ROOT; };
 		C9349DD80C00423383FB544C /* Logbook.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logbook.cpp; path = plugins/logbookkonni_pi/src/Logbook.cpp; sourceTree = SOURCE_ROOT; };
 		C97B73DCCA444448A16A96BF /* Logbook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logbook.h; path = plugins/logbookkonni_pi/src/Logbook.h; sourceTree = SOURCE_ROOT; };
-		C994B806FEDB443F9D48C920 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = plugins/logbookkonni_pi/src/tinyxml/tinyxml.cpp; sourceTree = SOURCE_ROOT; };
-		CA294AEC4DF34011918C35FF /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinystr.cpp; path = plugins/Findit_pi/src/tinyxml/tinystr.cpp; sourceTree = SOURCE_ROOT; };
 		CAB67BB38D4344A181B34DE4 /* TCDataFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCDataFactory.h; path = include/TCDataFactory.h; sourceTree = SOURCE_ROOT; };
 		CAE38AAB8C1D4207B90B3059 /* nmea0183.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = nmea0183.hpp; path = plugins/dashboard_pi/src/nmea0183/nmea0183.hpp; sourceTree = SOURCE_ROOT; };
 		CB0A56F93BB7449AA4740078 /* macutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = macutils.c; path = src/macutils.c; sourceTree = SOURCE_ROOT; };
@@ -2142,7 +2118,6 @@
 		D76684A6B5DD448FB5296DF8 /* poly-l-1.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = "poly-l-1.dat"; path = "data/gshhs/poly-l-1.dat"; sourceTree = SOURCE_ROOT; };
 		D7743A6F5226481893F5A9A8 /* tcmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tcmgr.cpp; path = src/tcmgr.cpp; sourceTree = SOURCE_ROOT; };
 		D7D513869E094B4984B0D253 /* gsv.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = gsv.hpp; path = plugins/logbookkonni_pi/src/nmea0183/gsv.hpp; sourceTree = SOURCE_ROOT; };
-		D7DC5007417F46FE82EB6E78 /* json_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = json_defs.h; path = plugins/Findit_pi/src/json_defs.h; sourceTree = SOURCE_ROOT; };
 		D7F16333AE7649539FFC7237 /* chartdb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartdb.h; path = include/chartdb.h; sourceTree = SOURCE_ROOT; };
 		D8778429E0EE40A38A9EFE82 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/celestial_navigation_pi/src/icons.cpp; sourceTree = SOURCE_ROOT; };
 		D977988323FF4509993BA863 /* ogr_feature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ogr_feature.h; path = src/mygdal/ogr_feature.h; sourceTree = SOURCE_ROOT; };
@@ -2193,7 +2168,6 @@
 		EA0EEB3DF433401E8549862F /* gpsserial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpsserial.h; path = src/garmin/jeeps/gpsserial.h; sourceTree = SOURCE_ROOT; };
 		EA1C28BEC0AE4051A205A60E /* ogr_p.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ogr_p.h; path = src/mygdal/ogr_p.h; sourceTree = SOURCE_ROOT; };
 		EA81B096D55B418785276241 /* IsoLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IsoLine.cpp; path = plugins/grib_pi/src/IsoLine.cpp; sourceTree = SOURCE_ROOT; };
-		EB0642E699F3447EB7A6CA00 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinystr.h; path = plugins/Findit_pi/src/tinyxml/tinystr.h; sourceTree = SOURCE_ROOT; };
 		EBEECFBBBA7A4F9CAADDAA46 /* GribUIDialogBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribUIDialogBase.h; path = plugins/grib_pi/src/GribUIDialogBase.h; sourceTree = SOURCE_ROOT; };
 		EBF04BFDA1054AD0BF36AED9 /* libvdr_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libvdr_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC307ABF44544DD8AA200518 /* gpsutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpsutil.h; path = src/garmin/jeeps/gpsutil.h; sourceTree = SOURCE_ROOT; };
@@ -2213,10 +2187,8 @@
 		F080AE8024FA4B1FABDE1238 /* CelestialNavigationUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CelestialNavigationUI.h; path = plugins/celestial_navigation_pi/src/CelestialNavigationUI.h; sourceTree = SOURCE_ROOT; };
 		F13F370A7CD04443AFFC02FC /* Export.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Export.h; path = plugins/logbookkonni_pi/src/Export.h; sourceTree = SOURCE_ROOT; };
 		F194A489A4174275B8FE7CA5 /* Select.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Select.h; path = include/Select.h; sourceTree = SOURCE_ROOT; };
-		F1A994AB7764429A83F4ABA0 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlparser.cpp; path = plugins/logbookkonni_pi/src/tinyxml/tinyxmlparser.cpp; sourceTree = SOURCE_ROOT; };
 		F240D10F595D499EBA424EFF /* MessageBoxOSX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MessageBoxOSX.cpp; path = plugins/logbookkonni_pi/src/MessageBoxOSX.cpp; sourceTree = SOURCE_ROOT; };
 		F2E75BDD1A474AD082CBD7DF /* FindBodyDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindBodyDialog.cpp; path = plugins/celestial_navigation_pi/src/FindBodyDialog.cpp; sourceTree = SOURCE_ROOT; };
-		F316D2B935A64D58A53CC543 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = plugins/Findit_pi/src/tinyxml/tinyxml.cpp; sourceTree = SOURCE_ROOT; };
 		F47B87EA5F4E49EDA472CDE8 /* RolloverWin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RolloverWin.h; path = include/RolloverWin.h; sourceTree = SOURCE_ROOT; };
 		F48231F79BD64032A6142743 /* elp2000.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = elp2000.cpp; path = plugins/celestial_navigation_pi/src/astrolabe/elp2000.cpp; sourceTree = SOURCE_ROOT; };
 		F4BD7D863B6945C18FCF32AC /* ChInfoWin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChInfoWin.cpp; path = src/ChInfoWin.cpp; sourceTree = SOURCE_ROOT; };
@@ -3042,12 +3014,6 @@
 				2831C7DD6CBA41C5A8E36F80 /* findit.cpp */,
 				FBED0B1C0B36431295C53C8D /* icons.cpp */,
 				1C2C7BD64A9C408F8E75168A /* gui.cpp */,
-				5171F8EDDB994E82B2222EA7 /* jsonreader.cpp */,
-				680DB42110B547EA8EC7EA9B /* jsonwriter.cpp */,
-				F316D2B935A64D58A53CC543 /* tinyxml.cpp */,
-				CA294AEC4DF34011918C35FF /* tinystr.cpp */,
-				6A2780201DCB4445BE8B4E58 /* tinyxmlerror.cpp */,
-				5BB28027225D47FD8C3E11F5 /* tinyxmlparser.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3102,12 +3068,6 @@
 				26FB7EE192AD4141B0EBA1D5 /* findit.h */,
 				02F2840F96C34281AF48C722 /* icons.h */,
 				C76BB2D23D89440DBFDCF037 /* gui.h */,
-				D7DC5007417F46FE82EB6E78 /* json_defs.h */,
-				014BB7B8D4614F27A590EC41 /* jsonreader.h */,
-				524AD46C8CD64B908BFB00FB /* jsonval.h */,
-				5CCB59A16B8541DEB01FB0BF /* jsonwriter.h */,
-				296AD0BD6B054205AB1C62B0 /* tinyxml.h */,
-				EB0642E699F3447EB7A6CA00 /* tinystr.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -3483,8 +3443,6 @@
 				2ABB1116BEFB439D80F79D15 /* Maintenance.h */,
 				848FE6894DA14D6AB72F7526 /* OverView.h */,
 				F13F370A7CD04443AFFC02FC /* Export.h */,
-				597F3F5EFC9C4A64ABA09BC1 /* tinyxml.h */,
-				09A960ED363B4AD09F3C012A /* tinystr.h */,
 				2B51E986C583410798E77883 /* MessageBoxOSX.h */,
 				F515DE11921947EE90EE5779 /* LatLong.hpp */,
 				AF4F47F3D5644393AB4FB2E5 /* nmea0183.hpp */,
@@ -3912,10 +3870,6 @@
 				7517CD3624484B42992411FE /* Maintenance.cpp */,
 				7B3491920D92479E930C8701 /* OverView.cpp */,
 				AEFC33CB454444FFB9B76956 /* Export.cpp */,
-				C994B806FEDB443F9D48C920 /* tinyxml.cpp */,
-				A86A7B6BAC6146688E379079 /* tinyxmlerror.cpp */,
-				F1A994AB7764429A83F4ABA0 /* tinyxmlparser.cpp */,
-				BC43FA019CA64EF986B77802 /* tinystr.cpp */,
 				F240D10F595D499EBA424EFF /* MessageBoxOSX.cpp */,
 				073A0C6C47414CB9BF44B3BE /* latlong.cpp */,
 				E3A2DEDA155F48E6A04F7B48 /* long.cpp */,
@@ -4692,10 +4646,6 @@
 				F1A1AAA5DD3D43D2A612B71A /* Maintenance.cpp in Sources */,
 				E64B6C17F9EE4FCAB37DDD15 /* OverView.cpp in Sources */,
 				EC14563FD6AE4F209361D4E1 /* Export.cpp in Sources */,
-				DB8E2D9A5650456581F8FA1E /* tinyxml.cpp in Sources */,
-				823EF5DAFDB044819583F291 /* tinyxmlerror.cpp in Sources */,
-				4FC16599EB6A4E198F78C4C7 /* tinyxmlparser.cpp in Sources */,
-				165CEACD43434DBCAF0232A2 /* tinystr.cpp in Sources */,
 				52ED3DD49614407DA8237B9B /* MessageBoxOSX.cpp in Sources */,
 				BD128E27B897423EB2E3BB10 /* latlong.cpp in Sources */,
 				ABC0D7D3950B4EDFB08F5CB0 /* long.cpp in Sources */,
@@ -4736,12 +4686,6 @@
 				6E108869F2234D0CB9919E16 /* findit.cpp in Sources */,
 				D7AB2BD19F1147779E2355E8 /* icons.cpp in Sources */,
 				D2C3A7380EE84E4D90753CDD /* gui.cpp in Sources */,
-				23D8089A2CF444FF82D849C9 /* jsonreader.cpp in Sources */,
-				D58DC0710C094CAC918A12F2 /* jsonwriter.cpp in Sources */,
-				D3FD90EADEB44730BDF756CC /* tinyxml.cpp in Sources */,
-				581E43D302864F7C8B0C5009 /* tinystr.cpp in Sources */,
-				EACE0CE1B413476A989F28CE /* tinyxmlerror.cpp in Sources */,
-				192ECA21CEFB44D78BAE69F5 /* tinyxmlparser.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
