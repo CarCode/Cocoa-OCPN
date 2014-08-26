@@ -498,6 +498,8 @@
 		A62034F318B911BC000A2376 /* dsa_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A62034F218B911BC000A2376 /* dsa_utils.cpp */; };
 		A62034F518B9126E000A2376 /* mp_math.c in Sources */ = {isa = PBXBuildFile; fileRef = A62034F418B9126E000A2376 /* mp_math.c */; };
 		A62034F718B91291000A2376 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A62034F618B91291000A2376 /* sha1.c */; };
+		A6207BAC19A6A33000215493 /* vlw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6207BAB19A6A33000215493 /* vlw.cpp */; };
+		A6207BAE19A6A34E00215493 /* Stalk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6207BAD19A6A34E00215493 /* Stalk.cpp */; };
 		A635C8AE17C16F0900B3E5E9 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AB17C16F0900B3E5E9 /* tinyxml.cpp */; };
 		A635C8AF17C16F0900B3E5E9 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AC17C16F0900B3E5E9 /* tinyxmlerror.cpp */; };
 		A635C8B017C16F0900B3E5E9 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AD17C16F0900B3E5E9 /* tinyxmlparser.cpp */; };
@@ -1245,7 +1247,6 @@
 		01B6C11A8E5F43938E948329 /* wdb_borders_c.b */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = wdb_borders_c.b; path = data/gshhs/wdb_borders_c.b; sourceTree = SOURCE_ROOT; };
 		0203ACF37908445999E243DA /* gpsdatum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpsdatum.h; path = src/garmin/jeeps/gpsdatum.h; sourceTree = SOURCE_ROOT; };
 		020767C550534051812132B1 /* sentence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sentence.cpp; path = plugins/logbookkonni_pi/src/nmea0183/sentence.cpp; sourceTree = SOURCE_ROOT; };
-		02E95DA0EF204C3886D0FBD6 /* 7bells.wav */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = 7bells.wav; path = data/sounds/7bells.wav; sourceTree = SOURCE_ROOT; };
 		02F2840F96C34281AF48C722 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/Findit_pi/src/icons.h; sourceTree = SOURCE_ROOT; };
 		03062E5E085E4F0AB6AD8169 /* mta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mta.cpp; path = plugins/dashboard_pi/src/nmea0183/mta.cpp; sourceTree = SOURCE_ROOT; };
 		0314497EEF5246C481E5A95F /* WeatherFaxUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherFaxUI.h; path = plugins/weatherfax_pi/src/WeatherFaxUI.h; sourceTree = SOURCE_ROOT; };
@@ -1269,13 +1270,11 @@
 		0AD01A0CEA184B828CF1E994 /* navutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = navutil.cpp; path = src/navutil.cpp; sourceTree = SOURCE_ROOT; };
 		0B9393CD2AF44F0CA015C9AD /* wpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = wpl.hpp; path = plugins/logbookkonni_pi/src/nmea0183/wpl.hpp; sourceTree = SOURCE_ROOT; };
 		0BDD861637964A0EA9588F64 /* gshhs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gshhs.cpp; path = src/gshhs.cpp; sourceTree = SOURCE_ROOT; };
-		0BE4BFAE46DC4691A09C7750 /* 3bells.wav */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = 3bells.wav; path = data/sounds/3bells.wav; sourceTree = SOURCE_ROOT; };
 		0CBEDB517AD84E4F8497C8B1 /* chartdbs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartdbs.h; path = include/chartdbs.h; sourceTree = SOURCE_ROOT; };
 		0CFB813CEFAD48B5BDD5B66E /* NIST.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NIST.cpp; path = plugins/weatherfax_pi/src/libaudiofile/NIST.cpp; sourceTree = SOURCE_ROOT; };
 		0DA24D3E84D644AFA970CF98 /* jsonreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jsonreader.h; path = include/wx/jsonreader.h; sourceTree = SOURCE_ROOT; };
 		0DF17986027D44859178F439 /* ogr_attrind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ogr_attrind.h; path = src/mygdal/ogr_attrind.h; sourceTree = SOURCE_ROOT; };
 		0E682744C1CD4EC892AE7DC2 /* SelectItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectItem.cpp; path = src/SelectItem.cpp; sourceTree = SOURCE_ROOT; };
-		0E7221DA6C6549F5BEEE6CEF /* 8bells.wav */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = 8bells.wav; path = data/sounds/8bells.wav; sourceTree = SOURCE_ROOT; };
 		0F1BE0C80497474CBE3BABBB /* Hyperlink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hyperlink.h; path = include/Hyperlink.h; sourceTree = SOURCE_ROOT; };
 		0FF4A7782BA64FDFB98CB748 /* s57featuredefns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = s57featuredefns.cpp; path = src/mygdal/s57featuredefns.cpp; sourceTree = SOURCE_ROOT; };
 		1117C343543345669AE26E54 /* gps.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gps.cpp; path = plugins/dashboard_pi/src/gps.cpp; sourceTree = SOURCE_ROOT; };
@@ -1371,7 +1370,6 @@
 		3209A9218494496C80E28A78 /* styles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = styles.h; path = include/styles.h; sourceTree = SOURCE_ROOT; };
 		32B00A925E3D4C5BA97A1D34 /* ogr_core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ogr_core.h; path = src/mygdal/ogr_core.h; sourceTree = SOURCE_ROOT; };
 		345CAC65A46A488195C57327 /* s57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = s57.h; path = src/mygdal/s57.h; sourceTree = SOURCE_ROOT; };
-		3471B56ED69946D18313BB8E /* 5bells.wav */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = 5bells.wav; path = data/sounds/5bells.wav; sourceTree = SOURCE_ROOT; };
 		347B9321DB244E49AC7F4647 /* AIS_Target_Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AIS_Target_Data.cpp; path = src/AIS_Target_Data.cpp; sourceTree = SOURCE_ROOT; };
 		34AC03CC44A648528053F3C7 /* gpsmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gpsmem.c; path = src/garmin/jeeps/gpsmem.c; sourceTree = SOURCE_ROOT; };
 		34BE4E3A28C64F378F119D8E /* S57ObjectDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = S57ObjectDesc.h; path = include/S57ObjectDesc.h; sourceTree = SOURCE_ROOT; };
@@ -1384,7 +1382,6 @@
 		36D17CE0C5114584973E12CA /* toolicons_journeyman.png */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = image; name = toolicons_journeyman.png; path = src/bitmaps/toolicons_journeyman.png; sourceTree = SOURCE_ROOT; };
 		372741C87C404AA9A94BBD57 /* rastersymbols-day.png */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = image; name = "rastersymbols-day.png"; path = "data/s57data/rastersymbols-day.png"; sourceTree = SOURCE_ROOT; };
 		373F7413ABBF446EB08D6A22 /* latlong.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = latlong.cpp; path = src/nmea0183/latlong.cpp; sourceTree = SOURCE_ROOT; };
-		37BBBF1764144559AE4E6422 /* 6bells.wav */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = 6bells.wav; path = data/sounds/6bells.wav; sourceTree = SOURCE_ROOT; };
 		37E6C9C6FEEE42E6900050F2 /* wpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wpl.cpp; path = plugins/dashboard_pi/src/nmea0183/wpl.cpp; sourceTree = SOURCE_ROOT; };
 		386C20EDDD284FB3A095D459 /* compass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = compass.cpp; path = plugins/dashboard_pi/src/compass.cpp; sourceTree = SOURCE_ROOT; };
 		38A060C23D674EEA84DFDB72 /* TCDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCDataSource.h; path = include/TCDataSource.h; sourceTree = SOURCE_ROOT; };
@@ -1562,7 +1559,6 @@
 		7D9DBEE1296E4E3AA5D360A8 /* ogrlinearring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ogrlinearring.cpp; path = src/mygdal/ogrlinearring.cpp; sourceTree = SOURCE_ROOT; };
 		7DC230A99E044F9A95B404D5 /* ogrmultilinestring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ogrmultilinestring.cpp; path = src/mygdal/ogrmultilinestring.cpp; sourceTree = SOURCE_ROOT; };
 		7E33F6D481944423BCD94C6F /* Sentence.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Sentence.hpp; path = plugins/logbookkonni_pi/src/nmea0183/Sentence.hpp; sourceTree = SOURCE_ROOT; };
-		7E3A1E7209304621B22D713B /* 4bells.wav */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = 4bells.wav; path = data/sounds/4bells.wav; sourceTree = SOURCE_ROOT; };
 		7E4630BEF360470F9E36CE97 /* cpl_error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpl_error.cpp; path = src/mygdal/cpl_error.cpp; sourceTree = SOURCE_ROOT; };
 		7EBAA8DA1271473290D02F85 /* wpl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = wpl.hpp; path = plugins/dashboard_pi/src/nmea0183/wpl.hpp; sourceTree = SOURCE_ROOT; };
 		7ED670B5E8BF4EDFB12AA26A /* AIS_Bitstring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AIS_Bitstring.cpp; path = src/AIS_Bitstring.cpp; sourceTree = SOURCE_ROOT; };
@@ -1738,6 +1734,10 @@
 		A62034F218B911BC000A2376 /* dsa_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dsa_utils.cpp; path = plugins/S63_pi/src/dsa/dsa_utils.cpp; sourceTree = "<group>"; };
 		A62034F418B9126E000A2376 /* mp_math.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mp_math.c; path = plugins/S63_pi/src/dsa/mp_math.c; sourceTree = "<group>"; };
 		A62034F618B91291000A2376 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sha1.c; path = plugins/S63_pi/src/dsa/sha1.c; sourceTree = "<group>"; };
+		A6207BA919A6A2E600215493 /* vlw.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vlw.hpp; path = src/nmea0183/vlw.hpp; sourceTree = "<group>"; };
+		A6207BAA19A6A30E00215493 /* Stalk.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Stalk.hpp; path = src/nmea0183/Stalk.hpp; sourceTree = "<group>"; };
+		A6207BAB19A6A33000215493 /* vlw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vlw.cpp; path = src/nmea0183/vlw.cpp; sourceTree = "<group>"; };
+		A6207BAD19A6A34E00215493 /* Stalk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Stalk.cpp; path = src/nmea0183/Stalk.cpp; sourceTree = "<group>"; };
 		A6219E7118AD7C2E00B3E5F4 /* triangulate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = triangulate.h; path = include/triangulate.h; sourceTree = "<group>"; };
 		A635C8AA17C16ED600B3E5E9 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = include/tinyxml.h; sourceTree = "<group>"; };
 		A635C8AB17C16F0900B3E5E9 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = src/tinyxml.cpp; sourceTree = "<group>"; };
@@ -3072,6 +3072,8 @@
 				F4CE388D804741B8989D1801 /* gsv.hpp */,
 				694DB5D66DB541BD87090417 /* GPwpl.hpp */,
 				188F596DE59A4DCA9EEB3F78 /* apb.hpp */,
+				A6207BA919A6A2E600215493 /* vlw.hpp */,
+				A6207BAA19A6A30E00215493 /* Stalk.hpp */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -3569,12 +3571,6 @@
 				41FDA6EC44444CC3932FB09D /* license.txt */,
 				36C10EB2CCF74CC88CFD81A0 /* 1bells.wav */,
 				24FF6D6006414DEBBDE9ECCC /* 2bells.wav */,
-				0BE4BFAE46DC4691A09C7750 /* 3bells.wav */,
-				7E3A1E7209304621B22D713B /* 4bells.wav */,
-				3471B56ED69946D18313BB8E /* 5bells.wav */,
-				37BBBF1764144559AE4E6422 /* 6bells.wav */,
-				02E95DA0EF204C3886D0FBD6 /* 7bells.wav */,
-				0E7221DA6C6549F5BEEE6CEF /* 8bells.wav */,
 				B2C43C3E0F084AD4A1C583A4 /* README.bells */,
 				C2CC9DD1B6214260BB9E03FF /* opencpn.icns */,
 			);
@@ -3872,6 +3868,8 @@
 				1161E5E10202470BB96B0316 /* gsv.cpp */,
 				CF40FB507CF44A26B87A78BD /* GPwpl.cpp */,
 				052B2062B1A9464D9E79E89A /* apb.cpp */,
+				A6207BAB19A6A33000215493 /* vlw.cpp */,
+				A6207BAD19A6A34E00215493 /* Stalk.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -4398,8 +4396,10 @@
 				76BD5DB3DEAF42BAA555F189 /* wpl.cpp in Sources */,
 				C6DC49F1FB5949248B35C285 /* rte.cpp in Sources */,
 				BA5C06D4803F45248256089B /* hdt.cpp in Sources */,
+				A6207BAC19A6A33000215493 /* vlw.cpp in Sources */,
 				78333986B0DF4E2C9019699A /* hdg.cpp in Sources */,
 				2B1659BD959B4FC1AD931C3C /* hdm.cpp in Sources */,
+				A6207BAE19A6A34E00215493 /* Stalk.cpp in Sources */,
 				C1C7DD504DA94957B16F1135 /* gll.cpp in Sources */,
 				424B764B9C4A4CDA90409F42 /* vtg.cpp in Sources */,
 				AC4DF66111884361A8AE6741 /* gga.cpp in Sources */,
