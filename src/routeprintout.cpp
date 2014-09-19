@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include <iostream>
 using namespace std;
@@ -48,7 +48,7 @@ using namespace std;
 #include <wx/colour.h>
 
 
-#if wxCHECK_VERSION( 3, 0, 0 )
+#if wxCHECK_VERSION( 2, 9, 0 )
 #include <wx/dialog.h>
 #else
 //  #include "scrollingdialog.h"
@@ -187,24 +187,24 @@ void MyRoutePrintout::OnPreparePrinting()
     // Get the size of the DC in pixels
     int w, h;
     dc->GetSize( &w, &h );
-    
+
     // We don't know before hand what size the Print DC will be, in pixels.  Varies by host.
     // So, if the dc size is greater than 1000 pixels, we scale accordinly.
-    
+
     int maxX = wxMin(w, 1000);
     int maxY = wxMin(h, 1000);
-    
+
     // Calculate a suitable scaling factor
     double scaleX = ( double )( w / maxX );
     double scaleY = ( double )( h / maxY );
-    
+
     // Use x or y scaling factor, whichever fits on the DC
     double actualScale = wxMin( scaleX, scaleY );
-    
+
     // Set the scale and origin
     dc->SetUserScale( actualScale, actualScale );
     dc->SetDeviceOrigin( ( long )marginX, ( long )marginY );
-    
+
     table.AdjustCells( dc, marginX, marginY );
     numberOfPages = table.GetNumberPages();
 }
@@ -223,12 +223,12 @@ bool MyRoutePrintout::OnPrintPage( int page )
             return false;
     } else
         return false;
-    
+
 }
 
 void MyRoutePrintout::DrawPage( wxDC* dc )
 {
-    
+
 
     wxFont routePrintFont_bold( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD );
     dc->SetFont( routePrintFont_bold );
@@ -237,7 +237,7 @@ void MyRoutePrintout::DrawPage( wxDC* dc )
 
     int header_textOffsetX = 2;
     int header_textOffsetY = 2;
-    
+
     int currentX = marginX;
     int currentY = marginY;
     vector< PrintCell >& header_content = table.GetHeader();
@@ -284,10 +284,10 @@ IMPLEMENT_DYNAMIC_CLASS( RoutePrintSelection, wxDialog )
  * RouteProp event table definition
  */
 
-wxBEGIN_EVENT_TABLE( RoutePrintSelection, wxDialog )
+BEGIN_EVENT_TABLE( RoutePrintSelection, wxDialog )
 EVT_BUTTON( ID_ROUTEPRINT_SELECTION_CANCEL, RoutePrintSelection::OnRoutepropCancelClick )
 EVT_BUTTON( ID_ROUTEPRINT_SELECTION_OK, RoutePrintSelection::OnRoutepropOkClick )
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 /*!
  * RouteProp constructors
@@ -332,7 +332,7 @@ bool RoutePrintSelection::Create( wxWindow* parent, wxWindowID id, const wxStrin
 #ifdef __WXOSX__
     style |= wxSTAY_ON_TOP;
 #endif
-    
+
     wxDialog::Create( parent, id, _("Print Route Selection"), pos, size, style );
 
     CreateControls();
@@ -414,9 +414,7 @@ void RoutePrintSelection::CreateControls()
 
 void RoutePrintSelection::SetColorScheme( ColorScheme cs )
 {
-#ifndef __WXOSX__
     DimeControl( this );
-#endif
 }
 
 

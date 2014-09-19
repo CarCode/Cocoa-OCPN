@@ -52,11 +52,11 @@
 #undef GSocket
 #else
 #include "wx/socket.h"
-#include <netinet/in.h>
 #endif
 
 #ifndef __WXMSW__
 #include <sys/socket.h>                 // needed for (some) Mac builds
+#include <netinet/in.h>
 #endif
 
 #ifdef __WXMSW__
@@ -165,7 +165,7 @@ public:
     dsPortType GetIoSelect(){ return m_io_select; }
     int GetPriority(){ return m_priority; }
     void *GetUserData(){ return m_user_data; }
-
+    
     bool SendSentence( const wxString &sentence );
 
     int GetLastError(){ return m_last_error; }
@@ -205,7 +205,7 @@ private:
     void OnSocketEvent(wxSocketEvent& event);
     void OnTimerSocket(wxTimerEvent& event);
     void OnSocketReadWatchdogTimer(wxTimerEvent& event);
-
+    
     wxMutex             m_output_mutex;
     bool                m_bok;
     wxEvtHandler        *m_consumer;
@@ -257,8 +257,7 @@ private:
     wxTimer             m_socketread_watchdog_timer;
     int                 m_dog_value;
 
-
-    wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 };
 
 
@@ -456,7 +455,7 @@ public:
     WXLRESULT MSWWindowProc(WXUINT message, WXWPARAM wParam, WXLPARAM lParam);
 #endif
 
-    wxDECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE()
 };
 
 

@@ -51,7 +51,7 @@ using namespace std;
 #include <wx/colour.h>
 #include <wx/tokenzr.h>
 
-#if wxCHECK_VERSION( 3, 0, 0 )
+#if wxCHECK_VERSION( 2, 9, 0 )
 #include <wx/dialog.h>
 #else
 //  #include "scrollingdialog.h"

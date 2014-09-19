@@ -54,6 +54,9 @@
 
 //  Some external prototypes
 
+#define DATA_TYPE_FLOAT         0
+#define DATA_TYPE_DOUBLE        1
+
 
 //--------------------------------------------------------------------------------------------------
 //
@@ -95,6 +98,7 @@ class TriPrim
 public:
         TriPrim();
         ~TriPrim();
+        void FreeMem();
 
         unsigned int type;                  // Type of triangle primitive
                                             //  May be PTG_TRIANGLES
@@ -124,6 +128,10 @@ public:
 
         TriPrim         *tri_prim_head;         // head of linked list of TriPrims
         bool            m_bSMSENC;
+        bool            bsingle_alloc;
+        unsigned char   *single_buffer;
+        int             single_buffer_size;
+        int             data_type;              //  p_vertex in TriPrim chain is FLOAT or DOUBLE
 
     private:
         int my_bufgets( char *buf, int buf_len_max );
@@ -170,12 +178,7 @@ class PolyTessGeo
         PolyTessGeo();
         ~PolyTessGeo();
 
-        PolyTessGeo(unsigned char *polybuf, int nrecl, int index);      // Build this from SENC file record
-
-//        PolyTessGeo(OGRPolygon *poly, bool bSENC_SM,
-//            double ref_lat, double ref_lon,  bool bUseInternalTess);  // Build this from OGRPolygon
-
-//        PolyTessGeo(Extended_Geometry *pxGeom);
+        PolyTessGeo(unsigned char *polybuf, int nrecl, int index,  int senc_file_version);      // Build this from SENC file record
 
         bool IsOk(){ return m_bOK;}
 
@@ -195,8 +198,6 @@ class PolyTessGeo
 
     private:
         int BuildTessGL(void);
-//        int PolyTessGeoGL(OGRPolygon *poly, bool bSENC_SM, double ref_lat, double ref_lon);
-//        int PolyTessGeoTri(OGRPolygon *poly, bool bSENC_SM, double ref_lat, double ref_lon);
         int my_bufgets( char *buf, int buf_len_max );
 
 
@@ -224,52 +225,6 @@ class PolyTessGeo
 
 };
 
-
-#if 0
-//--------------------------------------------------------------------------------------------------
-//
-//      Trapezoid Tesselator Class
-//
-//--------------------------------------------------------------------------------------------------
-class PolyTessGeoTrap
-{
-      public:
-            PolyTessGeoTrap();
-            ~PolyTessGeoTrap();
-
-
-            PolyTessGeoTrap(Extended_Geometry *pxGeom);  // Build this from Extended Geometry
-
-            void BuildTess();
-
-            double Get_xmin(){ return xmin;}
-            double Get_xmax(){ return xmax;}
-            double Get_ymin(){ return ymin;}
-            double Get_ymax(){ return ymax;}
-            PolyTrapGroup *Get_PolyTrapGroup_head(){ return m_ptg_head;}
-            int GetnVertexMax(){ return m_nvertex_max; }
-            bool IsOk(){ return m_bOK;}
-            int     ErrorCode;
-
-
-      private:
-
-
-
-    //  Data
-            bool            m_bOK;
-
-            double          xmin, xmax, ymin, ymax;
-            PolyTrapGroup   *m_ptg_head;                  // PolyTrapGroup
-            int             m_nvertex_max;                // computed max vertex count
-                                                          // used by drawing primitives as
-                                                          // optimization for malloc
-            int             m_ncnt;
-            int             m_nwkb;
-
-};
-
-#endif
 
 
 #endif

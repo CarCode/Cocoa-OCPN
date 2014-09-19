@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #pragma once
 
@@ -105,22 +105,21 @@ class ChartSymbols
 public:
 	ChartSymbols(void);
 	~ChartSymbols(void);
-	bool LoadConfigFile(s52plib* plibArg, const wxString & path );
+	bool LoadConfigFile(s52plib* plibArg, const wxString & path);
 
 	static void InitializeGlobals( void );
 	static void DeleteGlobals( void );
-	static int LoadRasterFileForColorTable( int tableNo, bool flush=false, bool dcmode=false );
+	static int LoadRasterFileForColorTable( int tableNo, bool flush=false );
 	static wxArrayPtrVoid * GetColorTables();
-	static int FindColorTable(const wxString & tableName );
+	static int FindColorTable(const wxString & tableName);
 	static S52color* GetColor( const char *colorName, int fromTable );
 	static wxColor GetwxColor( const wxString &colorName, int fromTable );
 	static wxColor GetwxColor( const char *colorName, int fromTable );
 	static wxString HashKey( const char* symbolName );
 	static wxImage GetImage( const char* symbolName );
-    static unsigned int GetGLTextureRect( wxRect &rect, const char* symbolName );
-    static wxSize GLTextureSize();
-
-    static void SetColorTableIndex( int index );
+        static unsigned int GetGLTextureRect( wxRect &rect, const char* symbolName );
+        static wxSize GLTextureSize();
+        static void SetColorTableIndex( int index );
 private:
       void ProcessVectorTag( TiXmlElement* subNodes, SymbolSizeInfo_t &vectorSize );
       void ProcessColorTables( TiXmlElement* colortableodes );

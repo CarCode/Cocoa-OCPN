@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __GOTOPOSITIONDIALOG_H__
 #define __GOTOPOSITIONDIALOG_H__
@@ -49,47 +50,45 @@
  */
 class GoToPositionDialog: public wxDialog
 {
-    wxDECLARE_DYNAMIC_CLASS( GoToPositionDialog );
+      DECLARE_DYNAMIC_CLASS( GoToPositionDialog )
+      DECLARE_EVENT_TABLE()
 
-public:
+      public:
     /// Constructors
-    GoToPositionDialog( );
-    GoToPositionDialog( wxWindow* parent, wxWindowID id = SYMBOL_GOTOPOS_IDNAME,
-                        const wxString& caption = SYMBOL_GOTOPOS_TITLE,
-                        const wxPoint& pos = SYMBOL_GOTOPOS_POSITION,
-                        const wxSize& size = SYMBOL_GOTOPOS_SIZE,
-                        long style = SYMBOL_GOTOPOS_STYLE );
+            GoToPositionDialog( );
+            GoToPositionDialog( wxWindow* parent, wxWindowID id = SYMBOL_GOTOPOS_IDNAME,
+                                const wxString& caption = SYMBOL_GOTOPOS_TITLE,
+                                const wxPoint& pos = SYMBOL_GOTOPOS_POSITION,
+                                const wxSize& size = SYMBOL_GOTOPOS_SIZE,
+                                long style = SYMBOL_GOTOPOS_STYLE );
 
-    ~GoToPositionDialog();
+            ~GoToPositionDialog();
 
     /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_GOTOPOS_IDNAME,
-                    const wxString& caption = SYMBOL_GOTOPOS_TITLE,
-                    const wxPoint& pos = SYMBOL_GOTOPOS_POSITION,
-                    const wxSize& size = SYMBOL_GOTOPOS_SIZE, long style = SYMBOL_GOTOPOS_STYLE );
+            bool Create( wxWindow* parent, wxWindowID id = SYMBOL_GOTOPOS_IDNAME,
+                         const wxString& caption = SYMBOL_GOTOPOS_TITLE,
+                         const wxPoint& pos = SYMBOL_GOTOPOS_POSITION,
+                         const wxSize& size = SYMBOL_GOTOPOS_SIZE, long style = SYMBOL_GOTOPOS_STYLE );
 
-    void SetColorScheme(ColorScheme cs);
+            void SetColorScheme(ColorScheme cs);
 
-    void CreateControls();
+            void CreateControls();
 
-    void OnGoToPosCancelClick( wxCommandEvent& event );
-    void OnGoToPosOkClick( wxCommandEvent& event );
-    void OnPositionCtlUpdated( wxCommandEvent& event );
-    void CheckPasteBufferForPosition();
+            void OnGoToPosCancelClick( wxCommandEvent& event );
+            void OnGoToPosOkClick( wxCommandEvent& event );
+            void OnPositionCtlUpdated( wxCommandEvent& event );
+            void CheckPasteBufferForPosition();
 
-    /// Should we show tooltips?
-    static bool ShowToolTips();
+      /// Should we show tooltips?
+            static bool ShowToolTips();
 
-    wxTextCtrl*   m_MarkLatCtl;
-    wxTextCtrl*   m_MarkLonCtl;
-    wxButton*     m_CancelButton;
-    wxButton*     m_OKButton;
+            wxTextCtrl*   m_MarkLatCtl;
+            wxTextCtrl*   m_MarkLonCtl;
+            wxButton*     m_CancelButton;
+            wxButton*     m_OKButton;
 
-    double        m_lat_save;
-    double        m_lon_save;
-
-    wxDECLARE_EVENT_TABLE();
-
+            double        m_lat_save;
+            double        m_lon_save;
 };
 
 #endif

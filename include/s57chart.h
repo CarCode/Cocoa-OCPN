@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef __S57CHART_H__
 #define __S57CHART_H__
@@ -87,6 +87,7 @@ class S57ClassRegistrar;
 class S57Obj;
 class VE_Element;
 class VC_Element;
+class connector_segment;
 
 #include <wx/dynarray.h>
 
@@ -105,6 +106,7 @@ WX_DECLARE_HASH_MAP( int, int, wxIntegerHash, wxIntegerEqual, VectorHelperHash )
 
 WX_DECLARE_HASH_MAP( unsigned int, VE_Element *, wxIntegerHash, wxIntegerEqual, VE_Hash );
 WX_DECLARE_HASH_MAP( unsigned int, VC_Element *, wxIntegerHash, wxIntegerEqual, VC_Hash );
+WX_DECLARE_STRING_HASH_MAP( connector_segment *, connected_segment_hash );
 
 //----------------------------------------------------------------------------
 // s57 Chart object class
@@ -182,15 +184,17 @@ public:
 
       virtual void ForceEdgePriorityEvaluate(void);
 
+      float *GetLineVertexBuffer( void ){ return m_line_vertex_buffer; }
+      
       void ClearRenderedTextCache();
-
+      
       double GetCalculatedSafetyContour(void){ return m_next_safe_cnt; }
 
 //#ifdef ocpnUSE_GL
       virtual bool RenderRegionViewOnGL(const wxGLContext &glc, const ViewPort& VPoint, const OCPNRegion &Region);
       virtual bool RenderOverlayRegionViewOnGL(const wxGLContext &glc, const ViewPort& VPoint, const OCPNRegion &Region);
 //#endif
-
+      
 // Public data
 //Todo Accessors here
       //  Object arrays used by S52PLIB TOPMAR rendering logic
@@ -225,13 +229,13 @@ public:
 
       bool        m_b2pointLUPS;
       bool        m_b2lineLUPS;
-
+      
       struct _chart_context     *m_this_chart_context;
-
+      
 private:
 
       void SetSafetyContour(void);
-
+    
       bool DoRenderViewOnDC(wxMemoryDC& dc, const ViewPort& VPoint, RenderTypeEnum option, bool force_new_view);
 
       bool DoRenderRegionViewOnDC(wxMemoryDC& dc, const ViewPort& VPoint, const OCPNRegion &Region, bool b_overlay);
@@ -268,10 +272,12 @@ private:
       const char *getName(OGRFeature *feature);
       int GetUpdateFileArray(const wxFileName file000, wxArrayString *UpFiles);
 
-
       bool DoRenderRectOnGL(const wxGLContext &glc, const ViewPort& VPoint, wxRect &rect);
       bool DoRenderRegionViewOnGL(const wxGLContext &glc, const ViewPort& VPoint, const OCPNRegion &Region, bool b_overlay);
 
+      void AssembleLineGeometry( void );
+      void BuildLineVBO( void );
+      
  // Private Data
       char        *hdr_buf;
       char        *mybuf_ptr;
@@ -312,19 +318,44 @@ private:
 
       VE_Hash     m_ve_hash;
       VC_Hash     m_vc_hash;
-
+      
+      connected_segment_hash m_connector_hash;
+      
+      float      *m_line_vertex_buffer;
+      size_t      m_vbo_byte_length;
+      
       bool        m_blastS57TextRender;
       wxString    m_lastColorScheme;
       wxRect      m_last_vprect;
       long        m_plib_state_hash;
       bool        m_btex_mem;
       char        m_usage_char;
-
+      
       double      m_next_safe_cnt;
+      double      m_LOD_meters;
 
-protected:
+      int         m_LineVBO_name;
+protected:      
       sm_parms    vp_transform;
+      
+};
 
+typedef enum
+{
+    TYPE_CE = 0,
+    TYPE_CC,
+    TYPE_EC,
+    TYPE_EE
+} SegmentType;
+
+class connector_segment
+{
+public:
+    void *start;
+    void *end;
+    SegmentType type;
+    int vbo_offset;
+    int max_priority;
 };
 
 #endif

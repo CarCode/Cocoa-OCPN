@@ -1819,9 +1819,10 @@ wxJSONValue&
 wxJSONValue::Item( const wxString& key )
 {
     wxLogTrace( traceMask, _T("(%s) searched key=\'%s\'"), __PRETTY_FUNCTION__, key.c_str());
-#if  !wxCHECK_VERSION(2,9,0)
+#if !wxCHECK_VERSION(2,9,0)
     wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str());
 #endif
+    
     wxJSONRefData* data = COW();
     wxJSON_ASSERT( data );
 
@@ -1872,6 +1873,7 @@ wxJSONValue::ItemAt( const wxString& key ) const
 #ifndef __WXOSX__
     wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str());
 #endif
+    
     wxJSONRefData* data = GetRefData();
     wxJSON_ASSERT( data );
 
@@ -2288,7 +2290,7 @@ wxJSONValue::Dump( bool deep, int indent ) const
     switch ( type )    {
         case wxJSONTYPE_OBJECT :
             map = AsMap();
-//            size = Size();  // Not used
+            size = Size();
             for ( it = map->begin(); it != map->end(); ++it )  {
                 const wxJSONValue& v = it->second;
                 sub = v.Dump( true, indent );
@@ -2821,9 +2823,7 @@ wxJSONValue::ClearComments()
 wxJSONRefData*
 wxJSONValue::SetType( wxJSONType type )
 {
-#ifndef __WXOSX__
-    wxJSONRefData* data = GetRefData();  // Not used: data
-#endif
+    wxJSONRefData* data = GetRefData();
     wxJSONType oldType = GetType();
 
     // check that type is within the allowed range
@@ -2839,11 +2839,8 @@ wxJSONValue::SetType( wxJSONType type )
     // wxJSONValue object.
     // If we would delete the structure using 'Unref()' we loose the
     // comments
-#ifdef __WXOSX__
-    wxJSONRefData* data = COW();
-#else
     data = COW();
-#endif
+
     // do nothing if the actual type is the same as 'type'
     if ( type == oldType )  {
         return data;
@@ -3016,6 +3013,7 @@ wxJSONValue::CloneRefData( const wxJSONRefData* otherData ) const
 #else
     wxJSON_ASSERT( otherData );
 #endif
+
     // make a static cast to pointer-to-wxJSONRefData
     const wxJSONRefData* other = otherData;
 

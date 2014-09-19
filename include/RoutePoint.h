@@ -19,7 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef __ROUTEPOINT_H__
 #define __ROUTEPOINT_H__
@@ -46,7 +46,7 @@ public:
 
       wxDateTime GetCreateTime(void);
       void SetCreateTime( wxDateTime dt );
-
+      
       void SetPosition(double lat, double lon);
       double GetLatitude()  { return m_lat; };
       double GetLongitude() { return m_lon; };
@@ -67,7 +67,7 @@ public:
 
       void *GetManagerListNode(void) { return m_ManagerNode; }
       void SetManagerListNode(void* node) { m_ManagerNode = node; }
-
+      
       void SetName(const wxString & name);
       void CalculateNameExtents(void);
 
@@ -77,7 +77,7 @@ public:
       double GetDistance() { return m_routeprop_distance; };
 
 
-      bool SendToGPS (const wxString& com_name, wxGauge *pProgress );
+      bool SendToGPS(const wxString& com_name, wxGauge *pProgress);
 
 
       double             m_lat;
@@ -130,30 +130,23 @@ public:
       bool              m_btemp;
 
 #ifdef ocpnUSE_GL
-    void DrawGL( ViewPort &vp, OCPNRegion &region );
-    unsigned int m_iTextTexture;
-    int m_iTextTextureWidth, m_iTextTextureHeight;
+      void DrawGL( ViewPort &vp, OCPNRegion &region );
+      unsigned int m_iTextTexture;
+      int m_iTextTextureWidth, m_iTextTextureHeight;
 
-    LLBBox m_wpBBox;
-    double m_wpBBox_chart_scale, m_wpBBox_rotation;
+      LLBBox m_wpBBox;
+      double m_wpBBox_chart_scale, m_wpBBox_rotation;
 
-    static bool s_bUpdateWaypointsDisplayList;
+      static bool s_bUpdateWaypointsDisplayList;
 #endif
 
-#ifdef __WXOSX__
-    wxDateTime        m_CreateTimeX;
-
-private:
-    wxString          m_MarkName;
-#else
 private:
       wxString          m_MarkName;
       wxDateTime        m_CreateTimeX;
-#endif
-
+      
       void              *m_SelectNode;
       void              *m_ManagerNode;
-
+      
 };
 
 WX_DECLARE_LIST(RoutePoint, RoutePointList);// establish class as list member

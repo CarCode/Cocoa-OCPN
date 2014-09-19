@@ -1,4 +1,4 @@
-/**************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  GSHHS Chart Object (Global Self-consistent, Hierarchical, High-resolution Shoreline)
@@ -26,7 +26,10 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ *
+ */
 
 #include "wx/wxprec.h"
 
@@ -76,6 +79,7 @@ void GSHHSChart::SetColorScheme( ColorScheme scheme ) {
     water.Set( water.Red()*dim, water.Green()*dim, water.Blue()*dim );
 }
 
+
 void GSHHSChart::RenderViewOnDC( ocpnDC& dc, ViewPort& vp )
 {
     if( ! reader ) {
@@ -93,7 +97,7 @@ void GSHHSChart::RenderViewOnDC( ocpnDC& dc, ViewPort& vp )
     reader->drawContinents( dc, vp, water, land );
 
     /* this is very inefficient since it draws the entire world*/
-    //    reader->drawBoundaries( dc, vp );
+//    reader->drawBoundaries( dc, vp );
 }
 
 GshhsPolyCell::GshhsPolyCell( FILE *fpoly_, int x0_, int y0_, PolygonFileHeader *header_ )
@@ -128,7 +132,7 @@ void GshhsPolyCell::ReadPoly(contour_list &poly)
         fread(&value, sizeof value, 1, fpoly); /* discarding hole value */
         fread(&value, sizeof value, 1, fpoly);
         num_vertices=value;
-        
+
         tmp_contour.clear();
         for (int v= 0; v < num_vertices; v++)
         {
@@ -146,7 +150,7 @@ void GshhsPolyCell::ReadPolygonFile()
     int tab_data;
 
     tab_data = ( x0cell / header->pasx ) * ( 180 / header->pasy )
-    + ( y0cell + 90 ) / header->pasy;
+        + ( y0cell + 90 ) / header->pasy;
     fseek( fpoly, sizeof(PolygonFileHeader) + tab_data * sizeof(int), SEEK_SET );
     fread( &pos_data, sizeof(int), 1, fpoly );
 
@@ -169,7 +173,7 @@ wxPoint GetPixFromLL(ViewPort &vp, double lat, double lon)
 void GshhsPolyCell::DrawPolygonFilled( ocpnDC &pnt, contour_list * p, double dx, ViewPort &vp,  wxColor color )
 {
     if( !p->size() ) /* size of 0 is very common, and setting the brush is
-                      actually quite slow, so exit early */
+                        actually quite slow, so exit early */
         return;
 
     int x, y;
@@ -185,14 +189,14 @@ void GshhsPolyCell::DrawPolygonFilled( ocpnDC &pnt, contour_list * p, double dx,
         if( !p->at( c ).size() ) continue;
 
         wxPoint* poly_pt = new wxPoint[ p->at(c).size() ];
-        
+
         contour &cp = p->at( c );
         pointCount = 0;
 
         for( v = 0; v < p->at( c ).size(); v++ ) {
             wxRealPoint &ccp = cp.at( v );
             wxPoint q = GetPixFromLL(vp,  ccp.y, ccp.x + dx );
-            
+
             x = q.x, y = q.y;
 
             if( v == 0 || x != x_old || y != y_old ) {
@@ -214,7 +218,7 @@ void GshhsPolyCell::DrawPolygonFilled( ocpnDC &pnt, contour_list * p, double dx,
 #define DRAW_POLY_FILLED(POLY,COL) if(POLY) DrawPolygonFilled(pnt,POLY,dx,vp,COL);
 
 void GshhsPolyCell::drawMapPlain( ocpnDC &pnt, double dx, ViewPort &vp, wxColor seaColor,
-                                 wxColor landColor, int cellcount )
+                                  wxColor landColor, int cellcount )
 {
     DRAW_POLY_FILLED( &poly1, landColor )
     DRAW_POLY_FILLED( &poly2, seaColor )
@@ -261,9 +265,9 @@ void GshhsPolyCell::DrawPolygonContour( ocpnDC &pnt, contour_list * p, double dx
 
         if( ( ( ( x1 == x2 ) && ( ( x1 == long_min ) || ( x1 == long_max ) ) )
                 || ( ( y1 == y2 ) && ( ( y1 == lat_min ) || ( y1 == lat_max ) ) ) ) == 0 ) {
-            wxPoint AB = GetPixFromLL(vp,  x1 + dx, y1);
-            wxPoint CD = GetPixFromLL(vp,  x2 + dx, y1);
-            pnt.DrawLine(AB.x, AB.y, CD.x, CD.y);
+                wxPoint AB = GetPixFromLL(vp,  x1 + dx, y1);
+                wxPoint CD = GetPixFromLL(vp,  x2 + dx, y1);
+                pnt.DrawLine(AB.x, AB.y, CD.x, CD.y);
         }
     }
 }
@@ -351,30 +355,30 @@ inline bool my_intersects( const QLineF &line1, const QLineF &line2 )
 {
     double x1 = line1.m_p1.x, y1 = line1.m_p1.y, x2 = line1.m_p2.x, y2 = line1.m_p2.y;
     double x3 = line2.m_p1.x, y3 = line2.m_p1.y, x4 = line2.m_p2.x, y4 = line2.m_p2.y;
-    
+
     // implementation is based on Graphics Gems III's "Faster Line Segment Intersection"
     double ax = x2 - x1, ay = y2 - y1;
     double bx = x3 - x4, by = y3 - y4;
     double cx = x1 - x3, cy = y1 - y3;
-    
+
     double denominator = ay * bx - ax * by;
     if( denominator < 1e-10 ) {
         if(fabs((y1*ax - ay*x1)*bx - (y3*bx - by*x3)*ax) > 1e-5)
             return false; /* different intercepts, no intersection */
-        
+
         return true;
     }
-    
+
 #  define INTER_LIMIT 1e-7
-    
+
     const double reciprocal = 1 / denominator;
     const double na = ( by * cx - bx * cy ) * reciprocal;
-    
+
     if( na < -INTER_LIMIT || na > 1 + INTER_LIMIT ) return false;
-    
+
     const double nb = ( ax * cy - ay * cx ) * reciprocal;
     if( nb < -INTER_LIMIT || nb > 1 + INTER_LIMIT ) return false;
-    
+
     return true;
 }
 
@@ -399,7 +403,7 @@ bool GshhsPolyReader::crossing1( QLineF trajectWorld )
 
     cymin = (int) floor( GSSH_SUBM*wxMin( y1, y2 ));
     cymax = (int) ceil( GSSH_SUBM*wxMax( y1, y2 ));
-//    wxASSERT(cymin >= -GSSH_SUBM*90 && cymax <= GSSH_SUBM*89);   // Crash von gshhs.h watchman_pi=ja 16*90 16*89
+    wxASSERT(cymin >= -GSSH_SUBM*90 && cymax <= GSSH_SUBM*89);
 
     // TODO: optimize by traversing only the cells the segment passes through,
     //       rather than all of the cells which fit in the bounding box,
@@ -436,7 +440,7 @@ bool GshhsPolyReader::crossing1( QLineF trajectWorld )
                 }
                 mutex1.Unlock();
             }
-            
+
             int hash = GSSH_SUBM*(GSSH_SUBM*(90-cyi) + cy - cxi) + cxx;
             std::vector<QLineF> *&high_res_map = cel->high_res_map[hash];
             wxASSERT(hash >= 0 && hash < GSSH_SUBM*GSSH_SUBM);
@@ -445,7 +449,7 @@ bool GshhsPolyReader::crossing1( QLineF trajectWorld )
                 if(!high_res_map) {
                     /* Build the needed sub cell of line segments from the cell */
                     contour_list &poly1 = cel->getPoly1();
-                    
+
                     double minlat = (double)cy/GSSH_SUBM, maxlat = (double)(cy+1)/GSSH_SUBM;
                     double minlon = (double)cxx/GSSH_SUBM, maxlon = (double)(cxx+1)/GSSH_SUBM;
                     high_res_map = new std::vector<QLineF>;
@@ -453,8 +457,8 @@ bool GshhsPolyReader::crossing1( QLineF trajectWorld )
                         contour &c = poly1[pi];
                         double lx = c[c.size()-1].x, ly = c[c.size()-1].y;
                         /* must compute states because sometimes a
-                         segment starts and ends outside our cell, but passes
-                         through it so must be included */
+                           segment starts and ends outside our cell, but passes
+                           through it so must be included */
                         int lstatex = lx < minlon ? -1 : lx > maxlon ? 1 : 0;
                         int lstatey = ly < minlat ? -1 : ly > maxlat ? 1 : 0;
                     
@@ -466,14 +470,14 @@ bool GshhsPolyReader::crossing1( QLineF trajectWorld )
                             // and doesn't correctly account for it
                             if(lx == cx && ly == cy)
                                 continue;
-                            
+
                             int statex = cx < minlon ? -1 : cx > maxlon ? 1 : 0;
                             int statey = cy < minlat ? -1 : cy > maxlat ? 1 : 0;
-                            
+
                             if((!statex || lstatex != statex) &&
                                (!statey || lstatey != statey))
                                 high_res_map->push_back(QLineF(lx, ly, cx, cy));
-                            
+
                             lx = cx, ly = cy;
                             lstatex = statex, lstatey = statey;
                         }
@@ -500,7 +504,7 @@ void GshhsPolyReader::readPolygonFileHeader( FILE *polyfile, PolygonFileHeader *
 
 //-------------------------------------------------------------------------
 void GshhsPolyReader::drawGshhsPolyMapPlain( ocpnDC &pnt, ViewPort &vp, wxColor seaColor,
-                                            wxColor landColor )
+                                             wxColor landColor )
 {
     if( !fpoly ) return;
 
@@ -517,8 +521,7 @@ void GshhsPolyReader::drawGshhsPolyMapPlain( ocpnDC &pnt, ViewPort &vp, wxColor 
     GshhsPolyCell *cel;
 
     int cellcount = (cxmax - cxmin) * (cymax - cymin);
-    //    printf("cellcount: %d\n", cellcount);
-
+//    printf("cellcount: %d\n", cellcount);
     for( cx = cxmin; cx < cxmax; cx++ ) {
         cxx = cx;
         while( cxx < 0 )
@@ -701,11 +704,11 @@ GshhsReader::GshhsReader( )
         wxLogMessage( msg );
     }
 
-    //    int q = selectBestQuality( vp );
-    //    if( ! qualityAvailable[q] ) {
-    //    int q = maxQualityAvailable;
-    //    }
-    
+//    int q = selectBestQuality( vp );
+//    if( ! qualityAvailable[q] ) {
+//    int q = maxQualityAvailable;
+//    }
+
     int q = 0;
 
     gshhsPoly_reader = new GshhsPolyReader( q );
@@ -881,16 +884,15 @@ std::vector<GshhsPolygon*> & GshhsReader::getList_rivers()
 
 int GshhsReader::GSHHS_scaledPoints( GshhsPolygon *pol, wxPoint *pts, double decx, ViewPort &vp )
 {
-
     wxBoundingBox box(pol->west + decx, pol->south, pol->east + decx, pol->north);
     if(vp.GetBBox().IntersectOut(box) )
         return 0;
 
     // Remove small polygons.
-    
+
     wxPoint p1 = GetPixFromLL(vp,  pol->west + decx, pol->north );
     wxPoint p2 = GetPixFromLL(vp,  pol->east + decx, pol->south );
-    
+
     if( p1.x == p2.x && p1.y == p2.y )
         return 0;
 
@@ -902,9 +904,9 @@ int GshhsReader::GSHHS_scaledPoints( GshhsPolygon *pol, wxPoint *pts, double dec
     for( itp = ( pol->lsPoints ).begin(); itp != ( pol->lsPoints ).end(); itp++ ) {
         x = ( *itp )->lon + decx;
         y = ( *itp )->lat;
-        {
-            wxPoint p = GetPixFromLL(vp,  y, x );
-            xx = p.x, yy = p.y;
+                                    {
+        wxPoint p = GetPixFromLL(vp,  y, x );
+        xx = p.x, yy = p.y;
         if( j == 0 || ( oxx != xx || oyy != yy ) )  // Remove close points
             oxx = xx;
             oyy = yy;
@@ -1011,7 +1013,7 @@ int GshhsReader::selectBestQuality( ViewPort &vp )
 {
     int bestQuality = 0;
 
-    if(vp.chart_scale <   500000) bestQuality = 4;
+         if(vp.chart_scale <   500000) bestQuality = 4;
     else if(vp.chart_scale <  2000000) bestQuality = 3;
     else if(vp.chart_scale <  8000000) bestQuality = 2;
     else if(vp.chart_scale < 20000000) bestQuality = 1;
@@ -1030,12 +1032,12 @@ int GshhsReader::selectBestQuality( ViewPort &vp )
 }
 
 /* so plugins can determine if a line segment crosses land, must call from main
- thread once at startup to initialize array */
+   thread once at startup to initialize array */
 static GshhsReader *reader = NULL;
 void gshhsCrossesLandInit()
 {
     reader = new GshhsReader();
-    
+
     /* load best possible quality for crossing tests */
     int bestQuality = 4;
     while( !reader->qualityAvailable[bestQuality] && bestQuality > 0)

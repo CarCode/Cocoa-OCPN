@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -38,9 +38,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#ifndef __WXOSX__
+
 #include <wx/listimpl.cpp>
-#endif
+
 #include "styles.h"
 #include "routeman.h"
 #include "concanv.h"
@@ -88,7 +88,7 @@ extern Multiplexer     *g_pMUX;
 extern PlugInManager    *g_pi_manager;
 extern ocpnStyle::StyleManager* g_StyleManager;
 extern wxString         g_uploadConnection;
-#ifndef __WXOSX__
+
 //    List definitions for Waypoint Manager Icons
 WX_DECLARE_LIST(wxBitmap, markicon_bitmap_list_type);
 WX_DECLARE_LIST(wxString, markicon_key_list_type);
@@ -99,7 +99,7 @@ WX_DECLARE_LIST(wxString, markicon_description_list_type);
 WX_DEFINE_LIST(markicon_bitmap_list_type);
 WX_DEFINE_LIST(markicon_key_list_type);
 WX_DEFINE_LIST(markicon_description_list_type);
-#endif
+
 
 
 //--------------------------------------------------------------------------------
@@ -299,6 +299,7 @@ bool Routeman::ActivateRoutePoint( Route *pA, RoutePoint *pRP_target )
     m_bArrival = false;
     m_arrival_min = 1e6;
     m_arrival_test = 0;
+    
 
     //    Update the RouteProperties Dialog, if currently shown
     if( ( NULL != pRoutePropDialog ) && ( pRoutePropDialog->IsShown() ) ) {
@@ -455,26 +456,26 @@ bool Routeman::UpdateProgress()
 
         }
         else {
-            //      Test to see if we are moving away from the arrival point, and
-            //      have been mving away for 2 seconds.
-            //      If so, we should declare "Arrival"
+        //      Test to see if we are moving away from the arrival point, and
+        //      have been mving away for 2 seconds.  
+        //      If so, we should declare "Arrival"
             if( (CurrentRangeToActiveNormalCrossing - m_arrival_min) >  pActiveRoute->GetRouteArrivalRadius() ){
                 if(++m_arrival_test > 2) {
                     m_bArrival = true;
                     UpdateAutopilot();
-
+                    
                     bDidArrival = true;
                     DoAdvance();
+                }
             }
-
+            else
+                m_arrival_test = 0;
+                
         }
-        else
-            m_arrival_test = 0;
-
-    }
-        if( !bDidArrival )
+        
+        if( !bDidArrival )                                        
             m_arrival_min = wxMin( m_arrival_min, CurrentRangeToActiveNormalCrossing );
-
+        
         if( !bDidArrival )                                        // Only once on arrival
             UpdateAutopilot();
 
@@ -492,7 +493,7 @@ void Routeman::DoAdvance(void)
     {
         Route *pthis_route = pActiveRoute;
         DeactivateRoute( true );                  // this is an arrival
-
+        
         if( pthis_route->m_bDeleteOnArrival && !pthis_route->m_bIsBeingEdited) {
             pConfig->DeleteConfigRoute( pthis_route );
             DeleteRoute( pthis_route );
@@ -504,9 +505,11 @@ void Routeman::DoAdvance(void)
 
         if( pRouteManagerDialog )
             pRouteManagerDialog->UpdateRouteListCtrl();
-
+                            
     }
 }
+                    
+    
 
 bool Routeman::DeactivateRoute( bool b_arrival )
 {
@@ -657,9 +660,9 @@ bool Routeman::UpdateAutopilot()
  
             //  We never pass the perpendicular, since we declare arrival before reaching this point
             m_NMEA0183.Apb.IsPerpendicular = NFalse;
-            
-            m_NMEA0183.Apb.To = pActivePoint->GetName().Truncate( 6 );
 
+            m_NMEA0183.Apb.To = pActivePoint->GetName().Truncate( 6 );
+            
             double brg1, dist1;
             DistanceBearingMercator( pActivePoint->m_lat, pActivePoint->m_lon,
                                      pActiveRouteSegmentBeginPoint->m_lat, pActiveRouteSegmentBeginPoint->m_lon,
@@ -667,16 +670,16 @@ bool Routeman::UpdateAutopilot()
                                      &dist1 );
             
             if( g_bMagneticAPB && !wxIsNaN(gVar) ) {
-
+                
                 double brg1m = ((brg1 - gVar) >= 0.) ? (brg1 - gVar) : (brg1 - gVar + 360.);
                 double bapm = ((CurrentBrgToActivePoint - gVar) >= 0.) ? (CurrentBrgToActivePoint - gVar) : (CurrentBrgToActivePoint - gVar + 360.);
-
+                
                 m_NMEA0183.Apb.BearingOriginToDestination = brg1m;
                 m_NMEA0183.Apb.BearingOriginToDestinationUnits = _T("M");
-
+                
                 m_NMEA0183.Apb.BearingPresentPositionToDestination = bapm;
                 m_NMEA0183.Apb.BearingPresentPositionToDestinationUnits = _T("M");
-
+                
                 m_NMEA0183.Apb.HeadingToSteer = bapm;
                 m_NMEA0183.Apb.HeadingToSteerUnits = _T("M");
             }
@@ -687,6 +690,7 @@ bool Routeman::UpdateAutopilot()
                 m_NMEA0183.Apb.BearingPresentPositionToDestination = CurrentBrgToActivePoint;
                 m_NMEA0183.Apb.BearingPresentPositionToDestinationUnits = _T("T");
             
+
                 m_NMEA0183.Apb.HeadingToSteer = CurrentBrgToActivePoint;
                 m_NMEA0183.Apb.HeadingToSteerUnits = _T("T");
             }
@@ -980,12 +984,12 @@ Route *Routeman::FindRouteByGUID(wxString &guid)
     wxRouteListNode *node1 = pRouteList->GetFirst();
     while( node1 ) {
         pRoute = node1->GetData();
-
+        
         if( pRoute->m_GUID == guid )
             break;
         node1 = node1->GetNext();
     }
-
+ 
     return pRoute;
 }
 
@@ -1015,6 +1019,7 @@ WayPointman::WayPointman()
 #else
     UserIconPath.Append( _T("UserIcons") );
 #endif
+
     if( wxDir::Exists( UserIconPath ) ) {
         wxArrayString FileList;
 
@@ -1084,10 +1089,10 @@ bool WayPointman::AddRoutePoint(RoutePoint *prp)
 {
     if(!prp)
         return false;
-
+    
     wxRoutePointListNode *prpnode = m_pWayPointList->Append(prp);
     prp->SetManagerListNode( prpnode );
-
+    
     return true;
 }
 
@@ -1095,17 +1100,17 @@ bool WayPointman::RemoveRoutePoint(RoutePoint *prp)
 {
     if(!prp)
         return false;
-
+    
     wxRoutePointListNode *prpnode = (wxRoutePointListNode *)prp->GetManagerListNode();
-
-    if(prpnode)
+    
+    if(prpnode) 
         delete prpnode;
     else
         m_pWayPointList->DeleteObject(prp);
-
-        prp->SetManagerListNode( NULL );
-
-        return true;
+    
+    prp->SetManagerListNode( NULL );
+    
+    return true;
 }
 
 
@@ -1158,7 +1163,7 @@ void WayPointman::ProcessIcons( ocpnStyle::Style* style )
     ProcessIcon( style->GetIcon( _T("activepoint") ), _T("activepoint"), _T("Active WP") );
 }
 
-void WayPointman::ProcessIcon( wxBitmap pimage, const wxString & key, const wxString & description )
+void WayPointman::ProcessIcon(wxBitmap pimage, const wxString & key, const wxString & description)
 {
     MarkIcon *pmi;
 
@@ -1244,7 +1249,7 @@ wxImageList *WayPointman::Getpmarkicon_image_list( void )
         pmarkicon_image_list->Add( icon_larger );
     }
     
-    m_markicon_image_list_base_count = pmarkicon_image_list->GetImageCount();
+    m_markicon_image_list_base_count = pmarkicon_image_list->GetImageCount(); 
 
     // Create and add "x-ed out" icons,
     // Being careful to preserve (some) transparency
@@ -1258,7 +1263,7 @@ wxImageList *WayPointman::Getpmarkicon_image_list( void )
         wxColour unused_color(r,g,b);
 
         wxBitmap bmp0( img );
-
+    
         wxBitmap bmp(w, h, -1 );
         wxMemoryDC mdc( bmp );
         mdc.SetBackground( wxBrush( unused_color) );
@@ -1271,15 +1276,15 @@ wxImageList *WayPointman::Getpmarkicon_image_list( void )
         mdc.DrawLine( 2, 2, xm-2, ym-2 );
         mdc.DrawLine( xm-2, 2, 2, ym-2 );
         mdc.SelectObject( wxNullBitmap );
-
+        
         wxMask *pmask = new wxMask(bmp, unused_color);
         bmp.SetMask( pmask );
-        
+
         pmarkicon_image_list->Add( bmp );
     }
-
-
-
+        
+        
+        
     return pmarkicon_image_list;
 }
 
@@ -1369,26 +1374,26 @@ unsigned int WayPointman::GetIconTexture( const wxBitmap *pbm, int &glw, int &gl
     MarkIcon *pmi = (MarkIcon *) m_pIconArray->Item( index );
 
     if(!pmi->icon_texture) {
-        /* make rgba texture */
+        /* make rgba texture */       
         glGenTextures(1, &pmi->icon_texture);
         glBindTexture(GL_TEXTURE_2D, pmi->icon_texture);
-
+                
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
-
+        
         wxImage image = pbm->ConvertToImage();
         int w = image.GetWidth(), h = image.GetHeight();
-
+        
         pmi->tex_w = NextPow2(w);
         pmi->tex_h = NextPow2(h);
-
+        
         unsigned char *d = image.GetData();
         unsigned char *a = image.GetAlpha();
-
+            
         unsigned char mr, mg, mb;
         image.GetOrFindMaskColour( &mr, &mg, &mb );
-
+    
         unsigned char *e = new unsigned char[4 * w * h];
         for( int y = 0; y < h; y++ )
             for( int x = 0; x < w; x++ ) {
@@ -1404,18 +1409,18 @@ unsigned int WayPointman::GetIconTexture( const wxBitmap *pbm, int &glw, int &gl
                 
                 e[off * 4 + 3] =  a ? a[off] : ( ( r == mr ) && ( g == mg ) && ( b == mb ) ? 0 : 255 );
             }
-
+    
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pmi->tex_w, pmi->tex_h,
                      0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h,
                         GL_RGBA, GL_UNSIGNED_BYTE, e);
-        
+
         delete [] e;
     }
-    
+
     glw = pmi->tex_w;
     glh = pmi->tex_h;
-    
+
     return pmi->icon_texture;
 #else
     return 0;
@@ -1464,21 +1469,21 @@ int WayPointman::GetIconIndex( const wxBitmap *pbm )
         if( pmi->picon_bitmap == pbm ) break;
     }
 
-    return i;   // index of base icon in the image list
+    return i;                                           // index of base icon in the image list
 
 }
 
 int WayPointman::GetXIconIndex( const wxBitmap *pbm )
 {
     unsigned int i;
-
+    
     for( i = 0; i < m_pIconArray->GetCount(); i++ ) {
         MarkIcon *pmi = (MarkIcon *) m_pIconArray->Item( i );
         if( pmi->picon_bitmap == pbm ) break;
     }
-
+    
     return i + m_markicon_image_list_base_count;        // index of "X-ed out" icon in the image list
-
+    
 }
 
 //  Create the unique identifier
@@ -1601,6 +1606,9 @@ void WayPointman::DeleteAllWaypoints( bool b_delete_used )
 
 void WayPointman::DestroyWaypoint( RoutePoint *pRp, bool b_update_changeset )
 {
+    if( ! b_update_changeset )
+        pConfig->m_bSkipChangeSetUpdate = true;             // turn OFF change-set updating if requested
+        
     if( pRp ) {
         // Get a list of all routes containing this point
         // and remove the point from them all
@@ -1632,11 +1640,9 @@ void WayPointman::DestroyWaypoint( RoutePoint *pRp, bool b_update_changeset )
         }
 
         // Now it is safe to delete the point
-        if( ! b_update_changeset )
-            pConfig->m_bSkipChangeSetUpdate = true;             // turn OFF change-set updating if requested
         pConfig->DeleteWayPoint( pRp );
         pConfig->m_bSkipChangeSetUpdate = false;
-
+        
         pSelect->DeleteSelectableRoutePoint( pRp );
 
         //    The RoutePoint might be currently in use as an anchor watch point

@@ -24,10 +24,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************
- *
- *
- */
+ ******************************************************************************/
 
 #ifndef _ISO8211_H_INCLUDED
 #define _ISO8211_H_INCLUDED
@@ -250,6 +247,8 @@ class DDFFieldDefn
     DDF_data_struct_code _data_struct_code;
 
     DDF_data_type_code   _data_type_code;
+
+    int         _lex_level;
 
     int         nSubfieldCount;
     DDFSubfieldDefn **papoSubfields;

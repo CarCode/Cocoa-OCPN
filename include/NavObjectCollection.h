@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __NAVOBJECTCOLLECTION_H__
 #define __NAVOBJECTCOLLECTION_H__
@@ -61,7 +62,7 @@ class Track;
                         (OUT_SHARED) +\
                         (OUT_AUTO_NAME) +\
                         (OUT_HYPERLINKS)
-#define OPT_ROUTEPT     OPT_WPT
+#define OPT_ROUTEPT     OPT_WPT                        
 
 //      Bitfield definitions controlling the GPX nodes output for Route.Track objects
 #define         RT_OUT_ACTION_ADD         1 << 1          //  opencpn:action node support
@@ -75,27 +76,28 @@ class NavObjectCollection1 : public pugi::xml_document
 public:
     NavObjectCollection1();
     ~NavObjectCollection1();
-
+    
     bool CreateNavObjGPXPoints(void);
     bool CreateNavObjGPXRoutes(void);
     bool CreateNavObjGPXTracks(void);
-
+ 
     bool AddGPXRoutesList( RouteList *pRoutes );
     bool AddGPXPointsList( RoutePointList *pRoutePoints );
     bool AddGPXRoute(Route *pRoute);
     bool AddGPXTrack(Track *pTrk);
     bool AddGPXWaypoint(RoutePoint *pWP );
-
+    
     bool CreateAllGPXObjects();
     bool LoadAllGPXObjects(void);
     int LoadAllGPXObjectsAsLayer(int layer_id, bool b_layerviz);
-
+    
     bool SaveFile( const wxString filename );
 
     void SetRootGPXNode(void);
-
+    
     pugi::xml_node      m_gpx_root;
 };
+
 
 class NavObjectChanges : public NavObjectCollection1
 {
@@ -103,17 +105,17 @@ public:
     NavObjectChanges();
     NavObjectChanges( wxString file_name );
     ~NavObjectChanges();
-
+    
     bool AddRoute( Route *pr, const char *action );           // support "changes" file set
     bool AddTrack( Track *pr, const char *action );
     bool AddWP( RoutePoint *pr, const char *action );
     bool AddTrackPoint( RoutePoint *pWP, const char *action, const wxString& parent_GUID );
-
+    
     bool ApplyChanges(void);
-
+    
     wxString    m_filename;
     FILE *      m_changes_file;
-
+    
 };
 
 

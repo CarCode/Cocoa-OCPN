@@ -1,11 +1,11 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Database Object
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,8 +20,12 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ ***************************************************************************
+ *
+ *
+ *
+ */
 
 #ifndef __CHARTDB_H__
 #define __CHARTDB_H__
@@ -134,7 +138,7 @@ public:
       ChartBase *OpenChartFromDB(int index, ChartInitFlag init_flag);
       ChartBase *OpenChartFromDBAndLock(int index, ChartInitFlag init_flag );
       ChartBase *OpenChartFromDB(wxString chart_path, ChartInitFlag init_flag);
-
+      
       void ApplyColorSchemeToCachedCharts(ColorScheme cs);
       void PurgeCache();
       bool DeleteCacheChart(ChartBase *pChart);
@@ -148,9 +152,9 @@ public:
       void LockCacheChart( int index );
       void UnLockCacheChart( int index );
       void UnLockAllCacheCharts();
-
+      
       void ClearCacheInUseFlags(void);
-      void PurgeCacheUnusedCharts(bool b_force = false);
+      void PurgeCacheUnusedCharts( double factor );
 
       bool IsBusy(){ return m_b_busy; }
 protected:
@@ -163,8 +167,8 @@ private:
       bool CreateS57SENCChartTableEntry(wxString full_name, ChartTableEntry *pEntry, Extent *pext);
       bool CheckPositionWithinChart(int index, float lat, float lon);
       ChartBase *OpenChartUsingCache(int dbindex, ChartInitFlag init_flag);
-      CacheEntry *FindOldestDeleteCandidate();
-
+      CacheEntry *FindOldestDeleteCandidate( bool blog );
+      
       wxArrayPtrVoid    *pChartCache;
 
       MyFrame           *pParent;

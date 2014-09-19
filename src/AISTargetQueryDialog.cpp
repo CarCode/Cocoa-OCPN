@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "wx/wxprec.h"
 
@@ -50,12 +51,12 @@ extern ChartCanvas *cc1;
 #define xID_WPT_CREATE 10010
 IMPLEMENT_CLASS ( AISTargetQueryDialog, wxDialog )
 // AISTargetQueryDialog event table definition
-wxBEGIN_EVENT_TABLE ( AISTargetQueryDialog, wxDialog )
+BEGIN_EVENT_TABLE ( AISTargetQueryDialog, wxDialog )
     EVT_BUTTON( xID_OK, AISTargetQueryDialog::OnIdOKClick )
     EVT_BUTTON( xID_WPT_CREATE, AISTargetQueryDialog::OnIdWptCreateClick )
     EVT_CLOSE(AISTargetQueryDialog::OnClose)
     EVT_MOVE( AISTargetQueryDialog::OnMove )
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 AISTargetQueryDialog::AISTargetQueryDialog()
 {
@@ -106,9 +107,9 @@ void AISTargetQueryDialog::OnIdWptCreateClick( wxCommandEvent& event )
 
             if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
                 pRouteManagerDialog->UpdateWptListCtrl();
-                cc1->undo->BeforeUndoableAction( Undo_CreateWaypoint, pWP, Undo_HasParent, NULL );
-                cc1->undo->AfterUndoableAction( NULL );
-                Refresh( false );
+            cc1->undo->BeforeUndoableAction( Undo_CreateWaypoint, pWP, Undo_HasParent, NULL );
+            cc1->undo->AfterUndoableAction( NULL );
+            Refresh( false );
         }
     }
 }
@@ -153,9 +154,7 @@ bool AISTargetQueryDialog::Create( wxWindow* parent, wxWindowID id, const wxStri
 void AISTargetQueryDialog::SetColorScheme( ColorScheme cs )
 {
     if( cs != m_colorscheme ) {
-#ifndef __WXOSX__
         DimeControl( this );
-#endif
         Refresh();
     }
 }
@@ -182,9 +181,8 @@ void AISTargetQueryDialog::UpdateText()
     wxString html;
 
     if( !m_pQueryTextCtl ) return;
-#ifndef __WXOSX__
+
     DimeControl( this );
-#endif
     wxColor bg = GetBackgroundColour();
     m_pQueryTextCtl->SetBackgroundColour( bg );
 
@@ -211,7 +209,7 @@ void AISTargetQueryDialog::UpdateText()
             wxSize sz;
             if( ! IsShown() ) {
                 sz = m_pQueryTextCtl->GetVirtualSize();
-                sz.x = 325;
+                sz.x = 300;
                 m_pQueryTextCtl->SetSize( sz );
             }
             m_pQueryTextCtl->Layout();
@@ -223,7 +221,7 @@ void AISTargetQueryDialog::UpdateText()
             Fit();
             sz -= wxSize( 200, 200 );
             m_pQueryTextCtl->SetMinSize( sz );
-
+            
             m_createWptBtn->Enable( td->b_positionOnceValid );
         }
   //  }

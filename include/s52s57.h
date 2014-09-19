@@ -1,11 +1,11 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCP
  * Purpose:  S52 PLIB and S57 Chart data types
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,14 +21,17 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ */
+
 
 #ifndef _S52S57_H_
 #define _S52S57_H_
 
 #include "bbox.h"
 
-#define CURRENT_SENC_FORMAT_VERSION  122
+#define CURRENT_SENC_FORMAT_VERSION  123
 
 //    Fwd Defns
 class wxArrayOfS57attVal;
@@ -206,8 +209,8 @@ typedef struct _S52color{
 class S52_TextC
 {
 public:
-    S52_TextC(){ pcol = NULL, pFont = NULL, m_pRGBA = NULL, bnat = false, bspecial_char = false; }
-    ~S52_TextC(){ free(m_pRGBA); }
+      S52_TextC(){ pcol = NULL, pFont = NULL, m_pRGBA = NULL, bnat = false, bspecial_char = false; }
+      ~S52_TextC(){ free(m_pRGBA); }
 
     wxString   frmtd;       // formated text string
     char       hjust;
@@ -291,6 +294,7 @@ class S57Obj;
 class OGRFeature;
 class PolyTessGeo;
 class PolyTessGeoTrap;
+class line_segment_element;
 
 typedef struct _chart_context{
     void                    *m_pvc_hash;
@@ -300,9 +304,11 @@ typedef struct _chart_context{
     wxArrayPtrVoid          *pFloatingATONArray;
     wxArrayPtrVoid          *pRigidATONArray;
     s57chart                *chart;
-    double                  safety_contour;
-
+    double                  safety_contour; 
+    float                   *vertex_buffer;
+    
 }chart_context;
+
 
 class S57Obj
 {
@@ -311,11 +317,11 @@ public:
       //  Public Methods
       S57Obj();
       ~S57Obj();
-      S57Obj(char *first_line, wxInputStream *fpx, double ref_lat, double ref_lon);
+      S57Obj(char *first_line, wxInputStream *fpx, double ref_lat, double ref_lon, int senc_file_version);
 
-      wxString GetAttrValueAsString ( char *attr );
+      wxString GetAttrValueAsString ( const char *attr );
       int GetAttributeIndex( const char *AttrSeek );
-
+          
       // Private Methods
 private:
       bool IsUsefulAttribute(char *buf);
@@ -366,9 +372,13 @@ public:
       int                     m_n_lsindex;
       int                     *m_lsindex_array;
       int                     m_n_edge_max_points;
-
+      line_segment_element    *m_ls_list;
+      
       DisCat                  m_DisplayCat;
-
+      int                     m_DPRI;                 // display priority, assigned from initial LUP
+                                                      // May be adjusted by CS
+      bool                    m_bcategory_mutable;    //  CS procedure may move this object to a higher category.
+                                                      //  Used as a hint to rendering filter logic
 
                                                       // This transform converts from object geometry
                                                       // to SM coordinates.
@@ -376,10 +386,12 @@ public:
       double                  y_rate;                 // to be used in GetPointPix() and friends
       double                  x_origin;               // on a per-object basis if necessary
       double                  y_origin;
-
+      
       chart_context           *m_chart_context;       // per-chart constants, carried in each object for convenience
       int auxParm0;                                   // some per-object auxiliary parameters, used for OpenGL
       int auxParm1;
+      int auxParm2;
+      int auxParm3;
 };
 
 
@@ -400,12 +412,12 @@ typedef struct _ObjRazRules{
    LUPrec          *LUP;
    S57Obj          *obj;
 //   void         (*GetPointPixel)(void *, float, float, wxPoint *);
-
+   
 //   s57chart        *chart;                //dsr ... chart object owning this rule set
-    sm_parms        *sm_transform_parms;
+   sm_parms        *sm_transform_parms;
    struct _ObjRazRules *child;            // child list, used only for MultiPoint Soundings
    struct _ObjRazRules *next;
-    struct _mps_container *mps;
+   struct _mps_container *mps;
 }ObjRazRules;
 
 
@@ -445,17 +457,35 @@ public:
 class VE_Element
 {
 public:
-    unsigned int    index;
-    unsigned int    nCount;
-    double          *pPoints;
-    int             max_priority;
+      unsigned int index;
+      unsigned int nCount;
+      double      *pPoints;
+      int         max_priority;
+      size_t      vbo_offset;
+      wxBoundingBox BBox;
 };
 
 class VC_Element
 {
 public:
-    unsigned int    index;
-    double          *pPoint;
+      unsigned int index;
+      double      *pPoint;
+};
+
+class line_segment_element
+{
+public:
+    size_t              vbo_offset;
+    size_t              n_points;
+    int                 priority;
+    float               lat_max;                // segment bounding box
+    float               lat_min;
+    float               lon_max;
+    float               lon_min;
+    void                *private0;
+    int                 type;
+    
+    line_segment_element *next;
 };
 
 

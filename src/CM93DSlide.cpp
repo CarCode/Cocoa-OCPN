@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "wx/wxprec.h"
 
@@ -36,7 +37,7 @@ extern int g_cm93detail_dialog_x;
 extern int g_cm93detail_dialog_y;
 extern ChartCanvas *cc1;
 
-wxBEGIN_EVENT_TABLE(CM93DSlide, wxDialog)
+BEGIN_EVENT_TABLE(CM93DSlide, wxDialog)
     EVT_MOVE( CM93DSlide::OnMove )
     EVT_COMMAND_SCROLL_THUMBRELEASE(-1, CM93DSlide::OnChangeValue)
     EVT_COMMAND_SCROLL_LINEUP(-1, CM93DSlide::OnChangeValue)
@@ -46,7 +47,7 @@ wxBEGIN_EVENT_TABLE(CM93DSlide, wxDialog)
     EVT_COMMAND_SCROLL_BOTTOM(-1, CM93DSlide::OnChangeValue)
     EVT_COMMAND_SCROLL_TOP(-1, CM93DSlide::OnChangeValue)
     EVT_CLOSE( CM93DSlide::OnClose )
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 CM93DSlide::CM93DSlide( wxWindow *parent, wxWindowID id, int value, int minValue, int maxValue,
                         const wxPoint& pos, const wxSize& size, long style, const wxString& title )
@@ -72,7 +73,7 @@ bool CM93DSlide::Create( wxWindow *parent, wxWindowID id, int value, int minValu
 #ifdef __WXOSX__
     wstyle |= wxSTAY_ON_TOP;
 #endif
-
+    
     if( !wxDialog::Create( parent, id, title, pos, size, wstyle ) ) return false;
 
     m_pparent = parent;

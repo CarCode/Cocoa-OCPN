@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __TCWIN_H__
 #define __TCWIN_H__
@@ -44,21 +45,21 @@ WX_DECLARE_LIST(wxPoint, SplineList);           // for spline curve points
 class TCWin: public wxDialog
 {
 public:
-    TCWin(ChartCanvas *parent, int x, int y, void *pvIDX);
-    ~TCWin();
+      TCWin(ChartCanvas *parent, int x, int y, void *pvIDX);
+      ~TCWin();
 
-    void OnSize(wxSizeEvent& event);
-    void OnPaint(wxPaintEvent& event);
-    void MouseEvent(wxMouseEvent& event);
-    void OnTCWinPopupTimerEvent(wxTimerEvent& event);
-    void OKEvent(wxCommandEvent& event);
-    void NXEvent(wxCommandEvent& event);
-    void PREvent(wxCommandEvent& event);
-    void OnCloseWindow(wxCloseEvent& event);
+      void OnSize(wxSizeEvent& event);
+      void OnPaint(wxPaintEvent& event);
+      void MouseEvent(wxMouseEvent& event);
+	  void OnTCWinPopupTimerEvent(wxTimerEvent& event);
+      void OKEvent(wxCommandEvent& event);
+      void NXEvent(wxCommandEvent& event);
+      void PREvent(wxCommandEvent& event);
+      void OnCloseWindow(wxCloseEvent& event);
 
-    void Resize(void);
+      void Resize(void);
 
-    void RePosition(void);
+      void RePosition(void);
 
 
 private:
@@ -69,44 +70,44 @@ private:
     int           curs_y;
     int          m_plot_type;
 
-    IDX_entry   *pIDX;
-    wxButton    *OK_button;
-    wxButton    *NX_button;
-    wxButton    *PR_button;
+      IDX_entry   *pIDX;
+      wxButton    *OK_button;
+      wxButton    *NX_button;
+      wxButton    *PR_button;
 
-    int         im;
-    int         ib;
-    int         it;
-    int         val_off;
-    wxRect    m_graph_rect;
-
-
-    float       tcv[26];
-    wxListBox  *m_tList ;
-    bool        btc_valid;
-    ChartCanvas *pParent;
-    int         m_corr_mins;
-    wxString    m_stz;
-    int         m_t_graphday_00_at_station;
-    wxDateTime  m_graphday;
-    int         m_plot_y_offset;
-
-    SplineList  m_sList;
-
-    wxFont *pSFont;
-    wxFont *pSMFont;
-    wxFont *pMFont;
-    wxFont *pLFont;
-
-    wxPen *pblack_1;
-    wxPen *pblack_2;
-    wxPen *pblack_3;
-    wxPen *pred_2;
-    wxBrush *pltgray;
-    wxBrush *pltgray2;
+      int         im;
+      int         ib;
+      int         it;
+      int         val_off;
+      wxRect    m_graph_rect;
 
 
-    wxDECLARE_EVENT_TABLE();
+      float       tcv[26];
+	  wxListBox  *m_tList ;
+      bool        btc_valid;
+      ChartCanvas *pParent;
+      int         m_corr_mins;
+      wxString    m_stz;
+      int         m_t_graphday_00_at_station;
+      wxDateTime  m_graphday;
+      int         m_plot_y_offset;
+
+      SplineList  m_sList;
+
+      wxFont *pSFont;
+      wxFont *pSMFont;
+      wxFont *pMFont;
+      wxFont *pLFont;
+
+      wxPen *pblack_1;
+      wxPen *pblack_2;
+      wxPen *pblack_3;
+      wxPen *pred_2;
+      wxBrush *pltgray;
+      wxBrush *pltgray2;
+
+
+DECLARE_EVENT_TABLE()
 };
 
 

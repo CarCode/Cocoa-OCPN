@@ -1,4 +1,4 @@
-/***************************************************************************
+/****************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Toolbar
@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include "wx/tbarbase.h"
 
@@ -29,8 +29,7 @@
 // GrabberWindow Definition
 //----------------------------------------------------------------------------
 
-class GrabberWin: public wxPanel
-{
+class GrabberWin: public wxPanel {
 public:
       GrabberWin( wxWindow *parent );
       void OnPaint( wxPaintEvent& event );
@@ -42,7 +41,7 @@ public:
       bool m_bRightDown;
       ocpnStyle::Style* m_style;
 
-      wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 };
 
 
@@ -57,8 +56,7 @@ class ocpnToolBarTool;
 //    Adapted from wxToolBarSimple( deprecated )
 // ----------------------------------------------------------------------------
 
-class ocpnToolBarSimple: public wxControl
-{
+class ocpnToolBarSimple: public wxControl {
 public:
       // ctors and dtor
       ocpnToolBarSimple() {
@@ -95,7 +93,7 @@ public:
       void OnKillFocus( wxFocusEvent& event );
       void OnToolTipTimerEvent( wxTimerEvent& event );
       void OnToolTipOffTimerEvent( wxTimerEvent& event );
-
+      
       wxToolBarToolBase *AddTool( int toolid, const wxString& label, const wxBitmap& bitmap,
                   const wxBitmap& bmpDisabled, wxItemKind kind = wxITEM_NORMAL,
                   const wxString& shortHelp = wxEmptyString, const wxString& longHelp =
@@ -130,8 +128,8 @@ public:
       int GetLineCount() { return m_LineCount; };
       int GetVisibleToolCount();
 
-      void SetToolNormalBitmapEx(wxToolBarToolBase *tool, const wxString & iconname );
-      
+      void SetToolNormalBitmapEx(wxToolBarToolBase *tool, const wxString & iconname);
+
       // get the control with the given id or return NULL
       virtual wxControl *FindControl( int toolid );
 
@@ -180,6 +178,8 @@ public:
       virtual void SetToolLongHelp( int toolid, const wxString& helpString );
       virtual wxString GetToolLongHelp( int toolid ) const;
 
+      virtual void SetToolTooltipHiViz( int id, bool b_hiviz );
+      
       // toolbar geometry
       // ----------------
 
@@ -293,7 +293,7 @@ protected:
       ocpnStyle::Style* m_style;
 
 private:
-      wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 };
 
 //----------------------------------------------------------------------------------------------------------
@@ -302,8 +302,8 @@ private:
 
 #define FADE_TIMER 2
 
-class ocpnFloatingToolbarDialog: public wxDialog
-{
+class ocpnFloatingToolbarDialog: public wxDialog {
+DECLARE_EVENT_TABLE()
 
 public:
       ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint position, long orient, float size_factor );
@@ -316,6 +316,7 @@ public:
       void FadeTimerEvent( wxTimerEvent& event );
       bool IsToolbarShown() { return ( m_ptoolbar != 0 ); }
       float GetScaleFactor() { return m_sizefactor; }
+      
       void Realize();
       ocpnToolBarSimple *GetToolbar();
       void Submerge();
@@ -364,12 +365,10 @@ private:
       int m_dock_y;
       ocpnStyle::Style* m_style;
       bool m_block;
-
+      
       bool m_marginsInvisible;
       float m_sizefactor;
-
-    wxDECLARE_EVENT_TABLE();
-
+      
 };
 
 //---------------------------------------------------------------------------

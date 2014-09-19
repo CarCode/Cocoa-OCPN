@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef __CHART1_H__
 #define __CHART1_H__
@@ -114,15 +114,8 @@ enum
       ID_PLUGIN_BASE
 
 };
-/*
-#ifdef __WXOSX__
-enum
-{
-    Menu_mac_Quit = wxID_EXIT,
-    Menu_mac_About = wxID_ABOUT
-};
-#endif
-*/
+
+
 static const long TOOLBAR_STYLE = wxTB_FLAT | wxTB_DOCKABLE | wxTB_TEXT ;
 
 enum
@@ -212,7 +205,7 @@ class MyApp: public wxApp
 #ifndef __WXOSX__
     wxSingleInstanceChecker *m_checker;
 #endif
-    wxDECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE()
 
 };
 
@@ -247,7 +240,7 @@ class MyFrame: public wxFrame
     void DoStackUp(void);
     void DoStackDown(void);
     void DoStackDelta( int direction );
-
+    
     void MouseEvent(wxMouseEvent& event);
     void SelectChartFromStack(int index,  bool bDir = false,  ChartTypeEnum New_Type = CHART_TYPE_DONTCARE, ChartFamilyEnum New_Family = CHART_FAMILY_DONTCARE);
     void SelectdbChart(int dbindex);
@@ -293,7 +286,7 @@ class MyFrame: public wxFrame
     void SubmergeToolbarIfOverlap(int x, int y, int margin = 0);
     void SurfaceToolbar(void);
     void SetToolbarScale(void);
-
+    
     void HandlePianoClick(int selected_index, int selected_dbIndex);
     void HandlePianoRClick(int x, int y,int selected_index, int selected_dbIndex);
     void HandlePianoRollover(int selected_index, int selected_dbIndex);
@@ -320,7 +313,6 @@ class MyFrame: public wxFrame
     void onTide(wxCommandEvent& event);
 #endif
     void SetGroupIndex(int index);
-    double GetTrueOrMag(double a);
 
     double GetBestVPScale(ChartBase *pchart);
 
@@ -337,6 +329,8 @@ class MyFrame: public wxFrame
     void ChartsRefresh(int dbi_hint, ViewPort &vp, bool b_purge = true);
 
     bool CheckGroup(int igroup);
+    double GetTrueOrMag(double a);
+    
 
     void TouchAISActive(void);
     void UpdateAISTool(void);
@@ -369,11 +363,7 @@ class MyFrame: public wxFrame
     wxSize              m_defer_size;
 
   private:
-#ifdef __WXOSX__
-    void ocpnDoSetSize(void);
-#else
-    void DoSetSize(void);
-#endif
+    void ODoSetSize(void);
     void DoCOGSet(void);
 
         //      Toolbar support
@@ -435,10 +425,10 @@ class MyFrame: public wxFrame
 
     MsgPriorityHash     NMEA_Msg_Hash;
     wxString            m_VDO_accumulator;
-
+    
     time_t              m_fixtime;
 
-    wxDECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE()
 };
 
 //--------------------------------------------------------------------
@@ -482,6 +472,7 @@ enum {
     MEMORY_FOOTPRINT_TIMER,
     BELLS_TIMER,
     ID_NMEA_THREADMSG
+
 };
 
 //-----------------------------------------------------------------------
@@ -498,7 +489,7 @@ public:
       int         m_mouse_wheel_oneshot;
       int         m_last_wheel_dir;
 
-      wxDECLARE_EVENT_TABLE();
+      DECLARE_EVENT_TABLE()
 };
 
 
@@ -510,7 +501,7 @@ extern int OCPNMessageBox(wxWindow *parent,
 
 //----------------------------------------------------------------------------
 // Generic Auto Timed Window
-// Belongs to the creator, not deleted automatically on applicaiton close
+// Belongs to the creator, not deleted automatically on application close
 //----------------------------------------------------------------------------
 
 class TimedPopupWin: public wxWindow
@@ -518,22 +509,23 @@ class TimedPopupWin: public wxWindow
 public:
     TimedPopupWin( wxWindow *parent, int timeout = -1 );
     ~TimedPopupWin();
-
+    
     void OnPaint( wxPaintEvent& event );
-
+    
     void SetBitmap( wxBitmap &bmp );
     wxBitmap* GetBitmap() { return m_pbm; }
     void OnTimer( wxTimerEvent& event );
     bool IsActive() { return isActive; }
     void IsActive( bool state ) { isActive = state; }
-
+    
 private:
     wxBitmap *m_pbm;
     wxTimer m_timer_timeout;
     int m_timeout_sec;
     bool isActive;
-
-    wxDECLARE_EVENT_TABLE();
+    
+    DECLARE_EVENT_TABLE()
 };
+
 
 #endif

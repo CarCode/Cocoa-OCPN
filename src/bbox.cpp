@@ -188,11 +188,7 @@ OVERLAP wxBoundingBox::Intersect(const wxBoundingBox &other, double Marge) const
 
 
 // Checks if a line intersects the boundingbox
-#ifdef __WXOSX__
-bool wxBoundingBox::LineIntersect(const wxPoint2DDouble& begin, const wxPoint2DDouble& end )
-#else
 bool wxBoundingBox::LineIntersect(const wxPoint2DDouble& begin, const wxPoint2DDouble& end ) const
-#endif
 {
     assert (m_validbbox == TRUE);
 
@@ -205,11 +201,7 @@ bool wxBoundingBox::LineIntersect(const wxPoint2DDouble& begin, const wxPoint2DD
 
 
 // Is the given point in the boundingbox ??
-#ifdef __WXOSX__
-bool wxBoundingBox::PointInBox(double x, double y, double Marge)
-#else
 bool wxBoundingBox::PointInBox(double x, double y, double Marge) const
-#endif
 {
     assert (m_validbbox == TRUE);
 
@@ -223,11 +215,7 @@ bool wxBoundingBox::PointInBox(double x, double y, double Marge) const
 //
 // Is the given point in the boundingbox ??
 //
-#ifdef __WXOSX__
-bool wxBoundingBox::PointInBox(const wxPoint2DDouble& a, double Marge)
-#else
 bool wxBoundingBox::PointInBox(const wxPoint2DDouble& a, double Marge) const
-#endif
 {
     assert (m_validbbox == TRUE);
 

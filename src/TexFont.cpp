@@ -122,27 +122,30 @@ void TexFont::Build( wxFont &font, bool blur )
         image = image.Blur(1);
 
     unsigned char *imgdata = image.GetData();
-    unsigned char *teximage = (unsigned char *) malloc( stride * tex_w * tex_h );
 
-    for( int j = 0; j < tex_w*tex_h; j++ )
-        for( int k = 0; k < stride; k++ )
-            teximage[j * stride + k] = imgdata[3*j];
+    if(imgdata){
+        unsigned char *teximage = (unsigned char *) malloc( stride * tex_w * tex_h );
 
-    if(texobj)
-        Delete();
+        for( int j = 0; j < tex_w*tex_h; j++ )
+            for( int k = 0; k < stride; k++ )
+                teximage[j * stride + k] = imgdata[3*j];
 
-    glGenTextures( 1, &texobj );
-    glBindTexture( GL_TEXTURE_2D, texobj );
+        if(texobj)
+            Delete();
 
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+        glGenTextures( 1, &texobj );
+        glBindTexture( GL_TEXTURE_2D, texobj );
 
-    glTexImage2D( GL_TEXTURE_2D, 0, internalformat, tex_w, tex_h, 0,
-                  format, GL_UNSIGNED_BYTE, teximage );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 
-    free(teximage);
+        glTexImage2D( GL_TEXTURE_2D, 0, internalformat, tex_w, tex_h, 0,
+                     format, GL_UNSIGNED_BYTE, teximage );
+
+        free(teximage);
+    }
 }
 
 void TexFont::Delete( )

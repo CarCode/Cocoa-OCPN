@@ -134,6 +134,11 @@
 			<key>orderHint</key>
 			<integer>37</integer>
 		</dict>
+		<key>squiddio_pi.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>38</integer>
+		</dict>
 		<key>trimplot-i18n.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -153,6 +158,11 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>24</integer>
+		</dict>
+		<key>watchdog_pi copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>39</integer>
 		</dict>
 		<key>watchman-i18n.xcscheme</key>
 		<dict>
@@ -378,6 +388,16 @@
 			<true/>
 		</dict>
 		<key>A60F748F17A0319F00A6160F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A671BCAA19BE406F00019119</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A671BCBC19BE44BC00019119</key>
 		<dict>
 			<key>primary</key>
 			<true/>

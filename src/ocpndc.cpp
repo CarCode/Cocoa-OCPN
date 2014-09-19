@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Layer to perform wxDC drawing using wxDC or opengl
@@ -21,8 +21,10 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ ***************************************************************************
+ *
+ */
 
 #include "wx/wxprec.h"
 
@@ -52,7 +54,7 @@
 
 #include "ocpndc.h"
 
-extern float g_GLMinLineWidth;
+extern float g_GLMinSymbolLineWidth;
 wxArrayPtrVoid gTesselatorVertices;
 
 //----------------------------------------------------------------------------
@@ -65,7 +67,7 @@ ocpnDC::ocpnDC( wxGLCanvas &canvas ) :
 #endif
 #ifdef ocpnUSE_GL
     m_textforegroundcolour = wxColour( 0, 0, 0 );
-#endif
+#endif    
 }
 
 ocpnDC::ocpnDC( wxDC &pdc ) :
@@ -109,7 +111,7 @@ void ocpnDC::Clear()
         glcanvas->GetSize( &w, &h );
         DrawRectangle( 0, 0, w, h );
         SetBrush( tmpBrush );
-#endif
+#endif        
     }
 }
 
@@ -127,7 +129,7 @@ void ocpnDC::SetBackground( const wxBrush &brush )
 void ocpnDC::SetGLAttrs( bool highQuality )
 {
 #ifdef ocpnUSE_GL
-
+    
     //      Enable anti-aliased polys, at best quality
     if( highQuality ) {
         glEnable( GL_LINE_SMOOTH );
@@ -141,7 +143,7 @@ void ocpnDC::SetGLAttrs( bool highQuality )
         glDisable( GL_POLYGON_SMOOTH );
         glDisable( GL_BLEND );
     }
-#endif
+#endif    
 }
 
 void ocpnDC::SetPen( const wxPen &pen )
@@ -207,7 +209,7 @@ void ocpnDC::GetSize( wxCoord *width, wxCoord *height ) const
 void ocpnDC::SetGLStipple() const
 {
 #ifdef ocpnUSE_GL
-
+    
     switch( m_pen.GetStyle() ) {
         case wxDOT: {
             glLineStipple( 1, 0x3333 );
@@ -231,7 +233,7 @@ void ocpnDC::SetGLStipple() const
         }
         default: break;
     }
-#endif
+#endif    
 }
 
 #ifdef ocpnUSE_GL
@@ -262,7 +264,7 @@ void DrawEndCap(float x1, float y1, float t1, float angle)
 void DrawGLThickLine( float x1, float y1, float x2, float y2, wxPen pen, bool b_hiqual )
 {
 #ifdef ocpnUSE_GL
-
+    
     float angle = atan2f( y2 - y1, x2 - x1 );
     float t1 = pen.GetWidth();
     float t2sina1 = t1 / 2 * sinf( angle );
@@ -323,7 +325,7 @@ void DrawGLThickLine( float x1, float y1, float x2, float y2, wxPen pen, bool b_
         glVertex2f( x1 + t2sina1, y1 - t2cosa1 );
 
         /* wx draws a nice rounded end in dc mode, so replicate
-         this for opengl mode, should this be done for the dashed mode case? */
+           this for opengl mode, should this be done for the dashed mode case? */
         if(pen.GetCap() == wxCAP_ROUND) {
             DrawEndCap( x1, y1, t1, angle);
             DrawEndCap( x2, y2, t1, angle + M_PI);
@@ -332,7 +334,7 @@ void DrawGLThickLine( float x1, float y1, float x2, float y2, wxPen pen, bool b_
     }
 
     glEnd();
-#endif
+#endif    
 }
 
 void ocpnDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hiqual )
@@ -347,10 +349,10 @@ void ocpnDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hi
 
             glDisable( GL_MULTISAMPLE );
             glDisable( GL_LINE_STIPPLE );
-
+            
             bool b_draw_thick = false;
 
-            float pen_width = wxMax(g_GLMinLineWidth, m_pen.GetWidth());
+            float pen_width = wxMax(g_GLMinSymbolLineWidth, m_pen.GetWidth());
 
             //      Enable anti-aliased lines, at best quality
             if( b_hiqual ) {
@@ -392,14 +394,14 @@ void ocpnDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hi
                     float cosa = cosf( angle );
                     float sina = sinf( angle );
                     float t1 = m_pen.GetWidth();
-                    
+
                     float lpix = sqrtf( powf(x1 - x2, 2) + powf(y1 - y2, 2) );
                     float lrun = 0.;
                     float xa = x1;
                     float ya = y1;
                     float ldraw = t1 * dashes[0];
                     float lspace = t1 * dashes[1];
-                    
+
                     glBegin( GL_LINES );
                     while( lrun < lpix ) {
                         //    Dash
@@ -433,17 +435,17 @@ void ocpnDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hi
 
         glPopAttrib();
     }
-#endif
+#endif    
 }
 
 // Draws thick lines from triangles
 void DrawGLThickLines( int n, wxPoint points[],wxCoord xoffset,
-                      wxCoord yoffset, wxPen pen, bool b_hiqual )
+                       wxCoord yoffset, wxPen pen, bool b_hiqual )
 {
 #ifdef ocpnUSE_GL
     if(n < 2)
         return;
-    
+
     /* for dashed case, for now just draw thick lines */
     wxDash *dashes;
     if( pen.GetDashes( &dashes ) )
@@ -451,12 +453,12 @@ void DrawGLThickLines( int n, wxPoint points[],wxCoord xoffset,
         wxPoint p0 = points[0];
         for( int i = 1; i < n; i++ ) {
             DrawGLThickLine( p0.x + xoffset, p0.y + yoffset, points[i].x + xoffset,
-                            points[i].y + yoffset, pen, b_hiqual );
+                             points[i].y + yoffset, pen, b_hiqual );
             p0 = points[i];
         }
         return;
     }
-    
+
     /* cull zero segments */
     wxPoint *cpoints = new wxPoint[n];
     cpoints[0] = points[0];
@@ -465,27 +467,27 @@ void DrawGLThickLines( int n, wxPoint points[],wxCoord xoffset,
         if(points[i].x != points[i-1].x || points[i].y != points[i-1].y)
             cpoints[c++] = points[i];
     }
-    
+
     /* nicer than than rendering each segment separately, this is because thick
-     line segments drawn as rectangles which have different angles have
-     rectangles which overlap and also leave a gap.
-     This code properly calculates vertexes for adjoining segments */
+       line segments drawn as rectangles which have different angles have
+       rectangles which overlap and also leave a gap.
+       This code properly calculates vertexes for adjoining segments */
     float t1 = pen.GetWidth();
-    
+
     float x0 = cpoints[0].x, y0 = cpoints[0].y, x1 = cpoints[1].x, y1 = cpoints[1].y;
     float a0 = atan2f( y1 - y0, x1 - x0 );
-    
+
     // It is also possible to use triangle strip, (and triangle fan for endcap)
     // to reduce vertex count.. is it worth it?
     glBegin( GL_TRIANGLES );
-    
+
     float t2sina0 = t1 / 2 * sinf( a0 );
     float t2cosa0 = t1 / 2 * cosf( a0 );
-    
+
     for( int i = 1; i < c; i++ ) {
         float x2, y2;
         float a1;
-        
+
         if(i < c - 1) {
             x2 = cpoints[i + 1].x, y2 = cpoints[i + 1].y;
             a1 = atan2f( y2 - y1, x2 - x1 );
@@ -493,23 +495,23 @@ void DrawGLThickLines( int n, wxPoint points[],wxCoord xoffset,
             x2 = x1, y2 = y1;
             a1 = a0;
         }
-        
+
         float aa = (a0 + a1) / 2;
         float diff = fabsf(a0 - a1);
         if(diff > M_PI)
-            diff -= 2*M_PI;
+            diff -= 2 * (float)M_PI;
         float rad = t1 / 2 / wxMax(cosf(diff / 2), .4);
-        
+
         float t2sina1 = rad * sinf( aa );
         float t2cosa1 = rad * cosf( aa );
-        
+
         glVertex2f( x1 + t2sina1, y1 - t2cosa1 );
         glVertex2f( x1 - t2sina1, y1 + t2cosa1 );
         glVertex2f( x0 + t2sina0, y0 - t2cosa0 );
-        
+
         glVertex2f( x0 - t2sina0, y0 + t2cosa0 );
         glVertex2f( x0 + t2sina0, y0 - t2cosa0 );
-        
+
         float dot = t2sina0 * t2sina1 + t2cosa0 * t2cosa1;
         if(dot > 0)
             glVertex2f( x1 - t2sina1, y1 + t2cosa1 );
@@ -521,20 +523,20 @@ void DrawGLThickLines( int n, wxPoint points[],wxCoord xoffset,
         a0 = a1;
         t2sina0 = t2sina1, t2cosa0 = t2cosa1;
     }
-    
+ 
     if(pen.GetCap() == wxCAP_ROUND) {
         DrawEndCap( x0, y0, t1, a0);
         DrawEndCap( x0, y0, t1, a0 + M_PI);
-    }
-    
+     }
+
     glEnd();
-    
+
     glPopAttrib();
-    
+
     delete [] cpoints;
-    
-#endif    
-}
+
+ #endif    
+ }
 
 void ocpnDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset, bool b_hiqual )
 {
@@ -558,18 +560,18 @@ void ocpnDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffse
                 glGetIntegerv( GL_SMOOTH_LINE_WIDTH_RANGE, &parms[0] );
                 if( m_pen.GetWidth() > parms[1] ) b_draw_thick = true;
                 else
-                    glLineWidth( wxMax(g_GLMinLineWidth, m_pen.GetWidth()) );
+                    glLineWidth( wxMax(g_GLMinSymbolLineWidth, m_pen.GetWidth()) );
             } else
-                glLineWidth( wxMax(g_GLMinLineWidth, 1) );
+                glLineWidth( wxMax(g_GLMinSymbolLineWidth, 1) );
         } else {
             if( m_pen.GetWidth() > 1 ) {
                 GLint parms[2];
                 glGetIntegerv( GL_ALIASED_LINE_WIDTH_RANGE, &parms[0] );
                 if( m_pen.GetWidth() > parms[1] ) b_draw_thick = true;
                 else
-                    glLineWidth( wxMax(g_GLMinLineWidth, m_pen.GetWidth()) );
+                    glLineWidth( wxMax(g_GLMinSymbolLineWidth, m_pen.GetWidth()) );
             } else
-                glLineWidth( wxMax(g_GLMinLineWidth, 1) );
+                glLineWidth( wxMax(g_GLMinSymbolLineWidth, 1) );
         }
 
         if( b_draw_thick) {
@@ -582,7 +584,7 @@ void ocpnDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffse
         }
         glPopAttrib();            // restore state
     }
-#endif
+#endif    
 }
 
 void ocpnDC::StrokeLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2 )
@@ -642,7 +644,7 @@ void ocpnDC::DrawRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h )
             glEnd();
         }
     }
-#endif
+#endif    
 }
 
 /* draw the arc along corners */
@@ -653,7 +655,7 @@ static void drawrrhelper( wxCoord x, wxCoord y, wxCoord r, float st, float et )
     float dt = ( et - st ) / slices;
     for( float t = st; t <= et + dt; t += dt )
         glVertex2f( x + r * cos( t ), y + r * sin( t ) );
-#endif
+#endif        
 }
 
 void ocpnDC::DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, wxCoord r )
@@ -665,7 +667,7 @@ void ocpnDC::DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, w
         wxCoord x0 = x, x1 = x + r, x2 = x + w - r, x3 = x + w;
         wxCoord y0 = y, y1 = y + r, y2 = y + h - r, y3 = y + h;
         if( ConfigureBrush() ) {
-
+            
             glBegin( GL_QUADS );
             glVertex2i( x0, y1 );
             glVertex2i( x1, y1 );
@@ -685,37 +687,37 @@ void ocpnDC::DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, w
 
             glBegin( GL_TRIANGLE_FAN );
             glVertex2i( x1, y2 );
-            drawrrhelper( x1, y2, r, M_PI/2, M_PI );
+            drawrrhelper( x1, y2, r, (float)M_PI / 2., (float)M_PI );
             glEnd();
 
             glBegin( GL_TRIANGLE_FAN );
             glVertex2i( x2, y2 );
-            drawrrhelper( x2, y2, r, 0, M_PI / 2 );
+            drawrrhelper( x2, y2, r, 0, (float)M_PI / 2. );
             glEnd();
 
             glBegin( GL_TRIANGLE_FAN );
             glVertex2i( x2, y1 );
-            drawrrhelper( x2, y1, r, -M_PI / 2, 0 );
+            drawrrhelper( x2, y1, r, (float)-M_PI / 2., 0 );
             glEnd();
 
             glBegin( GL_TRIANGLE_FAN );
             glVertex2i( x1, y1 );
-            drawrrhelper( x1, y1, r, -M_PI, -M_PI/2 );
+            drawrrhelper( x1, y1, r, (float)-M_PI, (float)-M_PI / 2. );
             glEnd();
-
+            
         }
 
         if( ConfigurePen() ) {
             glBegin( GL_LINE_LOOP );
-            drawrrhelper( x1, y2, r, -M_PI, -M_PI / 2 );
-            drawrrhelper( x2, y2, r, -M_PI / 2, 0 );
-            drawrrhelper( x2, y1, r, 0, M_PI / 2 );
-            drawrrhelper( x1, y1, r, M_PI / 2, M_PI );
+            drawrrhelper( x1, y2, r, (float)-M_PI, (float)-M_PI / 2. );
+            drawrrhelper( x2, y2, r, (float)-M_PI / 2., 0 );
+            drawrrhelper( x2, y1, r, 0, (float)M_PI / 2. );
+            drawrrhelper( x1, y1, r, (float)M_PI / 2., (float)M_PI );
             glEnd();
         }
-
+        
     }
-#endif
+#endif    
 }
 
 void ocpnDC::DrawCircle( wxCoord x, wxCoord y, wxCoord radius )
@@ -779,7 +781,7 @@ void ocpnDC::DrawEllipse( wxCoord x, wxCoord y, wxCoord width, wxCoord height )
 
         glPopAttrib();            // restore state
     }
-#endif
+#endif    
 }
 
 void ocpnDC::DrawPolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset )
@@ -807,7 +809,7 @@ void ocpnDC::DrawPolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yoff
         }
         glPopAttrib();
     }
-#endif
+#endif    
 }
 
 #ifdef ocpnUSE_GL
@@ -874,9 +876,9 @@ void ocpnDC::DrawPolygonTessellated( int n, wxPoint points[], wxCoord xoffset, w
         dc->DrawPolygon( n, points, xoffset, yoffset );
 #ifdef ocpnUSE_GL
     else {
-#ifndef ocpnUSE_GLES  // tessalator in glues is broken
+# ifndef ocpnUSE_GLES  // tessalator in glues is broken
         if( n < 5 )
-#endif
+# endif
         {
             DrawPolygon( n, points, xoffset, yoffset );
             return;
@@ -922,7 +924,7 @@ void ocpnDC::DrawPolygonTessellated( int n, wxPoint points[], wxCoord xoffset, w
             delete (GLvertex*)gTesselatorVertices.Item(i);
         gTesselatorVertices.Clear();
     }
-#endif
+#endif    
 }
 
 void ocpnDC::StrokePolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset )
@@ -949,7 +951,7 @@ void ocpnDC::StrokePolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yo
 void ocpnDC::DrawBitmap( const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usemask )
 {
 #ifdef ocpnUSE_GLES  // Do not attempt to do anything with glDrawPixels if using opengles
-    return;
+        return;
 #endif
 
     wxBitmap bmp;
@@ -1011,7 +1013,7 @@ void ocpnDC::DrawBitmap( const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usem
             glPixelZoom( 1, 1 );
         }
     }
-#endif
+#endif    
 }
 
 void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
@@ -1020,9 +1022,9 @@ void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
         dc->DrawText( text, x, y );
 #ifdef ocpnUSE_GL
     else {
-#ifdef ocpnUSE_GLES
+# ifdef ocpnUSE_GLES
         return;
-#endif
+# endif
         wxCoord w = 0;
         wxCoord h = 0;
 #ifdef __WXMAC__
@@ -1075,7 +1077,7 @@ void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
             delete[] data;
         }
     }
-#endif
+#endif    
 }
 
 void ocpnDC::GetTextExtent( const wxString &string, wxCoord *w, wxCoord *h, wxCoord *descent,
@@ -1110,8 +1112,8 @@ bool ocpnDC::ConfigurePen()
     wxColour c = m_pen.GetColour();
     int width = m_pen.GetWidth();
     glColor4ub( c.Red(), c.Green(), c.Blue(), c.Alpha() );
-    glLineWidth( wxMax(g_GLMinLineWidth, width) );
-#endif
+    glLineWidth( wxMax(g_GLMinSymbolLineWidth, width) );
+#endif    
     return true;
 }
 
@@ -1122,7 +1124,7 @@ bool ocpnDC::ConfigureBrush()
 #ifdef ocpnUSE_GL
     wxColour c = m_brush.GetColour();
     glColor4ub( c.Red(), c.Green(), c.Blue(), c.Alpha() );
-#endif
+#endif    
     return true;
 }
 
@@ -1130,7 +1132,7 @@ void ocpnDC::GLDrawBlendData( wxCoord x, wxCoord y, wxCoord w, wxCoord h, int fo
         const unsigned char *data )
 {
 #ifdef ocpnUSE_GL
-
+    
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     glRasterPos2i( x, y );

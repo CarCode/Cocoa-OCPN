@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include <wx/combobox.h>
 
@@ -32,9 +33,9 @@ extern wxString g_uploadConnection;
 
 IMPLEMENT_DYNAMIC_CLASS(SendToGpsDlg, wxDialog)
 
-wxBEGIN_EVENT_TABLE( SendToGpsDlg, wxDialog ) EVT_BUTTON( ID_STG_CANCEL, SendToGpsDlg::OnCancelClick )
+BEGIN_EVENT_TABLE( SendToGpsDlg, wxDialog ) EVT_BUTTON( ID_STG_CANCEL, SendToGpsDlg::OnCancelClick )
 	EVT_BUTTON( ID_STG_OK, SendToGpsDlg::OnSendClick )
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 SendToGpsDlg::SendToGpsDlg()
 {

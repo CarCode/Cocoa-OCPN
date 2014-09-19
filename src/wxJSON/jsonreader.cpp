@@ -1991,7 +1991,7 @@ wxJSONReader::Strtoll( const wxString& str, wxInt64* i64 )
                 }
                 break;
 
-                // case '+' :
+            // case '+' :
             default :
                 if ( ui64 > LLONG_MAX )  {
                     r = false;

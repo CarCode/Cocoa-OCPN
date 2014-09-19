@@ -5,7 +5,7 @@
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef _CHARTBASE_H_
 #define _CHARTBASE_H_
@@ -39,6 +39,7 @@
 //  Forward Declarations
 //----------------------------------------------------------------------------
 class ViewPort;
+class wxGLContext;
 
 //----------------------------------------------------------------------------
 // Constants. etc
@@ -332,7 +333,7 @@ class ChartPlugInWrapper : public ChartBase
             virtual void SetColorScheme(ColorScheme cs, bool bApplyImmediate);
 
             virtual double GetNearestPreferredScalePPM(double target_scale_ppm);
-
+            
             virtual PlugInChartBase *GetPlugInChart(void){ return m_ppicb; }
 
             virtual int GetCOVREntries();
@@ -359,7 +360,7 @@ class ChartPlugInWrapper : public ChartBase
             PlugInChartBase *m_ppicb;
             wxObject          *m_ppo;
             wxCriticalSection m_critSect;
-
+            
 };
 
 

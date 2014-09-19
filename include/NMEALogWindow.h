@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __NMEALOGWINDOW_H__
 #define __NMEALOGWINDOW_H__
@@ -38,7 +39,7 @@ class TTYWindow;
  * This provides everything needed to use the single NMEA log window.
  *
  * Singleton.
- * http://de.wikipedia.org/wiki/Liste_von_Singleton-Implementierungen : 2. C++ Beispiel
+ *
  * Reading geometry information from the window will cache them
  * inside this class. This is used to store them permanently in
  * the configuration file.

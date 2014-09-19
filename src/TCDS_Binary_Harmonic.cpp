@@ -19,7 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include "TCDS_Binary_Harmonic.h"
 #include "tcmgr.h"
@@ -332,11 +332,11 @@ TC_Error_Code TCDS_Binary_Harmonic::LoadData(const wxString &data_file_path)
     num_csts = hdr.constituents;
     if(0 == num_csts)
         return TC_GENERIC_ERROR;
-    
+
     num_nodes = hdr.number_of_years;
     if(0 == num_nodes)
         return TC_GENERIC_ERROR;
-
+    
     //  Allocate a working buffer
     m_work_buffer = (double *) malloc (num_csts * sizeof (double));
 

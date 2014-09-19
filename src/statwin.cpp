@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Status Window
@@ -21,7 +21,10 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ *
+ */
 
 #include "wx/wxprec.h"
 
@@ -48,11 +51,11 @@ extern MyFrame *gFrame;
 //------------------------------------------------------------------------------
 //    StatWin Implementation
 //------------------------------------------------------------------------------
-wxBEGIN_EVENT_TABLE(StatWin, wxDialog)
+BEGIN_EVENT_TABLE(StatWin, wxDialog)
     EVT_PAINT(StatWin::OnPaint)
     EVT_SIZE(StatWin::OnSize)
     EVT_MOUSE_EVENTS(StatWin::MouseEvent)
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 StatWin::StatWin( wxWindow *win )
 {
@@ -165,10 +168,10 @@ void StatWin::SetColorScheme( ColorScheme cs )
 //------------------------------------------------------------------------------
 //          TextStat Window Implementation
 //------------------------------------------------------------------------------
-wxBEGIN_EVENT_TABLE(TStatWin, wxWindow)
+BEGIN_EVENT_TABLE(TStatWin, wxWindow)
     EVT_PAINT(TStatWin::OnPaint)
     EVT_SIZE(TStatWin::OnSize)
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 TStatWin::TStatWin( wxFrame *frame ) :
         wxWindow( frame, wxID_ANY, wxPoint( 20, 20 ), wxSize( 5, 5 ), wxSIMPLE_BORDER )
@@ -202,11 +205,11 @@ void TStatWin::TextDraw( const wxString& text )
 //------------------------------------------------------------------------------
 //          Piano Window Implementation
 //------------------------------------------------------------------------------
-wxBEGIN_EVENT_TABLE(PianoWin, wxWindow)
+BEGIN_EVENT_TABLE(PianoWin, wxWindow)
     EVT_PAINT(PianoWin::OnPaint)
     EVT_SIZE(PianoWin::OnSize)
     EVT_MOUSE_EVENTS(PianoWin::MouseEvent)
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 // Define a constructor
 PianoWin::PianoWin( wxFrame *frame ) :
@@ -323,12 +326,12 @@ void PianoWin::OnPaint( wxPaintEvent& event )
             }
 
             if( ChartData->GetDBChartType( m_key_array.Item( i ) ) == CHART_TYPE_CM93COMP ) {
-                dc.SetBrush( m_cBrush );
+                    dc.SetBrush( m_cBrush );
 
-                for( unsigned int ino = 0; ino < m_active_index_array.GetCount(); ino++ ) {
-                    if( m_active_index_array.Item( ino ) == key_db_index ) // chart is in the active list
+                    for( unsigned int ino = 0; ino < m_active_index_array.GetCount(); ino++ ) {
+                        if( m_active_index_array.Item( ino ) == key_db_index ) // chart is in the active list
                         dc.SetBrush( m_scBrush );
-                }
+                    }
             }
 
 

@@ -19,7 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -77,7 +77,7 @@ RoutePoint::RoutePoint()
     m_btemp = false;
     m_SelectNode = NULL;
     m_ManagerNode = NULL;
-
+    
     m_HyperlinkList = new HyperlinkList;
 
     m_GUID = pWayPointMan->CreateGUID( this );
@@ -118,7 +118,7 @@ RoutePoint::RoutePoint( RoutePoint* orig )
     m_NameLocationOffsetX = orig->m_NameLocationOffsetX;
     m_NameLocationOffsetY = orig->m_NameLocationOffsetY;
     m_pMarkFont = orig->m_pMarkFont;
-	m_MarkDescription = orig->m_MarkDescription;
+    m_MarkDescription = orig->m_MarkDescription;
     m_btemp = orig->m_btemp;
 
     m_HyperlinkList = new HyperlinkList;
@@ -127,10 +127,10 @@ RoutePoint::RoutePoint( RoutePoint* orig )
 
     m_bIsInLayer = orig->m_bIsInLayer;
     m_GUID = pWayPointMan->CreateGUID( this );
-
+    
     m_SelectNode = NULL;
     m_ManagerNode = NULL;
-
+    
 }
 
 RoutePoint::RoutePoint( double lat, double lon, const wxString& icon_ident, const wxString& name,
@@ -171,7 +171,7 @@ RoutePoint::RoutePoint( double lat, double lon, const wxString& icon_ident, cons
 
     m_SelectNode = NULL;
     m_ManagerNode = NULL;
-
+    
     m_HyperlinkList = new HyperlinkList;
 
     if( !pGUID.IsEmpty() )
@@ -225,7 +225,7 @@ void RoutePoint::SetCreateTime( wxDateTime dt )
 }
 
 
-void RoutePoint::SetName(const wxString & name )
+void RoutePoint::SetName(const wxString & name)
 {
     m_MarkName = name;
     CalculateNameExtents();
@@ -249,7 +249,7 @@ void RoutePoint::ReLoadIcon( void )
 
 #ifdef ocpnUSE_GL
     m_wpBBox_chart_scale = -1;
-    
+
     m_iTextTexture = 0;
 #endif
 }
@@ -321,7 +321,8 @@ void RoutePoint::Draw( ocpnDC& dc, wxPoint *rpn )
         hi_colour = GetGlobalColor( _T ( "YELO1" ) );
         transparency = 150;
     }
-
+    
+        
     //  Highlite any selected point
     if( m_bPtIsSelected || m_bIsBeingEdited) {
         AlphaBlending( dc, r.x + hilitebox.x, r.y + hilitebox.y, hilitebox.width, hilitebox.height, radius,
@@ -364,11 +365,11 @@ void RoutePoint::Draw( ocpnDC& dc, wxPoint *rpn )
 void RoutePoint::DrawGL( ViewPort &vp, OCPNRegion &region )
 {
     if( !m_bIsVisible )
-        return;
-    
+    return;
+
     //    Optimization, especially apparent on tracks in normal cases
     if( m_IconName == _T("empty") && !m_bShowName && !m_bPtIsSelected ) return;
-    
+
     if(m_wpBBox.GetValid() &&
        vp.chart_scale == m_wpBBox_chart_scale &&
        vp.rotation == m_wpBBox_rotation) {
@@ -382,37 +383,37 @@ void RoutePoint::DrawGL( ViewPort &vp, OCPNRegion &region )
                 test_box2.Translate( xlate );
                 if( vp.GetBBox().IntersectOut( test_box2 ) )
                     return;
-            } else
-                if(vpBBox.GetMinX() < 180 && vpBBox.GetMaxX() > 180) {
-                    wxPoint2DDouble xlate( 360., 0. );
-                    wxBoundingBox test_box2 = m_wpBBox;
-                    test_box2.Translate( xlate );
-                    if( vp.GetBBox().IntersectOut( test_box2 ) )
-                        return;
-                } else
+            } else 
+            if(vpBBox.GetMinX() < 180 && vpBBox.GetMaxX() > 180) {
+                wxPoint2DDouble xlate( 360., 0. );
+                wxBoundingBox test_box2 = m_wpBBox;
+                test_box2.Translate( xlate );
+                if( vp.GetBBox().IntersectOut( test_box2 ) )
                     return;
+            } else
+                return;
         }
     }
-    
+
     wxPoint r;
     wxRect hilitebox;
     unsigned char transparency = 150;
-    
+
     cc1->GetCanvasPointPix( m_lat, m_lon, &r );
-    
-    //    Substitue icon?
+
+//    Substitue icon?
     wxBitmap *pbm;
     if( ( m_bIsActive ) && ( m_IconName != _T("mob") ) )
         pbm = pWayPointMan->GetIconBitmap(  _T ( "activepoint" ) );
     else
         pbm = m_pbmIcon;
-    
+
     int sx2 = pbm->GetWidth() / 2;
     int sy2 = pbm->GetHeight() / 2;
-    
-    //    Calculate the mark drawing extents
+
+//    Calculate the mark drawing extents
     wxRect r1( r.x - sx2, r.y - sy2, sx2 * 2, sy2 * 2 );           // the bitmap extents
-    
+
     wxRect r3 = r1;
     if( m_bShowName ) {
         if( !m_pMarkFont ) {
@@ -420,14 +421,14 @@ void RoutePoint::DrawGL( ViewPort &vp, OCPNRegion &region )
             m_FontColor = FontMgr::Get().GetFontColor( _( "Marks" ) );
             CalculateNameExtents();
         }
-        
+
         if( m_pMarkFont ) {
             wxRect r2( r.x + m_NameLocationOffsetX, r.y + m_NameLocationOffsetY,
-                      m_NameExtents.x, m_NameExtents.y );
+                       m_NameExtents.x, m_NameExtents.y );
             r3.Union( r2 );
         }
     }
-    
+
     hilitebox = r3;
     hilitebox.x -= r.x;
     hilitebox.y -= r.y;
@@ -446,18 +447,18 @@ void RoutePoint::DrawGL( ViewPort &vp, OCPNRegion &region )
         double lat1, lon1, lat2, lon2;
         cc1->GetCanvasPixPoint(r.x+hilitebox.x, r.y+hilitebox.y+hilitebox.height, lat1, lon1);
         cc1->GetCanvasPixPoint(r.x+hilitebox.x+hilitebox.width, r.y+hilitebox.y, lat2, lon2);
-        
+
         m_wpBBox.SetMin(lon1, lat1);
         m_wpBBox.SetMax(lon2, lat2);
         m_wpBBox_chart_scale = vp.chart_scale;
         m_wpBBox_rotation = vp.rotation;
     }
-    
+
     if(region.Contains(r3) == wxOutRegion)
         return;
-    
+
     ocpnDC dc;
-    
+
     //  Highlite any selected point
     if( m_bPtIsSelected ) {
         wxColour hi_colour;
@@ -470,13 +471,13 @@ void RoutePoint::DrawGL( ViewPort &vp, OCPNRegion &region )
         }
         
         AlphaBlending( dc, r.x + hilitebox.x, r.y + hilitebox.y, hilitebox.width, hilitebox.height, radius,
-                      hi_colour, transparency );
+                       hi_colour, transparency );
     }
     
     bool bDrawHL = false;
-    
+
     if( m_bBlink && ( gFrame->nBlinkerTick & 1 ) ) bDrawHL = true;
-    
+
     if( ( !bDrawHL ) && ( NULL != m_pbmIcon ) ) {
         int glw, glh;
         unsigned int IconTexture = pWayPointMan->GetIconTexture( pbm, glw, glh );
@@ -501,13 +502,13 @@ void RoutePoint::DrawGL( ViewPort &vp, OCPNRegion &region )
         glDisable(GL_BLEND);
         glDisable(GL_TEXTURE_2D);
     }
-    
+
     if( m_bShowName && m_pMarkFont ) {
         int w = m_NameExtents.x, h = m_NameExtents.y;
         if(!m_iTextTexture && w && h) {
             wxBitmap tbm(w, h); /* render text on dc */
             wxMemoryDC dc;
-            dc.SelectObject( tbm );
+            dc.SelectObject( tbm );               
             dc.SetBackground( wxBrush( *wxBLACK ) );
             dc.Clear();
             dc.SetFont( *m_pMarkFont );
@@ -528,7 +529,7 @@ void RoutePoint::DrawGL( ViewPort &vp, OCPNRegion &region )
             
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-            
+
             m_iTextTextureWidth = NextPow2(w);
             m_iTextTextureHeight = NextPow2(h);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, m_iTextTextureWidth, m_iTextTextureHeight,
@@ -537,7 +538,7 @@ void RoutePoint::DrawGL( ViewPort &vp, OCPNRegion &region )
                             GL_ALPHA, GL_UNSIGNED_BYTE, e);
             delete [] e;
         }
-        
+
         if(m_iTextTexture) {
             /* draw texture with text */
             glBindTexture(GL_TEXTURE_2D, m_iTextTexture);
@@ -545,7 +546,7 @@ void RoutePoint::DrawGL( ViewPort &vp, OCPNRegion &region )
             glEnable(GL_TEXTURE_2D);
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            
+        
             glColor3ub(m_FontColor.Red(), m_FontColor.Green(), m_FontColor.Blue());
             
             int x = r.x + m_NameLocationOffsetX, y = r.y + m_NameLocationOffsetY;
@@ -568,7 +569,7 @@ void RoutePoint::DrawGL( ViewPort &vp, OCPNRegion &region )
     CurrentRect_in_DC.y = r.y + hilitebox.y;
     CurrentRect_in_DC.width = hilitebox.width;
     CurrentRect_in_DC.height = hilitebox.height;
-    
+
     if( m_bBlink ) g_blink_rect = CurrentRect_in_DC;               // also save for global blinker
 }
 #endif
@@ -607,7 +608,7 @@ bool RoutePoint::IsSame( RoutePoint *pOtherRP )
     return IsSame;
 }
 
-bool RoutePoint::SendToGPS(const wxString & com_name, wxGauge *pProgress )
+bool RoutePoint::SendToGPS(const wxString & com_name, wxGauge *pProgress)
 {
     int result = 0;
     if( g_pMUX )
@@ -615,11 +616,11 @@ bool RoutePoint::SendToGPS(const wxString & com_name, wxGauge *pProgress )
 
     wxString msg;
     if( 0 == result )
-        msg = _("Waypoint(s) Uploaded successfully.");
+        msg = _("Waypoint(s) Transmitted.");
     else{
         if( result == ERR_GARMIN_INITIALIZE )
             msg = _("Error on Waypoint Upload.  Garmin GPS not connected");
-        else
+        else               
             msg = _("Error on Waypoint Upload.  Please check logfiles...");
     }
 

@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  AIS Decoder Object
@@ -21,7 +21,9 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ */
 
 #ifndef __AIS_H__
 #define __AIS_H__
@@ -136,8 +138,8 @@ typedef enum ais_transponder_class
 //    Describe AIS Alert state
 typedef enum ais_alert_type
 {
-    AIS_NO_ALERT = 0,
-    AIS_ALERT_SET,
+      AIS_NO_ALERT = 0,
+      AIS_ALERT_SET,
 
 }_ais_alarm_type;
 

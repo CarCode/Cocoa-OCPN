@@ -19,14 +19,14 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include <wx/tokenzr.h>
 #include <wx/intl.h>
 
 #include "ConnectionParams.h"
 
-ConnectionParams::ConnectionParams(const wxString &configStr)
+ConnectionParams::ConnectionParams(const wxString &configStr )
 {
     Deserialize( configStr );
 }
@@ -240,11 +240,11 @@ wxString ConnectionParams::GetLastDSPort()
     {
         wxString proto;
         if ( NetProtocol == TCP )
-                proto = _T("TCP");
+            proto = _T("TCP");
         else if (NetProtocol == UDP)
-                proto = _T("UDP");
+            proto = _T("UDP");
         else
-                proto = _T("GPSD");
+            proto = _T("GPSD");
         return wxString::Format( _T("%s:%s:%d"), proto.c_str(), LastNetworkAddress.c_str(), LastNetworkPort );
     }
 }

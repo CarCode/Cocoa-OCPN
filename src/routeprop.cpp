@@ -1,4 +1,4 @@
-/***************************************************************************
+/**************************************************************************
 *
 * Project:  OpenCPN
 * Purpose:  RouteProerties Support
@@ -21,7 +21,7 @@
 *   along with this program; if not, write to the                         *
 *   Free Software Foundation, Inc.,                                       *
 *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
-***************************************************************************/
+**************************************************************************/
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
@@ -45,7 +45,7 @@
 #include "routemanagerdialog.h"
 #include "routeprintout.h"
 #include "chcanv.h"
-#include "tcmgr.h"		// pjotrc 2011.03.02
+#include "tcmgr.h"        // pjotrc 2011.03.02
 #include "PositionParser.h"
 #include "pluginmanager.h"
 
@@ -83,18 +83,18 @@ extern RoutePrintSelection * pRoutePrintSelection;
 * Helper stuff for calculating Route Plans
 */
 
-#define	pi	    (4.*atan(1.0))
-#define	tpi	    (2.*pi)
-#define	twopi	(2.*pi)
-#define	degs	(180./pi)
-#define	rads	(pi/180.)
+#define    pi        (4.*atan(1.0))
+#define    tpi        (2.*pi)
+#define    twopi    (2.*pi)
+#define    degs    (180./pi)
+#define    rads    (pi/180.)
 
-#define	MOTWILIGHT	1	// in some languages there may be a distinction between morning/evening
-#define	SUNRISE	    2
-#define	DAY		    3
-#define	SUNSET	    4
-#define	EVTWILIGHT	5
-#define	NIGHT		6
+#define    MOTWILIGHT    1    // in some languages there may be a distinction between morning/evening
+#define    SUNRISE        2
+#define    DAY            3
+#define    SUNSET        4
+#define    EVTWILIGHT    5
+#define    NIGHT        6
 
 /* Next high tide, low tide, transition of the mark level, or some
 combination.
@@ -105,10 +105,10 @@ Bit      Meaning
 3       rising transition
 */
 
-#define	LW	1
-#define	HW	2
-#define	FALLING	4
-#define	RISING	8
+#define    LW    1
+#define    HW    2
+#define    FALLING    4
+#define    RISING    8
 
 char tide_status[][8] = {
     " LW ",
@@ -211,7 +211,7 @@ double getDaylightEvent( double glat, double glong, int riset, double altitude, 
         utnew = FNrange( utold - ( GHA + g + riset * correction ) );
         utold = tmp;
     }
-    return ( utnew * degs / 15. );      // returns decimal hours UTC
+    return ( utnew * degs / 15. );    // returns decimal hours UTC
 }
 
 static double getLMT( double ut, double lon )
@@ -280,12 +280,12 @@ int getDaylightStatus( double lat, double lon, wxDateTime utcDateTime )
     }
 }
 
-#define     UTCINPUT            0
-#define     LTINPUT             1	// i.e. this PC local time
-#define     LMTINPUT            2	// i.e. the remote location LMT time
-#define     INPUT_FORMAT        1
-#define     DISPLAY_FORMAT      2
-#define     TIMESTAMP_FORMAT    3
+#define    UTCINPUT         0
+#define    LTINPUT          1    // i.e. this PC local time
+#define    LMTINPUT         2    // i.e. the remote location LMT time
+#define    INPUT_FORMAT     1
+#define    DISPLAY_FORMAT   2
+#define    TIMESTAMP_FORMAT 3
 
 wxString ts2s(wxDateTime ts, int tz_selection, long LMT_offset, int format)
 {
@@ -316,7 +316,7 @@ IMPLEMENT_DYNAMIC_CLASS( RouteProp, wxDialog )
  * RouteProp event table definition
  */
 
-wxBEGIN_EVENT_TABLE( RouteProp, wxDialog )
+BEGIN_EVENT_TABLE( RouteProp, wxDialog )
     EVT_TEXT( ID_PLANSPEEDCTL, RouteProp::OnPlanSpeedCtlUpdated )
     EVT_TEXT_ENTER( ID_STARTTIMECTL, RouteProp::OnStartTimeCtlUpdated )
     EVT_RADIOBOX ( ID_TIMEZONESEL, RouteProp::OnTimeZoneSelected )
@@ -327,7 +327,7 @@ wxBEGIN_EVENT_TABLE( RouteProp, wxDialog )
     EVT_BUTTON( ID_ROUTEPROP_SPLIT, RouteProp::OnRoutepropSplitClick )
     EVT_BUTTON( ID_ROUTEPROP_EXTEND, RouteProp::OnRoutepropExtendClick )
     EVT_BUTTON( ID_ROUTEPROP_PRINT, RouteProp::OnRoutepropPrintClick )
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 /*!
  * RouteProp constructors
@@ -345,6 +345,9 @@ RouteProp::RouteProp( wxWindow* parent, wxWindowID id, const wxString& caption, 
     m_nSelected = 0;
     m_pHead = NULL;
     m_pTail = NULL;
+    m_pEnroutePoint = NULL;
+    m_bStartNow = false;
+
     m_pEnroutePoint = NULL;
     m_bStartNow = false;
     long wstyle = style;
@@ -452,6 +455,7 @@ void RouteProp::OnRoutepropSplitClick( wxCommandEvent& event )
 // slot on pressed button "Print Route" with selection of the route properties to print
 void RouteProp::OnRoutepropPrintClick( wxCommandEvent& event )
 {
+
   if (pRoutePrintSelection == NULL)
     pRoutePrintSelection = new RoutePrintSelection( GetParent(), m_pRoute );
 
@@ -513,6 +517,7 @@ void RouteProp::OnRoutepropCopyTxtClick( wxCommandEvent& event )
             item.SetColumn( i );
 
             m_wpList->GetItem( item );
+
             csvString << item.GetText() << tab;
         }
         csvString << eol;
@@ -587,6 +592,7 @@ bool RouteProp::IsThisRouteExtendable()
     return false;
 }
 
+
 RouteProp::~RouteProp()
 {
     delete m_TotalDistCtl;
@@ -627,11 +633,12 @@ bool RouteProp::Create( wxWindow* parent, wxWindowID id, const wxString& caption
 
 void RouteProp::CreateControls()
 {
+
     wxBoxSizer* itemBoxSizer1 = new wxBoxSizer( wxVERTICAL );
     SetSizer( itemBoxSizer1 );
-    
+
     itemDialog1 = new wxScrolledWindow( this, wxID_ANY,
-                                       wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
+                                      wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
     itemDialog1->SetScrollRate(5, 5);
 
     itemBoxSizer1->Add( itemDialog1, 1, wxEXPAND | wxALL, 0 );
@@ -654,6 +661,7 @@ void RouteProp::CreateControls()
     itemStaticBoxSizer3->Add( itemStaticText4, 0,
             wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 #endif
+
     m_RouteNameCtl = new wxTextCtrl( itemDialog1, ID_TEXTCTRL, _T(""), wxDefaultPosition,
             wxSize( 710, -1 ), 0 );
     itemStaticBoxSizer3->Add( m_RouteNameCtl, 0,
@@ -695,6 +703,7 @@ void RouteProp::CreateControls()
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
             5 );
 #endif
+
     m_PlanSpeedLabel = new wxStaticText( itemDialog1, wxID_STATIC, _("Plan Speed"),
             wxDefaultPosition, wxDefaultSize, 0 );
 #ifdef __WXOSX__
@@ -705,6 +714,7 @@ void RouteProp::CreateControls()
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
             5 );
 #endif
+
     wxStaticText* itemStaticText12a = new wxStaticText( itemDialog1, wxID_STATIC, _("Time Enroute"),
             wxDefaultPosition, wxDefaultSize, 0 );
 #ifdef __WXOSX__
@@ -715,6 +725,7 @@ void RouteProp::CreateControls()
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
             5 );
 #endif
+
     m_StartTimeLabel = new wxStaticText( itemDialog1, wxID_STATIC, _("Departure Time (m/d/y h:m)"),
             wxDefaultPosition, wxDefaultSize, 0 );
 #ifdef __WXOSX__
@@ -725,6 +736,7 @@ void RouteProp::CreateControls()
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
             5 );
 #endif
+
     m_TotalDistCtl = new wxTextCtrl( itemDialog1, ID_TEXTCTRL3, _T(""), wxDefaultPosition,
             wxDefaultSize, wxTE_READONLY );
     itemFlexGridSizer6a->Add( m_TotalDistCtl, 0,
@@ -756,14 +768,15 @@ void RouteProp::CreateControls()
     
     m_prb_tzUTC = new wxRadioButton(itemDialog1, ID_TIMEZONESEL_UTC, _("UTC"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
     itemStaticBoxSizerTZ->Add( m_prb_tzUTC, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM,5 );
-    
+ 
     m_prb_tzLocal = new wxRadioButton(itemDialog1, ID_TIMEZONESEL_LOCAL, _("Local @ PC"));
     itemStaticBoxSizerTZ->Add( m_prb_tzLocal, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM,5 );
-    
+
     m_prb_tzLMT = new wxRadioButton(itemDialog1, ID_TIMEZONESEL_LMT, _("LMT @ Location"));
     itemStaticBoxSizerTZ->Add( m_prb_tzLMT, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM,5 );
-
-    m_staticText1 = new wxStaticText( itemDialog1, wxID_ANY, _("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
+    
+    m_staticText1 = new wxStaticText( itemDialog1, wxID_ANY, _("Color:"), wxDefaultPosition, wxDefaultSize,
+            0 );
     m_staticText1->Wrap( -1 );
     bSizer2->Add( m_staticText1, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
@@ -772,22 +785,26 @@ void RouteProp::CreateControls()
             _("Light Gray"), _("Dark Gray"), _("Red"), _("Green"), _("Yellow"), _("Blue"),
             _("Magenta"), _("Cyan"), _("White") };
     int m_chColorNChoices = sizeof( m_chColorChoices ) / sizeof(wxString);
-    m_chColor = new wxChoice( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_chColorNChoices, m_chColorChoices, 0 );
+    m_chColor = new wxChoice( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_chColorNChoices,
+            m_chColorChoices, 0 );
     m_chColor->SetSelection( 0 );
     bSizer2->Add( m_chColor, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    m_staticText2 = new wxStaticText( itemDialog1, wxID_ANY, _("Style:"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_staticText2 = new wxStaticText( itemDialog1, wxID_ANY, _("Style:"), wxDefaultPosition, wxDefaultSize,
+            0 );
     m_staticText2->Wrap( -1 );
     bSizer2->Add( m_staticText2, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxString m_chStyleChoices[] = { _("Default"), _("Solid"), _("Dot"), _("Long dash"),
             _("Short dash"), _("Dot dash") };
     int m_chStyleNChoices = sizeof( m_chStyleChoices ) / sizeof(wxString);
-    m_chStyle = new wxChoice( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_chStyleNChoices, m_chStyleChoices, 0 );
+    m_chStyle = new wxChoice( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_chStyleNChoices,
+            m_chStyleChoices, 0 );
     m_chStyle->SetSelection( 0 );
     bSizer2->Add( m_chStyle, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    m_staticText2 = new wxStaticText( itemDialog1, wxID_ANY, _("Width:"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_staticText2 = new wxStaticText( itemDialog1, wxID_ANY, _("Width:"), wxDefaultPosition, wxDefaultSize,
+            0 );
     m_staticText2->Wrap( -1 );
     bSizer2->Add( m_staticText2, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
@@ -795,7 +812,8 @@ void RouteProp::CreateControls()
             _("4 pixels"), _("5 pixels"), _("6 pixels"), _("7 pixels"), _("8 pixels"),
             _("9 pixels"), _("10 pixels") };
     int m_chWidthNChoices = sizeof( m_chWidthChoices ) / sizeof(wxString);
-    m_chWidth = new wxChoice( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_chWidthNChoices, m_chWidthChoices, 0 );
+    m_chWidth = new wxChoice( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_chWidthNChoices,
+            m_chWidthChoices, 0 );
     m_chWidth->SetSelection( 0 );
     bSizer2->Add( m_chWidth, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
@@ -811,7 +829,7 @@ void RouteProp::CreateControls()
 
     m_PrintButton = new wxButton( itemDialog1, ID_ROUTEPROP_PRINT, _("Print Route"),
             wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizerAux->Add( m_PrintButton, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+     itemBoxSizerAux->Add( m_PrintButton, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     m_PrintButton->Enable( true );
 
     m_ExtendButton = new wxButton( itemDialog1, ID_ROUTEPROP_EXTEND, _("Extend Route"),
@@ -857,7 +875,7 @@ void RouteProp::CreateControls()
         m_wpList->InsertColumn( 3, _("Bearing (M)"), wxLIST_FORMAT_LEFT, char_size * 10 );
     else
         m_wpList->InsertColumn( 3, _("Bearing"), wxLIST_FORMAT_LEFT, char_size * 10 );
-    
+
     m_wpList->InsertColumn( 4, _("Latitude"), wxLIST_FORMAT_LEFT, char_size * 11 );
     m_wpList->InsertColumn( 5, _("Longitude"), wxLIST_FORMAT_LEFT, char_size * 11 );
     m_wpList->InsertColumn( 6, _("ETE/ETD"), wxLIST_FORMAT_LEFT, char_size * 15 );
@@ -876,7 +894,7 @@ void RouteProp::CreateControls()
     int width, height;
     ::wxDisplaySize( &width, &height );
     SetSizeHints( -1, -1, width-100, height-100 );
-
+    
     Connect( wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK,
             wxListEventHandler(RouteProp::OnRoutePropRightClick), NULL, this );
     Connect( wxEVT_COMMAND_MENU_SELECTED,
@@ -891,18 +909,18 @@ void RouteProp::CreateControls()
         m_prb_tzLocal->SetValue( true);
     else if( g_StartTimeTZ == 2 )
         m_prb_tzLMT->SetValue( true);
-
+    
 
     SetColorScheme( (ColorScheme) 0 );
 
-
+    
 }
 
 int RouteProp::GetTZSelection(void)
 {
     if(m_prb_tzUTC && m_prb_tzUTC->GetValue())
         return 0;
-    
+
     else if(m_prb_tzLocal && m_prb_tzLocal->GetValue())
         return 1;
     
@@ -912,7 +930,6 @@ int RouteProp::GetTZSelection(void)
     else
         return 0;
 }
-
 void RouteProp::OnRoutepropListClick( wxListEvent& event )
 {
     long itemno = 0;
@@ -991,9 +1008,7 @@ void RouteProp::OnRoutePropMenuSelected( wxCommandEvent& event )
 
 void RouteProp::SetColorScheme( ColorScheme cs )
 {
-#ifndef __WXOSX__
     DimeControl( this );
-#endif
 }
 
 /*
@@ -1048,13 +1063,14 @@ void RouteProp::SetRouteAndUpdate( Route *pR, bool only_points )
         }
 
         m_pRoute = pR;
-
+        
         if( g_StartTimeTZ == 0 )
             m_prb_tzUTC->SetValue( true);
         else if( g_StartTimeTZ == 1 )
             m_prb_tzLocal->SetValue( true);
         else if( g_StartTimeTZ == 2 )
             m_prb_tzLMT->SetValue( true);
+        
 
         if( m_pRoute ) {
             //    Calculate  LMT offset from the first point in the route
@@ -1062,7 +1078,7 @@ void RouteProp::SetRouteAndUpdate( Route *pR, bool only_points )
                     ( m_pEnroutePoint->m_lon ) * 3600. / 15. );
             else
                 gStart_LMT_Offset = long(
-                    ( m_pRoute->pRoutePointList->GetFirst()->GetData()->m_lon ) * 3600. / 15. );
+                        ( m_pRoute->pRoutePointList->GetFirst()->GetData()->m_lon ) * 3600. / 15. );
         }
 
         // Reorganize dialog for route or track display
@@ -1111,6 +1127,7 @@ void RouteProp::SetRouteAndUpdate( Route *pR, bool only_points )
     GetSizer()->Layout();
 #endif
 
+
     InitializeList();
 
     UpdateProperties();
@@ -1118,8 +1135,8 @@ void RouteProp::SetRouteAndUpdate( Route *pR, bool only_points )
     if( m_pRoute )
         m_wpList->Show();
 
-    //    GetSizer()->Fit( this );
-    //    GetSizer()->Layout();
+//    GetSizer()->Fit( this );
+//    GetSizer()->Layout();
 
     Refresh( false );
 
@@ -1249,7 +1266,7 @@ bool RouteProp::UpdateProperties()
         }
 
         m_pRoute->UpdateSegmentDistances( m_planspeed );           // get segment and total distance
-        double leg_speed; // Not used  = m_planspeed;
+        double leg_speed = m_planspeed;
         wxTimeSpan stopover_time( 0 ); // time spent waiting for ETD
         wxTimeSpan joining_time( 0 );   // time spent before reaching first waypoint
 
@@ -1337,8 +1354,8 @@ bool RouteProp::UpdateProperties()
 
         wxString nullify = _T("----");
 
-//        int i_prev_point = -1;  // Not used
-//        RoutePoint *prev_route_point = NULL;  // Not used
+        int i_prev_point = -1;
+        RoutePoint *prev_route_point = NULL;
 
         while( node ) {
             RoutePoint *prp = node->GetData();
@@ -1352,7 +1369,7 @@ bool RouteProp::UpdateProperties()
 
             //  Mark Name
             if( arrival ) m_wpList->SetItem( item_line_index, 1, prp->GetName() );
-            // Store Description
+        // Store Dewcription
             if( arrival ) m_wpList->SetItem( item_line_index, 9, prp->GetDescription() );
 
             //  Distance
@@ -1385,52 +1402,52 @@ bool RouteProp::UpdateProperties()
 
             DistanceBearingMercator( prp->m_lat, prp->m_lon, slat, slon, &brg, &leg_dist );
 
-	    // calculation of course at current WayPoint.
-	    double course=10, tmp_leg_dist=23;
-	    wxRoutePointListNode *next_node = node->GetNext();
-	    RoutePoint * _next_prp = (next_node)? next_node->GetData(): NULL;
-	    if (_next_prp )
-	    {
-		DistanceBearingMercator( _next_prp->m_lat, _next_prp->m_lon, prp->m_lat, prp->m_lon, &course, &tmp_leg_dist );
-	    }else
-	    {
-	      course = 0.0;
-	      tmp_leg_dist = 0.0;
-	    }
+        // calculation of course at current WayPoint.
+        double course=10, tmp_leg_dist=23;
+        wxRoutePointListNode *next_node = node->GetNext();
+        RoutePoint * _next_prp = (next_node)? next_node->GetData(): NULL;
+        if (_next_prp )
+        {
+        DistanceBearingMercator( _next_prp->m_lat, _next_prp->m_lon, prp->m_lat, prp->m_lon, &course, &tmp_leg_dist );
+        }else
+        {
+          course = 0.0;
+          tmp_leg_dist = 0.0;
+        }
 
-	    prp->SetCourse(course); // save the course to the next waypoint for printing.
-	    // end of calculation
+        prp->SetCourse(course); // save the course to the next waypoint for printing.
+        // end of calculation
 
 
-            t.Printf( _T("%6.2f ") + getUsrDistanceUnit(), toUsrDistance( leg_dist ) );
-            if( arrival )
-                m_wpList->SetItem( item_line_index, 2, t );
-            if( !enroute )
-                m_wpList->SetItem( item_line_index, 2, nullify );
-            prp->SetDistance(leg_dist); // save the course to the next waypoint for printing.
+        t.Printf( _T("%6.2f ") + getUsrDistanceUnit(), toUsrDistance( leg_dist ) );
+        if( arrival )
+            m_wpList->SetItem( item_line_index, 2, t );
+        if( !enroute )
+            m_wpList->SetItem( item_line_index, 2, nullify );
+        prp->SetDistance(leg_dist); // save the course to the next waypoint for printing.
 
             //  Bearing
+        if( g_bShowMag )
+            t.Printf( _T("%03.0f Deg. M"), gFrame->GetTrueOrMag( brg ) );
+        else
+            t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( brg ) );
+
+        if( arrival )
+            m_wpList->SetItem( item_line_index, 3, t );
+        if( !enroute )
+            m_wpList->SetItem( item_line_index, 3, nullify );
+
+        // Course (bearing of next )
+        if (_next_prp){
             if( g_bShowMag )
-                t.Printf( _T("%03.0f Deg. M"), gFrame->GetTrueOrMag( brg ) );
+                t.Printf( _T("%03.0f Deg. M"), gFrame->GetTrueOrMag( course ) );
             else
-                t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( brg ) );
-
+                t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( course ) );
             if( arrival )
-                m_wpList->SetItem( item_line_index, 3, t );
-            if( !enroute )
-                m_wpList->SetItem( item_line_index, 3, nullify );
-
-	    // Course (bearing of next )
-            if (_next_prp){
-                if( g_bShowMag )
-                    t.Printf( _T("%03.0f Deg. M"), gFrame->GetTrueOrMag( course ) );
-                else
-                    t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( course ) );
-                if( arrival )
-                    m_wpList->SetItem( item_line_index, 10, t );
-            }
-            else
-                m_wpList->SetItem( item_line_index, 10, nullify );
+                m_wpList->SetItem( item_line_index, 10, t );
+        }
+        else
+            m_wpList->SetItem( item_line_index, 10, nullify );
 
             //  Lat/Lon
             wxString tlat = toSDMM( 1, prp->m_lat, prp->m_bIsInTrack );  // low precision for routes
@@ -1507,6 +1524,7 @@ bool RouteProp::UpdateProperties()
                         time_form.Append( GetDaylightString(ds) );
                         time_form.Append( _T(")") );
 
+
                         if( ptcmgr ) {
                             int jx = 0;
                             if( prp->GetName().Find( _T("@~~") ) != wxNOT_FOUND ) {
@@ -1559,8 +1577,8 @@ bool RouteProp::UpdateProperties()
                 node = node->GetNext();
 
                 //    Record this point info for use as previous point in next iteration.
-//                i_prev_point = i - 1;  // Not used
-//                prev_route_point = prp;  // Not used
+                i_prev_point = i - 1;
+                prev_route_point = prp;
             }
         }
     }
@@ -1626,7 +1644,7 @@ bool RouteProp::SaveChanges( void )
 #endif
     //  Save the current planning speed
     g_PlanSpeed = m_planspeed;
-    g_StartTime = m_starttime;	// both always UTC
+    g_StartTime = m_starttime;    // both always UTC
     g_StartTimeTZ = GetTZSelection();
     m_StartTimeCtl->Clear();
 
@@ -1657,7 +1675,7 @@ bool RouteProp::SaveChanges( void )
         pConfig->UpdateSettings();
     }
 
-    if(m_pRoute->IsActive() || ((Track*) m_pRoute)->IsRunning())
+    if( m_pRoute->IsActive() || ((Track*) m_pRoute)->IsRunning() )
     {
         wxJSONValue v;
         v[_T("Name")] =  m_pRoute->m_RouteNameString;
@@ -1703,7 +1721,7 @@ void RouteProp::OnStartTimeCtlUpdated( wxCommandEvent& event )
     } else {
         m_pEnroutePoint = NULL;
         m_bStartNow = false;
-        if( !d.ParseDateTime( stime ) )		// only specific times accepted
+        if( !d.ParseDateTime( stime ) )        // only specific times accepted
         d = wxInvalidDateTime;
 
         m_starttime = d;
@@ -1782,10 +1800,10 @@ void RouteProp::OnRoutepropOkClick( wxCommandEvent& event )
     m_bStartNow = false;
 
     if( pRouteManagerDialog && pRouteManagerDialog->IsShown() ) {
-            if( !m_pRoute->m_bIsTrack )
-                pRouteManagerDialog->UpdateRouteListCtrl();
-            else
-                pRouteManagerDialog->UpdateTrkListCtrl();
+        if( !m_pRoute->m_bIsTrack )
+            pRouteManagerDialog->UpdateRouteListCtrl();
+        else
+            pRouteManagerDialog->UpdateTrkListCtrl();
     }
 
     Hide();
@@ -1814,11 +1832,11 @@ const wxEventType EVT_LLCHANGE = wxNewEventType();
 //------------------------------------------------------------------------------
 //    LatLonTextCtrl Window Implementation
 //------------------------------------------------------------------------------
-wxBEGIN_EVENT_TABLE(LatLonTextCtrl, wxWindow)
+BEGIN_EVENT_TABLE(LatLonTextCtrl, wxWindow)
 
 EVT_KILL_FOCUS(LatLonTextCtrl::OnKillFocus)
 
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 // constructor
 LatLonTextCtrl::LatLonTextCtrl( wxWindow* parent, wxWindowID id, const wxString& value,
@@ -1856,6 +1874,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 
     Create( parent, id, title, pos, size, wstyle );
 
+
     wxBoxSizer* bSizer1;
     bSizer1 = new wxBoxSizer( wxVERTICAL );
     SetSizer( bSizer1 );
@@ -1864,8 +1883,8 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     m_notebookProperties = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 
     m_panelBasicProperties = new wxScrolledWindow( m_notebookProperties, wxID_ANY,
-                                                  wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL | wxTAB_TRAVERSAL);
-    //    m_panelBasicProperties->SetScrollRate(5, 5);
+                                                   wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL | wxTAB_TRAVERSAL);
+//    m_panelBasicProperties->SetScrollRate(5, 5);
 
     m_notebookProperties->AddPage( m_panelBasicProperties, _("Basic"), true );
 
@@ -1933,7 +1952,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     bSizerTextProperties->Add( bSizer8, 0, wxEXPAND, 5 );
 
     bSizerTextProperties->AddSpacer(15);
-
+    
     wxBoxSizer* bSizerLatLon;
     bSizerLatLon = new wxBoxSizer( wxHORIZONTAL );
 
@@ -1997,18 +2016,22 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 #endif
     m_menuLink = new wxMenu();
     wxMenuItem* m_menuItemDelete;
-    m_menuItemDelete = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Delete") ), wxEmptyString, wxITEM_NORMAL );
+    m_menuItemDelete = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Delete") ), wxEmptyString,
+            wxITEM_NORMAL );
     m_menuLink->Append( m_menuItemDelete );
 
     wxMenuItem* m_menuItemEdit;
-    m_menuItemEdit = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Edit") ), wxEmptyString, wxITEM_NORMAL );
+    m_menuItemEdit = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Edit") ), wxEmptyString,
+            wxITEM_NORMAL );
     m_menuLink->Append( m_menuItemEdit );
 
     wxMenuItem* m_menuItemAdd;
-    m_menuItemAdd = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Add new") ), wxEmptyString, wxITEM_NORMAL );
+    m_menuItemAdd = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Add new") ), wxEmptyString,
+            wxITEM_NORMAL );
     m_menuLink->Append( m_menuItemAdd );
 #ifndef __WXOSX__
-    m_hyperlink17->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( MarkInfoDef::m_hyperlink17OnContextMenu ), NULL, this );
+    m_hyperlink17->Connect( wxEVT_RIGHT_DOWN,
+            wxMouseEventHandler( MarkInfoDef::m_hyperlink17OnContextMenu ), NULL, this );
 
     bSizerLinks->Add( m_hyperlink17, 0, wxALL, 5 );
 #endif
@@ -2111,46 +2134,75 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     Centre( wxBOTH );
 
     // Connect Events
-    m_textLatitude->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-    m_textLongitude->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+    m_textLatitude->Connect( wxEVT_COMMAND_TEXT_ENTER,
+            wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+    m_textLongitude->Connect( wxEVT_COMMAND_TEXT_ENTER,
+            wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
 
-    m_textLatitude->Connect( wxEVT_CONTEXT_MENU, wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
-    m_textLongitude->Connect( wxEVT_CONTEXT_MENU, wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
+    m_textLatitude->Connect( wxEVT_CONTEXT_MENU,
+            wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
+    m_textLongitude->Connect( wxEVT_CONTEXT_MENU,
+            wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
 
-    m_textDescription->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
-    m_buttonExtDescription->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnExtDescriptionClick ), NULL, this );
+    m_textDescription->Connect( wxEVT_COMMAND_TEXT_UPDATED,
+            wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
+    m_buttonExtDescription->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( MarkInfoDef::OnExtDescriptionClick ), NULL, this );
 
-    this->Connect( m_menuItemDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnDeleteLink ) );
-    this->Connect( m_menuItemEdit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnEditLink ) );
-    this->Connect( m_menuItemAdd->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnAddLink ) );
-    this->Connect( ID_RCLK_MENU_COPY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
-    this->Connect( ID_RCLK_MENU_COPY_LL, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
-    this->Connect( ID_RCLK_MENU_PASTE, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
-    this->Connect( ID_RCLK_MENU_PASTE_LL, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
+    this->Connect( m_menuItemDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler( MarkInfoDef::OnDeleteLink ) );
+    this->Connect( m_menuItemEdit->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler( MarkInfoDef::OnEditLink ) );
+    this->Connect( m_menuItemAdd->GetId(), wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler( MarkInfoDef::OnAddLink ) );
+    this->Connect( ID_RCLK_MENU_COPY, wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
+    this->Connect( ID_RCLK_MENU_COPY_LL, wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
+    this->Connect( ID_RCLK_MENU_PASTE, wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
+    this->Connect( ID_RCLK_MENU_PASTE_LL, wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler( MarkInfoDef::OnCopyPasteLatLon ) );
 
-    m_buttonAddLink->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnAddLink ), NULL, this );
-    m_toggleBtnEdit->Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnEditLinkToggle ), NULL, this );
-    m_textCtrlExtDescription->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnDescChangedExt ), NULL, this );
-    m_sdbSizerButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnMarkInfoCancelClick ), NULL, this );
-    m_sdbSizerButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnMarkInfoOKClick ), NULL, this );
+    m_buttonAddLink->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( MarkInfoDef::OnAddLink ), NULL, this );
+    m_toggleBtnEdit->Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED,
+            wxCommandEventHandler( MarkInfoDef::OnEditLinkToggle ), NULL, this );
+    m_textCtrlExtDescription->Connect( wxEVT_COMMAND_TEXT_UPDATED,
+            wxCommandEventHandler( MarkInfoDef::OnDescChangedExt ), NULL, this );
+    m_sdbSizerButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( MarkInfoDef::OnMarkInfoCancelClick ), NULL, this );
+    m_sdbSizerButtonsOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( MarkInfoDef::OnMarkInfoOKClick ), NULL, this );
 }
 
 MarkInfoDef::~MarkInfoDef()
 {
     // Disconnect Events
-    m_textLatitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-    m_textLongitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-
-    m_textDescription->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
-    m_buttonExtDescription->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnExtDescriptionClick ), NULL, this );
-    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnDeleteLink ) );
-    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnEditLink ) );
-    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MarkInfoDef::OnAddLink ) );
-    m_buttonAddLink->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnAddLink ), NULL, this );
-    m_toggleBtnEdit->Disconnect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnEditLinkToggle ), NULL, this );
-    m_textCtrlExtDescription->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnDescChangedExt ), NULL, this );
-    m_sdbSizerButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnMarkInfoCancelClick ), NULL, this );
-    m_sdbSizerButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MarkInfoDef::OnMarkInfoOKClick ), NULL, this );
+    m_textLatitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER,
+            wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+    m_textLongitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER,
+            wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+    m_textDescription->Disconnect( wxEVT_COMMAND_TEXT_UPDATED,
+            wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
+    m_buttonExtDescription->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( MarkInfoDef::OnExtDescriptionClick ), NULL, this );
+    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler( MarkInfoDef::OnDeleteLink ) );
+    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler( MarkInfoDef::OnEditLink ) );
+    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED,
+            wxCommandEventHandler( MarkInfoDef::OnAddLink ) );
+    m_buttonAddLink->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( MarkInfoDef::OnAddLink ), NULL, this );
+    m_toggleBtnEdit->Disconnect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED,
+            wxCommandEventHandler( MarkInfoDef::OnEditLinkToggle ), NULL, this );
+    m_textCtrlExtDescription->Disconnect( wxEVT_COMMAND_TEXT_UPDATED,
+            wxCommandEventHandler( MarkInfoDef::OnDescChangedExt ), NULL, this );
+    m_sdbSizerButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( MarkInfoDef::OnMarkInfoCancelClick ), NULL, this );
+    m_sdbSizerButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( MarkInfoDef::OnMarkInfoOKClick ), NULL, this );
 
     delete m_menuLink;
 }
@@ -2159,11 +2211,7 @@ MarkInfoImpl::MarkInfoImpl( wxWindow* parent, wxWindowID id, const wxString& tit
         const wxPoint& pos, const wxSize& size, long style ) :
         MarkInfoDef( parent, id, title, pos, size, style )
 {
-#ifdef __WXOSX__
-    m_pLinkProp = new LinkPropImpl( parent );
-#else
-    m_pLinkProp = new LinkPropImpl( this );
-#endif
+    m_pLinkProp = new LinkPropImpl( NULL );
     m_pMyLinkList = NULL;
     m_staticTextGpx->Show( false );
     m_textCtrlGpx->Show( false );
@@ -2185,11 +2233,9 @@ void MarkInfoImpl::InitialFocus( void )
 
 void MarkInfoImpl::SetColorScheme( ColorScheme cs )
 {
-#ifndef __WXOSX__
     DimeControl( this );
 
     DimeControl( m_pLinkProp );
-#endif
 }
 
 bool MarkInfoImpl::UpdateProperties( bool positionOnly )
@@ -2275,10 +2321,10 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
                 linknode = linknode->GetNext();
             }
         }
-
+        
         // Integrate all of the rebuilt hyperlink controls
         bSizerLinks->Layout();
-
+        
         //      Iterate on the Icon Descriptions, filling in the control
         int iconToSelect = 0;
         bool fillCombo = m_bcomboBoxIcon->GetCount() == 0;
@@ -2335,18 +2381,23 @@ void MarkInfoImpl::m_hyperlinkContextMenu( wxMouseEvent &event )
     m_scrolledWindowLinks->PopupMenu( m_menuLink,
             m_pEditedLink->GetPosition().x + event.GetPosition().x,
             m_pEditedLink->GetPosition().y + event.GetPosition().y );
-
+   
 }
 
 void MarkInfoImpl::OnDeleteLink( wxCommandEvent& event )
-{/*
-#ifdef __WXOSX__
-    HideWithEffect(wxSHOW_EFFECT_BLEND );
-#endif*/
+{
     wxHyperlinkListNode* nodeToDelete = NULL;
     wxString findurl = m_pEditedLink->GetURL();
     wxString findlabel = m_pEditedLink->GetLabel();
-    m_scrolledWindowLinks->DestroyChildren();
+    
+    wxWindowList kids = m_scrolledWindowLinks->GetChildren();
+    for( unsigned int i = 0; i < kids.GetCount(); i++ ) {
+        wxWindowListNode *node = kids.Item( i );
+        wxWindow *win = node->GetData();
+        win->Hide();    
+    }
+    
+//    m_scrolledWindowLinks->DestroyChildren();
     int NbrOfLinks = m_pRoutePoint->m_HyperlinkList->GetCount();
     HyperlinkList *hyperlinklist = m_pRoutePoint->m_HyperlinkList;
 //      int len = 0;
@@ -2356,8 +2407,9 @@ void MarkInfoImpl::OnDeleteLink( wxCommandEvent& event )
             Hyperlink *link = linknode->GetData();
             wxString Link = link->Link;
             wxString Descr = link->DescrText;
-            if( Link == findurl && ( Descr == findlabel || ( Link == findlabel && Descr == wxEmptyString ) ) )
-                nodeToDelete = linknode;
+            if( Link == findurl
+                    && ( Descr == findlabel || ( Link == findlabel && Descr == wxEmptyString ) ) ) nodeToDelete =
+                    linknode;
             else {
                 wxHyperlinkCtrl* ctrl = new wxHyperlinkCtrl( m_scrolledWindowLinks, wxID_ANY, Descr,
                         Link, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE );
@@ -2369,28 +2421,26 @@ void MarkInfoImpl::OnDeleteLink( wxCommandEvent& event )
                 bSizerLinks->Add( ctrl, 0, wxALL, 5 );
             }
             linknode = linknode->GetNext();
-        }  // while
+        }
     }
-    if( nodeToDelete )
-        hyperlinklist->DeleteNode( nodeToDelete );
+    if( nodeToDelete ) hyperlinklist->DeleteNode( nodeToDelete );
     m_scrolledWindowLinks->InvalidateBestSize();
     m_scrolledWindowLinks->Layout();
     sbSizerLinks->Layout();
-    event.Skip();/*
-#ifdef __WXOSX__
-    ShowWithEffect(wxSHOW_EFFECT_BLEND );
-#endif*/
+    event.Skip();
 }
 
 void MarkInfoImpl::OnEditLink( wxCommandEvent& event )
 {
-#ifdef __WXOSX__
-    HideWithEffect(wxSHOW_EFFECT_BLEND );
-#endif
     wxString findurl = m_pEditedLink->GetURL();
     wxString findlabel = m_pEditedLink->GetLabel();
     m_pLinkProp->m_textCtrlLinkDescription->SetValue( findlabel );
     m_pLinkProp->m_textCtrlLinkUrl->SetValue( findurl );
+    
+#ifdef __WXOSX__
+    HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
+    
     if( m_pLinkProp->ShowModal() == wxID_OK ) {
         int NbrOfLinks = m_pRoutePoint->m_HyperlinkList->GetCount();
         HyperlinkList *hyperlinklist = m_pRoutePoint->m_HyperlinkList;
@@ -2422,19 +2472,23 @@ void MarkInfoImpl::OnEditLink( wxCommandEvent& event )
         sbSizerLinks->Layout();
         event.Skip();
     }
-    event.Skip();
+    
 #ifdef __WXOSX__
     ShowWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
+    
+    event.Skip();
 }
 
 void MarkInfoImpl::OnAddLink( wxCommandEvent& event )
 {
+    m_pLinkProp->m_textCtrlLinkDescription->SetValue( wxEmptyString );
+    m_pLinkProp->m_textCtrlLinkUrl->SetValue( wxEmptyString );
+
 #ifdef __WXOSX__
     HideWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
-    m_pLinkProp->m_textCtrlLinkDescription->SetValue( wxEmptyString );
-    m_pLinkProp->m_textCtrlLinkUrl->SetValue( wxEmptyString );
+    
     if( m_pLinkProp->ShowModal() == wxID_OK ) {
         wxString desc = m_pLinkProp->m_textCtrlLinkDescription->GetValue();
         if( desc == wxEmptyString ) desc = m_pLinkProp->m_textCtrlLinkUrl->GetValue();
@@ -2456,12 +2510,13 @@ void MarkInfoImpl::OnAddLink( wxCommandEvent& event )
         m_pRoutePoint->m_HyperlinkList->Append( h );
     }
 
-    sbSizerLinks->Layout();
-
-    event.Skip();
 #ifdef __WXOSX__
     ShowWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
+    
+    sbSizerLinks->Layout();
+
+    event.Skip();
 }
 
 void MarkInfoImpl::OnEditLinkToggle( wxCommandEvent& event )
@@ -2566,7 +2621,7 @@ void MarkInfoImpl::OnMarkInfoOKClick( wxCommandEvent& event )
 
     if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
         pRouteManagerDialog->UpdateWptListCtrl();
-
+        
     if( pRoutePropDialog && pRoutePropDialog->IsShown() )
         pRoutePropDialog->UpdateProperties();
 
@@ -2628,10 +2683,10 @@ void MarkInfoImpl::OnPositionCtlUpdated( wxCommandEvent& event )
 void MarkInfoImpl::OnRightClick( wxCommandEvent& event )
 {
     wxMenu* popup = new wxMenu();
-    popup->Append( ID_RCLK_MENU_COPY, _("Copy") );
-    popup->Append( ID_RCLK_MENU_COPY_LL, _("Copy lat/long") );
-    popup->Append( ID_RCLK_MENU_PASTE, _("Paste") );
-    popup->Append( ID_RCLK_MENU_PASTE_LL, _("Paste lat/long") );
+    popup->Append( ID_RCLK_MENU_COPY, _T("Copy") );
+    popup->Append( ID_RCLK_MENU_COPY_LL, _T("Copy lat/long") );
+    popup->Append( ID_RCLK_MENU_PASTE, _T("Paste") );
+    popup->Append( ID_RCLK_MENU_PASTE_LL, _T("Paste lat/long") );
     m_contextObject = event.GetEventObject();
     PopupMenu( popup );
     delete popup;
@@ -2690,6 +2745,7 @@ void MarkInfoDef::OnCopyPasteLatLon( wxCommandEvent& event )
         wxTheClipboard->Close();
     }
 }
+
 
 void MarkInfoImpl::OnHyperLinkClick( wxHyperlinkEvent &event )
 {

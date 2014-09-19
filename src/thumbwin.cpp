@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Thumbnail Object
@@ -20,8 +20,12 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ ***************************************************************************
+ *
+ *
+ */
+
 
 #include "wx/wxprec.h"
 
@@ -55,9 +59,9 @@ extern ChartCanvas      *cc1;
 //------------------------------------------------------------------------------
 //    Thumbwin Implementation
 //------------------------------------------------------------------------------
-wxBEGIN_EVENT_TABLE(ThumbWin, wxWindow)
+BEGIN_EVENT_TABLE(ThumbWin, wxWindow)
   EVT_PAINT(ThumbWin::OnPaint)
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 // Define a constructor
 
@@ -116,6 +120,7 @@ const wxBitmap &ThumbWin::GetBitmap(void)
                 m_bitmap =  *( pThumbChart->GetThumbData()->pDIBThumb );
         }
     }
-
+    
     return m_bitmap;
 }
+     

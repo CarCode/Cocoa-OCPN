@@ -55,9 +55,9 @@ extern bool g_bAISShowTracks;
 
 IMPLEMENT_CLASS ( AISTargetListDialog, wxPanel )
 
-wxBEGIN_EVENT_TABLE(AISTargetListDialog, wxPanel)
+BEGIN_EVENT_TABLE(AISTargetListDialog, wxPanel)
     EVT_CLOSE(AISTargetListDialog::OnClose)
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 static bool g_bsort_once;
 
@@ -81,7 +81,7 @@ static int ItemCompare( AIS_Target_Data *pAISTarget1, AIS_Target_Data *pAISTarge
         else
             return -1;
     }
-
+    
     if( t2->Class == AIS_SART ) {
         if( t1->Class == AIS_DSC )
             return 0;
@@ -95,7 +95,7 @@ static int ItemCompare( AIS_Target_Data *pAISTarget1, AIS_Target_Data *pAISTarge
             n2 = t2->b_show_track;
             b_cmptype_num = true;
             break;
-
+        
         case tlNAME:
             s1 = trimAISField( t1->ShipName );
             if( (!t1->b_nameValid && ( t1->Class == AIS_BASE )) || ( t1->Class == AIS_SART ) )
@@ -292,18 +292,18 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
     m_pdecoder = pdecoder;
     g_bsort_once = false;
     m_bautosort_force = false;
-
+    
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"), 10);
     SetFont( *qFont );
-    
+
     //  Make an estimate of the default dialog size
     //  for the case when the AUI Perspective for this dialog is undefined
     wxSize esize;
     esize.x = 700;
     esize.y = GetCharHeight() * 18;
-    SetSize( esize );
+    SetSize( esize );    
     
-    //    SetMinSize( wxSize(400,240));
+//    SetMinSize( wxSize(400,240));
 
     s_p_sort_decoder = pdecoder;
     m_pMMSI_array = new ArrayOfMMSI( ArrayItemCompareMMSI );
@@ -339,14 +339,14 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
 
     int dx = GetCharWidth();
     
-    width = dx * 4;
+    width = dx * 4; 
     if( s_width.ToLong( &lwidth ) ) {
         width = wxMax(dx * 2, lwidth);
         width = wxMin(width, dx * 30);
     }
     m_pListCtrlAISTargets->InsertColumn( tlTRK, _("Trk"), wxLIST_FORMAT_LEFT, width );
     s_width = tkz.GetNextToken();
-
+    
     width = dx * 12;
     if( s_width.ToLong( &lwidth ) ) {
         width = wxMax(dx * 2, lwidth);
@@ -472,33 +472,33 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
     m_pButtonCreateWpt->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler( AISTargetListDialog::OnTargetCreateWpt ), NULL, this );
     boxSizer02->Add( m_pButtonCreateWpt, 0, wxEXPAND | wxALL, 0 );
-
+    
     m_pButtonHideAllTracks = new wxButton( this, wxID_ANY, _("Hide All Tracks"), wxDefaultPosition,
-                                            wxDefaultSize, wxBU_AUTODRAW );
+            wxDefaultSize, wxBU_AUTODRAW );
     m_pButtonHideAllTracks->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-                                    wxCommandEventHandler( AISTargetListDialog::OnHideAllTracks ), NULL, this );
+            wxCommandEventHandler( AISTargetListDialog::OnHideAllTracks ), NULL, this );
     boxSizer02->Add( m_pButtonHideAllTracks, 0, wxEXPAND | wxALL, 0 );
 
     m_pButtonShowAllTracks = new wxButton( this, wxID_ANY, _("Show All Tracks"), wxDefaultPosition,
-                                            wxDefaultSize, wxBU_AUTODRAW );
+            wxDefaultSize, wxBU_AUTODRAW );
     m_pButtonShowAllTracks->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-                                    wxCommandEventHandler( AISTargetListDialog::OnShowAllTracks ), NULL, this );
+            wxCommandEventHandler( AISTargetListDialog::OnShowAllTracks ), NULL, this );
     boxSizer02->Add( m_pButtonShowAllTracks, 0, wxEXPAND | wxALL, 0 );
-
+    
     m_pButtonToggleTrack = new wxButton( this, wxID_ANY, _("Toggle track"), wxDefaultPosition,
-                                        wxDefaultSize, wxBU_AUTODRAW );
+            wxDefaultSize, wxBU_AUTODRAW );
     m_pButtonToggleTrack->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-                                    wxCommandEventHandler( AISTargetListDialog::OnToggleTrack ), NULL, this );
+            wxCommandEventHandler( AISTargetListDialog::OnToggleTrack ), NULL, this );
     boxSizer02->Add( m_pButtonToggleTrack, 0, wxEXPAND | wxALL, 0 );
 
     m_pCBAutosort = new wxCheckBox( this, wxID_ANY, _("AutoSort"), wxDefaultPosition,
-                                   wxDefaultSize, wxBU_AUTODRAW );
+                                                           wxDefaultSize, wxBU_AUTODRAW );
     m_pCBAutosort->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED,
-                           wxCommandEventHandler( AISTargetListDialog::OnAutosortCB ), NULL, this );
+                                   wxCommandEventHandler( AISTargetListDialog::OnAutosortCB ), NULL, this );
     boxSizer02->Add( m_pCBAutosort, 0, wxEXPAND | wxALL, 0 );
     g_bAisTargetList_autosort = true;
     m_pCBAutosort->SetValue(g_bAisTargetList_autosort);
-
+    
     boxSizer02->AddSpacer( 10 );
 
     m_pStaticTextRange = new wxStaticText( this, wxID_ANY, _("Limit range: NM"), wxDefaultPosition,
@@ -510,7 +510,7 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
                                       wxSize( 50, -1 ), wxSP_ARROW_KEYS, 1, 20000  );
 #else
     m_pSpinCtrlRange = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-                                      wxSize( 50, -1 ), wxSP_ARROW_KEYS, 1, 20000, g_AisTargetList_range );
+            wxSize( 50, -1 ), wxSP_ARROW_KEYS, 1, 20000, g_AisTargetList_range );
 #endif
     m_pSpinCtrlRange->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED,
             wxCommandEventHandler( AISTargetListDialog::OnLimitRange ), NULL, this );
@@ -531,11 +531,11 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
 
     boxSizer02->AddSpacer( 10 );
     m_pButtonOK = new wxButton( this, wxID_ANY, _("Close"), wxDefaultPosition,
-                               wxDefaultSize, wxBU_AUTODRAW );
+                                    wxDefaultSize, wxBU_AUTODRAW );
     m_pButtonOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-                         wxCommandEventHandler( AISTargetListDialog::OnCloseButton ), NULL, this );
+                              wxCommandEventHandler( AISTargetListDialog::OnCloseButton ), NULL, this );
     boxSizer02->Add( m_pButtonOK, 0, wxEXPAND | wxALL, 0 );
-
+    
     topSizer->Layout();
 
     //    This is silly, but seems to be required for __WXMSW__ build
@@ -547,7 +547,7 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
 
     if( m_pAuiManager ) {
         wxAuiPaneInfo pane =
-        wxAuiPaneInfo().Name( _T("AISTargetList") ).CaptionVisible( true ).Float().FloatingPosition( 50, 50 );
+                wxAuiPaneInfo().Name( _T("AISTargetList") ).CaptionVisible( true ).Float().FloatingPosition( 50, 50 );
         m_pAuiManager->LoadPaneInfo( g_AisTargetList_perspective, pane );
 
         //      Force and/or override any perspective information that is not applicable
@@ -555,7 +555,7 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
         pane.DestroyOnClose( true );
         pane.TopDockable( false ).BottomDockable( true ).LeftDockable( false ).RightDockable( false );
         pane.Show( true );
-
+        
         bool b_reset_pos = false;
 
         if( (pane.floating_size.x != -1) && (pane.floating_size.y != -1)){
@@ -568,7 +568,7 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
             frame_title_rect.top = pane.floating_pos.y;
             frame_title_rect.right = pane.floating_pos.x + pane.floating_size.x;
             frame_title_rect.bottom = pane.floating_pos.y + 30;
-            
+
             if( NULL == MonitorFromRect( &frame_title_rect, MONITOR_DEFAULTTONULL ) )
                 b_reset_pos = true;
 #else
@@ -615,7 +615,7 @@ AISTargetListDialog::~AISTargetListDialog()
 {
     Disconnect_decoder();
     g_pAISTargetList = NULL;
-
+    
 }
 
 void AISTargetListDialog::OnClose( wxCloseEvent &event )
@@ -623,7 +623,7 @@ void AISTargetListDialog::OnClose( wxCloseEvent &event )
     Disconnect_decoder();
     Hide();
     g_pAISTargetList = NULL;
-
+    
 }
 
 void AISTargetListDialog::Disconnect_decoder()
@@ -633,14 +633,12 @@ void AISTargetListDialog::Disconnect_decoder()
 
 void AISTargetListDialog::SetColorScheme()
 {
-#ifndef __WXOSX__
     DimeControl( this );
-#endif
 }
 
 void AISTargetListDialog::OnPaneClose( wxAuiManagerEvent& event )
 {
-//    wxAuiPaneInfo *pane = event.pane;  // Not used
+    wxAuiPaneInfo *pane = event.pane;
     if( event.pane->name == _T("AISTargetList") ) {
         g_AisTargetList_perspective = m_pAuiManager->SavePaneInfo( *event.pane );
     }
@@ -659,6 +657,7 @@ void AISTargetListDialog::OnCloseButton( wxCommandEvent& event )
         Destroy();
     }
 }
+
 
 void AISTargetListDialog::UpdateButtons()
 {
@@ -742,7 +741,7 @@ void AISTargetListDialog::OnTargetListColumnClicked( wxListEvent &event )
     int key = event.GetColumn();
     wxListItem item;
     item.SetMask( wxLIST_MASK_IMAGE );
-    if( key == g_AisTargetList_sortColumn )
+    if( key == g_AisTargetList_sortColumn ) 
         g_bAisTargetList_sortReverse = !g_bAisTargetList_sortReverse;
     else {
         item.SetImage( -1 );
@@ -751,10 +750,10 @@ void AISTargetListDialog::OnTargetListColumnClicked( wxListEvent &event )
         g_AisTargetList_sortColumn = key;
     }
     item.SetImage( g_bAisTargetList_sortReverse ? 1 : 0 );
-
+    
     if(!g_bAisTargetList_autosort )
         g_bsort_once = true;
-
+    
     if( g_AisTargetList_sortColumn >= 0 ) {
         m_pListCtrlAISTargets->SetColumn( g_AisTargetList_sortColumn, item );
         UpdateAISTargetList();
@@ -834,11 +833,12 @@ void AISTargetListDialog::OnToggleTrack( wxCommandEvent& event )
 {
     long selItemID = -1;
     selItemID = m_pListCtrlAISTargets->GetNextItem( selItemID, wxLIST_NEXT_ALL,
-                                                    wxLIST_STATE_SELECTED );
+            wxLIST_STATE_SELECTED );
     if( selItemID == -1 ) return;
 
     AIS_Target_Data *pAISTarget = NULL;
-    if( m_pdecoder ) pAISTarget = m_pdecoder->Get_Target_Data_From_MMSI(m_pMMSI_array->Item( selItemID ) );
+    if( m_pdecoder ) pAISTarget = m_pdecoder->Get_Target_Data_From_MMSI(
+            m_pMMSI_array->Item( selItemID ) );
 
     if( pAISTarget ) {
         pAISTarget->b_show_track = !pAISTarget->b_show_track;
@@ -878,7 +878,7 @@ void AISTargetListDialog::UpdateAISTargetList( void )
         wxListItem item;
 
         int index = 0;
-        if( g_bAisTargetList_autosort || g_bsort_once )
+//        if( g_bAisTargetList_autosort || g_bsort_once )
             m_pMMSI_array->Clear();
 
         for( it = ( *current_targets ).begin(); it != ( *current_targets ).end(); ++it, ++index ) {
@@ -893,6 +893,7 @@ void AISTargetListDialog::UpdateAISTargetList( void )
                     b_add = true;
                 
                 if(b_add){
+/*
                     if( !g_bAisTargetList_autosort && !g_bsort_once ){
                         bool b_found = false;
                         for(unsigned int j=0 ; j < m_pMMSI_array->GetCount() ; j++){
@@ -901,24 +902,25 @@ void AISTargetListDialog::UpdateAISTargetList( void )
                                 break;
                             }
                         }
-                        if(!b_found)
+                        if(!b_found)    
                             m_pMMSI_array->Add( pAISTarget->MMSI );
                     }
                     else
+ */
                         m_pMMSI_array->Add( pAISTarget->MMSI );
                 }
             }
         }
 
         g_bsort_once = false;
-
+        
         m_pListCtrlAISTargets->SetItemCount( m_pMMSI_array->GetCount() );
 
         g_AisTargetList_count = m_pMMSI_array->GetCount();
-
+        
         if( (g_AisTargetList_count > 1000) && !m_bautosort_force )
             g_bAisTargetList_autosort = false;
-
+        
         m_pCBAutosort->SetValue( g_bAisTargetList_autosort );
 
         m_pListCtrlAISTargets->SetScrollPos( wxVERTICAL, sb_position, false );

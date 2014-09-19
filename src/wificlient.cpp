@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -30,9 +30,6 @@
 #endif //precompiled headers
 
 #include "dychart.h"
-#ifdef __WXOSX__
-#include "chart1.h"
-#endif
 
 #include <stdlib.h>
 #include <math.h>
@@ -133,11 +130,7 @@ WIFIWindow::WIFIWindow(wxFrame *frame, const wxString& WiFiServerName):
                     wxString msg(WIFI_data_ip);
                     msg.Prepend(_T("Could not resolve TCP/IP host '"));
                     msg.Append(_T("'\n Suggestion: Try 'xxx.xxx.xxx.xxx' notation"));
-#ifdef __WXOSX__
-                    wxMessageDialog md(this, msg, _T("OpenCPN Message"), wxICON_ERROR );
-#else
                     OCPNMessageDialog md(this, msg, _T("OpenCPN Message"), wxICON_ERROR );
-#endif
                     md.ShowModal();
 
                     m_sock->Notify(FALSE);

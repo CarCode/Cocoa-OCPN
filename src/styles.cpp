@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -54,9 +54,8 @@ wxBitmap MergeBitmaps( wxBitmap back, wxBitmap front, wxSize offset )
 {
     wxBitmap merged( back.GetWidth(), back.GetHeight(), back.GetDepth() );
 #if (!wxCHECK_VERSION(2,9,4) && (defined(__WXGTK__) || defined(__WXMAC__)))
-// Has worked with 2.9.5 somehow, why?
-    // Manual alpha blending for broken wxWidgets platforms.
 
+    // Manual alpha blending for broken wxWidgets platforms.
     merged.UseAlpha();
     back.UseAlpha();
     front.UseAlpha();
@@ -116,68 +115,7 @@ wxBitmap MergeBitmaps( wxBitmap back, wxBitmap front, wxSize offset )
     }
 
     merged = wxBitmap( im_result );
-#elif  (!wxCHECK_VERSION(3, 0, 0) && (defined(__WXGTK__) || defined(__WXMAC__)))
-    // Manual alpha blending for broken wxWidgets platforms.
-    
-    merged.UseAlpha();
-    back.UseAlpha();
-    front.UseAlpha();
-    
-    wxImage im_front = front.ConvertToImage();
-    wxImage im_back = back.ConvertToImage();
-    wxImage im_result = back.ConvertToImage();// Only way to make result have alpha channel in wxW 2.8.
-    
-    unsigned char *presult = im_result.GetData();
-    unsigned char *pback = im_back.GetData();
-    unsigned char *pfront = im_front.GetData();
-    
-    unsigned char *afront = NULL;
-    if( im_front.HasAlpha() )
-        afront = im_front.GetAlpha();
-    
-    unsigned char *aback = NULL;
-    if( im_back.HasAlpha() )
-        aback = im_back.GetAlpha();
-    
-    unsigned char *aresult = NULL;
-    if( im_result.HasAlpha() )
-        aresult = im_result.GetAlpha();
-    
-    // Do alpha blending, associative version of "over" operator.
-    
-    for( int i = 0; i < back.GetHeight(); i++ ) {
-        for( int j = 0; j < back.GetWidth(); j++ ) {
-            
-            int fX = j - offset.x;
-            int fY = i - offset.y;
-            
-            bool inFront = true;
-            if( fX < 0 || fY < 0 ) inFront = false;
-            if( fX >= front.GetWidth() ) inFront = false;
-            if( fY >= front.GetHeight() ) inFront = false;
-            
-            if( inFront ) {
-                double alphaF = (double) ( *afront++ ) / 256.0;
-                double alphaB = (double) ( *aback++ ) / 256.0;
-                double alphaRes = alphaF + alphaB * ( 1.0 - alphaF );
-                unsigned char a = alphaRes * 256;
-                *aresult++ = a;
-                unsigned char r = (*pfront++ * alphaF + *pback++ * alphaB * ( 1.0 - alphaF )) / alphaRes;
-                *presult++ = r;
-                unsigned char g = (*pfront++ * alphaF + *pback++ * alphaB * ( 1.0 - alphaF )) / alphaRes;
-                *presult++ = g;
-                unsigned char b = (*pfront++ * alphaF + *pback++ * alphaB * ( 1.0 - alphaF )) / alphaRes;
-                *presult++ = b;
-            } else {
-                *aresult++ = *aback++;
-                *presult++ = *pback++;
-                *presult++ = *pback++;
-                *presult++ = *pback++;
-            }
-        }
-    }
-    
-    merged = wxBitmap( im_result );
+
 #else
     wxMemoryDC mdc( merged );
     mdc.DrawBitmap( back, 0, 0, true );
@@ -196,10 +134,7 @@ wxBitmap ConvertTo24Bit( wxColor bgColor, wxBitmap front ) {
     if( front.GetDepth() == 24 ) return front;
 
     wxBitmap result( front.GetWidth(), front.GetHeight(), 24 );
-// Has worked with 2.9.5 somehow, why?
 #if !wxCHECK_VERSION(2,9,4)
-    front.UseAlpha();
-#elif !wxCHECK_VERSION(3, 0, 0)
     front.UseAlpha();
 #endif
 
@@ -209,6 +144,9 @@ wxBitmap ConvertTo24Bit( wxColor bgColor, wxBitmap front ) {
     unsigned char *presult = im_result.GetData();
     unsigned char *pfront = im_front.GetData();
 
+    if(!presult || !pfront)
+        return wxNullBitmap;
+    
     unsigned char *afront = NULL;
     if( im_front.HasAlpha() )
     afront = im_front.GetAlpha();
@@ -257,11 +195,11 @@ wxBitmap Style::GetIcon(const wxString & name)
     return icon->icon;
 }
 
-wxBitmap Style::GetToolIcon(const wxString & toolname, int iconType, bool rollover)
+wxBitmap Style::GetToolIcon(const wxString & toolname, int iconType, bool rollover )
 {
 
     if( toolIndex.find( toolname ) == toolIndex.end() ) {
-//  This will produce a flood of log messages for some PlugIns, notably WMM_PI, and GRADAR_PI        
+//  This will produce a flood of log messages for some PlugIns, notably WMM_PI, and GRADAR_PI
 //        wxString msg( _T("The requested tool was not found in the style: ") );
 //        msg += toolname;
 //        wxLogMessage( msg );
@@ -319,7 +257,7 @@ wxBitmap Style::GetToolIcon(const wxString & toolname, int iconType, bool rollov
                 else {
                     tool->icon = SetBitmapBrightness( bm );
                 }
-
+                
                 tool->iconLoaded = true;
                 return tool->icon;
             }
@@ -427,7 +365,7 @@ wxBitmap Style::SetBitmapBrightness( wxBitmap& bitmap )
             return bitmap;
         }
     }
-
+    
     return SetBitmapBrightnessAbs(bitmap, dimLevel);
 }
 
@@ -615,10 +553,8 @@ StyleManager::StyleManager(void)
     isOK = false;
     currentStyle = NULL;
     Init( g_SData_Locn + _T("uidata") + wxFileName::GetPathSeparator() );
-#ifndef __WXOSX__
     Init( *pHome_Locn );
     Init( *pHome_Locn + _T(".opencpn") + wxFileName::GetPathSeparator() );
-#endif
     SetStyle( _T("") );
 }
 
@@ -638,7 +574,7 @@ StyleManager::~StyleManager(void)
     styles.Clear();
 }
 
-void StyleManager::Init(const wxString & fromPath )
+void StyleManager::Init(const wxString & fromPath)
 {
     TiXmlDocument doc;
 

@@ -19,7 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef __OCP_DATASTREAMINPUT_THREAD_H__
 #define __OCP_DATASTREAMINPUT_THREAD_H__
@@ -98,7 +98,7 @@ private:
     int                     m_takIndex;
     int                     m_putIndex;
     char                    *m_poutQueue[OUT_QUEUE_LENGTH];
-
+    
 
 #ifdef __WXMSW__
     HANDLE                  m_hSerialComm;

@@ -48,6 +48,7 @@ extern MyConfig *pConfig;
 extern RouteManagerDialog *pRouteManagerDialog;
 extern ChartCanvas *cc1;
 
+
 //---------------------------------------------------------------------------------------------------------------------
 //
 //      OCPN Alert Dialog Base Class implementation
@@ -57,8 +58,8 @@ extern ChartCanvas *cc1;
 
 IMPLEMENT_CLASS ( OCPN_AlertDialog, wxDialog )
 
-wxBEGIN_EVENT_TABLE ( OCPN_AlertDialog, wxDialog )
-wxEND_EVENT_TABLE()
+BEGIN_EVENT_TABLE ( OCPN_AlertDialog, wxDialog )
+END_EVENT_TABLE()
 
 OCPN_AlertDialog::OCPN_AlertDialog()
 {
@@ -75,7 +76,7 @@ void OCPN_AlertDialog::Init(void)
 }
 
 bool OCPN_AlertDialog::Create( wxWindow *parent, wxWindowID id,
-                                const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+                                   const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 
 {
     //    As a display optimization....
@@ -83,19 +84,19 @@ bool OCPN_AlertDialog::Create( wxWindow *parent, wxWindowID id,
     //    Then create the dialog ..WITHOUT.. borders and title bar.
     //    This way, any window decorations set by external themes, etc
     //    will not detract from night-vision
-
+    
     long wstyle = wxDEFAULT_FRAME_STYLE;
     if( ( global_color_scheme != GLOBAL_COLOR_SCHEME_DAY )
         && ( global_color_scheme != GLOBAL_COLOR_SCHEME_RGB ) ) wstyle |= ( wxNO_BORDER );
-
+    
     wxSize size_min = size;
     size_min.IncTo( wxSize( 500, 600 ) );
     if( !wxDialog::Create( parent, id, caption, pos, size_min, wstyle ) ) return false;
-
+    
     m_pparent = parent;
-
+    
     if( !g_bopengl && CanSetTransparent() ) SetTransparent( 192 );
-
+    
     return true;
 }
 
@@ -108,7 +109,7 @@ bool OCPN_AlertDialog::Create( wxWindow *parent, wxWindowID id,
 
 IMPLEMENT_CLASS ( AISTargetAlertDialog, wxDialog )
 
-wxBEGIN_EVENT_TABLE ( AISTargetAlertDialog, wxDialog )
+BEGIN_EVENT_TABLE ( AISTargetAlertDialog, wxDialog )
     EVT_CLOSE(AISTargetAlertDialog::OnClose)
     EVT_BUTTON( ID_ACKNOWLEDGE, AISTargetAlertDialog::OnIdAckClick )
     EVT_BUTTON( ID_SILENCE, AISTargetAlertDialog::OnIdSilenceClick )
@@ -116,7 +117,7 @@ wxBEGIN_EVENT_TABLE ( AISTargetAlertDialog, wxDialog )
     EVT_BUTTON( ID_WPT_CREATE, AISTargetAlertDialog::OnIdCreateWPClick )
     EVT_MOVE( AISTargetAlertDialog::OnMove )
     EVT_SIZE( AISTargetAlertDialog::OnSize )
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 AISTargetAlertDialog::AISTargetAlertDialog()
 {
@@ -132,19 +133,19 @@ void AISTargetAlertDialog::Init()
     m_target_mmsi = 0;
 }
 
+
 bool AISTargetAlertDialog::Create( int target_mmsi, wxWindow *parent, AIS_Decoder *pdecoder,
-                                  bool b_jumpto, bool b_createWP, bool b_ack,
-                                  wxWindowID id,  const wxString& caption,
-                                  const wxPoint& pos,const wxSize& size, long style )
-
+                                   bool b_jumpto, bool b_createWP, bool b_ack,
+                                   wxWindowID id,  const wxString& caption,
+                                   const wxPoint& pos,const wxSize& size, long style )
+                     
 {
-
+    
     OCPN_AlertDialog::Create(parent, id, caption, pos, size, style);
-
     m_bjumpto = b_jumpto;
     m_back = b_ack;
     m_bcreateWP = b_createWP;
-
+    
     m_target_mmsi = target_mmsi;
     m_pdecoder = pdecoder;
 
@@ -161,9 +162,8 @@ bool AISTargetAlertDialog::Create( int target_mmsi, wxWindow *parent, AIS_Decode
 
     CreateControls();
     if( !g_bopengl && CanSetTransparent() ) SetTransparent( 192 );
-#ifndef __WXOSX__
     DimeControl( this );
-#endif
+
     return true;
 }
 
@@ -201,11 +201,12 @@ void AISTargetAlertDialog::CreateControls()
                 wxDefaultSize, 0 );
         AckBox->Add( jumpto, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     }
-
+    
     if( m_bcreateWP ) {
         wxButton *createWptBtn = new wxButton( this, ID_WPT_CREATE, _("Create Waypoint"), wxDefaultPosition, wxDefaultSize, 0 );
         AckBox->Add( createWptBtn, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     }
+    
 
     UpdateText();
 }
@@ -265,9 +266,8 @@ void AISTargetAlertDialog::UpdateText()
         sz -= wxSize( 200, 200 );
         m_pAlertTextCtl->SetMinSize( sz );
     }
-#ifndef __WXOSX__
+
     DimeControl( this );
-#endif
     if( !g_bopengl && CanSetTransparent() ) SetTransparent( 192 );
 }
 
@@ -303,10 +303,9 @@ void AISTargetAlertDialog::OnIdAckClick( wxCommandEvent& event )
     Destroy();
     g_pais_alert_dialog_active = NULL;
 }
-
 void AISTargetAlertDialog::OnIdCreateWPClick( wxCommandEvent& event )
 {
-    if( m_pdecoder ) {
+    if( m_pdecoder ) { 
         AIS_Target_Data *td =  m_pdecoder->Get_Target_Data_From_MMSI( Get_Dialog_MMSI() );
         if( td ) {
             RoutePoint *pWP = new RoutePoint( td->Lat, td->Lon, g_default_wp_icon, wxEmptyString, GPX_EMPTY_STRING );
@@ -326,6 +325,7 @@ void AISTargetAlertDialog::OnIdCreateWPClick( wxCommandEvent& event )
     }
     
 }
+
 
 void AISTargetAlertDialog::OnIdSilenceClick( wxCommandEvent& event )
 {
@@ -363,3 +363,4 @@ void AISTargetAlertDialog::OnSize( wxSizeEvent& event )
 
     event.Skip();
 }
+

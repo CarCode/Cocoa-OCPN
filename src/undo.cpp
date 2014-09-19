@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Framework for Undo features
@@ -21,7 +21,10 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ *
+ */
 
 #include "wx/wxprec.h"
 
@@ -109,9 +112,9 @@ void doUndoMoveWaypoint( UndoAction* action ) {
     selectable->m_slon = currentPoint->m_lon;
 
     if( ( NULL != pMarkPropDialog ) && ( pMarkPropDialog->IsShown() ) ){
-        if( currentPoint == pMarkPropDialog->GetRoutePoint() ) pMarkPropDialog->UpdateProperties(true);
-    }
-
+       if( currentPoint == pMarkPropDialog->GetRoutePoint() ) pMarkPropDialog->UpdateProperties(true);
+       }
+        
     wxArrayPtrVoid* routeArray = g_pRouteMan->GetRouteArrayContaining( currentPoint );
     if( routeArray ) {
         for( unsigned int ir = 0; ir < routeArray->GetCount(); ir++ ) {

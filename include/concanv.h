@@ -57,7 +57,7 @@ public:
       wxBrush *m_proadBrush;
       wxPen   *m_proadPen;
 
-      wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 
 };
 
@@ -93,7 +93,7 @@ private:
       wxString    m_LegendTextElement;
       wxString    m_ValueTextElement;
 
-      wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 
 };
 
@@ -137,7 +137,7 @@ private:
       void OnPaint(wxPaintEvent& event);
       void OnShow(wxShowEvent& event);
 
-      wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 };
 
 #endif

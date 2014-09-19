@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -43,8 +43,7 @@ extern MyFrame *gFrame;
 IMPLEMENT_DYNAMIC_CLASS( GoToPositionDialog, wxDialog )
 /*!
  * GoToPositionDialog event table definition
- */
-wxBEGIN_EVENT_TABLE( GoToPositionDialog, wxDialog )
+ */BEGIN_EVENT_TABLE( GoToPositionDialog, wxDialog )
 
 ////@begin GoToPositionDialog event table entries
 
@@ -55,7 +54,7 @@ wxBEGIN_EVENT_TABLE( GoToPositionDialog, wxDialog )
 
 ////@end GoToPositionDialog event table entries
 
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 /*!
  * GoToPositionDialog constructors
@@ -127,6 +126,7 @@ void GoToPositionDialog::CreateControls()
 #else
                               wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 #endif
+
     m_MarkLatCtl = new LatLonTextCtrl( itemDialog1, ID_LATCTRL, _T(""), wxDefaultPosition,
                                        wxSize( 180, -1 ), 0 );
     itemStaticBoxSizer4->Add( m_MarkLatCtl, 0,
@@ -140,6 +140,7 @@ void GoToPositionDialog::CreateControls()
 #else
                               wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 #endif
+
     m_MarkLonCtl = new LatLonTextCtrl( itemDialog1, ID_LONCTRL, _T(""), wxDefaultPosition,
                                        wxSize( 180, -1 ), 0 );
     itemStaticBoxSizer4->Add( m_MarkLonCtl, 0,
@@ -162,9 +163,7 @@ void GoToPositionDialog::CreateControls()
 
 void GoToPositionDialog::SetColorScheme( ColorScheme cs )
 {
-#ifndef __WXOSX__
     DimeControl( this );
-#endif
 }
 
 bool GoToPositionDialog::ShowToolTips()

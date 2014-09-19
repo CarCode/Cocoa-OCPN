@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include <iostream>
 using namespace std; // FIXME: 'using namespace' must not be used in header files
@@ -98,9 +98,9 @@ protected:
 #define ID_ROUTEPRINT_SELECTION_CANCEL 9002
 
 
-class RoutePrintSelection : public wxDialog
-{
-    wxDECLARE_DYNAMIC_CLASS( RoutePrintSelection );
+class RoutePrintSelection : public wxDialog {
+    DECLARE_DYNAMIC_CLASS( RoutePrintSelection )
+    DECLARE_EVENT_TABLE()
 
 public:
     // Constructors
@@ -152,9 +152,6 @@ public:
     wxCheckBox* m_checkBoxWPDescription;
 
     Route*      route;
-
-    wxDECLARE_EVENT_TABLE();
-
 };
 
 #endif

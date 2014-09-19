@@ -35,22 +35,18 @@ public:
     void Expand(const wxBoundingBox& bbox);
 
     OVERLAP Intersect( const wxBoundingBox &, double Marge = 0) const;
-    
+
     /* this routine is used very heavily, so this is a lightweight
-     version for when we only care if the other box is out */
+       version for when we only care if the other box is out */
     inline bool IntersectOut( const wxBoundingBox &other ) const {
         return (m_minx > other.m_maxx) || (m_maxx < other.m_minx) ||
-        (m_maxy < other.m_miny) || (m_miny > other.m_maxy);
+               (m_maxy < other.m_miny) || (m_miny > other.m_maxy);
     }
-#ifdef __WXOSX__
-    bool LineIntersect(const wxPoint2DDouble& begin, const wxPoint2DDouble& end );
-    bool PointInBox( const wxPoint2DDouble&, double Marge = 0);
-    virtual bool PointInBox( double, double, double Marge = 0);
-#else
+
     bool LineIntersect(const wxPoint2DDouble& begin, const wxPoint2DDouble& end ) const;
     bool PointInBox( const wxPoint2DDouble&, double Marge = 0) const;
     virtual bool PointInBox( double, double, double Marge = 0) const;
-#endif
+
     void Reset();
 
     void Translate( wxPoint2DDouble& );
@@ -91,6 +87,9 @@ protected:
 
 class LLBBox : public wxBoundingBox
 {
+//#ifdef __WXOSX__
+//    using wxBoundingBox::PointInBox;
+//#endif
       public:
             bool PointInBox(double Lon, double Lat, double Marge);
 };

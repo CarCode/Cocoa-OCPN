@@ -53,7 +53,7 @@
 #include <wx/tglbtn.h>
 #include <wx/notebook.h>
 
-#if wxCHECK_VERSION(3, 0, 0)
+#if wxCHECK_VERSION(2, 9, 0)
 #include <wx/dialog.h>
 #else
 #include "scrollingdialog.h"
@@ -99,8 +99,8 @@ private:
         LinkPropImpl    *m_pLinkProp;
         void OnHyperLinkClick(wxHyperlinkEvent &event);
         wxHyperlinkCtrl *m_pEditedLink;
-	
-protected:
+
+    protected:
         wxNotebook* m_notebook1;
         wxScrolledWindow* m_panelBasic;
         wxStaticText* m_stName;
@@ -141,7 +141,7 @@ protected:
         wxButton* m_sdbBtmBtnsSizerCancel;
         wxStaticBoxSizer* sbSizerLinks;
         wxBoxSizer* bSizerLinks;
-
+    
         wxButton* m_sdbBtmBtnsSizerPrint;
         wxButton* m_sdbBtmBtnsSizerSplit;
         wxButton* m_sdbBtmBtnsSizerExtend;
@@ -168,14 +168,14 @@ protected:
 
 public:
         TrackPropDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Track Properties"),
-                const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 680,440 ),
-                long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER );
-		~TrackPropDlg();
+                              const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 680,440 ),
+                              long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER ); 
+        ~TrackPropDlg();
 
-		void m_hyperlink1OnContextMenu( wxMouseEvent &event )
-		{
-			m_hyperlink1->PopupMenu( m_menuLink, event.GetPosition() );
-		}
+        void m_hyperlink1OnContextMenu( wxMouseEvent &event )
+        {
+            m_hyperlink1->PopupMenu( m_menuLink, event.GetPosition() );
+        }
         
         void SetTrackAndUpdate( Route *pR );
         bool UpdateProperties();

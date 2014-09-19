@@ -19,7 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef __CHINFOWIN_H__
 #define __CHINFOWIN_H__
@@ -35,7 +35,7 @@ public:
 
     void SetString(const wxString &s){ m_string = s; }
     const wxString& GetString(void) { return m_string; }
-
+    
     void SetPosition( wxPoint pt )
     {
         m_position = pt;
@@ -54,14 +54,14 @@ public:
     void OnEraseBackground( wxEraseEvent& event );
 
     wxStaticText *m_pInfoTextCtl;
-
+    
 private:
 
     wxString m_string;
     wxSize m_size;
     wxPoint m_position;
 
-    wxDECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE()
 };
 
 

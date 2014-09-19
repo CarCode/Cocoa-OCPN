@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include <wx/sizer.h>
 #include <wx/statbox.h>
@@ -34,9 +33,9 @@
 
 IMPLEMENT_DYNAMIC_CLASS( TTYWindow, wxDialog )
 
-wxBEGIN_EVENT_TABLE( TTYWindow, wxDialog )
-	EVT_CLOSE(TTYWindow::OnCloseWindow)
-wxEND_EVENT_TABLE()
+BEGIN_EVENT_TABLE( TTYWindow, wxDialog )
+    EVT_CLOSE(TTYWindow::OnCloseWindow)
+END_EVENT_TABLE()
 
 TTYWindow::TTYWindow()
     : m_window_destroy_listener(NULL)
@@ -53,6 +52,7 @@ TTYWindow::TTYWindow(wxWindow *parent, int n_lines, WindowDestroyListener * list
 #else
     wxDialog::Create( parent, -1, _T("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
 #endif
+
     wxBoxSizer* bSizerOuterContainer = new wxBoxSizer( wxVERTICAL );
     SetSizer( bSizerOuterContainer );
 
@@ -151,7 +151,7 @@ void TTYWindow::OnCloseWindow( wxCloseEvent& event )
     }
 }
 
-void TTYWindow::Add(const wxString &line )
+void TTYWindow::Add(const wxString &line)
 {
     if( m_pScroll ) m_pScroll->Add( line );
 }

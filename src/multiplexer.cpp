@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include "wx/wx.h"
 
@@ -97,7 +97,7 @@ void Multiplexer::StopAndRemoveStream( DataStream *stream )
 
 void Multiplexer::LogOutputMessageColor(const wxString &msg, const wxString & stream_name, const wxString & color)
 {
-    if(NMEALogWindow::Get().Active()) {
+    if (NMEALogWindow::Get().Active()) {
         wxDateTime now = wxDateTime::Now();
         wxString ss = now.FormatISOTime();
         ss.Prepend(_T("--> "));
@@ -108,9 +108,9 @@ void Multiplexer::LogOutputMessageColor(const wxString &msg, const wxString & st
         ss.Prepend( color );
 
         NMEALogWindow::Get().Add(ss);
-//        g_NMEALogWindow->Refresh( false );
     }
 }
+
 
 
 void Multiplexer::LogOutputMessage(const wxString &msg, wxString stream_name, bool b_filter)
@@ -123,7 +123,7 @@ void Multiplexer::LogOutputMessage(const wxString &msg, wxString stream_name, bo
 
 void Multiplexer::LogInputMessage(const wxString &msg, const wxString & stream_name, bool b_filter)
 {
-    if(NMEALogWindow::Get().Active()) {
+    if (NMEALogWindow::Get().Active()) {
         wxDateTime now = wxDateTime::Now();
         wxString ss = now.FormatISOTime();
         ss.Append( _T(" (") );
@@ -135,8 +135,7 @@ void Multiplexer::LogInputMessage(const wxString &msg, const wxString & stream_n
         else
             ss.Prepend( _T("<GREEN>") );
 
-        NMEALogWindow::Get().Add(ss);
-//        g_NMEALogWindow->Refresh( false );
+        NMEALogWindow::Get().Add( ss );
     }
 }
 
@@ -225,7 +224,7 @@ void Multiplexer::OnEvtStream(OCPN_DataStreamEvent& event)
         //Send to plugins
         if ( g_pi_manager )
             g_pi_manager->SendNMEASentenceToAllPlugIns( message );
-            
+
        //Send to all the other outputs
         for (size_t i = 0; i < m_pdatastreams->Count(); i++)
         {
@@ -476,7 +475,7 @@ ret_point:
                 dstr->Close();
                 goto ret_point_1;
             }
-
+                
             SENTENCE snt;
             NMEA0183 oNMEA0183;
             oNMEA0183.TalkerID = _T ( "EC" );
@@ -557,7 +556,7 @@ ret_point:
                         pProgress->Refresh();
                         pProgress->Update();
                     }
-                    
+
                     wxMilliSleep ( progress_stall );
 
                     node = node->GetNext();
@@ -570,7 +569,13 @@ ret_point:
             // Try to create a single sentence, and then check the length to see if too long
             unsigned int max_length = 76;
             unsigned int max_wp = 2;                     // seems to be required for garmin...
-
+            
+            //  Furuno GPS can only accept 5 (five) waypoint linkage sentences....
+            //  So, we need to compact a few more points into each link sentence.
+            if(g_GPS_Ident == _T("FurunoGP3X")){
+                max_wp = 6;
+            }
+                
             oNMEA0183.Rte.Empty();
             oNMEA0183.Rte.TypeOfRoute = CompleteRoute;
 
@@ -609,8 +614,8 @@ ret_point:
 
             oNMEA0183.Rte.Write ( snt );
 
-            if( (snt.Sentence.Len() > max_length)
-               || (pr->pRoutePointList->GetCount() > max_wp) )        // Do we need split sentences?
+            if( (snt.Sentence.Len() > max_length) 
+                || (pr->pRoutePointList->GetCount() > max_wp) )        // Do we need split sentences?
             {
                 // Make a route with zero waypoints to get tare load.
                 NMEA0183 tNMEA0183;
@@ -915,7 +920,14 @@ int Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, wx
             wxLogMessage(msg);
 
             ret_val = ERR_GARMIN_INITIALIZE;
+#ifdef __WXOSX__
+            if( old_stream )
+                CreateAndRestoreSavedStreamProperties();
+            
+            return ret_val;
+#else
             goto ret_point;
+#endif
         }
         else
         {
@@ -945,12 +957,25 @@ int Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, wx
             wxLogMessage(msg);
 
             ret_val = ERR_GARMIN_GENERAL;
+#ifdef __WXOSX__
+            if( old_stream )
+                CreateAndRestoreSavedStreamProperties();
+            
+            return ret_val;
+#else
             goto ret_point;
+#endif
         }
         else
             ret_val = 0;
-
+#ifdef __WXOSX__
+        if( old_stream )
+            CreateAndRestoreSavedStreamProperties();
+        
+        return ret_val;
+#else
         goto ret_point;
+#endif
     }
     else
 #endif //USE_GARMINHOST
@@ -987,12 +1012,13 @@ int Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, wx
         msg += com_name;
         msg += _T(" ...Could not be opened for writing");
         wxLogMessage(msg);
-
+        
         dstr->Close();
         goto ret_point;
     }
-
-
+    
+    
+    
         SENTENCE snt;
         NMEA0183 oNMEA0183;
         oNMEA0183.TalkerID = _T ( "EC" );
@@ -1034,7 +1060,7 @@ int Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, wx
             wxString name = prp->GetName();
             name += _T("000000");
             name.Truncate( 6 );
-            
+
             oNMEA0183.GPwpl.To = name;
 
             oNMEA0183.GPwpl.Write ( snt );
@@ -1042,7 +1068,7 @@ int Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, wx
 
         if( dstr->SendSentence( snt.Sentence ) )
             LogOutputMessage( snt.Sentence, dstr->GetPort(), false );
-        
+
         wxString msg(_T("-->GPS Port:"));
         msg += com_name;
         msg += _T(" Sentence: ");
@@ -1057,7 +1083,7 @@ int Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, wx
 
             if( dstr->SendSentence( term ) )
                 LogOutputMessage( term, dstr->GetPort(), false );
-            
+
             wxString msg(_T("-->GPS Port:"));
             msg += com_name;
             msg += _T(" Sentence: ");
@@ -1077,7 +1103,7 @@ int Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, wx
 
         //  All finished with the temp port
         dstr->Close();
-        
+
         ret_val = 0;
     }
 

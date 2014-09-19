@@ -22,7 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #pragma once
 #include <tinyxml.h>
@@ -108,7 +108,7 @@ public:
       wxBitmap GetToolbarEnd();
       bool HasBackground() const { return hasBackground; }
       void HasBackground( bool b ) { hasBackground = b; }
-      wxBitmap GetIcon(const wxString & name );
+      wxBitmap GetIcon(const wxString & name);
       wxBitmap GetToolIcon(const wxString & toolname, int iconType = TOOLICON_NORMAL, bool rollover = false );
       wxBitmap BuildPluginIcon( const wxBitmap* bm, int iconType );
 
@@ -136,9 +136,8 @@ public:
       void DrawToolbarLineEnd( wxBitmap& bmp );
 
       wxBitmap SetBitmapBrightness( wxBitmap& bitmap );
-
       wxBitmap SetBitmapBrightnessAbs( wxBitmap& bitmap, double level );
-
+      
       void SetOrientation( long orient );
       int GetOrientation();
       void SetColorScheme( ColorScheme cs );
@@ -207,9 +206,9 @@ public:
       StyleManager(const wxString & configDir);
 
       bool IsOK() const { return isOK; }
-      void Init(const wxString & fromPath );
+      void Init(const wxString & fromPath);
       void SetStyle(wxString name);
-      void SetStyleNextInvocation(const wxString & name ) { nextInvocationStyle = name; }
+      void SetStyleNextInvocation(const wxString & name) { nextInvocationStyle = name; }
       const wxString & GetStyleNextInvocation() const { return nextInvocationStyle; }
       Style* GetCurrentStyle();
       wxArrayPtrVoid GetArrayOfStyles() { return styles; };

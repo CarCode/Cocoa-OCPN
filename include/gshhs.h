@@ -1,4 +1,4 @@
-/**************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  GSHHS Chart Object (Global Self-consistent, Hierarchical, High-resolution Shoreline)
@@ -26,7 +26,10 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ *
+ */
 
 #ifndef GSHHS_H
 #define GSHHS_H
@@ -96,14 +99,14 @@ public:
     ~GshhsPolyCell();
 
     void drawMapPlain( ocpnDC &pnt, double dx, ViewPort &vp, wxColor seaColor,
-                      wxColor landColor, int cellcount );
+                       wxColor landColor, int cellcount );
 
     void drawSeaBorderLines( ocpnDC &pnt, double dx, ViewPort &vp );
     std::vector<QLineF> * getCoasts() { return &coasts; }
     contour_list &getPoly1() { return poly1; }
 
     /* we remap the segments into a high resolution map to
-     greatly reduce intersection testing time */
+       greatly reduce intersection testing time */
     std::vector<QLineF> *high_res_map[GSSH_SUBM*GSSH_SUBM];
 
 private:
@@ -146,6 +149,7 @@ private:
 
     PolygonFileHeader polyHeader;
     void readPolygonFileHeader( FILE *polyfile, PolygonFileHeader *header );
+
     wxMutex mutex1, mutex2;
 };
 

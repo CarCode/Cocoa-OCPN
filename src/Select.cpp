@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "Select.h"
 #include "georef.h"
@@ -37,7 +38,7 @@ Select::Select()
     wxDisplaySize( &w, &h );
     if( h > 800 ) pixelRadius = 10;
     if( h > 1024 ) pixelRadius = 12;
-
+    
 }
 
 Select::~Select()
@@ -58,14 +59,14 @@ bool Select::AddSelectableRoutePoint( float slat, float slon, RoutePoint *pRoute
     pSelItem->m_pData1 = pRoutePointAdd;
 
     wxSelectableItemListNode *node;
-
+    
     if( pRoutePointAdd->m_bIsInLayer )
         node = pSelectList->Append( pSelItem );
     else
         node = pSelectList->Insert( pSelItem );
-    
-    pRoutePointAdd->SetSelectNode(node);
 
+    pRoutePointAdd->SetSelectNode(node);
+    
     return true;
 }
 
@@ -142,7 +143,7 @@ bool Select::DeleteAllSelectableRoutePoints( Route *pr )
                     delete pFindSel;
                     pSelectList->DeleteNode( node );   //delete node;
                     prp->SetSelectNode( NULL );
-
+                    
                     node = pSelectList->GetFirst();
 
                     goto got_next_outer_node;
@@ -306,12 +307,12 @@ bool Select::DeleteSelectablePoint( void *pdata, int SeltypeToDelete )
                 if( pdata == pFindSel->m_pData1 ) {
                     delete pFindSel;
                     delete node;
-
+                    
                     if( SELTYPE_ROUTEPOINT == SeltypeToDelete ){
                         RoutePoint *prp = (RoutePoint *)pdata;
                         prp->SetSelectNode( NULL );
                     }
-
+                    
                     return true;
                 }
             }
@@ -333,12 +334,12 @@ bool Select::DeleteAllSelectableTypePoints( int SeltypeToDelete )
         if( pFindSel->m_seltype == SeltypeToDelete ) {
             delete pFindSel;
             delete node;
-
+            
             if( SELTYPE_ROUTEPOINT == SeltypeToDelete ){
                 RoutePoint *prp = (RoutePoint *)pFindSel->m_pData1;
                 prp->SetSelectNode( NULL );
             }
-
+            
             node = pSelectList->GetFirst();
             goto got_next_node;
         }
@@ -349,10 +350,9 @@ bool Select::DeleteAllSelectableTypePoints( int SeltypeToDelete )
     return true;
 }
 
-
 bool Select::DeleteSelectableRoutePoint( RoutePoint *prp )
 {
-
+    
     if( NULL != prp ) {
         wxSelectableItemListNode *node = (wxSelectableItemListNode *)prp->GetSelectNode();
         if(node){
@@ -366,7 +366,7 @@ bool Select::DeleteSelectableRoutePoint( RoutePoint *prp )
         }
         else
             return DeleteSelectablePoint( prp, SELTYPE_ROUTEPOINT );
-
+        
     }
     return false;
 }
@@ -539,8 +539,8 @@ SelectItem *Select::FindSelection( float slat, float slon, int fseltype )
                 case SELTYPE_TIDEPOINT:
                 case SELTYPE_CURRENTPOINT:
                 case SELTYPE_AISTARGET:
-//                    a = fabs( slat - pFindSel->m_slat );  // Not used
-//                    b = fabs( slon - pFindSel->m_slon );  // Not used
+                    a = fabs( slat - pFindSel->m_slat );
+                    b = fabs( slon - pFindSel->m_slon );
 
                     if( ( fabs( slat - pFindSel->m_slat ) < selectRadius )
                             && ( fabs( slon - pFindSel->m_slon ) < selectRadius ) ) goto find_ok;

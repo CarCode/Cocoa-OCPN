@@ -28,7 +28,7 @@
 
 //#include "bbox.h"
 
-#define CURRENT_SENC_FORMAT_VERSION  122
+#define CURRENT_SENC_FORMAT_VERSION  123
 
 //    Fwd Defns
 class wxArrayOfS57attVal;
@@ -289,8 +289,9 @@ typedef struct _pi_chart_context{
     double                  ref_lon;
     wxArrayPtrVoid          *pFloatingATONArray;
     wxArrayPtrVoid          *pRigidATONArray;
-    void *                  *chart;
+    void                    *chart;
     double                  safety_contour;
+    float                   *vertex_buffer;
 }pi_chart_context;
 
 

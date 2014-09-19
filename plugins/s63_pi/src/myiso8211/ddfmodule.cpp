@@ -168,7 +168,11 @@ void DDFModule::Close()
 /*      Cleanup the clones.  Deleting them will cause a callback to     */
 /*      remove them from the list.                                      */
 /* -------------------------------------------------------------------- */
+#ifdef __WXOSX__
+    while( nCloneCount > 0 && !papoClones[0] )
+#else
     while( nCloneCount > 0 )
+#endif
         delete papoClones[0];
 
     nMaxCloneCount = 0;

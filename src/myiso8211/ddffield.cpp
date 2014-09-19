@@ -138,12 +138,13 @@ void DDFField::Dump( FILE * fp )
         //if( pachData[i] < 32 || pachData[i] > 126 )
             fprintf( fp, "\\%02X", ((unsigned char *) pachData)[i] );
         //else
-        //fprintf( fp, "%c", pachData[i] );
-        il ++;
-        if( il == 16){
-            fprintf( fp, "\n" );
-            il = 0;
-        }
+            //fprintf( fp, "%c", pachData[i] );
+            il ++;
+            if( il == 16){
+                fprintf( fp, "\n" );
+                il = 0;
+            }
+            
     }
 
     if( nDataSize > 1000 )
@@ -384,7 +385,7 @@ const char *DDFField::GetInstanceData( int nInstance,
                                         nInstance );
         poLastSubfield->GetDataLength( pachLastData, nBytesRemaining2,
                                        &nLastSubfieldWidth );
-
+        
         if((pachLastData[nLastSubfieldWidth-1] == 0) && (pachLastData[nLastSubfieldWidth - 2] == DDF_FIELD_TERMINATOR))
             nLastSubfieldWidth -= 2;
 

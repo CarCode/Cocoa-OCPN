@@ -30,22 +30,22 @@ TTYScroll::TTYScroll(wxWindow *parent, int n_lines)
     : wxScrolledWindow(parent), m_nLines( n_lines )
 {
     bpause = false;
-	wxClientDC dc(this);
-	dc.GetTextExtent(_T("Line Height"), NULL, &m_hLine);
+    wxClientDC dc(this);
+    dc.GetTextExtent(_T("Line Height"), NULL, &m_hLine);
 
-	SetScrollRate( 0, m_hLine );
-	SetVirtualSize( -1, ( m_nLines + 1 ) * m_hLine );
-	m_plineArray = new wxArrayString;
-	for(unsigned int i=0 ; i < m_nLines ; i++)
-		m_plineArray->Add(_T(""));
+    SetScrollRate( 0, m_hLine );
+    SetVirtualSize( -1, ( m_nLines + 1 ) * m_hLine );
+    m_plineArray = new wxArrayString;
+    for(unsigned int i=0 ; i < m_nLines ; i++)
+        m_plineArray->Add(_T(""));
 }
 
 TTYScroll::~TTYScroll()
 {
-	delete m_plineArray;
+    delete m_plineArray;
 }
 
-void TTYScroll::Add(const wxString &line )
+void TTYScroll::Add(const wxString &line)
 {
     if(!bpause) {
         if( m_plineArray->GetCount() > m_nLines - 1 ) { // shuffle the arraystring

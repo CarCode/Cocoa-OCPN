@@ -21,10 +21,11 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef _PLUGIN_H_
 #define _PLUGIN_H_
+
 
 #ifndef DECL_EXP
 #ifdef __WXMSW__
@@ -52,7 +53,7 @@ class wxGLContext;
 //    PlugIns conforming to API Version less then the most modern will also
 //    be correctly supported.
 #define API_VERSION_MAJOR           1
-#define API_VERSION_MINOR           11
+#define API_VERSION_MINOR           12
 
 //    Fwd Definitions
 class       wxFileConfig;
@@ -85,7 +86,8 @@ class       wxScrolledWindow;
 #define     WANTS_DYNAMIC_OPENGL_OVERLAY_CALLBACK     0x00010000
 #define     WANTS_LATE_INIT                           0x00020000
 #define     INSTALLS_PLUGIN_CHART_GL                  0x00040000
-#define     WANTS_MOUSE_HOOK                          0x00080000
+#define     WANTS_MOUSE_EVENTS                        0x00080000
+#define     WANTS_VECTOR_CHART_OBJECT_INFO            0x00100000
 
 //----------------------------------------------------------------------------------------------------------
 //    Some PlugIn API interface object class definitions
@@ -397,7 +399,7 @@ public:
 
       virtual void ShowPreferencesDialog( wxWindow* parent );
 #ifdef __WXOSX__  // Test WXOSX ja oder nein?
-    bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
+      bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
 #else
       virtual bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
 #endif
@@ -417,26 +419,26 @@ public:
       virtual void UpdateAuiStatus(void);
 
       virtual wxArrayString GetDynamicChartClassNameArray(void);
-};
+ };
 
 
  // the types of the class factories used to create PlugIn instances
  typedef opencpn_plugin* create_t(void*);
  typedef void destroy_t(opencpn_plugin*);
 
-class DECL_EXP opencpn_plugin_16 : public opencpn_plugin
-{
+ class DECL_EXP opencpn_plugin_16 : public opencpn_plugin
+ {
        public:
              opencpn_plugin_16(void *pmgr);
              virtual ~opencpn_plugin_16();
 #ifdef __WXOSX__  // Test WXOSX
-            bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+             bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
              virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #endif
              virtual void SetPluginMessage(wxString &message_id, wxString &message_body);
 
-};
+ };
 
 class DECL_EXP opencpn_plugin_17 : public opencpn_plugin
 {
@@ -444,7 +446,7 @@ class DECL_EXP opencpn_plugin_17 : public opencpn_plugin
              opencpn_plugin_17(void *pmgr);
              virtual ~opencpn_plugin_17();
 #ifdef __WXOSX__  // Test WXOSX
-            bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+             bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
              virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #endif
@@ -494,7 +496,7 @@ class DECL_EXP opencpn_plugin_111 : public opencpn_plugin_110
 public:
     opencpn_plugin_111(void *pmgr);
     virtual ~opencpn_plugin_111();
-
+    
 };
 
 class DECL_EXP opencpn_plugin_112 : public opencpn_plugin_111
@@ -503,9 +505,11 @@ public:
     opencpn_plugin_112(void *pmgr);
     virtual ~opencpn_plugin_112();
     
-    virtual void MouseEventHook( wxMouseEvent &event );
+    virtual bool MouseEventHook( wxMouseEvent &event );
+    virtual void SendVectorChartObjectInfo(wxString &chart, wxString &feature, wxString &objname, double lat, double lon, double scale, int nativescale);
     
 };
+
 
 //------------------------------------------------------------------
 //      Route and Waypoint PlugIn support
@@ -514,7 +518,7 @@ public:
 
 class DECL_EXP Plugin_Hyperlink
 {
-    public:
+public:
     wxString DescrText;
     wxString Link;
     wxString Type;
@@ -526,7 +530,7 @@ WX_DECLARE_LIST(Plugin_Hyperlink, Plugin_HyperlinkList);
 
 class DECL_EXP PlugIn_Waypoint
 {
-    public:
+public:
     PlugIn_Waypoint();
     PlugIn_Waypoint(double lat, double lon,
                     const wxString& icon_ident, const wxString& wp_name,
@@ -552,7 +556,7 @@ WX_DECLARE_LIST(PlugIn_Waypoint, Plugin_WaypointList);
 
 class DECL_EXP PlugIn_Route
 {
-    public:
+public:
     PlugIn_Route(void);
     ~PlugIn_Route(void);
 
@@ -566,7 +570,7 @@ class DECL_EXP PlugIn_Route
 
 class DECL_EXP PlugIn_Track
 {
-    public:
+public:
     PlugIn_Track(void);
     ~PlugIn_Track(void);
 
@@ -638,12 +642,13 @@ extern "C"  DECL_EXP void DimeWindow(wxWindow *);
 
 extern "C"  DECL_EXP void JumpToPosition(double lat, double lon, double scale);
 
-/* API 1.9  adds some common cartographic fucntions to avoid unnecessary code duplication */
+/* API 1.9  adds some common cartographic functions to avoid unnecessary code duplication */
 /* Study the original OpenCPN source (georef.c) for functional definitions  */
 
 extern "C" DECL_EXP void PositionBearingDistanceMercator_Plugin(double lat, double lon, double brg, double dist, double *dlat, double *dlon);
 extern "C" DECL_EXP void DistanceBearingMercator_Plugin(double lat0, double lon0, double lat1, double lon1, double *brg, double *dist);
 extern "C" DECL_EXP double DistGreatCircle_Plugin(double slat, double slon, double dlat, double dlon);
+
 extern "C" DECL_EXP void toTM_Plugin(float lat, float lon, float lat0, float lon0, double *x, double *y);
 extern "C" DECL_EXP void fromTM_Plugin(double x, double y, double lat0, double lon0, double *lat, double *lon);
 extern "C" DECL_EXP void toSM_Plugin(double lat, double lon, double lat0, double lon0, double *x, double *y);
@@ -656,6 +661,7 @@ extern "C" DECL_EXP int GetChartbarHeight( void );
 extern "C" DECL_EXP bool GetActiveRoutepointGPX( char *buffer, unsigned int buffer_length );
 
 
+
 /* API 1.9 */
 typedef enum OptionsParentPI
 {
@@ -666,8 +672,9 @@ typedef enum OptionsParentPI
       PI_OPTIONS_PARENT_UI,
       PI_OPTIONS_PARENT_PLUGINS
 }_OptionsParentPI;
-extern DECL_EXP wxScrolledWindow *AddOptionsPage( OptionsParentPI parent, wxString title ); 
+extern DECL_EXP wxScrolledWindow *AddOptionsPage( OptionsParentPI parent, wxString title );
 extern DECL_EXP bool DeleteOptionsPage( wxScrolledWindow* page );
+
 
 /* API 1.10  */
 
@@ -682,6 +689,8 @@ extern DECL_EXP wxString getUsrSpeedUnit_Plugin( int unit = -1 );
 extern DECL_EXP wxString GetNewGUID();
 extern "C" DECL_EXP bool PlugIn_GSHHS_CrossesLand(double lat1, double lon1, double lat2, double lon2);
 extern DECL_EXP void PlugInPlaySound( wxString &sound_file );
+
+
 
 
 // API 1.10 Route and Waypoint Support
@@ -705,9 +714,10 @@ extern DECL_EXP bool UpdatePlugInTrack ( PlugIn_Track *ptrack );
 /* API 1.11  adds some more common functions to avoid unnecessary code duplication */
 wxColour DECL_EXP GetBaseGlobalColor(wxString colorName);
 int DECL_EXP OCPNMessageBox_PlugIn(wxWindow *parent,
-                        const wxString& message,
-                        const wxString& caption = _T("Message"),
-                        int style = wxOK, int x = -1, int y = -1);
+                          const wxString& message,
+                          const wxString& caption = _T("Message"),
+                          int style = wxOK, int x = -1, int y = -1);
+
 extern DECL_EXP wxString toSDMM_PlugIn(int NEflag, double a, bool hi_precision = true);
 
 extern "C"  DECL_EXP wxString *GetpPrivateApplicationDataLocation();
@@ -721,6 +731,15 @@ extern "C"  DECL_EXP int RemoveChartFromDBInPlace( wxString &full_path );
 
 //  API 1.11 adds access to S52 Presentation library
 //Types
+
+//      A flag field that defines the object capabilities passed by a chart to the S52 PLIB
+
+#define PLIB_CAPS_LINE_VBO              1
+#define PLIB_CAPS_LINE_BUFFER           1 << 1
+#define PLIB_CAPS_SINGLEGEO_BUFFER      1 << 2
+#define PLIB_CAPS_OBJSEGLIST            1 << 3
+#define PLIB_CAPS_OBJCATMUTATE          1 << 4
+
 
 class PI_S57Obj;
 
@@ -738,7 +757,7 @@ public:
     virtual ~PlugInChartBaseGL();
 
     virtual int RenderRegionViewOnGL( const wxGLContext &glc, const PlugIn_ViewPort& VPoint,
-                                        const wxRegion &Region, bool b_use_stencil );
+                                      const wxRegion &Region, bool b_use_stencil );
 
     virtual ListOfPI_S57Obj *GetObjRuleListAtLatLon(float lat, float lon, float select_radius, PlugIn_ViewPort *VPoint);
     virtual wxString CreateObjDescriptions( ListOfPI_S57Obj* obj_list );
@@ -747,7 +766,7 @@ public:
     virtual int GetNoCOVRTablePoints(int iTable);
     virtual int  GetNoCOVRTablenPoints(int iTable);
     virtual float *GetNoCOVRTableHead(int iTable);
-
+    
 };
 
 
@@ -802,77 +821,103 @@ typedef enum PI_InitReturn
     PI_INIT_FAIL_NOERROR       // Init failed, request no explicit error message
 }_PI_InitReturn;
 
+class PI_line_segment_element
+{
+public:
+    size_t              vbo_offset;
+    size_t              n_points;
+    int                 priority;
+    float               lat_max;                // segment bounding box
+    float               lat_min;
+    float               lon_max;
+    float               lon_min;
+    void                *private0;
+    int                 type;
+    
+    PI_line_segment_element *next;
+};
+
 
 class DECL_EXP PI_S57Obj
 {
 public:
 
-        //  Public Methods
-        PI_S57Obj();
-        ~PI_S57Obj();
+      //  Public Methods
+      PI_S57Obj();
+      ~PI_S57Obj();
 
 public:
-        // Instance Data
-        char                    FeatureName[8];
-        int                     Primitive_type;
+      // Instance Data
+      char                    FeatureName[8];
+      int                     Primitive_type;
 
-        char                    *att_array;
-        wxArrayOfS57attVal      *attVal;
-        int                     n_attr;
+      char                    *att_array;
+      wxArrayOfS57attVal      *attVal;
+      int                     n_attr;
 
-        int                     iOBJL;
-        int                     Index;
+      int                     iOBJL;
+      int                     Index;
 
-        double                  x;                      // for POINT
-        double                  y;
-        double                  z;
-        int                     npt;                    // number of points as needed by arrays
-        void                    *geoPt;                 // for LINE & AREA not described by PolyTessGeo
-        double                  *geoPtz;                // an array[3] for MultiPoint, SM with Z, i.e. depth
-        double                  *geoPtMulti;            // an array[2] for MultiPoint, lat/lon to make bbox
-                                                        // of decomposed points
+      double                  x;                      // for POINT
+      double                  y;
+      double                  z;
+      int                     npt;                    // number of points as needed by arrays
+      void                    *geoPt;                 // for LINE & AREA not described by PolyTessGeo
+      double                  *geoPtz;                // an array[3] for MultiPoint, SM with Z, i.e. depth
+      double                  *geoPtMulti;            // an array[2] for MultiPoint, lat/lon to make bbox
+                                                      // of decomposed points
 
-        void                    *pPolyTessGeo;
+      void                    *pPolyTessGeo;
 
-        double                  m_lat;                  // The lat/lon of the object's "reference" point
-        double                  m_lon;
+      double                  m_lat;                  // The lat/lon of the object's "reference" point
+      double                  m_lon;
 
-        double                  chart_ref_lat;
-        double                  chart_ref_lon;
+      double                  chart_ref_lat;
+      double                  chart_ref_lon;
 
-        double                  lat_min;
-        double                  lat_max;
-        double                  lon_min;
-        double                  lon_max;
+      double                  lat_min;
+      double                  lat_max;
+      double                  lon_min;
+      double                  lon_max;
 
-        int                     Scamin;                 // SCAMIN attribute decoded during load
+      int                     Scamin;                 // SCAMIN attribute decoded during load
 
-        bool                    bIsClone;
-        int                     nRef;                   // Reference counter, to signal OK for deletion
+      bool                    bIsClone;
+      int                     nRef;                   // Reference counter, to signal OK for deletion
 
-        bool                    bIsAton;                // This object is an aid-to-navigation
-        bool                    bIsAssociable;          // This object is DRGARE or DEPARE
+      bool                    bIsAton;                // This object is an aid-to-navigation
+      bool                    bIsAssociable;          // This object is DRGARE or DEPARE
 
-        int                     m_n_lsindex;
-        int                     *m_lsindex_array;
-        int                     m_n_edge_max_points;
-        void                    *m_chart_context;
+      int                     m_n_lsindex;
+      int                     *m_lsindex_array;
+      int                     m_n_edge_max_points;
+      void                    *m_chart_context;
 
-        PI_DisCat               m_DisplayCat;
+      PI_DisCat               m_DisplayCat;
 
-        void *                  S52_Context;
-        PI_S57Obj               *child;           // child list, used only for MultiPoint Soundings
+      void *                  S52_Context;
+      PI_S57Obj               *child;           // child list, used only for MultiPoint Soundings
 
-        PI_S57Obj               *next;            //  List linkage
+      PI_S57Obj               *next;            //  List linkage
 
+                                                      // This transform converts from object geometry
+                                                      // to SM coordinates.
+      double                  x_rate;                 // These auxiliary transform coefficients are
+      double                  y_rate;                 // to be used in GetPointPix() and friends
+      double                  x_origin;               // on a per-object basis if necessary
+      double                  y_origin;
+      
+      int auxParm0;                                   // some per-object auxiliary parameters, used for OpenGL
+      int auxParm1;
+      int auxParm2;
+      int auxParm3;
 
-                                                        // This transform converts from object geometry
-                                                        // to SM coordinates.
-        double                  x_rate;                 // These auxiliary transform coefficients are
-        double                  y_rate;                 // to be used in GetPointPix() and friends
-        double                  x_origin;               // on a per-object basis if necessary
-        double                  y_origin;
+      PI_line_segment_element *m_ls_list;
+      bool                    m_bcategory_mutable;
+      int                     m_DPRI;
 };
+
+
 
 wxString DECL_EXP PI_GetPLIBColorScheme();
 int DECL_EXP PI_GetPLIBDepthUnitInt();
@@ -890,6 +935,7 @@ PI_DisCat DECL_EXP PI_GetObjectDisplayCategory( PI_S57Obj *pObj );
 void DECL_EXP PI_PLIBSetLineFeaturePriority( PI_S57Obj *pObj, int prio );
 void DECL_EXP PI_PLIBPrepareForNewRender(void);
 void DECL_EXP PI_PLIBFreeContext( void *pContext );
+void DECL_EXP PI_PLIBSetRenderCaps( unsigned int flags );
 
 bool DECL_EXP PI_PLIBSetContext( PI_S57Obj *pObj );
 
@@ -901,38 +947,39 @@ int DECL_EXP PI_PLIBRenderAreaToGL( const wxGLContext &glcc, PI_S57Obj *pObj,
                                     PlugIn_ViewPort *vp, wxRect &render_rect );
 
 int DECL_EXP PI_PLIBRenderObjectToGL( const wxGLContext &glcc, PI_S57Obj *pObj,
-                                        PlugIn_ViewPort *vp, wxRect &render_rect );
+                                    PlugIn_ViewPort *vp, wxRect &render_rect );
 
 /* API 1.11 OpenGL Display List and vertex buffer object routines
- 
- Effectively these two routines cancel each other so all
- of the translation, scaling and rotation can be done by opengl.
- 
- Display lists need only be built infrequently, but used in each frame
- greatly accelerates the speed of rendering.  This avoids costly calculations,
- and also allows the vertexes to be stored in graphics memory.
- 
- static int dl = 0;
- glPushMatrix();
- PlugInMultMatrixViewport(current_viewport);
- if(dl)
- glCallList(dl);
- else {
- dl = glGenLists(1);
- PlugInViewPort norm_viewport = current_viewport;
- NormalizeViewPort(norm_viewport);
- glNewList(dl, GL_COMPILE_AND_EXECUTE);
- ... // use norm_viewport with GetCanvasLLPix here
- glEndList();
- }
- glPopMatrix();
- ... // use current_viewport with GetCanvasLLPix again
- */
+
+   Effectively these two routines cancel each other so all
+   of the translation, scaling and rotation can be done by opengl.
+
+   Display lists need only be built infrequently, but used in each frame
+   greatly accelerates the speed of rendering.  This avoids costly calculations,
+   and also allows the vertexes to be stored in graphics memory.
+
+   static int dl = 0;
+   glPushMatrix();
+   PlugInMultMatrixViewport(current_viewport);
+   if(dl)
+      glCallList(dl);
+   else {
+      dl = glGenLists(1);
+      PlugInViewPort norm_viewport = current_viewport;
+      NormalizeViewPort(norm_viewport);
+      glNewList(dl, GL_COMPILE_AND_EXECUTE);
+      ... // use norm_viewport with GetCanvasLLPix here
+      glEndList();
+   }      
+   glPopMatrix();
+   ... // use current_viewport with GetCanvasLLPix again
+*/
 
 extern DECL_EXP void PlugInMultMatrixViewport ( PlugIn_ViewPort *vp );
 extern DECL_EXP void PlugInNormalizeViewport ( PlugIn_ViewPort *vp );
 
 class wxPoint2DDouble;
 extern "C"  DECL_EXP void GetDoubleCanvasPixLL(PlugIn_ViewPort *vp, wxPoint2DDouble *pp, double lat, double lon);
+
 
 #endif //_PLUGIN_H_

@@ -57,33 +57,32 @@ class RoutePoint;
  */
 class SendToGpsDlg : public wxDialog
 {
-    wxDECLARE_DYNAMIC_CLASS( SendToGpsDlg );
+      DECLARE_DYNAMIC_CLASS( SendToGpsDlg )
+      DECLARE_EVENT_TABLE()
 
-public:
-    SendToGpsDlg();
-    SendToGpsDlg(  wxWindow* parent, wxWindowID id, const wxString& caption, const wxString& hint, const wxPoint& pos, const wxSize& size, long style );
-    ~SendToGpsDlg( );
+ public:
+       SendToGpsDlg();
+       SendToGpsDlg(  wxWindow* parent, wxWindowID id, const wxString& caption, const wxString& hint, const wxPoint& pos, const wxSize& size, long style );
+       ~SendToGpsDlg( );
 
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_STG_IDNAME, const wxString& caption = SYMBOL_STG_TITLE, const wxString& hint = SYMBOL_STG_TITLE,
-                const wxPoint& pos = SYMBOL_STG_POSITION, const wxSize& size = SYMBOL_STG_SIZE,
-                long style = SYMBOL_STG_STYLE);
-    void SetRoute(Route *pRoute){m_pRoute = pRoute;}
-    void SetWaypoint(RoutePoint *pRoutePoint){m_pRoutePoint = pRoutePoint;}
+       bool Create( wxWindow* parent, wxWindowID id = SYMBOL_STG_IDNAME, const wxString& caption = SYMBOL_STG_TITLE, const wxString& hint = SYMBOL_STG_TITLE,
+                    const wxPoint& pos = SYMBOL_STG_POSITION, const wxSize& size = SYMBOL_STG_SIZE,
+                    long style = SYMBOL_STG_STYLE);
+       void SetRoute(Route *pRoute){m_pRoute = pRoute;}
+       void SetWaypoint(RoutePoint *pRoutePoint){m_pRoutePoint = pRoutePoint;}
 
 private:
-    void CreateControls(const wxString& hint);
+      void CreateControls(const wxString& hint);
 
-    void OnCancelClick( wxCommandEvent& event );
-    void OnSendClick( wxCommandEvent& event );
+      void OnCancelClick( wxCommandEvent& event );
+      void OnSendClick( wxCommandEvent& event );
 
-    Route       *m_pRoute;
-    RoutePoint  *m_pRoutePoint;
-    wxComboBox  *m_itemCommListBox;
-    wxGauge     *m_pgauge;
-    wxButton    *m_CancelButton;
-    wxButton    *m_SendButton;
-
-    wxDECLARE_EVENT_TABLE();
+      Route       *m_pRoute;
+      RoutePoint  *m_pRoutePoint;
+      wxComboBox  *m_itemCommListBox;
+      wxGauge     *m_pgauge;
+      wxButton    *m_CancelButton;
+      wxButton    *m_SendButton;
 
 };
 

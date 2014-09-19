@@ -19,7 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include <wx/filename.h>
 #include <wx/tokenzr.h>
@@ -398,17 +398,9 @@ TC_Error_Code TCDS_Ascii_Harmonic::LoadHarmonicConstants(const wxString &data_fi
         m_cst_nodes[a] = (double *) malloc (num_nodes * sizeof (double));
 
     for (int a=0; a<num_csts; a++) {
-#ifdef __WXOSX__
-        fscanf (fp, "%s", linrec);
-#else
         int ignore = fscanf (fp, "%s", linrec);
-#endif
         for (b=0; b<num_nodes; b++)
-#ifdef __WXOSX__
-            fscanf (fp, "%lf", &(m_cst_nodes[a][b]));
-#else
             ignore = fscanf (fp, "%lf", &(m_cst_nodes[a][b]));
-#endif
     }
 
     fclose(fp);

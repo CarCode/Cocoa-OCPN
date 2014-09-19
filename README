@@ -31,11 +31,12 @@ a.  Opencpn was built with the following objectives in mind.
 2. Eigene Bemerkungen
 ----------------------------------------------------------------------
 a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
-   Mavericks (10.9). Es soll soweit wie möglich das Mac OS X Betriebssystem
-   unterstützt werden, einschl. Mac Menüs, Mac Hilfe usw.
+   Mavericks (10.9) und Yosemite (10.10). Es soll soweit wie möglich das
+   Mac OS X Betriebssystem unterstützt werden, einschl. Mac Menüs,
+   Mac Hilfe usw.
 
 b. Diese Version basiert auf Release-Version von wxWidgets 3.1.0 mit
-   entsprechenden dylibs vom 06. Juni 2014. Die Einbindung der Libs als
+   entsprechenden dylibs vom 02. August 2014. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -46,7 +47,7 @@ c. In einem weiteren Schritt soll mit Veröffentlichung einer Binär-Version
 d. Nicht alle Plugins laufen bisher problemlos. Einige wurden noch nicht
    compiliert, andere haben noch Fehler.
 
-e. Außer dem o.g. Problem, wegen dem Plugins nur die dynamischen Libraries von
+e. Außer dem o.g. Problem, wegen der Plugins nur die dynamischen Libraries von
    wxWidgets zu verwenden, hat das Plugin-Konzept noch weitere Nachteile
    offenbart: Zur Laufzeit werden die verschiedenen Locale-Dateien von OCPN
    und den Plugins verbunden, so daß gleichartige Strings mit unterschiedlichen
@@ -60,10 +61,10 @@ f. Das von den OCPN Programmierern gewünschte Konzept, die Plugins als
    Dateien.
 
 Compiler:
-Xcode 6 Beta
-Apple LLVM version 5.0 (clang-500.2.79) (based on LLVM 3.3svn)
-Target: x86_64-apple-darwin13.0.0
-SDK 10.9 Mavericks
+Xcode 6.1 Beta
+Apple LLVM version 6.0 (clang-600.0.54) (based on LLVM 3.3svn)
+Target: x86_64-apple-darwin13.4.0
+SDK 10.10 Yosemite
 Thread model: posix
 
 wxWidgets Direktive:
@@ -86,5 +87,5 @@ dylibs (im Contents/Frameworks/ Verzeichnis bzw. Contents/Plugins/ Verzeichnis)
 mit "install_name_tool -change" bearbeitet werden!
 Siehe batch.sh und batchwx.sh
 -----------------------------------------------------------------------
-17. Juli 2014
+19. September 2014
 

@@ -54,7 +54,7 @@ public:
       wxString *pText;
       bool  bTextSet;
 
-      wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 };
 
 
@@ -127,7 +127,7 @@ private:
       int         m_iactive;
       bool        m_brounded;
 
-      wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 };
 
 //----------------------------------------------------------------------------
@@ -158,7 +158,7 @@ private:
       int         m_rows;
 
 
-      wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 };
 
 #endif

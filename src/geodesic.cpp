@@ -78,7 +78,7 @@ double Geodesic::GreatCircleDistBear( double Lon1, double Lat1, double Lon2, dou
     dLon = Lon2 - Lon1;
 
     lambda = dLon;
-//    lambdaprime = 2 * M_PI; // Not used
+    lambdaprime = 2 * M_PI;
 
     do {
         sinlambda = sin( lambda );

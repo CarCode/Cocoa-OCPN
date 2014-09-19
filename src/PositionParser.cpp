@@ -19,7 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include <wx/tokenzr.h>
 #include <wx/regex.h>
@@ -39,7 +39,7 @@ PositionParser::PositionParser(const wxString & src)
 
 bool PositionParser::FindSeparator(const wxString & src)
 {
-//    int length = src.Length();  // Not used
+    int length = src.Length();
     wxStringTokenizer t;
 
     // Used when format is similar to "12 34.56 N 12 34.56 E"
@@ -62,11 +62,7 @@ bool PositionParser::FindSeparator(const wxString & src)
 
     if( regex.IsValid() ) {
         if( regex.Matches( src ) ) {
-#ifdef __WXOSX__
-            regex.GetMatchCount();
-#else
 			int n = regex.GetMatchCount();
-#endif
             latitudeString = regex.GetMatch( src, 1 );
             longitudeString = regex.GetMatch( src, 2 );
             latitudeString.Trim( true );

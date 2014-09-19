@@ -156,6 +156,7 @@ polyout  *do_triangulate_polygon(int ncontours, int cntr[], double (*vertices)[2
 
 
 
+
 /* Node types */
 
 #define T_X     1

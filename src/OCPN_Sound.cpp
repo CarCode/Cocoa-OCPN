@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "OCPN_Sound.h"
 #include <wx/file.h>
@@ -282,7 +283,7 @@ bool OCPN_Sound::LoadWAV(const wxUint8 *data, size_t length, bool copyData)
         return false;
     if (memcmp(&data[FMT_INDEX], "fmt ", 4) != 0)
         return false;
-
+ 
     // get the sound data size
         wxUint32 ul = 0;
     //  Get the "data" chunk length
@@ -290,7 +291,7 @@ bool OCPN_Sound::LoadWAV(const wxUint8 *data, size_t length, bool copyData)
         memcpy(&ul, &data[FMT_INDEX + waveformat.uiSize + 12], 4);
         ul = wxUINT32_SWAP_ON_BE(ul);
     }
-
+    
     //  There may be a "fact" chunk in the header, which will displace the first "data" chunk
     //  If so, find the "data" chunk 12 bytes further along
     else if (memcmp(&data[FMT_INDEX + waveformat.uiSize + 8], "fact", 4) == 0) {
@@ -299,7 +300,7 @@ bool OCPN_Sound::LoadWAV(const wxUint8 *data, size_t length, bool copyData)
             ul = wxUINT32_SWAP_ON_BE(ul);
         }
     }
-
+    
     if ( length < ul + FMT_INDEX + waveformat.uiSize + 16 )
         return false;
     

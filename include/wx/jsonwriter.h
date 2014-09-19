@@ -10,11 +10,11 @@
 
 #if !defined( _WX_JSONWRITER_H )
 #define _WX_JSONWRITER_H
-#ifndef __WXOSX__
-#ifdef __GNUG__
-    #pragma interface "jsonwriter.h"
-#endif
-#endif
+
+//#ifdef __GNUG__
+//    #pragma interface "jsonwriter.h"
+//#endif
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 
@@ -29,8 +29,8 @@
     #include <wx/string.h>
 #endif
 
-#include "wx/json_defs.h"
-#include "wx/jsonval.h"
+#include "json_defs.h"
+#include "jsonval.h"
 
 enum {
     wxJSONWRITER_NONE            = 0,

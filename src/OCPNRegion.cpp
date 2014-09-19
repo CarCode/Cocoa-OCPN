@@ -42,8 +42,9 @@
 
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
-
+#ifndef __WXOSX__  // Assert Region???
 #include "wx/region.h"
+#endif
 #include "OCPNRegion.h"
 
 #ifndef WX_PRECOMP
@@ -635,7 +636,7 @@ bool OCPNRegion::ODoUnionWithRect(const wxRect& r)
 
 bool OCPNRegion::ODoUnionWithRegion( const OCPNRegion& region )
 {
-    wxCHECK_MSG( region.Ok(), false, _T("invalid region") );
+    wxCHECK_MSG( region.Ok(), false, _T("invalid region") );   // Assert???
 
     if (!m_refData)
     {

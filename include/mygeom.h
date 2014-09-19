@@ -1,11 +1,11 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Tesselation of Polygon Object
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,8 +20,11 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ ***************************************************************************
+ *
+ *
+ */
 
 
 #ifndef __MYGEOM_H
@@ -55,6 +58,8 @@
 
 #define DATA_TYPE_FLOAT         0
 #define DATA_TYPE_DOUBLE        1
+
+void DouglasPeucker(double *PointList, int fp, int lp, double epsilon, wxArrayInt *keep);
 
 //--------------------------------------------------------------------------------------------------
 //
@@ -108,7 +113,7 @@ public:
         double      minx, miny, maxx, maxy;
 
         TriPrim     *p_next;                // chain link
-
+        
 };
 
 
@@ -130,7 +135,7 @@ public:
         unsigned char   *single_buffer;
         int             single_buffer_size;
         int             data_type;              //  p_vertex in TriPrim chain is FLOAT or DOUBLE
-
+        
     private:
         int my_bufgets( char *buf, int buf_len_max );
 
@@ -177,10 +182,10 @@ class PolyTessGeo
         PolyTessGeo();
         ~PolyTessGeo();
 
-        PolyTessGeo(unsigned char *polybuf, int nrecl, int index);      // Build this from SENC file record
+        PolyTessGeo(unsigned char *polybuf, int nrecl, int index, int senc_file_version);      // Build this from SENC file record
 
         PolyTessGeo(OGRPolygon *poly, bool bSENC_SM,
-            double ref_lat, double ref_lon,  bool bUseInternalTess);  // Build this from OGRPolygon
+            double ref_lat, double ref_lon,  bool bUseInternalTess, double LOD_meters);  // Build this from OGRPolygon
 
         PolyTessGeo(Extended_Geometry *pxGeom);
 
@@ -189,7 +194,6 @@ class PolyTessGeo
         int BuildDeferredTess(void);
 
         int Write_PolyTriGroup( FILE *ofs);
-        int Write_PolyTriGroup( wxOutputStream &ostream);
 
         double Get_xmin(){ return xmin;}
         double Get_xmax(){ return xmax;}
@@ -200,7 +204,7 @@ class PolyTessGeo
         int     ErrorCode;
         void Set_PolyTriGroup_head( PolyTriGroup *head ){ m_ppg_head = head;}
         void Set_OK( bool bok ){ m_bOK = bok;}
-
+        
 
     private:
         int BuildTessGL(void);
@@ -223,14 +227,15 @@ class PolyTessGeo
                                                       // used by drawing primitives as
                                                       // optimization
 
-        int             ncnt;
-        int             nwkb;
+        int             m_ncnt;
+        int             m_nwkb;
 
         char           *m_buf_head;
         char           *m_buf_ptr;                   // used to read passed SENC record
         int            m_nrecl;
 
         double         m_ref_lat, m_ref_lon;
+        double         m_LOD_meters;
 
 };
 

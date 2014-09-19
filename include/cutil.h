@@ -43,13 +43,13 @@ typedef struct {
 } float_2Dpt;
 
 #ifdef __cplusplus
-    extern "C" int G_PtInPolygon(MyPoint *, int, float, float) ;
-    extern "C" int G_PtInPolygon_FL(float_2Dpt *, int, float, float) ;
-    extern "C" int mysnprintf( char *buffer, int count, const char *format, ... );
-    extern "C" int NextPow2(int size);
+      extern "C" int G_PtInPolygon(MyPoint *, int, float, float) ;
+      extern "C" int G_PtInPolygon_FL(float_2Dpt *, int, float, float) ;
+      extern "C" int mysnprintf( char *buffer, int count, const char *format, ... );
+      extern "C" int NextPow2(int size);
 #else /* __cplusplus */
-    extern int G_PtInPolygon(MyPoint *, int, float, float) ;
-    extern int mysnprintf( char *buffer, int count, const char *format, ... );
+      extern int G_PtInPolygon(MyPoint *, int, float, float) ;
+      extern int mysnprintf( char *buffer, int count, const char *format, ... );
 #endif
 
 
@@ -60,16 +60,16 @@ typedef struct {
      extern  long  __stdcall MyUnhandledExceptionFilter( struct _EXCEPTION_POINTERS *ExceptionInfo );
 #endif
 #endif
-//      Replacement for round(x)???
+     
+
+     //      Replacement for round(x)???
 #ifdef __cplusplus
      extern "C"  double     round_msvc (double flt);
 #else
      extern double round_msvc (double flt);
 #endif /* __cplusplus */
-
-
-//  weather_routing issue ??? see (int)round() functions used in code
-
+     
+     
 inline int roundint (double x)
 {
 #ifdef __WXOSX__
@@ -78,8 +78,10 @@ inline int roundint (double x)
     int tmp = static_cast<int> (x);
     tmp += (x-tmp>=.5) - (x-tmp<=-.5);
     return tmp;
-#endif
+#endif    
 }
+     
+     
 
 //-------------------------------------------------------------------------------------------------------
 //  Cohen & Sutherland Line clipping algorithms

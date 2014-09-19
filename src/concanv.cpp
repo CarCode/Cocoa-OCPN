@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Console Canvas
@@ -21,7 +21,11 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ *
+ *
+ */
 
 
 #include "wx/wxprec.h"
@@ -62,14 +66,14 @@ enum eMenuItems {
 //------------------------------------------------------------------------------
 //    ConsoleCanvas Implementation
 //------------------------------------------------------------------------------
-wxBEGIN_EVENT_TABLE(ConsoleCanvas, wxWindow)
+BEGIN_EVENT_TABLE(ConsoleCanvas, wxWindow)
     EVT_PAINT(ConsoleCanvas::OnPaint)
     EVT_SHOW(ConsoleCanvas::OnShow)
     EVT_CONTEXT_MENU(ConsoleCanvas::OnContextMenu)
     EVT_MENU(ID_NAVLEG, ConsoleCanvas::OnContextMenuSelection)
     EVT_MENU(ID_NAVROUTE, ConsoleCanvas::OnContextMenuSelection)
     EVT_MENU(ID_NAVHIGHWAY, ConsoleCanvas::OnContextMenuSelection)
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 // Define a constructor for my canvas
 ConsoleCanvas::ConsoleCanvas( wxWindow *frame )
@@ -267,13 +271,13 @@ void ConsoleCanvas::UpdateRouteData()
             float dcog = g_pRouteMan->GetCurrentBrgToActivePoint();
             if( dcog >= 359.5 )
                 dcog = 0;
-
+            
             wxString cogstr;
             if( g_bShowMag )
                 cogstr << wxString::Format( wxString("%6.0f(M)", wxConvUTF8 ), gFrame->GetTrueOrMag( dcog ) );
             else
                 cogstr << wxString::Format( wxString("%6.0f", wxConvUTF8 ), gFrame->GetTrueOrMag( dcog ) );
-
+            
             pBRG->SetAValue( cogstr );
 
 //    XTE
@@ -419,8 +423,8 @@ void ConsoleCanvas::UpdateFonts( void )
 //------------------------------------------------------------------------------
 //    AnnunText Implementation
 //------------------------------------------------------------------------------
-wxBEGIN_EVENT_TABLE(AnnunText, wxWindow) EVT_PAINT(AnnunText::OnPaint)
-wxEND_EVENT_TABLE()
+BEGIN_EVENT_TABLE(AnnunText, wxWindow) EVT_PAINT(AnnunText::OnPaint)
+END_EVENT_TABLE()
 
 AnnunText::AnnunText( wxWindow *parent, wxWindowID id, const wxString& LegendElement,
         const wxString& ValueElement ) :
@@ -547,8 +551,8 @@ void AnnunText::OnPaint( wxPaintEvent& event )
 //------------------------------------------------------------------------------
 //    CDI Implementation
 //------------------------------------------------------------------------------
-wxBEGIN_EVENT_TABLE(CDI, wxWindow) EVT_PAINT(CDI::OnPaint)
-wxEND_EVENT_TABLE()
+BEGIN_EVENT_TABLE(CDI, wxWindow) EVT_PAINT(CDI::OnPaint)
+END_EVENT_TABLE()
 
 CDI::CDI( wxWindow *parent, wxWindowID id, long style, const wxString& name ) :
         wxWindow( parent, id, wxDefaultPosition, wxDefaultSize, style, name )

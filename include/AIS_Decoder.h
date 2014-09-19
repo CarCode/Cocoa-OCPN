@@ -50,7 +50,7 @@ private:
     void OnTimerAIS(wxTimerEvent& event);
     void OnTimerAISAudio(wxTimerEvent& event);
     void OnTimerDSC( wxTimerEvent& event );
-
+    
     bool NMEACheckSumOK(const wxString& str);
     bool Parse_VDXBitstring(AIS_Bitstring *bstr, AIS_Target_Data *ptd);
     void UpdateAllCPA(void);
@@ -60,7 +60,7 @@ private:
     void UpdateOneTrack(AIS_Target_Data *ptarget);
     void BuildERIShipTypeHash(void);
     AIS_Target_Data *ProcessDSx( const wxString& str, bool b_take_dsc = false );
-
+    
     AIS_Target_Hash *AISTargetList;
     AIS_Target_Hash *AIS_AreaNotice_Sources;
 
@@ -85,7 +85,7 @@ private:
     wxTimer          m_dsc_timer;
     wxString         m_dsc_last_string;
 
-    wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 };
 
 #endif

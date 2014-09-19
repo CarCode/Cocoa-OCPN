@@ -19,7 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -31,6 +31,7 @@
 #include "navutil.h"
 #include "multiplexer.h"
 #include "Select.h"
+#include "georef.h"
 
 extern WayPointman *pWayPointMan;
 extern bool g_bIsNewLayer;
@@ -69,7 +70,7 @@ Route::Route( void )
     m_pLastAddedPoint = NULL;
     m_GUID = pWayPointMan->CreateGUID( NULL );
     m_btemp = false;
-
+    
     m_ArrivalRadius = g_n_arrival_circle_radius;        // Nautical Miles
 
     m_bNeedsUpdateBBox = true;
@@ -83,11 +84,11 @@ Route::Route( void )
 
     m_lastMousePointIndex = 0;
     m_NextLegGreatCircle = false;
-
+    
     m_PlannedSpeed = ROUTE_DEFAULT_SPEED;
     m_PlannedDeparture = RTE_UNDEF_DEPARTURE;
     m_TimeDisplayFormat = RTE_TIME_DISP_PC;
-
+    
     m_HyperlinkList = new HyperlinkList;
 }
 
@@ -102,7 +103,7 @@ Route::~Route( void )
 
 // The following is used only for route splitting, assumes just created, empty route
 //
-void Route::CloneRoute( Route *psourceroute, int start_nPoint, int end_nPoint, const wxString & suffix )
+void Route::CloneRoute( Route *psourceroute, int start_nPoint, int end_nPoint, const wxString & suffix)
 {
     m_bIsTrack = psourceroute->m_bIsTrack;
 
@@ -128,7 +129,7 @@ void Route::CloneRoute( Route *psourceroute, int start_nPoint, int end_nPoint, c
 
 }
 
-void Route::CloneTrack( Route *psourceroute, int start_nPoint, int end_nPoint, const wxString & suffix )
+void Route::CloneTrack( Route *psourceroute, int start_nPoint, int end_nPoint, const wxString & suffix)
 {
     if( psourceroute->m_bIsInLayer ) return;
 
@@ -153,16 +154,16 @@ void Route::CloneTrack( Route *psourceroute, int start_nPoint, int end_nPoint, c
                 psourcepoint->m_IconName, psourcepoint->GetName(), GPX_EMPTY_STRING, false );
 
         AddPoint( ptargetpoint, false );
-
+        
         //    This is a hack, need to undo the action of Route::AddPoint
         ptargetpoint->m_bIsInRoute = false;
         ptargetpoint->m_bIsInTrack = true;
-
+        
         CloneAddedTrackPoint( m_pLastAddedPoint, psourcepoint );
 
         int segment_shift = psourcepoint->m_GPXTrkSegNo;
 
-        if(  start_nPoint == 2 )
+        if(  start_nPoint == 2 ) 
             segment_shift = psourcepoint->m_GPXTrkSegNo - 1; // continue first segment if tracks share the first point
 
         if( b_splitting )
@@ -395,11 +396,11 @@ void Route::Draw( ocpnDC& dc, ViewPort &VP )
                     if( rpt1.x < rpt2.x ) adder = (int) pix_full_circle;
                     else
                         adder = -(int) pix_full_circle;
-
+                    
                     float rxd = rpt2.x - ( rpt1.x + adder );
                     float ryd = rpt1.y - rpt2.y;
                     dtest = rxd*rxd + ryd*ryd;
-
+                    
                     if( dp < dtest ) adder = 0;
 
                     RenderSegment( dc, rpt1.x + adder, rpt1.y, rpt2.x, rpt2.y, VP, true, m_hiliteWidth );
@@ -408,7 +409,7 @@ void Route::Draw( ocpnDC& dc, ViewPort &VP )
 
         rpt1 = rpt2;
         prp1 = prp2;
-        
+
         node = node->GetNext();
     }
 }
@@ -419,7 +420,7 @@ void Route::DrawGL( ViewPort &VP, OCPNRegion &region )
 {
 #ifdef ocpnUSE_GL
     if( m_nPoints < 1 || !m_bVisible ) return;
-
+    
     //  Hiliting first
     //  Being special case to draw something for a 1 point route....
     if(m_hiliteWidth){
@@ -433,30 +434,31 @@ void Route::DrawGL( ViewPort &VP, OCPNRegion &region )
         RoutePoint *prp0 = node->GetData();
         wxPoint r0;
         cc1->GetCanvasPointPix( prp0->m_lat, prp0->m_lon, &r0);
-        
+
         if( m_nPoints == 1 ) {
             dc.StrokeLine( r0.x, r0.y, r0.x + 2, r0.y + 2 );
-            return;
+//            return;
         }
-
+            
+        
         node = node->GetNext();
         while( node ){
             
             RoutePoint *prp = node->GetData();
             wxPoint r1;
             cc1->GetCanvasPointPix( prp->m_lat, prp->m_lon, &r1);
-            
+
             dc.StrokeLine( r0.x, r0.y, r1.x, r1.y );
-            
+                    
             r0 = r1;
             node = node->GetNext();
             
         }
     }
-
-    if( m_nPoints < 2  )
-        return;
-
+    
+//    if( m_nPoints < 2  )
+//        return;
+    
     /* determine color and width */
     wxColour col;
     int width;
@@ -478,19 +480,19 @@ void Route::DrawGL( ViewPort &VP, OCPNRegion &region )
         if( m_width != STYLE_UNDEFINED ) width = m_width;
         if( m_Colour == wxEmptyString ) {
             col = g_pRouteMan->GetRoutePen()->GetColour();
-
+            
             //  For tracks, establish colour based on first icon name
             if(m_bIsTrack){
                 wxRoutePointListNode *node = pRoutePointList->GetFirst();
                 RoutePoint *prp = node->GetData();
                 
-                if( prp->m_IconName.StartsWith( _T("xmred") ) )
+                if( prp->m_IconName.StartsWith( _T("xmred") ) ) 
                     col = GetGlobalColor( _T ( "URED" ) );
-                else if( prp->m_IconName.StartsWith( _T("xmblue") ) )
+                else if( prp->m_IconName.StartsWith( _T("xmblue") ) ) 
                     col = GetGlobalColor( _T ( "BLUE3" ) );
-                else if( prp->m_IconName.StartsWith( _T("xmgreen") ) )
+                else if( prp->m_IconName.StartsWith( _T("xmgreen") ) ) 
                     col = GetGlobalColor( _T ( "UGREN" ) );
-                else
+                else 
                     col = GetGlobalColor( _T ( "CHMGD" ) );
             }
         } else {
@@ -502,15 +504,18 @@ void Route::DrawGL( ViewPort &VP, OCPNRegion &region )
             }
         }
     }
-    
+        
     glColor3ub(col.Red(), col.Green(), col.Blue());
     glLineWidth(width);
-    
+
     glBegin(GL_LINE_STRIP);
     float lastlon = 0;
+    float lastlat = 0;
+    unsigned short int FromSegNo = 1;
     for(wxRoutePointListNode *node = pRoutePointList->GetFirst();
         node; node = node->GetNext()) {
         RoutePoint *prp = node->GetData();
+        unsigned short int ToSegNo = prp->m_GPXTrkSegNo;
         
         /* crosses IDL? if so break up into two segments */
         int dir = 0;
@@ -518,23 +523,32 @@ void Route::DrawGL( ViewPort &VP, OCPNRegion &region )
             dir = -1;
         else if(prp->m_lon < -150 && lastlon > 150)
             dir = 1;
-        lastlon=prp->m_lon;
         
         wxPoint r;
-        if(dir) {
-            cc1->GetCanvasPointPix( prp->m_lat, dir*180, &r);
+        if (FromSegNo != ToSegNo)
+        {
+            glEnd();
+            FromSegNo = ToSegNo;
+            glBegin(GL_LINE_STRIP);
+        }
+        if(dir)
+        {
+            double crosslat = lat_rl_crosses_meridian(lastlat, lastlon, prp->m_lat, prp->m_lon, 180.0);
+            cc1->GetCanvasPointPix( crosslat, dir*180, &r);
             glVertex2i(r.x, r.y);
             glEnd();
             glBegin(GL_LINE_STRIP);
-            cc1->GetCanvasPointPix( prp->m_lat, -dir*180, &r);
+            cc1->GetCanvasPointPix( crosslat, -dir*180, &r);
             glVertex2i(r.x, r.y);
         }
+        lastlat=prp->m_lat;
+        lastlon=prp->m_lon;
         
         cc1->GetCanvasPointPix( prp->m_lat, prp->m_lon, &r);
         glVertex2i(r.x, r.y);
     }
     glEnd();
-    
+
     /* direction arrows.. could probably be further optimized for opengl */
     if( !m_bIsTrack ) {
         wxRoutePointListNode *node = pRoutePointList->GetFirst();
@@ -556,9 +570,9 @@ void Route::DrawGL( ViewPort &VP, OCPNRegion &region )
             prp->DrawGL( VP, region );
         else if (m_bVisible)
             prp->DrawGL( VP, region );
-        
+    
     }
-
+        
 #endif
 }
 
@@ -611,7 +625,7 @@ void Route::RenderSegment( ocpnDC& dc, int xa, int ya, int xb, int yb, ViewPort 
         //    Draw a direction arrow
 
         double theta = atan2( (double) ( yb - ya ), (double) ( xb - xa ) );
-        theta -= PI / 2;
+        theta -= PI / 2.;
 
         wxPoint icon[10];
         double icon_scale_factor = 100 * VP.view_scale_ppm;
@@ -652,7 +666,7 @@ void Route::RenderSegment( ocpnDC& dc, int xa, int ya, int xb, int yb, ViewPort 
 void Route::RenderSegmentArrowsGL( int xa, int ya, int xb, int yb, ViewPort &VP)
 {
 #ifdef ocpnUSE_GL
-    //    Draw a direction arrow
+    //    Draw a direction arrow        
     wxPoint icon[10];
     float icon_scale_factor = 100 * VP.view_scale_ppm;
     icon_scale_factor = fmin ( icon_scale_factor, 1.5 );              // Sets the max size
@@ -661,27 +675,27 @@ void Route::RenderSegmentArrowsGL( int xa, int ya, int xb, int yb, ViewPort &VP)
     //    Get the absolute line length
     //    and constrain the arrow to be no more than xx% of the line length
     float nom_arrow_size = 20.;
-    float max_arrow_to_leg = .20;
+    float max_arrow_to_leg = (float).20;
     float lpp = sqrtf( powf( (float) (xa - xb), 2) + powf( (float) (ya - yb), 2) );
     
     float icon_size = icon_scale_factor * nom_arrow_size;
     if( icon_size > ( lpp * max_arrow_to_leg ) )
         icon_scale_factor = ( lpp * max_arrow_to_leg )
-        / nom_arrow_size;
-    
+            / nom_arrow_size;
+
     float theta = atan2f( (float)yb - ya, (float)xb - xa );
-    theta -= PI;
-    
+    theta -= (float)PI;
+
     glPushMatrix();
     glTranslatef(xb, yb, 0);
     glScalef(icon_scale_factor, icon_scale_factor, 1);
     glRotatef(theta * 180/PI, 0, 0, 1);
-    
+
     glBegin(GL_POLYGON);
     for( int i = 0; i < 14; i+=2 )
         glVertex2f(s_arrow_icon[i], s_arrow_icon[i+1]);
     glEnd();
-    
+
     glPopMatrix();
 #endif
 }
@@ -939,7 +953,7 @@ void Route::CalculateDCRect( wxDC& dc_route, wxRect *prect, ViewPort &VP )
 {
     dc_route.ResetBoundingBox();
     dc_route.DestroyClippingRegion();
-
+    
     wxRect update_rect;
 
     // Draw the route in skeleton form on the dc
@@ -959,7 +973,7 @@ void Route::CalculateDCRect( wxDC& dc_route, wxRect *prect, ViewPort &VP )
 
             wxRect r =  prp2->CurrentRect_in_DC ;
             r.Inflate(m_hiliteWidth, m_hiliteWidth);        // allow for large hilite circles at segment ends
-            
+                
             update_rect.Union( r );
             node = node->GetNext();
         }
@@ -1075,7 +1089,7 @@ void Route::Reverse( bool bRenamePoints )
     pRoutePointList->Clear();
     m_nPoints = 0;
     m_route_length = 0.0;
-
+    
     AssembleRoute();                          // Rebuild the route points from the GUID list
 
     if( bRenamePoints ) RenameRoutePoints();
@@ -1166,7 +1180,7 @@ void Route::RenameRoutePoints( void )
     }
 }
 
-int Route::SendToGPS(const wxString & com_name, bool bsend_waypoints, wxGauge *pProgress)
+int Route::SendToGPS(const wxString & com_name, bool bsend_waypoints, wxGauge *pProgress )
 {
     int result = 0;
 
@@ -1178,7 +1192,7 @@ int Route::SendToGPS(const wxString & com_name, bool bsend_waypoints, wxGauge *p
 
     wxString msg;
     if( 0 == result )
-        msg = _("Route Uploaded successfully.");
+        msg = _("Route Transmitted.");
     else{
         if( result == ERR_GARMIN_INITIALIZE )
             msg = _("Error on Route Upload.  Garmin GPS not connected");

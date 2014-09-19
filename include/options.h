@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef _OPTIONS_H_
 #define _OPTIONS_H_
@@ -36,7 +36,7 @@
 
 #include "pluginmanager.h"
 
-#if wxCHECK_VERSION(3, 0, 0)
+#if wxCHECK_VERSION(2, 9, 0)
 #include <wx/dialog.h>
 #else
 #include "scrollingdialog.h"
@@ -173,6 +173,7 @@ enum {
 #define     TIDES_CHANGED   2048
 #define     GL_CHANGED      4096
 
+
 #ifndef wxCLOSE_BOX
 #define wxCLOSE_BOX 0x1000
 #endif
@@ -182,13 +183,14 @@ enum {
 
 WX_DECLARE_OBJARRAY(wxGenericDirCtrl *, ArrayOfDirCtrls);
 
-#ifndef bert// wxCHECK_VERSION(2, 9, 0)  What is bert???
+#ifndef bert// wxCHECK_VERSION(2, 9, 0)
 class options: public wxDialog
 #else
 class options: public wxScrollingDialog
 #endif
 {
-    wxDECLARE_DYNAMIC_CLASS( options );
+    DECLARE_DYNAMIC_CLASS( options )
+    DECLARE_EVENT_TABLE()
 
 public:
     options();
@@ -206,7 +208,7 @@ public:
 
     wxWindow* GetContentWindow() const;
     void OnClose( wxCloseEvent& event );
-
+    
     void CreateControls();
     size_t CreatePanel(const wxString & title);
     wxScrolledWindow *AddPage(size_t parent, const wxString & title);
@@ -233,8 +235,8 @@ public:
     }
 
     void UpdateDisplayedChartDirList(ArrayOfCDI p);
-
-
+    
+    
     void SetConfigPtr( MyConfig *p )
     {
         m_pConfig = p;
@@ -249,7 +251,7 @@ public:
     void OnCancelClick( wxCommandEvent& event );
     void OnChooseFont( wxCommandEvent& event );
     void OnCPAWarnClick( wxCommandEvent& event );
-
+    
 #ifdef __WXGTK__
     void OnChooseFontColor( wxCommandEvent& event );
 #endif
@@ -297,7 +299,9 @@ public:
     wxCheckBox              *pSDisplayGrid;
     wxCheckBox              *pAutoAnchorMark;
     wxCheckBox              *pCDOQuilting;
-    wxTextCtrl              *pCDOQuiltingMinFrag;   // for DutchENC
+#ifdef __WXOSX__
+    wxTextCtrl		    *pCDOQuiltingMinFrag;    // For DutchENC
+#endif
     wxCheckBox              *pCBRaster;
     wxCheckBox              *pCBVector;
     wxCheckBox              *pCBCM93;
@@ -305,6 +309,7 @@ public:
     wxTextCtrl              *pCOGUPUpdateSecs;
     wxCheckBox              *pCBLookAhead;
     wxTextCtrl              *m_pText_OSCOG_Predictor;
+    wxTextCtrl              *m_pText_OSHDT_Predictor;
     wxChoice                *m_pShipIconType;
     wxCheckBox              *pSkewComp;
     wxCheckBox              *pOpenGL;
@@ -315,9 +320,10 @@ public:
     wxTextCtrl              *pMagVar;
     wxCheckBox              *pMobile;
     wxCheckBox              *pResponsive;
-
+    
     int                      k_tides;
 
+    
 //    For GPS Page
     wxListCtrl* m_lcSources;
     wxButton* m_buttonAdd;
@@ -476,7 +482,7 @@ public:
     wxScrolledWindow        *itemPanelShip;
     wxBoxSizer              *ownShip;
     wxTextCtrl              *m_pText_ACRadius;
-
+    
 //    For Fonts page
     wxBoxSizer              *m_itemBoxSizerFontPanel;
     wxChoice                *m_itemFontElementListBox;
@@ -565,15 +571,13 @@ private:
     void SetDSFormRWStates();
     void FillSourceList();
     ConnectionParams *CreateConnectionParamsFromSelectedItem();
-
+    
     wxNotebookPage*             m_groupsPage;
-
-    wxDECLARE_EVENT_TABLE();
-
 };
 
-class ChartGroupsUI: public wxScrolledWindow
-{
+class ChartGroupsUI: public wxScrolledWindow {
+
+    DECLARE_EVENT_TABLE()
 
 public:
     ChartGroupsUI( wxWindow* parent );
@@ -636,9 +640,6 @@ private:
     ArrayOfDirCtrls m_DirCtrlArray;
 
     ChartGroupArray *m_pGroupArray;
-
-    wxDECLARE_EVENT_TABLE();
-
 };
 
 static int lang_list[] = {
@@ -939,7 +940,7 @@ public:
 
     wxCheckBox *m_cbRebuildTextureCache;
     wxCheckBox *m_cbClearTextureCache;
-
+    
     wxSpinCtrl *m_sTextureDimension;
     wxSpinCtrl *m_sTextureMemorySize;
 

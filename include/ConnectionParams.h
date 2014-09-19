@@ -19,7 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef __DSPORTTYPE_H__
 #include <dsPortType.h>
@@ -76,7 +76,7 @@ public:
     int             NetworkPort;
     wxString        LastNetworkAddress;
     int             LastNetworkPort;
-
+    
     DataProtocol    Protocol;
     wxString        Port;
     int             Baudrate;
@@ -102,7 +102,7 @@ public:
     wxString GetFiltersStr();
     wxString GetDSPort();
     wxString GetLastDSPort();
-
+    
     bool            Valid;
     bool            b_IsSetup;
 private:

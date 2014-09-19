@@ -101,11 +101,11 @@ wxString Garmin_GPS_GetSaveString()
 
 void Garmin_GPS_PrepareWptData(GPS_PWay pway, RoutePoint *prp)
 {
-    pway->lat = prp->m_lat;
-    pway->lon = prp->m_lon;
-    pway->alt_is_unknown = 1;
-    pway->alt = 0.0;
-    strncpy(pway->ident, (prp->GetName().Truncate ( 6 )).mb_str(), 6);
+      pway->lat = prp->m_lat;
+      pway->lon = prp->m_lon;
+      pway->alt_is_unknown = 1;
+      pway->alt = 0.0;
+      strncpy(pway->ident, (prp->GetName().Truncate ( 6 )).mb_str(), 6);
 }
 
 int Garmin_GPS_SendWaypoints( wxString &port_name, RoutePointList *wplist)

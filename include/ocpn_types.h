@@ -23,6 +23,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
+
 #ifndef __OCPNTYPES_H__
 #define __OCPNTYPES_H__
 
@@ -78,7 +79,7 @@ class ViewPort
 
             OCPNRegion GetVPRegionIntersect( const OCPNRegion &Region, size_t n, float *llpoints, int chart_native_scale, wxPoint *ppoints = NULL );
             wxRect GetVPRectIntersect( size_t n, float *llpoints );
-
+            
             void SetBoxes(void);
 
 //  Accessors
@@ -91,7 +92,7 @@ class ViewPort
 
             LLBBox &GetBBox() { return vpBBox; }
             void SetBBoxDirect( double latmin, double lonmin, double latmax, double lonmax);
-
+            
 //  Generic
             double   clat;                   // center point
             double   clon;

@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef __ROUTEMAN_H__
 #define __ROUTEMAN_H__
@@ -51,11 +51,11 @@ class RoutePoint;
 class RoutePointList;
 
 //    List definitions for Waypoint Manager Icons
-#ifndef __WXOSX__
+
 class markicon_bitmap_list_type;
 class markicon_key_list_type;
 class markicon_description_list_type;
-#endif
+
 //----------------------------------------------------------------------------
 //   Routeman
 //----------------------------------------------------------------------------
@@ -116,7 +116,7 @@ public:
 
 private:
       void DoAdvance(void);
-
+    
       MyApp       *m_pparent_app;
       Route       *pActiveRoute;
       RoutePoint  *pActivePoint;
@@ -145,9 +145,10 @@ private:
       wxBrush     *m_pRoutePointBrush;
 
       NMEA0183    m_NMEA0183;                         // For autopilot output
-
+      
       double      m_arrival_min;
       int         m_arrival_test;
+      
 
 };
 
@@ -189,7 +190,6 @@ public:
       RoutePointList *GetWaypointList(void) { return m_pWayPointList; }
 
       void ProcessIcon(wxBitmap pimage, const wxString & key, const wxString & description);
-
 private:
       RoutePointList    *m_pWayPointList;
       wxBitmap *CreateDimBitmap(wxBitmap *pBitmap, double factor);

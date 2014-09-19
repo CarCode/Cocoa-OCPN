@@ -31,7 +31,7 @@ enum
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST( SplineList );
 
-wxBEGIN_EVENT_TABLE ( TCWin, wxWindow ) EVT_PAINT ( TCWin::OnPaint )
+BEGIN_EVENT_TABLE ( TCWin, wxWindow ) EVT_PAINT ( TCWin::OnPaint )
     EVT_SIZE ( TCWin::OnSize )
     EVT_MOTION ( TCWin::MouseEvent )
     EVT_BUTTON ( wxID_OK, TCWin::OKEvent )
@@ -39,7 +39,7 @@ wxBEGIN_EVENT_TABLE ( TCWin, wxWindow ) EVT_PAINT ( TCWin::OnPaint )
     EVT_BUTTON ( ID_TCWIN_PR, TCWin::PREvent )
     EVT_CLOSE ( TCWin::OnCloseWindow )
     EVT_TIMER ( TCWININF_TIMER, TCWin::OnTCWinPopupTimerEvent )
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 // Define a constructor
 TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
@@ -60,7 +60,7 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
 
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"), 10);
     SetFont( *qFont );
-
+    
     pParent = parent;
 
     pIDX = (IDX_entry *) pvIDX;
@@ -146,7 +146,7 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
                               wxDefaultSize );
 
     PR_button = new wxButton( this, ID_TCWIN_PR, _( "Prev" ), wxPoint( 10, sy - (tsy + 4) ),
-                             wxSize( -1, -1 ) );
+                              wxSize( -1, -1 ) );
 
     m_ptextctrl = new wxTextCtrl( this, -1, _T(""), wxPoint( sx * 3 / 100, 6 ),
                                   wxSize( ( sx * 60 / 100 ), ( sy *29 / 100 ) ) ,
@@ -161,6 +161,7 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
     NX_button = new wxButton( this, ID_TCWIN_NX, _( "Next" ), wxPoint( bpx + bsx + 5, bpy ),
                               wxSize( -1, -1 ) );
 #endif
+
     m_TCWinPopupTimer.SetOwner( this, TCWININF_TIMER );
 
 
@@ -195,9 +196,9 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
                                                                                wxSOLID );
     pltgray2 = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "DILG1" ) ),
                                                                                 wxSOLID );
-#ifndef __WXOSX__
+
     DimeControl( this );
-#endif
+
     //  Fill in some static text control information
 
     //  Tidi station information
@@ -537,8 +538,6 @@ void TCWin::OnPaint( wxPaintEvent& event )
 
         //    Draw the Value curve
 #if wxCHECK_VERSION(2, 9, 0)
-        wxPointList *list = (wxPointList *)&m_sList;
-#elif wxCHECK_VERSION(3, 0, 0)
         wxPointList *list = (wxPointList *)&m_sList;
 #else
         wxList *list = (wxList *) &m_sList;

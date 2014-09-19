@@ -38,7 +38,7 @@
 #include <wx/notebook.h>
 
 #define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    5
+#define     PLUGIN_VERSION_MINOR    9
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    11
@@ -55,6 +55,7 @@ enum {
 void ScreenLogMessage(wxString s);
 void HideScreenLog(void);
 void ClearScreenLog(void);
+void ClearScreenLogSeq(void);
 
 extern "C++" wxString GetUserpermit(void);
 extern "C++" wxString GetInstallpermit(void);
@@ -126,7 +127,6 @@ public:
     void OnCloseToolboxPanel(int page_sel, int ok_apply_cancel);
 
     void SetPluginMessage(wxString &message_id, wxString &message_body);
-
     int ImportCellPermits( void );
     int RemoveCellPermit( void );
     int ImportCells( void );
@@ -152,7 +152,7 @@ private:
 
     Catalog31 *CreateCatalog31(const wxString &file31);
 
-    int ProcessCellPermit( wxString &permit );
+    int ProcessCellPermit( wxString &permit, bool b_confirm_existing );
     int AuthenticateCell( const wxString & cell_file );
 
     bool LoadConfig( void );
@@ -198,6 +198,7 @@ public:
 
     void LogMessage(wxString &s);
     void ClearLog(void);
+    void ClearLogSeq(void){ m_nseq = 0; }
 
     void OnServerEvent(wxSocketEvent& event);
     void OnSocketEvent(wxSocketEvent& event);
@@ -222,9 +223,9 @@ public:
 
     void LogMessage(wxString &s);
     void ClearLog(void);
-
-private:    
     S63ScreenLog        *m_slog;
+
+private:
 };
 
 
@@ -276,7 +277,6 @@ public:
 class GetUserpermitDialog: public wxDialog
 {
     wxDECLARE_DYNAMIC_CLASS( GetUserpermitDialog );
-    wxDECLARE_EVENT_TABLE();
 
 public:
     /// Constructors
@@ -312,6 +312,7 @@ public:
     wxButton*     m_testBtn;
     wxStaticText* m_TestResult;
 
+    wxDECLARE_EVENT_TABLE();
 
 };
 
@@ -340,7 +341,6 @@ public:
 class GetInstallpermitDialog: public wxDialog
 {
     wxDECLARE_DYNAMIC_CLASS( GetInstallpermitDialog );
-    wxDECLARE_EVENT_TABLE();
 
 public:
     /// Constructors
@@ -376,6 +376,7 @@ public:
     wxButton*     m_testBtn;
     wxStaticText* m_TestResult;
 
+    wxDECLARE_EVENT_TABLE();
 
 };
 

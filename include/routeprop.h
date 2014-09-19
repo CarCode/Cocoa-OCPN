@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef _ROUTEPROP_H_
 #define _ROUTEPROP_H_
@@ -39,7 +39,7 @@
 #include <wx/filesys.h>
 #include "LinkPropDlg.h"
 
-#if wxCHECK_VERSION(3, 0, 0)
+#if wxCHECK_VERSION(2, 9, 0)
 #include <wx/dialog.h>
 #else
 #include "scrollingdialog.h"
@@ -127,7 +127,8 @@ class   HyperlinkList;
 
 class RouteProp: public wxDialog
 {
-    wxDECLARE_DYNAMIC_CLASS( RouteProp );
+    DECLARE_DYNAMIC_CLASS( RouteProp )
+    DECLARE_EVENT_TABLE()
 
 public:
     /// Constructors
@@ -174,16 +175,16 @@ public:
     Route *GetRoute(void){return m_pRoute;}
 
     bool UpdateProperties(void);
-	wxString MakeTideInfo(int jx, time_t tm, int tz_selection, long LMT_Offset);
+    wxString MakeTideInfo(int jx, time_t tm, int tz_selection, long LMT_Offset);
     bool SaveChanges(void);
 
     wxTextCtrl  *m_TotalDistCtl;
     wxTextCtrl  *m_PlanSpeedCtl;
-	wxTextCtrl	*m_StartTimeCtl;
+    wxTextCtrl	*m_StartTimeCtl;
     wxTextCtrl  *m_TimeEnrouteCtl;
 
-	wxStaticText *m_PlanSpeedLabel;
-	wxStaticText *m_StartTimeLabel;
+    wxStaticText *m_PlanSpeedLabel;
+    wxStaticText *m_StartTimeLabel;
 
     wxTextCtrl  *m_RouteNameCtl;
     wxTextCtrl  *m_RouteStartCtl;
@@ -223,15 +224,13 @@ public:
 
     wxStaticBoxSizer* m_pListSizer;
     wxScrolledWindow *itemDialog1;
-
+    
 private:
     int GetTZSelection(void);
     wxRadioButton  *m_prb_tzUTC;
     wxRadioButton  *m_prb_tzLocal;
     wxRadioButton  *m_prb_tzLMT;
-
-    wxDECLARE_EVENT_TABLE();
-
+    
 };
 
 //    LatLonTextCtrl Specification
@@ -245,18 +244,18 @@ extern /*expdecl*/ const wxEventType EVT_LLCHANGE;
 class LatLonTextCtrl: public wxTextCtrl
 {
 //    DECLARE_DYNAMIC_CLASS( LatLonTextCtrl )
+    DECLARE_EVENT_TABLE()
 
 public:
-    LatLonTextCtrl(wxWindow* parent, wxWindowID id, const wxString& value = _T(""),
+      LatLonTextCtrl(wxWindow* parent, wxWindowID id, const wxString& value = _T(""),
             const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
             long style = 0, const wxValidator& validator = wxDefaultValidator,
             const wxString& name = wxTextCtrlNameStr);
 
-    void OnKillFocus(wxFocusEvent &event);
+      void OnKillFocus(wxFocusEvent &event);
 
-    wxEvtHandler *m_pParentEventHandler;
 
-    wxDECLARE_EVENT_TABLE();
+      wxEvtHandler *m_pParentEventHandler;
 
 };
 
@@ -306,7 +305,7 @@ class MarkInfoDef : public wxDialog
         wxStaticBoxSizer*       sbSizerLinks;
         wxSize                  m_defaultClientSize;
 
-        // Virtual event handlers, overide them in your derived class
+    // Virtual event handlers, overide them in your derived class
         virtual void OnPositionCtlUpdated( wxCommandEvent& event ) { event.Skip(); }
         virtual void OnDescChangedBasic( wxCommandEvent& event ) { event.Skip(); }
         virtual void OnExtDescriptionClick( wxCommandEvent& event ) { event.Skip(); }
@@ -318,17 +317,15 @@ class MarkInfoDef : public wxDialog
         virtual void OnMarkInfoCancelClick( wxCommandEvent& event ) { event.Skip(); }
         virtual void OnMarkInfoOKClick( wxCommandEvent& event ) { event.Skip(); }
         void OnCopyPasteLatLon( wxCommandEvent& event );
-    
+
     public:
-    
+
         MarkInfoDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Waypoint Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1, -1 ), long style = wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxRESIZE_BORDER );
         ~MarkInfoDef();
- 
+
         void m_hyperlink17OnContextMenu( wxMouseEvent &event )
         {
-
             m_hyperlink17->PopupMenu( m_menuLink, event.GetPosition() );
-
         }
 
 };
@@ -356,7 +353,7 @@ protected :
       virtual void OnPositionCtlUpdated( wxCommandEvent& event );
       void OnDeleteLink( wxCommandEvent& event );
       void OnEditLink( wxCommandEvent& event );
-	  void OnAddLink( wxCommandEvent& event );
+      void OnAddLink( wxCommandEvent& event );
       void OnEditLinkToggle( wxCommandEvent& event );
       void OnDescChangedBasic( wxCommandEvent& event );
       void OnDescChangedExt( wxCommandEvent& event );

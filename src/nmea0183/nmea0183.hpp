@@ -20,7 +20,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
  *
  *   S Blackburn's original source license:                                *
@@ -92,7 +92,7 @@
 #include "hdg.hpp"
 #include "hdt.hpp"
 #include "RMB.hpp"
-#include "RMC.hpp"
+#include "RMC.HPP"
 #include "wpl.hpp"
 #include "rte.hpp"
 #include "gll.hpp"
@@ -101,6 +101,10 @@
 #include "gga.hpp"
 #include "GPwpl.hpp"
 #include "apb.hpp"
+#ifdef __WXOSX__  // For Autopilot
+#include "vlw.hpp"
+#include "Stalk.hpp"
+#endif
 /*
 #include "ROT.hpp"
 #include "RPM.hpp"
@@ -195,6 +199,10 @@ class NMEA0183
        GGA Gga;
        GPWPL GPwpl;
        APB Apb;
+#ifdef __WXOSX__
+        VLW Vlw;
+        STALK Stalk;
+#endif
  /*
       ROT Rot;
       RPM Rpm;

@@ -45,7 +45,8 @@ class wxHtmlWindow;
 
 class about: public wxDialog
 {
-    wxDECLARE_DYNAMIC_CLASS( about );
+  DECLARE_DYNAMIC_CLASS( about )
+      DECLARE_EVENT_TABLE()
 
   public:
     about( );
@@ -86,7 +87,7 @@ class about: public wxDialog
 #ifdef __WXOSX__
     wxTextCtrl *pHelpTextCtl;
 #endif
-    wxDECLARE_EVENT_TABLE();
+    wxNotebook *pNotebook;
 
 };
 

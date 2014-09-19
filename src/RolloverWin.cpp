@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "wx/wxprec.h"
 
@@ -34,11 +35,11 @@
 #include "navutil.h"
 #include "FontMgr.h"
 
-wxBEGIN_EVENT_TABLE(RolloverWin, wxWindow) EVT_PAINT(RolloverWin::OnPaint)
+BEGIN_EVENT_TABLE(RolloverWin, wxWindow) EVT_PAINT(RolloverWin::OnPaint)
     EVT_TIMER(ROLLOVER_TIMER, RolloverWin::OnTimer)
     EVT_MOUSE_EVENTS ( RolloverWin::OnMouseEvent )
 
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 // Define a constructor
 RolloverWin::RolloverWin( wxWindow *parent, int timeout ) :

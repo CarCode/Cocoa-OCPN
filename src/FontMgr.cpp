@@ -19,7 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #include <locale>
 
@@ -40,6 +40,15 @@ FontMgr & FontMgr::Get()
     return *instance;
 }
 
+void FontMgr::Shutdown()
+{
+    if (instance)
+    {
+        delete instance;
+        instance = NULL;
+    }
+}
+
 FontMgr::FontMgr()
     : m_fontlist(NULL)
     , pDefFont(NULL)
@@ -49,7 +58,7 @@ FontMgr::FontMgr()
     m_fontlist->DeleteContents( true );
 
     s_locale = g_locale;
-
+    
     //    Get a nice generic font as default
     pDefFont = wxTheFontList->FindOrCreateFont( 12, wxDEFAULT, wxNORMAL, wxBOLD, FALSE,
             wxString( _T ( "" ) ), wxFONTENCODING_SYSTEM );
@@ -198,7 +207,7 @@ bool FontMgr::SetFont(const wxString &TextElement, wxFont *pFont, wxColour color
         pmfd = (MyFontDesc *) node->GetData();
         if( pmfd->m_dialogstring == TextElement ) {
             if(pmfd->m_configstring.BeforeFirst('-') == g_locale) {
-
+                
             // Todo Think about this
             //
 
@@ -311,7 +320,7 @@ void FontMgr::LoadFontNative( wxString *pConfigString, wxString *pNativeDesc )
 }
 
 wxString FontCandidates[] = {
-    _T("AISTargetAlert"),
+    _T("AISTargetAlert"), 
     _T("AISTargetQuery"),
     _T("StatusBar"),
     _T("AIS Target Name" ),
@@ -336,7 +345,7 @@ wxString FontCandidates[] = {
 void FontMgr::ScrubList( )
 {
     //  Logic:
-    //  For each element entry in the candidate list,
+    //  For each element entry in the candidate list, 
     //          Look through the font list
     //          If the the element appears and the locale prefix on the element is NOT en_US, fix it
     
@@ -346,7 +355,7 @@ void FontMgr::ScrubList( )
         wxString candidate = FontCandidates[i];
         if(candidate == _T("END_OF_LIST") ) {
             done = true;
-//            break;  // bool done or break?
+            break;
         }
         
         MyFontDesc *pmfd;
@@ -380,8 +389,8 @@ void FontMgr::ScrubList( )
                             
                             lnode = lnode->GetNext();
                         }
-                        
-                        
+                            
+                            
                     }
                     
                 }
@@ -391,7 +400,7 @@ void FontMgr::ScrubList( )
         
         i++;
     }
-    
+
     //  Remove the marked list items
     MyFontDesc *pmfd;
     wxNode *node = (wxNode *) ( m_fontlist->GetFirst() );
@@ -406,6 +415,7 @@ void FontMgr::ScrubList( )
             node = node->GetNext();
         
     }
-    
-    
+            
+            
 }
+

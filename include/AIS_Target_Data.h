@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __AIS_TARGET_DATA_H__
 #define __AIS_TARGET_DATA_H__
@@ -42,12 +43,12 @@ public:
     wxString GetRolloverString(void);
     wxString Get_vessel_type_string(bool b_short = false);
     wxString Get_class_string(bool b_short = false);
-	wxString GetFullName( void );
-    wxString GetCountry(bool b_CntryLongStr);
+    wxString GetFullName( void );
+    wxString GetCountryCode(bool b_CntryLongStr);
     void Toggle_AIS_CPA(void);
     void ToggleShowTrack(void);
     void CloneFrom( AIS_Target_Data* q );
-
+    
 
     int                       MID;
     int                       MMSI;
@@ -108,7 +109,7 @@ public:
     int                       m_utc_min;
     int                       m_utc_sec;
     wxString                  m_date_string;
-
+    
     wxDateTime                m_ack_time;
     bool                      b_in_ack_timeout;
 
@@ -123,7 +124,7 @@ public:
     double                    CPA;                      // Nautical Miles
 
     bool                      b_show_AIS_CPA;           //TR 2012.06.28: Show AIS-CPA
-
+    
     bool                      b_show_track;
 
     AISTargetTrackList        *m_ptrack;
@@ -131,7 +132,7 @@ public:
     AIS_Area_Notice_Hash     area_notices;
     bool                     b_SarAircraftPosnReport;
     int                      altitude;                  // Metres, from special position report(9)
-
+    
 };
 
 #endif

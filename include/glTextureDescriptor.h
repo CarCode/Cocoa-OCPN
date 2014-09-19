@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __GLTEXTUREDESCRIPTOR_H__
 #define __GLTEXTUREDESCRIPTOR_H__
@@ -40,19 +41,28 @@ public:
     ~glTextureDescriptor();
     void FreeAll();
     void FreeMap();
+    void FreeCompLevel(int level);
     
+    size_t GetMapArrayAlloc(void);
+    size_t GetCompArrayAlloc(void);
+    size_t GetCompCompArrayAlloc(void);
+
     unsigned char *CompressedArrayAccess( int mode, unsigned char *write_data, int level);
+    unsigned char *CompCompArrayAccess( int mode, unsigned char *write_data, int level);
     GLuint tex_name;
     int level_min;
     int x;
     int y;
     int nGPU_compressed;
     int nCache_Color;
-
-    unsigned char *map_array[10];
-
-private:
+    
+    unsigned char       *map_array[10];
+    int                 miplevel_upload[10];
+    int                 compcomp_size[10];
+    
+private:    
     unsigned char *comp_array[10];
+    unsigned char *compcomp_array[10];
 };
 
 

@@ -307,7 +307,7 @@ int OGRS57DataSource::Open( const char * pszFilename, int bTestOpen, CallBackFun
     {
         OGRFeatureDefn  *poDefn;
         int             *panClassCount;
-        int             iClass; // Not used: , bGeneric = FALSE;
+        int             iClass, bGeneric = FALSE;
 
         for( iModule = 0; iModule < nModules; iModule++ )
         {
@@ -349,7 +349,7 @@ int OGRS57DataSource::Open( const char * pszFilename, int bTestOpen, CallBackFun
                                                panClassCount[iClass] ) );
                 else
                 {
-//                    bGeneric = TRUE;  // Not used
+                    bGeneric = TRUE;
                     CPLDebug( "S57",
                               "Unable to find definition for OBJL=%d\n",
                               iClass );

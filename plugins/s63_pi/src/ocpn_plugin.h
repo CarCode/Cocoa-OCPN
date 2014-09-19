@@ -53,13 +53,14 @@ class wxGLContext;
 //    PlugIns conforming to API Version less then the most modern will also
 //    be correctly supported.
 #define API_VERSION_MAJOR           1
-#define API_VERSION_MINOR           11
+#define API_VERSION_MINOR           12
 
 //    Fwd Definitions
 class       wxFileConfig;
 class       wxNotebook;
 class       wxFont;
 class       wxAuiManager;
+class       wxScrolledWindow;
 
 //---------------------------------------------------------------------------------------------------------
 //
@@ -85,6 +86,8 @@ class       wxAuiManager;
 #define     WANTS_DYNAMIC_OPENGL_OVERLAY_CALLBACK     0x00010000
 #define     WANTS_LATE_INIT                           0x00020000
 #define     INSTALLS_PLUGIN_CHART_GL                  0x00040000
+#define     WANTS_MOUSE_EVENTS                        0x00080000
+#define     WANTS_VECTOR_CHART_OBJECT_INFO            0x00100000
 
 //----------------------------------------------------------------------------------------------------------
 //    Some PlugIn API interface object class definitions
@@ -395,7 +398,7 @@ public:
       virtual void OnCloseToolboxPanel(int page_sel, int ok_apply_cancel);
 
       virtual void ShowPreferencesDialog( wxWindow* parent );
-#ifdef __WXOSX__
+#ifdef __WXOSX__  // Test WXOSX ja oder nein?
       bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
 #else
       virtual bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
@@ -428,8 +431,8 @@ public:
        public:
              opencpn_plugin_16(void *pmgr);
              virtual ~opencpn_plugin_16();
-#ifdef __WXOSX__
-            bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+#ifdef __WXOSX__  // Test WXOSX
+             bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
              virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #endif
@@ -442,8 +445,8 @@ class DECL_EXP opencpn_plugin_17 : public opencpn_plugin
        public:
              opencpn_plugin_17(void *pmgr);
              virtual ~opencpn_plugin_17();
-#ifdef __WXOSX__
-            bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+#ifdef __WXOSX__  // Test WXOSX
+             bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
              virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #endif
@@ -458,7 +461,7 @@ class DECL_EXP opencpn_plugin_18 : public opencpn_plugin
       public:
             opencpn_plugin_18(void *pmgr);
             virtual ~opencpn_plugin_18();
-#ifdef __WXOSX__
+#ifdef __WXOSX__  // Test WXOSX
             bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
             virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
@@ -493,8 +496,20 @@ class DECL_EXP opencpn_plugin_111 : public opencpn_plugin_110
 public:
     opencpn_plugin_111(void *pmgr);
     virtual ~opencpn_plugin_111();
-
+    
 };
+
+class DECL_EXP opencpn_plugin_112 : public opencpn_plugin_111
+{
+public:
+    opencpn_plugin_112(void *pmgr);
+    virtual ~opencpn_plugin_112();
+    
+    virtual bool MouseEventHook( wxMouseEvent &event );
+    virtual void SendVectorChartObjectInfo(wxString &chart, wxString &feature, wxString &objname, double lat, double lon, double scale, int nativescale);
+    
+};
+
 
 //------------------------------------------------------------------
 //      Route and Waypoint PlugIn support
@@ -710,12 +725,21 @@ extern  DECL_EXP wxString GetOCPN_ExePath( void );
 extern "C"  DECL_EXP wxString *GetpPlugInLocation();
 extern  DECL_EXP wxString GetPlugInPath(opencpn_plugin *pplugin);
 
-extern "C"  DECL_EXP int AddChartToDBInPlace( wxString &full_path, bool b_ProgressDialog );
+extern "C"  DECL_EXP int AddChartToDBInPlace( wxString &full_path, bool b_RefreshCanvas );
 extern "C"  DECL_EXP int RemoveChartFromDBInPlace( wxString &full_path );
 
 
 //  API 1.11 adds access to S52 Presentation library
 //Types
+
+//      A flag field that defines the object capabilities passed by a chart to the S52 PLIB
+
+#define PLIB_CAPS_LINE_VBO              1
+#define PLIB_CAPS_LINE_BUFFER           1 << 1
+#define PLIB_CAPS_SINGLEGEO_BUFFER      1 << 2
+#define PLIB_CAPS_OBJSEGLIST            1 << 3
+#define PLIB_CAPS_OBJCATMUTATE          1 << 4
+
 
 class PI_S57Obj;
 
@@ -797,6 +821,22 @@ typedef enum PI_InitReturn
     PI_INIT_FAIL_NOERROR       // Init failed, request no explicit error message
 }_PI_InitReturn;
 
+class PI_line_segment_element
+{
+public:
+    size_t              vbo_offset;
+    size_t              n_points;
+    int                 priority;
+    float               lat_max;                // segment bounding box
+    float               lat_min;
+    float               lon_max;
+    float               lon_min;
+    void                *private0;
+    int                 type;
+    
+    PI_line_segment_element *next;
+};
+
 
 class DECL_EXP PI_S57Obj
 {
@@ -860,13 +900,21 @@ public:
 
       PI_S57Obj               *next;            //  List linkage
 
-
                                                       // This transform converts from object geometry
                                                       // to SM coordinates.
       double                  x_rate;                 // These auxiliary transform coefficients are
       double                  y_rate;                 // to be used in GetPointPix() and friends
       double                  x_origin;               // on a per-object basis if necessary
       double                  y_origin;
+      
+      int auxParm0;                                   // some per-object auxiliary parameters, used for OpenGL
+      int auxParm1;
+      int auxParm2;
+      int auxParm3;
+
+      PI_line_segment_element *m_ls_list;
+      bool                    m_bcategory_mutable;
+      int                     m_DPRI;
 };
 
 
@@ -886,7 +934,8 @@ PI_DisPrio DECL_EXP PI_GetObjectDisplayPriority( PI_S57Obj *pObj );
 PI_DisCat DECL_EXP PI_GetObjectDisplayCategory( PI_S57Obj *pObj );
 void DECL_EXP PI_PLIBSetLineFeaturePriority( PI_S57Obj *pObj, int prio );
 void DECL_EXP PI_PLIBPrepareForNewRender(void);
-
+void DECL_EXP PI_PLIBFreeContext( void *pContext );
+void DECL_EXP PI_PLIBSetRenderCaps( unsigned int flags );
 
 bool DECL_EXP PI_PLIBSetContext( PI_S57Obj *pObj );
 
@@ -899,6 +948,38 @@ int DECL_EXP PI_PLIBRenderAreaToGL( const wxGLContext &glcc, PI_S57Obj *pObj,
 
 int DECL_EXP PI_PLIBRenderObjectToGL( const wxGLContext &glcc, PI_S57Obj *pObj,
                                     PlugIn_ViewPort *vp, wxRect &render_rect );
+
+/* API 1.11 OpenGL Display List and vertex buffer object routines
+
+   Effectively these two routines cancel each other so all
+   of the translation, scaling and rotation can be done by opengl.
+
+   Display lists need only be built infrequently, but used in each frame
+   greatly accelerates the speed of rendering.  This avoids costly calculations,
+   and also allows the vertexes to be stored in graphics memory.
+
+   static int dl = 0;
+   glPushMatrix();
+   PlugInMultMatrixViewport(current_viewport);
+   if(dl)
+      glCallList(dl);
+   else {
+      dl = glGenLists(1);
+      PlugInViewPort norm_viewport = current_viewport;
+      NormalizeViewPort(norm_viewport);
+      glNewList(dl, GL_COMPILE_AND_EXECUTE);
+      ... // use norm_viewport with GetCanvasLLPix here
+      glEndList();
+   }      
+   glPopMatrix();
+   ... // use current_viewport with GetCanvasLLPix again
+*/
+
+extern DECL_EXP void PlugInMultMatrixViewport ( PlugIn_ViewPort *vp );
+extern DECL_EXP void PlugInNormalizeViewport ( PlugIn_ViewPort *vp );
+
+class wxPoint2DDouble;
+extern "C"  DECL_EXP void GetDoubleCanvasPixLL(PlugIn_ViewPort *vp, wxPoint2DDouble *pp, double lat, double lon);
 
 
 #endif //_PLUGIN_H_

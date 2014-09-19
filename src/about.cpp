@@ -53,23 +53,119 @@ wxString OpenCPNVersion = str_version_start + str_version_major + wxT(".") + str
 extern wxString         glog_file;
 extern wxString         gConfig_File;
 extern ocpnStyle::StyleManager* g_StyleManager;
-
+#ifdef __WXOSX__
+char AboutText[] =
+{
+    "\n                                         OpenCPN\n\n\
+    (c) 2000-2014 Die OpenCPN Autoren\n"
+};
+#else
 char AboutText[] =
 {
   "\n                                         OpenCPN\n\n\
-                       (c) 2000-2014 Die OpenCPN Autoren\n"
+                       (c) 2000-2013 The OpenCPN Authors\n"
 };
-
+#endif
+#ifdef __WXOSX__
 char OpenCPNInfo[] = {"\n\n\
-      OpenCPN ist ein freies Software Projekt, erstellt von Seglern.\n\
-       Es ist frei verfügbar zum Download und zur Verbreitung ohne Kosten\n\
-               von Opencpn.org.\n\n\
-       Verwenden Sie OpenCPN, beteiligen Sie sich bitte daran\n\
-                oder machen Sie eine Spende.\n\n\
-      Dokumentation:\n\
-        Über OS X Menü Hilfe (auch Begriffe-Suchfunktion)\n"
+    OpenCPN ist ein freies Software Projekt, erstellt von Seglern.\n\
+    Es ist frei verfügbar zum Download und zur Verbreitung ohne Kosten\n\
+    von Opencpn.org.\n\n\
+    Verwenden Sie OpenCPN, beteiligen Sie sich bitte daran\n\
+    oder machen Sie eine Spende.\n\n\
+    Dokumentation:\n\
+    Über OS X Menü Hilfe (auch Begriffe-Suchfunktion)\n"
 };
-
+#else
+char OpenCPNInfo[] = {"\n\n\
+      OpenCPN is a Free Software project, built by sailors.\n\
+       It is freely available to download and distribute\n\
+               without charge at Opencpn.org.\n\n\
+       If you use OpenCPN, please consider contributing\n\
+                or donating funds to the project.\n\n\
+      Documentation\n\
+           http://Opencpn.org\n\n"
+};
+#endif
+#ifdef __WXOSX__
+char AuthorText[] =
+{
+    "   David S Register\n\
+    OpenCPN Lead Developer\n\n\
+    Jesper Weissglas\n\
+    Vector Chart Rendering\n\
+    User Interface\n\n\
+    Sean D'Epagnier\n\
+    OpenGL Architecture\n\n\
+    Kathleen Boswell\n\
+    Icon design\n\n\
+    Flavius Bindea\n\
+    CM93 Offset and AIS enhancements\n\n\
+    Gunther Pilz\n\
+    Windows Installer enhancements\n\n\
+    Alan Bleasby\n\
+    Garmin jeeps module\n\n\
+    Jean-Eudes Onfray\n\
+    Dashboard and Dialog enhancements\n\n\
+    Pavel Kalian\n\
+    S52 Rasterization Improvements\n\n\
+    Piotr Carlson\n\
+    General usability enhancements\n\n\
+    Anders Lund\n\
+    RouteManagerDialog\n\n\
+    Gordon Mau\n\
+    OpenCPN Documentation\n\n\
+    Tim Francis\n\
+    OpenCPN Documentation\n\n\
+    Mark A Sikes\n\
+    OpenCPN CoDeveloper\n\n\
+    Thomas Haller\n\
+    GPX Import/Export Implementation\n\n\
+    Will Kamp\n\
+    Toolbar Icon design\n\n\
+    Richard Smith\n\
+    OpenCPN CoDeveloper, MacOSX\n\n\
+    David Herring\n\
+    OpenCPN CoDeveloper, MacOSX\n\n\
+    Philip Lange\n\
+    OpenCPN Documentation\n\n\
+    Ron Kuris\n\
+    wxWidgets Support\n\n\
+    Julian Smart, Robert Roebling et al\n\
+    wxWidgets Authors\n\n\
+    Sylvain Duclos\n\
+    S52 Presentation Library code\n\n\
+    Manish P. Pagey\n\
+    Serial Port Library\n\n\
+    David Flater\n\
+    XTIDE tide and current code\n\n\
+    Frank Warmerdam\n\
+    GDAL Class Library\n\n\
+    Mike Higgins\n\
+    BSB Chart Format Detail\n\n\
+    Samuel R. Blackburn\n\
+    NMEA0183 Class Library\n\n\
+    Atul Narkhede\n\
+    Polygon Graphics utilities\n\n\
+    Jan C. Depner\n\
+    WVS Chart Library\n\n\
+    Stuart Cunningham, et al\n\
+    BSB Chart Georeferencing Algorithms\n\n\
+    John F. Waers\n\
+    UTM Conversion Algorithms\n\n\
+    Carsten Tschach\n\
+    UTM Conversion Algorithms\n\n\
+    Ed Williams\n\
+    Great Circle Formulary\n\n\
+    Philippe Bekaert\n\
+    CIE->RGB Color Conversion Matrix\n\n\
+    Robert Lipe\n\
+    Garmin USB GPS Interface\n\n\
+    Gerhard Mueller (CarCode)\n\
+    Mac OS X 64-bit support\n"
+    
+};
+#else
 char AuthorText[] =
 {
 "   David S Register\n\
@@ -142,21 +238,19 @@ char AuthorText[] =
     Philippe Bekaert\n\
       CIE->RGB Color Conversion Matrix\n\n\
     Robert Lipe\n\
-      Garmin USB GPS Interface\n\n\
-    Gerhard Mueller (CarCode)\n\
-      Mac OS X 64-bit support\n"
+      Garmin USB GPS Interface\n"
 
 };
-
+#endif
 IMPLEMENT_DYNAMIC_CLASS( about, wxDialog )
 
-wxBEGIN_EVENT_TABLE( about, wxDialog )
+BEGIN_EVENT_TABLE( about, wxDialog )
     EVT_BUTTON( xID_OK, about::OnXidOkClick )
     EVT_NOTEBOOK_PAGE_CHANGED(ID_NOTEBOOK_HELP, about::OnPageChange)
     EVT_BUTTON( ID_DONATE, about::OnDonateClick)
     EVT_BUTTON( ID_COPYINI, about::OnCopyClick)
     EVT_BUTTON( ID_COPYLOG, about::OnCopyClick)
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 about::about( )
 {
@@ -206,12 +300,12 @@ void about::Update()
     delete pAboutString;
 
     // Show the user where the log file is going to be
-    wxString log = _T("    Log-Datei Pfad: ");
+    wxString log = _T("    Logfile location: ");
     log.Append( glog_file );
     pAboutTextCtl->WriteText( log );
 
     // Show the user where the config file is going to be
-    wxString conf = _T("\n    Konfig-Datei Pfad: ");
+    wxString conf = _T("\n    Config file location: ");
     conf.Append( gConfig_File );
     pAboutTextCtl->WriteText( conf );
 
@@ -250,10 +344,8 @@ void about::Update()
         wxLogMessage( msg );
     }
     pLicenseTextCtl->SetInsertionPoint( 0 );
-    
-#ifndef __WXOSX__
+
     DimeControl( this );
-#endif
 }
 
 void about::CreateControls()
@@ -290,18 +382,18 @@ void about::CreateControls()
 
 
     //  Main Notebook
-    wxNotebook* itemNotebook4 = new wxNotebook( itemDialog1, ID_NOTEBOOK_HELP, wxDefaultPosition,
+    pNotebook = new wxNotebook( itemDialog1, ID_NOTEBOOK_HELP, wxDefaultPosition,
             wxSize( -1, -1 ), wxNB_TOP );
-    itemNotebook4->InheritAttributes();
-    aboutSizer->Add( itemNotebook4, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5 );
+    pNotebook->InheritAttributes();
+    aboutSizer->Add( pNotebook, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5 );
 
     aboutSizer->Add( buttonSizer, 0, wxALL, 0 );
 
     //    About Panel
-    itemPanelAbout = new wxPanel( itemNotebook4, -1, wxDefaultPosition, wxDefaultSize,
+    itemPanelAbout = new wxPanel( pNotebook, -1, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
     itemPanelAbout->InheritAttributes();
-    itemNotebook4->AddPage( itemPanelAbout, _("About") );
+    pNotebook->AddPage( itemPanelAbout, _("About") );
 
     wxBoxSizer* itemBoxSizer6 = new wxBoxSizer( wxVERTICAL );
     itemPanelAbout->SetSizer( itemBoxSizer6 );
@@ -312,10 +404,10 @@ void about::CreateControls()
     itemBoxSizer6->Add( pAboutTextCtl, 0, wxALIGN_CENTER_HORIZONTAL | wxEXPAND | wxALL, 5 );
 
     //     Authors Panel
-    itemPanelAuthors = new wxPanel( itemNotebook4, -1, wxDefaultPosition, wxDefaultSize,
+    itemPanelAuthors = new wxPanel( pNotebook, -1, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
     itemPanelAuthors->InheritAttributes();
-    itemNotebook4->AddPage( itemPanelAuthors, _("Authors") );
+    pNotebook->AddPage( itemPanelAuthors, _("Authors") );
 
     wxBoxSizer* itemBoxSizer7 = new wxBoxSizer( wxVERTICAL );
     itemPanelAuthors->SetSizer( itemBoxSizer7 );
@@ -326,10 +418,10 @@ void about::CreateControls()
     itemBoxSizer7->Add( pAuthorTextCtl, 0, wxALIGN_CENTER_HORIZONTAL | wxEXPAND | wxALL, 5 );
 
     //  License Panel
-    itemPanelLicense = new wxPanel( itemNotebook4, -1, wxDefaultPosition, wxDefaultSize,
+    itemPanelLicense = new wxPanel( pNotebook, -1, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
     itemPanelLicense->InheritAttributes();
-    itemNotebook4->AddPage( itemPanelLicense, _("License") );
+    pNotebook->AddPage( itemPanelLicense, _("License") );
 
     wxBoxSizer* itemBoxSizer8 = new wxBoxSizer( wxVERTICAL );
     itemPanelLicense->SetSizer( itemBoxSizer8 );
@@ -349,10 +441,10 @@ void about::CreateControls()
     itemBoxSizer8->Add( pLicenseTextCtl, 0, wxALIGN_CENTER_HORIZONTAL | wxEXPAND | wxALL, 5 );
 
     //     Help Panel
-    itemPanelTips = new wxPanel( itemNotebook4, -1, wxDefaultPosition, wxDefaultSize,
+    itemPanelTips = new wxPanel( pNotebook, -1, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
     itemPanelTips->InheritAttributes();
-    itemNotebook4->AddPage( itemPanelTips, _("Help") );
+    pNotebook->AddPage( itemPanelTips, _("Help") );
 
     wxBoxSizer* itemBoxSizer9 = new wxBoxSizer( wxVERTICAL );
     itemPanelTips->SetSizer( itemBoxSizer9 );
@@ -405,7 +497,7 @@ void about::OnCopyClick( wxCommandEvent& event )
     }
 
     file.Close();
-//    int length = fileContent.Length();  // Not used
+    int length = fileContent.Length();
 
     if( event.GetId() == ID_COPYLOG ) {
         wxString lastLogs = fileContent;
@@ -438,7 +530,7 @@ void about::OnPageChange( wxNotebookEvent& event )
 
     if( 3 == i )                        // 3 is the index of "Help" page
 #ifndef __WXOSX__
-    {
+            {
         wxString def_lang_canonical = wxLocale::GetLanguageInfo( wxLANGUAGE_DEFAULT )->CanonicalName;
 
         wxString help_locn = _T("doc/help_");
@@ -448,21 +540,27 @@ void about::OnPageChange( wxNotebookEvent& event )
         help_try += def_lang_canonical;
         help_try += _T(".html");
 
-        if( ::wxFileExists( help_try ) ) wxLaunchDefaultBrowser(
-                wxString( _T("file:///") ) + help_try );
+        if( ::wxFileExists( help_try ) ) {
+            wxLaunchDefaultBrowser(wxString( _T("file:///") ) + help_try );
+            pNotebook->ChangeSelection(0);
+        }
 
         else {
             help_try = help_locn;
             help_try += _T("en_US");
             help_try += _T(".html");
 
-            if( ::wxFileExists( help_try ) ) wxLaunchDefaultBrowser(
-                    wxString( _T("file:///") ) + help_try );
+            if( ::wxFileExists( help_try ) ){
+                pNotebook->ChangeSelection(0);
+                wxLaunchDefaultBrowser( wxString( _T("file:///") ) + help_try );
+            }
             else {
                 help_try = _T("doc/help_web.html");
                 help_try.Prepend( *m_pDataLocn );
-                if( ::wxFileExists( help_try ) ) wxLaunchDefaultBrowser(
-                        wxString( _T("file:///") ) + help_try );
+                if( ::wxFileExists( help_try ) ) {
+                    pNotebook->ChangeSelection(0);
+                    wxLaunchDefaultBrowser(wxString( _T("file:///") ) + help_try );
+                 }
             }
         }
     }

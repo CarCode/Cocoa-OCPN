@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef __WIFICLIENT_H__
 #define __WIFICLIENT_H__
@@ -148,11 +148,7 @@ typedef struct
     int         sig_quality;
     int         secure;
     int         channel;
-#ifdef __WXOSX__
-//    wxSockAddress  ap_adr;
-#else
     sockaddr    ap_addr;
-#endif
     int         key_flags;
     unsigned char mode;
 } wifi_scan_data;

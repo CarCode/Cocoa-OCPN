@@ -21,7 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 class ocpnFloatingCompassWindow : public wxDialog
 {
@@ -38,7 +38,7 @@ public:
       void SetColorScheme( ColorScheme cs );
       int GetXOffset(void) const { return m_xoffset; }
       int GetYOffset(void) const { return m_yoffset; }
-      
+
 private:
       wxBitmap m_StatBmp;
       wxBitmap m_MaskBmp;
@@ -54,7 +54,7 @@ private:
       int m_xoffset;
       int m_yoffset;
 
-      wxDECLARE_EVENT_TABLE();
+      DECLARE_EVENT_TABLE()
 };
 
 

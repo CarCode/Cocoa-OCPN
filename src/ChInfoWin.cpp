@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "wx/wxprec.h"
 
@@ -28,10 +29,10 @@
 #include "ChInfoWin.h"
 #include "chart1.h"
 
-wxBEGIN_EVENT_TABLE(ChInfoWin, wxWindow)
+BEGIN_EVENT_TABLE(ChInfoWin, wxWindow)
     EVT_PAINT ( ChInfoWin::OnPaint )
     EVT_ERASE_BACKGROUND(ChInfoWin::OnEraseBackground)
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 // Define a constructor
 ChInfoWin::ChInfoWin( wxWindow *parent ) :

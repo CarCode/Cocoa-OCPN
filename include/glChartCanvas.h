@@ -34,18 +34,21 @@
 #define FORMAT_BITS           GL_RGB
 #endif
 
-class glTexFactory;
-//      This is a hashmap with Chartbase* as key, and glTexFactory as value
-WX_DECLARE_HASH_MAP( void*, glTexFactory*, wxPointerHash, wxPointerEqual, ChartPointerHashTexfactType );
+
+#include "glTexCache.h"
+
+//class glTexFactory;
+//      This is a hashmap with Chart full path as key, and glTexFactory as value
+WX_DECLARE_STRING_HASH_MAP( glTexFactory*, ChartPathHashTexfactType );
 
 class ocpnGLOptions
 {
 public:
     bool m_bUseAcceleratedPanning;
-    
+
     bool m_bTextureCompression;
     bool m_bTextureCompressionCaching;
-    
+
     int m_iTextureDimension;
     int m_iTextureMemorySize;
 };
@@ -66,12 +69,11 @@ public:
                               bool apply_rotation=true, bool b_clear=false);
     static void DisableClipRegion();
 
-    static void SetSmoothLineWidth();
-
     static bool         s_b_useScissorTest;
     static bool         s_b_useStencil;
+    static bool         s_b_useStencilAP;
     static bool         s_b_UploadFullCompressedMipmaps;
-
+    
     glChartCanvas(wxWindow *parent);
     ~glChartCanvas();
 
@@ -89,12 +91,12 @@ public:
 
     static void Invalidate();
     void RenderRasterChartRegionGL(ChartBase *chart, ViewPort &vp, OCPNRegion &region);
-    bool PurgeChartTextures(ChartBase *pc);
+    bool PurgeChartTextures(ChartBase *pc, bool b_purge_factory = false);
     void ClearAllRasterTextures(void);
     void DrawGLOverLayObjects(void);
     void GridDraw( );
     void FlushFBO( void );
-
+    
     static void FixRenderIDL(int dl);
 
     void DrawAllRoutesAndWaypoints( ViewPort &vp, OCPNRegion &region );
@@ -114,17 +116,20 @@ protected:
     void RenderQuiltViewGL(ViewPort &vp, const OCPNRegion &Region, bool b_clear = true);
     void BuildFBO();
     void SetupOpenGL();
-
+    bool TextureCrunch(double factor);
+    bool FactoryCrunch(double factor);
+    
     void ComputeRenderQuiltViewGLRegion( ViewPort &vp, OCPNRegion &Region );
     void RenderCharts(ocpnDC &dc, OCPNRegion &region);
     void RenderWorldChart(ocpnDC &dc, OCPNRegion &region);
     ViewPort BuildClippedVP(ViewPort &VP, wxRect &rect);
 //    void DeleteChartTextures(ChartBase *pc);
-    
+
     void DrawFloatingOverlayObjects( ocpnDC &dc, OCPNRegion &region );
     void DrawGroundedOverlayObjectsRect(ocpnDC &dc, wxRect &rect);
-    
+
     void DrawQuiting();
+    void DrawCloseMessage(wxString msg);
 
     wxGLContext       *m_pcontext;
 
@@ -139,13 +144,12 @@ protected:
 
     void GrowData(int size);
 
-
     //    This is a hash table
-    //    key is ChartBaseBSB pointer
+    //    key is Chart full path
     //    Value is glTexFactory*
-    ChartPointerHashTexfactType   m_chart_texfactory_hash;
-
-
+    ChartPathHashTexfactType   m_chart_texfactory_hash;
+    
+    
     ViewPort    m_cache_vp;
     ChartBase   *m_cache_current_ch;
 
@@ -170,7 +174,7 @@ protected:
     wxSize      ownship_size, ownship_tex_size;
     GLuint      ownship_large_scale_display_lists[2];
 
-wxDECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE()
 };
 
 extern void BuildCompressedCache();

@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __CM93DSLIDE_H__
 #define __CM93DSLIDE_H__
@@ -47,7 +48,7 @@ public:
     wxSlider *m_pCM93DetailSlider;
     wxWindow *m_pparent;
 
-    wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 };
 
 #endif

@@ -33,6 +33,7 @@ class wxHtmlWindow;
 class AISTargetQueryDialog: public wxDialog
 {
 DECLARE_CLASS( AISTargetQueryDialog )
+DECLARE_EVENT_TABLE()
 public:
 
       /// Constructors
@@ -79,8 +80,6 @@ public:
       int               m_nl;
       wxButton          *m_okButton;
       wxButton          *m_createWptBtn;
-    wxDECLARE_EVENT_TABLE();
-
 };
 
 #endif

@@ -37,9 +37,6 @@
 #include "styles.h"
 #include "dychart.h"
 #include "navutil.h"
-#ifdef __WXOSX__
-#include "chart1.h"
-#endif
 #include "routeprop.h"
 #include "routeman.h"
 #include "georef.h"
@@ -137,15 +134,10 @@ extern double           gLat, gLon;
 extern double           gCog, gSog;
 extern bool             g_bShowLayers;
 extern wxString         g_default_wp_icon;
-#ifdef __WXOSX__
-extern RouteManagerDialog *pRouteManagerDialog;
-#endif
 
 // sort callback. Sort by route name.
 int sort_route_name_dir;
 #if wxCHECK_VERSION(2, 9, 0)
-int wxCALLBACK SortRoutesOnName(long item1, long item2, wxIntPtr list)
-#elif wxCHECK_VERSION(3, 0, 0)
 int wxCALLBACK SortRoutesOnName(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortRoutesOnName(long item1, long item2, long list)
@@ -176,8 +168,6 @@ int wxCALLBACK SortRoutesOnName(long item1, long item2, long list)
 int sort_route_to_dir;
 #if wxCHECK_VERSION(2, 9, 0)
 int wxCALLBACK SortRoutesOnTo(long item1, long item2, wxIntPtr list)
-#elif wxCHECK_VERSION(3, 0, 0)
-int wxCALLBACK SortRoutesOnTo(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortRoutesOnTo(long item1, long item2, long list)
 #endif
@@ -205,8 +195,6 @@ int wxCALLBACK SortRoutesOnTo(long item1, long item2, long list)
 // sort callback. Sort by track name.
 int sort_track_name_dir;
 #if wxCHECK_VERSION(2, 9, 0)
-int wxCALLBACK SortTracksOnName(long item1, long item2, wxIntPtr list)
-#elif wxCHECK_VERSION(3, 0, 0)
 int wxCALLBACK SortTracksOnName(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortTracksOnName(long item1, long item2, long list)
@@ -236,8 +224,6 @@ int wxCALLBACK SortTracksOnName(long item1, long item2, long list)
 // sort callback. Sort by track length.
 int sort_track_len_dir;
 #if wxCHECK_VERSION(2, 9, 0)
-int wxCALLBACK SortTracksOnDistance(long item1, long item2, wxIntPtr list)
-#elif wxCHECK_VERSION(3, 0, 0)
 int wxCALLBACK SortTracksOnDistance(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortTracksOnDistance(long item1, long item2, long list)
@@ -278,8 +264,6 @@ int sort_wp_key;
 int sort_wp_name_dir;
 #if wxCHECK_VERSION(2, 9, 0)
 int wxCALLBACK SortWaypointsOnName(long item1, long item2, wxIntPtr list)
-#elif wxCHECK_VERSION(3, 0, 0)
-int wxCALLBACK SortWaypointsOnName(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortWaypointsOnName(long item1, long item2, long list)
 #endif
@@ -298,14 +282,12 @@ int wxCALLBACK SortWaypointsOnName(long item1, long item2, long list)
     }
     else
         return 0;
-
+    
 }
 
 // sort callback. Sort by wpt distance.
 int sort_wp_len_dir;
 #if wxCHECK_VERSION(2, 9, 0)
-int wxCALLBACK SortWaypointsOnDistance(long item1, long item2, wxIntPtr list)
-#elif wxCHECK_VERSION(3, 0, 0)
 int wxCALLBACK SortWaypointsOnDistance(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortWaypointsOnDistance(long item1, long item2, long list)
@@ -345,8 +327,6 @@ int wxCALLBACK SortWaypointsOnDistance(long item1, long item2, long list)
 int sort_layer_name_dir;
 #if wxCHECK_VERSION(2, 9, 0)
 int wxCALLBACK SortLayersOnName(long item1, long item2, wxIntPtr list)
-#elif wxCHECK_VERSION(3, 0, 0)
-int wxCALLBACK SortLayersOnName(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortLayersOnName(long item1, long item2, long list)
 #endif
@@ -375,8 +355,6 @@ int wxCALLBACK SortLayersOnName(long item1, long item2, long list)
 // sort callback. Sort by layer size.
 int sort_layer_len_dir;
 #if wxCHECK_VERSION(2, 9, 0)
-int wxCALLBACK SortLayersOnSize(long item1, long item2, wxIntPtr list)
-#elif wxCHECK_VERSION(3, 0, 0)
 int wxCALLBACK SortLayersOnSize(long item1, long item2, wxIntPtr list)
 #else
 int wxCALLBACK SortLayersOnSize(long item1, long item2, long list)
@@ -413,9 +391,9 @@ int wxCALLBACK SortLayersOnSize(long item1, long item2, long list)
 
 // event table. Empty, because I find it much easier to see what is connected to what
 // using Connect() where possible, so that it is visible in the code.
-wxBEGIN_EVENT_TABLE(RouteManagerDialog, wxDialog)
+BEGIN_EVENT_TABLE(RouteManagerDialog, wxDialog)
 EVT_NOTEBOOK_PAGE_CHANGED(wxID_ANY, RouteManagerDialog::OnTabSwitch) // This should work under Windows :-(
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 void RouteManagerDialog::OnTabSwitch( wxNotebookEvent &event )
 {
@@ -444,7 +422,7 @@ RouteManagerDialog::RouteManagerDialog( wxWindow *parent )
 
     wxDialog::Create( parent, -1, wxString( _("Route Manager") ), wxDefaultPosition, wxDefaultSize,
             style );
-
+    
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"), 10);
     SetFont( *qFont );
 
@@ -792,7 +770,7 @@ void RouteManagerDialog::Create()
     Fit();
 
     SetMinSize( GetBestSize() );
-
+    
     Centre();
 
     // create a image list for the list with just the eye icon
@@ -872,9 +850,7 @@ RouteManagerDialog::~RouteManagerDialog()
 
 void RouteManagerDialog::SetColorScheme()
 {
-#ifndef __WXOSX__
     DimeControl( this );
-#endif
 }
 
 void RouteManagerDialog::UpdateRouteListCtrl()
@@ -1002,10 +978,10 @@ void RouteManagerDialog::ZoomtoRoute( Route *route )
     int ww, wh; // chart window width, height
     // route bbox width in nm
     DistanceBearingMercator( RBBox.GetMinY(), RBBox.GetMinX(), RBBox.GetMinY(),
-                            RBBox.GetMaxX(), NULL, &rw );
+            RBBox.GetMaxX(), NULL, &rw );
     // route bbox height in nm
     DistanceBearingMercator( RBBox.GetMinY(), RBBox.GetMinX(), RBBox.GetMaxY(),
-                            RBBox.GetMinX(), NULL, &rh );
+            RBBox.GetMinX(), NULL, &rh );
 
     cc1->GetSize( &ww, &wh );
 
@@ -1127,11 +1103,10 @@ void RouteManagerDialog::OnRtePropertiesClick( wxCommandEvent &event )
             caption.Append( GetLayerName( route->m_LayerID ) );
             pRoutePropDialog->SetDialogTitle( caption );
         }
-        
+
         if( !pRoutePropDialog->IsShown() )
             pRoutePropDialog->Show();
     }
-
     m_bNeedConfigFlush = true;
 }
 
@@ -1175,7 +1150,7 @@ void RouteManagerDialog::OnRteReverseClick( wxCommandEvent &event )
     if( route->m_bIsInLayer ) return;
 
     int ask_return = OCPNMessageBox( this, g_pRouteMan->GetRouteReverseMessage(), _("Rename Waypoints?"),
-                                    wxYES_NO | wxCANCEL );
+            wxYES_NO | wxCANCEL );
     if( ask_return != wxID_CANCEL ) {
         bool rename = ( ask_return == wxID_YES );
 
@@ -1198,7 +1173,7 @@ void RouteManagerDialog::OnRteReverseClick( wxCommandEvent &event )
 void RouteManagerDialog::OnRteExportClick( wxCommandEvent &event )
 {
     RouteList list;
-    
+
     wxString suggested_name = _T("routes");
 
     long item = -1;
@@ -1273,7 +1248,7 @@ void RouteManagerDialog::OnRteToggleVisibility( wxMouseEvent &event )
         int wpts_set_viz = wxID_YES;
         bool togglesharedwpts = true;
         bool has_shared_wpts = g_pRouteMan->DoesRouteContainSharedPoints(route);
-
+        
         if( has_shared_wpts && route->IsVisible() ) {
             wpts_set_viz = OCPNMessageBox(  this, _("Do you also want to make the shared waypoints being part of this route invisible?"), _("Question"), wxYES_NO );
             togglesharedwpts = (wpts_set_viz == wxID_YES);
@@ -1367,17 +1342,17 @@ void RouteManagerDialog::OnRteSendToGPSClick( wxCommandEvent &event )
 
     wxString source;
     pdlg->Create( NULL, -1, _( "Send To GPS..." ), source );
-
+    
 #ifdef __WXOSX__
     HideWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
-
-    pdlg->ShowModal();
-
+    
+        pdlg->ShowModal();
+        
 #ifdef __WXOSX__
     ShowWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
-
+        
     pdlg->Destroy();
 }
 
@@ -1767,7 +1742,7 @@ void RouteManagerDialog::OnTrkExportClick( wxCommandEvent &event )
 {
     RouteList list;
     wxString suggested_name = _T("tracks");
-    
+
     long item = -1;
     for ( ;; )
     {
@@ -1775,7 +1750,7 @@ void RouteManagerDialog::OnTrkExportClick( wxCommandEvent &event )
         if ( item == -1 )
             break;
 
-    Route *proute_to_export = pRouteList->Item( m_pTrkListCtrl->GetItemData( item ) )->GetData();
+        Route *proute_to_export = pRouteList->Item( m_pTrkListCtrl->GetItemData( item ) )->GetData();
 
         if( proute_to_export ) {
             list.Append( proute_to_export );
@@ -1818,9 +1793,9 @@ void RouteManagerDialog::OnTrkRouteFromTrackClick( wxCommandEvent &event )
     if( item == -1 ) return;
 
     Track *track = (Track *) pRouteList->Item( m_pTrkListCtrl->GetItemData( item ) )->GetData();
-
+    
     TrackToRoute( track );
-
+    
     UpdateRouteListCtrl();
 }
 
@@ -1862,7 +1837,7 @@ void RouteManagerDialog::UpdateWptListCtrl( RoutePoint *rp_select, bool b_retain
 
     //  Freshen the image list
     m_pWptListCtrl->SetImageList( pWayPointMan->Getpmarkicon_image_list(), wxIMAGE_LIST_SMALL );
-
+    
     m_pWptListCtrl->DeleteAllItems();
 
     wxRoutePointListNode *node = pWayPointMan->GetWaypointList()->GetFirst();
@@ -1881,7 +1856,7 @@ void RouteManagerDialog::UpdateWptListCtrl( RoutePoint *rp_select, bool b_retain
             wxListItem li;
             li.SetId( index );
             li.SetImage( rp->IsVisible() ? pWayPointMan->GetIconIndex( rp->m_pbmIcon )
-                        : pWayPointMan->GetXIconIndex( rp->m_pbmIcon ) );
+                                    : pWayPointMan->GetXIconIndex( rp->m_pbmIcon ) );
             li.SetData( rp );
             li.SetText( _T("") );
             long idx = m_pWptListCtrl->InsertItem( li );
@@ -1936,11 +1911,11 @@ void RouteManagerDialog::UpdateWptListCtrlViz( )
         item = m_pWptListCtrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
         if ( item == -1 )
             break;
-
+        
         RoutePoint *pRP = (RoutePoint *)m_pWptListCtrl->GetItemData(item);
         int image = pRP->IsVisible() ? pWayPointMan->GetIconIndex( pRP->m_pbmIcon )
         : pWayPointMan->GetXIconIndex( pRP->m_pbmIcon ) ;
-
+                        
         m_pWptListCtrl->SetItemImage(item, image);
     }
 }
@@ -2024,8 +1999,8 @@ void RouteManagerDialog::OnWptToggleVisibility( wxMouseEvent &event )
 
         wp->SetVisible( !wp->IsVisible() );
         m_pWptListCtrl->SetItemImage( clicked_index,
-                wp->IsVisible() ? pWayPointMan->GetIconIndex( wp->m_pbmIcon )
-                                     : pWayPointMan->GetXIconIndex( wp->m_pbmIcon ) );
+                                      wp->IsVisible() ? pWayPointMan->GetIconIndex( wp->m_pbmIcon )
+                                                      : pWayPointMan->GetXIconIndex( wp->m_pbmIcon ) );
 
         pConfig->UpdateWayPoint( wp );
 
@@ -2043,7 +2018,6 @@ void RouteManagerDialog::OnWptNewClick( wxCommandEvent &event )
     pWP->m_bIsolatedMark = true;                      // This is an isolated mark
     pSelect->AddSelectableRoutePoint( gLat, gLon, pWP );
     pConfig->AddNewWayPoint( pWP, -1 );    // use auto next num
-#ifndef __WXOSX__
     cc1->Refresh( false );      // Needed for MSW, why not GTK??
 
     if( NULL == pMarkPropDialog )          // There is one global instance of the MarkProp Dialog
@@ -2053,13 +2027,6 @@ void RouteManagerDialog::OnWptNewClick( wxCommandEvent &event )
     pMarkPropDialog->UpdateProperties();
 
     WptShowPropertiesDialog( pWP, GetParent() );
-#else
-    if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
-        pRouteManagerDialog->UpdateWptListCtrl();
-    cc1->undo->BeforeUndoableAction( Undo_CreateWaypoint, pWP, Undo_HasParent, NULL );
-    cc1->undo->AfterUndoableAction( NULL );
-    Refresh( false );
-#endif
 }
 
 void RouteManagerDialog::OnWptPropertiesClick( wxCommandEvent &event )
@@ -2153,7 +2120,7 @@ void RouteManagerDialog::OnWptDeleteClick( wxCommandEvent &event )
                 if ( wp->m_bIsInRoute || wp->m_bIsInTrack )
                 {
                     if ( wxYES == OCPNMessageBox(this,  _( "The waypoint you want to delete is used in a route, do you really want to delete it?" ), _( "OpenCPN Alert" ), wxYES_NO ))
-                        pWayPointMan->DestroyWaypoint( wp );
+                            pWayPointMan->DestroyWaypoint( wp );
                 }
                 else
                     pWayPointMan->DestroyWaypoint( wp );
@@ -2212,7 +2179,7 @@ void RouteManagerDialog::OnWptGoToClick( wxCommandEvent &event )
     rteName.Append( name );
     temp_route->m_RouteNameString = rteName;
     temp_route->m_RouteStartString = _("Here");
-
+    
     temp_route->m_RouteEndString = name;
     temp_route->m_bDeleteOnArrival = true;
 
@@ -2226,7 +2193,7 @@ void RouteManagerDialog::OnWptGoToClick( wxCommandEvent &event )
 void RouteManagerDialog::OnWptExportClick( wxCommandEvent &event )
 {
     RoutePointList list;
-    
+
     wxString suggested_name = _T("waypoints");
 
     long item = -1;
@@ -2378,18 +2345,18 @@ void RouteManagerDialog::OnLayNewClick( wxCommandEvent &event )
 {
     bool show_flag = g_bShowLayers;
     g_bShowLayers = true;
-
+    
 #ifdef __WXOSX__
     HideWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
-
+    
     pConfig->UI_ImportGPX( this, true, _T("") );
-
+    
 #ifdef __WXOSX__
     ShowWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
-
-
+    
+    
     g_bShowLayers = show_flag;
 
     UpdateRouteListCtrl();
@@ -2421,7 +2388,7 @@ void RouteManagerDialog::OnLayDeleteClick( wxCommandEvent &event )
     int answer = OCPNMessageBox( this, prompt, wxString( _("OpenCPN Alert") ), wxYES_NO );
     if ( answer == wxID_NO )
         return;
-
+    
     // Process Tracks and Routes in this layer
     wxRouteListNode *node1 = pRouteList->GetFirst();
     wxRouteListNode *node2;
@@ -2717,17 +2684,17 @@ void RouteManagerDialog::OnImportClick( wxCommandEvent &event )
     // Import routes
     // FIXME there is no way to instruct this function about what to import.
     // Suggest to add that!
-
+    
 #ifdef __WXOSX__
     HideWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
-
+    
     pConfig->UI_ImportGPX( this );
 
 #ifdef __WXOSX__
     ShowWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
-
+    
     UpdateRouteListCtrl();
     UpdateTrkListCtrl();
     UpdateWptListCtrl();

@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "wx/wxprec.h"
 
@@ -33,10 +34,10 @@ extern int g_S57_dialog_sy;
 
 IMPLEMENT_CLASS ( S57QueryDialog, wxDialog )
 // S57QueryDialog event table definition
-wxBEGIN_EVENT_TABLE ( S57QueryDialog, wxDialog )  //ws wxDialog
+BEGIN_EVENT_TABLE ( S57QueryDialog, wxDialog )  //ws wxDialog
     EVT_SIZE ( S57QueryDialog::OnSize )
     EVT_CLOSE( S57QueryDialog::OnClose)
-wxEND_EVENT_TABLE()
+END_EVENT_TABLE()
 
 S57QueryDialog::S57QueryDialog()
 {
@@ -75,6 +76,7 @@ bool S57QueryDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
 #ifdef __WXOSX__
     wstyle |= wxSTAY_ON_TOP;
 #endif
+    
     if( ( global_color_scheme != GLOBAL_COLOR_SCHEME_DAY )
             && ( global_color_scheme != GLOBAL_COLOR_SCHEME_RGB ) ) wstyle |= ( wxNO_BORDER );
 
@@ -94,9 +96,8 @@ bool S57QueryDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
 
 // Centre the dialog on the parent or (if none) screen
     Centre();
-#ifndef __WXOSX__
+
     DimeControl( this );
-#endif
     return true;
 
 }
@@ -108,7 +109,7 @@ void S57QueryDialog::CreateControls()
 
     m_phtml = new wxHtmlWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                 wxHW_SCROLLBAR_AUTO );
-
+    
     m_phtml->SetBorders( 5 );
 
     m_phtml->SetMinSize( wxSize( 100, 100 ) );            // this will constrain the dialog, too
@@ -122,9 +123,7 @@ void S57QueryDialog::CreateControls()
 
 void S57QueryDialog::SetColorScheme( void )
 {
-#ifndef __WXOSX__
     DimeControl( this );
-#endif
     wxColor bg = GetBackgroundColour();
     m_phtml->SetBackgroundColour( bg );
 

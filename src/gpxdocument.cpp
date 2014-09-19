@@ -86,7 +86,7 @@ bool GpxDocument::LoadFile(const wxString &filename)
             {
                   int cnt = re.ReplaceAll(&s, wxT("&amp;"));
                   if (cnt > 0)
-                  {wxLogMessage(wxString::Format(wxT("File %s seems broken, %i occurences of '&' were replaced with '&amp;' to try to fix it."), filename.c_str(), cnt));}
+                        wxLogMessage(wxString::Format(wxT("File %s seems broken, %i occurences of '&' were replaced with '&amp;' to try to fix it."), filename.c_str(), cnt));
             }
       }
       wxFFile gpxfile;
@@ -684,7 +684,7 @@ void GpxTrkElement::SetProperty(const wxString &name, const wxString &value)
       //FIXME: can be reused for route and track
       GpxSimpleElement *element = new GpxSimpleElement(name, value);
       TiXmlElement *curelement = FirstChildElement();
-//      bool found = false;  // Not used
+      bool found = false;
       while(curelement)
       {
             if((const char *)curelement->Value() == (const char *)name.ToUTF8())
@@ -696,8 +696,8 @@ void GpxTrkElement::SetProperty(const wxString &name, const wxString &value)
             }
             curelement = curelement->NextSiblingElement();
       }
-//      if (!found)  // Not used
-//            LinkEndChild(element);  // Not used
+      if (!found)
+            LinkEndChild(element);
 }
 
 GpxTrksegElement::GpxTrksegElement(ListOfGpxWpts *waypoints, GpxExtensionsElement *extensions) : TiXmlElement("trkseg")

@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __TTYSCROLL_H__
 #define __TTYSCROLL_H__
@@ -39,12 +40,11 @@ class TTYScroll : public wxScrolledWindow
 
     protected:
 
-        wxCoord m_hLine;        // the height of one line on screen
-        size_t m_nLines;        // the number of lines we draw
+        wxCoord m_hLine;  // the height of one line on screen
+        size_t m_nLines;  // the number of lines we draw
 
-        wxArrayString     *m_plineArray;
-        bool               bpause;
-
+        wxArrayString *m_plineArray;
+        bool           bpause;
 };
 
 #endif

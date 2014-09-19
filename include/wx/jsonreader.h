@@ -10,11 +10,11 @@
 
 #if !defined( _WX_JSONREADER_H )
 #define _WX_JSONREADER_H
-#ifndef __WXOSX__
-#ifdef __GNUG__
-    #pragma interface "jsonreader.h"
-#endif
-#endif
+
+//#ifdef __GNUG__
+//    #pragma interface "jsonreader.h"
+//#endif
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 
@@ -31,8 +31,8 @@
 #endif
 
 
-#include "wx/json_defs.h"
-#include "wx/jsonval.h"
+#include "json_defs.h"
+#include "jsonval.h"
 
 // The flags of the parser
 enum {

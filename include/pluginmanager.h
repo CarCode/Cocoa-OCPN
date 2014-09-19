@@ -22,7 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ **************************************************************************/
 
 #ifndef _PLUGINMGR_H_
 #define _PLUGINMGR_H_
@@ -82,10 +82,10 @@ typedef struct {
 const BlackListedPlugin PluginBlacklist[] = {
     { _T("aisradar_pi"), 0, 95, true, true },
     { _T("radar_pi"), 0, 95, true, true },             // GCC alias for aisradar_pi
-    { _T("watchdog_pi"), 1, 00, false, true },
+    { _T("watchdog_pi"), 1, 00, true, true },
 #ifdef __WXOSX__
-    { _T("s63_pi"), 0, 4, true, true },
-#endif
+    { _T("s63_pi"), 0, 4, true, true },				// was 0,6,
+#endif    
 };
 
 //----------------------------------------------------------------------------
@@ -108,13 +108,13 @@ public:
     // accessors
     wxString GetID() { return m_MessageID; }
     wxString GetJSONText() { return m_MessageText; }
-    
+
     void SetID(const wxString &string) { m_MessageID = string; }
     void SetJSONText(const wxString &string) { m_MessageText = string; }
 
 
     // required for sending with wxPostEvent()
-    wxEvent *Clone() const; 
+    wxEvent *Clone() const;
 
 private:
     wxString    m_MessageID;
@@ -124,7 +124,7 @@ private:
 };
 
 extern  const wxEventType wxEVT_OCPN_MSG;
-    
+
 
 //-----------------------------------------------------------------------------------------------------
 //
@@ -266,20 +266,23 @@ public:
       void SetColorSchemeForAllPlugIns(ColorScheme cs);
       void NotifyAuiPlugIns(void);
       bool CallLateInit(void);
+      
+      void SendVectorChartObjectInfo(const wxString &chart, const wxString &feature, const wxString &objname, double &lat, double &lon, double &scale, int &nativescale);
 
+      bool SendMouseEventToPlugins( wxMouseEvent &event);
+      
       wxArrayString GetPlugInChartClassNameArray(void);
 
       ListOfPI_S57Obj *GetPlugInObjRuleListAtLatLon( ChartPlugInWrapper *target, float zlat, float zlon,
-                                                    float SelectRadius, const ViewPort& vp );
+                                                       float SelectRadius, const ViewPort& vp );
       wxString CreateObjDescriptions( ChartPlugInWrapper *target, ListOfPI_S57Obj *rule_list );
-
+      
       wxString GetLastError();
       MyFrame *GetParentFrame(){ return pParent; }
 
       void DimeWindow(wxWindow *win);
-
       OCPN_Sound        m_plugin_sound;
-
+      
 private:
       bool CheckBlacklistedPlugin(opencpn_plugin* plugin);
       bool DeactivatePlugIn(PlugInContainer *pic);
@@ -315,6 +318,7 @@ public:
 
       void SelectPlugin( PluginPanel *pi );
       void UpdateSelections();
+      
 
 private:
       ArrayOfPlugIns     *m_pPluginArray;
@@ -363,20 +367,21 @@ public:
         FText = NULL;
         ChildRazRules = NULL;
         MPSRulesList = NULL;
+        LUP = NULL;
         };
-
+        
     ~S52PLIB_Context(){};
-
+    
     wxBoundingBox           BBObj;                  // lat/lon BBox of the rendered object
     bool                    bBBObj_valid;           // set after the BBObj has been calculated once.
-
+    
     Rules                   *CSrules;               // per object conditional symbology
     int                     bCS_Added;
-
+    
     S52_TextC                *FText;
     int                     bFText_Added;
     wxRect                  rText;
-
+    
     LUPrec                  *LUP;
     ObjRazRules             *ChildRazRules;
     mps_container           *MPSRulesList;

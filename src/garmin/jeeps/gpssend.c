@@ -133,9 +133,8 @@ int32 GPS_Serial_Write_Packet(gpsdevh *fd, GPS_PPacket packet)
     if(!fd)
         return 0;
 
-    if (packet->type >= 0xff || packet->n >= 0xff)
-    {
-        GPS_Error("SEND: Unsupported packet type/size for serial protocol");
+    if (packet->type >= 0xff || packet->n >= 0xff) {
+	GPS_Error("SEND: Unsupported packet type/size for serial protocol");
         return 0;
     }
 
@@ -146,27 +145,27 @@ int32 GPS_Serial_Write_Packet(gpsdevh *fd, GPS_PPacket packet)
     Diag(&ser_pkt.dle, 3);
     if((ret=GPS_Serial_Write(fd,(const void *) &ser_pkt.dle,(size_t)3)) == -1)
     {
-        perror("write");
-        GPS_Error("SEND: Write to GPS failed");
-        return 0;
+	perror("write");
+	GPS_Error("SEND: Write to GPS failed");
+	return 0;
     }
     if(ret!=3)
     {
-        GPS_Error("SEND: Incomplete write to GPS");
-        return 0;
+	GPS_Error("SEND: Incomplete write to GPS");
+	return 0;
     }
 
     Diag(ser_pkt.data, bytes);
     if((ret=GPS_Serial_Write(fd,(const void *)ser_pkt.data,(size_t)bytes)) == -1)
     {
-        perror("write");
-        GPS_Error("SEND: Write to GPS failed");
-        return 0;
+	perror("write");
+	GPS_Error("SEND: Write to GPS failed");
+	return 0;
     }
     if(ret!=bytes)
     {
-        GPS_Error("SEND: Incomplete write to GPS");
-        return 0;
+	GPS_Error("SEND: Incomplete write to GPS");
+	return 0;
     }
 
 
@@ -180,14 +179,14 @@ int32 GPS_Serial_Write_Packet(gpsdevh *fd, GPS_PPacket packet)
 
     if((ret=GPS_Serial_Write(fd,(const void *)&ser_pkt.chk,(size_t)3)) == -1)
     {
-        perror("write");
-        GPS_Error("SEND: Write to GPS failed");
-        return 0;
+	perror("write");
+	GPS_Error("SEND: Write to GPS failed");
+	return 0;
     }
     if(ret!=3)
     {
-        GPS_Error("SEND: Incomplete write to GPS");
-        return 0;
+	GPS_Error("SEND: Incomplete write to GPS");
+	return 0;
     }
 
 
@@ -214,9 +213,9 @@ int32 GPS_Serial_Send_Ack(gpsdevh *fd, GPS_PPacket *tra, GPS_PPacket *rec)
     GPS_Make_Packet(tra,LINK_ID[0].Pid_Ack_Byte,data,2);
     if(!GPS_Write_Packet(fd,*tra))
     {
-        GPS_Error("Error acknowledging packet");
-        gps_errno = SERIAL_ERROR;
-        return 0;
+	GPS_Error("Error acknowledging packet");
+	gps_errno = SERIAL_ERROR;
+	return 0;
     }
 
     return 1;

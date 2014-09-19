@@ -106,11 +106,11 @@ int  G_PtInPolygon(MyPoint *rgpts, int wnumpts, float x, float y)
 
 
 int Intersect(MyPoint p1, MyPoint p2, MyPoint p3, MyPoint p4) {
-//      int i;  // Not used
-//      i = CCW(p1, p2, p3);
-//      i = CCW(p1, p2, p4);
-//      i = CCW(p3, p4, p1);
-//      i = CCW(p3, p4, p2);
+      int i;
+      i = CCW(p1, p2, p3);
+      i = CCW(p1, p2, p4);
+      i = CCW(p3, p4, p1);
+      i = CCW(p3, p4, p2);
    return ((( CCW(p1, p2, p3) * CCW(p1, p2, p4)) <= 0)
         && (( CCW(p3, p4, p1) * CCW(p3, p4, p2)  <= 0) )) ;
 
@@ -193,11 +193,11 @@ int  G_PtInPolygon_FL(float_2Dpt *rgpts, int wnumpts, float x, float y)
 
 
 int Intersect_FL(float_2Dpt p1, float_2Dpt p2, float_2Dpt p3, float_2Dpt p4) {
-//      int i;  // Not used
-//      i = CCW_FL(p1, p2, p3);
-//      i = CCW_FL(p1, p2, p4);
-//      i = CCW_FL(p3, p4, p1);
-//      i = CCW_FL(p3, p4, p2);
+      int i;
+      i = CCW_FL(p1, p2, p3);
+      i = CCW_FL(p1, p2, p4);
+      i = CCW_FL(p3, p4, p1);
+      i = CCW_FL(p3, p4, p2);
       return ((( CCW_FL(p1, p2, p3) * CCW_FL(p1, p2, p4)) <= 0)
                   && (( CCW_FL(p3, p4, p1) * CCW_FL(p3, p4, p2)  <= 0) )) ;
 
@@ -270,8 +270,7 @@ ClipResult cohen_sutherland_line_clip_d (double *x0, double *y0, double *x1, dou
       /* Cohen-Sutherland clipping algorithm for line P0=(x1,y0) to P1=(x1,y1)
     and clip rectangle with diagonal from (xmin,ymin) to (xmax,ymax).*/
     struct LOC_cohen_sutherland_line_clip V;
-//    int accept = CFALSE, done = CFALSE;  // Not used "accept"
-    int done = CFALSE;
+    int accept = CFALSE, done = CFALSE;
     ClipResult clip = Visible;
     outcode outcode0, outcode1, outcodeOut;
     /*Outcodes for P0,P1, and whichever point lies outside the clip rectangle*/
@@ -285,7 +284,7 @@ ClipResult cohen_sutherland_line_clip_d (double *x0, double *y0, double *x1, dou
     CompOutCode(*x1, *y1, &outcode1, &V);
     do {
         if (outcode0 == 0 && outcode1 == 0) {   /*Trivial accept and exit*/
-//            accept = CTRUE;  // Not used
+            accept = CTRUE;
             done = CTRUE;
         } else if ((outcode0 & outcode1) != 0) {
             clip = Invisible;

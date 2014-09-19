@@ -254,9 +254,9 @@ static int alloc_mem(int ncontours, int contours[])
     {
         nsegp += contours[i]+4;
     }
-
+    
     nsegp *= 2;
-
+    
     seg = (segment_t *)calloc(nsegp * sizeof(segment_t), 1);
     tr = (trap_t *)calloc(nsegp * 5 * sizeof(trap_t), 1);
     qs = (node_t *)calloc(nsegp * 10 * sizeof(node_t), 1);
@@ -304,7 +304,7 @@ static int alloc_mem(int ncontours, int contours[])
 polyout *trapezate_polygon(int ncontours, int cntr[], double (*vertices)[2])
 {
   int i;
-    int nmonpoly, ccount, npoints; // Not used: , genus;
+  int nmonpoly, ccount, npoints, genus;
   int n;
 
   polyout *top;
@@ -361,7 +361,7 @@ polyout *trapezate_polygon(int ncontours, int cntr[], double (*vertices)[2])
       ccount++;
     }
 
-//  genus = ncontours - 1;  // Not used
+  genus = ncontours - 1;
   n = i-1;
 
   initialise(n);
@@ -462,7 +462,7 @@ polyout *trapezate_polygon(int ncontours, int cntr[], double (*vertices)[2])
 polyout  *triangulate_polygon(int ncontours, int cntr[], double (*vertices)[2])
 {
     polyout  *ret_val;
-
+    
     //    In a MS WIndows environment, use SEH to catch bad code in the tesselator
     //    Polygons producing faults will not be drawn
     #ifdef __MSVC__
@@ -477,27 +477,28 @@ polyout  *triangulate_polygon(int ncontours, int cntr[], double (*vertices)[2])
     #else
     //    In a Posix environment, use sigaction, etc.. to catch bad code in the tesselator
     //    Polygons producing faults will not be drawn
-
+    
     sigaction(SIGSEGV, &sa_all, &sa_all_old);             // save existing action for this signal
-
+    
     if(sigsetjmp(env, 1))             //  Something in the below code block faulted....
-    {
-
-        ret_val = 0;
-
-        sigaction(SIGSEGV, &sa_all_old, NULL);        // reset signal handler
-
-        return ret_val;
-    }
-
-    ret_val = do_triangulate_polygon(ncontours, cntr, vertices);
-
-    sigaction(SIGSEGV, &sa_all_old, NULL);        // reset signal handler
-
-    #endif
-
-    return ret_val;
+      {
+          
+          ret_val = 0;
+          
+          sigaction(SIGSEGV, &sa_all_old, NULL);        // reset signal handler
+          
+          return ret_val;
+      }
+      
+      ret_val = do_triangulate_polygon(ncontours, cntr, vertices);
+      
+      sigaction(SIGSEGV, &sa_all_old, NULL);        // reset signal handler
+      
+      #endif
+      
+      return ret_val;
 }
+
 
 
 
@@ -528,13 +529,14 @@ polyout  *triangulate_polygon(int ncontours, int cntr[], double (*vertices)[2])
 polyout  *do_triangulate_polygon(int ncontours, int cntr[], double (*vertices)[2])
 {
   register int i;
-    int nmonpoly, ccount, npoints; // Not used: , genus;
+  int nmonpoly, ccount, npoints, genus;
   int n;
   int ntri;
   int p, q;
   int vt0, vt1;
   int vfirst;
   int a,b,c,d;
+  
 
   polyout *top;
   polyout *pp;
@@ -587,7 +589,7 @@ polyout  *do_triangulate_polygon(int ncontours, int cntr[], double (*vertices)[2
       ccount++;
     }
 
-//  genus = ncontours - 1;  // Not used
+  genus = ncontours - 1;
   n = i-1;
 
   initialise(n);
@@ -661,48 +663,48 @@ polyout  *do_triangulate_polygon(int ncontours, int cntr[], double (*vertices)[2
       a =  pp->vertex_index_list[0];
       b =  pp->vertex_index_list[1];
       c =  pp->vertex_index_list[2];
-
+      
       //        Sort the list, manually....Sorry....
       if(a > b){
-        d=a;
-        a=b;
-        b=d;
+          d=a;
+          a=b;
+          b=d;
       }
       if(c < a){
-        d=c;
-        c=b;
-        b=d;
-        d=b;
-        b=a;
-        a=d;
+          d=c;
+          c=b;
+          b=d;
+          d=b;
+          b=a;
+          a=d;
       }
       if(c < b){
-        d=c;
-        c=b;
-        b=d;
+          d=c;
+          c=b;
+          b=d;
       }
-
-
+      
+      
       // FNV1a, 32 bits, byte inputs, manually unrolled
       pp->index_hash = 2166136261;
-
+      
       pp->index_hash = pp->index_hash ^ (a & 255);
       pp->index_hash = pp->index_hash * 16777619;
       pp->index_hash = pp->index_hash ^ (a >> 8);
       pp->index_hash = pp->index_hash * 16777619;
-
+      
       pp->index_hash = pp->index_hash ^ (b & 255);
       pp->index_hash = pp->index_hash * 16777619;
       pp->index_hash = pp->index_hash ^ (b >> 8);
       pp->index_hash = pp->index_hash * 16777619;
-
+      
       pp->index_hash = pp->index_hash ^ (c & 255);
       pp->index_hash = pp->index_hash * 16777619;
       pp->index_hash = pp->index_hash ^ (c >> 8);
       pp->index_hash = pp->index_hash * 16777619;
-
-
-      if(NULL != pplast)
+      
+      
+     if(NULL != pplast)
           pplast->poly_next = pp;
 
       if(NULL == top)
@@ -1091,9 +1093,9 @@ static int make_new_monotone_poly(int mcur, int v0, int v1)
   int i, j, nf0, nf1;
   vertexchain_t *vp0, *vp1;
 
-  if(g_bug)
-    return 0;
-
+ if(g_bug)
+     return 0;
+ 
   vp0 = &vert[v0];
   vp1 = &vert[v1];
 
@@ -1162,7 +1164,7 @@ int monotonate_trapezoids(int n)
 #endif
 
   g_bug = 0;
-
+  
   /* First locate a trapezoid which lies inside the polygon */
   /* and which is triangular */
 
@@ -1222,10 +1224,10 @@ int monotonate_trapezoids(int n)
 
   /* return the number of polygons created */
   
-    if(g_bug)
-        return 0;
-    else
-        return newmon();
+  if(g_bug)
+      return 0;
+  else
+      return newmon();
 }
 
 /*
@@ -1243,10 +1245,8 @@ static int traverse_polygon(int mcur, int trnum, int from, int dir)
 //  int v0next, v1next;
   int retval = -1;
 //  int tmp;
-#ifndef __WXOSX__
   int do_switch = FALSE;
-#endif
-    
+
 /*
  n_recurse++;
  debug_file = fopen( "C:/debug", "a");
@@ -1266,9 +1266,9 @@ static int traverse_polygon(int mcur, int trnum, int from, int dir)
 	}
 
   visited[trnum] = TRUE;
-
-    if(g_bug)                     /*  Stop recursion eventually  */
-        return 0;
+  
+  if(g_bug)                     /*  Stop recursion eventually  */
+      return 0;
 
   /* We have much more information available here. */
   /* rseg: goes upwards   */
@@ -1286,16 +1286,14 @@ static int traverse_polygon(int mcur, int trnum, int from, int dir)
         {
           v0 = tr[t->d1].lseg;
           v1 = t->lseg;
-            if( (v0 <=0 ) || (v1 <= 0)){
-                g_bug = 1;
-                return 0;
-            }
-
+          if( (v0 <=0 ) || (v1 <= 0)){
+              g_bug = 1;
+              return 0;
+          }
+              
           if (from == t->d1)
             {
-#ifndef __WXOSX__
               do_switch = TRUE;
-#endif
               mnew = make_new_monotone_poly(mcur, v1, v0);
               traverse_polygon(mcur, t->d1, trnum, TR_FROM_UP);
               traverse_polygon(mnew, t->d0, trnum, TR_FROM_UP);
@@ -1323,15 +1321,13 @@ static int traverse_polygon(int mcur, int trnum, int from, int dir)
         {
           v0 = t->rseg;
           v1 = tr[t->u0].rseg;
-            if( (v0 <=0 ) || (v1 <= 0)){
-                g_bug = 1;
-                return 0;
-            }
+          if( (v0 <=0 ) || (v1 <= 0)){
+              g_bug = 1;
+              return 0;
+          }
           if (from == t->u1)
             {
-#ifndef __WXOSX__
               do_switch = TRUE;
-#endif
               mnew = make_new_monotone_poly(mcur, v1, v0);
               traverse_polygon(mcur, t->u1, trnum, TR_FROM_DN);
               traverse_polygon(mnew, t->u0, trnum, TR_FROM_DN);
@@ -1359,17 +1355,15 @@ static int traverse_polygon(int mcur, int trnum, int from, int dir)
         {
           v0 = tr[t->d1].lseg;
           v1 = tr[t->u0].rseg;
-            if( (v0 <=0 ) || (v1 <= 0)){
-                g_bug = 1;
-                return 0;
-            }
+          if( (v0 <=0 ) || (v1 <= 0)){
+              g_bug = 1;
+              return 0;
+          }
           retval = SP_2UP_2DN;
           if (((dir == TR_FROM_DN) && (t->d1 == from)) ||
               ((dir == TR_FROM_UP) && (t->u1 == from)))
             {
-#ifndef __WXOSX__
               do_switch = TRUE;
-#endif
               mnew = make_new_monotone_poly(mcur, v1, v0);
               traverse_polygon(mcur, t->u1, trnum, TR_FROM_DN);
               traverse_polygon(mcur, t->d1, trnum, TR_FROM_UP);
@@ -1391,23 +1385,20 @@ static int traverse_polygon(int mcur, int trnum, int from, int dir)
                 g_bug = 1;
                 return 0;
             }
-
-            if (_equal_to(&t->lo, &seg[t->lseg].v1))
+                
+          if (_equal_to(&t->lo, &seg[t->lseg].v1))
             {
               v0 = tr[t->u0].rseg;
               v1 = seg[t->lseg].next;
-
-                if( (v0 <=0 ) || (v1 <= 0)){
-                    g_bug = 1;
-                    return 0;
-                }
-
+              if( (v0 <=0 ) || (v1 <= 0)){
+                  g_bug = 1;
+                  return 0;
+              }
+              
               retval = SP_2UP_LEFT;
               if ((dir == TR_FROM_UP) && (t->u0 == from))
                 {
-#ifndef __WXOSX__
                   do_switch = TRUE;
-#endif
                   mnew = make_new_monotone_poly(mcur, v1, v0);
                   traverse_polygon(mcur, t->u0, trnum, TR_FROM_DN);
                   traverse_polygon(mnew, t->d0, trnum, TR_FROM_UP);
@@ -1427,17 +1418,15 @@ static int traverse_polygon(int mcur, int trnum, int from, int dir)
             {
               v0 = t->rseg;
               v1 = tr[t->u0].rseg;
-                if( (v0 <=0 ) || (v1 <= 0)){
-                    g_bug = 1;
-                    return 0;
-                }
-
+              if( (v0 <=0 ) || (v1 <= 0)){
+                  g_bug = 1;
+                  return 0;
+              }
+              
               retval = SP_2UP_RIGHT;
               if ((dir == TR_FROM_UP) && (t->u1 == from))
                 {
-#ifndef __WXOSX__
                   do_switch = TRUE;
-#endif
                   mnew = make_new_monotone_poly(mcur, v1, v0);
                   traverse_polygon(mcur, t->u1, trnum, TR_FROM_DN);
                   traverse_polygon(mnew, t->d1, trnum, TR_FROM_UP);
@@ -1463,23 +1452,21 @@ static int traverse_polygon(int mcur, int trnum, int from, int dir)
                 g_bug = 1;
                 return 0;
             }
-
+            
           if (_equal_to(&t->hi, &seg[t->lseg].v0))
             {
               v0 = tr[t->d1].lseg;
               v1 = t->lseg;
-
-                if( (v0 <=0 ) || (v1 <= 0)){
-                    g_bug = 1;
-                    return 0;
-                }
-
+              
+              if( (v0 <=0 ) || (v1 <= 0)){
+                  g_bug = 1;
+                  return 0;
+              }
+              
               retval = SP_2DN_LEFT;
               if (!((dir == TR_FROM_DN) && (t->d0 == from)))
                 {
-#ifndef __WXOSX__
                   do_switch = TRUE;
-#endif
                   mnew = make_new_monotone_poly(mcur, v1, v0);
                   traverse_polygon(mcur, t->u1, trnum, TR_FROM_DN);
                   traverse_polygon(mcur, t->d1, trnum, TR_FROM_UP);
@@ -1500,17 +1487,15 @@ static int traverse_polygon(int mcur, int trnum, int from, int dir)
               v0 = tr[t->d1].lseg;
               v1 = seg[t->rseg].next;
 
-                if( (v0 <=0 ) || (v1 <= 0)){
-                    g_bug = 1;
-                    return 0;
-                }
-
+              if( (v0 <=0 ) || (v1 <= 0)){
+                  g_bug = 1;
+                  return 0;
+              }
+              
               retval = SP_2DN_RIGHT;
               if ((dir == TR_FROM_DN) && (t->d1 == from))
                 {
-#ifndef __WXOSX__
                   do_switch = TRUE;
-#endif
                   mnew = make_new_monotone_poly(mcur, v1, v0);
                   traverse_polygon(mcur, t->d1, trnum, TR_FROM_UP);
                   traverse_polygon(mnew, t->u1, trnum, TR_FROM_DN);
@@ -1533,24 +1518,16 @@ static int traverse_polygon(int mcur, int trnum, int from, int dir)
                 g_bug = 1;
                 return 0;
             }
-
+            
           if (_equal_to(&t->hi, &seg[t->lseg].v0) &&
               _equal_to(&t->lo, &seg[t->rseg].v0))
             {
               v0 = t->rseg;
               v1 = t->lseg;
-
-                if( (v0 <=0 ) || (v1 <= 0)){
-                    g_bug = 1;
-                    return 0;
-                }
-
               retval = SP_SIMPLE_LRDN;
               if (dir == TR_FROM_UP)
                 {
-#ifndef __WXOSX__
                   do_switch = TRUE;
-#endif
                   mnew = make_new_monotone_poly(mcur, v1, v0);
                   traverse_polygon(mcur, t->u0, trnum, TR_FROM_DN);
                   traverse_polygon(mcur, t->u1, trnum, TR_FROM_DN);
@@ -1572,12 +1549,15 @@ static int traverse_polygon(int mcur, int trnum, int from, int dir)
               v0 = seg[t->rseg].next;
               v1 = seg[t->lseg].next;
 
+              if( (v0 <=0 ) || (v1 <= 0)){
+                  g_bug = 1;
+                  return 0;
+              }
+              
               retval = SP_SIMPLE_LRUP;
               if (dir == TR_FROM_UP)
                 {
-#ifndef __WXOSX__
                   do_switch = TRUE;
-#endif
                   mnew = make_new_monotone_poly(mcur, v1, v0);
                   traverse_polygon(mcur, t->u0, trnum, TR_FROM_DN);
                   traverse_polygon(mcur, t->u1, trnum, TR_FROM_DN);
@@ -1622,7 +1602,7 @@ int triangulate_monotone_polygons(int nvert, int nmonpoly, int op[][3])
 {
   register int i;
   point_t ymax, ymin;
-  int p, vfirst, posmax, v;  // Not used: posmin,
+  int p, vfirst, posmax, posmin, v;
   int vcount, processed;
 
 #if 1 //ifdef DEBUG
@@ -1645,7 +1625,7 @@ int triangulate_monotone_polygons(int nvert, int nmonpoly, int op[][3])
  if(nvert == 10709)
 {
     op_idx = 5;
-//    i=6;  // Not used
+    i=6;
 }
 
   op_idx = 0;
@@ -1668,7 +1648,7 @@ int triangulate_monotone_polygons(int nvert, int nmonpoly, int op[][3])
       processed = FALSE;
       vfirst = mchain[mon[i]].vnum;
       ymax = ymin = vert[vfirst].pt;
-      posmax = mon[i];  // Not used: = posmin =
+      posmax = posmin = mon[i];
       mchain[mon[i]].marked = TRUE;
       p = mchain[mon[i]].next;
       while ((v = mchain[p].vnum) != vfirst)
@@ -1689,7 +1669,7 @@ int triangulate_monotone_polygons(int nvert, int nmonpoly, int op[][3])
           if (_less_than(&vert[v].pt, &ymin))
             {
               ymin = vert[v].pt;
-//              posmin = p;  // Not used
+              posmin = p;
             }
           p = mchain[p].next;
           vcount++;
@@ -1782,12 +1762,12 @@ static int triangulate_single_polygon(int nvert, int vcount, int posmax, int sid
           else          /* non-convex */
             {           /* add v to the chain */
               ri++;
-
-                if(ri > vcount)
-                    return 0;
-
-                if(ri > rc_size-2)
-                    return 0;                     // some error condition, stop making output
+              
+              if(ri > vcount)
+                  return 0;
+                  
+              if(ri > rc_size-2)
+                  return 0;                     // some error condition, stop making output
 
               rc[ri] = v;
               vpos = mchain[vpos].next;
@@ -2288,7 +2268,7 @@ static int add_segment(int segnum)
   int i1, i2, t, tn;
 //  int t1, t2;
   point_t tpt;
-  int tribot = 0, is_swapped = 0;  // Not used: tritop = 0
+  int tritop = 0, tribot = 0, is_swapped = 0;
   int tmptriseg;
 
   s = seg[segnum];
@@ -2358,7 +2338,7 @@ static int add_segment(int segnum)
   else                          /* v0 already present */
     {       /* Get the topmost intersecting trapezoid */
       tfirst = locate_endpoint(&s.v0, &s.v1, s.root0);
-//      tritop = 1;  // Not used
+      tritop = 1;
     }
 
 
@@ -2656,12 +2636,12 @@ static int add_segment(int segnum)
 //              int tmpseg;                                     /* dsr ???? is tmpseg */
                                                                 /* anyway, this branch never seems to get hit */
               int tmpseg = tr[tr[t].d0].rseg;
-/*  // Never used ???
+
               if (is_swapped)
                 tmptriseg = seg[segnum].prev;
               else
                 tmptriseg = seg[segnum].next;
-*/
+
               if ((tmpseg > 0) && is_left_of(tmpseg, &s.v0))
                 {
                   /* L-R downward cusp */
@@ -2705,15 +2685,15 @@ static int add_segment(int segnum)
 //          int tmpseg = tr[tr[t].d0].rseg;
           double y0, yt;
           point_t tmppt;
-            int tnext, i_d0; // Not used: , i_d1;
+          int tnext, i_d0, i_d1;
 
-            i_d0 = FALSE; // Not used: i_d1 = FALSE;
+          i_d0 = i_d1 = FALSE;
           if (FP_EQUAL(tr[t].lo.y, s.v0.y))
             {
               if (tr[t].lo.x > s.v0.x)
                 i_d0 = TRUE;
-//              else  // Not used
-//                i_d1 = TRUE;  // Not used
+              else
+                i_d1 = TRUE;
             }
           else
             {
@@ -2723,8 +2703,8 @@ static int add_segment(int segnum)
 
               if (_less_than(&tmppt, &tr[t].lo))
                 i_d0 = TRUE;
-//              else  // Not used
-//                i_d1 = TRUE;  // Not used
+              else
+                i_d1 = TRUE;
             }
 
           /* check continuity from the top so that the lower-neighbour */
@@ -2888,7 +2868,7 @@ int construct_trapezoids(int nseg)
   register int i;
   int root, h;
 
-//  h=0;  // Not used
+  h=0;
   /* Add the first segment and get the query structure and trapezoid */
   /* list initialised */
 
@@ -3682,7 +3662,7 @@ static int int_add_segment(int segnum)
       int i1, i2, t, tn;
 //  int t1, t2;
       ipoint_t tpt;
-      int tribot = 0, is_swapped = 0; // Not used: tritop = 0
+      int tritop = 0, tribot = 0, is_swapped = 0;
       int tmptriseg;
 
       s = iseg[segnum];
@@ -3754,7 +3734,7 @@ static int int_add_segment(int segnum)
   else                          /* v0 already present */
   {       /* Get the topmost intersecting trapezoid */
         tfirst = int_locate_endpoint(&s.v0, &s.v1, s.root0);
-//        tritop = 1;  // Not used
+        tritop = 1;
   }
 
 
@@ -4065,12 +4045,12 @@ static int int_add_segment(int segnum)
                     //              int tmpseg;                                     /* dsr ???? is tmpseg */
                     /* anyway, this branch never seems to get hit */
                     int tmpseg = itr[itr[t].d0].rseg;
-/*  // Never used ???
+
                     if (is_swapped)
                           tmptriseg = iseg[segnum].prev;
                     else
                           tmptriseg = iseg[segnum].next;
-*/
+
                     if ((tmpseg > 0) && int_is_left_of(tmpseg, &s.v0))
                     {
                           /* L-R downward cusp */
@@ -4114,19 +4094,19 @@ static int int_add_segment(int segnum)
 //          int tmpseg = itr[itr[t].d0].rseg;
               double y0, yt;
               point_t tmppt;
-            int tnext, i_d0; // Not used: , i_d1;
+              int tnext, i_d0, i_d1;
               point_t tpt;
 
               tpt.x = (double)itr[t].lo.x;
               tpt.y = (double)itr[t].lo.y;
 
-            i_d0 = FALSE; // Not used: i_d1 = FALSE;
+              i_d0 = i_d1 = FALSE;
               if (itr[t].lo.y == s.v0.y)
               {
                     if (itr[t].lo.x > s.v0.x)
                           i_d0 = TRUE;
-//                    else  // Not used
-//                          i_d1 = TRUE;  // Not used
+                    else
+                          i_d1 = TRUE;
               }
               else
               {
@@ -4136,8 +4116,8 @@ static int int_add_segment(int segnum)
 
                     if (_less_than(&tmppt, &tpt))           //&itr[t].lo))
                           i_d0 = TRUE;
-//                    else  // Not used
-//                          i_d1 = TRUE;  // Not used
+                    else
+                          i_d1 = TRUE;
               }
 
               /* check continuity from the top so that the lower-neighbour */
@@ -4377,11 +4357,11 @@ int int_construct_trapezoids(int nseg)
 {
       register int i;
       int root, h;
-//      int nvtrap;  // Not used
+      int nvtrap;
 
-//      nvtrap = 0;  // Not used
+      nvtrap = 0;
 
-//      h=0;  // Not used
+      h=0;
       /* Add the first segment and get the query structure and trapezoid */
       /* list initialised */
 
@@ -4442,7 +4422,7 @@ bail_point:
 int do_int_trapezate_polygon(int ncontours, int cntr[], double (*vertices)[2], itrap_t **trap_return, isegment_t **iseg_return, int *n_traps)
 {
       int i, iv;
-    int ccount, npoints; // Not used: , genus;
+      int ccount, npoints, genus;
       int n;
       int ret_val;
 
@@ -4503,14 +4483,14 @@ int do_int_trapezate_polygon(int ncontours, int cntr[], double (*vertices)[2], i
             ccount++;
       }
 
-//      genus = ncontours - 1;  // Not used
+      genus = ncontours - 1;
       n = i-1;
 
       int_initialise(n);
 
  //     if(n > 14000) n = 14000;
 
-//      ret_val = 0;  // Not used
+      ret_val = 0;
       ret_val = int_construct_trapezoids(n);
 
       for(i=1 ; i< tr_idx ; i++)

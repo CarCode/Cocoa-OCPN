@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Thumbnail Object
@@ -21,8 +21,12 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ */
 
+
+//
 
 #ifndef __thumbwin_H__
 #define __thumbwin_H__
@@ -62,6 +66,7 @@ public:
       void SetMaxSize(wxSize const &max_size);
       const wxBitmap &GetBitmap(void);
 
+
       wxBitmap     m_bitmap;
       ChartBase    *pThumbChart;
 
@@ -70,7 +75,7 @@ private:
 
       wxSize      m_max_size;
 
-      wxDECLARE_EVENT_TABLE();
+DECLARE_EVENT_TABLE()
 };
 
 #endif

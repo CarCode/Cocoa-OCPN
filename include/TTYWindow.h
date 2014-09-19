@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __TTYWINDOW_H__
 #define __TTYWINDOW_H__
@@ -33,28 +34,26 @@ class WindowDestroyListener;
 
 class TTYWindow : public wxDialog
 {
-    wxDECLARE_DYNAMIC_CLASS( TTYWindow );
+    DECLARE_DYNAMIC_CLASS( TTYWindow )
+    DECLARE_EVENT_TABLE()
 
-public:
-    TTYWindow();
-    TTYWindow(wxWindow *parent, int n_lines, WindowDestroyListener * listener = NULL);
-    virtual ~TTYWindow();
+    public:
+        TTYWindow();
+        TTYWindow(wxWindow *parent, int n_lines, WindowDestroyListener * listener = NULL);
+        virtual ~TTYWindow();
 
-    void Add(const wxString &line);
-    void OnCloseWindow(wxCloseEvent& event);
-    void Close();
-    void OnPauseClick( wxCommandEvent& event );
+        void Add(const wxString &line);
+        void OnCloseWindow(wxCloseEvent& event);
+        void Close();
+        void OnPauseClick( wxCommandEvent& event );
 
-protected:
-    void CreateLegendBitmap();
-    WindowDestroyListener * m_window_destroy_listener;
-    TTYScroll   *m_pScroll;
-    wxButton    *m_buttonPause;
-    bool        bpause;
-    wxBitmap    m_bm_legend;
-
-    wxDECLARE_EVENT_TABLE();
-
+    protected:
+        void CreateLegendBitmap();
+        WindowDestroyListener * m_window_destroy_listener;
+        TTYScroll   *m_pScroll;
+        wxButton    *m_buttonPause;
+        bool        bpause;
+        wxBitmap    m_bm_legend;
 };
 
 #endif
