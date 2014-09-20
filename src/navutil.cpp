@@ -2541,13 +2541,9 @@ void MyConfig::UpdateSettings()
             Write( _T ( "VPLatLon" ), st1 );
             st1.Printf( _T ( "%g" ), vp.view_scale_ppm );
             Write( _T ( "VPScale" ), st1 );
-#ifdef __WXOSX__
-            st1.Printf( _T ( "%d" ), ((int)(vp.rotation * 180 / PI)) % 360 );
+            st1.Printf( _T ( "%i" ), ((int)(vp.rotation * 180 / PI)) % 360 );
             Write( _T ( "VPRotation" ), st1 );
-#else
-            st1.Printf( _T ( "%g" ), ((int)(vp.rotation * 180 / PI)) % 360 );
-            Write( _T ( "VPRotation" ), st1 );
-#endif
+            
         }
     }
 
