@@ -21,8 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/wx.h"
 #include "wx/tokenzr.h"
@@ -1204,7 +1203,7 @@ static void AISDrawTarget( AIS_Target_Data *td, ocpnDC& dc )
                     arrow[1] = wxPoint(  0, 27 );
                     arrow[2] = wxPoint(  4, 20 );
                     transrot_pts(3, arrow, sin_theta, cos_theta, TargetPoint);
-                    dc.StrokePolygon( 3, arrow, TargetPoint.x, TargetPoint.y );
+                    dc.StrokePolygon( 3, arrow );
 
                     arrow[0] = wxPoint( -4, 27 );
                     arrow[1] = wxPoint(  0, 34 );

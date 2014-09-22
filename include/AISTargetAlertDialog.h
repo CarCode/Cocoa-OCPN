@@ -46,14 +46,21 @@ public:
     
     virtual ~OCPN_AlertDialog( );
     virtual void Init();
-    
+#ifdef __WXOSX__
+    bool Create( wxWindow *parent,
+                wxWindowID id = wxID_ANY,
+                const wxString& caption = _("OpenCPN Alert"),
+                const wxPoint& pos = wxDefaultPosition,
+                const wxSize& size = wxDefaultSize,
+                long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU );
+#else
     virtual bool Create( wxWindow *parent,
                  wxWindowID id = wxID_ANY,
                  const wxString& caption = _("OpenCPN Alert"),
                  const wxPoint& pos = wxDefaultPosition,
                  const wxSize& size = wxDefaultSize,
                  long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU );
-
+#endif
                  
 private:
     wxWindow          *m_pparent;

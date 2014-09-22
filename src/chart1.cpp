@@ -1885,12 +1885,13 @@ bool MyApp::OnInit()
     //  This can happen when drivers are changed, for instance....
     //  and can confuse the WUI layout perspective stored in the config file.
     //  If detected, force a nominal window size and position....
+#ifndef __WXOSX__
     if( ( g_lastClientRectx != cx ) || ( g_lastClientRecty != cy ) || ( g_lastClientRectw != cw )
             || ( g_lastClientRecth != ch ) ) {
         new_frame_size.Set( cw * 7 / 10, ch * 7 / 10 );
         g_bframemax = false;
     }
-
+#endif
     g_lastClientRectx = cx;
     g_lastClientRecty = cy;
     g_lastClientRectw = cw;
