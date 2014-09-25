@@ -2221,6 +2221,7 @@ MarkInfoImpl::MarkInfoImpl( wxWindow* parent, wxWindowID id, const wxString& tit
 MarkInfoImpl::~MarkInfoImpl()
 {
     m_bcomboBoxIcon->Clear();
+    m_pLinkProp->Destroy();
 }
 
 void MarkInfoImpl::InitialFocus( void )

@@ -37,7 +37,7 @@
 #include "GribUIDialogBase.h"
 #include "GribUIDialog.h"
 #include "grib_pi.h"
-#include "ocpn_plugin.h"
+#include "../../../include/ocpn_plugin.h"
 
 class GRIBUIDialog;
 class GRIBFile;
@@ -76,9 +76,17 @@ private:
 
     void OnClose( wxCloseEvent& event );
     void OnOKButton( wxCommandEvent& event );
+
     void OnClick( wxGridEvent& event );
     void OnRangeClick( wxGridRangeSelectEvent& event );
-
+    
+#ifdef __WXOSX__
+    wxGridCellAttr *daysrow;
+    wxGridCellAttr *timerow;
+    wxGridCellAttr *singledatarow;
+    wxGridCellAttr *doubledatarow;
+#endif
+    
     GRIBUIDialog *m_pGDialog;
     GribTimelineRecordSet * m_pTimeset;
     wxColour m_pDataCellsColour;

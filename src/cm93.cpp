@@ -5152,8 +5152,11 @@ int cm93compchart::GetNativeScale()
 double cm93compchart::GetNormalScaleMin ( double canvas_scale_factor, bool b_allow_overzoom )
 {
       double oz_factor;
+#ifdef __WXOSX__
+    oz_factor = 40.;
+#else
       oz_factor = 10.;
-
+#endif
       if ( m_pcm93chart_current )
       {
             if ( m_pcm93chart_current->m_last_vp.IsValid() )

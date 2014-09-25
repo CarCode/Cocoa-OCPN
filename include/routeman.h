@@ -116,7 +116,7 @@ public:
 
 private:
       void DoAdvance(void);
-    
+
       MyApp       *m_pparent_app;
       Route       *pActiveRoute;
       RoutePoint  *pActivePoint;
@@ -145,10 +145,10 @@ private:
       wxBrush     *m_pRoutePointBrush;
 
       NMEA0183    m_NMEA0183;                         // For autopilot output
-      
+
       double      m_arrival_min;
       int         m_arrival_test;
-      
+
 
 };
 
@@ -191,6 +191,7 @@ public:
 
       void ProcessIcon(wxBitmap pimage, const wxString & key, const wxString & description);
 private:
+      void ProcessUserIcons( ocpnStyle::Style* style );
       RoutePointList    *m_pWayPointList;
       wxBitmap *CreateDimBitmap(wxBitmap *pBitmap, double factor);
 

@@ -1009,43 +1009,6 @@ WayPointman::WayPointman()
     m_pIconArray = new wxArrayPtrVoid();
     ProcessIcons( style );
 
-    // Load user defined icons.
-
-    wxString UserIconPath = g_PrivateDataDir;
-    wxChar sep = wxFileName::GetPathSeparator();
-    if( UserIconPath.Last() != sep ) UserIconPath.Append( sep );
-#ifdef __WXOSX__
-    UserIconPath.Append( _T("opencpn/UserIcons") );
-#else
-    UserIconPath.Append( _T("UserIcons") );
-#endif
-
-    if( wxDir::Exists( UserIconPath ) ) {
-        wxArrayString FileList;
-
-        wxDir dir( UserIconPath );
-        int n_files = dir.GetAllFiles( UserIconPath, &FileList );
-
-        for( int ifile = 0; ifile < n_files; ifile++ ) {
-            wxString name = FileList.Item( ifile );
-
-            wxFileName fn( name );
-            wxString iconname = fn.GetName();
-            wxBitmap icon1;
-
-            if( fn.GetExt().Lower() == _T("xpm") ) {
-                if( icon1.LoadFile( name, wxBITMAP_TYPE_XPM ) ) {
-                    ProcessIcon( icon1, iconname, iconname );
-                }
-            }
-            if( fn.GetExt().Lower() == _T("png") ) {
-                if( icon1.LoadFile( name, wxBITMAP_TYPE_PNG ) ) {
-                    ProcessIcon( icon1, iconname, iconname );
-                }
-            }
-        }
-    }
-
     m_nGUID = 0;
 }
 
@@ -1113,6 +1076,43 @@ bool WayPointman::RemoveRoutePoint(RoutePoint *prp)
     return true;
 }
 
+void WayPointman::ProcessUserIcons( ocpnStyle::Style* style )
+{
+    wxString UserIconPath = g_PrivateDataDir;
+    wxChar sep = wxFileName::GetPathSeparator();
+    if( UserIconPath.Last() != sep ) UserIconPath.Append( sep );
+#ifdef __WXOSX__
+    UserIconPath.Append( _T("opencpn/UserIcons") );
+#else
+    UserIconPath.Append( _T("UserIcons") );
+#endif
+    
+    if( wxDir::Exists( UserIconPath ) ) {
+        wxArrayString FileList;
+        
+        wxDir dir( UserIconPath );
+        int n_files = dir.GetAllFiles( UserIconPath, &FileList );
+        
+        for( int ifile = 0; ifile < n_files; ifile++ ) {
+            wxString name = FileList.Item( ifile );
+            
+            wxFileName fn( name );
+            wxString iconname = fn.GetName();
+            wxBitmap icon1;
+            
+            if( fn.GetExt().Lower() == _T("xpm") ) {
+                if( icon1.LoadFile( name, wxBITMAP_TYPE_XPM ) ) {
+                    ProcessIcon( icon1, iconname, iconname );
+                }
+            }
+            if( fn.GetExt().Lower() == _T("png") ) {
+                if( icon1.LoadFile( name, wxBITMAP_TYPE_PNG ) ) {
+                    ProcessIcon( icon1, iconname, iconname );
+                }
+            }
+        }
+    }
+}
 
 
 void WayPointman::ProcessIcons( ocpnStyle::Style* style )
@@ -1161,6 +1161,12 @@ void WayPointman::ProcessIcons( ocpnStyle::Style* style )
     ProcessIcon( style->GetIcon( _T("xmgreen") ), _T("xmgreen"), _T("Green X") );
     ProcessIcon( style->GetIcon( _T("xmred") ), _T("xmred"), _T("Red X") );
     ProcessIcon( style->GetIcon( _T("activepoint") ), _T("activepoint"), _T("Active WP") );
+
+    // Load user defined icons.
+    // Done after default icons are initialized,
+    // so that user may substitute an icon by using the same name in the Usericons file.
+    ProcessUserIcons( style );
+
 }
 
 void WayPointman::ProcessIcon(wxBitmap pimage, const wxString & key, const wxString & description)
@@ -1181,11 +1187,10 @@ void WayPointman::ProcessIcon(wxBitmap pimage, const wxString & key, const wxStr
     if( newIcon ) {
         pmi = new MarkIcon;
         m_pIconArray->Add( (void *) pmi );
-        pmi->icon_name = key;
-        pmi->icon_description = description;
-        pmi->icon_texture = 0;
     }
 
+    pmi->icon_name = key;
+    pmi->icon_description = description;
     pmi->picon_bitmap = new wxBitmap( pimage );
     pmi->icon_texture = 0; /* invalidate */
 }

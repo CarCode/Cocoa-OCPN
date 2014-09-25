@@ -62,7 +62,7 @@ void GRIBTable::InitGribTable( int zone, ArrayOfGribRecordSets *rsa )
     m_pCursorPosition->SetLabel(l);
     m_pCursorPosition->SetFont(wxFont(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
     m_pPositionText->SetFont(wxFont(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-
+#ifndef __WXOSX__
     //init row attr
     wxGridCellAttr *daysrow = new wxGridCellAttr();
     daysrow->SetFont(dayfont);
@@ -81,7 +81,7 @@ void GRIBTable::InitGribTable( int zone, ArrayOfGribRecordSets *rsa )
     wxGridCellAttr *doubledatarow = new wxGridCellAttr();
     doubledatarow->SetFont(datafont);
     doubledatarow->SetAlignment(wxALIGN_CENTRE, -1);
-
+#endif
     //init labels
     m_pGribTable->SetLabelFont(labelfont);                  
     m_pGribTable->SetLabelBackgroundColour(colour);
@@ -93,12 +93,14 @@ void GRIBTable::InitGribTable( int zone, ArrayOfGribRecordSets *rsa )
 
     //init days row
     m_pGribTable->SetRowLabelValue(0, wxEmptyString);
+#ifndef __WXOSX__
     m_pGribTable->SetRowAttr(0, daysrow);
-
+#endif
     //init time row
     m_pGribTable->SetRowLabelValue(1, wxEmptyString);
+#ifndef __WXOSX__
     m_pGribTable->SetRowAttr(1, timerow);
-
+#endif
     //populate grib
     wxDateTime day(rsa->Item(0).m_Reference_Time);
     wxDateTime time;
@@ -273,7 +275,9 @@ void GRIBTable::AddDataRow( int num_rows, int num_cols, wxString label, wxGridCe
     if(m_pGribTable->GetNumberRows() == num_rows) {
         m_pGribTable->AppendRows(1);
         m_pGribTable->SetRowLabelValue(num_rows, label);
+#ifndef __WXOSX__
         m_pGribTable->SetRowAttr(num_rows, row_attr);
+#endif
     }
     m_pDataCellsColour = m_pGribTable->GetCellBackgroundColour(num_rows, num_cols);  //set default colour
 }
