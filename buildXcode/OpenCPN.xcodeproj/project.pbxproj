@@ -188,6 +188,7 @@
 				A683CEC71958BD52004A0137 /* PBXTargetDependency */,
 				A6B4A58317A5229300E3A5D0 /* PBXTargetDependency */,
 				A647C90619C3652D0034EA04 /* PBXTargetDependency */,
+				A6FE261919D55C28001EF4B7 /* PBXTargetDependency */,
 				43CB8F738129439D86E8716F /* PBXTargetDependency */,
 			);
 			name = ALL_BUILD;
@@ -494,6 +495,7 @@
 		A62034F718B91291000A2376 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A62034F618B91291000A2376 /* sha1.c */; };
 		A6207BAC19A6A33000215493 /* vlw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6207BAB19A6A33000215493 /* vlw.cpp */; };
 		A6207BAE19A6A34E00215493 /* Stalk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6207BAD19A6A34E00215493 /* Stalk.cpp */; };
+		A627BE5519D5674400BBFC8A /* libobjsearch_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6728C0D19D4327900070B45 /* libobjsearch_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A635C8AE17C16F0900B3E5E9 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AB17C16F0900B3E5E9 /* tinyxml.cpp */; };
 		A635C8AF17C16F0900B3E5E9 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AC17C16F0900B3E5E9 /* tinyxmlerror.cpp */; };
 		A635C8B017C16F0900B3E5E9 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AD17C16F0900B3E5E9 /* tinyxmlparser.cpp */; };
@@ -553,6 +555,12 @@
 		A671BCDD19BE489900019119 /* PoiMan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A671BCDC19BE489900019119 /* PoiMan.cpp */; };
 		A671BCDF19BE48BB00019119 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A671BCDE19BE48BB00019119 /* pugixml.cpp */; };
 		A671BCE119BE48E800019119 /* squiddio_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A671BCE019BE48E800019119 /* squiddio_pi.cpp */; };
+		A6728C1B19D437AF00070B45 /* objsearch_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6728C1A19D437AF00070B45 /* objsearch_pi.cpp */; };
+		A6728C1D19D437FB00070B45 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6728C1C19D437FB00070B45 /* icons.cpp */; };
+		A6728C1F19D4382600070B45 /* ObjSearchDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6728C1E19D4382600070B45 /* ObjSearchDialog.cpp */; };
+		A6728C2119D4385100070B45 /* clcpopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6728C2019D4385100070B45 /* clcpopup.cpp */; };
+		A6728C2319D4388800070B45 /* wxsqlite3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6728C2219D4388800070B45 /* wxsqlite3.cpp */; };
+		A6728C2519D438B000070B45 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = A6728C2419D438B000070B45 /* sqlite3.c */; };
 		A67A0F1D178C3B540056F9C0 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F1C178C3B540056F9C0 /* pugixml.cpp */; };
 		A67A0F1F178C3B7F0056F9C0 /* OCPNRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F1E178C3B7F0056F9C0 /* OCPNRegion.cpp */; };
 		A67A0F22178C3C5D0056F9C0 /* NMEALogWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F21178C3C5D0056F9C0 /* NMEALogWindow.cpp */; };
@@ -1018,6 +1026,13 @@
 			remoteGlobalIDString = A6B4A52B17A5143700E3A5D0;
 			remoteInfo = "weather_routing-i18n";
 		};
+		A6FE261819D55C28001EF4B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6728C0219D4327900070B45;
+			remoteInfo = objsearch_pi;
+		};
 		AB0E0BF26BA246E79ADA8433 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
@@ -1202,6 +1217,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				A627BE5519D5674400BBFC8A /* libobjsearch_pi.dylib in Copy Files */,
 				A647C90719C365AD0034EA04 /* libsquiddio_pi.dylib in Copy Files */,
 				A6414F5E19599B6C0007787E /* libwatchdog_pi.dylib in Copy Files */,
 				A68FF416184A7B4D00C65557 /* libtrimplot_pi.dylib in Copy Files */,
@@ -1821,6 +1837,22 @@
 		A671BCDC19BE489900019119 /* PoiMan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PoiMan.cpp; path = plugins/Squiddio_pi/src/PoiMan.cpp; sourceTree = "<group>"; };
 		A671BCDE19BE48BB00019119 /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pugixml.cpp; path = plugins/Squiddio_pi/src/pugixml.cpp; sourceTree = "<group>"; };
 		A671BCE019BE48E800019119 /* squiddio_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = squiddio_pi.cpp; path = plugins/Squiddio_pi/src/squiddio_pi.cpp; sourceTree = "<group>"; };
+		A6728C0D19D4327900070B45 /* libobjsearch_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libobjsearch_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6728C1119D4365800070B45 /* objsearch_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = objsearch_pi.h; path = plugins/objsearch_pi/src/objsearch_pi.h; sourceTree = "<group>"; };
+		A6728C1219D4367F00070B45 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/objsearch_pi/src/icons.h; sourceTree = "<group>"; };
+		A6728C1319D436B600070B45 /* ObjSearchDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjSearchDialog.h; path = plugins/objsearch_pi/src/ObjSearchDialog.h; sourceTree = "<group>"; };
+		A6728C1419D436E200070B45 /* clcpopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = clcpopup.h; path = plugins/objsearch_pi/src/clcpopup.h; sourceTree = "<group>"; };
+		A6728C1519D4373200070B45 /* wxsqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wxsqlite3.h; path = "plugins/objsearch_pi/wxsqlite3-3.1.1/include/wx/wxsqlite3.h"; sourceTree = "<group>"; };
+		A6728C1619D4375700070B45 /* wxsqlite3def.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wxsqlite3def.h; path = "plugins/objsearch_pi/wxsqlite3-3.1.1/include/wx/wxsqlite3def.h"; sourceTree = "<group>"; };
+		A6728C1719D4375700070B45 /* wxsqlite3dyn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wxsqlite3dyn.h; path = "plugins/objsearch_pi/wxsqlite3-3.1.1/include/wx/wxsqlite3dyn.h"; sourceTree = "<group>"; };
+		A6728C1819D4375700070B45 /* wxsqlite3opt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wxsqlite3opt.h; path = "plugins/objsearch_pi/wxsqlite3-3.1.1/include/wx/wxsqlite3opt.h"; sourceTree = "<group>"; };
+		A6728C1919D4377B00070B45 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = "plugins/objsearch_pi/sqlite-amalgamation-3080600/sqlite3.h"; sourceTree = "<group>"; };
+		A6728C1A19D437AF00070B45 /* objsearch_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = objsearch_pi.cpp; path = plugins/objsearch_pi/src/objsearch_pi.cpp; sourceTree = "<group>"; };
+		A6728C1C19D437FB00070B45 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/objsearch_pi/src/icons.cpp; sourceTree = "<group>"; };
+		A6728C1E19D4382600070B45 /* ObjSearchDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ObjSearchDialog.cpp; path = plugins/objsearch_pi/src/ObjSearchDialog.cpp; sourceTree = "<group>"; };
+		A6728C2019D4385100070B45 /* clcpopup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = clcpopup.cpp; path = plugins/objsearch_pi/src/clcpopup.cpp; sourceTree = "<group>"; };
+		A6728C2219D4388800070B45 /* wxsqlite3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wxsqlite3.cpp; path = "plugins/objsearch_pi/wxsqlite3-3.1.1/src/wxsqlite3.cpp"; sourceTree = "<group>"; };
+		A6728C2419D438B000070B45 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sqlite3.c; path = "plugins/objsearch_pi/sqlite-amalgamation-3080600/sqlite3.c"; sourceTree = "<group>"; };
 		A6760CFC17DDE8E5009D4067 /* osx_helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = osx_helpers.h; path = include/osx_helpers.h; sourceTree = "<group>"; };
 		A677CF8018BB784100970057 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = include/version.h; sourceTree = "<group>"; };
 		A67A0F1B178C3AFF0056F9C0 /* OCPNRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCPNRegion.h; path = include/OCPNRegion.h; sourceTree = "<group>"; };
@@ -2778,6 +2810,7 @@
 				2460FC44FDDD495AAD837DC6 /* wmm-i18n */,
 				434C4673FD18472FAE1F6B03 /* wmm_pi */,
 				A6DB19B718EDCC1700E643D2 /* BR24radar_pi */,
+				A6728C0E19D433B700070B45 /* objsearch_pi */,
 				A671BCA419BE3D2F00019119 /* squiddio_pi */,
 			);
 			name = Sources;
@@ -3226,6 +3259,44 @@
 				A671BCE019BE48E800019119 /* squiddio_pi.cpp */,
 			);
 			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		A6728C0E19D433B700070B45 /* objsearch_pi */ = {
+			isa = PBXGroup;
+			children = (
+				A6728C1019D433F200070B45 /* Header Files */,
+				A6728C0F19D433E100070B45 /* Source Files */,
+			);
+			name = objsearch_pi;
+			sourceTree = "<group>";
+		};
+		A6728C0F19D433E100070B45 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				A6728C1A19D437AF00070B45 /* objsearch_pi.cpp */,
+				A6728C1C19D437FB00070B45 /* icons.cpp */,
+				A6728C1E19D4382600070B45 /* ObjSearchDialog.cpp */,
+				A6728C2019D4385100070B45 /* clcpopup.cpp */,
+				A6728C2219D4388800070B45 /* wxsqlite3.cpp */,
+				A6728C2419D438B000070B45 /* sqlite3.c */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		A6728C1019D433F200070B45 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				A6728C1119D4365800070B45 /* objsearch_pi.h */,
+				A6728C1219D4367F00070B45 /* icons.h */,
+				A6728C1319D436B600070B45 /* ObjSearchDialog.h */,
+				A6728C1419D436E200070B45 /* clcpopup.h */,
+				A6728C1519D4373200070B45 /* wxsqlite3.h */,
+				A6728C1619D4375700070B45 /* wxsqlite3def.h */,
+				A6728C1719D4375700070B45 /* wxsqlite3dyn.h */,
+				A6728C1819D4375700070B45 /* wxsqlite3opt.h */,
+				A6728C1919D4377B00070B45 /* sqlite3.h */,
+			);
+			name = "Header Files";
 			sourceTree = "<group>";
 		};
 		A683CEB11958A663004A0137 /* watchdog_pi */ = {
@@ -3711,6 +3782,7 @@
 				A6DB19DC18EDCDD400E643D2 /* libBR24radar_pi.dylib */,
 				A683CEB01958A550004A0137 /* libwatchdog_pi.dylib */,
 				A671BCC719BE44BC00019119 /* libsquiddio_pi.dylib */,
+				A6728C0D19D4327900070B45 /* libobjsearch_pi.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4162,6 +4234,21 @@
 			productReference = A671BCC719BE44BC00019119 /* libsquiddio_pi.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		A6728C0219D4327900070B45 /* objsearch_pi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6728C0A19D4327900070B45 /* Build configuration list for PBXNativeTarget "objsearch_pi" */;
+			buildPhases = (
+				A6728C0319D4327900070B45 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = objsearch_pi;
+			productName = gradar_pi;
+			productReference = A6728C0D19D4327900070B45 /* libobjsearch_pi.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		A683CEA31958A550004A0137 /* watchdog_pi */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A683CEAD1958A550004A0137 /* Build configuration list for PBXNativeTarget "watchdog_pi" */;
@@ -4410,6 +4497,7 @@
 				A6DB19BA18EDCDD300E643D2 /* BR24radar_pi */,
 				A683CEA31958A550004A0137 /* watchdog_pi */,
 				A671BCBC19BE44BC00019119 /* squiddio_pi */,
+				A6728C0219D4327900070B45 /* objsearch_pi */,
 			);
 		};
 /* End PBXProject section */
@@ -4821,6 +4909,19 @@
 				A671BCE119BE48E800019119 /* squiddio_pi.cpp in Sources */,
 				A671BCD719BE483200019119 /* icons.cpp in Sources */,
 				A671BCDF19BE48BB00019119 /* pugixml.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A6728C0319D4327900070B45 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6728C2319D4388800070B45 /* wxsqlite3.cpp in Sources */,
+				A6728C2519D438B000070B45 /* sqlite3.c in Sources */,
+				A6728C1F19D4382600070B45 /* ObjSearchDialog.cpp in Sources */,
+				A6728C1D19D437FB00070B45 /* icons.cpp in Sources */,
+				A6728C1B19D437AF00070B45 /* objsearch_pi.cpp in Sources */,
+				A6728C2119D4385100070B45 /* clcpopup.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5265,6 +5366,11 @@
 			isa = PBXTargetDependency;
 			target = A6B4A52B17A5143700E3A5D0 /* weather_routing-i18n */;
 			targetProxy = A6B4A58417A5260000E3A5D0 /* PBXContainerItemProxy */;
+		};
+		A6FE261919D55C28001EF4B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6728C0219D4327900070B45 /* objsearch_pi */;
+			targetProxy = A6FE261819D55C28001EF4B7 /* PBXContainerItemProxy */;
 		};
 		B07F18D59BFF42A0A94F9FE1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8573,6 +8679,232 @@
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = squiddio_pi;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
+		A6728C0B19D4327900070B45 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					objsearch_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_GL,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+					USE_DIALUP_MANAGER,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/objsearch_pi/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/objsearch_pi/wxsqlite3-3.1.1/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/objsearch_pi/sqlite-amalgamation-3080600",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					/opt/local/include,
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = Debug;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-rdynamic",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-rdynamic",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+					"-framework",
+					AGL,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = objsearch_pi;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		A6728C0C19D4327900070B45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					objsearch_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_GL,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+					USE_DIALUP_MANAGER,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/objsearch_pi/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/objsearch_pi/wxsqlite3-3.1.1/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/objsearch_pi/sqlite-amalgamation-3080600",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					/opt/local/include,
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = Release;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-rdynamic",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-rdynamic",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+					"-framework",
+					AGL,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = objsearch_pi;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";
 				USE_HEADERMAP = NO;
@@ -12533,6 +12865,15 @@
 			buildConfigurations = (
 				A671BCC519BE44BC00019119 /* Debug */,
 				A671BCC619BE44BC00019119 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A6728C0A19D4327900070B45 /* Build configuration list for PBXNativeTarget "objsearch_pi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6728C0B19D4327900070B45 /* Debug */,
+				A6728C0C19D4327900070B45 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

@@ -134,6 +134,11 @@
 			<key>orderHint</key>
 			<integer>37</integer>
 		</dict>
+		<key>squiddio_pi copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>40</integer>
+		</dict>
 		<key>squiddio_pi.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -398,6 +403,11 @@
 			<true/>
 		</dict>
 		<key>A671BCBC19BE44BC00019119</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A6728C0219D4327900070B45</key>
 		<dict>
 			<key>primary</key>
 			<true/>
