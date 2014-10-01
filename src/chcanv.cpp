@@ -1355,6 +1355,9 @@ ChartCanvas::ChartCanvas ( wxFrame *frame ) :
 
     m_canvas_width = 1000;
 
+    m_overzoomTextWidth = 0;
+    m_overzoomTextHeight = 0;
+
 //    Create the default world chart
     pWorldBackgroundChart = new GSHHSChart;
 
@@ -1366,6 +1369,7 @@ ChartCanvas::ChartCanvas ( wxFrame *frame ) :
     CreateDepthUnitEmbossMaps( GLOBAL_COLOR_SCHEME_DAY );
 
     m_pEM_OverZoom = NULL;
+    SetOverzoomFont();
     CreateOZEmbossMapData( GLOBAL_COLOR_SCHEME_DAY );
 
 //    Build icons for tide/current points
@@ -9549,10 +9553,10 @@ void ChartCanvas::CreateDepthUnitEmbossMaps( ColorScheme cs )
     m_pEM_Fathoms = CreateEmbossMapData( font, emboss_width, emboss_height, _("Fathoms"), cs );
 }
 
-void ChartCanvas::CreateOZEmbossMapData( ColorScheme cs )
-{
-    delete m_pEM_OverZoom;
+#define OVERZOOM_TEXT _("OverZoom")
 
+void ChartCanvas::SetOverzoomFont()
+{
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
     int w, h;
 
@@ -9564,10 +9568,25 @@ void ChartCanvas::CreateOZEmbossMapData( ColorScheme cs )
 
     wxClientDC dc( this );
     dc.SetFont( font );
-    dc.GetTextExtent( _("OverZoom"), &w, &h );
+    dc.GetTextExtent( OVERZOOM_TEXT, &w, &h );
+    
+    while( font.GetPointSize() > 10 && (w > 500 || h > 100) )
+    {
+        font.SetPointSize( font.GetPointSize() - 1 );
+        dc.SetFont( font );
+        dc.GetTextExtent( OVERZOOM_TEXT, &w, &h );
+    }
+    m_overzoomFont = font;
+    m_overzoomTextWidth = w;
+    m_overzoomTextHeight = h;
+}
 
-    if((w > 0) && (w < 500) && (h > 0) && (h < 100))
-        m_pEM_OverZoom = CreateEmbossMapData( font, w + 10, h + 10, _("OverZoom"), cs );
+void ChartCanvas::CreateOZEmbossMapData( ColorScheme cs )
+{
+    delete m_pEM_OverZoom;
+
+    if( m_overzoomTextWidth > 0 && m_overzoomTextHeight > 0 )
+        m_pEM_OverZoom = CreateEmbossMapData( m_overzoomFont, m_overzoomTextWidth + 10, m_overzoomTextHeight + 10, OVERZOOM_TEXT, cs );
 }
 
 emboss_data *ChartCanvas::CreateEmbossMapData( wxFont &font, int width, int height,

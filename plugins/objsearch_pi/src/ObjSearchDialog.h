@@ -28,6 +28,11 @@
 #include <wx/spinctrl.h>
 #include <wx/dialog.h>
 #include <wx/statbox.h>
+#include <wx/panel.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
+#include <wx/notebook.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -35,7 +40,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class ObjSearchDialog
 ///////////////////////////////////////////////////////////////////////////////
-class ObjSearchDialog : public wxDialog 
+class ObjSearchDialog : public wxDialog
 {
 	private:
 	
@@ -50,12 +55,14 @@ class ObjSearchDialog : public wxDialog
 		wxStaticText* m_stRange;
 		wxSpinCtrl* m_scRange;
 		wxStaticText* m_stUnit;
+        wxButton* m_btnSettings;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnSearch( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void OnShowOnChart( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnClose( wxCommandEvent& event ) { event.Skip(); }
+        virtual void OnSettings( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -66,14 +73,17 @@ class ObjSearchDialog : public wxDialog
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class PopulateDbDlg
+/// Class SettingsDialog
 ///////////////////////////////////////////////////////////////////////////////
-class PopulateDbDlg : public wxDialog 
+class SettingsDialog : public wxDialog
 {
 	private:
 	
 	protected:
-		wxStaticText* m_staticTextFromLat;
+        wxNotebook* m_notebookSettings;
+        wxPanel* m_panelPopulate;
+        wxStaticText* m_stScanCharts;
+        wxStaticText* m_staticTextFromLat;
 		wxSpinCtrl* m_spFromLat;
 		wxStaticText* m_staticTextFromLon;
 		wxSpinCtrl* m_spFromLon;
@@ -85,14 +95,26 @@ class PopulateDbDlg : public wxDialog
 		wxCheckBox* m_cb1000000;
 		wxCheckBox* m_cb200000;
 		wxCheckBox* m_cb20000;
+        wxStaticText* m_stOr;
+        wxStaticText* m_stFile;
+        wxTextCtrl* m_tPath;
+        wxButton* m_button4;
+        wxPanel* m_panelManage;
 		wxStdDialogButtonSizer* m_sdbSizerBtns;
 		wxButton* m_sdbSizerBtnsOK;
 		wxButton* m_sdbSizerBtnsCancel;
-	
+
+        // Virtual event handlers, overide them in your derived class
+        virtual void OnScale( wxCommandEvent& event ) { event.Skip(); }
+        virtual void OnPathChange( wxCommandEvent& event ) { event.Skip(); }
+        virtual void OnBrowse( wxCommandEvent& event ) { event.Skip(); }
+        virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
+        virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
+
 	public:
 		
-		PopulateDbDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Populate Object Database"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 476,281 ), long style = wxDEFAULT_DIALOG_STYLE ); 
-		~PopulateDbDlg();
+    SettingsDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,440 ), long style = wxDEFAULT_DIALOG_STYLE );
+    ~SettingsDialog();
 	
 };
 

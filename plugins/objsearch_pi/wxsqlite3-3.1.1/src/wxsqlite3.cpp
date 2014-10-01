@@ -4851,6 +4851,9 @@ wxSQLite3IntegerCollection::Bind(const wxArrayInt& integerCollection)
     return;
   }
 
+  if (!pIntArray->a)
+    return;
+
   size_t j;
   for (j = 0; j < n; ++j)
   {
@@ -4879,8 +4882,10 @@ wxSQLite3IntegerCollection::Bind(int n, int* integerCollection)
   {
     pIntArray->a = NULL;
     pIntArray->xFree = NULL;
-    return;
   }
+
+  if (!pIntArray->a)
+    return;
 
   int j;
   for (j = 0; j < n; ++j)
@@ -4975,8 +4980,10 @@ wxSQLite3StringCollection::Bind(const wxArrayString& stringCollection)
   {
     pCharArray->a = NULL;
     pCharArray->xFree = NULL;
-    return;
   }
+
+  if (!pCharArray->a)
+    return;
 
   size_t j;
   for (j = 0; j < n; ++j)

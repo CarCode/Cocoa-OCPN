@@ -1,4 +1,4 @@
-/******************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Vector Chart Object Search Plugin
@@ -21,8 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -32,8 +31,13 @@
 #include "wx/wx.h"
 #endif
 
+#include <wx/progdlg.h>
 #include "wx/wxsqlite3.h"
 
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include "csv_parser.h"
 #include "objsearch_pi.h"
 
 // Define NAN, which is unavailable on Windows
@@ -42,6 +46,36 @@
 #define NAN (INFINITY-INFINITY)
 #endif
 
+//SQLite user functions
+
+void DistanceMercatorFunc::Execute(wxSQLite3FunctionContext& ctx)
+{
+    if ( ctx.GetArgCount() != 4 )
+    {
+        ctx.SetResultError(_T("Function takes exactly 4 arguments."));
+        return;
+    }
+    double lat0 = ctx.GetDouble(0);
+    double lon0 = ctx.GetDouble(1);
+    double lat1 = ctx.GetDouble(2);
+    double lon1 = ctx.GetDouble(3);
+    if ( lat0 > 90. || lat0 < -90. || lat1 > 90. || lat1 < -90.)
+    {
+        ctx.SetResultError(_T("Latitude must be between -90 and 90."));
+        return;
+    }
+    
+    if ( lon0 > 180. || lon0 < -180. || lon1 > 180. || lon1 < -180.)
+    {
+        ctx.SetResultError(_T("Longitude must be between -180 and 180."));
+        return;
+    }
+    
+    double dist;
+    DistanceBearingMercator_Plugin(lat0, lon0, lat1, lon1, NULL, &dist);
+    
+    ctx.SetResult(dist);
+}
 
 // the class factories, used to create and destroy instances of the PlugIn
 
@@ -107,6 +141,8 @@ wxSQLite3Database* objsearch_pi::initDB(void)
     
     if ( m_bDBUsable )
 	{
+        db->CreateFunction(_T("distanceMercator"), 4, distMercFunc, true);
+        //sqlite3_create_function(db, "distanceMercator", 4, SQLITE_UTF8, NULL, &distanceMercatorFunc, NULL, NULL));
 		QueryDB( db, _T("PRAGMA synchronous=OFF") );
         QueryDB( db, _T("PRAGMA count_changes=OFF") );
         QueryDB( db, _T("PRAGMA journal_mode=MEMORY") );
@@ -268,6 +304,7 @@ int objsearch_pi::Init ( void )
              INSTALLS_TOOLBAR_TOOL     |
              WANTS_CONFIG              |
              WANTS_NMEA_EVENTS         |
+             WANTS_PREFERENCES         |
              WANTS_VECTOR_CHART_OBJECT_INFO
            );
 }
@@ -311,7 +348,6 @@ bool objsearch_pi::DeInit ( void )
     //  Try to wait a bit to see if all compression threads exit nicely
     wxDateTime now = wxDateTime::Now();
     time_t stall = now.GetTicks();
-    time_t start = stall;
     time_t end = stall + THREAD_WAIT_SECONDS;
     
     while(m_db_thread_running && stall < end ){
@@ -533,7 +569,7 @@ int objsearch_pi::GetFeatureId(wxString feature)
         return m_featuresInDb[feature];
 }
 
-void objsearch_pi::FindObjects( const wxString& feature_filter, const wxString& search_string )
+void objsearch_pi::FindObjects( const wxString& feature_filter, const wxString& search_string, double lat, double lon, double dist )
 {
     if (!m_bDBUsable)
     {
@@ -543,7 +579,11 @@ void objsearch_pi::FindObjects( const wxString& feature_filter, const wxString& 
     m_pObjSearchDialog->ClearObjects();
     wxString safe_value = search_string;
     safe_value.Replace(_T("'"), _T("''"));
-    wxSQLite3ResultSet set = SelectFromDB( m_db, wxString::Format( wxT("SELECT COUNT(*) FROM object o LEFT JOIN feature f ON (o.feature_id = f.id) WHERE instr('%s', featurename) > 0 AND objname LIKE '%%%s%%'"), feature_filter.c_str(), safe_value.c_str() ) );
+    wxSQLite3ResultSet set;
+    if ( dist > 0.1 )
+        set = SelectFromDB( m_db, wxString::Format( wxT("SELECT COUNT(*) FROM object o LEFT JOIN feature f ON (o.feature_id = f.id) WHERE instr('%s', featurename) > 0 AND objname LIKE '%%%s%%' AND distanceMercator(lat, lon, %f, %f) <= %f"), feature_filter.c_str(), safe_value.c_str(), lat, lon, dist ) );
+    else
+        set = SelectFromDB( m_db, wxString::Format( wxT("SELECT COUNT(*) FROM object o LEFT JOIN feature f ON (o.feature_id = f.id) WHERE instr('%s', featurename) > 0 AND objname LIKE '%%%s%%'"), feature_filter.c_str(), safe_value.c_str() ) );
     int objects_found = 0;
     if (m_bDBUsable)
     {
@@ -559,26 +599,17 @@ void objsearch_pi::FindObjects( const wxString& feature_filter, const wxString& 
     {
         if (m_bDBUsable)
         {
-            set = SelectFromDB( m_db, wxString::Format( wxT("SELECT f.featurename, o.objname, o.lat, o.lon, ch.scale, ch.nativescale, ch.chartname FROM object o LEFT JOIN feature f ON (o.feature_id = f.id) LEFT JOIN chart ch ON (o.chart_id = ch.id) WHERE instr('%s', featurename) > 0 AND objname LIKE '%%%s%%'"), feature_filter.c_str(), safe_value.c_str() ) );
-            double lat, lon;
-            double dist, brg;
-            if ( m_boatlat == NAN || m_boatlon == NAN)
-            {
-                lat = m_vplat;
-                lon = m_vplon;
-            }
+            if ( dist > 0.1 )
+                set = SelectFromDB( m_db, wxString::Format( wxT("SELECT f.featurename, o.objname, o.lat, o.lon, ch.scale, ch.nativescale, ch.chartname, distanceMercator(lat, lon, %f, %f) FROM object o LEFT JOIN feature f ON (o.feature_id = f.id) LEFT JOIN chart ch ON (o.chart_id = ch.id) WHERE instr('%s', featurename) > 0 AND objname LIKE '%%%s%%' AND distanceMercator(lat, lon, %f, %f) <= %f"),lat, lon, feature_filter.c_str(), safe_value.c_str(), lat, lon, dist ) );
             else
             {
-                lat = m_boatlat;
-                lon = m_boatlon;
+                set = SelectFromDB( m_db, wxString::Format( wxT("SELECT f.featurename, o.objname, o.lat, o.lon, ch.scale, ch.nativescale, ch.chartname, distanceMercator(lat, lon, %f, %f) FROM object o LEFT JOIN feature f ON (o.feature_id = f.id) LEFT JOIN chart ch ON (o.chart_id = ch.id) WHERE instr('%s', featurename) > 0 AND objname LIKE '%%%s%%'"), lat, lon, feature_filter.c_str(), safe_value.c_str() ) );
             }
             if (m_bDBUsable)
             {
                 while (set.NextRow())
                 {
-                    DistanceBearingMercator_Plugin( lat, lon, set.GetDouble(2), set.GetDouble(3), &brg, &dist );
-                    if ( dist <= m_iLimitRange || m_iLimitRange == 0 )
-                        m_pObjSearchDialog->AddObject( set.GetAsString(0),  set.GetAsString(1), set.GetDouble(2), set.GetDouble(3), dist, set.GetDouble(4), set.GetInt(5), set.GetAsString(6) );
+                    m_pObjSearchDialog->AddObject( set.GetAsString(0),  set.GetAsString(1), set.GetDouble(2), set.GetDouble(3), toUsrDistance_Plugin(set.GetDouble(7)), set.GetDouble(4), set.GetInt(5), set.GetAsString(6) );
                 }
                 m_pObjSearchDialog->SortResults();
             }
@@ -587,7 +618,8 @@ void objsearch_pi::FindObjects( const wxString& feature_filter, const wxString& 
     }
 }
 
-ObjSearchDialogImpl::ObjSearchDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : ObjSearchDialog(parent, id, title, pos, size, style )
+ObjSearchDialogImpl::ObjSearchDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
+: ObjSearchDialog(parent, id, title, pos, size, style )
 {
     p_plugin = plugin;
     
@@ -638,7 +670,7 @@ void ObjSearchDialogImpl::OnSearch( wxCommandEvent& event )
     p_plugin->SetRangeLimit(m_scRange->GetValue());
     wxString feature_filter = wxEmptyString;
     feature_filter = m_clcPopup->GetStringValue();
-    p_plugin->FindObjects( feature_filter, m_textCtrlSearchTerm->GetValue() );
+    p_plugin->FindObjects( feature_filter, m_textCtrlSearchTerm->GetValue(), p_plugin->GetLat(), p_plugin->GetLon(), p_plugin->GetRangeLimit() );
 }
 
 void ObjSearchDialogImpl::ClearObjects()
@@ -730,6 +762,13 @@ void ObjSearchDialogImpl::OnClose( wxCommandEvent& event )
 {
     Hide();
 }
+
+void ObjSearchDialogImpl::OnSettings( wxCommandEvent& event )
+{
+    Hide();
+    p_plugin->ShowPreferencesDialog(m_parent);
+}
+
 
 double fromDMM( wxString sdms )
 {
@@ -883,6 +922,10 @@ wxString ObjSearchDialogImpl::HumanizeFeatureName(const wxString& feature_name_c
         return inland + _("Cargo transshipment area");
     if ( feature_name == _T("CAUSWY") )
         return inland + _("Causeway");
+#ifdef __WXOSX__
+    if ( feature_name == _T("CHIMNY") )
+        return inland + _("Chimney");
+#endif
     if ( feature_name == _T("CHKPNT") )
         return inland + _("Checkpoint");
     if ( feature_name == _T("CGUSTA") )
@@ -1081,6 +1124,10 @@ wxString ObjSearchDialogImpl::HumanizeFeatureName(const wxString& feature_name_c
         return inland + _("Tidal stream - time series");
     if ( feature_name == _T("TIDEWY") )
         return inland + _("Tideway");
+#ifdef __WXOSX__
+    if ( feature_name == _T("TREPNT") )
+        return inland + _("Tree");
+#endif
     if ( feature_name == _T("TUNNEL") )
         return inland + _("Tunnel");
     if ( feature_name == _T("UWTROC") )
@@ -1157,6 +1204,10 @@ wxString ObjSearchDialogImpl::HumanizeFeatureName(const wxString& feature_name_c
     //CM93, "special case"
     if ( feature_name_chart == _T("_texto") )
         return _("Text label");
+#ifdef __WXOSX__
+    if ( feature_name_chart == _T("_extgn") )
+        return _("Extended navigational add");
+#endif
 
     //We don't know that object, just return the mnemonic
     return feature_name_chart;
@@ -1220,4 +1271,125 @@ wxString objsearch_pi::GetQuery()
 bool objsearch_pi::HasQueries()
 {
     return !query_queue.empty();
+}
+
+void objsearch_pi::ShowPreferencesDialog(wxWindow * parent)
+{
+    SettingsDialogImpl* settingsdlg = new SettingsDialogImpl(this, parent);
+    settingsdlg->ShowModal();
+}
+
+SettingsDialogImpl::SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
+: SettingsDialog(parent, id, title, pos, size, style )
+{
+    p_plugin = plugin;
+    m_prgdlg = NULL;
+    m_iProcessed = 0;
+}
+
+SettingsDialogImpl::~SettingsDialogImpl()
+{
+}
+
+
+void SettingsDialogImpl::OnBrowse(wxCommandEvent& event)
+{
+    wxFileDialog dlg(this, _T("Import data"), wxEmptyString, wxEmptyString, _("CSV files (*.csv)|*.csv|All files (*.*)|*.*"));
+    if( dlg.ShowModal() == wxID_OK )
+    {
+        m_tPath->SetValue(dlg.GetPath());
+    }
+}
+
+void SettingsDialogImpl::CreateObject( double lat, double lon, wxString& name, wxString& feature, wxString& source, long scale, double truescale )
+{
+    m_iProcessed++;
+    p_plugin->SendVectorChartObjectInfo( source, feature, name, lat, lon, truescale, (int)scale );
+    if( m_iProcessed % 10 == 0 )
+        m_prgdlg->Update(m_iProcessed);
+}
+
+int SettingsDialogImpl::ProcessCsvLine(void * frm, int cnt, const char ** cv)
+{
+    SettingsDialogImpl* p_frm=(SettingsDialogImpl*)frm;
+    
+    if( cnt < 5 )
+        return 0; //At least Lat, Lon, Object name, Feature name and "Source" name are needed
+    double lat = 0.0;
+    if( cnt >= 1)
+        lat = strtod(cv[0], NULL);
+    double lon = 0.0;
+    if( cnt >= 2)
+        lon = strtod(cv[1], NULL);
+    wxString name = wxEmptyString;
+    if( cnt >= 3)
+        name = wxString::FromUTF8(cv[2]);
+    wxString feature = wxEmptyString;
+    if( cnt >= 4)
+        feature = wxString::FromUTF8(cv[3]);
+    wxString source = wxEmptyString;
+    if( cnt >= 5)
+        source = wxString::FromUTF8(cv[4]);
+    long scale = -1;
+    if( cnt >= 6)
+        scale = strtol(cv[5], NULL, 10);
+    double truescale = 0.0;
+    if( cnt >= 7)
+        truescale = strtod(cv[6], NULL);
+    if( lat >= -90.0 && lat <= 90.0 && lon >= -180.0 && lon <= 180.0 && name != wxEmptyString && feature != wxEmptyString && source != wxEmptyString )
+        p_frm->CreateObject( lat, lon, name, feature, source, scale, truescale );
+    return 0;
+}
+
+void SettingsDialogImpl::OnOk(wxCommandEvent& event)
+{
+    if( m_tPath->GetValue() == wxEmptyString )
+    {
+        //TODO: perform scan
+    }
+    else
+    {
+        if( wxFileExists(m_tPath->GetValue()) )
+        {
+            std::ifstream inFile( m_tPath->GetValue().mb_str() );
+            int linecount = std::count(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>(), '\n');
+            m_prgdlg = new wxProgressDialog(_("Import progress..."),
+                                            wxString::Format( _("Importing data from %s."), m_tPath->GetValue().c_str() ),
+                                            linecount, this	);
+            m_prgdlg->Show();
+            
+            FILE *fp;
+            if ( NULL==(fp=fopen (m_tPath->GetValue().mb_str(),"r") ) )
+            {
+                fprintf (stderr, "Cannot open input file sales.csv\n");
+                return;
+            }
+            switch( csv_parse (fp, ProcessCsvLine, this) )
+            {
+                case E_LINE_TOO_WIDE:
+                    //fprintf(stderr,"Error parsing csv: line too wide.\n");
+                    break;
+                case E_QUOTED_STRING:
+                    //fprintf(stderr,"Error parsing csv: ill-formatted quoted string.\n");
+                    break;
+            }
+            
+            fclose (fp);
+            
+            m_prgdlg->Close();
+            delete m_prgdlg;
+            m_iProcessed = 0;
+            m_prgdlg = NULL;
+        }
+        else
+        {
+            wxMessageBox( wxString::Format( _("The files %s does not exist, nothing to import."), m_tPath->GetValue().c_str() ) );
+        }
+    }
+    this->Close();
+}
+
+void SettingsDialogImpl::OnCancel(wxCommandEvent& event)
+{
+    this->Close();
 }

@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "NavObjectCollection.h"
 #include "RoutePoint.h"
@@ -268,6 +267,7 @@ Track *GPXLoadTrack1( pugi::xml_node &trk_node, bool b_fullviz,
             if( ChildName == _T ( "desc" ) )
                 DescString = wxString::FromUTF8( tschild.first_child().value() );
             else
+            //TODO: This is wrong, left here just to save data of the 3.3 beta series users.
             if( ChildName.EndsWith( _T ( "TrackExtension" ) ) ) //Parse GPXX color
             {
                 for( pugi::xml_node gpxx_child = tschild.first_child(); gpxx_child; gpxx_child = gpxx_child.next_sibling() ) {
@@ -347,7 +347,7 @@ Track *GPXLoadTrack1( pugi::xml_node &trk_node, bool b_fullviz,
                                 }
                             }
                     } //extensions
-                    }
+                }
         }
         
         pTentTrack->m_RouteNameString = RouteName;
@@ -421,6 +421,7 @@ Route *GPXLoadRoute1( pugi::xml_node &wpt_node, bool b_fullviz,
             }
                 
             else
+            //TODO: This is wrong, left here just to save data of the 3.3 beta series users.
             if( ChildName.EndsWith( _T ( "RouteExtension" ) ) ) //Parse GPXX color
             {
                 for( pugi::xml_node gpxx_child = tschild.first_child(); gpxx_child; gpxx_child = gpxx_child.next_sibling() ) {
@@ -506,6 +507,15 @@ Route *GPXLoadRoute1( pugi::xml_node &wpt_node, bool b_fullviz,
                      else
                      if( ext_name == _T ( "opencpn:time_display" ) ) {
                         pTentRoute->m_TimeDisplayFormat, wxString::FromUTF8(ext_child.first_child().value());
+                     }
+                     else
+                     if( ext_name.EndsWith( _T ( "RouteExtension" ) ) ) //Parse GPXX color
+                     {
+                         for( pugi::xml_node gpxx_child = ext_child.first_child(); gpxx_child; gpxx_child = gpxx_child.next_sibling() ) {
+                                wxString gpxx_name = wxString::FromUTF8( gpxx_child.name() );
+                                if( gpxx_name.EndsWith( _T ( "DisplayColor" ) ) )
+                                    pTentRoute->m_Colour = wxString::FromUTF8(gpxx_child.first_child().value() );
+                         }
                      }
                 } //extensions
             }
@@ -735,7 +745,7 @@ bool GPXCreateTrk( pugi::xml_node node, Route *pRoute, unsigned int flags )
     }
     
     if( pRoute->m_Colour != wxEmptyString ) {
-        pugi::xml_node gpxx_ext = node.append_child("gpxx:TrackExtension");
+        pugi::xml_node gpxx_ext = child_ext.append_child("gpxx:TrackExtension");
         child = gpxx_ext.append_child("gpxx:DisplayColor");
         child.append_child(pugi::node_pcdata).set_value(pRoute->m_Colour.mb_str());
     }
@@ -874,7 +884,7 @@ bool GPXCreateRoute( pugi::xml_node node, Route *pRoute )
     }
     
     if( pRoute->m_Colour != wxEmptyString ) {
-        pugi::xml_node gpxx_ext = node.append_child("gpxx:RouteExtension");
+        pugi::xml_node gpxx_ext = child_ext.append_child("gpxx:RouteExtension");
         child = gpxx_ext.append_child("gpxx:DisplayColor");
         child.append_child(pugi::node_pcdata).set_value(pRoute->m_Colour.mb_str());
     }

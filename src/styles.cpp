@@ -553,8 +553,10 @@ StyleManager::StyleManager(void)
     isOK = false;
     currentStyle = NULL;
     Init( g_SData_Locn + _T("uidata") + wxFileName::GetPathSeparator() );
+#ifndef __WXOSX__
     Init( *pHome_Locn );
     Init( *pHome_Locn + _T(".opencpn") + wxFileName::GetPathSeparator() );
+#endif
     SetStyle( _T("") );
 }
 

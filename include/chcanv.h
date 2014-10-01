@@ -393,6 +393,9 @@ private:
       wxMouseEvent singleClickEvent;
 
       std::vector<s57Sector_t> extendedSectorLegs;
+      wxFont m_overzoomFont;
+      int m_overzoomTextWidth;
+      int m_overzoomTextHeight;
 
       //    Methods
       void OnActivate(wxActivateEvent& event);
@@ -442,6 +445,7 @@ private:
 
       void CreateOZEmbossMapData(ColorScheme cs);
       emboss_data *EmbossOverzoomIndicator ( ocpnDC &dc);
+      void SetOverzoomFont();
 
 //      void CreateCM93OffsetEmbossMapData(ColorScheme cs);
 //      void EmbossCM93Offset ( wxMemoryDC *pdc);
