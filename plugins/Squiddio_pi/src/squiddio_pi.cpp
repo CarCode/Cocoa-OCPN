@@ -181,6 +181,22 @@ bool squiddio_pi::DeInit(void)
 //          m_pdemo_window->Destroy(); //Gives a Segmentation fault
     }
     */
+    RemoveCanvasContextMenuItem(m_show_id);
+    RemoveCanvasContextMenuItem(m_hide_id);
+    RemoveCanvasContextMenuItem(m_update_id);
+    RemoveCanvasContextMenuItem(m_report_id);
+    
+    LayerList::iterator it;
+    int index = 0;
+    for (it = (*pLayerList).begin(); it != (*pLayerList).end(); ++it, ++index) {
+        Layer * l = (Layer *) (*it);
+        l->SetVisibleOnChart( false );
+        RenderLayerContentsOnChart( l, false );
+        pLayerList->DeleteObject( l );
+    }
+    
+    RequestRefresh(m_parent_window);
+
     delete pLayerList;
     delete pPoiMan;
     delete link;
@@ -319,7 +335,7 @@ bool squiddio_pi::LoadLayerItems(wxString &file_path, Layer *l, bool show)
     return nItems > 0;
 }
 
-void squiddio_pi::RenderLayerContentsOnChart( Layer *layer )
+void squiddio_pi::RenderLayerContentsOnChart( Layer *layer, bool save_config )
 {
     // Process POIs in this layer
 
@@ -350,7 +366,8 @@ void squiddio_pi::RenderLayerContentsOnChart( Layer *layer )
         g_VisibleLayers.Replace(layer->m_LayerName+_T(";"),wxEmptyString);
     }
     RequestRefresh(m_parent_window);
-    SaveConfig();
+    if (save_config)
+        SaveConfig();
 }
 
 bool squiddio_pi::ShowPOI(Poi * wp)

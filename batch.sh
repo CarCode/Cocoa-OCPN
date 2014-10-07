@@ -1,6 +1,6 @@
 #!/bin/bash
 # verzeichnis cd otool
-EXECFILES="libcalculator_pi.dylib libcelestial_navigation_pi.dylib libdashboard_pi.dylib libfindit_pi.dylib libgradar_pi.dylib libgrib_pi.dylib libiacfleet_pi.dylib liblogbookkonni_pi.dylib libvdr_pi.dylib libwatchman_pi.dylib libweather_routing_pi.dylib libweatherfax_pi.dylib libwmm_pi.dylib libs63_pi.dylib libtrimplot_pi.dylib OpenCPN"
+EXECFILES="libcalculator_pi.dylib libcelestial_navigation_pi.dylib libdashboard_pi.dylib libfindit_pi.dylib libgradar_pi.dylib libgrib_pi.dylib libiacfleet_pi.dylib liblogbookkonni_pi.dylib libobjsearch_pi.dylib libs63_pi.dylib libsquiddio_pi.dylib libtrimplot_pi.dylib libvdr_pi.dylib libwatchdog_pi.dylib libwatchman_pi.dylib libweather_routing_pi.dylib libweatherfax_pi.dylib libwmm_pi.dylib OpenCPN"
 LIBPATH="../Frameworks"
 NEWLIBPATH="@executable_path/../Frameworks"
 

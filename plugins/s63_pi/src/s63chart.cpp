@@ -64,6 +64,7 @@ extern wxString         g_SENCdir;
 extern bool             g_benable_screenlog;
 extern S63ScreenLogContainer           *g_pScreenLog;
 extern S63ScreenLog                    *g_pPanelScreenLog;
+extern bool             g_brendered_expired;
 
 extern bool             g_b_validated;
 extern bool             g_bSENCutil_valid;
@@ -744,7 +745,7 @@ wxString ChartS63::Build_eHDR( const wxString& name000 )
     cmd += _T(" -e ");
     cmd += GetInstallpermit();
 
-    if(g_benable_screenlog && (g_pPanelScreenLog || g_pScreenLog) ){
+    if(g_benable_screenlog /*&& (g_pPanelScreenLog || g_pScreenLog) */){
         cmd += _T(" -b ");
         wxString port;
         port.Printf( _T("%d"), g_backchannel_port );
@@ -780,16 +781,16 @@ wxString ChartS63::Build_eHDR( const wxString& name000 )
         m_extended_error += cmd;
         m_extended_error += _T("\n");
         m_extended_error += s_last_sync_error;
-        
+
         ScreenLogMessage( _T("\n") );
         ScreenLogMessage( m_extended_error + _T("\n"));
-/*        
+        
         for(unsigned int i=0 ; i < ehdr_result.GetCount() ; i++){
             ScreenLogMessage( ehdr_result[i] );
             if(!ehdr_result[i].EndsWith(_T("\n")))
                 ScreenLogMessage( _T("\n") );
         }
- */       
+
         return _T("");
     }
     else
@@ -889,6 +890,23 @@ int ChartS63::Init( const wxString& name_os63, int init_flags )
         return PI_INIT_FAIL_REMOVE;
     }
                 
+    //  Check the permit expiry date
+    wxDateTime permit_date;
+    wxString expiry_date = m_cell_permit.Mid(8, 8);
+    wxString ftime = expiry_date.Mid(0, 4) + _T(" ") + expiry_date.Mid(4,2) + _T(" ") + expiry_date.Mid(6,2);
+
+#if wxCHECK_VERSION(2, 9, 0)
+    wxString::const_iterator end;
+    permit_date.ParseDate(ftime, &end);
+#else
+    permit_date.ParseDate(ftime.wchar_str());
+#endif
+
+    if( permit_date.IsValid()){
+        wxDateTime now = wxDateTime::Now();
+        m_bexpired = now.IsLaterThan(permit_date);
+    }
+
     if( PI_HEADER_ONLY == init_flags ){
         
        //      else if the ehdr file exists, we init from there (normal path for adding cell to dB)
@@ -1055,10 +1073,10 @@ bool ChartS63::IsRenderDelta(PlugIn_ViewPort &vp_last, PlugIn_ViewPort &vp_propo
 
 double ChartS63::GetNormalScaleMin(double canvas_scale_factor, bool b_allow_overzoom)
 {
-    if( b_allow_overzoom )
+//    if( b_allow_overzoom )
         return m_Chart_Scale * 0.125;
-    else
-        return m_Chart_Scale * 0.25;
+//    else
+//        return m_Chart_Scale * 0.25;
 }
 
 double ChartS63::GetNormalScaleMax(double canvas_scale_factor, int canvas_width)
@@ -1195,6 +1213,9 @@ wxBitmap *ChartS63::GetThumbnail(int tnx, int tny, int cs)
 
 wxBitmap &ChartS63::RenderRegionView(const PlugIn_ViewPort& VPoint, const wxRegion &Region)
 {
+    if(m_bexpired)
+        g_brendered_expired = true;
+
     SetVPParms( VPoint );
 
     PI_PLIBSetRenderCaps( PLIB_CAPS_LINE_BUFFER | PLIB_CAPS_SINGLEGEO_BUFFER | PLIB_CAPS_OBJSEGLIST | PLIB_CAPS_OBJCATMUTATE);
@@ -1237,6 +1258,8 @@ wxBitmap &ChartS63::RenderRegionView(const PlugIn_ViewPort& VPoint, const wxRegi
 int ChartS63::RenderRegionViewOnGL( const wxGLContext &glc, const PlugIn_ViewPort& VPoint,
                           const wxRegion &Region, bool b_use_stencil )
 {
+    if(m_bexpired)
+        g_brendered_expired = true;
 
 #ifdef ocpnUSE_GL
     
@@ -2068,7 +2091,7 @@ bool ChartS63::InitFrom_ehdr( wxString &efn )
     fpx.Rewind();
     
     if(strncmp(verf, "SENC Version", 12)){
-        ScreenLogMessage( _T("   Info: ehdr decrypt failed first chance.\n "));
+//        ScreenLogMessage( _T("   Info: ehdr decrypt failed first chance.\n "));
         free( cb );
         return false;
     }
@@ -2408,11 +2431,9 @@ PI_InitReturn ChartS63::FindOrCreateSenc( const wxString& name )
             pfpx->Rewind();
         
             int senc_update = 0;
-            int senc_file_version;
+            int senc_file_version = -1;
             long senc_base_edtn = 0;
-#ifdef __WXOSX__
-            senc_file_version = 0;
-#endif
+
             if(!strncmp(verf, "SENC", 4)) {
                 bool dun = false;
                 char buf[256];
@@ -2458,35 +2479,38 @@ PI_InitReturn ChartS63::FindOrCreateSenc( const wxString& name )
             }
 
             else {
-                ScreenLogMessage( _T("   Info: eSENC file failed decrypt.\n "));
-            }
-            
-            //  SENC file version has to be correct for other tests to make sense
-            if( senc_file_version != CURRENT_SENC_FORMAT_VERSION ) {
-                ScreenLogMessage( _T("   Info: eSENC SENC format mismatch.\n "));
+                ScreenLogMessage( _T("   Info: Existing eSENC file failed decrypt.\n "));
                 bbuild_new_senc = true;
             }
             
-            //  Senc EDTN must be the same as .000 file EDTN.
-            //  This test catches the usual case where the .000 file is updated from the web,
-            //  and all updates (.001, .002, etc.)  are subsumed.
-            else if( senc_base_edtn != m_base_edtn ) {
-                wxString msg;
-                msg.Printf(_T("   Info: eSENC base edition mismatch %d %d .\n "), senc_base_edtn, m_base_edtn);
-                ScreenLogMessage( msg );
-                bbuild_new_senc = true;
-            }
-            
-            else {
-                //    Check the os63 file parse to see if the update number matches
-                if( senc_update != m_latest_update ) {
-                    ScreenLogMessage( _T("   Info: eSENC update mismatch.\n "));
+            //  So far so good, check some more stuff
+            if(!bbuild_new_senc){
+                //  SENC file version has to be correct for other tests to make sense
+                if( senc_file_version != CURRENT_SENC_FORMAT_VERSION ) {
+                    ScreenLogMessage( _T("   Info: Existing eSENC SENC format mismatch.\n "));
                     bbuild_new_senc = true;
                 }
-            }                
                 
+                //  Senc EDTN must be the same as .000 file EDTN.
+                //  This test catches the usual case where the .000 file is updated from the web,
+                //  and all updates (.001, .002, etc.)  are subsumed.
+                else if( senc_base_edtn != m_base_edtn ) {
+                    wxString msg;
+                    msg.Printf(_T("   Info: Existing eSENC base edition mismatch %d %d .\n "), senc_base_edtn, m_base_edtn);
+                    ScreenLogMessage( msg );
+                    bbuild_new_senc = true;
+                }
+
+                else {
+                    //    Check the os63 file parse to see if the update number matches
+                    if( senc_update != m_latest_update ) {
+                        ScreenLogMessage( _T("   Info: Existing eSENC update mismatch.\n "));
+                        bbuild_new_senc = true;
+                    }
+                }
+            }
         }
-                
+        
                 
         if( force_make_senc )
             bbuild_new_senc = true;
@@ -4495,65 +4519,127 @@ bool ChartS63::IsPointInObjArea( float lat, float lon, float select_radius, PI_S
             if (  lon >= (pTP->minx) && lon <= (pTP->maxx) &&
                 lat >= (pTP->miny) && lat <= (pTP->maxy) )
             {
-                double *p_vertex = pTP->p_vertex;
-                
-                switch( pTP->type ){
-                    case PTG_TRIANGLE_FAN: {
-                        for( int it = 0; it < pTP->nVert - 2; it++ ) {
-                            pvert_list[0].x = p_vertex[0];
-                            pvert_list[0].y = p_vertex[1];
-                            
-                            pvert_list[1].x = p_vertex[( it * 2 ) + 2];
-                            pvert_list[1].y = p_vertex[( it * 2 ) + 3];
-                            
-                            pvert_list[2].x = p_vertex[( it * 2 ) + 4];
-                            pvert_list[2].y = p_vertex[( it * 2 ) + 5];
-                            
-                            if( G_PtInPolygon( (MyPoint *) pvert_list, 3, easting, northing ) ) {
-                                ret = true;
-                                break;
+                if(ppg->data_type == DATA_TYPE_DOUBLE) {
+                    
+                    double *p_vertex = pTP->p_vertex;
+                    
+                    switch( pTP->type ){
+                        case PTG_TRIANGLE_FAN: {
+                            for( int it = 0; it < pTP->nVert - 2; it++ ) {
+                                pvert_list[0].x = p_vertex[0];
+                                pvert_list[0].y = p_vertex[1];
+                                
+                                pvert_list[1].x = p_vertex[( it * 2 ) + 2];
+                                pvert_list[1].y = p_vertex[( it * 2 ) + 3];
+                                
+                                pvert_list[2].x = p_vertex[( it * 2 ) + 4];
+                                pvert_list[2].y = p_vertex[( it * 2 ) + 5];
+                                
+                                if( G_PtInPolygon( (MyPoint *) pvert_list, 3, easting, northing ) ) {
+                                    ret = true;
+                                    break;
+                                }
                             }
+                            break;
                         }
-                        break;
-                    }
-                    case PTG_TRIANGLE_STRIP: {
-                        for( int it = 0; it < pTP->nVert - 2; it++ ) {
-                            pvert_list[0].x = p_vertex[( it * 2 )];
-                            pvert_list[0].y = p_vertex[( it * 2 ) + 1];
-                            
-                            pvert_list[1].x = p_vertex[( it * 2 ) + 2];
-                            pvert_list[1].y = p_vertex[( it * 2 ) + 3];
-                            
-                            pvert_list[2].x = p_vertex[( it * 2 ) + 4];
-                            pvert_list[2].y = p_vertex[( it * 2 ) + 5];
-                            
-                            if( G_PtInPolygon( (MyPoint *) pvert_list, 3, easting, northing ) ) {
-                                ret = true;
-                                break;
+                        case PTG_TRIANGLE_STRIP: {
+                            for( int it = 0; it < pTP->nVert - 2; it++ ) {
+                                pvert_list[0].x = p_vertex[( it * 2 )];
+                                pvert_list[0].y = p_vertex[( it * 2 ) + 1];
+                                
+                                pvert_list[1].x = p_vertex[( it * 2 ) + 2];
+                                pvert_list[1].y = p_vertex[( it * 2 ) + 3];
+                                
+                                pvert_list[2].x = p_vertex[( it * 2 ) + 4];
+                                pvert_list[2].y = p_vertex[( it * 2 ) + 5];
+                                
+                                if( G_PtInPolygon( (MyPoint *) pvert_list, 3, easting, northing ) ) {
+                                    ret = true;
+                                    break;
+                                }
                             }
+                            break;
                         }
-                        break;
-                    }
-                    case PTG_TRIANGLES: {
-                        for( int it = 0; it < pTP->nVert; it += 3 ) {
-                            pvert_list[0].x = p_vertex[( it * 2 )];
-                            pvert_list[0].y = p_vertex[( it * 2 ) + 1];
-                            
-                            pvert_list[1].x = p_vertex[( it * 2 ) + 2];
-                            pvert_list[1].y = p_vertex[( it * 2 ) + 3];
-                            
-                            pvert_list[2].x = p_vertex[( it * 2 ) + 4];
-                            pvert_list[2].y = p_vertex[( it * 2 ) + 5];
-                            
-                            if( G_PtInPolygon( (MyPoint *) pvert_list, 3, easting, northing ) ) {
-                                ret = true;
-                                break;
+                        case PTG_TRIANGLES: {
+                            for( int it = 0; it < pTP->nVert; it += 3 ) {
+                                pvert_list[0].x = p_vertex[( it * 2 )];
+                                pvert_list[0].y = p_vertex[( it * 2 ) + 1];
+                                
+                                pvert_list[1].x = p_vertex[( it * 2 ) + 2];
+                                pvert_list[1].y = p_vertex[( it * 2 ) + 3];
+                                
+                                pvert_list[2].x = p_vertex[( it * 2 ) + 4];
+                                pvert_list[2].y = p_vertex[( it * 2 ) + 5];
+                                
+                                if( G_PtInPolygon( (MyPoint *) pvert_list, 3, easting, northing ) ) {
+                                    ret = true;
+                                    break;
+                                }
                             }
+                            break;
                         }
-                        break;
                     }
-                }
-                
+                }  // double
+                else{
+                    float *p_vertex = (float *)pTP->p_vertex;
+                    
+                    switch( pTP->type ){
+                        case PTG_TRIANGLE_FAN: {
+                            for( int it = 0; it < pTP->nVert - 2; it++ ) {
+                                pvert_list[0].x = p_vertex[0];
+                                pvert_list[0].y = p_vertex[1];
+                                
+                                pvert_list[1].x = p_vertex[( it * 2 ) + 2];
+                                pvert_list[1].y = p_vertex[( it * 2 ) + 3];
+                                
+                                pvert_list[2].x = p_vertex[( it * 2 ) + 4];
+                                pvert_list[2].y = p_vertex[( it * 2 ) + 5];
+                                
+                                if( G_PtInPolygon( (MyPoint *) pvert_list, 3, easting, northing ) ) {
+                                    ret = true;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                        case PTG_TRIANGLE_STRIP: {
+                            for( int it = 0; it < pTP->nVert - 2; it++ ) {
+                                pvert_list[0].x = p_vertex[( it * 2 )];
+                                pvert_list[0].y = p_vertex[( it * 2 ) + 1];
+                                
+                                pvert_list[1].x = p_vertex[( it * 2 ) + 2];
+                                pvert_list[1].y = p_vertex[( it * 2 ) + 3];
+                                
+                                pvert_list[2].x = p_vertex[( it * 2 ) + 4];
+                                pvert_list[2].y = p_vertex[( it * 2 ) + 5];
+                                
+                                if( G_PtInPolygon( (MyPoint *) pvert_list, 3, easting, northing ) ) {
+                                    ret = true;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                        case PTG_TRIANGLES: {
+                            for( int it = 0; it < pTP->nVert; it += 3 ) {
+                                pvert_list[0].x = p_vertex[( it * 2 )];
+                                pvert_list[0].y = p_vertex[( it * 2 ) + 1];
+                                
+                                pvert_list[1].x = p_vertex[( it * 2 ) + 2];
+                                pvert_list[1].y = p_vertex[( it * 2 ) + 3];
+                                
+                                pvert_list[2].x = p_vertex[( it * 2 ) + 4];
+                                pvert_list[2].y = p_vertex[( it * 2 ) + 5];
+                                
+                                if( G_PtInPolygon( (MyPoint *) pvert_list, 3, easting, northing ) ) {
+                                    ret = true;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }  // float
             }
             pTP = pTP->p_next;
         }

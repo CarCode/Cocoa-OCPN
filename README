@@ -36,7 +36,7 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    Mac Hilfe usw.
 
 b. Diese Version basiert auf Release-Version von wxWidgets 3.1.0 mit
-   entsprechenden dylibs vom 02. August 2014. Die Einbindung der Libs als
+   entsprechenden dylibs vom 04. Oktober 2014. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -74,7 +74,7 @@ Ich verwende die SourceTree.app für Mac OS X.
 Im Sourcen-Tree neues Verzeichnis erstellen z.B. "build-cocoa-debug".
 Im Terminal in dies Verzeichnis wechseln und konfigurieren mit:
 
-../configure --with-osx_cocoa --enable-debug --enable-shared --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk --with-macosx-version-min=10.8 --enable-unicode --enable-mimetype=yes
+../configure --with-osx_cocoa --enable-debug --enable-shared --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk --with-macosx-version-min=10.9 --enable-unicode --enable-mimetype=yes
 
 Dann Eingabe von: make
 und schließlich Eingabe von: sudo make install
@@ -87,5 +87,5 @@ dylibs (im Contents/Frameworks/ Verzeichnis bzw. Contents/Plugins/ Verzeichnis)
 mit "install_name_tool -change" bearbeitet werden!
 Siehe batch.sh und batchwx.sh
 -----------------------------------------------------------------------
-19. September 2014
+04. Oktober 2014
 

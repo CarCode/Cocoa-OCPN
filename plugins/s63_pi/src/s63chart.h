@@ -301,6 +301,7 @@ protected:
       size_t            m_crypt_size;
 
       double            m_next_safe_contour;
+      bool              m_bexpired;
 
 };
 

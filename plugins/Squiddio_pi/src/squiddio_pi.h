@@ -1,10 +1,10 @@
-/*****************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose   Squiddio plugin
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Mauro Calvi   *
+ *   Copyright (C) 2014 by Mauro Calvi                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,8 +20,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef _SQUIDDIOPI_H_
 #define _SQUIDDIOPI_H_
@@ -36,7 +35,7 @@
 #include <wx/list.h>
 
 #define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    2
+#define     PLUGIN_VERSION_MINOR    3
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    10
@@ -82,7 +81,7 @@ public:
 
 //    The optional method overrides
 
-      void RenderLayerContentsOnChart(Layer *layer);
+      void RenderLayerContentsOnChart(Layer *layer, bool save_config = true);
 
       void OnContextMenuItemCallback(int id);
       void UpdateAuiStatus(void);

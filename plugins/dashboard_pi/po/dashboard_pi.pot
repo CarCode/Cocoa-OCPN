@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dashboard_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-05 11:03+0200\n"
+"POT-Creation-Date: 2014-10-06 16:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -154,177 +154,181 @@ msgstr ""
 msgid "Sum Log"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:335 ../src/dashboard_pi.cpp:448
-#: ../src/dashboard_pi.cpp:1285 ../src/dashboard_pi.cpp:1294
-#: ../src/dashboard_pi.cpp:1452 ../src/dashboard_pi.cpp:1491
-#: ../src/dashboard_pi.cpp:1755
+#: ../src/dashboard_pi.cpp:172
+msgid "From Ownship"
+msgstr ""
+
+#: ../src/dashboard_pi.cpp:338 ../src/dashboard_pi.cpp:451
+#: ../src/dashboard_pi.cpp:1288 ../src/dashboard_pi.cpp:1297
+#: ../src/dashboard_pi.cpp:1455 ../src/dashboard_pi.cpp:1494
+#: ../src/dashboard_pi.cpp:1758
 msgid "Dashboard"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:453
+#: ../src/dashboard_pi.cpp:456
 msgid "Dashboard PlugIn for OpenCPN"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:458
+#: ../src/dashboard_pi.cpp:461
 msgid ""
 "Dashboard PlugIn for OpenCPN\n"
 "Provides navigation instrument display from NMEA source."
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1428
+#: ../src/dashboard_pi.cpp:1431
 msgid "Dashboard preferences"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1498
+#: ../src/dashboard_pi.cpp:1501
 msgid "show this dashboard"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1504
+#: ../src/dashboard_pi.cpp:1507
 msgid "Caption:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1512
+#: ../src/dashboard_pi.cpp:1515
 msgid "Orientation:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1516 ../src/dashboard_pi.cpp:1948
+#: ../src/dashboard_pi.cpp:1519 ../src/dashboard_pi.cpp:1951
 msgid "Vertical"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1517 ../src/dashboard_pi.cpp:1950
+#: ../src/dashboard_pi.cpp:1520 ../src/dashboard_pi.cpp:1953
 msgid "Horizontal"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1524 ../src/dashboard_pi.cpp:1532
-#: ../src/dashboard_pi.cpp:1874
+#: ../src/dashboard_pi.cpp:1527 ../src/dashboard_pi.cpp:1535
+#: ../src/dashboard_pi.cpp:1877
 msgid "Instruments"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1540
+#: ../src/dashboard_pi.cpp:1543
 msgid "Add"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1553
+#: ../src/dashboard_pi.cpp:1556
 msgid "Delete"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1559
+#: ../src/dashboard_pi.cpp:1562
 msgid "Up"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1564
+#: ../src/dashboard_pi.cpp:1567
 msgid "Down"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1574
+#: ../src/dashboard_pi.cpp:1577
 msgid "Appearance"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1576
+#: ../src/dashboard_pi.cpp:1579
 msgid "Fonts"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1582
+#: ../src/dashboard_pi.cpp:1585
 msgid "Title:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1588
+#: ../src/dashboard_pi.cpp:1591
 msgid "Data:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1594
+#: ../src/dashboard_pi.cpp:1597
 msgid "Label:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1600
+#: ../src/dashboard_pi.cpp:1603
 msgid "Small:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1608
+#: ../src/dashboard_pi.cpp:1611
 msgid "Units, Ranges, Formats"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1614
+#: ../src/dashboard_pi.cpp:1617
 msgid "Speedometer max value:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1619
+#: ../src/dashboard_pi.cpp:1622
 msgid "Boat speed units:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1622 ../src/dashboard_pi.cpp:1640
+#: ../src/dashboard_pi.cpp:1625 ../src/dashboard_pi.cpp:1643
 msgid "Honor OpenCPN settings"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1622 ../src/dashboard_pi.cpp:1649
+#: ../src/dashboard_pi.cpp:1625 ../src/dashboard_pi.cpp:1652
 msgid "Kts"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1622 ../src/dashboard_pi.cpp:1649
+#: ../src/dashboard_pi.cpp:1625 ../src/dashboard_pi.cpp:1652
 msgid "mph"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1622 ../src/dashboard_pi.cpp:1649
+#: ../src/dashboard_pi.cpp:1625 ../src/dashboard_pi.cpp:1652
 msgid "km/h"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1622 ../src/dashboard_pi.cpp:1649
+#: ../src/dashboard_pi.cpp:1625 ../src/dashboard_pi.cpp:1652
 msgid "m/s"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1628
+#: ../src/dashboard_pi.cpp:1631
 msgid "Depth units:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1631 ../src/dashboard_pi.cpp:1640
+#: ../src/dashboard_pi.cpp:1634 ../src/dashboard_pi.cpp:1643
 msgid "Meters"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1631
+#: ../src/dashboard_pi.cpp:1634
 msgid "Feet"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1631
+#: ../src/dashboard_pi.cpp:1634
 msgid "Fathoms"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1631
+#: ../src/dashboard_pi.cpp:1634
 msgid "Centimeters"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1631
+#: ../src/dashboard_pi.cpp:1634
 msgid "Inches"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1637
+#: ../src/dashboard_pi.cpp:1640
 msgid "Distance units:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1640
+#: ../src/dashboard_pi.cpp:1643
 msgid "Nautical miles"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1640
+#: ../src/dashboard_pi.cpp:1643
 msgid "Statute miles"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1640
+#: ../src/dashboard_pi.cpp:1643
 msgid "Kilometers"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1646
+#: ../src/dashboard_pi.cpp:1649
 msgid "Wind speed units:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1857
+#: ../src/dashboard_pi.cpp:1860
 msgid "Add instrument"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1863
+#: ../src/dashboard_pi.cpp:1866
 msgid "Select instrument to add:"
 msgstr ""
 
-#: ../src/dashboard_pi.cpp:1957
+#: ../src/dashboard_pi.cpp:1960
 msgid "Preferences..."
 msgstr ""
 
@@ -359,11 +363,11 @@ msgstr ""
 msgid "NW"
 msgstr ""
 
-#: ../src/instrument.cpp:228
+#: ../src/instrument.cpp:232
 msgid " true"
 msgstr ""
 
-#: ../src/instrument.cpp:230
+#: ../src/instrument.cpp:234
 msgid " mag"
 msgstr ""
 
