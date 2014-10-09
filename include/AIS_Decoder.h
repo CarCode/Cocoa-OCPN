@@ -19,13 +19,37 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __AIS_DECODER_H__
 #define __AIS_DECODER_H__
 
 #include "ais.h"
+
+#define TRACKTYPE_DEFAULT       0
+#define TRACKTYPE_ALWAYS        1
+#define TRACKTYPE_NEVER         2
+
+class MMSIProperties
+{
+public:
+    MMSIProperties(){};
+    MMSIProperties( int mmsi ){ Init(); MMSI = mmsi; }
+    MMSIProperties( wxString &spec );
+    
+    ~MMSIProperties();
+    
+    wxString Serialize();
+    
+    void Init( void );
+    int         MMSI;
+    int         TrackType;
+    bool        m_bignore;
+    bool        m_bMOB;
+    bool        m_bVDM;
+};
+
+WX_DECLARE_OBJARRAY(MMSIProperties *,      ArrayOfMMSIProperties);
 
 class AIS_Decoder : public wxEvtHandler
 {
@@ -44,7 +68,6 @@ public:
     bool IsAISSuppressed(void){ return m_bSuppressed; }
     bool IsAISAlertGeneral(void) { return m_bGeneralAlert; }
     AIS_Error DecodeSingleVDO( const wxString& str, GenericPosDatEx *pos, wxString *acc );
-
 private:
     void OnActivate(wxActivateEvent& event);
     void OnTimerAIS(wxTimerEvent& event);

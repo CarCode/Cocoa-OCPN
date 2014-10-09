@@ -165,6 +165,7 @@ class wxSocketEvent;
 class ocpnToolBarSimple;
 class OCPN_DataStreamEvent;
 class DataStream;
+class AIS_Target_Data;
 
 //      A class to contain NMEA messages, their receipt time, and their source priority
 class NMEA_Msg_Container
@@ -334,6 +335,9 @@ class MyFrame: public wxFrame
 
     void TouchAISActive(void);
     void UpdateAISTool(void);
+
+    void ActivateAISMOBRoute( AIS_Target_Data *ptarget );
+    void UpdateAISMOBRoute( AIS_Target_Data *ptarget );
 
     wxStatusBar         *m_pStatusBar;
     int                 nRoute_State;
