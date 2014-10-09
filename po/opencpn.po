@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenCPN 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-09 14:23+0200\n"
-"PO-Revision-Date: 2014-10-09 14:27+0100\n"
+"POT-Creation-Date: 2014-10-09 16:11+0200\n"
+"PO-Revision-Date: 2014-10-09 18:46+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -2607,13 +2607,16 @@ msgid ""
 "Please click \"OK\" to agree and proceed, \"Cancel\" to quit.\n"
 msgstr ""
 "\n"
-"OpenCPN wird in der Hoffnung verbreitet, dass es nützlich ist,\n"
-"aber OHNE IRGENDEINE GARANTIE, insbesondere ohne die implizite\n"
-"Garantie der MARKTREIFE oder der EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.\n"
+"OpenCPN wird in der Hoffnung verbreitet, dass es\n"
+"nützlich ist, aber OHNE IRGENDEINE GARANTIE,\n"
+"insbesondere ohne die implizite Garantie der\n"
+"MARKTREIFE oder der EIGNUNG FÜR EINEN\n"
+"BESTIMMTEN ZWECK.\n"
 "Lesen Sie die GNU General Public License v2 für weitere Details.\n"
 "\n"
-"OpenCPN darf nur in Verbindung mit amtlichen Seekarten und\n"
-"den traditionellen Methoden der Navigation verwendet werden.\n"
+"OpenCPN darf nur in Verbindung mit amtlichen\n"
+"Seekarten und den traditionellen Methoden der\n"
+"Navigation verwendet werden.\n"
 "\n"
 "Verlassen Sie sich nicht auf OpenCPN im Bezug auf die Sicherheit von Leben "
 "und Ausrüstung.\n"
@@ -3963,6 +3966,10 @@ msgstr "VDM->VDO"
 #: ../src/options.cpp:701
 msgid "New..."
 msgstr "Neu..."
+
+#: ../src/options.cpp:724
+msgid "Add MMSI Properties"
+msgstr "MMSI Eigenschaften hinzufügen"
 
 #: ../src/options.cpp:1036
 msgid "NMEA"
@@ -5969,9 +5976,11 @@ msgstr "Verschiebe Wegpunkt"
 #
 #
 #
+#
 #~ msgid "Copy"
 #~ msgstr "Kopieren"
 
+#
 #
 #
 #
@@ -5983,9 +5992,11 @@ msgstr "Verschiebe Wegpunkt"
 #
 #
 #
+#
 #~ msgid "French Guina"
 #~ msgstr "Franz. Guyana"
 
+#
 #
 #
 #
@@ -5997,9 +6008,11 @@ msgstr "Verschiebe Wegpunkt"
 #
 #
 #
+#
 #~ msgid "Netherlands Antilles"
 #~ msgstr "Niederländische Antillen"
 
+#
 #
 #
 #
@@ -6011,9 +6024,11 @@ msgstr "Verschiebe Wegpunkt"
 #
 #
 #
+#
 #~ msgid "Paste"
 #~ msgstr "Einfügen"
 
+#
 #
 #
 #
@@ -6025,6 +6040,7 @@ msgstr "Verschiebe Wegpunkt"
 #
 #
 #
+#
 #~ msgid "Route Uploaded successfully."
 #~ msgstr "Route erfolgreich hochgeladen."
 
@@ -6032,9 +6048,11 @@ msgstr "Verschiebe Wegpunkt"
 #
 #
 #
+#
 #~ msgid "Tajikistan"
 #~ msgstr "Tajikistan"
 
+#
 #
 #
 #

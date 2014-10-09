@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-09 14:23+0200\n"
+"POT-Creation-Date: 2014-10-09 16:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3903,6 +3903,10 @@ msgstr ""
 
 #: ../src/options.cpp:701
 msgid "New..."
+msgstr ""
+
+#: ../src/options.cpp:724
+msgid "Add MMSI Properties"
 msgstr ""
 
 #: ../src/options.cpp:1036
