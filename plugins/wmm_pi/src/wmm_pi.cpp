@@ -31,6 +31,10 @@
 #include "wx/wx.h"
 #endif //precompiled headers
 #include "wx/stdpaths.h"
+
+void WMMLogMessage1(wxString s) { wxLogMessage(_T("WMM: ") + s); }
+extern "C" void WMMLogMessage(const char *s) { WMMLogMessage1(wxString::FromAscii(s)); }
+
 #include "wmm_pi.h"
 
 // the class factories, used to create and destroy instances of the PlugIn
@@ -139,8 +143,8 @@ int wmm_pi::Init(void)
 	if(MagneticModel == NULL || TimedMagneticModel == NULL)
 	{
 		//WMM_Error(2); Nohal - We don't want the printf's
-	wxLogMessage(_T("WMM initialization error"));
-	m_buseable = false;
+        WMMLogMessage1(_T("initialization error"));
+        m_buseable = false;
 	}
 
 	WMM_SetDefaults(&Ellip, MagneticModel, &Geoid); /* Set default values and constants */
@@ -155,12 +159,12 @@ int wmm_pi::Init(void)
     m_wmm_dir.Append(_T("plugins/wmm/data"));
 #endif
 	filename = m_wmm_dir + _T("/WMM.COF");
-	char cstring[1024];
-	strncpy(cstring, (const char*)filename.mb_str(wxConvUTF8), 1023);
-	if (0 == WMM_readMagneticModel(cstring, MagneticModel))
+    wxCharBuffer buf = filename.ToUTF8();
+    
+    if (0 == WMM_readMagneticModel(buf.data(), MagneticModel))
 	{
-		wxLogMessage(wxString::Format(_T("Warning: WMM model data file %s can't be loaded, using the bundled data."), filename.c_str()));
-		WMM_setupMagneticModel(wmm_cof_data, MagneticModel);
+        wxLogMessage(wxString::Format(_T("Warning: WMM model data file %s can't be loaded, using the bundled data."), buf.data()));
+        WMM_setupMagneticModel(wmm_cof_data, MagneticModel);
 	}
 
        filename = m_wmm_dir + _T("/EGM9615.BIN");
@@ -295,7 +299,10 @@ void wmm_pi::RearrangeWindow()
 		m_pWmmDialog->sbSboat->Show(m_pWmmDialog->gSboat, true, true);
 	}
 
-	if (!m_bShowAtCursor)
+    m_pWmmDialog->m_cbEnablePlot->Show(m_bShowPlotOptions);
+    m_pWmmDialog->m_bPlotSettings->Show(m_bShowPlotOptions);
+
+    if (!m_bShowAtCursor)
 	{
 		m_pWmmDialog->bSframe->Hide(m_pWmmDialog->sbScursor, true);
 	}
@@ -338,6 +345,10 @@ void wmm_pi::OnToolbarToolCallback(int id)
 		SendPluginMessage(_T("WMM_WINDOW_SHOWN"), wxEmptyString);
 	else
 		SendPluginMessage(_T("WMM_WINDOW_HIDDEN"), wxEmptyString);
+
+    wxPoint p = m_pWmmDialog->GetPosition();
+    m_pWmmDialog->Move(0,0);        // workaround for gtk autocentre dialog behavior
+    m_pWmmDialog->Move(p);
 }
 
 void wmm_pi::RenderOverlayBoth(wxDC *dc, PlugIn_ViewPort *vp)
@@ -623,6 +634,7 @@ bool wmm_pi::LoadConfig(void)
 	{
 		pConf->SetPath ( _T( "/Settings/WMM" ) );
 		pConf->Read ( _T( "ViewType" ),  &m_iViewType, 1 );
+        pConf->Read ( _T( "ShowPlotOptions" ),  &m_bShowPlotOptions, 1 );
 		pConf->Read ( _T( "ShowAtCursor" ),  &m_bShowAtCursor, 1 );
 		pConf->Read ( _T( "ShowLiveIcon" ),  &m_bShowLiveIcon, 1 );
 		pConf->Read ( _T( "Opacity" ),  &m_iOpacity, 255 );
@@ -671,6 +683,7 @@ bool wmm_pi::SaveConfig(void)
 	{
 		pConf->SetPath ( _T ( "/Settings/WMM" ) );
 		pConf->Write ( _T ( "ViewType" ), m_iViewType );
+        pConf->Write ( _T ( "ShowPlotOptions" ), m_bShowPlotOptions );
 		pConf->Write ( _T ( "ShowAtCursor" ), m_bShowAtCursor );
 		pConf->Write ( _T ( "ShowLiveIcon" ), m_bShowLiveIcon );
 		pConf->Write ( _T ( "Opacity" ), m_iOpacity );
@@ -706,6 +719,7 @@ void wmm_pi::ShowPreferencesDialog( wxWindow* parent )
 	dialog->SetBackgroundColour(cl);
 
 	dialog->m_rbViewType->SetSelection(m_iViewType);
+    dialog->m_cbShowPlotOptions->SetValue(m_bShowPlotOptions);
 	dialog->m_cbShowAtCursor->SetValue(m_bShowAtCursor);
 	dialog->m_cbLiveIcon->SetValue(m_bShowLiveIcon);
 	dialog->m_sOpacity->SetValue(m_iOpacity);
@@ -713,6 +727,7 @@ void wmm_pi::ShowPreferencesDialog( wxWindow* parent )
 	if(dialog->ShowModal() == wxID_OK)
 	{
 		m_iViewType = dialog->m_rbViewType->GetSelection();
+        m_bShowPlotOptions = dialog->m_cbShowPlotOptions->GetValue();
 		m_bShowAtCursor = dialog->m_cbShowAtCursor->GetValue();
 		m_bShowLiveIcon = dialog->m_cbLiveIcon->GetValue();
 		m_iOpacity = dialog->m_sOpacity->GetValue();
@@ -801,7 +816,8 @@ int WMM_setupMagneticModel(char *data, WMMtype_MagneticModel * MagneticModel)
 	MagneticModel->Secular_Var_Coeff_G[0] = 0.0;
 
 	c_tmp = strtok(tmp_data, "\n");
-	strncpy(c_str, c_tmp, 81);
+    strncpy(c_str, c_tmp, 80);
+    c_str[80] = '\0';
 	sscanf(c_str,"%lf%s",&epoch, MagneticModel->ModelName);
 	MagneticModel->epoch = epoch;
 	while (EOF_Flag == 0)
@@ -817,7 +833,7 @@ int WMM_setupMagneticModel(char *data, WMMtype_MagneticModel * MagneticModel)
 		icomp = strcmp("9999", c_new);
 		if (icomp == 0)
 		{
-			EOF_Flag = 1;
+//			EOF_Flag = 1;  // Not used
 			break;
 		}
 		/* END OF FILE NOT ENCOUNTERED, GET VALUES */

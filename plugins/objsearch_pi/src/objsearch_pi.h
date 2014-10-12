@@ -89,7 +89,11 @@ private:
 class SettingsDialogImpl : public SettingsDialog
 {
 public:
+#ifdef __WXOSX__
+    SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_DIALOG_STYLE );
+#else
     SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,440 ), long style = wxDEFAULT_DIALOG_STYLE );
+#endif
     ~SettingsDialogImpl();
     void OnBrowse( wxCommandEvent& event );
     void OnOk( wxCommandEvent& event );
@@ -106,7 +110,11 @@ private:
 class ObjSearchDialogImpl : public ObjSearchDialog
 {
 public:
+#ifdef __WXOSX__
+    ObjSearchDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Chart Object Search"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 760,480 ), long style = wxDEFAULT_DIALOG_STYLE );
+#else
     ObjSearchDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Chart Object Search"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 660,480 ), long style = wxDEFAULT_DIALOG_STYLE );
+#endif
     ~ObjSearchDialogImpl();
 
     void ClearFeatures();

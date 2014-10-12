@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  * $Id: MagneticPlotMap.cpp,v 1.0 2011/02/26 01:54:37 nohal Exp $
  *
  * Project:  OpenCPN
@@ -6,7 +6,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier   *
+ *   Copyright (C) 2013 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,8 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -130,10 +129,6 @@ double MagneticPlotMap::CalcParameter(double lat, double lon)
 		break;
 	}
 
-	if(isnan(m_MinContour) || ret < m_MinContour)
-		m_MinContour = ret;
-	if(isnan(m_MaxContour) || ret > m_MaxContour)
-		m_MaxContour = ret;
 	return ret;
 }
 
@@ -382,20 +377,6 @@ bool MagneticPlotMap::Recompute(wxDateTime date)
 	}
 
 	delete progressdialog;
-
-	m_MinContour /= m_Spacing;
-	m_MinContour = floor(m_MinContour);
-	m_MinContour *= m_Spacing;
-
-	m_MaxContour /= m_Spacing;
-	m_MaxContour = ceil(m_MaxContour);
-	m_MaxContour *= m_Spacing;
-
-	m_contourcachesize = (m_MaxContour - m_MinContour) / m_Spacing + 1;
-	m_contourcache = new ContourBitmap[m_contourcachesize];
-	for(int i=0; i<m_contourcachesize; i++)
-		m_contourcache[i] = ContourCacheData(m_MinContour + i*m_Spacing);
-
 	return true;
 }
 
@@ -434,114 +415,42 @@ void MagneticPlotMap::ClearMap()
 		for(int lonind=0; lonind<LONGITUDE_ZONES; lonind++)
 			m_map[latind][lonind].clear();
 
-	for(int i=0; i<m_contourcachesize; i++) {
-		delete [] m_contourcache[i].data;
-	}
-	delete [] m_contourcache;
-
-	m_MinContour = m_MaxContour = zero / zero; /* set to nan */
-	m_contourcachesize = 0;
-	m_contourcache = NULL;
-}
-
-/* generate a cache bitmap of a given number */
-ContourBitmap MagneticPlotMap::ContourCacheData(double value)
-{
-	wxString msg;
-	msg.Printf(_("%.0f"), value);
-
-	wxMemoryDC mdc;
-	wxBitmap bm( 120, 25 );
-	mdc.SelectObject( bm );
-	mdc.Clear();
-
-	wxFont mfont( 15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_NORMAL );
-	mdc.SetFont( mfont );
-	mdc.SetPen( *wxBLACK_PEN);
-	mdc.SetBrush( *wxWHITE_BRUSH);
-
-	int w, h;
-	mdc.GetTextExtent( msg, &w, &h );
-
-	mdc.DrawText( msg, 0, 0 );
-
-	mdc.SelectObject( wxNullBitmap );
-
-	wxRect r(0, 0, w, h);
-	wxBitmap sbm = bm.GetSubBitmap(r);
-	wxImage image = sbm.ConvertToImage();
-#ifndef __WXOSX__
-	image.InitAlpha();
-#endif
-	unsigned char *d = image.GetData();
-	unsigned char *a = image.GetAlpha();
-
-	w = image.GetWidth(), h = image.GetHeight();
-	unsigned char *e = new unsigned char[4 * w * h];
-	for( int y = 0; y < h; y++ )
-		for( int x = 0; x < w; x++ ) {
-			unsigned char r, g, b;
-			int ioff = (y * w + x);
-			r = d[ioff* 3 + 0];
-			g = d[ioff* 3 + 1];
-			b = d[ioff* 3 + 2];
-
-			a[ioff] = 255-r;
-
-			int off = ( y * w + x );
-			e[off * 4 + 0] = r;
-			e[off * 4 + 1] = g;
-			e[off * 4 + 2] = b;
-			e[off * 4 + 3] = 255-r;
-	}
-
-	ContourBitmap t;
-	t.image = image;
-	t.data = e;
-	return t;
 }
 
 /* draw text of the value of a contour at a given location */
 void MagneticPlotMap::DrawContour(wxDC *dc, PlugIn_ViewPort &VP, double contour, double lat, double lon)
 {
-	int index = (contour - m_MinContour) / m_Spacing;
-	if(index < 0 || index >= m_contourcachesize)
-		return;
-
 	wxPoint r;
 
 	GetCanvasPixLL(&VP, &r, lat, lon);
 
-	double dist_squared1 = square(r.x-m_contourcache[index].lastx)
-		+ square(r.y-m_contourcache[index].lasty);
-	double dist_squared2 = square(r.x-lastx) + square(r.y-lasty);
+    double dist_squared = square(r.x-lastx) + square(r.y-lasty);
 	/* avoid printing numbers on top of each other */
-	if(dist_squared1 < 100000 || dist_squared2 < 40000)
+    if(dist_squared < 40000)
 		return;
 
-	m_contourcache[index].lastx = lastx = r.x;
-	m_contourcache[index].lasty = lasty = r.y;
+    lastx = r.x;
+    lasty = r.y;
 
-	int w = m_contourcache[index].image.GetWidth();
-	int h = m_contourcache[index].image.GetHeight();
+    wxString msg;
+    msg.Printf(_T("%.0f"), contour);
 
 	if(dc) {
-		wxBitmap bmp(m_contourcache[index].image);
-		dc->DrawBitmap(bmp, r.x - w/2, r.y - h/2, true);
+        int w, h;
+        dc->GetTextExtent( msg, &w, &h);
+        dc->DrawText(msg, r.x - w/2, r.y - h/2);
 	} else {
-		glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
-		glColor4f( 1, 1, 1, 1 );
-
 		glEnable( GL_BLEND );
 		glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-		/* center */
-		glRasterPos2i( r.x - w/2, r.y - h/2);
-		glPixelZoom( 1, -1 ); /* draw data from top to bottom */
-		glDrawPixels( w, h, GL_RGBA, GL_UNSIGNED_BYTE, m_contourcache[index].data);
-		glPixelZoom( 1, 1 );
+        int w, h;
+        m_TexFont.GetTextExtent( msg, &w, &h);
 
-		glPopAttrib();
+        glEnable(GL_TEXTURE_2D);
+        m_TexFont.RenderString(msg, r.x - w/2, r.y - h/2);
+        glDisable(GL_TEXTURE_2D);
+        
+        glDisable(GL_BLEND);
 	}
 }
 
@@ -551,11 +460,16 @@ void MagneticPlotMap::Plot(wxDC *dc, PlugIn_ViewPort *vp, wxColour color)
 	if(!m_bEnabled)
 		return;
 
-	if(dc) {
+    wxFont font( 15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_NORMAL );
+
+    if(dc) {
 		dc->SetPen(wxPen(color, 3));
+        dc->SetTextForeground(color);
+        dc->SetFont( font );
 	} else {
 		glLineWidth(3.0);
 		glColor4ub(color.Red(), color.Green(), color.Blue(), color.Alpha());
+        m_TexFont.Build( font );
 	}
 
 	int startlatind = floor((vp->lat_min+MAX_LAT)/ZONE_SIZE);

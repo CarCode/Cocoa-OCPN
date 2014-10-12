@@ -47,7 +47,7 @@
 #define PI        3.1415926535897931160E0      /* pi */
 #endif
 
-#include "ocpn_plugin.h"
+#include "../../../include/ocpn_plugin.h"
 #include "wx/socket.h"
 #include "nmea0183/nmea0183.h"
 

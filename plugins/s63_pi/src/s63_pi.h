@@ -36,7 +36,7 @@
 #include <wx/fileconf.h>
 #include <wx/listctrl.h>
 #include <wx/notebook.h>
-#include "TexFont.h"
+#include "../../../include/TexFont.h"
 
 #define     PLUGIN_VERSION_MAJOR    1
 #define     PLUGIN_VERSION_MINOR    0
@@ -44,7 +44,7 @@
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    11
 
-#include "ocpn_plugin.h"
+#include "../../../include/ocpn_plugin.h"
 
 
 enum {

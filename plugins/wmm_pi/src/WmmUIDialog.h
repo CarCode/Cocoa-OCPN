@@ -103,6 +103,7 @@ class WmmPrefsDialog : public wxDialog
 
 	public:
 		wxRadioBox* m_rbViewType;
+        wxCheckBox* m_cbShowPlotOptions;
 		wxCheckBox* m_cbShowAtCursor;
 		wxCheckBox* m_cbLiveIcon;
 		wxSlider* m_sOpacity;

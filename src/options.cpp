@@ -721,7 +721,7 @@ void MMSI_Props_Panel::OnNewButton( wxCommandEvent &event )
 {
     MMSIProperties *props = new MMSIProperties(-1);
     
-    MMSIEditDialog *pd = new MMSIEditDialog( props, m_parent, -1, _T("Add MMSI Properties"), wxDefaultPosition, wxSize(200,200) );
+    MMSIEditDialog *pd = new MMSIEditDialog( props, m_parent, -1, _("Add MMSI Properties"), wxDefaultPosition, wxSize(200,200) );
     
     if ( pd->ShowModal() == wxID_OK )
         g_MMSI_Props_Array.Add( props );
@@ -3686,11 +3686,14 @@ void options::OnApplyClick( wxCommandEvent& event )
 
         int nLang = sizeof( lang_list ) / sizeof(int);
         for( int it = 0; it < nLang; it++ ) {
-            wxString lang_canonical = wxLocale::GetLanguageInfo( lang_list[it] )->CanonicalName;
-            wxString test_string = GetOCPNKnownLanguage( lang_canonical, NULL );
-            if( lang_sel == test_string ) {
-                new_canon = lang_canonical;
-                break;
+            const wxLanguageInfo * pli = wxLocale::GetLanguageInfo( lang_list[it] );
+            if(pli){
+                wxString lang_canonical = pli->CanonicalName;
+                wxString test_string = GetOCPNKnownLanguage( lang_canonical, NULL );
+                if( lang_sel == test_string ) {
+                    new_canon = lang_canonical;
+                    break;
+                }
             }
         }
 

@@ -13,7 +13,14 @@ WmmUIDialogBase::WmmUIDialogBase( wxWindow* parent, wxWindowID id, const wxStrin
 {
 	this->SetSizeHints( wxSize( -1,-1 ), wxSize( -1,-1 ) );
 
-	bSframe = new wxBoxSizer( wxVERTICAL );
+    wxFlexGridSizer* fgSizer6;
+    fgSizer6 = new wxFlexGridSizer( 0, 1, 0, 0 );
+    fgSizer6->AddGrowableCol( 0 );
+    fgSizer6->AddGrowableRow( 0 );
+    fgSizer6->SetFlexibleDirection( wxBOTH );
+    fgSizer6->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+    bSframe = new wxBoxSizer( wxVERTICAL );
 
 	bSframe->SetMinSize( wxSize( 200,-1 ) ); 
 	sbSboat = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Boat") ), wxVERTICAL );
@@ -208,6 +215,9 @@ WmmUIDialogBase::WmmUIDialogBase( wxWindow* parent, wxWindowID id, const wxStrin
 
 	bSframe->Add( sbScursor, 1, wxEXPAND|wxFIXED_MINSIZE, 0 );
 
+
+    fgSizer6->Add( bSframe, 1, wxEXPAND, 5 );
+
 	sbPlot = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxEmptyString ), wxVERTICAL );
 
 	wxFlexGridSizer* fgSizer5;
@@ -225,10 +235,10 @@ WmmUIDialogBase::WmmUIDialogBase( wxWindow* parent, wxWindowID id, const wxStrin
 	sbPlot->Add( fgSizer5, 1, wxEXPAND, 5 );
 
 
-	bSframe->Add( sbPlot, 1, wxEXPAND|wxFIXED_MINSIZE, 0 );
+    fgSizer6->Add( sbPlot, 1, wxEXPAND|wxFIXED_MINSIZE, 0 );
 
 
-	this->SetSizer( bSframe );
+    this->SetSizer( fgSizer6 );
 	this->Layout();
 
 	this->Centre( wxBOTH );
@@ -259,7 +269,10 @@ WmmPrefsDialog::WmmPrefsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	m_rbViewType->SetSelection( 1 );
 	bSizer2->Add( m_rbViewType, 0, wxALL|wxEXPAND, 5 );
 
-	m_cbShowAtCursor = new wxCheckBox( this, wxID_ANY, _("Show also data at cursor position"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_cbShowPlotOptions = new wxCheckBox( this, wxID_ANY, _("Show Plot Options"), wxDefaultPosition, wxDefaultSize, 0 );
+    bSizer2->Add( m_cbShowPlotOptions, 0, wxALL, 5 );
+
+    m_cbShowAtCursor = new wxCheckBox( this, wxID_ANY, _("Show also data at cursor position"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer2->Add( m_cbShowAtCursor, 0, wxALL, 5 );
 
 	m_cbLiveIcon = new wxCheckBox( this, wxID_ANY, _("Show data in toolbar icon"), wxDefaultPosition, wxDefaultSize, 0 );

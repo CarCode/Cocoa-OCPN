@@ -1393,3 +1393,4 @@ void SettingsDialogImpl::OnCancel(wxCommandEvent& event)
 {
     this->Close();
 }
+

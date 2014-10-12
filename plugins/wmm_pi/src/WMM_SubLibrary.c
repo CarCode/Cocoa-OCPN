@@ -2,11 +2,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#ifdef __WXOSX__
 #include <ctype.h>
-// #include "wx/wx.h"
-// #include "wx/private/wxprintf.h"  // Für wxPrintf ??
-#endif
 
 #include "WMMHeader.h"
 
@@ -358,17 +354,12 @@ int WMM_DateToYear (WMMtype_Date *CalendarDate, char *Error)
 	/******************Validation********************************/
 	if(CalendarDate->Month <= 0 || CalendarDate->Month > 12)
 	{
-		strcpy(Error, "\nError: The Month entered is invalid, valid months are '1 to 12'\n");
+        strcpy(Error, "WMM Error: The Month entered is invalid, valid months are '1 to 12'\n");
 		return 0;
 	}
 	if(CalendarDate->Day <= 0 || CalendarDate->Day > MonthDays[CalendarDate->Month])
 	{
-#ifndef __WXOSX__
-        wxPrintf("\nThe number of days in month %d is %d\n", CalendarDate->Month, MonthDays[CalendarDate->Month]);
-#else
-		printf("\nThe number of days in month %d is %d\n", CalendarDate->Month, MonthDays[CalendarDate->Month]);
-#endif
-		strcpy(Error, "\nError: The day entered is invalid\n");
+        strcpy(Error, "WMM Error: The day entered is invalid\n");
 		return 0;
 	}
 	/****************Calculation of t***************************/
@@ -420,7 +411,7 @@ void WMM_DegreeToDMSstring (double DegreesOfArc, int UnitDepth, char *DMSstring)
 	} /*WMM_DegreeToDMSstring*/
 
 
-
+void WMMLogMessage(const char *s);
 
 void WMM_DMSstringToDegree (char *DMSstring, double *DegreesOfArc)
 
@@ -453,145 +444,74 @@ void WMM_Error(int control)
 	{
 	switch(control)
 	{
-#ifndef __WXOSX__
 		case 1:
-			wxPrintf("\nError allocating in WMM_LegendreFunctionMemory.\n");
+            WMMLogMessage("Error allocating in WMM_LegendreFunctionMemory.");
 			break;
 		case 2:
-			wxPrintf("\nError allocating in WMM_AllocateModelMemory.\n");
+            WMMLogMessage("Error allocating in WMM_AllocateModelMemory.");
 			break;
 		case 3:
-			wxPrintf("\nError allocating in WMM_InitializeGeoid\n");
+            WMMLogMessage("Error allocating in WMM_InitializeGeoid");
 			break;
 		case 4:
-			wxPrintf("\nError in setting default values.\n");
+            WMMLogMessage("Error in setting default values.");
 			break;
 		case 5:
-			wxPrintf("\nError initializing Geoid.\n");
+            WMMLogMessage("Error initializing Geoid.");
 			break;
 		case 6:
-			wxPrintf("\nError opening WMM.COF\n.");
+            WMMLogMessage("Error opening WMM.COF");
 			break;
 		case 7:
-			wxPrintf("\nError opening WMMSV.COF\n.");
+            WMMLogMessage("Error opening WMMSV.COF");
 			break;
 		case 8:
-			wxPrintf("\nError reading Magnetic Model.\n");
+            WMMLogMessage("Error reading Magnetic Model.");
 			break;
 		case 9:
-			wxPrintf("\nError printing Command Prompt introduction.\n");
+            WMMLogMessage("Error printing Command Prompt introduction.");
 			break;
 		case 10:
-			wxPrintf("\nError converting from geodetic co-ordinates to spherical co-ordinates.\n");
+            WMMLogMessage("Error converting from geodetic co-ordinates to spherical co-ordinates.");
 			break;
 		case 11:
-			wxPrintf("\nError in time modifying the Magnetic model\n");
+            WMMLogMessage("Error in time modifying the Magnetic model");
 			break;
 		case 12:
-			wxPrintf("\nError in Geomagnetic\n");
+            WMMLogMessage("Error in Geomagnetic");
 			break;
 		case 13:
-			wxPrintf("\nError printing user data\n");\
+            WMMLogMessage("Error printing user data");
 			break;
 		case 14:
-			wxPrintf("\nError allocating in WMM_SummationSpecial\n");
+            WMMLogMessage("Error allocating in WMM_SummationSpecial");
 			break;
 		case 15:
-			wxPrintf("\nError allocating in WMM_SecVarSummationSpecial\n");
+            WMMLogMessage("Error allocating in WMM_SecVarSummationSpecial");
 			break;
 		case 16:
-			wxPrintf("\nError in opening EGM9615.BIN file\n");
+            WMMLogMessage("Error in opening EGM9615.BIN file");
 			break;
 		case 17:
-			wxPrintf("\nError: Latitude OR Longitude out of range in WMM_GetGeoidHeight\n");
+            WMMLogMessage("Error: Latitude OR Longitude out of range in WMM_GetGeoidHeight");
 			break;
 		case 18:
-			wxPrintf("\nError allocating in WMM_PcupHigh\n");
+            WMMLogMessage("Error allocating in WMM_PcupHigh");
 			break;
 		case 19:
-			wxPrintf("\nError allocating in WMM_PcupLow\n");
+            WMMLogMessage("Error allocating in WMM_PcupLow");
 			break;
 		case 20:
-			wxPrintf("\nError opening coefficient file\n");
+            WMMLogMessage("Error opening coefficient file");
 			break;
 		case 21:
-			wxPrintf("\nError: UnitDepth too large\n");
+            WMMLogMessage("Error: UnitDepth too large");
 			break;
 		case 22:
-			wxPrintf("\nYour system needs Big endian version of EGM9615.BIN.  \n");
-			wxPrintf("Please download this file from http://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml.  \n");
-			wxPrintf("Replace the existing EGM9615.BIN file with the downloaded one\n");
+            WMMLogMessage("Your system needs Big endian version of EGM9615.BIN.\n");
+            WMMLogMessage("Please download this file from http://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml.\n");
+            WMMLogMessage("Replace the existing EGM9615.BIN file with the downloaded one");
 			break;
-#else
-		case 1:
-			printf("\nError allocating in WMM_LegendreFunctionMemory.\n");
-			break;
-		case 2:
-			printf("\nError allocating in WMM_AllocateModelMemory.\n");
-			break;
-		case 3:
-			printf("\nError allocating in WMM_InitializeGeoid\n");
-			break;
-		case 4:
-			printf("\nError in setting default values.\n");
-			break;
-		case 5:
-			printf("\nError initializing Geoid.\n");
-			break;
-		case 6:
-			printf("\nError opening WMM.COF\n.");
-			break;
-		case 7:
-			printf("\nError opening WMMSV.COF\n.");
-			break;
-		case 8:
-			printf("\nError reading Magnetic Model.\n");
-			break;
-		case 9:
-			printf("\nError printing Command Prompt introduction.\n");
-			break;
-		case 10:
-			printf("\nError converting from geodetic co-ordinates to spherical co-ordinates.\n");
-			break;
-		case 11:
-			printf("\nError in time modifying the Magnetic model\n");
-			break;
-		case 12:
-			printf("\nError in Geomagnetic\n");
-			break;
-		case 13:
-			printf("\nError printing user data\n");\
-			break;
-		case 14:
-			printf("\nError allocating in WMM_SummationSpecial\n");
-			break;
-		case 15:
-			printf("\nError allocating in WMM_SecVarSummationSpecial\n");
-			break;
-		case 16:
-			printf("\nError in opening EGM9615.BIN file\n");
-			break;
-		case 17:
-			printf("\nError: Latitude OR Longitude out of range in WMM_GetGeoidHeight\n");
-			break;
-		case 18:
-			printf("\nError allocating in WMM_PcupHigh\n");
-			break;
-		case 19:
-			printf("\nError allocating in WMM_PcupLow\n");
-			break;
-		case 20:
-			printf("\nError opening coefficient file\n");
-			break;
-		case 21:
-			printf("\nError: UnitDepth too large\n");
-			break;
-		case 22:
-			printf("\nYour system needs Big endian version of EGM9615.BIN.  \n");
-			printf("Please download this file from http://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml.  \n");
-			printf("Replace the existing EGM9615.BIN file with the downloaded one\n");
-			break;
-#endif
 	}
 	} /*WMM_Error*/
 
@@ -866,7 +786,7 @@ int WMM_InitializeGeoid(WMMtype_Geoid *Geoid)
 */
 {
 int ElevationsRead, SwabType, Index;
-FILE  *GeoidHeightFile = 0;
+FILE  *GeoidHeightFile = NULL;
 
 if (Geoid->Geoid_Initialized)
 {
@@ -1053,7 +973,7 @@ if (Geoid->UseGeoid == 1) {      /* Geoid correction required */
 	return ( Error_Code );
 } /* WMM_ConvertGeoidToEllipsoidHeight*/
 
-/*
+#if 0
 char WMM_GeomagIntroduction(WMMtype_MagneticModel *MagneticModel)
 	//Prints the introduction to the Geomagnetic program.  It needs the Magnetic model for the epoch.
 
@@ -1200,7 +1120,7 @@ char EMM_GeomagIntroduction(WMMtype_MagneticModel *MagneticModel)
 	}
 		return ans;
 	}
-*/
+#endif
 
 
 int WMM_GetUserGrid(WMMtype_CoordGeodetic *minimum, WMMtype_CoordGeodetic *maximum, double *step_size, double *a_step_size, double *step_time, WMMtype_Date
@@ -1339,6 +1259,7 @@ int WMM_GetUserGrid(WMMtype_CoordGeodetic *minimum, WMMtype_CoordGeodetic *maxim
 	else
 		fprintf(fileout, "Minimum Altitude above MSL: %lf\tMaximum Altitude above WGS-84 Ellipsoid: %lf\tStep Size: %lf\n", minimum->HeightAboveEllipsoid, maximum->HeightAboveEllipsoid, *a_step_size);
 	fprintf(fileout,"Starting Date: %lf\t\tEnding Date: %lf\t\tStep Time: %lf\n\n\n", StartDate->DecimalYear, EndDate->DecimalYear, *step_time);
+    fclose(fileout);
 	return TRUE;
 	}
 
@@ -1493,7 +1414,7 @@ int  WMM_GetUserInput(WMMtype_MagneticModel *MagneticModel, WMMtype_Geoid *Geoid
 	{
 		strcpy(buffer, "");
 		fgets(buffer, 40, stdin);
-		j = 0;
+//		j = 0;  // Not used
 		if(buffer[0] == 'e' || buffer[0] == 'E')   /* User entered height above WGS-84 ellipsoid, copy it to CoordGeodetic->HeightAboveEllipsoid */
 		{
 			j = sscanf(buffer, "%c%lf", &tmp, &CoordGeodetic->HeightAboveEllipsoid);
@@ -1544,7 +1465,7 @@ int  WMM_GetUserInput(WMMtype_MagneticModel *MagneticModel, WMMtype_Geoid *Geoid
 			sscanf(buffer, "%d/%d/%d", &MagneticDate->Month, &MagneticDate->Day, &MagneticDate->Year);
 			if(!WMM_DateToYear(MagneticDate, Error_Message))
 			{
-//				printf(Error_Message);
+                fputs(Error_Message, stdout);
 				printf("\nPlease re-enter Date in MM/DD/YYYY or MM DD YYYY format, or as a decimal year\n");
 				fgets(buffer, 40, stdin);
 				i = 0;
@@ -1570,7 +1491,7 @@ int  WMM_GetUserInput(WMMtype_MagneticModel *MagneticModel, WMMtype_Geoid *Geoid
 			{
 				if(!WMM_DateToYear(MagneticDate, Error_Message))
 				{
-//					printf(Error_Message);
+                    fputs(Error_Message, stdout);
 					strcpy(buffer, "");
 					printf("\nError encountered, please re-enter Date in MM/DD/YYYY or MM DD YYYY format, or as a decimal year\n");
 					fgets(buffer, 40, stdin);
@@ -1980,11 +1901,8 @@ int WMM_PcupHigh(double *Pcup, double *dPcup, double x, int nMax)
 	{
 	double  pm2, pm1, pmm, plm, rescalem, z, scalef;
 	double *f1, *f2, *PreSqr;
-#ifdef __WXOSX__
-        int k, kstart, m, n, NumTerms;
-#else
-	int k, kstart, m, n, NumTerms, astat[3];
-#endif
+    int k, kstart, m, n, NumTerms;//, astat(3);
+
 	NumTerms = ( ( nMax + 1 ) * ( nMax + 2 ) / 2 );
 
 
@@ -2412,7 +2330,7 @@ int WMM_readMagneticModel(char *filename, WMMtype_MagneticModel * MagneticModel)
 		icomp = strcmp("9999", c_new);
 		if (icomp == 0)
 		{
-			EOF_Flag = 1;
+//			EOF_Flag = 1;  // Not used
 			break;
 		}
 		/* END OF FILE NOT ENCOUNTERED, GET VALUES */
@@ -2453,13 +2371,8 @@ int WMM_readMagneticModel_Large(char *filename, char *filenameSV, WMMtype_Magnet
 {
 	FILE *WMM_COF_File;
 	FILE *WMM_COFSV_File;
-#ifdef __WXOSX__
-    char c_str[81], c_str2[81];
-    int i, m, n, index, a, b;
-#else
-	char c_str[81], c_new[5], c_str2[81], c_new2[5];   //these strings are used to read a line from coefficient file
-	int i, icomp, m, n, EOF_Flag = 0, index, a, b;
-#endif
+    char c_str[81], /*c_new[5],*/ c_str2[81];//, c_new2[5];   //these strings are used to read a line from coefficient file
+    int i,/* icomp,*/ m, n,/* EOF_Flag = 0, */index, a, b;
 	double epoch, gnm, hnm, dgnm, dhnm;
 	WMM_COF_File = fopen(filename,"r");
 	WMM_COFSV_File = fopen(filenameSV,"r");
@@ -3230,6 +3143,9 @@ int WMM_Comparison(WMMtype_MagneticModel *MagneticModel, WMMtype_Ellipsoid Ellip
 	fileout = fopen(filename,"w");
 	filein = fopen("comp.txt","r");
 	Date.DecimalYear = 2010.0;
+    Date.Year = 2010;
+    Date.Month = 1;
+    Date.Day = 1;
 	WMM_TimelyModifyMagneticModel(Date, MagneticModel, TimedMagneticModel);
 	while(i == 0)
 	{
@@ -3249,6 +3165,8 @@ int WMM_Comparison(WMMtype_MagneticModel *MagneticModel, WMMtype_Ellipsoid Ellip
 	tot_RMSy = sqrt(tot_RMSy) / n;
 	tot_RMSz = sqrt(tot_RMSz) / n;
 	printf("RMS x = %lf\nRMS y = %lf\nRMS z = %lf\nn = %d", tot_RMSx, tot_RMSy, tot_RMSz, n);
+    fclose(filein);
+    fclose(fileout);
 	return TRUE;
 }
 
@@ -3332,36 +3250,21 @@ int WMM_GetTransverseMercator(WMMtype_CoordGeodetic CoordGeodetic, WMMtype_UTMPa
 
 
 {
-#ifndef __WXOSX__
-	double Pi, deg;
-#endif
-#ifndef __WXOSX__
-	double Eps, Epssq, invfla, fla, n1, R4oa;
-    double A, R4;
-   	double Acoeff[8], Bcoeff[8], Ccoeff[8], Dcoeff[8];
-#else
-    double Eps, Epssq;
-    double Acoeff[8];
-#endif
+//   double Pi, deg;
+    double Eps, Epssq;//, invfla, fla, n1, R4oa;
+//   double A, R4;
+    double Acoeff[8];//, Bcoeff[8], Ccoeff[8], Dcoeff[8];
 	double Lam0, K0, falseE, falseN;
-#ifndef __WXOSX__
-	double K0R4, K0R4oa, K0R4i, psfact;
-    double Dnest[6], Dderiv[7];
-    int TestId;
-	int Lon, Lat;
-#else
-    double K0R4, K0R4oa;
-#endif
+    double K0R4, K0R4oa;//, K0R4i, psfact;
+//   double Dnest[6], Dderiv[7];
+//   int TestId;
+//   int Lon, Lat;
 	double Lambda, Phi;
 	int XYonly;
 	double X, Y, pscale, CoM;
-#ifndef __WXOSX__
-	int LLonly;
-	int Xkm, Ykm, Zone;
-#else
-    int Zone;
-#endif
-	char Hemisphere;
+//   int LLonly;
+    int /*Xkm, Ykm,*/ Zone;
+    char Hemisphere;
 
 /*   Get the map projection  parameters */
 	Lambda = DEG2RAD (CoordGeodetic.lambda);
@@ -3796,7 +3699,7 @@ int WMM_readMagneticModel_ISO(char *filename, WMMtype_MagneticModel *magneticmod
 	double gnm,hnm,dgnm,dhnm;
 	int index;
 
-	WMMtype_MagneticModel *model;
+	WMMtype_MagneticModel *model = NULL;
 
 	FILE *stream;
 	stream = fopen(filename, READONLYMODE);
@@ -3823,7 +3726,8 @@ int WMM_readMagneticModel_ISO(char *filename, WMMtype_MagneticModel *magneticmod
 				header_index++;
 				if (header_index >= array_size) {
 					fprintf(stderr, "Header limit exceeded - too many models in model file. (%d)\n", header_index);
-						return array_size+1;
+                    fclose(stream);
+                    return array_size+1;
 				}
 				newrecord = 0;
 				allocationflag = 0;
@@ -3858,6 +3762,7 @@ int WMM_readMagneticModel_ISO(char *filename, WMMtype_MagneticModel *magneticmod
 			if(!allocationflag)
 			{
 			fprintf(stderr, "Degree not found in model. Memory cannot be allocated.\n");
+            fclose(stream);
 			return _DEGREE_NOT_FOUND;
 			}
 			if (m <= n)

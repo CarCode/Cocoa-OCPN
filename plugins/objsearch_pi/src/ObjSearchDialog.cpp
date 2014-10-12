@@ -156,10 +156,8 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	sbSizerFrom->Add( gSizerFrom, 0, wxEXPAND, 5 );
 	
 	
-    m_stScanCharts = new wxStaticText( this, wxID_ANY, _("Scan charts"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_stScanCharts->Wrap( -1 );
-    bSizerMain->Add( m_stScanCharts, 0, wxALL, 5 );
-	
+    bSizerArea->Add( sbSizerFrom, 0, wxALL|wxEXPAND, 5 );
+    
 	wxStaticBoxSizer* sbSizerTo;
     sbSizerTo = new wxStaticBoxSizer( new wxStaticBox( m_panelPopulate, wxID_ANY, _("To") ), wxVERTICAL );
 	

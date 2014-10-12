@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  * $Id: MagneticPlotMap.h,v 1.0 2011/02/26 01:54:37 nohal Exp $
  *
  * Project:  OpenCPN
@@ -6,7 +6,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier   *
+ *   Copyright (C) 2013 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,10 +22,11 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include <list>
+#include "../../../include/TexFont.h"
+
 
 enum MagneticPlotType {DECLINATION, INCLINATION, FIELD_STRENGTH};
 
@@ -62,17 +63,6 @@ ParamCache() : values(NULL), m_step(0) {}
 	double m_lat;
 };
 
-/* cache text bitmap data to speed up rendering.  This contains the rgba
-   values in data for opengl, or the image in wxformat */
-class ContourBitmap
-{
-public:
-	wxImage image;
-	unsigned char *data;
-
-	int lastx, lasty; /* when rendering to prevent overcluttering */
-};
-
 /* main model map suitable for a single plot type */
 class MagneticPlotMap
 {
@@ -83,8 +73,6 @@ public:
 	WMMtype_Ellipsoid *ellip)
 	: m_type(type), MagneticModel(mm), TimedMagneticModel(tmm), Ellip(ellip)
 	{
-		m_contourcachesize = 0;
-		m_contourcache = NULL;
 	}
 
 	~MagneticPlotMap() { ClearMap(); }
@@ -101,7 +89,6 @@ public:
 	void Plot(wxDC *dc, PlugIn_ViewPort *vp, wxColour color);
 
 	void ClearMap();
-	ContourBitmap ContourCacheData(double value);
 	void DrawContour(wxDC *dc, PlugIn_ViewPort &VP, double contour, double lat, double lon);
 
 	MagneticPlotType m_type;
@@ -123,8 +110,6 @@ public:
 	/* the line segments for the entire globe split into zones */
 	std::list<PlotLineSeg*> m_map[LATITUDE_ZONES][LONGITUDE_ZONES];
 
-	double m_MinContour, m_MaxContour;
-	int m_contourcachesize;
-	ContourBitmap *m_contourcache;
+    TexFont m_TexFont;
 	int lastx, lasty; /* when rendering to prevent overcluttering */
 };

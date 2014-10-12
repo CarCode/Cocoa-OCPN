@@ -37,7 +37,7 @@
 #include <wx/fileconf.h>
 
 #define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    6
+#define     PLUGIN_VERSION_MINOR    8
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    8
@@ -50,8 +50,8 @@
 #include "WMM_COF.h"
 #include "MagneticPlotMap.h"
 
-#include "jsonreader.h"
-#include "jsonwriter.h"
+#include "../../../include/wx/jsonreader.h"
+#include "../../../include/wx/jsonwriter.h"
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
@@ -147,12 +147,13 @@ private:
 
 	WmmUIDialog *m_pWmmDialog;
 
-	int m_wmm_dialog_x, m_wmm_dialog_y;
-	int m_display_width, m_display_height;
-	int m_iViewType;
-	bool m_bShowAtCursor;
-	bool m_bShowLiveIcon;
-	int m_iOpacity;
+	int     m_wmm_dialog_x, m_wmm_dialog_y;
+	int     m_display_width, m_display_height;
+	int     m_iViewType;
+    bool    m_bShowPlotOptions;
+	bool    m_bShowAtCursor;
+	bool    m_bShowLiveIcon;
+	int     m_iOpacity;
 
 	wxString m_LastVal;
 

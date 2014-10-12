@@ -112,8 +112,11 @@ class SettingsDialog : public wxDialog
         virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
 
 	public:
-		
+#ifdef __WXOSX__
+    SettingsDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_DIALOG_STYLE );
+#else
     SettingsDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,440 ), long style = wxDEFAULT_DIALOG_STYLE );
+#endif
     ~SettingsDialog();
 	
 };
