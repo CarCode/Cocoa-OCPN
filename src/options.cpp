@@ -821,11 +821,11 @@ options::options( MyFrame* parent, wxWindowID id, const wxString& caption, const
     long wstyle = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER;
     SetExtraStyle( wxWS_EX_BLOCK_EVENTS );
 
+    wxDialog::Create( parent, id, caption, pos, size, wstyle );
+
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"), 10);
     SetFont( *qFont );
     
-    wxDialog::Create( parent, id, caption, pos, size, wstyle );
-
     CreateControls();
     Fit();
     Center();
@@ -4101,7 +4101,7 @@ void options::OnButtonSelectSound( wxCommandEvent& event )
     wxString sound_dir = g_SData_Locn;
     sound_dir.Append( _T("sounds") );
 
-    wxFileDialog *openDialog = new wxFileDialog( this, _("Select Sound File"), sound_dir, wxT(""),
+    wxFileDialog *openDialog = new wxFileDialog( NULL, _("Select Sound File"), sound_dir, wxT(""),
             _("WAV files (*.wav)|*.wav|All files (*.*)|*.*"), wxFD_OPEN );
     int response = openDialog->ShowModal();
     if( response == wxID_OK ) {
@@ -4664,7 +4664,7 @@ void options::OnInsertTideDataLocation( wxCommandEvent &event )
     wxString sel_file;
     int response = wxID_CANCEL;
 
-    wxFileDialog openDialog( this, _( "Select Tide/Current Data" ), g_TCData_Dir, wxT ( "" ),
+    wxFileDialog openDialog( NULL, _( "Select Tide/Current Data" ), g_TCData_Dir, wxT ( "" ),
                              wxT ( "Tide/Current Data files (*.IDX; *.TCD)|*.IDX;*.idx;*.TCD;*.tcd|All files (*.*)|*.*" ),
                                     wxFD_OPEN  );
     response = openDialog.ShowModal();

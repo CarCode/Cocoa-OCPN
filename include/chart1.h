@@ -111,8 +111,8 @@ enum
       ID_TRACK,
       ID_TBSTATBOX,
       ID_MOB,
-      ID_PLUGIN_BASE
-
+      ID_PLUGIN_BASE,
+      ID_SPARKLE
 };
 
 
@@ -302,6 +302,7 @@ class MyFrame: public wxFrame
     void onAbout(wxCommandEvent& event);
     void onEinst(wxCommandEvent& event);
     void onHelp(wxCommandEvent& event);
+    void onSparkle(wxCommandEvent& event);
     void startHelp(void);
     void onZoomin(wxCommandEvent& event);
     void onZoomout(wxCommandEvent& event);

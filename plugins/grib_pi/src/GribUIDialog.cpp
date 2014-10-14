@@ -1122,7 +1122,7 @@ void GRIBUIDialog::OnOpenFile( wxCommandEvent& event )
         wxStandardPathsBase& path = wxStandardPaths::Get();
         m_grib_dir = path.GetDocumentsDir();
     }
-    wxFileDialog *dialog = new wxFileDialog(this, _("Select a GRIB file"), m_grib_dir,
+    wxFileDialog *dialog = new wxFileDialog(NULL, _("Select a GRIB file"), m_grib_dir,
                 _T(""), wxT ( "Grib files (*.grb;*.bz2|*.grb;*.bz2|All files (*)|*.*"), wxFD_OPEN, wxDefaultPosition, wxDefaultSize, _T("File Dialog") );
 
     if( dialog->ShowModal() == wxID_OK ) {

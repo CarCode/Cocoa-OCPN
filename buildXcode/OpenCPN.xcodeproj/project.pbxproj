@@ -462,7 +462,6 @@
 		A582D1D0B7804FA6911D04C4 /* s57chart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1AC68DF733B4BBBA14F40DC /* s57chart.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A5A643EA5D004321A9F4DCDC /* gga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8BA4CEF769E48A8922C360A /* gga.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A5B6C333557E4F95AAA77D13 /* s57attributes.csv in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1FD16753AAB4F039C6D9D73 /* s57attributes.csv */; settings = {COMPILER_FLAGS = ""; }; };
-		A609ADC9195F41ED003C298E /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A609ADC8195F41ED003C298E /* TexFont.cpp */; };
 		A60A21041912CE8100A3CB33 /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60A21031912CE8100A3CB33 /* TexFont.cpp */; };
 		A60F747A17A02F0800A6160F /* calculatorgui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F747917A02F0800A6160F /* calculatorgui.cpp */; };
 		A60F747C17A02F2700A6160F /* functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F747B17A02F2700A6160F /* functions.cpp */; };
@@ -501,6 +500,7 @@
 		A635C8B017C16F0900B3E5E9 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AD17C16F0900B3E5E9 /* tinyxmlparser.cpp */; };
 		A638304D1950E14100027BFE /* crashprint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A638304C1950E14100027BFE /* crashprint.cpp */; };
 		A6414F5E19599B6C0007787E /* libwatchdog_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A683CEB01958A550004A0137 /* libwatchdog_pi.dylib */; };
+		A642A17E19D8A4B600441ED3 /* csv_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A642A17D19D8A4B600441ED3 /* csv_parser.cpp */; };
 		A647084717A14A2800A16918 /* AboutDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084617A14A2800A16918 /* AboutDialog.cpp */; };
 		A647084917A14A4600A16918 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084817A14A4500A16918 /* icons.cpp */; };
 		A647084B17A14A6100A16918 /* watchman_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084A17A14A6100A16918 /* watchman_pi.cpp */; };
@@ -1668,7 +1668,6 @@
 		A5EB8D8576AE4373B945506A /* TCWin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCWin.h; path = include/TCWin.h; sourceTree = SOURCE_ROOT; };
 		A6034DFB56444882ADAF221E /* WMM_COF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WMM_COF.h; path = plugins/wmm_pi/src/WMM_COF.h; sourceTree = SOURCE_ROOT; };
 		A609ADC7195F41A8003C298E /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/grib_pi/src/TexFont.h; sourceTree = "<group>"; };
-		A609ADC8195F41ED003C298E /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/grib_pi/src/TexFont.cpp; sourceTree = "<group>"; };
 		A609ADCA195F5E28003C298E /* IsoLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IsoLine.h; path = plugins/grib_pi/src/IsoLine.h; sourceTree = "<group>"; };
 		A60A21021912CE4B00A3CB33 /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = include/TexFont.h; sourceTree = "<group>"; };
 		A60A21031912CE8100A3CB33 /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = src/TexFont.cpp; sourceTree = "<group>"; };
@@ -1752,6 +1751,8 @@
 		A6375E61CE4E433FB0399913 /* gpsdevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpsdevice.h; path = src/garmin/jeeps/gpsdevice.h; sourceTree = SOURCE_ROOT; };
 		A638304B1950DF6200027BFE /* crashprint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crashprint.h; path = include/crashprint.h; sourceTree = "<group>"; };
 		A638304C1950E14100027BFE /* crashprint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = crashprint.cpp; path = src/crashprint.cpp; sourceTree = "<group>"; };
+		A642A17D19D8A4B600441ED3 /* csv_parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csv_parser.cpp; path = plugins/objsearch_pi/src/csv_parser.cpp; sourceTree = "<group>"; };
+		A642A17F19D8A4E000441ED3 /* csv_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csv_parser.h; path = plugins/objsearch_pi/src/csv_parser.h; sourceTree = "<group>"; };
 		A64633D41956EE4100784D5B /* GribRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribRecord.h; path = plugins/grib_pi/src/GribRecord.h; sourceTree = "<group>"; };
 		A647084017A1486500A16918 /* AboutDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AboutDialog.h; path = plugins/watchman_pi/src/AboutDialog.h; sourceTree = "<group>"; };
 		A647084117A1489A00A16918 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/watchman_pi/src/icons.h; sourceTree = "<group>"; };
@@ -1806,6 +1807,7 @@
 		A65F36E11974733D0006DC40 /* jsonreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonreader.cpp; path = src/wxJSON/jsonreader.cpp; sourceTree = "<group>"; };
 		A65F36E21974733D0006DC40 /* jsonval.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonval.cpp; path = src/wxJSON/jsonval.cpp; sourceTree = "<group>"; };
 		A65F36E31974733D0006DC40 /* jsonwriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonwriter.cpp; path = src/wxJSON/jsonwriter.cpp; sourceTree = "<group>"; };
+		A66094A419E3D8550066CBBA /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/S63_pi/src/TexFont.h; sourceTree = "<group>"; };
 		A6632EE317E50BF4002001B9 /* osx_helpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = osx_helpers.mm; path = src/osx_helpers.mm; sourceTree = "<group>"; };
 		A665CBED17CF33C00007CDB7 /* s52s57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = s52s57.h; path = include/s52s57.h; sourceTree = "<group>"; };
 		A66D8E2E18D2584E00BC8747 /* routeprintout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = routeprintout.cpp; path = src/routeprintout.cpp; sourceTree = "<group>"; };
@@ -3070,7 +3072,6 @@
 				A6A94A5918CF397E00FD56EE /* GribRequestDialog.cpp */,
 				86FBC046FFA345A98B9D5612 /* zuFile.cpp */,
 				EA81B096D55B418785276241 /* IsoLine.cpp */,
-				A609ADC8195F41ED003C298E /* TexFont.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3277,6 +3278,7 @@
 				A6728C1C19D437FB00070B45 /* icons.cpp */,
 				A6728C1E19D4382600070B45 /* ObjSearchDialog.cpp */,
 				A6728C2019D4385100070B45 /* clcpopup.cpp */,
+				A642A17D19D8A4B600441ED3 /* csv_parser.cpp */,
 				A6728C2219D4388800070B45 /* wxsqlite3.cpp */,
 				A6728C2419D438B000070B45 /* sqlite3.c */,
 			);
@@ -3290,6 +3292,7 @@
 				A6728C1219D4367F00070B45 /* icons.h */,
 				A6728C1319D436B600070B45 /* ObjSearchDialog.h */,
 				A6728C1419D436E200070B45 /* clcpopup.h */,
+				A642A17F19D8A4E000441ED3 /* csv_parser.h */,
 				A6728C1519D4373200070B45 /* wxsqlite3.h */,
 				A6728C1619D4375700070B45 /* wxsqlite3def.h */,
 				A6728C1719D4375700070B45 /* wxsqlite3dyn.h */,
@@ -3349,6 +3352,7 @@
 			children = (
 				A68EAB0C18873BC500893250 /* s63_pi.h */,
 				A68EAB0F18873C3300893250 /* s63chart.h */,
+				A66094A419E3D8550066CBBA /* TexFont.h */,
 				A68EAB0618873B5500893250 /* mygeom63.h */,
 				A68EAB2118873D7A00893250 /* gl.h */,
 				A68EAB2218873D7A00893250 /* glext.h */,
@@ -4918,6 +4922,7 @@
 			files = (
 				A6728C2319D4388800070B45 /* wxsqlite3.cpp in Sources */,
 				A6728C2519D438B000070B45 /* sqlite3.c in Sources */,
+				A642A17E19D8A4B600441ED3 /* csv_parser.cpp in Sources */,
 				A6728C1F19D4382600070B45 /* ObjSearchDialog.cpp in Sources */,
 				A6728C1D19D437FB00070B45 /* icons.cpp in Sources */,
 				A6728C1B19D437AF00070B45 /* objsearch_pi.cpp in Sources */,
@@ -5079,7 +5084,6 @@
 				3F27B97012C84E9788F028D3 /* GribUIDialog.cpp in Sources */,
 				88E041FA2EA74CDEA7A14838 /* GribSettingsDialog.cpp in Sources */,
 				2395960E2AA64CE2B47A4BEE /* email.cpp in Sources */,
-				A609ADC9195F41ED003C298E /* TexFont.cpp in Sources */,
 				441BAF44978942D3B1CA434A /* icons.cpp in Sources */,
 				487043D2A2EB4160A23D94BB /* GribReader.cpp in Sources */,
 				21D7520CC5F44140B44B3DA5 /* GribRecord.cpp in Sources */,

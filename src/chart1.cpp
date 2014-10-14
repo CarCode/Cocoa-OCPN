@@ -2517,6 +2517,7 @@ BEGIN_EVENT_TABLE(MyFrame, wxFrame) EVT_CLOSE(MyFrame::OnCloseWindow)
 #ifdef __WXOSX__
 EVT_MENU(wxID_ABOUT, MyFrame::onAbout)
 EVT_MENU(wxID_PREFERENCES, MyFrame::onEinst)
+EVT_MENU(ID_SPARKLE, MyFrame::onSparkle)
 EVT_MENU(wxID_HELP, MyFrame::onHelp)
 EVT_MENU(ID_ZOOMIN, MyFrame::onZoomin)
 EVT_MENU(ID_ZOOMOUT, MyFrame::onZoomout)
@@ -2709,6 +2710,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     wxMenu* helpMenu = new wxMenu;
     helpMenu->Append(wxID_ABOUT, _T("Über OpenCPN"));
     helpMenu->Append(wxID_HELP, _T("&Hilfe  \u2318J"));               // macht neuen Menüpunkt
+    helpMenu->Append(ID_SPARKLE, _("Auf Aktualisierung prüfen..."));
     
     wxMenuBar* mac_menu = new wxMenuBar( wxMB_DOCKABLE );
     mac_menu->Append(appMenu, _T("Karte"));
@@ -2757,14 +2759,17 @@ void MyFrame::onAbout(wxCommandEvent& event)
     g_pAboutDlg->Update();
     g_pAboutDlg->Show();
 }
+
 void MyFrame::onEinst(wxCommandEvent& event)
 {
     gFrame->DoOptionsDialog();
 }
+
 void MyFrame::onHelp(wxCommandEvent &event)
 {
     startHelp();
 }
+
 void MyFrame::startHelp(void)
 {
 //    AHGotoPage(NULL, NULL);
@@ -2783,34 +2788,46 @@ void MyFrame::startHelp(void)
 //    _Error =
     AHGotoPage ( help, NULL, NULL );
 }
+
+void MyFrame::onSparkle(wxCommandEvent& event)
+{
+    wxMessageBox(_("Funktion noch nicht verfügbar."), _("Nachricht"));
+}
+
 void MyFrame::onZoomin(wxCommandEvent& event)
 {
     cc1->DoZoomCanvas( 2.0 );
     DoChartUpdate();
 }
+
 void MyFrame::onZoomout(wxCommandEvent& event)
 {
     cc1->DoZoomCanvas( 0.5 );
     DoChartUpdate();
 }
+
 void MyFrame::onStackup(wxCommandEvent& event)
 {
     DoStackUp();
     DoChartUpdate();
 }
+
 void MyFrame::onStackdown(wxCommandEvent& event)
 {
     DoStackDown();
     DoChartUpdate();
 }
+
 void MyFrame::onFollow(wxCommandEvent& event)
 {
     TogglebFollow();
 }
+
 void MyFrame::onText(wxCommandEvent& event)
 {
     ToggleENCText();
 }
+
 void MyFrame::onAis(wxCommandEvent& event)
 {
     if( g_bShowAIS )
@@ -3277,6 +3294,11 @@ bool MyFrame::AddDefaultPositionPlugInTools( ocpnToolBarSimple *tb )
 
     for( unsigned int i = 0; i < tool_array.GetCount(); i++ ) {
         PlugInToolbarToolContainer *pttc = tool_array.Item( i );
+
+        //      Tool is currently tagged as invisible
+        if( !pttc->b_viz )
+            continue;
+
         if( pttc->position == -1 )                  // PlugIn has requested default positioning
                 {
             wxBitmap *ptool_bmp;
@@ -3603,6 +3625,7 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
 
     if(g_FloatingToolbarDialog)
         g_FloatingToolbarDialog->Destroy();
+    g_FloatingToolbarDialog = NULL;
 
     if( g_pAISTargetList ) {
         g_pAISTargetList->Disconnect_decoder();
