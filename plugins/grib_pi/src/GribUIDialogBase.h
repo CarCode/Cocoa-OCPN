@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Nov  6 2013)
+// C++ code generated with wxFormBuilder (version Sep 30 2014)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -154,6 +154,9 @@ class GribSettingsDialogBase : public wxDialog
 		wxCheckBox* m_cbNumbers;
         wxStaticText* m_ctNumbers;
 		wxSpinCtrl* m_sNumbersSpacing;
+        wxCheckBox* m_cbParticles;
+        wxStaticText* m_ctParticles;
+        wxSlider* m_sParticleDensity;
         wxStaticText* m_staticText24;
         wxSlider* m_sTransparency;
 		

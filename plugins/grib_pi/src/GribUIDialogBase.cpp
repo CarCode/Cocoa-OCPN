@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Nov  6 2013)
+// C++ code generated with wxFormBuilder (version Sep 30 2014)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -185,6 +185,8 @@ GRIBUIDialogBase::GRIBUIDialogBase( wxWindow* parent, wxWindowID id, const wxStr
 	m_fgTrackingControls->Add( m_cbSeaTemperature, 0, wxALL, 5 );
 
 	m_tcSeaTemperature = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 70,-1 ), wxTE_READONLY );
+    m_tcSeaTemperature->SetToolTip( _("Sea or Air Temperature at Surface Level") );
+
 	m_fgTrackingControls->Add( m_tcSeaTemperature, 0, wxALL, 1 );
 
 
@@ -508,6 +510,17 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
 
 	m_sNumbersSpacing = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), wxSP_ARROW_KEYS, 30, 100, 50 );
 	fgSizer15->Add( m_sNumbersSpacing, 0, wxALL|wxEXPAND, 5 );
+
+    m_cbParticles = new wxCheckBox( this, wxID_ANY, _("Particle Map"), wxDefaultPosition, wxDefaultSize, 0 );
+    fgSizer15->Add( m_cbParticles, 0, wxALL, 5 );
+    
+    m_ctParticles = new wxStaticText( this, wxID_ANY, _("Density"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_ctParticles->Wrap( -1 );
+    fgSizer15->Add( m_ctParticles, 0, wxALL, 5 );
+    
+    m_sParticleDensity = new wxSlider( this, wxID_ANY, 5, 1, 10, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+    fgSizer15->Add( m_sParticleDensity, 0, wxALL|wxEXPAND, 5 );
+
 
     sbSizer5->Add( fgSizer15, 1, wxALL|wxEXPAND, 5 );
 
@@ -927,7 +940,7 @@ GribRequestSettingBase::GribRequestSettingBase( wxWindow* parent, wxWindowID id,
 	m_fgAltitudeData->SetFlexibleDirection( wxBOTH );
 	m_fgAltitudeData->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
     
-	m_p850hpa = new wxCheckBox( this, wxID_ANY, _("850 hPA"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_p850hpa = new wxCheckBox( this, wxID_ANY, _("850 hPa"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_fgAltitudeData->Add( m_p850hpa, 0, wxALL|wxEXPAND, 5 );
     
 	m_p700hpa = new wxCheckBox( this, wxID_ANY, _("700 hPa"), wxDefaultPosition, wxDefaultSize, 0 );

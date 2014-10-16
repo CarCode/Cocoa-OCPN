@@ -2782,6 +2782,9 @@ void MarkInfoImpl::OnHyperLinkClick( wxHyperlinkEvent &event )
     ::wxLaunchDefaultBrowser(url);
 //    event.Skip();
 #endif
+#ifdef __WXOSX__  // Sonst Crash, siehe ToDo-List
+    OnMarkInfoOKClick(event);
+#endif
 }
 
 void MarkInfoImpl::ValidateMark( void )

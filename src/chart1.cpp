@@ -237,7 +237,10 @@ extern wxString           str_version_major;
 extern wxString           str_version_minor;
 extern wxString           str_version_patch;
 
+#ifdef ocpnUSE_GL
 extern CompressionWorkerPool   *g_CompressorPool;
+#endif
+
 bool                      g_bcompression_wait;
 
 wxString                  g_uploadConnection;
@@ -2710,7 +2713,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     wxMenu* helpMenu = new wxMenu;
     helpMenu->Append(wxID_ABOUT, _T("Über OpenCPN"));
     helpMenu->Append(wxID_HELP, _T("&Hilfe  \u2318J"));               // macht neuen Menüpunkt
-    helpMenu->Append(ID_SPARKLE, _("Auf Aktualisierung prüfen..."));
+    helpMenu->Append(ID_SPARKLE, _("Suche nach Updates..."));
     
     wxMenuBar* mac_menu = new wxMenuBar( wxMB_DOCKABLE );
     mac_menu->Append(appMenu, _T("Karte"));
@@ -3470,12 +3473,14 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
 
     g_bquiting = true;
 
+#ifdef ocpnUSE_GL
     if(g_bopengl && g_CompressorPool){
         g_CompressorPool->PurgeJobList();
         
         if(g_CompressorPool->GetRunningJobCount())
             g_bcompression_wait = true;
     }
+#endif
 
     if( cc1 ) {
         cc1->SetCursor( wxCURSOR_WAIT );
@@ -3486,6 +3491,7 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     }
 
 #define THREAD_WAIT_SECONDS  5
+#ifdef ocpnUSE_GL
     //  Try to wait a bit to see if all compression threads exit nicely
     if(g_bopengl && g_CompressorPool){
         wxDateTime now = wxDateTime::Now();
@@ -3505,6 +3511,7 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
         
         int yyp = 5;
     }
+#endif
 
     //   Save the saved Screen Brightness
     RestoreScreenBrightness();
