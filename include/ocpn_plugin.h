@@ -637,9 +637,9 @@ extern  DECL_EXP bool UpdateChartDBInplace(wxArrayString dir_array,
 extern  DECL_EXP wxArrayString GetChartDBDirArrayString();
 
 extern "C"  DECL_EXP void SendPluginMessage( wxString message_id, wxString message_body );
-
+#ifndef __WXOSX__
 extern "C"  DECL_EXP void DimeWindow(wxWindow *);
-
+#endif
 extern "C"  DECL_EXP void JumpToPosition(double lat, double lon, double scale);
 
 /* API 1.9  adds some common cartographic functions to avoid unnecessary code duplication */

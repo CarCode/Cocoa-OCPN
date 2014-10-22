@@ -39,7 +39,7 @@
 //#include <wx/event.h>
 
 #define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    4
+#define     PLUGIN_VERSION_MINOR    5
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    12
@@ -48,6 +48,11 @@
 
 #include "ObjSearchDialog.h"
 
+// Define NAN, which is unavailable on Windows
+#ifdef _MSC_VER
+#define INFINITY (DBL_MAX+DBL_MAX)
+#define NAN (INFINITY-INFINITY)
+#endif
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
@@ -90,9 +95,9 @@ class SettingsDialogImpl : public SettingsDialog
 {
 public:
 #ifdef __WXOSX__
-    SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_DIALOG_STYLE );
+    SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_DIALOG_STYLE | wxSTAY_ON_TOP );
 #else
-    SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,440 ), long style = wxDEFAULT_DIALOG_STYLE );
+    SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,470 ), long style = wxDEFAULT_DIALOG_STYLE | wxSTAY_ON_TOP );
 #endif
     ~SettingsDialogImpl();
     void OnBrowse( wxCommandEvent& event );
@@ -111,9 +116,9 @@ class ObjSearchDialogImpl : public ObjSearchDialog
 {
 public:
 #ifdef __WXOSX__
-    ObjSearchDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Chart Object Search"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 760,480 ), long style = wxDEFAULT_DIALOG_STYLE );
+    ObjSearchDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Chart Object Search"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 760,480 ), long style = wxDEFAULT_DIALOG_STYLE | wxSTAY_ON_TOP );
 #else
-    ObjSearchDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Chart Object Search"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 660,480 ), long style = wxDEFAULT_DIALOG_STYLE );
+    ObjSearchDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Chart Object Search"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 660,480 ), long style = wxDEFAULT_DIALOG_STYLE | wxSTAY_ON_TOP );
 #endif
     ~ObjSearchDialogImpl();
 
@@ -172,15 +177,18 @@ public:
     void FindObjects( const wxString& feature_filter, const wxString& search_string, double lat, double lon, double dist );
     
     bool GetAutoClose() { return m_bCloseOnShow; }
-	int GetRangeLimit() { return m_iLimitRange; }
-	void SetAutoClose(bool val) { m_bCloseOnShow = val; }
-    void SetRangeLimit(int val) { m_iLimitRange = round(fromUsrDistance_Plugin(val)); }
+    int GetRangeLimit() { return m_iLimitRange; }
+    void SetAutoClose(bool val) { m_bCloseOnShow = val; }
+    void SetRangeLimit(int val) { m_iLimitRange = floor(fromUsrDistance_Plugin(val) + 0.5); }
 	
     double GetLat() { if ( m_boatlat == NAN || m_boatlon == NAN) return m_vplat; else return m_boatlat; }
     double GetLon() { if ( m_boatlat == NAN || m_boatlon == NAN) return m_vplon; else return m_boatlon; }
 
     void SetDBThreadRunning(bool state) { m_db_thread_running = state; }
-	bool IsDBThreadRunning() { return m_db_thread_running; }
+    bool IsDBThreadRunning() { return m_db_thread_running; }
+
+    void ScanArea( int latmin, int lonmin, int latmax, int lonmax, int scale );
+    void StopScan() { finishing = true; };
 
 protected:
     int QueryDB(const wxString& sql) { return QueryDB(m_db, sql); }
@@ -230,6 +238,11 @@ private:
     double m_vplat;
     double m_vplon;
 
+    double m_vpppm;
+    double m_vpscale;
+    double vplat_min, vplat_max, vplon_min, vplon_max;
+    bool finishing;
+
     DbThread *m_pThread;
     wxCriticalSection m_pThreadCS; // protects the m_pThread pointer
     friend class DbThread; // allow it to access our m_pThread
@@ -237,6 +250,8 @@ private:
     std::queue<wxString> query_queue;
 
     DistanceMercatorFunc distMercFunc;
+
+    double CalculatePPM(float scale);
 };
 
 #endif

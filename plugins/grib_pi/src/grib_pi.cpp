@@ -125,7 +125,8 @@ int grib_pi::Init(void)
 
 bool grib_pi::DeInit(void)
 {
-    if(m_pGribDialog) {
+    if(m_pGribDialog)
+    {
         m_pGribDialog->Close();
         delete m_pGribDialog;
         m_pGribDialog = NULL;
@@ -351,6 +352,10 @@ void grib_pi::OnToolbarToolCallback(int id)
 
       //    Toggle dialog?
       if(m_bShowGrib) {
+          if( m_pGribDialog->GetFont() != *OCPNGetFont(_("Dialog"), 10) ) {
+              m_pGribDialog->PopulateTrackingControls();
+              SetDialogFont( m_pGribDialog );
+          }
           m_pGribDialog->Show();
           if( m_pGribDialog->m_bGRIBActiveFile ) {
               if( m_pGribDialog->m_bGRIBActiveFile->IsOK() ) {
@@ -359,6 +364,7 @@ void grib_pi::OnToolbarToolCallback(int id)
             }
         }
       } else {
+          m_pGribDialog->StopPlayBack();
           SetCanvasContextMenuItemViz( m_MenuItem, false);
           m_pGribDialog->Hide();
           if(m_pGribDialog->pReq_Dialog) m_pGribDialog->pReq_Dialog->Hide();
@@ -367,11 +373,11 @@ void grib_pi::OnToolbarToolCallback(int id)
       // Toggle is handled by the toolbar but we must keep plugin manager b_toggle updated
       // to actual status to ensure correct status upon toolbar rebuild
       SetToolbarItemState( m_leftclick_tool_id, m_bShowGrib );
-/*
+
       wxPoint p = m_pGribDialog->GetPosition();
       m_pGribDialog->Move(0,0);        // workaround for gtk autocentre dialog behavior
       m_pGribDialog->Move(p);
-*/
+
       RequestRefresh(m_parent_window); // refresh main window
 }
 
@@ -426,6 +432,20 @@ void grib_pi::OnContextMenuItemCallback(int id)
 {
     if(!m_pGribDialog->m_bGRIBActiveFile) return;
     m_pGribDialog->ContextMenuItemCallback(id);
+}
+
+void grib_pi::SetDialogFont( wxWindow *dialog, wxFont *font)
+{
+    dialog->SetFont( *font );
+    wxWindowList list = dialog->GetChildren();
+    wxWindowListNode *node = list.GetFirst();
+    for( size_t i = 0; i < list.GetCount(); i++ ) {
+        wxWindow *win = node->GetData();
+        win->SetFont( *font );
+        node = node->GetNext();
+    }
+    dialog->Fit();
+    dialog->Refresh();
 }
 
 void grib_pi::SetPluginMessage(wxString &message_id, wxString &message_body)

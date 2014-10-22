@@ -930,6 +930,7 @@ bool PlugInManager::RenderAllGLCanvasOverlayPlugIns( wxGLContext *pcontext, cons
                 case 109:
                 case 110:
                 case 111:
+                case 112:
                 {
                     opencpn_plugin_18 *ppi = dynamic_cast<opencpn_plugin_18 *>(pic->m_pplugin);
                     if(ppi)
@@ -1912,12 +1913,12 @@ void SendPluginMessage( wxString message_id, wxString message_body )
     gFrame->GetEventHandler()->AddPendingEvent( Nevent );
 
 }
-
+#ifndef __WXOSX__
 void DimeWindow(wxWindow *win)
 {
     DimeControl(win);
 }
-
+#endif
 void JumpToPosition(double lat, double lon, double scale)
 {
     gFrame->JumpToPosition(lat, lon, scale);

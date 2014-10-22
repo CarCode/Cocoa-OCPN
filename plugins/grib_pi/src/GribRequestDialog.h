@@ -33,7 +33,7 @@
 #include "GribUIDialogBase.h"
 #include "GribUIDialog.h"
 
-#include "ocpn_plugin.h"
+#include "../../../include/ocpn_plugin.h"
 
 //----------------------------------------------------------------------------------------------------------
 //    Request setting Specification
@@ -68,6 +68,7 @@ private:
       void OnTimeRangeChange( wxCommandEvent& event );
       void OnSendMaiL( wxCommandEvent& event );
       void OnSaveMail( wxCommandEvent& event );
+      void SetMailImageSize();
 
       bool IsZYGRIB;
       bool IsGFS;

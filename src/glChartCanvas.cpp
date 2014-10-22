@@ -2646,6 +2646,12 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, OCPNRegion &region)
     if( !backgroundRegion.IsEmpty() )
         RenderWorldChart(dc, backgroundRegion);
 
+    if( cc1->m_bShowTide )
+        cc1->RebuildTideSelectList( VPoint.GetBBox() );
+    
+    if( cc1->m_bShowCurrent )
+        cc1->RebuildCurrentSelectList( VPoint.GetBBox() );
+
     /* render in each rectangle, the grounded overlay objects */
     for(OCPNRegionIterator upd( region ); upd.HaveRects(); upd.NextRect()) {
         wxRect rect = upd.GetRect();
@@ -2750,10 +2756,10 @@ void glChartCanvas::DrawGroundedOverlayObjectsRect(ocpnDC &dc, wxRect &rect)
     DrawAllRoutesAndWaypoints( temp_vp, region );
 
     if( cc1->m_bShowTide )
-        cc1->DrawAllTidesInBBox( dc, temp_vp.GetBBox(), true, true );
+        cc1->DrawAllTidesInBBox( dc, temp_vp.GetBBox() );
     
     if( cc1->m_bShowCurrent )
-        cc1->DrawAllCurrentsInBBox( dc, temp_vp.GetBBox(), true, true );
+        cc1->DrawAllCurrentsInBBox( dc, temp_vp.GetBBox() );
 
     DisableClipRegion();
 }

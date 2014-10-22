@@ -279,8 +279,9 @@ public:
       
       wxString GetLastError();
       MyFrame *GetParentFrame(){ return pParent; }
-
+#ifndef __WXOSX__
       void DimeWindow(wxWindow *win);
+#endif
       OCPN_Sound        m_plugin_sound;
       
 private:

@@ -297,8 +297,13 @@ bool GribRecord::GetInterpolatedParameters
     
     // align gribs on integer boundaries
     int i, j;
+#ifdef __WXOSX__
+    double rec1offdi = 0.0, rec2offdi = 0.0;
+    double rec1offdj = 0.0, rec2offdj = 0.0;
+#else
     double rec1offdi, rec2offdi;
     double rec1offdj, rec2offdj;
+#endif
     
     double iiters = rec2.Di / rec1.Di;
     if(iiters < 1) {
@@ -569,7 +574,7 @@ void  GribRecord::multiplyAllData(double k)
 	for (zuint j=0; j<Nj; j++) {
 		for (zuint i=0; i<Ni; i++)
 		{
-			if (hasValue(i,j)) {
+            if (isDefined(i,j)) {
 				data[j*Ni+i] *= k;
 			}
 		}
@@ -1166,13 +1171,13 @@ double GribRecord::getInterpolatedValue(double px, double py, bool numericalInte
 
     bool h00,h01,h10,h11;
     int nbval = 0;     // how many values in grid ?
-    if ((h00=hasValue(i0, j0)))
+    if ((h00=isDefined(i0, j0)))
         nbval ++;
-    if ((h10=hasValue(i1, j0)))
+    if ((h10=isDefined(i1, j0)))
         nbval ++;
-    if ((h01=hasValue(i0, j1)))
+    if ((h01=isDefined(i0, j1)))
         nbval ++;
-    if ((h11=hasValue(i1, j1)))
+    if ((h11=isDefined(i1, j1)))
         nbval ++;
 
     if (nbval < 3)
@@ -1311,13 +1316,13 @@ bool GribRecord::getInterpolatedValues(double &M, double &A,
     
     bool h00,h01,h10,h11;
     int nbval = 0;     // how many values in grid ?
-    if ((h00=GRX->hasValue(i0, j0) && GRX->hasValue(i0, j0)))
+    if ((h00=GRX->isDefined(i0, j0) && GRX->isDefined(i0, j0)))
         nbval ++;
-    if ((h10=GRX->hasValue(i1, j0) && GRY->hasValue(i1, j0)))
+    if ((h10=GRX->isDefined(i1, j0) && GRY->isDefined(i1, j0)))
         nbval ++;
-    if ((h01=GRX->hasValue(i0, j1) && GRY->hasValue(i0, j1)))
+    if ((h01=GRX->isDefined(i0, j1) && GRY->isDefined(i0, j1)))
         nbval ++;
-    if ((h11=GRX->hasValue(i1, j1) && GRY->hasValue(i1, j1)))
+    if ((h11=GRX->isDefined(i1, j1) && GRY->isDefined(i1, j1)))
         nbval ++;
     
     if (nbval < 3)

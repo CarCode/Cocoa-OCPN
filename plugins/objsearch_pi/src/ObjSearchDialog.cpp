@@ -199,11 +199,11 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	sbSizerScales->Add( m_cb1000000, 0, wxALL, 5 );
 	
     m_cb200000 = new wxCheckBox( m_panelPopulate, wxID_ANY, _("1:200000"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_cb200000->SetValue(true); 
 	sbSizerScales->Add( m_cb200000, 0, wxALL, 5 );
 	
-    m_cb20000 = new wxCheckBox( m_panelPopulate, wxID_ANY, _("1:20000"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_cb20000->SetValue(true); 
+    m_cb20000 = new wxCheckBox( m_panelPopulate, wxID_ANY, _("1:20000 (Very time consuming)"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_cb20000->Enable( false );
+ 
 	sbSizerScales->Add( m_cb20000, 0, wxALL, 5 );
 	
 	

@@ -26,6 +26,11 @@ cd build
 cmake ..
 cmake --build . --config release
 ```
+
+##CSV Data Import
+The format of the CSV is simple:
+```Lat, Lon, Object name, Feature name,"Source" name[[,Scale],PPM Scale]```
+Strings containing commas of course have to be quoted, the scale fields are optional
 ------------------------------------------------------
 Mac OS X:
 OS X SDK 10.10

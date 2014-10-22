@@ -73,7 +73,8 @@ public:
 //----------------------------------------------------------------------------------------------------------
 //    GRIB Selector/Control Dialog Specification
 //----------------------------------------------------------------------------------------------------------
-class GRIBUIDialog: public GRIBUIDialogBase {
+class GRIBUIDialog: public GRIBUIDialogBase
+{
 public:
 
     GRIBUIDialog(wxWindow *parent, grib_pi *ppi);
@@ -88,6 +89,7 @@ public:
 
     wxDateTime TimelineTime();
     GribTimelineRecordSet* GetTimeLineRecordSet(wxDateTime time);
+    void StopPlayBack();
     void TimelineChanged();
     void CreateActiveFileFromName( wxString filename );
     void PopulateComboDataList();
@@ -113,14 +115,15 @@ private:
     void OnPlayStopTimer( wxTimerEvent & event);
     void OnCursorTrackTimer( wxTimerEvent & event);
 
-    void AddTrackingControl( wxControl *ctrl1,  wxControl *ctrl2,  wxControl *ctrl3, bool show, bool altitude = false );
+    void AddTrackingControl( wxControl *ctrl1,  wxControl *ctrl2,  wxControl *ctrl3, bool show,
+            int wictrl2, int wictrl3 = 0, bool altitude = false );
     void UpdateTrackingControls( void );
 
     void OnZoomToCenterClick( wxCommandEvent& event );
     void OnPrev( wxCommandEvent& event );
-    void OnRecordForecast( wxCommandEvent& event ) { m_InterpolateMode = false; m_pNowMode = false; TimelineChanged(); }
+    void OnRecordForecast( wxCommandEvent& event ) { StopPlayBack(); m_InterpolateMode = false; m_pNowMode = false; TimelineChanged(); }
     void OnNext( wxCommandEvent& event );
-    void OnNow( wxCommandEvent& event ) { ComputeBestForecastForNow(); }
+    void OnNow( wxCommandEvent& event ) { StopPlayBack(); ComputeBestForecastForNow(); }
     void OnOpenFile( wxCommandEvent& event );
     void OnRequest(  wxCommandEvent& event );
 
@@ -135,6 +138,9 @@ private:
     int GetNearestValue(wxDateTime time, int model);
     bool GetGribZoneLimits(GribTimelineRecordSet *timelineSet, double *latmin, double *latmax, double *lonmin, double *lonmax);
     wxDateTime GetNow();
+    void RestaureSelectionString();
+    void SaveSelectionString()  { m_SelectionIsSaved = true; m_Selection_index = m_cRecordForecast->GetSelection();
+            m_Selection_label = m_cRecordForecast->GetString( m_Selection_index); }
 
     //    Data
     wxWindow *pParent;
@@ -148,15 +154,18 @@ private:
     bool m_InterpolateMode;
     bool m_pNowMode;
 
+    bool             m_SelectionIsSaved;
+    int              m_Selection_index;
+    wxString         m_Selection_label;
     wxString         m_file_name;   /* selected file */
     wxString         m_grib_dir;
-    wxBitmap         *m_bPlay;
 };
 
 //----------------------------------------------------------------------------------------------------------
 //    GRIBFile Object Specification
 //----------------------------------------------------------------------------------------------------------
-class GRIBFile {
+class GRIBFile
+{
 public:
 
     GRIBFile( const wxString file_name, bool CumRec, bool WaveRec );
