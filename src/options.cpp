@@ -1612,6 +1612,8 @@ void options::CreatePanel_ChartsLoad( size_t parent, int border_size, int group_
 
     activeSizer->Add( pActiveChartsList, 1, wxALL | wxEXPAND, border_size );
 
+    pActiveChartsList->Connect(  wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( options::OnChartDirListSelect ), NULL, this );
+
     wxBoxSizer* cmdButtonSizer = new wxBoxSizer( wxVERTICAL );
     activeSizer->Add( cmdButtonSizer, 0, wxALL, border_size );
 
@@ -1629,8 +1631,10 @@ void options::CreatePanel_ChartsLoad( size_t parent, int border_size, int group_
     wxButton* addBtn = new wxButton( chartPanelWin, ID_BUTTONADD, _("Add Directory...") );
     cmdButtonSizer->Add( addBtn, 1, wxALL | wxEXPAND, group_item_spacing );
 
-    wxButton* removeBtn = new wxButton( chartPanelWin, ID_BUTTONDELETE, _("Remove Selected") );
-    cmdButtonSizer->Add( removeBtn, 1, wxALL | wxEXPAND, group_item_spacing );
+    m_removeBtn = new wxButton( chartPanelWin, ID_BUTTONDELETE, _("Remove Selected") );
+    cmdButtonSizer->Add( m_removeBtn, 1, wxALL | wxEXPAND, group_item_spacing );
+    m_removeBtn->Disable();
+
 
     wxStaticBox* itemStaticBoxUpdateStatic = new wxStaticBox( chartPanelWin, wxID_ANY,
             _("Update Control") );
@@ -2912,7 +2916,6 @@ void options::OnCPAWarnClick( wxCommandEvent& event )
     }
 }
 
-
 void options::OnShowGpsWindowCheckboxClick( wxCommandEvent& event )
 {
     if( !m_cbNMEADebug->GetValue() ) {
@@ -3027,6 +3030,21 @@ void options::OnOpenGLOptions( wxCommandEvent& event )
         }
     }
 #endif
+}
+
+void options::OnChartDirListSelect( wxCommandEvent& event )
+{
+    if(event.IsSelection()){
+        m_removeBtn->Enable();
+    }
+    else{
+        wxArrayInt sel;
+        if(pActiveChartsList->GetSelections( sel ) )
+            m_removeBtn->Enable();
+        else
+            m_removeBtn->Disable();
+    }
+    
 }
 
 void options::OnDisplayCategoryRadioButton( wxCommandEvent& event )

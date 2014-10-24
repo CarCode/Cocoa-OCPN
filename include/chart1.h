@@ -103,6 +103,7 @@ enum
       ID_CURRENT,
       ID_TIDE,
       ID_HELP,
+      ID_SPARKLE,
       ID_TBEXIT,
       ID_TBSTAT,
       ID_PRINT,
@@ -111,8 +112,7 @@ enum
       ID_TRACK,
       ID_TBSTATBOX,
       ID_MOB,
-      ID_PLUGIN_BASE,
-      ID_SPARKLE
+      ID_PLUGIN_BASE
 };
 
 

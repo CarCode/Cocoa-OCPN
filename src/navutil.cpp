@@ -1919,6 +1919,7 @@ int MyConfig::LoadMyConfig( int iteration )
 
 //      next thing to do is read tracks, etc from the NavObject XML file,
     if( 0 == iteration ) {
+        wxLogMessage( _T("Loading navobjects from navobj.xml") );
         CreateRotatingNavObjBackup();
 
         if( NULL == m_pNavObjectInputSet )
@@ -1928,7 +1929,7 @@ int MyConfig::LoadMyConfig( int iteration )
             if( m_pNavObjectInputSet->load_file( m_sNavObjSetFile.fn_str() ) )
                 m_pNavObjectInputSet->LoadAllGPXObjects();
         }
-
+        wxLogMessage( _T("Done loading navobjects") );
         delete m_pNavObjectInputSet;
 
 
@@ -2575,7 +2576,11 @@ void MyConfig::UpdateSettings()
 
     //    Various Options
     SetPath( _T ( "/Settings/GlobalState" ) );
+#ifdef __WXOSX__
+    if( cc1 ) Write( _T ( "bFollow" ), 0 );
+#else
     if( cc1 ) Write( _T ( "bFollow" ), cc1->m_bFollow );
+#endif
     Write( _T ( "nColorScheme" ), (int) gFrame->GetColorScheme() );
 
     Write( _T ( "FrameWinX" ), g_nframewin_x );

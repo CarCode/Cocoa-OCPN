@@ -2720,7 +2720,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     mac_menu->Append(routMenu, _T("Routen"));
     mac_menu->Append(helpMenu, _("&Help"));
     
-    appMenu->Check(ID_FOLLOW, true);
+    appMenu->Check(ID_FOLLOW, false);
     appMenu->Check(ID_TEXT, true);
     appMenu->Check(ID_AIS, true);
     appMenu->Check(ID_CURRENT, false);
@@ -5039,19 +5039,10 @@ bool MyFrame::UpdateChartDatabaseInplace( ArrayOfCDI &DirArray, bool b_force, bo
 
     wxProgressDialog *pprog = NULL;
     if( b_prog ) {
-        pprog = new wxProgressDialog( _("OpenCPN Chart Update"), _T(""), 100, this,
+        wxString longmsg = _("OpenCPN Chart Update");
+        longmsg += _T("..........................................................................");
+        pprog = new wxProgressDialog( _("OpenCPN Chart Update"), longmsg, 100, this,
                 wxPD_SMOOTH | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME );
-
-        //    Make sure the dialog is big enough to be readable
-        pprog->Hide();
-        wxSize sz = pprog->GetSize();
-        wxSize csz = GetClientSize();
-        sz.x = csz.x * 7 / 10;
-        pprog->SetSize( sz );
-        pprog->Centre();
-        pprog->Update( 1, _T("") );
-        pprog->Show();
-        pprog->Raise();
     }
 
     wxLogMessage( _T("   ") );
