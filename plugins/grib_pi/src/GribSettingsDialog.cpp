@@ -318,7 +318,11 @@ wxString GribOverlaySettings::GetUnitSymbol(int settings)
 {
     switch(unittype[settings]) {
         case 0: switch(Settings[settings].m_Units) {
+#ifdef __WXOSX__  // ToDo: might be better in po/mo file, _(" instead of _T("
+            case KNOTS:  return _T("kn");
+#else
             case KNOTS:  return _T("kts");
+#endif
             case M_S:    return _T("m/s");
             case MPH:    return _T("mph");
             case KPH:    return _T("km/h");
