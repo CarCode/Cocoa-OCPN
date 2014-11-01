@@ -949,7 +949,7 @@ public:
     wxSpinCtrl *m_sTextureDimension;
     wxSpinCtrl *m_sTextureMemorySize;
 
-    OpenGLOptionsDlg( wxWindow* parent );
+    OpenGLOptionsDlg( wxWindow* parent, bool glTicked );
 };
 
 

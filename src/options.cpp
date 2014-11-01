@@ -372,7 +372,7 @@ void MMSIEditDialog::CreateControls()
     m_IgnoreButton = new wxCheckBox( itemDialog1, wxID_ANY, _("Ignore this MMSI") );
     itemStaticBoxSizer4->Add( m_IgnoreButton, 0, wxEXPAND, 5 );
     
-    m_MOBButton = new wxCheckBox( itemDialog1, wxID_ANY, _("Handle this MMSI as PLB/MOB") );
+    m_MOBButton = new wxCheckBox( itemDialog1, wxID_ANY, _("Handle this MMSI as SART/PLB/MOB") );
     itemStaticBoxSizer4->Add( m_MOBButton, 0, wxEXPAND, 5 );
     
     m_VDMButton = new wxCheckBox( itemDialog1, wxID_ANY, _("Convert AIVDM to AIVDO for this MMSI") );
@@ -563,7 +563,10 @@ void MMSIListCtrl::OnListItemActivated( wxListEvent &event)
 
 void MMSIListCtrl::OnListItemRightClick( wxListEvent &event)
 {
-    m_context_item = event.GetIndex();
+    m_context_item = GetNextItem( -1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
+    
+    if(-1 == m_context_item)
+        return;
     
     wxMenu* menu = new wxMenu( _("MMSI Properties") );
     
@@ -2971,7 +2974,7 @@ void options::OnRadarringSelect( wxCommandEvent& event )
 void options::OnOpenGLOptions( wxCommandEvent& event )
 {
 #ifdef ocpnUSE_GL
-    OpenGLOptionsDlg dlg(this);
+    OpenGLOptionsDlg dlg(this, pOpenGL->GetValue());
 
     if(dlg.ShowModal() == wxID_OK) {
         if(g_bexpert)
@@ -5458,7 +5461,7 @@ void SentenceListDlg::OnOkClick( wxCommandEvent& event ) { event.Skip(); }
  
 //OpenGLOptionsDlg
 
-OpenGLOptionsDlg::OpenGLOptionsDlg( wxWindow* parent )
+OpenGLOptionsDlg::OpenGLOptionsDlg( wxWindow* parent, bool glTicked )
 {
     long style = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER;
 #ifdef __WXOSX__
@@ -5499,9 +5502,17 @@ OpenGLOptionsDlg::OpenGLOptionsDlg( wxWindow* parent )
     
         /* disable caching if unsupported */
         extern PFNGLCOMPRESSEDTEXIMAGE2DPROC s_glCompressedTexImage2D;
-        if(!s_glCompressedTexImage2D) {
-            g_GLOptions.m_bTextureCompression = false;
+        extern bool  b_glEntryPointsSet;
+        
+        if(!glTicked)
             m_cbTextureCompressionCaching->Disable();
+
+        if(b_glEntryPointsSet){
+            if(!s_glCompressedTexImage2D) {
+                g_GLOptions.m_bTextureCompressionCaching = false;
+                m_cbTextureCompression->Disable();
+                m_cbTextureCompression->SetValue(false);
+            }
         }
         
         m_bSizer1->Add(m_cbTextureCompressionCaching, 0, wxALL | wxEXPAND, 5);
@@ -5541,10 +5552,14 @@ OpenGLOptionsDlg::OpenGLOptionsDlg( wxWindow* parent )
     m_cbRebuildTextureCache = new wxCheckBox(this, wxID_ANY, _("Rebuild Texture Cache") );
     m_bSizer1->Add(m_cbRebuildTextureCache, 0, wxALL | wxEXPAND, 5);
     m_cbRebuildTextureCache->Enable(g_GLOptions.m_bTextureCompressionCaching);
+    if(!glTicked)
+        m_cbRebuildTextureCache->Disable();
     
     m_cbClearTextureCache = new wxCheckBox(this, wxID_ANY, _("Clear Texture Cache") );
     m_bSizer1->Add(m_cbClearTextureCache, 0, wxALL | wxEXPAND, 5);
     m_cbClearTextureCache->Enable(g_GLOptions.m_bTextureCompressionCaching);
+    if(!glTicked)
+        m_cbClearTextureCache->Disable();
     
     wxStdDialogButtonSizer * m_sdbSizer4 = new wxStdDialogButtonSizer();
     wxButton *bOK = new wxButton( this, wxID_OK );

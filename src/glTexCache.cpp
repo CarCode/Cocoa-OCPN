@@ -1539,12 +1539,12 @@ void glTexFactory::UpdateCacheLevel( const wxRect &rect, int level, ColorScheme 
        }
     }
 
-    
+
 }
 
 int glTexFactory::GetTextureLevel( glTextureDescriptor *ptd, const wxRect &rect, int level, ColorScheme color_scheme )
 {
-    
+
     //  Already available in the texture descriptor?
     if(g_GLOptions.m_bTextureCompression && !g_GLOptions.m_bTextureCompressionCaching) {
         if( ptd->nGPU_compressed == GPU_TEXTURE_COMPRESSED){
@@ -1576,9 +1576,9 @@ int glTexFactory::GetTextureLevel( glTextureDescriptor *ptd, const wxRect &rect,
     //  If cacheing compressed textures, look in the cache
     if(g_GLOptions.m_bTextureCompression &&
         g_GLOptions.m_bTextureCompressionCaching) {
-        
+
         LoadCatalog();
-    
+
     //  Search for the requested texture
         bool b_found = false;
         CatalogEntry *p;
@@ -1593,46 +1593,46 @@ int glTexFactory::GetTextureLevel( glTextureDescriptor *ptd, const wxRect &rect,
             break;
                 }
         }
-        
+
         //      Requested texture level is found in the cache
         //      so go load it
         if( b_found ) {
-            
+
             int dim = g_GLOptions.m_iTextureDimension;
             int size = g_tile_size;
-            
+
             for(int i=0 ; i < level ; i++){
                 dim /= 2;
                 size /= 4;
                 if(size < 8) size = 8;
             }
-            
+
             if(m_fs->IsOpened()){
                 m_fs->Seek(p->texture_offset);
                 unsigned char *cb = (unsigned char*)malloc(size);
                 ptd->CompressedArrayAccess( CA_WRITE, cb, level);
-                
+
                 int max_compressed_size = LZ4_COMPRESSBOUND(g_tile_size);
                 char *compressed_data = new char[max_compressed_size];
                 m_fs->Read(compressed_data, p->compressed_size);
-                
+
                 LZ4_decompress_fast(compressed_data, (char*)cb, size);
                 delete [] compressed_data;    
             }
-            
+
             return COMPRESSED_BUFFER_OK;
         }
     }
-        
+
         //  Requested Texture level is not in cache, and not already built
         //  So go build it
     if( !ptd->map_array[level] ){
         GetFullMap( ptd, rect, m_ChartPath, level );
     }
-        
+
     return MAP_BUFFER_OK;
-        
-            
+
+
 }
 
 
@@ -1653,36 +1653,37 @@ bool glTexFactory::LoadHeader(void)
 {
     bool ret = false;
     if( !m_hdrOK) {
-        
+
         if(wxFileName::FileExists(m_CompressedCacheFilePath)) {
             
             m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::read_write);
-            
-            CompressedCacheHeader hdr;
-            
-            //  Header is located at the end of the file
-            wxFileOffset hdr_offset = m_fs->Length() -sizeof( hdr);
-            hdr_offset = m_fs->Seek( hdr_offset );
-            
-            if( sizeof( hdr) == m_fs->Read(&hdr, sizeof( hdr ))) {
-                if( hdr.magic != COMPRESSED_CACHE_MAGIC ||
-                    hdr.chartdate != m_chart_date_binary ||
-                    hdr.format != m_raster_format) {
-                    
-                    //  Bad header signature    
-                    m_fs->Close();
-                    delete m_fs;
-                
-                    m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::write);
-                    n_catalog_entries = 0;
-                    m_catalog_offset = 0;
-                    WriteCatalogAndHeader();
-                    m_fs->Close();
-                    delete m_fs;
-                
-                    m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::read_write);
-                
-                    m_hdrOK = true;
+            if(m_fs->IsOpened()){
+
+                CompressedCacheHeader hdr;
+
+                //  Header is located at the end of the file
+                wxFileOffset hdr_offset = m_fs->Length() -sizeof( hdr);
+                hdr_offset = m_fs->Seek( hdr_offset );
+
+                if( sizeof( hdr) == m_fs->Read(&hdr, sizeof( hdr ))) {
+                    if( hdr.magic != COMPRESSED_CACHE_MAGIC ||
+                       hdr.chartdate != m_chart_date_binary ||
+                       hdr.format != m_raster_format) {
+                        
+                        //  Bad header signature
+                        m_fs->Close();
+                        delete m_fs;
+                        
+                        m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::write);
+                        n_catalog_entries = 0;
+                        m_catalog_offset = 0;
+                        WriteCatalogAndHeader();
+                        m_fs->Close();
+                        delete m_fs;
+                        
+                        m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::read_write);
+                        
+                        m_hdrOK = true;
                     }
                     else {      // good header
                         n_catalog_entries = hdr.m_nentries;
@@ -1691,13 +1692,32 @@ bool glTexFactory::LoadHeader(void)
                         ret = true;
                     }
                 }
-            else{  // file exists, and is empty
+                else{  // file exists, and is empty
+                    n_catalog_entries = 0;
+                    m_catalog_offset = 0;
+                    WriteCatalogAndHeader();
+                    m_hdrOK = true;
+                    ret = true;
+                }
+            }  // is open
+            
+            else{               // some problem opening file, probably permissions on Win7
+                delete m_fs;
+                m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::write);
                 n_catalog_entries = 0;
                 m_catalog_offset = 0;
                 WriteCatalogAndHeader();
+                m_fs->Close();
+                delete m_fs;
+                
+                m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::read_write);
+
                 m_hdrOK = true;
                 ret = true;
-            }
+
+                
+            }   // exists
+
         }
         else {   // File does not exist
             wxFileName fn(m_CompressedCacheFilePath);

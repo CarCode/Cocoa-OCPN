@@ -35,6 +35,10 @@ extern PlugInManager    *g_pi_manager;
 extern wxString         g_GPS_Ident;
 extern bool             g_bGarminHostUpload;
 extern bool             g_bWplIsAprsPosition;
+extern wxArrayOfConnPrm  *g_pConnectionParams;
+extern bool             g_bserial_access_checked;
+
+extern "C" bool CheckSerialAccess( void );
 
 Multiplexer::Multiplexer()
 {
@@ -94,6 +98,12 @@ void Multiplexer::StopAndRemoveStream( DataStream *stream )
             m_pdatastreams->RemoveAt( index );
     }
 }
+
+extern wxArrayOfConnPrm  *g_pConnectionParams;
+extern bool             g_bserial_access_checked;
+
+extern "C" bool CheckSerialAccess( void );
+
 
 void Multiplexer::LogOutputMessageColor(const wxString &msg, const wxString & stream_name, const wxString & color)
 {

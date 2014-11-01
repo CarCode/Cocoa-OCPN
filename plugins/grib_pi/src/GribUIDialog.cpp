@@ -581,7 +581,7 @@ void GRIBUIDialog::PopulateTrackingControls( bool Populate_Altitude )
                     m_tcRelHumid->SetValue( _("N/A") );
         }
         
-        m_stAltitudeText->SetLabel((m_OverlaySettings.GetAltitudeFromIndex(
+        m_stAltitudeText->SetLabel( wxString(_("Data at")).Append(_T(" ")).Append(m_OverlaySettings.GetAltitudeFromIndex(
             pPlugIn->GetGRIBOverlayFactory()->m_Altitude, m_OverlaySettings.Settings[GribOverlaySettings::PRESSURE].m_Units))
             .Append( _T(" ") ).Append( m_OverlaySettings.GetUnitSymbol(GribOverlaySettings::PRESSURE) ) );
     } else
@@ -1157,7 +1157,8 @@ void GRIBUIDialog::OnOpenFile( wxCommandEvent& event )
         m_grib_dir = path.GetDocumentsDir();
     }
     wxFileDialog *dialog = new wxFileDialog(NULL, _("Select a GRIB file"), m_grib_dir,
-                _T(""), wxT ( "Grib files (*.grb;*.bz2|*.grb;*.bz2|All files (*)|*.*"), wxFD_OPEN, wxDefaultPosition, wxDefaultSize, _T("File Dialog") );
+                                            _T(""), wxT ( "Grib files (*.grb;*.bz2|*.grb;*.bz2)|All files (*)|*.*"), wxFD_OPEN, wxDefaultPosition,
+                                            wxDefaultSize, _T("File Dialog") );
 
     if( dialog->ShowModal() == wxID_OK ) {
         m_grib_dir = dialog->GetDirectory();

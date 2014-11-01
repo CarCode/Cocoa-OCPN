@@ -21,12 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- *
- *
- *
- */
+ ***************************************************************************/
 
 
 #ifndef __DATASTREAM_H__
@@ -206,7 +201,6 @@ private:
     void OnTimerSocket(wxTimerEvent& event);
     void OnSocketReadWatchdogTimer(wxTimerEvent& event);
     
-    wxMutex             m_output_mutex;
     bool                m_bok;
     wxEvtHandler        *m_consumer;
     wxString            m_portstring;
