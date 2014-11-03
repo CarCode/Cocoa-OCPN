@@ -1,11 +1,11 @@
-/******************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Tesselated Polygon Object
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,11 +20,9 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
+
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
 
@@ -419,7 +417,7 @@ PolyTessGeo::PolyTessGeo(unsigned char *polybuf, int nrecl, int index, int senc_
     int nvert;
     int nvert_max = 0;
     bool not_finished = true;
-    int total_byte_size = 0;
+    int total_byte_size = 2 * sizeof(float);
     while(not_finished)
     {
         if((m_buf_ptr - m_buf_head) != m_nrecl)
@@ -927,7 +925,7 @@ int PolyTessGeo::PolyTessGeoTri(OGRPolygon *poly, bool bSENC_SM, double ref_lat,
     //  to reduce SENC size and enable efficient access later
     
     //  First calculate the total byte size
-    int total_byte_size = 0;
+    int total_byte_size = 2 * sizeof(float);
     TriPrim *p_tp = m_ppg_head->tri_prim_head;
     while( p_tp ) {
         total_byte_size += p_tp->nVert * 2 * sizeof(float);
@@ -2009,7 +2007,7 @@ int PolyTessGeo::PolyTessGeoGL(OGRPolygon *poly, bool bSENC_SM, double ref_lat, 
     //  to reduce SENC size and enable efficient access later
     
     //  First calculate the total byte size
-    int total_byte_size = 0;
+    int total_byte_size = 2 * sizeof(float);
     TriPrim *p_tp = m_ppg_head->tri_prim_head;
     while( p_tp ) {
         total_byte_size += p_tp->nVert * 2 * sizeof(float);
@@ -2426,7 +2424,7 @@ int PolyTessGeo::BuildTessGL(void)
       //  to reduce SENC size and enable efficient access later
       
       //  First calculate the total byte size
-      int total_byte_size = 0;
+      int total_byte_size = 2 * sizeof(float);
       TriPrim *p_tp = m_ppg_head->tri_prim_head;
       while( p_tp ) {
           total_byte_size += p_tp->nVert * 2 * sizeof(float);

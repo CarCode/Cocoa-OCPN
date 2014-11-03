@@ -341,30 +341,23 @@ bool DoCompress(JobTicket *pticket, glTextureDescriptor *ptd, int level)
         else if(raster_format == GL_ETC1_RGB8_OES) 
             CompressDataETC(ptd->map_array[level], dim, size, tex_data);
         
-        
+
         ptd->CompressedArrayAccess( CA_WRITE, tex_data, level);
 
         if(pticket->bpost_zip_compress) {
             int max_compressed_size = LZ4_COMPRESSBOUND(g_tile_size);
-            unsigned char *compressed_data = (unsigned char *)malloc(max_compressed_size);
-            int compressed_size = LZ4_compressHC2( (char *)ptd->CompressedArrayAccess( CA_READ, NULL, level),
+            if(max_compressed_size){
+                unsigned char *compressed_data = (unsigned char *)malloc(max_compressed_size);
+                int compressed_size = LZ4_compressHC2( (char *)ptd->CompressedArrayAccess( CA_READ, NULL, level),
                                                    (char *)compressed_data, size, 4);
-            ptd->CompCompArrayAccess( CA_WRITE, compressed_data, level);
-            ptd->compcomp_size[level] = compressed_size;
-            
+                ptd->CompCompArrayAccess( CA_WRITE, compressed_data, level);
+                ptd->compcomp_size[level] = compressed_size;
         }
-        
-    
+    }
+
     return true;
-    
+
 }
-
-
-
-
-
-
-
 
 
 OCPN_CompressionThreadEvent::OCPN_CompressionThreadEvent(wxEventType commandType, int id)

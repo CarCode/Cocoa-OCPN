@@ -661,6 +661,7 @@ bool             g_bresponsive;
 
 bool             b_inCompressAllCharts;
 bool             g_bexpert;
+int              g_chart_zoom_modifier;
 
 #ifdef LINUX_CRASHRPT
 wxCrashPrint g_crashprint;
@@ -1472,7 +1473,7 @@ bool MyApp::OnInit()
     //    Manage internationalization of embedded messages
     //    using wxWidgets/gettext methodology....
 
-//        wxLog::SetVerbose(true);            // log all messages for debugging
+    wxLog::SetVerbose(true);            // log all messages for debugging language stuff
 
     if( lang_list[0] ) {
     };                 // silly way to avoid compiler warnings
@@ -1513,7 +1514,7 @@ bool MyApp::OnInit()
     plocale_def_lang = new wxLocale;
 
     if( pli ) {
-        b_initok = plocale_def_lang->Init( pli->Language, 0 );
+        b_initok = plocale_def_lang->Init( pli->Language, 1 );
         loc_lang_canonical = pli->CanonicalName;
     }
 
@@ -1544,7 +1545,7 @@ bool MyApp::OnInit()
     //    Always use dot as decimal
     setlocale( LC_NUMERIC, "C" );
 
-    wxLog::SetVerbose( false );           // log no verbose messages
+    wxLog::SetVerbose( false );           // log no more verbose messages
 
     //  French language locale is assumed to include the AZERTY keyboard
     //  This applies to either the system language, or to OpenCPN language selection
@@ -1800,7 +1801,7 @@ bool MyApp::OnInit()
 #ifdef USE_S57
         if( ps52plib && ps52plib->m_bOK ) {
             ps52plib->m_bShowSoundg = true;
-            ps52plib->m_nDisplayCategory = (enum _DisCat) STANDARD;
+            ps52plib->SetDisplayCategory((enum _DisCat) STANDARD );
             ps52plib->m_nSymbolStyle = (LUPname) PAPER_CHART;
             ps52plib->m_nBoundaryStyle = (LUPname) PLAIN_BOUNDARIES;
             ps52plib->m_bUseSCAMIN = true;
@@ -3455,7 +3456,10 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     if( b_inCompressAllCharts ) {
         return;
     }
-    
+
+    if( bDBUpdateInProgress )
+        return;
+
     b_inCloseWindow = true;
 
     ::wxSetCursor( wxCURSOR_WAIT );
@@ -4426,6 +4430,14 @@ bool MyFrame::ToggleLights( bool doToggle, bool temporary )
             }
         }
     }
+
+    if( doToggle ){
+        if( !ps52plib->IsObjNoshow("LIGHTS") )
+            ps52plib->AddObjNoshow("LIGHTS");
+        else
+            ps52plib->RemoveObjNoshow("LIGHTS");
+    }
+
 #endif
     return oldstate;
 }
@@ -4488,6 +4500,20 @@ void MyFrame::ToggleAnchor( void )
             }
             if( cnt == num ) break;
         }
+
+        if( !ps52plib->IsObjNoshow("SBDARE") ){
+            ps52plib->AddObjNoshow("SBDARE");
+            for( unsigned int c = 0; c < num; c++ ) {
+                ps52plib->AddObjNoshow(categories[c]);
+            }
+        }
+        else{
+            ps52plib->RemoveObjNoshow("SBDARE");
+            for( unsigned int c = 0; c < num; c++ ) {
+                ps52plib->RemoveObjNoshow(categories[c]);
+            }
+        }
+
         ps52plib->GenerateStateHash();
         cc1->ReloadVP();
     }
@@ -4626,7 +4652,18 @@ void MyFrame::JumpToPosition( double lat, double lon, double scale )
     vLat = lat;
     vLon = lon;
     cc1->m_bFollow = false;
-    DoChartUpdate();
+
+    //  is the current chart available at the target location?
+    int currently_selected_index = pCurrentStack->GetCurrentEntrydbIndex();
+    
+    //  If not, then select the smallest scale chart at the target location (may be empty)
+    ChartData->BuildChartStack( pCurrentStack, lat, lon );
+    if(!pCurrentStack->DoesStackContaindbIndex(currently_selected_index)){
+        pCurrentStack->CurrentStackEntry = pCurrentStack->nEntry - 1;
+        int selected_index = pCurrentStack->GetCurrentEntrydbIndex();
+        if( cc1->GetQuiltMode() )
+            cc1->SetQuiltRefChart( selected_index );
+    }
 
     if( !cc1->GetQuiltMode() ) {
         cc1->SetViewPoint( lat, lon, scale, Current_Ch->GetChartSkew() * PI / 180., cc1->GetVPRotation() );
@@ -5160,8 +5197,9 @@ void MyFrame::SetupQuiltMode( void )
 
         Current_Ch = NULL;                  // Bye....
         
+        SetChartThumbnail( -1 );            //Turn off thumbnails for sure
+
         //  Re-qualify the quilt reference chart selection
-//        cc1->ReloadVP();
         cc1->AdjustQuiltRefChart(  );
         
     } else                                                  // going to SC Mode
@@ -6235,7 +6273,6 @@ void MyFrame::HandlePianoClick( int selected_index, int selected_dbIndex )
                     cc1->SetVPScale( cc1->GetCanvasScaleFactor() / proposed_scale_onscreen );
                 }
             }
-
         }
         else {
             ToggleQuiltMode();
@@ -8497,21 +8534,23 @@ void MyFrame::UpdateAISMOBRoute( AIS_Target_Data *ptarget )
     
     cc1->Refresh( false );
     
-    wxDateTime mob_time = wxDateTime::Now();
-    
-    wxString mob_message( _( "AIS MAN OVERBOARD UPDATE" ) );
-    mob_message += _T(" Time: ");
-    mob_message += mob_time.Format();
-    mob_message += _T("  Ownship Position: ");
-    mob_message += toSDMM( 1, gLat );
-    mob_message += _T("   ");
-    mob_message += toSDMM( 2, gLon );
-    mob_message += _T("  MOB Position: ");
-    mob_message += toSDMM( 1, ptarget->Lat );
-    mob_message += _T("   ");
-    mob_message += toSDMM( 2, ptarget->Lon );
-    
-    wxLogMessage( mob_message );
+    if( ptarget ){
+        wxDateTime mob_time = wxDateTime::Now();
+        
+        wxString mob_message( _( "AIS MAN OVERBOARD UPDATE" ) );
+        mob_message += _T(" Time: ");
+        mob_message += mob_time.Format();
+        mob_message += _T("  Ownship Position: ");
+        mob_message += toSDMM( 1, gLat );
+        mob_message += _T("   ");
+        mob_message += toSDMM( 2, gLon );
+        mob_message += _T("  MOB Position: ");
+        mob_message += toSDMM( 1, ptarget->Lat );
+        mob_message += _T("   ");
+        mob_message += toSDMM( 2, ptarget->Lon );
+        
+        wxLogMessage( mob_message );
+    }
     
 }
 

@@ -336,6 +336,8 @@ extern bool             g_bexpert;
 extern int              g_SENC_LOD_pixels;
 extern ArrayOfMMSIProperties   g_MMSI_Props_Array;
 
+extern int              g_chart_zoom_modifier;
+
 #ifdef ocpnUSE_GL
 extern ocpnGLOptions g_GLOptions;
 #endif
@@ -1253,6 +1255,9 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "MobileTouch" ), &g_btouch, 0 );
     Read( _T ( "ResponsiveGraphics" ), &g_bresponsive, 0 );
     
+    Read( _T ( "ZoomDetailFactor" ), &g_chart_zoom_modifier, 0 );
+    g_chart_zoom_modifier = wxMin(g_chart_zoom_modifier,5);
+    g_chart_zoom_modifier = wxMax(g_chart_zoom_modifier,-5);
 
 #ifdef USE_S57
     Read( _T ( "CM93DetailFactor" ), &g_cm93_zoom_factor, 0 );
@@ -1468,7 +1473,7 @@ int MyConfig::LoadMyConfig( int iteration )
         ps52plib->SetExtendLightSectors( !( read_int == 0 ) );
 
         Read( _T ( "nDisplayCategory" ), &read_int, (enum _DisCat) STANDARD );
-        ps52plib->m_nDisplayCategory = (enum _DisCat) read_int;
+        ps52plib->SetDisplayCategory((enum _DisCat) read_int );
 
         Read( _T ( "nSymbolStyle" ), &read_int, (enum _LUPname) PAPER_CHART );
         ps52plib->m_nSymbolStyle = (LUPname) read_int;
@@ -2437,6 +2442,8 @@ void MyConfig::UpdateSettings()
     Write( _T ( "SkewToNorthUp" ), g_bskew_comp );
     Write( _T ( "OpenGL" ), g_bopengl );
 
+    Write( _T ( "ZoomDetailFactor" ), g_chart_zoom_modifier );
+
 #ifdef ocpnUSE_GL
     /* opengl options */
 #ifdef __WXOSX__
@@ -2651,7 +2658,7 @@ void MyConfig::UpdateSettings()
     if( ps52plib ) {
         Write( _T ( "bShowS57Text" ), ps52plib->GetShowS57Text() );
         Write( _T ( "bShowS57ImportantTextOnly" ), ps52plib->GetShowS57ImportantTextOnly() );
-        Write( _T ( "nDisplayCategory" ), (long) ps52plib->m_nDisplayCategory );
+        Write( _T ( "nDisplayCategory" ), (long) ps52plib->GetDisplayCategory() );
         Write( _T ( "nSymbolStyle" ), (int) ps52plib->m_nSymbolStyle );
         Write( _T ( "nBoundaryStyle" ), (int) ps52plib->m_nBoundaryStyle );
 

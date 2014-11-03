@@ -210,6 +210,7 @@ void GRIBUIDialog::OpenFile(bool newestFile)
                 pPlugIn->GetGRIBOverlayFactory()->SetMessage( m_bGRIBActiveFile->GetLastMessage() );
         }
         this->SetTitle(title);
+        SetTimeLineMax(false);
         SetFactoryOptions();
         if( pPlugIn->GetStartOptions() && m_TimeLineHours != 0)                             //fix a crash for one date files
             ComputeBestForecastForNow();
@@ -889,8 +890,9 @@ void GRIBUIDialog::OnSettings( wxCommandEvent& event )
     } else
         m_OverlaySettings = initSettings;
 
-    SetFactoryOptions(true);
-    TimelineChanged();
+    if( !m_OverlaySettings.m_bInterpolate ) m_InterpolateMode = false;        //Interpolate could have been unchecked
+    SetTimeLineMax(true);
+    SetFactoryOptions();
     PopulateTrackingControls();
 }
 
@@ -902,9 +904,8 @@ void GRIBUIDialog::OnPlayStop( wxCommandEvent& event )
         m_bpPlay->SetBitmap(wxBitmap( stop ));
         m_bpPlay->SetToolTip( _("Stop") );
         m_tPlayStop.Start( 1000/m_OverlaySettings.m_UpdatesPerSecond, wxTIMER_CONTINUOUS );
+        m_InterpolateMode = m_OverlaySettings.m_bInterpolate;
     }
-
-    m_InterpolateMode = m_OverlaySettings.m_bInterpolate;
 }
 
 void GRIBUIDialog::OnPlayStopTimer( wxTimerEvent & event )
@@ -913,7 +914,6 @@ void GRIBUIDialog::OnPlayStopTimer( wxTimerEvent & event )
         if(m_OverlaySettings.m_bLoopMode) {
             if(m_OverlaySettings.m_LoopStartPoint) {
                 ComputeBestForecastForNow();
-                m_InterpolateMode = m_OverlaySettings.m_bInterpolate;
                 if(m_sTimeline->GetValue() >= m_sTimeline->GetMax()) StopPlayBack();        //will stop playback
                 return;
             } else
@@ -1157,7 +1157,7 @@ void GRIBUIDialog::OnOpenFile( wxCommandEvent& event )
         m_grib_dir = path.GetDocumentsDir();
     }
     wxFileDialog *dialog = new wxFileDialog(NULL, _("Select a GRIB file"), m_grib_dir,
-                                            _T(""), wxT ( "Grib files (*.grb;*.bz2|*.grb;*.bz2)|All files (*)|*.*"), wxFD_OPEN, wxDefaultPosition,
+                                            _T(""), wxT ( "Grib files (*.grb;*.bz2)|*.grb;*.bz2|All files (*)|*.*"), wxFD_OPEN, wxDefaultPosition,
                                             wxDefaultSize, _T("File Dialog") );
 
     if( dialog->ShowModal() == wxID_OK ) {
@@ -1308,7 +1308,7 @@ void GRIBUIDialog::ComputeBestForecastForNow()
     }
 
     if( pPlugIn->GetStartOptions() != 2 ) {         //no interpolation at start : take the nearest forecast
-        m_OverlaySettings.m_bInterpolate ? m_InterpolateMode = true : m_InterpolateMode = false;
+        m_InterpolateMode = m_OverlaySettings.m_bInterpolate;
         TimelineChanged();
         return;
     }
@@ -1340,25 +1340,30 @@ void GRIBUIDialog::SetGribTimelineRecordSet(GribTimelineRecordSet *pTimelineSet)
     pPlugIn->GetGRIBOverlayFactory()->SetGribTimelineRecordSet(m_pTimelineSet);
 }
 
-void GRIBUIDialog::SetFactoryOptions( bool set_val )
+void GRIBUIDialog::SetTimeLineMax( bool SetValue )
 {
-    int max = wxMax(m_sTimeline->GetMax(), 1), val = m_sTimeline->GetValue();             //memorize the old range and value
+    int oldmax = wxMax(m_sTimeline->GetMax(), 1), oldval = m_sTimeline->GetValue();             //memorize the old range and value
 
     if(m_OverlaySettings.m_bInterpolate){
         int stepmin = m_OverlaySettings.GetMinFromIndex(m_OverlaySettings.m_SlicesPerUpdate);
         m_sTimeline->SetMax(m_TimeLineHours * 60 / stepmin );
-    }
-    else {
+    } else {
         if(m_bGRIBActiveFile && m_bGRIBActiveFile->IsOK()) {
             ArrayOfGribRecordSets *rsa = m_bGRIBActiveFile->GetRecordSetArrayPtr();
             m_sTimeline->SetMax(rsa->GetCount()-1);
         }
     }
-
     //try to retrieve a coherent timeline value with the new timeline range if it has changed
-    if( set_val && m_sTimeline->GetMax() != 0 )
-        m_sTimeline->SetValue( m_sTimeline->GetMax() * val / max );
+    if( SetValue && m_sTimeline->GetMax() != 0 ) {
+        if( m_pNowMode )
+            ComputeBestForecastForNow();
+        else
+            m_sTimeline->SetValue( m_sTimeline->GetMax() * oldval / oldmax );
+    }
+}
 
+void GRIBUIDialog::SetFactoryOptions()
+{
     if(m_pTimelineSet)
         m_pTimelineSet->ClearCachedData();
 
