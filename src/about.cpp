@@ -300,12 +300,20 @@ void about::Update()
     delete pAboutString;
 
     // Show the user where the log file is going to be
+#ifdef __WXOSX__
+    wxString log = _T("    Log-Datei Ort: ");
+#else
     wxString log = _T("    Logfile location: ");
+#endif
     log.Append( glog_file );
     pAboutTextCtl->WriteText( log );
 
     // Show the user where the config file is going to be
+#ifdef __WXOSX__
+    wxString conf = _T("\n    Konfig-Datei Ort: ");
+#else
     wxString conf = _T("\n    Config file location: ");
+#endif
     conf.Append( gConfig_File );
     pAboutTextCtl->WriteText( conf );
 

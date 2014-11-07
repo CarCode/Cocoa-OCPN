@@ -92,28 +92,50 @@ const int ID_TOOLBAR = 500;
 
 enum
 {
-      ID_ZOOMIN = 1550,
-      ID_ZOOMOUT,
-      ID_STKUP,
-      ID_STKDN,
-      ID_ROUTE,
-      ID_FOLLOW,
-      ID_SETTINGS,
-      ID_AIS,           // pjotrc 2010.02.09
-      ID_TEXT,
-      ID_CURRENT,
-      ID_TIDE,
-      ID_HELP,
-      ID_SPARKLE,
-      ID_TBEXIT,
-      ID_TBSTAT,
-      ID_PRINT,
-      ID_COLSCHEME,
-      ID_ROUTEMANAGER,
-      ID_TRACK,
-      ID_TBSTATBOX,
-      ID_MOB,
-      ID_PLUGIN_BASE
+    // The following constants represent the toolbar items (some are also used in menus).
+    // They MUST be in the SAME ORDER as on the toolbar and new items MUST NOT be added
+    // amongst them, due to the way the toolbar button visibility is saved and calculated.
+    ID_ZOOMIN = 1550,
+    ID_ZOOMOUT,
+    ID_STKUP,
+    ID_STKDN,
+    ID_ROUTE,
+    ID_FOLLOW,
+    ID_SETTINGS,
+    ID_AIS,
+    ID_ENC_TEXT,
+    ID_CURRENT,
+    ID_TIDE,
+    ID_HELP,
+    ID_SPARKLE,
+    ID_TBEXIT,
+    ID_TBSTAT,
+    ID_PRINT,
+    ID_COLSCHEME,
+    ID_ROUTEMANAGER,
+    ID_TRACK,
+    ID_TBSTATBOX,
+    ID_MOB,
+    ID_PLUGIN_BASE,
+
+    // The following are constants which are used in the menus but not in the toolbar.
+    // So long as they come after the constants above, all will be well.
+    ID_MEASURE,
+    ID_MARK_BOAT,
+    ID_MARK_CURSOR,
+    ID_NORTHUP,
+    ID_COGUP,
+    ID_ENC_LIGHTS,
+    ID_ENC_SOUNDINGS,
+    ID_ENC_ANCHOR,
+    ID_OUTLINES,
+    ID_QUILTING,
+    ID_CHARTBAR,
+    ID_FULLSCREEN,
+    ID_AISMENU_TARGETLIST,
+    ID_AISMENU_TARGETTRACKS,
+    ID_AISMENU_CPADIALOG,
+    ID_AISMENU_CPASOUND
 };
 
 
@@ -260,6 +282,7 @@ class MyFrame: public wxFrame
     void ProcessCanvasResize(void);
 
     void ApplyGlobalSettings(bool bFlyingUpdate, bool bnewtoolbar);
+    void UpdateGlobalMenuItems();
     void SetChartThumbnail(int index);
     int  DoOptionsDialog();
     int  ProcessOptionsDialog(int resultFlags , options* dialog );
@@ -309,7 +332,7 @@ class MyFrame: public wxFrame
     void onAbout(wxCommandEvent& event);
     void onEinst(wxCommandEvent& event);
     void onHelp(wxCommandEvent& event);
-    void onSparkle(wxCommandEvent& event);
+    void onSparkle(void);
     void startHelp(void);
     void onZoomin(wxCommandEvent& event);
     void onZoomout(wxCommandEvent& event);

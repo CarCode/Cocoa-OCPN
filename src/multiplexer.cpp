@@ -37,6 +37,7 @@ extern bool             g_bGarminHostUpload;
 extern bool             g_bWplIsAprsPosition;
 extern wxArrayOfConnPrm  *g_pConnectionParams;
 extern bool             g_bserial_access_checked;
+extern bool             g_b_legacy_input_filter_behaviour;
 
 extern "C" bool CheckSerialAccess( void );
 
@@ -141,7 +142,10 @@ void Multiplexer::LogInputMessage(const wxString &msg, const wxString & stream_n
         ss.Append( _T(") ") );
         ss.Append( msg );
         if(b_filter)
-            ss.Prepend( _T("<AMBER>") );
+            if (g_b_legacy_input_filter_behaviour)
+                ss.Prepend( _T("<AMBER>") );
+            else
+                ss.Prepend( _T("<YELLOW>") );  // DARK RED gibt es nicht
         else
             ss.Prepend( _T("<GREEN>") );
 
@@ -228,41 +232,45 @@ void Multiplexer::OnEvtStream(OCPN_DataStreamEvent& event)
             }
         }
 
-            //Send to the Debug Window, if open
-        LogInputMessage( message, port, !bpass );
+        
+        if ((g_b_legacy_input_filter_behaviour && !bpass) || bpass) {
 
-        //Send to plugins
-        if ( g_pi_manager )
-            g_pi_manager->SendNMEASentenceToAllPlugIns( message );
+            //Send to plugins
+            if ( g_pi_manager )
+                g_pi_manager->SendNMEASentenceToAllPlugIns( message );
 
-       //Send to all the other outputs
-        for (size_t i = 0; i < m_pdatastreams->Count(); i++)
-        {
-            DataStream* s = m_pdatastreams->Item(i);
-            if ( s->IsOk() ) {
-                if((s->GetConnectionType() == SERIAL)  || (s->GetPort() != port)) {
-                    if ( s->GetIoSelect() == DS_TYPE_INPUT_OUTPUT || s->GetIoSelect() == DS_TYPE_OUTPUT ) {
-                        bool bout_filter = true;
-
-                        bool bxmit_ok = true;
-                        if(s->SentencePassesFilter( message, FILTER_OUTPUT ) ) {
-                            bxmit_ok = s->SendSentence(message);
-                            bout_filter = false;
-                        }
-
-                        //Send to the Debug Window, if open
-                        if( !bout_filter ) {
-                            if( bxmit_ok )
-                                LogOutputMessageColor( message, s->GetPort(), _T("<BLUE>") );
+            //Send to all the other outputs
+            for (size_t i = 0; i < m_pdatastreams->Count(); i++)
+            {
+                DataStream* s = m_pdatastreams->Item(i);
+                if ( s->IsOk() ) {
+                    if((s->GetConnectionType() == SERIAL)  || (s->GetPort() != port)) {
+                        if ( s->GetIoSelect() == DS_TYPE_INPUT_OUTPUT || s->GetIoSelect() == DS_TYPE_OUTPUT ) {
+                            bool bout_filter = true;
+                            
+                            bool bxmit_ok = true;
+                            if(s->SentencePassesFilter( message, FILTER_OUTPUT ) ) {
+                                bxmit_ok = s->SendSentence(message);
+                                bout_filter = false;
+                            }
+                            
+                            //Send to the Debug Window, if open
+                            if( !bout_filter ) {
+                                if( bxmit_ok )
+                                    LogOutputMessageColor( message, s->GetPort(), _T("<BLUE>") );
+                                else
+                                    LogOutputMessageColor( message, s->GetPort(), _T("<RED>") );
+                            }
                             else
-                                LogOutputMessageColor( message, s->GetPort(), _T("<RED>") );
+                                LogOutputMessageColor( message, s->GetPort(), _T("<AMBER>") );
                         }
-                        else
-                            LogOutputMessageColor( message, s->GetPort(), _T("<AMBER>") );
                     }
                 }
             }
         }
+
+        //Send to the Debug Window, if open
+        LogInputMessage( message, port, !bpass );
     }
 }
 

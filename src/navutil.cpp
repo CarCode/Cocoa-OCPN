@@ -226,6 +226,7 @@ extern s52plib          *ps52plib;
 #endif
 
 extern int              g_cm93_zoom_factor;
+extern bool             g_b_legacy_input_filter_behaviour;
 extern bool             g_bShowCM93DetailSlider;
 extern int              g_cm93detail_dialog_x, g_cm93detail_dialog_y;
 
@@ -1345,6 +1346,9 @@ int MyConfig::LoadMyConfig( int iteration )
     NMEALogWindow::Get().SetSize(Read(_T("NMEALogWindowSizeX"), 600L), Read(_T("NMEALogWindowSizeY"), 400L));
     NMEALogWindow::Get().SetPos(Read(_T("NMEALogWindowPosX"), 10L), Read(_T("NMEALogWindowPosY"), 10L));
     NMEALogWindow::Get().CheckPos(display_width, display_height);
+
+    // Boolean to cater for legacy Input COM Port filer behaviour, i.e. show msg filtered but put msg on bus.
+    Read( _T ( "LegacyInputCOMPortFilterBehaviour" ), &g_b_legacy_input_filter_behaviour, 0 );
 
     SetPath( _T ( "/Settings/GlobalState" ) );
     Read( _T ( "bFollow" ), &st_bFollow );
