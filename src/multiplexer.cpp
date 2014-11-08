@@ -127,7 +127,7 @@ void Multiplexer::LogOutputMessageColor(const wxString &msg, const wxString & st
 void Multiplexer::LogOutputMessage(const wxString &msg, wxString stream_name, bool b_filter)
 {
     if(b_filter)
-        LogOutputMessageColor( msg, stream_name, _T("<AMBER>") );
+        LogOutputMessageColor( msg, stream_name, _T("<CORAL>") );
     else
         LogOutputMessageColor( msg, stream_name, _T("<BLUE>") );
 }
@@ -143,9 +143,9 @@ void Multiplexer::LogInputMessage(const wxString &msg, const wxString & stream_n
         ss.Append( msg );
         if(b_filter)
             if (g_b_legacy_input_filter_behaviour)
-                ss.Prepend( _T("<AMBER>") );
+                ss.Prepend( _T("<CORAL>") );
             else
-                ss.Prepend( _T("<YELLOW>") );  // DARK RED gibt es nicht
+                ss.Prepend( _T("<MAROON>") );
         else
             ss.Prepend( _T("<GREEN>") );
 
@@ -177,7 +177,7 @@ void Multiplexer::SendNMEAMessage(const wxString &msg)
                     LogOutputMessageColor( msg, s->GetPort(), _T("<RED>") );
             }
             else
-                LogOutputMessageColor( msg, s->GetPort(), _T("<AMBER>") );
+                LogOutputMessageColor( msg, s->GetPort(), _T("<CORAL>") );
         }
     }
     //Send to plugins
@@ -262,7 +262,7 @@ void Multiplexer::OnEvtStream(OCPN_DataStreamEvent& event)
                                     LogOutputMessageColor( message, s->GetPort(), _T("<RED>") );
                             }
                             else
-                                LogOutputMessageColor( message, s->GetPort(), _T("<AMBER>") );
+                                LogOutputMessageColor( message, s->GetPort(), _T("<CORAL>") );
                         }
                     }
                 }
