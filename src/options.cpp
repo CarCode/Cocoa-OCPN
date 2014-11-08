@@ -737,8 +737,6 @@ void MMSI_Props_Panel::OnNewButton( wxCommandEvent &event )
 
 void MMSI_Props_Panel::UpdateMMSIList( void )
 {
-    int sb_position = m_pListCtrlMMSI->GetScrollPos( wxVERTICAL );
-    
     //    Capture the MMSI of the curently selected list item
     long selItemID = -1;
     selItemID = m_pListCtrlMMSI->GetNextItem( selItemID, wxLIST_NEXT_ALL,
@@ -752,23 +750,23 @@ void MMSI_Props_Panel::UpdateMMSIList( void )
     m_pListCtrlMMSI->SetItemCount( g_MMSI_Props_Array.GetCount() );
     
     
-    //    Restore selected item
-    long item_sel = 0;
-    if( ( selItemID != -1 ) && ( selMMSI != -1 ) ) {
-        for( unsigned int i = 0; i < g_MMSI_Props_Array.GetCount(); i++ ) {
-            if( g_MMSI_Props_Array.Item( i )->MMSI == selMMSI ) {
-                item_sel = i;
-                break;
+    if( g_MMSI_Props_Array.GetCount() ){
+        //    Restore selected item
+        long item_sel = 0;
+        if( ( selItemID != -1 ) && ( selMMSI != -1 ) ) {
+            for( unsigned int i = 0; i < g_MMSI_Props_Array.GetCount(); i++ ) {
+                if( g_MMSI_Props_Array.Item( i )->MMSI == selMMSI ) {
+                    item_sel = i;
+                    break;
+                }
             }
         }
+
+        m_pListCtrlMMSI->SetItemState( item_sel,
+                                      wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
+                                      wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED );
+
     }
-#ifdef __WXOSX__
-    if(item_sel > 0)
-#endif
-    m_pListCtrlMMSI->SetItemState( item_sel,
-                                  wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
-                                  wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED );
-    
     
 #ifdef __WXMSW__
     m_pListCtrlMMSI->Refresh( false );
@@ -883,6 +881,7 @@ void options::Init()
     m_pWorkDirList = NULL;
 
     pShowStatusBar = NULL;
+    pShowMenuBar = NULL;
     pShowCompassWin = NULL;
     pSelCtl = NULL;
     pActiveChartsList = NULL;
@@ -1654,6 +1653,9 @@ void options::CreatePanel_ChartsLoad( size_t parent, int border_size, int group_
     itemStaticBoxSizerUpdate->Add( pUpdateCheckBox, 1, wxALL, 5 );
 
     chartPanel->Layout();
+
+    chartPanelWin->SetScrollRate(5, 5);
+
 }
 
 void options::CreatePanel_VectorCharts( size_t parent, int border_size, int group_item_spacing,
@@ -2368,6 +2370,12 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
     pShowStatusBar->SetValue( FALSE );
     miscOptions->Add( pShowStatusBar, 0, wxALL, border_size );
 
+#ifndef __WXOSX__
+    pShowMenuBar = new wxCheckBox( itemPanelFont, wxID_ANY, _("Show Menu Bar") );
+    pShowMenuBar->SetValue( FALSE );
+    miscOptions->Add( pShowMenuBar, 0, wxALL, border_size );
+#endif
+
     pShowCompassWin = new wxCheckBox( itemPanelFont, wxID_ANY, _("Show Compass/GPS Status Window") );
     pShowCompassWin->SetValue( FALSE );
     miscOptions->Add( pShowCompassWin, 0, wxALL, border_size );
@@ -2493,8 +2501,12 @@ void options::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer( wxVERTICAL );
     itemDialog1->SetSizer( itemBoxSizer2 );
 
-    m_pListbook = new wxListbook( itemDialog1, ID_NOTEBOOK, wxDefaultPosition, wxSize(-1, -1),
-            wxLB_TOP );
+    int flags = 0;
+#ifndef __WXQT__
+    flags = wxLB_TOP;
+#endif
+    
+    m_pListbook = new wxListbook( itemDialog1, ID_NOTEBOOK, wxDefaultPosition, wxSize(-1, -1), flags);
     
     //  Reduce the Font size on ListBook(ListView) selectors to allow single line layout
     if( g_bresponsive ) {
@@ -2647,6 +2659,9 @@ void options::SetInitialSettings()
 
     if( m_pConfig ) {
         pShowStatusBar->SetValue( m_pConfig->m_bShowStatusBar );
+#ifndef __WXOSX__
+        pShowMenuBar->SetValue( m_pConfig->m_bShowMenuBar );
+#endif
         pShowCompassWin->SetValue( m_pConfig->m_bShowCompassWin );
     }
 
@@ -3395,6 +3410,9 @@ void options::OnApplyClick( wxCommandEvent& event )
 
     if( m_pConfig ) {
         m_pConfig->m_bShowStatusBar = pShowStatusBar->GetValue();
+#ifndef __WXOSX__
+        m_pConfig->m_bShowMenuBar = pShowMenuBar->GetValue();
+#endif
         m_pConfig->m_bShowCompassWin = pShowCompassWin->GetValue();
     }
 
@@ -3810,6 +3828,7 @@ void options::OnXidOkClick( wxCommandEvent& event )
 
     lastWindowPos = GetPosition();
     lastWindowSize = GetSize();
+    SetReturnCode( m_returnChanges );
     EndModal( m_returnChanges );
 }
 

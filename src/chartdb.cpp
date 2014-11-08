@@ -260,7 +260,7 @@ bool ChartDB::LoadBinary(const wxString & filename, ArrayOfCDI& dir_array_check)
 void ChartDB::PurgeCache()
 {
 //    Empty the cache
-      wxLogMessage(_T("Chart cache purge"));
+//      wxLogMessage(_T("Chart cache purge"));
 
       if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
         unsigned int nCache = pChartCache->GetCount();
@@ -314,10 +314,10 @@ void ChartDB::PurgeCacheUnusedCharts( double factor)
 
                 int nl = pChartCache->GetCount();       // max loop count, by definition
                     
-                while( (mem_used > mem_limit) && (nl>0) )
+                while( (mem_used > mem_limit) && (nl > 0) )
                 {
                     if( pChartCache->GetCount() < 2 ){
-                        nl = 0;
+//                        nl = 0;  // Dead Store
                         break;
                     }
                     
@@ -1489,7 +1489,7 @@ wxXmlDocument ChartDB::GetXMLDescription(int dbIndex, bool b_getGeom)
       if(!IsValid() || (dbIndex >= GetChartTableEntries()))
             return doc;
 
-      bool b_remove = !IsChartInCache(dbIndex);
+      bool b_remove; // = !IsChartInCache(dbIndex); // Dead Store
 
       wxXmlNode *pcell_node = NULL;
       wxXmlNode *node;
