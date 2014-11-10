@@ -377,6 +377,8 @@ enum
 
     ID_DEF_MENU_GROUPBASE,
 
+    ID_DEF_ZERO_XTE,
+
     ID_DEF_MENU_LAST
 };
 
@@ -1064,6 +1066,8 @@ BEGIN_EVENT_TABLE ( ChartCanvas, wxWindow )
     EVT_MENU ( ID_DEF_MENU_TIDEINFO,        ChartCanvas::PopupMenuHandler )
     EVT_MENU ( ID_DEF_MENU_CURRENTINFO,     ChartCanvas::PopupMenuHandler )
     EVT_MENU ( ID_DEF_MENU_GROUPBASE,       ChartCanvas::PopupMenuHandler )
+
+    EVT_MENU ( ID_DEF_ZERO_XTE, ChartCanvas::PopupMenuHandler )
 END_EVENT_TABLE()
 
 // Define a constructor for my canvas
@@ -1136,6 +1140,8 @@ ChartCanvas::ChartCanvas ( wxFrame *frame ) :
     m_pos_image_user_yellow_day = NULL;
     m_pos_image_user_yellow_dusk = NULL;
     m_pos_image_user_yellow_night = NULL;
+
+    SetOwnShipState( SHIP_INVALID );
 
     undo = new Undo;
 
@@ -2068,12 +2074,7 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
     case WXK_F11:
         parent_frame->ToggleFullScreen();
         break;
-#ifdef __WXOSX__
-    case WXK_ESCAPE:
-//        if( IsFullScreen() )
-            parent_frame->ToggleFullScreen();
-        break;
-#endif
+
     case WXK_F12: {
 //        if( m_modkeys == wxMOD_ALT )
 //            m_nMeasureState = *(int *)(0);          // generate a fault for testing
@@ -3112,8 +3113,6 @@ void ChartCanvas::DoZoomCanvas( double factor,  bool can_zoom_to_cursor )
 
         double zoom_factor = factor;
 
-        double min_allowed_scale = 500.0;                // meters per meter
-        
         ChartBase *pc = NULL;
 
         if( !VPoint.b_quilt ) {
@@ -3128,7 +3127,7 @@ void ChartCanvas::DoZoomCanvas( double factor,  bool can_zoom_to_cursor )
         }
 
         if( pc ) {
-            min_allowed_scale = pc->GetNormalScaleMin( GetCanvasScaleFactor(), false/*g_b_overzoom_x*/ );
+            double min_allowed_scale = pc->GetNormalScaleMin( GetCanvasScaleFactor(), false/*g_b_overzoom_x*/ );
             
             double target_scale_ppm = GetVPScale() * zoom_factor;
             double new_scale_ppm = target_scale_ppm; //pc->GetNearestPreferredScalePPM(target_scale_ppm);
@@ -3144,11 +3143,9 @@ void ChartCanvas::DoZoomCanvas( double factor,  bool can_zoom_to_cursor )
                     proposed_scale_onscreen = min_allowed_scale;
             }
             
-            m_last_max_scale = min_allowed_scale;
         }
         else {
-            proposed_scale_onscreen = wxMax( proposed_scale_onscreen, m_last_max_scale);
-            
+            proposed_scale_onscreen = wxMax( proposed_scale_onscreen, 200.);
         }
             
         
@@ -6422,17 +6419,11 @@ void ChartCanvas::LostMouseCapture( wxMouseCaptureLostEvent& event )
 //          Popup Menu Handling
 //-------------------------------------------------------------------------------
 
-wxString _menuText( wxString name, wxString shortcut ) {
-    wxString menutext;
-    menutext << name << _T("\t") << shortcut;
-    return menutext;
-}
-
 void MenuPrepend( wxMenu *menu, int id, wxString label)
 {
     wxMenuItem *item = new wxMenuItem(menu, id, label);
 #ifdef __WXMSW__
-    wxFont *qFont = GetOCPNScaledFont(_T("Menu"), 10);
+    wxFont *qFont = GetOCPNScaledFont(_T("Menu"));
     item->SetFont(*qFont);
 #endif
     menu->Prepend(item);
@@ -6442,7 +6433,7 @@ void MenuAppend( wxMenu *menu, int id, wxString label)
 {
     wxMenuItem *item = new wxMenuItem(menu, id, label);
 #ifdef __WXMSW__
-    wxFont *qFont = GetOCPNScaledFont(_("Menu"), 10);
+    wxFont *qFont = GetOCPNScaledFont(_("Menu"));
     item->SetFont(*qFont);
 #endif
     menu->Append(item);
@@ -6451,7 +6442,7 @@ void MenuAppend( wxMenu *menu, int id, wxString label)
 void SetMenuItemFont(wxMenuItem *item)
 {
 #ifdef __WXMSW__
-    wxFont *qFont = GetOCPNScaledFont(_("Menu"), 10);
+    wxFont *qFont = GetOCPNScaledFont(_("Menu"));
     item->SetFont(*qFont);
 #endif
 }
@@ -6600,6 +6591,8 @@ void ChartCanvas::CanvasPopupMenu( int x, int y, int seltype )
         else
             MenuAppend( contextMenu, ID_DEF_MENU_NORTHUP, _("North Up Mode") );
     }
+
+    if ( g_pRouteMan->IsAnyRouteActive() && g_pRouteMan->GetCurrentXTEToActivePoint() > 0. ) MenuAppend( contextMenu, ID_DEF_ZERO_XTE, _("Zero XTE") );
 
     Kml* kml = new Kml;
     int pasteBuffer = kml->ParsePasteBuffer();
@@ -8147,6 +8140,10 @@ void ChartCanvas::PopupMenuHandler( wxCommandEvent& event )
         FinishRoute();
         gFrame->SurfaceToolbar();
         Refresh( false );
+        break;
+
+    case ID_DEF_ZERO_XTE:
+        g_pRouteMan->ZeroCurrentXTEToActivePoint();
         break;
 
     default: {

@@ -665,6 +665,8 @@ bool             b_inCompressAllCharts;
 bool             g_bexpert;
 int              g_chart_zoom_modifier;
 
+int              g_NMEAAPBPrecision;
+
 #ifdef LINUX_CRASHRPT
 wxCrashPrint g_crashprint;
 #endif
@@ -951,6 +953,12 @@ bool MyApp::OnInit()
         if ( m_checker->IsAnotherRunning() )
             return false;               // exit quietly
     }
+#endif
+
+#if wxCHECK_VERSION(3,0,0)
+    // Set the name of the app as displayed to the user.
+    // This is necessary at least on OS X, for the capitalisation to be correct in the system menus.
+    MyApp::SetAppDisplayName("OpenCPN");
 #endif
 
 #ifdef OCPN_USE_CRASHRPT
@@ -3931,23 +3939,23 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             g_bShowAIS = !g_bShowAIS;
 
             if( g_toolbar ) {
-                if( g_bShowAIS )
+                wxString iconName;
+                if( g_bShowAIS ) {
                     g_toolbar->SetToolShortHelp( ID_AIS, _("Hide AIS Targets") );
-                else
+                    iconName = _T("AIS");
+                } else {
                     g_toolbar->SetToolShortHelp( ID_AIS, _("Show AIS Targets") );
+                    iconName = _T("AIS_Disabled");
+                }
+
+                if( m_pAISTool ) {
+                    g_toolbar->SetToolNormalBitmapEx( m_pAISTool, iconName );
+                    g_toolbar->Refresh();
+                    m_lastAISiconName = iconName;
+                }
             }
 
-            wxString iconName;
-            if( g_bShowAIS )
-                iconName = _T("AIS");
-            else
-                iconName = _T("AIS_Disabled");
-
-            if( m_pAISTool && g_toolbar) {
-                g_toolbar->SetToolNormalBitmapEx( m_pAISTool, iconName );
-                g_toolbar->Refresh();
-                m_lastAISiconName = iconName;
-            }
+            SetMenubarItemState(ID_MENU_AIS_TARGETS, g_bShowAIS);
 
             cc1->ReloadVP();
 
@@ -4652,81 +4660,87 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
     if( bnewtoolbar ) UpdateToolbar( global_color_scheme );
 }
 
+wxString _menuText( wxString name, wxString shortcut ) {
+    wxString menutext;
+    menutext << name << _T("\t") << shortcut;
+    return menutext;
+}
+
 void MyFrame::RegisterGlobalMenuItems()
 {
     if ( !m_pMenuBar ) return; // if there isn't a menu bar
 
     wxMenu* nav_menu = new wxMenu();
-    nav_menu->AppendCheckItem(ID_MENU_NAV_FOLLOW, _("Auto Follow") + "\tCtrl-A");
-    nav_menu->AppendCheckItem(ID_MENU_NAV_TRACK, _("Record Track"));
+    nav_menu->AppendCheckItem( ID_MENU_NAV_FOLLOW, _menuText(_("Auto Follow"), _T("Ctrl-A")) );
+    nav_menu->AppendCheckItem( ID_MENU_NAV_TRACK, _("Record Track") );
     nav_menu->AppendSeparator();
-    nav_menu->AppendRadioItem(ID_MENU_CHART_NORTHUP, _("North Up Mode"));
-    nav_menu->AppendRadioItem(ID_MENU_CHART_COGUP, _("Course Up Mode"));
+    nav_menu->AppendRadioItem( ID_MENU_CHART_NORTHUP, _("North Up Mode") );
+    nav_menu->AppendRadioItem( ID_MENU_CHART_COGUP, _("Course Up Mode") );
     nav_menu->AppendSeparator();
-    nav_menu->Append(ID_MENU_ZOOM_IN, _("Zoom In") + "\t+");
-    nav_menu->Append(ID_MENU_ZOOM_OUT, _("Zoom Out") + "\t-");
+    nav_menu->Append( ID_MENU_ZOOM_IN, _menuText(_("Zoom In"), _T("+")) );
+    nav_menu->Append( ID_MENU_ZOOM_OUT, _menuText(_("Zoom Out"), _T("-")) );
     nav_menu->AppendSeparator();
-    nav_menu->Append(ID_MENU_SCALE_IN, _("Larger Scale Chart") + "\tCtrl-Left");
-    nav_menu->Append(ID_MENU_SCALE_OUT, _("Smaller Scale Chart") + "\tCtrl-Right");
+    nav_menu->Append( ID_MENU_SCALE_IN, _menuText(_("Larger Scale Chart"), _T("Ctrl-Left")) );
+    nav_menu->Append( ID_MENU_SCALE_OUT, _menuText(_("Smaller Scale Chart"), _T("Ctrl-Right")) );
     nav_menu->AppendSeparator();
-    m_pMenuBar->Append(nav_menu, _("Navigate"));
+    m_pMenuBar->Append( nav_menu, _("Navigate") );
 
 
     wxMenu* view_menu = new wxMenu();
-    view_menu->AppendCheckItem(ID_MENU_CHART_QUILTING, _("Enable Chart Quilting") + "\tQ");
-    view_menu->AppendCheckItem(ID_MENU_CHART_OUTLINES, _("Show Chart Outlines") + "\tO");
-    view_menu->AppendCheckItem(ID_MENU_UI_CHARTBAR, _("Show Chart Bar") + "\tCtrl-B");
+    view_menu->AppendCheckItem( ID_MENU_CHART_QUILTING, _menuText(_("Enable Chart Quilting"), _T("Q")) );
+    view_menu->AppendCheckItem( ID_MENU_CHART_OUTLINES, _menuText(_("Show Chart Outlines"), _T("O")) );
+    view_menu->AppendCheckItem( ID_MENU_UI_CHARTBAR, _menuText(_("Show Chart Bar"), _T("Ctrl-B")) );
 #ifdef USE_S57
     view_menu->AppendSeparator();
-    view_menu->AppendCheckItem(ID_MENU_ENC_TEXT, _("Show ENC Text") + "\tT");
-    view_menu->AppendCheckItem(ID_MENU_ENC_LIGHTS, _("Show ENC Lights") + "\tL");
-    view_menu->AppendCheckItem(ID_MENU_ENC_SOUNDINGS, _("Show ENC Soundings") + "\tS");
-    view_menu->AppendCheckItem(ID_MENU_ENC_ANCHOR, _("Show ENC Anchoring Info") + "\tA");
+    view_menu->AppendCheckItem( ID_MENU_ENC_TEXT, _menuText(_("Show ENC Text"), _T("T")) );
+    view_menu->AppendCheckItem( ID_MENU_ENC_LIGHTS, _menuText(_("Show ENC Lights"), _T("L")) );
+    view_menu->AppendCheckItem( ID_MENU_ENC_SOUNDINGS, _menuText(_("Show ENC Soundings"), _T("S")) );
+    view_menu->AppendCheckItem( ID_MENU_ENC_ANCHOR, _menuText(_("Show ENC Anchoring Info"), _T("A")) );
 #endif
     view_menu->AppendSeparator();
-    view_menu->AppendCheckItem(ID_MENU_SHOW_TIDES, _("Show Tides"));
-    view_menu->AppendCheckItem(ID_MENU_SHOW_CURRENTS, _("Show Currents"));
+    view_menu->AppendCheckItem( ID_MENU_SHOW_TIDES, _("Show Tides") );
+    view_menu->AppendCheckItem( ID_MENU_SHOW_CURRENTS, _("Show Currents") );
     view_menu->AppendSeparator();
-    view_menu->Append(ID_MENU_UI_COLSCHEME, _("Change Color Scheme") + "\tC");
+    view_menu->Append( ID_MENU_UI_COLSCHEME, _menuText(_("Change Color Scheme"), _T("C")) );
     view_menu->AppendSeparator();
 #ifdef __WXOSX__
-    view_menu->Append(ID_MENU_UI_FULLSCREEN, _("Enter Full Screen") + "\tRawCtrl-Ctrl-F");
+    view_menu->Append(ID_MENU_UI_FULLSCREEN, _menuText(_("Enter Full Screen"), _T("RawCtrl-Ctrl-F")) );
 #else
-    view_menu->Append(ID_MENU_UI_FULLSCREEN, _("Enter Full Screen") + "\tF11");
+    view_menu->Append(ID_MENU_UI_FULLSCREEN, _menuText(_("Enter Full Screen"), _T("F11")) );
 #endif
-    m_pMenuBar->Append(view_menu, _("View"));
+    m_pMenuBar->Append( view_menu, _("View") );
 
 
     wxMenu* ais_menu = new wxMenu();
-    ais_menu->AppendCheckItem(ID_MENU_AIS_TARGETS, _("Show AIS Targets"));
-    ais_menu->AppendCheckItem(ID_MENU_AIS_TRACKS, _("Show Target Tracks"));
-    ais_menu->AppendCheckItem(ID_MENU_AIS_CPADIALOG, _("Show CPA Alert Dialogs"));
-    ais_menu->AppendCheckItem(ID_MENU_AIS_CPASOUND, _("Sound CPA Alarms"));
+    ais_menu->AppendCheckItem( ID_MENU_AIS_TARGETS, _("Show AIS Targets") );
+    ais_menu->AppendCheckItem( ID_MENU_AIS_TRACKS, _("Show Target Tracks") );
+    ais_menu->AppendCheckItem( ID_MENU_AIS_CPADIALOG, _("Show CPA Alert Dialogs") );
+    ais_menu->AppendCheckItem( ID_MENU_AIS_CPASOUND, _("Sound CPA Alarms") );
     ais_menu->AppendSeparator();
-    ais_menu->Append(ID_MENU_AIS_TARGETLIST, _("AIS Target List..."));
-    m_pMenuBar->Append(ais_menu, _("AIS"));
+    ais_menu->Append( ID_MENU_AIS_TARGETLIST, _("AIS Target List...") );
+    m_pMenuBar->Append( ais_menu, _("AIS") );
 
 
     wxMenu* tools_menu = new wxMenu();
-    tools_menu->Append(ID_MENU_TOOL_MEASURE, _("Measure Distance") + "\tM");
+    tools_menu->Append( ID_MENU_TOOL_MEASURE, _menuText(_("Measure Distance"), _T("M")) );
     tools_menu->AppendSeparator();
-    tools_menu->Append(ID_MENU_ROUTE_MANAGER, _("Route && Mark Manager..."));
-    tools_menu->Append(ID_MENU_ROUTE_NEW, _("Create Route") + "\tCtrl-R");
+    tools_menu->Append( ID_MENU_ROUTE_MANAGER, _("Route && Mark Manager...") );
+    tools_menu->Append( ID_MENU_ROUTE_NEW, _menuText(_("Create Route"), _T("Ctrl-R")) );
     tools_menu->AppendSeparator();
-    tools_menu->Append(ID_MENU_MARK_BOAT, _("Drop Mark at Boat") + "\tCtrl-O");
-    tools_menu->Append(ID_MENU_MARK_CURSOR, _("Drop Mark at Cursor") + "\tCtrl-M");
+    tools_menu->Append( ID_MENU_MARK_BOAT, _menuText(_("Drop Mark at Boat"), _T("Ctrl-O")) );
+    tools_menu->Append( ID_MENU_MARK_CURSOR, _menuText(_("Drop Mark at Cursor"), _T("Ctrl-M")) );
     tools_menu->AppendSeparator();
-    tools_menu->Append(ID_MENU_MARK_MOB, _("Drop MOB Marker") + "\tRawCtrl-Space"); // NOTE Cmd+Space is reserved for Spotlight
+    tools_menu->Append( ID_MENU_MARK_MOB, _menuText(_("Drop MOB Marker"), _T("RawCtrl-Space")) ); // NOTE Cmd+Space is reserved for Spotlight
     tools_menu->AppendSeparator();
-    tools_menu->Append(wxID_PREFERENCES, _("Preferences...") + "\tCtrl-,");
-    m_pMenuBar->Append(tools_menu, _("Tools"));
+    tools_menu->Append( wxID_PREFERENCES, _menuText(_("Preferences..."), _T("Ctrl-,")) );
+    m_pMenuBar->Append( tools_menu, _("Tools") );
 
 
     wxMenu* help_menu = new wxMenu();
-    help_menu->Append(wxID_ABOUT, _("About OpenCPN"));
-    help_menu->Append(wxID_HELP, _("OpenCPN Hilfe  \u2318J"));
-    help_menu->Append(ID_SPARKLE, _("Search for Updates..."));
-    m_pMenuBar->Append(help_menu, _("Help"));
+    help_menu->Append( wxID_ABOUT, _("About OpenCPN"));
+    help_menu->Append( wxID_HELP, _menuText(_("OpenCPN Hilfe"), _T("Ctrl-J")) );
+    help_menu->Append( ID_SPARKLE, _("Search for Updates..."));
+    m_pMenuBar->Append( help_menu, _("Help"));
 
 
     // Set initial values for menu check items and radio items
@@ -6496,7 +6510,7 @@ double MyFrame::GetBestVPScale( ChartBase *pchart )
         double proposed_scale_onscreen = cc1->GetCanvasScaleFactor() / cc1->GetVPScale();
 
         if( ( g_bPreserveScaleOnX ) || ( CHART_TYPE_CM93COMP == pchart->GetChartType() ) ) {
-            double new_scale_ppm = cc1->GetVPScale(); //pchart->GetNearestPreferredScalePPM( cc1->GetVPScale() );
+            double new_scale_ppm = cc1->GetVPScale();
             proposed_scale_onscreen = cc1->GetCanvasScaleFactor() / new_scale_ppm;
         } else {
             //  This logic will bring the new chart onscreen at roughly twice the true paper scale equivalent.
@@ -6510,13 +6524,14 @@ double MyFrame::GetBestVPScale( ChartBase *pchart )
         // Otherwise, we get severe performance problems on all platforms
         
         double max_underzoom_multiplier = 2.0;
-        
         proposed_scale_onscreen =
         wxMin(proposed_scale_onscreen,
               pchart->GetNormalScaleMax(cc1->GetCanvasScaleFactor(), cc1->GetCanvasWidth()) *
               max_underzoom_multiplier);
-//        proposed_scale_onscreen =
-//                wxMax(proposed_scale_onscreen, pchart->GetNormalScaleMin(cc1->GetCanvasScaleFactor(), g_b_overzoom_x));
+
+        //  And, do not allow excessive overzoom either
+        proposed_scale_onscreen =
+        wxMax(proposed_scale_onscreen, pchart->GetNormalScaleMin(cc1->GetCanvasScaleFactor(), false));
 
         return cc1->GetCanvasScaleFactor() / proposed_scale_onscreen;
     } else
@@ -9925,7 +9940,7 @@ OCPNMessageDialog::OCPNMessageDialog( wxWindow *parent,
 : wxDialog( parent, wxID_ANY, caption, pos, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxSTAY_ON_TOP )
 {
     m_style = style;
-    wxFont *qFont = GetOCPNScaledFont(_("Dialog"), 10);
+    wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     SetFont( *qFont );
     
     wxBoxSizer *topsizer = new wxBoxSizer( wxVERTICAL );

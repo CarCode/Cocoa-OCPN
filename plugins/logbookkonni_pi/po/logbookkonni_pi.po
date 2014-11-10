@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OCPN Logbook\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-06 17:10+0200\n"
-"PO-Revision-Date: 2014-10-06 17:15+0100\n"
+"POT-Creation-Date: 2014-11-09 19:00+0100\n"
+"PO-Revision-Date: 2014-11-09 19:03+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -15,7 +15,7 @@ msgstr ""
 "\\Eigene Dateien\\Visual Studio 2008\\Projects\\opencpn\\plugins"
 "\\LogbookKonni_pi\\src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Poedit 1.6.10\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: ../src/logbook_pi.cpp:124 ../src/logbook_pi.cpp:687
@@ -1599,7 +1599,6 @@ msgstr "Größte Breite des Rumpfes"
 msgid "Draft"
 msgstr "Tiefgang"
 
-# Textfield for userlabel in boat
 #: ../src/LogbookDialog.cpp:1487 ../src/LogbookDialog.cpp:1495
 #: ../src/LogbookDialog.cpp:1503
 msgid "UserLabel"
@@ -2922,6 +2921,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid ""
 #~ "\n"
 #~ "Name of Waypoint: %s\n"
@@ -2933,6 +2933,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #~ "Wahre Peilung zum Ziel: %4.1f%s\n"
 #~ "Distanz zum Ziel: %4.2f%s"
 
+#
 #
 #
 #
@@ -2992,10 +2993,12 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #, fuzzy
 #~ msgid "&Cut"
 #~ msgstr "Ausschneiden"
 
+#
 #
 #
 #
@@ -3043,6 +3046,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Add to Watchlist"
 #~ msgstr "zur Wachliste hinzufügen"
 
@@ -3068,9 +3072,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Add to Watchlist same as"
 #~ msgstr "zur Wachliste hinzufügen wie.."
 
+#
 #
 #
 #
@@ -3188,6 +3194,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Append Line every Nm"
 #~ msgstr "Füge Zeile hinzu je Nm"
 
@@ -3213,9 +3220,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Automatic Watch Interval"
 #~ msgstr "Automatisches Wachinterval"
 
+#
 #
 #
 #
@@ -3385,9 +3394,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Copy"
 #~ msgstr "Kopieren"
 
+#
 #
 #
 #
@@ -3546,6 +3557,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid ""
 #~ "Crewmember is not onboard\n"
 #~ "\n"
@@ -3562,10 +3574,12 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #, fuzzy
 #~ msgid "Current <"
 #~ msgstr "Strom"
 
+#
 #
 #
 #
@@ -3708,9 +3722,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Delete"
 #~ msgstr "Löschen"
 
+#
 #
 #
 #
@@ -3758,9 +3774,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "End 1.Watch"
 #~ msgstr "Ende 1. Wache"
 
+#
 #
 #
 #
@@ -3808,9 +3826,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "End 3.Watch"
 #~ msgstr "Ende 3. Wache"
 
+#
 #
 #
 #
@@ -3858,6 +3878,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "End 5.Watch"
 #~ msgstr "Ende 5. Wache"
 
@@ -3883,9 +3904,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "End 6.Watch"
 #~ msgstr "Ende 6. Wache"
 
+#
 #
 #
 #
@@ -4046,9 +4069,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "FirstName"
 #~ msgstr "Vorname"
 
+#
 #
 #
 #
@@ -4058,6 +4083,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #~ msgid "HardWeather"
 #~ msgstr "Wetter"
 
+#
 #
 #
 #
@@ -4090,6 +4116,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid ""
 #~ "If You have created Your own Layouts\n"
 #~ "prepend them with e.g. My_ \n"
@@ -4106,6 +4133,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid ""
 #~ "If You have created Your own layouts\n"
 #~ "with prefix e.g. My_"
@@ -4113,6 +4141,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #~ "Wen Sie ein Layout mit dem Prefix\n"
 #~ "z.B. Mein_ erstellt haben"
 
+#
 #
 #
 #
@@ -4162,9 +4191,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Interval:"
 #~ msgstr "Interval:"
 
+#
 #
 #
 #
@@ -4191,10 +4222,12 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #, fuzzy
 #~ msgid "LightWeather"
 #~ msgstr "Wetter"
 
+#
 #
 #
 #
@@ -4334,9 +4367,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Logbook from %s to %s"
 #~ msgstr "Logbuch vom %s bis %s"
 
+#
 #
 #
 #
@@ -4381,6 +4416,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "No. Watches"
 #~ msgstr "Anzahl Wachen"
 
@@ -4392,9 +4428,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Only Layouts with prefix:"
 #~ msgstr "nur Layouts mit Prefix:"
 
+#
 #
 #
 #
@@ -4562,9 +4600,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Path to HTML-Editor (optional)"
 #~ msgstr "Pfad zum HTML-Editor (optional)"
 
+#
 #
 #
 #
@@ -4612,6 +4652,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Persons:"
 #~ msgstr "Personen:"
 
@@ -4637,9 +4678,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Please enter 4 digits in 24h-Format like 1545 = 03:45 PM"
 #~ msgstr "Bitte 4 Zahlen im 24h-Format eingeben z.B. 1545 = 15:45"
 
+#
 #
 #
 #
@@ -4738,6 +4781,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid ""
 #~ "Please enter the Time in the format:\n"
 #~ "   12:30:00PM"
@@ -4745,6 +4789,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #~ "Bitte geben Sie die Zeit im Format:\n"
 #~ "   12:30:00 ein."
 
+#
 #
 #
 #
@@ -4786,10 +4831,12 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #, fuzzy
 #~ msgid "RoughWeather"
 #~ msgstr "Wetter"
 
+#
 #
 #
 #
@@ -4941,9 +4988,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Save"
 #~ msgstr "Speichern"
 
+#
 #
 #
 #
@@ -5202,10 +5251,12 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #, fuzzy
 #~ msgid "Select boat-layout to view"
 #~ msgstr "Wähle Route"
 
+#
 #
 #
 #
@@ -5239,6 +5290,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Sorry, 0 Hrs 0 Min 0 Sec are not possible"
 #~ msgstr "Sorry, 0 Hrs 0 Min 0 Sec ist nicht möglich"
 
@@ -5249,9 +5301,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Sorry, Your Logbook has no lines"
 #~ msgstr "Sorry, Ihr Logbuch hat keine Zeilen"
 
+#
 #
 #
 #
@@ -5381,9 +5435,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Speed STW Max."
 #~ msgstr "Fahrt d.W. max."
 
+#
 #
 #
 #
@@ -5431,9 +5487,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Start 2.Watch"
 #~ msgstr "Start 2.Wache"
 
+#
 #
 #
 #
@@ -5481,9 +5539,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Start 4.Watch"
 #~ msgstr "Start 4.Wache"
 
+#
 #
 #
 #
@@ -5531,9 +5591,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Start 6.Watch"
 #~ msgstr "Start 6.Wache"
 
+#
 #
 #
 #
@@ -5588,9 +5650,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Timer "
 #~ msgstr "Timer an/aus"
 
+#
 #
 #
 #
@@ -5620,6 +5684,7 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid ""
 #~ "Uncheck for Motorboats\n"
 #~ "Sets \"Sails hoisted\" or \"Sails changed\" or \"Sails down\" messages\n"
@@ -5637,9 +5702,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Uncheck for Motorboats."
 #~ msgstr "Deaktiviere für Motorboote."
 
+#
 #
 #
 #
@@ -5679,9 +5746,11 @@ msgstr "%E Woche(n) %D Tag(e) %H:%M "
 #
 #
 #
+#
 #~ msgid "Undo"
 #~ msgstr "Rückgängig"
 
+#
 #
 #
 #

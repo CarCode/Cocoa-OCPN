@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: weatherfax_pi 3.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-25 15:37+0200\n"
-"PO-Revision-Date: 2013-10-25 17:17+0100\n"
+"POT-Creation-Date: 2014-11-09 19:23+0100\n"
+"PO-Revision-Date: 2014-11-09 19:25+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: CarCode <carcode@me.com>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: ../src/FaxDecoder.cpp:45
 msgid "Failure Decoding Fax: "
@@ -116,11 +116,11 @@ msgstr "WetterFax PlugIn für OpenCPN"
 #: ../src/weatherfax_pi.cpp:163
 msgid ""
 "Weather Fax PlugIn for OpenCPN\n"
-"Read weather fax encoded data as audio or image. \n"
-"Overlay this on top of charts. \n"
-"Enable OpenGL (in Display options) for best results. \n"
+" Read weather fax encoded data as audio or image.\n"
+" Overlay this on top of charts.\n"
+" Enable OpenGL (in Display options) for best results.\n"
 "\n"
-"The Weather Fax plugin was written by Sean D'Epagnier\n"
+" The Weather Fax plugin was written by Sean D'Epagnier\n"
 msgstr ""
 "WetterFax PlugIn für OpenCPN\n"
 "Liest Wetterfaxe kodiert als Daten, Audio oder Bild. \n"
@@ -129,7 +129,7 @@ msgstr ""
 "\n"
 "Das WetterFax Plugin hat Sean D'Epagnier geschrieben\n"
 
-#: ../src/weatherfax_pi.cpp:335
+#: ../src/weatherfax_pi.cpp:329
 msgid "WeatherFax Preferences"
 msgstr "WetterFax Einstellungen"
 
@@ -178,24 +178,24 @@ msgstr "Fehler bei Verwendung von dsp, das geht nur mit Linux und /dev/dsp"
 msgid "Failure"
 msgstr "Fehler"
 
-#: ../src/WeatherFaxImage.cpp:414
+#: ../src/WeatherFaxImage.cpp:415
 msgid "Resulting image has negative dimensions, aborting\n"
 msgstr "Resultierendes Bild hat negative Dimensionen, Abbruch\n"
 
-#: ../src/WeatherFaxImage.cpp:415 ../src/WeatherFaxImage.cpp:426
+#: ../src/WeatherFaxImage.cpp:416 ../src/WeatherFaxImage.cpp:427
 msgid "Mapping Failed"
 msgstr "Zeichnen fehlgeschlagen"
 
-#: ../src/WeatherFaxImage.cpp:424
+#: ../src/WeatherFaxImage.cpp:425
 #, c-format
 msgid "Resulting image larger than %dMB, aborting\n"
 msgstr "Resultierendes Bild größer als %dMB, Abbruch\n"
 
-#: ../src/WeatherFaxImage.cpp:434
+#: ../src/WeatherFaxImage.cpp:435
 msgid "Mapping Weather Fax Image"
 msgstr "Zeichne WetterFax Bild"
 
-#: ../src/WeatherFaxImage.cpp:434
+#: ../src/WeatherFaxImage.cpp:435
 msgid "Weather Fax Mapper"
 msgstr "WetterFax Zeichner"
 
@@ -399,7 +399,7 @@ msgstr ""
 "Ergänzungen vorgenommen werden."
 
 #: ../src/WeatherFaxUI.cpp:436 ../src/WeatherFaxUI.cpp:1008
-#: ../src/WeatherFaxWizard.cpp:751
+#: ../src/WeatherFaxWizard.cpp:755
 msgid "Information"
 msgstr "Information"
 
@@ -762,7 +762,7 @@ msgstr "Berechnung der Zeichnung noch nicht unterstützt.\n"
 msgid "Calculating Equator not yet supported.\n"
 msgstr "Berechnung Äquator noch nicht unterstützt.\n"
 
-#: ../src/WeatherFaxWizard.cpp:726
+#: ../src/WeatherFaxWizard.cpp:730
 msgid ""
 "Mapping allows for scaling, and conversion between coordinate systems\n"
 "Latitudes are +N -S, Longitudes +E -W\n"
@@ -815,7 +815,7 @@ msgstr ""
 "zu diesem Schritt zurück gehen, um die Zeichnungs-Parameter erneut zu "
 "optimieren."
 
-#: ../src/WeatherFaxWizard.cpp:840 ../src/WeatherFaxWizard.cpp:843
+#: ../src/WeatherFaxWizard.cpp:844 ../src/WeatherFaxWizard.cpp:847
 #, c-format
 msgid "%.2f"
 msgstr "%.2f"

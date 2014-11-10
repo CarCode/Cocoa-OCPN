@@ -20,7 +20,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
  *
  *   S Blackburn's original source license:                                *
@@ -491,6 +491,22 @@ const SENTENCE& SENTENCE::operator += ( double value )
    Sentence += temp_string;
 
    return( *this );
+}
+
+SENTENCE& SENTENCE::Add ( double value, int precision )
+{
+    //   ASSERT_VALID( this );
+    
+    wxString temp_string;
+    wxString s_Precision;
+    
+    s_Precision.Printf(_T("%c.%if"), '%', precision );
+    temp_string.Printf( s_Precision, value );
+    
+    Sentence += _T(",");
+    Sentence += temp_string;
+    
+    return( *this );
 }
 
 const SENTENCE& SENTENCE::operator += ( COMMUNICATIONS_MODE mode )

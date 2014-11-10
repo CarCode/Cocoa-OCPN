@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: weatherfax_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-25 15:37+0200\n"
+"POT-Creation-Date: 2014-11-09 19:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -116,14 +116,14 @@ msgstr ""
 #: ../src/weatherfax_pi.cpp:163
 msgid ""
 "Weather Fax PlugIn for OpenCPN\n"
-"Read weather fax encoded data as audio or image. \n"
-"Overlay this on top of charts. \n"
-"Enable OpenGL (in Display options) for best results. \n"
+" Read weather fax encoded data as audio or image.\n"
+" Overlay this on top of charts.\n"
+" Enable OpenGL (in Display options) for best results.\n"
 "\n"
-"The Weather Fax plugin was written by Sean D'Epagnier\n"
+" The Weather Fax plugin was written by Sean D'Epagnier\n"
 msgstr ""
 
-#: ../src/weatherfax_pi.cpp:335
+#: ../src/weatherfax_pi.cpp:329
 msgid "WeatherFax Preferences"
 msgstr ""
 
@@ -167,24 +167,24 @@ msgstr ""
 msgid "Failure"
 msgstr ""
 
-#: ../src/WeatherFaxImage.cpp:414
+#: ../src/WeatherFaxImage.cpp:415
 msgid "Resulting image has negative dimensions, aborting\n"
 msgstr ""
 
-#: ../src/WeatherFaxImage.cpp:415 ../src/WeatherFaxImage.cpp:426
+#: ../src/WeatherFaxImage.cpp:416 ../src/WeatherFaxImage.cpp:427
 msgid "Mapping Failed"
 msgstr ""
 
-#: ../src/WeatherFaxImage.cpp:424
+#: ../src/WeatherFaxImage.cpp:425
 #, c-format
 msgid "Resulting image larger than %dMB, aborting\n"
 msgstr ""
 
-#: ../src/WeatherFaxImage.cpp:434
+#: ../src/WeatherFaxImage.cpp:435
 msgid "Mapping Weather Fax Image"
 msgstr ""
 
-#: ../src/WeatherFaxImage.cpp:434
+#: ../src/WeatherFaxImage.cpp:435
 msgid "Weather Fax Mapper"
 msgstr ""
 
@@ -376,7 +376,7 @@ msgid ""
 msgstr ""
 
 #: ../src/WeatherFaxUI.cpp:436 ../src/WeatherFaxUI.cpp:1008
-#: ../src/WeatherFaxWizard.cpp:751
+#: ../src/WeatherFaxWizard.cpp:755
 msgid "Information"
 msgstr ""
 
@@ -715,7 +715,7 @@ msgstr ""
 msgid "Calculating Equator not yet supported.\n"
 msgstr ""
 
-#: ../src/WeatherFaxWizard.cpp:726
+#: ../src/WeatherFaxWizard.cpp:730
 msgid ""
 "Mapping allows for scaling, and conversion between coordinate systems\n"
 "Latitudes are +N -S, Longitudes +E -W\n"
@@ -742,7 +742,7 @@ msgid ""
 "estimate."
 msgstr ""
 
-#: ../src/WeatherFaxWizard.cpp:840 ../src/WeatherFaxWizard.cpp:843
+#: ../src/WeatherFaxWizard.cpp:844 ../src/WeatherFaxWizard.cpp:847
 #, c-format
 msgid "%.2f"
 msgstr ""

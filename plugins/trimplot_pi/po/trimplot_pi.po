@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: trimplot_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-01 11:02+0100\n"
-"PO-Revision-Date: 2013-12-01 18:48+0100\n"
+"POT-Creation-Date: 2014-11-09 19:18+0100\n"
+"PO-Revision-Date: 2014-11-09 19:19+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: CarCode <carcode@me.com>\n"
+"Language: pi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: ../src/TrimPlotUI.cpp:35 ../src/TrimPlotUI.cpp:43 ../src/TrimPlotUI.cpp:51
 #: ../src/TrimPlotUI.cpp:59
@@ -88,7 +89,7 @@ msgstr "Minuten"
 msgid "About"
 msgstr "Über"
 
-#: ../src/TrimPlotUI.cpp:288
+#: ../src/TrimPlotUI.cpp:290
 msgid ""
 "The trimplot plugin for opencpn is\n"
 "designed to monitor speed and course to make the results of changes to sail "
@@ -134,30 +135,29 @@ msgstr ""
 msgid "Trim Plot"
 msgstr "Trim Plot"
 
-#: ../src/TrimPlotUI.h:102
+#: ../src/TrimPlotUI.h:102 ../src/TrimPlotUI.h:104
 msgid "TrimPlot Preferences"
 msgstr "TrimPlot Einstellungen"
 
-#: ../src/TrimPlotUI.h:121
+#: ../src/TrimPlotUI.h:124
 msgid "About TrimPlot"
 msgstr "Über TrimPlot"
 
-#: ../src/trimplot_pi.cpp:97 ../src/trimplot_pi.cpp:158
+#: ../src/trimplot_pi.cpp:107 ../src/trimplot_pi.cpp:164
 msgid "TrimPlot"
 msgstr "TrimPlot"
 
-#: ../src/trimplot_pi.cpp:164
+#: ../src/trimplot_pi.cpp:169
 msgid "TrimPlot PlugIn for OpenCPN"
 msgstr "TrimPlot PlugIn für OpenCPN"
 
-#: ../src/trimplot_pi.cpp:169
+#: ../src/trimplot_pi.cpp:174
 msgid ""
 "TrimPlot PlugIn for OpenCPN\n"
-"Plot trim and course over ground to make the result of small sail trim "
+" Plot trim and course over ground to make the result of small sail trim "
 "changes evident.\n"
-"The TrimPlot plugin was written by Sean D'Epagnier\n"
+" The TrimPlot plugin was written by Sean D'Epagnier\n"
 msgstr ""
 "TrimPlot PlugIn für OpenCPN\n"
 "Plottet Trimm und Kurs über Grund, um kleine Segeltrimm-Änderungen bemerkbar "
 "zu machen.\n"
-"Das TrimPlot Plugin wurde von Sean D'Epagnier geschrieben\n"

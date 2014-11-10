@@ -1319,69 +1319,84 @@ bool Quilt::BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_
     return true;
 }
 
-    double Quilt::GetBestStartScale(int dbi_ref_hint, const ViewPort &vp_in)
-    {
-        if( !ChartData )
-            return false;
-        
-        if(ChartData->IsBusy())             // This prevent recursion on chart loads that Yeild()
-            return false;
-        
-        ViewPort vp_local = vp_in;                   // need a non-const copy
-        
-        //    Validate Reference Chart hint
-        int tentative_ref_index = dbi_ref_hint;
-        if( dbi_ref_hint < 0 ) {
-            //arbitrarily select reference chart as largest scale on current stack
-            if( !pCurrentStack ) {
-                pCurrentStack = new ChartStack;
-                ChartData->BuildChartStack( pCurrentStack, vp_local.clat, vp_local.clon );
-            }
-            tentative_ref_index = pCurrentStack->GetDBIndex(0);
+double Quilt::GetBestStartScale(int dbi_ref_hint, const ViewPort &vp_in)
+{
+    if( !ChartData )
+        return false;
+
+    if(ChartData->IsBusy())             // This prevent recursion on chart loads that Yeild()
+        return false;
+
+    ViewPort vp_local = vp_in;                   // need a non-const copy
+
+    //    Validate Reference Chart hint
+    int tentative_ref_index = dbi_ref_hint;
+    if( dbi_ref_hint < 0 ) {
+        //arbitrarily select reference chart as largest scale on current stack
+        if( !pCurrentStack ) {
+            pCurrentStack = new ChartStack;
+            ChartData->BuildChartStack( pCurrentStack, vp_local.clat, vp_local.clon );
         }
-        
-        //    As ChartdB data is always in rectilinear space, region calculations need to be done with no VP rotation
-        double saved_vp_rotation = vp_local.rotation;                      // save a copy
-        vp_local.SetRotationAngle( 0. );
-        
-        bool bfull = vp_in.b_FullScreenQuilt;
+        tentative_ref_index = pCurrentStack->GetDBIndex(0);
+    }
+
+    //    As ChartdB data is always in rectilinear space, region calculations need to be done with no VP rotation
+    double saved_vp_rotation = vp_local.rotation;                      // save a copy
+    vp_local.SetRotationAngle( 0. );
+
+    bool bfull = vp_in.b_FullScreenQuilt;
+    BuildExtendedChartStackAndCandidateArray(bfull, tentative_ref_index, vp_local);
+
+    //  tentative choice might not be in the extended stack....
+    bool bf = false;
+    for( unsigned int i = 0; i < m_pcandidate_array->GetCount(); i++ ) {
+        QuiltCandidate *qc = m_pcandidate_array->Item( i );
+        if( qc->dbIndex == tentative_ref_index ) {
+            bf = true;
+            break;
+        }
+    }
+
+    if( !bf && m_pcandidate_array->GetCount() ) {
+        tentative_ref_index = GetNewRefChart();
         BuildExtendedChartStackAndCandidateArray(bfull, tentative_ref_index, vp_local);
-        
-        //  tentative choice might not be in the extended stack....
-        bool bf = false;
+    }
+
+    double proposed_scale_onscreen = vp_in.chart_scale;
+
+    if(m_pcandidate_array->GetCount()){
+        m_refchart_dbIndex = tentative_ref_index;
+    }
+    else{
+        //    Need to choose some chart, find a quiltable candidate
+        bool bfq = false;
         for( unsigned int i = 0; i < m_pcandidate_array->GetCount(); i++ ) {
             QuiltCandidate *qc = m_pcandidate_array->Item( i );
-            if( qc->dbIndex == tentative_ref_index ) {
-                bf = true;
+            if( IsChartQuiltableRef(qc->dbIndex) ){
+                m_refchart_dbIndex = qc->dbIndex;
+                bfq = true;
                 break;
             }
         }
-        
-        if( !bf && m_pcandidate_array->GetCount() ) {
-            tentative_ref_index = GetNewRefChart();
-            BuildExtendedChartStackAndCandidateArray(bfull, tentative_ref_index, vp_local);
-        }
-        
+
+        if(!bfq)        // fallback to first chart in stack
+            m_refchart_dbIndex = pCurrentStack->GetDBIndex(0);
+    }
+
+    if(m_refchart_dbIndex >= 0) {
         // Suggest a scale so that the largest scale candidate is "nominally" scaled,
-        // meaning not overzoomed, and not underzoomed more than a factor of its base scale
-        
-        if(m_pcandidate_array->GetCount()){
-            m_refchart_dbIndex = tentative_ref_index;
-            
-            QuiltCandidate *pqc = m_pcandidate_array->Item( 0 );
-            
-            const ChartTableEntry &cte = ChartData->GetChartTableEntry( pqc->dbIndex );
-            
-            double base_scale = cte.GetScale() * 40;
-            
-            double proposed_scale_onscreen = vp_in.chart_scale;
-            proposed_scale_onscreen = wxMin(proposed_scale_onscreen, base_scale);
-            
-            return cc1->GetCanvasScaleFactor() / proposed_scale_onscreen;
+        // meaning not overzoomed, and not underzoomed
+        ChartBase *pc = ChartData->OpenChartFromDB( m_refchart_dbIndex, FULL_INIT );
+        if( pc ) {
+            double min_ref_scale = pc->GetNormalScaleMin( cc1->GetCanvasScaleFactor(), false );
+            double max_ref_scale = pc->GetNormalScaleMax( cc1->GetCanvasScaleFactor(), m_canvas_width );
+
+            proposed_scale_onscreen = wxMin(proposed_scale_onscreen, max_ref_scale);
+            proposed_scale_onscreen = wxMax(proposed_scale_onscreen, min_ref_scale);
         }
-        else            
-            return vp_in.view_scale_ppm;
-    }    
+    }
+    return cc1->GetCanvasScaleFactor() / proposed_scale_onscreen;
+}    
 
 bool Quilt::Compose( const ViewPort &vp_in )
 {

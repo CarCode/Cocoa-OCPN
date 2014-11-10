@@ -1,94 +1,99 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: findit_pi 3.4.64\n"
+"Project-Id-Version: findit\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-09 18:39+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2014-11-09 18:42+0100\n"
+"Last-Translator: CarCode <carcode@me.com>\n"
+"Language-Team: \n"
+"Language: pi\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: C:\\Users\\Konni\\Documents\\Visual Studio 2010\\Projects"
+"\\opencpn\\plugins\\FindIt_pi\\src\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 1.6.10\n"
+"X-Poedit-SearchPath-0: C:\\Users\\Konni\\Documents\\Visual Studio "
+"2010\\Projects\\opencpn\\plugins\\FindIt_pi\\src\n"
 
 #: ../src/findit_pi.cpp:96 ../src/findit_pi.cpp:157 ../src/findit_pi.cpp:198
 #: ../src/findit_pi.cpp:236 ../src/gui.h:101
 msgid "FindIt"
-msgstr ""
+msgstr "FindIt"
 
 #: ../src/findit_pi.cpp:162
 msgid "Stowage PlugIn for OpenCPN"
-msgstr ""
+msgstr "Stauraum-Plugin für OpenCPN"
 
 #: ../src/findit_pi.cpp:167
 msgid "Stowage PlugIn for OpenCPN\n"
-msgstr ""
+msgstr "Stauraum-Plugin für OpenCPN\n"
 
 #: ../src/gui.h:130
 msgid "FindIt Options"
-msgstr ""
+msgstr "FindIt Optionen"
 
 #: ../src/gui.cpp:27 ../src/gui.cpp:112 ../src/gui.cpp:196 ../src/gui.cpp:248
 msgid "Add Line"
-msgstr ""
+msgstr "Zeile hinzufügen"
 
 #: ../src/gui.cpp:28 ../src/gui.cpp:113
 msgid ""
 "Append a row\n"
 "Delete a row = Key <Del>"
 msgstr ""
+"Zeile anfügen\n"
+"Zeile löschen = Taste <Entf>"
 
 #: ../src/gui.cpp:32 ../src/gui.cpp:117
 msgid "Enter Searchstring:"
-msgstr ""
+msgstr "Suchbegriff eingeben:"
 
 #: ../src/gui.cpp:37 ../src/gui.cpp:122
 msgid "Separate more than one string with a blank"
-msgstr ""
+msgstr "mehrere Suchbegriffe durch Leertaste trennen"
 
 #: ../src/gui.cpp:42 ../src/gui.cpp:127
 msgid "Buy it"
-msgstr ""
+msgstr "Kaufe es"
 
 #: ../src/gui.cpp:43 ../src/gui.cpp:128
 msgid ""
 "If the logbook-plugin is installed send a list\n"
 "with checked items to 'Logbook/Maintenace/Buy Parts'"
 msgstr ""
+"Wenn das Logbuch-Plugin installiert/aktiviert wurde\n"
+"sende eine Liste mit Einträgen zu 'Logbuch/Instandhaltung/Kaufe Teile'"
 
 #: ../src/gui.cpp:74 ../src/gui.cpp:159
 msgid "Buy"
-msgstr ""
+msgstr "Kaufe"
 
 #: ../src/gui.cpp:75 ../src/gui.cpp:160
 msgid "Priority"
-msgstr ""
+msgstr "Priorität"
 
 #: ../src/gui.cpp:76 ../src/gui.cpp:161
 msgid "Quota"
-msgstr ""
+msgstr "Soll"
 
 #: ../src/gui.cpp:77 ../src/gui.cpp:162
 msgid "Actuell"
-msgstr ""
+msgstr "Ist"
 
 #: ../src/gui.cpp:78 ../src/gui.cpp:163
 msgid "Balance"
-msgstr ""
+msgstr "Differenz"
 
 #: ../src/gui.cpp:79 ../src/gui.cpp:164 ../src/gui.cpp:267
 msgid "Unit"
-msgstr ""
+msgstr "Einheit"
 
 #: ../src/gui.cpp:80 ../src/gui.cpp:165
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #: ../src/gui.cpp:81 ../src/gui.cpp:82 ../src/gui.cpp:83 ../src/gui.cpp:84
 #: ../src/gui.cpp:85 ../src/gui.cpp:86 ../src/gui.cpp:166 ../src/gui.cpp:167
@@ -96,52 +101,52 @@ msgstr ""
 #: ../src/gui.cpp:218 ../src/gui.cpp:219 ../src/gui.cpp:220 ../src/gui.cpp:221
 #: ../src/gui.cpp:222 ../src/gui.cpp:223
 msgid "Location"
-msgstr ""
+msgstr "Stauraum"
 
 #: ../src/gui.cpp:104
 msgid "Material"
-msgstr ""
+msgstr "Material"
 
 #: ../src/gui.cpp:188
 msgid "Provisions"
-msgstr ""
+msgstr "Proviant"
 
 #: ../src/gui.cpp:240
 msgid "Locations"
-msgstr ""
+msgstr "Stauräume"
 
 #: ../src/gui.cpp:285
 msgid "Units"
-msgstr ""
+msgstr "Einheiten"
 
 #: ../src/gui.cpp:385
 msgid "Show FindIt Icon"
-msgstr ""
+msgstr "Zeige FindIt Icon"
 
 #: ../src/gui.cpp:389 ../src/gui.cpp:399
 msgid "blank"
-msgstr ""
+msgstr "Leer"
 
 #: ../src/gui.cpp:392 ../src/gui.cpp:394
 msgid "If Value of Column \"Balance\" = 0, set Value to"
-msgstr ""
+msgstr "Wenn Spalte \"Differenz\" = 0, setze"
 
 #: ../src/gui.cpp:399
 msgid "\"No\""
-msgstr ""
+msgstr "\"Nein\""
 
 #: ../src/gui.cpp:402 ../src/gui.cpp:404
 msgid "If Value of Column \"Buy\" = No, set Value to"
-msgstr ""
+msgstr "Wenn Spalte \"Kaufe\" = Nein, setze ein"
 
 #: ../src/gui.cpp:409
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: ../src/gui.cpp:409
 msgid "No"
-msgstr ""
+msgstr "Nein"
 
 #: ../src/gui.cpp:412 ../src/gui.cpp:414
 msgid "Use last row values  as default for new row"
-msgstr ""
+msgstr "Setze die Beträge der letzten Zeile in neue Zeile"

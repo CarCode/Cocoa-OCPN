@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: watchdog_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-06-24 19:12+0200\n"
-"PO-Revision-Date: 2014-06-24 19:15+0100\n"
+"PO-Revision-Date: 2014-11-10 00:11+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: de_DE <carcode@me.com>\n"
 "Language: pi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: ../src/Alarm.cpp:41
 msgid "LandFall"
@@ -125,7 +125,7 @@ msgstr " ALARM!"
 
 #: ../src/Alarm.cpp:682
 msgid "Watchman"
-msgstr "Watchman"
+msgstr "Wachhund"
 
 #: ../src/WatchdogPrefsDialog.cpp:179 ../src/WatchdogUI.cpp:69
 msgid "Course Error"

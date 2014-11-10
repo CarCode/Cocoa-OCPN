@@ -2,7 +2,7 @@
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
- * Author:   Samuel R. Blackburn, David S. Register
+ * Author:   Samuel R. Blackburn, David S. Register, Jon Gough
  *
  ***************************************************************************
  *   Copyright (C) 2010 by Samuel R. Blackburn, David S Register           *
@@ -22,7 +22,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
+ *                                                                         *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -30,8 +30,8 @@
  */
 
 
-#if ! defined( SENTENCE_CLASS_HEADER )
-#define SENTENCE_CLASS_HEADER
+#if ! defined( XTE_CLASS_HEADER )
+#define XTE_CLASS_HEADER
 
 /*
 ** Author: Samuel R. Blackburn
@@ -41,59 +41,37 @@
 ** You can use it any way you like.
 */
 
-class LATLONG;
-
-class SENTENCE 
+class XTE : public RESPONSE
 {
-//   DECLARE_DYNAMIC( SENTENCE )
+
 
    public:
 
-      SENTENCE();
-      virtual ~SENTENCE();
+      XTE();
+     ~XTE();
 
       /*
       ** Data
       */
 
-      wxString Sentence;
+      NMEA0183_BOOLEAN IsLoranBlinkOK;
+      NMEA0183_BOOLEAN IsLoranCCycleLockOK;
+      double           CrossTrackErrorDistance;
+      LEFTRIGHT        DirectionToSteer;
+      wxString          CrossTrackUnits;
 
       /*
       ** Methods
       */
 
-      virtual NMEA0183_BOOLEAN Boolean( int field_number ) const;
-      virtual unsigned char ComputeChecksum( void ) const;
-      virtual COMMUNICATIONS_MODE CommunicationsMode( int field_number ) const;
-      virtual double Double( int field_number ) const;
-      virtual EASTWEST EastOrWest( int field_number ) const;
-      virtual const wxString& Field( int field_number ) const;
-      virtual void Finish( void );
-      virtual int GetNumberOfDataFields( void ) const;
-      virtual int Integer( int field_number ) const;
-      virtual NMEA0183_BOOLEAN IsChecksumBad( int checksum_field_number ) const;
-      virtual LEFTRIGHT LeftOrRight( int field_number ) const;
-      virtual NORTHSOUTH NorthOrSouth( int field_number ) const;
-      virtual REFERENCE Reference( int field_number ) const;
-      virtual TRANSDUCER_TYPE TransducerType( int field_number ) const;
-      virtual SENTENCE& Add ( double value, int precision); // Added to allow precision to be changed
-
+      virtual void Empty( void );
+      virtual bool Parse( const SENTENCE& sentence );
+      virtual bool Write( SENTENCE& sentence );
       /*
       ** Operators
       */
 
-      operator wxString() const; 
-      virtual const SENTENCE& operator  = ( const SENTENCE& source );
-      virtual const SENTENCE& operator  = ( const wxString& source );
-      virtual const SENTENCE& operator += ( const wxString& source );
-      virtual const SENTENCE& operator += ( double value );
-      virtual const SENTENCE& operator += ( NORTHSOUTH northing );
-      virtual const SENTENCE& operator += ( COMMUNICATIONS_MODE mode );
-      virtual const SENTENCE& operator += ( int value );
-      virtual const SENTENCE& operator += ( EASTWEST easting );
-      virtual const SENTENCE& operator += ( TRANSDUCER_TYPE transducer );
-      virtual const SENTENCE& operator += ( NMEA0183_BOOLEAN boolean );
-      virtual const SENTENCE& operator += ( LATLONG& source );
+      virtual const XTE& operator = ( const XTE& source );
 };
- 
-#endif // SENTENCE_CLASS_HEADER
+
+#endif // XTE_CLASS_HEADER
