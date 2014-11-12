@@ -5,17 +5,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: s63_pi 0.5.0\n"
+"Project-Id-Version: s63_pi 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-09 13:43+0200\n"
-"PO-Revision-Date: 2014-10-09 14:14+0100\n"
+"POT-Creation-Date: 2014-11-10 18:22+0100\n"
+"PO-Revision-Date: 2014-11-10 18:25+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: CarCode <carcode@me.com>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: ../src/s63_pi.cpp:292
 msgid "S63"

@@ -1211,6 +1211,7 @@ void WayPointman::ProcessIcon(wxBitmap pimage, const wxString & key, const wxStr
 
     bool newIcon = true;
 
+    // avoid adding duplicates
     for( unsigned int i = 0; i < m_pIconArray->GetCount(); i++ ) {
         pmi = (MarkIcon *) m_pIconArray->Item( i );
         if( pmi->icon_name.IsSameAs( key ) ) {
@@ -1388,18 +1389,21 @@ wxBitmap *WayPointman::GetIconBitmap( const wxString& icon_key )
 
     for( i = 0; i < m_pIconArray->GetCount(); i++ ) {
         pmi = (MarkIcon *) m_pIconArray->Item( i );
-        if( pmi->icon_name.IsSameAs( icon_key ) ) break;
+        if( pmi->icon_name.IsSameAs( icon_key ) )
+            break;
     }
 
     if( i == m_pIconArray->GetCount() )              // key not found
-            {
+    {
+        // find and return bitmap for "circle"
         for( i = 0; i < m_pIconArray->GetCount(); i++ ) {
             pmi = (MarkIcon *) m_pIconArray->Item( i );
-            if( pmi->icon_name.IsSameAs( _T("circle") ) ) break;
+//            if( pmi->icon_name.IsSameAs( _T("circle") ) )
+//                break;
         }
     }
 
-    if( i == m_pIconArray->GetCount() )              // not found again
+    if( i == m_pIconArray->GetCount() )              // "circle" not found
         pmi = (MarkIcon *) m_pIconArray->Item( 0 );       // use item 0
 
     if( pmi )
@@ -1494,7 +1498,7 @@ wxString *WayPointman::GetIconKey( int index )
 {
     wxString *pret = NULL;
 
-    if( index >= 0 ) {
+    if( (index >= 0)  && ((unsigned int)index < m_pIconArray->GetCount()) ) {
         MarkIcon *pmi = (MarkIcon *) m_pIconArray->Item( index );
         pret = &pmi->icon_name;
     }
@@ -1631,7 +1635,7 @@ void WayPointman::DeleteAllWaypoints( bool b_delete_used )
     while( node ) {
         RoutePoint *prp = node->GetData();
         // if argument is false, then only delete non-route waypoints
-        if( !prp->m_bIsInLayer && ( prp->m_IconName != _T("mob") )
+        if( !prp->m_bIsInLayer && ( prp->GetIconName() != _T("mob") )
             && ( ( b_delete_used && prp->m_bKeepXRoute )
                         || ( ( !prp->m_bIsInRoute ) && ( !prp->m_bIsInTrack )
                                 && !( prp == pAnchorWatchPoint1 ) && !( prp == pAnchorWatchPoint2 ) ) ) ) {
