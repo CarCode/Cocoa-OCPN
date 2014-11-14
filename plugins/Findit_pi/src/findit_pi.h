@@ -37,11 +37,10 @@
 #endif //precompiled headers
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    0
+#define     PLUGIN_VERSION_MINOR    1
 
 #define     MY_API_VERSION_MAJOR    1
-//#define     MY_API_VERSION_MINOR    5  // for OpenCPN 2.5
-#define     MY_API_VERSION_MINOR    6  // for OpenCPN 2.6.xxxx Beta
+#define     MY_API_VERSION_MINOR    6  // for OpenCPN > 2.6.xxxx Beta
 #include "../../../include/ocpn_plugin.h"
 #include "findit.h"
 
@@ -96,10 +95,10 @@ private:
       wxAuiManager     *m_AUImgr;
 #endif
 	  wxFileConfig     *m_pconfig;
-#ifdef __WXOSX__
-      int               m_show_id;
-      int               m_hide_id;
-#endif
+// not used
+//      int               m_show_id;
+//      int               m_hide_id;
+
 	  int				m_leftclick_tool_id;
 
 	  void				SaveConfig();

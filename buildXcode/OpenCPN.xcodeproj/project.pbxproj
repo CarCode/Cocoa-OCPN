@@ -515,6 +515,7 @@
 		A647A572189EA3B000B71153 /* ddfutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647A56C189EA3B000B71153 /* ddfutils.cpp */; };
 		A647C90719C365AD0034EA04 /* libsquiddio_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A671BCC719BE44BC00019119 /* libsquiddio_pi.dylib */; };
 		A64C17FD1899152D00732DCD /* mda.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64C17FC1899152D00732DCD /* mda.cpp */; };
+		A64D13BC1A0FD5C600B92F84 /* xte.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64D13BB1A0FD5C600B92F84 /* xte.cpp */; };
 		A65009C717DB5C2200FD3148 /* de.lproj in Resources */ = {isa = PBXBuildFile; fileRef = A65009C617DB5C2200FD3148 /* de.lproj */; };
 		A65034DB186845F700301CE7 /* GribTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65034DA186845F700301CE7 /* GribTable.cpp */; };
 		A6520DC719003965006FB056 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6520DC619003965006FB056 /* tinyxml.cpp */; };
@@ -627,6 +628,7 @@
 		A6B4A57817A51EF300E3A5D0 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A57717A51EF200E3A5D0 /* icons.cpp */; };
 		A6B4A58617A528B400E3A5D0 /* GribRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4B971ABE521C41EEB917EC81 /* GribRecord.cpp */; };
 		A6B4A58717A528FF00E3A5D0 /* zuFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86FBC046FFA345A98B9D5612 /* zuFile.cpp */; };
+		A6B5A5D919EFD3B50039E142 /* smapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B5A5D819EFD3B50039E142 /* smapi.cpp */; };
 		A6B83E3C195A1E0E00788044 /* glTexCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B83E3B195A1E0E00788044 /* glTexCache.cpp */; };
 		A6BE1130178C99A4001B4E60 /* vlw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6BE112F178C99A4001B4E60 /* vlw.cpp */; };
 		A6BE1134178C9BCE001B4E60 /* gradardialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6BE1133178C9BCE001B4E60 /* gradardialog.cpp */; };
@@ -1667,7 +1669,6 @@
 		A5812B7D2C484810831FA320 /* cplgetsymbol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cplgetsymbol.cpp; path = src/mygdal/cplgetsymbol.cpp; sourceTree = SOURCE_ROOT; };
 		A5EB8D8576AE4373B945506A /* TCWin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCWin.h; path = include/TCWin.h; sourceTree = SOURCE_ROOT; };
 		A6034DFB56444882ADAF221E /* WMM_COF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WMM_COF.h; path = plugins/wmm_pi/src/WMM_COF.h; sourceTree = SOURCE_ROOT; };
-		A609ADC7195F41A8003C298E /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/grib_pi/src/TexFont.h; sourceTree = "<group>"; };
 		A609ADCA195F5E28003C298E /* IsoLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IsoLine.h; path = plugins/grib_pi/src/IsoLine.h; sourceTree = "<group>"; };
 		A60A21021912CE4B00A3CB33 /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = include/TexFont.h; sourceTree = "<group>"; };
 		A60A21031912CE8100A3CB33 /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = src/TexFont.cpp; sourceTree = "<group>"; };
@@ -1775,6 +1776,8 @@
 		A647A56C189EA3B000B71153 /* ddfutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ddfutils.cpp; path = plugins/S63_pi/src/myiso8211/ddfutils.cpp; sourceTree = "<group>"; };
 		A64C17FB189914E600732DCD /* mda.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = mda.hpp; path = plugins/dashboard_pi/src/nmea0183/mda.hpp; sourceTree = "<group>"; };
 		A64C17FC1899152D00732DCD /* mda.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mda.cpp; path = plugins/dashboard_pi/src/nmea0183/mda.cpp; sourceTree = "<group>"; };
+		A64D13BA1A0FD5A400B92F84 /* xte.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = xte.hpp; path = src/nmea0183/xte.hpp; sourceTree = "<group>"; };
+		A64D13BB1A0FD5C600B92F84 /* xte.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xte.cpp; path = src/nmea0183/xte.cpp; sourceTree = "<group>"; };
 		A64FA6FF17EDB7D600710E97 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = buildosx/Info.plist; sourceTree = SOURCE_ROOT; };
 		A65009C617DB5C2200FD3148 /* de.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = de.lproj; sourceTree = "<group>"; };
 		A65034D81868458300301CE7 /* GribTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribTable.h; path = plugins/grib_pi/src/GribTable.h; sourceTree = "<group>"; };
@@ -1979,6 +1982,8 @@
 		A6B4A57317A51EAA00E3A5D0 /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = plugins/weather_routing_pi/src/Utilities.cpp; sourceTree = "<group>"; };
 		A6B4A57517A51ED000E3A5D0 /* WeatherRoutingUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WeatherRoutingUI.cpp; path = plugins/weather_routing_pi/src/WeatherRoutingUI.cpp; sourceTree = "<group>"; };
 		A6B4A57717A51EF200E3A5D0 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/weather_routing_pi/src/icons.cpp; sourceTree = "<group>"; };
+		A6B5A5D719EFD3830039E142 /* smapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smapi.h; path = plugins/grib_pi/src/smapi.h; sourceTree = "<group>"; };
+		A6B5A5D819EFD3B50039E142 /* smapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = smapi.cpp; path = plugins/grib_pi/src/smapi.cpp; sourceTree = "<group>"; };
 		A6B83E3A195A1DD800788044 /* glTexCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glTexCache.h; path = include/glTexCache.h; sourceTree = "<group>"; };
 		A6B83E3B195A1E0E00788044 /* glTexCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = glTexCache.cpp; path = src/glTexCache.cpp; sourceTree = "<group>"; };
 		A6BE112D178C9953001B4E60 /* vlw.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vlw.hpp; path = plugins/dashboard_pi/src/nmea0183/vlw.hpp; sourceTree = "<group>"; };
@@ -2373,8 +2378,8 @@
 				FA7ED76E54B84199B96B5B62 /* icons.h */,
 				12E8C566CFBE4B17A594E9DB /* msg.h */,
 				A609ADCA195F5E28003C298E /* IsoLine.h */,
-				A609ADC7195F41A8003C298E /* TexFont.h */,
 				6CAB5A51E9E3449C89D41F40 /* email.h */,
+				A6B5A5D719EFD3830039E142 /* smapi.h */,
 				A65034D9186845BB00301CE7 /* folder.xpm */,
 			);
 			name = "Header Files";
@@ -3072,6 +3077,7 @@
 				A6A94A5918CF397E00FD56EE /* GribRequestDialog.cpp */,
 				86FBC046FFA345A98B9D5612 /* zuFile.cpp */,
 				EA81B096D55B418785276241 /* IsoLine.cpp */,
+				A6B5A5D819EFD3B50039E142 /* smapi.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3110,6 +3116,7 @@
 				188F596DE59A4DCA9EEB3F78 /* apb.hpp */,
 				A6207BA919A6A2E600215493 /* vlw.hpp */,
 				A6207BAA19A6A30E00215493 /* Stalk.hpp */,
+				A64D13BA1A0FD5A400B92F84 /* xte.hpp */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -3985,6 +3992,7 @@
 				052B2062B1A9464D9E79E89A /* apb.cpp */,
 				A6207BAB19A6A33000215493 /* vlw.cpp */,
 				A6207BAD19A6A34E00215493 /* Stalk.cpp */,
+				A64D13BB1A0FD5C600B92F84 /* xte.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -5083,6 +5091,7 @@
 				A6A94A5A18CF397E00FD56EE /* GribRequestDialog.cpp in Sources */,
 				3F27B97012C84E9788F028D3 /* GribUIDialog.cpp in Sources */,
 				88E041FA2EA74CDEA7A14838 /* GribSettingsDialog.cpp in Sources */,
+				A6B5A5D919EFD3B50039E142 /* smapi.cpp in Sources */,
 				2395960E2AA64CE2B47A4BEE /* email.cpp in Sources */,
 				441BAF44978942D3B1CA434A /* icons.cpp in Sources */,
 				487043D2A2EB4160A23D94BB /* GribReader.cpp in Sources */,
@@ -5118,6 +5127,7 @@
 				FF6F6576A1144C899C287145 /* ocpCursor.cpp in Sources */,
 				89C60ECE9BF04DD59C510489 /* TCWin.cpp in Sources */,
 				6CDD5133AC95446D890148C5 /* S57QueryDialog.cpp in Sources */,
+				A64D13BC1A0FD5C600B92F84 /* xte.cpp in Sources */,
 				3E702F40F71549AFA2E21521 /* s57RegistrarMgr.cpp in Sources */,
 				F461793767334D119A1D1AC3 /* GoToPositionDialog.cpp in Sources */,
 				CD6B7B9189634F049EC0665B /* CM93DSlide.cpp in Sources */,
@@ -5828,9 +5838,9 @@
 					"-lwx_osx_cocoau_adv-3.1",
 					"-lwx_osx_cocoau_aui-3.1",
 					"-lwx_osx_cocoau_gl-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release/libNMEA0183.a",
-					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release/libS57ENC.a",
-					"/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release/libGARMINHOST.a",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release/libNMEA0183.a",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release/libS57ENC.a",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release/libGARMINHOST.a",
 					"-framework",
 					AGL,
 					"-framework",

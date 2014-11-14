@@ -306,24 +306,26 @@ FindItDialog::FindItDialog( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_textCtrl1->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindItDialog::OnTextMaterial ), NULL, this );
 	m_buttonBuyItMaterial->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickBuyMaterial ), NULL, this );
 	m_gridMaterial->Connect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharMaterial ), NULL, this );
-	m_gridMaterial->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( FindItDialog::OnGridCellChangeMaterial ), NULL, this );
-	m_gridMaterial->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickMaterial ), NULL, this );
+
+    m_gridMaterial->Connect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeMaterial ), NULL, this );
+    m_gridMaterial->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickMaterial ), NULL, this );
+    
 	m_gridMaterial->Connect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickMaterial ), NULL, this );
 	m_buttonaddLineFood->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickAddLineFood ), NULL, this );
 	m_textCtrl11->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindItDialog::OnTextFood ), NULL, this );
 	m_buttonBuyItFood->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickBuyFood ), NULL, this );
 	m_gridFood->Connect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharFood ), NULL, this );
-	m_gridFood->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( FindItDialog::OnGridCellChangeFood ), NULL, this );
+	m_gridFood->Connect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeFood ), NULL, this );
 	m_gridFood->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickFood ), NULL, this );
 	m_gridFood->Connect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickFood ), NULL, this );
 	m_buttonaddLineLocations->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::onButtonClickAddLineLocations ), NULL, this );
 	m_gridLocations->Connect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharLocations ), NULL, this );
-	m_gridLocations->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( FindItDialog::OnGridCellChangeLocations ), NULL, this );
+	m_gridLocations->Connect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeLocations ), NULL, this );
 	m_gridLocations->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickLocations ), NULL, this );
 	m_gridLocations->Connect( wxEVT_GRID_EDITOR_SHOWN, wxGridEventHandler( FindItDialog::onEditorShownLocations ), NULL, this );
 	m_buttonaddLineUnits->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickUnitsAddLine ), NULL, this );
 	m_gridUnits->Connect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharUnits ), NULL, this );
-	m_gridUnits->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( FindItDialog::OnGridCellChangeUnits ), NULL, this );
+	m_gridUnits->Connect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeUnits ), NULL, this );
 	m_gridUnits->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickUnits ), NULL, this );
 	m_gridUnits->Connect( wxEVT_GRID_EDITOR_SHOWN, wxGridEventHandler( FindItDialog::onEditorShownUnits ), NULL, this );
 	m_sdbSizerCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnCancelClick ), NULL, this );
@@ -339,24 +341,26 @@ FindItDialog::~FindItDialog()
 	m_textCtrl1->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindItDialog::OnTextMaterial ), NULL, this );
 	m_buttonBuyItMaterial->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickBuyMaterial ), NULL, this );
 	m_gridMaterial->Disconnect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharMaterial ), NULL, this );
-	m_gridMaterial->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( FindItDialog::OnGridCellChangeMaterial ), NULL, this );
-	m_gridMaterial->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickMaterial ), NULL, this );
+
+    m_gridMaterial->Disconnect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeMaterial ), NULL, this );
+    m_gridMaterial->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickMaterial ), NULL, this );
+
 	m_gridMaterial->Disconnect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickMaterial ), NULL, this );
 	m_buttonaddLineFood->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickAddLineFood ), NULL, this );
 	m_textCtrl11->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindItDialog::OnTextFood ), NULL, this );
 	m_buttonBuyItFood->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickBuyFood ), NULL, this );
 	m_gridFood->Disconnect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharFood ), NULL, this );
-	m_gridFood->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( FindItDialog::OnGridCellChangeFood ), NULL, this );
+	m_gridFood->Disconnect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeFood ), NULL, this );
 	m_gridFood->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickFood ), NULL, this );
 	m_gridFood->Disconnect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickFood ), NULL, this );
 	m_buttonaddLineLocations->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::onButtonClickAddLineLocations ), NULL, this );
 	m_gridLocations->Disconnect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharLocations ), NULL, this );
-	m_gridLocations->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( FindItDialog::OnGridCellChangeLocations ), NULL, this );
+	m_gridLocations->Disconnect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeLocations ), NULL, this );
 	m_gridLocations->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickLocations ), NULL, this );
 	m_gridLocations->Disconnect( wxEVT_GRID_EDITOR_SHOWN, wxGridEventHandler( FindItDialog::onEditorShownLocations ), NULL, this );
 	m_buttonaddLineUnits->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickUnitsAddLine ), NULL, this );
 	m_gridUnits->Disconnect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharUnits ), NULL, this );
-	m_gridUnits->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( FindItDialog::OnGridCellChangeUnits ), NULL, this );
+	m_gridUnits->Disconnect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeUnits ), NULL, this );
 	m_gridUnits->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickUnits ), NULL, this );
 	m_gridUnits->Disconnect( wxEVT_GRID_EDITOR_SHOWN, wxGridEventHandler( FindItDialog::onEditorShownUnits ), NULL, this );
 	m_sdbSizerCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnCancelClick ), NULL, this );

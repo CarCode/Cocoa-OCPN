@@ -133,6 +133,7 @@ extern bool             g_bskew_comp;
 extern bool             g_bopengl;
 extern bool             g_bdisable_opengl;
 extern bool             g_bsmoothpanzoom;
+extern bool             g_fog_overzoom;
 
 extern bool             g_bShowOutlines;
 extern bool             g_bShowActiveRouteHighway;
@@ -1263,6 +1264,8 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "ZoomDetailFactor" ), &g_chart_zoom_modifier, 0 );
     g_chart_zoom_modifier = wxMin(g_chart_zoom_modifier,5);
     g_chart_zoom_modifier = wxMax(g_chart_zoom_modifier,-5);
+
+    Read( _T ( "FogOnOverzoom" ), &g_fog_overzoom, 1 );
 
 #ifdef USE_S57
     Read( _T ( "CM93DetailFactor" ), &g_cm93_zoom_factor, 0 );

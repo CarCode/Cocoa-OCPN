@@ -622,15 +622,15 @@ void MainDialog::renameMaterialAndFood(wxArrayString& arr, int col, wxString str
         if(this->m_gridMaterial->GetCellValue(i,col+LOC1) == oldCellValue)
 			this->m_gridMaterial->SetCellValue(i,col+LOC1,str);
 
-        this->m_gridMaterial->SetCellEditor(i,col+LOC1,new wxGridCellChoiceEditor(arr,true));
+        this->m_gridMaterial->SetCellEditor(i,col+LOC1,new wxGridCellChoiceEditor(arr,false));
 	}
-			
-	for(int i = 0; i < this->m_gridFood->GetNumberRows(); i++)
+
+    for(int i = 0; i < this->m_gridFood->GetNumberRows(); i++)
 	{
 		if(this->m_gridFood->GetCellValue(i,col+LOC1) == oldCellValue)
 			this->m_gridFood->SetCellValue(i,col+LOC1,str);
         
-		this->m_gridFood->SetCellEditor(i,col+LOC1,new wxGridCellChoiceEditor(arr,true));
+		this->m_gridFood->SetCellEditor(i,col+LOC1,new wxGridCellChoiceEditor(arr,false));
 	}
 
 	this->Refresh();
@@ -695,14 +695,14 @@ void MainDialog::resetRowHeight(wxGrid* grid)
 
 int MainDialog::addLineFood()
 {
-    combo  = new wxGridCellChoiceEditor(location1,true);
-	combo1 = new wxGridCellChoiceEditor(location2,true);
-	combo2 = new wxGridCellChoiceEditor(location3,true);
-	combo3 = new wxGridCellChoiceEditor(location4,true);
-	combo4 = new wxGridCellChoiceEditor(location5,true);
-	combo5 = new wxGridCellChoiceEditor(location6,true);
-	comboUnit = new wxGridCellChoiceEditor(unit,true);
-	comboPriority = new wxGridCellChoiceEditor(prioritystr,true);
+    combo  = new wxGridCellChoiceEditor(location1,false);
+	combo1 = new wxGridCellChoiceEditor(location2,false);
+	combo2 = new wxGridCellChoiceEditor(location3,false);
+	combo3 = new wxGridCellChoiceEditor(location4,false);
+	combo4 = new wxGridCellChoiceEditor(location5,false);
+	combo5 = new wxGridCellChoiceEditor(location6,false);
+	comboUnit = new wxGridCellChoiceEditor(unit,false);
+	comboPriority = new wxGridCellChoiceEditor(prioritystr,false);
     
 	boolEditor = new wxGridCellBoolEditor();
 	if(!pPlugin->buyNo)
@@ -736,15 +736,15 @@ int MainDialog::addLineFood()
 
 int MainDialog::addLineMaterial()
 {
-    combo  = new wxGridCellChoiceEditor(location1,1);
-	combo1 = new wxGridCellChoiceEditor(location2,1);
-	combo2 = new wxGridCellChoiceEditor(location3,1);
-	combo3 = new wxGridCellChoiceEditor(location4,1);
-	combo4 = new wxGridCellChoiceEditor(location5,1);
-	combo5 = new wxGridCellChoiceEditor(location6,1);
-	comboUnit = new wxGridCellChoiceEditor(unit,1);
+    combo  = new wxGridCellChoiceEditor(location1,false);
+	combo1 = new wxGridCellChoiceEditor(location2,false);
+	combo2 = new wxGridCellChoiceEditor(location3,false);
+	combo3 = new wxGridCellChoiceEditor(location4,false);
+	combo4 = new wxGridCellChoiceEditor(location5,false);
+	combo5 = new wxGridCellChoiceEditor(location6,false);
+	comboUnit = new wxGridCellChoiceEditor(unit,false);
 	boolEditor = new wxGridCellBoolEditor();
-	comboPriority = new wxGridCellChoiceEditor(prioritystr,1);
+	comboPriority = new wxGridCellChoiceEditor(prioritystr,false);
 
 	if(!pPlugin->buyNo)
 		boolEditor->UseStringValues(_("Yes"));

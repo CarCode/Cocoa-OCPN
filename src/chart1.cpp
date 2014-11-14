@@ -425,6 +425,7 @@ bool                      g_bLookAhead;
 bool                      g_bskew_comp;
 bool                      g_bopengl;
 bool                      g_bsmoothpanzoom;
+bool                      g_fog_overzoom;
 
 int                       g_nCOMPortCheck;
 
