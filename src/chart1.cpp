@@ -4164,6 +4164,10 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
         }
 
     }         // switch
+
+    // If we didn't handle the event, allow it to bubble up to other handlers.
+    // This is ncessary eg for the system default menu items (Hide, etc) on OS X to work.
+    event.Skip();
 }
 
 void MyFrame::ToggleColorScheme()
@@ -4606,7 +4610,6 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
         if( !m_pStatusBar ) {
             m_pStatusBar = CreateStatusBar( m_StatusBarFieldCount, 0 );   // No wxST_SIZEGRIP needed
             ApplyGlobalColorSchemetoStatusBar();
-            SendSizeEvent();                        // seem only needed for MSW...
         }
 
     } else {
@@ -4614,11 +4617,10 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
             m_pStatusBar->Destroy();
             m_pStatusBar = NULL;
             SetStatusBar( NULL );
-
-            SendSizeEvent();                        // seem only needed for MSW...
-            Refresh( false );
         }
     }
+
+    SendSizeEvent();
 
     /*
      * Menu Bar - add or remove is if necessary, and update the state of the menu items
@@ -4637,8 +4639,6 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
       EnableFullScreenView();      
 #endif
             SetMenuBar(m_pMenuBar); // must be after RegisterGlobalMenuItems for wx to populate the OS X App Menu correctly
-
-            SendSizeEvent(); // only needed for MSW ?
         }
         UpdateGlobalMenuItems(); // update the state of the menu items (checkmarks etc)
     } else {
@@ -4646,11 +4646,10 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
             SetMenuBar( NULL );
             m_pMenuBar->Destroy();
             m_pMenuBar = NULL;
-
-            SendSizeEvent(); // only needed for MSW ?
-            Refresh( false );
         }
     }
+
+    SendSizeEvent();
 
     if( bFlyingUpdate ) {
         if( pConfig->m_bShowCompassWin ) {

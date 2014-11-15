@@ -950,7 +950,7 @@ int OCP_DataStreamInput_Thread::OpenComPortPhysical(const wxString &com_name, in
 
     if(hSerialComm == INVALID_HANDLE_VALUE)
     {
-        ThreadMessage(_T("Error:Invalid Handle"));
+//        ThreadMessage(_T("Error:Invalid Handle"));
         return (0 - abs((int)::GetLastError()));
     }
 

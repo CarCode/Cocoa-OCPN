@@ -277,7 +277,8 @@ public:
       int FindClosestCanvasChartdbIndex(int scale);
       void UpdateCanvasOnGroupChange(void);
       int AdjustQuiltRefChart( void );
-      
+
+      wxColour GetFogColor(){ return m_fog_color; }
 
       void ShowChartInfoWindow(int x, int y, int dbIndex);
       void HideChartInfoWindow(void);
@@ -622,7 +623,9 @@ private:
       bool        m_bsectors_shown;
       bool        m_bedge_pan;
       double      m_displayed_scale_factor;
-    
+
+    wxColour    m_fog_color;
+
 DECLARE_EVENT_TABLE()
 };
 
