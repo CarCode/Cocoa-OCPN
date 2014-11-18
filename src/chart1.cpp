@@ -36,6 +36,7 @@
 // Include CrashRpt Header
 #ifdef OCPN_USE_CRASHRPT
 #include "CrashRpt.h"
+#include <new.h>
 #endif
 
 #ifdef LINUX_CRASHRPT
@@ -296,6 +297,7 @@ bool                      g_bFullscreenToolbar;
 bool                      g_bShowLayers;
 bool                      g_bTransparentToolbar;
 bool                      g_bPermanentMOBIcon;
+bool                      g_bTempShowMenuBar;
 
 int                       g_iSDMMFormat;
 int                       g_iDistanceFormat;
@@ -723,6 +725,16 @@ enum {
 //              Fwd Refs
 //------------------------------------------------------------------------------
 
+#ifdef __WXMSW__
+int MyNewHandler( size_t size )
+{
+    //  Pass to wxWidgets Main Loop handler
+    throw std::bad_alloc();
+    
+    return 0;
+}
+#endif
+
 //-----------------------------------------------------------------------
 //      Signal Handlers
 //-----------------------------------------------------------------------
@@ -829,6 +841,17 @@ bool MyApp::OnCmdLineParsed( wxCmdLineParser& parser )
     
     return true;
 }
+
+#ifdef __WXMSW__
+//  Handle any exception not handled by CrashRpt
+//  Most probable:  Malloc/new failure
+
+bool MyApp::OnExceptionInMainLoop()
+{
+    wxLogWarning(_T("Caught MainLoopException, continuing..."));
+    return true;
+}
+#endif
 
 void MyApp::OnActivateApp( wxActivateEvent& event )
 {
@@ -989,11 +1012,17 @@ bool MyApp::OnInit()
     info.uPriorities[CR_SMTP] = CR_NEGATIVE_PRIORITY;  // Second try send report over SMTP
     info.uPriorities[CR_SMAPI] = CR_NEGATIVE_PRIORITY; //1; // Third try send report over Simple MAPI
 
-    // Install all available exception handlers.
-    info.dwFlags |= CR_INST_ALL_POSSIBLE_HANDLERS;
+    // Install all available exception handlers....
+    info.dwFlags = CR_INST_ALL_POSSIBLE_HANDLERS;
+    
+    //  Except memory allocation failures
+    info.dwFlags &= ~CR_INST_NEW_OPERATOR_ERROR_HANDLER;
 
-    // Use binary encoding for HTTP uploads (recommended).
-    info.dwFlags |= CR_INST_HTTP_BINARY_ENCODING;
+    //  Allow user to attach files
+    info.dwFlags |= CR_INST_ALLOW_ATTACH_MORE_FILES;
+    
+    //  Allow user to add more info
+    info.dwFlags |= CR_INST_SHOW_ADDITIONAL_INFO_FIELDS;
 
     // Provide privacy policy URL
     wxStandardPathsBase& std_path_crash = wxApp::GetTraits()->GetStandardPaths();
@@ -1042,6 +1071,13 @@ bool MyApp::OnInit()
     // fatal exceptions handling
     wxHandleFatalExceptions (true);
 #endif
+#endif
+
+#ifdef __WXMSW__
+    //  Invoke my own handler for failers of malloc/new
+    _set_new_handler( MyNewHandler );
+    //  configure malloc to call the New failure handler on failure
+    _set_new_mode(1);
 #endif
 
     //  Seed the random number generator
@@ -3639,20 +3675,32 @@ void MyFrame::ODoSetSize( void )
 //      Resize the children
 
     if( m_pStatusBar ) {
-        //  Maybe resize the font
+        //  Maybe resize the font so the text fits in the boxes
+
         wxRect stat_box;
         m_pStatusBar->GetFieldRect( 0, stat_box );
-        int font_size = stat_box.width / 28;                // 30 for linux
+        // maximum size is 1/28 of the box width, or the box height - whicever is less
+        int max_font_size = wxMin( (stat_box.width / 28), (stat_box.height) );
 
-#ifdef __WXMAC__
-        font_size = wxMax(10, font_size);             // beats me...
+#ifdef __WXMSW__
+        int try_font_size = 12;   // the Windows system default is too small so fix it at 12pt
+#else
+        wxFont sys_font = *wxNORMAL_FONT;
+        int try_font_size = sys_font.GetPointSize() + 1; // start 1pt larger than system default
+#endif
+        
+#ifdef __WXOSX__
+        int min_font_size = 10; // much less than 10pt is unreadably small on OS X
+#else
+        int min_font_size = 6;  // on Win/Linux the text does not shrink so fast and 6pt is fine
 #endif
 
-        wxFont* templateFont = FontMgr::Get().GetFont( _("StatusBar"), 12 );
-        font_size += templateFont->GetPointSize() - 10;
+        // get the user's preferred font, or if none set then the system default with the size overridden
+        wxFont* templateFont = FontMgr::Get().GetFont( _("StatusBar"), try_font_size );
+        int font_size = templateFont->GetPointSize();
 
-        font_size = wxMin( font_size, 12 );
-        font_size = wxMax( font_size, 5 );
+        font_size = wxMin( font_size, max_font_size );  // maximum to fit in the statusbar boxes
+        font_size = wxMax( font_size, min_font_size );  // minimum to stop it being unreadable
 
         wxFont *pstat_font = wxTheFontList->FindOrCreateFont( font_size,
               wxFONTFAMILY_SWISS, templateFont->GetStyle(), templateFont->GetWeight(), false,
@@ -4628,7 +4676,10 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
 #ifdef __WXOSX__
     bool showMenuBar = true; // the menu bar is always visible in OS X
 #else
-    bool showMenuBar = pConfig->m_bShowMenuBar;
+    bool showMenuBar = pConfig->m_bShowMenuBar; // get visibility from options
+    
+    if (!showMenuBar && g_bTempShowMenuBar)     // allows pressing alt to temporarily show
+        showMenuBar = true;
 #endif
 
     if ( showMenuBar ) {
