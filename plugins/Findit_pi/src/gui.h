@@ -98,8 +98,8 @@ class FindItDialog : public wxDialog
 		wxGrid* m_gridLocations;
 		wxGrid* m_gridUnits;
 		
-		FindItDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("FindIt"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 943,518 ), long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
-		~FindItDialog();
+		FindItDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("FindIt"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1100,518 ), long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		~FindItDialog();  // war 958 x 518
 	
 };
 
