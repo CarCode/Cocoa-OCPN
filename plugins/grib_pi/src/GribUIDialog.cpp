@@ -59,6 +59,8 @@ int round (double x) {
 
 WX_DEFINE_OBJARRAY( ArrayOfGribRecordSets );
 
+enum SettingsDisplay {B_ARROWS, ISO_LINE, D_ARROWS, OVERLAY, NUMBERS, PARTICLES};
+
 //    Sort compare function for File Modification Time
 static int CompareFileStringTime( const wxString& first, const wxString& second )
 {
@@ -90,7 +92,6 @@ static wxString TToString( const wxDateTime date_time, const int time_zone )
 //---------------------------------------------------------------------------------------
 //          GRIB Selector/Control Dialog Implementation
 //---------------------------------------------------------------------------------------
-
 /* interpolating constructor
    as a possible optimization, write this function to also
    take latitude longitude boundaries so the resulting record can be
@@ -408,6 +409,129 @@ void GRIBUIDialog::OnCursorTrackTimer( wxTimerEvent & event)
 #endif
 }
 
+void GRIBUIDialog::OnMouseEvent( wxMouseEvent& event )
+{
+    //populate menu
+    wxMenu* menu = new wxMenu();
+    int id = event.GetId();
+    switch( id ) {
+        case GribOverlaySettings::WIND:
+            MenuAppend( menu, B_ARROWS, _("Barbed Arrows"), id );
+            MenuAppend( menu, ISO_LINE, _("Display Isotachs"), id );
+            MenuAppend( menu, OVERLAY, _("OverlayMap"), id );
+            MenuAppend( menu, NUMBERS, _("Numbers"), id );
+            MenuAppend( menu, PARTICLES, _("Particle Map"), id );
+            break;
+        case GribOverlaySettings::WIND_GUST:
+            MenuAppend( menu, ISO_LINE, _("Display Isotachs"), id );
+            MenuAppend( menu, OVERLAY, _("OverlayMap"), id );
+            MenuAppend( menu, NUMBERS, _("Numbers"), id );
+            break;
+        case GribOverlaySettings::PRESSURE:
+            MenuAppend( menu, ISO_LINE, _("Display Isobars"), id );
+            MenuAppend( menu, NUMBERS, _("Numbers"), id );
+            menu->Remove( 2 );
+            break;
+        case GribOverlaySettings::AIR_TEMPERATURE:
+        case GribOverlaySettings::SEA_TEMPERATURE:
+            MenuAppend( menu, ISO_LINE, _("Display Isotherms"), id );
+        case GribOverlaySettings::CLOUD:
+        case GribOverlaySettings::PRECIPITATION:
+            MenuAppend( menu, OVERLAY, _("OverlayMap"), id );
+            MenuAppend( menu, NUMBERS, _("Numbers"), id );
+            break;
+        case GribOverlaySettings::CAPE:
+            MenuAppend( menu, ISO_LINE, _("Display Iso CAPE"), id );
+            MenuAppend( menu, OVERLAY, _("OverlayMap"), id );
+            MenuAppend( menu, NUMBERS, _("Numbers"), id );
+            break;
+        case GribOverlaySettings::WAVE:
+            MenuAppend( menu, D_ARROWS, _("Direction Arrows"), id );
+            MenuAppend( menu, OVERLAY, _("OverlayMap"), id );
+            MenuAppend( menu, NUMBERS, _("Numbers"), id );
+            break;
+        case GribOverlaySettings::CURRENT:
+            MenuAppend( menu, D_ARROWS, _("Direction Arrows"), id );
+            MenuAppend( menu, OVERLAY, _("OverlayMap"), id );
+            MenuAppend( menu, NUMBERS, _("Numbers"), id );
+            MenuAppend( menu, PARTICLES, _("Particle Map"), id );
+    }
+    
+    PopupMenu( menu );
+    
+    //apply new config
+    wxwxMenuItemListNode *node = menu->GetMenuItems().GetFirst();
+    while( node ) {
+        wxMenuItem *it = node->GetData();
+        switch( it->GetId() ) {
+            case B_ARROWS:
+                m_OverlaySettings.Settings[id].m_bBarbedArrows = it->IsChecked();
+                break;
+            case ISO_LINE:
+                m_OverlaySettings.Settings[id].m_bIsoBars = it->IsChecked();
+                break;
+            case D_ARROWS:
+                m_OverlaySettings.Settings[id].m_bDirectionArrows = it->IsChecked();
+                break;
+            case OVERLAY:
+                m_OverlaySettings.Settings[id].m_bOverlayMap = it->IsChecked();
+                break;
+            case NUMBERS:
+                m_OverlaySettings.Settings[id].m_bNumbers = it->IsChecked();
+                break;
+            case PARTICLES:
+                m_OverlaySettings.Settings[id].m_bParticles = it->IsChecked();
+        }
+        node = node->GetNext();
+    }
+    
+    //if the current box is checked then resolve display conflicts
+    wxWindowListNode *wnode =  this->GetChildren().GetFirst();
+    while( wnode ) {
+        wxWindow *win = wnode->GetData();
+        if( id == win->GetId() ) {
+            if( ((wxCheckBox*) win )->IsChecked() )
+                ResolveDisplayConflicts( this, id );
+            break;
+        }
+        wnode = wnode->GetNext();
+    }
+    
+    //save new config
+    m_OverlaySettings.Write();
+    
+    delete menu;
+}
+
+void GRIBUIDialog::MenuAppend( wxMenu *menu, int id, wxString label, int setting)
+{
+    wxMenuItem *item = new wxMenuItem(menu, id, label, _T(""), wxITEM_CHECK);
+    
+#ifdef __WXMSW__
+    wxFont *qFont = OCPNGetFont( _("Menu"), 10 );
+    item->SetFont(*qFont);
+#endif
+    
+    menu->Append(item);
+    
+    bool check;
+    if( id == B_ARROWS )
+        check = m_OverlaySettings.Settings[setting].m_bBarbedArrows;
+    else if( id == ISO_LINE )
+        check = m_OverlaySettings.Settings[setting].m_bIsoBars;
+    else if( id == D_ARROWS )
+        check = m_OverlaySettings.Settings[setting].m_bDirectionArrows;
+    else if( id == OVERLAY )
+        check = m_OverlaySettings.Settings[setting].m_bOverlayMap;
+    else if( id == NUMBERS )
+        check = m_OverlaySettings.Settings[setting].m_bNumbers;
+    else if( id == PARTICLES )
+        check = m_OverlaySettings.Settings[setting].m_bParticles;
+    else
+        check = false;
+    item->Check( check );
+}
+
 void GRIBUIDialog::ContextMenuItemCallback(int id)
 {
     wxFileConfig *pConf = GetOCPNConfigObject();
@@ -484,6 +608,36 @@ void GRIBUIDialog::AddTrackingControl( wxControl *ctrl1,  wxControl *ctrl2,  wxC
     }
 }
 
+void GRIBUIDialog::ResolveDisplayConflicts( wxWindow *window, int enventId )
+{
+    //allow multi selection only if there is no display type superposition
+    int winId;
+    wxWindowListNode *node =  window->GetChildren().GetFirst();
+    while( node ) {
+        wxWindow *win = node->GetData();
+        if( win->IsKindOf(CLASSINFO(wxCheckBox)) && ((wxCheckBox*) win )->IsChecked() ) {
+            winId = win->GetId();
+            if( enventId != winId ) {
+                if( (m_OverlaySettings.Settings[enventId].m_bBarbedArrows &&
+                     m_OverlaySettings.Settings[winId].m_bBarbedArrows)
+                   || (m_OverlaySettings.Settings[enventId].m_bDirectionArrows &&
+                       m_OverlaySettings.Settings[winId].m_bDirectionArrows)
+                   || (m_OverlaySettings.Settings[enventId].m_bIsoBars &&
+                       m_OverlaySettings.Settings[winId].m_bIsoBars)
+                   || (m_OverlaySettings.Settings[enventId].m_bNumbers &&
+                       m_OverlaySettings.Settings[winId].m_bNumbers)
+                   || (m_OverlaySettings.Settings[enventId].m_bOverlayMap &&
+                       m_OverlaySettings.Settings[winId].m_bOverlayMap)
+                   || (m_OverlaySettings.Settings[enventId].m_bParticles &&
+                       m_OverlaySettings.Settings[winId].m_bParticles) )
+                    ((wxCheckBox*) win )->SetValue(false);
+            }
+        }
+        node = node->GetNext();
+    }
+    SetFactoryOptions();                     // Reload the visibility options
+}
+
 void GRIBUIDialog::PopulateTrackingControls( bool Populate_Altitude )
 {
     //fix crash with curious files with no record
@@ -526,10 +680,11 @@ void GRIBUIDialog::PopulateTrackingControls( bool Populate_Altitude )
     GetTextExtent( _T("abcdefghijklm"), &wl, NULL, 0, 0, font); // long width text control size for double unit wave display
     //
 
+    int w1, w2;
+    m_OverlaySettings.Settings[GribOverlaySettings::WIND].m_Units == GribOverlaySettings::BFS ? w1 = wn, w2 = 0 : w1 = wd, w2 = ws;
     AddTrackingControl(m_cbWind, m_tcWindSpeed, m_tcWindDirection,
         m_pTimelineSet && m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_WIND_VX) != wxNOT_FOUND
-        && m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_WIND_VY) != wxNOT_FOUND,
-        m_OverlaySettings.Settings[GribOverlaySettings::WIND].m_Units == GribOverlaySettings::BFS ? wn, 0 : wd, ws,
+        && m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_WIND_VY) != wxNOT_FOUND, w1, w2,
         m_cbAltitude->GetCount() > 1 );
     AddTrackingControl(m_cbWindGust, m_tcWindGust, 0, m_pTimelineSet
         && m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_WIND_GUST) != wxNOT_FOUND, wn);
@@ -1133,19 +1288,7 @@ void GRIBUIDialog::OnAltitudeChange( wxCommandEvent& event )
 
 void GRIBUIDialog::OnCBAny( wxCommandEvent& event )
 {
-    //Ovoid to have more than one overlay at a time
-    if(m_cbWind->IsShown() && event.GetId() != m_cbWind->GetId()) m_cbWind->SetValue(false);
-    if(m_cbPressure->IsShown() && event.GetId() != m_cbPressure->GetId()) m_cbPressure->SetValue(false);
-    if(m_cbWindGust->IsShown() && event.GetId() != m_cbWindGust->GetId()) m_cbWindGust->SetValue(false);
-    if(m_cbWave->IsShown() && event.GetId() != m_cbWave->GetId()) m_cbWave->SetValue(false);
-    if(m_cbPrecipitation->IsShown() && event.GetId() != m_cbPrecipitation->GetId()) m_cbPrecipitation->SetValue(false);
-    if(m_cbCloud->IsShown() && event.GetId() != m_cbCloud->GetId()) m_cbCloud->SetValue(false);
-    if(m_cbAirTemperature->IsShown() && event.GetId() != m_cbAirTemperature->GetId()) m_cbAirTemperature->SetValue(false);
-    if(m_cbSeaTemperature->IsShown() && event.GetId() != m_cbSeaTemperature->GetId()) m_cbSeaTemperature->SetValue(false);
-    if(m_cbCAPE->IsShown() && event.GetId() != m_cbCAPE->GetId()) m_cbCAPE->SetValue(false);
-    if(m_cbCurrent->IsShown() && event.GetId() != m_cbCurrent->GetId()) m_cbCurrent->SetValue(false);
-
-    SetFactoryOptions();                     // Reload the visibility options
+    ResolveDisplayConflicts( this, event.GetId() );
 }
 
 void GRIBUIDialog::OnOpenFile( wxCommandEvent& event )
