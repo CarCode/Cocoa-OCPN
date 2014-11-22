@@ -670,6 +670,8 @@ int              g_chart_zoom_modifier;
 
 int              g_NMEAAPBPrecision;
 
+bool             g_bSailing;
+
 #ifdef LINUX_CRASHRPT
 wxCrashPrint g_crashprint;
 #endif

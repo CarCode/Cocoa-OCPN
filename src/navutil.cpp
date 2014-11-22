@@ -342,6 +342,8 @@ extern int              g_chart_zoom_modifier;
 
 extern int              g_NMEAAPBPrecision;
 
+extern bool             g_bSailing;
+
 #ifdef ocpnUSE_GL
 extern ocpnGLOptions g_GLOptions;
 #endif
@@ -1359,6 +1361,9 @@ int MyConfig::LoadMyConfig( int iteration )
 
     // Boolean to cater for legacy Input COM Port filer behaviour, i.e. show msg filtered but put msg on bus.
     Read( _T ( "LegacyInputCOMPortFilterBehaviour" ), &g_b_legacy_input_filter_behaviour, 0 );
+
+    // Boolean to cater for sailing when not approaching waypoint
+    Read( _T( "Sailing" ), &g_bSailing, 0);
 
     SetPath( _T ( "/Settings/GlobalState" ) );
     Read( _T ( "bFollow" ), &st_bFollow );
@@ -2558,6 +2563,8 @@ void MyConfig::UpdateSettings()
 
     Write( _T ( "KeepNavobjBackups" ), g_navobjbackups );
     Write( _T ( "LegacyInputCOMPortFilterBehaviour" ), g_b_legacy_input_filter_behaviour );
+    Write( _T( "Sailing" ), g_bSailing);
+
 //    S57 Object Filter Settings
 
     SetPath( _T ( "/Settings/ObjectFilter" ) );

@@ -161,6 +161,8 @@ extern int              g_iSDMMFormat;
 extern int              g_iDistanceFormat;
 extern int              g_iSpeedFormat;
 
+extern bool             g_bSailing;
+
 extern int              g_cm93_zoom_factor;
 
 extern int              g_COGAvgSec;
@@ -1560,7 +1562,10 @@ void options::CreatePanel_Ownship( size_t parent, int border_size, int group_ite
     wxString pDistUnitsStrings[] = { _("Nautical Miles"), _("Kilometers") };
     m_itemRadarRingsUnits = new wxChoice( itemPanelShip, ID_RADARDISTUNIT, wxDefaultPosition, m_pShipIconType->GetSize(), 2, pDistUnitsStrings );
     radarGrid->Add( m_itemRadarRingsUnits, 0, wxALIGN_RIGHT | wxALL, border_size );
-
+#ifndef __WXOSX__
+    pSailing = new wxCheckBox( itemPanelShip, ID_DAILYCHECKBOX, _("Sailing - Allow tracking away from a waypoint without switching to the next waypoint") );
+    ownShip->Add( pSailing, 0 );
+#endif
     //  Tracks
     wxStaticBox* trackText = new wxStaticBox( itemPanelShip, wxID_ANY, _("Tracks") );
     wxStaticBoxSizer* trackSizer = new wxStaticBoxSizer( trackText, wxVERTICAL );
@@ -1590,6 +1595,10 @@ void options::CreatePanel_Ownship( size_t parent, int border_size, int group_ite
     wxStaticBox* routeText = new wxStaticBox( itemPanelShip, wxID_ANY, _("Routes") );
     wxStaticBoxSizer* routeSizer = new wxStaticBoxSizer( routeText, wxVERTICAL );
     ownShip->Add( routeSizer, 0, wxGROW | wxALL, border_size );
+#ifdef __WXOSX__
+    pSailing = new wxCheckBox( itemPanelShip, ID_DAILYCHECKBOX, _("Advance route waypoint on arrival only") );
+    routeSizer->Add( pSailing, 1, wxALL, border_size );
+#endif
 #ifdef __WXOSX__
     wxFlexGridSizer *pRouteGrid = new wxFlexGridSizer( 2, group_item_spacing, group_item_spacing );
 #else
@@ -2772,6 +2781,8 @@ void options::SetInitialSettings()
     pDistanceFormat->Select( g_iDistanceFormat );
     pSpeedFormat->Select( g_iSpeedFormat );
 
+    pSailing->SetValue( g_bSailing );
+
     pTrackDaily->SetValue( g_bTrackDaily );
     pTrackHighlite->SetValue( g_bHighliteTracks );
 
@@ -3494,6 +3505,8 @@ void options::OnApplyClick( wxCommandEvent& event )
     g_iSDMMFormat = pSDMMFormat->GetSelection();
     g_iDistanceFormat = pDistanceFormat->GetSelection();
     g_iSpeedFormat = pSpeedFormat->GetSelection();
+
+    g_bSailing = pSailing->GetValue();
 
     g_nTrackPrecision = pTrackPrecision->GetSelection();
 
