@@ -181,26 +181,27 @@ wxString FontMgr::GetSimpleNativeFont( int size )
 #ifdef __WXMSW__
 //      nativefont = _T ( "0;-11;0;0;0;400;0;0;0;0;0;0;0;0;MS Sans Serif" );
 
-    double asize = -size * 96.0/72.0;
-    long lfHeight = int(asize);
+    wxFont sys_font = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+    sys_font.SetPointSize( size + 1 );
+
+    int size_px = sys_font.GetPixelSize().GetHeight();
 
     nativefont.Printf( _T("%d;%ld;%ld;%ld;%ld;%ld;%d;%d;%d;%d;%d;%d;%d;%d;"), 0, // version, in case we want to change the format later
-            lfHeight,            //lf.lfHeight
-            0,                   //lf.lfWidth,
-            0,                   //lf.lfEscapement,
-            0,                   //lf.lfOrientation,
-            400,                 //lf.lfWeight,
-            0,                   //lf.lfItalic,
-            0,                   //lf.lfUnderline,
-            0,                   //lf.lfStrikeOut,
-            0,                   //lf.lfCharSet,
-            0,                   //lf.lfOutPrecision,
-            0,                   //lf.lfClipPrecision,
-            0,                   //lf.lfQuality,
-            0 );                    //lf.lfPitchAndFamily,
+                      size_px,             //lf.lfHeight
+                      0,                   //lf.lfWidth,
+                      0,                   //lf.lfEscapement,
+                      0,                   //lf.lfOrientation,
+                      400,                 //lf.lfWeight,
+                      0,                   //lf.lfItalic,
+                      0,                   //lf.lfUnderline,
+                      0,                   //lf.lfStrikeOut,
+                      0,                   //lf.lfCharSet,
+                      0,                   //lf.lfOutPrecision,
+                      0,                   //lf.lfClipPrecision,
+                      0,                   //lf.lfQuality,
+                      0 );                    //lf.lfPitchAndFamily,
 
-    //    nativefont.Append( _T("Verdana") );
-    nativefont.Append( _T("MS Sans Serif") );
+    nativefont.Append( sys_font.GetFaceName() );
 
 #endif
 

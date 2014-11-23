@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -144,16 +143,16 @@ void RolloverWin::SetBestPosition( int x, int y, int off_x, int off_y, int rollo
     switch( rollover ) {
 
     case AIS_ROLLOVER:
-        dFont = FontMgr::Get().GetFont( _("AISRollover"), 12 );
+        dFont = FontMgr::Get().GetFont( _("AISRollover") );
         break;
 
     case TC_ROLLOVER:
-        dFont = FontMgr::Get().GetFont( _("TideCurrentGraphRollover"), 12 );
+        dFont = FontMgr::Get().GetFont( _("TideCurrentGraphRollover") );
         break;
 
     default:
     case LEG_ROLLOVER:
-        dFont = FontMgr::Get().GetFont( _("RouteLegInfoRollover"), 12 );
+        dFont = FontMgr::Get().GetFont( _("RouteLegInfoRollover") );
         break;
 
     }

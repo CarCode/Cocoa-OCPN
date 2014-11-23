@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: OpenCPN 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-22 12:15+0100\n"
-"PO-Revision-Date: 2014-11-22 12:26+0100\n"
+"PO-Revision-Date: 2014-11-22 17:21+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -4671,7 +4671,7 @@ msgstr "Aktualisierungsintervall (Sek.) im Kurs-Voraus Modus"
 
 #: ../src/options.cpp:2020
 msgid "Look Ahead Mode"
-msgstr "Kurs-Voraus Modus"
+msgstr "Vorausschau Modus"
 
 #: ../src/options.cpp:2024
 msgid "Show Grid"
