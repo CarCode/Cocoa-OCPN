@@ -43,9 +43,6 @@ extern int g_GroupIndex;
 extern ColorScheme global_color_scheme;
 extern int g_chart_zoom_modifier;
 extern bool g_fog_overzoom;
-#ifdef __WXOSX__
-extern double g_bQuiltMinFrag;   // For DutchENC
-#endif
 
 //      We define and use this one Macro in this module
 //      Reason:  some compilers refuse to inline "GetChartTableEntry()"
@@ -1205,16 +1202,8 @@ bool Quilt::BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_
                     // probably because it has a concave outline
                     // or lots of NoCovr regions.  US3EC04.000 is a good example
                     // i.e the full bboxes overlap, but the actual vp intersect is null.
-#ifdef __WXOSX__    // For DutchENC
-                    // only display chart when its fraction of the size of the VP is larger then g_bQuiltMinFrag
-                    // on slow machines setting this value < 0.2 will have impact on performance
-                    // setting it to 0.0 will display all ENC charts which intersect the actual VP
-                    if( chart_fractional_area < g_bQuiltMinFrag ) {
-                        b_add = false;
-#else
                     if( chart_fractional_area < .20 ) {
                         b_add = false;
-#endif
                     }
                     
                     //  Allow S57 charts that are near normal zoom, no matter what their fractional area coverage

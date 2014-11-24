@@ -146,6 +146,7 @@ void HalfScaleChartBits( int width, int height, unsigned char *source, unsigned 
     }
 }
 
+#include "ssl/sha1.h"
 
 wxString CompressedCachePath(wxString path)
 {
@@ -158,12 +159,23 @@ wxString CompressedCachePath(wxString path)
     wxChar separator = wxFileName::GetPathSeparator();
     for(unsigned int pos = 0; pos < path.size(); pos = path.find(separator, pos))
         path.replace(pos, 1, _T("!"));
+
+    //  Obfuscate the compressed chart file name, to (slightly) protect some encrypted raster chart data.
+    wxCharBuffer buf = path.ToUTF8();
+    unsigned char sha1_out[20];
+    sha1( (unsigned char *) buf.data(), strlen(buf.data()), sha1_out );
+    
+    wxString sha1;
+    for (unsigned int i=0 ; i < 20 ; i++){
+        wxString s;
+        s.Printf(_T("%02X"), sha1_out[i]);
+        sha1 += s;
+    }
+
 #ifdef __WXOSX__
-    return g_PrivateDataDir + separator + _T("opencpn/raster_texture_cache") + separator + path
-    + _T(".compressed_chart");
+    return g_PrivateDataDir + separator + _T("opencpn/raster_texture_cache") + separator + sha1;
 #else
-    return g_PrivateDataDir + separator + _T("raster_texture_cache") + separator + path
-    + _T(".compressed_chart");
+    return g_PrivateDataDir + separator + _T("raster_texture_cache") + separator + sha1;
 #endif
 }
 

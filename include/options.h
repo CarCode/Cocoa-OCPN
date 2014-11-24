@@ -302,9 +302,6 @@ public:
     wxCheckBox              *pSDisplayGrid;
     wxCheckBox              *pAutoAnchorMark;
     wxCheckBox              *pCDOQuilting;
-#ifdef __WXOSX__
-    wxTextCtrl		    *pCDOQuiltingMinFrag;    // For DutchENC
-#endif
     wxCheckBox              *pCBRaster;
     wxCheckBox              *pCBVector;
     wxCheckBox              *pCBCM93;
@@ -446,6 +443,10 @@ public:
     int                       k_charts;
     wxButton                  *m_removeBtn;
 
+//      For :Charts->Display Options" page
+    
+    wxScrolledWindow          *m_ChartDisplayPage;
+
 //    For "AIS" Page
     wxCheckBox                *m_pCheck_CPA_Max;
     wxTextCtrl                *m_pText_CPA_Max;
@@ -559,6 +560,9 @@ private:
             wxSize small_button_size );
     void CreatePanel_UI( size_t parent, int border_size, int group_item_spacing,
             wxSize small_button_size );
+
+    void CreatePanel_ChartDisplay( size_t parent, int border_size, int group_item_spacing,
+                                  wxSize small_button_size );
 
     int m_returnChanges;
     wxListBox *tcDataSelected;

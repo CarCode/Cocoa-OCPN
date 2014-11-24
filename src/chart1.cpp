@@ -446,9 +446,6 @@ bool                      g_bDebugGPSD;
 
 bool                      g_bFullScreenQuilt;
 bool                      g_bQuiltEnable;
-#ifdef __WXOSX__
-double                    g_bQuiltMinFrag;   // For DutchENC
-#endif
 bool                      g_bQuiltStart;
 
 bool                      g_bportable;
@@ -812,11 +809,14 @@ int CALLBACK CrashCallback(CR_CRASH_CALLBACK_INFO* pInfo)
 
 #endif
 
-wxString *newPrivateFileName(wxStandardPaths &std_path, wxString *home_locn, const char *name, const char *windowsName) {
-    wxString *filePathAndName = new wxString( name );
+wxString *newPrivateFileName(wxStandardPaths &std_path, wxString *home_locn, const char *name, const char *windowsName)
+{
+    wxString fname = wxString::FromUTF8(name);
+    wxString fwname = wxString::FromUTF8(windowsName);
+    wxString *filePathAndName = new wxString( fname );
     
 #ifdef __WXMSW__
-    filePathAndName = new wxString( windowsName );
+    filePathAndName = new wxString( fwname );
     filePathAndName->Prepend( *pHome_Locn );
 #elif defined __WXOSX__
     filePathAndName = new wxString(_T(""));
@@ -824,20 +824,20 @@ wxString *newPrivateFileName(wxStandardPaths &std_path, wxString *home_locn, con
     appendOSDirSlash(filePathAndName);
     filePathAndName->Append(_T("opencpn"));
     appendOSDirSlash(filePathAndName);
-    filePathAndName->Append( name );
+    filePathAndName->Append( fname );
 #else
     filePathAndName = new wxString(_T(""));
     filePathAndName->Append(std_path.GetUserDataDir());
     appendOSDirSlash(filePathAndName);
-    filePathAndName->Append( name );
+    filePathAndName->Append( fname );
 #endif
     
     if( g_bportable ) {
         filePathAndName->Clear();
 #ifdef __WXMSW__
-        filePathAndName->Append( windowsName );
+        filePathAndName->Append( fwname );
 #else
-        filePathAndName->Append( name );
+        filePathAndName->Append( fname );
 #endif
         filePathAndName->Prepend( *home_locn );
     }
@@ -1867,9 +1867,6 @@ bool MyApp::OnInit()
         g_PlanSpeed = 6.;
         g_bFullScreenQuilt = true;
         g_bQuiltEnable = true;
-#ifdef __WXOSX__
-        g_bQuiltMinFrag = 0.2;  // For DutchENC
-#endif
         g_bskew_comp = false;
         g_bShowAreaNotices = false;
         g_bDrawAISSize = false;
@@ -2064,7 +2061,8 @@ bool MyApp::OnInit()
 
 //      Load and initialize any PlugIns
     g_pi_manager = new PlugInManager( gFrame );
-    g_pi_manager->LoadAllPlugIns( g_Plugin_Dir, true );
+    g_pi_manager->LoadAllPlugIns( g_Plugin_Dir, true, false );         // do not allow blicklist dialog, since
+                                                                        // frame and canvas are not yet rendered...
 
 // Show the frame
 
@@ -2123,6 +2121,9 @@ bool MyApp::OnInit()
 
     //   Notify all the AUI PlugIns so that they may syncronize with the Perspective
     g_pi_manager->NotifyAuiPlugIns();
+
+    //  Give the use dialog on any blacklisted PlugIns
+    g_pi_manager->ShowDeferredBlacklistMessages();
 
     bool b_SetInitialPoint = false;
 
@@ -9652,7 +9653,7 @@ static const char *usercolors[] = { "Table:DAY", "GREEN1;120;255;120;", "GREEN2;
         "GREEN3;200;220;200;", "GREEN4;  0;255;  0;", "BLUE1; 170;170;255;", "BLUE2;  45; 45;170;",
         "BLUE3;   0;  0;255;", "GREY1; 200;200;200;", "GREY2; 230;230;230;", "RED1;  220;200;200;",
         "UBLCK;   0;  0;  0;", "UWHIT; 255;255;255;", "URED;  255;  0;  0;", "UGREN;   0;255;  0;",
-        "YELO1; 243;229; 47;", "YELO2; 128; 80;  0;", "TEAL1;   0;128;128;",
+        "YELO1; 243;229; 47;", "YELO2; 128; 80;  0;", "TEAL1;   0;128;128;", "GREEN5;178;205; 81;",
         "DILG0; 238;239;242;",              // Dialog Background white
         "DILG1; 212;208;200;",              // Dialog Background
         "DILG2; 255;255;255;",              // Control Background
@@ -9673,7 +9674,7 @@ static const char *usercolors[] = { "Table:DAY", "GREEN1;120;255;120;", "GREEN2;
         "GREEN4;  0;128;  0;", "BLUE1;  80; 80;160;", "BLUE2;  30; 30;120;", "BLUE3;   0;  0;128;",
         "GREY1; 100;100;100;", "GREY2; 128;128;128;", "RED1;  150;100;100;", "UBLCK;   0;  0;  0;",
         "UWHIT; 255;255;255;", "URED;  120; 54; 11;", "UGREN;  35;110; 20;", "YELO1; 120;115; 24;",
-        "YELO2;  64; 40;  0;", "TEAL1;   0; 64; 64;",
+        "YELO2;  64; 40;  0;", "TEAL1;   0; 64; 64;", "GREEN5; 90;102; 40;",
         "DILG0; 110;110;110;",              // Dialog Background
         "DILG1; 110;110;110;",              // Dialog Background
         "DILG2;   0;  0;  0;",              // Control Background
@@ -9694,7 +9695,7 @@ static const char *usercolors[] = { "Table:DAY", "GREEN1;120;255;120;", "GREEN2;
         "GREEN4;  0; 64;  0;", "BLUE1;  60; 60;100;", "BLUE2;  22; 22; 85;", "BLUE3;   0;  0; 40;",
         "GREY1;  48; 48; 48;", "GREY2;  64; 64; 64;", "RED1;  100; 50; 50;", "UWHIT; 255;255;255;",
         "UBLCK;   0;  0;  0;", "URED;   60; 27;  5;", "UGREN;  17; 55; 10;", "YELO1;  60; 65; 12;",
-        "YELO2;  32; 20;  0;", "TEAL1;   0; 32; 32;",
+        "YELO2;  32; 20;  0;", "TEAL1;   0; 32; 32;", "GREEN5; 45;51; 20;",
         "DILG0;  80; 80; 80;",              // Dialog Background
         "DILG1;  80; 80; 80;",              // Dialog Background
         "DILG2;   0;  0;  0;",              // Control Background

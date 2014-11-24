@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __AIS_TARGET_DATA_H__
 #define __AIS_TARGET_DATA_H__
@@ -132,7 +131,8 @@ public:
     AIS_Area_Notice_Hash     area_notices;
     bool                     b_SarAircraftPosnReport;
     int                      altitude;                  // Metres, from special position report(9)
-    
+    bool                     b_nameFromCache;
+
 };
 
 #endif

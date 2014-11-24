@@ -219,7 +219,7 @@ public:
       PlugInManager(MyFrame *parent);
       virtual ~PlugInManager();
 
-      bool LoadAllPlugIns(const wxString &plugin_dir, bool enabled_plugins);
+      bool LoadAllPlugIns(const wxString &plugin_dir, bool enabled_plugins, bool b_enable_blackdialog = true);
       bool UnLoadAllPlugIns();
       bool DeactivateAllPlugIns();
       bool UpdatePlugIns();
@@ -249,6 +249,7 @@ public:
       void SetToolbarItemBitmaps(int item, wxBitmap *bitmap, wxBitmap *bmpDisabled);
       opencpn_plugin *FindToolOwner(const int id);
       wxString GetToolOwnerCommonName(const int id);
+      void ShowDeferredBlacklistMessages();
 
       ArrayOfPlugInMenuItems &GetPluginContextMenuItemArray(){ return m_PlugInMenuItems; }
       int AddCanvasContextMenuItem(wxMenuItem *pitem, opencpn_plugin *pplugin );
@@ -305,7 +306,8 @@ private:
       int               m_plugin_menu_item_id_next;
       wxBitmap          m_cached_overlay_bm;
 
-
+      bool              m_benable_blackdialog;
+      wxArrayString     m_deferred_blacklist_messages;
 
 };
 
