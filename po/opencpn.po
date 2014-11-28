@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenCPN 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-24 12:46+0100\n"
-"PO-Revision-Date: 2014-11-24 12:50+0100\n"
+"POT-Creation-Date: 2014-11-26 11:31+0100\n"
+"PO-Revision-Date: 2014-11-26 17:56+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -2509,7 +2509,7 @@ msgstr "-"
 
 #: ../src/AISTargetListDialog.cpp:296 ../src/chart1.cpp:10023
 #: ../src/LinkPropDlg.cpp:38 ../src/options.cpp:635 ../src/options.cpp:827
-#: ../src/options.cpp:5551 ../src/routemanagerdialog.cpp:426
+#: ../src/options.cpp:5552 ../src/routemanagerdialog.cpp:426
 #: ../src/routeprop.cpp:1861 ../src/TCWin.cpp:62 ../src/TCWin.cpp:179
 #: ../src/TrackPropDlg.cpp:85
 msgid "Dialog"
@@ -3334,7 +3334,7 @@ msgid "CM93 Offset Dialog..."
 msgstr "CM93 Offset Dialog..."
 
 #: ../src/chcanv.cpp:6719 ../src/options.cpp:1932 ../src/options.cpp:1980
-#: ../src/options.cpp:4363
+#: ../src/options.cpp:4364
 msgid "Chart Groups"
 msgstr "Karten-Gruppen"
 
@@ -3439,7 +3439,7 @@ msgid "Copy as KML"
 msgstr "Kopiere als KML"
 
 #: ../src/chcanv.cpp:6919 ../src/chcanv.cpp:6963 ../src/options.cpp:576
-#: ../src/options.cpp:5323 ../src/routeprop.cpp:2017
+#: ../src/options.cpp:5324 ../src/routeprop.cpp:2017
 #: ../src/TrackPropDlg.cpp:291
 msgid "Delete"
 msgstr "Löschen"
@@ -3972,7 +3972,7 @@ msgstr "km/h"
 msgid "m/s"
 msgstr "m/s"
 
-#: ../src/NMEALogWindow.cpp:55
+#: ../src/NMEALogWindow.cpp:54
 msgid "NMEA Debug Window"
 msgstr "NMEA Anzeige-Fenster"
 
@@ -4515,13 +4515,13 @@ msgstr "Vektorkarten"
 
 #: ../src/options.cpp:1742
 msgid "Mariner's Standard"
-msgstr "Benutzerdef. Auswahl"
+msgstr "Benutzerdef. Auswahl          "
 
-#: ../src/options.cpp:1753 ../src/options.cpp:5312
+#: ../src/options.cpp:1753 ../src/options.cpp:5313
 msgid "Select All"
 msgstr "Alle auswählen"
 
-#: ../src/options.cpp:1755 ../src/options.cpp:5315
+#: ../src/options.cpp:1755 ../src/options.cpp:5316
 msgid "Clear All"
 msgstr "Alle abwählen"
 
@@ -4535,7 +4535,7 @@ msgstr "Alle"
 
 #: ../src/options.cpp:1762
 msgid "Mariners Standard"
-msgstr "Benutzerdef. Auswahl"
+msgstr "Benutzerdef. Auswahl     "
 
 #: ../src/options.cpp:1763
 msgid "Display Category"
@@ -4579,11 +4579,11 @@ msgstr "Nationaler Text in Karte"
 
 #: ../src/options.cpp:1807
 msgid "Paper Chart"
-msgstr "Papierkarte"
+msgstr "Papierkarte   "
 
 #: ../src/options.cpp:1807
 msgid "Simplified"
-msgstr "Vereinfacht"
+msgstr "Vereinfacht   "
 
 #: ../src/options.cpp:1808
 msgid "Points"
@@ -4595,7 +4595,7 @@ msgstr "Schlicht"
 
 #: ../src/options.cpp:1812
 msgid "Symbolized"
-msgstr "Symbolisch"
+msgstr "Symbolisch   "
 
 #: ../src/options.cpp:1813
 msgid "Boundaries"
@@ -4649,7 +4649,7 @@ msgstr "Datensatz hinzu..."
 msgid "All Available Charts"
 msgstr "Alle verfügbaren Karten"
 
-#: ../src/options.cpp:1970 ../src/options.cpp:5320 ../src/routeprop.cpp:2042
+#: ../src/options.cpp:1970 ../src/options.cpp:5321 ../src/routeprop.cpp:2042
 #: ../src/TrackPropDlg.cpp:307
 msgid "Add"
 msgstr "Hinzu"
@@ -4970,32 +4970,32 @@ msgstr "Oberfläche"
 msgid "Plugins"
 msgstr "Plugins"
 
-#: ../src/options.cpp:3163
+#: ../src/options.cpp:3164
 msgid "Add a directory containing chart files"
 msgstr "Verzeichnis mit Karten hinzu"
 
-#: ../src/options.cpp:3258
+#: ../src/options.cpp:3259
 msgid "Data connection must be input, output or both"
 msgstr "Datenverbindung muß Ein-, Ausgang oder beides sein"
 
-#: ../src/options.cpp:3258 ../src/options.cpp:3264 ../src/options.cpp:3272
-#: ../src/options.cpp:3279
+#: ../src/options.cpp:3259 ../src/options.cpp:3265 ../src/options.cpp:3273
+#: ../src/options.cpp:3280
 msgid "Error!"
 msgstr "Fehler!"
 
-#: ../src/options.cpp:3264
+#: ../src/options.cpp:3265
 msgid "You must select or enter the port..."
 msgstr "Port wählen oder eingeben..."
 
-#: ../src/options.cpp:3272
+#: ../src/options.cpp:3273
 msgid "You must enter a port..."
 msgstr "Port muß gewählt werden..."
 
-#: ../src/options.cpp:3279
+#: ../src/options.cpp:3280
 msgid "You must enter the address..."
 msgstr "Adresse muß eingegeben werden..."
 
-#: ../src/options.cpp:3361
+#: ../src/options.cpp:3362
 msgid ""
 "\n"
 " - your ship's length must be > 0"
@@ -5003,7 +5003,7 @@ msgstr ""
 "\n"
 " - die Bootslänge muß > 0 sein"
 
-#: ../src/options.cpp:3363
+#: ../src/options.cpp:3364
 msgid ""
 "\n"
 " - your ship's beam must be > 0"
@@ -5011,7 +5011,7 @@ msgstr ""
 "\n"
 " - die Bootsbreite muß > 0 sein"
 
-#: ../src/options.cpp:3365
+#: ../src/options.cpp:3366
 msgid ""
 "\n"
 " - your GPS offset from midship must be within your ship's beam"
@@ -5019,7 +5019,7 @@ msgstr ""
 "\n"
 " - die GPS Abweichung von Mittschiffs muß innerhalb der Bootsbreite sein"
 
-#: ../src/options.cpp:3367
+#: ../src/options.cpp:3368
 msgid ""
 "\n"
 " - your GPS offset from bow must be within your ship's length"
@@ -5027,7 +5027,7 @@ msgstr ""
 "\n"
 " - die GPS Abweichung vom Bug muß innerhalb der Bootslänge sein"
 
-#: ../src/options.cpp:3369
+#: ../src/options.cpp:3370
 msgid ""
 "\n"
 " - your minimum ship icon size must be between 1 and 100 mm"
@@ -5035,43 +5035,43 @@ msgstr ""
 "\n"
 " - die minimale Bootssymbol-Größe muß zwischen 1 und 100 mm sein"
 
-#: ../src/options.cpp:3371
+#: ../src/options.cpp:3372
 msgid "The settings for own ship real size are not correct:"
 msgstr "Einstellungen für eigene Bootsgröße sind falsch:"
 
-#: ../src/options.cpp:3372 ../src/routemanagerdialog.cpp:1432
+#: ../src/options.cpp:3373 ../src/routemanagerdialog.cpp:1432
 msgid "OpenCPN info"
 msgstr "OpenCPN Info"
 
-#: ../src/options.cpp:4184
+#: ../src/options.cpp:4185
 msgid "Select Sound File"
 msgstr "Warnton-Datei auswählen"
 
-#: ../src/options.cpp:4185
+#: ../src/options.cpp:4186
 msgid "WAV files (*.wav)|*.wav|All files (*.*)|*.*"
 msgstr "WAV-Dateien (*.wav)|*.wav|Alle Dateien (*.*)|*.*"
 
-#: ../src/options.cpp:4589
+#: ../src/options.cpp:4590
 msgid "Enter Group Name"
 msgstr "Gruppen-Name eingeben"
 
-#: ../src/options.cpp:4590
+#: ../src/options.cpp:4591
 msgid "New Chart Group"
 msgstr "Neue Karten-Gruppe"
 
-#: ../src/options.cpp:4747
+#: ../src/options.cpp:4748
 msgid "Select Tide/Current Data"
 msgstr "Wähle Tiden-/Strom-Daten"
 
-#: ../src/options.cpp:5460
+#: ../src/options.cpp:5461
 msgid "Enter the NMEA sentence (2, 3 or 5 characters)"
 msgstr "Die NMEA Sequenz eingeben (2, 3 oder 5 Zeichen)"
 
-#: ../src/options.cpp:5460
+#: ../src/options.cpp:5461
 msgid "Enter the NMEA sentence"
 msgstr "Die NMEA Sequenz eingeben"
 
-#: ../src/options.cpp:5469
+#: ../src/options.cpp:5470
 msgid ""
 "An NMEA sentence is generally 3 characters long (like RMC, GGA etc.) It can "
 "also have a two letter prefix identifying the source, or TALKER, of the "
@@ -5085,51 +5085,55 @@ msgstr ""
 "bestimmten TALKER-Vorzeichen (wie GP, AI etc.) herausgefiltert werden. Der "
 "Filter akzeptiert diese 3 Formate."
 
-#: ../src/options.cpp:5469
+#: ../src/options.cpp:5470
 msgid "Wrong length of the NMEA filter value"
 msgstr "Falsche Länge des NMEA Filter-Wertes"
 
-#: ../src/options.cpp:5520
+#: ../src/options.cpp:5521
 msgid "Accept Sentences"
 msgstr "Sequenzen annehmen"
 
-#: ../src/options.cpp:5522
+#: ../src/options.cpp:5523
 msgid "Ignore Sentences"
 msgstr "Abgewiesene Sequenzen"
 
-#: ../src/options.cpp:5526
+#: ../src/options.cpp:5527
 msgid "Transmit Sentences"
 msgstr "Sequenzen senden"
 
-#: ../src/options.cpp:5528
+#: ../src/options.cpp:5529
 msgid "Drop Sentences"
 msgstr "Sequenzen nicht senden"
 
-#: ../src/options.cpp:5559
+#: ../src/options.cpp:5549
+msgid "OpenGL Options"
+msgstr "OpenGL Optionen"
+
+#: ../src/options.cpp:5560
 msgid "Use Accelerated Panning"
 msgstr "Verwende beschleunigtes Verschieben (OpenGL)"
 
-#: ../src/options.cpp:5573
+#: ../src/options.cpp:5574
 msgid "Texture Compression"
 msgstr "Texturen Kompression"
 
-#: ../src/options.cpp:5577
+#: ../src/options.cpp:5578
 msgid "Texture Compression Caching"
 msgstr "Texturen Kompression Cache"
 
-#: ../src/options.cpp:5598
+#: ../src/options.cpp:5599
 msgid "Texture Compression with Caching"
 msgstr "Texturen Kompression mit Cache"
 
-#: ../src/options.cpp:5614
+#: ../src/options.cpp:5615
 msgid "Texture Memory Size (MB)"
 msgstr "Texturen Speichergröße (MB)"
 
-#: ../src/options.cpp:5629
+#: ../src/options.cpp:5630
 msgid "Rebuild Texture Cache"
 msgstr "Erneure Texture Cache"
 
-#: ../src/options.cpp:5635
+#: ../src/options.cpp:5636
 msgid "Clear Texture Cache"
 msgstr "Lösche Texture Cache"
 
@@ -6124,53 +6128,3 @@ msgstr "Wegpunkt löschen"
 #: ../src/undo.cpp:88
 msgid "Move Waypoint"
 msgstr "Verschiebe Wegpunkt"
-
-#
-#
-#
-#
-#~ msgid "&Help"
-#~ msgstr "&Help"
-
-#
-#~ msgid "For DutchENC: Minimum Fraction size of S57 Chart"
-#~ msgstr "Für Holland-IENC: Minimale Anteilgröße von S57 Karten"
-
-#
-#~ msgid "Miscellaneous Options"
-#~ msgstr "Verschiedene Optionen"
-
-#
-#
-#
-#~ msgid "OpenCPN Hilfe  \\u2318J"
-#~ msgstr "OpenCPN Hilfe  \\u2318J"
-
-#
-#
-#
-#
-#
-#~ msgid "Preferencesâ¦"
-#~ msgstr "Einstellungen"
-
-#
-#~ msgid ""
-#~ "Sailing - Allow tracking away from a waypoint without switching to the "
-#~ "next waypoint"
-#~ msgstr ""
-#~ "Segeln - Erlaube Tracking weg von einem Wegpunkt ohne zum nächsten zu "
-#~ "wechseln"
-
-#
-#
-#
-#~ msgid "Scale %4.0f"
-#~ msgstr "Maßstab %4.0f"
-
-#
-#
-#
-#
-#~ msgid "Suche nach Updates..."
-#~ msgstr "Suche nach Updates..."

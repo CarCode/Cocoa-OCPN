@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-24 12:46+0100\n"
+"POT-Creation-Date: 2014-11-26 11:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2505,7 +2505,7 @@ msgstr ""
 
 #: ../src/AISTargetListDialog.cpp:296 ../src/chart1.cpp:10023
 #: ../src/LinkPropDlg.cpp:38 ../src/options.cpp:635 ../src/options.cpp:827
-#: ../src/options.cpp:5551 ../src/routemanagerdialog.cpp:426
+#: ../src/options.cpp:5552 ../src/routemanagerdialog.cpp:426
 #: ../src/routeprop.cpp:1861 ../src/TCWin.cpp:62 ../src/TCWin.cpp:179
 #: ../src/TrackPropDlg.cpp:85
 msgid "Dialog"
@@ -3281,7 +3281,7 @@ msgid "CM93 Offset Dialog..."
 msgstr ""
 
 #: ../src/chcanv.cpp:6719 ../src/options.cpp:1932 ../src/options.cpp:1980
-#: ../src/options.cpp:4363
+#: ../src/options.cpp:4364
 msgid "Chart Groups"
 msgstr ""
 
@@ -3386,7 +3386,7 @@ msgid "Copy as KML"
 msgstr ""
 
 #: ../src/chcanv.cpp:6919 ../src/chcanv.cpp:6963 ../src/options.cpp:576
-#: ../src/options.cpp:5323 ../src/routeprop.cpp:2017
+#: ../src/options.cpp:5324 ../src/routeprop.cpp:2017
 #: ../src/TrackPropDlg.cpp:291
 msgid "Delete"
 msgstr ""
@@ -3911,7 +3911,7 @@ msgstr ""
 msgid "m/s"
 msgstr ""
 
-#: ../src/NMEALogWindow.cpp:55
+#: ../src/NMEALogWindow.cpp:54
 msgid "NMEA Debug Window"
 msgstr ""
 
@@ -4456,11 +4456,11 @@ msgstr ""
 msgid "Mariner's Standard"
 msgstr ""
 
-#: ../src/options.cpp:1753 ../src/options.cpp:5312
+#: ../src/options.cpp:1753 ../src/options.cpp:5313
 msgid "Select All"
 msgstr ""
 
-#: ../src/options.cpp:1755 ../src/options.cpp:5315
+#: ../src/options.cpp:1755 ../src/options.cpp:5316
 msgid "Clear All"
 msgstr ""
 
@@ -4588,7 +4588,7 @@ msgstr ""
 msgid "All Available Charts"
 msgstr ""
 
-#: ../src/options.cpp:1970 ../src/options.cpp:5320 ../src/routeprop.cpp:2042
+#: ../src/options.cpp:1970 ../src/options.cpp:5321 ../src/routeprop.cpp:2042
 #: ../src/TrackPropDlg.cpp:307
 msgid "Add"
 msgstr ""
@@ -4909,98 +4909,98 @@ msgstr ""
 msgid "Plugins"
 msgstr ""
 
-#: ../src/options.cpp:3163
+#: ../src/options.cpp:3164
 msgid "Add a directory containing chart files"
 msgstr ""
 
-#: ../src/options.cpp:3258
+#: ../src/options.cpp:3259
 msgid "Data connection must be input, output or both"
 msgstr ""
 
-#: ../src/options.cpp:3258 ../src/options.cpp:3264 ../src/options.cpp:3272
-#: ../src/options.cpp:3279
+#: ../src/options.cpp:3259 ../src/options.cpp:3265 ../src/options.cpp:3273
+#: ../src/options.cpp:3280
 msgid "Error!"
 msgstr ""
 
-#: ../src/options.cpp:3264
+#: ../src/options.cpp:3265
 msgid "You must select or enter the port..."
 msgstr ""
 
-#: ../src/options.cpp:3272
+#: ../src/options.cpp:3273
 msgid "You must enter a port..."
 msgstr ""
 
-#: ../src/options.cpp:3279
+#: ../src/options.cpp:3280
 msgid "You must enter the address..."
 msgstr ""
 
-#: ../src/options.cpp:3361
+#: ../src/options.cpp:3362
 msgid ""
 "\n"
 " - your ship's length must be > 0"
 msgstr ""
 
-#: ../src/options.cpp:3363
+#: ../src/options.cpp:3364
 msgid ""
 "\n"
 " - your ship's beam must be > 0"
 msgstr ""
 
-#: ../src/options.cpp:3365
+#: ../src/options.cpp:3366
 msgid ""
 "\n"
 " - your GPS offset from midship must be within your ship's beam"
 msgstr ""
 
-#: ../src/options.cpp:3367
+#: ../src/options.cpp:3368
 msgid ""
 "\n"
 " - your GPS offset from bow must be within your ship's length"
 msgstr ""
 
-#: ../src/options.cpp:3369
+#: ../src/options.cpp:3370
 msgid ""
 "\n"
 " - your minimum ship icon size must be between 1 and 100 mm"
 msgstr ""
 
-#: ../src/options.cpp:3371
+#: ../src/options.cpp:3372
 msgid "The settings for own ship real size are not correct:"
 msgstr ""
 
-#: ../src/options.cpp:3372 ../src/routemanagerdialog.cpp:1432
+#: ../src/options.cpp:3373 ../src/routemanagerdialog.cpp:1432
 msgid "OpenCPN info"
 msgstr ""
 
-#: ../src/options.cpp:4184
+#: ../src/options.cpp:4185
 msgid "Select Sound File"
 msgstr ""
 
-#: ../src/options.cpp:4185
+#: ../src/options.cpp:4186
 msgid "WAV files (*.wav)|*.wav|All files (*.*)|*.*"
 msgstr ""
 
-#: ../src/options.cpp:4589
+#: ../src/options.cpp:4590
 msgid "Enter Group Name"
 msgstr ""
 
-#: ../src/options.cpp:4590
+#: ../src/options.cpp:4591
 msgid "New Chart Group"
 msgstr ""
 
-#: ../src/options.cpp:4747
+#: ../src/options.cpp:4748
 msgid "Select Tide/Current Data"
 msgstr ""
 
-#: ../src/options.cpp:5460
+#: ../src/options.cpp:5461
 msgid "Enter the NMEA sentence (2, 3 or 5 characters)"
 msgstr ""
 
-#: ../src/options.cpp:5460
+#: ../src/options.cpp:5461
 msgid "Enter the NMEA sentence"
 msgstr ""
 
-#: ../src/options.cpp:5469
+#: ../src/options.cpp:5470
 msgid ""
 "An NMEA sentence is generally 3 characters long (like RMC, GGA etc.) It can "
 "also have a two letter prefix identifying the source, or TALKER, of the "
@@ -5009,51 +5009,55 @@ msgid ""
 "filter accepts just these three formats."
 msgstr ""
 
-#: ../src/options.cpp:5469
+#: ../src/options.cpp:5470
 msgid "Wrong length of the NMEA filter value"
 msgstr ""
 
-#: ../src/options.cpp:5520
+#: ../src/options.cpp:5521
 msgid "Accept Sentences"
 msgstr ""
 
-#: ../src/options.cpp:5522
+#: ../src/options.cpp:5523
 msgid "Ignore Sentences"
 msgstr ""
 
-#: ../src/options.cpp:5526
+#: ../src/options.cpp:5527
 msgid "Transmit Sentences"
 msgstr ""
 
-#: ../src/options.cpp:5528
+#: ../src/options.cpp:5529
 msgid "Drop Sentences"
 msgstr ""
 
-#: ../src/options.cpp:5559
+#: ../src/options.cpp:5549
+msgid "OpenGL Options"
+msgstr ""
+
+#: ../src/options.cpp:5560
 msgid "Use Accelerated Panning"
 msgstr ""
 
-#: ../src/options.cpp:5573
+#: ../src/options.cpp:5574
 msgid "Texture Compression"
 msgstr ""
 
-#: ../src/options.cpp:5577
+#: ../src/options.cpp:5578
 msgid "Texture Compression Caching"
 msgstr ""
 
-#: ../src/options.cpp:5598
+#: ../src/options.cpp:5599
 msgid "Texture Compression with Caching"
 msgstr ""
 
-#: ../src/options.cpp:5614
+#: ../src/options.cpp:5615
 msgid "Texture Memory Size (MB)"
 msgstr ""
 
-#: ../src/options.cpp:5629
+#: ../src/options.cpp:5630
 msgid "Rebuild Texture Cache"
 msgstr ""
 
-#: ../src/options.cpp:5635
+#: ../src/options.cpp:5636
 msgid "Clear Texture Cache"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: opencpn 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-09 18:54+0100\n"
-"PO-Revision-Date: 2014-11-09 18:56+0100\n"
+"PO-Revision-Date: 2014-11-26 17:32+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -711,7 +711,7 @@ msgstr "Verwende abgestufte Farben"
 
 #: ../src/GribUIDialogBase.cpp:618
 msgid "Copy First Cumulative Missing Record"
-msgstr "Kopiere ersten fehlenden kumulativen Datensatz"
+msgstr "Kopiere ersten fehlenden kumulativen Datensatz          "
 
 #: ../src/GribUIDialogBase.cpp:621
 msgid "Copy Missing Wave Records"
@@ -719,11 +719,11 @@ msgstr "Kopiere fehlende Wellen-Daten"
 
 #: ../src/GribUIDialogBase.cpp:624
 msgid "Load the More Recent File in Directory"
-msgstr "Lade neueste Datei im Verzeichnis"
+msgstr "Lade neueste Datei im Verzeichnis          "
 
 #: ../src/GribUIDialogBase.cpp:624
 msgid "Load the Last Opened File"
-msgstr "Lade zuletzt offene Datei"
+msgstr "Lade zuletzt offene Datei     "
 
 #: ../src/GribUIDialogBase.cpp:626
 msgid "Load File Options"
@@ -731,15 +731,15 @@ msgstr "Lade Datei-Optionen"
 
 #: ../src/GribUIDialogBase.cpp:630
 msgid "Start at the first forecast in GRIB file"
-msgstr "Starte mit erster Vorhersage in Grib-Datei"
+msgstr "Starte mit erster Vorhersage in Grib-Datei          "
 
 #: ../src/GribUIDialogBase.cpp:630
 msgid "Start at the nearest forecast to current time"
-msgstr "Starte mit nächster Vorhersage zur akt. Zeit"
+msgstr "Starte mit nächster Vorhersage zur akt. Zeit          "
 
 #: ../src/GribUIDialogBase.cpp:630
 msgid "Authorize Interpolation to start at current time"
-msgstr "Erlaube Interpolation-Start bei aktueller Zeit"
+msgstr "Erlaube Interpolation-Start bei aktueller Zeit          "
 
 #: ../src/GribUIDialogBase.cpp:632
 msgid "Start Options"
@@ -747,7 +747,7 @@ msgstr "Start-Optionen"
 
 #: ../src/GribUIDialogBase.cpp:636
 msgid "Local Time"
-msgstr "Lokale Zeit"
+msgstr "Lokale Zeit     "
 
 #: ../src/GribUIDialogBase.cpp:636
 msgid "UTC"
