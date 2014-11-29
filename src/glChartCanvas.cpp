@@ -1808,13 +1808,15 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
             unsigned char *d = image.GetData();
             unsigned char *a = image.GetAlpha();
             unsigned char *e = new unsigned char[4 * w * h];
-            for( int p = 0; p < w*h; p++ ) {
-                e[4*p+0] = d[3*p+0];
-                e[4*p+1] = d[3*p+1];
-                e[4*p+2] = d[3*p+2];
-                e[4*p+3] = a[p];
+
+            if(d && e && a){
+                for( int p = 0; p < w*h; p++ ) {
+                    e[4*p+0] = d[3*p+0];
+                    e[4*p+1] = d[3*p+1];
+                    e[4*p+2] = d[3*p+2];
+                    e[4*p+3] = a[p];
+                }
             }
-            
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
                          glw, glh, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
@@ -2577,11 +2579,10 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, OCPNRegion &region)
     ViewPort VPoint = cc1->VPoint;
     m_gl_rendered_region.Clear();
 
-    double scale_factor = cc1->m_pQuilt->GetRefNativeScale()/VPoint.chart_scale;
+    double scale_factor = VPoint.ref_scale/VPoint.chart_scale;
 
     glPushMatrix();
     if(VPoint.b_quilt) {
-        double scale_factor = cc1->m_pQuilt->GetRefNativeScale()/VPoint.chart_scale;
         bool fog_it = (g_fog_overzoom && (scale_factor > 10));
 
         RenderQuiltViewGL( VPoint, region );
@@ -2644,7 +2645,6 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, OCPNRegion &region)
                     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
                     
                     glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, bias);
-                    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
                     
                     glColor4f (1.0f,1.0f,1.0f,1.0f);
                     
@@ -3031,7 +3031,7 @@ void glChartCanvas::Render()
     TextureCrunch(0.8);
 
     //  If we plan to post process the display, don't use accelerated panning
-    double scale_factor = cc1->m_pQuilt->GetRefNativeScale()/VPoint.chart_scale;
+    double scale_factor = VPoint.ref_scale/VPoint.chart_scale;
     bool fog_it = (g_fog_overzoom && (scale_factor > 10) && VPoint.b_quilt);
     bool bpost_hilite = !cc1->m_pQuilt->GetHiliteRegion( VPoint ).IsEmpty();
 

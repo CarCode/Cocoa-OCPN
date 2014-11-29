@@ -48,6 +48,7 @@
 #include "razdsparser.h"
 #include "FontMgr.h"
 #include "TexFont.h"
+#include "ocpndc.h"
 
 #include <wx/image.h>
 #include <wx/tokenzr.h>
@@ -1586,23 +1587,25 @@ bool s52plib::RenderText( wxDC *pdc, S52_TextC *ptext, int x, int y, wxRect *pRe
                     unsigned char *pdest = ptext->m_pRGBA;
                     S52color *ccolor = ptext->pcol;
                     
-                    for( int y = 0; y < hs; y++ )
-                        for( int x = 0; x < ws; x++ ) {
-                            unsigned char r, g, b;
-                            int off = ( y * ws + x );
-                            r = d[off * 3 + 0];
-                            g = d[off * 3 + 1];
-                            b = d[off * 3 + 2];
-                            
-                            pdest[off * 4 + 0] = ccolor->R;
-                            pdest[off * 4 + 1] = ccolor->G;
-                            pdest[off * 4 + 2] = ccolor->B;
-                            
-                            int alpha = ( r + g + b ) / 3;
-                            pdest[off * 4 + 3] = (unsigned char) ( alpha & 0xff );
-                        }
-                        
-                        mdc.SelectObject( wxNullBitmap );
+                    if(d){
+                        for( int y = 0; y < hs; y++ )
+                            for( int x = 0; x < ws; x++ ) {
+                                unsigned char r, g, b;
+                                int off = ( y * ws + x );
+                                r = d[off * 3 + 0];
+                                g = d[off * 3 + 1];
+                                b = d[off * 3 + 2];
+                                
+                                pdest[off * 4 + 0] = ccolor->R;
+                                pdest[off * 4 + 1] = ccolor->G;
+                                pdest[off * 4 + 2] = ccolor->B;
+                                
+                                int alpha = ( r + g + b ) / 3;
+                                pdest[off * 4 + 3] = (unsigned char) ( alpha & 0xff );
+                            }
+                    }
+                    
+                    mdc.SelectObject( wxNullBitmap );
                 } // mdc OK
                 
             } // Building m_RGBA
@@ -2017,6 +2020,7 @@ int s52plib::RenderTE( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     return RenderT_All( rzRules, rules, vp, false );
 }
 
+#if 0
 unsigned char *GetRGBA_Array( wxImage &Image )
 {
     //    Get the glRGBA format data from the wxImage
@@ -2049,6 +2053,7 @@ unsigned char *GetRGBA_Array( wxImage &Image )
 
     return e;
 }
+#endif
 
 bool s52plib::RenderHPGL( ObjRazRules *rzRules, Rule *prule, wxPoint &r, ViewPort *vp,
         float rot_angle )
@@ -2276,24 +2281,26 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
                 Image.SetMaskColour( m_unused_wxColor.Red(), m_unused_wxColor.Green(),
                                      m_unused_wxColor.Blue() );
                 unsigned char mr, mg, mb;
-                if( !Image.GetOrFindMaskColour( &mr, &mg, &mb ) && !a ) printf(
-                    "trying to use mask to draw a bitmap without alpha or mask\n" );
+                if( !Image.GetOrFindMaskColour( &mr, &mg, &mb ) && !a )
+                    printf( "trying to use mask to draw a bitmap without alpha or mask\n" );
                 
                 unsigned char *e = (unsigned char *) malloc( w * h * 4 );
-                for( int y = 0; y < h; y++ ) {
-                    for( int x = 0; x < w; x++ ) {
-                        unsigned char r, g, b;
-                        int off = ( y * Image.GetWidth() + x );
-                        r = d[off * 3 + 0];
-                        g = d[off * 3 + 1];
-                        b = d[off * 3 + 2];
-                        
-                        e[off * 4 + 0] = r;
-                        e[off * 4 + 1] = g;
-                        e[off * 4 + 2] = b;
-                        
-                        e[off * 4 + 3] =
+                if( d && a){
+                    for( int y = 0; y < h; y++ ) {
+                        for( int x = 0; x < w; x++ ) {
+                            unsigned char r, g, b;
+                            int off = ( y * Image.GetWidth() + x );
+                            r = d[off * 3 + 0];
+                            g = d[off * 3 + 1];
+                            b = d[off * 3 + 2];
+                            
+                            e[off * 4 + 0] = r;
+                            e[off * 4 + 1] = g;
+                            e[off * 4 + 2] = b;
+                            
+                            e[off * 4 + 3] =
                             a ? a[off] : ( ( r == mr ) && ( g == mg ) && ( b == mb ) ? 0 : 255 );
+                        }
                     }
                 }
                 
@@ -2488,17 +2495,19 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
 
                 //    Do alpha blending, the hard way
 
-                for( int i = 0; i < b_height; i++ ) {
-                    for( int j = 0; j < b_width; j++ ) {
-                        double alpha = 1.0;
-                        if(asym)
-                            alpha = ( *asym++ ) / 256.0;
-                        unsigned char r = ( *psym++ * alpha ) + ( *pback++ * ( 1.0 - alpha ) );
-                        *pdest++ = r;
-                        unsigned char g = ( *psym++ * alpha ) + ( *pback++ * ( 1.0 - alpha ) );
-                        *pdest++ = g;
-                        unsigned char b = ( *psym++ * alpha ) + ( *pback++ * ( 1.0 - alpha ) );
-                        *pdest++ = b;
+                if(pdest && psym && pback){
+                    for( int i = 0; i < b_height; i++ ) {
+                        for( int j = 0; j < b_width; j++ ) {
+                            double alpha = 1.0;
+                            if(asym)
+                                alpha = ( *asym++ ) / 256.0;
+                            unsigned char r = ( *psym++ * alpha ) + ( *pback++ * ( 1.0 - alpha ) );
+                            *pdest++ = r;
+                            unsigned char g = ( *psym++ * alpha ) + ( *pback++ * ( 1.0 - alpha ) );
+                            *pdest++ = g;
+                            unsigned char b = ( *psym++ * alpha ) + ( *pback++ * ( 1.0 - alpha ) );
+                            *pdest++ = b;
+                        }
                     }
                 }
 
@@ -2600,7 +2609,10 @@ int s52plib::RenderGLLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     if( !m_benableGLLS )                        // root chart cannot support VBO model, for whatever reason
         return RenderLS(rzRules, rules, vp);
 
-    
+    double scale_factor = vp->ref_scale/vp->chart_scale;
+    if(scale_factor > 10.0)
+        return RenderLS(rzRules, rules, vp);
+
     bool b_useVBO = false;
     float *vertex_buffer = 0;
     
@@ -2715,9 +2727,8 @@ int s52plib::RenderGLLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             else
                 glDisable( GL_LINE_STIPPLE );
 #endif
-                
- 
-        
+
+
     glPushMatrix();
     
     // Set up the OpenGL transform matrix for this object
@@ -2822,29 +2833,64 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     w = atoi( str + 5 ); // Width
     wxPen *pdotpen = NULL;
 
-    if( m_pdc ) //DC mode
+    double scale_factor = vp->ref_scale/vp->chart_scale;
+    double scaled_line_width = wxMax((scale_factor - 10), 1);
+    bool b_wide_line = vp->b_quilt && (scale_factor > 10.0);
+    
+    wxPen *wide_pen;
+    wxDash dashw[2];
+    dashw[0] = 3;
+    dashw[1] = 1;
+    
+    if( b_wide_line)
     {
+        int w = wxMax(scaled_line_width, 2);            // looks better
         wxColour color( c->R, c->G, c->B );
+        wide_pen = new wxPen(*wxBLACK_PEN);
+        wide_pen->SetWidth( w );
+        wide_pen->SetColour( color );
 
         if( !strncmp( str, "DOTT", 4 ) ) {
-            wxDash dash1[2];
-            dash1[0] = 1;
-            dash1[1] = 2; 
-            
-            pdotpen = new wxPen(*wxBLACK_PEN);
-            pdotpen->SetStyle(wxUSER_DASH);
-            pdotpen->SetDashes( 2, dash1 );
-            pdotpen->SetWidth( w );
-            pdotpen->SetColour( color );
-            m_pdc->SetPen( *pdotpen );
-        }        
-        else {
-            int style = wxSOLID; // Style default
-            if( !strncmp( str, "DASH", 4 ) )
-                style = wxSHORT_DASH;
-            wxPen *pthispen = wxThePenList->FindOrCreatePen( color, w, style );
-            m_pdc->SetPen( *pthispen );
+            dashw[0] = 1;
+            wide_pen->SetStyle(wxUSER_DASH);
+            wide_pen->SetDashes( 2, dashw );
         }
+        else if( !strncmp( str, "DASH", 4 ) ){
+            wide_pen->SetStyle(wxUSER_DASH);
+            if( m_pdc){ //DC mode
+                dashw[0] = 1;
+                dashw[1] = 2;
+            }
+            
+            wide_pen->SetDashes( 2, dashw );
+        }
+    }
+
+    wxPen *thispen;
+    wxDash dash1[2];
+    dash1[0] = 1;
+    dash1[1] = 2;
+    
+    if( m_pdc) //DC mode
+    {
+        wxColour color( c->R, c->G, c->B );
+        thispen = new wxPen(*wxBLACK_PEN);
+        thispen->SetWidth( w );
+        thispen->SetColour( color );
+        
+        if( !strncmp( str, "DOTT", 4 ) ) {
+            thispen->SetStyle(wxUSER_DASH);
+            thispen->SetDashes( 2, dash1 );
+        }
+        else if( !strncmp( str, "DASH", 4 ) ){
+            thispen->SetStyle(wxSHORT_DASH);
+        }
+        
+        if(b_wide_line)
+            m_pdc->SetPen( *wide_pen );
+        else
+            m_pdc->SetPen( *thispen );
+        
     }
 
 #ifdef ocpnUSE_GL
@@ -2947,7 +2993,8 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         VC_Element *pnode;
 
 #ifdef ocpnUSE_GL
-        glBegin( GL_LINES );
+        if(!b_wide_line)
+            glBegin( GL_LINES );
 #endif
         for( int iseg = 0; iseg < rzRules->obj->m_n_lsindex; iseg++ ) {
             int seg_index = iseg * 3;
@@ -3038,16 +3085,22 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
                         m_pdc->DrawLine( x0, y0, x1, y1 );
 #ifdef ocpnUSE_GL
                     else {
-                        glVertex2i( x0, y0 );
-                        glVertex2i( x1, y1 );
+                        if(!b_wide_line){
+                            glVertex2i( x0, y0 );
+                            glVertex2i( x1, y1 );
+                        }
+                        else {
+                            DrawGLThickLine( x0, y0, x1, y1, *wide_pen, true );
+                        }
                     }
-#endif                    
+#endif
                 }
             }
         }
 #ifdef ocpnUSE_GL
-        glEnd();
-#endif                    
+        if(!b_wide_line)
+            glEnd();
+#endif
         free( ptp );
     }
 
@@ -6635,36 +6688,38 @@ render_canvas_parms* s52plib::CreatePatternBufferSpec( ObjRazRules *rzRules, Rul
         unsigned char mg = m_unused_wxColor.Green();
         unsigned char mb = m_unused_wxColor.Blue();
 
-        for( int iy = 0; iy < sizey; iy++ ) {
-            pd = pd0 + ( iy * patt_spec->pb_pitch );
-            ps = ps0 + ( iy * sizex * 3 );
-            for( int ix = 0; ix < sizex; ix++ ) {
-                if( ix < sizex ) {
-                    unsigned char r = *ps++;
-                    unsigned char g = *ps++;
-                    unsigned char b = *ps++;
+        if( pd0 && ps0 ){
+            for( int iy = 0; iy < sizey; iy++ ) {
+                pd = pd0 + ( iy * patt_spec->pb_pitch );
+                ps = ps0 + ( iy * sizex * 3 );
+                for( int ix = 0; ix < sizex; ix++ ) {
+                    if( ix < sizex ) {
+                        unsigned char r = *ps++;
+                        unsigned char g = *ps++;
+                        unsigned char b = *ps++;
 #ifdef ocpnUSE_ocpnBitmap
-                    if( b_revrgb ) {
-                        *pd++ = b;
-                        *pd++ = g;
-                        *pd++ = r;
-                    } else {
-                        *pd++ = r;
-                        *pd++ = g;
-                        *pd++ = b;
-                    }
-
+                        if( b_revrgb ) {
+                            *pd++ = b;
+                            *pd++ = g;
+                            *pd++ = r;
+                        } else {
+                            *pd++ = r;
+                            *pd++ = g;
+                            *pd++ = b;
+                        }
+                        
 #else
-                    *pd++ = r;
-                    *pd++ = g;
-                    *pd++ = b;
+                        *pd++ = r;
+                        *pd++ = g;
+                        *pd++ = b;
 #endif
-                    if( b_use_alpha && imgAlpha ) {
-                        *pd++ = *imgAlpha++;
-                    } else {
-                        *pd++ = ( ( r == mr ) && ( g == mg ) && ( b == mb ) ? 0 : 255 );
-                    }
+                        if( b_use_alpha && imgAlpha ) {
+                            *pd++ = *imgAlpha++;
+                        } else {
+                            *pd++ = ( ( r == mr ) && ( g == mg ) && ( b == mb ) ? 0 : 255 );
+                        }
 
+                    }
                 }
             }
         }

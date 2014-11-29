@@ -2532,15 +2532,27 @@ void options::CreateControls()
 #endif
     
     m_pListbook = new wxListbook( itemDialog1, ID_NOTEBOOK, wxDefaultPosition, wxSize(-1, -1), flags);
+
+#ifdef __WXMSW__
+    //  Windows clips the width of listbook selectors to about twice icon size
+    //  This makes the text render with ellipses if too large
+
+    //  So, Measure and reduce the Font size on ListBook(ListView) selectors
+    //  to allow text layout without ellipsis...
+    wxBitmap tbmp = g_StyleManager->GetCurrentStyle()->GetIcon( _T("Display") );
+    wxScreenDC sdc;
+    int text_width = tbmp.GetWidth();
+    if(sdc.IsOk())
+        sdc.GetTextExtent(_T("Connections"), &text_width, NULL, NULL, NULL, GetOCPNScaledFont(_("Dialog")));
     
-    //  Reduce the Font size on ListBook(ListView) selectors to allow single line layout
-    if( g_bresponsive ) {
+    if(text_width > tbmp.GetWidth() * 2 ){
         wxListView* lv = m_pListbook->GetListView();
-        wxFont *sFont = wxTheFontList->FindOrCreateFont( 10, wxFONTFAMILY_DEFAULT,
-                                                     wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
+        wxFont *qFont = GetOCPNScaledFont(_("Dialog"));         // to get type, weight, etc...
+        
+        wxFont *sFont = wxTheFontList->FindOrCreateFont( 10, qFont->GetFamily(), qFont->GetStyle(), qFont->GetWeight());
         lv->SetFont( *sFont );
     }
-    
+#endif
     
     m_topImgList = new wxImageList( 40, 40, true, 1 );
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
@@ -2649,6 +2661,9 @@ void options::CreateControls()
 void options::SetColorScheme( ColorScheme cs )
 {
     DimeControl( this );
+
+    wxListView* lv = m_pListbook->GetListView();
+    lv->SetBackgroundColour(this->GetBackgroundColour());
 }
 
 void options::SetInitialSettings()
@@ -2979,7 +2994,8 @@ void options::OnShowGpsWindowCheckboxClick( wxCommandEvent& event )
         NMEALogWindow::Get().Create(pParent, 35);
         Raise();
 #ifdef __WXOSX__
-        Show();
+//        NMEALogWindow::Get().Active();
+//        Show();
 #endif
     }
 }
@@ -5545,7 +5561,7 @@ OpenGLOptionsDlg::OpenGLOptionsDlg( wxWindow* parent, bool glTicked )
     style |= wxSTAY_ON_TOP;
 #endif
     
-    wxDialog::Create( parent, wxID_ANY, _T("OpenGL Options"), wxDefaultPosition, wxDefaultSize,
+    wxDialog::Create( parent, wxID_ANY, _("OpenGL Options"), wxDefaultPosition, wxDefaultSize,
                       style );
     
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));

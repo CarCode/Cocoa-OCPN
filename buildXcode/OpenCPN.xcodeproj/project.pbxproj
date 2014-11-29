@@ -534,6 +534,7 @@
 		A65F36E5197473690006DC40 /* jsonval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65F36E21974733D0006DC40 /* jsonval.cpp */; };
 		A65F36E6197473690006DC40 /* jsonwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65F36E31974733D0006DC40 /* jsonwriter.cpp */; };
 		A6632EE417E50BF4002001B9 /* osx_helpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6632EE317E50BF4002001B9 /* osx_helpers.mm */; };
+		A669D4C51A2282860078BFB1 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A669D4C41A2282860078BFB1 /* sha1.c */; };
 		A66D8E2F18D2584E00BC8747 /* routeprintout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66D8E2E18D2584E00BC8747 /* routeprintout.cpp */; };
 		A66D8E3118D2607A00BC8747 /* printtable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66D8E3018D2607A00BC8747 /* printtable.cpp */; };
 		A66FE65E1797E1CC00A2DD0D /* TrackPropDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66FE65D1797E1CC00A2DD0D /* TrackPropDlg.cpp */; };
@@ -608,6 +609,7 @@
 		A6AC8E7C17EC64FC00872D7E /* libwatchman_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6D583A617A141110094D709 /* libwatchman_pi.dylib */; };
 		A6AC8E7D17EC64FC00872D7E /* libweather_routing_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */; };
 		A6AD109D19B8CB7A009AC900 /* opencpn.icns in Resources */ = {isa = PBXBuildFile; fileRef = A6AD109C19B8CB7A009AC900 /* opencpn.icns */; };
+		A6AFFE691A29E0A900D10C76 /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6AFFE681A29E0A900D10C76 /* TexFont.cpp */; };
 		A6B4A55417A51C6F00E3A5D0 /* weather_routing_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55317A51C6F00E3A5D0 /* weather_routing_pi.cpp */; };
 		A6B4A55617A51CA000E3A5D0 /* WeatherRouting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55517A51CA000E3A5D0 /* WeatherRouting.cpp */; };
 		A6B4A55817A51CC800E3A5D0 /* ConfigurationDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55717A51CC800E3A5D0 /* ConfigurationDialog.cpp */; };
@@ -691,6 +693,19 @@
 		A6DB19E218EDCE9B00E643D2 /* AlarmZoneControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB19E118EDCE9B00E643D2 /* AlarmZoneControls.cpp */; };
 		A6DB19E418EDCEB500E643D2 /* br24radarcontrol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB19E318EDCEB500E643D2 /* br24radarcontrol.cpp */; };
 		A6DB19E618EDCECE00E643D2 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB19E518EDCECE00E643D2 /* icons.cpp */; };
+		A6DBD7181A28B40700E34070 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A689178919B8FBD400E95E0F /* Sparkle.framework */; };
+		A6DBD7191A28B40E00E34070 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A671BCAC19BE406F00019119 /* CoreFoundation.framework */; };
+		A6DBD71A1A28B41900E34070 /* libwx_baseu_net-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A69286AD19B8E8A1001FF9A0 /* libwx_baseu_net-3.1.dylib */; };
+		A6DBD71B1A28B42200E34070 /* libwx_baseu_xml-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A69286AE19B8E8B4001FF9A0 /* libwx_baseu_xml-3.1.dylib */; };
+		A6DBD71C1A28B42900E34070 /* libwx_baseu-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A69286AF19B8E8C2001FF9A0 /* libwx_baseu-3.1.dylib */; };
+		A6DBD71D1A28B44200E34070 /* libwx_osx_cocoau_adv-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A689178219B8FAF000E95E0F /* libwx_osx_cocoau_adv-3.1.dylib */; };
+		A6DBD71E1A28B44C00E34070 /* libwx_osx_cocoau_aui-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A689178119B8FAB300E95E0F /* libwx_osx_cocoau_aui-3.1.dylib */; };
+		A6DBD71F1A28B46200E34070 /* libwx_osx_cocoau_core-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A689178319B8FB3B00E95E0F /* libwx_osx_cocoau_core-3.1.dylib */; };
+		A6DBD7201A28B46C00E34070 /* libwx_osx_cocoau_gl-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A689178419B8FB5300E95E0F /* libwx_osx_cocoau_gl-3.1.dylib */; };
+		A6DBD7211A28B47900E34070 /* libwx_osx_cocoau_html-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A689178519B8FB7900E95E0F /* libwx_osx_cocoau_html-3.1.dylib */; };
+		A6DBD7221A28B48000E34070 /* libwx_osx_cocoau_qa-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A689178619B8FB8700E95E0F /* libwx_osx_cocoau_qa-3.1.dylib */; };
+		A6DBD7231A28B48700E34070 /* libwx_osx_cocoau_webview-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A689178719B8FBAB00E95E0F /* libwx_osx_cocoau_webview-3.1.dylib */; };
+		A6DBD7241A28B49100E34070 /* libwx_osx_cocoau_xrc-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A689178819B8FBBA00E95E0F /* libwx_osx_cocoau_xrc-3.1.dylib */; };
 		A731722C0162423E81673D81 /* nmea0183.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A2148A197B0413BAD4A3E2E /* nmea0183.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A7AE853E7E8246C4BD773F2B /* gll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CDD890D909794BDA81B02359 /* gll.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A7D85A911CD9440D88990DE9 /* lat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A34D3BDAF9D408F9D08642A /* lat.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -1813,6 +1828,8 @@
 		A66094A419E3D8550066CBBA /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/S63_pi/src/TexFont.h; sourceTree = "<group>"; };
 		A6632EE317E50BF4002001B9 /* osx_helpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = osx_helpers.mm; path = src/osx_helpers.mm; sourceTree = "<group>"; };
 		A665CBED17CF33C00007CDB7 /* s52s57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = s52s57.h; path = include/s52s57.h; sourceTree = "<group>"; };
+		A669D4C31A2282610078BFB1 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sha1.h; path = src/ssl/sha1.h; sourceTree = "<group>"; };
+		A669D4C41A2282860078BFB1 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sha1.c; path = src/ssl/sha1.c; sourceTree = "<group>"; };
 		A66D8E2E18D2584E00BC8747 /* routeprintout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = routeprintout.cpp; path = src/routeprintout.cpp; sourceTree = "<group>"; };
 		A66D8E3018D2607A00BC8747 /* printtable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = printtable.cpp; path = src/printtable.cpp; sourceTree = "<group>"; };
 		A66FE65B1797DF9400A2DD0D /* TrackPropDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackPropDlg.h; path = include/TrackPropDlg.h; sourceTree = "<group>"; };
@@ -1944,6 +1961,8 @@
 		A6A94A5918CF397E00FD56EE /* GribRequestDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GribRequestDialog.cpp; path = plugins/grib_pi/src/GribRequestDialog.cpp; sourceTree = "<group>"; };
 		A6A94A5B18CF39B900FD56EE /* GribRequestDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribRequestDialog.h; path = plugins/grib_pi/src/GribRequestDialog.h; sourceTree = "<group>"; };
 		A6AD109C19B8CB7A009AC900 /* opencpn.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = opencpn.icns; path = buildosx/opencpn.icns; sourceTree = "<group>"; };
+		A6AFFE671A29E08400D10C76 /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/grib_pi/src/TexFont.h; sourceTree = "<group>"; };
+		A6AFFE681A29E0A900D10C76 /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/grib_pi/src/TexFont.cpp; sourceTree = "<group>"; };
 		A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libweather_routing_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6B4A53E17A5174300E3A5D0 /* weather_routing_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = weather_routing_pi.h; path = plugins/weather_routing_pi/src/weather_routing_pi.h; sourceTree = "<group>"; };
 		A6B4A53F17A5177500E3A5D0 /* WeatherRouting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherRouting.h; path = plugins/weather_routing_pi/src/WeatherRouting.h; sourceTree = "<group>"; };
@@ -2302,6 +2321,29 @@
 		FFFAAD9CEBCE4D4AAD811429 /* celestial_navigation_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = celestial_navigation_pi.h; path = plugins/celestial_navigation_pi/src/celestial_navigation_pi.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		A6DBD7171A28B3E600E34070 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6DBD7181A28B40700E34070 /* Sparkle.framework in Frameworks */,
+				A6DBD7191A28B40E00E34070 /* CoreFoundation.framework in Frameworks */,
+				A6DBD71A1A28B41900E34070 /* libwx_baseu_net-3.1.dylib in Frameworks */,
+				A6DBD71B1A28B42200E34070 /* libwx_baseu_xml-3.1.dylib in Frameworks */,
+				A6DBD71C1A28B42900E34070 /* libwx_baseu-3.1.dylib in Frameworks */,
+				A6DBD71D1A28B44200E34070 /* libwx_osx_cocoau_adv-3.1.dylib in Frameworks */,
+				A6DBD71E1A28B44C00E34070 /* libwx_osx_cocoau_aui-3.1.dylib in Frameworks */,
+				A6DBD71F1A28B46200E34070 /* libwx_osx_cocoau_core-3.1.dylib in Frameworks */,
+				A6DBD7201A28B46C00E34070 /* libwx_osx_cocoau_gl-3.1.dylib in Frameworks */,
+				A6DBD7211A28B47900E34070 /* libwx_osx_cocoau_html-3.1.dylib in Frameworks */,
+				A6DBD7221A28B48000E34070 /* libwx_osx_cocoau_qa-3.1.dylib in Frameworks */,
+				A6DBD7231A28B48700E34070 /* libwx_osx_cocoau_webview-3.1.dylib in Frameworks */,
+				A6DBD7241A28B49100E34070 /* libwx_osx_cocoau_xrc-3.1.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
 		052DB85431F44C8CBA6858BF /* dashboard_pi */ = {
 			isa = PBXGroup;
@@ -2380,6 +2422,7 @@
 				A609ADCA195F5E28003C298E /* IsoLine.h */,
 				6CAB5A51E9E3449C89D41F40 /* email.h */,
 				A6B5A5D719EFD3830039E142 /* smapi.h */,
+				A6AFFE671A29E08400D10C76 /* TexFont.h */,
 				A65034D9186845BB00301CE7 /* folder.xpm */,
 			);
 			name = "Header Files";
@@ -2705,6 +2748,7 @@
 				A617AB18194E3D5200E7D443 /* singlecolourfit.cpp */,
 				A617AB1A194E3D9300E7D443 /* squish.cpp */,
 				A638304C1950E14100027BFE /* crashprint.cpp */,
+				A669D4C41A2282860078BFB1 /* sha1.c */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3057,6 +3101,7 @@
 				A617AB01194E3ACE00E7D443 /* singlecolourlookup.inl */,
 				A617AB03194E3AF800E7D443 /* squish.h */,
 				A638304B1950DF6200027BFE /* crashprint.h */,
+				A669D4C31A2282610078BFB1 /* sha1.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -3078,6 +3123,7 @@
 				86FBC046FFA345A98B9D5612 /* zuFile.cpp */,
 				EA81B096D55B418785276241 /* IsoLine.cpp */,
 				A6B5A5D819EFD3B50039E142 /* smapi.cpp */,
+				A6AFFE681A29E0A900D10C76 /* TexFont.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -4414,6 +4460,7 @@
 				3B5296F4970E4372ACC86314 /* CopyFiles */,
 				3C080A65A5AE40DDA3718AF1 /* CopyFiles */,
 				F5DA126B17E74064BB52EF4E /* Sources */,
+				A6DBD7171A28B3E600E34070 /* Frameworks */,
 				A68ADCA0179891DB003CAB88 /* Copy Files */,
 				A68EA3E118D0E3BA00E8AC13 /* CopyFiles */,
 				A660FE4D17E49B6000BD0587 /* Copy Files */,
@@ -5088,6 +5135,7 @@
 				46365E8A2190442AB997113D /* grib_pi.cpp in Sources */,
 				EF2B31197C074C969FDA291F /* GribOverlayFactory.cpp in Sources */,
 				FAF95B42AD97464793264BFB /* GribUIDialogBase.cpp in Sources */,
+				A6AFFE691A29E0A900D10C76 /* TexFont.cpp in Sources */,
 				A6A94A5A18CF397E00FD56EE /* GribRequestDialog.cpp in Sources */,
 				3F27B97012C84E9788F028D3 /* GribUIDialog.cpp in Sources */,
 				88E041FA2EA74CDEA7A14838 /* GribSettingsDialog.cpp in Sources */,
@@ -5154,6 +5202,7 @@
 				A617AB19194E3D5200E7D443 /* singlecolourfit.cpp in Sources */,
 				0993B41C48814637AD5931E4 /* Route.cpp in Sources */,
 				E3FBE0AEAED14D019705E124 /* SelectItem.cpp in Sources */,
+				A669D4C51A2282860078BFB1 /* sha1.c in Sources */,
 				81A0E6E57B0946939C3BEE23 /* Select.cpp in Sources */,
 				8BBCB5C8DB4E4701AF44BCE6 /* FontMgr.cpp in Sources */,
 				7FC8E1793FFD4F6DACCE2CFF /* FontDesc.cpp in Sources */,
@@ -5496,9 +5545,14 @@
 		07F890A631D74E9DA56F1AE7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -5541,6 +5595,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					buildXcode/Debug,
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				OTHER_CFLAGS = (
 					"-arch",
@@ -5745,9 +5800,14 @@
 		13D9795DFB3F4BD2A7AB61A7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
@@ -5790,6 +5850,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					buildXcode/Release,
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				OTHER_CFLAGS = (
 					"-arch",
@@ -7415,6 +7476,7 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
+					USE_SPARKLE,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -12397,6 +12459,7 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
+					USE_SPARKLE,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
