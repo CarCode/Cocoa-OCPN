@@ -937,6 +937,12 @@ void glChartCanvas::SetupOpenGL()
     
     GetglEntryPoints();
 
+    //  ATI cards do not do glGenerateMipmap very well, or at all.
+    if( GetRendererString().Upper().Find( _T("RADEON") ) != wxNOT_FOUND )
+        s_glGenerateMipmap = 0;
+    if( GetRendererString().Upper().Find( _T("ATI") ) != wxNOT_FOUND )
+        s_glGenerateMipmap = 0;
+
     if( !s_glGenFramebuffers  || !s_glGenRenderbuffers        || !s_glFramebufferTexture2D ||
         !s_glBindFramebuffer  || !s_glFramebufferRenderbuffer || !s_glRenderbufferStorage  ||
         !s_glBindRenderbuffer || !s_glCheckFramebufferStatus  || !s_glDeleteFramebuffers   ||
@@ -2235,7 +2241,7 @@ void glChartCanvas::RenderRasterChartRegionGL( ChartBase *chart, ViewPort &vp, O
 
     bool b_plugin = false;
     if( pPlugInWrapper ) b_plugin = true;
- 
+
     /* setup texture parameters */
     glEnable( GL_TEXTURE_2D );
     glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
@@ -2246,7 +2252,7 @@ void glChartCanvas::RenderRasterChartRegionGL( ChartBase *chart, ViewPort &vp, O
 
     svp.pix_width = svp.rv_rect.width;
     svp.pix_height = svp.rv_rect.height;
-    
+
     wxRealPoint Rp, Rs;
     double scalefactor;
     int size_X, size_Y;
@@ -2278,13 +2284,13 @@ void glChartCanvas::RenderRasterChartRegionGL( ChartBase *chart, ViewPort &vp, O
     wxString key = chart->GetFullPath();
     glTexFactory *pTexFact;
     ChartPathHashTexfactType::iterator ittf = m_chart_texfactory_hash.find( key );
-    
+
     //    Not Found ?
     if( ittf == m_chart_texfactory_hash.end() ) {
         glTexFactory *p = new glTexFactory(chart, g_raster_format);
         m_chart_texfactory_hash[key] = p;
     }
-    
+
     pTexFact = m_chart_texfactory_hash[key];
     pTexFact->SetLRUTime(wxDateTime::Now());
 
@@ -2380,7 +2386,7 @@ void glChartCanvas::RenderRasterChartRegionGL( ChartBase *chart, ViewPort &vp, O
                         pTexFact->DeleteTexture( rect );
                 } else { // this tile is needed
                     if(pTexFact->PrepareTexture( base_level, rect, global_color_scheme )){
-                    
+
                         double sx = rect.width;
                         double sy = rect.height;
 
@@ -2414,7 +2420,7 @@ void glChartCanvas::RenderRasterChartRegionGL( ChartBase *chart, ViewPort &vp, O
             wxLogMessage(msg);
 
             printf("%s\n", (const char*)msg.ToUTF8());
-            
+
             printf("texmem used: %.0fMB\n", g_tex_mem_used / 1024.0 / 1024.0);
     }
 
@@ -2431,15 +2437,15 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &Region )
 
         //  render the quilt
         ChartBase *chart = cc1->m_pQuilt->GetFirstChart();
-        
+
         //  Check the first, smallest scale chart
         if(chart) {
 //            if( ! cc1->IsChartLargeEnoughToRender( chart, vp ) )
 //            chart = NULL;
         }
-            
+
         while( chart ) {
-            
+
             //  This test does not need to be done for raster charts, since
             //  we can assume that texture binding is acceptably fast regardless of the render region,
             //  and that the quilt zoom methods choose a reasonable reference chart.
@@ -2571,7 +2577,7 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &Region )
         cc1->m_pQuilt->SetRenderedVP( vp );
 
     }
-    
+
 }
 
 void glChartCanvas::RenderCharts(ocpnDC &dc, OCPNRegion &region)
@@ -2594,105 +2600,100 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, OCPNRegion &region)
             float fog = ((scale_factor - 10.) * 255.) / 20.;
             fog = wxMin(fog, 200.);         // Don't fog out completely
             wxColour color = cc1->GetFogColor();
-            
+
             if( !m_gl_rendered_region.IsEmpty() ) {
 
-                GLuint err;
                 int wi = VPoint.rv_rect.width;
                 int hi = VPoint.rv_rect.height;
-                
-#if 1
+
                 // Use MipMap LOD tweaking to produce a blurred, downsampling effect at high speed.
-                
+
                 if(s_glGenerateMipmap){
-                    
+
                     //          Capture the rendered screen image to a texture
                     glReadBuffer( GL_BACK);
-                    
+
                     GLuint screen_capture;
                     glGenTextures( 1, &screen_capture );
-                    
+
                     glEnable(GL_TEXTURE_2D);
                     glBindTexture(GL_TEXTURE_2D, screen_capture);
                     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
                     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
                     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-                    
+
                     glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, wi, hi, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0 );
-                    
-                    
+
+
                     glCopyTexSubImage2D(GL_TEXTURE_2D,  0,  0,  0,  0,  0,  wi, hi);
-                    
+
                     glClear(GL_DEPTH_BUFFER_BIT);
                     glDisable(GL_DEPTH_TEST);
-                    
-                    //  Build MipMaps, and re-rendered at reduced LOD (i.e. higher mipmap number)
-                    double bias = fog/70;
-                    
+
+                    //  Build MipMaps
+                    int max_mipmap = 3;
                     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0 );
-                    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4 );
-                    
+                    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, max_mipmap );
+
                     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, -1);
-                    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, 5);
-                    
-                    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                    
-                    /* some ATI drivers require this filter mode to build MipMaps, so to be safe... */
-                    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-                    
-                    s_glGenerateMipmap( GL_TEXTURE_2D );
+                    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, max_mipmap);
+
+                    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
-                    
+
+                    //  Use hardware accelerated mipmap generation, if available
+                    s_glGenerateMipmap(GL_TEXTURE_2D);
+
+                    // Render at reduced LOD (i.e. higher mipmap number)
+                    double bias = fog/70;
                     glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, bias);
-                    
+
                     glColor4f (1.0f,1.0f,1.0f,1.0f);
-                    
+
                     glBegin(GL_QUADS);
                     glTexCoord2f(0 , 1 ); glVertex2f(0,  0);
                     glTexCoord2f(0 , 0 ); glVertex2f(0,  hi);
                     glTexCoord2f(1 , 0 ); glVertex2f(wi, hi);
                     glTexCoord2f(1 , 1 ); glVertex2f(wi, 0);
                     glEnd ();
-                    
+
                     glDeleteTextures(1, &screen_capture);
+
                 }
-                
-#endif
-                
-                
-                
-#if 0           // Fogging by alpha blending
-                glPushAttrib( GL_COLOR_BUFFER_BIT );
-                glEnable( GL_BLEND );
-                glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-                
-                glColor4ub( color.Red(), color.Green(), color.Blue(), (int)fog );
-                
-                OCPNRegionIterator upd ( m_gl_rendered_region );
-                while ( upd.HaveRects() )
-                {
-                    wxRect rect = upd.GetRect();
+
+                else {
+                    // Fogging by alpha blending
+                    glPushAttrib( GL_COLOR_BUFFER_BIT );
+                    glEnable( GL_BLEND );
+                    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+                    glColor4ub( color.Red(), color.Green(), color.Blue(), (int)fog );
                     
-                    glBegin( GL_QUADS );
-                    glVertex2i( rect.x, rect.y );
-                    glVertex2i( rect.x + rect.width, rect.y );
-                    glVertex2i( rect.x + rect.width, rect.y + rect.height );
-                    glVertex2i( rect.x, rect.y + rect.height );
-                    glEnd();
+                    OCPNRegionIterator upd ( m_gl_rendered_region );
+                    while ( upd.HaveRects() )
+                    {
+                        wxRect rect = upd.GetRect();
+                        
+                        glBegin( GL_QUADS );
+                        glVertex2i( rect.x, rect.y );
+                        glVertex2i( rect.x + rect.width, rect.y );
+                        glVertex2i( rect.x + rect.width, rect.y + rect.height );
+                        glVertex2i( rect.x, rect.y + rect.height );
+                        glEnd();
+                        
+                        upd.NextRect();
+                        
+                    }
                     
-                    upd.NextRect();
-                    
+                    glDisable( GL_BLEND );
+                    glPopAttrib();
                 }
-                
-                glDisable( GL_BLEND );
-                glPopAttrib();
-#endif
             }
         }
     }
     
-    
+
     else {
         if( Current_Ch->GetChartFamily() == CHART_FAMILY_RASTER ) {
             RenderRasterChartRegionGL( Current_Ch, VPoint, region );
@@ -2733,7 +2734,7 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, OCPNRegion &region)
 
     if( cc1->m_bShowTide )
         cc1->RebuildTideSelectList( VPoint.GetBBox() );
-    
+
     if( cc1->m_bShowCurrent )
         cc1->RebuildCurrentSelectList( VPoint.GetBBox() );
 
@@ -2748,9 +2749,9 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, OCPNRegion &region)
 void glChartCanvas::RenderWorldChart(ocpnDC &dc, OCPNRegion &region)
 {
     ViewPort vp = cc1->VPoint;
-  
+
     wxColour water = cc1->pWorldBackgroundChart->water;
-    
+
     /* we are not going to benefit from multiple passes
        if we are zoomed in far enough to only have a few cells, or there are
        many rectangles */
@@ -2809,12 +2810,12 @@ ViewPort glChartCanvas::BuildClippedVP(ViewPort &VP, wxRect &rect)
         lon1 -= 360;
         lon2 -= 360;
     }
-    
+
     while( lon2 <= -180 ) {
         lon1 += 360;
             lon2 += 360;
     }
-        
+
     temp_vp.GetBBox().SetMin( lon1, lat1 );
     temp_vp.GetBBox().SetMax( lon2, lat2 );
 
@@ -2842,7 +2843,7 @@ void glChartCanvas::DrawGroundedOverlayObjectsRect(ocpnDC &dc, wxRect &rect)
 
     if( cc1->m_bShowTide )
         cc1->DrawAllTidesInBBox( dc, temp_vp.GetBBox() );
-    
+
     if( cc1->m_bShowCurrent )
         cc1->DrawAllCurrentsInBBox( dc, temp_vp.GetBBox() );
 
@@ -2851,23 +2852,23 @@ void glChartCanvas::DrawGroundedOverlayObjectsRect(ocpnDC &dc, wxRect &rect)
 
 bool glChartCanvas::TextureCrunch(double factor)
 {
-    
+
     bool bGLMemCrunch = g_tex_mem_used > (double)(g_GLOptions.m_iTextureMemorySize * 1024 * 1024) * factor;
     if( ! bGLMemCrunch )
         return false;
-    
-    
+
+
     ChartPathHashTexfactType::iterator it0;
     for( it0 = m_chart_texfactory_hash.begin(); it0 != m_chart_texfactory_hash.end(); ++it0 ) {
         wxString chart_full_path = it0->first;
         glTexFactory *ptf = it0->second;
         if(!ptf)
             continue;
-        
+
         bGLMemCrunch = g_tex_mem_used > (double)(g_GLOptions.m_iTextureMemorySize * 1024 * 1024) * factor;
         if(!bGLMemCrunch)
             break;
-        
+
         if( cc1->VPoint.b_quilt )          // quilted
         {
                 if( cc1->m_pQuilt && cc1->m_pQuilt->IsComposed() &&
@@ -2883,7 +2884,7 @@ bool glChartCanvas::TextureCrunch(double factor)
                 }
         }
     }
-    
+
     return true;
 }
 
@@ -2892,11 +2893,11 @@ bool glChartCanvas::FactoryCrunch(double factor)
     int mem_used, mem_start;
     GetMemoryStatus(0, &mem_used);
     mem_start = mem_used;
-    
+
     bool bGLMemCrunch = mem_used > (double)(g_memCacheLimit) * factor;
     if( ! bGLMemCrunch )
         return false;
-    
+
 
     ChartPathHashTexfactType::iterator it0;
     for( it0 = m_chart_texfactory_hash.begin(); it0 != m_chart_texfactory_hash.end(); ++it0 ) {
@@ -2904,12 +2905,12 @@ bool glChartCanvas::FactoryCrunch(double factor)
         glTexFactory *ptf = it0->second;
         if(!ptf)
             continue;
-        
+
         GetMemoryStatus(0, &mem_used);
         bGLMemCrunch = mem_used > (double)(g_memCacheLimit) * factor;
         if(!bGLMemCrunch)
             break;
-        
+
         if( cc1->VPoint.b_quilt )          // quilted
         {
             if( cc1->m_pQuilt && cc1->m_pQuilt->IsComposed() &&
@@ -2929,22 +2930,22 @@ bool glChartCanvas::FactoryCrunch(double factor)
     bGLMemCrunch = mem_used > (double)(g_memCacheLimit) * factor;
     //  Need more, so delete the oldest factory
     if(bGLMemCrunch){
-        
+
         //      Find the oldest unused factory
         wxDateTime lru_oldest = wxDateTime::Now();
         glTexFactory *ptf_oldest = NULL;
-        
+
         for( it0 = m_chart_texfactory_hash.begin(); it0 != m_chart_texfactory_hash.end(); ++it0 ) {
             wxString chart_full_path = it0->first;
             glTexFactory *ptf = it0->second;
             if(!ptf)
                 continue;
-            
+
             if( cc1->VPoint.b_quilt )          // quilted
             {
                 if( cc1->m_pQuilt && cc1->m_pQuilt->IsComposed() &&
                     !cc1->m_pQuilt->IsChartInQuilt( chart_full_path ) ) {
-                    
+
                     wxDateTime lru = ptf->GetLRUTime();
                     if(lru.IsEarlierThan(lru_oldest)){
                         lru_oldest = lru;
@@ -2953,28 +2954,28 @@ bool glChartCanvas::FactoryCrunch(double factor)
                 }
             }
         }
-                    
+
         //      Found one?
         if(ptf_oldest){
             ptf_oldest->PurgeBackgroundCompressionPool();
             ptf_oldest->DeleteAllTextures();
             ptf_oldest->DeleteAllDescriptors();
-                
+
             m_chart_texfactory_hash.erase(ptf_oldest->GetChartPath());                // This chart  becoming invalid
-                
+
             delete ptf_oldest;
-                
+
 //            int mem_now;
 //            GetMemoryStatus(0, &mem_now);
 //            printf("-------------FactoryDelete\n");
-                
+
        }                
     }
-    
+
 //    int mem_now;
 //    GetMemoryStatus(0, &mem_now);
 //    printf(">>>>FactoryCrunch  was: %d  is:%d \n", mem_start, mem_now);
-    
+
     return true;
 }
 
@@ -2997,7 +2998,7 @@ void glChartCanvas::Render()
         glFinish();   
         g_glstopwatch.Start();
     }
-    
+
     wxPaintDC( this );
 
     ViewPort VPoint = cc1->VPoint;
@@ -3100,9 +3101,9 @@ void glChartCanvas::Render()
                 glEnable( g_texture_rectangle_format );
                 glDisable( GL_BLEND );
                 glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
-                            
+
                 //    Render the reuseable portion of the cached texture
-                            
+
                 // Render the cached texture as quad to FBO(m_blit_tex) with offsets
                 int x1, x2, y1, y2;
 
@@ -3114,7 +3115,7 @@ void glChartCanvas::Render()
                     x1 = dx,  x2 = 0;
                 else
                     x1 = 0,   x2 = -dx;
-                        
+
                 if( dy > 0 )
                     y1 = dy,  y2 = 0;
                 else
@@ -3144,7 +3145,7 @@ void glChartCanvas::Render()
                         (wxRect( 0, VPoint.pix_height - dy, VPoint.pix_width, dy ) );
                 else if(dy < 0)
                     update_region.Union( wxRect( 0, 0, VPoint.pix_width, -dy ) );
-                        
+
                 if( dx > 0 && dx < VPoint.pix_width )
                     update_region.Union
                         (wxRect( VPoint.pix_width - dx, 0, dx, VPoint.pix_height ) );
@@ -3207,25 +3208,25 @@ void glChartCanvas::Render()
         if(bmp.IsOk()){
             dc.SetBackground( wxBrush(GetGlobalColor( _T ( "UIBCK" ) ) ));
             dc.Clear();
- 
+
             dc.SetTextBackground( GetGlobalColor( _T ( "UIBCK" ) ) );
             dc.SetTextForeground( GetGlobalColor( _T ( "UITX1" ) ) );
-            
+
             int yt = 0;
             int xt = 0;
             wxString s = cc1->m_pCIWin->GetString();
             int h = cc1->m_pCIWin->GetCharHeight();
-            
+
             wxStringTokenizer tkz( s, _T("\n") );
             wxString token;
-            
+
             while(tkz.HasMoreTokens()) {
                 token = tkz.GetNextToken();
                 dc.DrawText(token, xt, yt);
                 yt += h;
             }
             dc.SelectObject(wxNullBitmap);
-            
+
             gldc.DrawBitmap( bmp, x, y, false);
         }
     }
@@ -3236,7 +3237,7 @@ void glChartCanvas::Render()
         if( pthumbwin->GetBitmap().IsOk())
             gldc.DrawBitmap( pthumbwin->GetBitmap(), thumbx, thumby, false);
     }
-    
+
 #endif
 
     //quiting?
@@ -3249,9 +3250,9 @@ void glChartCanvas::Render()
 
     if(b_timeGL){
         glFinish();
-        
+
         double filter = .05;
-        
+
         // Simple low pass filter
         g_gl_ms_per_frame = g_gl_ms_per_frame * (1. - filter) + ((double)(g_glstopwatch.Time()) * filter);
         printf(" OpenGL frame time: %3.0f\n", g_gl_ms_per_frame );
@@ -3259,6 +3260,6 @@ void glChartCanvas::Render()
 
     TextureCrunch(0.8);
     FactoryCrunch(0.6);
-    
+
     cc1->PaintCleanup();
 }
