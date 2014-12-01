@@ -2660,6 +2660,8 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, OCPNRegion &region)
 
                     glDeleteTextures(1, &screen_capture);
 
+                    glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, 0);
+
                 }
 
                 else {

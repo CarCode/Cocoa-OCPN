@@ -25,6 +25,7 @@
 #define __AIS_DECODER_H__
 
 #include "ais.h"
+#include <map>
 
 #define TRACKTYPE_DEFAULT       0
 #define TRACKTYPE_ALWAYS        1
@@ -47,6 +48,7 @@ public:
     bool        m_bignore;
     bool        m_bMOB;
     bool        m_bVDM;
+    bool        m_bPersistentTrack;
 };
 
 WX_DECLARE_OBJARRAY(MMSIProperties *,      ArrayOfMMSIProperties);
@@ -68,6 +70,7 @@ public:
     bool IsAISSuppressed(void){ return m_bSuppressed; }
     bool IsAISAlertGeneral(void) { return m_bGeneralAlert; }
     AIS_Error DecodeSingleVDO( const wxString& str, GenericPosDatEx *pos, wxString *acc );
+    void DeletePersistentTrack( Track *track );
 private:
     void OnActivate(wxActivateEvent& event);
     void OnTimerAIS(wxTimerEvent& event);
@@ -108,6 +111,8 @@ private:
     AIS_Target_Data  *m_ptentative_dsctarget;
     wxTimer          m_dsc_timer;
     wxString         m_dsc_last_string;
+
+    std::map<int, Track*> m_persistent_tracks;
 
 DECLARE_EVENT_TABLE()
 };
