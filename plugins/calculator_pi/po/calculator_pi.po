@@ -7,217 +7,418 @@ msgid ""
 msgstr ""
 "Project-Id-Version: calculator_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-02 11:33+0200\n"
-"PO-Revision-Date: 2013-08-02 11:35+0100\n"
+"POT-Creation-Date: 2014-12-05 14:03+0100\n"
+"PO-Revision-Date: 2014-12-05 14:22+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: de_DE <carcode@me.com>\n"
+"Language: pi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.7\n"
 
 #
-msgid " Calculator output:"
-msgstr " Calculator Ausgang:"
+#: ../src/calculator_pi.cpp:92 ../src/calculator_pi.cpp:153
+#: ../src/calculatorgui.h:67 ../src/calculatorgui.h:271
+msgid "Calculator"
+msgstr "Rechner"
 
 #
-msgid "\""
-msgstr "\""
+#: ../src/calculator_pi.cpp:158
+msgid "Calculator Plugin"
+msgstr "Rechner Plugin"
 
 #
-msgid "'"
-msgstr "'"
+#: ../src/calculator_pi.cpp:163
+msgid ""
+"This is a light weight yet powerful calculator plugin for OpenCPN.  Would "
+"you like to know your hull speed?"
+msgstr ""
+"Das ist ein einfaches aber mächtiges Calculator Plugin für OpenCPN. Möchten "
+"Sie Ihre Rumpfgeschw. wissen? "
 
 #
-msgid "(5/9) * (VAR - 32)=((9/5)* VAR)+32"
-msgstr "(5/9) * (VAR - 32)=((9/5)* VAR)+32"
+#: ../src/calculator_pi.cpp:311
+msgid "Calculator Preferences"
+msgstr "Rechner Einstellungen"
 
 #
-msgid "(5/9)*(VAR-491.67)=(9/5)*(VAR + 273.15)"
-msgstr "(5/9)*(VAR-491.67)=(9/5)*(VAR + 273.15)"
+#: ../src/calculatorgui_impl.h:56 ../src/calculatorgui.h:97
+msgid "Calculator preferences"
+msgstr "Rechner Einstellungen"
 
 #
-msgid "-"
-msgstr "-"
+#: ../src/calculatorgui_impl.h:62
+msgid "Help!!!!"
+msgstr "Hilfe!!!"
 
 #
-msgid "0.001"
-msgstr "0.001"
+#: ../src/calculatorgui_impl.h:68
+msgid "Extra Functions"
+msgstr "Extra Funktionen"
 
 #
-msgid "0.01"
-msgstr "0.01"
+#: ../src/calculatorgui_impl.h:91
+msgid "Calculator by SaltyPaws"
+msgstr "Rechner von SaltyPaws"
 
 #
-msgid "0.0254"
-msgstr "0.0254"
-
-#
-msgid "0.03386"
-msgstr "0.03386"
-
-#
-msgid "0.0689475729"
-msgstr "0.0689475729"
-
-#
-msgid "0.092903"
-msgstr "0.092903"
-
-#
-msgid "0.277778"
-msgstr "0.277778"
-
-#
-msgid "0.3048"
-msgstr "0.3048"
-
-#
-msgid "0.514444"
-msgstr "0.514444"
-
-#
-msgid "0.987"
-msgstr "0.987"
-
-#
-msgid "1"
-msgstr "1"
-
-#
-msgid "1.8288"
-msgstr "1.8288"
-
-#
-msgid "1000"
-msgstr "1000"
-
-#
-msgid "15850.3231"
-msgstr "15850.3231"
-
-#
-msgid "1852"
-msgstr "1852"
-
-#
-msgid "1e-05"
-msgstr "1e-05"
-
-#
-msgid "2"
-msgstr "2"
-
-#
-msgid "2.20462"
-msgstr "2.20462"
-
-#
-msgid "3"
-msgstr "3"
-
-#
-msgid "3600"
-msgstr "3600"
-
-#
-msgid "4"
-msgstr "4"
-
-#
-msgid "4.4482216"
-msgstr "4.4482216"
-
-#
-msgid "60"
-msgstr "60"
-
-#
-msgid "60000"
-msgstr "60000"
-
-#
-msgid "750.06"
-msgstr "750.06"
-
-#
-msgid "?"
-msgstr "?"
-
-#
-msgid "A"
-msgstr "A"
-
-#
+#: ../src/calculatorgui_impl.cpp:64 ../src/calculatorgui.cpp:599
+#: ../src/calculatorgui.cpp:611
 msgid "All"
 msgstr "Alle"
 
 #
-msgid "Angle"
-msgstr "Winkel"
+#: ../src/calculatorgui_impl.cpp:395
+msgid "Test"
+msgstr "Test"
 
 #
-msgid "Angle_In"
-msgstr "Winkel_Ein"
+#: ../src/calculatorgui_impl.cpp:399
+msgid "Mouse"
+msgstr "Maus"
 
 #
-msgid "Angle_Out=Angle_In"
-msgstr "Winkel_Aus=Winkel_Ein"
+#: ../src/calculatorgui_impl.cpp:403
+msgid "List"
+msgstr "Liste"
 
 #
+#: ../src/calculatorgui_impl.cpp:457 ../src/calculatorgui_impl.cpp:526
+#: ../src/calculatorgui_impl.cpp:538
+msgid "Error"
+msgstr "Fehler"
+
+#
+#: ../src/calculatorgui_impl.cpp:457
 msgid "Ans"
 msgstr "Ans"
 
 #
-msgid "Area"
-msgstr "Fläche"
+#: ../src/calculatorgui_impl.cpp:461
+msgid "clear"
+msgstr "clear"
 
 #
-msgid "Beaufort"
-msgstr "Beaufort"
+#: ../src/calculatorgui_impl.cpp:461
+msgid "Clear"
+msgstr "Löschen"
 
 #
-msgid ""
-"Beaufort scale was created in 1805 by Sir Francis Beaufort, British admiral "
-"and hydrographer. It describes wind speed based mainly on observed sea "
-"conditions.\n"
-"Wind speed on the Beaufort scale can be expressed by the formula:"
-msgstr ""
-"Die Beaufort Skala wurde 1805 von Sir Francis Beaufort, britischer Admiral "
-"und Hydrograph, aufgestellt. Sie beschreibt die Windgeschwindigkeit "
-"hauptsächlich an den beobachteten See-Zuständen.\n"
-"Windgeschwindigkeit auf der Beaufort Skala kann mit einer Formel ausgedrückt "
-"werden."
-
-#
-msgid "Beaufort to meter per second"
-msgstr "Beaufort zu Meter/Sekunde"
-
-#
+#: ../src/calculatorgui_impl.cpp:461
 msgid "CLEAR"
 msgstr "CLEAR"
 
 #
+#: ../src/calculatorgui_impl.cpp:465
+msgid "HideHelp"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:465
+msgid "hidehelp"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:465
+msgid "HIDEHELP"
+msgstr "HIDEHELP"
+
+#
+#: ../src/calculatorgui_impl.cpp:465
+msgid "ShowHelp"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:465
+msgid "showhelp"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:465
+msgid "SHOWHELP"
+msgstr "SHOWHELP"
+
+#
+#: ../src/calculatorgui_impl.cpp:471
+msgid "HideHistory"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:471
+msgid "hidehistory"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:471
+msgid "HIDEHISTORY"
+msgstr "HIDEHISTORY"
+
+#
+#: ../src/calculatorgui_impl.cpp:471
+msgid "ShowHistory"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:471
+msgid "showhistory"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:471
+msgid "SHOWHISTORY"
+msgstr "SHOWHISTORY"
+
+#
+#: ../src/calculatorgui_impl.cpp:477
+msgid "HideCalculate"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:477
+msgid "hidecalculate"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:477
+msgid "HIDECALCULATE"
+msgstr "HIDECALCULATE"
+
+#
+#: ../src/calculatorgui_impl.cpp:477
+msgid "ShowCalculate"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:477
+msgid "showcalculate"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:477
+msgid "SHOWCALCULATE"
+msgstr "SHOWCALCULATE"
+
+#
+#: ../src/calculatorgui_impl.cpp:483
+msgid "HideFunction"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:483
+msgid "hidefunction"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:483
+msgid "HIDEFUNCTION"
+msgstr "HIDEFUNCTION"
+
+#
+#: ../src/calculatorgui_impl.cpp:483
+msgid "showfunction"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:483
+msgid "ShowFunction"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:483
+msgid "SHOWFUNCTION"
+msgstr "SHOWFUNCTION"
+
+#
+#: ../src/calculatorgui_impl.cpp:489
+msgid "Help"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:489
+msgid "HELP"
+msgstr "HELP"
+
+#
+#: ../src/calculatorgui_impl.cpp:489
+msgid "help"
+msgstr ""
+
+#
+#: ../src/calculatorgui_impl.cpp:494 ../src/calculatorgui.cpp:40
+msgid "Function"
+msgstr "Funktion"
+
+#
+#: ../src/calculatorgui_impl.cpp:494
+msgid "function"
+msgstr "function"
+
+#
+#: ../src/calculatorgui_impl.cpp:494
+msgid "FUNCTION"
+msgstr "FUNCTION"
+
+#
+#: ../src/calculatorgui_impl.cpp:499
+msgid "history"
+msgstr "history"
+
+#
+#: ../src/calculatorgui_impl.cpp:499 ../src/calculatorgui.cpp:43
+msgid "History"
+msgstr "Historie"
+
+#
+#: ../src/calculatorgui_impl.cpp:499
+msgid "HISTORY"
+msgstr "HISTORY"
+
+#
+#: ../src/calculatorgui_impl.cpp:518 ../src/calculatorgui_impl.cpp:520
+msgid "Calculator INPUT:"
+msgstr "Rechner Eingang:"
+
+#
+#: ../src/calculatorgui_impl.cpp:518 ../src/calculatorgui_impl.cpp:520
+msgid " Calculator output:"
+msgstr " Rechner Ausgang:"
+
+#
+#: ../src/calculatorgui.cpp:34 ../src/calculatorgui.cpp:893
 msgid "Calculate"
 msgstr "Berechne"
 
 #
+#: ../src/calculatorgui.cpp:46
+msgid "?"
+msgstr "?"
+
+#
+#: ../src/calculatorgui.cpp:113
+msgid "Show/Hide Buttons"
+msgstr "Zeige/Verstecke Buttons"
+
+#
+#: ../src/calculatorgui.cpp:115
+msgid "Help Button"
+msgstr "Hilfe Button"
+
+#
+#: ../src/calculatorgui.cpp:117
+msgid "Show/Hide help button (you can always type \"help\" from input window)."
+msgstr ""
+"Zeige/Verstecke Hilfe Button (Sie können immer \"help\" im Eingabe-Fenster "
+"eingeben)."
+
+#
+#: ../src/calculatorgui.cpp:121
+msgid "History Toggle"
+msgstr "Historie Wechsel"
+
+#
+#: ../src/calculatorgui.cpp:123
+msgid ""
+"Show/Hide history toggle (you can always type \"history\" from input window)."
+msgstr ""
+"Zeige/Verstecke Historie Wechsel (Sie können immer \"history\" im Eingabe-"
+"Fenster eingeben)."
+
+#
+#: ../src/calculatorgui.cpp:127
 msgid "Calculate Button"
 msgstr "Berechnen Button"
 
 #
-msgid "Calculator"
-msgstr "Calculator"
+#: ../src/calculatorgui.cpp:129
+msgid ""
+"Show/Hide Calculate button (you can always press enter at the end of input)."
+msgstr ""
+"Zeige/Verstecke Berechnen Button (Sie können immer Enter-Taste bei Eingabe-"
+"Ende drücken)."
 
 #
-msgid "Calculator INPUT:"
-msgstr "Calculator Eingang:"
+#: ../src/calculatorgui.cpp:133
+msgid "Function button"
+msgstr "Funktionen Button"
 
 #
-msgid "Calculator Plugin"
-msgstr "Calculator Plugin"
+#: ../src/calculatorgui.cpp:141
+msgid "History Settings"
+msgstr "Historie Einstellungen"
 
 #
+#: ../src/calculatorgui.cpp:148
+msgid "Max Results"
+msgstr "Max Ergebn."
+
+#
+#: ../src/calculatorgui.cpp:150
+msgid ""
+"More results use up more memory. Memory is only allocated if required (e.g. "
+"if number is 30000, corresponding memory will only be used after this many "
+"calculations)."
+msgstr ""
+"Mehr Ergebnisse brauchen mehr Speicher. Speicher wird nur bei Bedarf "
+"verwendet (ist die Zahl z.B. 30000, wird entsprechender Speicher nur nach so "
+"vielen Berechnungen verwendet)."
+
+#
+#: ../src/calculatorgui.cpp:155
+msgid ""
+"More results use more memory. Memory will be cleared if Max Results is "
+"reached. NB variables are kept"
+msgstr ""
+"Mehr Ergebnisse brauchen mehr Speicher. Speicher wird freigegeben, wenn Max "
+"Ergebnisse erreicht ist. NB Variabelen werden behalten."
+
+#
+#: ../src/calculatorgui.cpp:162
+msgid "Opacity"
+msgstr ""
+
+#
+#: ../src/calculatorgui.cpp:173
+msgid "Show History Window"
+msgstr "Zeige Historie Fenster"
+
+#
+#: ../src/calculatorgui.cpp:174
+msgid "Show/Hide history"
+msgstr "Zeige/Verstecke Historie"
+
+#
+#: ../src/calculatorgui.cpp:178
+msgid "Capture when Hidden"
+msgstr "Erfasse wenn versteckt"
+
+#
+#: ../src/calculatorgui.cpp:180
+msgid ""
+"Capture results in history, even when the history box is hidden. Uncheck "
+"this box to save some memory when history is hidden."
+msgstr ""
+"Speichert Ergebnisse in der Historie, selbst wenn die Historiebox versteckt "
+"ist. Deaktiviere diese Box zum Sparen von etwas Speicher, wenn Historie "
+"versteckt ist."
+
+#
+#: ../src/calculatorgui.cpp:188
+msgid "Other"
+msgstr "Sonstige"
+
+#
+#: ../src/calculatorgui.cpp:190
+msgid "Log results to opencpn"
+msgstr "Log Ergebnisse in OpenCPN"
+
+#
+#: ../src/calculatorgui.cpp:191
+msgid "Log calculator results in OpenCPN log file"
+msgstr "Logge Berechnungsergebnisse in der OpenCPN Logdatei"
+
+#
+#: ../src/calculatorgui.cpp:236
 msgid ""
 "Calculator Plugin for OpenCPN by SaltyPaws aka Walbert Schulpen\n"
 "=======================================\n"
@@ -261,8 +462,8 @@ msgid ""
 " \n"
 "Functions:\n"
 "\tAbs, Exp, Sign, Sqrt, Log, Log10\n"
-"\tSin, Cos, Tan, ASin, ACos, Atan (default entry is in radians use e.g. sin"
-"(dtr*90) to calculate in degree)\n"
+"\tSin, Cos, Tan, ASin, ACos, Atan (default entry is in radians use e.g. "
+"sin(dtr*90) to calculate in degree)\n"
 "\tFactorial\n"
 " \n"
 "Variables:\n"
@@ -290,11 +491,11 @@ msgid ""
 "hidden - this will save some memory\n"
 "\tLog to opencpn: Enable/Disable logging of results to opencpn logfile."
 msgstr ""
-"Calculator Plugin für OpenCPN von SaltyPaws aka Walbert Schulpen\n"
+"Rechner Plugin für OpenCPN von SaltyPaws aka Walbert Schulpen\n"
 "=======================================\n"
 "\n"
-"Dies ist ein einfacher aber mächtiger Calculator für OpenCPN.  Möchten Sie "
-"Ihre Rumpfgeschw. wissen?\n"
+"Dies ist ein einfacher aber mächtiger Rechner für OpenCPN.  Möchten Sie Ihre "
+"Rumpfgeschw. wissen?\n"
 "\n"
 "Grundfunktionen sind:\n"
 "* Ergebnisse speichern in Variabelen\n"
@@ -302,7 +503,7 @@ msgstr ""
 "* Volle wissenschaftl. Funktionen\n"
 "* Bildschirmfenster kann nach Bedarf optimiert + verkleinert werden\n"
 "\n"
-"Beispiel-Ausdrücke im Calculator sind: (Kommentare sind in Klammern, einige "
+"Beispiel-Ausdrücke im Rechner sind: (Kommentare sind in Klammern, einige "
 "Ergebnisse beruhen auf anderen Beispiel-Berechnungen):\n"
 "=========\n"
 "Rumpf-Geschwindigkeit:\n"
@@ -341,8 +542,8 @@ msgstr ""
 "\tPi, e\n"
 "\tAns ist das Ergebnis der vorigen Berechnung\n"
 "\tdtr ist der Umrechnungsfaktor von Grad in Bogenmaß\t\t\n"
-"\tSie können eigene Variabelen definieren (z.B. meinvariable=10/8*cos"
-"(dtr*90) oder ihrevariable=Ans)\n"
+"\tSie können eigene Variabelen definieren (z.B. "
+"meinvariable=10/8*cos(dtr*90) oder ihrevariable=Ans)\n"
 "\tclear entfernt Ergebnisse in der Historie, aber läßt Ihre definierten "
 "Variabelen intakt\n"
 "\n"
@@ -365,153 +566,445 @@ msgstr ""
 "Logdatei."
 
 #
-msgid "Calculator Preferences"
-msgstr "Calculator Einstellungen"
-
-#
-msgid "Calculator by SaltyPaws"
-msgstr "Calculator von SaltyPaws"
-
-#
-msgid "Calculator preferences"
-msgstr "Calculator Einstellungen"
-
-#
-msgid ""
-"Capture results in history, even when the history box is hidden. Uncheck "
-"this box to save some memory when history is hidden."
-msgstr ""
-"Speichert Ergebnisse in der Historie, selbst wenn die Historiebox versteckt "
-"ist. Deaktiviere diese Box zum Sparen von etwas Speicher, wenn Historie "
-"versteckt ist."
-
-#
-msgid "Capture when Hidden"
-msgstr "Erfasse wenn versteckt"
-
-#
-msgid "Celsius"
-msgstr "Celsius"
-
-#
-msgid "Centimeter"
-msgstr "Zentimeter"
-
-#
-msgid "Change in height of Tide"
-msgstr "Tidenhub-Änderung"
-
-#
-msgid "Change_in_height_of_Tide = height/2 * (1-cos(dtr(180) * time_ratio))"
-msgstr "Tidenhub-Aenderung = Höhe/2 * (1-cos(dtr(180) * Zeit_Anteil))"
-
-#
-msgid "Clear"
-msgstr "Clear"
-
-msgid "Close"
-msgstr ""
-
-#
-msgid "Conversions"
-msgstr "Umrechnungen"
-
-#
-msgid "Convert"
-msgstr ""
-
-#
-msgid "Convert Angle"
-msgstr "Umrechnung Winkel"
-
-#
-msgid "Convert Distance"
-msgstr "Umrechnung Distanz"
-
-#
-msgid "Convert Flowrate"
-msgstr "Umrechnung Fließrate"
-
-#
-msgid "Convert Pressure"
-msgstr "Umrechnung Druck"
-
-#
-msgid "Convert Speed"
-msgstr "Umrechnung Geschw."
-
-#
-msgid "Convert Temperature"
-msgstr "Umrechnung Temperatur"
-
-#
+#: ../src/calculatorgui.cpp:292 ../src/calculatorgui.cpp:352
 msgid "DD.dddddd\\u00b0 (no limit to decimals)"
-msgstr ""
+msgstr "DD.dddddd\\u00b0 (keine Dezimalbegrenzung)"
 
 #
-msgid "DDMMSS.s (no limit to digits)"
-msgstr ""
+#: ../src/calculatorgui.cpp:300
+msgid "Lattitude  "
+msgstr "Breite  "
 
 #
-msgid "Degree"
-msgstr "Grad"
+#: ../src/calculatorgui.cpp:308 ../src/calculatorgui.cpp:326
+#: ../src/calculatorgui.cpp:368 ../src/calculatorgui.cpp:400
+msgid "\\u00b0"
+msgstr "\\u00b0"
 
 #
-msgid "Degree (\\u00b0)"
-msgstr "Grad (°)"
+#: ../src/calculatorgui.cpp:318
+msgid "Longitude"
+msgstr "Breite "
 
 #
-msgid "Degree, Minute"
-msgstr "Grad, Minute"
+#: ../src/calculatorgui.cpp:339 ../src/calculatorgui.cpp:430
+#: ../src/calculatorgui.cpp:543
+msgid "Convert"
+msgstr "Umwandeln"
 
 #
+#: ../src/calculatorgui.cpp:346
 msgid "Degrees"
 msgstr "Grad"
 
 #
-msgid "Density"
-msgstr "Dichte"
+#: ../src/calculatorgui.cpp:360 ../src/calculatorgui.cpp:457
+msgid "Lat "
+msgstr "Breite "
 
 #
-msgid "Description"
-msgstr "Beschreibung"
+#: ../src/calculatorgui.cpp:376 ../src/calculatorgui.cpp:408
+msgid "'"
+msgstr "'"
 
 #
-msgid "Design"
-msgstr "Design"
+#: ../src/calculatorgui.cpp:380 ../src/calculatorgui.cpp:485
+msgid "N"
+msgstr "N"
 
 #
-msgid "Distance"
-msgstr "Distanz"
+#: ../src/calculatorgui.cpp:380 ../src/calculatorgui.cpp:485
+msgid "S"
+msgstr "S"
 
 #
-msgid "Distance to horizon"
-msgstr "Distanz zum Horizont"
+#: ../src/calculatorgui.cpp:392 ../src/calculatorgui.cpp:497
+msgid "Lon"
+msgstr "Länge "
 
 #
-msgid "Distance_In"
-msgstr "Distanz_Ein"
-
-#
-msgid "Distance_Out=Distance_In"
-msgstr "Distanz_Aus=Distanz_Ein"
-
-#
-msgid "Diving"
-msgstr "Tauchen"
-
-#
-msgid "Draft of vessel when heeled"
-msgstr "Tiefgang des gekrängten Bootes"
-
-msgid "Draft of vessel when heeled (keelboat only, not for bi-keel)"
-msgstr "Tiefgang des gekrängten Bootes (nur Kielboote, keine Kimmkieler!)"
-
-#
+#: ../src/calculatorgui.cpp:412 ../src/calculatorgui.cpp:525
 msgid "E"
 msgstr "E"
 
 #
+#: ../src/calculatorgui.cpp:412 ../src/calculatorgui.cpp:525
+msgid "W"
+msgstr "W"
+
+#
+#: ../src/calculatorgui.cpp:440
+msgid "Degree, Minute"
+msgstr "Grad, Minute"
+
+#
+#: ../src/calculatorgui.cpp:447
+msgid "DDMMSS.s (no limit to digits)"
+msgstr "DDMMSS.s (keine Digitbegrenzung)"
+
+#
+#: ../src/calculatorgui.cpp:553
+msgid "\\u00b0 ' \""
+msgstr "\\u00b0 ' \""
+
+#
+#: ../src/calculatorgui.cpp:597
+msgid "Select Function Category"
+msgstr "Wähle Funktionsgruppe"
+
+#
+#: ../src/calculatorgui.cpp:609
+msgid "Select Function"
+msgstr "Wähle Funktion"
+
+#
+#: ../src/calculatorgui.cpp:621
+msgid "Function And Description"
+msgstr "Funktion und Beschreibung"
+
+#
+#: ../src/calculatorgui.cpp:627
+msgid "ere"
+msgstr "ere"
+
+#
+#: ../src/calculatorgui.cpp:631 ../src/calculatorgui.cpp:899
+msgid "Description"
+msgstr "Beschreibung"
+
+#
+#: ../src/calculatorgui.cpp:645
+msgid "Function Result Select Units"
+msgstr "Funktions-Ergebnis, Einheiten-Auswahl"
+
+#
+#: ../src/calculatorgui.cpp:656
+msgid "MyLabel"
+msgstr ""
+
+#
+#: ../src/calculatorgui.cpp:675
+msgid "Input Parameters"
+msgstr "Eingang Parameter"
+
+#
+#: ../src/calculatorgui.cpp:683 ../src/calculatorgui.cpp:704
+#: ../src/calculatorgui.cpp:725 ../src/calculatorgui.cpp:746
+#: ../src/calculatorgui.cpp:767 ../src/calculatorgui.cpp:788
+#: ../src/calculatorgui.cpp:809 ../src/calculatorgui.cpp:830
+#: ../src/calculatorgui.cpp:851 ../src/calculatorgui.cpp:872
+msgid "Parameter"
+msgstr "Parameter"
+
+#
+#: ../src/calculatorgui.cpp:896
+msgid "Close"
+msgstr "Schließen"
+
+#
+#: ../src/functions.cpp:34
+msgid "Hull Speed"
+msgstr "Rumpf-Geschwindigkeit"
+
+#
+#: ../src/functions.cpp:35
+msgid ""
+"Hull speed, sometimes referred to as displacement speed, can be thought of "
+"the speed at which the wavelength of the boats bow wave (in displacement "
+"mode) is equal to the boat length. As boat speed increases, the size of the "
+"bow wave increases, and therefore so does its wavelength. When hull speed is "
+"reached, a boat in pure displacement mode will appear trapped in a trough "
+"behind its very large bow wave."
+msgstr ""
+"Die Rumpf-Geschwindigkeit, manchmal als Verdrängungsgeschwindigkeit "
+"bezeichnet, kann man sich als Geschwindkeit verstellen, bei der die "
+"Wellenlänge der Bugwelle gleich der Bootslänge ist. Erhöht sich die "
+"Bootsgeschwindigkeit, erhöht sich die Bugwelle und so die Wellenlänge. Ist "
+"die Rumpf-Geschwindigkeit erreicht, ist ein Boot im Verdränger-Modus "
+"scheinbar gefangen in seiner langen Bugwelle."
+
+#
+#: ../src/functions.cpp:36
+msgid "Design"
+msgstr "Design"
+
+#
+#: ../src/functions.cpp:37 ../src/functions.cpp:64 ../src/functions.cpp:91
+#: ../src/functions.cpp:118 ../src/functions.cpp:145 ../src/functions.cpp:172
+#: ../src/functions.cpp:199 ../src/functions.cpp:226
+msgid "http://www.bootkeyharbor.com/Formulas.htm"
+msgstr "http://www.bootkeyharbor.com/Formulas.htm"
+
+#
+#: ../src/functions.cpp:38
+msgid "vhull=1.34*sqrt(LWL)"
+msgstr "v_rumpf=1.34*sqrt(LWL)"
+
+#
+#: ../src/functions.cpp:39 ../src/functions.cpp:93 ../src/functions.cpp:95
+#: ../src/functions.cpp:147
+msgid "knots"
+msgstr "Knoten"
+
+#
+#: ../src/functions.cpp:40
+msgid "LWL"
+msgstr "LWL"
+
+#
+#: ../src/functions.cpp:41 ../src/functions.cpp:205 ../src/functions.cpp:230
+#: ../src/functions.cpp:232 ../src/units_conversion.cpp:63
+msgid "feet"
+msgstr "Fuß"
+
+#
+#: ../src/functions.cpp:61
+msgid "Draft of vessel when heeled"
+msgstr "Tiefgang des gekrängten Bootes"
+
+#
+#: ../src/functions.cpp:62
+msgid "Draft of vessel when heeled (keelboat only, not for bi-keel)"
+msgstr "Tiefgang des gekrängten Bootes (nur Kielboote, keine Kimmkieler!)"
+
+#
+#: ../src/functions.cpp:63 ../src/functions.cpp:90 ../src/functions.cpp:117
+#: ../src/functions.cpp:144 ../src/functions.cpp:171 ../src/functions.cpp:306
+#: ../src/functions.cpp:333 ../src/functions.cpp:468 ../src/functions.cpp:495
+msgid "Navigation"
+msgstr "Navigation"
+
+#
+#: ../src/functions.cpp:65
+msgid "draft_heeled=draft*cos(dtr*angle)"
+msgstr "Tiefg_gekraengt = Tiefg*cos(dtr*Winkel)"
+
+#
+#: ../src/functions.cpp:66 ../src/functions.cpp:70 ../src/functions.cpp:174
+#: ../src/functions.cpp:176 ../src/functions.cpp:448 ../src/functions.cpp:525
+#: ../src/functions.cpp:527
+msgid "meter"
+msgstr "Meter"
+
+#
+#: ../src/functions.cpp:67
+msgid "angle"
+msgstr "Winkel"
+
+#
+#: ../src/functions.cpp:68 ../src/functions.cpp:313 ../src/functions.cpp:340
+#: ../src/functions.cpp:342 ../src/functions.cpp:633 ../src/functions.cpp:635
+#: ../src/units_conversion.cpp:33
+msgid "Degree (\\u00b0)"
+msgstr "Grad (°)"
+
+#
+#: ../src/functions.cpp:69
+msgid "draft"
+msgstr "Tiefg"
+
+#
+#: ../src/functions.cpp:88 ../src/functions.cpp:89
+msgid "Speed of wind-driven current"
+msgstr "Geschw. Wind-getriebenen Stroms"
+
+#
+#: ../src/functions.cpp:92
+msgid "Speed_Current = 0.03 * (Speed_Wind)"
+msgstr "Geschw_Strom = 0.03 * (Geschw_Wind)"
+
+#
+#: ../src/functions.cpp:94
+msgid "Speed_Wind"
+msgstr "Geschw_Wind"
+
+#
+#: ../src/functions.cpp:115
+msgid "Maximum Wavelength"
+msgstr "Maximale Wellenlänge"
+
+#
+#: ../src/functions.cpp:116
+msgid "Maximum Wavelength = 1.5 x square root of fetch in nm"
+msgstr ""
+"Max. Wellenlänge = 1.5 x Quadratwurzel des Fetch in Seemeilen. Fetch "
+"(Windlauflänge oder Wirkweg) ist die Länge der Anlaufstrecke eines Windes "
+"über der Wasseroberfläche."
+
+#
+#: ../src/functions.cpp:119
+msgid "Maximum_Wavelength = 1.5 * sqrt(fetch)"
+msgstr "Max_Wellenlaenge = 1.5 * sqrt(Fetch)"
+
+#
+#: ../src/functions.cpp:120
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#
+#: ../src/functions.cpp:121
+msgid "fetch"
+msgstr "Fetch"
+
+#
+#: ../src/functions.cpp:122 ../src/units_conversion.cpp:53
+msgid "Nautical Miles"
+msgstr "Nautische Meilen"
+
+#
+#: ../src/functions.cpp:142
+msgid "Wave speed =f(period)"
+msgstr "Wellen-Geschw. =f(Periode)"
+
+#
+#: ../src/functions.cpp:143
+msgid ""
+"Wave speed = 3.03 x (wave period in seconds) NB output units need to be "
+"confirmed"
+msgstr ""
+"Wellen-Geschw. = 3.03 x (Wellen-Periode in Sekunden) NB Ausgabe-Einheiten "
+"müssen bestätigt werden"
+
+#
+#: ../src/functions.cpp:146
+msgid "Wave_speed = 3.03 * (wave_period)"
+msgstr "Wellen_geschw = 3.03 * (Wellen_Periode)"
+
+#
+#: ../src/functions.cpp:148
+msgid "wave_period"
+msgstr "Wellen_Periode"
+
+#
+#: ../src/functions.cpp:149
+msgid "seconds"
+msgstr "Sekunden"
+
+#
+#: ../src/functions.cpp:169
+msgid "Change in height of Tide"
+msgstr "Tidenhub-Änderung"
+
+#
+#: ../src/functions.cpp:170
+msgid ""
+"Height is total change in tide heigt between high and low. The time ratio is "
+"time elapsed from the previous tide divided by the time difference between "
+"the two tides. (Similar to rule of 12)"
+msgstr ""
+"Höhe ist der gesamte Tidenhub zwischen Ebbe und Flut. Der Zeit-Anteil ist "
+"die verstrichene Zeit von der vorherigen Tide dividiert durch die "
+"Zeitdifferenz zwischen zwei Tiden. (Ähnlich wie Regel 12) dtr=Pi/180"
+
+#
+#: ../src/functions.cpp:173
+msgid "Change_in_height_of_Tide = height/2 * (1-cos(dtr(180) * time_ratio))"
+msgstr "Tidenhub-Aenderung = Höhe/2 * (1-cos(dtr(180) * Zeit_Anteil))"
+
+#
+#: ../src/functions.cpp:175 ../src/functions.cpp:472
+msgid "height"
+msgstr "Hoehe"
+
+#
+#: ../src/functions.cpp:177
+msgid "time_ratio"
+msgstr "Zeit_Anteil"
+
+#
+#: ../src/functions.cpp:196
+msgid "Flow rate of leak in boat"
+msgstr "Fließrate eines Lecks im Boot"
+
+#
+#: ../src/functions.cpp:197
+msgid ""
+"Flow rate of leak in boat:\tQ = 3,600 (A) (H)\n"
+"\tQ = gallons per minute of water coming in\n"
+"\tA = area of hole in square feet\n"
+"\tH = height of water over hole in feet, to bottom of the opening"
+msgstr ""
+"Fließrate eines Lecks im Boot:\tQ = 3,600 (A) (H)\n"
+"\tQ = Gallonen/Minute einfließendes Wasser\n"
+"\tA = Fläche des Lochs in Quadratfuß\n"
+"\tH = Wasserhöhe über Loch in Fuß zum Boden der Öffnung"
+
+#
+#: ../src/functions.cpp:198 ../src/functions.cpp:225 ../src/functions.cpp:252
+#: ../src/functions.cpp:279
+msgid "Safety"
+msgstr "Sicherheit"
+
+#
+#: ../src/functions.cpp:200
+msgid "Q = 3600 *(A)* (H)"
+msgstr "Q = 3600 *(A)* (H)"
+
+#
+#: ../src/functions.cpp:201 ../src/units_conversion.cpp:123
+msgid "US gallons per minute"
+msgstr "US Gallonen pro Minute"
+
+#
+#: ../src/functions.cpp:202
+msgid "A"
+msgstr "A"
+
+#
+#: ../src/functions.cpp:203 ../src/units_conversion.cpp:163
+msgid "square feet"
+msgstr "Quadratfuß"
+
+#
+#: ../src/functions.cpp:204 ../src/functions.cpp:229
+msgid "H"
+msgstr "H"
+
+#
+#: ../src/functions.cpp:223
+msgid "Patch over hole"
+msgstr "Loch-Flicken"
+
+#
+#: ../src/functions.cpp:224
+msgid ""
+"Patch or cover thickness to withstand water pressure (patch over hole):\n"
+"\n"
+"\tT = square root of:\t(48x (H) (L2))/ 1000)\n"
+"\tT = thickness of wood or plywood patch in inches\n"
+"\tH = height of water above bottom of hole, in feet\n"
+"\tL = length of patch, longest distance between supports, in feet"
+msgstr ""
+"Flicken- oder Abdeckungs-Stärke  gegen Wasserdruck (Loch-Flicken):\n"
+"\n"
+"\tT = Quadratwurzel von:\t(48x (H) (L2))/ 1000)\n"
+"\tT = Dicke von Holz oder Sperrholz Flicken in Zoll\n"
+"\tH = Wasserhöhe über Lochboden in Fuß\n"
+"\tL = Länge des Flickens, größster Durchmesser des Lochs in Fuß"
+
+#
+#: ../src/functions.cpp:227
+msgid "T = sqrt( (48* H* (L^2))/1000)"
+msgstr "T = sqrt( (48* H* (L^2))/1000)"
+
+#
+#: ../src/functions.cpp:228 ../src/functions.cpp:259 ../src/functions.cpp:286
+#: ../src/units_conversion.cpp:58
+msgid "inch"
+msgstr "Zoll"
+
+#
+#: ../src/functions.cpp:231
+msgid "L"
+msgstr "L"
+
+#
+#: ../src/functions.cpp:250
+msgid "Line Break strength (circumference)"
+msgstr "Leinen-Bruchlast (Umfang)"
+
+#
+#: ../src/functions.cpp:251 ../src/functions.cpp:278
 msgid ""
 "Each type of line, natural fiber, synthetic and wire rope, have different "
 "breaking strengths and safe working loads. Natural breaking strength of "
@@ -540,235 +1033,131 @@ msgstr ""
 "\tManilla \t\t\t\t1.0"
 
 #
-msgid "Error"
-msgstr "Fehler"
+#: ../src/functions.cpp:253 ../src/functions.cpp:280
+msgid "http://www.boatsafe.com/marlinespike/breaking.htm"
+msgstr "http://www.boatsafe.com/marlinespike/breaking.htm"
 
 #
-msgid "Extra Functions"
-msgstr "Extra Funktionen"
+#: ../src/functions.cpp:254
+msgid "breaking_strength= 900 * comparison_factor * circumference^2 "
+msgstr "Bruchlast= 900 * Vergleichs_Faktor * Umfang^2 "
 
 #
-msgid "FALSE"
-msgstr "FALSE"
+#: ../src/functions.cpp:255 ../src/functions.cpp:282
+#: ../src/units_conversion.cpp:153
+msgid "lbs"
+msgstr "lbs"
 
 #
-msgid "FUNCTION"
-msgstr "FUNCTION"
+#: ../src/functions.cpp:256 ../src/functions.cpp:283
+msgid "comparison_factor"
+msgstr "Vergleichs_Faktor"
 
 #
-msgid "Fahrenheit"
-msgstr "Fahrenheit"
+#: ../src/functions.cpp:257 ../src/functions.cpp:284
+msgid "See table"
+msgstr "Siehe Tabelle"
 
 #
-msgid "Fathom"
-msgstr "Faden"
+#: ../src/functions.cpp:258
+msgid "circumference"
+msgstr "Umfang"
 
 #
-msgid "Flow rate of leak in boat"
-msgstr "Fließrate eines Lecks im Boot"
+#: ../src/functions.cpp:277
+msgid "Line Break strength (diameter)"
+msgstr "Leinen-Bruchlast (Durchmesser)"
 
 #
+#: ../src/functions.cpp:281
+msgid "breaking_strength= 900 * comparison_factor * (pi*diameter)^2 "
+msgstr "Bruchlast= 900 * Vergleichs_Faktor * (pi*Diameter)^2 "
+
+#
+#: ../src/functions.cpp:285
+msgid "diameter"
+msgstr "Diameter"
+
+#
+#: ../src/functions.cpp:304
+msgid "Velocity Made Good (angle)"
+msgstr "Velocity Made Good (Winkel)"
+
+#
+#: ../src/functions.cpp:305 ../src/functions.cpp:332
 msgid ""
-"Flow rate of leak in boat:\tQ = 3,600 (A) (H)\n"
-"\tQ = gallons per minute of water coming in\n"
-"\tA = area of hole in square feet\n"
-"\tH = height of water over hole in feet, to bottom of the opening"
+"Velocity made good, or vmg, is a term in sailing, and specifically yacht "
+"racing, that refers to the component of a sailboats velocity that is in the "
+"direction of the true wind. The concept is useful in sailing, because a "
+"sailboat often cannot, or should not, sail directly to a mark to reach the "
+"mark as quickly as possible. Sailboats cannot sail directly upwind, and it "
+"is usually less than optimal, and sometimes dangerous, to sail directly "
+"downwind. Instead of sailing toward the mark, the helmsman chooses a point "
+"of sail that optimizes velocity made good."
 msgstr ""
-"Fließrate eines Lecks im Boot:\tQ = 3,600 (A) (H)\n"
-"\tQ = Gallonen/Minute einfließendes Wasser\n"
-"\tA = Fläche des Lochs in Quadratfuß\n"
-"\tH = Wasserhöhe über Loch in Fuß zum Boden der Öffnung"
+"Velocity made good oder VMG (bester Windwinkel zum Ziel) ist ein Begriff im "
+"Segeln und speziell im Yachtrennen, der die Komponente der Segelboot-"
+"Geschwindigkeit in Bezug auf die Richtung des wahren Winds beschreibt. Das "
+"Konzept ist hilfreich im Segeln, weil ein Segelboot oft nicht direkt zu "
+"einem Ziel segeln kann oder es nicht sollte, um das Ziel so schnell wie "
+"möglich zu erreichen. Segelboote können nicht direkt gegen den Wind segeln "
+"und es ist meist wenig optimal und manchmal gefährlich, vor dem Wind zu "
+"segeln. Statt auf das Ziel zu segeln, wählt der Steuermann einen Kurs, der "
+"VMG optimiert. dtr = Pi/180"
 
 #
-msgid "Flowrate"
-msgstr "Fließrate"
+#: ../src/functions.cpp:307 ../src/functions.cpp:334
+msgid "http://lagoon-inside.com/2012/01/faster-thanks-to-the-vmg-concept/"
+msgstr "http://lagoon-inside.com/2012/01/faster-thanks-to-the-vmg-concept/"
 
 #
-msgid "Flowrate_In"
-msgstr "Fliessrate_Ein"
+#: ../src/functions.cpp:308
+msgid "VMG=V*cos(alpha*dtr)"
+msgstr "VMG = V*cos(Alpha*dtr)"
 
 #
-msgid "Flowrate_Out=Flowrate_In"
-msgstr "Fliessrate_Aus=Fliessrate_Ein"
+#: ../src/functions.cpp:309 ../src/functions.cpp:311 ../src/functions.cpp:336
+#: ../src/functions.cpp:338 ../src/units_conversion.cpp:88
+msgid "Knots"
+msgstr "Knoten"
 
 #
-msgid "Force"
-msgstr "Kraft"
+#: ../src/functions.cpp:310 ../src/functions.cpp:337
+msgid "V"
+msgstr "V"
 
 #
-msgid "Function"
-msgstr "Funktion"
+#: ../src/functions.cpp:312
+msgid "alpha"
+msgstr "Alpha"
 
 #
-msgid "Function And Description"
-msgstr "Funktion und Beschreibung"
+#: ../src/functions.cpp:331
+msgid "Velocity Made Good (delta)"
+msgstr "Velocity Made Good (Delta)"
 
 #
-msgid "Function Result Select Units"
-msgstr "Funktions-Ergebnis, Einheiten-Auswahl"
+#: ../src/functions.cpp:335
+msgid "VMG=V*cos((alpha1-alpha2)*dtr)"
+msgstr "VMG = V*cos((Alpha1-Alpha2)*dtr)"
 
 #
-msgid "Function button"
-msgstr "Funktionen Button"
+#: ../src/functions.cpp:339
+msgid "alpha1"
+msgstr "Alpha1"
 
 #
-msgid "H"
-msgstr "H"
+#: ../src/functions.cpp:341
+msgid "alpha2"
+msgstr "Alpha2"
 
 #
-msgid "HELP"
-msgstr "HELP"
+#: ../src/functions.cpp:358
+msgid "Wind Chill"
+msgstr "Windchill"
 
 #
-msgid "HIDECALCULATE"
-msgstr "HIDECALCULATE"
-
-#
-msgid "HIDEFUNCTION"
-msgstr "HIDEFUNCTION"
-
-#
-msgid "HIDEHELP"
-msgstr "HIDEHELP"
-
-#
-msgid "HIDEHISTORY"
-msgstr "HIDEHISTORY"
-
-#
-msgid "HISTORY"
-msgstr "HISTORY"
-
-#
-msgid ""
-"Height is total change in tide heigt between high and low. The time ratio is "
-"time elapsed from the previous tide divided by the time difference between "
-"the two tides. (Similar to rule of 12)"
-msgstr ""
-"Höhe ist der gesamte Tidenhub zwischen Ebbe und Flut. Der Zeit-Anteil ist "
-"die verstrichene Zeit von der vorherigen Tide dividiert durch die "
-"Zeitdifferenz zwischen zwei Tiden. (Ähnlich wie Regel 12) dtr=Pi/180"
-
-#
-msgid "Help"
-msgstr ""
-
-#
-msgid "Help Button"
-msgstr "Hilfe Button"
-
-#
-msgid "Help!!!!"
-msgstr "Hilfe!!!"
-
-#
-msgid "HideCalculate"
-msgstr ""
-
-#
-msgid "HideFunction"
-msgstr ""
-
-#
-msgid "HideHelp"
-msgstr ""
-
-#
-msgid "HideHistory"
-msgstr ""
-
-#
-msgid "History"
-msgstr "Historie"
-
-#
-msgid "History Settings"
-msgstr "Historie Einstellungen"
-
-#
-msgid "History Toggle"
-msgstr "Historie Wechsel"
-
-#
-msgid "Hours"
-msgstr "Stunden"
-
-#
-msgid "Hull Speed"
-msgstr "Rumpf-Geschwindigkeit"
-
-#
-msgid ""
-"Hull speed, sometimes referred to as displacement speed, can be thought of "
-"the speed at which the wavelength of the boats bow wave (in displacement "
-"mode) is equal to the boat length. As boat speed increases, the size of the "
-"bow wave increases, and therefore so does its wavelength. When hull speed is "
-"reached, a boat in pure displacement mode will appear trapped in a trough "
-"behind its very large bow wave."
-msgstr ""
-"Die Rumpf-Geschwindigkeit, manchmal als Verdrängungsgeschwindigkeit "
-"bezeichnet, kann man sich als Geschwindkeit verstellen, bei der die "
-"Wellenlänge der Bugwelle gleich der Bootslänge ist. Erhöht sich die "
-"Bootsgeschwindigkeit, erhöht sich die Bugwelle und so die Wellenlänge. Ist "
-"die Rumpf-Geschwindigkeit erreicht, ist ein Boot im Verdränger-Modus "
-"scheinbar gefangen in seiner langen Bugwelle."
-
-#
-msgid "Humidex"
-msgstr "Hitzeindex"
-
-#
-msgid ""
-"Humidex is an index to indicate how hot or humid the weather feels to the "
-"average person. It is derived by combining temperature and humidity values "
-"into one number to reflect the perceived temperature. For example, a humidex "
-"of 40 means that the sensation of heat when the temperature is 30 degrees "
-"and the air is humid feels more or less the same as when the temperature is "
-"40 degrees and the air is dry. "
-msgstr ""
-"Hitzeindex oder Humidex ist ein Index zur Indikation, wie warm oder feucht "
-"das Wetter einer durchschnittlichen Person vorkommt. Er wird erhalten durch "
-"Kombination von Temperatur- und Feuchtigkeits-Werten in eine Zahl, die die "
-"empfundene Temperatur darstellt. Ein Humidex von 40 bedeutet beispielsweise, "
-"daß die Empfindung einer Temperatur von 30 Grad und Feuchte die Gleiche ist "
-"wie bei einer Temperatur von 40 Grad und trockener Luft."
-
-#
-msgid ""
-"If a fluid is within a container then the depth of an object placed in that "
-"fluid can be measured. The deeper the object is placed in the fluid, the "
-"more pressure it experiences. This is because is the weight of the fluid "
-"above it. The more dense the fluid above it, the more pressure is exerted on "
-"the object that is submerged, due to the weight of the fluid. Density is "
-"function of salinity and water temperature. Below are average values.\n"
-"Density Sea Water = 1.035 kg/liter\n"
-"Density Fresh Water = 1.0 kg/liter"
-msgstr ""
-"In einem mit Flüssigkeit gefüllten Behälter kann die Tiefe eines Objektes in "
-"der Flüssigkeit gemessen werden. Je tiefer das Objekt in der Flüssigkeit "
-"ist, desto mehr Druck erhält es. Das liegt am Gewicht der Flüssigkeit über "
-"dem Objekt. Je höher die Dichte der Flüssigkeit darüber ist, desto mehr "
-"Druck wird auf das untergetauchte Objekt ausgeübt, wegen des Gewichts der "
-"Flüssigkeit. Dichte ist eine Funktion des Salzgehalts und der Wasser-"
-"Temperatur. Unten sind einige durchschnittliche Werte.\n"
-"Dichte Seewasser = 1.035 kg/Liter\n"
-"Dichte Frischwasser = 1.0 kg/Liter"
-
-#
-msgid ""
-"If the Earth is assumed to be a sphere with no atmosphere then the distance "
-"to the horizon can easily be calculated. (The Earths radius of curvature "
-"actually varies by 1 between the Equator and the Poles, so this formula isnt "
-"absolutely exact even assuming no refraction.) This formula assumes earth "
-"diameter of 12 756.32 km."
-msgstr ""
-"Wenn die Erde als Späre ohne Atmosphäre angenommen wird, dann kann die "
-"Entfernung zum Horizont leicht berechnet werden.  (Die Erdkrümmung variiert "
-"aktuell um 1 zwischen dem Äquator und den Polen, somit ist diese Formel "
-"nicht absolut exakt, selbst wenn keine Brechung angenommen wird.) Diese "
-"Formel nimmt den Erddurchmesser mit 12 756,32 km an."
-
-#
+#: ../src/functions.cpp:359
 msgid ""
 "In November 2001 Canada, U.S. and U.K. implemented a new wind chill index "
 "developed by scientists and medical experts on the Joint Action Group for "
@@ -794,343 +1183,21 @@ msgstr ""
 "eine Genauigkeit von etwa einem Grad bei dieser Formal haben."
 
 #
-msgid "Inches of Mercury"
-msgstr "Zoll Quecksilbersäule"
+#: ../src/functions.cpp:360 ../src/functions.cpp:387 ../src/functions.cpp:414
+msgid "Weather"
+msgstr "Wetter"
 
 #
-msgid "Input Parameters"
-msgstr "Eingang Parameter"
-
-#
-msgid "Kelvin"
-msgstr "Kelvin"
-
-#
-msgid "Knots"
-msgstr "Knoten"
-
-#
-msgid "L"
-msgstr "L"
-
-#
-msgid "LWL"
-msgstr "LWL"
-
-#
-msgid "Lat "
-msgstr ""
-
-#
-msgid "Lattitude  "
-msgstr ""
-
-#
-msgid "Lbs (weight)"
-msgstr "Lbs (Gewicht)"
-
-#
-msgid "Line Break strength (circumference)"
-msgstr "Leinen-Bruchlast (Umfang)"
-
-#
-msgid "Line Break strength (diameter)"
-msgstr "Leinen-Bruchlast (Durchmesser)"
-
-#
-msgid "List"
-msgstr "Liste"
-
-#
-msgid "Log calculator results in OpenCPN log file"
-msgstr "Logge Berechnungsergebnisse in der OpenCPN Logdatei"
-
-#
-msgid "Log results to opencpn"
-msgstr "Log Ergebnisse in OpenCPN"
-
-#
-msgid "Lon"
-msgstr ""
-
-#
-msgid "Longitude"
-msgstr ""
-
-#
-msgid "Max Results"
-msgstr "Max Ergebn."
-
-#
-msgid "Maximum Wavelength"
-msgstr "Maximale Wellenlänge"
-
-#
-msgid "Maximum Wavelength = 1.5 x square root of fetch in nm"
-msgstr ""
-"Max. Wellenlänge = 1.5 x Quadratwurzel des Fetch in Seemeilen. Fetch "
-"(Windlauflänge oder Wirkweg) ist die Länge der Anlaufstrecke eines Windes "
-"über der Wasseroberfläche."
-
-#
-msgid "Maximum_Wavelength = 1.5 * sqrt(fetch)"
-msgstr "Max_Wellenlaenge = 1.5 * sqrt(Fetch)"
-
-#
-msgid "Meter"
-msgstr "Meter"
-
-#
-msgid "Minutes"
-msgstr "Minuten"
-
-#
+#: ../src/functions.cpp:361
 msgid ""
-"More results use more memory. Memory will be cleared if Max Results is "
-"reached. NB variables are kept"
+"http://en.wikipedia.org/wiki/Wind_chill, http://climate.weatheroffice.gc.ca/"
+"prods_servs/normals_documentation_e.html"
 msgstr ""
-"Mehr Ergebnisse brauchen mehr Speicher. Speicher wird freigegeben, wenn Max "
-"Ergebnisse erreicht ist. NB Variabelen werden behalten."
+"http://en.wikipedia.org/wiki/Wind_chill, http://climate.weatheroffice.gc.ca/"
+"prods_servs/normals_documentation_e.html"
 
 #
-msgid ""
-"More results use up more memory. Memory is only allocated if required (e.g. "
-"if number is 30000, corresponding memory will only be used after this many "
-"calculations)."
-msgstr ""
-"Mehr Ergebnisse brauchen mehr Speicher. Speicher wird nur bei Bedarf "
-"verwendet (ist die Zahl z.B. 30000, wird entsprechender Speicher nur nach so "
-"vielen Berechnungen verwendet)."
-
-#
-msgid "Mouse"
-msgstr "Maus"
-
-#
-msgid "MyLabel"
-msgstr ""
-
-#
-msgid "N"
-msgstr "N"
-
-#
-msgid "Nautical Miles"
-msgstr "Nautische Meilen"
-
-#
-msgid "Navigation"
-msgstr "Navigation"
-
-#
-msgid "Newton"
-msgstr "Newton"
-
-#
-msgid "Objects above horizon"
-msgstr "Objekte über Horizont"
-
-#
-msgid "Opacity"
-msgstr ""
-
-#
-msgid "Other"
-msgstr "Sonstige"
-
-#
-msgid "Pa"
-msgstr "Pa"
-
-#
-msgid "Parameter"
-msgstr "Parameter"
-
-#
-msgid ""
-"Patch or cover thickness to withstand water pressure (patch over hole):\n"
-"\n"
-"\tT = square root of:\t(48x (H) (L2))/ 1000)\n"
-"\tT = thickness of wood or plywood patch in inches\n"
-"\tH = height of water above bottom of hole, in feet\n"
-"\tL = length of patch, longest distance between supports, in feet"
-msgstr ""
-"Flicken- oder Abdeckungs-Stärke  gegen Wasserdruck (Loch-Flicken):\n"
-"\n"
-"\tT = Quadratwurzel von:\t(48x (H) (L2))/ 1000)\n"
-"\tT = Dicke von Holz oder Sperrholz Flicken in Zoll\n"
-"\tH = Wasserhöhe über Lochboden in Fuß\n"
-"\tL = Länge des Flickens, größster Durchmesser des Lochs in Fuß"
-
-#
-msgid "Patch over hole"
-msgstr "Loch-Flicken"
-
-#
-msgid "Pressure"
-msgstr "Druck"
-
-#
-msgid "Pressure at depth"
-msgstr "Tiefenduck"
-
-#
-msgid "Pressure=density*9.80665*depth"
-msgstr "Druck=Dichte*9.80665*Tiefe"
-
-#
-msgid "Pressure_In"
-msgstr "Druck_Ein"
-
-#
-msgid "Pressure_Out=Pressure_In"
-msgstr "Druck_Aus=Druck_Ein"
-
-#
-msgid "Q = 3600 *(A)* (H)"
-msgstr "Q = 3600 *(A)* (H)"
-
-#
-msgid "Radians"
-msgstr ""
-
-#
-msgid "Rankine"
-msgstr "Rankine-Skala"
-
-#
-msgid "S"
-msgstr "S"
-
-#
-msgid "SHOWCALCULATE"
-msgstr "SHOWCALCULATE"
-
-#
-msgid "SHOWFUNCTION"
-msgstr "SHOWFUNCTION"
-
-#
-msgid "SHOWHELP"
-msgstr "SHOWHELP"
-
-#
-msgid "SHOWHISTORY"
-msgstr "SHOWHISTORY"
-
-#
-msgid "Safety"
-msgstr "Sicherheit"
-
-#
-msgid "Saltypaws"
-msgstr "Saltypaws"
-
-#
-msgid "Seconds"
-msgstr "Sekunden"
-
-#
-msgid "See table"
-msgstr "Siehe Tabelle"
-
-#
-msgid "Select Function"
-msgstr "Wähle Funktion"
-
-#
-msgid "Select Function Category"
-msgstr "Wähle Funktionsgruppe"
-
-#
-msgid "Show History Window"
-msgstr "Zeige Historie Fenster"
-
-#
-msgid "Show/Hide Buttons"
-msgstr "Zeige/Verstecke Buttons"
-
-#
-msgid ""
-"Show/Hide Calculate button (you can always press enter at the end of input)."
-msgstr ""
-"Zeige/Verstecke Berechnen Button (Sie können immer Enter-Taste bei Eingabe-"
-"Ende drücken)."
-
-#
-msgid "Show/Hide help button (you can always type \"help\" from input window)."
-msgstr ""
-"Zeige/Verstecke Hilfe Button (Sie können immer \"help\" im Eingabe-Fenster "
-"eingeben)."
-
-#
-msgid "Show/Hide history"
-msgstr "Zeige/Verstecke Historie"
-
-#
-msgid ""
-"Show/Hide history toggle (you can always type \"history\" from input window)."
-msgstr ""
-"Zeige/Verstecke Historie Wechsel (Sie können immer \"history\" im Eingabe-"
-"Fenster eingeben)."
-
-#
-msgid "ShowCalculate"
-msgstr ""
-
-#
-msgid "ShowFunction"
-msgstr ""
-
-#
-msgid "ShowHelp"
-msgstr ""
-
-#
-msgid "ShowHistory"
-msgstr ""
-
-#
-msgid "Speed"
-msgstr "Geschw"
-
-#
-msgid "Speed of wind-driven current"
-msgstr "Geschw. Wind-getriebenen Stroms"
-
-#
-msgid "Speed_Current = 0.03 * (Speed_Wind)"
-msgstr "Geschw_Strom = 0.03 * (Geschw_Wind)"
-
-#
-msgid "Speed_In"
-msgstr "Geschw_Ein"
-
-#
-msgid "Speed_Out=Speed_In"
-msgstr "Geschw_Aus=Geschw_Ein"
-
-#
-msgid "Speed_Wind"
-msgstr "Geschw_Wind"
-
-#
-msgid "Square meter"
-msgstr "Quadratmeter"
-
-#
-msgid "T = sqrt( (48* H* (L^2))/1000)"
-msgstr "T = sqrt( (48* H* (L^2))/1000)"
-
-#
-msgid "TRUE"
-msgstr "TRUE"
-
-#
-msgid "T_air"
-msgstr "T_luft"
-
-#
+#: ../src/functions.cpp:362
 msgid ""
 "T_wind_chill = 13.12 + 0.6215 * T_air - 11.37 * V_wind^0.16 + 0.3965 * "
 "T_air* V_wind^0.16 "
@@ -1139,34 +1206,220 @@ msgstr ""
 "T_luft* V_wind^0.16 "
 
 #
-msgid "Temperature"
-msgstr "Temperatur"
+#: ../src/functions.cpp:363 ../src/functions.cpp:365 ../src/functions.cpp:390
+#: ../src/functions.cpp:392 ../src/functions.cpp:552 ../src/functions.cpp:554
+#: ../src/units_conversion.cpp:98
+msgid "Celsius"
+msgstr "Celsius"
 
 #
-msgid "Temperature_In"
-msgstr "Temperatur_Ein"
+#: ../src/functions.cpp:364 ../src/functions.cpp:391
+msgid "T_air"
+msgstr "T_luft"
 
 #
-msgid "Temperature_Out=Temperature_In"
-msgstr "Temperatur_Aus=Temperatur_Ein"
+#: ../src/functions.cpp:366
+msgid "V_wind"
+msgstr "V_wind"
 
 #
-msgid "Test"
-msgstr "Test"
+#: ../src/functions.cpp:367 ../src/functions.cpp:417 ../src/functions.cpp:579
+#: ../src/functions.cpp:581 ../src/units_conversion.cpp:83
+msgid "m/s"
+msgstr "m/s"
 
 #
+#: ../src/functions.cpp:385
+msgid "Humidex"
+msgstr "Hitzeindex"
+
+#
+#: ../src/functions.cpp:386
 msgid ""
-"This is a light weight yet powerful calculator plugin for OpenCPN.  Would "
-"you like to know your hull speed?"
+"Humidex is an index to indicate how hot or humid the weather feels to the "
+"average person. It is derived by combining temperature and humidity values "
+"into one number to reflect the perceived temperature. For example, a humidex "
+"of 40 means that the sensation of heat when the temperature is 30 degrees "
+"and the air is humid feels more or less the same as when the temperature is "
+"40 degrees and the air is dry. "
 msgstr ""
-"Das ist ein einfaches aber mächtiges Calculator Plugin für OpenCPN. Möchten "
-"Sie Ihre Rumpfgeschw. wissen? "
+"Hitzeindex oder Humidex ist ein Index zur Indikation, wie warm oder feucht "
+"das Wetter einer durchschnittlichen Person vorkommt. Er wird erhalten durch "
+"Kombination von Temperatur- und Feuchtigkeits-Werten in eine Zahl, die die "
+"empfundene Temperatur darstellt. Ein Humidex von 40 bedeutet beispielsweise, "
+"daß die Empfindung einer Temperatur von 30 Grad und Feuchte die Gleiche ist "
+"wie bei einer Temperatur von 40 Grad und trockener Luft."
 
 #
-msgid "Time"
-msgstr "Zeit"
+#: ../src/functions.cpp:388
+msgid ""
+"http://climate.weatheroffice.gc.ca/prods_servs/normals_documentation_e.html"
+msgstr ""
+"http://climate.weatheroffice.gc.ca/prods_servs/normals_documentation_e.html"
 
 #
+#: ../src/functions.cpp:389
+msgid ""
+"humidex = (T_air) + (0.5555)*((6.11 * exp (5417.7530 * ( (1/273.16) - (1/"
+"dewpoint) ) ) ) - 10.0)"
+msgstr ""
+"humidex = (T_luft) + (0.5555)*((6.11 * exp (5417.7530 * ( (1/273.16) - (1/"
+"Taupunkt) ) ) ) - 10.0)"
+
+#
+#: ../src/functions.cpp:393
+msgid "dewpoint"
+msgstr "Taupunkt"
+
+#
+#: ../src/functions.cpp:394 ../src/units_conversion.cpp:103
+msgid "Kelvin"
+msgstr "Kelvin"
+
+#
+#: ../src/functions.cpp:412
+msgid "Beaufort to meter per second"
+msgstr "Beaufort zu Meter/Sekunde"
+
+#
+#: ../src/functions.cpp:413
+msgid ""
+"Beaufort scale was created in 1805 by Sir Francis Beaufort, British admiral "
+"and hydrographer. It describes wind speed based mainly on observed sea "
+"conditions.\n"
+"Wind speed on the Beaufort scale can be expressed by the formula:"
+msgstr ""
+"Die Beaufort Skala wurde 1805 von Sir Francis Beaufort, britischer Admiral "
+"und Hydrograph, aufgestellt. Sie beschreibt die Windgeschwindigkeit "
+"hauptsächlich an den beobachteten See-Zuständen.\n"
+"Windgeschwindigkeit auf der Beaufort Skala kann mit einer Formel ausgedrückt "
+"werden."
+
+#
+#: ../src/functions.cpp:415
+msgid "http://planetcalc.com/384/"
+msgstr "http://planetcalc.com/384/"
+
+#
+#: ../src/functions.cpp:416
+msgid "Wind_Speed=0.837*Beaufort^(3/2)"
+msgstr "Wind_Geschw=0.837*Beaufort^(3/2)"
+
+#
+#: ../src/functions.cpp:418 ../src/functions.cpp:419
+msgid "Beaufort"
+msgstr "Beaufort"
+
+#
+#: ../src/functions.cpp:439
+msgid "Pressure at depth"
+msgstr "Tiefenduck"
+
+#
+#: ../src/functions.cpp:440
+msgid ""
+"If a fluid is within a container then the depth of an object placed in that "
+"fluid can be measured. The deeper the object is placed in the fluid, the "
+"more pressure it experiences. This is because is the weight of the fluid "
+"above it. The more dense the fluid above it, the more pressure is exerted on "
+"the object that is submerged, due to the weight of the fluid. Density is "
+"function of salinity and water temperature. Below are average values.\n"
+"Density Sea Water = 1.035 kg/liter\n"
+"Density Fresh Water = 1.0 kg/liter"
+msgstr ""
+"In einem mit Flüssigkeit gefüllten Behälter kann die Tiefe eines Objektes in "
+"der Flüssigkeit gemessen werden. Je tiefer das Objekt in der Flüssigkeit "
+"ist, desto mehr Druck erhält es. Das liegt am Gewicht der Flüssigkeit über "
+"dem Objekt. Je höher die Dichte der Flüssigkeit darüber ist, desto mehr "
+"Druck wird auf das untergetauchte Objekt ausgeübt, wegen des Gewichts der "
+"Flüssigkeit. Dichte ist eine Funktion des Salzgehalts und der Wasser-"
+"Temperatur. Unten sind einige durchschnittliche Werte.\n"
+"Dichte Seewasser = 1.035 kg/Liter\n"
+"Dichte Frischwasser = 1.0 kg/Liter"
+
+#
+#: ../src/functions.cpp:441
+msgid "Diving"
+msgstr "Tauchen"
+
+#
+#: ../src/functions.cpp:442
+msgid ""
+"http://www.grc.nasa.gov/WWW/k-12/WindTunnel/Activities/fluid_pressure.html\n"
+"Saltypaws"
+msgstr ""
+"http://www.grc.nasa.gov/WWW/k-12/WindTunnel/Activities/fluid_pressure.html\n"
+"Saltypaws"
+
+#
+#: ../src/functions.cpp:443
+msgid "Pressure=density*9.80665*depth"
+msgstr "Druck=Dichte*9.80665*Tiefe"
+
+#
+#: ../src/functions.cpp:444 ../src/units_conversion.cpp:203
+msgid "Pa"
+msgstr "Pa"
+
+#
+#: ../src/functions.cpp:445
+msgid "density"
+msgstr "Dichte"
+
+#
+#: ../src/functions.cpp:446 ../src/units_conversion.cpp:243
+msgid "kg/m3"
+msgstr "kg/m3"
+
+#
+#: ../src/functions.cpp:447
+msgid "depth"
+msgstr "Tiefe"
+
+#
+#: ../src/functions.cpp:466
+msgid "Distance to horizon"
+msgstr "Distanz zum Horizont"
+
+#
+#: ../src/functions.cpp:467
+msgid ""
+"If the Earth is assumed to be a sphere with no atmosphere then the distance "
+"to the horizon can easily be calculated. (The Earths radius of curvature "
+"actually varies by 1 between the Equator and the Poles, so this formula isnt "
+"absolutely exact even assuming no refraction.) This formula assumes earth "
+"diameter of 12 756.32 km."
+msgstr ""
+"Wenn die Erde als Späre ohne Atmosphäre angenommen wird, dann kann die "
+"Entfernung zum Horizont leicht berechnet werden.  (Die Erdkrümmung variiert "
+"aktuell um 1 zwischen dem Äquator und den Polen, somit ist diese Formel "
+"nicht absolut exakt, selbst wenn keine Brechung angenommen wird.) Diese "
+"Formel nimmt den Erddurchmesser mit 12 756,32 km an."
+
+#
+#: ../src/functions.cpp:469
+msgid "https://en.wikipedia.org/wiki/Horizon, geometrical model"
+msgstr "https://en.wikipedia.org/wiki/Horizon, geometrical model"
+
+#
+#: ../src/functions.cpp:470
+msgid "distance_horizon=sqrt(height* (height + 12756.32))"
+msgstr "Distanz_horizont=sqrt(Höhe* (Höhe + 12756.32))"
+
+#
+#: ../src/functions.cpp:471 ../src/functions.cpp:473 ../src/functions.cpp:498
+#: ../src/functions.cpp:500 ../src/functions.cpp:502
+#: ../src/units_conversion.cpp:68
+msgid "kilometer"
+msgstr "Kilometer"
+
+#
+#: ../src/functions.cpp:493
+msgid "Objects above horizon"
+msgstr "Objekte über Horizont"
+
+#
+#: ../src/functions.cpp:494
 msgid ""
 "To compute the greatest distance at which an observer can see the top of an "
 "object above the horizon, compute the distance to the horizon for a "
@@ -1193,416 +1446,544 @@ msgstr ""
 "16 km entfernt. Diese Formel nimmt den Erddurchmesser mit 12 756,32 km an."
 
 #
-msgid "US gallons per minute"
-msgstr "US Gallonen pro Minute"
-
-#
-msgid "Unknown"
-msgstr "Unbekannt"
-
-#
-msgid "V"
-msgstr "V"
-
-#
-msgid "VAR - 273.15=VAR + 273.15"
-msgstr "VAR - 273.15=VAR + 273.15"
-
-#
-msgid "VAR-1=VAR+1"
-msgstr "VAR-1=VAR+1"
-
-#
-msgid "VAR/dtr=VAR*dtr"
-msgstr "VAR/dtr=VAR*dtr"
-
-#
-msgid "VMG=V*cos((alpha1-alpha2)*dtr)"
-msgstr "VMG = V*cos((Alpha1-Alpha2)*dtr)"
-
-#
-msgid "VMG=V*cos(alpha*dtr)"
-msgstr "VMG = V*cos(Alpha*dtr)"
-
-#
-msgid "V_wind"
-msgstr "V_wind"
-
-#
-msgid "Velocity Made Good (angle)"
-msgstr "Velocity Made Good (Winkel)"
-
-#
-msgid "Velocity Made Good (delta)"
-msgstr "Velocity Made Good (Delta)"
-
-#
-msgid ""
-"Velocity made good, or vmg, is a term in sailing, and specifically yacht "
-"racing, that refers to the component of a sailboats velocity that is in the "
-"direction of the true wind. The concept is useful in sailing, because a "
-"sailboat often cannot, or should not, sail directly to a mark to reach the "
-"mark as quickly as possible. Sailboats cannot sail directly upwind, and it "
-"is usually less than optimal, and sometimes dangerous, to sail directly "
-"downwind. Instead of sailing toward the mark, the helmsman chooses a point "
-"of sail that optimizes velocity made good."
-msgstr ""
-"Velocity made good oder VMG (bester Windwinkel zum Ziel) ist ein Begriff im "
-"Segeln und speziell im Yachtrennen, der die Komponente der Segelboot-"
-"Geschwindigkeit in Bezug auf die Richtung des wahren Winds beschreibt. Das "
-"Konzept ist hilfreich im Segeln, weil ein Segelboot oft nicht direkt zu "
-"einem Ziel segeln kann oder es nicht sollte, um das Ziel so schnell wie "
-"möglich zu erreichen. Segelboote können nicht direkt gegen den Wind segeln "
-"und es ist meist wenig optimal und manchmal gefährlich, vor dem Wind zu "
-"segeln. Statt auf das Ziel zu segeln, wählt der Steuermann einen Kurs, der "
-"VMG optimiert. dtr = Pi/180"
-
-#
-msgid "W"
-msgstr "W"
-
-#
-msgid ""
-"Wave speed = 3.03 x (wave period in seconds) NB output units need to be "
-"confirmed"
-msgstr ""
-"Wellen-Geschw. = 3.03 x (Wellen-Periode in Sekunden) NB Ausgabe-Einheiten "
-"müssen bestätigt werden"
-
-#
-msgid "Wave speed =f(period)"
-msgstr "Wellen-Geschw. =f(Periode)"
-
-#
-msgid "Wave_speed = 3.03 * (wave_period)"
-msgstr "Wellen_geschw = 3.03 * (Wellen_Periode)"
-
-#
-msgid "Weather"
-msgstr "Wetter"
-
-#
-msgid "Weight"
-msgstr "Gewicht"
-
-#
-msgid "Wind Chill"
-msgstr "Windchill"
-
-#
-msgid "Wind_Speed=0.837*Beaufort^(3/2)"
-msgstr "Wind_Geschw=0.837*Beaufort^(3/2)"
-
-#
-msgid "\\u00b0"
-msgstr "\\u00b0"
-
-#
-msgid "\\u00b0 ' \""
-msgstr "\\u00b0 ' \""
-
-#
-msgid "alpha"
-msgstr "Alpha"
-
-#
-msgid "alpha1"
-msgstr "Alpha1"
-
-#
-msgid "alpha2"
-msgstr "Alpha2"
-
-#
-msgid "angle"
-msgstr "Winkel"
-
-#
-msgid "atm"
-msgstr "atm"
-
-#
-msgid "bar"
-msgstr "bar"
-
-#
-msgid "bara"
-msgstr "bar,abs"
-
-#
-msgid "barg"
-msgstr "bar,rel"
-
-#
-msgid "breaking_strength= 900 * comparison_factor * (pi*diameter)^2 "
-msgstr "Bruchlast= 900 * Vergleichs_Faktor * (pi*Diameter)^2 "
-
-#
-msgid "breaking_strength= 900 * comparison_factor * circumference^2 "
-msgstr "Bruchlast= 900 * Vergleichs_Faktor * Umfang^2 "
-
-#
-msgid "circumference"
-msgstr "Umfang"
-
-#
-msgid "clear"
-msgstr "clear"
-
-#
-msgid "comparison_factor"
-msgstr "Vergleichs_Faktor"
-
-#
-msgid "density"
-msgstr "Dichte"
-
-#
-msgid "depth"
-msgstr "Tiefe"
-
-#
-msgid "dewpoint"
-msgstr "Taupunkt"
-
-#
-msgid "diameter"
-msgstr "Diameter"
-
-#
-msgid "distance_horizon=sqrt(height* (height + 12756.32))"
-msgstr "Distanz_horizont=sqrt(Höhe* (Höhe + 12756.32))"
-
-#
-msgid ""
-"distance_visible=sqrt(height_observer * (height_observer + 12756.32)) + sqrt"
-"(height_object * (height_object + 12756.32))"
-msgstr ""
-"Distanz_sichtbar=sqrt(Höhe_Beobachter * (Höhe_Beobachter + 12756.32)) + sqrt"
-"(Höhe_Objekt * (Höhe_Objekt + 12756.32))"
-
-#
-msgid "draft"
-msgstr "Tiefg"
-
-#
-msgid "draft_heeled=draft*cos(dtr*angle)"
-msgstr "Tiefg_gekraengt = Tiefg*cos(dtr*Winkel)"
-
-#
-msgid "ere"
-msgstr "ere"
-
-#
-msgid "feet"
-msgstr "Fuß"
-
-#
-msgid "fetch"
-msgstr "Fetch"
-
-#
-msgid "foot"
-msgstr "Fuß"
-
-#
-msgid "function"
-msgstr "function"
-
-#
-msgid "gram"
-msgstr "Gramm"
-
-#
-msgid "height"
-msgstr "Hoehe"
-
-#
-msgid "height_object"
-msgstr "Höhe_Objekt"
-
-#
-msgid "height_observer"
-msgstr "Höhe_Beobachter"
-
-#
-msgid "help"
-msgstr ""
-
-#
-msgid "hidecalculate"
-msgstr ""
-
-#
-msgid "hidefunction"
-msgstr ""
-
-#
-msgid "hidehelp"
-msgstr ""
-
-#
-msgid "hidehistory"
-msgstr ""
-
-#
-msgid "history"
-msgstr "history"
-
-#
-msgid ""
-"http://climate.weatheroffice.gc.ca/prods_servs/normals_documentation_e.html"
-msgstr ""
-"http://climate.weatheroffice.gc.ca/prods_servs/normals_documentation_e.html"
-
-#
-msgid ""
-"http://en.wikipedia.org/wiki/Wind_chill, http://climate.weatheroffice.gc.ca/"
-"prods_servs/normals_documentation_e.html"
-msgstr ""
-"http://en.wikipedia.org/wiki/Wind_chill, http://climate.weatheroffice.gc.ca/"
-"prods_servs/normals_documentation_e.html"
-
-#
-msgid "http://lagoon-inside.com/2012/01/faster-thanks-to-the-vmg-concept/"
-msgstr "http://lagoon-inside.com/2012/01/faster-thanks-to-the-vmg-concept/"
-
-#
-msgid "http://planetcalc.com/384/"
-msgstr "http://planetcalc.com/384/"
-
-#
-msgid "http://www.boatsafe.com/marlinespike/breaking.htm"
-msgstr "http://www.boatsafe.com/marlinespike/breaking.htm"
-
-#
-msgid "http://www.bootkeyharbor.com/Formulas.htm"
-msgstr "http://www.bootkeyharbor.com/Formulas.htm"
-
-#
-msgid ""
-"http://www.grc.nasa.gov/WWW/k-12/WindTunnel/Activities/fluid_pressure.html\n"
-"Saltypaws"
-msgstr ""
-"http://www.grc.nasa.gov/WWW/k-12/WindTunnel/Activities/fluid_pressure.html\n"
-"Saltypaws"
-
-#
+#: ../src/functions.cpp:496
 msgid "https://en.wikipedia.org/wiki/Horizon, Objects above horizon"
 msgstr "https://en.wikipedia.org/wiki/Horizon, Objects above horizon"
 
 #
-msgid "https://en.wikipedia.org/wiki/Horizon, geometrical model"
-msgstr "https://en.wikipedia.org/wiki/Horizon, geometrical model"
-
-#
+#: ../src/functions.cpp:497
 msgid ""
-"humidex = (T_air) + (0.5555)*((6.11 * exp (5417.7530 * ( (1/273.16) - (1/"
-"dewpoint) ) ) ) - 10.0)"
+"distance_visible=sqrt(height_observer * (height_observer + 12756.32)) + "
+"sqrt(height_object * (height_object + 12756.32))"
 msgstr ""
-"humidex = (T_luft) + (0.5555)*((6.11 * exp (5417.7530 * ( (1/273.16) - (1/"
-"Taupunkt) ) ) ) - 10.0)"
+"Distanz_sichtbar=sqrt(Höhe_Beobachter * (Höhe_Beobachter + 12756.32)) + "
+"sqrt(Höhe_Objekt * (Höhe_Objekt + 12756.32))"
 
 #
-msgid "inch"
-msgstr "Zoll"
+#: ../src/functions.cpp:499
+msgid "height_observer"
+msgstr "Höhe_Beobachter"
 
 #
-msgid "kPa"
-msgstr "kPa"
+#: ../src/functions.cpp:501
+msgid "height_object"
+msgstr "Höhe_Objekt"
 
 #
-msgid "kg"
-msgstr "kg"
+#: ../src/functions.cpp:520 ../src/functions.cpp:521
+msgid "Convert Distance"
+msgstr "Umrechnung Distanz"
 
 #
-msgid "kg/liter"
-msgstr "kg/Liter"
+#: ../src/functions.cpp:522 ../src/functions.cpp:549 ../src/functions.cpp:576
+#: ../src/functions.cpp:603 ../src/functions.cpp:630 ../src/functions.cpp:657
+msgid "Conversions"
+msgstr "Umrechnungen"
 
 #
-msgid "kg/m3"
-msgstr "kg/m3"
+#: ../src/functions.cpp:523 ../src/functions.cpp:550 ../src/functions.cpp:577
+#: ../src/functions.cpp:604 ../src/functions.cpp:631 ../src/functions.cpp:658
+msgid "Saltypaws"
+msgstr "Saltypaws"
 
 #
-msgid "kilometer"
-msgstr "Kilometer"
+#: ../src/functions.cpp:524
+msgid "Distance_Out=Distance_In"
+msgstr "Distanz_Aus=Distanz_Ein"
 
 #
-msgid "km/h"
-msgstr "km/h"
+#: ../src/functions.cpp:526
+msgid "Distance_In"
+msgstr "Distanz_Ein"
 
 #
-msgid "knots"
-msgstr "Knoten"
+#: ../src/functions.cpp:547 ../src/functions.cpp:548
+msgid "Convert Temperature"
+msgstr "Umrechnung Temperatur"
 
 #
-msgid "lbs"
-msgstr "lbs"
+#: ../src/functions.cpp:551
+msgid "Temperature_Out=Temperature_In"
+msgstr "Temperatur_Aus=Temperatur_Ein"
 
 #
-msgid "liter per minute"
-msgstr "Liter pro Minute"
+#: ../src/functions.cpp:553
+msgid "Temperature_In"
+msgstr "Temperatur_Ein"
 
 #
-msgid "m/s"
-msgstr "m/s"
+#: ../src/functions.cpp:574 ../src/functions.cpp:575
+msgid "Convert Speed"
+msgstr "Umrechnung Geschw."
 
 #
+#: ../src/functions.cpp:578
+msgid "Speed_Out=Speed_In"
+msgstr "Geschw_Aus=Geschw_Ein"
+
+#
+#: ../src/functions.cpp:580
+msgid "Speed_In"
+msgstr "Geschw_Ein"
+
+#
+#: ../src/functions.cpp:601 ../src/functions.cpp:602
+msgid "Convert Pressure"
+msgstr "Umrechnung Druck"
+
+#
+#: ../src/functions.cpp:605
+msgid "Pressure_Out=Pressure_In"
+msgstr "Druck_Aus=Druck_Ein"
+
+#
+#: ../src/functions.cpp:606 ../src/functions.cpp:608
+#: ../src/units_conversion.cpp:178
+msgid "bara"
+msgstr "bar,abs"
+
+#
+#: ../src/functions.cpp:607
+msgid "Pressure_In"
+msgstr "Druck_Ein"
+
+#
+#: ../src/functions.cpp:628 ../src/functions.cpp:629
+msgid "Convert Angle"
+msgstr "Umrechnung Winkel"
+
+#
+#: ../src/functions.cpp:632
+msgid "Angle_Out=Angle_In"
+msgstr "Winkel_Aus=Winkel_Ein"
+
+#
+#: ../src/functions.cpp:634
+msgid "Angle_In"
+msgstr "Winkel_Ein"
+
+#
+#: ../src/functions.cpp:655 ../src/functions.cpp:656
+msgid "Convert Flowrate"
+msgstr "Umrechnung Fließrate"
+
+#
+#: ../src/functions.cpp:659
+msgid "Flowrate_Out=Flowrate_In"
+msgstr "Fliessrate_Aus=Fliessrate_Ein"
+
+#
+#: ../src/functions.cpp:660 ../src/functions.cpp:662
+#: ../src/units_conversion.cpp:118
 msgid "m3/s"
 msgstr "m3/s"
 
 #
-msgid "mBar"
-msgstr "mBar"
+#: ../src/functions.cpp:661
+msgid "Flowrate_In"
+msgstr "Fliessrate_Ein"
 
 #
-msgid "meter"
+#: ../src/units_conversion.cpp:34 ../src/units_conversion.cpp:39
+#: ../src/units_conversion.cpp:44
+msgid "Angle"
+msgstr "Winkel"
+
+#
+#: ../src/units_conversion.cpp:35 ../src/units_conversion.cpp:45
+#: ../src/units_conversion.cpp:50 ../src/units_conversion.cpp:85
+#: ../src/units_conversion.cpp:100 ../src/units_conversion.cpp:120
+#: ../src/units_conversion.cpp:135 ../src/units_conversion.cpp:150
+#: ../src/units_conversion.cpp:160 ../src/units_conversion.cpp:175
+#: ../src/units_conversion.cpp:180 ../src/units_conversion.cpp:230
+#: ../src/units_conversion.cpp:245
+msgid "1"
+msgstr "1"
+
+#
+#: ../src/units_conversion.cpp:36 ../src/units_conversion.cpp:41
+#: ../src/units_conversion.cpp:51 ../src/units_conversion.cpp:56
+#: ../src/units_conversion.cpp:61 ../src/units_conversion.cpp:66
+#: ../src/units_conversion.cpp:71 ../src/units_conversion.cpp:86
+#: ../src/units_conversion.cpp:91 ../src/units_conversion.cpp:96
+#: ../src/units_conversion.cpp:101 ../src/units_conversion.cpp:106
+#: ../src/units_conversion.cpp:111 ../src/units_conversion.cpp:116
+#: ../src/units_conversion.cpp:121 ../src/units_conversion.cpp:126
+#: ../src/units_conversion.cpp:131 ../src/units_conversion.cpp:136
+#: ../src/units_conversion.cpp:141 ../src/units_conversion.cpp:146
+#: ../src/units_conversion.cpp:151 ../src/units_conversion.cpp:156
+#: ../src/units_conversion.cpp:161 ../src/units_conversion.cpp:166
+#: ../src/units_conversion.cpp:171 ../src/units_conversion.cpp:176
+#: ../src/units_conversion.cpp:181 ../src/units_conversion.cpp:186
+#: ../src/units_conversion.cpp:191 ../src/units_conversion.cpp:201
+#: ../src/units_conversion.cpp:206 ../src/units_conversion.cpp:211
+#: ../src/units_conversion.cpp:216 ../src/units_conversion.cpp:221
+#: ../src/units_conversion.cpp:226 ../src/units_conversion.cpp:246
+#: ../src/units_conversion.cpp:251
+msgid "TRUE"
+msgstr "TRUE"
+
+#
+#: ../src/units_conversion.cpp:38
+msgid "Radians"
+msgstr ""
+
+#
+#: ../src/units_conversion.cpp:40
+msgid "VAR/dtr=VAR*dtr"
+msgstr "VAR/dtr=VAR*dtr"
+
+#
+#: ../src/units_conversion.cpp:43
+msgid "Degree"
+msgstr "Grad"
+
+#
+#: ../src/units_conversion.cpp:46 ../src/units_conversion.cpp:76
+#: ../src/units_conversion.cpp:81 ../src/units_conversion.cpp:196
+msgid "FALSE"
+msgstr "FALSE"
+
+#
+#: ../src/units_conversion.cpp:48
+msgid "Meter"
 msgstr "Meter"
 
 #
-msgid "mmHg"
-msgstr "mmHg"
+#: ../src/units_conversion.cpp:49 ../src/units_conversion.cpp:54
+#: ../src/units_conversion.cpp:59 ../src/units_conversion.cpp:64
+#: ../src/units_conversion.cpp:69 ../src/units_conversion.cpp:74
+#: ../src/units_conversion.cpp:79 ../src/units_conversion.cpp:169
+msgid "Distance"
+msgstr "Distanz"
 
 #
-msgid "psi"
-msgstr "psi"
+#: ../src/units_conversion.cpp:55
+msgid "1852"
+msgstr "1852"
 
 #
+#: ../src/units_conversion.cpp:60
+msgid "0.0254"
+msgstr "0.0254"
+
+#
+#: ../src/units_conversion.cpp:65 ../src/units_conversion.cpp:75
+msgid "0.3048"
+msgstr "0.3048"
+
+#
+#: ../src/units_conversion.cpp:70
+msgid "1000"
+msgstr "1000"
+
+#
+#: ../src/units_conversion.cpp:73
+msgid "foot"
+msgstr "Fuß"
+
+#
+#: ../src/units_conversion.cpp:78
+msgid "Fathom"
+msgstr "Faden"
+
+#
+#: ../src/units_conversion.cpp:80
+msgid "1.8288"
+msgstr "1.8288"
+
+#
+#: ../src/units_conversion.cpp:84 ../src/units_conversion.cpp:89
+#: ../src/units_conversion.cpp:94
+msgid "Speed"
+msgstr "Geschw"
+
+#
+#: ../src/units_conversion.cpp:90
+msgid "0.514444"
+msgstr "0.514444"
+
+#
+#: ../src/units_conversion.cpp:93
+msgid "km/h"
+msgstr "km/h"
+
+#
+#: ../src/units_conversion.cpp:95
+msgid "0.277778"
+msgstr "0.277778"
+
+#
+#: ../src/units_conversion.cpp:99 ../src/units_conversion.cpp:104
+#: ../src/units_conversion.cpp:109 ../src/units_conversion.cpp:114
+msgid "Temperature"
+msgstr "Temperatur"
+
+#
+#: ../src/units_conversion.cpp:105
+msgid "VAR - 273.15=VAR + 273.15"
+msgstr "VAR - 273.15=VAR + 273.15"
+
+#
+#: ../src/units_conversion.cpp:108
+msgid "Fahrenheit"
+msgstr "Fahrenheit"
+
+#
+#: ../src/units_conversion.cpp:110
+msgid "(5/9) * (VAR - 32)=((9/5)* VAR)+32"
+msgstr "(5/9) * (VAR - 32)=((9/5)* VAR)+32"
+
+#
+#: ../src/units_conversion.cpp:113
+msgid "Rankine"
+msgstr "Rankine-Skala"
+
+#
+#: ../src/units_conversion.cpp:115
+msgid "(5/9)*(VAR-491.67)=(9/5)*(VAR + 273.15)"
+msgstr "(5/9)*(VAR-491.67)=(9/5)*(VAR + 273.15)"
+
+#
+#: ../src/units_conversion.cpp:119 ../src/units_conversion.cpp:124
+#: ../src/units_conversion.cpp:129
+msgid "Flowrate"
+msgstr "Fließrate"
+
+#
+#: ../src/units_conversion.cpp:125
+msgid "15850.3231"
+msgstr "15850.3231"
+
+#
+#: ../src/units_conversion.cpp:128
+msgid "liter per minute"
+msgstr "Liter pro Minute"
+
+#
+#: ../src/units_conversion.cpp:130
+msgid "60000"
+msgstr "60000"
+
+#
+#: ../src/units_conversion.cpp:133
+msgid "Seconds"
+msgstr "Sekunden"
+
+#
+#: ../src/units_conversion.cpp:134 ../src/units_conversion.cpp:139
+#: ../src/units_conversion.cpp:144
+msgid "Time"
+msgstr "Zeit"
+
+#
+#: ../src/units_conversion.cpp:138
+msgid "Minutes"
+msgstr "Minuten"
+
+#
+#: ../src/units_conversion.cpp:140
+msgid "60"
+msgstr "60"
+
+#
+#: ../src/units_conversion.cpp:143
+msgid "Hours"
+msgstr "Stunden"
+
+#
+#: ../src/units_conversion.cpp:145
+msgid "3600"
+msgstr "3600"
+
+#
+#: ../src/units_conversion.cpp:148
+msgid "Newton"
+msgstr "Newton"
+
+#
+#: ../src/units_conversion.cpp:149 ../src/units_conversion.cpp:154
+msgid "Force"
+msgstr "Kraft"
+
+#
+#: ../src/units_conversion.cpp:155
+msgid "4.4482216"
+msgstr "4.4482216"
+
+#
+#: ../src/units_conversion.cpp:158
+msgid "Square meter"
+msgstr "Quadratmeter"
+
+#
+#: ../src/units_conversion.cpp:159 ../src/units_conversion.cpp:164
+msgid "Area"
+msgstr "Fläche"
+
+#
+#: ../src/units_conversion.cpp:165
+msgid "0.092903"
+msgstr "0.092903"
+
+#
+#: ../src/units_conversion.cpp:168
+msgid "Centimeter"
+msgstr "Zentimeter"
+
+#
+#: ../src/units_conversion.cpp:170 ../src/units_conversion.cpp:200
+msgid "0.01"
+msgstr "0.01"
+
+#
+#: ../src/units_conversion.cpp:173
+msgid "bar"
+msgstr "bar"
+
+#
+#: ../src/units_conversion.cpp:174 ../src/units_conversion.cpp:179
+#: ../src/units_conversion.cpp:184 ../src/units_conversion.cpp:189
+#: ../src/units_conversion.cpp:194 ../src/units_conversion.cpp:199
+#: ../src/units_conversion.cpp:204 ../src/units_conversion.cpp:209
+#: ../src/units_conversion.cpp:214 ../src/units_conversion.cpp:219
+#: ../src/units_conversion.cpp:224
+msgid "Pressure"
+msgstr "Druck"
+
+#
+#: ../src/units_conversion.cpp:183
+msgid "barg"
+msgstr "bar,rel"
+
+#
+#: ../src/units_conversion.cpp:185
+msgid "VAR-1=VAR+1"
+msgstr "VAR-1=VAR+1"
+
+#
+#: ../src/units_conversion.cpp:188
 msgid "psia"
 msgstr "psia"
 
 #
-msgid "seconds"
-msgstr "Sekunden"
+#: ../src/units_conversion.cpp:190 ../src/units_conversion.cpp:195
+msgid "0.0689475729"
+msgstr "0.0689475729"
 
 #
-msgid "showcalculate"
-msgstr ""
+#: ../src/units_conversion.cpp:193
+msgid "psi"
+msgstr "psi"
 
 #
-msgid "showfunction"
-msgstr ""
+#: ../src/units_conversion.cpp:198
+msgid "kPa"
+msgstr "kPa"
 
 #
-msgid "showhelp"
-msgstr ""
+#: ../src/units_conversion.cpp:205
+msgid "1e-05"
+msgstr "1e-05"
 
 #
-msgid "showhistory"
-msgstr ""
+#: ../src/units_conversion.cpp:208
+msgid "Inches of Mercury"
+msgstr "Zoll Quecksilbersäule"
 
 #
-msgid "square feet"
-msgstr "Quadratfuß"
+#: ../src/units_conversion.cpp:210
+msgid "0.03386"
+msgstr "0.03386"
 
 #
-msgid "time_ratio"
-msgstr "Zeit_Anteil"
+#: ../src/units_conversion.cpp:213
+msgid "mBar"
+msgstr "mBar"
 
 #
-msgid "vhull=1.34*sqrt(LWL)"
-msgstr "v_rumpf=1.34*sqrt(LWL)"
+#: ../src/units_conversion.cpp:215 ../src/units_conversion.cpp:240
+#: ../src/units_conversion.cpp:250
+msgid "0.001"
+msgstr "0.001"
 
 #
-msgid "wave_period"
-msgstr "Wellen_Periode"
+#: ../src/units_conversion.cpp:218
+msgid "atm"
+msgstr "atm"
+
+#
+#: ../src/units_conversion.cpp:220
+msgid "0.987"
+msgstr "0.987"
+
+#
+#: ../src/units_conversion.cpp:223
+msgid "mmHg"
+msgstr "mmHg"
+
+#
+#: ../src/units_conversion.cpp:225
+msgid "750.06"
+msgstr "750.06"
+
+#
+#: ../src/units_conversion.cpp:228
+msgid "kg"
+msgstr "kg"
+
+#
+#: ../src/units_conversion.cpp:229 ../src/units_conversion.cpp:234
+#: ../src/units_conversion.cpp:239
+msgid "Weight"
+msgstr "Gewicht"
+
+#
+#: ../src/units_conversion.cpp:231
+msgid "2"
+msgstr "2"
+
+#
+#: ../src/units_conversion.cpp:233
+msgid "Lbs (weight)"
+msgstr "Lbs (Gewicht)"
+
+#
+#: ../src/units_conversion.cpp:235
+msgid "2.20462"
+msgstr "2.20462"
+
+#
+#: ../src/units_conversion.cpp:236
+msgid "3"
+msgstr "3"
+
+#
+#: ../src/units_conversion.cpp:238
+msgid "gram"
+msgstr "Gramm"
+
+#
+#: ../src/units_conversion.cpp:241
+msgid "4"
+msgstr "4"
+
+#
+#: ../src/units_conversion.cpp:244 ../src/units_conversion.cpp:249
+msgid "Density"
+msgstr "Dichte"
+
+#
+#: ../src/units_conversion.cpp:248
+msgid "kg/liter"
+msgstr "kg/Liter"
+
+#
+#
+#~ msgid "\""
+#~ msgstr "\""
+
+#
+#
+#~ msgid "-"
+#~ msgstr "-"

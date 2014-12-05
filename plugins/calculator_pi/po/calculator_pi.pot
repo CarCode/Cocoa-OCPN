@@ -3,149 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#: ../src/calculatorgui_impl.cpp:146 ../src/calculatorgui_impl.cpp:509
-#: ../src/calculatorgui_impl.cpp:530 ../src/functions.cpp:42
-#: ../src/functions.cpp:43 ../src/functions.cpp:44 ../src/functions.cpp:45
-#: ../src/functions.cpp:46 ../src/functions.cpp:47 ../src/functions.cpp:48
-#: ../src/functions.cpp:49 ../src/functions.cpp:50 ../src/functions.cpp:51
-#: ../src/functions.cpp:52 ../src/functions.cpp:53 ../src/functions.cpp:54
-#: ../src/functions.cpp:55 ../src/functions.cpp:56 ../src/functions.cpp:57
-#: ../src/functions.cpp:58 ../src/functions.cpp:59 ../src/functions.cpp:71
-#: ../src/functions.cpp:72 ../src/functions.cpp:73 ../src/functions.cpp:74
-#: ../src/functions.cpp:75 ../src/functions.cpp:76 ../src/functions.cpp:77
-#: ../src/functions.cpp:78 ../src/functions.cpp:79 ../src/functions.cpp:80
-#: ../src/functions.cpp:81 ../src/functions.cpp:82 ../src/functions.cpp:83
-#: ../src/functions.cpp:84 ../src/functions.cpp:85 ../src/functions.cpp:86
-#: ../src/functions.cpp:96 ../src/functions.cpp:97 ../src/functions.cpp:98
-#: ../src/functions.cpp:99 ../src/functions.cpp:100 ../src/functions.cpp:101
-#: ../src/functions.cpp:102 ../src/functions.cpp:103 ../src/functions.cpp:104
-#: ../src/functions.cpp:105 ../src/functions.cpp:106 ../src/functions.cpp:107
-#: ../src/functions.cpp:108 ../src/functions.cpp:109 ../src/functions.cpp:110
-#: ../src/functions.cpp:111 ../src/functions.cpp:112 ../src/functions.cpp:113
-#: ../src/functions.cpp:123 ../src/functions.cpp:124 ../src/functions.cpp:125
-#: ../src/functions.cpp:126 ../src/functions.cpp:127 ../src/functions.cpp:128
-#: ../src/functions.cpp:129 ../src/functions.cpp:130 ../src/functions.cpp:131
-#: ../src/functions.cpp:132 ../src/functions.cpp:133 ../src/functions.cpp:134
-#: ../src/functions.cpp:135 ../src/functions.cpp:136 ../src/functions.cpp:137
-#: ../src/functions.cpp:138 ../src/functions.cpp:139 ../src/functions.cpp:140
-#: ../src/functions.cpp:150 ../src/functions.cpp:151 ../src/functions.cpp:152
-#: ../src/functions.cpp:153 ../src/functions.cpp:154 ../src/functions.cpp:155
-#: ../src/functions.cpp:156 ../src/functions.cpp:157 ../src/functions.cpp:158
-#: ../src/functions.cpp:159 ../src/functions.cpp:160 ../src/functions.cpp:161
-#: ../src/functions.cpp:162 ../src/functions.cpp:163 ../src/functions.cpp:164
-#: ../src/functions.cpp:165 ../src/functions.cpp:166 ../src/functions.cpp:167
-#: ../src/functions.cpp:179 ../src/functions.cpp:180 ../src/functions.cpp:181
-#: ../src/functions.cpp:182 ../src/functions.cpp:183 ../src/functions.cpp:184
-#: ../src/functions.cpp:185 ../src/functions.cpp:186 ../src/functions.cpp:187
-#: ../src/functions.cpp:188 ../src/functions.cpp:189 ../src/functions.cpp:190
-#: ../src/functions.cpp:191 ../src/functions.cpp:192 ../src/functions.cpp:193
-#: ../src/functions.cpp:194 ../src/functions.cpp:206 ../src/functions.cpp:207
-#: ../src/functions.cpp:208 ../src/functions.cpp:209 ../src/functions.cpp:210
-#: ../src/functions.cpp:211 ../src/functions.cpp:212 ../src/functions.cpp:213
-#: ../src/functions.cpp:214 ../src/functions.cpp:215 ../src/functions.cpp:216
-#: ../src/functions.cpp:217 ../src/functions.cpp:218 ../src/functions.cpp:219
-#: ../src/functions.cpp:220 ../src/functions.cpp:221 ../src/functions.cpp:233
-#: ../src/functions.cpp:234 ../src/functions.cpp:235 ../src/functions.cpp:236
-#: ../src/functions.cpp:237 ../src/functions.cpp:238 ../src/functions.cpp:239
-#: ../src/functions.cpp:240 ../src/functions.cpp:241 ../src/functions.cpp:242
-#: ../src/functions.cpp:243 ../src/functions.cpp:244 ../src/functions.cpp:245
-#: ../src/functions.cpp:246 ../src/functions.cpp:247 ../src/functions.cpp:248
-#: ../src/functions.cpp:260 ../src/functions.cpp:261 ../src/functions.cpp:262
-#: ../src/functions.cpp:263 ../src/functions.cpp:264 ../src/functions.cpp:265
-#: ../src/functions.cpp:266 ../src/functions.cpp:267 ../src/functions.cpp:268
-#: ../src/functions.cpp:269 ../src/functions.cpp:270 ../src/functions.cpp:271
-#: ../src/functions.cpp:272 ../src/functions.cpp:273 ../src/functions.cpp:274
-#: ../src/functions.cpp:275 ../src/functions.cpp:287 ../src/functions.cpp:288
-#: ../src/functions.cpp:289 ../src/functions.cpp:290 ../src/functions.cpp:291
-#: ../src/functions.cpp:292 ../src/functions.cpp:293 ../src/functions.cpp:294
-#: ../src/functions.cpp:295 ../src/functions.cpp:296 ../src/functions.cpp:297
-#: ../src/functions.cpp:298 ../src/functions.cpp:299 ../src/functions.cpp:300
-#: ../src/functions.cpp:301 ../src/functions.cpp:302 ../src/functions.cpp:314
-#: ../src/functions.cpp:315 ../src/functions.cpp:316 ../src/functions.cpp:317
-#: ../src/functions.cpp:318 ../src/functions.cpp:319 ../src/functions.cpp:320
-#: ../src/functions.cpp:321 ../src/functions.cpp:322 ../src/functions.cpp:323
-#: ../src/functions.cpp:324 ../src/functions.cpp:325 ../src/functions.cpp:326
-#: ../src/functions.cpp:327 ../src/functions.cpp:328 ../src/functions.cpp:329
-#: ../src/functions.cpp:343 ../src/functions.cpp:344 ../src/functions.cpp:345
-#: ../src/functions.cpp:346 ../src/functions.cpp:347 ../src/functions.cpp:348
-#: ../src/functions.cpp:349 ../src/functions.cpp:350 ../src/functions.cpp:351
-#: ../src/functions.cpp:352 ../src/functions.cpp:353 ../src/functions.cpp:354
-#: ../src/functions.cpp:355 ../src/functions.cpp:356 ../src/functions.cpp:368
-#: ../src/functions.cpp:369 ../src/functions.cpp:370 ../src/functions.cpp:371
-#: ../src/functions.cpp:372 ../src/functions.cpp:373 ../src/functions.cpp:374
-#: ../src/functions.cpp:375 ../src/functions.cpp:376 ../src/functions.cpp:377
-#: ../src/functions.cpp:378 ../src/functions.cpp:379 ../src/functions.cpp:380
-#: ../src/functions.cpp:381 ../src/functions.cpp:382 ../src/functions.cpp:383
-#: ../src/functions.cpp:395 ../src/functions.cpp:396 ../src/functions.cpp:397
-#: ../src/functions.cpp:398 ../src/functions.cpp:399 ../src/functions.cpp:400
-#: ../src/functions.cpp:401 ../src/functions.cpp:402 ../src/functions.cpp:403
-#: ../src/functions.cpp:404 ../src/functions.cpp:405 ../src/functions.cpp:406
-#: ../src/functions.cpp:407 ../src/functions.cpp:408 ../src/functions.cpp:409
-#: ../src/functions.cpp:410 ../src/functions.cpp:420 ../src/functions.cpp:421
-#: ../src/functions.cpp:422 ../src/functions.cpp:423 ../src/functions.cpp:424
-#: ../src/functions.cpp:425 ../src/functions.cpp:426 ../src/functions.cpp:427
-#: ../src/functions.cpp:428 ../src/functions.cpp:429 ../src/functions.cpp:430
-#: ../src/functions.cpp:431 ../src/functions.cpp:432 ../src/functions.cpp:433
-#: ../src/functions.cpp:434 ../src/functions.cpp:435 ../src/functions.cpp:436
-#: ../src/functions.cpp:437 ../src/functions.cpp:449 ../src/functions.cpp:450
-#: ../src/functions.cpp:451 ../src/functions.cpp:452 ../src/functions.cpp:453
-#: ../src/functions.cpp:454 ../src/functions.cpp:455 ../src/functions.cpp:456
-#: ../src/functions.cpp:457 ../src/functions.cpp:458 ../src/functions.cpp:459
-#: ../src/functions.cpp:460 ../src/functions.cpp:461 ../src/functions.cpp:462
-#: ../src/functions.cpp:463 ../src/functions.cpp:464 ../src/functions.cpp:474
-#: ../src/functions.cpp:475 ../src/functions.cpp:476 ../src/functions.cpp:477
-#: ../src/functions.cpp:478 ../src/functions.cpp:479 ../src/functions.cpp:480
-#: ../src/functions.cpp:481 ../src/functions.cpp:482 ../src/functions.cpp:483
-#: ../src/functions.cpp:484 ../src/functions.cpp:485 ../src/functions.cpp:486
-#: ../src/functions.cpp:487 ../src/functions.cpp:488 ../src/functions.cpp:489
-#: ../src/functions.cpp:490 ../src/functions.cpp:491 ../src/functions.cpp:503
-#: ../src/functions.cpp:504 ../src/functions.cpp:505 ../src/functions.cpp:506
-#: ../src/functions.cpp:507 ../src/functions.cpp:508 ../src/functions.cpp:509
-#: ../src/functions.cpp:510 ../src/functions.cpp:511 ../src/functions.cpp:512
-#: ../src/functions.cpp:513 ../src/functions.cpp:514 ../src/functions.cpp:515
-#: ../src/functions.cpp:516 ../src/functions.cpp:517 ../src/functions.cpp:518
-#: ../src/functions.cpp:528 ../src/functions.cpp:529 ../src/functions.cpp:530
-#: ../src/functions.cpp:531 ../src/functions.cpp:532 ../src/functions.cpp:533
-#: ../src/functions.cpp:534 ../src/functions.cpp:535 ../src/functions.cpp:536
-#: ../src/functions.cpp:537 ../src/functions.cpp:538 ../src/functions.cpp:539
-#: ../src/functions.cpp:540 ../src/functions.cpp:541 ../src/functions.cpp:542
-#: ../src/functions.cpp:543 ../src/functions.cpp:544 ../src/functions.cpp:545
-#: ../src/functions.cpp:555 ../src/functions.cpp:556 ../src/functions.cpp:557
-#: ../src/functions.cpp:558 ../src/functions.cpp:559 ../src/functions.cpp:560
-#: ../src/functions.cpp:561 ../src/functions.cpp:562 ../src/functions.cpp:563
-#: ../src/functions.cpp:564 ../src/functions.cpp:565 ../src/functions.cpp:566
-#: ../src/functions.cpp:567 ../src/functions.cpp:568 ../src/functions.cpp:569
-#: ../src/functions.cpp:570 ../src/functions.cpp:571 ../src/functions.cpp:572
-#: ../src/functions.cpp:582 ../src/functions.cpp:583 ../src/functions.cpp:584
-#: ../src/functions.cpp:585 ../src/functions.cpp:586 ../src/functions.cpp:587
-#: ../src/functions.cpp:588 ../src/functions.cpp:589 ../src/functions.cpp:590
-#: ../src/functions.cpp:591 ../src/functions.cpp:592 ../src/functions.cpp:593
-#: ../src/functions.cpp:594 ../src/functions.cpp:595 ../src/functions.cpp:596
-#: ../src/functions.cpp:597 ../src/functions.cpp:598 ../src/functions.cpp:599
-#: ../src/functions.cpp:609 ../src/functions.cpp:610 ../src/functions.cpp:611
-#: ../src/functions.cpp:612 ../src/functions.cpp:613 ../src/functions.cpp:614
-#: ../src/functions.cpp:615 ../src/functions.cpp:616 ../src/functions.cpp:617
-#: ../src/functions.cpp:618 ../src/functions.cpp:619 ../src/functions.cpp:620
-#: ../src/functions.cpp:621 ../src/functions.cpp:622 ../src/functions.cpp:623
-#: ../src/functions.cpp:624 ../src/functions.cpp:625 ../src/functions.cpp:626
-#: ../src/functions.cpp:636 ../src/functions.cpp:637 ../src/functions.cpp:638
-#: ../src/functions.cpp:639 ../src/functions.cpp:640 ../src/functions.cpp:641
-#: ../src/functions.cpp:642 ../src/functions.cpp:643 ../src/functions.cpp:644
-#: ../src/functions.cpp:645 ../src/functions.cpp:646 ../src/functions.cpp:647
-#: ../src/functions.cpp:648 ../src/functions.cpp:649 ../src/functions.cpp:650
-#: ../src/functions.cpp:651 ../src/functions.cpp:652 ../src/functions.cpp:653
-#: ../src/functions.cpp:663 ../src/functions.cpp:664 ../src/functions.cpp:665
-#: ../src/functions.cpp:666 ../src/functions.cpp:667 ../src/functions.cpp:668
-#: ../src/functions.cpp:669 ../src/functions.cpp:670 ../src/functions.cpp:671
-#: ../src/functions.cpp:672 ../src/functions.cpp:673 ../src/functions.cpp:674
-#: ../src/functions.cpp:675 ../src/functions.cpp:676 ../src/functions.cpp:677
-#: ../src/functions.cpp:678 ../src/functions.cpp:679 ../src/functions.cpp:680
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: calculator_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-02 11:33+0200\n"
+"POT-Creation-Date: 2014-12-05 14:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -173,201 +36,201 @@ msgstr ""
 msgid "Calculator Preferences"
 msgstr ""
 
-#: ../src/calculatorgui_impl.h:57 ../src/calculatorgui.h:97
+#: ../src/calculatorgui_impl.h:56 ../src/calculatorgui.h:97
 msgid "Calculator preferences"
 msgstr ""
 
-#: ../src/calculatorgui_impl.h:63
+#: ../src/calculatorgui_impl.h:62
 msgid "Help!!!!"
 msgstr ""
 
-#: ../src/calculatorgui_impl.h:69
+#: ../src/calculatorgui_impl.h:68
 msgid "Extra Functions"
 msgstr ""
 
-#: ../src/calculatorgui_impl.h:92
+#: ../src/calculatorgui_impl.h:91
 msgid "Calculator by SaltyPaws"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:65 ../src/calculatorgui.cpp:597
-#: ../src/calculatorgui.cpp:609
+#: ../src/calculatorgui_impl.cpp:64 ../src/calculatorgui.cpp:599
+#: ../src/calculatorgui.cpp:611
 msgid "All"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:396
+#: ../src/calculatorgui_impl.cpp:395
 msgid "Test"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:400
+#: ../src/calculatorgui_impl.cpp:399
 msgid "Mouse"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:404
+#: ../src/calculatorgui_impl.cpp:403
 msgid "List"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:458 ../src/calculatorgui_impl.cpp:527
-#: ../src/calculatorgui_impl.cpp:539
+#: ../src/calculatorgui_impl.cpp:457 ../src/calculatorgui_impl.cpp:526
+#: ../src/calculatorgui_impl.cpp:538
 msgid "Error"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:458
+#: ../src/calculatorgui_impl.cpp:457
 msgid "Ans"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:462
+#: ../src/calculatorgui_impl.cpp:461
 msgid "clear"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:462
+#: ../src/calculatorgui_impl.cpp:461
 msgid "Clear"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:462
+#: ../src/calculatorgui_impl.cpp:461
 msgid "CLEAR"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:466
+#: ../src/calculatorgui_impl.cpp:465
 msgid "HideHelp"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:466
+#: ../src/calculatorgui_impl.cpp:465
 msgid "hidehelp"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:466
+#: ../src/calculatorgui_impl.cpp:465
 msgid "HIDEHELP"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:466
+#: ../src/calculatorgui_impl.cpp:465
 msgid "ShowHelp"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:466
+#: ../src/calculatorgui_impl.cpp:465
 msgid "showhelp"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:466
+#: ../src/calculatorgui_impl.cpp:465
 msgid "SHOWHELP"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:472
+#: ../src/calculatorgui_impl.cpp:471
 msgid "HideHistory"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:472
+#: ../src/calculatorgui_impl.cpp:471
 msgid "hidehistory"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:472
+#: ../src/calculatorgui_impl.cpp:471
 msgid "HIDEHISTORY"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:472
+#: ../src/calculatorgui_impl.cpp:471
 msgid "ShowHistory"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:472
+#: ../src/calculatorgui_impl.cpp:471
 msgid "showhistory"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:472
+#: ../src/calculatorgui_impl.cpp:471
 msgid "SHOWHISTORY"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:478
+#: ../src/calculatorgui_impl.cpp:477
 msgid "HideCalculate"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:478
+#: ../src/calculatorgui_impl.cpp:477
 msgid "hidecalculate"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:478
+#: ../src/calculatorgui_impl.cpp:477
 msgid "HIDECALCULATE"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:478
+#: ../src/calculatorgui_impl.cpp:477
 msgid "ShowCalculate"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:478
+#: ../src/calculatorgui_impl.cpp:477
 msgid "showcalculate"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:478
+#: ../src/calculatorgui_impl.cpp:477
 msgid "SHOWCALCULATE"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:484
+#: ../src/calculatorgui_impl.cpp:483
 msgid "HideFunction"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:484
+#: ../src/calculatorgui_impl.cpp:483
 msgid "hidefunction"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:484
+#: ../src/calculatorgui_impl.cpp:483
 msgid "HIDEFUNCTION"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:484
+#: ../src/calculatorgui_impl.cpp:483
 msgid "showfunction"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:484
+#: ../src/calculatorgui_impl.cpp:483
 msgid "ShowFunction"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:484
+#: ../src/calculatorgui_impl.cpp:483
 msgid "SHOWFUNCTION"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:490
+#: ../src/calculatorgui_impl.cpp:489
 msgid "Help"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:490
+#: ../src/calculatorgui_impl.cpp:489
 msgid "HELP"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:490
+#: ../src/calculatorgui_impl.cpp:489
 msgid "help"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:495 ../src/calculatorgui.cpp:40
+#: ../src/calculatorgui_impl.cpp:494 ../src/calculatorgui.cpp:40
 msgid "Function"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:495
+#: ../src/calculatorgui_impl.cpp:494
 msgid "function"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:495
+#: ../src/calculatorgui_impl.cpp:494
 msgid "FUNCTION"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:500
+#: ../src/calculatorgui_impl.cpp:499
 msgid "history"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:500 ../src/calculatorgui.cpp:43
+#: ../src/calculatorgui_impl.cpp:499 ../src/calculatorgui.cpp:43
 msgid "History"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:500
+#: ../src/calculatorgui_impl.cpp:499
 msgid "HISTORY"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:519 ../src/calculatorgui_impl.cpp:521
+#: ../src/calculatorgui_impl.cpp:518 ../src/calculatorgui_impl.cpp:520
 msgid "Calculator INPUT:"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:519 ../src/calculatorgui_impl.cpp:521
+#: ../src/calculatorgui_impl.cpp:518 ../src/calculatorgui_impl.cpp:520
 msgid " Calculator output:"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:34 ../src/calculatorgui.cpp:891
+#: ../src/calculatorgui.cpp:34 ../src/calculatorgui.cpp:893
 msgid "Calculate"
 msgstr ""
 
@@ -375,96 +238,96 @@ msgstr ""
 msgid "?"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:111
+#: ../src/calculatorgui.cpp:113
 msgid "Show/Hide Buttons"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:113
+#: ../src/calculatorgui.cpp:115
 msgid "Help Button"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:115
+#: ../src/calculatorgui.cpp:117
 msgid "Show/Hide help button (you can always type \"help\" from input window)."
 msgstr ""
 
-#: ../src/calculatorgui.cpp:119
+#: ../src/calculatorgui.cpp:121
 msgid "History Toggle"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:121
+#: ../src/calculatorgui.cpp:123
 msgid ""
 "Show/Hide history toggle (you can always type \"history\" from input window)."
 msgstr ""
 
-#: ../src/calculatorgui.cpp:125
+#: ../src/calculatorgui.cpp:127
 msgid "Calculate Button"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:127
+#: ../src/calculatorgui.cpp:129
 msgid ""
 "Show/Hide Calculate button (you can always press enter at the end of input)."
 msgstr ""
 
-#: ../src/calculatorgui.cpp:131
+#: ../src/calculatorgui.cpp:133
 msgid "Function button"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:139
+#: ../src/calculatorgui.cpp:141
 msgid "History Settings"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:146
+#: ../src/calculatorgui.cpp:148
 msgid "Max Results"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:148
+#: ../src/calculatorgui.cpp:150
 msgid ""
 "More results use up more memory. Memory is only allocated if required (e.g. "
 "if number is 30000, corresponding memory will only be used after this many "
 "calculations)."
 msgstr ""
 
-#: ../src/calculatorgui.cpp:153
+#: ../src/calculatorgui.cpp:155
 msgid ""
 "More results use more memory. Memory will be cleared if Max Results is "
 "reached. NB variables are kept"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:160
+#: ../src/calculatorgui.cpp:162
 msgid "Opacity"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:171
+#: ../src/calculatorgui.cpp:173
 msgid "Show History Window"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:172
+#: ../src/calculatorgui.cpp:174
 msgid "Show/Hide history"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:176
+#: ../src/calculatorgui.cpp:178
 msgid "Capture when Hidden"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:178
+#: ../src/calculatorgui.cpp:180
 msgid ""
 "Capture results in history, even when the history box is hidden. Uncheck this "
 "box to save some memory when history is hidden."
 msgstr ""
 
-#: ../src/calculatorgui.cpp:186
+#: ../src/calculatorgui.cpp:188
 msgid "Other"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:188
+#: ../src/calculatorgui.cpp:190
 msgid "Log results to opencpn"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:189
+#: ../src/calculatorgui.cpp:191
 msgid "Log calculator results in OpenCPN log file"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:234
+#: ../src/calculatorgui.cpp:236
 msgid ""
 "Calculator Plugin for OpenCPN by SaltyPaws aka Walbert Schulpen\n"
 "=======================================\n"
@@ -538,119 +401,113 @@ msgid ""
 "\tLog to opencpn: Enable/Disable logging of results to opencpn logfile."
 msgstr ""
 
-#: ../src/calculatorgui.cpp:290 ../src/calculatorgui.cpp:350
+#: ../src/calculatorgui.cpp:292 ../src/calculatorgui.cpp:352
 msgid "DD.dddddd\\u00b0 (no limit to decimals)"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:298
+#: ../src/calculatorgui.cpp:300
 msgid "Lattitude  "
 msgstr ""
 
-#: ../src/calculatorgui.cpp:306 ../src/calculatorgui.cpp:324
-#: ../src/calculatorgui.cpp:366 ../src/calculatorgui.cpp:398
-#: ../src/calculatorgui.cpp:463 ../src/calculatorgui.cpp:503
+#: ../src/calculatorgui.cpp:308 ../src/calculatorgui.cpp:326
+#: ../src/calculatorgui.cpp:368 ../src/calculatorgui.cpp:400
 msgid "\\u00b0"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:316
+#: ../src/calculatorgui.cpp:318
 msgid "Longitude"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:337 ../src/calculatorgui.cpp:428
-#: ../src/calculatorgui.cpp:541
+#: ../src/calculatorgui.cpp:339 ../src/calculatorgui.cpp:430
+#: ../src/calculatorgui.cpp:543
 msgid "Convert"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:344
+#: ../src/calculatorgui.cpp:346
 msgid "Degrees"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:358 ../src/calculatorgui.cpp:455
+#: ../src/calculatorgui.cpp:360 ../src/calculatorgui.cpp:457
 msgid "Lat "
 msgstr ""
 
-#: ../src/calculatorgui.cpp:374 ../src/calculatorgui.cpp:406
-#: ../src/calculatorgui.cpp:471 ../src/calculatorgui.cpp:511
+#: ../src/calculatorgui.cpp:376 ../src/calculatorgui.cpp:408
 msgid "'"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:378 ../src/calculatorgui.cpp:483
+#: ../src/calculatorgui.cpp:380 ../src/calculatorgui.cpp:485
 msgid "N"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:378 ../src/calculatorgui.cpp:483
+#: ../src/calculatorgui.cpp:380 ../src/calculatorgui.cpp:485
 msgid "S"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:390 ../src/calculatorgui.cpp:495
+#: ../src/calculatorgui.cpp:392 ../src/calculatorgui.cpp:497
 msgid "Lon"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:410 ../src/calculatorgui.cpp:523
+#: ../src/calculatorgui.cpp:412 ../src/calculatorgui.cpp:525
 msgid "E"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:410 ../src/calculatorgui.cpp:523
+#: ../src/calculatorgui.cpp:412 ../src/calculatorgui.cpp:525
 msgid "W"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:438
+#: ../src/calculatorgui.cpp:440
 msgid "Degree, Minute"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:445
+#: ../src/calculatorgui.cpp:447
 msgid "DDMMSS.s (no limit to digits)"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:479 ../src/calculatorgui.cpp:519
-msgid "\""
-msgstr ""
-
-#: ../src/calculatorgui.cpp:551
+#: ../src/calculatorgui.cpp:553
 msgid "\\u00b0 ' \""
 msgstr ""
 
-#: ../src/calculatorgui.cpp:595
+#: ../src/calculatorgui.cpp:597
 msgid "Select Function Category"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:607
+#: ../src/calculatorgui.cpp:609
 msgid "Select Function"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:619
+#: ../src/calculatorgui.cpp:621
 msgid "Function And Description"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:625
+#: ../src/calculatorgui.cpp:627
 msgid "ere"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:629 ../src/calculatorgui.cpp:897
+#: ../src/calculatorgui.cpp:631 ../src/calculatorgui.cpp:899
 msgid "Description"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:643
+#: ../src/calculatorgui.cpp:645
 msgid "Function Result Select Units"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:654
+#: ../src/calculatorgui.cpp:656
 msgid "MyLabel"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:673
+#: ../src/calculatorgui.cpp:675
 msgid "Input Parameters"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:681 ../src/calculatorgui.cpp:702
-#: ../src/calculatorgui.cpp:723 ../src/calculatorgui.cpp:744
-#: ../src/calculatorgui.cpp:765 ../src/calculatorgui.cpp:786
-#: ../src/calculatorgui.cpp:807 ../src/calculatorgui.cpp:828
-#: ../src/calculatorgui.cpp:849 ../src/calculatorgui.cpp:870
+#: ../src/calculatorgui.cpp:683 ../src/calculatorgui.cpp:704
+#: ../src/calculatorgui.cpp:725 ../src/calculatorgui.cpp:746
+#: ../src/calculatorgui.cpp:767 ../src/calculatorgui.cpp:788
+#: ../src/calculatorgui.cpp:809 ../src/calculatorgui.cpp:830
+#: ../src/calculatorgui.cpp:851 ../src/calculatorgui.cpp:872
 msgid "Parameter"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:894
+#: ../src/calculatorgui.cpp:896
 msgid "Close"
 msgstr ""
 
@@ -813,10 +670,6 @@ msgstr ""
 
 #: ../src/functions.cpp:177
 msgid "time_ratio"
-msgstr ""
-
-#: ../src/functions.cpp:178
-msgid "-"
 msgstr ""
 
 #: ../src/functions.cpp:196

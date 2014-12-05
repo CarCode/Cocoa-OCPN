@@ -462,7 +462,7 @@ MyDialog5::MyDialog5( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_Lat1_d->SetMaxLength( 0 ); 
 	bSizer14313->Add( m_Lat1_d, 0, wxALL, 5 );
 	
-	m_staticText33313 = new wxStaticText( m_panel15, wxID_ANY, _("\u00b0"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_staticText33313 = new wxStaticText( m_panel15, wxID_ANY, _T("\u00b0"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_staticText33313->Wrap( -1 );
 	bSizer14313->Add( m_staticText33313, 0, wxALL, 5 );
 	
@@ -470,7 +470,7 @@ MyDialog5::MyDialog5( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_Lat1_m->SetMaxLength( 0 ); 
 	bSizer14313->Add( m_Lat1_m, 0, wxALL, 5 );
 	
-	m_staticText1143 = new wxStaticText( m_panel15, wxID_ANY, _("'"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText1143 = new wxStaticText( m_panel15, wxID_ANY, _T("'"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1143->Wrap( -1 );
 	bSizer14313->Add( m_staticText1143, 0, wxALL, 5 );
 	
@@ -478,7 +478,7 @@ MyDialog5::MyDialog5( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_Lat1_s->SetMaxLength( 0 ); 
 	bSizer14313->Add( m_Lat1_s, 0, wxALL, 5 );
 	
-	m_staticText1153 = new wxStaticText( m_panel15, wxID_ANY, _("\""), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText1153 = new wxStaticText( m_panel15, wxID_ANY, _T("\""), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1153->Wrap( -1 );
 	bSizer14313->Add( m_staticText1153, 0, wxALL, 5 );
 	
@@ -502,7 +502,7 @@ MyDialog5::MyDialog5( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_Lon1_d->SetMaxLength( 0 ); 
 	bSizer143112->Add( m_Lon1_d, 0, wxALL, 5 );
 	
-	m_staticText333112 = new wxStaticText( m_panel15, wxID_ANY, _("\u00b0"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText333112 = new wxStaticText( m_panel15, wxID_ANY, _T("\u00b0"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText333112->Wrap( -1 );
 	bSizer143112->Add( m_staticText333112, 0, wxALL, 5 );
 	
@@ -510,7 +510,7 @@ MyDialog5::MyDialog5( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_Lon1_m->SetMaxLength( 0 ); 
 	bSizer143112->Add( m_Lon1_m, 0, wxALL, 5 );
 	
-	m_staticText11412 = new wxStaticText( m_panel15, wxID_ANY, _("'"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText11412 = new wxStaticText( m_panel15, wxID_ANY, _T("'"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText11412->Wrap( -1 );
 	bSizer143112->Add( m_staticText11412, 0, wxALL, 5 );
 	
@@ -518,7 +518,7 @@ MyDialog5::MyDialog5( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_Lon1_s->SetMaxLength( 0 ); 
 	bSizer143112->Add( m_Lon1_s, 0, wxALL, 5 );
 	
-	m_staticText11512 = new wxStaticText( m_panel15, wxID_ANY, _("\""), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText11512 = new wxStaticText( m_panel15, wxID_ANY, _T("\""), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText11512->Wrap( -1 );
 	bSizer143112->Add( m_staticText11512, 0, wxALL, 5 );
 	

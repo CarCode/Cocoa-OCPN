@@ -2830,14 +2830,18 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
     char *str = (char*) rules->INSTstr;
     c = getColor( str + 7 ); // Colour
+    wxColour color( c->R, c->G, c->B );
     w = atoi( str + 5 ); // Width
-    wxPen *pdotpen = NULL;
 
     double scale_factor = vp->ref_scale/vp->chart_scale;
+#ifdef __WXOSX__
+    double scaled_line_width = wxMax((scale_factor - 30), 1);
+#else
     double scaled_line_width = wxMax((scale_factor - 10), 1);
+#endif
     bool b_wide_line = vp->b_quilt && (scale_factor > 10.0);
     
-    wxPen *wide_pen;
+    wxPen wide_pen(*wxBLACK_PEN);
     wxDash dashw[2];
     dashw[0] = 3;
     dashw[1] = 1;
@@ -2845,52 +2849,44 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     if( b_wide_line)
     {
         int w = wxMax(scaled_line_width, 2);            // looks better
-        wxColour color( c->R, c->G, c->B );
-        wide_pen = new wxPen(*wxBLACK_PEN);
-        wide_pen->SetWidth( w );
-        wide_pen->SetColour( color );
+        wide_pen.SetWidth( w );
 
         if( !strncmp( str, "DOTT", 4 ) ) {
             dashw[0] = 1;
-            wide_pen->SetStyle(wxUSER_DASH);
-            wide_pen->SetDashes( 2, dashw );
+            wide_pen.SetStyle(wxUSER_DASH);
+            wide_pen.SetDashes( 2, dashw );
         }
         else if( !strncmp( str, "DASH", 4 ) ){
-            wide_pen->SetStyle(wxUSER_DASH);
+            wide_pen.SetStyle(wxUSER_DASH);
             if( m_pdc){ //DC mode
                 dashw[0] = 1;
                 dashw[1] = 2;
             }
             
-            wide_pen->SetDashes( 2, dashw );
+            wide_pen.SetDashes( 2, dashw );
         }
     }
 
-    wxPen *thispen;
+    wxPen thispen(color, w, wxSOLID);
     wxDash dash1[2];
-    dash1[0] = 1;
-    dash1[1] = 2;
     
     if( m_pdc) //DC mode
     {
-        wxColour color( c->R, c->G, c->B );
-        thispen = new wxPen(*wxBLACK_PEN);
-        thispen->SetWidth( w );
-        thispen->SetColour( color );
-        
         if( !strncmp( str, "DOTT", 4 ) ) {
-            thispen->SetStyle(wxUSER_DASH);
-            thispen->SetDashes( 2, dash1 );
+            thispen.SetStyle(wxUSER_DASH);
+            dash1[0] = 1;
+            dash1[1] = 2;
+            thispen.SetDashes( 2, dash1 );
         }
         else if( !strncmp( str, "DASH", 4 ) ){
-            thispen->SetStyle(wxSHORT_DASH);
+            thispen.SetStyle(wxSHORT_DASH);
         }
         
         if(b_wide_line)
-            m_pdc->SetPen( *wide_pen );
+            m_pdc->SetPen( wide_pen );
         else
-            m_pdc->SetPen( *thispen );
-        
+            m_pdc->SetPen( thispen );
+
     }
 
 #ifdef ocpnUSE_GL
@@ -3090,7 +3086,7 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
                             glVertex2i( x1, y1 );
                         }
                         else {
-                            DrawGLThickLine( x0, y0, x1, y1, *wide_pen, true );
+                            DrawGLThickLine( x0, y0, x1, y1, wide_pen, true );
                         }
                     }
 #endif
@@ -3272,11 +3268,6 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     if( !m_pdc ) glPopAttrib();
 #endif
                 
-    if(pdotpen) {
-        pdotpen->SetDashes( 1, NULL );
-        delete pdotpen;
-    }
-    
     return 1;
 }
 
