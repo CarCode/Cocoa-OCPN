@@ -67,7 +67,8 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 //---------------------------------------------------------------------------------------------------------
 
 grib_pi::grib_pi(void *ppimgr)
-      :opencpn_plugin_17(ppimgr)
+    :opencpn_plugin_112(ppimgr)
+
 {
       // Create the PlugIn icons
       initialize_images();
@@ -119,7 +120,8 @@ int grib_pi::Init(void)
               INSTALLS_TOOLBAR_TOOL     |
               WANTS_CONFIG              |
               WANTS_PREFERENCES         |
-              WANTS_PLUGIN_MESSAGING
+              WANTS_PLUGIN_MESSAGING    |
+              WANTS_MOUSE_EVENTS
             );
 }
 
@@ -204,6 +206,13 @@ void grib_pi::SetDefaults(void)
 int grib_pi::GetToolbarToolCount(void)
 {
       return 1;
+}
+
+bool grib_pi::MouseEventHook( wxMouseEvent &event )
+{
+    if( (m_pGribDialog && m_pGribDialog->pReq_Dialog) )
+        return m_pGribDialog->pReq_Dialog->MouseEventHook( event );
+    return false;
 }
 
 void grib_pi::ShowPreferencesDialog( wxWindow* parent )
@@ -408,6 +417,8 @@ bool grib_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
 
     m_pGribDialog->SetViewPort( vp );
     m_pGRIBOverlayFactory->RenderGribOverlay ( dc, vp );
+    if( m_pGribDialog->pReq_Dialog && m_pGribDialog->pReq_Dialog->IsShown() )
+        m_pGribDialog->pReq_Dialog->RenderZoneOverlay( dc );
     return true;
 }
 
@@ -421,6 +432,8 @@ bool grib_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
 
     m_pGribDialog->SetViewPort( vp );
     m_pGRIBOverlayFactory->RenderGLGribOverlay ( pcontext, vp );
+    if( m_pGribDialog->pReq_Dialog && m_pGribDialog->pReq_Dialog->IsShown() )
+        m_pGribDialog->pReq_Dialog->RenderGlZoneOverlay();
     return true;
 }
 

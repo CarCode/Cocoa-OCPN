@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "NMEALogWindow.h"
 #include "TTYWindow.h"
@@ -42,6 +41,15 @@ NMEALogWindow::NMEALogWindow()
     , pos_x(0)
     , pos_y(0)
 {}
+
+void NMEALogWindow::Shutdown()
+{
+    if (instance)
+    {
+        delete instance;
+        instance = NULL;
+    }
+}
 
 bool NMEALogWindow::Active() const
 {

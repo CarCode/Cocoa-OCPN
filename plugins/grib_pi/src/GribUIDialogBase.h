@@ -32,6 +32,7 @@
 #include <wx/spinctrl.h>
 #include <wx/radiobox.h>
 #include <wx/statline.h>
+#include <wx/tglbtn.h>
 #include <wx/grid.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -47,6 +48,10 @@
 #define ID_CB_AIR_TEMP 1008
 #define ID_CB_SEA_TEMP 1009
 #define ID_CB_CAPE 1010
+#define MAXLAT 1011
+#define MAXLON 1012
+#define MINLAT 1013
+#define MINLON 1014
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class GRIBUIDialogBase
@@ -200,7 +205,7 @@ class GribPreferencesDialogBase : public wxDialog
         wxRadioBox* m_rbLoadOptions;
         wxRadioBox* m_rbStartOptions;
         wxRadioBox* m_rbTimeFormat;
-		
+    
 		GribPreferencesDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Grib Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(-1,-1), long style = wxDEFAULT_DIALOG_STYLE );
 		~GribPreferencesDialogBase();
 	
@@ -231,6 +236,18 @@ protected:
     wxChoice* m_pInterval;
     wxChoice* m_pTimeRange;
     wxStaticText* m_staticText21;
+    wxCheckBox* m_cManualZoneSel;
+    wxToggleButton* m_toggleSelection;
+    wxFlexGridSizer* fgZoneCoordinatesSizer;
+    wxSpinCtrl* m_spMaxLat;
+    wxStaticText* m_stMaxLatNS;
+    wxStaticText* m_staticText36;
+    wxSpinCtrl* m_spMaxLon;
+    wxStaticText* m_stMaxLonEW;
+    wxSpinCtrl* m_spMinLat;
+    wxStaticText* m_stMinLatNS;
+    wxSpinCtrl* m_spMinLon;
+    wxStaticText* m_stMinLonEW;
     wxCheckBox* m_pWind;
     wxCheckBox* m_pPress;
     wxCheckBox* m_pWindGust;
@@ -257,11 +274,16 @@ protected:
     wxButton* m_rButtonCancel;
     
     // Virtual event handlers, overide them in your derived class
+    virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
     virtual void OnTopChange( wxCommandEvent& event ) { event.Skip(); }
     virtual void OnMovingClick( wxCommandEvent& event ) { event.Skip(); }
     virtual void OnAnyChange( wxCommandEvent& event ) { event.Skip(); }
     virtual void OnTimeRangeChange( wxCommandEvent& event ) { event.Skip(); }
+    virtual void OnZoneSelectionModeChange( wxCommandEvent& event ) { event.Skip(); }
+    virtual void OnTooggleSelection( wxCommandEvent& event ) { event.Skip(); }
+    virtual void OnCoordinatesChange( wxSpinEvent& event ) { event.Skip(); }
     virtual void OnSaveMail( wxCommandEvent& event ) { event.Skip(); }
+    virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
     virtual void OnSendMaiL( wxCommandEvent& event ) { event.Skip(); }
 
 

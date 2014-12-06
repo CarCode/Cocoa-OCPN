@@ -37,7 +37,7 @@
 #define     PLUGIN_VERSION_MINOR    3
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    7
+#define     MY_API_VERSION_MINOR    12
 
 #include "../../../include/ocpn_plugin.h"
 
@@ -54,7 +54,7 @@
 
 #define GRIB_TOOL_POSITION    -1          // Request default positioning of toolbar tool
 
-class grib_pi : public opencpn_plugin_17
+class grib_pi : public opencpn_plugin_112
 {
 public:
       grib_pi(void *ppimgr);
@@ -74,6 +74,7 @@ public:
       wxString GetLongDescription();
 
 //    The override PlugIn Methods
+      bool MouseEventHook( wxMouseEvent &event);
       bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
       void SetCursorLatLon(double lat, double lon);
       void OnContextMenuItemCallback(int id);

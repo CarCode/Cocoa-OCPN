@@ -190,6 +190,11 @@ extern wxLocale         *plocale_def_lang;
 extern OCPN_Sound        g_anchorwatch_sound;
 extern bool             g_bMagneticAPB;
 
+extern bool             g_fog_overzoom;
+extern double           g_overzoom_emphasis_base;
+extern bool             g_oz_vector_scale;
+
+
 
 #ifdef USE_S57
 extern s52plib          *ps52plib;
@@ -1709,8 +1714,13 @@ void options::CreatePanel_Advanced( size_t parent, int border_size, int group_it
     
     pFullScreenQuilt = new wxCheckBox( m_ChartDisplayPage, ID_FULLSCREENQUILT, _("Disable Full Screen Quilting") );
     boxCharts->Add( pFullScreenQuilt, inputFlags );
+
+    pOverzoomEmphasis = new wxCheckBox( m_ChartDisplayPage, ID_FULLSCREENQUILT, _("Suppress overzoom display emphasis effects") );
+    boxCharts->Add( pOverzoomEmphasis, inputFlags );
     
-    
+    pOZScaleVector = new wxCheckBox( m_ChartDisplayPage, ID_FULLSCREENQUILT, _("Suppress scaled vector charts on overzoom") );
+    boxCharts->Add( pOZScaleVector, inputFlags );
+
     // spacer
     itemBoxSizerUI->Add( 0, border_size*3 );
     itemBoxSizerUI->Add( 0, border_size*3 );
@@ -2572,7 +2582,7 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
     pShowCompassWin = new wxCheckBox( itemPanelFont, wxID_ANY, _("Show Compass/GPS Status Window") );
     pShowCompassWin->SetValue( FALSE );
     miscOptions->Add( pShowCompassWin, 0, wxALL, border_size );
-#if 0
+#ifdef __WXOSX__
     pFullScreenToolbar = new wxCheckBox( itemPanelFont, ID_FSTOOLBARCHECKBOX,
             _("Show Toolbar in Fullscreen Mode") );
     miscOptions->Add( pFullScreenToolbar, 0, wxALL, border_size );
@@ -2846,7 +2856,8 @@ void options::SetInitialSettings()
     pSkewComp->SetValue( g_bskew_comp );
     pMobile->SetValue( g_btouch );
     pResponsive->SetValue( g_bresponsive );
-    
+    pOverzoomEmphasis->SetValue( !g_fog_overzoom );
+    pOZScaleVector->SetValue( !g_oz_vector_scale );
 
     pOpenGL->SetValue( g_bopengl );
     pSmoothPanZoom->SetValue( g_bsmoothpanzoom );
@@ -2912,7 +2923,9 @@ void options::SetInitialSettings()
 
     pPreserveScale->SetValue( g_bPreserveScaleOnX );
     pPlayShipsBells->SetValue( g_bPlayShipsBells );
-//    pFullScreenToolbar->SetValue( g_bFullscreenToolbar );
+#ifdef __WXOSX__
+    pFullScreenToolbar->SetValue( g_bFullscreenToolbar );
+#endif
     pTransparentToolbar->SetValue( g_bTransparentToolbar );
     pSDMMFormat->Select( g_iSDMMFormat );
     pDistanceFormat->Select( g_iDistanceFormat );
@@ -3113,12 +3126,12 @@ void options::OnShowGpsWindowCheckboxClick( wxCommandEvent& event )
     if( !m_cbNMEADebug->GetValue() ) {
         NMEALogWindow::Get().DestroyWindow();
     } else {
-        NMEALogWindow::Get().Create(pParent, 35);
-        Raise();
 #ifdef __WXOSX__
-//        NMEALogWindow::Get().Active();
-//        Show();
+        NMEALogWindow::Get().Create(this, 40);  // was: pParent , missing CheckBox update: m_cbNMEADebug->SetValue(false);
+#else
+        NMEALogWindow::Get().Create(pParent, 35);
 #endif
+        Raise();
     }
 }
 
@@ -3595,7 +3608,10 @@ void options::OnApplyClick( wxCommandEvent& event )
     g_bskew_comp = pSkewComp->GetValue();
     g_btouch = pMobile->GetValue();
     g_bresponsive = pResponsive->GetValue();
-    
+
+    g_fog_overzoom = !pOverzoomEmphasis->GetValue();
+    g_oz_vector_scale = !pOZScaleVector->GetValue();
+
     bool bopengl_changed = g_bopengl != pOpenGL->GetValue();
     g_bopengl = pOpenGL->GetValue();
 
@@ -3635,7 +3651,9 @@ void options::OnApplyClick( wxCommandEvent& event )
     g_bPreserveScaleOnX = pPreserveScale->GetValue();
 
     g_bPlayShipsBells = pPlayShipsBells->GetValue();
-//    g_bFullscreenToolbar = pFullScreenToolbar->GetValue();
+#ifdef __WXOSX__
+    g_bFullscreenToolbar = pFullScreenToolbar->GetValue();
+#endif
     g_bTransparentToolbar = pTransparentToolbar->GetValue();
     g_iSDMMFormat = pSDMMFormat->GetSelection();
     g_iDistanceFormat = pDistanceFormat->GetSelection();
