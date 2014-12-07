@@ -71,6 +71,8 @@ public:
     bool IsAISAlertGeneral(void) { return m_bGeneralAlert; }
     AIS_Error DecodeSingleVDO( const wxString& str, GenericPosDatEx *pos, wxString *acc );
     void DeletePersistentTrack( Track *track );
+    std::map<int, Track*> m_persistent_tracks;
+
 private:
     void OnActivate(wxActivateEvent& event);
     void OnTimerAIS(wxTimerEvent& event);
@@ -111,8 +113,6 @@ private:
     AIS_Target_Data  *m_ptentative_dsctarget;
     wxTimer          m_dsc_timer;
     wxString         m_dsc_last_string;
-
-    std::map<int, Track*> m_persistent_tracks;
 
 DECLARE_EVENT_TABLE()
 };
