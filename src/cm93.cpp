@@ -4306,6 +4306,9 @@ void cm93chart::ProcessMCOVRObjects ( int cell_index, char subcell )
                                     //     Add this object to the covr_set
                                     m_pcovr_set->Add_Update_MCD ( pmcd );
 
+                                    //  Update the parent cell mcovr bounding box
+                                    m_covr_bbox.Expand(pmcd->m_covr_bbox);
+
                                     //    Clean up the xgeom
                                     free ( xgeom->pvector_index );
 
@@ -6048,14 +6051,19 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
 
                         psc->SetColorScheme ( m_global_color_scheme );
                         psc->Init ( file_dummy, FULL_INIT );
+
                   }
 
                   if ( nss != 1 ) {       // skip rendering the A scale outlines
+                      //      Make sure the covr bounding box is complete
+                      psc->UpdateCovrSet ( &vp );
+                      
                       /* test rectangle for entire set to reduce number of tests */
                       if( !psc->m_covr_bbox.GetValid() ||
                           !vp_positive.GetBBox().IntersectOut ( psc->m_covr_bbox ) ||
-                          !vp.GetBBox().IntersectOut ( psc->m_covr_bbox ) ) {
-#ifdef ocpnUSE_GL        
+                         !vp.GetBBox().IntersectOut ( psc->m_covr_bbox ) )
+                      {
+#ifdef ocpnUSE_GL
                           ViewPort nvp;
                           if(g_bopengl) /* opengl */ {
                               wxPen pen = dc.GetPen();
@@ -6105,29 +6113,23 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
 #endif
                           if ( psc ) 
                           {
-                              bool mcr = psc->UpdateCovrSet ( &vp );
-                              
                               //    Render the chart outlines
-                              if ( mcr )
-                              {
-                                  covr_set *pcover = psc->GetCoverSet();
+                              covr_set *pcover = psc->GetCoverSet();
+                              
+                              for ( unsigned int im=0 ; im < pcover->GetCoverCount() ; im++ ){
+                                  M_COVR_Desc *mcd = pcover->GetCover ( im );
                                   
-                                  for ( unsigned int im=0 ; im < pcover->GetCoverCount() ; im++ )
-                                  {
-                                      M_COVR_Desc *mcd = pcover->GetCover ( im );
-                                      
-                                      /* build rect for quick test in the future */
-                                      psc->m_covr_bbox.Expand(mcd->m_covr_bbox);
-#ifdef ocpnUSE_GL        
-                                      // In opengl it is for the display list so we don't skip
-                                      if (g_bopengl) {
-                                          RenderCellOutlinesOnGL(nvp, mcd); 
-                                          // was anything actaully drawn?
-                                          if(! ( vp_positive.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ||
-                                             ! ( vp.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ) {
-                                              bdrawn = true;
-                                          }
-                                      } else
+#ifdef ocpnUSE_GL
+                                  // In opengl it is rendering into a display list
+                                  if (g_bopengl) {
+                                      RenderCellOutlinesOnGL(nvp, mcd);
+
+                                      // was anything actually drawn?
+                                      if(! ( vp_positive.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ||
+                                         ! ( vp.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ) {
+                                          bdrawn = true;
+                                      }
+                                  } else
 #endif
                                       //    Anything actually to be drawn?
                                       if(! ( vp_positive.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ||
@@ -6135,9 +6137,8 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
                                           wxPoint *pwp = psc->GetDrawBuffer ( mcd->m_nvertices );
                                           bdrawn = RenderCellOutlinesOnDC(dc, vp_positive, pwp, mcd);
                                       }
-                                  }
                               }
-#ifdef ocpnUSE_GL        
+#ifdef ocpnUSE_GL
                               if(g_bopengl) {
                                   glEndList();
                                   glChartCanvas::FixRenderIDL(psc->m_outline_display_list);
@@ -6148,6 +6149,14 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
                           if(g_bopengl) {
                               glPopMatrix();
                               glDisable( GL_LINE_STIPPLE );
+
+                              //  Cannot use the display list further, since it needs to be rebuilt on every change in the viewport
+                              //  We can only use the display list to potentially render the IDL crossing case
+                              //  But I leave the skeleton in place for maybe more thought....
+                              
+                              glDeleteLists(psc->m_outline_display_list, 1);
+                              psc->m_outline_display_list = 0;
+
                           }
 #endif
                       }

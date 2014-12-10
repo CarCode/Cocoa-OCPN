@@ -41,7 +41,6 @@
 
 #include "chart1.h"                 // for enum types
 #include "ocpndc.h"
-//#include "gshhs.h"
 #include "undo.h"
 
 #include "ocpCursor.h"
@@ -50,12 +49,12 @@
 #include "CM93DSlide.h"
 #include "RolloverWin.h"
 #include "AISTargetQueryDialog.h"
-#include "TCWin.h"
 #include "timers.h"
 #include "emboss_data.h"
 
 class wxGLContext;
 class GSHHSChart;
+class IDX_entry;
 
 //    Useful static routines
 void ShowAISTargetQueryDialog(wxWindow *parent, int mmsi);

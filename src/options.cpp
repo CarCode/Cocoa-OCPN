@@ -887,6 +887,7 @@ options::~options()
     m_groupsPage = NULL;
     g_pOptions = NULL;
     if( m_topImgList ) delete m_topImgList;
+    delete smallFont;
 }
 
 void options::Init()
@@ -906,6 +907,7 @@ void options::Init()
     k_vectorcharts = 0;
     k_plugins = 0;
     k_tides = 0;
+    smallFont = 0;
 
     activeSizer = NULL;
     itemActiveChartStaticBox = NULL;
@@ -1753,7 +1755,7 @@ void options::CreatePanel_Advanced( size_t parent, int border_size, int group_it
     wxStaticText* zoomText = new wxStaticText( m_ChartDisplayPage, wxID_ANY,
                                               _("With a lower value, the same zoom level shows a less detailed chart.\nWith a higher value, the same zoom level shows a more detailed chart.") );
     wxFont* dialogFont = FontMgr::Get().GetFont(_T("Dialog"));
-    wxFont* smallFont = new wxFont( * dialogFont ); // we can't use Smaller() because wx2.8 doesn't support it
+    smallFont = new wxFont( * dialogFont ); // we can't use Smaller() because wx2.8 doesn't support it
     smallFont->SetPointSize( (smallFont->GetPointSize() / 1.2) + 0.5 ); // + 0.5 to round instead of truncate
     zoomText->SetFont( * smallFont );
     //    zoomText->Wrap(200);
@@ -3123,9 +3125,9 @@ void options::UpdateOptionsUnits()
     // depth unit conversion factor
     float conv = 1;
     if ( depthUnit == 0 ) // feet
-        conv = 0.3048; // international definiton of 1 foot is 0.3048 metres
+        conv = 0.3048f; // international definiton of 1 foot is 0.3048 metres
     else if ( depthUnit == 2 ) // fathoms
-        conv = 0.3048 * 6; // 1 fathom is 6 feet
+        conv = 0.3048f * 6; // 1 fathom is 6 feet
     
     // set depth input values
     wxString s;
@@ -3938,9 +3940,9 @@ void options::OnApplyClick( wxCommandEvent& event )
         
         float conv = 1;
         if ( depthUnit == 0 ) // feet
-            conv = 0.3048; // international definiton of 1 foot is 0.3048 metres
+            conv = 0.3048f; // international definiton of 1 foot is 0.3048 metres
         else if ( depthUnit == 2 ) // fathoms
-            conv = 0.3048 * 6; // 1 fathom is 6 feet
+            conv = 0.3048f * 6; // 1 fathom is 6 feet
 
         if( ( m_SafetyCtl->GetValue() ).ToDouble( &dval ) ) {
             S52_setMarinerParam( S52_MAR_SAFETY_DEPTH, dval * conv );   // controls sounding display

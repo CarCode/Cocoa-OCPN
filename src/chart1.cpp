@@ -706,7 +706,6 @@ void DeInitializeUserColors( void );
 void SetSystemColors( ColorScheme cs );
 extern "C" bool CheckSerialAccess( void );
 
-DEFINE_EVENT_TYPE(EVT_THREADMSG)
 
 //------------------------------------------------------------------------------
 //    PNG Icon resources
@@ -2731,7 +2730,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     //  Create/connect a dynamic event handler slot for OCPN_MsgEvent(s) coming from PlugIn system
     Connect( wxEVT_OCPN_MSG, (wxObjectEventFunction) (wxEventFunction) &MyFrame::OnEvtPlugInMessage );
 
-    Connect( EVT_THREADMSG, (wxObjectEventFunction) (wxEventFunction) &MyFrame::OnEvtTHREADMSG );
+    Connect( wxEVT_OCPN_THREADMSG, (wxObjectEventFunction) (wxEventFunction) &MyFrame::OnEvtTHREADMSG );
 
 
     //        Establish the system icons for the frame.
@@ -7943,9 +7942,9 @@ void MyFrame::OnEvtPlugInMessage( OCPN_MsgEvent & event )
     }
 }
 
-void MyFrame::OnEvtTHREADMSG( wxCommandEvent & event )
+void MyFrame::OnEvtTHREADMSG( OCPN_ThreadMessageEvent & event )
 {
-    wxLogMessage( event.GetString() );
+    wxLogMessage( wxString(event.GetSString().c_str(), wxConvUTF8 ));
 }
 
 
@@ -9012,10 +9011,22 @@ void MyPrintout::DrawPageOne( wxDC *dc )
         int gsx = cc1->GetglCanvas()->GetSize().x;
         int gsy = cc1->GetglCanvas()->GetSize().y;
 
-        unsigned char *buffer = (unsigned char *)malloc( gsx * gsy * 3 );
-        glReadPixels(0, 0, gsx, gsy, GL_RGB, GL_UNSIGNED_BYTE, buffer );
+        unsigned char *buffer = (unsigned char *)malloc( gsx * gsy * 4 );
+        glReadPixels(0, 0, gsx, gsy, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
+        
+        unsigned char *e = (unsigned char *)malloc( gsx * gsy * 3 );
+        
+        if(buffer && e){
+            for( int p = 0; p < gsx*gsy; p++ ) {
+                e[3*p+0] = buffer[4*p+0];
+                e[3*p+1] = buffer[4*p+1];
+                e[3*p+2] = buffer[4*p+2];
+            }
+        }
+        free(buffer);
+
         wxImage image( gsx,gsy );
-        image.SetData(buffer);
+        image.SetData(e);
         wxImage mir_imag = image.Mirror( false );
         wxBitmap bmp( mir_imag );
         wxMemoryDC mdc;
@@ -10493,9 +10504,24 @@ wxFont *GetOCPNScaledFont( wxString item, int default_size )
     }
     return dFont;
 }
-    
-    
-    
+
+OCPN_ThreadMessageEvent::OCPN_ThreadMessageEvent(wxEventType commandType, int id)
+:wxEvent(id, commandType)
+{
+}
+
+OCPN_ThreadMessageEvent::~OCPN_ThreadMessageEvent()
+{
+}
+
+wxEvent* OCPN_ThreadMessageEvent::Clone() const
+{
+    OCPN_ThreadMessageEvent *newevent=new OCPN_ThreadMessageEvent(*this);
+    newevent->m_string=this->m_string;
+    return newevent;
+}
+
+
 
 
 #if 0

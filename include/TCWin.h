@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __TCWIN_H__
 #define __TCWIN_H__
@@ -106,6 +105,7 @@ private:
       wxBrush *pltgray;
       wxBrush *pltgray2;
 
+      int         m_button_height;
 
 DECLARE_EVENT_TABLE()
 };
