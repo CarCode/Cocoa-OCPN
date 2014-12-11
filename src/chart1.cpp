@@ -203,7 +203,6 @@ WayPointman               *pWayPointMan;
 MarkInfoImpl              *pMarkPropDialog;
 RouteProp                 *pRoutePropDialog;
 TrackPropDlg              *pTrackPropDialog;
-MarkInfoImpl              *pMarkInfoDialog;
 RouteManagerDialog        *pRouteManagerDialog;
 GoToPositionDialog        *pGoToPositionDialog;
 
@@ -669,6 +668,7 @@ bool             g_bexpert;
 int              g_chart_zoom_modifier;
 
 int              g_NMEAAPBPrecision;
+int              g_NMEAAPBXTEPrecision;
 
 bool             g_bSailing;
 
@@ -2028,7 +2028,7 @@ bool MyApp::OnInit()
     
     cc1->SetQuiltMode( g_bQuiltEnable );                     // set initial quilt mode
     cc1->m_bFollow = pConfig->st_bFollow;               // set initial state
-    cc1->SetViewPoint( vLat, vLon, initial_scale_ppm, 0., initial_rotation );
+    cc1->SetViewPoint( vLat, vLon, initial_scale_ppm, 0., 0. );
 
     gFrame->Enable();
 
@@ -2927,8 +2927,6 @@ void MyFrame::SetAndApplyColorScheme( ColorScheme cs )
     if( g_pRouteMan ) g_pRouteMan->SetColorScheme( cs );
 
     if( pMarkPropDialog ) pMarkPropDialog->SetColorScheme( cs );
-
-    if( pMarkInfoDialog ) pMarkInfoDialog->SetColorScheme( cs );
 
     //    For the AIS target query dialog, we must rebuild it to incorporate the style desired for the colorscheme selected
     if( g_pais_query_dialog_active ) {
@@ -3869,9 +3867,9 @@ void MyFrame::UpdateAllFonts()
         pTrackPropDialog = NULL;
     }
     
-    if( pMarkInfoDialog ) {
-        pMarkInfoDialog->Destroy();
-        pMarkInfoDialog = NULL;
+    if( pMarkPropDialog ) {
+        pMarkPropDialog->Destroy();
+        pMarkPropDialog = NULL;
     }
 
     if( g_pObjectQueryDialog ) {
@@ -4507,7 +4505,10 @@ void MyFrame::ToggleCourseUp( void )
         cc1->SetVPRotation(0); /* reset to north up */
     SetMenubarItemState( ID_MENU_CHART_COGUP, g_bCourseUp );
     SetMenubarItemState( ID_MENU_CHART_NORTHUP, !g_bCourseUp );
-    
+
+    if(m_pMenuBar)
+        m_pMenuBar->SetLabel( ID_MENU_CHART_NORTHUP, _("North Up Mode") );
+
     DoCOGSet();
     UpdateGPSCompassStatusBox( true );
     DoChartUpdate();
@@ -4547,25 +4548,31 @@ void MyFrame::ToggleSoundings( void )
 bool MyFrame::ToggleLights( bool doToggle, bool temporary )
 {
     bool oldstate = true;
+    OBJLElement *pOLE = NULL;
+
 #ifdef USE_S57
     if( ps52plib ) {
         for( unsigned int iPtr = 0; iPtr < ps52plib->pOBJLArray->GetCount(); iPtr++ ) {
-            OBJLElement *pOLE = (OBJLElement *) ( ps52plib->pOBJLArray->Item( iPtr ) );
+            pOLE = (OBJLElement *) ( ps52plib->pOBJLArray->Item( iPtr ) );
             if( !strncmp( pOLE->OBJLName, "LIGHTS", 6 ) ) {
                 oldstate = pOLE->nViz != 0;
-                if( doToggle ) pOLE->nViz = !pOLE->nViz;
                 break;
             }
         }
     }
 
-    if( doToggle ){
-        if( !ps52plib->IsObjNoshow("LIGHTS") )
-            ps52plib->AddObjNoshow("LIGHTS");
-        else
-            ps52plib->RemoveObjNoshow("LIGHTS");
+    oldstate &= !ps52plib->IsObjNoshow("LIGHTS");
 
-        SetMenubarItemState( ID_MENU_ENC_LIGHTS, !ps52plib->IsObjNoshow("LIGHTS") );
+    if( doToggle ){
+        if(oldstate)                            // On, going off
+            ps52plib->AddObjNoshow("LIGHTS");
+        else{                                   // Off, going on
+            if(pOLE)
+                pOLE->nViz = 1;
+            ps52plib->RemoveObjNoshow("LIGHTS");
+        }
+
+        SetMenubarItemState( ID_MENU_ENC_LIGHTS, !oldstate );
     }
 
     if( doToggle ) {
@@ -4612,49 +4619,56 @@ void MyFrame::ToggleAnchor( void )
 {
 #ifdef USE_S57
     if( ps52plib ) {
-        int vis =  0;
+        int old_vis =  0;
+        OBJLElement *pOLE = NULL;
+
         // Need to loop once for SBDARE, which is our "master", then for
         // other categories, since order is unknown?
         for( unsigned int iPtr = 0; iPtr < ps52plib->pOBJLArray->GetCount(); iPtr++ ) {
             OBJLElement *pOLE = (OBJLElement *) ( ps52plib->pOBJLArray->Item( iPtr ) );
             if( !strncmp( pOLE->OBJLName, "SBDARE", 6 ) ) {
-                pOLE->nViz = !pOLE->nViz;
-                vis = pOLE->nViz;
+                old_vis = pOLE->nViz;
                 break;
             }
         }
+
         const char * categories[] = { "ACHBRT", "ACHARE", "CBLSUB", "PIPARE", "PIPSOL", "TUNNEL" };
         unsigned int num = sizeof(categories) / sizeof(categories[0]);
-        unsigned int cnt = 0;
-        for( unsigned int iPtr = 0; iPtr < ps52plib->pOBJLArray->GetCount(); iPtr++ ) {
-            OBJLElement *pOLE = (OBJLElement *) ( ps52plib->pOBJLArray->Item( iPtr ) );
-            for( unsigned int c = 0; c < num; c++ ) {
-                if( !strncmp( pOLE->OBJLName, categories[c], 6 ) ) {
-                    pOLE->nViz = vis;
-                    cnt++;
-                    break;
-                }
-            }
-            if( cnt == num ) break;
-        }
 
-        if( !ps52plib->IsObjNoshow("SBDARE") ){
+        old_vis &= !ps52plib->IsObjNoshow("SBDARE");
+        
+        if(old_vis){                            // On, going off
             ps52plib->AddObjNoshow("SBDARE");
             for( unsigned int c = 0; c < num; c++ ) {
                 ps52plib->AddObjNoshow(categories[c]);
             }
         }
-        else{
+        else{                                   // Off, going on
+            if(pOLE)
+                pOLE->nViz = 1;
             ps52plib->RemoveObjNoshow("SBDARE");
             for( unsigned int c = 0; c < num; c++ ) {
                 ps52plib->RemoveObjNoshow(categories[c]);
             }
+
+            unsigned int cnt = 0;
+            for( unsigned int iPtr = 0; iPtr < ps52plib->pOBJLArray->GetCount(); iPtr++ ) {
+                OBJLElement *pOLE = (OBJLElement *) ( ps52plib->pOBJLArray->Item( iPtr ) );
+                for( unsigned int c = 0; c < num; c++ ) {
+                    if( !strncmp( pOLE->OBJLName, categories[c], 6 ) ) {
+                        pOLE->nViz = 1;         // force on
+                        cnt++;
+                        break;
+                    }
+                }
+                if( cnt == num ) break;
+            }
+
         }
 
         ps52plib->GenerateStateHash();
         cc1->ReloadVP();
 
-        SetMenubarItemState( ID_MENU_ENC_ANCHOR, !ps52plib->IsObjNoshow("SBDARE") );
     }
 #endif
 }
@@ -4813,7 +4827,7 @@ void MyFrame::RegisterGlobalMenuItems()
 {
     if ( !m_pMenuBar ) return; // if there isn't a menu bar
 
-    wxMenu* nav_menu = new wxMenu();
+    wxMenu *nav_menu = new wxMenu();
     nav_menu->AppendCheckItem( ID_MENU_NAV_FOLLOW, _menuText(_("Auto Follow"), _T("Ctrl-A")) );
     nav_menu->AppendCheckItem( ID_MENU_NAV_TRACK, _("Enable Tracking") );
     nav_menu->AppendSeparator();
@@ -4915,7 +4929,19 @@ void MyFrame::UpdateGlobalMenuItems()
     if( ps52plib ) {
         m_pMenuBar->FindItem( ID_MENU_ENC_TEXT )->Check( ps52plib->GetShowS57Text() );
         m_pMenuBar->FindItem( ID_MENU_ENC_SOUNDINGS )->Check( ps52plib->GetShowSoundings() );
-        m_pMenuBar->FindItem( ID_MENU_ENC_LIGHTS )->Check( !ps52plib->IsObjNoshow("LIGHTS") );
+
+        bool light_state = false;
+        if( ps52plib ) {
+            for( unsigned int iPtr = 0; iPtr < ps52plib->pOBJLArray->GetCount(); iPtr++ ) {
+                OBJLElement *pOLE = (OBJLElement *) ( ps52plib->pOBJLArray->Item( iPtr ) );
+                if( !strncmp( pOLE->OBJLName, "LIGHTS", 6 ) ) {
+                    light_state = (pOLE->nViz == 1);
+                    break;
+                }
+            }
+        }
+        m_pMenuBar->FindItem( ID_MENU_ENC_LIGHTS )->Check( (!ps52plib->IsObjNoshow("LIGHTS")) && light_state );
+
         m_pMenuBar->FindItem( ID_MENU_ENC_ANCHOR )->Check( !ps52plib->IsObjNoshow("SBDARE") );
     }
 #endif
@@ -5903,11 +5929,12 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
     gGPS_Watchdog--;
     if( gGPS_Watchdog <= 0 ) {
         bGPSValid = false;
-#ifdef __WXOSX__
-        if( g_nNMEADebug && ( gGPS_Watchdog == 0 ) ) {wxLogMessage( _T("   ***GPS Watchdog timeout...") );}
-#else
-        if( g_nNMEADebug && ( gGPS_Watchdog == 0 ) ) wxLogMessage( _T("   ***GPS Watchdog timeout...") );
-#endif
+        if( /*g_nNMEADebug && */ gGPS_Watchdog == 0  )
+        {
+            wxString msg;
+            msg.Printf( _T("   ***GPS Watchdog timeout at Lat:%g   Lon: %g"), gLat, gLon );
+            wxLogMessage(msg);
+        }
         gSog = NAN;
         gCog = NAN;
     }
@@ -6384,6 +6411,30 @@ void RenderShadowText( wxDC *pdc, wxFont *pFont, wxString& str, int x, int y )
 
 }
 
+void MyFrame::UpdateRotationState( double rotation )
+{
+    //  If rotated manually, we switch to NORTHUP
+    g_bCourseUp = false;
+    
+    if(fabs(rotation) > .001){
+        SetMenubarItemState( ID_MENU_CHART_COGUP, false );
+        SetMenubarItemState( ID_MENU_CHART_NORTHUP, true );
+        if(m_pMenuBar){
+            m_pMenuBar->SetLabel( ID_MENU_CHART_NORTHUP, _("Rotated Mode") );
+        }
+    }
+    else{
+        SetMenubarItemState( ID_MENU_CHART_COGUP, g_bCourseUp );
+        SetMenubarItemState( ID_MENU_CHART_NORTHUP, !g_bCourseUp );
+        if(m_pMenuBar){
+            m_pMenuBar->SetLabel( ID_MENU_CHART_NORTHUP, _("North Up Mode") );
+        }
+    }
+    
+    UpdateGPSCompassStatusBox( true );
+    DoChartUpdate();
+    cc1->ReloadVP();
+}
 
 void MyFrame::UpdateGPSCompassStatusBox( bool b_force_new )
 {

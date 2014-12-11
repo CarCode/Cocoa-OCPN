@@ -41,6 +41,7 @@
 */
 
 extern int              g_NMEAAPBPrecision;
+extern int              g_NMEAAPBXTEPrecision;
 
 APB::APB()
 {
@@ -149,7 +150,7 @@ bool APB::Write( SENTENCE& sentence )
 
    sentence += IsLoranBlinkOK;
    sentence += IsLoranCCycleLockOK;
-   sentence += CrossTrackErrorMagnitude;
+   sentence.Add( CrossTrackErrorMagnitude, g_NMEAAPBXTEPrecision);
 
    if(DirectionToSteer == Left)
        sentence += _T("L");
