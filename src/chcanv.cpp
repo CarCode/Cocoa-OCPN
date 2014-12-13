@@ -284,9 +284,8 @@ extern ocpnGLOptions g_GLOptions;
 wxProgressDialog *pprog;
 bool b_skipout;
 wxSize pprog_size;
-
+int pprog_count;
 wxArrayString compress_msg_array;
-extern wxSize pprog_size;
 
 //  TODO why are these static?
 static int mouse_x;
@@ -1693,7 +1692,7 @@ void ChartCanvas::OnEvtCompressProgress( OCPN_CompressProgressEvent & event )
     }
     
     bool skip = false;
-    pprog->Update(event.count-1, combined_msg, &skip );
+    pprog->Update(pprog_count, combined_msg, &skip );
     pprog->SetSize(pprog_size);
     if(skip)
         b_skipout = skip;
@@ -2508,6 +2507,11 @@ bool ChartCanvas::StartTimedMovement( bool stoptimer )
     // Start/restart the stop movement timer
     if(stoptimer)
         pMovementStopTimer->Start( 1000, wxTIMER_ONE_SHOT ); 
+
+    if(!pMovementTimer->IsRunning()){
+        //        printf("timer not running, starting\n");
+        pMovementTimer->Start( 1, wxTIMER_ONE_SHOT );
+    }
 
     if(m_panx || m_pany || m_zoom_factor!=1 || m_rotation_speed) {
         // already moving, gets called again because of key-repeat event

@@ -1882,6 +1882,8 @@
 		A67A0F1E178C3B7F0056F9C0 /* OCPNRegion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OCPNRegion.cpp; path = src/OCPNRegion.cpp; sourceTree = "<group>"; };
 		A67A0F20178C3C0C0056F9C0 /* NMEALogWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NMEALogWindow.h; path = include/NMEALogWindow.h; sourceTree = "<group>"; };
 		A67A0F21178C3C5D0056F9C0 /* NMEALogWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NMEALogWindow.cpp; path = src/NMEALogWindow.cpp; sourceTree = "<group>"; };
+		A67CA5501A3370E5009118DA /* pugiconfig.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugiconfig.hpp; path = include/pugiconfig.hpp; sourceTree = "<group>"; };
+		A67CA5511A337251009118DA /* pugixml.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugixml.hpp; path = include/pugixml.hpp; sourceTree = "<group>"; };
 		A683CEB01958A550004A0137 /* libwatchdog_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libwatchdog_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A683CEB41958BABB004A0137 /* Alarm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Alarm.h; path = plugins/watchdog_pi/src/Alarm.h; sourceTree = "<group>"; };
 		A683CEB51958BAD5004A0137 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/watchdog_pi/src/icons.h; sourceTree = "<group>"; };
@@ -3102,6 +3104,8 @@
 				A617AB03194E3AF800E7D443 /* squish.h */,
 				A638304B1950DF6200027BFE /* crashprint.h */,
 				A669D4C31A2282610078BFB1 /* sha1.h */,
+				A67CA5501A3370E5009118DA /* pugiconfig.hpp */,
+				A67CA5511A337251009118DA /* pugixml.hpp */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";

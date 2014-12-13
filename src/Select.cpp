@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "Select.h"
 #include "georef.h"
@@ -332,13 +331,13 @@ bool Select::DeleteAllSelectableTypePoints( int SeltypeToDelete )
     while( node ) {
         pFindSel = node->GetData();
         if( pFindSel->m_seltype == SeltypeToDelete ) {
-            delete pFindSel;
             delete node;
             
             if( SELTYPE_ROUTEPOINT == SeltypeToDelete ){
                 RoutePoint *prp = (RoutePoint *)pFindSel->m_pData1;
                 prp->SetSelectNode( NULL );
             }
+            delete pFindSel;
             
             node = pSelectList->GetFirst();
             goto got_next_node;
