@@ -33,6 +33,7 @@
 #include <wx/radiobox.h>
 #include <wx/statline.h>
 #include <wx/tglbtn.h>
+#include <wx/scrolwin.h>
 #include <wx/grid.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -219,6 +220,7 @@ class GribRequestSettingBase : public wxDialog
 private:
 
 protected:
+    wxFlexGridSizer* m_fgScrollSizer;
     wxFlexGridSizer* m_pSenderSizer;
     wxTextCtrl* m_pSenderAddress;
     wxChoice* m_pMailTo;
@@ -266,6 +268,7 @@ protected:
     wxCheckBox* m_p500hpa;
     wxCheckBox* m_p300hpa;
     wxTextCtrl* m_MailImage;
+    wxFlexGridSizer* m_fgFixedSizer;
     wxStaticText* m_tFileSize;
     wxStaticText* m_tLimit;
     wxStdDialogButtonSizer* m_rButton;
@@ -288,7 +291,10 @@ protected:
 
 
     public:
+    wxScrolledWindow* m_sScrolledDialog;
+
     GribRequestSettingBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Write and send eMail request"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
+
     ~GribRequestSettingBase();
 
 };

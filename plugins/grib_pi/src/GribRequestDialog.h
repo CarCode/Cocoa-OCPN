@@ -53,6 +53,7 @@ public:
       bool RenderZoneOverlay( wxDC &dc );
       bool RenderGlZoneOverlay();
       bool DoRenderZoneOverlay();
+      void SetRequestDialogSize();
 
       wxString m_RequestConfigBase;
       wxString m_MailToAddresses;
@@ -67,7 +68,7 @@ private:
 
       void ApplyRequestConfig( unsigned rs, unsigned it, unsigned tr );
       wxString WriteMail();
-      bool EstimateFileSize();
+      int EstimateFileSize();
 
       void OnExit(wxCommandEvent &event) { wxCloseEvent evt; OnClose ( evt ); }
       void OnTopChange(wxCommandEvent &event);
@@ -81,7 +82,6 @@ private:
       void OnTooggleSelection( wxCommandEvent& event );
       void OnCoordinatesChange( wxSpinEvent& event );
       void OnMouseEventTimer( wxTimerEvent & event);
-      void SetMailImageSize();
       void SetCoordinatesText();
     
       GRIBUIDialog &m_parent;

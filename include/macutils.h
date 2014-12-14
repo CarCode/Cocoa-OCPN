@@ -15,9 +15,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
 
 #ifndef MACUTILS_H_INCLUDED_H__
 #define MACUTILS_H_INCLUDED_H__
@@ -27,6 +25,8 @@
 
 extern "C" int FindSerialPortNames(char** pNames, int iMaxNames) ;
 extern "C" bool ValidateSerialPortName(const char* pPortName, int iMaxNamesToSearch) ;
+
+extern "C" int GetMacMonitorSize();
 
 #endif // __WXOSX__
 
