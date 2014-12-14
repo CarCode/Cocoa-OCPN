@@ -82,6 +82,7 @@ extern ChartCanvas      *cc1;
 extern wxString         g_PrivateDataDir;
 
 extern bool             g_bShowOutlines;
+extern bool             g_bShowChartBar;
 extern bool             g_bShowDepthUnits;
 extern bool             g_bskew_comp;
 extern bool             g_bopengl;
@@ -231,6 +232,8 @@ bool                    g_bLoadedDisabledPlugins;
 
 extern bool             g_btouch;
 extern bool             g_bresponsive;
+
+extern double           g_config_display_size_mm;
 
 extern "C" bool CheckSerialAccess( void );
 
@@ -1755,7 +1758,7 @@ void options::CreatePanel_Advanced( size_t parent, int border_size, int group_it
     itemBoxSizerUI->Add( 0, border_size*3 );
     wxStaticText* zoomText = new wxStaticText( m_ChartDisplayPage, wxID_ANY,
                                               _("With a lower value, the same zoom level shows a less detailed chart.\nWith a higher value, the same zoom level shows a more detailed chart.") );
-    wxFont* dialogFont = FontMgr::Get().GetFont(_T("Dialog"));
+    wxFont* dialogFont = FontMgr::Get().GetFont(_("Dialog"));
     smallFont = new wxFont( * dialogFont ); // we can't use Smaller() because wx2.8 doesn't support it
     smallFont->SetPointSize( (smallFont->GetPointSize() / 1.2) + 0.5 ); // + 0.5 to round instead of truncate
     zoomText->SetFont( * smallFont );
@@ -1795,6 +1798,31 @@ void options::CreatePanel_Advanced( size_t parent, int border_size, int group_it
     itemBoxSizerUI->Add( 0, border_size*3 );
     itemBoxSizerUI->Add( 0, border_size*3 );
 
+    //  Display size/DPI
+    itemBoxSizerUI->Add( new wxStaticText( m_ChartDisplayPage, wxID_ANY, _("Physical Screen Width") ), labelFlags );
+    wxBoxSizer *pDPIRow = new wxBoxSizer( wxHORIZONTAL );
+    itemBoxSizerUI->Add( pDPIRow, 0, wxEXPAND );
+    
+    pRBSizeAuto = new wxRadioButton( m_ChartDisplayPage, wxID_ANY, _("Auto") );
+    pDPIRow->Add( pRBSizeAuto, inputFlags );
+    
+    pDPIRow->AddSpacer( 10 );
+    pRBSizeManual = new wxRadioButton( m_ChartDisplayPage, ID_SIZEMANUALRADIOBUTTON, _("Manual:") );
+    pDPIRow->Add( pRBSizeManual, inputFlags );
+    
+    pScreenMM = new wxTextCtrl( m_ChartDisplayPage, ID_TEXTCTRL, _T(""), wxDefaultPosition, wxSize( 50, -1 ), wxTE_RIGHT  );
+    pDPIRow->Add( pScreenMM, 0, wxALIGN_RIGHT | wxALL, group_item_spacing );
+
+    pDPIRow->Add( new wxStaticText( m_ChartDisplayPage, wxID_ANY, _("mm") ), inputFlags );
+
+    pRBSizeAuto->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED,
+                         wxCommandEventHandler( options::OnSizeAutoButton ), NULL, this );
+    pRBSizeManual->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED,
+                           wxCommandEventHandler( options::OnSizeManualButton ), NULL, this );
+    
+    // spacer
+    itemBoxSizerUI->Add( 0, border_size*3 );
+    itemBoxSizerUI->Add( 0, border_size*3 );
 
     // OpenGL Options
     itemBoxSizerUI->Add( new wxStaticText( m_ChartDisplayPage, wxID_ANY, _("Graphics") ), labelFlags );
@@ -1897,8 +1925,8 @@ void options::CreatePanel_VectorCharts( size_t parent, int border_size, int grou
     optionsColumn->Add( pCheck_SCAMIN, inputFlags );
 
     // spacer
-    optionsColumn->Add( new wxStaticText(ps57Ctl, wxID_ANY, _T("")) );
-    optionsColumn->Add( new wxStaticText(ps57Ctl, wxID_ANY, _T("")) );
+    optionsColumn->Add( 0, border_size*4 );
+    optionsColumn->Add( 0, border_size*4 );
     
     
     // graphics options
@@ -1921,8 +1949,8 @@ void options::CreatePanel_VectorCharts( size_t parent, int border_size, int grou
     optionsColumn->Add( p24Color, inputFlags );
 
     // spacer
-    optionsColumn->Add( new wxStaticText(ps57Ctl, wxID_ANY, _T("")) );
-    optionsColumn->Add( new wxStaticText(ps57Ctl, wxID_ANY, _T("")) );
+    optionsColumn->Add( 0, border_size*4 );
+    optionsColumn->Add( 0, border_size*4 );
 
     // depth options
     optionsColumn->Add( new wxStaticText( ps57Ctl, wxID_ANY, _("Shallow Depth") ), labelFlags );
@@ -1950,8 +1978,8 @@ void options::CreatePanel_VectorCharts( size_t parent, int border_size, int grou
     depDeepRow->Add( m_depthUnitsDeep, inputFlags );
 
     // spacer
-    optionsColumn->Add( new wxStaticText(ps57Ctl, wxID_ANY, _T("")) );
-    optionsColumn->Add( new wxStaticText(ps57Ctl, wxID_ANY, _T("")) );
+    optionsColumn->Add( 0, border_size*4 );
+    optionsColumn->Add( 0, border_size*4 );
 
 #ifdef USE_S57
     optionsColumn->Add( new wxStaticText(ps57Ctl, wxID_ANY, _("CM93 Detail Level")), labelFlags );
@@ -2144,8 +2172,8 @@ void options::CreatePanel_Display( size_t parent, int border_size, int group_ite
     wrapperSizer->Add( generalSizer, 1, wxALL | wxALIGN_CENTER, border_size );
     
     // spacer
-    generalSizer->Add( new wxStaticText(pDisplayPanel, wxID_ANY, _T("")) );
-    generalSizer->Add( new wxStaticText(pDisplayPanel, wxID_ANY, _T("")) );
+    generalSizer->Add( 0, border_size*4 );
+    generalSizer->Add( 0, border_size*4 );
 
     // Nav Mode
     generalSizer->Add( new wxStaticText( pDisplayPanel, wxID_ANY, _("Navigation Mode") ), groupLabelFlags );
@@ -2164,8 +2192,8 @@ void options::CreatePanel_Display( size_t parent, int border_size, int group_ite
     boxNavMode->Add( pCBLookAhead, inputFlags );
 
     // spacer
-    generalSizer->Add( new wxStaticText(pDisplayPanel, wxID_ANY, _T("")) );
-    generalSizer->Add( new wxStaticText(pDisplayPanel, wxID_ANY, _T("")) );
+    generalSizer->Add( 0, border_size*4 );
+    generalSizer->Add( 0, border_size*4 );
 
     // Control Options
     generalSizer->Add( new wxStaticText( pDisplayPanel, wxID_ANY, _("Chart Display") ), groupLabelFlags );
@@ -2180,8 +2208,8 @@ void options::CreatePanel_Display( size_t parent, int border_size, int group_ite
     
     
     // spacer
-    generalSizer->Add( new wxStaticText(pDisplayPanel, wxID_ANY, _T("")) );
-    generalSizer->Add( new wxStaticText(pDisplayPanel, wxID_ANY, _T("")) );
+    generalSizer->Add( 0, border_size*4 );
+    generalSizer->Add( 0, border_size*4 );
 
     // Control Options
     generalSizer->Add( new wxStaticText( pDisplayPanel, wxID_ANY, _("Controls") ), groupLabelFlags );
@@ -2196,8 +2224,8 @@ void options::CreatePanel_Display( size_t parent, int border_size, int group_ite
     boxCtrls->Add( pEnableZoomToCursor, inputFlags );
 
     // spacer
-    generalSizer->Add( new wxStaticText(pDisplayPanel, wxID_ANY, _T("")) );
-    generalSizer->Add( new wxStaticText(pDisplayPanel, wxID_ANY, _T("")) );
+    generalSizer->Add( 0, border_size*4 );
+    generalSizer->Add( 0, border_size*4 );
     
     // Display Options
     generalSizer->Add( new wxStaticText( pDisplayPanel, wxID_ANY, _("Display Features") ), groupLabelFlags );
@@ -2233,8 +2261,8 @@ void options::CreatePanel_Units( size_t parent, int border_size, int group_item_
     
     
     // spacer
-    unitsSizer->Add( new wxStaticText(panelUnits, wxID_ANY, _T("")) );
-    unitsSizer->Add( new wxStaticText(panelUnits, wxID_ANY, _T("")) );
+    unitsSizer->Add( 0, border_size*4 );
+    unitsSizer->Add( 0, border_size*4 );
     
     
     // distance units
@@ -2278,8 +2306,8 @@ void options::CreatePanel_Units( size_t parent, int border_size, int group_item_
     
     
     // spacer
-    unitsSizer->Add( new wxStaticText(panelUnits, wxID_ANY, _T("")) );
-    unitsSizer->Add( new wxStaticText(panelUnits, wxID_ANY, _T("")) );
+    unitsSizer->Add( 0, border_size*4 );
+    unitsSizer->Add( 0, border_size*4 );
     
     
     // bearings (magnetic/true, variation)
@@ -2587,6 +2615,10 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
     pShowMenuBar->SetValue( FALSE );
     miscOptions->Add( pShowMenuBar, 0, wxALL, border_size );
 #endif
+
+    pShowChartBar = new wxCheckBox( itemPanelFont, wxID_ANY, _("Show Chart Bar") );
+    pShowChartBar->SetValue( g_bShowChartBar );
+    miscOptions->Add( pShowChartBar, 0, wxALL, border_size );
 
     pShowCompassWin = new wxCheckBox( itemPanelFont, wxID_ANY, _("Show Compass/GPS Status Window") );
     pShowCompassWin->SetValue( FALSE );
@@ -3025,6 +3057,19 @@ void options::SetInitialSettings()
 
     m_choicePrecision->SetSelection( g_NMEAAPBPrecision );
 
+    wxString screenmm;
+    if(g_config_display_size_mm > 0){
+        screenmm.Printf(_T("%d"), int(g_config_display_size_mm));
+        pRBSizeManual->SetValue( true );
+    }
+    else{
+        screenmm = _("Auto");
+        pRBSizeAuto->SetValue( true );
+        pScreenMM->Disable();
+    }
+    
+    pScreenMM->SetValue(screenmm);
+
 #ifdef USE_S57
     m_pSlider_CM93_Zoom->SetValue( g_cm93_zoom_factor );
 
@@ -3143,6 +3188,24 @@ void options::UpdateOptionsUnits()
     s.Printf( _T("%6.2f"), S52_getMarinerParam( S52_MAR_DEEP_CONTOUR ) / conv );
     s.Trim(false);
     m_DeepCtl->SetValue( s );
+}
+
+void options::OnSizeAutoButton( wxCommandEvent& event )
+{
+    pScreenMM->SetValue(_("Auto"));
+    pScreenMM->Disable();
+}
+
+void options::OnSizeManualButton( wxCommandEvent& event )
+{
+    wxString screenmm;
+    if(g_config_display_size_mm > 0){
+        screenmm.Printf(_T("%d"), int(g_config_display_size_mm));
+    }
+    
+    pScreenMM->SetValue(screenmm);
+    pScreenMM->Enable();
+    
 }
 
 void options::OnUnitsChoice( wxCommandEvent& event )
@@ -3609,6 +3672,20 @@ void options::OnApplyClick( wxCommandEvent& event )
 #endif
         m_pConfig->m_bShowCompassWin = pShowCompassWin->GetValue();
     }
+
+    g_bShowChartBar = pShowChartBar->GetValue();
+
+    wxString screenmm = pScreenMM->GetValue();
+    long mm = -1;
+    screenmm.ToLong(&mm);
+    if(mm >0){
+        g_config_display_size_mm = mm;
+    }
+    else{
+        g_config_display_size_mm = -1;
+    }
+
+
 
 //TODO    g_bGarminHost = pGarminHost->GetValue();
 

@@ -2269,7 +2269,7 @@ ThumbData *ChartBaseBSB::GetThumbData(int tnx, int tny, float lat, float lon)
 
       int div_factor = __min(divx, divy);
 
-      int pixx, pixy;
+      double pixx, pixy;
 
 
       //    Using a temporary synthetic ViewPort and source rectangle,
@@ -2301,7 +2301,7 @@ bool ChartBaseBSB::UpdateThumbData(double lat, double lon)
 
     int div_factor = __min(divx, divy);
 
-    int pixx_test, pixy_test;
+    double pixx_test, pixy_test;
 
 
       //    Using a temporary synthetic ViewPort and source rectangle,
@@ -2337,14 +2337,14 @@ bool ChartBaseBSB::UpdateThumbData(double lat, double lon)
 //-----------------------------------------------------------------------
 static double polytrans( double* coeff, double lon, double lat );
 
-int ChartBaseBSB::vp_pix_to_latlong(ViewPort& vp, int pixx, int pixy, double *plat, double *plon)
+int ChartBaseBSB::vp_pix_to_latlong(ViewPort& vp, double pixx, double pixy, double *plat, double *plon)
 {
       if(bHaveEmbeddedGeoref)
       {
             double raster_scale = GetPPM() / vp.view_scale_ppm;
 
-            int px = (int)(pixx*raster_scale) + Rsrc.x;
-            int py = (int)(pixy*raster_scale) + Rsrc.y;
+            double px = pixx*raster_scale + Rsrc.x;
+            double py = pixy*raster_scale + Rsrc.y;
 //            pix_to_latlong(px, py, plat, plon);
 
             if(1)
@@ -2493,7 +2493,7 @@ int ChartBaseBSB::vp_pix_to_latlong(ViewPort& vp, int pixx, int pixy, double *pl
 
 
 
-int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, int &pixx, int &pixy, ViewPort& vp)
+int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, double &pixx, double &pixy, ViewPort& vp)
 {
     double alat, alon;
 
@@ -2519,8 +2519,8 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, int &pixx, int &pixy
 
                 double raster_scale = GetPPM() / vp.view_scale_ppm;
 
-                pixx = wxRound((xd - Rsrc.x) / raster_scale);
-                pixy = wxRound((yd - Rsrc.y) / raster_scale);
+                pixx = (xd - Rsrc.x) / raster_scale;
+                pixy = (yd - Rsrc.y) / raster_scale;
 
             return 0;
           }
@@ -2575,13 +2575,8 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, int &pixx, int &pixy
                 double xs = xc - vp.pix_width  * raster_scale / 2;
                 double ys = yc - vp.pix_height * raster_scale / 2;
 
-                int pixx_p = (int)(((xd - xs) / raster_scale) + 0.5);
-                int pixy_p = (int)(((yd - ys) / raster_scale) + 0.5);
-
-//                printf("  %d  %d  %d  %d\n", pixx, pixx_p, pixy, pixy_p);
-
-                pixx = pixx_p;
-                pixy = pixy_p;
+                pixx = (xd - xs) / raster_scale;
+                pixy = (yd - ys) / raster_scale;
 
           }
           else if(m_projection == PROJECTION_MERCATOR)
@@ -2622,11 +2617,8 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, int &pixx, int &pixy
                 double xs = xc - vp.pix_width  * raster_scale / 2;
                 double ys = yc - vp.pix_height * raster_scale / 2;
 
-                int pixx_p = (int)(((xd - xs) / raster_scale) + 0.5);
-                int pixy_p = (int)(((yd - ys) / raster_scale) + 0.5);
-
-                pixx = pixx_p;
-                pixy = pixy_p;
+                pixx = (xd - xs) / raster_scale;
+                pixy = (yd - ys) / raster_scale;
 
           }
           else if(m_projection == PROJECTION_POLYCONIC)
@@ -2667,11 +2659,8 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, int &pixx, int &pixy
                 double xs = xc - vp.pix_width  * raster_scale / 2;
                 double ys = yc - vp.pix_height * raster_scale / 2;
 
-                int pixx_p = (int)(((xd - xs) / raster_scale) + 0.5);
-                int pixy_p = (int)(((yd - ys) / raster_scale) + 0.5);
-
-                pixx = pixx_p;
-                pixy = pixy_p;
+                pixx = (xd - xs) / raster_scale;
+                pixy = (yd - ys) / raster_scale;
 
           }
           else
@@ -2684,8 +2673,8 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, int &pixx, int &pixy
                 double dx = epix * cos ( vp.skew ) + npix * sin ( vp.skew );
                 double dy = npix * cos ( vp.skew ) - epix * sin ( vp.skew );
 
-                pixx = ( int ) ( ( (double)vp.pix_width  / 2 ) + dx + 0.5 );
-                pixy = ( int ) ( ( (double)vp.pix_height / 2 ) - dy + 0.5 );
+                pixx = ( (double)vp.pix_width  / 2 ) + dx;
+                pixy = ( (double)vp.pix_height / 2 ) - dy;
           }
                 return 0;
     }
@@ -3060,7 +3049,7 @@ bool ChartBaseBSB::AdjustVP(ViewPort &vp_last, ViewPort &vp_proposed)
                         wxRect rprop;
                         ComputeSourceRectangle(vp_proposed, &rprop);
 
-                        int pixx, pixy;
+                        double pixx, pixy;
                         double lon_adj, lat_adj;
                         latlong_to_pix_vp(vp_proposed.clat, vp_proposed.clon, pixx, pixy, vp_proposed);
                         vp_pix_to_latlong(vp_proposed, pixx, pixy, &lat_adj, &lon_adj);
