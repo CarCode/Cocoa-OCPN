@@ -163,9 +163,13 @@ int wmm_pi::Init(void)
     
     if (0 == WMM_readMagneticModel(buf.data(), MagneticModel))
 	{
-        wxLogMessage(wxString::Format(_T("Warning: WMM model data file %s can't be loaded, using the bundled data."), buf.data()));
+        wxLogMessage(wxString::Format(_T("Warning: WMM model data file %s can't be loaded, using the bundled data."), filename.c_str()));
         WMM_setupMagneticModel(wmm_cof_data, MagneticModel);
 	}
+    else
+    {
+        wxLogMessage(wxString::Format(_T("WMM model data loaded from file %s."), filename.c_str()));
+    }
 
        filename = m_wmm_dir + _T("/EGM9615.BIN");
        strncpy(geoiddatapath, (const char*)filename.mb_str(wxConvUTF8), 1023);
@@ -263,7 +267,7 @@ wxString wmm_pi::GetLongDescription()
 	return _("World Magnetic Model PlugIn for OpenCPN\n\
 Implements the NOAA World Magnetic Model\n\
 More information: http://www.ngdc.noaa.gov/geomag/WMM/\n\
-The bundled WMM2010 model expires on December 31, 2014.\n\
+The bundled WMM2015 model expires on December 31, 2019.\n\
 After then, if new version of the plugin will not be released\n\
 in time, get a new WMM.COF from NOAA and place it to the\n\
 location you can find in the OpenCPN logfile.");

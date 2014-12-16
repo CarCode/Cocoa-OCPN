@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wmm_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-09 19:30+0100\n"
+"POT-Creation-Date: 2014-12-16 13:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,30 +59,30 @@ msgstr ""
 msgid "WMM Plugin"
 msgstr ""
 
-#: ../src/wmm_pi.cpp:181 ../src/wmm_pi.cpp:252 ../src/WmmUIDialog.h:87
+#: ../src/wmm_pi.cpp:185 ../src/wmm_pi.cpp:256 ../src/WmmUIDialog.h:87
 msgid "WMM"
 msgstr ""
 
-#: ../src/wmm_pi.cpp:258
+#: ../src/wmm_pi.cpp:262
 msgid "World Magnetic Model PlugIn for OpenCPN"
 msgstr ""
 
-#: ../src/wmm_pi.cpp:263
+#: ../src/wmm_pi.cpp:267
 msgid ""
 "World Magnetic Model PlugIn for OpenCPN\n"
 "Implements the NOAA World Magnetic Model\n"
 "More information: http://www.ngdc.noaa.gov/geomag/WMM/\n"
-"The bundled WMM2010 model expires on December 31, 2014.\n"
+"The bundled WMM2015 model expires on December 31, 2019.\n"
 "After then, if new version of the plugin will not be released\n"
 "in time, get a new WMM.COF from NOAA and place it to the\n"
 "location you can find in the OpenCPN logfile."
 msgstr ""
 
-#: ../src/wmm_pi.cpp:415 ../src/wmm_pi.cpp:485
+#: ../src/wmm_pi.cpp:419 ../src/wmm_pi.cpp:489
 msgid "Error, see log."
 msgstr ""
 
-#: ../src/wmm_pi.cpp:715 ../src/WmmUIDialog.h:111
+#: ../src/wmm_pi.cpp:719 ../src/WmmUIDialog.h:111
 msgid "WMM Preferences"
 msgstr ""
 

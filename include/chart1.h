@@ -379,23 +379,11 @@ class MyFrame: public wxFrame
     void PianoPopupMenu ( int x, int y, int selected_index, int selected_dbIndex );
     void OnPianoMenuDisableChart(wxCommandEvent& event);
     void OnPianoMenuEnableChart(wxCommandEvent& event);
+    bool IsPianoContextMenuActive(){ return piano_ctx_menu != 0; }
+
 #ifdef __WXOSX__
-//    void MacSetCommonMenuBar(wxMenuBar* menubar);
-    wxMenu *mac_menu;
-    void onAbout(wxCommandEvent& event);
-    void onEinst(wxCommandEvent& event);
-    void onHelp(wxCommandEvent& event);
     void onSparkle(void);
     void startHelp(void);
-    void onZoomin(wxCommandEvent& event);
-    void onZoomout(wxCommandEvent& event);
-    void onStackup(wxCommandEvent& event);
-    void onStackdown(wxCommandEvent& event);
-    void onFollow(wxCommandEvent& event);
-    void onText(wxCommandEvent& event);
-    void onAis(wxCommandEvent& event);
-    void onCurrent(wxCommandEvent& event);
-    void onTide(wxCommandEvent& event);
 #endif
     void SetGroupIndex(int index);
 
@@ -518,6 +506,7 @@ class MyFrame: public wxFrame
     wxString            m_VDO_accumulator;
     
     time_t              m_fixtime;
+    wxMenu              *piano_ctx_menu;
 
     DECLARE_EVENT_TABLE()
 };

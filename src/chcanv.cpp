@@ -719,8 +719,25 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &Region, size_t nPoi
     OCPNRegionIterator screen_region_it1( Region );
     while( screen_region_it1.HaveRects() ) {
         wxRect rect = screen_region_it1.GetRect();
+
+        double lat, lon;
         
+        //  The screen region corners
+        GetLLFromPix( wxPoint(rect.x, rect.y), &lat, &lon );
+        float_2Dpt p0; p0.y = lat; p0.x = lon;
+        
+        GetLLFromPix( wxPoint(rect.x + rect.width, rect.y), &lat, &lon );
+        float_2Dpt p1; p1.y = lat; p1.x = lon;
+        
+        GetLLFromPix( wxPoint(rect.x + rect.width, rect.y + rect.height), &lat, &lon );
+        float_2Dpt p2; p2.y = lat; p2.x = lon;
+        
+        GetLLFromPix( wxPoint(rect.x, rect.y + rect.height), &lat, &lon );
+        float_2Dpt p3; p3.y = lat; p3.x = lon;
+
         for(size_t i=0 ; i < nPoints-1 ; i++){
+
+            //  Quick check
             int x0 = pp[i].x;  int y0 = pp[i].y; int x1 = pp[i+1].x; int y1 = pp[i+1].y;
             if( ((x0 < rect.x) && (x1 < rect.x)) ||
                 ((x0 > rect.x+rect.width) && (x1 > rect.x+rect.width)) )
@@ -730,24 +747,27 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &Region, size_t nPoi
                 ((y0 > rect.y+rect.height) && (y1 > rect.y+rect.height)) )
                 continue;
             
-            b_intersect = true;
-            break;
+            //  Look harder
+            float_2Dpt f0; f0.y = llpoints[i * 2];     f0.x = llpoints[(i * 2) + 1];
+            float_2Dpt f1; f1.y = llpoints[(i+1) * 2]; f1.x = llpoints[((i+1) * 2) + 1];
+            b_intersect |= Intersect_FL( p0, p1, f0, f1) != 0;
+            b_intersect |= Intersect_FL( p1, p2, f0, f1) != 0;
+            b_intersect |= Intersect_FL( p2, p3, f0, f1) != 0;
+            b_intersect |= Intersect_FL( p3, p0, f0, f1) != 0;
+
+            if(b_intersect)
+                break;
         }
 
         // Check segment, last point back to first point
         if(!b_intersect){
-            int x0 = pp[nPoints-1].x;  int y0 = pp[nPoints-1].y; int x1 = pp[0].x; int y1 = pp[0].y;
-            if( ((x0 < rect.x) && (x1 < rect.x)) ||
-               ((x0 > rect.x+rect.width) && (x1 > rect.x+rect.width)) ){
-            }
-            else{
-                if( ((y0 < rect.y) && (y1 < rect.y)) ||
-                   ((y0 > rect.y+rect.height) && (y1 > rect.y+rect.height)) ){
-                }
-                else{
-                    b_intersect = true;
-                }
-            }
+            float_2Dpt f0; f0.y = llpoints[(nPoints-1) * 2];     f0.x = llpoints[((nPoints-1) * 2) + 1];
+            float_2Dpt f1; f1.y = llpoints[0]; f1.x = llpoints[1];
+            b_intersect |= Intersect_FL( p0, p1, f0, f1) != 0;
+            b_intersect |= Intersect_FL( p1, p2, f0, f1) != 0;
+            b_intersect |= Intersect_FL( p2, p3, f0, f1) != 0;
+            b_intersect |= Intersect_FL( p3, p0, f0, f1) != 0;
+
         }
 
         screen_region_it1.NextRect();
@@ -785,7 +805,26 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &Region, size_t nPoi
         if(rpoly.Contains(rRegion)){
             //  subject poygon may be large enough to fully encompass the target Region,
             //  but it might not, especially for irregular or concave charts.
-            //  So we cannot shortcut here
+            //  So we cannot directly shortcut here
+            //  Better check....
+            
+#if 1
+            //  If the subject polygon does not contain the screen region center point,
+            //  then there must be no intersction, so return empty region
+            
+            if(!G_PtInPolygon_FL((float_2Dpt *)llpoints, nPoints, clon, clat)){
+                if( NULL == ppoints ) delete[] pp;
+                wxRegion r;
+                return r;
+            }
+            
+            //  Other wise, it must be the full screen.
+            else{
+                if( NULL == ppoints ) delete[] pp;
+                return Region;
+            }
+#endif
+
         }
         else{
         //  Subject polygon is entirely outside of target Region
@@ -1002,6 +1041,7 @@ BEGIN_EVENT_TABLE ( ChartCanvas, wxWindow )
     EVT_KEY_UP(ChartCanvas::OnKeyUp )
     EVT_CHAR(ChartCanvas::OnKeyChar)
     EVT_MOUSE_CAPTURE_LOST(ChartCanvas::LostMouseCapture )
+    EVT_KILL_FOCUS(ChartCanvas::OnFocusKill )
 
     EVT_MENU ( ID_DEF_MENU_MAX_DETAIL,         ChartCanvas::PopupMenuHandler )
     EVT_MENU ( ID_DEF_MENU_SCALE_IN,           ChartCanvas::PopupMenuHandler )
@@ -1112,6 +1152,7 @@ ChartCanvas::ChartCanvas ( wxFrame *frame ) :
     m_pAISRolloverWin = NULL;
     m_bedge_pan = false;
     m_disable_edge_pan = false;
+    m_brecapture = false;
 
     m_pCIWin = NULL;
 
@@ -1665,6 +1706,11 @@ ChartCanvas::~ChartCanvas()
 
 }
 
+void ChartCanvas::OnFocusKill(wxFocusEvent& event )
+{
+    m_brecapture = true;
+}
+
 void ChartCanvas::SetDisplaySizeMM( double size )
 {
     m_display_size_mm = size;
@@ -1982,8 +2028,9 @@ void ChartCanvas::OnKeyChar( wxKeyEvent &event )
 
 void ChartCanvas::OnKeyDown( wxKeyEvent &event )
 {
+#ifndef __WXOSX__
     bool b_handled = false;
-
+#endif
     m_modkeys = event.GetModifiers();
 
     int panspeed = m_modkeys == wxMOD_ALT ? 2 : 100;
@@ -2111,7 +2158,9 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
 
     case WXK_F11:
         parent_frame->ToggleFullScreen();
+#ifndef __WXOSX__
         b_handled = true;
+#endif
         break;
 
     case WXK_F12: {
@@ -3219,7 +3268,7 @@ void ChartCanvas::DoZoomCanvas( double factor,  bool can_zoom_to_cursor )
         
         
     } else if(factor < 1) {
-        double zoom_factor = 1/factor;
+//        double zoom_factor = 1/factor;  // Not used
 
         b_do_zoom = true;
 
@@ -3234,7 +3283,7 @@ void ChartCanvas::DoZoomCanvas( double factor,  bool can_zoom_to_cursor )
                 //      If Current_Ch is not on the screen, unbound the zoomout
                 LLBBox viewbox = VPoint.GetBBox();
                 wxBoundingBox chart_box;
-                int current_index = ChartData->FinddbIndex( pc->GetFullPath() );
+//                int current_index = ChartData->FinddbIndex( pc->GetFullPath() );  // Not used
                 double max_allowed_scale;
 
                 max_allowed_scale = GetCanvasScaleFactor() / m_absolute_min_scale_ppm;
@@ -3784,7 +3833,10 @@ bool ChartCanvas::SetViewPoint( double lat, double lon, double scale_ppm, double
 
     //   If any PlugIn chart ran wxExecute(), then the canvas focus is likely lost.
     //  Restore it here
-    cc1->SetFocus();
+    if(m_brecapture  && !gFrame->IsPianoContextMenuActive()){
+        cc1->SetFocus();
+        m_brecapture = false;
+    }
 
     return b_ret;
 }
@@ -4139,7 +4191,7 @@ void ChartCanvas::ShipDraw( ocpnDC& dc )
                 pos_image = m_pos_image_user_grey->Copy();
         }
 
-        img_height = pos_image.GetHeight();
+//        img_height = pos_image.GetHeight();  // Not used
 
         if( g_n_ownship_beam_meters > 0.0 &&
             g_n_ownship_length_meters > 0.0 &&
@@ -4172,7 +4224,7 @@ void ChartCanvas::ShipDraw( ocpnDC& dc )
 
                 int w = os_bm.GetWidth();
                 int h = os_bm.GetHeight();
-                img_height = h;
+//                img_height = h;  // Not used
 
                 dc.DrawBitmap( os_bm, lShipMidPoint.x - w / 2, lShipMidPoint.y - h / 2, true );
 
@@ -5114,11 +5166,11 @@ void ChartCanvas::MouseEvent( wxMouseEvent& event )
             }
             node = node->GetNext();
         }
-        
+
         //      Double tap with selected RoutePoint or Mark
-        bool bt1 = m_bMarkEditing;
-        RoutePoint *pp = m_pRoutePointEditTarget;
-        
+//        bool bt1 = m_bMarkEditing;  // Not used
+//        RoutePoint *pp = m_pRoutePointEditTarget;  // Not used
+
         if(m_pRoutePointEditTarget){
             if( b_onRPtarget ) {
                 ShowMarkPropertiesDialog( m_pRoutePointEditTarget );
@@ -5482,11 +5534,11 @@ void ChartCanvas::MouseEvent( wxMouseEvent& event )
 
             else if( m_bMeasure_Active && m_nMeasureState )   // measure tool?
             {
-                double rlat, rlon;
+//                double rlat, rlon;  // Not used
 
                 SetCursor( *pCursorPencil );
-                rlat = m_cursor_lat;
-                rlon = m_cursor_lon;
+//                rlat = m_cursor_lat;  // Not used
+//                rlon = m_cursor_lon;  // Not used
 
                 if( m_nMeasureState == 1 ) {
                     m_pMeasureRoute = new Route();
@@ -5887,10 +5939,10 @@ void ChartCanvas::MouseEvent( wxMouseEvent& event )
                     return;
                 }
                     
-                double rlat, rlon;
+//                double rlat, rlon;  // Not used
 
-                rlat = m_cursor_lat;
-                rlon = m_cursor_lon;
+//                rlat = m_cursor_lat;  // Not used
+//                rlon = m_cursor_lon;  // Not used
 
                 if( m_nMeasureState == 1 ) {
                     m_pMeasureRoute = new Route();
@@ -7280,8 +7332,8 @@ void ChartCanvas::ShowMarkPropertiesDialog( RoutePoint* markPoint ) {
         pMarkPropDialog->Centre();
 
 
-        int xp = (canvas_size.x - fitted_size.x)/2;
-        int yp = (canvas_size.y - fitted_size.y)/2;
+//        int xp = (canvas_size.x - fitted_size.x)/2;  // Not used
+//        int yp = (canvas_size.y - fitted_size.y)/2;  // Not used
 
         wxPoint xxp = ClientToScreen(canvas_pos);
 //        pMarkPropDialog->Move(xxp.x + xp, xxp.y + yp);
@@ -7327,8 +7379,8 @@ void ChartCanvas::ShowRoutePropertiesDialog(wxString title, Route* selected)
         pRoutePropDialog->SetSize( fitted_size );
         pRoutePropDialog->Centre();
 
-        int xp = (canvas_size.x - fitted_size.x)/2;
-        int yp = (canvas_size.y - fitted_size.y)/2;
+//        int xp = (canvas_size.x - fitted_size.x)/2;  // Not used
+//        int yp = (canvas_size.y - fitted_size.y)/2;  // Not used
 
         wxPoint xxp = ClientToScreen(canvas_pos);
 //        pRoutePropDialog->Move(xxp.x + xp, xxp.y + yp);
@@ -7368,7 +7420,11 @@ void pupHandler_PasteWaypoint() {
     Kml* kml = new Kml();
     ::wxBeginBusyCursor();
 
+#ifdef __WXOSX__
+    kml->ParsePasteBuffer();
+#else
     int pasteBuffer = kml->ParsePasteBuffer();
+#endif
     RoutePoint* pasted = kml->GetParsedRoutePoint();
 
     int nearby_sel_rad_pix = 8;
@@ -7409,8 +7465,11 @@ void pupHandler_PasteWaypoint() {
 void pupHandler_PasteRoute() {
     Kml* kml = new Kml();
     ::wxBeginBusyCursor();
-
+#ifdef __WXOSX__
+    kml->ParsePasteBuffer();
+#else
     int pasteBuffer = kml->ParsePasteBuffer();
+#endif
     Route* pasted = kml->GetParsedRoute();
     if( ! pasted ) return;
 
@@ -7532,8 +7591,11 @@ void pupHandler_PasteRoute() {
 void pupHandler_PasteTrack() {
     Kml* kml = new Kml();
     ::wxBeginBusyCursor();
-
+#ifdef __WXOSX__
+    kml->ParsePasteBuffer();
+#else
     int pasteBuffer = kml->ParsePasteBuffer();
+#endif
     Track* pasted = kml->GetParsedTrack();
     if( ! pasted ) return;
 
@@ -8701,12 +8763,12 @@ void ChartCanvas::RenderRouteLegs( ocpnDC &dc )
         int w, h;
         int xp, yp;
         int hilite_offset = 3;
-    #ifdef __WXMAC__
+#ifdef __WXMAC__
         wxScreenDC sdc;
         sdc.GetTextExtent(routeInfo, &w, &h, NULL, NULL, dFont);
-    #else
+#else
         dc.GetTextExtent( routeInfo, &w, &h );
-    #endif
+#endif
         xp = r_rband.x - w;
         yp = r_rband.y;
         yp += hilite_offset;
@@ -10201,16 +10263,11 @@ void ChartCanvas::DrawAllCurrentsInBBox( ocpnDC& dc, LLBBox& BBox )
     double true_scale_display = floor( VPoint.chart_scale / 100. ) * 100.;
     bDrawCurrentValues =  true_scale_display < g_Show_Target_Name_Scale;
 
-    wxPen *pblack_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFD" ) ), 1,
-                        wxSOLID );
-    wxPen *porange_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFO" ) ), 1,
-                         wxSOLID );
-    wxBrush *porange_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFO" ) ),
-                             wxSOLID );
-    wxBrush *pgray_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UIBDR" ) ),
-                           wxSOLID );
-    wxBrush *pblack_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFD" ) ),
-                            wxSOLID );
+    wxPen *pblack_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFD" ) ), 1, wxSOLID );
+    wxPen *porange_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFO" ) ), 1, wxSOLID );
+    wxBrush *porange_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFO" ) ), wxSOLID );
+//    wxBrush *pgray_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UIBDR" ) ), wxSOLID );  // Not used
+    wxBrush *pblack_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFD" ) ), wxSOLID );
 
     double skew_angle = GetVPRotation();
 

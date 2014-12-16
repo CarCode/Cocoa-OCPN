@@ -176,6 +176,7 @@ public:
       virtual void Update();
 
       void LostMouseCapture(wxMouseCaptureLostEvent& event);
+      void OnFocusKill(wxFocusEvent& event );
 
       void CancelMouseRoute();
       void SetDisplaySizeMM( double size );
@@ -629,6 +630,7 @@ private:
 
       wxColour    m_fog_color;
       bool        m_disable_edge_pan;
+      bool        m_brecapture;
 
 DECLARE_EVENT_TABLE()
 };
