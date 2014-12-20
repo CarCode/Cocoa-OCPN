@@ -3333,15 +3333,15 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
       strncpy ( u, sclass_sub.mb_str(), 199 );
       u[200] = '\0';
       strncpy ( pobj->FeatureName, u, 7 );
-
-      //  Touch up the geom types
+/*
+      //  Touch up the geom types   Not used, what for?
       int geomtype_sub = geomtype;
       if ( geomtype == 8 )                    // sounding....
             geomtype_sub = 1;
 
       if ( geomtype == 4 )                    // convert cm93 area(4) to GDAL area(3)...
             geomtype_sub = 3;
-
+*/
       pobj->attVal =  new wxArrayOfS57attVal();
 
 
@@ -5010,7 +5010,7 @@ int cm93compchart::PrepareChartScale ( const ViewPort &vpt, int cmscale, bool bO
                         if ( g_bDebugCM93 )
                               printf ( " chart %c contains clat/clon\n", ( char ) ( 'A' + cmscale -1 ) );
 
-                        cellscale_is_useable = true;
+//                        cellscale_is_useable = true;  // Not used, break
                         break;
                   }
 
@@ -6366,6 +6366,12 @@ VC_Hash& cm93compchart::Get_vc_hash ( void )
 
 bool cm93compchart::AdjustVP ( ViewPort &vp_last, ViewPort &vp_proposed )
 {
+    //  All the below logic is slow, and really redundant.
+    //  so, declare that cm93 charts do not require adjustment for optimum performance.
+
+    if( m_pcm93chart_current )
+        return false;
+
       //    This may be a partial screen render
       //    If it is, the cmscale value on this render must match the same parameter
       //    on the last render.
@@ -6375,7 +6381,7 @@ bool cm93compchart::AdjustVP ( ViewPort &vp_last, ViewPort &vp_proposed )
 
       int cmscale = GetCMScaleFromVP ( vp_proposed );                   // This is the scale that should be used, based on the vp
 
-      int cmscale_actual = PrepareChartScale ( vp_proposed, cmscale );  // this is the scale that will be used, based on cell coverage
+    int cmscale_actual = PrepareChartScale ( vp_proposed, cmscale, false );  // this is the scale that will be used, based on cell coverage
 
 #ifdef ocpnUSE_GL
       if(g_bopengl) {
@@ -6539,7 +6545,7 @@ cm93_dictionary *cm93compchart::FindAndLoadDictFromDir ( const wxString &dir )
 
             if ( ( path.Len() == 0 ) || path.IsSameAs ( fnc.GetPathSeparator() ) )
             {
-                  bdone = true;
+//                  bdone = true;  // Not used, break
                   wxLogMessage ( _T ( "Early break1" ) );
                   break;
             }
@@ -6547,7 +6553,7 @@ cm93_dictionary *cm93compchart::FindAndLoadDictFromDir ( const wxString &dir )
             //    Abort the search loop if the directory tree does not contain some indication of CM93
             if ( ( wxNOT_FOUND == path.Lower().Find ( _T ( "cm93" ) ) ) )
             {
-                  bdone = true;
+//                  bdone = true;  // Not used, break
                   wxLogMessage ( _T ( "Early break2" ) );
                   break;
             }

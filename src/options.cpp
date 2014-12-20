@@ -2649,7 +2649,7 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
 void options::CreateControls()
 {
     int border_size = 4;
-    int check_spacing = 2;
+//    int check_spacing = 2;  // Not used
     int group_item_spacing = 2;           // use for items within one group, with Add(...wxALL)
 
     int font_size_y, font_descent, font_lead;
@@ -2668,7 +2668,7 @@ void options::CreateControls()
     if(!g_bresponsive){
         if( height <= 800 ) {
             border_size = 2;
-            check_spacing = 2;
+//            check_spacing = 2;  // Not used
             group_item_spacing = 1;
         }
     }
@@ -5935,10 +5935,12 @@ OpenGLOptionsDlg::OpenGLOptionsDlg( wxWindow* parent, bool glTicked )
 
 void OpenGLOptionsDlg::OnButtonRebuild( wxCommandEvent& event )
 {
+#ifdef ocpnUSE_GL
     if(g_GLOptions.m_bTextureCompressionCaching) {
         m_brebuild_cache = true;
         EndModal(wxID_CANCEL);
     }
+#endif
 }
 
 void OpenGLOptionsDlg::OnButtonClear( wxCommandEvent& event )
@@ -5950,8 +5952,6 @@ void OpenGLOptionsDlg::OnButtonClear( wxCommandEvent& event )
     
     wxString path =  g_PrivateDataDir + wxFileName::GetPathSeparator() + _T("raster_texture_cache");
     if(::wxDirExists( path )){
-        cc1->GetglCanvas()->ClearAllRasterTextures();
-        
         wxArrayString files;
         size_t nfiles = wxDir::GetAllFiles(path, &files);
         for(unsigned int i=0 ; i < files.GetCount() ; i++){
@@ -5968,9 +5968,7 @@ wxString OpenGLOptionsDlg::TextureCacheSize()
 {
     wxString path =  g_PrivateDataDir + wxFileName::GetPathSeparator() + _T("raster_texture_cache");
     int total = 0;
-    if(::wxDirExists( path )){
-        cc1->GetglCanvas()->ClearAllRasterTextures();
-        
+    if(::wxDirExists( path )) {        
         wxArrayString files;
         size_t nfiles = wxDir::GetAllFiles(path, &files);
         for(unsigned int i=0 ; i < files.GetCount() ; i++){

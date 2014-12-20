@@ -54,7 +54,7 @@ public:
 class ParamCache
 {
 public:
-ParamCache() : values(NULL), m_step(0) {}
+    ParamCache() : values(NULL), m_step(0), m_lat(0.0) {}
 	~ParamCache() { delete [] values; }
 	void Initialize(double step);
 	bool Read(double lat, double lon, double &value);
@@ -71,8 +71,12 @@ public:
 	WMMtype_MagneticModel *&mm,
 	WMMtype_MagneticModel *&tmm,
 	WMMtype_Ellipsoid *ellip)
-	: m_type(type), MagneticModel(mm), TimedMagneticModel(tmm), Ellip(ellip)
+    : m_type(type), m_bEnabled(false), m_Spacing(0.0), m_Step(0.0), m_PoleAccuracy(0.0), MagneticModel(mm), TimedMagneticModel(tmm), Ellip(ellip), lastx(0), lasty(0)
 	{
+        UserDate.Year = 2015;
+        UserDate.Month = 1;
+        UserDate.Day = 1;
+        UserDate.DecimalYear = 2015.0;
 	}
 
 	~MagneticPlotMap() { ClearMap(); }

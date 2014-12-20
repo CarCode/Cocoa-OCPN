@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Status Window
@@ -21,8 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 
 #ifndef __statwin_H__
@@ -89,10 +88,16 @@ public:
 
       wxPoint GetKeyOrigin(int key_index);
       void ResetRollover(void);
-      void SetRoundedRectangles(bool val){ m_brounded = val; }
+      void SetRoundedRectangles(bool val){ m_brounded = val; m_hash.Clear();}
+
+      wxString &GenerateAndStoreNewHash();
+      wxString &GetStoredHash();
 
       int         Size_X, Size_Y, Pos_X, Pos_Y;
 private:
+      wxString GetStateHash();
+      wxString    m_hash;
+
       int         m_nRegions;
       int         m_index_last;
       int         m_hover_icon_last;

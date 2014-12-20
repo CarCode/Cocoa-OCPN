@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Authors:  David Register
@@ -212,7 +212,7 @@ bool CompressChart(wxThread *pThread, ChartBase *pchart, wxString CompressedCach
 {
     bool ret = true;
     ChartBaseBSB *pBSBChart = dynamic_cast<ChartBaseBSB*>( pchart );
-    int max_compressed_size = LZ4_COMPRESSBOUND(g_tile_size);
+//    int max_compressed_size = LZ4_COMPRESSBOUND(g_tile_size);  // Not used
     
     if(pBSBChart) {
         
@@ -281,6 +281,9 @@ bool CompressChart(wxThread *pThread, ChartBase *pchart, wxString CompressedCach
                 Nevent.thread = thread;
                 
                 pMessageTarget->AddPendingEvent(Nevent);
+
+                if(!pThread)
+                    ::wxYield();
 
             }
             
@@ -944,6 +947,9 @@ void glChartCanvas::SetupOpenGL()
         s_glGenerateMipmap = 0;
     if( GetRendererString().Upper().Find( _T("ATI") ) != wxNOT_FOUND )
         s_glGenerateMipmap = 0;
+
+    if( !s_glGenerateMipmap )
+        wxLogMessage( _T("OpenGL-> glGenerateMipmap unavailable") );
 
     if( !s_glGenFramebuffers  || !s_glGenRenderbuffers        || !s_glFramebufferTexture2D ||
         !s_glBindFramebuffer  || !s_glFramebufferRenderbuffer || !s_glRenderbufferStorage  ||
@@ -2606,67 +2612,163 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, OCPNRegion &region)
 
             if( !m_gl_rendered_region.IsEmpty() ) {
 
-                int wi = VPoint.pix_width; //VPoint.rv_rect.width;
-                int hi = VPoint.pix_height; //rv_rect.height;
+                int wi = VPoint.pix_width;
+                int hi = VPoint.pix_height;
 
                 // Use MipMap LOD tweaking to produce a blurred, downsampling effect at high speed.
 
                 if(s_glGenerateMipmap){
+                    int width = wi;
+                    int height = hi;
 
-                    //          Capture the rendered screen image to a texture
-                    glReadBuffer( GL_BACK);
+                    if(g_texture_rectangle_format){             //nPOT texture supported
 
-                    GLuint screen_capture;
-                    glGenTextures( 1, &screen_capture );
+                        //          Capture the rendered screen image to a texture
+                        glReadBuffer( GL_BACK);
 
-                    glEnable(GL_TEXTURE_2D);
-                    glBindTexture(GL_TEXTURE_2D, screen_capture);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+                        GLuint screen_capture;
+                        glGenTextures( 1, &screen_capture );
 
-                    glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, VPoint.rv_rect.width, VPoint.rv_rect.height,
-                                 0, GL_RGBA, GL_UNSIGNED_BYTE, 0 );
-                    glCopyTexSubImage2D(GL_TEXTURE_2D,  0,  0,  0,
-                                        VPoint.rv_rect.x,  VPoint.rv_rect.y,  VPoint.rv_rect.width, VPoint.rv_rect.height);
+                        glEnable(GL_TEXTURE_2D);
+                        glBindTexture(GL_TEXTURE_2D, screen_capture);
+                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-                    glClear(GL_DEPTH_BUFFER_BIT);
-                    glDisable(GL_DEPTH_TEST);
+                        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+                                     0, GL_RGBA, GL_UNSIGNED_BYTE, 0 );
+                        glCopyTexSubImage2D(GL_TEXTURE_2D,  0,  0,  0,
+                                            VPoint.rv_rect.x,  VPoint.rv_rect.y,  width, height);
 
-                    //  Build MipMaps
-                    int max_mipmap = 3;
-                    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0 );
-                    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, max_mipmap );
 
-                    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, -1);
-                    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, max_mipmap);
+                        glClear(GL_DEPTH_BUFFER_BIT);
+                        glDisable(GL_DEPTH_TEST);
 
-                    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+                        //  Build MipMaps
+                        int max_mipmap = 3;
+                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0 );
+                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, max_mipmap );
 
-                    //  Use hardware accelerated mipmap generation, if available
-                    s_glGenerateMipmap(GL_TEXTURE_2D);
+                        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, -1);
+                        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, max_mipmap);
 
-                    // Render at reduced LOD (i.e. higher mipmap number)
-                    double bias = fog/70;
-                    glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, bias);
-                    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+                        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 
-                    glColor4f (1.0f,1.0f,1.0f,1.0f);
+                        //  Use hardware accelerated mipmap generation, if available
+                        s_glGenerateMipmap(GL_TEXTURE_2D);
 
-                    glBegin(GL_QUADS);
+                        // Render at reduced LOD (i.e. higher mipmap number)
+                        double bias = fog/70;
+                        glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, bias);
+                        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
 
-                    glTexCoord2f(0 , 1 ); glVertex2i(VPoint.rv_rect.x,                        VPoint.rv_rect.y);
-                    glTexCoord2f(0 , 0 ); glVertex2i(VPoint.rv_rect.x,                        VPoint.rv_rect.y + VPoint.rv_rect.height);
-                    glTexCoord2f(1 , 0 ); glVertex2i(VPoint.rv_rect.x + VPoint.rv_rect.width, VPoint.rv_rect.y + VPoint.rv_rect.height);
-                    glTexCoord2f(1 , 1 ); glVertex2i(VPoint.rv_rect.x + VPoint.rv_rect.width, VPoint.rv_rect.y);
-                    glEnd ();
+                        glColor4f (1.0f,1.0f,1.0f,1.0f);
 
-                    glDeleteTextures(1, &screen_capture);
+                        glBegin(GL_QUADS);
 
-                    glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, 0);
+                        glTexCoord2f(0 , 1 ); glVertex2i(VPoint.rv_rect.x,         VPoint.rv_rect.y);
+                        glTexCoord2f(0 , 0 ); glVertex2i(VPoint.rv_rect.x,         VPoint.rv_rect.y + height);
+                        glTexCoord2f(1 , 0 ); glVertex2i(VPoint.rv_rect.x + width, VPoint.rv_rect.y + height);
+                        glTexCoord2f(1 , 1 ); glVertex2i(VPoint.rv_rect.x + width, VPoint.rv_rect.y);
+                        glEnd ();
 
+                        glDeleteTextures(1, &screen_capture);
+
+                        glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, 0);
+                    }
+                    else {              // must use POT textures
+                        // and we cannot really trust the value that comes from GL_MAX_TEXTURE_SIZE
+
+                        int tex_size = 512;  // reasonable assumption
+                        int ntx = (VPoint.rv_rect.width / tex_size) + 1;
+                        int nty = (VPoint.rv_rect.height / tex_size) + 1;
+
+                        GLuint *screen_capture = new GLuint[ntx * nty];
+                        glGenTextures( ntx * nty, screen_capture );
+
+                        // Render at reduced LOD (i.e. higher mipmap number)
+                        double bias = fog/70;
+                        glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS, bias);
+                        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+                        glColor4f (1.0f,1.0f,1.0f,1.0f);
+                        glClear(GL_DEPTH_BUFFER_BIT);
+                        glDisable(GL_DEPTH_TEST);
+                        int max_mipmap = 3;
+
+                        for(int i=0 ; i < ntx ; i++){
+                            for(int j=0 ; j < nty ; j++){
+
+                                int screen_x = VPoint.rv_rect.x + (i * tex_size);
+                                int screen_y = VPoint.rv_rect.y + (j * tex_size);
+
+                                glEnable(GL_TEXTURE_2D);
+                                glBindTexture(GL_TEXTURE_2D, screen_capture[(i * ntx) + j]);
+                                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+                                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+#if 1
+                                glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, tex_size, tex_size,
+                                             0, GL_RGBA, GL_UNSIGNED_BYTE, 0 );
+
+                                glCopyTexSubImage2D(GL_TEXTURE_2D,  0,  0,  0, screen_x,  screen_y, tex_size, tex_size);
+#else
+                                unsigned char *buffer = (unsigned char *)malloc( tex_size * tex_size * 3 );
+                                glReadPixels(screen_x, screen_y, tex_size, tex_size, GL_RGB, GL_UNSIGNED_BYTE, buffer );
+                                glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB,
+                                             tex_size, tex_size, 0, GL_RGB, GL_UNSIGNED_BYTE, buffer );
+                                free(buffer);
+#endif
+
+
+                                //  Build MipMaps
+                                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0 );
+                                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, max_mipmap );
+
+//                                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, -1);
+//                                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, max_mipmap);
+
+                                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST );
+
+                                s_glGenerateMipmap(GL_TEXTURE_2D);
+
+                            }
+                        }
+
+                        for(int i=0 ; i < ntx ; i++){
+                            int ybase =  VPoint.rv_rect.height - tex_size;
+                            for(int j=0 ; j < nty ; j++){
+
+                                int screen_x = VPoint.rv_rect.x + (i * tex_size);
+                                int screen_y = VPoint.rv_rect.y + (j * tex_size);
+
+                                glEnable(GL_TEXTURE_2D);
+                                glBindTexture(GL_TEXTURE_2D, screen_capture[(i * ntx) + j]);
+
+
+                                double bias = fog/70;
+//                                glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS, bias);
+                                glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+
+                                glBegin(GL_QUADS);
+                                glTexCoord2f(0 , 1 ); glVertex2i(screen_x,            ybase);
+                                glTexCoord2f(0 , 0 ); glVertex2i(screen_x,            ybase + tex_size);
+                                glTexCoord2f(1 , 0 ); glVertex2i(screen_x + tex_size, ybase + tex_size);
+                                glTexCoord2f(1 , 1 ); glVertex2i(screen_x + tex_size, ybase);
+                                glEnd ();
+
+                                ybase -= tex_size;
+                            }
+                        }
+
+//                        glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS, 0);
+                        glDeleteTextures(ntx * nty, screen_capture);
+                        delete [] screen_capture;
+                    }
                 }
 
                 else {
@@ -2690,9 +2792,9 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, OCPNRegion &region)
                         glVertex2i( rect.x + rect.width, rect.y + rect.height );
                         glVertex2i( rect.x, rect.y + rect.height );
                         glEnd();
-                        
+
                         upd.NextRect();
-                        
+
                     }
                     glDisable( GL_BLEND );
                     glPopAttrib();
@@ -2700,7 +2802,7 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, OCPNRegion &region)
             }
         }
     }
-    
+
 
     else {
         if( Current_Ch->GetChartFamily() == CHART_FAMILY_RASTER ) {
@@ -2898,9 +3000,9 @@ bool glChartCanvas::TextureCrunch(double factor)
 
 bool glChartCanvas::FactoryCrunch(double factor)
 {
-    int mem_used, mem_start;
+    int mem_used; //, mem_start;  // Not used
     GetMemoryStatus(0, &mem_used);
-    mem_start = mem_used;
+//    mem_start = mem_used;  // Not used
 
     bool bGLMemCrunch = mem_used > (double)(g_memCacheLimit) * factor;
     if( ! bGLMemCrunch )
@@ -3041,8 +3143,8 @@ void glChartCanvas::Render()
 
     //  If we plan to post process the display, don't use accelerated panning
     double scale_factor = VPoint.ref_scale/VPoint.chart_scale;
-    bool fog_it = (g_fog_overzoom && (scale_factor > g_overzoom_emphasis_base) && VPoint.b_quilt);
-    fog_it |= g_oz_vector_scale;
+    bool fog_it = g_fog_overzoom && (scale_factor > g_overzoom_emphasis_base) && VPoint.b_quilt;
+    fog_it |=  g_oz_vector_scale && (scale_factor > g_overzoom_emphasis_base) && VPoint.b_quilt;
     bool bpost_hilite = !cc1->m_pQuilt->GetHiliteRegion( VPoint ).IsEmpty();
 
     // Try to use the framebuffer object's cache of the last frame

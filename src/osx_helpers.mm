@@ -1,7 +1,7 @@
 /*
- *  This file is part of Poedit (http://www.poedit.net)
+ *  This file is part of Poedit (http://poedit.net)
  *
- *  Copyright (C) 2007-2013 Vaclav Slavik
+ *  Copyright (C) 2007-2014 Vaclav Slavik
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -33,31 +33,36 @@
 #import <AppKit/NSButton.h>
 #import <AppKit/NSSpellChecker.h>
 
-#ifndef USE_SPARKLE
+//#import "PFMoveApplication.h"
+
+#ifdef USE_SPARKLE
 #import <Sparkle/Sparkle.h>
 
 // --------------------------------------------------------------------------------
 // Sparkle helpers
 // --------------------------------------------------------------------------------
 
-void Sparkle_Initialize()
+void Sparkle_Initialize(bool checkForBeta)
 {
     /* Remove config key for Sparkle < 1.5. */
     UserDefaults_RemoveValue("SUCheckAtStartup");
 
     @autoreleasepool {
         SUUpdater *updater = [SUUpdater sharedUpdater];
-        // We don't use the updater here, this just triggered initialization
-        (void)updater;
+
+        /* TODO: Use feedParametersForUpdater delegate method and append ?beta=1 instead.
+                 This code puts SUFeedURL into user defaults! */
+        NSString *url = checkForBeta ? @"http://topperdiek.de/dl/app/ocpncast/beta"
+                                     : @"http://topperdiek.de/dl/app/ocpncast";
+        [updater setFeedURL:[NSURL URLWithString:url]];
     }
 }
 
 
-void Sparkle_AddMenuItem(const char *title)
+void Sparkle_AddMenuItem(NSMenu *appmenu, const char *title)
 {
     @autoreleasepool {
         NSString *nstitle = [NSString stringWithUTF8String: title];
-        NSMenu *appmenu = [[[[NSApplication sharedApplication] mainMenu] itemAtIndex:0] submenu];
         NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:nstitle
                                                action:@selector(checkForUpdates:)
                                                keyEquivalent:@""];
@@ -78,23 +83,11 @@ void Sparkle_Cleanup()
 }
 #endif // USE_SPARKLE
 
-// --------------------------------------------------------------------------------
-// Spell checking
-// --------------------------------------------------------------------------------
-/*
-int SpellChecker_SetLang(const char *lang)
-{
-    @autoreleasepool {
-        NSString *nslang = [NSString stringWithUTF8String: lang];
-        return [[NSSpellChecker sharedSpellChecker] setLanguage: nslang];
-    }
-}
-*/
 
 // --------------------------------------------------------------------------------
 // Native preferences
 // --------------------------------------------------------------------------------
-/*
+
 int UserDefaults_GetBoolValue(const char *key)
 {
     @autoreleasepool {
@@ -125,41 +118,19 @@ void UserDefaults_RemoveValue(const char *key)
     }
 }
 
-*/
+
 // --------------------------------------------------------------------------------
 // Misc UI helpers
 // --------------------------------------------------------------------------------
-/*
+
 void MakeButtonRounded(void *button)
 {
     [(__bridge NSButton*)button setBezelStyle:NSRoundRectBezelStyle];
 }
-*/
-
-// ---------------------------------------------------------------------------------
-// Für HelpViewer
-// ---------------------------------------------------------------------------------
-/*
-int MyGotoHelpPage (const char *pagePath, const char *anchorName)
+/*  erfordert deps/letsmove/ von Poedit
+void MoveToApplicationsFolderIfNecessary()
 {
-    CFBundleRef myApplicationBundle = NULL;
-    CFStringRef myBookName = NULL;
-    OSStatus err = noErr;
-    
-    myApplicationBundle = CFBundleGetMainBundle();// 1
-    if (myApplicationBundle == NULL) {err = fnfErr;}// 2
-    
-    myBookName = CFBundleGetValueForInfoDictionaryKey(// 3
-                                                      myApplicationBundle,
-                                                      CFSTR("CFBundleHelpBookName"));
-    if (myBookName == NULL) {err = fnfErr;}
-    
-    if (CFGetTypeID(myBookName) != CFStringGetTypeID()) {// 4
-        err = paramErr;
-    }
-    
-    if (err == noErr) err = AHGotoPage (myBookName, pagePath, anchorName);// 5
-    return err;
-    
+    PFMoveToApplicationsFolderIfNecessary();
 }
+
 */

@@ -1026,7 +1026,6 @@ void GRIBUIDialog::OnRequest(  wxCommandEvent& event )
     pReq_Dialog = new GribRequestSetting( *this );
     pPlugIn->SetDialogFont( pReq_Dialog );
     pPlugIn->SetDialogFont( pReq_Dialog->m_sScrolledDialog );
-    pReq_Dialog->InitRequestConfig();
     pReq_Dialog->OnVpChange(m_vp);
     pReq_Dialog->SetRequestDialogSize();
     //need to set a position at start

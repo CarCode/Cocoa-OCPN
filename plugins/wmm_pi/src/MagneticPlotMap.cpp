@@ -282,8 +282,8 @@ void MagneticPlotMap::PlotRegion(std::list<PlotLineSeg*> &region,
 	if(isnan(p1) || isnan(p2) || isnan(p3) || isnan(p4))
 		return;
 
-	double ry1, ry2, ry3, ry4;
-	double lon3, lon4, lat3, lat4;
+	double ry1 = 0.0, ry2 = 0.0, ry3 = 0.0, ry4 = 0.0;
+	double lon3 = 0.0, lon4 = 0.0, lat3 = 0.0, lat4 = 0.0;
 	/* horizontal interpolate to determine intermediate longitudes as well
        as the contours they are on. */
 	if(!Interpolate(lon1, lon2, p1, p2, false, lat1, lon3, ry1) ||

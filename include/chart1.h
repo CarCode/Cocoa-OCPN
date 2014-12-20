@@ -69,6 +69,7 @@ wxString _menuText(wxString name, wxString shortcut);
 double AnchorDistFix( double const d, double const AnchorPointMinDist, double const AnchorPointMaxDist);   //  pjotrc 2010.02.22
 
 bool TestGLCanvas(wxString &prog_dir);
+bool ReloadLocale();
 
 class NMEA_Msg_Container;
 WX_DECLARE_STRING_HASH_MAP( NMEA_Msg_Container*, MsgPriorityHash );
@@ -111,7 +112,6 @@ enum
     ID_CURRENT,
     ID_TIDE,
     ID_ABOUT,
-    ID_SPARKLE,
     ID_TBEXIT,
     ID_TBSTAT,
     ID_PRINT,
@@ -382,7 +382,6 @@ class MyFrame: public wxFrame
     bool IsPianoContextMenuActive(){ return piano_ctx_menu != 0; }
 
 #ifdef __WXOSX__
-    void onSparkle(void);
     void startHelp(void);
 #endif
     void SetGroupIndex(int index);

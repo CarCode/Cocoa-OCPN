@@ -673,6 +673,8 @@ int              g_NMEAAPBXTEPrecision;
 
 bool             g_bSailing;
 
+wxArrayString    g_locale_catalog_array;
+
 #ifdef LINUX_CRASHRPT
 wxCrashPrint g_crashprint;
 #endif
@@ -853,17 +855,16 @@ bool GetWindowsMonitorSize( int *w, int *h );
 
 double  GetDisplaySizeMM()
 {
-    double ret;
+    double ret = wxGetDisplaySizeMM().GetWidth();
     
 #ifdef __WXMSW__
     int w,h;
     if( GetWindowsMonitorSize( &w, &h) ){
         ret = w;
     }
-#elif defined __WXOSX__
+#endif
+#ifdef __WXOSX__
     ret = GetMacMonitorSize();
-#else
-    ret = wxGetDisplaySizeMM().GetWidth();
 #endif
 
     wxString msg;
@@ -2830,11 +2831,6 @@ void MyFrame::startHelp(void)
 //    _Error =
     AHGotoPage ( help, NULL, NULL );
 }
-
-void MyFrame::onSparkle(void)
-{
-    wxMessageBox(_("Funktion noch nicht verfügbar."), _("Nachricht"));
-}
 #endif
 
 void MyFrame::OnEraseBackground( wxEraseEvent& event )
@@ -4188,10 +4184,7 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             startHelp();
             break;
         }
-        case ID_SPARKLE: {
-            onSparkle();
-            break;
-        }
+
         case ID_PRINT: {
             DoPrint();
             break;
@@ -4805,7 +4798,9 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
     if ( showMenuBar ) {
         if ( !m_pMenuBar ) { // add the menu bar if it is enabled
             m_pMenuBar = new wxMenuBar();
+
             RegisterGlobalMenuItems();
+
 #ifdef __WXOSX__
       EnableFullScreenView();      
 #endif
@@ -4919,12 +4914,14 @@ void MyFrame::RegisterGlobalMenuItems()
     wxMenu* help_menu = new wxMenu();
     help_menu->Append( wxID_ABOUT, _("About OpenCPN"));
     help_menu->Append( wxID_HELP, _menuText(_("OpenCPN Hilfe"), _T("Ctrl-J")) );
-//    help_menu->Append( ID_SPARKLE, _("Search for Updates..."));
-#if USE_SPARKLE
-    Sparkle_AddMenuItem(_("Check for Updates...").utf8_str());
-#endif
     m_pMenuBar->Append( help_menu, _("Help"));
 
+#if USE_SPARKLE
+    wxMenu *apple = m_pMenuBar->OSXGetAppleMenu();
+    if (!apple)
+        return; // huh
+    Sparkle_AddMenuItem(apple->GetHMenu(), _("Check for Updates...").utf8_str());
+#endif
 
     // Set initial values for menu check items and radio items
     UpdateGlobalMenuItems();
@@ -5101,9 +5098,11 @@ int MyFrame::DoOptionsDialog()
     
     if( g_FloatingToolbarDialog)
         g_FloatingToolbarDialog->DisableTooltips();
-
+#ifdef __WXOSX__
+    g_options->ShowModal();
+#else
     int rr = g_options->ShowModal();
-
+#endif
     if( g_FloatingToolbarDialog)
         g_FloatingToolbarDialog->EnableTooltips();
 
@@ -5121,7 +5120,11 @@ int MyFrame::DoOptionsDialog()
 #endif
 
     bool ret_val = false;
+#ifdef __WXOSX__
+    int rr = g_options->GetReturnCode();
+#else
     rr = g_options->GetReturnCode();
+#endif
     if( rr ) {
         ProcessOptionsDialog( rr, g_options );
         ret_val = true;
@@ -7023,6 +7026,8 @@ void MyFrame::UpdateControlBar( void )
     ArrayOfInts piano_chart_index_array;
     ArrayOfInts empty_piano_chart_index_array;
 
+    wxString old_hash = stats->pPiano->GetStoredHash();
+
     if( cc1->GetQuiltMode() ) {
         piano_chart_index_array = cc1->GetQuiltExtendedStackdbIndexArray();
         stats->pPiano->SetKeyArray( piano_chart_index_array );
@@ -7076,7 +7081,10 @@ void MyFrame::UpdateControlBar( void )
     stats->pPiano->SetPolyIndexArray( piano_poly_chart_index_array );
 
     stats->FormatStat();
-    stats->Refresh( true );
+
+    wxString new_hash = stats->pPiano->GenerateAndStoreNewHash();
+    if(new_hash != old_hash)
+        stats->Refresh( false );
 
 }
 
@@ -7601,7 +7609,7 @@ void MyFrame::OnPianoMenuDisableChart( wxCommandEvent& event )
                 int dbIndex = pCurrentStack->GetDBIndex( i );
                 if( type == ChartData->GetDBChartType( dbIndex ) ) {
                     SelectQuiltRefChart( i );
-                    b_success = true;
+//                    b_success = true;  // Not used, break
                     break;
                 }
                 i--;
@@ -9928,7 +9936,7 @@ void InitializeUserColors( void )
     char TableName[20];
     colTable *ctp;
     colTable *ct;
-    int colIdx = 0;
+//    int colIdx = 0;  // Not used
     int R, G, B;
 
     UserColorTableArray = new wxArrayPtrVoid;
@@ -9958,7 +9966,7 @@ void InitializeUserColors( void )
                 ctp = (colTable *) ( UserColorTableArray->Item( it ) );
                 if( !strcmp( TableName, ctp->tableName->mb_str() ) ) {
                     ct = ctp;
-                    colIdx = 0;
+//                    colIdx = 0;  // Not used
                     break;
                 }
             }
@@ -11179,3 +11187,71 @@ void SearchPnpKeyW9x(HKEY hkPnp, BOOL bUsbDevice,
     }
 
 #endif
+
+bool ReloadLocale()
+{
+    bool ret = false;
+    
+    //  Old locale is done.
+    delete plocale_def_lang;
+    
+    plocale_def_lang = new wxLocale;
+    wxString loc_lang_canonical;
+    
+    const wxLanguageInfo *pli = wxLocale::FindLanguageInfo( g_locale );
+    bool b_initok = false;
+    
+    if( pli ) {
+        b_initok = plocale_def_lang->Init( pli->Language, 1 );
+        // If the locale was not initialized OK, it may be that the wxstd.mo translations
+        // of the wxWidgets strings is not present.
+        // So try again, without attempting to load defaults wxstd.mo.
+        if( !b_initok ){
+            b_initok = plocale_def_lang->Init( pli->Language, 0 );
+        }
+        loc_lang_canonical = pli->CanonicalName;
+    }
+    
+    if( !pli || !b_initok ) {
+        delete plocale_def_lang;
+        plocale_def_lang = new wxLocale;
+        b_initok = plocale_def_lang->Init( wxLANGUAGE_ENGLISH_US, 0 );
+        loc_lang_canonical = wxLocale::GetLanguageInfo( wxLANGUAGE_ENGLISH_US )->CanonicalName;
+    }
+    
+    if(b_initok){
+        wxString imsg = _T("Opencpn language reload for:  ");
+        imsg += loc_lang_canonical;
+        wxLogMessage( imsg );
+        
+        //  wxWidgets assigneds precedence to message catalogs in reverse order of loading.
+        //  That is, the last catalog containing a certain translatable item takes precedence.
+        
+        //  So, Load the catalogs saved in a global string array which is populated as PlugIns request a catalog load.
+        //  We want to load the PlugIn catalogs first, so that core opencpn translations loaded later will become precedent.
+        
+        wxLog::SetVerbose(true);            // log all messages for debugging language stuff
+        
+        for(unsigned int i=0 ; i < g_locale_catalog_array.GetCount() ; i++){
+            wxString imsg = _T("Loading catalog for:  ");
+            imsg += g_locale_catalog_array.Item(i);
+            wxLogMessage( imsg );
+            plocale_def_lang->AddCatalog( g_locale_catalog_array.Item(i) );
+        }
+        
+        
+        // Get core opencpn catalog translation (.mo) file
+        wxLogMessage( _T("Loading catalog for opencpn core.") );
+        plocale_def_lang->AddCatalog( _T("opencpn") );
+        
+        wxLog::SetVerbose(false);
+        
+        ret = true;
+    }
+    
+    //    Always use dot as decimal
+    setlocale( LC_NUMERIC, "C" );
+    
+    return ret;
+    
+}
