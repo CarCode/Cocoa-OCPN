@@ -715,12 +715,36 @@ found_uclc_file:
 
       if(nPlypoint < 3)
       {
-          wxString msg(_("   Chart File contains less than 3 PLY points: "));
+          wxString msg(_T("   Chart File contains less than 3 PLY points: "));
           msg.Append(m_FullPath);
           wxLogMessage(msg);
           free(pPlyTable);
           return INIT_FAIL_REMOVE;
       }
+
+    if(m_datum_str.IsEmpty()){
+        wxString msg(_T("   Chart datum not specified on chart "));
+        msg.Append(m_FullPath);
+        wxLogMessage(msg);
+        
+        return INIT_FAIL_REMOVE;
+    }
+    
+    char d_str[100];
+    strncpy(d_str, m_datum_str.mb_str(), 99);
+    d_str[99] = 0;
+    
+    int datum_index = GetDatumIndex(d_str);
+    
+    if(datum_index < 0){
+        wxString msg(_T("   Chart datum {"));
+        msg += m_datum_str;
+        msg += _T("} invalid on chart ");
+        msg.Append(m_FullPath);
+        wxLogMessage(msg);
+        
+        return INIT_FAIL_REMOVE;
+    }
 
 //    Convert captured plypoint information into chart COVR structures
       m_nCOVREntries = 1;
@@ -1277,9 +1301,15 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
                               if(dt.ParseDate(date_wxstr))       // successful parse?
                               {
                                   int iyear = dt.GetYear(); // GetYear() fails on W98, DMC compiler, wx2.8.3
-//    BSB charts typically list publish date as xx/yy/zz, we want 19zz.
-                                  if(iyear < 100)
-                                  {
+                                  //    BSB charts typically list publish date as xx/yy/zz
+                                  //  This our own little version of the Y2K problem.
+                                  //  Just apply some sensible logic
+
+                                  if(iyear < 50){
+                                      iyear += 2000;
+                                      dt.SetYear(iyear);
+                                  }
+                                  else if((iyear >= 50) && (iyear < 100)){
                                       iyear += 1900;
                                       dt.SetYear(iyear);
                                   }
@@ -1351,6 +1381,29 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
             return INIT_FAIL_REMOVE;
       }
 
+    if(m_datum_str.IsEmpty()){
+        wxString msg(_T("   Chart datum not specified on chart "));
+        msg.Append(m_FullPath);
+        wxLogMessage(msg);
+        
+        return INIT_FAIL_REMOVE;
+    }
+    
+    char d_str[100];
+    strncpy(d_str, m_datum_str.mb_str(), 99);
+    d_str[99] = 0;
+    
+    int datum_index = GetDatumIndex(d_str);
+    
+    if(datum_index < 0){
+        wxString msg(_T("   Chart datum {"));
+        msg += m_datum_str;
+        msg += _T("} invalid on chart ");
+        msg.Append(m_FullPath);
+        wxLogMessage(msg);
+        
+        return INIT_FAIL_REMOVE;
+    }
 
 //    Convert captured plypoint information into chart COVR structures
       m_nCOVREntries = 1;
@@ -1474,7 +1527,7 @@ ChartBaseBSB::ChartBaseBSB()
 
       m_mapped_color_index = COLOR_RGB_DEFAULT;
 
-      m_datum_str = _T("WGS84");                // assume until proven otherwise
+//      m_datum_str = _T("WGS84");                // assume until proven otherwise
 
       m_dtm_lat = 0.;
       m_dtm_lon = 0.;
@@ -1913,8 +1966,8 @@ bool ChartBaseBSB::CreateLineIndex()
     {
         int offset = ifs_bitmap->TellI();
 
-        int iscan;
-        iscan = BSBScanScanline(ifs_bitmap);
+//        int iscan;  // Not used
+//        iscan = BSBScanScanline(ifs_bitmap);  // Not used
 
         //  There is no sense reporting an error here, since we are recreating after an error
 /*
@@ -3986,7 +4039,7 @@ int ChartBaseBSB::ReadBSBHdrLine(wxFileInputStream* ifs, char* buf, int buf_len_
       //    Look for continued lines, indicated by ' ' in first position
             if( read_char == '\n' )
             {
-                  cr_test = 0;
+//                  cr_test = 0;  // Not used
                   cr_test = ifs->GetC( );
 
                   if( cr_test != ' ' )
@@ -4021,7 +4074,6 @@ int ChartBaseBSB::ReadBSBHdrLine(wxFileInputStream* ifs, char* buf, int buf_len_
 
       return line_length;
 }
-
 
 //-----------------------------------------------------------------------
 //    Scan a BSB Scan Line from raw data
@@ -4082,6 +4134,7 @@ int   ChartBaseBSB::BSBScanScanline(wxInputStream *pinStream )
 
       return nLineMarker;
 }
+
 //      MSVC compiler makes a bad decision about when to inline (or not) some intrinsics, like memset().
 //      So,...
 //      Here is a little hand-crafted memset() substitue for known short strings.
@@ -4884,9 +4937,9 @@ int   ChartBaseBSB::AnalyzeRefpoints(void)
 
              for(int n=0 ; n<nRefpoint ; n++)
              {
-                   double lata, lona;
-                   lata = pRefTable[n].latr;
-                   lona = pRefTable[n].lonr;
+//                   double lata, lona;  // Not used
+//                   lata = pRefTable[n].latr;  // Not used
+//                   lona = pRefTable[n].lonr;  // Not used
 
                    double easting, northing;
                    toPOLY(pRefTable[n].latr, pRefTable[n].lonr, m_proj_lat, m_proj_lon, &easting, &northing);
@@ -5016,8 +5069,8 @@ int   ChartBaseBSB::AnalyzeRefpoints(void)
               if(fabs(pRefTable[i].xpl_error) > fabs(xpl_err_max))
                     xpl_err_max = pRefTable[i].xpl_error;
 
-              xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);
-              ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);
+//              xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);  // Not used
+//              ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);  // Not used
 
         }
 
@@ -5086,8 +5139,8 @@ int   ChartBaseBSB::AnalyzeRefpoints(void)
                     if(fabs(pRefTable[i].xpl_error) > fabs(xpl_err_max))
                           xpl_err_max = pRefTable[i].xpl_error;
 
-                    xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);
-                    ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);
+//                    xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);  // Not used
+//                    ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);  // Not used
 
               }
 

@@ -132,6 +132,7 @@ extern bool             g_bAutoAnchorMark;
 extern bool             g_bskew_comp;
 extern bool             g_bopengl;
 extern bool             g_bdisable_opengl;
+extern bool             g_bShowFPS;
 extern bool             g_bsmoothpanzoom;
 extern bool             g_fog_overzoom;
 extern double           g_overzoom_emphasis_base;
@@ -835,7 +836,7 @@ Route *Track::RouteFromTrack( wxProgressDialog *pprog )
     while( prpnode ) {
         RoutePoint *prp = prpnode->GetData();
         prpnodeX = prpnode;
-        pWP_dst = pWP_src;
+//        pWP_dst = pWP_src;  // Not used
 
         delta_dist = 0.0;
         delta_hdg = 0.0;
@@ -863,7 +864,7 @@ Route *Track::RouteFromTrack( wxProgressDialog *pprog )
                 pWP_src = pWP_dst;
             }
             prpnodeX = prpnode;
-            pWP_dst = pWP_src;
+//            pWP_dst = pWP_src;  // Not used
             next_ic = 0;
             delta_dist = 0.0;
             back_ic = next_ic;
@@ -1239,6 +1240,8 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "OpenGL" ), &g_bopengl, 0 );
     if ( g_bdisable_opengl )
         g_bopengl = false;
+
+    Read( _T ( "ShowFPS" ), &g_bShowFPS, 0 );
 
     Read( _T ( "ActiveChartGroup" ), &g_GroupIndex, 0 );
 
@@ -2100,14 +2103,18 @@ bool MyConfig::LoadLayers(wxString &path)
             filename.Prepend( wxFileName::GetPathSeparator() );
             filename.Prepend( path );
             wxFileName f( filename );
-            size_t nfiles = 0;
+//            size_t nfiles = 0;  // Not used
             if( f.GetExt().IsSameAs( wxT("gpx") ) )
                 file_array.Add( filename); // single-gpx-file layer
             else{
                 if(wxDir::Exists( filename ) ){
                     wxDir dir( filename );
                     if( dir.IsOpened() ){
+#ifdef __WXOSX__  // Not used
+                        dir.GetAllFiles( filename, &file_array, wxT("*.gpx") );
+#else
                         nfiles = dir.GetAllFiles( filename, &file_array, wxT("*.gpx") );      // layers subdirectory set
+#endif
                     }
                 }
             }
@@ -2487,6 +2494,7 @@ void MyConfig::UpdateSettings()
 
     Write( _T ( "SkewToNorthUp" ), g_bskew_comp );
     Write( _T ( "OpenGL" ), g_bopengl );
+    Write( _T ( "ShowFPS" ), g_bShowFPS );
 
     Write( _T ( "ZoomDetailFactor" ), g_chart_zoom_modifier );
 
@@ -3101,7 +3109,7 @@ RoutePoint *WaypointExists( const wxString& name, double lat, double lon )
     RoutePoint *pret = NULL;
 //    if( g_bIsNewLayer ) return NULL;
     wxRoutePointListNode *node = pWayPointMan->GetWaypointList()->GetFirst();
-    bool Exists = false;
+//    bool Exists = false;  // Not used
     while( node ) {
         RoutePoint *pr = node->GetData();
 
@@ -3109,7 +3117,7 @@ RoutePoint *WaypointExists( const wxString& name, double lat, double lon )
 
         if( name == pr->GetName() ) {
             if( fabs( lat - pr->m_lat ) < 1.e-6 && fabs( lon - pr->m_lon ) < 1.e-6 ) {
-                Exists = true;
+//                Exists = true;  // Not used
                 pret = pr;
                 break;
             }

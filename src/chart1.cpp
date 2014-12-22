@@ -429,6 +429,7 @@ double                    g_COGAvg;
 bool                      g_bLookAhead;
 bool                      g_bskew_comp;
 bool                      g_bopengl;
+bool                      g_bShowFPS;
 bool                      g_bsmoothpanzoom;
 bool                      g_fog_overzoom;
 double                    g_overzoom_emphasis_base;
@@ -673,7 +674,7 @@ int              g_NMEAAPBXTEPrecision;
 
 bool             g_bSailing;
 
-wxArrayString    g_locale_catalog_array;
+// wxArrayString    g_locale_catalog_array;  // Reverted, #1049 in commit list
 
 #ifdef LINUX_CRASHRPT
 wxCrashPrint g_crashprint;
@@ -2666,7 +2667,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     m_pMenuBar = NULL;
     g_toolbar = NULL;
     m_toolbar_scale_tools_shown = false;
-    piano_ctx_menu = NULL;
+    piano_ctx_menu = NULL;  //  #1031 in commit list
 
     //      Redirect the global heartbeat timer to this frame
     FrameTimer1.SetOwner( this, FRAME_TIMER_1 );
@@ -4315,6 +4316,7 @@ void MyFrame::ToggleFullScreen()
 
     ShowFullScreen( to, style );
     UpdateToolbar( global_color_scheme );
+    UpdateControlBar();
     Layout();
 }
 
@@ -5685,7 +5687,7 @@ void MyFrame::DoStackDelta( int direction )
         if( (current_stack_index + direction) < 0 )
             return;
         
-        if( m_bpersistent_quilt && g_bQuiltEnable ) {
+        if( m_bpersistent_quilt /*&& g_bQuiltEnable*/ ) {
             int new_dbIndex = pCurrentStack->GetDBIndex(current_stack_index + direction );
             
             if( cc1->IsChartQuiltableRef( new_dbIndex ) ) {
@@ -5747,7 +5749,8 @@ void MyFrame::DoStackDelta( int direction )
             SelectQuiltRefChart( new_index );
         }
     }
-    
+
+    UpdateGlobalMenuItems(); // update the state of the menu items (checkmarks etc)
     cc1->SetQuiltChartHiLiteIndex( -1 );
     
     cc1->ReloadVP();
@@ -6618,7 +6621,7 @@ void MyFrame::HandlePianoClick( int selected_index, int selected_dbIndex )
     if( s_ProgDialog ) return;
 
     if( !cc1->GetQuiltMode() ) {
-        if( m_bpersistent_quilt && g_bQuiltEnable ) {
+        if( m_bpersistent_quilt/* && g_bQuiltEnable*/ ) {
             if( cc1->IsChartQuiltableRef( selected_dbIndex ) ) {
                 ToggleQuiltMode();
                 SelectQuiltRefdbChart( selected_dbIndex );
@@ -6681,6 +6684,7 @@ void MyFrame::HandlePianoClick( int selected_index, int selected_dbIndex )
     }
 
     cc1->SetQuiltChartHiLiteIndex( -1 );
+    UpdateGlobalMenuItems(); // update the state of the menu items (checkmarks etc)
     cc1->HideChartInfoWindow();
     DoChartUpdate();
     cc1->ReloadVP();                  // Pick up the new selections
@@ -7026,7 +7030,7 @@ void MyFrame::UpdateControlBar( void )
     ArrayOfInts piano_chart_index_array;
     ArrayOfInts empty_piano_chart_index_array;
 
-    wxString old_hash = stats->pPiano->GetStoredHash();
+    wxString old_hash = stats->pPiano->GetStoredHash();  //  #1046 in commit list
 
     if( cc1->GetQuiltMode() ) {
         piano_chart_index_array = cc1->GetQuiltExtendedStackdbIndexArray();
@@ -7081,6 +7085,7 @@ void MyFrame::UpdateControlBar( void )
     stats->pPiano->SetPolyIndexArray( piano_poly_chart_index_array );
 
     stats->FormatStat();
+//    stats->Refresh( true );  //  #1046 in commit list
 
     wxString new_hash = stats->pPiano->GenerateAndStoreNewHash();
     if(new_hash != old_hash)
@@ -7523,7 +7528,8 @@ void MyFrame::PianoPopupMenu( int x, int y, int selected_index, int selected_dbI
     menu_selected_dbIndex = selected_dbIndex;
     menu_selected_index = selected_index;
 
-    piano_ctx_menu = new wxMenu();
+//    wxMenu *pctx_menu = new wxMenu();  //  #1031 in commit list
+    piano_ctx_menu = new wxMenu();  // #1031
 
     //    Search the no-show array
     bool b_is_in_noshow = false;
@@ -7536,12 +7542,14 @@ void MyFrame::PianoPopupMenu( int x, int y, int selected_index, int selected_dbI
     }
 
     if( b_is_in_noshow ) {
-        piano_ctx_menu->Append( ID_PIANO_ENABLE_QUILT_CHART, _("Show This Chart") );
+        piano_ctx_menu->Append( ID_PIANO_ENABLE_QUILT_CHART, _("Show This Chart") );  //  #1031 in commit list
+//        pctx_menu->Append( ID_PIANO_ENABLE_QUILT_CHART, _("Show This Chart") );  // #1031
         Connect( ID_PIANO_ENABLE_QUILT_CHART, wxEVT_COMMAND_MENU_SELECTED,
                 wxCommandEventHandler(MyFrame::OnPianoMenuEnableChart) );
     } else
         if( pCurrentStack->nEntry > 1 ) {
-            piano_ctx_menu->Append( ID_PIANO_DISABLE_QUILT_CHART, _("Hide This Chart") );
+            piano_ctx_menu->Append( ID_PIANO_DISABLE_QUILT_CHART, _("Hide This Chart") );  //  #1031 in commit list
+//            pctx_menu->Append( ID_PIANO_DISABLE_QUILT_CHART, _("Hide This Chart") );  // #1031
             Connect( ID_PIANO_DISABLE_QUILT_CHART, wxEVT_COMMAND_MENU_SELECTED,
                     wxCommandEventHandler(MyFrame::OnPianoMenuDisableChart) );
         }
@@ -7554,10 +7562,11 @@ void MyFrame::PianoPopupMenu( int x, int y, int selected_index, int selected_dbI
     pos.y -= 30;
 
 //        Invoke the drop-down menu
-    if( piano_ctx_menu->GetMenuItems().GetCount() ) PopupMenu( piano_ctx_menu, pos );
+    if( piano_ctx_menu->GetMenuItems().GetCount() ) PopupMenu( piano_ctx_menu, pos );  //  #1031 in commit list
+//    if( pctx_menu->GetMenuItems().GetCount() ) PopupMenu( pctx_menu, pos );  // #1031
 
-    delete piano_ctx_menu;
-    piano_ctx_menu = NULL;
+    delete piano_ctx_menu;  //  #1031
+    piano_ctx_menu = NULL;  //  #1031
 
     cc1->HideChartInfoWindow();
     stats->pPiano->ResetRollover();
@@ -7566,6 +7575,7 @@ void MyFrame::PianoPopupMenu( int x, int y, int selected_index, int selected_dbI
 
     cc1->ReloadVP();
 
+//    delete pctx_menu;  //  #1031 in commit list
 }
 
 void MyFrame::OnPianoMenuEnableChart( wxCommandEvent& event )
@@ -8973,12 +8983,6 @@ void MyFrame::OnSuspending(wxPowerEvent& event)
     //   printf("OnSuspending...%d\n", now.GetTicks());
     
     wxLogMessage(_T("System suspend starting..."));
-    if ( wxMessageBox(_T("Veto suspend?"), _T("Please answer"),
-                      wxYES_NO, this) == wxYES )
-    {
-        event.Veto();
-        wxLogMessage(_T("Vetoed suspend."));
-    }
 }
 
 void MyFrame::OnSuspended(wxPowerEvent& WXUNUSED(event))
@@ -8986,6 +8990,7 @@ void MyFrame::OnSuspended(wxPowerEvent& WXUNUSED(event))
     //    wxDateTime now = wxDateTime::Now();
     //    printf("OnSuspended...%d\n", now.GetTicks());
     wxLogMessage(_T("System is going to suspend."));
+
 }
 
 void MyFrame::OnSuspendCancel(wxPowerEvent& WXUNUSED(event))
@@ -9010,6 +9015,21 @@ void MyFrame::OnResume(wxPowerEvent& WXUNUSED(event))
             g_pMUX->ClearStreams();
             
             g_pMUX->StartAllStreams();
+        }
+    }
+    //  If OpenGL is enabled, Windows Resume does not properly refresh the application GL context.
+    //  We need to force a Resize event that actually does something.
+    if(g_bopengl){
+        if( IsMaximized() ){            // This is not real pretty on-screen, but works
+            Maximize(false);
+            wxYield();
+            Maximize(true);
+        }
+        else {
+            wxSize sz = GetSize();
+            SetSize( wxSize(sz.x - 1, sz.y));
+            wxYield();
+            SetSize( sz );
         }
     }
 }
@@ -11187,7 +11207,8 @@ void SearchPnpKeyW9x(HKEY hkPnp, BOOL bUsbDevice,
     }
 
 #endif
-
+// Reverted, #1049 in commit list
+/*
 bool ReloadLocale()
 {
     bool ret = false;
@@ -11255,3 +11276,4 @@ bool ReloadLocale()
     return ret;
     
 }
+*/

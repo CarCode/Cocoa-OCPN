@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "AIS_Target_Data.h"
 
@@ -46,7 +45,7 @@ void make_hash_ERI(int key, const wxString & description)
 
 static wxString FormatTimeAdaptive( int seconds )
 {
-    int s = seconds % 60;
+//    int s = seconds % 60;  // Not used
     int m = seconds / 60;
     if( seconds < 100 )
         return wxString::Format( _T("%3ds"), seconds );
@@ -1078,6 +1077,7 @@ wxString AIS_Target_Data::GetCountryCode( bool b_CntryLongStr )  //false = Short
     case 466: return b_CntryLongStr ? _("Qatar") : _T("QA") ;
     case 468: return b_CntryLongStr ? _("Syrian Arab Republic") : _T("SY") ;
     case 470: return b_CntryLongStr ? _("United Arab Emirates") : _T("AE") ;
+    case 472: return b_CntryLongStr ? _("Tajikistan") : _T("TJ") ;
     case 473: return b_CntryLongStr ? _("Yemen") : _T("YE") ;
     case 475: return b_CntryLongStr ? _("Yemen") : _T("YE") ;
     case 477: return b_CntryLongStr ? _("Hong Kong") : _T("HK") ;

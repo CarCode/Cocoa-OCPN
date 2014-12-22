@@ -69,7 +69,7 @@ wxString _menuText(wxString name, wxString shortcut);
 double AnchorDistFix( double const d, double const AnchorPointMinDist, double const AnchorPointMaxDist);   //  pjotrc 2010.02.22
 
 bool TestGLCanvas(wxString &prog_dir);
-bool ReloadLocale();
+// bool ReloadLocale();  // Reverted, #1049 in commit list
 
 class NMEA_Msg_Container;
 WX_DECLARE_STRING_HASH_MAP( NMEA_Msg_Container*, MsgPriorityHash );
@@ -379,7 +379,7 @@ class MyFrame: public wxFrame
     void PianoPopupMenu ( int x, int y, int selected_index, int selected_dbIndex );
     void OnPianoMenuDisableChart(wxCommandEvent& event);
     void OnPianoMenuEnableChart(wxCommandEvent& event);
-    bool IsPianoContextMenuActive(){ return piano_ctx_menu != 0; }
+    bool IsPianoContextMenuActive(){ return piano_ctx_menu != 0; }  //  #1031 in commit list
 
 #ifdef __WXOSX__
     void startHelp(void);
@@ -505,7 +505,7 @@ class MyFrame: public wxFrame
     wxString            m_VDO_accumulator;
     
     time_t              m_fixtime;
-    wxMenu              *piano_ctx_menu;
+    wxMenu              *piano_ctx_menu;  // #1031 in commit list
 
     DECLARE_EVENT_TABLE()
 };

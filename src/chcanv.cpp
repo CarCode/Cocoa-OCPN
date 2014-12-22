@@ -281,6 +281,9 @@ extern bool              g_bresponsive;
 extern ocpnGLOptions g_GLOptions;
 #endif
 
+extern bool              g_bShowFPS;
+extern double            g_gl_ms_per_frame;
+
 wxProgressDialog *pprog;
 bool b_skipout;
 wxSize pprog_size;
@@ -2009,7 +2012,8 @@ void ChartCanvas::OnKeyChar( wxKeyEvent &event )
     int key_char = event.GetKeyCode();
     
     //      Handle both QWERTY and AZERTY keyboard separately for a few control codes
-    if( !g_b_assume_azerty ) {
+//    if( !g_b_assume_azerty )
+    {
         switch( key_char ) {
             case ']':
                 RotateCanvas( 1 );
@@ -3769,12 +3773,13 @@ bool ChartCanvas::SetViewPoint( double lat, double lon, double scale_ppm, double
                 
                 b_ret = true;
             }
+//            parent_frame->UpdateControlBar();  //  #1046 in commit list
         }
 
         VPoint.skew = 0.;  // Quilting supports 0 Skew
     }
 
-    parent_frame->UpdateControlBar();
+    parent_frame->UpdateControlBar();  // #1046 in commit list
 
     if( !VPoint.GetBBox().GetValid() ) VPoint.SetBoxes();
 
@@ -3841,6 +3846,16 @@ bool ChartCanvas::SetViewPoint( double lat, double lon, double scale_ppm, double
             else  {
                 double sfr = wxRound(m_displayed_scale_factor * 10.) / 10.;
                 text.Printf( _("Scale %4.0f (%1.2fx)"), true_scale_display, sfr );
+            }
+
+            if( g_bopengl && g_bShowFPS){
+                wxString fps_str;
+                double fps = 0.;
+                if( g_gl_ms_per_frame > 0){
+                    fps = 1000./ g_gl_ms_per_frame;
+                    fps_str.Printf(_T("  %3d fps"), (int)fps);
+                }
+                text += fps_str;
             }
 
             parent_frame->SetStatusText( text, STAT_FIELD_SCALE );
@@ -8258,9 +8273,8 @@ void ChartCanvas::PopupMenuHandler( wxCommandEvent& event )
         if( dlg_return == wxID_YES ) {
 
             if( (Track *) ( m_pSelectedTrack ) == g_pActiveTrack ) parent_frame->TrackOff();
-
+            g_pAIS->DeletePersistentTrack( (Track *) m_pSelectedTrack );
             pConfig->DeleteConfigRoute( m_pSelectedTrack );
-
             g_pRouteMan->DeleteTrack( m_pSelectedTrack );
 
             if( pTrackPropDialog && ( pTrackPropDialog->IsShown()) && (m_pSelectedTrack == pTrackPropDialog->GetTrack()) ) {

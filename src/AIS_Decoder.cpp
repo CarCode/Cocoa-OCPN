@@ -36,6 +36,7 @@ static const long long lNaN = 0xfff8000000000000;
 
 extern AISTargetAlertDialog *g_pais_alert_dialog_active;
 extern Select *pSelectAIS;
+extern Select *pSelect;
 extern MyFrame *gFrame;
 extern int g_ais_alert_dialog_x;
 extern int g_ais_alert_dialog_y;
@@ -244,8 +245,9 @@ void AIS_Decoder::BuildERIShipTypeHash(void)
 void AIS_Decoder::OnEvtAIS( OCPN_DataStreamEvent& event )
 {
     wxString message = wxString(event.GetNMEAString().c_str(), wxConvUTF8);
-
+#ifndef __WXOSX__
     int nr = 0;
+#endif
     if( !message.IsEmpty() )
     {
         if( message.Mid( 3, 3 ).IsSameAs( _T("VDM") ) ||
@@ -257,7 +259,11 @@ void AIS_Decoder::OnEvtAIS( OCPN_DataStreamEvent& event )
             message.Mid( 3, 3 ).IsSameAs( _T("OSD") ) ||
             ( g_bWplIsAprsPosition && message.Mid( 3, 3 ).IsSameAs( _T("WPL") ) ) )
         {
+#ifdef __WXOSX__
+            Decode( message );
+#else
                 nr = Decode( message );
+#endif
                 gFrame->TouchAISActive();
         }
     }
@@ -1110,7 +1116,7 @@ AIS_Target_Data *AIS_Decoder::ProcessDSx( const wxString& str, bool b_take_dsc )
         mmsi = (int) dse_mmsi;
     }
     
-    long mmsi_long = mmsi;
+//    long mmsi_long = mmsi;  // Not used
 
     //  Get the last report time for this target, if it exists
     wxDateTime now = wxDateTime::Now();
@@ -1810,8 +1816,14 @@ void AIS_Decoder::UpdateOneTrack( AIS_Target_Data *ptarget )
         {
             t = m_persistent_tracks[ptarget->MMSI];
         }
+        RoutePoint *rp = t->GetLastPoint();
         vector2D point( ptrackpoint->m_lon, ptrackpoint->m_lat );
-        t->AddNewPoint( point, wxDateTime(ptrackpoint->m_time).ToUTC() );
+        RoutePoint *rp1 = t->AddNewPoint( point, wxDateTime(ptrackpoint->m_time).ToUTC() );
+        if( rp )
+        {
+            pSelect->AddSelectableTrackSegment( rp->m_lat, rp->m_lon, rp1->m_lat,
+                                               rp1->m_lon, rp, rp1, t );
+        }
         
         //We do not want dependency on the GUI here, do we?
         //        if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
