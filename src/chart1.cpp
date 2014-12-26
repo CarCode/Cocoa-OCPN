@@ -1023,7 +1023,20 @@ void MyApp::OnActivateApp( wxActivateEvent& event )
 #endif
 
     if( !event.GetActive() ) {
-        if( g_FloatingToolbarDialog ) g_FloatingToolbarDialog->HideTooltip(); // Hide any existing tip
+
+        //  Remove a temporary Menubar when the application goes inactive
+        //  This is one way to handle properly ALT-TAB navigation on the Windows desktop
+        //  without accidentally leaving an unwanted Menubar shown.
+#ifdef __WXMSW__
+        if( g_bTempShowMenuBar ) {
+            g_bTempShowMenuBar = false;
+            if(gFrame)
+                gFrame->ApplyGlobalSettings(false, false);
+        }
+#endif
+        
+        if( g_FloatingToolbarDialog )
+            g_FloatingToolbarDialog->HideTooltip(); // Hide any existing tip
     }
 
     event.Skip();
@@ -6147,7 +6160,7 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
 
             if( g_bPlayShipsBells && ( ( minuteLOC == 0 ) || ( minuteLOC == 30 ) ) ) {
                 m_BellsToPlay = bells;
-                BellsTimer.Start(0, wxTIMER_ONE_SHOT);
+                BellsTimer.Start(5, wxTIMER_ONE_SHOT);
             }
         }
     }
@@ -6423,7 +6436,7 @@ void MyFrame::DoCOGSet( void )
     double old_VPRotate = g_VPRotate;
     g_VPRotate = -g_COGAvg * PI / 180.;
     if(!g_bskew_comp)
-        g_VPRotate += cc1->GetVPSkew();
+        g_VPRotate -= cc1->GetVPSkew();
 
     cc1->SetVPRotation( g_VPRotate );
     bool bnew_chart = DoChartUpdate();

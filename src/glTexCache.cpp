@@ -378,6 +378,30 @@ bool DoCompress(JobTicket *pticket, glTextureDescriptor *ptd, int level)
 
 }
 
+//  On Windows, we will use a translator to convert SEH exceptions (e.g. access violations),
+//    into c++ standard exception handling method.
+//  This class and helper function facilitate the conversion.
+
+//  We only do this in the compression worker threads, as they are vulnerable due to possibly errant code in
+//  the chart database management class, especially on low memory systems where chart cahing is stressed heavily.
+
+#ifdef __WXMSW__
+class SE_Exception
+{
+private:
+    unsigned int nSE;
+public:
+    SE_Exception() {}
+    SE_Exception( unsigned int n ) : nSE( n ) {}
+    ~SE_Exception() {}
+    unsigned int getSeNumber() { return nSE; }
+};
+
+void my_translate(unsigned int code, _EXCEPTION_POINTERS *ep)
+{
+    throw SE_Exception();
+}
+#endif
 
 OCPN_CompressionThreadEvent::OCPN_CompressionThreadEvent(wxEventType commandType, int id)
 :wxEvent(id, commandType)
@@ -421,7 +445,17 @@ CompressionPoolThread::CompressionPoolThread(JobTicket *ticket, wxEvtHandler *me
 
 void * CompressionPoolThread::Entry()
 {
+
+#ifdef __WXMSW__
+    _set_se_translator(my_translate);
+    
+    //  On Windows, if anything in this thread produces a SEH exception (like access violation)
+    //  we handle the exception locally, and simply alow the thread to exit smoothly with no results.
+    //  Upstream will notice that nothing got done, and maybe try again later.
+    
+
     try
+#endif
     {
 
     for(int i=0 ; i < 10 ; i++)
@@ -444,26 +478,26 @@ void * CompressionPoolThread::Entry()
         
         pchart = ChartData->OpenChartFromDBAndLock(index, FULL_INIT );
         
-             if(pchart){
+        if(pchart && ChartData->IsChartLocked( index )){
                 ChartBaseBSB *pBSBChart = dynamic_cast<ChartBaseBSB*>( pchart );
                 ChartPlugInWrapper *pPlugInWrapper = dynamic_cast<ChartPlugInWrapper*>( pchart );
                 
                 if( pBSBChart ) {
                     unsigned char *t_buf = (unsigned char *) malloc( ncrect.width * ncrect.height * 4 );
-                    pBSBChart->GetChartBits( ncrect, t_buf, 1 );
-                    
-                    //    and cache them here
                     m_bit_array[0] = t_buf;
+
+                    pBSBChart->GetChartBits( ncrect, t_buf, 1 );
                 }
                 else if( pPlugInWrapper ){
                     unsigned char *t_buf = (unsigned char *) malloc( ncrect.width * ncrect.height * 4 );
-                    pPlugInWrapper->GetChartBits( ncrect, t_buf, 1 );
-                    
-                    //    and cache them here
                     m_bit_array[0] = t_buf;
+
+                    pPlugInWrapper->GetChartBits( ncrect, t_buf, 1 );
                 }
                 ChartData->UnLockCacheChart(index);
-            }
+        }
+        else
+            m_bit_array[0] = NULL;
     }
     
     //OK, got the bits?
@@ -575,7 +609,9 @@ SendEvtAndReturn:
 
     }           // try
     
-    catch (...)
+#ifdef __WXMSW__
+    catch (SE_Exception e)
+#endif
     {
         if( m_pMessageTarget ) {
             OCPN_CompressionThreadEvent Nevent(wxEVT_OCPN_COMPRESSIONTHREAD, 0);

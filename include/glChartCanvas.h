@@ -141,6 +141,7 @@ protected:
 
     wxString m_renderer;
     wxString m_version;
+    wxString m_extensions;
 
     void GrowData(int size);
 

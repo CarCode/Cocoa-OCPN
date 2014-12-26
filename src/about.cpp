@@ -92,11 +92,16 @@ char AuthorText[] =
 {
     "   David S Register\n\
     OpenCPN Lead Developer\n\n\
-    Jesper Weissglas\n\
-    Vector Chart Rendering\n\
-    User Interface\n\n\
+    Pavel Kalian\n\
+    S52 Rasterization Improvements\n\n\
     Sean D'Epagnier\n\
     OpenGL Architecture\n\n\
+    Caesar Schinas\n\
+    User Interface and OS X improvements\n\n\
+    Jesper Weissglas\n\
+    Vector Chart Rendering\n\n\
+    Jean-Eudes Onfray\n\
+    Dashboard and Dialog enhancements\n\n\
     Kathleen Boswell\n\
     Icon design\n\n\
     Flavius Bindea\n\
@@ -105,10 +110,6 @@ char AuthorText[] =
     Windows Installer enhancements\n\n\
     Alan Bleasby\n\
     Garmin jeeps module\n\n\
-    Jean-Eudes Onfray\n\
-    Dashboard and Dialog enhancements\n\n\
-    Pavel Kalian\n\
-    S52 Rasterization Improvements\n\n\
     Piotr Carlson\n\
     General usability enhancements\n\n\
     Anders Lund\n\
@@ -162,7 +163,7 @@ char AuthorText[] =
     Robert Lipe\n\
     Garmin USB GPS Interface\n\n\
     Gerhard Mueller (CarCode)\n\
-    Mac OS X 64-bit support\n"
+    Mac OS X 64-bit support\n "
     
 };
 #else

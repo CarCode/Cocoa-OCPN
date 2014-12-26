@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dashboard_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-09 18:27+0100\n"
+"POT-Creation-Date: 2014-12-26 19:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,7 +39,7 @@ msgid "COG"
 msgstr ""
 
 #: ../src/dashboard_pi.cpp:104
-msgid "Magnetic COG"
+msgid "Mag COG"
 msgstr ""
 
 #: ../src/dashboard_pi.cpp:106

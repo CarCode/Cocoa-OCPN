@@ -1741,7 +1741,7 @@ void options::CreatePanel_Advanced( size_t parent, int border_size, int group_it
     pFullScreenQuilt = new wxCheckBox( m_ChartDisplayPage, ID_FULLSCREENQUILT, _("Disable Full Screen Quilting") );
     boxCharts->Add( pFullScreenQuilt, inputFlags );
 
-    pOverzoomEmphasis = new wxCheckBox( m_ChartDisplayPage, ID_FULLSCREENQUILT, _("Suppress overzoom display emphasis effects") );
+    pOverzoomEmphasis = new wxCheckBox( m_ChartDisplayPage, ID_FULLSCREENQUILT, _("Suppress blur/fog effects on overzoom") );
     boxCharts->Add( pOverzoomEmphasis, inputFlags );
     
     pOZScaleVector = new wxCheckBox( m_ChartDisplayPage, ID_FULLSCREENQUILT, _("Suppress scaled vector charts on overzoom") );
@@ -1777,11 +1777,11 @@ void options::CreatePanel_Advanced( size_t parent, int border_size, int group_it
     itemBoxSizerUI->Add( 0, border_size*3 );
     wxStaticText* zoomText = new wxStaticText( m_ChartDisplayPage, wxID_ANY,
                                               _("With a lower value, the same zoom level shows a less detailed chart.\nWith a higher value, the same zoom level shows a more detailed chart.") );
-    wxFont* dialogFont = FontMgr::Get().GetFont(_("Dialog"));
+
+    wxFont *dialogFont = GetOCPNScaledFont(_("Dialog"));
     smallFont = new wxFont( * dialogFont ); // we can't use Smaller() because wx2.8 doesn't support it
     smallFont->SetPointSize( (smallFont->GetPointSize() / 1.2) + 0.5 ); // + 0.5 to round instead of truncate
     zoomText->SetFont( * smallFont );
-    //    zoomText->Wrap(200);
     itemBoxSizerUI->Add( zoomText, 0, wxALL | wxEXPAND, group_item_spacing );
     
     
@@ -3748,7 +3748,8 @@ void options::OnApplyClick( wxCommandEvent& event )
             connectionsaved = true;
         } else {
             ::wxEndBusyCursor();
-            event.SetInt (wxID_STOP );
+            if( m_bNMEAParams_shown )
+                event.SetInt (wxID_STOP );
         }
     }
     

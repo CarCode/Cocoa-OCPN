@@ -5601,6 +5601,7 @@
 					buildXcode/Debug,
 					"$(PROJECT_DIR)/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CFLAGS = (
 					"-arch",
 					x86_64,
@@ -5856,6 +5857,7 @@
 					buildXcode/Release,
 					"$(PROJECT_DIR)/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CFLAGS = (
 					"-arch",
 					x86_64,
@@ -5908,8 +5910,6 @@
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release/libGARMINHOST.a",
 					"-framework",
 					AGL,
-					"-framework",
-					OpenGL,
 					/usr/lib/libbz2.dylib,
 					/usr/lib/libz.dylib,
 					"-ldl",
@@ -7024,7 +7024,7 @@
 				CLANG_ENABLE_MODULES = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";
@@ -11118,7 +11118,7 @@
 				CLANG_ENABLE_MODULES = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";

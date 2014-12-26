@@ -20,7 +20,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
  *
  *   S Blackburn's original source license:                                *
@@ -104,7 +104,7 @@ bool GPWPL::Write( SENTENCE& sentence )
    sentence += Position;
    sentence += To;
    sentence += _T("");            // color = black
-   sentence += _T("");             // comment
+   sentence += _T("@q");             // comment, minimum
    sentence += _T("A");
    sentence += _T("");
    sentence += _T("");

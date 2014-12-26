@@ -342,9 +342,7 @@ wxString FontCandidates[] = {
     _T("Console Value"),
     _T("AISRollover"),
     _T("TideCurrentGraphRollover"),
-    _T("RouteLegInfoRollover"),
-    _T("AISRollover"),
-    _T("Marks" ),
+    _T("Marks"),
     _T("ChartTexts"),
     _T("ToolTips"),
     _T("Dialog"),
@@ -362,7 +360,7 @@ void FontMgr::ScrubList( )
     while( ! done ){
         wxString candidate = FontCandidates[i];
         if(candidate == _T("END_OF_LIST") ) {
-            done = true;
+//            done = true;  // Not used, break
             break;
         }
 
@@ -437,7 +435,7 @@ void FontMgr::ScrubList( )
     while( ! done ){
         wxString candidate = FontCandidates[i];
         if(candidate == _T("END_OF_LIST") ) {
-            done = true;
+//            done = true;  // Not used, break
             break;
         }
 

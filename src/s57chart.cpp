@@ -269,7 +269,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
 
     int MAX_LINE = 499999;
     char *buf = (char *) malloc( MAX_LINE + 1 );
-    int llmax = 0;
+//    int llmax = 0;  // Not used
 
     char *br;
     char szAtt[20];
@@ -312,7 +312,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                     int nrl = my_bufgetl( mybuf_ptr, hdr_end, buf, MAX_LINE );
                     mybuf_ptr += nrl;
                     if( 0 == nrl ) {
-                        attdun = 1;
+//                        attdun = 1;  // Not used, break
                         my_fgets( buf, MAX_LINE, *pfpx );     // this will be PolyGeo
                         break;
                     }
@@ -339,14 +339,14 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                 }
 
                 else if( !strncmp( buf, geoMatch, 6 ) ) {
-                    attdun = 1;
+//                    attdun = 1;  // Not used, break
                     break;
                 }
 
                 else if( !strncmp( buf, "  MULT", 6 ) )         // Special multipoint
                         {
                     bMulti = true;
-                    attdun = 1;
+//                    attdun = 1;  // Not used, break
                     break;
                 }
 
@@ -683,7 +683,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                             || !strncmp( FeatureName, "DRGARE", 6 ) ) bIsAssociable = true;
 
                     int ll = strlen( buf );
-                    if( ll > llmax ) llmax = ll;
+//                    if( ll > llmax ) llmax = ll;  // Not used
 
                     my_fgets( buf, MAX_LINE, *pfpx );     // this will be "  POLYTESSGEO"
 
@@ -2051,12 +2051,12 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
 
     SetVPParms( VPoint );
 
-    bool force_new_view = false;
+//    bool force_new_view = false;  // Not used
 
     if(!Region.Ok())
         return false;
     
-    if( Region != m_last_Region ) force_new_view = true;
+//    if( Region != m_last_Region ) force_new_view = true;  // Not used
 
     ps52plib->PrepareForRender();
     
@@ -2958,12 +2958,12 @@ InitReturn s57chart::FindOrCreateSenc( const wxString& name )
 
                 while( !dun ) {
                     if( my_fgets( pbuf, 256, *pfpx ) == 0 ) {
-                        dun = 1;
+//                        dun = 1;  // Not usd, break
                         force_make_senc = 1;
                         break;
                     } else {
                         if( !strncmp( pbuf, "OGRF", 4 ) ) {
-                            dun = 1;
+//                            dun = 1;  // Not used, break
                             break;
                         }
 
@@ -3558,12 +3558,12 @@ bool s57chart::CreateHeaderDataFromSENC( void )
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-            dun = 1;
+//            dun = 1;  // Not used, break
             break;
         }
 
         if( !strncmp( buf, "OGRF", 4 ) ) {
-            dun = 1;
+//            dun = 1;  // Not used, break
             break;
         }               //OGRF
 
@@ -3575,7 +3575,7 @@ bool s57chart::CreateHeaderDataFromSENC( void )
                 msg.Append( m_SENCFileName.GetFullPath() );
                 wxLogMessage( msg );
 
-                dun = 1;
+//                dun = 1;  // Not used, break
                 ret_val = false;                   // error
                 break;
             }
@@ -3999,6 +3999,8 @@ int s57chart::ValidateAndCountUpdates( const wxFileName file000, const wxString 
         //      ogr file open/ingest.  Delete after SENC file create finishes.
         //      Set starts with .000, which has the effect of copying the base file to the working dir
 
+        bool chain_broken_mssage_shown = false;
+
         if( b_copyfiles ) {
             m_tmpup_array = new wxArrayString;       // save a list of created files for later erase
 
@@ -4040,6 +4042,20 @@ int s57chart::ValidateAndCountUpdates( const wxFileName file000, const wxString 
 
                 else {
                     // Create a dummy ISO8211 file with no real content
+                    // Correct this.  We should break the walk, and notify the user  See FS#1406
+
+                    if( !chain_broken_mssage_shown ){
+                        OCPNMessageBox(NULL,
+                                       _("S57 Cell Update chain incomplete.\nENC features may be incomplete or inaccurate.\nCheck the logfile for details."),
+                                       _("OpenCPN Create SENC Warning"), wxOK | wxICON_EXCLAMATION, 30 );
+                        chain_broken_mssage_shown = true;
+                    }
+                    
+                    wxString msg( _T("WARNING---ENC Update chain incomplete. Substituting NULL update file: "));
+                    msg += ufile.GetFullName();
+                    wxLogMessage(msg);
+                    wxLogMessage(_T("   Subsequent ENC updates may produce errors.") );
+                    wxLogMessage(_T("   This ENC exchange set should be updated and SENCs rebuilt.") );
 
                     bool bstat;
                     DDFModule *dupdate = new DDFModule;
@@ -4052,7 +4068,6 @@ int s57chart::ValidateAndCountUpdates( const wxFileName file000, const wxString 
                         msg.Append( cp_ufile );
                         wxLogMessage( msg );
                     }
-
                 }
 
                 m_tmpup_array->Add( cp_ufile );
@@ -4525,7 +4540,7 @@ int s57chart::BuildRAZFromSENCFile( const wxString& FullPath )
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-            dun = 1;
+//            dun = 1;  // Not used, break
             break;
         }
 
@@ -6527,12 +6542,12 @@ bool s57chart::InitFromSENCMinimal( const wxString &FullPath )
 
             while( !dun ) {
                 if( my_fgets( pbuf, 256, *pfpx ) == 0 ) {
-                    dun = 1;
+//                    dun = 1;  // Not used, break
                     ret_val = false;
                     break;
                 } else {
                     if( !strncmp( pbuf, "OGRF", 4 ) ) {
-                        dun = 1;
+//                        dun = 1;  // Not used, break
                         break;
                     } else if( !strncmp( pbuf, "UPDT", 4 ) ) {
                         sscanf( pbuf, "UPDT=%i", &last_update );
