@@ -20,7 +20,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
  *
  *   S Blackburn's original source license:                                *
@@ -139,13 +139,8 @@ unsigned char SENTENCE::ComputeChecksum( void ) const
 //   ASSERT_VALID( this );
 
    unsigned char checksum_value = 0;
-#ifdef __WXOSX__
-   char str_ascii[101];
-   strncpy(str_ascii, (const char *)Sentence.mb_str(), 99);
-   str_ascii[100] = '\0';
-#endif
 
-   int string_length = Sentence.Len();
+   int string_length = Sentence.Length();
    int index = 1; // Skip over the $ at the begining of the sentence
 
    while( index < string_length    &&
@@ -153,11 +148,7 @@ unsigned char SENTENCE::ComputeChecksum( void ) const
           Sentence[ index ] != CARRIAGE_RETURN &&
           Sentence[ index ] != LINE_FEED )
    {
-#ifdef __WXOSX__
-      checksum_value ^= str_ascii[ index ];
-#else
-      checksum_value ^= (unsigned char)(Sentence[ index ]);
-#endif
+      checksum_value ^= (char)(Sentence[ index ]);
       index++;
    }
 
@@ -167,10 +158,11 @@ unsigned char SENTENCE::ComputeChecksum( void ) const
 double SENTENCE::Double( int field_number ) const
 {
  //  ASSERT_VALID( this );
-      if(Field( field_number ).Len() == 0)
-            return 999.;
-
-      return( ::atof( Field( field_number ).mb_str() ) );
+    wxCharBuffer abuf = Field( field_number).ToUTF8();
+    if( !abuf.data() )                            // badly formed sentence?
+        return (999.);
+    
+    return( ::atof( abuf.data() ));
 }
 
 
@@ -279,7 +271,11 @@ int SENTENCE::Integer( int field_number ) const
 {
 //   ASSERT_VALID( this );
 
-    return( ::atoi( Field( field_number ).mb_str() ) );
+    wxCharBuffer abuf = Field( field_number).ToUTF8();
+    if( !abuf.data() )                            // badly formed sentence?
+        return 0;
+    
+    return( ::atoi( abuf.data() ));
 }
 
 NMEA0183_BOOLEAN SENTENCE::IsChecksumBad( int checksum_field_number ) const

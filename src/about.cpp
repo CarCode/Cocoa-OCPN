@@ -57,7 +57,7 @@ extern ocpnStyle::StyleManager* g_StyleManager;
 char AboutText[] =
 {
     "\n                                         OpenCPN\n\n\
-    (c) 2000-2014 Die OpenCPN Autoren\n"
+    (c) 2000-2015 Die OpenCPN Autoren\n"
 };
 #else
 char AboutText[] =
@@ -96,6 +96,8 @@ char AuthorText[] =
     S52 Rasterization Improvements\n\n\
     Sean D'Epagnier\n\
     OpenGL Architecture\n\n\
+    Thomas Höckne\n\
+    Documentation and Wiki support\n\n\
     Caesar Schinas\n\
     User Interface and OS X improvements\n\n\
     Jesper Weissglas\n\
@@ -163,7 +165,7 @@ char AuthorText[] =
     Robert Lipe\n\
     Garmin USB GPS Interface\n\n\
     Gerhard Mueller (CarCode)\n\
-    Mac OS X 64-bit support\n "
+    Mac OS X 64-bit support\n"
     
 };
 #else
@@ -506,7 +508,7 @@ void about::OnCopyClick( wxCommandEvent& event )
     }
 
     file.Close();
-    int length = fileContent.Length();
+//    int length = fileContent.Length();  // Not used
 
     if( event.GetId() == ID_COPYLOG ) {
         wxString lastLogs = fileContent;

@@ -483,7 +483,17 @@ void DataStream::OnSocketEvent(wxSocketEvent& event)
                     if ( nmea_end == 0 ) //The first character in the buffer is a terminator, skip it to avoid infinite loop
                         nmea_end = 1;
                     std::string nmea_line = m_sock_buffer.substr(0,nmea_end);
-                    m_sock_buffer = m_sock_buffer.substr(nmea_end);
+
+                    //  If, due to some logic error, the {nmea_end} parameter is larger than the length of the
+                    //  socket buffer, then std::string::substr() will throw an exception.
+                    //  We don't want that, so test for it.
+                    //  If found, the simple solution is to clear the socket buffer, and carry on
+                    //  This has been seen on high volume TCP feeds, Windows only.
+                    //  Hard to catch.....
+                    if(nmea_end > m_sock_buffer.size())
+                        m_sock_buffer.clear();
+                    else
+                        m_sock_buffer = m_sock_buffer.substr(nmea_end);
 
                     size_t nmea_start = nmea_line.find_last_of("$!"); // detect the potential start of a NMEA string, skipping preceding chars that may look like the start of a string.
                     if(nmea_start != wxString::npos){
@@ -839,11 +849,9 @@ GarminProtocolHandler::GarminProtocolHandler(DataStream *parent, wxEvtHandler *M
     
     //      Connect(wxEVT_OCPN_GARMIN, (wxObjectEventFunction)(wxEventFunction)&GarminProtocolHandler::OnEvtGarmin);
     
-    char  pvt_on[14] =
-    {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};
+//    char  pvt_on[14] = {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};  // Not used
     
-    char  pvt_off[14] =
-    {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 50, 0};
+//    char  pvt_off[14] = {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 50, 0};  // Not used
     
 #ifdef __WXMSW__    
     if(m_busb) {
@@ -968,13 +976,14 @@ void GarminProtocolHandler::RestartIOThread(void)
 
 void GarminProtocolHandler::OnTimerGarmin1(wxTimerEvent& event)
 {
+#ifdef __WXMSW__
     char  pvt_on[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};
-    
+#endif
     TimerGarmin1.Stop();
     
     if(m_busb) {
-        #ifdef __WXMSW__    
+#ifdef __WXMSW__
         //  Try to open the Garmin USB device
         if(INVALID_HANDLE_VALUE == m_usb_handle)
         {
@@ -991,7 +1000,7 @@ void GarminProtocolHandler::OnTimerGarmin1(wxTimerEvent& event)
                 m_garmin_usb_thread->Run();
             }
         }
-        #endif
+#endif
     }
     
     TimerGarmin1.Start(1000);
@@ -1488,7 +1497,7 @@ void *GARMIN_Serial_Thread::Entry()
     while((not_done) && (m_parent->m_Thread_run_flag > 0)) {
 
         if(TestDestroy()) {
-            not_done = false;                               // smooth exit
+//            not_done = false;                               // smooth exit, but this bool not used here
             goto thread_exit;
         }
 
@@ -1651,9 +1660,11 @@ void *GARMIN_USB_Thread::Entry()
                   goto thread_prexit;                               // smooth exit
 
       //    Get one  packet
-
+#ifdef __WXOSX__
+          gusb_cmd_get(&iresp, sizeof(iresp));
+#else
             int nr = gusb_cmd_get(&iresp, sizeof(iresp));
-
+#endif
             if(iresp.gusb_pkt.pkt_id[0] == GUSB_RESPONSE_SDR)     //Satellite Data Record
             {
                   unsigned char *t = (unsigned char *)&(iresp.gusb_pkt.databuf[0]);

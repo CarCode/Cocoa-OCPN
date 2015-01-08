@@ -490,7 +490,7 @@ void WMM_Error(int control)
             WMMLogMessage("Error allocating in WMM_SecVarSummationSpecial");
 			break;
 		case 16:
-            WMMLogMessage("Error in opening EGM9615.BIN file");
+//            WMMLogMessage("Error in opening EGM9615.BIN file");
 			break;
 		case 17:
             WMMLogMessage("Error: Latitude OR Longitude out of range in WMM_GetGeoidHeight");
@@ -2151,135 +2151,6 @@ int WMM_PcupLow( double *Pcup, double *dPcup, double x, int nMax)
 		free(schmidtQuasiNorm);
 	return TRUE;
 }   /*WMM_PcupLow */
-
-
-void WMM_PrintUserData(WMMtype_GeoMagneticElements GeomagElements, WMMtype_CoordGeodetic SpaceInput, WMMtype_Date TimeInput, WMMtype_MagneticModel *MagneticModel, WMMtype_Geoid *Geoid)
-	/* This function prints the results in  Geomagnetic Elements for a point calculation. It takes the calculated
-	*  Geomagnetic elements "GeomagElements" as input.
-	*  As well as the coordinates, date, and Magnetic Model.
-	INPUT :  GeomagElements : Data structure WMMtype_GeoMagneticElements with the following elements
-				double Decl; (Angle between the magnetic field vector and true north, positive east)
-				double Incl; Angle between the magnetic field vector and the horizontal plane, positive down
-				double F; Magnetic Field Strength
-				double H; Horizontal Magnetic Field Strength
-				double X; Northern component of the magnetic field vector
-				double Y; Eastern component of the magnetic field vector
-				double Z; Downward component of the magnetic field vector4
-				double Decldot; Yearly Rate of change in declination
-				double Incldot; Yearly Rate of change in inclination
-				double Fdot; Yearly rate of change in Magnetic field strength
-				double Hdot; Yearly rate of change in horizontal field strength
-				double Xdot; Yearly rate of change in the northern component
-				double Ydot; Yearly rate of change in the eastern component
-				double Zdot; Yearly rate of change in the downward component
-				double GVdot;Yearly rate of chnage in grid variation
-		CoordGeodetic Pointer to the  data  structure with the following elements
-				double lambda; (longitude)
-				double phi; ( geodetic latitude)
-				double HeightAboveEllipsoid; (height above the ellipsoid (HaE) )
-				double HeightAboveGeoid;(height above the Geoid )
-		TimeInput :  data structure WMMtype_Date with the following elements
-				int	Year;
-				int	Month;
-				int	Day;
-				double DecimalYear;      decimal years
-		MagneticModel :	 data structure with the following elements
-				double EditionDate;
-				double epoch;       Base time of Geomagnetic model epoch (yrs)
-				char  ModelName[20];
-				double *Main_Field_Coeff_G;          C - Gauss coefficients of main geomagnetic model (nT)
-				double *Main_Field_Coeff_H;          C - Gauss coefficients of main geomagnetic model (nT)
-				double *Secular_Var_Coeff_G;  CD - Gauss coefficients of secular geomagnetic model (nT/yr)
-				double *Secular_Var_Coeff_H;  CD - Gauss coefficients of secular geomagnetic model (nT/yr)
-				int nMax;  Maximum degree of spherical harmonic model
-				int nMaxSecVar; Maxumum degree of spherical harmonic secular model
-				int SecularVariationUsed; Whether or not the magnetic secular variation vector will be needed by program
-		OUTPUT : none
-
-
-	*/
-{
-	char DeclString[100];
-	char InclString[100];
-	WMM_DegreeToDMSstring(GeomagElements.Incl, 2, InclString);
-	if(GeomagElements.H < 5000 && GeomagElements.H > 1000)
-		WMM_Warnings(1, GeomagElements.H, MagneticModel);
-	if(GeomagElements.H < 1000)
-		WMM_Warnings(2, GeomagElements.H, MagneticModel);
-	if(MagneticModel->SecularVariationUsed == TRUE)
-	{
-		WMM_DegreeToDMSstring(GeomagElements.Decl, 2, DeclString);
-		printf("\n Results For \n\n");
-		if(SpaceInput.phi < 0)
-			printf("Latitude	%.2lfS\n", -SpaceInput.phi);
-		else
-			printf("Latitude	%.2lfN\n", SpaceInput.phi);
-		if(SpaceInput.lambda < 0)
-			printf("Longitude	%.2lfW\n", -SpaceInput.lambda);
-		else
-			printf("Longitude	%.2lfE\n", SpaceInput.lambda);
-		if (Geoid->UseGeoid == 1)
-			printf("Altitude:	%.2lf Kilometers above mean sea level\n", SpaceInput.HeightAboveGeoid);
-		else
-			printf("Altitude:	%.2lf Kilometers above the WGS-84 ellipsoid\n", SpaceInput.HeightAboveEllipsoid);
-		printf("Date:		%.1lf\n", TimeInput.DecimalYear);
-		printf("\n		Main Field\t\t\tSecular Change\n");
-		printf("F	=	%-9.1lf nT\t\t  Fdot = %.1lf\tnT/yr\n", GeomagElements.F, GeomagElements.Fdot);
-		printf("H	=	%-9.1lf nT\t\t  Hdot = %.1lf\tnT/yr\n", GeomagElements.H, GeomagElements.Hdot);
-		printf("X	=	%-9.1lf nT\t\t  Xdot = %.1lf\tnT/yr\n", GeomagElements.X, GeomagElements.Xdot);
-		printf("Y	=	%-9.1lf nT\t\t  Ydot = %.1lf\tnT/yr\n", GeomagElements.Y, GeomagElements.Ydot);
-		printf("Z	=	%-9.1lf nT\t\t  Zdot = %.1lf\tnT/yr\n", GeomagElements.Z, GeomagElements.Zdot);
-		if(GeomagElements.Decl < 0)
-			printf("Decl	=%20s  (WEST)\t  Ddot = %.1lf\tMin/yr\n", DeclString, 60 * GeomagElements.Decldot);
-		else
-			printf("Decl	=%20s  (EAST)\t  Ddot = %.1lf\tMin/yr\n", DeclString, 60 * GeomagElements.Decldot);
-		if(GeomagElements.Incl < 0)
-			printf("Incl	=%20s  (UP)\t  Idot = %.1lf\tMin/yr\n", InclString, 60 * GeomagElements.Incldot);
-		else
-			printf("Incl	=%20s  (DOWN)\t  Idot = %.1lf\tMin/yr\n", InclString, 60 * GeomagElements.Incldot);
-	}
-	else
-	{
-		WMM_DegreeToDMSstring(GeomagElements.Decl, 2, DeclString);
-		printf("\n Results For \n\n");
-		if(SpaceInput.phi < 0)
-			printf("Latitude	%.2lfS\n", -SpaceInput.phi);
-		else
-			printf("Latitude	%.2lfN\n", SpaceInput.phi);
-		if(SpaceInput.lambda < 0)
-			printf("Longitude	%.2lfW\n", -SpaceInput.lambda);
-		else
-			printf("Longitude	%.2lfE\n", SpaceInput.lambda);
-		if(Geoid->UseGeoid == 1)
-			printf("Altitude:	%.2lf Kilometers above MSL\n", SpaceInput.HeightAboveGeoid);
-		else
-			printf("Altitude:	%.2lf Kilometers above WGS-84 Ellipsoid\n", SpaceInput.HeightAboveEllipsoid);
-		printf("Date:		%.1lf\n", TimeInput.DecimalYear);
-		printf("\n	Main Field\n");
-		printf("F	=	%-9.1lf nT\n", GeomagElements.F);
-		printf("H	=	%-9.1lf nT\n", GeomagElements.H);
-		printf("X	=	%-9.1lf nT\n", GeomagElements.X);
-		printf("Y	=	%-9.1lf nT\n", GeomagElements.Y);
-		printf("Z	=	%-9.1lf nT\n", GeomagElements.Z);
-		if(GeomagElements.Decl < 0)
-			printf("Decl	=%20s  (WEST)\n", DeclString);
-		else
-			printf("Decl	=%20s  (EAST)\n", DeclString);
-		if(GeomagElements.Incl < 0)
-			printf("Incl	=%20s  (UP)\n", InclString);
-		else
-			printf("Incl	=%20s  (DOWN)\n", InclString);
-	}
-
-	if (SpaceInput.phi <= -55 || SpaceInput.phi >= 55 )
-		/* Print Grid Variation */
-		{
-		WMM_DegreeToDMSstring(GeomagElements.GV, 2, InclString);
-		printf("\n\n Grid variation =%20s\n", InclString);
-		}
-
-}/*WMM_PrintUserData*/
-
 
 int WMM_readMagneticModel(char *filename, WMMtype_MagneticModel * MagneticModel)
 {

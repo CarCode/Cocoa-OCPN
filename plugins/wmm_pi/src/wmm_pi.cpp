@@ -147,37 +147,41 @@ int wmm_pi::Init(void)
         m_buseable = false;
 	}
 
-	WMM_SetDefaults(&Ellip, MagneticModel, &Geoid); /* Set default values and constants */
-	/* Check for Geographic Poles */
-	//WMM_readMagneticModel_Large(filename, filenameSV, MagneticModel); //Uncomment this line when using the 740 model, and comment out the  WMM_readMagneticModel line.
-#ifdef __WXOSX__
-    wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
-    wxString m_wmm_dir  = std_path.GetUserConfigDir();   // should be ~/Library/Preferences
-    m_wmm_dir.Append(_T("/opencpn/plugins/wmm/data"));
-#else
-    wxString m_wmm_dir = *GetpSharedDataLocation();
-    m_wmm_dir.Append(_T("plugins/wmm/data"));
-#endif
-	filename = m_wmm_dir + _T("/WMM.COF");
-    wxCharBuffer buf = filename.ToUTF8();
-    
-    if (0 == WMM_readMagneticModel(buf.data(), MagneticModel))
-	{
-        wxLogMessage(wxString::Format(_T("Warning: WMM model data file %s can't be loaded, using the bundled data."), filename.c_str()));
-        WMM_setupMagneticModel(wmm_cof_data, MagneticModel);
-	}
-    else
+    if( m_buseable )
     {
-        wxLogMessage(wxString::Format(_T("WMM model data loaded from file %s."), filename.c_str()));
+        WMM_SetDefaults(&Ellip, MagneticModel, &Geoid); /* Set default values and constants */
+        /* Check for Geographic Poles */
+        //WMM_readMagneticModel_Large(filename, MagneticModel); //Uncomment this line when using the 740 model, and comment out the  WMM_readMagneticModel line.
+
+#ifdef __WXOSX__
+        wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
+        wxString m_wmm_dir  = std_path.GetUserConfigDir();   // should be ~/Library/Preferences
+        m_wmm_dir.Append(_T("/opencpn/plugins/wmm/data"));
+#else
+        wxString m_wmm_dir = *GetpSharedDataLocation();
+        m_wmm_dir.Append(_T("plugins/wmm/data"));
+#endif
+        filename = m_wmm_dir + _T("/WMM.COF");
+        wxCharBuffer buf = filename.ToUTF8();
+    
+        if (0 == WMM_readMagneticModel(buf.data(), MagneticModel))
+        {
+            WMMLogMessage1(wxString::Format(_T("Warning: WMM model data file %s can't be loaded, using the bundled data."), filename.c_str()));
+            WMM_setupMagneticModel(wmm_cof_data, MagneticModel);
+        }
+        else
+        {
+            WMMLogMessage1(wxString::Format(_T("WMM model data loaded from file %s."), filename.c_str()));
+        }
     }
 
-       filename = m_wmm_dir + _T("/EGM9615.BIN");
-       strncpy(geoiddatapath, (const char*)filename.mb_str(wxConvUTF8), 1023);
-       if (FALSE == WMM_InitializeGeoid(&Geoid))    /* Read the Geoid file */
-       {
-             wxLogMessage(wxString::Format(_T("Warning: WMM model data file %s can't be loaded. Switching off the geoid calculations. The accuracy will be reduced"), filename.c_str()));
+//       filename = m_wmm_dir + _T("/EGM9615.BIN");
+//       strncpy(geoiddatapath, (const char*)filename.mb_str(wxConvUTF8), 1023);
+//       if (FALSE == WMM_InitializeGeoid(&Geoid))    /* Read the Geoid file */
+//       {
+//             wxLogMessage(wxString::Format(_T("Warning: WMM model data file %s can't be loaded. Switching off the geoid calculations. The accuracy will be reduced"), filename.c_str()));
              m_busegeoid = false;
-       }
+//       }
 //	WMM_GeomagIntroduction(MagneticModel);  /* Print out the WMM introduction */
 
 //    This PlugIn needs a toolbar icon, so request its insertion
@@ -335,6 +339,8 @@ void wmm_pi::RearrangeWindow()
 
 void wmm_pi::OnToolbarToolCallback(int id)
 {
+    if( !m_buseable )
+        return;
 	if(NULL == m_pWmmDialog)
 	{
 		m_pWmmDialog = new WmmUIDialog(*this, m_parent_window);
@@ -672,7 +678,8 @@ bool wmm_pi::LoadConfig(void)
 		pConf->SetPath ( _T ( "/Directories" ) );
 		wxString def;
 		def = ::wxGetCwd() + _T("/plugins");
-		pConf->Read ( _T ( "WMMDataLocation" ), &m_wmm_dir, def);
+        //pConf->Read ( _T ( "WMMDataLocation" ), &m_wmm_dir, def);
+        m_wmm_dir = def;
 		return true;
 	}
 	else
@@ -827,7 +834,7 @@ int WMM_setupMagneticModel(char *data, WMMtype_MagneticModel * MagneticModel)
 	while (EOF_Flag == 0)
 	{
 		c_tmp = strtok(NULL, "\n");
-		strncpy(c_str, c_tmp, 81);
+		strncpy(c_str, c_tmp, 80);
 		/* CHECK FOR LAST LINE IN FILE */
 		for (i=0; i<4 && (c_str[i] != '\0'); i++)
 		{

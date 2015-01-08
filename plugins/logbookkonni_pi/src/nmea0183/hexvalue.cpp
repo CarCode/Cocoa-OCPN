@@ -20,9 +20,9 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
+ *                                                                         *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -42,12 +42,16 @@
 
 int HexValue( const wxString& hex_string )
 {
-   int return_value = 0;
+    int return_value = 0;
 
-   long scan_value = 0;
+    long scan_value = 0;
 
-   sscanf( hex_string.mb_str(), "%lx",  &scan_value );
+    wxCharBuffer abuf = hex_string.ToUTF8();
+    if( !abuf.data() )                            // badly formed sentence?
+        return 0;
+    
+    sscanf( abuf.data(), "%lx",  &scan_value );
 
-   return_value = (int)scan_value;
-   return( return_value );
+    return_value = (int)scan_value;
+    return( return_value );
 }

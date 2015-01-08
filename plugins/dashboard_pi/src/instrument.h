@@ -103,6 +103,7 @@ public:
       void OnPaint(wxPaintEvent& WXUNUSED(event));
       virtual void SetData(int st, double data, wxString unit) = 0;
       void SetDrawSoloInPane(bool value);
+      void MouseEvent( wxMouseEvent &event );
 
       int               instrumentTypeId;
 

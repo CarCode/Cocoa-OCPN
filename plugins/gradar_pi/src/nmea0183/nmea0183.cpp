@@ -20,9 +20,9 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
+ *                                                                         *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -234,6 +234,10 @@ bool NMEA0183::IsGood( void ) const
 
 bool NMEA0183::PreParse( void )
 {
+    wxCharBuffer buf = sentence.Sentence.ToUTF8();
+    if( !buf.data() )                            // badly formed sentence?
+        return false;
+
       if ( IsGood() )
       {
             wxString mnemonic = sentence.Field( 0 );

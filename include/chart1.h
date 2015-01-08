@@ -59,9 +59,9 @@ wxFont *GetOCPNScaledFont( wxString item, int default_size = 0 );
 
 wxArrayString *EnumerateSerialPorts(void);
 wxColour GetGlobalColor(wxString colorName);
-
-int GetApplicationMemoryUse(void);
-
+#ifndef __WXOSX__
+int GetApplicationMemoryUse(void);  // Not used
+#endif
 // Helper to create menu label + hotkey string when registering menus
 wxString _menuText(wxString name, wxString shortcut);
 
@@ -183,7 +183,8 @@ enum
     ID_MENU_AIS_TRACKS,
     ID_MENU_AIS_CPADIALOG,
     ID_MENU_AIS_CPASOUND,
-    ID_MENU_AIS_TARGETLIST
+    ID_MENU_AIS_TARGETLIST,
+    ID_MENU_OQUIT
 };
 
 #define N_STATUS_BAR_FIELDS_MAX     20
@@ -289,9 +290,9 @@ class MyFrame: public wxFrame
     MyFrame(wxFrame *frame, const wxString& title, const wxPoint& pos, const wxSize& size, long style);
 
     ~MyFrame();
-
-    int GetApplicationMemoryUse(void);
-
+#ifndef __WXOSX__
+    int GetApplicationMemoryUse(void);  // Not used
+#endif
     void OnEraseBackground(wxEraseEvent& event);
     void OnActivate(wxActivateEvent& event);
     void OnMaximize(wxMaximizeEvent& event);
@@ -304,7 +305,9 @@ class MyFrame: public wxFrame
     void OnEvtTHREADMSG(OCPN_ThreadMessageEvent& event);
     void OnEvtOCPN_NMEA(OCPN_DataStreamEvent & event);
     void OnEvtPlugInMessage( OCPN_MsgEvent & event );
-    void OnMemFootTimer(wxTimerEvent& event);
+#ifndef __WXOSX__
+    void OnMemFootTimer(wxTimerEvent& event);  // Not used
+#endif
     void OnBellsTimer(wxTimerEvent& event);
 #ifdef wxHAS_POWER_EVENTS
     void OnSuspending(wxPowerEvent &event);
@@ -320,7 +323,8 @@ class MyFrame: public wxFrame
     void DoStackUp(void);
     void DoStackDown(void);
     void DoStackDelta( int direction );
-    
+    void DoSettings( void );
+
     void MouseEvent(wxMouseEvent& event);
     void SelectChartFromStack(int index,  bool bDir = false,  ChartTypeEnum New_Type = CHART_TYPE_DONTCARE, ChartFamilyEnum New_Family = CHART_FAMILY_DONTCARE);
     void SelectdbChart(int dbindex);
@@ -419,8 +423,9 @@ class MyFrame: public wxFrame
     wxTimer             FrameTCTimer;
     wxTimer             FrameTimer1;
     wxTimer             FrameCOGTimer;
-    wxTimer             MemFootTimer;
-
+#ifndef __WXOSX__
+    wxTimer             MemFootTimer;  // Not used
+#endif
     int                 m_BellsToPlay;
     wxTimer             BellsTimer;
 
