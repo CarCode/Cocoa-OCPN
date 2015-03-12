@@ -27,7 +27,11 @@
 #define SQUISH_SINGLECOLOURFIT_H
 
 #include <limits.h>
+#ifdef __WXOSX__
 #include "squish.h"
+#else
+#include <squish.h>
+#endif
 #include "colourfit.h"
 
 namespace squish {

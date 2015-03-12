@@ -313,8 +313,7 @@ class cm93chart : public s57chart
 
             double GetNormalScaleMin(double canvas_scale_factor, bool b_allow_overzoom);
 #ifdef __WXOSX__
-    double GetNormalScaleMax2(double canvas_scale_factor);
-    //    double GetNormalScaleMax(double canvas_scale_factor, int canvas_width);
+            double GetNormalScaleMax2(double canvas_scale_factor);
 #else
             double GetNormalScaleMax(double canvas_scale_factor);
 #endif

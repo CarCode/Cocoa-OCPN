@@ -122,12 +122,12 @@ void UserDefaults_RemoveValue(const char *key)
 // --------------------------------------------------------------------------------
 // Misc UI helpers
 // --------------------------------------------------------------------------------
-
+/*
 void MakeButtonRounded(void *button)
 {
     [(__bridge NSButton*)button setBezelStyle:NSRoundRectBezelStyle];
 }
-/*  erfordert deps/letsmove/ von Poedit
+//  erfordert deps/letsmove/ von Poedit
 void MoveToApplicationsFolderIfNecessary()
 {
     PFMoveToApplicationsFolderIfNecessary();

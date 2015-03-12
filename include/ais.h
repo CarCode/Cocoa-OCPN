@@ -1,4 +1,4 @@
-/**************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  AIS Decoder Object
@@ -21,7 +21,9 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ */
 
 #ifndef __AIS_H__
 #define __AIS_H__
@@ -229,6 +231,7 @@ wxString ais_get_short_type(int index);
 void AISDrawAreaNotices (ocpnDC& dc );
 void AISDraw(ocpnDC& dc);
 bool AnyAISTargetsOnscreen( ViewPort &vp );
+
 
 WX_DECLARE_HASH_MAP( int, wxString, wxIntegerHash, wxIntegerEqual, AIS_Target_Name_Hash );
 

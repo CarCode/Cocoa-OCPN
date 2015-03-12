@@ -44,14 +44,16 @@
 #include "S57ClassRegistrar.h"
 #include "S57Light.h"
 
+#include "S57Sector.h"
 #include "s52s57.h"                 //types
-#include "chcanv.h"                // for Viewport
 #include "OCPNRegion.h"
-
+#include "ocpndc.h"
+#include "viewport.h"
 
 // ----------------------------------------------------------------------------
 // Useful Prototypes
 // ----------------------------------------------------------------------------
+
 
 // ----------------------------------------------------------------------------
 // S57 Utility Prototypes

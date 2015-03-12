@@ -90,7 +90,7 @@ Route::Route( void )
     m_PlannedSpeed = ROUTE_DEFAULT_SPEED;
     if(g_PlanSpeed != ROUTE_DEFAULT_SPEED)
         m_PlannedSpeed = g_PlanSpeed;
-
+    
     m_PlannedDeparture = RTE_UNDEF_DEPARTURE;
     m_TimeDisplayFormat = RTE_TIME_DISP_PC;
     
@@ -122,7 +122,7 @@ void Route::CloneRoute( Route *psourceroute, int start_nPoint, int end_nPoint, c
         else {
             RoutePoint *psourcepoint = psourceroute->GetPoint( i );
             RoutePoint *ptargetpoint = new RoutePoint( psourcepoint->m_lat, psourcepoint->m_lon,
-                        psourcepoint->GetIconName(), psourcepoint->GetName(), GPX_EMPTY_STRING, false );
+                    psourcepoint->GetIconName(), psourcepoint->GetName(), GPX_EMPTY_STRING, false );
 
             AddPoint( ptargetpoint, false );
 
@@ -156,7 +156,7 @@ void Route::CloneTrack( Route *psourceroute, int start_nPoint, int end_nPoint, c
 
         RoutePoint *psourcepoint = psourceroute->GetPoint( i );
         RoutePoint *ptargetpoint = new RoutePoint( psourcepoint->m_lat, psourcepoint->m_lon,
-                    psourcepoint->GetIconName(), psourcepoint->GetName(), GPX_EMPTY_STRING, false );
+                psourcepoint->GetIconName(), psourcepoint->GetName(), GPX_EMPTY_STRING, false );
 
         AddPoint( ptargetpoint, false );
         
@@ -196,7 +196,7 @@ void Route::CloneAddedRoutePoint( RoutePoint *ptargetpoint, RoutePoint *psourcep
     ptargetpoint->SetCreateTime(psourcepoint->GetCreateTime());
     ptargetpoint->m_HyperlinkList = new HyperlinkList;
     ptargetpoint->ReLoadIcon();
-
+    
     if( !psourcepoint->m_HyperlinkList->IsEmpty() ) {
         HyperlinkList::iterator iter = psourcepoint->m_HyperlinkList->begin();
         psourcepoint->m_HyperlinkList->splice( iter, *( ptargetpoint->m_HyperlinkList ) );
@@ -242,7 +242,7 @@ void Route::AddPoint( RoutePoint *pNewPoint, bool b_rename_in_sequence, bool b_d
 
     if( !b_deferBoxCalc )
         FinalizeForRendering();
-    
+
     if (!b_isLoading)
         UpdateSegmentDistances();
     m_pLastAddedPoint = pNewPoint;
@@ -489,9 +489,9 @@ void Route::DrawGL( ViewPort &VP, OCPNRegion &region )
                 wxRoutePointListNode *node = pRoutePointList->GetFirst();
                 RoutePoint *prp = node->GetData();
                 
-                if( prp->GetIconName().StartsWith( _T("xmred") ) )
+                if( prp->GetIconName().StartsWith( _T("xmred") ) ) 
                     col = GetGlobalColor( _T ( "URED" ) );
-                else if( prp->GetIconName().StartsWith( _T("xmblue") ) )
+                else if( prp->GetIconName().StartsWith( _T("xmblue") ) ) 
                     col = GetGlobalColor( _T ( "BLUE3" ) );
                 else if( prp->GetIconName().StartsWith( _T("xmgreen") ) ) 
                     col = GetGlobalColor( _T ( "UGREN" ) );
@@ -507,14 +507,14 @@ void Route::DrawGL( ViewPort &VP, OCPNRegion &region )
             }
         }
     }
-
+    
     int style = wxSOLID;
     if( m_style != STYLE_UNDEFINED ) style = m_style;
     dc.SetPen( *wxThePenList->FindOrCreatePen( col, width, style ) );
-
+    
     glColor3ub(col.Red(), col.Green(), col.Blue());
     glLineWidth( wxMax( g_GLMinSymbolLineWidth, width ) );
-
+    
     dc.SetGLStipple();
 
     glBegin(GL_LINE_STRIP);
@@ -558,7 +558,7 @@ void Route::DrawGL( ViewPort &VP, OCPNRegion &region )
     }
     glEnd();
     glDisable (GL_LINE_STIPPLE);
-
+    
     /* direction arrows.. could probably be further optimized for opengl */
     if( !m_bIsTrack ) {
         wxRoutePointListNode *node = pRoutePointList->GetFirst();
@@ -743,6 +743,34 @@ RoutePoint *Route::InsertPointBefore( RoutePoint *pRP, double rlat, double rlon,
     FinalizeForRendering();
     UpdateSegmentDistances();
 
+    return ( newpoint );
+}
+
+RoutePoint *Route::InsertPointAfter( RoutePoint *pRP, double rlat, double rlon,
+                                      bool bRenamePoints )
+{
+    int nRP = pRoutePointList->IndexOf( pRP );
+    if( nRP >= m_nPoints - 1 )
+        return NULL;
+    nRP++;
+    
+    RoutePoint *newpoint = new RoutePoint( rlat, rlon, wxString( _T ( "diamond" ) ),
+                                           GetNewMarkSequenced(), GPX_EMPTY_STRING );
+    newpoint->m_bIsInRoute = true;
+    newpoint->m_bDynamicName = true;
+    newpoint->SetNameShown( false );
+    
+    pRoutePointList->Insert( nRP, newpoint );
+    
+    RoutePointGUIDList.Insert( pRP->m_GUID, nRP );
+    
+    m_nPoints++;
+    
+    if( bRenamePoints ) RenameRoutePoints();
+    
+    FinalizeForRendering();
+    UpdateSegmentDistances();
+    
     return ( newpoint );
 }
 

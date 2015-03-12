@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "wx/wxprec.h"
 #include <wx/sizer.h>
@@ -120,13 +121,13 @@ void GoToPositionDialog::CreateControls()
 
     wxStaticText* itemStaticText5 = new wxStaticText( itemDialog1, wxID_STATIC, _("Latitude"),
             wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer4->Add( itemStaticText5, 0,
 #ifdef __WXOSX__
+    itemStaticBoxSizer4->Add( itemStaticText5, 0,
                              wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
 #else
+    itemStaticBoxSizer4->Add( itemStaticText5, 0,
                               wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 #endif
-
     m_MarkLatCtl = new LatLonTextCtrl( itemDialog1, ID_LATCTRL, _T(""), wxDefaultPosition,
                                        wxSize( 180, -1 ), 0 );
     itemStaticBoxSizer4->Add( m_MarkLatCtl, 0,
@@ -134,13 +135,13 @@ void GoToPositionDialog::CreateControls()
 
     wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _("Longitude"),
             wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer4->Add( itemStaticText6, 0,
 #ifdef __WXOSX__
+    itemStaticBoxSizer4->Add( itemStaticText6, 0,
                              wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
 #else
+    itemStaticBoxSizer4->Add( itemStaticText6, 0,
                               wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 #endif
-
     m_MarkLonCtl = new LatLonTextCtrl( itemDialog1, ID_LONCTRL, _T(""), wxDefaultPosition,
                                        wxSize( 180, -1 ), 0 );
     itemStaticBoxSizer4->Add( m_MarkLonCtl, 0,

@@ -1,4 +1,4 @@
-/***************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -52,7 +52,6 @@ TTYWindow::TTYWindow(wxWindow *parent, int n_lines, WindowDestroyListener * list
 #else
     wxDialog::Create( parent, -1, _T("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
 #endif
-
     wxBoxSizer* bSizerOuterContainer = new wxBoxSizer( wxVERTICAL );
     SetSizer( bSizerOuterContainer );
 
@@ -124,7 +123,7 @@ void TTYWindow::CreateLegendBitmap()
         dc.DrawRectangle( 5, y, 20, 20 );
         dc.SetTextForeground( wxColour(_T("MAROON")) );
         dc.DrawText(  _("Input Message filtered and dropped"), 30, y );
-        
+
         y += yp;
         wxBrush b4(wxColour( _T("BLUE")) );
         dc.SetBrush(b4);

@@ -26,9 +26,8 @@
  ***************************************************************************
  *  Parts of this file were adapted from source code found in              *
  *  John F. Waers (jfwaers@csn.net) public domain program MacGPS45         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
+
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
@@ -54,6 +53,10 @@
 #include "OCP_DataStreamInput_Thread.h"
 #include "garmin/jeeps/garmin_wrapper.h"
 
+#ifdef __OCPN__ANDROID__
+#include "androidUTIL.h"
+#endif
+
 #include <vector>
 
 #if !defined(NAN)
@@ -64,6 +67,16 @@ static const long long lNaN = 0xfff8000000000000;
 const wxEventType wxEVT_OCPN_DATASTREAM = wxNewEventType();
 
 #define N_DOG_TIMEOUT   5
+
+#ifdef __OCPN__ANDROID__
+#include <netdb.h>
+int gethostbyaddr_r(const char *, int, int, struct hostent *, char *, size_t, struct hostent **, int *)
+{
+    wxLogMessage(_T("Called stub gethostbyaddr_r()"));
+    return 0;
+}
+#endif
+
 
 //------------------------------------------------------------------------------
 //    DataStream Implementation
@@ -79,6 +92,7 @@ END_EVENT_TABLE()
 
 // constructor
 DataStream::DataStream(wxEvtHandler *input_consumer,
+             const ConnectionType conn_type,         
              const wxString& Port,
              const wxString& BaudRate,
              dsPortType io_select,
@@ -87,8 +101,6 @@ DataStream::DataStream(wxEvtHandler *input_consumer,
              int EOS_type,
              int handshake_type,
              void *user_data )
-:m_net_protocol(GPSD),m_connection_type(SERIAL)
-
 {
     m_consumer = input_consumer;
     m_portstring = Port;
@@ -98,6 +110,7 @@ DataStream::DataStream(wxEvtHandler *input_consumer,
     m_handshake = handshake_type;
     m_user_data = user_data;
     m_bGarmin_GRMN_mode = bGarmin;
+    m_connection_type = conn_type;
 
     Init();
 
@@ -116,6 +129,7 @@ void DataStream::Init(void)
     m_is_multicast = false;
     m_socket_server = 0;
     m_txenter = 0;
+    m_net_protocol = GPSD;
     
     m_socket_timer.SetOwner(this, TIMER_SOCKET);
     m_socketread_watchdog_timer.SetOwner(this, TIMER_SOCKET + 1);
@@ -147,9 +161,9 @@ void DataStream::Open(void)
             comx =  m_portstring.AfterFirst(':');      // strip "Serial:"
 
             comx = comx.BeforeFirst(' ');               // strip off any description provided by Windows
-
+            
 #if 0
-#ifdef __WXMSW__
+ #ifdef __WXMSW__
             wxString scomx = comx;
             scomx.Prepend(_T("\\\\.\\"));                  // Required for access to Serial Ports greater than COM9
 
@@ -171,6 +185,7 @@ void DataStream::Open(void)
                 CloseHandle(hSerialComm);
 #endif
 #endif
+
     //    Kick off the DataSource RX thread
             m_pSecondary_Thread = new OCP_DataStreamInput_Thread(this,
                                                                  m_consumer,
@@ -182,27 +197,29 @@ void DataStream::Open(void)
             m_bok = true;
         }
     }
-    else if(m_portstring.Contains(_T("GPSD"))){
-        m_net_addr = _T("127.0.0.1");              // defaults
-        m_net_port = _T("2947");
-        m_net_protocol = GPSD;
-        m_connection_type = NETWORK;
-    }
-    else if(m_portstring.StartsWith(_T("TCP"))) {
-        m_net_addr = _T("0.0.0.0");              // defaults
-        m_net_port = _T("10110");
-        m_net_protocol = TCP;
-        m_connection_type = NETWORK;
-    }
-    else if(m_portstring.StartsWith(_T("UDP"))) {
-        m_net_addr =  _T("0.0.0.0");              // any address
-        m_net_port = _T("10110");
-        m_net_protocol = UDP;
-        m_connection_type = NETWORK;
-    }
     
-    if(m_connection_type == NETWORK){
-    
+    else if(m_connection_type == NETWORK){
+        if(m_portstring.Contains(_T("GPSD"))){
+            m_net_addr = _T("127.0.0.1");              // defaults
+            m_net_port = _T("2947");
+            m_net_protocol = GPSD;
+        }
+        else if(m_portstring.StartsWith(_T("TCP"))) {
+            m_net_addr = _T("0.0.0.0");              // defaults
+            m_net_port = _T("10110");
+            m_net_protocol = TCP;
+        }
+        else if(m_portstring.StartsWith(_T("UDP"))) {
+            m_net_addr =  _T("0.0.0.0");              // any address
+            m_net_port = _T("10110");
+            m_net_protocol = UDP;
+        }
+        else {
+            m_net_addr =  _T("0.0.0.0");              // any address
+            m_net_port = _T("0");
+            m_net_protocol = UDP;
+        }
+        
         //  Capture the  parameters from the portstring
 
         wxStringTokenizer tkz(m_portstring, _T(":"));
@@ -220,7 +237,7 @@ void DataStream::Open(void)
         m_addr.Hostname(m_net_addr);
         m_addr.Service(m_net_port);
         
-#ifdef __WXGTK__
+#ifdef __UNIX__
 # if wxCHECK_VERSION(3,0,0)
         in_addr_t addr = ((struct sockaddr_in *) m_addr.GetAddressData())->sin_addr.s_addr;
 # else
@@ -325,10 +342,26 @@ void DataStream::Open(void)
                 }
                 
                 break;
-        }
-
+                
+            default:
+                break;
+                
+        } 
         m_bok = true;
+        
+    }  // NETWORK       
+    
+    else if(m_connection_type == INTERNAL_GPS){
+#ifdef __OCPN__ANDROID__
+        androidStartNMEA(m_consumer);
+        m_bok = true;
+#endif
+        
     }
+        
+    else
+        m_bok = false;
+
     m_connect_time = wxDateTime::Now();
     
 }
@@ -397,6 +430,13 @@ void DataStream::Close()
     
     m_socket_timer.Stop();
     m_socketread_watchdog_timer.Stop();
+    
+    if(m_connection_type == INTERNAL_GPS){
+#ifdef __OCPN__ANDROID__
+        androidStopNMEA();
+#endif
+    }
+        
 }
 
 void DataStream::OnSocketReadWatchdogTimer(wxTimerEvent& event)
@@ -684,7 +724,7 @@ bool DataStream::SendSentence( const wxString &sentence )
         payload += _T("\r\n");
 
     switch( m_connection_type ) {
-        case SERIAL:
+        case SERIAL:{
             if( m_pSecondary_Thread ) {
                 if( IsSecThreadActive() )
                 {
@@ -701,8 +741,9 @@ bool DataStream::SendSentence( const wxString &sentence )
                     return false;
             }
             break;
-
-        case NETWORK:
+        }
+            
+        case NETWORK:{
             if(m_txenter)
                 return false;                 // do not allow recursion, could happen with non-blocking sockets
             m_txenter++;
@@ -748,6 +789,10 @@ bool DataStream::SendSentence( const wxString &sentence )
             }
             m_txenter--;
             return ret;
+            break;
+        }
+         
+        default:
             break;
     }
     
@@ -849,9 +894,11 @@ GarminProtocolHandler::GarminProtocolHandler(DataStream *parent, wxEvtHandler *M
     
     //      Connect(wxEVT_OCPN_GARMIN, (wxObjectEventFunction)(wxEventFunction)&GarminProtocolHandler::OnEvtGarmin);
     
-//    char  pvt_on[14] = {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};  // Not used
+    char  pvt_on[14] =
+    {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};
     
-//    char  pvt_off[14] = {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 50, 0};  // Not used
+    char  pvt_off[14] =
+    {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 50, 0};
     
 #ifdef __WXMSW__    
     if(m_busb) {
@@ -976,14 +1023,13 @@ void GarminProtocolHandler::RestartIOThread(void)
 
 void GarminProtocolHandler::OnTimerGarmin1(wxTimerEvent& event)
 {
-#ifdef __WXMSW__
     char  pvt_on[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};
-#endif
+    
     TimerGarmin1.Stop();
     
     if(m_busb) {
-#ifdef __WXMSW__
+        #ifdef __WXMSW__    
         //  Try to open the Garmin USB device
         if(INVALID_HANDLE_VALUE == m_usb_handle)
         {
@@ -1000,7 +1046,7 @@ void GarminProtocolHandler::OnTimerGarmin1(wxTimerEvent& event)
                 m_garmin_usb_thread->Run();
             }
         }
-#endif
+        #endif
     }
     
     TimerGarmin1.Start(1000);
@@ -1497,7 +1543,7 @@ void *GARMIN_Serial_Thread::Entry()
     while((not_done) && (m_parent->m_Thread_run_flag > 0)) {
 
         if(TestDestroy()) {
-//            not_done = false;                               // smooth exit, but this bool not used here
+            not_done = false;                               // smooth exit
             goto thread_exit;
         }
 

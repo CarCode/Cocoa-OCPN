@@ -35,16 +35,16 @@
 #include <wx/menu.h>
 #endif
 #include <wx/power.h>
+#include <wx/clrpicker.h>
 
 #ifdef __WXMSW__
 #include "wx/msw/private.h"
 #endif
 
 #include "ocpn_types.h"
-
+#include "viewport.h"
 #include "nmea0183.h"
 
-WX_DEFINE_ARRAY_INT(int, ArrayOfInts);
 
 #ifdef USE_S57
 #include "cpl_error.h"
@@ -69,7 +69,8 @@ wxString _menuText(wxString name, wxString shortcut);
 double AnchorDistFix( double const d, double const AnchorPointMinDist, double const AnchorPointMaxDist);   //  pjotrc 2010.02.22
 
 bool TestGLCanvas(wxString &prog_dir);
-// bool ReloadLocale();  // Reverted, #1049 in commit list
+bool ReloadLocale();
+
 
 class NMEA_Msg_Container;
 WX_DECLARE_STRING_HASH_MAP( NMEA_Msg_Container*, MsgPriorityHash );
@@ -120,8 +121,10 @@ enum
     ID_TRACK,
     ID_TBSTATBOX,
     ID_MOB,
-    ID_PLUGIN_BASE  // This MUST be the last item in this enum
+
+    ID_PLUGIN_BASE // This MUST be the last item in the enum
 };
+
 
 static const long TOOLBAR_STYLE = wxTB_FLAT | wxTB_DOCKABLE | wxTB_TEXT ;
 
@@ -143,6 +146,7 @@ enum
 
     ID_COMBO = 1000
 };
+
 
 // Menu item IDs for the main menu bar
 enum
@@ -186,6 +190,8 @@ enum
     ID_MENU_AIS_TARGETLIST,
     ID_MENU_OQUIT
 };
+
+
 
 #define N_STATUS_BAR_FIELDS_MAX     20
 
@@ -274,8 +280,8 @@ class MyApp: public wxApp
     //  Catch malloc/new fail exceptions
     //  All the rest will be caught be CrashRpt
     bool OnExceptionInMainLoop();
-#endif
-
+#endif    
+    
     void TrackOff(void);
 #ifndef __WXOSX__
     wxSingleInstanceChecker *m_checker;
@@ -300,6 +306,7 @@ class MyFrame: public wxFrame
     void OnExit(wxCommandEvent& event);
     void OnSize(wxSizeEvent& event);
     void OnMove(wxMoveEvent& event);
+    void OnInitTimer(wxTimerEvent& event);
     void OnFrameTimer1(wxTimerEvent& event);
     bool DoChartUpdate(void);
     void OnEvtTHREADMSG(OCPN_ThreadMessageEvent& event);
@@ -315,7 +322,7 @@ class MyFrame: public wxFrame
     void OnSuspendCancel(wxPowerEvent &event);
     void OnResume(wxPowerEvent &event);
 #endif // wxHAS_POWER_EVENTS
-
+    
     void UpdateAllFonts(void);
     void PositionConsole(void);
     void OnToolLeftClick(wxCommandEvent& event);
@@ -324,6 +331,9 @@ class MyFrame: public wxFrame
     void DoStackDown(void);
     void DoStackDelta( int direction );
     void DoSettings( void );
+
+    void TriggerResize(wxSize sz);
+    void OnResizeTimer(wxTimerEvent &event);
 
     void MouseEvent(wxMouseEvent& event);
     void SelectChartFromStack(int index,  bool bDir = false,  ChartTypeEnum New_Type = CHART_TYPE_DONTCARE, ChartFamilyEnum New_Family = CHART_FAMILY_DONTCARE);
@@ -342,6 +352,7 @@ class MyFrame: public wxFrame
     int  DoOptionsDialog();
     int  ProcessOptionsDialog(int resultFlags , options* dialog );
     void DoPrint(void);
+    void LaunchLocalHelp(void);
     void StopSockets(void);
     void ResumeSockets(void);
     void TogglebFollow(void);
@@ -383,7 +394,7 @@ class MyFrame: public wxFrame
     void PianoPopupMenu ( int x, int y, int selected_index, int selected_dbIndex );
     void OnPianoMenuDisableChart(wxCommandEvent& event);
     void OnPianoMenuEnableChart(wxCommandEvent& event);
-    bool IsPianoContextMenuActive(){ return piano_ctx_menu != 0; }  //  #1031 in commit list
+    bool IsPianoContextMenuActive(){ return piano_ctx_menu != 0; }
 
 #ifdef __WXOSX__
     void startHelp(void);
@@ -413,12 +424,15 @@ class MyFrame: public wxFrame
 
     void ActivateAISMOBRoute( AIS_Target_Data *ptarget );
     void UpdateAISMOBRoute( AIS_Target_Data *ptarget );
-
+    
     wxStatusBar         *m_pStatusBar;
     wxMenuBar           *m_pMenuBar;
     int                 nRoute_State;
     int                 nBlinkerTick;
     bool                m_bTimeIsSet;
+
+    wxTimer             InitTimer;
+    int                 m_iInitCount;
 
     wxTimer             FrameTCTimer;
     wxTimer             FrameTimer1;
@@ -426,6 +440,8 @@ class MyFrame: public wxFrame
 #ifndef __WXOSX__
     wxTimer             MemFootTimer;  // Not used
 #endif
+    wxTimer             m_resizeTimer;
+
     int                 m_BellsToPlay;
     wxTimer             BellsTimer;
 
@@ -437,13 +453,14 @@ class MyFrame: public wxFrame
     void ActivateMOB(void);
     void UpdateGPSCompassStatusBox(bool b_force_new = false);
     void UpdateRotationState( double rotation );
-
+    
     bool UpdateChartDatabaseInplace(ArrayOfCDI &DirArray,
                                     bool b_force, bool b_prog,
                                     const wxString &ChartListFileName);
 
     bool                m_bdefer_resize;
     wxSize              m_defer_size;
+    wxSize              m_newsize;
 
   private:
     void ODoSetSize(void);
@@ -510,8 +527,8 @@ class MyFrame: public wxFrame
     wxString            m_VDO_accumulator;
     
     time_t              m_fixtime;
-    wxMenu              *piano_ctx_menu;  // #1031 in commit list
-
+    wxMenu              *piano_ctx_menu;
+    
     DECLARE_EVENT_TABLE()
 };
 
@@ -533,9 +550,9 @@ class MyPrintout: public wxPrintout
   void GetPageInfo(int *minPage, int *maxPage, int *selPageFrom, int *selPageTo);
 
   void DrawPageOne(wxDC *dc);
-
+  
   void GenerateGLbmp(void);
-    
+  
 private:
   wxBitmap m_GLbmp;
 
@@ -546,6 +563,7 @@ private:
 enum {
     ID_NMEA_WINDOW      = wxID_HIGHEST,
     ID_AIS_WINDOW,
+    INIT_TIMER,
     FRAME_TIMER_1,
     FRAME_TIMER_2,
     TIMER_AIS1,
@@ -557,7 +575,8 @@ enum {
     FRAME_COG_TIMER,
     MEMORY_FOOTPRINT_TIMER,
     BELLS_TIMER,
-    ID_NMEA_THREADMSG
+    ID_NMEA_THREADMSG,
+    RESIZE_TIMER
 
 };
 

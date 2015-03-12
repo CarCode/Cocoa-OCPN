@@ -5491,11 +5491,10 @@ static void GPS_A500_Translate(UC *s, GPS_PAlmanac *alm)
 
     (*alm)->i = GPS_Util_Get_Float(p);
 #ifdef __WXOSX__
-//    p+=sizeof(float);  // Not used ???
+    //    p+=sizeof(float);  // Not used ???
 #else
     p+=sizeof(float);
 #endif
-
     return;
 }
 
@@ -6631,7 +6630,7 @@ void GPS_D1006_Get(GPS_PCourse *crs, UC *p)
       (*crs)->course_name[i] = *p++;
     (*crs)->track_index = GPS_Util_Get_Short(p);
 #ifdef __WXOSX__
-//    p+=sizeof(uint16);  // Not used ???
+    //    p+=sizeof(uint16);  // Not used ???
 #else
     p+=sizeof(uint16);
 #endif
@@ -7278,7 +7277,7 @@ void GPS_D1013_Get(GPS_PCourse_Limits limits, UC *p)
 
     limits->max_course_trk_pnt = GPS_Util_Get_Uint(p);
 #ifdef __WXOSX__
-//    p+=sizeof(uint32);  // Not used ???
+    //    p+=sizeof(uint32);  // Not used ???
 #else
     p+=sizeof(uint32);
 #endif

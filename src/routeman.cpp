@@ -58,7 +58,10 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/apptrait.h>
+#include "OCPNPlatform.h"
 
+
+extern OCPNPlatform     *g_Platform;
 extern ConsoleCanvas    *console;
 
 extern RouteList        *pRouteList;
@@ -67,8 +70,6 @@ extern MyConfig         *pConfig;
 extern Routeman         *g_pRouteMan;
 
 extern wxRect           g_blink_rect;
-extern wxString         g_SData_Locn;
-extern wxString         g_PrivateDataDir;
 
 extern double           gLat, gLon, gSog, gCog;
 extern double           gVar;
@@ -90,7 +91,7 @@ extern AIS_Decoder     *g_pAIS;
 extern PlugInManager    *g_pi_manager;
 extern ocpnStyle::StyleManager* g_StyleManager;
 extern wxString         g_uploadConnection;
-extern bool             g_bSailing;
+extern bool             g_bAdvanceRouteWaypointOnArrivalOnly;
 extern Route            *pAISMOBRoute;
 
 //    List definitions for Waypoint Manager Icons
@@ -463,11 +464,11 @@ bool Routeman::UpdateProgress()
 
             }
             else {
-                //      Test to see if we are moving away from the arrival point, and
-                //      have been moving away for 2 seconds.
-                //      If so, we should declare "Arrival"
+            //      Test to see if we are moving away from the arrival point, and
+            //      have been moving away for 2 seconds.  
+            //      If so, we should declare "Arrival"
                 if( (CurrentRangeToActiveNormalCrossing - m_arrival_min) >  pActivePoint->GetWaypointArrivalRadius() ){
-                    if(++m_arrival_test > 2 && !g_bSailing) {
+                    if(++m_arrival_test > 2 && !g_bAdvanceRouteWaypointOnArrivalOnly) {
                         m_bArrival = true;
                         UpdateAutopilot();
                         
@@ -477,7 +478,7 @@ bool Routeman::UpdateProgress()
                 }
                 else
                     m_arrival_test = 0;
-
+                    
             }
         }
         
@@ -706,28 +707,28 @@ bool Routeman::UpdateAutopilot()
             g_pMUX->SendNMEAMessage( snt.Sentence );
         }
         
-    // XTE
-    {
-        m_NMEA0183.TalkerID = _T("EC");
-        
-        SENTENCE snt;
-        
-        m_NMEA0183.Xte.IsLoranBlinkOK = NTrue;
-        m_NMEA0183.Xte.IsLoranCCycleLockOK = NTrue;
-        
-        m_NMEA0183.Xte.CrossTrackErrorDistance = CurrentXTEToActivePoint;
-        
-        if( XTEDir < 0 ) m_NMEA0183.Xte.DirectionToSteer = Left;
-        else
-            m_NMEA0183.Xte.DirectionToSteer = Right;
-        
-        m_NMEA0183.Xte.CrossTrackUnits = _T("N");
-        
-        m_NMEA0183.Xte.Write( snt );
-        g_pMUX->SendNMEAMessage( snt.Sentence );
-    }
-    
+        // XTE
+        {
+            m_NMEA0183.TalkerID = _T("EC");
+            
+            SENTENCE snt;
+             
+            m_NMEA0183.Xte.IsLoranBlinkOK = NTrue;
+            m_NMEA0183.Xte.IsLoranCCycleLockOK = NTrue;
+            
+            m_NMEA0183.Xte.CrossTrackErrorDistance = CurrentXTEToActivePoint;
+            
+            if( XTEDir < 0 ) m_NMEA0183.Xte.DirectionToSteer = Left;
+            else
+                m_NMEA0183.Xte.DirectionToSteer = Right;
+            
+            m_NMEA0183.Xte.CrossTrackUnits = _T("N");
 
+            m_NMEA0183.Xte.Write( snt );
+            g_pMUX->SendNMEAMessage( snt.Sentence );
+        }
+        
+       
     return true;
 }
 
@@ -784,14 +785,13 @@ bool Routeman::DeleteRoute( Route *pRoute )
             else
                 pAISMOBRoute = NULL;
         }
-
         ::wxBeginBusyCursor();
 
         if( GetpActiveRoute() == pRoute ) DeactivateRoute();
 
         if( pRoute->m_bIsInLayer )
             return false;
-        
+            
         pConfig->DeleteConfigRoute( pRoute );
 
         //    Remove the route from associated lists
@@ -921,18 +921,18 @@ void Routeman::DeleteTrack( Route *pRoute )
 
         int count = pRoute->pRoutePointList->GetCount();
         if( count > 10000) {
-            pprog = new wxProgressDialog( _("OpenCPN Track Delete"), _T("0/0"), count, NULL,
+            pprog = new wxProgressDialog( _("OpenCPN Track Delete"), _T("0/0"), count, NULL, 
                                           wxPD_APP_MODAL | wxPD_SMOOTH |
                                           wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME );
             pprog->SetSize( 400, wxDefaultCoord );
             pprog->Centre();
-
+            
         }
 
         //    Remove the route from associated lists
         pSelect->DeleteAllSelectableTrackSegments( pRoute );
         pRouteList->DeleteObject( pRoute );
-
+        
         // walk the route, tentatively deleting/marking points used only by this route
         int ic = 0;
         wxRoutePointListNode *pnode = ( pRoute->pRoutePointList )->GetFirst();
@@ -943,7 +943,7 @@ void Routeman::DeleteTrack( Route *pRoute )
                 wxString msg;
                 msg.Printf(_T("%d/%d"), ic, count);
                 if(ic % 100 == 0)
-                    pprog->Update( ic, msg );
+                   pprog->Update( ic, msg );
                 ic++;
             }
 
@@ -1039,9 +1039,9 @@ void Routeman::ZeroCurrentXTEToActivePoint()
     // When zeroing XTE create a "virtual" waypoint at present position
     if( pRouteActivatePoint ) delete pRouteActivatePoint;
     pRouteActivatePoint = new RoutePoint( gLat, gLon, wxString( _T("") ), wxString( _T("") ),
-                                         GPX_EMPTY_STRING, false ); // Current location
+    GPX_EMPTY_STRING, false ); // Current location
     pRouteActivatePoint->m_bShowName = false;
-    
+
     pActiveRouteSegmentBeginPoint = pRouteActivatePoint;
     m_arrival_min = 1e6;
 }
@@ -1130,7 +1130,7 @@ bool WayPointman::RemoveRoutePoint(RoutePoint *prp)
 
 void WayPointman::ProcessUserIcons( ocpnStyle::Style* style )
 {
-    wxString UserIconPath = g_PrivateDataDir;
+    wxString UserIconPath = g_Platform->GetPrivateDataDir();
     wxChar sep = wxFileName::GetPathSeparator();
     if( UserIconPath.Last() != sep ) UserIconPath.Append( sep );
 #ifdef __WXOSX__
@@ -1138,7 +1138,6 @@ void WayPointman::ProcessUserIcons( ocpnStyle::Style* style )
 #else
     UserIconPath.Append( _T("UserIcons") );
 #endif
-    
     if( wxDir::Exists( UserIconPath ) ) {
         wxArrayString FileList;
         
@@ -1213,12 +1212,12 @@ void WayPointman::ProcessIcons( ocpnStyle::Style* style )
     ProcessIcon( style->GetIcon( _T("xmgreen") ), _T("xmgreen"), _T("Green X") );
     ProcessIcon( style->GetIcon( _T("xmred") ), _T("xmred"), _T("Red X") );
     ProcessIcon( style->GetIcon( _T("activepoint") ), _T("activepoint"), _T("Active WP") );
-
+    
     // Load user defined icons.
     // Done after default icons are initialized,
     // so that user may substitute an icon by using the same name in the Usericons file.
     ProcessUserIcons( style );
-
+    
 }
 
 void WayPointman::ProcessIcon(wxBitmap pimage, const wxString & key, const wxString & description)
@@ -1372,8 +1371,6 @@ wxBitmap *WayPointman::CreateDimBitmap( wxBitmap *pBitmap, double factor )
 
 void WayPointman::SetColorScheme( ColorScheme cs )
 {
-    ProcessIcons( g_StyleManager->GetCurrentStyle() );
-
     //    Iterate on the RoutePoint list, requiring each to reload icon
 
     wxRoutePointListNode *node = m_pWayPointList->GetFirst();

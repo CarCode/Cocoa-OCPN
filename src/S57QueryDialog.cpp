@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "wx/wxprec.h"
 
@@ -107,7 +108,7 @@ void S57QueryDialog::CreateControls()
     SetSizer( topSizer );
 
     m_phtml = new wxHtmlWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                wxHW_SCROLLBAR_AUTO );
+                               wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION);
     
     m_phtml->SetBorders( 5 );
 
@@ -128,6 +129,16 @@ void S57QueryDialog::SetColorScheme( void )
     SetBackgroundColour( bg );                  // This looks like non-sense, but is needed for __WXGTK__
                                                 // to get colours to propagate down the control's family tree.
 
+#ifdef __WXQT__
+    //  wxQT has some trouble clearing the background of HTML window...
+    wxBitmap tbm( GetSize().x, GetSize().y, -1 );
+    wxMemoryDC tdc( tbm );
+    //    wxColour cback = GetGlobalColor( _T("YELO1") );
+    tdc.SetBackground( bg );
+    tdc.Clear();
+    m_phtml->SetBackgroundImage(tbm);
+#endif
+    
 }
 
 void S57QueryDialog::SetHTMLPage( wxString& page )

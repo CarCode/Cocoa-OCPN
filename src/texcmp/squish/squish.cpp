@@ -22,8 +22,11 @@
 	SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	
    -------------------------------------------------------------------------- */
-   
+#ifdef __WXOSX__
 #include "squish.h"
+#else
+#include <squish.h>
+#endif
 #include "colourset.h"
 #include "maths.h"
 #include "rangefit.h"

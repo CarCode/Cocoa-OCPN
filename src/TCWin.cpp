@@ -3,8 +3,6 @@
 
 #include "TCWin.h"
 #include "timers.h"
-#include "ocpn_types.h"
-#include "RolloverWin.h"
 #include "chcanv.h"
 #include "tide_time.h"
 #include "tcmgr.h"
@@ -57,9 +55,9 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
             && ( global_color_scheme != GLOBAL_COLOR_SCHEME_RGB ) ) wstyle |= ( wxNO_BORDER );
 
 #ifdef __WXOSX__
-    wstyle |= wxSTAY_ON_TOP;
+     wstyle |= wxSTAY_ON_TOP;
 #endif
-
+            
     wxDialog::Create( parent, wxID_ANY, wxString( _T ( "test" ) ), wxPoint( x, y ),
                       wxSize( 550, 480 ), wstyle );
 
@@ -166,7 +164,6 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
     NX_button = new wxButton( this, ID_TCWIN_NX, _( "Next" ), wxPoint( bpx + bsx + 5, sy - (tsy + 10) ),
                               wxSize( -1, -1 ) );
 #endif
-
     m_TCWinPopupTimer.SetOwner( this, TCWININF_TIMER );
 
     wxScreenDC dc;
@@ -186,7 +183,7 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
 
     wxFont *dlg_font = FontMgr::Get().GetFont( _("Dialog") );
     int dlg_font_size = dlg_font->GetPointSize();
-    
+
     pSFont = wxTheFontList->FindOrCreateFont( dlg_font_size-2, wxFONTFAMILY_SWISS, wxNORMAL,
                                                     wxFONTWEIGHT_NORMAL, FALSE, wxString( _T ( "Arial" ) ) );
     pSMFont = wxTheFontList->FindOrCreateFont( dlg_font_size-1, wxFONTFAMILY_SWISS, wxNORMAL,

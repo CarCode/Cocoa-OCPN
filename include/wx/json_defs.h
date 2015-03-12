@@ -176,12 +176,11 @@
   #define wxJSON_ASSERT( cond )
 #else
 #ifdef __WXOSX__
-  #define wxJSON_ASSERT( cond )		assert( cond );
+#define wxJSON_ASSERT( cond )		assert( cond );
 #else
   #define wxJSON_ASSERT( cond )		wxASSERT( cond );
 #endif
 #endif
-
 
 //
 // the following macros are used by the wxJSONWriter::WriteStringValues()

@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include <wx/textctrl.h>
 #include <wx/sizer.h>
@@ -893,7 +894,7 @@ void AISTargetListDialog::UpdateAISTargetList( void )
                     b_add = true;
                 
                 if(b_add){
-/*
+/*                    
                     if( !g_bAisTargetList_autosort && !g_bsort_once ){
                         bool b_found = false;
                         for(unsigned int j=0 ; j < m_pMMSI_array->GetCount() ; j++){
@@ -906,7 +907,7 @@ void AISTargetListDialog::UpdateAISTargetList( void )
                             m_pMMSI_array->Add( pAISTarget->MMSI );
                     }
                     else
- */
+*/                        
                         m_pMMSI_array->Add( pAISTarget->MMSI );
                 }
             }

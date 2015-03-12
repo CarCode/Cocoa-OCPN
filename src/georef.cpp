@@ -1,11 +1,11 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Georef utility
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,13 +20,16 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
 
  ***************************************************************************
  *  Parts of this file were adapted from source code found in              *
  *  John F. Waers (jfwaers@csn.net) public domain program MacGPS45         *
- ***************************************************************************/
+ ***************************************************************************
+ */
+
+
 
 #include <vector>
 #include <utility>
@@ -169,15 +172,15 @@ struct DATUM const gDatum[] = {
       { "Zanderij",              14,   -265,    120,   -358 },    // 102
       { "WGS_84",                20,      0,      0,      0 },    // 103
       { "WGS-84",                20,      0,      0,      0 },    // 104
-      { "EUROPEAN DATUM 1950",   14,    -87,    -98,   -121 },
-      { "European 1950 (Norway Finland)", 14, -87, -98, -121},
-      { "ED50",                  14,    -87,    -98,   -121 },
-      { "RT90 (Sweden)",          3,    498,    -36,    568 },
+      { "EUROPEAN DATUM 1950",   14,    -87,    -98,   -121 }, 
+      { "European 1950 (Norway Finland)", 14, -87, -98, -121}, 
+      { "ED50",                  14,    -87,    -98,   -121 }, 
+      { "RT90 (Sweden)",          3,    498,    -36,    568 }, 
       { "Monte Mario 1940",      14,   -104,    -49,     10 },
-      { "Ord Surv of Gr Britain 1936", 0, 375, -111,    431 },
+      { "Ord Surv of Gr Britain 1936", 0, 375, -111,    431 }, 
       { "South American 1969",  16,     -57,      1,    -41 },
       { "PULKOVO 1942 (2)",     15,      25,   -141,    -79 },
-      { "EUROPEAN DATUM",       14,     -87,    -98,   -121 },
+      { "EUROPEAN DATUM",       14,     -87,    -98,   -121 }, 
       { "BERMUDA DATUM 1957",    4,     -73,    213,    296 },
       { "COA",                  14,    -206,    172,     -6 },
       { "COABR",                14,    -206,    172,     -6 },
@@ -190,11 +193,12 @@ struct DATUM const gDatum[] = {
       { "ED-50",                 14,    -87,    -98,   -121 },
       { "EUROPEAN",              14,    -87,    -98,   -121 },
       { "POTSDAM",               14,    -87,    -98,   -121 },
-      { "GRACIOSA SW BASE DATUM",14,   -104,    167,    -38 },
+      { "GRACIOSA SW BASE DATUM",14,   -104,    167,    -38 }, 
       { "WGS 1984",              20,      0,      0,      0 },
       { "WGS 1972",              19,      0,      0,      5 },
       { "WGS",                   19,      0,      0,      5 }
 
+      
 };
 
 struct ELLIPSOID const gEllipsoid[] = {
@@ -221,7 +225,9 @@ struct ELLIPSOID const gEllipsoid[] = {
       {  "WGS 72",                     6378135.0,   298.26        },    // 19
       {  "WGS 84",                     6378137.0,   298.257223563 },    // 20
       {  "Bessel 1841 (Namibia)",      6377483.865, 299.1528128   },    // 21
-      {  "Everest (India 1956)",       6377301.243, 300.8017      }     // 22
+      {  "Everest (India 1956)",       6377301.243, 300.8017      },    // 22
+      {  "Struve 1860",                6378298.3,   294.73        }     // 23
+      
 };
 
 short nDatums = sizeof(gDatum)/sizeof(struct DATUM);
@@ -2719,12 +2725,13 @@ double lm_enorm( int n, double *x )
     return x3max*sqrt(s3);
 }
 
+
 double lat_gc_crosses_meridian( double lat1, double lon1, double lat2, double lon2, double lon )
 {
-    /*
-     Calculates a latitude at which a GC route between two points crosses a given meridian
-     */
-    
+    /*    
+    Calculates a latitude at which a GC route between two points crosses a given meridian
+    */
+
     double dlon = lon * DEGREE;
     double dlat1 = lat1 * DEGREE;
     double dlat2 = lat2 * DEGREE;
@@ -2732,19 +2739,19 @@ double lat_gc_crosses_meridian( double lat1, double lon1, double lat2, double lo
     double dlon2 = lon2 * DEGREE;
     
     return RADIAN * atan((sin(dlat1) * cos(dlat2) * sin(dlon-dlon2)
-                          - sin(dlat2) * cos(dlat1) * sin(dlon-dlon1)) / (cos(dlat1) * cos(dlat2) * sin(dlon1-dlon2)));
+              - sin(dlat2) * cos(dlat1) * sin(dlon-dlon1)) / (cos(dlat1) * cos(dlat2) * sin(dlon1-dlon2)));
 }
 
 double lat_rl_crosses_meridian( double lat1, double lon1, double lat2, double lon2, double lon )
 {
     /*
-     Calculates a latitude at which a loxodromic route between two points crosses a given meridian
-     */
+    Calculates a latitude at which a loxodromic route between two points crosses a given meridian
+    */
     
     double brg;
     
     DistanceBearingMercator( lat2, lon2, lat1, lon1, &brg, NULL );
-    
+
     double x1, y1, x;
     toSM( lat1, lon1, 0., lon, &x1, &y1 );
     toSM( lat1, lon, 0., lon, &x, &y1 );
@@ -2768,11 +2775,11 @@ double lat_rl_crosses_meridian( double lat1, double lon1, double lat2, double lo
     {
         brg = 90.0 - brg;
     }
-    
+
     double ydelta = fabs( x1 ) * tan( brg * DEGREE );
     
     double crosslat, crosslon;
     fromSM(x, y1 + dir * ydelta, 0., lon, &crosslat, &crosslon);
-    
+
     return crosslat;
 }

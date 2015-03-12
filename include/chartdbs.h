@@ -395,7 +395,7 @@ class ChartGroup
 public:
       ChartGroup(){};
       ~ChartGroup(){ for (unsigned int i=0 ; i < m_element_array.GetCount() ; i++){ delete m_element_array.Item(i);}}
-
+      
       wxString                m_group_name;
       ChartGroupElementArray  m_element_array;
 };

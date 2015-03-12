@@ -26,8 +26,11 @@
    
 #ifndef SQUISH_CLUSTERFIT_H
 #define SQUISH_CLUSTERFIT_H
-
+#ifdef __WXOSX__
 #include "squish.h"
+#else
+#include <squish.h>
+#endif
 #include "maths.h"
 #include "simd.h"
 #include "colourfit.h"

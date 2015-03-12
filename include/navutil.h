@@ -189,7 +189,9 @@ public:
       MyConfig(const wxString &appName, const wxString &vendorName,
                               const wxString &LocalFileName);
 
-      int LoadMyConfig(int iteration);
+      int LoadMyConfig();
+      void LoadS57Config();
+      void LoadNavObjects();
       virtual bool AddNewRoute(Route *pr, int ConfigRouteNum = -1);
       virtual bool UpdateRoute(Route *pr);
       virtual bool DeleteConfigRoute(Route *pr);
@@ -232,7 +234,7 @@ public:
       bool                    m_bSkipChangeSetUpdate;
       
 //    These members are set/reset in Options dialog
-      bool m_bShowStatusBar, m_bShowMenuBar, m_bShowCompassWin;
+      bool  m_bShowStatusBar, m_bShowMenuBar, m_bShowCompassWin;
 
 
 

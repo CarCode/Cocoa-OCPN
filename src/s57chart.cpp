@@ -269,7 +269,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
 
     int MAX_LINE = 499999;
     char *buf = (char *) malloc( MAX_LINE + 1 );
-//    int llmax = 0;  // Not used
+    int llmax = 0;
 
     char *br;
     char szAtt[20];
@@ -312,7 +312,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                     int nrl = my_bufgetl( mybuf_ptr, hdr_end, buf, MAX_LINE );
                     mybuf_ptr += nrl;
                     if( 0 == nrl ) {
-//                        attdun = 1;  // Not used, break
+                        attdun = 1;
                         my_fgets( buf, MAX_LINE, *pfpx );     // this will be PolyGeo
                         break;
                     }
@@ -323,7 +323,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
 
                 if( !strncmp( buf, "HDRLEN", 6 ) ) {
                     hdr_len = atoi( buf + 7 );
-                    char * tmp = hdr_buf;
+		    char * tmp = hdr_buf;
                     hdr_buf = (char *) realloc( hdr_buf, hdr_len );
                     if (NULL == hdr_buf)
                     {
@@ -339,14 +339,14 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                 }
 
                 else if( !strncmp( buf, geoMatch, 6 ) ) {
-//                    attdun = 1;  // Not used, break
+                    attdun = 1;
                     break;
                 }
 
                 else if( !strncmp( buf, "  MULT", 6 ) )         // Special multipoint
                         {
                     bMulti = true;
-//                    attdun = 1;  // Not used, break
+                    attdun = 1;
                     break;
                 }
 
@@ -683,7 +683,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                             || !strncmp( FeatureName, "DRGARE", 6 ) ) bIsAssociable = true;
 
                     int ll = strlen( buf );
-//                    if( ll > llmax ) llmax = ll;  // Not used
+                    if( ll > llmax ) llmax = ll;
 
                     my_fgets( buf, MAX_LINE, *pfpx );     // this will be "  POLYTESSGEO"
 
@@ -2051,12 +2051,12 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
 
     SetVPParms( VPoint );
 
-//    bool force_new_view = false;  // Not used
+    bool force_new_view = false;
 
     if(!Region.Ok())
         return false;
     
-//    if( Region != m_last_Region ) force_new_view = true;  // Not used
+    if( Region != m_last_Region ) force_new_view = true;
 
     ps52plib->PrepareForRender();
     
@@ -2958,12 +2958,12 @@ InitReturn s57chart::FindOrCreateSenc( const wxString& name )
 
                 while( !dun ) {
                     if( my_fgets( pbuf, 256, *pfpx ) == 0 ) {
-//                        dun = 1;  // Not usd, break
+                        dun = 1;
                         force_make_senc = 1;
                         break;
                     } else {
                         if( !strncmp( pbuf, "OGRF", 4 ) ) {
-//                            dun = 1;  // Not used, break
+                            dun = 1;
                             break;
                         }
 
@@ -3558,12 +3558,12 @@ bool s57chart::CreateHeaderDataFromSENC( void )
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-//            dun = 1;  // Not used, break
+            dun = 1;
             break;
         }
 
         if( !strncmp( buf, "OGRF", 4 ) ) {
-//            dun = 1;  // Not used, break
+            dun = 1;
             break;
         }               //OGRF
 
@@ -3575,7 +3575,7 @@ bool s57chart::CreateHeaderDataFromSENC( void )
                 msg.Append( m_SENCFileName.GetFullPath() );
                 wxLogMessage( msg );
 
-//                dun = 1;  // Not used, break
+                dun = 1;
                 ret_val = false;                   // error
                 break;
             }
@@ -3947,9 +3947,9 @@ int s57chart::GetUpdateFileArray( const wxFileName file000, wxArrayString *UpFil
                         umedtn = _T("1");                // backstop
                     }
                 }
-
+                
                 delete poModule;
-
+                
                 if( ( !umdate.IsEarlierThan( m_date000 ) ) && ( umedtn.IsSameAs( m_edtn000 ) ) ) // Note polarity on Date compare....
                 dummy_array->Add( FileToAdd );                    // Looking for umdate >= m_date000
             }
@@ -4000,7 +4000,7 @@ int s57chart::ValidateAndCountUpdates( const wxFileName file000, const wxString 
         //      Set starts with .000, which has the effect of copying the base file to the working dir
 
         bool chain_broken_mssage_shown = false;
-
+        
         if( b_copyfiles ) {
             m_tmpup_array = new wxArrayString;       // save a list of created files for later erase
 
@@ -4045,9 +4045,9 @@ int s57chart::ValidateAndCountUpdates( const wxFileName file000, const wxString 
                     // Correct this.  We should break the walk, and notify the user  See FS#1406
 
                     if( !chain_broken_mssage_shown ){
-                        OCPNMessageBox(NULL,
-                                       _("S57 Cell Update chain incomplete.\nENC features may be incomplete or inaccurate.\nCheck the logfile for details."),
-                                       _("OpenCPN Create SENC Warning"), wxOK | wxICON_EXCLAMATION, 30 );
+                        OCPNMessageBox(NULL, 
+                        _("S57 Cell Update chain incomplete.\nENC features may be incomplete or inaccurate.\nCheck the logfile for details."),
+                        _("OpenCPN Create SENC Warning"), wxOK | wxICON_EXCLAMATION, 30 );
                         chain_broken_mssage_shown = true;
                     }
                     
@@ -4056,7 +4056,7 @@ int s57chart::ValidateAndCountUpdates( const wxFileName file000, const wxString 
                     wxLogMessage(msg);
                     wxLogMessage(_T("   Subsequent ENC updates may produce errors.") );
                     wxLogMessage(_T("   This ENC exchange set should be updated and SENCs rebuilt.") );
-
+                    
                     bool bstat;
                     DDFModule *dupdate = new DDFModule;
                     dupdate->Initialize( '3', 'L', 'E', '1', '0', "!!!", 3, 4, 4 );
@@ -4540,7 +4540,7 @@ int s57chart::BuildRAZFromSENCFile( const wxString& FullPath )
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-//            dun = 1;  // Not used, break
+            dun = 1;
             break;
         }
 
@@ -5269,7 +5269,7 @@ void s57chart::CreateSENCRecord( OGRFeature *pFeature, FILE * fpOut, int mode, S
                 if(strlen( pAttrVal ) ) {
                     snprintf( line, MAX_HDR_LINE - 2, "  %s (%c) = ", pAttrName, *pType);
                     wxString AttrStringPrefix = wxString( line, wxConvUTF8 );
-
+                    
                     wxString wxAttrValue;
 
                     if( (0 == strncmp("NOBJNM",pAttrName, 6) ) ||
@@ -5294,7 +5294,7 @@ void s57chart::CreateSENCRecord( OGRFeature *pFeature, FILE * fpOut, int mode, S
                     if( wxAttrValue.IsEmpty()) {
         // Attempt different conversions to accomodate different language encodings in
         // the original ENC files.
-
+        
         //  For attribute fields other that "National" Objects, (handled above)  See FS#1464
         //  the text must be encoded in simple ASCII, or in lex level 1 (i.e. iso8859-1)
 
@@ -5305,10 +5305,9 @@ void s57chart::CreateSENCRecord( OGRFeature *pFeature, FILE * fpOut, int mode, S
                             wxString att_conv(pAttrVal, conv);
                             wxAttrValue = att_conv;
                         }
-                        
+                            
                         if( 0 ==wxAttrValue.Length() ) {
                             wxLogError( _T("Warning: CreateSENCRecord(): Failed to convert string value to wxString.") );
-
                         }
                     }
                 
@@ -6118,7 +6117,7 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
                 //  make the hit test using SM coordinates, converting from object points to SM using per-object conversion factors.
 
                 float sel_rad_meters = select_radius * 1852 * 60;       // approximately
-
+                
                 double easting, northing;
                 toSM( lat, lon, ref_lat, ref_lon, &easting, &northing );
 
@@ -6140,9 +6139,9 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
 
                     //    A slightly less coarse segment bounding box check
                     if( northing >= ( fmin(north, north0) - sel_rad_meters ) ) if( northing
-                            <= ( fmax(north, north0) + sel_rad_meters ) ) if( easting
-                            >= ( fmin(east, east0) - sel_rad_meters ) ) if( easting
-                            <= ( fmax(east, east0) + sel_rad_meters ) ) {
+                        <= ( fmax(north, north0) + sel_rad_meters ) ) if( easting
+                        >= ( fmin(east, east0) - sel_rad_meters ) ) if( easting
+                        <= ( fmax(east, east0) + sel_rad_meters ) ) {
                         //                                                    index = ip;
                         return true;
                     }
@@ -6410,22 +6409,33 @@ bool s57chart::IsPointInObjArea( float lat, float lon, float select_radius, S57O
         double easting, northing;
         toSM( lat, lon, ref_lat, ref_lon, &easting, &northing );
 
+        //  It turns out that trapezoid tesselation is only used for cm93,
+        //  So we get better accuracy if we use the cell-referenced points instead of global SM points
+        {
+            double y_rate = obj->y_rate;
+            double y_origin = obj->y_origin;
+            double x_rate = obj->x_rate;
+            double x_origin = obj->x_origin;
+            
+            double northing_scaled = ( northing - y_origin ) / y_rate;
+            double easting_scaled = ( easting - x_origin ) / x_rate;
+            northing = northing_scaled;
+            easting = easting_scaled;
+        }
+
         int ntraps = ptg->ntrap_count;
         trapz_t *ptraps = ptg->trap_array;
         MyPoint *segs = (MyPoint *) ptg->ptrapgroup_geom; //TODO convert MyPoint to wxPoint2DDouble globally
 
         MyPoint pvert_list[4];
 
-        double y_rate = obj->y_rate;
-        double y_origin = obj->y_origin;
-
         for( int i = 0; i < ntraps; i++, ptraps++ ) {
             //      Y test
 
-            double hiy = ( ptraps->hiy * y_rate ) + y_origin;
+            double hiy = ptraps->hiy;
             if( northing > hiy ) continue;
 
-            double loy = ( ptraps->loy * y_rate ) + y_origin;
+            double loy = ptraps->loy;
             if( northing < loy ) continue;
 
             //      Use the segment endpoints to calculate the corners of a trapezoid
@@ -6459,10 +6469,15 @@ bool s57chart::IsPointInObjArea( float lat, float lon, float select_radius, S57O
                 xcb = xmin + ( ptraps->hiy - ymin ) / slope;
             }
 
-            pvert_list[0].x = ( xca * obj->x_rate ) + obj->x_origin;
+            //  Test point is west of leftmost trap point
+            double x_quad_left = wxMin(xca, xcb);
+            if( x_quad_left > easting )
+                continue;
+            
+            pvert_list[0].x = xca;
             pvert_list[0].y = loy;
 
-            pvert_list[1].x = ( xcb * obj->x_rate ) + obj->x_origin;
+            pvert_list[1].x = xcb;
             pvert_list[1].y = hiy;
 
             //    Right edge
@@ -6489,10 +6504,15 @@ bool s57chart::IsPointInObjArea( float lat, float lon, float select_radius, S57O
                 xcb = xmin + ( ptraps->loy - ymin ) / slope;
             }
 
-            pvert_list[2].x = ( xca * obj->x_rate ) + obj->x_origin;
+            //  Test point is east of rightmost trap point
+            double x_quad_right = wxMax(xca, xcb);
+            if( x_quad_right < easting )
+                continue;
+            
+            pvert_list[2].x = xca;
             pvert_list[2].y = hiy;
 
-            pvert_list[3].x = ( xcb * obj->x_rate ) + obj->x_origin;
+            pvert_list[3].x = xcb;
             pvert_list[3].y = loy;
 
             if( G_PtInPolygon( (MyPoint *) pvert_list, 4, easting, northing ) ) {
@@ -6542,12 +6562,12 @@ bool s57chart::InitFromSENCMinimal( const wxString &FullPath )
 
             while( !dun ) {
                 if( my_fgets( pbuf, 256, *pfpx ) == 0 ) {
-//                    dun = 1;  // Not used, break
+                    dun = 1;
                     ret_val = false;
                     break;
                 } else {
                     if( !strncmp( pbuf, "OGRF", 4 ) ) {
-//                        dun = 1;  // Not used, break
+                        dun = 1;
                         break;
                     } else if( !strncmp( pbuf, "UPDT", 4 ) ) {
                         sscanf( pbuf, "UPDT=%i", &last_update );
@@ -6680,7 +6700,7 @@ wxString s57chart::GetObjectAttributeValueAsString( S57Obj *obj, int iatt, wxStr
             wxString val_suffix = _T(" m");
 
             //    As a special case, convert some attribute values to feet.....
-            if( ( curAttrName == _T("VERCLR") ) || ( curAttrName == _T("VERCLL") )
+            if( ( curAttrName == _T("VERCLR") ) || ( curAttrName == _T("VERCCL") ) || ( curAttrName == _T("VERCOP") )
                     || ( curAttrName == _T("HEIGHT") ) || ( curAttrName == _T("HORCLR") ) ) {
                 switch( ps52plib->m_nDepthUnitDisplay ){
                     case 0:                       // feet
@@ -6809,7 +6829,7 @@ wxString s57chart::GetAttributeValueAsString( S57attVal *pAttrVal, wxString Attr
             wxString val_suffix = _T(" m");
             
             //    As a special case, convert some attribute values to feet.....
-            if( ( AttrName == _T("VERCLR") ) || ( AttrName == _T("VERCLL") )
+            if( ( AttrName == _T("VERCLR") ) || ( AttrName == _T("VERCCL") ) || ( AttrName == _T("VERCOP") )
                 || ( AttrName == _T("HEIGHT") ) || ( AttrName == _T("HORCLR") ) ) {
                     switch( ps52plib->m_nDepthUnitDisplay ){
                         case 0:                       // feet
@@ -7722,10 +7742,10 @@ bool s57_CheckExtendedLightSectors( int mx, int my, ViewPort& viewport, std::vec
             
                         if(!bviz)
                             newsector = false;
-
+                    
                         if((sector.sector2 == 360) && ( sector.sector1 == 0))  //FS#1437
                             newsector = false;
-
+                        
                         if( newsector ) {
                             sectorlegs.push_back( sector );
                             newSectorsNeedDrawing = true;

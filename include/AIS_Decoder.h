@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __AIS_DECODER_H__
 #define __AIS_DECODER_H__
@@ -72,7 +73,7 @@ public:
     AIS_Error DecodeSingleVDO( const wxString& str, GenericPosDatEx *pos, wxString *acc );
     void DeletePersistentTrack( Track *track );
     std::map<int, Track*> m_persistent_tracks;
-
+    
 private:
     void OnActivate(wxActivateEvent& event);
     void OnTimerAIS(wxTimerEvent& event);

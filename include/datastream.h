@@ -21,7 +21,12 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ *
+ *
+ *
+ */
 
 
 #ifndef __DATASTREAM_H__
@@ -101,6 +106,7 @@ enum {
 #define     RX_BUFFER_SIZE        4096
 
 
+// Class declarations
 
 
 
@@ -130,6 +136,7 @@ class DataStream: public wxEvtHandler
 {
 public:
     DataStream(wxEvtHandler *input_consumer,
+               const ConnectionType conn_type,
                const wxString& Port,
                const wxString& BaudRate,
                dsPortType io_select,
@@ -169,7 +176,6 @@ public:
     bool SentencePassesFilter(const wxString& sentence, FilterDirection direction);
     bool ChecksumOK(const std::string& sentence);
     bool GetGarminMode(){ return m_bGarmin_GRMN_mode; }
-
 
     wxString GetBaudRate(){ return m_BaudRate; }
     dsPortType GetPortType(){ return m_io_select; }

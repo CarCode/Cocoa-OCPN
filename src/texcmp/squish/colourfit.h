@@ -25,8 +25,11 @@
    
 #ifndef SQUISH_COLOURFIT_H
 #define SQUISH_COLOURFIT_H
-
+#ifdef __WXOSX__
 #include "squish.h"
+#else
+#include <squish.h>
+#endif
 #include "maths.h"
 
 namespace squish {

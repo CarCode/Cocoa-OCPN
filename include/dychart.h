@@ -1,11 +1,11 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Global Build Options
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,9 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ */
 
 //----------------------------------------------------------------------------------
 //          Global Build options for opencpn
@@ -213,15 +215,27 @@
 #define OCPN_GL_INCLUDES 1
 
 #ifdef __WXMSW__
-#include "GL/gl.h"            // local copy for Windows
-#include "GL/glu.h"
+    #include "GL/gl.h"            // local copy for Windows
+    #include "GL/glu.h"
 #else
-//#include <GL/glew.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
+    #ifndef __OCPN__ANDROID__
+        #include <GL/gl.h>
+        #include <GL/glu.h>
+        #include <GL/glext.h>
+    #else
+        #include <qopengl.h>
+        #include <GL/gl_private.h>              // this is a cut-down version of gl.h
+                                                // which allows use of gl functions with gles2 headers
+                                                // to be included as well, and avoids colisions.
+    #endif
+
 #endif
 
 #endif      //OCPN_GL_INCLUDES
+
+
+#ifdef __OCPN__ANDROID__
+#include "qdebug.h"
+#endif
 
 #endif      // __FILE__

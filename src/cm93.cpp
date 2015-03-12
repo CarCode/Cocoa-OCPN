@@ -48,6 +48,7 @@
 #include "ocpn_pixel.h"                         // for ocpnUSE_DIBSECTION
 #include "ocpndc.h"
 #include "pluginmanager.h"  // for PlugInManager
+#include "OCPNPlatform.h"
 
 #include <stdio.h>
 
@@ -64,6 +65,7 @@
 #define new DEBUG_NEW
 #endif
 
+extern OCPNPlatform     *g_Platform;
 extern wxString         g_SENCPrefix;
 extern s52plib          *ps52plib;
 extern MyConfig         *pConfig;
@@ -357,10 +359,10 @@ bool covr_set::Init ( wxChar scale_char, wxString &prefix )
       prefix_string.Replace ( sep, _T ( "_" ) );
       prefix_string.Replace ( _T ( ":" ), _T ( "_" ) );       // for Windows
 
-      m_cachefile = g_PrivateDataDir;
+      m_cachefile = g_Platform->GetPrivateDataDir();
       appendOSDirSep ( &m_cachefile );
 #ifdef __WXOSX__
-      m_cachefile += _T ( "opencpn/cm93" );
+    m_cachefile += _T ( "opencpn/cm93" );
 #else
       m_cachefile += _T ( "cm93" );
 #endif
@@ -1987,7 +1989,6 @@ double cm93chart::GetNormalScaleMin ( double canvas_scale_factor, bool b_allow_o
 }
 
 #ifdef __WXOSX__
-//double cm93chart::GetNormalScaleMax ( double canvas_scale_factor, int canvas_width)
 double cm93chart::GetNormalScaleMax2 ( double canvas_scale_factor )
 #else
 double cm93chart::GetNormalScaleMax ( double canvas_scale_factor )
@@ -3333,15 +3334,15 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
       strncpy ( u, sclass_sub.mb_str(), 199 );
       u[200] = '\0';
       strncpy ( pobj->FeatureName, u, 7 );
-/*
-      //  Touch up the geom types   Not used, what for?
+
+      //  Touch up the geom types
       int geomtype_sub = geomtype;
       if ( geomtype == 8 )                    // sounding....
             geomtype_sub = 1;
 
       if ( geomtype == 4 )                    // convert cm93 area(4) to GDAL area(3)...
             geomtype_sub = 3;
-*/
+
       pobj->attVal =  new wxArrayOfS57attVal();
 
 
@@ -4306,9 +4307,10 @@ void cm93chart::ProcessMCOVRObjects ( int cell_index, char subcell )
                                     //     Add this object to the covr_set
                                     m_pcovr_set->Add_Update_MCD ( pmcd );
 
+                                    
                                     //  Update the parent cell mcovr bounding box
                                     m_covr_bbox.Expand(pmcd->m_covr_bbox);
-
+                                    
                                     //    Clean up the xgeom
                                     free ( xgeom->pvector_index );
 
@@ -4702,7 +4704,7 @@ cm93compchart::~cm93compchart()
     if( m_pOffsetDialog ){
         m_pOffsetDialog->Hide();
     }
-
+       
       for ( int i = 0 ; i < 8 ; i++ )
             delete m_pcm93chart_array[i];
 
@@ -5010,7 +5012,7 @@ int cm93compchart::PrepareChartScale ( const ViewPort &vpt, int cmscale, bool bO
                         if ( g_bDebugCM93 )
                               printf ( " chart %c contains clat/clon\n", ( char ) ( 'A' + cmscale -1 ) );
 
-//                        cellscale_is_useable = true;  // Not used, break
+                        cellscale_is_useable = true;
                         break;
                   }
 
@@ -5160,11 +5162,8 @@ int cm93compchart::GetNativeScale()
 double cm93compchart::GetNormalScaleMin ( double canvas_scale_factor, bool b_allow_overzoom )
 {
       double oz_factor;
-#ifdef __WXOSX__
-    oz_factor = 40.;
-#else
-      oz_factor = 10.;
-#endif
+      oz_factor = 40.;
+
       if ( m_pcm93chart_current )
       {
             if ( m_pcm93chart_current->m_last_vp.IsValid() )
@@ -5299,7 +5298,7 @@ OCPNRegion cm93compchart::GetValidScreenCanvasRegion ( const ViewPort& VPoint, c
 
                   OCPNRegion rgn_covr = vp_positive.GetVPRegionIntersect ( ScreenRegion, pmcd->m_nvertices, ( float * ) pmcd->pvertices, chart_native_scale, DrawBuf );
 
-                if(rgn_covr.IsOk())           // not empty
+                  if(rgn_covr.IsOk())           // not empty
                     ret_region.Union( rgn_covr );
 
             }
@@ -5970,8 +5969,8 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
       if ( m_cmscale < 7 )
       {
           int nss_max;
-#if 0
-
+#if 0      
+          
             //    Something like an effective true_scale
             double top_scale = vp.chart_scale * .10; //0.25;
 
@@ -6051,19 +6050,20 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
 
                         psc->SetColorScheme ( m_global_color_scheme );
                         psc->Init ( file_dummy, FULL_INIT );
-
+                        
                   }
 
                   if ( nss != 1 ) {       // skip rendering the A scale outlines
-                      //      Make sure the covr bounding box is complete
-                      psc->UpdateCovrSet ( &vp );
-                      
-                      /* test rectangle for entire set to reduce number of tests */
+
+                       //      Make sure the covr bounding box is complete
+                       psc->UpdateCovrSet ( &vp );
+                              
+                       /* test rectangle for entire set to reduce number of tests */
                       if( !psc->m_covr_bbox.GetValid() ||
                           !vp_positive.GetBBox().IntersectOut ( psc->m_covr_bbox ) ||
-                         !vp.GetBBox().IntersectOut ( psc->m_covr_bbox ) )
+                          !vp.GetBBox().IntersectOut ( psc->m_covr_bbox ) ) 
                       {
-#ifdef ocpnUSE_GL
+#ifdef ocpnUSE_GL        
                           ViewPort nvp;
                           if(g_bopengl) /* opengl */ {
                               wxPen pen = dc.GetPen();
@@ -6100,14 +6100,14 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
                                       M_COVR_Desc *mcd = pcover->GetCover ( im );
                                       
                                       if(! ( vp_positive.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ||
-                                         ! ( vp.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ) {
+                                              ! ( vp.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ) {
                                           
-                                          bdrawn = true;
+                                                    bdrawn = true;
                                       }
                                   }
-
+                                  
                                   psc = NULL; /* skip rendering, we used display list */
-
+                                  
                               }
                           }
 #endif
@@ -6115,30 +6115,31 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
                           {
                               //    Render the chart outlines
                               covr_set *pcover = psc->GetCoverSet();
-                              
+                                  
                               for ( unsigned int im=0 ; im < pcover->GetCoverCount() ; im++ ){
                                   M_COVR_Desc *mcd = pcover->GetCover ( im );
-                                  
-#ifdef ocpnUSE_GL
-                                  // In opengl it is rendering into a display list
+                                      
+#ifdef ocpnUSE_GL        
+                                      // In opengl it is rendering into a display list
                                   if (g_bopengl) {
-                                      RenderCellOutlinesOnGL(nvp, mcd);
-
-                                      // was anything actually drawn?
+                                      RenderCellOutlinesOnGL(nvp, mcd); 
+                                          
+                                          // was anything actually drawn?
                                       if(! ( vp_positive.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ||
-                                         ! ( vp.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ) {
-                                          bdrawn = true;
+                                          ! ( vp.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ) {
+                                              bdrawn = true;
                                       }
                                   } else
 #endif
                                       //    Anything actually to be drawn?
-                                      if(! ( vp_positive.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ||
+                                         if(! ( vp_positive.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ||
                                          ! ( vp.GetBBox().IntersectOut ( mcd->m_covr_bbox ) ) ) {
-                                          wxPoint *pwp = psc->GetDrawBuffer ( mcd->m_nvertices );
-                                          bdrawn = RenderCellOutlinesOnDC(dc, vp_positive, pwp, mcd);
-                                      }
+                                            
+                                            wxPoint *pwp = psc->GetDrawBuffer ( mcd->m_nvertices );
+                                            bdrawn = RenderCellOutlinesOnDC(dc, vp_positive, pwp, mcd);
+                                        }
                               }
-#ifdef ocpnUSE_GL
+#ifdef ocpnUSE_GL        
                               if(g_bopengl) {
                                   glEndList();
                                   glChartCanvas::FixRenderIDL(psc->m_outline_display_list);
@@ -6149,14 +6150,14 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
                           if(g_bopengl) {
                               glPopMatrix();
                               glDisable( GL_LINE_STIPPLE );
-
+                              
                               //  Cannot use the display list further, since it needs to be rebuilt on every change in the viewport
                               //  We can only use the display list to potentially render the IDL crossing case
                               //  But I leave the skeleton in place for maybe more thought....
                               
                               glDeleteLists(psc->m_outline_display_list, 1);
                               psc->m_outline_display_list = 0;
-
+                              
                           }
 #endif
                       }
@@ -6368,10 +6369,10 @@ bool cm93compchart::AdjustVP ( ViewPort &vp_last, ViewPort &vp_proposed )
 {
     //  All the below logic is slow, and really redundant.
     //  so, declare that cm93 charts do not require adjustment for optimum performance.
-
+    
     if( m_pcm93chart_current )
         return false;
-
+    
       //    This may be a partial screen render
       //    If it is, the cmscale value on this render must match the same parameter
       //    on the last render.
@@ -6381,7 +6382,7 @@ bool cm93compchart::AdjustVP ( ViewPort &vp_last, ViewPort &vp_proposed )
 
       int cmscale = GetCMScaleFromVP ( vp_proposed );                   // This is the scale that should be used, based on the vp
 
-    int cmscale_actual = PrepareChartScale ( vp_proposed, cmscale, false );  // this is the scale that will be used, based on cell coverage
+      int cmscale_actual = PrepareChartScale ( vp_proposed, cmscale, false );  // this is the scale that will be used, based on cell coverage
 
 #ifdef ocpnUSE_GL
       if(g_bopengl) {
@@ -6545,7 +6546,7 @@ cm93_dictionary *cm93compchart::FindAndLoadDictFromDir ( const wxString &dir )
 
             if ( ( path.Len() == 0 ) || path.IsSameAs ( fnc.GetPathSeparator() ) )
             {
-//                  bdone = true;  // Not used, break
+                  bdone = true;
                   wxLogMessage ( _T ( "Early break1" ) );
                   break;
             }
@@ -6553,7 +6554,7 @@ cm93_dictionary *cm93compchart::FindAndLoadDictFromDir ( const wxString &dir )
             //    Abort the search loop if the directory tree does not contain some indication of CM93
             if ( ( wxNOT_FOUND == path.Lower().Find ( _T ( "cm93" ) ) ) )
             {
-//                  bdone = true;  // Not used, break
+                  bdone = true;
                   wxLogMessage ( _T ( "Early break2" ) );
                   break;
             }
@@ -6655,7 +6656,7 @@ wxString  OCPNOffsetListCtrl::OnGetItemText ( long item, long column ) const
             case tlCELL:
             {
 #ifdef __WXOSX__
-                  ret.Printf ( wxString( "%d", wxConvUTF8 ), (int)pmcd->m_cell_index );
+                ret.Printf ( wxString( "%d", wxConvUTF8 ), (int)pmcd->m_cell_index );
 #else
                   ret.Printf ( _T ( "%d" ), pmcd->m_cell_index );
 #endif
@@ -6677,7 +6678,7 @@ wxString  OCPNOffsetListCtrl::OnGetItemText ( long item, long column ) const
             }
             case tlMCOVR:
 #ifdef __WXOSX__
-                  ret.Printf ( wxString( "%d", wxConvUTF8 ), (int)pmcd->m_object_id );
+              ret.Printf ( wxString( "%d", wxConvUTF8 ), (int)pmcd->m_object_id );
 #else
                   ret.Printf ( _T ( "%d" ), pmcd->m_object_id );
 #endif
@@ -6689,7 +6690,7 @@ wxString  OCPNOffsetListCtrl::OnGetItemText ( long item, long column ) const
 
             case tlXOFF:
 #ifdef __WXOSX__
-                  ret.Printf ( wxString( "%g", wxConvUTF8), (double)pmcd->transform_WGS84_offset_x );
+              ret.Printf ( wxString( "%g", wxConvUTF8), (double)pmcd->transform_WGS84_offset_x );
 #else
                   ret.Printf ( _T ( "%g" ), pmcd->transform_WGS84_offset_x );
 #endif
@@ -6697,7 +6698,7 @@ wxString  OCPNOffsetListCtrl::OnGetItemText ( long item, long column ) const
 
             case tlYOFF:
 #ifdef __WXOSX__
-                  ret.Printf ( wxString( "%g", wxConvUTF8), (double)pmcd->transform_WGS84_offset_y );
+              ret.Printf ( wxString( "%g", wxConvUTF8), (double)pmcd->transform_WGS84_offset_y );
 #else
                   ret.Printf ( _T ( "%g" ), pmcd->transform_WGS84_offset_y );
 #endif
@@ -6705,7 +6706,7 @@ wxString  OCPNOffsetListCtrl::OnGetItemText ( long item, long column ) const
 
             case tlUXOFF:
 #ifdef __WXOSX__
-                  ret.Printf ( wxString( "%6.0f", wxConvUTF8 ), (double)pmcd->user_xoff * (double)pmcd->m_centerlat_cos );
+              ret.Printf ( wxString( "%6.0f", wxConvUTF8 ), (double)pmcd->user_xoff * (double)pmcd->m_centerlat_cos );
 #else
                   ret.Printf ( _T ( "%6.0f" ), pmcd->user_xoff * pmcd->m_centerlat_cos );
 #endif
@@ -6713,7 +6714,7 @@ wxString  OCPNOffsetListCtrl::OnGetItemText ( long item, long column ) const
 
             case tlUYOFF:
 #ifdef __WXOSX__
-                  ret.Printf ( wxString( "%6.0f", wxConvUTF8 ), (double)pmcd->user_yoff * (double)pmcd->m_centerlat_cos );
+              ret.Printf ( wxString( "%6.0f", wxConvUTF8 ), (double)pmcd->user_yoff * (double)pmcd->m_centerlat_cos );
 #else
                   ret.Printf ( _T ( "%6.0f" ), pmcd->user_yoff * pmcd->m_centerlat_cos );
 #endif
@@ -6862,7 +6863,7 @@ void CM93OffsetDialog::OnOK ( wxCommandEvent& event )
 }
 
 void CM93OffsetDialog::SetCM93Chart( cm93compchart *pchart )
-{
+{ 
     m_pcompchart = pchart;
     if ( m_pcompchart )
         m_pcompchart->SetOffsetDialog ( this );
@@ -6907,8 +6908,8 @@ void CM93OffsetDialog::SetColorScheme()
 
 void CM93OffsetDialog::OnCellSelected ( wxListEvent &event )
 {
-      if ( m_pcompchart ){
-
+    if ( m_pcompchart ){
+        
       m_selected_list_index = event.GetIndex();
 
       M_COVR_Desc *mcd =  m_pcovr_array.Item ( event.GetIndex() );
@@ -6938,7 +6939,7 @@ void CM93OffsetDialog::OnCellSelected ( wxListEvent &event )
 
       if ( m_pparent )
             m_pparent->Refresh ( true );
-      }
+    }
 }
 
 

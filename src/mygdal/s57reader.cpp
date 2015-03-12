@@ -24,7 +24,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************/
+ ******************************************************************************
+ *
+ * *
+ */
 
 #include "s57.h"
 #include "ogr_api.h"
@@ -767,7 +770,7 @@ void S57Reader::ApplyObjectClassAttributes( DDFRecord * poRecord,
         return;
 
     DDFFieldDefn *poDefn = poATTF->GetFieldDefn();
-
+    
     nAttrCount = poATTF->GetRepeatCount();
     for( iAttr = 0; iAttr < nAttrCount; iAttr++ )
     {
@@ -821,7 +824,7 @@ void S57Reader::ApplyObjectClassAttributes( DDFRecord * poRecord,
             poFeature->UnsetField( iField );
             continue;
         }
-
+        
         poFldDefn = poFeature->GetDefnRef()->GetFieldDefn( iField );
         if( poFldDefn->GetType() == OFTInteger
             || poFldDefn->GetType() == OFTReal )

@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "NavObjectCollection.h"
 #include "RoutePoint.h"
@@ -37,6 +38,9 @@ extern Select *pSelect;
 //extern bool g_bIsNewLayer;
 //extern bool g_bLayerViz;
 
+extern int g_iWaypointRangeRingsNumber;
+extern float g_fWaypointRangeRingsStep;
+extern int g_iWaypointRangeRingsStepUnits;
 
 NavObjectCollection1::NavObjectCollection1()
 : pugi::xml_document()
@@ -64,6 +68,7 @@ RoutePoint * GPXLoadWaypoint1( pugi::xml_node &wpt_node,
     bool bshared = false;
     bool b_propvizname = false;
     bool b_propviz = false;
+    bool bviz_waypointrangerings = false;
 
     wxString SymString = def_symbol_name;       // default icon
     wxString NameString;
@@ -79,6 +84,12 @@ RoutePoint * GPXLoadWaypoint1( pugi::xml_node &wpt_node,
     double rlat = wpt_node.attribute( "lat" ).as_double();
     double rlon = wpt_node.attribute( "lon" ).as_double();
     double ArrivalRadius = 0;
+    int     l_iWaypointRangeRingsNumber = -1;
+    float   l_fWaypointRangeRingsStep = -1;
+    int     l_pWaypointRangeRingsStepUnits = -1;
+    bool    l_bWaypointRangeRingsVisible = false;
+    wxColour    l_wxcWaypointRangeRingsColour;
+    l_wxcWaypointRangeRingsColour.Set( _T( "#FFFFFF" ) );
 
     for( pugi::xml_node child = wpt_node.first_child(); child != 0; child = child.next_sibling() ) {
         const char *pcn = child.name();
@@ -171,7 +182,21 @@ RoutePoint * GPXLoadWaypoint1( pugi::xml_node &wpt_node,
                 if( ext_name == _T ( "opencpn:arrival_radius" ) ) {
                     wxString::FromUTF8(ext_child.first_child().value()).ToDouble(&ArrivalRadius ) ;
                 }
-            }// for
+                if ( ext_name == _T("opencpn:waypoint_range_rings") ) {
+                    for ( pugi::xml_attribute attr = ext_child.first_attribute(); attr; attr = attr.next_attribute() ) {
+                        if ( wxString::FromUTF8(attr.name()) == _T("number") )
+                            l_iWaypointRangeRingsNumber = attr.as_int();
+                        else if ( wxString::FromUTF8(attr.name()) == _T("step") )
+                            l_fWaypointRangeRingsStep = attr.as_float();
+                        else if ( wxString::FromUTF8(attr.name()) == _T("units") )
+                            l_pWaypointRangeRingsStepUnits = attr.as_int();
+                        else if ( wxString::FromUTF8(attr.name()) == _T("visible") )
+                            l_bWaypointRangeRingsVisible =  attr.as_bool();
+                        else if ( wxString::FromUTF8(attr.name()) == _T("colour") )
+                            l_wxcWaypointRangeRingsColour.Set( wxString::FromUTF8( attr.as_string() ) );
+                    }
+                }
+             }// for 
         } //extensions
     }   // for
 
@@ -186,7 +211,11 @@ RoutePoint * GPXLoadWaypoint1( pugi::xml_node &wpt_node,
     pWP->m_MarkDescription = DescString;
     pWP->m_bIsolatedMark = bshared;      // This is an isolated mark
     pWP->SetWaypointArrivalRadius( ArrivalRadius );
-
+    pWP->SetWaypointRangeRingsNumber( l_iWaypointRangeRingsNumber );
+    pWP->SetWaypointRangeRingsStep( l_fWaypointRangeRingsStep );
+    pWP->SetWaypointRangeRingsStepUnits( l_pWaypointRangeRingsStepUnits );
+    pWP->SetShowWaypointRangeRings( l_bWaypointRangeRingsVisible );
+    pWP->SetWaypointRangeRingsColour( l_wxcWaypointRangeRingsColour );
 
     if( b_propvizname )
         pWP->m_bShowName = bviz_name;
@@ -422,6 +451,7 @@ Route *GPXLoadRoute1( pugi::xml_node &wpt_node, bool b_fullviz,
                     pWayPointMan->AddRoutePoint( pWp );
                 else
                     delete tpWp;
+                    
             }
             else
             if( ChildName == _T ( "name" ) ) {
@@ -433,7 +463,7 @@ Route *GPXLoadRoute1( pugi::xml_node &wpt_node, bool b_fullviz,
             }
                 
             else
-            //TODO: This is wrong, left here just to save data of the 3.3 beta series users.
+            //TODO: This is wrong, left here just to save data of the 3.3 beta series users. 
             if( ChildName.EndsWith( _T ( "RouteExtension" ) ) ) //Parse GPXX color
             {
                 for( pugi::xml_node gpxx_child = tschild.first_child(); gpxx_child; gpxx_child = gpxx_child.next_sibling() ) {
@@ -523,11 +553,11 @@ Route *GPXLoadRoute1( pugi::xml_node &wpt_node, bool b_fullviz,
                      else
                      if( ext_name.EndsWith( _T ( "RouteExtension" ) ) ) //Parse GPXX color
                      {
-                         for( pugi::xml_node gpxx_child = ext_child.first_child(); gpxx_child; gpxx_child = gpxx_child.next_sibling() ) {
-                                wxString gpxx_name = wxString::FromUTF8( gpxx_child.name() );
-                                if( gpxx_name.EndsWith( _T ( "DisplayColor" ) ) )
-                                    pTentRoute->m_Colour = wxString::FromUTF8(gpxx_child.first_child().value() );
-                         }
+                        for( pugi::xml_node gpxx_child = ext_child.first_child(); gpxx_child; gpxx_child = gpxx_child.next_sibling() ) {
+                            wxString gpxx_name = wxString::FromUTF8( gpxx_child.name() );
+                            if( gpxx_name.EndsWith( _T ( "DisplayColor" ) ) )
+                                 pTentRoute->m_Colour = wxString::FromUTF8(gpxx_child.first_child().value() );
+                        }
                      }
                 } //extensions
             }
@@ -670,11 +700,24 @@ bool GPXCreateWpt( pugi::xml_node node, RoutePoint *pr, unsigned int flags )
              child = child_ext.append_child("opencpn:shared");
              child.append_child(pugi::node_pcdata).set_value("1");
          }
-         if(flags & OUT_ARRIVAL_RADIUS) {
-             child = child_ext.append_child("opencpn:arrival_radius");
-             s.Printf(_T("%.3f"), pr->GetWaypointArrivalRadius());
-             child.append_child(pugi::node_pcdata).set_value( s.mbc_str() );
-         }
+        if(flags & OUT_ARRIVAL_RADIUS) {
+            child = child_ext.append_child("opencpn:arrival_radius");
+            s.Printf(_T("%.3f"), pr->GetWaypointArrivalRadius());
+            child.append_child(pugi::node_pcdata).set_value( s.mbc_str() );
+        }
+        if(flags & OUT_WAYPOINT_RANGE_RINGS) {
+            child = child_ext.append_child("opencpn:waypoint_range_rings");
+            pugi::xml_attribute viz = child.append_attribute( "visible" );
+            viz.set_value( pr->m_bShowWaypointRangeRings );
+            pugi::xml_attribute number = child.append_attribute( "number" );
+            number.set_value( pr->m_iWaypointRangeRingsNumber );
+            pugi::xml_attribute step = child.append_attribute( "step" );
+            step.set_value( pr->m_fWaypointRangeRingsStep );
+            pugi::xml_attribute units = child.append_attribute( "units" );
+            units.set_value( pr->m_iWaypointRangeRingsStepUnits );
+            pugi::xml_attribute colour = child.append_attribute( "colour" );
+            colour.set_value( pr->m_wxcWaypointRangeRingsColour.GetAsString( wxC2S_HTML_SYNTAX ).utf8_str() ) ;
+        }
     }
     
     return true;
@@ -1109,7 +1152,10 @@ bool NavObjectCollection1::CreateNavObjGPXPoints( void )
     //    Iterate over the Routepoint list, creating Nodes for
     //    Routepoints that are not in any Route
     //    as indicated by m_bIsolatedMark == false
-    
+
+    if(!pWayPointMan)
+        return false;
+
     wxRoutePointListNode *node = pWayPointMan->GetWaypointList()->GetFirst();
     
     RoutePoint *pr;

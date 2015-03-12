@@ -5,7 +5,7 @@
  * Author:   David Register, Mark A Sikes
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -44,6 +44,8 @@
 
 #include <wx/progdlg.h>
 
+#include "chcanv.h"
+
 #ifdef USE_S57
 #include "s57chart.h"
 #include "cm93.h"
@@ -61,7 +63,9 @@ extern int          g_GroupIndex;
 extern s52plib      *ps52plib;
 extern ChartDB      *ChartData;
 
-
+#ifdef USE_S57
+void LoadS57();
+#endif
 bool G_FloatPtInPolygon(MyFlPoint *rgpts, int wnumpts, float x, float y) ;
 bool GetMemoryStatus(int *mem_total, int *mem_used);
 
@@ -260,7 +264,7 @@ bool ChartDB::LoadBinary(const wxString & filename, ArrayOfCDI& dir_array_check)
 void ChartDB::PurgeCache()
 {
 //    Empty the cache
-//      wxLogMessage(_T("Chart cache purge"));
+      wxLogMessage(_T("Chart cache purge"));
 
       if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
         unsigned int nCache = pChartCache->GetCount();
@@ -314,10 +318,10 @@ void ChartDB::PurgeCacheUnusedCharts( double factor)
 
                 int nl = pChartCache->GetCount();       // max loop count, by definition
                     
-                while( (mem_used > mem_limit) && (nl > 0) )
+                while( (mem_used > mem_limit) && (nl>0) )
                 {
                     if( pChartCache->GetCount() < 2 ){
-//                        nl = 0;  // Dead Store
+                        nl = 0;
                         break;
                     }
                     
@@ -481,27 +485,27 @@ int ChartDB::BuildChartStack(ChartStack * cstk, float lat, float lon)
                       if(CheckPositionWithinChart(db_index, lat, lon + 360.)  &&  (j < MAXSTACK) )
                           b_pos_add = true;
                   }
-
-
+                  
+                  
             }
-          
-          bool b_available = true;
-          //  Verify PlugIn charts are actually available
-          if(b_group_add && b_pos_add && (cte.GetChartType() == CHART_TYPE_PLUGIN)){
-              
-              ChartTableEntry *pcte = (ChartTableEntry*)&cte;
-              if( !IsChartAvailable(db_index) ){
-                  pcte->SetAvailable(false);
-                  b_available = false;
-              }
-              else
-                  pcte->SetAvailable(true);
-          }
-          
-          if(b_group_add && b_pos_add && b_available){                // add it
-              j++;
-              cstk->nEntry = j;
-              cstk->SetDBIndex(j-1, db_index);
+            
+            bool b_available = true;
+            //  Verify PlugIn charts are actually available
+            if(b_group_add && b_pos_add && (cte.GetChartType() == CHART_TYPE_PLUGIN)){
+                
+                ChartTableEntry *pcte = (ChartTableEntry*)&cte;
+                if( !IsChartAvailable(db_index) ){
+                    pcte->SetAvailable(false);
+                    b_available = false;
+                }
+                else
+                    pcte->SetAvailable(true);
+            }
+            
+            if(b_group_add && b_pos_add && b_available){                // add it
+                j++;
+                cstk->nEntry = j;
+                cstk->SetDBIndex(j-1, db_index);
             }
       }
 
@@ -875,7 +879,7 @@ bool ChartDB::IsChartLocked( int index )
     
     return false;
 }
-
+    
 void ChartDB::LockCacheChart( int index )
 {
     //    Search the cache
@@ -1184,6 +1188,7 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
 #ifdef USE_S57
             else if(chart_type == CHART_TYPE_S57)
             {
+                  LoadS57();
                   Ch = new s57chart();
                   s57chart *Chs57 = dynamic_cast<s57chart*>(Ch);
 
@@ -1203,6 +1208,7 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
 #ifdef USE_S57
             else if(chart_type == CHART_TYPE_CM93)
             {
+                  LoadS57();
                   Ch = new cm93chart();
                   cm93chart *Chcm93 = dynamic_cast<cm93chart*>(Ch);
 
@@ -1220,6 +1226,7 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
 
             else if(chart_type == CHART_TYPE_CM93COMP)
             {
+                  LoadS57();
                   Ch = new cm93compchart();
 
                   cm93compchart *Chcm93 = dynamic_cast<cm93compchart*>(Ch);
@@ -1509,7 +1516,7 @@ wxXmlDocument ChartDB::GetXMLDescription(int dbIndex, bool b_getGeom)
       if(!IsValid() || (dbIndex >= GetChartTableEntries()))
             return doc;
 
-      bool b_remove; // = !IsChartInCache(dbIndex); // Dead Store
+      bool b_remove = !IsChartInCache(dbIndex);
 
       wxXmlNode *pcell_node = NULL;
       wxXmlNode *node;

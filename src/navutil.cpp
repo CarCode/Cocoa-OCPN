@@ -72,6 +72,7 @@
 #include "NavObjectCollection.h"
 #include "NMEALogWindow.h"
 #include "AIS_Decoder.h"
+#include "OCPNPlatform.h"
 
 #ifdef USE_S57
 #include "s52plib.h"
@@ -84,6 +85,7 @@
 
 //    Statics
 
+extern OCPNPlatform     *g_Platform;
 extern ChartCanvas      *cc1;
 extern MyFrame          *gFrame;
 
@@ -113,7 +115,6 @@ extern wxString         g_SENCPrefix;
 extern wxString         g_UserPresLibData;
 
 extern AIS_Decoder      *g_pAIS;
-extern wxString         g_SData_Locn;
 extern wxString         *pInit_Chart_Dir;
 extern WayPointman      *pWayPointMan;
 extern Routeman         *g_pRouteMan;
@@ -207,6 +208,10 @@ extern int              g_S57_dialog_sx, g_S57_dialog_sy;
 extern int              g_iNavAidRadarRingsNumberVisible;
 extern float            g_fNavAidRadarRingsStep;
 extern int              g_pNavAidRadarRingsStepUnits;
+extern int              g_iWaypointRangeRingsNumber;
+extern float            g_fWaypointRangeRingsStep;
+extern int              g_iWaypointRangeRingsStepUnits;
+extern wxColour         g_colourWaypointRangeRingsColour;
 extern bool             g_bWayPointPreventDragging;
 extern bool             g_bConfirmObjectDelete;
 
@@ -343,9 +348,10 @@ extern ArrayOfMMSIProperties   g_MMSI_Props_Array;
 extern int              g_chart_zoom_modifier;
 
 extern int              g_NMEAAPBPrecision;
-extern int              g_NMEAAPBXTEPrecision;
 
-extern bool             g_bSailing;
+extern wxString         g_TalkerIdText;
+
+extern bool             g_bAdvanceRouteWaypointOnArrivalOnly;
 extern double           g_display_size_mm;
 extern double           g_config_display_size_mm;
 extern bool             g_benable_rotate;
@@ -438,12 +444,12 @@ void Track::Stop( bool do_add_point )
     if(m_bRunning){
         if(do_add_point)
             AddPointNow( true );                   // Force add last point
-        else{
+        else{    
             double delta = 0.0;
             if( m_lastStoredTP )
                 delta = DistGreatCircle( gLat, gLon, m_lastStoredTP->m_lat, m_lastStoredTP->m_lon );
-            
-            if(  delta > m_minTrackpoint_delta )
+
+            if(  delta > m_minTrackpoint_delta ) 
                 AddPointNow( true );                   // Add last point
         }
     }
@@ -548,7 +554,7 @@ RoutePoint* Track::AddNewPoint( vector2D point, wxDateTime time ) {
     AddPoint( rPoint );
 
     pConfig->AddNewTrackPoint( rPoint, m_GUID );        // This will update the "changes" file only
-    
+
     //    This is a hack, need to undo the action of Route::AddPoint
     rPoint->m_bIsInRoute = false;
     rPoint->m_bIsInTrack = true;
@@ -780,13 +786,13 @@ void Track::Draw( ocpnDC& dc, ViewPort &VP )
             wxPen psave = dc.GetPen();
 
             dc.StrokeLines( i, points );
-                    
+
             wxColour y = GetGlobalColor( _T ( "YELO1" ) );
             wxColour hilt( y.Red(), y.Green(), y.Blue(), 128 );
-            
+
             wxPen HiPen( hilt, hilite_width, wxSOLID );
             dc.SetPen( HiPen );
-            
+
             dc.StrokeLines( i, points );
 
             dc.SetPen( psave );
@@ -839,7 +845,7 @@ Route *Track::RouteFromTrack( wxProgressDialog *pprog )
     while( prpnode ) {
         RoutePoint *prp = prpnode->GetData();
         prpnodeX = prpnode;
-//        pWP_dst = pWP_src;  // Not used
+        pWP_dst = pWP_src;
 
         delta_dist = 0.0;
         delta_hdg = 0.0;
@@ -867,7 +873,7 @@ Route *Track::RouteFromTrack( wxProgressDialog *pprog )
                 pWP_src = pWP_dst;
             }
             prpnodeX = prpnode;
-//            pWP_dst = pWP_src;  // Not used
+            pWP_dst = pWP_src;
             next_ic = 0;
             delta_dist = 0.0;
             back_ic = next_ic;
@@ -1087,7 +1093,7 @@ MyConfig::MyConfig( const wxString &appName, const wxString &vendorName,
 
     m_pNavObjectInputSet = NULL;
     m_pNavObjectChangesSet = NULL;
-    
+
     m_bSkipChangeSetUpdate = false;
 
     g_pConnectionParams = new wxArrayOfConnPrm();
@@ -1102,22 +1108,22 @@ void MyConfig::CreateRotatingNavObjBackup()
         wxFile f;
         wxString oldname = m_sNavObjSetFile;
         wxString newname = wxString::Format( _T("%s.1"), m_sNavObjSetFile.c_str() );
-      
+
         wxFileOffset s_diff = 1;
         if( ::wxFileExists( newname ) ) {
-            
+
             if( f.Open(oldname) ){
                 s_diff = f.Length();
                 f.Close();
             }
-        
+
             if( f.Open(newname) ){
                 s_diff -= f.Length();
                 f.Close();
             }
         }
-        
-        
+
+
         if ( s_diff != 0 )
         {
             for( int i = g_navobjbackups - 1; i >= 1; i-- )
@@ -1143,7 +1149,7 @@ void MyConfig::CreateRotatingNavObjBackup()
             break;
 }
 
-int MyConfig::LoadMyConfig( int iteration )
+int MyConfig::LoadMyConfig()
 {
 
     int read_int;
@@ -1156,24 +1162,20 @@ int MyConfig::LoadMyConfig( int iteration )
     SetPath( _T ( "/Settings" ) );
 
     // Some undocumented values
-    if( iteration == 0 ) {
-        Read( _T ( "ConfigVersionString" ), &g_config_version_string, _T("") );
-        Read( _T ( "NavMessageShown" ), &n_NavMessageShown, 0 );
-    }
+    Read( _T ( "ConfigVersionString" ), &g_config_version_string, _T("") );
+    Read( _T ( "NavMessageShown" ), &n_NavMessageShown, 0 );
 
     wxString uiStyle;
     Read( _T ( "UIStyle" ), &uiStyle, wxT("") );
     g_StyleManager->SetStyle( uiStyle );
 
-    if( iteration == 0 ) {
-        Read( _T ( "NCacheLimit" ), &g_nCacheLimit, CACHE_N_LIMIT_DEFAULT );
+    Read( _T ( "NCacheLimit" ), &g_nCacheLimit, CACHE_N_LIMIT_DEFAULT );
 
-        int mem_limit;
-        Read( _T ( "MEMCacheLimit" ), &mem_limit, 0 );
-
-        if(mem_limit > 0)
-            g_memCacheLimit = mem_limit * 1024;       // convert from MBytes to kBytes
-    }
+    int mem_limit;
+    Read( _T ( "MEMCacheLimit" ), &mem_limit, 0 );
+    
+    if(mem_limit > 0)
+        g_memCacheLimit = mem_limit * 1024;       // convert from MBytes to kBytes
 
     Read( _T ( "DebugGDAL" ), &g_bGDAL_Debug, 0 );
     Read( _T ( "DebugNMEA" ), &g_nNMEADebug, 0 );
@@ -1197,15 +1199,13 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "UseNMEA_GLL" ), &g_bUseGLL, 1 );
     Read( _T ( "UseBigRedX" ), &g_bbigred, 0 );
 
-    if(iteration == 0){
-        int size_mm;
-        Read( _T ( "DisplaySizeMM" ), &size_mm, -1 );
-        g_config_display_size_mm = size_mm;
-        if((size_mm > 100) && (size_mm < 2000)){
-            g_display_size_mm = size_mm;
-        }
+    int size_mm;
+    Read( _T ( "DisplaySizeMM" ), &size_mm, -1 );
+    g_config_display_size_mm = size_mm;
+    if((size_mm > 100) && (size_mm < 2000)){
+        g_display_size_mm = size_mm;
     }
-
+    
     Read( _T ( "FilterNMEA_Avg" ), &g_bfilter_cogsog, 0 );
     Read( _T ( "FilterNMEA_Sec" ), &g_COGFilterSec, 1 );
     g_COGFilterSec = wxMin(g_COGFilterSec, MAX_COGSOG_FILTER_SECONDS);
@@ -1243,13 +1243,14 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "OpenGL" ), &g_bopengl, 0 );
     if ( g_bdisable_opengl )
         g_bopengl = false;
-
+    
     Read( _T ( "ShowFPS" ), &g_bShowFPS, 0 );
-
+    
     Read( _T ( "ActiveChartGroup" ), &g_GroupIndex, 0 );
 
     Read( _T( "NMEAAPBPrecision" ), &g_NMEAAPBPrecision, 3 );
-    Read( _T( "NMEAAPBXTEPrecision" ), &g_NMEAAPBXTEPrecision, 2 );
+    
+    Read( _T( "TalkerIdText" ), &g_TalkerIdText, _T("EC") );
 
     /* opengl options */
 #ifdef ocpnUSE_GL
@@ -1265,7 +1266,7 @@ int MyConfig::LoadMyConfig( int iteration )
         g_GLOptions.m_iTextureMemorySize = wxMax(128, g_GLOptions.m_iTextureMemorySize);
         g_GLOptions.m_bTextureCompressionCaching = g_GLOptions.m_bTextureCompression;
     }
-        
+
 #endif
     Read( _T ( "SmoothPanZoom" ), &g_bsmoothpanzoom, 0 );
 
@@ -1281,10 +1282,10 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "InitialdBIndex" ), &g_restore_dbindex, -1 );
 
     Read( _T ( "ChartNotRenderScaleFactor" ), &g_ChartNotRenderScaleFactor, 1.5 );
-    
+
     Read( _T ( "MobileTouch" ), &g_btouch, 0 );
     Read( _T ( "ResponsiveGraphics" ), &g_bresponsive, 0 );
-    
+
     Read( _T ( "ZoomDetailFactor" ), &g_chart_zoom_modifier, 0 );
     g_chart_zoom_modifier = wxMin(g_chart_zoom_modifier,5);
     g_chart_zoom_modifier = wxMax(g_chart_zoom_modifier,-5);
@@ -1292,7 +1293,7 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "FogOnOverzoom" ), &g_fog_overzoom, 1 );
     Read( _T ( "OverzoomVectorScale" ), &g_oz_vector_scale, 1 );
     Read( _T ( "OverzoomEmphasisBase" ), &g_overzoom_emphasis_base, 10.0 );
-
+    
 #ifdef USE_S57
     Read( _T ( "CM93DetailFactor" ), &g_cm93_zoom_factor, 0 );
     g_cm93_zoom_factor = wxMin(g_cm93_zoom_factor,CM93_ZOOM_FACTOR_MAX_RANGE);
@@ -1308,7 +1309,7 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "ShowCM93DetailSlider" ), &g_bShowCM93DetailSlider, 0 );
 
     Read( _T ( "SENC_LOD_Pixels" ), &g_SENC_LOD_pixels, 2 );
-    
+
 #endif
 
     Read( _T ( "SkewCompUpdatePeriod" ), &g_SkewCompUpdatePeriod, 10 );
@@ -1331,7 +1332,7 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "ShowActiveRouteHighway" ), &g_bShowActiveRouteHighway, 1 );
     Read( _T ( "MostRecentGPSUploadConnection" ), &g_uploadConnection, _T("") );
     Read( _T ( "ShowChartBar" ), &g_bShowChartBar, 1 );
-
+    
     Read( _T ( "SDMMFormat" ), &g_iSDMMFormat, 0 ); //0 = "Degrees, Decimal minutes"), 1 = "Decimal degrees", 2 = "Degrees,Minutes, Seconds"
     Read( _T ( "DistanceFormat" ), &g_iDistanceFormat, 0 ); //0 = "Nautical miles"), 1 = "Statute miles", 2 = "Kilometers", 3 = "Meters"
     Read( _T ( "SpeedFormat" ), &g_iSpeedFormat, 0 ); //0 = "kts"), 1 = "mph", 2 = "km/h", 3 = "m/s"
@@ -1339,7 +1340,7 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "OwnshipCOGPredictorMinutes" ), &g_ownship_predictor_minutes, 5 );
     Read( _T ( "OwnshipCOGPredictorWidth" ), &g_cog_predictor_width, 3 );
     Read( _T ( "OwnshipHDTPredictorMiles" ), &g_ownship_HDTpredictor_miles, 1 );
-    
+
     Read( _T ( "OwnShipIconType" ), &g_OwnShipIconType, 0 );
     Read( _T ( "OwnShipLength" ), &g_n_ownship_length_meters, 0 );
     Read( _T ( "OwnShipWidth" ), &g_n_ownship_beam_meters, 0 );
@@ -1370,10 +1371,8 @@ int MyConfig::LoadMyConfig( int iteration )
 
     Read( _T ( "PreserveScaleOnX" ), &g_bPreserveScaleOnX, 0 );
 
-    if( iteration == 0 ) {
-        g_locale = _T("en_US");
-        Read( _T ( "Locale" ), &g_locale );
-    }
+    g_locale = _T("en_US");
+    Read( _T ( "Locale" ), &g_locale );
 
     //We allow 0-99 backups ov navobj.xml
     Read( _T ( "KeepNavobjBackups" ), &g_navobjbackups, 5 );
@@ -1386,16 +1385,16 @@ int MyConfig::LoadMyConfig( int iteration )
 
     // Boolean to cater for legacy Input COM Port filer behaviour, i.e. show msg filtered but put msg on bus.
     Read( _T ( "LegacyInputCOMPortFilterBehaviour" ), &g_b_legacy_input_filter_behaviour, 0 );
-
+    
     // Boolean to cater for sailing when not approaching waypoint
-    Read( _T( "Sailing" ), &g_bSailing, 0);
+    Read( _T( "AdvanceRouteWaypointOnArrivalOnly" ), &g_bAdvanceRouteWaypointOnArrivalOnly, 0);
 
     Read( _T ( "EnableRotateKeys" ),  &g_benable_rotate );
     Read( _T ( "EmailCrashReport" ),  &g_bEmailCrashReport );
-
+    
     g_benableAISNameCache = true;
     Read( _T ( "EnableAISNameCache" ),  &g_benableAISNameCache );
-
+    
     SetPath( _T ( "/Settings/GlobalState" ) );
     Read( _T ( "bFollow" ), &st_bFollow );
 
@@ -1505,77 +1504,14 @@ int MyConfig::LoadMyConfig( int iteration )
     g_S57_dialog_sx = Read( _T ( "S57QueryDialogSizeX" ), 400L );
     g_S57_dialog_sy = Read( _T ( "S57QueryDialogSizeY" ), 400L );
 
-#ifdef USE_S57
-    if( NULL != ps52plib ) {
-        double dval;
-        SetPath( _T ( "/Settings/GlobalState" ) );
-
-        Read( _T ( "bShowS57Text" ), &read_int, 0 );
-        ps52plib->SetShowS57Text( !( read_int == 0 ) );
-
-        Read( _T ( "bShowS57ImportantTextOnly" ), &read_int, 0 );
-        ps52plib->SetShowS57ImportantTextOnly( !( read_int == 0 ) );
-
-        Read( _T ( "bShowLightDescription" ), &read_int, 0 );
-        ps52plib->SetShowLdisText( !( read_int == 0 ) );
-
-        Read( _T ( "bExtendLightSectors" ), &read_int, 0 );
-        ps52plib->SetExtendLightSectors( !( read_int == 0 ) );
-
-        Read( _T ( "nDisplayCategory" ), &read_int, (enum _DisCat) STANDARD );
-        ps52plib->SetDisplayCategory((enum _DisCat) read_int );
-
-        Read( _T ( "nSymbolStyle" ), &read_int, (enum _LUPname) PAPER_CHART );
-        ps52plib->m_nSymbolStyle = (LUPname) read_int;
-
-        Read( _T ( "nBoundaryStyle" ), &read_int, PLAIN_BOUNDARIES );
-        ps52plib->m_nBoundaryStyle = (LUPname) read_int;
-
-        Read( _T ( "bShowSoundg" ), &read_int, 0 );
-        ps52plib->m_bShowSoundg = !( read_int == 0 );
-
-        Read( _T ( "bShowMeta" ), &read_int, 0 );
-        ps52plib->m_bShowMeta = !( read_int == 0 );
-
-        Read( _T ( "bUseSCAMIN" ), &read_int, 0 );
-        ps52plib->m_bUseSCAMIN = !( read_int == 0 );
-
-        Read( _T ( "bShowAtonText" ), &read_int, 0 );
-        ps52plib->m_bShowAtonText = !( read_int == 0 );
-
-        Read( _T ( "bDeClutterText" ), &read_int, 0 );
-        ps52plib->m_bDeClutterText = !( read_int == 0 );
-
-        Read( _T ( "bShowNationalText" ), &read_int, 0 );
-        ps52plib->m_bShowNationalTexts = !( read_int == 0 );
-
-        if( Read( _T ( "S52_MAR_SAFETY_CONTOUR" ), &dval, 5.0 ) ) {
-            S52_setMarinerParam( S52_MAR_SAFETY_CONTOUR, dval );
-            S52_setMarinerParam( S52_MAR_SAFETY_DEPTH, dval ); // Set safety_contour and safety_depth the same
-        }
-
-        if( Read( _T ( "S52_MAR_SHALLOW_CONTOUR" ), &dval, 3.0 ) ) S52_setMarinerParam(
-                S52_MAR_SHALLOW_CONTOUR, dval );
-
-        if( Read( _T ( "S52_MAR_DEEP_CONTOUR" ), &dval, 10.0 ) ) S52_setMarinerParam(
-                S52_MAR_DEEP_CONTOUR, dval );
-
-        if( Read( _T ( "S52_MAR_TWO_SHADES" ), &dval, 0.0 ) ) S52_setMarinerParam(
-                S52_MAR_TWO_SHADES, dval );
-
-        ps52plib->UpdateMarinerParams();
-
-        SetPath( _T ( "/Settings/GlobalState" ) );
-        Read( _T ( "S52_DEPTH_UNIT_SHOW" ), &read_int, 1 );   // default is metres
-        ps52plib->m_nDepthUnitDisplay = read_int;
-    }
 
     wxString strpres( _T ( "PresentationLibraryData" ) );
     wxString valpres;
     SetPath( _T ( "/Directories" ) );
     Read( strpres, &valpres );              // Get the File name
-    if( iteration == 0 ) g_UserPresLibData = valpres;
+    g_UserPresLibData = valpres;
 
+#ifdef USE_S57
     /*
      wxString strd ( _T ( "S57DataLocation" ) );
      SetPath ( _T ( "/Directories" ) );
@@ -1597,7 +1533,7 @@ int MyConfig::LoadMyConfig( int iteration )
     wxString vals;
     Read( strs, &vals );              // Get the Directory name
 
-    if( iteration == 0 ) g_SENCPrefix = vals;
+    g_SENCPrefix = vals;
 
 #endif
 
@@ -1621,23 +1557,22 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "nColorScheme" ), &read_int, 0 );
     global_color_scheme = (ColorScheme) read_int;
 
-    if( iteration == 0){
-        SetPath( _T ( "/Settings/NMEADataSource" ) );
-        
-        wxString connectionconfigs;
-        Read ( _T( "DataConnections" ),  &connectionconfigs, wxEmptyString );
-        wxArrayString confs = wxStringTokenize(connectionconfigs, _T("|"));
-        g_pConnectionParams->Clear();
-        for (size_t i = 0; i < confs.Count(); i++)
-        {
-            ConnectionParams * prm = new ConnectionParams(confs[i]);
-            if (!prm->Valid) {
-                wxLogMessage( _T( "Skipped invalid DataStream config") );
-                delete prm;
-                continue;
-            }
-            g_pConnectionParams->Add(prm);
+
+    SetPath( _T ( "/Settings/NMEADataSource" ) );
+
+    wxString connectionconfigs;
+    Read ( _T( "DataConnections" ),  &connectionconfigs, wxEmptyString );
+    wxArrayString confs = wxStringTokenize(connectionconfigs, _T("|"));
+    g_pConnectionParams->Clear();
+    for (size_t i = 0; i < confs.Count(); i++)
+    {
+        ConnectionParams * prm = new ConnectionParams(confs[i]);
+        if (!prm->Valid) {
+            wxLogMessage( _T( "Skipped invalid DataStream config") );
+            delete prm;
+            continue;
         }
+        g_pConnectionParams->Add(prm);
     }
 
     //  Automatically handle the upgrade to DataSources architecture...
@@ -1682,10 +1617,9 @@ int MyConfig::LoadMyConfig( int iteration )
                 g_bGarminHostUpload = (b_garmin_host == 1);
             }
         }
-        if( iteration == 1 ) {
-            Write ( _T ( "Source" ), _T("") );          // clear the old tag
-            Write ( _T ( "BaudRate" ), _T("") );
-        }
+
+        DeleteEntry ( _T ( "Source" ) );
+        DeleteEntry ( _T ( "BaudRate" ), _T("") );
     }
 
    //  Is there an existing AISPort definition?
@@ -1724,12 +1658,10 @@ int MyConfig::LoadMyConfig( int iteration )
                 g_pConnectionParams->Add(prm);
             }
         }
-
-        if( iteration == 1 ) {
-            Write ( _T ( "Port" ), _T("") );          // clear the old tag
-            Write ( _T ( "BaudRate" ), _T("") );
-        }
+        DeleteEntry ( _T ( "Source" ) );
+        DeleteEntry ( _T ( "BaudRate" ) );
     }
+
 
     //  Is there an existing NMEAAutoPilotPort definition?
     SetPath( _T ( "/Settings/NMEAAutoPilotPort" ) );
@@ -1769,9 +1701,6 @@ int MyConfig::LoadMyConfig( int iteration )
                 cp->OutputSentenceList.Add( _T("RMB") );
             }
         }
-
-        if( iteration == 1 )
-            Write ( _T ( "Port" ), _T("") );          // clear the old tag
     }
 
 //    Reasonable starting point
@@ -1843,53 +1772,6 @@ int MyConfig::LoadMyConfig( int iteration )
     s.Printf( _T ( "Setting Ownship Lat/Lon %g, %g" ), gLat, gLon );
     wxLogMessage( s );
 
-#ifdef USE_S57
-//    S57 Object Class Visibility
-
-    OBJLElement *pOLE;
-
-    SetPath( _T ( "/Settings/ObjectFilter" ) );
-
-    if( ps52plib ) {
-        int iOBJMax = GetNumberOfEntries();
-        if( iOBJMax ) {
-
-            wxString str;
-            long val;
-            long dummy;
-
-            wxString sObj;
-
-            bool bCont = pConfig->GetFirstEntry( str, dummy );
-            while( bCont ) {
-                pConfig->Read( str, &val );              // Get an Object Viz
-
-                bool bNeedNew = true;
-
-                if( str.StartsWith( _T ( "viz" ), &sObj ) ) {
-                    for( unsigned int iPtr = 0; iPtr < ps52plib->pOBJLArray->GetCount(); iPtr++ ) {
-                        pOLE = (OBJLElement *) ( ps52plib->pOBJLArray->Item( iPtr ) );
-                        if( !strncmp( pOLE->OBJLName, sObj.mb_str(), 6 ) ) {
-                            pOLE->nViz = val;
-                            bNeedNew = false;
-                            break;
-                        }
-                    }
-
-                    if( bNeedNew ) {
-                        pOLE = (OBJLElement *) calloc( sizeof(OBJLElement), 1 );
-                        strncpy( pOLE->OBJLName, sObj.mb_str(), 6 );
-                        pOLE->nViz = 1;
-
-                        ps52plib->pOBJLArray->Add( (void *) pOLE );
-                    }
-                }
-                bCont = pConfig->GetNextEntry( str, dummy );
-            }
-        }
-    }
-#endif
-
 //    Fonts
 
 #ifdef __WXX11__
@@ -1908,43 +1790,42 @@ int MyConfig::LoadMyConfig( int iteration )
     SetPath ( _T ( "/Settings/MacFonts" ) );
 #endif
 
-    if( 0 == iteration ) {
-        wxString str;
-        long dummy;
-        wxString *pval = new wxString;
-        wxArrayString deleteList;
+#ifdef __WXQT__
+    SetPath ( _T ( "/Settings/QTFonts" ) );
+#endif
+    
+    wxString str;
+    long dummy;
+    wxString *pval = new wxString;
+    wxArrayString deleteList;
 
-        bool bCont = GetFirstEntry( str, dummy );
-        while( bCont ) {
-            Read( str, pval );
+    bool bCont = GetFirstEntry( str, dummy );
+    while( bCont ) {
+        Read( str, pval );
 
-            if( str.StartsWith( _T("Font") ) ) {
-                // Convert pre 3.1 setting. Can't delete old entries from inside the
-                // GetNextEntry() loop, so we need to save those and delete outside.
-                deleteList.Add( str );
-                wxString oldKey = pval->BeforeFirst( _T(':') );
-                str = FontMgr::GetFontConfigKey( oldKey );
-            }
-
-            if( pval->IsEmpty() || pval->StartsWith(_T(":")) ) {
-                deleteList.Add( str );
-            }
-            else
-                FontMgr::Get().LoadFontNative( &str, pval );
-
-            bCont = GetNextEntry( str, dummy );
+        if( str.StartsWith( _T("Font") ) ) {
+            // Convert pre 3.1 setting. Can't delete old entries from inside the
+            // GetNextEntry() loop, so we need to save those and delete outside.
+            deleteList.Add( str );
+            wxString oldKey = pval->BeforeFirst( _T(':') );
+            str = FontMgr::GetFontConfigKey( oldKey );
         }
 
-        for( unsigned int i=0; i<deleteList.Count(); i++ ) {
-            DeleteEntry( deleteList[i] );
+        if( pval->IsEmpty() || pval->StartsWith(_T(":")) ) {
+            deleteList.Add( str );
         }
-        deleteList.Clear();
-        delete pval;
+        else
+            FontMgr::Get().LoadFontNative( &str, pval );
+
+        bCont = GetNextEntry( str, dummy );
     }
 
-    if( 1 == iteration )
-        FontMgr::Get().ScrubList();
-    
+    for( unsigned int i=0; i<deleteList.Count(); i++ ) {
+        DeleteEntry( deleteList[i] );
+    }
+    deleteList.Clear();
+    delete pval;
+
 //  Tide/Current Data Sources
     SetPath( _T ( "/TideCurrentDataSources" ) );
     TideCurrentDataSet.Clear();
@@ -1962,63 +1843,13 @@ int MyConfig::LoadMyConfig( int iteration )
 
 
     //    Layers
-    if( 0 == iteration )
-        pLayerList = new LayerList;
+    pLayerList = new LayerList;
 
     //  Routes
-    if( 0 == iteration )
-        pRouteList = new RouteList;
+    pRouteList = new RouteList;
 
     //    Groups
-    if( 0 == iteration )
-        LoadConfigGroups( g_pGroupArray );
-
-
-//      next thing to do is read tracks, etc from the NavObject XML file,
-    if( 0 == iteration ) {
-        wxLogMessage( _T("Loading navobjects from navobj.xml") );
-        CreateRotatingNavObjBackup();
-
-        if( NULL == m_pNavObjectInputSet )
-            m_pNavObjectInputSet = new NavObjectCollection1();
-
-        if( ::wxFileExists( m_sNavObjSetFile ) ) {
-            if( m_pNavObjectInputSet->load_file( m_sNavObjSetFile.fn_str() ) )
-                m_pNavObjectInputSet->LoadAllGPXObjects();
-        }
-        wxLogMessage( _T("Done loading navobjects") );
-        delete m_pNavObjectInputSet;
-
-
-        if( ::wxFileExists( m_sNavObjSetChangesFile ) ) {
-            
-            wxULongLong size = wxFileName::GetSize(m_sNavObjSetChangesFile);
-            
-            //We crashed last time :(
-            //That's why this file still exists...
-            //Let's reconstruct the unsaved changes
-            NavObjectChanges *pNavObjectChangesSet = new NavObjectChanges();
-            pNavObjectChangesSet->load_file( m_sNavObjSetChangesFile.fn_str() );
-
-            //  Remove the file before applying the changes,
-            //  just in case the changes file itself causes a fault.
-            //  If it does fault, at least the next restart will proceed without fault.
-           if( ::wxFileExists( m_sNavObjSetChangesFile ) )
-                ::wxRemoveFile( m_sNavObjSetChangesFile );
-
-           if(size != 0){
-                wxLogMessage( _T("Applying NavObjChanges") );
-                pNavObjectChangesSet->ApplyChanges();
-                UpdateNavObj();
-           }
-
-            delete pNavObjectChangesSet;
-
-        }
-        
-        m_pNavObjectChangesSet = new NavObjectChanges(m_sNavObjSetChangesFile);
-        
-    }
+    LoadConfigGroups( g_pGroupArray );
 
     SetPath( _T ( "/Settings/Others" ) );
 
@@ -2033,6 +1864,23 @@ int MyConfig::LoadMyConfig( int iteration )
 
     g_pNavAidRadarRingsStepUnits = 0;
     Read( _T ( "RadarRingsStepUnits" ), &g_pNavAidRadarRingsStepUnits );
+
+    // Waypoint Radar rings
+    g_iWaypointRangeRingsNumber = 0;
+    Read( _T ( "WaypointRangeRingsNumber" ), &val );
+    if( val.Length() > 0 ) g_iWaypointRangeRingsNumber = atoi( val.mb_str() );
+
+    g_fWaypointRangeRingsStep = 1.0;
+    Read( _T ( "WaypointRangeRingsStep" ), &val );
+    if( val.Length() > 0 ) g_fWaypointRangeRingsStep = atof( val.mb_str() );
+
+    g_iWaypointRangeRingsStepUnits = 0;
+    Read( _T ( "WaypointRangeRingsStepUnits" ), &g_iWaypointRangeRingsStepUnits );
+    
+    g_colourWaypointRangeRingsColour = wxColour( *wxRED );
+    wxString l_wxsWaypointRangeRingsColour;
+    Read( _T( "WaypointRangeRingsColour" ), &l_wxsWaypointRangeRingsColour );
+    g_colourWaypointRangeRingsColour.Set( l_wxsWaypointRangeRingsColour );
 
     //  Support Version 3.0 and prior config setting for Radar Rings
     bool b300RadarRings= true;
@@ -2074,28 +1922,185 @@ int MyConfig::LoadMyConfig( int iteration )
     Read( _T ( "CurrentArrowScale" ), &g_current_arrow_scale, 100 );
     Read( _T ( "DefaultWPIcon" ), &g_default_wp_icon, _T("triangle") );
 
-    if(0 == iteration){
-        SetPath( _T ( "/MMSIProperties" ) );
-        int iPMax = GetNumberOfEntries();
-        if( iPMax ) {
-            g_MMSI_Props_Array.Empty();
-            wxString str, val;
-            long dummy;
-            int iDir = 0;
-            bool bCont = pConfig->GetFirstEntry( str, dummy );
-            while( bCont ) {
-                pConfig->Read( str, &val );              // Get an entry
-                
-                MMSIProperties *pProps = new MMSIProperties( val );
-                g_MMSI_Props_Array.Add(pProps);
-                
-                bCont = pConfig->GetNextEntry( str, dummy );
-                
-            }
+    SetPath( _T ( "/MMSIProperties" ) );
+    int iPMax = GetNumberOfEntries();
+    if( iPMax ) {
+        g_MMSI_Props_Array.Empty();
+        wxString str, val;
+        long dummy;
+        int iDir = 0;
+        bool bCont = pConfig->GetFirstEntry( str, dummy );
+        while( bCont ) {
+            pConfig->Read( str, &val );              // Get an entry
+
+            MMSIProperties *pProps = new MMSIProperties( val );
+            g_MMSI_Props_Array.Add(pProps);
+
+            bCont = pConfig->GetNextEntry( str, dummy );
+
         }
     }
 
     return ( 0 );
+}
+
+void MyConfig::LoadS57Config()
+{
+#ifdef USE_S57
+    if( !ps52plib )
+        return;
+
+    int read_int;
+    double dval;
+    SetPath( _T ( "/Settings/GlobalState" ) );
+
+    Read( _T ( "bShowS57Text" ), &read_int, 0 );
+    ps52plib->SetShowS57Text( !( read_int == 0 ) );
+
+    Read( _T ( "bShowS57ImportantTextOnly" ), &read_int, 0 );
+    ps52plib->SetShowS57ImportantTextOnly( !( read_int == 0 ) );
+
+    Read( _T ( "bShowLightDescription" ), &read_int, 0 );
+    ps52plib->SetShowLdisText( !( read_int == 0 ) );
+
+    Read( _T ( "bExtendLightSectors" ), &read_int, 0 );
+    ps52plib->SetExtendLightSectors( !( read_int == 0 ) );
+
+    Read( _T ( "nDisplayCategory" ), &read_int, (enum _DisCat) STANDARD );
+    ps52plib->SetDisplayCategory((enum _DisCat) read_int );
+
+    Read( _T ( "nSymbolStyle" ), &read_int, (enum _LUPname) PAPER_CHART );
+    ps52plib->m_nSymbolStyle = (LUPname) read_int;
+
+    Read( _T ( "nBoundaryStyle" ), &read_int, PLAIN_BOUNDARIES );
+    ps52plib->m_nBoundaryStyle = (LUPname) read_int;
+
+    Read( _T ( "bShowSoundg" ), &read_int, 0 );
+    ps52plib->m_bShowSoundg = !( read_int == 0 );
+
+    Read( _T ( "bShowMeta" ), &read_int, 0 );
+    ps52plib->m_bShowMeta = !( read_int == 0 );
+
+    Read( _T ( "bUseSCAMIN" ), &read_int, 0 );
+    ps52plib->m_bUseSCAMIN = !( read_int == 0 );
+
+    Read( _T ( "bShowAtonText" ), &read_int, 0 );
+    ps52plib->m_bShowAtonText = !( read_int == 0 );
+
+    Read( _T ( "bDeClutterText" ), &read_int, 0 );
+    ps52plib->m_bDeClutterText = !( read_int == 0 );
+
+    Read( _T ( "bShowNationalText" ), &read_int, 0 );
+    ps52plib->m_bShowNationalTexts = !( read_int == 0 );
+
+    if( Read( _T ( "S52_MAR_SAFETY_CONTOUR" ), &dval, 5.0 ) ) {
+        S52_setMarinerParam( S52_MAR_SAFETY_CONTOUR, dval );
+        S52_setMarinerParam( S52_MAR_SAFETY_DEPTH, dval ); // Set safety_contour and safety_depth the same
+    }
+
+    if( Read( _T ( "S52_MAR_SHALLOW_CONTOUR" ), &dval, 3.0 ) ) S52_setMarinerParam(
+        S52_MAR_SHALLOW_CONTOUR, dval );
+
+    if( Read( _T ( "S52_MAR_DEEP_CONTOUR" ), &dval, 10.0 ) ) S52_setMarinerParam(
+        S52_MAR_DEEP_CONTOUR, dval );
+
+    if( Read( _T ( "S52_MAR_TWO_SHADES" ), &dval, 0.0 ) ) S52_setMarinerParam(
+        S52_MAR_TWO_SHADES, dval );
+
+    ps52plib->UpdateMarinerParams();
+
+    SetPath( _T ( "/Settings/GlobalState" ) );
+    Read( _T ( "S52_DEPTH_UNIT_SHOW" ), &read_int, 1 );   // default is metres
+    ps52plib->m_nDepthUnitDisplay = read_int;
+
+//    S57 Object Class Visibility
+
+    OBJLElement *pOLE;
+
+    SetPath( _T ( "/Settings/ObjectFilter" ) );
+
+    int iOBJMax = GetNumberOfEntries();
+    if( iOBJMax ) {
+
+        wxString str;
+        long val;
+        long dummy;
+
+        wxString sObj;
+
+        bool bCont = pConfig->GetFirstEntry( str, dummy );
+        while( bCont ) {
+            pConfig->Read( str, &val );              // Get an Object Viz
+
+            bool bNeedNew = true;
+
+            if( str.StartsWith( _T ( "viz" ), &sObj ) ) {
+                for( unsigned int iPtr = 0; iPtr < ps52plib->pOBJLArray->GetCount(); iPtr++ ) {
+                    pOLE = (OBJLElement *) ( ps52plib->pOBJLArray->Item( iPtr ) );
+                    if( !strncmp( pOLE->OBJLName, sObj.mb_str(), 6 ) ) {
+                        pOLE->nViz = val;
+                        bNeedNew = false;
+                        break;
+                    }
+                }
+
+                if( bNeedNew ) {
+                    pOLE = (OBJLElement *) calloc( sizeof(OBJLElement), 1 );
+                    strncpy( pOLE->OBJLName, sObj.mb_str(), 6 );
+                    pOLE->nViz = 1;
+
+                    ps52plib->pOBJLArray->Add( (void *) pOLE );
+                }
+            }
+            bCont = pConfig->GetNextEntry( str, dummy );
+        }
+    }
+#endif
+}
+
+void MyConfig::LoadNavObjects()
+{
+    //      next thing to do is read tracks, etc from the NavObject XML file,
+    wxLogMessage( _T("Loading navobjects from navobj.xml") );
+    CreateRotatingNavObjBackup();
+
+    if( NULL == m_pNavObjectInputSet )
+        m_pNavObjectInputSet = new NavObjectCollection1();
+
+    if( ::wxFileExists( m_sNavObjSetFile ) &&
+        m_pNavObjectInputSet->load_file( m_sNavObjSetFile.fn_str() ) )
+        m_pNavObjectInputSet->LoadAllGPXObjects();
+
+    wxLogMessage( _T("Done loading navobjects") );
+    delete m_pNavObjectInputSet;
+
+    if( ::wxFileExists( m_sNavObjSetChangesFile ) ) {
+
+        wxULongLong size = wxFileName::GetSize(m_sNavObjSetChangesFile);
+
+        //We crashed last time :(
+        //That's why this file still exists...
+        //Let's reconstruct the unsaved changes
+        NavObjectChanges *pNavObjectChangesSet = new NavObjectChanges();
+        pNavObjectChangesSet->load_file( m_sNavObjSetChangesFile.fn_str() );
+
+        //  Remove the file before applying the changes,
+        //  just in case the changes file itself causes a fault.
+        //  If it does fault, at least the next restart will proceed without fault.
+        if( ::wxFileExists( m_sNavObjSetChangesFile ) )
+            ::wxRemoveFile( m_sNavObjSetChangesFile );
+        
+        if(size != 0){
+            wxLogMessage( _T("Applying NavObjChanges") );
+            pNavObjectChangesSet->ApplyChanges();
+            UpdateNavObj();
+        }
+        
+        delete pNavObjectChangesSet;
+           
+    }
+
+    m_pNavObjectChangesSet = new NavObjectChanges(m_sNavObjSetChangesFile);
 }
 
 bool MyConfig::LoadLayers(wxString &path)
@@ -2216,7 +2221,7 @@ bool MyConfig::LoadChartDirArray( ArrayOfCDI &ChartDirArray )
 
                     pConfig->DeleteEntry( str );
                     wxString new_dir = dirname.Mid( dirname.Find( _T ( "SampleCharts" ) ) );
-                    new_dir.Prepend( g_SData_Locn );
+                    new_dir.Prepend( g_Platform->GetSharedDataDir() );
                     dirname = new_dir;
                 }
 
@@ -2291,7 +2296,7 @@ bool MyConfig::AddNewWayPoint( RoutePoint *pWP, int crm )
 
     if(!pWP->m_bIsolatedMark)
         return true;
-    
+
     if( !m_bSkipChangeSetUpdate ) {
         m_pNavObjectChangesSet->AddWP( pWP, "add" );
     }
@@ -2328,7 +2333,7 @@ bool MyConfig::AddNewTrackPoint( RoutePoint *pWP, const wxString& parent_GUID )
     if( !m_bSkipChangeSetUpdate ) {
         m_pNavObjectChangesSet->AddTrackPoint( pWP, "add", parent_GUID );
     }
-    
+
     return true;
 }
 
@@ -2489,7 +2494,7 @@ void MyConfig::UpdateSettings()
     Write( _T ( "SpeedFormat" ), g_iSpeedFormat );
     Write( _T ( "MostRecentGPSUploadConnection" ), g_uploadConnection );
     Write( _T ( "ShowChartBar" ), g_bShowChartBar );
-
+    
     Write( _T ( "FilterNMEA_Avg" ), g_bfilter_cogsog );
     Write( _T ( "FilterNMEA_Sec" ), g_COGFilterSec );
 
@@ -2504,9 +2509,9 @@ void MyConfig::UpdateSettings()
     Write( _T ( "SkewToNorthUp" ), g_bskew_comp );
     Write( _T ( "OpenGL" ), g_bopengl );
     Write( _T ( "ShowFPS" ), g_bShowFPS );
-
+    
     Write( _T ( "ZoomDetailFactor" ), g_chart_zoom_modifier );
-
+    
     Write( _T ( "FogOnOverzoom" ), g_fog_overzoom );
     Write( _T ( "OverzoomVectorScale" ), g_oz_vector_scale );
     Write( _T ( "OverzoomEmphasisBase" ), g_overzoom_emphasis_base );
@@ -2570,6 +2575,8 @@ void MyConfig::UpdateSettings()
     Write( _T ( "ActiveChartGroup" ), g_GroupIndex );
 
     Write( _T( "NMEAAPBPrecision" ), g_NMEAAPBPrecision );
+    
+    Write( _T("TalkerIdText"), g_TalkerIdText );
 
     Write( _T ( "AnchorWatch1GUID" ), g_AW1GUID );
     Write( _T ( "AnchorWatch2GUID" ), g_AW2GUID );
@@ -2607,8 +2614,8 @@ void MyConfig::UpdateSettings()
 
     Write( _T ( "KeepNavobjBackups" ), g_navobjbackups );
     Write( _T ( "LegacyInputCOMPortFilterBehaviour" ), g_b_legacy_input_filter_behaviour );
-    Write( _T( "Sailing" ), g_bSailing);
-
+    Write( _T( "AdvanceRouteWaypointOnArrivalOnly" ), g_bAdvanceRouteWaypointOnArrivalOnly);
+    
 //    S57 Object Filter Settings
 
     SetPath( _T ( "/Settings/ObjectFilter" ) );
@@ -2644,7 +2651,6 @@ void MyConfig::UpdateSettings()
             Write( _T ( "VPScale" ), st1 );
             st1.Printf( _T ( "%i" ), ((int)(vp.rotation * 180 / PI)) % 360 );
             Write( _T ( "VPRotation" ), st1 );
-            
         }
     }
 
@@ -2786,8 +2792,12 @@ void MyConfig::UpdateSettings()
     font_path = ( _T ( "/Settings/MacFonts" ) );
 #endif
 
+#ifdef __WXQT__
+    font_path = ( _T ( "/Settings/QTFonts" ) );
+#endif
+    
     DeleteGroup(font_path);
-
+    
     SetPath( font_path );
 
     int nFonts = FontMgr::Get().GetNumFonts();
@@ -2816,6 +2826,12 @@ void MyConfig::UpdateSettings()
     Write( _T ( "RadarRingsStep" ), g_fNavAidRadarRingsStep );
     Write( _T ( "RadarRingsStepUnits" ), g_pNavAidRadarRingsStepUnits );
 
+    // Waypoint Radar rings
+    Write( _T ( "WaypointRangeRingsNumber" ), g_iWaypointRangeRingsNumber );
+    Write( _T ( "WaypointRangeRingsStep" ), g_fWaypointRangeRingsStep );
+    Write( _T ( "WaypointRangeRingsStepUnits" ), g_iWaypointRangeRingsStepUnits );
+    Write( _T ( "WaypointRangeRingsColour" ), g_colourWaypointRangeRingsColour.GetAsString( wxC2S_HTML_SYNTAX ) );
+
     Write( _T ( "ConfirmObjectDeletion" ), g_bConfirmObjectDelete );
 
     // Waypoint dragging with mouse; toh, 2009.02.24
@@ -2840,6 +2856,7 @@ void MyConfig::UpdateSettings()
         Write( p, g_MMSI_Props_Array.Item(i)->Serialize() );
     }
 
+
     Flush();
 }
 
@@ -2856,7 +2873,7 @@ void MyConfig::UpdateNavObj( void )
 
     if( ::wxFileExists( m_sNavObjSetChangesFile ) )
         wxRemoveFile( m_sNavObjSetChangesFile );
-    
+
     delete m_pNavObjectChangesSet;
     m_pNavObjectChangesSet = new NavObjectChanges(m_sNavObjSetChangesFile);
 
@@ -3118,7 +3135,7 @@ RoutePoint *WaypointExists( const wxString& name, double lat, double lon )
     RoutePoint *pret = NULL;
 //    if( g_bIsNewLayer ) return NULL;
     wxRoutePointListNode *node = pWayPointMan->GetWaypointList()->GetFirst();
-//    bool Exists = false;  // Not used
+    bool Exists = false;
     while( node ) {
         RoutePoint *pr = node->GetData();
 
@@ -3126,7 +3143,7 @@ RoutePoint *WaypointExists( const wxString& name, double lat, double lon )
 
         if( name == pr->GetName() ) {
             if( fabs( lat - pr->m_lat ) < 1.e-6 && fabs( lon - pr->m_lon ) < 1.e-6 ) {
-//                Exists = true;  // Not used
+                Exists = true;
                 pret = pr;
                 break;
             }
@@ -3451,7 +3468,7 @@ static wxString wxColourDialogNames[NUM_COLS]= {wxT ( "ORANGE" ),
     wxT ( "SEA GREEN" ),
     wxT ( "LIGHT GREY" ),
     wxT ( "MEDIUM SLATE BLUE" ),
-    wxT ( "WHITE" ),
+    wxT ( "WHITE" )
     wxT ( "SIENNA" )
 };
 
@@ -4326,7 +4343,6 @@ wxString toSDMM( int NEflag, double a, bool hi_precision )
 #else
                 c = 'E';
 #endif
-
                 if( neg ) {
                     d = -d;
                     c = 'W';
@@ -4493,7 +4509,7 @@ void AlphaBlending( ocpnDC &dc, int x, int y, int size_x, int size_y, float radi
         wxMemoryDC oldc( olbm );
         if(!oldc.IsOk())
             return;
-            
+
         oldc.SetBackground( *wxBLACK_BRUSH );
         oldc.SetBrush( *wxWHITE_BRUSH );
         oldc.Clear();
@@ -4518,7 +4534,7 @@ void AlphaBlending( ocpnDC &dc, int x, int y, int size_x, int size_y, float radi
         if(NULL == box)
             return;
 #endif
-        
+
         float alpha = 1.0 - (float)transparency / 255.0;
         int sb = size_x * size_y;
         for( int i = 0; i < sb; i++ ) {

@@ -53,6 +53,13 @@
 #include <wx/image.h>
 #include <wx/tokenzr.h>
 
+#ifdef __OCPN__ANDROID__
+#include <qopengl.h>
+#include "GL/gl_private.h"
+#else
+#include "GL/gl.h"
+#endif
+
 #ifdef ocpnUSE_GL
 #include "glChartCanvas.h"
 #endif
@@ -262,7 +269,6 @@ s52plib::s52plib( const wxString& PLib, bool b_forceLegacy )
 
     canvas_pix_per_mm = 3.;
 
-
     //        Set up some default flags
     m_bDeClutterText = false;
     m_bShowAtonText = true;
@@ -404,7 +410,7 @@ void s52plib::GenerateStateHash()
 {
     unsigned char state_buffer[512];  // Needs to be at least this big...
     memset(state_buffer, 0, sizeof(state_buffer));
-
+    
     int time = ::wxGetUTCTime();
     memcpy(state_buffer, &time, sizeof(int));
     
@@ -414,10 +420,10 @@ void s52plib::GenerateStateHash()
         if( (offset + sizeof(double)) < sizeof(state_buffer)){
             double t = S52_getMarinerParam((S52_MAR_param_t) i);
             memcpy( &state_buffer[offset], &t, sizeof(double));
-            offset += sizeof(double);
+	    offset += sizeof(double);
         }
     }
-
+    
     for(unsigned int i=0 ; i < m_noshow_array.GetCount() ; i++){
         if( (offset + 6) < sizeof(state_buffer)){
             memcpy(&state_buffer[offset], m_noshow_array[i].obj, 6) ;
@@ -442,13 +448,13 @@ void s52plib::GenerateStateHash()
     
     if(offset + sizeof(bool) < sizeof(state_buffer))
         memcpy(&state_buffer[offset], &m_bShowAtonText, sizeof(bool));  offset += sizeof(bool);
-    
+
     if(offset + sizeof(bool) < sizeof(state_buffer))
         memcpy(&state_buffer[offset], &m_bShowLdisText, sizeof(bool));  offset += sizeof(bool);
     
     if(offset + sizeof(bool) < sizeof(state_buffer))
         memcpy(&state_buffer[offset], &m_bExtendLightSectors, sizeof(bool));  offset += sizeof(bool);
-    
+            
     m_state_hash = crc32buf(state_buffer, offset );
     
 }
@@ -1338,7 +1344,7 @@ char *_getParamVal( ObjRazRules *rzRules, char *str, char *buf, int bsz )
     } else {
 
         //    Special case for conversion of some vertical (height) attributes to feet
-        if( ( !strncmp( buf, "VERCLR", 6 ) ) || ( !strncmp( buf, "VERCCL", 6 ) ) ) {
+        if( ( !strncmp( buf, "VERCLR", 6 ) ) || ( !strncmp( buf, "VERCCL", 6 ) ) || ( !strncmp( buf, "VERCOP", 6 ) ) ) {
             switch( ps52plib->m_nDepthUnitDisplay ){
                 case 0: // feet
                 case 2: // fathoms
@@ -1580,7 +1586,7 @@ bool s52plib::RenderText( wxDC *pdc, S52_TextC *ptext, int x, int y, wxRect *pRe
     
     if(!g_oz_vector_scale || !vp->b_quilt)
         scale_factor = 1.0;
-
+        
     if( !pdc ) // OpenGL
     {
 #ifdef ocpnUSE_GL
@@ -1588,12 +1594,12 @@ bool s52plib::RenderText( wxDC *pdc, S52_TextC *ptext, int x, int y, wxRect *pRe
         bool b_force_no_texture = false;
         if(scale_factor > 1.){
             b_force_no_texture = true;
-            
+  
             int old_size = ptext->pFont->GetPointSize();
             int new_size = old_size * scale_factor;
             scaled_font = wxTheFontList->FindOrCreateFont( new_size, ptext->pFont->GetFamily(),
-                                                          ptext->pFont->GetStyle(), ptext->pFont->GetWeight(), false,
-                                                          ptext->pFont->GetFaceName() );
+                                                           ptext->pFont->GetStyle(), ptext->pFont->GetWeight(), false,
+                                                           ptext->pFont->GetFaceName() );
             wxScreenDC sdc;
             sdc.GetTextExtent( ptext->frmtd, &w_scaled, &h_scaled, &descent, &exlead, scaled_font ); // measure the text
             
@@ -1603,22 +1609,21 @@ bool s52plib::RenderText( wxDC *pdc, S52_TextC *ptext, int x, int y, wxRect *pRe
                 free(ptext->m_pRGBA);
                 ptext->m_pRGBA = NULL;
             }
-            
+                
             ptext->rendered_char_height = h_scaled - descent;
-            
+                
         }
-
         // We render National text the old, hard way, since the text will probably have full UTF-8 codepage elements
         // and we don't necessarily have the glyphs in our font, or if we do we would need a hashmap to cache and extract them
         
         // We also do this if the string has been detected to contain "special" characters
+        
         // And we also do this if the text is to be scaled up artificially.
-        if( (ptext->bnat) || (ptext->bspecial_char) || b_force_no_texture) {
-       
+        if( (ptext->bnat) || (ptext->bspecial_char) || b_force_no_texture) {       
             if( !ptext->m_pRGBA ) // is RGBA bitmap ready?
             {
                 wxScreenDC sdc;
-                
+
                 if(scale_factor <= 1.){
                     sdc.GetTextExtent( ptext->frmtd, &w_scaled, &h_scaled, &descent, &exlead, scaled_font ); // measure the text
                     ptext->rendered_char_height = h_scaled - descent;
@@ -1806,13 +1811,14 @@ bool s52plib::RenderText( wxDC *pdc, S52_TextC *ptext, int x, int y, wxRect *pRe
         } else {
             wxFont oldfont = pdc->GetFont(); // save current font
 
+            
             if(scale_factor > 1){
                 wxFont *pf = ptext->pFont;
                 int old_size = pf->GetPointSize();
                 int new_size = old_size * scale_factor;
                 wxFont *scaled_font = wxTheFontList->FindOrCreateFont( new_size, pf->GetFamily(),
-                                                                      pf->GetStyle(), pf->GetWeight(), false,
-                                                                      pf->GetFaceName() );
+                                                                       pf->GetStyle(), pf->GetWeight(), false,
+                                                                       pf->GetFaceName() );
                 pdc->SetFont( *scaled_font);
             }
             else{
@@ -1980,11 +1986,17 @@ int s52plib::RenderT_All( ObjRazRules *rzRules, Rules *rules, ViewPort *vp, bool
                     if( spec_weight == 5 ) fontweight = wxFONTWEIGHT_NORMAL;
                     else
                         fontweight = wxFONTWEIGHT_BOLD;
+
+                wxFont sys_font = *wxNORMAL_FONT;
+                int default_size = sys_font.GetPointSize();
+
 #ifdef __WXOSX__
-                wxFont* templateFont = FontMgr::Get().GetFont( _("ChartTexts"), 12 );
+                default_size += 1;     // default to 1pt larger than system UI font
 #else
-                wxFont* templateFont = FontMgr::Get().GetFont( _("ChartTexts"), 24 );
+                default_size += 2;     // default to 2pt larger than system UI font
 #endif
+                
+                wxFont* templateFont = FontMgr::Get().GetFont( _("ChartTexts"), default_size );
 
                 // NOAA ENC fles requests font size up to 20 points, which looks very
                 // disproportioned. Let's scale those sizes down to more reasonable values.
@@ -1995,7 +2007,7 @@ int s52plib::RenderT_All( ObjRazRules *rzRules, Rules *rules, ViewPort *vp, bool
                     if( fontSize > 13 ) fontSize -= 3;
 
                 // Now factor in the users selected font size.
-                fontSize += templateFont->GetPointSize() - 12;
+                fontSize += templateFont->GetPointSize() - 10;
                 
                 // In no case should font size be less than 10, since it becomes unreadable
                 fontSize = wxMax(10, fontSize);
@@ -2307,12 +2319,15 @@ wxImage s52plib::RuleXBMToImage( Rule *prule )
 bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r, ViewPort *vp,
                                   float rot_angle )
 {
-
     double scale_factor = 1.0;
     
     if(g_oz_vector_scale && vp->b_quilt){
         double sfactor = vp->ref_scale/vp->chart_scale;
+#ifdef __WXOSX__
+        scale_factor = wxMax((sfactor - g_overzoom_emphasis_base)  / 4., 1.75);
+#else
         scale_factor = wxMax((sfactor - g_overzoom_emphasis_base)  / 4., 1);
+#endif
         scale_factor = wxMin(scale_factor, 20);
     }
     
@@ -2341,7 +2356,7 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
                 if( prule->parm0 != ID_RGBA ) b_dump_cache = true;
             }
         }
-
+        
         // This handles the case when zooming into overzoom scale mode from normal
         // We want to make sure the old unzoomed cache is not used.
         //  Logic:  If parm0 != ID_EMPTY, it must be true that the last render was un-zoomed,
@@ -2366,7 +2381,7 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
                 int h0 = Image.GetHeight();
                 Image.Rescale(w0 * scale_factor, h0 * scale_factor);
             }
-
+            
             int w = Image.GetWidth();
             int h = Image.GetHeight();
 
@@ -2397,7 +2412,7 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
                             e[off * 4 + 2] = b;
                             
                             e[off * 4 + 3] =
-                            a ? a[off] : ( ( r == mr ) && ( g == mg ) && ( b == mb ) ? 0 : 255 );
+                                a ? a[off] : ( ( r == mr ) && ( g == mg ) && ( b == mb ) ? 0 : 255 );
                         }
                     }
                 }
@@ -2498,7 +2513,7 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
-
+        
         if(texture) {
             extern GLenum       g_texture_rectangle_format;
             glPushAttrib( GL_ENABLE_BIT ); //Save
@@ -2524,7 +2539,7 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
                 glRotatef(vp->rotation * 180/PI, 0, 0, -1);
                 glTranslatef(-pivot_x, -pivot_y, 0);
                 glScalef(scale_factor, scale_factor, 1);
-
+                
                 glBegin(GL_QUADS);
                     glTexCoord2f(tx1, ty1);    glVertex2i( 0, 0);
                     glTexCoord2f(tx2, ty1);    glVertex2i( w, 0);
@@ -2535,6 +2550,7 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
                 glPopMatrix();
             }
             else {
+                
                 if(scale_factor > 1.0){
                     glPushMatrix();
                     
@@ -2554,14 +2570,14 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
                 else {
                     float ddx = pivot_x;
                     float ddy = pivot_y;
-                    
+                
                     glBegin(GL_QUADS);
-                    glTexCoord2f(tx1, ty1);    glVertex2i(  r.x - ddx, r.y - ddy );
-                    glTexCoord2f(tx2, ty1);    glVertex2i(  r.x - ddx + w, r.y - ddy );
-                    glTexCoord2f(tx2, ty2);    glVertex2i(  r.x - ddx + w, r.y - ddy + h );
-                    glTexCoord2f(tx1, ty2);    glVertex2i(  r.x - ddx, r.y - ddy + h);
+                        glTexCoord2f(tx1, ty1);    glVertex2i(  r.x - ddx, r.y - ddy );
+                        glTexCoord2f(tx2, ty1);    glVertex2i(  r.x - ddx + w, r.y - ddy );
+                        glTexCoord2f(tx2, ty2);    glVertex2i(  r.x - ddx + w, r.y - ddy + h );
+                        glTexCoord2f(tx1, ty2);    glVertex2i(  r.x - ddx, r.y - ddy + h);
                     glEnd();
-                }
+                }                
             }
 
             glPopAttrib();
@@ -2576,13 +2592,13 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
             //  Since draw pixels is so slow, lets not draw anything we don't have to
             wxRect sym_rect(r.x - ddx, r.y - ddy, b_width, b_height);
             if(vp->rv_rect.Intersects(sym_rect) ) {
-
+                
                 glPushAttrib( GL_SCISSOR_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
+                
                 glDisable( GL_SCISSOR_TEST );
                 glDisable( GL_STENCIL_TEST );
                 glDisable( GL_DEPTH_TEST );
-
+                
                 glRasterPos2f( r.x - ddx, r.y - ddy );
                 glPixelZoom( 1, -1 );
                 glDrawPixels( b_width, b_height, GL_RGBA, GL_UNSIGNED_BYTE, prule->pixelPtr );
@@ -2601,7 +2617,7 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
             //    Don't bother if the symbol is off the true screen,
             //    as for instance when an area-centered symbol is called for.
             if( ( ( r.x - pivot_x /*+ b_width*/ ) < vp->pix_width )
-               && ( ( r.y - pivot_y/* + b_height*/ ) < vp->pix_height ) ) {
+                    && ( ( r.y - pivot_y/* + b_height*/ ) < vp->pix_height ) ) {
                 // Get the current screen contents
                 wxBitmap b1( b_width, b_height, -1 );
                 wxMemoryDC mdc1( b1 );
@@ -2686,7 +2702,7 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
     //  Dump the cache for next time
     if(g_oz_vector_scale && (scale_factor > 1.0))
         ClearRulesCache( prule );
-
+    
     return true;
 }
 
@@ -2746,7 +2762,7 @@ int s52plib::RenderGLLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     double scale_factor = vp->ref_scale/vp->chart_scale;
     if(scale_factor > 10.0)
         return RenderLS(rzRules, rules, vp);
-
+    
     bool b_useVBO = false;
     float *vertex_buffer = 0;
     
@@ -2861,8 +2877,8 @@ int s52plib::RenderGLLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             else
                 glDisable( GL_LINE_STIPPLE );
 #endif
-
-
+                
+ 
     glPushMatrix();
     
     // Set up the OpenGL transform matrix for this object
@@ -2974,7 +2990,7 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     wxPen wide_pen(*wxBLACK_PEN);
     wxDash dashw[2];
     dashw[0] = 3;
-    dashw[1] = 1;
+    dashw[1] = 1; 
     
     if( b_wide_line)
     {
@@ -2982,23 +2998,23 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         w = wxMin(w, 50);                               // upper bound
         wide_pen.SetWidth( w );
         wide_pen.SetColour(color);
-
+        
         if( !strncmp( str, "DOTT", 4 ) ) {
             dashw[0] = 1;
             wide_pen.SetStyle(wxUSER_DASH);
             wide_pen.SetDashes( 2, dashw );
-        }
+        }        
         else if( !strncmp( str, "DASH", 4 ) ){
             wide_pen.SetStyle(wxUSER_DASH);
             if( m_pdc){ //DC mode
                 dashw[0] = 1;
                 dashw[1] = 2;
             }
-            
+                
             wide_pen.SetDashes( 2, dashw );
         }
     }
-
+ 
     wxPen thispen(color, w, wxSOLID);
     wxDash dash1[2];
     
@@ -3007,18 +3023,18 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         if( !strncmp( str, "DOTT", 4 ) ) {
             thispen.SetStyle(wxUSER_DASH);
             dash1[0] = 1;
-            dash1[1] = 2;
+            dash1[1] = 2; 
             thispen.SetDashes( 2, dash1 );
-        }
+        }        
         else if( !strncmp( str, "DASH", 4 ) ){
             thispen.SetStyle(wxSHORT_DASH);
         }
-        
+         
         if(b_wide_line)
             m_pdc->SetPen( wide_pen );
         else
             m_pdc->SetPen( thispen );
-
+        
     }
 
 #ifdef ocpnUSE_GL
@@ -3153,7 +3169,7 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
             //  Here we decide to draw or not based on the highest priority seen for this segment
             //  That is, if this segment is going to be drawn at a higher priority later, then "continue", and don't draw it here.
-
+            
             // This logic is not perfectly right for one case:
             // If the segment has only two end connected nodes, and no intermediate edge,
             // then we have no good way to evaluate the priority.
@@ -3220,15 +3236,16 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
                         else {
                             DrawGLThickLine( x0, y0, x1, y1, wide_pen, true );
                         }
+                        
                     }
-#endif
+#endif                    
                 }
             }
         }
 #ifdef ocpnUSE_GL
         if(!b_wide_line)
             glEnd();
-#endif
+#endif                    
         free( ptp );
     }
 
@@ -3400,6 +3417,7 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     if( !m_pdc ) glPopAttrib();
 #endif
                 
+   
     return 1;
 }
 
@@ -3501,7 +3519,7 @@ int s52plib::RenderLC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             if(pedge){
             //  Here we decide to draw or not based on the highest priority seen for this segment
             //  That is, if this segment is going to be drawn at a higher priority later, then don't draw it here.
-
+            
             // This logic is not perfectly right for one case:
             // If the segment has only two end connected nodes, and no intermediate edge,
             // then we have no good way to evaluate the priority.
@@ -3510,8 +3528,8 @@ int s52plib::RenderLC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             if( pedge->nCount ){
                 if( pedge->max_priority != priority_current ) continue;
             }
-                
-                //                if( pedge->max_priority != priority_current ) continue;
+            
+//                if( pedge->max_priority != priority_current ) continue;
 
                 nls = pedge->nCount;
 
@@ -3989,14 +4007,14 @@ int s52plib::RenderMPS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     double scale_factor = vp->ref_scale/vp->chart_scale;
     double box_mult = wxMax((scale_factor - g_overzoom_emphasis_base), 1);
     int box_dim = 32 * box_mult;
-
+    
     // We need a pixel bounding rectangle of the passed ViewPort.
     // Very important for partial screen renders, as with dc mode pans or OpenGL FBO operation.
     
     wxPoint cr0 = vp_local.GetPixFromLL( vp_local.GetBBox().GetMaxY(), vp_local.GetBBox().GetMinX());
     wxPoint cr1 = vp_local.GetPixFromLL( vp_local.GetBBox().GetMinY(), vp_local.GetBBox().GetMaxX());
     wxRect clip_rect(cr0, cr1);
-
+    
     for( int ip = 0; ip < npt; ip++ ) {
         
         double lon = *pdl++;
@@ -4005,7 +4023,6 @@ int s52plib::RenderMPS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         wxPoint r = vp_local.GetPixFromLL( lat, lon );
         //      Use estimated symbol size
         wxRect rr(r.x-(box_dim/2), r.y-(box_dim/2), box_dim, box_dim);
-        
         
         //      After all the setup, the render inclusion test is trivial....
         if(!clip_rect.Intersects(rr))
@@ -4127,7 +4144,7 @@ int s52plib::RenderCARC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
         //      For some reason, the __WXMSW__ build flips the sense of
         //      start and end angles on DrawEllipticArc()
-#ifdef __WXMSW__
+#ifndef __WXMSW__
         if ( sectr2 > sectr1 )
         {
             sb = 90 - sectr1;
@@ -4477,7 +4494,7 @@ int s52plib::DoRenderObject( wxDC *pdcin, ObjRazRules *rzRules, ViewPort *vp )
 
     if( IsObjNoshow( rzRules->LUP->OBCL) )
         return 0;
-
+        
     if( !ObjectRenderCheckCat( rzRules, vp ) ) {
 
         //  If this object cannot be moved to a higher category by CS procedures,
@@ -6490,9 +6507,9 @@ int s52plib::RenderToGLAP( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
         int h = ppatt_spec->height;
         int w = ppatt_spec->width;
-        int xr; // = obj_xmin;  // Not used
+        int xr = obj_xmin;
         int yr = obj_ymin;
-
+        
         float ww = (float) ppatt_spec->width / (float) ppatt_spec->w_pot;
         float hh = (float) ppatt_spec->height / (float) ppatt_spec->h_pot;
         float x_stagger_off = 0;
@@ -6504,7 +6521,7 @@ int s52plib::RenderToGLAP( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
                 if( ( (yr + h) >= 0 ) && ( yr <= obj_ymax ) )  {
                     xr = obj_xmin;   //reset
                     while( xr < vp->pix_width ) {
-
+                    
                         int xp = xr;
                         if( yc & 1 ) xp += x_stagger_off;
                     
@@ -6836,7 +6853,7 @@ render_canvas_parms* s52plib::CreatePatternBufferSpec( ObjRazRules *rzRules, Rul
                         unsigned char r = *ps++;
                         unsigned char g = *ps++;
                         unsigned char b = *ps++;
-#ifdef ocpnUSE_ocpnBitmap
+    #ifdef ocpnUSE_ocpnBitmap
                         if( b_revrgb ) {
                             *pd++ = b;
                             *pd++ = g;
@@ -6846,12 +6863,12 @@ render_canvas_parms* s52plib::CreatePatternBufferSpec( ObjRazRules *rzRules, Rul
                             *pd++ = g;
                             *pd++ = b;
                         }
-                        
-#else
+
+    #else
                         *pd++ = r;
                         *pd++ = g;
                         *pd++ = b;
-#endif
+    #endif
                         if( b_use_alpha && imgAlpha ) {
                             *pd++ = *imgAlpha++;
                         } else {
@@ -7193,6 +7210,14 @@ bool s52plib::ObjectRenderCheckCat( ObjRazRules *rzRules, ViewPort *vp )
 //  Soundings override
     if( !strncmp( rzRules->LUP->OBCL, "SOUNDG", 6 ) )
         b_catfilter = m_bShowSoundg;
+    
+    //  Some objects may be promoted to category "ALL", according to the S52 spec.
+    //  So we give the CS procedures a chance to run here.  After the CS is evaluated, they will display or not
+    //  depending on the results of UDWHAZ procedure, and whether they were promoted.
+    if( !strncmp( rzRules->LUP->OBCL, "UWTROC", 6 ) ){  //  TODO Should add OBSTRN and WRECKS to this test
+        if( !rzRules->obj->bCS_Added )
+            b_catfilter = true;
+    }
 
     bool b_visible = false;
     if( b_catfilter ) {
@@ -7267,6 +7292,7 @@ void s52plib::ClearNoshow(void)
 {
     m_noshow_array.Clear();
 }
+
 
 //    Do all those things necessary to prepare for a new rendering
 void s52plib::PrepareForRender()

@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Layer to perform wxDC drawing using wxDC or opengl
@@ -21,8 +21,10 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ ***************************************************************************
+ *
+ */
 
 #include "wx/wxprec.h"
 
@@ -35,9 +37,19 @@
 #endif
 
 #ifdef __WXMSW__
-#include "GL/gl.h"            // local copy for Windows
+    #include "GL/gl.h"            // local copy for Windows
+    #include <GL/glu.h>
 #else
-#include <GL/gl.h>
+
+    #ifndef __OCPN__ANDROID__
+        #include <GL/gl.h>
+        #include <GL/glu.h>
+    #else
+        #include "qopengl.h"                  // this gives us the qt runtime gles2.h
+        #include "GL/gl_private.h"
+        #include "glues.h"
+    #endif
+
 #endif
 
 #ifdef ocpnUSE_GL
@@ -845,9 +857,9 @@ void APIENTRY ocpnDCcombineCallback( GLdouble coords[3], GLdouble *vertex_data[4
 
 void APIENTRY ocpnDCvertexCallback( GLvoid* arg )
 {
-	GLvertex* vertex;
-	vertex = (GLvertex*) arg;
-    glVertex2d( vertex->info.x, vertex->info.y );
+    GLvertex* vertex;
+    vertex = (GLvertex*) arg;
+    glVertex2f( (float)vertex->info.x, (float)vertex->info.y );
 }
 
 void APIENTRY ocpnDCerrorCallback( GLenum errorCode )
@@ -1066,7 +1078,7 @@ void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
             }
 
             unsigned char *data = new unsigned char[w * h];
-            unsigned char *im = image.GetData();
+           unsigned char *im = image.GetData();
             if(im){
                 for( int i = 0; i < w * h; i++ )
                     data[i] = im[3 * i];
@@ -1087,7 +1099,7 @@ void ocpnDC::GetTextExtent( const wxString &string, wxCoord *w, wxCoord *h, wxCo
     //  Give at least reasonable results on failure.
     if(w) *w = 100;
     if(h) *h = 100;
-
+    
     if( dc ) dc->GetTextExtent( string, w, h, descent, externalLeading, font );
     else {
         wxFont f = m_font;
@@ -1095,12 +1107,13 @@ void ocpnDC::GetTextExtent( const wxString &string, wxCoord *w, wxCoord *h, wxCo
 
         wxMemoryDC temp_dc;
         temp_dc.GetTextExtent( string, w, h, descent, externalLeading, &f );
-    }
-    
-    //  Sometimes GetTextExtent returns really wrong, uninitialized results.
-    //  Dunno why....
-    if( w && (*w > 500) ) *w = 500;
-    if( h && (*h > 500) ) *h = 500;
+        
+     }
+     
+     //  Sometimes GetTextExtent returns really wrong, uninitialized results.
+     //  Dunno why....
+     if( w && (*w > 500) ) *w = 500;
+     if( h && (*h > 500) ) *h = 500;
 }
 
 void ocpnDC::ResetBoundingBox()

@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "wx/wxprec.h"
 
@@ -133,9 +134,9 @@ void AISTargetQueryDialog::OnIdTrkCreateClick( wxCommandEvent& event )
             {
                 RoutePoint *rp = NULL;
                 RoutePoint *rp1 = NULL;
-                
+                    
                 Track *t = new Track();
-                
+
                 t->m_RouteNameString = wxString::Format( _T("AIS %s (%u) %s %s"), td->GetFullName().c_str(), td->MMSI, wxDateTime::Now().FormatISODate().c_str(), wxDateTime::Now().FormatISOTime().c_str() );
                 wxAISTargetTrackListNode *node = td->m_ptrack->GetFirst();
                 while( node )
@@ -146,7 +147,7 @@ void AISTargetQueryDialog::OnIdTrkCreateClick( wxCommandEvent& event )
                     if( rp )
                     {
                         pSelect->AddSelectableTrackSegment( rp->m_lat, rp->m_lon, rp1->m_lat,
-                                                           rp1->m_lon, rp, rp1, t );
+                            rp1->m_lon, rp, rp1, t );
                     }
                     rp = rp1;
                     node = node->GetNext();
@@ -155,14 +156,14 @@ void AISTargetQueryDialog::OnIdTrkCreateClick( wxCommandEvent& event )
                 pRouteList->Append( t );
                 pConfig->AddNewRoute( t, -1 );
                 t->RebuildGUIDList(); // ensure the GUID list is intact and good
-                
+
                 if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
                     pRouteManagerDialog->UpdateTrkListCtrl();
                 Refresh( false );
-
+         
                 if( wxID_YES == OCPNMessageBox(NULL,
-                                            _("The recently captured track of this target has been recorded.\nDo you want to continue recording until the end of the current OpenCPN session?"),
-                                            _("OpenCPN Info"), wxYES_NO | wxCENTER, 60 ) )
+                    _("The recently captured track of this target has been recorded.\nDo you want to continue recording until the end of the current OpenCPN session?"),
+                    _("OpenCPN Info"), wxYES_NO | wxCENTER, 60 ) )
                 {
                     td->b_PersistTrack = true;
                     g_pAIS->m_persistent_tracks[td->MMSI] = t;
@@ -215,13 +216,23 @@ void AISTargetQueryDialog::SetColorScheme( ColorScheme cs )
     wxColor bg = GetBackgroundColour();
     m_pQueryTextCtl->SetBackgroundColour( bg );
     SetBackgroundColour( bg );                  // This looks like non-sense, but is needed for __WXGTK__
-    // to get colours to propagate down the control's family tree.
+                                                // to get colours to propagate down the control's family tree.
+
+#ifdef __WXQT__
+    //  wxQT has some trouble clearing the background of HTML window...
+    wxBitmap tbm( GetSize().x, GetSize().y, -1 );
+    wxMemoryDC tdc( tbm );
+    //    wxColour cback = GetGlobalColor( _T("YELO1") );
+    tdc.SetBackground( bg );
+    tdc.Clear();
+    m_pQueryTextCtl->SetBackgroundImage(tbm);
+#endif
 
     if( cs != m_colorscheme ) {
         Refresh();
     }
     m_colorscheme = cs;
-
+    
 }
 
 void AISTargetQueryDialog::CreateControls()
@@ -230,17 +241,18 @@ void AISTargetQueryDialog::CreateControls()
     SetSizer( topSizer );
 
     m_pQueryTextCtl = new wxHtmlWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                wxHW_SCROLLBAR_AUTO );
+                                       wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION );
     m_pQueryTextCtl->SetBorders( 5 );
     topSizer->Add( m_pQueryTextCtl, 1, wxALIGN_CENTER_HORIZONTAL | wxALL | wxEXPAND, 5 );
 
     wxSizer* opt = new wxBoxSizer( wxHORIZONTAL );
     m_createWptBtn = new wxButton( this, xID_WPT_CREATE, _("Create Waypoint"), wxDefaultPosition, wxDefaultSize, 0 );
     opt->Add( m_createWptBtn, 0, wxALL|wxEXPAND, 5 );
-
+    
     m_createTrkBtn = new wxButton( this, xID_TRK_CREATE, _("Record Track"), wxDefaultPosition, wxDefaultSize, 0 );
     opt->Add( m_createTrkBtn, 0, wxALL|wxEXPAND, 5 );
     topSizer->Add( opt, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 5 );
+    
 
     wxSizer* ok = CreateButtonSizer( wxOK );
     topSizer->Add( ok, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 5 );

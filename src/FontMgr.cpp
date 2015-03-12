@@ -58,7 +58,7 @@ FontMgr::FontMgr()
     m_fontlist->DeleteContents( true );
 
     s_locale = g_locale;
-
+    
     //    Get a nice generic font as default
     pDefFont = wxTheFontList->FindOrCreateFont( 12, wxDEFAULT, wxNORMAL, wxBOLD, FALSE,
             wxString( _T ( "" ) ), wxFONTENCODING_SYSTEM );
@@ -130,14 +130,10 @@ wxFont *FontMgr::GetFont( const wxString &TextElement, int user_default_size )
 
     //    Now create a benign, always present native font
     //    with optional user requested default size
-
+    
     //    Get the system default font.
     wxFont sys_font = *wxNORMAL_FONT;
     int sys_font_size = sys_font.GetPointSize();
-
-#ifdef __WXMSW__
-    sys_font_size = wxMax( sys_font_size, 10 );   //  In no case should the default font be smaller than 10 pt.
-#endif
 
     int new_size;
     if( 0 == user_default_size )
@@ -163,7 +159,12 @@ wxString FontMgr::GetSimpleNativeFont( int size )
     //    Now create a benign, always present native string
     wxString nativefont;
 
-//    For those platforms which have no native font description string format
+    // this should work for all platforms
+    nativefont = wxFont(size, wxFONTFAMILY_DEFAULT, (int) wxFONTSTYLE_NORMAL, (int) wxFONTWEIGHT_NORMAL)
+    .GetNativeFontInfoDesc();
+    
+#if 0
+    //    For those platforms which have no native font description string format
     nativefont.Printf( _T ( "%d;%d;%d;%d;%d;%d;%s;%d" ),
             0,                                 // version
             size, wxFONTFAMILY_DEFAULT, (int) wxFONTSTYLE_NORMAL, (int) wxFONTWEIGHT_NORMAL, false,
@@ -187,24 +188,24 @@ wxString FontMgr::GetSimpleNativeFont( int size )
     int size_px = sys_font.GetPixelSize().GetHeight();
 
     nativefont.Printf( _T("%d;%ld;%ld;%ld;%ld;%ld;%d;%d;%d;%d;%d;%d;%d;%d;"), 0, // version, in case we want to change the format later
-                      size_px,             //lf.lfHeight
-                      0,                   //lf.lfWidth,
-                      0,                   //lf.lfEscapement,
-                      0,                   //lf.lfOrientation,
-                      400,                 //lf.lfWeight,
-                      0,                   //lf.lfItalic,
-                      0,                   //lf.lfUnderline,
-                      0,                   //lf.lfStrikeOut,
-                      0,                   //lf.lfCharSet,
-                      0,                   //lf.lfOutPrecision,
-                      0,                   //lf.lfClipPrecision,
-                      0,                   //lf.lfQuality,
-                      0 );                    //lf.lfPitchAndFamily,
+            size_px,             //lf.lfHeight
+            0,                   //lf.lfWidth,
+            0,                   //lf.lfEscapement,
+            0,                   //lf.lfOrientation,
+            400,                 //lf.lfWeight,
+            0,                   //lf.lfItalic,
+            0,                   //lf.lfUnderline,
+            0,                   //lf.lfStrikeOut,
+            0,                   //lf.lfCharSet,
+            0,                   //lf.lfOutPrecision,
+            0,                   //lf.lfClipPrecision,
+            0,                   //lf.lfQuality,
+            0 );                    //lf.lfPitchAndFamily,
 
     nativefont.Append( sys_font.GetFaceName() );
 
 #endif
-
+#endif
     return nativefont;
 }
 
@@ -309,7 +310,15 @@ void FontMgr::LoadFontNative( wxString *pConfigString, wxString *pNativeDesc )
     if( !node ) {
 
         wxFont *nf0 = new wxFont();
+        
+#ifdef __OCPN__ANDROID__
+        wxFont *nf = new wxFont( nativefont );
+#else
         wxFont *nf = nf0->New( nativefont );
+#endif
+        
+        double font_size = nf->GetPointSize();
+        wxString s = nf->GetNativeFontInfoDesc();
 
         //    Scrub the native font string for bad unicode conversion
 #ifdef __WXMSW__
@@ -350,28 +359,29 @@ wxString FontCandidates[] = {
     _T("END_OF_LIST")
 };
 
+
 void FontMgr::ScrubList( )
 {
     wxString now_locale = g_locale;
     wxArrayString string_array;
-
+    
     bool done = false;
     unsigned int i = 0;
     while( ! done ){
         wxString candidate = FontCandidates[i];
         if(candidate == _T("END_OF_LIST") ) {
-//            done = true;  // Not used, break
+            done = true;
             break;
         }
-
+        
         //  For each font identifier string in the FontCandidate array...
-
+        
         //  In the current locale, walk the loaded list looking for a translation
         //  that is correct, according to the currently load .mo file.
         //  If found, add to a temporary array
-
+        
         wxString trans = wxGetTranslation(candidate);
-
+        
         MyFontDesc *pmfd;
         wxNode *node = (wxNode *) ( m_fontlist->GetFirst() );
         while( node ) {
@@ -380,19 +390,19 @@ void FontMgr::ScrubList( )
             if( tlocale == now_locale) {
                 if(trans == pmfd->m_dialogstring){
                     string_array.Add(pmfd->m_dialogstring);
-
                 }
             }
+ 
             node = node->GetNext();
         }
-
+        
         i++;
-    }
+    }        
 
-    // now we have an array of correct translations
+    // now we have an array of correct translations    
     // Walk the loaded list again.
     // If a list item's translation is not in the "good" array, mark it for removal
-
+    
     MyFontDesc *pmfd;
     wxNode *node = (wxNode *) ( m_fontlist->GetFirst() );
     while( node ) {
@@ -411,10 +421,10 @@ void FontMgr::ScrubList( )
                 pmfd->m_configstring = _T("");
             }
         }
-
+        
         node = node->GetNext();
     }
-
+    
     //  Remove the marked list items
     node = (wxNode *) ( m_fontlist->GetFirst() );
     while( node ) {
@@ -426,23 +436,26 @@ void FontMgr::ScrubList( )
         }
         else
             node = node->GetNext();
-
+        
     }
-
+ 
     //  And finally, for good measure, make sure that everything in the candidate array has a valid entry in the list
     done = false;
     i = 0;
     while( ! done ){
         wxString candidate = FontCandidates[i];
         if(candidate == _T("END_OF_LIST") ) {
-//            done = true;  // Not used, break
+            done = true;
             break;
         }
 
         GetFont( wxGetTranslation(candidate), 0 );
-
+     
         i++;
     }
-
+ 
+     
 }
+
+
 

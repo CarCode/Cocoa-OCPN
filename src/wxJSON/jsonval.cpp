@@ -3013,7 +3013,6 @@ wxJSONValue::CloneRefData( const wxJSONRefData* otherData ) const
 #else
     wxJSON_ASSERT( otherData );
 #endif
-
     // make a static cast to pointer-to-wxJSONRefData
     const wxJSONRefData* other = otherData;
 

@@ -25,8 +25,11 @@
    
 #ifndef SQUISH_RANGEFIT_H
 #define SQUISH_RANGEFIT_H
-
+#ifdef __WXOSX__
 #include "squish.h"
+#else
+#include <squish.h>
+#endif
 #include "colourfit.h"
 #include "maths.h"
 

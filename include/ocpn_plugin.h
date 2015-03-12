@@ -53,7 +53,7 @@ class wxGLContext;
 //    PlugIns conforming to API Version less then the most modern will also
 //    be correctly supported.
 #define API_VERSION_MAJOR           1
-#define API_VERSION_MINOR           12
+#define API_VERSION_MINOR           13
 
 //    Fwd Definitions
 class       wxFileConfig;
@@ -88,6 +88,7 @@ class       wxScrolledWindow;
 #define     INSTALLS_PLUGIN_CHART_GL                  0x00040000
 #define     WANTS_MOUSE_EVENTS                        0x00080000
 #define     WANTS_VECTOR_CHART_OBJECT_INFO            0x00100000
+#define     WANTS_KEYBOARD_EVENTS                     0x00200000
 
 //----------------------------------------------------------------------------------------------------------
 //    Some PlugIn API interface object class definitions
@@ -399,7 +400,7 @@ public:
 
       virtual void ShowPreferencesDialog( wxWindow* parent );
 #ifdef __WXOSX__  // Test WXOSX ja oder nein?
-      bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
+    bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
 #else
       virtual bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
 #endif
@@ -432,7 +433,7 @@ public:
              opencpn_plugin_16(void *pmgr);
              virtual ~opencpn_plugin_16();
 #ifdef __WXOSX__  // Test WXOSX
-             bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+            bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
              virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #endif
@@ -446,7 +447,7 @@ class DECL_EXP opencpn_plugin_17 : public opencpn_plugin
              opencpn_plugin_17(void *pmgr);
              virtual ~opencpn_plugin_17();
 #ifdef __WXOSX__  // Test WXOSX
-             bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+    bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
              virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #endif
@@ -462,7 +463,7 @@ class DECL_EXP opencpn_plugin_18 : public opencpn_plugin
             opencpn_plugin_18(void *pmgr);
             virtual ~opencpn_plugin_18();
 #ifdef __WXOSX__  // Test WXOSX
-            bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+    bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
             virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #endif
@@ -507,6 +508,16 @@ public:
     
     virtual bool MouseEventHook( wxMouseEvent &event );
     virtual void SendVectorChartObjectInfo(wxString &chart, wxString &feature, wxString &objname, double lat, double lon, double scale, int nativescale);
+    
+};
+
+class DECL_EXP opencpn_plugin_113 : public opencpn_plugin_112
+{
+public:
+    opencpn_plugin_113(void *pmgr);
+    virtual ~opencpn_plugin_113();
+    
+    virtual bool KeyboardEventHook( wxKeyEvent &event );
     
 };
 

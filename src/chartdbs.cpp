@@ -1269,9 +1269,6 @@ wxString ChartDatabase::GetFullChartInfo(ChartBase *pc, int dbIndex, int *char_w
                   line = _(" Updated:  ");
                   wxDateTime ed = pc->GetEditionDate();
                   line += ed.FormatISODate();
-#ifdef __WXOSX__
-                  lc++;
-#endif
             }
             line += _T("\n");
             max_width = wxMax(max_width, line.Len());
@@ -2586,7 +2583,7 @@ bool  ChartDatabase::IsChartAvailable(int dbIndex)
             }
         }
     }
-    
+        
     return false;
 }
 

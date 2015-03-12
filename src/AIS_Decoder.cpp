@@ -80,7 +80,7 @@ extern bool g_bAIS_CPA_Alert;
 extern bool g_bAIS_CPA_Alert_Audio;
 extern ArrayOfMMSIProperties   g_MMSI_Props_Array;
 extern Route    *pAISMOBRoute;
-extern wxString *pAISTargetNameFileName;
+extern wxString AISTargetNameFileName;
 extern MyConfig *pConfig;
 extern RouteList *pRouteList;
 
@@ -110,9 +110,9 @@ AIS_Decoder::AIS_Decoder( wxFrame *parent )
 
     // Load cached AIS target names from a file
     AISTargetNames = new AIS_Target_Name_Hash;
-
+    
     if(g_benableAISNameCache){
-        std::ifstream infile( pAISTargetNameFileName->mb_str() );
+        std::ifstream infile( AISTargetNameFileName.mb_str() );
         if( infile ) {
             std::string line;
             while ( getline( infile, line ) ) {
@@ -124,7 +124,7 @@ AIS_Decoder::AIS_Decoder( wxFrame *parent )
         }
         infile.close();
     }
-
+    
     AIS_AreaNotice_Sources = new AIS_Target_Hash;
     BuildERIShipTypeHash();
 
@@ -137,7 +137,8 @@ AIS_Decoder::AIS_Decoder( wxFrame *parent )
 
     TimerAIS.SetOwner(this, TIMER_AIS1);
     TimerAIS.Start(TIMER_AIS_MSEC,wxTIMER_CONTINUOUS);
-    
+
+    m_ptentative_dsctarget = NULL;
     m_dsc_timer.SetOwner( this, TIMER_DSC );
     
 
@@ -157,12 +158,12 @@ AIS_Decoder::~AIS_Decoder( void )
     }
 
     delete AISTargetList;
-
+    
     delete AIS_AreaNotice_Sources;
 
     AISTargetNames->clear();
     delete AISTargetNames;
-
+    
     m_dsc_timer.Stop();
     m_AIS_Audio_Alert_Timer.Stop();
     TimerAIS.Stop();
@@ -791,7 +792,7 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
                         break;
                 }
             }
-
+            
              //  Search the current AISTargetList for an MMSI match
             AIS_Target_Hash::iterator it = AISTargetList->find( mmsi );
             if( it == AISTargetList->end() )                  // not found
@@ -944,7 +945,7 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
                         break;
                 }
             }
-
+                
 
             //  If the message was decoded correctly
             //  Update the AIS Target information
@@ -954,41 +955,41 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
                     if( !pTargetData->b_nameValid ){
                         AIS_Target_Name_Hash::iterator it = AISTargetNames->find( mmsi );
                         if(  it != AISTargetNames->end()  ) {
-                            // If we don't have a name yet but have one in the MMSI->ShipName hash, use the one in the hash
+                        // If we don't have a name yet but have one in the MMSI->ShipName hash, use the one in the hash
                             wxString ship_name = ( *AISTargetNames )[mmsi];
                             strncpy( pTargetData->ShipName, ship_name.mb_str(), ship_name.length() + 1 );
                             pTargetData->b_nameValid = true;
                             pTargetData->b_nameFromCache = true;
                         }
-                    }
+                    } 
                     else if( (pTargetData->MID == 5) || (pTargetData->MID == 24) ){
                         //  This message contains ship static data, so has a name field
                         pTargetData->b_nameFromCache = false;
                         AIS_Target_Name_Hash::iterator it = AISTargetNames->find( mmsi );
                         if(  it == AISTargetNames->end()  ) {
-                            // If have a name but haven't saved it to the hash, save it
+                        // If have a name but haven't saved it to the hash, save it
                             wxString ship_name = trimAISField( pTargetData->ShipName );
                             ( *AISTargetNames )[mmsi] = ship_name;
-                            // Write the MMSI->ShipName hash file
-                            std::ofstream outfile( pAISTargetNameFileName->mb_str(), std::ios_base::app );
+                        // Write the MMSI->ShipName hash file
+                            std::ofstream outfile( AISTargetNameFileName.mb_str(), std::ios_base::app );
                             if( outfile.is_open() ) {
                                 outfile << mmsi << "," << ship_name.mb_str() << "\r\n";
                             }
                             outfile.close();
                         }
                         else{               // there is an entry in the cache for this MMSI
-                            // Verify that the cached name matches the name just received.
+                                            // Verify that the cached name matches the name just received.
                             wxString ship_name = trimAISField( pTargetData->ShipName );
                             if( it->second != ship_name){
                                 ( *AISTargetNames )[mmsi] = ship_name;  // update the in-core cache
                                 
                                 // Write an MMSI->ShipName hash file entry
                                 // Note that due to the manner in which the cache file is loaded on program start,
-                                //   the last recorded entry for a particular MMSI number,
+                                //   the last recorded entry for a particular MMSI number, 
                                 //   (i.e. this one), takes precedence.
                                 // This also means that duplicates may be present in the cache file over time.
                                 //   A subject for later analysis...
-                                std::ofstream outfile( pAISTargetNameFileName->mb_str(), std::ios_base::app );
+                                std::ofstream outfile( AISTargetNameFileName.mb_str(), std::ios_base::app );
                                 if( outfile.is_open() ) {
                                     outfile << mmsi << "," << ship_name.mb_str() << ",Mismatch" << "\r\n";
                                 }
@@ -997,7 +998,7 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
                         }
                     }
                 }
-
+                
                 ( *AISTargetList )[pTargetData->MMSI] = pTargetData;            // update the hash table entry
 
                 if( !pTargetData->area_notices.empty() ) {
@@ -1101,7 +1102,10 @@ AIS_Target_Data *AIS_Decoder::ProcessDSx( const wxString& str, bool b_take_dsc )
         token = tkz.GetNextToken();         // expansion indicator
         
         dsc_quadrant = (int) (dsc_tmp / 1000000000.0);
-        
+
+        if(dsc_quadrant > 3)                // Position is "Unspecified", or 9999999999
+            return NULL;
+
         dsc_lat = (int) ( dsc_tmp / 100000.0 );
         dsc_lon = dsc_tmp - dsc_lat * 100000.0;
         dsc_lat = dsc_lat - dsc_quadrant * 10000;
@@ -1141,7 +1145,7 @@ AIS_Target_Data *AIS_Decoder::ProcessDSx( const wxString& str, bool b_take_dsc )
         mmsi = (int) dse_mmsi;
     }
     
-//    long mmsi_long = mmsi;  // Not used
+    long mmsi_long = mmsi;
 
     //  Get the last report time for this target, if it exists
     wxDateTime now = wxDateTime::Now();
@@ -1825,7 +1829,7 @@ void AIS_Decoder::UpdateOneTrack( AIS_Target_Data *ptarget )
     ptrackpoint->m_time = wxDateTime::Now().GetTicks();
 
     ptarget->m_ptrack->Append( ptrackpoint );
-
+    
     if( ptarget->b_PersistTrack )
     {
         Track *t;
@@ -1843,16 +1847,16 @@ void AIS_Decoder::UpdateOneTrack( AIS_Target_Data *ptarget )
         }
         RoutePoint *rp = t->GetLastPoint();
         vector2D point( ptrackpoint->m_lon, ptrackpoint->m_lat );
-        RoutePoint *rp1 = t->AddNewPoint( point, wxDateTime(ptrackpoint->m_time).ToUTC() );
+        RoutePoint *rp1 = t->AddNewPoint( point, wxDateTime(ptrackpoint->m_time).ToUTC() );        
         if( rp )
         {
             pSelect->AddSelectableTrackSegment( rp->m_lat, rp->m_lon, rp1->m_lat,
-                                               rp1->m_lon, rp, rp1, t );
+                rp1->m_lon, rp, rp1, t );
         }
         
-        //We do not want dependency on the GUI here, do we?
-        //        if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
-        //                pRouteManagerDialog->UpdateTrkListCtrl();
+//We do not want dependency on the GUI here, do we?
+//        if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
+//                pRouteManagerDialog->UpdateTrkListCtrl();
     }
 
     //    Walk the list, removing any track points that are older than the stipulated time
@@ -2220,7 +2224,7 @@ void AIS_Decoder::OnTimerAIS( wxTimerEvent& event )
     //    Scan all targets, looking for SART, DSC Distress, and CPA incursions
     //    In the case of multiple targets of the same type, select the shortest range or shortest TCPA
     AIS_Target_Data *palert_target = NULL;
-
+    
     if( NULL == g_pais_alert_dialog_active ) {
         pAISMOBRoute = NULL;                // Reset the AISMOB auto route.
         double tcpa_min = 1e6;             // really long
@@ -2367,7 +2371,7 @@ void AIS_Decoder::OnTimerAIS( wxTimerEvent& event )
     } else
         m_AIS_Audio_Alert_Timer.Stop();
 
-    //  If a SART Alert is active, check to see if the MMSI has special properties set
+    //  If a SART Alert is active, check to see if the MMSI has special properties set 
     //  indicating that this Alert is a MOB for THIS ship.
     if(palert_target && (palert_target->Class == AIS_SART) ){
         for(unsigned int i=0 ; i < g_MMSI_Props_Array.GetCount() ; i++){
@@ -2380,7 +2384,7 @@ void AIS_Decoder::OnTimerAIS( wxTimerEvent& event )
             }
         }
     }
-
+    
     TimerAIS.Start( TIMER_AIS_MSEC, wxTIMER_CONTINUOUS );
 }
 
@@ -2439,13 +2443,13 @@ MMSIProperties::MMSIProperties( wxString &spec )
         if(s.Upper() == _T("VDM"))
             m_bVDM = true;
     }
- 
+    
     s = tkz.GetNextToken();
     if(s.Len()){
         if(s.Upper() == _T("PERSIST"))
             m_bPersistentTrack = true;
     }
-
+    
 }
 
 MMSIProperties::~MMSIProperties()
@@ -2491,12 +2495,13 @@ wxString MMSIProperties::Serialize( void )
     if(m_bVDM){
         sMMSI << _T("VDM");
     }
-
+    
     sMMSI << _T(";");
     
     if(m_bPersistentTrack){
         sMMSI << _T("PERSIST");
     }
-
+    
     return sMMSI;
 }
+

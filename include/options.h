@@ -33,6 +33,7 @@
 #include <wx/listctrl.h>
 #include <wx/choice.h>
 #include <wx/collpane.h>
+#include <wx/clrpicker.h>
 
 #include "pluginmanager.h"
 
@@ -157,6 +158,7 @@ enum {
     ID_MOBILEBOX,
     ID_REPONSIVEBOX,
     ID_SIZEMANUALRADIOBUTTON,
+    ID_WAYPOINTRANGERINGS,
     xID_OK
 };
 
@@ -210,7 +212,7 @@ public:
     void Init();
 
     void SetInitialPage( int page_sel);
-
+    
     wxWindow* GetContentWindow() const;
     void OnClose( wxCloseEvent& event );
     
@@ -257,11 +259,11 @@ public:
     void OnCancelClick( wxCommandEvent& event );
     void OnChooseFont( wxCommandEvent& event );
     void OnCPAWarnClick( wxCommandEvent& event );
-
+    
     void OnSizeAutoButton( wxCommandEvent& event );
     void OnSizeManualButton( wxCommandEvent& event );
-
-
+    
+    
 #ifdef __WXGTK__
     void OnChooseFontColor( wxCommandEvent& event );
 #endif
@@ -276,6 +278,7 @@ public:
     void OnShowGpsWindowCheckboxClick( wxCommandEvent& event );
     void OnZTCCheckboxClick( wxCommandEvent& event );
     void OnRadarringSelect( wxCommandEvent& event );
+    void OnWaypointRangeRingSelect( wxCommandEvent& event );
     void OnShipTypeSelect( wxCommandEvent& event );
     void OnButtonGroups( wxCommandEvent& event );
     void OnInsertTideDataLocation( wxCommandEvent &event );
@@ -284,7 +287,7 @@ public:
     void OnChartsPageChange( wxListbookEvent& event );
     void OnChartDirListSelect( wxCommandEvent& event );
     void OnUnitsChoice( wxCommandEvent& event );
-
+    
     void UpdateWorkArrayFromTextCtl();
 
 // Should we show tooltips?
@@ -302,7 +305,7 @@ public:
     ChartGroupArray         *m_pGroupArray;
     int                     m_groups_changed;
 
-    //  Sizer Flags
+//  Sizer Flags
     wxSizerFlags inputFlags;
     wxSizerFlags labelFlags;
     wxSizerFlags groupInputFlags;
@@ -337,15 +340,15 @@ public:
     wxChoice                *m_pcTCDatasets;
     wxCheckBox              *pMobile;
     wxCheckBox              *pResponsive;
-    wxSlider                *m_pSlider_Zoom;
+    wxSlider                *m_pSlider_Zoom;    
     int                      k_tides;
     wxCheckBox              *pOverzoomEmphasis;
     wxCheckBox              *pOZScaleVector;
     wxTextCtrl              *pScreenMM;
     wxRadioButton           *pRBSizeAuto;
     wxRadioButton           *pRBSizeManual;
-
-
+    
+    
 //    For GPS Page
     wxListCtrl* m_lcSources;
     wxButton* m_buttonAdd;
@@ -353,6 +356,8 @@ public:
     wxStaticBoxSizer* sbSizerConnectionProps;
     wxRadioButton* m_rbTypeSerial;
     wxRadioButton* m_rbTypeNet;
+    wxRadioButton* m_rbTypeInternalGPS;
+    wxRadioButton* m_rbTypeInternalBT;
     wxGridSizer* gSizerNetProps;
     wxStaticText* m_stNetProto;
     wxRadioButton* m_rbNetProtoTCP;
@@ -398,6 +403,8 @@ public:
     wxStaticBoxSizer* sbSizerInFilter;
     wxStaticBoxSizer* sbSizerOutFilter;
     wxCheckBox *m_cbAPBMagnetic;
+    wxStaticText* m_stTalkerIdText;
+    wxTextCtrl* m_TalkerIdText;
 
     SentenceListDlg* m_stcdialog_in;
     SentenceListDlg* m_stcdialog_out;
@@ -406,8 +413,12 @@ public:
     void OnSelectDatasource( wxListEvent& event );
     void OnAddDatasourceClick( wxCommandEvent& event );
     void OnRemoveDatasourceClick( wxCommandEvent& event );
+    
     void OnTypeSerialSelected( wxCommandEvent& event );
     void OnTypeNetSelected( wxCommandEvent& event );
+    void OnTypeGPSSelected( wxCommandEvent& event );
+    void OnTypeBTSelected( wxCommandEvent& event );
+    
     void OnNetProtocolSelected( wxCommandEvent& event );
     void OnBaudrateChoice( wxCommandEvent& event ) { OnConnValChange(event); }
     void OnProtocolChoice( wxCommandEvent& event ) { OnConnValChange(event); }
@@ -474,7 +485,7 @@ public:
     wxCheckBox                *pScanCheckBox;
     int                       k_charts;
     wxButton                  *m_removeBtn;
-
+    
 //      For :Charts->Display Options" page
     
     wxScrolledWindow          *m_ChartDisplayPage;
@@ -518,6 +529,7 @@ public:
     wxTextCtrl              *m_pOSGPSOffsetY;
     wxTextCtrl              *m_pOSMinSize;
     wxStaticBoxSizer        *dispOptions;
+    wxStaticBoxSizer        *dispWaypointOptions;
     wxScrolledWindow        *itemPanelShip;
     wxBoxSizer              *ownShip;
     wxTextCtrl              *m_pText_ACRadius;
@@ -538,11 +550,16 @@ public:
 
     wxScrolledWindow        *itemPanelPlugins;
     wxBoxSizer              *itemBoxSizerPanelPlugins;
-
+    
     wxChoice                *pNavAidRadarRingsNumberVisible;
+    wxChoice                *pWaypointRangeRingsNumber; 
     wxFlexGridSizer         *radarGrid;
+    wxFlexGridSizer         *waypointradarGrid;
     wxTextCtrl              *pNavAidRadarRingsStep;
     wxChoice                *m_itemRadarRingsUnits;
+    wxTextCtrl              *pWaypointRangeRingsStep;
+    wxChoice                *m_itemWaypointRangeRingsUnits;
+    wxColourPickerCtrl      *m_colourWaypointRangeRingsColour;
     wxCheckBox              *pWayPointPreventDragging;
     wxCheckBox              *pConfirmObjectDeletion;
     wxCheckBox              *pEnableZoomToCursor;
@@ -551,8 +568,8 @@ public:
     wxCheckBox              *pFullScreenToolbar;
     wxCheckBox              *pTransparentToolbar;
 
-    wxCheckBox              *pSailing;
-
+    wxCheckBox              *pAdvanceRouteWaypointOnArrivalOnly;
+    
     wxCheckBox              *pTrackShowIcon;
     wxCheckBox              *pTrackDaily;
     wxCheckBox              *pTrackHighlite;
@@ -573,7 +590,7 @@ public:
 
 private:
     void CreatePanel_MMSI( size_t parent, int border_size, int group_item_spacing,
-                          wxSize small_button_size );
+            wxSize small_button_size );
     void CreatePanel_AIS( size_t parent, int border_size, int group_item_spacing,
             wxSize small_button_size );
     void CreatePanel_Ownship( size_t parent, int border_size, int group_item_spacing,
@@ -593,10 +610,10 @@ private:
     void CreatePanel_UI( size_t parent, int border_size, int group_item_spacing,
             wxSize small_button_size );
     void CreatePanel_Units( size_t parent, int border_size, int group_item_spacing,
-                           wxSize small_button_size );
+            wxSize small_button_size );
     void CreatePanel_Advanced( size_t parent, int border_size, int group_item_spacing,
-                                  wxSize small_button_size );
-
+            wxSize small_button_size );
+    
     int m_returnChanges;
     wxListBox *tcDataSelected;
     std::vector<int> marinersStdXref;
@@ -605,10 +622,17 @@ private:
 
     wxScrolledWindow *m_pNMEAForm;
     void ShowNMEACommon( bool visible );
+    
     void ShowNMEASerial( bool visible );
     void ShowNMEANet( bool visible );
+    void ShowNMEAGPS( bool visible );
+    void ShowNMEABT( bool visible );
+    
     void SetNMEAFormToSerial();
     void SetNMEAFormToNet();
+    void SetNMEAFormToGPS();
+    void SetNMEAFormToBT();
+    
     void ClearNMEAForm();
     bool m_bNMEAParams_shown;
 
@@ -622,6 +646,7 @@ private:
     wxNotebookPage*             m_groupsPage;
     wxFont*     smallFont;
     wxSize      m_small_button_size;
+    int         m_fontHeight;
 
 };
 
@@ -691,6 +716,8 @@ private:
 
     ChartGroupArray *m_pGroupArray;
 };
+
+#if wxUSE_XLOCALE || !wxCHECK_VERSION(3,0,0)
 
 static int lang_list[] = {
             wxLANGUAGE_DEFAULT,
@@ -923,7 +950,8 @@ static int lang_list[] = {
             wxLANGUAGE_ZHUANG,
             wxLANGUAGE_ZULU
             };
-
+#endif
+            
 ///////////////////////////////////////////////////////////////////////////////
 /// Class SentenceListDlg
 ///////////////////////////////////////////////////////////////////////////////
@@ -990,20 +1018,20 @@ public:
 
     wxCheckBox *m_cbTextureCompression, *m_cbTextureCompressionCaching;
     wxCheckBox *m_cbShowFPS;
-
+    
     wxButton *m_bRebuildTextureCache;
     wxButton *m_bClearTextureCache;
-    
+
     wxStaticText *m_stTextureCacheSize;
     
     wxSpinCtrl *m_sTextureDimension;
     wxSpinCtrl *m_sTextureMemorySize;
 
     OpenGLOptionsDlg( wxWindow* parent, bool glTicked );
-
+    
     void OnButtonRebuild( wxCommandEvent& event );
     void OnButtonClear( wxCommandEvent& event );
-    
+
     wxString TextureCacheSize();
     
     bool m_brebuild_cache;
@@ -1032,7 +1060,7 @@ class MMSIListCtrl: public wxListCtrl
 {
 public:
     MMSIListCtrl( wxWindow* parent, wxWindowID id, const wxPoint& pos,
-                 const wxSize& size, long style );
+                  const wxSize& size, long style );
     ~MMSIListCtrl();
     
     wxString OnGetItemText( long item, long column ) const;
@@ -1073,17 +1101,17 @@ class MMSIEditDialog: public wxDialog
 public:
     MMSIEditDialog( );
     MMSIEditDialog( MMSIProperties *props, wxWindow* parent, wxWindowID id = -1,
-                   const wxString& caption = _T(""),
-                   const wxPoint& pos = wxDefaultPosition,
-                   const wxSize& size = wxDefaultSize,
-                   long style = 0 );
+                    const wxString& caption = _T(""),
+                    const wxPoint& pos = wxDefaultPosition,
+                    const wxSize& size = wxDefaultSize,
+                    long style = 0 );
     
     ~MMSIEditDialog();
     
     bool Create( MMSIProperties *props, wxWindow* parent, wxWindowID id = -1,
-                const wxString& caption = _T(""),
-                const wxPoint& pos = wxDefaultPosition,
-                const wxSize& size = wxDefaultSize, long style = 0 );
+                 const wxString& caption = _T(""),
+                 const wxPoint& pos = wxDefaultPosition,
+                 const wxSize& size = wxDefaultSize, long style = 0 );
     
     void SetColorScheme(ColorScheme cs);
     
@@ -1100,7 +1128,7 @@ public:
     wxRadioButton       *m_rbTypeTrackAlways;
     wxRadioButton       *m_rbTypeTrackNever;
     wxCheckBox          *m_cbTrackPersist;
-
+    
     wxCheckBox          *m_IgnoreButton;
     wxCheckBox          *m_MOBButton;
     wxCheckBox          *m_VDMButton;
@@ -1121,7 +1149,7 @@ public:
     MMSI_Props_Panel( wxWindow *parent );
     ~MMSI_Props_Panel( );
     
-    //    void OnClose(wxCloseEvent &event);
+//    void OnClose(wxCloseEvent &event);
     void OnNewButton( wxCommandEvent &event );
     
     void SetColorScheme( ColorScheme cs );
@@ -1135,6 +1163,7 @@ private:
     wxWindow          *m_pparent;
     
 };
+
 
 #endif
     // _OPTIONS_H_

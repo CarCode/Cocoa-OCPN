@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __GLCHARTCANVAS_H__
 #define __GLCHARTCANVAS_H__
@@ -27,6 +28,7 @@
 #include <wx/glcanvas.h>
 #include "ocpn_types.h"
 #include "OCPNRegion.h"
+#include "viewport.h"
 
 #ifdef __WXMSW__
 #define FORMAT_BITS           GL_BGR
@@ -34,6 +36,9 @@
 #define FORMAT_BITS           GL_RGB
 #endif
 
+#ifdef __OCPN__ANDROID__
+#include "wx/qt/private/wxQtGesture.h"
+#endif
 
 #include "glTexCache.h"
 
@@ -45,7 +50,8 @@ class ocpnGLOptions
 {
 public:
     bool m_bUseAcceleratedPanning;
-
+    bool m_bUseCanvasPanning;
+    
     bool m_bTextureCompression;
     bool m_bTextureCompressionCaching;
 
@@ -85,7 +91,15 @@ public:
     void OnActivate ( wxActivateEvent& event );
     void OnSize ( wxSizeEvent& event );
     void MouseEvent(wxMouseEvent& event);
-
+    void FastPan(int dx, int dy);
+    void FastZoom(float factor);
+    void RenderCanvasBackingChart( ocpnDC dc, OCPNRegion chart_get_region);
+    
+#ifdef __OCPN__ANDROID__    
+    void OnEvtPanGesture( wxQT_PanGestureEvent &event);
+    void OnEvtPinchGesture( wxQT_PinchGestureEvent &event);
+#endif
+    
     wxString GetRendererString(){ return m_renderer; }
     void EnablePaint(bool b_enable){ m_b_paint_enable = b_enable; }
 
@@ -121,7 +135,7 @@ protected:
     
     void ComputeRenderQuiltViewGLRegion( ViewPort &vp, OCPNRegion &Region );
     void RenderCharts(ocpnDC &dc, OCPNRegion &region);
-    void RenderWorldChart(ocpnDC &dc, OCPNRegion &region);
+    void RenderWorldChart(ocpnDC &dc, OCPNRegion &region, ViewPort &vp);
     ViewPort BuildClippedVP(ViewPort &VP, wxRect &rect);
 
     void DrawFloatingOverlayObjects( ocpnDC &dc, OCPNRegion &region );
@@ -129,7 +143,7 @@ protected:
 
     void DrawQuiting();
     void DrawCloseMessage(wxString msg);
-
+    
     wxGLContext       *m_pcontext;
 
     int max_texture_dimension;
@@ -174,6 +188,14 @@ protected:
     int         ownship_color;
     wxSize      ownship_size, ownship_tex_size;
     GLuint      ownship_large_scale_display_lists[2];
+    
+    float       m_fbo_offsetx;
+    float       m_fbo_offsety;
+    float       m_fbo_swidth;
+    float       m_fbo_sheight;
+    bool        m_binPinch;
+    OCPNRegion  m_canvasregion;
+
 
     DECLARE_EVENT_TABLE()
 };

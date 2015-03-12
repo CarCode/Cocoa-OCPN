@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __NAVOBJECTCOLLECTION_H__
 #define __NAVOBJECTCOLLECTION_H__
@@ -49,6 +50,7 @@ class Track;
 #define         OUT_ACTION_UPD  1 << 16
 #define         OUT_EXTENSION   1 << 17
 #define         OUT_ARRIVAL_RADIUS 1 << 18
+#define         OUT_WAYPOINT_RANGE_RINGS 1 << 19
 
 #define  OPT_TRACKPT    OUT_TIME
 #define  OPT_WPT        (OUT_TYPE) +\
@@ -62,8 +64,9 @@ class Track;
                         (OUT_SHARED) +\
                         (OUT_AUTO_NAME) +\
                         (OUT_HYPERLINKS) +\
-                        (OUT_ARRIVAL_RADIUS)
-#define OPT_ROUTEPT     OPT_WPT
+                        (OUT_ARRIVAL_RADIUS) +\
+                        (OUT_WAYPOINT_RANGE_RINGS)
+#define OPT_ROUTEPT     OPT_WPT                        
 
 //      Bitfield definitions controlling the GPX nodes output for Route.Track objects
 #define         RT_OUT_ACTION_ADD         1 << 1          //  opencpn:action node support

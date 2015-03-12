@@ -1,4 +1,4 @@
-/**************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,12 +19,12 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __QUIT_H__
 #define __QUIT_H__
 
-#include "ocpn_types.h"
 #include "chart1.h"
 #include "OCPNRegion.h"
 
@@ -58,12 +58,12 @@ public:
     }
 
     OCPNRegion &GetCandidateVPRegion( ViewPort &vp );
-
+    
     int dbIndex;
     int ChartScale;
     bool b_include;
     bool b_eclipsed;
-
+    
 private:    
     OCPNRegion candidate_region;
 
@@ -86,7 +86,7 @@ public:
     }
 
     void EnableHighDefinitionZoom( bool value ) { m_b_hidef = value;}
-
+    
     bool BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_db_index, ViewPort &vp_in);
     bool Compose( const ViewPort &vp );
     bool IsComposed() {
@@ -119,6 +119,7 @@ public:
         return m_PatchList.GetCount();
     }
     double GetBestStartScale(int dbi_ref_hint, const ViewPort &vp_in);
+    
 
     void ComputeRenderRegion( ViewPort &vp, OCPNRegion &chart_region );
     bool RenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion &chart_region );
@@ -146,7 +147,7 @@ public:
     int AdjustRefOnZoomOut( double proposed_scale_onscreen );
     int AdjustRefOnZoomIn( double proposed_scale_onscreen );
     int AdjustRefOnZoom( bool b_zin, ChartFamilyEnum family, ChartTypeEnum type, double proposed_scale_onscreen );
-
+    
     void SetHiliteIndex( int index ) {
         m_nHiLiteIndex = index;
     }
@@ -191,23 +192,23 @@ public:
     QuiltPatch *GetCurrentPatch();
     bool IsChartInQuilt( ChartBase *pc );
     bool IsChartInQuilt( wxString &full_path);
-
+    
     bool IsQuiltVector( void );
     OCPNRegion GetHiliteRegion( ViewPort &vp );
-
+    static OCPNRegion GetChartQuiltRegion( const ChartTableEntry &cte, ViewPort &vp );
+    
 private:
-    OCPNRegion GetChartQuiltRegion( const ChartTableEntry &cte, ViewPort &vp );
     wxRect GetChartQuiltBoundingRect( const ChartTableEntry &cte, ViewPort &vp );
-
+    
     void EmptyCandidateArray( void );
     void SubstituteClearDC( wxMemoryDC &dc, ViewPort &vp );
     int GetNewRefChart( void );
 
     int GetNomScaleMin(int scale, ChartTypeEnum type, ChartFamilyEnum family);
     int GetNomScaleMax(int scale, ChartTypeEnum type, ChartFamilyEnum family);
-
+    
     bool IsChartS57Overlay( int db_index );
-
+    
     OCPNRegion m_covered_region;
     OCPNRegion m_rendered_region;
 
@@ -244,7 +245,7 @@ private:
     int m_zout_dbindex;
     int m_zout_family;
     int m_zout_type;
-
+    
     int m_lost_refchart_dbIndex;
     bool m_b_hidef;
 };

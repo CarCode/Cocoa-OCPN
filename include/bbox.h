@@ -45,8 +45,11 @@ public:
 
     bool LineIntersect(const wxPoint2DDouble& begin, const wxPoint2DDouble& end ) const;
     bool PointInBox( const wxPoint2DDouble&, double Marge = 0) const;
+#ifdef __WXOSX__
+    bool PointInBox( double, double, double Marge = 0) const;
+#else
     virtual bool PointInBox( double, double, double Marge = 0) const;
-
+#endif
     void Reset();
 
     void Translate( wxPoint2DDouble& );
@@ -87,9 +90,6 @@ protected:
 
 class LLBBox : public wxBoundingBox
 {
-//#ifdef __WXOSX__
-//    using wxBoundingBox::PointInBox;
-//#endif
       public:
             bool PointInBox(double Lon, double Lat, double Marge);
 };

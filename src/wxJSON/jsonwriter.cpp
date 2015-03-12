@@ -444,7 +444,11 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
                 return lastChar;
             }
             if ( lastChar != '\n' )   {
+#ifdef __WXOSX__
+                WriteSeparator( os );  // lastChar Dead Store
+#else
                 lastChar = WriteSeparator( os );
+#endif
             }
         }
         else   {    // comment is not to be printed inline, so write a LF
@@ -492,7 +496,11 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
             }
         }
         else   {
+#ifdef __WXOSX__
+            WriteSeparator( os );  // lastChar Dead Store
+#else
             lastChar = WriteSeparator( os );
+#endif
         }
 
         map = value.AsMap();

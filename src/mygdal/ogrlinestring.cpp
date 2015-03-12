@@ -691,7 +691,6 @@ OGRErr OGRLineString::importFromWkb( unsigned char * pabyData,
 #else
     CPLAssert( eGeometryType == wkbLineString );
 #endif
-
 /* -------------------------------------------------------------------- */
 /*      Get the vertex count.                                           */
 /* -------------------------------------------------------------------- */

@@ -892,7 +892,6 @@ int32  GPS_Command_Send_Course
 
     return ret_crs * ret_clp * ret_trk * ret_cpt;
 #endif
-
 }
 
 

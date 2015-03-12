@@ -37,6 +37,7 @@
 #include <wx/bmpcbox.h>
 #include <wx/notebook.h>
 #include <wx/filesys.h>
+#include <wx/clrpicker.h>
 #include "LinkPropDlg.h"
 
 #if wxCHECK_VERSION(2, 9, 0)
@@ -60,7 +61,11 @@ class   HyperlinkList;
 
 ////@begin control identifiers
 #define ID_ROUTEPROP 7000
+#ifdef __WXOSX__
+#define SYMBOL_ROUTEPROP_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxSTAY_ON_TOP
+#else
 #define SYMBOL_ROUTEPROP_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
+#endif
 #define SYMBOL_ROUTEPROP_TITLE _("Route Properties")
 #define SYMBOL_ROUTEPROP_IDNAME ID_ROUTEPROP
 #define SYMBOL_ROUTEPROP_SIZE wxSize(450, 300)
@@ -77,6 +82,8 @@ class   HyperlinkList;
 #define ID_ROUTEPROP_EXTEND    7207
 #define ID_ROUTEPROP_COPYTXT   7307
 #define ID_ROUTEPROP_PRINT     7407
+#define ID_WAYPOINTRANGERINGS  7507 
+#define ID_SHOWWAYPOINTRANGERINGS  7607 
 #define ID_PLANSPEEDCTL        7008
 #define ID_TEXTCTRL4           7009
 #define ID_TEXTCTRLDESC        7010
@@ -159,7 +166,6 @@ public:
     bool IsThisRouteExtendable();
     void OnEvtColDragEnd(wxListEvent& event);
     void InitializeList();
-
 
     /// Should we show tooltips?
     static bool ShowToolTips();
@@ -257,6 +263,8 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 class MarkInfoDef : public wxDialog
 {
+    DECLARE_EVENT_TABLE()
+    
 	private:
 
 	protected:
@@ -299,7 +307,16 @@ class MarkInfoDef : public wxDialog
         wxSize                  m_defaultClientSize;
         wxStaticText*           m_staticTextArrivalRadius;
         wxTextCtrl*             m_textArrivalRadius;
-
+        wxBoxSizer*             bSizerBasicProperties;
+        wxCheckBox*             m_checkBoxShowWaypointRangeRings;
+    
+        wxChoice*               m_choiceWaypointRangeRingsNumber;
+        wxFlexGridSizer*        waypointradarGrid;
+        wxTextCtrl*             m_textWaypointRangeRingsStep;
+        wxChoice*               m_choiceWaypointRangeRingsUnits;
+        wxFlexGridSizer*        waypointrrSelect;
+        wxColourPickerCtrl*     m_colourWaypointRangeRingsColour;
+        
     // Virtual event handlers, overide them in your derived class
         virtual void OnPositionCtlUpdated( wxCommandEvent& event ) { event.Skip(); }
         virtual void OnDescChangedBasic( wxCommandEvent& event ) { event.Skip(); }
@@ -312,7 +329,11 @@ class MarkInfoDef : public wxDialog
         virtual void OnMarkInfoCancelClick( wxCommandEvent& event ) { event.Skip(); }
         virtual void OnMarkInfoOKClick( wxCommandEvent& event ) { event.Skip(); }
         virtual void OnArrivalRadiusChange( wxCommandEvent& event ) { event.Skip(); }
+        virtual void OnWaypointRangeRingsStepChange( wxCommandEvent& event ) { event.Skip(); }
         void OnCopyPasteLatLon( wxCommandEvent& event );
+        void OnWaypointRangeRingSelect( wxCommandEvent& event );
+        void OnShowWaypointRangeRingSelect( wxCommandEvent& event );
+
 
     public:
 

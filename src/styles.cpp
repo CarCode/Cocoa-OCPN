@@ -32,12 +32,12 @@
 #include <wx/filename.h>
 #include <wx/dir.h>
 #include <stdlib.h>
+#include "OCPNPlatform.h"
 
 #include "styles.h"
 #include "chart1.h"
 
-extern wxString *pHome_Locn;
-extern wxString g_SData_Locn;
+extern OCPNPlatform     *g_Platform;
 
 using namespace ocpnStyle;
 
@@ -59,7 +59,7 @@ wxBitmap MergeBitmaps( wxBitmap back, wxBitmap front, wxSize offset )
     wxImage im_front = front.ConvertToImage();
     if(!im_front.HasAlpha())
         return front;
-
+    
 #if !wxCHECK_VERSION(2,9,4)
 
     // Manual alpha blending for broken wxWidgets alpha bitmap support, pervasive in wx2.8.
@@ -88,19 +88,18 @@ wxBitmap MergeBitmaps( wxBitmap back, wxBitmap front, wxSize offset )
     aresult = im_result.GetAlpha();
 
     // Do alpha blending, associative version of "over" operator.
-
-    if(presult && pback && pfront){
+    if(presult && pback && pfront){ 
         for( int i = 0; i < back.GetHeight(); i++ ) {
             for( int j = 0; j < back.GetWidth(); j++ ) {
-                
+
                 int fX = j - offset.x;
                 int fY = i - offset.y;
-                
+
                 bool inFront = true;
                 if( fX < 0 || fY < 0 ) inFront = false;
                 if( fX >= front.GetWidth() ) inFront = false;
                 if( fY >= front.GetHeight() ) inFront = false;
-                
+
                 if( inFront ) {
                     double alphaF = (double) ( *afront++ ) / 256.0;
                     double alphaB = (double) ( *aback++ ) / 256.0;
@@ -560,10 +559,10 @@ StyleManager::StyleManager(void)
 {
     isOK = false;
     currentStyle = NULL;
-    Init( g_SData_Locn + _T("uidata") + wxFileName::GetPathSeparator() );
+    Init( g_Platform->GetSharedDataDir() + _T("uidata") + wxFileName::GetPathSeparator() );
 #ifndef __WXOSX__
-    Init( *pHome_Locn );
-    Init( *pHome_Locn + _T(".opencpn") + wxFileName::GetPathSeparator() );
+    Init( g_Platform->GetHomeDir() );
+    Init( g_Platform->GetHomeDir() + _T(".opencpn") + wxFileName::GetPathSeparator() );
 #endif
     SetStyle( _T("") );
 }

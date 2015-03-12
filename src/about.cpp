@@ -1,4 +1,4 @@
-/***************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  About Dialog
@@ -41,7 +41,7 @@
 #include "chcanv.h"
 #include "styles.h"
 #include "version.h"
-
+#include "OCPNPlatform.h"
 
 wxString str_version_start = wxT("\n      Version ");
 wxString str_version_major = wxString::Format(wxT("%i"),VERSION_MAJOR);
@@ -50,8 +50,10 @@ wxString str_version_patch = wxString::Format(wxT("%i"),VERSION_PATCH);
 wxString str_version_date(VERSION_DATE, wxConvUTF8);
 wxString OpenCPNVersion = str_version_start + str_version_major + wxT(".") + str_version_minor + wxT(".") + str_version_patch + wxT(" Build ") + str_version_date;
 
-extern wxString         glog_file;
-extern wxString         gConfig_File;
+extern OCPNPlatform     *g_Platform;
+extern MyFrame          *gFrame;
+extern wxString         mlog_file;
+//extern wxString         gConfig_File;
 extern ocpnStyle::StyleManager* g_StyleManager;
 #ifdef __WXOSX__
 char AboutText[] =
@@ -63,7 +65,7 @@ char AboutText[] =
 char AboutText[] =
 {
   "\n                                         OpenCPN\n\n\
-                       (c) 2000-2013 The OpenCPN Authors\n"
+                       (c) 2000-2015 The OpenCPN Authors\n"
 };
 #endif
 #ifdef __WXOSX__
@@ -173,11 +175,20 @@ char AuthorText[] =
 {
 "   David S Register\n\
       OpenCPN Lead Developer\n\n\
-    Jesper Weissglas\n\
-      Vector Chart Rendering\n\
-      User Interface\n\n\
+    Pavel Kalian\n\
+      S52 Rasterization Improvements\n\n\
     Sean D'Epagnier\n\
       OpenGL Architecture\n\n\
+    J.P. Joubert\n\
+      GRIB PlugIn enhancements\n\n\
+    Thomas Höckne\n\
+      Documentation and Wiki support\n\n\
+    Caesar Schinas\n\
+      User Interface and OS X improvements\n\n\
+    Jesper Weissglas\n\
+      Vector Chart Rendering\n\n\
+    Jean-Eudes Onfray\n\
+      Dashboard and Dialog enhancements\n\n\
     Kathleen Boswell\n\
       Icon design\n\n\
     Flavius Bindea\n\
@@ -186,10 +197,6 @@ char AuthorText[] =
       Windows Installer enhancements\n\n\
     Alan Bleasby\n\
       Garmin jeeps module\n\n\
-    Jean-Eudes Onfray\n\
-      Dashboard and Dialog enhancements\n\n\
-    Pavel Kalian\n\
-      S52 Rasterization Improvements\n\n\
     Piotr Carlson\n\
       General usability enhancements\n\n\
     Anders Lund\n\
@@ -259,10 +266,10 @@ about::about( )
 {
 }
 
-about::about( wxWindow* parent,wxString *pData_Locn, wxWindowID id, const wxString& caption,
+about::about( wxWindow* parent,wxString Data_Locn, wxWindowID id, const wxString& caption,
                   const wxPoint& pos, const wxSize& size, long style)
 {
-  m_pDataLocn = pData_Locn;
+  m_DataLocn = Data_Locn;
 #ifdef __WXOSX__
   style |= wxSTAY_ON_TOP;
 #endif
@@ -305,10 +312,11 @@ void about::Update()
     // Show the user where the log file is going to be
 #ifdef __WXOSX__
     wxString log = _T("    Log-Datei Ort: ");
+    mlog_file = g_Platform->GetLogFileName();
 #else
     wxString log = _T("    Logfile location: ");
 #endif
-    log.Append( glog_file );
+    log.Append( mlog_file );
     pAboutTextCtl->WriteText( log );
 
     // Show the user where the config file is going to be
@@ -317,7 +325,7 @@ void about::Update()
 #else
     wxString conf = _T("\n    Config file location: ");
 #endif
-    conf.Append( gConfig_File );
+    conf.Append( g_Platform->GetConfigFileName() );
     pAboutTextCtl->WriteText( conf );
 
     pAuthorTextCtl->Clear();
@@ -333,7 +341,7 @@ void about::Update()
 #endif
 
     pLicenseTextCtl->Clear();
-    wxString license_loc( *m_pDataLocn );
+    wxString license_loc(m_DataLocn );
     license_loc.Append( _T("license.txt") );
 
     wxTextFile license_file( license_loc );
@@ -490,9 +498,17 @@ void about::OnDonateClick( wxCommandEvent& event )
 
 void about::OnCopyClick( wxCommandEvent& event )
 {
-    wxString filename = gConfig_File;
-    if( event.GetId() == ID_COPYLOG ) filename = glog_file;
-
+    wxString filename = g_Platform->GetConfigFileName();
+wxMessageBox("Dateiname1: "+filename);
+#ifdef __WXOSX__
+    if( event.GetId() == ID_COPYLOG )
+    {
+        filename = g_Platform->GetLogFileName();
+    }
+#else
+    if( event.GetId() == ID_COPYLOG ) filename = mlog_file;
+#endif
+wxMessageBox("Dateiname2: "+filename);
     wxFFile file( filename );
 
     if( ! file.IsOpened() ) {
@@ -508,7 +524,7 @@ void about::OnCopyClick( wxCommandEvent& event )
     }
 
     file.Close();
-//    int length = fileContent.Length();  // Not used
+    int length = fileContent.Length();
 
     if( event.GetId() == ID_COPYLOG ) {
         wxString lastLogs = fileContent;
@@ -539,45 +555,15 @@ void about::OnPageChange( wxNotebookEvent& event )
 {
     int i = event.GetSelection();
 
-    if( 3 == i )                        // 3 is the index of "Help" page
+    if( 3 == i ) // { // 3 is the index of "Help" page
 #ifndef __WXOSX__
-            {
-        wxString def_lang_canonical = wxLocale::GetLanguageInfo( wxLANGUAGE_DEFAULT )->CanonicalName;
-
-        wxString help_locn = _T("doc/help_");
-        help_locn.Prepend( *m_pDataLocn );
-
-        wxString help_try = help_locn;
-        help_try += def_lang_canonical;
-        help_try += _T(".html");
-
-        if( ::wxFileExists( help_try ) ) {
-            wxLaunchDefaultBrowser(wxString( _T("file:///") ) + help_try );
-            pNotebook->ChangeSelection(0);
-        }
-
-        else {
-            help_try = help_locn;
-            help_try += _T("en_US");
-            help_try += _T(".html");
-
-            if( ::wxFileExists( help_try ) ){
-                pNotebook->ChangeSelection(0);
-                wxLaunchDefaultBrowser( wxString( _T("file:///") ) + help_try );
-            }
-            else {
-                help_try = _T("doc/help_web.html");
-                help_try.Prepend( *m_pDataLocn );
-                if( ::wxFileExists( help_try ) ) {
-                    pNotebook->ChangeSelection(0);
-                    wxLaunchDefaultBrowser(wxString( _T("file:///") ) + help_try );
-                 }
-            }
-        }
-    }
+        gFrame->LaunchLocalHelp();
 #else
     wxString msg1( _T("Für Hilfe verwenden Sie bitte das Menü Hilfe"));
-//    OCPNMessageBox ( NULL, wxString( _T("Für Hilfe verwenden Sie bitte das Menü Hilfe.")), wxString( _("OpenCPN Info") ),
-//                    wxICON_INFORMATION | wxOK );
+    //    OCPNMessageBox ( NULL, wxString( _T("Für Hilfe verwenden Sie bitte das Menü Hilfe.")), wxString( _("OpenCPN Info") ),
+    //                    wxICON_INFORMATION | wxOK );
+
 #endif
+//        pNotebook->ChangeSelection(0);
+//    }
 }

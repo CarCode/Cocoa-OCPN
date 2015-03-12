@@ -171,7 +171,7 @@ void DDFModule::Close()
 #ifdef __WXOSX__
     while( nCloneCount > 0 && !papoClones[0])
 #else
-    while( nCloneCount > 0)
+    while( nCloneCount > 0 )
 #endif
         delete papoClones[0];
 

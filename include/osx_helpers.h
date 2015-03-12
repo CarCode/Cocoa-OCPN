@@ -1,7 +1,7 @@
 /*
- *  This file is part of Poedit (http://www.poedit.net)
+ *  This file is part of Poedit (http://poedit.net)
  *
- *  Copyright (C) 2007-2013 Vaclav Slavik
+ *  Copyright (C) 2007-2014 Vaclav Slavik
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -28,34 +28,30 @@
 
 // FIXME: This is a hack to work around Automake's lack of support for ObjC++.
 //        Remove it after switching build system to Bakefile.
-
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
+#include <wx/defs.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifdef USE_SPARKLE
 // Sparkle helpers
-void Sparkle_Initialize();
-void Sparkle_AddMenuItem(const char *title);
+void Sparkle_Initialize(bool checkForBeta);
+void Sparkle_AddMenuItem(NSMenu *appmenu, const char *title);  // NSMenu ???
 void Sparkle_Cleanup();
 #endif // USE_SPARKLE
 
-// Spell checking
-// int SpellChecker_SetLang(const char *lang);
-
 // Native preferences
-// void UserDefaults_SetBoolValue(const char *key, int value);
-// int  UserDefaults_GetBoolValue(const char *key);
-// void UserDefaults_RemoveValue(const char *key);
+void UserDefaults_SetBoolValue(const char *key, int value);
+int  UserDefaults_GetBoolValue(const char *key);
+void UserDefaults_RemoveValue(const char *key);
 
 // Misc UI helpers
-// void MakeButtonRounded(void *button);
+//void MakeButtonRounded(void *button);
 
-// Für HelpViewer
-//    OSStatus MyGotoHelpPage (CFStringRef pagePath, CFStringRef anchorName);
-// int MyGotoHelpPage (const char *pagePath, const char *anchorName);
-//#ifdef __cplusplus
-//}
-//#endif
+void MoveToApplicationsFolderIfNecessary();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _OSX_HELPERS_H_

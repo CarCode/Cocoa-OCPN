@@ -59,17 +59,21 @@
 #include "s52utils.h"
 #include "gshhs.h"
 #include "mygeom.h"
+#include "OCPNPlatform.h"
 
 #ifdef ocpnUSE_GL
 #include "glChartCanvas.h"
 #endif
 
 extern MyConfig        *pConfig;
-extern wxString        g_SData_Locn;
-extern wxString        g_PrivateDataDir;
 extern AIS_Decoder     *g_pAIS;
 extern wxAuiManager    *g_pauimgr;
+
+#if wxUSE_XLOCALE || !wxCHECK_VERSION(3,0,0)
 extern wxLocale        *plocale_def_lang;
+#endif
+
+extern OCPNPlatform     *g_Platform;
 extern ChartDB         *ChartData;
 extern MyFrame         *gFrame;
 extern ocpnStyle::StyleManager* g_StyleManager;
@@ -83,14 +87,14 @@ extern RouteManagerDialog *pRouteManagerDialog;
 extern RouteList       *pRouteList;
 extern PlugInManager   *g_pi_manager;
 extern s52plib         *ps52plib;
-extern wxString        *pChartListFileName;
+extern wxString         ChartListFileName;
 extern wxString         gExe_path;
 extern wxString         g_Plugin_Dir;
 extern bool             g_boptionsactive;
 extern options         *g_options;
 extern ColorScheme      global_color_scheme;
 extern ChartCanvas     *cc1;
-// extern wxArrayString    g_locale_catalog_array;  // Reverted, #1049 in commit list
+extern wxArrayString    g_locale_catalog_array;
 
 unsigned int      gs_plib_flags;
 
@@ -133,7 +137,7 @@ ViewPort CreateCompatibleViewport( const PlugIn_ViewPort &pivp)
 {
     //    Create a system ViewPort
     ViewPort vp;
-
+    
     vp.clat =                   pivp.clat;                   // center point
     vp.clon =                   pivp.clon;
     vp.view_scale_ppm =         pivp.view_scale_ppm;
@@ -145,15 +149,15 @@ ViewPort CreateCompatibleViewport( const PlugIn_ViewPort &pivp)
     vp.rv_rect =                pivp.rv_rect;
     vp.b_quilt =                pivp.b_quilt;
     vp.m_projection_type =      pivp.m_projection_type;
-
+ 
     if(cc1)
         vp.ref_scale = cc1->GetVP().ref_scale;
     else
         vp.ref_scale = vp.chart_scale;
-
+    
     vp.SetBoxes();
     vp.Validate();                 // This VP is valid
-
+    
     return vp;
 }
 
@@ -232,7 +236,7 @@ PlugInManager::~PlugInManager()
 bool PlugInManager::LoadAllPlugIns(const wxString &plugin_dir, bool load_enabled, bool b_enable_blackdialog)
 {
     m_benable_blackdialog = b_enable_blackdialog;
-
+    
     m_plugin_location = plugin_dir;
 
     wxString msg(_T("PlugInManager searching for PlugIns in location "));
@@ -381,6 +385,7 @@ void PlugInManager::SendVectorChartObjectInfo(const wxString &chart, const wxStr
                 switch(pic->m_api_version)
                 {
                 case 112:
+                case 113:
                 {
                     opencpn_plugin_112 *ppi = dynamic_cast<opencpn_plugin_112 *>(pic->m_pplugin);
                     if(ppi)
@@ -594,7 +599,7 @@ void PlugInManager::ShowDeferredBlacklistMessages()
     for( unsigned int i=0 ; i < m_deferred_blacklist_messages.GetCount() ; i++){
         OCPNMessageBox ( NULL, m_deferred_blacklist_messages.Item(i), wxString( _("OpenCPN Info") ), wxICON_INFORMATION | wxOK, 5 );  // 5 second timeout
     }
-    
+        
 }
 
 bool PlugInManager::CheckBlacklistedPlugin(opencpn_plugin* plugin)
@@ -602,7 +607,7 @@ bool PlugInManager::CheckBlacklistedPlugin(opencpn_plugin* plugin)
     int len = sizeof(PluginBlacklist) / sizeof(BlackListedPlugin);
     int major = plugin->GetPlugInVersionMajor();
     int minor = plugin->GetPlugInVersionMinor();
-
+    
 #ifdef __WXMSW__
     wxString name = wxString::FromAscii(typeid(*plugin).name());
     name.Replace(_T("class "), wxEmptyString);
@@ -615,7 +620,7 @@ bool PlugInManager::CheckBlacklistedPlugin(opencpn_plugin* plugin)
 #endif // __WXMSW__
     for (int i = 0; i < len; i++) {
         if( ( PluginBlacklist[i].all_lower && name == PluginBlacklist[i].name && PluginBlacklist[i].version_major >= major && PluginBlacklist[i].version_minor >= minor ) ||
-           ( !PluginBlacklist[i].all_lower && name == PluginBlacklist[i].name && PluginBlacklist[i].version_major == major && PluginBlacklist[i].version_minor == minor ) )
+            ( !PluginBlacklist[i].all_lower && name == PluginBlacklist[i].name && PluginBlacklist[i].version_major == major && PluginBlacklist[i].version_minor == minor ) )
         {
             wxString msg;
             wxString msg1;
@@ -656,7 +661,7 @@ PlugInContainer *PlugInManager::LoadPlugIn(wxString plugin_file)
     // load the library
     wxDynamicLibrary *plugin = new wxDynamicLibrary(plugin_file);
     pic->m_plibrary = plugin;     // Save a pointer to the wxDynamicLibrary for later deletion
-
+    
     if( !wxIsReadable(plugin_file) )
     {
         msg = _("Unreadable PlugIn library detected, check the file permissions:\n");
@@ -665,7 +670,6 @@ PlugInContainer *PlugInManager::LoadPlugIn(wxString plugin_file)
         OCPNMessageBox ( NULL, msg, wxString( _("OpenCPN Info") ), wxICON_INFORMATION | wxOK, 10 );  // 10 second timeout
     }
     else if(!plugin->IsLoaded())
-
     {
         //  Look in the Blacklist, try to match a filename, to give some kind of message
         //  extract the probable plugin name
@@ -791,6 +795,10 @@ PlugInContainer *PlugInManager::LoadPlugIn(wxString plugin_file)
         pic->m_pplugin = dynamic_cast<opencpn_plugin_112*>(plug_in);
         break;
     
+    case 113:
+        pic->m_pplugin = dynamic_cast<opencpn_plugin_113*>(plug_in);
+        break;
+        
     default:
         break;
     }
@@ -853,6 +861,7 @@ bool PlugInManager::RenderAllCanvasOverlayPlugIns( ocpnDC &dc, const ViewPort &v
                     case 110:
                     case 111:
                     case 112:
+                    case 113:    
                     {
                         opencpn_plugin_18 *ppi = dynamic_cast<opencpn_plugin_18 *>(pic->m_pplugin);
                         if(ppi)
@@ -879,7 +888,6 @@ bool PlugInManager::RenderAllCanvasOverlayPlugIns( ocpnDC &dc, const ViewPort &v
                     if((m_cached_overlay_bm.GetWidth() != vp.pix_width) || (m_cached_overlay_bm.GetHeight() != vp.pix_height))
                         m_cached_overlay_bm.Create(vp.pix_width, vp.pix_height, -1);
 #endif
-
                     wxMemoryDC mdc;
                     mdc.SelectObject ( m_cached_overlay_bm );
                     mdc.SetBackground ( *wxBLACK_BRUSH );
@@ -909,6 +917,7 @@ bool PlugInManager::RenderAllCanvasOverlayPlugIns( ocpnDC &dc, const ViewPort &v
                     case 110:
                     case 111:
                     case 112:
+                    case 113: 
                     {
                         opencpn_plugin_18 *ppi = dynamic_cast<opencpn_plugin_18 *>(pic->m_pplugin);
                         if(ppi)
@@ -970,6 +979,7 @@ bool PlugInManager::RenderAllGLCanvasOverlayPlugIns( wxGLContext *pcontext, cons
                 case 110:
                 case 111:
                 case 112:
+                case 113:
                 {
                     opencpn_plugin_18 *ppi = dynamic_cast<opencpn_plugin_18 *>(pic->m_pplugin);
                     if(ppi)
@@ -999,12 +1009,45 @@ bool PlugInManager::SendMouseEventToPlugins( wxMouseEvent &event)
                 switch(pic->m_api_version)
                 {
                     case 112:
+                    case 113:
                     {
                         opencpn_plugin_112 *ppi = dynamic_cast<opencpn_plugin_112*>(pic->m_pplugin);
                             if(ppi)
                                 if(ppi->MouseEventHook( event ))
                                     bret = true;
                             break;
+                        }
+                        
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    
+    return bret;;
+}
+
+bool PlugInManager::SendKeyEventToPlugins( wxKeyEvent &event)
+{
+    bool bret = false;
+    for(unsigned int i = 0 ; i < plugin_array.GetCount() ; i++)
+    {
+        PlugInContainer *pic = plugin_array.Item(i);
+        if(pic->m_bEnabled && pic->m_bInitState)
+        {
+            if(pic->m_cap_flag & WANTS_KEYBOARD_EVENTS){
+                {
+                    switch(pic->m_api_version)
+                    {
+                        case 113:
+                        {
+                            opencpn_plugin_113 *ppi = dynamic_cast<opencpn_plugin_113*>(pic->m_pplugin);
+                            if(ppi)
+                                if(ppi->KeyboardEventHook( event ))
+                                    bret = true;
+                                break;
                         }
                         
                         default:
@@ -1060,6 +1103,7 @@ void NotifySetupOptionsPlugin( PlugInContainer *pic )
             case 110:
             case 111:
             case 112:
+            case 113:
             {
                 opencpn_plugin_19 *ppi = dynamic_cast<opencpn_plugin_19 *>(pic->m_pplugin);
                 if(ppi) {
@@ -1222,6 +1266,7 @@ void PlugInManager::SendMessageToAllPlugins(const wxString &message_id, const wx
                 case 110:
                 case 111:
                 case 112:
+                case 113:
                 {
                     opencpn_plugin_18 *ppi = dynamic_cast<opencpn_plugin_18 *>(pic->m_pplugin);
                     if(ppi)
@@ -1411,10 +1456,10 @@ void PlugInManager::SetToolbarToolViz(int item, bool viz)
             if(pttc->id == item)
             {
                 pttc->b_viz = viz;
-
-                //      Apply the change
+                
+                //      Apply the change      
                 pParent->RequestNewToolbar();
-
+                
                 break;
             }
         }
@@ -1768,12 +1813,12 @@ wxFont *OCPNGetFont(wxString TextElement, int default_size)
 
 wxString *GetpSharedDataLocation(void)
 {
-    return &g_SData_Locn;
+    return g_Platform->GetSharedDataDirPtr();
 }
 
 wxString *GetpPrivateApplicationDataLocation(void)
 {
-    return &g_PrivateDataDir;
+    return g_Platform->GetPrivateDataDirPtr();
 }
 
 
@@ -1816,9 +1861,8 @@ wxAuiManager *GetFrameAuiManager(void)
 
 bool AddLocaleCatalog( wxString catalog )
 {
-    if(plocale_def_lang)
-        return plocale_def_lang->AddCatalog( catalog );
-#if 0  // Reverted, #1049 in commit list
+#if wxUSE_XLOCALE || !wxCHECK_VERSION(3,0,0)
+    
     if(plocale_def_lang){
         // Add this catalog to the persistent catalog array
         g_locale_catalog_array.Add(catalog);
@@ -1826,8 +1870,8 @@ bool AddLocaleCatalog( wxString catalog )
         //  And then reload all catalogs.
         return ReloadLocale(); // plocale_def_lang->AddCatalog( catalog );
     }
-#endif
     else
+#endif        
         return false;
 }
 
@@ -1893,7 +1937,7 @@ int AddChartToDBInPlace( wxString &full_path, bool b_RefreshCanvas )
         if(bret){
             // Save to disk
             pConfig->UpdateChartDirs( ChartData->GetChartDirArray() );
-            ChartData->SaveBinary(*pChartListFileName);
+            ChartData->SaveBinary(ChartListFileName);
             
 
             //  Completely reload the chart database, for a fresh start
@@ -1901,7 +1945,7 @@ int AddChartToDBInPlace( wxString &full_path, bool b_RefreshCanvas )
             pConfig->LoadChartDirArray( XnewChartDirArray );
             delete ChartData;
             ChartData = new ChartDB( gFrame );
-            ChartData->LoadBinary(*pChartListFileName, XnewChartDirArray);
+            ChartData->LoadBinary(ChartListFileName, XnewChartDirArray);
 
             if(g_boptionsactive){
                 g_options->UpdateDisplayedChartDirList(ChartData->GetChartDirArray());
@@ -1926,7 +1970,7 @@ int RemoveChartFromDBInPlace( wxString &full_path )
         
     // Save to disk
         pConfig->UpdateChartDirs( ChartData->GetChartDirArray() );
-        ChartData->SaveBinary(*pChartListFileName);
+        ChartData->SaveBinary(ChartListFileName);
     
     
     //  Completely reload the chart database, for a fresh start
@@ -1934,7 +1978,7 @@ int RemoveChartFromDBInPlace( wxString &full_path )
         pConfig->LoadChartDirArray( XnewChartDirArray );
         delete ChartData;
         ChartData = new ChartDB( gFrame );
-        ChartData->LoadBinary(*pChartListFileName, XnewChartDirArray);
+        ChartData->LoadBinary(ChartListFileName, XnewChartDirArray);
     
         if(g_boptionsactive){
             g_options->UpdateDisplayedChartDirList(ChartData->GetChartDirArray());
@@ -2863,6 +2907,22 @@ void opencpn_plugin_112::SendVectorChartObjectInfo(wxString &chart, wxString &fe
 {
 }
 
+//    Opencpn_Plugin_113 Implementation
+opencpn_plugin_113::opencpn_plugin_113(void *pmgr)
+: opencpn_plugin_112(pmgr)
+{
+}
+
+opencpn_plugin_113::~opencpn_plugin_113(void)
+{
+}
+
+bool opencpn_plugin_113::KeyboardEventHook( wxKeyEvent &event )
+{
+    return false;
+}
+
+
 
 //          Helper and interface classes
 
@@ -2951,7 +3011,7 @@ PluginListPanel::PluginListPanel( wxWindow *parent, wxWindowID id, const wxPoint
     }
 
     itemBoxSizer01->AddSpacer(max_dy);
-
+    
     Show();
 }
 
@@ -3310,11 +3370,12 @@ InitReturn ChartPlugInWrapper::Init( const wxString& name, ChartInitFlag init_fl
 
         }
 
+
         //  PlugIn may invoke wxExecute(), which steals the keyboard focus
         //  So take it back
         if(cc1)
             cc1->SetFocus();
-
+        
         return ret_val;
     }
     else
@@ -3672,12 +3733,12 @@ int OCPNMessageBox_PlugIn(wxWindow *parent,
 
 wxString GetOCPN_ExePath( void )
 {
-    return gExe_path;
+    return g_Platform->GetExePath();
 }
 
 wxString *GetpPlugInLocation()
 {
-    return &g_Plugin_Dir;
+    return g_Platform->GetPluginDirPtr();
 }
 
 wxString GetPlugInPath(opencpn_plugin *pplugin)
@@ -4234,7 +4295,7 @@ int PI_PLIBRenderAreaToDC( wxDC *pdc, PI_S57Obj *pObj, PlugIn_ViewPort *vp, wxRe
         
             if(!tess)
                 return 1;                       // bail on empty data
-
+                
             PolyTriGroup *ptg = new PolyTriGroup;
             ptg->tri_prim_head = tess->Get_PolyTriGroup_head()->tri_prim_head; //tph;
             ptg->bsingle_alloc = false;
@@ -4246,7 +4307,7 @@ int PI_PLIBRenderAreaToDC( wxDC *pdc, PI_S57Obj *pObj, PlugIn_ViewPort *vp, wxRe
         
         }
     }
-
+    
     if(pContext->LUP){
     //  Do the render
         ps52plib->RenderAreaToDC( pdc, &rzRules, &cvp, &pb_spec );
@@ -4254,7 +4315,7 @@ int PI_PLIBRenderAreaToDC( wxDC *pdc, PI_S57Obj *pObj, PlugIn_ViewPort *vp, wxRe
     //  Update the PLIB context after the render operation
         UpdatePIObjectPlibContext( pObj, &cobj, &rzRules );
     }
-
+    
     return 1;
 }
 
@@ -4274,10 +4335,10 @@ int PI_PLIBRenderAreaToGL( const wxGLContext &glcc, PI_S57Obj *pObj, PlugIn_View
        if(!pObj->geoPtMulti ){                          // only do this once
             PolyTessGeo *tess = (PolyTessGeo *)pObj->pPolyTessGeo;
         
-           if(!tess)
-               return 1;                       // bail on empty data
-
-           PolyTriGroup *ptg = new PolyTriGroup;       // this will leak a little, but is POD
+            if(!tess)
+                return 1;                       // bail on empty data
+                
+            PolyTriGroup *ptg = new PolyTriGroup;       // this will leak a little, but is POD
             ptg->tri_prim_head = tess->Get_PolyTriGroup_head()->tri_prim_head; 
             ptg->bsingle_alloc = false;
             ptg->data_type = DATA_TYPE_DOUBLE;

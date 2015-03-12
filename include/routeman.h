@@ -117,7 +117,7 @@ public:
 
 private:
       void DoAdvance(void);
-
+    
       MyApp       *m_pparent_app;
       Route       *pActiveRoute;
       RoutePoint  *pActivePoint;
@@ -146,10 +146,10 @@ private:
       wxBrush     *m_pRoutePointBrush;
 
       NMEA0183    m_NMEA0183;                         // For autopilot output
-
+      
       double      m_arrival_min;
       int         m_arrival_test;
-
+      
 
 };
 
@@ -178,7 +178,7 @@ public:
       void DestroyWaypoint(RoutePoint *pRp, bool b_update_changeset = true);
       void ClearRoutePointFonts(void);
       void ProcessIcons( ocpnStyle::Style* style );
-
+      
       bool DoesIconExist(const wxString & icon_key) const;
       wxBitmap *GetIconBitmap(int index);
       wxString *GetIconDescription(int index);

@@ -165,7 +165,7 @@ public:
 
     void SetDisplayCategory( enum _DisCat cat );
     DisCat GetDisplayCategory(){ return m_nDisplayCategory; }
-
+    
     wxArrayOfLUPrec* SelectLUPARRAY( LUPname TNAM );
     LUPArrayContainer *SelectLUPArrayContainer( LUPname TNAM );
         
@@ -187,7 +187,7 @@ public:
     void AddObjNoshow( const char *objcl);
     void RemoveObjNoshow( const char *objcl);
     void ClearNoshow(void);
-
+    
     //Todo accessors
     LUPname m_nSymbolStyle;
     LUPname m_nBoundaryStyle;

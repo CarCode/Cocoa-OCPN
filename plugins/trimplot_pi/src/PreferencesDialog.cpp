@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 #include "trimplot_pi.h"
+#include "TrimPlotDialog.h"
 #include "PreferencesDialog.h"
 
 PreferencesDialog::PreferencesDialog(wxWindow* parent, trimplot_pi &_trimplot_pi)
@@ -96,6 +97,7 @@ PreferencesDialog::~PreferencesDialog()
 void PreferencesDialog::OnPlotChange( wxCommandEvent& event )
 {
     m_trimplot_pi.RepopulatePlots();
+    m_trimplot_pi.m_TrimPlotDialog->Fit();
 }
 
 void PreferencesDialog::OnAbout( wxCommandEvent& event )

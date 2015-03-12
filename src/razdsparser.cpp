@@ -1,4 +1,4 @@
-/******************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  RAZ Symbology Parser
@@ -20,10 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -154,8 +152,9 @@ int RazdsParser::ParseCOLS( FILE *fp )
 
 int RazdsParser::ParseLUPT( FILE *fp )
 {
+#ifndef __WXOSX__
     int ret;
-
+#endif
     bool inserted = FALSE;
 
     LUPrec *LUP = (LUPrec*) calloc( 1, sizeof(LUPrec) );
@@ -172,9 +171,11 @@ int RazdsParser::ParseLUPT( FILE *fp )
     LUP->DPRI = (enum _DisPrio) pBuf[30];
     LUP->RPRI = (enum _RadPrio) pBuf[31];
     LUP->TNAM = (enum _LUPname) pBuf[36];
-
+#ifdef __WXOSX__
+    ReadS52Line( pBuf, NEWLN, 0, fp );
+#else
     ret = ReadS52Line( pBuf, NEWLN, 0, fp );
-
+#endif
     do {
         MOD_REC ( ATTC ) {
             if( '\037' != pBuf[9] ) // could be empty!
@@ -234,9 +235,11 @@ int RazdsParser::ParseLUPT( FILE *fp )
             inserted = TRUE;
 
         } // MOD_REC
-
+#ifdef __WXOSX__
+        ReadS52Line( pBuf, NEWLN, 0, fp );
+#else
         ret = ReadS52Line( pBuf, NEWLN, 0, fp );
-
+#endif
     } while( inserted == FALSE );
 
     return 1;
@@ -258,8 +261,11 @@ int RazdsParser::ParseLNST( FILE *fp )
     wxString LCRF;
 
     sscanf( pBuf + 11, "%d", &lnst->RCID );
-
+#ifdef __WXOSX__
+    ReadS52Line( pBuf, NEWLN, 0, fp );
+#else
     ret = ReadS52Line( pBuf, NEWLN, 0, fp );
+#endif
     do {
         MOD_REC ( LIND ) {
             strncpy( lnst->name.LINM, pBuf + 9, 8 ); // could be empty!
@@ -321,9 +327,11 @@ int RazdsParser::ParsePATT( FILE *fp )
     wxString PCRF;
 
     sscanf( pBuf + 11, "%d", &patt->RCID );
-
+#ifdef __WXOSX__
+    ReadS52Line( pBuf, NEWLN, 0, fp );
+#else
     ret = ReadS52Line( pBuf, NEWLN, 0, fp );
-
+#endif
     do {
         MOD_REC ( PATD ) {
             strncpy( patt->name.PANM, pBuf + 9, 8 );

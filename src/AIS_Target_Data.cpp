@@ -45,7 +45,7 @@ void make_hash_ERI(int key, const wxString & description)
 
 static wxString FormatTimeAdaptive( int seconds )
 {
-//    int s = seconds % 60;  // Not used
+    int s = seconds % 60;
     int m = seconds / 60;
     if( seconds < 100 )
         return wxString::Format( _T("%3ds"), seconds );
@@ -585,7 +585,7 @@ wxString AIS_Target_Data::BuildQueryResult( void )
 #else
             brgStr << wxString::Format( wxString("%03d°  ", wxConvUTF8 ), (int)gFrame->GetTrueOrMag( Brg ) );
 #endif
-    }   
+    }
     else
         brgStr = _("---");
 
@@ -908,6 +908,8 @@ wxString AIS_Target_Data::GetCountryCode( bool b_CntryLongStr )  //false = Short
   int mmsi_start = MMSI / 1000000;
   if (mmsi_start == 111) mmsi_start = (MMSI - 111000000)/1000 ; //SAR Aircraft start with 111 and has a MID.
 
+#if wxUSE_XLOCALE || !wxCHECK_VERSION(3,0,0)
+
   switch(mmsi_start) {
     case 201: return b_CntryLongStr ? _("Albania") : _T("AL") ;
     case 202: return b_CntryLongStr ? _("Andorra") : _T("AD") ;
@@ -1201,4 +1203,8 @@ wxString AIS_Target_Data::GetCountryCode( bool b_CntryLongStr )  //false = Short
 
     default: return wxEmptyString;
   }
+#else
+  return wxEmptyString;
+#endif    
+  
 }

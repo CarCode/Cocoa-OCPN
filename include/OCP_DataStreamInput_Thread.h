@@ -76,7 +76,7 @@ private:
     int WriteComPortPhysical(int port_descriptor, char *msg);
     int ReadComPortPhysical(int port_descriptor, int count, unsigned char *p);
     bool CheckComPortPhysical(int port_descriptor);
-
+    
     void HandleASuccessfulRead( char *buf, int nread );
     
     wxCriticalSection       m_outCritical;

@@ -22,7 +22,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
+ *                                                                         *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -93,12 +93,24 @@
 #include "hdt.hpp"
 #include "RMB.hpp"
 #include "RMC.HPP"
+#include "rsa.hpp"
 #include "wpl.hpp"
 #include "rte.hpp"
 #include "gll.hpp"
 #include "vtg.hpp"
 #include "gsv.hpp"
 #include "gga.hpp"
+#include "dbt.hpp"
+#include "dpt.hpp"
+#include "mta.hpp" //Air temperature
+#include "mtw.hpp" //Water temperature
+#include "mda.hpp" //barometric pressure
+#include "mwd.hpp"
+#include "mwv.hpp"
+#include "vhw.hpp"
+#include "vwr.hpp"
+#include "vwt.hpp"
+#include "zda.hpp"
 #include "GPwpl.hpp"
 #include "apb.hpp"
 #include "xte.hpp"
@@ -159,33 +171,35 @@ class NMEA0183
       ** NMEA 0183 Sentences we understand
       */
 
-/*
-      AAM Aam;
-      ALM Alm;
-      APB Apb;
-      ASD Asd;
-      BEC Bec;
-      BOD Bod;
-      BWC Bwc;
-      BWR Bwr;
-      BWW Bww;
+//      AAM Aam;
+//      ALM Alm;
+//      APB Apb;
+//      ASD Asd;
+//      BEC Bec;
+//      BOD Bod;
+//      BWC Bwc;
+//      BWR Bwr;
+//      BWW Bww;
+
       DBT Dbt;
-      DCN Dcn;
+//      DCN Dcn;
       DPT Dpt;
-      FSI Fsi;
+//      FSI Fsi;
       GGA Gga;
-      GLC Glc;
+//      GLC Glc;
       GLL Gll;
-      GXA Gxa;
-      HSC Hsc;
-      LCD Lcd;
+//      GXA Gxa;
+//      HSC Hsc;
+//      LCD Lcd;
+      MTA Mta; //Air temperature
       MTW Mtw;
+      MWD Mwd;
       MWV Mwv;
-      OLN Oln;
-      OSD Osd;
-      P   Proprietary;
-      RMA Rma;
-*/
+      MDA Mda; //Metrological composite
+//      OLN Oln;
+//      OSD Osd;
+//      P   Proprietary;
+//      RMA Rma;
        HDM Hdm;
        HDG Hdg;
        HDT Hdt;
@@ -193,10 +207,8 @@ class NMEA0183
        RMC Rmc;
        WPL Wpl;
        RTE Rte;
-       GLL Gll;
        VTG Vtg;
        GSV Gsv;
-       GGA Gga;
        GPWPL GPwpl;
        APB Apb;
        XTE Xte;
@@ -204,30 +216,28 @@ class NMEA0183
         VLW Vlw;
         STALK Stalk;
 #endif
- /*
-      ROT Rot;
-      RPM Rpm;
+//      ROT Rot;
+//      RPM Rpm;
       RSA Rsa;
-      RSD Rsd;
-      SFI Sfi;
-      STN Stn;
-      TRF Trf;
-      TTM Ttm;
-      VBW Vbw;
-      VDR Vdr;
+//      RSD Rsd;
+//      SFI Sfi;
+//      STN Stn;
+//      TRF Trf;
+//      TTM Ttm;
+//      VBW Vbw;
+//      VDR Vdr;
       VHW Vhw;
-      VLW Vlw;
-      VPW Vpw;
-      VTG Vtg;
-      WCV Wcv;
-      WNC Wnc;
-      XDR Xdr;
-      XTE Xte;
-      XTR Xtr;
+      VWR Vwr;
+      VWT Vwt;
+//      VPW Vpw;
+//      WCV Wcv;
+//      WNC Wnc;
+//      XDR Xdr;
+//      XTR Xtr;
       ZDA Zda;
-      ZFO Zfo;
-      ZTG Ztg;
-*/
+//      ZFO Zfo;
+//      ZTG Ztg;
+
       wxString ErrorMessage; // Filled when Parse returns FALSE
       wxString LastSentenceIDParsed; // ID of the lst sentence successfully parsed
       wxString LastSentenceIDReceived; // ID of the last sentence received, may not have parsed successfully

@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,13 +19,15 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __GLTEXTCACHE_H__
 #define __GLTEXTCACHE_H__
 
 #include <wx/glcanvas.h>
 #include <wx/file.h>
+#include <wx/timer.h>
 #include <stdint.h>
 
 #include "ocpn_types.h"
@@ -174,7 +176,7 @@ public:
     ~CompressionWorkerPool();
     
     bool ScheduleJob( glTexFactory *client, const wxRect &rect, int level_min,
-                     bool b_throttle_thread, bool b_immediate, bool b_postZip);
+                      bool b_throttle_thread, bool b_immediate, bool b_postZip);
     void OnEvtThread( OCPN_CompressionThreadEvent & event );
     int GetRunningJobCount(){ return m_njobs_running; }
     void PurgeJobList( wxString chart_path = wxEmptyString );

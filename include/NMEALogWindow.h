@@ -63,7 +63,7 @@ class NMEALogWindow : public WindowDestroyListener
         void CheckPos(int display_width, int display_height);
         virtual void DestroyWindow();
         static void Shutdown();
-
+        
     private: // prevent class from being copied, needed by singleton
         NMEALogWindow();
         NMEALogWindow(const NMEALogWindow &) {}

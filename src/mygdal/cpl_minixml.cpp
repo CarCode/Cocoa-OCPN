@@ -344,7 +344,6 @@ static TokenType ReadToken( ParseContext *psContext )
 #else
         CPLAssert( chNext == '>' );
 #endif
-
         psContext->eTokenType = TSlashClose;
         psContext->bInElement = FALSE;
     }
@@ -360,7 +359,6 @@ static TokenType ReadToken( ParseContext *psContext )
 #else
         CPLAssert( chNext == '>' );
 #endif
-
         psContext->eTokenType = TQuestionClose;
         psContext->bInElement = FALSE;
     }

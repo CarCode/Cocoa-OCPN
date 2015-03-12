@@ -151,7 +151,7 @@ public:
 
       void LockCacheChart( int index );
       bool IsChartLocked( int index );
-
+      
       void UnLockCacheChart( int index );
       void UnLockAllCacheCharts();
       

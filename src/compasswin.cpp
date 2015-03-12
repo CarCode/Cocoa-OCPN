@@ -1,11 +1,11 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Main wxWidgets Program
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,8 +21,9 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
-
+ ***************************************************************************
+ *
+ */
 #include "wx/wxprec.h"
 #ifndef  WX_PRECOMP
 #include "wx/wx.h"
@@ -32,7 +33,7 @@
 #include "chcanv.h"
 #include "styles.h"
 BEGIN_EVENT_TABLE(ocpnFloatingCompassWindow, wxWindow) EVT_PAINT ( ocpnFloatingCompassWindow::OnPaint )
-EVT_LEFT_DOWN ( ocpnFloatingCompassWindow::MouseEvent )
+    EVT_LEFT_DOWN ( ocpnFloatingCompassWindow::MouseEvent )
 END_EVENT_TABLE()
 
 extern ocpnStyle::StyleManager* g_StyleManager;
@@ -238,7 +239,7 @@ wxBitmap ocpnFloatingCompassWindow::CreateBmp( bool newColorScheme )
             m_lastgpsIconName = gpsIconName;
         }
 
-#ifndef __WXMAC__       
+#if !defined(__WXMAC__) && !defined(__OCPN__ANDROID__)       
         if( style->marginsInvisible ) {
             m_MaskBmp = wxBitmap( StatBmp.GetWidth(), StatBmp.GetHeight() );
             wxMemoryDC sdc( m_MaskBmp );

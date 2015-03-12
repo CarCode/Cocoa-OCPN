@@ -38,7 +38,7 @@
 #include <wx/fileconf.h>
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    0
+#define     PLUGIN_VERSION_MINOR    4
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    10
@@ -136,6 +136,7 @@ public:
       wxWindow         *m_parent_window;
 
       std::list<PlugIn_Position_Fix_Ex> m_fixes;
+      TrimPlotDialog   *m_TrimPlotDialog;
       PreferencesDialog *m_Preferences;
 
 private:
@@ -145,7 +146,6 @@ private:
 
       void    SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix);
 
-      TrimPlotDialog   *m_pTrimPlotDialog;
       int               m_trimplot_dialog_x, m_trimplot_dialog_y;
       int               m_trimplot_dialog_w, m_trimplot_dialog_h;
 

@@ -5,7 +5,7 @@
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,10 +20,9 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
@@ -106,11 +105,13 @@ int  G_PtInPolygon(MyPoint *rgpts, int wnumpts, float x, float y)
 
 
 int Intersect(MyPoint p1, MyPoint p2, MyPoint p3, MyPoint p4) {
+#ifndef __WXOSX__  // Not used
       int i;
       i = CCW(p1, p2, p3);
       i = CCW(p1, p2, p4);
       i = CCW(p3, p4, p1);
       i = CCW(p3, p4, p2);
+#endif
    return ((( CCW(p1, p2, p3) * CCW(p1, p2, p4)) <= 0)
         && (( CCW(p3, p4, p1) * CCW(p3, p4, p2)  <= 0) )) ;
 
@@ -193,11 +194,13 @@ int  G_PtInPolygon_FL(float_2Dpt *rgpts, int wnumpts, float x, float y)
 
 
 int Intersect_FL(float_2Dpt p1, float_2Dpt p2, float_2Dpt p3, float_2Dpt p4) {
+#ifndef __WXOSX__  // Not used
       int i;
       i = CCW_FL(p1, p2, p3);
       i = CCW_FL(p1, p2, p4);
       i = CCW_FL(p3, p4, p1);
       i = CCW_FL(p3, p4, p2);
+#endif
       return ((( CCW_FL(p1, p2, p3) * CCW_FL(p1, p2, p4)) <= 0)
                   && (( CCW_FL(p3, p4, p1) * CCW_FL(p3, p4, p2)  <= 0) )) ;
 
