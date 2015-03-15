@@ -98,6 +98,7 @@ extern bool g_bopengl;
 extern int g_GPU_MemSize;
 extern bool g_bDebugOGL;
 extern bool g_bShowFPS;
+extern bool g_btouch;
 
 GLenum       g_texture_rectangle_format;
 
@@ -872,6 +873,10 @@ void glChartCanvas::MouseEvent( wxMouseEvent& event )
 #ifndef __OCPN__ANDROID__
     if(!obj_proc)
         cc1->MouseEventProcessCanvas( event );
+
+    if( !g_btouch )
+        cc1->SetCanvasCursor( event );
+
 #endif
 
 }
@@ -1119,12 +1124,19 @@ void glChartCanvas::SetupOpenGL()
 
     g_GLOptions.m_bUseCanvasPanning = false;
 #ifdef __OCPN__ANDROID__
-    g_GLOptions.m_bUseCanvasPanning = true;
+    g_GLOptions.m_bUseCanvasPanning = false; //true;
 #endif
 
     //      Maybe build FBO(s)
 
     BuildFBO();
+
+#ifdef __OCPN__ANDROID__
+    g_GLOptions.m_bUseCanvasPanning = false; //m_b_BuiltFBO;
+#endif
+
+
+
 #if 1   /* this test sometimes fails when the fbo still works */
         //  But we need to be ultra-conservative here, so run all the tests we can think of
 
@@ -1388,16 +1400,15 @@ bool glChartCanvas::PurgeChartTextures( ChartBase *pc, bool b_purge_factory )
 
 /*   This is needed for building display lists */
 #define NORM_FACTOR 16.0
-void glChartCanvas::MultMatrixViewPort(const ViewPort &vp)
+void glChartCanvas::MultMatrixViewPort(ViewPort &vp)
 {
-    wxPoint point;
-    cc1->GetCanvasPointPix(0, 0, &point);
-    glTranslatef(point.x, point.y, 0);
-    glScalef(vp.view_scale_ppm/NORM_FACTOR, vp.view_scale_ppm/NORM_FACTOR, 1);
-    double angle = vp.rotation;
-//    if(!g_bskew_comp)
-//        angle -= vp.skew;
+    wxPoint2DDouble point;
+    cc1->GetDoubleCanvasPointPixVP(vp, 0, 0, &point);
+    glTranslatef(point.m_x, point.m_y, 0);
 
+    glScalef(vp.view_scale_ppm/NORM_FACTOR, vp.view_scale_ppm/NORM_FACTOR, 1);
+
+    double angle = vp.rotation;
     glRotatef(angle*180/PI, 0, 0, 1);
 }
 
@@ -3038,7 +3049,7 @@ void glChartCanvas::RenderWorldChart(ocpnDC &dc, OCPNRegion &region, ViewPort &v
     for(OCPNRegionIterator clipit( region ); clipit.HaveRects(); clipit.NextRect())
         n_rect++;
 
-    if(vp.view_scale_ppm > .003 || n_rect > 2)
+    if(/*vp.view_scale_ppm > .03 ||*/ n_rect > 2)
     {
         glColor3ub(water.Red(), water.Green(), water.Blue());
         SetClipRegion( vp, region, true, true ); /* clear background, no rotation */

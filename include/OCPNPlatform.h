@@ -48,19 +48,20 @@ public:
     static bool hasInternalGPS(wxString profile = _T(""));      // GPS
 
     static bool hasInternalBT(wxString profile = _T(""));       // Bluetooth
-    
-    
+    bool startBluetoothScan();
+    wxArrayString getBluetoothScanResults();
+
 //  Per-Platform initialization support    
-    
+
     //  Called from MyApp() immediately upon entry to MyApp::OnInit()
     static void Initialize_1( void );
-    
+
     //  Called from MyApp() immediately before creation of MyFrame()
     static void Initialize_2( void );
-    
+
     //  Called from MyApp() just before end of MyApp::OnInit()
     static void Initialize_3( void );
-    
+
     static void OnExit_1( void );
     static void OnExit_2( void );
 
@@ -97,8 +98,8 @@ private:
     FILE        *flog;
     wxLog       *m_Oldlogger;
     wxString    large_log_message;
-    
-    
+
+
 
 };
 

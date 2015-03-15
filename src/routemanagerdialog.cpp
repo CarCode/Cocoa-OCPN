@@ -800,9 +800,13 @@ void RouteManagerDialog::Create()
     //  The size will later be adjusted so that it fits iwithing the parent's client area, with some padding
     
     wxSize sz;
+#ifdef __WXOSX__
+    sz.x = 80 * char_width;
+    sz.y = 40 * char_width;
+#else
     sz.x = 44 * char_width;
     sz.y = 20 * char_width;
-    
+#endif
     wxSize dsize = GetParent()->GetClientSize();
     sz.y = wxMin(sz.y, dsize.y - (2 * char_height));
     sz.x = wxMin(sz.x, dsize.x - (2 * char_height));

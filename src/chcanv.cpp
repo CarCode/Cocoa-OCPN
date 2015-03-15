@@ -2470,6 +2470,11 @@ void ChartCanvas::GetCursorLatLon( double *lat, double *lon )
 
 void ChartCanvas::GetDoubleCanvasPointPix( double rlat, double rlon, wxPoint2DDouble *r )
 {
+    return GetDoubleCanvasPointPixVP( GetVP(), rlat, rlon, r );
+}
+
+void ChartCanvas::GetDoubleCanvasPointPixVP( ViewPort &vp, double rlat, double rlon, wxPoint2DDouble *r )
+{
     // If the Current Chart is a raster chart, and the
     // requested lat/long is within the boundaries of the chart,
     // and the VP is not rotated,
@@ -2477,37 +2482,37 @@ void ChartCanvas::GetDoubleCanvasPointPix( double rlat, double rlon, wxPoint2DDo
     // for greater accuracy
     // Additionally, use chart embedded georef if the projection is TMERC
     //  i.e. NOT MERCATOR and NOT POLYCONIC
-
+    
     // If for some reason the chart rejects the request by returning an error,
     // then fall back to Viewport Projection estimate from canvas parameters
     if( Current_Ch && ( Current_Ch->GetChartFamily() == CHART_FAMILY_RASTER )
-        && ( ( ( fabs( GetVP().rotation ) < .0001 ) &&
-               ( ( !g_bskew_comp || ( fabs( GetVP().skew ) < .0001 ) ) ) )
-             || ( ( Current_Ch->GetChartProjectionType() != PROJECTION_MERCATOR )
-                  && ( Current_Ch->GetChartProjectionType() != PROJECTION_TRANSVERSE_MERCATOR )
-                  && ( Current_Ch->GetChartProjectionType() != PROJECTION_POLYCONIC ) ) ) )
+       && ( ( ( fabs( vp.rotation ) < .0001 ) &&
+             ( ( !g_bskew_comp || ( fabs( vp.skew ) < .0001 ) ) ) )
+           || ( ( Current_Ch->GetChartProjectionType() != PROJECTION_MERCATOR )
+               && ( Current_Ch->GetChartProjectionType() != PROJECTION_TRANSVERSE_MERCATOR )
+               && ( Current_Ch->GetChartProjectionType() != PROJECTION_POLYCONIC ) ) ) )
     {
         ChartBaseBSB *Cur_BSB_Ch = dynamic_cast<ChartBaseBSB *>( Current_Ch );
-//                        bool bInside = G_FloatPtInPolygon ( ( MyFlPoint * ) Cur_BSB_Ch->GetCOVRTableHead ( 0 ),
-//                                                            Cur_BSB_Ch->GetCOVRTablenPoints ( 0 ), rlon, rlat );
-//                        bInside = true;
-//                        if ( bInside )
+        //                        bool bInside = G_FloatPtInPolygon ( ( MyFlPoint * ) Cur_BSB_Ch->GetCOVRTableHead ( 0 ),
+        //                                                            Cur_BSB_Ch->GetCOVRTablenPoints ( 0 ), rlon, rlat );
+        //                        bInside = true;
+        //                        if ( bInside )
         if( Cur_BSB_Ch ) {
             //    This is a Raster chart....
             //    If the VP is changing, the raster chart parameters may not yet be setup
             //    So do that before accessing the chart's embedded georeferencing
-            Cur_BSB_Ch->SetVPRasterParms( GetVP() );
+            Cur_BSB_Ch->SetVPRasterParms( vp );
             double rpixxd, rpixyd;
-            if( 0 == Cur_BSB_Ch->latlong_to_pix_vp( rlat, rlon, rpixxd, rpixyd, GetVP() ) ) {
+            if( 0 == Cur_BSB_Ch->latlong_to_pix_vp( rlat, rlon, rpixxd, rpixyd, vp ) ) {
                 r->m_x = rpixxd;
                 r->m_y = rpixyd;
                 return;
             }
         }
     }
-
+    
     //    if needed, use the VPoint scaling estimator,
-    *r = GetVP().GetDoublePixFromLL( rlat, rlon );
+    *r = vp.GetDoublePixFromLL( rlat, rlon );
 }
 
 // This routine might be deleted and all of the rendering improved
@@ -2516,6 +2521,13 @@ void ChartCanvas::GetCanvasPointPix( double rlat, double rlon, wxPoint *r )
 {
     wxPoint2DDouble p;
     GetDoubleCanvasPointPix(rlat, rlon, &p);
+    *r = wxPoint(wxRound(p.m_x), wxRound(p.m_y));
+}
+
+void ChartCanvas::GetCanvasPointPixVP( ViewPort &vp, double rlat, double rlon, wxPoint *r )
+{
+    wxPoint2DDouble p;
+    GetDoubleCanvasPointPixVP(vp, rlat, rlon, &p);
     *r = wxPoint(wxRound(p.m_x), wxRound(p.m_y));
 }
 
@@ -6100,6 +6112,45 @@ void ChartCanvas::MouseEvent( wxMouseEvent& event )
     
     if(!MouseEventProcessObjects( event ) )
         MouseEventProcessCanvas( event );
+
+    if( !g_btouch )
+        SetCanvasCursor( event );
+}
+
+
+void ChartCanvas::SetCanvasCursor( wxMouseEvent& event )
+{
+    //    Switch to the appropriate cursor on mouse movement
+    
+    int x, y;
+    event.GetPosition( &x, &y );
+    
+    wxCursor *ptarget_cursor = pCursorArrow;
+    
+    if( ( !parent_frame->nRoute_State )
+       && ( !m_bMeasure_Active ) /*&& ( !m_bCM93MeasureOffset_Active )*/) {
+        
+        if( x > xr_margin ) {
+            ptarget_cursor = pCursorRight;
+            cursor_region = MID_RIGHT;
+        } else if( x < xl_margin ) {
+            ptarget_cursor = pCursorLeft;
+            cursor_region = MID_LEFT;
+        } else if( y > yb_margin ) {
+            ptarget_cursor = pCursorDown;
+            cursor_region = MID_TOP;
+        } else if( y < yt_margin ) {
+            ptarget_cursor = pCursorUp;
+            cursor_region = MID_BOT;
+        } else {
+            ptarget_cursor = pCursorArrow;
+            cursor_region = CENTER;
+        }
+    } else if( m_bMeasure_Active || parent_frame->nRoute_State ) // If Measure tool use Pencil Cursor
+        ptarget_cursor = pCursorPencil;
+    
+    SetCursor( *ptarget_cursor );
+
 }
 
 
@@ -6457,13 +6508,13 @@ void ChartCanvas::MouseEvent( wxMouseEvent& event )
                         && !pNearbyPoint->m_bIsInTrack && !pNearbyPoint->m_bIsInLayer )
                 {
                     int dlg_return;
-    #ifndef __WXOSX__
+#ifndef __WXOSX__
                     dlg_return = OCPNMessageBox( this, _("Use nearby waypoint?"),
                                                     _("OpenCPN Route Create"),
                                                     (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
-    #else
+#else
                     dlg_return = wxID_YES;
-    #endif
+#endif
                     if( dlg_return == wxID_YES ) {
                         pMousePoint = pNearbyPoint;
 
@@ -6867,13 +6918,13 @@ void ChartCanvas::MouseEvent( wxMouseEvent& event )
                     && !pNearbyPoint->m_bIsInTrack && !pNearbyPoint->m_bIsInLayer )
                 {
                     int dlg_return;
-                    #ifndef __WXOSX__
+#ifndef __WXOSX__
                     dlg_return = OCPNMessageBox( this, _("Use nearby waypoint?"),
                                                 _("OpenCPN Route Create"),
                                                 (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
-                                                #else
+#else
                                                 dlg_return = wxID_YES;
-                                                #endif
+#endif
                                                 if( dlg_return == wxID_YES ) {
                                                     pMousePoint = pNearbyPoint;
 
@@ -6917,11 +6968,11 @@ void ChartCanvas::MouseEvent( wxMouseEvent& event )
                         << FormatDistanceAdaptive( rhumbDist - gcDistNM ) << _(" shorter than rhumbline.\n\n")
                         << _("Would you like include the Great Circle routing points for this leg?");
 
-                        #ifndef __WXOSX__
+#ifndef __WXOSX__
                         int answer = OCPNMessageBox( this, msg, _("OpenCPN Route Create"), wxYES_NO | wxNO_DEFAULT );
-                        #else
+#else
                         int answer = wxID_NO;
-                        #endif
+#endif
 
                         if( answer == wxID_YES ) {
                             RoutePoint* gcPoint;

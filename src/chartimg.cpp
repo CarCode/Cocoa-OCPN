@@ -1,11 +1,11 @@
-/******************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  ChartBase, ChartBaseBSB and Friends
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,10 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 
 // ============================================================================
@@ -724,32 +722,34 @@ found_uclc_file:
 
           return INIT_FAIL_REMOVE;
       }
-      
+
       if(m_datum_str.IsEmpty()){
           wxString msg(_T("   Chart datum not specified on chart "));
           msg.Append(m_FullPath);
           wxLogMessage(msg);
-          
-          return INIT_FAIL_REMOVE;
-      }
-      
-      char d_str[100];
-      strncpy(d_str, m_datum_str.mb_str(), 99);
-      d_str[99] = 0;
-      
-      int datum_index = GetDatumIndex(d_str);
+          wxLogMessage(_T("   Default datum (WGS84) substituted."));
 
-      if(datum_index < 0){
-          wxString msg(_T("   Chart datum {"));
-          msg += m_datum_str;
-          msg += _T("} invalid on chart ");
-          msg.Append(m_FullPath);
-          wxLogMessage(msg);
-          
-//          return INIT_FAIL_REMOVE;
+          //    return INIT_FAIL_REMOVE;
       }
-      
-
+      else {
+          char d_str[100];
+          strncpy(d_str, m_datum_str.mb_str(), 99);
+          d_str[99] = 0;
+          
+          int datum_index = GetDatumIndex(d_str);
+          
+          if(datum_index < 0){
+              wxString msg(_T("   Chart datum {"));
+              msg += m_datum_str;
+              msg += _T("} invalid on chart ");
+              msg.Append(m_FullPath);
+              wxLogMessage(msg);
+              wxLogMessage(_T("   Default datum (WGS84) substituted."));
+              
+              //          return INIT_FAIL_REMOVE;
+          }
+      }
+    
 //    Convert captured plypoint information into chart COVR structures
       m_nCOVREntries = 1;
       m_pCOVRTablePoints = (int *)malloc(sizeof(int));
@@ -1387,24 +1387,27 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
           wxString msg(_T("   Chart datum not specified on chart "));
           msg.Append(m_FullPath);
           wxLogMessage(msg);
-          
-          return INIT_FAIL_REMOVE;
-      }
-      
-      char d_str[100];
-      strncpy(d_str, m_datum_str.mb_str(), 99);
-      d_str[99] = 0;
-      
-      int datum_index = GetDatumIndex(d_str);
-      
-      if(datum_index < 0){
-          wxString msg(_T("   Chart datum {"));
-          msg += m_datum_str;
-          msg += _T("} invalid on chart ");
-          msg.Append(m_FullPath);
-          wxLogMessage(msg);
+          wxLogMessage(_T("   Default datum (WGS84) substituted."));
           
 //          return INIT_FAIL_REMOVE;
+      }
+      else {
+          char d_str[100];
+          strncpy(d_str, m_datum_str.mb_str(), 99);
+          d_str[99] = 0;
+          
+          int datum_index = GetDatumIndex(d_str);
+          
+          if(datum_index < 0){
+              wxString msg(_T("   Chart datum {"));
+              msg += m_datum_str;
+              msg += _T("} invalid on chart ");
+              msg.Append(m_FullPath);
+              wxLogMessage(msg);
+              wxLogMessage(_T("   Default datum (WGS84) substituted."));
+              
+              //          return INIT_FAIL_REMOVE;
+          }
       }
 
 //    Convert captured plypoint information into chart COVR structures

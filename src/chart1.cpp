@@ -1685,12 +1685,13 @@ bool MyApp::OnInit()
 
 #ifdef __OCPN__ANDROID__
     ::wxDisplaySize( &cw, &ch);
+    qDebug() << cw << ch;
     ch -= 24;                           // This accounts for an error in the wxQT-Android interface...
 
     if((cw > 200) && (ch > 200) )
         new_frame_size.Set( cw, ch );
     else
-        new_frame_size.Set( 800, 500 );
+        new_frame_size.Set( 800, 400 );
 #endif
         
     //  For Windows and GTK, provide the expected application Minimize/Close bar
@@ -4369,7 +4370,7 @@ void MyFrame::ToggleAnchor( void )
         }
 
         SetMenubarItemState( ID_MENU_ENC_ANCHOR, !old_vis );
-        
+
         ps52plib->GenerateStateHash();
         cc1->ReloadVP();
 
@@ -4541,8 +4542,13 @@ void MyFrame::RegisterGlobalMenuItems()
     nav_menu->AppendRadioItem( ID_MENU_CHART_NORTHUP, _("North Up Mode") );
     nav_menu->AppendRadioItem( ID_MENU_CHART_COGUP, _("Course Up Mode") );
     nav_menu->AppendSeparator();
+#ifndef __WXOSX__
     nav_menu->Append( ID_MENU_ZOOM_IN, _menuText(_("Zoom In"), _T("+")) );
     nav_menu->Append( ID_MENU_ZOOM_OUT, _menuText(_("Zoom Out"), _T("-")) );
+#else
+    nav_menu->Append( ID_MENU_ZOOM_IN, _menuText(_("Zoom In"), _T("Alt-+")) );
+    nav_menu->Append( ID_MENU_ZOOM_OUT, _menuText(_("Zoom Out"), _T("Alt--")) );
+#endif
     nav_menu->AppendSeparator();
     nav_menu->Append( ID_MENU_SCALE_IN, _menuText(_("Larger Scale Chart"), _T("Ctrl-Left")) );
     nav_menu->Append( ID_MENU_SCALE_OUT, _menuText(_("Smaller Scale Chart"), _T("Ctrl-Right")) );
@@ -4558,37 +4564,39 @@ void MyFrame::RegisterGlobalMenuItems()
 
 // Buchstaben deaktiviert wegen Wegpunkt-Beschreibungsfenster etc.
     wxMenu* view_menu = new wxMenu();
-#ifdef __WXOSX__
-    view_menu->AppendCheckItem( ID_MENU_CHART_QUILTING, _menuText(_("Enable Chart Quilting"), _T("Alt-Q")) );
-    view_menu->AppendCheckItem( ID_MENU_CHART_OUTLINES, _menuText(_("Show Chart Outlines"), _T("Alt-O")) );
-#else
+#ifndef __WXOSX__
     view_menu->AppendCheckItem( ID_MENU_CHART_QUILTING, _menuText(_("Enable Chart Quilting"), _T("Q")) );
     view_menu->AppendCheckItem( ID_MENU_CHART_OUTLINES, _menuText(_("Show Chart Outlines"), _T("O")) );
+#else
+    view_menu->AppendCheckItem( ID_MENU_CHART_QUILTING, _menuText(_("Enable Chart Quilting"), _T("Alt-Q")) );
+    view_menu->AppendCheckItem( ID_MENU_CHART_OUTLINES, _menuText(_("Show Chart Outlines"), _T("Alt-O")) );
 #endif
     view_menu->AppendCheckItem( ID_MENU_UI_CHARTBAR, _menuText(_("Show Chart Bar"), _T("Ctrl-B")) );
+
 #ifdef USE_S57
     view_menu->AppendSeparator();
-#ifdef __WXOSX__
-    view_menu->AppendCheckItem( ID_MENU_ENC_TEXT, _menuText(_("Show ENC Text"), _T("Alt-T")) );
-    view_menu->AppendCheckItem( ID_MENU_ENC_LIGHTS, _menuText(_("Show ENC Lights"), _T("Alt-L")) );
-    view_menu->AppendCheckItem( ID_MENU_ENC_SOUNDINGS, _menuText(_("Show ENC Soundings"), _T("Alt-S")) );
-    view_menu->AppendCheckItem( ID_MENU_ENC_ANCHOR, _menuText(_("Show ENC Anchoring Info"), _T("Alt-A")) );
-#else
+#ifndef __WXOSX__
     view_menu->AppendCheckItem( ID_MENU_ENC_TEXT, _menuText(_("Show ENC Text"), _T("T")) );
     view_menu->AppendCheckItem( ID_MENU_ENC_LIGHTS, _menuText(_("Show ENC Lights"), _T("L")) );
     view_menu->AppendCheckItem( ID_MENU_ENC_SOUNDINGS, _menuText(_("Show ENC Soundings"), _T("S")) );
     view_menu->AppendCheckItem( ID_MENU_ENC_ANCHOR, _menuText(_("Show ENC Anchoring Info"), _T("A")) );
-#endif
+#else
+    view_menu->AppendCheckItem( ID_MENU_ENC_TEXT, _menuText(_("Show ENC Text"), _T("Alt-T")) );
+    view_menu->AppendCheckItem( ID_MENU_ENC_LIGHTS, _menuText(_("Show ENC Lights"), _T("Alt-L")) );
+    view_menu->AppendCheckItem( ID_MENU_ENC_SOUNDINGS, _menuText(_("Show ENC Soundings"), _T("Alt-S")) );
+    view_menu->AppendCheckItem( ID_MENU_ENC_ANCHOR, _menuText(_("Show ENC Anchoring Info"), _T("Alt-A")) );
+    #endif
 #endif
     view_menu->AppendSeparator();
     view_menu->AppendCheckItem( ID_MENU_SHOW_TIDES, _("Show Tides") );
     view_menu->AppendCheckItem( ID_MENU_SHOW_CURRENTS, _("Show Currents") );
     view_menu->AppendSeparator();
-#ifdef __WXOSX__
-    view_menu->Append( ID_MENU_UI_COLSCHEME, _menuText(_("Change Color Scheme"), _T("Alt-C")) );
-#else
+#ifndef __WXOSX__
     view_menu->Append( ID_MENU_UI_COLSCHEME, _menuText(_("Change Color Scheme"), _T("C")) );
+#else
+    view_menu->Append( ID_MENU_UI_COLSCHEME, _menuText(_("Change Color Scheme"), _T("Alt-C")) );
 #endif
+
     view_menu->AppendSeparator();
 #ifdef __WXOSX__
     view_menu->Append(ID_MENU_UI_FULLSCREEN, _menuText(_("Enter Full Screen"), _T("RawCtrl-Ctrl-F")) );
@@ -4612,11 +4620,12 @@ void MyFrame::RegisterGlobalMenuItems()
 #endif
 
     wxMenu* tools_menu = new wxMenu();
-#ifdef __WXOSX__
-    tools_menu->Append( ID_MENU_TOOL_MEASURE, _menuText(_("Measure Distance"), _T("Alt-M")) );
-#else
+#ifndef __WXOSX__
     tools_menu->Append( ID_MENU_TOOL_MEASURE, _menuText(_("Measure Distance"), _T("M")) );
+#else
+    tools_menu->Append( ID_MENU_TOOL_MEASURE, _menuText(_("Measure Distance"), _T("Alt-M")) );
 #endif
+    
     tools_menu->AppendSeparator();
     tools_menu->Append( ID_MENU_ROUTE_MANAGER, _("Route && Mark Manager...") );
     tools_menu->Append( ID_MENU_ROUTE_NEW, _menuText(_("Create Route"), _T("Ctrl-R")) );
@@ -5011,9 +5020,13 @@ int MyFrame::ProcessOptionsDialog( int rr, options* dialog )
 }
 
 void MyFrame::LaunchLocalHelp( void ) {
-#if wxUSE_XLOCALE || !wxCHECK_VERSION(3,0,0)
     
-    wxString def_lang_canonical = wxLocale::GetLanguageInfo( wxLANGUAGE_DEFAULT )->CanonicalName;
+    wxString def_lang_canonical = _T("en_US");
+    
+#if wxUSE_XLOCALE
+    if(plocale_def_lang)
+        def_lang_canonical = plocale_def_lang->GetCanonicalName();
+#endif
 
     wxString help_locn = g_Platform->GetSharedDataDir() + _T("doc/help_");
 
@@ -5030,7 +5043,6 @@ void MyFrame::LaunchLocalHelp( void ) {
     }
 
     wxLaunchDefaultBrowser(wxString( _T("file:///") ) + help_try );
-#endif    
 }
 
 
@@ -9057,15 +9069,13 @@ void MyPrintout::GenerateGLbmp( )
 
  *     Very system specific, unavoidably.
  */
-#ifndef __WXOSX__
-#if defined(__UNIX__) && !defined(__OCPN__ANDROID__)
+#if defined(__UNIX__) && !defined(__OCPN__ANDROID__) && !defined(__WXOSX__)
 extern "C" int wait(int *);                     // POSIX wait() for process
 
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <linux/serial.h>
 
-#endif
 #endif
 // ****************************************
 // Fulup devices selection with scandir
@@ -9094,8 +9104,7 @@ int paternAdd (const char* patern) {
   return 0;
 }
 
-#ifndef __WXOSX__
-#if defined(__UNIX__) && !defined(__OCPN__ANDROID__)
+#if defined(__UNIX__) && !defined(__OCPN__ANDROID__) && !defined(__WXOSX__)
 // This filter verify is device is withing searched patern and verify it is openable
 // -----------------------------------------------------------------------------------
 int paternFilter (const struct dirent * dir) {
@@ -9148,13 +9157,11 @@ int isTTYreal(const char *dev)
 }
 
 #endif
-#endif
 
 wxArrayString *EnumerateSerialPorts( void )
 {
     wxArrayString *preturn = new wxArrayString;
-#ifndef __WXOSX__
-#if defined(__UNIX__) && !defined(__OCPN__ANDROID__)
+#if defined(__UNIX__) && !defined(__OCPN__ANDROID__) && !defined(__WXOSX__)
 
     //Initialize the pattern table
     if( devPatern[0] == NULL ) {
@@ -9192,7 +9199,6 @@ wxArrayString *EnumerateSerialPorts( void )
         preturn->Add( _T("/dev/ttyS1") );
 
 
-#endif
 #endif
 #ifdef PROBE_PORTS__WITH_HELPER
 
@@ -11063,52 +11069,53 @@ bool GetSizeForDevID(wxString &TargetDevID, int *WidthMm, int *HeightMm)
         
 bool GetWindowsMonitorSize( int *width, int *height)
 {
-            int WidthMm, HeightMm;
-            
-            DISPLAY_DEVICE dd;
-            dd.cb = sizeof(dd);
-            DWORD dev = 0; // device index
-            int id = 1; // monitor number, as used by Display Properties > Settings
-            
-            wxString DeviceID;
-            bool bFoundDevice = false;
-            while (EnumDisplayDevices(0, dev, &dd, 0) && !bFoundDevice)
-            {
-                DISPLAY_DEVICE ddMon;
-                ZeroMemory(&ddMon, sizeof(ddMon));
-                ddMon.cb = sizeof(ddMon);
-                DWORD devMon = 0;
-                
-                while (EnumDisplayDevices(dd.DeviceName, devMon, &ddMon, 0) && !bFoundDevice)
+    int WidthMm = 0;
+    int HeightMm = 0;
+
+    DISPLAY_DEVICE dd;
+    dd.cb = sizeof(dd);
+    DWORD dev = 0; // device index
+    int id = 1; // monitor number, as used by Display Properties > Settings
+
+    wxString DeviceID;
+    bool bFoundDevice = false;
+    while (EnumDisplayDevices(0, dev, &dd, 0) && !bFoundDevice)
+    {
+        DISPLAY_DEVICE ddMon;
+        ZeroMemory(&ddMon, sizeof(ddMon));
+        ddMon.cb = sizeof(ddMon);
+        DWORD devMon = 0;
+
+        while (EnumDisplayDevices(dd.DeviceName, devMon, &ddMon, 0) && !bFoundDevice)
+        {
+            if (ddMon.StateFlags & DISPLAY_DEVICE_ACTIVE &&
+                !(ddMon.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER))
                 {
-                    if (ddMon.StateFlags & DISPLAY_DEVICE_ACTIVE &&
-                        !(ddMon.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER))
-                        {
-                            DeviceID = wxString(ddMon.DeviceID, wxConvUTF8);
-                            DeviceID = DeviceID.Mid (8);
-                            DeviceID = DeviceID.Mid (0, DeviceID.Find ( '\\' ));
-                            
-                            bFoundDevice = GetSizeForDevID(DeviceID, &WidthMm, &HeightMm);
-                        }
-                        devMon++;
-                    
-                    ZeroMemory(&ddMon, sizeof(ddMon));
-                    ddMon.cb = sizeof(ddMon);
+                    DeviceID = wxString(ddMon.DeviceID, wxConvUTF8);
+                    DeviceID = DeviceID.Mid (8);
+                    DeviceID = DeviceID.Mid (0, DeviceID.Find ( '\\' ));
+
+                    bFoundDevice = GetSizeForDevID(DeviceID, &WidthMm, &HeightMm);
                 }
-                
-                ZeroMemory(&dd, sizeof(dd));
-                dd.cb = sizeof(dd);
-                dev++;
-            }
-            
-            if(width)
-                *width = WidthMm;
-            if(height)
-                *height = HeightMm;
-            
-            return bFoundDevice;
+                devMon++;
+
+            ZeroMemory(&ddMon, sizeof(ddMon));
+            ddMon.cb = sizeof(ddMon);
+        }
+
+        ZeroMemory(&dd, sizeof(dd));
+        dd.cb = sizeof(dd);
+        dev++;
+    }
+
+    if(width)
+        *width = WidthMm;
+    if(height)
+        *height = HeightMm;
+
+    return bFoundDevice;
 }
-        
+
 
 #endif
 

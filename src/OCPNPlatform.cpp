@@ -706,7 +706,7 @@ void OCPNPlatform::CloseLogFile( void)
 
 bool OCPNPlatform::hasInternalGPS(wxString profile)
 {
-    
+
 #ifdef __OCPN__ANDROID__
     bool t = androidDeviceHasGPS();
     qDebug() << "androidDeviceHasGPS" << t;
@@ -714,7 +714,7 @@ bool OCPNPlatform::hasInternalGPS(wxString profile)
 #else
 
     return false;
-    
+
 #endif    
 }
 
@@ -725,6 +725,38 @@ bool OCPNPlatform::hasInternalGPS(wxString profile)
 
 bool OCPNPlatform::hasInternalBT(wxString profile)
 {
-    
+#ifdef __OCPN__ANDROID__
+    bool t = androidDeviceHasBlueTooth();
+    qDebug() << "androidDeviceHasBluetooth" << t;
+    return t;
+#else
+
     return false;
+#endif
+}
+
+bool OCPNPlatform::startBluetoothScan()
+{
+#ifdef __OCPN__ANDROID__
+    return androidStartBluetoothScan();
+#else
+
+    return false;
+#endif
+}
+
+wxArrayString OCPNPlatform::getBluetoothScanResults()
+{
+    wxArrayString ret_val;
+#ifdef __OCPN__ANDROID__
+    return androidGetBluetoothScanResults();
+#else
+
+    ret_val.Add(_T("line 1"));
+    ret_val.Add(_T("line 2"));
+    ret_val.Add(_T("line 3"));
+    return ret_val;
+
+#endif
+    
 }
