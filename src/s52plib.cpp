@@ -4144,7 +4144,7 @@ int s52plib::RenderCARC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
         //      For some reason, the __WXMSW__ build flips the sense of
         //      start and end angles on DrawEllipticArc()
-#ifndef __WXMSW__
+#ifdef __WXMSW__
         if ( sectr2 > sectr1 )
         {
             sb = 90 - sectr1;
@@ -4236,7 +4236,6 @@ int s52plib::RenderCARC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
                 mdc.SetPen( *pthispen );
 
                 mdc.DrawEllipticArc( width / 2 - rad, height / 2 - rad, rad * 2, rad * 2, sb, se );
-
             }
 
             mdc.SelectObject( wxNullBitmap );

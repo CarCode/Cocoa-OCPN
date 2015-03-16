@@ -2642,8 +2642,9 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &Region )
             QuiltPatch *pqp = cc1->m_pQuilt->GetCurrentPatch();
             if( pqp->b_Valid ) {
                 OCPNRegion get_region = pqp->ActiveRegion;
+#ifndef __WXOSX__
                 get_region.Intersect( Region );
-
+#endif
                 bool b_rendered = false;
 
                 if( !get_region.IsEmpty() ) {

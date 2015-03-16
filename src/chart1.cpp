@@ -4497,6 +4497,9 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
 
             SetMenuBar(m_pMenuBar); // must be after RegisterGlobalMenuItems for wx to populate the OS X App Menu correctly
         }
+#ifdef __WXOSX__
+        LoadS57();
+#endif
         UpdateGlobalMenuItems(); // update the state of the menu items (checkmarks etc)
     } else {
         if ( m_pMenuBar ) {     // remove the menu bar if it is disabled
