@@ -2097,8 +2097,6 @@ extern ocpnGLOptions g_GLOptions;
 
     wxLogMessage( wxString::Format(_("OpenCPN Initialized in %ld ms."), sw.Time() ) );
 
-//    qDebug() << "OpenCPN Initialized ms:" <<  sw.Time();
-    
 #ifdef __OCPN__ANDROID__
     androidHideBusyIcon();
 #endif
@@ -4545,13 +4543,8 @@ void MyFrame::RegisterGlobalMenuItems()
     nav_menu->AppendRadioItem( ID_MENU_CHART_NORTHUP, _("North Up Mode") );
     nav_menu->AppendRadioItem( ID_MENU_CHART_COGUP, _("Course Up Mode") );
     nav_menu->AppendSeparator();
-#ifndef __WXOSX__
     nav_menu->Append( ID_MENU_ZOOM_IN, _menuText(_("Zoom In"), _T("+")) );
     nav_menu->Append( ID_MENU_ZOOM_OUT, _menuText(_("Zoom Out"), _T("-")) );
-#else
-    nav_menu->Append( ID_MENU_ZOOM_IN, _menuText(_("Zoom In"), _T("Alt-+")) );
-    nav_menu->Append( ID_MENU_ZOOM_OUT, _menuText(_("Zoom Out"), _T("Alt--")) );
-#endif
     nav_menu->AppendSeparator();
     nav_menu->Append( ID_MENU_SCALE_IN, _menuText(_("Larger Scale Chart"), _T("Ctrl-Left")) );
     nav_menu->Append( ID_MENU_SCALE_OUT, _menuText(_("Smaller Scale Chart"), _T("Ctrl-Right")) );
@@ -7137,8 +7130,7 @@ bool MyFrame::DoChartUpdate( void )
     if( NULL == pCurrentStack ) pCurrentStack = new ChartStack;
 
     // Build a chart stack based on tLat, tLon
-    if( 0 == ChartData->BuildChartStack( &WorkStack, tLat, tLon, g_sticky_chart ) )       // Bogus Lat, Lon?
-            {
+    if( 0 == ChartData->BuildChartStack( &WorkStack, tLat, tLon, g_sticky_chart ) ) {      // Bogus Lat, Lon?
         if( NULL == pDummyChart ) {
             pDummyChart = new ChartDummy;
             bNewChart = true;
@@ -7155,9 +7147,11 @@ bool MyFrame::DoChartUpdate( void )
         bNewView |= cc1->SetViewPoint( tLat, tLon, set_scale, 0, cc1->GetVPRotation() );
 
         //      If the chart stack has just changed, there is new status
-        if( !ChartData->EqualStacks( &WorkStack, pCurrentStack ) ) {
-            bNewPiano = true;
-            bNewChart = true;
+        if(WorkStack.nEntry && pCurrentStack->nEntry){
+            if( !ChartData->EqualStacks( &WorkStack, pCurrentStack ) ) {
+                bNewPiano = true;
+                bNewChart = true;
+            }
         }
 
         //      Copy the new (by definition empty) stack into the target stack
