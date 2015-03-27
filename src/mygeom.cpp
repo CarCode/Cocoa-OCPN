@@ -1,4 +1,4 @@
-/******************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Tesselated Polygon Object
@@ -33,8 +33,7 @@
 #include "wx/tokenzr.h"
 #include <wx/mstream.h>
 
-#include "dychart.h"
-#include "navutil.h"
+#include "vector2D.h"
 
 #include "s52s57.h"
 
@@ -54,7 +53,8 @@
     #include <GL/gl.h>
     #include <GL/glu.h>
 #else
-    #include "glues.h"          // local version of glu for GLES
+    #include "qopengl.h"                  // this gives us the qt runtime gles2.h
+    #include "GL/gl_private.h"
 #endif
 
 #endif

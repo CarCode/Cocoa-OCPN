@@ -1024,8 +1024,8 @@ wxScrolledWindow *options::AddPage( size_t parent, const wxString & title)
         wxString toptitle = m_pListbook->GetPageText( parent );
         wxNotebook *nb = new wxNotebook( m_pListbook, wxID_ANY, wxDefaultPosition, wxDefaultSize,wxNB_TOP );
         /* Only remove the tab from listbook, we still have original content in {page} */
-        m_pListbook->RemovePage( parent );
         m_pListbook->InsertPage( parent, nb, toptitle, false, parent );
+        m_pListbook->RemovePage( parent + 1 );
         wxString previoustitle = page->GetName();
         page->Reparent( nb );
         nb->AddPage( page, previoustitle );
@@ -1040,8 +1040,9 @@ wxScrolledWindow *options::AddPage( size_t parent, const wxString & title)
         window = new wxScrolledWindow( m_pListbook, wxID_ANY, wxDefaultPosition, wxDefaultSize, style, title );
         window->SetScrollRate(m_scrollRate, m_scrollRate);
         wxString toptitle = m_pListbook->GetPageText( parent );
-        m_pListbook->DeletePage( parent );
         m_pListbook->InsertPage( parent, window, toptitle, false, parent );
+        m_pListbook->DeletePage( parent + 1 );
+
     }
 
     return window;
@@ -2869,11 +2870,16 @@ void options::CreateControls()
     itemDialog1->SetSizer( itemBoxSizer2 );
 
     int flags = 0;
-#ifndef __WXQT__
+
+#ifdef __OCPN__OPTIONS_USE_LISTBOOK__
     flags = wxLB_TOP;
-#endif
-    
     m_pListbook = new wxListbook( itemDialog1, ID_NOTEBOOK, wxDefaultPosition, wxSize(-1, -1), flags);
+    m_pListbook->Connect( wxEVT_COMMAND_LISTBOOK_PAGE_CHANGED, wxListbookEventHandler( options::OnPageChange ), NULL, this );
+#else
+    flags = wxNB_TOP;
+    m_pListbook = new wxNotebook( itemDialog1, ID_NOTEBOOK, wxDefaultPosition, wxSize(-1, -1), flags);
+    m_pListbook->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( options::OnNBPageChange ), NULL, this );
+#endif
  
 #ifdef __WXMSW__
     //  Windows clips the width of listbook selectors to about twice icon size
@@ -3018,7 +3024,6 @@ void options::CreateControls()
     //  The s57 chart panel is the one which controls the minimum width required to avoid horizontal scroll bars
     vectorPanel->SetSizeHints( ps57Ctl );
     
-    m_pListbook->Connect( wxEVT_COMMAND_LISTBOOK_PAGE_CHANGED, wxListbookEventHandler( options::OnPageChange ), NULL, this );
 }
 
 void options::SetInitialPage( int page_sel)
@@ -3041,8 +3046,10 @@ void options::SetColorScheme( ColorScheme cs )
 {
     DimeControl( this );
 
+#ifdef __OCPN__OPTIONS_USE_LISTBOOK__
     wxListView* lv = m_pListbook->GetListView();
     lv->SetBackgroundColour(this->GetBackgroundColour());
+#endif
 }
 
 void options::SetInitialSettings()
@@ -4470,9 +4477,26 @@ void options::OnChooseFont( wxCommandEvent& event )
 #else
     wxFontDialog dg( pParent, init_font_data );
 #endif
-    
+
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     dg.SetFont(*qFont);
+
+#ifdef __WXQT__
+    // Make sure that font dialog will fit on the screen without scrolling
+    // We do this by setting the dialog font size "small enough" to show "n" lines
+    wxSize proposed_size = GetSize();
+    float n_lines = 30;
+    
+    wxFont *dialogFont = GetOCPNScaledFont(_("Dialog"));
+    float font_size = dialogFont->GetPointSize();
+    
+    if( (proposed_size.y / font_size) < n_lines){
+        float new_font_size = proposed_size.y / n_lines;
+        wxFont *smallFont = new wxFont( * dialogFont );
+        smallFont->SetPointSize( new_font_size );
+        dg.SetFont( *smallFont );
+    }
+#endif
 
     if(g_bresponsive){
         dg.SetSize(GetSize());
@@ -4546,10 +4570,20 @@ void options::OnChartsPageChange( wxListbookEvent& event )
     event.Skip();               // Allow continued event processing
 }
 
-
 void options::OnPageChange( wxListbookEvent& event )
 {
-    unsigned int i = event.GetSelection();
+    DoOnPageChange( event.GetSelection() );
+}
+
+void options::OnNBPageChange( wxNotebookEvent& event )
+{
+    DoOnPageChange( event.GetSelection() );
+}
+
+
+void options::DoOnPageChange( size_t page )
+{
+    unsigned int i = page;
     lastPage = i;
 
     //    User selected Chart Page?

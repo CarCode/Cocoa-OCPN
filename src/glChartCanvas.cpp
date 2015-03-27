@@ -76,7 +76,6 @@
 extern "C" void glOrthof(float left,  float right,  float bottom,  float top,  float near,  float far);
 #define glOrtho(a,b,c,d,e,f);     glOrthof(a,b,c,d,e,f);
 
-#define ocpnUSE_GLES
 #endif
 
 #ifdef USE_S57
@@ -777,10 +776,8 @@ glChartCanvas::glChartCanvas( wxWindow *parent ) :
     ownship_tex = 0;
     ownship_color = -1;
 
-    ownship_large_scale_display_lists[0] = 0;
-    ownship_large_scale_display_lists[1] = 0;
-
     m_binPinch = false;
+    m_binPan = false;
 
     b_timeGL = true;
  
@@ -1859,18 +1856,19 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
 
     ll_gc_ll( gLat, gLon, pCog, pSog * g_ownship_predictor_minutes / 60., &pred_lat, &pred_lon );
 
-    //    Is predicted point in the VPoint?
-    if( cc1->GetVP().GetBBox().PointInBox( pred_lon, pred_lat, 0 ) ) drawit++;                     // yep
-
     cc1->GetCanvasPointPix( gLat, gLon, &lGPSPoint );
+    lShipMidPoint = lGPSPoint;
     cc1->GetCanvasPointPix( pred_lat, pred_lon, &lPredPoint );
 
-    float cog_rad = atan2f( (float) ( lPredPoint.y - lGPSPoint.y ),
-                            (float) ( lPredPoint.x - lGPSPoint.x ) );
+    float cog_rad = atan2f( (float) ( lPredPoint.y - lShipMidPoint.y ),
+                           (float) ( lPredPoint.x - lShipMidPoint.x ) );
     cog_rad += (float)PI;
 
-    float lpp = sqrtf( powf( (float) (lPredPoint.x - lGPSPoint.x), 2) +
-                       powf( (float) (lPredPoint.y - lGPSPoint.y), 2) );
+    float lpp = sqrtf( powf( (float) (lPredPoint.x - lShipMidPoint.x), 2) +
+                      powf( (float) (lPredPoint.y - lShipMidPoint.y), 2) );
+    
+    //    Is predicted point in the VPoint?
+    if( cc1->GetVP().GetBBox().PointInBox( pred_lon, pred_lat, 0 ) ) drawit++;      // yep
 
     //  Draw the icon rotated to the COG
     //  or to the Hdt if available
@@ -1888,29 +1886,29 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
 
     cc1->GetCanvasPointPix( osd_head_lat, osd_head_lon, &osd_head_point );
 
-    float icon_rad = atan2( (float) ( osd_head_point.y - lGPSPoint.y ),
-                            (float) ( osd_head_point.x - lGPSPoint.x ) );
+    float icon_rad = atan2f( (float) ( osd_head_point.y - lShipMidPoint.y ),
+                            (float) ( osd_head_point.x - lShipMidPoint.x ) );
     icon_rad += (float)PI;
 
     if( pSog < 0.2 ) icon_rad = ( ( icon_hdt + 90. ) * PI / 180. ) + cc1->GetVP().rotation;
 
-//    Calculate ownship Heading pointer as a predictor
+    //    Calculate ownship Heading pointer as a predictor
     double hdg_pred_lat, hdg_pred_lon;
 
     ll_gc_ll( gLat, gLon, icon_hdt, g_ownship_HDTpredictor_miles, &hdg_pred_lat,
-              &hdg_pred_lon );
+             &hdg_pred_lon );
 
     cc1->GetCanvasPointPix( hdg_pred_lat, hdg_pred_lon, &lHeadPoint );
 
-//    Should we draw the Head vector?
-//    Compare the points lHeadPoint and lPredPoint
-//    If they differ by more than n pixels, and the head vector is valid, then render the head vector
+    //    Should we draw the Head vector?
+    //    Compare the points lHeadPoint and lPredPoint
+    //    If they differ by more than n pixels, and the head vector is valid, then render the head vector
 
     float ndelta_pix = 10.;
     bool b_render_hdt = false;
     if( !wxIsNaN( gHdt ) ) {
         float dist = sqrtf( powf( (float) (lHeadPoint.x - lPredPoint.x), 2) +
-                            powf( (float) (lHeadPoint.y - lPredPoint.y), 2) );
+                           powf( (float) (lHeadPoint.y - lPredPoint.y), 2) );
         if( dist > ndelta_pix && !wxIsNaN(gSog) )
             b_render_hdt = true;
     }
@@ -1924,31 +1922,58 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
     if( !drawit )
         return;
 
+    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT | GL_HINT_BIT);
+    glEnable( GL_LINE_SMOOTH );
+    glEnable( GL_POLYGON_SMOOTH );
+    glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+    glHint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+
     int img_height;
 
     if( cc1->GetVP().chart_scale > 300000 )             // According to S52, this should be 50,000
     {
-        /* this test must match that in ShipDrawLargeScale */
-        int list = cc1->m_ownship_state == SHIP_NORMAL;
+        const int v = 12;
+        // start with cross
+        float vertexes[4*v+8] = {-12, 0, 12, 0, 0, -12, 0, 12};
 
-        glPushMatrix();
-        glTranslatef(lGPSPoint.x, lGPSPoint.y, 0);
-#ifdef __OCPN__ANDROID__                // glshim display_lists broken?
-        cc1->ShipDrawLargeScale(dc, wxPoint(0, 0));
-#else
-
-        if(ownship_large_scale_display_lists[list])
-            glCallList(ownship_large_scale_display_lists[list]);
-        else {
-            ownship_large_scale_display_lists[list] = glGenLists(1);
-            glNewList(ownship_large_scale_display_lists[list], GL_COMPILE_AND_EXECUTE);
-
-            cc1->ShipDrawLargeScale(dc, wxPoint(0, 0));
-            glEndList();
+        // build two concentric circles
+        for( int i=0; i<2*v; i+=2) {
+            float a = i * (float)PI / v;
+            float s = sinf( a ), c = cosf( a );
+            vertexes[i+8] =  10 * s;
+            vertexes[i+9] =  10 * c;
+            vertexes[i+2*v+8] = 6 * s;
+            vertexes[i+2*v+9] = 6 * c;
         }
-#endif        
-        glPopMatrix();
-        img_height = 20; /* is this needed? */
+
+        // apply translation
+        for( int i=0; i<4*v+8; i+=2) {
+            vertexes[i] += lShipMidPoint.x;
+            vertexes[i+1] += lShipMidPoint.y;
+        }
+
+        glVertexPointer(2, GL_FLOAT, 2*sizeof(GLfloat), vertexes);
+
+        wxColour c;
+        if( SHIP_NORMAL != cc1->m_ownship_state ) {
+            c = GetGlobalColor( _T ( "YELO1" ) );
+
+            glColor4ub(c.Red(), c.Green(), c.Blue(), 255);
+            glDrawArrays(GL_TRIANGLE_FAN, 4, v);
+        }
+
+        glLineWidth( 2 );
+        c = cc1->PredColor();
+        glColor4ub(c.Red(), c.Green(), c.Blue(), 255);
+
+        glDrawArrays(GL_LINE_LOOP, 4, v);
+        glDrawArrays(GL_LINE_LOOP, 4+v, v);
+
+        glDrawArrays(GL_LINES, 0, 4);
+
+        img_height = 20;
     } else {
         int draw_color = SHIP_INVALID;
         if( SHIP_NORMAL == cc1->m_ownship_state )
@@ -1957,7 +1982,7 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
             draw_color = SHIP_LOWACCURACY;
 
         if(!ownship_tex || (draw_color != ownship_color)) { /* initial run, create texture for ownship,
-                              also needed at colorscheme changes (not implemented) */
+                                                             also needed at colorscheme changes (not implemented) */
             if(ownship_tex)
                 glDeleteTextures(1, &ownship_tex);
 
@@ -2025,26 +2050,22 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
         lShipMidPoint = lGPSPoint;
 
         if( g_n_ownship_beam_meters > 0.0 &&
-            g_n_ownship_length_meters > 0.0 &&
-            g_OwnShipIconType == 1 )
-        {            
+           g_n_ownship_length_meters > 0.0 &&
+           g_OwnShipIconType == 1 )
+        {
             ownShipWidth = ownship_size.x;
             ownShipLength= ownship_size.y;
         }
 
         if( g_OwnShipIconType != 0 )
             cc1->ComputeShipScaleFactor
-                (icon_hdt, ownShipWidth, ownShipLength, lShipMidPoint,
-                 GPSOffsetPixels, lGPSPoint, scale_factor_x, scale_factor_y);
-
-        glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT | GL_HINT_BIT);
-        glEnable( GL_LINE_SMOOTH );
-        glEnable( GL_POLYGON_SMOOTH );
-        glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-        glHint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+            (icon_hdt, ownShipWidth, ownShipLength, lShipMidPoint,
+             GPSOffsetPixels, lGPSPoint, scale_factor_x, scale_factor_y);
 
         glEnable(GL_BLEND);
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+        glEnableClientState(GL_VERTEX_ARRAY);
 
         int x = lShipMidPoint.x, y = lShipMidPoint.y;
         glPushMatrix();
@@ -2075,27 +2096,18 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
             glDisable(GL_TEXTURE_2D);
         } else if( g_OwnShipIconType == 2 ) { // Scaled Vector
 
-            static const int s_ownship_icon[] = { 5, -42, 11, -28, 11, 42, -11, 42,
-                                                  -11, -28, -5, -42, -11, 0, 11, 0,
-                                                  0, 42, 0, -42       };
-            glBegin(GL_POLYGON);
-            for( int i = 0; i < 12; i+=2 )
-                glVertex2f(s_ownship_icon[i], s_ownship_icon[i + 1] );
-            glEnd();
+            static const GLint s_ownship_icon[] = { 5, -42, 11, -28, 11, 42, -11, 42,
+                -11, -28, -5, -42, -11, 0, 11, 0,
+                0, 42, 0, -42       };
+
+            glVertexPointer(2, GL_INT, 2*sizeof(GLint), s_ownship_icon);
+            glDrawArrays(GL_POLYGON, 0, 6);
 
             glColor4ub(0, 0, 0, 255);
             glLineWidth(1);
 
-            glBegin(GL_LINE_LOOP);
-            for(int i=0; i<12; i+=2)
-                glVertex2f( s_ownship_icon[i], s_ownship_icon[i+1] );
-            glEnd();
-
-            // draw reference point (midships) cross
-            glBegin(GL_LINES);
-            for(int i=12; i<20; i+=2)
-                glVertex2f( s_ownship_icon[i], s_ownship_icon[i+1] );
-            glEnd();
+            glDrawArrays(GL_LINE_LOOP, 0, 6);
+            glDrawArrays(GL_LINES, 6, 4);
         }
         glPopMatrix();
 
@@ -2106,22 +2118,29 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
         if( cc1->m_pos_image_user ) circle_rad = 1;
 
         float cx = lGPSPoint.x, cy = lGPSPoint.y;
-        float r = circle_rad+1;
+        // store circle coordinates at compile time
+        const int v = 12;
+        float circle[4*v];
+        for( int i=0; i<2*v; i+=2) {
+            float a = i * (float)PI / v;
+            float s = sinf( a ), c = cosf( a );
+            circle[i+0] = cx + (circle_rad+1) * s;
+            circle[i+1] = cy + (circle_rad+1) * c;
+            circle[i+2*v] = cx + circle_rad * s;
+            circle[i+2*v+1] = cy + circle_rad * c;
+        }
+
+        glVertexPointer(2, GL_FLOAT, 2*sizeof(float), circle);
+
         glColor4ub(0, 0, 0, 255);
-        glBegin(GL_POLYGON);
-        for( float a = 0; a <= 2 * (float)PI; a += 2 * (float)PI / 12. )
-            glVertex2f( cx + r * sinf( a ), cy + r * cosf( a ) );
-        glEnd();
-
-        r = circle_rad;
+        glDrawArrays(GL_TRIANGLE_FAN, 0, v);
         glColor4ub(255, 255, 255, 255);
-
-        glBegin(GL_POLYGON);
-        for( float a = 0; a <= 2 * (float)M_PI; a += 2 * (float)M_PI / 12. )
-            glVertex2f( cx + r * sinf( a ), cy + r * cosf( a ) );
-        glEnd();       
-        glPopAttrib();            // restore state
+        glDrawArrays(GL_TRIANGLE_FAN, v, v);
     }
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+
+    glPopAttrib();            // restore state
 
     cc1->ShipIndicatorsDraw(dc, lpp,  GPSOffsetPixels,
                             lGPSPoint,  lHeadPoint,
@@ -3304,6 +3323,9 @@ void glChartCanvas::Render()
 
     wxPaintDC( this );
 
+    if(m_binPinch || m_binPan)
+        return;
+
     ViewPort VPoint = cc1->VPoint;
     ViewPort svp = VPoint;
     svp.pix_width = svp.rv_rect.width;
@@ -4005,7 +4027,6 @@ void glChartCanvas::FastZoom(float factor)
 #ifdef __OCPN__ANDROID__
 
 int panx, pany;
-bool m_binPan;
 
 void glChartCanvas::OnEvtPanGesture( wxQT_PanGestureEvent &event)
 {

@@ -5,7 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -496,15 +496,15 @@ void GribSettingsDialog::SetDataTypeSettings(int settings)
     odc.m_bDirectionArrows = m_cbDirectionArrows->GetValue();
     odc.m_iDirectionArrowForm = m_cDirectionArrowForm->GetSelection();
     odc.m_iDirectionArrowSize = m_cDirectionArrowSize->GetSelection();
-    odc.m_bDirArrFixSpac = m_cDirArrFixSpac->GetValue();
-    odc.m_iDirArrSpacing = m_sDirArrSpacing->GetValue();
+    odc.m_bBarbArrFixSpac = m_cBarbArrFixSpac->GetValue();
+    odc.m_iBarbArrSpacing = m_sBarbArrSpacing->GetValue();
     odc.m_bOverlayMap = m_cbOverlayMap->GetValue();
     odc.m_iOverlayMapColors = m_cOverlayColors->GetSelection();
     odc.m_bNumbers = m_cbNumbers->GetValue();
     odc.m_bNumFixSpac = m_cNumFixSpac->GetValue();
     odc.m_iNumbersSpacing = m_sNumbersSpacing->GetValue();
     odc.m_bParticles = m_cbParticles->GetValue();
-    odc.m_dParticleDensity = 2.0*exp(m_sParticleDensity->GetValue() / 2.0 - 3);
+    odc.m_dParticleDensity = 4.0*exp(m_sParticleDensity->GetValue() / 2.0 - 3);
 }
 
 void GribSettingsDialog::ReadDataTypeSettings(int settings)
@@ -534,7 +534,7 @@ void GribSettingsDialog::ReadDataTypeSettings(int settings)
     m_cNumMinSpac->SetValue(!odc.m_bNumFixSpac);
     m_sNumbersSpacing->SetValue(odc.m_iNumbersSpacing);
     m_cbParticles->SetValue(odc.m_bParticles);
-    m_sParticleDensity->SetValue(2.0*(log(odc.m_dParticleDensity/2.0) + 3));
+    m_sParticleDensity->SetValue(2.0*(log(odc.m_dParticleDensity/4.0) + 3));
 
     ShowFittingSettings(settings);
 }
@@ -738,3 +738,4 @@ void GribSettingsDialog::OnSpacingModeChange( wxCommandEvent& event )
         mes.ShowModal();
     }
 }
+

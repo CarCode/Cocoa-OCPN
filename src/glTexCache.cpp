@@ -58,11 +58,6 @@
 #include "lz4.h"
 #include "lz4hc.h"
 #endif
-#ifdef __OCPN__ANDROID__
-#define ocpnUSE_GLES
-#endif
-
-
 
 extern OCPNPlatform *g_Platform;
 extern bool g_bopengl;

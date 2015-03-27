@@ -1,4 +1,4 @@
-/******************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Layer to perform wxDC drawing using wxDC or opengl
@@ -21,10 +21,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -41,14 +39,13 @@
     #include <GL/glu.h>
 #else
 
-    #ifndef __OCPN__ANDROID__
-        #include <GL/gl.h>
-        #include <GL/glu.h>
-    #else
-        #include "qopengl.h"                  // this gives us the qt runtime gles2.h
-        #include "GL/gl_private.h"
-        #include "glues.h"
-    #endif
+#ifndef __OCPN__ANDROID__
+    #include <GL/gl.h>
+    #include <GL/glu.h>
+#else
+    #include "qopengl.h"                  // this gives us the qt runtime gles2.h
+    #include "GL/gl_private.h"
+#endif
 
 #endif
 
@@ -59,7 +56,6 @@
 #include <wx/graphics.h>
 #include <wx/dcclient.h>
 
-#include <GL/glu.h>
 #include <vector>
 
 #include "ocpndc.h"
