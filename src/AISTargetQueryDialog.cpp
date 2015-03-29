@@ -1,4 +1,4 @@
-/******************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -86,8 +85,9 @@ void AISTargetQueryDialog::Init()
     m_nl = 0;
     m_colorscheme = (ColorScheme) ( -1 );
     m_okButton = NULL;
-
+    m_bsize_set = false;
 }
+
 void AISTargetQueryDialog::OnClose( wxCloseEvent& event )
 {
     Destroy();
@@ -264,6 +264,9 @@ void AISTargetQueryDialog::UpdateText()
 
     if( !m_pQueryTextCtl ) return;
 
+    int scroll_x, scroll_y;
+    m_pQueryTextCtl->GetViewStart(&scroll_x, &scroll_y);
+
     DimeControl( this );
     wxColor bg = GetBackgroundColour();
     m_pQueryTextCtl->SetBackgroundColour( bg );
@@ -291,32 +294,30 @@ void AISTargetQueryDialog::UpdateText()
             html.Printf( _T("<html><body bgcolor=#%02x%02x%02x><center>"), bg.Red(), bg.Green(), bg.Blue() );
 
             html << td->BuildQueryResult();
+
             html << _T("</center></font></body></html>");
 
             m_pQueryTextCtl->SetFonts( face, face, sizes );
-            m_pQueryTextCtl->SetPage( html );
 
-            // Try to create a min size that works across font sizes.
-            wxSize sz;
-            if( ! IsShown() ) {
-                sz = m_pQueryTextCtl->GetVirtualSize();
-                sz.x = 300;
-                m_pQueryTextCtl->SetSize( sz );
-            }
-            m_pQueryTextCtl->Layout();
-            wxSize ir(m_pQueryTextCtl->GetInternalRepresentation()->GetWidth(),
-                    m_pQueryTextCtl->GetInternalRepresentation()->GetHeight() );
-            sz.x = wxMax( m_pQueryTextCtl->GetSize().x, ir.x );
-            sz.y = wxMax( m_pQueryTextCtl->GetSize().y, ir.y );
-            m_pQueryTextCtl->SetMinSize( sz );
-            Fit();
-            sz -= wxSize( 200, 200 );
-            m_pQueryTextCtl->SetMinSize( sz );
+            wxCharBuffer buf = html.ToUTF8();
+            if( buf.data() )                            // string OK?
+                m_pQueryTextCtl->SetPage( html );
             
+            if(!m_bsize_set){
+                SetBestSize();
+                m_bsize_set = true;
+            }
+
             m_createWptBtn->Enable( td->b_positionOnceValid );
             m_createTrkBtn->Enable( td->b_show_track );
         }
   //  }
+
+#ifdef __WXQT__
+    SetColorScheme( m_colorscheme );
+#endif
+    
+    m_pQueryTextCtl->Scroll(scroll_x, scroll_y);
 }
 
 void AISTargetQueryDialog::OnMove( wxMoveEvent& event )
@@ -328,3 +329,29 @@ void AISTargetQueryDialog::OnMove( wxMoveEvent& event )
     event.Skip();
 }
 
+void AISTargetQueryDialog::SetBestSize( void )
+{
+    // Try to create a min size that works across font sizes.
+    wxSize sz;
+    /*
+     if( ! IsShown() ) {
+     sz = m_pQueryTextCtl->GetVirtualSize();
+     sz.x = 300;
+     m_pQueryTextCtl->SetSize( sz );
+     }
+     */
+    m_pQueryTextCtl->Layout();
+    wxSize ir(m_pQueryTextCtl->GetInternalRepresentation()->GetWidth(),
+              m_pQueryTextCtl->GetInternalRepresentation()->GetHeight() );
+    sz.x = wxMax( m_pQueryTextCtl->GetSize().x, ir.x );
+    sz.y = wxMax( m_pQueryTextCtl->GetSize().y, ir.y );
+    sz.x += 100;         // fluff, to try and avoid scrollbars
+    sz.y += 20;         // fluff
+    
+    m_pQueryTextCtl->SetMinSize( sz );
+    Fit();
+    
+    sz -= wxSize( 200, 200 );
+    m_pQueryTextCtl->SetMinSize( sz );
+    
+}

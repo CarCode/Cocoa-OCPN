@@ -64,6 +64,7 @@ public:
       void OnIdWptCreateClick( wxCommandEvent& event );
       void OnIdTrkCreateClick( wxCommandEvent& event );
       void OnMove( wxMoveEvent& event );
+      void SetBestSize( void );
 
       void CreateControls();
 
@@ -83,6 +84,7 @@ public:
       wxButton          *m_okButton;
       wxButton          *m_createWptBtn;
       wxButton          *m_createTrkBtn;
+      bool              m_bsize_set;
 };
 
 #endif

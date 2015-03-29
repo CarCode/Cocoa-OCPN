@@ -244,7 +244,8 @@ extern int choose_segment(void);
 extern int read_segments(char *, int *);
 extern int math_logstar_n(int);
 extern int math_N(int, int);
-#ifndef __WXOSX__
+
+#if __GNUC__ == 5 
 extern inline int int_greater_than(ipoint_t *v0, ipoint_t *v1);
 extern inline int int_equal_to(ipoint_t *v0, ipoint_t *v1);
 extern inline int int_greater_than_equal_to(ipoint_t *v0, ipoint_t *v1);

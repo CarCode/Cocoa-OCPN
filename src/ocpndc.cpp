@@ -1124,7 +1124,7 @@ void ocpnDC::CalcBoundingBox( wxCoord x, wxCoord y )
 
 bool ocpnDC::ConfigurePen()
 {
-    if( m_pen == wxNullPen ) return false;
+    if( !m_pen.IsOk() ) return false;
     if( m_pen == *wxTRANSPARENT_PEN ) return false;
 
 #ifdef ocpnUSE_GL

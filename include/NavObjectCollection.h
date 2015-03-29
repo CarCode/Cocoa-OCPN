@@ -1,4 +1,4 @@
-/******************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __NAVOBJECTCOLLECTION_H__
 #define __NAVOBJECTCOLLECTION_H__
@@ -80,25 +79,26 @@ class NavObjectCollection1 : public pugi::xml_document
 public:
     NavObjectCollection1();
     ~NavObjectCollection1();
-    
+
     bool CreateNavObjGPXPoints(void);
     bool CreateNavObjGPXRoutes(void);
     bool CreateNavObjGPXTracks(void);
- 
+
     bool AddGPXRoutesList( RouteList *pRoutes );
     bool AddGPXPointsList( RoutePointList *pRoutePoints );
     bool AddGPXRoute(Route *pRoute);
     bool AddGPXTrack(Track *pTrk);
     bool AddGPXWaypoint(RoutePoint *pWP );
-    
+
     bool CreateAllGPXObjects();
     bool LoadAllGPXObjects( bool b_full_viz = false);
     int LoadAllGPXObjectsAsLayer(int layer_id, bool b_layerviz);
-    
+
     bool SaveFile( const wxString filename );
 
     void SetRootGPXNode(void);
-    
+    bool IsOpenCPN();
+
     pugi::xml_node      m_gpx_root;
 };
 
