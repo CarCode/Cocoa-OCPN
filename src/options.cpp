@@ -838,6 +838,8 @@ BEGIN_EVENT_TABLE( options, wxDialog )
     EVT_CHOICE( ID_RADARRINGS, options::OnRadarringSelect )
     EVT_CHOICE( ID_WAYPOINTRANGERINGS, options::OnWaypointRangeRingSelect )
     EVT_CHAR_HOOK( options::OnCharHook )
+    EVT_TIMER ( ID_BT_SCANTIMER, options::onBTScanTimer )
+
 END_EVENT_TABLE()
 
 options::options()
@@ -967,6 +969,9 @@ void options::Init()
 #else
     m_scrollRate = 15;
 #endif
+
+    m_BTScanTimer.SetOwner(this, ID_BT_SCANTIMER);
+    m_BTscanning = 0;
 
     // This variable is used by plugin callback function AddOptionsPage
     g_pOptions = this;
@@ -1312,7 +1317,6 @@ void options::CreatePanel_NMEA( size_t parent, int border_size, int group_item_s
     m_choiceSerialProtocol->Enable( false );
 
     fgSizer1->Add( m_choiceSerialProtocol, 1, wxEXPAND|wxTOP, 5 );
-
     m_stPriority = new wxStaticText( m_pNMEAForm, wxID_ANY, _("Priority"), wxDefaultPosition, wxDefaultSize, 0 );
     m_stPriority->Wrap( -1 );
     fgSizer1->Add( m_stPriority, 0, wxALL, 5 );
@@ -3814,13 +3818,29 @@ ConnectionParams *options::CreateConnectionParamsFromSelectedItem()
         pConnectionParams->NetProtocol = PROTO_UNDEFINED;
         pConnectionParams->Baudrate = 0;
     }
-    
+
+    if(pConnectionParams->Type == INTERNAL_BT){
+        wxString parms = m_choiceBTDataSources->GetStringSelection();
+        wxStringTokenizer tkz( parms, _T(";") );
+        wxString name = tkz.GetNextToken();
+        wxString mac = tkz.GetNextToken();
+        
+        pConnectionParams->NetworkAddress = name;
+        pConnectionParams->Port = mac;
+        pConnectionParams->NetworkPort = 0;
+        pConnectionParams->NetProtocol = PROTO_UNDEFINED;
+        pConnectionParams->Baudrate = 0;
+//        pConnectionParams->SetAuxParameterStr(m_choiceBTDataSources->GetStringSelection());
+    }
+
     return pConnectionParams;
 }
 
 void options::OnApplyClick( wxCommandEvent& event )
 {
     ::wxBeginBusyCursor();
+
+    StopBTScan();
 
     m_returnChanges = 0;
 
@@ -5384,7 +5404,64 @@ void options::OnValChange( wxCommandEvent& event )
 
 void options::OnScanBTClick( wxCommandEvent& event )
 {
-    g_Platform->startBluetoothScan();
+    if(m_BTscanning){
+    }
+    else {
+        m_BTScanTimer.Start(1000, wxTIMER_CONTINUOUS);
+        g_Platform->startBluetoothScan();
+        m_BTscanning = 1;
+    }
+}
+
+void options::onBTScanTimer(wxTimerEvent &event)
+{
+    if(m_BTscanning){
+        m_BTscanning++;
+        
+        int isel = m_choiceBTDataSources->GetSelection();
+        
+        m_BTscan_results = g_Platform->getBluetoothScanResults();
+        
+        m_choiceBTDataSources->Clear();
+        m_choiceBTDataSources->Append(m_BTscan_results.Item(0));  // scan status
+        
+        unsigned int i=1;
+        while( (i+1) < m_BTscan_results.GetCount()){
+            wxString item1 = m_BTscan_results.Item(i) + _T(";");
+            wxString item2 = m_BTscan_results.Item(i+1);
+            m_choiceBTDataSources->Append(item1 + item2);
+            
+            i += 2;
+        }
+        
+        if( isel != wxNOT_FOUND){
+            m_choiceBTDataSources->SetSelection( isel );
+        }
+        
+        
+        if(m_BTscanning >= 30){
+            m_BTScanTimer.Stop();
+            
+            m_choiceBTDataSources->SetString(0, _("Finished"));
+            m_BTscanning = 0;
+            
+        }
+    }
+    else{
+    }
+    
+    return;
+}
+
+void options::StopBTScan()
+{
+    m_BTScanTimer.Stop();
+    
+    g_Platform->stopBluetoothScan();
+    
+    if(m_choiceBTDataSources)
+        m_choiceBTDataSources->SetString(0, _("Finished"));
+    m_BTscanning = 0;
 }
 
 void options::OnConnValChange( wxCommandEvent& event )
@@ -5835,7 +5912,10 @@ void options::FillSourceList()
         wxString prio_str;
         prio_str.Printf(_T("%d"), g_pConnectionParams->Item(i)->Priority );
         m_lcSources->SetItem(itemIndex, 3, prio_str);
-        m_lcSources->SetItem(itemIndex, 4, g_pConnectionParams->Item(i)->GetParametersStr());
+        wxString parms = g_pConnectionParams->Item(i)->GetParametersStr();
+        if(parms.IsEmpty())
+            parms = g_pConnectionParams->Item(i)->GetPortStr();
+        m_lcSources->SetItem(itemIndex, 4, parms);
         m_lcSources->SetItem(itemIndex, 5, g_pConnectionParams->Item(i)->GetIOTypeValueStr());
         m_lcSources->SetItem(itemIndex, 6, g_pConnectionParams->Item(i)->GetFiltersStr());
     }

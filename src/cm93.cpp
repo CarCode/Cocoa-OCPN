@@ -4899,6 +4899,21 @@ void cm93compchart::SetVPParms ( const ViewPort &vpt )
         ViewPort vp = vpt;
         AdjustVP ( m_vpt, vp );
     }
+
+    {
+        m_vpt = vpt;                              // save a copy
+
+        int cmscale = GetCMScaleFromVP ( vpt );         // First order calculation of cmscale
+
+        m_cmscale = PrepareChartScale ( vpt, cmscale );
+
+        //    Continuoesly update the composite chart edition date to the latest cell decoded
+        if ( m_pcm93chart_array[cmscale] )
+        {
+            if ( m_pcm93chart_array[cmscale]->GetEditionDate().IsLaterThan ( m_EdDate ) )
+                m_EdDate = m_pcm93chart_array[cmscale]->GetEditionDate();
+        }
+    }
 }
 
 int cm93compchart::PrepareChartScale ( const ViewPort &vpt, int cmscale, bool bOZ_protect )

@@ -4031,6 +4031,9 @@ int panx, pany;
 void glChartCanvas::OnEvtPanGesture( wxQT_PanGestureEvent &event)
 {
 
+    if( cc1->isRouteEditing() || cc1->isMarkEditing() )
+        return;
+
     if(m_binPinch)
         return;
 

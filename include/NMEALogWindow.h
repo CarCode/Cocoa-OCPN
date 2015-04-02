@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __NMEALOGWINDOW_H__
 #define __NMEALOGWINDOW_H__
@@ -63,7 +62,8 @@ class NMEALogWindow : public WindowDestroyListener
         void CheckPos(int display_width, int display_height);
         virtual void DestroyWindow();
         static void Shutdown();
-        
+        wxWindow *GetTTYWindow( void ){ return (wxWindow *)window; }
+
     private: // prevent class from being copied, needed by singleton
         NMEALogWindow();
         NMEALogWindow(const NMEALogWindow &) {}

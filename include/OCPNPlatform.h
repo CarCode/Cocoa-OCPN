@@ -50,6 +50,7 @@ public:
     static bool hasInternalBT(wxString profile = _T(""));       // Bluetooth
     bool startBluetoothScan();
     wxArrayString getBluetoothScanResults();
+    bool stopBluetoothScan();
 
 //  Per-Platform initialization support    
 
@@ -64,6 +65,8 @@ public:
 
     static void OnExit_1( void );
     static void OnExit_2( void );
+
+    void SetDefaultOptions( void );
 
 //--------------------------------------------------------------------------
 //      Per-Platform file/directory support

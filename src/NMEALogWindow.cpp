@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "NMEALogWindow.h"
 #include "TTYWindow.h"
@@ -68,6 +67,7 @@ void NMEALogWindow::Create(wxWindow * parent, int num_lines)
         pos_y = wxMax(pos_y, 40);
 
         window->SetSize(pos_x, pos_y, width, height);
+        window->Centre();
     }
     window->Show();
 }
