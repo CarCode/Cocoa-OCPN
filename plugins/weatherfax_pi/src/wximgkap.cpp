@@ -33,6 +33,7 @@
 #include <ctype.h>
 #include <stdlib.h>		/* for malloc() */
 #include <string.h>		/* for strncmp() */
+#include <math.h>
 
 #include <time.h>       /* for date in kap */
 
@@ -45,11 +46,11 @@
 typedef struct
 {
     uint8_t rgbRed, rgbGreen, rgbBlue, rgbReserved;
-} RGBQUAD;
+} RGBQUAD_t;
 
 typedef union
 {
-    RGBQUAD  q;
+    RGBQUAD_t  q;
     uint32_t p;
 } Color32;
 
@@ -207,7 +208,7 @@ static int HistGetColorNum (histogram *h, Color32 pixel)
         h = h->child;
     }
     if (!h->num)
-        level = 0;
+//        level = 0;  // Not used
     if (h->num < 0) return -1-h->num;
     return h->num-1;
 }
@@ -268,7 +269,7 @@ static inline int HistDist(Color32 a, Color32 b)
    c = a.q.rgbBlue - b.q.rgbBlue;
    r += c*c;
 
-   return sqrt(r);
+   return sqrt((double)r);
 }
 
 static int HistReduceDist(reduce *r, histogram *h, histogram *e, int cote, int level)
@@ -352,7 +353,7 @@ static void HistReduceLevel(reduce *r, histogram *h, int level)
             r->nbout++;
 
             cote = (int32_t)(pow((double)((1<<24)/(double)r->colorsout),1.0/3.0)/2)-1;
-            r->maxcote = sqrt(3*cote*cote);
+            r->maxcote = sqrt(3.0*cote*cote);
 
             curv = 0;
             nbcolors = (r->colorsin +r->colorsout -1)/r->colorsout;
@@ -361,7 +362,7 @@ static void HistReduceLevel(reduce *r, histogram *h, int level)
             {
                 curv += nbcolors - r->nbin;
                 cote = (int32_t)(pow(curv,1.0/3.0)/2) - 1;
-                cote = sqrt(3*cote*cote);
+                cote = sqrt(3.0*cote*cote);
 
                 if (r->nextcote > cote)
                     cote = r->nextcote;
@@ -421,9 +422,9 @@ static int HistReduce(histogram *h, int colorsin, int colorsout)
     r.colorsin = colorsin;
     r.colorsout = colorsout;
 
-    r.limcote[2] = sqrt(3*3*3) ;
-    r.limcote[4] = sqrt(3*15*15) ;
-    r.limcote[6] = sqrt(3*63*63) ;
+    r.limcote[2] = sqrt((double)3*3*3) ;
+    r.limcote[4] = sqrt((double)3*15*15) ;
+    r.limcote[6] = sqrt((double)3*63*63) ;
 
     HistReduceLevel(&r,h,6);
 
@@ -645,7 +646,7 @@ int bsb_uncompress_row(int typein, FILE *in, uint8_t *buf_out, uint16_t bits_in,
 	maxin = (1<<decin) - 1;
 
     /* read the line number */
-    count = bsb_uncompress_nb(typein, in,&pixel,0,0x7F);
+//    count = bsb_uncompress_nb(typein, in,&pixel,0,0x7F);  // Not used
 
     /* no test count = line number */
     switch (bits_out)
@@ -734,8 +735,8 @@ static void read_line(uint8_t *in, uint16_t bits, int width, uint8_t *colors, hi
                 cur.p = ( *(uint32_t *)in & RGBMASK);
                 if (last.p != cur.p)
                 {
-                    c = HistGetColorNum(hist, cur);
-                    c = colors[HistGetColorNum(hist, cur)];
+//                    c = HistGetColorNum(hist, cur);  // Not used
+                    c = colors[HistGetColorNum(hist, cur)];  // What for?
                     last = cur;
                 }
                 out[i] = c;
@@ -808,7 +809,7 @@ static int writewximgkap(FILE *out, wxImage &img, uint16_t widthout, uint16_t he
     /* reduce colors */
     num_colors = HistReduce(hist,num_colors,max_colors);
 
-    bits_out = ceil(log2(num_colors));
+    bits_out = ceil(log((double)num_colors) / log(2.0));
 
     /* if possible do not use colors 0 */
     len = ((1<<bits_out) > num_colors);
@@ -847,6 +848,11 @@ static int writewximgkap(FILE *out, wxImage &img, uint16_t widthout, uint16_t he
     index = (uint32_t *)malloc((heightout + 1) * sizeof(uint32_t));
     if ((buf_in == NULL) || (buf_out == NULL) || (index == NULL))
     {
+#ifdef __WXOSX__
+        free(buf_in);
+        free(buf_out);
+        free(index);
+#endif
         fprintf(stderr,"ERROR - mem malloc\n");
         
         return 2;

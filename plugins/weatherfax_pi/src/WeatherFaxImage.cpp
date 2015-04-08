@@ -1,11 +1,11 @@
-/***************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2014 by Sean D'Epagnier                                 *
  *   sean at depagnier dot com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,25 +24,63 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
-#include "wx/wxprec.h"
-
-#ifndef  WX_PRECOMP
-  #include "wx/wx.h"
-#endif //precompiled headers
-
+#include <wx/wx.h>
 #include <wx/progdlg.h>
 
+#include "defs.h"
 #include "WeatherFaxImage.h"
 WX_DEFINE_LIST(WeatherFaxImageCoordinateList);
+
+#if !defined(GL_CLAMP_TO_EDGE)
+#define GL_CLAMP_TO_EDGE			0x812F
+#endif
+
+#if !defined(GL_TEXTURE_RECTANGLE_ARB)
+#define GL_TEXTURE_RECTANGLE_ARB          0x84F5
+#endif
+
+static int texture_format;
+
+static GLboolean QueryExtension( const char *extName )
+{
+    /*
+     ** Search for extName in the extensions string. Use of strstr()
+     ** is not sufficient because extension names can be prefixes of
+     ** other extension names. Could use strtok() but the constant
+     ** string returned by glGetString might be in read-only memory.
+     */
+    char *p;
+    char *end;
+    int extNameLen;
+
+    extNameLen = strlen( extName );
+
+    p = (char *) glGetString( GL_EXTENSIONS );
+    if( NULL == p ) {
+        return GL_FALSE;
+    }
+
+    end = p + strlen( p );
+
+    while( p < end ) {
+        int n = strcspn( p, " " );
+        if( ( extNameLen == n ) && ( strncmp( extName, p, n ) == 0 ) ) {
+            return GL_TRUE;
+        }
+        p += ( n + 1 );
+    }
+    return GL_FALSE;
+}
+
 
 wxString WeatherFaxImageCoordinates::MapName(MapType type)
 {
     switch(type) {
-        case MERCATOR:   return _T("Mercator");
-        case POLAR:      return _T("Polar");
-        case CONIC:      return _T("Conic");
-        case FIXED_FLAT: return _T("FixedFlat");
-        default: break;
+    case MERCATOR:   return _T("Mercator");
+    case POLAR:      return _T("Polar");
+    case CONIC:      return _T("Conic");
+    case FIXED_FLAT: return _T("FixedFlat");
+    default: break;
     }
     return _T("");
 }
@@ -73,7 +111,7 @@ void WeatherFaxImage::FreeData()
 void WeatherFaxImage::MakePhasedImage()
 {
     if(!m_origimg.IsOk()) {
-        m_phasedimg.Create(1, 1); /* make dummy small image so phased image is always ok */
+        m_origimg.Create(1, 1); /* small image; so orig image is always ok to work with */
         return;
     }
 
@@ -156,18 +194,24 @@ void WeatherFaxImage::MakePhasedImage()
     }
 
     /* crop last line of phased image */
+#if 0
     m_phasedimg.Resize(wxSize(m_phasedimg.GetWidth(), m_phasedimg.GetHeight()-1),
                        wxPoint(0, 0));
+#else
+//    m_phasedimg = wxImage(m_phasedimg.GetWidth(), m_phasedimg.GetHeight()-1, m_phasedimg.GetData(), true);
+
+#endif
 
     /* apply rotation */
-    switch(rotation) {
-    case 1:
+    switch(m_Coords->rotation) {
+    case WeatherFaxImageCoordinates::CCW:
         m_phasedimg = m_phasedimg.Rotate90(false);
         break;
-    case 3:
+    case WeatherFaxImageCoordinates::R180:
         m_phasedimg = m_phasedimg.Rotate90(true);
-    case 2:
+    case WeatherFaxImageCoordinates::CW:
         m_phasedimg = m_phasedimg.Rotate90(true);
+    default:
         break;
     }
 
@@ -238,12 +282,7 @@ void WeatherFaxImage::InputToMercator(double px, double py, double &mx, double &
     dy = py - m_Coords->inputpole.y;
 
     /* map coordinates */
-    double theta, pp, y;
-#ifdef __WXOSX__
-    double x = 0.0;
-#else
-    double x;
-#endif
+    double theta, pp = 0, x = 0, y = 0;
     switch(m_Coords->mapping) {
     case WeatherFaxImageCoordinates::MERCATOR:
         x = dx;
@@ -261,8 +300,7 @@ void WeatherFaxImage::InputToMercator(double px, double py, double &mx, double &
         double z = hypot(dx, dy) / inputheight;
         double q = 4/M_PI*atan(z);
         pp = q + (inputheight > 0 ? -1 : 1); /* inputheight < 0 for south polar */
-    }
-            break;
+    } break;
     case WeatherFaxImageCoordinates::FIXED_FLAT:
         x = dx;
         pp = dy / inputheight - 1;
@@ -278,8 +316,8 @@ void WeatherFaxImage::InputToMercator(double px, double py, double &mx, double &
     }
 
     /* apply scale */
-    x*=m_Coords->mappingmultiplier*aspectratio;
-    y*=m_Coords->mappingmultiplier;
+    x*=m_Coords->mappingmultiplier;
+    y*=m_Coords->mappingmultiplier/m_Coords->mappingratio;
 
     /* apply offsets */
     mx = mercatoroffset.x + x;
@@ -296,8 +334,8 @@ void WeatherFaxImage::MercatorToInput(double mx, double my, double &px, double &
     y = my - mercatoroffset.y;
 
     /* apply scale */
-    x /= m_Coords->mappingmultiplier*aspectratio;
-    y /= m_Coords->mappingmultiplier;
+    x /= m_Coords->mappingmultiplier;
+    y /= m_Coords->mappingmultiplier/m_Coords->mappingratio;
 
     /* if not mercator, it is fixed and needs conversion here */
     double pp;
@@ -307,12 +345,7 @@ void WeatherFaxImage::MercatorToInput(double mx, double my, double &px, double &
     }
 
     /* unmap coordinates */
-#ifdef __WXOSX__
-    double dx = 0.0;
-    double dy = 0.0;
-#else
-    double dx, dy;
-#endif
+    double dx = 0, dy = 0;
     switch(m_Coords->mapping) {
     case WeatherFaxImageCoordinates::MERCATOR:
         dx = x;
@@ -344,7 +377,7 @@ void WeatherFaxImage::MercatorToInput(double mx, double my, double &px, double &
 
 bool WeatherFaxImage::MakeMappedImage(wxWindow *parent, bool paramsonly)
 {
-    int w = m_phasedimg.GetWidth(), h = m_phasedimg.GetHeight();
+    int w = m_origimg.GetWidth(), h = m_origimg.GetHeight();
 
     inputheight = m_Coords->inputequator - m_Coords->inputpole.y;
 
@@ -354,15 +387,6 @@ bool WeatherFaxImage::MakeMappedImage(wxWindow *parent, bool paramsonly)
 
     double p1x, p2x, p3x, p4x, p5x, p6x;
     double p1y, p2y, p3y, p4y, p5y, p6y;
-
-    /* calculate aspect ratio to give 1:1 along equator so if the image is
-        saved as a kap file it can be displayed as mercator without needing to
-        change he aspect ratio, this method is not numerically perfect but
-        I think it is close enough in practice */
-    aspectratio = 1;
-    InputToMercator(m_Coords->inputpole.x+2e-2, m_Coords->inputequator, p2x, p2y);
-    InputToMercator(m_Coords->inputpole.x, m_Coords->inputequator+2e-2, p3x, p3y);
-    aspectratio = p3y / p2x * m_Coords->mappingratio;
 
     /* four corners of input */
     InputToMercator(0, 0, p1x, p1y);
@@ -419,10 +443,13 @@ bool WeatherFaxImage::MakeMappedImage(wxWindow *parent, bool paramsonly)
 
     const int maxsize = 30;
         /* bigger than 30 megabytes is pretty huge and possibly too slow */
-    if(mw * mh > maxsize*1024*1024) {
+    double maxscale = maxsize*1024*1024 / ((double)mw * mh);
+    if(maxscale < 1) {
         wxMessageDialog w
-            ( parent, wxString::Format(_("Resulting image larger than %dMB, aborting\n"),
-                                     maxsize),
+            ( parent, wxString::Format(
+                _("Resulting image larger than %dMB\n\
+Try changing size parameter to a smaller value. (less than %.2f)\naborting\n"),
+                maxsize, sqrt(maxscale)*m_Coords->mappingmultiplier),
               _("Mapping Failed"), wxOK | wxICON_ERROR );
         w.ShowModal();
         return false;
@@ -432,12 +459,12 @@ bool WeatherFaxImage::MakeMappedImage(wxWindow *parent, bool paramsonly)
     m_mappedimg.Create(mw, mh);
     wxProgressDialog progressdialog(
         _("Mapping Weather Fax Image"), _("Weather Fax Mapper"), mw, parent,
-        wxPD_SMOOTH | wxPD_ELAPSED_TIME | wxPD_REMAINING_TIME | wxPD_CAN_ABORT);
+        wxPD_SMOOTH | wxPD_ELAPSED_TIME | wxPD_REMAINING_TIME);
 
     unsigned char *d = m_phasedimg.GetData(), *md = m_mappedimg.GetData();
     for(int x=0; x<mw; x++) {
-//        if(x%200 == 0 && !progressdialog.Update(x))
-//            return false;
+        if(x%200 == 0 && !progressdialog.Update(x))
+            return false;
 
         for(int y=0; y<mh; y++) {
             double px, py;
@@ -446,14 +473,7 @@ bool WeatherFaxImage::MakeMappedImage(wxWindow *parent, bool paramsonly)
             MercatorToInput(x, y, px, py);
 
             if(px >= 0 && py >= 0 && px < w-1 && py < h-1)
-#if 0 /* mono with interpolation for speed */
-                ImageInterpolatedValueMono
-#elif 1                
-                ImageInterpolatedValue
-#else /* faster without interpolation, looks like crap */
-                ImageValue
-#endif
-                    (d, w, px, py, cd);
+                ImageInterpolatedValue(d, w, px, py, cd);
             else
                 cd[0] = cd[1] = cd[2] = 255;
         }
@@ -461,7 +481,7 @@ bool WeatherFaxImage::MakeMappedImage(wxWindow *parent, bool paramsonly)
     return true;
 }
 
-bool WeatherFaxImage::GetOverlayCoords(PlugIn_ViewPort *vp, wxPoint &p0, wxPoint &pwh, int &w, int &h)
+bool WeatherFaxImage::GetOverlayCoords(PlugIn_ViewPort *vp, wxPoint p[3], int &w, int &h)
 {
     if(!m_Coords)
         return false;
@@ -474,43 +494,34 @@ bool WeatherFaxImage::GetOverlayCoords(PlugIn_ViewPort *vp, wxPoint &p0, wxPoint
     w=img.GetWidth();
     h=img.GetHeight();
 
-    double lon0 = m_Coords->lon(0), lonw = m_Coords->lon(w);
+    double lat0 = m_Coords->lat(0), lon0 = m_Coords->lon(0);
+    double lat1 = m_Coords->lat(h), lon1 = m_Coords->lon(w);
 
     /* skip coordinates that go the long way around the world */
-    if(lon0+180 < vp->clon && lonw+180 > vp->clon)
+    if(lon0+180 < vp->clon && lon1+180 > vp->clon)
         return false;
-    if(lon0-180 < vp->clon && lonw-180 > vp->clon)
+    if(lon0-180 < vp->clon && lon1-180 > vp->clon)
         return false;
 
-    double lat1 = m_Coords->lat1, lon1 = m_Coords->lon1;
-    double lat2 = m_Coords->lat2, lon2 = m_Coords->lon2;
-    
-    wxPoint p1, p2;
-    GetCanvasPixLL( vp, &p1, lat1, lon1 );
-    GetCanvasPixLL( vp, &p2, lat2, lon2 );
+    /* prefer double precision version when it is available */
+    GetCanvasPixLL( vp, &p[0], lat0, lon0 );
+    GetCanvasPixLL( vp, &p[1], lat0, lon1 );
+    GetCanvasPixLL( vp, &p[2], lat1, lon0 );
 
-    /* now extrapolate to 0-w and 0-h from p1 p2 pa etc.. 
-    (m_Coords->p2.x-m_Coords->p1.x)/(p2.x-p1.x) = (m_Coords->p1.x - 0) / (p1.x - p0.x)
-    p0.x = p1.x - (p2.x-p1.x) * (m_Coords->p1.x - 0) /
-    (m_Coords->p2.x-m_Coords->p1.x)
-    */
-
-    double divx = (m_Coords->p2.x-m_Coords->p1.x);
-    double divy = (m_Coords->p2.y-m_Coords->p1.y);
-    p0.x = p1.x - (p2.x-p1.x) * (m_Coords->p1.x - 0) / divx;
-    p0.y = p1.y - (p2.y-p1.y) * (m_Coords->p1.y - 0) / divy;
-
-    pwh.x = p1.x - (p2.x-p1.x) * (m_Coords->p1.x - w) / divx;
-    pwh.y = p1.y - (p2.y-p1.y) * (m_Coords->p1.y - h) / divy;
     return true;
 }
 
 void WeatherFaxImage::RenderImage(wxDC &dc, PlugIn_ViewPort *vp)
 {
-    wxPoint p1, p2;
+    wxPoint p[4];
     int w, h;
-    if(!GetOverlayCoords(vp, p1, p2, w, h))
+    if(vp->rotation)
         return;
+
+    if(!GetOverlayCoords(vp, p, w, h))
+        return;
+
+    wxPoint p1 = p[0], p2 = wxPoint(p[1].x, p[2].y);
 
     wxImage &img = m_mappedimg;
 
@@ -563,14 +574,32 @@ void WeatherFaxImage::RenderImageGL(PlugIn_ViewPort *vp)
 {
     const int maxtexsize = 1024; /* all gfx should support at least this */
 
-    wxPoint p1, p2;
+    wxPoint p[3];
     int w, h;
-    if(!GetOverlayCoords(vp, p1, p2, w, h))
+    if(!GetOverlayCoords(vp, p, w, h))
         return;
 
     wxImage &img = m_mappedimg;
 
     if(!m_gltextures) {
+        if(!texture_format) {
+            if( QueryExtension( "GL_ARB_texture_non_power_of_two" ) ||
+                QueryExtension( "GL_OES_texture_npot" ) )
+                texture_format = GL_TEXTURE_2D;
+            else if( QueryExtension( "GL_ARB_texture_rectangle" ) )
+                texture_format = GL_TEXTURE_RECTANGLE_ARB;
+            else {
+                static bool once = false;
+                if(!once) {
+                    wxMessageDialog w( NULL, _("Graphics hardware not supported (Disable OpenGL)\n"),
+                                   _("Weather Fax"), wxOK | wxICON_ERROR );
+                    w.ShowModal();
+                    once = true;
+                }
+                return;
+            }
+        }
+
         m_numgltexturesh = ceil((double)h/maxtexsize);
         m_numgltexturesw = ceil((double)w/maxtexsize);
         m_gltextures = new unsigned int[m_numgltexturesh*m_numgltexturesw];
@@ -585,18 +614,13 @@ void WeatherFaxImage::RenderImageGL(PlugIn_ViewPort *vp)
                 int tox = tx*maxtexsize;
                 int toy = ty*maxtexsize;
 
-                glBindTexture(GL_TEXTURE_RECTANGLE_ARB, m_gltextures[ty*m_numgltexturesw + tx]);
+                glBindTexture(texture_format, m_gltextures[ty*m_numgltexturesw + tx]);
         
-                glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP );
-                glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP );
-                glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-                glTexParameteri( GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+                glTexParameteri( texture_format, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+                glTexParameteri( texture_format, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+                glTexParameteri( texture_format, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+                glTexParameteri( texture_format, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
         
-#if 1 /* I think we can delete these */
-                glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-                glPixelStorei( GL_UNPACK_SKIP_PIXELS, 0 );
-                glPixelStorei( GL_UNPACK_SKIP_ROWS, 0 );
-#endif
                 unsigned char *data = img.GetData();
                 for(unsigned int y=0; y<th; y++) {
                     for(unsigned int x=0; x<tw; x++) {
@@ -613,7 +637,7 @@ void WeatherFaxImage::RenderImageGL(PlugIn_ViewPort *vp)
                     }
                 }
 
-                glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA,
+                glTexImage2D(texture_format, 0, GL_RGBA,
                          tw, th, 0, GL_RGBA, GL_UNSIGNED_BYTE, idata);
             }
         }
@@ -622,10 +646,9 @@ void WeatherFaxImage::RenderImageGL(PlugIn_ViewPort *vp)
         
     glPushAttrib(GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_POLYGON_BIT | GL_TEXTURE_BIT);
 
-    glEnable(GL_TEXTURE_RECTANGLE_ARB);
+    glEnable(texture_format);
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glDisable( GL_MULTISAMPLE );
     glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
     glColor4ub(255, 255, 255, 255-m_iTransparency);
 
@@ -634,18 +657,26 @@ void WeatherFaxImage::RenderImageGL(PlugIn_ViewPort *vp)
             unsigned int th = (ty == m_numgltexturesh-1) ? h - ty*maxtexsize : maxtexsize;
             unsigned int tw = (tx == m_numgltexturesw-1) ? w - tx*maxtexsize : maxtexsize;
 
-            glBindTexture(GL_TEXTURE_RECTANGLE_ARB, m_gltextures[ty*m_numgltexturesw + tx]);
+            glBindTexture(texture_format, m_gltextures[ty*m_numgltexturesw + tx]);
     
-            wxPoint p1u = wxPoint(p1.x + (p2.x-p1.x)*maxtexsize*tx/w,
-                                  p1.y + (p2.y-p1.y)*maxtexsize*ty/h);
-            wxPoint p2u = wxPoint(p1.x + (p2.x-p1.x)*(maxtexsize*tx+tw)/w,
-                                  p1.y + (p2.y-p1.y)*(maxtexsize*ty+th)/h);
+            /* interpolate coordinates correctly even with rotation */
+            double mtx = maxtexsize*tx, mty = maxtexsize*ty;
+            wxPoint p1 = p[0], p2 = p[1], p3 = p[2];
+            double q1x = p2.x-p1.x, q2x = p3.x-p1.x, q1y = p2.y-p1.y, q2y = p3.y-p1.y;
+            double f1x = mtx/w, f2x = (mtx+tw)/w, f1y = mty/h, f2y = (mty+th)/h;
+            double vx1x = q1x*f1x, vx1y = q1y*f1x, vx2x = q1x*f2x, vx2y = q1y*f2x;
+            double vy1x = q2x*f1y, vy1y = q2y*f1y, vy2x = q2x*f2y, vy2y = q2y*f2y;
+            double pu1x = p1.x+vx1x+vy1x, pu2x = p1.x+vx2x+vy1x, pu3x = p1.x+vx2x+vy2x, pu4x = p1.x+vx1x+vy2x;
+            double pu1y = p1.y+vx1y+vy1y, pu2y = p1.y+vx2y+vy1y, pu3y = p1.y+vx2y+vy2y, pu4y = p1.y+vx1y+vy2y;
+
+            if(texture_format == GL_TEXTURE_2D)
+                tw = th = 1;
 
             glBegin(GL_QUADS);
-            glTexCoord2i(0,   0), glVertex2i(p1u.x, p1u.y);
-            glTexCoord2i(tw,  0), glVertex2i(p2u.x, p1u.y);
-            glTexCoord2i(tw, th), glVertex2i(p2u.x, p2u.y);
-            glTexCoord2i(0,  th), glVertex2i(p1u.x, p2u.y);
+            glTexCoord2i(0,   0), glVertex2d(pu1x, pu1y);
+            glTexCoord2i(tw,  0), glVertex2d(pu2x, pu2y);
+            glTexCoord2i(tw, th), glVertex2d(pu3x, pu3y);
+            glTexCoord2i(0,  th), glVertex2d(pu4x, pu4y);
             glEnd();
         }
     }

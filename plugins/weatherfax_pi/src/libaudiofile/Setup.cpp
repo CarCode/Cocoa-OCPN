@@ -393,7 +393,11 @@ void afInitDataOffset (AFfilesetup setup, int trackid, AFfileoffset offset)
 
 	if (offset < 0)
 	{
-		_af_error(AF_BAD_DATAOFFSET, "invalid data offset %jd",
+#ifdef __WXOSX__
+        _af_error(AF_BAD_DATAOFFSET, "invalid data offset %jd",
+#else
+		_af_error(AF_BAD_DATAOFFSET, "invalid data offset %"PRId64,
+#endif
 			static_cast<intmax_t>(offset));
 		return;
 	}
@@ -416,7 +420,11 @@ void afInitFrameCount (AFfilesetup setup, int trackid, AFfileoffset count)
 
 	if (count < 0)
 	{
-		_af_error(AF_BAD_FRAMECNT, "invalid frame count %jd",
+#ifdef __WXOSX__
+        _af_error(AF_BAD_FRAMECNT, "invalid frame count %jd",
+#else
+		_af_error(AF_BAD_FRAMECNT, "invalid frame count %"PRId64,
+#endif
 			static_cast<intmax_t>(count));
 		return;
 	}

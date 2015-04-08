@@ -23,6 +23,7 @@
 
 #include "File.h"
 #include "Track.h"
+#include "util.h"
 
 #include <errno.h>
 #include <string.h>
@@ -71,7 +72,11 @@ void FileModule::reportReadError(AFframecount framesRead,
 		return;
 
 	_af_error(AF_BAD_READ,
-		"file missing data -- read %jd frames, should be %jd",
+#ifdef __WXOSX__
+        "file missing data -- read %jd frames, should be %jd",
+#else
+		"file missing data -- read %"PRId64" frames, should be %"PRId64,
+#endif
 		static_cast<intmax_t>(m_track->nextfframe),
 		static_cast<intmax_t>(m_track->totalfframes));
 	m_track->filemodhappy = false;
@@ -88,7 +93,11 @@ void FileModule::reportWriteError(AFframecount framesWritten,
 	{
 		// Signal I/O error.
 		_af_error(AF_BAD_WRITE,
-			"unable to write data (%s) -- wrote %jd out of %jd frames",
+#ifdef __WXOSX__
+            "unable to write data (%s) -- wrote %jd out of %jd frames",
+#else
+			"unable to write data (%s) -- wrote %"PRId64" out of %"PRId64" frames",
+#endif
 			strerror(errno),
 			static_cast<intmax_t>(m_track->nextfframe),
 			static_cast<intmax_t>(m_track->nextfframe + framesToWrite));
@@ -97,8 +106,13 @@ void FileModule::reportWriteError(AFframecount framesWritten,
 	{
 		// Signal disk full error.
 		_af_error(AF_BAD_WRITE,
+#ifdef __WXOSX__
+                  "unable to write data (disk full) -- "
+                  "wrote %jd out of %jd frames",
+#else
 			"unable to write data (disk full) -- "
-			"wrote %jd out of %jd frames",
+			"wrote %"PRId64" out of %"PRId64" frames",
+#endif
 			static_cast<intmax_t>(m_track->nextfframe + framesWritten),
 			static_cast<intmax_t>(m_track->nextfframe + framesToWrite));
 	}

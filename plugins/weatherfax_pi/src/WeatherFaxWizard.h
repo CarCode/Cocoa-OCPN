@@ -5,7 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2014 by Sean D'Epagnier                                 *
  *   sean at depagnier dot com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -30,33 +30,44 @@ class WeatherFax;
 class DecoderThread;
 class FaxDecoder;
 
+class DecoderOptionsDialog;
 class WeatherFaxWizard : public WeatherFaxWizardBase
 {
 public:
-    WeatherFaxWizard( WeatherFaxImage &img, FaxDecoder *decoder,
-                    WeatherFax &parent,
-                    WeatherFaxImageCoordinateList &coords,
-                    wxString newcoordbasename);
+    WeatherFaxWizard( WeatherFaxImage &img,
+                      bool use_decoder, wxString decoder_filename,
+                      WeatherFax &parent,
+                      WeatherFaxImageCoordinateList *coords,
+                      wxString newcoordbasename);
 
     ~WeatherFaxWizard();
 
     wxTimer m_tDecoder;
     DecoderThread *m_thDecoder;
-    FaxDecoder *m_decoder;
+    FaxDecoder m_decoder;
+    bool m_bDecoderStopped;
+    DecoderOptionsDialog *m_DecoderOptionsDialog;
 
+    void StartDecoder();
+    void StopDecoder();
     void MakeNewCoordinates();
     void OnDecoderTimer( wxTimerEvent & );
 
+    void OnWizardCancel( wxWizardEvent& event );
+    void OnWizardFinished( wxWizardEvent& event );
     void OnSetSizes( wxInitDialogEvent& event );
     void UpdateMappingControls();
     void OnStopDecoding( wxCommandEvent& event );
+    void OnDecoderOptions( wxCommandEvent& event );
     void OnPaintPhasing( wxPaintEvent& event );
     void OnWizardPageChanged( wxWizardEvent& event );
     void OnMappingChoice( wxCommandEvent& event );
     void GetMappingPolar(bool onlyequator);
     void GetMappingFixedFlat();
+    void GetAspectRatio();
     void OnGetMapping( wxCommandEvent& event );
     void OnGetEquator( wxCommandEvent& event );
+    void OnGetAspectRatio( wxCommandEvent& event );
     void OnBitmapClickPage2( wxMouseEvent& event );
     void OnBitmapClickPage3( wxMouseEvent& event );
     void OnCoordSet( wxCommandEvent& event );
@@ -67,22 +78,32 @@ public:
     
     void SetUnMappedCoordRanges();
     void SetCoordRanges();
-    void OnUpdateMapping( wxSpinEvent& event ) { Refresh(); }
+    void OnUpdateMappingSpin( wxSpinEvent& event ) { Refresh(); }
     void OnUpdateMapping( wxCommandEvent& event ) { Refresh(); }
     void OnInformation( wxCommandEvent& event );
 
     void StoreCoords();
 
+    WeatherFaxImage &GetImage() { return m_wfimg; }
+    WeatherFaxImageCoordinateList &GetBuiltinCoords() { return m_BuiltinCoords; }
+    
+    wxString FaxName;
+
 protected:
+    void ReadMappingLatLon(double &mapping1lat, double &mapping1lon,
+                           double &mapping2lat, double &mapping2lon);
+    void WriteMappingLatLon(double mapping1lat, double mapping1lon,
+                           double mapping2lat, double mapping2lon);
 
     void UpdatePage1();
     void UpdatePage1Rotation ( wxCommandEvent& event );
-    void UpdatePage1( wxCommandEvent& event );
-    void UpdatePage1( wxScrollEvent& event );
+    void UpdatePage1( wxCommandEvent& event ) { UpdatePage1(); }
+    void UpdatePage1Scroll( wxScrollEvent& event ) { UpdatePage1(); }
 
     wxString NewCoordName();
     void SetCoords(int index);
     void OnSpin( wxSpinEvent& event );
+    void OnShowLatLonMinutes( wxCommandEvent& event );
     void OnPaintImage( wxPaintEvent& event);
 
     WeatherFax &m_parent;
@@ -93,6 +114,7 @@ protected:
 
     WeatherFaxImageCoordinates *m_newCoords;
     WeatherFaxImageCoordinateList &m_Coords;
+    WeatherFaxImageCoordinateList m_BuiltinCoords;
 
     bool m_skippaint;
 

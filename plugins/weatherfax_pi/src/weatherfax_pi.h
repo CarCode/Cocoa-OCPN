@@ -1,11 +1,11 @@
-/***************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2014 by Sean D'Epagnier                                 *
  *   sean at depagnier dot com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -27,19 +27,19 @@
 #ifndef _WEATHERFAXPI_H_
 #define _WEATHERFAXPI_H_
 
-#include "wx/wxprec.h"
-
-#ifndef  WX_PRECOMP
-  #include "wx/wx.h"
-#endif //precompiled headers
-
+#include <wx/wx.h>
+#include <wx/stdpaths.h>
 #include <wx/fileconf.h>
 
-#define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    9
+#include "version.h"
+
+#define     PLUGIN_VERSION_MAJOR    1
+#define     PLUGIN_VERSION_MINOR    3
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    8
+
+#define ABOUT_AUTHOR_URL "http://seandepagnier.users.sourceforge.net"
 
 #include "../../../include/ocpn_plugin.h"
 
@@ -59,7 +59,7 @@ class weatherfax_pi : public opencpn_plugin_18
 public:
       weatherfax_pi(void *ppimgr);
 
-
+      
 //    The required PlugIn Methods
       int Init(void);
       bool DeInit(void);
@@ -97,13 +97,10 @@ public:
       wxString m_path, m_export_path;
 
       /* audio decoding options */
-      int m_ImageWidth, m_BitsPerPixel, m_Carrier, m_Deviation, m_Filter;
-      bool m_bSkipHeaderDetection, m_bIncludeHeadersInImage;
-
       bool m_bLoadSchedulesStart;
 
       int m_iExportColors;
-      int m_bExportDepthMeters;
+      bool m_bExportDepthMeters;
       wxString m_sExportSoundingDatum;
 
       wxFileConfig     *m_pconfig;

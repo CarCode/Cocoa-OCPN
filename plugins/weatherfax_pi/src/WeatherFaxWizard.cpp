@@ -1,11 +1,11 @@
-/***************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2014 by Sean D'Epagnier                                 *
  *   sean at depagnier dot com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -30,51 +30,57 @@
 #include "FaxDecoder.h"
 #include "WeatherFaxImage.h"
 #include "WeatherFax.h"
+#include "DecoderOptionsDialog.h"
 #include "WeatherFaxWizard.h"
+#include "icons.h"
 
-WeatherFaxWizard::WeatherFaxWizard( WeatherFaxImage &img, FaxDecoder *decoder,
-                                WeatherFax &parent,
-                                WeatherFaxImageCoordinateList &coords,
-                                wxString newcoordbasename)
-    : WeatherFaxWizardBase( &parent ), m_decoder(decoder), m_parent(parent),
-      m_wfimg(img), m_curCoords(img.m_Coords),
+WeatherFaxWizard::WeatherFaxWizard( WeatherFaxImage &img,
+                                    bool use_decoder, wxString decoder_filename,
+                                    WeatherFax &parent,
+                                    WeatherFaxImageCoordinateList *coords,
+                                    wxString newcoordbasename)
+    : WeatherFaxWizardBase( &parent ), m_decoder(*this, decoder_filename),
+      m_DecoderOptionsDialog(use_decoder ? new DecoderOptionsDialog(*this) : NULL),
+      m_parent(parent), m_wfimg(img), m_curCoords(img.m_Coords),
       m_NewCoordBaseName(newcoordbasename.empty() ? wxString(_("New Coord")) : newcoordbasename),
-      m_Coords(coords)
+      m_Coords(coords ? *coords : m_BuiltinCoords)
 {
+
+    wxIcon icon;
+    icon.CopyFromBitmap(*_img_weatherfax);
+    SetIcon(icon);
+
     m_sPhasing->SetValue(m_wfimg.phasing);
     m_sSkew->SetValue(m_wfimg.skew);
     m_cFilter->SetSelection(m_wfimg.filter);
-    m_cRotation->SetSelection(m_wfimg.rotation);
-    m_wfimg.MakePhasedImage();
-
-    m_sPhasing->SetRange(0, m_wfimg.m_phasedimg.GetWidth()-1);
-
-    m_swFaxArea1->SetScrollbars(1, 1, m_wfimg.m_phasedimg.GetWidth(), m_wfimg.m_phasedimg.GetHeight());
 
     MakeNewCoordinates();
 
-    if(m_decoder) {
-        /* periodically check for updates */
-        m_tDecoder.Connect(wxEVT_TIMER, wxTimerEventHandler( WeatherFaxWizard::OnDecoderTimer ), NULL, this);
-        m_tDecoder.Start(1000, wxTIMER_ONE_SHOT);
+    m_wfimg.MakePhasedImage();
 
-        /* run decoder in a separate thread */
-        m_thDecoder = new DecoderThread(*m_decoder);
-        m_thDecoder->Run();
+    m_sPhasing->SetRange(0, m_wfimg.m_phasedimg.GetWidth()-1);
+    m_swFaxArea1->SetScrollbars(1, 1, m_wfimg.m_phasedimg.GetWidth(), m_wfimg.m_phasedimg.GetHeight());
+    
+    m_cRotation->SetSelection(m_curCoords->rotation);
+
+    if(use_decoder && m_decoder.m_inputtype != FaxDecoder::NONE) {
+        m_DecoderOptionsDialog->SetIcon(icon);
+        StartDecoder();
     } else {
         m_thDecoder = NULL;
         m_bStopDecoding->Disable();
-        m_sMinusSaturationThreshold->Disable();
+
+        if(m_DecoderOptionsDialog)
+            m_DecoderOptionsDialog->m_sMinusSaturationThreshold->Disable();
+        else
+            m_bDecoderOptions->Disable();
     }
 }
 
 WeatherFaxWizard::~WeatherFaxWizard()
 {
-    if(m_decoder) {
-        m_decoder->m_bEndDecoding = true;
-        m_thDecoder->Wait(); /* wait for decoder thread to end */
-        delete m_thDecoder;
-    }
+    StopDecoder();
+    delete m_DecoderOptionsDialog;
 
     wxFileConfig *pConf = GetOCPNConfigObject();
     pConf->SetPath ( _T ( "/Settings/WeatherFax" ) );
@@ -86,41 +92,47 @@ WeatherFaxWizard::~WeatherFaxWizard()
     wxSize s = GetSize();
     pConf->Write ( _T ( "WizardW" ), s.x);
     pConf->Write ( _T ( "WizardH" ), s.y);
+}
 
-    /* add coordinates to set if it is the new one, but make
-       sure it has a unique name */
-    int sel = m_cbCoordSet->GetSelection();
-    if(sel == -1)
-        sel = m_SelectedIndex;
+void WeatherFaxWizard::StartDecoder()
+{
+    /* reset image */
+    m_wfimg.m_origimg.Create(1, 1); /* small image; so orig image is always ok to work with */
 
-    if(sel == 0 && GetReturnCode() != wxID_CANCEL) {
-        int cc = m_Coords.GetCount();
-        wxString newname = m_newCoords->name, newnumberedname;
-        for(int n=0, i=-1; i != cc; n++) {
-            newnumberedname = newname;
-            if(n)
-                newnumberedname += wxString::Format(_(" %d"), n);
+    /* periodically check for updates */
+    m_tDecoder.Connect(wxEVT_TIMER, wxTimerEventHandler( WeatherFaxWizard::OnDecoderTimer ), NULL, this);
+    m_tDecoder.Start(1000, wxTIMER_ONE_SHOT);
 
-            if(!cc)
-                break;
-            for(i=0; i<cc; i++)
-                if(m_Coords[i]->name == newnumberedname)
-                    break;
-        }
-        m_newCoords->name = newnumberedname;
-        m_Coords.Append(m_newCoords);
-    } else
-        delete m_newCoords;
+    m_bDecoderStopped = false;
+
+    /* run decoder in a separate thread */
+    m_thDecoder = new DecoderThread(m_decoder);
+    m_thDecoder->Run();
+
+    m_bStopDecoding->SetLabel(_("Stop"));
+    m_bStopDecoding->Enable();
+}
+
+void WeatherFaxWizard::StopDecoder()
+{
+    if(!m_thDecoder)
+        return;
+
+    m_tDecoder.Stop();
+    m_decoder.m_bEndDecoding = true;
+
+    m_bStopDecoding->Disable();
+
+    if(m_bDecoderStopped)
+        m_decoder.m_DecoderStopMutex.Unlock();
+
+    m_thDecoder->Wait(); /* wait for decoder thread to end */
+    delete m_thDecoder;
+    m_thDecoder = NULL;
 }
 
 void WeatherFaxWizard::MakeNewCoordinates()
 {
-    if(m_curCoords && !m_curCoords->Station.empty() && !m_curCoords->Area.empty()) {
-        m_bRemoveCoordSet->Disable();
-        m_cbCoordSet->Append(m_curCoords->name);
-        return;
-    }
-
     /* make a new coord, yet making sure it has a unique name */
     wxString newcoordname;
     int cc = m_Coords.GetCount();
@@ -144,24 +156,23 @@ void WeatherFaxWizard::MakeNewCoordinates()
         m_cbCoordSet->Append(m_Coords[i]->name);
     }
 
-    m_cbCoordSet->SetSelection(sel);
     m_newCoords = new WeatherFaxImageCoordinates(newcoordname);
-
     SetCoords(sel);
-}
 
+    if(m_Coords.GetCount() == 0)
+        m_cbCoordSet->Disable();
+}
 
 void WeatherFaxWizard::OnDecoderTimer( wxTimerEvent & )
 {
-    if(m_decoder->m_DecoderMutex.Lock() == wxMUTEX_NO_ERROR) {
-        m_decoder->minus_saturation_threshold =
-            -(1 + (double)m_sMinusSaturationThreshold->GetValue()/10);
+    if(m_decoder.m_DecoderMutex.Lock() == wxMUTEX_NO_ERROR) {
+        if(!m_thDecoder->IsRunning())
+            m_bStopDecoding->Disable();
 
-        if(m_decoder->imageline &&
-           (!m_wfimg.m_origimg.IsOk() || m_decoder->imageline != m_wfimg.m_origimg.GetHeight())) {
-            int w = m_decoder->m_imagewidth, h = m_decoder->imageline;
+        int w = m_decoder.m_imagewidth, h = m_decoder.m_imageline;
+        if(h && (!m_wfimg.m_origimg.IsOk() || h != m_wfimg.m_origimg.GetHeight())) {
             m_wfimg.m_origimg = wxImage( w, h );
-            memcpy(m_wfimg.m_origimg.GetData(), m_decoder->imgdata, w*h*3);
+            memcpy(m_wfimg.m_origimg.GetData(), m_decoder.m_imgdata, w*h*3);
 
             m_sPhasing->SetRange(0, m_wfimg.m_origimg.GetWidth()-1);
 
@@ -182,7 +193,7 @@ void WeatherFaxWizard::OnDecoderTimer( wxTimerEvent & )
             m_swFaxArea1->SetScrollbars(1, 1, pw, ph, x, y);
             m_swFaxArea1->Refresh();
         }
-        m_decoder->m_DecoderMutex.Unlock();
+        m_decoder.m_DecoderMutex.Unlock();
         m_bPhasingArea->Refresh();
     }
     m_tDecoder.Start(1000, wxTIMER_ONE_SHOT);
@@ -190,7 +201,18 @@ void WeatherFaxWizard::OnDecoderTimer( wxTimerEvent & )
 
 void WeatherFaxWizard::OnStopDecoding( wxCommandEvent& event )
 {
-    m_decoder->m_bEndDecoding = true;
+    if((m_bDecoderStopped = !m_bDecoderStopped)) {
+        m_bStopDecoding->SetLabel(_("Start"));
+        m_decoder.m_DecoderStopMutex.Lock();
+    } else {
+        m_bStopDecoding->SetLabel(_("Stop"));
+        m_decoder.m_DecoderStopMutex.Unlock();
+    }
+}
+
+void WeatherFaxWizard::OnDecoderOptions( wxCommandEvent& event )
+{
+    m_DecoderOptionsDialog->ShowModal();
 }
 
 void WeatherFaxWizard::OnPaintPhasing( wxPaintEvent& event )
@@ -201,19 +223,19 @@ void WeatherFaxWizard::OnPaintPhasing( wxPaintEvent& event )
 
     wxPaintDC dc( window );
 
-    if(!m_decoder)
+    if(!m_thDecoder)
         return;
 
     dc.SetBrush(wxBrush(*wxBLACK));
     dc.SetPen(wxPen( *wxBLACK, 1 ));
 
-    int blocksize = m_decoder->blocksize;
+    int blocksize = m_decoder.m_blocksize;
     int w, h;
     int s = 4;
     window->GetSize(&w, &h);
     for(int x = 0; x<w; x++) {
         int i = x * blocksize / w;
-        int y = h*((m_decoder->imageline ? m_decoder->datadouble[i] : 0) +(s/2))/s;
+        int y = h*((m_decoder.m_imageline ? m_decoder.datadouble[i] : 0) +(s/2))/s;
         dc.DrawLine(x, h/2, x, y);
     }
 
@@ -224,8 +246,8 @@ void WeatherFaxWizard::OnPaintPhasing( wxPaintEvent& event )
     p = h*(-1+(s/2))/s;
     dc.DrawLine(0, p, w, p);
     
-    dc.SetPen(wxPen( *wxGREEN, 1 ));
-    p = h*(m_decoder->minus_saturation_threshold+(s/2))/s;
+    dc.SetPen(wxPen( wxColour(32,192,32), 1 ));
+    p = h*(m_decoder.m_minus_saturation_threshold+(s/2))/s;
     dc.DrawLine(0, p, w, p);
 }
 
@@ -248,10 +270,12 @@ void WeatherFaxWizard::OnWizardPageChanged( wxWizardEvent& event )
             m_sCoord2XUnMapped->SetValue(round(mx2));
             m_sCoord2YUnMapped->SetValue(round(my2));
     
-            m_sCoord1LatUnMapped->SetValue(m_sCoord1Lat->GetValue());
-            m_sCoord1LonUnMapped->SetValue(m_sCoord1Lon->GetValue());
-            m_sCoord2LatUnMapped->SetValue(m_sCoord2Lat->GetValue());
-            m_sCoord2LonUnMapped->SetValue(m_sCoord2Lon->GetValue());
+            double coord1lat, coord1lon, coord2lat, coord2lon;
+            m_tCoord1Lat->GetValue().ToDouble(&coord1lat);
+            m_tCoord1Lon->GetValue().ToDouble(&coord1lon);
+            m_tCoord2Lat->GetValue().ToDouble(&coord2lat);
+            m_tCoord2Lon->GetValue().ToDouble(&coord2lon);
+            WriteMappingLatLon(coord1lat, coord1lon, coord2lat, coord2lon);
         }
 
         SetUnMappedCoordRanges();
@@ -269,14 +293,63 @@ void WeatherFaxWizard::OnWizardPageChanged( wxWizardEvent& event )
         if(!ApplyMapping()) {
             wxMessageDialog w
                 ( this, _("Failed to apply mapping\nCheck Mapping Correction Parameters"),
-                            _("Mapping"), wxOK | wxICON_ERROR );
+                  _("Mapping"), wxOK | wxICON_ERROR );
             w.ShowModal();
             ShowPage(m_pages[1], true);
         } else if(m_curCoords->mapping == WeatherFaxImageCoordinates::MERCATOR &&
-                  m_curCoords->mappingmultiplier == 1 &&
-                  m_curCoords->mappingratio == 1)
-            EndModal(wxID_OK);
+                m_curCoords->mappingmultiplier == 1 &&
+                  m_curCoords->mappingratio == 1) {
+            wxWizardEvent dummy;
+            OnWizardFinished( dummy );
+            if(IsModal())
+                EndModal(wxID_OK);
+            else
+                Hide();
+        }
     }
+}
+
+void WeatherFaxWizard::OnWizardCancel( wxWizardEvent& event )
+{
+    delete m_newCoords;
+
+    if(m_parent.WizardCleanup(this)) {
+        m_tDecoder.Stop();
+        delete &m_wfimg;
+    }
+}
+
+void WeatherFaxWizard::OnWizardFinished( wxWizardEvent& event )
+{
+    /* add coordinates to set if it is the new one, but make
+       sure it has a unique name */
+    int sel = m_cbCoordSet->GetSelection();
+    if(sel == -1)
+        sel = m_SelectedIndex;
+
+    if(sel == 0) {
+        int cc = m_Coords.GetCount();
+        wxString newname = m_newCoords->name, newnumberedname;
+        for(int n=0, i=-1; i != cc; n++) {
+            newnumberedname = newname;
+            if(n)
+                newnumberedname += wxString::Format(_T(" %d"), n);
+
+            if(!cc)
+                break;
+            for(i=0; i<cc; i++)
+                if(m_Coords[i]->name == newnumberedname)
+                    break;
+        }
+        m_newCoords->name = newnumberedname;
+        m_Coords.Append(m_newCoords);
+    }
+
+    StoreCoords();
+    StoreMappingParams();
+
+    if(m_parent.WizardCleanup(this))
+        m_parent.WizardFinished(this);
 }
 
 void WeatherFaxWizard::OnSetSizes( wxInitDialogEvent& event )
@@ -299,10 +372,10 @@ void WeatherFaxWizard::UpdateMappingControls()
 {
     switch((WeatherFaxImageCoordinates::MapType)m_cMapping->GetSelection()) {
     case WeatherFaxImageCoordinates::MERCATOR: /* nomapping */
-        m_sMappingPoleX->Disable();
-        m_sMappingPoleY->Disable();
-        m_sMappingEquatorY->Disable();
-        m_tTrueRatio->Disable();
+        m_sMappingPoleX->Disable(),    m_sMappingPoleX->SetValue(0);
+        m_sMappingPoleY->Disable(),    m_sMappingPoleY->SetValue(0);
+        m_sMappingEquatorY->Disable(), m_sMappingEquatorY->SetValue(0);
+        m_tTrueRatio->Disable(),       m_tTrueRatio->SetValue(_T("1.0"));
         m_bGetMapping->Disable();
         m_bGetEquator->Disable();
         break;
@@ -345,10 +418,8 @@ void WeatherFaxWizard::GetMappingPolar(bool onlyequator)
     double mapping1x = m_sCoord1XUnMapped->GetValue(), mapping1y = m_sCoord1YUnMapped->GetValue();
     double mapping2x = m_sCoord2XUnMapped->GetValue(), mapping2y = m_sCoord2YUnMapped->GetValue();
 
-    double mapping1lat = m_sCoord1LatUnMapped->GetValue();
-    double mapping2lat = m_sCoord2LatUnMapped->GetValue();
-    double mapping1lon = m_sCoord1LonUnMapped->GetValue();
-    double mapping2lon = m_sCoord2LonUnMapped->GetValue();
+    double mapping1lat, mapping1lon, mapping2lat, mapping2lon;
+    ReadMappingLatLon(mapping1lat, mapping1lon, mapping2lat, mapping2lon);
 
     bool south = false;
     if(mapping1lat * mapping2lat < 0) {
@@ -515,8 +586,8 @@ or the coordinates specified are not correct\n"),
 
 void WeatherFaxWizard::GetMappingFixedFlat()
 {
-    double mapping1lat = m_sCoord1LatUnMapped->GetValue();
-    double mapping2lat = m_sCoord2LatUnMapped->GetValue();
+    double mapping1lat, mapping1lon, mapping2lat, mapping2lon;
+    ReadMappingLatLon(mapping1lat, mapping1lon, mapping2lat, mapping2lon);
 
     double pp1 = 1 - mapping1lat / 90;
     double pp2 = 1 - mapping2lat / 90;
@@ -540,6 +611,43 @@ void WeatherFaxWizard::GetMappingFixedFlat()
     m_sMappingEquatorY->SetValue(inputequator);
 }
 
+void WeatherFaxWizard::GetAspectRatio()
+{
+    /* calculate aspect ratio so that resulting image is mercator and can be
+       easily exported to a kap file */
+
+    wxPoint p1, p2;
+    double mapping1lat, mapping1lon, mapping2lat, mapping2lon;
+    ReadMappingLatLon(mapping1lat, mapping1lon, mapping2lat, mapping2lon);
+
+    PlugIn_ViewPort smvp;
+    smvp.clat = 0, smvp.clon = 0, smvp.view_scale_ppm = 1, smvp.skew = 0, smvp.rotation = 0;
+    smvp.m_projection_type = PI_PROJECTION_MERCATOR;
+    smvp.pix_width = smvp.pix_height = 1024;
+    if(fabs(mapping1lon - mapping2lon) > 180)
+        smvp.clon = 180;
+
+    GetCanvasPixLL(&smvp, &p1, mapping1lat, mapping1lon);
+    GetCanvasPixLL(&smvp, &p2, mapping2lat, mapping2lon);
+
+    double p1x, p1y, p2x, p2y;
+
+    double x1 = m_sCoord1XUnMapped->GetValue(), y1 = m_sCoord1YUnMapped->GetValue();
+    double x2 = m_sCoord2XUnMapped->GetValue(), y2 = m_sCoord2YUnMapped->GetValue();
+
+    double dx1 = p2.x - p1.x, dy1 = p2.y - p1.y;
+    WeatherFaxImageCoordinates oldcoords = *m_curCoords; /* don't clobber incase of cancel */
+    StoreMappingParams();
+    m_curCoords->mappingratio = 1;
+    m_wfimg.MakeMappedImage(this, true);
+    m_wfimg.InputToMercator(x1, y1, p1x, p1y);
+    m_wfimg.InputToMercator(x2, y2, p2x, p2y);
+    double dx2 = p2x - p1x, dy2 = p2y - p1y;
+    *m_curCoords = oldcoords; /* restore coordinates */
+
+    m_tMappingRatio->SetValue(wxString::Format(_T("%.4f"), dx1 / dy1 * dy2 / dx2));
+}
+
 void WeatherFaxWizard::OnGetMapping( wxCommandEvent& event )
 {
     switch((WeatherFaxImageCoordinates::MapType)m_cMapping->GetSelection()) {
@@ -550,12 +658,12 @@ void WeatherFaxWizard::OnGetMapping( wxCommandEvent& event )
         GetMappingFixedFlat();
         break;
     default:
-        wxMessageDialog w
-            ( this, _("Calculating Mapping not yet supported.\n"),
-              _("Mapping"), wxOK | wxICON_WARNING );
+        wxMessageDialog w( this, _("Calculating Mapping not yet supported.\n"),
+                           _("Mapping"), wxOK | wxICON_WARNING );
         w.ShowModal();
         return;
     }
+    GetAspectRatio();
     Refresh();
 }
 
@@ -566,13 +674,17 @@ void WeatherFaxWizard::OnGetEquator( wxCommandEvent& event )
         GetMappingPolar(true);
         break;
     default:
-        wxMessageDialog w
-            ( this, _("Calculating Equator not yet supported.\n"),
-              _("Mapping"), wxOK | wxICON_WARNING );
+        wxMessageDialog w( this, _("Calculating Equator not yet supported.\n"),
+                           _("Mapping"), wxOK | wxICON_WARNING );
         w.ShowModal();
         return;
     }
     Refresh();
+}
+
+void WeatherFaxWizard::OnGetAspectRatio( wxCommandEvent& event )
+{
+    GetAspectRatio();
 }
 
 void WeatherFaxWizard::OnBitmapClickPage2( wxMouseEvent& event )
@@ -626,17 +738,26 @@ void WeatherFaxWizard::OnCoordText( wxCommandEvent& event )
 {
     int index = m_cbCoordSet->GetSelection();
     if(index == -1)
+#ifdef __WXOSX__
+        m_SelectedIndex = index;
+#else
         index = m_SelectedIndex;
+#endif
     else if(index != m_SelectedIndex)
         return;
 
-    m_cbCoordSet->SetString(m_SelectedIndex, event.GetString());
+    static bool recursion = false;
+    if(!recursion) {
+        recursion = true;
+        m_cbCoordSet->SetString(m_SelectedIndex, event.GetString());
+    }
+    recursion = false;
     m_curCoords->name = event.GetString();
 }
 
 void WeatherFaxWizard::OnRemoveCoords( wxCommandEvent& event )
 {
-    int selection = m_SelectedIndex;//m_cbCoordSet->GetSelection();
+    int selection = m_SelectedIndex;
     if(selection == 0) /* don't delete first item, button should be disabled anyway */
         return;
 
@@ -648,6 +769,7 @@ void WeatherFaxWizard::OnRemoveCoords( wxCommandEvent& event )
 
 void WeatherFaxWizard::StoreMappingParams()
 {
+    m_curCoords->rotation = (WeatherFaxImageCoordinates::RotationType)m_cRotation->GetSelection();
     m_curCoords->mapping = (WeatherFaxImageCoordinates::MapType)m_cMapping->GetSelection();
 
     m_curCoords->inputpole.x = m_sMappingPoleX->GetValue();
@@ -670,7 +792,7 @@ void WeatherFaxWizard::StoreMappingParams()
 bool WeatherFaxWizard::ApplyMapping()
 {
     if(!m_wfimg.m_mappedimg.IsOk())
-        if(!m_wfimg.MakeMappedImage(this, false))
+        if(!m_wfimg.MakeMappedImage(this))
             return false;
 
     double x1 = m_sCoord1XUnMapped->GetValue(), y1 = m_sCoord1YUnMapped->GetValue(), mx1, my1;
@@ -685,13 +807,18 @@ bool WeatherFaxWizard::ApplyMapping()
     m_wfimg.InputToMercator(x2, y2, mx2, my2);
     m_sCoord2X->SetValue(mx2);
     m_sCoord2Y->SetValue(my2);
-    
-    m_sCoord1Lat->SetValue(m_sCoord1LatUnMapped->GetValue());
-    m_sCoord1Lon->SetValue(m_sCoord1LonUnMapped->GetValue());
-    m_sCoord2Lat->SetValue(m_sCoord2LatUnMapped->GetValue());
-    m_sCoord2Lon->SetValue(m_sCoord2LonUnMapped->GetValue());
 
+    double mapping1lat, mapping1lon, mapping2lat, mapping2lon;
+    ReadMappingLatLon(mapping1lat, mapping1lon, mapping2lat, mapping2lon);
+
+    m_tCoord1Lat->SetValue(wxString::Format(_T("%.6f"), mapping1lat));
+    m_tCoord1Lon->SetValue(wxString::Format(_T("%.6f"), mapping1lon));
+    m_tCoord2Lat->SetValue(wxString::Format(_T("%.6f"), mapping2lat));
+    m_tCoord2Lon->SetValue(wxString::Format(_T("%.6f"), mapping2lon));
+
+#if !wxCHECK_VERSION(3, 0, 0)
     m_cbCoordSet->SetValue(m_curCoords->name);
+#endif
 
     Refresh();
     return true;
@@ -699,14 +826,14 @@ bool WeatherFaxWizard::ApplyMapping()
 
 void WeatherFaxWizard::SetUnMappedCoordRanges()
 {
-    int w = m_wfimg.m_phasedimg.GetWidth(), h = m_wfimg.m_phasedimg.GetHeight();
+    int w = m_wfimg.m_origimg.GetWidth(), h = m_wfimg.m_origimg.GetHeight();
+// wxMessageBox("SetUnMappedCcordRanges: (w) " + (wxString::Format(_T("%d"), w )));
     m_sCoord1XUnMapped->SetRange(0, w);
     m_sCoord2XUnMapped->SetRange(0, w);
     m_sCoord1YUnMapped->SetRange(0, h);
     m_sCoord2YUnMapped->SetRange(0, h);
 
-    m_swFaxArea2->SetScrollbars
-        (1, 1, m_wfimg.m_phasedimg.GetWidth(), m_wfimg.m_phasedimg.GetHeight());
+    m_swFaxArea2->SetScrollbars(1, 1, w, h);
 }
 
 void WeatherFaxWizard::SetCoordRanges()
@@ -752,12 +879,46 @@ back to this step and get the mapping parameters again to improve the estimate.\
     w.ShowModal();
 }
 
+void WeatherFaxWizard::ReadMappingLatLon(double &mapping1lat, double &mapping1lon,
+                                          double &mapping2lat, double &mapping2lon)
+{
+    double mapping1latminutes, mapping1lonminutes, mapping2latminutes, mapping2lonminutes;
+    mapping1lat = m_sCoord1LatUnMapped->GetValue();
+    m_tCoord1LatMinutesUnMapped->GetValue().ToDouble(&mapping1latminutes);
+    mapping1lat += ((mapping1lat > 0) ? mapping1latminutes : - mapping1latminutes) / 60;
+
+    mapping1lon = m_sCoord1LonUnMapped->GetValue();
+    m_tCoord1LonMinutesUnMapped->GetValue().ToDouble(&mapping1lonminutes);
+    mapping1lon += ((mapping1lon > 0) ? mapping1lonminutes : - mapping1lonminutes) / 60;
+
+    mapping2lat = m_sCoord2LatUnMapped->GetValue();
+    m_tCoord2LatMinutesUnMapped->GetValue().ToDouble(&mapping2latminutes);
+    mapping2lat += ((mapping2lat > 0) ? mapping2latminutes : - mapping2latminutes) / 60;
+
+    mapping2lon = m_sCoord2LonUnMapped->GetValue();
+    m_tCoord2LonMinutesUnMapped->GetValue().ToDouble(&mapping2lonminutes);
+    mapping2lon += ((mapping2lon > 0) ? mapping2lonminutes : - mapping2lonminutes) / 60;
+}
+
+void WeatherFaxWizard::WriteMappingLatLon(double mapping1lat, double mapping1lon,
+                                          double mapping2lat, double mapping2lon)
+{
+    m_sCoord1LatUnMapped->SetValue(trunc(mapping1lat)), mapping1lat -= trunc(mapping1lat);
+    m_tCoord1LatMinutesUnMapped->SetValue(wxString::Format(_T("%.4f"), 60*fabsf(mapping1lat)));
+    m_sCoord1LonUnMapped->SetValue(trunc(mapping1lon)), mapping1lon -= trunc(mapping1lon);
+    m_tCoord1LonMinutesUnMapped->SetValue(wxString::Format(_T("%.4f"), 60*fabsf(mapping1lon)));
+    m_sCoord2LatUnMapped->SetValue(trunc(mapping2lat)), mapping2lat -= trunc(mapping2lat);
+    m_tCoord2LatMinutesUnMapped->SetValue(wxString::Format(_T("%.4f"), 60*fabsf(mapping2lat)));
+    m_sCoord2LonUnMapped->SetValue(trunc(mapping2lon)), mapping2lon -= trunc(mapping2lon);
+    m_tCoord2LonMinutesUnMapped->SetValue(wxString::Format(_T("%.4f"), 60*fabsf(mapping2lon)));
+}
+
 void WeatherFaxWizard::UpdatePage1()
 {
     m_wfimg.phasing = m_sPhasing->GetValue();
     m_wfimg.skew = m_sSkew->GetValue();
     m_wfimg.filter = m_cFilter->GetSelection();
-    m_wfimg.rotation = m_cRotation->GetSelection();
+    m_curCoords->rotation = (WeatherFaxImageCoordinates::RotationType)m_cRotation->GetSelection();
     m_wfimg.MakePhasedImage();
     Refresh();
 }
@@ -768,26 +929,16 @@ void WeatherFaxWizard::UpdatePage1Rotation ( wxCommandEvent& event )
     m_swFaxArea1->SetScrollbars(1, 1, m_wfimg.m_phasedimg.GetWidth(), m_wfimg.m_phasedimg.GetHeight());
 }
 
-void WeatherFaxWizard::UpdatePage1( wxCommandEvent& event )
-{
-    UpdatePage1();
-}
-
-void WeatherFaxWizard::UpdatePage1( wxScrollEvent& event )
-{
-    UpdatePage1();
-}
-
 void WeatherFaxWizard::StoreCoords()
 {
     m_curCoords->p1.x = m_sCoord1X->GetValue();
     m_curCoords->p1.y = m_sCoord1Y->GetValue();
-    m_curCoords->lat1 = m_sCoord1Lat->GetValue();
-    m_curCoords->lon1 = m_sCoord1Lon->GetValue();
+    m_tCoord1Lat->GetValue().ToDouble(&m_curCoords->lat1);
+    m_tCoord1Lon->GetValue().ToDouble(&m_curCoords->lon1);
     m_curCoords->p2.x = m_sCoord2X->GetValue();
     m_curCoords->p2.y = m_sCoord2Y->GetValue();
-    m_curCoords->lat2 = m_sCoord2Lat->GetValue();
-    m_curCoords->lon2 = m_sCoord2Lon->GetValue();
+    m_tCoord2Lat->GetValue().ToDouble(&m_curCoords->lat2);
+    m_tCoord2Lon->GetValue().ToDouble(&m_curCoords->lon2);
 }
 
 void WeatherFaxWizard::SetCoords(int index)
@@ -804,7 +955,9 @@ void WeatherFaxWizard::SetCoords(int index)
 
     m_SelectedIndex = index;
 
+#if !wxCHECK_VERSION(3, 0, 0)
     m_cbCoordSet->SetValue(m_curCoords->name);
+#endif
 
     double x1 = m_curCoords->p1.x, y1 = m_curCoords->p1.y;
     double x2 = m_curCoords->p2.x, y2 = m_curCoords->p2.y;
@@ -822,11 +975,7 @@ void WeatherFaxWizard::SetCoords(int index)
     m_sCoord2XUnMapped->SetValue(mx2);
     m_sCoord2YUnMapped->SetValue(my2);
     
-    m_sCoord1LatUnMapped->SetValue(m_curCoords->lat1);
-    m_sCoord1LonUnMapped->SetValue(m_curCoords->lon1);
-    
-    m_sCoord2LatUnMapped->SetValue(m_curCoords->lat2);
-    m_sCoord2LonUnMapped->SetValue(m_curCoords->lon2);
+    WriteMappingLatLon(m_curCoords->lat1, m_curCoords->lon1, m_curCoords->lat2, m_curCoords->lon2);
     
     m_cMapping->SetSelection((int)m_curCoords->mapping);
     UpdateMappingControls();
@@ -837,10 +986,10 @@ void WeatherFaxWizard::SetCoords(int index)
     m_tTrueRatio->SetValue(wxString::Format(_T("%.4f"), m_curCoords->inputtrueratio));
 
     m_tMappingMultiplier->SetValue
-        (wxString::Format(_("%.2f"), m_curCoords->mappingmultiplier));
+        (wxString::Format(_T("%.2f"), m_curCoords->mappingmultiplier));
     
     m_tMappingRatio->SetValue
-        (wxString::Format(_("%.2f"), m_curCoords->mappingratio));
+        (wxString::Format(_T("%.2f"), m_curCoords->mappingratio));
 
     Refresh();
 }
@@ -848,6 +997,22 @@ void WeatherFaxWizard::SetCoords(int index)
 void WeatherFaxWizard::OnSpin( wxSpinEvent& event )
 {
     Refresh();
+}
+
+void WeatherFaxWizard::OnShowLatLonMinutes( wxCommandEvent& event )
+{
+    bool b = event.IsChecked();
+    m_stMinutes->Show(b);
+    m_tCoord1LatMinutesUnMapped->Show(b);
+    m_tCoord1LonMinutesUnMapped->Show(b);
+    m_tCoord2LatMinutesUnMapped->Show(b);
+    m_tCoord2LonMinutesUnMapped->Show(b);
+
+    // why this works, I will probably never know
+    int w, h;
+    GetSize(&w, &h);
+    SetSize(w + 1, h);
+    SetSize(w - 1, h);
 }
 
 void WeatherFaxWizard::OnPaintImage( wxPaintEvent& event)
@@ -890,7 +1055,7 @@ void WeatherFaxWizard::OnPaintImage( wxPaintEvent& event)
         dc.DrawLine(x1-x, 0, x1-x, h);
         dc.DrawLine(0, y1-y, w, y1-y);
 
-        dc.SetPen(wxPen( *wxGREEN, 1 ));
+        dc.SetPen(wxPen( wxColour(32,192,32), 1 ));
         dc.DrawLine(x2-x, 0, x2-x, h);
         dc.DrawLine(0, y2-y, w, y2-y);
 

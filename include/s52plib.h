@@ -173,13 +173,13 @@ public:
     void DestroyRuleNode( Rule *pR );
     void DestroyRulesChain( Rules *top );
     
-//#ifdef ocpnUSE_GL
     //    For OpenGL
     int RenderObjectToGL( const wxGLContext &glcc, ObjRazRules *rzRules,
                           ViewPort *vp, wxRect &render_rect );
     int RenderAreaToGL( const wxGLContext &glcc, ObjRazRules *rzRules,
                         ViewPort *vp, wxRect &render_rect );
-//#endif
+
+    void RenderPolytessGL( ObjRazRules *rzRules, ViewPort *vp,double z_clip_geom, wxPoint *ptp );
 
     bool EnableGLLS(bool benable);
 
@@ -258,7 +258,12 @@ private:
     char *RenderCS( ObjRazRules *rzRules, Rules *rules );
     int RenderGLLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp );
     int RenderGLLC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp );
-    
+
+    void RenderCARCGL( double sectr1, double sectr2,
+                      wxString& outline_color, long outline_width,
+                      wxString& arc_color, long arc_width,
+                      long sector_radius, long radius );
+
     void UpdateOBJLArray( S57Obj *obj );
 
     render_canvas_parms* CreatePatternBufferSpec( ObjRazRules *rzRules,

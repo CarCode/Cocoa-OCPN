@@ -1,4 +1,4 @@
-/***************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
@@ -30,7 +30,7 @@ struct WeatherFaxImageCoordinates
 {
 WeatherFaxImageCoordinates(wxString n) : name(n),
         p1(wxPoint(0, 0)), p2(wxPoint(0, 0)), lat1(0), lon1(0), lat2(0), lon2(0),
-        mapping(MERCATOR), inputpole(wxPoint(0,0)), inputequator(0), inputtrueratio(1),
+        rotation(NONE), mapping(MERCATOR), inputpole(wxPoint(0,0)), inputequator(0), inputtrueratio(1),
         mappingmultiplier(1), mappingratio(1)
         {}
 
@@ -38,20 +38,21 @@ WeatherFaxImageCoordinates(wxString n) : name(n),
     wxPoint p1, p2;
     double lat1, lon1, lat2, lon2;
 
+    enum RotationType {NONE, CCW, CW, R180};
+    RotationType rotation;
+
     enum MapType {MERCATOR, POLAR, CONIC, FIXED_FLAT, MAP_TYPES};
     MapType mapping;
     wxPoint inputpole;
     double inputequator, /* y value */ inputtrueratio;
     double mappingmultiplier, mappingratio;
 
-    wxString Station, Area;
-
 /*
   (p1.x - x) / (lat1 - lat(x)) = (p2.x - p1.x) / (lat2 - lat1)
   lat1 - lat(x) = (p1.x - x) * (lat2 - lat1) / (p2.x - p1.x)
   lat(x) = lat1 - (p1.x - x) * (lat2 - lat1) / (p2.x - p1.x)
 */
-    double lon(int x) {
+    double lon(int x) { 
         double d = (lon2 - lon1);
         while(d <= -180) d += 360;
         while(d >=  180) d -= 360;
@@ -68,9 +69,16 @@ WeatherFaxImageCoordinates(wxString n) : name(n),
         // y1*p2.y - y1*eq = y2*p1.y - y2*eq;
         double eq = (y1*p2.y - y2*p1.y) / (y1 - y2);
 
-        //        y1/(p1.y-eq) = yy/(y-eq);
-        //        y1*(y-eq)/(p1.y-eq) = yy;
-        double yy = y1*(y-eq)/(p1.y-eq);
+        double yy;
+        // for accuracy use reference furthest from equator,
+        // and to avoid case where p1.y-eq == 0
+        if(fabsf(p1.y - eq) > fabsf(p2.y - eq))
+            //        y1/(p1.y-eq) = yy/(y-eq);
+            //        y1*(y-eq)/(p1.y-eq) = yy;
+            yy = y1*(y-eq)/(p1.y-eq);
+        else
+            //        y2*(y-eq)/(p2.y-eq) = yy;
+            yy = y2*(y-eq)/(p2.y-eq);
 
         return 90*(4/M_PI*atan(exp(yy)) - 1);
     }
@@ -87,7 +95,7 @@ class WeatherFaxImage
 public:
         WeatherFaxImage(wxImage img, int transparency, int whitetransparency, bool invert)
             : m_origimg(img),
-        phasing(0), skew(0), filter(0), rotation(0),
+        phasing(0), skew(0), filter(0),
         m_Coords(NULL),
         m_CacheBitmap(NULL), m_gltextures(NULL), m_numgltexturesw(0), m_numgltexturesh(0),
         m_iTransparency(transparency), m_iWhiteTransparency(whitetransparency), m_bInvert(invert)
@@ -107,15 +115,15 @@ public:
 
     /* page 1 */
     void MakePhasedImage();
-    int phasing, skew, filter, rotation;
+    int phasing, skew, filter;
     wxImage m_phasedimg;
 
     /* page 2 */
     void InputToMercator(double px, double py, double &mx, double &my);
     void MercatorToInput(double mx, double my, double &px, double &py);
-    bool MakeMappedImage(wxWindow *parent, bool paramsonly);
+    bool MakeMappedImage(wxWindow *parent, bool paramsonly=false);
 
-    double inputheight, aspectratio; /* used internally */
+    double inputheight; /* used internally */
     wxPoint mercatoroffset;
 
     wxImage m_mappedimg;
@@ -123,7 +131,7 @@ public:
 
     /* rendering */
     void FreeData();
-    bool GetOverlayCoords(PlugIn_ViewPort *vp, wxPoint &p0, wxPoint &pwh, int &w, int &h);
+    bool GetOverlayCoords(PlugIn_ViewPort *vp, wxPoint p[3], int &w, int &h);
     void RenderImage(wxDC &dc, PlugIn_ViewPort *vp);
     void RenderImageGL(PlugIn_ViewPort *vp);
 

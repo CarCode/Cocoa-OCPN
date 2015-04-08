@@ -1,11 +1,11 @@
-/***************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2014 by Sean D'Epagnier                                 *
  *   sean at depagnier dot com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -32,10 +32,68 @@
 #include "FaxDecoder.h"
 #include "WeatherFaxImage.h"
 #include "WeatherFax.h"
+#include "DecoderOptionsDialog.h"
 #include "WeatherFaxWizard.h"
 #include "AboutDialog.h"
+#include "icons.h"
+
+#include "georef.h"
 
 #include "wximgkap.h"
+
+/* XPM */
+const char * box_xpm[] = {
+"20 20 3 1",
+" 	c None",
+".	c #FFFFFF",
+"+	c #333333",
+"....................",
+".++++++++++++++++++.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".+................+.",
+".++++++++++++++++++.",
+"...................."};
+
+/* XPM */
+const char * check_xpm[] = {
+"20 20 3 1",
+" 	c None",
+".	c #FFFFFF",
+"+	c #333333",
+"....................",
+".++++++++++++++++++.",
+".+................+.",
+".+.++..........++.+.",
+".+.+++........+++.+.",
+".+..+++......+++..+.",
+".+...+++....+++...+.",
+".+....+++..+++....+.",
+".+.....++++++.....+.",
+".+......++++......+.",
+".+......++++......+.",
+".+.....++++++.....+.",
+".+....+++..+++....+.",
+".+...+++....+++...+.",
+".+..+++......+++..+.",
+".+.+++........+++.+.",
+".+.++..........++.+.",
+".+................+.",
+".++++++++++++++++++.",
+"...................."};
 
 /* replace characters a in input with b */
 wxString ReplaceChar(wxString input, wxChar a, wxChar b)
@@ -74,22 +132,15 @@ int AttributeInt(TiXmlElement *e, const char *name, int def)
 }
 
 #define FAIL(X) do { error = X; goto failed; } while(0)
-WeatherFax::WeatherFax( weatherfax_pi &_weatherfax_pi, wxWindow* parent)
-    : WeatherFaxBase( parent ),
-      m_SchedulesDialog(_weatherfax_pi, this),
-      m_InternetRetrievalDialog(_weatherfax_pi, this),
-      m_weatherfax_pi(_weatherfax_pi)
+static void LoadCoordinatesFromXml(WeatherFaxImageCoordinateList &coords, wxString coordinatesets)
 {
-    UpdateMenuStates();
+    TiXmlDocument doc;
 
     wxString error;
     wxString coordinatesets_path = weatherfax_pi::StandardPath();
     wxString s = wxFileName::GetPathSeparator();
     wxString default_coordinatesets_path = *GetpSharedDataLocation() + _T("plugins")
-        + s + _T("weatherfax") + s + _T("data") + _T("/");
-    wxString coordinatesets = _T("WeatherFaxCoordinateSets.xml");
-    
-    TiXmlDocument doc;
+        + s + _T("weatherfax_pi") + s + _T("data") + s;
 
     if(!doc.LoadFile((coordinatesets_path + coordinatesets).mb_str()) &&
        !doc.LoadFile((default_coordinatesets_path + coordinatesets).mb_str()))
@@ -99,7 +150,7 @@ WeatherFax::WeatherFax( weatherfax_pi &_weatherfax_pi, wxWindow* parent)
 
         if(strcmp(root.Element()->Value(), "WeatherFaxCoordinates"))
             FAIL(_("Invalid xml file"));
-        
+
         for(TiXmlElement* e = root.FirstChild().Element(); e; e = e->NextSiblingElement())
             if(!strcmp(e->Value(), "Coordinate")) {
                 wxString name = wxString::FromUTF8(e->Attribute("Name"));
@@ -116,6 +167,16 @@ WeatherFax::WeatherFax( weatherfax_pi &_weatherfax_pi, wxWindow* parent)
                 coord->lat2 = AttributeDouble(e, "Lat2", 0);
                 coord->lon2 = AttributeDouble(e, "Lon2", 0);
 
+                wxString rotation = wxString::FromUTF8(e->Attribute("Rotation"));
+                if(rotation == _T("CW"))
+                    coord->rotation = WeatherFaxImageCoordinates::CW;
+                else if(rotation == _T("CCW"))
+                    coord->rotation = WeatherFaxImageCoordinates::CCW;
+                else if(rotation == _T("180"))
+                    coord->rotation = WeatherFaxImageCoordinates::R180;
+                else
+                    coord->rotation = WeatherFaxImageCoordinates::NONE;
+
                 coord->mapping = WeatherFaxImageCoordinates::GetMapType
                     (wxString::FromUTF8(e->Attribute("Mapping")));
   
@@ -127,27 +188,41 @@ WeatherFax::WeatherFax( weatherfax_pi &_weatherfax_pi, wxWindow* parent)
                 coord->mappingmultiplier = AttributeDouble(e, "MappingMultiplier", 1.0);
                 coord->mappingratio = AttributeDouble(e, "MappingRatio", 1.0);
 
-                coord->Station = wxString::FromUTF8(e->Attribute("Station"));
-                coord->Area = wxString::FromUTF8(e->Attribute("Area"));
-
-                m_Coords.Append(coord);
-            }
+                coords.Append(coord);
+            } else
+                FAIL(_("Unrecognized xml node: ") + wxString::FromUTF8(e->Value()));
     }
+    return;
+failed:
+    wxLogMessage(_("Weather Fax") + wxString(_T(" : ")) + error);
+//    wxMessageDialog mdlg(NULL, error, _("Weather Fax"), wxOK | wxICON_ERROR);
+//    mdlg.ShowModal();
+}
+
+WeatherFax::WeatherFax( weatherfax_pi &_weatherfax_pi, wxWindow* parent)
+    : WeatherFaxBase( parent ),
+      m_SchedulesDialog(_weatherfax_pi, this),
+      m_InternetRetrievalDialog(_weatherfax_pi, this),
+      m_weatherfax_pi(_weatherfax_pi)
+{
+    wxIcon icon;
+    icon.CopyFromBitmap(*_img_weatherfax);
+    m_SchedulesDialog.SetIcon(icon);
+    m_InternetRetrievalDialog.SetIcon(icon);
+
+    UpdateMenuStates();
+
+    LoadCoordinatesFromXml(m_BuiltinCoords, _T("CoordinateSets.xml"));
+    LoadCoordinatesFromXml(m_UserCoords, _T("UserCoordinateSets.xml"));
 
     if(m_weatherfax_pi.m_bLoadSchedulesStart)
         m_SchedulesDialog.Load();
 
-    return;
-failed:
-    wxMessageDialog mdlg(NULL, error, _("Weather Fax"), wxOK | wxICON_ERROR);
-    mdlg.ShowModal();
+    m_tDeleteAudioWizard.Connect(wxEVT_TIMER, wxTimerEventHandler( WeatherFax::OnDeleteWizardTimer ), NULL, this);
 }
 
-WeatherFax::~WeatherFax()
+static void SaveCoordinatesToXml(WeatherFaxImageCoordinateList &coords, wxString filename)
 {
-    wxString coordinatesets_path = weatherfax_pi::StandardPath();
-    wxString coordinatesets = _T("WeatherFaxCoordinateSets.xml");
-    
     TiXmlDocument doc;
     TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "utf-8", "" );
     doc.LinkEndChild( decl );
@@ -155,55 +230,59 @@ WeatherFax::~WeatherFax()
     TiXmlElement * root = new TiXmlElement( "WeatherFaxCoordinates" );
     doc.LinkEndChild( root );
 
-    for(unsigned int i=0; i<m_Coords.GetCount(); i++) {
+    for(unsigned int i=0; i<coords.GetCount(); i++) {
         TiXmlElement *c = new TiXmlElement( "Coordinate" );
 
-        c->SetAttribute("Name", m_Coords[i]->name.mb_str());
+        c->SetAttribute("Name", coords[i]->name.mb_str());
 
-        c->SetAttribute("X1", wxString::Format(_T("%d"), m_Coords[i]->p1.x).mb_str());
-        c->SetAttribute("Y1", wxString::Format(_T("%d"), m_Coords[i]->p1.y).mb_str());
-        c->SetAttribute("Lat1", wxString::Format(_T("%.5f"), m_Coords[i]->lat1).mb_str());
-        c->SetAttribute("Lon1", wxString::Format(_T("%.5f"), m_Coords[i]->lon1).mb_str());
+        c->SetAttribute("X1", wxString::Format(_T("%d"), coords[i]->p1.x).mb_str());
+        c->SetAttribute("Y1", wxString::Format(_T("%d"), coords[i]->p1.y).mb_str());
+        c->SetAttribute("Lat1", wxString::Format(_T("%.5f"), coords[i]->lat1).mb_str());
+        c->SetAttribute("Lon1", wxString::Format(_T("%.5f"), coords[i]->lon1).mb_str());
+        
+        c->SetAttribute("X2", wxString::Format(_T("%d"), coords[i]->p2.x).mb_str());
+        c->SetAttribute("Y2", wxString::Format(_T("%d"), coords[i]->p2.y).mb_str());
+        c->SetAttribute("Lat2", wxString::Format(_T("%.5f"), coords[i]->lat2).mb_str());
+        c->SetAttribute("Lon2", wxString::Format(_T("%.5f"), coords[i]->lon2).mb_str());
 
-        c->SetAttribute("X2", wxString::Format(_T("%d"), m_Coords[i]->p2.x).mb_str());
-        c->SetAttribute("Y2", wxString::Format(_T("%d"), m_Coords[i]->p2.y).mb_str());
-        c->SetAttribute("Lat2", wxString::Format(_T("%.5f"), m_Coords[i]->lat2).mb_str());
-        c->SetAttribute("Lon2", wxString::Format(_T("%.5f"), m_Coords[i]->lon2).mb_str());
+        switch(coords[i]->rotation) {
+        case WeatherFaxImageCoordinates::CW:  c->SetAttribute("Rotation", "CW"); break;
+        case WeatherFaxImageCoordinates::CCW: c->SetAttribute("Rotation", "CCW"); break;
+        case WeatherFaxImageCoordinates::R180: c->SetAttribute("Rotation", "180"); break;
+        default: break;
+        }
+    
+        c->SetAttribute("Mapping", WeatherFaxImageCoordinates::MapName(coords[i]->mapping).mb_str());
 
-        c->SetAttribute("Mapping", WeatherFaxImageCoordinates::MapName(m_Coords[i]->mapping).mb_str());
-
-        if(m_Coords[i]->mapping != WeatherFaxImageCoordinates::MERCATOR) {
-            if(m_Coords[i]->mapping != WeatherFaxImageCoordinates::FIXED_FLAT)
+        if(coords[i]->mapping != WeatherFaxImageCoordinates::MERCATOR) {
+            if(coords[i]->mapping != WeatherFaxImageCoordinates::FIXED_FLAT)
                 c->SetAttribute("InputPoleX", wxString::Format
-                                (_T("%d"), m_Coords[i]->inputpole.x).mb_str());
+                                (_T("%d"), coords[i]->inputpole.x).mb_str());
             c->SetAttribute("InputPoleY", wxString::Format
-                            (_T("%d"), m_Coords[i]->inputpole.y).mb_str());
+                            (_T("%d"), coords[i]->inputpole.y).mb_str());
             c->SetAttribute("InputEquator", wxString::Format
-                            (_T("%.5f"), m_Coords[i]->inputequator).mb_str());
+                            (_T("%.5f"), coords[i]->inputequator).mb_str());
             c->SetAttribute("InputTrueRatio", wxString::Format
-                            (_T("%.4f"), m_Coords[i]->inputtrueratio).mb_str());
-
-            if(!m_Coords[i]->Station.empty())
-                c->SetAttribute("Station", m_Coords[i]->Station.mb_str());
-            if(!m_Coords[i]->Area.empty())
-                c->SetAttribute("Area", m_Coords[i]->Area.mb_str());
-
+                            (_T("%.4f"), coords[i]->inputtrueratio).mb_str());
         }
 
         c->SetAttribute("MappingMultiplier", wxString::Format
-                        (_T("%.4f"), m_Coords[i]->mappingmultiplier).mb_str());
+                        (_T("%.4f"), coords[i]->mappingmultiplier).mb_str());
         c->SetAttribute("MappingRatio", wxString::Format
-                        (_T("%.4f"), m_Coords[i]->mappingratio).mb_str());
+                        (_T("%.4f"), coords[i]->mappingratio).mb_str());
 
         root->LinkEndChild(c);
     }
 
-    wxString filename = coordinatesets_path + coordinatesets;
-    if(!doc.SaveFile(filename.mb_str())) {
-        wxMessageDialog mdlg(this, _("Failed to save xml file: ") + filename,
-                             _("Weather Fax"), wxOK | wxICON_ERROR);
-        mdlg.ShowModal();
-    }
+    wxString coordinatesets_path = weatherfax_pi::StandardPath();
+    if(!doc.SaveFile((coordinatesets_path + filename).mb_str()))
+        wxLogMessage(_("Weather Fax") + wxString(_T(": ")) + _("Failed to save xml file: ") + filename);
+}
+
+WeatherFax::~WeatherFax()
+{
+    SaveCoordinatesToXml(m_BuiltinCoords, _T("CoordinateSets.xml"));
+    SaveCoordinatesToXml(m_UserCoords, _T("UserCoordinateSets.xml"));
 
     for(unsigned int i=0; i<m_Faxes.size(); i++)
         delete m_Faxes[i];
@@ -220,9 +299,11 @@ void WeatherFax::OnFaxes( wxCommandEvent& event )
 {
     UpdateMenuStates();
 
-    int selection = m_lFaxes->GetSelection();
-    if(selection < 0 || selection >= (int)m_Faxes.size())
-        return;
+    /* take first selection.. we could do an average for sliders, but whatever */
+    int selection;
+    for(selection = 0; !m_lFaxes->IsSelected(selection); selection++)
+        if(selection == (int)m_Faxes.size())
+            return;
 
     WeatherFaxImage &img = *m_Faxes[selection];
     m_sTransparency->SetValue(img.m_iTransparency);
@@ -232,97 +313,161 @@ void WeatherFax::OnFaxes( wxCommandEvent& event )
     RequestRefresh( m_parent );
 }
 
-void WeatherFax::OnFaxesToggled( wxCommandEvent& event )
+void WeatherFax::WizardFinished(WeatherFaxWizard *wizard)
 {
+    int selection = m_lFaxes->Append(wizard->FaxName);
+    m_Faxes.push_back(&wizard->GetImage());
+
+    m_lFaxes->DeselectAll();
+    m_lFaxes->SetSelection(selection);
+    Goto(selection);
+
     RequestRefresh( m_parent );
+    UpdateMenuStates();
+    
+    WeatherFaxImageCoordinateList &CurrentWizardBuiltinCoordList = wizard->GetBuiltinCoords();
+    if(CurrentWizardBuiltinCoordList.GetCount())
+        m_BuiltinCoords.Append(CurrentWizardBuiltinCoordList[0]);
 }
 
-void WeatherFax::OpenWav(wxString filename, wxString station, wxString area)
+bool WeatherFax::WizardCleanup(WeatherFaxWizard *wizard)
+{
+    std::list<WeatherFaxWizard *>::iterator it;
+    for(it = m_AudioWizards.begin(); it != m_AudioWizards.end(); it++)
+        if(*it == wizard)
+            break;
+
+    if(it == m_AudioWizards.end())
+        return false;
+
+    if(m_AudioWizards.size() <= 1)
+        m_mAudioCapture->Enable();
+
+    m_tDeleteAudioWizard.Start(10, wxTIMER_ONE_SHOT);
+    return true;
+}
+
+WeatherFaxWizard *WeatherFax::OpenWav(wxString filename, wxString station, wxString area, wxString contents)
 {
     int transparency = m_sTransparency->GetValue();
     int whitetransparency = m_sWhiteTransparency->GetValue();
     bool invert = m_cInvert->GetValue();
-
-    FaxDecoder decoder(*this,
-                       m_weatherfax_pi.m_ImageWidth,
-                       m_weatherfax_pi.m_BitsPerPixel,
-                       m_weatherfax_pi.m_Carrier,
-                       m_weatherfax_pi.m_Deviation,
-                       (enum Bandwidth)m_weatherfax_pi.m_Filter,
-                       m_weatherfax_pi.m_bSkipHeaderDetection,
-                       m_weatherfax_pi.m_bIncludeHeadersInImage);
-    
-    if(!decoder.DecodeFaxFromFilename(filename))
-        return;
 
     WeatherFaxImage *img = new WeatherFaxImage(wxNullImage, transparency, whitetransparency, invert);
+    wxString name = station.size() && area.size() ? (station + _T(" - ") + area) : _T("");
+// wxMessageBox("OpenWav(): Station "+ name);
+    for(unsigned int i=0; i<m_BuiltinCoords.GetCount(); i++)
+        if(name == m_BuiltinCoords[i]->name)
+            img->m_Coords = m_BuiltinCoords[i];
 
-    for(unsigned int i=0; i<m_Coords.GetCount(); i++)
-        if(station.size() && m_Coords[i]->Station == station &&
-           area.size() && m_Coords[i]->Area == area)
-            img->m_Coords = m_Coords[i];
+    WeatherFaxWizard *wizard = new WeatherFaxWizard
+        (*img, true, filename, *this, name.size() ? NULL : &m_UserCoords, name);
 
-    WeatherFaxWizard wizard(*img, &decoder, *this, m_Coords,
-                            station.size() && area.size() ? (station + _T(" - ") + area) : _T(""));
-    
-    if(wizard.RunWizard(wizard.m_pages[0])) {
-        int selection = m_lFaxes->Append(area.size() ? (station + _T(" - ") + area) : filename );
-        m_Faxes.push_back(img);
-        
-        wizard.StoreCoords();
-        wizard.StoreMappingParams();
-        m_lFaxes->SetSelection(selection);
-
-        RequestRefresh( m_parent );
-        UpdateMenuStates();
-    } else
+    if(wizard->m_decoder.m_inputtype == FaxDecoder::NONE) {
         delete img;
+        delete wizard;
+        return NULL;
+    }
+
+    m_mAudioCapture->Enable(false);
+
+    wizard->FaxName  = station.size() && contents.size() ? (station + _T(" - ") + contents) :
+        filename.size() ? filename : wxString(_("Audio Capture") );
+    wizard->ShowPage(wizard->m_pages[0]);
+    wizard->Show();
+
+    m_AudioWizards.push_back(wizard);
+    return wizard;
 }
 
-void WeatherFax::OpenImage(wxString filename)
+void WeatherFax::OpenImage(wxString filename, wxString station, wxString area, wxString contents)
 {
     int transparency = m_sTransparency->GetValue();
     int whitetransparency = m_sWhiteTransparency->GetValue();
     bool invert = m_cInvert->GetValue();
 
+    WeatherFaxImageCoordinateList BuiltinCoordList;
     wxImage wimg;
-    if(wimg.LoadFile(filename)) {
-        WeatherFaxImage *img = new WeatherFaxImage(wimg, transparency, whitetransparency, invert);
-        WeatherFaxWizard wizard(*img, NULL, *this, m_Coords, _T(""));
-        
-        if(wizard.RunWizard(wizard.m_pages[1])) {
-            wxFileName filenamec(filename);
+    if (!wimg.CanRead(filename))
+        ::wxInitAllImageHandlers();
 
-            int selection = m_lFaxes->Append(filenamec.GetFullName());
-            m_Faxes.push_back(img);
-            
-            wizard.StoreCoords();
-            wizard.StoreMappingParams();
-            
-            m_lFaxes->SetSelection(selection);
+    if(!wimg.LoadFile(filename)) {
+#ifdef WIN32
+        // attempt to convert using PVW32Con.exe
+        wxString s = wxFileName::GetPathSeparator();
+        wxString pvw32con = *GetpSharedDataLocation() + _T("plugins")
+            + s + _T("weatherfax_pi") + s + _T("PVW32Con.exe");
+        wxString cmd = pvw32con + _T(" \"") + filename + _T("\" -t --o \"" + filename + _T("\""));
 
-            RequestRefresh( m_parent );
-            UpdateMenuStates();
-        } else
-            delete img;
-    } else {
-        wxMessageDialog w( this, _("Failed to load input file: ") + filename, _("Failed"),
-                           wxOK | wxICON_ERROR );
-        w.ShowModal();
+        int ret = ::wxExecute(cmd, wxEXEC_SYNC);
+
+        wxLogMessage(_("try to execute :") + cmd + _T("\nreturn code ") + wxString::Format(_T("%d"), ret));
+        if(!wimg.LoadFile(filename))
+#endif
+        {
+            wxMessageDialog mdlg(this, _("Failed to load input file: ") + filename,
+                                 _("Weather Fax"), wxOK | wxICON_ERROR);
+            mdlg.ShowModal();
+            return;
+        }
     }
+
+    WeatherFaxImage *img = new WeatherFaxImage(wimg, transparency, whitetransparency, invert);
+    wxString name = station.size() && area.size() ? (station + _T(" - ") + area) : _T("");
+
+    for(unsigned int i=0; i<m_BuiltinCoords.GetCount(); i++)
+        if(name == m_BuiltinCoords[i]->name) {
+            img->m_Coords = m_BuiltinCoords[i];
+            img->MakePhasedImage();
+            if(img->MakeMappedImage(this))
+                goto wizarddone;
+        }
+
+    {
+        WeatherFaxWizard wizard(*img, false, _T(""), *this, name.size() ? &BuiltinCoordList : &m_UserCoords, name);
+        if(wizard.RunWizard(wizard.m_pages[1])) {
+            if(name.size() == 0) {
+                wxFileName filenamec(filename);
+                name = filenamec.GetFullName();
+            }
+        } else {
+            delete img;
+            return;
+        }
+    }
+
+wizarddone:
+    name = station.size() && contents.size() ? (station + _T(" - ") + contents) : filename;
+    int selection = m_lFaxes->Append(name);
+    m_Faxes.push_back(img);
+
+    m_lFaxes->DeselectAll();
+    m_lFaxes->SetSelection(selection);
+    Goto(selection);
+
+    RequestRefresh( m_parent );
+    UpdateMenuStates();
+
+    if(BuiltinCoordList.GetCount())
+        m_BuiltinCoords.Append(BuiltinCoordList[0]);
 }
 
-void WeatherFax::Export(wxString filename)
+void WeatherFax::Goto(int selection)
 {
-    int selection = m_lFaxes->GetSelection();
-    if(selection < 0 || selection >= (int)m_Faxes.size())
-        return;
-
     WeatherFaxImage &image = *m_Faxes[selection];
+    double lat0 = image.m_Coords->lat(0), lat1 = image.m_Coords->lat(image.m_mappedimg.GetHeight());
+    double lon0 = image.m_Coords->lon(0), lon1 = image.m_Coords->lon(image.m_mappedimg.GetWidth());
+    if(lon0 - lon1 > 180)
+        lon1 += 360;
 
-    wximgtokap(image, m_weatherfax_pi.m_iExportColors,
-                m_weatherfax_pi.m_bExportDepthMeters ? METERS : FATHOMS,
-                m_weatherfax_pi.m_sExportSoundingDatum.mb_str(), filename.mb_str());
+    double distance;
+#if 0 // for opencpn 3.3 and later
+    DistanceBearingMercator_Plugin(lat0, lon0, lat1, lon1, NULL, &distance);
+#else
+    WFDistanceBearingMercator(lat0, lon0, lat1, lon1, NULL, &distance);
+#endif
+    if(!isnan(distance))
+        JumpToPosition((lat0 + lat1) / 2, (lon0 + lon1) / 2, .5/distance);
 }
 
 void WeatherFax::OnOpen( wxCommandEvent& event )
@@ -340,140 +485,189 @@ All files (*.*)|*.*" ), wxFD_OPEN);
         wxString filename = openDialog.GetPath();
         wxFileName filenamec(filename);
         m_weatherfax_pi.m_path = openDialog.GetDirectory();        
-        if(filenamec.GetExt() == _T("wav") || filenamec.GetExt() == _T("WAV"))
+        if(filenamec.GetExt() == _T("wav") || filenamec.GetExt() == _T("WAV")) {
+            if(m_AudioWizards.size()) {
+                wxMessageDialog mdlg(this, _("Cannot open audio weather fax already in progress."),
+                                     _("Weather Fax"), wxOK | wxICON_ERROR);
+                mdlg.ShowModal();
+                return;
+            }
             OpenWav(filename);
-        else
+        } else
             OpenImage(filename);
+    }
+}
+
+void WeatherFax::OnSaveAs( wxCommandEvent& event )
+{
+    for(int selection = 0; selection < (int)m_Faxes.size(); selection++) {
+        if(!m_lFaxes->IsSelected(selection))
+            continue;
+
+        WeatherFaxImage &image = *m_Faxes[selection];
+
+        wxFileDialog saveDialog
+            ( this, _( "Save Weather Fax To Image" ),
+              m_weatherfax_pi.m_export_path, image.m_Coords->name + _T(".png"),
+              _ ( "\
+Image Files|*.BMP;*.bmp|*.PNG;*.png|*.TIFF;*.tiff\
+All files (*.*)|*.*" ), wxFD_SAVE);
+
+        if( saveDialog.ShowModal() == wxID_OK ) {
+            wxString filename = saveDialog.GetPath();
+            m_weatherfax_pi.m_export_path = saveDialog.GetDirectory();        
+
+            if(!image.m_mappedimg.SaveFile(filename)) {
+                wxMessageDialog mdlg(this, _("Failed to save file: ") + filename,
+                                 _("Weather Fax"), wxOK | wxICON_ERROR);
+                mdlg.ShowModal();
+            }
+        }
     }
 }
 
 void WeatherFax::OnEdit( wxCommandEvent& event )
 {
-    int selection = m_lFaxes->GetSelection();
-    if(selection < 0 || selection >= (int)m_Faxes.size())
-        return;
+    /* take first selection.. we could instead edit all in order... */
+    int selection;
+    for(selection = 0; !m_lFaxes->IsSelected(selection); selection++)
+        if(selection == (int)m_Faxes.size())
+            return;
 
     WeatherFaxImage &image = *m_Faxes[selection];
     WeatherFaxImage backupimage = image;
-    WeatherFaxWizard wizard(image, NULL, *this, m_Coords, _T(""));
-    if(wizard.RunWizard(wizard.m_pages[0])) {
-        wizard.StoreCoords();
-        wizard.StoreMappingParams();
 
+    bool builtin=false;
+    WeatherFaxImageCoordinateList BuiltinCoordList;
+    for(unsigned int i=0; i<m_BuiltinCoords.GetCount(); i++)
+        if(m_BuiltinCoords[i] == image.m_Coords) {
+            BuiltinCoordList.Append(image.m_Coords);
+            builtin = true;
+        }
+
+    WeatherFaxWizard wizard(image, false, _T(""), *this, builtin ? &BuiltinCoordList : &m_UserCoords, _T(""));
+    if(wizard.RunWizard(wizard.m_pages[0]))
         image.FreeData();
-    } else
+    else
         image = backupimage;
 
     m_parent->SetFocus(); /* try this to see if it helps or not */
     RequestRefresh( m_parent );
 }
 
+void WeatherFax::OnGoto( wxCommandEvent& event )
+{
+    /* take first selection.. we could instead average or something... */
+    int selection;
+    for(selection = 0; !m_lFaxes->IsSelected(selection); selection++)
+        if(selection == (int)m_Faxes.size())
+            return;
+
+    Goto(selection);
+}
+
 void WeatherFax::OnExport( wxCommandEvent& event )
 {
-    wxFileDialog saveDialog
-        ( this, _( "Save Weather Fax To KAP" ),
-         m_weatherfax_pi.m_export_path, wxT ( "" ),
-         _ ( "\
-Supported Files|*.KAP;*.kap|\
+    for(int selection = 0; selection < (int)m_Faxes.size(); selection++) {
+        if(!m_lFaxes->IsSelected(selection))
+            continue;
+
+        WeatherFaxImage &image = *m_Faxes[selection];
+    
+        wxFileDialog saveDialog
+            ( this, _( "Save Weather Fax To KAP" ),
+              m_weatherfax_pi.m_export_path, image.m_Coords->name + _T(".kap"),
+              _ ( "\
+KAP Files|*.KAP;*.kap|\
 All files (*.*)|*.*" ), wxFD_SAVE);
 
-    if( saveDialog.ShowModal() == wxID_OK ) {
-        wxString filename = saveDialog.GetPath();
-        m_weatherfax_pi.m_export_path = saveDialog.GetDirectory();
-        Export(filename);
+        if( saveDialog.ShowModal() == wxID_OK ) {
+            wxString filename = saveDialog.GetPath();
+            m_weatherfax_pi.m_export_path = saveDialog.GetDirectory();        
+
+            wximgtokap(image, m_weatherfax_pi.m_iExportColors,
+                       m_weatherfax_pi.m_bExportDepthMeters ? METERS : FATHOMS,
+                       m_weatherfax_pi.m_sExportSoundingDatum.mb_str(), filename.mb_str());
+        } else
+            break;
     }
 }
 
 void WeatherFax::OnDelete( wxCommandEvent& event )
 {
-    int selection = m_lFaxes->GetSelection();
-    if(selection < 0 || selection >= (int)m_Faxes.size())
-        return;
+    for(int selection = 0; selection < (int)m_Faxes.size(); selection++) {
+        if(!m_lFaxes->IsSelected(selection))
+            continue;
 
-    delete m_Faxes[selection];
-    m_Faxes.erase(m_Faxes.begin() + selection);
+        delete m_Faxes[selection];
+        m_Faxes.erase(m_Faxes.begin() + selection);
 
-    m_lFaxes->Delete(selection);
-    UpdateMenuStates();
-
-    RequestRefresh( m_parent );
+        m_lFaxes->Delete(selection);
+        UpdateMenuStates();
+        
+        RequestRefresh( m_parent );
+        selection--;
+    }
 }
 
 void WeatherFax::TransparencyChanged( wxScrollEvent& event )
 {
-    int selection = m_lFaxes->GetSelection();
-    if(selection < 0 || selection >= (int)m_Faxes.size())
-        return;
+    bool update = false;
+    for(int selection = 0; selection < (int)m_Faxes.size(); selection++) {
+        if(!m_lFaxes->IsSelected(selection))
+            continue;
 
-    WeatherFaxImage &image = *m_Faxes[selection];
-    image.m_iTransparency = event.GetPosition();
-    RequestRefresh( m_parent );
+        WeatherFaxImage &image = *m_Faxes[selection];
+        image.m_iTransparency = event.GetPosition();
+        update = true;
+    }
+
+    if(update)
+        RequestRefresh( m_parent );
 }
 
 void WeatherFax::WhiteTransparencyChanged( wxScrollEvent& event )
 {
-    int selection = m_lFaxes->GetSelection();
-    if(selection < 0 || selection >= (int)m_Faxes.size())
-        return;
+    bool update = false;
+    for(int selection = 0; selection < (int)m_Faxes.size(); selection++) {
+        if(!m_lFaxes->IsSelected(selection))
+            continue;
 
-    WeatherFaxImage &image = *m_Faxes[selection];
-    image.m_iWhiteTransparency = event.GetPosition();
-    image.FreeData();
-    RequestRefresh( m_parent );
+        WeatherFaxImage &image = *m_Faxes[selection];
+        image.m_iWhiteTransparency = event.GetPosition();
+        image.FreeData();
+        update = true;
+    }
+
+    if(update)
+        RequestRefresh( m_parent );
 }
 
 void WeatherFax::OnInvert( wxCommandEvent& event )
 {
-    int selection = m_lFaxes->GetSelection();
-    if(selection < 0 || selection >= (int)m_Faxes.size())
-        return;
+    bool update = false;
+    for(int selection = 0; selection < (int)m_Faxes.size(); selection++) {
+        if(!m_lFaxes->IsSelected(selection))
+            continue;
 
-    WeatherFaxImage &image = *m_Faxes[selection];
-    image.m_bInvert = event.IsChecked();
-    image.FreeData();
-    RequestRefresh( m_parent );
+        WeatherFaxImage &image = *m_Faxes[selection];
+        image.m_bInvert = event.IsChecked();
+        image.FreeData();
+        update = true;
+    }
+
+    if(update)
+        RequestRefresh( m_parent );
 }
 
 void WeatherFax::OnCapture( wxCommandEvent& event )
 {
-    int transparency = m_sTransparency->GetValue();
-    int whitetransparency = m_sWhiteTransparency->GetValue();
-    bool invert = m_cInvert->GetValue();
-
-     FaxDecoder decoder(*this,
-                        m_weatherfax_pi.m_ImageWidth,
-                        m_weatherfax_pi.m_BitsPerPixel,
-                        m_weatherfax_pi.m_Carrier,
-                        m_weatherfax_pi.m_Deviation,
-                        (enum Bandwidth)m_weatherfax_pi.m_Filter,
-                        m_weatherfax_pi.m_bSkipHeaderDetection,
-                        /*m_weatherfax_pi.m_bIncludeHeadersInImage*/true);
-
-     decoder.SetSampleRate(8000);
-
-     if(!decoder.DecodeFaxFromDSP()) {
-         wxMessageDialog w( this, _("Failed to set stuff up with dsp, this only works on linux if you have /dev/dsp"),
-                            _("Failure"),
-                            wxOK | wxICON_ERROR );
-         w.ShowModal();
-         return;
-     }
-
-     WeatherFaxImage *img = new WeatherFaxImage(wxNullImage, transparency, whitetransparency, invert);
-     WeatherFaxWizard wizard(*img, &decoder, *this, m_Coords, _T(""));
-
-    if(wizard.RunWizard(wizard.m_pages[0])) {
-        static int dspc;
-        int selection = m_lFaxes->Append(_T("dsp - ") + wxString::Format(_T("%d"), dspc));
-        m_Faxes.push_back(img);
-
-        wizard.StoreCoords();
-        wizard.StoreMappingParams();
-
-        RequestRefresh( m_parent );
-        UpdateMenuStates();
-    } else
-        delete img;
+#ifdef __WXOSX__
+    wxMessageBox("Noch nicht bei Mac OS X implementiert.");
+    return;
+#else
+    OpenWav(_T(""));
+#endif
 }
 
 void WeatherFax::OnSchedules( wxCommandEvent& event )
@@ -494,19 +688,48 @@ void WeatherFax::OnAbout( wxCommandEvent& event )
     dlg.ShowModal();
 }
 
+bool WeatherFax::Show( bool show )
+{
+    for(std::list<WeatherFaxWizard *>::iterator it = m_AudioWizards.begin();
+        it != m_AudioWizards.end(); it++)
+        (*it)->Show(show);
+    return WeatherFaxBase::Show(show);
+}
+
 void WeatherFax::UpdateMenuStates()
 {
-    int selection = m_lFaxes->GetSelection();
-    if(selection < 0 || selection >= (int)m_Faxes.size()) {
-        m_mEdit->Enable(false);
-        m_mExport->Enable(false);
-        m_mDelete->Enable(false);
-        EnableDisplayControls(false);
-    } else {
-        m_mEdit->Enable();
-        m_mExport->Enable();
-        m_mDelete->Enable();
-        EnableDisplayControls(true);
+    wxArrayInt Selections;
+    bool e = m_lFaxes->GetSelections(Selections) != 0;
+    m_mSaveAs->Enable(e);
+    m_mEdit->Enable(e);
+    m_mGoto->Enable(e);
+    m_mExport->Enable(e);
+    m_mDelete->Enable(e);
+    EnableDisplayControls(e);
+}
+
+void WeatherFax::StopDecoder(WeatherFaxWizard *wizard)
+{
+    // only stop if it's in the list
+    for(std::list<WeatherFaxWizard *>::iterator it = m_AudioWizards.begin();
+        it != m_AudioWizards.end(); it++)
+        if(*it == wizard) {
+            wizard->StopDecoder();
+            break;
+        }
+}
+
+void WeatherFax::OnDeleteWizardTimer( wxTimerEvent & )
+{
+    for(std::list<WeatherFaxWizard *>::iterator it = m_AudioWizards.begin();
+        it != m_AudioWizards.end(); it++) {
+        if(!(*it)->IsShown()) {
+            if(m_SchedulesDialog.m_CaptureWizard == *it)
+                m_SchedulesDialog.m_CaptureWizard = NULL;
+            delete *it;
+            m_AudioWizards.erase(it);
+            return;
+        }
     }
 }
 

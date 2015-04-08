@@ -1,11 +1,11 @@
-/***************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2014 by Sean D'Epagnier                                 *
  *   sean at depagnier dot com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -33,13 +33,13 @@
 
 class weatherfax_pi;
 
-class FaxUrl
+struct FaxUrl
 {
-public:
     bool Filtered;
-    bool Selected;
+    bool Scheduled;
 
     wxString Server;
+    wxString Region;
     wxString Url;
     wxString Contents;
     wxString area_name;
@@ -47,10 +47,27 @@ public:
     FaxArea Area;
 };
 
+struct FaxRegion
+{
+    bool Filtered;
+    bool Selected;
+
+    wxString Name;
+    wxString Server;
+};
+
+struct FaxServer
+{
+    bool Filtered;
+    bool Selected;
+
+    wxString Name;
+};
+
 class InternetRetrievalDialog: public InternetRetrievalDialogBase
 {
 public:
-    enum {SELECTED, SERVER, CONTENTS, MAP_AREA};
+    enum {SCHEDULED, SERVER, REGION, CONTENTS, MAP_AREA};
 
     InternetRetrievalDialog( weatherfax_pi &_weatherfax_pi, wxWindow* parent);
     ~InternetRetrievalDialog();
@@ -61,16 +78,27 @@ public:
 
     void OnUrlsLeftDown( wxMouseEvent& event );
     void OnUrlsSort( wxListEvent& event );
+    void OnUrlSelected( wxListEvent& event );
     void OnFilter( wxCommandEvent& event ) { Filter(); }
+    void OnFilterServers( wxCommandEvent& event )
+    { m_bDisableServers = true; Filter(); m_bDisableServers = false; }
+    void OnFilterRegions( wxCommandEvent& event )
+    { m_bDisableRegions = true; Filter(); m_bDisableRegions = false; }
     void OnBoatPosition( wxCommandEvent& event );
     void OnReset( wxCommandEvent& event );
     void OnAllServers( wxCommandEvent& event );
     void OnNoServers( wxCommandEvent& event );
+    void OnAllRegions( wxCommandEvent& event );
+    void OnNoRegions( wxCommandEvent& event );
+    void OnRetrieve( wxMouseEvent& event ) { wxCommandEvent evt; OnRetrieve(evt); }
     void OnRetrieve( wxCommandEvent& event );
     void OnClose( wxCommandEvent& event );
 
     bool HasServer(wxString server);
+    bool HasRegion(wxString region);
     void Filter();
+    void RebuildServers();
+    void RebuildRegions();
     void RebuildList();
     void UpdateItem(long index);
 
@@ -80,10 +108,12 @@ private:
 
     weatherfax_pi &m_weatherfax_pi;
 
+    std::list<FaxServer> m_Servers;
+    std::list<FaxRegion> m_Regions;
     std::list<FaxUrl*> m_InternetRetrieval;
-    std::list<FaxUrl*> m_CaptureInternetRetrieval;
 
-    bool m_bLoaded, m_bDisableFilter;
+    bool m_bLoaded;
+    bool m_bDisableServers, m_bDisableRegions, m_bDisableFilter;
     bool m_bKilled;
 
     bool m_bRebuilding;

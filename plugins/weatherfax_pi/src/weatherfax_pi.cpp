@@ -1,11 +1,11 @@
-/***************************************************************************
+/**************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2014 by Sean D'Epagnier                                 *
  *   sean at depagnier dot com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -23,14 +23,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
-
-#include "wx/wxprec.h"
-
-#ifndef  WX_PRECOMP
-  #include "wx/wx.h"
-#endif //precompiled headers
-
-#include <wx/stdpaths.h>
 
 #include "weatherfax_pi.h"
 #include "WeatherFaxImage.h"
@@ -113,13 +105,10 @@ bool weatherfax_pi::DeInit(void)
     SetWeatherFaxY(p.y);
 
     m_pWeatherFax->Close();
-    delete m_pWeatherFax;
-    m_pWeatherFax = NULL;
 
     SaveConfig();
 
     RemovePlugInTool(m_leftclick_tool_id);
-
     return true;
 }
 
@@ -161,11 +150,12 @@ wxString weatherfax_pi::GetShortDescription()
 wxString weatherfax_pi::GetLongDescription()
 {
     return _("Weather Fax PlugIn for OpenCPN\n\
-Read weather fax encoded data as audio or image. \n\
-Overlay this on top of charts. \n\
-Enable OpenGL (in Display options) for best results. \n\
-\n\
-The Weather Fax plugin was written by Sean D'Epagnier\n\
+Can open image files directly, or decode audio faxes to an image.\n\
+With simple calibration, resulting image is overlaid on top of charts.\n\
+Converts images in mercator, polar, conic and uniform coordinates.\n\
+Can convert any image into a raster chart.\n\
+Builtin database for HF radio fax stations via SSB.\n\
+Builtin database for internet retrieval from meterological sites.\n\
 ");
 }
 
@@ -197,6 +187,11 @@ void weatherfax_pi::OnToolbarToolCallback(int id)
 {
     m_pWeatherFax->Show(!m_pWeatherFax->IsShown());
 
+    if(!m_pWeatherFax->IsShown()) {
+        m_pWeatherFax->m_SchedulesDialog.Hide();
+        m_pWeatherFax->m_InternetRetrievalDialog.Hide();
+    }
+
     RearrangeWindow();
 
     wxPoint p = m_pWeatherFax->GetPosition();
@@ -210,9 +205,7 @@ bool weatherfax_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
         return true;
 
     for(unsigned int i=0; i<m_pWeatherFax->m_lFaxes->GetCount(); i++)
-        if(m_pWeatherFax->m_lFaxes->IsChecked(i) ||
-            (m_pWeatherFax->m_cbDisplaySelected->GetValue() &&
-            (int)i == m_pWeatherFax->m_lFaxes->GetSelection()))
+        if(m_pWeatherFax->m_lFaxes->IsSelected(i))
             m_pWeatherFax->m_Faxes[i]->RenderImage(dc, vp);
 
     return true;
@@ -224,9 +217,7 @@ bool weatherfax_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
         return true;
 
     for(unsigned int i=0; i<m_pWeatherFax->m_lFaxes->GetCount(); i++)
-        if(m_pWeatherFax->m_lFaxes->IsChecked(i) ||
-            (m_pWeatherFax->m_cbDisplaySelected->GetValue() &&
-            (int)i == m_pWeatherFax->m_lFaxes->GetSelection()))
+        if(m_pWeatherFax->m_lFaxes->IsSelected(i))
             m_pWeatherFax->m_Faxes[i]->RenderImageGL(vp);
 
     return true;
@@ -242,10 +233,21 @@ wxString weatherfax_pi::StandardPath()
     wxString stdPath  = std_path.GetUserDataDir();
 #endif
 #ifdef __WXOSX__
-    wxString stdPath  = std_path.GetUserConfigDir();   // should be ~/Library/Preferences
+    wxString stdPath  = std_path.GetUserConfigDir();   // should be ~/Library/Preferences	
 #endif
 
-    return stdPath + wxFileName::GetPathSeparator();
+    wxString s = wxFileName::GetPathSeparator(), path = stdPath + s + _T("plugins") + s;
+
+    wxFileName dir(path);
+    if(!dir.DirExists())
+        dir.Mkdir();
+
+    path += _T("weatherfax") + s;
+    wxFileName dir2(path);
+    if(!dir2.DirExists())
+        dir2.Mkdir();
+
+    return path;
 }
 
 bool weatherfax_pi::LoadConfig(void)
@@ -260,15 +262,6 @@ bool weatherfax_pi::LoadConfig(void)
 
         m_weatherfax_dialog_x =  pConf->Read ( _T ( "DialogPosX" ), 20L );
         m_weatherfax_dialog_y =  pConf->Read ( _T ( "DialogPosY" ), 20L );
-
-        pConf->SetPath ( _T ( "/Settings/WeatherFax/Audio" ) );
-        pConf->Read ( _T ( "ImageWidth" ), &m_ImageWidth, 576*2 );
-        pConf->Read ( _T ( "BitsPerPixel" ), &m_BitsPerPixel, 8 );
-        pConf->Read ( _T ( "Carrier" ), &m_Carrier, 1900 );
-        pConf->Read ( _T ( "Deviation" ), &m_Deviation, 400 );
-        pConf->Read ( _T ( "Filter" ), &m_Filter, 1 );
-        pConf->Read ( _T ( "SkipHeaderDetection" ), &m_bSkipHeaderDetection, 0 );
-        pConf->Read ( _T ( "IncludeHeadersInImage" ), &m_bIncludeHeadersInImage, 0 );
 
         pConf->SetPath ( _T ( "/Settings/WeatherFax/Schedules" ) );
         pConf->Read ( _T ( "LoadAtStart" ), &m_bLoadSchedulesStart, 0 );
@@ -297,22 +290,13 @@ bool weatherfax_pi::SaveConfig(void)
     pConf->SetPath ( _T ( "/Settings/WeatherFax" ) );
     pConf->Write ( _T ( "Path" ), m_path );
     pConf->Write ( _T ( "ExportPath" ), m_export_path );
-
+    
     pConf->Write ( _T ( "DialogPosX" ),   m_weatherfax_dialog_x );
     pConf->Write ( _T ( "DialogPosY" ),   m_weatherfax_dialog_y );
-
-    pConf->SetPath ( _T ( "/Settings/WeatherFax/Audio" ) );
-    pConf->Write ( _T ( "ImageWidth" ), m_ImageWidth );
-    pConf->Write ( _T ( "BitsPerPixel" ), m_BitsPerPixel );
-    pConf->Write ( _T ( "Carrier" ), m_Carrier );
-    pConf->Write ( _T ( "Deviation" ), m_Deviation );
-    pConf->Write ( _T ( "Filter" ), m_Filter );
-    pConf->Write ( _T ( "SkipHeaderDetection" ), m_bSkipHeaderDetection );
-    pConf->Write ( _T ( "IncludeHeadersInImage" ), m_bIncludeHeadersInImage );
-
+        
     pConf->SetPath ( _T ( "/Settings/WeatherFax/Schedules" ) );
     pConf->Write ( _T ( "LoadAtStart" ), m_bLoadSchedulesStart );
-
+    
     pConf->SetPath ( _T ( "/Settings/WeatherFax/Export" ) );
     pConf->Write ( _T ( "Colors" ), m_iExportColors );
     pConf->Write ( _T ( "DepthMeters" ), m_bExportDepthMeters );
@@ -321,7 +305,7 @@ bool weatherfax_pi::SaveConfig(void)
     pConf->SetPath ( _T ( "/Directories" ) );
     pConf->Write ( _T ( "WeatherFaxDataLocation" ), m_weatherfax_dir );
 
-       return true;
+    return true;
 }
 
 void weatherfax_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix)
@@ -336,14 +320,6 @@ void weatherfax_pi::ShowPreferencesDialog( wxWindow* parent )
                                    wxPoint( m_weatherfax_dialog_x, m_weatherfax_dialog_y),
                                    wxDefaultSize, wxDEFAULT_DIALOG_STYLE );
     
-    dialog->m_sImageWidth->SetValue(m_ImageWidth);
-    dialog->m_sBitsPerPixel->SetValue(m_BitsPerPixel);
-    dialog->m_sCarrier->SetValue(m_Carrier);
-    dialog->m_sDeviation->SetValue(m_Deviation);
-    dialog->m_cFilter->SetSelection(m_Filter);
-    dialog->m_cbSkip->SetValue(m_bSkipHeaderDetection);
-    dialog->m_cbInclude->SetValue(m_bIncludeHeadersInImage);
-
     dialog->m_cbLoadSchedulesStart->SetValue(m_bLoadSchedulesStart);
 
     dialog->m_sExportColors->SetValue(m_iExportColors);
@@ -357,14 +333,6 @@ void weatherfax_pi::ShowPreferencesDialog( wxWindow* parent )
     
     if(dialog->ShowModal() == wxID_OK)
     {
-        m_ImageWidth = dialog->m_sImageWidth->GetValue();
-        m_BitsPerPixel = dialog->m_sBitsPerPixel->GetValue();
-        m_Carrier = dialog->m_sCarrier->GetValue();
-        m_Deviation = dialog->m_sDeviation->GetValue();
-        m_Filter = dialog->m_cFilter->GetSelection();
-        m_bSkipHeaderDetection = dialog->m_cbSkip->GetValue();
-        m_bIncludeHeadersInImage = dialog->m_cbInclude->GetValue();
-
         m_bLoadSchedulesStart = dialog->m_cbLoadSchedulesStart->GetValue();
 
         m_iExportColors = dialog->m_sExportColors->GetValue();

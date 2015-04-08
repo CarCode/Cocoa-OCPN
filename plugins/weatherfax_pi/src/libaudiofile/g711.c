@@ -131,9 +131,9 @@ _af_linear2alaw(pcm_val)
 
 	/* Convert the scaled magnitude to segment number. */
 #ifdef __WXOSX__
-	seg = search(pcm_val, (short *)seg_end, 8);
+    seg = search(pcm_val, (short *)seg_end, 8);
 #else
-    seg = search(pcm_val, seg_end, 8);
+	seg = search(pcm_val, seg_end, 8);
 #endif
 	/* Combine the sign, segment, and quantization bits. */
 

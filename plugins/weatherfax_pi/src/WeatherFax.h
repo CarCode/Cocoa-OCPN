@@ -5,7 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2014 by Sean D'Epagnier                                 *
  *   sean at depagnier dot com                                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -28,6 +28,8 @@
 
 #include "WeatherFaxUI.h"
 
+extern const char * box_xpm[];
+extern const char * check_xpm[];
 
 class FaxArea
 {
@@ -49,9 +51,9 @@ public:
     wxString AreaDescription() {
         return description +
             ((!isnan(lat1) && !isnan(lat2)) ?
-            _T(" ") + LatArea(lat1) + _T("-") + LatArea(lat2) : _T("")) +
+             _T(" ") + LatArea(lat1) + _T("-") + LatArea(lat2) : _T("")) +
             ((!isnan(lon1) && !isnan(lon2)) ?
-            _T(" ") + LonArea(lon1) + _T("-") + LonArea(lon2) : _T(""));
+             _T(" ") + LonArea(lon1) + _T("-") + LonArea(lon2) : _T(""));
     }
 };
 
@@ -59,45 +61,54 @@ public:
 #include "InternetRetrievalDialog.h"
 
 class weatherfax_pi;
+class WeatherFaxWizard;
 
-class WeatherFax: public WeatherFaxBase
+class WeatherFax : public WeatherFaxBase
 {
 public:
     WeatherFax( weatherfax_pi &_weatherfax_pi, wxWindow* parent);
-
     ~WeatherFax();
 
-    void EnableDisplayControls(bool enable);
     void OnClose( wxCloseEvent& event ) { Hide(); }
+    void EnableDisplayControls(bool enable);
     void OnFaxes( wxCommandEvent& event );
-    void OnFaxesToggled( wxCommandEvent& event );
     void TransparencyChanged( wxScrollEvent& event );
     void WhiteTransparencyChanged( wxScrollEvent& event );
     void OnInvert( wxCommandEvent& event );
     void OnOpen( wxCommandEvent& event );
+    void OnSaveAs( wxCommandEvent& event );
     void OnEdit( wxCommandEvent& event );
+    void OnGoto( wxCommandEvent& event );
     void OnDelete( wxCommandEvent& event );
     void OnExport( wxCommandEvent& event );
     void OnPreferences( wxCommandEvent& event ) { m_weatherfax_pi.ShowPreferencesDialog( this ); }
-    void OnClose( wxCommandEvent& event ) { Show(false); }
+    void OnClose( wxCommandEvent& event ) { Hide(); }
     void OnCapture( wxCommandEvent& event );
     void OnSchedules( wxCommandEvent& event );
     void OnInternet( wxCommandEvent& event );
     void OnAbout( wxCommandEvent& event );
 
-    void OpenWav(wxString filename, wxString station=_T(""), wxString area=_T(""));
-    void OpenImage(wxString filename);
-    void Export(wxString filename);
+    bool Show( bool show = true );
+    void WizardFinished(WeatherFaxWizard *wizard);
+    bool WizardCleanup(WeatherFaxWizard *wizard);
+    WeatherFaxWizard *OpenWav(wxString filename, wxString station=_T(""), wxString area=_T(""), wxString contents=_T(""));
+    void OpenImage(wxString filename, wxString station=_T(""), wxString area=_T(""), wxString contents=_T(""));
+    void Goto(int selection);
 
     void UpdateMenuStates();
+    void StopDecoder(WeatherFaxWizard *wizard);
 
-    WeatherFaxImageCoordinateList m_Coords;
+    WeatherFaxImageCoordinateList m_BuiltinCoords, m_UserCoords;
 
     std::vector<WeatherFaxImage*>m_Faxes;
-
-protected:
     SchedulesDialog m_SchedulesDialog;
     InternetRetrievalDialog m_InternetRetrievalDialog;
+
+protected:
+    void OnDeleteWizardTimer( wxTimerEvent & );
+
+    std::list<WeatherFaxWizard *> m_AudioWizards;
+    wxTimer m_tDeleteAudioWizard;
 
     weatherfax_pi &m_weatherfax_pi;
 };

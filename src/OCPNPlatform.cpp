@@ -45,6 +45,10 @@
 #include "androidUTIL.h"
 #endif
 
+#ifdef ocpnUSE_GL
+#include "glChartCanvas.h"
+#endif
+
 // Include CrashRpt Header
 #ifdef OCPN_USE_CRASHRPT
 #include "CrashRpt.h"
@@ -176,10 +180,16 @@ extern bool                     g_bFullScreenQuilt;
 extern bool                     g_bQuiltEnable;
 extern bool                     g_bskew_comp;
 
+extern bool                     g_bopengl;
+extern bool                     g_btouch;
+extern bool                     g_bresponsive;
+extern bool                     g_bShowStatusBar;
+extern int                      g_cm93_zoom_factor;
 
-
-
-
+#ifdef ocpnUSE_GL
+extern ocpnGLOptions            g_GLOptions;
+#endif
+extern int                      g_default_font_size;
 
 wxLog       *g_logger;
 bool         g_bEmailCrashReport;
@@ -510,8 +520,25 @@ void OCPNPlatform::SetDefaultOptions( void )
     g_bShowAreaNotices = false;
     g_bDrawAISSize = false;
     g_bShowAISName = false;
+
+
+#ifdef __OCPN__ANDROID__
     
+#ifdef ocpnUSE_GL
+    g_bopengl = true;
+    g_GLOptions.m_bTextureCompression = 1;
+    g_GLOptions.m_bTextureCompressionCaching = 1;
+#endif
     
+    g_btouch = true;
+    g_bresponsive = true;
+    g_default_font_size = 14;
+    
+    g_bShowStatusBar = false;
+    g_cm93_zoom_factor = -5;
+#endif
+
+
 }
 
 //--------------------------------------------------------------------------
@@ -828,6 +855,27 @@ void OCPNPlatform::CloseLogFile( void)
 
 
 
+
+
+//--------------------------------------------------------------------------
+//      Platform Display Support
+//--------------------------------------------------------------------------
+double OCPNPlatform::getFontPointsperPixel( void )
+{
+    //  Make a measurement...
+    wxScreenDC dc;
+
+    wxFont *f = wxTheFontList->FindOrCreateFont( 12, wxDEFAULT, wxNORMAL, wxBOLD, FALSE,
+                                                wxString( _T ( "" ) ), wxFONTENCODING_SYSTEM );
+    dc.SetFont(*f);
+
+    wxSize sz = dc.GetTextExtent(_T("H"));
+    double pt_per_pixel = 12.0 / (double)sz.y;
+
+    return pt_per_pixel;
+
+
+}
 
 
 //--------------------------------------------------------------------------
