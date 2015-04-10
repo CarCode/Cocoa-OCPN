@@ -71,6 +71,7 @@ class about: public wxDialog
     void OnDonateClick( wxCommandEvent& event );
     void OnCopyClick( wxCommandEvent& event );
     void Update();
+    void OnClose( wxCloseEvent& event );
 
     wxString          m_DataLocn;
     wxWindow          *m_parent;

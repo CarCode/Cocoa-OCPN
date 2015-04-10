@@ -38,6 +38,10 @@
 #include <wx/fileconf.h>
 #include <wx/stdpaths.h>
 
+#ifdef __WXOSX__
+#include <cmath>
+#endif
+
 #include <typeinfo>
 #include "squiddio_pi.h"
 #include "icons.h"
@@ -257,7 +261,11 @@ bool squiddio_pi::LoadLayers(wxString &path)
             else{
                 wxDir dir( filename );
                 if( dir.IsOpened() ){
-                    nfiles = dir.GetAllFiles( filename, &file_array, wxT("*.gpx") );      // layers subdirectory set
+#ifdef __WXOSX__
+                    dir.GetAllFiles( filename, &file_array, wxT("*.gpx") );      // layers subdirectory set
+#else
+                    nfiles = dir.GetAllFiles( filename, &file_array, wxT("*.gpx") );      // layers subdirectory set, nfiles=Dead Store
+#endif
                 }
             }
 
@@ -420,9 +428,13 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon)
 {
         m_cursor_lon = lon;
         m_cursor_lat = lat;
-
+#ifdef __WXOSX__
+    int lat_sector = std::abs( m_cursor_lat/5);
+    int lon_sector = std::abs( m_cursor_lon/5);
+#else
         int lat_sector = abs( m_cursor_lat/5);
         int lon_sector = abs( m_cursor_lon/5);
+#endif
         wxString lat_quadrant = (m_cursor_lat > 0) ? (_T("N")) : (_T("S"));
         wxString lon_quadrant = (m_cursor_lon > 0) ? (_T("E")) : (_T("W"));
         local_region =  lat_quadrant << wxString::Format(wxT("%02i"),lat_sector)<< lon_quadrant << wxString::Format(wxT("%02i"),lon_sector);

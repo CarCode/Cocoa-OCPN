@@ -788,38 +788,6 @@ wxString newPrivateFileName(wxString home_locn, const char *name, const char *wi
     return filePathAndName;
 }
 
-#ifdef __WXMSW__
-bool GetWindowsMonitorSize( int *w, int *h );
-#endif
-
-    
-double  GetDisplaySizeMM()
-{
-    double ret = wxGetDisplaySizeMM().GetWidth();
-    
-#ifdef __WXMSW__    
-    int w,h;
-    if( GetWindowsMonitorSize( &w, &h) ){
-        if(w > 100)             // sanity check
-            ret = w;
-    }
-#endif
-#ifdef __WXOSX__
-    ret = GetMacMonitorSize();
-#endif
-
-#ifdef __OCPN__ANDROID__
-    ret = GetAndroidDisplaySize();
-#endif    
-        
-    wxString msg;
-    msg.Printf(_T("Detected display size (horizontal): %d mm"), (int) ret);
-    wxLogMessage(msg);
-    
-    return ret;
-}
- 
-
 
 // `Main program' equivalent, creating windows and returning main app frame
 //------------------------------------------------------------------------------
@@ -1358,7 +1326,7 @@ bool MyApp::OnInit()
         exit( EXIT_FAILURE );
     }
 
-    g_display_size_mm = wxMax(100, GetDisplaySizeMM());
+    g_display_size_mm = wxMax(100, g_Platform->GetDisplaySizeMM());
     double dsmm = g_display_size_mm;
 
     //      Init the WayPoint Manager (Must be after UI Style init).
@@ -2078,8 +2046,8 @@ extern ocpnGLOptions g_GLOptions;
     g_FloatingCompassDialog->Raise();
 #endif
     
-    // Perform delayed initialization after 50 milliseconds
-    gFrame->InitTimer.Start( 50, wxTIMER_CONTINUOUS );
+    // Start delayed initialization chain after 100 milliseconds
+    gFrame->InitTimer.Start( 100, wxTIMER_CONTINUOUS );
 
     wxLogMessage( wxString::Format(_("OpenCPN Initialized in %ld ms."), sw.Time() ) );
 
@@ -3055,7 +3023,6 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
 
     g_bquiting = true;
 
-#ifndef __OCPN__ANDROID__    
 #ifdef ocpnUSE_GL
     // cancel compression jobs
     if(g_bopengl && g_CompressorPool){
@@ -3073,7 +3040,6 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
         cc1->Update();
         wxYield();
     }
-#endif
 
     //   Save the saved Screen Brightness
     RestoreScreenBrightness();
@@ -3202,13 +3168,6 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     if( g_FloatingCompassDialog ) g_FloatingCompassDialog->Destroy();
     g_FloatingCompassDialog = NULL;
 
-    //      Delete all open charts in the cache
-    cc1->EnablePaint(false);
-    if( ChartData )
-        ChartData->PurgeCache();
-
-
-
 
 #ifndef __OCPN__ANDROID__
     SetStatusBar( NULL );
@@ -3275,11 +3234,7 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     g_FloatingToolbarDialog = NULL;
     g_bTempShowMenuBar = false;
     
-    this->Destroy();
-    
-    gFrame = NULL;
 
-#ifndef __OCPN__ANDROID__    
     #define THREAD_WAIT_SECONDS  5
 #ifdef ocpnUSE_GL
     // The last thing we do is finish the compression threads.
@@ -3302,8 +3257,9 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
         }
     }
 #endif
-#endif
 
+    this->Destroy();
+    gFrame = NULL;
 
 #ifdef __OCPN__ANDROID__
     wxTheApp->OnExit();
@@ -4524,7 +4480,9 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
 
 wxString _menuText( wxString name, wxString shortcut ) {
     wxString menutext;
-    menutext << name << _T("\t") << shortcut;
+    menutext << name;
+    if(!g_bresponsive)
+        menutext << _T("\t") << shortcut;
     return menutext;
 }
 
@@ -5006,9 +4964,9 @@ int MyFrame::ProcessOptionsDialog( int rr, options* dialog )
         g_display_size_mm = g_config_display_size_mm;
     }
     else{
-        g_display_size_mm = wxMax(100, GetDisplaySizeMM());
+        g_display_size_mm = wxMax(100, g_Platform->GetDisplaySizeMM());
     }
-        
+    
     cc1->SetDisplaySizeMM( g_display_size_mm );
     
     return 0;
@@ -5608,8 +5566,8 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
         InitTimer.Stop(); // Initialization complete
     }
 
-    cc1->InvalidateGL();
-    Refresh();
+    //    cc1->InvalidateGL();
+    cc1->Refresh( true );
 }
 
 //    Manage the application memory footprint on a periodic schedule
@@ -10276,7 +10234,7 @@ TimedMessageBox::TimedMessageBox(wxWindow* parent, const wxString& message,
     int ret = dlg->ShowModal();
 
     //  Not sure why we need this, maybe on wx3?
-    if((style == wxYES_NO) && (ret == wxID_OK))
+    if( ((style & wxYES_NO) == wxYES_NO) && (ret == wxID_OK))
         ret = wxID_YES;
 
     delete dlg;
@@ -10988,136 +10946,6 @@ void SearchPnpKeyW9x(HKEY hkPnp, BOOL bUsbDevice,
 
 #endif
 
-#ifdef __WXMSW__
-
-#define NAME_SIZE 128
-
-const GUID GUID_CLASS_MONITOR = {0x4d36e96e, 0xe325, 0x11ce, 0xbf, 0xc1, 0x08, 0x00, 0x2b, 0xe1, 0x03, 0x18};
-
-// Assumes hDevRegKey is valid
-bool GetMonitorSizeFromEDID(const HKEY hDevRegKey, int *WidthMm, int *HeightMm)
-{
-    DWORD dwType, AcutalValueNameLength = NAME_SIZE;
-    TCHAR valueName[NAME_SIZE];
-    
-    BYTE EDIDdata[1024];
-    DWORD edidsize=sizeof(EDIDdata);
-    
-    for (LONG i = 0, retValue = ERROR_SUCCESS; retValue != ERROR_NO_MORE_ITEMS; ++i)
-    {
-        retValue = RegEnumValue ( hDevRegKey, i, &valueName[0],
-        &AcutalValueNameLength, NULL, &dwType,
-        EDIDdata, // buffer
-        &edidsize); // buffer size
-        
-        if (retValue != ERROR_SUCCESS || 0 != _tcscmp(valueName,_T("EDID")))
-            continue;
-        
-        *WidthMm  = ((EDIDdata[68] & 0xF0) << 4) + EDIDdata[66];
-        *HeightMm = ((EDIDdata[68] & 0x0F) << 8) + EDIDdata[67];
-        
-        return true; // valid EDID found
-    }
-        
-    return false; // EDID not found
-}
-        
-bool GetSizeForDevID(wxString &TargetDevID, int *WidthMm, int *HeightMm)
-        {
-            HDEVINFO devInfo = SetupDiGetClassDevsEx(
-                &GUID_CLASS_MONITOR, //class GUID
-                NULL, //enumerator
-                NULL, //HWND
-                DIGCF_PRESENT, // Flags //DIGCF_ALLCLASSES|
-                NULL, // device info, create a new one.
-                NULL, // machine name, local machine
-                NULL);// reserved
-            
-            if (NULL == devInfo)
-            return false;
-            
-            bool bRes = false;
-            
-            for (ULONG i=0; ERROR_NO_MORE_ITEMS != GetLastError(); ++i)
-            {
-                SP_DEVINFO_DATA devInfoData;
-                memset(&devInfoData,0,sizeof(devInfoData));
-                devInfoData.cbSize = sizeof(devInfoData);
-                
-                if (SetupDiEnumDeviceInfo(devInfo,i,&devInfoData))
-                {
-                    wchar_t    Instance[80];
-                    SetupDiGetDeviceInstanceId(devInfo, &devInfoData, Instance, MAX_PATH, NULL);
-                    wxString instance(Instance);
-                    if(instance.Upper().Find( TargetDevID.Upper() ) == wxNOT_FOUND )
-                        continue;
-                    
-                    HKEY hDevRegKey = SetupDiOpenDevRegKey(devInfo,&devInfoData,
-                    DICS_FLAG_GLOBAL, 0, DIREG_DEV, KEY_READ);
-                    
-                    if(!hDevRegKey || (hDevRegKey == INVALID_HANDLE_VALUE))
-                        continue;
-                    
-                    bRes = GetMonitorSizeFromEDID(hDevRegKey, WidthMm, HeightMm);
-                    
-                    RegCloseKey(hDevRegKey);
-                }
-            }
-            SetupDiDestroyDeviceInfoList(devInfo);
-            return bRes;
-        }
-        
-bool GetWindowsMonitorSize( int *width, int *height)
-{
-    int WidthMm = 0;
-    int HeightMm = 0;
-
-    DISPLAY_DEVICE dd;
-    dd.cb = sizeof(dd);
-    DWORD dev = 0; // device index
-    int id = 1; // monitor number, as used by Display Properties > Settings
-
-    wxString DeviceID;
-    bool bFoundDevice = false;
-    while (EnumDisplayDevices(0, dev, &dd, 0) && !bFoundDevice)
-    {
-        DISPLAY_DEVICE ddMon;
-        ZeroMemory(&ddMon, sizeof(ddMon));
-        ddMon.cb = sizeof(ddMon);
-        DWORD devMon = 0;
-
-        while (EnumDisplayDevices(dd.DeviceName, devMon, &ddMon, 0) && !bFoundDevice)
-        {
-            if (ddMon.StateFlags & DISPLAY_DEVICE_ACTIVE &&
-                !(ddMon.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER))
-                {
-                    DeviceID = wxString(ddMon.DeviceID, wxConvUTF8);
-                    DeviceID = DeviceID.Mid (8);
-                    DeviceID = DeviceID.Mid (0, DeviceID.Find ( '\\' ));
-
-                    bFoundDevice = GetSizeForDevID(DeviceID, &WidthMm, &HeightMm);
-                }
-                devMon++;
-
-            ZeroMemory(&ddMon, sizeof(ddMon));
-            ddMon.cb = sizeof(ddMon);
-        }
-
-        ZeroMemory(&dd, sizeof(dd));
-        dd.cb = sizeof(dd);
-        dev++;
-    }
-
-    if(width)
-        *width = WidthMm;
-    if(height)
-        *height = HeightMm;
-
-    return bFoundDevice;
-}
-
-
-#endif
 
 bool ReloadLocale()
 {

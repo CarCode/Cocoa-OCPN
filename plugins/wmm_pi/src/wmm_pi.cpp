@@ -31,6 +31,9 @@
 #include "wx/wx.h"
 #endif //precompiled headers
 #include "wx/stdpaths.h"
+#ifdef __WXOSX__
+#include <cmath>
+#endif
 
 void WMMLogMessage1(wxString s) { wxLogMessage(_T("WMM: ") + s); }
 extern "C" void WMMLogMessage(const char *s) { WMMLogMessage1(wxString::FromAscii(s)); }
@@ -624,7 +627,11 @@ void wmm_pi::SendCursorVariation()
 
 wxString wmm_pi::AngleToText(double angle)
 {
+#ifdef __WXOSX__
+    int deg = std::abs(angle);
+#else
 	int deg = abs(angle);
+#endif
 	int min = (fabs(angle) - deg) * 60;
 	if (angle < 0)
 		return wxString::Format(_T("%u\u00B0%u' W"), deg, min);

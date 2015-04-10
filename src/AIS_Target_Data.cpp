@@ -45,7 +45,7 @@ void make_hash_ERI(int key, const wxString & description)
 
 static wxString FormatTimeAdaptive( int seconds )
 {
-    int s = seconds % 60;
+//    int s = seconds % 60;  // Not used
     int m = seconds / 60;
     if( seconds < 100 )
         return wxString::Format( _T("%3ds"), seconds );

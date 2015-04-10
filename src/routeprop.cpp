@@ -358,8 +358,11 @@ RouteProp::RouteProp( wxWindow* parent, wxWindowID id, const wxString& caption, 
 #endif
 
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
+#ifdef __WXOSX__
+    wxDialog::Create( parent, id, caption, pos, size, wstyle );
+#else
     wxDialog::Create( parent, id, caption, pos, size, style );
-
+#endif
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     SetFont( *qFont );
         
@@ -2015,7 +2018,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 #ifdef __WXOSX__
     waypointradarGrid = new wxFlexGridSizer( 2, 1, 1 );
 #else
-    waypointradarGrid = new wxFlexGridSizer( 1, 2, 1, 1 );
+    waypointradarGrid = new wxFlexGridSizer( 0, 2, 1, 1 );
 #endif
     waypointradarGrid->AddGrowableCol( 1 );
     bSizerTextProperties->Add( waypointradarGrid, 0, wxLEFT | wxRIGHT| wxEXPAND, 5 );

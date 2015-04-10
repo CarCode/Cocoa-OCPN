@@ -1973,7 +1973,8 @@ void options::CreatePanel_Advanced( size_t parent, int border_size, int group_it
     pRBSizeManual = new wxRadioButton( m_ChartDisplayPage, ID_SIZEMANUALRADIOBUTTON, _("Manual:") );
     pDPIRow->Add( pRBSizeManual, inputFlags );
 
-    pScreenMM = new wxTextCtrl( m_ChartDisplayPage, ID_TEXTCTRL, _T(""), wxDefaultPosition, wxSize( 50, -1 ), wxTE_RIGHT  );
+    pScreenMM = new wxTextCtrl( m_ChartDisplayPage, ID_TEXTCTRL, _T(""), wxDefaultPosition,
+                               wxSize( 3 * m_fontHeight, -1 ), wxTE_RIGHT  );
     pDPIRow->Add( pScreenMM, 0, wxALIGN_RIGHT | wxALL, group_item_spacing );
 
     pDPIRow->Add( new wxStaticText( m_ChartDisplayPage, wxID_ANY, _("mm") ), inputFlags );
@@ -2874,7 +2875,7 @@ void options::CreateControls()
     if(!g_bresponsive){
         if( height <= 800 ) {
             border_size = 2;
-            check_spacing = 2;
+//            check_spacing = 2;  // Not used
             group_item_spacing = 1;
         }
     }
@@ -3295,8 +3296,8 @@ void options::SetInitialSettings()
         pRBSizeManual->SetValue( true );
     }
     else{
-        screenmm = _("Auto");
         pRBSizeAuto->SetValue( true );
+        screenmm.Printf(_T("%d"), int(g_Platform->GetDisplaySizeMM()));
         pScreenMM->Disable();
     }
     
@@ -3427,6 +3428,9 @@ void options::UpdateOptionsUnits()
 void options::OnSizeAutoButton( wxCommandEvent& event )
 {
     pScreenMM->SetValue(_("Auto"));
+    wxString screenmm;
+    screenmm.Printf(_T("%d"), int(g_Platform->GetDisplaySizeMM()));
+    pScreenMM->SetValue(screenmm);
     pScreenMM->Disable();
 }
 
@@ -3436,7 +3440,10 @@ void options::OnSizeManualButton( wxCommandEvent& event )
     if(g_config_display_size_mm > 0){
         screenmm.Printf(_T("%d"), int(g_config_display_size_mm));
     }
-    
+    else {
+        screenmm.Printf(_T("%d"), int(g_Platform->GetDisplaySizeMM()));
+    }
+
     pScreenMM->SetValue(screenmm);
     pScreenMM->Enable();
     

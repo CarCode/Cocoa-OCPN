@@ -273,7 +273,7 @@ ClipResult cohen_sutherland_line_clip_d (double *x0, double *y0, double *x1, dou
       /* Cohen-Sutherland clipping algorithm for line P0=(x1,y0) to P1=(x1,y1)
     and clip rectangle with diagonal from (xmin,ymin) to (xmax,ymax).*/
     struct LOC_cohen_sutherland_line_clip V;
-    int accept = CFALSE, done = CFALSE;
+    int /*accept = CFALSE,*/ done = CFALSE;
     ClipResult clip = Visible;
     outcode outcode0, outcode1, outcodeOut;
     /*Outcodes for P0,P1, and whichever point lies outside the clip rectangle*/
@@ -287,7 +287,7 @@ ClipResult cohen_sutherland_line_clip_d (double *x0, double *y0, double *x1, dou
     CompOutCode(*x1, *y1, &outcode1, &V);
     do {
         if (outcode0 == 0 && outcode1 == 0) {   /*Trivial accept and exit*/
-            accept = CTRUE;
+//            accept = CTRUE;  // Not used
             done = CTRUE;
         } else if ((outcode0 & outcode1) != 0) {
             clip = Invisible;

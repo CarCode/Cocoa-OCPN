@@ -270,8 +270,11 @@ OGRBoolean OGRGeometry::Intersect( OGRGeometry *poOtherGeom ) const
 
 {
     OGREnvelope         oEnv1, oEnv2;
-
+#ifdef __WXOSX__
+    if( !this || poOtherGeom == NULL )
+#else
     if( this == NULL || poOtherGeom == NULL )
+#endif
         return FALSE;
 
     this->getEnvelope( &oEnv1 );

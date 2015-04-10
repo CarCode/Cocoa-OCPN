@@ -1276,7 +1276,12 @@ bool Quilt::BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_
                             if( m_extended_stack_array.Item( id ) != -1 ) {
                                 ChartTableEntry *pm = ChartData->GetpChartTableEntry( m_extended_stack_array.Item( id ) );
                                 if( pm->GetFileTime() && pn->GetFileTime()) {
-                                    if( abs(pm->GetFileTime() - pn->GetFileTime()) < 60 ) {           // simple test
+#ifdef __WXOSX__
+                                    if( std::abs(pm->GetFileTime() - pn->GetFileTime()) < 60 )
+#else
+                                    if( abs(pm->GetFileTime() - pn->GetFileTime()) < 60 )
+#endif
+                                    {           // simple test
                                         if( pn->GetpFileName()->IsSameAs( *( pm->GetpFileName() ) ) )
                                             b_noadd = true;
                                     }

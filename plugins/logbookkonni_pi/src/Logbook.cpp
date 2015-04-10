@@ -12,7 +12,7 @@
 #include "LogbookOptions.h"
 #include "MessageBoxOSX.h"
 
-#include "nmea0183/nmea0183.h"
+#include "../../../src/nmea0183/nmea0183.h"
 
 #include <wx/object.h>
 #include "wx/stdpaths.h"
@@ -32,6 +32,9 @@
 #include <wx/txtstrm.h> 
 
 #include <math.h>
+#ifdef __WXOSX__
+#include <cmath>
+#endif
 
 Logbook::Logbook(LogbookDialog* parent, wxString data, wxString layout, wxString layoutODT)
 	: LogbookHTML(this,parent,data,layout)
@@ -1701,14 +1704,14 @@ void Logbook::checkCourseChanged()
 
 
 #ifdef __WXOSX__
-	wxDouble result = labs(cog-dCOG); 
+    wxDouble result = std::abs(cog-dCOG);
 #else
 	wxDouble result = abs(cog-dCOG); 
 #endif
 	if(result > 180) result -= 360;
 
 #ifdef __WXOSX__
-	if(labs(result) >= opt->dCourseChangeDegrees && !dialog->logbookPlugIn->eventsEnabled)
+    if(std::abs(result) >= opt->dCourseChangeDegrees && !dialog->logbookPlugIn->eventsEnabled)
 #else
 	if(abs(result) >= opt->dCourseChangeDegrees && !dialog->logbookPlugIn->eventsEnabled)
 #endif

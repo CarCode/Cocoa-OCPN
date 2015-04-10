@@ -493,7 +493,7 @@ void AISDrawAreaNotices( ocpnDC& dc )
 
                 yellow_brush = wxTheBrushList->FindOrCreateBrush( yellow, wxCROSSDIAG_HATCH );
                 green_brush = wxTheBrushList->FindOrCreateBrush( green, wxTRANSPARENT );
-                brush = yellow_brush;
+//                brush = yellow_brush;  // Not used
 
                 b_pens_set = true;
             }

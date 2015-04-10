@@ -29,6 +29,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#ifdef __WXOSX__
+#include <cmath>
+#endif
 
 #include "Utilities.h"
 #include "Boat.h"
@@ -602,7 +605,11 @@ wxString BoatPlan::TrySwitchBoatPlan(double VW, double H, double Swell,
                                      wxDateTime &gribtime, double lat, double lon, int &daytime)
 
 {
+#ifdef __WXOSX__
+    H = std::abs(heading_resolve(H));
+#else
     H = abs(heading_resolve(H)); /* make this work for both tacks */
+#endif
 
     for(unsigned int i=0; i<SwitchPlans.size(); i++) {
         SwitchPlan p = SwitchPlans[i];

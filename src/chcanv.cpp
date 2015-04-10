@@ -8232,7 +8232,7 @@ bool ChartCanvas::InvokeCanvasMenu(int x, int y, int seltype)
 {
     m_canvasMenu = new CanvasMenuHandler(this, m_pSelectedRoute, m_pSelectedTrack,
                                          m_pFoundRoutePoint, m_FoundAIS_MMSI, m_pIDXCandidate);
-    
+
     Connect(  wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction) (wxEventFunction) &ChartCanvas::PopupMenuHandler );
 
     m_canvasMenu->CanvasPopupMenu( x, y, seltype );
@@ -8241,7 +8241,12 @@ bool ChartCanvas::InvokeCanvasMenu(int x, int y, int seltype)
 
     delete m_canvasMenu;
     m_canvasMenu = NULL;
-    
+
+#ifdef __WXQT__
+    g_FloatingToolbarDialog->Raise();
+    g_FloatingCompassDialog->Raise();
+#endif
+
     return true;
 }
 
