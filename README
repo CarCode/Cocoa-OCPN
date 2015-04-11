@@ -36,13 +36,12 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    Mac Hilfe usw.
 
 b. Diese Version basiert auf Release-Version von wxWidgets 3.1.0 mit
-   entsprechenden dylibs vom 04. Oktober 2014. Die Einbindung der Libs als
+   entsprechenden dylibs vom 10. Januar 2015. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
-c. In einem weiteren Schritt soll mit Veröffentlichung einer Binär-Version
-   von OCPN für Mac ein automatischer Update-Service mit Sparkle eingeführt
-   werden.
+c. In einem weiteren Schritt wurde mit Veröffentlichung einer Binär-Version
+   von OCPN für Mac ein automatischer Update-Service mit Sparkle eingeführt.
 
 d. Nicht alle Plugins laufen bisher problemlos. Einige wurden noch nicht
    compiliert, andere haben noch Fehler.
@@ -61,10 +60,10 @@ f. Das von den OCPN Programmierern gewünschte Konzept, die Plugins als
    Dateien.
 
 Compiler:
-Xcode 6.1 Beta
-Apple LLVM version 6.0 (clang-600.0.54) (based on LLVM 3.3svn)
-Target: x86_64-apple-darwin13.4.0
-SDK 10.10 Yosemite
+Xcode 6.3
+Apple LLVM version 6.1.0 (clang-602.0.49) (based on LLVM 3.6.0svn)
+Target: x86_64-apple-darwin14.3.0
+SDK 10.10.3 Yosemite
 Thread model: posix
 
 wxWidgets Direktive:
@@ -85,7 +84,7 @@ bzw. /usr/local/include/wx-3.1
 Um eine eigenständige OpenCPN-Version zu erhalten, müssen OpenCPN und die
 dylibs (im Contents/Frameworks/ Verzeichnis bzw. Contents/Plugins/ Verzeichnis)
 mit "install_name_tool -change" bearbeitet werden!
-Siehe batch.sh und batchwx.sh
+Siehe batchwx.sh bzw. Xcode Scripts.
 -----------------------------------------------------------------------
-04. Oktober 2014
+11. April 2015
 

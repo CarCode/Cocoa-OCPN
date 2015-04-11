@@ -24,39 +24,39 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
-	<string>14.10.25</string>
+	<string>15.4.11</string>
 	<key>CFBundleName</key>
 	<string>OpenCPN</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>14.11.10</string>
+	<string>15.4.11</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>14.11</string>
+	<string>15.4</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>DTCompiler</key>
 	<string>Xcode</string>
 	<key>DTPlatformBuild</key>
-	<string>4H1503</string>
+	<string>6D570</string>
 	<key>DTPlatformVersion</key>
 	<string>GM</string>
 	<key>DTSDKBuild</key>
-	<string>13F34</string>
+	<string>14A383</string>
 	<key>DTSDKName</key>
 	<string>macosx10.10</string>
 	<key>DTXcode</key>
-	<string>0610</string>
+	<string>0630</string>
 	<key>DTXcodeBuild</key>
-	<string>6A1052d</string>
+	<string>6D570</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.business</string>
 	<key>LSRequiresCarbon</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>CarCode 2014</string>
+	<string>CarCode 2015</string>
 	<key>SUFeedURL</key>
 	<string>http://topperdiek.de/dl/app/ocpncast.xml</string>
 	<key>SUPublicDSAKeyFile</key>
