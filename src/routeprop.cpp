@@ -1271,7 +1271,7 @@ bool RouteProp::UpdateProperties()
         }
 
         m_pRoute->UpdateSegmentDistances( m_planspeed );           // get segment and total distance
-        double leg_speed = m_planspeed;
+        double leg_speed; // = m_planspeed;  // Not used
         wxTimeSpan stopover_time( 0 ); // time spent waiting for ETD
         wxTimeSpan joining_time( 0 );   // time spent before reaching first waypoint
 
@@ -1359,8 +1359,8 @@ bool RouteProp::UpdateProperties()
 
         wxString nullify = _T("----");
 
-        int i_prev_point = -1;
-        RoutePoint *prev_route_point = NULL;
+//        int i_prev_point = -1;  // Not used
+//        RoutePoint *prev_route_point = NULL;  // Not used
 
         while( node ) {
             RoutePoint *prp = node->GetData();
@@ -1582,8 +1582,8 @@ bool RouteProp::UpdateProperties()
                 node = node->GetNext();
 
                 //    Record this point info for use as previous point in next iteration.
-                i_prev_point = i - 1;
-                prev_route_point = prp;
+//                i_prev_point = i - 1;  // Not used
+//                prev_route_point = prp;  // Not used
             }
         }
     }
@@ -2283,6 +2283,7 @@ void MarkInfoDef::OnShowWaypointRangeRingSelect( wxCommandEvent& event )
             waypointradarGrid->ShowItems( true );
     }
     bSizerBasicProperties->Layout();
+    m_panelBasicProperties->FitInside();
     Refresh();
     event.Skip();
 }
@@ -2295,6 +2296,7 @@ void MarkInfoDef::OnWaypointRangeRingSelect( wxCommandEvent& event )
         waypointradarGrid->ShowItems( true );
     }
     bSizerBasicProperties->Layout();
+    m_panelBasicProperties->FitInside();
     Refresh();
     event.Skip();
 }

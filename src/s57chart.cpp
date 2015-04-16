@@ -323,7 +323,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
 
                 if( !strncmp( buf, "HDRLEN", 6 ) ) {
                     hdr_len = atoi( buf + 7 );
-		    char * tmp = hdr_buf;
+                    char * tmp = hdr_buf;
                     hdr_buf = (char *) realloc( hdr_buf, hdr_len );
                     if (NULL == hdr_buf)
                     {
@@ -4477,7 +4477,12 @@ int s57chart::BuildSENCFile( const wxString& FullPath000, const wxString& SENCFi
             msg.Append( _T(" to ") );
             msg.Append( SENCfile.GetFullPath() );
             wxLogMessage( msg );
+#ifdef __OCPN__ANDROID__
+            wxLogMessage(_T("   Android: Error overridden / ignored.") );
+            ret_code = BUILD_SENC_OK;
+#else
             ret_code = BUILD_SENC_NOK_RETRY;
+#endif
         } else
             ret_code = BUILD_SENC_OK;
 
