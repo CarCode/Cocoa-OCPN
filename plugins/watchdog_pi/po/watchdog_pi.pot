@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: watchdog_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-24 19:12+0200\n"
+"POT-Creation-Date: 2015-04-19 13:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,125 +17,138 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/Alarm.cpp:41
+#: ../src/Alarm.cpp:42
 msgid "LandFall"
 msgstr ""
 
-#: ../src/Alarm.cpp:120
+#: ../src/Alarm.cpp:112
 msgid "LandFall not Detected"
 msgstr ""
 
-#: ../src/Alarm.cpp:124
+#: ../src/Alarm.cpp:116
 msgid "Days"
 msgstr ""
 
-#: ../src/Alarm.cpp:127
+#: ../src/Alarm.cpp:119
 msgid "Day"
 msgstr ""
 
-#: ../src/Alarm.cpp:131
+#: ../src/Alarm.cpp:123
 msgid "Hours"
 msgstr ""
 
-#: ../src/Alarm.cpp:134
+#: ../src/Alarm.cpp:126
 msgid "Hour"
 msgstr ""
 
-#: ../src/Alarm.cpp:138
+#: ../src/Alarm.cpp:130
 msgid "Minutes"
 msgstr ""
 
-#: ../src/Alarm.cpp:141
+#: ../src/Alarm.cpp:133
 msgid "Minute"
 msgstr ""
 
-#: ../src/Alarm.cpp:145
+#: ../src/Alarm.cpp:137
 msgid "Seconds"
 msgstr ""
 
-#: ../src/Alarm.cpp:147
+#: ../src/Alarm.cpp:139
 msgid "Second"
 msgstr ""
 
-#: ../src/Alarm.cpp:168
+#: ../src/Alarm.cpp:155
 msgid "Distance"
 msgstr ""
 
-#: ../src/Alarm.cpp:222 ../src/WatchdogUI.cpp:248
+#: ../src/Alarm.cpp:235 ../src/WatchdogUI.cpp:280
 msgid "NMEA Data"
 msgstr ""
 
-#: ../src/Alarm.cpp:242
+#: ../src/Alarm.cpp:254
 msgid "second(s)"
 msgstr ""
 
-#: ../src/Alarm.cpp:289 ../src/WatchdogUI.cpp:270
+#: ../src/Alarm.cpp:303 ../src/WatchdogUI.cpp:313
 msgid "Deadman"
 msgstr ""
 
-#: ../src/Alarm.cpp:324
+#: ../src/Alarm.cpp:339 ../src/WatchdogPrefsDialog.cpp:252
+#: ../src/WatchdogUI.cpp:306 ../src/WatchdogUI.cpp:343
+msgid "Second Deadman"
+msgstr ""
+
+#: ../src/Alarm.cpp:352
 msgid "Anchor"
 msgstr ""
 
-#: ../src/Alarm.cpp:347
+#: ../src/Alarm.cpp:396
 msgid "meter(s)"
 msgstr ""
 
-#: ../src/Alarm.cpp:398 ../src/WatchdogPrefsDialog.cpp:179
-#: ../src/WatchdogUI.cpp:371
+#: ../src/Alarm.cpp:452 ../src/Alarm.cpp:455 ../src/Alarm.cpp:548
+#: ../src/WatchdogPrefsDialog.cpp:259 ../src/WatchdogUI.cpp:447
 msgid "Off Course"
 msgstr ""
 
-#: ../src/Alarm.cpp:424
-msgid "degrees(s)"
-msgstr ""
-
-#: ../src/Alarm.cpp:428
-msgid " Port"
-msgstr ""
-
-#: ../src/Alarm.cpp:488 ../src/WatchdogPrefsDialog.cpp:183
-#: ../src/WatchdogUI.cpp:386
-msgid "Off Course Starboard"
-msgstr ""
-
-#: ../src/Alarm.cpp:511
-msgid "degrees(s) Starboard"
-msgstr ""
-
-#: ../src/Alarm.cpp:581
-msgid "UnderSpeed"
-msgstr ""
-
-#: ../src/Alarm.cpp:597
-msgid "OverSpeed"
-msgstr ""
-
-#: ../src/Alarm.cpp:674
-msgid "Failed to execute command: "
-msgstr ""
-
-#: ../src/Alarm.cpp:675 ../src/watchdog_pi.cpp:97 ../src/watchdog_pi.cpp:166
-msgid "Watchdog"
-msgstr ""
-
-#: ../src/Alarm.cpp:681
-msgid " ALARM!"
-msgstr ""
-
-#: ../src/Alarm.cpp:682
-msgid "Watchman"
-msgstr ""
-
-#: ../src/WatchdogPrefsDialog.cpp:179 ../src/WatchdogUI.cpp:69
-msgid "Course Error"
-msgstr ""
-
-#: ../src/WatchdogPrefsDialog.cpp:179
+#: ../src/Alarm.cpp:453 ../src/WatchdogPrefsDialog.cpp:259
 msgid "Port"
 msgstr ""
 
-#: ../src/WatchdogPrefsDialog.cpp:195
+#: ../src/Alarm.cpp:482
+msgid "degrees(s)"
+msgstr ""
+
+#: ../src/Alarm.cpp:486
+msgid " Port"
+msgstr ""
+
+#: ../src/Alarm.cpp:548
+msgid "Starboard"
+msgstr ""
+
+#: ../src/Alarm.cpp:570
+msgid "degrees(s) Starboard"
+msgstr ""
+
+#: ../src/Alarm.cpp:642 ../src/WatchdogUI.cpp:93 ../src/WatchdogUI.cpp:494
+msgid "Under Speed"
+msgstr ""
+
+#: ../src/Alarm.cpp:659 ../src/WatchdogUI.cpp:101 ../src/WatchdogUI.cpp:526
+msgid "Over Speed"
+msgstr ""
+
+#: ../src/Alarm.cpp:751
+msgid "Failed to execute command: "
+msgstr ""
+
+#: ../src/Alarm.cpp:752 ../src/WatchdogPrefsDialog.cpp:123
+#: ../src/watchdog_pi.cpp:90 ../src/watchdog_pi.cpp:153
+msgid "Watchdog"
+msgstr ""
+
+#: ../src/Alarm.cpp:758
+msgid "ALARM!"
+msgstr ""
+
+#: ../src/Alarm.cpp:759
+msgid "Watchman"
+msgstr ""
+
+#: ../src/WatchdogPrefsDialog.cpp:123
+msgid "Invalid Alarm"
+msgstr ""
+
+#: ../src/WatchdogPrefsDialog.cpp:259 ../src/WatchdogUI.cpp:77
+msgid "Course Error"
+msgstr ""
+
+#: ../src/WatchdogPrefsDialog.cpp:263 ../src/WatchdogUI.cpp:462
+msgid "Off Course Starboard"
+msgstr ""
+
+#: ../src/WatchdogPrefsDialog.cpp:275
 msgid ""
 "Most alarms should be self-explanatory\n"
 "Normally a sound is played, however you can execute any command you like, "
@@ -146,7 +159,7 @@ msgid ""
 "it may be triggered again later."
 msgstr ""
 
-#: ../src/WatchdogPrefsDialog.cpp:202
+#: ../src/WatchdogPrefsDialog.cpp:282
 msgid "Watchdog Information"
 msgstr ""
 
@@ -170,244 +183,269 @@ msgstr ""
 msgid "Deadman activity"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:57
+#: ../src/WatchdogUI.cpp:57 ../src/WatchdogUI.cpp:65
 msgid "No Updates"
 msgstr ""
 
 #: ../src/WatchdogUI.cpp:61
+msgid "Second Deadman activity"
+msgstr ""
+
+#: ../src/WatchdogUI.cpp:69
 msgid "Distance to Anchor"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:77
+#: ../src/WatchdogUI.cpp:85
 msgid "Course Error Starboard"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:85 ../src/WatchdogUI.cpp:418
-msgid "Under Speed"
-msgstr ""
-
-#: ../src/WatchdogUI.cpp:93 ../src/WatchdogUI.cpp:450
-msgid "Over Speed"
-msgstr ""
-
-#: ../src/WatchdogUI.cpp:109
-msgid "Disable All Alarms"
-msgstr ""
-
-#: ../src/WatchdogUI.cpp:112
+#: ../src/WatchdogUI.cpp:117
 msgid "Preferences"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:115
+#: ../src/WatchdogUI.cpp:120
 msgid "Reset"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:118
+#: ../src/WatchdogUI.cpp:123
 msgid "Close"
 msgstr ""
 
+#: ../src/WatchdogUI.cpp:161
+msgid "General Setup"
+msgstr ""
+
+#: ../src/WatchdogUI.cpp:168
+msgid "Enable Alarms"
+msgstr ""
+
 #: ../src/WatchdogUI.cpp:171
-msgid "GPS course crosses land in <"
+msgid "Enabled first time Dialog is opened"
+msgstr ""
+
+#: ../src/WatchdogUI.cpp:174
+msgid "Enabled only if Dialog is visible"
 msgstr ""
 
 #: ../src/WatchdogUI.cpp:177
+msgid "Disable Alarms"
+msgstr ""
+
+#: ../src/WatchdogUI.cpp:200
+msgid "GPS course crosses land in <"
+msgstr ""
+
+#: ../src/WatchdogUI.cpp:206
 msgid "minutes"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:189
+#: ../src/WatchdogUI.cpp:218
 msgid "GPS fix is <"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:192
+#: ../src/WatchdogUI.cpp:221
 msgid "3"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:195
+#: ../src/WatchdogUI.cpp:224
 msgid ""
 "nm from coastline\n"
 "(any direction)"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:202
+#: ../src/WatchdogUI.cpp:231
 msgid ""
 "Graphical overlay for time displays line from boat to location of land "
 "crossing"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:210
+#: ../src/WatchdogUI.cpp:235
+msgid ""
+"Landfall detection uses gshhs (global heirarchical high-resolution shoreline "
+"data.)\n"
+"Consider installing the highest resolution database for best accuracy."
+msgstr ""
+
+#: ../src/WatchdogUI.cpp:242
 msgid "Landfall"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:218
+#: ../src/WatchdogUI.cpp:250
 msgid "Require following NMEA sentences:"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:222
+#: ../src/WatchdogUI.cpp:254
 msgid "$GPGGA"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:230
+#: ../src/WatchdogUI.cpp:262
 msgid "at least every"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:237
+#: ../src/WatchdogUI.cpp:269
 msgid "seconds"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:255
+#: ../src/WatchdogUI.cpp:292 ../src/WatchdogUI.cpp:325
 msgid "No User Activity for"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:262
+#: ../src/WatchdogUI.cpp:299 ../src/WatchdogUI.cpp:332
 msgid "minute(s)"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:282
+#: ../src/WatchdogUI.cpp:355
 msgid "Latitude"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:292
+#: ../src/WatchdogUI.cpp:365
 msgid "Longitude"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:299
+#: ../src/WatchdogUI.cpp:372
 msgid "Sync to Boat"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:302
+#: ../src/WatchdogUI.cpp:375
 msgid "Radius"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:309
+#: ../src/WatchdogUI.cpp:382
 msgid "meters"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:316
+#: ../src/WatchdogUI.cpp:389
+msgid ""
+"Automatically sync position when the boat\n"
+"stops for more than 1 minute"
+msgstr ""
+
+#: ../src/WatchdogUI.cpp:392
 msgid "Graphical overlay displays bounding anchor area"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:324
+#: ../src/WatchdogUI.cpp:400
 msgid "Anchor Watch"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:336
+#: ../src/WatchdogUI.cpp:412
 msgid "Off Course By >"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:343
+#: ../src/WatchdogUI.cpp:419
 msgid "Degrees"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:347
+#: ../src/WatchdogUI.cpp:423
 msgid "With Course Of"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:354
+#: ../src/WatchdogUI.cpp:430
 msgid "Current Course"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:360
+#: ../src/WatchdogUI.cpp:436
 msgid "Separate Port and Starboard Alarms"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:363
+#: ../src/WatchdogUI.cpp:439
 msgid "Graphical overlay displays lines bounding valid courses"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:378
+#: ../src/WatchdogUI.cpp:454
 msgid ""
 "Settings the same as Off Course Port, with different Alarm Actions possible."
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:389 ../src/WatchdogUI.cpp:421
+#: ../src/WatchdogUI.cpp:465 ../src/WatchdogUI.cpp:497
 msgid "Speed Alarm"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:396
+#: ../src/WatchdogUI.cpp:472
 msgid "Speed over ground <"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:400
+#: ../src/WatchdogUI.cpp:476
 msgid "1"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:403 ../src/WatchdogUI.cpp:435
+#: ../src/WatchdogUI.cpp:479 ../src/WatchdogUI.cpp:511
 msgid "knots"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:410 ../src/WatchdogUI.cpp:442
+#: ../src/WatchdogUI.cpp:486 ../src/WatchdogUI.cpp:518
 msgid "Graphical overlay displays circle with radius of this speed"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:428
+#: ../src/WatchdogUI.cpp:504
 msgid "Speed over ground >"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:432
+#: ../src/WatchdogUI.cpp:508
 msgid "12"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:457 ../src/WatchdogUI.cpp:472
+#: ../src/WatchdogUI.cpp:533 ../src/WatchdogUI.cpp:548
 msgid "Not implemented"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:465
+#: ../src/WatchdogUI.cpp:541
 msgid "Depth"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:480
+#: ../src/WatchdogUI.cpp:556
 msgid "Wind"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:499
+#: ../src/WatchdogUI.cpp:575
 msgid "Enabled"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:502
+#: ../src/WatchdogUI.cpp:578
 msgid "Disabled"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:505
+#: ../src/WatchdogUI.cpp:581
 msgid "Graphical Overlay Display"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:512
+#: ../src/WatchdogUI.cpp:589
 msgid "Alarm Action"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:520
+#: ../src/WatchdogUI.cpp:597
 msgid "Sound"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:523
+#: ../src/WatchdogUI.cpp:600
 msgid "Select a file"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:526
+#: ../src/WatchdogUI.cpp:603
 msgid "Command"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:532
+#: ../src/WatchdogUI.cpp:609
 msgid "Message Box"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:538
+#: ../src/WatchdogUI.cpp:615
 msgid "Repeat Alarm after seconds"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:544
+#: ../src/WatchdogUI.cpp:621
 msgid "Automatically  Reset"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:547
+#: ../src/WatchdogUI.cpp:624
 msgid "Test Alarm"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:567
+#: ../src/WatchdogUI.cpp:644
 msgid "Information"
 msgstr ""
 
-#: ../src/WatchdogUI.cpp:570
+#: ../src/WatchdogUI.cpp:647
 msgid "About Author"
 msgstr ""
 
@@ -415,15 +453,15 @@ msgstr ""
 msgid "WatchDog"
 msgstr ""
 
-#: ../src/WatchdogUI.h:179
+#: ../src/WatchdogUI.h:196
 msgid "Watchdog Preferences"
 msgstr ""
 
-#: ../src/watchdog_pi.cpp:171
+#: ../src/watchdog_pi.cpp:158
 msgid "Watchdog PlugIn for OpenCPN"
 msgstr ""
 
-#: ../src/watchdog_pi.cpp:176
+#: ../src/watchdog_pi.cpp:163
 msgid ""
 "Watchdog PlugIn for OpenCPN\n"
 "Alarm user of changing conditions."

@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,22 +23,21 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
-#ifndef _WATCHMANPI_H_
-#define _WATCHMANPI_H_
+#ifndef _WATCHDOGPI_H_
+#define _WATCHDOGPI_H_
 
 #include "wx/wx.h"
 
 #include <wx/fileconf.h>
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    1
+#define     PLUGIN_VERSION_MINOR    4
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    10
 
 #define ABOUT_AUTHOR_URL "http://seandepagnier.users.sourceforge.net"
 
-// #include "ocpn_plugin.h"
 #include "../../../include/ocpn_plugin.h"
 
 #ifdef __MSVC__
@@ -82,7 +80,7 @@ double heading_resolve(double degrees);
 //    The PlugIn Class Definition
 //----------------------------------
 
-#define WATCHMAN_TOOL_POSITION    -1          // Request default positioning of toolbar tool
+#define WATCHDOG_TOOL_POSITION    -1          // Request default positioning of toolbar tool
 
 #include "Alarm.h"
 
@@ -124,11 +122,10 @@ public:
       void SetColorScheme(PI_ColorScheme cs);
 
 //    Other public methods
-      void SetWatchdogDialogX    (int x){ m_watchdog_dialog_x = x;}
-      void SetWatchdogDialogY    (int x){ m_watchdog_dialog_y = x;}
-
       void OnWatchdogDialogClose();
       void    ShowPreferencesDialog( wxWindow* );
+
+      void UpdatePreferences();
 
       PlugIn_Position_Fix_Ex &LastFix() { return m_lastfix; }
 
@@ -154,9 +151,6 @@ private:
       void    SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix);
 
       WatchdogPrefsDialog *m_pWatchdogPrefsDialog;
-      int               m_watchdog_dialog_x, m_watchdog_dialog_y;
-      int               m_display_width, m_display_height;
-
       int               m_leftclick_tool_id;
 
       void              RearrangeWindow();

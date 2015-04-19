@@ -18,19 +18,19 @@
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
-#include <wx/checkbox.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
+#include <wx/radiobut.h>
+#include <wx/statbox.h>
+#include <wx/checkbox.h>
 #include <wx/spinctrl.h>
 #include <wx/textctrl.h>
 #include <wx/panel.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/statbox.h>
 #include <wx/listbook.h>
 #include <wx/listctrl.h>
-#include <wx/radiobut.h>
 #include <wx/filepicker.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -44,13 +44,11 @@ class WatchdogDialogBase : public wxDialog
 	private:
 	
 	protected:
-		wxCheckBox* m_cbDisableAllAlarms;
 		wxButton* m_bPreferences;
 		wxButton* m_bReset;
 		wxButton* m_bClose;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnDisableAllAlarms( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnPreferences( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnReset( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnClose( wxCommandEvent& event ) { event.Skip(); }
@@ -66,6 +64,8 @@ class WatchdogDialogBase : public wxDialog
 		wxStaticText* m_stNMEAData;
 		wxStaticText* m_stTextDeadman;
 		wxStaticText* m_stDeadman;
+        wxStaticText* m_stTextSecondDeadman;
+        wxStaticText* m_stSecondDeadman;
 		wxStaticText* m_stTextAnchor;
 		wxStaticText* m_stAnchorDistance;
 		wxStaticText* m_stTextCourseError;
@@ -90,11 +90,16 @@ class WatchdogPrefsDialogBase : public wxDialog
 	private:
 	
 	protected:
+        wxRadioButton* m_rbAlways;
+        wxRadioButton* m_rbOnce;
+        wxRadioButton* m_rbVisible;
+        wxRadioButton* m_rbNever;
 		wxListbook* m_lbAlarm;
 		wxPanel* m_panel1;
 		wxStaticText* m_staticText30;
 		wxStaticText* m_staticText7;
 		wxStaticText* m_staticText39122;
+        wxStaticText* m_staticText45;
 		wxPanel* m_panel2;
 		wxStaticText* m_staticText34;
 		wxTextCtrl* m_tNMEASentences;
@@ -103,12 +108,17 @@ class WatchdogPrefsDialogBase : public wxDialog
 		wxPanel* m_panel3;
 		wxStaticText* m_staticText33;
 		wxStaticText* m_staticText6;
+        wxCheckBox* m_cbSecondDeadman;
+        wxPanel* m_pSecondDeadman;
+        wxStaticText* m_staticText331;
+        wxStaticText* m_staticText61;
 		wxPanel* m_panel4;
 		wxStaticText* m_staticText71;
 		wxStaticText* m_staticText8;
 		wxButton* m_bSyncToBoat;
 		wxStaticText* m_staticText9;
 		wxStaticText* m_staticText39;
+        wxCheckBox* m_cbAutoSync;
 		wxStaticText* m_staticText39121;
 		wxPanel* m_pCourse;
 		wxStaticText* m_staticText32;
@@ -142,13 +152,19 @@ class WatchdogPrefsDialogBase : public wxDialog
 		wxButton* m_sdbSizer1OK;
 		
 		// Virtual event handlers, overide them in your derived class
+        virtual void OnEnabled( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAlarmChanged( wxListbookEvent& event ) { event.Skip(); }
 		virtual void OnAlarmUpdate( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAlarmUpdateSpin( wxSpinEvent& event ) { event.Skip(); }
+        virtual void OnCheckSecondDeadman( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSyncToBoat( wxCommandEvent& event ) { event.Skip(); }
+        virtual void f( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCurrentCourse( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCheckSeparatePortAndStarboard( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnAlarmUpdateFile( wxFileDirPickerEvent& event ) { event.Skip(); }
+        virtual void OnAlarmUpdateRB( wxCommandEvent& event ) { event.Skip(); }
+        virtual void OnAlarmUpdateSound( wxFileDirPickerEvent& event ) { event.Skip(); }
+        virtual void OnAlarmUpdateCommand( wxCommandEvent& event ) { event.Skip(); }
+        virtual void OnAlarmUpdateRepeat( wxSpinEvent& event ) { event.Skip(); }
 		virtual void OnTestAlarm( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnInformation( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAboutAuthor( wxCommandEvent& event ) { event.Skip(); }
@@ -161,6 +177,7 @@ class WatchdogPrefsDialogBase : public wxDialog
 		wxTextCtrl* m_tcLandFallDistance;
 		wxSpinCtrl* m_sNMEASeconds;
 		wxSpinCtrl* m_sDeadmanMinutes;
+        wxSpinCtrl* m_sSecondDeadmanMinutes;
 		wxTextCtrl* m_tAnchorLatitude;
 		wxTextCtrl* m_tAnchorLongitude;
 		wxSpinCtrl* m_sAnchorRadius;

@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,8 +37,9 @@
 class LandFallAlarm : public Alarm
 {
 public:
-    LandFallAlarm() : Alarm(_("LandFall"), 5 /* seconds */), m_bFiredTime(false) {}
+    LandFallAlarm() : Alarm(5 /* seconds */), m_bFiredTime(false) {}
 
+    wxString Name() { return _("LandFall"); }
     bool Test() {
         PlugIn_Position_Fix_Ex lastfix = g_watchdog_pi->LastFix();
 
@@ -104,14 +104,6 @@ public:
     wxString GetStatus() {
         WatchdogDialog &dlg = *g_watchdog_pi->m_pWatchdogDialog;
 
-        if(!m_bEnabled) {
-            dlg.m_stTextLandFallTime->Hide();
-            dlg.m_stLandFallTime->Hide();
-            dlg.m_stTextLandFallDistance->Hide();
-            dlg.m_stLandFallDistance->Hide();
-            return _T("");
-        }
-
         wxString s, fmt(_T(" %d "));
         wxFileConfig *pConf = GetConfigObject();
 
@@ -155,11 +147,6 @@ public:
                 dlg.m_stLandFallTime->SetForegroundColour(*wxBLACK);
 
             dlg.m_stLandFallTime->SetLabel(s);
-            dlg.m_stTextLandFallTime->Show();
-            dlg.m_stLandFallTime->Show();
-        } else {
-            dlg.m_stTextLandFallTime->Hide();
-            dlg.m_stLandFallTime->Hide();
         }
         
         if(pConf->Read ( _T ( "DistanceAlarm" ), 0L)) {
@@ -175,14 +162,38 @@ public:
                 dlg.m_stLandFallDistance->SetForegroundColour(*wxBLACK);
 
             dlg.m_stLandFallDistance->SetLabel(s);
+        }
+        
+        return _T("");
+    }
+    
+    void Repopulate() {
+        wxFileConfig *pConf = GetConfigObject();
+        
+        WatchdogDialog &dlg = *g_watchdog_pi->m_pWatchdogDialog;
+        wxFlexGridSizer &sizer = *dlg.m_fgAlarms;
+        
+        if(pConf->Read ( _T ( "TimeAlarm" ), 1L) && m_bEnabled) {
+            sizer.Add(dlg.m_stTextLandFallTime, 0, wxALL, 5);
+            sizer.Add(dlg.m_stLandFallTime, 0, wxALL, 5);
+            
+            dlg.m_stTextLandFallTime->Show();
+            dlg.m_stLandFallTime->Show();
+        } else {
+            dlg.m_stTextLandFallTime->Hide();
+            dlg.m_stLandFallTime->Hide();
+        }
+        
+        if(pConf->Read ( _T ( "DistanceAlarm" ), 0L) && m_bEnabled) {
+            sizer.Add(dlg.m_stTextLandFallDistance, 0, wxALL, 5);
+            sizer.Add(dlg.m_stLandFallDistance, 0, wxALL, 5);
+
             dlg.m_stTextLandFallDistance->Show();
             dlg.m_stLandFallDistance->Show();
         } else {
             dlg.m_stTextLandFallDistance->Hide();
             dlg.m_stLandFallDistance->Hide();
         }
-
-        return _T("");
     }
 
     void Render(ocpnDC &dc, PlugIn_ViewPort &vp) {
@@ -219,8 +230,9 @@ private:
 class NMEADataAlarm : public Alarm
 {
 public:
-    NMEADataAlarm() : Alarm(_("NMEA Data")) { start = wxDateTime::Now(); }
+    NMEADataAlarm() { start = wxDateTime::Now(); }
 
+    wxString Name() { return _("NMEA Data"); }
     void GetStatusControls(wxControl *&Text, wxControl *&status) {
         WatchdogDialog &dlg = *g_watchdog_pi->m_pWatchdogDialog;
         Text = dlg.m_stTextNMEAData;
@@ -286,8 +298,9 @@ private:
 class DeadmanAlarm : public Alarm
 {
 public:
-    DeadmanAlarm() : Alarm(_("Deadman")) {}
+    DeadmanAlarm() {}
 
+    wxString Name() { return _("Deadman"); }
     void GetStatusControls(wxControl *&Text, wxControl *&status) {
         WatchdogDialog &dlg = *g_watchdog_pi->m_pWatchdogDialog;
         Text = dlg.m_stTextDeadman;
@@ -318,11 +331,25 @@ public:
     }
 } g_DeadmanAlarm;
 
+class SecondDeadmanAlarm : public DeadmanAlarm
+{
+public:
+    SecondDeadmanAlarm() {}
+    
+    wxString Name() { return _("Second Deadman"); }
+    void GetStatusControls(wxControl *&Text, wxControl *&status) {
+        WatchdogDialog &dlg = *g_watchdog_pi->m_pWatchdogDialog;
+        Text = dlg.m_stTextSecondDeadman;
+        status = dlg.m_stSecondDeadman;
+    }
+} g_SecondDeadmanAlarm;
+
 class AnchorAlarm : public Alarm
 {
 public:
-    AnchorAlarm() : Alarm(_("Anchor")) {}
+    AnchorAlarm() { minoldfix.FixTime = 0; }
 
+    wxString Name() { return _("Anchor"); }
     void GetStatusControls(wxControl *&Text, wxControl *&status) {
         WatchdogDialog &dlg = *g_watchdog_pi->m_pWatchdogDialog;
         Text = dlg.m_stTextAnchor;
@@ -332,8 +359,30 @@ public:
     bool Test() {
         wxFileConfig *pConf = GetConfigObject();
 
-        double anchordist = Distance();
         long AnchorRadius = pConf->Read ( _T ( "Radius" ), 50L );
+
+        if( pConf->Read ( _T ( "AutoSync" ), 0L ) ) {
+            PlugIn_Position_Fix_Ex lastfix = g_watchdog_pi->LastFix();
+            if(lastfix.FixTime - minoldfix.FixTime >= 60) {
+                if(minoldfix.FixTime) {
+                    double dist;
+                    DistanceBearingMercator_Plugin(lastfix.Lat, lastfix.Lon,
+                                                   minoldfix.Lat, minoldfix.Lon,
+                                                   0, &dist);
+                    dist *= 1853.248; /* in meters */
+                    
+                    if(dist < AnchorRadius) {
+                        pConf->Write(_T("Latitude"), lastfix.Lat);
+                        pConf->Write(_T("Longitude"), lastfix.Lon);
+                        g_watchdog_pi->UpdatePreferences();
+                    }
+                }
+                minoldfix = lastfix;
+            }
+        }
+        
+        double anchordist = Distance();
+
         return anchordist > AnchorRadius;
     }
 
@@ -390,12 +439,21 @@ private:
         anchordist *= 1853.248; /* in meters */
         return anchordist;
     }
+
+    PlugIn_Position_Fix_Ex minoldfix;
+
 } g_AnchorAlarm;
 
 class CourseAlarm : public Alarm
 {
 public:
-    CourseAlarm() : Alarm(_("Off Course")), m_Mode(BOTH) {}
+    CourseAlarm() : m_Mode(BOTH) {}
+    
+    wxString Name() { return _("Off Course") +
+        (m_Mode == PORT ? wxString(_T(" ")) + _("Port") : _T("")); }
+
+    wxString ConfigName() { return _("Off Course"); }
+
     void SetPort(bool port) {
         m_Mode = port ? PORT : BOTH;
     }
@@ -485,8 +543,9 @@ private:
 class CourseStarboardAlarm : public Alarm
 {
 public:
-    CourseStarboardAlarm() : Alarm(_("Off Course Starboard")) {}
+    CourseStarboardAlarm() : Alarm() {}
 
+    wxString Name() { return _("Off Course") + wxString(_T(" ")) + _("Starboard"); }
     void GetStatusControls(wxControl *&Text, wxControl *&status) {
         WatchdogDialog &dlg = *g_watchdog_pi->m_pWatchdogDialog;
         Text = dlg.m_stTextStarboardCourseError;
@@ -529,7 +588,7 @@ private:
 class SpeedAlarm : public Alarm
 {
 public:
-    SpeedAlarm(wxString name) : Alarm(name, 1) {}
+    SpeedAlarm() {}
 
     double Knots() {
         wxFileConfig *pConf = GetConfigObject();
@@ -578,8 +637,9 @@ public:
 class UnderSpeedAlarm : public SpeedAlarm
 {
 public:
-    UnderSpeedAlarm() : SpeedAlarm(_("UnderSpeed")) {}
+    UnderSpeedAlarm() {}
 
+    wxString Name() { return _("Under Speed"); }
     void GetStatusControls(wxControl *&Text, wxControl *&status) {
         WatchdogDialog &dlg = *g_watchdog_pi->m_pWatchdogDialog;
         Text = dlg.m_stTextUnderSpeed;
@@ -594,8 +654,9 @@ public:
 class OverSpeedAlarm : public SpeedAlarm
 {
 public:
-    OverSpeedAlarm() : SpeedAlarm(_("OverSpeed")) {}
+    OverSpeedAlarm() {}
 
+    wxString Name() { return _("Over Speed"); }
     void GetStatusControls(wxControl *&Text, wxControl *&status) {
         WatchdogDialog &dlg = *g_watchdog_pi->m_pWatchdogDialog;
         Text = dlg.m_stTextOverSpeed;
@@ -609,10 +670,9 @@ public:
 
 ////////// Alarm Base Class /////////////////
 
-Alarm *Alarms[] = {&g_LandfallAlarm, &g_NMEADataAlarm, &g_DeadmanAlarm,
+Alarm *Alarms[] = {&g_LandfallAlarm, &g_NMEADataAlarm, &g_DeadmanAlarm, &g_SecondDeadmanAlarm,
                    &g_AnchorAlarm, &g_CourseAlarm, &g_CourseStarboardAlarm,
-                   &g_UnderSpeedAlarm,
-                   &g_OverSpeedAlarm, 0, 0, 0};
+                    &g_UnderSpeedAlarm, &g_OverSpeedAlarm, 0, 0, 0};
 
 void Alarm::RenderAll(ocpnDC &dc, PlugIn_ViewPort &vp)
 {
@@ -642,9 +702,25 @@ void Alarm::UpdateStatusAll()
         (*alarm)->UpdateStatus();
 }
 
+void Alarm::RepopulateAll()
+{
+    for(Alarm **alarm = Alarms; *alarm; alarm++)
+        (*alarm)->Repopulate();
+}
+
 void Alarm::NMEAString(const wxString &string)
 {
     g_NMEADataAlarm.NMEAString(string);
+}
+
+void Alarm::ConfigSecondDeadman(bool read, wxCheckBox *control)
+{
+    g_DeadmanAlarm.ConfigItem(read, _T ( "SecondDeadman" ), control);
+    
+    if(control->GetValue())
+        g_SecondDeadmanAlarm.m_bEnabled = g_DeadmanAlarm.m_bEnabled;
+    else
+        g_SecondDeadmanAlarm.m_bEnabled = false;
 }
 
 void Alarm::ConfigCoursePort(bool read, wxCheckBox *control)
@@ -658,8 +734,8 @@ void Alarm::ConfigCoursePort(bool read, wxCheckBox *control)
         g_CourseStarboardAlarm.m_bEnabled = false;
 }
 
-Alarm::Alarm(wxString name, int interval)
-    : m_sName(name), m_interval(interval)
+Alarm::Alarm(int interval)
+: m_interval(interval)
 {
 }
 
@@ -671,6 +747,7 @@ void Alarm::Run()
     if(m_bCommand)
         if(!wxProcess::Open(m_sCommand)) {
             wxMessageDialog mdlg(GetOCPNCanvasWindow(),
+                                 Name() + _T(" ") +
                                  _("Failed to execute command: ") + m_sCommand,
                                  _("Watchdog"), wxOK | wxICON_ERROR);
             mdlg.ShowModal();
@@ -678,7 +755,7 @@ void Alarm::Run()
         }
 
     if(m_bMessageBox) {
-        wxMessageDialog mdlg(GetOCPNCanvasWindow(), m_sName + _(" ALARM!"),
+        wxMessageDialog mdlg(GetOCPNCanvasWindow(), Name() + _T(" ") + _("ALARM!"),
                              _("Watchman"), wxOK | wxICON_WARNING);
         mdlg.ShowModal();
     }
@@ -768,7 +845,15 @@ void Alarm::OnTimer( wxTimerEvent & )
 {
     wxFileConfig *pConf = GetOCPNConfigObject();
     pConf->SetPath ( _T( "/Settings/Watchdog" ) );
-    if(!pConf->Read ( _T( "DisableAllAlarms" ), 0L ) && m_bEnabled) {
+    int enabled = pConf->Read ( _T ( "Enabled" ), 0L );
+    
+    if(enabled == 2 && !g_watchdog_pi->m_pWatchdogDialog)
+        enabled = 0;
+    
+    if(enabled == 3 && !g_watchdog_pi->m_pWatchdogDialog->IsShown())
+        enabled = 0;
+    
+    if(enabled && m_bEnabled) {
         if(Test()) {        
             wxDateTime now = wxDateTime::Now();
             if(m_bFired) {
@@ -791,26 +876,38 @@ void Alarm::OnTimer( wxTimerEvent & )
 
 void Alarm::UpdateStatus()
 {
-    wxControl *Text, *status;
-    GetStatusControls(Text, status);
+    wxControl *text, *status;
+    GetStatusControls(text, status);
 
-    if(status && Text) {
-        if(m_bEnabled) {
-            wxString s = GetStatus();
-            if(m_bFired)
-                status->SetForegroundColour(*wxRED);
-            else
-                status->SetForegroundColour(*wxBLACK);
+    if(!status || !m_bEnabled)
+        return;
+    
+    wxString s = GetStatus();
+    if(m_bFired)
+        status->SetForegroundColour(*wxRED);
+    else
+        status->SetForegroundColour(*wxBLACK);
             
-            status->SetLabel(s);
-            Text->Show();
-            status->Show();
-        } else {
-            Text->Hide();
-            status->Hide();
-        }
-    } else
-        GetStatus();
+    status->SetLabel(s);
+}
+
+void Alarm::Repopulate()
+{
+    wxControl *text, *status;
+    GetStatusControls(text, status);
+    
+    if(!status || !text)
+        return;
+    
+    wxFlexGridSizer &sizer = *g_watchdog_pi->m_pWatchdogDialog->m_fgAlarms;
+    
+    text->Show(m_bEnabled);
+    status->Show(m_bEnabled);
+    
+    if(m_bEnabled) {
+        sizer.Add(text, 0, wxALL, 5);
+        sizer.Add(status, 0, wxALL, 5);
+    }
 }
 
 wxFileConfig *Alarm::GetConfigObject()
@@ -820,6 +917,6 @@ wxFileConfig *Alarm::GetConfigObject()
     if(!pConf)
         return NULL;
         
-    pConf->SetPath ( _T( "/Settings/Watchdog/Alarms/" ) + m_sName );
+    pConf->SetPath ( _T( "/Settings/Watchdog/Alarms/" ) + ConfigName() );
     return pConf;
 }

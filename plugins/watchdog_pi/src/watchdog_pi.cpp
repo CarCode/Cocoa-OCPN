@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -84,17 +83,11 @@ int watchdog_pi::Init(void)
 {
     AddLocaleCatalog( _T("opencpn-watchdog_pi") );
 
-    // Set some default private member parameters
-    m_watchdog_dialog_x = 0;
-    m_watchdog_dialog_y = 0;
-
-    ::wxDisplaySize(&m_display_width, &m_display_height);
-    
     LoadConfig(); //    And load the configuration items
     
     m_leftclick_tool_id  = InsertPlugInTool
         (_T(""), _img_watchdog, _img_watchdog, wxITEM_NORMAL,
-         _("Watchdog"), _T(""), NULL, WATCHMAN_TOOL_POSITION, 0, this);
+         _("Watchdog"), _T(""), NULL, WATCHDOG_TOOL_POSITION, 0, this);
     
     m_pWatchdogDialog = NULL;
     m_pWatchdogPrefsDialog = NULL;
@@ -106,8 +99,7 @@ int watchdog_pi::Init(void)
             WANTS_OPENGL_OVERLAY_CALLBACK |
             WANTS_TOOLBAR_CALLBACK    |
             WANTS_CURSOR_LATLON       |
-//            WANTS_PREFERENCES         |
-            WANTS_NMEA_SENTENCES |
+            WANTS_NMEA_SENTENCES      |
             WANTS_NMEA_EVENTS         |
             WANTS_AIS_SENTENCES       |
             WANTS_CONFIG);
@@ -115,21 +107,16 @@ int watchdog_pi::Init(void)
 
 bool watchdog_pi::DeInit(void)
 {
+    SaveConfig();
+
     //    Record the dialog position
     if (m_pWatchdogDialog)
     {
-        wxPoint p = m_pWatchdogDialog->GetPosition();
-        SetWatchdogDialogX(p.x);
-        SetWatchdogDialogY(p.y);
-        
-        if(m_pWatchdogDialog) {
-            m_pWatchdogDialog->Close();
-            delete m_pWatchdogDialog;
-            m_pWatchdogDialog = NULL;
-            m_pWatchdogPrefsDialog = NULL;
-        }
+        m_pWatchdogDialog->Close();
+        delete m_pWatchdogDialog;
+        m_pWatchdogDialog = NULL;
+        m_pWatchdogPrefsDialog = NULL;
     }
-    SaveConfig();
 
     RemovePlugInTool(m_leftclick_tool_id);
 
@@ -206,9 +193,13 @@ void watchdog_pi::OnToolbarToolCallback(int id)
     if(!m_pWatchdogDialog)
     {
         m_pWatchdogDialog = new WatchdogDialog(*this, GetOCPNCanvasWindow());
-        m_pWatchdogDialog->Move(wxPoint(m_watchdog_dialog_x, m_watchdog_dialog_y));
 
         m_pWatchdogPrefsDialog = new WatchdogPrefsDialog(*this, m_pWatchdogDialog);
+
+        wxIcon icon;
+        icon.CopyFromBitmap(*_img_watchdog);
+        m_pWatchdogDialog->SetIcon(icon);
+        m_pWatchdogPrefsDialog->SetIcon(icon);
     }
 
     m_pWatchdogDialog->Show(!m_pWatchdogDialog->IsShown());
@@ -293,16 +284,6 @@ void watchdog_pi::OnTimer( wxTimerEvent & )
 
 bool watchdog_pi::LoadConfig(void)
 {
-    wxFileConfig *pConf = GetOCPNConfigObject();
-
-    if(!pConf)
-        return false;
-
-    pConf->SetPath ( _T( "/Settings/Watchdog" ) );
-    
-    m_watchdog_dialog_x =  pConf->Read ( _T ( "DialogPosX" ), 20L );
-    m_watchdog_dialog_y =  pConf->Read ( _T ( "DialogPosY" ), 20L );
-
     Alarm::ConfigAll(true);
     
     return true;
@@ -310,16 +291,6 @@ bool watchdog_pi::LoadConfig(void)
 
 bool watchdog_pi::SaveConfig(void)
 {
-    wxFileConfig *pConf = GetOCPNConfigObject();
-
-    if(!pConf)
-        return false;
-
-    pConf->SetPath ( _T ( "/Settings/Watchdog" ) );
-
-    pConf->Write ( _T ( "DialogPosX" ),   m_watchdog_dialog_x );
-    pConf->Write ( _T ( "DialogPosY" ),   m_watchdog_dialog_y );
-
     Alarm::ConfigAll(false);
     
     return true;
@@ -348,4 +319,10 @@ void watchdog_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix)
 void watchdog_pi::ShowPreferencesDialog( wxWindow* )
 {
     m_pWatchdogPrefsDialog->Show();
+}
+
+void watchdog_pi::UpdatePreferences()
+{
+    if(m_pWatchdogPrefsDialog)
+        m_pWatchdogPrefsDialog->ReadAlarmActions();
 }

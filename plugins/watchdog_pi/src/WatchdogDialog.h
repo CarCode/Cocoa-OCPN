@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +35,6 @@ public:
 
     void UpdateAlarms();
 
-    void OnDisableAllAlarms( wxCommandEvent& event );
     void OnPreferences( wxCommandEvent& event );
     void OnReset( wxCommandEvent& event );
     void OnClose( wxCommandEvent& event ) { Hide(); }

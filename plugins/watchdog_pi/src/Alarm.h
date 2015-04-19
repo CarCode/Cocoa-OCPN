@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,10 +30,12 @@ public:
     static void ConfigAll(bool load);
     static void ResetAll();
     static void UpdateStatusAll();
+    static void RepopulateAll();
     static void NMEAString(const wxString &string);
+    static void ConfigSecondDeadman(bool read, wxCheckBox *control);
     static void ConfigCoursePort(bool read, wxCheckBox *control);
 
-    Alarm(wxString name, int interval=1);
+    Alarm(int interval=1);
 
     void Run();
     virtual void SaveConfig();
@@ -42,19 +43,20 @@ public:
 
     void UpdateStatus();
 
+    virtual void Repopulate();
+
+    virtual wxString Name() = 0;
+    virtual wxString ConfigName() { return Name(); }
     virtual bool Test() = 0;
     virtual wxString GetStatus() = 0;
     virtual void Render(ocpnDC &dc, PlugIn_ViewPort &vp) {}
 
     void OnTimer( wxTimerEvent & );
-
-    wxFileConfig *GetConfigObject();
+    virtual wxFileConfig *GetConfigObject();
 
 protected:
     bool m_bEnabled, m_bgfxEnabled;
     bool m_bFired;
-
-    wxString m_sName;
 
 private:
     friend class WatchdogPrefsDialog;
@@ -72,6 +74,6 @@ private:
     wxDateTime m_LastAlarmTime;
 };
 
-enum AlarmNames {LANDFALL, NMEADATA, DEADMAN, ANCHOR, COURSE, COURSESTARBOARD,
-                 UNDERSPEED, OVERSPEED, DEPTH, WIND};
+enum AlarmNames {LANDFALL, NMEADATA, DEADMAN, SECOND_DEADMAN, ANCHOR,
+    COURSE, COURSE_STARBOARD, UNDERSPEED, OVERSPEED, DEPTH, WIND};
 extern Alarm *Alarms[];

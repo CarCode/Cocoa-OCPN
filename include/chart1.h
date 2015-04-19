@@ -385,7 +385,8 @@ class MyFrame: public wxFrame
     void SubmergeToolbarIfOverlap(int x, int y, int margin = 0);
     void SurfaceToolbar(void);
     void SetToolbarScale(void);
-    
+    void ToggleToolbar( bool b_smooth = false );
+
     void HandlePianoClick(int selected_index, int selected_dbIndex);
     void HandlePianoRClick(int x, int y,int selected_index, int selected_dbIndex);
     void HandlePianoRollover(int selected_index, int selected_dbIndex);
