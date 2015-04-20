@@ -171,6 +171,7 @@
 				785D38FA2EB248D992323ED9 /* PBXTargetDependency */,
 				71ADD26CEFF44A5FB372EE29 /* PBXTargetDependency */,
 				9D1F24F095AC45E38CA1BC4A /* PBXTargetDependency */,
+				A645151F1AE50A3700933404 /* PBXTargetDependency */,
 				99AA407E955648AB95C0E429 /* PBXTargetDependency */,
 				A68FF415184A686400C65557 /* PBXTargetDependency */,
 				A68EAB3E188745FB00893250 /* PBXTargetDependency */,
@@ -189,6 +190,7 @@
 				A6B4A58317A5229300E3A5D0 /* PBXTargetDependency */,
 				A647C90619C3652D0034EA04 /* PBXTargetDependency */,
 				A6FE261919D55C28001EF4B7 /* PBXTargetDependency */,
+				A62F3F4A1AE13D9200AFD69B /* PBXTargetDependency */,
 				43CB8F738129439D86E8716F /* PBXTargetDependency */,
 			);
 			name = ALL_BUILD;
@@ -458,12 +460,77 @@
 		A6207BAC19A6A33000215493 /* vlw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6207BAB19A6A33000215493 /* vlw.cpp */; };
 		A6207BAE19A6A34E00215493 /* Stalk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6207BAD19A6A34E00215493 /* Stalk.cpp */; };
 		A627BE5519D5674400BBFC8A /* libobjsearch_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6728C0D19D4327900070B45 /* libobjsearch_pi.dylib */; };
+		A62F3F4B1AE1559700AFD69B /* libchartdldr_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A63220C81AE047E800A52EAC /* libchartdldr_pi.dylib */; };
+		A63220D31AE04CCE00A52EAC /* chartdldr_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220D21AE04CCE00A52EAC /* chartdldr_pi.cpp */; };
+		A63220D51AE04D1400A52EAC /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220D41AE04D1400A52EAC /* icons.cpp */; };
+		A63220D71AE04D4400A52EAC /* chartdldrgui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220D61AE04D4400A52EAC /* chartdldrgui.cpp */; };
+		A63220D91AE04D6E00A52EAC /* checkedlistctrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220D81AE04D6E00A52EAC /* checkedlistctrl.cpp */; };
+		A63220DB1AE04D8E00A52EAC /* chartcatalog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220DA1AE04D8E00A52EAC /* chartcatalog.cpp */; };
+		A63220F51AE04F9B00A52EAC /* rar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220F41AE04F9B00A52EAC /* rar.cpp */; };
+		A63220F71AE0502E00A52EAC /* strlist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220F61AE0502E00A52EAC /* strlist.cpp */; };
+		A63220F91AE0505E00A52EAC /* strfn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220F81AE0505E00A52EAC /* strfn.cpp */; };
+		A63220FB1AE0508000A52EAC /* pathfn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220FA1AE0508000A52EAC /* pathfn.cpp */; };
+		A63220FD1AE050AD00A52EAC /* smallfn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220FC1AE050AD00A52EAC /* smallfn.cpp */; };
+		A63220FF1AE050CA00A52EAC /* global.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220FE1AE050CA00A52EAC /* global.cpp */; };
+		A63221011AE050E600A52EAC /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221001AE050E600A52EAC /* file.cpp */; };
+		A63221031AE0510100A52EAC /* filefn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221021AE0510100A52EAC /* filefn.cpp */; };
+		A63221051AE0514800A52EAC /* filcreat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221041AE0514800A52EAC /* filcreat.cpp */; };
+		A63221071AE0517000A52EAC /* archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221061AE0517000A52EAC /* archive.cpp */; };
+		A63221091AE051BA00A52EAC /* arcread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221081AE051BA00A52EAC /* arcread.cpp */; };
+		A632210B1AE051E900A52EAC /* unicode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632210A1AE051E900A52EAC /* unicode.cpp */; };
+		A632210D1AE0521900A52EAC /* system.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632210C1AE0521900A52EAC /* system.cpp */; };
+		A632210F1AE0524800A52EAC /* isnt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632210E1AE0524800A52EAC /* isnt.cpp */; };
+		A63221111AE0527200A52EAC /* crypt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221101AE0527200A52EAC /* crypt.cpp */; };
+		A63221131AE0528C00A52EAC /* crc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221121AE0528C00A52EAC /* crc.cpp */; };
+		A63221151AE052C900A52EAC /* rawread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221141AE052C900A52EAC /* rawread.cpp */; };
+		A63221171AE052E300A52EAC /* encname.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221161AE052E300A52EAC /* encname.cpp */; };
+		A63221191AE0531600A52EAC /* resource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221181AE0531600A52EAC /* resource.cpp */; };
+		A632211B1AE0533C00A52EAC /* match.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632211A1AE0533C00A52EAC /* match.cpp */; };
+		A632211D1AE0536F00A52EAC /* timefn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632211C1AE0536F00A52EAC /* timefn.cpp */; };
+		A632211F1AE053A000A52EAC /* rdwrfn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632211E1AE053A000A52EAC /* rdwrfn.cpp */; };
+		A63221211AE053BB00A52EAC /* consio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221201AE053BB00A52EAC /* consio.cpp */; };
+		A63221231AE053E200A52EAC /* options.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221221AE053E200A52EAC /* options.cpp */; };
+		A63221251AE0541B00A52EAC /* errhnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221241AE0541B00A52EAC /* errhnd.cpp */; };
+		A63221271AE0544300A52EAC /* rarvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221261AE0544300A52EAC /* rarvm.cpp */; };
+		A63221291AE0547300A52EAC /* secpassword.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221281AE0547300A52EAC /* secpassword.cpp */; };
+		A632212B1AE0549A00A52EAC /* rijndael.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632212A1AE0549A00A52EAC /* rijndael.cpp */; };
+		A632212D1AE054C300A52EAC /* getbits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632212C1AE054C300A52EAC /* getbits.cpp */; };
+		A632212F1AE054E100A52EAC /* sha1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632212E1AE054E100A52EAC /* sha1.cpp */; };
+		A63221311AE0550200A52EAC /* sha256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221301AE0550200A52EAC /* sha256.cpp */; };
+		A63221331AE0552F00A52EAC /* blake2s.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221321AE0552F00A52EAC /* blake2s.cpp */; };
+		A63221351AE0555100A52EAC /* hash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221341AE0555100A52EAC /* hash.cpp */; };
+		A63221371AE0557700A52EAC /* extinfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221361AE0557700A52EAC /* extinfo.cpp */; };
+		A63221391AE0559C00A52EAC /* extract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221381AE0559C00A52EAC /* extract.cpp */; };
+		A632213B1AE055CC00A52EAC /* volume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632213A1AE055CC00A52EAC /* volume.cpp */; };
+		A632213D1AE055E600A52EAC /* list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632213C1AE055E600A52EAC /* list.cpp */; };
+		A632213F1AE0560A00A52EAC /* find.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632213E1AE0560A00A52EAC /* find.cpp */; };
+		A63221411AE0563200A52EAC /* unpack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221401AE0563200A52EAC /* unpack.cpp */; };
+		A63221431AE0566900A52EAC /* headers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221421AE0566900A52EAC /* headers.cpp */; };
+		A63221451AE0568E00A52EAC /* threadpool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221441AE0568E00A52EAC /* threadpool.cpp */; };
+		A63221471AE056B200A52EAC /* rs16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221461AE056B200A52EAC /* rs16.cpp */; };
+		A63221491AE056D500A52EAC /* cmddata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221481AE056D500A52EAC /* cmddata.cpp */; };
+		A632214B1AE056F700A52EAC /* ui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632214A1AE056F700A52EAC /* ui.cpp */; };
+		A632214D1AE0572000A52EAC /* filestr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632214C1AE0572000A52EAC /* filestr.cpp */; };
+		A632214F1AE0574200A52EAC /* scantree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632214E1AE0574200A52EAC /* scantree.cpp */; };
+		A63221511AE0577100A52EAC /* qopen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221501AE0577100A52EAC /* qopen.cpp */; };
 		A635C8AE17C16F0900B3E5E9 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AB17C16F0900B3E5E9 /* tinyxml.cpp */; };
 		A635C8AF17C16F0900B3E5E9 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AC17C16F0900B3E5E9 /* tinyxmlerror.cpp */; };
 		A635C8B017C16F0900B3E5E9 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AD17C16F0900B3E5E9 /* tinyxmlparser.cpp */; };
 		A638304D1950E14100027BFE /* crashprint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A638304C1950E14100027BFE /* crashprint.cpp */; };
 		A6414F5E19599B6C0007787E /* libwatchdog_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A683CEB01958A550004A0137 /* libwatchdog_pi.dylib */; };
 		A642A17E19D8A4B600441ED3 /* csv_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A642A17D19D8A4B600441ED3 /* csv_parser.cpp */; };
+		A64515031AE501B400933404 /* base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64514FA1AE501B400933404 /* base.cpp */; };
+		A64515041AE501B400933404 /* dav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64514FB1AE501B400933404 /* dav.cpp */; };
+		A64515051AE501B400933404 /* davtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64514FC1AE501B400933404 /* davtool.cpp */; };
+		A64515061AE501B400933404 /* dialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64514FD1AE501B400933404 /* dialog.cpp */; };
+		A64515071AE501B400933404 /* ftp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64514FE1AE501B400933404 /* ftp.cpp */; };
+		A64515081AE501B400933404 /* ftpparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64514FF1AE501B400933404 /* ftpparse.cpp */; };
+		A64515091AE501B400933404 /* ftptool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64515011AE501B400933404 /* ftptool.cpp */; };
+		A645150A1AE501B400933404 /* http.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64515021AE501B400933404 /* http.cpp */; };
+		A645150F1AE501CC00933404 /* panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A645150B1AE501CC00933404 /* panel.cpp */; };
+		A64515101AE501CC00933404 /* telnet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A645150C1AE501CC00933404 /* telnet.cpp */; };
+		A64515111AE501CC00933404 /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A645150D1AE501CC00933404 /* thread.cpp */; };
+		A64515121AE501CC00933404 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A645150E1AE501CC00933404 /* utils.cpp */; };
 		A647084717A14A2800A16918 /* AboutDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084617A14A2800A16918 /* AboutDialog.cpp */; };
 		A647084917A14A4600A16918 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084817A14A4500A16918 /* icons.cpp */; };
 		A647084B17A14A6100A16918 /* watchman_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084A17A14A6100A16918 /* watchman_pi.cpp */; };
@@ -639,18 +706,6 @@
 		A6E0822D1AAB591B002CC7F0 /* viewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E0822C1AAB591B002CC7F0 /* viewport.cpp */; };
 		A6E0822F1AAB5931002CC7F0 /* canvasMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E0822E1AAB5931002CC7F0 /* canvasMenu.cpp */; };
 		A6E082311AAB5956002CC7F0 /* OCPNPlatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E082301AAB5956002CC7F0 /* OCPNPlatform.cpp */; };
-		A6EA73281ACEB70E0096A55B /* base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA73271ACEB70E0096A55B /* base.cpp */; };
-		A6EA732A1ACEB7360096A55B /* dav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA73291ACEB7360096A55B /* dav.cpp */; };
-		A6EA732C1ACEB7570096A55B /* davtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA732B1ACEB7570096A55B /* davtool.cpp */; };
-		A6EA732E1ACEB7860096A55B /* dialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA732D1ACEB7860096A55B /* dialog.cpp */; };
-		A6EA73301ACEB7A10096A55B /* ftp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA732F1ACEB7A10096A55B /* ftp.cpp */; };
-		A6EA73321ACEB7C30096A55B /* ftpparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA73311ACEB7C30096A55B /* ftpparse.cpp */; };
-		A6EA73341ACEB7E50096A55B /* ftptool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA73331ACEB7E50096A55B /* ftptool.cpp */; };
-		A6EA73361ACEB8050096A55B /* http.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA73351ACEB8050096A55B /* http.cpp */; };
-		A6EA73381ACEB8210096A55B /* panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA73371ACEB8210096A55B /* panel.cpp */; };
-		A6EA733A1ACEB8410096A55B /* telnet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA73391ACEB8410096A55B /* telnet.cpp */; };
-		A6EA733C1ACEB8600096A55B /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA733B1ACEB8600096A55B /* thread.cpp */; };
-		A6EA733E1ACEB8830096A55B /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6EA733D1ACEB8830096A55B /* utils.cpp */; };
 		A7D85A911CD9440D88990DE9 /* lat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A34D3BDAF9D408F9D08642A /* lat.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A7FB0E99BAB54FE18BFC2CF1 /* PositionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1A7C66C95E44197A749D5E9 /* PositionParser.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A926F111F93F452498044653 /* dicts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9BF6F7114A5401DB8A705FB /* dicts.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -895,6 +950,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = A60F745B17A0217D00A6160F;
 			remoteInfo = calculator_pi;
+		};
+		A62F3F491AE13D9200AFD69B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A632207B1AE047E700A52EAC;
+			remoteInfo = chartdldr_pi;
+		};
+		A64514CD1AE4FF3000933404 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A87580D1DD2B4F81B39F3B5A;
+			remoteInfo = ZERO_CHECK;
+		};
+		A645151E1AE50A3700933404 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A64514CB1AE4FF3000933404;
+			remoteInfo = wxCurl;
 		};
 		A647085217A14AE400A16918 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1157,6 +1233,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				A62F3F4B1AE1559700AFD69B /* libchartdldr_pi.dylib in Copy Files */,
 				A627BE5519D5674400BBFC8A /* libobjsearch_pi.dylib in Copy Files */,
 				A647C90719C365AD0034EA04 /* libsquiddio_pi.dylib in Copy Files */,
 				A6414F5E19599B6C0007787E /* libwatchdog_pi.dylib in Copy Files */,
@@ -1616,6 +1693,66 @@
 		A6207BAD19A6A34E00215493 /* Stalk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Stalk.cpp; path = src/nmea0183/Stalk.cpp; sourceTree = "<group>"; };
 		A6219E7118AD7C2E00B3E5F4 /* triangulate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = triangulate.h; path = include/triangulate.h; sourceTree = "<group>"; };
 		A62AB01519CC4512000DE58C /* nmea0183.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nmea0183.h; path = src/nmea0183/nmea0183.h; sourceTree = "<group>"; };
+		A63220C81AE047E800A52EAC /* libchartdldr_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libchartdldr_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A63220CC1AE04B7A00A52EAC /* chartdldr_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartdldr_pi.h; path = plugins/chartdldr_pi/src/chartdldr_pi.h; sourceTree = "<group>"; };
+		A63220CD1AE04BAC00A52EAC /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/chartdldr_pi/src/icons.h; sourceTree = "<group>"; };
+		A63220CE1AE04BE900A52EAC /* chartdldrgui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartdldrgui.h; path = plugins/chartdldr_pi/src/chartdldrgui.h; sourceTree = "<group>"; };
+		A63220CF1AE04C2600A52EAC /* checkedlistctrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = checkedlistctrl.h; path = plugins/chartdldr_pi/src/checkedlistctrl.h; sourceTree = "<group>"; };
+		A63220D01AE04C4A00A52EAC /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = base64.h; path = plugins/chartdldr_pi/src/base64.h; sourceTree = "<group>"; };
+		A63220D11AE04C7300A52EAC /* chartcatalog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartcatalog.h; path = plugins/chartdldr_pi/src/chartcatalog.h; sourceTree = "<group>"; };
+		A63220D21AE04CCE00A52EAC /* chartdldr_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = chartdldr_pi.cpp; path = plugins/chartdldr_pi/src/chartdldr_pi.cpp; sourceTree = "<group>"; };
+		A63220D41AE04D1400A52EAC /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/chartdldr_pi/src/icons.cpp; sourceTree = "<group>"; };
+		A63220D61AE04D4400A52EAC /* chartdldrgui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = chartdldrgui.cpp; path = plugins/chartdldr_pi/src/chartdldrgui.cpp; sourceTree = "<group>"; };
+		A63220D81AE04D6E00A52EAC /* checkedlistctrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = checkedlistctrl.cpp; path = plugins/chartdldr_pi/src/checkedlistctrl.cpp; sourceTree = "<group>"; };
+		A63220DA1AE04D8E00A52EAC /* chartcatalog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = chartcatalog.cpp; path = plugins/chartdldr_pi/src/chartcatalog.cpp; sourceTree = "<group>"; };
+		A63220F41AE04F9B00A52EAC /* rar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rar.cpp; path = plugins/chartdldr_pi/src/unrar/rar.cpp; sourceTree = "<group>"; };
+		A63220F61AE0502E00A52EAC /* strlist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = strlist.cpp; path = plugins/chartdldr_pi/src/unrar/strlist.cpp; sourceTree = "<group>"; };
+		A63220F81AE0505E00A52EAC /* strfn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = strfn.cpp; path = plugins/chartdldr_pi/src/unrar/strfn.cpp; sourceTree = "<group>"; };
+		A63220FA1AE0508000A52EAC /* pathfn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pathfn.cpp; path = plugins/chartdldr_pi/src/unrar/pathfn.cpp; sourceTree = "<group>"; };
+		A63220FC1AE050AD00A52EAC /* smallfn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = smallfn.cpp; path = plugins/chartdldr_pi/src/unrar/smallfn.cpp; sourceTree = "<group>"; };
+		A63220FE1AE050CA00A52EAC /* global.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = global.cpp; path = plugins/chartdldr_pi/src/unrar/global.cpp; sourceTree = "<group>"; };
+		A63221001AE050E600A52EAC /* file.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = file.cpp; path = plugins/chartdldr_pi/src/unrar/file.cpp; sourceTree = "<group>"; };
+		A63221021AE0510100A52EAC /* filefn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = filefn.cpp; path = plugins/chartdldr_pi/src/unrar/filefn.cpp; sourceTree = "<group>"; };
+		A63221041AE0514800A52EAC /* filcreat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = filcreat.cpp; path = plugins/chartdldr_pi/src/unrar/filcreat.cpp; sourceTree = "<group>"; };
+		A63221061AE0517000A52EAC /* archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = archive.cpp; path = plugins/chartdldr_pi/src/unrar/archive.cpp; sourceTree = "<group>"; };
+		A63221081AE051BA00A52EAC /* arcread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = arcread.cpp; path = plugins/chartdldr_pi/src/unrar/arcread.cpp; sourceTree = "<group>"; };
+		A632210A1AE051E900A52EAC /* unicode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unicode.cpp; path = plugins/chartdldr_pi/src/unrar/unicode.cpp; sourceTree = "<group>"; };
+		A632210C1AE0521900A52EAC /* system.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = system.cpp; path = plugins/chartdldr_pi/src/unrar/system.cpp; sourceTree = "<group>"; };
+		A632210E1AE0524800A52EAC /* isnt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = isnt.cpp; path = plugins/chartdldr_pi/src/unrar/isnt.cpp; sourceTree = "<group>"; };
+		A63221101AE0527200A52EAC /* crypt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = crypt.cpp; path = plugins/chartdldr_pi/src/unrar/crypt.cpp; sourceTree = "<group>"; };
+		A63221121AE0528C00A52EAC /* crc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = crc.cpp; path = plugins/chartdldr_pi/src/unrar/crc.cpp; sourceTree = "<group>"; };
+		A63221141AE052C900A52EAC /* rawread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rawread.cpp; path = plugins/chartdldr_pi/src/unrar/rawread.cpp; sourceTree = "<group>"; };
+		A63221161AE052E300A52EAC /* encname.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = encname.cpp; path = plugins/chartdldr_pi/src/unrar/encname.cpp; sourceTree = "<group>"; };
+		A63221181AE0531600A52EAC /* resource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resource.cpp; path = plugins/chartdldr_pi/src/unrar/resource.cpp; sourceTree = "<group>"; };
+		A632211A1AE0533C00A52EAC /* match.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = match.cpp; path = plugins/chartdldr_pi/src/unrar/match.cpp; sourceTree = "<group>"; };
+		A632211C1AE0536F00A52EAC /* timefn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timefn.cpp; path = plugins/chartdldr_pi/src/unrar/timefn.cpp; sourceTree = "<group>"; };
+		A632211E1AE053A000A52EAC /* rdwrfn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rdwrfn.cpp; path = plugins/chartdldr_pi/src/unrar/rdwrfn.cpp; sourceTree = "<group>"; };
+		A63221201AE053BB00A52EAC /* consio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = consio.cpp; path = plugins/chartdldr_pi/src/unrar/consio.cpp; sourceTree = "<group>"; };
+		A63221221AE053E200A52EAC /* options.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = options.cpp; path = plugins/chartdldr_pi/src/unrar/options.cpp; sourceTree = "<group>"; };
+		A63221241AE0541B00A52EAC /* errhnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = errhnd.cpp; path = plugins/chartdldr_pi/src/unrar/errhnd.cpp; sourceTree = "<group>"; };
+		A63221261AE0544300A52EAC /* rarvm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rarvm.cpp; path = plugins/chartdldr_pi/src/unrar/rarvm.cpp; sourceTree = "<group>"; };
+		A63221281AE0547300A52EAC /* secpassword.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = secpassword.cpp; path = plugins/chartdldr_pi/src/unrar/secpassword.cpp; sourceTree = "<group>"; };
+		A632212A1AE0549A00A52EAC /* rijndael.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rijndael.cpp; path = plugins/chartdldr_pi/src/unrar/rijndael.cpp; sourceTree = "<group>"; };
+		A632212C1AE054C300A52EAC /* getbits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = getbits.cpp; path = plugins/chartdldr_pi/src/unrar/getbits.cpp; sourceTree = "<group>"; };
+		A632212E1AE054E100A52EAC /* sha1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sha1.cpp; path = plugins/chartdldr_pi/src/unrar/sha1.cpp; sourceTree = "<group>"; };
+		A63221301AE0550200A52EAC /* sha256.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sha256.cpp; path = plugins/chartdldr_pi/src/unrar/sha256.cpp; sourceTree = "<group>"; };
+		A63221321AE0552F00A52EAC /* blake2s.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = blake2s.cpp; path = plugins/chartdldr_pi/src/unrar/blake2s.cpp; sourceTree = "<group>"; };
+		A63221341AE0555100A52EAC /* hash.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hash.cpp; path = plugins/chartdldr_pi/src/unrar/hash.cpp; sourceTree = "<group>"; };
+		A63221361AE0557700A52EAC /* extinfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = extinfo.cpp; path = plugins/chartdldr_pi/src/unrar/extinfo.cpp; sourceTree = "<group>"; };
+		A63221381AE0559C00A52EAC /* extract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = extract.cpp; path = plugins/chartdldr_pi/src/unrar/extract.cpp; sourceTree = "<group>"; };
+		A632213A1AE055CC00A52EAC /* volume.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = volume.cpp; path = plugins/chartdldr_pi/src/unrar/volume.cpp; sourceTree = "<group>"; };
+		A632213C1AE055E600A52EAC /* list.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = list.cpp; path = plugins/chartdldr_pi/src/unrar/list.cpp; sourceTree = "<group>"; };
+		A632213E1AE0560A00A52EAC /* find.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = find.cpp; path = plugins/chartdldr_pi/src/unrar/find.cpp; sourceTree = "<group>"; };
+		A63221401AE0563200A52EAC /* unpack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unpack.cpp; path = plugins/chartdldr_pi/src/unrar/unpack.cpp; sourceTree = "<group>"; };
+		A63221421AE0566900A52EAC /* headers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = headers.cpp; path = plugins/chartdldr_pi/src/unrar/headers.cpp; sourceTree = "<group>"; };
+		A63221441AE0568E00A52EAC /* threadpool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = threadpool.cpp; path = plugins/chartdldr_pi/src/unrar/threadpool.cpp; sourceTree = "<group>"; };
+		A63221461AE056B200A52EAC /* rs16.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rs16.cpp; path = plugins/chartdldr_pi/src/unrar/rs16.cpp; sourceTree = "<group>"; };
+		A63221481AE056D500A52EAC /* cmddata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cmddata.cpp; path = plugins/chartdldr_pi/src/unrar/cmddata.cpp; sourceTree = "<group>"; };
+		A632214A1AE056F700A52EAC /* ui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ui.cpp; path = plugins/chartdldr_pi/src/unrar/ui.cpp; sourceTree = "<group>"; };
+		A632214C1AE0572000A52EAC /* filestr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = filestr.cpp; path = plugins/chartdldr_pi/src/unrar/filestr.cpp; sourceTree = "<group>"; };
+		A632214E1AE0574200A52EAC /* scantree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scantree.cpp; path = plugins/chartdldr_pi/src/unrar/scantree.cpp; sourceTree = "<group>"; };
+		A63221501AE0577100A52EAC /* qopen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qopen.cpp; path = plugins/chartdldr_pi/src/unrar/qopen.cpp; sourceTree = "<group>"; };
+		A63221521AE0594100A52EAC /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = plugins/chartdldr_pi/src/version.h; sourceTree = "<group>"; };
 		A635C8AA17C16ED600B3E5E9 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = include/tinyxml.h; sourceTree = "<group>"; };
 		A635C8AB17C16F0900B3E5E9 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = src/tinyxml.cpp; sourceTree = "<group>"; };
 		A635C8AC17C16F0900B3E5E9 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlerror.cpp; path = src/tinyxmlerror.cpp; sourceTree = "<group>"; };
@@ -1625,6 +1762,31 @@
 		A638304C1950E14100027BFE /* crashprint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = crashprint.cpp; path = src/crashprint.cpp; sourceTree = "<group>"; };
 		A642A17D19D8A4B600441ED3 /* csv_parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csv_parser.cpp; path = plugins/objsearch_pi/src/csv_parser.cpp; sourceTree = "<group>"; };
 		A642A17F19D8A4E000441ED3 /* csv_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csv_parser.h; path = plugins/objsearch_pi/src/csv_parser.h; sourceTree = "<group>"; };
+		A64514F61AE4FF3000933404 /* libwxCurl.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libwxCurl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A64514FA1AE501B400933404 /* base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = base.cpp; path = src/wxcurl/base.cpp; sourceTree = "<group>"; };
+		A64514FB1AE501B400933404 /* dav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dav.cpp; path = src/wxcurl/dav.cpp; sourceTree = "<group>"; };
+		A64514FC1AE501B400933404 /* davtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = davtool.cpp; path = src/wxcurl/davtool.cpp; sourceTree = "<group>"; };
+		A64514FD1AE501B400933404 /* dialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dialog.cpp; path = src/wxcurl/dialog.cpp; sourceTree = "<group>"; };
+		A64514FE1AE501B400933404 /* ftp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftp.cpp; path = src/wxcurl/ftp.cpp; sourceTree = "<group>"; };
+		A64514FF1AE501B400933404 /* ftpparse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftpparse.cpp; path = src/wxcurl/ftpparse.cpp; sourceTree = "<group>"; };
+		A64515001AE501B400933404 /* ftpparse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftpparse.h; path = src/wxcurl/ftpparse.h; sourceTree = "<group>"; };
+		A64515011AE501B400933404 /* ftptool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftptool.cpp; path = src/wxcurl/ftptool.cpp; sourceTree = "<group>"; };
+		A64515021AE501B400933404 /* http.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = http.cpp; path = src/wxcurl/http.cpp; sourceTree = "<group>"; };
+		A645150B1AE501CC00933404 /* panel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = panel.cpp; path = src/wxcurl/panel.cpp; sourceTree = "<group>"; };
+		A645150C1AE501CC00933404 /* telnet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = telnet.cpp; path = src/wxcurl/telnet.cpp; sourceTree = "<group>"; };
+		A645150D1AE501CC00933404 /* thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thread.cpp; path = src/wxcurl/thread.cpp; sourceTree = "<group>"; };
+		A645150E1AE501CC00933404 /* utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utils.cpp; path = src/wxcurl/utils.cpp; sourceTree = "<group>"; };
+		A64515131AE501EA00933404 /* base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = base.h; path = src/wxcurl/wx/curl/base.h; sourceTree = "<group>"; };
+		A64515141AE501EA00933404 /* dav.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dav.h; path = src/wxcurl/wx/curl/dav.h; sourceTree = "<group>"; };
+		A64515151AE501EA00933404 /* davtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = davtool.h; path = src/wxcurl/wx/curl/davtool.h; sourceTree = "<group>"; };
+		A64515161AE501EA00933404 /* dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dialog.h; path = src/wxcurl/wx/curl/dialog.h; sourceTree = "<group>"; };
+		A64515171AE501EA00933404 /* ftp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftp.h; path = src/wxcurl/wx/curl/ftp.h; sourceTree = "<group>"; };
+		A64515181AE501EA00933404 /* ftptool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftptool.h; path = src/wxcurl/wx/curl/ftptool.h; sourceTree = "<group>"; };
+		A64515191AE501EA00933404 /* http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = http.h; path = src/wxcurl/wx/curl/http.h; sourceTree = "<group>"; };
+		A645151A1AE501EA00933404 /* panel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = panel.h; path = src/wxcurl/wx/curl/panel.h; sourceTree = "<group>"; };
+		A645151B1AE501EA00933404 /* telnet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = telnet.h; path = src/wxcurl/wx/curl/telnet.h; sourceTree = "<group>"; };
+		A645151C1AE501EA00933404 /* thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = thread.h; path = src/wxcurl/wx/curl/thread.h; sourceTree = "<group>"; };
+		A645151D1AE501EA00933404 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utils.h; path = src/wxcurl/wx/curl/utils.h; sourceTree = "<group>"; };
 		A64633D41956EE4100784D5B /* GribRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribRecord.h; path = plugins/grib_pi/src/GribRecord.h; sourceTree = "<group>"; };
 		A647084017A1486500A16918 /* AboutDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AboutDialog.h; path = plugins/watchman_pi/src/AboutDialog.h; sourceTree = "<group>"; };
 		A647084117A1489A00A16918 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/watchman_pi/src/icons.h; sourceTree = "<group>"; };
@@ -1917,18 +2079,6 @@
 		A6E0822C1AAB591B002CC7F0 /* viewport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = viewport.cpp; path = src/viewport.cpp; sourceTree = "<group>"; };
 		A6E0822E1AAB5931002CC7F0 /* canvasMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = canvasMenu.cpp; path = src/canvasMenu.cpp; sourceTree = "<group>"; };
 		A6E082301AAB5956002CC7F0 /* OCPNPlatform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OCPNPlatform.cpp; path = src/OCPNPlatform.cpp; sourceTree = "<group>"; };
-		A6EA73271ACEB70E0096A55B /* base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = base.cpp; path = plugins/weatherfax_pi/src/wxcurl/base.cpp; sourceTree = "<group>"; };
-		A6EA73291ACEB7360096A55B /* dav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dav.cpp; path = plugins/weatherfax_pi/src/wxcurl/dav.cpp; sourceTree = "<group>"; };
-		A6EA732B1ACEB7570096A55B /* davtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = davtool.cpp; path = plugins/weatherfax_pi/src/wxcurl/davtool.cpp; sourceTree = "<group>"; };
-		A6EA732D1ACEB7860096A55B /* dialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dialog.cpp; path = plugins/weatherfax_pi/src/wxcurl/dialog.cpp; sourceTree = "<group>"; };
-		A6EA732F1ACEB7A10096A55B /* ftp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftp.cpp; path = plugins/weatherfax_pi/src/wxcurl/ftp.cpp; sourceTree = "<group>"; };
-		A6EA73311ACEB7C30096A55B /* ftpparse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftpparse.cpp; path = plugins/weatherfax_pi/src/wxcurl/ftpparse.cpp; sourceTree = "<group>"; };
-		A6EA73331ACEB7E50096A55B /* ftptool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftptool.cpp; path = plugins/weatherfax_pi/src/wxcurl/ftptool.cpp; sourceTree = "<group>"; };
-		A6EA73351ACEB8050096A55B /* http.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = http.cpp; path = plugins/weatherfax_pi/src/wxcurl/http.cpp; sourceTree = "<group>"; };
-		A6EA73371ACEB8210096A55B /* panel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = panel.cpp; path = plugins/weatherfax_pi/src/wxcurl/panel.cpp; sourceTree = "<group>"; };
-		A6EA73391ACEB8410096A55B /* telnet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = telnet.cpp; path = plugins/weatherfax_pi/src/wxcurl/telnet.cpp; sourceTree = "<group>"; };
-		A6EA733B1ACEB8600096A55B /* thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thread.cpp; path = plugins/weatherfax_pi/src/wxcurl/thread.cpp; sourceTree = "<group>"; };
-		A6EA733D1ACEB8830096A55B /* utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utils.cpp; path = plugins/weatherfax_pi/src/wxcurl/utils.cpp; sourceTree = "<group>"; };
 		A6FABA6218CDDFA400922E48 /* RMC.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = RMC.hpp; path = src/nmea0183/RMC.hpp; sourceTree = "<group>"; };
 		A76934330B0A4AF2877C4238 /* gpxdocument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gpxdocument.cpp; path = src/gpxdocument.cpp; sourceTree = SOURCE_ROOT; };
 		A8CB7EA0F7D54C8BA1AD0EDA /* bbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bbox.cpp; path = src/bbox.cpp; sourceTree = SOURCE_ROOT; };
@@ -2615,6 +2765,7 @@
 				41CAEE4C0A354FCDAE4EA413 /* S57ENC */,
 				2C88068D27054E07BCE811AF /* GARMINHOST */,
 				CD113B3A09BD4020A8BFB595 /* NMEA0183 */,
+				A64514F71AE500FB00933404 /* wxCurl */,
 				C39CC01E93C34EF1984864E2 /* OpenCPN */,
 				73819D4B3EDA48BCB3B2A5B2 /* ZERO_CHECK */,
 				288D9AAFB67C433994D580B9 /* i18n */,
@@ -2648,6 +2799,7 @@
 				434C4673FD18472FAE1F6B03 /* wmm_pi */,
 				A6DB19B718EDCC1700E643D2 /* BR24radar_pi */,
 				A6728C0E19D433B700070B45 /* objsearch_pi */,
+				A63220C91AE04A5200A52EAC /* chartdlfr_pi */,
 				A671BCA419BE3D2F00019119 /* squiddio_pi */,
 			);
 			name = Sources;
@@ -3025,6 +3177,135 @@
 				A60F747217A02E4900A6160F /* functions.h */,
 				A60F749717A0338600A6160F /* parser.h */,
 				A60F747417A02E8C00A6160F /* variablelist.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		A63220C91AE04A5200A52EAC /* chartdlfr_pi */ = {
+			isa = PBXGroup;
+			children = (
+				A63220CB1AE04A9C00A52EAC /* Header Files */,
+				A63220CA1AE04A8A00A52EAC /* Source Files */,
+			);
+			name = chartdlfr_pi;
+			sourceTree = "<group>";
+		};
+		A63220CA1AE04A8A00A52EAC /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				A63220D21AE04CCE00A52EAC /* chartdldr_pi.cpp */,
+				A63220D41AE04D1400A52EAC /* icons.cpp */,
+				A63220D61AE04D4400A52EAC /* chartdldrgui.cpp */,
+				A63220D81AE04D6E00A52EAC /* checkedlistctrl.cpp */,
+				A63220DA1AE04D8E00A52EAC /* chartcatalog.cpp */,
+				A63220F41AE04F9B00A52EAC /* rar.cpp */,
+				A63220F61AE0502E00A52EAC /* strlist.cpp */,
+				A63220F81AE0505E00A52EAC /* strfn.cpp */,
+				A63220FA1AE0508000A52EAC /* pathfn.cpp */,
+				A63220FC1AE050AD00A52EAC /* smallfn.cpp */,
+				A63220FE1AE050CA00A52EAC /* global.cpp */,
+				A63221001AE050E600A52EAC /* file.cpp */,
+				A63221021AE0510100A52EAC /* filefn.cpp */,
+				A63221041AE0514800A52EAC /* filcreat.cpp */,
+				A63221061AE0517000A52EAC /* archive.cpp */,
+				A63221081AE051BA00A52EAC /* arcread.cpp */,
+				A632210A1AE051E900A52EAC /* unicode.cpp */,
+				A632210C1AE0521900A52EAC /* system.cpp */,
+				A632210E1AE0524800A52EAC /* isnt.cpp */,
+				A63221101AE0527200A52EAC /* crypt.cpp */,
+				A63221121AE0528C00A52EAC /* crc.cpp */,
+				A63221141AE052C900A52EAC /* rawread.cpp */,
+				A63221161AE052E300A52EAC /* encname.cpp */,
+				A63221181AE0531600A52EAC /* resource.cpp */,
+				A632211A1AE0533C00A52EAC /* match.cpp */,
+				A632211C1AE0536F00A52EAC /* timefn.cpp */,
+				A632211E1AE053A000A52EAC /* rdwrfn.cpp */,
+				A63221201AE053BB00A52EAC /* consio.cpp */,
+				A63221221AE053E200A52EAC /* options.cpp */,
+				A63221241AE0541B00A52EAC /* errhnd.cpp */,
+				A63221261AE0544300A52EAC /* rarvm.cpp */,
+				A63221281AE0547300A52EAC /* secpassword.cpp */,
+				A632212A1AE0549A00A52EAC /* rijndael.cpp */,
+				A632212C1AE054C300A52EAC /* getbits.cpp */,
+				A632212E1AE054E100A52EAC /* sha1.cpp */,
+				A63221301AE0550200A52EAC /* sha256.cpp */,
+				A63221321AE0552F00A52EAC /* blake2s.cpp */,
+				A63221341AE0555100A52EAC /* hash.cpp */,
+				A63221361AE0557700A52EAC /* extinfo.cpp */,
+				A63221381AE0559C00A52EAC /* extract.cpp */,
+				A632213A1AE055CC00A52EAC /* volume.cpp */,
+				A632213C1AE055E600A52EAC /* list.cpp */,
+				A632213E1AE0560A00A52EAC /* find.cpp */,
+				A63221401AE0563200A52EAC /* unpack.cpp */,
+				A63221421AE0566900A52EAC /* headers.cpp */,
+				A63221441AE0568E00A52EAC /* threadpool.cpp */,
+				A63221461AE056B200A52EAC /* rs16.cpp */,
+				A63221481AE056D500A52EAC /* cmddata.cpp */,
+				A632214A1AE056F700A52EAC /* ui.cpp */,
+				A632214C1AE0572000A52EAC /* filestr.cpp */,
+				A632214E1AE0574200A52EAC /* scantree.cpp */,
+				A63221501AE0577100A52EAC /* qopen.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		A63220CB1AE04A9C00A52EAC /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				A63220CC1AE04B7A00A52EAC /* chartdldr_pi.h */,
+				A63220CD1AE04BAC00A52EAC /* icons.h */,
+				A63220CE1AE04BE900A52EAC /* chartdldrgui.h */,
+				A63220CF1AE04C2600A52EAC /* checkedlistctrl.h */,
+				A63220D01AE04C4A00A52EAC /* base64.h */,
+				A63220D11AE04C7300A52EAC /* chartcatalog.h */,
+				A63221521AE0594100A52EAC /* version.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		A64514F71AE500FB00933404 /* wxCurl */ = {
+			isa = PBXGroup;
+			children = (
+				A64514F91AE5015F00933404 /* Header Files */,
+				A64514F81AE5014B00933404 /* Source Files */,
+			);
+			name = wxCurl;
+			sourceTree = "<group>";
+		};
+		A64514F81AE5014B00933404 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				A64514FA1AE501B400933404 /* base.cpp */,
+				A64514FB1AE501B400933404 /* dav.cpp */,
+				A64514FC1AE501B400933404 /* davtool.cpp */,
+				A64514FD1AE501B400933404 /* dialog.cpp */,
+				A64514FE1AE501B400933404 /* ftp.cpp */,
+				A64514FF1AE501B400933404 /* ftpparse.cpp */,
+				A64515001AE501B400933404 /* ftpparse.h */,
+				A64515011AE501B400933404 /* ftptool.cpp */,
+				A64515021AE501B400933404 /* http.cpp */,
+				A645150B1AE501CC00933404 /* panel.cpp */,
+				A645150C1AE501CC00933404 /* telnet.cpp */,
+				A645150D1AE501CC00933404 /* thread.cpp */,
+				A645150E1AE501CC00933404 /* utils.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		A64514F91AE5015F00933404 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				A64515131AE501EA00933404 /* base.h */,
+				A64515141AE501EA00933404 /* dav.h */,
+				A64515151AE501EA00933404 /* davtool.h */,
+				A64515161AE501EA00933404 /* dialog.h */,
+				A64515171AE501EA00933404 /* ftp.h */,
+				A64515181AE501EA00933404 /* ftptool.h */,
+				A64515191AE501EA00933404 /* http.h */,
+				A645151A1AE501EA00933404 /* panel.h */,
+				A645151B1AE501EA00933404 /* telnet.h */,
+				A645151C1AE501EA00933404 /* thread.h */,
+				A645151D1AE501EA00933404 /* utils.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -3572,6 +3853,8 @@
 				A683CEB01958A550004A0137 /* libwatchdog_pi.dylib */,
 				A671BCC719BE44BC00019119 /* libsquiddio_pi.dylib */,
 				A6728C0D19D4327900070B45 /* libobjsearch_pi.dylib */,
+				A63220C81AE047E800A52EAC /* libchartdldr_pi.dylib */,
+				A64514F61AE4FF3000933404 /* libwxCurl.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3648,18 +3931,6 @@
 				B7A21B6E4FD4437791417307 /* RebufferModule.cpp */,
 				1C595FCA35154621B7C424B5 /* SimpleModule.cpp */,
 				A61AD26B181884A7007A45D8 /* wximgkap.cpp */,
-				A6EA73271ACEB70E0096A55B /* base.cpp */,
-				A6EA73291ACEB7360096A55B /* dav.cpp */,
-				A6EA732B1ACEB7570096A55B /* davtool.cpp */,
-				A6EA732D1ACEB7860096A55B /* dialog.cpp */,
-				A6EA732F1ACEB7A10096A55B /* ftp.cpp */,
-				A6EA73311ACEB7C30096A55B /* ftpparse.cpp */,
-				A6EA73331ACEB7E50096A55B /* ftptool.cpp */,
-				A6EA73351ACEB8050096A55B /* http.cpp */,
-				A6EA73371ACEB8210096A55B /* panel.cpp */,
-				A6EA73391ACEB8410096A55B /* telnet.cpp */,
-				A6EA733B1ACEB8600096A55B /* thread.cpp */,
-				A6EA733D1ACEB8830096A55B /* utils.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3991,6 +4262,39 @@
 			productReference = A60F746517A0217D00A6160F /* libcalculator_pi.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		A632207B1AE047E700A52EAC /* chartdldr_pi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A63220C51AE047E800A52EAC /* Build configuration list for PBXNativeTarget "chartdldr_pi" */;
+			buildPhases = (
+				A632207E1AE047E700A52EAC /* Sources */,
+				A63220C41AE047E800A52EAC /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = chartdldr_pi;
+			productName = weatherfax_pi;
+			productReference = A63220C81AE047E800A52EAC /* libchartdldr_pi.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		A64514CB1AE4FF3000933404 /* wxCurl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A64514F31AE4FF3000933404 /* Build configuration list for PBXNativeTarget "wxCurl" */;
+			buildPhases = (
+				A64514CE1AE4FF3000933404 /* Sources */,
+				A64515201AE50B1C00933404 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A64514CC1AE4FF3000933404 /* PBXTargetDependency */,
+			);
+			name = wxCurl;
+			productName = NMEA0183;
+			productReference = A64514F61AE4FF3000933404 /* libwxCurl.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
 		A671BCBC19BE44BC00019119 /* squiddio_pi */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A671BCC419BE44BC00019119 /* Build configuration list for PBXNativeTarget "squiddio_pi" */;
@@ -4246,6 +4550,7 @@
 				A526958EA3AB4C80841A9FF2 /* GARMINHOST */,
 				A2C9E5259EEB4C26AEC31484 /* NMEA0183 */,
 				9267E25BB49C4D6E8A431D0A /* S57ENC */,
+				A64514CB1AE4FF3000933404 /* wxCurl */,
 				DA8BE84D3892479688EFF96F /* OpenCPN */,
 				A87580D1DD2B4F81B39F3B5A /* ZERO_CHECK */,
 				1552EA4FD4D44CD5B481D00A /* i18n */,
@@ -4284,6 +4589,7 @@
 				A683CEA31958A550004A0137 /* watchdog_pi */,
 				A671BCBC19BE44BC00019119 /* squiddio_pi */,
 				A6728C0219D4327900070B45 /* objsearch_pi */,
+				A632207B1AE047E700A52EAC /* chartdldr_pi */,
 			);
 		};
 /* End PBXProject section */
@@ -4314,6 +4620,32 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "install_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_qa-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_qa-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_webview-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_webview-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_xrc-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_xrc-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\n";
+		};
+		A63220C41AE047E800A52EAC /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libchartdldr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libchartdldr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libchartdldr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libchartdldr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libchartdldr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libchartdldr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libchartdldr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libchartdldr_pi.dylib\n";
+		};
+		A64515201AE50B1C00933404 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\n";
 		};
 		A6B7B8F91AD87335004FFAF2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4751,16 +5083,12 @@
 			files = (
 				2E4A93F658A3476BAFE629A3 /* weatherfax_pi.cpp in Sources */,
 				774DAE3087304E22B3374526 /* FaxDecoder.cpp in Sources */,
-				A6EA733A1ACEB8410096A55B /* telnet.cpp in Sources */,
-				A6EA73281ACEB70E0096A55B /* base.cpp in Sources */,
 				4FDF04F7115A4CDD920BE944 /* WeatherFaxWizard.cpp in Sources */,
-				A6EA73341ACEB7E50096A55B /* ftptool.cpp in Sources */,
 				88A02E4431334098AA06ECC5 /* WeatherFaxUI.cpp in Sources */,
 				8ADBA8F8E8D54C1DB193AC37 /* WeatherFaxImage.cpp in Sources */,
 				24BDEEA7B4F5428C935B60A2 /* aupv.c in Sources */,
 				F73F4D28A4804FE2B8B2DF08 /* error.c in Sources */,
 				BCC60C9203F04C84B1496799 /* extended.c in Sources */,
-				A6EA732C1ACEB7570096A55B /* davtool.cpp in Sources */,
 				111DE65D7BDE4A0897FC1963 /* g711.c in Sources */,
 				1B18D790C70E4479A494A96D /* AIFF.cpp in Sources */,
 				75F9993E0AE540D2BBCA1FB9 /* AVR.cpp in Sources */,
@@ -4777,13 +5105,11 @@
 				6171DD007A8546A9822EA695 /* FileHandle.cpp in Sources */,
 				C3CF508285024A3BAF124BF4 /* Instrument.cpp in Sources */,
 				891B2F6EF147470994F007DB /* Loop.cpp in Sources */,
-				A6EA73321ACEB7C30096A55B /* ftpparse.cpp in Sources */,
 				84B794224D4A4DA39F72FB93 /* Marker.cpp in Sources */,
 				995DAFD4E9CE4CF697105767 /* Miscellaneous.cpp in Sources */,
 				05D4A1AB24B245C1B5CFFA7D /* Setup.cpp in Sources */,
 				875E563AEF24447699279F44 /* Track.cpp in Sources */,
 				17DCF40B24E84C03B85C919C /* UUID.cpp in Sources */,
-				A6EA73361ACEB8050096A55B /* http.cpp in Sources */,
 				D82B97E6E156429983F459E0 /* WAVE.cpp in Sources */,
 				AD4E8D2E60B541AAB549A988 /* aes.cpp in Sources */,
 				B442321F60C94BB09AA00E9D /* af_vfs.cpp in Sources */,
@@ -4791,24 +5117,18 @@
 				328BA1F0ED444F98A219601A /* data.cpp in Sources */,
 				025E0747528A4EAA8CF895D2 /* debug.cpp in Sources */,
 				2CD097596B69477CA27CF4F2 /* format.cpp in Sources */,
-				A6EA732A1ACEB7360096A55B /* dav.cpp in Sources */,
 				7841819D59F145AA94BE2D6C /* openclose.cpp in Sources */,
 				0EB93DEA6FEA43A49D77A7ED /* pcm.cpp in Sources */,
 				1E4992008581494CA4691E49 /* query.cpp in Sources */,
 				A6CE035E1AC9DA1E0025E180 /* DecoderOptionsDialog.cpp in Sources */,
 				AA1DB44639A740FC84F04D85 /* units.cpp in Sources */,
-				A6EA733E1ACEB8830096A55B /* utils.cpp in Sources */,
-				A6EA73301ACEB7A10096A55B /* ftp.cpp in Sources */,
 				37AD9D4D92964004B9CAA0A5 /* util.cpp in Sources */,
-				A6EA732E1ACEB7860096A55B /* dialog.cpp in Sources */,
 				0936CEEA68CC40E39600E0E1 /* FileModule.cpp in Sources */,
 				EDBA601D7A4E4C1ABE0CB6B6 /* G711.cpp in Sources */,
 				CE4A43A1BF144C17A739E143 /* IMA.cpp in Sources */,
 				F183500E785249ABBF690733 /* MSADPCM.cpp in Sources */,
-				A6EA733C1ACEB8600096A55B /* thread.cpp in Sources */,
 				EF1ACA8B632C4AB6A50F0E6C /* Module.cpp in Sources */,
 				6F3BCD3853724BF1B4F6E887 /* ModuleState.cpp in Sources */,
-				A6EA73381ACEB8210096A55B /* panel.cpp in Sources */,
 				8543DBC604B447CEACF59123 /* PCM.cpp in Sources */,
 				2E728F5FD24E4E649ED8231E /* RebufferModule.cpp in Sources */,
 				9588E9963E1A4A76A8F1E723 /* SimpleModule.cpp in Sources */,
@@ -4887,6 +5207,84 @@
 				A60F748617A02FE700A6160F /* functions.cpp in Sources */,
 				A60F748A17A0302F00A6160F /* parser.cpp in Sources */,
 				A60F748C17A0304A00A6160F /* variablelist.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A632207E1AE047E700A52EAC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A63221471AE056B200A52EAC /* rs16.cpp in Sources */,
+				A63220F71AE0502E00A52EAC /* strlist.cpp in Sources */,
+				A63221091AE051BA00A52EAC /* arcread.cpp in Sources */,
+				A63221391AE0559C00A52EAC /* extract.cpp in Sources */,
+				A63221071AE0517000A52EAC /* archive.cpp in Sources */,
+				A63221311AE0550200A52EAC /* sha256.cpp in Sources */,
+				A632210B1AE051E900A52EAC /* unicode.cpp in Sources */,
+				A63220FD1AE050AD00A52EAC /* smallfn.cpp in Sources */,
+				A63220F51AE04F9B00A52EAC /* rar.cpp in Sources */,
+				A63220FF1AE050CA00A52EAC /* global.cpp in Sources */,
+				A63221331AE0552F00A52EAC /* blake2s.cpp in Sources */,
+				A63221111AE0527200A52EAC /* crypt.cpp in Sources */,
+				A63220F91AE0505E00A52EAC /* strfn.cpp in Sources */,
+				A63221431AE0566900A52EAC /* headers.cpp in Sources */,
+				A63221211AE053BB00A52EAC /* consio.cpp in Sources */,
+				A63220D91AE04D6E00A52EAC /* checkedlistctrl.cpp in Sources */,
+				A632212F1AE054E100A52EAC /* sha1.cpp in Sources */,
+				A63221231AE053E200A52EAC /* options.cpp in Sources */,
+				A63221411AE0563200A52EAC /* unpack.cpp in Sources */,
+				A632211B1AE0533C00A52EAC /* match.cpp in Sources */,
+				A632214B1AE056F700A52EAC /* ui.cpp in Sources */,
+				A632212B1AE0549A00A52EAC /* rijndael.cpp in Sources */,
+				A632214D1AE0572000A52EAC /* filestr.cpp in Sources */,
+				A63221451AE0568E00A52EAC /* threadpool.cpp in Sources */,
+				A63221511AE0577100A52EAC /* qopen.cpp in Sources */,
+				A632213F1AE0560A00A52EAC /* find.cpp in Sources */,
+				A63221051AE0514800A52EAC /* filcreat.cpp in Sources */,
+				A63221151AE052C900A52EAC /* rawread.cpp in Sources */,
+				A63221191AE0531600A52EAC /* resource.cpp in Sources */,
+				A632212D1AE054C300A52EAC /* getbits.cpp in Sources */,
+				A63220FB1AE0508000A52EAC /* pathfn.cpp in Sources */,
+				A63221031AE0510100A52EAC /* filefn.cpp in Sources */,
+				A632213D1AE055E600A52EAC /* list.cpp in Sources */,
+				A632211F1AE053A000A52EAC /* rdwrfn.cpp in Sources */,
+				A63220D51AE04D1400A52EAC /* icons.cpp in Sources */,
+				A632210F1AE0524800A52EAC /* isnt.cpp in Sources */,
+				A63221171AE052E300A52EAC /* encname.cpp in Sources */,
+				A63221351AE0555100A52EAC /* hash.cpp in Sources */,
+				A63221491AE056D500A52EAC /* cmddata.cpp in Sources */,
+				A63220D31AE04CCE00A52EAC /* chartdldr_pi.cpp in Sources */,
+				A63221011AE050E600A52EAC /* file.cpp in Sources */,
+				A63221271AE0544300A52EAC /* rarvm.cpp in Sources */,
+				A63221251AE0541B00A52EAC /* errhnd.cpp in Sources */,
+				A632214F1AE0574200A52EAC /* scantree.cpp in Sources */,
+				A63221291AE0547300A52EAC /* secpassword.cpp in Sources */,
+				A632211D1AE0536F00A52EAC /* timefn.cpp in Sources */,
+				A63220DB1AE04D8E00A52EAC /* chartcatalog.cpp in Sources */,
+				A63221131AE0528C00A52EAC /* crc.cpp in Sources */,
+				A632213B1AE055CC00A52EAC /* volume.cpp in Sources */,
+				A63221371AE0557700A52EAC /* extinfo.cpp in Sources */,
+				A632210D1AE0521900A52EAC /* system.cpp in Sources */,
+				A63220D71AE04D4400A52EAC /* chartdldrgui.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A64514CE1AE4FF3000933404 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A64515031AE501B400933404 /* base.cpp in Sources */,
+				A64515041AE501B400933404 /* dav.cpp in Sources */,
+				A64515051AE501B400933404 /* davtool.cpp in Sources */,
+				A64515061AE501B400933404 /* dialog.cpp in Sources */,
+				A64515071AE501B400933404 /* ftp.cpp in Sources */,
+				A64515081AE501B400933404 /* ftpparse.cpp in Sources */,
+				A64515091AE501B400933404 /* ftptool.cpp in Sources */,
+				A645150A1AE501B400933404 /* http.cpp in Sources */,
+				A645150F1AE501CC00933404 /* panel.cpp in Sources */,
+				A64515101AE501CC00933404 /* telnet.cpp in Sources */,
+				A64515111AE501CC00933404 /* thread.cpp in Sources */,
+				A64515121AE501CC00933404 /* utils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5292,6 +5690,21 @@
 			isa = PBXTargetDependency;
 			target = A60F745B17A0217D00A6160F /* calculator_pi */;
 			targetProxy = A60F749517A0321500A6160F /* PBXContainerItemProxy */;
+		};
+		A62F3F4A1AE13D9200AFD69B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A632207B1AE047E700A52EAC /* chartdldr_pi */;
+			targetProxy = A62F3F491AE13D9200AFD69B /* PBXContainerItemProxy */;
+		};
+		A64514CC1AE4FF3000933404 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A87580D1DD2B4F81B39F3B5A /* ZERO_CHECK */;
+			targetProxy = A64514CD1AE4FF3000933404 /* PBXContainerItemProxy */;
+		};
+		A645151F1AE50A3700933404 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A64514CB1AE4FF3000933404 /* wxCurl */;
+			targetProxy = A645151E1AE50A3700933404 /* PBXContainerItemProxy */;
 		};
 		A647085317A14AE400A16918 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8449,6 +8862,442 @@
 			};
 			name = Release;
 		};
+		A63220C61AE047E800A52EAC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					chartdldr_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					"'_LARGEFILE_SOURCE'",
+					"'LIBUNRAR_BUILD'",
+					"'RARDLL'",
+					"'UNRAR'",
+					"'SILENT'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_GL,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
+					/opt/local/include,
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/chartdldr_pi/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/chartdldr_pi/src/unrar",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl",
+				);
+				INSTALL_PATH = Debug;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O0",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O0",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib",
+					/usr/lib/libz.dylib,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = chartdldr_pi;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		A63220C71AE047E800A52EAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					chartdldr_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					"'_LARGEFILE_SOURCE'",
+					"'LIBUNRAR_BUILD'",
+					"'RARDLL'",
+					"'UNRAR'",
+					"'SILENT'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_GL,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
+					/opt/local/include,
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/chartdldr_pi/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/chartdldr_pi/src/unrar",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl",
+				);
+				INSTALL_PATH = Release;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O0",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O0",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib",
+					/usr/lib/libz.dylib,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = chartdldr_pi;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
+		A64514F41AE4FF3000933404 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl/wx/curl",
+					/opt/local/include,
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = Debug;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				MACH_O_TYPE = dynamiclib;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-rdynamic",
+					"-g",
+					"-fno-strict-aliasing",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = wxCurl;
+				SDKROOT = macosx;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		A64514F51AE4FF3000933404 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl/wx/curl",
+					/opt/local/include,
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = Release;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				MACH_O_TYPE = dynamiclib;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-rdynamic",
+					"-g",
+					"-fno-strict-aliasing",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = wxCurl;
+				SDKROOT = macosx;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
 		A671BCC519BE44BC00019119 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -10752,7 +11601,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/weatherfax_pi/src/libaudiofile",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/weatherfax_pi/src/wxcurl",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl",
 				);
 				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
@@ -10810,6 +11659,7 @@
 					"-lwx_osx_cocoau_adv-3.1",
 					"-lwx_osx_cocoau_aui-3.1",
 					"-lwx_osx_cocoau_gl-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -12494,7 +13344,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/weatherfax_pi/src/libaudiofile",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/weatherfax_pi/src/wxcurl",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl",
 				);
 				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
@@ -12552,6 +13402,7 @@
 					"-lwx_osx_cocoau_adv-3.1",
 					"-lwx_osx_cocoau_aui-3.1",
 					"-lwx_osx_cocoau_gl-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -12828,6 +13679,24 @@
 			buildConfigurations = (
 				A60F749117A0319F00A6160F /* Debug */,
 				A60F749217A0319F00A6160F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A63220C51AE047E800A52EAC /* Build configuration list for PBXNativeTarget "chartdldr_pi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A63220C61AE047E800A52EAC /* Debug */,
+				A63220C71AE047E800A52EAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A64514F31AE4FF3000933404 /* Build configuration list for PBXNativeTarget "wxCurl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A64514F41AE4FF3000933404 /* Debug */,
+				A64514F51AE4FF3000933404 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

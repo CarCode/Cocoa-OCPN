@@ -19,6 +19,11 @@
 			<key>orderHint</key>
 			<integer>19</integer>
 		</dict>
+		<key>NMEA0183 copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>42</integer>
+		</dict>
 		<key>NMEA0183.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -119,6 +124,11 @@
 			<key>orderHint</key>
 			<integer>22</integer>
 		</dict>
+		<key>objsearch_pi.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>40</integer>
+		</dict>
 		<key>po-update.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -193,6 +203,11 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>25</integer>
+		</dict>
+		<key>weatherfax_pi copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>41</integer>
 		</dict>
 		<key>weatherfax_pi.xcscheme</key>
 		<dict>
@@ -393,6 +408,16 @@
 			<true/>
 		</dict>
 		<key>A60F748F17A0319F00A6160F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A632207B1AE047E700A52EAC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A64514CB1AE4FF3000933404</key>
 		<dict>
 			<key>primary</key>
 			<true/>
