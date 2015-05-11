@@ -81,13 +81,21 @@ public:
     Chart( TiXmlNode * xmldata );
     ~Chart();
     // public methods
+#ifdef __WXOSX__
+    wxString GetChartTitle() { return title; }
+    wxString GetDownloadLocation() { return zipfile_location; }
+    bool NeedsManualDownload() { return manual_download_url != wxEmptyString; }
+    wxString GetManualDownloadUrl() { return manual_download_url; }
+    wxString GetChartFilename( bool to_check = false );
+    wxDateTime GetUpdateDatetime() { return zipfile_datetime_iso8601; }
+#else
     virtual wxString GetChartTitle() { return title; }
     virtual wxString GetDownloadLocation() { return zipfile_location; }
     virtual bool NeedsManualDownload() { return manual_download_url != wxEmptyString; }
     virtual wxString GetManualDownloadUrl() { return manual_download_url; }
     virtual wxString GetChartFilename( bool to_check = false );
     virtual wxDateTime GetUpdateDatetime() { return zipfile_datetime_iso8601; }
-
+#endif
     // public properties
     wxString number;
     wxString title; //RNC: <title>, ENC:<lname>

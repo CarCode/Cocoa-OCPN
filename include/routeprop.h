@@ -166,6 +166,7 @@ public:
     bool IsThisRouteExtendable();
     void OnEvtColDragEnd(wxListEvent& event);
     void InitializeList();
+    void RecalculateSize( void );
 
     /// Should we show tooltips?
     static bool ShowToolTips();

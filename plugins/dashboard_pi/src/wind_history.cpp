@@ -396,7 +396,7 @@ void DashboardInstrument_WindDirHistory::DrawBackground(wxGCDC* dc)
 //***********************************************************************************
 wxString DashboardInstrument_WindDirHistory::GetWindDirStr(wxString WindDir)
 {
-    AddLocaleCatalog( _T("opencpn-dashboard_pi") );
+//    AddLocaleCatalog( _T("opencpn-dashboard_pi") );
     
    if ( WindDir == _T("0.0") || WindDir == _T("360.0") )
      return _("N");

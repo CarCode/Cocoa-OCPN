@@ -479,7 +479,11 @@ void OCPNPlatform::Initialize_1( void )
             sigaction(SIGTERM, &sa_all, NULL);
             sigaction(SIGTERM, NULL, &sa_all_old);
 #endif
-            
+
+#ifdef __OCPN__ANDROID__
+    androidUtilInit( );
+#endif
+
 }
 
 //  Called from MyApp() immediately before creation of MyFrame()
@@ -700,7 +704,16 @@ wxString &OCPNPlatform::GetPluginDir()
             m_PluginsDir = GetHomeDir();
             m_PluginsDir += _T("plugins");
         }
+#ifdef __OCPN__ANDROID__
+        // something like: data/data/org.opencpn.opencpn
+        wxFileName fdir = wxFileName::DirName(std_path.GetUserConfigDir());
+        fdir.RemoveLastDir();
+        m_PluginsDir = fdir.GetPath();
         
+        m_PluginsDir = GetHomeDir();
+        
+#endif
+
     }
     
     return m_PluginsDir;
@@ -934,7 +947,7 @@ wxSize OCPNPlatform::getDisplaySize()
 
 double  OCPNPlatform::GetDisplaySizeMM()
 {
-    double ret = wxGetDisplaySizeMM().GetWidth();
+    double ret; // = wxGetDisplaySizeMM().GetWidth();  // Not used
     
 #ifdef __WXMSW__
     int w,h;

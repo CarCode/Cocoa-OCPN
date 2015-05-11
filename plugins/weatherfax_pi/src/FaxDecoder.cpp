@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
@@ -22,8 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "FaxDecoder.h"
 
@@ -199,7 +198,7 @@ double FaxDecoder::FourierTransformSub(wxUint8* buffer, int buffer_len, int freq
         retr += buffer[n]*cos(k*n);
         reti += buffer[n]*sin(k*n);
     }
-    return hypot(retr, reti);
+    return sqrt(retr*retr + reti*reti);
 }
 
 /* see if the fourier transform at the start and stop frequencies reveils header */

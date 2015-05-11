@@ -510,17 +510,15 @@ void CanvasMenuHandler::CanvasPopupMenu( int x, int y, int seltype )
     for( unsigned int i = 0; i < item_array.GetCount(); i++ ) {
         PlugInMenuItemContainer *pimis = item_array.Item( i );
         {
-#ifdef __WXOSX__
             if( pimis->b_viz ) {
                 wxMenuItem *pmi = new wxMenuItem( contextMenu, pimis->id,
-                                                 pimis->pmenu_item->GetItemLabel(), pimis->pmenu_item->GetHelp(),
-                                                 pimis->pmenu_item->GetKind(), pimis->pmenu_item->GetSubMenu() );
+#if wxCHECK_VERSION(3,0,0)
+                                                 pimis->pmenu_item->GetItemLabelText(),
 #else
-            if( pimis->b_viz ) {
-                wxMenuItem *pmi = new wxMenuItem( contextMenu, pimis->id,
-                                                  pimis->pmenu_item->GetLabel(), pimis->pmenu_item->GetHelp(),
-                                                  pimis->pmenu_item->GetKind(), pimis->pmenu_item->GetSubMenu() );
+                                                 pimis->pmenu_item->GetLabel(),
 #endif
+                                                 pimis->pmenu_item->GetHelp(),
+                                                 pimis->pmenu_item->GetKind(), pimis->pmenu_item->GetSubMenu() );
 #ifdef __WXMSW__
                 pmi->SetFont(pimis->pmenu_item->GetFont());
 #endif

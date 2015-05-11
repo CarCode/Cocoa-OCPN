@@ -364,8 +364,10 @@ public:
     wxTextCtrl              *pScreenMM;
     wxRadioButton           *pRBSizeAuto;
     wxRadioButton           *pRBSizeManual;
-    
-    
+
+    wxCheckBox              *pToolbarAutoHideCB;
+    wxTextCtrl              *pToolbarHideSecs;
+
 //    For GPS Page
     wxListCtrl* m_lcSources;
     wxButton* m_buttonAdd;

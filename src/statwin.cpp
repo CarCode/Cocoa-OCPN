@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Status Window
@@ -21,10 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- *
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -80,8 +77,6 @@ StatWin::StatWin( wxWindow *win )
 
 //    SetBackgroundStyle( wxBG_STYLE_CUSTOM ); // on WXMSW, this prevents flashing on color scheme change
 
-    m_rows = 1;
-
     //   Create the Children
 
     pPiano = new PianoWin( (wxFrame *) this );
@@ -115,7 +110,12 @@ void StatWin::ReSize()
     wxSize cs = GetParent()->GetClientSize();
     wxSize new_size;
     new_size.x = cs.x;
-    new_size.y = 22 * GetRows();
+
+    if(g_btouch)
+        new_size.y = 40;
+    else
+        new_size.y = 22;
+
     SetSize(new_size);
 
 }
@@ -137,13 +137,19 @@ void StatWin::OnPaint( wxPaintEvent& event )
 
 void StatWin::OnSize( wxSizeEvent& event )
 {
+    if (!IsShown())
+        return;
     int width, height;
     GetClientSize( &width, &height );
     int x, y;
     GetPosition( &x, &y );
 
+    float width_factor = 0.6f;
+    if(g_btouch)
+        width_factor = 0.98f;
+
     if( width ) {
-        pPiano->SetSize( 0, 0, width * 6 / 10, height * 1 / m_rows );
+        pPiano->SetSize( 0, 0, width * width_factor, height );
         pPiano->FormatKeys();
     }
 }

@@ -861,17 +861,27 @@ void glChartCanvas::OnSize( wxSizeEvent& event )
 
 void glChartCanvas::MouseEvent( wxMouseEvent& event )
 {
+#ifndef __OCPN__ANDROID__
     if(cc1->MouseEventSetup( event ))
         return;                 // handled, no further action required
 
     bool obj_proc = cc1->MouseEventProcessObjects( event );
 
-#ifndef __OCPN__ANDROID__
     if(!obj_proc && !cc1->singleClickEventIsValid )
         cc1->MouseEventProcessCanvas( event );
 
     if( !g_btouch )
         cc1->SetCanvasCursor( event );
+
+#else
+    
+    if(cc1->MouseEventSetup( event, false )) {
+        if(!event.LeftDClick()){
+            return;                 // handled, no further action required
+        }
+    }
+    
+    cc1->MouseEventProcessObjects( event );
 
 #endif
 
@@ -1006,7 +1016,7 @@ void glChartCanvas::SetupOpenGL()
     const GLubyte *ext_str = glGetString(GL_EXTENSIONS);
     m_extensions = wxString( (const char *)ext_str, wxConvUTF8 );
     wxLogMessage( _T("OpenGL extensions available: ") );
-    wxLogMessage(m_extensions );
+//    wxLogMessage(m_extensions );
 
     //  Set the minimum line width
     GLint parms[2];
@@ -2208,11 +2218,7 @@ void glChartCanvas::DrawFloatingOverlayObjects( ocpnDC &dc, OCPNRegion &region )
 
     if( g_pi_manager ) {
         g_pi_manager->SendViewPortToRequestingPlugIns( vp );
-#if wxCHECK_VERSION(3,0,0)
-        g_pi_manager->RenderAllGLCanvasOverlayPlugIns( m_pcontext, cc1->GetVP() );
-#else
-        g_pi_manager->RenderAllGLCanvasOverlayPlugIns( GetContext(), vp );
-#endif
+        g_pi_manager->RenderAllGLCanvasOverlayPlugIns( NULL, vp );
     }
 
     // all functions called with cc1-> are still slow because they go through ocpndc

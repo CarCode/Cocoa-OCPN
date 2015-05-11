@@ -4,3 +4,5 @@
 ../src/iacfleet_pi.h
 ../src/iacfleet.cpp
 ../src/iacfleet.h
+../src/TexFont.cpp
+../src/TexFont.h

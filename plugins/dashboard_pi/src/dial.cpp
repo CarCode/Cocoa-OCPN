@@ -497,7 +497,7 @@ void DashboardInstrument_Dial::DrawForeground(wxGCDC* dc)
 /* Shared functions */
 void DrawCompassRose(wxGCDC* dc, int cx, int cy, int radius, int startangle, bool showlabels)
 {
-      AddLocaleCatalog( _T("opencpn-dashboard_pi") );
+//      AddLocaleCatalog( _T("opencpn-dashboard_pi") );
     
       wxPoint pt, points[3];
       wxString Value;

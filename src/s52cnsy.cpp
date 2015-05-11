@@ -1,14 +1,14 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  S52 Conditional Symbology Library
  * Author:   David Register, Sylvain Duclos
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
- *
- *   Copyright (C) 2000-2001  Sylvain Duclos
- *   sylvain_duclos@yahoo.com
+ *   Copyright (C) 2010 by David S. Register                               *
+ *                                                                         *
+ *   Copyright (C) 2000-2001  Sylvain Duclos                               *
+ *   sylvain_duclos@yahoo.com                                              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,10 +23,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -597,7 +595,10 @@ static wxString *_UDWHAZ03(S57Obj *obj, double depth_value, ObjRazRules *rzRules
                     double drval1 = 0.0;
                     GetDoubleAttr(ptest_obj, "DRVAL1", drval1);
 
-                    if(depth_value < drval1)
+                    double drval2 = 0.0;
+                    GetDoubleAttr(ptest_obj, "DRVAL2", drval2);
+                    
+                    if(depth_value < drval2)
                         b_promote = true;
                     
                     if(drval1 >= safety_contour)
@@ -685,7 +686,7 @@ static void *DEPARE01(void *param)
 
    //   Create a string of the proper color reference
 
-    bool shallow  = TRUE;
+//    bool shallow  = TRUE;  // Not used
     wxString rule_str =_T("AC(DEPIT)");
 
 
@@ -698,7 +699,7 @@ static void *DEPARE01(void *param)
             drval2 >  S52_getMarinerParam(S52_MAR_SAFETY_CONTOUR))
         {
             rule_str  = _T("AC(DEPDW)");
-            shallow = FALSE;
+//            shallow = FALSE;  // Not used
         }
     }
     else
@@ -711,14 +712,14 @@ static void *DEPARE01(void *param)
                 drval2 >  S52_getMarinerParam(S52_MAR_SAFETY_CONTOUR))
         {
             rule_str  = _T("AC(DEPMD)");
-            shallow = FALSE;
+//            shallow = FALSE;  // Not used
         }
 
         if (drval1 >= S52_getMarinerParam(S52_MAR_DEEP_CONTOUR)  &&
                 drval2 >  S52_getMarinerParam(S52_MAR_DEEP_CONTOUR))
         {
             rule_str  = _T("AC(DEPDW)");
-            shallow = FALSE;
+//            shallow = FALSE;  // Not used
         }
 
     }
@@ -731,7 +732,7 @@ static void *DEPARE01(void *param)
         if (!drval1_found) //If DRVAL1 was not defined...
         {
             rule_str  = _T("AC(DEPMD)");
-            shallow = FALSE;
+//            shallow = FALSE;  // Not used
         }
         rule_str.Append(_T(";AP(DRGARE01)"));
         rule_str.Append(_T(";LS(DASH,1,CHGRF)"));
@@ -800,7 +801,7 @@ static void *DEPCNT02 (void *param)
 //      int      objl      = 0;
 //      GString *quaposstr = NULL;
 //      int      quapos    = 0;
-      double   depth_value;
+//      double   depth_value;  // Not used
       double drval1, drval2;
       bool safe = FALSE;
       wxString rule_str;
@@ -876,7 +877,7 @@ static void *DEPCNT02 (void *param)
                               */
             }
 
-            depth_value = drval1;
+//            depth_value = drval1;  // Not used
 
       }
       else
@@ -887,7 +888,7 @@ static void *DEPCNT02 (void *param)
 //            GString *valdcostr = S57_getAttVal(geo, "VALDCO");
 //            double   valdco    = (NULL == valdcostr) ? 0.0 : atof(valdcostr->str);
 
-            depth_value = valdco;
+//            depth_value = valdco;  // Not used
 
             if (valdco == safety_contour)
                   safe = TRUE;   // this is useless !?!?
@@ -1533,8 +1534,8 @@ static void *OBSTRN04 (void *param)
 //      GString *sndfrm02str = NULL;
       wxString *udwhaz03str = NULL;
 //      GString *valsoustr   = S57_getAttVal(geo, "VALSOU");
-      bool b_promote;
-      
+      bool b_promote = false;
+    
       ObjRazRules *rzRules = (ObjRazRules *)param;
       S57Obj *obj = rzRules->obj;
 

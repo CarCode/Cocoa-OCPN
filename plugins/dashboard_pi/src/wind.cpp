@@ -59,7 +59,7 @@ void DashboardInstrument_Wind::DrawBackground(wxGCDC* dc)
 DashboardInstrument_WindCompass::DashboardInstrument_WindCompass( wxWindow *parent, wxWindowID id, wxString title, int cap_flag ) :
       DashboardInstrument_Dial( parent, id, title, cap_flag, 0, 360, 0, 360 )
 {
-      AddLocaleCatalog( _T("opencpn-dashboard_pi") );
+//      AddLocaleCatalog( _T("opencpn-dashboard_pi") );
       SetOptionMarker(5, DIAL_MARKER_SIMPLE, 2);
       wxString labels[] = {_("N"), _("NE"), _("E"), _("SE"), _("S"), _("SW"), _("W"), _("NW")};
       SetOptionLabel(45, DIAL_LABEL_HORIZONTAL, wxArrayString(8, labels));

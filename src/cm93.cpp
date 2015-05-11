@@ -3990,6 +3990,18 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
       }         // geomtype switch
 
 
+    //  Is this a catagory-movable object?
+    if( !strncmp(pobj->FeatureName, "OBSTRN", 6) ||
+       !strncmp(pobj->FeatureName, "WRECKS", 6) ||
+       !strncmp(pobj->FeatureName, "DEPCNT", 6) ||
+       !strncmp(pobj->FeatureName, "UWTROC", 6) )
+    {
+        pobj->m_bcategory_mutable = true;
+    }
+    else{
+        pobj->m_bcategory_mutable = false;
+    }
+
       //      Build/Maintain a list of found OBJL types for later use
       //      And back-reference the appropriate list index in S57Obj for Display Filtering
 
@@ -4895,25 +4907,10 @@ int cm93compchart::GetCMScaleFromVP ( const ViewPort &vpt )
 void cm93compchart::SetVPParms ( const ViewPort &vpt )
 {
     // need to recompute the cm93 cell when switching quilting off
-    if(m_vpt.b_quilt && !vpt.b_quilt) {
+//    if((m_vpt.b_quilt && !vpt.b_quilt) || !m_pcm93chart_current) {
         ViewPort vp = vpt;
         AdjustVP ( m_vpt, vp );
-    }
-
-    {
-        m_vpt = vpt;                              // save a copy
-
-        int cmscale = GetCMScaleFromVP ( vpt );         // First order calculation of cmscale
-
-        m_cmscale = PrepareChartScale ( vpt, cmscale );
-
-        //    Continuoesly update the composite chart edition date to the latest cell decoded
-        if ( m_pcm93chart_array[cmscale] )
-        {
-            if ( m_pcm93chart_array[cmscale]->GetEditionDate().IsLaterThan ( m_EdDate ) )
-                m_EdDate = m_pcm93chart_array[cmscale]->GetEditionDate();
-        }
-    }
+//    }
 }
 
 int cm93compchart::PrepareChartScale ( const ViewPort &vpt, int cmscale, bool bOZ_protect )

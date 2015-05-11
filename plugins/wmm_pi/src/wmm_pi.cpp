@@ -330,10 +330,14 @@ void wmm_pi::RearrangeWindow()
 
 #ifdef __WXMSW__
 	//UGLY!!!!!!! On Windows XP the transparent window is not refreshed properly in OpenGL mode at least on the Atom powered netbooks, so we have to disable transparency.
-	wxFileConfig *cfg = GetOCPNConfigObject();
-	cfg->SetPath(_T("/Settings"));
-	bool gl = cfg->Read(_T("OpenGL"));
-	cfg = NULL;
+    wxFileConfig *pConf = (wxFileConfig *)m_pconfig;
+    bool gl = true;
+    if(pConf)
+    {
+        pConf->SetPath(_T("/Settings"));
+        pConf->Read(_T("OpenGL"), &gl, false);
+        pConf = NULL;
+    }
 	if (!(gl && wxPlatformInfo::Get().GetOSMajorVersion() == 5 && wxPlatformInfo::Get().GetOSMinorVersion() == 1))
 #endif
 	if (m_pWmmDialog->CanSetTransparent())

@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Status Window
@@ -21,8 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 
 #ifndef __statwin_H__
@@ -149,7 +148,6 @@ public:
       void OnPaint(wxPaintEvent& event);
       void MouseEvent(wxMouseEvent& event);
       int  GetFontHeight();
-      int  GetRows(){ return(m_rows);}
       void SetColorScheme(ColorScheme cs);
       void RePosition();
       void ReSize();
@@ -162,7 +160,6 @@ public:
 
 private:
       wxBrush     m_backBrush;
-      int         m_rows;
 
 
 DECLARE_EVENT_TABLE()

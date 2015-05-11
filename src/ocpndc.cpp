@@ -1029,11 +1029,13 @@ void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
         dc->DrawText( text, x, y );
 #ifdef ocpnUSE_GL
     else {
-# ifdef ocpnUSE_GLES
-        return;
-# endif
         wxCoord w = 0;
         wxCoord h = 0;
+
+        m_texfont.Build( m_font );      // make sure the font is ready
+        m_texfont.GetTextExtent(text, &w, &h);
+        
+        /*
 #ifdef __WXMAC__
         wxBitmap tbmp(200, 200);
         wxMemoryDC mac_dc(tbmp);
@@ -1041,8 +1043,30 @@ void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
 #else
         GetTextExtent( text, &w, &h );
 #endif
-
+*/
         if( w && h ) {
+
+            glEnable( GL_BLEND );
+            glEnable( GL_TEXTURE_2D );
+            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+            
+            glPushMatrix();
+            glTranslatef(x, y, 0);
+            
+            glColor3ub( m_textforegroundcolour.Red(), m_textforegroundcolour.Green(),
+                       m_textforegroundcolour.Blue() );
+            
+            
+            m_texfont.RenderString(text);
+            glPopMatrix();
+            
+            glDisable( GL_TEXTURE_2D );
+            glDisable( GL_BLEND );
+            
+            
+#if 0            
+
             /* create bitmap of appropriate size and select it */
             wxBitmap bmp( w, h );
             wxMemoryDC temp_dc;
@@ -1084,6 +1108,7 @@ void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
                     m_textforegroundcolour.Blue(), 255 );
             GLDrawBlendData( x, y, w, h, GL_ALPHA, data );
             delete[] data;
+#endif
         }
     }
 #endif    

@@ -368,12 +368,16 @@ RouteProp::RouteProp( wxWindow* parent, wxWindowID id, const wxString& caption, 
         
     CreateControls();
 
+    RecalculateSize();
+}
+
+void RouteProp::RecalculateSize( void )
+{
     //  Make an estimate of the dialog size, without scrollbars showing
     
     wxSize esize;
     esize.x = GetCharWidth() * 110;
     esize.y = GetCharHeight() * 40;
-//    SetSize( esize );
     
     wxSize dsize = GetParent()->GetClientSize();
     esize.y = wxMin(esize.y, dsize.y - (2 * GetCharHeight()));
@@ -387,6 +391,7 @@ RouteProp::RouteProp( wxWindow* parent, wxWindowID id, const wxString& caption, 
     
     
     Centre();
+
 }
 
 void RouteProp::OnRoutePropRightClick( wxListEvent &event )
@@ -655,13 +660,9 @@ void RouteProp::CreateControls()
 
     wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC, _("Name"),
             wxDefaultPosition, wxDefaultSize, 0 );
-#ifdef __WXOSX__
     itemStaticBoxSizer3->Add( itemStaticText4, 0,
                              wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
-#else
-    itemStaticBoxSizer3->Add( itemStaticText4, 0,
-            wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
-#endif
+
     m_RouteNameCtl = new wxTextCtrl( itemDialog1, ID_TEXTCTRL, _T(""), wxDefaultPosition,
             wxSize( 710, -1 ), 0 );
     itemStaticBoxSizer3->Add( m_RouteNameCtl, 0,
@@ -701,44 +702,24 @@ void RouteProp::CreateControls()
 
     wxStaticText* itemStaticText11 = new wxStaticText( itemDialog1, wxID_STATIC,
             _("Total Distance"), wxDefaultPosition, wxDefaultSize, 0 );
-#ifdef __WXOSX__
     itemFlexGridSizer6a->Add( itemStaticText11, 0,
                              wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP, 5 );
-#else
-    itemFlexGridSizer6a->Add( itemStaticText11, 0,
-            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
-            5 );
-#endif
+
     m_PlanSpeedLabel = new wxStaticText( itemDialog1, wxID_STATIC, _("Plan Speed"),
             wxDefaultPosition, wxDefaultSize, 0 );
-#ifdef __WXOSX__
     itemFlexGridSizer6a->Add( m_PlanSpeedLabel, 0,
                              wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP, 5 );
-#else
-    itemFlexGridSizer6a->Add( m_PlanSpeedLabel, 0,
-            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
-            5 );
-#endif
+
     wxStaticText* itemStaticText12a = new wxStaticText( itemDialog1, wxID_STATIC, _("Time Enroute"),
             wxDefaultPosition, wxDefaultSize, 0 );
-#ifdef __WXOSX__
     itemFlexGridSizer6a->Add( itemStaticText12a, 0,
                              wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP, 5 );
-#else
-    itemFlexGridSizer6a->Add( itemStaticText12a, 0,
-            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
-            5 );
-#endif
+
     m_StartTimeLabel = new wxStaticText( itemDialog1, wxID_STATIC, _("Departure Time (m/d/y h:m)"),
             wxDefaultPosition, wxDefaultSize, 0 );
-#ifdef __WXOSX__
     itemFlexGridSizer6a->Add( m_StartTimeLabel, 0,
                              wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP, 5 );
-#else
-    itemFlexGridSizer6a->Add( m_StartTimeLabel, 0,
-            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE,
-            5 );
-#endif
+
     m_TotalDistCtl = new wxTextCtrl( itemDialog1, ID_TEXTCTRL3, _T(""), wxDefaultPosition,
             wxDefaultSize, wxTE_READONLY );
     itemFlexGridSizer6a->Add( m_TotalDistCtl, 0,

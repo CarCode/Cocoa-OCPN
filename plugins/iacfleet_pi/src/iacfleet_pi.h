@@ -31,16 +31,20 @@
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif //precompiled headers
 
+#include "../../../src/wxcurl/wx/curl/dialog.h"
+
+//#include "version.h"
 #define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    1
+#define     PLUGIN_VERSION_MINOR    5
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    6
+#define     MY_API_VERSION_MINOR    7
 
-#include "../../../include/ocpn_plugin.h"
+//#include "../../../include/ocpn_plugin.h"
+#include "ocpn_plugin.h"
 
 #define IACFLEET_TOOL_POSITION -1          // Request default positioning of toolbar tool
 
@@ -48,61 +52,72 @@
 //    The PlugIn Class Definition
 //----------------------------------------------------------------------------------------------------------
 class IACFleetUIDialog;
-class iacfleet_pi : public opencpn_plugin_16
+class iacfleet_pi : public opencpn_plugin_17
 {
 public:
-      iacfleet_pi(void *ppimgr);
-      ~iacfleet_pi();
+    iacfleet_pi( void *ppimgr );
+    ~iacfleet_pi();
 
 //    The required PlugIn Methods
-      int Init(void);
-      bool DeInit(void);
+    int Init( void );
+    bool DeInit( void );
 
-      int GetAPIVersionMajor();
-      int GetAPIVersionMinor();
-      int GetPlugInVersionMajor();
-      int GetPlugInVersionMinor();
-      wxBitmap *GetPlugInBitmap();
-      wxString GetCommonName();
-      wxString GetShortDescription();
-      wxString GetLongDescription();
-      void SetCursorLatLon(double lat, double lon);
+    int GetAPIVersionMajor();
+    int GetAPIVersionMinor();
+    int GetPlugInVersionMajor();
+    int GetPlugInVersionMinor();
+    wxBitmap *GetPlugInBitmap();
+    wxString GetCommonName();
+    wxString GetShortDescription();
+    wxString GetLongDescription();
+    void SetCursorLatLon( double lat, double lon );
 
 //    The override PlugIn Methods
-#ifdef __WXOSX__
-      bool RenderOverlay(wxDC &pmdc, PlugIn_ViewPort *vp);
-#else
-      bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
-#endif
-      int GetToolbarToolCount(void);
-      void ShowPreferencesDialog( wxWindow* parent );
-      void OnToolbarToolCallback(int id);
-      void SetDialogX    (int x){ m_dialog_x = x;};
-      void SetDialogY    (int x){ m_dialog_y = x;}
-      void SetDialogSizeX(int x){ m_dialog_sx = x;}
-      void SetDialogSizeY(int x){ m_dialog_sy = x;}
+    bool RenderOverlay( wxDC &dc, PlugIn_ViewPort *vp );
+    bool RenderGLOverlay( wxGLContext *pcontext, PlugIn_ViewPort *vp );
+    int GetToolbarToolCount( void );
+    void ShowPreferencesDialog( wxWindow* parent );
+    void OnToolbarToolCallback( int id );
+    void SetDialogX( int x )
+    {
+        m_dialog_x = x;
+    };
+    void SetDialogY( int x )
+    {
+        m_dialog_y = x;
+    }
+    void SetDialogSizeX( int x )
+    {
+        m_dialog_sx = x;
+    }
+    void SetDialogSizeY( int x )
+    {
+        m_dialog_sy = x;
+    }
+    void OnDialogClose();
+    void SetDir( wxString dir )
+    {
+        m_dir = dir;
+    };
+    void SetSortType( int sort_type )
+    {
+        m_sort_type = sort_type;
+    };
 
-      void OnDialogClose();
-      void SetDir(wxString dir){ m_dir = dir;};
 private:
-      bool LoadConfig(void);
-      bool SaveConfig(void);
-
-
+    bool LoadConfig( void );
+    bool SaveConfig( void );
 
 private:
-      wxWindow         *m_parent_window;
-#ifndef __WXOSX__
-      bool              m_bShowIcon;
-#endif
-      int               m_leftclick_tool_id;
-      int               m_dialog_x, m_dialog_y;
-      int               m_dialog_sx, m_dialog_sy;
-      wxString          m_dir;
-      IACFleetUIDialog *m_pDialog;
+    wxWindow         *m_parent_window;
+    bool              m_bShowIcon;
+    int               m_leftclick_tool_id;
+    int               m_dialog_x, m_dialog_y;
+    int               m_dialog_sx, m_dialog_sy;
+    int               m_sort_type;
+    wxString          m_dir;
+    IACFleetUIDialog *m_pDialog;
+    wxDC             *m_pdc;
 };
 
 #endif
-
-
-

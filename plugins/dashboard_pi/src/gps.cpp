@@ -100,7 +100,7 @@ void DashboardInstrument_GPS::Draw(wxGCDC* dc)
 
 void DashboardInstrument_GPS::DrawFrame(wxGCDC* dc)
 {
-      AddLocaleCatalog( _T("opencpn-dashboard_pi") );
+//      AddLocaleCatalog( _T("opencpn-dashboard_pi") );
     
       wxSize size = GetClientSize();
       wxColour cb;
