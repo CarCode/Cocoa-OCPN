@@ -1,4 +1,4 @@
-/**************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Tesselated Polygon Object
@@ -436,7 +436,7 @@ PolyTessGeo::PolyTessGeo(unsigned char *polybuf, int nrecl, int index, int senc_
             //    interpreting the string "POLYEND" as an int
             if(tri_type == 0x594c4f50)
             {
-                  not_finished = false;
+//                  not_finished = false;  // Not used but break
                   break;
             }
 
@@ -794,7 +794,7 @@ int PolyTessGeo::PolyTessGeoTri(OGRPolygon *poly, bool bSENC_SM, double ref_lat,
 //  Converting to float as we go, and
 //  allowing for tess_orient
 
-    int nptfinal = npta;
+    int nptfinal; // Not used: = npta;
     
     //  No longer need the full geometry in the SENC,
     nptfinal = 1;
@@ -1225,7 +1225,7 @@ int PolyTessGeo::BuildTessTri(void)
     //  Converting to float as we go, and
     //  allowing for tess_orient
 
-    int nptfinal = npta;
+    int nptfinal; // Not used: = npta;
     
     //  No longer need the full geometry in the SENC,
     nptfinal = 1;
@@ -1468,7 +1468,7 @@ int PolyTessGeo::Write_PolyTriGroup( FILE *ofs)
     ostream2->Write(stemp.mb_str(), stemp.Len());
 
     int nrecl = ostream1->GetSize() + ostream2->GetSize();
-    stemp.sprintf( _T("  POLYTESSGEO  %08d %g %g\n"), nrecl, m_ref_lat, m_ref_lon);
+    stemp.sprintf( _T("  POLYTESSGEO  %08d %f %f\n"), nrecl, m_ref_lat, m_ref_lon);
 
     fwrite(stemp.mb_str(), 1, stemp.Len(), ofs);                 // Header, + record length
 
@@ -1777,7 +1777,7 @@ int PolyTessGeo::PolyTessGeoGL(OGRPolygon *poly, bool bSENC_SM, double ref_lat, 
     
         if(  ((fabs(x-x0) > EQUAL_EPS) || (fabs(y-y0) > EQUAL_EPS)))
         {
-            GLdouble *ppt_temp = ppt;
+//            GLdouble *ppt_temp = ppt;  // Not used
             if(tess_orient == TESS_VERT)
             {
                 *DPrun++ = x;
@@ -2385,7 +2385,7 @@ int PolyTessGeo::BuildTessGL(void)
 //  allowing for tess_orient
 //  Also, convert to SM if requested
 
-      int nptfinal = npta;
+    int nptfinal; // Not used: = npta;
       
       //  No longer need the full geometry in the SENC,
       nptfinal = 1;

@@ -388,31 +388,19 @@ OptionsDialog::OptionsDialog( wxWindow* parent, findit_pi* p, wxWindowID id, con
 	
 	wxString m_radioBox1Choices[] = { _("blank"), _T("\"0\"") };
 	int m_radioBox1NChoices = sizeof( m_radioBox1Choices ) / sizeof( wxString );
-#ifdef __WXOSX__
     m_radioBox1 = new wxRadioBox( this, wxID_ANY, _("If Value of Column \"Balance\" = 0, set Value to"), wxDefaultPosition, wxDefaultSize, m_radioBox1NChoices, m_radioBox1Choices, 1, wxRA_SPECIFY_ROWS );
-#else
-	m_radioBox1 = new wxRadioBox( this, wxID_ANY, _("If Value of Column \"Balance\" = 0, set Value to"), wxDefaultPosition, wxDefaultSize, m_radioBox1NChoices, m_radioBox1Choices, 1, wxRA_SPECIFY_ROWS|wxRA_USE_CHECKBOX );
-#endif
 	m_radioBox1->SetSelection( 0 );
 	fgSizer1->Add( m_radioBox1, 0, wxALL, 5 );
 	
 	wxString m_radioBox11Choices[] = { _("blank"), _("\"No\"") };
 	int m_radioBox11NChoices = sizeof( m_radioBox11Choices ) / sizeof( wxString );
-#ifdef __WXOSX__
     m_radioBox11 = new wxRadioBox( this, wxID_ANY, _("If Value of Column \"Buy\" = No, set Value to"), wxDefaultPosition, wxDefaultSize, m_radioBox11NChoices, m_radioBox11Choices, 1, wxRA_SPECIFY_ROWS );
-#else
-	m_radioBox11 = new wxRadioBox( this, wxID_ANY, _("If Value of Column \"Buy\" = No, set Value to"), wxDefaultPosition, wxDefaultSize, m_radioBox11NChoices, m_radioBox11Choices, 1, wxRA_SPECIFY_ROWS|wxRA_USE_CHECKBOX );
-#endif
 	m_radioBox11->SetSelection( 0 );
 	fgSizer1->Add( m_radioBox11, 0, wxALL, 5 );
 	
 	wxString m_radioBox5Choices[] = { _("Yes"), _("No") };
 	int m_radioBox5NChoices = sizeof( m_radioBox5Choices ) / sizeof( wxString );
-#ifdef __WXOSX__
     m_radioBox5 = new wxRadioBox( this, wxID_ANY, _("Use last row values  as default for new row"), wxDefaultPosition, wxDefaultSize, m_radioBox5NChoices, m_radioBox5Choices, 1, wxRA_SPECIFY_ROWS );
-#else
-	m_radioBox5 = new wxRadioBox( this, wxID_ANY, _("Use last row values  as default for new row"), wxDefaultPosition, wxDefaultSize, m_radioBox5NChoices, m_radioBox5Choices, 1, wxRA_SPECIFY_ROWS|wxRA_USE_CHECKBOX );
-#endif
 	m_radioBox5->SetSelection( 0 );
 	fgSizer1->Add( m_radioBox5, 0, wxALL, 5 );
 	

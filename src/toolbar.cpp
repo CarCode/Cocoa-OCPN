@@ -41,6 +41,7 @@
 
 extern ocpnFloatingToolbarDialog* g_FloatingToolbarDialog;
 extern bool                       g_bTransparentToolbar;
+extern bool                       g_bTransparentToolbarInOpenGLOK;
 extern ChartCanvas*               cc1;
 extern bool                       g_bopengl;
 extern ocpnToolBarSimple*         g_toolbar;
@@ -62,10 +63,12 @@ BEGIN_EVENT_TABLE(GrabberWin, wxPanel) EVT_MOUSE_EVENTS ( GrabberWin::MouseEvent
 EVT_PAINT ( GrabberWin::OnPaint )
 END_EVENT_TABLE()
 
-GrabberWin::GrabberWin( wxWindow *parent, ocpnFloatingToolbarDialog *toolbar, float scale_factor )
+GrabberWin::GrabberWin( wxWindow *parent, ocpnFloatingToolbarDialog *toolbar, float scale_factor, wxString icon_name, wxPoint position ):
+wxPanel( parent, wxID_ANY, position, wxDefaultSize, wxNO_BORDER )
 {
+    m_icon_name = icon_name;
     m_style = g_StyleManager->GetCurrentStyle();
-    wxBitmap bitmap = m_style->GetIcon( _T("grabber") );
+    wxBitmap bitmap = m_style->GetIcon( icon_name );
     if(scale_factor > 1.0f){
         int new_width = bitmap.GetWidth() * scale_factor;
         int new_height = bitmap.GetHeight() * scale_factor;
@@ -75,8 +78,6 @@ GrabberWin::GrabberWin( wxWindow *parent, ocpnFloatingToolbarDialog *toolbar, fl
     else
         m_bitmap = bitmap;
 
-    Create( parent, -1 );
-
     SetSize( wxSize( m_bitmap.GetWidth(), m_bitmap.GetHeight() ) );
     SetMinSize( wxSize( m_bitmap.GetWidth(), m_bitmap.GetHeight() ) );
 
@@ -85,15 +86,20 @@ GrabberWin::GrabberWin( wxWindow *parent, ocpnFloatingToolbarDialog *toolbar, fl
     m_scale_factor = scale_factor;
     m_ptoolbar = toolbar;
     m_dragging = false;
+    Hide();
 
 }
+
 
 void GrabberWin::OnPaint( wxPaintEvent& event )
 {
     wxPaintDC dc( this );
 
-    dc.DrawBitmap( m_bitmap, 0, 0, true );
+    wxColour back_color = GetGlobalColor( _T("GREY2") );
+    SetBackgroundColour( back_color );
+    ClearBackground();
 
+    dc.DrawBitmap( m_bitmap, 0, 0, true );
 }
 
 void GrabberWin::SetColorScheme( ColorScheme cs )
@@ -103,7 +109,7 @@ void GrabberWin::SetColorScheme( ColorScheme cs )
     SetBackgroundColour( back_color );
     ClearBackground();
 
-    wxBitmap bitmap = m_style->GetIcon( _T("grabber") );
+    wxBitmap bitmap = m_style->GetIcon( m_icon_name) ;
     if(m_scale_factor > 1.0f){
         int new_width = bitmap.GetWidth() * m_scale_factor;
         int new_height = bitmap.GetHeight() * m_scale_factor;
@@ -122,47 +128,10 @@ void GrabberWin::MouseEvent( wxMouseEvent& event )
     event.GetPosition( &x, &y );
 
     wxPoint spt = ClientToScreen( wxPoint( x, y ) );
-
-    if(g_btouch){
-        if( event.LeftDown() ) {
-            wxColour back_color = GetGlobalColor( _T("BLUE1") );
-            SetBackgroundColour( back_color );
-            ClearBackground();
-            Refresh( true );
-        }
-    }
-
-
-#ifdef __WXOSX__
-    ocpnFloatingToolbarDialog *pp = wxDynamicCast(GetParent(), ocpnFloatingToolbarDialog);
-
-    if (!m_bLeftDown && event.LeftIsDown())
-    {
-        m_bLeftDown = true;
+    if( event.LeftDown() ) {
         s_gspt = spt;
-        if (!HasCapture())
-        CaptureMouse();
-    }
-    else if (m_bLeftDown && !event.LeftIsDown())
-    {
-        m_bLeftDown = false;
-        if (HasCapture())
-        ReleaseMouse();
     }
 
-    if (!m_bRightDown && event.RightIsDown()) {
-        m_bRightDown = true;
-        if (!HasCapture()) {
-            CaptureMouse();
-            pp->ToggleOrientation();
-        }
-    }
-    else if (m_bRightDown && !event.RightIsDown()) {
-        m_bRightDown = false;
-        if (HasCapture())
-        ReleaseMouse();
-    }
-#else
 
 #ifndef __WXQT__
 
@@ -176,15 +145,26 @@ void GrabberWin::MouseEvent( wxMouseEvent& event )
 
 #endif
 
-    if( event.LeftDown() )
-        s_gspt = spt;
     
-    if( event.RightDown() )
-        if(m_ptoolbar)m_ptoolbar->ToggleOrientation();
-#endif
+    if( event.RightDown() ){
+        if(m_ptoolbar){
+            m_dragging = true;
+            
+            if( !m_ptoolbar->m_bnavgrabber ){
+                m_ptoolbar->m_bnavgrabber = true;
+                m_ptoolbar->SetGrabber(_T("4WayMove") );
+            }
+            else{
+                m_ptoolbar->m_bnavgrabber = false;
+                m_ptoolbar->SetGrabber(_T("grabber_hi") );
+            }
+            
+        }
+    }
+    
 
     if( event.Dragging() ) {
-        if(m_ptoolbar && m_ptoolbar->IsShown()){
+        if(m_ptoolbar && m_ptoolbar->IsShown() && m_ptoolbar->m_bnavgrabber){
             wxPoint par_pos_old = m_ptoolbar->GetPosition();
 
             wxPoint par_pos = par_pos_old;
@@ -201,24 +181,27 @@ void GrabberWin::MouseEvent( wxMouseEvent& event )
 
     if( event.LeftUp() ) {
         if(m_ptoolbar){
-            if(!m_ptoolbar->IsShown()){
-                Hide();
-                m_ptoolbar->Surface();
-            }
-            else{
+            if(m_ptoolbar->m_bnavgrabber){
                 if(!m_dragging)
+                    m_ptoolbar->ToggleOrientation();
+            }
+            else if(!m_dragging){
+                if(m_ptoolbar->m_bsubmerged){
+                    m_ptoolbar->SurfaceFromGrabber();
+                }
+                else{
                     m_ptoolbar->SubmergeToGrabber();
-                
-                m_dragging = false;
+                }
             }
         }
+        m_dragging = false;
     }
+
 
 #ifndef __OCPN__ANDROID__
     gFrame->Raise();
 #endif
 
-    event.Skip( false );
 }
 
 class ocpnToolBarTool: public wxToolBarToolBase {
@@ -305,6 +288,7 @@ BEGIN_EVENT_TABLE(ocpnFloatingToolbarDialog, wxDialog)
     EVT_MOUSE_EVENTS ( ocpnFloatingToolbarDialog::MouseEvent )
     EVT_MENU(wxID_ANY, ocpnFloatingToolbarDialog::OnToolLeftClick)
     EVT_TIMER ( FADE_TIMER, ocpnFloatingToolbarDialog::FadeTimerEvent )
+    EVT_TIMER ( DESTROY_TIMER, ocpnFloatingToolbarDialog::DestroyTimerEvent )
     EVT_WINDOW_CREATE(ocpnFloatingToolbarDialog::OnWindowCreate)
 END_EVENT_TABLE()
 
@@ -327,11 +311,10 @@ ocpnFloatingToolbarDialog::ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint 
 
     m_opacity = 255;
 
-    m_pGrabberwin = new GrabberWin( this, this, size_factor );
+    m_pGrabberwin = new GrabberWin( this, this, size_factor, _T("grabber_hi") );
+    m_pGrabberwin->Show();
 
-    m_pRecoverwin = new GrabberWin( parent, this, size_factor );
-    m_pRecoverwin->Hide();
-
+    m_pRecoverwin = NULL;
     m_position = position;
     m_orient = orient;
     m_sizefactor = size_factor;
@@ -352,7 +335,11 @@ ocpnFloatingToolbarDialog::ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint 
 //    if(m_sizefactor > 1.0 )
  //       m_marginsInvisible = true;
 
+    m_bnavgrabber = false;
+
     Hide();
+
+    m_bsubmerged = false;
 
     m_fade_timer.SetOwner( this, FADE_TIMER );
     if( g_bTransparentToolbar )
@@ -361,6 +348,7 @@ ocpnFloatingToolbarDialog::ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint 
     if( g_bAutoHideToolbar && (g_nAutoHideToolbar > 0))
         m_fade_timer.Start( g_nAutoHideToolbar * 1000 );
 
+    m_destroyTimer.SetOwner( this, DESTROY_TIMER );
 }
 
 ocpnFloatingToolbarDialog::~ocpnFloatingToolbarDialog()
@@ -371,6 +359,20 @@ ocpnFloatingToolbarDialog::~ocpnFloatingToolbarDialog()
 void ocpnFloatingToolbarDialog::OnWindowCreate( wxWindowCreateEvent& event )
 {
     Realize();
+}
+
+void ocpnFloatingToolbarDialog::SetGrabber( wxString icon_name )
+{
+    //    m_pGrabberwin->Destroy();
+    m_pGrabberwin = new GrabberWin( this, this, m_sizefactor, icon_name );
+    m_pGrabberwin->Show();
+    
+    Realize();
+
+#ifdef __WXOSX__
+    m_pGrabberwin->Refresh();
+#endif
+
 }
 
 void ocpnFloatingToolbarDialog::SetColorScheme( ColorScheme cs )
@@ -424,7 +426,6 @@ void ocpnFloatingToolbarDialog::SetGeometry()
             m_ptoolbar->SetMaxRowsCols(max_rows, 100);
         else
             m_ptoolbar->SetMaxRowsCols( 100, max_cols);
-
         m_ptoolbar->SetSizeFactor(m_sizefactor);
     }
  }
@@ -450,10 +451,6 @@ void ocpnFloatingToolbarDialog::RePosition()
         m_position.y = wxMax(0, m_position.y);
 
         wxPoint screen_pos = m_pparent->ClientToScreen( m_position );
-//        screen_pos.y = 300;
-//        wxString msg;
-//        msg.Printf(_T("Toolbar Reposition: %d %d"), screen_pos.x, screen_pos.y);
-//        wxLogMessage(msg);
 
         Move( screen_pos );
 
@@ -466,6 +463,7 @@ void ocpnFloatingToolbarDialog::RePosition()
 
 void ocpnFloatingToolbarDialog::Submerge()
 {
+    m_bsubmerged = true;
     Hide();
     if( m_ptoolbar ) m_ptoolbar->KillTooltip();
 }
@@ -474,22 +472,24 @@ void ocpnFloatingToolbarDialog::SubmergeToGrabber()
 {
     Submerge();
     
-    //    m_pGrabberwin->SetColorScheme( m_cs );
-    wxColour back_color = GetGlobalColor( _T("GREY2") );
-    m_pRecoverwin->SetBackgroundColour( back_color );
-    m_pRecoverwin->ClearBackground();
-    
-    m_pRecoverwin->Move(10,10);
+    m_pRecoverwin = new GrabberWin( m_pparent, this, m_sizefactor, _T("grabber_ext" ), wxPoint(10,10) );
+
     m_pRecoverwin->Show();
-    m_pRecoverwin->Refresh();
+    m_pRecoverwin->Raise();
 #ifdef __WXQT__
+    wxSize s = gFrame->GetSize();
+    m_recoversize = s;
+    s.y--;
+    gFrame->TriggerResize(s);
     Raise();
 #endif
-    
+
+    gFrame->Refresh();          // Needed for MSW OpenGL
 }
 
 void ocpnFloatingToolbarDialog::Surface()
 {
+    m_bsubmerged = false;
 #ifndef __WXOSX__
     Hide();
     Move( 0, 0 );
@@ -507,6 +507,60 @@ void ocpnFloatingToolbarDialog::Surface()
     Raise();
 #endif
 
+}
+
+bool ocpnFloatingToolbarDialog::CheckSurfaceRequest( wxMouseEvent &event )
+{
+    if( m_bsubmerged ){
+        if( event.LeftUp() ){
+            int x,y;
+            event.GetPosition( &x, &y );
+            if( m_pRecoverwin ){
+                wxRect winRect = m_pRecoverwin->GetRect();
+                if( winRect.Contains( x, y ) ){
+                    SurfaceFromGrabber();
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+void ocpnFloatingToolbarDialog::SurfaceFromGrabber()
+{
+    m_bsubmerged = false;
+#ifndef __WXOSX__
+    Hide();
+    Move( 0, 0 );
+#endif
+    
+    RePosition();
+    Show();
+    if( m_ptoolbar ) m_ptoolbar->EnableTooltips();
+    
+    if( g_bAutoHideToolbar && (g_nAutoHideToolbar > 0) ){
+        m_fade_timer.Start( g_nAutoHideToolbar * 1000 );
+    }
+    
+#ifdef __WXQT__
+    wxSize s = gFrame->GetSize();               // check for rotation
+    if(m_recoversize.x == s.x)
+        gFrame->TriggerResize(m_recoversize);
+    Raise();
+#endif
+
+    m_destroyGrabber = m_pRecoverwin;
+    m_destroyTimer.Start( 5, wxTIMER_ONE_SHOT );           //  Destor the unneeded recovery grabber
+
+}
+
+void ocpnFloatingToolbarDialog::DestroyTimerEvent( wxTimerEvent& event )
+{
+    delete m_destroyGrabber;
+    m_destroyGrabber = NULL;
+    m_pRecoverwin = NULL;
 }
 
 void ocpnFloatingToolbarDialog::HideTooltip()
@@ -560,16 +614,20 @@ void ocpnFloatingToolbarDialog::MouseEvent( wxMouseEvent& event )
 
 void ocpnFloatingToolbarDialog::FadeTimerEvent( wxTimerEvent& event )
 {
-    if( g_bTransparentToolbar && !g_bopengl ){
-        DoFade( 128 );
-        m_fade_timer.Start( 5000 );           // retrigger the continuous timer
+    if(m_bnavgrabber){
+        m_fade_timer.Start( 5000 );           // do nothing if nav grabber is shown
     }
-    
-    if(g_bAutoHideToolbar && (g_nAutoHideToolbar > 0) ){
-        SubmergeToGrabber();
-        m_fade_timer.Stop();
+    else{
+        if( g_bTransparentToolbar && (!g_bopengl || g_bTransparentToolbarInOpenGLOK) ){
+            DoFade( 128 );
+            m_fade_timer.Start( 5000 );           // retrigger the continuous timer
+        }
+        
+        if(g_bAutoHideToolbar && (g_nAutoHideToolbar > 0) ){
+            SubmergeToGrabber();
+            m_fade_timer.Stop();
+        }
     }
-
 }
 
 void ocpnFloatingToolbarDialog::DoFade( int value )
@@ -583,6 +641,11 @@ void ocpnFloatingToolbarDialog::RefreshFadeTimer()
     SetTransparent( 255 );
     m_opacity = 255;
     m_fade_timer.Start( 500 );           // retrigger the continuous timer
+
+    if(g_bAutoHideToolbar && (g_nAutoHideToolbar > 0) ){
+        m_fade_timer.Start( g_nAutoHideToolbar * 1000 );
+    }
+
 }
 
 void ocpnFloatingToolbarDialog::MoveDialogInScreenCoords( wxPoint posn, wxPoint posn_old )
@@ -825,7 +888,9 @@ void ocpnFloatingToolbarDialog::OnToolLeftClick( wxCommandEvent& event )
     // (instead of relying on event.Skip()). Send events up the window hierarchy
 
     m_pparent->GetEventHandler()->AddPendingEvent( event );
-///    gFrame->Raise();
+#ifndef __WXQT__
+    gFrame->Raise();
+#endif
 }
 
 ocpnToolBarSimple *ocpnFloatingToolbarDialog::GetToolbar()
@@ -1061,6 +1126,8 @@ void ocpnToolBarSimple::Init()
 
     m_btoolbar_is_zooming = false;
     m_sizefactor = 1.0f;
+
+    m_last_plugin_down_id = -1;
 
     EnableTooltips();
 }
@@ -1616,6 +1683,22 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
         }
 
         DrawTool( tool );
+
+        //        Look for PlugIn tools
+        //        If found, make the callback.
+        if( g_pi_manager ) {
+            ArrayOfPlugInToolbarTools tool_array = g_pi_manager->GetPluginToolbarToolArray();
+            for( unsigned int i = 0; i < tool_array.GetCount(); i++ ) {
+                PlugInToolbarToolContainer *pttc = tool_array.Item( i );
+                if( tool->GetId() == pttc->id ) {
+                    opencpn_plugin_113 *ppi = dynamic_cast<opencpn_plugin_113 *>(pttc->m_pplugin);
+                    if( ppi ) {
+                        ppi->OnToolbarToolDownCallback( pttc->id );
+                        m_last_plugin_down_id = pttc->id;
+                    }
+                }
+            }
+        }
     } else
         if( event.RightDown() ) {
             OnRightClick( tool->GetId(), x, y );
@@ -1633,6 +1716,8 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
             tool->Toggle();
             tool->bitmapOK = false;
         }
+
+        DoPluginToolUp();
     }
 
     wxMouseEvent *pev = (wxMouseEvent *) event.Clone();
@@ -1920,7 +2005,8 @@ bool ocpnToolBarSimple::GetToolEnabled( int id ) const
 void ocpnToolBarSimple::ToggleTool( int id, bool toggle )
 {
     wxToolBarToolBase *tool = FindById( id );
-    if( tool && tool->Toggle( toggle ) ) {
+
+    if( tool && tool->CanBeToggled() && tool->Toggle( toggle ) ) {
         DoToggleTool( tool, toggle );
         if( g_toolbar ) g_toolbar->Refresh();
     }
@@ -2185,18 +2271,46 @@ void ocpnToolBarSimple::OnMouseEnter( int id )
     }
 
     (void) GetEventHandler()->ProcessEvent( event );
+
+    DoPluginToolUp();
+}
+
+void ocpnToolBarSimple::DoPluginToolUp()
+{
+    //        Look for PlugIn tools
+    //        If found, make the callback.
+    if( !g_pi_manager)
+        return;
+    
+    ArrayOfPlugInToolbarTools tool_array = g_pi_manager->GetPluginToolbarToolArray();
+    for( unsigned int i = 0; i < tool_array.GetCount(); i++ ) {
+        PlugInToolbarToolContainer *pttc = tool_array.Item( i );
+        if( m_last_plugin_down_id == pttc->id ) {
+            opencpn_plugin_113 *ppi = dynamic_cast<opencpn_plugin_113 *>(pttc->m_pplugin);
+            if( ppi )
+                ppi->OnToolbarToolUpCallback( pttc->id );
+        }
+    }
+    
+    m_last_plugin_down_id = -1;
 }
 
 void ocpnToolBarSimple::SetToolNormalBitmapEx(wxToolBarToolBase *tool, const wxString & iconName)
 {
     if( tool ) {
-        ocpnStyle::Style *style = g_StyleManager->GetCurrentStyle();
+        ocpnToolBarTool *otool = (ocpnToolBarTool *) tool;
+        if(otool){
+            ocpnStyle::Style *style = g_StyleManager->GetCurrentStyle();
 
-        wxBitmap bmp = style->GetToolIcon( iconName, TOOLICON_NORMAL );
-        tool->SetNormalBitmap( bmp );
-        ocpnToolBarTool *otool = (ocpnToolBarTool *)tool;
-        if(otool)
+            wxBitmap bmp = style->GetToolIcon( iconName, TOOLICON_NORMAL );
+            if(m_sizefactor > 1.0 ){
+                wxImage scaled_image = bmp.ConvertToImage();
+                bmp = wxBitmap(scaled_image.Scale(otool->m_width, otool->m_height, wxIMAGE_QUALITY_HIGH));
+            }
+            
+            tool->SetNormalBitmap( bmp );
             otool->SetIconName( iconName );
+        }
     }
 }
 

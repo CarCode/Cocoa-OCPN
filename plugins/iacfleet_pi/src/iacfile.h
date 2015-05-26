@@ -93,6 +93,9 @@ class IACSystem
 {
 public:
     IACSystem( void );
+#ifdef __WXOSX__
+    virtual ~IACSystem(void);
+#endif
     //void SetMovement(unsigned int m, unsigned int d, unsigned int s);
 #ifndef __WXOSX__
     wxString ToString( bool includePosition = true ) const;
@@ -104,7 +107,7 @@ public:
     wxString GetTab( const wxChar*(tab[]), size_t index ) const;
     wxString PositionsToString( void ) const;
     bool DrawPositions( wxDC *dc, PlugIn_ViewPort *vp );
-#ifndef __WXOSX__
+#ifdef __WXOSX__
     bool FindAtPos( GeoPoint &pos, double deviation );
 #else
     virtual bool FindAtPos( GeoPoint &pos, double deviation );

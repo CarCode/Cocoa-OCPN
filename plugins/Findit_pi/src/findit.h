@@ -25,20 +25,6 @@
 
 
 class findit_pi;
-#if 1
-class myGridCellChoiceEditor : public wxGridCellChoiceEditor
-{
-public:
-	myGridCellChoiceEditor(int i, wxString s[], bool mode):wxGridCellChoiceEditor(i,s,mode){}
-	~myGridCellChoiceEditor(void){}
-    
-	void StartingClick()
-	{
-		this->Combo()->Show(true);
-		this->Combo()->Popup();
-	}
-};
-#endif
 
 class MainDialog : public FindItDialog
 {

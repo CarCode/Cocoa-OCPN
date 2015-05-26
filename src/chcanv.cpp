@@ -199,6 +199,7 @@ extern float            g_fNavAidRadarRingsStep;
 extern int              g_pNavAidRadarRingsStepUnits;
 extern bool             g_bWayPointPreventDragging;
 extern bool             g_bEnableZoomToCursor;
+extern bool             g_bShowChartBar;
 
 extern AISTargetAlertDialog    *g_pais_alert_dialog_active;
 extern AISTargetQueryDialog    *g_pais_query_dialog_active;
@@ -1922,7 +1923,7 @@ void ChartCanvas::StopMovement( )
     m_zoom_factor = 1;
     m_rotation_speed = 0;
     m_mustmove = 0;
-#ifndef __OCPN__ANDROID__    
+#if !defined(__WXGTK__) && !defined(__WXQT__)    
     SetFocus();
     gFrame->Raise();
 #endif    
@@ -2763,6 +2764,9 @@ void ChartCanvas::DoRotateCanvas( double rotation )
 {
     while(rotation < 0) rotation += 2*PI;
     while(rotation > 2*PI) rotation -= 2*PI;
+
+    if(rotation == VPoint.rotation || wxIsNaN(rotation))
+        return;
 
     SetVPRotation( rotation );
     parent_frame->UpdateRotationState( VPoint.rotation);
@@ -4498,6 +4502,8 @@ bool ChartCanvas::MouseEventSetup( wxMouseEvent& event,  bool b_handle_dclick )
     int x, y;
     int mx, my;
 
+    bool bret = false;
+
     if( s_ProgDialog )
         return(true);
 
@@ -4673,7 +4679,7 @@ bool ChartCanvas::MouseEventSetup( wxMouseEvent& event,  bool b_handle_dclick )
         }
     }
     
-    return false;
+    return bret;
         
 }
 
@@ -6088,8 +6094,7 @@ bool ChartCanvas::MouseEventProcessCanvas( wxMouseEvent& event )
         }
     }
 
-    if( event.Dragging() ){
-        if( 1/*leftIsDown*/ ) {
+    if( event.Dragging() && event.LeftIsDown()){
             if( ( last_drag.x != x ) || ( last_drag.y != y ) ) {
                 m_bChartDragging = true;
                 PanCanvas( last_drag.x - x, last_drag.y - y );
@@ -6106,7 +6111,6 @@ bool ChartCanvas::MouseEventProcessCanvas( wxMouseEvent& event )
                 }
 
             }
-        }
     }
 
 
@@ -8252,6 +8256,8 @@ bool ChartCanvas::InvokeCanvasMenu(int x, int y, int seltype)
 #ifdef __WXQT__
     g_FloatingToolbarDialog->Raise();
     g_FloatingCompassDialog->Raise();
+    if(stats && stats->IsShown())
+        stats->Raise();
 #endif
 
     return true;
@@ -8698,10 +8704,10 @@ void ChartCanvas::RenderRouteLegs( ocpnDC &dc )
                 }
             }
             else {
-                route->DrawSegment( dc, &lastPoint, &r_rband, GetVP(), false );
+                if(r_rband.x && r_rband.y)      // RubberBand disabled?
+                    route->DrawSegment( dc, &lastPoint, &r_rband, GetVP(), false );
             }
         }
-
 
         wxString routeInfo;
         if( g_bShowMag )
@@ -9420,6 +9426,10 @@ void ChartCanvas::Refresh( bool eraseBackground, const wxRect *rect )
             m_pCIWin->Refresh( false );
         }
 
+        if(g_FloatingToolbarDialog && g_FloatingToolbarDialog->m_pRecoverwin ){
+            g_FloatingToolbarDialog->m_pRecoverwin->Raise();
+            g_FloatingToolbarDialog->m_pRecoverwin->Refresh( false );
+        }
 
     } else
 #endif

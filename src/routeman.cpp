@@ -93,6 +93,8 @@ extern ocpnStyle::StyleManager* g_StyleManager;
 extern wxString         g_uploadConnection;
 extern bool             g_bAdvanceRouteWaypointOnArrivalOnly;
 extern Route            *pAISMOBRoute;
+extern bool             g_btouch;
+extern int              g_ChartScaleFactor;
 
 //    List definitions for Waypoint Manager Icons
 WX_DECLARE_LIST(wxBitmap, markicon_bitmap_list_type);
@@ -165,8 +167,11 @@ wxArrayPtrVoid *Routeman::GetRouteArrayContaining( RoutePoint *pWP )
         wxRoutePointListNode *waypoint_node = ( proute->pRoutePointList )->GetFirst();
         while( waypoint_node ) {
             RoutePoint *prp = waypoint_node->GetData();
-            if( prp == pWP )                // success
-            pArray->Add( (void *) proute );
+            if( prp == pWP ){              // success
+                pArray->Add( (void *) proute );
+                break;          // only add a route to the array once, even if there are duplicate points
+                // in the route...See FS#1743
+            }
 
             waypoint_node = waypoint_node->GetNext();           // next waypoint
         }
@@ -983,33 +988,34 @@ void Routeman::SetColorScheme( ColorScheme cs )
 {
     // Re-Create the pens and colors
 
-//      m_pRoutePen =             wxThePenList->FindOrCreatePen(wxColour(0,0,255), 2, wxSOLID);
-//      m_pSelectedRoutePen =     wxThePenList->FindOrCreatePen(wxColour(255,0,0), 2, wxSOLID);
-//      m_pActiveRoutePen =       wxThePenList->FindOrCreatePen(wxColour(255,0,255), 2, wxSOLID);
+    int scaled_line_width = g_route_line_width;
+    if(g_btouch){
+        double size_mult =  exp( g_ChartScaleFactor * 0.25 );
+        scaled_line_width *= size_mult;
+        scaled_line_width = wxMax( scaled_line_width, 1);
+    }
+
     m_pActiveRoutePointPen = wxThePenList->FindOrCreatePen( wxColour( 0, 0, 255 ),
-            g_route_line_width, wxSOLID );
-    m_pRoutePointPen = wxThePenList->FindOrCreatePen( wxColour( 0, 0, 255 ), g_route_line_width,
+                                                           scaled_line_width, wxSOLID );
+    m_pRoutePointPen = wxThePenList->FindOrCreatePen( wxColour( 0, 0, 255 ), scaled_line_width,
             wxSOLID );
 
 //    Or in something like S-52 compliance
 
-    m_pRoutePen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T("UINFB") ), g_route_line_width,
+    m_pRoutePen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T("UINFB") ), scaled_line_width,
             wxSOLID );
     m_pSelectedRoutePen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T("UINFO") ),
-            g_route_line_width, wxSOLID );
-//      m_pActiveRoutePen =       wxThePenList->FindOrCreatePen(GetGlobalColor(_T("PLRTE")), g_route_line_width, wxSOLID);
+                                                        scaled_line_width, wxSOLID );
     m_pActiveRoutePen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T("UARTE") ),
-            g_route_line_width, wxSOLID );
-//      m_pActiveRoutePointPen =  wxThePenList->FindOrCreatePen(GetGlobalColor(_T("PLRTE")), 2, wxSOLID);
-//      m_pRoutePointPen =        wxThePenList->FindOrCreatePen(GetGlobalColor(_T("CHBLK")), 2, wxSOLID);
+                                                      scaled_line_width, wxSOLID );
+    m_pTrackPen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T("CHMGD") ), scaled_line_width,
+                                                wxSOLID );
 
     m_pRouteBrush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T("UINFB") ), wxSOLID );
     m_pSelectedRouteBrush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T("UINFO") ),
             wxSOLID );
     m_pActiveRouteBrush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T("PLRTE") ),
             wxSOLID );
-//      m_pActiveRoutePointBrush =  wxTheBrushList->FindOrCreatePen(GetGlobalColor(_T("PLRTE")), wxSOLID);
-//      m_pRoutePointBrush =        wxTheBrushList->FindOrCreatePen(GetGlobalColor(_T("CHBLK")), wxSOLID);
 
 }
 

@@ -414,16 +414,15 @@ void CanvasMenuHandler::CanvasPopupMenu( int x, int y, int seltype )
         MenuAppend1( contextMenu, ID_DEF_MENU_TOGGLE_FULL, _("Toggle Full Screen") );
         full_toggle_added = true;
     }
-        
-    
+
+
     if(!full_toggle_added){
         if(gFrame->IsFullScreen()){
             MenuAppend1( contextMenu, ID_DEF_MENU_TOGGLE_FULL, _("Toggle Full Screen") );
         }
     }
-        
-    
-    if ( g_pRouteMan->IsAnyRouteActive() && g_pRouteMan->GetCurrentXTEToActivePoint() > 0. ) 
+
+    if ( g_pRouteMan->IsAnyRouteActive() && g_pRouteMan->GetCurrentXTEToActivePoint() > 0. )
         MenuAppend1( contextMenu, ID_DEF_ZERO_XTE, _("Zero XTE") );
 
     Kml* kml = new Kml;
@@ -1440,6 +1439,8 @@ void CanvasMenuHandler::PopupMenuHandler( wxCommandEvent& event )
             && ( event.GetId() <= ID_DEF_MENU_GROUPBASE + (int) g_pGroupArray->GetCount() ) ) {
         gFrame->SetGroupIndex( event.GetId() - ID_DEF_MENU_GROUPBASE );
     }
+
+    parent->InvalidateGL();
 
     g_click_stop = 0;    // Context menu was processed, all is well
 

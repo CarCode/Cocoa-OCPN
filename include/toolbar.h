@@ -31,10 +31,12 @@
 
 class GrabberWin: public wxPanel {
 public:
-      GrabberWin( wxWindow *parent,  ocpnFloatingToolbarDialog *toolbar, float scale_factor );
+    GrabberWin( wxWindow *parent,  ocpnFloatingToolbarDialog *toolbar, float scale_factor,
+               wxString icon_name, wxPoint position = wxDefaultPosition );
       void OnPaint( wxPaintEvent& event );
       void MouseEvent( wxMouseEvent& event );
       void SetColorScheme( ColorScheme cs );
+      wxBitmap &GetBitmap(){ return m_bitmap; }
 
       wxBitmap m_bitmap;
       bool m_bLeftDown;
@@ -43,6 +45,7 @@ public:
       float m_scale_factor;
       ocpnFloatingToolbarDialog *m_ptoolbar;
       bool m_dragging;
+      wxString m_icon_name;
 
 DECLARE_EVENT_TABLE()
 };
@@ -122,6 +125,7 @@ public:
       // Called when the mouse cursor enters a tool bitmap.
       // Argument is wxID_ANY if mouse is exiting the toolbar.
       virtual void OnMouseEnter( int toolid );
+      virtual void DoPluginToolUp();
 
       size_t GetToolsCount() const {
             return m_tools.GetCount();
@@ -298,6 +302,8 @@ protected:
 
       float m_sizefactor;
 
+      int m_last_plugin_down_id;
+
 private:
 DECLARE_EVENT_TABLE()
 };
@@ -307,6 +313,7 @@ DECLARE_EVENT_TABLE()
 //----------------------------------------------------------------------------------------------------------
 
 #define FADE_TIMER 2
+#define DESTROY_TIMER 3
 
 class ocpnFloatingToolbarDialog: public wxDialog {
 DECLARE_EVENT_TABLE()
@@ -322,12 +329,15 @@ public:
       void FadeTimerEvent( wxTimerEvent& event );
       bool IsToolbarShown() { return ( m_ptoolbar != 0 ); }
       float GetScaleFactor() { return m_sizefactor; }
+      void SetGrabber( wxString icon_name );
+      void DestroyTimerEvent( wxTimerEvent& event );
 
       void Realize();
       ocpnToolBarSimple *GetToolbar();
       void Submerge();
       void SubmergeToGrabber();
       void Surface();
+      void SurfaceFromGrabber();
       void HideTooltip();
       void ShowTooltips();
       void EnableTooltips() { if(m_ptoolbar) m_ptoolbar->EnableTooltips(); }
@@ -339,6 +349,7 @@ public:
       void RePosition();
       void LockPosition(bool lock){ m_block = lock; }
       void SetColorScheme( ColorScheme cs );
+      bool CheckSurfaceRequest( wxMouseEvent &event );
 
       void SetGeometry();
       long GetOrient() {
@@ -352,6 +363,9 @@ public:
             return m_dock_y;
       }
       bool toolbarConfigChanged;
+      GrabberWin *m_pRecoverwin;
+      bool m_bnavgrabber;
+      bool  m_bsubmerged;
 
 private:
       void DoFade( int value );
@@ -375,8 +389,9 @@ private:
 
       bool m_marginsInvisible;
       float m_sizefactor;
-
-      GrabberWin *m_pRecoverwin;
+      wxTimer m_destroyTimer;
+      GrabberWin *m_destroyGrabber;
+      wxSize m_recoversize;
 
 };
 

@@ -247,8 +247,11 @@ double MinCirclePoints(double &mincx, double &mincy,
     for(std::list<wxRealPoint>::iterator it = cpoints.begin();
         it != cpoints.end(); it++) {
         points[s] = *it;
-
+#ifdef __WXOSX__
+        double cx=0.0, cy=0.0, cd;
+#else
         double cx, cy, cd;
+#endif
         cd = MinCirclePoints(cx, cy, all_points, points);
         if(cd < mind) {
             mind = cd;
@@ -357,8 +360,8 @@ determine fix visually instead.\n"), wxString(_("Fix Position"), wxID_OK | wxICO
         double y = cos(deg2rad(lat))*sin(deg2rad(lon));
         double z = sin(deg2rad(lat));
 
-        double sm = sin(deg2rad(s->m_CorrectedAltitude));
-        double cm = cos(deg2rad(s->m_CorrectedAltitude));
+        double sm = sin(deg2rad(s->m_ObservedAltitude));
+        double cm = cos(deg2rad(s->m_ObservedAltitude));
 
         double d;
 

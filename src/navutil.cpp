@@ -124,6 +124,7 @@ extern RouteProp        *pRoutePropDialog;
 extern bool             s_bSetSystemTime;
 extern bool             g_bDisplayGrid;         //Flag indicating if grid is to be displayed
 extern bool             g_bPlayShipsBells;
+extern int              g_iSoundDeviceIndex;
 extern bool             g_bFullscreenToolbar;
 extern bool             g_bShowLayers;
 extern bool             g_bTransparentToolbar;
@@ -362,6 +363,8 @@ extern int              g_default_font_size;
 
 extern bool             g_bAutoHideToolbar;
 extern int              g_nAutoHideToolbar;
+extern int              g_GUIScaleFactor;
+extern int              g_ChartScaleFactor;
 
 #ifdef ocpnUSE_GL
 extern ocpnGLOptions g_GLOptions;
@@ -709,7 +712,7 @@ void Track::Draw( ocpnDC& dc, ViewPort &VP )
             }
 
     int style = wxSOLID;
-    int width = g_track_line_width;
+    int width = g_pRouteMan->GetTrackPen()->GetWidth();
     wxColour col;
     if( m_style != STYLE_UNDEFINED )
         style = m_style;
@@ -851,7 +854,7 @@ Route *Track::RouteFromTrack( wxProgressDialog *pprog )
     while( prpnode ) {
         RoutePoint *prp = prpnode->GetData();
         prpnodeX = prpnode;
-        pWP_dst = pWP_src;
+//        pWP_dst = pWP_src;  // Not used
 
         delta_dist = 0.0;
         delta_hdg = 0.0;
@@ -879,7 +882,7 @@ Route *Track::RouteFromTrack( wxProgressDialog *pprog )
                 pWP_src = pWP_dst;
             }
             prpnodeX = prpnode;
-            pWP_dst = pWP_src;
+//            pWP_dst = pWP_src;  // Not used
             next_ic = 0;
             delta_dist = 0.0;
             back_ic = next_ic;
@@ -1216,7 +1219,10 @@ int MyConfig::LoadMyConfig()
     if((size_mm > 100) && (size_mm < 2000)){
         g_display_size_mm = size_mm;
     }
-    
+
+    Read( _T ( "GUIScaleFactor" ), &g_GUIScaleFactor, 0 );
+    Read( _T ( "ChartObjectScaleFactor" ), &g_ChartScaleFactor, 0 );
+
     Read( _T ( "FilterNMEA_Avg" ), &g_bfilter_cogsog, 0 );
     Read( _T ( "FilterNMEA_Sec" ), &g_COGFilterSec, 1 );
     g_COGFilterSec = wxMin(g_COGFilterSec, MAX_COGSOG_FILTER_SECONDS);
@@ -1333,6 +1339,7 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "ShowCompassWindow" ), &m_bShowCompassWin, 1 );
     Read( _T ( "ShowGrid" ), &g_bDisplayGrid, 0 );
     Read( _T ( "PlayShipsBells" ), &g_bPlayShipsBells, 0 );
+    Read( _T ( "SoundDeviceIndex" ), &g_iSoundDeviceIndex, -1 );
     Read( _T ( "FullscreenToolbar" ), &g_bFullscreenToolbar, 1 );
     Read( _T ( "TransparentToolbar" ), &g_bTransparentToolbar, 1 );
     Read( _T ( "PermanentMOBIcon" ), &g_bPermanentMOBIcon, 0 );
@@ -2493,6 +2500,7 @@ void MyConfig::UpdateSettings()
     Write( _T ( "SetSystemTime" ), s_bSetSystemTime );
     Write( _T ( "ShowGrid" ), g_bDisplayGrid );
     Write( _T ( "PlayShipsBells" ), g_bPlayShipsBells );
+    Write( _T ( "SoundDeviceIndex" ), g_iSoundDeviceIndex );
     Write( _T ( "FullscreenToolbar" ), g_bFullscreenToolbar );
     Write( _T ( "TransparentToolbar" ), g_bTransparentToolbar );
     Write( _T ( "PermanentMOBIcon" ), g_bPermanentMOBIcon );
@@ -2506,7 +2514,10 @@ void MyConfig::UpdateSettings()
     Write( _T ( "SpeedFormat" ), g_iSpeedFormat );
     Write( _T ( "MostRecentGPSUploadConnection" ), g_uploadConnection );
     Write( _T ( "ShowChartBar" ), g_bShowChartBar );
-    
+
+    Write( _T ( "GUIScaleFactor" ), g_GUIScaleFactor );
+    Write( _T ( "ChartObjectScaleFactor" ), g_ChartScaleFactor );
+
     Write( _T ( "FilterNMEA_Avg" ), g_bfilter_cogsog );
     Write( _T ( "FilterNMEA_Sec" ), g_COGFilterSec );
 
@@ -2896,24 +2907,28 @@ void MyConfig::UpdateNavObj( void )
 
 bool MyConfig::ExportGPXRoutes( wxWindow* parent, RouteList *pRoutes, const wxString suggestedName )
 {
-    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName,
+    wxFileDialog *psaveDialog = new wxFileDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName,
             wxT ( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
 
+    if(g_bresponsive)
+        psaveDialog = g_Platform->AdjustFileDialogFont(parent, psaveDialog);
+    
 #ifdef __WXOSX__
     if(parent)
         parent->HideWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
 
-     int response = saveDialog.ShowModal();
+    int response = psaveDialog->ShowModal();
 
 #ifdef __WXOSX__
     if(parent)
         parent->ShowWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
 
-    wxString path = saveDialog.GetPath();
+    wxString path = psaveDialog->GetPath();
     wxFileName fn( path );
     m_gpx_path = fn.GetPath();
+    delete psaveDialog;
 
     if( response == wxID_OK ) {
         fn.SetExt( _T ( "gpx" ) );
@@ -2936,14 +2951,18 @@ bool MyConfig::ExportGPXRoutes( wxWindow* parent, RouteList *pRoutes, const wxSt
 
 bool MyConfig::ExportGPXWaypoints( wxWindow* parent, RoutePointList *pRoutePoints, const wxString suggestedName )
 {
-    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName,
+    wxFileDialog *psaveDialog = new wxFileDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName,
             wxT ( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
 
-    int response = saveDialog.ShowModal();
+    if(g_bresponsive)
+        psaveDialog = g_Platform->AdjustFileDialogFont(parent, psaveDialog);
+    
+    int response = psaveDialog->ShowModal();
 
-    wxString path = saveDialog.GetPath();
+    wxString path = psaveDialog->GetPath();
     wxFileName fn( path );
     m_gpx_path = fn.GetPath();
+    delete psaveDialog;
 
     if( response == wxID_OK ) {
         fn.SetExt( _T ( "gpx" ) );
@@ -2966,14 +2985,18 @@ bool MyConfig::ExportGPXWaypoints( wxWindow* parent, RoutePointList *pRoutePoint
 
 void MyConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
 {
-    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, wxT ( "" ),
+    wxFileDialog *psaveDialog = new wxFileDialog( NULL, _( "Export GPX file" ), m_gpx_path, wxT ( "" ),
             wxT ( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
 
-    int response = saveDialog.ShowModal();
+    if(g_bresponsive)
+        psaveDialog = g_Platform->AdjustFileDialogFont(parent, psaveDialog);
+    
+    int response = psaveDialog->ShowModal();
 
-    wxString path = saveDialog.GetPath();
+    wxString path = psaveDialog->GetPath();
     wxFileName fn( path );
     m_gpx_path = fn.GetPath();
+    delete psaveDialog;
 
     if( response == wxID_OK ) {
         fn.SetExt( _T ( "gpx" ) );
@@ -3066,13 +3089,18 @@ void MyConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
     Layer *l = NULL;
 
     if( !islayer || dirpath.IsSameAs( _T("") ) ) {
-        wxFileDialog openDialog( NULL, _( "Import GPX file" ), m_gpx_path, wxT ( "" ),
+        wxFileDialog *popenDialog = new wxFileDialog( NULL, _( "Import GPX file" ), m_gpx_path, wxT ( "" ),
                 wxT ( "GPX files (*.gpx)|*.gpx|All files (*.*)|*.*" ),
                 wxFD_OPEN | wxFD_MULTIPLE );
-        openDialog.Centre();
-        response = openDialog.ShowModal();
+
+        if(g_bresponsive)
+            popenDialog = g_Platform->AdjustFileDialogFont(parent, popenDialog);
+        
+        popenDialog->Centre();
+        response = popenDialog->ShowModal();
+
         if( response == wxID_OK ) {
-            openDialog.GetPaths( file_array );
+            popenDialog->GetPaths( file_array );
 
             //    Record the currently selected directory for later use
             if( file_array.GetCount() ) {
@@ -3080,6 +3108,7 @@ void MyConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
                 m_gpx_path = fn.GetPath();
             }
         }
+        delete popenDialog;
 
     } else {
         if( isdirectory ) {
@@ -3150,7 +3179,7 @@ RoutePoint *WaypointExists( const wxString& name, double lat, double lon )
     RoutePoint *pret = NULL;
 //    if( g_bIsNewLayer ) return NULL;
     wxRoutePointListNode *node = pWayPointMan->GetWaypointList()->GetFirst();
-    bool Exists = false;
+//    bool Exists = false;  // Not used
     while( node ) {
         RoutePoint *pr = node->GetData();
 
@@ -3158,7 +3187,7 @@ RoutePoint *WaypointExists( const wxString& name, double lat, double lon )
 
         if( name == pr->GetName() ) {
             if( fabs( lat - pr->m_lat ) < 1.e-6 && fabs( lon - pr->m_lon ) < 1.e-6 ) {
-                Exists = true;
+//                Exists = true;  // Not used but break
                 pret = pr;
                 break;
             }
@@ -4577,7 +4606,6 @@ void AlphaBlending( ocpnDC &dc, int x, int y, int size_x, int size_y, float radi
 #ifdef ocpnUSE_GL
         /* opengl version */
         glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
         if(radius > 1.0f){
             wxColour c(color.Red(), color.Green(), color.Blue(), transparency);

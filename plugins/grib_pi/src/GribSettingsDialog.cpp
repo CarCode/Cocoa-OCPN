@@ -24,6 +24,7 @@
  ***************************************************************************/
 
 #include "grib_pi.h"
+#include "folder.xpm"
 
 static const wxString units0_names[] = {_("Knots"), _("m/s"), _("mph"), _("km/h"), _("Beaufort"), wxEmptyString};
 static const wxString units1_names[] = {_("MilliBars"), _("mmHG"), _("inHG"), wxEmptyString};
@@ -59,6 +60,8 @@ static const wxString altitude_from_index[3][5] = {
 
 enum SettingsDisplay {B_ARROWS, ISO_LINE, ISO_LINE_VISI, ISO_LINE_SHORT, D_ARROWS, OVERLAY, NUMBERS, PARTICLES};
 
+extern int   m_DialogStyle;
+
 wxString GribOverlaySettings::GetAltitudeFromIndex( int index, int unit )
 {
     return wxGetTranslation(altitude_from_index[unit][index]);
@@ -83,13 +86,26 @@ void GribOverlaySettings::Read()
         return;
 
     pConf->SetPath ( _T( "/PlugIns/GRIB" ) );
-    pConf->Read ( _T ( "Interpolate" ), &m_bInterpolate, false );
+    //Overlay general parameter
+    pConf->Read ( _T ( "OverlayTransparency" ), &m_iOverlayTransparency, 220);
+    //Playback Options
     pConf->Read ( _T ( "LoopMode" ), &m_bLoopMode, false );
     pConf->Read ( _T ( "LoopStartPoint" ), &m_LoopStartPoint, 0 );
     pConf->Read ( _T ( "SlicesPerUpdate" ), &m_SlicesPerUpdate, 5);
     pConf->Read ( _T ( "UpdatesPerSecond" ), &m_UpdatesPerSecond, 2);
-    pConf->Read ( _T ( "OverlayTransparency" ), &m_iOverlayTransparency, 220);
-
+    pConf->Read ( _T ( "Interpolate" ), &m_bInterpolate, false );
+    //gui options
+    m_iCtrlandDataStyle = m_DialogStyle;
+    wxString s1, s2;
+    pConf->Read ( _T( "CtrlBarCtrlVisibility1" ), &s1, _T( "XXXXXXXXX" ) );
+    if(s1.Len() != wxString (_T( "XXXXXXXXX" ) ).Len() )
+        s1 = _T( "XXXXXXXXX" );
+    pConf->Read ( _T( "CtrlBarCtrlVisibility2" ), &s2, _T( "XXXXXXXXX" ) );
+    if(s2.Len() != wxString (_T( "XXXXXXXXX" ) ).Len() )
+        s2 = _T( "XXXXXXXXX" );
+    m_iCtrlBarCtrlVisible[0] = s1;
+    m_iCtrlBarCtrlVisible[1] = s2;
+    //data options
     for(int i=0; i<SETTINGS_COUNT; i++) {
         wxString Name=name_from_index[i];
 
@@ -139,12 +155,19 @@ void GribOverlaySettings::Write()
         return;
 
     pConf->SetPath ( _T( "/PlugIns/GRIB" ) );
+    //Overlay general parameter
+    pConf->Write ( _T ( "OverlayTransparency" ), m_iOverlayTransparency);
+    //playback options
     pConf->Write ( _T ( "Interpolate" ), m_bInterpolate);
     pConf->Write ( _T ( "LoopMode" ), m_bLoopMode );
     pConf->Write ( _T ( "LoopStartPoint" ), m_LoopStartPoint);
     pConf->Write ( _T ( "SlicesPerUpdate" ), m_SlicesPerUpdate);
     pConf->Write ( _T ( "UpdatesPerSecond" ), m_UpdatesPerSecond);
-    pConf->Write ( _T ( "OverlayTransparency" ), m_iOverlayTransparency);
+    //gui options
+    pConf->Write( _T ( "GribCursorDataDisplayStyle" ), m_iCtrlandDataStyle );
+    wxString s1 = m_iCtrlBarCtrlVisible[0], s2 = m_iCtrlBarCtrlVisible[1];
+    pConf->Write( _T ( "CtrlBarCtrlVisibility1" ), s1 );
+    pConf->Write( _T ( "CtrlBarCtrlVisibility2" ), s2 );
 
     for(int i=0; i<SETTINGS_COUNT; i++) {
         pConf->Write ( name_from_index[i] + _T ( "Units" ), (int)Settings[i].m_Units);
@@ -401,7 +424,7 @@ double GribOverlaySettings::GetMax(int settings)
     return CalibrateValue(settings, max);
 }
 
-GribSettingsDialog::GribSettingsDialog(GRIBUIDialog &parent, GribOverlaySettings &Settings, int &lastdatatype, int fileIntervalIndex)
+GribSettingsDialog::GribSettingsDialog(GRIBUICtrlBar &parent, GribOverlaySettings &Settings, int &lastdatatype, int fileIntervalIndex)
     : GribSettingsDialogBase(&parent),
       m_parent(parent), m_extSettings(Settings), m_lastdatatype(lastdatatype)
 {
@@ -411,6 +434,22 @@ GribSettingsDialog::GribSettingsDialog(GRIBUIDialog &parent, GribOverlaySettings
     for( int i=0; i < fileIntervalIndex + 1; i++){
         int mn = m_Settings.GetMinFromIndex(i);
         m_sSlicesPerUpdate->Append(wxString::Format(_T("%2d "), mn / 60) + _("h") + wxString::Format(_T(" %.2d "), mn % 60) + _("mn"));
+    }
+    //Set Bitmap
+    m_biAltitude->SetBitmap( wxBitmap( altitude ) );
+    m_biNow->SetBitmap( wxBitmap( now ) );
+    m_biZoomToCenter->SetBitmap( wxBitmap( zoomto ) );
+    m_biShowCursorData->SetBitmap( wxBitmap( m_parent.m_CDataIsShown ? curdata : ncurdata ) );
+    m_biPlay->SetBitmap( wxBitmap( play ) );
+    m_biTimeSlider->SetBitmap( wxBitmap( slider ) );
+    m_biOpenFile->SetBitmap( wxBitmap( openfile ) );
+    m_biSettings->SetBitmap( wxBitmap( setting ) );
+    m_biRequest->SetBitmap( wxBitmap( request ) );
+    //read bookpage
+    wxFileConfig *pConf = GetOCPNConfigObject();
+    if(pConf) {
+        pConf->SetPath ( _T ( "/Settings/GRIB" ) );
+        pConf->Read( _T ( "GribSettingsBookPageIndex" ), &m_SetBookpageIndex, 0 );
     }
 
     m_cInterpolate->SetValue(m_Settings.m_bInterpolate);
@@ -424,6 +463,16 @@ GribSettingsDialog::GribSettingsDialog(GRIBUIDialog &parent, GribOverlaySettings
         m_sSlicesPerUpdate->Hide();
     }
 
+    m_rbCurDataAttaWCap->SetValue( m_Settings.m_iCtrlandDataStyle == 0 );
+    m_rbCurDataAttaWoCap->SetValue( m_Settings.m_iCtrlandDataStyle == 1 );
+    m_rbCurDataIsolHoriz->SetValue( m_Settings.m_iCtrlandDataStyle == 2 );
+    m_rbCurDataIsolVertic->SetValue( m_Settings.m_iCtrlandDataStyle == 3 );
+
+    for( unsigned int i = 0; i < (m_Settings.m_iCtrlBarCtrlVisible[0].Len() * 2) ; i += 2 ) {
+        ((wxCheckBox*) FindWindow( i + AC0 ) )->SetValue( m_Settings.m_iCtrlBarCtrlVisible[0].GetChar(i / 2) == _T('X') );
+        ((wxCheckBox*) FindWindow( i + 1 + AC0 ) )->SetValue( m_Settings.m_iCtrlBarCtrlVisible[1].GetChar(i / 2) == _T('X') );
+    }
+
     for(int i=0; i<GribOverlaySettings::SETTINGS_COUNT; i++)
         m_cDataType->Append( wxGetTranslation(tname_from_index[i]) );
 
@@ -435,7 +484,7 @@ GribSettingsDialog::GribSettingsDialog(GRIBUIDialog &parent, GribOverlaySettings
     //set all wxSpinCtrl width
     int w;
     GetTextExtent( _T("1234"), &w, NULL, 0, 0, OCPNGetFont(_("Dialog"), 10) );
-    wxWindowList list = m_scrolledSettingsDialog->GetChildren();
+    wxWindowList list = this->GetChildren();
     wxWindowListNode *node = list.GetFirst();
     for( size_t i = 0; i < list.GetCount(); i++ ) {
         wxWindow *win = node->GetData();
@@ -450,21 +499,69 @@ GribSettingsDialog::GribSettingsDialog(GRIBUIDialog &parent, GribOverlaySettings
     Fit();
 }
 
+void GribSettingsDialog::SaveLastPage()
+{
+    wxFileConfig *pConf = GetOCPNConfigObject();
+    
+    if(pConf) {
+        pConf->SetPath ( _T ( "/Settings/GRIB" ) );
+        
+        pConf->Write( _T ( "GribSettingsBookPageIndex" ), m_SetBookpageIndex );
+    }
+}
+
+void GribSettingsDialog::OnPageChange( wxNotebookEvent& event )
+{
+    m_SetBookpageIndex = event.GetSelection();
+
+#if defined( __WXMSW__) || defined ( __WXOSX__ )
+    for( size_t i = 0; i < m_nSettingsBook->GetPageCount(); i++ ) {
+        wxScrolledWindow *sc = ((wxScrolledWindow*) m_nSettingsBook->GetPage( i ));
+        sc->Show( i == (unsigned int ) m_SetBookpageIndex );
+    }
+#endif
+
+    Layout();
+    Fit();
+    Refresh();
+}
+
 void GribSettingsDialog::SetSettingsDialogSize()
 {
-    /*default sizing do not work with wxScolledWindow so we need to compute it
-     using a conditional X margin to stabilize the display width and a fixed Y margin to include differents OS bars*/
-    int XMargin = m_scrolledSettingsDialog->GetScrollLines( wxVERTICAL )? 0 : 18;
-    int YMargin = 130;
-    wxSize scroll = m_fgScrolledSettingsSizer->Fit(m_scrolledSettingsDialog);           // the area size to be scrolled
-    int h;
-    ::wxDisplaySize( NULL, &h);                                                         // the screen size
-    h -= m_sButton->GetSize().GetY() + YMargin;											//height available for the scrolled window
-    m_scrolledSettingsDialog->SetMinSize( wxSize( scroll.GetWidth() + XMargin,          //set scrolled area size with margins
-                                                 wxMin(scroll.GetHeight(), h )) );
-    this->Layout();
-    this->Fit();
-    this->Refresh();
+    /*Sizing do not work with wxScolledWindow so we need to compute it
+     using fixed X/Y margin to try to center nicely the dialog in the screen*/
+    int wt,ht,w,h;
+    ::wxDisplaySize( &wt, &ht);                                                         // the screen size
+#ifdef __WXOSX__
+    int XMargin = 300, YMargin = 700;													//set margins war:200
+#else
+    int XMargin = 300, YMargin = 2  00;
+#endif
+    w = wt - XMargin;																	//maximum scolled window size
+    h = ht - ( m_sButton->GetSize().GetY() + YMargin );
+    wxSize scroll(0, 0);
+    for( size_t i = 0; i < m_nSettingsBook->GetPageCount(); i++ ) {						//compute and set scrolled windows size
+        wxScrolledWindow *sc = ((wxScrolledWindow*) m_nSettingsBook->GetPage( i ));
+        wxSize scr;
+        switch( i ) {
+            case 0:
+                scr = m_fgSetDataSizer->Fit( sc ); break;
+            case 1:
+                scr = m_fgSetPlaybackSizer->Fit( sc ); break;
+            case 2:
+                scr = m_fgSetGuiSizer->Fit( sc ); break;
+        }
+        sc->SetMinSize( wxSize(wxMin( scr.x, w ), h) );
+#if defined( __WXMSW__) || defined ( __WXOSX__ )
+        sc->Show( i == (unsigned int) m_SetBookpageIndex );
+#endif
+    }																					//end compute
+    
+    m_nSettingsBook->SetSize( wt, ht);
+    
+    Layout();
+    Fit();
+    Refresh();
 }
 
 /* set settings to the dialog controls */
@@ -476,9 +573,19 @@ void GribSettingsDialog::WriteSettings()
     m_Settings.m_SlicesPerUpdate = m_sSlicesPerUpdate->GetCurrentSelection();
     m_Settings.m_UpdatesPerSecond = m_sUpdatesPerSecond->GetValue();
 
+    m_Settings.m_iCtrlandDataStyle = m_rbCurDataAttaWCap->GetValue() ? ATTACHED_HAS_CAPTION
+    : m_rbCurDataAttaWoCap->GetValue() ? ATTACHED_NO_CAPTION
+    : m_rbCurDataIsolHoriz->GetValue() ? SEPARATED_HORIZONTAL : SEPARATED_VERTICAL;
+
+    for( unsigned int i = 0; i < (m_Settings.m_iCtrlBarCtrlVisible[0].Len() * 2) ; i += 2 ) {
+        m_Settings.m_iCtrlBarCtrlVisible[0].SetChar( i / 2, ((wxCheckBox*) FindWindow(i + AC0))->GetValue() ? _T('X') : _T('.') );
+        m_Settings.m_iCtrlBarCtrlVisible[1].SetChar(i / 2, ((wxCheckBox*) FindWindow( i + 1 + AC0))->GetValue() ? _T('X') : _T('.') );
+    }
+
     SetDataTypeSettings(m_lastdatatype);
 
     m_extSettings = m_Settings;
+    m_DialogStyle = m_Settings.m_iCtrlandDataStyle;
 }
 
 void GribSettingsDialog::SetDataTypeSettings(int settings)
@@ -679,16 +786,35 @@ void GribSettingsDialog::OnUnitChange( wxCommandEvent& event )
 
 void GribSettingsDialog::OnTransparencyChange( wxScrollEvent& event  )
 {
-    m_extSettings = m_Settings;
     m_Settings.m_iOverlayTransparency = 254. - ( (long) m_sTransparency->GetValue() * 254. / 100. );
     m_parent.SetFactoryOptions();
 }
 
+void GribSettingsDialog::OnCtrlandDataStyleChanged( wxCommandEvent& event )
+{
+    wxString messages;
+    if( (m_Settings.m_iCtrlandDataStyle == 0 && !m_rbCurDataAttaWCap->GetValue()) )
+        messages.Printf( _("You want to remove the dialog title/drag bar\n") );
+    if( (m_Settings.m_iCtrlandDataStyle != 0 && m_rbCurDataAttaWCap->GetValue()) )
+        messages.Printf( _("You want to add a title/drag bar to the dialog\n") );
+    if( !messages.IsEmpty() ) {
+        m_parent.pPlugIn->m_DialogStyleChanged = true;
+        messages.Append( _("This change needs a complete reload.\nIt will be aplied after closing and re-opning the plugin") );
+        wxMessageDialog mes(this, messages );
+        mes.ShowModal();
+    }
+}
+
 void GribSettingsDialog::OnApply( wxCommandEvent& event )
 {
+    if( m_Settings.Settings[GribOverlaySettings::WIND].m_Units != m_extSettings.Settings[GribOverlaySettings::WIND].m_Units
+       && (m_Settings.Settings[GribOverlaySettings::WIND].m_Units == GribOverlaySettings::BFS
+           || m_extSettings.Settings[GribOverlaySettings::WIND].m_Units == GribOverlaySettings::BFS) )
+        m_parent.m_old_DialogStyle = STARTING_STATE_STYLE;                   //must recompute dialogs size
+
     WriteSettings();
     m_parent.SetFactoryOptions();
-    m_parent.PopulateTrackingControls();
+    m_parent.SetDialogsStyleSizePosition(true);
 }
 
 void GribSettingsDialog::OnIntepolateChange( wxCommandEvent& event )

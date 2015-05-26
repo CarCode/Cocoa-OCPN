@@ -35,8 +35,8 @@
 #include <wx/fileconf.h>
 
 #include "findit_pi.h"
-#include "jsonval.h"
-#include "jsonreader.h"
+#include "../../../include/wx/jsonval.h"
+#include "../../../include/wx/jsonreader.h"
 #include "gui.h"
 #include "icons.h"
 
@@ -54,7 +54,7 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 
 
 findit_pi::findit_pi(void *ppimgr)
-      :opencpn_plugin_16(ppimgr)
+      :opencpn_plugin_19(ppimgr)
 {	
       // Create the PlugIn icons
       initialize_images();
@@ -172,6 +172,13 @@ wxBitmap *findit_pi::GetPlugInBitmap()
       return _img_findit_pi;
 }
 
+void findit_pi::SetColorScheme(PI_ColorScheme cs)
+{
+    if (NULL == m_pFindItWindow)
+        return;
+//    DimeWindow(m_pFindItWindow);
+}
+
 void findit_pi::OnToolbarToolCallback(int id)
 {
 	SendPluginMessage(_T("LOGBOOK_IS_READY_FOR_REQUEST"), wxEmptyString);
@@ -183,7 +190,9 @@ void findit_pi::OnToolbarToolCallback(int id)
 			m_pFindItWindow->Iconize(false);
 	}
 	
-	m_pFindItWindow->Show(); 
+    SetColorScheme(PI_ColorScheme());
+    
+    m_pFindItWindow->Show();
 	m_pFindItWindow->SetFocus();
 }
 
@@ -195,8 +204,7 @@ void findit_pi::SetDefaults(void)
             m_bFINDITShowIcon = true;
 
             m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_findit, _img_findit, wxITEM_NORMAL,
-                  _("FindIt"), _T(""), NULL,
-                   FINDIT_TOOL_POSITION, 0, this);
+                    _("FindIt"), _T(""), NULL, FINDIT_TOOL_POSITION, 0, this);
 				   
       }
 }
@@ -214,36 +222,40 @@ void findit_pi::ShowPreferencesDialog( wxWindow* parent )
 
 	OptionsDialog* dlg = new OptionsDialog(parent,this);
 
+    wxColour cl;
+    GetGlobalColor(_T("DILG1"), &cl);
+    dlg->SetBackgroundColour(cl);
+
 //	dlg->m_checkBoxShowLogbook->SetValue(m_bLOGShowIcon);
 
-     if(dlg->ShowModal() == wxID_OK)
-      {
-			buyNo = dlg->m_radioBox11->GetSelection();
-			toBuyZero = dlg->m_radioBox1->GetSelection();
-			lastRowDefault = dlg->m_radioBox5->GetSelection();
-
-			if((buyNo != buyNotemp) || (toBuyZero != toBuyZerotemp) || (lastRowDefault != lastRowDefaulttemp))
-				if(m_pFindItWindow)
-					m_pFindItWindow->reloadData();
-
-            //    Show Icon changed value?	
-			if(m_bFINDITShowIcon != dlg->m_checkBoxFindItIcon->GetValue())
-            {
-                  m_bFINDITShowIcon = dlg->m_checkBoxFindItIcon->GetValue();
-
-                  if(m_bFINDITShowIcon)
-						 m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_findit, _img_findit, wxITEM_NORMAL,
-								 _("FindIt"), _T(""), NULL, FINDIT_TOOL_POSITION, 0, this);
-                  else
-                        RemovePlugInTool(m_leftclick_tool_id);
-            }
-            SaveConfig();
-      }
-	 else
-	 {
-			if(buyNo != buyNotemp || toBuyZero != toBuyZerotemp || lastRowDefault != lastRowDefaulttemp)
-				if(m_pFindItWindow)
-					m_pFindItWindow->reloadData();
+    if(dlg->ShowModal() == wxID_OK)
+    {
+        buyNo = dlg->m_radioBox11->GetSelection();
+        toBuyZero = dlg->m_radioBox1->GetSelection();
+        lastRowDefault = dlg->m_radioBox5->GetSelection();
+        
+        if((buyNo != buyNotemp) || (toBuyZero != toBuyZerotemp) || (lastRowDefault != lastRowDefaulttemp))
+            if(m_pFindItWindow)
+                m_pFindItWindow->reloadData();
+        
+        //    Show Icon changed value?
+        if(m_bFINDITShowIcon != dlg->m_checkBoxFindItIcon->GetValue())
+        {
+            m_bFINDITShowIcon = dlg->m_checkBoxFindItIcon->GetValue();
+            
+            if(m_bFINDITShowIcon)
+                m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_findit, _img_findit, wxITEM_NORMAL,
+                                                        _("FindIt"), _T(""), NULL, FINDIT_TOOL_POSITION, 0, this);
+            else
+                RemovePlugInTool(m_leftclick_tool_id);
+        }
+        SaveConfig();
+    }
+    else
+    {
+        if(buyNo != buyNotemp || toBuyZero != toBuyZerotemp || lastRowDefault != lastRowDefaulttemp)
+            if(m_pFindItWindow)
+                m_pFindItWindow->reloadData();
 	 }
 	 delete dlg;
 }

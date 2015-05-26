@@ -35,13 +35,14 @@
 
 #include "../../../include/ocpn_plugin.h"
 
+
 //----------------------------------------------------------------------------------------------------------
 //    Request setting Specification
 //----------------------------------------------------------------------------------------------------------
 class GribRequestSetting : public GribRequestSettingBase
 {
 public:
-      GribRequestSetting( GRIBUIDialog &parent );
+      GribRequestSetting( GRIBUICtrlBar &parent );
 
       ~GribRequestSetting() {}
 
@@ -53,39 +54,40 @@ public:
       bool RenderGlZoneOverlay();
       bool DoRenderZoneOverlay();
       void SetRequestDialogSize();
+      void StopGraphicalZoneSelection();
+      void Save() { wxCommandEvent evt; OnSaveMail( evt); }
 
       wxString m_RequestConfigBase;
       wxString m_MailToAddresses;
       int m_RenderZoneOverlay;
-    
+
       wxPoint         m_StartPoint;
       PlugIn_ViewPort *m_Vp;
       double          m_Lat;
       double          m_Lon;
-    
+
 private:
 
       void ApplyRequestConfig( unsigned rs, unsigned it, unsigned tr );
       wxString WriteMail();
-      int EstimateFileSize();
+      int EstimateFileSize( double *size );
 
       void InitRequestConfig();
       void OnExit(wxCommandEvent &event) { wxCloseEvent evt; OnClose ( evt ); }
       void OnTopChange(wxCommandEvent &event);
       void OnMovingClick( wxCommandEvent& event );
       void OnAnyChange( wxCommandEvent& event );
-      void OnAnyChange( wxSpinEvent& event ) { wxCommandEvent evt; OnAnyChange( evt); }
+      void OnAnySpinChange( wxSpinEvent& event ) { wxCommandEvent evt; OnAnyChange( evt); }
       void OnTimeRangeChange( wxCommandEvent& event );
       void OnSendMaiL( wxCommandEvent& event );
       void OnSaveMail( wxCommandEvent& event );
       void OnZoneSelectionModeChange( wxCommandEvent& event  );
       void OnCancel( wxCommandEvent& event ) { wxCloseEvent evt; OnClose( evt); }
-      void OnTooggleSelection( wxCommandEvent& event );
       void OnCoordinatesChange( wxSpinEvent& event );
       void OnMouseEventTimer( wxTimerEvent & event);
       void SetCoordinatesText();
     
-      GRIBUIDialog &m_parent;
+      GRIBUICtrlBar &m_parent;
     
       wxDC           *m_pdc;
       wxTimer        m_tMouseEventTimer;

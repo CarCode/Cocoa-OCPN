@@ -63,9 +63,6 @@ extern int          g_GroupIndex;
 extern s52plib      *ps52plib;
 extern ChartDB      *ChartData;
 
-#ifdef USE_S57
-void LoadS57();
-#endif
 bool G_FloatPtInPolygon(MyFlPoint *rgpts, int wnumpts, float x, float y) ;
 bool GetMemoryStatus(int *mem_total, int *mem_used);
 
@@ -326,7 +323,7 @@ void ChartDB::PurgeCacheUnusedCharts( double factor)
                 while( (mem_used > mem_limit) && (nl>0) )
                 {
                     if( pChartCache->GetCount() < 2 ){
-                        nl = 0;
+//                        nl = 0;  // Not used
                         break;
                     }
                     
@@ -397,12 +394,14 @@ ChartBase *ChartDB::GetChart(const wxChar *theFilePath, ChartClassDescriptor &ch
       }
 #ifdef USE_S57
       else if (chartExt == wxT("000") || chartExt == wxT("S57")) {
-            pch = new s57chart;
+          LoadS57();
+          pch = new s57chart;
       }
 #endif
       else if (chart_desc.m_descriptor_type == PLUGIN_DESCRIPTOR) {
-            ChartPlugInWrapper *cpiw = new ChartPlugInWrapper(chart_desc.m_class_name);
-            pch = (ChartBase *)cpiw;
+          LoadS57();
+          ChartPlugInWrapper *cpiw = new ChartPlugInWrapper(chart_desc.m_class_name);
+          pch = (ChartBase *)cpiw;
       }
 
 #ifdef USE_S57
@@ -1526,7 +1525,7 @@ wxXmlDocument ChartDB::GetXMLDescription(int dbIndex, bool b_getGeom)
       if(!IsValid() || (dbIndex >= GetChartTableEntries()))
             return doc;
 
-      bool b_remove = !IsChartInCache(dbIndex);
+      bool b_remove; // = !IsChartInCache(dbIndex);  // Not used
 
       wxXmlNode *pcell_node = NULL;
       wxXmlNode *node;

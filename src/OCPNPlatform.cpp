@@ -692,14 +692,14 @@ wxString &OCPNPlatform::GetPluginDir()
     if(m_PluginsDir.IsEmpty()){
 
         wxStandardPaths& std_path = GetStdPaths();
-        
+
         //  Get the PlugIns directory location
         m_PluginsDir = std_path.GetPluginsDir();    // linux:   {prefix}/lib/opencpn
                                                     // Mac:     appname.app/Contents/PlugIns
 #ifdef __WXMSW__
         m_PluginsDir += _T("\\plugins");             // Windows: {exe dir}/plugins
 #endif
-        
+
         if( g_bportable ) {
             m_PluginsDir = GetHomeDir();
             m_PluginsDir += _T("plugins");
@@ -711,8 +711,9 @@ wxString &OCPNPlatform::GetPluginDir()
         m_PluginsDir = fdir.GetPath();
         
         m_PluginsDir = GetHomeDir();
-        
+
 #endif
+
 
     }
     
@@ -733,7 +734,9 @@ wxString &OCPNPlatform::GetConfigFileName()
 #elif defined __WXOSX__
         m_config_file_name = std_path.GetUserConfigDir(); // should be ~/Library/Preferences
         appendOSDirSlash(&m_config_file_name);
-        m_config_file_name.Append(_T("opencpn/opencpn.ini"));
+        m_config_file_name.Append(_T("opencpn"));
+        appendOSDirSlash(&m_config_file_name);
+        m_config_file_name.Append(_T("opencpn.ini"));
 #else
         m_config_file_name = std_path.GetUserDataDir(); // should be ~/.opencpn
         appendOSDirSlash(&m_config_file_name);
@@ -856,7 +859,7 @@ bool OCPNPlatform::InitializeLogFile( void )
     
 }
 
-#ifdef __WXOSX__
+#ifndef __WXOSX__
 wxString &OCPNPlatform::GetLogFileName()
 {
 
@@ -879,6 +882,25 @@ void OCPNPlatform::CloseLogFile( void)
 
 
 
+
+
+//--------------------------------------------------------------------------
+//      Internal GPS Support
+//--------------------------------------------------------------------------
+
+bool OCPNPlatform::hasInternalGPS(wxString profile)
+{
+    
+#ifdef __OCPN__ANDROID__
+    bool t = androidDeviceHasGPS();
+    qDebug() << "androidDeviceHasGPS" << t;
+    return t;
+#else
+    
+    return false;
+    
+#endif
+}
 
 
 //--------------------------------------------------------------------------
@@ -916,24 +938,6 @@ double OCPNPlatform::getFontPointsperPixel( void )
 
 }
 
-
-//--------------------------------------------------------------------------
-//      Internal GPS Support
-//--------------------------------------------------------------------------
-
-bool OCPNPlatform::hasInternalGPS(wxString profile)
-{
-
-#ifdef __OCPN__ANDROID__
-    bool t = androidDeviceHasGPS();
-    qDebug() << "androidDeviceHasGPS" << t;
-    return t;
-#else
-
-    return false;
-
-#endif    
-}
 
 wxSize OCPNPlatform::getDisplaySize()
 {
@@ -973,6 +977,82 @@ double  OCPNPlatform::GetDisplaySizeMM()
     wxLogMessage(msg);
     
     return ret;
+}
+
+wxDirDialog* OCPNPlatform::AdjustDirDialogFont(wxWindow *container, wxDirDialog* dlg)
+{
+    wxDirDialog* ret_dlg = dlg;
+    
+    dlg->Show();
+    dlg->SetSize( container->GetSize());
+    dlg->Centre();
+    
+    wxSize sds = dlg->GetSize();
+    wxSize ss = container->GetSize();
+    
+    
+    if(sds.x > ss.x){
+        dlg->Hide();
+        
+        wxString msg = dlg->GetMessage();
+        wxString default_dir = dlg->GetPath();
+        
+        delete dlg;
+        
+        ret_dlg = new wxDirDialog( NULL, msg, default_dir, wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST );
+        
+        
+        wxFont *dialogFont = GetOCPNScaledFont(_("Dialog"));
+        wxFont *smallFont = new wxFont( * dialogFont );
+        smallFont->SetPointSize( (smallFont->GetPointSize() / 2) + 0.5 ); // + 0.5 to round instead of truncate
+        ret_dlg->SetFont( * smallFont );
+        
+        ret_dlg->SetSize( container->GetSize());
+        ret_dlg->Centre();
+        
+    }
+    ret_dlg->Hide();
+    
+    return ret_dlg;
+}
+
+wxFileDialog* OCPNPlatform::AdjustFileDialogFont(wxWindow *container, wxFileDialog* dlg)
+{
+    wxFileDialog* ret_dlg = dlg;
+    
+    dlg->Show();
+    dlg->SetSize( container->GetSize());
+    dlg->Centre();
+    
+    wxSize sds = dlg->GetSize();
+    wxSize ss = container->GetSize();
+    
+    
+    if(sds.x > ss.x){
+        dlg->Hide();
+        
+        wxString msg = dlg->GetMessage();
+        wxString default_dir = dlg->GetDirectory();
+        wxString default_file = dlg->GetFilename();
+        wxString wildcard = dlg->GetWildcard();
+        
+        delete dlg;
+        
+        ret_dlg = new wxFileDialog( NULL, msg, default_dir, default_file,  wildcard, wxFD_OPEN );
+        
+        
+        wxFont *dialogFont = GetOCPNScaledFont(_("Dialog"));
+        wxFont *smallFont = new wxFont( * dialogFont );
+        smallFont->SetPointSize( (smallFont->GetPointSize() / 2) + 0.5 ); // + 0.5 to round instead of truncate
+        ret_dlg->SetFont( * smallFont );
+        
+        ret_dlg->SetSize( container->GetSize());
+        ret_dlg->Centre();
+        
+    }
+    ret_dlg->Hide();
+    
+    return ret_dlg;
 }
 
 #ifdef __WXMSW__

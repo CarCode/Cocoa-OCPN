@@ -442,7 +442,13 @@ void DataStream::Close()
         androidStopNMEA();
 #endif
     }
-        
+    else if(m_connection_type == INTERNAL_BT){
+#ifdef __OCPN__ANDROID__
+        androidStopBT();
+#endif
+    }
+
+
 }
 
 void DataStream::OnSocketReadWatchdogTimer(wxTimerEvent& event)

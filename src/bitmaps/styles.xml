@@ -163,6 +163,10 @@
 		</tools>
 
 		<icons>
+            <icon name="4WayMove">
+                <icon-location x="420" y="160"/>
+                <size x="32" y="32"/>
+            </icon>
 			<icon name="Display">
 				<icon-location x="20" y="400"/>
                         <size x="40" y="40"/>
@@ -228,6 +232,14 @@
 				<icon-location x="700" y="60"/>
 				<size x="12" y="32"/>
 			</icon>
+            <icon name="grabber_hi">
+                <icon-location x="712" y="60"/>
+                <size x="12" y="32"/>
+            </icon>
+            <icon name="grabber_ext">
+                <icon-location x="700" y="100"/>
+                <size x="32" y="32"/>
+            </icon>
 			<icon name="viz">
 				<icon-location x="20" y="100"/>
 				<size x="20" y="13"/>
@@ -649,6 +661,10 @@
 		</tools>
 
 		<icons>
+            <icon name="4WayMove">
+                <icon-location x="420" y="160"/>
+                <size x="32" y="32"/>
+            </icon>
 			<icon name="Display">
 				<icon-location x="20" y="370"/>
                         <size x="40" y="40"/>
@@ -717,6 +733,14 @@
 				<icon-location x="700" y="60"/>
 				<size x="11" y="32"/>
 			</icon>
+            <icon name="grabber_hi">
+                <icon-location x="714" y="60"/>
+                <size x="11" y="32"/>
+            </icon>
+            <icon name="grabber_ext">
+                <icon-location x="700" y="100"/>
+                <size x="32" y="32"/>
+            </icon>
 			<icon name="viz">
 				<icon-location x="20" y="100"/>
 				<size x="20" y="13"/>
@@ -1131,6 +1155,10 @@
 		</tools>
 
 		<icons>
+            <icon name="4WayMove">
+                <icon-location x="420" y="160"/>
+                <size x="32" y="32"/>
+            </icon>
 			<icon name="Display">
 				<icon-location x="20" y="370"/>
                 <size x="40" y="40"/>
@@ -1199,6 +1227,14 @@
 				<icon-location x="700" y="60"/>
 				<size x="11" y="32"/>
 			</icon>
+            <icon name="grabber_hi">
+                <icon-location x="714" y="60"/>
+                <size x="11" y="32"/>
+            </icon>
+            <icon name="grabber_ext">
+                <icon-location x="700" y="100"/>
+                <size x="11" y="32"/>
+            </icon>
 			<icon name="viz">
 				<icon-location x="20" y="100"/>
 				<size x="20" y="13"/>

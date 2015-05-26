@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __OCPN_SOUND_H__
 #define __OCPN_SOUND_H__
@@ -38,8 +37,10 @@ public:
     OCPN_Sound();
     ~OCPN_Sound();
 
+    static int DeviceCount();
+
     bool IsOk() const;
-    bool Create(const wxString& fileName, bool isResource = false);
+    bool Create(const wxString& fileName, int deviceIndex=-1, bool isResource = false);
     bool Play(unsigned flags = wxSOUND_ASYNC) const;
     bool IsPlaying() const;
     void Stop();

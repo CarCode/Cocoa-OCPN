@@ -130,11 +130,11 @@ public:
         { return m_bVerbose; }
 
 protected:     // internal utils
-//#ifdef __WXOSX__
-//    virtual void EndModal(wxCurlDialogReturnFlag retCode);
-//#else
+#ifdef __WXOSX__
+    virtual void CTDSEndModal(wxCurlDialogReturnFlag retCode);
+#else
     virtual void EndModal(wxCurlDialogReturnFlag retCode);
-//#endif
+#endif
     wxStaticText *AddSizerRow(wxSizer *sz, const wxString &name);
     void CreateControls(const wxString &url, const wxString &msg, 
                         const wxString& sizeLabel, const wxBitmap &bitmap);

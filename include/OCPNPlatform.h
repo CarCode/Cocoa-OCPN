@@ -77,6 +77,8 @@ public:
     wxSize getDisplaySize();
     double GetDisplaySizeMM();
 
+    wxFileDialog *AdjustFileDialogFont(wxWindow *container, wxFileDialog *dlg);
+    wxDirDialog  *AdjustDirDialogFont(wxWindow *container,  wxDirDialog *dlg);
 
 //--------------------------------------------------------------------------
 //      Per-Platform file/directory support
@@ -92,6 +94,8 @@ public:
     wxString *GetPluginDirPtr();
     wxString *GetSharedDataDirPtr();
     wxString *GetPrivateDataDirPtr();
+    wxString &GetLogFileName(){ return mlog_file; }
+
     bool InitializeLogFile( void );
 #ifdef __WXOSX__
     wxString &GetLogFileName();

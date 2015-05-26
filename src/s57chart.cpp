@@ -269,7 +269,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
 
     int MAX_LINE = 499999;
     char *buf = (char *) malloc( MAX_LINE + 1 );
-    int llmax = 0;
+//    int llmax = 0;  // Not used
 
     char *br;
     char szAtt[20];
@@ -682,8 +682,8 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                     if( !strncmp( FeatureName, "DEPARE", 6 )
                             || !strncmp( FeatureName, "DRGARE", 6 ) ) bIsAssociable = true;
 
-                    int ll = strlen( buf );
-                    if( ll > llmax ) llmax = ll;
+//                    int ll = strlen( buf );  // Not used
+//                    if( ll > llmax ) llmax = ll;  // Not used
 
                     my_fgets( buf, MAX_LINE, *pfpx );     // this will be "  POLYTESSGEO"
 
@@ -2051,12 +2051,12 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
 
     SetVPParms( VPoint );
 
-    bool force_new_view = false;
+//    bool force_new_view = false;  // Not used
 
     if(!Region.Ok())
         return false;
-    
-    if( Region != m_last_Region ) force_new_view = true;
+
+//    if( Region != m_last_Region ) force_new_view = true;  // Not used
 
     ps52plib->PrepareForRender();
     
@@ -2160,6 +2160,8 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
 
             glColor3f( r, g, b ); /* nodta color */
             glChartCanvas::SetClipRegion( temp_vp, OCPNRegion(rect), false, !b_overlay); /* no rotation, clear */
+            if( !glChartCanvas::s_b_useStencil )
+                ps52plib->m_last_clip_region = OCPNRegion(rect);
             DoRenderRectOnGL( glc, temp_vp, rect );
             glChartCanvas::DisableClipRegion();
 
@@ -2199,6 +2201,8 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
 
         glColor3f( r, g, b ); /* nodta color */
         glChartCanvas::SetClipRegion( temp_vp, Region, false, !b_overlay ); /* no rotation */
+        if( !glChartCanvas::s_b_useStencil )
+            ps52plib->m_last_clip_region = Region;
         DoRenderRectOnGL( glc, temp_vp, rect );
         glChartCanvas::DisableClipRegion();
         
@@ -2409,7 +2413,7 @@ bool s57chart::DoRenderViewOnDC( wxMemoryDC& dc, const ViewPort& VPoint, RenderT
     double easting_ul, northing_ul;
     double easting_lr, northing_lr;
     double prev_easting_ul = 0., prev_northing_ul = 0.;
-    double prev_easting_lr, prev_northing_lr;
+//    double prev_easting_lr, prev_northing_lr;  // Not used
 
     if( ps52plib->GetPLIBColorScheme() != m_lastColorScheme ) bReallyNew = true;
     m_lastColorScheme = ps52plib->GetPLIBColorScheme();
@@ -2450,8 +2454,8 @@ bool s57chart::DoRenderViewOnDC( wxMemoryDC& dc, const ViewPort& VPoint, RenderT
                 - ( ( m_last_vp.pix_width / 2 ) / m_view_scale_ppm );
         prev_northing_ul = last_northing_vp_center
                 + ( ( m_last_vp.pix_height / 2 ) / m_view_scale_ppm );
-        prev_easting_lr = easting_ul + ( m_last_vp.pix_width / m_view_scale_ppm );
-        prev_northing_lr = northing_ul - ( m_last_vp.pix_height / m_view_scale_ppm );
+//        prev_easting_lr = easting_ul + ( m_last_vp.pix_width / m_view_scale_ppm );  // Not used
+//        prev_northing_lr = northing_ul - ( m_last_vp.pix_height / m_view_scale_ppm );  // Not used
 
         double dx = ( easting_ul - prev_easting_ul ) * m_view_scale_ppm;
         double dy = ( prev_northing_ul - northing_ul ) * m_view_scale_ppm;
@@ -2958,12 +2962,12 @@ InitReturn s57chart::FindOrCreateSenc( const wxString& name )
 
                 while( !dun ) {
                     if( my_fgets( pbuf, 256, *pfpx ) == 0 ) {
-                        dun = 1;
+//                        dun = 1;  // Not used but break
                         force_make_senc = 1;
                         break;
                     } else {
                         if( !strncmp( pbuf, "OGRF", 4 ) ) {
-                            dun = 1;
+//                            dun = 1;  // Not used but break
                             break;
                         }
 
@@ -3558,12 +3562,12 @@ bool s57chart::CreateHeaderDataFromSENC( void )
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-            dun = 1;
+//            dun = 1;  // Not used but break
             break;
         }
 
         if( !strncmp( buf, "OGRF", 4 ) ) {
-            dun = 1;
+//            dun = 1;  // Not used but break
             break;
         }               //OGRF
 
@@ -3575,7 +3579,7 @@ bool s57chart::CreateHeaderDataFromSENC( void )
                 msg.Append( m_SENCFileName.GetFullPath() );
                 wxLogMessage( msg );
 
-                dun = 1;
+//                dun = 1;  // Not used but break
                 ret_val = false;                   // error
                 break;
             }
@@ -4325,7 +4329,7 @@ int s57chart::BuildSENCFile( const wxString& FullPath000, const wxString& SENCFi
     OGRwkbGeometryType geoType;
     wxString sobj;
 
-    bcont = s_ProgDialog->Update( 1, _T("") );
+//    bcont = s_ProgDialog->Update( 1, _T("") );  // Not used but later
 
     //  Here comes the actual ISO8211 file reading
     OGRS57DataSource *poS57DS = new OGRS57DataSource;
@@ -4488,11 +4492,11 @@ int s57chart::BuildSENCFile( const wxString& FullPath000, const wxString& SENCFi
 
     }
 
-/*    
+/* again activated */
     if( bbad_update ) OCPNMessageBox(NULL, 
             _T("Errors encountered processing ENC update file(s).\nENC features may be incomplete or inaccurate."),
             _T("OpenCPN Create SENC"), wxOK | wxICON_EXCLAMATION );
-*/
+
     return ret_code;
 }
 
@@ -4545,7 +4549,7 @@ int s57chart::BuildRAZFromSENCFile( const wxString& FullPath )
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-            dun = 1;
+//            dun = 1;  // Not used but break
             break;
         }
 
@@ -5341,7 +5345,7 @@ void s57chart::CreateSENCRecord( OGRFeature *pFeature, FILE * fpOut, int mode, S
     }
 
     if( mode == 1 ) {
-        sprintf( line, "  %s %g %g\n", pGeo->getGeometryName(), ref_lat, ref_lon );
+        sprintf( line, "  %s %f %f\n", pGeo->getGeometryName(), ref_lat, ref_lon );
         sheader += wxString( line, wxConvUTF8 );
     }
     wxCharBuffer buffer=sheader.ToUTF8();
@@ -5536,7 +5540,6 @@ void s57chart::CreateSENCRecord( OGRFeature *pFeature, FILE * fpOut, int mode, S
                 wkb_len = pGeo->WkbSize();
                 fprintf( fpOut, "  %d\n", wkb_len );
                 fwrite( pwkb_buffer, 1, wkb_len, fpOut );
-
                 break;
 
             case wkbPoint: {
@@ -5609,7 +5612,7 @@ void s57chart::CreateSENCRecord( OGRFeature *pFeature, FILE * fpOut, int mode, S
 
                 memcpy( pd, ps, 9 );                                  // byte order, type, count
 
-                ps += 9;
+//                ps += 9;  // Not used
                 pd += 9;
 
                 pdf = (float *) pd;
@@ -5826,7 +5829,11 @@ void s57chart::CreateSENCVectorEdgeTable( FILE * fpOut, S57Reader *poReader )
         //  Transcribe points to a buffer
         
         if(nPoints){
+#ifdef __WXOSX__
+            double *ppd = (double *)malloc(nPoints * sizeof(double));
+#else
             double *ppd = (double *)malloc(nPoints * sizeof(MyPoint));
+#endif
             double *ppr = ppd;
 
             for( int i = 0; i < nPoints; i++ ) {
@@ -6567,12 +6574,12 @@ bool s57chart::InitFromSENCMinimal( const wxString &FullPath )
 
             while( !dun ) {
                 if( my_fgets( pbuf, 256, *pfpx ) == 0 ) {
-                    dun = 1;
+//                    dun = 1;  // Not used but break
                     ret_val = false;
                     break;
                 } else {
                     if( !strncmp( pbuf, "OGRF", 4 ) ) {
-                        dun = 1;
+//                        dun = 1;  // Not used but break
                         break;
                     } else if( !strncmp( pbuf, "UPDT", 4 ) ) {
                         sscanf( pbuf, "UPDT=%i", &last_update );

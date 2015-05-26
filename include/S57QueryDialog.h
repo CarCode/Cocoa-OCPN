@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __S57QUERYDIALOG_H__
 #define __S57QUERYDIALOG_H__
@@ -59,6 +58,8 @@ class S57QueryDialog: public wxDialog
 
             void CreateControls();
             void OnSize(wxSizeEvent& event);
+            void RecalculateSize( void );
+
             void OnClose(wxCloseEvent& event);
 
       //    Overrides
@@ -68,6 +69,7 @@ class S57QueryDialog: public wxDialog
 
       //    Data
             wxHtmlWindow      *m_phtml;
+            wxSize            m_createsize;
 
 };
 

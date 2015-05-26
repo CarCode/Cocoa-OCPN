@@ -1,5 +1,9 @@
+../src/CursorData.cpp
+../src/CursorData.h
 ../src/email.cpp
 ../src/email.h
+../src/GrabberWin.cpp
+../src/GrabberWin.h
 ../src/grib_pi.cpp
 ../src/grib_pi.h
 ../src/GribOverlayFactory.cpp

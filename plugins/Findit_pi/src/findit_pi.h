@@ -33,14 +33,14 @@
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif //precompiled headers
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    1
+#define     PLUGIN_VERSION_MINOR    2
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    6  // for OpenCPN > 2.6.xxxx Beta
+#define     MY_API_VERSION_MINOR    9  // for OpenCPN > 3.x
 #include "../../../include/ocpn_plugin.h"
 #include "findit.h"
 
@@ -51,7 +51,7 @@ class findit_pi;
 //----------------------------------------------------------------------------------------------------------
 
 
-class findit_pi : public opencpn_plugin_16
+class findit_pi : public opencpn_plugin_19
 {
 public:
       findit_pi(void *ppimgr);//:opencpn_plugin(ppimgr){}
@@ -72,7 +72,8 @@ public:
       wxString GetLongDescription();
 
 //    The optional method overrides
-  	  void OnToolbarToolCallback(int id);
+      void OnToolbarToolCallback(int id);
+      void SetColorScheme(PI_ColorScheme cs);
 	  void SetPluginMessage(wxString &message_id, wxString &message_body);
 	  void ShowPreferencesDialog( wxWindow* parent );
       void UpdateAuiStatus(void);

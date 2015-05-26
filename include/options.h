@@ -35,7 +35,7 @@
 #include <wx/collpane.h>
 #include <wx/clrpicker.h>
 
-#include "pluginmanager.h"
+#include <vector>
 
 #if wxCHECK_VERSION(2, 9, 0)
 #include <wx/dialog.h>
@@ -55,6 +55,9 @@ class MyConfig;
 class ChartGroupsUI;
 class ConnectionParams;
 class SentenceListDlg;
+class PluginListPanel;
+class ChartGroupArray;
+class ChartGroup;
 
 #define ID_DIALOG 10001
 #define SYMBOL_OPTIONS_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -146,8 +149,7 @@ enum {
     ID_TCDATAADD,
     ID_TCDATADEL,
     ID_TEXTCHECKBOX,
-    ID_TEXTCTRL,
-    ID_TEXTCTRL1,
+    ID_OPTEXTCTRL,
     ID_TIDESELECTED,
     ID_TRACKCHECKBOX,
     ID_TRACKHILITE,
@@ -162,26 +164,27 @@ enum {
     ID_MOBILEBOX,
     ID_REPONSIVEBOX,
     ID_SIZEMANUALRADIOBUTTON,
-    ID_WAYPOINTRANGERINGS,
+    ID_OPWAYPOINTRANGERINGS,
     xID_OK,
     ID_BT_SCANTIMER
 };
 
 //    Define an int bit field for dialog return value
 //    To indicate which types of settings have changed
-#define     GENERIC_CHANGED    1
-#define     S52_CHANGED        2
-#define     FONT_CHANGED       4
-#define     FORCE_UPDATE       8
-#define     VISIT_CHARTS      16
-#define     LOCALE_CHANGED    32
-#define     TOOLBAR_CHANGED   64
-#define     CHANGE_CHARTS    128
-#define     SCAN_UPDATE      256
-#define     GROUPS_CHANGED   512
-#define     STYLE_CHANGED   1024
-#define     TIDES_CHANGED   2048
-#define     GL_CHANGED      4096
+#define     GENERIC_CHANGED             1
+#define     S52_CHANGED                 2
+#define     FONT_CHANGED                4
+#define     FORCE_UPDATE                8
+#define     VISIT_CHARTS                16
+#define     LOCALE_CHANGED              32
+#define     TOOLBAR_CHANGED             64
+#define     CHANGE_CHARTS               128
+#define     SCAN_UPDATE                 256
+#define     GROUPS_CHANGED              512
+#define     STYLE_CHANGED               1024
+#define     TIDES_CHANGED               2048
+#define     GL_CHANGED                  4096
+#define     REBUILD_RASTER_CACHE        8192
 
 
 #ifndef wxCLOSE_BOX
@@ -217,7 +220,8 @@ public:
     void Init();
 
     void SetInitialPage( int page_sel);
-    
+    void Finish( void);
+
     wxWindow* GetContentWindow() const;
     void OnClose( wxCloseEvent& event );
     
@@ -226,6 +230,7 @@ public:
     wxScrolledWindow *AddPage(size_t parent, const wxString & title);
     bool DeletePage( wxScrolledWindow *page );
     void SetColorScheme( ColorScheme cs );
+    void RecalculateSize();
 
     void SetInitChartDir(const wxString &dir)
     {
@@ -357,7 +362,10 @@ public:
     wxChoice                *m_pcTCDatasets;
     wxCheckBox              *pMobile;
     wxCheckBox              *pResponsive;
-    wxSlider                *m_pSlider_Zoom;    
+    wxSlider                *m_pSlider_Zoom;
+    wxSlider                *m_pSlider_GUI_Factor;
+    wxSlider                *m_pSlider_Chart_Factor;
+
     int                      k_tides;
     wxCheckBox              *pOverzoomEmphasis;
     wxCheckBox              *pOZScaleVector;
@@ -588,6 +596,7 @@ public:
     wxCheckBox              *pEnableZoomToCursor;
     wxCheckBox              *pPreserveScale;
     wxCheckBox              *pPlayShipsBells;
+    wxSpinCtrl              *pSoundDeviceIndex;
     wxCheckBox              *pFullScreenToolbar;
     wxCheckBox              *pTransparentToolbar;
 
