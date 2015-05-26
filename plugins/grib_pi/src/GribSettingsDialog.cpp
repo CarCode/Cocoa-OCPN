@@ -535,7 +535,7 @@ void GribSettingsDialog::SetSettingsDialogSize()
 #ifdef __WXOSX__
     int XMargin = 300, YMargin = 700;													//set margins war:200
 #else
-    int XMargin = 300, YMargin = 2  00;
+    int XMargin = 300, YMargin = 200;
 #endif
     w = wt - XMargin;																	//maximum scolled window size
     h = ht - ( m_sButton->GetSize().GetY() + YMargin );
