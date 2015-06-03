@@ -628,8 +628,8 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
 
 	m_cBarbArrMinSpac = new wxCheckBox( m_scSetDataPanel, BARBMINSPACING, _("Minimum"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer42->Add( m_cBarbArrMinSpac, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
-
-
+// ------------------------------------------------------------------------
+// Ab hier stimmt was nicht
 	m_fgBarbedData1->Add( fgSizer42, 1, wxEXPAND, 0 );
 
 
@@ -785,9 +785,9 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
 
 	m_fgSetDataSizer->Add( sbSizer101, 1, wxEXPAND|wxTOP, 10 );
 
-
+#ifndef __WXOSX__
 	m_fgSetDataSizer->Add( 0, 0, 1, wxEXPAND, 5 );
-
+#endif
 	wxStaticBoxSizer* sbSizer12;
 	sbSizer12 = new wxStaticBoxSizer( new wxStaticBox( m_scSetDataPanel, wxID_ANY, _("Transparency for all Overlay Maps") ), wxVERTICAL );
 

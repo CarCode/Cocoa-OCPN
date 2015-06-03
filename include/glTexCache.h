@@ -26,7 +26,7 @@
 #define __GLTEXTCACHE_H__
 
 #include <wx/glcanvas.h>
-#include <wx/file.h>
+#include <wx/ffile.h>
 #include <wx/timer.h>
 #include <stdint.h>
 
@@ -71,7 +71,7 @@ public:
     uint32_t    compressed_size;
 };
 
-WX_DECLARE_OBJARRAY(CatalogEntry*, ArrayOfCatalogEntries);
+WX_DEFINE_ARRAY(CatalogEntry*, ArrayOfCatalogEntries);
 
 
 class glTexFactory : public wxEvtHandler
@@ -123,7 +123,7 @@ private:
     int         m_catalog_offset;
     bool        m_hdrOK;
     bool        m_catalogOK;
-    wxFile      *m_fs;
+    wxFFile     *m_fs;
     uint32_t    m_chart_date_binary;
     
     int         m_stride;

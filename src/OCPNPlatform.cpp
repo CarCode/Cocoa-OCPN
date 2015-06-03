@@ -598,13 +598,15 @@ wxString &OCPNPlatform::GetHomeDir()
 //  This make debugging easier, as it is not deleted whenever the APK is re-deployed.
 //  This behaviour should go away at Release.
 #ifdef __OCPN__ANDROID__
-        if( wxDirExists(_T("/mnt/sdcard")) ){
+        if( wxDirExists(_T("/mnt/sdcard")) ) {
             m_homeDir =  _T("/mnt/sdcard/.opencpn");
         }
 #endif
 
-        if( g_bportable ) 
-            m_homeDir = GetExePath();
+        if( g_bportable ) {
+            wxFileName path(GetExePath());
+            m_homeDir = path.GetPath();
+        }
         
 #ifdef  __WXOSX__
         appendOSDirSlash(&m_homeDir);
@@ -671,6 +673,8 @@ wxString &OCPNPlatform::GetPrivateDataDir()
         m_PrivateDataDir = GetHomeDir();                     // should be {Documents and Settings}\......
 #elif defined __WXOSX__
         m_PrivateDataDir = std_path.GetUserConfigDir();     // should be ~/Library/Preferences
+        appendOSDirSlash(&m_PrivateDataDir);
+        m_PrivateDataDir.Append(_T("opencpn"));
 #else
         m_PrivateDataDir = std_path.GetUserDataDir();       // should be ~/.opencpn
 #endif
@@ -911,6 +915,9 @@ void OCPNPlatform::ShowBusySpinner( void )
 {
 #ifdef __OCPN__ANDROID__
     androidShowBusyIcon();
+    androidShowBusyIcon();
+#else
+    ::wxBeginBusyCursor();
 #endif
 }
 
@@ -918,6 +925,8 @@ void OCPNPlatform::HideBusySpinner( void )
 {
 #ifdef __OCPN__ANDROID__
     androidHideBusyIcon();
+#else
+    ::wxEndBusyCursor();
 #endif
 }
 

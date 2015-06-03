@@ -54,6 +54,7 @@ extern Select *pSelect;
 extern RouteManagerDialog *pRouteManagerDialog;
 extern bool g_bAISShowTracks;
 extern bool g_btouch;
+extern bool g_bresponsive;
 
 IMPLEMENT_CLASS ( AISTargetListDialog, wxPanel )
 
@@ -301,8 +302,146 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
     s_p_sort_decoder = pdecoder;
     m_pMMSI_array = new ArrayOfMMSI( ArrayItemCompareMMSI );
 
+    CreateControls();
+    
+    SetColorScheme();
+    UpdateButtons();
+    
+    if( m_pAuiManager ) {
+        wxAuiPaneInfo pane =
+        wxAuiPaneInfo().Name( _T("AISTargetList") ).CaptionVisible( true ).Float().FloatingPosition( 50, 50 )
+        .FloatingSize(400, 200).BestSize(700, GetCharHeight() * 10);
+        m_pAuiManager->LoadPaneInfo( g_AisTargetList_perspective, pane );
+        
+        //      Force and/or override any perspective information that is not applicable
+        pane.Name( _T("AISTargetList") );
+        pane.DestroyOnClose( true );
+        pane.TopDockable( false ).BottomDockable( true ).LeftDockable( false ).RightDockable( false );
+        pane.Show( true );
+        
+        bool b_reset_pos = false;
+        if( (pane.floating_size.x != -1) && (pane.floating_size.y != -1)){
+#ifdef __WXMSW__
+            //  Support MultiMonitor setups which an allow negative window positions.
+            //  If the requested window title bar does not intersect any installed monitor,
+            //  then default to simple primary monitor positioning.
+            RECT frame_title_rect;
+            frame_title_rect.left = pane.floating_pos.x;
+            frame_title_rect.top = pane.floating_pos.y;
+            frame_title_rect.right = pane.floating_pos.x + pane.floating_size.x;
+            frame_title_rect.bottom = pane.floating_pos.y + 30;
+            
+            if( NULL == MonitorFromRect( &frame_title_rect, MONITOR_DEFAULTTONULL ) )
+                b_reset_pos = true;
+#else
+            
+            //    Make sure drag bar (title bar) of window intersects wxClient Area of screen, with a little slop...
+            wxRect window_title_rect;// conservative estimate
+            window_title_rect.x = pane.floating_pos.x;
+            window_title_rect.y = pane.floating_pos.y;
+            window_title_rect.width = pane.floating_size.x;
+            window_title_rect.height = 30;
+            
+            wxRect ClientRect = wxGetClientDisplayRect();
+            ClientRect.Deflate(60, 60);// Prevent the new window from being too close to the edge
+            if(!ClientRect.Intersects(window_title_rect))
+                b_reset_pos = true;
+            
+#endif
+            
+            if( b_reset_pos )
+                pane.FloatingPosition( 50, 50 );
+        }
+        
+        //    If the list got accidentally dropped on top of the chart bar, move it away....
+        if( pane.IsDocked() && ( pane.dock_row == 0 ) ) {
+            pane.Float();
+            pane.Row( 1 );
+            pane.Position( 0 );
+            
+        }
+        pane.Caption( wxGetTranslation( _("AIS target list") ) );
+        pane.Show();
+        
+        //  Some special setup for touch screens
+        if(g_btouch){
+            pane.Float();
+            pane.Dockable( false );
+            
+            wxSize screen_size = ::wxGetDisplaySize();
+            pane.FloatingSize(screen_size.x * 6/10, screen_size.y * 8/10);
+            pane.FloatingPosition(screen_size.x * 2/10, screen_size.y * 1/10);
+        }
+        
+        
+        m_pAuiManager->AddPane( this, pane );
+        m_pAuiManager->Update();
+        
+        g_AisTargetList_perspective = m_pAuiManager->SavePaneInfo( pane );
+        pConfig->UpdateSettings();
+        
+        m_pAuiManager->Connect( wxEVT_AUI_PANE_CLOSE,
+                               wxAuiManagerEventHandler( AISTargetListDialog::OnPaneClose ), NULL, this );
+    }
+    else {
+        //  Make an estimate of the default dialog size
+        //  for the case when the AUI Perspective for this dialog is undefined
+        wxSize esize;
+        esize.x = 700;
+        esize.y = GetCharHeight() * 10; //18;
+        SetSize( esize );
+    }
+    
+    RecalculateSize();
+}
+
+AISTargetListDialog::~AISTargetListDialog()
+{
+    Disconnect_decoder();
+    g_pAISTargetList = NULL;
+    
+}
+
+void AISTargetListDialog::RecalculateSize()
+{
+    if(g_bresponsive){
+        //  Make an estimate of the dialog size
+        
+        wxSize esize;
+        esize.x = GetCharWidth() * 110;
+        esize.y = GetCharHeight() * 40;
+        
+        wxSize dsize = gFrame->GetClientSize();
+        esize.y = wxMin(esize.y, dsize.y - (4 * GetCharHeight()));
+        esize.x = wxMin(esize.x, dsize.x - (2 * GetCharHeight()));
+        SetClientSize(esize);
+        
+        wxSize fsize = GetSize();
+        fsize.y = wxMin(fsize.y, dsize.y - (2 * GetCharHeight()));
+        fsize.x = wxMin(fsize.x, dsize.x - (2 * GetCharHeight()));
+        SetSize(fsize);
+        
+        if( m_pAuiManager ){
+            wxAuiPaneInfo &pane = m_pAuiManager->GetPane(_T("AISTargetList"));
+            
+            if(pane.IsOk()){
+                pane.FloatingSize(fsize.x, fsize.y);
+                wxPoint pos = gFrame->GetScreenPosition();
+                pane.FloatingPosition(pos.x + (dsize.x - fsize.x)/2, pos.y + (dsize.y - fsize.y)/2);
+            }
+            
+            m_pAuiManager->Update();
+        }
+        
+    }
+    
+}
+
+void AISTargetListDialog::CreateControls()
+{
     wxBoxSizer* topSizer = new wxBoxSizer( wxHORIZONTAL );
     SetSizer( topSizer );
+
 
     //  Parse the global column width string as read from config file
     wxStringTokenizer tkz( g_AisTargetList_column_spec, _T(";") );
@@ -310,10 +449,13 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
     int width;
     long lwidth;
 
-    m_pListCtrlAISTargets = new OCPNListCtrl( this, ID_AIS_TARGET_LIST, wxDefaultPosition,
-            wxDefaultSize,
-            wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES | wxBORDER_SUNKEN
-                    | wxLC_VIRTUAL );
+    long flags = wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES | wxBORDER_SUNKEN;
+#ifndef __WXQT__
+    flags |=  wxLC_VIRTUAL;
+#endif
+    
+    m_pListCtrlAISTargets = new OCPNListCtrl( this, ID_AIS_TARGET_LIST, wxDefaultPosition, wxDefaultSize, flags);
+
     wxImageList *imglist = new wxImageList( 16, 16, true, 2 );
 
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
@@ -535,102 +677,8 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
     //    If not done, the SECOND invocation of AISTargetList fails to expand the list to the full wxSizer size....
     SetSize( GetSize().x, GetSize().y - 1 );
 
-    SetColorScheme();
-    UpdateButtons();
-
-    if( m_pAuiManager ) {
-        wxAuiPaneInfo pane =
-                wxAuiPaneInfo().Name( _T("AISTargetList") ).CaptionVisible( true ).Float().FloatingPosition( 50, 50 )
-                .FloatingSize(400, 200).BestSize(700, GetCharHeight() * 10);
-        m_pAuiManager->LoadPaneInfo( g_AisTargetList_perspective, pane );
-
-        //      Force and/or override any perspective information that is not applicable
-        pane.Name( _T("AISTargetList") );
-        pane.DestroyOnClose( true );
-        pane.TopDockable( false ).BottomDockable( true ).LeftDockable( false ).RightDockable( false );
-        pane.Show( true );
-        
-        bool b_reset_pos = false;
-        if( (pane.floating_size.x != -1) && (pane.floating_size.y != -1)){
-#ifdef __WXMSW__
-            //  Support MultiMonitor setups which an allow negative window positions.
-            //  If the requested window title bar does not intersect any installed monitor,
-            //  then default to simple primary monitor positioning.
-            RECT frame_title_rect;
-            frame_title_rect.left = pane.floating_pos.x;
-            frame_title_rect.top = pane.floating_pos.y;
-            frame_title_rect.right = pane.floating_pos.x + pane.floating_size.x;
-            frame_title_rect.bottom = pane.floating_pos.y + 30;
-
-            if( NULL == MonitorFromRect( &frame_title_rect, MONITOR_DEFAULTTONULL ) )
-                b_reset_pos = true;
-#else
-
-            //    Make sure drag bar (title bar) of window intersects wxClient Area of screen, with a little slop...
-            wxRect window_title_rect;// conservative estimate
-            window_title_rect.x = pane.floating_pos.x;
-            window_title_rect.y = pane.floating_pos.y;
-            window_title_rect.width = pane.floating_size.x;
-            window_title_rect.height = 30;
-
-            wxRect ClientRect = wxGetClientDisplayRect();
-            ClientRect.Deflate(60, 60);// Prevent the new window from being too close to the edge
-            if(!ClientRect.Intersects(window_title_rect))
-                b_reset_pos = true;
-
-#endif
-
-            if( b_reset_pos )
-                pane.FloatingPosition( 50, 50 );
-        }
-
-        //    If the list got accidentally dropped on top of the chart bar, move it away....
-        if( pane.IsDocked() && ( pane.dock_row == 0 ) ) {
-            pane.Float();
-            pane.Row( 1 );
-            pane.Position( 0 );
-
-        }
-
-        pane.Caption( wxGetTranslation( _("AIS target list") ) );
-        pane.Show();
-
-        //  Some special setup for touch screens
-        if(g_btouch){
-            pane.Float();
-            pane.Dockable( false );
-            
-            wxSize screen_size = ::wxGetDisplaySize();
-            pane.FloatingSize(screen_size.x * 6/10, screen_size.y * 8/10);
-            pane.FloatingPosition(screen_size.x * 2/10, screen_size.y * 1/10);
-        }
-
-        m_pAuiManager->AddPane( this, pane );
-        m_pAuiManager->Update();
-
-        g_AisTargetList_perspective = m_pAuiManager->SavePaneInfo( pane );
-        pConfig->UpdateSettings();
-
-        m_pAuiManager->Connect( wxEVT_AUI_PANE_CLOSE,
-                wxAuiManagerEventHandler( AISTargetListDialog::OnPaneClose ), NULL, this );
-    }
-    else {
-        //  Make an estimate of the default dialog size
-        //  for the case when the AUI Perspective for this dialog is undefined
-        wxSize esize;
-        esize.x = 700;
-        esize.y = GetCharHeight() * 10; //18;
-        SetSize( esize );
-    }
-
 }
 
-AISTargetListDialog::~AISTargetListDialog()
-{
-    Disconnect_decoder();
-    g_pAISTargetList = NULL;
-    
-}
 
 void AISTargetListDialog::OnClose( wxCloseEvent &event )
 {
@@ -660,6 +708,11 @@ void AISTargetListDialog::OnPaneClose( wxAuiManagerEvent& event )
 }
 
 void AISTargetListDialog::OnCloseButton( wxCommandEvent& event )
+{
+    Shutdown();
+}
+
+void AISTargetListDialog::Shutdown( void )
 {
     if(m_pAuiManager) {
         wxAuiPaneInfo pane =m_pAuiManager->GetPane(this);
@@ -876,8 +929,10 @@ AIS_Target_Data *AISTargetListDialog::GetpTarget( unsigned int list_item )
 
 void AISTargetListDialog::UpdateAISTargetList( void )
 {
+    if(m_pListCtrlAISTargets && !m_pListCtrlAISTargets->IsVirtual())
+        return UpdateNVAISTargetList();
+
     if( m_pdecoder ) {
-///        int sb_position = m_pListCtrlAISTargets->GetScrollPos( wxVERTICAL );
 
         //    Capture the MMSI of the curently selected list item
         long selItemID = -1;
@@ -892,8 +947,7 @@ void AISTargetListDialog::UpdateAISTargetList( void )
         wxListItem item;
 
         int index = 0;
-//        if( g_bAisTargetList_autosort || g_bsort_once )
-            m_pMMSI_array->Clear();
+        m_pMMSI_array->Clear();
 
         for( it = ( *current_targets ).begin(); it != ( *current_targets ).end(); ++it, ++index ) {
             AIS_Target_Data *pAISTarget = it->second;
@@ -907,21 +961,7 @@ void AISTargetListDialog::UpdateAISTargetList( void )
                     b_add = true;
                 
                 if(b_add){
-/*                    
-                    if( !g_bAisTargetList_autosort && !g_bsort_once ){
-                        bool b_found = false;
-                        for(unsigned int j=0 ; j < m_pMMSI_array->GetCount() ; j++){
-                            if( m_pMMSI_array->Item(j) == pAISTarget->MMSI ) {
-                                b_found = true;
-                                break;
-                            }
-                        }
-                        if(!b_found)    
-                            m_pMMSI_array->Add( pAISTarget->MMSI );
-                    }
-                    else
-*/                        
-                        m_pMMSI_array->Add( pAISTarget->MMSI );
+                    m_pMMSI_array->Add( pAISTarget->MMSI );
                 }
             }
         }
@@ -937,7 +977,6 @@ void AISTargetListDialog::UpdateAISTargetList( void )
         
         m_pCBAutosort->SetValue( g_bAisTargetList_autosort );
 
-///        m_pListCtrlAISTargets->SetScrollPos( wxVERTICAL, sb_position, false );
 
         //    Restore selected item
         long item_sel = 0;
@@ -970,3 +1009,92 @@ void AISTargetListDialog::UpdateAISTargetList( void )
     }
 }
 
+void AISTargetListDialog::UpdateNVAISTargetList( void )
+{
+    if( m_pdecoder ) {
+        
+        //    Capture the MMSI of the curently selected list item
+        long selItemID = -1;
+        selItemID = m_pListCtrlAISTargets->GetNextItem( selItemID, wxLIST_NEXT_ALL,
+                                                       wxLIST_STATE_SELECTED );
+        
+        int selMMSI = -1;
+        if( selItemID != -1 ) selMMSI = m_pMMSI_array->Item( selItemID );
+        
+        AIS_Target_Hash::iterator it;
+        AIS_Target_Hash *current_targets = m_pdecoder->GetTargetList();
+        wxListItem item;
+        
+        int index = 0;
+        m_pMMSI_array->Clear();
+        
+        for( it = ( *current_targets ).begin(); it != ( *current_targets ).end(); ++it, ++index ) {
+            AIS_Target_Data *pAISTarget = it->second;
+            item.SetId( index );
+            
+            if( NULL != pAISTarget ) {
+                bool b_add = false;
+                if( ( pAISTarget->b_positionOnceValid ) && ( pAISTarget->Range_NM <= g_AisTargetList_range ) )
+                    b_add = true;
+                else if( !pAISTarget->b_positionOnceValid )
+                    b_add = true;
+                
+                if(b_add){
+                    m_pMMSI_array->Add( pAISTarget->MMSI );
+                }
+            }
+        }
+        
+        g_bsort_once = false;
+        
+        g_AisTargetList_count = m_pMMSI_array->GetCount();
+        
+        m_pListCtrlAISTargets->DeleteAllItems();
+        
+        for(int i=0 ; i < g_AisTargetList_count ; i++){
+            wxListItem item;
+            item.SetId(i);
+            m_pListCtrlAISTargets->InsertItem(item);
+            for(int j=0 ; j < tlTCPA + 1 ; j++){
+                item.SetColumn(j);
+                item.SetText(m_pListCtrlAISTargets->OnGetItemText( i, j) );
+                m_pListCtrlAISTargets->SetItem(item);
+            }
+            
+        }
+        
+        
+        
+        if( (g_AisTargetList_count > 1000) && !m_bautosort_force )
+            g_bAisTargetList_autosort = false;
+        
+        m_pCBAutosort->SetValue( g_bAisTargetList_autosort );
+        
+        
+        //    Restore selected item
+        long item_sel = 0;
+        if( ( selItemID != -1 ) && ( selMMSI != -1 ) ) {
+            for( unsigned int i = 0; i < m_pMMSI_array->GetCount(); i++ ) {
+                if( m_pMMSI_array->Item( i ) == selMMSI ) {
+                    item_sel = i;
+                    break;
+                }
+            }
+        }
+        
+        if( m_pMMSI_array->GetCount() )
+            m_pListCtrlAISTargets->SetItemState( item_sel,
+                                                wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
+                                                wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED );
+        else
+            m_pListCtrlAISTargets->DeleteAllItems();
+        
+        wxString count;
+        count.Printf( _T("%d"), m_pMMSI_array->GetCount() );
+        m_pTextTargetCount->ChangeValue( count );
+        
+#ifdef __WXMSW__
+        m_pListCtrlAISTargets->Refresh( false );
+#endif
+    }
+}

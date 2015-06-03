@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __AISTARGETLISTDIALOG_H__
 #define __AISTARGETLISTDIALOG_H__
@@ -53,11 +52,14 @@ class AISTargetListDialog: public wxPanel
             AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr, AIS_Decoder *pdecoder );
            ~AISTargetListDialog( );
 
+            void Shutdown( void );
             void OnClose(wxCloseEvent &event);
             void Disconnect_decoder();
 
+            void RecalculateSize( void );
             void SetColorScheme( );
             void UpdateAISTargetList( );     // Rebuild AIS target list
+            void UpdateNVAISTargetList( );
             AIS_Target_Data   *GetpTarget(unsigned int list_item);
 
             OCPNListCtrl      *m_pListCtrlAISTargets;
@@ -66,6 +68,8 @@ class AISTargetListDialog: public wxPanel
             ArrayOfMMSI       *m_pMMSI_array;
 
       private:
+            void CreateControls( void );
+
             void OnPaneClose( wxAuiManagerEvent& event );
             void UpdateButtons();
             void OnTargetSelected( wxListEvent &event );

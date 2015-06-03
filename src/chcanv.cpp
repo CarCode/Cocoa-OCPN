@@ -1062,8 +1062,13 @@ ChartCanvas::~ChartCanvas()
 
     delete undo;
 #ifdef ocpnUSE_GL
-    if( !g_bdisable_opengl )
+    if( !g_bdisable_opengl ) {
         delete m_glcc;
+
+#if wxCHECK_VERSION(2, 9, 0)
+        delete m_pGLcontext;
+#endif
+    }
 #endif
 
 }
@@ -2670,7 +2675,7 @@ void ChartCanvas::DoZoomCanvas( double factor,  bool can_zoom_to_cursor )
             
         
     } else if(factor < 1) {
-        double zoom_factor = 1/factor;
+//        double zoom_factor = 1/factor;  // Not used
 
         b_do_zoom = true;
 
@@ -2685,7 +2690,7 @@ void ChartCanvas::DoZoomCanvas( double factor,  bool can_zoom_to_cursor )
                 //      If Current_Ch is not on the screen, unbound the zoomout
                 LLBBox viewbox = VPoint.GetBBox();
                 wxBoundingBox chart_box;
-                int current_index = ChartData->FinddbIndex( pc->GetFullPath() );
+//                int current_index = ChartData->FinddbIndex( pc->GetFullPath() );  // Not used
                 double max_allowed_scale;
 
                 max_allowed_scale = GetCanvasScaleFactor() / m_absolute_min_scale_ppm;
@@ -3549,6 +3554,9 @@ void ChartCanvas::ShipDraw( ocpnDC& dc )
     GetCanvasPointPix( gLat, gLon, &lShipMidPoint );
     GetCanvasPointPix( hdg_pred_lat, hdg_pred_lon, &lHeadPoint );
 
+    //    Is head predicted point in the VPoint?
+    if( GetVP().GetBBox().PointInBox( hdg_pred_lon, hdg_pred_lat, 0 ) ) drawit++;                     // yep
+
 //    Should we draw the Head vector?
 //    Compare the points lHeadPoint and lPredPoint
 //    If they differ by more than n pixels, and the head vector is valid, then render the head vector
@@ -3567,11 +3575,14 @@ void ChartCanvas::ShipDraw( ocpnDC& dc )
     wxBoundingBox bb_screen( 0, 0, GetVP().pix_width, GetVP().pix_height );
     if( bb_screen.PointInBox( lShipMidPoint, 20 ) ) drawit++;
 
-    // And one more test to catch the case where COG line crosses the screen,
+    // And two more tests to catch the case where COG/HDG line crosses the screen,
     // but ownship and pred point are both off
 
     if( GetVP().GetBBox().LineIntersect( wxPoint2DDouble( gLon, gLat ),
-                                         wxPoint2DDouble( pred_lon, pred_lat ) ) ) drawit++;
+                                        wxPoint2DDouble( pred_lon, pred_lat ) ) ) drawit++;
+    if( GetVP().GetBBox().LineIntersect( wxPoint2DDouble( gLon, gLat ),
+                                        wxPoint2DDouble( hdg_pred_lon, hdg_pred_lat ) ) ) drawit++;
+
 
 //    Do the draw if either the ship or prediction is within the current VPoint
     if( !drawit )
@@ -3608,7 +3619,7 @@ void ChartCanvas::ShipDraw( ocpnDC& dc )
                 pos_image = m_pos_image_user_grey->Copy();
         }
 
-        img_height = pos_image.GetHeight();
+//        img_height = pos_image.GetHeight();  // Not used
 
         if( g_n_ownship_beam_meters > 0.0 &&
             g_n_ownship_length_meters > 0.0 &&
@@ -3641,7 +3652,7 @@ void ChartCanvas::ShipDraw( ocpnDC& dc )
 
                 int w = os_bm.GetWidth();
                 int h = os_bm.GetHeight();
-                img_height = h;
+//                img_height = h;  // Not used
 
                 dc.DrawBitmap( os_bm, lShipMidPoint.x - w / 2, lShipMidPoint.y - h / 2, true );
 
@@ -4500,7 +4511,7 @@ bool leftIsDown;
 bool ChartCanvas::MouseEventSetup( wxMouseEvent& event,  bool b_handle_dclick )
 {
     int x, y;
-    int mx, my;
+//    int mx, my;  // Not used
 
     bool bret = false;
 
@@ -4508,11 +4519,21 @@ bool ChartCanvas::MouseEventSetup( wxMouseEvent& event,  bool b_handle_dclick )
         return(true);
 
     event.GetPosition( &x, &y );
+
+    //  Some systems produce null drag events, where the pointer position has not changed from the previous value.
+    //  Detect this case, and abort further processing (FS#1748)
+#ifdef __WXMSW__
+    if(event.Dragging()){
+        if((x == mouse_x) && (y == mouse_y))
+            return true;
+    }
+#endif
+
     mouse_x = x;
     mouse_y = y;
     mouse_leftisdown = event.LeftDown();
-    mx = x;
-    my = y;
+//    mx = x;  // Not used
+//    my = y;  // Not used
     GetCanvasPixPoint( x, y, m_cursor_lat, m_cursor_lon );
 
     //  Establish the event region
@@ -4999,11 +5020,11 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
 
             else if( m_bMeasure_Active && m_nMeasureState )   // measure tool?
             {
-                double rlat, rlon;
+//                double rlat, rlon;  // Not used
 
                 SetCursor( *pCursorPencil );
-                rlat = m_cursor_lat;
-                rlon = m_cursor_lon;
+//                rlat = m_cursor_lat;  // Not used
+//                rlon = m_cursor_lon;  // Not used
 
                 if( m_nMeasureState == 1 ) {
                     m_pMeasureRoute = new Route();
@@ -5400,10 +5421,10 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                     return false;
                 }
 
-                double rlat, rlon;
+//                double rlat, rlon;  // Not used
 
-                rlat = m_cursor_lat;
-                rlon = m_cursor_lon;
+//                rlat = m_cursor_lat;  // Not used
+//                rlon = m_cursor_lon;  // Not used
 
                 if( m_nMeasureState == 1 ) {
                     m_pMeasureRoute = new Route();
@@ -7929,8 +7950,8 @@ void ChartCanvas::ShowMarkPropertiesDialog( RoutePoint* markPoint ) {
         pMarkPropDialog->Centre();
 
 
-        int xp = (canvas_size.x - fitted_size.x)/2;
-        int yp = (canvas_size.y - fitted_size.y)/2;
+//        int xp = (canvas_size.x - fitted_size.x)/2;  // Not used
+//        int yp = (canvas_size.y - fitted_size.y)/2;  // Not used
 
         wxPoint xxp = ClientToScreen(canvas_pos);
 //        pMarkPropDialog->Move(xxp.x + xp, xxp.y + yp);
@@ -7976,8 +7997,8 @@ void ChartCanvas::ShowRoutePropertiesDialog(wxString title, Route* selected)
         pRoutePropDialog->SetSize( fitted_size );
         pRoutePropDialog->Centre();
 
-        int xp = (canvas_size.x - fitted_size.x)/2;
-        int yp = (canvas_size.y - fitted_size.y)/2;
+//        int xp = (canvas_size.x - fitted_size.x)/2;  // Not used
+//        int yp = (canvas_size.y - fitted_size.y)/2;  // Not used
 
         wxPoint xxp = ClientToScreen(canvas_pos);
 //        pRoutePropDialog->Move(xxp.x + xp, xxp.y + yp);
@@ -8644,13 +8665,13 @@ void ChartCanvas::RenderRouteLegs( ocpnDC &dc )
         (m_pMeasureRoute && m_bMeasure_Active && ( m_nMeasureState >= 2 )) ) {
 
         Route* route = 0;
-        int state;
+//        int state;  // Not used
         if( m_pMeasureRoute ) {
             route = m_pMeasureRoute;
-            state = m_nMeasureState;
+//            state = m_nMeasureState;  // Not used
         } else {
             route = m_pMouseRoute;
-            state = parent_frame->nRoute_State;
+//            state = parent_frame->nRoute_State;  // Not used
         }
         
         if(!route)
@@ -9806,7 +9827,7 @@ void ChartCanvas::DrawAllRoutesInBBox( ocpnDC& dc, LLBBox& BltBBox, const wxRegi
                     test_box2.Translate( xlate );
                     if( !BltBBox.IntersectOut( test_box2 ) ) // Route is not wholly outside window
                     {
-                        b_drawn = true;
+//                        b_drawn = true;  // Not used
                         if( ( pRouteDraw != active_route ) && ( pRouteDraw != active_track ) ) pRouteDraw->Draw(
                                 dc, GetVP() );
                     }
@@ -9816,7 +9837,7 @@ void ChartCanvas::DrawAllRoutesInBBox( ocpnDC& dc, LLBBox& BltBBox, const wxRegi
                     test_box3.Translate( xlate );
                     if( !BltBBox.IntersectOut( test_box3 ) ) // Route is not wholly outside window
                     {
-                        b_drawn = true;
+//                        b_drawn = true;  // Not used
                         if( ( pRouteDraw != active_route ) && ( pRouteDraw != active_track ) ) pRouteDraw->Draw(
                                 dc, GetVP() );
                     }
@@ -10250,16 +10271,11 @@ void ChartCanvas::DrawAllCurrentsInBBox( ocpnDC& dc, LLBBox& BBox )
     double true_scale_display = floor( VPoint.chart_scale / 100. ) * 100.;
     bDrawCurrentValues =  true_scale_display < g_Show_Target_Name_Scale;
 
-    wxPen *pblack_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFD" ) ), 1,
-                        wxSOLID );
-    wxPen *porange_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFO" ) ), 1,
-                         wxSOLID );
-    wxBrush *porange_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFO" ) ),
-                             wxSOLID );
-    wxBrush *pgray_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UIBDR" ) ),
-                           wxSOLID );
-    wxBrush *pblack_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFD" ) ),
-                            wxSOLID );
+    wxPen *pblack_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFD" ) ), 1, wxSOLID );
+    wxPen *porange_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFO" ) ), 1, wxSOLID );
+    wxBrush *porange_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFO" ) ), wxSOLID );
+//    wxBrush *pgray_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UIBDR" ) ), wxSOLID );  // Not used
+    wxBrush *pblack_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFD" ) ), wxSOLID );
 
     double skew_angle = GetVPRotation();
 

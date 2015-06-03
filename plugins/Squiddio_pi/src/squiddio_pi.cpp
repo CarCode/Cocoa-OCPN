@@ -144,7 +144,7 @@ int squiddio_pi::Init(void)
     layerdir = *GetpPrivateApplicationDataLocation();
     layerdir += wxFileName::GetPathSeparator();
 #ifdef __WXOSX__
-    layerdir += _T("opencpn/plugins/squiddio");
+    layerdir += _T("plugins/squiddio");
 #else
     layerdir += _T("squiddio");
 #endif

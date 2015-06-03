@@ -19,9 +19,10 @@
 #include "../../../include/tinyxml.h"
 
 #include <wx/tokenzr.h>
-#include "wx/stdpaths.h"
+#include <wx/stdpaths.h>
 #include <wx/dir.h>
 #include <wx/arrimpl.cpp>
+#include <wx/generic/gridctrl.h>
 
 #include "../../../include/wx/jsonval.h"
 #include "../../../include/wx/jsonwriter.h"
@@ -205,6 +206,87 @@ void MainDialog::OnGridLabelLClickMaterial( wxGridEvent& event )
 	static bool ascending = true;
 	sortGrid(this->m_gridMaterial, col,ascending);
 	ascending = !ascending;
+}
+
+void MainDialog::OnGridSelectCellMaterial( wxGridEvent& event )
+{
+    if(!this->IsShown()) return;
+    if(event.GetRow() < 0 || selGridRow < 0) return;
+    
+    if(selGridRow != event.GetRow())
+        setEqualRowHeight(m_gridMaterial, selGridRow);
+    
+    selGridCol = event.GetCol();
+    selGridRow = event.GetRow();
+    //	previousColumn = event.GetCol();
+    
+    if(selGridCol == MainDialog::REMARKS && m_gridMaterial->GetRowHeight(selGridRow) < 120)
+    {
+#ifdef __WXOSX__
+        m_gridMaterial->SetRowSize(selGridRow,120);
+#else
+        m_gridMaterial->SetRowHeight(selGridRow,120);
+#endif
+        m_gridMaterial->SetCellEditor(selGridRow,selGridCol,new wxGridCellAutoWrapStringEditor);
+    }
+    else if(m_gridMaterial->GetRowHeight(selGridRow) == 120 && selGridCol != MainDialog::REMARKS)
+        setEqualRowHeight(m_gridMaterial, selGridRow);
+    
+    m_gridMaterial->SetCellAlignment( selGridRow, selGridCol, wxALIGN_LEFT, wxALIGN_TOP );
+    m_gridMaterial->Refresh();
+    m_gridMaterial->MakeCellVisible(selGridRow,selGridCol);
+    event.Skip();
+}
+
+void MainDialog::OnGridSelectCellFood( wxGridEvent& event )
+{
+    if(!this->IsShown()) return;
+    if(event.GetRow() < 0 || selGridRow < 0) return;
+    
+    if(selGridRow != event.GetRow())
+        setEqualRowHeight(m_gridFood, selGridRow);
+    
+    selGridCol = event.GetCol();
+    selGridRow = event.GetRow();
+    //	previousColumn = event.GetCol();
+    
+    if(selGridCol == MainDialog::REMARKS && m_gridFood->GetRowHeight(selGridRow) < 120)
+    {
+#ifdef __WXOSX__
+        m_gridFood->SetRowSize(selGridRow,120);
+#else
+        m_gridFood->SetRowHeight(selGridRow,120);
+#endif
+        m_gridFood->SetCellEditor(selGridRow,selGridCol,new wxGridCellAutoWrapStringEditor);
+    }
+    else if(m_gridFood->GetRowHeight(selGridRow) == 120 && selGridCol != MainDialog::REMARKS)
+        setEqualRowHeight(m_gridFood, selGridRow);
+    
+    m_gridFood->SetCellAlignment( selGridRow, selGridCol, wxALIGN_LEFT, wxALIGN_TOP );
+    m_gridFood->Refresh();
+    m_gridFood->MakeCellVisible(selGridRow,selGridCol);
+    event.Skip();
+}
+
+void MainDialog::setEqualRowHeight(wxGrid* grid, int row)
+{
+    if(row < 0) return;
+    
+    int max = 0, height;
+    
+    int count = grid->GetNumberRows();
+    if(count <= 0) return;
+    
+    grid->AutoSizeRow(row,false);	
+    height = grid->GetRowHeight(row);
+    
+    if( height > max)
+        max = height;
+#ifdef __WXOSX__
+    grid->SetRowSize(row,max);
+#else
+    grid->SetRowHeight(row,max);
+#endif
 }
 
 void MainDialog::sortGrid(wxGrid* grid, int col, bool ascending)

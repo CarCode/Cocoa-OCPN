@@ -95,7 +95,7 @@ static wxString TToString( const wxDateTime date_time, const int time_zone )
     t.MakeFromTimezone( wxDateTime::UTC );
     if( t.IsDST() ) t.Subtract( wxTimeSpan( 1, 0, 0, 0 ) );
     switch( time_zone ) {
-        case 0: return t.Format( _T(" %a %d-%b-%Y  %H:%M "), wxDateTime::Local ) + _T("LOC");//:%S
+        case 0: return t.Format( _T(" %a %d-%b-%Y  %H:%M "), wxDateTime::Local ) + _T("Ort");//:%S
         case 1:
         default: return t.Format( _T(" %a %d-%b-%Y %H:%M  "), wxDateTime::UTC ) + _T("UTC");
     }

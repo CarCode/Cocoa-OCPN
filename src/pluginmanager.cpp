@@ -323,7 +323,7 @@ bool PlugInManager::LoadAllPlugIns(const wxString &plugin_dir, bool load_enabled
         if(!b_compat)
         {
             wxLogMessage(wxString::Format(_("    Incompatible PlugIn detected: %s"), file_name.c_str()));
-            wxMessageBox(wxString::Format(_("The plugin %s is not compatible with this version of OpenCPN, please get an updated version."), plugin_file.c_str()));
+            OCPNMessageBox( NULL, wxString::Format(_("The plugin %s is not compatible with this version of OpenCPN, please get an updated version."), plugin_file.c_str()), wxString(_("OpenCPN Info")), wxICON_INFORMATION | wxOK, 10 );
         }
         
         PlugInContainer *pic = NULL;
@@ -481,8 +481,10 @@ bool PlugInManager::UpDateChartDataTypes(void)
     {
         PlugInContainer *pic = plugin_array.Item(i);
 
-        if((pic->m_cap_flag & INSTALLS_PLUGIN_CHART) || (pic->m_cap_flag & INSTALLS_PLUGIN_CHART_GL))
-            bret = true;
+        if(pic->m_bInitState) {
+            if((pic->m_cap_flag & INSTALLS_PLUGIN_CHART) || (pic->m_cap_flag & INSTALLS_PLUGIN_CHART_GL))
+                bret = true;
+        }
     }
 
     if(bret)
@@ -4602,4 +4604,20 @@ wxBitmap GetIcon_PlugIn(const wxString & name)
 {
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
     return style->GetIcon( name );
+}
+
+void AddChartDirectory( wxString &path )
+{
+    if( g_options )
+    {
+        g_options->AddChartDir( path );
+    }
+}
+
+void ForceChartDBUpdate()
+{
+    if( g_options )
+    {
+        g_options->pScanCheckBox->SetValue(true);
+    }
 }

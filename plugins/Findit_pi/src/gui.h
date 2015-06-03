@@ -88,7 +88,8 @@ class FindItDialog : public wxDialog
 		virtual void onEditorShownUnits( wxGridEvent& event ) { event.Skip(); }
 		virtual void OnCancelClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnOKClick( wxCommandEvent& event ) { event.Skip(); }
-		
+        virtual void OnGridSelectCellMaterial( wxGridEvent& event ) { event.Skip(); }
+        virtual void OnGridSelectCellFood( wxGridEvent& event ) { event.Skip(); }
 	
 	public:
 		wxButton* m_buttonBuyItMaterial;

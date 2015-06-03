@@ -782,8 +782,6 @@ wxString newPrivateFileName(wxString home_locn, const char *name, const char *wi
 #elif defined __WXOSX__
     filePathAndName = g_Platform->GetPrivateDataDir();
     appendOSDirSlash(&filePathAndName);
-    filePathAndName.Append(_T("opencpn"));
-    appendOSDirSlash(&filePathAndName);
     filePathAndName.Append( fname );
 #else
     filePathAndName = g_Platform->GetPrivateDataDir();
@@ -1002,11 +1000,7 @@ void LoadS57()
     if( g_SENCPrefix.IsEmpty() ) {
         g_SENCPrefix = g_Platform->GetPrivateDataDir();
         appendOSDirSlash(&g_SENCPrefix);
-#ifdef __WXOSX__
-        g_SENCPrefix.Append( _T("opencpn/SENC") );
-#else
         g_SENCPrefix.Append( _T("SENC") );
-#endif
     }
 
     if( g_bportable ) {
@@ -1535,6 +1529,9 @@ bool MyApp::OnInit()
 #else
     g_bdisable_opengl = true;;
 #endif
+
+    if(g_bdisable_opengl)
+        g_bopengl = false;
 
     // Determine if a transparent toolbar is possible under linux with opengl
 #ifdef OCPN_HAVE_X11
@@ -2317,13 +2314,15 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
 
     m_pMenuBar = NULL;
     g_toolbar = NULL;
+    g_options = NULL;
     m_toolbar_scale_tools_shown = false;
     piano_ctx_menu = NULL;
 
     //      Redirect the initialization timer to this frame
     InitTimer.SetOwner( this, INIT_TIMER );
     m_iInitCount = 0;
-    
+    m_initializing = false;
+
     //      Redirect the global heartbeat timer to this frame
     FrameTimer1.SetOwner( this, FRAME_TIMER_1 );
 
@@ -4035,6 +4034,7 @@ void MyFrame::DoSettings()
     //  The chart display options may have changed, especially on S57 ENC,
     //  So, flush the cache and redraw
     cc1->ReloadVP();
+
 }
 
 
@@ -4867,9 +4867,12 @@ int MyFrame::DoOptionsDialog()
 {
     g_boptionsactive = true;
 
-    ::wxBeginBusyCursor();
+    g_Platform->ShowBusySpinner();
+
     g_options = new options( this, -1, _("Options") );
-    ::wxEndBusyCursor();
+
+    g_Platform->HideBusySpinner();
+
 
 //    Set initial Chart Dir
     g_options->SetInitChartDir( *pInit_Chart_Dir );
@@ -4903,6 +4906,13 @@ int MyFrame::DoOptionsDialog()
 
 #if defined(__WXOSX__) || defined(__WXQT__)
     if(stats) stats->Hide();
+
+    bool b_restoreAIS = false;
+    if( g_pAISTargetList  && g_pAISTargetList->IsShown() ){
+        b_restoreAIS = true;
+        g_pAISTargetList->Shutdown();
+        g_pAISTargetList = NULL;
+    }
 #endif
 
     g_options->SetInitialPage(options_lastPage );
@@ -4980,6 +4990,11 @@ int MyFrame::DoOptionsDialog()
 #if defined(__WXOSX__) || defined(__WXQT__)
     if( g_FloatingCompassDialog )
         g_FloatingCompassDialog->Raise();
+
+    if( b_restoreAIS ){
+        g_pAISTargetList = new AISTargetListDialog( this, g_pauimgr, g_pAIS );
+        g_pAISTargetList->UpdateAISTargetList();
+    }
 #endif
 
 
@@ -5643,11 +5658,7 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
         // Import Layer-wise any .gpx files from /Layers directory
         wxString layerdir = g_Platform->GetPrivateDataDir();
         appendOSDirSlash( &layerdir );
-#ifdef __WXOSX__
-        layerdir.Append( _T("/opencpn/layers") );
-#else
         layerdir.Append( _T("layers") );
-#endif
         if( wxDir::Exists( layerdir ) ) {
             wxString laymsg;
             laymsg.Printf( wxT("Getting .gpx layer files from: %s"), layerdir.c_str() );
@@ -5703,6 +5714,9 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
         break;
 
     default:
+        if (m_initializing)
+            break;
+        m_initializing = true;
         g_pi_manager->LoadAllPlugIns( g_Platform->GetPluginDir(), true, false );
 
         RequestNewToolbar();
@@ -6600,6 +6614,12 @@ void MyFrame::HandlePianoClick( int selected_index, int selected_dbIndex )
 {
     if( !pCurrentStack ) return;
     if( s_ProgDialog ) return;
+
+    // stop movement or on slow computer we may get something like :
+    // zoom out with the wheel (timer is set)
+    // quickly click and display a chart, which may zoom in
+    // but the delayed timer fires first and it zooms out again!
+    cc1->StopMovement();
 
     if( !cc1->GetQuiltMode() ) {
         if( m_bpersistent_quilt/* && g_bQuiltEnable*/ ) {
@@ -9890,6 +9910,7 @@ static const char *usercolors[] = { "Table:DAY", "GREEN1;120;255;120;", "GREEN2;
         "CHBLK;   7;   7;   7;",
         "SNDG1; 125; 137; 140;",
         "SNDG2;   7;   7;   7;",
+        "SCLBR; 235; 125;  54;",
         "UIBDR; 125; 137; 140;",
         "UINFB;  58; 120; 240;",
         "UINFD;   7;   7;   7;",
@@ -9920,10 +9941,11 @@ static const char *usercolors[] = { "Table:DAY", "GREEN1;120;255;120;", "GREEN2;
         "UDKRD;  80;  0;  0;",
         "UARTE;  64; 64; 64;",              // Active Route, Grey on Dusk/Night
 
-        "NODTA;  41;  46;  46;"
+        "NODTA;  41;  46;  46;",
         "CHBLK;  54;  60;  61;",
         "SNDG1;  41;  46;  46;",
         "SNDG2;  71;  78;  79;",
+        "SCLBR;  75;  38;  19;",
         "UIBDR;  54;  60;  61;",
         "UINFB;  19;  40;  80;",
         "UINFD;  71;  78;  79;",
@@ -9954,15 +9976,16 @@ static const char *usercolors[] = { "Table:DAY", "GREEN1;120;255;120;", "GREEN2;
         "UDKRD;  50;  0;  0;",
         "UARTE;  64; 64; 64;",              // Active Route, Grey on Dusk/Night
 
-        "NODTA;   7;   7;   7;"
-        "CHBLK; 163; 180; 183;",
-        "SNDG1; 125; 137; 140;",
-        "SNDG2; 212; 234; 238;",
-        "UIBDR; 163; 180; 183;",
+        "NODTA;   7;   7;   7;",
+        "CHBLK;  31;  34;  35;",
+        "SNDG1;  31;  34;  35;",
+        "SNDG2;  43;  48;  48;",
+        "SCLBR;  52;  28;  12;",
+        "UIBDR;  31;  34;  35;",
         "UINFB;  21;  29;  69;",
-        "UINFD; 212; 234; 238;",
-        "UINFO; 221; 118;  51;",
-        "PLRTE; 220;  64;  37;",
+        "UINFD;  43;  48;  58;",
+        "UINFO;  52;  28;  12;",
+        "PLRTE;  66;  19;  11;",
         "CHMGD; 52; 18; 52;",
         "UIBCK; 7; 7; 7;",
 

@@ -101,7 +101,7 @@ wxSQLite3Database* objsearch_pi::initDB(void)
 {
     bool have_to_create = false;
 #ifdef __WXOSX__
-    wxString sDBName = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator()+ wxT("opencpn/plugins/objsearch/objsearch_pi.db");
+    wxString sDBName = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator()+ wxT("plugins/objsearch/objsearch_pi.db");
 #else
     wxString sDBName = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator()+ wxT("objsearch_pi.db");
 #endif

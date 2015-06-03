@@ -350,6 +350,7 @@ void ChartDB::PurgeCacheUnusedCharts( double factor)
 
                                 //remove the cache entry
                         pChartCache->Remove(pce);
+                        delete pce;
 
                     }
                     
@@ -991,7 +992,7 @@ CacheEntry *ChartDB::FindOldestDeleteCandidate( bool blog)
                 CacheEntry *pce = (CacheEntry *)(pChartCache->Item(i));
                 if((ChartBase *)(pce->pChart) != Current_Ch)
                 {
-                    if(pce->RecentTime < LRUTime)
+                    if(pce->RecentTime < LRUTime && !pce->n_lock)
                     {
                         LRUTime = pce->RecentTime;
                         iOldest = i;
@@ -1027,6 +1028,7 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
       const ChartTableEntry &cte = GetChartTableEntry(dbindex);
       wxString ChartFullPath(cte.GetpFullPath(), wxConvUTF8 );
       ChartTypeEnum chart_type = (ChartTypeEnum)cte.GetChartType();
+      ChartFamilyEnum chart_family = (ChartFamilyEnum)cte.GetChartFamily();
 
       ChartBase *Ch = NULL;
       CacheEntry *pce;
@@ -1124,7 +1126,8 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                                 
                                 //remove the cache entry
                             pChartCache->Remove(pce);
-                            
+                            delete pce;
+
                             GetMemoryStatus(&mem_total, &mem_used);
     
                             if((mem_used < g_memCacheLimit * 8 / 10) || (pChartCache->GetCount() <= 2)) 
@@ -1168,7 +1171,8 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                                     
                                     //remove the cache entry
                                     pChartCache->Remove(pce);
-                                    
+                                    delete pce;
+
                                     if(nCache <= (unsigned int)g_nCacheLimit)
                                         break;
                                     
@@ -1290,6 +1294,8 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                   {
                         ChartPlugInWrapper *cpiw = new ChartPlugInWrapper(chart_class_name);
                         Ch = (ChartBase *)cpiw;
+                        if(chart_family == CHART_FAMILY_VECTOR)
+                            LoadS57();
                   }
             }
 
@@ -1303,8 +1309,8 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                   InitReturn ir;
 
                   //    Vector charts need a PLIB for useful display....
-                  if((Ch->GetChartFamily() != CHART_FAMILY_VECTOR) ||
-                      ((Ch->GetChartFamily() == CHART_FAMILY_VECTOR) && ps52plib) )
+                  if((chart_family != CHART_FAMILY_VECTOR) ||
+                     ((chart_family == CHART_FAMILY_VECTOR) && ps52plib) )
                   {
                         wxString msg(_T("Initializing Chart "));
                         msg.Append(ChartFullPath);
@@ -1420,6 +1426,7 @@ bool ChartDB::DeleteCacheChart(ChartBase *pDeleteCandidate)
 
                         //remove the cache entry
                   pChartCache->Remove(pce);
+                  delete pce;
 
                   if(pthumbwin)
                   {

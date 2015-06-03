@@ -179,10 +179,6 @@ s63_pi::s63_pi(void *ppimgr)
     else{
         g_CommonDataDir = *GetpPrivateApplicationDataLocation();
         g_CommonDataDir += wxFileName::GetPathSeparator();
-#ifdef __WXOSX__
-        g_CommonDataDir += _T("opencpn");
-        g_CommonDataDir += wxFileName::GetPathSeparator();
-#endif
         g_CommonDataDir += _T("s63");
         g_CommonDataDir += wxFileName::GetPathSeparator();
     }

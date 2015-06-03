@@ -1139,11 +1139,7 @@ void WayPointman::ProcessUserIcons( ocpnStyle::Style* style )
     wxString UserIconPath = g_Platform->GetPrivateDataDir();
     wxChar sep = wxFileName::GetPathSeparator();
     if( UserIconPath.Last() != sep ) UserIconPath.Append( sep );
-#ifdef __WXOSX__
-    UserIconPath.Append( _T("opencpn/UserIcons") );
-#else
     UserIconPath.Append( _T("UserIcons") );
-#endif
     if( wxDir::Exists( UserIconPath ) ) {
         wxArrayString FileList;
         

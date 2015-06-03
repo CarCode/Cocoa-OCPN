@@ -80,6 +80,8 @@ extern int              g_uncompressed_tile_size;
 
 class CompressionWorkerPool;
 CompressionWorkerPool   *g_CompressorPool;
+static wxMutex 		s_MutexPool;
+
 
 extern PFNGLGETCOMPRESSEDTEXIMAGEPROC s_glGetCompressedTexImage;
 extern PFNGLCOMPRESSEDTEXIMAGE2DPROC s_glCompressedTexImage2D;
@@ -88,9 +90,6 @@ extern bool GetMemoryStatus( int *mem_total, int *mem_used );
 
 bool bthread_debug;
 bool g_throttle_squish;
-
-#include <wx/arrimpl.cpp> 
-WX_DEFINE_OBJARRAY(ArrayOfCatalogEntries);
 
 class CompressionPoolThread;
 class JobTicket
@@ -175,11 +174,7 @@ wxString CompressedCachePath(wxString path)
         s.Printf(_T("%02X"), sha1_out[i]);
         sha1 += s;
     }
-#ifdef __WXOSX__
-    return g_Platform->GetPrivateDataDir() + separator + _T("opencpn/raster_texture_cache") + separator + sha1;
-#else
     return g_Platform->GetPrivateDataDir() + separator + _T("raster_texture_cache") + separator + sha1;
-#endif
 }
 
 /* reduce pixel values to 5/6/5, because this is the format they are stored
@@ -977,24 +972,24 @@ glTexFactory::glTexFactory(ChartBase *chart, GLuint raster_format)
     m_catalog_offset = sizeof(CompressedCacheHeader);
     wxDateTime ed = chart->GetEditionDate();
     m_chart_date_binary = (uint32_t)ed.GetTicks();
-    
-    
+
+
     m_CompressedCacheFilePath = CompressedCachePath(chart->GetFullPath());
     m_hdrOK = false;
     m_catalogOK = false;
     m_fs = 0;
-    
+
     //  Initialize the TextureDescriptor array
     ChartBaseBSB *pBSBChart = dynamic_cast<ChartBaseBSB*>( chart );
     ChartPlugInWrapper *pPlugInWrapper = dynamic_cast<ChartPlugInWrapper*>( chart );
-    
+
     if( !pPlugInWrapper && !pBSBChart )
         return;
-    
+
     bool b_plugin = false;
     if( pPlugInWrapper )
         b_plugin = true;
-    
+
     if( b_plugin ) {
         m_size_X = pPlugInWrapper->GetSize_X();
         m_size_Y = pPlugInWrapper->GetSize_Y();
@@ -1002,23 +997,33 @@ glTexFactory::glTexFactory(ChartBase *chart, GLuint raster_format)
         m_size_X = pBSBChart->GetSize_X();
         m_size_Y = pBSBChart->GetSize_Y();
     }
-    
+
     m_ChartPath = chart->GetFullPath();
-    
+
     //  Calculate the number of textures needed
     m_tex_dim = g_GLOptions.m_iTextureDimension;
     m_nx_tex = ( m_size_X / m_tex_dim ) + 1;
     m_ny_tex = ( m_size_Y / m_tex_dim ) + 1;
-    
+
     m_stride = m_nx_tex;
     m_ntex = m_nx_tex * m_ny_tex;
     m_td_array = (glTextureDescriptor **)calloc(m_ntex, sizeof(glTextureDescriptor *));
-    
-    if(!g_CompressorPool)
-        g_CompressorPool = new CompressionWorkerPool;
-    
-    m_timer.SetOwner(this, FACTORY_TIMER);
-    m_timer.Start( 500 );
+
+    {
+        // we only want one pool but glTexFactory could be created from
+        // many concurrent threads in rebuildCache.
+        wxMutexLocker lock(s_MutexPool);
+        
+        if(!g_CompressorPool)
+            g_CompressorPool = new CompressionWorkerPool;
+    }
+
+    m_ticks = 0;
+    // only the main thread can start timer
+    if (wxThread::IsMain()) {
+        m_timer.SetOwner(this, FACTORY_TIMER);
+        m_timer.Start( 500 );
+    }
 }
 
 glTexFactory::~glTexFactory()
@@ -1026,13 +1031,9 @@ glTexFactory::~glTexFactory()
     if(m_fs && m_fs->IsOpened()){
         m_fs->Close();
     }
+    delete m_fs;
 
-    while(!m_catalog.IsEmpty()){
-        CatalogEntry **t = m_catalog.Detach(0);
-        delete *t;
-    }
-    
-    m_catalog.Clear();
+    WX_CLEAR_ARRAY (m_catalog);
     
     DeleteAllDescriptors();
  
@@ -1798,7 +1799,7 @@ bool glTexFactory::LoadHeader(void)
 
         if(wxFileName::FileExists(m_CompressedCacheFilePath)) {
             
-            m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::read_write);
+            m_fs = new wxFFile(m_CompressedCacheFilePath, _T("rb+"));
             if(m_fs->IsOpened()){
             
                 CompressedCacheHeader hdr;
@@ -1816,14 +1817,14 @@ bool glTexFactory::LoadHeader(void)
                         m_fs->Close();
                         delete m_fs;
                     
-                        m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::write);
+                        m_fs = new wxFFile(m_CompressedCacheFilePath, _T("wb"));
                         n_catalog_entries = 0;
                         m_catalog_offset = 0;
                         WriteCatalogAndHeader();
                         m_fs->Close();
                         delete m_fs;
                     
-                        m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::read_write);
+                        m_fs = new wxFFile(m_CompressedCacheFilePath, _T("rb+"));
                     
                         m_hdrOK = true;
                     }
@@ -1847,14 +1848,14 @@ bool glTexFactory::LoadHeader(void)
                 delete m_fs;
                 wxRemoveFile(m_CompressedCacheFilePath);
                 
-                m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::write);
+                m_fs = new wxFFile(m_CompressedCacheFilePath, _T("wb"));
                 n_catalog_entries = 0;
                 m_catalog_offset = 0;
                 WriteCatalogAndHeader();
                 m_fs->Close();
                 delete m_fs;
                 
-                m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::read_write);
+                m_fs = new wxFFile(m_CompressedCacheFilePath, _T("rb+"));
                 
                 m_hdrOK = true;
                 ret = true;
@@ -1870,14 +1871,14 @@ bool glTexFactory::LoadHeader(void)
                 fn.Mkdir();
             
             //  Create new file, with empty catalog, and correct header
-            m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::write);
+            m_fs = new wxFFile(m_CompressedCacheFilePath, _T("wb"));
             n_catalog_entries = 0;
             m_catalog_offset = 0;
             WriteCatalogAndHeader();
             m_fs->Close();
             delete m_fs;
-            
-            m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::read_write);
+
+            m_fs = new wxFFile(m_CompressedCacheFilePath, _T("rb+"));
             ret = true;
             
         }
@@ -1984,11 +1985,11 @@ bool glTexFactory::UpdateCache(unsigned char *data, int data_size, glTextureDesc
                 fn.Mkdir();
             
             if(!fn.FileExists()){
-                wxFile new_file(m_CompressedCacheFilePath, wxFile::write);
+                wxFFile new_file(m_CompressedCacheFilePath, _T("wb"));
                 new_file.Close();
             }
             
-            m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::read_write);
+            m_fs = new wxFFile(m_CompressedCacheFilePath, _T("rb+"));
             
             WriteCatalogAndHeader();
         }
@@ -2055,11 +2056,11 @@ bool glTexFactory::UpdateCachePrecomp(unsigned char *data, int data_size, glText
                 fn.Mkdir();
             
             if(!fn.FileExists()){
-                wxFile new_file(m_CompressedCacheFilePath, wxFile::write);
+                wxFFile new_file(m_CompressedCacheFilePath, _T("wb"));
                 new_file.Close();
             }
             
-            m_fs = new wxFile(m_CompressedCacheFilePath, wxFile::read_write);
+            m_fs = new wxFFile(m_CompressedCacheFilePath, _T("rwb"));
             
             WriteCatalogAndHeader();
         }

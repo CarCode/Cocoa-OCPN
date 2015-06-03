@@ -330,7 +330,7 @@ InitReturn ChartGEO::Init( const wxString& name, ChartInitFlag init_flags)
 
       char buffer[BUF_LEN_MAX];
 
-      ifs_hdr = new wxFileInputStream(name);          // open the file as a read-only stream
+      ifs_hdr = new wxFFileInputStream(name);          // open the file as a read-only stream
 
       m_filesize = wxFileName::GetSize( name );
       
@@ -554,7 +554,7 @@ InitReturn ChartGEO::Init( const wxString& name, ChartInitFlag init_flags)
       wxFileName NOS_filename(*pBitmapFilePath);
       if(NOS_filename.FileExists())
       {
-            ifss_bitmap = new wxFileInputStream(*pBitmapFilePath); // open the bitmap file
+            ifss_bitmap = new wxFFileInputStream(*pBitmapFilePath); // open the bitmap file
             ifs_bitmap = new wxBufferedInputStream(*ifss_bitmap);
       }
 //    File as fetched verbatim from the .geo file doesn't exist.
@@ -629,7 +629,7 @@ found_uclc_file:
 
             delete pBitmapFilePath;                   // fix up the member element
             pBitmapFilePath = new wxString(NOS_filename.GetFullPath());
-            ifss_bitmap = new wxFileInputStream(*pBitmapFilePath); // open the bitmap file
+            ifss_bitmap = new wxFFileInputStream(*pBitmapFilePath); // open the bitmap file
             ifs_bitmap = new wxBufferedInputStream(*ifss_bitmap);
 
       }           //else
@@ -823,7 +823,7 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
 
       char buffer[BUF_LEN_MAX];
 
-      ifs_hdr = new wxFileInputStream(name);          // open the Header file as a read-only stream
+      ifs_hdr = new wxFFileInputStream(name);          // open the Header file as a read-only stream
 
       m_filesize = wxFileName::GetSize( name );
       
@@ -836,7 +836,7 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
       m_FullPath = name;
       m_Description = m_FullPath;
 
-      ifss_bitmap = new wxFileInputStream(name); // Open again, as the bitmap
+      ifss_bitmap = new wxFFileInputStream(name); // Open again, as the bitmap
       ifs_bitmap = new wxBufferedInputStream(*ifss_bitmap);
 
       //    Clear georeferencing coefficients
@@ -4027,7 +4027,7 @@ bool ChartBaseBSB::GetChartBits(wxRect& source, unsigned char *pPix, int sub_sam
 //    Read and return count of a line of BSB header file
 //-----------------------------------------------------------------------------------------------
 
-int ChartBaseBSB::ReadBSBHdrLine(wxFileInputStream* ifs, char* buf, int buf_len_max)
+int ChartBaseBSB::ReadBSBHdrLine(wxFFileInputStream* ifs, char* buf, int buf_len_max)
 
 {
       char  read_char;

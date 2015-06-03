@@ -70,6 +70,10 @@
 
 #include <algorithm>          // for std::sort
 
+#ifdef __WXMSW__
+#define strncasecmp(x,y,z) _strnicmp(x,y,z)
+#endif
+
 extern bool GetDoubleAttr(S57Obj *obj, const char *AttrName, double &val);      // found in s52cnsy
 
 void OpenCPN_OGRErrorHandler( CPLErr eErrClass, int nError,
@@ -201,7 +205,17 @@ S57Obj::~S57Obj()
         }
         free( att_array );
 
-        if( pPolyTessGeo ) delete pPolyTessGeo;
+        if( pPolyTessGeo ) {
+#ifdef ocpnUSE_GL
+            bool b_useVBO = g_b_EnableVBO  && !auxParm1;    // VBO allowed?
+            
+            PolyTriGroup *ppg_vbo = pPolyTessGeo->Get_PolyTriGroup_head();
+            if (b_useVBO && ppg_vbo && auxParm0 > 0 && ppg_vbo->single_buffer && s_glDeleteBuffers) {
+                s_glDeleteBuffers(1, (GLuint *)&auxParm0);
+            }
+#endif
+            delete pPolyTessGeo;
+        }
 
         if( pPolyTrapGeo ) delete pPolyTrapGeo;
 
@@ -1033,6 +1047,7 @@ s57chart::s57chart()
     m_next_safe_cnt = 1e6;
     m_LineVBO_name = -1;
     m_line_vertex_buffer = 0;
+    m_this_chart_context =  0;
 }
 
 s57chart::~s57chart()
@@ -1089,7 +1104,7 @@ s57chart::~s57chart()
     if(s_glDeleteBuffers && (m_LineVBO_name > 0))
         s_glDeleteBuffers(1, (GLuint *)&m_LineVBO_name);
 #endif
-    
+    free (m_this_chart_context);
 }
 
 void s57chart::GetValidCanvasRegion( const ViewPort& VPoint, OCPNRegion *pValidRegion )
@@ -2309,6 +2324,7 @@ bool s57chart::DoRenderRegionViewOnDC( wxMemoryDC& dc, const ViewPort& VPoint,
         ClearRenderedTextCache();                       // and reset the text renderer,
                                                         //for the case where depth(height) units change
         ResetPointBBoxes( m_last_vp, VPoint );
+        SetSafetyContour();
     }
 
     if( VPoint.view_scale_ppm != m_last_vp.view_scale_ppm ) {
@@ -4561,27 +4577,28 @@ int s57chart::BuildRAZFromSENCFile( const wxString& FullPath )
                 wxString fe_name = wxString(obj->FeatureName, wxConvUTF8);
                 if (objnam.Len() > 0)
                     g_pi_manager->SendVectorChartObjectInfo( FullPath, fe_name, objnam, obj->m_lat, obj->m_lon, scale, nativescale );
-                
+
 //      Build/Maintain the ATON floating/rigid arrays
                 if( GEO_POINT == obj->Primitive_type ) {
 
 // set floating platform
                     if( ( !strncmp( obj->FeatureName, "LITFLT", 6 ) )
                             || ( !strncmp( obj->FeatureName, "LITVES", 6 ) )
-                            || ( !strncmp( obj->FeatureName, "BOY", 3 ) ) ) {
+                            || ( !strncasecmp( obj->FeatureName, "BOY", 3 ) ) ) {
                         pFloatingATONArray->Add( obj );
                     }
 
 // set rigid platform
-                    if( !strncmp( obj->FeatureName, "BCN", 3 ) ) {
+                    if( !strncasecmp( obj->FeatureName, "BCN", 3 ) ) {
                         pRigidATONArray->Add( obj );
                     }
+
 
                     //    Mark the object as an ATON
                     if( ( !strncmp( obj->FeatureName, "LIT", 3 ) )
                             || ( !strncmp( obj->FeatureName, "LIGHTS", 6 ) )
-                            || ( !strncmp( obj->FeatureName, "BCN", 3 ) )
-                            || ( !strncmp( obj->FeatureName, "BOY", 3 ) ) ) {
+                            || ( !strncasecmp( obj->FeatureName, "BCN", 3 ) )
+                            || ( !strncasecmp( obj->FeatureName, "BOY", 3 ) ) ) {
                         obj->bIsAton = true;
                     }
 

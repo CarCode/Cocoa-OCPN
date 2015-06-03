@@ -49,7 +49,7 @@ FindItDialog::FindItDialog( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_gridMaterial = new wxGrid( m_panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	
 	// Grid
-	m_gridMaterial->CreateGrid( 0, 13 );
+	m_gridMaterial->CreateGrid( 0, 14 );
 	m_gridMaterial->EnableEditing( true );
 	m_gridMaterial->EnableGridLines( true );
 	m_gridMaterial->EnableDragGridSize( false );
@@ -64,10 +64,12 @@ FindItDialog::FindItDialog( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_gridMaterial->SetColSize( 5, 189 );
 	m_gridMaterial->SetColSize( 6, 70 );
 	m_gridMaterial->SetColSize( 7, 70 );
-	m_gridMaterial->SetColSize( 8, 65 );
-	m_gridMaterial->SetColSize( 9, 67 );
-	m_gridMaterial->SetColSize( 10, 60 );
-	m_gridMaterial->SetColSize( 11, 68 );
+    m_gridMaterial->SetColSize( 8, 70 );
+    m_gridMaterial->SetColSize( 9, 70 );
+    m_gridMaterial->SetColSize( 10, 70 );
+    m_gridMaterial->SetColSize( 11, 70 );
+    m_gridMaterial->SetColSize( 12, 70 );
+    m_gridMaterial->SetColSize( 13, 100 );
 	m_gridMaterial->EnableDragColMove( false );
 	m_gridMaterial->EnableDragColSize( true );
 	m_gridMaterial->SetColLabelSize( 30 );
@@ -83,7 +85,8 @@ FindItDialog::FindItDialog( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_gridMaterial->SetColLabelValue( 9, _("Location") );
 	m_gridMaterial->SetColLabelValue( 10, _("Location") );
 	m_gridMaterial->SetColLabelValue( 11, _("Location") );
-	m_gridMaterial->SetColLabelValue( 12, _("Location") );
+    m_gridMaterial->SetColLabelValue( 12, _("Location") );
+    m_gridMaterial->SetColLabelValue( 13, _("Remarks") );
 	m_gridMaterial->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
 	
 	// Rows
@@ -134,7 +137,7 @@ FindItDialog::FindItDialog( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_gridFood = new wxGrid( m_panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	
 	// Grid
-	m_gridFood->CreateGrid( 0, 13 );
+	m_gridFood->CreateGrid( 0, 14 );
 	m_gridFood->EnableEditing( true );
 	m_gridFood->EnableGridLines( true );
 	m_gridFood->EnableDragGridSize( false );
@@ -148,11 +151,13 @@ FindItDialog::FindItDialog( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_gridFood->SetColSize( 4, 48 );
 	m_gridFood->SetColSize( 5, 208 );
 	m_gridFood->SetColSize( 6, 68 );
-	m_gridFood->SetColSize( 7, 63 );
-	m_gridFood->SetColSize( 8, 67 );
-	m_gridFood->SetColSize( 9, 64 );
-	m_gridFood->SetColSize( 10, 64 );
-	m_gridFood->SetColSize( 11, 71 );
+    m_gridFood->SetColSize( 7, 70 );
+    m_gridFood->SetColSize( 8, 70 );
+    m_gridFood->SetColSize( 9, 70 );
+    m_gridFood->SetColSize( 10, 70 );
+    m_gridFood->SetColSize( 11, 70 );
+    m_gridFood->SetColSize( 12, 70 );
+    m_gridFood->SetColSize( 13, 100 );
 	m_gridFood->EnableDragColMove( false );
 	m_gridFood->EnableDragColSize( true );
 	m_gridFood->SetColLabelSize( 30 );
@@ -168,7 +173,8 @@ FindItDialog::FindItDialog( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_gridFood->SetColLabelValue( 9, _("Location") );
 	m_gridFood->SetColLabelValue( 10, _("Location") );
 	m_gridFood->SetColLabelValue( 11, _("Location") );
-	m_gridFood->SetColLabelValue( 12, _("Location") );
+    m_gridFood->SetColLabelValue( 12, _("Location") );
+    m_gridFood->SetColLabelValue( 13, _("Remarks") );
 	m_gridFood->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
 	
 	// Rows
@@ -310,15 +316,17 @@ FindItDialog::FindItDialog( wxWindow* parent, wxWindowID id, const wxString& tit
     m_gridMaterial->Connect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeMaterial ), NULL, this );
     m_gridMaterial->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickMaterial ), NULL, this );
     
-	m_gridMaterial->Connect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickMaterial ), NULL, this );
+    m_gridMaterial->Connect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickMaterial ), NULL, this );
+    m_gridMaterial->Connect( wxEVT_GRID_SELECT_CELL, wxGridEventHandler( FindItDialog::OnGridSelectCellMaterial ), NULL, this );
 	m_buttonaddLineFood->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickAddLineFood ), NULL, this );
 	m_textCtrl11->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindItDialog::OnTextFood ), NULL, this );
 	m_buttonBuyItFood->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickBuyFood ), NULL, this );
 	m_gridFood->Connect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharFood ), NULL, this );
 	m_gridFood->Connect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeFood ), NULL, this );
 	m_gridFood->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickFood ), NULL, this );
-	m_gridFood->Connect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickFood ), NULL, this );
-	m_buttonaddLineLocations->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::onButtonClickAddLineLocations ), NULL, this );
+    m_gridFood->Connect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickFood ), NULL, this );
+    m_gridFood->Connect( wxEVT_GRID_SELECT_CELL, wxGridEventHandler( FindItDialog::OnGridSelectCellFood ), NULL, this );
+    m_buttonaddLineLocations->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::onButtonClickAddLineLocations ), NULL, this );
 	m_gridLocations->Connect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharLocations ), NULL, this );
 	m_gridLocations->Connect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeLocations ), NULL, this );
 	m_gridLocations->Connect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickLocations ), NULL, this );
@@ -345,14 +353,16 @@ FindItDialog::~FindItDialog()
     m_gridMaterial->Disconnect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeMaterial ), NULL, this );
     m_gridMaterial->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickMaterial ), NULL, this );
 
-	m_gridMaterial->Disconnect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickMaterial ), NULL, this );
+    m_gridMaterial->Disconnect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickMaterial ), NULL, this );
+    m_gridMaterial->Disconnect( wxEVT_GRID_SELECT_CELL, wxGridEventHandler( FindItDialog::OnGridSelectCellMaterial ), NULL, this );
 	m_buttonaddLineFood->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickAddLineFood ), NULL, this );
 	m_textCtrl11->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindItDialog::OnTextFood ), NULL, this );
 	m_buttonBuyItFood->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::OnButtonClickBuyFood ), NULL, this );
 	m_gridFood->Disconnect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharFood ), NULL, this );
 	m_gridFood->Disconnect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeFood ), NULL, this );
 	m_gridFood->Disconnect( wxEVT_GRID_CELL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridCellLeftClickFood ), NULL, this );
-	m_gridFood->Disconnect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickFood ), NULL, this );
+    m_gridFood->Disconnect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( FindItDialog::OnGridLabelLClickFood ), NULL, this );
+    m_gridFood->Disconnect( wxEVT_GRID_SELECT_CELL, wxGridEventHandler( FindItDialog::OnGridSelectCellFood ), NULL, this );
 	m_buttonaddLineLocations->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindItDialog::onButtonClickAddLineLocations ), NULL, this );
 	m_gridLocations->Disconnect( wxEVT_CHAR, wxKeyEventHandler( FindItDialog::OnCharLocations ), NULL, this );
 	m_gridLocations->Disconnect( wxEVT_GRID_CELL_CHANGED, wxGridEventHandler( FindItDialog::OnGridCellChangeLocations ), NULL, this );

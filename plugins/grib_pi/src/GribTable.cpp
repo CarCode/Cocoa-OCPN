@@ -500,7 +500,7 @@ wxString GRIBTable::GetTimeRowsStrings( wxDateTime date_time, int time_zone, int
         case 0: 
             switch( type ){
             case 0:
-                return t.Format( _T(" %H:%M  "), wxDateTime::Local ) + _T("LOC");
+                return t.Format( _T(" %H:%M  "), wxDateTime::Local ) + _T("Ort");
             case 1:
                 return t.Format( _T(" %a-%d-%b-%Y  "), wxDateTime::Local);
             }

@@ -780,15 +780,15 @@ void MMSI_Props_Panel::UpdateMMSIList( void )
         long selItemID = -1;
         selItemID = m_pListCtrlMMSI->GetNextItem( selItemID, wxLIST_NEXT_ALL,
                                                         wxLIST_STATE_SELECTED );
-        
+
         int selMMSI = -1;
         if( selItemID != -1 )
             selMMSI = g_MMSI_Props_Array.Item( selItemID )->MMSI;
  
-        
+
         m_pListCtrlMMSI->SetItemCount( g_MMSI_Props_Array.GetCount() );
-        
-                
+
+
         //    Restore selected item
         long item_sel = 0;
         if( ( selItemID != -1 ) && ( selMMSI != -1 ) ) {
@@ -796,20 +796,21 @@ void MMSI_Props_Panel::UpdateMMSIList( void )
                 if( g_MMSI_Props_Array.Item( i )->MMSI == selMMSI ) {
                     item_sel = i;
                     break;
-                    }
                 }
             }
-                
-        m_pListCtrlMMSI->SetItemState( item_sel,
+        }
+
+        if( g_MMSI_Props_Array.GetCount() != 0 )
+            m_pListCtrlMMSI->SetItemState( item_sel,
                     wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
                     wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED );
 
-                
+
 #ifdef __WXMSW__
         m_pListCtrlMMSI->Refresh( false );
 #endif
 }
-        
+
 void MMSI_Props_Panel::SetColorScheme( ColorScheme cs )
 {
     DimeControl( this );
@@ -826,7 +827,7 @@ BEGIN_EVENT_TABLE( options, wxDialog )
     EVT_BUTTON( wxID_CANCEL, options::OnCancelClick )
     EVT_BUTTON( ID_BUTTONFONTCHOOSE, options::OnChooseFont )
     EVT_CLOSE( options::OnClose)
-    
+
 #ifdef __WXGTK__
     EVT_BUTTON( ID_BUTTONFONTCOLOR, options::OnChooseFontColor )
 #endif
@@ -872,7 +873,6 @@ options::options( MyFrame* parent, wxWindowID id, const wxString& caption, const
     CreateControls();
     RecalculateSize();
 
-    Fit();
     Center();
 }
 
@@ -935,17 +935,19 @@ void options::RecalculateSize()
         fitted_size.y = wxMin(fitted_size.y, canvas_size.y);
         
         SetSize( fitted_size );
+
+        Fit();
     }
     else {
         wxSize esize;
         esize.x = GetCharWidth() * 110;
         esize.y = GetCharHeight() * 40;
-        
+
         wxSize dsize = GetParent()->GetClientSize();
         esize.y = wxMin(esize.y, dsize.y - (2 * GetCharHeight()));
         esize.x = wxMin(esize.x, dsize.x - (2 * GetCharHeight()));
         SetClientSize(esize);
-        
+
         wxSize fsize = GetSize();
         wxSize canvas_size = GetParent()->GetSize();
         wxPoint canvas_pos = GetParent()->GetPosition();
@@ -953,7 +955,7 @@ void options::RecalculateSize()
         int yp = (canvas_size.y - fsize.y)/2;
         wxPoint xxp = GetParent()->ClientToScreen(canvas_pos);
         Move(xxp.x + xp, xxp.y + yp);
-        
+
     }
 }
 
@@ -3748,7 +3750,6 @@ void options::OnCharHook( wxKeyEvent& event ) {
 void options::OnButtonaddClick( wxCommandEvent& event )
 {
     wxString selDir;
-    wxFileName dirname;
     wxDirDialog *dirSelector = new wxDirDialog( this, _("Add a directory containing chart files"),
             *pInit_Chart_Dir, wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST );
 
@@ -3762,27 +3763,33 @@ void options::OnButtonaddClick( wxCommandEvent& event )
         goto done;
 
     selDir = dirSelector->GetPath();
-    dirname = wxFileName( selDir );
+
+    AddChartDir( selDir );
+    
+done:
+    
+    delete dirSelector;
+    event.Skip();
+}
+
+void options::AddChartDir( wxString &dir )
+{
+    wxFileName dirname = wxFileName( dir );
 
     pInit_Chart_Dir->Empty();
     if( !g_bportable )
         pInit_Chart_Dir->Append( dirname.GetPath() );
 
     if( g_bportable ) {
-        wxFileName f( selDir );
+        wxFileName f( dir );
         f.MakeRelativeTo( g_Platform->GetHomeDir() );
         pActiveChartsList->Append( f.GetFullPath() );
     } else
-        pActiveChartsList->Append( selDir );
+        pActiveChartsList->Append( dir );
 
     k_charts |= CHANGE_CHARTS;
 
     pScanCheckBox->Disable();
-
-done:
-
-    delete dirSelector;
-    event.Skip();
 }
 
 void options::UpdateDisplayedChartDirList(ArrayOfCDI p)
@@ -6650,7 +6657,7 @@ void OpenGLOptionsDlg::OnButtonClear( wxCommandEvent& event )
 wxString OpenGLOptionsDlg::TextureCacheSize()
 {
     wxString path =  g_Platform->GetPrivateDataDir() + wxFileName::GetPathSeparator() + _T("raster_texture_cache");
-    int total = 0;
+    long long total = 0;
     if(::wxDirExists( path )) {
         wxArrayString files;
         size_t nfiles = wxDir::GetAllFiles(path, &files);
@@ -6658,6 +6665,10 @@ wxString OpenGLOptionsDlg::TextureCacheSize()
             total += wxFile(files[i]).Length();
         }
     }
+    double mb = total/1024.0/1024.0;
+    if (mb < 10000.0)
+        return wxString::Format(_T("%.1f MB"), mb);
+    mb = mb / 1024.0;
+    return wxString::Format(_T("%.1f GB"), mb);
 
-    return wxString::Format(_T("%.1f MB"), total/1024.0/1024.0);
 }
