@@ -310,8 +310,11 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
 	
 	m_staticText123 = new wxStaticText( m_panel15, wxID_ANY, _("Writes this text to the logbook when the event occurs, alter texts as desired"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
 	m_staticText123->Wrap( -1 );
+#ifdef __WXOSX__
+    fgSizer10->Add( m_staticText123, 0, wxALL|wxEXPAND, 5 );
+#else
 	fgSizer10->Add( m_staticText123, 0, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
-	
+#endif
 	wxFlexGridSizer* fgSizer14;
 	fgSizer14 = new wxFlexGridSizer( 6, 3, 0, 0 );
 	fgSizer14->SetFlexibleDirection( wxBOTH );
@@ -1149,9 +1152,11 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
 
     wxBoxSizer* bSizer461;
     bSizer461 = new wxBoxSizer( wxVERTICAL );
-
+#ifdef __WXOSX__
+    bSizer461->Add( 0, 20, 0, wxEXPAND, 5 );
+#else
     bSizer461->Add( 0, 20, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
-
+#endif
     m_buttonToSailsSpace = new wxButton( m_panelSailNames, wxID_ANY, _("Checkbox Space  >>"), wxDefaultPosition, wxDefaultSize, 0 );
     m_buttonToSailsSpace->SetToolTip( _("Usefull for Tablet-PC's") );
 

@@ -537,8 +537,11 @@ void s63_pi::OnSetupOptions()
     sbSizerUP->Add(m_up_text, wxEXPAND);
 
     m_buttonNewUP = new wxButton( m_s63chartPanelKeys, wxID_ANY, _("New Userpermit..."), wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    sbSizerUP->Add( m_buttonNewUP, 0, wxALL, 5 );
+#else
     sbSizerUP->Add( m_buttonNewUP, 0, wxALL | wxALIGN_RIGHT, 5 );
-
+#endif
     chartPanelSizerKeys->AddSpacer( 5 );
     chartPanelSizerKeys->Add( sbSizerUP, 0, wxEXPAND, 5 );
 
@@ -551,8 +554,11 @@ void s63_pi::OnSetupOptions()
     sbSizerIP->Add(m_ip_text, wxEXPAND);
 
     m_buttonNewIP = new wxButton( m_s63chartPanelKeys, wxID_ANY, _("New Installpermit..."), wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    sbSizerIP->Add( m_buttonNewIP, 0, wxALL, 5 );
+#else
     sbSizerIP->Add( m_buttonNewIP, 0, wxALL | wxALIGN_RIGHT, 5 );
-
+#endif
     chartPanelSizerKeys->AddSpacer( 5 );
     chartPanelSizerKeys->Add( sbSizerIP, 0, wxEXPAND, 5 );
 

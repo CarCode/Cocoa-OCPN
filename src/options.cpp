@@ -1952,8 +1952,11 @@ void options::CreatePanel_Advanced( size_t parent, int border_size, int group_it
     itemBoxSizerUI->Add( pCOGUPFilterRow, 0, wxALL | wxEXPAND, group_item_spacing );
 
     pCOGUPUpdateSecs = new wxTextCtrl( m_ChartDisplayPage, ID_OPTEXTCTRL, _T(""), wxDefaultPosition, wxSize( 50, -1 ), wxTE_RIGHT  );
+#ifdef __WXOSX__
+    pCOGUPFilterRow->Add( pCOGUPUpdateSecs, 0, wxALL, group_item_spacing );
+#else
     pCOGUPFilterRow->Add( pCOGUPUpdateSecs, 0, wxALIGN_RIGHT | wxALL, group_item_spacing );
-    
+#endif
     pCOGUPFilterRow->Add( new wxStaticText( m_ChartDisplayPage, wxID_ANY, _("seconds") ), inputFlags );
 
 
@@ -2022,8 +2025,11 @@ void options::CreatePanel_Advanced( size_t parent, int border_size, int group_it
 
     pScreenMM = new wxTextCtrl( m_ChartDisplayPage, ID_OPTEXTCTRL, _T(""), wxDefaultPosition,
                                wxSize( 3 * m_fontHeight, -1 ), wxTE_RIGHT  );
+#ifdef __WXOSX__
+    pDPIRow->Add( pScreenMM, 0, wxALL, group_item_spacing );
+#else
     pDPIRow->Add( pScreenMM, 0, wxALIGN_RIGHT | wxALL, group_item_spacing );
-
+#endif
     pDPIRow->Add( new wxStaticText( m_ChartDisplayPage, wxID_ANY, _("mm") ), inputFlags );
 
     pRBSizeAuto->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED,
@@ -2445,8 +2451,11 @@ void options::CreatePanel_Display( size_t parent, int border_size, int group_ite
     pCBNorthUp = new wxRadioButton( pDisplayPanel, wxID_ANY, _("North Up") );
     rowOrientation->Add( pCBNorthUp, inputFlags );
     pCBCourseUp = new wxRadioButton( pDisplayPanel, ID_COURSEUPCHECKBOX, _("Course Up") );
+#ifdef __WXOSX__
+    rowOrientation->Add( pCBCourseUp, wxSizerFlags(0).Border(wxLEFT, group_item_spacing*2) );
+#else
     rowOrientation->Add( pCBCourseUp, wxSizerFlags(0).Align(wxALIGN_CENTRE_VERTICAL).Border(wxLEFT, group_item_spacing*2) );
-
+#endif
     pCBLookAhead = new wxCheckBox( pDisplayPanel, ID_CHECK_LOOKAHEAD, _("Look Ahead Mode") );
     boxNavMode->Add( pCBLookAhead, inputFlags );
     
@@ -2895,8 +2904,11 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
     pToolbarAutoHide->Add( pToolbarAutoHideCB, 0, wxALL, group_item_spacing );
     
     pToolbarHideSecs = new wxTextCtrl( itemPanelFont, ID_OPTEXTCTRL, _T(""), wxDefaultPosition, wxSize( 50, -1 ), wxTE_RIGHT  );
+#ifdef __WXOSX__
+    pToolbarAutoHide->Add( pToolbarHideSecs, 0, wxALL, group_item_spacing );
+#else
     pToolbarAutoHide->Add( pToolbarHideSecs, 0, wxALIGN_RIGHT | wxALL, group_item_spacing );
-    
+#endif
     pToolbarAutoHide->Add( new wxStaticText( itemPanelFont, wxID_ANY, _("seconds") ),group_item_spacing );
     
     // Sound options
@@ -2985,9 +2997,13 @@ void options::CreateControls()
             group_item_spacing = 1;
         }
     }
-
+#ifdef __WXOSX__
+    labelFlags = wxSizerFlags(0).Align(wxALIGN_RIGHT).Border(wxALL, group_item_spacing);
+    inputFlags = wxSizerFlags(0).Align(wxALIGN_LEFT).Border(wxALL, group_item_spacing);
+#else
     labelFlags = wxSizerFlags(0).Align(wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL).Border(wxALL, group_item_spacing);
     inputFlags = wxSizerFlags(0).Align(wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL).Border(wxALL, group_item_spacing);
+#endif
     groupLabelFlags = wxSizerFlags(0).Align(wxALIGN_RIGHT | wxALIGN_TOP).Border(wxALL, group_item_spacing);
     groupInputFlags = wxSizerFlags(0).Align(wxALIGN_LEFT | wxALIGN_TOP).Border(wxBOTTOM, group_item_spacing*2).Expand();
 
@@ -3084,22 +3100,34 @@ void options::CreateControls()
 #endif
     
     m_pListbook->SetImageList( m_topImgList );
+#ifdef __WXOSX__
+    itemBoxSizer2->Add( m_pListbook, 1, wxALL | wxEXPAND, border_size );
+#else
     itemBoxSizer2->Add( m_pListbook, 1,
             wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL | wxEXPAND, border_size );
-
+#endif
     wxBoxSizer* buttons = new wxBoxSizer( wxHORIZONTAL );
     itemBoxSizer2->Add( buttons, 0, wxALIGN_RIGHT | wxALL, border_size );
 
     m_OKButton = new wxButton( itemDialog1, xID_OK, _("OK") );
     m_OKButton->SetDefault();
+#ifdef __WXOSX__
+    buttons->Add( m_OKButton, 0, wxALL, border_size );
+#else
     buttons->Add( m_OKButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, border_size );
-
+#endif
     m_CancelButton = new wxButton( itemDialog1, wxID_CANCEL, _("&Cancel") );
+#ifdef __WXOSX__
+    buttons->Add( m_CancelButton, 0, wxALL, border_size );
+#else
     buttons->Add( m_CancelButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, border_size );
-
+#endif
     m_ApplyButton = new wxButton( itemDialog1, ID_APPLY, _("Apply") );
+#ifdef __WXOSX__
+    buttons->Add( m_ApplyButton, 0, wxALL, border_size );
+#else
     buttons->Add( m_ApplyButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, border_size );
-
+#endif
     m_pageDisplay = CreatePanel( _("Display") );
     CreatePanel_Display( m_pageDisplay, border_size, group_item_spacing, m_small_button_size );
     CreatePanel_Units( m_pageDisplay, border_size, group_item_spacing, m_small_button_size );

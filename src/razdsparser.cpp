@@ -423,7 +423,12 @@ int RazdsParser::ParseSYMB( FILE *fp, RuleHash *pHash )
         MOD_REC ( SBTM ) {
             bitmap_width = symb->pos.symb.bnbox_w.SYHL;
             if( bitmap_width > 200 ) wxLogMessage( _T ( "ParseSymb....bitmap too wide." ) );
+#ifdef __WXOSX__  //  bitmap_width > pbm_line ???
+            // buffer overflow attack possible so changed to strlcpy()
+            strlcpy( pbm_line, pBuf + 9, bitmap_width );
+#else
             strncpy( pbm_line, pBuf + 9, bitmap_width );
+#endif
             pbm_line[bitmap_width] = 0;
             symb->bitmap.SBTM->Append( wxString( pbm_line, wxConvUTF8 ) );
         }

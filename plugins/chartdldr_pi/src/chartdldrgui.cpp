@@ -143,8 +143,11 @@ ChartDldrPanel::ChartDldrPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
 	bSizer8->Add( m_bUpdateChartList, 0, wxALL|wxEXPAND, 5 );
 	
 	m_bUpdateAllCharts = new wxButton( this, wxID_ANY, _("Update All"), wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    bSizer8->Add( m_bUpdateAllCharts, 0, wxALL|wxEXPAND, 5 );
+#else
 	bSizer8->Add( m_bUpdateAllCharts, 0, wxALIGN_BOTTOM|wxALL|wxEXPAND, 5 );
-	
+#endif
 	
 	bSizer4->Add( bSizer8, 0, wxEXPAND, 5 );
 	

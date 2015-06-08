@@ -269,8 +269,11 @@ void IACFleetUIDialog::CreateControls()
     m_pitemCurrentDirectoryCtrl->AppendText( m_currentDir );
 
     wxButton* bChooseDir = new wxBitmapButton( this, ID_CHOOSEIACFLEETDIR, *m_pfolder_bitmap );
+#ifdef __WXOSX__
+    itemStaticBoxSizer11Static->Add( bChooseDir, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+#else
     itemStaticBoxSizer11Static->Add( bChooseDir, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
-    
+#endif
     topSizer->Add( itemStaticBoxSizer11Static, 0, wxALL|wxEXPAND, 5 );
 
     // panels

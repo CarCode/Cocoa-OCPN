@@ -165,17 +165,26 @@ CPLFileFinder CPLPopFileFinder()
 
     CPLFinderInit();
 
+#ifdef __WXOSX__
+    if( nFileFinders == 0)
+    {
+        CPLFree( papfnFinders );
+        papfnFinders = NULL;
+        return NULL;
+    }
+    pfnReturn = papfnFinders[--nFileFinders];
+#else
     if( nFileFinders == 0 )
         return NULL;
-
+    
     pfnReturn = papfnFinders[--nFileFinders];
-
+    
     if( nFileFinders == 0)
     {
         CPLFree( papfnFinders );
         papfnFinders = NULL;
     }
-
+#endif
     return pfnReturn;
 }
 

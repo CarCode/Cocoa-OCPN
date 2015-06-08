@@ -1,11 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////
-
 // C++ code generated with wxFormBuilder (version Sep  8 2010)
-
 // http://www.wxformbuilder.org/
-
 //
-
 ///////////////////////////////////////////////////////////////////////////
 #include "LogbookDialog.h"
 #include "Logbook.h"
@@ -153,11 +149,17 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	bSizer49 = new wxBoxSizer( wxVERTICAL );
 	
 	m_toggleBtnEngine1 = new wxToggleButton( m_panelEngine, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    bSizer49->Add( m_toggleBtnEngine1, 0, wxRIGHT|wxLEFT, 0 );
+#else
 	bSizer49->Add( m_toggleBtnEngine1, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 0 );
-	
+#endif
 	m_toggleBtnEngine2 = new wxToggleButton( m_panelEngine, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    bSizer49->Add( m_toggleBtnEngine2, 0, wxRIGHT|wxLEFT, 0 );
+#else
 	bSizer49->Add( m_toggleBtnEngine2, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 0 );
-		
+#endif
 	bSizer45->Add( bSizer49, 0, wxRIGHT|wxLEFT, 5 );
 	
 	fgSizerSails = new wxFlexGridSizer( 3, 5, 0, 0 );
@@ -273,7 +275,9 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	// Label Appearance
 	
 	// Cell Defaults
+#ifndef __WXOSX__
 	m_gridGlobal->SetDefaultCellAlignment( wxALIGN_RIGHT, wxALIGN_TOP );
+#endif
 	m_menu1 = new wxMenu();
 	wxMenuItem* m_menuItem1;
 	m_menuItem1 = new wxMenuItem( m_menu1, 500, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
@@ -370,7 +374,9 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	// Label Appearance
 	
 	// Cell Defaults
+#ifndef __WXOSX__
 	m_gridWeather->SetDefaultCellAlignment( wxALIGN_RIGHT, wxALIGN_TOP );
+#endif
 	bSizer11->Add( m_gridWeather, 1, wxEXPAND|wxALL, 5 );
 	
 	m_panel7->SetSizer( bSizer11 );
@@ -452,7 +458,9 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	// Label Appearance
 	
 	// Cell Defaults
+#ifndef __WXOSX__
 	m_gridMotorSails->SetDefaultCellAlignment( wxALIGN_RIGHT, wxALIGN_TOP );
+#endif
 	bSizer111->Add( m_gridMotorSails, 1, wxEXPAND|wxALL, 5 );
 	
 	m_panel71->SetSizer( bSizer111 );
@@ -580,9 +588,11 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticTextStatusText->Wrap( -1 );
 	fgSizer53->Add( m_staticTextStatusText, 0, wxRIGHT|wxLEFT, 5 );
 	m_staticTextStatusText->SetFont( wxFont( 7, 74, 90, 90, false, wxT("Tahoma") ) );	
-	
+#ifdef __WXOSX__
+    bSizer39->Add( fgSizer53, 1, wxALIGN_CENTER_VERTICAL, 0 );
+#else
 	bSizer39->Add( fgSizer53, 1, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0 );
-
+#endif
 	Statusbar->SetSizer( bSizer39 );
 	Statusbar->Layout();
 	bSizer39->Fit( Statusbar );
@@ -1233,28 +1243,28 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	bname = new wxStaticText( m_panel72, wxID_ANY, _("Name"), wxDefaultPosition, wxDefaultSize, 0 );
 	bname->Wrap( -1 );
 	fgSizer38->Add( bname, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	boatName = new wxTextCtrl( m_panel72, 1, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
 	fgSizer38->Add( boatName, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticText114 = new wxStaticText( m_panel72, wxID_ANY, _("Homeport"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText114->Wrap( -1 );
 	fgSizer38->Add( m_staticText114, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	homeport = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer38->Add( homeport, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticText115 = new wxStaticText( m_panel72, wxID_ANY, _("Callsign"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText115->Wrap( -1 );
 	fgSizer38->Add( m_staticText115, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	callsign = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer38->Add( callsign, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticText116 = new wxStaticText( m_panel72, wxID_ANY, _("HIN-Nr."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText116->Wrap( -1 );
 	fgSizer38->Add( m_staticText116, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	hin = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	hin->SetToolTip( _("Hull Identification No.") );
 	fgSizer38->Add( hin, 0, wxALL, 5 );
@@ -1262,10 +1272,10 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticText117 = new wxStaticText( m_panel72, wxID_ANY, _("Sail-Nr."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText117->Wrap( -1 );
 	fgSizer38->Add( m_staticText117, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	sailno = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer38->Add( sailno, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	
 	fgSizer38->Add( 0, 0, 1, wxEXPAND, 5 );
 	
@@ -1275,21 +1285,21 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticText119 = new wxStaticText( m_panel72, wxID_ANY, _("Insurance"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText119->Wrap( -1 );
 	fgSizer38->Add( m_staticText119, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	insurance = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
 	fgSizer38->Add( insurance, 0, wxALL, 5 );
 	
 	m_staticText118 = new wxStaticText( m_panel72, wxID_ANY, _("Registration"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText118->Wrap( -1 );
 	fgSizer38->Add( m_staticText118, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	registration = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer38->Add( registration, 0, wxALL, 5 );
 	
 	m_staticText120 = new wxStaticText( m_panel72, wxID_ANY, _("Policy"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText120->Wrap( -1 );
 	fgSizer38->Add( m_staticText120, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	policy = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer38->Add( policy, 0, wxALL, 5 );
 	
@@ -1381,49 +1391,49 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticText128 = new wxStaticText( m_panel72, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText128->Wrap( -1 );
 	fgSizer33->Add( m_staticText128, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	boatType = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer33->Add( boatType, 0, wxALL, 5 );
 	
 	m_staticText125 = new wxStaticText( m_panel72, wxID_ANY, _("Builder"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText125->Wrap( -1 );
 	fgSizer33->Add( m_staticText125, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	builder = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer33->Add( builder, 0, wxALL, 5 );
 	
 	m_staticText124 = new wxStaticText( m_panel72, wxID_ANY, _("Hull"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText124->Wrap( -1 );
 	fgSizer33->Add( m_staticText124, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	hull = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer33->Add( hull, 0, wxALL, 5 );
 	
 	m_staticText126 = new wxStaticText( m_panel72, wxID_ANY, _("Date Launched"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText126->Wrap( -1 );
 	fgSizer33->Add( m_staticText126, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	dateLaunched = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer33->Add( dateLaunched, 0, wxALL, 5 );
 	
 	m_staticText127 = new wxStaticText( m_panel72, wxID_ANY, _("Yard-Nr."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText127->Wrap( -1 );
 	fgSizer33->Add( m_staticText127, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	yardNr = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer33->Add( yardNr, 0, wxALL, 5 );
 	
 	m_staticText123 = new wxStaticText( m_panel72, wxID_ANY, _("Designer"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText123->Wrap( -1 );
 	fgSizer33->Add( m_staticText123, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	designer = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer33->Add( designer, 0, wxALL, 5 );
 	
 	m_staticText129 = new wxStaticText( m_panel72, wxID_ANY, _("Construction"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText129->Wrap( -1 );
 	fgSizer33->Add( m_staticText129, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	construction = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer33->Add( construction, 0, wxALL, 5 );
 	
@@ -1448,7 +1458,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticText106 = new wxStaticText( m_panel72, wxID_ANY, _("LOA"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText106->Wrap( -1 );
 	fgSizer33->Add( m_staticText106, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	LOA = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	LOA->SetToolTip( _("Length over all") );
 	
@@ -1466,7 +1476,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticText108 = new wxStaticText( m_panel72, wxID_ANY, _("LWL"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText108->Wrap( -1 );
 	fgSizer33->Add( m_staticText108, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	LWL = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	LWL->SetToolTip( _("Length in Waterline") );
 	
@@ -1475,7 +1485,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticText109 = new wxStaticText( m_panel72, wxID_ANY, _("Beam"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText109->Wrap( -1 );
 	fgSizer33->Add( m_staticText109, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	beam = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	beam->SetToolTip( _("Greatest Width of Hull") );
 	
@@ -1484,7 +1494,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticText110 = new wxStaticText( m_panel72, wxID_ANY, _("Draft"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText110->Wrap( -1 );
 	fgSizer33->Add( m_staticText110, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	draft = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	fgSizer33->Add( draft, 0, wxALL, 5 );
 	
@@ -1516,7 +1526,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticText122 = new wxStaticText( m_panel72, wxID_ANY, _("Displacement"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText122->Wrap( -1 );
 	fgSizer33->Add( m_staticText122, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	displacement = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	fgSizer33->Add( displacement, 0, wxALL, 5 );
 	
@@ -1708,9 +1718,11 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_menuItem13 = new wxMenuItem( m_menu7, wxID_ANY, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu7->Append( m_menuItem13 );
 	
-	
+#ifdef __WXOSX__
+    bSizer12->Add( m_gridMaintanence, 1, wxALL, 5 );
+#else
 	bSizer12->Add( m_gridMaintanence, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-	
+#endif
 	fgSizer151->Add( bSizer12, 1, wxEXPAND, 5 );
 	
 	m_panel14->SetSizer( fgSizer151 );
@@ -1724,7 +1736,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	fgSizer1513->AddGrowableRow( 2 );  // Reparaturen???
 	fgSizer1513->SetFlexibleDirection( wxBOTH );
 	fgSizer1513->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	wxBoxSizer* bSizer10113;
 	bSizer10113 = new wxBoxSizer( wxHORIZONTAL );
 	
@@ -1825,9 +1837,11 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_menuItem131 = new wxMenuItem( m_menu71, wxID_ANY, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu71->Append( m_menuItem131 );
 	
-	
+#ifdef __WXOSX__
+    bSizer122->Add( m_gridMaintanenceRepairs, 1, wxALL, 5 );
+#else
 	bSizer122->Add( m_gridMaintanenceRepairs, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-	
+#endif
 	fgSizer1513->Add( bSizer122, 1, wxEXPAND, 5 );
 	
 	m_panel141->SetSizer( fgSizer1513 );
@@ -6594,11 +6608,12 @@ void LogbookDialog::OnMenuSelectionGotoRoute( wxCommandEvent& ev )
 	overview->gotoRoute();
 }
 
+
 bool LogbookDialog::myParseDate(wxString s, wxDateTime &dt)
 {
-	long day;
-	long month;
-	long year;
+	long day = 0;
+	long month = 0;
+	long year = 0;
 	unsigned int i;
 
 	if(s.IsEmpty()) return false;

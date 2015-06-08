@@ -99,7 +99,7 @@ DlgDef::~DlgDef()
 
 CfgDlgDef::CfgDlgDef( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	AddLocaleCatalog( _T("opencpn-calculator_pi") );
+//	AddLocaleCatalog( _T("opencpn-calculator_pi") );
     
     this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
@@ -891,8 +891,11 @@ FunDlgDef::FunDlgDef( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer39 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_button7 = new wxButton( m_panel152, wxID_ANY, _("Calculate"), wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    bSizer39->Add( m_button7, 0, wxALL, 5 );
+#else
 	bSizer39->Add( m_button7, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
-	
+#endif
 	m_button10 = new wxButton( m_panel152, wxID_ANY, _("Close"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer39->Add( m_button10, 0, wxALL, 5 );
 	

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: objsearch_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-09 19:13+0100\n"
-"PO-Revision-Date: 2014-11-09 19:14+0100\n"
+"POT-Creation-Date: 2015-06-08 13:57+0100\n"
+"PO-Revision-Date: 2015-06-08 13:57+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: CarCode <carcode@me.com>\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.8.1\n"
 
 #: ../src/ObjSearchDialog.cpp:38
 msgid "Search"
@@ -25,95 +25,95 @@ msgstr "Suche"
 msgid "Show on Chart"
 msgstr "Zeige auf Karte"
 
-#: ../src/ObjSearchDialog.cpp:53
+#: ../src/ObjSearchDialog.cpp:56
 msgid "Close"
 msgstr "Schließe"
 
-#: ../src/ObjSearchDialog.cpp:56
+#: ../src/ObjSearchDialog.cpp:62
 msgid "Close on show"
 msgstr "Schließe nach Zeigen"
 
-#: ../src/ObjSearchDialog.cpp:63
+#: ../src/ObjSearchDialog.cpp:72
 msgid "Limit range to"
 msgstr "Begrenze Bereich auf"
 
-#: ../src/ObjSearchDialog.cpp:65 ../src/ObjSearchDialog.cpp:70
+#: ../src/ObjSearchDialog.cpp:74 ../src/ObjSearchDialog.cpp:79
 msgid "0 = Unlimited"
 msgstr "0 = Unbegrenzt"
 
-#: ../src/ObjSearchDialog.cpp:74
+#: ../src/ObjSearchDialog.cpp:83
 msgid "NMi"
 msgstr "sm"
 
-#: ../src/ObjSearchDialog.cpp:78
+#: ../src/ObjSearchDialog.cpp:87
 msgid "..."
 msgstr "..."
 
-#: ../src/ObjSearchDialog.cpp:79
+#: ../src/ObjSearchDialog.cpp:88
 msgid "Settings..."
 msgstr "Einstellungen..."
 
-#: ../src/ObjSearchDialog.cpp:125
+#: ../src/ObjSearchDialog.cpp:136
 msgid "Scan charts"
 msgstr "Scanne Karten"
 
-#: ../src/ObjSearchDialog.cpp:136
-msgid "From"
-msgstr "von"
+#: ../src/ObjSearchDialog.cpp:147
+msgid "Start from"
+msgstr "Beginne bei (Grad)"
 
-#: ../src/ObjSearchDialog.cpp:141 ../src/ObjSearchDialog.cpp:167
+#: ../src/ObjSearchDialog.cpp:152 ../src/ObjSearchDialog.cpp:178
 msgid "Latitude"
 msgstr "Breite"
 
-#: ../src/ObjSearchDialog.cpp:148 ../src/ObjSearchDialog.cpp:174
+#: ../src/ObjSearchDialog.cpp:159 ../src/ObjSearchDialog.cpp:185
 msgid "Longitude"
 msgstr "Länge"
 
-#: ../src/ObjSearchDialog.cpp:162
-msgid "To"
-msgstr "bis"
+#: ../src/ObjSearchDialog.cpp:173
+msgid "End to"
+msgstr "bis zu (Grad)"
 
-#: ../src/ObjSearchDialog.cpp:191
+#: ../src/ObjSearchDialog.cpp:202
 msgid "Scales"
 msgstr "Maßstab"
 
-#: ../src/ObjSearchDialog.cpp:193
+#: ../src/ObjSearchDialog.cpp:204
 msgid "1:5000000"
 msgstr "1:5000000"
 
-#: ../src/ObjSearchDialog.cpp:197
+#: ../src/ObjSearchDialog.cpp:208
 msgid "1:1000000"
 msgstr "1:1000000"
 
-#: ../src/ObjSearchDialog.cpp:201
+#: ../src/ObjSearchDialog.cpp:212
 msgid "1:200000"
 msgstr "1:200000"
 
-#: ../src/ObjSearchDialog.cpp:204
+#: ../src/ObjSearchDialog.cpp:215
 msgid "1:20000 (Very time consuming)"
 msgstr "1:20000 (sehr zeitintensiv)"
 
-#: ../src/ObjSearchDialog.cpp:215
+#: ../src/ObjSearchDialog.cpp:227
 msgid "or"
 msgstr "oder"
 
-#: ../src/ObjSearchDialog.cpp:220
+#: ../src/ObjSearchDialog.cpp:232
 msgid "Import data"
 msgstr "Daten-Import"
 
-#: ../src/ObjSearchDialog.cpp:222
+#: ../src/ObjSearchDialog.cpp:234
 msgid "File"
 msgstr "Datei"
 
-#: ../src/ObjSearchDialog.cpp:229
+#: ../src/ObjSearchDialog.cpp:241
 msgid "Browse..."
 msgstr "Durchsuche..."
 
-#: ../src/ObjSearchDialog.cpp:239
+#: ../src/ObjSearchDialog.cpp:251
 msgid "Populate database"
 msgstr "Fülle Objekt Datenbank"
 
-#: ../src/ObjSearchDialog.cpp:244
+#: ../src/ObjSearchDialog.cpp:256
 msgid "Manage Database"
 msgstr "Bearbeite Datenbank"
 
@@ -157,8 +157,8 @@ msgid ""
 "Your search resulted in %i objects found. This is a lot, do you really want "
 "to show all of them?"
 msgstr ""
-"Your search resulted in %i objects found. This is a lot, do you really want "
-"to show all of them?"
+"Suche ergibt %i gefundene Objekte. Das ist viel, sollen wirklich alle "
+"gezeigt werden?"
 
 #: ../src/objsearch_pi.cpp:602
 msgid "Too many objects found"
@@ -857,8 +857,8 @@ msgstr "CSV Dateien (*.csv)|*.csv|Alle Dateien (*.*)|*.*"
 msgid ""
 "Sorry, I'm stupid and can't cross the IDL, please divide your scan in two."
 msgstr ""
-"Entschuldigung, ich bin blöd und kann nicht IDL übersprinen. Bitte Scan "
-"teilen."
+"Entschuldigung, ich bin blöd und kann nicht NullMeridan übersprinen. Bitte "
+"Scan teilen."
 
 #: ../src/objsearch_pi.cpp:1429
 msgid "Import progress..."
@@ -873,7 +873,3 @@ msgstr "Importiere Daten von %s."
 #, c-format
 msgid "The files %s does not exist, nothing to import."
 msgstr "Datei %s gibt es nicht, nichts zum Importieren."
-
-#
-#~ msgid "1:20000"
-#~ msgstr "1:20000"

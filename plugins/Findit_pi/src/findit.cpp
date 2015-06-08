@@ -62,8 +62,10 @@ void MainDialog::OnInit( wxInitDialogEvent& event )
     lastColSelectedMaterial   = lastColSelectedFood   = 0;
 
     myGridStringTable* material = new myGridStringTable(1,this->m_gridMaterial->GetNumberCols());
+    
     for(int i = 0; i < this->m_gridMaterial->GetNumberCols(); i++)
         material->SetColLabelValue(i,this->m_gridMaterial->GetColLabelValue(i));
+    
     this->m_gridMaterial->SetTable(material,true);
 #ifdef __WXOSX__
     this->m_gridMaterial->SetTabBehaviour(wxGrid::Tab_Wrap);
@@ -219,12 +221,13 @@ void MainDialog::OnGridSelectCellMaterial( wxGridEvent& event )
     selGridCol = event.GetCol();
     selGridRow = event.GetRow();
     //	previousColumn = event.GetCol();
-    
+#ifdef __WXOSX__
     if(selGridCol == MainDialog::REMARKS && m_gridMaterial->GetRowHeight(selGridRow) < 120)
     {
-#ifdef __WXOSX__
         m_gridMaterial->SetRowSize(selGridRow,120);
 #else
+    if(selGridCol == MainDialog::REMARKS && m_gridMaterial->GetRowHeight(selGridRow) < 120)
+    {
         m_gridMaterial->SetRowHeight(selGridRow,120);
 #endif
         m_gridMaterial->SetCellEditor(selGridRow,selGridCol,new wxGridCellAutoWrapStringEditor);
@@ -249,12 +252,13 @@ void MainDialog::OnGridSelectCellFood( wxGridEvent& event )
     selGridCol = event.GetCol();
     selGridRow = event.GetRow();
     //	previousColumn = event.GetCol();
-    
+#ifdef __WXOSX__
     if(selGridCol == MainDialog::REMARKS && m_gridFood->GetRowHeight(selGridRow) < 120)
     {
-#ifdef __WXOSX__
         m_gridFood->SetRowSize(selGridRow,120);
 #else
+    if(selGridCol == MainDialog::REMARKS && m_gridFood->GetRowHeight(selGridRow) < 120)
+    {
         m_gridFood->SetRowHeight(selGridRow,120);
 #endif
         m_gridFood->SetCellEditor(selGridRow,selGridCol,new wxGridCellAutoWrapStringEditor);

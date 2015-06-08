@@ -32,10 +32,10 @@
 #endif //precompiled headers
 
 #include <wx/filename.h>
-#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
 
 #include "iacfile.h"
 
+#include <wx/arrimpl.cpp> // this is a magic incantation which must be done!
 WX_DEFINE_OBJARRAY(IACSystems);
 WX_DEFINE_OBJARRAY(IACPressureSystems);
 WX_DEFINE_OBJARRAY(IACFrontalSystems);
@@ -1401,7 +1401,7 @@ bool IACTropicalSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, T
     {
         GetGlobalColor ( _T ( "YELO1" ), &m_isoLineColor );
         m_isoLineWidth = wxMax(FRONT_WIDTH, GL_MIN_LINE_WIDTH);
-        hasDrawn = DrawPositions( dc, vp );
+//        hasDrawn = DrawPositions( dc, vp );  // Not used
     }
     hasDrawn = DrawPositions( dc, vp );
     if( dc )

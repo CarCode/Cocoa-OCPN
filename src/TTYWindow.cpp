@@ -73,8 +73,11 @@ TTYWindow::TTYWindow(wxWindow *parent, int n_lines, WindowDestroyListener * list
     bSizerBottomContainer->Add( sbSizer1, 0, wxALIGN_LEFT | wxALL, 5 );
 
     m_buttonPause = new wxButton( this, wxID_ANY, _("Pause"), wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    bSizerBottomContainer->Add( m_buttonPause, 0, wxALL, 5 );
+#else
     bSizerBottomContainer->Add( m_buttonPause, 0, wxALIGN_RIGHT | wxALL, 5 );
-
+#endif
     m_buttonPause->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TTYWindow::OnPauseClick ), NULL, this );
 
     bpause = false;

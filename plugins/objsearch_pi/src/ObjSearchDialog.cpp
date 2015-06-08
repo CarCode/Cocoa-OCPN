@@ -48,18 +48,27 @@ ObjSearchDialog::ObjSearchDialog( wxWindow* parent, wxWindowID id, const wxStrin
 	bSizerButtons = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_btnShowOnChart = new wxButton( this, wxID_ANY, _("Show on Chart"), wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    bSizerButtons->Add( m_btnShowOnChart, 0, wxALL, 5 );
+#else
     bSizerButtons->Add( m_btnShowOnChart, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+#endif
 	m_btnClose = new wxButton( this, wxID_ANY, _("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    bSizerButtons->Add( m_btnClose, 0, wxALL, 5 );
+#else
     bSizerButtons->Add( m_btnClose, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+#endif
 	m_cAutoClose = new wxCheckBox( this, wxID_ANY, _("Close on show"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_cAutoClose->SetValue(true); 
+	m_cAutoClose->SetValue(true);
+#ifdef __WXOSX__
+    bSizerButtons->Add( m_cAutoClose, 0, wxALL, 5 );
+    bSizerButtons->Add( 0, 0, 1, wxEXPAND, 5 );
+#else
 	bSizerButtons->Add( m_cAutoClose, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	
     bSizerButtons->Add( 0, 0, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
-	
+#endif
 	m_stRange = new wxStaticText( this, wxID_ANY, _("Limit range to"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_stRange->Wrap( -1 );
 	m_stRange->SetToolTip( _("0 = Unlimited") );
@@ -80,9 +89,11 @@ ObjSearchDialog::ObjSearchDialog( wxWindow* parent, wxWindowID id, const wxStrin
     
     bSizerButtons->Add( m_btnSettings, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-
+#ifdef __WXOSX__
+    bMainSizer->Add( bSizerButtons, 0, wxEXPAND, 5 );
+#else
 	bMainSizer->Add( bSizerButtons, 0, wxALIGN_RIGHT|wxEXPAND, 5 );
-	
+#endif
 	
 	this->SetSizer( bMainSizer );
 	this->Layout();
@@ -202,8 +213,9 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	sbSizerScales->Add( m_cb200000, 0, wxALL, 5 );
 	
     m_cb20000 = new wxCheckBox( m_panelPopulate, wxID_ANY, _("1:20000 (Very time consuming)"), wxDefaultPosition, wxDefaultSize, 0 );
+#ifndef __WXOSX__
     m_cb20000->Enable( false );
- 
+#endif
 	sbSizerScales->Add( m_cb20000, 0, wxALL, 5 );
 	
 	

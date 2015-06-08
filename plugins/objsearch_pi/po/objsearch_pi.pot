@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: objsearch_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-09 19:13+0100\n"
+"POT-Creation-Date: 2015-06-08 13:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,95 +25,95 @@ msgstr ""
 msgid "Show on Chart"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:53
+#: ../src/ObjSearchDialog.cpp:56
 msgid "Close"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:56
+#: ../src/ObjSearchDialog.cpp:62
 msgid "Close on show"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:63
+#: ../src/ObjSearchDialog.cpp:72
 msgid "Limit range to"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:65 ../src/ObjSearchDialog.cpp:70
+#: ../src/ObjSearchDialog.cpp:74 ../src/ObjSearchDialog.cpp:79
 msgid "0 = Unlimited"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:74
+#: ../src/ObjSearchDialog.cpp:83
 msgid "NMi"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:78
+#: ../src/ObjSearchDialog.cpp:87
 msgid "..."
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:79
+#: ../src/ObjSearchDialog.cpp:88
 msgid "Settings..."
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:125
+#: ../src/ObjSearchDialog.cpp:136
 msgid "Scan charts"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:136
-msgid "From"
+#: ../src/ObjSearchDialog.cpp:147
+msgid "Start from"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:141 ../src/ObjSearchDialog.cpp:167
+#: ../src/ObjSearchDialog.cpp:152 ../src/ObjSearchDialog.cpp:178
 msgid "Latitude"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:148 ../src/ObjSearchDialog.cpp:174
+#: ../src/ObjSearchDialog.cpp:159 ../src/ObjSearchDialog.cpp:185
 msgid "Longitude"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:162
-msgid "To"
+#: ../src/ObjSearchDialog.cpp:173
+msgid "End to"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:191
+#: ../src/ObjSearchDialog.cpp:202
 msgid "Scales"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:193
+#: ../src/ObjSearchDialog.cpp:204
 msgid "1:5000000"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:197
+#: ../src/ObjSearchDialog.cpp:208
 msgid "1:1000000"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:201
+#: ../src/ObjSearchDialog.cpp:212
 msgid "1:200000"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:204
+#: ../src/ObjSearchDialog.cpp:215
 msgid "1:20000 (Very time consuming)"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:215
+#: ../src/ObjSearchDialog.cpp:227
 msgid "or"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:220
+#: ../src/ObjSearchDialog.cpp:232
 msgid "Import data"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:222
+#: ../src/ObjSearchDialog.cpp:234
 msgid "File"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:229
+#: ../src/ObjSearchDialog.cpp:241
 msgid "Browse..."
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:239
+#: ../src/ObjSearchDialog.cpp:251
 msgid "Populate database"
 msgstr ""
 
-#: ../src/ObjSearchDialog.cpp:244
+#: ../src/ObjSearchDialog.cpp:256
 msgid "Manage Database"
 msgstr ""
 

@@ -62,25 +62,25 @@ extern bool             g_bresponsive;
 #ifdef __WXOSX__
 char AboutText[] =
 {
-    "\n                                         OpenCPN\n\n\
-    (c) 2000-2015 Die OpenCPN Autoren\n"
+    "<br>OpenCPN<br>\
+    (c) 2000-2015 Die OpenCPN Autoren<br><br>   "
 };
 #else
 char AboutText[] =
 {
-  "\n                                         OpenCPN\n\n\
+  "<br>OpenCPN<br>\
                        (c) 2000-2015 The OpenCPN Authors\n"
 };
 #endif
 #ifdef __WXOSX__
-char OpenCPNInfo[] = {"\n\n\
-    OpenCPN ist ein freies Software Projekt, erstellt von Seglern.\n\
-    Es ist frei verfügbar zum Download und zur Verbreitung ohne Kosten\n\
-    von Opencpn.org.\n\n\
-    Verwenden Sie OpenCPN, beteiligen Sie sich bitte daran\n\
-    oder machen Sie eine Spende.\n\n\
-    Dokumentation:\n\
-    Über OS X Menü Hilfe (auch Begriffe-Suchfunktion)\n"
+char OpenCPNInfo[] = {"<br><br>\
+    OpenCPN ist ein freies Software Projekt, erstellt von Seglern.<br>\
+    Es ist frei verfügbar zum Download und zur Verbreitung ohne Kosten<br>\
+    von Opencpn.org.<br>\
+    Verwenden Sie OpenCPN, beteiligen Sie sich bitte daran\
+    oder machen Sie eine Spende.<br><br>\
+    Dokumentation:<br>\
+    Über OS X Menü Hilfe (auch Begriffe-Suchfunktion)<br><br>"
 };
 #else
 char OpenCPNInfo[] = {"<br><br>\
@@ -477,16 +477,21 @@ void about::CreateControls()
 
     wxButton* donateButton = new wxBitmapButton( itemDialog1, ID_DONATE, donate_bmp,
             wxDefaultPosition, wxDefaultSize, 0 );
-
+#ifdef __WXOSX__
+    buttonSizer->Add( donateButton, 1, wxALL | wxEXPAND, 3 );
+#else
     buttonSizer->Add( donateButton, 1, wxALL | wxEXPAND | wxALIGN_RIGHT, 3 );
-
+#endif
 
     //  Main Notebook
     pNotebook = new wxNotebook( itemDialog1, ID_NOTEBOOK_HELP, wxDefaultPosition,
             wxSize( -1, -1 ), wxNB_TOP );
     pNotebook->InheritAttributes();
+#ifdef __WXOSX__
+    aboutSizer->Add( pNotebook, 1, wxEXPAND | wxALL, 5 );
+#else
     aboutSizer->Add( pNotebook, 1, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5 );
-
+#endif
     aboutSizer->Add( buttonSizer, 0, wxALL, 0 );
 
     //    About Panel
@@ -502,8 +507,11 @@ void about::CreateControls()
                                      wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION);
     
     pAboutHTMLCtl->SetBorders( 5 );
+#ifdef __WXOSX__
+    itemBoxSizer6->Add( pAboutHTMLCtl, 1, wxEXPAND | wxALL, 5 );
+#else
     itemBoxSizer6->Add( pAboutHTMLCtl, 1, wxALIGN_CENTER_HORIZONTAL | wxEXPAND | wxALL, 5 );
-
+#endif
     //     Authors Panel
     itemPanelAuthors = new wxPanel( pNotebook, -1, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
@@ -516,8 +524,11 @@ void about::CreateControls()
     pAuthorTextCtl = new wxTextCtrl( itemPanelAuthors, -1, _T(""), wxDefaultPosition,
                                     wxSize( -1, v_size ), wxTE_MULTILINE | wxTE_READONLY );
     pAuthorTextCtl->InheritAttributes();
+#ifdef __WXOSX__
+    itemBoxSizer7->Add( pAuthorTextCtl, 1, wxEXPAND | wxALL, 5 );
+#else
     itemBoxSizer7->Add( pAuthorTextCtl, 1, wxALIGN_CENTER_HORIZONTAL | wxEXPAND | wxALL, 5 );
-
+#endif
     //  License Panel
     itemPanelLicense = new wxPanel( pNotebook, -1, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
@@ -539,8 +550,11 @@ void about::CreateControls()
                                      wxSize( -1, v_size ), tcflags );
 
     pLicenseTextCtl->InheritAttributes();
+#ifdef __WXOSX__
+    itemBoxSizer8->Add( pLicenseTextCtl, 1, wxEXPAND | wxALL, 5 );
+#else
     itemBoxSizer8->Add( pLicenseTextCtl, 1, wxALIGN_CENTER_HORIZONTAL | wxEXPAND | wxALL, 5 );
-
+#endif
     //     Help Panel
     itemPanelTips = new wxPanel( pNotebook, -1, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
@@ -553,18 +567,25 @@ void about::CreateControls()
     pHelpTextCtl = new wxTextCtrl (itemPanelTips, -1, _T(""), wxDefaultPosition,
                                    wxSize(-1,300), wxTE_MULTILINE | wxTE_READONLY );
     pHelpTextCtl->InheritAttributes();
-    itemBoxSizer9->Add(pHelpTextCtl,0, wxALIGN_CENTER_HORIZONTAL | wxEXPAND | wxALL, 5 );
+    itemBoxSizer9->Add(pHelpTextCtl,0, wxEXPAND | wxALL, 5 );
 #endif
     //    Close Button
 
     wxBoxSizer* itemBoxSizer28 = new wxBoxSizer( wxHORIZONTAL );
+#ifdef __WXOSX__
+    aboutSizer->Add( itemBoxSizer28, 0, wxALL, 5 );
+#else
     aboutSizer->Add( itemBoxSizer28, 0, wxALIGN_RIGHT | wxALL, 5 );
-
+#endif
     wxButton* itemButton29 = new wxButton( itemDialog1, xID_OK, _("Close"), wxDefaultPosition,
             wxDefaultSize, 0 );
     itemButton29->SetDefault();
     itemButton29->InheritAttributes();
+#ifdef __WXOSX__
+    itemBoxSizer28->Add( itemButton29, 0, wxALL, 5 );
+#else
     itemBoxSizer28->Add( itemButton29, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+#endif
 }
 
 

@@ -450,9 +450,12 @@ void RouteManagerDialog::Create()
     SetSizer( itemBoxSizer1 );
     
     m_pNotebook = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxSize( -1, -1 ), wxNB_TOP );
+#ifdef __WXOSX__
+    itemBoxSizer1->Add( m_pNotebook, 1, wxALL | wxEXPAND, 5 );
+#else
     itemBoxSizer1->Add( m_pNotebook, 1,
                         wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL | wxEXPAND, 5 );
-    
+#endif
     //  Create "Routes" panel
     m_pPanelRte = new wxPanel( m_pNotebook, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                wxNO_BORDER | wxTAB_TRAVERSAL);
@@ -496,8 +499,11 @@ void RouteManagerDialog::Create()
     
     // Buttons: Delete, Properties...
     wxBoxSizer *bsRouteButtons = new wxBoxSizer( wxVERTICAL );
+#ifdef __WXOSX__
+    sbsRoutes->Add( bsRouteButtons, 0, wxEXPAND );
+#else
     sbsRoutes->Add( bsRouteButtons, 0, wxALIGN_RIGHT | wxEXPAND );
-    
+#endif
     wxScrolledWindow *winr = new wxScrolledWindow( m_pPanelRte, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                                    wxNO_BORDER | wxTAB_TRAVERSAL | wxVSCROLL);
     winr->SetScrollRate(0,5);
@@ -584,8 +590,11 @@ void RouteManagerDialog::Create()
     m_pTrkListCtrl->InsertColumn( colTRKLENGTH, _("Length"), wxLIST_FORMAT_LEFT, 5 * char_width );
     
     wxBoxSizer *bsTrkButtons = new wxBoxSizer( wxVERTICAL );
+#ifdef __WXOSX__
+    itemBoxSizer3->Add( bsTrkButtons, 0, wxEXPAND );
+#else
     itemBoxSizer3->Add( bsTrkButtons, 0, wxALIGN_RIGHT | wxEXPAND );
-    
+#endif
     wxScrolledWindow *wint = new wxScrolledWindow( m_pPanelTrk, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                                    wxNO_BORDER | wxTAB_TRAVERSAL | wxVSCROLL);
     wint->SetScrollRate(0,5);
@@ -653,8 +662,11 @@ void RouteManagerDialog::Create()
     m_pWptListCtrl->InsertColumn( colWPTDIST, _("Distance from Ownship"), wxLIST_FORMAT_LEFT, 14 * char_width );
     
     wxBoxSizer *bsWptButtons = new wxBoxSizer( wxVERTICAL );
+#ifdef __WXOSX__
+    itemBoxSizer4->Add( bsWptButtons, 0, wxEXPAND );
+#else
     itemBoxSizer4->Add( bsWptButtons, 0, wxALIGN_RIGHT | wxEXPAND );
-    
+#endif
     wxScrolledWindow *winw = new wxScrolledWindow( m_pPanelWpt, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                                    wxNO_BORDER | wxTAB_TRAVERSAL | wxVSCROLL);
     winw->SetScrollRate(0,5);
@@ -754,8 +766,11 @@ void RouteManagerDialog::Create()
     m_pLayListCtrl->InsertColumn( colLAYITEMS, _("No. of items"), wxLIST_FORMAT_LEFT, 10 * char_width );
     
     wxBoxSizer *bsLayButtons = new wxBoxSizer( wxVERTICAL );
+#ifdef __WXOSX__
+    itemBoxSizer7->Add( bsLayButtons, 0, wxEXPAND);
+#else
     itemBoxSizer7->Add( bsLayButtons, 0, wxALIGN_RIGHT | wxEXPAND);
-    
+#endif
     wxScrolledWindow *winl = new wxScrolledWindow( m_pPanelLay, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                                    wxNO_BORDER | wxTAB_TRAVERSAL | wxVSCROLL);
     winl->SetScrollRate(0,5);
@@ -792,9 +807,11 @@ void RouteManagerDialog::Create()
     
     // Dialog buttons
     wxSizer *szButtons = CreateButtonSizer( wxOK );
-    
+#ifdef __WXOSX__
+    itemBoxSizer5->Add( szButtons, 0, wxALL, DIALOG_MARGIN );
+#else
     itemBoxSizer5->Add( szButtons, 0, wxALL | wxALIGN_RIGHT, DIALOG_MARGIN );
-    
+#endif
     //  All of this dialog layout is expandable, so we need to set a specific size target
     //  for the onscreen display.
     //  The size will later be adjusted so that it fits iwithing the parent's client area, with some padding
