@@ -1324,7 +1324,11 @@ bool objsearch_pi::HasQueries()
 void objsearch_pi::ShowPreferencesDialog(wxWindow * parent)
 {
     SettingsDialogImpl* settingsdlg = new SettingsDialogImpl(this, parent);
+#if __WXOSX__
     settingsdlg->Show();
+#else
+    settingsdlg->ShowModal();
+#endif
 }
 
 SettingsDialogImpl::SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )

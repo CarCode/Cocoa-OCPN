@@ -187,11 +187,7 @@ wxString watchman_pi::GetShortDescription()
 
 wxString watchman_pi::GetLongDescription()
 {
-    return _("Watchman PlugIn for OpenCPN\n\
-Alarm user of possible dangerous situations. \n\
-\n\
-The Watchman plugin was written by Sean D'Epagnier\n\
-");
+    return _("Watchman PlugIn for OpenCPN\n Alarm user of possible dangerous situations.\n\n The Watchman plugin was written by Sean D'Epagnier");
 }
 
 int watchman_pi::GetToolbarToolCount(void)
@@ -303,8 +299,8 @@ void watchman_pi::OnTimer( wxTimerEvent & )
         double dist = 0, dist1 = 1000;
         int count = 0;
         m_LandFallTime = wxTimeSpan();
-
-        while(count < 10) {
+// TODO:
+/*        while(count < 10) {
             PositionBearingDistanceMercator_Plugin
                 (m_lastfix.Lat, m_lastfix.Lon, m_lastfix.Cog, dist + dist1, &lat2, &lon2);
             if(PlugIn_GSHHS_CrossesLand(lat1, lon1, lat2, lon2)) {
@@ -322,8 +318,9 @@ void watchman_pi::OnTimer( wxTimerEvent & )
                 lon1 = lon2;
                 count++;
             }
-        }
-
+        }  */
+/* // Assert mit crossing1(wxLineF trajectWorld) in gshhs.cpp Zeile 600
+   // cymin >= -16*90 && cymax <= 16*89
         if(m_bLandFallDistance) {
             for(double t = 0; t<360; t+=18) {
                 double dlat, dlon;
@@ -335,7 +332,7 @@ void watchman_pi::OnTimer( wxTimerEvent & )
                     break;
                 }
             }
-        }
+        } */
     }
 
     double anchordist;
@@ -372,7 +369,7 @@ void watchman_pi::OnTimer( wxTimerEvent & )
             } else
                 sog = cog = NAN;
 
-        setfix:
+setfix:
             m_lasttimerfix = m_lastfix;
             m_LastTimerFix = m_LastPositionFix;
         }

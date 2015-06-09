@@ -1,0 +1,8 @@
+../src/br24radar_pi.cpp
+../src/br24radar_pi.h
+../src/br24radarcontrol.cpp
+../src/GuardZoneBogey.cpp
+../src/GuardZoneControls.cpp
+../src/icons.cpp
+../src/icons.h
+../src/Idle_Dialog.cpp

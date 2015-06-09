@@ -97,7 +97,7 @@ public:
 #ifdef __WXOSX__
     SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_DIALOG_STYLE | wxSTAY_ON_TOP );
 #else
-    SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,470 ), long style = wxDEFAULT_DIALOG_STYLE | wxSTAY_ON_TOP );
+    SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,470 ), long style = wxDEFAULT_DIALOG_STYLE );
 #endif
     ~SettingsDialogImpl();
     void OnBrowse( wxCommandEvent& event );

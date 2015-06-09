@@ -14,13 +14,20 @@ WatchdogDialogBase::WatchdogDialogBase( wxWindow* parent, wxWindowID id, const w
 	this->SetSizeHints( wxSize( -1,-1 ), wxSize( -1,-1 ) );
 	
 	wxFlexGridSizer* fgSizer8;
+#ifdef __WXOSX__
+    fgSizer8 = new wxFlexGridSizer( 1, 0, 0 );
+#else
 	fgSizer8 = new wxFlexGridSizer( 2, 1, 0, 0 );
+#endif
 	fgSizer8->AddGrowableCol( 0 );
 	fgSizer8->AddGrowableRow( 0 );
 	fgSizer8->SetFlexibleDirection( wxBOTH );
 	fgSizer8->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_fgAlarms = new wxFlexGridSizer( 9, 2, 0, 0 );  // ( 0, 2, ...
+#ifdef __WXOSX__
+    m_fgAlarms = new wxFlexGridSizer( 2, 0, 0 );
+#else
+	m_fgAlarms = new wxFlexGridSizer( 9, 2, 0, 0 );
+#endif
 	m_fgAlarms->AddGrowableCol( 0 );
     m_fgAlarms->AddGrowableCol( 1 );
 	m_fgAlarms->SetFlexibleDirection( wxBOTH );
@@ -110,7 +117,11 @@ WatchdogDialogBase::WatchdogDialogBase( wxWindow* parent, wxWindowID id, const w
 	fgSizer8->Add( m_fgAlarms, 1, wxEXPAND, 5 );
 	
 	wxFlexGridSizer* fgSizer71;
+#ifdef __WXOSX__
+    fgSizer71 = new wxFlexGridSizer( 4, 0, 0 );
+#else
 	fgSizer71 = new wxFlexGridSizer( 0, 4, 0, 0 );
+#endif
 	fgSizer71->SetFlexibleDirection( wxBOTH );
 	fgSizer71->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -153,7 +164,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
 	wxFlexGridSizer* fgSizer4;
+#ifdef __WXOSX__
+    fgSizer4 = new wxFlexGridSizer( 1, 0, 0 );
+#else
 	fgSizer4 = new wxFlexGridSizer( 0, 1, 0, 0 );
+#endif
 	fgSizer4->SetFlexibleDirection( wxBOTH );
 	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
@@ -161,7 +176,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
     sbSizer41 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("General Setup") ), wxVERTICAL );
     
     wxFlexGridSizer* fgSizer241;
+#ifdef __WXOSX__
+    fgSizer241 = new wxFlexGridSizer( 2, 0, 0 );
+#else
     fgSizer241 = new wxFlexGridSizer( 0, 2, 0, 0 );
+#endif
     fgSizer241->SetFlexibleDirection( wxBOTH );
     fgSizer241->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
     
@@ -188,12 +207,20 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	
 	m_panel1 = new wxPanel( m_lbAlarm, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer17;
+#ifdef __WXOSX__
+    fgSizer17 = new wxFlexGridSizer( 1, 0, 0 );
+#else
 	fgSizer17 = new wxFlexGridSizer( 0, 1, 0, 0 );
+#endif
 	fgSizer17->SetFlexibleDirection( wxBOTH );
 	fgSizer17->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	wxFlexGridSizer* fgSizer16;
+#ifdef __WXOSX__
+    fgSizer16 = new wxFlexGridSizer( 3, 0, 0 );
+#else
 	fgSizer16 = new wxFlexGridSizer( 0, 3, 0, 0 );
+#endif
 	fgSizer16->SetFlexibleDirection( wxBOTH );
 	fgSizer16->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -211,7 +238,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	fgSizer17->Add( fgSizer16, 1, wxEXPAND, 5 );
 	
 	wxFlexGridSizer* fgSizer10;
+#ifdef __WXOSX__
+    fgSizer10 = new wxFlexGridSizer( 3, 0, 0 );
+#else
 	fgSizer10 = new wxFlexGridSizer( 0, 3, 0, 0 );
+#endif
 	fgSizer10->SetFlexibleDirection( wxBOTH );
 	fgSizer10->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -242,7 +273,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
     m_lbAlarm->AddPage( m_panel1, _("Landfall"), false );
 	m_panel2 = new wxPanel( m_lbAlarm, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer91;
+#ifdef __WXOSX__
+    fgSizer91 = new wxFlexGridSizer( 1, 0, 0 );
+#else
 	fgSizer91 = new wxFlexGridSizer( 0, 1, 0, 0 );
+#endif
 	fgSizer91->AddGrowableCol( 0 );
 	fgSizer91->SetFlexibleDirection( wxBOTH );
 	fgSizer91->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
@@ -255,7 +290,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	fgSizer91->Add( m_tNMEASentences, 0, wxALL|wxEXPAND, 5 );
 	
 	wxFlexGridSizer* fgSizer19;
+#ifdef __WXOSX__
+    fgSizer19 = new wxFlexGridSizer( 3, 0, 0 );
+#else
 	fgSizer19 = new wxFlexGridSizer( 0, 3, 0, 0 );
+#endif
 	fgSizer19->SetFlexibleDirection( wxBOTH );
 	fgSizer19->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -280,12 +319,20 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
     m_lbAlarm->AddPage( m_panel2, _("NMEA Data"), false );
 	m_panel3 = new wxPanel( m_lbAlarm, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
     wxFlexGridSizer* fgSizer25;
+#ifdef __WXOSX__
+    fgSizer25 = new wxFlexGridSizer( 1, 0, 0 );
+#else
     fgSizer25 = new wxFlexGridSizer( 0, 1, 0, 0 );
+#endif
     fgSizer25->SetFlexibleDirection( wxBOTH );
     fgSizer25->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
 	wxFlexGridSizer* fgSizer5;
+#ifdef __WXOSX__
+    fgSizer5 = new wxFlexGridSizer( 3, 0, 0 );
+#else
 	fgSizer5 = new wxFlexGridSizer( 0, 3, 0, 0 );
+#endif
 	fgSizer5->SetFlexibleDirection( wxBOTH );
 	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -313,12 +360,20 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
     m_lbAlarm->AddPage( m_panel3, _("Deadman"), true );
     m_pSecondDeadman = new wxPanel( m_lbAlarm, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
     wxFlexGridSizer* fgSizer251;
+#ifdef __WXOSX__
+    fgSizer251 = new wxFlexGridSizer( 1, 0, 0 );
+#else
     fgSizer251 = new wxFlexGridSizer( 0, 1, 0, 0 );
+#endif
     fgSizer251->SetFlexibleDirection( wxBOTH );
     fgSizer251->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
     
     wxFlexGridSizer* fgSizer51;
+#ifdef __WXOSX__
+    fgSizer51 = new wxFlexGridSizer( 3, 0, 0 );
+#else
     fgSizer51 = new wxFlexGridSizer( 0, 3, 0, 0 );
+#endif
     fgSizer51->SetFlexibleDirection( wxBOTH );
     fgSizer51->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
     
@@ -343,12 +398,20 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
     m_lbAlarm->AddPage( m_pSecondDeadman, _("Second Deadman"), false );
 	m_panel4 = new wxPanel( m_lbAlarm, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer24;
+#ifdef __WXOSX__
+    fgSizer24 = new wxFlexGridSizer( 1, 0, 0 );
+#else
 	fgSizer24 = new wxFlexGridSizer( 0, 1, 0, 0 );
+#endif
 	fgSizer24->SetFlexibleDirection( wxBOTH );
 	fgSizer24->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	wxFlexGridSizer* fgSizer9;
+#ifdef __WXOSX__
+    fgSizer9 = new wxFlexGridSizer( 3, 0, 0 );
+#else
 	fgSizer9 = new wxFlexGridSizer( 0, 3, 0, 0 );
+#endif
 	fgSizer9->SetFlexibleDirection( wxBOTH );
 	fgSizer9->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -400,12 +463,20 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_lbAlarm->AddPage( m_panel4, _("Anchor Watch"), false );
 	m_pCourse = new wxPanel( m_lbAlarm, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer22;
+#ifdef __WXOSX__
+    fgSizer22 = new wxFlexGridSizer( 1, 0, 0 );
+#else
 	fgSizer22 = new wxFlexGridSizer( 0, 1, 0, 0 );
+#endif
 	fgSizer22->SetFlexibleDirection( wxBOTH );
 	fgSizer22->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	wxFlexGridSizer* fgSizer101;
+#ifdef __WXOSX__
+    fgSizer101 = new wxFlexGridSizer( 3, 0, 0 );
+#else
 	fgSizer101 = new wxFlexGridSizer( 0, 3, 0, 0 );
+#endif
 	fgSizer101->SetFlexibleDirection( wxBOTH );
 	fgSizer101->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -447,7 +518,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_lbAlarm->AddPage( m_pCourse, _("Off Course"), false );
 	m_pCourseStarboard = new wxPanel( m_lbAlarm, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer221;
+#ifdef __WXOSX__
+    fgSizer221 = new wxFlexGridSizer( 1, 0, 0 );
+#else
 	fgSizer221 = new wxFlexGridSizer( 0, 1, 0, 0 );
+#endif
 	fgSizer221->SetFlexibleDirection( wxBOTH );
 	fgSizer221->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -465,7 +540,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbSizer7 = new wxStaticBoxSizer( new wxStaticBox( m_panel5, wxID_ANY, _("Speed Alarm") ), wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer14;
+#ifdef __WXOSX__
+    fgSizer14 = new wxFlexGridSizer( 3, 0, 0 );
+#else
 	fgSizer14 = new wxFlexGridSizer( 0, 3, 0, 0 );
+#endif
 	fgSizer14->SetFlexibleDirection( wxBOTH );
 	fgSizer14->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -497,7 +576,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbSizer71 = new wxStaticBoxSizer( new wxStaticBox( m_panel51, wxID_ANY, _("Speed Alarm") ), wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer141;
+#ifdef __WXOSX__
+    fgSizer141 = new wxFlexGridSizer( 3, 0, 0 );
+#else
 	fgSizer141 = new wxFlexGridSizer( 0, 3, 0, 0 );
+#endif
 	fgSizer141->SetFlexibleDirection( wxBOTH );
 	fgSizer141->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -526,7 +609,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
     m_lbAlarm->AddPage( m_panel51, _("Over Speed"), false );
 	m_panel10 = new wxPanel( m_lbAlarm, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer211;
+#ifdef __WXOSX__
+    fgSizer211 = new wxFlexGridSizer( 2, 0, 0 );
+#else
 	fgSizer211 = new wxFlexGridSizer( 0, 2, 0, 0 );
+#endif
 	fgSizer211->SetFlexibleDirection( wxBOTH );
 	fgSizer211->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -541,7 +628,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_lbAlarm->AddPage( m_panel10, _("Depth"), false );
 	m_panel11 = new wxPanel( m_lbAlarm, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer21;
+#ifdef __WXOSX__
+    fgSizer21 = new wxFlexGridSizer( 2, 0, 0 );
+#else
 	fgSizer21 = new wxFlexGridSizer( 0, 2, 0, 0 );
+#endif
 	fgSizer21->SetFlexibleDirection( wxBOTH );
 	fgSizer21->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -568,7 +659,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	fgSizer4->Add( m_lbAlarm, 1, wxEXPAND | wxALL, 5 );
 	
 	wxFlexGridSizer* fgSizer171;
+#ifdef __WXOSX__
+    fgSizer171 = new wxFlexGridSizer( 3, 0, 0 );
+#else
 	fgSizer171 = new wxFlexGridSizer( 0, 3, 0, 0 );
+#endif
 	fgSizer171->SetFlexibleDirection( wxBOTH );
 	fgSizer171->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -589,7 +684,11 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbSizer4 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Alarm Action") ), wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer6;
+#ifdef __WXOSX__
+    fgSizer6 = new wxFlexGridSizer( 2, 0, 0 );
+#else
 	fgSizer6 = new wxFlexGridSizer( 0, 2, 0, 0 );
+#endif
 	fgSizer6->AddGrowableCol( 1 );
 	fgSizer6->SetFlexibleDirection( wxBOTH );
 	fgSizer6->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
@@ -631,13 +730,21 @@ WatchdogPrefsDialogBase::WatchdogPrefsDialogBase( wxWindow* parent, wxWindowID i
 	fgSizer4->Add( sbSizer4, 1, wxEXPAND, 5 );
 	
 	wxFlexGridSizer* fgSizer11;
+#ifdef __WXOSX__
+    fgSizer11 = new wxFlexGridSizer( 0, 0, 0 );
+#else
 	fgSizer11 = new wxFlexGridSizer( 1, 0, 0, 0 );
+#endif
 	fgSizer11->AddGrowableCol( 1 );
 	fgSizer11->SetFlexibleDirection( wxBOTH );
 	fgSizer11->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	wxFlexGridSizer* fgSizer15;
+#ifdef __WXOSX__
+    fgSizer15 = new wxFlexGridSizer( 0, 0, 0 );
+#else
 	fgSizer15 = new wxFlexGridSizer( 1, 0, 0, 0 );
+#endif
 	fgSizer15->SetFlexibleDirection( wxBOTH );
 	fgSizer15->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
