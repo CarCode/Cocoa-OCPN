@@ -735,8 +735,11 @@ bool BR24DisplayOptionsDialog::Create(wxWindow *parent, br24radar_pi *ppi)
     SetSizer(topSizer);
 
     wxFlexGridSizer * DisplayOptionsBox = new wxFlexGridSizer(2, 5, 5);
+#ifdef __WXOSX__
+    topSizer->Add(DisplayOptionsBox, 0, wxALL | wxEXPAND, 2);
+#else
     topSizer->Add(DisplayOptionsBox, 0, wxALIGN_CENTER_HORIZONTAL | wxALL | wxEXPAND, 2);
-
+#endif
     //  BR24 toolbox icon checkbox
     //    wxStaticBox* DisplayOptionsCheckBox = new wxStaticBox(this, wxID_ANY, _T(""));
     //    wxStaticBoxSizer* DisplayOptionsCheckBoxSizer = new wxStaticBoxSizer(DisplayOptionsCheckBox, wxVERTICAL);
@@ -841,7 +844,11 @@ bool BR24DisplayOptionsDialog::Create(wxWindow *parent, br24radar_pi *ppi)
     topSizer->Add(itemStaticBoxSizerOptions, 0, wxEXPAND | wxALL, border_size);
 
     cbPassHeading = new wxCheckBox(this, ID_PASS_HEADING, _("Pass radar heading to OpenCPN"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE | wxST_NO_AUTORESIZE);
+#ifdef __WXOSX__
+    itemStaticBoxSizerOptions->Add(cbPassHeading, 0, wxALL, border_size);
+#else
     itemStaticBoxSizerOptions->Add(cbPassHeading, 0, wxALIGN_CENTER_VERTICAL | wxALL, border_size);
+#endif
     cbPassHeading->SetValue(pPlugIn->settings.PassHeadingToOCPN ? true : false);
     cbPassHeading->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED,
                              wxCommandEventHandler(BR24DisplayOptionsDialog::OnPassHeadingClick), NULL, this);

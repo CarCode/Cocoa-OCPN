@@ -2607,7 +2607,7 @@ void* MulticastRXThread::Entry()
      //    Subscribe to a multicast group
      unsigned int a = 0;
 #ifdef __WXGTK__
-     GAddress gaddress;
+/*     GAddress gaddress;
      _GAddress_Init_INET(&gaddress);
      GAddress_INET_SetHostName(&gaddress, m_ip.mb_str());
      //       struct in_addr *iaddr;
@@ -2617,6 +2617,9 @@ void* MulticastRXThread::Entry()
      struct in_addr *addr;
      addr = &(((struct sockaddr_in *)gaddress.m_addr)->sin_addr);
      a = addr->s_addr;
+*/
+    a = inet_addr(m_ip.mb_str());
+
 #endif
 
 #ifdef __WXMSW__
@@ -2689,7 +2692,7 @@ void* MulticastRXThread::Entry()
      {
           if(TestDestroy())
           {
-               not_done = false;                               // smooth exit
+//               not_done = false;                               // smooth exit  Not used
                goto thread_exit;
           }
 
@@ -2760,7 +2763,9 @@ void MulticastRXThread::process_buffer(void)
                          g_sweep_count++;
 
                     g_current_scan_length_bytes = packet.scan_length_bytes;
-
+#ifdef __WXOSX__
+                   assert(g_scan_buf);
+#endif
                     unsigned char *packet_data = buf + sizeof(radar_scanline_pkt) - 1;
                     unsigned char *dest_data = &g_scan_buf[packet.scan_length_bytes * packet.angle / 2];
                     memcpy(dest_data, packet_data, packet.scan_length_bytes);
