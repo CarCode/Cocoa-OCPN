@@ -196,6 +196,7 @@ extern bool                     g_btouch;
 extern bool                     g_bresponsive;
 extern bool                     g_bShowStatusBar;
 extern int                      g_cm93_zoom_factor;
+extern int                      g_GUIScaleFactor;
 
 #ifdef ocpnUSE_GL
 extern ocpnGLOptions            g_GLOptions;
@@ -551,6 +552,8 @@ void OCPNPlatform::SetDefaultOptions( void )
     
     g_bShowStatusBar = false;
     g_cm93_zoom_factor = -5;
+    
+    g_GUIScaleFactor = 5;               // max
 #endif
 
 
@@ -713,8 +716,10 @@ wxString &OCPNPlatform::GetPluginDir()
         wxFileName fdir = wxFileName::DirName(std_path.GetUserConfigDir());
         fdir.RemoveLastDir();
         m_PluginsDir = fdir.GetPath();
-        
-        m_PluginsDir = GetHomeDir();
+
+//        m_PluginsDir = GetHomeDir();
+
+//        m_PluginsDir = _T("/data/data/org.opencpn.opencpn/lib")
 
 #endif
 

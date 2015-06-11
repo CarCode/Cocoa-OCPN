@@ -141,7 +141,7 @@ private:
         wxButton* m_sdbBtmBtnsSizerCancel;
         wxStaticBoxSizer* sbSizerLinks;
         wxBoxSizer* bSizerLinks;
-    
+
         wxButton* m_sdbBtmBtnsSizerPrint;
         wxButton* m_sdbBtmBtnsSizerSplit;
         wxButton* m_sdbBtmBtnsSizerExtend;
@@ -176,14 +176,14 @@ public:
         {
             m_hyperlink1->PopupMenu( m_menuLink, event.GetPosition() );
         }
-        
+
         void SetTrackAndUpdate( Route *pR );
         bool UpdateProperties();
         void InitializeList();
         Route *GetTrack(void){return m_pRoute;}
-        
+
         Route      *m_pRoute;
-        
+
         void m_hyperlinkContextMenu( wxMouseEvent &event );
 };
 

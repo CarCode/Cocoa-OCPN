@@ -28,6 +28,7 @@
 #include "email.h"
 
 #include "GribRequestDialog.h"
+#include "GribOverlayFactory.h"
 
 #include "TexFont.h"
 

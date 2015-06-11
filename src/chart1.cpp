@@ -32,7 +32,6 @@
 #endif
 
 
-
 #include "wx/print.h"
 #include "wx/printdlg.h"
 #include "wx/artprov.h"
@@ -1508,9 +1507,18 @@ bool MyApp::OnInit()
     g_config_version_string = vs;
 
     //  log deferred log restart message, if it exists.
+#ifdef __WXOSX__
+    if( !g_Platform->GetLargeLogMessage().IsEmpty() )
+    {
+        wxLogMessage( g_Platform->GetLargeLogMessage() );
+        wxString msg1 = g_Platform->GetLargeLogMessage();
+        OCPNMessageBox(gFrame, msg1, wxString( _("OpenCPN Info") ), wxICON_INFORMATION | wxOK );
+    }
+#else
     if( !g_Platform->GetLargeLogMessage().IsEmpty() )
         wxLogMessage( g_Platform->GetLargeLogMessage() );
-
+#endif
+    
     //  Validate OpenGL functionality, if selected
 #ifdef ocpnUSE_GL
 
@@ -3948,7 +3956,7 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
         case ID_MENU_ROUTE_MANAGER:
         case ID_ROUTEMANAGER: {
             if( NULL == pRouteManagerDialog )         // There is one global instance of the Dialog
-            pRouteManagerDialog = new RouteManagerDialog( cc1 );
+                pRouteManagerDialog = new RouteManagerDialog( cc1 );
 
             pRouteManagerDialog->UpdateRouteListCtrl();
             pRouteManagerDialog->UpdateTrkListCtrl();
@@ -4036,7 +4044,6 @@ void MyFrame::DoSettings()
     cc1->ReloadVP();
 
 }
-
 
 void MyFrame::ToggleStats()
 {
@@ -4340,10 +4347,10 @@ bool MyFrame::ToggleLights( bool doToggle, bool temporary )
             }
             pOLE = NULL;
         }
+#ifndef __WXOSX__
     }
-
+#endif
     oldstate &= !ps52plib->IsObjNoshow("LIGHTS");
-    
     if( doToggle ){
         if(oldstate)                            // On, going off
             ps52plib->AddObjNoshow("LIGHTS");
@@ -4355,14 +4362,15 @@ bool MyFrame::ToggleLights( bool doToggle, bool temporary )
         
         SetMenubarItemState( ID_MENU_ENC_LIGHTS, !oldstate );
     }
-
     if( doToggle ) {
         if( ! temporary ) {
             ps52plib->GenerateStateHash();
             cc1->ReloadVP();
         }
     }
-    
+#ifdef __WXOSX__
+    }
+#endif
 
 #endif
     return oldstate;
@@ -5380,6 +5388,9 @@ void MyFrame::ToggleQuiltMode( void )
             Refresh();
         }
     }
+#ifdef __WXOSX__
+    if( cc1 )
+#endif
     g_bQuiltEnable = cc1->GetQuiltMode();
 }
 
@@ -6313,7 +6324,7 @@ double MyFrame::GetTrueOrMag(double a)
 
 void MyFrame::TouchAISActive( void )
 {
-    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+//    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();  // Not used
 
     if( m_pAISTool ) {
         if( ( !g_pAIS->IsAISSuppressed() ) && ( !g_pAIS->IsAISAlertGeneral() ) ) {
@@ -6340,7 +6351,7 @@ void MyFrame::UpdateAISTool( void )
     if(!g_pAIS) return;
 
     bool b_need_refresh = false;
-    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+//    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();  // Not used
 
     wxString iconName;
 
@@ -6760,7 +6771,7 @@ void MyFrame::HandlePianoRolloverIcon( int selected_index, int selected_dbIndex 
 double MyFrame::GetBestVPScale( ChartBase *pchart )
 {
     if( pchart ) {
-        double proposed_scale_onscreen = cc1->GetCanvasScaleFactor() / cc1->GetVPScale();
+        double proposed_scale_onscreen; // = cc1->GetCanvasScaleFactor() / cc1->GetVPScale();  // Not used
 
         if( ( g_bPreserveScaleOnX ) || ( CHART_TYPE_CM93COMP == pchart->GetChartType() ) ) {
             double new_scale_ppm = cc1->GetVPScale(); 
