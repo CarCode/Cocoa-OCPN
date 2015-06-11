@@ -124,6 +124,11 @@
 			<key>orderHint</key>
 			<integer>22</integer>
 		</dict>
+		<key>objsearch_pi copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>43</integer>
+		</dict>
 		<key>objsearch_pi.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -438,6 +443,11 @@
 			<true/>
 		</dict>
 		<key>A678220A17075EFE0041729A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A68035A21B288508007A4045</key>
 		<dict>
 			<key>primary</key>
 			<true/>
