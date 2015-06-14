@@ -1142,7 +1142,7 @@ void glTexFactory::PurgeBackgroundCompressionPool()
 void glTexFactory::DeleteSingleTexture( glTextureDescriptor *ptd )
 {
     /* compute space saved */
-    int dim = g_GLOptions.m_iTextureDimension;
+//    int dim = g_GLOptions.m_iTextureDimension;  // Not used
     int size = g_tile_size;
     if( ptd->nGPU_compressed == GPU_TEXTURE_UNCOMPRESSED)
         size = g_uncompressed_tile_size;

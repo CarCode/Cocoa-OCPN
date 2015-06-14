@@ -234,7 +234,7 @@ bool CompressChart(wxThread *pThread, ChartBase *pchart, wxString CompressedCach
 {
     bool ret = true;
     ChartBaseBSB *pBSBChart = dynamic_cast<ChartBaseBSB*>( pchart );
-    int max_compressed_size = LZ4_COMPRESSBOUND(g_tile_size);
+//    int max_compressed_size = LZ4_COMPRESSBOUND(g_tile_size);  // Not used
 
     if(pBSBChart) {
 
@@ -3367,9 +3367,9 @@ bool glChartCanvas::TextureCrunch(double factor)
 
 bool glChartCanvas::FactoryCrunch(double factor)
 {
-    int mem_used, mem_start;
+    int mem_used; //, mem_start;  // Not used
     GetMemoryStatus(0, &mem_used);
-    mem_start = mem_used;
+//    mem_start = mem_used;  // Not used
     
     bool bGLMemCrunch = mem_used > (double)(g_memCacheLimit) * factor;
     if( ! bGLMemCrunch )
@@ -4007,9 +4007,9 @@ void glChartCanvas::FastPan(int dx, int dy)
     //if( GL_TEXTURE_RECTANGLE_ARB == g_texture_rectangle_format )
     //  tx = sx, ty = sy;
     //else
-    tx = 1, ty = 1;
+//    tx = 1, ty = 1;  // Not used
 
-    tx0 = ty0 = 0.;
+//    tx0 = ty0 = 0.;  // Not used
 
     m_fbo_offsety += dy;
     m_fbo_offsetx += dx;
@@ -4142,9 +4142,9 @@ void glChartCanvas::FastZoom(float factor)
     //if( GL_TEXTURE_RECTANGLE_ARB == g_texture_rectangle_format )
     //  tx = sx, ty = sy;
     //else
-    tx = 1, ty = 1;
+//    tx = 1, ty = 1;  // Not used
 
-    tx0 = ty0 = 0.;
+//    tx0 = ty0 = 0.;  // Not used
 
     tx0 = m_fbo_offsetx;
     ty0 = m_fbo_offsety;

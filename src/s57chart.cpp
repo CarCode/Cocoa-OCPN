@@ -326,7 +326,7 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                     int nrl = my_bufgetl( mybuf_ptr, hdr_end, buf, MAX_LINE );
                     mybuf_ptr += nrl;
                     if( 0 == nrl ) {
-                        attdun = 1;
+//                        attdun = 1;  // Not used but break
                         my_fgets( buf, MAX_LINE, *pfpx );     // this will be PolyGeo
                         break;
                     }
@@ -353,14 +353,14 @@ S57Obj::S57Obj( char *first_line, wxInputStream *pfpx, double dummy, double dumm
                 }
 
                 else if( !strncmp( buf, geoMatch, 6 ) ) {
-                    attdun = 1;
+//                    attdun = 1;  // Not used but break
                     break;
                 }
 
                 else if( !strncmp( buf, "  MULT", 6 ) )         // Special multipoint
                         {
                     bMulti = true;
-                    attdun = 1;
+//                    attdun = 1;  // Not used but break
                     break;
                 }
 
@@ -1617,17 +1617,17 @@ void s57chart::AssembleLineGeometry( void )
                             VC_Element *epnode = 0;
                             epnode = m_vc_hash[enode];
                             
-                            double e0, n0, e1, n1;
-                            
+//                            double e0, n0, e1, n1;  // Not used
+// What for???
                             if( ipnode ) {
-                                double *ppt = ipnode->pPoint;
+/*                                double *ppt = ipnode->pPoint;
                                 e0 = *ppt++;
-                                n0 = *ppt;
+                                n0 = *ppt; */
                                 if(pedge && pedge->nCount)
                                 {
-                                    e1 = pedge->pPoints[0];
+/*                                    e1 = pedge->pPoints[0];
                                     n1 = pedge->pPoints[1];
-                                    
+*/
                                     //      The initial node exists and connects to the start of an edge
                                     wxString key;
                                     key.Printf(_T("CE%d%d"), inode, venode);
@@ -1644,17 +1644,17 @@ void s57chart::AssembleLineGeometry( void )
                             }
                             
                             if(pedge && pedge->nCount){
-                                e0 = pedge->pPoints[ (2 * (pedge->nCount - 1))];
+/*                                e0 = pedge->pPoints[ (2 * (pedge->nCount - 1))];
                                 n0 = pedge->pPoints[ (2 * (pedge->nCount - 1)) + 1];
-                                
+*/
                             }   //pedge
                             
                             // end node
                             if( epnode ) {
-                                double *ppt = epnode->pPoint;
+/*                                double *ppt = epnode->pPoint;
                                 e1 = *ppt++;
                                 n1 = *ppt;
-                                
+*/
                                 if(ipnode){
                                     if(pedge && pedge->nCount){
                                         
@@ -5471,14 +5471,14 @@ void s57chart::CreateSENCRecord( OGRFeature *pFeature, FILE * fpOut, int mode, S
 
 //    Capture the Vector Table geometry indices
                 int *pNAME_RCID;
-                int *pORNT;
+//                int *pORNT;  // Not used
                 int nEdgeVectorRecords;
                 OGRFeature *pEdgeVectorRecordFeature;
 
                 pNAME_RCID = (int *) pFeature->GetFieldAsIntegerList( "NAME_RCID",
                         &nEdgeVectorRecords );
 
-                pORNT = (int *) pFeature->GetFieldAsIntegerList( "ORNT", NULL );
+//                pORNT = (int *) pFeature->GetFieldAsIntegerList( "ORNT", NULL );  // Not used
 
                 fprintf( fpOut, "LSINDEXLIST %d\n", nEdgeVectorRecords );
 //                    fwrite(pNAME_RCID, 1, nEdgeVectorRecords * sizeof(int), fpOut);

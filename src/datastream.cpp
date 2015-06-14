@@ -338,6 +338,11 @@ void DataStream::Open(void)
                     if ((!m_is_multicast) && ( m_addr.IPAddress().EndsWith(_T("255")))) {
                         int broadcastEnable=1;
                         bool bam = m_tsock->SetOption(SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable));
+#ifdef __WXOSX__
+                        if (!bam) {
+                            wxLogError(wxT("Unable to listen to multicast group: %d"), m_tsock->LastError());
+                        }
+#endif
                     }
                 }
                 
@@ -905,13 +910,13 @@ GarminProtocolHandler::GarminProtocolHandler(DataStream *parent, wxEvtHandler *M
     m_busb = bsel_usb;
     
     //      Connect(wxEVT_OCPN_GARMIN, (wxObjectEventFunction)(wxEventFunction)&GarminProtocolHandler::OnEvtGarmin);
-    
+/*  Not used
     char  pvt_on[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};
-    
+
     char  pvt_off[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 50, 0};
-    
+*/
 #ifdef __WXMSW__    
     if(m_busb) {
         m_usb_handle = INVALID_HANDLE_VALUE;
@@ -1035,13 +1040,14 @@ void GarminProtocolHandler::RestartIOThread(void)
 
 void GarminProtocolHandler::OnTimerGarmin1(wxTimerEvent& event)
 {
+#ifndef __WXOSX__
     char  pvt_on[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};
-    
+#endif
     TimerGarmin1.Stop();
     
     if(m_busb) {
-        #ifdef __WXMSW__    
+#ifdef __WXMSW__
         //  Try to open the Garmin USB device
         if(INVALID_HANDLE_VALUE == m_usb_handle)
         {
@@ -1058,7 +1064,7 @@ void GarminProtocolHandler::OnTimerGarmin1(wxTimerEvent& event)
                 m_garmin_usb_thread->Run();
             }
         }
-        #endif
+#endif
     }
     
     TimerGarmin1.Start(1000);
@@ -1367,7 +1373,7 @@ int GarminProtocolHandler::gusb_cmd_get(garmin_usb_packet *ibuf, size_t sz)
     int rv = 0;
     unsigned char *buf = (unsigned char *) &ibuf->dbuf[0];
     int orig_receive_state;
-    top:
+top:
     orig_receive_state = m_receive_state;
     switch (m_receive_state) {
         case rs_fromintr:
@@ -1555,7 +1561,7 @@ void *GARMIN_Serial_Thread::Entry()
     while((not_done) && (m_parent->m_Thread_run_flag > 0)) {
 
         if(TestDestroy()) {
-            not_done = false;                               // smooth exit
+//            not_done = false;                               // smooth exit, but not used
             goto thread_exit;
         }
 

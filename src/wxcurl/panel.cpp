@@ -167,7 +167,7 @@ void wxCurlConnectionSettingsPanel::CreateControls(const wxString &msg)
 void wxCurlConnectionSettingsPanel::SetCURLOptions(wxCurlBase *p)
 {
     wxASSERT(p);
-
+    if(p) {
     if (HasFlag(wxCCSP_PORT_OPTION))
     {
         long port = -1;     // -1 tell libCURL to use the default port
@@ -192,6 +192,7 @@ void wxCurlConnectionSettingsPanel::SetCURLOptions(wxCurlBase *p)
         long port = -1;     // -1 tell libCURL to use the default port
         m_pProxyPort->GetValue().ToLong(&port);
         p->SetProxyPort(port);
+    }
     }
 }
 

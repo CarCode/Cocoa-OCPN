@@ -1145,7 +1145,7 @@ AIS_Target_Data *AIS_Decoder::ProcessDSx( const wxString& str, bool b_take_dsc )
         mmsi = (int) dse_mmsi;
     }
     
-    long mmsi_long = mmsi;
+//    long mmsi_long = mmsi;  // Not used
 
     //  Get the last report time for this target, if it exists
     wxDateTime now = wxDateTime::Now();

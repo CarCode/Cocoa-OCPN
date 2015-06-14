@@ -1021,7 +1021,7 @@ int TCMgr::GetStationIDXbyName(const wxString & prefix, double xlat, double xlon
     wxString locn;
     double distx = 100000.;
 
-    int jmax = Get_max_IDX();
+//    int jmax = Get_max_IDX();  // Not used
 
     for ( int j=1 ; j<Get_max_IDX() +1 ; j++ ) {
         lpIDX = GetIDX_entry ( j );
@@ -1052,7 +1052,7 @@ int TCMgr::GetStationIDXbyNameType(const wxString & prefix, double xlat, double 
 
     // if (prp->m_MarkName.Find(_T("@~~")) != wxNOT_FOUND) {
     //tide_form = prp->m_MarkName.Mid(prp->m_MarkName.Find(_T("@~~"))+3);
-    int jmax = Get_max_IDX();
+//    int jmax = Get_max_IDX();  // Not used
 
     for ( int j=1 ; j<Get_max_IDX() +1 ; j++ ) {
         lpIDX = GetIDX_entry ( j );

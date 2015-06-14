@@ -7926,8 +7926,7 @@ void ChartCanvas::RemovePointFromRoute( RoutePoint* point, Route* route ) {
 }
 
 void ChartCanvas::ShowMarkPropertiesDialog( RoutePoint* markPoint ) {
-    if( NULL == pMarkPropDialog )    // There is one global instance of the MarkProp Dialog
-        pMarkPropDialog = new MarkInfoImpl( this );
+    pMarkPropDialog = MarkInfoImpl::getInstance( this );     // There is one global instance of the MarkProp Dialog
 
     if( 1/*g_bresponsive*/ ) {
 
@@ -7973,8 +7972,7 @@ void ChartCanvas::ShowMarkPropertiesDialog( RoutePoint* markPoint ) {
 
 void ChartCanvas::ShowRoutePropertiesDialog(wxString title, Route* selected)
 {
-    if( NULL == pRoutePropDialog )  // There is one global instance of the RouteProp Dialog
-        pRoutePropDialog = new RouteProp( this );
+    pRoutePropDialog = RouteProp::getInstance( this ); // There is one global instance of the RouteProp Dialog
 
     if( g_bresponsive ) {
 
@@ -8023,8 +8021,7 @@ void ChartCanvas::ShowRoutePropertiesDialog(wxString title, Route* selected)
 
 void ChartCanvas::ShowTrackPropertiesDialog( Route* selected )
 {
-    if( NULL == pTrackPropDialog )  // There is one global instance of the RouteProp Dialog
-        pTrackPropDialog = new TrackPropDlg( this );
+    pTrackPropDialog = TrackPropDlg::getInstance( this );    // There is one global instance of the RouteProp Dialog
 
     pTrackPropDialog->SetTrackAndUpdate( selected );
     pTrackPropDialog->UpdateProperties();

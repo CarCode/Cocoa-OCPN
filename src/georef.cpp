@@ -439,11 +439,11 @@ void toSM_ECC(double lat, double lon, double lat0, double lon0, double *x, doubl
 
 // y =.5 ln( (1 + sin t) / (1 - sin t) )
       const double s = sin(lat * DEGREE);
-      const double y3 = (.5 * log((1 + s) / (1 - s))) * z;
+//      const double y3 = (.5 * log((1 + s) / (1 - s))) * z;  // Not used
 
       const double s0 = sin(lat0 * DEGREE);
-      const double y30 = (.5 * log((1 + s0) / (1 - s0))) * z;
-      const double y4 = y3 - y30;
+//      const double y30 = (.5 * log((1 + s0) / (1 - s0))) * z;  // Not used
+//      const double y4 = y3 - y30;  // Not used
 
     //Add eccentricity terms
 

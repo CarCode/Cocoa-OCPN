@@ -101,8 +101,18 @@ OCPNRegion &QuiltCandidate::GetCandidateVPRegion( ViewPort &vp )
                                                        cte.GetScale() );
         return candidate_region;
     }
-    
-    
+
+    // Special case:
+    // A skewed chart at high magnification will produce an OCPNregion that is very complex and expensive to process.
+    // And there is really no useful visual information to be gotten from the chart, anyway.
+    //  So, we simply "eclipse" these quilt candidates under these conditions as a p[erformance optimization.
+
+    if( (vp.chart_scale < cte.GetScale() / 10) && (cte.GetChartSkew() > 1.0) ){
+        candidate_region.Clear();
+        return candidate_region;
+    }
+
+
     //    If the chart has an aux ply table, use it for finer region precision
     int nAuxPlyEntries = cte.GetnAuxPlyEntries();
     if( nAuxPlyEntries >= 1 ) {
@@ -2396,11 +2406,11 @@ bool Quilt::RenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion 
         //    Fogging....
         if( g_fog_overzoom ) {
             double scale_factor = vp.ref_scale/vp.chart_scale;
-            
+
             if(scale_factor > g_overzoom_emphasis_base){
                 float fog = ((scale_factor - g_overzoom_emphasis_base) * 255.) / 20.;
                 fog = wxMin(fog, 200.);         // Don't fog out completely
-                
+
                 //    Is scratch member bitmap OK?
                 if( m_pBM ) {
                     if( ( m_pBM->GetWidth() != vp.rv_rect.width )
@@ -2409,16 +2419,16 @@ bool Quilt::RenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion 
                     m_pBM = NULL;
                         }
                 }
-                
+
                 if( NULL == m_pBM )
                     m_pBM = new wxBitmap( vp.rv_rect.width, vp.rv_rect.height );
-                
+
                 //    Copy the entire quilt to my scratch bm
                 wxMemoryDC q_dc;
                 q_dc.SelectObject( *m_pBM );
                 q_dc.Blit( 0, 0, vp.rv_rect.width, vp.rv_rect.height, &dc, 0, 0 );
                 q_dc.SelectObject( wxNullBitmap );
-  
+
 
                 wxImage src = m_pBM->ConvertToImage();
 #if 1
@@ -2426,24 +2436,24 @@ bool Quilt::RenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion 
                 if(src.IsOk()){
                     wxImage dest = src.Blur( blur_factor );
 #endif                
-                
-                
+
+
 #if 0           // this is fogging effect                
                 unsigned char *bg = src.GetData();
                 wxColour color = cc1->GetFogColor();
-                
+
                 float transparency = fog;
 
                 // destination image
                 wxImage dest(vp.rv_rect.width, vp.rv_rect.height);
                 unsigned char *dest_data = (unsigned char *) malloc( vp.rv_rect.width * vp.rv_rect.height * 3 * sizeof(unsigned char) );
                 unsigned char *d = dest_data;
-                
+
                 float alpha = 1.0 - (float)transparency / 255.0;
                 int sb = vp.rv_rect.width * vp.rv_rect.height;
                 for( int i = 0; i < sb; i++ ) {
                     float a = alpha;
-                    
+
                     int r = ( ( *bg++ ) * a ) + (1.0-a) * color.Red();
                     *d++ = r;
                     int g = ( ( *bg++ ) * a ) + (1.0-a) * color.Green();
@@ -2451,15 +2461,15 @@ bool Quilt::RenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion 
                     int b = ( ( *bg++ ) * a ) + (1.0-a) * color.Blue();
                     *d++ = b;
                 }
-                
+
                 dest.SetData( dest_data );
 #endif
-                
-                
+
+
                     wxBitmap dim(dest);
                     wxMemoryDC ddc;
                     ddc.SelectObject( dim );
-                
+
                     q_dc.SelectObject( *m_pBM );
                     OCPNRegionIterator upd ( rendered_region );
                     while ( upd.HaveRects() )
@@ -2468,17 +2478,17 @@ bool Quilt::RenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion 
                         q_dc.Blit( rect.x, rect.y, rect.width, rect.height, &ddc, rect.x, rect.y );
                         upd.NextRect();
                     }
-                    
+
                     ddc.SelectObject( wxNullBitmap );
                     q_dc.SelectObject( wxNullBitmap );
-                
+
                 //    Select the scratch BM as the return dc contents
                     dc.SelectObject( *m_pBM );
                 }                
             }              
          }     // overzoom
-        
-        
+
+
         if( !dc.IsOk() )          // some error, probably bad charts, to be disabled on next compose
         {
             SubstituteClearDC( dc, vp );

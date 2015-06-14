@@ -258,7 +258,7 @@ void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &m
     main->SetSizeHints(this);
 }
 
-void wxCurlTransferDialog::EndModal(wxCurlDialogReturnFlag retCode)
+void wxCurlTransferDialog::CTDSEndModal(wxCurlDialogReturnFlag retCode)
 {
     wxDialog::EndModal(retCode);
 

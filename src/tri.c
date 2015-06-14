@@ -2636,17 +2636,12 @@ static int add_segment(int segnum)
 //              int tmpseg;                                     /* dsr ???? is tmpseg */
                                                                 /* anyway, this branch never seems to get hit */
               int tmpseg = tr[tr[t].d0].rseg;
-#ifdef __WXOSX__
+/*  // Never used ???
                 if (is_swapped)
-                    tmpseg = seg[segnum].prev;
+                 tmptriseg = seg[segnum].prev;
                 else
-                    tmpseg = seg[segnum].next;
-#else
-              if (is_swapped)
-                tmptriseg = seg[segnum].prev;
-              else
-                tmptriseg = seg[segnum].next;
-#endif
+                 tmptriseg = seg[segnum].next;
+*/
               if ((tmpseg > 0) && is_left_of(tmpseg, &s.v0))
                 {
                   /* L-R downward cusp */
@@ -2697,8 +2692,8 @@ static int add_segment(int segnum)
             {
               if (tr[t].lo.x > s.v0.x)
                 i_d0 = TRUE;
-              else
-                i_d1 = TRUE;
+//              else  // Not used
+//                i_d1 = TRUE;  // Not used
             }
           else
             {
@@ -2708,8 +2703,8 @@ static int add_segment(int segnum)
 
               if (_less_than(&tmppt, &tr[t].lo))
                 i_d0 = TRUE;
-              else
-                i_d1 = TRUE;
+//              else  // Not used
+//                i_d1 = TRUE;  // Not used
             }
 
           /* check continuity from the top so that the lower-neighbour */
@@ -4050,17 +4045,12 @@ static int int_add_segment(int segnum)
                     //              int tmpseg;                                     /* dsr ???? is tmpseg */
                     /* anyway, this branch never seems to get hit */
                     int tmpseg = itr[itr[t].d0].rseg;
-#ifdef __WXOSX__
-                  if (is_swapped)
-                      tmpseg = iseg[segnum].prev;
-                  else
-                      tmpseg = iseg[segnum].next;
-#else
-                    if (is_swapped)
-                          tmptriseg = iseg[segnum].prev;
-                    else
-                          tmptriseg = iseg[segnum].next;
-#endif
+/*  // Never used ???
+                if (is_swapped)
+                   tmptriseg = iseg[segnum].prev;
+                else
+                   tmptriseg = iseg[segnum].next;
+*/
                     if ((tmpseg > 0) && int_is_left_of(tmpseg, &s.v0))
                     {
                           /* L-R downward cusp */
@@ -4115,8 +4105,8 @@ static int int_add_segment(int segnum)
               {
                     if (itr[t].lo.x > s.v0.x)
                           i_d0 = TRUE;
-                    else
-                          i_d1 = TRUE;
+//                    else  // Not used
+//                          i_d1 = TRUE;  // Not used
               }
               else
               {
@@ -4126,8 +4116,8 @@ static int int_add_segment(int segnum)
 
                     if (_less_than(&tmppt, &tpt))           //&itr[t].lo))
                           i_d0 = TRUE;
-                    else
-                          i_d1 = TRUE;
+//                    else  // Not used
+//                          i_d1 = TRUE;  // Not used
               }
 
               /* check continuity from the top so that the lower-neighbour */
@@ -4493,7 +4483,7 @@ int do_int_trapezate_polygon(int ncontours, int cntr[], double (*vertices)[2], i
             ccount++;
       }
 
-      genus = ncontours - 1;
+//      genus = ncontours - 1;  // Not used
       n = i-1;
 
       int_initialise(n);

@@ -163,7 +163,7 @@ void GrabberWin::MouseEvent( wxMouseEvent& event )
     }
     
 
-    if( event.Dragging() ) {
+    if( event.Dragging() ) {  // && m_ptoolbar->m_bnavgrabber) gelassen, so daß Verschieben nur mit 4Wege-Symbol geht
         if(m_ptoolbar && m_ptoolbar->IsShown() && m_ptoolbar->m_bnavgrabber){
             wxPoint par_pos_old = m_ptoolbar->GetPosition();
 

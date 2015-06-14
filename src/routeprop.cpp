@@ -335,6 +335,22 @@ END_EVENT_TABLE()
  * RouteProp constructors
  */
 
+bool RouteProp::instanceFlag = false;
+RouteProp* RouteProp::single = NULL;
+RouteProp* RouteProp::getInstance( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
+{
+    if(! instanceFlag)
+    {
+        single = new RouteProp( parent, id, title, pos, size, style);
+        instanceFlag = true;
+        return single;
+    }
+    else
+    {
+        return single;
+    }
+}
+
 RouteProp::RouteProp()
 {
 }
@@ -630,6 +646,7 @@ RouteProp::~RouteProp()
 
     // delete global print route selection dialog
     delete pRoutePrintSelection;
+    instanceFlag = false;
 }
 
 
@@ -1795,7 +1812,7 @@ void RouteProp::OnRoutepropOkClick( wxCommandEvent& event )
     m_pEnroutePoint = NULL;
     m_bStartNow = false;
 
-    if( pRouteManagerDialog && pRouteManagerDialog->IsShown() ) {
+    if( RouteManagerDialog::getInstanceFlag() && pRouteManagerDialog->IsShown() ) {
         if( !m_pRoute->m_bIsTrack )
             pRouteManagerDialog->UpdateRouteListCtrl();
         else
@@ -2312,6 +2329,25 @@ MarkInfoDef::~MarkInfoDef()
     delete m_menuLink;
 }
 
+bool MarkInfoImpl::instanceFlag = false;
+MarkInfoImpl* MarkInfoImpl::single = NULL;
+
+MarkInfoImpl *MarkInfoImpl::getInstance( wxWindow* parent, wxWindowID id,
+                                        const wxString& title, const wxPoint& pos, const wxSize& size,
+                                        long style)
+{
+    if(! instanceFlag)
+    {
+        single = new MarkInfoImpl( parent, id, title, pos, size,style);
+        instanceFlag = true;
+        return single;
+    }
+    else
+    {
+        return single;
+    }
+}
+
 MarkInfoImpl::MarkInfoImpl( wxWindow* parent, wxWindowID id, const wxString& title,
         const wxPoint& pos, const wxSize& size, long style ) :
         MarkInfoDef( parent, id, title, pos, size, style )
@@ -2327,6 +2363,7 @@ MarkInfoImpl::~MarkInfoImpl()
 {
     m_bcomboBoxIcon->Clear();
     m_pLinkProp->Destroy();
+    instanceFlag = false;
 }
 
 void MarkInfoImpl::InitialFocus( void )
@@ -2480,7 +2517,11 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
 
         //  not found, so add  it to the list, with a generic bitmap and using the name as description
         // n.b.  This should never happen...
-        if( -1 == iconToSelect){    
+#ifdef __WXOSX__
+        if( -1 == iconToSelect && icons){
+#else
+        if( -1 == iconToSelect){
+#endif
             m_bcomboBoxIcon->Append( m_pRoutePoint->GetIconName(), icons->GetBitmap( 0 ) );
             iconToSelect = m_bcomboBoxIcon->GetCount() - 1;
         }

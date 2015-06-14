@@ -98,7 +98,7 @@ public:
 
     bool InitializeLogFile( void );
 #ifdef __WXOSX__
-    wxString &GetLogFileName();
+//    wxString &GetLogFileName();
 #endif
     void CloseLogFile( void );
     wxString    &GetLargeLogMessage( void ){ return large_log_message; }

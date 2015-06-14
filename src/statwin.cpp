@@ -97,7 +97,7 @@ StatWin::~StatWin()
 void StatWin::RePosition()
 {
     wxSize cs = GetParent()->GetClientSize();
-    wxFrame *frame = dynamic_cast<wxFrame*>(GetParent());
+//    wxFrame *frame = dynamic_cast<wxFrame*>(GetParent());  // Not used
     wxPoint position;
     position.x = 0;
     position.y = cs.y;
@@ -303,7 +303,9 @@ void PianoWin::SetColorScheme( ColorScheme cs )
 
 void PianoWin::OnPaint( wxPaintEvent& event )
 {
+#ifndef __WXOSX__
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+#endif
     int width, height;
     GetClientSize( &width, &height );
     wxPaintDC dc( this );

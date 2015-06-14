@@ -374,7 +374,7 @@ void FontMgr::ScrubList( )
     while( ! done ){
         wxString candidate = FontCandidates[i];
         if(candidate == _T("END_OF_LIST") ) {
-            done = true;
+//            done = true;  // Not used but break
             break;
         }
         
@@ -449,7 +449,7 @@ void FontMgr::ScrubList( )
     while( ! done ){
         wxString candidate = FontCandidates[i];
         if(candidate == _T("END_OF_LIST") ) {
-            done = true;
+//            done = true;  // Not used but break
             break;
         }
 

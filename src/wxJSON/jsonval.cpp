@@ -967,7 +967,8 @@ wxJSONValue::AsString() const
             break;
         case wxJSONTYPE_INT :
             #if defined( wxJSON_64BIT_INT )
-            s.Printf( _T("%") compatibleLongLongFmtSpec _T("i"),
+//            s.Printf( _T("%") compatibleLongLongFmtSpec _T("i"),
+            s.Printf( _T("%") _T(wxLongLongFmtSpec) _T("i"),
                         data->m_value.m_valInt64 );
             #else
                 s.Printf( _T("%ld"), data->m_value.m_valLong );
@@ -975,7 +976,8 @@ wxJSONValue::AsString() const
             break;
         case wxJSONTYPE_UINT :
             #if defined( wxJSON_64BIT_INT )
-            s.Printf( _T("%") compatibleLongLongFmtSpec _T("u"),
+//            s.Printf( _T("%") compatibleLongLongFmtSpec _T("u"),
+            s.Printf( _T("%") _T(wxLongLongFmtSpec) _T("u"),
                         data->m_value.m_valUInt64 );
             #else
                 s.Printf( _T("%lu"), data->m_value.m_valULong );
@@ -2290,12 +2292,12 @@ wxJSONValue::Dump( bool deep, int indent ) const
   if ( deep )   {
     indent += 3;
     const wxJSONInternalMap* map;
-    int size;;
+    int size;
     wxJSONInternalMap::const_iterator it;
     switch ( type )    {
         case wxJSONTYPE_OBJECT :
             map = AsMap();
-            size = Size();
+//            size = Size();  // Not used
             for ( it = map->begin(); it != map->end(); ++it )  {
                 const wxJSONValue& v = it->second;
                 sub = v.Dump( true, indent );
