@@ -743,8 +743,11 @@ void Alarm::Run()
 {
     if(m_bSound)
         PlugInPlaySound(m_sSound);
-
+#ifdef __WXOSX__
+    if(m_bCommand && (m_sCommand != wxEmptyString))
+#else
     if(m_bCommand)
+#endif
         if(!wxProcess::Open(m_sCommand)) {
             wxMessageDialog mdlg(GetOCPNCanvasWindow(),
                                  Name() + _T(" ") +

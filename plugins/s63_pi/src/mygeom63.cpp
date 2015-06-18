@@ -347,7 +347,7 @@ PolyTessGeo::PolyTessGeo(unsigned char *polybuf, int nrecl, int index,  int senc
     ppg->pn_vertex = (int *)malloc(nctr * sizeof(int));
     int *pctr = ppg->pn_vertex;
 
-    size_t buf_len = wxMax(twkb_len + 2, 20 + (nctr * 4));
+    size_t buf_len = wxMax(twkb_len + 2, 20 + (nctr * 6));
     char *buf = (char *)malloc(buf_len);        // allocate a buffer guaranteed big enough
 
     my_bufgets( buf, buf_len );                 // contour nVert, as a char line
@@ -385,7 +385,11 @@ PolyTessGeo::PolyTessGeo(unsigned char *polybuf, int nrecl, int index,  int senc
     unsigned int tri_type;
     int nvert;
     int nvert_max = 0;
+#ifdef __WXOSX__
+    int total_byte_size = 2 * sizeof(float);
+#else
     int total_byte_size = 0;
+#endif
     bool not_finished = true;
     while(not_finished)
     {

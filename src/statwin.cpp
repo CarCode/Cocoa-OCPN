@@ -641,10 +641,7 @@ void PianoWin::MouseEvent( wxMouseEvent& event )
         if( event.ButtonUp() ) {
             gFrame->HandlePianoRollover( -1, -1 );
             gFrame->HandlePianoRolloverIcon( -1, -1 );
-
-            m_index_last = -1;
-            m_hover_icon_last = -1;
-            m_hover_last = -1;
+            ResetRollover();
         }
 
 
@@ -675,10 +672,7 @@ void PianoWin::MouseEvent( wxMouseEvent& event )
         if( event.Leaving() ) {
             gFrame->HandlePianoRollover( -1, -1 );
             gFrame->HandlePianoRolloverIcon( -1, -1 );
-
-            m_index_last = -1;
-            m_hover_icon_last = -1;
-            m_hover_last = -1;
+            ResetRollover();
         }
     }
 

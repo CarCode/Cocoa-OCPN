@@ -1,11 +1,11 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Database Object
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,23 +20,13 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- *
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #ifndef __CHARTDB_H__
 #define __CHARTDB_H__
 
 
-#include "wx/file.h"
-#include "wx/stream.h"
-#include "wx/wfstream.h"
-#include "wx/tokenzr.h"
-#include "wx/dir.h"
-#include "wx/filename.h"
 #include <wx/xml/xml.h>
 
 #include "chartbase.h"
@@ -107,7 +97,7 @@ class ChartDB: public ChartDatabase
 {
 public:
 
-      ChartDB(MyFrame *parent);
+      ChartDB();
       virtual ~ChartDB();
 
 
@@ -174,7 +164,6 @@ private:
       
       wxArrayPtrVoid    *pChartCache;
 
-      MyFrame           *pParent;
       bool              m_b_locked;
       bool              m_b_busy;
 

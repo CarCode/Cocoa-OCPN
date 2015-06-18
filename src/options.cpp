@@ -40,6 +40,8 @@
 #include <wx/choice.h>
 #include <wx/dirdlg.h>
 #include <wx/clrpicker.h>
+#include "wx/tokenzr.h"
+
 #if wxCHECK_VERSION(2,9,4) /* does this work in 2.8 too.. do we need a test? */
 #include <wx/renderer.h>
 #endif
@@ -2910,7 +2912,7 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
     pToolbarAutoHide->Add( pToolbarHideSecs, 0, wxALIGN_RIGHT | wxALL, group_item_spacing );
 #endif
     pToolbarAutoHide->Add( new wxStaticText( itemPanelFont, wxID_ANY, _("seconds") ),group_item_spacing );
-    
+
     // Sound options
     pPlayShipsBells = new wxCheckBox( itemPanelFont, ID_BELLSCHECKBOX, _("Play Ships Bells"));
     miscOptions->Add( pPlayShipsBells, 0, wxALL, border_size );
@@ -2936,7 +2938,7 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
     
     pResponsive = new wxCheckBox( itemPanelFont, ID_REPONSIVEBOX, _("Enable Tablet Scaled Graphics interface") );
     miscOptions->Add( pResponsive, 0, wxALL, border_size );
-
+#ifndef __WXOSX__
     int slider_width = wxMax(m_fontHeight * 4, 150);
     
     m_pSlider_GUI_Factor = new wxSlider( itemPanelFont, wxID_ANY, 0, -5, 5,
@@ -2966,7 +2968,7 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
     m_pSlider_Chart_Factor->GetHandle()->setStyleSheet( getQtStyleSheet());
 #endif
 #endif
-
+#endif
 }
 
 void options::CreateControls()
@@ -3142,6 +3144,7 @@ void options::CreateControls()
 
     m_pageConnections = CreatePanel( _("Connections") );
     CreatePanel_NMEA( m_pageConnections, border_size, group_item_spacing, m_small_button_size );
+
     m_pageShips = CreatePanel( _("Ships") );
     CreatePanel_Ownship( m_pageShips, border_size, group_item_spacing, m_small_button_size );
     CreatePanel_AIS( m_pageShips, border_size, group_item_spacing, m_small_button_size );
@@ -3408,10 +3411,10 @@ void options::SetInitialSettings()
     m_pCheck_Rollover_CPA->SetValue( g_bAISRolloverShowCPA );
 
     m_pSlider_Zoom->SetValue( g_chart_zoom_modifier );
-
+#ifndef __WXOSX__
     m_pSlider_GUI_Factor->SetValue(g_GUIScaleFactor);
     m_pSlider_Chart_Factor->SetValue(g_ChartScaleFactor);
-
+#endif
     wxString screenmm;
     if(g_config_display_size_mm > 0){
         screenmm.Printf(_T("%d"), int(g_config_display_size_mm));
@@ -3778,6 +3781,14 @@ void options::OnCharHook( wxKeyEvent& event ) {
 void options::OnButtonaddClick( wxCommandEvent& event )
 {
     wxString selDir;
+
+    int dresult = g_Platform->DoDirSelectorDialog( this, &selDir, _("Add a directory containing chart files"),
+                                                  *pInit_Chart_Dir);
+    
+    if(wxID_CANCEL == dresult)
+        goto done;
+    
+#if 0
     wxDirDialog *dirSelector = new wxDirDialog( this, _("Add a directory containing chart files"),
             *pInit_Chart_Dir, wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST );
 
@@ -3791,12 +3802,13 @@ void options::OnButtonaddClick( wxCommandEvent& event )
         goto done;
 
     selDir = dirSelector->GetPath();
-
+#endif
+    
     AddChartDir( selDir );
     
 done:
     
-    delete dirSelector;
+//    delete dirSelector;
     event.Skip();
 }
 
@@ -4358,9 +4370,10 @@ void options::OnApplyClick( wxCommandEvent& event )
     g_bAISRolloverShowCPA = m_pCheck_Rollover_CPA->GetValue();
 
     g_chart_zoom_modifier = m_pSlider_Zoom->GetValue();
+#ifndef __WXOSX__
     g_GUIScaleFactor = m_pSlider_GUI_Factor->GetValue();
     g_ChartScaleFactor = m_pSlider_Chart_Factor->GetValue();
-
+#endif
     g_NMEAAPBPrecision = m_choicePrecision->GetCurrentSelection();
     
     g_TalkerIdText = m_TalkerIdText->GetValue().MakeUpper();
