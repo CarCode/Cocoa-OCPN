@@ -3416,8 +3416,9 @@ bool s57chart::CreateHeaderDataFromENC( void )
                         pNoCovrCntArray->Add( npt );
                     }
                 }
-                
-
+#ifdef __WXOSX__
+            free( pf);
+#endif
             delete pFeat;
             pFeat = GetChartNextM_COVR( catcov );
         }         // while

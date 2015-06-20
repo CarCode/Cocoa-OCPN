@@ -168,7 +168,6 @@ OCPNPlatform              *g_Platform;
 
 bool                      g_bFirstRun;
 wxString                  mlog_file;
-//wxString                  gConfig_File;
 
 int                       g_unit_test_1;
 bool                      g_start_fullscreen;

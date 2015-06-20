@@ -26,7 +26,7 @@
 #include <map>
 
 #include <wx/wx.h>
-#include "../../../include/ocpndc.h"
+#include "wddc.h"
 
 #include <wx/process.h>
 
@@ -196,7 +196,7 @@ public:
         }
     }
 
-    void Render(ocpnDC &dc, PlugIn_ViewPort &vp) {
+    void Render(wdDC &dc, PlugIn_ViewPort &vp) {
         PlugIn_Position_Fix_Ex lastfix = g_watchdog_pi->LastFix();
         if(isnan(m_crossinglat1))
             return;
@@ -399,7 +399,7 @@ public:
         return s;
     }
 
-    void Render(ocpnDC &dc, PlugIn_ViewPort &vp) {
+    void Render(wdDC &dc, PlugIn_ViewPort &vp) {
         wxFileConfig *pConf = GetConfigObject();
         
         wxPoint r1, r2;
@@ -488,7 +488,7 @@ public:
         return s;
     }
 
-    void Render(ocpnDC &dc, PlugIn_ViewPort &vp) {
+    void Render(wdDC &dc, PlugIn_ViewPort &vp) {
         wxFileConfig *pConf = GetConfigObject();
 
         double Tolerance;
@@ -613,7 +613,7 @@ public:
         return s;
     }
 
-    void Render(ocpnDC &dc, PlugIn_ViewPort &vp) {
+    void Render(wdDC &dc, PlugIn_ViewPort &vp) {
         PlugIn_Position_Fix_Ex lastfix = g_watchdog_pi->LastFix();
 
         double knots = Knots();
@@ -674,7 +674,7 @@ Alarm *Alarms[] = {&g_LandfallAlarm, &g_NMEADataAlarm, &g_DeadmanAlarm, &g_Secon
                    &g_AnchorAlarm, &g_CourseAlarm, &g_CourseStarboardAlarm,
                     &g_UnderSpeedAlarm, &g_OverSpeedAlarm, 0, 0, 0};
 
-void Alarm::RenderAll(ocpnDC &dc, PlugIn_ViewPort &vp)
+void Alarm::RenderAll(wdDC &dc, PlugIn_ViewPort &vp)
 {
     for(Alarm **alarm = Alarms; *alarm; alarm++)
         if((*alarm)->m_bgfxEnabled)
