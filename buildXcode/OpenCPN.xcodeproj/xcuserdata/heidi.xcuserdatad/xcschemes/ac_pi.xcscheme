@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0630"
+   LastUpgradeVersion = "0640"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A64514CB1AE4FF3000933404"
-               BuildableName = "libwxCurl.dylib"
-               BlueprintName = "wxCurl"
+               BlueprintIdentifier = "A669B1D31B372B7400C440BF"
+               BuildableName = "libac_pi.dylib"
+               BlueprintName = "ac_pi"
                ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,9 +42,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A64514CB1AE4FF3000933404"
-            BuildableName = "libwxCurl.dylib"
-            BlueprintName = "wxCurl"
+            BlueprintIdentifier = "A669B1D31B372B7400C440BF"
+            BuildableName = "libac_pi.dylib"
+            BlueprintName = "ac_pi"
             ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -60,9 +60,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A64514CB1AE4FF3000933404"
-            BuildableName = "libwxCurl.dylib"
-            BlueprintName = "wxCurl"
+            BlueprintIdentifier = "A669B1D31B372B7400C440BF"
+            BuildableName = "libac_pi.dylib"
+            BlueprintName = "ac_pi"
             ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

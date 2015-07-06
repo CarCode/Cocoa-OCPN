@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A68FF3D4184A625D00C65557"
-               BuildableName = "trimplot-i18n"
-               BlueprintName = "trimplot-i18n"
+               BlueprintIdentifier = "A632207B1AE047E700A52EAC"
+               BuildableName = "libchartdldr_pi.dylib"
+               BlueprintName = "chartdldr_pi"
                ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,9 +42,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A68FF3D4184A625D00C65557"
-            BuildableName = "trimplot-i18n"
-            BlueprintName = "trimplot-i18n"
+            BlueprintIdentifier = "A632207B1AE047E700A52EAC"
+            BuildableName = "libchartdldr_pi.dylib"
+            BlueprintName = "chartdldr_pi"
             ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -57,6 +57,15 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A632207B1AE047E700A52EAC"
+            BuildableName = "libchartdldr_pi.dylib"
+            BlueprintName = "chartdldr_pi"
+            ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

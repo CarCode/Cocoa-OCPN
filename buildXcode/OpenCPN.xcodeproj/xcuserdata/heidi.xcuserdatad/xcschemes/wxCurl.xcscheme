@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0630"
+   LastUpgradeVersion = "0640"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A632207B1AE047E700A52EAC"
-               BuildableName = "libchartdldr_pi.dylib"
-               BlueprintName = "chartdldr_pi"
+               BlueprintIdentifier = "A64514CB1AE4FF3000933404"
+               BuildableName = "libwxCurl.dylib"
+               BlueprintName = "wxCurl"
                ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,9 +42,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A632207B1AE047E700A52EAC"
-            BuildableName = "libchartdldr_pi.dylib"
-            BlueprintName = "chartdldr_pi"
+            BlueprintIdentifier = "A64514CB1AE4FF3000933404"
+            BuildableName = "libwxCurl.dylib"
+            BlueprintName = "wxCurl"
             ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -60,9 +60,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A632207B1AE047E700A52EAC"
-            BuildableName = "libchartdldr_pi.dylib"
-            BlueprintName = "chartdldr_pi"
+            BlueprintIdentifier = "A64514CB1AE4FF3000933404"
+            BuildableName = "libwxCurl.dylib"
+            BlueprintName = "wxCurl"
             ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

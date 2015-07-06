@@ -7,27 +7,6 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		08218CDDDBBF48CFB69FB60E /* logbookkonni-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = E038FB0A7C2F4490A2682EED /* Build configuration list for PBXAggregateTarget "logbookkonni-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "logbookkonni-i18n";
-			productName = "logbookkonni-i18n";
-		};
-		0B4529AF75434AF39FA03058 /* celestial_navigation-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = D56DD5E13A9E4BD79A11D60C /* Build configuration list for PBXAggregateTarget "celestial_navigation-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-				A6B158201829915400B18B37 /* PBXTargetDependency */,
-			);
-			name = "celestial_navigation-i18n";
-			productName = "celestial_navigation-i18n";
-		};
 		1552EA4FD4D44CD5B481D00A /* i18n */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 9A06621A266C447BAB1DE588 /* Build configuration list for PBXAggregateTarget "i18n" */;
@@ -38,16 +17,6 @@
 			);
 			name = i18n;
 			productName = i18n;
-		};
-		1880D5AAC70D458E8AF8845F /* weatherfax-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = B747165BB42A4342B7B53DAB /* Build configuration list for PBXAggregateTarget "weatherfax-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "weatherfax-i18n";
-			productName = "weatherfax-i18n";
 		};
 		27CF8681E9854FB2BFEC4280 /* po-update */ = {
 			isa = PBXAggregateTarget;
@@ -60,16 +29,6 @@
 			name = "po-update";
 			productName = "po-update";
 		};
-		37660061C03E4FB789FCFE8F /* vdr-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 75027213D83945A4B58B563F /* Build configuration list for PBXAggregateTarget "vdr-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "vdr-i18n";
-			productName = "vdr-i18n";
-		};
 		50A33997A9A446B7BE4122DF /* pot-update */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 6B4B7D401D3645D2A815D901 /* Build configuration list for PBXAggregateTarget "pot-update" */;
@@ -81,66 +40,6 @@
 			name = "pot-update";
 			productName = "pot-update";
 		};
-		6EC43A9463774F598FB1A42B /* wmm-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = CFDD51C594214D028A767FB3 /* Build configuration list for PBXAggregateTarget "wmm-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "wmm-i18n";
-			productName = "wmm-i18n";
-		};
-		7C4065816236458CAC0D204B /* grib-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 3BC51413165046C2A2790550 /* Build configuration list for PBXAggregateTarget "grib-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "grib-i18n";
-			productName = "grib-i18n";
-		};
-		A60F748F17A0319F00A6160F /* calculator-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = A60F749017A0319F00A6160F /* Build configuration list for PBXAggregateTarget "calculator-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "calculator-i18n";
-			productName = "calculator-i18n";
-		};
-		A68FF3D4184A625D00C65557 /* trimplot-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = A68FF3D5184A625D00C65557 /* Build configuration list for PBXAggregateTarget "trimplot-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "trimplot-i18n";
-			productName = "gradar-i18n";
-		};
-		A6B4A52B17A5143700E3A5D0 /* weather_routing-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = A6B4A52C17A5143700E3A5D0 /* Build configuration list for PBXAggregateTarget "weather_routing-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "weather_routing-i18n";
-			productName = "gradar-i18n";
-		};
-		A6D583A717A141220094D709 /* watchman-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = A6D583A817A141220094D709 /* Build configuration list for PBXAggregateTarget "watchman-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "watchman-i18n";
-			productName = "gradar-i18n";
-		};
 		A87580D1DD2B4F81B39F3B5A /* ZERO_CHECK */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 455E66B066EF4A08A0D08BBE /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
@@ -151,22 +50,13 @@
 			name = ZERO_CHECK;
 			productName = ZERO_CHECK;
 		};
-		C3E7830A45DB43C6972F769E /* gradar-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 88BA2931A14D42578377E68A /* Build configuration list for PBXAggregateTarget "gradar-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "gradar-i18n";
-			productName = "gradar-i18n";
-		};
 		CA63ADD7C51F4BCFB9082FB9 /* ALL_BUILD */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 0F88EFB11CF345ACACED14E2 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
 			buildPhases = (
 			);
 			dependencies = (
+				A669B20F1B374A6500C440BF /* PBXTargetDependency */,
 				A68035B31B2890A8007A4045 /* PBXTargetDependency */,
 				EAAB4E87696645CDAEA03510 /* PBXTargetDependency */,
 				785D38FA2EB248D992323ED9 /* PBXTargetDependency */,
@@ -197,36 +87,6 @@
 			);
 			name = ALL_BUILD;
 			productName = ALL_BUILD;
-		};
-		CB31BDFEC5D94590ADB7FEBA /* IACFleet-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 1C83C8F161C643CEB45C685D /* Build configuration list for PBXAggregateTarget "IACFleet-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "IACFleet-i18n";
-			productName = "IACFleet-i18n";
-		};
-		DC307BE96D784EB6B4B451DB /* dashboard-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 829E2F3F20764808A441A79F /* Build configuration list for PBXAggregateTarget "dashboard-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "dashboard-i18n";
-			productName = "dashboard-i18n";
-		};
-		F1DE54257F2A4DBA82D6F8AA /* findit-i18n */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 2A85DE9E83E1468FBD627DB8 /* Build configuration list for PBXAggregateTarget "findit-i18n" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = "findit-i18n";
-			productName = "findit-i18n";
 		};
 /* End PBXAggregateTarget section */
 
@@ -571,6 +431,18 @@
 		A65F36E5197473690006DC40 /* jsonval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65F36E21974733D0006DC40 /* jsonval.cpp */; };
 		A65F36E6197473690006DC40 /* jsonwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65F36E31974733D0006DC40 /* jsonwriter.cpp */; };
 		A6632EE417E50BF4002001B9 /* osx_helpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6632EE317E50BF4002001B9 /* osx_helpers.mm */; };
+		A669B1F31B372EC600C440BF /* ac_pi_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1F21B372EC600C440BF /* ac_pi_draw.cpp */; };
+		A669B1F51B372EFF00C440BF /* ac_pi_gui_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1F41B372EFF00C440BF /* ac_pi_gui_impl.cpp */; };
+		A669B1F71B372F1700C440BF /* ac_pi_gui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1F61B372F1700C440BF /* ac_pi_gui.cpp */; };
+		A669B1F91B372F4100C440BF /* ac_pi_thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1F81B372F4100C440BF /* ac_pi_thread.cpp */; };
+		A669B1FB1B372F5700C440BF /* ac_pi_util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1FA1B372F5700C440BF /* ac_pi_util.cpp */; };
+		A669B1FD1B372F7500C440BF /* ac_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1FC1B372F7400C440BF /* ac_pi.cpp */; };
+		A669B1FF1B372F9200C440BF /* ac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1FE1B372F9200C440BF /* ac.cpp */; };
+		A669B2011B372FBF00C440BF /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B2001B372FBF00C440BF /* icons.cpp */; };
+		A669B2041B37300100C440BF /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B2031B37300100C440BF /* md5.cpp */; };
+		A669B2061B37301F00C440BF /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B2051B37301F00C440BF /* pugixml.cpp */; };
+		A669B2081B37304100C440BF /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B2071B37304100C440BF /* TexFont.cpp */; };
+		A669B20D1B37496900C440BF /* libac_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A669B1E01B372B7400C440BF /* libac_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A669D4C51A2282860078BFB1 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A669D4C41A2282860078BFB1 /* sha1.c */; };
 		A66D8E2F18D2584E00BC8747 /* routeprintout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66D8E2E18D2584E00BC8747 /* routeprintout.cpp */; };
 		A66D8E3118D2607A00BC8747 /* printtable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66D8E3018D2607A00BC8747 /* printtable.cpp */; };
@@ -662,6 +534,8 @@
 		A6AC8E7D17EC64FC00872D7E /* libweather_routing_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */; };
 		A6AD109D19B8CB7A009AC900 /* opencpn.icns in Resources */ = {isa = PBXBuildFile; fileRef = A6AD109C19B8CB7A009AC900 /* opencpn.icns */; };
 		A6AFFE691A29E0A900D10C76 /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6AFFE681A29E0A900D10C76 /* TexFont.cpp */; };
+		A6B1506F1B3430B6007DC7B4 /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B1506E1B3430B6007DC7B4 /* TexFont.cpp */; };
+		A6B150711B3430D9007DC7B4 /* wddc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B150701B3430D9007DC7B4 /* wddc.cpp */; };
 		A6B4A55417A51C6F00E3A5D0 /* weather_routing_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55317A51C6F00E3A5D0 /* weather_routing_pi.cpp */; };
 		A6B4A55617A51CA000E3A5D0 /* WeatherRouting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55517A51CA000E3A5D0 /* WeatherRouting.cpp */; };
 		A6B4A55817A51CC800E3A5D0 /* ConfigurationDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55717A51CC800E3A5D0 /* ConfigurationDialog.cpp */; };
@@ -840,27 +714,6 @@
 			remoteGlobalIDString = 0AC78A9BDDEE45EBA4DB4E9B;
 			remoteInfo = iacfleet_pi;
 		};
-		32C5DD674A4D416C994B59D7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0B4529AF75434AF39FA03058;
-			remoteInfo = "celestial_navigation-i18n";
-		};
-		34499BDFB0EC49C8B1499E78 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1880D5AAC70D458E8AF8845F;
-			remoteInfo = "weatherfax-i18n";
-		};
-		3CABA53027814198BC9648FE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7C4065816236458CAC0D204B;
-			remoteInfo = "grib-i18n";
-		};
 		4921AF15F01048E6AE1AF3C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
@@ -874,13 +727,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = BBDCA085D6A048ACA460037B;
 			remoteInfo = dashboard_pi;
-		};
-		627DD7F1F6A54E12BF598A56 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DC307BE96D784EB6B4B451DB;
-			remoteInfo = "dashboard-i18n";
 		};
 		753807C4548C41858E527A05 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -902,13 +748,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 311E4754305E4E4BB9093EB9;
 			remoteInfo = vdr_pi;
-		};
-		7F0ABE1F60F141609BE5855F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 08218CDDDBBF48CFB69FB60E;
-			remoteInfo = "logbookkonni-i18n";
 		};
 		8348A6B4B1864F459D12AAE7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -945,13 +784,6 @@
 			remoteGlobalIDString = 0E212BE62703449FAE04E4A7;
 			remoteInfo = gradar_pi;
 		};
-		A60F749317A031D600A6160F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A60F748F17A0319F00A6160F;
-			remoteInfo = "calculator-i18n";
-		};
 		A60F749517A0321500A6160F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
@@ -987,13 +819,6 @@
 			remoteGlobalIDString = A6D5839C17A141110094D709;
 			remoteInfo = watchman_pi;
 		};
-		A647085417A14B1100A16918 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A6D583A717A141220094D709;
-			remoteInfo = "watchman-i18n";
-		};
 		A647C90519C3652D0034EA04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
@@ -1007,6 +832,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = A6DB19BA18EDCDD300E643D2;
 			remoteInfo = BR24radar_pi;
+		};
+		A669B20E1B374A6500C440BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A669B1D31B372B7400C440BF;
+			remoteInfo = ac_pi;
 		};
 		A68035B21B2890A8007A4045 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1029,13 +861,6 @@
 			remoteGlobalIDString = A68EAB01188739ED00893250;
 			remoteInfo = s63_pi;
 		};
-		A68FF3FC184A632B00C65557 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A68FF3D4184A625D00C65557;
-			remoteInfo = "trimplot-i18n";
-		};
 		A68FF414184A686400C65557 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
@@ -1043,26 +868,12 @@
 			remoteGlobalIDString = A68FF3D8184A62A700C65557;
 			remoteInfo = trimplot_pi;
 		};
-		A6B1581F1829915400B18B37 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A87580D1DD2B4F81B39F3B5A;
-			remoteInfo = ZERO_CHECK;
-		};
 		A6B4A58217A5229300E3A5D0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = A6B4A52F17A515FA00E3A5D0;
 			remoteInfo = weather_routing_pi;
-		};
-		A6B4A58417A5260000E3A5D0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A6B4A52B17A5143700E3A5D0;
-			remoteInfo = "weather_routing-i18n";
 		};
 		A6FE261819D55C28001EF4B7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1092,47 +903,12 @@
 			remoteGlobalIDString = DA8BE84D3892479688EFF96F;
 			remoteInfo = OpenCPN;
 		};
-		BD0ABB05B25D4EAE939D0B58 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CB31BDFEC5D94590ADB7FEBA;
-			remoteInfo = "IACFleet-i18n";
-		};
-		C115E05F32CF42D9A93CECD4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6EC43A9463774F598FB1A42B;
-			remoteInfo = "wmm-i18n";
-		};
 		C3E129559A164CC482C73658 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 35C748B81A2C422A916539B5;
 			remoteInfo = findit_pi;
-		};
-		C9E08A3F66104E38A2AA8330 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 37660061C03E4FB789FCFE8F;
-			remoteInfo = "vdr-i18n";
-		};
-		CA797611DE8F497983C32EE8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C3E7830A45DB43C6972F769E;
-			remoteInfo = "gradar-i18n";
-		};
-		D4639EF636D0491B9F38AFFE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F1DE54257F2A4DBA82D6F8AA;
-			remoteInfo = "findit-i18n";
 		};
 		E124575F318C4D0B858E0587 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1256,6 +1032,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				A669B20D1B37496900C440BF /* libac_pi.dylib in Copy Files */,
 				A68035B41B2890D7007A4045 /* libnmeaconverter_pi.dylib in Copy Files */,
 				A64EBB551B271D5A00F861D0 /* libBR24radar_pi.dylib in Copy Files */,
 				A62F3F4B1AE1559700AFD69B /* libchartdldr_pi.dylib in Copy Files */,
@@ -1876,6 +1653,33 @@
 		A66094A419E3D8550066CBBA /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/S63_pi/src/TexFont.h; sourceTree = "<group>"; };
 		A6632EE317E50BF4002001B9 /* osx_helpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = osx_helpers.mm; path = src/osx_helpers.mm; sourceTree = "<group>"; };
 		A665CBED17CF33C00007CDB7 /* s52s57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = s52s57.h; path = include/s52s57.h; sourceTree = "<group>"; };
+		A669B1E01B372B7400C440BF /* libac_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libac_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A669B1E41B372CB100C440BF /* ac_pi_draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ac_pi_draw.h; path = plugins/ac_pi/src/ac_pi_draw.h; sourceTree = "<group>"; };
+		A669B1E51B372CED00C440BF /* ac_pi_gui_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ac_pi_gui_impl.h; path = plugins/ac_pi/src/ac_pi_gui_impl.h; sourceTree = "<group>"; };
+		A669B1E61B372D0B00C440BF /* ac_pi_gui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ac_pi_gui.h; path = plugins/ac_pi/src/ac_pi_gui.h; sourceTree = "<group>"; };
+		A669B1E71B372D2800C440BF /* ac_pi_thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ac_pi_thread.h; path = plugins/ac_pi/src/ac_pi_thread.h; sourceTree = "<group>"; };
+		A669B1E81B372D4600C440BF /* ac_pi_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ac_pi_util.h; path = plugins/ac_pi/src/ac_pi_util.h; sourceTree = "<group>"; };
+		A669B1E91B372D6E00C440BF /* ac_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ac_pi.h; path = plugins/ac_pi/src/ac_pi.h; sourceTree = "<group>"; };
+		A669B1EA1B372D8B00C440BF /* ac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ac.h; path = plugins/ac_pi/src/ac.h; sourceTree = "<group>"; };
+		A669B1EB1B372DB400C440BF /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/ac_pi/src/icons.h; sourceTree = "<group>"; };
+		A669B1EC1B372E1900C440BF /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = md5.h; path = plugins/ac_pi/src/md5.h; sourceTree = "<group>"; };
+		A669B1ED1B372E3600C440BF /* ocpn_plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ocpn_plugin.h; path = plugins/ac_pi/src/ocpn_plugin.h; sourceTree = "<group>"; };
+		A669B1EE1B372E5800C440BF /* pugiconfig.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugiconfig.hpp; path = plugins/ac_pi/src/pugiconfig.hpp; sourceTree = "<group>"; };
+		A669B1EF1B372E8400C440BF /* pugixml.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugixml.hpp; path = plugins/ac_pi/src/pugixml.hpp; sourceTree = "<group>"; };
+		A669B1F01B372E8400C440BF /* RTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RTree.h; path = plugins/ac_pi/src/RTree.h; sourceTree = "<group>"; };
+		A669B1F11B372E9F00C440BF /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/ac_pi/src/TexFont.h; sourceTree = "<group>"; };
+		A669B1F21B372EC600C440BF /* ac_pi_draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ac_pi_draw.cpp; path = plugins/ac_pi/src/ac_pi_draw.cpp; sourceTree = "<group>"; };
+		A669B1F41B372EFF00C440BF /* ac_pi_gui_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ac_pi_gui_impl.cpp; path = plugins/ac_pi/src/ac_pi_gui_impl.cpp; sourceTree = "<group>"; };
+		A669B1F61B372F1700C440BF /* ac_pi_gui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ac_pi_gui.cpp; path = plugins/ac_pi/src/ac_pi_gui.cpp; sourceTree = "<group>"; };
+		A669B1F81B372F4100C440BF /* ac_pi_thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ac_pi_thread.cpp; path = plugins/ac_pi/src/ac_pi_thread.cpp; sourceTree = "<group>"; };
+		A669B1FA1B372F5700C440BF /* ac_pi_util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ac_pi_util.cpp; path = plugins/ac_pi/src/ac_pi_util.cpp; sourceTree = "<group>"; };
+		A669B1FC1B372F7400C440BF /* ac_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ac_pi.cpp; path = plugins/ac_pi/src/ac_pi.cpp; sourceTree = "<group>"; };
+		A669B1FE1B372F9200C440BF /* ac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ac.cpp; path = plugins/ac_pi/src/ac.cpp; sourceTree = "<group>"; };
+		A669B2001B372FBF00C440BF /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/ac_pi/src/icons.cpp; sourceTree = "<group>"; };
+		A669B2021B372FDC00C440BF /* IntervalTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntervalTree.h; path = plugins/ac_pi/src/IntervalTree.h; sourceTree = "<group>"; };
+		A669B2031B37300100C440BF /* md5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = md5.cpp; path = plugins/ac_pi/src/md5.cpp; sourceTree = "<group>"; };
+		A669B2051B37301F00C440BF /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pugixml.cpp; path = plugins/ac_pi/src/pugixml.cpp; sourceTree = "<group>"; };
+		A669B2071B37304100C440BF /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/ac_pi/src/TexFont.cpp; sourceTree = "<group>"; };
 		A669D4C31A2282610078BFB1 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sha1.h; path = src/ssl/sha1.h; sourceTree = "<group>"; };
 		A669D4C41A2282860078BFB1 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sha1.c; path = src/ssl/sha1.c; sourceTree = "<group>"; };
 		A66D8E2E18D2584E00BC8747 /* routeprintout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = routeprintout.cpp; path = src/routeprintout.cpp; sourceTree = "<group>"; };
@@ -2045,6 +1849,8 @@
 		A6AD109C19B8CB7A009AC900 /* opencpn.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = opencpn.icns; path = buildosx/opencpn.icns; sourceTree = "<group>"; };
 		A6AFFE671A29E08400D10C76 /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/grib_pi/src/TexFont.h; sourceTree = "<group>"; };
 		A6AFFE681A29E0A900D10C76 /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/grib_pi/src/TexFont.cpp; sourceTree = "<group>"; };
+		A6B1506E1B3430B6007DC7B4 /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/watchdog_pi/src/TexFont.cpp; sourceTree = "<group>"; };
+		A6B150701B3430D9007DC7B4 /* wddc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wddc.cpp; path = plugins/watchdog_pi/src/wddc.cpp; sourceTree = "<group>"; };
 		A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libweather_routing_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6B4A53E17A5174300E3A5D0 /* weather_routing_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = weather_routing_pi.h; path = plugins/weather_routing_pi/src/weather_routing_pi.h; sourceTree = "<group>"; };
 		A6B4A53F17A5177500E3A5D0 /* WeatherRouting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherRouting.h; path = plugins/weather_routing_pi/src/WeatherRouting.h; sourceTree = "<group>"; };
@@ -2845,6 +2651,7 @@
 				A6DB19B718EDCC1700E643D2 /* BR24radar_pi */,
 				A6728C0E19D433B700070B45 /* objsearch_pi */,
 				A63220C91AE04A5200A52EAC /* chartdlfr_pi */,
+				A669B1E11B372BB300C440BF /* ac_pi */,
 				A671BCA419BE3D2F00019119 /* squiddio_pi */,
 				A680359A1B28823A007A4045 /* nmeaconverter_pi */,
 			);
@@ -3360,6 +3167,55 @@
 			name = "Header Files";
 			sourceTree = "<group>";
 		};
+		A669B1E11B372BB300C440BF /* ac_pi */ = {
+			isa = PBXGroup;
+			children = (
+				A669B1E31B372BE600C440BF /* Header Files */,
+				A669B1E21B372BD600C440BF /* Source Files */,
+			);
+			name = ac_pi;
+			sourceTree = "<group>";
+		};
+		A669B1E21B372BD600C440BF /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				A669B1FC1B372F7400C440BF /* ac_pi.cpp */,
+				A669B1FE1B372F9200C440BF /* ac.cpp */,
+				A669B1F21B372EC600C440BF /* ac_pi_draw.cpp */,
+				A669B1FA1B372F5700C440BF /* ac_pi_util.cpp */,
+				A669B1F81B372F4100C440BF /* ac_pi_thread.cpp */,
+				A669B1F61B372F1700C440BF /* ac_pi_gui.cpp */,
+				A669B1F41B372EFF00C440BF /* ac_pi_gui_impl.cpp */,
+				A669B2001B372FBF00C440BF /* icons.cpp */,
+				A669B2031B37300100C440BF /* md5.cpp */,
+				A669B2051B37301F00C440BF /* pugixml.cpp */,
+				A669B2071B37304100C440BF /* TexFont.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		A669B1E31B372BE600C440BF /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				A669B1E91B372D6E00C440BF /* ac_pi.h */,
+				A669B1EA1B372D8B00C440BF /* ac.h */,
+				A669B1E41B372CB100C440BF /* ac_pi_draw.h */,
+				A669B1E61B372D0B00C440BF /* ac_pi_gui.h */,
+				A669B1E51B372CED00C440BF /* ac_pi_gui_impl.h */,
+				A669B1E71B372D2800C440BF /* ac_pi_thread.h */,
+				A669B1E81B372D4600C440BF /* ac_pi_util.h */,
+				A669B1EB1B372DB400C440BF /* icons.h */,
+				A669B2021B372FDC00C440BF /* IntervalTree.h */,
+				A669B1EC1B372E1900C440BF /* md5.h */,
+				A669B1ED1B372E3600C440BF /* ocpn_plugin.h */,
+				A669B1EE1B372E5800C440BF /* pugiconfig.hpp */,
+				A669B1EF1B372E8400C440BF /* pugixml.hpp */,
+				A669B1F01B372E8400C440BF /* RTree.h */,
+				A669B1F11B372E9F00C440BF /* TexFont.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
 		A671BCA419BE3D2F00019119 /* squiddio_pi */ = {
 			isa = PBXGroup;
 			children = (
@@ -3489,6 +3345,8 @@
 				A683CEC01958BC48004A0137 /* WatchdogDialog.cpp */,
 				A683CEC21958BC64004A0137 /* WatchdogPrefsDialog.cpp */,
 				A683CEC41958BC7C004A0137 /* WatchdogUI.cpp */,
+				A6B1506E1B3430B6007DC7B4 /* TexFont.cpp */,
+				A6B150701B3430D9007DC7B4 /* wddc.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3937,6 +3795,7 @@
 				A63220C81AE047E800A52EAC /* libchartdldr_pi.dylib */,
 				A64514F61AE4FF3000933404 /* libwxCurl.dylib */,
 				A68035AF1B288508007A4045 /* libnmeaconverter_pi.dylib */,
+				A669B1E01B372B7400C440BF /* libac_pi.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4187,7 +4046,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D991B9D88F514954A97BDAB6 /* PBXTargetDependency */,
 			);
 			name = iacfleet_pi;
 			productName = iacfleet_pi;
@@ -4204,7 +4062,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				9FB815AF781244959847C8DD /* PBXTargetDependency */,
 			);
 			name = gradar_pi;
 			productName = gradar_pi;
@@ -4221,7 +4078,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				3DDAAD84B5704A9996AB7C30 /* PBXTargetDependency */,
 			);
 			name = logbookkonni_pi;
 			productName = logbookkonni_pi;
@@ -4238,7 +4094,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				73B139E7AD53473784F317B0 /* PBXTargetDependency */,
 			);
 			name = vdr_pi;
 			productName = vdr_pi;
@@ -4255,7 +4110,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				9790FB2EB8DF43B9AA852C87 /* PBXTargetDependency */,
 			);
 			name = findit_pi;
 			productName = findit_pi;
@@ -4272,7 +4126,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				59E60CABCCBF40089717DFB7 /* PBXTargetDependency */,
 			);
 			name = celestial_navigation_pi;
 			productName = celestial_navigation_pi;
@@ -4337,7 +4190,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				A60F749417A031D600A6160F /* PBXTargetDependency */,
 			);
 			name = calculator_pi;
 			productName = calculator_pi;
@@ -4376,6 +4228,22 @@
 			productName = NMEA0183;
 			productReference = A64514F61AE4FF3000933404 /* libwxCurl.dylib */;
 			productType = "com.apple.product-type.library.static";
+		};
+		A669B1D31B372B7400C440BF /* ac_pi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A669B1DD1B372B7400C440BF /* Build configuration list for PBXNativeTarget "ac_pi" */;
+			buildPhases = (
+				A669B1D41B372B7400C440BF /* Sources */,
+				A669B1DC1B372B7400C440BF /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ac_pi;
+			productName = gradar_pi;
+			productReference = A669B1E01B372B7400C440BF /* libac_pi.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
 		};
 		A671BCBC19BE44BC00019119 /* squiddio_pi */ = {
 			isa = PBXNativeTarget;
@@ -4467,7 +4335,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				A68FF3FD184A632B00C65557 /* PBXTargetDependency */,
 			);
 			name = trimplot_pi;
 			productName = gradar_pi;
@@ -4484,7 +4351,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				A6B4A58517A5260000E3A5D0 /* PBXTargetDependency */,
 			);
 			name = weather_routing_pi;
 			productName = gradar_pi;
@@ -4501,7 +4367,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				A647085517A14B1100A16918 /* PBXTargetDependency */,
 			);
 			name = watchman_pi;
 			productName = gradar_pi;
@@ -4534,7 +4399,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				DC26931A2ECD479DAD9B7C32 /* PBXTargetDependency */,
 			);
 			name = dashboard_pi;
 			productName = dashboard_pi;
@@ -4551,7 +4415,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				C6BACBF6B61B435A836E6B21 /* PBXTargetDependency */,
 			);
 			name = grib_pi;
 			productName = grib_pi;
@@ -4568,7 +4431,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				3EFCA9BFA0384424AAFA9288 /* PBXTargetDependency */,
 			);
 			name = wmm_pi;
 			productName = wmm_pi;
@@ -4617,7 +4479,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				9D9DF08E2C164918A236AD69 /* PBXTargetDependency */,
 			);
 			name = weatherfax_pi;
 			productName = weatherfax_pi;
@@ -4631,7 +4492,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0640;
 			};
 			buildConfigurationList = B3FF15EAE22C49A1BCA88BD8 /* Build configuration list for PBXProject "OpenCPN" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -4654,33 +4515,19 @@
 				1552EA4FD4D44CD5B481D00A /* i18n */,
 				27CF8681E9854FB2BFEC4280 /* po-update */,
 				50A33997A9A446B7BE4122DF /* pot-update */,
-				0B4529AF75434AF39FA03058 /* celestial_navigation-i18n */,
 				54EFAF8E71AB4B0DBDDDC368 /* celestial_navigation_pi */,
-				DC307BE96D784EB6B4B451DB /* dashboard-i18n */,
 				BBDCA085D6A048ACA460037B /* dashboard_pi */,
-				F1DE54257F2A4DBA82D6F8AA /* findit-i18n */,
 				35C748B81A2C422A916539B5 /* findit_pi */,
-				C3E7830A45DB43C6972F769E /* gradar-i18n */,
 				0E212BE62703449FAE04E4A7 /* gradar_pi */,
-				7C4065816236458CAC0D204B /* grib-i18n */,
 				C79F239F31F54A629F97A87E /* grib_pi */,
-				CB31BDFEC5D94590ADB7FEBA /* IACFleet-i18n */,
 				0AC78A9BDDEE45EBA4DB4E9B /* iacfleet_pi */,
-				08218CDDDBBF48CFB69FB60E /* logbookkonni-i18n */,
 				245F07C941074404B880614E /* logbookkonni_pi */,
-				37660061C03E4FB789FCFE8F /* vdr-i18n */,
 				311E4754305E4E4BB9093EB9 /* vdr_pi */,
-				1880D5AAC70D458E8AF8845F /* weatherfax-i18n */,
 				EC9D9FEC13434F67B90D988A /* weatherfax_pi */,
-				6EC43A9463774F598FB1A42B /* wmm-i18n */,
 				D06C62D335654D1D99D14B3F /* wmm_pi */,
-				A60F748F17A0319F00A6160F /* calculator-i18n */,
 				A60F745B17A0217D00A6160F /* calculator_pi */,
-				A6D583A717A141220094D709 /* watchman-i18n */,
 				A6D5839C17A141110094D709 /* watchman_pi */,
-				A6B4A52B17A5143700E3A5D0 /* weather_routing-i18n */,
 				A6B4A52F17A515FA00E3A5D0 /* weather_routing_pi */,
-				A68FF3D4184A625D00C65557 /* trimplot-i18n */,
 				A68FF3D8184A62A700C65557 /* trimplot_pi */,
 				A68EAB01188739ED00893250 /* s63_pi */,
 				A6DB19BA18EDCDD300E643D2 /* BR24radar_pi */,
@@ -4689,6 +4536,7 @@
 				A6728C0219D4327900070B45 /* objsearch_pi */,
 				A632207B1AE047E700A52EAC /* chartdldr_pi */,
 				A68035A21B288508007A4045 /* nmeaconverter_pi */,
+				A669B1D31B372B7400C440BF /* ac_pi */,
 			);
 		};
 /* End PBXProject section */
@@ -4718,7 +4566,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "install_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_qa-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_qa-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_webview-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_webview-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_xrc-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_xrc-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\n";
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_qa-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_qa-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_webview-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_webview-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_xrc-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_xrc-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN\ninstall_name_tool -change /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib @executable_path/../Frameworks/libwxCurl.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/OpenCPN.app/Contents/MacOS/OpenCPN";
 			showEnvVarsInLog = 0;
 		};
 		A63220C41AE047E800A52EAC /* ShellScript */ = {
@@ -4746,7 +4594,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\n";
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib @executable_path/../Frameworks/libwxCurl.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib";
+			showEnvVarsInLog = 0;
+		};
+		A669B1DC1B372B7400C440BF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libac_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libac_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libac_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libac_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libac_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libac_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libac_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libac_pi.dylib\n";
 			showEnvVarsInLog = 0;
 		};
 		A68035AB1B288508007A4045 /* ShellScript */ = {
@@ -4858,7 +4720,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\n";
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib\ninstall_name_tool -change /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib @executable_path/../Frameworks/libwxCurl.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libiacfleet_pi.dylib";
 			showEnvVarsInLog = 0;
 		};
 		A6B7B9001AD879DB004FFAF2 /* ShellScript */ = {
@@ -4900,7 +4762,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\n";
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib @executable_path/../Frameworks/libwxCurl.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libweatherfax_pi.dylib";
 			showEnvVarsInLog = 0;
 		};
 		A6B7B9031AD87CBD004FFAF2 /* ShellScript */ = {
@@ -5424,6 +5286,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A669B1D41B372B7400C440BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A669B1F31B372EC600C440BF /* ac_pi_draw.cpp in Sources */,
+				A669B1F91B372F4100C440BF /* ac_pi_thread.cpp in Sources */,
+				A669B2081B37304100C440BF /* TexFont.cpp in Sources */,
+				A669B1FF1B372F9200C440BF /* ac.cpp in Sources */,
+				A669B1F71B372F1700C440BF /* ac_pi_gui.cpp in Sources */,
+				A669B1FB1B372F5700C440BF /* ac_pi_util.cpp in Sources */,
+				A669B1F51B372EFF00C440BF /* ac_pi_gui_impl.cpp in Sources */,
+				A669B2061B37301F00C440BF /* pugixml.cpp in Sources */,
+				A669B1FD1B372F7500C440BF /* ac_pi.cpp in Sources */,
+				A669B2041B37300100C440BF /* md5.cpp in Sources */,
+				A669B2011B372FBF00C440BF /* icons.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A671BCBD19BE44BC00019119 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5467,8 +5347,10 @@
 				A683CEC11958BC48004A0137 /* WatchdogDialog.cpp in Sources */,
 				A683CEBD1958BC19004A0137 /* icons.cpp in Sources */,
 				A683CEC51958BC7C004A0137 /* WatchdogUI.cpp in Sources */,
+				A6B150711B3430D9007DC7B4 /* wddc.cpp in Sources */,
 				A683CEC31958BC64004A0137 /* WatchdogPrefsDialog.cpp in Sources */,
 				A683CEBF1958BC2E004A0137 /* watchdog_pi.cpp in Sources */,
+				A6B1506F1B3430B6007DC7B4 /* TexFont.cpp in Sources */,
 				A683CEBB1958BC02004A0137 /* Alarm.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5745,16 +5627,6 @@
 			target = 0E212BE62703449FAE04E4A7 /* gradar_pi */;
 			targetProxy = 978865DC703046F2B79F0D42 /* PBXContainerItemProxy */;
 		};
-		3DDAAD84B5704A9996AB7C30 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 08218CDDDBBF48CFB69FB60E /* logbookkonni-i18n */;
-			targetProxy = 7F0ABE1F60F141609BE5855F /* PBXContainerItemProxy */;
-		};
-		3EFCA9BFA0384424AAFA9288 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6EC43A9463774F598FB1A42B /* wmm-i18n */;
-			targetProxy = C115E05F32CF42D9A93CECD4 /* PBXContainerItemProxy */;
-		};
 		43CB8F738129439D86E8716F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A87580D1DD2B4F81B39F3B5A /* ZERO_CHECK */;
@@ -5770,11 +5642,6 @@
 			target = C79F239F31F54A629F97A87E /* grib_pi */;
 			targetProxy = 78A602A2BA264B6D887999BD /* PBXContainerItemProxy */;
 		};
-		59E60CABCCBF40089717DFB7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0B4529AF75434AF39FA03058 /* celestial_navigation-i18n */;
-			targetProxy = 32C5DD674A4D416C994B59D7 /* PBXContainerItemProxy */;
-		};
 		6F3E9FF907924045ABDCE8CD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = BBDCA085D6A048ACA460037B /* dashboard_pi */;
@@ -5784,11 +5651,6 @@
 			isa = PBXTargetDependency;
 			target = A526958EA3AB4C80841A9FF2 /* GARMINHOST */;
 			targetProxy = 8348A6B4B1864F459D12AAE7 /* PBXContainerItemProxy */;
-		};
-		73B139E7AD53473784F317B0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 37660061C03E4FB789FCFE8F /* vdr-i18n */;
-			targetProxy = C9E08A3F66104E38A2AA8330 /* PBXContainerItemProxy */;
 		};
 		785D38FA2EB248D992323ED9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5800,11 +5662,6 @@
 			target = 0AC78A9BDDEE45EBA4DB4E9B /* iacfleet_pi */;
 			targetProxy = 05CF50C91B6846348F2D8B87 /* PBXContainerItemProxy */;
 		};
-		9790FB2EB8DF43B9AA852C87 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F1DE54257F2A4DBA82D6F8AA /* findit-i18n */;
-			targetProxy = D4639EF636D0491B9F38AFFE /* PBXContainerItemProxy */;
-		};
 		99AA407E955648AB95C0E429 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 54EFAF8E71AB4B0DBDDDC368 /* celestial_navigation_pi */;
@@ -5814,21 +5671,6 @@
 			isa = PBXTargetDependency;
 			target = DA8BE84D3892479688EFF96F /* OpenCPN */;
 			targetProxy = B6623C3BC61E40C59EB77DA4 /* PBXContainerItemProxy */;
-		};
-		9D9DF08E2C164918A236AD69 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1880D5AAC70D458E8AF8845F /* weatherfax-i18n */;
-			targetProxy = 34499BDFB0EC49C8B1499E78 /* PBXContainerItemProxy */;
-		};
-		9FB815AF781244959847C8DD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C3E7830A45DB43C6972F769E /* gradar-i18n */;
-			targetProxy = CA797611DE8F497983C32EE8 /* PBXContainerItemProxy */;
-		};
-		A60F749417A031D600A6160F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A60F748F17A0319F00A6160F /* calculator-i18n */;
-			targetProxy = A60F749317A031D600A6160F /* PBXContainerItemProxy */;
 		};
 		A60F749617A0321500A6160F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5855,11 +5697,6 @@
 			target = A6D5839C17A141110094D709 /* watchman_pi */;
 			targetProxy = A647085217A14AE400A16918 /* PBXContainerItemProxy */;
 		};
-		A647085517A14B1100A16918 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A6D583A717A141220094D709 /* watchman-i18n */;
-			targetProxy = A647085417A14B1100A16918 /* PBXContainerItemProxy */;
-		};
 		A647C90619C3652D0034EA04 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A671BCBC19BE44BC00019119 /* squiddio_pi */;
@@ -5869,6 +5706,11 @@
 			isa = PBXTargetDependency;
 			target = A6DB19BA18EDCDD300E643D2 /* BR24radar_pi */;
 			targetProxy = A64EBB511B26FD4800F861D0 /* PBXContainerItemProxy */;
+		};
+		A669B20F1B374A6500C440BF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A669B1D31B372B7400C440BF /* ac_pi */;
+			targetProxy = A669B20E1B374A6500C440BF /* PBXContainerItemProxy */;
 		};
 		A68035B31B2890A8007A4045 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5885,30 +5727,15 @@
 			target = A68EAB01188739ED00893250 /* s63_pi */;
 			targetProxy = A68EAB3D188745FB00893250 /* PBXContainerItemProxy */;
 		};
-		A68FF3FD184A632B00C65557 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A68FF3D4184A625D00C65557 /* trimplot-i18n */;
-			targetProxy = A68FF3FC184A632B00C65557 /* PBXContainerItemProxy */;
-		};
 		A68FF415184A686400C65557 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A68FF3D8184A62A700C65557 /* trimplot_pi */;
 			targetProxy = A68FF414184A686400C65557 /* PBXContainerItemProxy */;
 		};
-		A6B158201829915400B18B37 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A87580D1DD2B4F81B39F3B5A /* ZERO_CHECK */;
-			targetProxy = A6B1581F1829915400B18B37 /* PBXContainerItemProxy */;
-		};
 		A6B4A58317A5229300E3A5D0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A6B4A52F17A515FA00E3A5D0 /* weather_routing_pi */;
 			targetProxy = A6B4A58217A5229300E3A5D0 /* PBXContainerItemProxy */;
-		};
-		A6B4A58517A5260000E3A5D0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A6B4A52B17A5143700E3A5D0 /* weather_routing-i18n */;
-			targetProxy = A6B4A58417A5260000E3A5D0 /* PBXContainerItemProxy */;
 		};
 		A6FE261919D55C28001EF4B7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5930,21 +5757,6 @@
 			target = EC9D9FEC13434F67B90D988A /* weatherfax_pi */;
 			targetProxy = AB0E0BF26BA246E79ADA8433 /* PBXContainerItemProxy */;
 		};
-		C6BACBF6B61B435A836E6B21 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7C4065816236458CAC0D204B /* grib-i18n */;
-			targetProxy = 3CABA53027814198BC9648FE /* PBXContainerItemProxy */;
-		};
-		D991B9D88F514954A97BDAB6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CB31BDFEC5D94590ADB7FEBA /* IACFleet-i18n */;
-			targetProxy = BD0ABB05B25D4EAE939D0B58 /* PBXContainerItemProxy */;
-		};
-		DC26931A2ECD479DAD9B7C32 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DC307BE96D784EB6B4B451DB /* dashboard-i18n */;
-			targetProxy = 627DD7F1F6A54E12BF598A56 /* PBXContainerItemProxy */;
-		};
 		EAAB4E87696645CDAEA03510 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9267E25BB49C4D6E8A431D0A /* S57ENC */;
@@ -5958,70 +5770,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		00044308A6A446CBA6D21456 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-g",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "wmm-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
 		07F890A631D74E9DA56F1AE7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6150,134 +5898,6 @@
 			};
 			name = Debug;
 		};
-		0955E4FDFCE7408D98CE71F9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-g",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "vdr-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
-		0B30622A53A54FD48101C1DE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "gradar-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
 		13D9795DFB3F4BD2A7AB61A7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6404,136 +6024,6 @@
 			};
 			name = Release;
 		};
-		1703E41B7C314862AFF1E5B4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-					"/Users/heidi/devel/Cocoa-OCPN/plugins/weatherfax_pi/./src/libaudiofile",
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-g",
-					"-O0",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "weatherfax-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
-		226327B639B5426B9DC32E08 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O0",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "IACFleet-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
 		2622711BFAD046119625DAB9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6595,64 +6085,6 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = S57ENC;
 				SDKROOT = macosx;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
-		27920FFD2A1240F09ED0BA76 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-g",
-					"-fexceptions",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "celestial_navigation-i18n";
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";
 				USE_HEADERMAP = NO;
@@ -6773,70 +6205,6 @@
 			};
 			name = Debug;
 		};
-		39118A3002D54D06AB46264A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "findit-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
 		3C470566804A450E8448628F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -6943,70 +6311,6 @@
 				);
 			};
 			name = Release;
-		};
-		401D6FAB71EA4CD2A4BE8568 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O0",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "grib-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
 		};
 		4344F650B99A4A6F9D7963BB /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -7580,72 +6884,6 @@
 			};
 			name = Release;
 		};
-		6FE3BB2A7C174EB39276BCD2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-					"/Users/heidi/devel/Cocoa-OCPN/plugins/weatherfax_pi/./src/libaudiofile",
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-g",
-					"-O0",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "weatherfax-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
 		705FD62A80DA44F8BC0E8CF8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -7797,64 +7035,6 @@
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = "pot-update";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
-		73A2E9B6894F4E60A87D642C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-g",
-					"-fexceptions",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "celestial_navigation-i18n";
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";
 				USE_HEADERMAP = NO;
@@ -8093,71 +7273,6 @@
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = iacfleet_pi;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
-		81F70A2463E3462B89E4058D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-					"/Users/heidi/devel/Cocoa-OCPN/plugins/logbookkonni_pi/src/nmea0183",
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "logbookkonni-i18n";
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";
 				USE_HEADERMAP = NO;
@@ -8539,134 +7654,6 @@
 			};
 			name = Debug;
 		};
-		9981BCCFA36F480681FA8606 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-g",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "wmm-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
-		A0CCC6A064084F62849E51FD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-g",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "vdr-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
 		A60F746317A0217D00A6160F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -8880,134 +7867,6 @@
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				PRODUCT_NAME = calculator_pi;
 				SDKROOT = macosx;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
-		A60F749117A0319F00A6160F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "gradar-i18n copy";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
-		A60F749217A0319F00A6160F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "gradar-i18n copy";
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";
 				USE_HEADERMAP = NO;
@@ -9289,7 +8148,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = Debug;
+				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = dynamiclib;
@@ -9389,7 +8248,7 @@
 					/usr/X11/include,
 					/usr/X11/include/GL,
 				);
-				INSTALL_PATH = Release;
+				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = dynamiclib;
@@ -9444,6 +8303,230 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = wxCurl;
 				SDKROOT = macosx;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
+		A669B1DE1B372B7400C440BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					ac_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_GL,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+					USE_DIALUP_MANAGER,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/wxsqlite3-3.1.1/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/sqlite-amalgamation-3080600",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl/wx/curl",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					/opt/local/include,
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = Debug;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+					"-framework",
+					AGL,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ac_pi;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		A669B1DF1B372B7400C440BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					ac_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_GL,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+					USE_DIALUP_MANAGER,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/wxsqlite3-3.1.1/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/sqlite-amalgamation-3080600",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl/wx/curl",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					/opt/local/include,
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = Release;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+					"-framework",
+					AGL,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ac_pi;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";
 				USE_HEADERMAP = NO;
@@ -10600,134 +9683,6 @@
 			};
 			name = Release;
 		};
-		A68FF3D6184A625D00C65557 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "weather_routing-i18n copy";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
-		A68FF3D7184A625D00C65557 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "weather_routing-i18n copy";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
 		A68FF3F9184A62A700C65557 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -10940,134 +9895,6 @@
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = trimplot_pi;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
-		A6B4A52D17A5143700E3A5D0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "gradar-i18n copy";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
-		A6B4A52E17A5143700E3A5D0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "gradar-i18n copy";
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";
 				USE_HEADERMAP = NO;
@@ -11527,134 +10354,6 @@
 			};
 			name = Release;
 		};
-		A6D583A917A141220094D709 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "watchman-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
-		A6D583AA17A141220094D709 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "watchman-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
 		A6DB19DA18EDCDD300E643D2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11868,71 +10567,6 @@
 				);
 			};
 			name = Release;
-		};
-		A9F3B35CA273482DB8B7A71D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-					"/Users/heidi/devel/Cocoa-OCPN/plugins/dashboard_pi/src/nmea0183",
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "dashboard-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
 		};
 		B02D6D5FE51F4156A9CF5601 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -12239,70 +10873,6 @@
 			};
 			name = Debug;
 		};
-		BDFB09C643B64B26BA86DADD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "gradar-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
 		BE4514A8429444D283F3637A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -12397,70 +10967,6 @@
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = vdr_pi;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
-		C45CEC03C2674982A26DBC8C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O0",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "grib-i18n";
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";
 				USE_HEADERMAP = NO;
@@ -12582,71 +11088,6 @@
 			};
 			name = Debug;
 		};
-		CB5A4A3A873E4A389B604BF9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-					"/Users/heidi/devel/Cocoa-OCPN/plugins/logbookkonni_pi/src/nmea0183",
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "logbookkonni-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
 		CC43013C1E354C23BAD70030 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -12742,7 +11183,7 @@
 					"-lwx_osx_cocoau_adv-3.1",
 					"-lwx_osx_cocoau_aui-3.1",
 					"-lwx_osx_cocoau_gl-3.1",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/Frameworks/libwxCurl.dylib",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = iacfleet_pi;
@@ -13152,71 +11593,6 @@
 			};
 			name = Debug;
 		};
-		E1B9838F4EEE402F80E633C4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-					"/Users/heidi/devel/Cocoa-OCPN/plugins/dashboard_pi/src/nmea0183",
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "dashboard-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
 		E5AADD1B8CDE494EB7ED74B6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -13616,70 +11992,6 @@
 			};
 			name = Release;
 		};
-		F18A3E6A845A42B6B15B157D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O0",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "IACFleet-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
 		FC446340033040C6BDA1BAAB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -13776,7 +12088,7 @@
 					"-lwx_osx_cocoau_adv-3.1",
 					"-lwx_osx_cocoau_aui-3.1",
 					"-lwx_osx_cocoau_gl-3.1",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/Frameworks/libwxCurl.dylib",
 					/usr/lib/libz.dylib,
 				);
 				OTHER_REZFLAGS = "";
@@ -13791,70 +12103,6 @@
 				);
 			};
 			name = Release;
-		};
-		FCCDD8EA9CFC4D409224F4A1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "";
-				OTHER_CFLAGS = (
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-rdynamic",
-					"-g",
-					"-fno-strict-aliasing",
-					"-Wall",
-					"-O3",
-					"-fexceptions",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "findit-i18n";
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
@@ -13873,33 +12121,6 @@
 			buildConfigurations = (
 				B3E20252B84F4E8090A953AA /* Debug */,
 				3C470566804A450E8448628F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		1C83C8F161C643CEB45C685D /* Build configuration list for PBXAggregateTarget "IACFleet-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F18A3E6A845A42B6B15B157D /* Debug */,
-				226327B639B5426B9DC32E08 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		2A85DE9E83E1468FBD627DB8 /* Build configuration list for PBXAggregateTarget "findit-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FCCDD8EA9CFC4D409224F4A1 /* Debug */,
-				39118A3002D54D06AB46264A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		3BC51413165046C2A2790550 /* Build configuration list for PBXAggregateTarget "grib-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				401D6FAB71EA4CD2A4BE8568 /* Debug */,
-				C45CEC03C2674982A26DBC8C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -13967,15 +12188,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		75027213D83945A4B58B563F /* Build configuration list for PBXAggregateTarget "vdr-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0955E4FDFCE7408D98CE71F9 /* Debug */,
-				A0CCC6A064084F62849E51FD /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		7578D6A8C24A49B39B055B4D /* Build configuration list for PBXAggregateTarget "po-update" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -13990,24 +12202,6 @@
 			buildConfigurations = (
 				B02D6D5FE51F4156A9CF5601 /* Debug */,
 				FC446340033040C6BDA1BAAB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		829E2F3F20764808A441A79F /* Build configuration list for PBXAggregateTarget "dashboard-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A9F3B35CA273482DB8B7A71D /* Debug */,
-				E1B9838F4EEE402F80E633C4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		88BA2931A14D42578377E68A /* Build configuration list for PBXAggregateTarget "gradar-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BDFB09C643B64B26BA86DADD /* Debug */,
-				0B30622A53A54FD48101C1DE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -14048,15 +12242,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		A60F749017A0319F00A6160F /* Build configuration list for PBXAggregateTarget "calculator-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A60F749117A0319F00A6160F /* Debug */,
-				A60F749217A0319F00A6160F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		A63220C51AE047E800A52EAC /* Build configuration list for PBXNativeTarget "chartdldr_pi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -14071,6 +12256,15 @@
 			buildConfigurations = (
 				A64514F41AE4FF3000933404 /* Debug */,
 				A64514F51AE4FF3000933404 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A669B1DD1B372B7400C440BF /* Build configuration list for PBXNativeTarget "ac_pi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A669B1DE1B372B7400C440BF /* Debug */,
+				A669B1DF1B372B7400C440BF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -14120,29 +12314,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		A68FF3D5184A625D00C65557 /* Build configuration list for PBXAggregateTarget "trimplot-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A68FF3D6184A625D00C65557 /* Debug */,
-				A68FF3D7184A625D00C65557 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		A68FF3F8184A62A700C65557 /* Build configuration list for PBXNativeTarget "trimplot_pi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A68FF3F9184A62A700C65557 /* Debug */,
 				A68FF3FA184A62A700C65557 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		A6B4A52C17A5143700E3A5D0 /* Build configuration list for PBXAggregateTarget "weather_routing-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A6B4A52D17A5143700E3A5D0 /* Debug */,
-				A6B4A52E17A5143700E3A5D0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -14161,15 +12337,6 @@
 			buildConfigurations = (
 				A6D583A417A141110094D709 /* Debug */,
 				A6D583A517A141110094D709 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		A6D583A817A141220094D709 /* Build configuration list for PBXAggregateTarget "watchman-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A6D583A917A141220094D709 /* Debug */,
-				A6D583AA17A141220094D709 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -14201,15 +12368,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		B747165BB42A4342B7B53DAB /* Build configuration list for PBXAggregateTarget "weatherfax-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1703E41B7C314862AFF1E5B4 /* Debug */,
-				6FE3BB2A7C174EB39276BCD2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		C27F4B0DEE3D4516A350B6F7 /* Build configuration list for PBXNativeTarget "NMEA0183" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -14224,33 +12382,6 @@
 			buildConfigurations = (
 				EB46A631A5834DAAAEBF9FB0 /* Debug */,
 				79D6F39860E44FAEAF6D20A9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		CFDD51C594214D028A767FB3 /* Build configuration list for PBXAggregateTarget "wmm-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				00044308A6A446CBA6D21456 /* Debug */,
-				9981BCCFA36F480681FA8606 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		D56DD5E13A9E4BD79A11D60C /* Build configuration list for PBXAggregateTarget "celestial_navigation-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				27920FFD2A1240F09ED0BA76 /* Debug */,
-				73A2E9B6894F4E60A87D642C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		E038FB0A7C2F4490A2682EED /* Build configuration list for PBXAggregateTarget "logbookkonni-i18n" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				81F70A2463E3462B89E4058D /* Debug */,
-				CB5A4A3A873E4A389B604BF9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
