@@ -5,7 +5,7 @@
 * Author:   David S Register, Mark A Sikes
 *
 ***************************************************************************
-*   Copyright (C) 2010 by David S. Register *
+*   Copyright (C) 2010 by David S. Register                               *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
 *   it under the terms of the GNU General Public License as published by  *
@@ -303,12 +303,14 @@ public:
 
     bool AddSingleChart( wxString &fullpath, bool b_force_full_search = true );
     bool RemoveSingleChart( wxString &ChartFullPath );
-    
+
     const wxString & GetDBFileName() const { return m_DBFileName; }
     ArrayOfCDI& GetChartDirArray(){ return m_dir_array; }
     wxArrayString &GetChartDirArrayString(){ return m_chartDirs; }
     void SetChartDirArray( ArrayOfCDI array ){ m_dir_array = array; }
-    
+    bool CompareChartDirArray( ArrayOfCDI& test_array );
+    wxString GetMagicNumberCached(wxString dir);
+
     void UpdateChartClassDescriptorArray(void);
 
     int GetChartTableEntries() const { return active_chartTable.size(); }
@@ -327,7 +329,7 @@ public:
 
     bool GetDBBoundingBox(int dbindex, wxBoundingBox *box);
     const wxBoundingBox &GetDBBoundingBox(int dbIndex);
-    
+
     int  GetnAuxPlyEntries(int dbIndex);
     int  GetDBPlyPoint(int dbIndex, int plyindex, float *lat, float *lon);
     int  GetDBAuxPlyPoint(int dbIndex, int plyindex, int iAuxPly, float *lat, float *lon);

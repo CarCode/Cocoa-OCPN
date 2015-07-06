@@ -189,12 +189,26 @@ void GribOverlaySettings::Write()
             SaveSettingGroups(pConf, i, ISO_LINE_VISI);
             SaveSettingGroups(pConf, i, NUMBERS);
         }
+#ifdef __WXOSX__
+        else if(i == CURRENT) {
+            SaveSettingGroups(pConf, i, D_ARROWS);
+            SaveSettingGroups(pConf, i, OVERLAY);
+            SaveSettingGroups(pConf, i, NUMBERS);
+            SaveSettingGroups(pConf, i, PARTICLES);
+        }
+        else if(i == WAVE) {
+            SaveSettingGroups(pConf, i, D_ARROWS);
+            SaveSettingGroups(pConf, i, OVERLAY);
+            SaveSettingGroups(pConf, i, NUMBERS);
+        }
+#else
         else if(i == WAVE || i == CURRENT) {
             SaveSettingGroups(pConf, i, D_ARROWS);
             SaveSettingGroups(pConf, i, OVERLAY);
             SaveSettingGroups(pConf, i, NUMBERS);
             SaveSettingGroups(pConf, i, PARTICLES);
         }
+#endif
         else if( i == PRECIPITATION || i == CLOUD) {
             SaveSettingGroups(pConf, i, OVERLAY);
             SaveSettingGroups(pConf, i, NUMBERS);
@@ -611,7 +625,11 @@ void GribSettingsDialog::SetDataTypeSettings(int settings)
     odc.m_bNumFixSpac = m_cNumFixSpac->GetValue();
     odc.m_iNumbersSpacing = m_sNumbersSpacing->GetValue();
     odc.m_bParticles = m_cbParticles->GetValue();
+#ifdef __WXOSX__
+    odc.m_dParticleDensity = m_sParticleDensity->GetValue();
+#else
     odc.m_dParticleDensity = 4.0*exp(m_sParticleDensity->GetValue() / 2.0 - 3);
+#endif
 }
 
 void GribSettingsDialog::ReadDataTypeSettings(int settings)
@@ -641,7 +659,11 @@ void GribSettingsDialog::ReadDataTypeSettings(int settings)
     m_cNumMinSpac->SetValue(!odc.m_bNumFixSpac);
     m_sNumbersSpacing->SetValue(odc.m_iNumbersSpacing);
     m_cbParticles->SetValue(odc.m_bParticles);
+#ifdef __WXOSX__
+    m_sParticleDensity->SetValue(odc.m_dParticleDensity);
+#else
     m_sParticleDensity->SetValue(2.0*(log(odc.m_dParticleDensity/4.0) + 3));
+#endif
 
     ShowFittingSettings(settings);
 }

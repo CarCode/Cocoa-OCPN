@@ -258,6 +258,7 @@ class GribSettingsDialogBase : public wxDialog
 		wxCheckBox* m_cbParticles;
 		wxStaticText* m_ctParticles;
 		wxSlider* m_sParticleDensity;
+        wxSlider* m_sParticleDensityNo;
 		wxStaticText* m_staticText24;
 		wxSlider* m_sTransparency;
 		wxFlexGridSizer* m_fgSetPlaybackSizer;

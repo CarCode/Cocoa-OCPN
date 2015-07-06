@@ -37,6 +37,8 @@
 
 #include <stdio.h>
 
+class MyConfig;
+
 class OCPNPlatform
 {
 public:    
@@ -68,6 +70,8 @@ public:
 
     void SetDefaultOptions( void );
 
+    void applyExpertMode(bool mode);
+
 //--------------------------------------------------------------------------
 //      Platform Display Support
 //--------------------------------------------------------------------------
@@ -76,6 +80,8 @@ public:
     double getFontPointsperPixel( void );
     wxSize getDisplaySize();
     double GetDisplaySizeMM();
+    double GetDisplayDPmm();
+    double GetToolbarScaleFactor( int GUIScaleFactor );
 
     wxFileDialog *AdjustFileDialogFont(wxWindow *container, wxFileDialog *dlg);
     wxDirDialog  *AdjustDirDialogFont(wxWindow *container,  wxDirDialog *dlg);
@@ -95,6 +101,7 @@ public:
     wxString *GetSharedDataDirPtr();
     wxString *GetPrivateDataDirPtr();
     wxString &GetLogFileName(){ return mlog_file; }
+    MyConfig *GetConfigObject();
 
     int DoFileSelectorDialog( wxWindow *parent, wxString *file_spec, wxString Title, wxString initDir,
                              wxString suggestedName, wxString wildcard);
@@ -107,6 +114,11 @@ public:
     void CloseLogFile( void );
     wxString    &GetLargeLogMessage( void ){ return large_log_message; }
     FILE        *GetLogFilePtr(){ return flog; }
+
+//--------------------------------------------------------------------------
+//      Per-Platform Utility support
+//--------------------------------------------------------------------------
+    void setChartTypeMaskSel(int mask, wxString &indicator);
 
 private:
     wxString    m_homeDir;

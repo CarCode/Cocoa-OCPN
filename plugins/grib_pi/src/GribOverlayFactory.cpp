@@ -1943,6 +1943,9 @@ void GRIBOverlayFactory::drawLineBuffer(LineBuffer &buffer, int x, int y, double
     if( m_pdc ) {
         for(int i=0; i < buffer.count; i++) {
             float *l = vertexes + 4*i;
+#ifdef __WXOSX__
+            l[0] = 0,0; l[1] = 0.0; l[2] = 0.0; l[3] = 0.0;
+#endif
 #if wxUSE_GRAPHICS_CONTEXT
             if( m_hiDefGraphics && m_gdc )
                 m_gdc->StrokeLine( l[0], l[1], l[2], l[3] );

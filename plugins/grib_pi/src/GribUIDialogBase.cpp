@@ -581,6 +581,7 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
 	fgSizer15->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
 	wxArrayString m_cDataTypeChoices;
+    int m_cDataTypeNChoices = sizeof(m_cDataTypeChoices) / sizeof(wxString);
 	m_cDataType = new wxChoice( m_scSetDataPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_cDataTypeChoices, 0 );
 	m_cDataType->SetSelection( 0 );
 	fgSizer15->Add( m_cDataType, 0, wxBOTTOM|wxEXPAND|wxTOP, 10 );
@@ -589,9 +590,11 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
 	m_staticText12 = new wxStaticText( m_scSetDataPanel, wxID_ANY, _("Units"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText12->Wrap( -1 );
 	m_staticText12->SetMinSize( wxSize( 110,-1 ) );
-
-	fgSizer15->Add( m_staticText12, 0, wxALL|wxEXPAND, 15 );
-
+#ifdef __WXOSX__
+	fgSizer15->Add( m_staticText12, 0, wxALIGN_RIGHT|wxALL, 15 );
+#else
+    fgSizer15->Add( m_staticText12, 0, wxALL|wxEXPAND, 15 );
+#endif
 	wxArrayString m_cDataUnitsChoices;
 	m_cDataUnits = new wxChoice( m_scSetDataPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_cDataUnitsChoices, 0 );
 	m_cDataUnits->SetSelection( 0 );
@@ -629,7 +632,6 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
 	m_cBarbArrMinSpac = new wxCheckBox( m_scSetDataPanel, BARBMINSPACING, _("Minimum"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer42->Add( m_cBarbArrMinSpac, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
 // ------------------------------------------------------------------------
-// Ab hier stimmt was nicht
 	m_fgBarbedData1->Add( fgSizer42, 1, wxEXPAND, 0 );
 
 
@@ -775,9 +777,22 @@ GribSettingsDialogBase::GribSettingsDialogBase( wxWindow* parent, wxWindowID id,
 	m_ctParticles = new wxStaticText( m_scSetDataPanel, wxID_ANY, _("Density"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_ctParticles->Wrap( -1 );
 	fgSizer15->Add( m_ctParticles, 0, wxALL, 5 );
-
+#ifdef __WXOSX__
+//    int flags = GetAttrs().m_defaultFlags;
+    //"wxSL_MIN_MAX_LABELS|wxSL_VALUE_LABEL";
+    //wxString m_SizerLabels2 = "wxSL_HORIZONTAL";
+    m_sParticleDensity = new wxSlider( m_scSetDataPanel, wxID_ANY, 5, 1, 10, wxDefaultPosition, wxSize( -1,-1 ), wxSL_MIN_MAX_LABELS|wxSL_VALUE_LABEL|wxSL_AUTOTICKS );
+//    m_sParticleDensityNo = new wxSlider( m_scSetDataPanel, wxID_ANY, 5, 1, 10, wxDefaultPosition, wxSize( -1,-1 ), wxSL_HORIZONTAL );
+//    wxString Datentyp = m_cDataType->GetSelection(); // "Wind" oder "Current" m_cDataType->GetSelection();
+//    if(wxStrnicmp_String(Datentyp , wxT("Wind"), 4))
+//    if(m_cDataTypeChoices[0] == _T("Wind"))
+//    int datentyp = m_cDataType->GetSelection();
+//    if(datentyp == 0)
+    fgSizer15->Add( m_sParticleDensity, 0, wxALL/*|wxEXPAND*/, 5 );
+#else
 	m_sParticleDensity = new wxSlider( m_scSetDataPanel, wxID_ANY, 5, 1, 10, wxDefaultPosition, wxDefaultSize, wxSL_BOTTOM|wxSL_HORIZONTAL|wxSL_LABELS );
-	fgSizer15->Add( m_sParticleDensity, 0, wxALL|wxEXPAND, 5 );
+    fgSizer15->Add( m_sParticleDensity, 0, wxALL|wxEXPAND, 5 );
+#endif
 
 
 	sbSizer101->Add( fgSizer15, 1, wxEXPAND, 5 );

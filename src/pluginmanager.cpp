@@ -3178,7 +3178,7 @@ void PluginListPanel::SelectPlugin( PluginPanel *pi )
         m_PluginSelected->SetSelected(false);
 
     m_PluginSelected = pi;
-    Layout();
+    m_parent->Layout();
     Refresh(false);
 }
 

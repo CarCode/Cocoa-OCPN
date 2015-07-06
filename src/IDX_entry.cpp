@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,12 +19,12 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "IDX_entry.h"
 
 #include <string.h>
+#include <stdlib.h>
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(ArrayOfIDXEntry);
 
@@ -35,5 +35,6 @@ IDX_entry::IDX_entry()
 
 IDX_entry::~IDX_entry()
 {
+    free(IDX_tzname);
 }
 

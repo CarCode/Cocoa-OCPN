@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Console Canvas
@@ -21,12 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- *
- *
- */
-
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -73,6 +68,7 @@ BEGIN_EVENT_TABLE(ConsoleCanvas, wxWindow)
     EVT_MENU(ID_NAVLEG, ConsoleCanvas::OnContextMenuSelection)
     EVT_MENU(ID_NAVROUTE, ConsoleCanvas::OnContextMenuSelection)
     EVT_MENU(ID_NAVHIGHWAY, ConsoleCanvas::OnContextMenuSelection)
+
 END_EVENT_TABLE()
 
 // Define a constructor for my canvas
@@ -438,7 +434,9 @@ void ConsoleCanvas::UpdateFonts( void )
 //------------------------------------------------------------------------------
 //    AnnunText Implementation
 //------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(AnnunText, wxWindow) EVT_PAINT(AnnunText::OnPaint)
+BEGIN_EVENT_TABLE(AnnunText, wxWindow)
+EVT_PAINT(AnnunText::OnPaint)
+EVT_MOUSE_EVENTS ( AnnunText::MouseEvent )
 END_EVENT_TABLE()
 
 AnnunText::AnnunText( wxWindow *parent, wxWindowID id, const wxString& LegendElement,
@@ -463,6 +461,23 @@ AnnunText::~AnnunText()
 {
 }
 
+void AnnunText::MouseEvent( wxMouseEvent& event )
+{
+#ifdef __OCPN__ANDROID__
+    if( event.RightDown() ) {
+        qDebug() << "right down";
+        
+        wxContextMenuEvent cevt;
+        cevt.SetPosition( event.GetPosition());
+        
+        ConsoleCanvas *ccp = dynamic_cast<ConsoleCanvas*>(GetParent());
+        if(ccp)
+            ccp->OnContextMenu( cevt );
+        
+    }
+#endif
+}
+
 void AnnunText::CalculateMinSize( void )
 {
     //    Calculate the minimum required size of the window based on text size
@@ -478,6 +493,12 @@ void AnnunText::CalculateMinSize( void )
 
     wxSize min;
     min.x = wl + wv;
+
+    // Space is tight on Android....
+#ifdef __OCPN__ANDROID__
+    min.x = wv * 1.2;
+#endif
+
     min.y = (int) ( ( hl + hv ) * 1.2 );
 
     SetMinSize( min );
@@ -486,9 +507,10 @@ void AnnunText::CalculateMinSize( void )
 void AnnunText::SetColorScheme( ColorScheme cs )
 {
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
-    m_pbackBrush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T("UBLCK") ), wxSOLID );
+    m_backBrush = *wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T("UBLCK") ), wxSOLID );
 
-    m_text_color = style->consoleFontColor;
+    m_default_text_color = style->consoleFontColor;
+    RefreshFonts();
 }
 
 void AnnunText::RefreshFonts()
@@ -497,6 +519,24 @@ void AnnunText::RefreshFonts()
     m_pvalueFont = FontMgr::Get().GetFont( m_ValueTextElement );
 
     CalculateMinSize();
+
+    // Make sure that the background color and the text colors are not too close, for contrast
+    if(m_backBrush.IsOk()){
+        wxColour back_color = m_backBrush.GetColour();
+        
+        wxColour legend_color = FontMgr::Get().GetFontColor( _("Console Legend") );
+        if( (abs(legend_color.Red() - back_color.Red()) < 5) &&
+           (abs(legend_color.Green() - back_color.Blue()) < 5) &&
+           (abs(legend_color.Blue() - back_color.Blue()) < 5))
+            m_legend_color = m_default_text_color;
+        
+        wxColour value_color = FontMgr::Get().GetFontColor( _("Console Value") );
+        if( (abs(value_color.Red() - back_color.Red()) < 5) &&
+           (abs(value_color.Green() - back_color.Blue()) < 5) &&
+           (abs(value_color.Blue() - back_color.Blue()) < 5))
+            m_val_color = m_default_text_color;
+        
+    }
 
 }
 
@@ -532,24 +572,22 @@ void AnnunText::OnPaint( wxPaintEvent& event )
 
     wxBitmap m_bitmap( sx, sy, -1 );
     mdc.SelectObject( m_bitmap );
-    mdc.SetBackground( *m_pbackBrush );
+    mdc.SetBackground( m_backBrush );
     mdc.Clear();
 
     if( style->consoleTextBackground.IsOk() ) mdc.DrawBitmap( style->consoleTextBackground, 0, 0 );
 
-    mdc.SetTextForeground( m_text_color );
+    mdc.SetTextForeground( m_default_text_color );
 
     if( m_plabelFont ) {
         mdc.SetFont( *m_plabelFont );
-        if ( m_pbackBrush->GetColour() != FontMgr::Get().GetFontColor( _("Console Legend") ) )
-            mdc.SetTextForeground( FontMgr::Get().GetFontColor( _("Console Legend") ) );
+        mdc.SetTextForeground( m_legend_color );
         mdc.DrawText( m_label, 5, 2 );
     }
 
     if( m_pvalueFont ) {
         mdc.SetFont( *m_pvalueFont );
-        if ( m_pbackBrush->GetColour() != FontMgr::Get().GetFontColor( _("Console Value") ) )
-            mdc.SetTextForeground( FontMgr::Get().GetFontColor( _("Console Value") ) );
+        mdc.SetTextForeground( m_val_color );
 
         int w, h;
         mdc.GetTextExtent( m_value, &w, &h );
@@ -566,7 +604,9 @@ void AnnunText::OnPaint( wxPaintEvent& event )
 //------------------------------------------------------------------------------
 //    CDI Implementation
 //------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(CDI, wxWindow) EVT_PAINT(CDI::OnPaint)
+BEGIN_EVENT_TABLE(CDI, wxWindow)
+EVT_PAINT(CDI::OnPaint)
+EVT_MOUSE_EVENTS ( CDI::MouseEvent )
 END_EVENT_TABLE()
 
 CDI::CDI( wxWindow *parent, wxWindowID id, long style, const wxString& name ) :
@@ -574,6 +614,23 @@ CDI::CDI( wxWindow *parent, wxWindowID id, long style, const wxString& name ) :
 
 {
     SetMinSize( wxSize( 10, 150 ) );
+}
+
+void CDI::MouseEvent( wxMouseEvent& event )
+{
+#ifdef    __OCPN__ANDROID__
+    if( event.RightDown() ) {
+        qDebug() << "right down";
+        
+        wxContextMenuEvent cevt;
+        cevt.SetPosition( event.GetPosition());
+        
+        ConsoleCanvas *ccp = dynamic_cast<ConsoleCanvas*>(GetParent());
+        if(ccp)
+            ccp->OnContextMenu( cevt );
+        
+    }
+#endif
 }
 
 void CDI::SetColorScheme( ColorScheme cs )
@@ -645,7 +702,7 @@ void CDI::OnPaint( wxPaintEvent& event )
         mdc.SetPen( *m_proadPen );
         mdc.DrawPolygon( 4, road, 0, 0, wxODDEVEN_RULE );
 
-        mdc.DrawLine( xc1, yc1, xc2, yc2 );
+///        mdc.DrawLine( xc1, yc1, xc2, yc2 );
 
         mdc.DrawLine( 0, yp, sx, yp );
         mdc.DrawCircle( xp, yp, 6 );

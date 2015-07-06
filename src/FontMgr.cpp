@@ -27,8 +27,11 @@
 #include <wx/tokenzr.h>
 
 #include "FontMgr.h"
+#include "OCPNPlatform.h"
 
 extern wxString g_locale;
+extern OCPNPlatform     *g_Platform;
+
 wxString s_locale;
 int g_default_font_size;
 
@@ -138,6 +141,12 @@ wxFont *FontMgr::GetFont( const wxString &TextElement, int user_default_size )
     //    Get the system default font.
     wxFont sys_font = *wxNORMAL_FONT;
     int sys_font_size = sys_font.GetPointSize();
+    wxString FaceName = sys_font.GetFaceName();
+
+#ifdef __OCPN__ANDROID__
+    sys_font_size = 18;
+    FaceName = _T("Roboto");
+#endif
 
     int new_size;
     if( 0 == user_default_size )
@@ -145,7 +154,7 @@ wxFont *FontMgr::GetFont( const wxString &TextElement, int user_default_size )
     else
         new_size = user_default_size;
 
-    wxString nativefont = GetSimpleNativeFont( new_size );
+    wxString nativefont = GetSimpleNativeFont( new_size, FaceName );
 
     wxFont *nf = wxFont::New( nativefont );
 
@@ -158,13 +167,13 @@ wxFont *FontMgr::GetFont( const wxString &TextElement, int user_default_size )
 
 }
 
-wxString FontMgr::GetSimpleNativeFont( int size )
+wxString FontMgr::GetSimpleNativeFont( int size, wxString face )
 {
     //    Now create a benign, always present native string
     wxString nativefont;
 
     // this should work for all platforms
-    nativefont = wxFont(size, wxFONTFAMILY_DEFAULT, (int) wxFONTSTYLE_NORMAL, (int) wxFONTWEIGHT_NORMAL)
+    nativefont = wxFont(size, wxFONTFAMILY_DEFAULT, (int) wxFONTSTYLE_NORMAL, (int) wxFONTWEIGHT_NORMAL, false, face)
     .GetNativeFontInfoDesc();
     
 #if 0
@@ -321,7 +330,7 @@ void FontMgr::LoadFontNative( wxString *pConfigString, wxString *pNativeDesc )
         wxFont *nf = nf0->New( nativefont );
 #endif
         
-        double font_size = nf->GetPointSize();
+//        double font_size = nf->GetPointSize();  // Not used
         wxString s = nf->GetNativeFontInfoDesc();
 
         //    Scrub the native font string for bad unicode conversion
@@ -330,7 +339,7 @@ void FontMgr::LoadFontNative( wxString *pConfigString, wxString *pNativeDesc )
         const wxChar *t = face.c_str();
         if( *t > 255 ) {
             delete nf;
-            wxString substitute_native = GetSimpleNativeFont( 12 );
+            wxString substitute_native = GetSimpleNativeFont( 12, _T("") );
             nf = nf0->New( substitute_native );
         }
 #endif

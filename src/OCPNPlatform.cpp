@@ -40,6 +40,8 @@
 
 #include "chart1.h"
 #include "cutil.h"
+#include "styles.h"
+#include "navutil.h"
 
 #ifdef __OCPN__ANDROID__
 #include "androidUTIL.h"
@@ -95,6 +97,11 @@ extern wxString           str_version_major;
 extern wxString           str_version_minor;
 extern wxString           str_version_patch;
 
+extern ocpnStyle::StyleManager* g_StyleManager;
+
+extern bool                      g_bshowToolbar;
+extern bool                      g_bBasicMenus;
+extern bool                      g_bUIexpert;
 
 extern bool                      g_bShowOutlines;
 extern bool                      g_bShowDepthUnits;
@@ -185,6 +192,8 @@ extern int                       g_lastClientRectw;
 extern int                       g_lastClientRecth;
 extern double                    g_display_size_mm;
 extern double                    g_config_display_size_mm;
+extern bool                      g_config_display_size_manual;
+
 extern bool                     g_bTrackDaily;
 extern double                   g_PlanSpeed;
 extern bool                     g_bFullScreenQuilt;
@@ -488,7 +497,9 @@ void OCPNPlatform::Initialize_1( void )
 }
 
 //  Called from MyApp() immediately before creation of MyFrame()
-void OCPNPlatform::Initialize_2( void ){
+//  Config is known to be loaded and stable
+void OCPNPlatform::Initialize_2( void )
+{
 }
 
 //  Called from MyApp() just before end of MyApp::OnInit()
@@ -548,15 +559,25 @@ void OCPNPlatform::SetDefaultOptions( void )
     
     g_btouch = true;
     g_bresponsive = true;
-    g_default_font_size = 14;
-    
-    g_bShowStatusBar = false;
+    g_default_font_size = 18;            //  This is pretty close to TextAppearance.Medium
+    g_bUIexpert = false;
+
+    g_bShowStatusBar = true;
     g_cm93_zoom_factor = -5;
     
-    g_GUIScaleFactor = 5;               // max
+    g_GUIScaleFactor = 0;               // nominal
 #endif
 
 
+}
+
+void OCPNPlatform::applyExpertMode(bool mode)
+{
+#ifdef __OCPN__ANDROID__
+    g_bshowToolbar = mode;               // no toolbar unless in exprt mode
+    g_bBasicMenus = !mode;              //  simplified context menus in basic mode
+#endif
+    
 }
 
 //--------------------------------------------------------------------------
@@ -597,13 +618,8 @@ wxString &OCPNPlatform::GetHomeDir()
         m_homeDir = std_path.GetUserConfigDir();  // on Mac, should be ~/Library/Preferences
 #endif
 
-//  On android, make the private data dir on the sdcard, if it exists.
-//  This make debugging easier, as it is not deleted whenever the APK is re-deployed.
-//  This behaviour should go away at Release.
 #ifdef __OCPN__ANDROID__
-        if( wxDirExists(_T("/mnt/sdcard")) ) {
-            m_homeDir =  _T("/mnt/sdcard/.opencpn");
-        }
+        m_homeDir =  androidGetHomeDir();
 #endif
 
         if( g_bportable ) {
@@ -651,11 +667,7 @@ wxString &OCPNPlatform::GetSharedDataDir()
         appendOSDirSlash( &m_SData_Dir );
         
 #ifdef __OCPN__ANDROID__
-        wxFileName fdir = wxFileName::DirName(std_path.GetUserConfigDir());
-        
-        fdir.RemoveLastDir();
-        m_SData_Dir = fdir.GetPath();
-        m_SData_Dir += _T("/cache/");
+        m_SData_Dir = androidGetSharedDir();
 #endif
         
         if( g_bportable )
@@ -686,7 +698,7 @@ wxString &OCPNPlatform::GetPrivateDataDir()
             m_PrivateDataDir = GetHomeDir();
         
 #ifdef __OCPN__ANDROID__
-        m_PrivateDataDir = GetHomeDir();
+        m_PrivateDataDir = androidGetPrivateDir();
 #endif
     }
     
@@ -765,7 +777,8 @@ wxString &OCPNPlatform::GetConfigFileName()
         }
         
 #ifdef __OCPN__ANDROID__
-        m_config_file_name = GetHomeDir();
+        m_config_file_name = androidGetPrivateDir();
+        appendOSDirSlash(&m_config_file_name);
         m_config_file_name += _T("opencpn.conf");
 #endif
         
@@ -880,7 +893,8 @@ int OCPNPlatform::DoDirSelectorDialog( wxWindow *parent, wxString *file_spec, wx
 bool OCPNPlatform::InitializeLogFile( void )
 {
     //      Establish Log File location
-    mlog_file = GetHomeDir();
+    mlog_file = GetPrivateDataDir();
+    appendOSDirSlash( &mlog_file );
 
 #ifdef  __WXOSX__
     
@@ -894,6 +908,7 @@ bool OCPNPlatform::InitializeLogFile( void )
     mlog_file.Append(_T("Logs/")); // so, on OS X, opencpn.log ends up in ~/Library/Logs
                                    // which makes it accessible to Applications/Utilities/Console....
 #endif
+
 
     // create the opencpn "home" directory if we need to
     wxFileName wxHomeFiledir( GetHomeDir() );
@@ -916,6 +931,10 @@ bool OCPNPlatform::InitializeLogFile( void )
 #ifndef __WXOSX__ // Not used
     wxString logit = mlog_file;
 #endif
+#ifdef __OCPN__ANDROID__
+    wxCharBuffer abuf = mlog_file.ToUTF8();  qDebug() << "logfile " << abuf.data();
+#endif
+
         //  Constrain the size of the log file
     if( ::wxFileExists( mlog_file ) ) {
             if( wxFileName::GetSize( mlog_file ) > 1000000 ) {
@@ -973,12 +992,14 @@ void OCPNPlatform::CloseLogFile( void)
     }
 }
 
-
-
-
-
-
-
+MyConfig *OCPNPlatform::GetConfigObject()
+{
+    MyConfig *result = NULL;
+    
+    result = new MyConfig( wxString( _T("") ), wxString( _T("") ), GetConfigFileName() );
+    
+    return result;
+}
 
 
 
@@ -1011,7 +1032,9 @@ void OCPNPlatform::ShowBusySpinner( void )
     androidShowBusyIcon();
     androidShowBusyIcon();
 #else
-    ::wxBeginBusyCursor();
+    if(! ::wxIsBusy() ){
+        ::wxBeginBusyCursor();
+    }
 #endif
 }
 
@@ -1026,6 +1049,15 @@ void OCPNPlatform::HideBusySpinner( void )
 
 double OCPNPlatform::getFontPointsperPixel( void )
 {
+    double pt_per_pixel = 1.0;
+    
+#ifdef __OCPN__ANDROID__
+    // On Android, this calculation depends on the density bucket in use.
+    //  Also uses some magic numbers...
+    //  For reference, see http://pixplicity.com/dp-px-converter/
+    pt_per_pixel = 14.0 / (31.11 * getAndroidDisplayDensity()) ;
+    
+#else
     //  Make a measurement...
     wxScreenDC dc;
 
@@ -1034,7 +1066,8 @@ double OCPNPlatform::getFontPointsperPixel( void )
     dc.SetFont(*f);
 
     wxSize sz = dc.GetTextExtent(_T("H"));
-    double pt_per_pixel = 12.0 / (double)sz.y;
+    pt_per_pixel = 12.0 / (double)sz.y;
+#endif
 
     return pt_per_pixel;
 
@@ -1080,6 +1113,16 @@ double  OCPNPlatform::GetDisplaySizeMM()
     wxLogMessage(msg);
     
     return ret;
+}
+
+double OCPNPlatform::GetDisplayDPmm()
+{
+#ifdef __OCPN__ANDROID__
+    return getAndroidDPmm();
+#else
+    double r = ::wxGetDisplaySize().x;            // dots
+    return r / GetDisplaySizeMM();
+#endif
 }
 
 wxDirDialog* OCPNPlatform::AdjustDirDialogFont(wxWindow *container, wxDirDialog* dlg)
@@ -1156,6 +1199,53 @@ wxFileDialog* OCPNPlatform::AdjustFileDialogFont(wxWindow *container, wxFileDial
     ret_dlg->Hide();
     
     return ret_dlg;
+}
+
+double OCPNPlatform::GetToolbarScaleFactor( int GUIScaleFactor )
+{
+    double rv = 1.0;
+#ifdef __OCPN__ANDROID__
+    
+    // We try to arrange matters so that at GUIScaleFactor=0, the tool icons are approximately 9 mm in size
+    // and that the value may range from 0.5 -> 2.0
+    
+    if(g_bresponsive ){
+        //  Get the basic size of a tool icon
+        ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+        wxSize style_tool_size = style->GetToolSize();
+        double tool_size = style_tool_size.x;
+
+        // unless overridden by user, we declare the "best" tool size to be the same as the
+        // ActionBar height, reduced by 8 pixels
+        double premult = 1.0;
+        if( g_config_display_size_manual && (g_config_display_size_mm > 0) ){
+            double target_size = 9.0;                // mm
+        
+            double basic_tool_size_mm = tool_size / GetDisplayDPmm();
+            premult = target_size / basic_tool_size_mm;
+            qDebug() << "parmsA" << style_tool_size.x << GetDisplayDPmm() << basic_tool_size_mm;
+            
+        }
+        else{
+            qDebug() << "parmsB" << style_tool_size.x << getAndroidActionBarHeight();
+            premult = wxMax(getAndroidActionBarHeight() - 8, 50) / tool_size;
+        }
+        
+        //Adjust the scale factor using the global GUI scale parameter
+        double postmult =  exp( GUIScaleFactor * (0.693 / 5.0) );       //  exp(2)
+        rv = wxMin(rv, 1.5);      //  Clamp at 1.5
+        
+        qDebug() << "parmsF" << GUIScaleFactor << premult << postmult;
+        
+        rv = premult * postmult;
+    }
+    
+    
+    
+#else
+#endif
+    
+    return rv;
 }
 
 #ifdef __WXMSW__
@@ -1336,6 +1426,18 @@ wxArrayString OCPNPlatform::getBluetoothScanResults()
     ret_val.Add(_T("line 3"));
     return ret_val;
 
+#endif
+    
+}
+
+//--------------------------------------------------------------------------
+//      Per-Platform Utility support
+//--------------------------------------------------------------------------
+
+void OCPNPlatform::setChartTypeMaskSel(int mask, wxString &indicator)
+{
+#ifdef __OCPN__ANDROID__
+    return androidSetChartTypeMaskSel(mask, indicator);
 #endif
     
 }

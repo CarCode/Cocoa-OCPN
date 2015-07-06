@@ -192,9 +192,16 @@ enum
 
     ID_MENU_SETTINGS_BASIC,
 
-    ID_MENU_OQUIT
+    ID_MENU_OQUIT,
+    
+    ID_CMD_SELECT_CHART_TYPE,
+    ID_CMD_SELECT_CHART_FAMILY,
+
 };
 
+//      Command identifiers for wxCommandEvents coming from the outside world.
+//      Removed from enum to facilitate constant definition
+#define ID_CMD_APPLY_SETTINGS 300
 
 
 #define N_STATUS_BAR_FIELDS_MAX     20
@@ -335,6 +342,9 @@ class MyFrame: public wxFrame
     void ClearRouteTool();
     void DoStackUp(void);
     void DoStackDown(void);
+    void selectChartDisplay( int type, int family);
+    void applySettingsString( wxString settings);
+
     void DoStackDelta( int direction );
     void DoSettings( void );
 
@@ -356,7 +366,7 @@ class MyFrame: public wxFrame
     void UpdateGlobalMenuItems();
     void SetChartThumbnail(int index);
     int  DoOptionsDialog();
-    int  ProcessOptionsDialog(int resultFlags , options* dialog );
+    int  ProcessOptionsDialog(int resultFlags, ArrayOfCDI *pNewDirArray );
     void DoPrint(void);
     void LaunchLocalHelp(void);
     void StopSockets(void);
@@ -391,7 +401,8 @@ class MyFrame: public wxFrame
     void SubmergeToolbarIfOverlap(int x, int y, int margin = 0);
     void SurfaceToolbar(void);
     void ToggleToolbar( bool b_smooth = false );
-
+    void RaiseToolbarRecoveryWindow();
+    bool IsToolbarShown();
     void ShowChartBarIfEnabled(void);
     void SetToolbarScale(void);
 
@@ -458,7 +469,7 @@ class MyFrame: public wxFrame
     //      PlugIn support
     int GetNextToolbarToolId(){return m_next_available_plugin_tool_id;}
     void RequestNewToolbarArgEvent( wxCommandEvent & WXUNUSED( event ) ){ return RequestNewToolbar(); }
-    void RequestNewToolbar();
+    void RequestNewToolbar( bool bforcenew = false);
 
     void ActivateMOB(void);
     void UpdateGPSCompassStatusBox(bool b_force_new = false);
@@ -535,10 +546,11 @@ class MyFrame: public wxFrame
 
     MsgPriorityHash     NMEA_Msg_Hash;
     wxString            m_VDO_accumulator;
-    
+
     time_t              m_fixtime;
     wxMenu              *piano_ctx_menu;
-    
+    bool                b_autofind;
+
     DECLARE_EVENT_TABLE()
 };
 
