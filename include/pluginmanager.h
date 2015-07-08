@@ -313,6 +313,9 @@ private:
       bool              m_benable_blackdialog;
       wxArrayString     m_deferred_blacklist_messages;
 
+      wxArrayString     m_plugin_order;
+      void SetPluginOrder( wxString serialized_names );
+      wxString GetPluginOrder();
 };
 
 WX_DEFINE_ARRAY_PTR(PluginPanel *, ArrayOfPluginPanel);
@@ -324,13 +327,17 @@ public:
       ~PluginListPanel();
 
       void SelectPlugin( PluginPanel *pi );
+      void MoveUp( PluginPanel *pi );
+      void MoveDown( PluginPanel *pi );
       void UpdateSelections();
-      
+      void UpdatePluginsOrder();
 
 private:
       ArrayOfPlugIns     *m_pPluginArray;
       ArrayOfPluginPanel  m_PluginItems;
       PluginPanel        *m_PluginSelected;
+
+      wxBoxSizer         *m_pitemBoxSizer01;
 };
 
 class PluginPanel: public wxPanel
@@ -343,8 +350,11 @@ public:
       void SetSelected( bool selected );
       void OnPluginPreferences( wxCommandEvent& event );
       void OnPluginEnable( wxCommandEvent& event );
+      void OnPluginUp( wxCommandEvent& event );
+      void OnPluginDown( wxCommandEvent& event );
       void SetEnabled( bool enabled );
       bool GetSelected(){ return m_bSelected; }
+      PlugInContainer* GetPluginPtr() { return m_pPlugin; };
 
 private:
       PluginListPanel *m_PluginListPanel;
@@ -353,10 +363,13 @@ private:
       wxStaticText    *m_pName;
       wxStaticText    *m_pVersion;
       wxStaticText    *m_pDescription;
-//      wxBoxSizer      *m_pButtons;
       wxFlexGridSizer      *m_pButtons;
       wxButton        *m_pButtonEnable;
       wxButton        *m_pButtonPreferences;
+
+      wxBoxSizer      *m_pButtonsUpDown;
+      wxButton        *m_pButtonUp;
+      wxButton        *m_pButtonDown;
 };
 
 

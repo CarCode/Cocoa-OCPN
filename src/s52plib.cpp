@@ -78,6 +78,8 @@ extern float g_GLMinSymbolLineWidth;
 extern bool  g_b_EnableVBO;
 extern double  g_overzoom_emphasis_base;
 extern bool    g_oz_vector_scale;
+extern bool g_bresponsive;
+extern int  g_ChartScaleFactor;
 
 extern PFNGLGENBUFFERSPROC                 s_glGenBuffers;
 extern PFNGLBINDBUFFERPROC                 s_glBindBuffer;
@@ -2320,7 +2322,6 @@ wxImage s52plib::RuleXBMToImage( Rule *prule )
             } else {
                 Image.SetRGB( ix, iy, m_unused_color.R, m_unused_color.G, m_unused_color.B );
             }
-
         }
     }
 
@@ -2338,14 +2339,17 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
                                   float rot_angle )
 {
     double scale_factor = 1.0;
-    
+
+    if(g_bresponsive){
+        scale_factor *=  exp( g_ChartScaleFactor * (0.693 / 5.0) );       //  exp(2)
+        scale_factor = wxMax(scale_factor, .5);
+        scale_factor = wxMin(scale_factor, 4.);
+    }
+
     if(g_oz_vector_scale && vp->b_quilt){
         double sfactor = vp->ref_scale/vp->chart_scale;
-#ifdef __WXOSX__
-        scale_factor = wxMax((sfactor - g_overzoom_emphasis_base)  / 4., 1.75);
-#else
-        scale_factor = wxMax((sfactor - g_overzoom_emphasis_base)  / 4., 1);
-#endif
+//#ifdef __WXOSX__  scale_factor: 1.75
+        scale_factor = wxMax((sfactor - g_overzoom_emphasis_base)  / 4., scale_factor);
         scale_factor = wxMin(scale_factor, 20);
     }
     
@@ -2928,7 +2932,7 @@ int s52plib::RenderGLLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     glEnableClientState(GL_VERTEX_ARRAY);             // activate vertex coords array
 
   
-    ls_list = rzRules->obj->m_ls_list;
+    // from above ls_list is the first drawable segment
     while( ls_list){
         
         if( (ls_list->priority == priority_current) && (ls_list->n_points > 1) )   
@@ -7607,6 +7611,15 @@ void RenderFromHPGL::SetPen()
 {
     // plib->canvas_pix_per_mm;
     scaleFactor = 100.0 / plib->GetPPMM();
+
+    if(g_bresponsive){
+        double scale_factor = 1.0;
+        scale_factor *=  exp( g_ChartScaleFactor * (0.693 / 5.0) );       //  exp(2)
+        scale_factor = wxMax(scale_factor, .5);
+        scale_factor = wxMin(scale_factor, 4.);
+        
+        scaleFactor /= scale_factor;
+    }
 
     if( renderToDC ) {
         pen = wxThePenList->FindOrCreatePen( penColor, penWidth, wxSOLID );

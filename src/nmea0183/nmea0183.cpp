@@ -88,7 +88,8 @@ NMEA0183::NMEA0183()
    response_table.Append( (RESPONSE *) &Gga );
    response_table.Append( (RESPONSE *) &GPwpl );
    response_table.Append( (RESPONSE *) &Apb );
-   response_table.Append( (RESPONSE *) &Xte );
+   response_table.Append( (RESPONSE *) &Xdr );
+   response_table.Append( (RESPONSE *) &Zda );
 
 #ifdef __WXOSX__  // For Autopilot
     response_table.Append( (RESPONSE *) &Vlw );
@@ -115,7 +116,6 @@ NMEA0183::NMEA0183()
    response_table.Add( (RESPONSE *) &Xdr );
    response_table.Add( (RESPONSE *) &Xte );
    response_table.Add( (RESPONSE *) &Xtr );
-   response_table.Add( (RESPONSE *) &Zda );
    response_table.Add( (RESPONSE *) &Zfo );
    response_table.Add( (RESPONSE *) &Ztg );
 */

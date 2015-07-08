@@ -44,7 +44,7 @@
 #include "geodesic.h"
 #include "styles.h"
 #include "routeman.h"
-#include "statwin.h"
+#include "chartbarwin.h"
 #include "navutil.h"
 #include "kml.h"
 #include "concanv.h"
@@ -194,7 +194,8 @@ extern bool             g_bShowAreaNotices;
 extern int              g_Show_Target_Name_Scale;
 
 extern MyFrame          *gFrame;
-extern StatWin          *stats;
+extern Piano            *g_Piano;
+extern ChartBarWin      *g_ChartBarWin;
 extern ocpnFloatingCompassWindow *g_FloatingCompassDialog;
 
 extern int              g_iNavAidRadarRingsNumberVisible;
@@ -1680,7 +1681,7 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
             break;
 
         case 2:                      // Ctrl B
-            parent_frame->ToggleStats();
+            parent_frame->ToggleChartBar();
             break;
 
 #ifdef __WXOSX__
@@ -2132,6 +2133,7 @@ void ChartCanvas::SetColorScheme( ColorScheme cs )
     }
 #endif
     SetbTCUpdate( true );                        // force re-render of tide/current locators
+    m_brepaint_piano = true;
 
     ReloadVP();
 
@@ -2848,8 +2850,9 @@ void ChartCanvas::LoadVP( ViewPort &vp, bool b_adjust )
 #ifdef ocpnUSE_GL
     if( g_bopengl ) {
         glChartCanvas::Invalidate();
-        if( m_glcc->GetSize().x != VPoint.pix_width || m_glcc->GetSize().y != VPoint.pix_height ) m_glcc->SetSize(
-                VPoint.pix_width, VPoint.pix_height );
+        if( m_glcc->GetSize() != GetSize() ) {
+            m_glcc->SetSize( GetSize() );
+        }
     }
     else
 #endif
@@ -3012,7 +3015,17 @@ bool ChartCanvas::SetViewPoint( double lat, double lon, double scale_ppm, double
 #ifdef ocpnUSE_GL
         if( g_bopengl )
             glChartCanvas::Invalidate();
-#endif        
+#endif
+    }
+
+    // adjust pix_height to remove the chart bar from the viewport
+    if(!g_ChartBarWin) {
+        ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+        VPoint.pix_height = m_canvas_height;
+        if(!style->chartStatusWindowTransparent && g_bShowChartBar){
+            if( g_Piano->GetnKeys() )
+                VPoint.pix_height -= g_Piano->GetHeight();
+        }
     }
 
     //  A preliminary value, may be tweaked below
@@ -3240,9 +3253,12 @@ bool ChartCanvas::SetViewPoint( double lat, double lon, double scale_ppm, double
                 text.Printf( _("Scale %4.0f (%1.0fx)"), true_scale_display, m_displayed_scale_factor );
             else if( m_displayed_scale_factor > 1.0 )
                 text.Printf( _("Scale %4.0f (%1.1fx)"), true_scale_display, m_displayed_scale_factor );
-            else  {
+            else if( m_displayed_scale_factor > 0.1 ){
                 double sfr = wxRound(m_displayed_scale_factor * 10.) / 10.;
                 text.Printf( _("Scale %4.0f (%1.2fx)"), true_scale_display, sfr );
+            }
+            else  {
+                text.Printf( _("Scale %4.0f (---)"), true_scale_display );      // Generally, no chart, so no chart scale factor
             }
 
 #ifdef ocpnUSE_GL
@@ -3867,7 +3883,7 @@ void ChartCanvas::GridDraw( ocpnDC& dc )
     wxCoord w, h;
     wxPen GridPen( GetGlobalColor( _T ( "SNDG1" ) ), 1, wxSOLID );
 #ifdef __WXOSX__
-    wxFont *font = wxTheFontList->FindOrCreateFont( 12, wxFONTFAMILY_SWISS, wxNORMAL,
+    wxFont *font = wxTheFontList->FindOrCreateFont( 20, wxFONTFAMILY_SWISS, wxNORMAL,
                     wxFONTWEIGHT_NORMAL, FALSE, wxString( _T ( "Arial" ) ) );
 #else
     wxFont *font = wxTheFontList->FindOrCreateFont( 8, wxFONTFAMILY_SWISS, wxNORMAL,
@@ -4294,6 +4310,7 @@ void ChartCanvas::OnSize( wxSizeEvent& event )
     // Resize the scratch BM
     delete pscratch_bm;
     pscratch_bm = new wxBitmap( VPoint.pix_width, VPoint.pix_height, -1 );
+    m_brepaint_piano = true;
 
     // Resize the Route Calculation BM
     m_dc_route.SelectObject( wxNullBitmap );
@@ -4319,7 +4336,7 @@ void ChartCanvas::OnSize( wxSizeEvent& event )
     ReloadVP();
 }
 
-void ChartCanvas::ShowChartInfoWindow( int x, int y, int dbIndex )
+void ChartCanvas::ShowChartInfoWindow( int x, int dbIndex )
 {
     if( dbIndex >= 0 ) {
         if( NULL == m_pCIWin ) {
@@ -4344,9 +4361,7 @@ void ChartCanvas::ShowChartInfoWindow( int x, int y, int dbIndex )
             if( ( p.x + m_pCIWin->GetWinSize().x ) > m_canvas_width )
                 p.x = m_canvas_width - m_pCIWin->GetWinSize().x;
 
-            int statsW, statsH;
-            stats->GetSize( &statsW, &statsH );
-            p.y = m_canvas_height - statsH - 4 - m_pCIWin->GetWinSize().y;
+            p.y = m_canvas_height - g_Piano->GetHeight() - 4 - m_pCIWin->GetWinSize().y;
 
             m_pCIWin->dbIndex = dbIndex;
             m_pCIWin->SetPosition( p );
@@ -4515,6 +4530,16 @@ void ChartCanvas::MouseTimedEvent( wxTimerEvent& event )
 bool leftIsDown;
 
 
+bool ChartCanvas::MouseEventChartBar( wxMouseEvent& event )
+{
+    if(!g_bShowChartBar || g_ChartBarWin || !g_Piano->MouseEvent(event))
+        return false;
+    
+    cursor_region = CENTER;
+    if( !g_btouch )
+        SetCanvasCursor( event );
+    return true;
+}
 
 bool ChartCanvas::MouseEventSetup( wxMouseEvent& event,  bool b_handle_dclick )
 {
@@ -4546,12 +4571,15 @@ bool ChartCanvas::MouseEventSetup( wxMouseEvent& event,  bool b_handle_dclick )
 
     //  Establish the event region
     cursor_region = CENTER;
-    
+
+    int chartbar_height = GetChartbarHeight();
+
     if( x > xr_margin ) {
         cursor_region = MID_RIGHT;
     } else if( x < xl_margin ) {
         cursor_region = MID_LEFT;
-    } else if( y > yb_margin ) {
+    } else if( y > yb_margin - chartbar_height &&
+              y < m_canvas_height - chartbar_height) {
         cursor_region = MID_TOP;
     } else if( y < yt_margin ) {
         cursor_region = MID_BOT;
@@ -6137,8 +6165,11 @@ bool ChartCanvas::MouseEventProcessCanvas( wxMouseEvent& event )
 
 void ChartCanvas::MouseEvent( wxMouseEvent& event )
 {
+    if(cc1->MouseEventChartBar( event ))
+        return;
+
     if(MouseEventSetup( event ))
-        return;                 // handled, no further action required
+        return;              // handled, no further action required
 
     if(!MouseEventProcessObjects( event ))
         MouseEventProcessCanvas( event );
@@ -8274,8 +8305,8 @@ bool ChartCanvas::InvokeCanvasMenu(int x, int y, int seltype)
     gFrame->SurfaceToolbar();
     //g_FloatingToolbarDialog->Raise();
     g_FloatingCompassDialog->Raise();
-    if(stats && stats->IsShown())
-        stats->Raise();
+    if(g_ChartBarWin && g_ChartBarWin->IsShown())
+        g_ChartBarWin->Raise();
 #endif
 
     return true;
@@ -8771,6 +8802,7 @@ void ChartCanvas::RenderRouteLegs( ocpnDC &dc )
             disp_length += dist;
         s0 += FormatDistanceAdaptive( disp_length );
         RenderExtraRouteLegInfo( dc, r_rband, s0 );
+        m_brepaint_piano = true;
     }
 }
 
@@ -8826,7 +8858,15 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
     wxMemoryDC temp_dc;
 #endif
 
-    wxRegion rgn_chart( 0, 0, GetVP().pix_width, GetVP().pix_height );
+    long height = GetVP().pix_height;
+    
+#ifdef __WXMAC__
+    //On OS X we have to explicitly extend the region for the piano area
+    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+    if(!style->chartStatusWindowTransparent && g_bShowChartBar)
+        height += g_Piano->GetHeight();
+#endif // __WXMAC__
+    wxRegion rgn_chart( 0, 0, GetVP().pix_width, height );
 
 //    In case Thumbnail is shown, set up dc clipper and blt iterator regions
     if( pthumbwin ) {
@@ -8838,6 +8878,21 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
         if( pthumbwin->IsShown() ) {
             rgn_chart.Subtract( rgn_thumbwin );
             ru.Subtract( rgn_thumbwin );
+        }
+    }
+
+    // subtract the chart bar if it isn't transparent, and determine if we need to paint it
+    wxRegion rgn_blit = ru;
+    if(g_bShowChartBar && !g_ChartBarWin) {
+        wxRect chart_bar_rect(0, GetClientSize().y - g_Piano->GetHeight(),
+                              GetClientSize().x, g_Piano->GetHeight());
+        
+        ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+        if(ru.Contains(chart_bar_rect) != wxOutRegion) {
+            if(style->chartStatusWindowTransparent)
+                m_brepaint_piano = true;
+            else
+                ru.Subtract(chart_bar_rect);
         }
     }
 
@@ -9151,7 +9206,6 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
     m_cache_vp = VPoint;
 
 //    Set up a scratch DC for overlay objects
-    wxRegion rgn_blit;
     wxMemoryDC mscratch_dc;
     mscratch_dc.SelectObject( *pscratch_bm );
 
@@ -9160,7 +9214,6 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
     mscratch_dc.SetClippingRegion( rgn_chart );
 
     //    Blit the externally invalidated areas of the chart onto the scratch dc
-    rgn_blit = ru;
     wxRegionIterator upd( rgn_blit ); // get the update rect list
     while( upd ) {
         wxRect rect = upd.GetRect();
@@ -9184,6 +9237,10 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
         DrawAllCurrentsInBBox( scratch_dc, GetVP().GetBBox() );
     }
 
+    if( m_brepaint_piano ) {
+        g_Piano->Paint(GetClientSize().y - g_Piano->GetHeight(), mscratch_dc);
+        m_brepaint_piano = false;
+    }
 
     //quiting?
     if( g_bquiting ) {
@@ -9579,11 +9636,13 @@ void ChartCanvas::DrawOverlayObjects( ocpnDC &dc, const wxRegion& ru )
         dc.DrawBitmap( *(m_pRouteRolloverWin->GetBitmap()),
                        m_pRouteRolloverWin->GetPosition().x,
                        m_pRouteRolloverWin->GetPosition().y, false );
+        m_brepaint_piano = true;
     }
     if( m_pAISRolloverWin && m_pAISRolloverWin->IsActive() ) {
         dc.DrawBitmap( *(m_pAISRolloverWin->GetBitmap()),
                 m_pAISRolloverWin->GetPosition().x,
                 m_pAISRolloverWin->GetPosition().y, false );
+        m_brepaint_piano = true;
     }
 }
 

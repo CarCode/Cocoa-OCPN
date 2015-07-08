@@ -113,6 +113,7 @@
 #include "zda.hpp"
 #include "GPwpl.hpp"
 #include "apb.hpp"
+#include "xdr.hpp" //transducer data
 #include "xte.hpp"
 #ifdef __WXOSX__  // For Autopilot
 #include "vlw.hpp"
@@ -211,7 +212,7 @@ class NMEA0183
        GSV Gsv;
        GPWPL GPwpl;
        APB Apb;
-       XTE Xte;
+//       XTE Xte;
 #ifdef __WXOSX__
         VLW Vlw;
         STALK Stalk;
@@ -232,7 +233,7 @@ class NMEA0183
 //      VPW Vpw;
 //      WCV Wcv;
 //      WNC Wnc;
-//      XDR Xdr;
+      XDR Xdr;
 //      XTR Xtr;
       ZDA Zda;
 //      ZFO Zfo;

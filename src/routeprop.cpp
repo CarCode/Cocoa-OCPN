@@ -662,7 +662,7 @@ void RouteProp::CreateControls()
 
     itemDialog1 = new wxScrolledWindow( this, wxID_ANY,
                                       wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
-    itemDialog1->SetScrollRate(5, 5);
+    itemDialog1->SetScrollRate(2, 2);
 
     itemBoxSizer1->Add( itemDialog1, 1, wxEXPAND | wxALL, 0 );
 
@@ -777,7 +777,7 @@ void RouteProp::CreateControls()
     
     m_staticText1 = new wxStaticText( itemDialog1, wxID_ANY, _("Color:"), wxDefaultPosition, wxDefaultSize,
             0 );
-    m_staticText1->Wrap( -1 );
+    //m_staticText1->Wrap( -1 );
     bSizer2->Add( m_staticText1, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxString m_chColorChoices[] = { _("Default color"), _("Black"), _("Dark Red"), _("Dark Green"),
@@ -792,7 +792,7 @@ void RouteProp::CreateControls()
 
     m_staticText2 = new wxStaticText( itemDialog1, wxID_ANY, _("Style:"), wxDefaultPosition, wxDefaultSize,
             0 );
-    m_staticText2->Wrap( -1 );
+    //m_staticText2->Wrap( -1 );
     bSizer2->Add( m_staticText2, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxString m_chStyleChoices[] = { _("Default"), _("Solid"), _("Dot"), _("Long dash"),
@@ -805,7 +805,7 @@ void RouteProp::CreateControls()
 
     m_staticText2 = new wxStaticText( itemDialog1, wxID_ANY, _("Width:"), wxDefaultPosition, wxDefaultSize,
             0 );
-    m_staticText2->Wrap( -1 );
+    //m_staticText2->Wrap( -1 );
     bSizer2->Add( m_staticText2, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxString m_chWidthChoices[] = { _("Default"), _("1 pixel"), _("2 pixels"), _("3 pixels"),
@@ -1891,6 +1891,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     SetFont( *qFont );
     
+    int metric = GetCharHeight();
 
     wxBoxSizer* bSizer1;
     bSizer1 = new wxBoxSizer( wxVERTICAL );
@@ -1901,7 +1902,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 
     m_panelBasicProperties = new wxScrolledWindow( m_notebookProperties, wxID_ANY,
                                                    wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL | wxTAB_TRAVERSAL);
-//    m_panelBasicProperties->SetScrollRate(5, 5);
+    m_panelBasicProperties->SetScrollRate(0, 2);
 
     m_notebookProperties->AddPage( m_panelBasicProperties, _("Basic"), true );
 
@@ -1913,12 +1914,12 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     sbSizerProperties = new wxStaticBoxSizer(
             new wxStaticBox( m_panelBasicProperties, wxID_ANY, _("Properties") ), wxVERTICAL );
 
-    wxBoxSizer* bSizerInnerProperties;
-    bSizerInnerProperties = new wxBoxSizer( wxHORIZONTAL );
-
-    m_bitmapIcon = new wxStaticBitmap( m_panelBasicProperties, wxID_ANY, wxNullBitmap,
-            wxDefaultPosition, wxDefaultSize, 0 );
-    bSizerInnerProperties->Add( m_bitmapIcon, 0, wxALL, 5 );
+    wxBoxSizer* bSizerInnerProperties = new wxBoxSizer( wxHORIZONTAL );
+    
+//    m_bitmapIcon = new wxStaticBitmap( m_panelBasicProperties, wxID_ANY, wxNullBitmap,
+//            wxDefaultPosition, wxDefaultSize, 0 );
+//    bSizerInnerProperties->Add( m_bitmapIcon, 0, wxALL, 5 );
+//    m_bitmapIcon->Show( false );
 
     wxBoxSizer* bSizerTextProperties;
     bSizerTextProperties = new wxBoxSizer( wxVERTICAL );
@@ -1926,7 +1927,6 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     m_staticTextLayer = new wxStaticText( m_panelBasicProperties, wxID_ANY,
             _("This waypoint is part of a layer and can't be edited"), wxDefaultPosition,
             wxDefaultSize, 0 );
-    m_staticTextLayer->Wrap( -1 );
     m_staticTextLayer->Enable( false );
 
     bSizerTextProperties->Add( m_staticTextLayer, 0, wxALL, 5 );
@@ -1936,93 +1936,96 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 
     m_staticTextName = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Name"),
             wxDefaultPosition, wxDefaultSize, 0 );
-    m_staticTextName->Wrap( -1 );
+    //m_staticTextName->Wrap( -1 );
     bSizerName->Add( m_staticTextName, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
-    wxBoxSizer* bSizerNameValue;
-    bSizerNameValue = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* bSizerNameValue = new wxBoxSizer( wxVERTICAL );
 
     m_textName = new wxTextCtrl( m_panelBasicProperties, wxID_ANY, wxEmptyString, wxDefaultPosition,
             wxDefaultSize, 0 );
     bSizerNameValue->Add( m_textName, 0, wxALL | wxEXPAND, 5 );
-
     bSizerName->Add( bSizerNameValue, 1, wxEXPAND, 5 );
-
     bSizerTextProperties->Add( bSizerName, 0, wxEXPAND, 5 );
-
-    wxBoxSizer* bSizer8;
-    bSizer8 = new wxBoxSizer( wxHORIZONTAL );
 
     m_checkBoxShowName = new wxCheckBox( m_panelBasicProperties, wxID_ANY, _("Show name"),
             wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-    bSizer8->Add( m_checkBoxShowName, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
+#ifdef __WXOSX__
+    bSizerTextProperties->Add( m_checkBoxShowName, 0, wxALL, 5 );
+#else
+    bSizerTextProperties->Add( m_checkBoxShowName, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
+#endif
+    ///
+    wxBoxSizer* bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+    bSizerTextProperties->Add( bSizer8, 0, wxEXPAND, 5 );
 
     m_staticTextIcon = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Icon"),
             wxDefaultPosition, wxDefaultSize, 0 );
-    m_staticTextIcon->Wrap( -1 );
-    bSizer8->Add( m_staticTextIcon, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
+    bSizer8->Add( m_staticTextIcon, 0, wxALL, 5 );
 
     m_bcomboBoxIcon = new wxBitmapComboBox( m_panelBasicProperties, wxID_ANY, _("Combo!"),
             wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
     bSizer8->Add( m_bcomboBoxIcon, 1, wxALL, 5 );
 
-    bSizerTextProperties->Add( bSizer8, 0, wxEXPAND, 5 );
 
-    bSizerTextProperties->AddSpacer(15);
+    bSizerTextProperties->AddSpacer(5);
+
+    wxFlexGridSizer *LLGrid = new wxFlexGridSizer( 0, 2, 1, 1 );
+    LLGrid->AddGrowableCol( 1 );
+    bSizerTextProperties->Add( LLGrid, 1, wxEXPAND, 0 );
     
-    wxBoxSizer* bSizerLatLon;
-    bSizerLatLon = new wxBoxSizer( wxHORIZONTAL );
-
-    m_staticTextLatitude = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Latitude"),
-            wxDefaultPosition, wxDefaultSize, 0 );
-    m_staticTextLatitude->Wrap( -1 );
-    bSizerLatLon->Add( m_staticTextLatitude, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
+    int w,h;
+    GetTextExtent(_T("179 59.9999 W"), &w, &h);
+    
+    m_staticTextLatitude = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Latitude"));
+    LLGrid->Add( m_staticTextLatitude, 0, wxALL | wxALIGN_LEFT, 0 );
 
     m_textLatitude = new wxTextCtrl( m_panelBasicProperties, wxID_ANY, wxEmptyString,
-            wxDefaultPosition, wxDefaultSize, 0 );
-    bSizerLatLon->Add( m_textLatitude, 1, wxALL, 5 );
+                                    wxDefaultPosition, wxSize(w + 20, -1), 0 );
+    LLGrid->Add( m_textLatitude, 1, wxALL , 5 );
 
-    m_staticTextLongitude = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Longitude"),
-            wxDefaultPosition, wxDefaultSize, 0 );
-    m_staticTextLongitude->Wrap( -1 );
-    bSizerLatLon->Add( m_staticTextLongitude, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
-
+    m_staticTextLongitude = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Longitude"));
+    LLGrid->Add( m_staticTextLongitude, 0, wxALL  | wxALIGN_LEFT, 0 );
+    
     m_textLongitude = new wxTextCtrl( m_panelBasicProperties, wxID_ANY, wxEmptyString,
-            wxDefaultPosition, wxDefaultSize, 0 );
-    bSizerLatLon->Add( m_textLongitude, 1, wxALL, 5 );
+                                     wxDefaultPosition, wxSize(w + 20, -1), 0 );
+    LLGrid->Add( m_textLongitude, 1, wxALL , 5 );
 
-    bSizerTextProperties->Add( bSizerLatLon, 0, wxEXPAND, 5 );
 
     wxBoxSizer* bSizerArrivalRadius;
     bSizerArrivalRadius = new wxBoxSizer( wxHORIZONTAL );
-    m_staticTextArrivalRadius = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Arrival Radius"),
-            wxDefaultPosition, wxDefaultSize, 0 );
-    m_staticTextArrivalRadius->Wrap( -1 );
-    bSizerArrivalRadius->Add( m_staticTextArrivalRadius, 1, wxALL, 5 );
+    m_staticTextArrivalRadius = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Arrival Radius"));
+    bSizerArrivalRadius->Add( m_staticTextArrivalRadius, 0, wxALL, 0 );
 
-    m_textArrivalRadius = new wxTextCtrl( m_panelBasicProperties, wxID_ANY, wxEmptyString,
-            wxDefaultPosition, wxDefaultSize, 0 );
-    bSizerArrivalRadius->Add( m_textArrivalRadius, 1, wxALL, 5 );
+    m_textArrivalRadius = new wxTextCtrl( m_panelBasicProperties, wxID_ANY, wxEmptyString);
+#ifdef __WXOSX__
+    bSizerArrivalRadius->Add( m_textArrivalRadius, 0, wxALL, 5 );
+#else
+    bSizerArrivalRadius->Add( m_textArrivalRadius, 0, wxALL | wxALIGN_RIGHT, 5 );
+#endif
     bSizerTextProperties->Add( bSizerArrivalRadius, 0, wxEXPAND, 5 );
 
     //  Waypoints
-    m_checkBoxShowWaypointRangeRings = new wxCheckBox( m_panelBasicProperties, ID_SHOWWAYPOINTRANGERINGS, _("Show Waypoint Range Rings"),
+    m_checkBoxShowWaypointRangeRings = new wxCheckBox( m_panelBasicProperties, ID_SHOWWAYPOINTRANGERINGS, _("Show Range Rings"),
             wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-    bSizerTextProperties->Add( m_checkBoxShowWaypointRangeRings, 0, wxALL, 5 );
+    bSizerTextProperties->Add( m_checkBoxShowWaypointRangeRings, 0, wxALL, 0 );
 #ifdef __WXOSX__
     waypointrrSelect = new wxFlexGridSizer( 2, 1, 1 );
 #else
     waypointrrSelect = new wxFlexGridSizer( 1, 2, 1, 1 );
 #endif
     waypointrrSelect->AddGrowableCol( 1 );
-    bSizerTextProperties->Add( waypointrrSelect, 0, wxLEFT|wxRIGHT | wxEXPAND, 5 );
+    bSizerTextProperties->Add( waypointrrSelect, 0, wxLEFT|wxRIGHT | wxEXPAND, 0 );
 
-    wxStaticText *waypointrrTxt = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Waypoint range rings") );
-    waypointrrSelect->Add( waypointrrTxt, 1, wxEXPAND | wxALL, 1 );
-        
+    wxStaticText *waypointrrTxt = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Range rings") );
+    waypointrrSelect->Add( waypointrrTxt, 1, wxEXPAND | wxALL, 5 );
+    
     wxString rrAlt[] = { _("None"), _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10") };
     m_choiceWaypointRangeRingsNumber = new wxChoice( m_panelBasicProperties, ID_WAYPOINTRANGERINGS, wxDefaultPosition, wxDefaultSize, 11, rrAlt );
+#ifdef __WXOSX__
+    waypointrrSelect->Add( m_choiceWaypointRangeRingsNumber, 0, wxALL, 1 );
+#else
     waypointrrSelect->Add( m_choiceWaypointRangeRingsNumber, 0, wxALIGN_RIGHT | wxALL, 1 );
+#endif
 #ifdef __WXOSX__
     waypointradarGrid = new wxFlexGridSizer( 2, 1, 1 );
 #else
@@ -2031,28 +2034,44 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     waypointradarGrid->AddGrowableCol( 1 );
     bSizerTextProperties->Add( waypointradarGrid, 0, wxLEFT | wxRIGHT| wxEXPAND, 5 );
 
-    wxStaticText* waypointdistanceText = new wxStaticText( m_panelBasicProperties, wxID_STATIC, _("Distance Between Waypoint Rings") );
+    wxStaticText* waypointdistanceText = new wxStaticText( m_panelBasicProperties, wxID_STATIC, _("Ring Spacing") );
     waypointradarGrid->Add( waypointdistanceText, 1, wxEXPAND | wxALL, 1 );
 
     m_textWaypointRangeRingsStep = new wxTextCtrl( m_panelBasicProperties, ID_TEXTCTRL, _T(""), wxDefaultPosition, wxSize( 100, -1 ), 0 );
+#ifdef __WXOSX__
+    waypointradarGrid->Add( m_textWaypointRangeRingsStep, 0, wxALL, 1 );
+#else
     waypointradarGrid->Add( m_textWaypointRangeRingsStep, 0, wxALIGN_RIGHT | wxALL, 1 );
-
+#endif
     wxStaticText* waypointunitText = new wxStaticText( m_panelBasicProperties, wxID_STATIC, _("Distance Unit") );
     waypointradarGrid->Add( waypointunitText, 1, wxEXPAND | wxALL, 1 );
 
     wxString pDistUnitsStrings[] = { _("Nautical Miles"), _("Kilometers") };
     m_choiceWaypointRangeRingsUnits = new wxChoice( m_panelBasicProperties, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, pDistUnitsStrings );
+#ifdef __WXOSX__
+    waypointradarGrid->Add( m_choiceWaypointRangeRingsUnits, 0, wxALL, 1 );
+#else
     waypointradarGrid->Add( m_choiceWaypointRangeRingsUnits, 0, wxALIGN_RIGHT | wxALL, 1 );
-    
-    wxStaticText* waypointrangeringsColour = new wxStaticText( m_panelBasicProperties, wxID_STATIC, _("Waypoint Range Ring Colours") );
+#endif
+    wxStaticText* waypointrangeringsColour = new wxStaticText( m_panelBasicProperties, wxID_STATIC, _("Ring Colour") );
     waypointradarGrid->Add( waypointrangeringsColour, 1, wxEXPAND | wxALL, 1 );
     
     m_colourWaypointRangeRingsColour = new wxColourPickerCtrl( m_panelBasicProperties, wxID_ANY, *wxRED, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_COLOURWAYPOINTRANGERINGSCOLOUR") );
+#ifdef __WXOSX__
+    waypointradarGrid->Add( m_colourWaypointRangeRingsColour, 0, wxALL, 1);
+#else
     waypointradarGrid->Add( m_colourWaypointRangeRingsColour, 0, wxALIGN_RIGHT | wxALL, 1);
+#endif
+#ifdef __WXQT__
+    waypointrangeringsColour->Hide();
+    m_colourWaypointRangeRingsColour->Hide();
+#endif
+
+
+    bSizerTextProperties->AddSpacer(15);
 
     m_staticTextDescription = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Description"),
             wxDefaultPosition, wxDefaultSize, 0 );
-    m_staticTextDescription->Wrap( -1 );
     bSizerTextProperties->Add( m_staticTextDescription, 0, wxALL, 5 );
 
     wxBoxSizer* bSizer14;
@@ -2081,7 +2100,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 
     m_scrolledWindowLinks = new wxScrolledWindow( m_panelBasicProperties, wxID_ANY,
             wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL );
-    m_scrolledWindowLinks->SetScrollRate( 5, 5 );
+    m_scrolledWindowLinks->SetScrollRate( 2, 2 );
     bSizerLinks = new wxBoxSizer( wxVERTICAL );
 #ifndef __WXOSX__
     m_hyperlink17 = new wxHyperlinkCtrl( m_scrolledWindowLinks, wxID_ANY, _("wxFB Website"),
@@ -2112,8 +2131,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     m_scrolledWindowLinks->SetSizer( bSizerLinks );
     sbSizerLinks->Add( m_scrolledWindowLinks, 1, wxEXPAND | wxALL, 5 );
 
-    wxBoxSizer* bSizer9;
-    bSizer9 = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* bSizer9 = new wxBoxSizer( wxHORIZONTAL );
 
     m_buttonAddLink = new wxButton( m_panelBasicProperties, wxID_ANY, _("Add"), wxDefaultPosition,
             wxDefaultSize, wxBU_EXACTFIT );
@@ -2123,13 +2141,17 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
             wxDefaultPosition, wxDefaultSize, 0 );
     bSizer9->Add( m_toggleBtnEdit, 0, wxALL, 5 );
 
-    m_staticTextEditEnabled = new wxStaticText( m_panelBasicProperties, wxID_ANY,
-            _("Links are opened in the default browser."), wxDefaultPosition, wxDefaultSize,
-            0 );
-    m_staticTextEditEnabled->Wrap( -1 );
-    bSizer9->Add( m_staticTextEditEnabled, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
     sbSizerLinks->Add( bSizer9, 0, wxEXPAND, 5 );
+
+    m_staticTextEditEnabled = new wxStaticText( m_panelBasicProperties, wxID_ANY,
+                                               _("Links are opened in the default browser."), wxDefaultPosition, wxDefaultSize,
+                                               0 );
+#ifdef __WXOSX__
+    sbSizerLinks->Add( m_staticTextEditEnabled, 0, wxALL, 5 );
+#else
+    sbSizerLinks->Add( m_staticTextEditEnabled, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
+#endif
     bSizerBasicProperties->Add( sbSizerLinks, 2, wxALL | wxEXPAND, 5 );
 
 
@@ -2158,7 +2180,6 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 
     m_staticTextGuid = new wxStaticText( m_panelExtendedProperties, wxID_ANY, _("GUID"),
             wxDefaultPosition, wxDefaultSize, 0 );
-    m_staticTextGuid->Wrap( -1 );
     bSizerGuid->Add( m_staticTextGuid, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
     m_textCtrlGuid = new wxTextCtrl( m_panelExtendedProperties, wxID_ANY, wxEmptyString,
@@ -2169,7 +2190,6 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 
     m_staticTextGpx = new wxStaticText( m_panelExtendedProperties, wxID_ANY, _("GPX"),
             wxDefaultPosition, wxDefaultSize, 0 );
-    m_staticTextGpx->Wrap( -1 );
     m_staticTextGpx->Enable( false );
 
     bSizerExtendedProperties->Add( m_staticTextGpx, 0, wxALL, 5 );
@@ -2247,9 +2267,15 @@ void MarkInfoDef::RecalculateSize( void )
 {
     
     Layout();
-    wxSize esize = GetSizer()->CalcMin();
-    esize.IncBy( 20 );   // Account for some decorations?
-    
+
+    wxSize esize;
+#ifdef __WXOSX__
+    esize.x = GetCharWidth() * 60;
+    esize.y = GetCharHeight() * 100;
+#else
+    esize.x = GetCharWidth() * 110;
+    esize.y = GetCharHeight() * 40;
+#endif
     wxSize dsize = GetParent()->GetClientSize();
     esize.y = wxMin(esize.y, dsize.y - (2 * GetCharHeight()));
     esize.x = wxMin(esize.x, dsize.x - (2 * GetCharHeight()));
@@ -2442,7 +2468,7 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
         
         m_textDescription->SetValue( m_pRoutePoint->m_MarkDescription );
         m_textCtrlExtDescription->SetValue( m_pRoutePoint->m_MarkDescription );
-        m_bitmapIcon->SetBitmap( *m_pRoutePoint->GetIconBitmap() );
+//        m_bitmapIcon->SetBitmap( *m_pRoutePoint->GetIconBitmap() );
         wxWindowList kids = m_scrolledWindowLinks->GetChildren();
         for( unsigned int i = 0; i < kids.GetCount(); i++ ) {
             wxWindowListNode *node = kids.Item( i );
