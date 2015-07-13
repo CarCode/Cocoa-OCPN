@@ -3538,7 +3538,7 @@ void MyFrame::ODoSetSize( void )
               wxFONTFAMILY_DEFAULT, templateFont->GetStyle(), templateFont->GetWeight(), false,
               templateFont->GetFaceName() );
 
-        int min_height = stat_box.height;
+//        int min_height = stat_box.height;  // Not used, see below
 
         m_pStatusBar->SetFont( *pstat_font );
 #ifdef __WXQT__

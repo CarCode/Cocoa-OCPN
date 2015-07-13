@@ -36,7 +36,7 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    Mac Hilfe usw.
 
 b. Diese Version basiert auf Release-Version von wxWidgets 3.1.0 mit
-   entsprechenden dylibs vom 10. Januar 2015. Die Einbindung der Libs als
+   entsprechenden dylibs vom 06. Juli 2015. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -60,10 +60,10 @@ f. Das von den OCPN Programmierern gewünschte Konzept, die Plugins als
    Dateien.
 
 Compiler:
-Xcode 6.3.1
-Apple LLVM version 6.1.0 (clang-602.0.49) (based on LLVM 3.6.0svn)
-Target: x86_64-apple-darwin14.3.0
-SDK 10.10.3 Yosemite
+Xcode 6.4
+Apple LLVM version 6.1.0 (clang-602.0.53) (based on LLVM 3.6.0svn)
+Target: x86_64-apple-darwin14.4.0
+SDK 10.10.4 Yosemite
 Thread model: posix
 
 wxWidgets Direktive:
@@ -73,7 +73,7 @@ Ich verwende die SourceTree.app für Mac OS X.
 Im Sourcen-Tree neues Verzeichnis erstellen z.B. "build-cocoa-debug".
 Im Terminal in dies Verzeichnis wechseln und konfigurieren mit:
 
-../configure --with-osx_cocoa --enable-debug --enable-shared --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk --with-macosx-version-min=10.9 --enable-unicode --enable-mimetype=yes
+../configure --with-osx_cocoa --enable-debug --enable-shared --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk --with-macosx-version-min=10.9 --enable-mimetype=yes
 
 Dann Eingabe von: make
 und schließlich Eingabe von: sudo make install
@@ -88,5 +88,5 @@ Siehe batchwx.sh bzw. Xcode Scripts.
 
 wxCurl wurde auf diese Art ebenfalls als dynamische Library compiliert.
 -----------------------------------------------------------------------
-24. April 2015
+12. Juli 2015
 
