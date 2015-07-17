@@ -1,11 +1,11 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Thumbnail Object
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,11 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 
 #include "wx/wxprec.h"
@@ -43,7 +40,7 @@
 #include "chart1.h"
 #include "chartdb.h"
 #include "chcanv.h"
-
+#include "wx28compat.h"
 
 //------------------------------------------------------------------------------
 //    External Static Storage
@@ -103,9 +100,9 @@ void ThumbWin::OnPaint( wxPaintEvent& event )
             if( pThumbChart->GetThumbData()->pDIBThumb ) dc.DrawBitmap(
                     *( pThumbChart->GetThumbData()->pDIBThumb ), 0, 0, false );
 
-            wxPen ppPen( GetGlobalColor( _T("CHBLK") ), 1, wxSOLID );
+            wxPen ppPen( GetGlobalColor( _T("CHBLK") ), 1, wxPENSTYLE_SOLID );
             dc.SetPen( ppPen );
-            wxBrush yBrush( GetGlobalColor( _T("CHYLW") ), wxSOLID );
+            wxBrush yBrush( GetGlobalColor( _T("CHYLW") ), wxBRUSHSTYLE_SOLID );
             dc.SetBrush( yBrush );
             dc.DrawCircle( pThumbChart->GetThumbData()->ShipX, pThumbChart->GetThumbData()->ShipY, 6 );
         }
@@ -123,4 +120,3 @@ const wxBitmap &ThumbWin::GetBitmap(void)
     
     return m_bitmap;
 }
-     

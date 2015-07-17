@@ -467,7 +467,6 @@ class cm93compchart : public s57chart
 
             void SetSpecialCellIndexOffset(int cell_index, int object_id, int subcell, int xoff, int yoff);
             void CloseandReopenCurrentSubchart(void);
-            void SetOffsetDialog(CM93OffsetDialog *dialog){ m_pOffsetDialog = dialog; }
 
             void InvalidateCache();
       private:
@@ -510,7 +509,6 @@ class cm93compchart : public s57chart
             int               m_special_offset_y;
             ViewPort          m_vpt;
 
-            CM93OffsetDialog  *m_pOffsetDialog;
 
             cm93chart *m_last_cell_adjustvp;
 };

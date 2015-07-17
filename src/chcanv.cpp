@@ -79,6 +79,7 @@
 #include "OCPNRegion.h"
 #include "gshhs.h"
 #include "canvasMenu.h"
+#include "wx28compat.h"
 
 #ifdef __OCPN_ANDROID__
 #include "androidUTIL.h"
@@ -2176,7 +2177,7 @@ wxBitmap ChartCanvas::CreateDimBitmap( wxBitmap &Bitmap, double factor )
 
 void ChartCanvas::ShowBrightnessLevelTimedPopup( int brightness, int min, int max )
 {
-    wxFont *pfont = wxTheFontList->FindOrCreateFont( 40, wxDEFAULT, wxNORMAL, wxBOLD );
+    wxFont *pfont = wxTheFontList->FindOrCreateFont( 40, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD );
 
     if( !m_pBrightPopup ) {
         //    Calculate size
@@ -3338,7 +3339,7 @@ void ChartCanvas::ShipDrawLargeScale( ocpnDC& dc, wxPoint lShipMidPoint )
     dc.SetPen( wxPen( PredColor(), 2 ) );
 
     if( SHIP_NORMAL == m_ownship_state )
-        dc.SetBrush( wxBrush( ShipColor(), wxTRANSPARENT ) );
+        dc.SetBrush( wxBrush( ShipColor(), wxBRUSHSTYLE_TRANSPARENT ) );
     else
         dc.SetBrush( wxBrush( GetGlobalColor( _T ( "YELO1" ) ) ) );
  
@@ -3382,7 +3383,7 @@ void ChartCanvas::ShipIndicatorsDraw( ocpnDC& dc, float lpp,
             dash_long[0] = (int) ( 3.0 * m_pix_per_mm );  //8// Long dash  <---------+
             dash_long[1] = (int) ( 1.5 * m_pix_per_mm );  //2// Short gap            |
 
-            wxPen ppPen2( PredColor(), g_cog_predictor_width, wxUSER_DASH );
+            wxPen ppPen2( PredColor(), g_cog_predictor_width, wxPENSTYLE_USER_DASH );
             ppPen2.SetDashes( 2, dash_long );
             dc.SetPen( ppPen2 );
             dc.StrokeLine( lGPSPoint.x + GPSOffsetPixels.x, lGPSPoint.y + GPSOffsetPixels.y,
@@ -3393,13 +3394,13 @@ void ChartCanvas::ShipIndicatorsDraw( ocpnDC& dc, float lpp,
             dash_long3[1] = g_cog_predictor_width * dash_long[1];
 
             if( g_cog_predictor_width > 1 ) {
-                wxPen ppPen3( GetGlobalColor( _T ( "UBLCK" ) ), 1, wxUSER_DASH );
+                wxPen ppPen3( GetGlobalColor( _T ( "UBLCK" ) ), 1, wxPENSTYLE_USER_DASH );
                 ppPen3.SetDashes( 2, dash_long3 );
                 dc.SetPen( ppPen3 );
                 dc.StrokeLine( lGPSPoint.x + GPSOffsetPixels.x, lGPSPoint.y + GPSOffsetPixels.y,
                                lPredPoint.x + GPSOffsetPixels.x, lPredPoint.y + GPSOffsetPixels.y );
             }
-            wxPen ppPen1( GetGlobalColor( _T ( "UBLCK" ) ), 1, wxSOLID );
+            wxPen ppPen1( GetGlobalColor( _T ( "UBLCK" ) ), 1, wxPENSTYLE_SOLID );
             dc.SetPen( ppPen1 );
             dc.SetBrush( wxBrush( PredColor() ) ); //*wxWHITE_BRUSH);
 
@@ -3413,14 +3414,14 @@ void ChartCanvas::ShipIndicatorsDraw( ocpnDC& dc, float lpp,
         dash_short[0] = (int) ( 1.5 * m_pix_per_mm );  // Short dash  <---------+
         dash_short[1] = (int) ( 1.8 * m_pix_per_mm );  // Short gap            |
 
-        wxPen ppPen2( PredColor(), 2, wxUSER_DASH );
+        wxPen ppPen2( PredColor(), 2, wxPENSTYLE_USER_DASH );
         ppPen2.SetDashes( 2, dash_short );
 
         dc.SetPen( ppPen2 );
         dc.StrokeLine( lGPSPoint.x + GPSOffsetPixels.x, lGPSPoint.y + GPSOffsetPixels.y,
                        lHeadPoint.x + GPSOffsetPixels.x, lHeadPoint.y + GPSOffsetPixels.y );
 
-        wxPen ppPen1( PredColor(), 2, wxSOLID );
+        wxPen ppPen1( PredColor(), 2, wxPENSTYLE_SOLID );
         dc.SetPen( ppPen1 );
         dc.SetBrush( wxBrush( GetGlobalColor( _T ( "GREY2" ) ) ) );
 
@@ -3446,7 +3447,7 @@ void ChartCanvas::ShipIndicatorsDraw( ocpnDC& dc, float lpp,
 
         wxPen ppPen1( GetGlobalColor( _T ( "URED" ) ), 2 );
         dc.SetPen( ppPen1 );
-        dc.SetBrush( wxBrush( GetGlobalColor( _T ( "URED" ) ), wxTRANSPARENT ) );
+        dc.SetBrush( wxBrush( GetGlobalColor( _T ( "URED" ) ), wxBRUSHSTYLE_TRANSPARENT ) );
 
         for( int i = 1; i <= g_iNavAidRadarRingsNumberVisible; i++ )
             dc.StrokeCircle( lGPSPoint.x, lGPSPoint.y, i * pix_radius );
@@ -3712,7 +3713,7 @@ void ChartCanvas::ShipDraw( ocpnDC& dc )
                     ownship_icon[i].y = (int) ( py ) + lShipMidPoint.y;
                 }
 
-                wxPen ppPen1( GetGlobalColor( _T ( "UBLCK" ) ), 1, wxSOLID );
+                wxPen ppPen1( GetGlobalColor( _T ( "UBLCK" ) ), 1, wxPENSTYLE_SOLID );
                 dc.SetPen( ppPen1 );
                 dc.SetBrush( wxBrush( ShipColor() ) );
 
@@ -3891,12 +3892,12 @@ void ChartCanvas::GridDraw( ocpnDC& dc )
     float dlat, dlon;
     float gridlatMajor, gridlatMinor, gridlonMajor, gridlonMinor;
     wxCoord w, h;
-    wxPen GridPen( GetGlobalColor( _T ( "SNDG1" ) ), 1, wxSOLID );
+    wxPen GridPen( GetGlobalColor( _T ( "SNDG1" ) ), 1, wxPENSTYLE_SOLID );
 #ifdef __WXOSX__
-    wxFont *font = wxTheFontList->FindOrCreateFont( 20, wxFONTFAMILY_SWISS, wxNORMAL,
+    wxFont *font = wxTheFontList->FindOrCreateFont( 20, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,
                     wxFONTWEIGHT_NORMAL, FALSE, wxString( _T ( "Arial" ) ) );
 #else
-    wxFont *font = wxTheFontList->FindOrCreateFont( 8, wxFONTFAMILY_SWISS, wxNORMAL,
+    wxFont *font = wxTheFontList->FindOrCreateFont( 8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,
                    wxFONTWEIGHT_NORMAL, FALSE, wxString( _T ( "Arial" ) ) );
 #endif
     dc.SetPen( GridPen );
@@ -4002,14 +4003,14 @@ void ChartCanvas::ScaleBarDraw( ocpnDC& dc )
     {
         dist = 10.0;
         count = 5;
-        pen1 = wxPen( GetGlobalColor( _T ( "SNDG2" ) ), 3, wxSOLID );
-        pen2 = wxPen( GetGlobalColor( _T ( "SNDG1" ) ), 3, wxSOLID );
+        pen1 = wxPen( GetGlobalColor( _T ( "SNDG2" ) ), 3, wxPENSTYLE_SOLID );
+        pen2 = wxPen( GetGlobalColor( _T ( "SNDG1" ) ), 3, wxPENSTYLE_SOLID );
     } else                                // Draw 1 mile scale as SCALEB10
     {
         dist = 1.0;
         count = 10;
-        pen1 = wxPen( GetGlobalColor( _T ( "SCLBR" ) ), 3, wxSOLID );
-        pen2 = wxPen( GetGlobalColor( _T ( "CHGRD" ) ), 3, wxSOLID );
+        pen1 = wxPen( GetGlobalColor( _T ( "SCLBR" ) ), 3, wxPENSTYLE_SOLID );
+        pen2 = wxPen( GetGlobalColor( _T ( "CHDRD" ) ), 3, wxPENSTYLE_SOLID );
     }
 
     GetCanvasPixPoint( x_origin, y_origin, blat, blon );
@@ -8427,11 +8428,11 @@ void ChartCanvas::RenderAllChartOutlines( ocpnDC &dc, ViewPort& vp )
             double zoom_factor = GetVP().view_scale_ppm / chart_native_ppm;
 
             if( zoom_factor > 8.0 ) {
-                wxPen mPen( GetGlobalColor( _T("UINFM") ), 2, wxSHORT_DASH );
+                wxPen mPen( GetGlobalColor( _T("UINFM") ), 2, wxPENSTYLE_SHORT_DASH );
                 dc.SetPen( mPen );
                 pch->RenderNextSmallerCellOutlines( dc, GetVP() );
             } else {
-                wxPen mPen( GetGlobalColor( _T("UINFM") ), 1, wxSOLID );
+                wxPen mPen( GetGlobalColor( _T("UINFM") ), 1, wxPENSTYLE_SOLID );
                 dc.SetPen( mPen );
             } 
 
@@ -8513,13 +8514,13 @@ void ChartCanvas::RenderChartOutline( ocpnDC &dc, int dbIndex, ViewPort& vp )
     int nPly = ChartData->GetDBPlyPoint( dbIndex, 0, &plylat, &plylon );
 
     if( ChartData->GetDBChartType( dbIndex ) == CHART_TYPE_CM93 )
-        dc.SetPen( wxPen( GetGlobalColor( _T ( "YELO1" ) ), 1, wxSOLID ) );
+        dc.SetPen( wxPen( GetGlobalColor( _T ( "YELO1" ) ), 1, wxPENSTYLE_SOLID ) );
 
     else if( ChartData->GetDBChartFamily( dbIndex ) == CHART_FAMILY_VECTOR )
-        dc.SetPen( wxPen( GetGlobalColor( _T ( "UINFG" ) ), 1, wxSOLID ) );
+        dc.SetPen( wxPen( GetGlobalColor( _T ( "UINFG" ) ), 1, wxPENSTYLE_SOLID ) );
 
     else
-        dc.SetPen( wxPen( GetGlobalColor( _T ( "UINFR" ) ), 1, wxSOLID ) );
+        dc.SetPen( wxPen( GetGlobalColor( _T ( "UINFR" ) ), 1, wxPENSTYLE_SOLID ) );
 
     //        Are there any aux ply entries?
     int nAuxPlyEntries = ChartData->GetnAuxPlyEntries( dbIndex );
@@ -9266,7 +9267,7 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
         q_dc.Blit( 0, 0, GetVP().pix_width, GetVP().pix_height, &mscratch_dc, 0, 0 );
 
         //  Draw a rectangle over the screen with a stipple brush
-        wxBrush qbr( *wxBLACK, wxFDIAGONAL_HATCH );
+        wxBrush qbr( *wxBLACK, wxBRUSHSTYLE_FDIAGONAL_HATCH );
         q_dc.SetBrush( qbr );
         q_dc.DrawRectangle( 0, 0, GetVP().pix_width, GetVP().pix_height );
 
@@ -10003,7 +10004,7 @@ void ChartCanvas::DrawAnchorWatchPoints( ocpnDC& dc )
         wxPen ppPeng( GetGlobalColor( _T ( "UGREN" ) ), 2 );
         wxPen ppPenr( GetGlobalColor( _T ( "URED" ) ), 2 );
 
-        wxBrush *ppBrush = wxTheBrushList->FindOrCreateBrush( wxColour( 0, 0, 0 ), wxTRANSPARENT );
+        wxBrush *ppBrush = wxTheBrushList->FindOrCreateBrush( wxColour( 0, 0, 0 ), wxBRUSHSTYLE_TRANSPARENT );
         dc.SetBrush( *ppBrush );
 
         if( lpp1 > 0 ) {
@@ -10081,17 +10082,17 @@ void ChartCanvas::RebuildTideSelectList( LLBBox& BBox )
 void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
 {
     wxPen *pblack_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFD" ) ), 1,
-                        wxSOLID );
+                                                      wxPENSTYLE_SOLID );
     wxPen *pyelo_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "YELO1" ) ), 1,
-                       wxSOLID );
+                                                     wxPENSTYLE_SOLID );
     wxPen *pblue_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "BLUE2" ) ), 1,
-                       wxSOLID );
+                                                     wxPENSTYLE_SOLID );
 
     wxBrush *pgreen_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "GREEN1" ) ),
-                            wxSOLID );
+                                                              wxBRUSHSTYLE_SOLID );
 //        wxBrush *pblack_brush = wxTheBrushList->FindOrCreateBrush ( GetGlobalColor ( _T ( "UINFD" ) ), wxSOLID );
-    wxBrush *brc_1 = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "BLUE2" ) ), wxSOLID );
-    wxBrush *brc_2 = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "YELO1" ) ), wxSOLID );
+    wxBrush *brc_1 = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "BLUE2" ) ), wxBRUSHSTYLE_SOLID );
+    wxBrush *brc_2 = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "YELO1" ) ), wxBRUSHSTYLE_SOLID );
 
     wxFont *dFont = FontMgr::Get().GetFont( _("ExtendedTideIcon") );
     dc.SetTextForeground( FontMgr::Get().GetFontColor( _("ExtendedTideIcon") ) );
@@ -10338,11 +10339,11 @@ void ChartCanvas::DrawAllCurrentsInBBox( ocpnDC& dc, LLBBox& BBox )
     double true_scale_display = floor( VPoint.chart_scale / 100. ) * 100.;
     bDrawCurrentValues =  true_scale_display < g_Show_Target_Name_Scale;
 
-    wxPen *pblack_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFD" ) ), 1, wxSOLID );
-    wxPen *porange_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFO" ) ), 1, wxSOLID );
-    wxBrush *porange_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFO" ) ), wxSOLID );
-//    wxBrush *pgray_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UIBDR" ) ), wxSOLID );  // Not used
-    wxBrush *pblack_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFD" ) ), wxSOLID );
+    wxPen *pblack_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFD" ) ), 1, wxPENSTYLE_SOLID );
+    wxPen *porange_pen = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFO" ) ), 1, wxPENSTYLE_SOLID );
+    wxBrush *porange_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFO" ) ), wxPENSTYLE_SOLID );
+//    wxBrush *pgray_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UIBDR" ) ), wxPENSTYLE_SOLID );  // Not used
+    wxBrush *pblack_brush = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UINFD" ) ), wxPENSTYLE_SOLID );
 
     double skew_angle = GetVPRotation();
 
