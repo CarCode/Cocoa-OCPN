@@ -243,7 +243,6 @@
 		793DACC96C624C3DBE3A76AF /* RoutePoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B8B7EE91BA740D282905D97 /* RoutePoint.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		7DA7375B4D11439AAFFB0A4F /* gradar_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 661C4CD8A6FF4F2D927D5D06 /* gradar_pi.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		7EACA98E65374614B0B82C79 /* TTYWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE996846CB004999A2C7CE77 /* TTYWindow.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		7EE94381B8A440DCAB7F98F8 /* statwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 632B0CFD4AD64F378FFA8A21 /* statwin.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		7FC8E1793FFD4F6DACCE2CFF /* FontDesc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AB439EFAB50943A988F10B70 /* FontDesc.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		8147CD613BA94293887C59AB /* logbook_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF0D3018DC6C4D629F16A9BA /* logbook_pi.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		816AB23653D442B3B9A8E2CA /* sun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FC2D11FBB404657A433178C /* sun.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -379,6 +378,8 @@
 		A635C8AF17C16F0900B3E5E9 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AC17C16F0900B3E5E9 /* tinyxmlerror.cpp */; };
 		A635C8B017C16F0900B3E5E9 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AD17C16F0900B3E5E9 /* tinyxmlparser.cpp */; };
 		A638304D1950E14100027BFE /* crashprint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A638304C1950E14100027BFE /* crashprint.cpp */; };
+		A639BC381B4C30CC0053AB4A /* chartbarwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A639BC371B4C30CC0053AB4A /* chartbarwin.cpp */; };
+		A639BC3E1B4C61A70053AB4A /* xdr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A639BC3D1B4C61A70053AB4A /* xdr.cpp */; };
 		A6414F5E19599B6C0007787E /* libwatchdog_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A683CEB01958A550004A0137 /* libwatchdog_pi.dylib */; };
 		A642A17E19D8A4B600441ED3 /* csv_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A642A17D19D8A4B600441ED3 /* csv_parser.cpp */; };
 		A64515031AE501B400933404 /* base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64514FA1AE501B400933404 /* base.cpp */; };
@@ -1279,7 +1280,6 @@
 		62E271547AB44CCDB2E98ED1 /* ogrmultipolygon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ogrmultipolygon.cpp; path = src/mygdal/ogrmultipolygon.cpp; sourceTree = SOURCE_ROOT; };
 		62F01A0B32D1400299CA0649 /* S57ClassRegistrar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = S57ClassRegistrar.h; path = include/S57ClassRegistrar.h; sourceTree = SOURCE_ROOT; };
 		6324503B2058401981B47EF5 /* Route.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Route.h; path = include/Route.h; sourceTree = SOURCE_ROOT; };
-		632B0CFD4AD64F378FFA8A21 /* statwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = statwin.cpp; path = src/statwin.cpp; sourceTree = SOURCE_ROOT; };
 		64214A29EA854C03B90E8B6B /* chartsymbols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartsymbols.h; path = include/chartsymbols.h; sourceTree = SOURCE_ROOT; };
 		642AC255B3984FC4BE46954E /* Hyperlink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Hyperlink.cpp; path = src/Hyperlink.cpp; sourceTree = SOURCE_ROOT; };
 		64AC0FE418BF4FC8ADB3BC73 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = plugins/celestial_navigation_pi/src/astrolabe/util.cpp; sourceTree = SOURCE_ROOT; };
@@ -1562,6 +1562,11 @@
 		A6375E61CE4E433FB0399913 /* gpsdevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpsdevice.h; path = src/garmin/jeeps/gpsdevice.h; sourceTree = SOURCE_ROOT; };
 		A638304B1950DF6200027BFE /* crashprint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crashprint.h; path = include/crashprint.h; sourceTree = "<group>"; };
 		A638304C1950E14100027BFE /* crashprint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = crashprint.cpp; path = src/crashprint.cpp; sourceTree = "<group>"; };
+		A639BC361B4C30A10053AB4A /* chartbarwin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartbarwin.h; path = include/chartbarwin.h; sourceTree = "<group>"; };
+		A639BC371B4C30CC0053AB4A /* chartbarwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = chartbarwin.cpp; path = src/chartbarwin.cpp; sourceTree = "<group>"; };
+		A639BC3C1B4C61830053AB4A /* xdr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = xdr.hpp; path = src/nmea0183/xdr.hpp; sourceTree = "<group>"; };
+		A639BC3D1B4C61A70053AB4A /* xdr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xdr.cpp; path = src/nmea0183/xdr.cpp; sourceTree = "<group>"; };
+		A64128E11B59058A0024C916 /* wx28compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wx28compat.h; path = include/wx28compat.h; sourceTree = "<group>"; };
 		A642A17D19D8A4B600441ED3 /* csv_parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csv_parser.cpp; path = plugins/objsearch_pi/src/csv_parser.cpp; sourceTree = "<group>"; };
 		A642A17F19D8A4E000441ED3 /* csv_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csv_parser.h; path = plugins/objsearch_pi/src/csv_parser.h; sourceTree = "<group>"; };
 		A64514F61AE4FF3000933404 /* libwxCurl.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libwxCurl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2511,7 +2516,6 @@
 				A66D8E2E18D2584E00BC8747 /* routeprintout.cpp */,
 				A66D8E3018D2607A00BC8747 /* printtable.cpp */,
 				D1A7C66C95E44197A749D5E9 /* PositionParser.cpp */,
-				632B0CFD4AD64F378FFA8A21 /* statwin.cpp */,
 				D7743A6F5226481893F5A9A8 /* tcmgr.cpp */,
 				13E83550EAB04D639D447813 /* Station_Data.cpp */,
 				88C7F944718345E0BA9AC28C /* IDX_entry.cpp */,
@@ -2569,6 +2573,7 @@
 				A6E0822C1AAB591B002CC7F0 /* viewport.cpp */,
 				A6E0822E1AAB5931002CC7F0 /* canvasMenu.cpp */,
 				A6E082301AAB5956002CC7F0 /* OCPNPlatform.cpp */,
+				A639BC371B4C30CC0053AB4A /* chartbarwin.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -2851,6 +2856,8 @@
 				A6E0822A1AAB58C1002CC7F0 /* canvasMenu.h */,
 				A6E0822B1AAB58F1002CC7F0 /* OCPNPlatform.h */,
 				A6B71B441ABAD75700452B84 /* gl_private.h */,
+				A639BC361B4C30A10053AB4A /* chartbarwin.h */,
+				A64128E11B59058A0024C916 /* wx28compat.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -2925,6 +2932,7 @@
 				A6ABA9EF1AA9ECE9004D7500 /* vwr.hpp */,
 				A6ABA9F01AA9ED1E004D7500 /* vwt.hpp */,
 				114312ACFC5845AFAAB29D48 /* wpl.hpp */,
+				A639BC3C1B4C61830053AB4A /* xdr.hpp */,
 				A64D13BA1A0FD5A400B92F84 /* xte.hpp */,
 				A6ABA9F11AA9ED58004D7500 /* zda.hpp */,
 			);
@@ -3984,6 +3992,7 @@
 				A6ABAA001AA9F0BA004D7500 /* vwr.cpp */,
 				A6ABAA021AA9F0D8004D7500 /* vwt.cpp */,
 				5DE94639561D47E8B1D7B8A3 /* wpl.cpp */,
+				A639BC3D1B4C61A70053AB4A /* xdr.cpp */,
 				A64D13BB1A0FD5C600B92F84 /* xte.cpp */,
 				A6ABAA041AA9F104004D7500 /* zda.cpp */,
 			);
@@ -4926,6 +4935,7 @@
 				2B1659BD959B4FC1AD931C3C /* hdm.cpp in Sources */,
 				A6207BAE19A6A34E00215493 /* Stalk.cpp in Sources */,
 				A6ABAA011AA9F0BA004D7500 /* vwr.cpp in Sources */,
+				A639BC3E1B4C61A70053AB4A /* xdr.cpp in Sources */,
 				C1C7DD504DA94957B16F1135 /* gll.cpp in Sources */,
 				424B764B9C4A4CDA90409F42 /* vtg.cpp in Sources */,
 				AC4DF66111884361A8AE6741 /* gga.cpp in Sources */,
@@ -5493,6 +5503,7 @@
 				A65F36E5197473690006DC40 /* jsonval.cpp in Sources */,
 				A65F36E6197473690006DC40 /* jsonwriter.cpp in Sources */,
 				A66D8E2F18D2584E00BC8747 /* routeprintout.cpp in Sources */,
+				A639BC381B4C30CC0053AB4A /* chartbarwin.cpp in Sources */,
 				A617AB17194E3CFC00E7D443 /* rangefit.cpp in Sources */,
 				875EDB02E57A46C1AC1A60D4 /* chart1.cpp in Sources */,
 				A617AB07194E3BC200E7D443 /* lz4.c in Sources */,
@@ -5560,7 +5571,6 @@
 				4304FED46B524F84A8E28B12 /* routemanagerdialog.cpp in Sources */,
 				F31A268E6D2E4275A3B3A300 /* routeprop.cpp in Sources */,
 				A7FB0E99BAB54FE18BFC2CF1 /* PositionParser.cpp in Sources */,
-				7EE94381B8A440DCAB7F98F8 /* statwin.cpp in Sources */,
 				2B3ED7EF99A540518F94AAD0 /* tcmgr.cpp in Sources */,
 				1A53B74C5F334D138624FAF5 /* Station_Data.cpp in Sources */,
 				6FB3DBA648504431A4312319 /* IDX_entry.cpp in Sources */,

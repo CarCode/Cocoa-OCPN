@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: OpenCPN 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-08 11:43+0200\n"
-"PO-Revision-Date: 2015-07-08 11:43+0200\n"
+"PO-Revision-Date: 2015-07-19 12:47+0200\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -7697,12 +7697,12 @@ msgstr "NW"
 #
 #: ../src/TCWin.cpp:629
 msgid "Today"
-msgstr "heute"
+msgstr "Heute"
 
 #
 #: ../src/TCWin.cpp:630 ../src/TCWin.cpp:635
 msgid "Tomorrow"
-msgstr "morgen"
+msgstr "Morgen"
 
 #
 #: ../src/toolbar.cpp:883

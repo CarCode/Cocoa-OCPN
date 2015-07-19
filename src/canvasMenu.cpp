@@ -75,6 +75,9 @@
 
 #include <vector>
 
+#ifdef __OCPN__ANDROID__
+#include "androidUTIL.h"
+#endif
 
 // ----------------------------------------------------------------------------
 // Useful Prototypes
@@ -1221,6 +1224,7 @@ void CanvasMenuHandler::PopupMenuHandler( wxCommandEvent& event )
         parent->m_pMouseRoute = m_pSelectedRoute;
         parent->parent_frame->nRoute_State = m_pSelectedRoute->GetnPoints() + 1;
         parent->m_pMouseRoute->m_lastMousePointIndex = m_pSelectedRoute->GetnPoints();
+        parent->m_pMouseRoute->SetHiLite(50);
 
         pLast = m_pSelectedRoute->GetLastPoint();
 
@@ -1231,6 +1235,9 @@ void CanvasMenuHandler::PopupMenuHandler( wxCommandEvent& event )
         parent->m_bAppendingRoute = true;
 
         parent->SetCursor( *parent->pCursorPencil );
+#ifdef __OCPN__ANDROID__
+            androidSetRouteAnnunciator( true );
+#endif
 
         break;
 

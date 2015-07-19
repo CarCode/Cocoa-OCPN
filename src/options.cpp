@@ -3031,7 +3031,15 @@ void options::CreateControls()
     m_pListbook = new wxNotebook( itemDialog1, ID_NOTEBOOK, wxDefaultPosition, wxSize(-1, -1), flags);
     m_pListbook->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( options::OnNBPageChange ), NULL, this );
 #endif
- 
+
+#ifdef __OCPN__ANDROID__
+    //  In wxQT, we can dynamically style the little scroll buttons on a small display, to make them bigger
+    wxString qstyle;
+    qstyle.Printf(_T("QTabBar::scroller { width: %dpx; }"), m_fontHeight * 3 / 4);
+    wxCharBuffer buf = qstyle.ToUTF8();
+    m_pListbook->GetHandle()->setStyleSheet( buf.data() );
+#endif
+
 #ifdef __WXMSW__
     //  Windows clips the width of listbook selectors to about twice icon size
     //  This makes the text render with ellipses if too large
@@ -5566,15 +5574,25 @@ void options::OnInsertTideDataLocation( wxCommandEvent &event )
     wxString sel_file;
     int response = wxID_CANCEL;
 
+#ifndef __OCPN__ANDROID__
     wxFileDialog *popenDialog = new wxFileDialog( NULL, _( "Select Tide/Current Data" ), g_TCData_Dir, wxT ( "" ),
                              wxT ( "Tide/Current Data files (*.IDX; *.TCD)|*.IDX;*.idx;*.TCD;*.tcd|All files (*.*)|*.*" ),
                                     wxFD_OPEN  );
     if(g_bresponsive)
         popenDialog = g_Platform->AdjustFileDialogFont(this, popenDialog);
-    
+
     response = popenDialog->ShowModal();
+    sel_file = popenDialog->GetPath();
+    delete popenDialog;
+    
+#else
+    wxString path;
+    response = g_Platform->DoFileSelectorDialog( NULL, &path, _( "Select Tide/Current Data" ),
+                                                g_TCData_Dir, _T(""), wxT ( "*.*" ) );
+    sel_file = path;
+#endif
+
     if( response == wxID_OK ) {
-        sel_file = popenDialog->GetPath();
 
         if( g_bportable ) {
             wxFileName f( sel_file );
@@ -5595,7 +5613,7 @@ void options::OnInsertTideDataLocation( wxCommandEvent &event )
             g_TCData_Dir = data_dir;
     }
 
-    delete popenDialog;
+
 }
 
 void options::OnRemoveTideDataLocation( wxCommandEvent &event )
@@ -6057,12 +6075,14 @@ void options::SetConnectionParams(ConnectionParams *cp)
     }
     else if ( cp->Type == INTERNAL_GPS )
     {
-        m_rbTypeInternalGPS->SetValue( true );
+        if(m_rbTypeInternalGPS)
+            m_rbTypeInternalGPS->SetValue( true );
         SetNMEAFormToGPS();
     }
     else if ( cp->Type == INTERNAL_BT )
     {
-        m_rbTypeInternalBT->SetValue( true );
+        if(m_rbTypeInternalBT)
+            m_rbTypeInternalBT->SetValue( true );
         SetNMEAFormToBT();
     }
     
