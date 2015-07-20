@@ -1891,7 +1891,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     SetFont( *qFont );
     
-    int metric = GetCharHeight();
+    /*int metric = */GetCharHeight();  // Not used
 
     wxBoxSizer* bSizer1;
     bSizer1 = new wxBoxSizer( wxVERTICAL );

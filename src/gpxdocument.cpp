@@ -692,6 +692,9 @@ void GpxTrkElement::SetProperty(const wxString &name, const wxString &value)
                   ReplaceChild(curelement, *element);
                   element->Clear();
                   delete element;
+#ifdef __WXOSX__
+                found = true;
+#endif
                   break;
             }
             curelement = curelement->NextSiblingElement();

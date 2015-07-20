@@ -589,7 +589,7 @@ void RoutePoint::DrawGL( ViewPort &vp, OCPNRegion &region,bool use_cached_screen
 
         glColor3f(1, 1, 1);
         
-        int x = r1.x, y = r1.y, w = r1.width, h = r1.height;
+        int /*x = r1.x, y = r1.y,*/ w = r1.width, h = r1.height;  // Not used
 
         float scale = 1.0;
         if(g_bresponsive){
