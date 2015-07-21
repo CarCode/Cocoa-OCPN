@@ -9198,7 +9198,7 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
         }
     } // temp_dc.IsOk();
 
-    wxMemoryDC *pChartDC = &temp_dc;
+    wxMemoryDC *pChartDC; // = &temp_dc;  // Not used
     wxMemoryDC rotd_dc;
 
     if( ( ( fabs( GetVP().rotation ) > 0.01 ) )

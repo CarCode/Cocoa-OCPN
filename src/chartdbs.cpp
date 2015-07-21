@@ -1327,6 +1327,19 @@ wxString ChartDatabase::GetFullChartInfo(ChartBase *pc, int dbIndex, int *char_w
                   lc++;
 
             }
+#ifdef __WXOSX__
+            line.Empty();
+            if(pc)
+            {
+                double lat=pc->GetLatAdjustment();
+                double lon=pc->GetLonAdjustment();
+                line.Printf(_(" Adjustment:  Lat:%0.3f' Lon:%0.3f'"),60*lat,60*lon);
+                line += _T("\n");
+                max_width = wxMax(max_width, line.Len());
+                r += line;
+                lc++;
+            }
+#endif
       }
 
       if(line_count)

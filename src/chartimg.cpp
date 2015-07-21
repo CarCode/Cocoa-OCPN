@@ -1380,7 +1380,9 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
             free(pPlyTable);
             return INIT_FAIL_REMOVE;
       }
-
+#ifdef __WXOSX__
+    int datum_index = DATUM_INDEX_UNKNOWN;
+#endif
       if(m_datum_str.IsEmpty()){
           wxString msg(_T("   Chart datum not specified on chart "));
           msg.Append(m_FullPath);
@@ -1393,9 +1395,11 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
           char d_str[100];
           strncpy(d_str, m_datum_str.mb_str(), 99);
           d_str[99] = 0;
-          
+#ifdef __WXOSX__
+          datum_index = GetDatumIndex(d_str);
+#else
           int datum_index = GetDatumIndex(d_str);
-          
+#endif
           if(datum_index < 0){
               wxString msg(_T("   Chart datum {"));
               msg += m_datum_str;
@@ -1421,18 +1425,31 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
       //    Adjust the PLY points to WGS84 datum
       Plypoint *ppp = (Plypoint *)GetCOVRTableHead(0);
       int cnPlypoint = GetCOVRTablenPoints(0);
-
+#ifndef __WXOSX__
       //  n.b. this is not precisely right for non-wgs84 charts.
       //  should use molodensky transform, and then consider SHOM Ver 1.1 charts
-
+#endif
       for(int u=0 ; u<cnPlypoint ; u++)
       {
+#ifndef __WXOSX__
             ppp->lnp += m_dtm_lon / 3600;
             ppp->ltp += m_dtm_lat / 3600;
             ppp++;
       }
+#else
+        double tlon,tlat;
+        if ( ( datum_index != DATUM_INDEX_UNKNOWN ) && ( datum_index != DATUM_INDEX_WGS84 ) ) {
+            MolodenskyTransform( ppp->ltp,ppp->lnp, &tlat,&tlon, datum_index, DATUM_INDEX_WGS84 );
+        } else {
+            tlat=ppp->ltp;
+            tlon=ppp->lnp;
+        }
 
-
+        ppp->lnp = (float) ( tlon + ( m_b_apply_dtm ? m_dtm_lon / 3600 : 0 ));
+        ppp->ltp = (float) ( tlat + ( m_b_apply_dtm ? m_dtm_lat / 3600 : 0 ));
+        ppp++;
+    }
+#endif
       if(!SetMinMax())
             return INIT_FAIL_REMOVE;          // have to bail here
 
