@@ -144,7 +144,11 @@ void DashboardInstrument_GPS::DrawFrame(wxGCDC* dc)
         dc->Blit(m_cx-3, m_cy-m_radius-6, width, height, &tdc, 0, 0);
 
         tdc.Clear();
+#ifdef __WXOSX__
+        tdc.DrawText(_("O"), 0,0);
+#else
         tdc.DrawText(_("E"), 0,0);
+#endif
         dc->Blit(m_cx+m_radius-4, m_cy-5, width, height, &tdc, 0, 0);
 
         tdc.Clear();

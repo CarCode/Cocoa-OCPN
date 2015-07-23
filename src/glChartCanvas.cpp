@@ -1712,7 +1712,7 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
     else
         color = GetGlobalColor( _T ( "UINFR" ) );
 
-    ChartTableEntry *entry = ChartData->GetpChartTableEntry(dbIndex);
+//    ChartTableEntry *entry = ChartData->GetpChartTableEntry(dbIndex);  // Not used
 
 //    glEnable( GL_BLEND );
     glEnable( GL_LINE_SMOOTH );
@@ -2343,7 +2343,7 @@ void glChartCanvas::DrawFloatingOverlayObjects( ocpnDC &dc, OCPNRegion &region )
     //  Draw any active or selected routes now
     extern Routeman                  *g_pRouteMan;
     extern Track                     *g_pActiveTrack;
-    Route *active_route = g_pRouteMan->GetpActiveRoute();
+//    Route *active_route = g_pRouteMan->GetpActiveRoute();  // Not used
 
 //    if( active_route ) active_route->DrawGL( vp, region );
 //    if( g_pActiveTrack ) g_pActiveTrack->Draw( dc, vp );
@@ -4203,7 +4203,7 @@ void glChartCanvas::RenderLast()
         int sy = GetSize().y;
         
         //  Is this viewpoint the same as the previously painted one?
-        bool b_newview = true;
+//        bool b_newview = true;  // Not used
         
         // If the view is the same we do no updates,
         // cached texture to the framebuffe
@@ -4213,7 +4213,7 @@ void glChartCanvas::RenderLast()
            && m_cache_vp.clon == VPoint.clon
            && m_cache_vp.IsValid()
            && m_cache_current_ch == Current_Ch ) {
-            b_newview = false;
+//            b_newview = false;  // Not used
         }
         
 #if 0

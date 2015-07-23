@@ -689,7 +689,7 @@ void CompressionWorkerPool::OnEvtThread( OCPN_CompressionThreadEvent & event )
         
         if(ticket->bpost_zip_compress){
             for(int i=0 ; i < g_mipmap_max_level+1 ; i++){
-                void *p = ticket->compcomp_bits_array[i];
+//                void *p = ticket->compcomp_bits_array[i];  // Not used
                 free( ticket->compcomp_bits_array[i] );
             }
             
@@ -1274,7 +1274,7 @@ void glTexFactory::DoImmediateFullCompress(const wxRect &rect)
         p->y = rect.y;
         p->level_min = g_mipmap_max_level + 1;  // default, nothing loaded
         m_td_array[array_index] = p;
-        ptd = p;
+//        ptd = p;  // Not used
     }
     
     if(g_CompressorPool){
@@ -1842,8 +1842,8 @@ bool glTexFactory::LoadHeader(void)
                 
                 //  Header is located at the end of the file
                 wxFileOffset hdr_offset = m_fs->Length() -sizeof( hdr);
-                hdr_offset = m_fs->Seek( hdr_offset );
-                
+                /*hdr_offset = */m_fs->Seek( hdr_offset );  // Not used
+
                 if( sizeof( hdr) == m_fs->Read(&hdr, sizeof( hdr ))) {
                     if( hdr.magic != COMPRESSED_CACHE_MAGIC ||
                         hdr.chartdate != m_chart_date_binary ||

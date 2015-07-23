@@ -101,7 +101,7 @@ ChartBarWin::~ChartBarWin()
 void ChartBarWin::RePosition()
 {
     wxSize cs = GetParent()->GetClientSize();
-    wxFrame *frame = dynamic_cast<wxFrame*>(GetParent());
+//    wxFrame *frame = dynamic_cast<wxFrame*>(GetParent());  // Not used
     wxPoint position;
     position.x = 0;
     position.y = cs.y;
@@ -124,7 +124,7 @@ void ChartBarWin::OnPaint( wxPaintEvent& event )
 {
     wxPaintDC dc( this );
 
-    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+//    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();  // Not used
 
     wxBitmap shape = wxBitmap( cc1->GetClientSize().x, g_Piano->GetHeight() );
     wxMemoryDC shapeDC( shape );
@@ -678,7 +678,7 @@ void Piano::BuildGLTexture()
 
     wxImage image = bmp.ConvertToImage();
 
-    unsigned char *data = new unsigned char[4*m_texw*m_texh], *d = data, *e = image.GetData(), *a = image.GetAlpha();
+    unsigned char *data = new unsigned char[4*m_texw*m_texh], *d = data, *e = image.GetData(); //, *a = image.GetAlpha(); Not used
     for(unsigned int i=0; i<m_texw*m_texh; i++) {
         if(style->chartStatusWindowTransparent &&
            e[0] == 1 && e[1] == 1 && e[2] == 1)
@@ -714,8 +714,11 @@ void Piano::BuildGLTexture()
 
 void Piano::DrawGL(int off)
 {
+#ifdef __WXOSX__
+    unsigned int w = cc1->GetClientSize().x, h = GetHeight(), endx = 0;
+#else
     unsigned int w = cc1->GetClientSize().x, h = GetHeight(), endx;
- 
+#endif
     if(m_tex_piano_height != h)
         BuildGLTexture();
 
