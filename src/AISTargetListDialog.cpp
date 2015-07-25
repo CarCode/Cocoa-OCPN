@@ -700,7 +700,7 @@ void AISTargetListDialog::SetColorScheme()
 
 void AISTargetListDialog::OnPaneClose( wxAuiManagerEvent& event )
 {
-    wxAuiPaneInfo *pane = event.pane;
+    wxAuiPaneInfo *pane; // = event.pane;
     if( event.pane->name == _T("AISTargetList") ) {
         g_AisTargetList_perspective = m_pAuiManager->SavePaneInfo( *event.pane );
     }
@@ -936,6 +936,9 @@ void AISTargetListDialog::UpdateAISTargetList( void )
 
         //    Capture the MMSI of the curently selected list item
         long selItemID = -1;
+#ifdef __WXOSX__
+        if(m_pListCtrlAISTargets > 0)
+#endif
         selItemID = m_pListCtrlAISTargets->GetNextItem( selItemID, wxLIST_NEXT_ALL,
                 wxLIST_STATE_SELECTED );
 
@@ -967,7 +970,9 @@ void AISTargetListDialog::UpdateAISTargetList( void )
         }
 
         g_bsort_once = false;
-        
+#ifdef __WXOSX__
+        if(m_pListCtrlAISTargets > 0)
+#endif
         m_pListCtrlAISTargets->SetItemCount( m_pMMSI_array->GetCount() );
 
         g_AisTargetList_count = m_pMMSI_array->GetCount();
@@ -988,13 +993,17 @@ void AISTargetListDialog::UpdateAISTargetList( void )
                 }
             }
         }
-
+#ifdef __WXOSX__
+        if(m_pListCtrlAISTargets > 0) {
+#endif
         if( m_pMMSI_array->GetCount() ) m_pListCtrlAISTargets->SetItemState( item_sel,
                 wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
                 wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED );
         else
             m_pListCtrlAISTargets->DeleteAllItems();
-
+#ifdef __WXOSX__
+        }
+#endif
         wxString count;
 #ifdef __WXOSX__
         count.Printf( _T("%ld"), m_pMMSI_array->GetCount() );

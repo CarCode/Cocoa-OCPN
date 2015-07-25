@@ -279,7 +279,11 @@ void DataStream::Open(void)
                     m_socket_server->SetEventHandler(*this, DS_SERVERSOCKET_ID);
                     m_socket_server->SetNotify( wxSOCKET_CONNECTION_FLAG );
                     m_socket_server->Notify(TRUE);
+#ifdef __WXOSX__
+                    tsock->SetTimeout(1);
+#else
                     m_socket_server->SetTimeout(1);    // Short timeout
+#endif
                 }
                 else {
                     m_sock->SetEventHandler(*this, DS_SOCKET_ID);
@@ -290,8 +294,11 @@ void DataStream::Open(void)
                         notify_flags |= wxSOCKET_INPUT_FLAG;
                     m_sock->SetNotify(notify_flags);
                     m_sock->Notify(TRUE);
+#ifdef __WXOSX__
+                    tsock->SetTimeout(1);
+#else
                     m_sock->SetTimeout(1);              // Short timeout
-
+#endif
                     m_brx_connect_event = false;
                     m_socket_timer.Start(100, wxTIMER_ONE_SHOT);    // schedule a connection
                 }
@@ -1834,11 +1841,15 @@ thread_prexit:
 int GARMIN_USB_Thread::gusb_cmd_get(garmin_usb_packet *ibuf, size_t sz)
 {
       int rv = 0;
-      unsigned char *buf = (unsigned char *) &ibuf->dbuf[0];
+//      unsigned char *buf = (unsigned char *) &ibuf->dbuf[0];  // Not used
       int orig_receive_state;
 top:
       orig_receive_state = m_receive_state;
+#ifdef __WXOSX__
+    switch (orig_receive_state) {
+#else
       switch (m_receive_state) {
+#endif
             case rs_fromintr:
                   rv = gusb_win_get(ibuf, sz);
                   break;

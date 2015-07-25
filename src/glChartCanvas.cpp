@@ -3581,12 +3581,17 @@ void glChartCanvas::DrawGLTidesInBBox(ocpnDC& dc, LLBBox& BBox)
     }
     else
         cc1->DrawAllTidesInBBox( dc, BBox );
-    
+#ifdef __WXOSX__
+    cc1->RebuildTideSelectList( cc1->GetVP().GetBBox() );
+#endif
 }
 
 void glChartCanvas::DrawGLCurrentsInBBox(ocpnDC& dc, LLBBox& BBox)
 {
     cc1->DrawAllCurrentsInBBox( dc, BBox );
+#ifdef __WXOSX__
+    cc1->RebuildCurrentSelectList( cc1->GetVP().GetBBox() );
+#endif
 }
 
 

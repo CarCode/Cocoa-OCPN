@@ -819,10 +819,13 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
             // Delete the stale AIS Target selectable point
             if( pStaleTarget )
                 pSelectAIS->DeleteSelectablePoint( (void *) mmsi_long, SELTYPE_AISTARGET );
-
+#ifdef __WXOSX__
+            if( pStaleTarget )
+                pStaleTarget->b_nameValid;
+#else
             bool bhad_name = false;
             if( pStaleTarget ) bhad_name = pStaleTarget->b_nameValid;
-
+#endif
             if( gpsg_mmsi && pTargetData ) {
                 pTargetData->PositionReportTicks = now.GetTicks();
                 pTargetData->StaticReportTicks = now.GetTicks();

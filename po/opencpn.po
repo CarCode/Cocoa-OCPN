@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: OpenCPN 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-20 15:06+0200\n"
-"PO-Revision-Date: 2015-07-20 15:09+0200\n"
+"PO-Revision-Date: 2015-07-24 21:57+0200\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.8.2\n"
+"X-Generator: Poedit 1.8.3\n"
 
 #: ../include/about.h:36 ../src/chart1.cpp:2800 ../src/chart1.cpp:4888
 msgid "About OpenCPN"
@@ -137,8 +137,8 @@ msgstr "Gewählte Route drucken"
 msgid "Route Properties"
 msgstr "Routen-Eigenschaften"
 
-#: ../include/routeprop.h:106 ../include/routeprop.h:349
-#: ../src/chcanv.cpp:8068 ../src/routemanagerdialog.cpp:2192
+#: ../include/routeprop.h:106 ../include/routeprop.h:349 ../src/chcanv.cpp:8068
+#: ../src/routemanagerdialog.cpp:2192
 msgid "Waypoint Properties"
 msgstr "Wegpunkt-Eigenschaften"
 
@@ -154,17 +154,16 @@ msgstr "Route an GPS senden"
 msgid "Track Properties"
 msgstr "Track-Eigenschaften"
 
-#: ../src/about.cpp:294 ../src/about.cpp:349
-#: ../src/AISTargetListDialog.cpp:299 ../src/chart1.cpp:10933
-#: ../src/glChartCanvas.cpp:482 ../src/LinkPropDlg.cpp:38
-#: ../src/OCPNPlatform.cpp:875 ../src/OCPNPlatform.cpp:1175
-#: ../src/OCPNPlatform.cpp:1214 ../src/options.cpp:678 ../src/options.cpp:874
-#: ../src/options.cpp:1988 ../src/options.cpp:2395 ../src/options.cpp:3053
-#: ../src/options.cpp:3057 ../src/options.cpp:3810 ../src/options.cpp:4708
-#: ../src/options.cpp:4717 ../src/options.cpp:6600
-#: ../src/routemanagerdialog.cpp:449 ../src/routeprop.cpp:382
-#: ../src/routeprop.cpp:1891 ../src/TCWin.cpp:73 ../src/TCWin.cpp:178
-#: ../src/TrackPropDlg.cpp:102
+#: ../src/about.cpp:294 ../src/about.cpp:349 ../src/AISTargetListDialog.cpp:299
+#: ../src/chart1.cpp:10933 ../src/glChartCanvas.cpp:482
+#: ../src/LinkPropDlg.cpp:38 ../src/OCPNPlatform.cpp:875
+#: ../src/OCPNPlatform.cpp:1175 ../src/OCPNPlatform.cpp:1214
+#: ../src/options.cpp:678 ../src/options.cpp:874 ../src/options.cpp:1988
+#: ../src/options.cpp:2395 ../src/options.cpp:3053 ../src/options.cpp:3057
+#: ../src/options.cpp:3810 ../src/options.cpp:4708 ../src/options.cpp:4717
+#: ../src/options.cpp:6600 ../src/routemanagerdialog.cpp:449
+#: ../src/routeprop.cpp:382 ../src/routeprop.cpp:1891 ../src/TCWin.cpp:73
+#: ../src/TCWin.cpp:178 ../src/TrackPropDlg.cpp:102
 msgid "Dialog"
 msgstr "Dialog"
 
@@ -2621,8 +2620,8 @@ msgstr ""
 #: ../src/options.cpp:3932 ../src/options.cpp:3939 ../src/options.cpp:6511
 #: ../src/pluginmanager.cpp:331 ../src/pluginmanager.cpp:733
 #: ../src/pluginmanager.cpp:775 ../src/pluginmanager.cpp:803
-#: ../src/pluginmanager.cpp:838 ../src/Route.cpp:1321
-#: ../src/RoutePoint.cpp:777 ../src/tcmgr.cpp:762
+#: ../src/pluginmanager.cpp:838 ../src/Route.cpp:1321 ../src/RoutePoint.cpp:777
+#: ../src/tcmgr.cpp:762
 msgid "OpenCPN Info"
 msgstr "OpenCPN Info"
 
@@ -5760,8 +5759,8 @@ msgstr ""
 "Fehler beim Hochladen der Wegpunkte. Bitte prüfen Sie die Log-Dateien..."
 
 #: ../src/routeprintout.cpp:116 ../src/routeprintout.cpp:391
-#: ../src/routeprop.cpp:897 ../src/routeprop.cpp:2073
-#: ../src/routeprop.cpp:2168 ../src/TrackPropDlg.cpp:376
+#: ../src/routeprop.cpp:897 ../src/routeprop.cpp:2073 ../src/routeprop.cpp:2168
+#: ../src/TrackPropDlg.cpp:376
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -5883,7 +5882,7 @@ msgstr "System/PC Zeit"
 
 #: ../src/routeprop.cpp:760 ../src/routeprop.cpp:775
 msgid "LMT @ Location"
-msgstr "LMT Ort/Position"
+msgstr "LMT Ortszeit"
 
 #: ../src/routeprop.cpp:764
 msgid "Times shown as"

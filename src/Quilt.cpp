@@ -981,8 +981,8 @@ int Quilt::AdjustRefOnZoom( bool b_zin, ChartFamilyEnum family,  ChartTypeEnum t
     
     // Search for the largest scale chart whose scale limits contain the requested scale.
     for(size_t i=0 ; i < index_array.GetCount() ; i++){
-        int a = min_scale.Item(i);
-        int b = max_scale.Item(i);
+//        int a = min_scale.Item(i);  // Not used
+//        int b = max_scale.Item(i);  // Not used
 
         if( ( proposed_scale_onscreen < min_scale.Item(i) * 1.05) &&   // 5 percent leeway to allow for roundoff errors
             (proposed_scale_onscreen > max_scale.Item(i)) ) {
@@ -1130,7 +1130,7 @@ bool Quilt::BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_
 
     int reference_scale = 1.;
     int reference_type = -1;
-    int reference_family;
+//    int reference_family;  // Not used
     int quilt_proj = PROJECTION_UNKNOWN;
 
     if( ref_db_index >= 0 ) {
@@ -1138,7 +1138,7 @@ bool Quilt::BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_
         reference_scale = cte_ref.GetScale();
         reference_type = cte_ref.GetChartType();
         quilt_proj = ChartData->GetDBChartProj( ref_db_index );
-        reference_family = cte_ref.GetChartFamily();
+//        reference_family = cte_ref.GetChartFamily();  // Noz used
     }
 
     bool b_need_resort = false;
@@ -1390,7 +1390,7 @@ double Quilt::GetBestStartScale(int dbi_ref_hint, const ViewPort &vp_in)
     }
 
     //    As ChartdB data is always in rectilinear space, region calculations need to be done with no VP rotation
-    double saved_vp_rotation = vp_local.rotation;                      // save a copy
+//    double saved_vp_rotation = vp_local.rotation;  // Not used                    // save a copy
     vp_local.SetRotationAngle( 0. );
     
     bool bfull = vp_in.b_FullScreenQuilt;
@@ -1980,7 +1980,7 @@ bool Quilt::Compose( const ViewPort &vp_in )
     for( unsigned int k = 0; k < kl; k++ ) {
         wxPatchListNode *cnode = m_PatchList.Item( ( kl - k ) - 1 );
         m_index_array.Add( cnode->GetData()->dbIndex );
-        cnode = cnode->GetNext();
+        /*cnode = */cnode->GetNext();  // Not used
     }
 
     //    Walk the patch list again, checking the depth units
@@ -2408,9 +2408,9 @@ bool Quilt::RenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion 
             double scale_factor = vp.ref_scale/vp.chart_scale;
 
             if(scale_factor > g_overzoom_emphasis_base){
-                float fog = ((scale_factor - g_overzoom_emphasis_base) * 255.) / 20.;
-                fog = wxMin(fog, 200.);         // Don't fog out completely
-
+//                float fog = ((scale_factor - g_overzoom_emphasis_base) * 255.) / 20.;
+//                fog = wxMin(fog, 200.);         // Don't fog out completely
+// fog not used, see below: #if 0
                 //    Is scratch member bitmap OK?
                 if( m_pBM ) {
                     if( ( m_pBM->GetWidth() != vp.rv_rect.width )

@@ -353,9 +353,9 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
     
     if(!m_bautosize)
         return;
-    
+
     wxSize origSize = GetSize();
-    
+
     //  First pass, try to set the size using the user specified font sizes completely
     if(!m_bsize_set){
         RenderHTMLQuery(td);
@@ -386,7 +386,7 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
     }
     
     // Now adjust the font size used for the control buttons.
-    
+
     if( m_createWptBtn && m_createTrkBtn ){
         
         wxSize psz = g_Platform->getDisplaySize();
@@ -419,10 +419,16 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
     
     // Height adjustments
     // Try to avoid vertical scroll bar if possible.
-    
+
     //  Estimate the control button area height
+#ifdef __WXOSX__
+    int yb = 0;
+    if( m_createWptBtn > 0)
+        yb = m_createWptBtn->GetSize().y * 4;
+#else
     int yb = m_createWptBtn->GetSize().y * 4;
-    
+#endif
+
     wxSize szyv = m_pQueryTextCtl->GetVirtualSize();
     int csz = g_Platform->getDisplaySize().y * 8 / 10;
     if((szyv.y + yb) < csz){

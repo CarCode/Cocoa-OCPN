@@ -711,6 +711,9 @@ void TCWin::OnPaint( wxPaintEvent& event )
 
 void TCWin::OnSize( wxSizeEvent& event )
 {
+#ifdef __WXOSX__
+    if( !m_created ) return;
+#endif
     int x, y;
     GetClientSize( &x, &y );
     
