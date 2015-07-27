@@ -3,7 +3,6 @@
 #include "logbook_pi.h"
 #include "Logbook.h"
 #include "Options.h"
-#include "MessageBoxOSX.h"
 #include "Export.h"
 
 #ifndef WX_PRECOMP
@@ -128,7 +127,7 @@ void CrewList::firstColumn()
 	dt = wxDateTime::Now();
 	e = dt;
 	dt.Set(8,0);
-	e.Set(19,59);
+	e.Set(7,59);
 	gridWake->SetCellValue(1,0,wxDateTime::Now().Format(dialog->logbookPlugIn->opt->sdateformat));
 	gridWake->SetCellValue(2,0,wxString::Format(_T("%s-%s"),dt.Format(dialog->logbookPlugIn->opt->stimeformatw).c_str(),
 															e.Format(dialog->logbookPlugIn->opt->stimeformatw).c_str()));//_T("00:00-23:39"));
@@ -1650,67 +1649,65 @@ int CrewList::getDayOne(int dayone)
 
 bool CrewList::checkHourFormat(wxString s, int row, int col, wxDateTime *dt)
 {
-						bool t = false;
-						wxString sep;
+    bool t = false;
+    wxString sep;
 
-						if(s.IsEmpty())
-						{
-							gridWake->SetCellValue(row,col,_T("00:00"));
-							s = _T("0");
-						}
+    if(s.IsEmpty())
+    {
+        gridWake->SetCellValue(row,col,_T("00:00"));
+        s = _T("0");
+    }
 
-						if(s.GetChar(0) == ',' || s.GetChar(0) == '.') // no leading zero when ,3 is entered
-							s.Prepend(_T("0"));
+    if(s.GetChar(0) == ',' || s.GetChar(0) == '.') // no leading zero when ,3 is entered
+        s.Prepend(_T("0"));
 
-						if(s.Length() == 4 && (!s.Contains(_T(".")) && !s.Contains(_T(",")))) // NATO-Format entered 1230 => 12.30
-							s.insert(2,_T("."));
+    if(s.Length() == 4 && (!s.Contains(_T(".")) && !s.Contains(_T(",")))) // NATO-Format entered 1230 => 12.30
+        s.insert(2,_T("."));
 
-						if(s.Contains(_T(".")))
-						{
-							t = true;
-							sep = _T(".");
-						}
-						if(s.Contains(_T(",")))
-						{
-							t = true;
-							sep = _T(",");
-						}
-						if(s.Contains(_T(":")))
-						{
-							t = true;
-							sep = _T(":");
-						}
+    if(s.Contains(_T(".")))
+    {
+        t = true;
+        sep = _T(".");
+    }
+    if(s.Contains(_T(",")))
+    {
+        t = true;
+        sep = _T(",");
+    }
+    if(s.Contains(_T(":")))
+    {
+        t = true;
+        sep = _T(":");
+    }
 
-						if(true != t)
-						{
-							s.Append(_T(":0"));
-							sep = _T(":");
-						}
+    if(true != t)
+    {
+        s.Append(_T(":0"));
+        sep = _T(":");
+    }
 
-						wxStringTokenizer tkz(s,sep);
-						wxString h = tkz.GetNextToken();
-						wxString m;
-						if(tkz.HasMoreTokens())
-							m = tkz.GetNextToken();
-						else
-							m = _T("0");
-						if(!h.IsNumber()) h = _T("24");
-						if(!m.IsNumber()) m = _T("60");
-						if(wxAtoi(h) > 23 || wxAtoi(m) > 59 || wxAtoi(h) < 0 || wxAtoi(m) < 0)
-							{
-/*#ifdef __WXOSX__
-                                MessageBoxOSX(NULL,_("Hours < 0 or > 23\nMinutes < 0 or > 59"),_T(""),wxID_OK);
-#else
-								wxMessageBox(_("Hours < 0 or > 23\nMinutes < 0 or > 59"),_T(""));
-#endif*/
-								if(row != -1)
-									gridWake->SetCellValue(row,col,_T("00:00"));
-								return false;
-							}
-						else
-							s = wxString::Format(_T("%s:%s"),h.c_str(),m.c_str());
-		dialog->myParseTime(s,*dt);
-		return true;
+    wxStringTokenizer tkz(s,sep);
+    wxString h = tkz.GetNextToken();
+    wxString m;
+    if(tkz.HasMoreTokens())
+        m = tkz.GetNextToken();
+    else
+        m = _T("0");
+    if(!h.IsNumber()) h = _T("24");
+    if(!m.IsNumber()) m = _T("60");
+
+    if(wxAtoi(h) > 23 || wxAtoi(m) > 59 || wxAtoi(h) < 0 || wxAtoi(m) < 0)
+    {
+        //wxMessageBox(_("Hours < 0 or > 23\nMinutes < 0 or > 59"),_T(""));
+        if(row != -1)
+            gridWake->SetCellValue(row,col,_T("00:00"));
+        return false;
+    }
+    else
+        s = wxString::Format(_T("%s:%s"),h.c_str(),m.c_str());
+
+    dialog->myParseTime(s,*dt);
+    return true;
 }
 
 void CrewList::saveCSV(wxString path)
@@ -1722,30 +1719,30 @@ void CrewList::saveCSV(wxString path)
 	wxTextFile csvFile(path);
 
 	if(csvFile.Exists())
-		{
-			::wxRemoveFile(path);
-			csvFile.Create();
-		}
+    {
+        ::wxRemoveFile(path);
+        csvFile.Create();
+    }
 
-		crewListFile->Open();
+    crewListFile->Open();
 
 
 	for(unsigned int i = 0; i < crewListFile->GetLineCount(); i++)
-		{
-			wxString line = crewListFile->GetLine(i);
-			wxStringTokenizer tkz(line, _T("\t"),wxTOKEN_RET_EMPTY);
+    {
+        wxString line = crewListFile->GetLine(i);
+        wxStringTokenizer tkz(line, _T("\t"),wxTOKEN_RET_EMPTY);
 
-			while ( tkz.HasMoreTokens() )
-			{
-				wxString s;
-				s += tkz.GetNextToken().RemoveLast();
-				s= dialog->restoreDangerChar(s);
-				result += wxT("\"")+s+wxT("\",");
-			}
-			result.RemoveLast();
-			csvFile.AddLine(result);
-			result=_T("");
-		}
+        while ( tkz.HasMoreTokens() )
+        {
+            wxString s;
+            s += tkz.GetNextToken().RemoveLast();
+            s= dialog->restoreDangerChar(s);
+            result += wxT("\"")+s+wxT("\",");
+        }
+        result.RemoveLast();
+        csvFile.AddLine(result);
+        result=_T("");
+    }
 
 	csvFile.Write();
 	csvFile.Close();
@@ -1760,11 +1757,7 @@ void CrewList::saveHTML(wxString savePath, wxString layout, bool mode)
 
 	if(layout == _T(""))
 	{
-#ifdef __WXOSX__
-        MessageBoxOSX(NULL,_("Sorry, no Layout installed"),_("Information"),wxID_OK);
-#else        
 		wxMessageBox(_("Sorry, no Layout installed"),_("Information"),wxOK);
-#endif
 		return;
 	}
 
@@ -2151,11 +2144,7 @@ void CrewList::saveODT(wxString savePath,wxString layout, bool mode)
 
 	if(layout == _T(""))
 	{
-#ifdef __WXOSX__
-        MessageBoxOSX(NULL,_("Sorry, no Layout installed"),_("Information"),wxID_OK);
-#else
 		wxMessageBox(_("Sorry, no Layout installed"),_("Information"),wxOK);
-#endif
 		return;
 	}
 
@@ -2438,7 +2427,7 @@ wxString CrewList::readLayoutODT(wxString layout)
 
 	if(wxFileExists(filename))
 	{
-//#ifdef __WXOSX__
+#ifdef __WXOSX__
         auto_ptr<wxZipEntry> entry;
         static const wxString fn = _T("content.xml");
         wxString name = wxZipEntry::GetInternalName(fn);
@@ -2455,14 +2444,14 @@ wxString CrewList::readLayoutODT(wxString layout)
             while(!zip.Eof())
                 odt += txt.ReadLine();
         }
-//#else
+#else
 		/*static const wxString fn = _T("content.xml");
 		wxFileInputStream in(filename);
 		wxZipInputStream zip(in);
 		wxTextInputStream txt(zip);
 		while(!zip.Eof())
 			odt += txt.ReadLine();*/
-//#endif
+#endif
 	}
 	return odt;
 }
@@ -2496,11 +2485,7 @@ void CrewList::saveXML(wxString path)
 
 	if(crewListFile->GetLineCount() <= 0)
 	{
-#ifdef __WXOSX__
-        MessageBoxOSX(NULL,_("Sorry, Logbook has no lines"),_("Information"),wxID_OK); 
-#else
 		wxMessageBox(_("Sorry, Logbook has no lines"),_("Information"),wxOK);
-#endif
 		return;
 	}
 

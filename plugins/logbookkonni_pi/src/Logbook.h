@@ -7,7 +7,7 @@
 
 #include "../../../include/ocpn_plugin.h"
 #include "LogbookHTML.h"
-#include "nmea0183/nmea0183.h"
+#include "../../../src/nmea0183/nmea0183.h"
 
 //#define PBVE_DEBUG 1
 #define DEVICE_TIMEOUT 4 // NMEA-Device doesn't send for 4 sec. sets the strings to empty in appendRow()
@@ -31,120 +31,127 @@ private:
 		char   WEflag;
 				}oldPosition,newPosition;
 
-	NMEA0183       		m_NMEA0183;
-	RMB					tempRMB;
-	wxString			sLat;
-	wxString			sLon;
-	wxDateTime			mUTCDateTime;
-	wxString		    sSOG;
-	wxString			sSOW;
-    wxDateTime			dtSOW;
-    bool				bSOW;
-	wxString		    sCOG;
-	wxString		    sCOW;
-    wxDateTime			dtCOW;
-	wxString			sDistance;
-	wxString			sTemperatureWater;
-    wxDateTime			dtTemperatureWater;
-    bool				bTemperatureWater;
-    wxString			sTemperatureAir;
-    bool				bTemperatureAir;
-    wxDateTime			dtWimda;
-    wxString			sPressure;
-    wxString			sHumidity;
-	wxString		    sWind;
-    wxDateTime			dtWind;
-    bool				bWind;
-	wxString			sWindSpeed;
-	wxString			sDepth;
-    wxDateTime			dtDepth;
-    bool				bDepth;
-	wxString			sLogText;
-	wxString			sLinesReminder;
-    wxString			sRPM1;
-    wxString			sRPM1Shaft;
-    wxString			sRPM1Source;
-    wxString			sRPM2Shaft;
-    wxString			sRPM2Source;
-    wxString			sRPM2;
-    wxDateTime			dtRPM2;
-    long				engine;
+    NMEA0183       	m_NMEA0183;
+    RMB		tempRMB;
+    wxString	sLat;
+    wxString	sLon;
+    wxDateTime	mUTCDateTime;
+    wxString	sSOG;
+    wxString	sSOW;
+    wxDateTime	dtSOW;
+    bool		bSOW;
+    wxString	sCOG;
+    wxString	sCOW;
+    wxDateTime	dtCOW;
+    wxString	sDistance;
+    wxString	sTemperatureWater;
+    wxDateTime	dtTemperatureWater;
+    bool		bTemperatureWater;
+    wxString	sTemperatureAir;
+    bool		bTemperatureAir;
+    wxDateTime	dtWimda;
+    wxString	sPressure;
+    wxString	sHumidity;
+    wxString	sWindA;
+    wxString	sWindT;
+    wxDateTime	dtWindA;
+    wxDateTime	dtWindT;
+    bool		bWindA;
+    bool		bWindT;
+    wxString	sWindSpeedA;
+    wxString	sWindSpeedT;
+    wxString	sDepth;
+    wxDateTime	dtDepth;
+    bool		bDepth;
+    wxString	sLogText;
+    wxString	sLinesReminder;
+    wxString	sRPM1;
+    wxString	sRPM1Shaft;
+    wxString	sRPM1Source;
+    wxString	sRPM2Shaft;
+    wxString	sRPM2Source;
+    wxString	sRPM2;
+    wxDateTime	dtRPM2;
+    long		engine;
 
-	bool				noSentence;
-	bool				bCOW;
-	double				dCOW;
-	double				dCOG;
-	bool				mode;
-	bool				courseChange;
-	bool				everySM;
-	bool				waypointArrived;
-	bool				oldLogbook;
-    bool				wimdaSentence;
+    bool		noSentence;
+    bool		bCOW;
+    double		dCOW;
+    double		dCOG;
+    bool		mode;
+    bool		courseChange;
+    bool		everySM;
+    bool		waypointArrived;
+    bool		oldLogbook;
+    bool		wimdaSentence;
 
-	wxString			toSDMM ( int NEflag, double a, bool mode );
-	wxString			toSDMMOpenCPN ( int NEflag, double a, bool hi_precision );
-	void				setPositionString(double lat,int north, double lon, int east);
-	void				setDateTimeString(wxDateTime s);
-	wxString			computeCell(int grid,int row, int col, wxString s, bool mode);
-	wxString			calculateDistance(wxString fromstr, wxString tostr);
-	wxDouble			positionStringToDezimal(wxString pos);
-	wxDouble			positionStringToDezimalModern(wxString pos);
-	void				checkCourseChanged();
-	void				checkGuardChanged();
-	void				checkDistance();
-	wxString			positionTraditional(int NEflag, double a, bool mode );
-	wxString			positionGPSLike(int NEflag, double a, bool mode );
-	void				setOldPosition();
-	void				setWayPointArrivedText();
+    wxString	toSDMM ( int NEflag, double a, bool mode );
+    wxString	toSDMMOpenCPN ( int NEflag, double a, bool hi_precision );
+    void		setPositionString(double lat,int north, double lon, int east);
+    void		setDateTimeString(wxDateTime s);
+    wxString	computeCell(int grid,int row, int col, wxString s, bool mode);
+    wxString	calculateDistance(wxString fromstr, wxString tostr);
+    wxDouble	positionStringToDezimal(wxString pos);
+    wxDouble	positionStringToDezimalModern(wxString pos);
+    void		checkCourseChanged();
+    void		checkGuardChanged();
+    void		checkDistance();
+    wxString	positionTraditional(int NEflag, double a, bool mode );
+    wxString	positionGPSLike(int NEflag, double a, bool mode );
+    void		setOldPosition();
+    void		setWayPointArrivedText();
 
 #ifdef PBVE_DEBUG
 	int pbvecount;
 #endif
 
 public:
-	enum fields{ ROUTE,RDATE,RTIME,SIGN,WAKE,DISTANCE,DTOTAL,POSITION,COG,COW,SOG,SOW,DEPTH,REMARKS,
-				 BARO,HYDRO,TEMPAIR,TEMPWATER,WIND,WSPD,CURRENT,CSPD,WAVE,SWELL,WEATHER,CLOUDS,VISIBILITY,
-				 MOTOR,MOTORT,RPM1,MOTOR1,MOTOR1T,RPM2,FUEL,FUELT,SAILS,REEF,GENE,GENET,BANK1,BANK1T,BANK2,BANK2T,WATERM,WATERMT,WATERMO,WATER,WATERT,MREMARKS,ROUTEID,TRACKID};
+    enum fields{ ROUTE,RDATE,RTIME,STATUS,WAKE,DISTANCE,DTOTAL,POSITION,COG,COW,SOG,SOW,DEPTH,REMARKS,
+                BARO,HYDRO,TEMPAIR,TEMPWATER,WIND,WSPD,WINDR,WSPDR,CURRENT,CSPD,WAVE,SWELL,WEATHER,CLOUDS,VISIBILITY,
+                MOTOR,MOTORT,RPM1,MOTOR1,MOTOR1T,RPM2,FUEL,FUELT,SAILS,REEF,GENE,GENET,BANK1,BANK1T,BANK2,BANK2T,WATERM,WATERMT,WATERMO,WATER,WATERT,MREMARKS,ROUTEID,TRACKID};
 
-    Options			*opt;
+    Options         *opt;
     wxArrayString	mergeList;
 	LogbookDialog*	dialog;
 	LogbookHTML*	logbookHTML;
-	wxString		layout_locn;
-	wxString		layoutODT;
-	wxString		data_locn;
-	bool			modified;
-	wxDateTime		mCorrectedDateTime;
-	long			dLastMinute;
-	PBVEDialog*		pvbe;
-	bool			WP_skipped;
-	wxString		lastWayPoint;
-	bool			OCPN_Message;
-    bool			routeIsActive;
-	wxString		activeRoute;
-	wxString		activeRouteGUID;
-    bool			trackIsActive;
-    wxString		activeMOB;
+    wxString	layout_locn;
+    wxString	layoutODT;
+    wxString	data_locn;
+    bool		modified;
+    wxDateTime	mCorrectedDateTime;
+    long		dLastMinute;
+    PBVEDialog*	pvbe;
+    bool		WP_skipped;
+    wxString	lastWayPoint;
+    bool		OCPN_Message;
+    bool		routeIsActive;
+    wxString	activeRoute;
+    wxString	activeRouteGUID;
+    bool		trackIsActive;
+    wxString	activeMOB;
 
-    wxString		MOB_GUID;
-    bool			MOBIsActive;
-    wxString		activeTrack;
-    wxString		activeTrackGUID;
+    wxString	MOB_GUID;
+    bool		MOBIsActive;
+    wxString	activeTrack;
+    wxString	activeTrackGUID;
 
-	wxString		sDate;
-	wxString		sTime;
-	bool			guardChange;
-    bool			rpmSentence;
-    wxDateTime		dtRPM;
-    bool			engine1Manual;
-    bool			engine2Manual;
-    wxTimeSpan		dtEngine1Off;
-    wxTimeSpan		dtEngine2Off;
-    bool			bRPM2;
-    bool			bRPM1;
-    bool			sailsMessage;
-    int				sailsState;
-    int				oldSailsState;
+    wxString	sDate;
+    wxString	sTime;
+    bool		guardChange;
+    bool		rpmSentence;
+    wxDateTime	dtRPM;
+    bool		engine1Manual;
+    bool		engine2Manual;
+    bool        generatorManual;
+    wxTimeSpan	dtEngine1Off;
+    wxTimeSpan	dtEngine2Off;
+    wxTimeSpan  dtGeneratorOff;
+    bool		bRPM2;
+    bool		bRPM1;
+    bool        bGEN;
+    bool		sailsMessage;
+    int		sailsState;
+    int		oldSailsState;
 
 public:
 	Logbook(LogbookDialog* parent, wxString data, wxString layout, wxString layoutODT);
@@ -156,7 +163,7 @@ public:
 	void loadSelectedData(wxString path);
 	void loadDatanew();
 	void deleteRow(int row);
-	void appendRow(bool mode);
+    void appendRow(bool showlastline, bool autoline);
 	void update();
 	void clearNMEAData();
 	void newLogbook();
@@ -174,7 +181,7 @@ public:
 	void deleteRows();
     void setTrackToNewID(wxString target);
     void checkNMEADeviceIsOn();
-    void resetEngineManuallMode();
+    void resetEngineManualMode(int enginenumber);
 
 	static wxString makeDateFromFile(wxString date, wxString dateformat);
 	static wxString makeWatchtimeFromFile(wxString time, wxString timeformat);

@@ -9,9 +9,6 @@
 #include "Options.h"
 #include "../../../include/tinyxml.h"
 #include "icons.h"
-#ifdef __WXOSX__
-	#include "MessageBoxOSX.h"
-#endif
 
 #include <wx/string.h>
 #include <wx/button.h>
@@ -80,30 +77,30 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 //	wxInitAllImageHandlers();
 
 	this->SetSizeHints( wxSize( -1,-1 ), wxDefaultSize );
-	
+
     wxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
-	
+
 	m_logbook = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP );
 	m_panel2 = new wxPanel( m_logbook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer361;
 	bSizer361 = new wxBoxSizer( wxVERTICAL );
-	
+
 	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
-	
+
 	m_button4 = new wxButton( m_panel2, wxID_ANY , _("Add Line"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_button4->SetToolTip( _("add a line to the end of your logbook") );
-	
+
 	bSizer6->Add( m_button4, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxLEFT, 5 );
-	
+
 	logSave = new wxButton( m_panel2, wxID_ANY, _("Export"), wxDefaultPosition, wxDefaultSize, 0 );
 	logSave->SetToolTip( _("export your logbook-data as:\nHTML, ODT,  ODS, XML, CSV") );
-	
+
 	bSizer6->Add( logSave, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
+
 	m_staticline8 = new wxStaticLine( m_panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL|wxLI_VERTICAL );
 	bSizer6->Add( m_staticline8, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_bpButtonShowHideLayout = new wxBitmapButton( m_panel2, wxID_ANY, forward_xpm, wxDefaultPosition, wxSize( -1,-1 ), wxBU_AUTODRAW );
     m_bpButtonShowHideLayout->SetToolTip( _("Show Layout Selection Mode") );
 
@@ -116,22 +113,22 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_staticText32 = new wxStaticText( m_panelLayout, wxID_ANY, _("Select Layout: "), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText32->Wrap( -1 );
 	bSizer46->Add( m_staticText32, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
-	
+
 	wxArrayString logbookChoiceChoices;
 	logbookChoice = new wxChoice( m_panelLayout, wxID_ANY, wxDefaultPosition, wxSize( 180,-1 ), logbookChoiceChoices, 0 );
 	logbookChoice->SetSelection( 0 );
 	logbookChoice->SetToolTip( _("Select a layout which is displayed\nwith button \"View\"") );
-	
+
 	bSizer46->Add( logbookChoice, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
+
 	m_buttonReloadLayout = new wxButton( m_panelLayout, wxID_ANY, _("R"), wxPoint( -1,-1 ), wxSize( -1,-1 ), wxBU_EXACTFIT );
 	m_buttonReloadLayout->SetToolTip( _("Reload Layouts") );
-	
+
 	bSizer46->Add( m_buttonReloadLayout, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
-	
+
 	m_buttonEditLayout = new wxButton( m_panelLayout, wxID_ANY, _("E"), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
 	m_buttonEditLayout->SetToolTip( _("Edit Layout") );
-	
+
 	bSizer46->Add( m_buttonEditLayout, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
 
     m_panelLayout->SetSizer( bSizer46 );
@@ -147,7 +144,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 
 	wxBoxSizer* bSizer49;
 	bSizer49 = new wxBoxSizer( wxVERTICAL );
-	
+
 	m_toggleBtnEngine1 = new wxToggleButton( m_panelEngine, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 #ifdef __WXOSX__
     bSizer49->Add( m_toggleBtnEngine1, 0, wxRIGHT|wxLEFT, 0 );
@@ -160,38 +157,44 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 #else
 	bSizer49->Add( m_toggleBtnEngine2, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 0 );
 #endif
-	bSizer45->Add( bSizer49, 0, wxRIGHT|wxLEFT, 5 );
-	
+    m_toggleBtnGenerator = new wxToggleButton( m_panelEngine, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    bSizer49->Add( m_toggleBtnGenerator, 0, wxRIGHT|wxLEFT, 0 );
+#else
+    bSizer49->Add( m_toggleBtnGenerator, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 0 );
+#endif
+    bSizer45->Add( bSizer49, 0, wxRIGHT|wxLEFT|wxBOTTOM, 5 );
+
 	fgSizerSails = new wxFlexGridSizer( 3, 5, 0, 0 );
 	fgSizerSails->SetFlexibleDirection( wxBOTH );
 	fgSizerSails->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_NONE );
-		
+
 	bSizer45->Add( fgSizerSails, 0, wxRIGHT|wxLEFT, 0 );
     m_panelEngine->SetSizer( bSizer45 );
     m_panelEngine->Layout();
     bSizer45->Fit( m_panelEngine );
     bSizer6->Add( m_panelEngine, 1, wxEXPAND | wxALL, 0 );
-	
+
 	m_radioBtnHTML = new wxRadioButton( m_panel2, wxID_ANY, _("HTML"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
 	m_radioBtnHTML->SetValue( true ); 
 	bSizer6->Add( m_radioBtnHTML, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxLEFT, 5 );
-	
+
 	m_radioBtnODT = new wxRadioButton( m_panel2, wxID_ANY, _("ODT"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer6->Add( m_radioBtnODT, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
+
 	logView = new wxButton( m_panel2, wxID_ANY, _("View"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	logView->SetToolTip( _("View data in browser (HTML) or Openoffice/LibreOffice (ODT)") );
-	
+
 	bSizer6->Add( logView, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
+
 	m_staticline7 = new wxStaticLine( m_panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer6->Add( m_staticline7, 0, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
+
 	newLogbook = new wxButton( m_panel2, wxID_ANY, _("New Logbook"), wxDefaultPosition, wxDefaultSize, 0 );
 	newLogbook->SetToolTip( _("Create a new logbook\nthe active logbook is saved with today's date\nand can be viewed with Button \"Select Logbook\"") );
 
     bSizer6->Add( newLogbook, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
-	
+
 	selLogbook = new wxButton( m_panel2, wxID_ANY, _("Select Logbook"), wxDefaultPosition, wxDefaultSize, 0 );
 	selLogbook->SetToolTip( _("Select a old logbook\nEverytime a new logbook is created, you'll \nfind the active logbook as old logbook here") );
 
@@ -199,10 +202,10 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 
 	m_staticline411 = new wxStaticLine( m_panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer6->Add( m_staticline411, 0, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 5 );
-	
+
 	m_bpButtonShowHideStatusGlobal = new wxBitmapButton( m_panel2, wxID_ANY, up_xpm, wxDefaultPosition, wxSize( -1,-1 ), wxBU_AUTODRAW );
 	m_bpButtonShowHideStatusGlobal->SetToolTip( _("Show/Hide Statusbar") );
-	
+
 	bSizer6->Add( m_bpButtonShowHideStatusGlobal, 0, wxALIGN_CENTER_VERTICAL, 5 );
 #ifdef __WXOSX__
 	m_bpButtonHelpGlobal = new wxBitmapButton( m_panel2, wxID_ANY, wxArtProvider::GetBitmap( wxART_HELP, wxART_BUTTON ), wxDefaultPosition, wxSize( 28,-1 ), wxBORDER_NONE );
@@ -210,33 +213,33 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
     m_bpButtonHelpGlobal = new wxBitmapButton( m_panel2, wxID_ANY, wxArtProvider::GetBitmap( wxART_HELP_BOOK, wxART_BUTTON ), wxDefaultPosition, wxSize( -1,-1 ), wxBU_AUTODRAW );
 #endif
 	m_bpButtonHelpGlobal->SetToolTip( _("Help") );
-	
+
 	bSizer6->Add( m_bpButtonHelpGlobal, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5 );
 
 	bSizer361->Add( bSizer6, 0, 0, 0 );
-	
+
 	m_staticline401 = new wxStaticLine( m_panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer361->Add( m_staticline401, 0, wxEXPAND | wxALL, 5 );
 
 	m_notebook8 = new wxNotebook( m_panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	m_panel6 = new wxPanel( m_notebook8, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-    
+
 	wxBoxSizer* bSizer391;
 	bSizer391 = new wxBoxSizer( wxVERTICAL );
 	m_gridGlobal = new wxGrid( m_panel6, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxALWAYS_SHOW_SB );
-	
+
 	// Grid
 	m_gridGlobal->CreateGrid( 0, 14 );
 	m_gridGlobal->EnableEditing( true );
 	m_gridGlobal->EnableGridLines( true );
 	m_gridGlobal->EnableDragGridSize( false );
 	m_gridGlobal->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridGlobal->SetColSize( 0, 144 );
-	m_gridGlobal->SetColSize( 1, 68 );
+	m_gridGlobal->SetColSize( 1, 89 );
 	m_gridGlobal->SetColSize( 2, 63 );
-	m_gridGlobal->SetColSize( 3, 34 );
+	m_gridGlobal->SetColSize( 3, 35 );
 	m_gridGlobal->SetColSize( 4, 157 );
 	m_gridGlobal->SetColSize( 5, 58 );
 	m_gridGlobal->SetColSize( 6, 86 );
@@ -253,7 +256,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridGlobal->SetColLabelValue( 0, _("Route") );
 	m_gridGlobal->SetColLabelValue( 1, _("Date") );
 	m_gridGlobal->SetColLabelValue( 2, _("Time") );
-	m_gridGlobal->SetColLabelValue( 3, _("Sign") );
+    m_gridGlobal->SetColLabelValue( 3, _("Status") );
 	m_gridGlobal->SetColLabelValue( 4, _("Watch") );
 	m_gridGlobal->SetColLabelValue( 5, _("Distance") );
 	m_gridGlobal->SetColLabelValue( 6, _("DistanceTotal") );
@@ -265,15 +268,15 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridGlobal->SetColLabelValue( 12, _("Depth") );
 	m_gridGlobal->SetColLabelValue( 13, _("Remarks") );
 	m_gridGlobal->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Rows
 	m_gridGlobal->AutoSizeRows();
 	m_gridGlobal->EnableDragRowSize( true );
 	m_gridGlobal->SetRowLabelSize( 30 );
 	m_gridGlobal->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
-	
+
 	// Cell Defaults
 #ifndef __WXOSX__
 	m_gridGlobal->SetDefaultCellAlignment( wxALIGN_RIGHT, wxALIGN_TOP );
@@ -282,31 +285,31 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	wxMenuItem* m_menuItem1;
 	m_menuItem1 = new wxMenuItem( m_menu1, 500, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( m_menuItem1 );
-	
+
 	m_menu1->AppendSeparator();
-	
+
 	wxMenuItem* m_menuItem132;
 	m_menuItem132 = new wxMenuItem( m_menu1, 503, wxString( _("Show hidden columns") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( m_menuItem132 );
-	
+
 	wxMenuItem* m_menuItem15;
 	m_menuItem15 = new wxMenuItem( m_menu1, 506, wxString( _("Hide column") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( m_menuItem15 );
-	
+
 	wxMenuItem* m_menuItemSearch;
 	m_menuItemSearch = new wxMenuItem( m_menu1, wxID_ANY, wxString( _("Search in Logbook") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( m_menuItemSearch );
-	
+
 	m_menu1->AppendSeparator();
-	
+
 	wxMenuItem* m_menuItemShutDown;
 	m_menuItemShutDown = new wxMenuItem( m_menu1, wxID_ANY, wxString( _("Shutdown Logbook") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( m_menuItemShutDown );
-	
+
 	m_gridGlobal->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( LogbookDialog::m_gridGlobalOnContextMenu ), NULL, this ); 
-	
+
 	bSizer391->Add( m_gridGlobal, 1, wxALL|wxEXPAND, 5 );
-	
+
 	m_panel6->SetSizer( bSizer391 );
 	m_panel6->Layout();
 	bSizer391->Fit( m_panel6 );
@@ -315,7 +318,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	wxMenuItem* m_menuItemDelRows;
 	m_menuItemDelRows = new wxMenuItem( m_menu10, 518, wxString( _("Delete Rows") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu10->Append( m_menuItemDelRows );
-	
+
 	wxMenuItem* m_menuItemFlip;
 	m_menuItemFlip = new wxMenuItem( m_menu10, 519, wxString( _("Flip Day<->Month") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu10->Append( m_menuItemFlip );
@@ -324,16 +327,16 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_panel7 = new wxPanel( m_notebook8, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer11;
 	bSizer11 = new wxBoxSizer( wxVERTICAL );
-	
+
 	m_gridWeather = new wxGrid( m_panel7, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxALWAYS_SHOW_SB );
-	
+
 	// Grid
-	m_gridWeather->CreateGrid( 0, 13 );
+	m_gridWeather->CreateGrid( 0, 15 );  // 13
 	m_gridWeather->EnableEditing( true );
 	m_gridWeather->EnableGridLines( true );
 	m_gridWeather->EnableDragGridSize( false );
 	m_gridWeather->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridWeather->SetColSize( 0, 69 );
 	m_gridWeather->SetColSize( 1, 78 );
@@ -341,13 +344,15 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridWeather->SetColSize( 3, 66 );
 	m_gridWeather->SetColSize( 4, 81 );
 	m_gridWeather->SetColSize( 5, 76 );
-	m_gridWeather->SetColSize( 6, 63 );
+	m_gridWeather->SetColSize( 6, 81 );  // 63
 	m_gridWeather->SetColSize( 7, 76 );
-	m_gridWeather->SetColSize( 8, 92 );
-	m_gridWeather->SetColSize( 9, 89 );
-	m_gridWeather->SetColSize( 10, 80 );
-	m_gridWeather->SetColSize( 11, 80 );
+	m_gridWeather->SetColSize( 8, 63 );  // 92
+	m_gridWeather->SetColSize( 9, 76 );  // 89
+	m_gridWeather->SetColSize( 10, 92 );  // 80
+	m_gridWeather->SetColSize( 11, 89 );  // 80
 	m_gridWeather->SetColSize( 12, 80 );
+    m_gridWeather->SetColSize( 13, 80 );
+    m_gridWeather->SetColSize( 14, 80 );
 	m_gridWeather->EnableDragColMove( false );
 	m_gridWeather->EnableDragColSize( true );
 	m_gridWeather->SetColLabelSize( 30 );
@@ -355,30 +360,32 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridWeather->SetColLabelValue( 1, _("Hygrometer") );
 	m_gridWeather->SetColLabelValue( 2, _("Air") );
 	m_gridWeather->SetColLabelValue( 3, _("Water") );
-	m_gridWeather->SetColLabelValue( 4, _("Wind") );
-	m_gridWeather->SetColLabelValue( 5, _("W/Strength") );
-	m_gridWeather->SetColLabelValue( 6, _("Current") );
-	m_gridWeather->SetColLabelValue( 7, _("C/Strength") );
-	m_gridWeather->SetColLabelValue( 8, _("Wave") );
-	m_gridWeather->SetColLabelValue( 9, _("Swell") );
-	m_gridWeather->SetColLabelValue( 10, _("Weather") );
-	m_gridWeather->SetColLabelValue( 11, _("Clouds") );
-	m_gridWeather->SetColLabelValue( 12, _("Visibility") );
+    m_gridWeather->SetColLabelValue( 4, _("TWA") );
+    m_gridWeather->SetColLabelValue( 5, _("TWS") );
+    m_gridWeather->SetColLabelValue( 6, _("AWA") );
+    m_gridWeather->SetColLabelValue( 7, _("AWS") );
+    m_gridWeather->SetColLabelValue( 8, _("Current") );
+    m_gridWeather->SetColLabelValue( 9, _("C/Strength") );
+    m_gridWeather->SetColLabelValue( 10, _("Wave") );
+    m_gridWeather->SetColLabelValue( 11, _("Swell") );
+    m_gridWeather->SetColLabelValue( 12, _("Weather") );
+    m_gridWeather->SetColLabelValue( 13, _("Clouds") );
+    m_gridWeather->SetColLabelValue( 14, _("Visibility") );
 	m_gridWeather->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Rows
 	m_gridWeather->EnableDragRowSize( true );
 	m_gridWeather->SetRowLabelSize( 30 );
 	m_gridWeather->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
-	
+
 	// Cell Defaults
 #ifndef __WXOSX__
 	m_gridWeather->SetDefaultCellAlignment( wxALIGN_RIGHT, wxALIGN_TOP );
 #endif
 	bSizer11->Add( m_gridWeather, 1, wxEXPAND|wxALL, 5 );
-	
+
 	m_panel7->SetSizer( bSizer11 );
 	m_panel7->Layout();
 	bSizer11->Fit( m_panel7 );
@@ -386,16 +393,16 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_panel71 = new wxPanel( m_notebook8, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer111;
 	bSizer111 = new wxBoxSizer( wxVERTICAL );
-	
+
 	m_gridMotorSails = new wxGrid( m_panel71, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxALWAYS_SHOW_SB );
-	
+
 	// Grid
 	m_gridMotorSails->CreateGrid( 0, 24 );
 	m_gridMotorSails->EnableEditing( true );
 	m_gridMotorSails->EnableGridLines( true );
 	m_gridMotorSails->EnableDragGridSize( false );
 	m_gridMotorSails->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridMotorSails->SetColSize( 0, 62 );
 	m_gridMotorSails->SetColSize( 1, 96 );
@@ -449,38 +456,38 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
     m_gridMotorSails->SetColLabelValue( 22, _("RouteID") );
     m_gridMotorSails->SetColLabelValue( 23, _("TrackID") );
 	m_gridMotorSails->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Rows
 	m_gridMotorSails->EnableDragRowSize( true );
 	m_gridMotorSails->SetRowLabelSize( 30 );
 	m_gridMotorSails->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
-	
+
 	// Cell Defaults
 #ifndef __WXOSX__
 	m_gridMotorSails->SetDefaultCellAlignment( wxALIGN_RIGHT, wxALIGN_TOP );
 #endif
 	bSizer111->Add( m_gridMotorSails, 1, wxEXPAND|wxALL, 5 );
-	
+
 	m_panel71->SetSizer( bSizer111 );
 	m_panel71->Layout();
 	bSizer111->Fit( m_panel71 );
 	m_notebook8->AddPage( m_panel71, _("Motor/Sails"), false );
-	
+
 	bSizer361->Add( m_notebook8, 1, wxALL|wxEXPAND, 0 );
-	
+
 	Statusbar = new wxPanel( m_panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	Statusbar->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
-	
+
 	wxBoxSizer* bSizer39;
 	bSizer39 = new wxBoxSizer( wxHORIZONTAL );
-	
+
 	m_buttonSetTimer = new wxButton( Statusbar, wxID_ANY, _("Set Timer"), wxDefaultPosition, wxSize( -1,20 ), 0 );
 	m_buttonSetTimer->SetToolTip( _("Set the interval for the timer") );
-	
+
 	bSizer39->Add( m_buttonSetTimer, 0, wxALIGN_CENTER_VERTICAL|wxLEFT, 0 );
-	
+
 #if wxCHECK_VERSION(3, 0, 0)
 	m_bpButtonTimer = new myBitmapButton( Statusbar, wxID_ANY, _("Timer"),*_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
 #else
@@ -492,7 +499,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
     bSizer39->Add( m_bpButtonTimer, 0, wxALIGN_CENTER_VERTICAL, 5 );
 	m_staticline40 = new wxStaticLine( Statusbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer39->Add( m_staticline40, 0, wxEXPAND | wxALL, 5 );
-	
+
 #if wxCHECK_VERSION(3, 0, 0)
 	m_bpButtonWatch = new myBitmapButton( Statusbar, wxID_ANY, _("Watch"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
 #else
@@ -506,7 +513,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 
 	m_staticline41 = new wxStaticLine( Statusbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer39->Add( m_staticline41, 0, wxEXPAND | wxALL, 5 );
-	
+
 #if wxCHECK_VERSION(3, 0, 0)
 	m_bpButton8Waypoint = new myBitmapButton( Statusbar, wxID_ANY,  _("Waypoint"), *_img_Bullet_red, wxDefaultPosition, wxSize( -1,20 ), 0 );
 #else
@@ -533,12 +540,12 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 
 	m_textCtrlStatusDistance = new wxTextCtrl( Statusbar, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxTE_PROCESS_ENTER  );
 	m_textCtrlStatusDistance->SetToolTip( _("Set the desired distance in NM\n = (Track made good)") );
-	
+
 	bSizer39->Add( m_textCtrlStatusDistance, 0, wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticline43 = new wxStaticLine( Statusbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer39->Add( m_staticline43, 0, wxEXPAND | wxALL, 5 );
-	
+
 #if wxCHECK_VERSION(3, 0, 0)
 	m_bpButtonCourse = new myBitmapButton( Statusbar, wxID_ANY, _("Course"),  *_img_Bullet_red );
 #else
@@ -551,23 +558,23 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 
 	m_textCtrlStatusCourseDeg = new wxTextCtrl( Statusbar, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 40,-1 ), wxTE_PROCESS_ENTER  );
 	m_textCtrlStatusCourseDeg->SetToolTip( _("Set desired Degrees\nif the course changes by this amount\na course-changed-event occurs") );
-	
+
 	bSizer39->Add( m_textCtrlStatusCourseDeg, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5 );
-	
-	m_textCtrlStatusCourseMin = new wxTextCtrl( Statusbar, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), wxTE_PROCESS_ENTER  );
+
+	m_textCtrlStatusCourseMin = new wxTextCtrl( Statusbar, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 35,-1 ), wxTE_PROCESS_ENTER  );
 	m_textCtrlStatusCourseMin->SetToolTip( _("Set desired delay in minutes\nIt's a good idea to set here a value > 0\nto find the right wind.") );
-	
+
 	bSizer39->Add( m_textCtrlStatusCourseMin, 0, wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticline44 = new wxStaticLine( Statusbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer39->Add( m_staticline44, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_buttonStartStop = new wxButton( Statusbar, wxID_ANY, _("Stop"), wxDefaultPosition, wxSize( -1,20 ), 0 );
 	m_buttonStartStop->Enable( false );
 	m_buttonStartStop->SetToolTip( _("Suspend/Resume running event/s") );
-	
+
 	bSizer39->Add( m_buttonStartStop, 0, wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticline46 = new wxStaticLine( Statusbar, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer39->Add( m_staticline46, 0, wxEXPAND | wxALL, 5 );
 
@@ -597,7 +604,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	Statusbar->Layout();
 	bSizer39->Fit( Statusbar );
 	bSizer361->Add( Statusbar, 0, wxEXPAND, 5 );
-	
+
 	m_panel2->SetSizer( bSizer361 );
 	m_panel2->Layout();
 	bSizer361->Fit( m_panel2 );
@@ -614,83 +621,83 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 
 	wxBoxSizer* bSizer51;
 	bSizer51 = new wxBoxSizer( wxVERTICAL );
-	
+
 	wxBoxSizer* bSizer61;
 	bSizer61 = new wxBoxSizer( wxHORIZONTAL );
-	
+
 	logSaveOverview = new wxButton( m_panel142, wxID_ANY, _("Export"), wxDefaultPosition, wxDefaultSize, 0 );
 	logSaveOverview->SetToolTip( _("export your Overview-data as HTML or ODT") );
 	bSizer61->Add( logSaveOverview, 0, wxALL, 5 );
-	
+
 	m_staticline81 = new wxStaticLine( m_panel142, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL|wxLI_VERTICAL );
 	bSizer61->Add( m_staticline81, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_staticText323 = new wxStaticText( m_panel142, wxID_ANY, _("Select Layout: "), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText323->Wrap( -1 );
 	bSizer61->Add( m_staticText323, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	wxArrayString overviewChoiceChoices;
 	overviewChoice = new wxChoice( m_panel142, wxID_ANY, wxDefaultPosition, wxSize( 180,-1 ), overviewChoiceChoices, 0 );
 	overviewChoice->SetToolTip( _("Select a layout which is displayed\nwith button \"View\"") );
 	overviewChoice->SetSelection( 0 );
-	
+
 	bSizer61->Add( overviewChoice, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonReloadLayoutOview = new wxButton( m_panel142, wxID_ANY, _("R"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_buttonReloadLayoutOview->SetToolTip( _("Reload Layouts") );
-	
+
 	bSizer61->Add( m_buttonReloadLayoutOview, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonEditLayoutOview = new wxButton( m_panel142, wxID_ANY, _("E"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_buttonEditLayoutOview->SetToolTip( _("Edit Layout") );
-	
+
 	bSizer61->Add( m_buttonEditLayoutOview, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnHTMLOverview = new wxRadioButton( m_panel142, wxID_ANY, _T("HTML"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
 	m_radioBtnHTMLOverview->SetValue( true ); 
 	bSizer61->Add( m_radioBtnHTMLOverview, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnODTOverview = new wxRadioButton( m_panel142, wxID_ANY, wxT("ODT"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer61->Add( m_radioBtnODTOverview, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	logViewOverview = new wxButton( m_panel142, wxID_ANY, _("View"), wxDefaultPosition, wxDefaultSize, 0 );
 	logViewOverview->SetToolTip( _("View data in browser (HTML) or Openoffice/LibreOffice (ODT)") );
 
 	bSizer61->Add( logViewOverview, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticline71 = new wxStaticLine( m_panel142, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer61->Add( m_staticline71, 0, wxEXPAND | wxALL, 5 );
 
 	m_radioBtnActuellLogbook = new wxRadioButton( m_panel142, wxID_ANY, _("Actuell Logbook"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
 	m_radioBtnActuellLogbook->SetValue( true ); 
 	bSizer61->Add( m_radioBtnActuellLogbook, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnAllLogbooks = new wxRadioButton( m_panel142, wxID_ANY, _("All Logbooks"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer61->Add( m_radioBtnAllLogbooks, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnSelectLogbook = new wxRadioButton( m_panel142, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer61->Add( m_radioBtnSelectLogbook, 0, wxALL|wxEXPAND, 5 );
 
 	m_buttonSelectLogbook = new wxButton( m_panel142, wxID_ANY, _("Select Logbook"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonSelectLogbook->SetToolTip( _("Select one of the old logbooks") );
 	bSizer61->Add( m_buttonSelectLogbook, 0, wxALL, 5 );
-	
+
 	bSizer51->Add( bSizer61, 1, wxEXPAND, 5 );
 
 	fgSizer251->Add( bSizer51, 1, wxEXPAND, 5 );
-	
+
 	m_staticline11 = new wxStaticLine( m_panel142, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	fgSizer251->Add( m_staticline11, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_gridOverview = new wxGrid( m_panel142, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	
+
 	// Grid
 	m_gridOverview->CreateGrid( 1, 33 );
 	m_gridOverview->EnableEditing( false );
 	m_gridOverview->EnableGridLines( true );
 	m_gridOverview->EnableDragGridSize( false );
 	m_gridOverview->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridOverview->SetColSize( 0, 153 );
 	m_gridOverview->SetColSize( 1, 144 );
@@ -713,7 +720,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridOverview->SetColSize( 18, 80 );
 	m_gridOverview->SetColSize( 19, 100 );
 	m_gridOverview->SetColSize( 20, 80 );
-	m_gridOverview->SetColSize( 21, 108 );
+	m_gridOverview->SetColSize( 21, 80 );  // 108
 	m_gridOverview->SetColSize( 22, 80 );
 	m_gridOverview->SetColSize( 23, 80 );
 	m_gridOverview->SetColSize( 24, 123 );
@@ -749,9 +756,9 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridOverview->SetColLabelValue( 18, _("Watermaker") );
 	m_gridOverview->SetColLabelValue( 19, _("Waterm. Outp") );
 	m_gridOverview->SetColLabelValue( 20, _("Water used") );
-	m_gridOverview->SetColLabelValue( 21, _("Winddirection Avg.") );
-	m_gridOverview->SetColLabelValue( 22, _("Wind Avg.") );
-	m_gridOverview->SetColLabelValue( 23, _("Wind Max.") );
+    m_gridOverview->SetColLabelValue( 21, _("TWA Avg.") );
+    m_gridOverview->SetColLabelValue( 22, _("TWS Avg.") );
+    m_gridOverview->SetColLabelValue( 23, _("TWS Max.") );
 	m_gridOverview->SetColLabelValue( 24, _("Currentdirection Avg.") );
 	m_gridOverview->SetColLabelValue( 25, _("Current Avg.") );
 	m_gridOverview->SetColLabelValue( 26, _("Current Max.") );
@@ -762,23 +769,23 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridOverview->SetColLabelValue( 31, _("Sails used mostly") );
 	m_gridOverview->SetColLabelValue( 32, _("Path") );
 	m_gridOverview->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Rows
 	m_gridOverview->EnableDragRowSize( true );
 	m_gridOverview->SetRowLabelSize( 30 );
 	m_gridOverview->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
-	
+
 	// Cell Defaults
 	m_gridOverview->SetDefaultCellAlignment( wxALIGN_RIGHT, wxALIGN_TOP );
 	m_gridOverview->SetMinSize( wxSize( -1,400 ) );
-	
+
 	m_menuOverView = new wxMenu();
 	wxMenuItem* m_menuItemOverviewRoute;
 	m_menuItemOverviewRoute = new wxMenuItem( m_menuOverView, wxID_ANY, wxString( _("Goto Route") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menuOverView->Append( m_menuItemOverviewRoute );
-	
+
 	wxMenuItem* m_menuItem14;
 	m_menuItem14 = new wxMenuItem( m_menuOverView, wxID_ANY, wxString( _("Show hidden columns") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menuOverView->Append( m_menuItem14 );
@@ -786,9 +793,9 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	wxMenuItem* m_menuItem16;
 	m_menuItem16 = new wxMenuItem( m_menuOverView, wxID_ANY, wxString( _("Hide column") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menuOverView->Append( m_menuItem16 );
-	
+
 	fgSizer251->Add( m_gridOverview, 1, wxALL|wxEXPAND, 5 );
-	
+
 	m_panel142->SetSizer( fgSizer251 );
 	m_panel142->Layout();
 	fgSizer251->Fit( m_panel142 );
@@ -796,93 +803,93 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_panel21 = new wxPanel( m_logbook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer381;
 	bSizer381 = new wxBoxSizer( wxVERTICAL );
-	
+
 	wxBoxSizer* bSizer38;
 	bSizer38 = new wxBoxSizer( wxVERTICAL );
-	
+
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
-	
+
 	crewAdd = new wxButton( m_panel21, wxID_ANY, _("Add Crew"), wxDefaultPosition, wxDefaultSize, 0 );
 	crewAdd->SetToolTip( _("Add a new Crewmember") );
-	
+
 	bSizer3->Add( crewAdd, 0, wxALL, 5 );
-	
+
 	crewSave = new wxButton( m_panel21, wxID_ANY, _("Export"), wxDefaultPosition, wxDefaultSize, 0 );
 	crewSave->SetToolTip( _("export your crew-data as:\nHTML, ODT,  ODS, XML, CSV") );
-	
+
 	bSizer3->Add( crewSave, 0, wxALL, 5 );
-	
+
 	m_staticline5 = new wxStaticLine( m_panel21, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL|wxLI_VERTICAL );
 	bSizer3->Add( m_staticline5, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_staticText321 = new wxStaticText( m_panel21, wxID_ANY, _("Select Layout: "), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText321->Wrap( -1 );
 	bSizer3->Add( m_staticText321, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	wxArrayString crewChoiceChoices;
 	crewChoice = new wxChoice( m_panel21, wxID_ANY, wxDefaultPosition, wxSize( 180,-1 ), crewChoiceChoices, 0 );
 	crewChoice->SetSelection( 0 );
 	crewChoice->SetToolTip( _("Select a layout which is displayed\nwith button \"View\"") );
-	
+
 	bSizer3->Add( crewChoice, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonReloadCrew = new wxButton( m_panel21, wxID_ANY, _("R"), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
 	m_buttonReloadCrew->SetToolTip( _("Reload Layouts") );
-	
+
 	bSizer3->Add( m_buttonReloadCrew, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonEditLayoutCrew = new wxButton( m_panel21, wxID_ANY, _("E"), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
 	m_buttonEditLayoutCrew->SetToolTip( _("Edit Layout") );
-	
+
 	bSizer3->Add( m_buttonEditLayoutCrew, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnHTMLCrew = new wxRadioButton( m_panel21, wxID_ANY, _("HTML"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_radioBtnHTMLCrew->SetValue( true ); 
 	bSizer3->Add( m_radioBtnHTMLCrew, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnODTCrew = new wxRadioButton( m_panel21, wxID_ANY, _("ODT"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer3->Add( m_radioBtnODTCrew, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	crewView = new wxButton( m_panel21, wxID_ANY, _("View"), wxDefaultPosition, wxDefaultSize, 0 );
 	crewView->SetToolTip( _("View data in browser (HTML) or Openoffice/LibreOffice (ODT)") );
-	
+
 	bSizer3->Add( crewView, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticline36 = new wxStaticLine( m_panel21, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL|wxLI_VERTICAL );
 	bSizer3->Add( m_staticline36, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_staticText1171 = new wxStaticText( m_panel21, wxID_ANY, _("Copy to watch"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1171->Wrap( -1 );
 	bSizer3->Add( m_staticText1171, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	wxString m_choiceCrewNamesChoices[] = { _("Name in full"), _("Firstname only"), _("Lastname only") };
 	int m_choiceCrewNamesNChoices = sizeof( m_choiceCrewNamesChoices ) / sizeof( wxString );
 	m_choiceCrewNames = new wxChoice( m_panel21, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceCrewNamesNChoices, m_choiceCrewNamesChoices, 0 );
 	m_choiceCrewNames->SetSelection( 0 );
 	bSizer3->Add( m_choiceCrewNames, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	bSizer38->Add( bSizer3, 0, wxEXPAND, 5 );
-	
+
 	m_staticline2 = new wxStaticLine( m_panel21, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL|wxLI_VERTICAL );
 	bSizer38->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_splitterWatch = new wxSplitterWindow( m_panel21, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_3D );
 	m_splitterWatch->SetSashGravity( 1 );
-	
+
 	m_panel211 = new wxPanel( m_splitterWatch, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer36;
 	bSizer36 = new wxBoxSizer( wxVERTICAL );
-	
+
 	m_gridCrew = new wxGrid( m_panel211, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxALWAYS_SHOW_SB );
-	
+
 	// Grid
 	m_gridCrew->CreateGrid( 0, 15 );
 	m_gridCrew->EnableEditing( true );
 	m_gridCrew->EnableGridLines( true );
 	m_gridCrew->EnableDragGridSize( false );
 	m_gridCrew->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridCrew->SetColSize( 0, 60 );
 	m_gridCrew->SetColSize( 1, 154 );
@@ -918,156 +925,156 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridCrew->SetColLabelValue( 13, _("Town") );
 	m_gridCrew->SetColLabelValue( 14, _("Street") );
 	m_gridCrew->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Rows
 	m_gridCrew->EnableDragRowSize( true );
 	m_gridCrew->SetRowLabelSize( 30 );
 	m_gridCrew->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
-	
+
 	// Cell Defaults
 	m_gridCrew->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
 	m_menu2 = new wxMenu();
 	wxMenuItem* m_menuItem2;
 	m_menuItem2 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu2->Append( m_menuItem2 );
-		
+
 	wxMenuItem* m_menuItem22;
 	m_menuItem22 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("Show hidden columns") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu2->Append( m_menuItem22 );
-	
-	 m_menu2->AppendSeparator();
-	
+
+    m_menu2->AppendSeparator();
+
 	wxMenuItem* m_menuItem30;
 	m_menuItem30 = new wxMenuItem( m_menu2, MENUCREWONBOARD, wxString( _("Show onboard only") ) , wxEmptyString, wxITEM_CHECK );
 	m_menu2->Append( m_menuItem30 );
 	m_menuItem30->Check( true );
-	
+
 	wxMenuItem* m_menuItem31;
 	m_menuItem31 = new wxMenuItem( m_menu2, MENUCREWALL, wxString( _("Show all entries") ) , wxEmptyString, wxITEM_CHECK );
 	m_menu2->Append( m_menuItem31 );
-	
+
 	m_menu2->AppendSeparator();
-	
+
 	wxMenuItem* m_menuItem32;
 	m_menuItem32 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("Sort ascending") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu2->Append( m_menuItem32 );
-	
+
 	wxMenuItem* m_menuItem33;
 	m_menuItem33 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("Sort descending") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu2->Append( m_menuItem33 );
-	
-	
+
+
 	bSizer36->Add( m_gridCrew, 1, wxALL|wxEXPAND, 5 );
-	
+
 	m_panel211->SetSizer( bSizer36 );
 	m_panel211->Layout();
 	bSizer36->Fit( m_panel211 );
 	m_panel22 = new wxPanel( m_splitterWatch, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer37;
 	bSizer37 = new wxBoxSizer( wxVERTICAL );
-	
+
 	wxStaticBoxSizer* sbSizer1;
 	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( m_panel22, wxID_ANY, wxEmptyString ), wxVERTICAL );
-	
+
 	sbSizer61 = new wxStaticBoxSizer( new wxStaticBox( m_panel22, wxID_ANY, _("Set Watchtimes") ), wxHORIZONTAL );
-	
+
 	m_staticText1141 = new wxStaticText( m_panel22, wxID_ANY, _("Start"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1141->Wrap( -1 );
 	sbSizer61->Add( m_staticText1141, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	m_textCtrlWatchStartDate = new wxTextCtrl( m_panel22, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 75,-1 ), wxTE_CENTRE|wxTE_READONLY );
+
+	m_textCtrlWatchStartDate = new wxTextCtrl( m_panel22, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 95,-1 ), wxTE_CENTRE|wxTE_READONLY );
 	m_textCtrlWatchStartDate->SetToolTip( _("Set the startdate of the sailing trip") );
-	
+
 	sbSizer61->Add( m_textCtrlWatchStartDate, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_textCtrlWatchStartTime = new wxTextCtrl( m_panel22, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 45,-1 ), wxTE_CENTRE|wxTE_PROCESS_ENTER );
 	m_textCtrlWatchStartTime->SetMaxLength( 5 ); 
 	m_textCtrlWatchStartTime->SetToolTip( _("Set the starttime of your sailing trip") );
-	
+
 	sbSizer61->Add( m_textCtrlWatchStartTime, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticText1161 = new wxStaticText( m_panel22, wxID_ANY, _("Days"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1161->Wrap( -1 );
 	sbSizer61->Add( m_staticText1161, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_textCtrlWakeTrip = new wxTextCtrl( m_panel22, wxID_ANY, _T("10"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
 	m_textCtrlWakeTrip->SetToolTip( _("Length of your sailing trip") );
-	
+
 	sbSizer61->Add( m_textCtrlWakeTrip, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonCalculate = new wxButton( m_panel22, wxID_ANY, _("Calculate"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonCalculate->SetToolTip( _("Calculate the watches with the members entered in the columns") );
-	
+
 	sbSizer61->Add( m_buttonCalculate, 0, wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonReset = new wxButton( m_panel22, wxID_ANY, _("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonReset->Enable( false );
 	m_buttonReset->SetToolTip( _("Reset data to edit-level") );
-	
+
 	sbSizer61->Add( m_buttonReset, 0, wxALL, 5 );
-	
+
 	m_buttonClear = new wxButton( m_panel22, wxID_ANY, _("Clear"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonClear->SetToolTip( _("Clear all data") );
-	
+
 	sbSizer61->Add( m_buttonClear, 0, wxALL, 5 );
-	
+
 	m_staticline35 = new wxStaticLine( m_panel22, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	sbSizer61->Add( m_staticline35, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_buttonDayMinus = new wxButton( m_panel22, wxID_ANY, _T("<"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
 	m_buttonDayMinus->Enable( false );
 	m_buttonDayMinus->SetToolTip( _("Day backward") );
-	
+
 	sbSizer61->Add( m_buttonDayMinus, 0, wxALL, 5 );
-	
+
 	m_buttonNow = new wxButton( m_panel22, wxID_ANY, _("Now"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonNow->Enable( false );
 	m_buttonNow->SetToolTip( _("Go to date/time now") );
-	
+
 	sbSizer61->Add( m_buttonNow, 0, wxALL, 5 );
-	
+
 	m_buttonDayPlus = new wxButton( m_panel22, wxID_ANY, _T(">"), wxDefaultPosition, wxSize( 30,-1 ), 0 );
 	m_buttonDayPlus->Enable( false );
 	m_buttonDayPlus->SetToolTip( _("Day forward") );
-	
+
 	sbSizer61->Add( m_buttonDayPlus, 0, wxALL, 5 );
-	
+
 	m_staticTextWakeDay = new wxStaticText( m_panel22, wxID_ANY, _("Day:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextWakeDay->Wrap( -1 );
 	sbSizer61->Add( m_staticTextWakeDay, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_textCtrlWakeDay = new wxTextCtrl( m_panel22, wxID_ANY, _T("0"), wxDefaultPosition, wxSize( 30,-1 ), wxTE_CENTRE|wxTE_PROCESS_ENTER );
 	m_textCtrlWakeDay->SetToolTip( _("Shows/Sets the day\nDisplays the data in your ODT/Browser-program from this day to end") );
-	
+
 	sbSizer61->Add( m_textCtrlWakeDay, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticText1181 = new wxStaticText( m_panel22, wxID_ANY, _("Display"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1181->Wrap( -1 );
 	sbSizer61->Add( m_staticText1181, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	wxString m_choiceWakeDisplayChoices[] = { _("all"), _("this day"), _T("+1"), _T("+2"), _T("+3"), _T("+4"), _T("+5"), _T("+6"), _T("+7"), _T("+8"), _T("+9"), _T("+10") };
 	int m_choiceWakeDisplayNChoices = sizeof( m_choiceWakeDisplayChoices ) / sizeof( wxString );
 	m_choiceWakeDisplay = new wxChoice( m_panel22, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), m_choiceWakeDisplayNChoices, m_choiceWakeDisplayChoices, 0 );
 	m_choiceWakeDisplay->SetSelection( 0 );
 	m_choiceWakeDisplay->SetToolTip( _("Used for ODT/Browser-program\nOne Row for the day + selected days = Days displayed") );
-	
+
 	sbSizer61->Add( m_choiceWakeDisplay, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	sbSizer1->Add( sbSizer61, 0, wxEXPAND, 5 );
-	
+
 	bSizer37->Add( sbSizer1, 0, wxEXPAND, 5 );
-	
+
 	m_gridCrewWake = new wxGrid( m_panel22, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	
+
 	// Grid
 	m_gridCrewWake->CreateGrid( 4, 1 );
 	m_gridCrewWake->EnableEditing( true );
 	m_gridCrewWake->EnableGridLines( true );
 	m_gridCrewWake->EnableDragGridSize( true );
 	m_gridCrewWake->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridCrewWake->SetColSize( 0, 160 );
 	m_gridCrewWake->AutoSizeColumns();
@@ -1076,8 +1083,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridCrewWake->SetColLabelSize( 30 );
 	m_gridCrewWake->SetColLabelValue( 0, _("1. Watch") );
 	m_gridCrewWake->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
-	// Rows
+
+    // Rows
 	m_gridCrewWake->SetRowSize( 0, 19 );
 	m_gridCrewWake->SetRowSize( 1, 19 );
 	m_gridCrewWake->SetRowSize( 2, 19 );
@@ -1090,21 +1097,21 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridCrewWake->SetRowLabelValue( 2, _("Time") );
 	m_gridCrewWake->SetRowLabelValue( 3, _("Member") );
 	m_gridCrewWake->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
-	
+
 	// Cell Defaults
 	m_gridCrewWake->SetDefaultCellAlignment( wxALIGN_CENTRE, wxALIGN_TOP );
-	
+
 	m_menu21 = new wxMenu();
 	wxMenuItem* m_menuItemNewWatch;
 	m_menuItemNewWatch = new wxMenuItem( m_menu21, wxID_ANY, wxString( _("Set as Watchbase") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu21->Append( m_menuItemNewWatch );
-	
+
 	wxMenuItem* m_menuItem19;
 	m_menuItem19 = new wxMenuItem( m_menu21, 514, wxString( _("Split Watch") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu21->Append( m_menuItem19 );
-	
+
 	wxMenuItem* m_menuItem23;
 	m_menuItem23 = new wxMenuItem( m_menu21, 515, wxString( _("Merge Watches") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu21->Append( m_menuItem23 );
@@ -1112,36 +1119,36 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	wxMenuItem* m_menuItem36;
 	m_menuItem36 = new wxMenuItem( m_menu21, 520, wxString( _("Swap two Watches") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu21->Append( m_menuItem36 );
-	
+
 	wxMenuItem* m_menuItem35;
 	m_menuItem35 = new wxMenuItem( m_menu21, 516, wxString( _("Delete Crewmembers") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu21->Append( m_menuItem35 );
-	
+
 	bSizer37->Add( m_gridCrewWake, 1, wxALL|wxEXPAND, 5 );
-	
+
 	m_panel22->SetSizer( bSizer37 );
 	m_panel22->Layout();
 	bSizer37->Fit( m_panel22 );
 	m_splitterWatch->SplitHorizontally( m_panel211, m_panel22, -1 );
 	bSizer38->Add( m_splitterWatch, 1, wxEXPAND, 5 );
-	
+
 	m_panel24 = new wxPanel( m_panel21, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_panel24->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
-	
+
 	wxBoxSizer* bSizer371;
 	bSizer371 = new wxBoxSizer( wxHORIZONTAL );
-	
+
 	m_staticTextStatusWatch = new wxStaticText( m_panel24, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextStatusWatch->Wrap( -1 );
 	bSizer371->Add( m_staticTextStatusWatch, 0, wxRIGHT|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_panel24->SetSizer( bSizer371 );
 	m_panel24->Layout();
 	bSizer371->Fit( m_panel24 );
 	bSizer38->Add( m_panel24, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
-	
+
 	bSizer381->Add( bSizer38, 1, wxEXPAND, 5 );
-	
+
 	m_panel21->SetSizer( bSizer381 );
 	m_panel21->Layout();
 	bSizer381->Fit( m_panel21 );
@@ -1156,13 +1163,13 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 
 	fgSizer1->SetFlexibleDirection( wxBOTH );
 	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxVERTICAL );
-	
+
 	wxBoxSizer* bSizer10;
 	bSizer10 = new wxBoxSizer( wxHORIZONTAL );
-	
+
 	addEquipmentButton = new wxButton( m_panel3, wxID_ANY, _("Add Equipment"), wxDefaultPosition, wxDefaultSize, 0 );
 	addEquipmentButton->SetToolTip( _("add the equipment of your boat") );
 	bSizer10->Add( addEquipmentButton, 0, wxALL, 5 );
@@ -1170,76 +1177,76 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_toggleBtnShowEquipment = new wxToggleButton( m_panel3, wxID_ANY, _("Show Equipment"), wxDefaultPosition, wxSize( 120,-1 ), 0 );
 	m_toggleBtnShowEquipment->SetToolTip( _("Show/Hide Equipmentgrid") );
 	bSizer10->Add( m_toggleBtnShowEquipment, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticline27 = new wxStaticLine( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer10->Add( m_staticline27, 0, wxEXPAND | wxALL, 5 );
-	
+
 	boatSave = new wxButton( m_panel3, wxID_ANY, _("Export"), wxDefaultPosition, wxDefaultSize, 0 );
 	boatSave->SetToolTip( _("export your boat/equipment-data as:\n      HTML, ODT,  ODS, XML, CSV") );
 
 	bSizer10->Add( boatSave, 0, wxALL, 5 );
-	
+
 	m_staticline4 = new wxStaticLine( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL|wxLI_VERTICAL );
 	bSizer10->Add( m_staticline4, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_staticText322 = new wxStaticText( m_panel3, wxID_ANY, _("Select Layout: "), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText322->Wrap( -1 );
 	bSizer10->Add( m_staticText322, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	wxArrayString boatChoiceChoices;
 	boatChoice = new wxChoice( m_panel3, wxID_ANY, wxDefaultPosition, wxSize( 180,-1 ), boatChoiceChoices, 0 );
 	boatChoice->SetToolTip( _("Select a layout which is displayed\nwith button \"View\"") );
 	boatChoice->SetSelection( 0 );
 	bSizer10->Add( boatChoice, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonReloadLayoutsBoat = new wxButton( m_panel3, wxID_ANY, _("R"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_buttonReloadLayoutsBoat->SetToolTip( _("Reload Layouts") );
-	
+
 	bSizer10->Add( m_buttonReloadLayoutsBoat, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonEditLayoutBoat = new wxButton( m_panel3, wxID_ANY, _("E"), wxDefaultPosition, wxDefaultSize,wxBU_EXACTFIT );
 	m_buttonEditLayoutBoat->SetToolTip( _("Edit Layouts") );
-	
+
 	bSizer10->Add( m_buttonEditLayoutBoat, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnHTMLBoat = new wxRadioButton( m_panel3, wxID_ANY, wxT("HTML"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_radioBtnHTMLBoat->SetValue( true ); 
 	bSizer10->Add( m_radioBtnHTMLBoat, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnODTBoat = new wxRadioButton( m_panel3, wxID_ANY, wxT("ODT"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer10->Add( m_radioBtnODTBoat, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	boatView = new wxButton( m_panel3, wxID_ANY, _("View"), wxDefaultPosition, wxDefaultSize, 0 );
 	boatView->SetToolTip( _("View data in browser (HTML) or Openoffice/LibreOffice (ODT)") );
 
 	bSizer10->Add( boatView, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	bSizer9->Add( bSizer10, 1, wxEXPAND, 5 );
-	
+
 	m_staticline3 = new wxStaticLine( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer9->Add( m_staticline3, 0, wxEXPAND | wxALL, 5 );
-	
+
 	fgSizer1->Add( bSizer9, 1, wxEXPAND, 5 );
-	
+
 	m_splitter1 = new wxSplitterWindow( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_3D );
 	m_splitter1->Connect( wxEVT_IDLE, wxIdleEventHandler( LogbookDialog::m_splitter1OnIdle ), NULL, this );
 	m_splitter1->SetMinimumPaneSize( 15 );
-	
+
 	m_panel72 = new wxPanel( m_splitter1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer34;
 	fgSizer34 = new wxFlexGridSizer( 3, 1, 0, 0 );
 	fgSizer34->SetFlexibleDirection( wxBOTH );
 	fgSizer34->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	wxStaticBoxSizer* sbSizer11;
 	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( m_panel72, wxID_ANY, _("Boat") ), wxHORIZONTAL );
-	
+
 	wxFlexGridSizer* fgSizer38;
 
     fgSizer38 = new wxFlexGridSizer( 2, 12, 0, 0 );
 	fgSizer38->SetFlexibleDirection( wxBOTH );
 	fgSizer38->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	bname = new wxStaticText( m_panel72, wxID_ANY, _("Name"), wxDefaultPosition, wxDefaultSize, 0 );
 	bname->Wrap( -1 );
 	fgSizer38->Add( bname, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -1268,7 +1275,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	hin = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	hin->SetToolTip( _("Hull Identification No.") );
 	fgSizer38->Add( hin, 0, wxALL, 5 );
-	
+
 	m_staticText117 = new wxStaticText( m_panel72, wxID_ANY, _("Sail-Nr."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText117->Wrap( -1 );
 	fgSizer38->Add( m_staticText117, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
@@ -1276,264 +1283,264 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	sailno = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer38->Add( sailno, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
-	
+
 	fgSizer38->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	
+
+
 	fgSizer38->Add( 0, 0, 1, wxEXPAND, 5 );
-	
+
 	m_staticText119 = new wxStaticText( m_panel72, wxID_ANY, _("Insurance"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText119->Wrap( -1 );
 	fgSizer38->Add( m_staticText119, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	insurance = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
 	fgSizer38->Add( insurance, 0, wxALL, 5 );
-	
+
 	m_staticText118 = new wxStaticText( m_panel72, wxID_ANY, _("Registration"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText118->Wrap( -1 );
 	fgSizer38->Add( m_staticText118, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	registration = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer38->Add( registration, 0, wxALL, 5 );
-	
+
 	m_staticText120 = new wxStaticText( m_panel72, wxID_ANY, _("Policy"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText120->Wrap( -1 );
 	fgSizer38->Add( m_staticText120, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	policy = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer38->Add( policy, 0, wxALL, 5 );
-	
+
 	m_staticText53 = new wxStaticText( m_panel72, wxID_ANY, _("MMSI"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText53->Wrap( -1 );
 	fgSizer38->Add( m_staticText53, 0, wxALL, 5 );
-	
+
 	mmsi = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer38->Add( mmsi, 0, wxALL, 5 );
-	
+
 	sbSizer11->Add( fgSizer38, 1, wxEXPAND, 5 );
-	
+
 	fgSizer34->Add( sbSizer11, 1, wxEXPAND, 5 );
-	
+
 	sbSizer6 = new wxStaticBoxSizer( new wxStaticBox( m_panel72, wxID_ANY, _("Owner") ), wxHORIZONTAL );
-	
+
 	wxFlexGridSizer* fgSizer39;
 	fgSizer39 = new wxFlexGridSizer( 2, 10, 0, 0 );
 	fgSizer39->SetFlexibleDirection( wxBOTH );
 	fgSizer39->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_staticText90 = new wxStaticText( m_panel72, wxID_ANY, _("Name      "), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText90->Wrap( -1 );
 	fgSizer39->Add( m_staticText90, 0, wxALL, 5 );
-	
+
 	ownerName = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
 	fgSizer39->Add( ownerName, 0, wxALL, 5 );
-	
+
 	m_staticText91 = new wxStaticText( m_panel72, wxID_ANY, _("Firstname"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText91->Wrap( -1 );
 	fgSizer39->Add( m_staticText91, 0, wxALL, 5 );
-	
+
 	ownerFirstname = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer39->Add( ownerFirstname, 0, wxALL, 5 );
-	
+
 	m_staticText95 = new wxStaticText( m_panel72, wxID_ANY, _("Telephone"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText95->Wrap( -1 );
 	fgSizer39->Add( m_staticText95, 0, wxALL, 5 );
-	
+
 	ownerPhone = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
 	fgSizer39->Add( ownerPhone, 0, wxALL, 5 );
-	
-	
+
+
 	fgSizer39->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	
+
+
 	fgSizer39->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	
+
+
 	fgSizer39->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	
+
+
 	fgSizer39->Add( 0, 0, 1, wxEXPAND, 5 );
-	
+
 	m_staticText92 = new wxStaticText( m_panel72, wxID_ANY, _("Street"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText92->Wrap( -1 );
 	fgSizer39->Add( m_staticText92, 0, wxALL, 5 );
-	
+
 	ownerStreet = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
 	fgSizer39->Add( ownerStreet, 0, wxALL, 5 );
-	
+
 	m_staticText93 = new wxStaticText( m_panel72, wxID_ANY, _("Zip"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText93->Wrap( -1 );
 	fgSizer39->Add( m_staticText93, 0, wxALL, 5 );
-	
+
 	owenerZip = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer39->Add( owenerZip, 0, wxALL, 5 );
 
 	m_staticText94 = new wxStaticText( m_panel72, wxID_ANY, _("Town"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText94->Wrap( -1 );
 	fgSizer39->Add( m_staticText94, 0, wxALL, 5 );
-	
+
 	ownerTown = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 200,-1 ), 0 );
 	fgSizer39->Add( ownerTown, 0, wxALL, 5 );
-	
+
 	sbSizer6->Add( fgSizer39, 1, wxEXPAND, 5 );
-	
+
 	fgSizer34->Add( sbSizer6, 1, wxEXPAND, 5 );
-	
+
 	wxStaticBoxSizer* sbSizer8;
 	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( m_panel72, wxID_ANY, _("Details") ), wxVERTICAL );
-	
+
 	wxFlexGridSizer* fgSizer33;
 
     fgSizer33 = new wxFlexGridSizer( 4, 10, 0, 0 );
 	fgSizer33->SetFlexibleDirection( wxBOTH );
 	fgSizer33->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_staticText128 = new wxStaticText( m_panel72, wxID_ANY, _("Type"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText128->Wrap( -1 );
 	fgSizer33->Add( m_staticText128, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	boatType = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer33->Add( boatType, 0, wxALL, 5 );
-	
+
 	m_staticText125 = new wxStaticText( m_panel72, wxID_ANY, _("Builder"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText125->Wrap( -1 );
 	fgSizer33->Add( m_staticText125, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	builder = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer33->Add( builder, 0, wxALL, 5 );
-	
+
 	m_staticText124 = new wxStaticText( m_panel72, wxID_ANY, _("Hull"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText124->Wrap( -1 );
 	fgSizer33->Add( m_staticText124, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	hull = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer33->Add( hull, 0, wxALL, 5 );
-	
+
 	m_staticText126 = new wxStaticText( m_panel72, wxID_ANY, _("Date Launched"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText126->Wrap( -1 );
 	fgSizer33->Add( m_staticText126, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	dateLaunched = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer33->Add( dateLaunched, 0, wxALL, 5 );
-	
+
 	m_staticText127 = new wxStaticText( m_panel72, wxID_ANY, _("Yard-Nr."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText127->Wrap( -1 );
 	fgSizer33->Add( m_staticText127, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	yardNr = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer33->Add( yardNr, 0, wxALL, 5 );
-	
+
 	m_staticText123 = new wxStaticText( m_panel72, wxID_ANY, _("Designer"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText123->Wrap( -1 );
 	fgSizer33->Add( m_staticText123, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	designer = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer33->Add( designer, 0, wxALL, 5 );
-	
+
 	m_staticText129 = new wxStaticText( m_panel72, wxID_ANY, _("Construction"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText129->Wrap( -1 );
 	fgSizer33->Add( m_staticText129, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	construction = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 150,-1 ), 0 );
 	fgSizer33->Add( construction, 0, wxALL, 5 );
-	
-	
+
+
 	fgSizer33->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	
+
+
 	fgSizer33->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	
+
+
 	fgSizer33->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	
+
+
 	fgSizer33->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	
+
+
 	fgSizer33->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	
+
+
 	fgSizer33->Add( 0, 0, 1, wxEXPAND, 5 );
-	
+
 	m_staticText106 = new wxStaticText( m_panel72, wxID_ANY, _("LOA"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText106->Wrap( -1 );
 	fgSizer33->Add( m_staticText106, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	LOA = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	LOA->SetToolTip( _("Length over all") );
-	
+
 	fgSizer33->Add( LOA, 0, wxALL, 5 );
-	
+
 	m_staticText107 = new wxStaticText( m_panel72, wxID_ANY, _("LOD"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText107->Wrap( -1 );
 	fgSizer33->Add( m_staticText107, 0, wxALL, 5 );
-	
+
 	LOD = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	LOD->SetToolTip( _("Length over Deck") );
-	
+
 	fgSizer33->Add( LOD, 0, wxALL, 5 );
-	
+
 	m_staticText108 = new wxStaticText( m_panel72, wxID_ANY, _("LWL"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText108->Wrap( -1 );
 	fgSizer33->Add( m_staticText108, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	LWL = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	LWL->SetToolTip( _("Length in Waterline") );
-	
+
 	fgSizer33->Add( LWL, 0, wxALL, 5 );
-	
+
 	m_staticText109 = new wxStaticText( m_panel72, wxID_ANY, _("Beam"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText109->Wrap( -1 );
 	fgSizer33->Add( m_staticText109, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	beam = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	beam->SetToolTip( _("Greatest Width of Hull") );
-	
+
 	fgSizer33->Add( beam, 0, wxALL, 5 );
-	
+
 	m_staticText110 = new wxStaticText( m_panel72, wxID_ANY, _("Draft"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText110->Wrap( -1 );
 	fgSizer33->Add( m_staticText110, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	draft = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	fgSizer33->Add( draft, 0, wxALL, 5 );
-	
+
 	UserLabel1 = new wxTextCtrl( m_panel72, wxID_ANY, _("UserLabel"), wxDefaultPosition, wxSize( 40,-1 ), 0 );
 	UserLabel1->SetToolTip( _("write your own label") );
-	
+
 	fgSizer33->Add( UserLabel1, 0, wxALL, 5 );
-	
+
 	Userfield1 = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer33->Add( Userfield1, 0, wxALL, 5 );
-	
+
 	UserLabel2 = new wxTextCtrl( m_panel72, wxID_ANY, _("UserLabel"), wxDefaultPosition, wxSize( 60,-1 ), 0 );
 	UserLabel2->SetToolTip( _("write your own label") );
-	
+
 	fgSizer33->Add( UserLabel2, 0, wxALL, 5 );
-	
+
 	Userfield2 = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer33->Add( Userfield2, 0, wxALL, 5 );
-	
+
 	UserLabel3 = new wxTextCtrl( m_panel72, wxID_ANY, _("UserLabel"), wxDefaultPosition, wxSize( 60,-1 ), 0 );
 	UserLabel3->SetToolTip( _("write your own label") );
 	UserLabel3->SetMaxSize( wxSize( 30,-1 ) );
-	
+
 	fgSizer33->Add( UserLabel3, 0, wxALL, 5 );
-	
+
 	Userfield3 = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	fgSizer33->Add( Userfield3, 0, wxALL, 5 );
-	
+
 	m_staticText122 = new wxStaticText( m_panel72, wxID_ANY, _("Displacement"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText122->Wrap( -1 );
 	fgSizer33->Add( m_staticText122, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	displacement = new wxTextCtrl( m_panel72, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	fgSizer33->Add( displacement, 0, wxALL, 5 );
-	
+
 	sbSizer8->Add( fgSizer33, 1, wxEXPAND, 5 );
-	
+
 	fgSizer34->Add( sbSizer8, 1, wxEXPAND, 5 );
-	
+
 	m_panel72->SetSizer( fgSizer34 );
 	m_panel72->Layout();
 	fgSizer34->Fit( m_panel72 );
@@ -1544,14 +1551,14 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	sbSizer12->SetMinSize( wxSize( -1,-1 ) ); 
 
 	m_gridEquipment = new wxGrid( m_panel8, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	
+
 	// Grid
 	m_gridEquipment->CreateGrid( 0, 4 );
 	m_gridEquipment->EnableEditing( true );
 	m_gridEquipment->EnableGridLines( true );
 	m_gridEquipment->EnableDragGridSize( false );
 	m_gridEquipment->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridEquipment->SetColSize( 0, 120 );
 	m_gridEquipment->SetColSize( 1, 296 );
@@ -1565,32 +1572,32 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridEquipment->SetColLabelValue( 2, _("Serial-Nr.") );
 	m_gridEquipment->SetColLabelValue( 3, _("Remarks") );
 	m_gridEquipment->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Rows
 	m_gridEquipment->EnableDragRowSize( true );
 	m_gridEquipment->SetRowLabelSize( 30 );
 	m_gridEquipment->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
-	
+
 	// Cell Defaults
 	m_gridEquipment->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
 	m_menu3 = new wxMenu();
 	wxMenuItem* m_menuItem3;
 	m_menuItem3 = new wxMenuItem( m_menu3, wxID_ANY, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu3->Append( m_menuItem3 );
-	
-	
+
+
 	sbSizer12->Add( m_gridEquipment, 1, wxALL|wxEXPAND, 5 );
-	
+
 	m_panel8->SetSizer( sbSizer12 );
 	m_panel8->Layout();
 	sbSizer12->Fit( m_panel8 );
-	
+
 	m_splitter1->SplitHorizontally( m_panel72, m_panel8, 315 );
 
 	fgSizer1->Add( m_splitter1, 1, wxEXPAND, 5 );
-	
+
 	m_panel3->SetSizer( fgSizer1 );
 	m_panel3->Layout();
 	fgSizer1->Fit( m_panel3 );
@@ -1608,73 +1615,73 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	fgSizer151->AddGrowableRow( 3 );
 	fgSizer151->SetFlexibleDirection( wxBOTH );
 	fgSizer151->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	wxBoxSizer* bSizer1011;
 	bSizer1011 = new wxBoxSizer( wxHORIZONTAL );
-	
+
 	m_buttonAddLineService = new wxButton( m_panel14, wxID_ANY, _("Add Line"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonAddLineService->SetToolTip( _("Add a new line") );
 	bSizer1011->Add( m_buttonAddLineService, 0, wxALL, 5 );
-	
+
 	m_buttonSaveService = new wxButton( m_panel14, wxID_ANY, _("Export"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonSaveService->SetToolTip( _("export your Service-data as HTML or ODT") );	
 	bSizer1011->Add( m_buttonSaveService, 0, wxALL, 5 );
-	
+
 	m_staticline151 = new wxStaticLine( m_panel14, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL|wxLI_VERTICAL );
 	bSizer1011->Add( m_staticline151, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_staticText621 = new wxStaticText( m_panel14, wxID_ANY, _("Select Layout:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText621->Wrap( -1 );
 	bSizer1011->Add( m_staticText621, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	wxArrayString m_choiceSelectLayoutServiceChoices;
 	m_choiceSelectLayoutService = new wxChoice( m_panel14, wxID_ANY, wxDefaultPosition, wxSize( 180,-1 ), m_choiceSelectLayoutServiceChoices, 0 );
 	m_choiceSelectLayoutService->SetToolTip( _("Select a layout which is displayed\nwith button \"View\"") );
 	m_choiceSelectLayoutService->SetSelection( 0 );
 	bSizer1011->Add( m_choiceSelectLayoutService, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonReloadLayoutsServiceHTML = new wxButton( m_panel14, wxID_ANY, _("R"),wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_buttonReloadLayoutsServiceHTML->SetToolTip( _("Reload Layouts") );
-	
+
 	bSizer1011->Add( m_buttonReloadLayoutsServiceHTML, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonEditLayoutODTService = new wxButton( m_panel14, wxID_ANY, _("E"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_buttonEditLayoutODTService->SetToolTip( _("Edit Layout") );
-	
+
 	bSizer1011->Add( m_buttonEditLayoutODTService, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnHTMLService = new wxRadioButton( m_panel14, wxID_ANY, wxT("HTML"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_radioBtnHTMLService->SetValue( true ); 
 	bSizer1011->Add( m_radioBtnHTMLService, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnODTService = new wxRadioButton( m_panel14, wxID_ANY, wxT("ODT"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer1011->Add( m_radioBtnODTService, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonViewService = new wxButton( m_panel14, wxID_ANY, _("View"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonViewService->SetToolTip( _("View data in browser (HTML) or Openoffice/LibreOffice (ODT)") );
 	bSizer1011->Add( m_buttonViewService, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	
+
+
 	bSizer1011->Add( 300, 0, 1, wxEXPAND, 5 );
-	
+
 	fgSizer151->Add( bSizer1011, 1, wxEXPAND, 5 );
-	
+
 	m_staticline141 = new wxStaticLine( m_panel14, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	fgSizer151->Add( m_staticline141, 0, wxEXPAND | wxALL, 5 );
-	
+
 	wxBoxSizer* bSizer12;
 	bSizer12 = new wxBoxSizer( wxVERTICAL );
-	
+
 	bSizer12->SetMinSize( wxSize( -1,400 ) ); 
 	m_gridMaintanence = new wxGrid( m_panel14, wxID_ANY, wxDefaultPosition, wxSize(1000,400), 0 );
-	
+
 	// Grid
 	m_gridMaintanence->CreateGrid( 0, 7 );
 	m_gridMaintanence->EnableEditing( true );
 	m_gridMaintanence->EnableGridLines( true );
 	m_gridMaintanence->EnableDragGridSize( false );
 	m_gridMaintanence->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridMaintanence->SetColSize( 0, 50 );
 	m_gridMaintanence->SetColSize( 1, 400 );
@@ -1693,38 +1700,38 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridMaintanence->SetColLabelValue( 5, _("Startvalue") );
 	m_gridMaintanence->SetColLabelValue( 6, _("Active") );
 	m_gridMaintanence->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Rows
 	m_gridMaintanence->AutoSizeRows();
 	m_gridMaintanence->EnableDragRowSize( true );
 	m_gridMaintanence->SetRowLabelSize( 30 );
 	m_gridMaintanence->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
 	m_gridMaintanence->SetLabelTextColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) );
-	
+
 	// Cell Defaults
 	m_gridMaintanence->SetDefaultCellAlignment( wxALIGN_RIGHT, wxALIGN_TOP );
 	m_menu7 = new wxMenu();
 	wxMenuItem* m_menuItem9;
 	m_menuItem9 = new wxMenuItem( m_menu7, wxID_ANY, wxString( _("Service done") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu7->Append( m_menuItem9 );
-	
+
 	wxMenuItem* m_menuItem92;
 	m_menuItem92 = new wxMenuItem( m_menu7, wxID_ANY, wxString( _("Buy parts for this service") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu7->Append( m_menuItem92 );
-	
+
 	wxMenuItem* m_menuItem13;
 	m_menuItem13 = new wxMenuItem( m_menu7, wxID_ANY, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu7->Append( m_menuItem13 );
-	
+
 #ifdef __WXOSX__
     bSizer12->Add( m_gridMaintanence, 1, wxALL, 5 );
 #else
 	bSizer12->Add( m_gridMaintanence, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 #endif
 	fgSizer151->Add( bSizer12, 1, wxEXPAND, 5 );
-	
+
 	m_panel14->SetSizer( fgSizer151 );
 	m_panel14->Layout();
 	fgSizer151->Fit( m_panel14 );
@@ -1739,70 +1746,70 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 
 	wxBoxSizer* bSizer10113;
 	bSizer10113 = new wxBoxSizer( wxHORIZONTAL );
-	
+
 	m_buttonAddLineRepairs = new wxButton( m_panel141, wxID_ANY, _("Add Line"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonAddLineRepairs->SetToolTip( _("Add a new line") );
 	bSizer10113->Add( m_buttonAddLineRepairs, 0, wxALL, 5 );
-	
+
 	m_buttonSaveRepairs = new wxButton( m_panel141, wxID_ANY, _("Export"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonSaveRepairs->SetToolTip( _("export your Repairs-data as HTML or ODT") );	
 	bSizer10113->Add( m_buttonSaveRepairs, 0, wxALL, 5 );
-	
+
 	m_staticline1513 = new wxStaticLine( m_panel141, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL|wxLI_VERTICAL );
 	bSizer10113->Add( m_staticline1513, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_staticText6213 = new wxStaticText( m_panel141, wxID_ANY, _("Select Layout:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText6213->Wrap( -1 );
 	bSizer10113->Add( m_staticText6213, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	wxArrayString m_choiceSelectLayoutRepairsChoices;
 	m_choiceSelectLayoutRepairs = new wxChoice( m_panel141, wxID_ANY, wxDefaultPosition, wxSize( 180,-1 ), m_choiceSelectLayoutRepairsChoices, 0 );
 	m_choiceSelectLayoutRepairs->SetToolTip( _("Select a layout which is displayed\nwith button \"View\"") );
 	m_choiceSelectLayoutRepairs->SetSelection( 0 );
 	bSizer10113->Add( m_choiceSelectLayoutRepairs, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonReloadLayoutsRepairsHTML = new wxButton( m_panel141, wxID_ANY, _("R"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_buttonReloadLayoutsRepairsHTML->SetToolTip( _("Reload Layouts") );
-	
+
 	bSizer10113->Add( m_buttonReloadLayoutsRepairsHTML, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonEditLayoutODTRepairs = new wxButton( m_panel141, wxID_ANY, _("E"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_buttonEditLayoutODTRepairs->SetToolTip( _("Edit Layout") );
-	
+
 	bSizer10113->Add( m_buttonEditLayoutODTRepairs, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnHTMLRepairs = new wxRadioButton( m_panel141, wxID_ANY, wxT("HTML"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_radioBtnHTMLRepairs->SetValue( true ); 
 	bSizer10113->Add( m_radioBtnHTMLRepairs, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnODTRepairs = new wxRadioButton( m_panel141, wxID_ANY, wxT("ODT"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer10113->Add( m_radioBtnODTRepairs, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonViewRepairs = new wxButton( m_panel141, wxID_ANY, _("View"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonViewRepairs->SetToolTip( _("View data in browser (HTML) or Openoffice/LibreOffice (ODT)") );
 	bSizer10113->Add( m_buttonViewRepairs, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	
+
+
 	bSizer10113->Add( 300, 0, 1, wxEXPAND, 5 );
-	
+
 	fgSizer1513->Add( bSizer10113, 1, wxEXPAND, 5 );
-	
+
 	m_staticline1413 = new wxStaticLine( m_panel141, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	fgSizer1513->Add( m_staticline1413, 0, wxEXPAND | wxALL, 5 );
-	
+
 	wxBoxSizer* bSizer122;
 	bSizer122 = new wxBoxSizer( wxVERTICAL );
-	
+
 	bSizer122->SetMinSize( wxSize( -1,400 ) ); 
 	m_gridMaintanenceRepairs = new wxGrid( m_panel141, wxID_ANY, wxDefaultPosition, wxSize( 1000,400 ), 0 );
-	
+
 	// Grid
 	m_gridMaintanenceRepairs->CreateGrid( 0, 2 );
 	m_gridMaintanenceRepairs->EnableEditing( true );
 	m_gridMaintanenceRepairs->EnableGridLines( true );
 	m_gridMaintanenceRepairs->EnableDragGridSize( false );
 	m_gridMaintanenceRepairs->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridMaintanenceRepairs->SetColSize( 0, 50 );
 	m_gridMaintanenceRepairs->SetColSize( 1, 400 );
@@ -1812,38 +1819,38 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridMaintanenceRepairs->SetColLabelValue( 0, _("Priority") );
 	m_gridMaintanenceRepairs->SetColLabelValue( 1, _("RepairsTODO") );
 	m_gridMaintanenceRepairs->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Rows
 	m_gridMaintanenceRepairs->AutoSizeRows();
 	m_gridMaintanenceRepairs->EnableDragRowSize( true );
 	m_gridMaintanenceRepairs->SetRowLabelSize( 30 );
 	m_gridMaintanenceRepairs->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
 	m_gridMaintanenceRepairs->SetLabelTextColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) );
-	
+
 	// Cell Defaults
 	m_gridMaintanenceRepairs->SetDefaultCellAlignment( wxALIGN_RIGHT, wxALIGN_TOP );
 	m_menu71 = new wxMenu();
 	wxMenuItem* m_menuItem91;
 	m_menuItem91 = new wxMenuItem( m_menu71, wxID_ANY, wxString( _("Repair done") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu71->Append( m_menuItem91 );
-	
-	wxMenuItem* m_menuItem921;
+
+    wxMenuItem* m_menuItem921;
 	m_menuItem921 = new wxMenuItem( m_menu71, wxID_ANY, wxString( _("Buy parts for this repair") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu71->Append( m_menuItem921 );
-	
+
 	wxMenuItem* m_menuItem131;
 	m_menuItem131 = new wxMenuItem( m_menu71, wxID_ANY, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu71->Append( m_menuItem131 );
-	
+
 #ifdef __WXOSX__
     bSizer122->Add( m_gridMaintanenceRepairs, 1, wxALL, 5 );
 #else
 	bSizer122->Add( m_gridMaintanenceRepairs, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 #endif
 	fgSizer1513->Add( bSizer122, 1, wxEXPAND, 5 );
-	
+
 	m_panel141->SetSizer( fgSizer1513 );
 	m_panel141->Layout();
 	fgSizer1513->Fit( m_panel141 );
@@ -1855,63 +1862,63 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	fgSizer1511->AddGrowableRow( 2 );  // Zubehör kaufen ???
 	fgSizer1511->SetFlexibleDirection( wxBOTH );
 	fgSizer1511->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	wxBoxSizer* bSizer10111;
 	bSizer10111 = new wxBoxSizer( wxHORIZONTAL );
-	
+
 	m_buttonAddLineBuyParts = new wxButton( m_panel16, wxID_ANY, _("Add Line"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonAddLineBuyParts->SetToolTip( _("Add a new line") );
 	bSizer10111->Add( m_buttonAddLineBuyParts, 0, wxALL, 5 );
-	
+
 	m_buttonSaveBuyParts = new wxButton( m_panel16, wxID_ANY, _("Export"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonSaveBuyParts->SetToolTip( _("export your BuyParts-data as HTML or ODT") );	
 	bSizer10111->Add( m_buttonSaveBuyParts, 0, wxALL, 5 );
-	
+
 	m_staticline1511 = new wxStaticLine( m_panel16, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL|wxLI_VERTICAL );
 	bSizer10111->Add( m_staticline1511, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_staticText6211 = new wxStaticText( m_panel16, wxID_ANY, _("Select Layout:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText6211->Wrap( -1 );
 	bSizer10111->Add( m_staticText6211, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	wxArrayString m_choiceSelectLayoutBuyPartsChoices;
 	m_choiceSelectLayoutBuyParts = new wxChoice( m_panel16, wxID_ANY, wxDefaultPosition, wxSize( 180,-1 ), m_choiceSelectLayoutBuyPartsChoices, 0 );
 	m_choiceSelectLayoutBuyParts->SetToolTip( _("Select a layout which is displayed\nwith button \"View\"") );
 	m_choiceSelectLayoutBuyParts->SetSelection( 0 );
 	bSizer10111->Add( m_choiceSelectLayoutBuyParts, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonReloadLayoutsBuyPartsHTML = new wxButton( m_panel16, wxID_ANY, _("R"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_buttonReloadLayoutsBuyPartsHTML->SetToolTip( _("Reload Layouts") );
-	
+
 	bSizer10111->Add( m_buttonReloadLayoutsBuyPartsHTML, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonEditLayoutODTBuyParts = new wxButton( m_panel16, wxID_ANY, _("E"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_buttonEditLayoutODTBuyParts->SetToolTip( _("Edit Layout") );
-	
+
 	bSizer10111->Add( m_buttonEditLayoutODTBuyParts, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnHTMLBuyParts = new wxRadioButton( m_panel16, wxID_ANY, wxT("HTML"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_radioBtnHTMLBuyParts->SetValue( true ); 
 	bSizer10111->Add( m_radioBtnHTMLBuyParts, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_radioBtnODTBuyParts = new wxRadioButton( m_panel16, wxID_ANY, wxT("ODT"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer10111->Add( m_radioBtnODTBuyParts, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_buttonViewBuyParts = new wxButton( m_panel16, wxID_ANY, _("View"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttonViewBuyParts->SetToolTip( _("View data in browser (HTML) or Openoffice/LibreOffice (ODT)") );
 	bSizer10111->Add( m_buttonViewBuyParts, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	
+
+
 	bSizer10111->Add( 300, 0, 1, wxEXPAND, 5 );
-	
+
 	fgSizer1511->Add( bSizer10111, 1, wxEXPAND, 5 );
-	
+
 	m_staticline1411 = new wxStaticLine( m_panel16, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	fgSizer1511->Add( m_staticline1411, 0, wxEXPAND | wxALL, 5 );
-	
+
 	wxBoxSizer* bSizer121;
 	bSizer121 = new wxBoxSizer( wxVERTICAL );
-	
+
 	bSizer121->SetMinSize( wxSize( -1,400 ) );
 	m_gridMaintenanceBuyParts = new wxGrid( m_panel16, wxID_ANY, wxDefaultPosition, wxSize(1000,400), 0 );
 
@@ -1921,7 +1928,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridMaintenanceBuyParts->EnableGridLines( true );
 	m_gridMaintenanceBuyParts->EnableDragGridSize( false );
 	m_gridMaintenanceBuyParts->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridMaintenanceBuyParts->SetColSize( 0, 50 );
 	m_gridMaintenanceBuyParts->SetColSize( 1, 101 );
@@ -1938,17 +1945,17 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridMaintenanceBuyParts->SetColLabelValue( 3, _("Buy Parts") );
 	m_gridMaintenanceBuyParts->SetColLabelValue( 4, _("Date") );
 	m_gridMaintenanceBuyParts->SetColLabelValue( 5, _("At") );
-	m_gridMaintenanceBuyParts->SetColLabelValue( 6, _("Active") );
+//	m_gridMaintenanceBuyParts->SetColLabelValue( 6, _("Active") ); // No column set for 6 ??
 	m_gridMaintenanceBuyParts->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Rows
 	m_gridMaintenanceBuyParts->AutoSizeRows();
 	m_gridMaintenanceBuyParts->EnableDragRowSize( true );
 	m_gridMaintenanceBuyParts->SetRowLabelSize( 40 );
 	m_gridMaintenanceBuyParts->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
-	
+
 	// Cell Defaults
 	m_gridMaintenanceBuyParts->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
 	m_menu711 = new wxMenu();
@@ -1956,18 +1963,18 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_menuItem1311 = new wxMenuItem( m_menu711, wxID_ANY, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu711->Append( m_menuItem1311 );
 // WXOSX: Menü ist GANZ unten außerhalb Fenster, warum????
-	
+
 	bSizer121->Add( m_gridMaintenanceBuyParts, 1, wxALL|wxEXPAND, 5 );
 
 	fgSizer1511->Add( bSizer121, 1, wxEXPAND, 5 );
-	
+
 	m_panel16->SetSizer( fgSizer1511 );
 	m_panel16->Layout();
 	fgSizer1511->Fit( m_panel16 );
 	m_notebook6->AddPage( m_panel16, _("Buy Parts"), false );
-	
+
 	bSizer13->Add( m_notebook6, 1, wxEXPAND | wxALL, 5 );
-	
+
 	m_panel13->SetSizer( bSizer13 );
 	m_panel13->Layout();
 	bSizer13->Fit( m_panel13 );
@@ -2092,6 +2099,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
     m_bpButtonShowHideLayout->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnButtomClickShowHideLayout ), NULL, this );
     m_toggleBtnEngine1->Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnToggleButtonEngine1 ), NULL, this );
     m_toggleBtnEngine2->Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnToggleButtonEngine2 ), NULL, this );
+    m_toggleBtnGenerator->Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnToggleButtonGenerator ), NULL, this );
 
 	m_notebook8->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( LogbookDialog::OnNotebookPageChangedLoggrids ), NULL, this );
 	m_bpButtonShowHideStatusGlobal->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnButtomClickStatusbarGlobal ), NULL, this );
@@ -2200,7 +2208,6 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridCrewWake->Connect( wxEVT_GRID_LABEL_LEFT_CLICK, wxGridEventHandler( LogbookDialog::OnGridLabelLeftClickWake ), NULL, this );
 
 	m_splitterWatch->Connect( wxEVT_COMMAND_SPLITTER_SASH_POS_CHANGED, wxSplitterEventHandler( LogbookDialog::OnSplitterSashPositionChangedWake ), NULL, this );
-	m_buttonSetTimer->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnButtonClickStatusTimer ), NULL, this );
 	m_buttonSetTimer->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnButtonClickStatusTimer ), NULL, this );
 	m_bpButtonTimer->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnStatusBulletTimer ), NULL, this );
 	m_bpButtonWatch->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnStatusBulletWatch ), NULL, this );
@@ -2352,6 +2359,7 @@ LogbookDialog::~LogbookDialog()
     m_bpButtonShowHideLayout->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnButtomClickShowHideLayout ), NULL, this );
     m_toggleBtnEngine1->Disconnect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnToggleButtonEngine1 ), NULL, this );
     m_toggleBtnEngine2->Disconnect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnToggleButtonEngine2 ), NULL, this );
+    m_toggleBtnGenerator->Disconnect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnToggleButtonGenerator ), NULL, this );
     m_buttonSailsReset->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookDialog::OnButtonClickResetSails ), NULL, this );
 
 	m_gridCrewWake->Disconnect( wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler( LogbookDialog::OnGridCellRightClickWake ), NULL, this );
@@ -2545,7 +2553,7 @@ void LogbookDialog::OnIdleMainDialog( wxIdleEvent& event )
 				{
 					logbookTimerWindow->popUp();
 					logbook->guardChange = true;
-					logbook->appendRow(false);
+                    logbook->appendRow(true, true);
 					logbook->guardChange = false;
 				}
 			}
@@ -2562,27 +2570,12 @@ void LogbookDialog::OnToggleButtonEngine1( wxCommandEvent& event )
         SendPluginMessage(_T("LOGBOOK_ENGINEBUTTON1"), _T("ON"));
         if(logbookPlugIn->opt->engineMessageSails && logbookPlugIn->opt->engineAllwaysSailsDown)
             resetSails();
-        logbook->bRPM1 = true;
-        logbookPlugIn->opt->toggleEngine1 = true;
-        logbookPlugIn->opt->dtEngine1On = wxDateTime::Now();
-
-        logbook->appendRow(false);
-
-        logbookPlugIn->opt->engine1Running = true;
-        m_toggleBtnEngine1->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR)+onOff[1]);
+        startEngine1(true, true, true);
     }
     else
     {
         SendPluginMessage(_T("LOGBOOK_ENGINEBUTTON1"), _T("OFF"));
-        logbookPlugIn->opt->toggleEngine1 = false;
-        logbook->bRPM1 = false;
-        logbook->dtEngine1Off = wxDateTime::Now().Subtract(logbookPlugIn->opt->dtEngine1On);
-
-        logbook->appendRow(false);
-
-        logbookPlugIn->opt->dtEngine1On = -1;
-        logbookPlugIn->opt->engine1Running = false;
-        m_toggleBtnEngine1->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR)+onOff[0]);
+        stopEngine1(true, true);
     }
 }
 
@@ -2593,26 +2586,26 @@ void LogbookDialog::OnToggleButtonEngine2( wxCommandEvent& event )
         SendPluginMessage(_T("LOGBOOK_ENGINEBUTTON2"), _T("ON"));
         if(logbookPlugIn->opt->engineMessageSails && logbookPlugIn->opt->engineAllwaysSailsDown)
             resetSails();
-        logbook->bRPM2 = true;
-        logbookPlugIn->opt->toggleEngine2 = true;
-        logbookPlugIn->opt->dtEngine2On = wxDateTime::Now();
-
-        logbook->appendRow(false);
-
-        logbookPlugIn->opt->engine2Running = true;
-        m_toggleBtnEngine2->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR1)+onOff[1]);
+        startEngine2(true, true, true);
     }
     else
     {
         SendPluginMessage(_T("LOGBOOK_ENGINEBUTTON2"), _T("OFF"));
-        logbookPlugIn->opt->toggleEngine2 = false;
-        logbook->bRPM2 = false;
-        logbook->dtEngine2Off = wxDateTime::Now().Subtract(logbookPlugIn->opt->dtEngine2On);
-        logbook->appendRow(false);
+        stopEngine2(true, true, true);
+    }
+}
 
-        logbookPlugIn->opt->dtEngine2On = -1;
-        logbookPlugIn->opt->engine2Running = false;
-        m_toggleBtnEngine2->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR1)+onOff[0]);
+void LogbookDialog::OnToggleButtonGenerator( wxCommandEvent& event )
+{
+    if(event.IsChecked())
+    {
+        SendPluginMessage(_T("LOGBOOK_GENERATORBUTTON"), _T("ON"));
+        startGenerator(true, true, true);
+    }
+    else
+    {
+        SendPluginMessage(_T("LOGBOOK_GENERATORBUTTON"), _T("OFF"));
+        stopGenerator(true, true, true);
     }
 }
 
@@ -2808,11 +2801,7 @@ void LogbookDialog::OnMenuSelectionFlip( wxCommandEvent& event )
 
 		if(a > 11) 
 		{
-#ifdef __WXOSX__
-			MessageBoxOSX(NULL,_T("Cannot flip, month would be > 12"),_("Information"),wxID_OK);
-#else
 			wxMessageBox(_T("Cannot flip, month would be > 12"));
-#endif
 			return;
 		}
 
@@ -2864,7 +2853,7 @@ void LogbookDialog::OnTextEnterStatusMinutes( wxCommandEvent& event )
 void LogbookDialog::OnButtonClickStatusTimer( wxCommandEvent& event )
 {
 	TimerInterval* ti = new TimerInterval(this,logbookPlugIn->opt);
-    
+
 #ifdef __WXOSX__
     HideWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
@@ -2875,7 +2864,8 @@ void LogbookDialog::OnButtonClickStatusTimer( wxCommandEvent& event )
     ShowWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
 
-	delete ti;
+    delete ti;
+    this->Raise();
 }
 
 void LogbookDialog::OnStatusBulletTimer( wxCommandEvent& event )
@@ -3155,11 +3145,7 @@ void LogbookDialog::OnGridLabelLeftDClickMotorSails( wxGridEvent& ev )
 
 void LogbookDialog::m_menu1Highlighted(wxMenuEvent& ev)
 {
-#ifdef __WXOSX__
-    MessageBoxOSX(NULL,m_menu1->GetLabel(ev.GetMenuId()));
-#else
 	wxMessageBox(m_menu1->GetLabel(ev.GetMenuId()));
-#endif
 }
 
 void LogbookDialog::OnMenuSelectionSearch( wxCommandEvent& event )
@@ -3276,7 +3262,7 @@ bool LogbookDialog::checkHiddenColumns(wxGrid* grid,int i, bool use)
 			selGridCol += i;
 		else
 			break;
-		
+
 		if((selGridCol == 0  && i == -1) && use)
 		{
 			  if(m_notebook8->GetSelection() == 0)
@@ -3316,7 +3302,7 @@ bool LogbookDialog::checkHiddenColumns(wxGrid* grid,int i, bool use)
 			}
 
 			grid = logGrids[m_notebook8->GetSelection()];
-		
+
 
 	}
 	grid->SetGridCursor(selGridRow,selGridCol);
@@ -3397,7 +3383,8 @@ void LogbookDialog::onButtonClickEditLayoutLogbook(wxCommandEvent & ev)
     HideWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
 	showLayoutDialog(LogbookDialog::LOGBOOK, logbookChoice,logbook->layout_locn, format);
-	logGrids[m_logbook->GetSelection()]->SetFocus();
+    logGrids[m_logbook->GetSelection()]->SetFocus();
+    this->Raise();
 #ifdef __WXOSX__
     ShowWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
@@ -3462,10 +3449,10 @@ else
 }
 */
     dlg->m_choice15->SetSelection(filterSel);
-#ifndef __WXOSX__
-    if(filterSel != 0 && logbookPlugIn->opt->filterLayout)
+
+    if(filterSel != 0 && logbookPlugIn->opt->filterLayout[grid])
         layout.Prepend(logbookPlugIn->opt->layoutPrefix[grid]);
-#endif
+
     dlg->m_textCtrlRename->SetValue(layout);
     dlg->m_radioBtnEdit->SetValue(true);
 #ifndef __WXOSX__
@@ -3480,7 +3467,7 @@ else
 
 	if (dlg->ShowModal() == wxID_CANCEL)
             return -1;
-	
+
 	if(dlg->m_radioBtnEdit->GetValue())  // 1. Layout editieren
 	{
 		if(m_radioBtnODT->GetValue())
@@ -3908,25 +3895,28 @@ Backup Logbook(*.txt)|*.txt");
     onOff[1] = _(" on");
     m_toggleBtnEngine1->SetValue(logbookPlugIn->opt->toggleEngine1);
     m_toggleBtnEngine2->SetValue(logbookPlugIn->opt->toggleEngine2);
-    m_toggleBtnEngine1->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR)+onOff[(int) m_toggleBtnEngine1->GetValue()]);
-    m_toggleBtnEngine2->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR1)+onOff[(int) m_toggleBtnEngine2->GetValue()]);
+
+    m_toggleBtnGenerator->SetValue(logbookPlugIn->opt->toggleGenerator);
 
     logbook->bRPM1 = logbookPlugIn->opt->engine1Running;
     logbook->bRPM2 = logbookPlugIn->opt->engine2Running;
+    logbook->bGEN = logbookPlugIn->opt->generatorRunning;
 
     setToNumberEngine();
+    setShowGenerator();
 
-    m_toggleBtnEngine1->Enable(!logbookPlugIn->opt->bRPMIsChecked);
-    if(logbookPlugIn->opt->engines == 1)
-        m_toggleBtnEngine2->Enable(!logbookPlugIn->opt->bRPMIsChecked);
-    else
-        m_toggleBtnEngine2->Enable(false);
-
-    if((!logbookPlugIn->opt->toggleEngine1 && logbookPlugIn->opt->engine1Running) ||
-            (!logbookPlugIn->opt->toggleEngine2 && logbookPlugIn->opt->engine2Running))
+    if((!logbookPlugIn->opt->toggleEngine1 && logbookPlugIn->opt->engine1Running)
+        || (!logbookPlugIn->opt->toggleEngine2 && logbookPlugIn->opt->engine2Running)
+        || (!logbookPlugIn->opt->toggleGenerator && logbookPlugIn->opt->generatorRunning))
     {
         logbook->rpmSentence = true;
         logbook->dtRPM = wxDateTime::Now();
+        if(logbookPlugIn->opt->engine1Running && logbookPlugIn->opt->bEng1RPMIsChecked)
+            m_toggleBtnEngine1->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR)+onOff[1]);
+        if(logbookPlugIn->opt->engine2Running && logbookPlugIn->opt->bEng2RPMIsChecked)
+            m_toggleBtnEngine2->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR1)+onOff[1]);
+        if(logbookPlugIn->opt->generatorRunning && logbookPlugIn->opt->bGenRPMIsChecked)
+            m_toggleBtnGenerator->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::GENE)+onOff[1]);
     }
 
 #ifdef PBVE_DEBUG
@@ -3946,7 +3936,7 @@ Backup Logbook(*.txt)|*.txt");
 	m_buttonReloadLayoutOview->SetMinSize( wxSize( 25,-1 ) );
 	m_buttonEditLayoutCrew->SetMinSize( wxSize( 25,-1 ) );
 	m_buttonReloadCrew->SetMinSize( wxSize( 25,-1 ) );	
-	
+
 	m_buttonEditLayoutBoat->SetMinSize( wxSize( 25,-1 ) );
 	m_buttonReloadLayoutsBoat->SetMinSize( wxSize( 25,-1 ) );
 	m_buttonReloadLayoutsServiceHTML->SetMinSize( wxSize( 25,-1 ) );
@@ -3955,7 +3945,7 @@ Backup Logbook(*.txt)|*.txt");
 	m_buttonReloadLayoutsRepairsHTML->SetMinSize( wxSize( 25,-1 ) );
 	m_buttonEditLayoutODTBuyParts->SetMinSize( wxSize( 25,-1 ) );
 	m_buttonReloadLayoutsBuyPartsHTML->SetMinSize( wxSize( 25,-1 ) );
-	
+
 #endif
 }
 
@@ -4001,7 +3991,7 @@ void LogbookDialog::OnCheckboxSails( wxCommandEvent& event )
 void LogbookDialog::OnTimerSails(wxTimerEvent &event)
 {
     if(logbook->sailsMessage)
-        logbook->appendRow(false);
+        logbook->appendRow(true, true);
 }
 
 void LogbookDialog::stateSails()
@@ -4063,10 +4053,14 @@ void LogbookDialog::setToNumberEngine()
         m_gridMotorSails->SetColSize(LogbookHTML::MOTOR1,0);
         m_gridMotorSails->SetColSize(LogbookHTML::MOTOR1T,0);
         m_gridMotorSails->SetColSize(LogbookHTML::RPM2,0);
+        m_toggleBtnEngine1->Enable(!logbookPlugIn->opt->bEng1RPMIsChecked);
+        m_toggleBtnEngine1->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR)+onOff[(int) m_toggleBtnEngine1->GetValue()]);
         m_toggleBtnEngine2->Enable(false);
+        m_toggleBtnEngine2->Hide();
     }
     else
     {
+
 #ifdef __WXOSX__
         m_gridMotorSails->ShowCol(LogbookHTML::MOTOR1);
         m_gridMotorSails->ShowCol(LogbookHTML::MOTOR1T);
@@ -4076,8 +4070,19 @@ void LogbookDialog::setToNumberEngine()
         m_gridMotorSails->AutoSizeColumn(LogbookHTML::MOTOR1T,false);
         m_gridMotorSails->AutoSizeColumn(LogbookHTML::RPM2,false);
 #endif
-        m_toggleBtnEngine1->Enable(true);
-        m_toggleBtnEngine2->Enable(true);
+/*
+        m_gridMotorSails->SetColumnWidth(LogbookHTML::MOTOR1,1);
+        m_gridMotorSails->AutoSizeColumn(LogbookHTML::MOTOR1,false);
+        m_gridMotorSails->SetColumnWidth(LogbookHTML::MOTOR1T,1);
+        m_gridMotorSails->AutoSizeColumn(LogbookHTML::MOTOR1T,false);
+        m_gridMotorSails->SetColumnWidth(LogbookHTML::RPM2,1);
+        m_gridMotorSails->AutoSizeColumn(LogbookHTML::RPM2,false);
+*/
+        m_toggleBtnEngine1->Enable(!logbookPlugIn->opt->bEng1RPMIsChecked);
+        m_toggleBtnEngine1->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR)+onOff[(int) m_toggleBtnEngine1->GetValue()]);
+        m_toggleBtnEngine2->Show();
+        m_toggleBtnEngine2->Enable(!logbookPlugIn->opt->bEng2RPMIsChecked);
+        m_toggleBtnEngine2->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR1)+onOff[(int) m_toggleBtnEngine2->GetValue()]);
     }
     m_panel2->Layout();
     Refresh();
@@ -4115,6 +4120,217 @@ void LogbookDialog::setNoWatermaker()
     }
     m_panel2->Layout();
     Refresh();
+}
+
+
+void LogbookDialog::setShowGenerator()
+{
+    if(logbookPlugIn->opt->generator == 1)
+    {
+#ifdef __WXOSX__
+        m_gridMotorSails->ShowCol(LogbookHTML::GENE);
+        m_gridMotorSails->ShowCol(LogbookHTML::GENET);
+#else
+        m_gridMotorSails->SetColumnWidth(LogbookHTML::GENE,1);
+        m_gridMotorSails->AutoSizeColumn(LogbookHTML::GENE,false);
+        m_gridMotorSails->SetColumnWidth(LogbookHTML::GENET,1);
+        m_gridMotorSails->AutoSizeColumn(LogbookHTML::GENET,false);
+        m_toggleBtnGenerator->Show();
+#endif
+        m_toggleBtnGenerator->Enable(!logbookPlugIn->opt->bGenRPMIsChecked);
+        m_toggleBtnGenerator->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::GENE)+onOff[(int) m_toggleBtnGenerator->GetValue()]);
+    }
+    else
+    {
+#ifdef __WXOSX__
+        m_gridMotorSails->ShowCol(LogbookHTML::GENE);
+        m_gridMotorSails->ShowCol(LogbookHTML::GENET);
+#else
+        m_gridMotorSails->SetColumnWidth(LogbookHTML::GENE,0);
+        m_gridMotorSails->SetColumnWidth(LogbookHTML::GENET,0);
+#endif
+        m_toggleBtnGenerator->Enable(false);
+        m_toggleBtnGenerator->Hide();
+    }
+    m_panel2->Layout();
+    Refresh();
+}
+
+void LogbookDialog::stopEngine1(bool enabled, bool print)
+{
+    logbook->bRPM1 = false;
+    if(logbookPlugIn->opt->engine1Running)
+        logbook->dtEngine1Off = wxDateTime::Now().Subtract(logbookPlugIn->opt->dtEngine1On);
+    logbookPlugIn->opt->dtEngine1On = -1;
+    if(print)
+        logbook->appendRow(true, false);
+    logbookPlugIn->opt->engine1Running = false;
+    logbookPlugIn->opt->toggleEngine1 = false;
+    m_toggleBtnEngine1->SetValue(false);
+    m_toggleBtnEngine1->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR)+onOff[0]);
+    if(enabled)
+    {
+        m_toggleBtnEngine1->Enable(true);
+    }
+    else
+    {
+        m_toggleBtnEngine1->Enable(false);
+    }
+}
+
+void LogbookDialog::stopEngine2(bool enabled, bool show, bool print)
+{
+    logbook->bRPM2 = false;
+    if(logbookPlugIn->opt->engine2Running)
+        logbook->dtEngine2Off = wxDateTime::Now().Subtract(logbookPlugIn->opt->dtEngine2On);
+    logbookPlugIn->opt->dtEngine2On = -1;
+    if(print)
+        logbook->appendRow(true, false);
+    logbookPlugIn->opt->engine2Running = false;
+    logbookPlugIn->opt->toggleEngine2 = false;
+    m_toggleBtnEngine2->SetValue(false);
+    if(enabled)
+    {
+        m_toggleBtnEngine2->Enable(true);
+    }
+    else
+    {
+        m_toggleBtnEngine2->Enable(false);
+    }
+    if(show)
+    {
+        m_toggleBtnEngine2->Show();
+        m_toggleBtnEngine2->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR1)+onOff[0]);
+    }
+    else
+    {
+        m_toggleBtnEngine2->Hide();
+    }
+
+}
+
+void LogbookDialog::stopGenerator(bool enabled, bool show, bool print)
+{
+    logbook->bGEN = false;
+    if(logbookPlugIn->opt->generatorRunning)
+        logbook->dtGeneratorOff = wxDateTime::Now().Subtract(logbookPlugIn->opt->dtGeneratorOn);
+    logbookPlugIn->opt->dtGeneratorOn = -1;
+    if(print)
+        logbook->appendRow(true, false);
+    logbookPlugIn->opt->generatorRunning = false;
+    logbookPlugIn->opt->toggleGenerator = false;
+    m_toggleBtnGenerator->SetValue(false);
+    if(enabled)
+    {
+        m_toggleBtnGenerator->Enable(true);
+    }
+    else
+    {
+        m_toggleBtnGenerator->Enable(false);
+    }
+    if(show)
+    {
+        m_toggleBtnGenerator->Show();
+        m_toggleBtnGenerator->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::GENE)+onOff[0]);
+    }
+    else
+    {
+        m_toggleBtnGenerator->Hide();
+    }
+}
+
+void LogbookDialog::startEngine1(bool enabled, bool active, bool print)
+{
+
+    logbookPlugIn->opt->dtEngine1On = wxDateTime::Now();
+    if(enabled)
+    {
+        logbook->bRPM1 = true;
+        m_toggleBtnEngine1->Enable(true);
+        m_toggleBtnEngine1->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR)+onOff[1]);
+        logbook->engine1Manual = true;
+    }
+    else
+    {
+        logbook->bRPM1 = true; //Set for NMEA RPM message
+        m_toggleBtnEngine1->Enable(false);
+        m_toggleBtnEngine1->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR)+onOff[0]);
+        logbook->engine1Manual = false;
+    }
+    if(active)
+    {
+        logbookPlugIn->opt->toggleEngine1 = true;
+    }
+    else
+    {
+        logbookPlugIn->opt->toggleEngine1 = false;
+    }
+    if(print)
+        logbook->appendRow(true, false);
+    logbookPlugIn->opt->engine1Running = true;
+}
+
+void LogbookDialog::startEngine2(bool enabled, bool active, bool print)
+{
+
+    logbookPlugIn->opt->dtEngine2On = wxDateTime::Now();
+    if(enabled)
+    {
+        logbook->bRPM2 = true;
+        m_toggleBtnEngine2->Enable(true);
+        m_toggleBtnEngine2->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR1)+onOff[1]);
+        logbook->engine2Manual = true;
+    }
+    else
+    {
+        logbook->bRPM2 = true;  //Set for NMEA RPM message
+        m_toggleBtnEngine2->Enable(false);
+        m_toggleBtnEngine2->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::MOTOR1)+onOff[0]);
+        logbook->engine2Manual = false;
+    }
+    if(active)
+    {
+        logbookPlugIn->opt->toggleEngine2 = true;
+    }
+    else
+    {
+        logbookPlugIn->opt->toggleEngine2 = false;
+    }
+    if(print)
+        logbook->appendRow(true, false);
+    logbookPlugIn->opt->engine2Running = true;
+}
+
+void LogbookDialog::startGenerator(bool enabled, bool active, bool print)
+{
+
+    logbookPlugIn->opt->dtGeneratorOn = wxDateTime::Now();
+    if(enabled)
+    {
+        logbook->bGEN = true;
+        m_toggleBtnGenerator->Enable(true);
+        m_toggleBtnGenerator->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::GENE)+onOff[1]);
+        logbook->generatorManual = true;
+    }
+    else
+    {
+        logbook->bGEN = true;  //Set for NMEA RPM message
+        m_toggleBtnGenerator->Enable(false);
+        m_toggleBtnGenerator->SetLabel(m_gridMotorSails->GetColLabelValue(LogbookHTML::GENE)+onOff[0]);
+        logbook->generatorManual = false;
+    }
+    if(active)
+    {
+        logbookPlugIn->opt->toggleGenerator = true;
+    }
+    else
+    {
+        logbookPlugIn->opt->toggleGenerator = false;
+    }
+    if(print)
+        logbook->appendRow(true, false);
+    logbookPlugIn->opt->generatorRunning = true;
+
 }
 
 void LogbookDialog::loadTimerEx()
@@ -4159,7 +4375,7 @@ void LogbookDialog::loadTimerEx()
 			TimerIndidividualAMPM.Add(ss);
 		}
 	}
-	
+
 	txt.Close();
 }
 
@@ -4211,7 +4427,7 @@ void LogbookDialog::m_menuItem1OnMenuSelection( wxCommandEvent& ev )
 			logGrids[item->grid]->SetGridCursor(selGridRow,item->gridcol);
 			setEqualRowHeight(selGridRow);
 		}
-		
+
 	}
 	else if(ev.GetId() == SELECT_ROUTE || ev.GetId() == SELECT_TRACK)
 	{
@@ -4356,11 +4572,10 @@ void LogbookDialog::writeToRouteDlg(wxJSONValue data)
 void LogbookDialog::OnMenuSelectionShowHiddenCols(wxCommandEvent &ev)
 {
 	int selGrid = this->m_notebook8->GetSelection();
-
 	for(int i = 0; i < logGrids[selGrid]->GetNumberCols(); i++)
 		if(logGrids[selGrid]->GetColSize(i) == 0)
         {
-			if((selGrid == 2 && logbookPlugIn->opt->engines == 0) && ((i == LogbookHTML::MOTOR1 || i == LogbookHTML::MOTOR1T) || i == LogbookHTML::RPM2) )
+            if((selGrid == 2 && logbookPlugIn->opt->engines == 0) && ((i == LogbookHTML::MOTOR1 || i == LogbookHTML::MOTOR1T) || i == LogbookHTML::RPM2 || (i == LogbookHTML::GENE || i == LogbookHTML::GENET)) )
                 continue;
             else
 #ifdef __WXOSX__
@@ -4371,10 +4586,10 @@ void LogbookDialog::OnMenuSelectionShowHiddenCols(wxCommandEvent &ev)
                 logGrids[selGrid]->AutoSizeColumn(i);
 #endif
         }
-    
+
     m_gridMotorSails->SetColSize(LogbookHTML::ROUTEID,0);
     m_gridMotorSails->SetColSize(LogbookHTML::TRACKID,0);
-    
+
     if(logbookPlugIn->opt->engines == 0)
         setToNumberEngine();
 
@@ -4384,6 +4599,9 @@ void LogbookDialog::OnMenuSelectionShowHiddenCols(wxCommandEvent &ev)
     if(logbookPlugIn->opt->watermakeris == 0)
         setNoWatermaker();
 
+#ifndef __WXOSX__
+    setShowGenerator();
+#endif
 	logGrids[selGrid]->Refresh();
 }
 
@@ -4408,7 +4626,7 @@ void LogbookDialog::OnNoteBookPageChangedLogbook(wxNotebookEvent & ev)
 		logbook->update();
 		overview->refresh();
 	}
-	
+
 	if(ev.GetSelection() == 3)
 	{
 		if(sashPos == -1)
@@ -4471,7 +4689,7 @@ void LogbookDialog::m_gridGlobalOnGridCellRightClick( wxGridEvent& ev )
 		addColdFingerTextBlocks(m_menu1);
 	}
 
-	if(ev.GetCol() == 11 && (m_notebook8->GetSelection() == 1))
+	if(ev.GetCol() == 13 && (m_notebook8->GetSelection() == 1))
 	{
 		m_menu1->PrependSeparator();
 		wxString path = *pHome_Locn;
@@ -4492,8 +4710,16 @@ void LogbookDialog::m_gridGlobalOnGridCellRightClick( wxGridEvent& ev )
 				wxCommandEventHandler( LogbookDialog::m_menuItem1OnMenuSelection ) );
 		}
 	}
-
+#ifndef __WXOSX__
 	m_gridGlobal->PopupMenu( m_menu1, ev.GetPosition() );
+#else
+    switch(m_notebook8->GetSelection() )
+    {
+        case 0: m_gridGlobal->PopupMenu( m_menu1, ev.GetPosition() ); break;
+        case 1: m_gridWeather->PopupMenu( m_menu1, ev.GetPosition() );break;
+        case 2: m_gridMotorSails->PopupMenu( m_menu1, ev.GetPosition() );break;
+    }
+#endif
 
 	wxMenuItemList  list = m_menu1->GetMenuItems();
 
@@ -4582,27 +4808,17 @@ wxTreeItemId LogbookDialog::FindMenuItem(int grid, int col, wxString name)
 			nextChild = tree->GetNextSibling(nextChild);
 		}
 	}
- 
+
 	return wxTreeItemId();
 }
 
 void LogbookDialog::m_gridWeatherOnGridCellRightClick( wxGridEvent& ev )
 {
-	for(int i = 0; i < LOGGRIDS; i++)
-		logGrids[i]->ClearSelection();
-
-	selGridCol = ev.GetCol();
-	selGridRow = ev.GetRow();
 	m_gridGlobalOnGridCellRightClick( ev );
 }
 
 void LogbookDialog::m_gridMotorSailsOnGridCellRightClick( wxGridEvent& ev )
 {
-	for(int i = 0; i < LOGGRIDS; i++)
-		logGrids[i]->ClearSelection();
-
-	selGridCol = ev.GetCol();
-	selGridRow = ev.GetRow();
 	m_gridGlobalOnGridCellRightClick( ev );
 }
 
@@ -4623,6 +4839,7 @@ void LogbookDialog::m_gridMotorSailsOnGridCmdCellChange( wxGridEvent& ev )
 
 void LogbookDialog::logSaveOnButtonClick( wxCommandEvent& ev )
 {
+    wxString layout;
 	wxString filter = saveDialogFilter;
     filter.Prepend(_T("Google-Format(*.kml)|*.kml|"));
 	if(m_radioBtnHTML->GetValue())
@@ -4644,25 +4861,25 @@ void LogbookDialog::logSaveOnButtonClick( wxCommandEvent& ev )
 	wxString path = saveFileDialog->GetPath();
 	int sel = saveFileDialog->GetFilterIndex();
 
+    layout = logbookChoice->GetString(logbookChoice->GetSelection());
+    wxString prefix = logbook->opt->engineStr[logbook->opt->engines]+logbook->opt->layoutPrefix[LogbookDialog::LOGBOOK];
+    if(logbook->opt->filterLayout[LogbookDialog::LOGBOOK])
+        layout.Prepend(prefix);
+
 	switch(sel)
 	{
 	case 0: if(m_radioBtnHTML->GetValue())
-				logbook->toHTML(path, 
-				logbookChoice->GetString(logbookChoice->GetSelection()),true);
+                logbook->toHTML(path,layout,true);
 			else
-				logbook->toODT(path,
-				logbookChoice->GetString(logbookChoice->GetSelection()),true); 
+                logbook->toODT(path,layout,true); 
 			break;
     case 1: logbook->toKML(path); break;
     case 2:	logbook->toODS(path); break;
     case 3: logbook->toXML(path); break;
     case 4: logbook->toCSV(path); break;
     case 5: logbook->backup(path); break;
-#ifdef __WXOSX__
-    default: ::MessageBoxOSX(NULL,_T("Not implemented yet"),_T("Information"),wxID_OK); break;        
-#else
-	default: ::wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
-#endif
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
+
 	}
 	logGrids[m_logbook->GetSelection()]->SetFocus();
 }
@@ -4680,7 +4897,7 @@ void LogbookDialog::logViewOnButtonClick( wxCommandEvent& ev )
 
 void LogbookDialog::m_button4OnButtonClick( wxCommandEvent& ev )
 {
-	logbook->appendRow(true);
+    logbook->appendRow(true, false);
 }
 
 void LogbookDialog::startNormalTimer()
@@ -4690,11 +4907,7 @@ void LogbookDialog::startNormalTimer()
 	while(logbookPlugIn->opt->timerSec <= 0)
 	{
 		TimerInterval* ti = new TimerInterval(this,logbookPlugIn->opt);
-#ifdef __WXOSX__
-        ::MessageBoxOSX(NULL,_("Normal Timer has 0 h 0 Min.\n\nPlease change settings (Timer-Interval)"),_T("Information"),wxID_OK);
-#else
-		::wxMessageBox(_("Normal Timer has 0 h 0 Min.\n\nPlease change settings (Timer-Interval)"),_T(""));
-#endif
+		wxMessageBox(_("Normal Timer has 0 h 0 Min.\n\nPlease change settings (Timer-Interval)"),_T(""));
 		ti->ShowModal();
 		sec = logbookPlugIn->opt->timerSec;
 		delete ti;
@@ -4869,11 +5082,7 @@ void LogbookDialog::startApplication(wxString filename, wxString ext)
 #endif
         }
 		else  // No HTML-Editor
-#ifdef __WXOSX__
-            MessageBoxOSX(NULL,_("No Path set to HTML-Editor\nin Toolbox/Plugins/LogbookKonni/Preferences"),_T("Information"),wxID_OK);
-#else
 			wxMessageBox(_("No Path set to HTML-Editor\nin ToolBox/Plugins/LogbookKonni/Preferences"));
-#endif
 	}
 }
 
@@ -5020,7 +5229,7 @@ void LogbookDialog::getIniValues()
 	  this->m_radioBtnHTMLOverview->SetValue(true);
 	else	
 	  this->m_radioBtnODTOverview->SetValue(true);
-	
+
 	if(logbookPlugIn->opt->serviceHTML)
 	  this->m_radioBtnHTMLService->SetValue(true);
 	else
@@ -5030,7 +5239,7 @@ void LogbookDialog::getIniValues()
 	  this->m_radioBtnHTMLRepairs->SetValue(true);
 	else
 	  this->m_radioBtnODTRepairs->SetValue(true);
-	
+
 	if(logbookPlugIn->opt->buypartsHTML)
 	  this->m_radioBtnHTMLBuyParts->SetValue(true);
 	else	
@@ -5267,6 +5476,7 @@ void LogbookDialog::OnMenuSelectionNewWatchWake( wxCommandEvent& event )
 
 void LogbookDialog::crewSaveOnButtonClick( wxCommandEvent& ev )
 {
+    wxString layout;
 	wxString filter = saveDialogFilter;
 	if(m_radioBtnHTMLCrew->GetValue())
 		filter.Prepend(_T("HTML Format(*.html)|*.html|"));
@@ -5285,24 +5495,22 @@ void LogbookDialog::crewSaveOnButtonClick( wxCommandEvent& ev )
 	wxString path = saveFileDialog->GetPath();
 	int sel = saveFileDialog->GetFilterIndex();
 
+    layout = crewChoice->GetString(crewChoice->GetSelection());
+    if(logbook->opt->filterLayout[LogbookDialog::CREW])
+        layout.Prepend(logbook->opt->layoutPrefix[LogbookDialog::CREW]);
+
 	switch(sel)
 	{
 	case 0: if(m_radioBtnHTMLCrew->GetValue())
-				crewList->saveHTML(path,
-				crewChoice->GetString(crewChoice->GetSelection()),false); 
+                crewList->saveHTML(path, layout, false);
 			else
-				crewList->saveODT(path,
-				crewChoice->GetString(crewChoice->GetSelection()),true); 
+                crewList->saveODT(path, layout, true);
 			break;
 	case 1: crewList->saveODS(path); break;
 	case 2:	crewList->saveXML(path); break;
 	case 3: crewList->saveCSV(path); break;
 	case 4: crewList->backup(path); break;
-#ifdef __WXOSX__
-    default: ::MessageBoxOSX(NULL,_T("Not implemented yet"),_T("Information"),wxID_OK); break;        
-#else
-	default: ::wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
-#endif
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
 	}
 }
 
@@ -5513,7 +5721,8 @@ void LogbookDialog::m_gridCrewWakeOnGridCellChange( wxGridEvent& ev )
 	m_gridCrewWake->BeginBatch();
 	crewList->updateWatchTime(0,ev.GetCol(),&insertCols);
 	m_gridCrewWake->EndBatch();
-	insertCols = false;
+    insertCols = false;
+    m_buttonCalculate->Enable();
 
 	crewList->updateLine();
 
@@ -5618,7 +5827,9 @@ void LogbookDialog::OnToggleButtonShowEquip(wxCommandEvent& ev)
 
 void LogbookDialog::boatSaveOnButtonClick( wxCommandEvent& ev )
 {
-	wxString filter = saveDialogFilter;
+    wxString filter = saveDialogFilter;
+    wxString layout;
+
 	if(m_radioBtnHTMLBoat->GetValue())
 		filter.Prepend(_T("HTML Format(*.html)|*.html|"));
 	else
@@ -5635,24 +5846,22 @@ void LogbookDialog::boatSaveOnButtonClick( wxCommandEvent& ev )
 	wxString path = saveFileDialog->GetPath();
 	int sel = saveFileDialog->GetFilterIndex();
 
+    layout = boatChoice->GetString(boatChoice->GetSelection());
+    if(logbook->opt->filterLayout[LogbookDialog::BOAT])
+        layout.Prepend(logbook->opt->layoutPrefix[LogbookDialog::BOAT]);
+
 	switch(sel)
 	{
 	case 0: if(m_radioBtnHTMLBoat->GetValue())
-				boat->toHTML(path,
-				boatChoice->GetString(boatChoice->GetSelection()), true); 
+                boat->toHTML(path, layout, true);
 			else
-				boat->toODT(path,
-				boatChoice->GetString(boatChoice->GetSelection()), true); 
+                boat->toODT(path, layout, true);
 		break;
 	case 1: boat->toODS(path); break;
 	case 2:	boat->toXML(path); break;
 	case 3: boat->toCSV(path); break;
 	case 4: boat->backup(path); break;
-#ifdef __WXOSX__
-    default: ::MessageBoxOSX(NULL,_T("Not implemented yet"),_T("Information"),wxID_OK); break;        
-#else
-	default: ::wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
-#endif
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
 	}
 }
 
@@ -5787,6 +5996,7 @@ void LogbookDialog::OnGridLabelLeftClickService( wxGridEvent& event )
 
 void LogbookDialog::onButtobClickSaveService(wxCommandEvent & ev)
 {
+    wxString layout;
 	wxString filter = _T("");
 	if(m_radioBtnHTMLService->GetValue())
 		filter = _T("HTML Format(*.html)|*.html");
@@ -5803,20 +6013,18 @@ void LogbookDialog::onButtobClickSaveService(wxCommandEvent & ev)
 	wxString path = saveFileDialog->GetPath();
 	int sel = saveFileDialog->GetFilterIndex();
 
+    layout = m_choiceSelectLayoutService->GetString(m_choiceSelectLayoutService->GetSelection());
+    if(logbook->opt->filterLayout[LogbookDialog::GSERVICE])
+        layout.Prepend(logbook->opt->layoutPrefix[LogbookDialog::GSERVICE]);
+
 	switch(sel)
 	{
 	case 0: if(m_radioBtnHTMLService->GetValue())
-				maintenance->toHTML(0,path,
-				m_choiceSelectLayoutService->GetString(m_choiceSelectLayoutService->GetSelection()),2);
+                maintenance->toHTML(0, path, layout, 2);
 			else
-				maintenance->toODT(0,path,
-				m_choiceSelectLayoutService->GetString(m_choiceSelectLayoutService->GetSelection()),2); 
+                maintenance->toODT(0, path, layout, 2);
 			break;
-#ifdef __WXOSX__
-    default: ::MessageBoxOSX(NULL,_T("Not implemented yet"),_T("Information"),wxID_OK); break;        
-#else
-	default: ::wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
-#endif
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
 	}
 	delete saveFileDialog;
 }
@@ -6044,6 +6252,7 @@ void LogbookDialog::onMenuSelectionRepairsBuyParts(wxCommandEvent &ev)
 
 void LogbookDialog::onButtobClickSaveRepairs( wxCommandEvent& event )
 {
+    wxString layout;
 	wxString filter = _T("");
 	if(m_radioBtnHTMLRepairs->GetValue())
 		filter = _T("HTML Format(*.html)|*.html");
@@ -6061,21 +6270,18 @@ void LogbookDialog::onButtobClickSaveRepairs( wxCommandEvent& event )
 	wxString path = saveFileDialog->GetPath();
 	int sel = saveFileDialog->GetFilterIndex();
 
+    layout = m_choiceSelectLayoutRepairs->GetString(m_choiceSelectLayoutRepairs->GetSelection());
+    if(logbook->opt->filterLayout[LogbookDialog::GREPAIRS])
+        layout.Prepend(logbook->opt->layoutPrefix[LogbookDialog::GREPAIRS]);
+
 	switch(sel)
 	{
 	case 0: if(m_radioBtnHTMLRepairs->GetValue())
-				maintenance->toHTML(1,path, 
-				m_choiceSelectLayoutRepairs->GetString(m_choiceSelectLayoutRepairs->GetSelection()),2);
+                maintenance->toHTML(1, path, layout, 2);
 			else
-				maintenance->toODT(1,path,
-				m_choiceSelectLayoutRepairs->GetString(m_choiceSelectLayoutRepairs->GetSelection()),2); 
+                maintenance->toODT(1, path, layout, 2);
 			break;
-
-#ifdef __WXOSX__
-    default: ::MessageBoxOSX(NULL,_T("Not implemented yet"),_T("Information"),wxID_OK); break;        
-#else
-	default: ::wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
-#endif
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
 	}
 	delete saveFileDialog;
 }
@@ -6163,7 +6369,7 @@ void LogbookDialog::OnKeyDownRepairs( wxKeyEvent& ev )
 			ev.Skip();
 		return;
 	}
-	
+
 	if (ev.GetKeyCode() == WXK_TAB || ev.GetKeyCode() == WXK_RIGHT)
 	{	
 		if(maintenance->selectedColRepairs == m_gridMaintanenceRepairs->GetNumberCols()-1)
@@ -6188,7 +6394,7 @@ void LogbookDialog::onGridCellRightClickBuyParts( wxGridEvent& ev )
 {
 	maintenance->selectedRowBuyParts = ev.GetRow();
 	maintenance->selectedColBuyParts = ev.GetCol();
-	m_gridMaintanence->PopupMenu( m_menu711, ev.GetPosition() );
+    m_gridMaintenanceBuyParts->PopupMenu( m_menu711, ev.GetPosition() );
 }
 
 void LogbookDialog::OnChoiceBuyParts( wxCommandEvent& event )
@@ -6265,6 +6471,7 @@ void LogbookDialog::onGridCellChangeBuyParts(wxGridEvent &ev)
 }
 void LogbookDialog::onButtobClickSaveBuyParts( wxCommandEvent& event )
 {
+    wxString layout;
 	wxString filter = _T("");
 	if(m_radioBtnHTMLBuyParts->GetValue())
 		filter = _T("HTML Format(*.html)|*.html");
@@ -6282,21 +6489,19 @@ void LogbookDialog::onButtobClickSaveBuyParts( wxCommandEvent& event )
 	wxString path = saveFileDialog->GetPath();
 	int sel = saveFileDialog->GetFilterIndex();
 
+    layout = m_choiceSelectLayoutBuyParts->GetString(m_choiceSelectLayoutBuyParts->GetSelection());
+    if(logbook->opt->filterLayout[LogbookDialog::GBUYPARTS])
+        layout.Prepend(logbook->opt->layoutPrefix[LogbookDialog::GBUYPARTS]);
+
 	switch(sel)
 	{
 	case 0: if(m_radioBtnHTMLBuyParts->GetValue())
-				maintenance->toHTML(2,path, 
-				m_choiceSelectLayoutBuyParts->GetString(m_choiceSelectLayoutBuyParts->GetSelection()),2);
+                maintenance->toHTML(2, path, layout, 2);
 			else
-				maintenance->toODT(2,path,
-				m_choiceSelectLayoutBuyParts->GetString(m_choiceSelectLayoutBuyParts->GetSelection()),2); 
+                maintenance->toODT(2, path, layout, 2);
 			break;
 
-#ifdef __WXOSX__
-    default: ::MessageBoxOSX(NULL,_T("Not implemented yet"),_T("Information"),wxID_OK); break;        
-#else
-	default: ::wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
-#endif
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
 	}
 	delete saveFileDialog;
 }
@@ -6395,7 +6600,7 @@ void LogbookDialog::OnKeyDownBuyParts( wxKeyEvent& ev )
 			ev.Skip();
 		return;
 	}
-	
+
 	if (ev.GetKeyCode() == WXK_TAB || ev.GetKeyCode() == WXK_RIGHT)
 	{	
 		if(maintenance->selectedColBuyParts == m_gridMaintenanceBuyParts->GetNumberCols()-1)
@@ -6502,6 +6707,7 @@ void LogbookDialog::OnMenuSelectionHideColumnOverView(wxCommandEvent& ev)
 
 void LogbookDialog::OnButtonClickOverviewSave( wxCommandEvent& ev )
 {
+    wxString layout;
 	wxString filter = _T("");
 	if(m_radioBtnHTMLOverview->GetValue())
 		filter = _T("HTML Format(*.html)|*.html");
@@ -6519,21 +6725,19 @@ void LogbookDialog::OnButtonClickOverviewSave( wxCommandEvent& ev )
 	wxString path = saveFileDialog->GetPath();
 	int sel = saveFileDialog->GetFilterIndex();
 
+    layout = overviewChoice->GetString(overviewChoice->GetSelection());
+    if(logbook->opt->filterLayout[LogbookDialog::OVERVIEW])
+        layout.Prepend(logbook->opt->layoutPrefix[LogbookDialog::OVERVIEW]);
+
 	switch(sel)
 	{
 	case 0: if(m_radioBtnHTMLOverview->GetValue())
-				overview->toHTML(path, 
-				overviewChoice->GetString(overviewChoice->GetSelection()),2);
+                overview->toHTML(path, layout, 2);
 			else
-				overview->toODT(path,
-				overviewChoice->GetString(overviewChoice->GetSelection()),2); 
+                overview->toODT(path, layout, 2); 
 			break;
 
-#ifdef __WXOSX__
-    default: ::MessageBoxOSX(NULL,_T("Not implemented yet"),_T("Information"),wxID_OK); break;        
-#else
-	default: ::wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
-#endif
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
 	}
 	delete saveFileDialog;
 }
@@ -6608,7 +6812,6 @@ void LogbookDialog::OnMenuSelectionGotoRoute( wxCommandEvent& ev )
 	overview->gotoRoute();
 }
 
-
 bool LogbookDialog::myParseDate(wxString s, wxDateTime &dt)
 {
 	long day = 0;
@@ -6655,11 +6858,11 @@ bool LogbookDialog::myParseDate(wxString s, wxDateTime &dt)
 	c = LogbookDialog::datePattern.GetChar(i);
 	switch(c)
 		{
-		case 'd': temp.ToLong(&day); i += 3;
+		case 'd': temp.ToLong(&day);  // i += 3;  // Not used
 			break;
-		case 'm': temp.ToLong(&month); i += 3;
+		case 'm': temp.ToLong(&month);  // i += 3;  // Not used
 			break;
-		case 'y': temp.ToLong(&year); i += 5;
+		case 'y': temp.ToLong(&year);  // i += 5;  // Not used
 			break;
 		}
 #ifdef __WXOSX__
@@ -6766,7 +6969,7 @@ void LogbookDialog::setDatePattern()
 	if(s.SubString(i,i+1) == _T("12"))
 		{ LogbookDialog::datePattern += _T("mm");  i += 3; }
     if(s.SubString(i,i+3) == _T("2011"))
-		{ LogbookDialog::datePattern += _T("yyyy");  i += 5; }
+		{ LogbookDialog::datePattern += _T("yyyy"); /*  i += 5;*/ }  // Not used
 }
 
 ////////////////////////////////////////////////////////////
@@ -7229,7 +7432,7 @@ SelectLogbook::SelectLogbook( wxWindow* parent, wxString path, wxWindowID id, co
 	this->parent = (LogbookDialog*)parent;
 
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-	
+
 	wxBoxSizer* bSizer23;
 	bSizer23 = new wxBoxSizer( wxVERTICAL );
 
@@ -7964,14 +8167,15 @@ ColdFinger::~ColdFinger()
 
 void ColdFinger::OnCloseCold( wxCloseEvent& event )
 {
-	if(modified)
-	{
-		((myTreeItem*)m_treeCtrl3->GetItemData(m_treeCtrl3->GetSelection()))->text = m_textCtrl73->GetValue();
-		writeTextblocks();
-	}
+//	if(modified)
+//	{
+//		((myTreeItem*)m_treeCtrl3->GetItemData(m_treeCtrl3->GetSelection()))->text = m_textCtrl73->GetValue();
+//		writeTextblocks();
+//	}
 
 	retItem = NULL;
 	Hide();
+    EndModal(wxID_CANCEL);
 }
 
 void ColdFinger::OnOKButtonClickCold( wxCommandEvent& event )
@@ -7987,6 +8191,7 @@ void ColdFinger::OnOKButtonClickCold( wxCommandEvent& event )
 		retItem = NULL;
 
 	Hide();
+    EndModal(wxID_OK);
 }
 
 void ColdFinger::OnCancelButtonClickCold( wxCommandEvent& ev )
@@ -8311,7 +8516,7 @@ void ColdFinger::loadTextBlocks()
 void ColdFinger::fillTree(wxTreeItemId id, TiXmlNode* node)
 {
 	TiXmlNode* pChild;
-	static myTreeItem* elem	;
+	static myTreeItem* elem;
 	int t = node->Type();
 
 	switch ( t )
@@ -8473,104 +8678,104 @@ bool DnD::OnDropText(wxCoord x, wxCoord y, const wxString& str)
 TimerInterval::TimerInterval( wxWindow* parent, Options* opt,  wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-	
+
 	wxBoxSizer* bSizer32;
 	bSizer32 = new wxBoxSizer( wxVERTICAL );
-	
+
 	m_radioBtnNormalTimer = new wxRadioButton( this, wxID_ANY, _("Normal Timer"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer32->Add( m_radioBtnNormalTimer, 0, wxALL, 5 );
-	
+
 	wxFlexGridSizer* fgSizer46;
 	fgSizer46 = new wxFlexGridSizer( 0, 6, 0, 0 );
 	fgSizer46->SetFlexibleDirection( wxBOTH );
 	fgSizer46->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_spinCtrlH = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 0, 24, 24 );
 	fgSizer46->Add( m_spinCtrlH, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticTextH = new wxStaticText( this, wxID_ANY, _("h"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextH->Wrap( -1 );
 	fgSizer46->Add( m_staticTextH, 0, wxALL|wxALIGN_CENTER_VERTICAL, 0 );
-	
+
 	m_spinCtrlM = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 0, 59, 0 );
 	fgSizer46->Add( m_spinCtrlM, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticTextM = new wxStaticText( this, wxID_ANY, _("m"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextM->Wrap( -1 );
 	fgSizer46->Add( m_staticTextM, 0, wxALL|wxALIGN_CENTER_VERTICAL, 0 );
-	
+
 	m_spinCtrlS = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 0, 59, 0 );
 	fgSizer46->Add( m_spinCtrlS, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticTextS = new wxStaticText( this, wxID_ANY, _T("s"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextS->Wrap( -1 );
 	fgSizer46->Add( m_staticTextS, 0, wxALL|wxALIGN_CENTER_VERTICAL, 0 );
-	
+
 	bSizer32->Add( fgSizer46, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	wxFlexGridSizer* fgSizer49;
 	fgSizer49 = new wxFlexGridSizer( 0, 1, 0, 0 );
 	fgSizer49->SetFlexibleDirection( wxBOTH );
 	fgSizer49->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_staticText120 = new wxStaticText( this, wxID_ANY, _("Event"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText120->Wrap( -1 );
 	fgSizer49->Add( m_staticText120, 0, wxALL, 5 );
-	
+
 	bSizer32->Add( fgSizer49, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
-	
+
 	m_staticline37 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer32->Add( m_staticline37, 0, wxEXPAND | wxALL, 5 );
-	
+
 	wxFlexGridSizer* fgSizer54;
 	fgSizer54 = new wxFlexGridSizer( 0, 4, 0, 0 );
 	fgSizer54->SetFlexibleDirection( wxBOTH );
 	fgSizer54->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_radioBtnFullHour = new wxRadioButton( this, wxID_ANY, _("Full Hour Timer"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer54->Add( m_radioBtnFullHour, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_staticText125 = new wxStaticText( this, wxID_ANY, _("every"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText125->Wrap( -1 );
 	fgSizer54->Add( m_staticText125, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_spinCtrl4 = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 1, 24, 1 );
 	fgSizer54->Add( m_spinCtrl4, 0, wxALL, 5 );
-	
+
 	m_staticText124 = new wxStaticText( this, wxID_ANY, _("h"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText124->Wrap( -1 );
 	fgSizer54->Add( m_staticText124, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	bSizer32->Add( fgSizer54, 0, 0, 5 );
-	
+
 	wxFlexGridSizer* fgSizer47;
 	fgSizer47 = new wxFlexGridSizer( 0, 1, 0, 0 );
 	fgSizer47->SetFlexibleDirection( wxBOTH );
 	fgSizer47->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
 	m_gridFull = new wxGrid( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	
+
 	// Grid
 	m_gridFull->CreateGrid( 2, 1 );
 	m_gridFull->EnableEditing( true );
 	m_gridFull->EnableGridLines( true );
 	m_gridFull->EnableDragGridSize( false );
 	m_gridFull->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridFull->EnableDragColMove( false );
 	m_gridFull->EnableDragColSize( true );
 	m_gridFull->SetColLabelSize( 30 );
 	m_gridFull->SetColLabelValue( 0, _("+ Minutes") );
 	m_gridFull->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Rows
 	m_gridFull->EnableDragRowSize( true );
 	m_gridFull->SetRowLabelSize( 30 );
 	m_gridFull->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
-	
+
 	// Cell Defaults
 	m_gridFull->SetDefaultCellAlignment( wxALIGN_CENTRE, wxALIGN_TOP );
 
@@ -8578,45 +8783,45 @@ TimerInterval::TimerInterval( wxWindow* parent, Options* opt,  wxWindowID id, co
 	wxMenuItem* m_menuItemDeleteRow;
 	m_menuItemDeleteRow = new wxMenuItem( m_menu11, wxID_ANY, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu11->Append( m_menuItemDeleteRow );
-	
+
 	wxMenuItem* m_menuItemClearAll;
 	m_menuItemClearAll = new wxMenuItem( m_menu11, wxID_ANY, wxString( _("Clear all") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu11->Append( m_menuItemClearAll );
-	
+
 	fgSizer47->Add( m_gridFull, 0, wxALL|wxEXPAND, 5 );
 	bSizer32->Add( fgSizer47, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
-	
+
 	wxFlexGridSizer* fgSizer491;
 	fgSizer491 = new wxFlexGridSizer( 0, 1, 0, 0 );
 	fgSizer491->SetFlexibleDirection( wxBOTH );
 	fgSizer491->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_staticText1201 = new wxStaticText( this, wxID_ANY, _("Event"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText1201->Wrap( -1 );
 	fgSizer491->Add( m_staticText1201, 0, wxALL, 5 );
-	
+
 	bSizer32->Add( fgSizer491, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
-	
+
 	m_staticline38 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer32->Add( m_staticline38, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_radioBtnIndividualTimer = new wxRadioButton( this, wxID_ANY, _("Individual Timer"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer32->Add( m_radioBtnIndividualTimer, 0, wxALL, 5 );
-	
+
 	wxFlexGridSizer* fgSizer48;
 	fgSizer48 = new wxFlexGridSizer( 0, 2, 0, 0 );
 	fgSizer48->SetFlexibleDirection( wxBOTH );
 	fgSizer48->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_gridIndividual = new wxGrid( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	
+
 	// Grid
 	m_gridIndividual->CreateGrid( 2, 2 );
 	m_gridIndividual->EnableEditing( true );
 	m_gridIndividual->EnableGridLines( true );
 	m_gridIndividual->EnableDragGridSize( false );
 	m_gridIndividual->SetMargins( 0, 0 );
-	
+
 	// Columns
 	m_gridIndividual->SetColSize( 0, 51 );
 	m_gridIndividual->SetColSize( 1, 53 );
@@ -8626,14 +8831,14 @@ TimerInterval::TimerInterval( wxWindow* parent, Options* opt,  wxWindowID id, co
 	m_gridIndividual->SetColLabelValue( 0, _("Hour") );
 	m_gridIndividual->SetColLabelValue( 1, _("Minutes") );
 	m_gridIndividual->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Rows
 	m_gridIndividual->EnableDragRowSize( true );
 	m_gridIndividual->SetRowLabelSize( 1 );
 	m_gridIndividual->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
+
 	// Label Appearance
-	
+
 	// Cell Defaults
 	m_gridIndividual->SetDefaultCellAlignment( wxALIGN_CENTRE, wxALIGN_TOP );
 
@@ -8641,29 +8846,29 @@ TimerInterval::TimerInterval( wxWindow* parent, Options* opt,  wxWindowID id, co
 	wxMenuItem* m_menuItemDeleteRowI;
 	m_menuItemDeleteRowI = new wxMenuItem( m_menu12, wxID_ANY, wxString( _("Delete Row") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu12->Append( m_menuItemDeleteRowI );
-	
+
 	wxMenuItem* m_menuItemClearAllI;
 	m_menuItemClearAllI = new wxMenuItem( m_menu12, wxID_ANY, wxString( _("Clear all") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu12->Append( m_menuItemClearAllI );
 
 	fgSizer48->Add( m_gridIndividual, 0, wxALL, 5 );
-	
+
 	bSizer32->Add( fgSizer48, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
-	
+
 	wxFlexGridSizer* fgSizer4911;
 	fgSizer4911 = new wxFlexGridSizer( 0, 1, 0, 0 );
 	fgSizer4911->SetFlexibleDirection( wxBOTH );
 	fgSizer4911->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_staticText12011 = new wxStaticText( this, wxID_ANY, _("Event"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText12011->Wrap( -1 );
 	fgSizer4911->Add( m_staticText12011, 0, wxALL, 5 );
-	
+
 	bSizer32->Add( fgSizer4911, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
-	
+
 	m_staticline39 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	bSizer32->Add( m_staticline39, 0, wxEXPAND | wxALL, 5 );
-	
+
 	m_sdbSizer9 = new wxStdDialogButtonSizer();
 	m_sdbSizer9OK = new wxButton( this, wxID_OK );
 	m_sdbSizer9->AddButton( m_sdbSizer9OK );
@@ -8671,12 +8876,12 @@ TimerInterval::TimerInterval( wxWindow* parent, Options* opt,  wxWindowID id, co
 	m_sdbSizer9->AddButton( m_sdbSizer9Cancel );
 	m_sdbSizer9->Realize();
 	bSizer32->Add( m_sdbSizer9, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
-	
+
 	this->SetSizer( bSizer32 );
 	this->Layout();
-	
+
 	this->Centre( wxBOTH );
-	
+
 	m_radioBtnNormalTimer->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( TimerInterval::OnRadioButtonNormal ), NULL, this );
 	m_radioBtnFullHour->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( TimerInterval::OnRadioButtonFull ), NULL, this );
 	m_spinCtrl4->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TimerInterval::OnSpinCtrlFullh ), NULL, this );
@@ -9086,8 +9291,6 @@ void TimerInterval::init(Options* opt, LogbookDialog* dialog)
 	for(unsigned int i = 0; i < TimerIndidividualAMPM.Count(); i++)
 		oldTimerIndidividualAMPM.Add(TimerIndidividualAMPM[i]);
 
-
-
 	opt->tsec = _T("0");
 	m_spinCtrlS->Hide();
 	m_staticTextS->Hide();
@@ -9132,81 +9335,81 @@ void TimerInterval::init(Options* opt, LogbookDialog* dialog)
 PositionDlg::PositionDlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-	
+
 	wxBoxSizer* bSizer35;
 	bSizer35 = new wxBoxSizer( wxVERTICAL );
-	
+
 	wxBoxSizer* bSizer34;
 	bSizer34 = new wxBoxSizer( wxVERTICAL );
-	
+
 	wxFlexGridSizer* fgSizer44;
 	fgSizer44 = new wxFlexGridSizer( 0, 9, 0, 0 );
 	fgSizer44->SetFlexibleDirection( wxBOTH );
 	fgSizer44->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_textCtrlDeg1 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
 	fgSizer44->Add( m_textCtrlDeg1, 0, wxALL, 5 );
-	
+
 	m_staticTextDeg1 = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextDeg1->Wrap( -1 );
 	fgSizer44->Add( m_staticTextDeg1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_textCtrlmin1 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), 0 );
 	fgSizer44->Add( m_textCtrlmin1, 0, wxALL, 5 );
-	
+
 	m_staticTextmin1 = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextmin1->Wrap( -1 );
 	fgSizer44->Add( m_staticTextmin1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_textCtrlsec1 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), 0 );
 	fgSizer44->Add( m_textCtrlsec1, 0, wxALL, 5 );
-	
+
 	m_staticTextsec1 = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextsec1->Wrap( -1 );
 	fgSizer44->Add( m_staticTextsec1, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_textCtrlNS = new wxTextCtrl( this, wxID_ANY, wxT("N"), wxDefaultPosition, wxSize( 25,-1 ), 0 );
 	fgSizer44->Add( m_textCtrlNS, 0, wxALL, 5 );
-	
+
 	bSizer34->Add( fgSizer44, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT, 5 );
-	
+
 	fgSizer441 = new wxFlexGridSizer( 0, 9, 0, 0 );
 	fgSizer441->SetFlexibleDirection( wxBOTH );
 	fgSizer441->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
+
 	m_textCtrlDeg2 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 30,-1 ), 0 );
 	fgSizer441->Add( m_textCtrlDeg2, 0, wxALL, 5 );
-	
+
 	m_staticTextDeg2 = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextDeg2->Wrap( -1 );
 	fgSizer441->Add( m_staticTextDeg2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_textCtrlmin2 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), 0 );
 	fgSizer441->Add( m_textCtrlmin2, 0, wxALL, 5 );
-	
+
 	m_staticTextmin2 = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextmin2->Wrap( -1 );
 	fgSizer441->Add( m_staticTextmin2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_textCtrlsec2 = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), 0 );
 	fgSizer441->Add( m_textCtrlsec2, 0, wxALL, 5 );
-	
+
 	m_staticTextsec2 = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextsec2->Wrap( -1 );
 	fgSizer441->Add( m_staticTextsec2, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_textCtrlWE = new wxTextCtrl( this, wxID_ANY, wxT("W"), wxDefaultPosition, wxSize( 25,-1 ), 0 );
 	fgSizer441->Add( m_textCtrlWE, 0, wxALL, 5 );
-	
+
 	bSizer34->Add( fgSizer441, 0, wxALIGN_RIGHT, 5 );
-	
+
 	bSizer35->Add( bSizer34, 1, wxEXPAND, 5 );
-	
+
 	wxArrayString m_choiceFormatChoices;
 	m_choiceFormat = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceFormatChoices, 0 );
 	m_choiceFormat->SetSelection( 0 );
 	bSizer35->Add( m_choiceFormat, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
-	
+
 	m_sdbSizer10 = new wxStdDialogButtonSizer();
 	m_sdbSizer10OK = new wxButton( this, wxID_OK );
 	m_sdbSizer10->AddButton( m_sdbSizer10OK );
@@ -9214,12 +9417,12 @@ PositionDlg::PositionDlg( wxWindow* parent, wxWindowID id, const wxString& title
 	m_sdbSizer10->AddButton( m_sdbSizer10Cancel );
 	m_sdbSizer10->Realize();
 	bSizer35->Add( m_sdbSizer10, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
-	
+
 	this->SetSizer( bSizer35 );
 	this->Layout();
-	
+
 	this->Centre( wxBOTH );
-	
+
 	// Connect Events
 	m_sdbSizer10Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PositionDlg::OnCancelButtonClick ), NULL, this );
 	m_sdbSizer10OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( PositionDlg::OnOKButtonClick ), NULL, this );

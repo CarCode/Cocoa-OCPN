@@ -116,9 +116,7 @@ private:
 	wxString		data_locn;
 	wxString		data_locnRepairs;
 	wxString		data_locnBuyParts;
-#ifdef __WXOSX__
-//
-#else
+#ifndef __WXOSX__
 	bool			format; // 0 = ODT 1 = HTML
 #endif
 };

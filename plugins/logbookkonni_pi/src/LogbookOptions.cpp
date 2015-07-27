@@ -29,6 +29,14 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
 	this->opt = opt;
 	this->log_pi = log_pi;
 
+    // for small screens: don't let boat dialog be larger than screen
+    int w,h;
+    wxDisplaySize( &w, &h );
+    w = wxMin(w, GetMinWidth());
+    h = wxMin(h-32, GetMinHeight());
+    SetMinSize(wxSize(w/2, h/2)); // allow to half normal dimensions
+    SetSize(wxSize(w, h));
+
 //	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
 	wxBoxSizer* bSizer21;
@@ -268,32 +276,37 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
 
 	fgSizer29->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	m_checkBoxEngineRunning = new wxCheckBox( m_panel15, wxID_ANY, _("Write message \"Engine running\""), wxDefaultPosition, wxDefaultSize, 0 );
-	m_checkBoxEngineRunning->SetValue(true);
-	fgSizer29->Add( m_checkBoxEngineRunning, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+    m_checkBoxGenerator = new wxCheckBox( m_panel15, wxID_ANY, _("Generator On Board"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_checkBoxGenerator->SetValue(true);
+    m_checkBoxGenerator->SetToolTip( _("Check if there is a Generator onboard.\nIf unchecked the Generator columns will not show in Logbook") );
+    fgSizer29->Add( m_checkBoxGenerator, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
 	
 	
 	m_staticText741 = new wxStaticText( m_panel15, wxID_ANY, _("     Winddirection set to:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText741->Wrap( -1 );
-	fgSizer29->Add( m_staticText741, 0, wxALL|wxALIGN_CENTER_VERTICAL, 0 );
+	fgSizer29->Add( m_staticText741, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	wxString m_choiceWindToChoices[] = { _("default"), _("Heading") };
 	int m_choiceWindToNChoices = sizeof( m_choiceWindToChoices ) / sizeof( wxString );
-	m_choiceWindTo = new wxChoice( m_panel15, wxID_ANY, wxDefaultPosition, wxSize( 100,-1 ), m_choiceWindToNChoices, m_choiceWindToChoices, 0 );
+    m_choiceWindTo = new wxChoice( m_panel15, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceWindToNChoices, m_choiceWindToChoices, 0 );
 	m_choiceWindTo->SetSelection( 0 );
 	m_choiceWindTo->SetToolTip( _("default = Relative to Boat\nHeading = Actual wind direction") );
-	fgSizer29->Add( m_choiceWindTo, 0, wxALL, 0 );
+    fgSizer29->Add( m_choiceWindTo, 0, wxRIGHT, 5 );
 // 5. Zeile
 	
-	fgSizer29->Add( 0, 0, 1, wxEXPAND, 5 );
+//	fgSizer29->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	m_checkBoxSailsDown = new wxCheckBox( m_panel15, wxID_ANY, _("On engine start set always all sails down"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer29->Add( m_checkBoxSailsDown, 0, 0, 5 );
-	
-	
-	fgSizer29->Add( 0, 0, 1, wxEXPAND, 5 );
+    m_checkBoxEngineRunning = new wxCheckBox( m_panel15, wxID_ANY, _("Write message \"Engine running\" "), wxDefaultPosition, wxDefaultSize, 0 );
+    m_checkBoxEngineRunning->SetValue(true);
+    fgSizer29->Add( m_checkBoxEngineRunning, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+    
+    fgSizer29->Add( 0, 0, 1, wxEXPAND, 5 );
 // 6. Zeile
-	
+    m_checkBoxSailsDown = new wxCheckBox( m_panel15, wxID_ANY, _("On engine start set always all sails down"), wxDefaultPosition, wxDefaultSize, 0 );
+    fgSizer29->Add( m_checkBoxSailsDown, 0, 0, 5 );
+    
+    fgSizer29->Add( 0, 0, 1, wxEXPAND, 5 );
+
 	fgSizer10->Add( fgSizer29, 1, 0, 0 );
 	
 	m_staticline25 = new wxStaticLine( m_panel15, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
@@ -1070,8 +1083,8 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
 
     fgSizer48->Add( 100, 50, 1, wxEXPAND, 5 );
 
-    m_checkBoxUseRPMOnOff = new wxCheckBox( m_panel28, wxID_ANY, _("Use ERRPM-Sentence (see help)"), wxDefaultPosition, wxDefaultSize, 0 );
-    fgSizer48->Add( m_checkBoxUseRPMOnOff, 0, wxALL|wxALIGN_BOTTOM, 5 );
+    m_staticTextUseRPM = new wxStaticText( m_panel28, wxID_ANY, _("Check one of the below checkboxes, if you want use ERRPM-Sentence (see help)"), wxDefaultPosition, wxDefaultSize, 0 );
+    fgSizer48->Add( m_staticTextUseRPM, 0, wxALL|wxALIGN_BOTTOM, 5 );
 
 
     fgSizer48->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -1097,11 +1110,11 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
 
     fgSizer511->Add( 0, 0, 1, wxEXPAND, 5 );
  	
-    m_staticText138 = new wxStaticText( m_panel28, wxID_ANY, _("Engine-No. corresponds with column Engine #1"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_staticText138->Wrap( -1 );
-    m_staticText138->Enable( false );
+    m_checkBoxEng1RPM = new wxCheckBox( m_panel28, wxID_ANY, _("Engine-No. corresponds with column Engine #1"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_checkBoxEng1RPM->Enable( true );
+    m_checkBoxEng1RPM->SetToolTip( _("Check this box if the NMEA stream contains RPM messages for this engine\n") );
 
-    fgSizer511->Add( m_staticText138, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+    fgSizer511->Add( m_checkBoxEng1RPM, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
     m_textCtrlEngine1 = new wxTextCtrl( m_panel28, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 40,-1 ), 0 );
     m_textCtrlEngine1->Enable( false );
@@ -1111,11 +1124,11 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
 
     fgSizer511->Add( 0, 0, 1, wxEXPAND, 5 );
 
-    m_staticText139 = new wxStaticText( m_panel28, wxID_ANY, _("Engine-No. corresponds with column Engine #2"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_staticText139->Wrap( -1 );
-    m_staticText139->Enable( false );
+    m_checkBoxEng2RPM = new wxCheckBox( m_panel28, wxID_ANY, _("Engine-No. corresponds with column Engine #2"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_checkBoxEng2RPM->Enable( true );
+    m_checkBoxEng2RPM->SetToolTip( _("Check this box if the NMEA stream contains RPM messages for this engine\n") );
 
-    fgSizer511->Add( m_staticText139, 0, wxALL, 5 );
+    fgSizer511->Add( m_checkBoxEng2RPM, 0, wxALL, 5 );
 
     m_textCtrlEngine2 = new wxTextCtrl( m_panel28, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 40,-1 ), 0 );
     m_textCtrlEngine2->Enable( false );
@@ -1123,6 +1136,20 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
     fgSizer511->Add( m_textCtrlEngine2, 0, wxALL, 5 );
 
 
+    fgSizer511->Add( 0, 0, 1, wxEXPAND, 5 );
+
+    m_checkBoxGenRPM = new wxCheckBox( m_panel28, wxID_ANY, _("Engine-No. corresponds with column Generator"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_checkBoxGenRPM->Enable( true );
+    m_checkBoxGenRPM->SetToolTip( _("Check this box if the NMEA stream contains RPM messages for this generator\n") );
+    
+    fgSizer511->Add( m_checkBoxGenRPM, 0, wxALL, 5 );
+    
+    m_textCtrlGenerator = new wxTextCtrl( m_panel28, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 40,-1 ), 0 );
+    m_textCtrlGenerator->Enable( false );
+    
+    fgSizer511->Add( m_textCtrlGenerator, 0, wxALL, 5 );
+    
+    
     fgSizer511->Add( 0, 0, 1, wxEXPAND, 5 );
 
     m_checkBoxNMEAUseRPM = new wxCheckBox( m_panel28, wxID_ANY, _("Use ERRPM-Sentence to calculate the engine-hours"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1282,6 +1309,8 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
 	
 	this->Centre( wxBOTH );
 
+    SetSize(wxSize(w, h));
+
 	// Connect Events
 	m_choicePositionFormat->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( LogbookOptions::onChoicePositionFormat ), NULL, this );
 	m_checkBoxToolTips->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::onCheckBoxToolTips ), NULL, this );
@@ -1319,7 +1348,9 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
     m_choiceNoGenerator->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( LogbookOptions::OnChoiceNoGenerator ), NULL, this );
     m_choiceNoWatermaker->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( LogbookOptions::OnChoiceNoWatermaker ), NULL, this );
     m_toggleBtnRPMCheck->Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( LogbookOptions::OnToggleButtonRPMCheck ), NULL, this );
-    m_checkBoxUseRPMOnOff->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxUseRPM ), NULL, this );
+    m_checkBoxEng1RPM->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxEng1RPM ), NULL, this );
+    m_checkBoxEng2RPM->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxEng2RPM ), NULL, this );
+    m_checkBoxGenRPM->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxGenRPM ), NULL, this );
     m_buttonToSailsSpace->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookOptions::OnButtonToSailsSpace ), NULL, this );
     m_buttonBackToSails->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookOptions::onButtonBackToSails ), NULL, this );
     m_buttonSpaceRPlus->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookOptions::OnButtonSpaceRPlus ), NULL, this );
@@ -1329,6 +1360,10 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
     m_buttonSpaceReset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookOptions::OnButtonSpaceReset ), NULL, this );
     m_checkBoxEngine->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxEngineMessage ), NULL, this );
     m_checkBoxEngineRunning->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxEngineRunning ), NULL, this );
+    m_checkBoxGenerator->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxGeneratorMessage ), NULL, this );
+    m_textCtrlEngine1->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LogbookOptions::OnTextEng1IdEntry ), NULL, this );
+    m_textCtrlEngine2->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LogbookOptions::OnTextEng2IdEntry ), NULL, this );
+    m_textCtrlGenerator->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LogbookOptions::OnTextGenIdEntry ), NULL, this );
 
 
 
@@ -1381,7 +1416,9 @@ LogbookOptions::~LogbookOptions()
     m_choiceNoGenerator->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( LogbookOptions::OnChoiceNoGenerator ), NULL, this );
     m_choiceNoWatermaker->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( LogbookOptions::OnChoiceNoWatermaker ), NULL, this );
     m_toggleBtnRPMCheck->Disconnect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED, wxCommandEventHandler( LogbookOptions::OnToggleButtonRPMCheck ), NULL, this );
-    m_checkBoxUseRPMOnOff->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxUseRPM ), NULL, this );
+    m_checkBoxEng1RPM->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxEng1RPM ), NULL, this );
+    m_checkBoxEng2RPM->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxEng2RPM ), NULL, this );
+    m_checkBoxGenRPM->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxGenRPM ), NULL, this );
     m_buttonToSailsSpace->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookOptions::OnButtonToSailsSpace ), NULL, this );
     m_buttonBackToSails->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookOptions::onButtonBackToSails ), NULL, this );
     m_buttonSpaceRPlus->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookOptions::OnButtonSpaceRPlus ), NULL, this );
@@ -1391,7 +1428,10 @@ LogbookOptions::~LogbookOptions()
     m_buttonSpaceReset->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LogbookOptions::OnButtonSpaceReset ), NULL, this );
     m_checkBoxEngine->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxEngineMessage ), NULL, this );
     m_checkBoxEngineRunning->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxEngineRunning ), NULL, this );
-
+    m_checkBoxGenerator->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LogbookOptions::OnCheckBoxGeneratorMessage ), NULL, this );
+    m_textCtrlEngine1->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LogbookOptions::OnTextEng1IdEntry ), NULL, this );
+    m_textCtrlEngine2->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LogbookOptions::OnTextEng2IdEntry ), NULL, this );
+    m_textCtrlGenerator->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LogbookOptions::OnTextGenIdEntry ), NULL, this );
 
 
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( LogbookOptions::OnClose ) );
@@ -1475,7 +1515,7 @@ void LogbookOptions::init()
 		}
 			
 	}
-    setUseRPM(opt->bRPMIsChecked);
+    setUseRPM();
 }
 
 void LogbookOptions::resetToOldDateTimeFormat()
@@ -1502,6 +1542,44 @@ void LogbookOptions::OnCheckBoxEngineRunning( wxCommandEvent& event )
 void LogbookOptions::OnCheckBoxEngineMessage( wxCommandEvent& event )
 {
 
+}
+
+void LogbookOptions::OnCheckBoxGeneratorMessage( wxCommandEvent& event )
+{
+    opt->generator = m_checkBoxGenerator->GetValue();
+    if(log_pi->m_plogbook_window)
+    {
+        if(!opt->generator)
+        {
+            if(opt->generatorRunning)
+            {
+                log_pi->m_plogbook_window->stopGenerator(false, false, true);
+                wxMessageBox(_("Your Generator is still running .\n\nGenerator stopped now."),_("Information"));
+            }
+            else
+            {
+                log_pi->m_plogbook_window->stopGenerator(false, false, false);
+            }
+        }
+        else
+        {
+            log_pi->m_plogbook_window->stopGenerator(true, true, false);
+        }
+        log_pi->m_plogbook_window->setShowGenerator();
+    }
+    setUseRPM();
+}
+
+void LogbookOptions::OnTextEng1IdEntry( wxCommandEvent& event )
+{
+}
+
+void LogbookOptions::OnTextEng2IdEntry( wxCommandEvent& event )
+{
+}
+
+void LogbookOptions::OnTextGenIdEntry( wxCommandEvent& event )
+{
 }
 
 void LogbookOptions::OnButtonToSailsSpace( wxCommandEvent& event )
@@ -1582,75 +1660,153 @@ void LogbookOptions::OnButtonSpaceReset( wxCommandEvent& event )
 
 }
 
-void LogbookOptions::OnCheckBoxUseRPM( wxCommandEvent& event )
+void LogbookOptions::OnCheckBoxEng1RPM( wxCommandEvent& event )
 {
+    opt->bEng1RPMIsChecked = event.IsChecked();
     if(log_pi->m_plogbook_window)
-        if((log_pi->m_plogbook_window->logbook->engine1Manual && opt->engine1Running) ||
-            (log_pi->m_plogbook_window->logbook->engine1Manual && opt->engine2Running))
-        {
-            log_pi->m_plogbook_window->logbook->resetEngineManuallMode();
-            wxMessageBox(_("Your Engine(s) running in manually mode.\n\nEngine(s) stopped now."),_("Information"));
-        }
-    opt->bRPMIsChecked = event.IsChecked();
-    setUseRPM(opt->bRPMIsChecked);
-}
-
-void LogbookOptions::setUseRPM(bool bIsChecked)
-{
-    opt->toggleEngine1 = false;
-    opt->toggleEngine2 = false;
-
-    if(opt->engines == 0 && bIsChecked)
     {
-        m_staticText138->Enable(true);
-        m_textCtrlEngine1->Enable(true);
-        m_staticText139->Enable(false);
-        m_textCtrlEngine2->Enable(false);
-        m_checkBoxNMEAUseRPM->Enable(true);
-        m_toggleBtnRPMCheck->Enable(true);
-
-        if(log_pi->m_plogbook_window)
+        if(opt->bEng1RPMIsChecked)
         {
-            log_pi->m_plogbook_window->m_toggleBtnEngine1->Enable(false);
-            log_pi->m_plogbook_window->m_toggleBtnEngine2->Enable(false);
-            log_pi->m_plogbook_window->logbook->engine1Manual = false;
-            log_pi->m_plogbook_window->logbook->bRPM1 = false;
+            if(log_pi->m_plogbook_window->logbook->engine1Manual && opt->engine1Running)
+            {
+                log_pi->m_plogbook_window->stopEngine1(false, true);
+                wxMessageBox(_("Your Engine #1 is running in manual mode.\n\nEngine stopped now."),_("Information"));
+            }
+            else
+            {
+                log_pi->m_plogbook_window->stopEngine1(false, false);
+            }
+        }
+        else
+        {
+            log_pi->m_plogbook_window->stopEngine1(true, false);
         }
     }
-    else if(opt->engines ==  1 && bIsChecked)
+    setUseRPM();
+}
+
+void LogbookOptions::OnCheckBoxEng2RPM( wxCommandEvent& event )
+{
+    opt->bEng2RPMIsChecked = event.IsChecked();
+    if(log_pi->m_plogbook_window)
     {
-        m_staticText138->Enable(true);
-        m_textCtrlEngine1->Enable(true);
-        m_staticText139->Enable(true);
-        m_textCtrlEngine2->Enable(true);
+        if(opt->bEng2RPMIsChecked)
+        {
+            if(log_pi->m_plogbook_window->logbook->engine2Manual && opt->engine2Running)
+            {
+                log_pi->m_plogbook_window->stopEngine2(false, true, true);
+                wxMessageBox(_("Your Engine #2 is running in manual mode.\n\nEngine stopped now."),_("Information"));
+            }
+            else
+            {
+                log_pi->m_plogbook_window->stopEngine2(false, true, false);
+            }
+        }
+        else
+        {
+            log_pi->m_plogbook_window->stopEngine2(true, true, false);
+        }
+    }
+    setUseRPM();
+}
+
+void LogbookOptions::OnCheckBoxGenRPM( wxCommandEvent& event )
+{
+    opt->bGenRPMIsChecked = event.IsChecked();
+    if(log_pi->m_plogbook_window)
+    {
+        if(opt->bGenRPMIsChecked)
+        {
+            if(log_pi->m_plogbook_window->logbook->generatorManual && opt->generatorRunning)
+            {
+                log_pi->m_plogbook_window->stopGenerator(false, true, true);
+                wxMessageBox(_("Your Generator is running in manual mode.\n\nGenerator stopped now."),_("Information"));
+            }
+            else
+            {
+                log_pi->m_plogbook_window->stopGenerator(false, true, false);
+            }
+        }
+        else
+        {
+            log_pi->m_plogbook_window->stopGenerator(true, true, false);
+        }
+    }
+    setUseRPM();
+}
+
+void LogbookOptions::setUseRPM()
+{
+    bool bIsChecked;
+    
+    bIsChecked = (opt->bEng1RPMIsChecked || opt->bEng2RPMIsChecked || opt->bGenRPMIsChecked);
+    
+    if(bIsChecked)
+    {
+        opt->bRPMIsChecked = true;
         m_checkBoxNMEAUseRPM->Enable(true);
         m_toggleBtnRPMCheck->Enable(true);
-        if(log_pi->m_plogbook_window)
+    }
+    else
+    {
+        opt->bRPMIsChecked = false;
+        m_checkBoxNMEAUseRPM->Enable(false);
+        m_toggleBtnRPMCheck->Enable(false);
+    }
+    
+    if(opt->engines == 0)
+    {
+        m_checkBoxEng2RPM->SetValue(false);
+        m_checkBoxEng2RPM->Enable(false);
+        m_textCtrlEngine2->Enable(false);
+        
+        if(opt->bEng1RPMIsChecked)
         {
-            log_pi->m_plogbook_window->m_toggleBtnEngine1->Enable(false);
-            log_pi->m_plogbook_window->m_toggleBtnEngine2->Enable(false);
-            log_pi->m_plogbook_window->logbook->engine2Manual = false;
-            log_pi->m_plogbook_window->logbook->bRPM2 = false;
+            m_textCtrlEngine1->Enable(true);
+        }
+        else
+        {
+            m_textCtrlEngine1->Enable(false);
         }
     }
     else
     {
-        m_staticText138->Enable(false);
-        this->m_textCtrlEngine1->Enable(false);
-        m_staticText139->Enable(false);
-        this->m_textCtrlEngine2->Enable(false);
-        m_checkBoxNMEAUseRPM->Enable(false);
-        m_toggleBtnRPMCheck->Enable(false);
-
-        if(log_pi->m_plogbook_window)
+        m_checkBoxEng2RPM->Enable(true);
+        if(opt->bEng1RPMIsChecked)
         {
-            log_pi->m_plogbook_window->m_toggleBtnEngine1->Enable(true);
-            if(opt->engines == 1)
-                log_pi->m_plogbook_window->m_toggleBtnEngine2->Enable(true);
-                log_pi->m_plogbook_window->logbook->engine1Manual = true;
-                log_pi->m_plogbook_window->logbook->engine2Manual = true;
-                log_pi->m_plogbook_window->logbook->bRPM1 = false;
-                log_pi->m_plogbook_window->logbook->bRPM2 = false;
+       	    m_textCtrlEngine1->Enable(true);
+        }
+        else
+        {
+       	    m_textCtrlEngine1->Enable(false);
+        }
+
+        if(opt->bEng2RPMIsChecked)
+        {
+            m_textCtrlEngine2->Enable(true);
+        }
+        else
+        {
+       	    m_textCtrlEngine2->Enable(false);
+        }
+    }
+    
+    if(!opt->generator)
+    {
+        m_checkBoxGenRPM->SetValue(false);
+        m_checkBoxGenRPM->Enable(false);
+        m_textCtrlGenerator->Enable(false);
+    }
+    else
+    {
+        m_checkBoxGenRPM->Enable(true);
+        if(opt->bGenRPMIsChecked)
+        {
+            m_textCtrlGenerator->Enable(true);
+        }
+        else
+        {
+            m_textCtrlGenerator->Enable(false);
         }
     }
 }
@@ -1672,15 +1828,15 @@ void LogbookOptions::setRPMSentence(wxString sentence)
     wxString source = tkz.GetNextToken();
     wxString t = tkz.GetNextToken();
 
-    if(e1.IsEmpty())
+/*    if(e1.IsEmpty())
         e1 = t;
     if(e2.IsEmpty() && t != e1)
         e2 = t;
 
     m_textCtrlEngine1->SetValue(e1);
-    m_textCtrlEngine2->SetValue(e2);
-    if(source == _T("E"))
-        m_checkBoxNMEAUseRPM->SetValue(true);
+ m_textCtrlEngine2->SetValue(e2); */
+    //    if(source == _T("E"))
+    //        m_checkBoxNMEAUseRPM->SetValue(true);
 }
 
 void LogbookOptions::OnCancel( wxCommandEvent& event )
@@ -1850,13 +2006,14 @@ void LogbookOptions::OnButtonOKClick(wxCommandEvent &ev)
     {
         dlg->setSailsGap();
         dlg->setToNumberEngine();
+        dlg->setShowGenerator();
         dlg->setNoGenerator();
         dlg->setNoWatermaker();
         dlg->setCheckboxLabels();
         dlg->setAbbreviations();
     }
 
-    setUseRPM(opt->bRPMIsChecked);
+    setUseRPM();
 
     wxString newPattern = LogbookDialog::datePattern;
 	wxString newDateFormat = opt->sdateformat;
@@ -2043,6 +2200,7 @@ void LogbookOptions::setValues()
     m_checkBoxEngine->SetValue(opt->engineMessageSails);
     m_checkBoxEngineRunning->SetValue(opt->engineMessageRunning);
 	m_checkBoxSailsDown->SetValue(opt->engineAllwaysSailsDown);
+    m_checkBoxGenerator->SetValue(opt->generator);
 
     m_checkBoxKMLRoute->SetValue((opt->kmlRoute)?true:false);
     m_checkBoxKMLTrack->SetValue((opt->kmlTrack)?true:false);
@@ -2051,10 +2209,17 @@ void LogbookOptions::setValues()
     m_choiceKMLRouteLineColo->SetSelection(opt->kmlRouteColor);
     m_choiceKMLTrackLineColor->SetSelection(opt->kmlTrackColor);
 
-    m_checkBoxUseRPMOnOff->SetValue(opt->bRPMIsChecked);
-    m_textCtrlEngine1->SetValue(opt->engine1);
-    m_textCtrlEngine2->SetValue(opt->engine2);
-    m_checkBoxNMEAUseRPM->SetValue(opt->NMEAUseERRPM);
+    if(opt->bRPMIsChecked)
+    {
+        m_checkBoxEng1RPM->SetValue(opt->bEng1RPMIsChecked);
+        m_checkBoxEng2RPM->SetValue(opt->bEng2RPMIsChecked);
+        m_checkBoxGenRPM->SetValue(opt->bGenRPMIsChecked);
+        m_textCtrlEngine1->SetValue(opt->engine1Id);
+        m_textCtrlEngine2->SetValue(opt->engine2Id);
+        m_textCtrlGenerator->SetValue(opt->generatorId);
+        m_checkBoxNMEAUseRPM->SetValue(opt->NMEAUseERRPM);
+    }
+
     m_checkBoxNMEAUseWIMDA->SetValue(opt->NMEAUseWIMDA);
 
 #ifdef __WXOSX__
@@ -2077,7 +2242,27 @@ void LogbookOptions::setValues()
 void LogbookOptions::OnChoiceNoEngines( wxCommandEvent& event )
 {
     opt->engines = m_choiceNoEngines->GetSelection();
-    setUseRPM(opt->bRPMIsChecked);
+    if(log_pi->m_plogbook_window)
+    {
+        if(opt->engines == 0)
+        {
+            if(opt->engine2Running)
+            {
+                log_pi->m_plogbook_window->stopEngine2(false, false, true);
+                wxMessageBox(_("Your Engine #2 is still running .\n\nEngine #2 stopped now."),_("Information"));
+            }
+            else
+            {
+                log_pi->m_plogbook_window->stopEngine2(false, false, false);
+            }
+        }
+        else
+        {
+            log_pi->m_plogbook_window->stopEngine2(true, true, false);
+        }
+        log_pi->m_plogbook_window->setToNumberEngine();
+    }
+    setUseRPM();
 }
 
 void LogbookOptions::OnChoiceNoGenerator( wxCommandEvent& event )
@@ -2191,6 +2376,7 @@ void LogbookOptions::getValues()
     opt->engineMessageSails = m_checkBoxEngine->GetValue();
     opt->engineMessageRunning = m_checkBoxEngineRunning->GetValue();
     opt->engineAllwaysSailsDown = m_checkBoxSailsDown->GetValue();
+    opt->generator = m_checkBoxGenerator->GetValue();
 
     opt->kmlRoute = m_checkBoxKMLRoute->GetValue();
     opt->kmlTrack = m_checkBoxKMLTrack->GetValue();
@@ -2199,9 +2385,13 @@ void LogbookOptions::getValues()
     opt->kmlRouteColor = m_choiceKMLRouteLineColo->GetSelection();
     opt->kmlTrackColor = m_choiceKMLTrackLineColor->GetSelection();
 
-    opt->engine1 = m_textCtrlEngine1->GetValue();
-    opt->engine2 = m_textCtrlEngine2->GetValue();
-    opt->bRPMIsChecked= m_checkBoxUseRPMOnOff->GetValue();
+    opt->engine1Id = m_textCtrlEngine1->GetValue();
+    opt->engine2Id = m_textCtrlEngine2->GetValue();
+    opt->generatorId = m_textCtrlGenerator->GetValue();
+    
+    opt->bEng1RPMIsChecked= m_checkBoxEng1RPM->GetValue();
+    opt->bEng2RPMIsChecked= m_checkBoxEng2RPM->GetValue();
+    opt->bGenRPMIsChecked= m_checkBoxGenRPM->GetValue();
     opt->NMEAUseERRPM = m_checkBoxNMEAUseRPM->GetValue();
     opt->NMEAUseWIMDA = m_checkBoxNMEAUseWIMDA->GetValue();
 

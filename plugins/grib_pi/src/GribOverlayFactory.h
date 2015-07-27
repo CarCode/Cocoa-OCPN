@@ -50,9 +50,11 @@ public:
 
     ~GribOverlay( void )
     {
-        if(m_iTexture)
 #ifdef ocpnUSE_GL
-          glDeleteTextures( 1, &m_iTexture );
+        if(m_iTexture)
+        {
+            glDeleteTextures( 1, &m_iTexture );
+        }
 #endif
         delete m_pDCBitmap, delete[] m_pRGBA;
     }
@@ -166,6 +168,7 @@ public:
     wxSize  m_ParentSize;
 
 private:
+    void InitColorsTable( );
 
     void SettingsIdToGribId(int i, int &idx, int &idy, bool &polar);
     bool DoRenderGribOverlay( PlugIn_ViewPort *vp );

@@ -43,7 +43,7 @@
 
 #include "../../../include/ocpn_plugin.h"
 #include "Options.h"
-#include "nmea0183/nmea0183.h"
+#include "../../../src/nmea0183/nmea0183.h"
 #include "MessageBoxOSX.h"
 
 #include <wx/aui/aui.h>
@@ -57,7 +57,7 @@
 #include <wx/fileconf.h>
 #include <wx/dynarray.h>
 
-#include "jsonwriter.h"
+#include "../../../include/wx/jsonwriter.h"
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
 //----------------------------------------------------------------------------------------------------------

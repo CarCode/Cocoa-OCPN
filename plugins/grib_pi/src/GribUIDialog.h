@@ -117,7 +117,11 @@ public:
     grib_pi         *pPlugIn;
     GribRequestSetting  *pReq_Dialog;
     GRIBFile        *m_bGRIBActiveFile;
+#ifdef __WXOSX__
+    bool            m_bDataPlot[GribOverlaySettings::SETTINGS_COUNT];
+#else
     bool            m_bDataPlot[GribOverlaySettings::GEO_ALTITUDE];  //only for no altitude parameters
+#endif
     bool            m_CDataIsShown;
     int             m_ZoneSelAllowed;
     int             m_old_DialogStyle;

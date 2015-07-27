@@ -3,7 +3,7 @@
 #include <wx/filename.h>
 #include <wx/wfstream.h>
 #include <wx/txtstrm.h>
-#include "jsonreader.h"
+#include "../../../include/wx/jsonreader.h"
 
 class LogbookDialog;
 class Logbook;
@@ -30,8 +30,8 @@ public:
 	void setPlaceholders();
 
 public:
-	enum fieldsGlobal{ ROUTE,RDATE,RTIME,SIGN,WAKE,DISTANCE,DTOTAL,POSITION,COG,COW,SOG,SOW,DEPTH,REMARKS};
-	enum fieldsWeather{ BARO,HYDRO, AIRTE,WATERTE,WIND,WSPD,CURRENT,CSPD,WAVE,SWELL,WEATHER,CLOUDS,VISIBILITY};
+    enum fieldsGlobal{ ROUTE,RDATE,RTIME,STATUS,WAKE,DISTANCE,DTOTAL,POSITION,COG,COW,SOG,SOW,DEPTH,REMARKS};
+    enum fieldsWeather{ BARO,HYDRO, AIRTE,WATERTE,WIND,WSPD,WINDR,WSPDR,CURRENT,CSPD,WAVE,SWELL,WEATHER,CLOUDS,VISIBILITY};
 	enum fieldsMotor{ MOTOR,MOTORT,RPM1,MOTOR1,MOTOR1T,RPM2,FUEL,FUELT,SAILS,REEF,GENE,GENET,BANK1,BANK1T,BANK2,BANK2T,WATERM,WATERMT,WATERMO,WATER,WATERT,MREMARKS,ROUTEID,TRACKID};	
 
 	struct gridc 

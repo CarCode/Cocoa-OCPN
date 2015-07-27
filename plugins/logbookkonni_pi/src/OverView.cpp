@@ -326,7 +326,8 @@ void OverView::loadLogbookData(wxString logbook, bool colour)
 									endtime = s;
 								}
 				break;
-			case SIGN:		   sign = s;
+            case STATUS:
+                sign = s;
 				break;
 			case WATCH:	
 				break;
@@ -1060,18 +1061,18 @@ void OverView::writeSumColumnLogbook(total data, int row, wxString logbook, bool
         int bd = startdt.GetDay(), bm = startdt.GetMonth() ,by = startdt.GetYear(),
         cd = enddt.GetDay(),cm = enddt.GetMonth(),cy = enddt.GetYear(),ad,am,ay;
         if(cd<bd)
-{
-cm=cm-1;
-cd=cd+startdt.GetLastMonthDay().GetDay();
-}
-if(cm<bm)
-{
-cy=cy-1;
-cm=cm+12;
-}
-ad=cd-bd;
-am=cm-bm;
-ay=cy-by;
+        {
+            cm=cm-1;
+            cd=cd+startdt.GetLastMonthDay().GetDay();
+        }
+        if(cm<bm)
+        {
+            cy=cy-1;
+            cm=cm+12;
+        }
+        ad=cd-bd;
+        am=cm-bm;
+        ay=cy-by;
 
 		month = startdt.GetMonth()-enddt.GetMonth();
 		if(month < 0 && startdt.GetYear() != enddt.GetYear())
@@ -1083,9 +1084,9 @@ ay=cy-by;
             month = enddt.GetMonth()-startdt.GetMonth();
         
 		days = enddt.GetDay() - startdt.GetDay();
-		if(days < 0)
+		if(days < 0)  // Not used ???
         {
-            days = startdt.GetDay() - days;
+//            days = startdt.GetDay() - days;  // Not used ???
             month --;
         }
         /*		else
@@ -1102,16 +1103,13 @@ ay=cy-by;
 	int max = 0; 
 	wxString result;
 	collection::iterator it;
-#ifdef __WXOSX__
+
     for(it = t_coll.begin(); it != t_coll.end(); ++it)
 		if(it->second >= max)  { sail = it->first; max = it->second; }
-    
+#ifdef __WXOSX__
         temp = wxString(sail.To8BitData(), wxConvUTF8);
         grid->SetCellValue(row,FSAILS,temp);
 #else
-	for(it = t_coll.begin(); it != t_coll.end(); ++it)
-		if(it->second >= max)  { sail = it->first; max = it->second; }
-    
         grid->SetCellValue(row,FSAILS,sail);
 #endif
 	if(colour)

@@ -31,18 +31,26 @@ Options::Options(void)
     kmlColor.Add(_T("0000FF"));
     kmlColor.Add(_T("14F0FF"));
     engines = 0;
+    generator = 0;
     generatoris = 0;
     watermakeris = 0;
     toggleEngine1 = false;
     toggleEngine2 = false;
+    toggleGenerator = false;
     dtEngine1On = -1;
     dtEngine2On = -1;
+    dtGeneratorOn = -1;
     bRPMIsChecked = false;
+    bEng1RPMIsChecked = false;
+    bEng2RPMIsChecked = false;
+    bGenRPMIsChecked = false;
     sentence = wxEmptyString;
-    engine1  = wxEmptyString;
-    engine2 = wxEmptyString;
+    engine1Id = wxEmptyString;
+    engine2Id = wxEmptyString;
+    generatorId = wxEmptyString;
     engine1Running = false;
     engine2Running = false;
+    generatorRunning = false;
     bRPMCheck = false;
     engineStr[0] = _T("1");
     engineStr[1] = _T("2");
@@ -160,7 +168,7 @@ or change this text in Toolbox/Plugins/Logbook\n\nShift+Enter appends a new line
 	// Grid MotorSails
 	vol = _("gal");
 	motorh = _("h");
-    engine = _("E");
+    engine = _T("E");
     shaft = _T("S");
     rpm = _T("RPM");
 

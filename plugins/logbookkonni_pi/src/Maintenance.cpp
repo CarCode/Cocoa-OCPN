@@ -91,16 +91,16 @@ Maintenance::Maintenance(LogbookDialog* d, wxString data, wxString layout, wxStr
 
 	m_choices[0] = dialog->m_gridGlobal->GetColLabelValue(6)+_T(" +");								// Distance/T
 	m_choices[1] = wxString(_("Engine "))+dialog->m_gridMotorSails->GetColLabelValue(1)+_T(" +");	// Motor1/h
-	m_choices[2] = wxString(_("Engine "))+dialog->m_gridMotorSails->GetColLabelValue(3)+_T(" +");	// Motor2/h
-	m_choices[3] = dialog->m_gridMotorSails->GetColLabelValue(8)+_T(" +");							// Generator/h
-	m_choices[4] = dialog->m_gridMotorSails->GetColLabelValue(11)+_T(" <=");						// Bank1/AH
-	m_choices[5] = dialog->m_gridMotorSails->GetColLabelValue(13)+_T(" <=");						// Bank2/AH
-	m_choices[6] = dialog->m_gridMotorSails->GetColLabelValue(14)+_T(" +");							// Watermaker/h
-	m_choices[7] = dialog->m_gridGlobal->GetColLabelValue(3);										// Sign
+    m_choices[2] = wxString(_("Engine "))+dialog->m_gridMotorSails->GetColLabelValue(4)+_T(" +");	// Motor2/h
+    m_choices[3] = dialog->m_gridMotorSails->GetColLabelValue(11)+_T(" +");							// Generator/h
+    m_choices[4] = dialog->m_gridMotorSails->GetColLabelValue(13)+_T(" <=");						// Bank1/AH
+    m_choices[5] = dialog->m_gridMotorSails->GetColLabelValue(15)+_T(" <=");						// Bank2/AH
+    m_choices[6] = dialog->m_gridMotorSails->GetColLabelValue(17)+_T(" +");							// Watermaker/h
+    m_choices[7] = dialog->m_gridGlobal->GetColLabelValue(3);										// Status
 	m_choices[8]  = _("Fix Date");
 	m_choices[9]  = _("Date + Days");
 	m_choices[10] = _("Date + Weeks");
-	m_choices[11] = _("Date + Month");
+    m_choices[11] = _("Date + Months");
 	m_choicesCount = 12;
 
 	m_YesNo[0] = _("Yes"); 
@@ -564,7 +564,7 @@ void Maintenance::checkService(int row)
 		else if (g == m_choices[7])
 		{
 			choice = 7;
-			col = LogbookHTML::SIGN;
+            col = LogbookHTML::STATUS;
 		}
 		else if (g == m_choices[8])
 			choice = 8;
@@ -739,8 +739,8 @@ void Maintenance::checkService(int row)
 						dialog->m_gridMotorSails->SetCellBackgroundColour(i,col,white);
 				}
 				break;
-			case 7: //Sign
-				if(grid->GetCellValue(r,URGENT) == dialog->m_gridGlobal->GetCellValue(row,LogbookHTML::SIGN))
+            case 7: //Status
+                if(grid->GetCellValue(r,URGENT) == dialog->m_gridGlobal->GetCellValue(row,LogbookHTML::STATUS))
 				{
 					border = 2;
 					rowBack = red;
@@ -1153,7 +1153,7 @@ void Maintenance::cellCollChanged(int col, int row)
 						grid->SetCellValue(selectedRow,WARN,_T("1"));
 						grid->SetCellValue(selectedRow,URGENT,_T("2"));
 		}
-		else if (g == m_choices[7]) //Sign
+        else if (g == m_choices[7]) //Status
 		{
 						grid->BeginBatch();
 						grid->SetCellValue(selectedRow,WARN,_T(""));
@@ -1471,7 +1471,6 @@ wxString Maintenance::toHTML(int tab,wxString path,wxString layout,int mode)
 	}
 	else if(tab == dialog->REPAIRS)
 	{
-
 		path = data_locnRepairs;
 		layout_loc = layout_locnRepairs;
 		grid = repairs;
@@ -1482,6 +1481,10 @@ wxString Maintenance::toHTML(int tab,wxString path,wxString layout,int mode)
 		layout_loc = layout_locnBuyParts;
 		grid = buyparts;
 	}
+    
+#ifdef __WXOSX__
+    if (grid == NULL) return _T("");
+#endif
 
 	wxString tempPath = path;
 
@@ -1496,6 +1499,55 @@ wxString Maintenance::toHTML(int tab,wxString path,wxString layout,int mode)
 	writeToHTML(text,grid,tempPath,layout_loc+layout+_T(".html"), top,header,middle,bottom,mode);
 
 	return tempPath;
+}
+
+wxString Maintenance::toODT(int tab,wxString path,wxString layout,int mode)
+{
+    wxString top;
+    wxString header;
+    wxString middle;
+    wxString bottom;
+    
+    wxString layout_loc;
+    wxGrid * grid = NULL;
+    
+    wxString savePath = path;
+    
+    if(tab == dialog->SERVICE)
+    {
+        path = data_locn;
+        layout_loc = layout_locnService;
+        grid = this->grid;
+    }
+    else if(tab == dialog->REPAIRS)
+    {
+        path = data_locnRepairs;
+        layout_loc = layout_locnRepairs;
+        grid = repairs;
+    }
+    else if(tab == dialog->BUYPARTS)
+    {
+        path = this->data_locnBuyParts;
+        layout_loc = layout_locnBuyParts;
+        grid = buyparts;
+    }
+
+#ifdef __WXOSX__
+    if (grid == NULL) return _T("");
+#endif
+
+    wxString tempPath = path;
+    
+    wxString odt = Export::readLayoutODT(layout_loc,layout);
+    odt = replaceLabels(odt,grid);
+    
+    if(!cutInPartsODT( odt, &top, &header,	&middle, &bottom))
+        return _T("");
+    
+    wxTextFile* text = setFiles(savePath, &tempPath, mode);
+    writeToODT(text,grid,tempPath,layout_loc+layout+_T(".odt"), top,header,middle,bottom,mode);
+    
+    return tempPath;
 }
 
 wxString Maintenance::replaceLabels(wxString s, wxGrid *grid)
@@ -1529,52 +1581,6 @@ wxString Maintenance::replaceLabels(wxString s, wxGrid *grid)
 	}
 
 	return s;
-}
-
-wxString Maintenance::toODT(int tab,wxString path,wxString layout,int mode)
-{
-	wxString top;
-	wxString header;
-	wxString middle;
-	wxString bottom;
-
-	wxString layout_loc;
-	wxGrid * grid = NULL;
-
-	wxString savePath = path;
-
-	if(tab == dialog->SERVICE)
-	{
-		path = data_locn;
-		layout_loc = layout_locnService;
-		grid = this->grid;
-	}
-	else if(tab == dialog->REPAIRS)
-	{
-
-		path = data_locnRepairs;
-		layout_loc = layout_locnRepairs;
-		grid = repairs;
-	}
-	else if(tab == dialog->BUYPARTS)
-	{
-		path = this->data_locnBuyParts;
-		layout_loc = layout_locnBuyParts;
-		grid = buyparts;
-	}
-
-	wxString tempPath = path;
-
-	wxString odt = readLayoutODT(layout_loc,layout);
-	odt = replaceLabels(odt,grid);
-
-	if(!cutInPartsODT( odt, &top, &header,	&middle, &bottom))
-		return _T("");
-
-	wxTextFile* text = setFiles(savePath, &tempPath, mode);
-	writeToODT(text,grid,tempPath,layout_loc+layout+_T(".odt"), top,header,middle,bottom,mode);
-
-	return tempPath;
 }
 
 wxString Maintenance::setPlaceHolders(int mode, wxGrid *grid, int row, wxString middleODT)

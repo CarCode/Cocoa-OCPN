@@ -44,7 +44,7 @@
 #include <wx/gdicmn.h>
 #include <wx/dnd.h>
 
-#include "jsonreader.h"
+#include "../../../include/wx/jsonreader.h"
 ///////////////////////////////////////////////////////////////////////////
 
 #define LOGGRIDS 3
@@ -298,7 +298,7 @@ enum grids  {LOGBOOK,OVERVIEW,CREW,BOAT,GSERVICE,GREPAIRS,GBUYPARTS};
 		wxStaticText* m_staticText6211;
 		wxStaticLine* m_staticline1411;
 		wxMenu* m_menu711;
-        wxStaticText* m_staticText140;
+//        wxStaticText* m_staticText140;
         wxTextCtrl* m_textCtrl95;
         wxStaticText* m_staticText141;
         wxTextCtrl* m_textCtrl96;
@@ -528,6 +528,7 @@ enum grids  {LOGBOOK,OVERVIEW,CREW,BOAT,GSERVICE,GREPAIRS,GBUYPARTS};
          void OnButtomClickShowHideLayout( wxCommandEvent& event );
          void OnToggleButtonEngine1( wxCommandEvent& event );
          void OnToggleButtonEngine2( wxCommandEvent& event );
+         void OnToggleButtonGenerator( wxCommandEvent& event );
          void OnButtonClickResetSails( wxCommandEvent& event );
          void OnCheckboxSails( wxCommandEvent& event );
 
@@ -561,6 +562,7 @@ enum FORMAT {HTML,ODT};
         wxPanel* m_panelEngine;
         wxToggleButton* m_toggleBtnEngine1;
         wxToggleButton* m_toggleBtnEngine2;
+        wxToggleButton* m_toggleBtnGenerator;
         wxFlexGridSizer* fgSizerSails;
 		wxRadioButton* m_radioBtnHTML;
 		wxRadioButton* m_radioBtnODT;
@@ -681,6 +683,13 @@ enum FORMAT {HTML,ODT};
 		void deselectAllLogbookGrids();
         void writeToRouteDlg(wxJSONValue data);
         void setToNumberEngine();
+        void setShowGenerator();
+        void stopEngine1(bool enable, bool print);
+        void stopEngine2(bool enable, bool show, bool print);
+        void stopGenerator(bool enabled, bool show, bool print);
+        void startEngine1(bool enabled, bool active, bool print);
+        void startEngine2(bool enabled, bool active, bool print);
+        void startGenerator(bool enabled, bool active, bool print);
         void setNoGenerator();
         void setNoWatermaker();
         void resetSails();
@@ -695,6 +704,10 @@ enum FORMAT {HTML,ODT};
         wxString			  basePath;
 		wxString              data;
 		wxString              image_locn;
+#ifndef __WXOSX__  // Not implemented, see "Updates 13.03.2015"
+        wxString              help_locn;
+        wxString              clouds_locn;
+#endif
 		Logbook*			  logbook;
 		OverView*			  overview;
         wxString			  onOff[2];
@@ -846,7 +859,7 @@ class SelectLogbook : public wxDialog
 #ifdef __WXMSW__		
 		SelectLogbook( wxWindow* parent, wxString path, wxWindowID id = wxID_ANY, const wxString& title = _("Select Logbook"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 700,252), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 #else
-		SelectLogbook( wxWindow* parent, wxString path, wxWindowID id = wxID_ANY, const wxString& title = _("Select Logbook"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 297,260), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER  );		
+        SelectLogbook( wxWindow* parent, wxString path, wxWindowID id = wxID_ANY, const wxString& title = _("Select Logbook"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 610,350), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER  );
 #endif
 		~SelectLogbook();
 	
