@@ -984,13 +984,13 @@ int TCMgr::GetNextBigEvent(time_t *tm, int idx)
 {
     float tcvalue[1];
     float dir;
-    bool ret;
+//    bool ret;  // Not used
     double p, q;
     int flags = 0, slope = 0;
-    ret = GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+    /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
     p = tcvalue[0];
     *tm += 60;
-    ret = GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+    /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
     q = tcvalue[0];
     *tm += 60;
     if (p < q)
@@ -1007,7 +1007,7 @@ int TCMgr::GetNextBigEvent(time_t *tm, int idx)
             return flags;
         }
         p = q;
-        ret = GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+        /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
         q = tcvalue[0];
         *tm += 60;
     }
@@ -4451,10 +4451,9 @@ static NV_INT32 read_partial_tide_record (NV_INT32 num, TIDE_RECORD *rec)
     /* DWF 2007-12-02:  This is the one place where a short read would not
        necessarily mean catastrophe.  We don't know how long the partial
        record actually is yet, and it's possible that the full record will
-       be shorter than maximum_possible_size.  So the return of fread is
-       deliberately unchecked. */
-    (void) fread (buf, maximum_possible_size, 1, fp);
-    unpack_partial_tide_record (buf, maximum_possible_size, rec, &pos);
+     be shorter than maximum_possible_size. */
+    size_t size = fread (buf, 1, maximum_possible_size, fp);
+    unpack_partial_tide_record (buf, size, rec, &pos);
     free (buf);
     return (num);
 }
@@ -4879,7 +4878,9 @@ database should be rebuilt from the original data if possible.\n");
     /*  NOTE: Using bit_unpack to get integers.  */
 
     /*  Read speeds.  */
-
+#ifdef __WXOSX__
+    if(hd.pub.constituents)
+#endif
     hd.speed = (NV_FLOAT64 *) calloc (hd.pub.constituents,
                                       sizeof (NV_FLOAT64));
 
@@ -4956,7 +4957,9 @@ database should be rebuilt from the original data if possible.\n");
 
 
     /*  Read node factors.  */
-
+#ifdef __WXOSX__
+    if(hd.pub.constituents)
+#endif
     hd.node_factor = (NV_FLOAT32 **) calloc (hd.pub.constituents,
                      sizeof (NV_FLOAT32 *));
 
@@ -4976,7 +4979,6 @@ database should be rebuilt from the original data if possible.\n");
     else
         size = bits2bytes (hd.pub.constituents * hd.pub.number_of_years *
                            hd.node_bits);
-
 
     if ((buf = (NV_U_BYTE *) calloc (size, sizeof (NV_U_BYTE))) == NULL)
     {
@@ -5305,7 +5307,9 @@ NV_BOOL create_tide_db (const NV_CHAR *file, NV_U_INT32 constituents, NV_CHAR
 
 
     /*  Constituent names.  */
-
+#ifdef __WXOSX__
+    if(hd.pub.constituents)
+#endif
     hd.constituent =
         (NV_CHAR **) calloc (hd.pub.constituents, sizeof (NV_CHAR *));
     for (i = 0 ; i < hd.pub.constituents ; ++i)

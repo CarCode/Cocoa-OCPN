@@ -98,35 +98,37 @@ public:
     void SetLRUTime(wxDateTime time) { m_LRUtime = time; }
     wxDateTime &GetLRUTime() { return m_LRUtime; }
     void FreeSome( long target );
-    
+
     glTextureDescriptor *GetpTD( wxRect & rect );
     GLuint GetRasterFormat() { return m_raster_format; }
-    
-    
+
+
 private:
     bool LoadCatalog(void);
     bool LoadHeader(void);
     bool WriteCatalogAndHeader();
-    
+
+    CatalogEntry *GetCacheEntry(int level, int x, int y, ColorScheme color_scheme);
     bool UpdateCache(unsigned char *data, int data_size, glTextureDescriptor *ptd, int level,
                                    ColorScheme color_scheme);
     bool UpdateCachePrecomp(unsigned char *data, int data_size, glTextureDescriptor *ptd, int level,
                                           ColorScheme color_scheme);
-    
+
     void DeleteSingleTexture( glTextureDescriptor *ptd );
-    
+    int  ArrayIndex(int x, int y) const { return ((y / m_tex_dim) * m_stride) + (x / m_tex_dim); }
+
     int         n_catalog_entries;
     ArrayOfCatalogEntries       m_catalog;
     wxString    m_ChartPath;
     GLuint      m_raster_format;
     wxString    m_CompressedCacheFilePath;
-    
+
     int         m_catalog_offset;
     bool        m_hdrOK;
     bool        m_catalogOK;
     wxFFile     *m_fs;
     uint32_t    m_chart_date_binary;
-    
+
     int         m_stride;
     int         m_ntex;
     int         m_tex_dim;
@@ -134,16 +136,16 @@ private:
     int         m_size_Y;
     int         m_nx_tex;
     int         m_ny_tex;
-    
+
     ColorScheme m_colorscheme;
     wxTimer     m_timer;
     size_t      m_ticks;
     wxDateTime  m_LRUtime;
-    
+
     glTextureDescriptor  **m_td_array;
-    
+
     DECLARE_EVENT_TABLE()
-    
+
 };
 
 const wxEventType wxEVT_OCPN_COMPRESSIONTHREAD = wxNewEventType();
@@ -175,29 +177,29 @@ class CompressionWorkerPool : public wxEvtHandler
 public:
     CompressionWorkerPool();
     ~CompressionWorkerPool();
-    
+
     bool ScheduleJob( glTexFactory *client, const wxRect &rect, int level_min,
                       bool b_throttle_thread, bool b_immediate, bool b_postZip);
     void OnEvtThread( OCPN_CompressionThreadEvent & event );
     int GetRunningJobCount(){ return m_njobs_running; }
     bool AsJob( wxString const &chart_path ) const;
     void PurgeJobList( wxString chart_path = wxEmptyString );
-    
+
     unsigned int m_raster_format;
-    JobList             running_list;
-    
+
 private:
-    
+
     bool DoJob( JobTicket *pticket );
     bool DoThreadJob(JobTicket* pticket);
     bool StartTopJob();
-    
+
+    JobList             running_list;
     JobList             todo_list;
     int                 m_njobs_running;
     int                 m_max_jobs;
-    
-    
-    
+
+
+
 };
 
 #endif

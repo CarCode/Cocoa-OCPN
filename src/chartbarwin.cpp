@@ -714,11 +714,8 @@ void Piano::BuildGLTexture()
 
 void Piano::DrawGL(int off)
 {
-#ifdef __WXOSX__
     unsigned int w = cc1->GetClientSize().x, h = GetHeight(), endx = 0;
-#else
-    unsigned int w = cc1->GetClientSize().x, h = GetHeight(), endx;
-#endif
+
     if(m_tex_piano_height != h)
         BuildGLTexture();
 

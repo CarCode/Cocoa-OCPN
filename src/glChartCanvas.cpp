@@ -321,8 +321,7 @@ bool CompressChart(wxThread *pThread, ChartBase *pchart, wxString CompressedCach
 
             rect.y += rect.height;
         }
-skipout:        
-        tex_fact->DeleteAllTextures();
+skipout:
         delete tex_fact;
     }
     return ret;
@@ -856,15 +855,8 @@ void glChartCanvas::ClearAllRasterTextures( void )
     //     Delete all the TexFactory instances
     ChartPathHashTexfactType::iterator itt;
     for( itt = m_chart_texfactory_hash.begin(); itt != m_chart_texfactory_hash.end(); ++itt ) {
-//        ChartBase *pc = (ChartBase *) itt->first;
-        wxString key = itt->first;
+        glTexFactory *ptf = itt->second;
 
-        glTexFactory *ptf = m_chart_texfactory_hash[key];
-
-        if( ptf){
-            ptf->PurgeBackgroundCompressionPool();
-            ptf->DeleteAllTextures();
-        }
         delete ptf;
     }
     m_chart_texfactory_hash.clear();
@@ -1476,15 +1468,11 @@ bool glChartCanvas::PurgeChartTextures( ChartBase *pc, bool b_purge_factory )
 
     //    Found ?
     if( ittf != m_chart_texfactory_hash.end() ) {
-        glTexFactory *pTexFact = m_chart_texfactory_hash[pc->GetFullPath()];
+        glTexFactory *pTexFact = ittf->second;
 
         if(pTexFact){
 
             if( b_purge_factory){
-                pTexFact->PurgeBackgroundCompressionPool();
-                pTexFact->DeleteAllTextures();
-                pTexFact->DeleteAllDescriptors();
-
                 m_chart_texfactory_hash.erase(ittf);                // This chart  becoming invalid
 
                 delete pTexFact;
@@ -2859,7 +2847,7 @@ void glChartCanvas::RenderRasterChartRegionGL( ChartBase *chart, ViewPort &vp, O
                     }
                     
                     
-                    //                    bneeded = true;
+//                    bneeded = true;
                     DisableClipRegion();
                     
                     if(bneeded){
@@ -2977,9 +2965,7 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &Region )
             QuiltPatch *pqp = cc1->m_pQuilt->GetCurrentPatch();
             if( pqp->b_Valid ) {
                 OCPNRegion get_region = pqp->ActiveRegion;
-#ifndef __WXOSX__
                 get_region.Intersect( Region );
-#endif
                 bool b_rendered = false;
 
                 if( !get_region.IsEmpty() ) {
@@ -3581,17 +3567,11 @@ void glChartCanvas::DrawGLTidesInBBox(ocpnDC& dc, LLBBox& BBox)
     }
     else
         cc1->DrawAllTidesInBBox( dc, BBox );
-#ifdef __WXOSX__
-    cc1->RebuildTideSelectList( cc1->GetVP().GetBBox() );
-#endif
 }
 
 void glChartCanvas::DrawGLCurrentsInBBox(ocpnDC& dc, LLBBox& BBox)
 {
     cc1->DrawAllCurrentsInBBox( dc, BBox );
-#ifdef __WXOSX__
-    cc1->RebuildCurrentSelectList( cc1->GetVP().GetBBox() );
-#endif
 }
 
 
@@ -3739,10 +3719,6 @@ bool glChartCanvas::FactoryCrunch(double factor)
 
         //      Found one?
         if(ptf_oldest){
-            ptf_oldest->PurgeBackgroundCompressionPool();
-            ptf_oldest->DeleteAllTextures();
-            ptf_oldest->DeleteAllDescriptors();
-
             m_chart_texfactory_hash.erase(ptf_oldest->GetChartPath());                // This chart  becoming invalid
 
             delete ptf_oldest;
@@ -3750,7 +3726,6 @@ bool glChartCanvas::FactoryCrunch(double factor)
 //            int mem_now;
 //            GetMemoryStatus(0, &mem_now);
 //            printf("-------------FactoryDelete\n");
-
        }                
     }
 
@@ -3976,10 +3951,9 @@ void glChartCanvas::Render()
                         m_fbo_sheight = sy;
                         
                         m_canvasregion = OCPNRegion( m_fbo_offsetx, m_fbo_offsety, sx, sy );
-#ifndef __WXOSX__
                         if(m_cache_vp.view_scale_ppm != VPoint.view_scale_ppm )
                             g_Platform->ShowBusySpinner();
-#endif
+
                         RenderCanvasBackingChart(gldc, m_canvasregion);
                     }
 
@@ -4143,9 +4117,8 @@ void glChartCanvas::Render()
     FactoryCrunch(0.6);
 
     cc1->PaintCleanup();
-#ifndef __WXOSX__
     g_Platform->HideBusySpinner();
-#endif
+
     n_render++;
 }
 

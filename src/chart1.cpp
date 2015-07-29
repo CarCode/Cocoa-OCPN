@@ -119,6 +119,7 @@
 #include <CoreFoundation/CFBundle.h>
 #include <Carbon/Carbon.h>
 #include <wx/menu.h>
+#include <wx/power.h>
 #endif
 
 #ifdef USE_S57
@@ -1180,8 +1181,17 @@ bool MyApp::OnInit()
     MyApp::SetAppDisplayName("OpenCPN");
 #endif
 
-
-
+#ifdef __WXOSX__
+    wxPowerResourceBlocker
+    blocker(wxPOWER_RESOURCE_SCREEN, "Block Screensaver");
+    
+    if ( !blocker.IsInEffect() )
+    {
+        // If the resource could not be acquired, tell the user that he has
+        // to keep the screen alive
+        wxLogMessage("Warning: Screensaver may suspend Screen view.");
+    }
+#endif
     
     //  Seed the random number generator
     wxDateTime x = wxDateTime::UNow();
@@ -1591,12 +1601,13 @@ bool MyApp::OnInit()
         g_memCacheLimit = (int) ( g_mem_total * 0.5 );
     g_memCacheLimit = wxMin(g_memCacheLimit, 1024 * 1024); // math in kBytes, Max is 1 GB
 #else
-    if( 0 == g_memCacheLimit ){
+    if( 0 ==  g_nCacheLimit && 0 == g_memCacheLimit ){
         g_memCacheLimit = (int) ( (g_mem_total - g_mem_initial) * 0.5 );
         g_memCacheLimit = wxMin(g_memCacheLimit, 1024 * 1024); // Max is 1 GB if unspecified
     }
 #endif
-
+    if( 0 ==  g_nCacheLimit)
+        g_nCacheLimit = CACHE_N_LIMIT_DEFAULT;
 #ifdef __OCPN__ANDROID__
     g_memCacheLimit = 100 * 1024;
 #endif
@@ -7198,6 +7209,8 @@ void MyFrame::UpdateControlBar( void )
     if( !cc1 ) return;
 
     if( !pCurrentStack ) return;
+
+    if ( !g_bShowChartBar ) return;
 
     int sel_type = -1;
     int sel_family = -1;

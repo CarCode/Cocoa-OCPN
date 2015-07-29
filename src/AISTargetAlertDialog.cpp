@@ -178,9 +178,11 @@ void AISTargetAlertDialog::CreateControls()
     m_pAlertTextCtl = new wxHtmlWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
             wxHW_SCROLLBAR_AUTO );
     m_pAlertTextCtl->SetBorders( 5 );
-
+#ifdef __WXOSX__
+    topSizer->Add( m_pAlertTextCtl, 1, wxALL | wxEXPAND, 5 );
+#else
     topSizer->Add( m_pAlertTextCtl, 1, wxALIGN_CENTER_HORIZONTAL | wxALL | wxEXPAND, 5 );
-
+#endif
     // A horizontal box sizer to contain Ack
     wxBoxSizer* AckBox = new wxBoxSizer( wxHORIZONTAL );
     topSizer->Add( AckBox, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );

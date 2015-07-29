@@ -2957,11 +2957,8 @@ void ChartBaseBSB::ComputeSourceRectangle(const ViewPort &vp, wxRealPoint *pPos,
       double binary_scale_factor = (wxRound(100000 * GetPPM() / vp.view_scale_ppm)) / 100000.;
 
       m_raster_scale_factor = binary_scale_factor;
-#ifdef __WXOSX__
+
       double xd = 0.0, yd = 0.0;
-#else
-    double xd, yd;
-#endif
       latlong_to_chartpix(vp.clat, vp.clon, xd, yd);
 
       pPos->x = xd - (vp.pix_width  * binary_scale_factor / 2);
