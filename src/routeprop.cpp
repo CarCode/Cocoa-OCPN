@@ -49,6 +49,12 @@
 #include "tcmgr.h"        // pjotrc 2011.03.02
 #include "PositionParser.h"
 #include "pluginmanager.h"
+#include "OCPNPlatform.h"
+
+#ifdef __OCPN__ANDROID__
+#include "androidUTIL.h"
+#endif
+
 
 extern double             gLat, gLon, gSog, gCog;
 extern double             g_PlanSpeed;
@@ -381,7 +387,7 @@ RouteProp::RouteProp( wxWindow* parent, wxWindowID id, const wxString& caption, 
 #endif
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     SetFont( *qFont );
-        
+
     CreateControls();
 
     RecalculateSize();
@@ -390,22 +396,22 @@ RouteProp::RouteProp( wxWindow* parent, wxWindowID id, const wxString& caption, 
 void RouteProp::RecalculateSize( void )
 {
     //  Make an estimate of the dialog size, without scrollbars showing
-    
+
     wxSize esize;
     esize.x = GetCharWidth() * 110;
-    esize.y = GetCharHeight() * 40;
-    
+    esize.y = GetCharHeight() * 44;
+
     wxSize dsize = GetParent()->GetClientSize();
     esize.y = wxMin(esize.y, dsize.y - (2 * GetCharHeight()));
     esize.x = wxMin(esize.x, dsize.x - (2 * GetCharHeight()));
     SetClientSize(esize);
-    
+
     wxSize fsize = GetSize();
     fsize.y = wxMin(fsize.y, dsize.y - (2 * GetCharHeight()));
     fsize.x = wxMin(fsize.x, dsize.x - (2 * GetCharHeight()));
+
     SetSize(fsize);
-    
-    
+
     Centre();
 
 }
@@ -664,7 +670,10 @@ void RouteProp::CreateControls()
                                       wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
     itemDialog1->SetScrollRate(2, 2);
 
-    itemBoxSizer1->Add( itemDialog1, 1, wxEXPAND | wxALL, 0 );
+#ifdef __OCPN__ANDROID__
+    itemDialog1->GetHandle()->setStyleSheet( getQtStyleSheet());
+#endif
+    itemBoxSizer1->Add( itemDialog1, 2, wxEXPAND | wxALL, 0 );
 
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer( wxVERTICAL );
     itemDialog1->SetSizer( itemBoxSizer2 );
@@ -790,10 +799,8 @@ void RouteProp::CreateControls()
     m_chColor->SetSelection( 0 );
     bSizer2->Add( m_chColor, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    m_staticText2 = new wxStaticText( itemDialog1, wxID_ANY, _("Style:"), wxDefaultPosition, wxDefaultSize,
-            0 );
-    //m_staticText2->Wrap( -1 );
-    bSizer2->Add( m_staticText2, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    wxStaticText *staticTextStyle = new wxStaticText( itemDialog1, wxID_ANY, _("Style:"), wxDefaultPosition, wxDefaultSize, 0 );
+    bSizer2->Add( staticTextStyle, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxString m_chStyleChoices[] = { _("Default"), _("Solid"), _("Dot"), _("Long dash"),
             _("Short dash"), _("Dot dash") };
@@ -802,6 +809,11 @@ void RouteProp::CreateControls()
             m_chStyleChoices, 0 );
     m_chStyle->SetSelection( 0 );
     bSizer2->Add( m_chStyle, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+
+#ifdef ocpnUSE_GLES // linestipple is emulated poorly
+    staticTextStyle->Hide();
+    m_chStyle->Hide();
+#endif
 
     m_staticText2 = new wxStaticText( itemDialog1, wxID_ANY, _("Width:"), wxDefaultPosition, wxDefaultSize,
             0 );
@@ -819,51 +831,62 @@ void RouteProp::CreateControls()
 
     itemStaticBoxSizer3->Add( bSizer2, 1, wxEXPAND, 0 );
 
-    wxStaticBox* itemStaticBoxSizer14Static = new wxStaticBox( itemDialog1, wxID_ANY,
-            _("Waypoints") );
+    wxStaticBox* itemStaticBoxSizer14Static = new wxStaticBox( this, wxID_ANY, _("Waypoints") );
     m_pListSizer = new wxStaticBoxSizer( itemStaticBoxSizer14Static, wxVERTICAL );
-    itemBoxSizer2->Add( m_pListSizer, 1, wxEXPAND | wxALL, 5 );
+    itemBoxSizer1->Add( m_pListSizer, 2, wxEXPAND | wxALL, 1 );
+
+    //      Create the list control
+    m_wpList = new wxListCtrl( this, ID_LISTCTRL, wxDefaultPosition, wxSize( -1, -1 ),
+                              wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxLC_EDIT_LABELS );
+    
+    m_wpList->SetMinSize(wxSize(-1, 100) );
+    m_pListSizer->Add( m_wpList, 1, wxEXPAND | wxALL, 6 );
+    
+    
+#ifdef __OCPN__ANDROID__
+    m_wpList->GetHandle()->setStyleSheet( getQtStyleSheet());
+#endif
 
     wxBoxSizer* itemBoxSizerBottom = new wxBoxSizer( wxHORIZONTAL );
     itemBoxSizer1->Add( itemBoxSizerBottom, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     
     wxBoxSizer* itemBoxSizerAux = new wxBoxSizer( wxHORIZONTAL );
-    itemBoxSizerBottom->Add( itemBoxSizerAux, 1, wxALIGN_LEFT | wxALL, 5 );
+    itemBoxSizerBottom->Add( itemBoxSizerAux, 1, wxALIGN_LEFT | wxALL, 3 );
 
     m_PrintButton = new wxButton( this, ID_ROUTEPROP_PRINT, _("Print Route"),
             wxDefaultPosition, wxDefaultSize, 0 );
-     itemBoxSizerAux->Add( m_PrintButton, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    itemBoxSizerAux->Add( m_PrintButton, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 3 );
     m_PrintButton->Enable( true );
 
     m_ExtendButton = new wxButton( this, ID_ROUTEPROP_EXTEND, _("Extend Route"),
             wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizerAux->Add( m_ExtendButton, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    itemBoxSizerAux->Add( m_ExtendButton, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 3 );
     m_ExtendButton->Enable( false );
 
     m_SplitButton = new wxButton( this, ID_ROUTEPROP_SPLIT, _("Split Route"),
             wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizerAux->Add( m_SplitButton, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    itemBoxSizerAux->Add( m_SplitButton, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 3 );
     m_SplitButton->Enable( false );
 
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
 #ifdef __WXOSX__
-    itemBoxSizerBottom->Add( itemBoxSizer16, 0, wxALL, 5 );
+    itemBoxSizerBottom->Add( itemBoxSizer16, 0, wxALL, 3 );
 #else
-    itemBoxSizerBottom->Add( itemBoxSizer16, 0, wxALIGN_RIGHT | wxALL, 5 );
+    itemBoxSizerBottom->Add( itemBoxSizer16, 0, wxALIGN_RIGHT | wxALL, 3 );
 #endif
     m_CancelButton = new wxButton( this, ID_ROUTEPROP_CANCEL, _("Cancel"), wxDefaultPosition,
             wxDefaultSize, 0 );
 #ifdef __WXOSX__
-    itemBoxSizer16->Add( m_CancelButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    itemBoxSizer16->Add( m_CancelButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 1 );
 #else
-    itemBoxSizer16->Add( m_CancelButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    itemBoxSizer16->Add( m_CancelButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 1 );
 #endif
     m_OKButton = new wxButton( this, ID_ROUTEPROP_OK, _("OK"), wxDefaultPosition,
             wxDefaultSize, 0 );
 #ifdef __WXOSX__
-    itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 1 );
 #else
-    itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+    itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 1 );
 #endif
     m_OKButton->SetDefault();
 
@@ -873,10 +896,6 @@ void RouteProp::CreateControls()
     Connect( wxEVT_COMMAND_LIST_COL_END_DRAG,
             (wxObjectEventFunction) (wxEventFunction) &RouteProp::OnEvtColDragEnd );
 
-
-    //      Create the list control
-    m_wpList = new wxListCtrl( itemDialog1, ID_LISTCTRL, wxDefaultPosition, wxSize( 800, 200 ),
-            wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxLC_EDIT_LABELS );
 
     int char_size = GetCharWidth();
 
@@ -899,9 +918,6 @@ void RouteProp::CreateControls()
         m_wpList->InsertColumn( 10, _("Course (M)"), wxLIST_FORMAT_LEFT, char_size * 10 );
     else
         m_wpList->InsertColumn( 10, _("Course"), wxLIST_FORMAT_LEFT, char_size * 10 );
-    //    m_wpList->Hide();
-
-    m_pListSizer->Add( m_wpList, 2, wxEXPAND | wxALL, 5 );
 
     //Set the maximum size of the entire  dialog
     int width, height;
@@ -1902,6 +1918,10 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 
     m_panelBasicProperties = new wxScrolledWindow( m_notebookProperties, wxID_ANY,
                                                    wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL | wxTAB_TRAVERSAL);
+#ifdef __OCPN__ANDROID__
+    m_panelBasicProperties->GetHandle()->setStyleSheet( getQtStyleSheet());
+#endif
+
     m_panelBasicProperties->SetScrollRate(0, 2);
 
     m_notebookProperties->AddPage( m_panelBasicProperties, _("Basic"), true );
@@ -2353,6 +2373,11 @@ MarkInfoDef::~MarkInfoDef()
             wxCommandEventHandler( MarkInfoDef::OnMarkInfoOKClick ), NULL, this );
 
     delete m_menuLink;
+
+#ifdef __OCPN__ANDROID__
+    androidEnableBackButton( true );
+#endif
+
 }
 
 bool MarkInfoImpl::instanceFlag = false;
@@ -2388,6 +2413,7 @@ MarkInfoImpl::MarkInfoImpl( wxWindow* parent, wxWindowID id, const wxString& tit
 MarkInfoImpl::~MarkInfoImpl()
 {
     m_bcomboBoxIcon->Clear();
+    m_bcomboBoxIcon->Destroy();
     m_pLinkProp->Destroy();
     instanceFlag = false;
 }
@@ -2494,7 +2520,7 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
         m_colourWaypointRangeRingsColour->SetColour( m_pRoutePoint->GetWaypointRangeRingsColour() );
         wxCommandEvent eDummy;
         OnShowWaypointRangeRingSelect( eDummy );
-        
+
 
         int NbrOfLinks = m_pRoutePoint->m_HyperlinkList->GetCount();
         HyperlinkList *hyperlinklist = m_pRoutePoint->m_HyperlinkList;
@@ -2556,6 +2582,10 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
         m_bcomboBoxIcon->Select( iconToSelect );
         icons = NULL;
     }
+
+#ifdef __OCPN__ANDROID__
+        androidEnableBackButton( false );
+#endif
 
     return true;
 }
@@ -2850,6 +2880,11 @@ void MarkInfoImpl::OnMarkInfoOKClick( wxCommandEvent& event )
         pRoutePropDialog->UpdateProperties();
 
     SetClientSize(m_defaultClientSize);
+
+#ifdef __OCPN__ANDROID__
+    androidEnableBackButton( true );
+#endif
+
     event.Skip();
 }
 
@@ -2885,6 +2920,10 @@ void MarkInfoImpl::OnMarkInfoCancelClick( wxCommandEvent& event )
     delete m_pMyLinkList;
     m_pMyLinkList = NULL;
     SetClientSize(m_defaultClientSize);
+
+#ifdef __OCPN__ANDROID__
+    androidEnableBackButton( true );
+#endif
 
     event.Skip();
 }

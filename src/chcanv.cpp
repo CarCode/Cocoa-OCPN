@@ -4377,14 +4377,6 @@ void ChartCanvas::OnSize( wxSizeEvent& event )
     ReloadVP();
 }
 
-void ChartCanvas::RenderLastGLCanvas()
-{
-#ifdef ocpnUSE_GL
-    if( /*g_bopengl &&*/ m_glcc )
-        m_glcc->RenderLast();
-#endif
-}
-
 void ChartCanvas::ShowChartInfoWindow( int x, int dbIndex )
 {
     if( dbIndex >= 0 ) {
@@ -4414,7 +4406,7 @@ void ChartCanvas::ShowChartInfoWindow( int x, int dbIndex )
             wxPoint p;
             p.x = x;
             if( ( p.x + m_pCIWin->GetWinSize().x ) > m_canvas_width )
-                p.x = m_canvas_width - m_pCIWin->GetWinSize().x;
+                p.x = (m_canvas_width - m_pCIWin->GetWinSize().x)/2;    // centered
 
             p.y = m_canvas_height - g_Piano->GetHeight() - 4 - m_pCIWin->GetWinSize().y;
 
@@ -4431,7 +4423,16 @@ void ChartCanvas::ShowChartInfoWindow( int x, int dbIndex )
 
 void ChartCanvas::HideChartInfoWindow( void )
 {
-    if( m_pCIWin && m_pCIWin->IsShown() ) m_pCIWin->Hide();
+    if( m_pCIWin /*&& m_pCIWin->IsShown()*/ ){
+        m_pCIWin->Hide();
+        m_pCIWin->Destroy();
+        m_pCIWin = NULL;
+
+#ifdef __OCPN__ANDROID__
+        androidForceFullRepaint();
+#endif
+        
+    }
 }
 
 void ChartCanvas::PanTimerEvent( wxTimerEvent& event )
@@ -6120,6 +6121,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                 }
                 m_pFoundRoutePoint = NULL;
 
+                Refresh( true );
 
             }                
 
@@ -9765,7 +9767,14 @@ emboss_data *ChartCanvas::EmbossDepthScale()
     }
 
     ped->x = ( GetVP().pix_width - ped->width );
-    ped->y = 40;
+
+    if(g_FloatingCompassDialog && pConfig->m_bShowCompassWin){
+        wxPoint p = ScreenToClient(g_FloatingCompassDialog->GetPosition());
+        ped->y = p.y + g_FloatingCompassDialog->GetSize().y + 4;
+    }
+    else{
+        ped->y = 40;
+    }
     return ped;
 }
 
@@ -9773,8 +9782,12 @@ void ChartCanvas::CreateDepthUnitEmbossMaps( ColorScheme cs )
 {
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
     wxFont font;
-    if( style->embossFont == wxEmptyString )
-        font = wxFont( 60, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD );
+    if( style->embossFont == wxEmptyString ){
+        wxFont *dFont = FontMgr::Get().GetFont( _("Dialog"), 0 );
+        font = *dFont;
+        font.SetPointSize(60);
+        font.SetWeight(wxFONTWEIGHT_BOLD);
+    }
     else
         font = wxFont( style->embossHeight, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, style->embossFont );
 

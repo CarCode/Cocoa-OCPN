@@ -365,10 +365,8 @@ public:
     wxCheckBox              *pMobile;
     wxCheckBox              *pResponsive;
     wxSlider                *m_pSlider_Zoom;
-#ifndef __WXOSX__
     wxSlider                *m_pSlider_GUI_Factor;
     wxSlider                *m_pSlider_Chart_Factor;
-#endif
     int                      k_tides;
     wxCheckBox              *pOverzoomEmphasis;
     wxCheckBox              *pOZScaleVector;

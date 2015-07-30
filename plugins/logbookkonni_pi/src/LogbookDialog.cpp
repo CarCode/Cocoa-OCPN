@@ -8545,7 +8545,9 @@ void ColdFinger::fillTree(wxTreeItemId id, TiXmlNode* node)
 			elem = new myTreeItem(1,_T(""),_T(""),_T(""),_T(""),_T(""),_T(""),0,0,false,false,false);
 			id = m_treeCtrl3->AppendItem(id,_T(""),it,-1,elem);
 		}
-
+#ifdef __WXOSX__
+        if(elem){
+#endif
 		if(wxString(node->Value(),wxConvUTF8) == _T("Type"))
 		{
 			elem->type = atoi(node->ToElement()->GetText());
@@ -8576,6 +8578,9 @@ void ColdFinger::fillTree(wxTreeItemId id, TiXmlNode* node)
 
 		if(wxString(node->Value(),wxConvUTF8) == _T("Menu"))
 			elem->menu = (wxString(node->ToElement()->GetText(),wxConvUTF8) == _T("true"))?true:false;
+#ifdef __WXOSX__
+        }
+#endif
 		break;
 	}
 

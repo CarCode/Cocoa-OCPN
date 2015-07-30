@@ -147,7 +147,7 @@ extern bool             b_inCompressAllCharts;
 extern bool             g_bexpert;
 extern bool             g_bcompression_wait;
 extern bool             g_bresponsive;
-extern int              g_ChartScaleFactor;
+extern float            g_ChartScaleFactorExp;
 
 float            g_GLMinSymbolLineWidth;
 float            g_GLMinCartographicLineWidth;
@@ -807,6 +807,7 @@ glChartCanvas::glChartCanvas( wxWindow *parent ) :
 
     m_binPinch = false;
     m_binPan = false;
+    m_bpinchGuard = false;
 
     b_timeGL = true;
 
@@ -1419,7 +1420,6 @@ no_compression:
     m_benableVScale = false;
 #endif
 
-
 }
 
 void glChartCanvas::OnPaint( wxPaintEvent &event )
@@ -1454,9 +1454,7 @@ void glChartCanvas::OnPaint( wxPaintEvent &event )
     //      Recursion test, sometimes seen on GTK systems when wxBusyCursor is activated
     if( m_in_glpaint ) return;
     m_in_glpaint++;
-
     Render();
-
     m_in_glpaint--;
 
 }
@@ -2098,9 +2096,7 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
     {
         float scale =  1.0f;
         if(g_bresponsive){
-            scale =  exp( g_ChartScaleFactor * (0.693 / 5.0) );       //  exp(2)
-            scale = wxMax(scale, .5);
-            scale = wxMin(scale, 4.);
+            scale =  g_ChartScaleFactorExp;
         }
 
         const int v = 12;
@@ -2245,9 +2241,7 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
         glScalef(scale_factor_x, scale_factor_y, 1);
 
         if(g_bresponsive){
-            float scale =  exp( g_ChartScaleFactor * (0.693 / 5.0) );       //  exp(2)
-            scale = wxMax(scale, .5);
-            scale = wxMin(scale, 4.);
+            float scale =  g_ChartScaleFactorExp;
             glScalef(scale, scale, 1);
         }
 
@@ -4122,351 +4116,6 @@ void glChartCanvas::Render()
     n_render++;
 }
 
-void glChartCanvas::RenderLast()
-{
-    
-    //        wxPaintDC( this );
-    
-    ViewPort VPoint = cc1->VPoint;
-    
-    ViewPort svp = VPoint;
-    svp.pix_width = svp.rv_rect.width;
-    svp.pix_height = svp.rv_rect.height;
-    
-    OCPNRegion chart_get_region( 0, 0, VPoint.rv_rect.width, VPoint.rv_rect.height );
-    
-    ocpnDC gldc( *this );
-    
-    int w, h;
-    GetClientSize( &w, &h );
-    glViewport( 0, 0, (GLint) w, (GLint) h );
-    
-    glLoadIdentity();
-    ///    gluOrtho2D( 0, (GLint) w, (GLint) h, 0 );
-    glOrtho( 0, (GLint) w, (GLint) h, 0, -1, 1 );
-    
-    if( s_b_useStencil ) {
-        glEnable( GL_STENCIL_TEST );
-        glStencilMask( 0xff );
-        glClear( GL_STENCIL_BUFFER_BIT );
-        glDisable( GL_STENCIL_TEST );
-    }
-    
-    // set opengl settings that don't normally change
-    // this should be able to go in SetupOpenGL, but it's
-    // safer here incase a plugin mangles these
-    glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-    glHint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    
-    //  Delete any textures known to the GPU that
-    //  belong to charts which will not be used in this render
-    //  This is done chart-by-chart...later we will scrub for unused textures
-    //  that belong to charts which ARE used in this render, if we need to....
-    
-    //      TextureCrunch(0.8);
-    
-    //  If we plan to post process the display, don't use accelerated panning
-    double scale_factor = VPoint.ref_scale/VPoint.chart_scale;
-    
-    m_bfogit = m_benableFog && g_fog_overzoom && (scale_factor > g_overzoom_emphasis_base) && VPoint.b_quilt;
-    bool scale_it  =  m_benableVScale && g_oz_vector_scale && (scale_factor > g_overzoom_emphasis_base) && VPoint.b_quilt;
-    
-    bool bpost_hilite = !cc1->m_pQuilt->GetHiliteRegion( VPoint ).IsEmpty();
-    
-    // Try to use the framebuffer object's cache of the last frame
-    // to accelerate drawing this frame (if overlapping)
-    if( m_b_BuiltFBO && !m_bfogit && !scale_it && !bpost_hilite) {
-        int sx = GetSize().x;
-        int sy = GetSize().y;
-        
-        //  Is this viewpoint the same as the previously painted one?
-//        bool b_newview = true;  // Not used
-        
-        // If the view is the same we do no updates,
-        // cached texture to the framebuffe
-        if(    m_cache_vp.view_scale_ppm == VPoint.view_scale_ppm
-           && m_cache_vp.rotation == VPoint.rotation
-           && m_cache_vp.clat == VPoint.clat
-           && m_cache_vp.clon == VPoint.clon
-           && m_cache_vp.IsValid()
-           && m_cache_current_ch == Current_Ch ) {
-//            b_newview = false;  // Not used
-        }
-        
-#if 0
-        if( b_newview ) {
-            // enable rendering to texture in framebuffer object
-            ( s_glBindFramebuffer )( GL_FRAMEBUFFER_EXT, m_fb0 );
-            
-            wxPoint c_old, c_new;
-            int dx, dy;
-            bool accelerated_pan = false;
-            if(g_GLOptions.m_bUseAcceleratedPanning && m_cache_vp.IsValid()
-               // only works for mercator without rotation
-               && VPoint.m_projection_type == PROJECTION_MERCATOR
-               && fabs( VPoint.rotation ) == 0.0
-               // since single chart mode for raster charts uses the chart coordinates,
-               // we can't use the viewport to compute then panning offsets.
-               // For now, just don't do hardware accelerated panning,
-               // (fortunately this case is least in need of it)
-               && (!Current_Ch || ( Current_Ch->GetChartFamily() != CHART_FAMILY_RASTER))
-               /* && (!g_bskew_comp || fabs( VPoint.skew ) == 0.0 )*/) {
-                wxPoint c_old = VPoint.GetPixFromLL( VPoint.clat, VPoint.clon );
-                wxPoint c_new = m_cache_vp.GetPixFromLL( VPoint.clat, VPoint.clon );
-                
-                dy = c_new.y - c_old.y;
-                dx = c_new.x - c_old.x;
-                
-                accelerated_pan = (!VPoint.b_quilt ||
-                                   cc1->m_pQuilt->IsVPBlittable( VPoint, dx, dy, true )) &&
-                // there must be some overlap
-                abs(dx) < m_cache_tex_x && abs(dy) < m_cache_tex_y;
-            }
-            
-            // do we allow accelerated panning?  can we perform it here?
-            
-            if(accelerated_pan && !g_GLOptions.m_bUseCanvasPanning) {
-                m_cache_page = !m_cache_page; /* page flip */
-                
-                /* perform accelerated pan rendering to the new framebuffer */
-                ( s_glFramebufferTexture2D )
-                ( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-                 g_texture_rectangle_format, m_cache_tex[m_cache_page], 0 );
-                
-                /* using the old framebuffer */
-                glBindTexture( g_texture_rectangle_format, m_cache_tex[!m_cache_page] );
-                
-                glEnable( g_texture_rectangle_format );
-                glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
-                
-                //    Render the reuseable portion of the cached texture
-                
-                // Render the cached texture as quad to FBO(m_blit_tex) with offsets
-                int x1, x2, y1, y2;
-                
-                wxASSERT(sx == m_cache_tex_x);
-                wxASSERT(sy == m_cache_tex_y);
-                int ow = sx - abs( dx );
-                int oh = sy - abs( dy );
-                if( dx > 0 )
-                    x1 = dx,  x2 = 0;
-                else
-                    x1 = 0,   x2 = -dx;
-                
-                if( dy > 0 )
-                    y1 = dy,  y2 = 0;
-                else
-                    y1 = 0,   y2 = -dy;
-                
-                // normalize to texture coordinates range from 0 to 1
-                float tx1 = x1, tx2 = x1 + ow, ty1 = sy - y1, ty2 = y2;
-                if( GL_TEXTURE_RECTANGLE_ARB != g_texture_rectangle_format )
-                    tx1 /= sx, tx2 /= sx, ty1 /= sy, ty2 /= sy;
-                
-                glBegin( GL_QUADS );
-                glTexCoord2f( tx1, ty1 );  glVertex2f( x2, y2 );
-                glTexCoord2f( tx2, ty1 );  glVertex2f( x2 + ow, y2 );
-                glTexCoord2f( tx2, ty2 );  glVertex2f( x2 + ow, y2 + oh );
-                glTexCoord2f( tx1, ty2 );  glVertex2f( x2, y2 + oh );
-                glEnd();
-                
-                //   Done with cached texture "blit"
-                glDisable( g_texture_rectangle_format );
-                
-                //calculate the new regions to render
-                // add an extra pixel avoid coorindate rounding issues
-                OCPNRegion update_region;
-                
-                if( dy > 0 && dy < VPoint.pix_height)
-                    update_region.Union
-                    (wxRect( 0, VPoint.pix_height - dy, VPoint.pix_width, dy ) );
-                else if(dy < 0)
-                    update_region.Union( wxRect( 0, 0, VPoint.pix_width, -dy ) );
-                
-                if( dx > 0 && dx < VPoint.pix_width )
-                    update_region.Union
-                    (wxRect( VPoint.pix_width - dx, 0, dx, VPoint.pix_height ) );
-                else if (dx < 0)
-                    update_region.Union( wxRect( 0, 0, -dx, VPoint.pix_height ) );
-                
-                RenderCharts(gldc, update_region);
-            } else { // must redraw the entire screen
-                ( s_glFramebufferTexture2D )( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-                                             g_texture_rectangle_format,
-                                             m_cache_tex[m_cache_page], 0 );
-                
-                if(g_GLOptions.m_bUseCanvasPanning){
-                    
-                    bool b_reset = false;
-                    if( (m_fbo_offsetx < 50) ||
-                       ((m_cache_tex_x - (m_fbo_offsetx + sx)) < 50) ||
-                       (m_fbo_offsety < 50) ||
-                       ((m_cache_tex_y - (m_fbo_offsety + sy)) < 50))
-                        b_reset = true;
-                    
-                    if(m_cache_vp.view_scale_ppm != VPoint.view_scale_ppm )
-                        b_reset = true;
-                    if(!m_cache_vp.IsValid())
-                        b_reset = true;
-                    
-                    if( b_reset ){
-                        m_fbo_offsetx = (m_cache_tex_x - GetSize().x)/2;
-                        m_fbo_offsety = (m_cache_tex_y - GetSize().y)/2;
-                        m_fbo_swidth = sx;
-                        m_fbo_sheight = sy;
-                        
-                        m_canvasregion = OCPNRegion( m_fbo_offsetx, m_fbo_offsety, sx, sy );
-                        
-                        if(m_cache_vp.view_scale_ppm != VPoint.view_scale_ppm )
-                            g_Platform->ShowBusySpinner();
-                        
-                        RenderCanvasBackingChart(gldc, m_canvasregion);
-                    }
-                    
-                    
-                    
-                    glPushMatrix();
-                    
-                    glViewport( m_fbo_offsetx, m_fbo_offsety, (GLint) sx, (GLint) sy );
-                    
-                    //g_Platform->ShowBusySpinner();
-                    RenderCharts(gldc, chart_get_region);
-                    //g_Platform->HideBusySpinner();
-                    
-                    /*
-                     *                    wxRect rect( 50, 50, cc1->VPoint.rv_rect.width-100, cc1->VPoint.rv_rect.height-100 );
-                     *                    glColor3ub(250, 0, 0);
-                     *
-                     *                    glBegin( GL_QUADS );
-                     *                    glVertex2f( rect.x,                     rect.y );
-                     *                    glVertex2f( rect.x + rect.width,        rect.y );
-                     *                    glVertex2f( rect.x + rect.width,        rect.y + rect.height );
-                     *                    glVertex2f( rect.x,                     rect.y + rect.height );
-                     *                    glEnd();
-                     */
-                    glPopMatrix();
-                    
-                    glViewport( 0, 0, (GLint) sx, (GLint) sy );
-                }
-                else{
-                    m_fbo_offsetx = 0;
-                    m_fbo_offsety = 0;
-                    m_fbo_swidth = sx;
-                    m_fbo_sheight = sy;
-                    RenderCharts(gldc, chart_get_region);
-                }
-                
-            }
-            // Disable Render to FBO
-            ( s_glBindFramebuffer )( GL_FRAMEBUFFER_EXT, 0 );
-        } // newview
-#endif
-        // Render the cached texture as quad to screen
-        glBindTexture( g_texture_rectangle_format, m_cache_tex[m_cache_page]);
-        glEnable( g_texture_rectangle_format );
-        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
-        
-        float tx, ty, tx0, ty0, divx, divy;
-        
-        //  Normalize, or not?
-        if( GL_TEXTURE_RECTANGLE_ARB == g_texture_rectangle_format ){
-            divx = divy = 1.0f;
-        }
-        else{
-            divx = m_cache_tex_x;
-            divy = m_cache_tex_y;
-        }
-        
-        tx0 = m_fbo_offsetx/divx;
-        ty0 = m_fbo_offsety/divy;
-        tx =  (m_fbo_offsetx + m_fbo_swidth)/divx;
-        ty =  (m_fbo_offsety + m_fbo_sheight)/divy;
-        
-        
-        glBegin( GL_QUADS );
-        glTexCoord2f( tx0, ty );  glVertex2f( 0,  0 );
-        glTexCoord2f( tx,  ty );  glVertex2f( sx, 0 );
-        glTexCoord2f( tx,  ty0 ); glVertex2f( sx, sy );
-        glTexCoord2f( tx0, ty0 ); glVertex2f( 0,  sy );
-        glEnd();
-        
-        glDisable( g_texture_rectangle_format );
-        //                m_cache_vp = VPoint;
-        //                m_cache_current_ch = Current_Ch;
-        
-        
-    }  //FBO
-    
-#if 0
-    // Now draw all the objects which normally move around and are not
-    // cached from the previous frame
-    DrawFloatingOverlayObjects( gldc, chart_get_region );
-    
-    //  On some platforms, the opengl context window is always on top of any standard DC windows,
-    //  so we need to draw the Chart Info Window and the Thumbnail as overlayed bmps.
-    
-#ifdef __WXOSX__
-    if(cc1->m_pCIWin && cc1->m_pCIWin->IsShown()) {
-        int x, y, width, height;
-        cc1->m_pCIWin->GetClientSize( &width, &height );
-        cc1->m_pCIWin->GetPosition( &x, &y );
-        wxBitmap bmp(width, height, -1);
-        wxMemoryDC dc(bmp);
-        if(bmp.IsOk()){
-            dc.SetBackground( wxBrush(GetGlobalColor( _T ( "UIBCK" ) ) ));
-            dc.Clear();
-            
-            dc.SetTextBackground( GetGlobalColor( _T ( "UIBCK" ) ) );
-            dc.SetTextForeground( GetGlobalColor( _T ( "UITX1" ) ) );
-            
-            int yt = 0;
-            int xt = 0;
-            wxString s = cc1->m_pCIWin->GetString();
-            int h = cc1->m_pCIWin->GetCharHeight();
-            
-            wxStringTokenizer tkz( s, _T("\n") );
-            wxString token;
-            
-            while(tkz.HasMoreTokens()) {
-                token = tkz.GetNextToken();
-                dc.DrawText(token, xt, yt);
-                yt += h;
-            }
-            dc.SelectObject(wxNullBitmap);
-            
-            gldc.DrawBitmap( bmp, x, y, false);
-        }
-    }
-    
-    if( pthumbwin && pthumbwin->IsShown()) {
-        int thumbx, thumby;
-        pthumbwin->GetPosition( &thumbx, &thumby );
-        if( pthumbwin->GetBitmap().IsOk())
-            gldc.DrawBitmap( pthumbwin->GetBitmap(), thumbx, thumby, false);
-    }
-    
-    if(g_FloatingToolbarDialog && g_FloatingToolbarDialog->m_pRecoverwin ){
-        int recoverx, recovery;
-        g_FloatingToolbarDialog->m_pRecoverwin->GetPosition( &recoverx, &recovery );
-        if( g_FloatingToolbarDialog->m_pRecoverwin->GetBitmap().IsOk())
-            gldc.DrawBitmap( g_FloatingToolbarDialog->m_pRecoverwin->GetBitmap(), recoverx, recovery, true);
-    }
-    
-    
-#endif
-    
-    //quiting?
-    if( g_bquiting )
-        DrawQuiting();
-    if( g_bcompression_wait)
-        DrawCloseMessage( _("Waiting for raster chart compression thread exit."));
-#endif
-    SwapBuffers();
-    
-}
-
-
 void glChartCanvas::RenderCanvasBackingChart( ocpnDC dc, OCPNRegion valid_region)
 {
 
@@ -4881,6 +4530,8 @@ void glChartCanvas::OnEvtPanGesture( wxQT_PanGestureEvent &event)
 
     if(m_binPinch)
         return;
+    if(m_bpinchGuard)
+        return;
 
     int x = event.GetOffset().x;
     int y = event.GetOffset().y;
@@ -4901,32 +4552,33 @@ void glChartCanvas::OnEvtPanGesture( wxQT_PanGestureEvent &event)
             break;
 
         case GestureUpdated:
-            if(!g_GLOptions.m_bUseCanvasPanning || m_bfogit)
-                cc1->PanCanvas( dx, -dy );
-            else{
-                FastPan( dx, dy );
-            }
+            if(m_binPan){
+                if(!g_GLOptions.m_bUseCanvasPanning || m_bfogit)
+                    cc1->PanCanvas( dx, -dy );
+                else{
+                    FastPan( dx, dy );
+                }
 
-            panx -= dx;
-            pany -= dy;
-            cc1->ClearbFollow();
+                panx -= dx;
+                pany -= dy;
+                cc1->ClearbFollow();
 
 #ifdef __OCPN__ANDROID__
-            androidSetFollowTool(false);
+                androidSetFollowTool(false);
 #endif
-
+            }
             break;
 
         case GestureFinished:
-            if (g_GLOptions.m_bUseCanvasPanning){
-                //               cc1->PanCanvas( -x,-y ); //works, but jumps
-                cc1->PanCanvas( -panx, pany );
-            }
+            if(m_binPan){
+                if (g_GLOptions.m_bUseCanvasPanning)
+                    cc1->PanCanvas( -panx, pany );
 
 #ifdef __OCPN__ANDROID__
-            androidSetFollowTool(false);
+                androidSetFollowTool(false);
 #endif
 
+            }
             panx = pany = 0;
             m_binPan = false;
 
@@ -4999,6 +4651,7 @@ void glChartCanvas::OnEvtPinchGesture( wxQT_PinchGestureEvent &event)
     }
 
     m_bgestureGuard = true;
+    m_bpinchGuard = true;
     m_gestureEeventTimer.Start(500, wxTIMER_ONE_SHOT);
 
 }
@@ -5008,12 +4661,12 @@ void glChartCanvas::onGestureTimerEvent(wxTimerEvent &event)
     //  On some devices, the pan GestureFinished event fails to show up
     //  Watch for this case, and fix it.....
     if(m_binPan){
-        //qDebug() << "STUCK IN PAN, CLEARING";
         m_binPan = false;
         Invalidate();
         Update();
     }
     m_bgestureGuard = false;
+    m_bpinchGuard = false;
 }
 
 #endif

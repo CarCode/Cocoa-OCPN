@@ -364,6 +364,7 @@ bool                      g_config_display_size_manual;
 
 int                       g_GUIScaleFactor;
 int                       g_ChartScaleFactor;
+float                     g_ChartScaleFactorExp;
 
 #ifdef USE_S57
 s52plib                   *ps52plib;
@@ -903,20 +904,6 @@ void MyApp::OnActivateApp( wxActivateEvent& event )
                 }
             }
         }
-
-#if 0
-        if(console && console->IsShown()) {
-            console->Hide();
-        }
-
-        if(g_FloatingCompassDialog && g_FloatingCompassDialog->IsShown()) {
-            g_FloatingCompassDialog->Hide();
-        }
-
-        if(g_ChartBarWin && g_ChartBarWin->IsShown()) {
-            g_ChartBarWin->Hide();
-        }
-#endif
     }
     else
     {
@@ -938,24 +925,6 @@ void MyApp::OnActivateApp( wxActivateEvent& event )
             node = node->GetNext();
         }
 
-#if 0
-        if(g_FloatingCompassDialog){
-            g_FloatingCompassDialog->Hide();
-            g_FloatingCompassDialog->Show();
-        }
-
-        if(g_ChartBarWin){
-            g_ChartBarWin->Hide();
-            g_ChartBarWin->Show();
-        }
-
-        if(console) {
-            if( g_pRouteMan->IsAnyRouteActive() ){
-                console->Hide();
-                console->Show();
-            }
-        }
-#endif
         if( pOptions )
             pOptions->Raise();
         else
@@ -4128,6 +4097,11 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             break;
         }
 
+        case ID_CMD_NULL_REFRESH:{
+            Refresh(true);
+            break;
+        }
+
         default: {
             //        Look for PlugIn tools
             //        If found, make the callback.
@@ -4325,6 +4299,10 @@ void MyFrame::TrackOn( void )
     
     SetMenubarItemState( ID_MENU_NAV_TRACK, g_bTrackActive );
 
+#ifdef __OCPN__ANDROID__
+    androidSetTrackTool(true);
+#endif
+
     if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
     {
         pRouteManagerDialog->UpdateTrkListCtrl();
@@ -4392,6 +4370,10 @@ Track *MyFrame::TrackOff( bool do_add_point )
     if( g_toolbar )
         g_toolbar->SetToolShortHelp( ID_TRACK, _("Enable Tracking") );
     SetMenubarItemState( ID_MENU_NAV_TRACK, g_bTrackActive );
+
+#ifdef __OCPN__ANDROID__
+    androidSetTrackTool(false);
+#endif
 
     return return_val;
 }
@@ -6127,19 +6109,6 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
                 }
             }
         }
-#if 0
-        if(console && console->IsShown()) {
-            console->Hide();
-        }
-
-        if(g_FloatingCompassDialog && g_FloatingCompassDialog->IsShown()) {
-            g_FloatingCompassDialog->Hide();
-        }
-
-        if(g_ChartBarWin && g_ChartBarWin->IsShown()) {
-            g_ChartBarWin->Hide();
-        }
-#endif
     }
 #endif
 
@@ -6677,7 +6646,7 @@ void MyFrame::UpdateRotationState( double rotation )
 void MyFrame::UpdateGPSCompassStatusBox( bool b_force_new )
 {
     if( !g_FloatingCompassDialog ) return;
-
+    
     //  Process changes in scale
     if(fabs(g_FloatingCompassDialog->GetScaleFactor() - g_compass_scalefactor) > 0.01){
         g_FloatingCompassDialog->SetScaleFactor(g_compass_scalefactor);
@@ -6699,14 +6668,14 @@ void MyFrame::UpdateGPSCompassStatusBox( bool b_force_new )
         wxSize parent_size = g_FloatingCompassDialog->GetParent()->GetSize();
 
         // check to see if it would overlap if it was in its home position (upper right)
-         tentative_pt_in_screen = g_FloatingCompassDialog->GetParent()->ClientToScreen(
-                wxPoint( parent_size.x - size_x - x_offset - cc1_edge_comp, y_offset ) );
-
+        tentative_pt_in_screen = g_FloatingCompassDialog->GetParent()->ClientToScreen(
+                    wxPoint( parent_size.x - size_x - x_offset - cc1_edge_comp, y_offset ) );
+        
         tentative_rect = wxRect( tentative_pt_in_screen.x, tentative_pt_in_screen.y, size_x, size_y );
 
         //  If the toolbar location has changed, or the proposed compassDialog location has changed
         if( (g_FloatingToolbarDialog->GetScreenRect() != g_last_tb_rect) ||
-            (tentative_rect != g_FloatingCompassDialog->GetScreenRect()) ) {
+           (tentative_rect != g_FloatingCompassDialog->GetScreenRect()) ) {
 
             wxRect tb_rect = g_FloatingToolbarDialog->GetScreenRect();
 
@@ -6717,11 +6686,11 @@ void MyFrame::UpdateGPSCompassStatusBox( bool b_force_new )
             }
             else {
                 wxPoint posn_in_canvas =
-                    wxPoint( cc1->GetSize().x - size_x - x_offset - cc1_edge_comp,
-                             cc1->GetSize().y - ( size_y + y_offset + cc1_edge_comp ) );
+                wxPoint( cc1->GetSize().x - size_x - x_offset - cc1_edge_comp,
+                        cc1->GetSize().y - ( size_y + y_offset + cc1_edge_comp ) );
                 g_FloatingCompassDialog->Move( cc1->ClientToScreen( posn_in_canvas ) );
             }
-
+            
             b_update = true;
 
             g_last_tb_rect = tb_rect;
@@ -7327,6 +7296,8 @@ void MyFrame::UpdateControlBar( void )
 
 void MyFrame::selectChartDisplay( int type, int family)
 {
+    double target_scale = cc1->GetVP().view_scale_ppm;
+
     if( !cc1->GetQuiltMode() ) {
         if(pCurrentStack){
             int stack_index = -1;
@@ -7342,7 +7313,7 @@ void MyFrame::selectChartDisplay( int type, int family)
                     break;
                 }
             }
-            
+
             if(stack_index >= 0){
                 SelectChartFromStack( stack_index );
             }
@@ -7366,17 +7337,22 @@ void MyFrame::selectChartDisplay( int type, int family)
                 }
             }
         }
-        
+
         if(sel_dbIndex >= 0){
             SelectQuiltRefdbChart( sel_dbIndex );
         }
-        
-        
+
+        //  Now adjust the scale to the target...
+        cc1->SetVPScale(target_scale);
+
+        //  Re-qualify the quilt reference chart selection
+        cc1->AdjustQuiltRefChart(  );
+
     }
-    
+
     UpdateGlobalMenuItems(); // update the state of the menu items (checkmarks etc)
     cc1->SetQuiltChartHiLiteIndex( -1 );
-    
+
     cc1->ReloadVP();
 }
 
@@ -9271,7 +9247,8 @@ void MyFrame::UpdateAISMOBRoute( AIS_Target_Data *ptarget )
 
 void MyFrame::applySettingsString( wxString settings)
 {
-    
+    g_Platform->ShowBusySpinner();
+   
     //  Parse the passed settings string
     //    wxLogMessage( settings );
     bool bproc_InternalGPS = false;
@@ -9387,10 +9364,16 @@ void MyFrame::applySettingsString( wxString settings)
         
         else if(token.StartsWith( _T("prefs_chartScaleFactor"))){
             double a;
-            if(val.ToDouble(&a))
+            if(val.ToDouble(&a)){
                 g_ChartScaleFactor = wxRound( (a / 10.) - 5.);
+                g_ChartScaleFactorExp = g_Platform->getChartScaleFactorExp( g_ChartScaleFactor );
+            }
         }
-        
+
+        else if(token.StartsWith( _T("prefs_chartInitDir"))){
+            *pInit_Chart_Dir = val;
+        }
+
         else if(token.StartsWith( _T("prefs_displaycategory"))){
             rr |= S52_CHANGED;
             _DisCat nset = DISPLAYBASE;
@@ -9529,7 +9512,7 @@ void MyFrame::applySettingsString( wxString settings)
 
     // And apply the changes
     pConfig->UpdateSettings();
-    
+
     if(rr & S52_CHANGED){
         if(ps52plib){
             ps52plib->FlushSymbolCaches();
@@ -9537,24 +9520,20 @@ void MyFrame::applySettingsString( wxString settings)
             ps52plib->GenerateStateHash();
         }
     }
-    
-    
+
     ProcessOptionsDialog( rr,  &NewDirArray );
 
+    if(g_FloatingToolbarDialog)
+        g_FloatingToolbarDialog->DestroyToolBar();
+
+    //  We do this is one case only to remove an orphan recovery window
+#ifdef __OCPN__ANDROID__
     if(previous_expert && !g_bUIexpert){
-        if(g_FloatingToolbarDialog)
-            g_FloatingToolbarDialog->SurfaceFromGrabber();
+        androidForceFullRepaint();
     }
+#endif
 
     g_Platform->applyExpertMode(g_bUIexpert);
-    
-    ShowChartBarIfEnabled();
-    
-    gFrame->Raise();
-    cc1->InvalidateGL();
-    DoChartUpdate();
-    UpdateControlBar();
-    Refresh();
 
     //  We set the compass size first, since that establishes the available space for the toolbar.
     if(g_FloatingCompassDialog){
@@ -9567,15 +9546,22 @@ void MyFrame::applySettingsString( wxString settings)
     RequestNewToolbar(true);    // Force rebuild, to pick up bGUIexpert settings.
     SurfaceToolbar();
 
+    gFrame->Raise();
+
+    cc1->InvalidateGL();
+    DoChartUpdate();
+    UpdateControlBar();
+    Refresh();
+
     ShowChartBarIfEnabled();
-    
+
 #if defined(__WXOSX__) || defined(__WXQT__)
     if( g_FloatingCompassDialog )
         g_FloatingCompassDialog->Raise();
-    
+
     if( g_FloatingToolbarDialog )
         g_FloatingToolbarDialog->Raise();
-    
+
     //    if( b_restoreAIS ){
     //        g_pAISTargetList = new AISTargetListDialog( this, g_pauimgr, g_pAIS );
     //        g_pAISTargetList->UpdateAISTargetList();
@@ -9586,11 +9572,13 @@ void MyFrame::applySettingsString( wxString settings)
         console->Raise();
 
     Refresh( false );
-    
+
     if (NMEALogWindow::Get().Active())
         NMEALogWindow::Get().GetTTYWindow()->Raise();
-    
-}   
+
+    g_Platform->HideBusySpinner();
+
+}
 
 #ifdef wxHAS_POWER_EVENTS
 void MyFrame::OnSuspending(wxPowerEvent& event)
@@ -11356,6 +11344,29 @@ wxFont *GetOCPNScaledFont( wxString item, int default_size )
     return dFont;
 }
 
+wxFont GetOCPNGUIScaledFont( wxString item )
+{
+    wxFont *dFont = FontMgr::Get().GetFont( item, 0 );
+//    int req_size = dFont->GetPointSize();  // Not used
+    wxFont qFont = *dFont;
+    
+    if( g_bresponsive ){
+        double postmult =  exp( g_GUIScaleFactor * (0.693 / 5.0) );       //  exp(2)
+        double scaled_font_size = dFont->GetPointSize() * postmult;
+        
+        double points_per_mm  = g_Platform->getFontPointsperPixel() * g_Platform->GetDisplayDPmm();
+        double min_scaled_font_size = 3 * points_per_mm;    // smaller than 3 mm is unreadable
+        int nscaled_font_size = wxMax( wxRound(scaled_font_size), min_scaled_font_size );
+        
+        //        wxFont *qFont = wxTheFontList->FindOrCreateFont( nscaled_font_size,
+        //                                                                  dFont->GetFamily(),
+        //                                                                  dFont->GetStyle(),
+        //                                                                  dFont->GetWeight());
+        qFont.SetPointSize(nscaled_font_size);
+    }
+    
+    return qFont;
+}
 
 OCPN_ThreadMessageEvent::OCPN_ThreadMessageEvent(wxEventType commandType, int id)
 :wxEvent(id, commandType)

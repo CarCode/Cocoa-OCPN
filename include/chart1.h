@@ -52,10 +52,10 @@
 //    Global Static error reporting function
 extern "C" void MyCPLErrorHandler( CPLErr eErrClass, int nError,
                              const char * pszErrorMsg );
+#endif
 
 wxFont *GetOCPNScaledFont( wxString item, int default_size = 0 );
-
-#endif
+wxFont GetOCPNGUIScaledFont( wxString item );
 
 wxArrayString *EnumerateSerialPorts(void);
 wxColour GetGlobalColor(wxString colorName);
@@ -202,6 +202,7 @@ enum
 //      Command identifiers for wxCommandEvents coming from the outside world.
 //      Removed from enum to facilitate constant definition
 #define ID_CMD_APPLY_SETTINGS 300
+#define ID_CMD_NULL_REFRESH 301
 
 
 #define N_STATUS_BAR_FIELDS_MAX     20

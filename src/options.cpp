@@ -257,6 +257,7 @@ extern bool             g_bAutoHideToolbar;
 extern int              g_nAutoHideToolbar;
 extern int              g_GUIScaleFactor;
 extern int              g_ChartScaleFactor;
+extern float            g_ChartScaleFactorExp;
 
 extern double           g_config_display_size_mm;
 extern bool             g_config_display_size_manual;
@@ -2940,7 +2941,7 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
     
     pResponsive = new wxCheckBox( itemPanelFont, ID_REPONSIVEBOX, _("Enable Tablet Scaled Graphics interface") );
     miscOptions->Add( pResponsive, 0, wxALL, border_size );
-#ifndef __WXOSX__
+
     int slider_width = wxMax(m_fontHeight * 4, 150);
     
     m_pSlider_GUI_Factor = new wxSlider( itemPanelFont, wxID_ANY, 0, -5, 5,
@@ -2968,7 +2969,6 @@ void options::CreatePanel_UI( size_t parent, int border_size, int group_item_spa
 
 #ifdef __WXQT__
     m_pSlider_Chart_Factor->GetHandle()->setStyleSheet( getQtStyleSheet());
-#endif
 #endif
 #endif
 }
@@ -3019,6 +3019,10 @@ void options::CreateControls()
 
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer( wxVERTICAL );
     itemDialog1->SetSizer( itemBoxSizer2 );
+
+#ifdef __OCPN__ANDROID__
+    itemDialog1->GetHandle()->setStyleSheet( getQtStyleSheet());
+#endif
 
     int flags = 0;
 
@@ -3422,10 +3426,8 @@ void options::SetInitialSettings()
     m_pCheck_Rollover_CPA->SetValue( g_bAISRolloverShowCPA );
 
     m_pSlider_Zoom->SetValue( g_chart_zoom_modifier );
-#ifndef __WXOSX__
     m_pSlider_GUI_Factor->SetValue(g_GUIScaleFactor);
     m_pSlider_Chart_Factor->SetValue(g_ChartScaleFactor);
-#endif
     wxString screenmm;
     
     if( !g_config_display_size_manual ){
@@ -4360,7 +4362,7 @@ void options::OnApplyClick( wxCommandEvent& event )
             }
         }
     }
-    
+
 
     g_bShowMoored = !m_pCheck_Show_Moored->GetValue();
     m_pText_Moored_Speed->GetValue().ToDouble( &g_ShowMoored_Kts );
@@ -4388,10 +4390,10 @@ void options::OnApplyClick( wxCommandEvent& event )
     g_bAISRolloverShowCPA = m_pCheck_Rollover_CPA->GetValue();
 
     g_chart_zoom_modifier = m_pSlider_Zoom->GetValue();
-#ifndef __WXOSX__
     g_GUIScaleFactor = m_pSlider_GUI_Factor->GetValue();
     g_ChartScaleFactor = m_pSlider_Chart_Factor->GetValue();
-#endif
+    g_ChartScaleFactorExp = g_Platform->getChartScaleFactorExp( g_ChartScaleFactor );
+
     g_NMEAAPBPrecision = m_choicePrecision->GetCurrentSelection();
     
     g_TalkerIdText = m_TalkerIdText->GetValue().MakeUpper();
@@ -5476,7 +5478,10 @@ int ChartGroupsUI::FindGroupBranch( ChartGroup *pGroup, wxTreeCtrl *ptree, wxTre
         wxString target = pGroup->m_element_array.Item( i )->m_element_name;
         if( branch_name == target ) {
             target_element = pGroup->m_element_array.Item( i );
-            target_item_index = i;
+#ifdef __WXOSX__
+            if(target_element)
+#endif
+                target_item_index = i;
             break;
         }
     }
@@ -5618,6 +5623,7 @@ void options::OnInsertTideDataLocation( wxCommandEvent &event )
 
 void options::OnRemoveTideDataLocation( wxCommandEvent &event )
 {
+#ifndef __WXQT__                // Multi selection is not implemented in wxQT
     wxArrayInt sels;
     int nSel = tcDataSelected->GetSelections(sels);
     wxArrayString a;
@@ -5626,9 +5632,16 @@ void options::OnRemoveTideDataLocation( wxCommandEvent &event )
     }
 
     for (unsigned int i=0 ; i < a.Count() ; i++) {
+
         int b = tcDataSelected->FindString(a.Item(i));
+        wxCharBuffer buf = a.Item(i).ToUTF8();
         tcDataSelected->Delete( b );
     }
+#else
+    int iSel = tcDataSelected->GetSelection();
+    tcDataSelected->Delete( iSel );
+#endif
+
 }
 
 void options::OnValChange( wxCommandEvent& event )
@@ -6728,7 +6741,7 @@ void OpenGLOptionsDlg::OnButtonClear( wxCommandEvent& event )
     wxString path =  g_Platform->GetPrivateDataDir() + wxFileName::GetPathSeparator() + _T("raster_texture_cache");
     if(::wxDirExists( path )){
         wxArrayString files;
-        size_t nfiles = wxDir::GetAllFiles(path, &files);
+        /*size_t nfiles = */wxDir::GetAllFiles(path, &files);  // Not used
         for(unsigned int i=0 ; i < files.GetCount() ; i++){
             ::wxRemoveFile(files[i]);
         }                
@@ -6745,7 +6758,7 @@ wxString OpenGLOptionsDlg::TextureCacheSize()
     long long total = 0;
     if(::wxDirExists( path )) {
         wxArrayString files;
-        size_t nfiles = wxDir::GetAllFiles(path, &files);
+        /*size_t nfiles = */wxDir::GetAllFiles(path, &files);  // Not used
         for(unsigned int i=0 ; i < files.GetCount() ; i++){
             total += wxFile(files[i]).Length();
         }

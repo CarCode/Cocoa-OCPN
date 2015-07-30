@@ -562,15 +562,19 @@ void ocpnFloatingToolbarDialog::SurfaceFromGrabber()
     Hide();
     Move( 0, 0 );
 #endif
-    
+
+    if( m_ptoolbar )
+        m_ptoolbar->InvalidateBitmaps();
+
     RePosition();
     Show();
-    if( m_ptoolbar ) m_ptoolbar->EnableTooltips();
-    
+    if( m_ptoolbar )
+        m_ptoolbar->EnableTooltips();
+
     if( g_bAutoHideToolbar && (g_nAutoHideToolbar > 0) ){
         m_fade_timer.Start( g_nAutoHideToolbar * 1000 );
     }
-    
+
 #ifdef __WXQT__
     wxSize s = gFrame->GetSize();               // check for rotation
     if(m_recoversize.x == s.x)
@@ -947,6 +951,10 @@ void ocpnFloatingToolbarDialog::DestroyToolBar()
         delete m_ptoolbar;                  //->Destroy();
         m_ptoolbar = NULL;
     }
+
+    m_destroyGrabber = m_pRecoverwin;
+    m_destroyTimer.Start( 5, wxTIMER_ONE_SHOT );           //  Destor the unneeded recovery grabber
+
 }
 
 //----------------------------------------------------------------------------
@@ -1769,7 +1777,6 @@ void ocpnToolBarSimple::DrawTool( wxToolBarToolBase *tool )
 void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
 {
     ocpnToolBarTool *tool = (ocpnToolBarTool *) toolBase;
-
     PrepareDC( dc );
 
     wxPoint drawAt( tool->m_x, tool->m_y );
@@ -1810,7 +1817,8 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
                 if( bmp.GetDepth() == 1 ) {
                     if( tool->rollover ) {
                         bmp = m_style->BuildPluginIcon( tool->pluginRolloverIcon, TOOLICON_TOGGLED );
-                        if( ! bmp.IsOk() ) bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_TOGGLED );
+                        if( ! bmp.IsOk() )
+                            bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_TOGGLED );
                     }
                     else
                         bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_TOGGLED );
@@ -1820,11 +1828,16 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
                 if( bmp.GetDepth() == 1 ) {
                     if( tool->rollover ) {
                         bmp = m_style->BuildPluginIcon( tool->pluginRolloverIcon, TOOLICON_NORMAL );
-                        if( ! bmp.IsOk() ) bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_NORMAL );
+                        if( ! bmp.IsOk() )
+                            bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_NORMAL );
                     }
                     else
                         bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_NORMAL );
                 }
+            }
+            if(m_sizefactor > 1.0 ){
+                wxImage scaled_image = bmp.ConvertToImage();
+                bmp = wxBitmap(scaled_image.Scale(tool->m_width, tool->m_height, wxIMAGE_QUALITY_HIGH));
             }
             tool->SetNormalBitmap( bmp );
             tool->bitmapOK = true;

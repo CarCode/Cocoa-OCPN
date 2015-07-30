@@ -368,6 +368,8 @@ extern bool             g_bAutoHideToolbar;
 extern int              g_nAutoHideToolbar;
 extern int              g_GUIScaleFactor;
 extern int              g_ChartScaleFactor;
+extern float            g_ChartScaleFactorExp;
+
 extern wxString         g_uiStyle;
 
 #ifdef ocpnUSE_GL
@@ -1114,6 +1116,12 @@ MyConfig::MyConfig( const wxString &appName, const wxString &vendorName,
 
 void MyConfig::CreateRotatingNavObjBackup()
 {
+
+    // Avoid nonsense log errors...
+#ifdef __OCPN__ANDROID__
+    wxLogNull logNo;
+#endif
+
     //Rotate navobj backups, but just in case there are some changes in the current version
     //to prevent the user trying to "fix" the problem by continuously starting the
     //application to overwrite all of his good backups...
@@ -1227,6 +1235,7 @@ int MyConfig::LoadMyConfig()
 
     Read( _T ( "GUIScaleFactor" ), &g_GUIScaleFactor, 0 );
     Read( _T ( "ChartObjectScaleFactor" ), &g_ChartScaleFactor, 0 );
+    g_ChartScaleFactorExp = g_Platform->getChartScaleFactorExp( g_ChartScaleFactor );
 
     Read( _T ( "FilterNMEA_Avg" ), &g_bfilter_cogsog, 0 );
     Read( _T ( "FilterNMEA_Sec" ), &g_COGFilterSec, 1 );
@@ -2487,6 +2496,11 @@ void MyConfig::LoadConfigGroups( ChartGroupArray *pGroupArray )
 
 void MyConfig::UpdateSettings()
 {
+    //  Temporarily suppress logging of trivial non-fatal wxLogSysError() messages provoked by Android security...
+#ifdef __OCPN__ANDROID__
+    wxLogNull logNo;
+#endif
+
 //    Global options and settings
     SetPath( _T ( "/Settings" ) );
 
