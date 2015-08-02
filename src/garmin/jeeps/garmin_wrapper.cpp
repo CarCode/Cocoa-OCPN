@@ -173,14 +173,18 @@ GPS_SWay **Garmin_GPS_Create_A200_Route(Route *pr, int route_number, int *size)
       GPS_SWay **ppway = (GPS_SWay **)malloc((*size) * sizeof(GPS_PWay));
 
       //    and the GPS_Oways themselves
+#ifdef __WXOSX__
+      ppway[0] = GPS_Way_New();
+      for(int i=1 ; i < nPoints+1 ; i++)
+#else
       for(int i=0 ; i < nPoints+1 ; i++)
+#endif
             ppway[i] = GPS_Way_New();
 
 
       //    Now fill in the useful elements
 
       //    Element 0 is a route record
-
       GPS_PWay pway = ppway[0];
       pway->isrte = true;
       pway->rte_num = route_number;
@@ -230,7 +234,12 @@ GPS_SWay **Garmin_GPS_Create_A201_Route(Route *pr, int route_number, int *size)
       GPS_SWay **ppway = (GPS_SWay **)malloc((*size) * sizeof(GPS_PWay));
 
       //    and the GPS_Oways themselves
+#ifdef __WXOSX__
+    ppway[0] = GPS_Way_New();
+    for(int i=1 ; i < *size ; i++)
+#else
       for(int i=0 ; i < *size ; i++)
+#endif
             ppway[i] = GPS_Way_New();
 
 

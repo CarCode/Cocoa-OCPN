@@ -398,9 +398,13 @@ void RouteProp::RecalculateSize( void )
     //  Make an estimate of the dialog size, without scrollbars showing
 
     wxSize esize;
+#ifdef __WXOSX__
+    esize.x = GetCharWidth() * 120;
+    esize.y = GetCharHeight() * 46;
+#else
     esize.x = GetCharWidth() * 110;
     esize.y = GetCharHeight() * 44;
-
+#endif
     wxSize dsize = GetParent()->GetClientSize();
     esize.y = wxMin(esize.y, dsize.y - (2 * GetCharHeight()));
     esize.x = wxMin(esize.x, dsize.x - (2 * GetCharHeight()));

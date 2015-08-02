@@ -93,7 +93,11 @@ xstrdup(const char *s)
 	char *o = s ? strdup(s) : strdup("");
 
 	if (!o) {
+#ifdef __WXOSX__
+        fatal("gpsbabel: Unable to allocate memory for xstrdup().\n");
+#else
 		fatal("gpsbabel: Unable to allocate %ld bytes of memory.\n", (unsigned long) strlen(s));
+#endif
 	}
 
 	return o;
