@@ -44,6 +44,16 @@
 			<key>orderHint</key>
 			<integer>5</integer>
 		</dict>
+		<key>ac_pi copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>45</integer>
+		</dict>
+		<key>ac_pi.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>41</integer>
+		</dict>
 		<key>calculator-i18n.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -63,6 +73,11 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>10</integer>
+		</dict>
+		<key>chartdldr_pi.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>42</integer>
 		</dict>
 		<key>dashboard-i18n.xcscheme</key>
 		<dict>
@@ -123,6 +138,11 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>22</integer>
+		</dict>
+		<key>nmeaconverter_pi.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>43</integer>
 		</dict>
 		<key>objsearch_pi copy 2.xcscheme</key>
 		<dict>
@@ -233,6 +253,11 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>28</integer>
+		</dict>
+		<key>wxCurl.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>44</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -503,6 +528,11 @@
 			<true/>
 		</dict>
 		<key>A6DB19BA18EDCDD300E643D2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A6DB33441B736C0400163272</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -56,6 +56,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				A6F037B61B73FBF000E82ECC /* PBXTargetDependency */,
 				A669B20F1B374A6500C440BF /* PBXTargetDependency */,
 				A68035B31B2890A8007A4045 /* PBXTargetDependency */,
 				EAAB4E87696645CDAEA03510 /* PBXTargetDependency */,
@@ -253,7 +254,6 @@
 		84E4D48DC39046D09DA3B9D1 /* talkerid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F3AF4F6F737411EB96E9DE3 /* talkerid.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		8515E5FD75824C139F17EFD7 /* ogrmultilinestring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7DC230A99E044F9A95B404D5 /* ogrmultilinestring.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		8543DBC604B447CEACF59123 /* PCM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 261F475E34AE4BA195959B50 /* PCM.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		85D17722C3AD480DA667AACD /* compasswin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8CEE48B7AEB5458EA410B145 /* compasswin.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		862B7AF1C9DD4EB5ABBC1088 /* CrewList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9FD750239864DA19F11B3E9 /* CrewList.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		875E563AEF24447699279F44 /* Track.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFF06E212B740F6A3D40E04 /* Track.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		875EDB02E57A46C1AC1A60D4 /* chart1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DB17F660A3D74672A428F377 /* chart1.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -572,6 +572,36 @@
 		A6DB19E018EDCE7600E643D2 /* br24radar_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB19DF18EDCE7600E643D2 /* br24radar_pi.cpp */; };
 		A6DB19E418EDCEB500E643D2 /* br24radarcontrol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB19E318EDCEB500E643D2 /* br24radarcontrol.cpp */; };
 		A6DB19E618EDCECE00E643D2 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB19E518EDCECE00E643D2 /* icons.cpp */; };
+		A6DB33761B73752F00163272 /* ocpn_draw_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33751B73752F00163272 /* ocpn_draw_pi.cpp */; };
+		A6DB337B1B73758D00163272 /* Boundary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33771B73758D00163272 /* Boundary.cpp */; };
+		A6DB337C1B73758D00163272 /* BoundaryMan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33781B73758D00163272 /* BoundaryMan.cpp */; };
+		A6DB337D1B73758D00163272 /* BoundaryPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33791B73758D00163272 /* BoundaryPoint.cpp */; };
+		A6DB337E1B73758D00163272 /* BoundaryProp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB337A1B73758D00163272 /* BoundaryProp.cpp */; };
+		A6DB33811B7375B700163272 /* EBL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB337F1B7375B700163272 /* EBL.cpp */; };
+		A6DB33821B7375B700163272 /* EBLProp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33801B7375B700163272 /* EBLProp.cpp */; };
+		A6DB33841B7375F600163272 /* PointMan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33831B7375F600163272 /* PointMan.cpp */; };
+		A6DB33861B73761500163272 /* ODSelect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33851B73761500163272 /* ODSelect.cpp */; };
+		A6DB33891B73763800163272 /* PathMan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33871B73763800163272 /* PathMan.cpp */; };
+		A6DB338A1B73763800163272 /* pathmanagerdialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33881B73763800163272 /* pathmanagerdialog.cpp */; };
+		A6DB338C1B73765E00163272 /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB338B1B73765E00163272 /* Path.cpp */; };
+		A6DB338E1B73767700163272 /* ODPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB338D1B73767700163272 /* ODPoint.cpp */; };
+		A6DB33921B73769800163272 /* ODConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB338F1B73769800163272 /* ODConfig.cpp */; };
+		A6DB33931B73769800163272 /* ODdc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33901B73769800163272 /* ODdc.cpp */; };
+		A6DB33941B73769800163272 /* ODEventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33911B73769800163272 /* ODEventHandler.cpp */; };
+		A6DB33961B7376CD00163272 /* ODNavObjectChanges.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33951B7376CD00163272 /* ODNavObjectChanges.cpp */; };
+		A6DB33991B7376F200163272 /* ODPropertiesDialogDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33971B7376F200163272 /* ODPropertiesDialogDef.cpp */; };
+		A6DB339A1B7376F200163272 /* ODPropertiesDialogImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33981B7376F200163272 /* ODPropertiesDialogImpl.cpp */; };
+		A6DB339D1B73771200163272 /* ODPathPropertiesDialogDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB339B1B73771200163272 /* ODPathPropertiesDialogDef.cpp */; };
+		A6DB339E1B73771200163272 /* ODPathPropertiesDialogImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB339C1B73771200163272 /* ODPathPropertiesDialogImpl.cpp */; };
+		A6DB33A21B73775900163272 /* ODPointPropertiesDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB339F1B73775900163272 /* ODPointPropertiesDialog.cpp */; };
+		A6DB33A31B73775900163272 /* ODPointPropertiesImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33A01B73775900163272 /* ODPointPropertiesImpl.cpp */; };
+		A6DB33A41B73775900163272 /* ODPositionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33A11B73775900163272 /* ODPositionParser.cpp */; };
+		A6DB33A61B73777700163272 /* ODRolloverWin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33A51B73777700163272 /* ODRolloverWin.cpp */; };
+		A6DB33A91B73779A00163272 /* ODToolbarDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33A71B73779A00163272 /* ODToolbarDef.cpp */; };
+		A6DB33AA1B73779A00163272 /* ODToolbarImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33A81B73779A00163272 /* ODToolbarImpl.cpp */; };
+		A6DB33AC1B7377CE00163272 /* ODUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33AB1B7377CE00163272 /* ODUtils.cpp */; };
+		A6DB33AE1B7377E700163272 /* ODicons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33AD1B7377E700163272 /* ODicons.cpp */; };
+		A6DB33B01B73780200163272 /* TextPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33AF1B73780200163272 /* TextPoint.cpp */; };
 		A6DBD7181A28B40700E34070 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A689178919B8FBD400E95E0F /* Sparkle.framework */; };
 		A6DBD7191A28B40E00E34070 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A671BCAC19BE406F00019119 /* CoreFoundation.framework */; };
 		A6DBD71A1A28B41900E34070 /* libwx_baseu_net-3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A69286AD19B8E8A1001FF9A0 /* libwx_baseu_net-3.1.dylib */; };
@@ -588,7 +618,9 @@
 		A6E0822D1AAB591B002CC7F0 /* viewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E0822C1AAB591B002CC7F0 /* viewport.cpp */; };
 		A6E0822F1AAB5931002CC7F0 /* canvasMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E0822E1AAB5931002CC7F0 /* canvasMenu.cpp */; };
 		A6E082311AAB5956002CC7F0 /* OCPNPlatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E082301AAB5956002CC7F0 /* OCPNPlatform.cpp */; };
+		A6F037B71B73FC2900E82ECC /* libdraw_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6DB33551B736C0400163272 /* libdraw_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A6F5FF5A1AEB9B120034F6CF /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F5FF591AEB9B120034F6CF /* TexFont.cpp */; };
+		A6FCDFF31B6A6F3D00E1320E /* compasswin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8CEE48B7AEB5458EA410B145 /* compasswin.cpp */; };
 		A7D85A911CD9440D88990DE9 /* lat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A34D3BDAF9D408F9D08642A /* lat.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A7FB0E99BAB54FE18BFC2CF1 /* PositionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1A7C66C95E44197A749D5E9 /* PositionParser.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A926F111F93F452498044653 /* dicts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9BF6F7114A5401DB8A705FB /* dicts.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -876,6 +908,13 @@
 			remoteGlobalIDString = A6B4A52F17A515FA00E3A5D0;
 			remoteInfo = weather_routing_pi;
 		};
+		A6F037B51B73FBF000E82ECC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6DB33441B736C0400163272;
+			remoteInfo = draw_pi;
+		};
 		A6FE261819D55C28001EF4B7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
@@ -1033,6 +1072,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				A6F037B71B73FC2900E82ECC /* libdraw_pi.dylib in Copy Files */,
 				A669B20D1B37496900C440BF /* libac_pi.dylib in Copy Files */,
 				A68035B41B2890D7007A4045 /* libnmeaconverter_pi.dylib in Copy Files */,
 				A64EBB551B271D5A00F861D0 /* libBR24radar_pi.dylib in Copy Files */,
@@ -1696,7 +1736,6 @@
 		A66FE66117985E1C00A2DD0D /* WindowDestroyListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WindowDestroyListener.h; path = include/WindowDestroyListener.h; sourceTree = "<group>"; };
 		A671BCAC19BE406F00019119 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		A671BCC719BE44BC00019119 /* libsquiddio_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libsquiddio_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		A671BCC819BE45DD00019119 /* gpxdocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpxdocument.h; path = plugins/Squiddio_pi/src/gpxdocument.h; sourceTree = "<group>"; };
 		A671BCC919BE461800019119 /* Hyperlink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hyperlink.h; path = plugins/Squiddio_pi/src/Hyperlink.h; sourceTree = "<group>"; };
 		A671BCCA19BE463A00019119 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/Squiddio_pi/src/icons.h; sourceTree = "<group>"; };
 		A671BCCB19BE466600019119 /* Layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Layer.h; path = plugins/Squiddio_pi/src/Layer.h; sourceTree = "<group>"; };
@@ -1923,6 +1962,69 @@
 		A6DB19DF18EDCE7600E643D2 /* br24radar_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = br24radar_pi.cpp; path = plugins/BR24radar_pi/src/br24radar_pi.cpp; sourceTree = "<group>"; };
 		A6DB19E318EDCEB500E643D2 /* br24radarcontrol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = br24radarcontrol.cpp; path = plugins/BR24radar_pi/src/br24radarcontrol.cpp; sourceTree = "<group>"; };
 		A6DB19E518EDCECE00E643D2 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/BR24radar_pi/src/icons.cpp; sourceTree = "<group>"; };
+		A6DB33551B736C0400163272 /* libdraw_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libdraw_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6DB33561B736DEF00163272 /* ocpn_draw_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ocpn_draw_pi.h; path = plugins/draw_pi/include/ocpn_draw_pi.h; sourceTree = "<group>"; };
+		A6DB33571B736E1A00163272 /* Boundary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Boundary.h; path = plugins/draw_pi/include/Boundary.h; sourceTree = "<group>"; };
+		A6DB33581B736E6400163272 /* BoundaryMan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BoundaryMan.h; path = plugins/draw_pi/include/BoundaryMan.h; sourceTree = "<group>"; };
+		A6DB33591B736E6400163272 /* BoundaryPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BoundaryPoint.h; path = plugins/draw_pi/include/BoundaryPoint.h; sourceTree = "<group>"; };
+		A6DB335A1B736E6400163272 /* BoundaryProp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BoundaryProp.h; path = plugins/draw_pi/include/BoundaryProp.h; sourceTree = "<group>"; };
+		A6DB335B1B736E6400163272 /* EBL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EBL.h; path = plugins/draw_pi/include/EBL.h; sourceTree = "<group>"; };
+		A6DB335C1B736E6400163272 /* EBLProp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EBLProp.h; path = plugins/draw_pi/include/EBLProp.h; sourceTree = "<group>"; };
+		A6DB335D1B736E9D00163272 /* PointMan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PointMan.h; path = plugins/draw_pi/include/PointMan.h; sourceTree = "<group>"; };
+		A6DB335E1B736EBD00163272 /* ODSelect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODSelect.h; path = plugins/draw_pi/include/ODSelect.h; sourceTree = "<group>"; };
+		A6DB335F1B736EFB00163272 /* PathMan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PathMan.h; path = plugins/draw_pi/include/PathMan.h; sourceTree = "<group>"; };
+		A6DB33601B736EFB00163272 /* pathmanagerdialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pathmanagerdialog.h; path = plugins/draw_pi/include/pathmanagerdialog.h; sourceTree = "<group>"; };
+		A6DB33611B736F3300163272 /* Path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Path.h; path = plugins/draw_pi/include/Path.h; sourceTree = "<group>"; };
+		A6DB33621B736F5800163272 /* ODPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODPoint.h; path = plugins/draw_pi/include/ODPoint.h; sourceTree = "<group>"; };
+		A6DB33631B736F8300163272 /* ODConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODConfig.h; path = plugins/draw_pi/include/ODConfig.h; sourceTree = "<group>"; };
+		A6DB33641B736F8300163272 /* ODdc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODdc.h; path = plugins/draw_pi/include/ODdc.h; sourceTree = "<group>"; };
+		A6DB33651B736F8300163272 /* ODEventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODEventHandler.h; path = plugins/draw_pi/include/ODEventHandler.h; sourceTree = "<group>"; };
+		A6DB33661B736FBC00163272 /* ODNavObjectChanges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODNavObjectChanges.h; path = plugins/draw_pi/include/ODNavObjectChanges.h; sourceTree = "<group>"; };
+		A6DB33671B736FF900163272 /* ODPropertiesDialogDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODPropertiesDialogDef.h; path = plugins/draw_pi/include/ODPropertiesDialogDef.h; sourceTree = "<group>"; };
+		A6DB33681B736FF900163272 /* ODPropertiesDialogImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODPropertiesDialogImpl.h; path = plugins/draw_pi/include/ODPropertiesDialogImpl.h; sourceTree = "<group>"; };
+		A6DB33691B73702A00163272 /* ODPathPropertiesDialogDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODPathPropertiesDialogDef.h; path = plugins/draw_pi/include/ODPathPropertiesDialogDef.h; sourceTree = "<group>"; };
+		A6DB336A1B73702A00163272 /* ODPathPropertiesDialogImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODPathPropertiesDialogImpl.h; path = plugins/draw_pi/include/ODPathPropertiesDialogImpl.h; sourceTree = "<group>"; };
+		A6DB336B1B73705100163272 /* ODPointPropertiesDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODPointPropertiesDialog.h; path = plugins/draw_pi/include/ODPointPropertiesDialog.h; sourceTree = "<group>"; };
+		A6DB336C1B73705100163272 /* ODPointPropertiesImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODPointPropertiesImpl.h; path = plugins/draw_pi/include/ODPointPropertiesImpl.h; sourceTree = "<group>"; };
+		A6DB336D1B73705100163272 /* ODPositionParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODPositionParser.h; path = plugins/draw_pi/include/ODPositionParser.h; sourceTree = "<group>"; };
+		A6DB336E1B73706D00163272 /* ODRolloverWin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODRolloverWin.h; path = plugins/draw_pi/include/ODRolloverWin.h; sourceTree = "<group>"; };
+		A6DB336F1B73709400163272 /* ODToolbarDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODToolbarDef.h; path = plugins/draw_pi/include/ODToolbarDef.h; sourceTree = "<group>"; };
+		A6DB33701B73709400163272 /* ODToolbarImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODToolbarImpl.h; path = plugins/draw_pi/include/ODToolbarImpl.h; sourceTree = "<group>"; };
+		A6DB33711B7370B200163272 /* ODUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODUtils.h; path = plugins/draw_pi/include/ODUtils.h; sourceTree = "<group>"; };
+		A6DB33721B7370D100163272 /* ODvector2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODvector2D.h; path = plugins/draw_pi/include/ODvector2D.h; sourceTree = "<group>"; };
+		A6DB33731B7370EE00163272 /* ODicons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODicons.h; path = plugins/draw_pi/include/ODicons.h; sourceTree = "<group>"; };
+		A6DB33741B73710D00163272 /* TextPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextPoint.h; path = plugins/draw_pi/include/TextPoint.h; sourceTree = "<group>"; };
+		A6DB33751B73752F00163272 /* ocpn_draw_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ocpn_draw_pi.cpp; path = plugins/draw_pi/src/ocpn_draw_pi.cpp; sourceTree = "<group>"; };
+		A6DB33771B73758D00163272 /* Boundary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Boundary.cpp; path = plugins/draw_pi/src/Boundary.cpp; sourceTree = "<group>"; };
+		A6DB33781B73758D00163272 /* BoundaryMan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BoundaryMan.cpp; path = plugins/draw_pi/src/BoundaryMan.cpp; sourceTree = "<group>"; };
+		A6DB33791B73758D00163272 /* BoundaryPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BoundaryPoint.cpp; path = plugins/draw_pi/src/BoundaryPoint.cpp; sourceTree = "<group>"; };
+		A6DB337A1B73758D00163272 /* BoundaryProp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BoundaryProp.cpp; path = plugins/draw_pi/src/BoundaryProp.cpp; sourceTree = "<group>"; };
+		A6DB337F1B7375B700163272 /* EBL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EBL.cpp; path = plugins/draw_pi/src/EBL.cpp; sourceTree = "<group>"; };
+		A6DB33801B7375B700163272 /* EBLProp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EBLProp.cpp; path = plugins/draw_pi/src/EBLProp.cpp; sourceTree = "<group>"; };
+		A6DB33831B7375F600163272 /* PointMan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PointMan.cpp; path = plugins/draw_pi/src/PointMan.cpp; sourceTree = "<group>"; };
+		A6DB33851B73761500163272 /* ODSelect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODSelect.cpp; path = plugins/draw_pi/src/ODSelect.cpp; sourceTree = "<group>"; };
+		A6DB33871B73763800163272 /* PathMan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PathMan.cpp; path = plugins/draw_pi/src/PathMan.cpp; sourceTree = "<group>"; };
+		A6DB33881B73763800163272 /* pathmanagerdialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pathmanagerdialog.cpp; path = plugins/draw_pi/src/pathmanagerdialog.cpp; sourceTree = "<group>"; };
+		A6DB338B1B73765E00163272 /* Path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Path.cpp; path = plugins/draw_pi/src/Path.cpp; sourceTree = "<group>"; };
+		A6DB338D1B73767700163272 /* ODPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODPoint.cpp; path = plugins/draw_pi/src/ODPoint.cpp; sourceTree = "<group>"; };
+		A6DB338F1B73769800163272 /* ODConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODConfig.cpp; path = plugins/draw_pi/src/ODConfig.cpp; sourceTree = "<group>"; };
+		A6DB33901B73769800163272 /* ODdc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODdc.cpp; path = plugins/draw_pi/src/ODdc.cpp; sourceTree = "<group>"; };
+		A6DB33911B73769800163272 /* ODEventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODEventHandler.cpp; path = plugins/draw_pi/src/ODEventHandler.cpp; sourceTree = "<group>"; };
+		A6DB33951B7376CD00163272 /* ODNavObjectChanges.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODNavObjectChanges.cpp; path = plugins/draw_pi/src/ODNavObjectChanges.cpp; sourceTree = "<group>"; };
+		A6DB33971B7376F200163272 /* ODPropertiesDialogDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODPropertiesDialogDef.cpp; path = plugins/draw_pi/src/ODPropertiesDialogDef.cpp; sourceTree = "<group>"; };
+		A6DB33981B7376F200163272 /* ODPropertiesDialogImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODPropertiesDialogImpl.cpp; path = plugins/draw_pi/src/ODPropertiesDialogImpl.cpp; sourceTree = "<group>"; };
+		A6DB339B1B73771200163272 /* ODPathPropertiesDialogDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODPathPropertiesDialogDef.cpp; path = plugins/draw_pi/src/ODPathPropertiesDialogDef.cpp; sourceTree = "<group>"; };
+		A6DB339C1B73771200163272 /* ODPathPropertiesDialogImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODPathPropertiesDialogImpl.cpp; path = plugins/draw_pi/src/ODPathPropertiesDialogImpl.cpp; sourceTree = "<group>"; };
+		A6DB339F1B73775900163272 /* ODPointPropertiesDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODPointPropertiesDialog.cpp; path = plugins/draw_pi/src/ODPointPropertiesDialog.cpp; sourceTree = "<group>"; };
+		A6DB33A01B73775900163272 /* ODPointPropertiesImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODPointPropertiesImpl.cpp; path = plugins/draw_pi/src/ODPointPropertiesImpl.cpp; sourceTree = "<group>"; };
+		A6DB33A11B73775900163272 /* ODPositionParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODPositionParser.cpp; path = plugins/draw_pi/src/ODPositionParser.cpp; sourceTree = "<group>"; };
+		A6DB33A51B73777700163272 /* ODRolloverWin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODRolloverWin.cpp; path = plugins/draw_pi/src/ODRolloverWin.cpp; sourceTree = "<group>"; };
+		A6DB33A71B73779A00163272 /* ODToolbarDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODToolbarDef.cpp; path = plugins/draw_pi/src/ODToolbarDef.cpp; sourceTree = "<group>"; };
+		A6DB33A81B73779A00163272 /* ODToolbarImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODToolbarImpl.cpp; path = plugins/draw_pi/src/ODToolbarImpl.cpp; sourceTree = "<group>"; };
+		A6DB33AB1B7377CE00163272 /* ODUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODUtils.cpp; path = plugins/draw_pi/src/ODUtils.cpp; sourceTree = "<group>"; };
+		A6DB33AD1B7377E700163272 /* ODicons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODicons.cpp; path = plugins/draw_pi/src/ODicons.cpp; sourceTree = "<group>"; };
+		A6DB33AF1B73780200163272 /* TextPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextPoint.cpp; path = plugins/draw_pi/src/TextPoint.cpp; sourceTree = "<group>"; };
+		A6DB33B11B73834600163272 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = plugins/draw_pi/include/version.h; sourceTree = "<group>"; };
 		A6E082291AAB5889002CC7F0 /* viewport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = viewport.h; path = include/viewport.h; sourceTree = "<group>"; };
 		A6E0822A1AAB58C1002CC7F0 /* canvasMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = canvasMenu.h; path = include/canvasMenu.h; sourceTree = "<group>"; };
 		A6E0822B1AAB58F1002CC7F0 /* OCPNPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCPNPlatform.h; path = include/OCPNPlatform.h; sourceTree = "<group>"; };
@@ -2658,6 +2760,7 @@
 				A63220C91AE04A5200A52EAC /* chartdlfr_pi */,
 				A669B1E11B372BB300C440BF /* ac_pi */,
 				A671BCA419BE3D2F00019119 /* squiddio_pi */,
+				A6DB33411B736AEE00163272 /* draw_pi */,
 				A680359A1B28823A007A4045 /* nmeaconverter_pi */,
 			);
 			name = Sources;
@@ -3236,7 +3339,6 @@
 		A671BCA519BE3DB300019119 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
-				A671BCC819BE45DD00019119 /* gpxdocument.h */,
 				A671BCC919BE461800019119 /* Hyperlink.h */,
 				A671BCCA19BE463A00019119 /* icons.h */,
 				A671BCCB19BE466600019119 /* Layer.h */,
@@ -3619,6 +3721,91 @@
 			name = "Header Files";
 			sourceTree = "<group>";
 		};
+		A6DB33411B736AEE00163272 /* draw_pi */ = {
+			isa = PBXGroup;
+			children = (
+				A6DB33431B736B7100163272 /* Header Files */,
+				A6DB33421B736B5C00163272 /* Source Files */,
+			);
+			name = draw_pi;
+			sourceTree = "<group>";
+		};
+		A6DB33421B736B5C00163272 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				A6DB33751B73752F00163272 /* ocpn_draw_pi.cpp */,
+				A6DB33771B73758D00163272 /* Boundary.cpp */,
+				A6DB33781B73758D00163272 /* BoundaryMan.cpp */,
+				A6DB33791B73758D00163272 /* BoundaryPoint.cpp */,
+				A6DB337A1B73758D00163272 /* BoundaryProp.cpp */,
+				A6DB337F1B7375B700163272 /* EBL.cpp */,
+				A6DB33801B7375B700163272 /* EBLProp.cpp */,
+				A6DB33831B7375F600163272 /* PointMan.cpp */,
+				A6DB33851B73761500163272 /* ODSelect.cpp */,
+				A6DB33871B73763800163272 /* PathMan.cpp */,
+				A6DB33881B73763800163272 /* pathmanagerdialog.cpp */,
+				A6DB338B1B73765E00163272 /* Path.cpp */,
+				A6DB338D1B73767700163272 /* ODPoint.cpp */,
+				A6DB338F1B73769800163272 /* ODConfig.cpp */,
+				A6DB33901B73769800163272 /* ODdc.cpp */,
+				A6DB33911B73769800163272 /* ODEventHandler.cpp */,
+				A6DB33951B7376CD00163272 /* ODNavObjectChanges.cpp */,
+				A6DB33971B7376F200163272 /* ODPropertiesDialogDef.cpp */,
+				A6DB33981B7376F200163272 /* ODPropertiesDialogImpl.cpp */,
+				A6DB339B1B73771200163272 /* ODPathPropertiesDialogDef.cpp */,
+				A6DB339C1B73771200163272 /* ODPathPropertiesDialogImpl.cpp */,
+				A6DB339F1B73775900163272 /* ODPointPropertiesDialog.cpp */,
+				A6DB33A01B73775900163272 /* ODPointPropertiesImpl.cpp */,
+				A6DB33A11B73775900163272 /* ODPositionParser.cpp */,
+				A6DB33A51B73777700163272 /* ODRolloverWin.cpp */,
+				A6DB33A71B73779A00163272 /* ODToolbarDef.cpp */,
+				A6DB33A81B73779A00163272 /* ODToolbarImpl.cpp */,
+				A6DB33AB1B7377CE00163272 /* ODUtils.cpp */,
+				A6DB33AD1B7377E700163272 /* ODicons.cpp */,
+				A6DB33AF1B73780200163272 /* TextPoint.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		A6DB33431B736B7100163272 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				A6DB33561B736DEF00163272 /* ocpn_draw_pi.h */,
+				A6DB33571B736E1A00163272 /* Boundary.h */,
+				A6DB33581B736E6400163272 /* BoundaryMan.h */,
+				A6DB33591B736E6400163272 /* BoundaryPoint.h */,
+				A6DB335A1B736E6400163272 /* BoundaryProp.h */,
+				A6DB335B1B736E6400163272 /* EBL.h */,
+				A6DB335C1B736E6400163272 /* EBLProp.h */,
+				A6DB335D1B736E9D00163272 /* PointMan.h */,
+				A6DB335E1B736EBD00163272 /* ODSelect.h */,
+				A6DB335F1B736EFB00163272 /* PathMan.h */,
+				A6DB33601B736EFB00163272 /* pathmanagerdialog.h */,
+				A6DB33611B736F3300163272 /* Path.h */,
+				A6DB33621B736F5800163272 /* ODPoint.h */,
+				A6DB33631B736F8300163272 /* ODConfig.h */,
+				A6DB33641B736F8300163272 /* ODdc.h */,
+				A6DB33651B736F8300163272 /* ODEventHandler.h */,
+				A6DB33661B736FBC00163272 /* ODNavObjectChanges.h */,
+				A6DB33671B736FF900163272 /* ODPropertiesDialogDef.h */,
+				A6DB33681B736FF900163272 /* ODPropertiesDialogImpl.h */,
+				A6DB33691B73702A00163272 /* ODPathPropertiesDialogDef.h */,
+				A6DB336A1B73702A00163272 /* ODPathPropertiesDialogImpl.h */,
+				A6DB336B1B73705100163272 /* ODPointPropertiesDialog.h */,
+				A6DB336C1B73705100163272 /* ODPointPropertiesImpl.h */,
+				A6DB336D1B73705100163272 /* ODPositionParser.h */,
+				A6DB336E1B73706D00163272 /* ODRolloverWin.h */,
+				A6DB336F1B73709400163272 /* ODToolbarDef.h */,
+				A6DB33701B73709400163272 /* ODToolbarImpl.h */,
+				A6DB33711B7370B200163272 /* ODUtils.h */,
+				A6DB33721B7370D100163272 /* ODvector2D.h */,
+				A6DB33731B7370EE00163272 /* ODicons.h */,
+				A6DB33741B73710D00163272 /* TextPoint.h */,
+				A6DB33B11B73834600163272 /* version.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
 		A9DFE84696B94EA5B2A4099C /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -3804,6 +3991,7 @@
 				A64514F61AE4FF3000933404 /* libwxCurl.dylib */,
 				A68035AF1B288508007A4045 /* libnmeaconverter_pi.dylib */,
 				A669B1E01B372B7400C440BF /* libac_pi.dylib */,
+				A6DB33551B736C0400163272 /* libdraw_pi.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4398,6 +4586,22 @@
 			productReference = A6DB19DC18EDCDD400E643D2 /* libBR24radar_pi.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		A6DB33441B736C0400163272 /* draw_pi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6DB33521B736C0400163272 /* Build configuration list for PBXNativeTarget "draw_pi" */;
+			buildPhases = (
+				A6DB33451B736C0400163272 /* Sources */,
+				A6DB33511B736C0400163272 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = draw_pi;
+			productName = gradar_pi;
+			productReference = A6DB33551B736C0400163272 /* libdraw_pi.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		BBDCA085D6A048ACA460037B /* dashboard_pi */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B5E5A037A2EA44A3B6997887 /* Build configuration list for PBXNativeTarget "dashboard_pi" */;
@@ -4546,6 +4750,7 @@
 				A632207B1AE047E700A52EAC /* chartdldr_pi */,
 				A68035A21B288508007A4045 /* nmeaconverter_pi */,
 				A669B1D31B372B7400C440BF /* ac_pi */,
+				A6DB33441B736C0400163272 /* draw_pi */,
 			);
 		};
 /* End PBXProject section */
@@ -4898,6 +5103,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libobjsearch_pi.dylib\n";
+			showEnvVarsInLog = 0;
+		};
+		A6DB33511B736C0400163272 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libdraw_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libdraw_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libdraw_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libdraw_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libdraw_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libdraw_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libdraw_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libdraw_pi.dylib\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -5470,6 +5689,43 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A6DB33451B736C0400163272 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6DB33A21B73775900163272 /* ODPointPropertiesDialog.cpp in Sources */,
+				A6DB33A61B73777700163272 /* ODRolloverWin.cpp in Sources */,
+				A6DB339A1B7376F200163272 /* ODPropertiesDialogImpl.cpp in Sources */,
+				A6DB33A41B73775900163272 /* ODPositionParser.cpp in Sources */,
+				A6DB337D1B73758D00163272 /* BoundaryPoint.cpp in Sources */,
+				A6DB339D1B73771200163272 /* ODPathPropertiesDialogDef.cpp in Sources */,
+				A6DB33761B73752F00163272 /* ocpn_draw_pi.cpp in Sources */,
+				A6DB338A1B73763800163272 /* pathmanagerdialog.cpp in Sources */,
+				A6DB337B1B73758D00163272 /* Boundary.cpp in Sources */,
+				A6DB33B01B73780200163272 /* TextPoint.cpp in Sources */,
+				A6DB33921B73769800163272 /* ODConfig.cpp in Sources */,
+				A6DB33841B7375F600163272 /* PointMan.cpp in Sources */,
+				A6DB33941B73769800163272 /* ODEventHandler.cpp in Sources */,
+				A6DB33AE1B7377E700163272 /* ODicons.cpp in Sources */,
+				A6DB33861B73761500163272 /* ODSelect.cpp in Sources */,
+				A6DB338E1B73767700163272 /* ODPoint.cpp in Sources */,
+				A6DB33991B7376F200163272 /* ODPropertiesDialogDef.cpp in Sources */,
+				A6DB338C1B73765E00163272 /* Path.cpp in Sources */,
+				A6DB339E1B73771200163272 /* ODPathPropertiesDialogImpl.cpp in Sources */,
+				A6DB33A31B73775900163272 /* ODPointPropertiesImpl.cpp in Sources */,
+				A6DB33931B73769800163272 /* ODdc.cpp in Sources */,
+				A6DB33811B7375B700163272 /* EBL.cpp in Sources */,
+				A6DB33AC1B7377CE00163272 /* ODUtils.cpp in Sources */,
+				A6DB33961B7376CD00163272 /* ODNavObjectChanges.cpp in Sources */,
+				A6DB337E1B73758D00163272 /* BoundaryProp.cpp in Sources */,
+				A6DB337C1B73758D00163272 /* BoundaryMan.cpp in Sources */,
+				A6DB33821B7375B700163272 /* EBLProp.cpp in Sources */,
+				A6DB33AA1B73779A00163272 /* ODToolbarImpl.cpp in Sources */,
+				A6DB33A91B73779A00163272 /* ODToolbarDef.cpp in Sources */,
+				A6DB33891B73763800163272 /* PathMan.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F422F0362726497CA1FB3C22 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -5498,6 +5754,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6FCDFF31B6A6F3D00E1320E /* compasswin.cpp in Sources */,
 				A6E082311AAB5956002CC7F0 /* OCPNPlatform.cpp in Sources */,
 				A65F36E4197473690006DC40 /* jsonreader.cpp in Sources */,
 				A65F36E5197473690006DC40 /* jsonval.cpp in Sources */,
@@ -5591,7 +5848,6 @@
 				BFA588CF95CF42ECBC7C60C6 /* razdsparser.cpp in Sources */,
 				1F6070C2F20E42B994B6E9D8 /* styles.cpp in Sources */,
 				48D675F1A5F946E0869B1A2E /* toolbar.cpp in Sources */,
-				85D17722C3AD480DA667AACD /* compasswin.cpp in Sources */,
 				B57F875019994478819BDF69 /* geodesic.cpp in Sources */,
 				06B497E9E7C14330BFCD5DFD /* datastream.cpp in Sources */,
 				6BD0FD1D98A2446C97171E9A /* OCPN_DataStreamEvent.cpp in Sources */,
@@ -5746,6 +6002,11 @@
 			isa = PBXTargetDependency;
 			target = A6B4A52F17A515FA00E3A5D0 /* weather_routing_pi */;
 			targetProxy = A6B4A58217A5229300E3A5D0 /* PBXContainerItemProxy */;
+		};
+		A6F037B61B73FBF000E82ECC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6DB33441B736C0400163272 /* draw_pi */;
+			targetProxy = A6F037B51B73FBF000E82ECC /* PBXContainerItemProxy */;
 		};
 		A6FE261919D55C28001EF4B7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -10578,6 +10839,228 @@
 			};
 			name = Release;
 		};
+		A6DB33531B736C0400163272 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					ac_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_GL,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+					USE_DIALUP_MANAGER,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/draw_pi/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
+					/opt/local/include,
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = Debug;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+					"-framework",
+					AGL,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = draw_pi;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		A6DB33541B736C0400163272 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					ac_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_GL,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+					USE_DIALUP_MANAGER,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/draw_pi/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
+					/opt/local/include,
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = Release;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+					"-framework",
+					AGL,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = draw_pi;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
 		B02D6D5FE51F4156A9CF5601 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -12356,6 +12839,15 @@
 			buildConfigurations = (
 				A6DB19DA18EDCDD300E643D2 /* Debug */,
 				A6DB19DB18EDCDD300E643D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A6DB33521B736C0400163272 /* Build configuration list for PBXNativeTarget "draw_pi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6DB33531B736C0400163272 /* Debug */,
+				A6DB33541B736C0400163272 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
