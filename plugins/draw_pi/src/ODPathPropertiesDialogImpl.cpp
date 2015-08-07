@@ -92,9 +92,10 @@ ODPathPropertiesDialogImpl::ODPathPropertiesDialogImpl( wxWindow* parent, wxWind
     
     m_pEnroutePoint = NULL;
     m_bStartNow = false;
-    #ifdef __WXOSX__
-    style |= wxSTAY_ON_TOP;
-    #endif
+#ifdef __WXOSX__
+//    style |= wxSTAY_ON_TOP;  // Not used
+// No: Create(parent, id, caption, pos, size, style);
+#endif
     
     
     wxFont *qFont = OCPNGetFont(_("Dialog"), 0);

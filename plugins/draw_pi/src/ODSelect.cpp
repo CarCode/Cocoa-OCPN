@@ -434,8 +434,8 @@ SelectItem *ODSelect::FindSelection( float slat, float slon, int fseltype )
         if( pFindSel->m_seltype == fseltype ) {
             switch( fseltype ){
                 case SELTYPE_OCPNPOINT:
-                    a = fabs( slat - pFindSel->m_slat );
-                    b = fabs( slon - pFindSel->m_slon );
+//                    a = fabs( slat - pFindSel->m_slat );  // Not used
+//                    b = fabs( slon - pFindSel->m_slon );  // Not used
 
                     if( ( fabs( slat - pFindSel->m_slat ) < selectRadius )
                             && ( fabs( slon - pFindSel->m_slon ) < selectRadius ) ) goto find_ok;

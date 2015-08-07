@@ -42,14 +42,14 @@ ODPropertiesDialogDef::ODPropertiesDialogDef( wxWindow* parent, wxWindowID id, c
 	m_spinCtrlNavObjBackups = new wxSpinCtrl( m_panelGeneral, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 5 );
 	fgSizer4->Add( m_spinCtrlNavObjBackups, 0, wxALL, 5 );
 
-	m_staticTextEdgePan = new wxStaticText( m_panelGeneral, wxID_ANY, _("Edge Panning Sensitivity (%age screen width) Default 5"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextEdgePan = new wxStaticText( m_panelGeneral, wxID_ANY, _("Edge Panning Sensitivity (percentage screen width) Default 5"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextEdgePan->Wrap( -1 );
 	fgSizer4->Add( m_staticTextEdgePan, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 	m_sliderEdgePan = new wxSlider( m_panelGeneral, wxID_ANY, 5, 0, 10, wxDefaultPosition, wxSize( -1,-1 ), wxSL_HORIZONTAL|wxSL_LABELS );
 	fgSizer4->Add( m_sliderEdgePan, 0, wxALL|wxEXPAND, 5 );
 
-	m_staticTextInitialEdgePan = new wxStaticText( m_panelGeneral, wxID_ANY, _("Initial Edge Panning Sensitivity (%age screen width) Default 3"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextInitialEdgePan = new wxStaticText( m_panelGeneral, wxID_ANY, _("Initial Edge Panning Sensitivity (percentage screen width) Default 3"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextInitialEdgePan->Wrap( -1 );
 	fgSizer4->Add( m_staticTextInitialEdgePan, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 

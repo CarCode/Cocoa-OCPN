@@ -64,7 +64,7 @@ PointMan::PointMan()
     ProcessIcons();
 
     m_pFontEnumerator = new wxFontEnumerator();
-    bool bEF = m_pFontEnumerator->EnumerateFacenames();
+    /*bool bEF = */m_pFontEnumerator->EnumerateFacenames();  // Not used
     m_wxasFontFacenames = wxFontEnumerator::GetFacenames();
 
     m_nGUID = 0;

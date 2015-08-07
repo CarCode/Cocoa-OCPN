@@ -88,7 +88,7 @@ void EBL::MovePoint( double inc_lat, double inc_lon )
     bp->m_lat -= inc_lat;
     bp->m_lon -= inc_lon;
     node = m_pODPointList->GetFirst();
-    bp = (ODPoint *)node->GetData();
+    /*bp = */(ODPoint *)node->GetData();  // Not used
 }
 
 void EBL::SetPersistence( int PersistenceType )

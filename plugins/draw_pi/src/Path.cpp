@@ -886,7 +886,7 @@ void Path::UpdateSegmentDistances()
             slat1 = slat2;
             slon1 = slon2;
 
-            pOp0 = pOp;
+//            pOp0 = pOp;  // Not used
 
             node = node->GetNext();
         }
