@@ -41,7 +41,9 @@ extern const wxBitmap *_img_Bullet_red;
 extern const wxBitmap *_img_Bullet_yellow;
 extern wxString g_SData_Locn;
 extern wxString *g_pHome_locn;
+#ifndef __WXOSX__
 extern wxString *g_pData;
+#endif
 extern wxString *g_pImage;;
 
 void initialize_images(void)

@@ -149,8 +149,11 @@ int         g_PathLineStyle;
 wxString    *g_PrivateDataDir;
 
 wxString    *g_pHome_Locn;
+#ifdef __WXOSX__
+wxString    g_pData;
+#else
 wxString    *g_pData;
-
+#endif
 ODEventHandler   *g_ODEventHandler;
 
 bool            g_bODPointShowName;
@@ -264,18 +267,14 @@ ocpn_draw_pi::ocpn_draw_pi(void *ppimgr)
     g_OD_pi_manager = (PlugInManager *) ppimgr;
     g_ocpn_draw_pi = this;
     m_pSelectedPath = NULL;
-    
+#ifndef __WXOSX__
     g_pData = GetpPrivateApplicationDataLocation();
     appendOSDirSlash( g_pData );
     g_pData->Append(_T("plugins"));
     appendOSDirSlash( g_pData );
     if ( !wxDir::Exists(*g_pData))
         wxMkdir( *g_pData );
-#ifdef __WXOSX__
-    g_pData->Append(_T("draw_pi"));
-#else
     g_pData->Append(_T("ocpn_draw_pi"));
-#endif
     appendOSDirSlash( g_pData );
     if ( !wxDir::Exists(*g_pData))
         wxMkdir( *g_pData );
@@ -285,13 +284,22 @@ ocpn_draw_pi::ocpn_draw_pi(void *ppimgr)
     appendOSDirSlash( g_pData );
     if ( !wxDir::Exists(*g_pData))
         wxMkdir( *g_pData );
-    
+#else
+    wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
+    g_pData = std_path.GetUserConfigDir();   // should be ~/Library/Preferences
+    g_pData += wxS("/opencpn/plugins/draw_pi/");
+    g_PrivateDataDir = new wxString;
+    g_PrivateDataDir->Append(g_pData);
+    g_pData.append( wxS("data/") );
+    if ( !wxDir::Exists(g_pData))
+        wxMkdir( g_pData );
+#endif
     initialize_images();
 }
 
 ocpn_draw_pi::~ocpn_draw_pi()
 {
-    
+
 }
 
 int ocpn_draw_pi::Init(void)
@@ -1296,7 +1304,7 @@ bool ocpn_draw_pi::MouseEventHook( wxMouseEvent &event )
                         pp->SetHiLite( 0 );
                     }
                 }
-                bRefresh = TRUE;
+//                bRefresh = TRUE;  // Not used
             }
             
             //    Update the PathProperties Dialog, if currently shown
@@ -1975,7 +1983,7 @@ void ocpn_draw_pi::DrawAllPathsInBBox(ODDC &dc,  LLBBox& BltBBox)
                     test_box2.Translate( xlate );
                     if( !BltBBox.IntersectOut( test_box2 ) ) // Boundary is not wholly outside window
                     {
-                        b_drawn = true;
+//                        b_drawn = true;  // Not used
                         if( ( pBoundaryDraw != active_boundary ) ) pBoundaryDraw->Draw( dc, *m_vp );
                     }
                 } else if( !b_drawn && ( BltBBox.GetMinX() < 180. ) && ( BltBBox.GetMaxX() > 180. ) ) {
@@ -1984,7 +1992,7 @@ void ocpn_draw_pi::DrawAllPathsInBBox(ODDC &dc,  LLBBox& BltBBox)
                     test_box3.Translate( xlate );
                     if( !BltBBox.IntersectOut( test_box3 ) ) // Boundary is not wholly outside window
                     {
-                        b_drawn = true;
+//                        b_drawn = true;  // Not used
                         if( ( pBoundaryDraw != active_boundary ) ) pBoundaryDraw->Draw( dc, *m_vp );
                     }
                 }
@@ -2029,16 +2037,20 @@ void ocpn_draw_pi::DrawAllPathsInBBox(ODDC &dc,  LLBBox& BltBBox)
                     test_box2.Translate( xlate );
                     if( !BltBBox.IntersectOut( test_box2 ) ) // Boundary is not wholly outside window
                     {
-                        b_drawn = true;
+//                        b_drawn = true;  // Not used
                         pEBLDraw->Draw( dc, *m_vp );
                     }
+#ifdef __WXOSX__
+                } else if( ( BltBBox.GetMinX() < 180. ) && ( BltBBox.GetMaxX() > 180. ) ) {
+#else
                 } else if( !b_drawn && ( BltBBox.GetMinX() < 180. ) && ( BltBBox.GetMaxX() > 180. ) ) {
+#endif
                     wxPoint2DDouble xlate( 360., 0. );
                     wxBoundingBox test_box3 = pEBLDraw->GetBBox();
                     test_box3.Translate( xlate );
                     if( !BltBBox.IntersectOut( test_box3 ) ) // Boundary is not wholly outside window
                     {
-                        b_drawn = true;
+//                        b_drawn = true;  // Not used
                         pEBLDraw->Draw( dc, *m_vp );
                     }
                 }
@@ -2503,9 +2515,10 @@ void ocpn_draw_pi::AlphaBlending( ODDC &dc, int x, int y, int size_x, int size_y
         unsigned char *d = dest_data;
         
         //  Sometimes, on Windows, the destination image is corrupt...
+#ifndef __WXOSX__
         if(NULL == box)
             return;
-        
+#endif
         float alpha = 1.0 - (float)transparency / 255.0;
         int sb = size_x * size_y;
         for( int i = 0; i < sb; i++ ) {
