@@ -3697,9 +3697,10 @@ next_seg_dc:
                     }
 
                     //      Enable anti-aliased lines, at best quality
+#ifndef __OCPN__ANDROID__
                     glEnable( GL_BLEND );
                     glEnable( GL_LINE_SMOOTH );
-
+#endif
                     // if(m_pen.GetWidth() > 1)
                     //   DrawThickLine(x1, y1, x2, y2, m_pen.GetWidth());
                     //  else
@@ -3732,10 +3733,10 @@ next_seg_dc:
                         ys += sym_len * sth * sym_factor;
                         s += sym_len * sym_factor;
                     }
-
+#ifndef __OCPN__ANDROID__
                     glEnable( GL_BLEND );
                     glEnable( GL_LINE_SMOOTH );
-
+#endif
                     // if(m_pen.GetWidth() > 1)
                     //   DrawThickLine(x1, y1, x2, y2, m_pen.GetWidth());
                     //  else
@@ -4671,42 +4672,42 @@ int s52plib::SetLineFeaturePriority( ObjRazRules *rzRules, int npriority )
 int s52plib::PrioritizeLineFeature( ObjRazRules *rzRules, int npriority )
 {
     if(rzRules->obj->m_ls_list){
-        
+
         VE_Element *pedge;
         connector_segment *pcs;
         line_segment_element *ls = rzRules->obj->m_ls_list;
         while( ls ){
             switch (ls->type){
                 case TYPE_EE:
-                    
+
                     pedge = (VE_Element *)ls->private0;
                     if(pedge)
                         pedge->max_priority = npriority;// wxMax(pedge->max_priority, npriority);
                     break;
-                    
+
                 default:
                     pcs = (connector_segment *)ls->private0;
                     if(pcs)
                         pcs->max_priority = npriority; //wxMax(pcs->max_priority, npriority);
                     break;
             }
-            
+
             ls = ls->next;
         }
     }
-    
-    
-    
+
+
+
     else if( rzRules->obj->m_n_lsindex ) {
         VE_Hash *edge_hash; 
-        
+
         if( rzRules->obj->m_chart_context->chart ){
             edge_hash = &rzRules->obj->m_chart_context->chart->Get_ve_hash(); 
         }
         else {
             edge_hash = (VE_Hash *)rzRules->obj->m_chart_context->m_pve_hash; 
         }
-        
+
         int *index_run = rzRules->obj->m_lsindex_array;
 
         for( int iseg = 0; iseg < rzRules->obj->m_n_lsindex; iseg++ ) {
@@ -4730,7 +4731,7 @@ int s52plib::PrioritizeLineFeature( ObjRazRules *rzRules, int npriority )
         }
     }
 
-        
+
     return 1;
 }
 
@@ -7499,7 +7500,9 @@ void RenderFromHPGL::SetPen()
     if( renderToOpenGl ) {
         glColor4ub( penColor.Red(), penColor.Green(), penColor.Blue(), penColor.Alpha() );
         glLineWidth( wxMax(g_GLMinSymbolLineWidth, (float) penWidth * 0.7) );
+#ifndef __OCPN__ANDROID__
         glEnable( GL_BLEND );
+#endif
     }
 #endif
 #if wxUSE_GRAPHICS_CONTEXT

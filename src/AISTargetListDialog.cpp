@@ -1018,11 +1018,7 @@ void AISTargetListDialog::UpdateAISTargetList( void )
         }
 #endif
         wxString count;
-#ifdef __WXOSX__
-        count.Printf( _T("%ld"), m_pMMSI_array->GetCount() );
-#else
-        count.Printf( _T("%d"), m_pMMSI_array->GetCount() );
-#endif
+        count.Printf( _T("%lu"), (unsigned long)m_pMMSI_array->GetCount() );
         m_pTextTargetCount->ChangeValue( count );
 
 #ifdef __WXMSW__

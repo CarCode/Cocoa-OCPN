@@ -288,6 +288,7 @@
 		A46C0CE0A7F34F78B68CAE8F /* response.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C827A52DC43E467CAC233693 /* response.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A582D1D0B7804FA6911D04C4 /* s57chart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1AC68DF733B4BBBA14F40DC /* s57chart.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A5B6C333557E4F95AAA77D13 /* s57attributes.csv in CopyFiles */ = {isa = PBXBuildFile; fileRef = E1FD16753AAB4F039C6D9D73 /* s57attributes.csv */; settings = {COMPILER_FLAGS = ""; }; };
+		A60774D61B761E180034E864 /* compass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60774D51B761E180034E864 /* compass.cpp */; };
 		A60A21041912CE8100A3CB33 /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60A21031912CE8100A3CB33 /* TexFont.cpp */; };
 		A60F747A17A02F0800A6160F /* calculatorgui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F747917A02F0800A6160F /* calculatorgui.cpp */; };
 		A60F747C17A02F2700A6160F /* functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F747B17A02F2700A6160F /* functions.cpp */; };
@@ -620,7 +621,6 @@
 		A6E082311AAB5956002CC7F0 /* OCPNPlatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E082301AAB5956002CC7F0 /* OCPNPlatform.cpp */; };
 		A6F037B71B73FC2900E82ECC /* libdraw_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6DB33551B736C0400163272 /* libdraw_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A6F5FF5A1AEB9B120034F6CF /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F5FF591AEB9B120034F6CF /* TexFont.cpp */; };
-		A6FCDFF31B6A6F3D00E1320E /* compasswin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8CEE48B7AEB5458EA410B145 /* compasswin.cpp */; };
 		A7D85A911CD9440D88990DE9 /* lat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A34D3BDAF9D408F9D08642A /* lat.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A7FB0E99BAB54FE18BFC2CF1 /* PositionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1A7C66C95E44197A749D5E9 /* PositionParser.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A926F111F93F452498044653 /* dicts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9BF6F7114A5401DB8A705FB /* dicts.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -1312,7 +1312,6 @@
 		6047DD7197F04BAD8B501562 /* NeXT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NeXT.cpp; path = plugins/weatherfax_pi/src/libaudiofile/NeXT.cpp; sourceTree = SOURCE_ROOT; };
 		607725FEC49445E38681D9E0 /* gpsmem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpsmem.h; path = src/garmin/jeeps/gpsmem.h; sourceTree = SOURCE_ROOT; };
 		6118EA8297094F6C80791AD2 /* gdal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gdal.h; path = src/mygdal/gdal.h; sourceTree = SOURCE_ROOT; };
-		61C43906008645A3B1366081 /* compasswin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = compasswin.h; path = include/compasswin.h; sourceTree = SOURCE_ROOT; };
 		628A8B1C5177472DB9EFD1F7 /* TCDS_Ascii_Harmonic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TCDS_Ascii_Harmonic.cpp; path = src/TCDS_Ascii_Harmonic.cpp; sourceTree = SOURCE_ROOT; };
 		62A789ECCBC44B0C9E1877BE /* WeatherFaxWizard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WeatherFaxWizard.cpp; path = plugins/weatherfax_pi/src/WeatherFaxWizard.cpp; sourceTree = SOURCE_ROOT; };
 		62CBC17ADD98423F92F52233 /* FontMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontMgr.h; path = include/FontMgr.h; sourceTree = SOURCE_ROOT; };
@@ -1409,7 +1408,6 @@
 		89D02D904634497E933139C1 /* WmmUIDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WmmUIDialog.cpp; path = plugins/wmm_pi/src/WmmUIDialog.cpp; sourceTree = SOURCE_ROOT; };
 		8A0A15DA680341D196BC3750 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = plugins/weatherfax_pi/src/libaudiofile/util.cpp; sourceTree = SOURCE_ROOT; };
 		8B7507A37F1747D39CB037AD /* globals.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = globals.cpp; path = plugins/celestial_navigation_pi/src/astrolabe/globals.cpp; sourceTree = SOURCE_ROOT; };
-		8CEE48B7AEB5458EA410B145 /* compasswin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = compasswin.cpp; path = src/compasswin.cpp; sourceTree = SOURCE_ROOT; };
 		8E24589304D64249B8E1A710 /* routeprintout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = routeprintout.h; path = include/routeprintout.h; sourceTree = SOURCE_ROOT; };
 		8EB8D4A216704A9FB447D485 /* LogbookHTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LogbookHTML.h; path = plugins/logbookkonni_pi/src/LogbookHTML.h; sourceTree = SOURCE_ROOT; };
 		8EC92928478C4C2D87038A4D /* AVR.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AVR.cpp; path = plugins/weatherfax_pi/src/libaudiofile/AVR.cpp; sourceTree = SOURCE_ROOT; };
@@ -1459,6 +1457,8 @@
 		A5812B7D2C484810831FA320 /* cplgetsymbol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cplgetsymbol.cpp; path = src/mygdal/cplgetsymbol.cpp; sourceTree = SOURCE_ROOT; };
 		A5EB8D8576AE4373B945506A /* TCWin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCWin.h; path = include/TCWin.h; sourceTree = SOURCE_ROOT; };
 		A6034DFB56444882ADAF221E /* WMM_COF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WMM_COF.h; path = plugins/wmm_pi/src/WMM_COF.h; sourceTree = SOURCE_ROOT; };
+		A60774D41B761DB00034E864 /* compass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = compass.h; path = include/compass.h; sourceTree = "<group>"; };
+		A60774D51B761E180034E864 /* compass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = compass.cpp; path = src/compass.cpp; sourceTree = "<group>"; };
 		A609ADCA195F5E28003C298E /* IsoLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IsoLine.h; path = plugins/grib_pi/src/IsoLine.h; sourceTree = "<group>"; };
 		A60A21021912CE4B00A3CB33 /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = include/TexFont.h; sourceTree = "<group>"; };
 		A60A21031912CE8100A3CB33 /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = src/TexFont.cpp; sourceTree = "<group>"; };
@@ -2644,7 +2644,6 @@
 				240F1A5F4BA74C8886AA64B4 /* razdsparser.cpp */,
 				3F4C158D03FA47718645F21A /* styles.cpp */,
 				7F3C25B9C72740538576243A /* toolbar.cpp */,
-				8CEE48B7AEB5458EA410B145 /* compasswin.cpp */,
 				19CA41E5466F4A46A17E41C1 /* geodesic.cpp */,
 				7941796E5934470ABF18BA35 /* datastream.cpp */,
 				2F2930EC0EDF42C6BA815DB3 /* OCPN_DataStreamEvent.cpp */,
@@ -2676,6 +2675,7 @@
 				A6E0822E1AAB5931002CC7F0 /* canvasMenu.cpp */,
 				A6E082301AAB5956002CC7F0 /* OCPNPlatform.cpp */,
 				A639BC371B4C30CC0053AB4A /* chartbarwin.cpp */,
+				A60774D51B761E180034E864 /* compass.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -2919,7 +2919,6 @@
 				A08B1CA0D7A645F59105C9F6 /* razdsparser.h */,
 				3209A9218494496C80E28A78 /* styles.h */,
 				698F9C18F0E84E058F0F2756 /* toolbar.h */,
-				61C43906008645A3B1366081 /* compasswin.h */,
 				D70A9AFD9E94423ABF1F9F7F /* geodesic.h */,
 				9277560E81864543888C7B37 /* datastream.h */,
 				BFF6DACF2D9E4ABE8378EDCB /* OCPN_DataStreamEvent.h */,
@@ -2961,6 +2960,7 @@
 				A6B71B441ABAD75700452B84 /* gl_private.h */,
 				A639BC361B4C30A10053AB4A /* chartbarwin.h */,
 				A64128E11B59058A0024C916 /* wx28compat.h */,
+				A60774D41B761DB00034E864 /* compass.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -5754,7 +5754,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A6FCDFF31B6A6F3D00E1320E /* compasswin.cpp in Sources */,
 				A6E082311AAB5956002CC7F0 /* OCPNPlatform.cpp in Sources */,
 				A65F36E4197473690006DC40 /* jsonreader.cpp in Sources */,
 				A65F36E5197473690006DC40 /* jsonval.cpp in Sources */,
@@ -5813,6 +5812,7 @@
 				5FF5DA75EDC044B8A82115B3 /* OCPNSoundData.cpp in Sources */,
 				A60A21041912CE8100A3CB33 /* TexFont.cpp in Sources */,
 				82D5224EB0E94078B00FD74A /* OCPN_Sound.cpp in Sources */,
+				A60774D61B761E180034E864 /* compass.cpp in Sources */,
 				7EACA98E65374614B0B82C79 /* TTYWindow.cpp in Sources */,
 				3AD5E7B3CD854BAF8093DB30 /* TTYScroll.cpp in Sources */,
 				A6E0822F1AAB5931002CC7F0 /* canvasMenu.cpp in Sources */,

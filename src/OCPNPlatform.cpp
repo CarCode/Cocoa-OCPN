@@ -670,6 +670,19 @@ wxString &OCPNPlatform::GetExePath()
     return m_exePath;
 }
 
+wxString OCPNPlatform::GetWritableDocumentsDir()
+{
+    wxString dir;
+    
+#ifdef __OCPN__ANDROID__
+    dir = androidGetExtStorageDir();                 // Used for Chart storage, typically
+#else
+    wxStandardPaths& std_path = GetStdPaths();
+    dir = std_path.GetDocumentsDir();
+#endif
+    return dir;
+}
+
 wxString &OCPNPlatform::GetSharedDataDir()
 {
     if(m_SData_Dir.IsEmpty()){
@@ -828,7 +841,12 @@ int OCPNPlatform::DoFileSelectorDialog( wxWindow *parent, wxString *file_spec, w
     int result = wxID_CANCEL;
     
 #ifdef __OCPN__ANDROID__
-    result = androidFileChooser(&file, initDir, Title, suggestedName, wildcard);
+    //  Verify that initDir is traversable, fix it if not...
+    wxString idir = initDir;
+    if(initDir.StartsWith(_T("/data/data")))                 // not good, provokes a crash usually...
+        idir = GetWritableDocumentsDir();
+    
+    result = androidFileChooser(&file, idir, Title, suggestedName, wildcard);
     if(file_spec)
         *file_spec = file;
 #else
@@ -859,7 +877,8 @@ int OCPNPlatform::DoFileSelectorDialog( wxWindow *parent, wxString *file_spec, w
 #endif
     
     
-    file = psaveDialog->GetPath();
+    if(file_spec)
+        *file_spec = psaveDialog->GetPath();
     delete psaveDialog;
     
 #endif
@@ -873,7 +892,12 @@ int OCPNPlatform::DoDirSelectorDialog( wxWindow *parent, wxString *file_spec, wx
     int result = wxID_CANCEL;
     
 #ifdef __OCPN__ANDROID__
-    result = androidFileChooser(&dir, initDir, Title, _T(""), _T(""), true);    // Directories only
+    //  Verify that initDir is traversable, fix it if not...
+    wxString idir = initDir;
+    if(initDir.StartsWith(_T("/data/data")))                 // not good, provokes a crash usually...
+        idir = GetWritableDocumentsDir();
+    
+    result = androidFileChooser(&dir, idir, Title, _T(""), _T(""), true);    // Directories only
     if(file_spec)
         *file_spec = dir;
 #else
@@ -1051,9 +1075,8 @@ void OCPNPlatform::ShowBusySpinner( void )
 {
 #ifdef __OCPN__ANDROID__
     androidShowBusyIcon();
-    androidShowBusyIcon();
 #else
-    if(! ::wxIsBusy() ){
+    if( !::wxIsBusy() ){
         ::wxBeginBusyCursor();
     }
 #endif
@@ -1064,7 +1087,10 @@ void OCPNPlatform::HideBusySpinner( void )
 #ifdef __OCPN__ANDROID__
     androidHideBusyIcon();
 #else
-    if( ::wxIsBusy() ){
+#if wxCHECK_VERSION(2, 9, 0 )
+    if( ::wxIsBusy() )
+#endif
+    {
         ::wxEndBusyCursor();
     }
 #endif
@@ -1319,13 +1345,19 @@ double OCPNPlatform::GetCompassScaleFactor( int GUIScaleFactor )
         rv = wxMin(rv, 1.5);      //  Clamp at 1.5
 
         rv = premult * postmult;
-        qDebug() << "parmsF" << GUIScaleFactor << premult << postmult << rv;
+//        qDebug() << "parmsF" << GUIScaleFactor << premult << postmult << rv;
         rv = wxMin(rv, 3.0);      //  Clamp at 3.0
     }
 
 
 
 #else
+    if(g_bresponsive ){
+        double postmult =  exp( GUIScaleFactor * (0.693 / 5.0) );       //  exp(2)
+        rv *= postmult;
+        rv = wxMin(rv, 3.0);      //  Clamp at 3.0
+    }
+
 #endif
 
     return rv;

@@ -1056,7 +1056,8 @@ public:
 
     wxCheckBox *m_cbTextureCompression, *m_cbTextureCompressionCaching;
     wxCheckBox *m_cbShowFPS;
-    
+    wxCheckBox *m_cbSoftwareGL;
+
     wxButton *m_bRebuildTextureCache;
     wxButton *m_bClearTextureCache;
 

@@ -2220,7 +2220,7 @@ void cm93chart::SetVPParms ( const ViewPort &vpt )
             }
       }
       if( s_b_busy_shown){
-          ::wxEndBusyCursor();
+          OCPNPlatform::HideBusySpinner();
           s_b_busy_shown = false;
       }
 }
@@ -6853,9 +6853,9 @@ void CM93OffsetDialog::UpdateOffsets ( void )
 
             //    Closing the current cell will record the offsets in the M_COVR cache file
             //    Re-opening will then refresh the M_COVRs in the cover set
-            ::wxBeginBusyCursor();
+            OCPNPlatform::ShowBusySpinner();
             m_pcompchart->CloseandReopenCurrentSubchart();
-            ::wxEndBusyCursor();
+            OCPNPlatform::ShowBusySpinner();
 
           if ( m_pparent ) {
               m_pparent->Refresh ( true );

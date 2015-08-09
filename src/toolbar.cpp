@@ -53,8 +53,6 @@ extern wxString                   g_toolbarConfig;
 extern bool                       g_bPermanentMOBIcon;
 extern bool                       g_btouch;
 extern bool                       g_bsmoothpanzoom;
-extern int                        g_nAutoHideToolbar;
-extern bool                       g_bAutoHideToolbar;
 
 //----------------------------------------------------------------------------
 // GrabberWindow Implementation
@@ -319,6 +317,9 @@ ocpnFloatingToolbarDialog::ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint 
     m_orient = orient;
     m_sizefactor = size_factor;
 
+    m_bAutoHideToolbar = false;
+    m_nAutoHideToolbar = 5;
+
     m_style = g_StyleManager->GetCurrentStyle();
 
 // A top-level sizer
@@ -345,8 +346,8 @@ ocpnFloatingToolbarDialog::ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint 
     if( g_bTransparentToolbar )
         m_fade_timer.Start( 5000 );
     
-    if( g_bAutoHideToolbar && (g_nAutoHideToolbar > 0))
-        m_fade_timer.Start( g_nAutoHideToolbar * 1000 );
+    if( m_bAutoHideToolbar && (m_nAutoHideToolbar > 0))
+        m_fade_timer.Start( m_nAutoHideToolbar * 1000 );
 
     m_destroyTimer.SetOwner( this, DESTROY_TIMER );
 }
@@ -402,7 +403,7 @@ void ocpnFloatingToolbarDialog::SetColorScheme( ColorScheme cs )
 
 }
 
-void ocpnFloatingToolbarDialog::SetGeometry(wxWindow *pwinAvoid)
+void ocpnFloatingToolbarDialog::SetGeometry(bool bAvoid, wxRect rectAvoid)
 {
 
     if( m_ptoolbar ) {
@@ -421,8 +422,8 @@ void ocpnFloatingToolbarDialog::SetGeometry(wxWindow *pwinAvoid)
         if(cc1){
 
             int avoid_start = cc1->GetClientSize().x - (tool_size.x + m_style->GetToolSeparation()) * 2;  // default
-            if(pwinAvoid && pwinAvoid->IsShown()){
-                avoid_start = cc1->GetClientSize().x - pwinAvoid->GetSize().x;  // this is compass window, if shown
+            if(bAvoid && !rectAvoid.IsEmpty()){
+                avoid_start = cc1->GetClientSize().x - rectAvoid.width - 10;  // this is compass window, if shown
             }
 
             
@@ -530,8 +531,8 @@ void ocpnFloatingToolbarDialog::Surface()
 #endif
     }
 
-    if( g_bAutoHideToolbar && (g_nAutoHideToolbar > 0) ){
-        m_fade_timer.Start( g_nAutoHideToolbar * 1000 );
+    if( m_bAutoHideToolbar && (m_nAutoHideToolbar > 0) ){
+        m_fade_timer.Start( m_nAutoHideToolbar * 1000 );
     }
 }
 
@@ -571,8 +572,8 @@ void ocpnFloatingToolbarDialog::SurfaceFromGrabber()
     if( m_ptoolbar )
         m_ptoolbar->EnableTooltips();
 
-    if( g_bAutoHideToolbar && (g_nAutoHideToolbar > 0) ){
-        m_fade_timer.Start( g_nAutoHideToolbar * 1000 );
+    if( m_bAutoHideToolbar && (m_nAutoHideToolbar > 0) ){
+        m_fade_timer.Start( m_nAutoHideToolbar * 1000 );
     }
 
 #ifdef __WXQT__
@@ -638,8 +639,8 @@ void ocpnFloatingToolbarDialog::MouseEvent( wxMouseEvent& event )
         m_fade_timer.Start( 5000 );           // retrigger the continuous timer
     }
 
-    if(g_bAutoHideToolbar && (g_nAutoHideToolbar > 0) ){
-        m_fade_timer.Start( g_nAutoHideToolbar * 1000 );
+    if(m_bAutoHideToolbar && (m_nAutoHideToolbar > 0) ){
+        m_fade_timer.Start( m_nAutoHideToolbar * 1000 );
     }
 }
 
@@ -654,10 +655,19 @@ void ocpnFloatingToolbarDialog::FadeTimerEvent( wxTimerEvent& event )
             m_fade_timer.Start( 5000 );           // retrigger the continuous timer
         }
 
-        if(g_bAutoHideToolbar && (g_nAutoHideToolbar > 0) && !m_bsubmerged){
+        if(m_bAutoHideToolbar && (m_nAutoHideToolbar > 0) && !m_bsubmerged){
             SubmergeToGrabber();
 //            m_fade_timer.Stop();
         }
+    }
+}
+
+void ocpnFloatingToolbarDialog::SetAutoHideTimer(int time)
+{
+    m_nAutoHideToolbar = time;
+    if(m_bAutoHideToolbar){
+        m_fade_timer.Stop();
+        m_fade_timer.Start( m_nAutoHideToolbar * 1000 );
     }
 }
 
@@ -673,8 +683,8 @@ void ocpnFloatingToolbarDialog::RefreshFadeTimer()
     m_opacity = 255;
     m_fade_timer.Start( 500 );           // retrigger the continuous timer
 
-    if(g_bAutoHideToolbar && (g_nAutoHideToolbar > 0) ){
-        m_fade_timer.Start( g_nAutoHideToolbar * 1000 );
+    if(m_bAutoHideToolbar && (m_nAutoHideToolbar > 0) ){
+        m_fade_timer.Start( m_nAutoHideToolbar * 1000 );
     }
 
 }
@@ -938,7 +948,7 @@ ocpnToolBarSimple *ocpnFloatingToolbarDialog::GetToolbar()
         m_ptoolbar->SetToggledBackgroundColour( GetGlobalColor( _T("GREY1") ) );
         m_ptoolbar->SetColorScheme( m_cs );
 
-        SetGeometry();
+        SetGeometry(false, wxRect());
     }
 
     return m_ptoolbar;
