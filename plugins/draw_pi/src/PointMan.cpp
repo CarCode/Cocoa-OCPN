@@ -137,26 +137,37 @@ bool PointMan::RemoveODPoint(ODPoint *prp)
 
 void PointMan::ProcessUserIcons( )
 {
+#ifdef __WXOSX__
+    wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
+    wxString UserIconPath = std_path.GetUserConfigDir();
+    UserIconPath += wxS("/opencpn/UserIcons");
+
+    if( wxDir::Exists( UserIconPath ) ) {
+        wxArrayString FileList;
+
+        wxDir dir( UserIconPath );
+        int n_files = dir.GetAllFiles( UserIconPath, &FileList );
+#else
     wxString *UserIconPath = g_PrivateDataDir;
     wxChar sep = wxFileName::GetPathSeparator();
     if ( UserIconPath->IsNull() ) return;
-    
+
     if( UserIconPath->Last() != sep ) UserIconPath->Append( sep );
     UserIconPath->Append( _T("UserIcons") );
-    
+
     if( wxDir::Exists( *UserIconPath ) ) {
         wxArrayString FileList;
-        
+
         wxDir dir( *UserIconPath );
         int n_files = dir.GetAllFiles( *UserIconPath, &FileList );
-        
+#endif
         for( int ifile = 0; ifile < n_files; ifile++ ) {
             wxString name = FileList.Item( ifile );
-            
+
             wxFileName fn( name );
             wxString iconname = fn.GetName();
             wxBitmap icon1;
-            
+
             if( fn.GetExt().Lower() == _T("xpm") ) {
                 if( icon1.LoadFile( name, wxBITMAP_TYPE_XPM ) ) {
                     ProcessIcon( icon1, iconname, iconname );
