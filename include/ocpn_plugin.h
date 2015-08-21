@@ -1010,7 +1010,7 @@ extern DECL_EXP void AddChartDirectory( wxString &path );
 extern DECL_EXP void ForceChartDBUpdate();
 
 extern  DECL_EXP wxString GetWritableDocumentsDir( void );
-
+extern  DECL_EXP wxDialog *GetActiveOptionsDialog();
 
 /*  Platform optimized File/Dir selector dialogs */
 extern  DECL_EXP int PlatformDirSelectorDialog( wxWindow *parent, wxString *file_spec, wxString Title, wxString initDir);

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grib_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-27 12:10+0200\n"
+"POT-Creation-Date: 2015-08-16 10:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../src/CursorData.cpp:143 ../src/grib_pi.cpp:384 ../src/grib_pi.h:103
 #: ../src/GribRequestDialog.cpp:118 ../src/GribRequestDialog.cpp:188
-#: ../src/GribRequestDialog.cpp:436 ../src/GribSettingsDialog.cpp:500
+#: ../src/GribRequestDialog.cpp:436 ../src/GribSettingsDialog.cpp:501
 msgid "Dialog"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgid "Barbed Arrows"
 msgstr ""
 
 #: ../src/CursorData.cpp:457 ../src/CursorData.cpp:463
-#: ../src/GribSettingsDialog.cpp:689 ../src/GribSettingsDialog.cpp:698
+#: ../src/GribSettingsDialog.cpp:690 ../src/GribSettingsDialog.cpp:699
 msgid "Display Isotachs"
 msgstr ""
 
@@ -96,15 +96,15 @@ msgstr ""
 msgid "Particle Map"
 msgstr ""
 
-#: ../src/CursorData.cpp:468 ../src/GribSettingsDialog.cpp:705
+#: ../src/CursorData.cpp:468 ../src/GribSettingsDialog.cpp:706
 msgid "Display Isobars"
 msgstr ""
 
-#: ../src/CursorData.cpp:473 ../src/GribSettingsDialog.cpp:724
+#: ../src/CursorData.cpp:473 ../src/GribSettingsDialog.cpp:725
 msgid "Display Isotherms"
 msgstr ""
 
-#: ../src/CursorData.cpp:480 ../src/GribSettingsDialog.cpp:731
+#: ../src/CursorData.cpp:480 ../src/GribSettingsDialog.cpp:732
 msgid "Display Iso CAPE"
 msgstr ""
 
@@ -156,8 +156,8 @@ msgid ""
 msgstr ""
 
 #: ../src/grib_pi.cpp:348 ../src/grib_pi.cpp:632
-#: ../src/GribRequestDialog.cpp:606 ../src/GribSettingsDialog.cpp:846
-#: ../src/GribSettingsDialog.cpp:885
+#: ../src/GribRequestDialog.cpp:606 ../src/GribSettingsDialog.cpp:847
+#: ../src/GribSettingsDialog.cpp:886
 msgid "Warning!"
 msgstr ""
 
@@ -446,45 +446,45 @@ msgstr ""
 msgid "Relative Humidity"
 msgstr ""
 
-#: ../src/GribSettingsDialog.cpp:450
+#: ../src/GribSettingsDialog.cpp:451
 msgid "h"
 msgstr ""
 
-#: ../src/GribSettingsDialog.cpp:450
+#: ../src/GribSettingsDialog.cpp:451
 msgid "mn"
 msgstr ""
 
-#: ../src/GribSettingsDialog.cpp:496
+#: ../src/GribSettingsDialog.cpp:497
 msgid "Apply"
 msgstr ""
 
-#: ../src/GribSettingsDialog.cpp:737 ../src/GribSettingsDialog.cpp:805
+#: ../src/GribSettingsDialog.cpp:738 ../src/GribSettingsDialog.cpp:806
 #: ../src/GribUIDialogBase.cpp:673
 msgid "Spacing"
 msgstr ""
 
-#: ../src/GribSettingsDialog.cpp:819
+#: ../src/GribSettingsDialog.cpp:820
 msgid "You want to remove the dialog title/drag bar\n"
 msgstr ""
 
-#: ../src/GribSettingsDialog.cpp:821
+#: ../src/GribSettingsDialog.cpp:822
 msgid "You want to add a title/drag bar to the dialog\n"
 msgstr ""
 
-#: ../src/GribSettingsDialog.cpp:824
+#: ../src/GribSettingsDialog.cpp:825
 msgid ""
 "This change needs a complete reload.\n"
-"It will be aplied after closing and re-opning the plugin"
+"It will be applied after closing and re-opning the plugin"
 msgstr ""
 
-#: ../src/GribSettingsDialog.cpp:845
+#: ../src/GribSettingsDialog.cpp:846
 msgid ""
 "You have chosen to authorize interpolation.\n"
 "Don't forget that data displayed will not be real but recomputed and this can "
 "decrease accuracy!"
 msgstr ""
 
-#: ../src/GribSettingsDialog.cpp:884
+#: ../src/GribSettingsDialog.cpp:885
 msgid ""
 "This option imply you authorize intrepolation\n"
 "Don't forget that data displayed will not be real but recomputed and this can "
@@ -544,8 +544,8 @@ msgstr ""
 msgid "Start play back"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:693 ../src/GribUIDialogBase.cpp:54
-msgid "Select geoptential altitude"
+#: ../src/GribUIDialog.cpp:693
+msgid "Select geopotential altitude"
 msgstr ""
 
 #: ../src/GribUIDialog.cpp:695 ../src/GribUIDialogBase.cpp:59
@@ -600,6 +600,10 @@ msgstr ""
 
 #: ../src/GribUIDialogBase.cpp:46
 msgid "Next"
+msgstr ""
+
+#: ../src/GribUIDialogBase.cpp:54
+msgid "Select geoptential altitude"
 msgstr ""
 
 #: ../src/GribUIDialogBase.cpp:260

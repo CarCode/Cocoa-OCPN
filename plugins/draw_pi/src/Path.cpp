@@ -66,6 +66,7 @@ Path::Path( void )
     m_pPathActivePoint = NULL;
     m_bIsBeingEdited = false;
     m_bIsBeingCreated = true;
+    m_bDrawArrow = false;
     m_nPoints = 0;
     m_nm_sequence = 1;
     m_path_length = 0.0;
@@ -81,8 +82,8 @@ Path::Path( void )
     m_pLastAddedPoint = NULL;
     m_pFirstAddedPoint = NULL;
     m_GUID = GetUUID();
-    m_btemp = false;
-    
+    m_bTemporary = false;
+
     m_bNeedsUpdateBBox = true;
     RBBox.Reset();
     m_bcrosses_idl = false;
@@ -93,10 +94,10 @@ Path::Path( void )
     m_wxcActiveLineColour = g_colourActivePathLineColour;
     m_wxcInActiveLineColour = g_colourInActivePathLineColour;
     SetActiveColours();
-    
+
     m_lastMousePointIndex = 0;
     m_NextLegGreatCircle = false;
-    
+
     m_HyperlinkList = new HyperlinkList;
 }
 
@@ -126,7 +127,7 @@ void Path::AddPoint( ODPoint *pNewPoint, bool b_rename_in_sequence, bool b_defer
 
     if ( m_pFirstAddedPoint == NULL )
         m_pFirstAddedPoint = pNewPoint;
-    
+
     if (!b_isLoading)
         UpdateSegmentDistances();
     m_pLastAddedPoint = pNewPoint;
@@ -191,7 +192,7 @@ void Path::DrawSegment( ODDC& dc, wxPoint *rp1, wxPoint *rp2, PlugIn_ViewPort &V
         if( m_bPathIsActive ) dc.SetPen( *g_pPathMan->GetActivePathPen() );
         else
             dc.SetPen( *g_pPathMan->GetPathPen() );
-    
+
     wxColour col;
     wxString colour;
 
@@ -212,22 +213,23 @@ void Path::Draw( ODDC& dc, PlugIn_ViewPort &VP )
     if( m_width != STYLE_UNDEFINED ) width = m_width;
 
     SetActiveColours();
-    
+
     dc.SetPen( *wxThePenList->FindOrCreatePen( m_col, width, style ) );
+    dc.SetBrush( *wxTheBrushList->FindOrCreateBrush( m_col, wxBRUSHSTYLE_SOLID ) );
 
     wxPoint ppt1, ppt2;
     m_bpts = new wxPoint[ m_pODPointList->GetCount() ];
     int j = 0;
-    
+
     if ( m_bVisible )
         DrawPointWhich( dc, 1, &ppt1 );
 
     wxODPointListNode *node = m_pODPointList->GetFirst();
     ODPoint *pOp1 = node->GetData();
     node = node->GetNext();
-    
+
     m_bpts[ j++ ] = ppt1;
-        
+
     if ( !m_bVisible && pOp1->m_bKeepXPath )
             pOp1->Draw( dc );
 
@@ -250,7 +252,7 @@ void Path::Draw( ODDC& dc, PlugIn_ViewPort &VP )
             bool b_1_on = llbb.PointInBox( pOp1->m_lon, pOp1->m_lat, 0 );
 
             //Simple case
-            if( b_1_on && b_2_on ) RenderSegment( dc, ppt1.x, ppt1.y, ppt2.x, ppt2.y, VP, false, m_hiliteWidth ); // with no arrows
+            if( b_1_on && b_2_on ) RenderSegment( dc, ppt1.x, ppt1.y, ppt2.x, ppt2.y, VP, m_bDrawArrow, m_hiliteWidth ); // with no arrows
 
             //    In the cases where one point is on, and one off
             //    we must decide which way to go in longitude
@@ -271,20 +273,20 @@ void Path::Draw( ODDC& dc, PlugIn_ViewPort &VP )
 
                 if( dp < dtest ) adder = 0;
 
-                RenderSegment( dc, ppt1.x, ppt1.y, ppt2.x + adder, ppt2.y, VP, false, m_hiliteWidth );
+                RenderSegment( dc, ppt1.x, ppt1.y, ppt2.x + adder, ppt2.y, VP, m_bDrawArrow, m_hiliteWidth );
             } else
                 if( !b_1_on ) {
                     if( ppt1.x < ppt2.x ) adder = (int) pix_full_circle;
                     else
                         adder = -(int) pix_full_circle;
-                    
+
                     float rxd = ppt2.x - ( ppt1.x + adder );
                     float ryd = ppt1.y - ppt2.y;
                     dtest = rxd*rxd + ryd*ryd;
-                    
+
                     if( dp < dtest ) adder = 0;
 
-                    RenderSegment( dc, ppt1.x + adder, ppt1.y, ppt2.x, ppt2.y, VP, false, m_hiliteWidth );
+                    RenderSegment( dc, ppt1.x + adder, ppt1.y, ppt2.x, ppt2.y, VP, m_bDrawArrow, m_hiliteWidth );
                 }
         }
 
@@ -304,39 +306,50 @@ void Path::DrawGL( PlugIn_ViewPort &piVP )
     if( m_nPoints < 1 || !m_bVisible ) return;
 
     ODDC dc;
-    
+
     /* determine color and width */
     int style = wxSOLID;
     int width = g_path_line_width;
-    
+
     if( m_style != STYLE_UNDEFINED ) style = m_style;
     if( m_width != STYLE_UNDEFINED ) width = m_width;
-    
+
     SetActiveColours();
 
-    dc.SetBrush( *wxTheBrushList->FindOrCreateBrush( m_col, wxBRUSHSTYLE_TRANSPARENT ) );
-    dc.SetPen( *wxThePenList->FindOrCreatePen( m_col, width, style ) );
-    dc.SetGLStipple();
-    
     int j = 0;
     wxPoint r;
-    
+
     m_bpts = new wxPoint[ m_pODPointList->GetCount() ];
     for(wxODPointListNode *node = m_pODPointList->GetFirst(); node; node = node->GetNext()) {
         ODPoint *pOp = node->GetData();
         GetCanvasPixLL( &piVP, &r, pOp->m_lat, pOp->m_lon );
         m_bpts[ j++ ] = r;
     }
-    
-    dc.DrawPolygon( m_pODPointList->GetCount(), m_bpts, 0, 0 );
-    
+
+    dc.SetPen( *wxThePenList->FindOrCreatePen( m_col, width, style ) );
+    dc.SetBrush( *wxTheBrushList->FindOrCreateBrush( m_col, wxBRUSHSTYLE_TRANSPARENT ) );
+    dc.SetGLStipple();
+
+    if(m_pODPointList->GetCount() == 2)
+        dc.DrawLine(m_bpts[0].x, m_bpts[0].y, m_bpts[1].x, m_bpts[1].y);
+    else
+        dc.DrawPolygon( m_pODPointList->GetCount(), m_bpts, 0, 0 );
+    glDisable( GL_LINE_STIPPLE );
+
+    dc.SetBrush( *wxTheBrushList->FindOrCreateBrush( m_col, wxBRUSHSTYLE_SOLID ) );
+
+    for(size_t i = 1; i < m_pODPointList->GetCount(); i++) {
+        if(m_bDrawArrow)
+            RenderSegmentArrowsGL( m_bpts[i - 1].x, m_bpts[i - 1].y, m_bpts[i].x, m_bpts[i].y, piVP );
+    }
+
     /*  ODPoints  */
     for(wxODPointListNode *node = m_pODPointList->GetFirst(); node; node = node->GetNext()) {
         ODPoint *pOp = node->GetData();
         if ( m_bVisible || pOp->m_bKeepXPath )
             pOp->DrawGL( piVP );
     }        
-    
+
 #endif
 }
 
@@ -408,6 +421,9 @@ void Path::RenderSegment( ODDC& dc, int xa, int ya, int xb, int yb, PlugIn_ViewP
         if( icon_size > ( lpp * max_arrow_to_leg ) ) icon_scale_factor = ( lpp * max_arrow_to_leg )
                 / nom_arrow_size;
 
+        int xc, yc; // move the pointer back from the icon
+        xc = xb - ( ( xb - xa ) / 20 );
+        yc = yb - ( ( yb - ya ) / 20 );
         for( int i = 0; i < 7; i++ ) {
             int j = i * 2;
             double pxa = (double) ( s_arrow_icon[j] );
@@ -419,8 +435,8 @@ void Path::RenderSegment( ODDC& dc, int xa, int ya, int xb, int yb, PlugIn_ViewP
             double px = ( pxa * sin( theta ) ) + ( pya * cos( theta ) );
             double py = ( pya * sin( theta ) ) - ( pxa * cos( theta ) );
 
-            icon[i].x = (int) ( px ) + xb;
-            icon[i].y = (int) ( py ) + yb;
+            icon[i].x = (int) ( px ) + xc;
+            icon[i].y = (int) ( py ) + yc;
         }
         wxPen savePen = dc.GetPen();
         dc.SetPen( *wxTRANSPARENT_PEN );
@@ -436,13 +452,13 @@ void Path::RenderSegmentArrowsGL( int xa, int ya, int xb, int yb, PlugIn_ViewPor
     float icon_scale_factor = 100 * VP.view_scale_ppm;
     icon_scale_factor = fmin ( icon_scale_factor, 1.5 );              // Sets the max size
     icon_scale_factor = fmax ( icon_scale_factor, .10 );
-    
+
     //    Get the absolute line length
     //    and constrain the arrow to be no more than xx% of the line length
     float nom_arrow_size = 20.;
     float max_arrow_to_leg = (float).20;
     float lpp = sqrtf( powf( (float) (xa - xb), 2) + powf( (float) (ya - yb), 2) );
-    
+
     float icon_size = icon_scale_factor * nom_arrow_size;
     if( icon_size > ( lpp * max_arrow_to_leg ) )
         icon_scale_factor = ( lpp * max_arrow_to_leg )
@@ -452,7 +468,10 @@ void Path::RenderSegmentArrowsGL( int xa, int ya, int xb, int yb, PlugIn_ViewPor
     theta -= (float)PI;
 
     glPushMatrix();
-    glTranslatef(xb, yb, 0);
+    int xc, yc; // move the pointer back from the icon
+    xc = xb - ( ( xb - xa ) / 20 );
+    yc = yb - ( ( yb - ya ) / 20 );
+    glTranslatef(xc, yc, 0);
     glScalef(icon_scale_factor, icon_scale_factor, 1);
     glRotatef(theta * 180/PI, 0, 0, 1);
 
@@ -483,7 +502,7 @@ wxString Path::GetNewMarkSequenced( void )
     long num;
     num = 0;
     ODPoint *pop = NULL;
-    
+
     wxODPointListNode *node = m_pODPointList->GetFirst();
     while ( node ) {
         pop = node->GetData();
@@ -609,10 +628,10 @@ void Path::ReloadPathPointIcons()
 {
     wxODPointListNode *node = m_pODPointList->GetFirst();
 
-    ODPoint *rp;
+    ODPoint *op;
     while( node ) {
-        rp = node->GetData();
-        rp->ReLoadIcon();
+        op = node->GetData();
+        op->ReLoadIcon();
 
         node = node->GetNext();
     }
@@ -709,7 +728,7 @@ void Path::CalculateDCRect( wxDC& dc_boundary, wxRect *prect, PlugIn_ViewPort &V
 {
     dc_boundary.ResetBoundingBox();
     dc_boundary.DestroyClippingRegion();
-    
+
     wxRect update_rect;
 
     // Draw the route in skeleton form on the dc
@@ -729,7 +748,7 @@ void Path::CalculateDCRect( wxDC& dc_boundary, wxRect *prect, PlugIn_ViewPort &V
 
             wxRect r =  pOp2->CurrentRect_in_DC ;
             r.Inflate(m_hiliteWidth, m_hiliteWidth);        // allow for large hilite circles at segment ends
-                
+
             update_rect.Union( r );
             node = node->GetNext();
         }
@@ -886,8 +905,6 @@ void Path::UpdateSegmentDistances()
             slat1 = slat2;
             slon1 = slon2;
 
-//            pOp0 = pOp;  // Not used
-
             node = node->GetNext();
         }
     }
@@ -895,25 +912,24 @@ void Path::UpdateSegmentDistances()
     m_path_length = path_len;
 }
 
-ODPoint *Path::InsertPointBefore( ODPoint *pRP, double rlat, double rlon,
-        bool bRenamePoints )
+ODPoint *Path::InsertPointBefore( ODPoint *pOP, double lat, double lon, bool bRenamePoints )
 {
-    ODPoint *newpoint = new ODPoint( rlat, rlon, g_sODPointIconName, GetNewMarkSequenced(), wxT("") );
+    ODPoint *newpoint = new ODPoint( lat, lon, g_sODPointIconName, GetNewMarkSequenced(), wxT("") );
     newpoint->m_bIsInPath = true;
     newpoint->m_bDynamicName = true;
     newpoint->SetNameShown( false );
     newpoint->SetTypeString( wxT("Boundary Point") );
-    
-    int nRP = m_pODPointList->IndexOf( pRP );
-    if ( nRP == 0 ) {
+
+    int nOP = m_pODPointList->IndexOf( pOP );
+    if ( nOP == 0 ) {
         m_pODPointList->Insert( m_pODPointList->GetCount() - 1, newpoint );
-        nRP = m_pODPointList->GetCount();
+        nOP = m_pODPointList->GetCount();
     }
     else {
-        m_pODPointList->Insert( nRP, newpoint );
+        m_pODPointList->Insert( nOP, newpoint );
     }
 
-    ODPointGUIDList.Insert( pRP->m_GUID, nRP );
+    ODPointGUIDList.Insert( pOP->m_GUID, nOP );
 
     m_nPoints++;
 
@@ -925,30 +941,30 @@ ODPoint *Path::InsertPointBefore( ODPoint *pRP, double rlat, double rlon,
     return ( newpoint );
 }
 
-ODPoint *Path::InsertPointAfter( ODPoint *pOP, double rlat, double rlon, bool bRenamePoints )
+ODPoint *Path::InsertPointAfter( ODPoint *pOP, double lat, double lon, bool bRenamePoints )
 {
     int nOP = m_pODPointList->IndexOf( pOP );
     if( nOP >= m_nPoints - 1 )
         return NULL;
     nOP++;
-    
-    ODPoint *newpoint = new ODPoint( rlat, rlon, g_sODPointIconName, GetNewMarkSequenced(), wxT("") );
+
+    ODPoint *newpoint = new ODPoint( lat, lon, g_sODPointIconName, GetNewMarkSequenced(), wxT("") );
     newpoint->m_bIsInPath = true;
     newpoint->m_bDynamicName = true;
     newpoint->SetNameShown( false );
     newpoint->SetTypeString( wxT("Boundary Point") );
-    
+
     m_pODPointList->Insert( nOP, newpoint );
-    
+
     ODPointGUIDList.Insert( pOP->m_GUID, nOP );
-    
+
     m_nPoints++;
-    
+
     if( bRenamePoints ) RenameODPoints();
-    
+
     FinalizeForRendering();
     UpdateSegmentDistances();
-    
+
     return ( newpoint );
 }
 
@@ -958,18 +974,18 @@ void Path::InsertPointAfter( ODPoint *pOP, ODPoint *pnOP, bool bRenamePoints )
     if( nOP >= m_nPoints - 1 )
         return;
     nOP++;
-    
+
     m_pODPointList->Insert( nOP, pnOP );
-    
+
     ODPointGUIDList.Insert( pnOP->m_GUID, nOP );
-    
+
     m_nPoints++;
-    
+
     if( bRenamePoints ) RenameODPoints();
-    
+
     FinalizeForRendering();
     UpdateSegmentDistances();
-    
+
     return;
 }
 
@@ -987,7 +1003,7 @@ void Path::RemovePointFromPath( ODPoint* point, Path* path )
         g_pPathMan->DeletePath( path );
         path = NULL;
     } 
-    
+
     //  Add this point back into the selectables
     g_pODSelect->AddSelectableODPoint( point->m_lat, point->m_lon, point );
 
@@ -1000,7 +1016,7 @@ void Path::RemovePointFromPath( ODPoint* point, Path* path )
 void Path::SetActiveColours( void )
 {
     wxString colour;
-    
+
     if( m_bVisible && m_bPathIsActive ) {
         if(m_iBlink && (g_ocpn_draw_pi->nBlinkerTick & 1))
             m_col= m_wxcInActiveLineColour;
@@ -1013,28 +1029,11 @@ void Path::SetActiveColours( void )
         else
             m_col = m_wxcInActiveLineColour;
     }
+}
 
-/*    if( m_bVisible && m_bPathIsActive ) {
-        colour = m_ActiveLineColour;
-    }
-    else {
-        colour = m_InActiveLineColour;
-    }
-    
-    if( colour.IsNull() ) {
-        colour = m_ActiveLineColour;
-    }
-    
-    if( m_bVisible && m_iBlink && ( g_ocpn_draw_pi->nBlinkerTick & 1 ) )
-        colour = m_InActiveLineColour;
-    
-    for( unsigned int i = 0; i < sizeof( ::GpxxColorNames ) / sizeof(wxString); i++ ) {
-        if( colour == ::GpxxColorNames[i] ) {
-            m_col = ::GpxxColors[i];
-            break;
-        }
-    }
-*/    
+wxColour Path::GetCurrentColour(void)
+{
+    return m_col;
 }
 
 void Path::MoveAllPoints( double inc_lat, double inc_lon )

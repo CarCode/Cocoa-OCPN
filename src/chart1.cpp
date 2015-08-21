@@ -239,10 +239,6 @@ wxString                  g_UserPresLibData;
 wxString                  g_VisibleLayers;
 wxString                  g_InvisibleLayers;
 
-extern wxString           str_version_major;
-extern wxString           str_version_minor;
-extern wxString           str_version_patch;
-
 #ifdef ocpnUSE_GL
 extern CompressionWorkerPool   *g_CompressorPool;
 #endif
@@ -774,8 +770,9 @@ paper charts and traditional methods of navigation.\n\n\
 DO NOT rely upon OpenCPN for safety of life or property.\n\n\
 Please click \"OK\" to agree and proceed, \"Cancel\" to quit.\n") );
 
-    wxString vs = wxT(" .. Version ") + str_version_major + wxT(".") + str_version_minor + wxT(".")
-            + str_version_patch;
+    wxString vs =
+    wxString::Format(wxT(" .. Version %i.%i.%i"),
+                     VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
 
     wxMessageDialog odlg( gFrame, msg0, _("Welcome to OpenCPN") + vs, wxCANCEL | wxOK );
 
@@ -855,7 +852,7 @@ bool MyApp::OnCmdLineParsed( wxCmdLineParser& parser )
 #ifdef __WXMSW__
     //  Handle any exception not handled by CrashRpt
     //  Most probable:  Malloc/new failure
-    
+
 bool MyApp::OnExceptionInMainLoop()
 {
     wxLogWarning(_T("Caught MainLoopException, continuing..."));
@@ -940,14 +937,14 @@ void MyApp::OnActivateApp( wxActivateEvent& event )
         //  Remove a temporary Menubar when the application goes inactive
         //  This is one way to handle properly ALT-TAB navigation on the Windows desktop
         //  without accidentally leaving an unwanted Menubar shown.
-#ifdef __WXMSW__        
+#ifdef __WXMSW__
         if( g_bTempShowMenuBar ) {
             g_bTempShowMenuBar = false;
             if(gFrame)
                 gFrame->ApplyGlobalSettings(false, false);
         }
-#endif        
-        
+#endif
+
         if( g_FloatingToolbarDialog )
             g_FloatingToolbarDialog->HideTooltip(); // Hide any existing tip
     }
@@ -986,7 +983,7 @@ void LoadS57()
 
     if( g_bportable ) {
         wxFileName f( g_SENCPrefix );
-        if( f.MakeRelativeTo( g_Platform->GetPrivateDataDir() ) ) 
+        if( f.MakeRelativeTo( g_Platform->GetPrivateDataDir() ) )
             g_SENCPrefix = f.GetFullPath();
         else
             g_SENCPrefix = _T("SENC");
@@ -1130,6 +1127,18 @@ bool MyApp::OnInit()
 
     if( !wxApp::OnInit() ) return false;
 
+#if defined(__WXGTK__) && defined(ARMHF) && defined(ocpnUSE_GLES)
+    // There is a race condition between cairo which is used for text rendering
+    // by gtk and EGL which without the below code causes a bus error and the
+    // program aborts before startup
+    // this hack forces cairo to load right now by rendering some text
+
+    wxBitmap bmp( 10, 10, -1 );
+    wxMemoryDC dc;
+    dc.SelectObject( bmp );
+    dc.DrawText( _T("X"), 0, 0 );
+#endif
+
     //  On Windows
     //  We allow only one instance unless the portable option is used
 #ifdef __WXMSW__
@@ -1142,10 +1151,10 @@ bool MyApp::OnInit()
 
     // Instantiate the global OCPNPlatform class
     g_Platform = new OCPNPlatform;
-    
+
     //  Perform first stage initialization
     OCPNPlatform::Initialize_1( );
-    
+
 #if wxCHECK_VERSION(3,0,0)
     // Set the name of the app as displayed to the user.
     // This is necessary at least on OS X, for the capitalisation to be correct in the system menus.
@@ -1155,7 +1164,7 @@ bool MyApp::OnInit()
 #ifdef __WXOSX__
     wxPowerResourceBlocker
     blocker(wxPOWER_RESOURCE_SCREEN, "Block Screensaver");
-    
+
     if ( !blocker.IsInEffect() )
     {
         // If the resource could not be acquired, tell the user that he has
@@ -1163,7 +1172,7 @@ bool MyApp::OnInit()
         wxLogMessage("Warning: Screensaver may suspend Screen view.");
     }
 #endif
-    
+
     //  Seed the random number generator
     wxDateTime x = wxDateTime::UNow();
     long seed = x.GetMillisecond();
@@ -1202,15 +1211,15 @@ bool MyApp::OnInit()
     //      Establish Log File location
     if(!g_Platform->InitializeLogFile())
         return false;
-    
+
 
 #ifdef __WXMSW__
-    
+
     //  Un-comment the following to establish a separate console window as a target for printf() in Windows
     //     RedirectIOToConsole();
-    
+
 #endif
-    
+
 //      Send init message
     wxLogMessage( _T("\n\n________\n") );
 
@@ -1229,20 +1238,20 @@ bool MyApp::OnInit()
 
     wxString wxver(wxVERSION_STRING);
     wxver.Prepend( _T("wxWidgets version: ") );
-    
+
     wxPlatformInfo platforminfo = wxPlatformInfo::Get();
-    
+
     wxString os_name;
 #ifndef __WXQT__
     os_name = platforminfo.GetOperatingSystemIdName();
 #else
     os_name = platforminfo.GetOperatingSystemFamilyName();
 #endif
-    
+
     wxString platform = os_name + _T(" ") +
     platforminfo.GetArchName()+ _T(" ") +
     platforminfo.GetPortIdName();
-    
+
     wxLogMessage( wxver + _T(" ") + platform );
 #ifndef __WXOSX__
     wxLogMessage( _T("MemoryStatus:  mem_total: %d mb,  mem_initial: %d mb"), g_mem_total / 1024,
@@ -1325,7 +1334,7 @@ bool MyApp::OnInit()
 
 
     bool b_initial_load = false;
-    
+
     wxFileName config_test_file_name( g_Platform->GetConfigFileName() );
     if( config_test_file_name.FileExists() ) wxLogMessage(
         _T("Using existing Config_File: ") + g_Platform->GetConfigFileName() );
@@ -1344,11 +1353,11 @@ bool MyApp::OnInit()
     //      Open/Create the Config Object
     pConfig = g_Platform->GetConfigObject();
     pConfig->LoadMyConfig();
-    
+
     //  Override for some safe and nice default values if the config file was created from scratch
     if(b_initial_load)
         g_Platform->SetDefaultOptions();
-    
+
     g_Platform->applyExpertMode(g_bUIexpert);
 
     // Now initialize UI Style.
@@ -1506,7 +1515,7 @@ bool MyApp::OnInit()
     if( !g_Platform->GetLargeLogMessage().IsEmpty() )
         wxLogMessage( g_Platform->GetLargeLogMessage() );
 #endif
-    
+
     //  Validate OpenGL functionality, if selected
 #ifdef ocpnUSE_GL
 
@@ -1554,7 +1563,7 @@ bool MyApp::OnInit()
                 // we know it works in xfce4, add other checks as we can validate them
                 if(strstr(wm_name, "Xfwm4"))
                     g_bTransparentToolbarInOpenGLOK = true;
-                
+
                 free(wm_name);
             }
             free(sup_window);
@@ -1597,7 +1606,7 @@ bool MyApp::OnInit()
 //      Establish guessed location of chart tree
     if( pInit_Chart_Dir->IsEmpty() ) {
         wxStandardPaths& std_path = g_Platform->GetStdPaths();
-        
+
         if( !g_bportable )
 #ifndef __OCPN__ANDROID__
         pInit_Chart_Dir->Append( std_path.GetDocumentsDir() );
@@ -1729,8 +1738,8 @@ bool MyApp::OnInit()
     app_style |= wxWANTS_CHARS;
 
 // Create the main frame window
-    wxString myframe_window_title = wxT("OpenCPN ") + str_version_major + wxT(".")
-            + str_version_minor + wxT(".") + str_version_patch; //Gunther
+    wxString myframe_window_title = wxString::Format(wxT("OpenCPN %i.%i.%i"),
+            VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH); //Gunther
 
     if( g_bportable ) {
         myframe_window_title += _(" -- [Portable(-p) executing from ");
@@ -2051,7 +2060,7 @@ extern ocpnGLOptions g_GLOptions;
     gFrame->Raise();
 
     gFrame->RequestNewToolbar();
-  
+
 
     cc1->Enable();
     cc1->SetFocus();
@@ -2094,7 +2103,7 @@ extern ocpnGLOptions g_GLOptions;
     if(g_FloatingToolbarDialog)
         g_FloatingToolbarDialog->Raise();
 #endif
-    
+
     // Start delayed initialization chain after 100 milliseconds
     gFrame->InitTimer.Start( 100, wxTIMER_CONTINUOUS );
 
@@ -2110,7 +2119,7 @@ extern ocpnGLOptions g_GLOptions;
 int MyApp::OnExit()
 {
     wxLogMessage( _T("opencpn::MyApp starting exit.") );
-    
+
     //  Send current nav status data to log file   // pjotrc 2010.02.09
 
     wxDateTime lognow = wxDateTime::Now();
@@ -2164,18 +2173,18 @@ int MyApp::OnExit()
         for(unsigned int igroup = 0; igroup < g_pGroupArray->GetCount(); igroup++){
             delete g_pGroupArray->Item(igroup);
         }
-            
+
         g_pGroupArray->Clear();
         delete g_pGroupArray;
     }
-    
+
     delete pDummyChart;
 
     wxLogMessage( _T("opencpn::MyApp exiting cleanly...\n") );
     wxLog::FlushActive();
-    
+
     g_Platform->CloseLogFile();
-    
+
     delete phost_name;
     delete pInit_Chart_Dir;
     delete pWorldMapLocation;
@@ -2337,7 +2346,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
 //    m_PrefTimer.SetOwner( this, ANDROID_PREF_TIMER );
 //    Connect( m_PrefTimer.GetId(), wxEVT_TIMER, wxTimerEventHandler( MyFrame::OnPreferencesResultTimer ), NULL, this );
 #endif
-    
+
     //      Set up some assorted member variables
     nRoute_State = 0;
     m_bTimeIsSet = false;
@@ -2356,6 +2365,11 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     gVar = NAN;
     gSog = NAN;
     gCog = NAN;
+
+    for (int i = 0; i < MAX_COG_AVERAGE_SECONDS; i++ ) {
+        COGTable[i] = 0.;
+    }
+
     m_fixtime = 0;
 
     m_bpersistent_quilt = false;
@@ -2379,7 +2393,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
 
     Connect( wxEVT_OCPN_THREADMSG, (wxObjectEventFunction) (wxEventFunction) &MyFrame::OnEvtTHREADMSG );
 
-    
+
     //        Establish the system icons for the frame.
 
 #ifdef __WXMSW__
@@ -2441,15 +2455,15 @@ void MyFrame::startHelp(void)
     CFBundleRef const bundle = CFBundleGetMainBundle ( );
     if ( !bundle )
         return;
-    
+
     CFStringRef const key = CFSTR( "CFBundleHelpBookName" );
     CFTypeRef const book =
     CFBundleGetValueForInfoDictionaryKey ( bundle, key );
     if ( !book )
         return;
-    
+
     CFStringRef const help = (CFStringRef)book;
-    
+
     //    _Error =
     AHGotoPage ( help, NULL, NULL );
 }
@@ -2480,7 +2494,7 @@ void MyFrame::OnActivate( wxActivateEvent& event )
     if(event.GetActive())
     {
         SurfaceToolbar();
-        
+
         if(g_ChartBarWin)
             g_ChartBarWin->Show(g_bShowChartBar);
     }
@@ -2829,18 +2843,18 @@ ocpnToolBarSimple *MyFrame::CreateAToolbar()
     m_lastAISiconName = initiconName;
 
     tb->ToggleTool( ID_TRACK, g_bTrackActive );
-    
+
     //  Set PlugIn tool toggle states
     ArrayOfPlugInToolbarTools tool_array = g_pi_manager->GetPluginToolbarToolArray();
     for( unsigned int i = 0; i < tool_array.GetCount(); i++ ) {
         PlugInToolbarToolContainer *pttc = tool_array.Item( i );
         if( !pttc->b_viz )
             continue;
-        
+
         if( pttc->kind == wxITEM_CHECK )
             tb->ToggleTool( pttc->id, pttc->b_toggle );
     }
-    
+
 
     SetStatusBarPane( -1 );                   // don't show help on status bar
 
@@ -2971,7 +2985,7 @@ void MyFrame::RequestNewToolbar(bool bforcenew)
         gFrame->Raise(); // ensure keyboard focus to the chart window (needed by gtk+)
 #endif
     }
-    
+
 #ifdef __OCPN__ANDROID__
     DoChartUpdate();
 #endif    
@@ -3030,7 +3044,7 @@ void MyFrame::EnableToolbar( bool newstate )
 void MyFrame::SetToolbarScale()
 {
     g_toolbar_scalefactor = g_Platform->GetToolbarScaleFactor( g_GUIScaleFactor );
-    
+
     //  Round to the nearest "quarter", to avoid rendering artifacts
     g_toolbar_scalefactor = wxRound( g_toolbar_scalefactor * 4.0 )/ 4.0;
 
@@ -3039,10 +3053,10 @@ void MyFrame::SetToolbarScale()
 void MyFrame::SetGPSCompassScale()
 {
     g_compass_scalefactor = g_Platform->GetCompassScaleFactor( g_GUIScaleFactor );
-    
+
     //  Round to the nearest "quarter", to avoid rendering artifacts
     //    g_compass_scalefactor = wxRound( g_toolbar_scalefactor * 4.0 )/ 4.0;
-    
+
 }
 
 void MyFrame::RaiseToolbarRecoveryWindow()
@@ -3308,7 +3322,7 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
         delete cp;
     }
     delete g_pConnectionParams;
-    
+
     if(pLayerList){
         LayerList::iterator it;
         while(pLayerList->GetCount()){
@@ -3316,21 +3330,21 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
             delete lay;                 // automatically removes the layer from list, see Layer dtor
         }
     }
-    
+
     MsgPriorityHash::iterator it;
     for( it = NMEA_Msg_Hash.begin(); it != NMEA_Msg_Hash.end(); ++it ){
         NMEA_Msg_Container *pc = it->second;
         delete pc;
     }
     NMEA_Msg_Hash.clear();
-    
+
     pthumbwin = NULL;
 
     NMEALogWindow::Shutdown();
-    
+
     g_FloatingToolbarDialog = NULL;
     g_bTempShowMenuBar = false;
-    
+
 
     #define THREAD_WAIT_SECONDS  5
 #ifdef ocpnUSE_GL
@@ -3339,7 +3353,7 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     // it appears to have finished rather than hanging for several seconds
     // while the compression threads exit
     if(g_bopengl && g_CompressorPool && g_CompressorPool->GetRunningJobCount()){
-        
+
         wxLogMessage(_T("Starting compressor pool drain"));
         wxDateTime now = wxDateTime::Now();
         time_t stall = now.GetTicks();
@@ -3418,10 +3432,15 @@ void MyFrame::ProcessCanvasResize( void )
 int timer_sequence;
 void MyFrame::TriggerResize(wxSize sz)
 {
+#ifdef __OCPN__ANDROID__
     m_newsize = sz;
 
     timer_sequence = 0;
     m_resizeTimer.Start(10, wxTIMER_ONE_SHOT);
+
+    resizeAndroidPersistents();
+
+#endif
 }
 
 void MyFrame::OnResizeTimer(wxTimerEvent &event)
@@ -3432,12 +3451,12 @@ void MyFrame::OnResizeTimer(wxTimerEvent &event)
         if( m_pStatusBar != NULL ){
             int widths[] = { 2,2,2,2,2 };
             m_pStatusBar->SetStatusWidths( m_StatusBarFieldCount, widths );
-            
+
             for(int i=0 ; i <  m_pStatusBar->GetFieldsCount() ; i++){
                 m_pStatusBar->SetStatusText(_T(""), i);
             }
         }
-        
+
         timer_sequence++;
         m_resizeTimer.Start(10, wxTIMER_ONE_SHOT);
         return;
@@ -3451,7 +3470,7 @@ void MyFrame::OnResizeTimer(wxTimerEvent &event)
         m_resizeTimer.Start(10, wxTIMER_ONE_SHOT);
         return;
     }
-    
+
     if(timer_sequence == 2){
         if( g_FloatingToolbarDialog ) {
             g_Platform->GetDisplaySizeMM();             // causes a reload of all display metrics
@@ -3463,10 +3482,10 @@ void MyFrame::OnResizeTimer(wxTimerEvent &event)
         }
         timer_sequence++;
         m_resizeTimer.Start(10, wxTIMER_ONE_SHOT);
-        
+
         return;
     }
-    
+
     if(timer_sequence == 3){
         g_Platform->onStagedResizeFinal();
 
@@ -3484,16 +3503,15 @@ void MyFrame::ODoSetSize( void )
 {
     int x, y;
     GetClientSize( &x, &y );
-
 //      Resize the children
 
     if( m_pStatusBar != NULL ) {
         if(m_StatusBarFieldCount){
-            
+
             //  If the status bar layout is "complex", meaning more than two columns,
             //  then use custom crafted relative widths for the fields.
             //  Otherwise, just split the frame client width into equal spaces
-            
+
             if(m_StatusBarFieldCount > 2){
                 int widths[] = { -6, -5, -5, -3, -4 };
                 m_pStatusBar->SetStatusWidths( m_StatusBarFieldCount, widths );
@@ -3510,10 +3528,10 @@ void MyFrame::ODoSetSize( void )
                 widths[0] = x * 90 / 100 ;
                 m_pStatusBar->SetStatusWidths( m_StatusBarFieldCount, widths );
             }
-            
+
             int styles[] = { wxSB_FLAT, wxSB_FLAT, wxSB_FLAT, wxSB_FLAT, wxSB_FLAT, wxSB_FLAT };
             m_pStatusBar->SetStatusStyles( m_StatusBarFieldCount, styles );
-            
+
         }
     }
 
@@ -3557,7 +3575,7 @@ void MyFrame::ODoSetSize( void )
 #ifdef __OCPN__ANDROID__
         min_height = ( pstat_font->GetPointSize() * getAndroidDisplayDensity() ) + 10;
         m_pStatusBar->SetMinHeight( min_height );
-//        qDebug() <<"StatusBar min height:" << min_height << "StatusBar font points:" << pstat_font->GetPointSize();
+        qDebug() <<"StatusBar min height:" << min_height << "StatusBar font points:" << pstat_font->GetPointSize();
 #endif
 //        wxString msg;
 //        msg.Printf(_T("StatusBar min height: %d    StatusBar font points: %d"), min_height, pstat_font->GetPointSize());
@@ -3653,9 +3671,9 @@ void MyFrame::UpdateAllFonts()
 
     //  Close and destroy any persistent dialogs, so that new fonts will be utilized
     DestroyPersistentDialogs();
-    
+
     if( pWayPointMan ) pWayPointMan->ClearRoutePointFonts();
-    
+
     cc1->Refresh();
 }
 
@@ -3827,7 +3845,7 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             ToggleChartBar();
             break;
         }
-            
+
 #ifdef USE_S57
         case ID_MENU_ENC_TEXT:
         case ID_ENC_TEXT: {
@@ -3932,7 +3950,7 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
                     tip = _("Hide Currents");
                 if( g_toolbar )
                     g_toolbar->SetToolShortHelp( ID_CURRENT, tip );
-                
+
                 SetMenubarItemState( ID_MENU_SHOW_CURRENTS, cc1->GetbShowCurrent() );
                 cc1->ReloadVP();
             } else {
@@ -3966,7 +3984,7 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
                     tip = _("Hide Tides");
                 if( g_toolbar )
                     g_toolbar->SetToolShortHelp( ID_TIDE, tip );
-                
+
                 SetMenubarItemState( ID_MENU_SHOW_TIDES, cc1->GetbShowTide() );
                 cc1->ReloadVP();
             } else {
@@ -3992,8 +4010,8 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
         case ID_ABOUT: {
             if( !g_pAboutDlg )
                 g_pAboutDlg = new about( this, g_Platform->GetSharedDataDir() );
-
-            g_pAboutDlg->Update();
+            else
+                g_pAboutDlg->SetFocus();
             g_pAboutDlg->Show();
 
             break;
@@ -4028,7 +4046,7 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             Close();
             break;
         }
-        
+
         case ID_MENU_ROUTE_MANAGER:
         case ID_ROUTEMANAGER: {
             pRouteManagerDialog = RouteManagerDialog::getInstance( cc1 ); // There is one global instance of the Dialog
@@ -4081,19 +4099,26 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
 
         //  Various command events coming from (usually) other threads,
         //  used to control OCPN modes in a thread-safe way.
-            
+
         case ID_CMD_SELECT_CHART_TYPE:{
             selectChartDisplay( event.GetExtraLong(), -1);
             break;
         }
-            
+
         case ID_CMD_SELECT_CHART_FAMILY:{
             selectChartDisplay( -1, event.GetExtraLong());
             break;
         }
-            
+
         case ID_CMD_APPLY_SETTINGS:{
             applySettingsString(event.GetString());
+            break;
+        }
+
+        case ID_CMD_TRIGGER_RESIZE:{
+#ifdef __OCPN__ANDROID__
+            TriggerResize( getAndroidConfigSize() );
+#endif
             break;
         }
 
@@ -4142,7 +4167,7 @@ void MyFrame::DoSettings()
 
     if( cc1->GetbShowCurrent() || cc1->GetbShowTide() )
         LoadHarmonics();
-    
+
     //  The chart display options may have changed, especially on S57 ENC,
     //  So, flush the cache and redraw
     cc1->ReloadVP();
@@ -4158,13 +4183,13 @@ void MyFrame::ShowChartBarIfEnabled()
             g_ChartBarWin->RePosition();
         }
     }
-    
+
 }
 
 void MyFrame::ToggleChartBar()
 {
     g_bShowChartBar = !g_bShowChartBar;
-    
+
     if( g_ChartBarWin ) {
         g_ChartBarWin->Show(g_bShowChartBar);
         
@@ -4176,10 +4201,10 @@ void MyFrame::ToggleChartBar()
         SendSizeEvent();
     } else if(g_bShowChartBar)
         cc1->m_brepaint_piano = true;
-    
+
     cc1->ReloadVP(); // needed to set VP.pix_height
     Refresh();
-    
+
     if(g_bShowChartBar) {
         DoChartUpdate();
         UpdateControlBar();
@@ -4296,7 +4321,7 @@ void MyFrame::TrackOn( void )
     SetToolbarItemState( ID_TRACK, g_bTrackActive );
     if( g_toolbar )
         g_toolbar->SetToolShortHelp( ID_TRACK, _("Disable Tracking") );
-    
+
     SetMenubarItemState( ID_MENU_NAV_TRACK, g_bTrackActive );
 
 #ifdef __OCPN__ANDROID__
@@ -4423,7 +4448,7 @@ void MyFrame::ToggleCourseUp( void )
 
     if(m_pMenuBar)
         m_pMenuBar->SetLabel( ID_MENU_CHART_NORTHUP, _("North Up Mode") );
-    
+
     DoCOGSet();
     UpdateGPSCompassStatusBox( true );
     DoChartUpdate();
@@ -4441,7 +4466,7 @@ void MyFrame::ToggleENCText( void )
             tip = _("Hide ENC Text (T)");
         if( g_toolbar )
             g_toolbar->SetToolShortHelp( ID_ENC_TEXT, tip );
-        
+
         SetMenubarItemState( ID_MENU_ENC_TEXT, ps52plib->GetShowS57Text() );
         cc1->ReloadVP();
     }
@@ -4487,7 +4512,7 @@ bool MyFrame::ToggleLights( bool doToggle, bool temporary )
                 pOLE->nViz = 1;
             ps52plib->RemoveObjNoshow("LIGHTS");
         }
-        
+
         SetMenubarItemState( ID_MENU_ENC_LIGHTS, !oldstate );
     }
     if( doToggle ) {
@@ -4539,7 +4564,7 @@ void MyFrame::ToggleAnchor( void )
     if( ps52plib ) {
         int old_vis =  0;
         OBJLElement *pOLE = NULL;
-        
+
         if(  MARINERS_STANDARD == ps52plib->GetDisplayCategory()){
             // Need to loop once for SBDARE, which is our "master", then for
             // other categories, since order is unknown?
@@ -4557,9 +4582,9 @@ void MyFrame::ToggleAnchor( void )
 
         const char * categories[] = { "ACHBRT", "ACHARE", "CBLSUB", "PIPARE", "PIPSOL", "TUNNEL" };
         unsigned int num = sizeof(categories) / sizeof(categories[0]);
-        
+
         old_vis &= !ps52plib->IsObjNoshow("SBDARE");
-        
+
         if(old_vis){                            // On, going off
             ps52plib->AddObjNoshow("SBDARE");
             for( unsigned int c = 0; c < num; c++ ) {
@@ -4573,7 +4598,7 @@ void MyFrame::ToggleAnchor( void )
             for( unsigned int c = 0; c < num; c++ ) {
                 ps52plib->RemoveObjNoshow(categories[c]);
             }
-            
+
             unsigned int cnt = 0;
             for( unsigned int iPtr = 0; iPtr < ps52plib->pOBJLArray->GetCount(); iPtr++ ) {
                 OBJLElement *pOLE = (OBJLElement *) ( ps52plib->pOBJLArray->Item( iPtr ) );
@@ -4586,7 +4611,7 @@ void MyFrame::ToggleAnchor( void )
                 }
                 if( cnt == num ) break;
             }
-            
+
         }
 
         SetMenubarItemState( ID_MENU_ENC_ANCHOR, !old_vis );
@@ -4702,7 +4727,7 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
     }
 
     SendSizeEvent();               
-    
+
     /*
      * Menu Bar - add or remove it if necessary, and update the state of the menu items
      */
@@ -4719,7 +4744,7 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
         if ( !m_pMenuBar ) {    // add the menu bar if it is enabled
             m_pMenuBar = new wxMenuBar();
             RegisterGlobalMenuItems();
-            
+
 #ifdef __WXOSX__
             EnableFullScreenView();
 #endif
@@ -4739,7 +4764,7 @@ void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
     }
 
     SendSizeEvent();               
-    
+
     if( bFlyingUpdate )
         g_Compass->Show(pConfig->m_bShowCompassWin);
 
@@ -4845,7 +4870,7 @@ void MyFrame::RegisterGlobalMenuItems()
 #else
     tools_menu->Append( ID_MENU_TOOL_MEASURE, _menuText(_("Measure Distance"), _T("Alt-M")) );
 #endif
-    
+
     tools_menu->AppendSeparator();
     tools_menu->Append( ID_MENU_ROUTE_MANAGER, _("Route && Mark Manager...") );
     tools_menu->Append( ID_MENU_ROUTE_NEW, _menuText(_("Create Route"), _T("Ctrl-R")) );
@@ -4867,13 +4892,13 @@ void MyFrame::RegisterGlobalMenuItems()
 #else
     m_pMenuBar->Append( tools_menu, _("&Tools") );
 #endif
-    
+
     wxMenu* help_menu = new wxMenu();
     help_menu->Append( wxID_ABOUT, _("About OpenCPN") );
 #ifdef __WXOSX__
     help_menu->Append( wxID_HELP, _menuText(_("OpenCPN Hilfe"), _T("Ctrl-J")) );
     m_pMenuBar->Append( help_menu, _("Help"));
-    
+
 #if USE_SPARKLE
     wxMenu *apple = m_pMenuBar->OSXGetAppleMenu();
     if (!apple)
@@ -4920,7 +4945,7 @@ void MyFrame::UpdateGlobalMenuItems()
             }
         }
         m_pMenuBar->FindItem( ID_MENU_ENC_LIGHTS )->Check( (!ps52plib->IsObjNoshow("LIGHTS")) && light_state );
-        
+
         m_pMenuBar->FindItem( ID_MENU_ENC_ANCHOR )->Check( !ps52plib->IsObjNoshow("SBDARE") );
     }
 #endif
@@ -5113,7 +5138,7 @@ int MyFrame::DoOptionsDialog()
     delete pWorkDirArray;
 
     ShowChartBarIfEnabled();
-    
+
     gFrame->Raise();
     DoChartUpdate();
     UpdateControlBar();
@@ -5270,7 +5295,7 @@ int MyFrame::ProcessOptionsDialog( int rr, ArrayOfCDI *pNewDirArray )
     else{
         g_display_size_mm = wxMax(100, g_Platform->GetDisplaySizeMM());
     }
-    
+
     cc1->SetDisplaySizeMM( g_display_size_mm );
 
     if(g_FloatingToolbarDialog){
@@ -5290,9 +5315,9 @@ int MyFrame::ProcessOptionsDialog( int rr, ArrayOfCDI *pNewDirArray )
 }
 
 void MyFrame::LaunchLocalHelp( void ) {
-    
+
     wxString def_lang_canonical = _T("en_US");
-    
+
 #if wxUSE_XLOCALE
     if(plocale_def_lang)
         def_lang_canonical = plocale_def_lang->GetCanonicalName();
@@ -5583,7 +5608,7 @@ void MyFrame::SetupQuiltMode( void )
 
             if(-1 != target_new_dbindex){
                 if( !cc1->IsChartQuiltableRef( target_new_dbindex ) ){
-                    
+
                     int proj = ChartData->GetDBChartProj(target_new_dbindex);
                     int type = ChartData->GetDBChartType(target_new_dbindex);
 
@@ -5709,7 +5734,7 @@ void MyFrame::ClearRouteTool()
 {
     if( g_toolbar )
         g_toolbar->ToggleTool( ID_ROUTE, false );
-    
+
 #ifdef __OCPN__ANDROID__
     androidSetRouteAnnunciator(false);
 #endif
@@ -5840,7 +5865,7 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
     case 1:
         // Connect Datastreams
         
-   
+
         for ( size_t i = 0; i < g_pConnectionParams->Count(); i++ )
         {
             ConnectionParams *cp = g_pConnectionParams->Item(i);
@@ -5925,12 +5950,12 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
         default:
         {
             // Last call....
-            
+
             if(g_FloatingToolbarDialog){
                 g_FloatingToolbarDialog->SetAutoHide(g_bAutoHideToolbar);
                 g_FloatingToolbarDialog->SetAutoHideTimer(g_nAutoHideToolbar);
             }
-            
+
             InitTimer.Stop(); // Initialization complete
             break;
         }
@@ -6032,7 +6057,7 @@ void MyFrame::OnBellsTimer(wxTimerEvent& event)
 
     bells_sound[bells - 1].Play();
     m_BellsToPlay -= bells;
-    
+
     BellsTimer.Start(2000, wxTIMER_ONE_SHOT);
 }
 
@@ -6040,7 +6065,7 @@ int ut_index;
 
 void MyFrame::OnFrameTimer1( wxTimerEvent& event )
 {
-    
+
 
     if( s_ProgDialog ) {
         return;
@@ -6406,10 +6431,10 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
 #ifdef ocpnUSE_GL
         if(m_fixtime - cc1->GetglCanvas()->m_last_render_time > 0)
             bnew_view = true;
-        
+
         if( AnyAISTargetsOnscreen( cc1->GetVP() ) )
             bnew_view = true;
-        
+
         if(bnew_view) /* full frame in opengl mode */
             cc1->Refresh(false);
 #endif
@@ -6625,7 +6650,7 @@ void MyFrame::UpdateRotationState( double rotation )
 {
     //  If rotated manually, we switch to NORTHUP
     g_bCourseUp = false;
-    
+
     if(fabs(rotation) > .001){
         SetMenubarItemState( ID_MENU_CHART_COGUP, false );
         SetMenubarItemState( ID_MENU_CHART_NORTHUP, true );
@@ -6640,7 +6665,7 @@ void MyFrame::UpdateRotationState( double rotation )
             m_pMenuBar->SetLabel( ID_MENU_CHART_NORTHUP, _("North Up Mode") );
         }
     }
-    
+
     UpdateGPSCompassStatusBox( true );
     DoChartUpdate();
     cc1->ReloadVP();
@@ -6922,7 +6947,7 @@ double MyFrame::GetBestVPScale( ChartBase *pchart )
                wxMin(proposed_scale_onscreen,
                      pchart->GetNormalScaleMax(cc1->GetCanvasScaleFactor(), cc1->GetCanvasWidth()) *
                      max_underzoom_multiplier);
-               
+
         //  And, do not allow excessive overzoom either       
         proposed_scale_onscreen =
                 wxMax(proposed_scale_onscreen, pchart->GetNormalScaleMin(cc1->GetCanvasScaleFactor(), false));
@@ -7175,7 +7200,7 @@ void MyFrame::UpdateControlBar( void )
     ArrayOfInts empty_piano_chart_index_array;
 
     wxString old_hash = g_Piano->GetStoredHash();
-    
+
     if( cc1->GetQuiltMode() ) {
         piano_chart_index_array = cc1->GetQuiltExtendedStackdbIndexArray();
         g_Piano->SetKeyArray( piano_chart_index_array );
@@ -7238,7 +7263,7 @@ void MyFrame::UpdateControlBar( void )
     g_Piano->SetTmercIndexArray( piano_tmerc_chart_index_array );
     g_Piano->SetPolyIndexArray( piano_poly_chart_index_array );
     g_Piano->FormatKeys();
-    
+
     wxString new_hash = g_Piano->GenerateAndStoreNewHash();
     if(new_hash != old_hash) {
         SetChartThumbnail( -1 );
@@ -7266,7 +7291,7 @@ void MyFrame::UpdateControlBar( void )
                 mask |= 2;
         }
     }
-    
+
     wxString s_indicated;
     if(sel_type == CHART_TYPE_CM93COMP)
         s_indicated = _T("cm93");
@@ -7276,9 +7301,9 @@ void MyFrame::UpdateControlBar( void )
         else if(sel_family == CHART_FAMILY_VECTOR)
             s_indicated = _T("vector");
     }
-    
+
     g_Platform->setChartTypeMaskSel(mask, s_indicated);
-    
+
 }
 
 void MyFrame::selectChartDisplay( int type, int family)
@@ -7830,7 +7855,7 @@ void MyFrame::PianoPopupMenu( int x, int y, int selected_index, int selected_dbI
 
     delete piano_ctx_menu;
     piano_ctx_menu = NULL;
-    
+
     cc1->HideChartInfoWindow();
     g_Piano->ResetRollover();
 
@@ -7901,7 +7926,7 @@ bool GetMemoryStatus( int *mem_total, int *mem_used )
 #ifdef __OCPN__ANDROID__
     return androidGetMemoryStatus( mem_total, mem_used );
 #endif
-            
+
 #ifdef __LINUX__
 
     //      Use filesystem /proc/self/statm to determine memory status
@@ -8056,12 +8081,12 @@ void MyFrame::DoPrint( void )
     wxPrinter printer( &printDialogData );
 
     MyPrintout printout( wxT("Chart Print") );
-    
+
     //  In OperGL mode, make the bitmap capture of the screen before the print method starts,
     //  so as to be sure the "Abort..." dialog does not appear on the image
     if(g_bopengl) 
         printout.GenerateGLbmp( );
-                
+
     if( !printer.Print( this, &printout, true ) ) {
         if( wxPrinter::GetLastError() == wxPRINTER_ERROR ) OCPNMessageBox(NULL,
                 _("There was a problem printing.\nPerhaps your current printer is not set correctly?"),
@@ -9234,23 +9259,24 @@ void MyFrame::UpdateAISMOBRoute( AIS_Target_Data *ptarget )
 
 void MyFrame::applySettingsString( wxString settings)
 {
-    g_Platform->ShowBusySpinner();
-   
+    //  Save some present values
+    int last_UIScaleFactor = g_GUIScaleFactor;
+    bool previous_expert = g_bUIexpert;
+
     //  Parse the passed settings string
-    //    wxLogMessage( settings );
     bool bproc_InternalGPS = false;
     bool benable_InternalGPS = false;
 
     int rr = GENERIC_CHANGED;
-    
+
     // extract chart directories
     ArrayOfCDI NewDirArray;
-    
+
     if(ChartData){
         wxStringTokenizer tkd(settings, _T(";"));
         while ( tkd.HasMoreTokens() ){
             wxString token = tkd.GetNextToken();
-            
+
             if(token.StartsWith( _T("ChartDir"))){
                 wxString dir = token.AfterFirst(':');
                 if(dir.Length()){
@@ -9258,11 +9284,10 @@ void MyFrame::applySettingsString( wxString settings)
                     cdi.fullpath = dir.Trim();
                     cdi.magic_number = ChartData->GetMagicNumberCached(dir.Trim());
                     NewDirArray.Add(cdi);
-                    //                   wxLogMessage(dir.Trim());
                 }
             }
         }
-        
+
         // Scan for changes
         if(!ChartData->CompareChartDirArray( NewDirArray )){
             rr |= VISIT_CHARTS;
@@ -9271,19 +9296,14 @@ void MyFrame::applySettingsString( wxString settings)
         }
     }
 
-    bool previous_expert = g_bUIexpert;
-
     wxStringTokenizer tk(settings, _T(";"));
     while ( tk.HasMoreTokens() )
     {
         wxString token = tk.GetNextToken();
-        //        wxLogMessage(token);
-        
         wxString val = token.AfterFirst(':');
-        //        wxLogMessage(val);
-        
+
         //  Binary switches
-        
+
         if(token.StartsWith( _T("prefb_lookahead"))){
             g_bLookAhead = val.IsSameAs(_T("1"));
         }
@@ -9309,24 +9329,34 @@ void MyFrame::applySettingsString( wxString settings)
             g_bUIexpert = val.IsSameAs(_T("1"));
         }
         else if(token.StartsWith( _T("prefb_showsound"))){
+            bool old_val = ps52plib->m_bShowSoundg;
             ps52plib->m_bShowSoundg = val.IsSameAs(_T("1"));
-            rr |= S52_CHANGED;
+            if(old_val != ps52plib->m_bShowSoundg)
+                rr |= S52_CHANGED;
         }
         else if(token.StartsWith( _T("prefb_showSCAMIN"))){
+            bool old_val = ps52plib->m_bUseSCAMIN;
             ps52plib->m_bUseSCAMIN = val.IsSameAs(_T("1"));
-            rr |= S52_CHANGED;
+            if(old_val != ps52plib->m_bUseSCAMIN)
+                rr |= S52_CHANGED;
         }
         else if(token.StartsWith( _T("prefb_showimptext"))){
+            bool old_val = ps52plib->m_bShowS57ImportantTextOnly;
             ps52plib->m_bShowS57ImportantTextOnly = val.IsSameAs(_T("1"));
-            rr |= S52_CHANGED;
+            if(old_val != ps52plib->m_bShowS57ImportantTextOnly)
+                rr |= S52_CHANGED;
         }
         else if(token.StartsWith( _T("prefb_showlightldesc"))){
+            bool old_val = ps52plib->m_bShowLdisText;
             ps52plib->m_bShowLdisText = val.IsSameAs(_T("1"));
-            rr |= S52_CHANGED;
+            if(old_val != ps52plib->m_bShowLdisText)
+                rr |= S52_CHANGED;
         }
         else if(token.StartsWith( _T("prefb_showATONLabels"))){
-            rr |= S52_CHANGED;
+            bool old_val = ps52plib->m_bShowAtonText;
             ps52plib->m_bShowAtonText = val.IsSameAs(_T("1"));
+            if(old_val != ps52plib->m_bShowAtonText)
+                rr |= S52_CHANGED;
         }
         else if(token.StartsWith( _T("prefb_internalGPS"))){
             bproc_InternalGPS = true;
@@ -9340,15 +9370,15 @@ void MyFrame::applySettingsString( wxString settings)
             if(bPrevMode != new_val)
                 ToggleCourseUp();
         }
-        
+
         //  Strings, etc.
-        
+
         else if(token.StartsWith( _T("prefs_UIScaleFactor"))){
             double a;
             if(val.ToDouble(&a))
                 g_GUIScaleFactor = wxRound( (a / 10.) - 5.);
         }
-        
+
         else if(token.StartsWith( _T("prefs_chartScaleFactor"))){
             double a;
             if(val.ToDouble(&a)){
@@ -9362,7 +9392,8 @@ void MyFrame::applySettingsString( wxString settings)
         }
 
         else if(token.StartsWith( _T("prefs_displaycategory"))){
-            rr |= S52_CHANGED;
+            _DisCat old_nset = ps52plib->GetDisplayCategory();
+
             _DisCat nset = DISPLAYBASE;
             if(wxNOT_FOUND != val.Lower().Find(_T("base")))
                 nset = DISPLAYBASE;
@@ -9370,72 +9401,106 @@ void MyFrame::applySettingsString( wxString settings)
                 nset = STANDARD;
             else if(wxNOT_FOUND != val.Lower().Find(_T("all")))
                 nset = OTHER;
-            
-            ps52plib-> SetDisplayCategory( nset );
+
+            if(nset != old_nset){
+                rr |= S52_CHANGED;
+                ps52plib-> SetDisplayCategory( nset );
+            }
         }
-        
+
         else if(token.StartsWith( _T("prefs_shallowdepth"))){
-            rr |= S52_CHANGED;
+            double old_dval = S52_getMarinerParam( S52_MAR_SHALLOW_CONTOUR );
+
             float conv = 1;
             //             if ( depthUnit == 0 ) // feet
             //                 conv = 0.3048f; // international definiton of 1 foot is 0.3048 metres
             //             else if ( depthUnit == 2 ) // fathoms
             //                 conv = 0.3048f * 6; // 1 fathom is 6 feet
-            
+
             double dval;
-            if(val.ToDouble(&dval))
-                S52_setMarinerParam( S52_MAR_SHALLOW_CONTOUR, dval * conv );
+            if(val.ToDouble(&dval)){
+                if(fabs(dval - old_dval) > .1){
+                    S52_setMarinerParam( S52_MAR_SHALLOW_CONTOUR, dval * conv );
+                    rr |= S52_CHANGED;
+                }
+            }
         }
-        
+
         else if(token.StartsWith( _T("prefs_safetydepth"))){
-            rr |= S52_CHANGED;
+            double old_dval = S52_getMarinerParam( S52_MAR_SAFETY_DEPTH );
             float conv = 1;
             double dval;
-            if(val.ToDouble(&dval))
-                S52_setMarinerParam( S52_MAR_SAFETY_DEPTH, dval * conv );
+            if(val.ToDouble(&dval)){
+                if(fabs(dval - old_dval) > .1){
+                    S52_setMarinerParam( S52_MAR_SAFETY_DEPTH, dval * conv );
+                    rr |= S52_CHANGED;
+                }
+            }
         }
-        
+
         else if(token.StartsWith( _T("prefs_deepdepth"))){
-            rr |= S52_CHANGED;
+            double old_dval = S52_getMarinerParam( S52_MAR_DEEP_CONTOUR );
             float conv = 1;
             double dval;
-            if(val.ToDouble(&dval))
-                S52_setMarinerParam( S52_MAR_DEEP_CONTOUR, dval * conv );
+            if(val.ToDouble(&dval)){
+                if(fabs(dval - old_dval) > .1){
+                    S52_setMarinerParam( S52_MAR_DEEP_CONTOUR, dval * conv );
+                    rr |= S52_CHANGED;
+                }
+            }
+
         }
-        
+
         else if(token.StartsWith( _T("prefs_vectorgraphicsstyle"))){
-            rr |= S52_CHANGED;
+            LUPname old_LUP = ps52plib->m_nSymbolStyle;
+
             if(wxNOT_FOUND != val.Lower().Find(_T("paper")))
                 ps52plib->m_nSymbolStyle = PAPER_CHART;
             else if(wxNOT_FOUND != val.Lower().Find(_T("simplified")))
                 ps52plib->m_nSymbolStyle = SIMPLIFIED;
+
+            if(old_LUP != ps52plib->m_nSymbolStyle)
+                rr |= S52_CHANGED;
+
         }
-        
+
         else if(token.StartsWith( _T("prefs_vectorboundarystyle"))){
-            rr |= S52_CHANGED;
+            LUPname old_LUP = ps52plib->m_nBoundaryStyle;
+
             if(wxNOT_FOUND != val.Lower().Find(_T("plain")))
                 ps52plib->m_nBoundaryStyle = PLAIN_BOUNDARIES;
             else if(wxNOT_FOUND != val.Lower().Find(_T("symbolized")))
                 ps52plib->m_nBoundaryStyle = SYMBOLIZED_BOUNDARIES;
+
+            if(old_LUP != ps52plib->m_nBoundaryStyle)
+                rr |= S52_CHANGED;
+
         }
-        
+
         else if(token.StartsWith( _T("prefs_vectorchartcolors"))){
-            rr |= S52_CHANGED;
+            double old_dval = S52_getMarinerParam( S52_MAR_TWO_SHADES );
+
             if(wxNOT_FOUND != val.Lower().Find(_T("2")))
                 S52_setMarinerParam( S52_MAR_TWO_SHADES, 1. );
             else if(wxNOT_FOUND != val.Lower().Find(_T("4")))
                 S52_setMarinerParam( S52_MAR_TWO_SHADES, 0. );
+
+            double new_dval = S52_getMarinerParam( S52_MAR_TWO_SHADES );
+            if(fabs(new_dval - old_dval) > .1){
+                rr |= S52_CHANGED;
+            }
+
         }
 
     }
 
     // Process Connections
     if(g_pConnectionParams && bproc_InternalGPS){
-        
+
         //  Does the connection already exist?
         ConnectionParams *pExistingParams = NULL;
         ConnectionParams *cp = NULL;
-        
+
         for ( size_t i = 0; i < g_pConnectionParams->Count(); i++ )
         {
             ConnectionParams *xcp = g_pConnectionParams->Item(i);
@@ -9445,7 +9510,7 @@ void MyFrame::applySettingsString( wxString settings)
                 break;
             }
         }
-        
+
         bool b_action = true;
         if(pExistingParams){
             if(pExistingParams->bEnabled == benable_InternalGPS)
@@ -9457,23 +9522,23 @@ void MyFrame::applySettingsString( wxString settings)
             // make a generic config string for InternalGPS.
             wxString sGPS = _T("2;3;;0;0;;0;1;0;0;;0;;1;0;0;0;0");          // 17 parms
             ConnectionParams *new_params = new ConnectionParams(sGPS);
-            
+
             new_params->bEnabled = benable_InternalGPS;
             g_pConnectionParams->Add(new_params);
             cp = new_params;
         }
-        
-        
-        
-        
+
+
+
+
         if(b_action && cp){                               // something to do?
-            
+
             // Terminate and remove any existing stream with the same port name
             DataStream *pds_existing = g_pMUX->FindStream( cp->GetDSPort() );
             if(pds_existing)
                 g_pMUX->StopAndRemoveStream( pds_existing );
-            
-            
+
+
             if( cp->bEnabled ) {
                 dsPortType port_type = cp->IOSelect;
                 DataStream *dstr = new DataStream( g_pMUX,
@@ -9488,9 +9553,9 @@ void MyFrame::applySettingsString( wxString settings)
                 dstr->SetOutputFilter(cp->OutputSentenceList);
                 dstr->SetOutputFilterType(cp->OutputSentenceListType);
                 dstr->SetChecksumCheck(cp->ChecksumCheck);
-                
+
                 g_pMUX->AddStream(dstr);
-                
+
                 cp->b_IsSetup = true;
             }
         }
@@ -9510,7 +9575,18 @@ void MyFrame::applySettingsString( wxString settings)
 
     ProcessOptionsDialog( rr,  &NewDirArray );
 
-    if(g_FloatingToolbarDialog)
+    // Try to detect if the toolbar is changing, to avoid a rebuild if not necessary.
+
+    bool b_newToolbar = false;
+
+    if(g_GUIScaleFactor != last_UIScaleFactor)
+        b_newToolbar = true;
+
+    if(previous_expert != g_bUIexpert)
+        b_newToolbar = true;
+
+
+    if(b_newToolbar && g_FloatingToolbarDialog)
         g_FloatingToolbarDialog->DestroyToolBar();
 
     //  We do this is one case only to remove an orphan recovery window
@@ -9520,15 +9596,23 @@ void MyFrame::applySettingsString( wxString settings)
     }
 #endif
 
-    g_Platform->applyExpertMode(g_bUIexpert);
+    if(previous_expert != g_bUIexpert)
+        g_Platform->applyExpertMode(g_bUIexpert);
 
     //  We set the compass size first, since that establishes the available space for the toolbar.
     SetGPSCompassScale();
     g_Compass->SetScaleFactor(g_compass_scalefactor);
     UpdateGPSCompassStatusBox( true );
 
-    SetToolbarScale();
-    RequestNewToolbar(true);    // Force rebuild, to pick up bGUIexpert settings.
+    if(b_newToolbar){
+        g_Platform->ShowBusySpinner();
+
+        SetToolbarScale();
+        RequestNewToolbar(true);    // Force rebuild, to pick up bGUIexpert and scale settings.
+
+        g_Platform->HideBusySpinner();
+    }
+
     SurfaceToolbar();
 
     gFrame->Raise();
@@ -9543,11 +9627,6 @@ void MyFrame::applySettingsString( wxString settings)
 #if defined(__WXOSX__) || defined(__WXQT__)
     if( g_FloatingToolbarDialog )
         g_FloatingToolbarDialog->Raise();
-
-    //    if( b_restoreAIS ){
-    //        g_pAISTargetList = new AISTargetListDialog( this, g_pauimgr, g_pAIS );
-    //        g_pAISTargetList->UpdateAISTargetList();
-    //    }
 #endif
 
     if(console)
@@ -9557,8 +9636,6 @@ void MyFrame::applySettingsString( wxString settings)
 
     if (NMEALogWindow::Get().Active())
         NMEALogWindow::Get().GetTTYWindow()->Raise();
-
-    g_Platform->HideBusySpinner();
 
 }
 
@@ -9576,7 +9653,7 @@ void MyFrame::OnSuspended(wxPowerEvent& WXUNUSED(event))
 //    wxDateTime now = wxDateTime::Now();
 //    printf("OnSuspended...%d\n", now.GetTicks());
     wxLogMessage(_T("System is going to suspend."));
-    
+
 }
 
 void MyFrame::OnSuspendCancel(wxPowerEvent& WXUNUSED(event))
@@ -9619,7 +9696,7 @@ void MyFrame::OnResume(wxPowerEvent& WXUNUSED(event))
             SetSize( sz );
         }
     }
-    
+
 }
 #endif // wxHAS_POWER_EVENTS
 
@@ -9764,12 +9841,12 @@ void MyPrintout::GenerateGLbmp( )
 #ifdef ocpnUSE_GL
         int gsx = cc1->GetglCanvas()->GetSize().x;
         int gsy = cc1->GetglCanvas()->GetSize().y;
-        
+
         unsigned char *buffer = (unsigned char *)malloc( gsx * gsy * 4 );
         glReadPixels(0, 0, gsx, gsy, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
-        
+
         unsigned char *e = (unsigned char *)malloc( gsx * gsy * 3 );
-        
+
         if(buffer && e){
             for( int p = 0; p < gsx*gsy; p++ ) {
                 e[3*p+0] = buffer[4*p+0];
@@ -9778,7 +9855,7 @@ void MyPrintout::GenerateGLbmp( )
             }
         }
         free(buffer);
-        
+
         wxImage image( gsx,gsy );
         image.SetData(e);
         wxImage mir_imag = image.Mirror( false );
@@ -10281,7 +10358,7 @@ wxArrayString *EnumerateSerialPorts( void )
             DIGCF_PRESENT | DIGCF_INTERFACEDEVICE );
 
     if( hdeviceinfo != INVALID_HANDLE_VALUE ) {
-        
+
         if(GarminProtocolHandler::IsGarminPlugged()){
             wxLogMessage( _T("EnumerateSerialPorts() Found Garmin USB Device.") );
             preturn->Add( _T("Garmin-USB") );         // Add generic Garmin selectable device
@@ -11047,7 +11124,7 @@ TimedMessageBox::TimedMessageBox(wxWindow* parent, const wxString& message,
 
     dlg = new OCPNMessageDialog( parent, message, caption, style, pos );
     dlg->ShowModal();
-    
+
     int ret= dlg->GetReturnCode();
 
     //  Not sure why we need this, maybe on wx3?
@@ -11292,7 +11369,7 @@ wxFont *GetOCPNScaledFont( wxString item, int default_size )
 {
     wxFont *dFont = FontMgr::Get().GetFont( item, default_size );
     int req_size = dFont->GetPointSize();
-    
+
     if( g_bresponsive ){
         //      Adjust font size to be no smaller than xx mm actual size
         double scaled_font_size = dFont->GetPointSize();
@@ -11322,11 +11399,11 @@ wxFont GetOCPNGUIScaledFont( wxString item )
     wxFont *dFont = FontMgr::Get().GetFont( item, 0 );
 //    int req_size = dFont->GetPointSize();  // Not used
     wxFont qFont = *dFont;
-    
+
     if( g_bresponsive ){
         double postmult =  exp( g_GUIScaleFactor * (0.693 / 5.0) );       //  exp(2)
         double scaled_font_size = dFont->GetPointSize() * postmult;
-        
+
         double points_per_mm  = g_Platform->getFontPointsperPixel() * g_Platform->GetDisplayDPmm();
         double min_scaled_font_size = 3 * points_per_mm;    // smaller than 3 mm is unreadable
         int nscaled_font_size = wxMax( wxRound(scaled_font_size), min_scaled_font_size );
@@ -11783,16 +11860,16 @@ bool ReloadLocale()
     bool ret = false;
 // #ifndef __WXOSX__
 #if wxUSE_XLOCALE || !wxCHECK_VERSION(3,0,0)
-    
+
     //  Old locale is done.
     delete plocale_def_lang;    
-    
+
     plocale_def_lang = new wxLocale;
     wxString loc_lang_canonical;
-    
+
     const wxLanguageInfo *pli = wxLocale::FindLanguageInfo( g_locale );
     bool b_initok = false;
-    
+
     if( pli ) {
         b_initok = plocale_def_lang->Init( pli->Language, 1 );
         // If the locale was not initialized OK, it may be that the wxstd.mo translations
@@ -11803,51 +11880,51 @@ bool ReloadLocale()
         }
         loc_lang_canonical = pli->CanonicalName;
     }
-    
+
     if( !pli || !b_initok ) {
         delete plocale_def_lang;
         plocale_def_lang = new wxLocale;
         b_initok = plocale_def_lang->Init( wxLANGUAGE_ENGLISH_US, 0 );
         loc_lang_canonical = wxLocale::GetLanguageInfo( wxLANGUAGE_ENGLISH_US )->CanonicalName;
     }
-    
+
     if(b_initok){
         wxString imsg = _T("Opencpn language reload for:  ");
         imsg += loc_lang_canonical;
         wxLogMessage( imsg );
-    
+
         //  wxWidgets assigneds precedence to message catalogs in reverse order of loading.
         //  That is, the last catalog containing a certain translatable item takes precedence.
-        
+
         //  So, Load the catalogs saved in a global string array which is populated as PlugIns request a catalog load.
         //  We want to load the PlugIn catalogs first, so that core opencpn translations loaded later will become precedent.
-    
+
 //        wxLog::SetVerbose(true);            // log all messages for debugging language stuff
-        
+
         for(unsigned int i=0 ; i < g_locale_catalog_array.GetCount() ; i++){
 //            wxString imsg = _T("Loading catalog for:  ");  // No log messages please
 //            imsg += g_locale_catalog_array.Item(i);
 //            wxLogMessage( imsg );
             plocale_def_lang->AddCatalog( g_locale_catalog_array.Item(i) );
         }
-    
-    
+
+
     // Get core opencpn catalog translation (.mo) file
         wxLogMessage( _T("Loading catalog for opencpn core.") );
         plocale_def_lang->AddCatalog( _T("opencpn") );
-        
+
 //        wxLog::SetVerbose(false);
-       
+
         ret = true;
     }
-    
+
     //    Always use dot as decimal
     setlocale( LC_NUMERIC, "C" );
 
 #endif
 // #endif
     return ret;
-    
+
 }
 
 

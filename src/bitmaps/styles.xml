@@ -1,6 +1,7 @@
 <styles>
 	<style name="Traditional">
 		<graphics-file name="toolicons_traditional.png" />
+        <chart-status-window transparent="true"/>
 		<active-route>
 			<font-color r="50" g="240" b="50" />
 			<text-background-location x="660" y="260" width="111" height="43" />
@@ -169,32 +170,32 @@
             </icon>
 			<icon name="Display">
 				<icon-location x="20" y="400"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="20" y="430"/>
 			</icon>
 			<icon name="Connections">
 				<icon-location x="80" y="400"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="80" y="430"/>
 			</icon>
 			<icon name="Charts">
 				<icon-location x="140" y="400"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="140" y="430"/>
 			</icon>
 			<icon name="Ship">
 				<icon-location x="200" y="400"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="200" y="430"/>
 			</icon>
 			<icon name="UI">
 				<icon-location x="260" y="400"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="260" y="430"/>
 			</icon>
 			<icon name="Plugins">
 				<icon-location x="320" y="400"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="320" y="430"/>
 			</icon>
 			<icon name="mob">
@@ -459,10 +460,10 @@
 				<icon-location x="120" y="160"/>
 				<size x="16" y="16"/>
 			</icon>
-                        <icon name="qmark">
-                                <icon-location x="142" y="160"/>
-                                <size x="16" y="16"/>
-                        </icon>
+                <icon name="qmark">
+                <icon-location x="142" y="160"/>
+                <size x="16" y="16"/>
+            </icon>
 			<icon name="tidesml">
 				<icon-location x="240" y="160"/>
 				<size x="16" y="16"/>
@@ -640,24 +641,24 @@
 			</tool>
 			<tool name="AIS_AlertGeneral">
 				<icon-location x="380" y="260"/>
-                                <rollover-location x="337" y="220"/>
+                <rollover-location x="337" y="220"/>
 			</tool>
 			<tool name="AIS_Normal_Active">
 				<icon-location x="500" y="260"/>
-                                <rollover-location x="337" y="220"/>
+                <rollover-location x="337" y="220"/>
 			</tool>
 			<tool name="AIS_Suppressed_Active">
 				<icon-location x="340" y="260"/>
-                                <rollover-location x="337" y="220"/>
+                <rollover-location x="337" y="220"/>
 			</tool>
 			<tool name="AIS_AlertGeneral_Active">
 				<icon-location x="420" y="260"/>
-                                <rollover-location x="337" y="220"/>
+                <rollover-location x="337" y="220"/>
 			</tool>
-                        <tool name="AIS_Disabled">
-                                <icon-location x="337" y="320"/>
-                                <rollover-location x="337" y="220"/>
-                        </tool>
+            <tool name="AIS_Disabled">
+                <icon-location x="337" y="320"/>
+                <rollover-location x="337" y="220"/>
+            </tool>
 		</tools>
 
 		<icons>
@@ -667,32 +668,32 @@
             </icon>
 			<icon name="Display">
 				<icon-location x="20" y="370"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="20" y="430"/>
 			</icon>
 			<icon name="Connections">
 				<icon-location x="80" y="370"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="80" y="430"/>
 			</icon>
 			<icon name="Charts">
 				<icon-location x="140" y="370"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="140" y="430"/>
 			</icon>
 			<icon name="Ship">
 				<icon-location x="200" y="370"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="200" y="430"/>
 			</icon>
 			<icon name="UI">
 				<icon-location x="260" y="370"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="260" y="430"/>
 			</icon>
 			<icon name="Plugins">
 				<icon-location x="320" y="370"/>
-                        <size x="40" y="40"/>
+                <size x="40" y="40"/>
 				<rollover-location x="320" y="430"/>
 			</icon>
 			<icon name="mob">
@@ -961,10 +962,10 @@
 				<icon-location x="120" y="160"/>
 				<size x="16" y="16"/>
 			</icon>
-                        <icon name="qmark">
-                                <icon-location x="142" y="160"/>
-                                <size x="16" y="16"/>
-                        </icon>
+            <icon name="qmark">
+                <icon-location x="142" y="160"/>
+                <size x="16" y="16"/>
+            </icon>
 			<icon name="tidesml">
 				<icon-location x="240" y="160"/>
 				<size x="16" y="16"/>
@@ -995,7 +996,7 @@
         <embossed-indicators size="30" font="Verdana" />
 		<active-route>
 			<font-color r="50" g="50" b="50" />
-                        <text-background-location x="660" y="260" width="140" height="55" />
+            <text-background-location x="660" y="260" width="140" height="55" />
 		</active-route>
 		<tools>
 			<horizontal>
@@ -1148,10 +1149,10 @@
 			<tool name="AIS_AlertGeneral_Active">
 				<icon-location x="420" y="260"/>
 			</tool>
-                        <tool name="AIS_Disabled">
-                                <icon-location x="337" y="320"/>
-                                <rollover-location x="337" y="220"/>
-                        </tool>
+            <tool name="AIS_Disabled">
+                <icon-location x="337" y="320"/>
+                <rollover-location x="337" y="220"/>
+            </tool>
 		</tools>
 
 		<icons>
@@ -1455,10 +1456,10 @@
 				<icon-location x="120" y="160"/>
 				<size x="16" y="16"/>
 			</icon>
-                        <icon name="qmark">
-                                <icon-location x="142" y="160"/>
-                                <size x="16" y="16"/>
-                        </icon>
+            <icon name="qmark">
+                <icon-location x="142" y="160"/>
+                <size x="16" y="16"/>
+            </icon>
 			<icon name="tidesml">
 				<icon-location x="240" y="160"/>
 				<size x="16" y="16"/>

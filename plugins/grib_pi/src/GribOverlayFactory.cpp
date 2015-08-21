@@ -444,7 +444,7 @@ bool GRIBOverlayFactory::DoRenderGribOverlay( PlugIn_ViewPort *vp )
     GribRecord **pGR = m_pGribTimelineRecordSet->m_GribRecordPtrArray;
     wxArrayPtrVoid **pIA = m_pGribTimelineRecordSet->m_IsobarArray;
 
-    for(int overlay = 1; overlay >= 0; overlay--)
+    for(int overlay = 1; overlay >= 0; overlay--) {
         for(int i=0; i<GribOverlaySettings::SETTINGS_COUNT; i++) {
             if(i == GribOverlaySettings::WIND ) {
                 if(overlay) {   /* render overlays first */
@@ -472,17 +472,18 @@ bool GRIBOverlayFactory::DoRenderGribOverlay( PlugIn_ViewPort *vp )
                 }
                 continue;
             }
-        if( !m_dlg.m_bDataPlot[i] )
-            continue;
-
-        if(overlay) /* render overlays first */
-            RenderGribOverlayMap( i, pGR, vp );
-        else {
-            RenderGribBarbedArrows( i, pGR, vp );
-            RenderGribIsobar( i, pGR, pIA, vp );
-            RenderGribDirectionArrows( i, pGR, vp );
-            RenderGribNumbers( i, pGR, vp );
-            RenderGribParticles( i, pGR, vp );
+            if( m_dlg.InDataPlot(i) && !m_dlg.m_bDataPlot[i] )
+                continue;
+            
+            if(overlay) /* render overlays first */
+                RenderGribOverlayMap( i, pGR, vp );
+            else {
+                RenderGribBarbedArrows( i, pGR, vp );
+                RenderGribIsobar( i, pGR, pIA, vp );
+                RenderGribDirectionArrows( i, pGR, vp );
+                RenderGribNumbers( i, pGR, vp );
+                RenderGribParticles( i, pGR, vp );
+            }
         }
     }
     if( m_Altitude ) {
@@ -1507,30 +1508,32 @@ void GRIBOverlayFactory::RenderGribParticles( int settings, GribRecord **pGR,
     if(!m_ParticleMap)
         m_ParticleMap = new ParticleMap(settings);
 
-    std::list<Particle> &particles = m_ParticleMap->m_Particles;
+    std::vector<Particle> &particles = m_ParticleMap->m_Particles;
 
     const int max_duration = 50;
     const int run_count = 6;
-    int history_size = 24 / sqrt(m_Settings.Settings[settings].m_dParticleDensity);
+
+    double density = m_Settings.Settings[settings].m_dParticleDensity;
+    //    density = density * sqrt(vp.view_scale_ppm);
+    
+    int history_size = 27 / sqrt(density);
     history_size = wxMin(history_size, MAX_PARTICLE_HISTORY);
 
-    std::list<Particle>::iterator it;
+    std::vector<Particle>::iterator it;
     // if the history size changed
     if(m_ParticleMap->history_size != history_size) {
-        it = particles.begin();
-
-        while(it != particles.end()) {
-            if(m_ParticleMap->history_size > history_size) {
-                if(it->m_HistoryPos >= history_size) {
-                    it = particles.erase(it);
-                    continue;
-                }
+        for(unsigned int i = 0; i < particles.size(); i++) {
+            Particle &it = particles[i];
+            if(m_ParticleMap->history_size > history_size &&
+               it.m_HistoryPos >= history_size) {
+                it = particles[particles.size() - 1];
+                particles.pop_back();
+                i--;
+                continue;
             }
 
-            it->m_HistorySize = it->m_HistoryPos+1;
-            it++;
+            it.m_HistorySize = it.m_HistoryPos+1;
         }
-
         m_ParticleMap->history_size = history_size;
     }
 
@@ -1574,37 +1577,45 @@ void GRIBOverlayFactory::RenderGribParticles( int settings, GribRecord **pGR,
             lvp = *vp;
         }
 
+    double mtime = 0, ptime = 0, ctime = 0, ttime = 0;
+
     // update particle map
     if(m_bUpdateParticles) {
-        for(it = particles.begin(); it != particles.end(); it++) {
+        for(unsigned int i = 0; i < particles.size(); i++) {
+            Particle &it = particles[i];
+
             // Update the interpolation factor
-            if(++it->m_Run < run_count)
+            if(++it.m_Run < run_count)
                 continue;
-            it->m_Run = 0;
+            it.m_Run = 0;
             
             // don't allow particle to live too long
-            if(it->m_Duration > max_duration) {
-                it = particles.erase(it);
+            if(it.m_Duration > max_duration) {
+                it = particles[particles.size() - 1];
+                particles.pop_back();
+                i--;
                 continue;
             }
 
-            it->m_Duration++;
+            it.m_Duration++;
 
-            float (&pp)[2] = it->m_History[it->m_HistoryPos].m_Pos;
+            float (&pp)[2] = it.m_History[it.m_HistoryPos].m_Pos;
 
             // maximum history size
-            if(++it->m_HistorySize > history_size)
-                it->m_HistorySize = history_size;
+            if(++it.m_HistorySize > history_size)
+                it.m_HistorySize = history_size;
 
-            if(++it->m_HistoryPos >= history_size)
-                it->m_HistoryPos = 0;
+            if(++it.m_HistoryPos >= history_size)
+                it.m_HistoryPos = 0;
 
-            Particle::ParticleNode &n = it->m_History[it->m_HistoryPos];
+            Particle::ParticleNode &n = it.m_History[it.m_HistoryPos];
             float (&p)[2] = n.m_Pos;
             double vkn=0, ang;
-            if(it->m_Duration < max_duration - history_size &&
+
+            if(it.m_Duration < max_duration - history_size &&
                GribRecord::getInterpolatedValues(vkn, ang, pGRX, pGRY, pp[0], pp[1]) &&
                vkn > 0 && vkn < 100 ) {
+
                 vkn = m_Settings.CalibrateValue(settings, vkn);
                 double d;
                 if(settings == GribOverlaySettings::CURRENT)
@@ -1613,9 +1624,13 @@ void GRIBOverlayFactory::RenderGribParticles( int settings, GribRecord **pGR,
                     d = vkn*run_count/4;
                 
                 ang += 180;
+
 #if 0 // elliptical very accurate but incredibly slow
-                PositionBearingDistanceMercator_Plugin(pp.m_y, pp.m_x, ang,
-                                                       d, &p.m_y, &p.m_x);
+                double dp[2];
+                PositionBearingDistanceMercator_Plugin(pp[1], pp[0], ang,
+                                                       d, &dp[1], &dp[0]);
+                p[0] = dp[0];
+                p[1] = dp[1];
 #elif 0 // really fast rectangular.. not really good at high latitudes
                 
                 float angr = ang/180*M_PI;
@@ -1633,7 +1648,6 @@ void GRIBOverlayFactory::RenderGribParticles( int settings, GribRecord **pGR,
                 p[1] = asinf(sy*cD + cy*sD*ca) * 180/M_PI;
 #endif
                 wxPoint ps;
-
                 GetCanvasPixLL( vp, &ps, p[1], p[0] );
                 
                 n.m_Screen[0] = ps.x;
@@ -1646,12 +1660,12 @@ void GRIBOverlayFactory::RenderGribParticles( int settings, GribRecord **pGR,
                 n.m_Color[2] = c.Blue();
             } else
                 p[0] = -10000;
+            ptime += sw.Time();
         }
     }
-
     m_bUpdateParticles = false;
 
-    int total_particles = m_Settings.Settings[settings].m_dParticleDensity * pGRX->getNi() * pGRX->getNj();
+    int total_particles = density * pGRX->getNi() * pGRX->getNj();
 
     // set max cap to avoid locking the program up
     if(total_particles > 60000)
@@ -1701,8 +1715,7 @@ void GRIBOverlayFactory::RenderGribParticles( int settings, GribRecord **pGR,
         np.m_History[np.m_HistoryPos].m_Screen[0] = ps.x;
         np.m_History[np.m_HistoryPos].m_Screen[1] = ps.y;
 
-        wxColour c;
-        c = GetGraphicColor(settings, vkn);
+        wxColour c = GetGraphicColor(settings, vkn);
         np.m_History[np.m_HistoryPos].m_Color[0] = c.Red();
         np.m_History[np.m_HistoryPos].m_Color[1] = c.Green();
         np.m_History[np.m_HistoryPos].m_Color[2] = c.Blue();
@@ -1725,15 +1738,15 @@ void GRIBOverlayFactory::RenderGribParticles( int settings, GribRecord **pGR,
     float *&va = m_ParticleMap->vertex_array;
     
     if(m_ParticleMap->array_size < particles.size() && !m_pdc) {
+        m_ParticleMap->array_size = 2*particles.size();
         delete [] ca;
         delete [] va;
-        ca = new unsigned char[particles.size() * MAX_PARTICLE_HISTORY * 8];
-        va = new float[particles.size() * MAX_PARTICLE_HISTORY * 4];
-        m_ParticleMap->array_size = particles.size();
+        ca = new unsigned char[m_ParticleMap->array_size * MAX_PARTICLE_HISTORY * 8];
+        va = new float[m_ParticleMap->array_size * MAX_PARTICLE_HISTORY * 4];
     }
 
     // draw particles
-    for(std::list<Particle>::iterator it = particles.begin();
+    for(std::vector<Particle>::iterator it = particles.begin();
         it != particles.end(); it++) {
 
         wxUint8 alpha = 250;

@@ -40,6 +40,8 @@
 #include "ODUtils.h"
 #include "../../../include/chcanv.h"
 #include "PointMan.h"
+#include "Boundary.h"
+#include "EBL.h"
 #include "TextPoint.h"
 #include <wx/window.h>
 
@@ -61,6 +63,7 @@ extern ODRolloverWin    *g_pPathRolloverWin;
 extern SelectItem       *g_pRolloverPathSeg;
 extern int              g_cursor_x;
 extern int              g_cursor_y;
+extern PlugIn_Position_Fix_Ex  g_pfFix;
 
 // Event Handler implementation 
 
@@ -84,8 +87,18 @@ ODEventHandler::ODEventHandler(ChartCanvas *parent,
                           Path *selectedPath,
                           ODPoint *selectedODPoint)
 {
+    m_pBoundary = NULL;
+    m_pEBL = NULL;
+
     m_parentcanvas = parent;
-    m_pSelectedPath = selectedPath;
+    if(selectedPath->m_sTypeString == wxT("Boundary")) {
+        m_pBoundary = (Boundary *)selectedPath;
+        m_pSelectedPath = m_pBoundary;
+    } else if(selectedPath->m_sTypeString == wxT("EBL")) {
+        m_pEBL = (EBL *)selectedPath;
+        m_pSelectedPath = m_pEBL;
+    } else
+        m_pSelectedPath = selectedPath;
     m_pFoundODPoint = selectedODPoint;
 }
 
@@ -93,14 +106,37 @@ ODEventHandler::ODEventHandler(ChartCanvas *parent,
                                Path *selectedPath,
                                TextPoint *selectedTextPoint)
 {
+    m_pBoundary = NULL;
+    m_pEBL = NULL;
+
     m_parentcanvas = parent;
+    if(selectedPath->m_sTypeString == wxT("Boundary")) {
+        m_pBoundary = (Boundary *)selectedPath;
+        m_pSelectedPath = m_pBoundary;
+    } else if(selectedPath->m_sTypeString == wxT("EBL")) {
+        m_pEBL = (EBL *)selectedPath;
+        m_pSelectedPath = m_pEBL;
+    } else
+        m_pSelectedPath = selectedPath;
     m_pSelectedPath = selectedPath;
     m_pFoundODPoint = selectedTextPoint;
 }
 
 void ODEventHandler::SetPath( Path *path )
 {
-    m_pSelectedPath = path;
+    m_pBoundary = NULL;
+    m_pEBL = NULL;
+    m_pSelectedPath = NULL;
+    if(path) {
+        if(path->m_sTypeString == wxT("Boundary")) {
+            m_pBoundary = (Boundary *)path;
+            m_pSelectedPath = m_pBoundary;
+        } else if(path->m_sTypeString == wxT("EBL")) {
+            m_pEBL = (EBL *)path;
+            m_pSelectedPath = m_pEBL;
+        } else
+            m_pSelectedPath = path;
+    }
 }
 
 void ODEventHandler::SetPoint( ODPoint* point )
@@ -142,44 +178,44 @@ void ODEventHandler::OnODTimer1( wxTimerEvent& event )
 
 void ODEventHandler::OnRolloverPopupTimerEvent( wxTimerEvent& event )
 {
-    #ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__
     return;
-    #endif
-    
+#endif
+
     bool b_need_refresh = false;
-    
+
     bool showRollover = false;
-    
+
     if( NULL == g_pRolloverPathSeg ) {
         //    Get a list of all selectable sgements, and search for the first visible segment as the rollover target.
-        
+
         SelectableItemList SelList = g_pODSelect->FindSelectionList( g_ocpn_draw_pi->m_cursor_lat, g_ocpn_draw_pi->m_cursor_lon,
                                                                      SELTYPE_PATHSEGMENT );
-        
+
         wxSelectableItemListNode *node = SelList.GetFirst();
         while( node ) {
             SelectItem *pFindSel = node->GetData();
-            
+
             Path *pp = (Path *) pFindSel->m_pData3;        //candidate
-            
+
             if( pp && pp->IsVisible() ) {
                 g_pRolloverPathSeg = pFindSel;
                 showRollover = true;
-                
+
                 if( NULL == g_pPathRolloverWin ) {
                     g_pPathRolloverWin = new ODRolloverWin( g_ocpn_draw_pi->m_parent_window );
                     g_pPathRolloverWin->IsActive( false );
                 }
-                
+
                 if( !g_pPathRolloverWin->IsActive() ) {
                     wxString s;
                     ODPoint *segShow_point_a = (ODPoint *) g_pRolloverPathSeg->m_pData1;
                     ODPoint *segShow_point_b = (ODPoint *) g_pRolloverPathSeg->m_pData2;
-                    
+
                     double brg, dist;
-                    DistanceBearingMercator( segShow_point_b->m_lat, segShow_point_b->m_lon,
+                    DistanceBearingMercator_Plugin( segShow_point_b->m_lat, segShow_point_b->m_lon,
                                              segShow_point_a->m_lat, segShow_point_a->m_lon, &brg, &dist );
-                    
+
                     if( !pp->m_bIsInLayer ) {
                         wxString wxsText;
                         wxsText.append( pp->m_sTypeString );
@@ -188,37 +224,37 @@ void ODEventHandler::OnRolloverPopupTimerEvent( wxTimerEvent& event )
                     }
                     else {
                         wxString wxsText;
-                        wxsText.append( wxT("Layer ") );
+                        wxsText.append( _("Layer ") );
                         wxsText.append( pp->m_sTypeString );
                         wxsText.append( wxT(": ") );
                         s.Append( wxsText );
                     }
-                    
+
                     if( pp->m_PathNameString.IsEmpty() ) s.Append( _("(unnamed)") );
                     else
                         s.Append( pp->m_PathNameString );
-                    
+
                     s << _T("\n") << _("Total Length: ") << g_ocpn_draw_pi->FormatDistanceAdaptive( pp->m_path_length)
                     << _T("\n") << _("Leg: from ") << segShow_point_a->GetName()
                     << _(" to ") << segShow_point_b->GetName()
                     << _T("\n");
-                    
+
                     if( g_bShowMag )
                         s << wxString::Format( wxString("%03d°(M)  ", wxConvUTF8 ), (int)g_ocpn_draw_pi->GetTrueOrMag( brg ) );
                     else
                         s << wxString::Format( wxString("%03d°  ", wxConvUTF8 ), (int)g_ocpn_draw_pi->GetTrueOrMag( brg ) );
-                    
+
                     s << g_ocpn_draw_pi->FormatDistanceAdaptive( dist );
-                    
+
                     // Compute and display cumulative distance from route start point to current
                     // leg end point.
-                    
+
                     if( segShow_point_a != pp->m_pODPointList->GetFirst()->GetData() ) {
                         wxODPointListNode *node = (pp->m_pODPointList)->GetFirst()->GetNext();
                         ODPoint *pop;
                         float dist_to_endleg = 0;
                         wxString t;
-                        
+
                         while( node ) {
                             pop = node->GetData();
                             dist_to_endleg += pop->m_seg_len;
@@ -227,9 +263,9 @@ void ODEventHandler::OnRolloverPopupTimerEvent( wxTimerEvent& event )
                         }
                         s << _T(" (+") << g_ocpn_draw_pi->FormatDistanceAdaptive( dist_to_endleg ) << _T(")");
                     }
-                    
+
                     g_pPathRolloverWin->SetString( s );
-                    
+
                     wxSize win_size = ocpncc1->GetSize();
                     //if( console && console->IsShown() ) win_size.x -= console->().x;
                     wxPoint point;
@@ -252,11 +288,11 @@ void ODEventHandler::OnRolloverPopupTimerEvent( wxTimerEvent& event )
         else
             showRollover = true;
     }
-    
+
     //    If currently creating a Path, do not show this rollover window
     if( g_ocpn_draw_pi->nPath_State )
         showRollover = false;
-    
+
     if( g_pPathRolloverWin && g_pPathRolloverWin->IsActive() && !showRollover ) {
         g_pPathRolloverWin->IsActive( false );
         g_pRolloverPathSeg = NULL;
@@ -268,7 +304,7 @@ void ODEventHandler::OnRolloverPopupTimerEvent( wxTimerEvent& event )
         g_pPathRolloverWin->Show();
         b_need_refresh = true;
     }
-    
+
     if( b_need_refresh )
         RequestRefresh( g_ocpn_draw_pi->m_parent_window );
 }
@@ -276,14 +312,14 @@ void ODEventHandler::OnRolloverPopupTimerEvent( wxTimerEvent& event )
 void ODEventHandler::PopupMenuHandler(wxCommandEvent& event ) 
 {
     int dlg_return;
-    
+
     wxPoint r;
-    
+
     //ocpncc1->GetCanvasPixPoint( popx, popy, zlat, zlon );
     wxPoint wxp;
     wxp.x = popx;
     wxp.y = popy;
-    
+
     switch( event.GetId() )
     {            
         case ID_PATH_MENU_PROPERTIES:
@@ -310,33 +346,33 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
         case ID_PATH_MENU_INSERT:
             // Insert new OCPN Point
             m_pSelectedPath->InsertPointAfter( m_pFoundODPoint, m_cursor_lat, m_cursor_lon );
-            
+
             g_pODSelect->DeleteAllSelectableODPoints( m_pSelectedPath );
             g_pODSelect->DeleteAllSelectablePathSegments( m_pSelectedPath );
-            
+
             g_pODSelect->AddAllSelectablePathSegments( m_pSelectedPath );
             g_pODSelect->AddAllSelectableODPoints( m_pSelectedPath );
-            
+
             m_pSelectedPath->RebuildGUIDList();          // ensure the GUID list is intact and good
             g_pODConfig->UpdatePath( m_pSelectedPath );
-            
+
             if( g_pODPathPropDialog && ( g_pODPathPropDialog->IsShown() ) ) {
                 g_pODPathPropDialog->SetPathAndUpdate( m_pSelectedPath, true );
             }
-            
+
             break;
         case ID_PATH_MENU_DELETE: {
             dlg_return = wxID_YES;
             if( g_bConfirmObjectDelete ) {
-                wxString sTypeLong = wxT("Are you sure you want to delete this ");
+                wxString sTypeLong = _("Are you sure you want to delete this ");
                 sTypeLong.append( m_pSelectedPath->m_sTypeString );
                 sTypeLong.append( wxT("?") );
                 wxString sTypeShort = wxT("OpenCPN ");
                 sTypeShort.append( m_pSelectedPath->m_sTypeString );
-                sTypeShort.append( wxT(" Delete") );
+                sTypeShort.append( _(" Delete") );
                 dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas,  sTypeLong, sTypeShort, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
             }
-            
+
             if( dlg_return == wxID_YES ) {
                 DeletePath();
             }
@@ -350,7 +386,7 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
             msg.append( wxS(", GUID: ") );
             msg.append( m_pSelectedPath->m_GUID );
             SendPluginMessage( msg_id, msg );
-            
+
             g_pPathMan->DeactivatePath( m_pSelectedPath );
             m_pSelectedPath = NULL;
             break;
@@ -363,9 +399,24 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
             msg.append( wxS(", GUID: ") );
             msg.append( m_pSelectedPath->m_GUID );
             SendPluginMessage( msg_id, msg );
-            
+
             g_pPathMan->ActivatePath( m_pSelectedPath );
             m_pSelectedPath = NULL;
+            break;
+        }
+        case ID_EBL_MENU_CENTRE_ON_BOAT:
+            m_pEBL->CentreOnBoat();
+            break;
+        case ID_EBL_MENU_CENTRE_ON_BOAT_LATLON:
+            m_pEBL->CentreOnLatLon( g_pfFix.Lat, g_pfFix.Lon );
+            break;
+        case ID_EBL_MENU_PICK_NEW_START:
+            g_ocpn_draw_pi->m_bEBLMoveOrigin = true;
+            g_ocpn_draw_pi->m_pCurrentCursor = ocpncc1->pCursorCross;
+            break;
+        case ID_EBL_MENU_VRM_MATCH_EBL_COLOUR: {
+            ODPoint *pFirstPoint = m_pEBL->m_pODPointList->GetFirst()->GetData();
+            pFirstPoint->SetODPointRangeRingsColour( m_pEBL->GetCurrentColour() );
             break;
         }
         case ID_OCPNPOINT_MENU_PROPERTIES:
@@ -385,24 +436,24 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
                 wxString sCaption( _("OCPN Draw Remove ") );
                 wxString sType( wxS("") );
                 if (!m_pFoundODPoint || m_pFoundODPoint->GetTypeString().IsNull() || m_pFoundODPoint->GetTypeString().IsEmpty() )
-                    sType.append( wxS("OCPN Point") );
+                    sType.append( _("OCPN Point") );
                 else
                     sType.append( m_pFoundODPoint->GetTypeString() );
                 sMessage.append( sType );
                 sMessage.append( wxS("?") );
                 sCaption.append( sType );
-                
+
                 dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas, sMessage, sCaption, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
             }
-            
+
             if( dlg_return == wxID_YES ) {
                 m_pSelectedPath->RemovePointFromPath( m_pFoundODPoint, m_pSelectedPath );
                 m_pFoundODPoint->SetTypeString( wxT("OCPN Point") );
             }
-            
+
             g_pODSelect->DeleteAllSelectableODPoints( m_pSelectedPath );
             g_pODSelect->DeleteAllSelectablePathSegments( m_pSelectedPath );
-            
+
             g_pODSelect->AddAllSelectablePathSegments( m_pSelectedPath );
             g_pODSelect->AddAllSelectableODPoints( m_pSelectedPath );
 
@@ -434,7 +485,7 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
                 
                 dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas, sMessage, sCaption, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
             }
-            
+
             if( dlg_return == wxID_YES ) {
                 if(m_pSelectedPath->GetnPoints() <= 3)
                     DeletePath();
@@ -462,10 +513,10 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
                 sMessage.append( sType );
                 sMessage.append( wxS("?") );
                 sCaption.append( sType );
-                
+
                 dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas, sMessage, sCaption, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
             }
-            
+
             if( dlg_return == wxID_YES ) {
                 // If the ODPoint belongs to an invisible path, we come here instead of to ID_PATH_MENU_DELPOINT
                 //  Check it, and if so then remove the point from its routes
@@ -479,7 +530,7 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
                     if( NULL != g_pODPointMan )
                         g_pODPointMan->RemoveODPoint( m_pFoundODPoint );
                 }
-                
+
                 if( g_pPathManagerDialog && g_pPathManagerDialog->IsShown() )
                     g_pPathManagerDialog->UpdateODPointsListCtrl();
             }
@@ -492,9 +543,9 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
             m_pFoundODPoint = NULL;
             break;
         }
-            
+
     }
-    
+
 } 
 
 void ODEventHandler::PopupMenu( int x, int y, int seltype )
@@ -502,23 +553,23 @@ void ODEventHandler::PopupMenu( int x, int y, int seltype )
     wxMenu* contextMenu = new wxMenu;
     wxMenu* menuODPoint = NULL;
     wxMenu* menuPath = NULL;
-    
+
     wxMenu *menuFocus = contextMenu;    // This is the one that will be shown
-    
+
     popx = x;
     popy = y;
-    
+
     //  This is the default context menu
     menuFocus = contextMenu;
-    
+
     if( seltype & SELTYPE_PATHSEGMENT ) {
         bool blay = false;
         if( m_pSelectedPath && m_pSelectedPath->m_bIsInLayer )
             blay = true;
-        
+
         if( blay ) {
             wxString  tName;
-            tName.Append( wxT("Layer ") );
+            tName.Append( _("Layer ") );
             tName.Append( m_pSelectedPath->m_sTypeString );
             menuPath = new wxMenu( tName );
             MenuAppend( menuPath, ID_PATH_MENU_PROPERTIES, _( "Properties..." ) );
@@ -527,15 +578,25 @@ void ODEventHandler::PopupMenu( int x, int y, int seltype )
             menuPath = new wxMenu( m_pSelectedPath->m_sTypeString );
             MenuAppend( menuPath, ID_PATH_MENU_PROPERTIES, _( "Properties..." ) );
             wxString sType;
-            if(m_pSelectedPath->m_sTypeString != wxT("EBL")) {
+            if(m_pSelectedPath->m_sTypeString == wxT("EBL")) {
+                if(!m_pEBL->m_bCentreOnBoat) {
+                    MenuAppend( menuPath, ID_EBL_MENU_CENTRE_ON_BOAT, _("Centre on moving boat") );
+                    MenuAppend( menuPath, ID_EBL_MENU_CENTRE_ON_BOAT_LATLON, _("Centre on boat lat lon") );
+                } else
+                    MenuAppend( menuPath, ID_EBL_MENU_PICK_NEW_START, _("Pick a new start point") );
+                ODPoint *pFirstPoint = m_pEBL->m_pODPointList->GetFirst()->GetData();
+                if(m_pEBL->GetCurrentColour() != pFirstPoint->GetODPointRangeRingsColour())
+                    MenuAppend( menuPath, ID_EBL_MENU_VRM_MATCH_EBL_COLOUR, _("Match VRM colour to EBL colour"));
+            }
+            else {
                 sType.clear();
-                sType.append( wxT("Move ") );
+                sType.append( _("Move ") );
                 sType.append( m_pSelectedPath->m_sTypeString );
                 MenuAppend( menuPath, ID_PATH_MENU_MOVE_PATH, sType );
                 sType.clear();
-                sType.append( wxS("Insert ") );
+                sType.append( _("Insert ") );
                 sType.append(m_pSelectedPath->m_sTypeString);
-                sType.append( wxT(" Point") );
+                sType.append( _(" Point") );
                 MenuAppend( menuPath, ID_PATH_MENU_INSERT, sType );
             }
             MenuAppend( menuPath, ID_PATH_MENU_DELETE, _( "Delete..." ) );
@@ -544,23 +605,23 @@ void ODEventHandler::PopupMenu( int x, int y, int seltype )
                 else  MenuAppend( menuPath, ID_PATH_MENU_ACTIVATE, _( "Activate" ) );
             }
         }
-        
+
         //      Set this menu as the "focused context menu"
         menuFocus = menuPath;
     }
-    
+
     if( seltype & SELTYPE_OCPNPOINT ) {
         bool blay = false;
         if( m_pFoundODPoint && m_pFoundODPoint->m_bIsInLayer )
             blay = true;
-        
+
         if( blay ){
             wxString sType;
-            sType.append( wxT("Layer ") );
+            sType.append( _("Layer ") );
             sType.append( m_pFoundODPoint->m_sTypeString );
             menuODPoint = new wxMenu( sType );
             MenuAppend( menuODPoint, ID_OCPNPOINT_MENU_PROPERTIES, _( "Properties..." ) );
-            
+
             //if( m_pSelectedPath && m_pSelectedPath->IsActive() )
             //    MenuAppend( menuODPoint, ID_PATH_MENU_ACTPOINT, _( "Activate" ) );
         }
@@ -570,7 +631,7 @@ void ODEventHandler::PopupMenu( int x, int y, int seltype )
             menuODPoint = new wxMenu( sType );
             MenuAppend( menuODPoint, ID_OCPNPOINT_MENU_PROPERTIES, _( "Properties..." ) );
             sType.clear();
-            sType.append( wxS("Move ") );
+            sType.append( _("Move ") );
             sType.append(m_pFoundODPoint->m_sTypeString);
             MenuAppend( menuODPoint, ID_OCPNPOINT_MENU_MOVE, sType );
 
@@ -578,7 +639,7 @@ void ODEventHandler::PopupMenu( int x, int y, int seltype )
 //                if(m_pSelectedPath->m_pPathActivePoint != m_pFoundODPoint )
 //                    MenuAppend( menuODPoint, ID_PATH_MENU_ACTPOINT, _( "Activate" ) );
 //            }
-            
+
 //            if( m_pSelectedPath && m_pSelectedPath->IsActive() ) {
 //                if(m_pSelectedPath->m_pPathActivePoint == m_pFoundODPoint ) {
 //                    int indexActive = m_pSelectedPath->GetIndexOf( m_pSelectedPath->m_pPathActivePoint );
@@ -588,17 +649,17 @@ void ODEventHandler::PopupMenu( int x, int y, int seltype )
 //            }
             if( m_pSelectedPath && m_pSelectedPath->GetnPoints() > 2 )
                 MenuAppend( menuODPoint, ID_PATH_MENU_REMPOINT, _( "Remove Point from Path" ) );
-            
+
             if( m_pSelectedPath )
                 MenuAppend( menuODPoint, ID_PATH_MENU_DELPOINT,  _( "Delete" ) );
             else
                 MenuAppend( menuODPoint, ID_OCPNPOINT_MENU_DELPOINT,  _( "Delete" ) );
-            
+
         }
         //      Set this menu as the "focused context menu"
         menuFocus = menuODPoint;
     }
-    
+
     if( ( m_pSelectedPath ) ) {
         m_pSelectedPath->m_bPathIsSelected = true;
         RequestRefresh( g_ocpn_draw_pi->m_parent_window );
@@ -606,48 +667,48 @@ void ODEventHandler::PopupMenu( int x, int y, int seltype )
         m_pFoundODPoint->m_bPtIsSelected = true;
         RequestRefresh( g_ocpn_draw_pi->m_parent_window );
     }
-    
+
     //        Invoke the correct focused drop-down menu
     m_parentcanvas->Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ODEventHandler::PopupMenuHandler ), NULL, this );
     m_parentcanvas->PopupMenu( menuFocus, x, y );
     m_parentcanvas->Disconnect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( ODEventHandler::PopupMenuHandler ), NULL, this );
-    
+
     // Cleanup
     if( ( m_pSelectedPath ) ) m_pSelectedPath->m_bPathIsSelected = false;
     m_pSelectedPath = NULL;
-    
+
     if( m_pFoundODPoint ) m_pFoundODPoint->m_bPtIsSelected = false;
     m_pFoundODPoint = NULL;
-    
+
     //m_pFoundODPointSecond = NULL;
     menuFocus = NULL;
     delete contextMenu;
     if(menuPath) delete menuPath;
     if( menuODPoint ) delete menuODPoint;
-    
+
 }
 
 void ODEventHandler::DeletePath( void )
 {
     if( g_pPathMan->GetpActivePath() == m_pSelectedPath ) g_pPathMan->DeactivatePath( m_pSelectedPath );
-    
+
     if( !g_pPathMan->DeletePath( m_pSelectedPath ) )
         return;
     if( g_pODPathPropDialog && ( g_pODPathPropDialog->IsShown()) && (m_pSelectedPath == g_pODPathPropDialog->GetPath()) ) {
         g_pODPathPropDialog->Hide();
     }
-    
+
     if( g_pPathManagerDialog && g_pPathManagerDialog->IsShown() )
         g_pPathManagerDialog->UpdatePathListCtrl();
-    
+
     if( g_pODPointPropDialog && g_pODPointPropDialog->IsShown() ) {
         g_pODPointPropDialog->ValidateMark();
         g_pODPointPropDialog->UpdateProperties();
     }
-    
+
     // TODO implement UNDO
     //m_parent->undo->InvalidateUndo();
     RequestRefresh( m_parentcanvas );
     m_pSelectedPath = NULL;
-    
+
 }

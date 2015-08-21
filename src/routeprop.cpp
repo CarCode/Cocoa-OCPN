@@ -77,6 +77,7 @@ extern bool                g_bShowMag;
 extern wxColour            g_colourWaypointRangeRingsColour;
 
 extern MyFrame            *gFrame;
+extern OCPNPlatform       *g_Platform;
 
 // Global print data, to remember settings during the session
 extern wxPrintData               *g_printData;
@@ -675,7 +676,19 @@ void RouteProp::CreateControls()
     itemDialog1->SetScrollRate(2, 2);
 
 #ifdef __OCPN__ANDROID__
-    itemDialog1->GetHandle()->setStyleSheet( getQtStyleSheet());
+    //itemDialog1->GetHandle()->setStyleSheet( getQtStyleSheet());
+    
+    //  Set Dialog Font by custom crafted Qt Stylesheet.
+    wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
+    
+    wxString wqs = getFontQtStylesheet(qFont);
+    wxCharBuffer sbuf = wqs.ToUTF8();
+    QString qsb = QString(sbuf.data());
+    
+    QString qsbq = getQtStyleSheet();           // basic scrollbars, etc
+    
+    itemDialog1->GetHandle()->setStyleSheet( qsb + qsbq );      // Concatenated style sheets
+
 #endif
     itemBoxSizer1->Add( itemDialog1, 2, wxEXPAND | wxALL, 0 );
 
@@ -1910,8 +1923,24 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     SetFont( *qFont );
+    int metric = GetCharHeight();
+
+#ifdef __OCPN__ANDROID__
+    //  Set Dialog Font by custom crafted Qt Stylesheet.
     
-    /*int metric = */GetCharHeight();  // Not used
+    wxString wqs = getFontQtStylesheet(qFont);
+    wxCharBuffer sbuf = wqs.ToUTF8();
+    QString qsb = QString(sbuf.data());
+    
+    QString qsbq = getQtStyleSheet();           // basic scrollbars, etc
+    
+    this->GetHandle()->setStyleSheet( qsb + qsbq );      // Concatenated style sheets
+    
+    wxScreenDC sdc;
+    if(sdc.IsOk())
+        sdc.GetTextExtent(_T("W"), NULL, &metric, NULL, NULL, qFont);
+    
+#endif
 
     wxBoxSizer* bSizer1;
     bSizer1 = new wxBoxSizer( wxVERTICAL );
@@ -2044,11 +2073,12 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     waypointrrSelect->Add( waypointrrTxt, 1, wxEXPAND | wxALL, 5 );
     
     wxString rrAlt[] = { _("None"), _T("1"), _T("2"), _T("3"), _T("4"), _T("5"), _T("6"), _T("7"), _T("8"), _T("9"), _T("10") };
-    m_choiceWaypointRangeRingsNumber = new wxChoice( m_panelBasicProperties, ID_WAYPOINTRANGERINGS, wxDefaultPosition, wxDefaultSize, 11, rrAlt );
+    m_choiceWaypointRangeRingsNumber = new wxChoice( m_panelBasicProperties, ID_WAYPOINTRANGERINGS, wxDefaultPosition,
+                                                    wxSize(250, -1), 11, rrAlt );
 #ifdef __WXOSX__
-    waypointrrSelect->Add( m_choiceWaypointRangeRingsNumber, 0, wxALL, 1 );
+    waypointrrSelect->Add( m_choiceWaypointRangeRingsNumber, 0, wxALL, 4 );
 #else
-    waypointrrSelect->Add( m_choiceWaypointRangeRingsNumber, 0, wxALIGN_RIGHT | wxALL, 1 );
+    waypointrrSelect->Add( m_choiceWaypointRangeRingsNumber, 0, wxALIGN_RIGHT | wxALL, 4 );
 #endif
 #ifdef __WXOSX__
     waypointradarGrid = new wxFlexGridSizer( 2, 1, 1 );
@@ -2061,36 +2091,40 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     wxStaticText* waypointdistanceText = new wxStaticText( m_panelBasicProperties, wxID_STATIC, _("Ring Spacing") );
     waypointradarGrid->Add( waypointdistanceText, 1, wxEXPAND | wxALL, 1 );
 
-    m_textWaypointRangeRingsStep = new wxTextCtrl( m_panelBasicProperties, ID_TEXTCTRL, _T(""), wxDefaultPosition, wxSize( 100, -1 ), 0 );
+    m_textWaypointRangeRingsStep = new wxTextCtrl( m_panelBasicProperties, ID_TEXTCTRL, _T(""), wxDefaultPosition,
+                                                  wxSize( 100, -1 ), 0 );
 #ifdef __WXOSX__
-    waypointradarGrid->Add( m_textWaypointRangeRingsStep, 0, wxALL, 1 );
+    waypointradarGrid->Add( m_textWaypointRangeRingsStep, 0, wxALL, 4 );
 #else
-    waypointradarGrid->Add( m_textWaypointRangeRingsStep, 0, wxALIGN_RIGHT | wxALL, 1 );
+    waypointradarGrid->Add( m_textWaypointRangeRingsStep, 0, wxALIGN_RIGHT | wxALL, 4 );
 #endif
     wxStaticText* waypointunitText = new wxStaticText( m_panelBasicProperties, wxID_STATIC, _("Distance Unit") );
     waypointradarGrid->Add( waypointunitText, 1, wxEXPAND | wxALL, 1 );
 
     wxString pDistUnitsStrings[] = { _("Nautical Miles"), _("Kilometers") };
-    m_choiceWaypointRangeRingsUnits = new wxChoice( m_panelBasicProperties, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, pDistUnitsStrings );
+    m_choiceWaypointRangeRingsUnits = new wxChoice( m_panelBasicProperties, wxID_ANY, wxDefaultPosition,
+                                                   wxSize(250, -1), 2, pDistUnitsStrings );
 #ifdef __WXOSX__
-    waypointradarGrid->Add( m_choiceWaypointRangeRingsUnits, 0, wxALL, 1 );
+    waypointradarGrid->Add( m_choiceWaypointRangeRingsUnits, 0, wxALL, 4 );
 #else
-    waypointradarGrid->Add( m_choiceWaypointRangeRingsUnits, 0, wxALIGN_RIGHT | wxALL, 1 );
+    waypointradarGrid->Add( m_choiceWaypointRangeRingsUnits, 0, wxALIGN_RIGHT | wxALL, 4 );
 #endif
-    wxStaticText* waypointrangeringsColour = new wxStaticText( m_panelBasicProperties, wxID_STATIC, _("Ring Colour") );
+    
+    wxString cText = _("Ring Colour");
+    wxSize cSize = wxSize(metric * 4, 40);
+
+    wxStaticText* waypointrangeringsColour = new wxStaticText( m_panelBasicProperties, wxID_STATIC, cText );
     waypointradarGrid->Add( waypointrangeringsColour, 1, wxEXPAND | wxALL, 1 );
     
-    m_colourWaypointRangeRingsColour = new wxColourPickerCtrl( m_panelBasicProperties, wxID_ANY, *wxRED, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_COLOURWAYPOINTRANGERINGSCOLOUR") );
-#ifdef __WXOSX__
-    waypointradarGrid->Add( m_colourWaypointRangeRingsColour, 0, wxALL, 1);
-#else
-    waypointradarGrid->Add( m_colourWaypointRangeRingsColour, 0, wxALIGN_RIGHT | wxALL, 1);
-#endif
-#ifdef __WXQT__
-    waypointrangeringsColour->Hide();
-    m_colourWaypointRangeRingsColour->Hide();
-#endif
-
+    wxString chColorChoices[] = { _("Default color"), _("Black"), _("Dark Red"), _("Dark Green"),
+        _("Dark Yellow"), _("Dark Blue"), _("Dark Magenta"), _("Dark Cyan"),
+        _("Light Gray"), _("Dark Gray"), _("Red"), _("Green"), _("Yellow"), _("Blue"),
+        _("Magenta"), _("Cyan"), _("White") };
+    int chColorNChoices = sizeof( chColorChoices ) / sizeof(wxString);
+    m_chColor = new wxChoice( m_panelBasicProperties, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                             chColorNChoices,  chColorChoices, 0 );
+    m_chColor->SetSelection( 0 );
+    waypointradarGrid->Add( m_chColor, 0, wxALIGN_RIGHT | wxALL, 4);
 
     bSizerTextProperties->AddSpacer(15);
 
@@ -2469,7 +2503,7 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
             m_choiceWaypointRangeRingsUnits->Enable( false );
             m_choiceWaypointRangeRingsNumber->Enable( false );
             m_textWaypointRangeRingsStep->SetEditable( false );
-            m_colourWaypointRangeRingsColour->Enable( false );
+            m_chColor->Enable( false );
         } else {
             m_staticTextLayer->Enable( false );
             m_staticTextLayer->Show( false );
@@ -2488,7 +2522,7 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
             m_choiceWaypointRangeRingsUnits->Enable( true );
             m_choiceWaypointRangeRingsNumber->Enable( true );
             m_textWaypointRangeRingsStep->SetEditable( true );
-            m_colourWaypointRangeRingsColour->Enable( true );
+            m_chColor->Enable( true );
         }
         m_textName->SetValue( m_pRoutePoint->GetName() );
 
@@ -2521,7 +2555,19 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
         wxString buf;
         buf.Printf( _T("%.3f" ), m_pRoutePoint->GetWaypointRangeRingsStep() );
         m_textWaypointRangeRingsStep->SetValue( buf );
-        m_colourWaypointRangeRingsColour->SetColour( m_pRoutePoint->GetWaypointRangeRingsColour() );
+
+        wxColour col = m_pRoutePoint->m_wxcWaypointRangeRingsColour;
+        wxString sColour = _("Default");
+        
+        for( unsigned int i = 0; i < sizeof( ::GpxxColorNames ) / sizeof(wxString); i++ ) {
+            if( col == ::GpxxColors[i] ) {
+                sColour = ::GpxxColorNames[i];
+                break;
+            }
+        }
+        
+        m_chColor->SetStringSelection(sColour);
+
         wxCommandEvent eDummy;
         OnShowWaypointRangeRingSelect( eDummy );
 
@@ -2866,7 +2912,22 @@ void MarkInfoImpl::OnMarkInfoOKClick( wxCommandEvent& event )
         m_pRoutePoint->m_iWaypointRangeRingsNumber = m_choiceWaypointRangeRingsNumber->GetSelection();
         m_pRoutePoint->m_fWaypointRangeRingsStep = atof( m_textWaypointRangeRingsStep->GetValue().mb_str() );
         m_pRoutePoint->m_iWaypointRangeRingsStepUnits = m_choiceWaypointRangeRingsUnits->GetSelection();
-        m_pRoutePoint->m_wxcWaypointRangeRingsColour = m_colourWaypointRangeRingsColour->GetColour();
+
+        wxString sColour;
+        if( m_chColor->GetSelection() == 0 )
+            sColour = _T("Red");
+        else
+            sColour = ::GpxxColorNames[m_chColor->GetSelection() - 1];
+        
+        wxColour col;
+        for( unsigned int i = 0; i < sizeof( ::GpxxColorNames ) / sizeof(wxString); i++ ) {
+            if( sColour == ::GpxxColorNames[i] ) {
+                col = ::GpxxColors[i];
+                break;
+            }
+        }
+        m_pRoutePoint->m_wxcWaypointRangeRingsColour = col;
+
         OnPositionCtlUpdated( event );
         SaveChanges(); // write changes to globals and update config
         cc1->RefreshRect( m_pRoutePoint->CurrentRect_in_DC.Inflate( 1000, 100 ), false );

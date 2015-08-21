@@ -629,7 +629,7 @@ void GribSettingsDialog::SetDataTypeSettings(int settings)
 #ifdef __WXOSX__
     odc.m_dParticleDensity = m_sParticleDensity->GetValue();
 #else
-    odc.m_dParticleDensity = 4.0*exp(m_sParticleDensity->GetValue() / 2.0 - 3);
+    odc.m_dParticleDensity = 4.0*exp(m_sParticleDensity->GetValue() - 7);
 #endif
 }
 
@@ -663,7 +663,7 @@ void GribSettingsDialog::ReadDataTypeSettings(int settings)
 #ifdef __WXOSX__
     m_sParticleDensity->SetValue(odc.m_dParticleDensity);
 #else
-    m_sParticleDensity->SetValue(2.0*(log(odc.m_dParticleDensity/4.0) + 3));
+    m_sParticleDensity->SetValue(log(odc.m_dParticleDensity/4.0) + 7);
 #endif
 
     ShowFittingSettings(settings);
@@ -822,7 +822,7 @@ void GribSettingsDialog::OnCtrlandDataStyleChanged( wxCommandEvent& event )
         messages.Printf( _("You want to add a title/drag bar to the dialog\n") );
     if( !messages.IsEmpty() ) {
         m_parent.pPlugIn->m_DialogStyleChanged = true;
-        messages.Append( _("This change needs a complete reload.\nIt will be aplied after closing and re-opning the plugin") );
+        messages.Append( _("This change needs a complete reload.\nIt will be applied after closing and re-opning the plugin") );
         wxMessageDialog mes(this, messages );
         mes.ShowModal();
     }

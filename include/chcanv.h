@@ -391,6 +391,7 @@ private:
       bool        m_bDrawingRoute;
       bool        m_bRouteEditing;
       bool        m_bMarkEditing;
+      bool		  m_bRoutePoinDragging;
       bool        m_bIsInRadius;
       bool        m_bMayToggleMenuBar;
 

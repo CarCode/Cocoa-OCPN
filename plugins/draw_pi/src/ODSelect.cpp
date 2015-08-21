@@ -40,7 +40,7 @@ ODSelect::ODSelect()
     wxDisplaySize( &w, &h );
     if( h > 800 ) pixelRadius = 10;
     if( h > 1024 ) pixelRadius = 12;
-    
+
 }
 
 ODSelect::~ODSelect()
@@ -61,14 +61,14 @@ bool ODSelect::AddSelectableODPoint( float slat, float slon, ODPoint *pODPointAd
     pSelItem->m_pData1 = pODPointAdd;
 
     wxSelectableItemListNode *node;
-    
+
     if( pODPointAdd->m_bIsInLayer )
         node = pSelectList->Append( pSelItem );
     else
         node = pSelectList->Insert( pSelItem );
 
     pODPointAdd->SetSelectNode(node);
-    
+
     return true;
 }
 
@@ -145,7 +145,7 @@ bool ODSelect::DeleteAllSelectableODPoints( Path *pr )
                     delete pFindSel;
                     pSelectList->DeleteNode( node );   //delete node;
                     prp->SetSelectNode( NULL );
-                    
+
                     node = pSelectList->GetFirst();
 
                     goto got_next_outer_node;
@@ -282,7 +282,7 @@ bool ODSelect::DeleteSelectablePoint( void *pdata, int SeltypeToDelete )
                         ODPoint *prp = (ODPoint *)pdata;
                         prp->SetSelectNode( NULL );
                     }
-                    
+
                     return true;
                 }
             }
@@ -303,13 +303,13 @@ bool ODSelect::DeleteAllSelectableTypePoints( int SeltypeToDelete )
         pFindSel = node->GetData();
         if( pFindSel->m_seltype == SeltypeToDelete ) {
             delete node;
-            
+
             if( SELTYPE_OCPNPOINT == SeltypeToDelete ){
                 ODPoint *prp = (ODPoint *)pFindSel->m_pData1;
                 prp->SetSelectNode( NULL );
             }
             delete pFindSel;
-            
+
             node = pSelectList->GetFirst();
             goto got_next_node;
         }
@@ -322,7 +322,7 @@ bool ODSelect::DeleteAllSelectableTypePoints( int SeltypeToDelete )
 
 bool ODSelect::DeleteSelectableODPoint( ODPoint *prp )
 {
-    
+
     if( NULL != prp ) {
         wxSelectableItemListNode *node = (wxSelectableItemListNode *)prp->GetSelectNode();
         if(node){
@@ -336,7 +336,7 @@ bool ODSelect::DeleteSelectableODPoint( ODPoint *prp )
         }
         else
             return DeleteSelectablePoint( prp, SELTYPE_OCPNPOINT );
-        
+
     }
     return false;
 }
@@ -434,19 +434,15 @@ SelectItem *ODSelect::FindSelection( float slat, float slon, int fseltype )
         if( pFindSel->m_seltype == fseltype ) {
             switch( fseltype ){
                 case SELTYPE_OCPNPOINT:
-//                    a = fabs( slat - pFindSel->m_slat );  // Not used
-//                    b = fabs( slon - pFindSel->m_slon );  // Not used
-
                     if( ( fabs( slat - pFindSel->m_slat ) < selectRadius )
-                            && ( fabs( slon - pFindSel->m_slon ) < selectRadius ) ) goto find_ok;
+                       && ( fabs( slon - pFindSel->m_slon ) < selectRadius ) ) return pFindSel;
                     break;
-                case SELTYPE_PATHSEGMENT: 
+                case SELTYPE_PATHSEGMENT:
                     a = pFindSel->m_slat;
                     b = pFindSel->m_slat2;
                     c = pFindSel->m_slon;
                     d = pFindSel->m_slon2;
 
-//                    if( IsSegmentSelected( a, b, c, d, slat, slon ) ) goto find_ok;
                     if( IsSegmentSelected( a, b, c, d, slat, slon ) ) return pFindSel;
                     break;
                 default:
@@ -458,7 +454,6 @@ SelectItem *ODSelect::FindSelection( float slat, float slon, int fseltype )
     }
 
     return NULL;
-    find_ok: return pFindSel;
 }
 
 bool ODSelect::IsSelectableSegmentSelected( float slat, float slon, SelectItem *pFindSel )
@@ -586,5 +581,3 @@ double ODSelect::vVectorMagnitude( pODVector2D v0 )
         dMagnitude = sqrt( vVectorSquared( v0 ) );
     return ( dMagnitude );
 }
-
-

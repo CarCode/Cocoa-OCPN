@@ -53,10 +53,13 @@ EBLProp::EBLProp( wxWindow* parent, wxWindowID id, const wxString& caption, cons
     m_bSizerEBL->ShowItems( true );
     m_checkBoxEBLFixedEndPosition->Show();
     m_checkBoxEBLFixedEndPosition->Enable( true );
+    m_checkBoxEBLShowArrow->Show();
+    m_checkBoxEBLShowArrow->Enable( true );
     m_radioBoxEBLPersistence->Show();
     m_radioBoxEBLPersistence->Enable( true );
 
     this->GetSizer()->Fit( this );
+    this->Layout();
 }
 
 
@@ -69,17 +72,39 @@ bool EBLProp::UpdateProperties( EBL *pInEBL )
 {
     m_checkBoxEBLFixedEndPosition->SetValue( pInEBL->m_bFixedEndPosition );
     m_radioBoxEBLPersistence->SetSelection( pInEBL->m_PersistenceType );
+    m_checkBoxEBLShowArrow->SetValue( pInEBL->m_bDrawArrow );
+    m_checkBoxShowVRM->SetValue( pInEBL->m_bVRM );
     return ODPathPropertiesDialogImpl::UpdateProperties( pInEBL );
+}
+
+bool EBLProp::UpdateProperties( void )
+{
+    return ODPathPropertiesDialogImpl::UpdateProperties();
 }
 
 bool EBLProp::SaveChanges( void )
 {
+    wxColour l_EBLOrigColour = m_pEBL->GetCurrentColour();
+    ODPoint *pFirstPoint = m_pEBL->m_pODPointList->GetFirst()->GetData();
+//    ODPoint *pEndPoint = m_pEBL->m_pODPointList->GetLast()->GetData();  // Not used
+    
+    bool ret = ODPathPropertiesDialogImpl::SaveChanges();
+    
+    if(pFirstPoint->GetODPointRangeRingsColour() == l_EBLOrigColour)
+        pFirstPoint->SetODPointRangeRingsColour( m_pEBL->GetCurrentColour() );
+
     m_pEBL->m_bFixedEndPosition = m_checkBoxEBLFixedEndPosition->GetValue();
     m_pEBL->m_PersistenceType = m_radioBoxEBLPersistence->GetSelection();
     if(m_pEBL->m_PersistenceType == ID_EBL_NOT_PERSISTENT || m_pEBL->m_PersistenceType == ID_EBL_PERSISTENT_CRASH)
-        m_pEBL->m_btemp = true;
+        m_pEBL->m_bTemporary = true;
     else
-        m_pEBL->m_btemp = false;
-    
-    return ODPathPropertiesDialogImpl::SaveChanges();
+        m_pEBL->m_bTemporary = false;
+    m_pEBL->m_bDrawArrow = m_checkBoxEBLShowArrow->GetValue();
+    m_pEBL->m_bVRM = m_checkBoxShowVRM->GetValue();
+    if(m_pEBL->m_bVRM) {
+        pFirstPoint->m_bShowODPointRangeRings = true;
+    } else
+        pFirstPoint->m_bShowODPointRangeRings = false;
+
+    return ret;
 }

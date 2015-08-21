@@ -58,16 +58,16 @@ public:
     ODPoint *GetPoint(int nPoint);
     ODPoint *GetPoint ( const wxString &guid );
     int GetIndexOf(ODPoint *prp);
-    ODPoint *InsertPointBefore(ODPoint *pRP, double rlat, double rlon, bool bRenamePoints = false);
-    ODPoint *InsertPointAfter(ODPoint *pOP, double rlat, double rlon, bool bRenamePoints = false);
-    void InsertPointAfter( ODPoint *pOP, ODPoint *pnOP, bool bRenamePoints = false);
+    virtual ODPoint *InsertPointBefore(ODPoint *pOP, double lat, double lon, bool bRenamePoints = false);
+    virtual ODPoint *InsertPointAfter(ODPoint *pOP, double lat, double lon, bool bRenamePoints = false);
+    virtual void InsertPointAfter( ODPoint *pOP, ODPoint *pnOP, bool bRenamePoints = false);
     void DrawPointWhich(ODDC& dc, int iPoint, wxPoint *rpn);
     void DrawSegment(ODDC& dc, wxPoint *rp1, wxPoint *rp2, PlugIn_ViewPort &VP, bool bdraw_arrow);
     virtual void Draw(ODDC& dc, PlugIn_ViewPort &pVP);
     virtual void DrawGL( PlugIn_ViewPort &piVP );
     ODPoint *GetLastPoint();
     virtual void DeletePoint(ODPoint *rp, bool bRenamePoints = false);
-    void RemovePoint(ODPoint *rp, bool bRenamePoints = false);
+    virtual void RemovePoint(ODPoint *rp, bool bRenamePoints = false);
     void DeSelectPath();
     void FinalizeForRendering();
     void UpdateSegmentDistances();
@@ -90,6 +90,7 @@ public:
     void RenderSegment(ODDC& dc, int xa, int ya, int xb, int yb, PlugIn_ViewPort &VP, bool bdraw_arrow, int hilite_width = 0);
     void RenderSegmentArrowsGL( int xa, int ya, int xb, int yb, PlugIn_ViewPort &VP);
     virtual void SetActiveColours( void );
+    virtual wxColour GetCurrentColour( void );
 
     bool CrossesIDL(){ return m_bcrosses_idl; }
     void SetVisible(bool visible = true, bool includeWpts = true);
@@ -103,7 +104,7 @@ public:
 
     double GetRouteArrivalRadius(void){ return m_ArrivalRadius;}
     void SetRouteArrivalRadius(double radius){m_ArrivalRadius = radius;}
-    
+
     void RemovePointFromPath( ODPoint* point, Path* path );
     virtual void MoveAllPoints( double inc_lat, double inc_lon );
 
@@ -139,11 +140,12 @@ public:
     wxRect      active_pt_rect;
     wxColour    m_wxcActiveLineColour;
     wxColour    m_wxcInActiveLineColour;
-    bool        m_btemp;
+    bool        m_bTemporary;
     int         m_hiliteWidth;
     wxPoint     *m_bpts;
     int         m_iBlink;
-    
+    bool        m_bDrawArrow;
+
 protected:    
     bool m_bNeedsUpdateBBox;
     wxBoundingBox     RBBox;
@@ -156,10 +158,10 @@ protected:
     double      m_ArrivalRadius;
     bool        m_bcrosses_idl;
     wxColour    m_col;
-    
+
 private:
 
-    
+
 };
 
 WX_DECLARE_LIST(Path, PathList); // establish class Path as list member

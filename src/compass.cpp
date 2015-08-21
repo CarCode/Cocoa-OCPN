@@ -57,6 +57,8 @@ ocpnCompass::ocpnCompass()
             _img_compass.GetWidth() + _img_gpsRed.GetWidth() + style->GetCompassLeftMargin() * 2
                     + style->GetToolSeparation(),
                     _img_compass.GetHeight() + style->GetCompassTopMargin() + style->GetCompassBottomMargin() );
+    texobj = 0;
+
 }
 
 ocpnCompass::~ocpnCompass()
@@ -95,10 +97,11 @@ void ocpnCompass::Paint( ocpnDC& dc )
 
 bool ocpnCompass::MouseEvent( wxMouseEvent& event )
 {
-    if(!m_shown || !m_rect.Contains(event.GetPosition()) || !event.LeftDown())
+    if(!m_shown || !m_rect.Contains(event.GetPosition()))
         return false;
 
-    gFrame->ToggleCourseUp();
+    if (event.LeftDown())
+        gFrame->ToggleCourseUp();
     return true;
 }
 
@@ -112,8 +115,6 @@ void ocpnCompass::UpdateStatus( bool bnew )
     if( bnew ) m_lastgpsIconName.Clear();        // force an update to occur
 
     CreateBmp( bnew );
-    if(bnew)
-        m_StatBmp.SetMask(new wxMask(m_MaskBmp, *wxWHITE));
 }
 
 void ocpnCompass::SetScaleFactor( float factor)
@@ -211,13 +212,33 @@ void ocpnCompass::CreateBmp( bool newColorScheme )
     if( !b_need_refresh )
         return;
 
-     m_StatBmp.Create(
+    m_StatBmp.Create(
         m_scale * ( ( _img_compass.GetWidth() + _img_gpsRed.GetWidth() ) + style->GetCompassLeftMargin() * 2
         + style->GetToolSeparation()),
                    m_scale * (_img_compass.GetHeight() + style->GetCompassTopMargin() + style->GetCompassBottomMargin()) );
     
     if( !m_StatBmp.IsOk() )
         return;
+
+    m_MaskBmp = wxBitmap( m_StatBmp.GetWidth(), m_StatBmp.GetHeight() );
+    if( style->marginsInvisible ) {
+        wxMemoryDC sdc( m_MaskBmp );
+        sdc.SetBackground( *wxWHITE_BRUSH );
+        sdc.Clear();
+        sdc.SetBrush( *wxBLACK_BRUSH );
+        sdc.SetPen( *wxBLACK_PEN );
+        sdc.DrawRoundedRectangle( wxPoint( leftmargin, topmargin ), toolsize, radius );
+        sdc.SelectObject( wxNullBitmap );
+    } else if(radius) {
+        wxMemoryDC sdc( m_MaskBmp );
+        sdc.SetBackground( *wxWHITE_BRUSH );
+        sdc.Clear();
+        sdc.SetBrush( *wxBLACK_BRUSH );
+        sdc.SetPen( *wxBLACK_PEN );
+        sdc.DrawRoundedRectangle( 0, 0, m_MaskBmp.GetWidth(), m_MaskBmp.GetHeight(), radius );
+        sdc.SelectObject( wxNullBitmap );
+    }
+    m_StatBmp.SetMask(new wxMask(m_MaskBmp, *wxWHITE));
 
     wxMemoryDC mdc;
     mdc.SelectObject( m_StatBmp );
@@ -288,25 +309,6 @@ void ocpnCompass::CreateBmp( bool newColorScheme )
     mdc.SelectObject( wxNullBitmap );
     m_lastgpsIconName = gpsIconName;
 
-    if( style->marginsInvisible ) {
-        m_MaskBmp = wxBitmap( m_StatBmp.GetWidth(), m_StatBmp.GetHeight() );
-        wxMemoryDC sdc( m_MaskBmp );
-        sdc.SetBackground( *wxWHITE_BRUSH );
-        sdc.Clear();
-        sdc.SetBrush( *wxBLACK_BRUSH );
-        sdc.SetPen( *wxBLACK_PEN );
-        sdc.DrawRoundedRectangle( wxPoint( leftmargin, topmargin ), toolsize, radius );
-        sdc.SelectObject( wxNullBitmap );
-    } else if(radius) {
-        m_MaskBmp = wxBitmap( m_StatBmp.GetWidth(), m_StatBmp.GetHeight() );
-        wxMemoryDC sdc( m_MaskBmp );
-        sdc.SetBackground( *wxWHITE_BRUSH );
-        sdc.Clear();
-        sdc.SetBrush( *wxBLACK_BRUSH );
-        sdc.SetPen( *wxBLACK_PEN );
-        sdc.DrawRoundedRectangle( 0, 0, m_MaskBmp.GetWidth(), m_MaskBmp.GetHeight(), radius );
-        sdc.SelectObject( wxNullBitmap );
-    }
    
 # ifdef ocpnUSE_GLES  // GLES does not do ocpnDC::DrawBitmap(), so use texture
    if(g_bopengl){

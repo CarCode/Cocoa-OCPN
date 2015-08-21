@@ -45,23 +45,24 @@ protected:
     // Handlers for ODPropertiesForm events.
     void OnODPointComboboxSelected( wxCommandEvent& event );
     void OnEBLEndIconComboboxSelected( wxCommandEvent& event );
+    void OnEBLStartIconComboboxSelected( wxCommandEvent& event );
     void OnButtonClickFonts( wxCommandEvent& event );
     void OnDrawPropertiesOKClick( wxCommandEvent& event );
     void OnDrawPropertiesCancelClick( wxCommandEvent& event );
     void OnDrawPropertiesApplyClick( wxCommandEvent& event );
-    
+
     void SaveChanges();
-    
+
     wxSize              m_defaultClientSize;
 
-    
+
 public:
     /** Constructor */
     ODPropertiesDialogImpl( wxWindow* parent );
     void UpdateProperties( void );
     void SetDialogSize( void );
     wxFontDialog  *m_pfdDialog;
-    
+
 };
 
 #endif // __ODPropertiesDialogImpl__

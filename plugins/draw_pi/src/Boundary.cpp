@@ -68,7 +68,7 @@ Boundary::Boundary() : Path()
     m_wxcInActiveFillColour = g_colourInActiveBoundaryFillColour;
     m_uiFillTransparency = g_uiFillTransparency;
     SetActiveColours();
-    
+
 }
 
 Boundary::~Boundary()
@@ -79,7 +79,7 @@ Boundary::~Boundary()
 void Boundary::Draw( ODDC& dc, PlugIn_ViewPort &VP )
 {
     Path::Draw( dc, VP );
-    
+
     // fill boundary with hatching
     if ( m_bVisible ) {
         wxGraphicsContext *wxGC = NULL;
@@ -89,7 +89,7 @@ void Boundary::Draw( ODDC& dc, PlugIn_ViewPort &VP )
             wxClientDC *pcdc = wxDynamicCast(dc.GetDC(), wxClientDC);
             if( pcdc ) wxGC = wxGraphicsContext::Create( *pcdc );
         }
-        
+
         wxGC->SetPen(*wxTRANSPARENT_PEN);
         wxColour tCol;
         tCol.Set(m_fillcol.Red(), m_fillcol.Green(), m_fillcol.Blue(), m_uiFillTransparency);
@@ -118,7 +118,7 @@ void Boundary::DrawGL( PlugIn_ViewPort &piVP )
     if ( !m_bVisible ) return;
 
     ODDC dc;
-    
+
     int j = 0;
     m_bpts = new wxPoint[ m_pODPointList->GetCount() ];
     wxPoint r;
@@ -127,7 +127,7 @@ void Boundary::DrawGL( PlugIn_ViewPort &piVP )
         GetCanvasPixLL( &piVP, &r, pOp->m_lat, pOp->m_lon );
         m_bpts[ j++ ] = r;
     }
-    
+
     // Each byte represents a single pixel for Alpha. This provides a cross hatch in a 16x16 pixel square
     GLubyte slope_cross_hatch[] = {
         0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -172,9 +172,9 @@ void Boundary::DrawGL( PlugIn_ViewPort &piVP )
     glDisable( GL_BLEND );
     glDisable( GL_TEXTURE_2D );
     glDeleteTextures(1, &textureID);
-    
+
     Path::DrawGL( piVP );
-    
+
 #endif
 }
 
@@ -182,42 +182,24 @@ void Boundary::DeletePoint( ODPoint *op, bool bRenamePoints )
 {
     //    n.b. must delete Selectables  and update config before deleting the point
     if( op->m_bIsInLayer ) return;
-    
+
     if((ODPoint *)m_pODPointList->GetFirst()->GetData() == op) {
         m_pODPointList->DeleteObject( op );
         m_pODPointList->Append( (ODPoint *)m_pODPointList->GetFirst()->GetData() );
     }
-    
+
     Path::DeletePoint( op, bRenamePoints );
 }
 
 void Boundary::SetActiveColours( void )
 {
     wxString fillcolour;
-    
+
     Path::SetActiveColours();
-    
+
     if( m_bVisible && m_bPathIsActive ) m_fillcol = m_wxcActiveFillColour;
     else m_fillcol = m_wxcInActiveFillColour;
-        
-/*    if( m_bVisible && m_bPathIsActive ) {
-        fillcolour = m_ActiveFillColour;
-    }
-    else {
-        fillcolour = m_InActiveFillColour;
-    }
-    if( fillcolour.IsNull() ) {
-        fillcolour = m_ActiveFillColour;
-    }
-    
-    for( unsigned int i = 0; i < sizeof( ::GpxxColorNames ) / sizeof(wxString); i++ ) {
-        if( fillcolour == ::GpxxColorNames[i] ) {
-            m_fillcol = ::GpxxColors[i];
-            break;
-        }
-    }
-*/    
-    
+
 }
 
 void Boundary::MoveAllPoints( double inc_lat, double inc_lon )

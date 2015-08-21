@@ -20,6 +20,13 @@
 *   Free Software Foundation, Inc.,                                       *
 *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
 **************************************************************************/
+#ifdef __WXOSX__
+#include <wx/wxprec.h>
+
+#ifndef  WX_PRECOMP
+#include <wx/wx.h>
+#endif //precompiled headers
+#endif
 
 #include <wx/tokenzr.h>
 #include <wx/regex.h>

@@ -300,7 +300,7 @@ void ChartDB::PurgeCache()
 //    Empty the cache
       wxLogMessage(_T("Chart cache purge"));
 
-      if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
+    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
         unsigned int nCache = pChartCache->GetCount();
         for(unsigned int i=0 ; i<nCache ; i++)
         {
@@ -317,7 +317,7 @@ void ChartDB::PurgeCachePlugins()
     //    Empty the cache
     wxLogMessage(_T("Chart cache PlugIn purge"));
     
-    if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
+    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
         unsigned int nCache = pChartCache->GetCount();
         unsigned int i = 0;
         while(i < nCache){
@@ -341,7 +341,7 @@ void ChartDB::PurgeCachePlugins()
 
 void ChartDB::ClearCacheInUseFlags(void)
 {
-    if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
+    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
         unsigned int nCache = pChartCache->GetCount();
         for(unsigned int i=0 ; i<nCache ; i++)
         {
@@ -862,8 +862,8 @@ bool ChartDB::IsChartInCache(int dbindex)
       bool bInCache = false;
 
 //    Search the cache
-      if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
-          
+    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
+        
         unsigned int nCache = pChartCache->GetCount();
         for(unsigned int i=0 ; i<nCache ; i++)
         {
@@ -885,7 +885,7 @@ bool ChartDB::IsChartInCache(int dbindex)
 bool ChartDB::IsChartInCache(wxString path)
 {
     bool bInCache = false;
-    if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
+    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
         
         //    Search the cache
         unsigned int nCache = pChartCache->GetCount();
@@ -908,7 +908,7 @@ bool ChartDB::IsChartInCache(wxString path)
 bool ChartDB::IsChartLocked( int index )
 {
     
-    if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
+    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
         unsigned int nCache = pChartCache->GetCount();
         for(unsigned int i=0 ; i<nCache ; i++)
         {
@@ -929,7 +929,7 @@ bool ChartDB::IsChartLocked( int index )
 void ChartDB::LockCacheChart( int index )
 {
     //    Search the cache
-    if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
+    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
         
         unsigned int nCache = pChartCache->GetCount();
         for(unsigned int i=0 ; i<nCache ; i++)
@@ -948,7 +948,7 @@ void ChartDB::LockCacheChart( int index )
 void ChartDB::UnLockCacheChart( int index )
 {
     //    Search the cache
-    if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
+    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
         unsigned int nCache = pChartCache->GetCount();
         for(unsigned int i=0 ; i<nCache ; i++)
         {
@@ -967,7 +967,7 @@ void ChartDB::UnLockCacheChart( int index )
 void ChartDB::UnLockAllCacheCharts()
 {
     //    Walk the cache
-    if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
+    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
         
         unsigned int nCache = pChartCache->GetCount();
         for(unsigned int i=0 ; i<nCache ; i++)
@@ -1392,7 +1392,7 @@ bool ChartDB::DeleteCacheChart(ChartBase *pDeleteCandidate)
 {
     bool retval = false;
 
-    if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
+    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
 
       if(Current_Ch != pDeleteCandidate)
       {
@@ -1429,8 +1429,8 @@ void ChartDB::ApplyColorSchemeToCachedCharts(ColorScheme cs)
       CacheEntry *pce;
      //    Search the cache
 
-      if( wxMUTEX_NO_ERROR == m_cache_mutex.TryLock() ){
-          
+    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
+        
         unsigned int nCache = pChartCache->GetCount();
         for(unsigned int i=0 ; i<nCache ; i++)
         {

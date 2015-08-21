@@ -153,8 +153,7 @@ bool ODConfig::DeleteODPoint( ODPoint *pWP )
 
 bool ODConfig::ExportGPXPaths( wxWindow* parent, PathList *pPaths, const wxString suggestedName )
 {
-    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName,
-            wxT ( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
+    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName, _( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
 
 #ifdef __WXOSX__
     if(parent)
@@ -193,8 +192,7 @@ bool ODConfig::ExportGPXPaths( wxWindow* parent, PathList *pPaths, const wxStrin
 
 bool ODConfig::ExportGPXODPoints( wxWindow* parent, ODPointList *pODPoints, const wxString suggestedName )
 {
-    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName,
-            wxT ( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
+    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName, _( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
 
     int response = saveDialog.ShowModal();
 
@@ -242,7 +240,7 @@ void ODConfig::LoadNavObjects()
 {
     //      next thing to do is read tracks, etc from the NavObject XML file,
     wxString sLogMessage;
-    sLogMessage.append( wxT("Loading navobjects from ") );
+    sLogMessage.append( _T("Loading ODnavobjects from ") );
     sLogMessage.append(m_sODNavObjSetFile );
     wxLogMessage( sLogMessage );
     CreateRotatingNavObjBackup();
@@ -274,15 +272,16 @@ void ODConfig::LoadNavObjects()
         
         if(size != 0){
             wxString sLogMessage;
-            sLogMessage.append( wxT("Applying changes from ") );
+            sLogMessage.append( _T("Applying changes from ") );
             sLogMessage.append( m_sODNavObjSetChangesFile );
             wxLogMessage( sLogMessage );
             m_pODNavObjectChangesSet->ApplyChanges();
             UpdateNavObj();
         }
-        
-//        delete m_pODNavObjectChangesSet;
-           
+#ifdef __WXOSX__
+        if( wxFileExists( m_sODNavObjSetChangesFile ) )
+            wxRemoveFile( m_sODNavObjSetChangesFile);
+#endif
     }
 
 //    m_pODNavObjectChangesSet = new ODNavObjectChanges(m_sODNavObjSetChangesFile);
@@ -290,8 +289,7 @@ void ODConfig::LoadNavObjects()
 
 void ODConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
 {
-    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, wxT ( "" ),
-            wxT ( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
+    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, wxT ( "" ), _( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
 
     int response = saveDialog.ShowModal();
 
@@ -387,8 +385,7 @@ void ODConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
     Layer *l = NULL;
 
     if( !islayer || dirpath.IsSameAs( _T("") ) ) {
-        wxFileDialog openDialog( NULL, _( "Import GPX file" ), m_gpx_path, wxT ( "" ),
-                wxT ( "GPX files (*.gpx)|*.gpx|All files (*.*)|*.*" ),
+        wxFileDialog openDialog( NULL, _( "Import GPX file" ), m_gpx_path, wxT( "" ), _( "GPX files (*.gpx)|*.gpx|All files (*.*)|*.*" ),
                 wxFD_OPEN | wxFD_MULTIPLE );
         openDialog.Centre();
         response = openDialog.ShowModal();
@@ -435,7 +432,7 @@ void ODConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
             l->m_bIsVisibleOnChart = bLayerViz;
 
             wxString laymsg;
-            laymsg.Printf( wxT("New layer %d: %s"), l->m_LayerID, l->m_LayerName.c_str() );
+            laymsg.Printf( _T("New layer %d: %s"), l->m_LayerID, l->m_LayerName.c_str() );
             wxLogMessage( laymsg );
 
             pLayerList->Insert( l );

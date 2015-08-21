@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-27 12:15+0200\n"
-"PO-Revision-Date: 2015-07-27 12:15+0200\n"
+"POT-Creation-Date: 2015-08-16 10:23+0200\n"
+"PO-Revision-Date: 2015-08-16 10:23+0200\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: Gerhard Mueller <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.8.4\n"
 
 #: ../src/CursorData.cpp:143 ../src/grib_pi.cpp:384 ../src/grib_pi.h:103
 #: ../src/GribRequestDialog.cpp:118 ../src/GribRequestDialog.cpp:188
-#: ../src/GribRequestDialog.cpp:436 ../src/GribSettingsDialog.cpp:500
+#: ../src/GribRequestDialog.cpp:436 ../src/GribSettingsDialog.cpp:501
 msgid "Dialog"
 msgstr "Dialog"
 
@@ -74,7 +74,7 @@ msgid "Barbed Arrows"
 msgstr "Pfeil-Federn"
 
 #: ../src/CursorData.cpp:457 ../src/CursorData.cpp:463
-#: ../src/GribSettingsDialog.cpp:689 ../src/GribSettingsDialog.cpp:698
+#: ../src/GribSettingsDialog.cpp:690 ../src/GribSettingsDialog.cpp:699
 msgid "Display Isotachs"
 msgstr "Zeige Isotache"
 
@@ -97,15 +97,15 @@ msgstr "Nummern"
 msgid "Particle Map"
 msgstr "Animierte Karte"
 
-#: ../src/CursorData.cpp:468 ../src/GribSettingsDialog.cpp:705
+#: ../src/CursorData.cpp:468 ../src/GribSettingsDialog.cpp:706
 msgid "Display Isobars"
 msgstr "Zeige Isobare"
 
-#: ../src/CursorData.cpp:473 ../src/GribSettingsDialog.cpp:724
+#: ../src/CursorData.cpp:473 ../src/GribSettingsDialog.cpp:725
 msgid "Display Isotherms"
 msgstr "Zeige Isotherme"
 
-#: ../src/CursorData.cpp:480 ../src/GribSettingsDialog.cpp:731
+#: ../src/CursorData.cpp:480 ../src/GribSettingsDialog.cpp:732
 msgid "Display Iso CAPE"
 msgstr "Zeige Iso CAPE"
 
@@ -177,8 +177,8 @@ msgstr ""
 "Versuchen Sie eine kleinere Schriftgröße"
 
 #: ../src/grib_pi.cpp:348 ../src/grib_pi.cpp:632
-#: ../src/GribRequestDialog.cpp:606 ../src/GribSettingsDialog.cpp:846
-#: ../src/GribSettingsDialog.cpp:885
+#: ../src/GribRequestDialog.cpp:606 ../src/GribSettingsDialog.cpp:847
+#: ../src/GribSettingsDialog.cpp:886
 msgid "Warning!"
 msgstr "Warnung!"
 
@@ -495,40 +495,40 @@ msgstr "Höhe (Geopotential)"
 msgid "Relative Humidity"
 msgstr "Relative Feuchte"
 
-#: ../src/GribSettingsDialog.cpp:450
+#: ../src/GribSettingsDialog.cpp:451
 msgid "h"
 msgstr "h"
 
-#: ../src/GribSettingsDialog.cpp:450
+#: ../src/GribSettingsDialog.cpp:451
 msgid "mn"
 msgstr "mn"
 
-#: ../src/GribSettingsDialog.cpp:496
+#: ../src/GribSettingsDialog.cpp:497
 msgid "Apply"
 msgstr "Anwenden"
 
-#: ../src/GribSettingsDialog.cpp:737 ../src/GribSettingsDialog.cpp:805
+#: ../src/GribSettingsDialog.cpp:738 ../src/GribSettingsDialog.cpp:806
 #: ../src/GribUIDialogBase.cpp:673
 msgid "Spacing"
 msgstr "Abstand"
 
-#: ../src/GribSettingsDialog.cpp:819
+#: ../src/GribSettingsDialog.cpp:820
 msgid "You want to remove the dialog title/drag bar\n"
 msgstr "Eine Titel/Kopf-Zeile vom Dialog entfernen\n"
 
-#: ../src/GribSettingsDialog.cpp:821
+#: ../src/GribSettingsDialog.cpp:822
 msgid "You want to add a title/drag bar to the dialog\n"
 msgstr "Eine Titel/Kopf-Zeile dem Dialog hinzufügen\n"
 
-#: ../src/GribSettingsDialog.cpp:824
+#: ../src/GribSettingsDialog.cpp:825
 msgid ""
 "This change needs a complete reload.\n"
-"It will be aplied after closing and re-opning the plugin"
+"It will be applied after closing and re-opning the plugin"
 msgstr ""
 "Diese Änderung braucht einen Neustart.\n"
 "Er erfolgt nach Schließen und Neuöffnen des Plugins"
 
-#: ../src/GribSettingsDialog.cpp:845
+#: ../src/GribSettingsDialog.cpp:846
 msgid ""
 "You have chosen to authorize interpolation.\n"
 "Don't forget that data displayed will not be real but recomputed and this "
@@ -538,7 +538,7 @@ msgstr ""
 "Die angezeigten Daten bei der aktuellen Zeit sind nicht echt sondern "
 "berechnet!"
 
-#: ../src/GribSettingsDialog.cpp:884
+#: ../src/GribSettingsDialog.cpp:885
 msgid ""
 "This option imply you authorize intrepolation\n"
 "Don't forget that data displayed will not be real but recomputed and this "
@@ -605,8 +605,8 @@ msgstr "Zeige Daten am Cursor"
 msgid "Start play back"
 msgstr "Abspielen Start"
 
-#: ../src/GribUIDialog.cpp:693 ../src/GribUIDialogBase.cpp:54
-msgid "Select geoptential altitude"
+#: ../src/GribUIDialog.cpp:693
+msgid "Select geopotential altitude"
 msgstr "Wähle Geopotential Höhe"
 
 #: ../src/GribUIDialog.cpp:695 ../src/GribUIDialogBase.cpp:59
@@ -662,6 +662,10 @@ msgstr "vorher"
 #: ../src/GribUIDialogBase.cpp:46
 msgid "Next"
 msgstr "nächstes"
+
+#: ../src/GribUIDialogBase.cpp:54
+msgid "Select geoptential altitude"
+msgstr "Wähle Geopotential Höhe"
 
 #: ../src/GribUIDialogBase.cpp:260
 msgid "MyLabel"
@@ -1148,15 +1152,18 @@ msgstr "Fehler beim eMail-Senden"
 #
 #
 #
+#
 #~ msgid "00N  00W"
 #~ msgstr "00N  00W"
 
 #
 #
 #
+#
 #~ msgid "Allow Start or Stop drawing an area by dragging on the map"
 #~ msgstr "Markieren Sie einen Bereich auf der Karte mit Start und Stop."
 
+#
 #
 #
 #
@@ -1178,9 +1185,11 @@ msgstr "Fehler beim eMail-Senden"
 #
 #
 #
+#
 #~ msgid "Cloud"
 #~ msgstr "Bewölkung"
 
+#
 #
 #
 #
@@ -1194,9 +1203,11 @@ msgstr "Fehler beim eMail-Senden"
 #
 #
 #
+#
 #~ msgid "Data available"
 #~ msgstr "Daten verfügbar"
 
+#
 #
 #
 #
@@ -1205,9 +1216,11 @@ msgstr "Fehler beim eMail-Senden"
 
 #
 #
+#
 #~ msgid "Draw the desired zone"
 #~ msgstr "Zeichne gewünschte Zone"
 
+#
 #
 #
 #
@@ -1217,14 +1230,17 @@ msgstr "Fehler beim eMail-Senden"
 #
 #
 #
+#
 #~ msgid "Error:  No valid data in this file!"
 #~ msgstr "Fehler: Keine gültigen Daten in Datei!"
 
 #
 #
+#
 #~ msgid "Play"
 #~ msgstr "Abspielen"
 
+#
 #
 #
 #
@@ -1246,13 +1262,16 @@ msgstr "Fehler beim eMail-Senden"
 #
 #
 #
+#
 #~ msgid "Pressure Altitude (in %s) or Standard Height Selection."
 #~ msgstr "Druck Höhe (in %s) oder Standard Höhe."
 
 #
+#
 #~ msgid "Rel. Humid."
 #~ msgstr "Rel. Feuchte"
 
+#
 #
 #
 #
@@ -1261,9 +1280,11 @@ msgstr "Fehler beim eMail-Senden"
 
 #
 #
+#
 #~ msgid "Stop"
 #~ msgstr "Stop"
 
+#
 #
 #
 #
@@ -1271,9 +1292,11 @@ msgstr "Fehler beim eMail-Senden"
 #~ msgstr "Stop graf. Auswahl"
 
 #
+#
 #~ msgid "Temperature"
 #~ msgstr "Temperatur"
 
+#
 #
 #
 #
@@ -1297,6 +1320,7 @@ msgstr "Fehler beim eMail-Senden"
 #
 #
 #
+#
 #~ msgid ""
 #~ "The file size limits are overcome!\n"
 #~ "(2Mb for SyGrib and 180\\u00B0 x 180\\u00B0 for all)\n"
@@ -1311,6 +1335,7 @@ msgstr "Fehler beim eMail-Senden"
 #
 #
 #
+#
 #~ msgid ""
 #~ "This file contains data for particular time intervals but you have chosen "
 #~ "to display different intervals.\n"
@@ -1320,6 +1345,7 @@ msgstr "Fehler beim eMail-Senden"
 #~ "Daten für andere Intervalle anzeigen.\n"
 #~ "Bitte beachten Sie, daß diese Werte interpoliert werden."
 
+#
 #
 #
 #

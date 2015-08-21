@@ -37,7 +37,11 @@ wxString BoundaryMan::FindPointInBoundary( double lat, double lon )
 {
     wxPathListNode *boundary_node = g_pPathList->GetFirst();
     Boundary *pboundary = NULL;
+#ifdef __WXOSX__
+    bool bInPoly = false;
+#else
     bool bInPoly;
+#endif
     ODPoint *pop;
     int k = 0;
     

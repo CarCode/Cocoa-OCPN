@@ -386,6 +386,10 @@ bool ODNavObjectChanges::GPXCreatePath( pugi::xml_node node, Path *pInPath )
         wxString s;
         s.Printf(_T("%1i"), pEBL->m_PersistenceType);
         child.append_child(pugi::node_pcdata).set_value( s.mbc_str() );
+        child = node.append_child("opencpn:show_arrow");
+        child.append_child(pugi::node_pcdata).set_value( pEBL->m_bDrawArrow == true ? "1" : "0" );
+        child = node.append_child("opencpn:VRM");
+        child.append_child(pugi::node_pcdata).set_value( pEBL->m_bVRM == true ? "1" : "0" );
     }
 
     ODPointList *pODPointList = pPath->m_pODPointList;
@@ -508,14 +512,14 @@ bool ODNavObjectChanges::CreateNavObjGPXPoints( void )
     
     wxODPointListNode *node = g_pODPointMan->GetODPointList()->GetFirst();
     
-    ODPoint *pr;
+    ODPoint *pOP;
     
     while( node ) {
-        pr = node->GetData();
+        pOP = node->GetData();
         
-        if( ( pr->m_bIsolatedMark ) && !( pr->m_bIsInLayer ) && !(pr->m_btemp) )
+        if( ( pOP->m_bIsolatedMark ) && !( pOP->m_bIsInLayer ) && !(pOP->m_btemp) )
         {
-            GPXCreateODPoint(m_gpx_root.append_child("opencpn:ODPoint"), pr, OPT_OCPNPOINT);
+            GPXCreateODPoint(m_gpx_root.append_child("opencpn:ODPoint"), pOP, OPT_OCPNPOINT);
         }
         node = node->GetNext();
     }
@@ -540,9 +544,10 @@ bool ODNavObjectChanges::CreateNavObjGPXPaths( void )
         } else if(pPath->m_sTypeString == wxT("EBL")) {
             pEBL = (EBL *)node1->GetData();
             pPath = pEBL;
+            if(pEBL->m_PersistenceType == ID_EBL_NOT_PERSISTENT) return true;
         }
         
-        if( !pPath->m_bIsInLayer && !pPath->m_btemp )
+        if( !pPath->m_bIsInLayer && !pPath->m_bTemporary )
             GPXCreatePath(m_gpx_root.append_child("opencpn:path"), pPath);
         node1 = node1->GetNext();
     }
@@ -670,7 +675,7 @@ ODPoint * ODNavObjectChanges::GPXLoadODPoint1( pugi::xml_node &opt_node,
     wxColour    l_colourBackgroundColour = g_colourDefaultTextBackgroundColour;
     int     l_iBackgroundTransparency = g_iTextBackgroundTransparency;
     bool    l_bFill = false;
-    double  l_natural_scale = NULL;
+    double  l_natural_scale = 0.0;
     
     l_wxcODPointRangeRingsColour.Set( _T( "#FFFFFF" ) );
 
@@ -856,7 +861,7 @@ ODPoint * ODNavObjectChanges::GPXLoadODPoint1( pugi::xml_node &opt_node,
             pTP->m_iBackgroundTransparency = l_iBackgroundTransparency;
             pTP->m_natural_scale = l_natural_scale;
         } else if ( TypeString == "Boundary Point" )
-            pBP -> m_bFill = l_bFill;
+            pBP->m_bFill = l_bFill;
         
         pOP->SetMarkDescription( DescString );
         pOP->m_sTypeString = TypeString;
@@ -978,15 +983,15 @@ Path *ODNavObjectChanges::GPXLoadPath1( pugi::xml_node &wpt_node, bool b_fullviz
             
             else
             if( ChildName == _T ( "opencpn:viz" ) ) {
-                        wxString viz = wxString::FromUTF8(tschild.first_child().value());
-                        b_propviz = true;
-                        b_viz = ( viz == _T("1") );
+                wxString viz = wxString::FromUTF8(tschild.first_child().value());
+                b_propviz = true;
+                b_viz = ( viz == _T("1") );
             }
             
             else
             if( ChildName == _T ( "opencpn:active" ) ) {
-                        wxString active = wxString::FromUTF8(tschild.first_child().value());
-                        b_active = ( active == _T("1") );
+                wxString active = wxString::FromUTF8(tschild.first_child().value());
+                b_active = ( active == _T("1") );
             }
             else
             if( ChildName == _T ( "opencpn:style" ) ) {
@@ -1018,6 +1023,12 @@ Path *ODNavObjectChanges::GPXLoadPath1( pugi::xml_node &wpt_node, bool b_fullviz
                 long v = 0;
                 if( s.ToLong( &v ) )
                     pTentEBL->SetPersistence( v );
+            } else if( ChildName == _T ( "opencpn:show_arrow" ) ) {
+                wxString s = wxString::FromUTF8( tschild.first_child().value() );
+                pTentEBL->m_bDrawArrow = ( s == wxT("1") );
+            } else if( ChildName == _T ( "opencpn:VRM" ) ) {
+                wxString s = wxString::FromUTF8( tschild.first_child().value() );
+                pTentEBL->m_bVRM = ( s == wxT("1") );
             }
         }
                     

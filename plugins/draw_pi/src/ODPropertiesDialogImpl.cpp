@@ -78,9 +78,12 @@ extern int          g_iTextLeftOffsetX;
 extern int          g_iTextLeftOffsetY;
 
 extern wxString     g_sEBLEndIconName;
+extern wxString     g_sEBLStartIconName;
 extern wxColour     g_colourEBLLineColour;
 extern bool         g_bEBLFixedEndPosition;
 extern int          g_EBLPersistenceType;
+extern bool         g_bEBLShowArrow;
+extern bool         g_bEBLVRM;
 extern int          g_EBLLineWidth;
 extern int          g_EBLLineStyle;
 
@@ -96,13 +99,13 @@ ODPropertiesDialogImpl::ODPropertiesDialogImpl( wxWindow* parent )
 :
 ODPropertiesDialogDef( parent )
 {
-    
+
     m_staticTextNameVal->SetLabel( wxT("OpenCPN Draw Plugin") );
     m_staticTextMajorVal->SetLabel(wxString::Format(wxT("%i"), PLUGIN_VERSION_MAJOR ));
     m_staticTextMinorVal->SetLabel(wxString::Format(wxT("%i"), PLUGIN_VERSION_MINOR ));
     m_staticTextPatchVal->SetLabel( wxT(TOSTRING(PLUGIN_VERSION_PATCH)) );
     m_staticTextDateVal->SetLabel(PLUGIN_VERSION_DATE);
-    
+
     m_pfdDialog = NULL;
 
 }
@@ -117,15 +120,20 @@ void ODPropertiesDialogImpl::OnEBLEndIconComboboxSelected( wxCommandEvent& event
     m_bitmapEBLEndBitmap->SetBitmap( m_bcomboBoxEBLEndIconName->GetItemBitmap( m_bcomboBoxEBLEndIconName->GetSelection() ) );
 }
 
+void ODPropertiesDialogImpl::OnEBLStartIconComboboxSelected( wxCommandEvent& event )
+{
+    m_bitmapEBLStartBitmap->SetBitmap( m_bcomboBoxEBLStartIconName->GetItemBitmap( m_bcomboBoxEBLStartIconName->GetSelection() ) );
+}
+
 void ODPropertiesDialogImpl::OnButtonClickFonts( wxCommandEvent& event )
 {
     if(m_pfdDialog) delete m_pfdDialog;
-    
+
     wxFontData l_FontData;
     l_FontData.SetInitialFont( g_DisplayTextFont );
     m_pfdDialog = new wxFontDialog( this, l_FontData );
     m_pfdDialog->Centre( wxBOTH );
-    
+
     int iRet = m_pfdDialog->ShowModal();
     if(iRet == wxID_OK) {
         //wxFontData wsfdData = m_pfdDialog->GetFontData();
@@ -174,19 +182,22 @@ void ODPropertiesDialogImpl::SaveChanges()
     g_BoundaryLineWidth = m_choiceBoundaryLineWidth->GetSelection() + 1;
     g_BoundaryLineStyle = ::StyleValues[ m_choiceBoundaryLineStyle->GetSelection()];
     g_uiFillTransparency = m_sliderFillTransparency->GetValue();
-    
+
     g_colourActivePathLineColour = m_colourPickerActivePathLineColour->GetColour();
     g_colourInActivePathLineColour = m_colourPickerInActivePathLineColour->GetColour();
 
     g_PathLineWidth = m_choicePathLineWidth->GetSelection() + 1;
     g_PathLineStyle = ::StyleValues[ m_choicePathLineStyle->GetSelection()];
-    
+
     g_colourEBLLineColour = m_colourPickerEBLLineColour->GetColour();
     g_EBLLineWidth = m_choiceEBLLineWidth->GetSelection() + 1;
     g_EBLLineStyle = ::StyleValues[ m_choiceEBLLineStyle->GetSelection()];
+    g_bEBLShowArrow = m_checkBoxEBLShowArrow->GetValue();
+    g_bEBLVRM = m_checkBoxShowVRM->GetValue();
     g_EBLPersistenceType = m_radioBoxEBLPersistence->GetSelection();
     g_bEBLFixedEndPosition = m_checkBoxEBLFixedEndPosition->GetValue();
     g_sEBLEndIconName = m_bcomboBoxEBLEndIconName->GetValue();
+    g_sEBLStartIconName = g_sEBLEndIconName;
 
     g_iODPointRangeRingsNumber = m_choiceODPointRangeRingNumber->GetSelection();
     g_fODPointRangeRingsStep = atof( m_textCtrlODPointRangeRingSteps->GetValue().mb_str() );
@@ -195,19 +206,19 @@ void ODPropertiesDialogImpl::SaveChanges()
     m_textCtrlODPointArrivalRadius->GetValue().ToDouble( &g_n_arrival_circle_radius );
     g_bODPointShowRangeRings = m_checkBoxShowODPointRangeRings->GetValue();
     g_sODPointIconName = m_bcomboBoxODPointIconName->GetValue();
-    
+
     g_bConfirmObjectDelete = m_checkBoxConfirmObjectDelete->GetValue();
     g_navobjbackups = m_spinCtrlNavObjBackups->GetValue();
-    
+
     g_iTextPosition = m_choiceTextPosition->GetSelection();
     g_colourDefaultTextColour = m_colourPickerTextColour->GetColour();
     g_colourDefaultTextBackgroundColour = m_colourPickerBackgroundColour->GetColour();
     g_iTextBackgroundTransparency = m_sliderBackgroundTransparency->GetValue();
     if(m_pfdDialog) g_DisplayTextFont = m_pfdDialog->GetFontData().GetChosenFont();
-    
+
     g_EdgePanSensitivity = m_sliderEdgePan->GetValue();
     g_InitialEdgePanSensitivity = m_sliderInitialEdgePan->GetValue();
-    
+
     g_iDisplayToolbar = m_choiceToolbar->GetSelection();
 }
 
@@ -235,7 +246,7 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
         wxString s_ArrivalRadius;
         s_ArrivalRadius.Printf( _T("%.3f"), g_n_arrival_circle_radius );
         m_textCtrlODPointArrivalRadius->SetValue( s_ArrivalRadius );
-        
+
         m_checkBoxShowName->SetValue( g_bODPointShowName );
         m_checkBoxShowODPointRangeRings->SetValue( g_bODPointShowRangeRings );
         m_choiceODPointRangeRingNumber->SetSelection( g_iODPointRangeRingsNumber );
@@ -247,9 +258,10 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
 
         m_bcomboBoxODPointIconName->Clear();
         m_bcomboBoxEBLEndIconName->Clear();
+        m_bcomboBoxEBLStartIconName->Clear();
         //      Iterate on the Icon Descriptions, filling in the combo control
         if( g_pODPointMan == NULL ) g_pODPointMan = new PointMan();
-        
+
         bool fillCombo = m_bcomboBoxODPointIconName->GetCount() == 0;
         wxImageList *icons = g_pODPointMan->Getpmarkicon_image_list();
 
@@ -258,9 +270,10 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
                 wxString *ps = g_pODPointMan->GetIconDescription( i );
                 m_bcomboBoxODPointIconName->Append( *ps, icons->GetBitmap( i ) );
                 m_bcomboBoxEBLEndIconName->Append( *ps, icons->GetBitmap( i ) );
+                m_bcomboBoxEBLStartIconName->Append( *ps, icons->GetBitmap( i ) );
             }
         }
-        
+
         // find the correct item in the combo box
         int iconToSelect = -1;
         for( int i = 0; i < g_pODPointMan->GetNumIcons(); i++ ) {
@@ -275,14 +288,11 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
             m_bcomboBoxODPointIconName->Append( g_sODPointIconName, icons->GetBitmap( 0 ) );
             iconToSelect = m_bcomboBoxODPointIconName->GetCount() - 1;
         } 
-        
-        
+
+
         m_bcomboBoxODPointIconName->SetSelection( iconToSelect );
         m_bitmapPointBitmap->SetBitmap( m_bcomboBoxODPointIconName->GetItemBitmap( m_bcomboBoxODPointIconName->GetSelection() ) );
-        
-        m_bcomboBoxODPointIconName->SetSelection( iconToSelect );
-        m_bitmapPointBitmap->SetBitmap( m_bcomboBoxODPointIconName->GetItemBitmap( m_bcomboBoxODPointIconName->GetSelection() ) );
-        
+
         iconToSelect = -1;
         for( int i = 0; i < g_pODPointMan->GetNumIcons(); i++ ) {
             if( *g_pODPointMan->GetIconDescription( i ) == g_sEBLEndIconName ) {
@@ -293,27 +303,40 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
         //  not found, so add  it to the list, with a generic bitmap and using the name as description
         // n.b.  This should never happen...
         if( -1 == iconToSelect){    
-            m_bcomboBoxEBLEndIconName->Append( g_sODPointIconName, icons->GetBitmap( 0 ) );
+            m_bcomboBoxEBLEndIconName->Append( g_sEBLEndIconName, icons->GetBitmap( 0 ) );
             iconToSelect = m_bcomboBoxEBLEndIconName->GetCount() - 1;
-        } 
-        
-        
+        }
+
         m_bcomboBoxEBLEndIconName->SetSelection( iconToSelect );
         m_bitmapEBLEndBitmap->SetBitmap( m_bcomboBoxEBLEndIconName->GetItemBitmap( m_bcomboBoxEBLEndIconName->GetSelection() ) );
-        
-        m_bcomboBoxEBLEndIconName->SetSelection( iconToSelect );
-        m_bitmapEBLEndBitmap->SetBitmap( m_bcomboBoxEBLEndIconName->GetItemBitmap( m_bcomboBoxEBLEndIconName->GetSelection() ) );
-        
+
+        iconToSelect = -1;
+        for( int i = 0; i < g_pODPointMan->GetNumIcons(); i++ ) {
+            if( *g_pODPointMan->GetIconDescription( i ) == g_sEBLStartIconName ) {
+                iconToSelect = i;
+                break;
+            }
+        }
+        //  not found, so add  it to the list, with a generic bitmap and using the name as description
+        // n.b.  This should never happen...
+        if( -1 == iconToSelect){
+            m_bcomboBoxEBLStartIconName->Append( g_sEBLStartIconName, icons->GetBitmap( 0 ) );
+            iconToSelect = m_bcomboBoxEBLStartIconName->GetCount() - 1;
+        }
+
+        m_bcomboBoxEBLStartIconName->SetSelection( iconToSelect );
+        m_bitmapEBLStartBitmap->SetBitmap( m_bcomboBoxEBLStartIconName->GetItemBitmap( m_bcomboBoxEBLStartIconName->GetSelection() ) );
+
         icons = NULL;
 
         m_colourPickerActiveBoundaryLineColour->SetColour( g_colourActiveBoundaryLineColour );
         m_colourPickerInActiveBoundaryLineColour->SetColour( g_colourInActiveBoundaryLineColour );
         m_colourPickerActiveBoundaryFillColour->SetColour( g_colourActiveBoundaryFillColour );
         m_colourPickerInActiveBoundaryFillColour->SetColour( g_colourInActiveBoundaryFillColour );
-        
+
         m_colourPickerActivePathLineColour->SetColour( g_colourActivePathLineColour );
         m_colourPickerInActivePathLineColour->SetColour( g_colourInActivePathLineColour );
-        
+
         for( unsigned int i = 0; i < sizeof( ::StyleValues ) / sizeof(int); i++ ) {
             if( g_BoundaryLineStyle == ::StyleValues[i] )
                 m_choiceBoundaryLineStyle->Select( i );
@@ -325,25 +348,27 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
         m_choiceBoundaryLineWidth->SetSelection( g_BoundaryLineWidth - 1 );
         m_choicePathLineWidth->SetSelection( g_PathLineWidth - 1 );
         m_sliderFillTransparency->SetValue( g_uiFillTransparency );
-        
+
         m_colourPickerEBLLineColour->SetColour( g_colourEBLLineColour );
         m_checkBoxEBLFixedEndPosition->SetValue( g_bEBLFixedEndPosition );
         m_radioBoxEBLPersistence->SetSelection( g_EBLPersistenceType );
         m_choiceEBLLineWidth->SetSelection( g_EBLLineWidth - 1 );
-        
+        m_checkBoxEBLShowArrow->SetValue( g_bEBLShowArrow );
+        m_checkBoxShowVRM->SetValue( g_bEBLVRM );
+
         m_choiceTextPosition->SetSelection( g_iTextPosition );
         m_colourPickerTextColour->SetColour( g_colourDefaultTextColour );
         m_colourPickerBackgroundColour->SetColour( g_colourDefaultTextBackgroundColour );
         m_sliderBackgroundTransparency->SetValue( g_iTextBackgroundTransparency );
         m_staticTextFontFaceExample->SetFont( g_DisplayTextFont );
-        
+
         m_checkBoxConfirmObjectDelete->SetValue( g_bConfirmObjectDelete );
         m_spinCtrlNavObjBackups->SetValue( g_navobjbackups );
         m_sliderInitialEdgePan->SetValue( g_InitialEdgePanSensitivity );
         m_sliderEdgePan->SetValue( g_EdgePanSensitivity );
         m_choiceToolbar->Select( g_iDisplayToolbar );
-        
+
+        SetDialogSize();
 
     return;
 }
-

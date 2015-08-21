@@ -494,10 +494,10 @@ bool ODPointPropertiesImpl::UpdateProperties( bool positionOnly )
             caption.append( wxS("OCPN Draw Point") );
         else
             caption.append( m_pODPoint->GetTypeString() );
-        caption.append( wxS(" Properties") );
+        caption.append( _(" Properties") );
         
         if( m_pODPoint->m_bIsInLayer ) {
-            caption.append( wxS(", Layer: ") );
+            caption.append( _(", Layer: ") );
             caption.Append( g_pPathManagerDialog->GetLayerName( m_pODPoint->m_LayerID ) );
         }
         SetTitle( caption );

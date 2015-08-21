@@ -10,14 +10,15 @@
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
+#include <wx/intl.h>
 #include <wx/string.h>
 #include <wx/stattext.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
-#include <wx/sizer.h>
 #include <wx/textctrl.h>
+#include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
@@ -41,14 +42,14 @@
 class ODPointPropertiesDialog : public wxDialog 
 {
 	private:
-	
+
 	protected:
 		wxBoxSizer* m_SizerDialogBox;
 		wxNotebook* m_notebookProperties;
 		wxPanel* m_panelBasicProperties;
 		wxBoxSizer* m_SizerBasicProperties;
 		wxStaticText* m_staticText2;
-		wxStaticText* m_staticText3;
+        wxStaticText* m_staticTextName;
 		wxTextCtrl* m_textName;
 		wxBoxSizer* m_SizerNameIcon;
 		wxCheckBox* m_checkBoxShowName;
@@ -97,7 +98,7 @@ class ODPointPropertiesDialog : public wxDialog
 		wxTextCtrl* m_textCtrlGuid;
 		wxButton* m_OK;
 		wxButton* m_Cancel;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnPointPropertiesClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnComboboxSelected( wxCommandEvent& event ) { event.Skip(); }
@@ -111,13 +112,13 @@ class ODPointPropertiesDialog : public wxDialog
 		virtual void OnButtonClickFonts( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnPointPropertiesOKClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnPointPropertiesCancelClick( wxCommandEvent& event ) { event.Skip(); }
-		
-	
+
+
 	public:
-		
-		ODPointPropertiesDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("OD Point Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP ); 
+
+        ODPointPropertiesDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("OD Point Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
 		~ODPointPropertiesDialog();
-	
+
 };
 
 #endif //__ODPOINTPROPERTIESDIALOG_H__

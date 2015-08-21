@@ -868,8 +868,10 @@ void ocpnFloatingToolbarDialog::Realize()
             }
 
 #ifndef __OCPN__ANDROID__
+#ifndef __WXOSX__  // Shaped windows must be created with the wxFRAME_SHAPED style
             if(shape.GetWidth() && shape.GetHeight())
                 SetShape( wxRegion( shape, *wxWHITE, 10 ) );
+#endif
 #endif
         }
     }

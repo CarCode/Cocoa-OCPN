@@ -71,6 +71,7 @@ public:
 };
 
 #define MAX_PARTICLE_HISTORY 8
+#include <vector>
 #include <list>
 struct Particle {
     int m_Duration;
@@ -100,7 +101,7 @@ public:
         delete [] vertex_array;
     }
 
-    std::list<Particle> m_Particles;
+    std::vector<Particle> m_Particles;
     
     // particles are rebuilt whenever any of these fields change
     time_t m_Reference_Time;

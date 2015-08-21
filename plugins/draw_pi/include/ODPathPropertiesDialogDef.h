@@ -10,6 +10,7 @@
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
+#include <wx/intl.h>
 #include <wx/string.h>
 #include <wx/stattext.h>
 #include <wx/gdicmn.h>
@@ -35,7 +36,7 @@
 class ODPathPropertiesDialogDef : public wxDialog 
 {
 	private:
-	
+
 	protected:
 		wxStaticText* m_staticTextName;
 		wxTextCtrl* m_textCtrlName;
@@ -57,26 +58,29 @@ class ODPathPropertiesDialogDef : public wxDialog
 		wxStaticText* m_staticTextFillTransparency;
 		wxSlider* m_sliderFillTransparency;
 		wxBoxSizer* m_bSizerEBL;
+        wxBoxSizer* m_bSizerPersistence;
 		wxCheckBox* m_checkBoxEBLFixedEndPosition;
 		wxRadioBox* m_radioBoxEBLPersistence;
+        wxCheckBox* m_checkBoxEBLShowArrow;
+        wxCheckBox* m_checkBoxShowVRM;
 		wxStaticText* m_staticTextODPoints;
 		wxListCtrl* m_listCtrlODPoints;
 		wxButton* m_buttonOK;
 		wxButton* m_buttonCancel;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnLeftDoubleClick( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnRightClick( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
-		
-	
+
+
 	public:
-		
-		ODPathPropertiesDialogDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Path Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
+
+        ODPathPropertiesDialogDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Path Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~ODPathPropertiesDialogDef();
-	
+
 };
 
 #endif //__ODPATHPROPERTIESDIALOGDEF_H__

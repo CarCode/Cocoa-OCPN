@@ -119,6 +119,10 @@ enum
     ID_PATH_MENU_ACTNXTPOINT,
     ID_PATH_MENU_REMPOINT,
     ID_PATH_MENU_PROPERTIES,
+    ID_EBL_MENU_CENTRE_ON_BOAT,
+    ID_EBL_MENU_CENTRE_ON_BOAT_LATLON,
+    ID_EBL_MENU_PICK_NEW_START,
+    ID_EBL_MENU_VRM_MATCH_EBL_COLOUR,
 
     ID_UNDO,
     ID_REDO,
@@ -127,7 +131,7 @@ enum
 
     ID_DEF_MENU_GROUPBASE,  // Must be last entry, as chart group identifiers are created dynamically
 
-    
+
     ID_DEF_MENU_LAST
 };
 
@@ -138,7 +142,7 @@ enum
     ID_MODE_POINT,
     ID_MODE_TEXT_POINT,
     ID_MODE_EBL,
-    
+
     ID_LAST_MODE
 };
 
@@ -159,8 +163,6 @@ class BoundaryProp;
 class EBL;
 class SelectItem;
 
-const wxString GpxxColorNames[] = { _("Black"), _("DarkRed"), _("DarkGreen"), _("DarkYellow"), _("DarkBlue"), _("DarkMagenta"), _("DarkCyan"), _("LightGray"), _("DarkGray"), _("Red"), _("Green"), _("Yellow"), _("Blue"), _("Magenta"), _("Cyan"), _("White") };//The last color defined by Garmin is transparent - we ignore it
-const wxColour GpxxColors[] = { wxColour(0x00, 0x00, 0x00), wxColour(0x60, 0x00, 0x00), wxColour(0x00, 0x60, 0x00), wxColour(0x80, 0x80, 0x00), wxColour(0x00, 0x00, 0x60), wxColour(0x60, 0x00, 0x60), wxColour(0x00, 0x80, 0x80), wxColour(0xC0, 0xC0, 0xC0), wxColour(0x60, 0x60, 0x60), wxColour(0xFF, 0x00, 0x00), wxColour(0x00, 0xFF, 0x00), wxColour(0xF0, 0xF0, 0x00), wxColour(0x00, 0x00, 0xFF), wxColour(0xFE, 0x00, 0xFE), wxColour(0x00, 0xFF, 0xFF), wxColour(0xFF, 0xFF, 0xFF) };
 const int StyleValues[] = { wxSOLID, wxDOT, wxLONG_DASH, wxSHORT_DASH, wxDOT_DASH };
 const int WidthValues[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
@@ -192,7 +194,8 @@ public:
     bool            m_bODPointEditing;
     bool            m_bTextPointEditing;
     bool            m_bEBLEditing;
-    
+    bool            m_bEBLMoveOrigin;
+
 
     //    The required PlugIn Methods
     int Init(void);
@@ -233,7 +236,7 @@ public:
     void loadLayouts(wxWindow * parent);
 //    void startLogbook();
     void shutdown(bool menu);
-    
+
     bool MouseEventHook( wxMouseEvent &event );
     bool KeyboardEventHook( wxKeyEvent &event );
     void SetCursorLatLon(double lat, double lon);
@@ -248,15 +251,15 @@ public:
     void CanvasPopupMenu( int x, int y, int seltype );
     double  GetTrueOrMag(double a);
     void SetPositionFixEx( PlugIn_Position_Fix_Ex &pfix );
-    
+
     void RenderPathLegs( ODDC &dc );
-    
+
     // OD Methods
     void    ProcessTimerEvent(wxTimerEvent& ev);
     void    PopupMenuHandler(wxCommandEvent& ev);
-    
+
     void    SaveConfig();
-    
+
     void    AlphaBlending( ODDC &dc, int x, int y, int size_x, int size_y, float radius, wxColour color, unsigned char transparency );
 
     void    DimeControl( wxWindow* ctrl );
@@ -277,11 +280,11 @@ public:
     wxCursor    *pCursorArrow;
     wxCursor    *pCursorCross;
     wxCursor    *m_pTextCursorCross;
-    
+
     wxCursor    *m_pCurrentCursor;
-    
+
     int         nConfig_State;
-    
+
     int         nPath_State;
     int         nBoundary_State;
     Boundary    *m_pMouseBoundary;
@@ -304,29 +307,30 @@ public:
     double      m_lat, m_lon;
     double      m_pixx, m_pixy;
     wxPoint     m_cursorPoint;
-    
+
     Undo        *undo;
-    
+
     PlugIn_ViewPort *m_vp;
     wxGLContext     *m_pcontext;
     wxMemoryDC      *pmdc;
     wxGLCanvas      *m_glcc;
-    
+
     int         nBlinkerTick;
     int         m_Mode;
     int                m_draw_button_id;
-    
+
     void    appendOSDirSlash(wxString* pString);  
-    
+
     double  m_chart_scale;
     double  m_view_scale;
-    
+
 
 private:
     void    OnTimer(wxTimerEvent& ev);
 
     void    LoadConfig();
-    void    RenderExtraBoundaryLegInfo(ODDC &dc, wxPoint ref_point, wxString s );
+    void    RenderExtraPathLegInfo(ODDC &dc, wxPoint ref_point, wxString s );
+    wxString CreateExtraPathLegInfo(ODDC &dc, Path *path, double brg, double dist, wxPoint ref_point);
     void    FinishBoundary();
 //    ArrayOfGridColWidth    readCols(ArrayOfGridColWidth ar, wxString str);
 //    void                    writeCols(wxFileConfig *pConf, ArrayOfGridColWidth ar, wxString entry);
@@ -338,14 +342,14 @@ private:
     bool    CreatePointLeftClick( wxMouseEvent &event );
     bool    CreateTextPointLeftClick( wxMouseEvent &event );
     bool    CreateEBLLeftClick( wxMouseEvent &event );
-    
+
     void    MenuPrepend( wxMenu *menu, int id, wxString label);
     void    MenuAppend( wxMenu *menu, int id, wxString label);
     void    FindSelectedObject( void )    ;
-    
+
     wxTimer         m_RolloverPopupTimer;
-    
-    
+
+
     int               m_show_id;
     int               m_hide_id;
     bool                show;
@@ -353,27 +357,28 @@ private:
 
     bool              m_bLOGShowIcon;
     PI_ColorScheme               global_color_scheme;
-    
+
     Boundary    *m_pSelectedBoundary;
-    
+    EBL         *m_pSelectedEBL;
+
     bool        m_bDrawingBoundary;
-    
+
     int         popx, popy;
     wxString m_sNavObjSetChangesFile;
-    
+
     wxString    m_Data;
 
     int         m_numModes;
 
     int         m_rollover_popup_timer_msec;
-    
+
     int         m_seltype;
-    
+
     double      m_PathMove_cursor_start_lat;
     double      m_PathMove_cursor_start_lon;
-    
+
     wxDateTime  m_LastFixTime;
-    
+
 };
 
 #endif
