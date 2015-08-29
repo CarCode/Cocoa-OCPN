@@ -718,8 +718,11 @@ int s63_pi::ImportCells( void )
             }
             if(!enc_root_dir.Length()){
                 wxString msg = _("Cannot find \"ENC_ROOT\" directory");
-                
+#ifdef __WXOSX__
+                int dret = OCPNMessageBox_PlugIn(NULL, msg, _("s63_pi Message"),  wxCANCEL | wxOK | wxICON_HAND, -1, -1);
+#else
                 int dret = OCPNMessageBox_PlugIn(NULL, msg, _("s63_pi Message"),  wxCANCEL | wxOK, -1, -1);
+#endif
                 if(dret == wxID_CANCEL){
                     return 0;
                 }
@@ -745,8 +748,11 @@ int s63_pi::ImportCells( void )
     msg += _("eSENCS not yet processed will be created as needed by OpenCPN.\n\n");
     msg += _("Create eSENCs on Import?\n");
 
-
+#ifdef __WXOSX__
+    int dret = OCPNMessageBox_PlugIn(NULL, msg, _("s63_pi Message"),  wxYES_NO | wxICON_INFORMATION, -1, -1);
+#else
     int dret = OCPNMessageBox_PlugIn(NULL, msg, _("s63_pi Message"),  wxYES_NO, -1, -1);
+#endif
     bool bSENC = (dret == wxID_YES);
 
     m_s63chartPanelWinTop->Refresh();
@@ -832,10 +838,11 @@ int s63_pi::ImportCells( void )
 
     if( 0 == os63_file_array.GetCount() ){
         wxString msg = _("Security Scheme Error\n\n SSE 10 - Permits not available for this data provider.\n");
-        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                            msg,
-                            _T("s63_pi Message"),  wxOK, -1, -1);
-
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK, -1, -1);
+#endif
         wxLogMessage(_T("s63_pi: ") + msg);
 
         return 0;
@@ -1066,11 +1073,11 @@ int s63_pi::ImportCells( void )
                                         msg += _T("\n");
                                         msg += _("Base cell edition update skipped\n");
                                         msg += _("There may be other expired permits.  However, this message will be shown once only.");
-                                        
-                                        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                                              msg,
-                                                              _("s63_pi Message"),  wxOK, -1, -1);
-                                        
+#ifdef __WXOSX__
+                                        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+                                        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxOK, -1, -1);
+#endif
                                         g_bshown_sse15 = true;
                                     }
                                     wxLogMessage(_T("s63_pi: ") + msg);
@@ -1190,10 +1197,11 @@ int s63_pi::ImportCells( void )
                                 msg += m1;
                                 m1.Printf(_T("Attempted update: %d\n"), update_updn);
                                 msg += m1;
-                                OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                                      msg,
-                                                      _T("s63_pi Message"),  wxOK, -1, -1);
-                                
+#ifdef __WXOSX__
+                                OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+                                OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK, -1, -1);
+#endif
                                 ScreenLogMessage( msg );
                                 wxLogMessage(_T("s63_pi: ") + msg);
                                 
@@ -1219,11 +1227,11 @@ int s63_pi::ImportCells( void )
                                     m1.Printf(_("Attempted update: %d\n"), update_updn);
                                     msg += m1;
                                     msg += _("There may be other expired permits.  However, this message will be shown once only.");
-                                    
-                                    OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                                          msg,
-                                                          _("s63_pi Message"),  wxOK, -1, -1);
-                                    
+#ifdef __WXOSX__
+                                    OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+                                    OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxOK, -1, -1);
+#endif
                                     g_bshown_sse15 = true;
                                 }
                                 wxLogMessage(_T("s63_pi: ") + msg);
@@ -1379,10 +1387,11 @@ int s63_pi::ImportCert(void)
     else {
         wxString msg = _("Security Scheme Error\n\nSSE 08 - SA Digital Certificate file incorrect format.\n");
         msg += _("A valid certificate can be obtained from the IHO website or your data supplier.\n");
-        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                            msg,
-                            _T("s63_pi Message"),  wxOK, -1, -1);
-
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK, -1, -1);
+#endif
         wxLogMessage(_T("s63_pi: ") + msg);
 
         ScreenLogMessage(_T("SA Digital Certificate file incorrect format.\n\n") );
@@ -1404,10 +1413,11 @@ int s63_pi::ImportCert(void)
     else
         msg = _("Certificate Key import FAILED\n");
 
-
-    OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg,
-                        _T("s63_pi Message"),  wxOK, -1, -1);
-
+#ifdef __WXOSX__
+    OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK | wxICON_INFORMATION, -1, -1);
+#else
+    OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK, -1, -1);
+#endif
     m_cert_list->BuildList( GetCertificateDir() );
 
     return 0;
@@ -1428,10 +1438,11 @@ int s63_pi::ImportCellPermits(void)
     
     if(!bok) {
         wxString msg = _("Please enter valid Userpermit and Installpermit on Keys/Permits tab");
-        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                              msg,
-                              _("s63_pi Message"),  wxOK, -1, -1);
-        
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxOK | wxICON_INFORMATION, -1, -1);
+#else
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxOK, -1, -1);
+#endif
         wxLogMessage(_T("s63_pi: ") + msg);
         
         return 1;
@@ -1509,9 +1520,11 @@ int s63_pi::ImportCellPermits(void)
             
             if(b_update){
                 wxString msg = _("Update all existing cell permits?");
-                int dret = OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg,
-                                                 _("s63_pi Message"),  wxCANCEL | wxYES_NO, -1, -1);
-                
+#ifdef __WXOSX__
+                int dret = OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxCANCEL | wxYES_NO | wxICON_QUESTION, -1, -1);
+#else
+                int dret = OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxCANCEL | wxYES_NO, -1, -1);
+#endif
                 if(wxID_CANCEL == dret)
                     goto over_loop;
                 else if(wxID_YES == dret)
@@ -1569,10 +1582,15 @@ int s63_pi::ImportCellPermits(void)
     }
 
     if( !n_permits){
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
+                              _T("Security Scheme Error\n\nSSE 11 - Cell permit not found"),
+                              _T("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
         OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
                                 _T("Security Scheme Error\n\nSSE 11 - Cell permit not found"),
                                 _T("s63_pi Message"),  wxOK, -1, -1);
-
+#endif
         wxLogMessage(_T("s63_pi:  SSE 11 – Cell permit not found" ));
     }
 
@@ -1610,10 +1628,11 @@ int s63_pi::ProcessCellPermit( wxString &permit, bool b_confirm_existing )
         wxString msg = _T("Security Scheme Error\n\nSSE 12 – Cell permit format is incorrect\n\nIncorrect cell permit line starts with ");
         msg += cellpermitstring.Mid(0, 16);
         msg += _T("...");
-        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                msg,
-                                _T("s63_pi Message"),  wxOK, -1, -1);
-
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK, -1, -1);
+#endif
         wxLogMessage(_T("s63_pi: ") + msg);
 
         return 1;
@@ -1642,10 +1661,11 @@ int s63_pi::ProcessCellPermit( wxString &permit, bool b_confirm_existing )
             msg += _("Invalid cell permit starts with ");
             msg += cellpermitstring.Mid(0, 24);
             msg += _T("...");
-            int dret = OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                    msg,
-                                    _("s63_pi Message"),  wxCANCEL | wxOK, -1, -1);
-
+#ifdef __WXOSX__
+            int dret = OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxCANCEL | wxOK | wxICON_HAND, -1, -1);
+#else
+            int dret = OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxCANCEL | wxOK, -1, -1);
+#endif
             wxLogMessage(_T("s63_pi: ") + msg);
 
             if(wxID_CANCEL == dret)
@@ -1689,11 +1709,11 @@ int s63_pi::ProcessCellPermit( wxString &permit, bool b_confirm_existing )
                 msg += cell_name;
                 msg += _T("\n");
                 msg += _("There may be other expired permits.  However, this message will be shown once only.");
-                
-                OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                      msg,
-                                      _("s63_pi Message"),  wxOK, -1, -1);
-                
+#ifdef __WXOSX__
+                OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+                OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxOK, -1, -1);
+#endif
                 wxLogMessage(_T("s63_pi: ") + msg);
                 
                 ScreenLogMessage(_T("SSE 15 – Subscription service has expired.\n\n") );
@@ -1719,10 +1739,11 @@ int s63_pi::ProcessCellPermit( wxString &permit, bool b_confirm_existing )
             wxString msg = _("Permit\n");
             msg += cellpermitstring;
             msg += _("\nalready imported.\nWould you like to replace it?");
-            int dret = OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                         msg,
-                                         _("s63_pi Message"),  wxCANCEL | wxYES_NO, -1, -1);
-        
+#ifdef __WXOSX__
+            int dret = OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxCANCEL | wxYES_NO | wxICON_QUESTION, -1, -1);
+#else
+            int dret = OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _("s63_pi Message"),  wxCANCEL | wxYES_NO, -1, -1);
+#endif
             if(wxID_CANCEL == dret)
                 return 2;
             else if(wxID_NO == dret)
@@ -1877,10 +1898,11 @@ int s63_pi::AuthenticateCell( const wxString & cell_file )
         wxString msg = _("Security Scheme Error\n\nSSE 24 - ENC Signature format is incorrect.\n\n");
         msg += _("Cell name: ");
         msg += cell_file;
-        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                msg,
-                                _T("s63_pi Message"),  wxOK, -1, -1);
-
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK, -1, -1);
+#endif
         wxLogMessage(_T("s63_pi: ") + msg);
 
         ScreenLogMessage(_T("Signature file format incorrect.\n\n") );
@@ -1899,10 +1921,11 @@ int s63_pi::AuthenticateCell( const wxString & cell_file )
     else {
         wxString msg = _("Security Scheme Error\n\nSSE 08 - SA Digital Certificate file incorrect format.\n");
         msg += _("A valid certificate can be obtained from the IHO website or your data supplier.\n");
-        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                msg,
-                                _T("s63_pi Message"),  wxOK, -1, -1);
-
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK, -1, -1);
+#endif
         wxLogMessage(_T("s63_pi: ") + msg);
 
         ScreenLogMessage(_T("SA Digital Certificate file incorrect format.\n\n") );
@@ -1942,10 +1965,11 @@ int s63_pi::AuthenticateCell( const wxString & cell_file )
         msg += _T("A new SA public key can be obtained from the IHO website or from your data supplier.\n\n");
         msg += _T("Cell name: ");
         msg += cell_file;
-        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                msg,
-                                _T("s63_pi Message"),  wxOK, -1, -1);
-
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK, -1, -1);
+#endif
         wxLogMessage(_T("s63_pi: ") + msg);
 
         return 6;
@@ -1955,10 +1979,11 @@ int s63_pi::AuthenticateCell( const wxString & cell_file )
             wxString msg = _T("Security Scheme Warning\n\nSSE 26 – ENC is not authenticated by the IHO acting as the SA.\n\n");
             msg += _T("Cell name: ");
             msg += cell_file;
-            OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                    msg,
-                                    _T("s63_pi Message"),  wxOK, -1, -1);
-
+#ifdef __WXOSX__
+            OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+            OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK, -1, -1);
+#endif
             wxLogMessage(_T("s63_pi: ") + msg);
             m_bSSE26_shown = true;
         }
@@ -1973,10 +1998,11 @@ int s63_pi::AuthenticateCell( const wxString & cell_file )
         wxString msg = _T("Security Scheme Error\n\nSSE 09 – ENC Signature is invalid.\n");
         msg += _T("Cell name: ");
         msg += cell_file;
-        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(),
-                                msg,
-                                _T("s63_pi Message"),  wxOK, -1, -1);
-
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
+        OCPNMessageBox_PlugIn(GetOCPNCanvasWindow(), msg, _T("s63_pi Message"),  wxOK, -1, -1);
+#endif
         wxLogMessage(_T("s63_pi: ") + msg);
 
         ScreenLogMessage(_T("ENC Authentication FAILED\n\n") );

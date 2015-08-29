@@ -194,7 +194,6 @@
 		50C9F46D0DC542C5AD40AD0F /* s52cnsy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9C7C9E754134BBDA63A8157 /* s52cnsy.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		511B1D5F9F5244DAA7264A85 /* options.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 545E80ACB44349559F9A871E /* options.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		5162534296E04C3FAF19C53C /* LogbookHTML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C478155BD3464E817D87CF /* LogbookHTML.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		52ED3DD49614407DA8237B9B /* MessageBoxOSX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F240D10F595D499EBA424EFF /* MessageBoxOSX.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		555F2C7511894F668E9D8AD5 /* long.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B21295F3BB2947B9BCF1FAD3 /* long.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		5629E1D11EDA461BBC82ABB0 /* Logbook.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9349DD80C00423383FB544C /* Logbook.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		590DDC3DF80E47C586B3F277 /* gpsprot.c in Sources */ = {isa = PBXBuildFile; fileRef = 7569C66B26214E4D92971929 /* gpsprot.c */; settings = {COMPILER_FLAGS = ""; }; };
@@ -433,6 +432,7 @@
 		A65F36E5197473690006DC40 /* jsonval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65F36E21974733D0006DC40 /* jsonval.cpp */; };
 		A65F36E6197473690006DC40 /* jsonwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65F36E31974733D0006DC40 /* jsonwriter.cpp */; };
 		A6632EE417E50BF4002001B9 /* osx_helpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6632EE317E50BF4002001B9 /* osx_helpers.mm */; };
+		A6654E0D1B8661D3001A2DE8 /* Osenc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6654E0C1B8661D3001A2DE8 /* Osenc.cpp */; };
 		A669B1F31B372EC600C440BF /* ac_pi_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1F21B372EC600C440BF /* ac_pi_draw.cpp */; };
 		A669B1F51B372EFF00C440BF /* ac_pi_gui_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1F41B372EFF00C440BF /* ac_pi_gui_impl.cpp */; };
 		A669B1F71B372F1700C440BF /* ac_pi_gui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1F61B372F1700C440BF /* ac_pi_gui.cpp */; };
@@ -1697,6 +1697,8 @@
 		A65F36E31974733D0006DC40 /* jsonwriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonwriter.cpp; path = src/wxJSON/jsonwriter.cpp; sourceTree = "<group>"; };
 		A66094A419E3D8550066CBBA /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/S63_pi/src/TexFont.h; sourceTree = "<group>"; };
 		A6632EE317E50BF4002001B9 /* osx_helpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = osx_helpers.mm; path = src/osx_helpers.mm; sourceTree = "<group>"; };
+		A6654E0B1B8661B0001A2DE8 /* Osenc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Osenc.h; path = include/Osenc.h; sourceTree = "<group>"; };
+		A6654E0C1B8661D3001A2DE8 /* Osenc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Osenc.cpp; path = src/Osenc.cpp; sourceTree = "<group>"; };
 		A665CBED17CF33C00007CDB7 /* s52s57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = s52s57.h; path = include/s52s57.h; sourceTree = "<group>"; };
 		A669B1E01B372B7400C440BF /* libac_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libac_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A669B1E41B372CB100C440BF /* ac_pi_draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ac_pi_draw.h; path = plugins/ac_pi/src/ac_pi_draw.h; sourceTree = "<group>"; };
@@ -2400,6 +2402,7 @@
 				0FF4A7782BA64FDFB98CB748 /* s57featuredefns.cpp */,
 				397BD03F076F461CA3DE1EAF /* s57reader.cpp */,
 				EE82E68B558A40739C44BE9C /* gdal_misc.cpp */,
+				A6654E0C1B8661D3001A2DE8 /* Osenc.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -2550,6 +2553,7 @@
 				345CAC65A46A488195C57327 /* s57.h */,
 				8119AE32CDD943F6B3E1795F /* gdal_frmts.h */,
 				A6219E7118AD7C2E00B3E5F4 /* triangulate.h */,
+				A6654E0B1B8661B0001A2DE8 /* Osenc.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -5255,6 +5259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6654E0D1B8661D3001A2DE8 /* Osenc.cpp in Sources */,
 				50C9F46D0DC542C5AD40AD0F /* s52cnsy.cpp in Sources */,
 				E34AFADFA26A40BDBEAA5C98 /* s52plib.cpp in Sources */,
 				87CC46FF1A9741399C4E5077 /* s52utils.cpp in Sources */,
@@ -5396,7 +5401,6 @@
 				F1A1AAA5DD3D43D2A612B71A /* Maintenance.cpp in Sources */,
 				E64B6C17F9EE4FCAB37DDD15 /* OverView.cpp in Sources */,
 				EC14563FD6AE4F209361D4E1 /* Export.cpp in Sources */,
-				52ED3DD49614407DA8237B9B /* MessageBoxOSX.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

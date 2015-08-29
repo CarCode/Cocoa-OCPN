@@ -758,9 +758,13 @@ TC_Error_Code TCMgr::LoadDataSources(wxArrayString &sources)
     bTCMReady = true;
     
     if (m_Combined_IDX_array.Count() <= 1)
+#ifdef __WXOSX__
+        OCPNMessageBox( NULL, _("It seems you have no tide/current harmonic data installed."),
+                       _("OpenCPN Info"), wxOK | wxCENTER | wxICON_INFORMATION );
+#else
         OCPNMessageBox( NULL, _("It seems you have no tide/current harmonic data installed."),
                         _("OpenCPN Info"), wxOK | wxCENTER );
-        
+#endif
     return  TC_NO_ERROR ;
 }
 

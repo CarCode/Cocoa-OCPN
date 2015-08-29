@@ -1125,8 +1125,11 @@ void CanvasMenuHandler::PopupMenuHandler( wxCommandEvent& event )
         if( m_pSelectedRoute->m_bIsInLayer ) break;
 
         int ask_return = OCPNMessageBox( parent, g_pRouteMan->GetRouteReverseMessage(),
+#ifdef __WXOSX__
+                               _("Rename Waypoints?"), wxYES_NO | wxCANCEL| wxICON_QUESTION );
+#else
                                _("Rename Waypoints?"), wxYES_NO | wxCANCEL );
-
+#endif
         if( ask_return != wxID_CANCEL ) {
             pSelect->DeleteAllSelectableRouteSegments( m_pSelectedRoute );
             m_pSelectedRoute->Reverse( ask_return == wxID_YES );
@@ -1146,7 +1149,11 @@ void CanvasMenuHandler::PopupMenuHandler( wxCommandEvent& event )
         int dlg_return = wxID_YES;
         if( g_bConfirmObjectDelete ) {
             dlg_return = OCPNMessageBox( parent,  _("Are you sure you want to delete this route?"),
+#ifdef __WXOSX__
+                _("OpenCPN Route Delete"), (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT| wxICON_QUESTION );
+#else
                 _("OpenCPN Route Delete"), (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
+#endif
         }
 
         if( dlg_return == wxID_YES ) {
@@ -1401,7 +1408,11 @@ void CanvasMenuHandler::PopupMenuHandler( wxCommandEvent& event )
         int dlg_return = wxID_YES;
         if( g_bConfirmObjectDelete ) {
             dlg_return = OCPNMessageBox( parent, _("Are you sure you want to delete this track?"),
+#ifdef __WXOSX__
+                _("OpenCPN Track Delete"), (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT| wxICON_QUESTION );                        
+#else
                 _("OpenCPN Track Delete"), (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
+#endif
         }
 
         if( dlg_return == wxID_YES ) {

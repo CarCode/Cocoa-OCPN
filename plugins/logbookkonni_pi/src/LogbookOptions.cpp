@@ -1554,7 +1554,7 @@ void LogbookOptions::OnCheckBoxGeneratorMessage( wxCommandEvent& event )
             if(opt->generatorRunning)
             {
                 log_pi->m_plogbook_window->stopGenerator(false, false, true);
-                wxMessageBox(_("Your Generator is still running .\n\nGenerator stopped now."),_("Information"));
+                wxMessageBox(_("Your Generator is still running .\n\nGenerator stopped now."),_("Information"),wxOK | wxICON_INFORMATION);
             }
             else
             {
@@ -1670,7 +1670,7 @@ void LogbookOptions::OnCheckBoxEng1RPM( wxCommandEvent& event )
             if(log_pi->m_plogbook_window->logbook->engine1Manual && opt->engine1Running)
             {
                 log_pi->m_plogbook_window->stopEngine1(false, true);
-                wxMessageBox(_("Your Engine #1 is running in manual mode.\n\nEngine stopped now."),_("Information"));
+                wxMessageBox(_("Your Engine #1 is running in manual mode.\n\nEngine stopped now."),_("Information"),wxOK | wxICON_INFORMATION);
             }
             else
             {
@@ -1695,7 +1695,7 @@ void LogbookOptions::OnCheckBoxEng2RPM( wxCommandEvent& event )
             if(log_pi->m_plogbook_window->logbook->engine2Manual && opt->engine2Running)
             {
                 log_pi->m_plogbook_window->stopEngine2(false, true, true);
-                wxMessageBox(_("Your Engine #2 is running in manual mode.\n\nEngine stopped now."),_("Information"));
+                wxMessageBox(_("Your Engine #2 is running in manual mode.\n\nEngine stopped now."),_("Information"),wxOK | wxICON_INFORMATION);
             }
             else
             {
@@ -1720,7 +1720,7 @@ void LogbookOptions::OnCheckBoxGenRPM( wxCommandEvent& event )
             if(log_pi->m_plogbook_window->logbook->generatorManual && opt->generatorRunning)
             {
                 log_pi->m_plogbook_window->stopGenerator(false, true, true);
-                wxMessageBox(_("Your Generator is running in manual mode.\n\nGenerator stopped now."),_("Information"));
+                wxMessageBox(_("Your Generator is running in manual mode.\n\nGenerator stopped now."),_("Information"),wxOK | wxICON_INFORMATION);
             }
             else
             {
@@ -1926,7 +1926,7 @@ void LogbookOptions::OnChoiceTimeFormat( wxCommandEvent& event )
 {
 	if(opt->hourFormat && m_choiceTimeFormat->GetSelection() == 1)
 	{
-		wxMessageBox(_("Your Country has 24 Hour Format.\nIn this case the OS doen't serve AM/PM-Strings.\n"));
+		wxMessageBox(_("Your Country has 24 Hour Format.\nIn this case the OS doen't serve AM/PM-Strings.\n"),_("Information"),wxOK | wxICON_INFORMATION);
 		m_choiceTimeFormat->SetSelection(0);
 		return;
 	}
@@ -1993,7 +1993,7 @@ void LogbookOptions::OnButtonOKClick(wxCommandEvent &ev)
 	{
 		wxString sep = m_textCtrlDateSeparator->GetValue();
 		wxMessageBox(wxString::Format(_("You cannot set this dateformat.\n\n%s%s%s%s%s\n\nPlease use a different Dateformat in all three Choiceboxes.")
-			,m_choiceDate1->GetString(sel1).c_str(),sep.c_str(),m_choiceDate2->GetString(sel2).c_str(),sep.c_str(),m_choiceDate3->GetString(sel3).c_str()));
+			,m_choiceDate1->GetString(sel1).c_str(),sep.c_str(),m_choiceDate2->GetString(sel2).c_str(),sep.c_str(),m_choiceDate3->GetString(sel3).c_str()),_("Information"),wxOK | wxICON_INFORMATION);
 		return;
 	}
 
@@ -2026,13 +2026,8 @@ void LogbookOptions::OnButtonOKClick(wxCommandEvent &ev)
 		(m_sMin->IsEmpty() || m_sMin->GetValue().Len()!= 1) ||
 		(m_sSec->IsEmpty()) || m_sSec->GetValue().Len() != 1)
 	{
-#ifdef __WXOSX__
-        MessageBoxOSX(NULL,_("Please fill in one character in Degrees, Minuts and Seconds"),_T("Information"),wxID_OK);
-        return;
-#else
-		wxMessageBox(_("Please fill in one character in Degrees, Minutes and Seconds"));
+		wxMessageBox(_("Please fill in one character in Degrees, Minutes and Seconds"),_("Information"),wxOK | wxICON_INFORMATION);
 		return;
-#endif
 	}
 	else
 		ev.Skip();
@@ -2249,7 +2244,7 @@ void LogbookOptions::OnChoiceNoEngines( wxCommandEvent& event )
             if(opt->engine2Running)
             {
                 log_pi->m_plogbook_window->stopEngine2(false, false, true);
-                wxMessageBox(_("Your Engine #2 is still running .\n\nEngine #2 stopped now."),_("Information"));
+                wxMessageBox(_("Your Engine #2 is still running .\n\nEngine #2 stopped now."),_("Information"),wxOK | wxICON_INFORMATION);
             }
             else
             {

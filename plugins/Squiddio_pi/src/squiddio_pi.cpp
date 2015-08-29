@@ -127,12 +127,12 @@ int squiddio_pi::Init(void)
     m_report_id = AddCanvasContextMenuItem(repi, this);
     SetCanvasContextMenuItemViz(m_report_id, true);
 
-    AddCustomWaypointIcon(_img_marina_grn,  _T("marina_grn"),   _T("Marina"));
-    AddCustomWaypointIcon(_img_anchor_blu,  _T("anchor_blu"),   _T("Anchorage/Buoys"));
-    AddCustomWaypointIcon(_img_club_pur,    _T("club_pur"),     _T("Yacht Club"));
-    AddCustomWaypointIcon(_img_fuelpump_red,_T("fuelpump_red"), _T("Fuel Station"));
-    AddCustomWaypointIcon(_img_pier_yel,    _T("pier_yel"),     _T("Dock/Pier"));
-    AddCustomWaypointIcon(_img_ramp_azu,    _T("ramp_azu"),     _T("Boat Ramp"));
+    AddCustomWaypointIcon(_img_marina_grn,  _T("marina_grn"),   _("Marina"));
+    AddCustomWaypointIcon(_img_anchor_blu,  _T("anchor_blu"),   _("Anchorage/Buoys"));
+    AddCustomWaypointIcon(_img_club_pur,    _T("club_pur"),     _("Yacht Club"));
+    AddCustomWaypointIcon(_img_fuelpump_red,_T("fuelpump_red"), _("Fuel Station"));
+    AddCustomWaypointIcon(_img_pier_yel,    _T("pier_yel"),     _("Dock/Pier"));
+    AddCustomWaypointIcon(_img_ramp_azu,    _T("ramp_azu"),     _("Boat Ramp"));
 
     pLayerList  = new LayerList;
     pPoiMan     = new PoiMan;
@@ -491,20 +491,20 @@ void squiddio_pi::OnContextMenuItemCallback(int id)
 
                 if (isLayerUpdate)
                 {
-                    wxMessageBox(_("Local destinations have been updated"));
+                    wxMessageBox(_("Local destinations have been updated"),_("Information"),wxOK | wxICON_INFORMATION);
                 }
             } else {
-                wxMessageBox(_("No destinations available for the region"));
+                wxMessageBox(_("No destinations available for the region"),_("Information"),wxOK | wxICON_INFORMATION);
             }
         } else {
-            wxMessageBox(_("Server not responding. Check your Internet connection"));
+            wxMessageBox(_("Server not responding. Check your Internet connection"),_("Information"),wxOK | wxICON_INFORMATION);
         }
     } else if (id == m_report_id)
     {
         wxString url_path = _T("http://squidd.io/locations/new?lat=");
         url_path.Append(wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=") << wxString::Format(wxT("%f"), m_cursor_lon));
         if (!IsOnline() || !wxLaunchDefaultBrowser(url_path))
-            wxMessageBox(_("Could not launch default browser. Check your Internet connection"));
+            wxMessageBox(_("Could not launch default browser. Check your Internet connection"),_("Information"),wxOK | wxICON_INFORMATION);
     }
 }
 
@@ -539,7 +539,7 @@ wxString squiddio_pi::DownloadLayer()
     }
     else
     {
-        wxMessageBox(_("Squiddio_pi: unable to connect to host"));
+        wxMessageBox(_("Squiddio_pi: unable to connect to host"),_("Information"),wxOK | wxICON_INFORMATION);
     }
     wxDELETE(httpStream);
     get.Close();

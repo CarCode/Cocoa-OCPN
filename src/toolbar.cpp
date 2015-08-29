@@ -911,9 +911,15 @@ void ocpnFloatingToolbarDialog::OnToolLeftClick( wxCommandEvent& event )
                 }
 
                 if( m_ptoolbar->GetVisibleToolCount() == 1 ) {
+#ifdef __WXOSX__
+                    OCPNMessageBox( this,
+                                   _("You can't hide the last tool from the toolbar\nas this would make it inaccessible."),
+                                   _("OpenCPN Alert"), wxOK | wxICON_EXCLAMATION );
+#else
                     OCPNMessageBox( this,
                             _("You can't hide the last tool from the toolbar\nas this would make it inaccessible."),
                             _("OpenCPN Alert"), wxOK );
+#endif
                     g_FloatingToolbarConfigMenu->FindItem( event.GetId() )->Check( true );
                     return;
                 }

@@ -33,6 +33,7 @@
 
 #include <wx/progdlg.h>
 #include "wx/wxsqlite3.h"
+//#include <sqlite3.h>  // Siehe Commits...
 
 #include <iostream>
 #include <fstream>
@@ -579,7 +580,7 @@ void objsearch_pi::FindObjects( const wxString& feature_filter, const wxString& 
 {
     if (!m_bDBUsable)
     {
-        wxMessageBox(_("There is a problem with your database, check the OpenCPN logfile for more information."));
+        wxMessageBox(_("There is a problem with your database, check the OpenCPN logfile for more information."),_("Information"),wxOK | wxICON_EXCLAMATION);
         return;
     }
     m_pObjSearchDialog->ClearObjects();
@@ -599,7 +600,7 @@ void objsearch_pi::FindObjects( const wxString& feature_filter, const wxString& 
     int show = wxYES;
     if ( objects_found > 1000 )
     {
-        show = wxMessageBox( wxString::Format( _("Your search resulted in %i objects found. This is a lot, do you really want to show all of them?"), objects_found ), _("Too many objects found"), wxYES_NO | wxCENTER );
+        show = wxMessageBox( wxString::Format( _("Your search resulted in %i objects found. This is a lot, do you really want to show all of them?"), objects_found ), _("Too many objects found"), wxYES_NO | wxCENTER | wxICON_EXCLAMATION);
     }
     if ( show == wxYES )
     {
@@ -711,7 +712,7 @@ void ObjSearchDialogImpl::OnSearch( wxCommandEvent& event )
 {
     if ( m_textCtrlSearchTerm->GetValue().Len() == 0 )
     {
-        wxMessageBox( _("You did not enter any search term, do so.") );
+        wxMessageBox( _("You did not enter any search term, do so."),_("Information"),wxOK | wxICON_EXCLAMATION );
         return;
     }
     p_plugin->SetAutoClose(m_cAutoClose->GetValue());
@@ -1410,7 +1411,7 @@ void SettingsDialogImpl::OnOk(wxCommandEvent& event)
         //Check if we cross IDL and refuse to run...
         if( (lonmin < -90 && lonmax > 90) || (lonmin < 0 && lonmax > 0 && 180 + lonmin + lonmax < 180) )
         {
-            wxMessageBox(_("Sorry, I'm stupid and can't cross the IDL, please divide your scan in two."));
+            wxMessageBox(_("Sorry, I'm stupid and can't cross the IDL, please divide your scan in two."),_("Information"),wxOK | wxICON_EXCLAMATION);
             can_scan = false;
         }
         //        this->Hide();
@@ -1460,7 +1461,7 @@ void SettingsDialogImpl::OnOk(wxCommandEvent& event)
         }
         else
         {
-            wxMessageBox( wxString::Format( _("The files %s does not exist, nothing to import."), m_tPath->GetValue().c_str() ) );
+            wxMessageBox( wxString::Format( _("The files %s does not exist, nothing to import."), m_tPath->GetValue().c_str() ),_("Information"),wxOK | wxICON_EXCLAMATION);
         }
         this->Close();
     }

@@ -1757,7 +1757,7 @@ void CrewList::saveHTML(wxString savePath, wxString layout, bool mode)
 
 	if(layout == _T(""))
 	{
-		wxMessageBox(_("Sorry, no Layout installed"),_("Information"),wxOK);
+		wxMessageBox(_("Sorry, no Layout installed"),_("Information"),wxOK  | wxICON_INFORMATION);
 		return;
 	}
 
@@ -2144,7 +2144,7 @@ void CrewList::saveODT(wxString savePath,wxString layout, bool mode)
 
 	if(layout == _T(""))
 	{
-		wxMessageBox(_("Sorry, no Layout installed"),_("Information"),wxOK);
+		wxMessageBox(_("Sorry, no Layout installed"),_("Information"),wxOK | wxICON_INFORMATION);
 		return;
 	}
 
@@ -2459,7 +2459,7 @@ wxString CrewList::readLayoutODT(wxString layout)
 void CrewList::deleteRow(int row)
 {
 	int answer = wxMessageBox(wxString::Format(_("Delete Row Nr. %i ?"),row+1), _("Confirm"),
-                              wxYES_NO | wxCANCEL, 0);
+                              wxYES_NO | wxCANCEL | wxICON_QUESTION, 0);
 	if (answer == wxYES)
 	{
 		gridCrew->DeleteRows(row);
@@ -2485,7 +2485,7 @@ void CrewList::saveXML(wxString path)
 
 	if(crewListFile->GetLineCount() <= 0)
 	{
-		wxMessageBox(_("Sorry, Logbook has no lines"),_("Information"),wxOK);
+		wxMessageBox(_("Sorry, Logbook has no lines"),_("Information"),wxOK | wxICON_INFORMATION);
 		return;
 	}
 

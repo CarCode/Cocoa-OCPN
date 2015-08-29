@@ -550,7 +550,6 @@ void GribSettingsDialog::SetSettingsDialogSize()
     int XMargin = 300, YMargin = 200;													//set margins
     w = wt - XMargin;																	//maximum scolled window size
 //    h = ht - ( m_sButton->GetSize().GetY() + YMargin );
-//    wxMessageBox("Größe: ht = "+ wxString::Format(_T("%i"),ht));  1200
 //    wxSize scroll(0, 0);
     for( size_t i = 0; i < m_nSettingsBook->GetPageCount(); i++ ) {						//compute and set scrolled windows size
         wxScrolledWindow *sc = ((wxScrolledWindow*) m_nSettingsBook->GetPage( i ));
@@ -563,7 +562,6 @@ void GribSettingsDialog::SetSettingsDialogSize()
             case 2:
                 scr = m_fgSetGuiSizer->Fit( sc ); break;
         }
-//        wxMessageBox("Größen: h = "+ wxString::Format(_T("%i"),h));  // 3x 960
 //        sc->SetMinSize( wxSize(wxMin( scr.x, w ), h) );
         sc->SetMinSize( wxSize(wxMin( scr.x, w ),  scr.y ));
 //        wxMessageBox("Größen: scr.y = "+ wxString::Format(_T("%i"),scr.y));  // 455, 140, 475
@@ -573,7 +571,6 @@ void GribSettingsDialog::SetSettingsDialogSize()
     }																					//end compute
     
 //    m_nSettingsBook->SetSize( wt, ht);  // Was soll das? Das ist das wxNotebook
-//    wxMessageBox("Größen: wt = "+ wxString::Format(_T("%i"),wt) + " ht: " + wxString::Format(_T("%i"),ht));  // 1920 x 1200
     Layout();
     Fit();
     Refresh();

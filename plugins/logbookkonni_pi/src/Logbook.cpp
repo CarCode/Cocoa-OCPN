@@ -10,7 +10,6 @@
 #include "logbook_pi.h"
 #include "Options.h"
 #include "LogbookOptions.h"
-#include "MessageBoxOSX.h"
 
 #include "../../../src/nmea0183/nmea0183.h"
 
@@ -731,35 +730,20 @@ void Logbook::newLogbook()
 	if(data_locn != this->logbookData_actuell)
 		this->switchToActuellLogbook();
 
-#ifdef __WXOSX__
-	int i = MessageBoxOSX(this->dialog,_("Are you sure ?"),_("New Logbook"),wxID_NO|wxID_OK);
-	if(i == wxID_NO)
-	{ 	dialog->logGrids[dialog->m_logbook->GetSelection()]->SetFocus(); return; }
-
-	int ii = MessageBoxOSX(this->dialog,_("Reset all Values to zero ?"),_T("New Logbook"),wxID_OK|wxID_NO);
-	if(ii == wxID_OK)
-		zero = true;
-	else if(ii == wxID_NO)
-	{ 	dialog->logGrids[dialog->m_logbook->GetSelection()]->SetFocus(); return; }
-#else
-	int i = wxMessageBox(_("Are you sure ?"),_("New Logbook"),wxYES_NO );
+	int i = wxMessageBox(_("Are you sure ?"),_("New Logbook"),wxYES_NO | wxICON_QUESTION );
 	if(i == wxNO)
 	{ 	dialog->logGrids[dialog->m_logbook->GetSelection()]->SetFocus(); return;}
 
-	i = wxMessageBox(_("Reset all Values to zero ?"),_T(""),wxYES_NO );
+	i = wxMessageBox(_("Reset all Values to zero ?"),_T(""),wxYES_NO | wxICON_QUESTION );
 	if(i == wxYES)
 		zero = true;
-#endif
+    else
+    { 	dialog->logGrids[dialog->m_logbook->GetSelection()]->SetFocus(); return; }
 
 	if(dialog->m_gridGlobal->GetNumberRows() <= 0)
 	{
-#ifdef __WXOSX__
-		MessageBoxOSX(this->dialog, _("Your Logbook has no lines ?"),_("New Logbook"),wxID_OK);
+		wxMessageBox(_("Your Logbook has no lines ?"),_("New Logbook"),wxOK | wxICON_EXCLAMATION );
 		return;
-#else
-		wxMessageBox(_("Your Logbook has no lines ?"),_("New Logbook"),wxOK );
-		return;
-#endif
 	}
 
 	update();
@@ -925,11 +909,8 @@ void Logbook::loadData()
 		if(!wxDir::Exists(dest))
 			::wxMkdir(dest);
 
-#ifdef __WXOSX__
-		MessageBoxOSX(NULL,wxString::Format(_("Start converting to new Date/Time-Format\nand backup all datafiles from version 1.1 to\n\n%s"),dest.c_str()),_("Information"),wxID_OK);
-#else
-		wxMessageBox(wxString::Format(_("Start converting to new Date/Time-Format\nand backup all datafiles from version 1.1 to\n\n%s"),dest.c_str()));
-#endif
+		wxMessageBox(wxString::Format(_("Start converting to new Date/Time-Format\nand backup all datafiles from version 1.1 to\n\n%s"),dest.c_str()),_("Information"),wxOK | wxICON_INFORMATION);
+
 		dir.GetAllFiles(path,&files,_T("*.txt"),wxDIR_FILES);
 		dest += wxFileName::GetPathSeparator();
 
@@ -2153,7 +2134,7 @@ void Logbook::deleteRow(int row)
 {
 	dialog->logGrids[dialog->m_notebook8->GetSelection()]->SelectRow(row,true);
 	int answer = wxMessageBox(wxString::Format(_("Delete Row Nr. %i ?"),row+1), _("Confirm"),
-		wxYES_NO | wxCANCEL, dialog);
+		wxYES_NO | wxCANCEL | wxICON_QUESTION, dialog);
 	if (answer == wxYES)
 		deleteRows();
 	modified = true;
@@ -2336,12 +2317,8 @@ void  Logbook::getModifiedCellValue(int grid, int row, int selCol, int col)
 		if(!dialog->myParseDate(s,dt))
 		{
 			dt = dt.Now();
-#ifdef __WXOSX__
-			wxString s = dt.FormatDate().c_str();
-			MessageBoxOSX(NULL,wxString::Format(_("Please enter the Date in the format:\n      %s"),dt.Format(opt->sdateformat).c_str()), _("Information"),wxID_OK);                     
-#else
-			wxMessageBox(wxString::Format(_("Please enter the Date in the format:\n      %s"),dt.Format(opt->sdateformat).c_str()),_("Information"));
-#endif
+			wxMessageBox(wxString::Format(_("Please enter the Date in the format:\n      %s"),dt.Format(opt->sdateformat).c_str()),_("Information"), wxOK | wxICON_INFORMATION);
+
 			dialog->logGrids[grid]->SetCellValue(row,col,_T(""));
 		}
 		else
@@ -2363,11 +2340,8 @@ void  Logbook::getModifiedCellValue(int grid, int row, int selCol, int col)
 
 		if(!c)
 		{
-#ifdef __WXOSX__
-			MessageBoxOSX(NULL,wxString::Format(_("Please enter the Time in the format:\n   %s"),dt.Format(opt->stimeformat).c_str()),_("Information"),wxID_OK);
-#else
-			wxMessageBox(wxString::Format(_("Please enter the Time in the format:\n   %s"),dt.Format(opt->stimeformat).c_str()));
-#endif
+			wxMessageBox(wxString::Format(_("Please enter the Time in the format:\n   %s"),dt.Format(opt->stimeformat).c_str()),_("Information"),wxOK | wxICON_INFORMATION);
+
 			dialog->logGrids[grid]->SetCellValue(row,col,_T(""));
 		}
 		else
@@ -2410,20 +2384,14 @@ void  Logbook::getModifiedCellValue(int grid, int row, int selCol, int col)
 		{
 			if(opt->traditional && s.length() != 22)
 			{
-#ifdef __WXOSX__
-				MessageBoxOSX(NULL,_("Please enter 0544512.15n0301205.15e for\n054Deg 45Min 12.15Sec N 030Deg 12Min 05.15Sec E"),_("Information"),wxID_OK);
-#else
-				wxMessageBox(_("Please enter 0544512.15n0301205.15e for\n054Deg 45Min 12.15Sec N 030Deg 12Min 05.15Sec E"),_("Information"),wxOK);
-#endif
+				wxMessageBox(_("Please enter 0544512.15n0301205.15e for\n054Deg 45Min 12.15Sec N 030Deg 12Min 05.15Sec E"),_("Information"),wxOK | wxICON_INFORMATION);
+
 				s = _T("");
 			}
 			else if(!opt->traditional && s.length() != 22)
 			{
-#ifdef __WXOSX__
-				MessageBoxOSX(NULL,_("Please enter 05445.1234n03012.0504e for\n054Deg 45.1234Min N 030Deg 12.0504Min E"),_("Information"),wxID_OK);
-#else
-				wxMessageBox(_("Please enter 05445.1234n03012.0504e for\n054Deg 45.1234Min N 030Deg 12.0504Min E"),_("Information"),wxOK);
-#endif
+				wxMessageBox(_("Please enter 05445.1234n03012.0504e for\n054Deg 45.1234Min N 030Deg 12.0504Min E"),_("Information"),wxOK | wxICON_INFORMATION);
+
 				s = _T("");
 			}
 			if(s == _T("")) return;
@@ -2739,11 +2707,8 @@ void  Logbook::getModifiedCellValue(int grid, int row, int selCol, int col)
 
 		if(wxAtoi(m) > 59)
 		{
-#ifdef __WXOSX__
-			MessageBoxOSX(NULL,_("Minutes greater than 59"),_T(""),wxID_OK);
-#else
-			wxMessageBox(_("Minutes greater than 59"),_T(""));
-#endif
+			wxMessageBox(_("Minutes greater than 59"),_T(""),wxOK | wxICON_INFORMATION);
+
 			dialog->logGrids[grid]->SetCellValue(row,col,_T("00:00"));
 			return;
 		}

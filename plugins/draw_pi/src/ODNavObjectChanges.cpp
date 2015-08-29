@@ -367,16 +367,32 @@ bool ODNavObjectChanges::GPXCreatePath( pugi::xml_node node, Path *pInPath )
     child = node.append_child("opencpn:style");
     
     pugi::xml_attribute activecolour = child.append_attribute("active_colour");
+#ifdef __WXOSX__
+    activecolour.set_value( pPath->m_wxcActiveLineColour.GetAsString( wxC2S_CSS_SYNTAX ).utf8_str() );
+#else
     activecolour.set_value( pPath->m_wxcActiveLineColour.GetAsString( wxC2S_HTML_SYNTAX ).utf8_str() );
+#endif
     if(pBoundary) {
         pugi::xml_attribute activefillcolour = child.append_attribute("active_fillcolour");
+#ifdef __WXOSX__
+        activefillcolour.set_value( pBoundary->m_wxcActiveFillColour.GetAsString( wxC2S_CSS_SYNTAX ).utf8_str() );
+#else
         activefillcolour.set_value( pBoundary->m_wxcActiveFillColour.GetAsString( wxC2S_HTML_SYNTAX ).utf8_str() );
+#endif
     }
     pugi::xml_attribute inactivecolour = child.append_attribute("inactive_colour");
+#ifdef __WXOSX__
+    inactivecolour.set_value( pPath->m_wxcInActiveLineColour.GetAsString( wxC2S_CSS_SYNTAX ).utf8_str() );
+#else
     inactivecolour.set_value( pPath->m_wxcInActiveLineColour.GetAsString( wxC2S_HTML_SYNTAX ).utf8_str() );
+#endif
     if(pBoundary) {
         pugi::xml_attribute inactivefillcolour = child.append_attribute("inactive_fillcolour");
+#ifdef __WXOSX__
+        inactivefillcolour.set_value( pBoundary->m_wxcInActiveFillColour.GetAsString( wxC2S_CSS_SYNTAX ).utf8_str() );
+#else
         inactivefillcolour.set_value( pBoundary->m_wxcInActiveFillColour.GetAsString( wxC2S_HTML_SYNTAX ).utf8_str() );
+#endif
     }
     child.append_attribute("width") = pPath->m_width;
     child.append_attribute("style") = pPath->m_style;

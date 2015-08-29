@@ -2801,7 +2801,7 @@ void LogbookDialog::OnMenuSelectionFlip( wxCommandEvent& event )
 
 		if(a > 11) 
 		{
-			wxMessageBox(_T("Cannot flip, month would be > 12"));
+			wxMessageBox(_T("Cannot flip, month would be > 12"),_("Information"),wxOK | wxICON_INFORMATION);
 			return;
 		}
 
@@ -4878,7 +4878,7 @@ void LogbookDialog::logSaveOnButtonClick( wxCommandEvent& ev )
     case 3: logbook->toXML(path); break;
     case 4: logbook->toCSV(path); break;
     case 5: logbook->backup(path); break;
-	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information"),wxOK | wxICON_INFORMATION); break;
 
 	}
 	logGrids[m_logbook->GetSelection()]->SetFocus();
@@ -4907,7 +4907,7 @@ void LogbookDialog::startNormalTimer()
 	while(logbookPlugIn->opt->timerSec <= 0)
 	{
 		TimerInterval* ti = new TimerInterval(this,logbookPlugIn->opt);
-		wxMessageBox(_("Normal Timer has 0 h 0 Min.\n\nPlease change settings (Timer-Interval)"),_T(""));
+		wxMessageBox(_("Normal Timer has 0 h 0 Min.\n\nPlease change settings (Timer-Interval)"),_T(""),wxOK | wxICON_INFORMATION);
 		ti->ShowModal();
 		sec = logbookPlugIn->opt->timerSec;
 		delete ti;
@@ -5082,7 +5082,7 @@ void LogbookDialog::startApplication(wxString filename, wxString ext)
 #endif
         }
 		else  // No HTML-Editor
-			wxMessageBox(_("No Path set to HTML-Editor\nin ToolBox/Plugins/LogbookKonni/Preferences"));
+			wxMessageBox(_("No Path set to HTML-Editor\nin ToolBox/Plugins/LogbookKonni/Preferences"),_("Information"),wxOK | wxICON_INFORMATION);
 	}
 }
 
@@ -5510,7 +5510,7 @@ void LogbookDialog::crewSaveOnButtonClick( wxCommandEvent& ev )
 	case 2:	crewList->saveXML(path); break;
 	case 3: crewList->saveCSV(path); break;
 	case 4: crewList->backup(path); break;
-	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information"),wxOK | wxICON_INFORMATION); break;
 	}
 }
 
@@ -5861,7 +5861,7 @@ void LogbookDialog::boatSaveOnButtonClick( wxCommandEvent& ev )
 	case 2:	boat->toXML(path); break;
 	case 3: boat->toCSV(path); break;
 	case 4: boat->backup(path); break;
-	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information"),wxOK | wxICON_INFORMATION); break;
 	}
 }
 
@@ -6024,7 +6024,7 @@ void LogbookDialog::onButtobClickSaveService(wxCommandEvent & ev)
 			else
                 maintenance->toODT(0, path, layout, 2);
 			break;
-	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information"),wxOK | wxICON_INFORMATION); break;
 	}
 	delete saveFileDialog;
 }
@@ -6281,7 +6281,7 @@ void LogbookDialog::onButtobClickSaveRepairs( wxCommandEvent& event )
 			else
                 maintenance->toODT(1, path, layout, 2);
 			break;
-	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information"),wxOK | wxICON_INFORMATION); break;
 	}
 	delete saveFileDialog;
 }
@@ -6501,7 +6501,7 @@ void LogbookDialog::onButtobClickSaveBuyParts( wxCommandEvent& event )
                 maintenance->toODT(2, path, layout, 2);
 			break;
 
-	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information"),wxOK | wxICON_INFORMATION); break;
 	}
 	delete saveFileDialog;
 }
@@ -6737,7 +6737,7 @@ void LogbookDialog::OnButtonClickOverviewSave( wxCommandEvent& ev )
                 overview->toODT(path, layout, 2); 
 			break;
 
-	default: wxMessageBox(_T("Not implemented yet"),_T("Information")); break;
+	default: wxMessageBox(_T("Not implemented yet"),_T("Information"),wxOK | wxICON_INFORMATION); break;
 	}
 	delete saveFileDialog;
 }
@@ -6877,7 +6877,7 @@ bool LogbookDialog::myParseDate(wxString s, wxDateTime &dt)
     else if ( end == s.end() )
         return true;
 	else
-		wxMessageBox(_T("Parse Error myParseDate ")+wxString(end, s.end()));// left over ...	
+		wxMessageBox(_T("Parse Error myParseDate ")+wxString(end, s.end()), _("Error"), wxOK | wxICON_HAND);// left over ...
     return false;
 }
 

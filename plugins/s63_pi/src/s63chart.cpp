@@ -136,7 +136,11 @@ void validate_SENC_util(void)
         msg += _T("{");
         msg += bin_test;
         msg += _T("}");
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(NULL, msg, _("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
         OCPNMessageBox_PlugIn(NULL, msg, _("s63_pi Message"),  wxOK, -1, -1);
+#endif
         wxLogMessage(_T("s63_pi: ") + msg);
         
         g_sencutil_bin.Clear();
@@ -155,7 +159,11 @@ void validate_SENC_util(void)
         msg += _T("{");
         msg += bin_test;
         msg += _T("}");
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(NULL, msg, _("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
         OCPNMessageBox_PlugIn(NULL, msg, _("s63_pi Message"),  wxOK, -1, -1);
+#endif
         wxLogMessage(_T("s63_pi: ") + msg);
     
         g_sencutil_bin.Clear();
@@ -196,7 +204,11 @@ void validate_SENC_util(void)
         wxString msg1;
         msg1.Printf(_("This version of S63_PI requires OCPNsenc of version 1.03 or later."));
         msg += msg1;
+#ifdef __WXOSX__
+        OCPNMessageBox_PlugIn(NULL, msg, _("s63_pi Message"),  wxOK | wxICON_HAND, -1, -1);
+#else
         OCPNMessageBox_PlugIn(NULL, msg, _("s63_pi Message"),  wxOK, -1, -1);
+#endif
         wxLogMessage(_T("s63_pi: ") + msg);
         
         g_sencutil_bin.Clear();
@@ -2119,7 +2131,7 @@ bool ChartS63::InitFrom_ehdr( wxString &efn )
     while( !dun ) {
         
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-            dun = 1;
+//            dun = 1;  // Not used but break
             break;
         }
         
@@ -2130,7 +2142,7 @@ bool ChartS63::InitFrom_ehdr( wxString &efn )
                 msg.Append( efn );
                 wxLogMessage( msg );
                 
-                dun = 1;
+//                dun = 1;  // Not used but break
                 ret_val = false;                   // error
                 break;
             }
@@ -2442,12 +2454,12 @@ PI_InitReturn ChartS63::FindOrCreateSenc( const wxString& name )
                 
                 while( !dun ) {
                     if( my_fgets( pbuf, 256, *pfpx ) == 0 ) {
-                        dun = 1;
+//                        dun = 1;  // Not used but break
                         force_make_senc = 1;
                         break;
                     } else {
                         if( !strncmp( pbuf, "OGRF", 4 ) ) {
-                            dun = 1;
+//                            dun = 1;  // Not used but break
                             break;
                         }
                         
@@ -3011,12 +3023,12 @@ int ChartS63::BuildRAZFromSENCFile( const wxString& FullPath )
         int err = my_fgets( buf, MAX_LINE, *pfpx );
         
         if( err == 0 ) {
-            dun = 1;
+//            dun = 1;  // Not used but break
             break;
         }
         else if( err < 0 ) {
             wxPrintf(_T("fgets err %d\n"), err);
-            dun = 1;
+//            dun = 1;  // Not used but break
             //            ret_val = 1;
             break;
         }
@@ -3927,229 +3939,227 @@ bool ChartS63::DoRenderViewOnDC( wxMemoryDC& dc, const PlugIn_ViewPort& VPoint, 
     bool bnewview = false;
     wxPoint rul, rlr;
     bool bNewVP = false;
-    
+
     bool bReallyNew = false;
-    
+
     double easting_ul, northing_ul;
     double easting_lr, northing_lr;
     double prev_easting_ul = 0., prev_northing_ul = 0.;
     //    double prev_easting_lr, prev_northing_lr;
-    
+
     if( PI_GetPLIBColorScheme() != m_lastColorScheme )
         bReallyNew = true;
     m_lastColorScheme = PI_GetPLIBColorScheme();
-    
+
     if( VPoint.view_scale_ppm != m_last_vp.view_scale_ppm )
         bReallyNew = true;
-    
+
     //      If the scale is very small, do not use the cache to avoid harmonic difficulties...
-        if( VPoint.chart_scale > 1e8 )
-            bReallyNew = true;
-        
-        wxRect dest( 0, 0, VPoint.pix_width, VPoint.pix_height );
-        if( m_last_vprect != dest )
-            bReallyNew = true;
-         m_last_vprect = dest;
-        
-                                           
-                                            if( bReallyNew ) {
-                                                bNewVP = true;
-                                                delete pDIB;
-                                                pDIB = NULL;
-                                                bnewview = true;
-                                            }
-                                            
-                                            //      Calculate the desired rectangle in the last cached image space
-                                            if( 0/*m_last_vp.IsValid()*/ ) {
-                                                easting_ul = m_easting_vp_center - ( ( VPoint.pix_width / 2 ) / m_view_scale_ppm );
-                                                northing_ul = m_northing_vp_center + ( ( VPoint.pix_height / 2 ) / m_view_scale_ppm );
-                                                easting_lr = easting_ul + ( VPoint.pix_width / m_view_scale_ppm );
-                                                northing_lr = northing_ul - ( VPoint.pix_height / m_view_scale_ppm );
-                                                
-                                                double last_easting_vp_center, last_northing_vp_center;
-                                                toSM_Plugin( m_last_vp.clat, m_last_vp.clon, m_ref_lat, m_ref_lon, &last_easting_vp_center,
+    if( VPoint.chart_scale > 1e8 )
+        bReallyNew = true;
+
+    wxRect dest( 0, 0, VPoint.pix_width, VPoint.pix_height );
+    if( m_last_vprect != dest )
+        bReallyNew = true;
+    m_last_vprect = dest;
+
+
+    if( bReallyNew ) {
+        bNewVP = true;
+        delete pDIB;
+        pDIB = NULL;
+        bnewview = true;
+    }
+
+    //      Calculate the desired rectangle in the last cached image space
+    if( 0/*m_last_vp.IsValid()*/ ) {
+        easting_ul = m_easting_vp_center - ( ( VPoint.pix_width / 2 ) / m_view_scale_ppm );
+        northing_ul = m_northing_vp_center + ( ( VPoint.pix_height / 2 ) / m_view_scale_ppm );
+        easting_lr = easting_ul + ( VPoint.pix_width / m_view_scale_ppm );
+        northing_lr = northing_ul - ( VPoint.pix_height / m_view_scale_ppm );
+
+        double last_easting_vp_center, last_northing_vp_center;
+        toSM_Plugin( m_last_vp.clat, m_last_vp.clon, m_ref_lat, m_ref_lon, &last_easting_vp_center,
                                                       &last_northing_vp_center );
+
+        prev_easting_ul = last_easting_vp_center - ( ( m_last_vp.pix_width / 2 ) / m_view_scale_ppm );
+        prev_northing_ul = last_northing_vp_center + ( ( m_last_vp.pix_height / 2 ) / m_view_scale_ppm );
+        //        prev_easting_lr = easting_ul + ( m_last_vp.pix_width / m_view_scale_ppm );
+        //        prev_northing_lr = northing_ul - ( m_last_vp.pix_height / m_view_scale_ppm );
+
+        double dx = ( easting_ul - prev_easting_ul ) * m_view_scale_ppm;
+        double dy = ( prev_northing_ul - northing_ul ) * m_view_scale_ppm;
+
+        rul.x = (int) round((easting_ul - prev_easting_ul) * m_view_scale_ppm);
+        rul.y = (int) round((prev_northing_ul - northing_ul) * m_view_scale_ppm);
+
+        rlr.x = (int) round((easting_lr - prev_easting_ul) * m_view_scale_ppm);
+        rlr.y = (int) round((prev_northing_ul - northing_lr) * m_view_scale_ppm);
+
+        if( ( fabs( dx - wxRound( dx ) ) > 1e-5 ) || ( fabs( dy - wxRound( dy ) ) > 1e-5 ) ) {
+            rul.x = 0;
+            rul.y = 0;
+            rlr.x = 0;
+            rlr.y = 0;
+            bNewVP = true;
+        }
+
+        else if( ( rul.x != 0 ) || ( rul.y != 0 ) ) {
+            bNewVP = true;
+        }
+    } else {
+        rul.x = 0;
+        rul.y = 0;
+        rlr.x = 0;
+        rlr.y = 0;
+        bNewVP = true;
+    }
+
+    if( force_new_view ) bNewVP = true;
+
+    //      Using regions, calculate re-usable area of pDIB
+
+    wxRegion rgn_last( 0, 0, VPoint.pix_width, VPoint.pix_height );
+    wxRegion rgn_new( rul.x, rul.y, rlr.x - rul.x, rlr.y - rul.y );
+    rgn_last.Intersect( rgn_new );            // intersection is reusable portion
+
+    if( bNewVP && ( NULL != pDIB ) && !rgn_last.IsEmpty() ) {
+        int xu, yu, wu, hu;
+        rgn_last.GetBox( xu, yu, wu, hu );
+
+        int desx = 0;
+        int desy = 0;
+        int srcx = xu;
+        int srcy = yu;
                                                 
-                                                prev_easting_ul = last_easting_vp_center
-                                                - ( ( m_last_vp.pix_width / 2 ) / m_view_scale_ppm );
-                                                prev_northing_ul = last_northing_vp_center
-                                                + ( ( m_last_vp.pix_height / 2 ) / m_view_scale_ppm );
-                                                //        prev_easting_lr = easting_ul + ( m_last_vp.pix_width / m_view_scale_ppm );
-                                                //        prev_northing_lr = northing_ul - ( m_last_vp.pix_height / m_view_scale_ppm );
+        if( rul.x < 0 ) {
+            srcx = 0;
+            desx = -rul.x;
+        }
+        if( rul.y < 0 ) {
+            srcy = 0;
+            desy = -rul.y;
+        }
+
+        wxMemoryDC dc_last;
+        dc_last.SelectObject( *pDIB );
+        wxMemoryDC dc_new;
+        wxBitmap *pDIBNew = new wxBitmap( VPoint.pix_width, VPoint.pix_height, BPP );
+        dc_new.SelectObject( *pDIBNew );
+
+        //        printf("reuse blit %d %d %d %d %d %d\n",desx, desy, wu, hu,  srcx, srcy);
+        dc_new.Blit( desx, desy, wu, hu, (wxDC *) &dc_last, srcx, srcy, wxCOPY );
+
+        //        Ask the plib to adjust the persistent text rectangle list for this canvas shift
+        //        This ensures that, on pans, the list stays in registration with the new text renders to come
+        //        ps52plib->AdjustTextList( desx - srcx, desy - srcy, VPoint.pix_width, VPoint.pix_height );
+
+        dc_new.SelectObject( wxNullBitmap );
+        dc_last.SelectObject( wxNullBitmap );
+
+        delete pDIB;
+        pDIB = pDIBNew;
                                                 
-                                                double dx = ( easting_ul - prev_easting_ul ) * m_view_scale_ppm;
-                                                double dy = ( prev_northing_ul - northing_ul ) * m_view_scale_ppm;
-                                                
-                                                rul.x = (int) round((easting_ul - prev_easting_ul) * m_view_scale_ppm);
-                                                rul.y = (int) round((prev_northing_ul - northing_ul) * m_view_scale_ppm);
-                                                
-                                                rlr.x = (int) round((easting_lr - prev_easting_ul) * m_view_scale_ppm);
-                                                rlr.y = (int) round((prev_northing_ul - northing_lr) * m_view_scale_ppm);
-                                                
-                                                if( ( fabs( dx - wxRound( dx ) ) > 1e-5 ) || ( fabs( dy - wxRound( dy ) ) > 1e-5 ) ) {
-                                                    rul.x = 0;
-                                                    rul.y = 0;
-                                                    rlr.x = 0;
-                                                    rlr.y = 0;
-                                                    bNewVP = true;
-                                                }
-                                                
-                                                else if( ( rul.x != 0 ) || ( rul.y != 0 ) ) {
-                                                    bNewVP = true;
-                                                }
-                                            } else {
-                                                rul.x = 0;
-                                                rul.y = 0;
-                                                rlr.x = 0;
-                                                rlr.y = 0;
-                                                bNewVP = true;
-                                            }
-                                            
-                                            if( force_new_view ) bNewVP = true;
-                                            
-                                            //      Using regions, calculate re-usable area of pDIB
-                                            
-                                            wxRegion rgn_last( 0, 0, VPoint.pix_width, VPoint.pix_height );
-                                            wxRegion rgn_new( rul.x, rul.y, rlr.x - rul.x, rlr.y - rul.y );
-                                            rgn_last.Intersect( rgn_new );            // intersection is reusable portion
-                                            
-                                            if( bNewVP && ( NULL != pDIB ) && !rgn_last.IsEmpty() ) {
-                                                int xu, yu, wu, hu;
-                                                rgn_last.GetBox( xu, yu, wu, hu );
-                                                
-                                                int desx = 0;
-                                                int desy = 0;
-                                                int srcx = xu;
-                                                int srcy = yu;
-                                                
-                                                if( rul.x < 0 ) {
-                                                    srcx = 0;
-                                                    desx = -rul.x;
-                                                }
-                                                if( rul.y < 0 ) {
-                                                    srcy = 0;
-                                                    desy = -rul.y;
-                                                }
-                                                
-                                                wxMemoryDC dc_last;
-                                                dc_last.SelectObject( *pDIB );
-                                                wxMemoryDC dc_new;
-                                                wxBitmap *pDIBNew = new wxBitmap( VPoint.pix_width, VPoint.pix_height, BPP );
-                                                dc_new.SelectObject( *pDIBNew );
-                                                
-                                                //        printf("reuse blit %d %d %d %d %d %d\n",desx, desy, wu, hu,  srcx, srcy);
-                                                dc_new.Blit( desx, desy, wu, hu, (wxDC *) &dc_last, srcx, srcy, wxCOPY );
-                                                
-                                                //        Ask the plib to adjust the persistent text rectangle list for this canvas shift
-                                                //        This ensures that, on pans, the list stays in registration with the new text renders to come
-                                                //        ps52plib->AdjustTextList( desx - srcx, desy - srcy, VPoint.pix_width, VPoint.pix_height );
-                                                
-                                                dc_new.SelectObject( wxNullBitmap );
-                                                dc_last.SelectObject( wxNullBitmap );
-                                                
-                                                delete pDIB;
-                                                pDIB = pDIBNew;
-                                                
-                                                //              OK, now have the re-useable section in place
-                                                //              Next, build the new sections
-                                                
-//                                                pDIB->SelectIntoDC( dc );
-                                                dc.SelectObject( *pDIB );
-                                                wxRegion rgn_delta( 0, 0, VPoint.pix_width, VPoint.pix_height );
-                                                wxRegion rgn_reused( desx, desy, wu, hu );
-                                                rgn_delta.Subtract( rgn_reused );
-                                                
-                                                wxRegionIterator upd( rgn_delta ); // get the update rect list
-                                                while( upd.HaveRects() ) {
-                                                    wxRect rect = upd.GetRect();
-                                                    
-                                                    //      Build temp ViewPort on this region
-                                                    
-                                                    PlugIn_ViewPort temp_vp = VPoint;
-                                                    double temp_lon_left, temp_lat_bot, temp_lon_right, temp_lat_top;
-                                                    
-                                                    double temp_northing_ul = prev_northing_ul - ( rul.y / m_view_scale_ppm )
+        //              OK, now have the re-useable section in place
+        //              Next, build the new sections
+
+//        pDIB->SelectIntoDC( dc );
+        dc.SelectObject( *pDIB );
+        wxRegion rgn_delta( 0, 0, VPoint.pix_width, VPoint.pix_height );
+        wxRegion rgn_reused( desx, desy, wu, hu );
+        rgn_delta.Subtract( rgn_reused );
+
+        wxRegionIterator upd( rgn_delta ); // get the update rect list
+        while( upd.HaveRects() ) {
+            wxRect rect = upd.GetRect();
+
+            //      Build temp ViewPort on this region
+
+            PlugIn_ViewPort temp_vp = VPoint;
+            double temp_lon_left, temp_lat_bot, temp_lon_right, temp_lat_top;
+
+            double temp_northing_ul = prev_northing_ul - ( rul.y / m_view_scale_ppm )
                                                     - ( rect.y / m_view_scale_ppm );
-                                                    double temp_easting_ul = prev_easting_ul + ( rul.x / m_view_scale_ppm )
+            double temp_easting_ul = prev_easting_ul + ( rul.x / m_view_scale_ppm )
                                                     + ( rect.x / m_view_scale_ppm );
-                                                    fromSM_Plugin( temp_easting_ul, temp_northing_ul, m_ref_lat, m_ref_lon, &temp_lat_top,
+            fromSM_Plugin( temp_easting_ul, temp_northing_ul, m_ref_lat, m_ref_lon, &temp_lat_top,
                                                             &temp_lon_left );
-                                                    
-                                                    double temp_northing_lr = temp_northing_ul - ( rect.height / m_view_scale_ppm );
-                                                    double temp_easting_lr = temp_easting_ul + ( rect.width / m_view_scale_ppm );
-                                                    fromSM_Plugin( temp_easting_lr, temp_northing_lr, m_ref_lat, m_ref_lon, &temp_lat_bot,
+
+            double temp_northing_lr = temp_northing_ul - ( rect.height / m_view_scale_ppm );
+            double temp_easting_lr = temp_easting_ul + ( rect.width / m_view_scale_ppm );
+            fromSM_Plugin( temp_easting_lr, temp_northing_lr, m_ref_lat, m_ref_lon, &temp_lat_bot,
                                                             &temp_lon_right );
-                                                    
-                                                    //            temp_vp.GetBBox().SetMin( temp_lon_left, temp_lat_bot );
-                                                    //            temp_vp.GetBBox().SetMax( temp_lon_right, temp_lat_top );
-                                                    
-                                                    temp_vp.lat_min = temp_lat_bot;
-                                                    temp_vp.lat_max = temp_lat_top;
-                                                    temp_vp.lon_min = temp_lon_left;
-                                                    temp_vp.lon_max = temp_lon_right;
-                                                    
-                                                    //      Allow some slop in the viewport
-                                                    //    TODO Investigate why this fails if greater than 5 percent
-                                                    //            double margin = wxMin(temp_vp.GetBBox().GetWidth(), temp_vp.GetBBox().GetHeight())
-                                                    //                    * 0.05;
-                                                    
-                                                    //            temp_vp.GetBBox().EnLarge( margin );
-                                                    
-                                                    //      And Render it new piece on the target dc
-                                                    //     printf("New Render, rendering %d %d %d %d \n", rect.x, rect.y, rect.width, rect.height);
-                                                    
-                                                    DCRenderRect( dc, temp_vp, &rect );
-                                                    
-                                                    upd++;
-                                                }
-                                                
-                                                dc.SelectObject( wxNullBitmap );
-                                                
-                                                bnewview = true;
-                                                
-                                                //      Update last_vp to reflect the current cached bitmap
-                                                m_last_vp = VPoint;
-                                                
-                                            }
-                                            
-                                            else if( bNewVP || ( NULL == pDIB ) ) {
-                                                delete pDIB;
-//                                                pDIB = new PixelCache( VPoint.pix_width, VPoint.pix_height, BPP );     // destination
-                                                pDIB = new wxBitmap( VPoint.pix_width, VPoint.pix_height, BPP );     // destination
-                                                
-                                                wxRect full_rect( 0, 0, VPoint.pix_width, VPoint.pix_height );
-//                                                pDIB->SelectIntoDC( dc );
-                                                dc.SelectObject( *pDIB );
-                                                
-                                                //        Clear the text declutter list
-                                                //        ps52plib->ClearTextList();
-                                                
-                                                DCRenderRect( dc, VPoint, &full_rect );
-                                                
-                                                dc.SelectObject( wxNullBitmap );
-                                                
-                                                bnewview = true;
-                                                
-                                                //      Update last_vp to reflect the current cached bitmap
-                                                m_last_vp = VPoint;
-                                                
-                                            }
-                                            
-                                            return bnewview;
-                                            
+
+//            temp_vp.GetBBox().SetMin( temp_lon_left, temp_lat_bot );
+//            temp_vp.GetBBox().SetMax( temp_lon_right, temp_lat_top );
+
+            temp_vp.lat_min = temp_lat_bot;
+            temp_vp.lat_max = temp_lat_top;
+            temp_vp.lon_min = temp_lon_left;
+            temp_vp.lon_max = temp_lon_right;
+
+            //      Allow some slop in the viewport
+            //    TODO Investigate why this fails if greater than 5 percent
+            //            double margin = wxMin(temp_vp.GetBBox().GetWidth(), temp_vp.GetBBox().GetHeight())
+            //                    * 0.05;
+
+            //            temp_vp.GetBBox().EnLarge( margin );
+
+            //      And Render it new piece on the target dc
+            //     printf("New Render, rendering %d %d %d %d \n", rect.x, rect.y, rect.width, rect.height);
+
+            DCRenderRect( dc, temp_vp, &rect );
+
+            upd++;
+        }
+
+        dc.SelectObject( wxNullBitmap );
+
+        bnewview = true;
+
+        //      Update last_vp to reflect the current cached bitmap
+        m_last_vp = VPoint;
+
+    }
+
+    else if( bNewVP || ( NULL == pDIB ) ) {
+        delete pDIB;
+//        pDIB = new PixelCache( VPoint.pix_width, VPoint.pix_height, BPP );     // destination
+        pDIB = new wxBitmap( VPoint.pix_width, VPoint.pix_height, BPP );     // destination
+
+        wxRect full_rect( 0, 0, VPoint.pix_width, VPoint.pix_height );
+//        pDIB->SelectIntoDC( dc );
+        dc.SelectObject( *pDIB );
+
+        //        Clear the text declutter list
+        //        ps52plib->ClearTextList();
+
+        DCRenderRect( dc, VPoint, &full_rect );
+
+        dc.SelectObject( wxNullBitmap );
+
+        bnewview = true;
+
+        //      Update last_vp to reflect the current cached bitmap
+        m_last_vp = VPoint;
+
+    }
+
+    return bnewview;
+
 }
 
 int ChartS63::DCRenderRect( wxMemoryDC& dcinput, const PlugIn_ViewPort& vp, wxRect* rect )
 {
 //    ScreenLogMessage(_T("Render\n"));
-    
+
     int i;
     PI_S57Obj *top;
     PI_S57Obj *crnt;
-    
+
     PlugIn_ViewPort tvp = vp;                    // undo const  TODO fix this in PLIB
-    
-    
+
+
     int depth = BPP;
     int pb_pitch = ( ( rect->width * depth / 8 ) );
     unsigned char *pixbuf = (unsigned char *) malloc( rect->height * pb_pitch );
@@ -4157,7 +4167,7 @@ int ChartS63::DCRenderRect( wxMemoryDC& dcinput, const PlugIn_ViewPort& vp, wxRe
     int height = rect->height;
     int pbx = rect->x;
     int pby = rect->y;
-    
+
     // Preset background
     wxColour color = GetBaseGlobalColor( _T ( "NODTA" ) );
     unsigned char r, g, b;
@@ -4167,7 +4177,7 @@ int ChartS63::DCRenderRect( wxMemoryDC& dcinput, const PlugIn_ViewPort& vp, wxRe
         b = color.Blue();
     } else
         r = g = b = 0;
-    
+
     if( depth == 24 ) {
         for( int i = 0; i < height; i++ ) {
             unsigned char *p = pixbuf + ( i * pb_pitch );
@@ -4179,7 +4189,7 @@ int ChartS63::DCRenderRect( wxMemoryDC& dcinput, const PlugIn_ViewPort& vp, wxRe
         }
     } else {
         int color_int = ( ( r ) << 16 ) + ( ( g ) << 8 ) + ( b );
-        
+
         for( int i = 0; i < height; i++ ) {
             int *p = (int *) ( pixbuf + ( i * pb_pitch ) );
             for( int j = 0; j < width; j++ ) {
@@ -4187,21 +4197,21 @@ int ChartS63::DCRenderRect( wxMemoryDC& dcinput, const PlugIn_ViewPort& vp, wxRe
             }
         }
     }
-    
+
     //      Render the areas quickly
     for( i = 0; i < PI_PRIO_NUM; ++i ) {
 //        if( PI_GetPLIBBoundaryStyle() == PI_SYMBOLIZED_BOUNDARIES )
 //            top = razRules[i][4]; // Area Symbolized Boundaries
 //            else
                 top = razRules[i][3];           // Area Plain Boundaries
-                
+
                 while( top != NULL ) {
                     crnt = top;
                     top = top->next;               // next object
                     PI_PLIBRenderAreaToDC( &dcinput, crnt, &tvp, *rect, pixbuf );
                 }
     }
-    
+
     //      Convert the Private render canvas into a bitmap
 //    #ifdef ocpnUSE_ocpnBitmap
 //    ocpnBitmap *pREN = new ocpnBitmap( pixbuf, width, height, depth );
@@ -4209,31 +4219,31 @@ int ChartS63::DCRenderRect( wxMemoryDC& dcinput, const PlugIn_ViewPort& vp, wxRe
     wxImage *prender_image = new wxImage(width, height, false);
     prender_image->SetData((unsigned char*)pixbuf);
     wxBitmap *pREN = new wxBitmap(*prender_image);
-    
+
 //    #endif
-    
+
     //      Map it into a temporary DC
     wxMemoryDC dc_ren;
     dc_ren.SelectObject( *pREN );
-    
+
     //      Blit it onto the target dc
     dcinput.Blit( pbx, pby, width, height, (wxDC *) &dc_ren, 0, 0 );
-    
+
     //      And clean up the mess
     dc_ren.SelectObject( wxNullBitmap );
-    
+
 //    #ifdef ocpnUSE_ocpnBitmap
 //    free( pixbuf );
 //    #else
     delete prender_image;           // the image owns the data
     // and so will free it in due course
 //    #endif
-    
+
     delete pREN;
-    
+
     //      Render the rest of the objects/primitives
     DCRenderLPB( dcinput, vp, rect );
-    
+
     return 1;
 }
 
@@ -4243,7 +4253,7 @@ bool ChartS63::DCRenderLPB( wxMemoryDC& dcinput, const PlugIn_ViewPort& vp, wxRe
     PI_S57Obj *top;
     PI_S57Obj *crnt;
     PlugIn_ViewPort tvp = vp;                    // undo const  TODO fix this in PLIB
-    
+
     for( i = 0; i < PI_PRIO_NUM; ++i ) {
         //      Set up a Clipper for Lines
         wxDCClipper *pdcc = NULL;
@@ -4251,7 +4261,7 @@ bool ChartS63::DCRenderLPB( wxMemoryDC& dcinput, const PlugIn_ViewPort& vp, wxRe
             //            wxRect nr = *rect;
             //         pdcc = new wxDCClipper(dcinput, nr);
         }
-        
+
 //        if( PI_GetPLIBBoundaryStyle() == PI_SYMBOLIZED_BOUNDARIES )
 //            top = razRules[i][4]; // Area Symbolized Boundaries
 //            else
@@ -4261,29 +4271,29 @@ bool ChartS63::DCRenderLPB( wxMemoryDC& dcinput, const PlugIn_ViewPort& vp, wxRe
                     top = top->next;               // next object
                     PI_PLIBRenderObjectToDC( &dcinput, crnt, &tvp );
                 }
-                
+
                 top = razRules[i][2];           //LINES
                 while( top != NULL ) {
                     PI_S57Obj *crnt = top;
                     top = top->next;
                     PI_PLIBRenderObjectToDC( &dcinput, crnt, &tvp );
                 }
-                
+
 //                if( PI_GetPLIBSymbolStyle() == PI_SIMPLIFIED )
                     top = razRules[i][0];       //SIMPLIFIED Points
 //                    else
 //                        top = razRules[i][1];           //Paper Chart Points Points
-                        
+
                         while( top != NULL ) {
                             crnt = top;
                             top = top->next;
                             PI_PLIBRenderObjectToDC( &dcinput, crnt, &tvp );
                         }
-                        
+
                         //      Destroy Clipper
                         if( pdcc ) delete pdcc;
     }
-    
+
     return true;
 }
 
@@ -6075,9 +6085,9 @@ int SENCclient::UnRead(char *destination, int length)
     
     return 0;
     }
-    #endif
+#endif
     
-    #if 0
+#if 0
     int SENCclient::fgets( char *buf, int buf_len_max )
     
     {
@@ -6109,9 +6119,9 @@ int SENCclient::UnRead(char *destination, int length)
         return nLineLen;
     }
     
-    #endif
+#endif
     
-    #if 0
+#if 0
     int SENCclient::fgets( char *destination, int max_length)
     {
         int ret_val = 0;
@@ -6146,7 +6156,7 @@ int SENCclient::UnRead(char *destination, int length)
         fast_return:
         return ret_val;
     }
-    #endif
+#endif
     
     size_t SENCclient::OnSysRead(void *buffer, size_t size)
     {
@@ -6283,11 +6293,11 @@ PI_S57Obj::~PI_S57Obj()
         if( geoPtMulti ) free( geoPtMulti );
 
         if( pPolyTessGeo ) delete (PolyTessGeo*)pPolyTessGeo;
-        
+
 //        if(S52_Context) delete (S52PLIB_Context *)S52_Context;
         
         if( m_lsindex_array ) free( m_lsindex_array );
-        
+
         if(m_ls_list){
             PI_line_segment_element *element = m_ls_list;
             while(element){
@@ -6296,16 +6306,8 @@ PI_S57Obj::~PI_S57Obj()
                 element = next;
             }
         }
-        
     }
 }
-
-
-
-
-
-
-
 
 //----------------------------------------------------------------------------------
 //      PI_S57Obj CTOR
@@ -6465,7 +6467,7 @@ PI_S57ObjX::PI_S57ObjX( char *first_line, CryptInputStream *fpx, int senc_file_v
 
                     mybuf_ptr += nrl;
                     if( 0 == nrl ) {
-                        attdun = 1;
+//                        attdun = 1;  // Not used but break
                         py_fgets( buf, MAX_LINE, fpx );     // this will be PolyGeo
                         break;
                     }
@@ -6492,14 +6494,14 @@ PI_S57ObjX::PI_S57ObjX( char *first_line, CryptInputStream *fpx, int senc_file_v
                 }
 
                 else if( !strncmp( buf, geoMatch, 6 ) ) {
-                    attdun = 1;
+//                    attdun = 1;  // Not used but break
                     break;
                 }
 
                 else if( !strncmp( buf, "  MULT", 6 ) )         // Special multipoint
                         {
                     bMulti = true;
-                    attdun = 1;
+//                    attdun = 1;  // Not used but break
                     break;
                 }
 
@@ -6840,8 +6842,8 @@ PI_S57ObjX::PI_S57ObjX( char *first_line, CryptInputStream *fpx, int senc_file_v
 
  
                    
-                    int ll = strlen( buf );
-                    if( ll > llmax ) llmax = ll;
+//                    int ll = strlen( buf );       // Not used
+//                    if( ll > llmax ) llmax = ll;  // Not used
 
                     py_fgets( buf, MAX_LINE, fpx );     // this will be "  POLYTESSGEO"
 

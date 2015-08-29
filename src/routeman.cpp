@@ -784,8 +784,11 @@ bool Routeman::DeleteRoute( Route *pRoute )
     if( pRoute ) {
         if( pRoute == pAISMOBRoute )
         {
+#ifdef __WXOSX__
+            int ret = OCPNMessageBox( NULL, _("You are trying to delete an active AIS MOB route, are you REALLY sure?"), _("OpenCPN Warning"), wxYES_NO | wxICON_EXCLAMATION );
+#else
             int ret = OCPNMessageBox( NULL, _("You are trying to delete an active AIS MOB route, are you REALLY sure?"), _("OpenCPN Warning"), wxYES_NO );
-            
+#endif
             if( ret == wxID_NO )
                 return false;
             else
@@ -860,7 +863,11 @@ void Routeman::DeleteAllRoutes( void )
         if( proute == pAISMOBRoute )
         {
             ::wxEndBusyCursor();
+#ifdef __WXOSX__
+            int ret = OCPNMessageBox( NULL, _("You are trying to delete an active AIS MOB route, are you REALLY sure?"), _("OpenCPN Warning"), wxYES_NO | wxICON_EXCLAMATION );
+#else
             int ret = OCPNMessageBox( NULL, _("You are trying to delete an active AIS MOB route, are you REALLY sure?"), _("OpenCPN Warning"), wxYES_NO );
+#endif
             if( ret == wxID_NO )
                 return;
             else

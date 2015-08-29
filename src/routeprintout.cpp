@@ -468,7 +468,11 @@ void RoutePrintSelection::OnRoutepropOkClick( wxCommandEvent& event )
             OCPNMessageBox(
                 NULL,
                 _( "There was a problem printing.\nPerhaps your current printer is not set correctly?" ),
+#ifdef __WXOSX__
+                _T( "OpenCPN" ), wxOK | wxICON_INFORMATION );           
+#else
                 _T( "OpenCPN" ), wxOK );
+#endif
         }
     }
 

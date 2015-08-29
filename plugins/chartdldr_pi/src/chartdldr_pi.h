@@ -183,13 +183,13 @@ protected:
 	void            DownloadCharts( wxCommandEvent& event );
 	void            DoHelp( wxCommandEvent& event )
       {
-          #ifdef __WXMSW__
+#ifdef __WXMSW__
           wxLaunchDefaultBrowser( _T("file:///") + *GetpSharedDataLocation() + _T("plugins/chartdldr_pi/data/doc/index.html") );
-          #elif defined __WXOSX__
-          wxMessageBox("Siehe Mac OS X Menüleiste: OpenCPN-Hilfe");
-          #else
+#elif defined __WXOSX__
+          wxMessageBox(_("Siehe Mac OS X Menüleiste: OpenCPN-Hilfe"), _("Information"), wxOK | wxICON_INFORMATION);
+#else
           wxLaunchDefaultBrowser( _T("file://") + *GetpSharedDataLocation() + _T("plugins/chartdldr_pi/data/doc/index.html") ); 
-          #endif
+#endif
       }
     void            UpdateAllCharts( wxCommandEvent& event );
 	void            OnShowLocalDir( wxCommandEvent& event );

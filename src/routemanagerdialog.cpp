@@ -1147,8 +1147,11 @@ void RouteManagerDialog::ZoomtoRoute( Route *route )
 void RouteManagerDialog::OnRteDeleteClick( wxCommandEvent &event )
 {
     RouteList list;
-
+#ifdef __WXOSX__
+    int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION );
+#else
     int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO );
+#endif
     if ( answer != wxID_YES )
         return;
 
@@ -1196,9 +1199,13 @@ void RouteManagerDialog::OnRteDeleteClick( wxCommandEvent &event )
 
 void RouteManagerDialog::OnRteDeleteAllClick( wxCommandEvent &event )
 {
+#ifdef __WXOSX__
+    int dialog_ret = OCPNMessageBox( this, _("Are you sure you want to delete <ALL> routes?"),
+                                    wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION );
+#else
     int dialog_ret = OCPNMessageBox( this, _("Are you sure you want to delete <ALL> routes?"),
             wxString( _("OpenCPN Alert") ), wxYES_NO );
-
+#endif
     if( dialog_ret == wxID_YES ) {
         if( g_pRouteMan->GetpActiveRoute() ) g_pRouteMan->DeactivateRoute();
 
@@ -1292,9 +1299,13 @@ void RouteManagerDialog::OnRteReverseClick( wxCommandEvent &event )
 
     if( !route ) return;
     if( route->m_bIsInLayer ) return;
-
+#ifdef __WXOSX__
+    int ask_return = OCPNMessageBox( this, g_pRouteMan->GetRouteReverseMessage(), _("Rename Waypoints?"),
+                                    wxYES_NO | wxCANCEL | wxICON_QUESTION );
+#else
     int ask_return = OCPNMessageBox( this, g_pRouteMan->GetRouteReverseMessage(), _("Rename Waypoints?"),
             wxYES_NO | wxCANCEL );
+#endif
     if( ask_return != wxID_CANCEL ) {
         bool rename = ( ask_return == wxID_YES );
 
@@ -1394,7 +1405,11 @@ void RouteManagerDialog::OnRteToggleVisibility( wxMouseEvent &event )
         bool has_shared_wpts = g_pRouteMan->DoesRouteContainSharedPoints(route);
         
         if( has_shared_wpts && route->IsVisible() ) {
+#ifdef __WXOX__
+            wpts_set_viz = OCPNMessageBox(  this, _("Do you also want to make the shared waypoints being part of this route invisible?"), _("Question"), wxYES_NO | wxICON_QUESTION );
+#else
             wpts_set_viz = OCPNMessageBox(  this, _("Do you also want to make the shared waypoints being part of this route invisible?"), _("Question"), wxYES_NO );
+#endif
             togglesharedwpts = (wpts_set_viz == wxID_YES);
         }
         route->SetVisible( !route->IsVisible(), togglesharedwpts );
@@ -1844,8 +1859,11 @@ void RouteManagerDialog::OnTrkPropertiesClick( wxCommandEvent &event )
 void RouteManagerDialog::OnTrkDeleteClick( wxCommandEvent &event )
 {
     RouteList list;
-
+#ifdef __WXOSX__
+    int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION);
+#else
     int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO );
+#endif
     if ( answer != wxID_YES )
         return;
 
@@ -1952,9 +1970,13 @@ void RouteManagerDialog::OnTrkRouteFromTrackClick( wxCommandEvent &event )
 
 void RouteManagerDialog::OnTrkDeleteAllClick( wxCommandEvent &event )
 {
+#ifdef __WXOSX__
+    int dialog_ret = OCPNMessageBox( this, _("Are you sure you want to delete <ALL> tracks?"),
+                                    wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION );
+#else
     int dialog_ret = OCPNMessageBox( this, _("Are you sure you want to delete <ALL> tracks?"),
             wxString( _("OpenCPN Alert") ), wxYES_NO );
-
+#endif
     if( dialog_ret == wxID_YES ) {
         g_pRouteMan->DeleteAllTracks();
     }
@@ -2234,8 +2256,11 @@ void RouteManagerDialog::OnWptZoomtoClick( wxCommandEvent &event )
 void RouteManagerDialog::OnWptDeleteClick( wxCommandEvent &event )
 {
     RoutePointList list;
-
+#ifdef __WXOSX__
+    int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION );
+#else
     int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO );
+#endif
     if ( answer != wxID_YES )
         return;
 
@@ -2268,8 +2293,13 @@ void RouteManagerDialog::OnWptDeleteClick( wxCommandEvent &event )
 
                 if ( wp->m_bIsInRoute || wp->m_bIsInTrack )
                 {
+#ifdef __WXOSX__
+                    if ( wxID_YES == OCPNMessageBox(this,  _( "The waypoint you want to delete is used in a route, do you really want to delete it?" ), _( "OpenCPN Alert" ), wxYES_NO | wxICON_EXCLAMATION ))
+                        pWayPointMan->DestroyWaypoint( wp );
+#else
                     if ( wxID_YES == OCPNMessageBox(this,  _( "The waypoint you want to delete is used in a route, do you really want to delete it?" ), _( "OpenCPN Alert" ), wxYES_NO ))
                             pWayPointMan->DestroyWaypoint( wp );
+#endif
                 }
                 else
                     pWayPointMan->DestroyWaypoint( wp );
@@ -2400,7 +2430,11 @@ void RouteManagerDialog::OnWptDeleteAllClick( wxCommandEvent &event )
         buttons = wxYES_NO | wxCANCEL;
         type = 2;
     }
+#ifdef __WXOSX__
+    int answer = OCPNMessageBox( this, prompt, wxString( _("OpenCPN Alert") ), buttons | wxICON_QUESTION );
+#else
     int answer = OCPNMessageBox( this, prompt, wxString( _("OpenCPN Alert") ), buttons );
+#endif
     if ( answer == wxID_YES )
         pWayPointMan->DeleteAllWaypoints( true );
     if ( answer == wxID_NO && type == 2 )
@@ -2534,7 +2568,11 @@ void RouteManagerDialog::OnLayDeleteClick( wxCommandEvent &event )
     if( !layer ) return;
 
     wxString prompt = _("Are you sure you want to delete this layer and <ALL> of its contents?");
+#ifdef __WXOSX__
+    int answer = OCPNMessageBox( this, prompt, wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION );
+#else
     int answer = OCPNMessageBox( this, prompt, wxString( _("OpenCPN Alert") ), wxYES_NO );
+#endif
     if ( answer == wxID_NO )
         return;
     

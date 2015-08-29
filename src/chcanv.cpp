@@ -1579,7 +1579,7 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
 
             }
             
-#ifdef __WXMAC__
+#ifdef __WXOSX__
             if(g_benable_rotate){
                 switch( key_char ) {
                     
@@ -1829,7 +1829,7 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
         }           // switch
     }
 
-#ifndef __WXMAC__
+#ifndef __WXOSX__
     // Allow OnKeyChar to catch the key events too.
     // On OS X this is unnecessary since we handle all key events here.
     if(!b_handled)
@@ -2975,6 +2975,24 @@ void ChartCanvas::UpdateCanvasOnGroupChange( void )
     }
 }
 
+bool ChartCanvas::SetViewPointByCorners( double latSW, double lonSW, double latNE, double lonNE )
+{
+    // Center Point
+    double latc = (latSW + latNE)/2.0;
+    double lonc = (lonSW + lonNE)/2.0;
+
+    // Get scale in ppm (latitude)
+    double ne_easting, ne_northing;
+    toSM( latNE, lonNE, latc, lonc, &ne_easting, &ne_northing );
+
+    double sw_easting, sw_northing;
+    toSM( latSW, lonSW, latc, lonc, &sw_easting, &sw_northing );
+
+    double scale_ppm = VPoint.pix_height / fabs(ne_northing - sw_northing);
+
+    return SetViewPoint( latc, lonc, scale_ppm, VPoint.skew, VPoint.rotation );
+}
+
 bool ChartCanvas::SetVPScale( double scale, bool refresh )
 {
     return SetViewPoint( VPoint.clat, VPoint.clon, scale, VPoint.skew, VPoint.rotation, true, refresh );
@@ -3083,8 +3101,27 @@ bool ChartCanvas::SetViewPoint( double lat, double lon, double scale_ppm, double
                 current_ref_stack_index = m_pQuilt->GetRefChartdbIndex();
             }
 
+            //We might need a new Reference Chart
+            bool b_needNewRef = false;
+
             //    If the new stack does not contain the current ref chart....
-            if( ( -1 == current_ref_stack_index ) && ( m_pQuilt->GetRefChartdbIndex() >= 0 ) ) {
+            if( ( -1 == current_ref_stack_index ) && ( m_pQuilt->GetRefChartdbIndex() >= 0 ) )
+                b_needNewRef = true;
+
+            // Would the current Ref Chart be excessively underzoomed?
+            bool renderable = true;
+            ChartBase* referenceChart = ChartData->OpenChartFromDB( m_pQuilt->GetRefChartdbIndex(), FULL_INIT );
+            if( referenceChart ) {
+                double chartMaxScale = referenceChart->GetNormalScaleMax( cc1->GetCanvasScaleFactor(), cc1->GetCanvasWidth() );
+                renderable = chartMaxScale*1.5 > VPoint.chart_scale;
+            }
+            if( !renderable )
+                b_needNewRef = true;
+
+
+
+            //    Need new refchart?
+            if( b_needNewRef ) {
                 const ChartTableEntry &cte_ref = ChartData->GetChartTableEntry(
                                                      m_pQuilt->GetRefChartdbIndex() );
                 int target_scale = cte_ref.GetScale();
@@ -3101,7 +3138,18 @@ bool ChartCanvas::SetViewPoint( double lat, double lon, double scale_ppm, double
                     int candidate_scale = cte_candidate.GetScale();
                     int candidate_type = cte_candidate.GetChartType();
 
-                    if( ( candidate_scale >= target_scale ) && ( candidate_type == target_type ) ) break;
+                    if( ( candidate_scale >= target_scale ) && ( candidate_type == target_type ) ){
+                        bool renderable = true;
+                        ChartBase* tentative_referenceChart = ChartData->OpenChartFromDB( pCurrentStack->GetDBIndex( candidate_stack_index ),
+                                                                                         FULL_INIT );
+                        if( tentative_referenceChart ) {
+                            double chartMaxScale = tentative_referenceChart->GetNormalScaleMax( cc1->GetCanvasScaleFactor(), cc1->GetCanvasWidth() );
+                            renderable = chartMaxScale*1.5 > VPoint.chart_scale;
+                        }
+                        
+                        if(renderable)
+                            break;
+                    }
 
                     candidate_stack_index++;
                 }
@@ -3139,13 +3187,6 @@ bool ChartCanvas::SetViewPoint( double lat, double lon, double scale_ppm, double
 
             // Always keep the default Mercator projection if the reference chart is
             // not in the PatchList or the scale is too small for it to render.
-
-            bool renderable = true;
-            ChartBase* referenceChart = ChartData->OpenChartFromDB( ref_db_index, FULL_INIT );
-            if( referenceChart ) {
-                double chartMaxScale = referenceChart->GetNormalScaleMax( cc1->GetCanvasScaleFactor(), cc1->GetCanvasWidth() );
-                renderable = chartMaxScale*1.5 > VPoint.chart_scale;
-            }
 
             VPoint.b_MercatorProjectionOverride = ( m_pQuilt->GetnCharts() == 0 || !renderable );
 
@@ -5038,9 +5079,11 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                             << _("Would you like include the Great Circle routing points for this leg?");
 
                             m_disable_edge_pan = true;  // This helps on OS X if MessageBox does not fully capture mouse
-
+#ifdef __WXOSX__
+                            int answer = OCPNMessageBox( this, msg, _("OpenCPN Route Create"), wxYES_NO | wxNO_DEFAULT| wxICON_QUESTION );
+#else
                             int answer = OCPNMessageBox( this, msg, _("OpenCPN Route Create"), wxYES_NO | wxNO_DEFAULT );
-
+#endif
                             m_disable_edge_pan = false;
 
                             if( answer == wxID_YES ) {
@@ -5814,8 +5857,8 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
         last_drag.y = my;
 
         if(g_btouch ){
-            if( m_pRoutePointEditTarget )
-                return false;
+//            if( m_pRoutePointEditTarget )
+//                return false;
         }
 
         ret = true;
@@ -5830,7 +5873,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
             slat = m_cursor_lat;
             slon = m_cursor_lon;
 
-#if defined(__WXMAC__) || defined(__OCPN__ANDROID__)
+#if defined(__WXOSX__) || defined(__OCPN__ANDROID__)
             wxScreenDC sdc;
             ocpnDC dc( sdc );
 #else
@@ -6703,9 +6746,11 @@ void ChartCanvas::MouseEvent( wxMouseEvent& event )
                                 << _("Would you like include the Great Circle routing points for this leg?");
                                 
                             m_disable_edge_pan = true;  // This helps on OS X if MessageBox does not fully capture mouse
-
+#ifdef __WXOSX__
+                            int answer = OCPNMessageBox( this, msg, _("OpenCPN Route Create"), wxYES_NO | wxNO_DEFAULT| wxICON_QUESTION );
+#else
                             int answer = OCPNMessageBox( this, msg, _("OpenCPN Route Create"), wxYES_NO | wxNO_DEFAULT );
-
+#endif
                             m_disable_edge_pan = false;
                             
                             if( answer == wxID_YES ) {
@@ -7503,7 +7548,7 @@ void ChartCanvas::MouseEvent( wxMouseEvent& event )
             slat = m_cursor_lat;
             slon = m_cursor_lon;
 
-#if defined(__WXMAC__) || defined(__OCPN__ANDROID__)
+#if defined(__WXOSX__) || defined(__OCPN__ANDROID__)
             wxScreenDC sdc;
             ocpnDC dc( sdc );
 #else
@@ -8168,7 +8213,11 @@ void pupHandler_PasteWaypoint() {
         wxString msg;
         msg << _("There is an existing waypoint at the same location as the one you are pasting. Would you like to merge the pasted data with it?\n\n");
         msg << _("Answering 'No' will create a new waypoint at the same location.");
+#ifdef __WXOSX__
+        answer = OCPNMessageBox( cc1, msg, _("Merge waypoint?"), (long) wxYES_NO | wxCANCEL | wxNO_DEFAULT| wxICON_QUESTION );
+#else
         answer = OCPNMessageBox( cc1, msg, _("Merge waypoint?"), (long) wxYES_NO | wxCANCEL | wxNO_DEFAULT );
+#endif
     }
 
     if( answer == wxID_YES ) {
@@ -8232,8 +8281,11 @@ void pupHandler_PasteRoute() {
         wxString msg;
         msg << _("There are existing waypoints at the same location as some of the ones you are pasting. Would you like to just merge the pasted data into them?\n\n");
         msg << _("Answering 'No' will create all new waypoints for this route.");
+#ifdef __WXOSX__
+        answer = OCPNMessageBox( cc1, msg, _("Merge waypoints?"), (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT| wxICON_QUESTION );
+#else
         answer = OCPNMessageBox( cc1, msg, _("Merge waypoints?"), (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
-
+#endif
         if( answer == wxID_CANCEL ) {
             delete kml;
             return;
@@ -8759,7 +8811,7 @@ void RenderExtraRouteLegInfo( ocpnDC &dc, wxPoint ref_point, wxString s )
     int w, h;
     int xp, yp;
     int hilite_offset = 3;
-#ifdef __WXMAC__
+#ifdef __WXOSX__
     wxScreenDC sdc;
     sdc.GetTextExtent(s, &w, &h, NULL, NULL, dFont);
 #else
@@ -8861,7 +8913,7 @@ void ChartCanvas::RenderRouteLegs( ocpnDC &dc )
         int w, h;
         int xp, yp;
         int hilite_offset = 3;
-#ifdef __WXMAC__
+#ifdef __WXOSX__
         wxScreenDC sdc;
         sdc.GetTextExtent(routeInfo, &w, &h, NULL, NULL, dFont);
 #else
@@ -8945,7 +8997,7 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
 
     long height = GetVP().pix_height;
     
-#ifdef __WXMAC__
+#ifdef __WXOSX__
     //On OS X we have to explicitly extend the region for the piano area
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
     if(!style->chartStatusWindowTransparent && g_bShowChartBar)

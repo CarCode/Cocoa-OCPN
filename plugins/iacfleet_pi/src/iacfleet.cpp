@@ -625,7 +625,7 @@ void IACFleetUIDialog::updateIACFleet( void )
             }
         }
         else if( !m_timer->IsRunning() ) //Show error just if we are not running the animation
-            wxMessageBox( wxString::Format(_("Error opening: %s"), m_currentFileName.c_str()), _T("IACFleet") );
+            wxMessageBox( wxString::Format(_("Error opening: %s"), m_currentFileName.c_str()), _T("IACFleet"), wxOK | wxICON_HAND );
         if( !ok )
         {
             Invalidate();
@@ -666,12 +666,12 @@ void IACFleetUIDialog::OnBrDownload( wxCommandEvent& event )
     if( dt > wxDateTime::Now())
 #endif
     {
-        wxMessageBox(_("Sorry, you can't download data from the future - they don't exist..."));
+        wxMessageBox(_("Sorry, you can't download data from the future - they don't exist..."), _(""), wxOK | wxICON_HAND );
         return;
     }
     else if( dt < wxDateTime( 1, 9, 2006 ) )
     {
-        wxMessageBox(_("Sorry, the data is not available before September 1, 2006..."));
+        wxMessageBox(_("Sorry, the data is not available before September 1, 2006..."), _(""), wxOK | wxICON_HAND );
         return;
     }
     

@@ -36,7 +36,6 @@
 #include "LogbookDialog.h"
 #include "LogbookOptions.h"
 #include "Options.h"
-#include "MessageBoxOSX.h"
 #include "wx/stdpaths.h"
 #include <wx/timer.h> 
 #include <wx/event.h> 
@@ -1568,11 +1567,7 @@ void logbookkonni_pi::loadLayouts(wxWindow *parent)
 		}
 	wxString ok = wxString::Format(_("Layouts %sinstalled at\n\n%s\n%s\n%s\n%s"),
 				       (!ret)?n.c_str():wxEmptyString,data.c_str(),data1.c_str(),data2.c_str(),data3.c_str());
-#ifdef __WXOSX__
-        MessageBoxOSX(this->m_plogbook_window,ok,_T("Information"),wxID_OK);
-#else
-		wxMessageBox(ok);
-#endif
+		wxMessageBox(ok,_(""),wxOK | wxICON_INFORMATION);
 	}
 	if(opt->firstTime)
 		loadLanguages(parent);
@@ -1678,9 +1673,9 @@ void logbookkonni_pi::loadLanguages(wxWindow *parent)
 		else
 			s = wxString::Format(_("Languages not installed at\n\n%s\n\nClick Help Options/Behavoir in the image the button 'Install Languages'"),languagePath.c_str());
 #ifdef __WXOSX__
-        MessageBoxOSX(m_plogbook_window,s,_T("Information"),wxID_OK);
+        wxMessageBox(s,_("Information"),wxOK | wxICON_INFORMATION);
 #elif defined __WXGTK__
-		wxMessageBox(s);
+		wxMessageBox(s,_("Information"),wxOK | wxICON_INFORMATION);
 #elif defined __WXMSW__
 		s = wxString::Format(_("Tried to install Languages at\n\n%s\n\nOn Windows Vista/7/8 you need administrator rights.\nIf no languages installed please restart OpenCPN as admin.\n(Rightclick on the icon and select \"Run as administrator\")\n\nAfter installation restart as normal user.\n\nThe dialog 'Logbook Preferences' is closed now."),languagePath.c_str());
 		wxMessageBox(s);

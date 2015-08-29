@@ -3755,8 +3755,11 @@ void MyFrame::SetGroupIndex( int index )
         wxString msg( _("Group \"") );
         msg += GetGroupName( old_group_index );
         msg += _("\" is empty, switching to \"All Active Charts\" group.");
-
+#ifdef __WXOSX__
+        OCPNMessageBox( this, msg, _("OpenCPN Group Notice"), wxOK| wxICON_INFORMATION );
+#else
         OCPNMessageBox( this, msg, _("OpenCPN Group Notice"), wxOK );
+#endif
     }
 }
 
@@ -4127,6 +4130,11 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             break;
         }
 
+        case ID_CMD_SETVP:{
+            setStringVP(event.GetString());
+            break;
+        }
+
         default: {
             //        Look for PlugIn tools
             //        If found, make the callback.
@@ -4152,6 +4160,29 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
         }
 
     }         // switch
+
+}
+
+void MyFrame::setStringVP(wxString VPS)
+{
+    if(!cc1)
+        return;
+
+    wxStringTokenizer tkz(VPS, _T(";"));
+
+    wxString token = tkz.GetNextToken();
+    double lat = gLat;
+    token.ToDouble(&lat);
+
+    token = tkz.GetNextToken();
+    double lon = gLon;
+    token.ToDouble(&lon);
+
+    token = tkz.GetNextToken();
+    double scale_ppm = cc1->GetVP().view_scale_ppm;
+    token.ToDouble(&scale_ppm);
+
+    cc1->SetViewPoint( lat, lon, scale_ppm, 0, cc1->GetVPRotation() );
 
 }
 
@@ -5165,6 +5196,8 @@ int MyFrame::DoOptionsDialog()
     }
 #endif
 
+    if(console && console->IsShown())
+        console->Raise();
 
     Refresh( false );
 
@@ -8090,7 +8123,11 @@ void MyFrame::DoPrint( void )
     if( !printer.Print( this, &printout, true ) ) {
         if( wxPrinter::GetLastError() == wxPRINTER_ERROR ) OCPNMessageBox(NULL,
                 _("There was a problem printing.\nPerhaps your current printer is not set correctly?"),
+#ifdef __WXOSX__
+                _T("OpenCPN"), wxOK| wxICON_EXCLAMATION );
+#else
                 _T("OpenCPN"), wxOK );
+#endif
 //        else
 //            OCPNMessageBox(_T("Print Cancelled"), _T("OpenCPN"), wxOK);
     } else {

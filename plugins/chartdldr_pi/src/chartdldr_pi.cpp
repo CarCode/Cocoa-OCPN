@@ -580,7 +580,7 @@ void ChartDldrPanelImpl::AppendCatalog( ChartSource *cs )
     wxURI url(cs->GetUrl());
     if( url.IsReference() )
     {
-        wxMessageBox(_("Error, the URL to the chart source data seems wrong."), _("Error"));
+        wxMessageBox(_("Error, the URL to the chart source data seems wrong."), _("Error"), wxOK | wxICON_HAND);
         return;
     }
     wxFileName fn(url.GetPath());
@@ -654,7 +654,7 @@ void ChartDldrPanelImpl::UpdateChartList( wxCommandEvent& event )
     wxURI url(cs->GetUrl());
     if( url.IsReference() )
     {
-        wxMessageBox(_("Error, the URL to the chart source data seems wrong."), _("Error"));
+        wxMessageBox(_("Error, the URL to the chart source data seems wrong."), _("Error"), wxOK | wxICON_HAND);
         return;
     }
 
@@ -672,7 +672,7 @@ void ChartDldrPanelImpl::UpdateChartList( wxCommandEvent& event )
     {
         if( !wxFileName::Mkdir(cs->GetDir(), 0755, wxPATH_MKDIR_FULL) )
         {
-            wxMessageBox(wxString::Format(_("Directory %s can't be created."), cs->GetDir().c_str()), _("Chart Downloader"));
+            wxMessageBox(wxString::Format(_("Directory %s can't be created."), cs->GetDir().c_str()), _("Chart Downloader"), wxOK | wxICON_HAND);
             return;
         }
     }
@@ -849,13 +849,13 @@ void ChartDldrPanelImpl::DownloadCharts( wxCommandEvent& event )
     cancelled = false;
     if( !m_lbChartSources->GetSelectedItemCount() && !updatingAll )
     {
-        wxMessageBox(_("No charts selected for download."));
+        wxMessageBox(_("No charts selected for download."), _(""), wxOK | wxICON_HAND);
         return;
     }
     ChartSource *cs = pPlugIn->m_chartSources->Item(GetSelectedCatalog());
     if( m_clCharts->GetCheckedItemCount() == 0 && !updatingAll )
     {
-        wxMessageBox(_("No charts selected for download."));
+        wxMessageBox(_("No charts selected for download."), _(""), wxOK | wxICON_HAND);
         return;
     }
     to_download = m_clCharts->GetCheckedItemCount();
@@ -881,7 +881,7 @@ After downloading the charts, please extract them to %s"), pPlugIn->m_pChartCata
                 wxURI url(pPlugIn->m_pChartCatalog->charts->Item(i).GetDownloadLocation());
                 if( url.IsReference() )
                 {
-                    wxMessageBox(wxString::Format(_("Error, the URL to the chart (%s) data seems wrong."), url.BuildURI().c_str()), _("Error"));
+                    wxMessageBox(wxString::Format(_("Error, the URL to the chart (%s) data seems wrong."), url.BuildURI().c_str()), _("Error"), wxOK | wxICON_HAND);
                     this->Enable();
                     return;
                 }
@@ -967,7 +967,7 @@ void ChartDldrPanelImpl::DeleteSource( wxCommandEvent& event )
     if( !m_lbChartSources->GetSelectedItemCount() )
         return;
     if( wxYES != wxMessageBox(_("Do you really want to remove the chart source?\nThe local chart files will not be removed, but you will not be able to update the charts anymore."),
-                                 _("Chart Downloader"), wxYES_NO | wxCENTRE, this) )
+                                 _("Chart Downloader"), wxYES_NO | wxCENTRE | wxICON_EXCLAMATION, this) )
         return;
 	int ToBeRemoved = GetSelectedCatalog();
 	m_lbChartSources->SetItemState(ToBeRemoved,  0, wxLIST_STATE_SELECTED|wxLIST_STATE_FOCUSED);
@@ -1001,7 +1001,7 @@ void ChartDldrPanelImpl::AddSource( wxCommandEvent& event )
         }
         if( !covered )
             wxMessageBox( wxString::Format(_("Path %s seems not to be covered by your configured Chart Directories.\nTo see the charts you have to adjust the configuration on the 'Chart Files' tab."), cs->GetDir().c_str()),
-                         _("Chart Downloader") );
+                         _("Chart Downloader"), wxOK | wxICON_EXCLAMATION );
         SelectCatalog(m_lbChartSources->GetItemCount() - 1);
         pPlugIn->SaveConfig();
     }
@@ -1053,8 +1053,7 @@ void ChartDldrPanelImpl::DoEditSource()
             }
         }
         if( !covered )
-            wxMessageBox( wxString::Format(_("Path %s seems not to be covered by your configured Chart Directories.\nTo see the charts you have to adjust the configuration on the 'Chart Files' tab."), pPlugIn->m_chartSources->Item(cat)->GetDir().c_str()),
-                         _("Chart Downloader") );
+            wxMessageBox( wxString::Format(_("Path %s seems not to be covered by your configured Chart Directories.\nTo see the charts you have to adjust the configuration on the 'Chart Files' tab."), pPlugIn->m_chartSources->Item(cat)->GetDir().c_str()), _("Chart Downloader"), wxOK | wxICON_EXCLAMATION );
 
         pPlugIn->SaveConfig();
         SetSource(cat);
@@ -1579,7 +1578,7 @@ void ChartDldrPrefsDlgImpl::OnOkClick( wxCommandEvent& event )
     if( !wxDirExists(m_dpDefaultDir->GetTextCtrlValue()) )
         if( !wxFileName::Mkdir(m_dpDefaultDir->GetTextCtrlValue(), 0755, wxPATH_MKDIR_FULL) )
         {
-            wxMessageBox(wxString::Format(_("Directory %s can't be created."), m_dpDefaultDir->GetTextCtrlValue().c_str()), _("Chart Downloader"));
+            wxMessageBox(wxString::Format(_("Directory %s can't be created."), m_dpDefaultDir->GetTextCtrlValue().c_str()), _("Chart Downloader"), wxOK | wxICON_EXCLAMATION);
             return;
         }
     event.Skip();

@@ -1020,9 +1020,13 @@ void RouteProp::OnRoutePropMenuSelected( wxCommandEvent& event )
             break;
         }
         case ID_RCLK_MENU_DELETE: {
+#ifdef __WXOSX__
+            int dlg_return = OCPNMessageBox( this, _("Are you sure you want to remove this waypoint?"),
+                                            _("OpenCPN Remove Waypoint"), (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT | wxICON_QUESTION );
+#else
             int dlg_return = OCPNMessageBox( this, _("Are you sure you want to remove this waypoint?"),
                     _("OpenCPN Remove Waypoint"), (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
-
+#endif
             if( dlg_return == wxID_YES ) {
                 long item = -1;
                 item = m_wpList->GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
