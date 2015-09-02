@@ -79,7 +79,7 @@ enum {
     ID_DBP_D_MON, ID_DBP_I_ATMP, ID_DBP_I_AWA, ID_DBP_I_TWA, ID_DBP_I_TWD, ID_DBP_I_TWS,
     ID_DBP_D_TWD, ID_DBP_I_HDM, ID_DBP_D_HDT, ID_DBP_D_WDH, ID_DBP_I_VLW1, ID_DBP_I_VLW2,
     ID_DBP_D_MDA, ID_DBP_I_MDA,ID_DBP_D_BPH, ID_DBP_I_FOS, ID_DBP_M_COG, ID_DBP_I_PITCH, ID_DBP_I_HEEL,
-    ID_DBP_LAST_ENTRY //this has a reference in one of the routines; defining a "LAST_ENTRY" and setting the reference to it, is one codeline less to change (and find) when adding new instruments :-)
+    ID_DBP_I_SATU, ID_DBP_LAST_ENTRY //this has a reference in one of the routines; defining a "LAST_ENTRY" and setting the reference to it, is one codeline less to change (and find) when adding new instruments :-)
 };
 
 bool IsObsolete( int id ) {
@@ -177,6 +177,8 @@ wxString getInstrumentCaption( unsigned int id )
             return _("Pitch");
         case ID_DBP_I_HEEL:
             return _("Heel");
+        case ID_DBP_I_SATU:
+            return _("GPS in Use");
     }
     return _T("");
 }
@@ -205,6 +207,7 @@ void getListItemForInstrument( wxListItem &item, unsigned int id )
         case ID_DBP_I_VMG:
         case ID_DBP_I_RSA:
         case ID_DBP_I_SAT:
+        case ID_DBP_I_SATU:
         case ID_DBP_I_PTR:
         case ID_DBP_I_CLK:
         case ID_DBP_I_SUN:
@@ -1107,9 +1110,12 @@ void dashboard_pi::SetPositionFix( PlugIn_Position_Fix &pfix )
         mUTCDateTime.Set( pfix.FixTime );
         mUTCDateTime = mUTCDateTime.ToUTC();
     }
+#ifndef __WXOSX__
     mSatsInView = pfix.nSats;
-//    SendSentenceToAllInstruments( OCPN_DBP_STC_SAT, mSatsInView, _T("") );
-
+#else
+    mSatsInView = m_NMEA0183.Gga.NumberOfSatellitesInUse;
+    SendSentenceToAllInstruments( OCPN_DBP_STC_SATU, mSatsInView, _T("") );
+#endif
 }
 
 void dashboard_pi::SetCursorLatLon( double lat, double lon )
@@ -2375,15 +2381,19 @@ void DashboardWindow::SetInstrumentList( wxArrayInt list )
                 break;
             case ID_DBP_I_FOS:
                 instrument = new DashboardInstrument_FromOwnship( this, wxID_ANY,
-                                                                 getInstrumentCaption( id ) );
+                        getInstrumentCaption( id ) );
                 break;
             case ID_DBP_I_PITCH:
                 instrument = new DashboardInstrument_Single(this, wxID_ANY,
-                                                            getInstrumentCaption(id), OCPN_DBP_STC_PITCH, _T("%2.1f"));
+                        getInstrumentCaption(id), OCPN_DBP_STC_PITCH, _T("%2.1f"));
                 break;
             case ID_DBP_I_HEEL:
                 instrument = new DashboardInstrument_Single(this, wxID_ANY,
-                                                            getInstrumentCaption(id), OCPN_DBP_STC_HEEL, _T("%2.1f"));
+                        getInstrumentCaption(id), OCPN_DBP_STC_HEEL, _T("%2.1f"));
+                break;
+            case ID_DBP_I_SATU:
+                instrument = new DashboardInstrument_Single( this, wxID_ANY,
+                        getInstrumentCaption( id ), OCPN_DBP_STC_SATU, _T("%5.0f") );
         }
         if( instrument ) {
             instrument->instrumentTypeId = id;
