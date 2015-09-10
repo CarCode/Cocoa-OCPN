@@ -62,6 +62,7 @@
 ../include/OCPNRegion.h
 ../include/OCPNSoundData.h
 ../include/options.h
+../include/Osenc.h
 ../include/osx_helpers.h
 ../include/pluginmanager.h
 ../include/PositionParser.h
@@ -312,6 +313,7 @@
 ../src/OCPNRegion.cpp
 ../src/OCPNSoundData.cpp
 ../src/options.cpp
+../src/Osenc.cpp
 ../src/osx_helpers.mm
 ../src/pluginmanager.cpp
 ../src/PositionParser.cpp

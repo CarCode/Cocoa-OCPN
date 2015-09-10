@@ -6271,7 +6271,7 @@ void cm93compchart::SetColorScheme(ColorScheme cs, bool bApplyImmediate)
       }
 }
 
-ListOfObjRazRules *cm93compchart::GetObjRuleListAtLatLon ( float lat, float lon, float select_radius, ViewPort *VPoint )
+ListOfObjRazRules *cm93compchart::GetObjRuleListAtLatLon ( float lat, float lon, float select_radius, ViewPort *VPoint, int selection_mask )
 {
       float alon = lon;
 

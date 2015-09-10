@@ -212,9 +212,11 @@ void ODEventHandler::OnRolloverPopupTimerEvent( wxTimerEvent& event )
                     ODPoint *segShow_point_a = (ODPoint *) g_pRolloverPathSeg->m_pData1;
                     ODPoint *segShow_point_b = (ODPoint *) g_pRolloverPathSeg->m_pData2;
 
-                    double brg, dist;
+                    double brgFrom, brgTo, dist;
                     DistanceBearingMercator_Plugin( segShow_point_b->m_lat, segShow_point_b->m_lon,
-                                             segShow_point_a->m_lat, segShow_point_a->m_lon, &brg, &dist );
+                                                   segShow_point_a->m_lat, segShow_point_a->m_lon, &brgFrom, &dist );
+                    DistanceBearingMercator_Plugin( segShow_point_a->m_lat, segShow_point_a->m_lon,
+                                                   segShow_point_b->m_lat, segShow_point_b->m_lon, &brgTo, &dist );
 
                     if( !pp->m_bIsInLayer ) {
                         wxString wxsText;
@@ -239,10 +241,24 @@ void ODEventHandler::OnRolloverPopupTimerEvent( wxTimerEvent& event )
                     << _(" to ") << segShow_point_b->GetName()
                     << _T("\n");
 
-                    if( g_bShowMag )
-                        s << wxString::Format( wxString("%03d°(M)  ", wxConvUTF8 ), (int)g_ocpn_draw_pi->GetTrueOrMag( brg ) );
-                    else
-                        s << wxString::Format( wxString("%03d°  ", wxConvUTF8 ), (int)g_ocpn_draw_pi->GetTrueOrMag( brg ) );
+                    if(pp->m_sTypeString == wxT("EBL")) {
+                        s << _("From: ");
+                        if( g_bShowMag )
+                            s << wxString::Format( wxString("%03d°(M)  ", wxConvUTF8 ), (int)g_ocpn_draw_pi->GetTrueOrMag( brgFrom ) );
+                        else
+                            s << wxString::Format( wxString("%03d°  ", wxConvUTF8 ), (int)g_ocpn_draw_pi->GetTrueOrMag( brgFrom ) );
+                        s << _(" To: ");
+                        if( g_bShowMag )
+                            s << wxString::Format( wxString("%03d°(M)  ", wxConvUTF8 ), (int)g_ocpn_draw_pi->GetTrueOrMag( brgTo ) );
+                        else
+                            s << wxString::Format( wxString("%03d°  ", wxConvUTF8 ), (int)g_ocpn_draw_pi->GetTrueOrMag( brgTo ) );
+                        s << _T("\n");
+                    } else {
+                        if( g_bShowMag )
+                            s << wxString::Format( wxString("%03d°(M)  ", wxConvUTF8 ), (int)g_ocpn_draw_pi->GetTrueOrMag( brgFrom ) );
+                        else
+                            s << wxString::Format( wxString("%03d°  ", wxConvUTF8 ), (int)g_ocpn_draw_pi->GetTrueOrMag( brgFrom ) );
+                    }
 
                     s << g_ocpn_draw_pi->FormatDistanceAdaptive( dist );
 
@@ -370,7 +386,11 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
                 wxString sTypeShort = wxT("OpenCPN ");
                 sTypeShort.append( m_pSelectedPath->m_sTypeString );
                 sTypeShort.append( _(" Delete") );
+#ifdef __WXOSX__
+                dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas,  sTypeLong, sTypeShort, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT| wxICON_QUESTION );
+#else
                 dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas,  sTypeLong, sTypeShort, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
+#endif
             }
 
             if( dlg_return == wxID_YES ) {
@@ -442,8 +462,11 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
                 sMessage.append( sType );
                 sMessage.append( wxS("?") );
                 sCaption.append( sType );
-
+#ifdef __WXOSX__
+                dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas, sMessage, sCaption, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT| wxICON_QUESTION );
+#else
                 dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas, sMessage, sCaption, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
+#endif
             }
 
             if( dlg_return == wxID_YES ) {
@@ -482,8 +505,11 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
                 sMessage.append( sType );
                 sMessage.append( wxS("?") );
                 sCaption.append( sType );
-                
+#ifdef __WXOSX__
+                dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas, sMessage, sCaption, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT| wxICON_QUESTION );
+#else
                 dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas, sMessage, sCaption, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
+#endif
             }
 
             if( dlg_return == wxID_YES ) {
@@ -513,8 +539,11 @@ void ODEventHandler::PopupMenuHandler(wxCommandEvent& event )
                 sMessage.append( sType );
                 sMessage.append( wxS("?") );
                 sCaption.append( sType );
-
+#ifdef __WXOSX__
+                dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas, sMessage, sCaption, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT| wxICON_QUESTION );
+#else
                 dlg_return = OCPNMessageBox_PlugIn( m_parentcanvas, sMessage, sCaption, (long) wxYES_NO | wxCANCEL | wxYES_DEFAULT );
+#endif
             }
 
             if( dlg_return == wxID_YES ) {
@@ -560,7 +589,7 @@ void ODEventHandler::PopupMenu( int x, int y, int seltype )
     popy = y;
 
     //  This is the default context menu
-    menuFocus = contextMenu;
+//    menuFocus = contextMenu;  // See above, already done
 
     if( seltype & SELTYPE_PATHSEGMENT ) {
         bool blay = false;

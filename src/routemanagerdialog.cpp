@@ -467,10 +467,11 @@ void RouteManagerDialog::Create()
     //  Get a text height metric for reference
     int char_width, char_height;
     GetTextExtent(_T("W"), &char_width, &char_height);
-    
+    m_charWidth = char_width;
+
     wxBoxSizer* itemBoxSizer1 = new wxBoxSizer( wxVERTICAL );
     SetSizer( itemBoxSizer1 );
-    
+
     m_pNotebook = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxSize( -1, -1 ), wxNB_TOP );
 #ifdef __WXOSX__
     itemBoxSizer1->Add( m_pNotebook, 1, wxALL | wxEXPAND, 5 );
@@ -481,11 +482,11 @@ void RouteManagerDialog::Create()
     //  Create "Routes" panel
     m_pPanelRte = new wxPanel( m_pNotebook, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                wxNO_BORDER | wxTAB_TRAVERSAL);
-    
+
     wxBoxSizer *sbsRoutes = new wxBoxSizer( wxHORIZONTAL );
     m_pPanelRte->SetSizer( sbsRoutes );
     m_pNotebook->AddPage( m_pPanelRte, _("Routes") );
-    
+
     sort_wp_len_dir = 1;
     sort_wp_name_dir = 0;
     sort_track_len_dir = 1;
@@ -494,9 +495,9 @@ void RouteManagerDialog::Create()
     sort_route_name_dir = 0;
     sort_layer_name_dir = 0;
     sort_layer_len_dir = 1;
-    
+
     // Setup GUI
-    m_pRouteListCtrl = new wxListCtrl( m_pPanelRte, -1, wxDefaultPosition, wxDefaultSize,
+    m_pRouteListCtrl = new wxListCtrl( m_pPanelRte, -1, wxDefaultPosition, wxSize(-1, -1),
                                        wxLC_REPORT  | wxLC_SORT_ASCENDING | wxLC_HRULES
                                        | wxBORDER_SUNKEN/*|wxLC_VRULES*/);
 #ifdef __OCPN__ANDROID__
@@ -518,7 +519,7 @@ void RouteManagerDialog::Create()
     // Columns: visibility ctrl, name
     // note that under MSW for SetColumnWidth() to work we need to create the
     // items with images initially even if we specify dummy image id
-    m_pRouteListCtrl->InsertColumn( rmVISIBLE, _("Show"), wxLIST_FORMAT_LEFT, 4 * char_width );
+    m_pRouteListCtrl->InsertColumn( rmVISIBLE, _("Show"), wxLIST_FORMAT_LEFT, 10 /*4 * char_width*/ );
     m_pRouteListCtrl->InsertColumn( rmROUTENAME, _("Route Name"), wxLIST_FORMAT_LEFT, 15 * char_width );
     m_pRouteListCtrl->InsertColumn( rmROUTEDESC, _("From <-> To"), wxLIST_FORMAT_LEFT, 10 * char_width );
     
@@ -1019,6 +1020,7 @@ void RouteManagerDialog::UpdateRouteListCtrl()
         li.SetImage( ( *it )->IsVisible() ? 0 : 1 );
         li.SetData( index );
         li.SetText( _T("") );
+        li.SetAlign(wxLIST_FORMAT_LEFT);
 
         if( ( *it )->m_bRtIsActive ) {
             wxFont font = *wxNORMAL_FONT;
@@ -1027,19 +1029,32 @@ void RouteManagerDialog::UpdateRouteListCtrl()
         }
 
         long idx = m_pRouteListCtrl->InsertItem( li );
-        list_index++;
 
         wxString name = ( *it )->m_RouteNameString;
         if( name.IsEmpty() ) name = _("(Unnamed Route)");
         m_pRouteListCtrl->SetItem( idx, rmROUTENAME, name );
 
         wxString startend = ( *it )->m_RouteStartString;
-        if( !( *it )->m_RouteEndString.IsEmpty() ) startend.append(
-                _(" - ") + ( *it )->m_RouteEndString );
+        if( !( *it )->m_RouteEndString.IsEmpty() )
+            startend.append(_(" - ") + ( *it )->m_RouteEndString );
         m_pRouteListCtrl->SetItem( idx, rmROUTEDESC, startend );
+
+        wxListItem lic;
+        lic.SetId( list_index );
+        lic.SetColumn(1);
+        lic.SetAlign(wxLIST_FORMAT_LEFT);
+        m_pRouteListCtrl->SetItem( lic );
+        
+        lic.SetColumn(2);
+        lic.SetAlign(wxLIST_FORMAT_LEFT);
+        m_pRouteListCtrl->SetItem( lic );
+        
+        list_index++;
     }
 
     m_pRouteListCtrl->SortItems( SortRoutesOnName, (long) m_pRouteListCtrl );
+
+    m_pRouteListCtrl->SetColumnWidth(0, 4 * m_charWidth);
 
     // restore selection if possible
     // NOTE this will select a different item, if one is deleted
@@ -1738,7 +1753,6 @@ void RouteManagerDialog::UpdateTrkListCtrl()
             li.SetFont( font );
         }
         long idx = m_pTrkListCtrl->InsertItem( li );
-        list_index++;
 
         wxString name = trk->m_RouteNameString;
         if( name.IsEmpty() ) {
@@ -1753,9 +1767,23 @@ void RouteManagerDialog::UpdateTrkListCtrl()
         wxString len;
         len.Printf( wxT("%5.2f"), trk->m_route_length );
         m_pTrkListCtrl->SetItem( idx, colTRKLENGTH, len );
+
+        wxListItem lic;
+        lic.SetId( list_index );
+        lic.SetColumn(1);
+        lic.SetAlign(wxLIST_FORMAT_LEFT);
+        m_pTrkListCtrl->SetItem( lic );
+        
+        lic.SetColumn(2);
+        lic.SetAlign(wxLIST_FORMAT_LEFT);
+        m_pTrkListCtrl->SetItem( lic );
+        
+        list_index++;
+
     }
 
     m_pTrkListCtrl->SortItems( SortRoutesOnName, (long) m_pTrkListCtrl );
+    m_pTrkListCtrl->SetColumnWidth(0, 4 * m_charWidth);
 
     // restore selection if possible
     // NOTE this will select a different item, if one is deleted
@@ -2046,6 +2074,16 @@ void RouteManagerDialog::UpdateWptListCtrl( RoutePoint *rp_select, bool b_retain
 
             if( rp == rp_select ) selected_id = (long) rp_select; //index; //m_pWptListCtrl->GetItemData(item);
 
+            wxListItem lic;
+            lic.SetId( index );
+            lic.SetColumn(1);
+            lic.SetAlign(wxLIST_FORMAT_LEFT);
+            m_pWptListCtrl->SetItem( lic );
+            
+            lic.SetColumn(2);
+            lic.SetAlign(wxLIST_FORMAT_LEFT);
+            m_pWptListCtrl->SetItem( lic );
+
             index++;
         }
 
@@ -2073,6 +2111,9 @@ void RouteManagerDialog::UpdateWptListCtrl( RoutePoint *rp_select, bool b_retain
 
     if( (m_lastWptItem >= 0) && (m_pWptListCtrl->GetItemCount()) )
         m_pWptListCtrl->EnsureVisible( m_lastWptItem );
+
+    m_pWptListCtrl->SetColumnWidth(0, 4 * m_charWidth);
+
     UpdateWptButtons();
 }
 
@@ -2852,9 +2893,21 @@ void RouteManagerDialog::UpdateLayListCtrl()
         wxString len;
         len.Printf( wxT("%d"), (int) lay->m_NoOfItems );
         m_pLayListCtrl->SetItem( idx, colLAYITEMS, len );
+
+        wxListItem lic;
+        lic.SetId( index );
+        lic.SetColumn(1);
+        lic.SetAlign(wxLIST_FORMAT_LEFT);
+        m_pLayListCtrl->SetItem( lic );
+        
+        lic.SetColumn(2);
+        lic.SetAlign(wxLIST_FORMAT_LEFT);
+        m_pLayListCtrl->SetItem( lic );
+
     }
 
     m_pLayListCtrl->SortItems( SortLayersOnName, (long) m_pLayListCtrl );
+    m_pLayListCtrl->SetColumnWidth(0, 4 * m_charWidth);
 
     // restore selection if possible
     // NOTE this will select a different item, if one is deleted

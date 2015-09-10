@@ -93,10 +93,11 @@ long style = wxSIMPLE_BORDER | wxCLIP_CHILDREN;
     pThisLegText->Fit();
     m_pitemBoxSizerLeg->Add( pThisLegText, 0, wxALIGN_CENTER_HORIZONTAL, 2 );
 
-    //     pSBoxRgn = new wxRegion(pThisLegBox->GetRect() );
-
-    pThisLegFont = wxTheFontList->FindOrCreateFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD );
-
+    wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
+    
+    wxFont *pThisLegFont = wxTheFontList->FindOrCreateFont( 10, wxFONTFAMILY_DEFAULT,
+                                                           qFont->GetStyle(), wxFONTWEIGHT_BOLD, false,
+                                                           qFont->GetFaceName() );
     pThisLegText->SetFont( *pThisLegFont );
 
     pXTE = new AnnunText( this, -1, _("Console Legend"), _("Console Value") );

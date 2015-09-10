@@ -196,6 +196,7 @@ enum
     
     ID_CMD_SELECT_CHART_TYPE,
     ID_CMD_SELECT_CHART_FAMILY,
+    ID_CMD_INVALIDATE,
 
 };
 
@@ -371,7 +372,6 @@ class MyFrame: public wxFrame
     int  DoOptionsDialog();
     int  ProcessOptionsDialog(int resultFlags, ArrayOfCDI *pNewDirArray );
     void DoPrint(void);
-    void LaunchLocalHelp(void);
     void StopSockets(void);
     void ResumeSockets(void);
     void TogglebFollow(void);

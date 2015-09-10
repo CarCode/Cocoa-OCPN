@@ -631,6 +631,7 @@ int                       g_AisTargetList_count;
 bool                      g_bAisTargetList_autosort;
 
 bool                      g_bGarminHostUpload;
+bool                      g_bFullscreen;
 
 wxAuiManager              *g_pauimgr;
 wxAuiDefaultDockArt       *g_pauidockart;
@@ -2313,7 +2314,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     m_ulLastNEMATicktime = 0;
 
     m_pStatusBar = NULL;
-    m_StatusBarFieldCount = STAT_FIELD_COUNT;
+    m_StatusBarFieldCount = g_Platform->GetStatusBarFieldCount();
 
     m_pMenuBar = NULL;
     g_toolbar = NULL;
@@ -3506,6 +3507,9 @@ void MyFrame::ODoSetSize( void )
 //      Resize the children
 
     if( m_pStatusBar != NULL ) {
+        m_StatusBarFieldCount = g_Platform->GetStatusBarFieldCount();
+        m_pStatusBar->SetFieldsCount(m_StatusBarFieldCount);
+
         if(m_StatusBarFieldCount){
 
             //  If the status bar layout is "complex", meaning more than two columns,
@@ -3531,6 +3535,9 @@ void MyFrame::ODoSetSize( void )
 
             int styles[] = { wxSB_FLAT, wxSB_FLAT, wxSB_FLAT, wxSB_FLAT, wxSB_FLAT, wxSB_FLAT };
             m_pStatusBar->SetStatusStyles( m_StatusBarFieldCount, styles );
+
+            wxString sogcog( _T("SOG --- ") + getUsrSpeedUnit() + + _T("     ") + _T(" COG ---\u00B0") );
+            m_pStatusBar->SetStatusText( sogcog, STAT_FIELD_SOGCOG );
 
         }
     }
@@ -3657,7 +3664,11 @@ void MyFrame::PositionConsole( void )
 
     console->GetSize( &consx, &consy );
 
-    wxPoint screen_pos = ClientToScreen( wxPoint( ccx + ccsx - consx - 2, ccy + 45 ) );
+    int yOffset = 45;
+    if(g_Compass)
+        yOffset = g_Compass->GetRect().y + g_Compass->GetRect().height + 45;
+    
+    wxPoint screen_pos = ClientToScreen( wxPoint( ccx + ccsx - consx - 2, ccy + yOffset ) );
     console->Move( screen_pos );
 }
 
@@ -4024,7 +4035,7 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
 #ifdef __WXOSX__
             startHelp();
 #else
-            LaunchLocalHelp();
+            g_Platform->LaunchLocalHelp();
 #endif
             break;
         }
@@ -4132,6 +4143,13 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
 
         case ID_CMD_SETVP:{
             setStringVP(event.GetString());
+            break;
+        }
+
+        case ID_CMD_INVALIDATE:{
+            if(cc1)
+                cc1->InvalidateGL();
+            Refresh(true);
             break;
         }
 
@@ -4737,7 +4755,7 @@ void MyFrame::SetToolbarItemBitmaps( int tool_id, wxBitmap *bmp, wxBitmap *bmpRo
 void MyFrame::ApplyGlobalSettings( bool bFlyingUpdate, bool bnewtoolbar )
 {
     //             ShowDebugWindow as a wxStatusBar
-    m_StatusBarFieldCount = STAT_FIELD_COUNT;
+    m_StatusBarFieldCount = g_Platform->GetStatusBarFieldCount();
 
 #ifdef __WXMSW__
     UseNativeStatusBar( false );              // better for MSW, undocumented in frame.cpp
@@ -5347,32 +5365,6 @@ int MyFrame::ProcessOptionsDialog( int rr, ArrayOfCDI *pNewDirArray )
     return 0;
 }
 
-void MyFrame::LaunchLocalHelp( void ) {
-
-    wxString def_lang_canonical = _T("en_US");
-
-#if wxUSE_XLOCALE
-    if(plocale_def_lang)
-        def_lang_canonical = plocale_def_lang->GetCanonicalName();
-#endif
-
-    wxString help_locn = g_Platform->GetSharedDataDir() + _T("doc/help_");
-
-    wxString help_try = help_locn + def_lang_canonical + _T(".html");
-
-    if( ! ::wxFileExists( help_try ) ) {
-        help_try = help_locn + _T("en_US") + _T(".html");
-
-        if( ! ::wxFileExists( help_try ) ) {
-            help_try = help_locn + _T("web") + _T(".html");
-        }
-
-        if( ! ::wxFileExists( help_try ) ) return;
-    }
-
-    wxLaunchDefaultBrowser(wxString( _T("file:///") ) + help_try );
-}
-
 
 wxString MyFrame::GetGroupName( int igroup )
 {
@@ -5867,7 +5859,10 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
 {
     switch(m_iInitCount++) {
     case 0:
-        {
+    {
+        // Set persistent Fullscreen mode
+        g_Platform->SetFullscreen(g_bFullscreen);
+
         // Load the waypoints.. both of these routines are very slow to execute which is why
         // they have been to defered until here
         pWayPointMan = new WayPointman();
@@ -6375,7 +6370,7 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
 
 //      Update the Toolbar Status windows and lower status bar the first time watchdog times out
     if( ( gGPS_Watchdog == 0 ) || ( gSAT_Watchdog == 0 ) ) {
-        wxString sogcog( _T("SOG --- ") + getUsrSpeedUnit() + _T(" COG ---\u00B0") );
+        wxString sogcog( _T("SOG --- ") + getUsrSpeedUnit() + + _T("     ") + _T(" COG ---\u00B0") );
         if( GetStatusBar() ) SetStatusText( sogcog, STAT_FIELD_SOGCOG );
 
         gCog = 0.0;                                 // say speed is zero to kill ownship predictor
@@ -8918,7 +8913,7 @@ void MyFrame::PostProcessNNEA( bool pos_valid, const wxString &sfixtime )
             SetStatusText( s1, STAT_FIELD_TICK );
 
         wxString sogcog;
-        if( wxIsNaN(gSog) ) sogcog.Printf( _T("SOG --- ") + getUsrSpeedUnit() + _T("  ") );
+        if( wxIsNaN(gSog) ) sogcog.Printf( _T("SOG --- ") + getUsrSpeedUnit() + _T("     ") );
         else
             sogcog.Printf( _T("SOG %2.2f ") + getUsrSpeedUnit() + _T("  "), toUsrSpeed( gSog ) );
 
@@ -9434,6 +9429,8 @@ void MyFrame::applySettingsString( wxString settings)
             _DisCat nset = DISPLAYBASE;
             if(wxNOT_FOUND != val.Lower().Find(_T("base")))
                 nset = DISPLAYBASE;
+            else if(wxNOT_FOUND != val.Lower().Find(_T("mariner")))
+                nset = MARINERS_STANDARD;
             else if(wxNOT_FOUND != val.Lower().Find(_T("standard")))
                 nset = STANDARD;
             else if(wxNOT_FOUND != val.Lower().Find(_T("all")))

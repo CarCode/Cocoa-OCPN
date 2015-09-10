@@ -656,10 +656,10 @@ void ocpn_draw_pi::OnToolbarToolDownCallback(int id)
 
 
             //    Required if RMDialog is not STAY_ON_TOP
-            #ifdef __WXOSX__
+#ifdef __WXOSX__
             g_pPathManagerDialog->Centre();
             g_pPathManagerDialog->Raise();
-            #endif
+#endif
             nConfig_State = 0;
             //SetToolbarItemState( m_config_button_id, false );
 
@@ -875,7 +875,7 @@ void ocpn_draw_pi::LoadConfig()
         g_uiFillTransparency = l_longFillTransparency;
         pConf->Read( wxS( "DefaultBoundaryLineWidth" ), &g_BoundaryLineWidth, 2  );
         pConf->Read( wxS( "DefaultBoundaryLineStyle" ), &g_BoundaryLineStyle, wxSOLID );
-        pConf->Read( wxS( "DefaultEBLEndIcon" ), &g_sEBLEndIconName, wxS("Circle") );
+        pConf->Read( wxS( "DefaultEBLEndIcon" ), &g_sEBLEndIconName, wxS("Triangle") );
         pConf->Read( wxS( "DefaultEBLStartIcon" ), &g_sEBLStartIconName, wxS("Circle") );
         pConf->Read( wxS( "DefaultEBLLineWidth" ), &g_EBLLineWidth, 2  );
         pConf->Read( wxS( "DefaultEBLLineStyle" ), &g_EBLLineStyle, wxSOLID );
@@ -887,7 +887,7 @@ void ocpn_draw_pi::LoadConfig()
         pConf->Read( wxS( "DefaultPathLineStyle" ), &g_PathLineStyle, 100 );
         pConf->Read( wxS( "ShowLOGIcon" ),  &m_bLOGShowIcon, 1 );
         pConf->Read( wxS( "PathLineWidth" ), &g_path_line_width, 2 );
-        pConf->Read( wxS( "DefaultODPointIcon" ), &g_sODPointIconName, wxS("triangle") );
+        pConf->Read( wxS( "DefaultODPointIcon" ), &g_sODPointIconName, wxS("Triangle") );
         pConf->Read( wxS( "ODPointRangeRingsNumber" ), &g_iODPointRangeRingsNumber, 0 );
         pConf->Read( wxS( "ODPointRangeRingsStep" ), &val, wxS("1.0") );
         g_fODPointRangeRingsStep = atof( val.mb_str() );
@@ -1112,7 +1112,29 @@ void ocpn_draw_pi::SetPluginMessage(wxString &message_id, wxString &message_body
                 }
             }
         }
+    } else if(message_id == _T("WMM_VARIATION_BOAT")) {
+        
+        // construct the JSON root object
+        wxJSONValue  root;
+        // construct a JSON parser
+        wxJSONReader reader;
+        
+        // now read the JSON text and store it in the 'root' structure
+        // check for errors before retreiving values...
+        int numErrors = reader.Parse( message_body, &root );
+        if ( numErrors > 0 )  {
+            //              const wxArrayString& errors = reader.GetErrors();
+            return;
+        }
+        
+        // get the DECL value from the JSON message
+        wxString decl = root[_T("Decl")].AsString();
+        double decl_val;
+        decl.ToDouble(&decl_val);
+        
+        g_dVar = decl_val;
     }
+
     return;
 }
 
@@ -1928,12 +1950,12 @@ void ocpn_draw_pi::RenderExtraPathLegInfo( ODDC &dc, wxPoint ref_point, wxString
     int w, h;
     int xp, yp;
     int hilite_offset = 3;
-    #ifdef __WXMAC__
+#ifdef __WXMAC__
     wxScreenDC sdc;
     sdc.GetTextExtent(s, &w, &h, NULL, NULL, dFont);
-    #else
+#else
     dc.GetTextExtent( s, &w, &h );
-    #endif
+#endif
 
     xp = ref_point.x - w;
     yp = ref_point.y + h;
@@ -2699,7 +2721,7 @@ void ocpn_draw_pi::DimeControl( wxWindow* ctrl, wxColour col, wxColour window_ba
         if( cs == GLOBAL_COLOR_SCHEME_DAY || cs == GLOBAL_COLOR_SCHEME_RGB ) {
 #ifdef __WXOSX__
             window_back_color = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWFRAME);
-            #else
+#else
             window_back_color = wxNullColour;
 #endif
 
@@ -2789,9 +2811,9 @@ void ocpn_draw_pi::DimeControl( wxWindow* ctrl, wxColour col, wxColour window_ba
             ( (wxGrid*) win )->SetDefaultCellTextColour( uitext );
             ( (wxGrid*) win )->SetLabelBackgroundColour( col );
             ( (wxGrid*) win )->SetLabelTextColour( uitext );
-            #if !wxCHECK_VERSION(3,0,0)
+#if !wxCHECK_VERSION(3,0,0)
             ( (wxGrid*) win )->SetDividerPen( wxPen( col ) );
-            #endif            
+#endif
             ( (wxGrid*) win )->SetGridLineColour( gridline );
         }
 

@@ -43,6 +43,7 @@
 #include "styles.h"
 #include "navutil.h"
 #include "ConnectionParams.h"
+#include "FontMgr.h"
 
 #ifdef __OCPN__ANDROID__
 #include "androidUTIL.h"
@@ -224,7 +225,9 @@ bool         g_bEmailCrashReport;
 extern int                       g_ais_alert_dialog_x, g_ais_alert_dialog_y;
 extern int                       g_ais_alert_dialog_sx, g_ais_alert_dialog_sy;
 
-
+#if wxUSE_XLOCALE || !wxCHECK_VERSION(3,0,0)
+extern wxLocale                  *plocale_def_lang;
+#endif
 
 
 //  OCPN Platform implementation
@@ -576,7 +579,7 @@ void OCPNPlatform::SetDefaultOptions( void )
     g_btouch = true;
     g_bresponsive = true;
     g_default_font_size = 18;            //  This is pretty close to TextAppearance.Medium
-    g_bUIexpert = false;
+    g_bUIexpert = true;
 
     g_bShowStatusBar = true;
     g_cm93_zoom_factor = -5;
@@ -600,6 +603,22 @@ void OCPNPlatform::SetDefaultOptions( void )
     if(pConfig){
         pConfig->SetPath( _T ( "/PlugIns/libchartdldr_pi.so" ) );
         pConfig->Write( _T ( "bEnabled" ), true );
+
+        pConfig->SetPath( _T ( "/PlugIns/libwmm_pi.so" ) );
+        pConfig->Write( _T ( "bEnabled" ), true );
+
+        pConfig->SetPath ( _T ( "/Settings/WMM" ) );
+        pConfig->Write ( _T ( "ShowIcon" ), false );
+
+
+        pConfig->SetPath ( _T ( "/Settings/QTFonts" ) );
+
+        //Status Bar
+        wxString str = _T("en_US-b25a3899");
+        wxString pval = _T("StatusBar:Roboto,26,-1,5,75,0,0,0,0,0:rgb(0, 0, 0)");
+
+        pConfig->Write (str, pval );
+        FontMgr::Get().LoadFontNative( &str, &pval );
     }
 
 #endif
@@ -1107,6 +1126,36 @@ void OCPNPlatform::HideBusySpinner( void )
 #endif
 }
 
+int OCPNPlatform::GetStatusBarFieldCount()
+{
+#ifdef __OCPN__ANDROID__
+    int count = 1;
+    
+    //  Make a horizontal measurement...
+    wxScreenDC dc;
+    wxFont* templateFont = FontMgr::Get().GetFont( _("StatusBar"), 0 );
+    dc.SetFont(*templateFont);
+    
+    wxSize sz = dc.GetTextExtent(_T("WWWWWW"));
+    double font_size_pix = (double)sz.x / 6.0;
+    
+    wxSize dispSize = getDisplaySize();
+    
+    double nChars = dispSize.x / font_size_pix;
+    
+    if(nChars < 40)
+        count = 1;
+    else
+        count = 2;
+    
+    return count;
+    
+#else
+    return STAT_FIELD_COUNT;            // default
+#endif
+    
+}
+
 double OCPNPlatform::getFontPointsperPixel( void )
 {
     double pt_per_pixel = 1.0;
@@ -1191,6 +1240,29 @@ void OCPNPlatform::onStagedResizeFinal()
     androidConfirmSizeCorrection();
 #endif
     
+}
+
+bool OCPNPlatform::GetFullscreen()
+{
+    bool bret = false;
+#ifdef __OCPN__ANDROID__
+    bret = androidGetFullscreen();
+#else
+    
+#endif
+    
+    return bret;
+}
+
+bool OCPNPlatform::SetFullscreen( bool bFull )
+{
+    bool bret = false;
+#ifdef __OCPN__ANDROID__
+    bret = androidSetFullscreen( bFull );
+#else
+#endif
+    
+    return bret;
 }
 
 void OCPNPlatform::PositionAISAlert(wxWindow *alert_window)
@@ -1615,3 +1687,34 @@ QString getQtStyleSheet( void )
 }
 
 #endif
+
+void OCPNPlatform::LaunchLocalHelp( void ) {
+    
+#ifdef __OCPN__ANDROID__
+    androidLaunchHelpView();
+#else
+    wxString def_lang_canonical = _T("en_US");
+    
+#if wxUSE_XLOCALE
+    if(plocale_def_lang)
+        def_lang_canonical = plocale_def_lang->GetCanonicalName();
+#endif
+    
+    wxString help_locn = g_Platform->GetSharedDataDir() + _T("doc/help_");
+    
+    wxString help_try = help_locn + def_lang_canonical + _T(".html");
+    
+    if( ! ::wxFileExists( help_try ) ) {
+        help_try = help_locn + _T("en_US") + _T(".html");
+        
+        if( ! ::wxFileExists( help_try ) ) {
+            help_try = help_locn + _T("web") + _T(".html");
+        }
+        
+        if( ! ::wxFileExists( help_try ) ) return;
+    }
+    
+    wxLaunchDefaultBrowser(wxString( _T("file:///") ) + help_try );
+#endif
+}
+

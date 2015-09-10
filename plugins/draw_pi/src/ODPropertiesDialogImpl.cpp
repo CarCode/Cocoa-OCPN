@@ -88,6 +88,7 @@ extern int          g_EBLLineWidth;
 extern int          g_EBLLineStyle;
 
 extern bool         g_bConfirmObjectDelete;
+extern bool         g_bShowMag;
 extern int          g_navobjbackups;
 
 extern int          g_EdgePanSensitivity;
@@ -197,8 +198,11 @@ void ODPropertiesDialogImpl::SaveChanges()
     g_EBLPersistenceType = m_radioBoxEBLPersistence->GetSelection();
     g_bEBLFixedEndPosition = m_checkBoxEBLFixedEndPosition->GetValue();
     g_sEBLEndIconName = m_bcomboBoxEBLEndIconName->GetValue();
+#ifdef __WXOSX__
+    g_sEBLStartIconName = m_bcomboBoxEBLStartIconName->GetValue();
+#else
     g_sEBLStartIconName = g_sEBLEndIconName;
-
+#endif
     g_iODPointRangeRingsNumber = m_choiceODPointRangeRingNumber->GetSelection();
     g_fODPointRangeRingsStep = atof( m_textCtrlODPointRangeRingSteps->GetValue().mb_str() );
     g_iODPointRangeRingsStepUnits = m_choiceODPointDistanceUnit->GetSelection();
@@ -208,6 +212,7 @@ void ODPropertiesDialogImpl::SaveChanges()
     g_sODPointIconName = m_bcomboBoxODPointIconName->GetValue();
 
     g_bConfirmObjectDelete = m_checkBoxConfirmObjectDelete->GetValue();
+    g_bShowMag = m_checkBoxShowMagBearings->GetValue();
     g_navobjbackups = m_spinCtrlNavObjBackups->GetValue();
 
     g_iTextPosition = m_choiceTextPosition->GetSelection();
@@ -363,6 +368,7 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
         m_staticTextFontFaceExample->SetFont( g_DisplayTextFont );
 
         m_checkBoxConfirmObjectDelete->SetValue( g_bConfirmObjectDelete );
+        m_checkBoxShowMagBearings->SetValue( g_bShowMag );
         m_spinCtrlNavObjBackups->SetValue( g_navobjbackups );
         m_sliderInitialEdgePan->SetValue( g_InitialEdgePanSensitivity );
         m_sliderEdgePan->SetValue( g_EdgePanSensitivity );

@@ -30,11 +30,14 @@ ODPropertiesDialogDef::ODPropertiesDialogDef( wxWindow* parent, wxWindowID id, c
 	m_checkBoxConfirmObjectDelete->SetValue(true); 
 	fgSizer4->Add( m_checkBoxConfirmObjectDelete, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-	wxBoxSizer* bSizerFiller1;
-	bSizerFiller1 = new wxBoxSizer( wxVERTICAL );
+    fgSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
 
 
-	fgSizer4->Add( bSizerFiller1, 1, wxEXPAND, 5 );
+    m_checkBoxShowMagBearings = new wxCheckBox( m_panelGeneral, wxID_ANY, _("Show Magnetic Bearings"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+    fgSizer4->Add( m_checkBoxShowMagBearings, 0, wxALL, 5 );
+
+
+    fgSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
 
 	m_staticTextNavObjBackups = new wxStaticText( m_panelGeneral, wxID_ANY, _("Nav Object Backups"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextNavObjBackups->Wrap( -1 );
@@ -388,39 +391,39 @@ ODPropertiesDialogDef::ODPropertiesDialogDef( wxWindow* parent, wxWindowID id, c
     m_staticTextStartPointIcon->Wrap( -1 );
     fgSizerEBLSettings->Add( m_staticTextStartPointIcon, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    wxFlexGridSizer* fgSizerEBLEndPointIcon;
-    fgSizerEBLEndPointIcon = new wxFlexGridSizer( 0, 3, 0, 0 );
-    fgSizerEBLEndPointIcon->AddGrowableCol( 1 );
-    fgSizerEBLEndPointIcon->SetFlexibleDirection( wxBOTH );
-    fgSizerEBLEndPointIcon->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+    wxFlexGridSizer* fgSizerEBLStartPointIcon;
+    fgSizerEBLStartPointIcon = new wxFlexGridSizer( 0, 3, 0, 0 );
+    fgSizerEBLStartPointIcon->AddGrowableCol( 1 );
+    fgSizerEBLStartPointIcon->SetFlexibleDirection( wxBOTH );
+    fgSizerEBLStartPointIcon->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
     
     m_bitmapEBLStartBitmap = new wxStaticBitmap( m_panelEBL, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
-    fgSizerEBLEndPointIcon->Add( m_bitmapEBLStartBitmap, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
+    fgSizerEBLStartPointIcon->Add( m_bitmapEBLStartBitmap, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
     
     m_bcomboBoxEBLStartIconName = new wxBitmapComboBox( m_panelEBL, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
-    fgSizerEBLEndPointIcon->Add( m_bcomboBoxEBLStartIconName, 1, wxALIGN_RIGHT|wxALL, 5 );
+    fgSizerEBLStartPointIcon->Add( m_bcomboBoxEBLStartIconName, 1, wxALIGN_RIGHT|wxALL, 5 );
     
     
-    fgSizerEBLSettings->Add( fgSizerEBLEndPointIcon, 1, wxALIGN_RIGHT, 5 );
+    fgSizerEBLSettings->Add( fgSizerEBLStartPointIcon, 1, wxALIGN_RIGHT, 5 );
     
     m_staticTextEndPointIcon = new wxStaticText( m_panelEBL, wxID_ANY, _("End Point Icon"), wxDefaultPosition, wxDefaultSize, 0 );
     m_staticTextEndPointIcon->Wrap( -1 );
     fgSizerEBLSettings->Add( m_staticTextEndPointIcon, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
     
-    wxFlexGridSizer* fgSizerEBLStartPointIcon;
-    fgSizerEBLStartPointIcon = new wxFlexGridSizer( 0, 2, 0, 0 );
-    fgSizerEBLStartPointIcon->AddGrowableCol( 1 );
-    fgSizerEBLStartPointIcon->SetFlexibleDirection( wxBOTH );
-    fgSizerEBLStartPointIcon->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+    wxFlexGridSizer* fgSizerEBLEndPointIcon;
+    fgSizerEBLEndPointIcon = new wxFlexGridSizer( 0, 2, 0, 0 );
+    fgSizerEBLEndPointIcon->AddGrowableCol( 1 );
+    fgSizerEBLEndPointIcon->SetFlexibleDirection( wxBOTH );
+    fgSizerEBLEndPointIcon->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
 	m_bitmapEBLEndBitmap = new wxStaticBitmap( m_panelEBL, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
-    fgSizerEBLStartPointIcon->Add( m_bitmapEBLEndBitmap, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    fgSizerEBLEndPointIcon->Add( m_bitmapEBLEndBitmap, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 	m_bcomboBoxEBLEndIconName = new wxBitmapComboBox( m_panelEBL, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-    fgSizerEBLStartPointIcon->Add( m_bcomboBoxEBLEndIconName, 1, wxALIGN_RIGHT|wxALL, 5 );
+    fgSizerEBLEndPointIcon->Add( m_bcomboBoxEBLEndIconName, 1, wxALIGN_RIGHT|wxALL, 5 );
 
 
-    fgSizerEBLSettings->Add( fgSizerEBLStartPointIcon, 1, wxALIGN_RIGHT, 5 );
+    fgSizerEBLSettings->Add( fgSizerEBLEndPointIcon, 1, wxALIGN_RIGHT, 5 );
 
 	m_staticTextActiveEBLLineColour = new wxStaticText( m_panelEBL, wxID_ANY, _("Active EBL Line Colour"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextActiveEBLLineColour->Wrap( -1 );
