@@ -407,7 +407,7 @@ extern int mysnprintf( char *buffer, int count, const char *format, ... )
 }
 #endif
 
-int NextPow2(int size)
+int oldNextPow2(int size)
 {
     /* compute dimensions needed as next larger power of 2 */
     int a = size;
@@ -417,4 +417,16 @@ int NextPow2(int size)
         p++;
     }
     return 1 << p;
+}
+
+int NextPow2(int size)
+{
+    int n = size-1;          // compute dimensions needed as next larger power of 2
+    int shift = 1;
+    while ((n+1) & n){
+        n |= n >> shift;
+        shift <<= 1;
+    }
+    
+    return n + 1;
 }

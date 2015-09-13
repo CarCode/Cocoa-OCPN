@@ -1,4 +1,4 @@
-/**************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  About Dialog
@@ -33,7 +33,7 @@
 #include <wx/ffile.h>
 #include <wx/clipbrd.h>
 #include <wx/html/htmlwin.h>
-
+#include <wx/tokenzr.h>
 #include <version.h>
 
 #include "about.h"
@@ -46,26 +46,32 @@
 
 extern OCPNPlatform *g_Platform;
 extern MyFrame *gFrame;
-//extern wxString         mlog_file;
 extern ocpnStyle::StyleManager* g_StyleManager;
 extern about *g_pAboutDlg;
 extern bool g_bresponsive;
 
 wxString OpenCPNVersion =
-wxString::Format( wxT("\n      Version %i.%i.%i Build %s"),
-                 VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_DATE );
+    wxString::Format( wxT("\n      Version %i.%i.%i Build %s"),
+        VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_DATE );
 
-#ifdef __WXOSX__
 const wxString AboutText =
     wxT("<br>OpenCPN<br>")
+#ifdef __WXOSX__
     wxT("(c) 2000-2015 Die OpenCPN Autoren<br><br>");
 #else
-const wxString AboutText =
-    wxT("<br>OpenCPN<br>")
     wxT("(c) 2000-2015 The OpenCPN Authors<br><br>");
 #endif
 #ifdef __WXOSX__
 const wxString OpenCPNInfo =
+    wxT("<br><br>")
+    wxT("OpenCPN ist ein freies Software Projekt, erstellt von Seglern.<br>")
+    wxT("Es ist frei verfügbar zum Download und zur Verbreitung ohne Kosten ")
+    wxT("von Opencpn.org.<br>")
+    wxT("Verwenden Sie OpenCPN, beteiligen Sie sich bitte daran ")
+    wxT("oder machen Sie eine Spende.<br><br>")
+    wxT("Dokumentation:<br>")
+    wxT("Über OS X Menü Hilfe (auch Begriffe-Suchfunktion)<br><br>");
+const wxString OpenCPNInfoAlt =
     wxT("<br><br>")
     wxT("OpenCPN ist ein freies Software Projekt, erstellt von Seglern.<br>")
     wxT("Es ist frei verfügbar zum Download und zur Verbreitung ohne Kosten ")
@@ -83,96 +89,17 @@ const wxString OpenCPNInfo =
     wxT("If you use OpenCPN, please consider contributing ")
     wxT("or donating funds to the project.<br><br>")
     wxT("For more information, visit http://opencpn.org<br><br>");
-#endif
 
 const wxString OpenCPNInfoAlt =
-wxT("<br><br>")
-wxT("OpenCPN is a Free Software project, built by sailors.")
-wxT("The complete source code and many other resources ")
-wxT("are freely available for your download and use, ")
-wxT("subject to applicable License agreements.")
-wxT("<br><br>")
-wxT("For more information, visit http://opencpn.org<br><br>");
+    wxT("<br><br>")
+    wxT("OpenCPN is a Free Software project, built by sailors.")
+    wxT("The complete source code and many other resources ")
+    wxT("are freely available for your download and use, ")
+    wxT("subject to applicable License agreements.")
+    wxT("<br><br>")
+    wxT("For more information, visit http://opencpn.org<br><br>");
+#endif
 
-#ifdef __WXOSX__
-const wxString AuthorText =
-    wxT("   David S Register\n")
-    wxT("    OpenCPN Lead Developer\n\n")
-    wxT("    Pavel Kalian\n")
-    wxT("    S52 Rasterization Improvements\n\n")
-    wxT("    Sean D'Epagnier\n")
-    wxT("    OpenGL Architecture\n\n")
-    wxT("    Thomas Höckne\n")
-    wxT("    Documentation and Wiki support\n\n")
-    wxT("    Caesar Schinas\n")
-    wxT("    User Interface and OS X improvements\n\n")
-    wxT("    Jesper Weissglas\n")
-    wxT("    Vector Chart Rendering\n\n")
-    wxT("    Jean-Eudes Onfray\n")
-    wxT("    Dashboard and Dialog enhancements\n\n")
-    wxT("    Kathleen Boswell\n")
-    wxT("    Icon design\n\n")
-    wxT("    Flavius Bindea\n")
-    wxT("    CM93 Offset and AIS enhancements\n\n")
-    wxT("    Gunther Pilz\n")
-    wxT("    Windows Installer enhancements\n\n")
-    wxT("    Alan Bleasby\n")
-    wxT("    Garmin jeeps module\n\n")
-    wxT("    Piotr Carlson\n")
-    wxT("    General usability enhancements\n\n")
-    wxT("    Anders Lund\n")
-    wxT("    RouteManagerDialog\n\n")
-    wxT("    Gordon Mau\n")
-    wxT("    OpenCPN Documentation\n\n")
-    wxT("    Tim Francis\n")
-    wxT("    OpenCPN Documentation\n\n")
-    wxT("    Mark A Sikes\n")
-    wxT("    OpenCPN CoDeveloper\n\n")
-    wxT("    Thomas Haller\n")
-    wxT("    GPX Import/Export Implementation\n\n")
-    wxT("    Will Kamp\n")
-    wxT("    Toolbar Icon design\n\n")
-    wxT("    Richard Smith\n")
-    wxT("    OpenCPN CoDeveloper, MacOSX\n\n")
-    wxT("    David Herring\n")
-    wxT("    OpenCPN CoDeveloper, MacOSX\n\n")
-    wxT("    Philip Lange\n")
-    wxT("    OpenCPN Documentation\n\n")
-    wxT("    Ron Kuris\n")
-    wxT("    wxWidgets Support\n\n")
-    wxT("    Julian Smart, Robert Roebling et al\n")
-    wxT("    wxWidgets Authors\n\n")
-    wxT("    Sylvain Duclos\n")
-    wxT("    S52 Presentation Library code\n\n")
-    wxT("    Manish P. Pagey\n")
-    wxT("    Serial Port Library\n\n")
-    wxT("    David Flater\n")
-    wxT("    XTIDE tide and current code\n\n")
-    wxT("    Frank Warmerdam\n")
-    wxT("    GDAL Class Library\n\n")
-    wxT("    Mike Higgins\n")
-    wxT("    BSB Chart Format Detail\n\n")
-    wxT("    Samuel R. Blackburn\n")
-    wxT("    NMEA0183 Class Library\n\n")
-    wxT("    Atul Narkhede\n")
-    wxT("    Polygon Graphics utilities\n\n")
-    wxT("    Jan C. Depner\n")
-    wxT("    WVS Chart Library\n\n")
-    wxT("    Stuart Cunningham, et al\n")
-    wxT("    BSB Chart Georeferencing Algorithms\n\n")
-    wxT("    John F. Waers\n")
-    wxT("    UTM Conversion Algorithms\n\n")
-    wxT("    Carsten Tschach\n")
-    wxT("    UTM Conversion Algorithms\n\n")
-    wxT("    Ed Williams\n")
-    wxT("    Great Circle Formulary\n\n")
-    wxT("    Philippe Bekaert\n")
-    wxT("    CIE->RGB Color Conversion Matrix\n\n")
-    wxT("    Robert Lipe\n")
-    wxT("    Garmin USB GPS Interface\n\n")
-    wxT("    Gerhard Mueller (CarCode)\n")
-    wxT("    Mac OS X 64-bit support\n");
-#else
 const wxString AuthorText =
     wxT("   David S Register\n")
     wxT("      OpenCPN Lead Developer\n\n")
@@ -249,6 +176,11 @@ const wxString AuthorText =
     wxT("    Philippe Bekaert\n")
     wxT("      CIE->RGB Color Conversion Matrix\n\n")
     wxT("    Robert Lipe\n")
+#ifdef __WXOSX__
+    wxT("      Garmin USB GPS Interface\n\n")
+    wxT("    Gerhard Mueller (CarCode)\n")
+    wxT("      Mac OS X 64-bit support\n");
+#else
     wxT("      Garmin USB GPS Interface\n");
 #endif
 IMPLEMENT_DYNAMIC_CLASS( about, wxDialog )
@@ -263,17 +195,17 @@ BEGIN_EVENT_TABLE( about, wxDialog )
 END_EVENT_TABLE()
 
 about::about( void ) :
-m_DataLocn( wxEmptyString ),
-m_parent( NULL ),
-m_btips_loaded ( FALSE ) { }
+    m_DataLocn( wxEmptyString ),
+    m_parent( NULL ),
+    m_btips_loaded ( FALSE ) { }
 
 about::about( wxWindow* parent,wxString Data_Locn, wxWindowID id, const wxString& caption,
-             const wxPoint& pos, const wxSize& size, long style) :
+                  const wxPoint& pos, const wxSize& size, long style) :
     m_DataLocn( Data_Locn ),
     m_parent( parent ),
     m_btips_loaded ( FALSE )
 {
-    Create(parent, id, caption, pos, size, style);
+  Create(parent, id, caption, pos, size, style);
 }
 
 
@@ -287,14 +219,13 @@ bool about::Create( wxWindow* parent, wxWindowID id, const wxString& caption, co
 
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
     wxDialog::Create( parent, id, caption, pos, size, style );
-
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     SetFont( *qFont );
 
     m_displaySize = g_Platform->getDisplaySize();
     CreateControls();
     Populate();
-    
+
     RecalculateSize();
 
     return TRUE;
@@ -307,11 +238,12 @@ void about::SetColorScheme( void )
     pAboutHTMLCtl->SetBackgroundColour( bg );
     pLicenseHTMLCtl->SetBackgroundColour( bg );
     pAuthorHTMLCtl->SetBackgroundColour( bg );
+    
 
     // This looks like non-sense, but is needed for __WXGTK__
     // to get colours to propagate down the control's family tree.
     SetBackgroundColour( bg );
-    
+
 #ifdef __WXQT__
     // wxQT has some trouble clearing the background of HTML window...
     wxBitmap tbm( GetSize().x, GetSize().y, -1 );
@@ -327,17 +259,19 @@ void about::SetColorScheme( void )
 
 void about::Populate( void )
 {
+
     wxColor bg = GetBackgroundColour();
     wxColor fg = wxColour( 0, 0, 0 );
-    
+
     // The HTML Header
     wxString aboutText =
-    wxString::Format(
-                     _T( "<html><body bgcolor=#%02x%02x%02x><font color=#%02x%02x%02x>" ),
-                     bg.Red(), bg.Blue(), bg.Green(), fg.Red(), fg.Blue(), fg.Green() );
-    
+        wxString::Format(
+            _T( "<html><body bgcolor=#%02x%02x%02x><font color=#%02x%02x%02x>" ),
+            bg.Red(), bg.Blue(), bg.Green(), fg.Red(), fg.Blue(), fg.Green() );
+
     wxFont *dFont = FontMgr::Get().GetFont( _("Dialog") );
-    
+
+    // Do weird font size calculation
     int points = dFont->GetPointSize();
 #ifndef __WXOSX__
     ++points;
@@ -352,11 +286,11 @@ void about::Populate( void )
     if( wxFONTSTYLE_ITALIC == dFont->GetStyle() )
         aboutText.Append( _T("<i>") );
 
-#ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__    
     aboutText.Append( AboutText + OpenCPNVersion + OpenCPNInfoAlt );
 #else
     aboutText.Append( AboutText + OpenCPNVersion + OpenCPNInfo );
-#endif
+#endif    
 
     // Show where the log file is going to be placed
 #ifdef __WXOSX__
@@ -365,7 +299,7 @@ void about::Populate( void )
     wxString log_string = _T("Logfile location: ") + g_Platform->GetLogFileName();
 #endif
     log_string.Replace(_T("/"), _T("/ "));      // allow line breaks, in a cheap way...
-
+    
     aboutText.Append( log_string );
 
     // Show where the config file is going to be placed
@@ -376,19 +310,21 @@ void about::Populate( void )
 #endif
     config_string.Replace(_T("/"), _T("/ "));      // allow line breaks, in a cheap way...
     aboutText.Append( config_string );
-
+    
     if(wxFONTSTYLE_ITALIC == dFont->GetStyle())
         aboutText.Append( _T("</i>") );
-    
+
     // The HTML Footer
     aboutText.Append( _T("</font></body></html>") );
-    
+
     pAboutHTMLCtl->SetPage( aboutText );
+    
+    
     ///Authors page
     // The HTML Header
     wxString authorText =
     wxString::Format(
-                     _T( "<html><body bgcolor=#%02x%02x%02x><font color=#%02x%02x%02x>" ),
+        _T( "<html><body bgcolor=#%02x%02x%02x><font color=#%02x%02x%02x>" ),
                      bg.Red(), bg.Blue(), bg.Green(), fg.Red(), fg.Blue(), fg.Green() );
     
     pAuthorHTMLCtl->SetFonts( face, face, sizes );
@@ -400,9 +336,44 @@ void about::Populate( void )
     
     // The HTML Footer
     authorText.Append( _T("</font></body></html>") );
-    
+
     pAuthorHTMLCtl->SetPage( authorFixText );
     
+
+    ///License page
+    // The HTML Header
+    wxString licenseText =
+    wxString::Format(
+        _T( "<html><body bgcolor=#%02x%02x%02x><font color=#%02x%02x%02x>" ),
+            bg.Red(), bg.Blue(), bg.Green(), fg.Red(), fg.Blue(), fg.Green() );
+        
+    pLicenseHTMLCtl->SetFonts( face, face, sizes );
+ 
+    wxTextFile license_filea( m_DataLocn + _T("license.txt") );
+    if ( license_filea.Open() ) {
+        for ( wxString str = license_filea.GetFirstLine(); !license_filea.Eof() ; str = license_filea.GetNextLine() )
+            licenseText.Append( str + _T("<br>") );
+        license_filea.Close();
+    } else {
+        wxLogMessage( _T("Could not open License file: ") + m_DataLocn );
+    }
+    
+    wxString suppLicense = g_Platform->GetSupplementalLicenseString();
+    
+    wxStringTokenizer st(suppLicense, _T("\n"), wxTOKEN_DEFAULT);
+    while( st.HasMoreTokens() )
+    {
+        wxString s1 = st.GetNextToken();
+        licenseText.Append( s1 + _T("<br>") );
+    }
+        
+        // The HTML Footer
+    licenseText.Append( _T("</font></body></html>") );
+        
+    pLicenseHTMLCtl->SetPage( licenseText );
+        
+        
+#if 0    
     wxTextFile license_file( m_DataLocn + _T("license.txt") );
     if ( license_file.Open() ) {
         for ( wxString str = license_file.GetFirstLine(); !license_file.Eof() ; str = license_file.GetNextLine() )
@@ -411,16 +382,19 @@ void about::Populate( void )
     } else {
         wxLogMessage( _T("Could not open License file: ") + m_DataLocn );
     }
+    
+    wxString suppLicense = g_Platform->GetSupplementalLicenseString();
+    pLicenseTextCtl->AppendText( suppLicense );
+    
     pLicenseTextCtl->SetInsertionPoint( 0 );
-
+#endif
 #ifdef __WXOSX__
     const wxString HilfeText = wxT(
-    "Für Hilfe gehen Sie bitte zum OS X Menü Hilfe oben in der Menüzeile. Geben Sie dort Suchbegriffe ein wie z.B. Plugins.");
+        "Für Hilfe gehen Sie bitte zum OS X Menü Hilfe oben in der Menüzeile. Geben Sie dort Suchbegriffe ein wie z.B. Plugins.");
     pHelpTextCtl->Clear();
     pHelpTextCtl->WriteText( HilfeText );
     pHelpTextCtl->SetInsertionPoint ( 0 );
 #endif
-
     SetColorScheme();
 }
 
@@ -446,30 +420,30 @@ void about::RecalculateSize( void )
     Centre();
 }
 
+
 void about::CreateControls( void )
 {
     //  Set the nominal vertical size of the embedded controls
     int v_size = g_bresponsive ? -1 : 300;
-    
+
     wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
     SetSizer( mainSizer );
     wxStaticText *pST1 = new wxStaticText( this, -1,
-            _("The Open Source Chart Plotter/Navigator"), wxDefaultPosition,
-            wxSize( -1, 50 /* 500, 30 */ ), wxALIGN_CENTRE /* | wxALIGN_CENTER_VERTICAL */ );
+        _("The Open Source Chart Plotter/Navigator"), wxDefaultPosition,
+        wxSize( -1, 50 /* 500, 30 */ ), wxALIGN_CENTRE /* | wxALIGN_CENTER_VERTICAL */ );
 
-    
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     
     wxFont *headerFont = wxTheFontList->FindOrCreateFont( 14, wxFONTFAMILY_DEFAULT,
-                                                         qFont->GetStyle(), wxFONTWEIGHT_BOLD, false,
-                                                         qFont->GetFaceName() );
+                                                          qFont->GetStyle(), wxFONTWEIGHT_BOLD, false,
+                                                          qFont->GetFaceName() );
     pST1->SetFont( *headerFont );
     mainSizer->Add( pST1, 0, wxALL | wxEXPAND, 8 );
 
-#ifndef __OCPN__ANDROID__
+#ifndef __OCPN__ANDROID__    
     wxSizer *buttonSizer = new wxBoxSizer( m_displaySize.x < m_displaySize.y ? wxVERTICAL : wxHORIZONTAL );
     mainSizer->Add( buttonSizer, 0, wxALL, 0 );
-
+    
     wxButton* donateButton = new wxBitmapButton( this, ID_DONATE,
             g_StyleManager->GetCurrentStyle()->GetIcon( _T("donate") ),
             wxDefaultPosition, wxDefaultSize, 0 );
@@ -482,7 +456,6 @@ void about::CreateControls( void )
     buttonSizer->Add( donateButton, 1, wxALL | wxEXPAND | wxALIGN_RIGHT, 3 );
 #endif
 #endif
-
     //  Main Notebook
     pNotebook = new wxNotebook( this, ID_NOTEBOOK_HELP, wxDefaultPosition,
             wxSize( -1, -1 ), wxNB_TOP );
@@ -492,7 +465,6 @@ void about::CreateControls( void )
 #else
     mainSizer->Add( pNotebook, 1, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5 );
 #endif
-
     //  About Panel
     itemPanelAbout = new wxPanel( pNotebook, -1, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
@@ -500,8 +472,7 @@ void about::CreateControls( void )
     pNotebook->AddPage( itemPanelAbout, _("About"), TRUE /* Default page */ );
 
     pAboutHTMLCtl = new wxHtmlWindow( itemPanelAbout, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                     wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION);
-
+                                wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION);
     pAboutHTMLCtl->SetBorders( 5 );
     wxBoxSizer* aboutSizer = new wxBoxSizer( wxVERTICAL );
 #ifdef __WXOSX__
@@ -514,12 +485,12 @@ void about::CreateControls( void )
     //  Authors Panel
 
     itemPanelAuthors = new wxPanel( pNotebook, -1, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
+                                wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
     itemPanelAuthors->InheritAttributes();
     pNotebook->AddPage( itemPanelAuthors, _("Authors") );
 
     pAuthorHTMLCtl = new wxHtmlWindow( itemPanelAuthors, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                      wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION);
+                                    wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION);
     pAuthorHTMLCtl->SetBorders( 5 );
     wxBoxSizer* authorSizer = new wxBoxSizer( wxVERTICAL );
 #ifdef __WXOSX__
@@ -528,19 +499,25 @@ void about::CreateControls( void )
     authorSizer->Add( pAuthorHTMLCtl, 1, wxALIGN_CENTER_HORIZONTAL | wxEXPAND | wxALL, 5 );
 #endif
     itemPanelAuthors->SetSizer( authorSizer );
+    
 
     //  License Panel
     itemPanelLicense = new wxPanel( pNotebook, -1, wxDefaultPosition, wxDefaultSize,
             wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
     itemPanelLicense->InheritAttributes();
     pNotebook->AddPage( itemPanelLicense, _("License") );
-
+    
     pLicenseHTMLCtl = new wxHtmlWindow( itemPanelLicense, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                       wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION);
+                                      wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION);
     pLicenseHTMLCtl->SetBorders( 5 );
     wxBoxSizer* licenseSizer = new wxBoxSizer( wxVERTICAL );
+#ifdef __WXOSX__
+    licenseSizer->Add( pLicenseHTMLCtl, 1, wxEXPAND | wxALL, 5 );
+#else
     licenseSizer->Add( pLicenseHTMLCtl, 1, wxALIGN_CENTER_HORIZONTAL | wxEXPAND | wxALL, 5 );
+#endif
     itemPanelLicense->SetSizer( licenseSizer );
+    
 
     //  Help Panel
     itemPanelTips = new wxPanel( pNotebook, -1, wxDefaultPosition, wxDefaultSize,
@@ -556,7 +533,6 @@ void about::CreateControls( void )
     pHelpTextCtl->InheritAttributes();
     helpSizer->Add(pHelpTextCtl,0, wxEXPAND | wxALL, 5 );
 #endif
-    
     //  Close Button
     wxButton* closeButton = new wxButton( this, xID_OK, _("Close"), wxDefaultPosition,
             wxDefaultSize, 0 );
@@ -585,7 +561,7 @@ void about::OnDonateClick( wxCommandEvent& event )
 void about::OnCopyClick( wxCommandEvent& event )
 {
     wxString filename = event.GetId() == ID_COPYLOG ?
-    g_Platform->GetLogFileName() : g_Platform->GetConfigFileName();
+        g_Platform->GetLogFileName() : g_Platform->GetConfigFileName();
 
     wxFFile file( filename );
 

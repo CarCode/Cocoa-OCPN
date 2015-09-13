@@ -1,4 +1,4 @@
-/**************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  About Dialog
@@ -64,8 +64,8 @@ class about: public wxDialog
                  const wxSize& size = wxSize(500, 500),
                  long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX );
 
-    void RecalculateSize( void );
-
+   void RecalculateSize( void );
+   
   private:
     void CreateControls( void );
     void Populate( void );
@@ -94,9 +94,10 @@ class about: public wxDialog
     wxHtmlWindow *pAboutHTMLCtl;
     wxHtmlWindow *pLicenseHTMLCtl;
     wxHtmlWindow *pAuthorHTMLCtl;
-
+    
     wxSize m_displaySize;
 
 };
 
 #endif    // _ABOUT_H_
+
