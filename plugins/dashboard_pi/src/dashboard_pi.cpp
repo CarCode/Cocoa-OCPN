@@ -79,7 +79,7 @@ enum {
     ID_DBP_D_MON, ID_DBP_I_ATMP, ID_DBP_I_AWA, ID_DBP_I_TWA, ID_DBP_I_TWD, ID_DBP_I_TWS,
     ID_DBP_D_TWD, ID_DBP_I_HDM, ID_DBP_D_HDT, ID_DBP_D_WDH, ID_DBP_I_VLW1, ID_DBP_I_VLW2,
     ID_DBP_D_MDA, ID_DBP_I_MDA,ID_DBP_D_BPH, ID_DBP_I_FOS, ID_DBP_M_COG, ID_DBP_I_PITCH, ID_DBP_I_HEEL,
-    ID_DBP_I_SATU, ID_DBP_LAST_ENTRY //this has a reference in one of the routines; defining a "LAST_ENTRY" and setting the reference to it, is one codeline less to change (and find) when adding new instruments :-)
+    ID_DBP_I_SATU, ID_DBP_D_AWA_TWA, ID_DBP_LAST_ENTRY //this has a reference in one of the routines; defining a "LAST_ENTRY" and setting the reference to it, is one codeline less to change (and find) when adding new instruments :-)
 };
 
 bool IsObsolete( int id ) {
@@ -115,6 +115,8 @@ wxString getInstrumentCaption( unsigned int id )
         case ID_DBP_D_AW:
         case ID_DBP_D_AWA:
             return _("App. Wind Angle & Speed");
+        case ID_DBP_D_AWA_TWA:
+            return _("App & True Wind Angle");
         case ID_DBP_I_AWS:
             return _("App. Wind Speed");
         case ID_DBP_D_AWS:
@@ -224,6 +226,7 @@ void getListItemForInstrument( wxListItem &item, unsigned int id )
         case ID_DBP_D_AWA:
         case ID_DBP_D_AWS:
         case ID_DBP_D_TW:
+        case ID_DBP_D_AWA_TWA:
         case ID_DBP_D_TWD:
         case ID_DBP_D_DPT:
         case ID_DBP_D_MDA:
@@ -1507,7 +1510,7 @@ void dashboard_pi::PopulateContextMenu( wxMenu* menu )
 {
     for( size_t i = 0; i < m_ArrayOfDashboardWindow.GetCount(); i++ ) {
         DashboardWindowContainer *cont = m_ArrayOfDashboardWindow.Item( i );
-        wxMenuItem* item = menu->AppendCheckItem( i+1, cont->m_sCaption );
+        wxMenuItem* item = menu->AppendCheckItem( i+ 1, cont->m_sCaption );  // was ( i + 1, Assert with ID <= 0
         item->Check( cont->m_bIsVisible );
     }
 }
@@ -2262,6 +2265,14 @@ void DashboardWindow::SetInstrumentList( wxArrayInt list )
                         DIAL_POSITION_BOTTOMLEFT );
                 ( (DashboardInstrument_Dial *) instrument )->SetOptionExtraValue(
                         OCPN_DBP_STC_TWS, _T("%.1f"), DIAL_POSITION_INSIDE );
+                break;
+            case ID_DBP_D_AWA_TWA: //App/True Wind angle +-180° on boat axis
+                instrument = new DashboardInstrument_AppTrueWindAngle(this, wxID_ANY,
+                        getInstrumentCaption(id), OCPN_DBP_STC_AWA | OCPN_DBP_STC_TWA);
+                ((DashboardInstrument_Dial *)instrument)->SetOptionMainValue(_T("%.0f"),
+                        DIAL_POSITION_NONE);
+                ((DashboardInstrument_Dial *)instrument)->SetOptionExtraValue(
+                        OCPN_DBP_STC_TWS | OCPN_DBP_STC_AWS, _T("%.1f"), DIAL_POSITION_NONE);
                 break;
             case ID_DBP_D_TWD: //True Wind direction
                 instrument = new DashboardInstrument_WindCompass( this, wxID_ANY,
