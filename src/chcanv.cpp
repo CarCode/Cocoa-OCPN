@@ -3983,7 +3983,6 @@ void ChartCanvas::GridDraw( ocpnDC& dc )
     // Draw Major latitude grid lines and text
     while( lat < nlat ) {
         wxPoint r;
-        char sbuf[12];
         wxString st = CalcGridText( lat, gridlatMajor, true ); // get text for grid line
         GetCanvasPointPix( lat, ( elon + wlon ) / 2, &r );
         dc.DrawLine( 0, r.y, w, r.y, false );                             // draw grid line
@@ -4014,7 +4013,6 @@ void ChartCanvas::GridDraw( ocpnDC& dc )
     // draw major longitude grid lines
     for( int i = 0, itermax = (int) ( dlon / gridlonMajor ); i <= itermax; i++ ) {
         wxPoint r;
-        char sbuf[12];
         wxString st = CalcGridText( lon, gridlonMajor, false );
         GetCanvasPointPix( ( nlat + slat ) / 2, lon, &r );
         dc.DrawLine( r.x, 0, r.x, h, false );
@@ -6315,7 +6313,7 @@ void ChartCanvas::SetCanvasCursor( wxMouseEvent& event )
 {
     //    Switch to the appropriate cursor on mouse movement
 
-    wxCursor *ptarget_cursor = pCursorArrow;
+    wxCursor *ptarget_cursor; // = pCursorArrow;  // Not used
     if( !pPlugIn_Cursor ) {
         ptarget_cursor = pCursorArrow;
         if( ( !parent_frame->nRoute_State )

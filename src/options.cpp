@@ -4553,7 +4553,7 @@ void options::OnChartDirListSelect( wxCommandEvent& event )
         m_removeBtn->Enable();
     } else {
         wxArrayInt sel;
-        m_removeBtn->Enable( pActiveChartsList->GetSelections( sel ) );
+        m_removeBtn->Enable( pActiveChartsList->GetSelections( sel ) != 0 );
     }
 }
 
