@@ -477,14 +477,9 @@ OCPNRegion::OCPNRegion( size_t n, const wxPoint *points, int fillStyle )
 {
 }
 
-wxRegion &OCPNRegion::ConvertTowxRegion()
+wxRegion *OCPNRegion::GetNew_wxRegion() const
 {
-    return *(wxRegion *)this;
-}
-
-wxRegion *OCPNRegion::GetNew_wxRegion()
-{
-    return (wxRegion *)this;
+    return new wxRegion(this);
 }
 
 #endif    
@@ -805,36 +800,7 @@ void *OCPNRegion::GetRegion() const
 }
 
 
-wxRegion &OCPNRegion::ConvertTowxRegion()
-{
-    wxRegion *r = new wxRegion;
-    
-    OGdkRectangle *gdkrects = NULL;
-    int numRects = 0;
-    gdk_region_get_rectangles( (OGdkRegion *)GetRegion(), &gdkrects, &numRects );
-    
-    if (numRects)
-    {
-        for (int i=0; i < numRects; ++i)
-        {
-            OGdkRectangle &gr = gdkrects[i];
-            
-            wxRect wr;
-            wr.x = gr.x;
-            wr.y = gr.y;
-            wr.width = gr.width;
-            wr.height = gr.height;
-            
-            r->Union(wr);
-        }
-    }
-    free( gdkrects );
-    
-    return *r;
-}
-
-
-wxRegion *OCPNRegion::GetNew_wxRegion()
+wxRegion *OCPNRegion::GetNew_wxRegion() const
 {
     wxRegion *r = new wxRegion;
     r->Clear();

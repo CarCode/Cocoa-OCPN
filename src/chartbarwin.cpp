@@ -622,6 +622,7 @@ void Piano::DrawGL(int off)
 // this texture is only updated if the color scheme or chart bar height change
 void Piano::BuildGLTexture()
 {
+#ifdef ocpnUSE_GL
     int h = GetHeight();
 
     wxBrush tbackBrush; // transparent back brush
@@ -714,18 +715,22 @@ void Piano::BuildGLTexture()
         glTexSubImage2D( GL_TEXTURE_2D, 0, 0, off, iw, ih, GL_RGBA, GL_UNSIGNED_BYTE, data );
         delete [] data;
     }
+#endif
 }
 
 void Piano::DrawGL(int off)
 {
-    unsigned int w = cc1->GetClientSize().x, h = GetHeight(), endx = 0;
+    int nKeys = m_key_array.GetCount();
+    if(!nKeys)
+        return;
+
+#ifdef ocpnUSE_GL
+    unsigned int w = cc1->GetClientSize().x, h = GetHeight(), endx;
 
     if(m_tex_piano_height != h)
         BuildGLTexture();
 
     int y1 = off, y2 = y1 + h;
-
-    int nKeys = m_key_array.GetCount();
 
     // we could cache the coordinates and recompute only when the piano hash changes,
     // but the performance is already fast enough at this point
@@ -870,6 +875,7 @@ void Piano::DrawGL(int off)
     delete [] coords;
 
     glDisable(GL_TEXTURE_2D);
+#endif
 }
 
 void Piano::SetColorScheme( ColorScheme cs )

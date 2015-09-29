@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,13 +19,33 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __GLTEXTUREDESCRIPTOR_H__
 #define __GLTEXTUREDESCRIPTOR_H__
 
-#include "dychart.h"
+#include "wx/wxprec.h"
+
+#ifndef  WX_PRECOMP
+#include "wx/wx.h"
+#endif //precompiled headers
+
+#ifdef ocpnUSE_GL
+#ifdef __WXMSW__
+#include "GL/gl.h"            // local copy for Windows
+#include <GL/glu.h>
+#else
+
+#ifndef __OCPN__ANDROID__
+#include <GL/gl.h>
+#include <GL/glu.h>
+#else
+#include "qopengl.h"                  // this gives us the qt runtime gles2.h
+#include "GL/gl_private.h"
+#endif
+
+#endif
+#endif
 
 #define CA_READ         0
 #define CA_WRITE        1
@@ -42,7 +62,8 @@ public:
     void FreeAll();
     void FreeMap();
     void FreeCompLevel(int level);
-    
+    void FreeCompComp();
+
     size_t GetMapArrayAlloc(void);
     size_t GetCompArrayAlloc(void);
     size_t GetCompCompArrayAlloc(void);
@@ -55,11 +76,11 @@ public:
     int y;
     int nGPU_compressed;
     int nCache_Color;
-    
+
     unsigned char       *map_array[10];
-    int                 miplevel_upload[10];
+    bool                miplevel_upload[10];
     int                 compcomp_size[10];
-    
+
 private:    
     unsigned char *comp_array[10];
     unsigned char *compcomp_array[10];

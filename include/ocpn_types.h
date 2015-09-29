@@ -27,10 +27,6 @@
 #ifndef __OCPNTYPES_H__
 #define __OCPNTYPES_H__
 
-//#include "bbox.h"
-//#include "OCPNRegion.h"
-//class OCPNRegion;
-
 WX_DEFINE_ARRAY_INT(int, ArrayOfInts);
 
 //    ChartType constants

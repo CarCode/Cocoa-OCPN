@@ -4709,7 +4709,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0700;
 			};
 			buildConfigurationList = B3FF15EAE22C49A1BCA88BD8 /* Build configuration list for PBXProject "OpenCPN" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -6160,6 +6160,7 @@
 					"-ldl",
 				);
 				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = de.topperdiek.opencpn;
 				PRODUCT_NAME = OpenCPN;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
@@ -6286,6 +6287,7 @@
 					"-ldl",
 				);
 				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = de.topperdiek.opencpn;
 				PRODUCT_NAME = OpenCPN;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
@@ -11360,6 +11362,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;

@@ -24,10 +24,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************
- *
- * *
- */
+ ******************************************************************************/
 
 #include "s57.h"
 #include "ogr_api.h"
@@ -789,7 +786,7 @@ void S57Reader::ApplyObjectClassAttributes( DDFRecord * poRecord,
     if( poATTF == NULL )
         return;
 
-    DDFFieldDefn *poDefn = poATTF->GetFieldDefn();
+//    DDFFieldDefn *poDefn = poATTF->GetFieldDefn();  // Not used
     
     nAttrCount = poATTF->GetRepeatCount();
     for( iAttr = 0; iAttr < nAttrCount; iAttr++ )
@@ -1466,7 +1463,14 @@ void S57Reader::AssembleSoundingGeometry( DDFRecord * poFRecord,
     if( poField == NULL )
         poField = poSRecord->FindField( "SG3D" );
     if( poField == NULL )
+#ifdef __WXOSX__
+    {
+        delete poMP;
         return;
+    }
+#else
+    return;
+#endif
 
     poXCOO = poField->GetFieldDefn()->FindSubfieldDefn( "XCOO" );
     poYCOO = poField->GetFieldDefn()->FindSubfieldDefn( "YCOO" );
@@ -2367,7 +2371,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
 
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
 
-        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );
+//        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );  // Not used
 
         for( int iAtt = 0; iAtt < nRepeatCount; iAtt++ )
         {
@@ -2419,7 +2423,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
         
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
         
-        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );
+//        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );  // Not used
         
         for( int iAtt = 0; iAtt < nRepeatCount; iAtt++ )
         {

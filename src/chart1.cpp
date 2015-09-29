@@ -907,29 +907,30 @@ void MyApp::OnActivateApp( wxActivateEvent& event )
     }
     else
     {
+        if(gFrame){
 //        printf("App Activate\n");
-        gFrame->SubmergeToolbar();              // This is needed to reset internal wxWidgets logic
-                                                // Also required for other TopLevelWindows here
-                                                // reportedly not required for wx 2.9
-        gFrame->SurfaceToolbar();
+            gFrame->SubmergeToolbar();              // This is needed to reset internal wxWidgets logic
+            // Also required for other TopLevelWindows here
+            // reportedly not required for wx 2.9
+            gFrame->SurfaceToolbar();
 
-        wxWindow *pOptions = NULL;
+            wxWindow *pOptions = NULL;
 
-        wxWindowListNode *node = AppActivateList.GetFirst();
-        while (node) {
-            wxWindow *win = node->GetData();
-            win->Show();
-            if( win->IsKindOf( CLASSINFO(options) ) )
-                pOptions = win;
+            wxWindowListNode *node = AppActivateList.GetFirst();
+            while (node) {
+                wxWindow *win = node->GetData();
+                win->Show();
+                if( win->IsKindOf( CLASSINFO(options) ) )
+                    pOptions = win;
 
-            node = node->GetNext();
+                node = node->GetNext();
+            }
+            
+            if( pOptions )
+                pOptions->Raise();
+            else
+                gFrame->Raise();
         }
-
-        if( pOptions )
-            pOptions->Raise();
-        else
-            gFrame->Raise();
-
     }
 #endif
 
@@ -1090,7 +1091,7 @@ void LoadS57()
 #endif
 }
 
-#ifdef __WXGTK__
+#if defined(__WXGTK__) && defined(OCPN_HAVE_X11)
 static char *get_X11_property (Display *disp, Window win,
                                Atom xa_prop_type, const char *prop_name) {
     Atom xa_prop_name;
@@ -1566,7 +1567,7 @@ bool MyApp::OnInit()
                 (wm_name = get_X11_property(disp, *sup_window,
                                             XA_STRING, "_NET_WM_NAME"))) {
                 // we know it works in xfce4, add other checks as we can validate them
-                if(strstr(wm_name, "Xfwm4"))
+                if(strstr(wm_name, "Xfwm4") || strstr(wm_name, "Compiz"))
                     g_bTransparentToolbarInOpenGLOK = true;
 
                 free(wm_name);
@@ -2658,8 +2659,13 @@ ocpnToolBarSimple *MyFrame::CreateAToolbar()
 
     if( g_FloatingToolbarDialog ){
         tb = g_FloatingToolbarDialog->GetToolbar();
-        if(tb)
-            g_FloatingToolbarDialog->SetGeometry(g_Compass->IsShown(), g_Compass->GetRect());
+        if(tb){
+            if(g_Compass)
+                g_FloatingToolbarDialog->SetGeometry(g_Compass->IsShown(), g_Compass->GetRect());
+            else
+                g_FloatingToolbarDialog->SetGeometry(false, wxRect(0,0,1,1));
+        }
+
     }
     if( !tb )
         return 0;
@@ -5872,6 +5878,13 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
         // Load the waypoints.. both of these routines are very slow to execute which is why
         // they have been to defered until here
         pWayPointMan = new WayPointman();
+
+        // Reload the ownship icon from UserIcons, if present
+        if(cc1){
+            if(cc1->SetUserOwnship())
+                cc1->SetColorScheme(global_color_scheme);
+        }
+
         pConfig->LoadNavObjects();
 
         //    Re-enable anchor watches if set in config file
@@ -10010,6 +10023,12 @@ int isTTYreal(const char *dev)
 
 #endif
 
+#ifdef __MINGW32__ // do I need this because of mingw, or because I am running mingw under wine?
+# ifndef GUID_CLASS_COMPORT
+DEFINE_GUID(GUID_CLASS_COMPORT, 0x86e0d1e0L, 0x8089, 0x11d0, 0x9c, 0xe4, 0x08, 0x00, 0x3e, 0x30, 0x1f, 0x73);
+# endif
+#endif
+
 wxArrayString *EnumerateSerialPorts( void )
 {
     wxArrayString *preturn = new wxArrayString;
@@ -11349,7 +11368,7 @@ void RedirectIOToConsole()
 
     // redirect unbuffered STDOUT to the console
 
-    lStdHandle = (long)GetStdHandle(STD_OUTPUT_HANDLE);
+    lStdHandle = (wxIntPtr)GetStdHandle(STD_OUTPUT_HANDLE);
     hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
     fp = _fdopen( hConHandle, "w" );
     *stdout = *fp;
@@ -11358,7 +11377,7 @@ void RedirectIOToConsole()
 
     // redirect unbuffered STDIN to the console
 
-    lStdHandle = (long)GetStdHandle(STD_INPUT_HANDLE);
+    lStdHandle = (wxIntPtr)GetStdHandle(STD_INPUT_HANDLE);
     hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
     fp = _fdopen( hConHandle, "r" );
     *stdin = *fp;
@@ -11366,7 +11385,7 @@ void RedirectIOToConsole()
 
     // redirect unbuffered STDERR to the console
 
-    lStdHandle = (long)GetStdHandle(STD_ERROR_HANDLE);
+    lStdHandle = (wxIntPtr)GetStdHandle(STD_ERROR_HANDLE);
     hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
     fp = _fdopen( hConHandle, "w" );
     *stderr = *fp;
@@ -11383,8 +11402,9 @@ void RedirectIOToConsole()
 
 
 #ifdef __WXMSW__
-bool TestGLCanvas(wxString &prog_dir)
+bool TestGLCanvas(wxString prog_dir)
 {
+#ifdef __MSVC__
     wxString test_app = prog_dir;
     test_app += _T("ocpn_gltest1.exe");
 
@@ -11400,8 +11420,10 @@ bool TestGLCanvas(wxString &prog_dir)
     }
     else
         return true;
-
-
+#else
+    /* until we can get the source to ocpn_gltest1 assume true for mingw */
+    return true;
+#endif
 }
 #endif
 

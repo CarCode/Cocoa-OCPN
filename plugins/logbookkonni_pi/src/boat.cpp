@@ -1127,6 +1127,9 @@ void Boat::saveODS( wxString path, bool mode )
 		txt << _T("</table:table-row>");;
 
 	}
+#ifdef __WXOSX__
+    delete stream;
+#endif
 	txt << parent->contentEnd;
 
 	zip.PutNextEntry(wxT("mimetype"));

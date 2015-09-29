@@ -2601,6 +2601,9 @@ void CrewList::saveODS(wxString path)
 
 	}
 	   }
+#ifdef __WXOSX__
+    delete stream;
+#endif
 	txt << dialog->contentEnd;
 
 	zip.PutNextEntry(wxT("mimetype"));

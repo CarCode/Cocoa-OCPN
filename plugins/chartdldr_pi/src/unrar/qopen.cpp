@@ -261,7 +261,7 @@ bool QuickOpen::ReadNext()
   RawRead Raw(NULL);
   if (!ReadRaw(Raw)) // Read internal quick open header preceding stored block.
     return false;
-  uint Flags=(uint)Raw.GetV();
+//  uint Flags=(uint)Raw.GetV();  // Not used
   uint64 Offset=Raw.GetV();
   size_t HeaderSize=(size_t)Raw.GetV();
   LastReadHeader.Alloc(HeaderSize);

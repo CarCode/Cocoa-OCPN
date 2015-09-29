@@ -1,11 +1,11 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Georef utility
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,14 +20,13 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
 
  ***************************************************************************
  *  Parts of this file were adapted from source code found in              *
  *  John F. Waers (jfwaers@csn.net) public domain program MacGPS45         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 
 
@@ -46,7 +45,10 @@
 #define snprintf mysnprintf
 #endif
 
-
+#if !defined(NAN)
+static const long long lNaN = 0xfff8000000000000;
+#define NAN (*(double*)&lNaN)
+#endif
 
 
 //  ellipsoid: index into the gEllipsoid[] array, in which
@@ -391,13 +393,13 @@ void toSMcache(double lat, double lon, double y30, double lon0, double *x, doubl
         lon < 0.0 ? xlon += 360.0 : xlon -= 360.0;
     }
     
-    const float z = WGS84_semimajor_axis_meters * mercator_k0;
+    const double z = WGS84_semimajor_axis_meters * mercator_k0;
     
     *x = (xlon - lon0) * DEGREE * z;
     
     // y =.5 ln( (1 + sin t) / (1 - sin t) )
-    const float s = sinf(lat * DEGREE);
-    const float y3 = (.5f * logf((1 + s) / (1 - s))) * z;
+    const double s = sinf(lat * DEGREE);
+    const double y3 = (.5 * logf((1 + s) / (1 - s))) * z;
     
     *y = y3 - y30;
 }
@@ -651,6 +653,219 @@ void fromTM (double x, double y, double lat0, double lon0, double *lat, double *
 
 }
 
+/* orthographic, polar, stereographic, gnomonic and equirectangular projection routines, contributed by Sean D'Epagnier */
+/****************************************************************************/
+/* Convert Lat/Lon <-> Simple Polar                                         */
+/****************************************************************************/
+void cache_phi0(double lat0, double *sin_phi0, double *cos_phi0)
+{
+    double phi0 = lat0*DEGREE;
+    *sin_phi0 = sin(phi0);
+    *cos_phi0 = cos(phi0);
+}
+
+void toORTHO(double lat, double lon, double sin_phi0, double cos_phi0, double lon0, double *x, double *y)
+{
+    const double z = WGS84_semimajor_axis_meters * mercator_k0;
+    
+    double xlon = lon;
+    /*  Make sure lon and lon0 are same phase */
+    if((lon * lon0 < 0.) && (fabs(lon - lon0) > 180.))
+        lon < 0.0 ? xlon += 360.0 : xlon -= 360.0;
+    
+    double theta = (xlon - lon0) * DEGREE;
+    double phi = lat * DEGREE;
+    double cos_phi = cosf(phi);
+    
+    float vy = sinf(phi), vz = cosf(theta)*cos_phi;
+    
+    if(vy*sin_phi0 + vz*cos_phi0 < 0) { // on the far side of the earth
+        *x = *y = NAN;
+        return;
+    }
+    
+    double vx = sinf(theta)*cos_phi;
+    double vw = vy*cos_phi0 - vz*sin_phi0;
+    
+    *x = vx*z;
+    *y = vw*z;
+}
+
+void fromORTHO(double x, double y, double lat0, double lon0, double *lat, double *lon)
+{
+    const double z = WGS84_semimajor_axis_meters * mercator_k0;
+    
+    double vx = x / z;
+    double vw = y / z;
+    
+    double phi0 = lat0 * DEGREE;
+    double d = 1 - vx*vx - vw*vw;
+    
+    if(d < 0) { // position is outside of the earth
+        *lat = *lon = NAN;
+        return;
+    }
+    
+    double sin_phi0 = sin(phi0), cos_phi0 = cos(phi0);
+    double vy = vw*cos_phi0 + sqrt(d)*sin_phi0;
+    double phi = asin(vy);
+    
+    double vz = (vy*cos_phi0 - vw) / sin_phi0;
+    double theta = atan2(vx, vz);
+    
+    *lat = phi / DEGREE;
+    *lon = theta / DEGREE + lon0;
+}
+
+double toPOLARcache_e(double lat0)
+{
+    double pole = lat0 > 0 ? 90 : -90;
+    return tan((pole - lat0) * DEGREE / 2);
+}
+
+void toPOLAR(double lat, double lon, double e, double lat0, double lon0, double *x, double *y)
+{
+    const double z = WGS84_semimajor_axis_meters * mercator_k0;
+    
+    double xlon = lon;
+    /*  Make sure lon and lon0 are same phase */
+    if((lon * lon0 < 0.) && (fabs(lon - lon0) > 180.))
+        lon < 0.0 ? xlon += 360.0 : xlon -= 360.0;
+    
+    double theta = (xlon - lon0) * DEGREE;
+    double pole = lat0 > 0 ? 90 : -90;
+    
+    double d = tanf((pole - lat) * DEGREE / 2);
+    
+    *x = fabs(d)*sinf(theta)*z;
+    *y = (e-d*cosf(theta))*z;
+}
+
+
+void fromPOLAR(double x, double y, double lat0, double lon0, double *lat, double *lon)
+{
+    const double z = WGS84_semimajor_axis_meters * mercator_k0;
+    double pole = lat0 > 0 ? 90 : -90;
+    
+    double e = tan((pole - lat0) * DEGREE / 2);
+    
+    double xn = x/z;
+    double yn = e - y/z;
+    double d = sqrt(xn*xn + yn*yn);
+    if(pole < 0) // south polar (negative root and correct branch from cosine)
+        d = -d, yn = -yn;
+    
+    *lat = pole - atan(d) * 2 / DEGREE;
+    
+    double theta = atan2(xn, yn);
+    *lon = theta / DEGREE + lon0;
+}
+
+static inline void toSTEREO1(double &u, double &v, double &w, double lat, double lon,
+                             double sin_phi0, double cos_phi0, double lon0)
+{
+    double xlon = lon;
+    /*  Make sure lon and lon0 are same phase */
+    if((lon * lon0 < 0.) && (fabs(lon - lon0) > 180.))
+        lon < 0.0 ? xlon += 360.0 : xlon -= 360.0;
+    
+    double theta = (xlon - lon0) * DEGREE, phi = lat*DEGREE;
+    double cos_phi = cos(phi), v0 = sinf(phi), w0 = cosf(theta)*cos_phi;
+    
+    u = sinf(theta)*cos_phi;
+    v = cos_phi0*v0 - sin_phi0*w0;
+    w = sin_phi0*v0 + cos_phi0*w0;
+}
+
+static inline void fromSTEREO1(double *lat, double *lon, double lat0, double lon0,
+                               double u, double v, double w)
+{
+    double phi0 = lat0*DEGREE;
+    double v0 = sin(phi0)*w + cos(phi0)*v;
+    double w0 = cos(phi0)*w - sin(phi0)*v;
+    double phi = asin(v0);
+    double theta = atan2(u, w0);
+    
+    *lat = phi / DEGREE;
+    *lon = theta / DEGREE + lon0;
+}
+
+void toSTEREO(double lat, double lon, double sin_phi0, double cos_phi0, double lon0, double *x, double *y)
+{
+    const double z = WGS84_semimajor_axis_meters * mercator_k0;
+    
+    double u, v, w;
+    toSTEREO1(u, v, w, lat, lon, sin_phi0, cos_phi0, lon0);
+    
+    double t = 2/(w+1);
+    *x = u*t*z;
+    *y = v*t*z;
+}
+
+void fromSTEREO(double x, double y, double lat0, double lon0, double *lat, double *lon)
+{
+    const double z = WGS84_semimajor_axis_meters * mercator_k0;
+    
+    x /= z, y /= z;
+    
+    double t = (x*x + y*y) / 4 + 1;
+    
+    double u = x/t;
+    double v = y/t;
+    double w = 2/t - 1;
+    
+    fromSTEREO1(lat, lon, lat0, lon0, u, v, w);
+}
+
+void toGNO(double lat, double lon, double sin_phi0, double cos_phi0, double lon0, double *x, double *y)
+{
+    const double z = WGS84_semimajor_axis_meters * mercator_k0;
+    
+    double u, v, w;
+    toSTEREO1(u, v, w, lat, lon, sin_phi0, cos_phi0, lon0);
+    
+    if(w <= 0) {
+        *x = *y = NAN; // far side of world
+        return;
+    }
+    
+    *x = u/w*z;
+    *y = v/w*z;
+}
+
+void fromGNO(double x, double y, double lat0, double lon0, double *lat, double *lon)
+{
+    const double z = WGS84_semimajor_axis_meters * mercator_k0;
+    
+    x /= z, y /= z;
+    
+    double w = 1 / sqrt(x*x + y*y + 1);
+    double u = x*w;
+    double v = y*w;
+    
+    fromSTEREO1(lat, lon, lat0, lon0, u, v, w);
+}
+
+void toEQUIRECT(double lat, double lon, double lat0, double lon0, double *x, double *y)
+{
+    const double z = WGS84_semimajor_axis_meters * mercator_k0;
+    double xlon = lon;
+    /*  Make sure lon and lon0 are same phase */
+    if((lon * lon0 < 0.) && (fabs(lon - lon0) > 180.))
+        lon < 0.0 ? xlon += 360.0 : xlon -= 360.0;
+    
+    *x = (xlon - lon0) * DEGREE * z;
+    *y = (lat - lat0) * DEGREE * z;
+}
+
+void fromEQUIRECT(double x, double y, double lat0, double lon0, double *lat, double *lon)
+{
+    const double z = WGS84_semimajor_axis_meters * mercator_k0;
+    
+    *lat = lat0 + (y / (DEGREE * z));
+    //    if(fabs(*lat) > 90) *lat = NAN;
+    *lon = lon0 + (x / (DEGREE * z));
+}
 
 
 /* --------------------------------------------------------------------------------- *
@@ -701,8 +916,8 @@ void MolodenskyTransform (double lat, double lon, double *to_lat, double *to_lon
 
       const double dlon = (-dx * slon + dy * clon) / ((rn + from_h) * clat);
 
-      const double dh = (dx * clat * clon) + (dy * clat * slon) + (dz * slat)
-                  - (da * (from_a / rn)) + ((df * rn * ssqlat) / adb);
+//      const double dh = (dx * clat * clon) + (dy * clat * slon) + (dz * slat)
+//                  - (da * (from_a / rn)) + ((df * rn * ssqlat) / adb);  // Not used
 
       *to_lon = lon + dlon/DEGREE;
       *to_lat = lat + dlat/DEGREE;
@@ -765,7 +980,7 @@ double adjlon (double lon) {
 /*
 // Given the lat/long of starting point, and traveling a specified distance,
 // at an initial bearing, calculates the lat/long of the resulting location.
-// using elliptic earth model.
+// using sphere earth model.
 */
 /* --------------------------------------------------------------------------------- */
 void ll_gc_ll(double lat, double lon, double brg, double dist, double *dlat, double *dlon)
@@ -783,7 +998,7 @@ void ll_gc_ll(double lat, double lon, double brg, double dist, double *dlat, dou
     int ellipse;
     double geod_f;
     double geod_a;
-    double es, onef, f, f64, f2, f4;
+    double es, onef, f, /*f64, f2,*/ f4;  // Not used
     
     /*      Setup the static parameters  */
     phi1 = lat * DEGREE;            /* Initial Position  */
@@ -805,9 +1020,9 @@ void ll_gc_ll(double lat, double lon, double brg, double dist, double *dlat, dou
         es = 2 * f - f * f;
         onef = sqrt(1. - es);
         geod_f = 1 - onef;
-        f2 = geod_f/2;
+//        f2 = geod_f/2;  // Not used
         f4 = geod_f/4;
-        f64 = geod_f*geod_f/64;
+//        f64 = geod_f*geod_f/64;  // Not used
         
         al12 = adjlon(al12); /* reduce to  +- 0-PI */
         signS = fabs(al12) > HALFPI ? 1 : 0;
@@ -871,7 +1086,7 @@ void ll_gc_ll(double lat, double lon, double brg, double dist, double *dlat, dou
         if (merid) {
             phi2 = atan( tan(HALFPI + s1 - ds) / onef);
             if (al21 > 0.) {
-                al21 = PI;
+//                al21 = PI;  // Not used
                 if (signS)
                     de = PI;
                 else {
@@ -879,7 +1094,7 @@ void ll_gc_ll(double lat, double lon, double brg, double dist, double *dlat, dou
                     de = 0.;
                 }
             } else {
-                al21 = 0.;
+//                al21 = 0.;  // Not used
                 if (signS) {
                     phi2 = - phi2;
                     de = 0;
@@ -1030,7 +1245,7 @@ void PositionBearingDistanceMercator(double lat, double lon, double brg, double 
 /* --------------------------------------------------------------------------------- */
 /*
 // Given the lat/long of starting point and ending point,
-// calculates the distance along a geodesic curve, using elliptic earth model.
+// calculates the distance along a geodesic curve, using sphere earth model.
 */
 /* --------------------------------------------------------------------------------- */
 
@@ -1352,7 +1567,7 @@ int Georef_Calculate_Coefficients(struct GeoRef *cp, int nlin_lon)
                                          0.0);
 
     //      if blin_lon > 0, force cross terms in latitude equation coefficients to be zero by making ty not dependent on lon,
-    px = nlin_lon ? &pnull[0] : cp->lon;
+//    px = nlin_lon ? &pnull[0] : cp->lon;  // Not used
 
     int r4 = Georef_Calculate_Coefficients_Onedir(cp->count, mp_lat, &pnull[0]/*cp->lon*/, cp->lat, cp->ty, cp->wpy,
                                          cp->tymin - ((cp->tymax - cp->tymin) * cp->latmin / (cp->latmax - cp->latmin)),

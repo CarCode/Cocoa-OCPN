@@ -86,11 +86,11 @@ void ocpnCompass::Paint( ocpnDC& dc )
             
         }
 #else
+        bool b_alpha = true;
 #ifdef __WXOSX__
-        dc.DrawBitmap( m_StatBmp, m_rect.x, m_rect.y, false );
-#else
-        dc.DrawBitmap( m_StatBmp, m_rect.x, m_rect.y, true );
+        b_alpha = false;
 #endif
+        dc.DrawBitmap( m_StatBmp, m_rect.x, m_rect.y, b_alpha );
 #endif
     }
 }
@@ -116,7 +116,7 @@ void ocpnCompass::UpdateStatus( bool bnew )
         m_lastgpsIconName.Clear();        // force an update to occur
         
         //  We clear the texture so that any onPaint method will not use a stale texture
-# ifdef ocpnUSE_GLES
+#ifdef ocpnUSE_GLES
         if(g_bopengl){
             if(texobj){
                 glDeleteTextures(1, &texobj);

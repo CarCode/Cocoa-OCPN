@@ -213,6 +213,9 @@ OGRErr OGRMultiPolygon::importFromWkt( char ** ppszInput )
         pszInput = OGRWktReadToken( pszInput, szToken );
         if( szToken[0] != '(' )
         {
+#ifdef __WXOSX__
+            delete poPolygon;
+#endif
             eErr = OGRERR_CORRUPT_DATA;
             break;
         }
@@ -270,6 +273,9 @@ OGRErr OGRMultiPolygon::importFromWkt( char ** ppszInput )
         if( eErr == OGRERR_NONE )
             eErr = addGeometryDirectly( poPolygon );
 
+#ifdef __WXOSX__
+        delete poPolygon;
+#endif
     } while( szToken[0] == ',' && eErr == OGRERR_NONE );
 
 /* -------------------------------------------------------------------- */

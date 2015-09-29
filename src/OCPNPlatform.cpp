@@ -423,7 +423,7 @@ void OCPNPlatform::Initialize_1( void )
 #endif
 #endif
 
-#ifdef __WXMSW__
+#ifdef __MSVC__
     //  Invoke my own handler for failures of malloc/new
     _set_new_handler( MyNewHandler );
     //  configure malloc to call the New failure handler on failure
@@ -463,7 +463,7 @@ void OCPNPlatform::Initialize_1( void )
 #endif
 #endif
             
-#ifdef __WXMSW__
+#ifdef __MSVC__
             
             //    Handle any Floating Point Exceptions which may leak thru from other
             //    processes.  The exception filter is in cutil.c
