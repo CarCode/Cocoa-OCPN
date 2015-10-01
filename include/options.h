@@ -383,7 +383,7 @@ class options: private Uncopyable, public wxScrollingDialog
     void OnUploadFormatChange( wxCommandEvent& event );
     void EnableItem( const long index );
     void OnConnectionToggleEnable( wxListEvent &event );
-    void OnConnectionToggleEnable( wxMouseEvent &event );
+    void OnConnectionToggleEnableMouse(wxMouseEvent &event);
 
     bool connectionsaved;
     bool m_connection_enabled;

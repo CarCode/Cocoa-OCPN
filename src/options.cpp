@@ -323,7 +323,6 @@ public:
     void Check(int index, bool val);
     bool IsChecked( int index );
 
-
 private:
     wxBoxSizer *m_sizer;
 
@@ -333,7 +332,6 @@ private:
 
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(CBList);
-
 
 bool OCPNCheckedListCtrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pt,
                                const wxSize& sz, long style, const wxString& name)
@@ -1490,7 +1488,7 @@ void options::CreatePanel_NMEA_Compact( size_t parent, int border_size,
     m_cbAPBMagnetic->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( options::OnValChange ), NULL, this );
 
 #if wxCHECK_VERSION(2, 9, 0)
-    m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnable), NULL, this );
+    m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnableMouse), NULL, this );
     m_lcSources->Connect( wxEVT_LIST_ITEM_ACTIVATED, wxListEventHandler( options::OnConnectionToggleEnable ), NULL, this );
 #endif
 
@@ -1942,7 +1940,7 @@ void options::CreatePanel_NMEA( size_t parent, int border_size,
     m_cbAPBMagnetic->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( options::OnValChange ), NULL, this );
 
 #if wxCHECK_VERSION(2, 9, 0)
-    m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnable), NULL, this );
+    m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnableMouse), NULL, this);
     m_lcSources->Connect( wxEVT_LIST_ITEM_ACTIVATED, wxListEventHandler( options::OnConnectionToggleEnable ), NULL, this );
 #endif
 
@@ -2017,7 +2015,7 @@ void options::OnConnectionToggleEnable( wxListEvent &event )
     cc1->Refresh();
 }
 
-void options::OnConnectionToggleEnable( wxMouseEvent &event )
+void options::OnConnectionToggleEnableMouse(wxMouseEvent& event)
 {
     int flags;
     long index = m_lcSources->HitTest( event.GetPosition(), flags );
@@ -4346,7 +4344,9 @@ void options::SetInitialSettings( void )
         }
 
         pDispCat->SetSelection( nset );
-
+#ifdef __WXOSX__
+    if(ps57CtlListBox)
+#endif
         ps57CtlListBox->Enable( MARINERS_STANDARD == ps52plib->GetDisplayCategory() );
         itemButtonClearList->Enable( MARINERS_STANDARD == ps52plib->GetDisplayCategory() );
         itemButtonSelectList->Enable( MARINERS_STANDARD == ps52plib->GetDisplayCategory() );

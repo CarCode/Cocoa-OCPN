@@ -1430,9 +1430,13 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
         nPlypoint = 0;
         Plypoint *pOldPlyTable = pPlyTable;
         pPlyTable = NULL;
+#ifdef __WXOSX__
+        double lastplylat=0.0, lastplylon=0.0, x1=0.0, y1=0.0, x2, y2;
+#else
+        double lastplylat, lastplylon, x1, y1, x2, y2;
+#endif
         for( int i = 0; i < count+1; i++ ) {
             double plylat = pOldPlyTable[i%count].ltp, plylon = pOldPlyTable[i%count].lnp;
-            double lastplylat, lastplylon, x1, y1, x2, y2;
             latlong_to_chartpix(plylat, plylon, x2, y2);
             if(i>0) {
                 if(lastplylon - plylon > 180)
@@ -2996,7 +3000,11 @@ void ChartBaseBSB::chartpix_to_latlong(double pixx, double pixy, double *plat, d
 void ChartBaseBSB::ComputeSourceRectangle(const ViewPort &vp, wxRect *pSourceRect)
 {
     m_raster_scale_factor = GetRasterScaleFactor(vp);
+#ifdef __WXOSX__
+    double xd = 0.0, yd = 0.0;
+#else
     double xd, yd;
+#endif
     latlong_to_chartpix(vp.clat, vp.clon, xd, yd);
 
     wxRealPoint pos, size;
@@ -4286,8 +4294,10 @@ int   ChartBaseBSB::BSBGetScanline( unsigned char *pLineBuf, int y, int xs, int 
         do byNext = *lp++; while( (byNext & 0x80) != 0 );
 
         //      Setup masking values.
+#ifdef USE_OLD_CACHE
         nValueShift = 7 - nColorSize;
         byValueMask = (((1 << nColorSize)) - 1) << nValueShift;
+#endif
         byCountMask = (1 << (7 - nColorSize)) - 1;
 
         //      Read and expand runs.

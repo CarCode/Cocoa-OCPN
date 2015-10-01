@@ -518,8 +518,9 @@ void ocpnFloatingToolbarDialog::Surface()
 {
 
     if(m_pRecoverwin){
-        m_pRecoverwin->Show();
-        m_pRecoverwin->Raise();
+        SurfaceFromGrabber();
+        //m_pRecoverwin->Show();
+        //m_pRecoverwin->Raise();
     }
     else {
         m_bsubmerged = false;
@@ -1701,11 +1702,11 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
             m_currentTool = -1;
             OnMouseEnter( -1 );
         }
-
+#ifndef __WXOSX__
         wxMouseEvent *pev = (wxMouseEvent *) event.Clone();
         GetParent()->GetEventHandler()->AddPendingEvent( *pev );
         wxDELETE( pev );
-
+#endif
         return;
     }
 
@@ -1726,11 +1727,11 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
             m_currentTool = tool->GetId();
             OnMouseEnter( m_currentTool );
         }
-
+#ifndef __WXOSX__
         wxMouseEvent *pev = (wxMouseEvent *) event.Clone();
         GetParent()->GetEventHandler()->AddPendingEvent( *pev );
         wxDELETE( pev );
-
+#endif
         return;
     }
 
@@ -1779,10 +1780,11 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
 
         DoPluginToolUp();
     }
-
+#ifndef __WXOSX__
     wxMouseEvent *pev = (wxMouseEvent *) event.Clone();
     GetParent()->GetEventHandler()->AddPendingEvent( *pev );
     wxDELETE( pev );
+#endif
     event.Skip();
 }
 
