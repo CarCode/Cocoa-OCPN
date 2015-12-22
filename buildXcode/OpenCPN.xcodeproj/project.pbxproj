@@ -56,8 +56,8 @@
 			buildPhases = (
 			);
 			dependencies = (
+				A65D60391C23442C00988D56 /* PBXTargetDependency */,
 				A6F037B61B73FBF000E82ECC /* PBXTargetDependency */,
-				A669B20F1B374A6500C440BF /* PBXTargetDependency */,
 				A68035B31B2890A8007A4045 /* PBXTargetDependency */,
 				EAAB4E87696645CDAEA03510 /* PBXTargetDependency */,
 				785D38FA2EB248D992323ED9 /* PBXTargetDependency */,
@@ -426,6 +426,15 @@
 		A6520DF019013947006FB056 /* randtable.c in Sources */ = {isa = PBXBuildFile; fileRef = A6520DEF19013947006FB056 /* randtable.c */; };
 		A6520DF519013B49006FB056 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6520DF419013B49006FB056 /* tinystr.cpp */; };
 		A6520DFD1901695D006FB056 /* ReportDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6520DFC1901695D006FB056 /* ReportDialog.cpp */; };
+		A6581CAE1C241AFA007A36A7 /* LLRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6581CAD1C241AF3007A36A7 /* LLRegion.cpp */; };
+		A6581CB01C241CCF007A36A7 /* singlecolourfitfast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6581CAF1C241CC9007A36A7 /* singlecolourfitfast.cpp */; };
+		A6581CB21C241CEF007A36A7 /* twocolourfitfast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6581CB11C241CEA007A36A7 /* twocolourfitfast.cpp */; };
+		A6581CBB1C2443F8007A36A7 /* AboutDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6581CBA1C2443F2007A36A7 /* AboutDialog.cpp */; };
+		A6581CBD1C24441E007A36A7 /* History.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6581CBC1C244418007A36A7 /* History.cpp */; };
+		A6581CBF1C244443007A36A7 /* Plot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6581CBE1C24443C007A36A7 /* Plot.cpp */; };
+		A6581CC11C244463007A36A7 /* sweepplot_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6581CC01C24445D007A36A7 /* sweepplot_pi.cpp */; };
+		A6581CC31C244482007A36A7 /* SweepPlotDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6581CC21C24447E007A36A7 /* SweepPlotDialog.cpp */; };
+		A6581CC51C24449F007A36A7 /* SweepPlotUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6581CC41C24449A007A36A7 /* SweepPlotUI.cpp */; };
 		A65CBD8F1B08E73500549D28 /* CursorData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65CBD8E1B08E73500549D28 /* CursorData.cpp */; };
 		A65CBD911B08E76300549D28 /* GrabberWin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65CBD901B08E76300549D28 /* GrabberWin.cpp */; };
 		A65F36E4197473690006DC40 /* jsonreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65F36E11974733D0006DC40 /* jsonreader.cpp */; };
@@ -501,9 +510,6 @@
 		A68EAB3C18873EEE00893250 /* cpl_vsisimple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB3B18873EEE00893250 /* cpl_vsisimple.cpp */; };
 		A68FF40B184A673D00C65557 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF40A184A673D00C65557 /* icons.cpp */; };
 		A68FF40D184A676100C65557 /* PreferencesDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF40C184A676100C65557 /* PreferencesDialog.cpp */; };
-		A68FF40F184A679200C65557 /* trimplot_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF40E184A679200C65557 /* trimplot_pi.cpp */; };
-		A68FF411184A67B300C65557 /* TrimPlotDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF410184A67B300C65557 /* TrimPlotDialog.cpp */; };
-		A68FF413184A67E800C65557 /* TrimPlotUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF412184A67E800C65557 /* TrimPlotUI.cpp */; };
 		A68FF416184A7B4D00C65557 /* libtrimplot_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68FF3FB184A62A700C65557 /* libtrimplot_pi.dylib */; };
 		A69CD17717E34BEC00B2C059 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = A69CD17617E34BEC00B2C059 /* dsa_pub.pem */; };
 		A69FCA10194F4A5700E613B8 /* from_ownship.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69FCA0F194F4A5700E613B8 /* from_ownship.cpp */; };
@@ -866,7 +872,7 @@
 			remoteGlobalIDString = A6DB19BA18EDCDD300E643D2;
 			remoteInfo = BR24radar_pi;
 		};
-		A669B20E1B374A6500C440BF /* PBXContainerItemProxy */ = {
+		A65D60381C23442C00988D56 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
 			proxyType = 1;
@@ -1688,6 +1694,24 @@
 		A6520DFC1901695D006FB056 /* ReportDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ReportDialog.cpp; path = plugins/weather_routing_pi/src/ReportDialog.cpp; sourceTree = "<group>"; };
 		A6520DFE19016993006FB056 /* ReportDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReportDialog.h; path = plugins/weather_routing_pi/src/ReportDialog.h; sourceTree = "<group>"; };
 		A65483FC1AFFED0A00317F8C /* DecoderOptionsDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DecoderOptionsDialog.h; path = plugins/weatherfax_pi/src/DecoderOptionsDialog.h; sourceTree = "<group>"; };
+		A6581CAB1C241A7E007A36A7 /* LLRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LLRegion.h; path = include/LLRegion.h; sourceTree = "<group>"; };
+		A6581CAC1C241AA4007A36A7 /* glu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glu.h; path = include/GL/glu.h; sourceTree = "<group>"; };
+		A6581CAD1C241AF3007A36A7 /* LLRegion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LLRegion.cpp; path = src/LLRegion.cpp; sourceTree = "<group>"; };
+		A6581CAF1C241CC9007A36A7 /* singlecolourfitfast.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = singlecolourfitfast.cpp; path = src/texcmp/squish/singlecolourfitfast.cpp; sourceTree = "<group>"; };
+		A6581CB11C241CEA007A36A7 /* twocolourfitfast.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = twocolourfitfast.cpp; path = src/texcmp/squish/twocolourfitfast.cpp; sourceTree = "<group>"; };
+		A6581CB31C243B61007A36A7 /* AboutDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AboutDialog.h; path = plugins/trimplot_pi/src/AboutDialog.h; sourceTree = "<group>"; };
+		A6581CB41C243B85007A36A7 /* History.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = History.h; path = plugins/trimplot_pi/src/History.h; sourceTree = "<group>"; };
+		A6581CB51C243BA6007A36A7 /* Plot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plot.h; path = plugins/trimplot_pi/src/Plot.h; sourceTree = "<group>"; };
+		A6581CB61C243BC9007A36A7 /* sweepplot_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sweepplot_pi.h; path = plugins/trimplot_pi/src/sweepplot_pi.h; sourceTree = "<group>"; };
+		A6581CB71C243BE8007A36A7 /* SweepPlotDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SweepPlotDialog.h; path = plugins/trimplot_pi/src/SweepPlotDialog.h; sourceTree = "<group>"; };
+		A6581CB81C243C06007A36A7 /* SweepPlotUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SweepPlotUI.h; path = plugins/trimplot_pi/src/SweepPlotUI.h; sourceTree = "<group>"; };
+		A6581CB91C243C22007A36A7 /* wx28compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wx28compat.h; path = plugins/trimplot_pi/src/wx28compat.h; sourceTree = "<group>"; };
+		A6581CBA1C2443F2007A36A7 /* AboutDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AboutDialog.cpp; path = plugins/trimplot_pi/src/AboutDialog.cpp; sourceTree = "<group>"; };
+		A6581CBC1C244418007A36A7 /* History.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = History.cpp; path = plugins/trimplot_pi/src/History.cpp; sourceTree = "<group>"; };
+		A6581CBE1C24443C007A36A7 /* Plot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plot.cpp; path = plugins/trimplot_pi/src/Plot.cpp; sourceTree = "<group>"; };
+		A6581CC01C24445D007A36A7 /* sweepplot_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sweepplot_pi.cpp; path = plugins/trimplot_pi/src/sweepplot_pi.cpp; sourceTree = "<group>"; };
+		A6581CC21C24447E007A36A7 /* SweepPlotDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SweepPlotDialog.cpp; path = plugins/trimplot_pi/src/SweepPlotDialog.cpp; sourceTree = "<group>"; };
+		A6581CC41C24449A007A36A7 /* SweepPlotUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SweepPlotUI.cpp; path = plugins/trimplot_pi/src/SweepPlotUI.cpp; sourceTree = "<group>"; };
 		A65CBD8C1B08E6E100549D28 /* CursorData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CursorData.h; path = plugins/grib_pi/src/CursorData.h; sourceTree = "<group>"; };
 		A65CBD8D1B08E70F00549D28 /* GrabberWin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GrabberWin.h; path = plugins/grib_pi/src/GrabberWin.h; sourceTree = "<group>"; };
 		A65CBD8E1B08E73500549D28 /* CursorData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CursorData.cpp; path = plugins/grib_pi/src/CursorData.cpp; sourceTree = "<group>"; };
@@ -1842,14 +1866,8 @@
 		A68FF3FB184A62A700C65557 /* libtrimplot_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libtrimplot_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A68FF405184A669700C65557 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/trimplot_pi/src/icons.h; sourceTree = "<group>"; };
 		A68FF406184A66B900C65557 /* PreferencesDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesDialog.h; path = plugins/trimplot_pi/src/PreferencesDialog.h; sourceTree = "<group>"; };
-		A68FF407184A66DD00C65557 /* trimplot_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = trimplot_pi.h; path = plugins/trimplot_pi/src/trimplot_pi.h; sourceTree = "<group>"; };
-		A68FF408184A66FA00C65557 /* TrimPlotDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrimPlotDialog.h; path = plugins/trimplot_pi/src/TrimPlotDialog.h; sourceTree = "<group>"; };
-		A68FF409184A671700C65557 /* TrimPlotUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrimPlotUI.h; path = plugins/trimplot_pi/src/TrimPlotUI.h; sourceTree = "<group>"; };
 		A68FF40A184A673D00C65557 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/trimplot_pi/src/icons.cpp; sourceTree = "<group>"; };
 		A68FF40C184A676100C65557 /* PreferencesDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferencesDialog.cpp; path = plugins/trimplot_pi/src/PreferencesDialog.cpp; sourceTree = "<group>"; };
-		A68FF40E184A679200C65557 /* trimplot_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = trimplot_pi.cpp; path = plugins/trimplot_pi/src/trimplot_pi.cpp; sourceTree = "<group>"; };
-		A68FF410184A67B300C65557 /* TrimPlotDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrimPlotDialog.cpp; path = plugins/trimplot_pi/src/TrimPlotDialog.cpp; sourceTree = "<group>"; };
-		A68FF412184A67E800C65557 /* TrimPlotUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrimPlotUI.cpp; path = plugins/trimplot_pi/src/TrimPlotUI.cpp; sourceTree = "<group>"; };
 		A6912F3D179FEA6600C4AFA6 /* Celestial Navigation Basics.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = "Celestial Navigation Basics.html"; path = "plugins/celestial_navigation_pi/data/Celestial Navigation Basics.html"; sourceTree = "<group>"; };
 		A6912F3E179FEAA600C4AFA6 /* IGRF11.COF */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = IGRF11.COF; path = plugins/celestial_navigation_pi/data/IGRF11.COF; sourceTree = "<group>"; };
 		A6912F3F179FEAC500C4AFA6 /* vsop87d.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vsop87d.txt; path = plugins/celestial_navigation_pi/data/vsop87d.txt; sourceTree = "<group>"; };
@@ -2321,13 +2339,6 @@
 			name = "Header Files";
 			sourceTree = "<group>";
 		};
-		0CB9363A7A684266B6485C1D /* celestial_navigation-i18n */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "celestial_navigation-i18n";
-			sourceTree = "<group>";
-		};
 		12F1B40629F946D0AFE59BDD /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -2407,20 +2418,6 @@
 			name = "Source Files";
 			sourceTree = "<group>";
 		};
-		187FC46D3A994140A7E0D78E /* findit-i18n */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "findit-i18n";
-			sourceTree = "<group>";
-		};
-		1FEAD586B575410AAE3615F8 /* gradar-i18n */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "gradar-i18n";
-			sourceTree = "<group>";
-		};
 		2451BD609F1942A79B83145C /* logbookkonni_pi */ = {
 			isa = PBXGroup;
 			children = (
@@ -2428,13 +2425,6 @@
 				F4B7E9955EB24178A46AB2BD /* Source Files */,
 			);
 			name = logbookkonni_pi;
-			sourceTree = "<group>";
-		};
-		2460FC44FDDD495AAD837DC6 /* wmm-i18n */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "wmm-i18n";
 			sourceTree = "<group>";
 		};
 		288D9AAFB67C433994D580B9 /* i18n */ = {
@@ -2672,6 +2662,8 @@
 				A617AB14194E3CC600E7D443 /* maths.cpp */,
 				A617AB16194E3CFC00E7D443 /* rangefit.cpp */,
 				A617AB18194E3D5200E7D443 /* singlecolourfit.cpp */,
+				A6581CAF1C241CC9007A36A7 /* singlecolourfitfast.cpp */,
+				A6581CB11C241CEA007A36A7 /* twocolourfitfast.cpp */,
 				A617AB1A194E3D9300E7D443 /* squish.cpp */,
 				A638304C1950E14100027BFE /* crashprint.cpp */,
 				A669D4C41A2282860078BFB1 /* sha1.c */,
@@ -2680,6 +2672,7 @@
 				A6E082301AAB5956002CC7F0 /* OCPNPlatform.cpp */,
 				A639BC371B4C30CC0053AB4A /* chartbarwin.cpp */,
 				A60774D51B761E180034E864 /* compass.cpp */,
+				A6581CAD1C241AF3007A36A7 /* LLRegion.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -2734,30 +2727,20 @@
 				2C0162869B38442DA31B3E61 /* po-update */,
 				921E3A10C8974074A0DEC263 /* pot-update */,
 				A60F746617A02BB900A6160F /* calculator_pi */,
-				0CB9363A7A684266B6485C1D /* celestial_navigation-i18n */,
 				3F680006BEC44B83A3F6183C /* celestial_navigation_pi */,
-				F3435C5EDDEF4050817FF762 /* dashboard-i18n */,
 				052DB85431F44C8CBA6858BF /* dashboard_pi */,
-				187FC46D3A994140A7E0D78E /* findit-i18n */,
 				D8FD184683894F07BB420D23 /* findit_pi */,
-				1FEAD586B575410AAE3615F8 /* gradar-i18n */,
 				47E642168F404782B45A9246 /* gradar_pi */,
-				B36B63B7F4414C8C952598EA /* grib-i18n */,
 				2ACA7EDA82E04275B3BF121A /* grib_pi */,
-				EE6657A52EBF4DDBBD47045F /* IACFleet-i18n */,
 				6770617A94EA4BA5941208D4 /* iacfleet_pi */,
-				AB01852AFF5A410482A1255F /* logbookkonni-i18n */,
 				2451BD609F1942A79B83145C /* logbookkonni_pi */,
-				DEB45E3ACA8846D0B5F72958 /* vdr-i18n */,
 				6F9B0090875E48649E9DB0A1 /* vdr_pi */,
 				A68FF402184A660100C65557 /* trimplot_pi */,
 				A68EAAFB1887381400893250 /* s63_pi */,
 				A683CEB11958A663004A0137 /* watchdog_pi */,
 				A6D583AB17A141880094D709 /* watchman_pi */,
 				A6B4A53A17A5163C00E3A5D0 /* weather_routing_pi */,
-				C8FABBD57384476A8419D3C0 /* weatherfax-i18n */,
 				BAEF057CB9D547249F4426BB /* weatherfax_pi */,
-				2460FC44FDDD495AAD837DC6 /* wmm-i18n */,
 				434C4673FD18472FAE1F6B03 /* wmm_pi */,
 				A6DB19B718EDCC1700E643D2 /* BR24radar_pi */,
 				A6728C0E19D433B700070B45 /* objsearch_pi */,
@@ -2965,6 +2948,8 @@
 				A639BC361B4C30A10053AB4A /* chartbarwin.h */,
 				A64128E11B59058A0024C916 /* wx28compat.h */,
 				A60774D41B761DB00034E864 /* compass.h */,
+				A6581CAB1C241A7E007A36A7 /* LLRegion.h */,
+				A6581CAC1C241AA4007A36A7 /* glu.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -3555,11 +3540,15 @@
 		A68FF403184A661100C65557 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
-				A68FF409184A671700C65557 /* TrimPlotUI.h */,
-				A68FF408184A66FA00C65557 /* TrimPlotDialog.h */,
-				A68FF407184A66DD00C65557 /* trimplot_pi.h */,
 				A68FF406184A66B900C65557 /* PreferencesDialog.h */,
 				A68FF405184A669700C65557 /* icons.h */,
+				A6581CB31C243B61007A36A7 /* AboutDialog.h */,
+				A6581CB41C243B85007A36A7 /* History.h */,
+				A6581CB51C243BA6007A36A7 /* Plot.h */,
+				A6581CB61C243BC9007A36A7 /* sweepplot_pi.h */,
+				A6581CB71C243BE8007A36A7 /* SweepPlotDialog.h */,
+				A6581CB81C243C06007A36A7 /* SweepPlotUI.h */,
+				A6581CB91C243C22007A36A7 /* wx28compat.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -3567,11 +3556,14 @@
 		A68FF404184A662A00C65557 /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
-				A68FF412184A67E800C65557 /* TrimPlotUI.cpp */,
-				A68FF410184A67B300C65557 /* TrimPlotDialog.cpp */,
-				A68FF40E184A679200C65557 /* trimplot_pi.cpp */,
 				A68FF40C184A676100C65557 /* PreferencesDialog.cpp */,
 				A68FF40A184A673D00C65557 /* icons.cpp */,
+				A6581CBA1C2443F2007A36A7 /* AboutDialog.cpp */,
+				A6581CBC1C244418007A36A7 /* History.cpp */,
+				A6581CBE1C24443C007A36A7 /* Plot.cpp */,
+				A6581CC01C24445D007A36A7 /* sweepplot_pi.cpp */,
+				A6581CC21C24447E007A36A7 /* SweepPlotDialog.cpp */,
+				A6581CC41C24449A007A36A7 /* SweepPlotUI.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3830,20 +3822,6 @@
 			name = "Header Files";
 			sourceTree = "<group>";
 		};
-		AB01852AFF5A410482A1255F /* logbookkonni-i18n */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "logbookkonni-i18n";
-			sourceTree = "<group>";
-		};
-		B36B63B7F4414C8C952598EA /* grib-i18n */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "grib-i18n";
-			sourceTree = "<group>";
-		};
 		BAEF057CB9D547249F4426BB /* weatherfax_pi */ = {
 			isa = PBXGroup;
 			children = (
@@ -3900,13 +3878,6 @@
 				651EED43EC01439CA2996E3D /* vdr_pi.h */,
 			);
 			name = "Header Files";
-			sourceTree = "<group>";
-		};
-		C8FABBD57384476A8419D3C0 /* weatherfax-i18n */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "weatherfax-i18n";
 			sourceTree = "<group>";
 		};
 		CD113B3A09BD4020A8BFB595 /* NMEA0183 */ = {
@@ -4126,13 +4097,6 @@
 			name = "Source Files";
 			sourceTree = "<group>";
 		};
-		DEB45E3ACA8846D0B5F72958 /* vdr-i18n */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "vdr-i18n";
-			sourceTree = "<group>";
-		};
 		E196DA9AF0C44890A52BDED7 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -4198,20 +4162,6 @@
 				A65009C617DB5C2200FD3148 /* de.lproj */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
-		};
-		EE6657A52EBF4DDBBD47045F /* IACFleet-i18n */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "IACFleet-i18n";
-			sourceTree = "<group>";
-		};
-		F3435C5EDDEF4050817FF762 /* dashboard-i18n */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "dashboard-i18n";
 			sourceTree = "<group>";
 		};
 		F4B7E9955EB24178A46AB2BD /* Source Files */ = {
@@ -4709,7 +4659,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0720;
 			};
 			buildConfigurationList = B3FF15EAE22C49A1BCA88BD8 /* Build configuration list for PBXProject "OpenCPN" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -5619,11 +5569,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A68FF40F184A679200C65557 /* trimplot_pi.cpp in Sources */,
-				A68FF413184A67E800C65557 /* TrimPlotUI.cpp in Sources */,
 				A68FF40D184A676100C65557 /* PreferencesDialog.cpp in Sources */,
-				A68FF411184A67B300C65557 /* TrimPlotDialog.cpp in Sources */,
+				A6581CC51C24449F007A36A7 /* SweepPlotUI.cpp in Sources */,
 				A68FF40B184A673D00C65557 /* icons.cpp in Sources */,
+				A6581CC11C244463007A36A7 /* sweepplot_pi.cpp in Sources */,
+				A6581CBD1C24441E007A36A7 /* History.cpp in Sources */,
+				A6581CBB1C2443F8007A36A7 /* AboutDialog.cpp in Sources */,
+				A6581CC31C244482007A36A7 /* SweepPlotDialog.cpp in Sources */,
+				A6581CBF1C244443007A36A7 /* Plot.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5764,6 +5717,7 @@
 				A65F36E6197473690006DC40 /* jsonwriter.cpp in Sources */,
 				A66D8E2F18D2584E00BC8747 /* routeprintout.cpp in Sources */,
 				A639BC381B4C30CC0053AB4A /* chartbarwin.cpp in Sources */,
+				A6581CB21C241CEF007A36A7 /* twocolourfitfast.cpp in Sources */,
 				A617AB17194E3CFC00E7D443 /* rangefit.cpp in Sources */,
 				875EDB02E57A46C1AC1A60D4 /* chart1.cpp in Sources */,
 				A617AB07194E3BC200E7D443 /* lz4.c in Sources */,
@@ -5786,6 +5740,7 @@
 				F461793767334D119A1D1AC3 /* GoToPositionDialog.cpp in Sources */,
 				CD6B7B9189634F049EC0665B /* CM93DSlide.cpp in Sources */,
 				A617AB0F194E3C7300E7D443 /* colourblock.cpp in Sources */,
+				A6581CB01C241CCF007A36A7 /* singlecolourfitfast.cpp in Sources */,
 				9EB7262692174CEEA06D1578 /* RolloverWin.cpp in Sources */,
 				0233A10760CA4302A4740E46 /* glChartCanvas.cpp in Sources */,
 				A617AB11194E3C8E00E7D443 /* colourfit.cpp in Sources */,
@@ -5831,6 +5786,7 @@
 				A617AB13194E3CAA00E7D443 /* colourset.cpp in Sources */,
 				4304FED46B524F84A8E28B12 /* routemanagerdialog.cpp in Sources */,
 				F31A268E6D2E4275A3B3A300 /* routeprop.cpp in Sources */,
+				A6581CAE1C241AFA007A36A7 /* LLRegion.cpp in Sources */,
 				A7FB0E99BAB54FE18BFC2CF1 /* PositionParser.cpp in Sources */,
 				2B3ED7EF99A540518F94AAD0 /* tcmgr.cpp in Sources */,
 				1A53B74C5F334D138624FAF5 /* Station_Data.cpp in Sources */,
@@ -5977,10 +5933,10 @@
 			target = A6DB19BA18EDCDD300E643D2 /* BR24radar_pi */;
 			targetProxy = A64EBB511B26FD4800F861D0 /* PBXContainerItemProxy */;
 		};
-		A669B20F1B374A6500C440BF /* PBXTargetDependency */ = {
+		A65D60391C23442C00988D56 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A669B1D31B372B7400C440BF /* ac_pi */;
-			targetProxy = A669B20E1B374A6500C440BF /* PBXContainerItemProxy */;
+			targetProxy = A65D60381C23442C00988D56 /* PBXContainerItemProxy */;
 		};
 		A68035B31B2890A8007A4045 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8622,7 +8578,7 @@
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/src",
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/wxsqlite3-3.1.1/include",
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/sqlite-amalgamation-3080600",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl/wx/curl",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl",
 					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
 					"/usr/local/include/wx-3.1",
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
@@ -8734,7 +8690,7 @@
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/src",
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/wxsqlite3-3.1.1/include",
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/sqlite-amalgamation-3080600",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl/wx/curl",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl",
 					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
 					"/usr/local/include/wx-3.1",
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
