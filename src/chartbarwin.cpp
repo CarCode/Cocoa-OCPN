@@ -726,8 +726,12 @@ void Piano::DrawGL(int off)
         return;
 
 #ifdef ocpnUSE_GL
+<<<<<<< HEAD
     unsigned int w = cc1->GetClientSize().x, h = GetHeight();
     unsigned int endx = 0;
+=======
+    unsigned int w = cc1->GetClientSize().x, h = GetHeight(), endx;
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
     if(m_tex_piano_height != h)
         BuildGLTexture();

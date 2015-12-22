@@ -86,8 +86,14 @@ LLRegion &QuiltCandidate::GetCandidateRegion()
         ChartBase *chart = ChartData->OpenChartFromDB( dbIndex, FULL_INIT);
         return candidate_region = chart->GetValidRegion();
 #else
+<<<<<<< HEAD
         double cm93_ll_bounds[8] = {-80, -180, -80, 180, 80, 180, 80, -180};
         candidate_region = LLRegion(4, cm93_ll_bounds);
+=======
+        double cm93_ll_bounds[16] = {-80, -180, -80, 180, 80, 180, 80, 120,
+            40, 120, 40, 40, 80, 40, 80, -180};
+        candidate_region = LLRegion(8, cm93_ll_bounds);
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         return candidate_region;
 #endif
     }
@@ -121,7 +127,11 @@ LLRegion &QuiltCandidate::GetCandidateRegion()
             float *pfp = cte.GetpAuxPlyTableEntry( ip );
             int nAuxPly = cte.GetAuxCntTableEntry( ip );
 
+<<<<<<< HEAD
             candidate_region.Union(LLRegion( nAuxPly, pfp ));
+=======
+            candidate_region = LLRegion( nAuxPly, pfp );
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         }
     } else {
         int n_ply_entries = cte.GetnPlyEntries();
@@ -1450,7 +1460,10 @@ bool Quilt::Compose( const ViewPort &vp_in )
             }
         }
     }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
     //    Using Region logic, and starting from the largest scale chart
     //    figuratively "draw" charts until the ViewPort window is completely quilted over
@@ -2194,10 +2207,16 @@ bool Quilt::RenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion 
                         OCPNRegion get_screen_region = vp.GetVPRegionIntersect(chart_region, get_region,
                                                                                chart->GetNativeScale());
                         if( !get_region.Empty() ) {
+<<<<<<< HEAD
 #ifdef USE_S57
                             s57chart *Chs57 = dynamic_cast<s57chart*>( chart );
                             Chs57->RenderOverlayRegionViewOnDC( tmp_dc, vp, get_screen_region );
 #endif
+=======
+                            s57chart *Chs57 = dynamic_cast<s57chart*>( chart );
+                            Chs57->RenderOverlayRegionViewOnDC( tmp_dc, vp, get_screen_region );
+
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
                             OCPNRegionIterator upd( get_screen_region );
                             while( upd.HaveRects() ) {
                                 wxRect rect = upd.GetRect();

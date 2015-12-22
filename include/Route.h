@@ -58,11 +58,18 @@ public:
       RoutePoint *InsertPointBefore(RoutePoint *pRP, double rlat, double rlon, bool bRenamePoints = false);
       RoutePoint *InsertPointAfter(RoutePoint *pRP, double rlat, double rlon, bool bRenamePoints = false);
       void DrawPointWhich(ocpnDC& dc, int iPoint, wxPoint *rpn);
+<<<<<<< HEAD
       void DrawSegment(ocpnDC& dc, wxPoint *rp1, wxPoint *rp2, ViewPort &vp, bool bdraw_arrow);
       virtual void Draw(ocpnDC& dc, ViewPort &pvp);
       void DrawGLLines( ViewPort &vp, ocpnDC *dc );
       virtual void DrawGL( ViewPort &vp );
       void DrawGLRouteLines( ViewPort &vp );
+=======
+      void DrawSegment(ocpnDC& dc, wxPoint *rp1, wxPoint *rp2, ViewPort &VP, bool bdraw_arrow);
+      virtual void Draw(ocpnDC& dc, ViewPort &pVP);
+      void DrawGLLines( ViewPort &VP, ocpnDC *dc );
+      virtual void DrawGL( ViewPort &VP );
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
       RoutePoint *GetLastPoint();
       void DeletePoint(RoutePoint *rp, bool bRenamePoints = false);
       void RemovePoint(RoutePoint *rp, bool bRenamePoints = false);
@@ -87,8 +94,13 @@ public:
       void CloneAddedTrackPoint(RoutePoint *ptargetpoint, RoutePoint *psourcepoint);
       void CloneAddedRoutePoint(RoutePoint *ptargetpoint, RoutePoint *psourcepoint);
       void ClearHighlights(void);
+<<<<<<< HEAD
       void RenderSegment(ocpnDC& dc, int xa, int ya, int xb, int yb, ViewPort &vp, bool bdraw_arrow, int hilite_width = 0);
       void RenderSegmentArrowsGL( int xa, int ya, int xb, int yb, ViewPort &vp);
+=======
+      void RenderSegment(ocpnDC& dc, int xa, int ya, int xb, int yb, ViewPort &VP, bool bdraw_arrow, int hilite_width = 0);
+      void RenderSegmentArrowsGL( int xa, int ya, int xb, int yb, ViewPort &VP);
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
       void SetVisible(bool visible = true, bool includeWpts = true);
       void SetListed(bool visible = true);

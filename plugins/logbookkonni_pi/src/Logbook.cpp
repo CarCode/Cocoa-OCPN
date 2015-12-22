@@ -1342,6 +1342,9 @@ void Logbook::convertTo_1_2()
 		l++;
 		*out << s+_T("\n");
 	}
+#ifdef __WXOSX__
+    delete out;
+#endif
 	stream3.Close();
 
 	::wxCopyFile(path + m + _T("_"), path + m );
@@ -1353,7 +1356,7 @@ void Logbook::convertTo_1_2()
 	wxFileOutputStream stream4( path + m + _T("_") );
 	out = new wxTextOutputStream (stream4,wxEOL_NATIVE,wxConvUTF8);
 
-	l = 0;
+    l = 0;
 	while(true)
 	{
 		wxString tmp;
@@ -1376,6 +1379,9 @@ void Logbook::convertTo_1_2()
 		l++;
 		*out << s+_T("\n");
 	}
+#ifdef __WXOSX__
+    delete out;
+#endif
 	stream4.Close();
 
 	::wxCopyFile(path + m + _T("_"), path + m );

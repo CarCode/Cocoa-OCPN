@@ -424,7 +424,10 @@ public:
     virtual int GetSize_X();
     virtual int GetSize_Y();
     virtual void latlong_to_chartpix(double lat, double lon, double &pixx, double &pixy);
+<<<<<<< HEAD
     virtual void chartpix_to_latlong(double pixx, double pixy, double *plat, double *plon);
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
 
 private:

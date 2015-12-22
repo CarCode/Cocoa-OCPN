@@ -42,9 +42,10 @@ Warum überhaupt diese eigene OpenCPN Version?
   Apple gewohnten Umfeld. Weitere Abweichungen zum Original Code sind:
 
 a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
-   Mavericks (10.9) und Yosemite (10.10). Es soll soweit wie möglich das
-   Mac OS X Betriebssystem unterstützt werden, einschl. Mac Menüs,
-   Mac Hilfe usw.
+   Mavericks (10.9), Yosemite (10.10) und El Capitan (10.11). Es soll
+   soweit wie möglich das Mac OS X Betriebssystem unterstützt werden,
+   einschl. Mac Menüs, Mac Hilfe usw. El Capitane (10.11) wird ab
+   Erscheinen Ende September 2015 ebenfalls unterstützt.
 
 b. Diese Version basiert auf Release-Version von wxWidgets 3.1.0 mit
    entsprechenden dylibs vom 02. August 2015. Die Einbindung der Libs als
@@ -70,11 +71,14 @@ f. Das von den OCPN Programmierern gewünschte Konzept, die Plugins als
    Änderungen an mehreren Stellen nachzuhalten wie z.B. bei den wxJSON
    Dateien.
 
+Größte Änderung ist jedoch die Verwendung von Clang/LLVM mit Xcode statt
+der Befehlszeilen orientierten Cmake Version.
+
 Compiler:
-Xcode 6.4
-Apple LLVM version 6.1.0 (clang-602.0.53) (based on LLVM 3.6.0svn)
-Target: x86_64-apple-darwin14.4.0
-SDK 10.10.4 Yosemite
+Xcode 7.0.1
+Apple LLVM version 7.0.0 (clang-700.0.72) (based on LLVM 3.6.0svn)
+Target: x86_64-apple-darwin14.5.0
+SDK 10.10.5 Yosemite
 Thread model: posix
 
 wxWidgets Direktive:
@@ -99,5 +103,5 @@ Siehe batchwx.sh bzw. Xcode Scripts.
 
 wxCurl wurde auf diese Art ebenfalls als dynamische Library compiliert.
 -----------------------------------------------------------------------
-02. August 2015
+19. September 2015
 

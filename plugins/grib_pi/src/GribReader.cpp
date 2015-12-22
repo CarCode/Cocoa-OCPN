@@ -100,16 +100,23 @@ void GribReader::readAllGribRecords()
     int id = 0;
     time_t firstdate = -1;
     bool b_EOF;
-
+#ifdef __WXOSX__  //Otherwise potential leak of memory
+    rec = new GribRecord(file, id);
+#endif
     do {
         id ++;
+#ifndef __WXOSX__  //Otherwise potential leak of memory
         rec = new GribRecord(file, id);
+#endif
         assert(rec);
         if (rec->isOk())
         {
-              b_EOF = rec->isEof();
-
-        	if (rec->isDataKnown())
+            b_EOF = rec->isEof();
+#ifdef __WXOSX__  //Otherwise potential leak of memory
+        	if (rec->isDataKnown() && !b_EOF)
+#else
+            if (rec->isDataKnown())
+#endif
         	{
 				ok = true;   // au moins 1 record ok
 
@@ -284,14 +291,21 @@ void GribReader::readAllGribRecords()
                               );
                               */
                               delete rec;
+#ifdef __WXOSX__  //Otherwise potential leak of memory
+                            rec = NULL;
+#endif
                         }
-                  }
+                  }  // rec->isDataKnown()
         }
         else {    // ! rec-isOk
             delete rec;
             rec = NULL;
         }
     } while (rec != NULL &&  !b_EOF);
+#ifdef __WXOSX__  //Otherwise potential leak of memory
+    delete rec;
+    rec = NULL;
+#endif
 }
 
 

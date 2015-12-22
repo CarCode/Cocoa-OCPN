@@ -44,7 +44,11 @@
 #ifdef USE_S57
 #include "s52s57.h"
 #include "s57chart.h"               // for Object list
+<<<<<<< HEAD
 #endif
+=======
+#include "chartimg.h"
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
 //For widgets...
 #include "wx/hyperlink.h"
@@ -55,7 +59,10 @@
 #ifndef __OCPN__ANDROID__
 #ifndef __WXOSX__
 #include "../../../src/wxcurl/wx/curl/dialog.h"
+<<<<<<< HEAD
 #include "../../../src/wxcurl/wx/curl/http.h"
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 #endif
 #endif
 
@@ -340,8 +347,11 @@ public:
     
     wxEvtHandler   *m_download_evHandler;
     long           *m_downloadHandle;
+<<<<<<< HEAD
     bool m_last_online;
     long m_last_online_chk;
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 #endif
     
     DECLARE_EVENT_TABLE()

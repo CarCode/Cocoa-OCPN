@@ -2547,6 +2547,7 @@ void ChartCanvas::GetDoubleCanvasPointPixVP( ViewPort &vp, double rlat, double r
     
     // If for some reason the chart rejects the request by returning an error,
     // then fall back to Viewport Projection estimate from canvas parameters
+<<<<<<< HEAD
     if( !g_bopengl && Current_Ch && ( Current_Ch->GetChartFamily() == CHART_FAMILY_RASTER )
        && ( ( ( fabs( vp.rotation ) < .0001 ) && ( fabs( vp.skew ) < .0001 ) )
            || ( ( Current_Ch->GetChartProjectionType() != PROJECTION_MERCATOR )
@@ -2554,6 +2555,15 @@ void ChartCanvas::GetDoubleCanvasPointPixVP( ViewPort &vp, double rlat, double r
                && ( Current_Ch->GetChartProjectionType() != PROJECTION_POLYCONIC ) ) )
        && ( Current_Ch->GetChartProjectionType() == vp.m_projection_type )
        && ( Current_Ch->GetChartType() != CHART_TYPE_PLUGIN) )
+=======
+    if(!g_bopengl && Current_Ch && ( Current_Ch->GetChartFamily() == CHART_FAMILY_RASTER )
+       && ( ( ( fabs( vp.rotation ) < .0001 ) &&
+             ( ( !g_bskew_comp || ( fabs( vp.skew ) < .0001 ) ) ) )
+           || ( ( Current_Ch->GetChartProjectionType() != PROJECTION_MERCATOR )
+               && ( Current_Ch->GetChartProjectionType() != PROJECTION_TRANSVERSE_MERCATOR )
+               && ( Current_Ch->GetChartProjectionType() != PROJECTION_POLYCONIC ) ) )
+       && ( Current_Ch->GetChartProjectionType() == vp.m_projection_type ) )
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     {
         ChartBaseBSB *Cur_BSB_Ch = dynamic_cast<ChartBaseBSB *>( Current_Ch );
         //                        bool bInside = G_FloatPtInPolygon ( ( MyFlPoint * ) Cur_BSB_Ch->GetCOVRTableHead ( 0 ),
@@ -2615,6 +2625,7 @@ void ChartCanvas::GetCanvasPixPoint( double x, double y, double &lat, double &lo
     // then fall back to Viewport Projection  estimate from canvas parameters
     bool bUseVP = true;
 
+<<<<<<< HEAD
     if( !g_bopengl && Current_Ch && ( Current_Ch->GetChartFamily() == CHART_FAMILY_RASTER )
        && ( ( ( fabs( GetVP().rotation ) < .0001 ) && ( fabs( GetVP().skew ) < .0001 ) )
            || ( ( Current_Ch->GetChartProjectionType() != PROJECTION_MERCATOR )
@@ -2622,6 +2633,15 @@ void ChartCanvas::GetCanvasPixPoint( double x, double y, double &lat, double &lo
                && ( Current_Ch->GetChartProjectionType() != PROJECTION_POLYCONIC ) ) )
        && ( Current_Ch->GetChartProjectionType() == GetVP().m_projection_type )
        && ( Current_Ch->GetChartType() != CHART_TYPE_PLUGIN ) )
+=======
+    if(!g_bopengl && Current_Ch && ( Current_Ch->GetChartFamily() == CHART_FAMILY_RASTER )
+        && ( ( ( fabs( GetVP().rotation ) < .0001 ) &&
+               ( ( !g_bskew_comp || ( fabs( GetVP().skew ) < .0001 ) ) ) )
+             || ( ( Current_Ch->GetChartProjectionType() != PROJECTION_MERCATOR )
+                  && ( Current_Ch->GetChartProjectionType() != PROJECTION_TRANSVERSE_MERCATOR )
+                 && ( Current_Ch->GetChartProjectionType() != PROJECTION_POLYCONIC ) ) )
+       && ( Current_Ch->GetChartProjectionType() == GetVP().m_projection_type ) )
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     {
         ChartBaseBSB *Cur_BSB_Ch = dynamic_cast<ChartBaseBSB *>( Current_Ch );
 
@@ -3996,6 +4016,7 @@ void CalcGridSpacing( float view_scale_ppm, float& MajorSpacing, float&MinorSpac
     // [1] spacing between major grid lines in degrees
     // [2] spacing between minor grid lines in degrees
     const float lltab[][3] =
+<<<<<<< HEAD
       { { 0.0f, 90.0f, 30.0f },                  { 1e-5f, 45.0f, 15.0f },
         { 2e-4f, 30.0f, 10.0f },                 { 3e-4f, 10.0f, 2.0f  },
         { 6e-4f, 5.0f, 1.0f },                   { 2e-3f, 2.0f, 30.0f / 60.0f },
@@ -4004,6 +4025,16 @@ void CalcGridSpacing( float view_scale_ppm, float& MajorSpacing, float&MinorSpac
         { 3e-2f, 5.0f / 60.0f, 1.0f / 60.0f },   { 6e-2f, 2.0f / 60.0f, 0.5f / 60.0f },
         { 1e-1f, 1.0f / 60.0f, 0.2f / 60.0f },   { 4e-1f, 0.5f / 60.0f, 0.1f / 60.0f },
         { 8e-1f, 0.2f / 60.0f, 0.05f / 60.0f },  { 1e10f, 0.1f / 60.0f, 0.02f / 60.0f }
+=======
+    { { 0, 90.0f, 30.0f },                    { 1e-5, 45.0f, 15.0f },
+        { 2e-4, 30.0f, 10.0f },                 { 3e-4, 10.0f, 2.0f  },
+        { 6e-4, 5.0f, 1.0f },                   { 2e-3, 2.0f, 30.0f / 60.0f },
+        { 3e-3, 1.0f, 20.0f / 60.0f },          { 6e-3, 0.5f, 10.0f / 60.0f },
+        { 1e-2, 15.0f / 60.0f, 5.0f / 60.0f },  { 2e-2, 10.0f / 60.0f, 2.0f / 60.0f },
+        { 3e-2, 5.0f / 60.0f, 1.0f / 60.0f },   { 6e-2, 2.0f / 60.0f, 0.5f / 60.0f },
+        { 1e-1, 1.0f / 60.0f, 0.2f / 60.0f },   { 4e-1, 0.5f / 60.0f, 0.1f / 60.0f },
+        { 8e-1, 0.2f / 60.0f, 0.05f / 60.0f },  { 1e10, 0.1f / 60.0f, 0.02f / 60.0f }
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     };
 
     unsigned int tabi;

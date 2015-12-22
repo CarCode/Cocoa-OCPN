@@ -1550,6 +1550,10 @@ void options::CreatePanel_NMEA_Compact( size_t parent, int border_size,
 
     m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnableMouse), NULL, this );
 #if wxCHECK_VERSION(2, 9, 0)
+<<<<<<< HEAD
+=======
+    m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnableMouse), NULL, this );
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     m_lcSources->Connect( wxEVT_LIST_ITEM_ACTIVATED, wxListEventHandler( options::OnConnectionToggleEnable ), NULL, this );
 #endif
 
@@ -2002,6 +2006,10 @@ void options::CreatePanel_NMEA( size_t parent, int border_size,
 
     m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnableMouse), NULL, this);
 #if wxCHECK_VERSION(2, 9, 0)
+<<<<<<< HEAD
+=======
+    m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnableMouse), NULL, this);
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     m_lcSources->Connect( wxEVT_LIST_ITEM_ACTIVATED, wxListEventHandler( options::OnConnectionToggleEnable ), NULL, this );
 #endif
 
@@ -4508,6 +4516,7 @@ void options::SetInitialVectorSettings(void)
                 nset = 3;
                 break;
         }
+<<<<<<< HEAD
         
         pDispCat->SetSelection(nset);
         
@@ -4518,6 +4527,17 @@ void options::SetInitialVectorSettings(void)
         itemButtonSelectList->Enable(MARINERS_STANDARD ==
                                      ps52plib->GetDisplayCategory());
         
+=======
+
+        pDispCat->SetSelection( nset );
+#ifdef __WXOSX__
+    if(ps57CtlListBox)
+#endif
+        ps57CtlListBox->Enable( MARINERS_STANDARD == ps52plib->GetDisplayCategory() );
+        itemButtonClearList->Enable( MARINERS_STANDARD == ps52plib->GetDisplayCategory() );
+        itemButtonSelectList->Enable( MARINERS_STANDARD == ps52plib->GetDisplayCategory() );
+
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         //  Other Display Filters
         pCheck_SOUNDG->SetValue(ps52plib->m_bShowSoundg);
         pCheck_META->SetValue(ps52plib->m_bShowMeta);

@@ -27,6 +27,7 @@
 #ifndef __OCPNTYPES_H__
 #define __OCPNTYPES_H__
 
+<<<<<<< HEAD
 typedef struct _S52color{
     char colName[20];
     unsigned char  R;
@@ -46,6 +47,8 @@ typedef struct _colTable {
 } colTable;
 
 
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 WX_DEFINE_ARRAY_INT(int, ArrayOfInts);
 
 //    ChartType constants

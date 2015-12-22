@@ -601,11 +601,16 @@ void Route::DrawGLLines( ViewPort &vp, ocpnDC *dc )
 #endif
 }
 
+<<<<<<< HEAD
 void Route::DrawGL( ViewPort &vp )
+=======
+void Route::DrawGL( ViewPort &VP )
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 {
 #ifdef ocpnUSE_GL
     if( m_nPoints < 1 || !m_bVisible ) return;
 
+<<<<<<< HEAD
     if(!vp.GetBBox().IntersectOut(GetBBox()))
         DrawGLRouteLines(vp);
 
@@ -626,6 +631,8 @@ void Route::DrawGL( ViewPort &vp )
 void Route::DrawGLRouteLines( ViewPort &vp )
 {
 #ifdef ocpnUSE_GL
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     //  Hiliting first
     //  Being special case to draw something for a 1 point route....
     ocpnDC dc;
@@ -638,8 +645,44 @@ void Route::DrawGLRouteLines( ViewPort &vp )
         ocpnDC dc;
         dc.SetPen( HiPen );
 
+<<<<<<< HEAD
         DrawGLLines(vp, &dc);
+=======
+        wxRoutePointListNode *node = pRoutePointList->GetFirst();
+        RoutePoint *prp0 = node->GetData();
+        wxPoint r0;
+        
+        bool r0valid = cc1->GetCanvasPointPix( prp0->m_lat, prp0->m_lon, &r0);
+        
+        int lines = 0;
+        node = node->GetNext();
+        while( node ) {
+            
+            RoutePoint *prp = node->GetData();
+            wxPoint r1;
+            bool r1valid = cc1->GetCanvasPointPix( prp->m_lat, prp->m_lon, &r1);
+            
+            if(r0valid && r1valid) {
+                dc.StrokeLine( r0.x, r0.y, r1.x, r1.y );
+                lines++;
+            }
+            
+            r0valid = r1valid;
+            r0 = r1;
+            node = node->GetNext();
+            
+        }
+        
+        if(lines == 0 &&
+           cc1->GetCanvasPointPix( prp0->m_lat, prp0->m_lon, &r0)) {
+            dc.StrokeLine( r0.x, r0.y, r0.x + 2, r0.y + 2 );
+            return;
+        }
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     }
+
+//    if( m_nPoints < 2  )
+//        return;
 
     /* determine color and width */
     wxColour col;
@@ -691,9 +734,56 @@ void Route::DrawGLRouteLines( ViewPort &vp )
     glLineWidth( wxMax( g_GLMinSymbolLineWidth, width ) );
     
     dc.SetGLStipple();
+<<<<<<< HEAD
 
     DrawGLLines(vp, NULL);
 
+=======
+    glBegin(GL_LINE_STRIP);
+    float lastlon = 0;
+    float lastlat = 0;
+    unsigned short int FromSegNo = 1;
+    for(wxRoutePointListNode *node = pRoutePointList->GetFirst();
+        node; node = node->GetNext()) {
+        RoutePoint *prp = node->GetData();
+        unsigned short int ToSegNo = prp->m_GPXTrkSegNo;
+        
+        /* crosses IDL? if so break up into two segments */
+        int dir = 0;
+        if(prp->m_lon > 150 && lastlon < -150)
+            dir = -1;
+        else if(prp->m_lon < -150 && lastlon > 150)
+            dir = 1;
+        
+        wxPoint r;
+        if (FromSegNo != ToSegNo)
+        {
+            glEnd();
+            FromSegNo = ToSegNo;
+            glBegin(GL_LINE_STRIP);
+        }
+        if(dir)
+        {
+            double crosslat = lat_rl_crosses_meridian(lastlat, lastlon, prp->m_lat, prp->m_lon, 180.0);
+            if(cc1->GetCanvasPointPix( crosslat, dir*180, &r))
+                glVertex2i(r.x, r.y);
+            glEnd();
+            glBegin(GL_LINE_STRIP);
+            if(cc1->GetCanvasPointPix( crosslat, -dir*180, &r))
+                glVertex2i(r.x, r.y);
+        }
+        lastlat=prp->m_lat;
+        lastlon=prp->m_lon;
+        
+        if(cc1->GetCanvasPointPix( prp->m_lat, prp->m_lon, &r))
+            glVertex2i(r.x, r.y);
+        else {
+            glEnd();
+            glBegin(GL_LINE_STRIP);
+        }
+    }
+    glEnd();
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     glDisable (GL_LINE_STIPPLE);
 
     /* direction arrows.. could probably be further optimized for opengl */
@@ -704,11 +794,29 @@ void Route::DrawGLRouteLines( ViewPort &vp )
             RoutePoint *prp = node->GetData();
             cc1->GetCanvasPointPix( prp->m_lat, prp->m_lon, &rpt2 );
             if(node != pRoutePointList->GetFirst())
+<<<<<<< HEAD
                 RenderSegmentArrowsGL( rpt1.x, rpt1.y, rpt2.x, rpt2.y, vp );
+=======
+                RenderSegmentArrowsGL( rpt1.x, rpt1.y, rpt2.x, rpt2.y, cc1->GetVP() );
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
             rpt1 = rpt2;
             node = node->GetNext();
         }
     }
+<<<<<<< HEAD
+=======
+
+    /*  Route points  */
+    for(wxRoutePointListNode *node = pRoutePointList->GetFirst(); node; node = node->GetNext()) {
+        RoutePoint *prp = node->GetData();
+        if ( !m_bVisible && prp->m_bKeepXRoute )
+            prp->DrawGL( VP );
+        else if (m_bVisible)
+            prp->DrawGL( VP );
+        
+    }
+
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 #endif
 }
 
@@ -799,7 +907,11 @@ void Route::RenderSegment( ocpnDC& dc, int xa, int ya, int xb, int yb, ViewPort 
     }
 }
 
+<<<<<<< HEAD
 void Route::RenderSegmentArrowsGL( int xa, int ya, int xb, int yb, ViewPort &vp)
+=======
+void Route::RenderSegmentArrowsGL( int xa, int ya, int xb, int yb, ViewPort &VP)
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 {
 #ifdef ocpnUSE_GL
     //    Draw a direction arrow        
@@ -1037,6 +1149,12 @@ LLBBox &Route::GetBBox( void )
     double bbox_ymin = 90.;
     double bbox_ymax = -90.;
 
+<<<<<<< HEAD
+=======
+    RBBox.Reset();
+    m_bcrosses_idl = CalculateCrossesIDL();
+
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     wxRoutePointListNode *node = pRoutePointList->GetFirst();
     RoutePoint *data = node->GetData();
 
@@ -1048,12 +1166,20 @@ LLBBox &Route::GetBBox( void )
     node = node->GetNext();
     while( node ) {
         data = node->GetData();
+<<<<<<< HEAD
+=======
+        if( ( lon0 < -150. ) && ( data->m_lon > 150. ) ) {
+            idl_cross = true;
+            break;
+        }
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
         if(lastlon - data->m_lon > 180)
             wrap += 360;
         else if(data->m_lon - lastlon > 180)
             wrap -= 360;
 
+<<<<<<< HEAD
         double lon = data->m_lon + wrap;
 
         if( lon > bbox_xmax )
@@ -1067,6 +1193,9 @@ LLBBox &Route::GetBBox( void )
             bbox_ymin = data->m_lat;
 
         lastlon = data->m_lon;
+=======
+        lon0 = data->m_lon;
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
         node = node->GetNext();
     }

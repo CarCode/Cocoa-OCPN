@@ -626,7 +626,7 @@ void GribSettingsDialog::SetDataTypeSettings(int settings)
 #ifdef __WXOSX__
     odc.m_dParticleDensity = m_sParticleDensity->GetValue();
 #else
-    odc.m_dParticleDensity = 4.0*exp(m_sParticleDensity->GetValue() - 7);
+    odc.m_dParticleDensity = 4.0*exp(m_sParticleDensity->GetValue() - 7.0);
 #endif
 }
 

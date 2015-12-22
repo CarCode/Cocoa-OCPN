@@ -316,6 +316,9 @@ void Maintenance::loadData()
 		}
 		row++;
 	}
+#ifdef __WXOSX__
+    delete stream;
+#endif
 	dialog->m_gridMaintanence->EndBatch();
 	wxFileInputStream input1( data_locnBuyParts );
 	wxTextInputStream* stream1 = new wxTextInputStream (input1,_T("\n"),wxConvUTF8);
@@ -1336,6 +1339,9 @@ void Maintenance::updateRepairs()
 		s = _T("");
 	}
 	output.Close();
+#ifdef __WXOSX__
+    delete stream;
+#endif
 //	modified = false;
 }
 
@@ -1372,6 +1378,9 @@ void Maintenance::updateBuyParts()
 		s = _T("");
 	}
 	output.Close();
+#ifdef __WXOSX__
+    delete stream;
+#endif
 	modified = false;
 }
 

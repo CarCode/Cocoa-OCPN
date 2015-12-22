@@ -398,8 +398,13 @@ void toSMcache(double lat, double lon, double y30, double lon0, double *x, doubl
     *x = (xlon - lon0) * DEGREE * z;
     
     // y =.5 ln( (1 + sin t) / (1 - sin t) )
+<<<<<<< HEAD
     const double s = sin(lat * DEGREE);
     const double y3 = (.5 * log((1 + s) / (1 - s))) * z;
+=======
+    const double s = sinf(lat * DEGREE);
+    const double y3 = (.5 * logf((1 + s) / (1 - s))) * z;
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     
     *y = y3 - y30;
 }
@@ -675,16 +680,26 @@ void toORTHO(double lat, double lon, double sin_phi0, double cos_phi0, double lo
     
     double theta = (xlon - lon0) * DEGREE;
     double phi = lat * DEGREE;
+<<<<<<< HEAD
     double cos_phi = cos(phi);
     
     double vy = sin(phi), vz = cos(theta)*cos_phi;
+=======
+    double cos_phi = cosf(phi);
+    
+    float vy = sinf(phi), vz = cosf(theta)*cos_phi;
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     
     if(vy*sin_phi0 + vz*cos_phi0 < 0) { // on the far side of the earth
         *x = *y = NAN;
         return;
     }
     
+<<<<<<< HEAD
     double vx = sin(theta)*cos_phi;
+=======
+    double vx = sinf(theta)*cos_phi;
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     double vw = vy*cos_phi0 - vz*sin_phi0;
     
     *x = vx*z;
@@ -735,10 +750,17 @@ void toPOLAR(double lat, double lon, double e, double lat0, double lon0, double 
     double theta = (xlon - lon0) * DEGREE;
     double pole = lat0 > 0 ? 90 : -90;
     
+<<<<<<< HEAD
     double d = tan((pole - lat) * DEGREE / 2);
     
     *x = fabs(d)*sin(theta)*z;
     *y = (e-d*cos(theta))*z;
+=======
+    double d = tanf((pole - lat) * DEGREE / 2);
+    
+    *x = fabs(d)*sinf(theta)*z;
+    *y = (e-d*cosf(theta))*z;
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 }
 
 
@@ -770,9 +792,15 @@ static inline void toSTEREO1(double &u, double &v, double &w, double lat, double
         lon < 0.0 ? xlon += 360.0 : xlon -= 360.0;
     
     double theta = (xlon - lon0) * DEGREE, phi = lat*DEGREE;
+<<<<<<< HEAD
     double cos_phi = cos(phi), v0 = sin(phi), w0 = cos(theta)*cos_phi;
     
     u = sin(theta)*cos_phi;
+=======
+    double cos_phi = cos(phi), v0 = sinf(phi), w0 = cosf(theta)*cos_phi;
+    
+    u = sinf(theta)*cos_phi;
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     v = cos_phi0*v0 - sin_phi0*w0;
     w = sin_phi0*v0 + cos_phi0*w0;
 }

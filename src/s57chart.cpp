@@ -2149,6 +2149,7 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
 
     glColor3f( r, g, b ); /* nodta color */
 #endif
+<<<<<<< HEAD
 
     ViewPort vp = VPoint;
 
@@ -2171,6 +2172,29 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
             else
                 glChartCanvas::SetClipRect(cvp, upd.GetRect(), false);
 
+=======
+
+    ViewPort vp = VPoint;
+
+    // region always has either 1 or 2 rectangles (full screen or panning rectangles)
+    for(OCPNRegionIterator upd ( RectRegion ); upd.HaveRects(); upd.NextRect()) {
+        LLRegion chart_region = vp.GetLLRegion(upd.GetRect());
+        chart_region.Intersect(Region);
+
+        if(!chart_region.Empty()) {
+
+            //TODO  I think this needs nore work for alternate Projections...
+            //  cm93 vpoint crossing Greenwich, panning east, was rendering areas incorrectly.
+            ViewPort cvp = VPoint;
+            if( GetChartType() == CHART_TYPE_CM93 ) {
+                void SetVPPositive ( ViewPort *pvp );
+                SetVPPositive ( &cvp );
+            }
+            else
+                cvp = glChartCanvas::ClippedViewport(VPoint, chart_region);
+
+            glChartCanvas::SetClipRect(cvp, upd.GetRect(), false/*!b_overlay*/);
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
             ps52plib->m_last_clip_rect = upd.GetRect();
             glPushMatrix(); //    Adjust for rotation
             glChartCanvas::RotateToViewPort(VPoint);

@@ -88,7 +88,11 @@ WX_DEFINE_ARRAY(CatalogEntry*, ArrayOfCatalogEntries);
 class glTexTile
 {
 public:
+<<<<<<< HEAD
     glTexTile() { m_coords = m_texcoords = NULL;  m_ncoords = 0;}
+=======
+    glTexTile() { m_coords = m_texcoords = NULL; }
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     virtual ~glTexTile() { delete [] m_coords; delete [] m_texcoords; }
     
     wxRect rect;
@@ -128,8 +132,14 @@ public:
     void FreeSome( long target );
 
     glTextureDescriptor *GetpTD( wxRect & rect );
+<<<<<<< HEAD
 
     void PrepareTiles(const ViewPort &vp, bool use_norm_vp, ChartBase *pChart);
+=======
+    //    GLuint GetRasterFormat() { return g_raster_format; }
+
+    void PrepareTiles(const ViewPort &vp, bool use_norm_vp, ChartBaseBSB *pChartBSB);
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     glTexTile** GetTiles(int &num) { num = m_ntex; return m_tiles; }
     void GetCenter(double &lat, double &lon) { lat = m_clat, lon = m_clon; }
 

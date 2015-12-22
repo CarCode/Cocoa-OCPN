@@ -30,7 +30,26 @@
 #include "wx/wx.h"
 #endif //precompiled headers
 
+<<<<<<< HEAD
 #include "dychart.h"
+=======
+#ifdef ocpnUSE_GL
+#ifdef __WXMSW__
+#include "GL/gl.h"            // local copy for Windows
+#include <GL/glu.h>
+#else
+
+#ifndef __OCPN__ANDROID__
+#include <GL/gl.h>
+#include <GL/glu.h>
+#else
+#include "qopengl.h"                  // this gives us the qt runtime gles2.h
+#include "GL/gl_private.h"
+#endif
+
+#endif
+#endif
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
 #define CA_READ         0
 #define CA_WRITE        1

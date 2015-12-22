@@ -139,8 +139,11 @@ ViewPort::ViewPort()
 wxPoint ViewPort::GetPixFromLL( double lat, double lon )
 {
     wxPoint2DDouble p = GetDoublePixFromLL(lat, lon);
+<<<<<<< HEAD
     if(wxIsNaN(p.m_x) || wxIsNaN(p.m_y))
         return wxPoint(INVALID_COORD, INVALID_COORD);
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     return wxPoint(wxRound(p.m_x), wxRound(p.m_y));
 }
 
@@ -356,6 +359,7 @@ LLRegion ViewPort::GetLLRegion( const OCPNRegion &region )
         
         int x1 = rect.x, y1 = rect.y, x2 = x1 + rect.width, y2 = y1 + rect.height;
         int p[8] = {x1, y1, x2, y1, x2, y2, x1, y2};
+<<<<<<< HEAD
         double pll[540];
         int j;
         
@@ -395,13 +399,26 @@ LLRegion ViewPort::GetLLRegion( const OCPNRegion &region )
         
         // resolve (this works even if rectangle crosses both 0 and 180)
         for(int i=0; i<j; i+=2) {
+=======
+        double pll[8];
+        for(int i=0; i<8; i+=2)
+            GetLLFromPix(wxPoint(p[i], p[i+1]), pll+i, pll+i+1);
+        
+        // resolve (this works even if rectangle crosses both 0 and 180)
+        //if(LLRegion::PointsCCW(4, pll))
+        for(int i=0; i<8; i+=2) {
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
             if(pll[i+1] <= clon - 180)
                 pll[i+1] += 360;
             else if(pll[i+1] >= clon + 180)
                 pll[i+1] -= 360;
         }
         
+<<<<<<< HEAD
         r.Union(LLRegion(j/2, pll));
+=======
+        r.Union(LLRegion(4, pll));
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         it.NextRect();
     }
     return r;
@@ -605,11 +622,23 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &Region, size_t nPoi
     }
  
     if(!valid)
+<<<<<<< HEAD
     {
         delete[] pp;
         return OCPNRegion(); //empty;
     }
 
+=======
+#ifdef __WXOSX__
+    {
+        delete[] pp;
+        pp = NULL;
+        return OCPNRegion(); //empty;
+    }
+#else
+    return OCPNRegion(); //empty;
+#endif
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     //  We want to avoid processing regions with very large rectangle counts,
     //  so make some tests for special cases
 

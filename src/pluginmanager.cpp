@@ -103,12 +103,20 @@ extern ChartCanvas     *cc1;
 extern wxArrayString    g_locale_catalog_array;
 
 unsigned int      gs_plib_flags;
+<<<<<<< HEAD
 #ifndef __WXOSX__
+=======
+
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 enum
 {
     CurlThreadId = wxID_HIGHEST+1
 };
+<<<<<<< HEAD
 #endif
+=======
+
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(Plugin_WaypointList);
 WX_DEFINE_LIST(Plugin_HyperlinkList);
@@ -251,8 +259,11 @@ PlugInManager::PlugInManager(MyFrame *parent)
 #ifndef __OCPN__ANDROID__
     wxCurlBase::Init();
 #endif
+<<<<<<< HEAD
     m_last_online = false;
     m_last_online_chk = -1;
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 #endif
 }
 
@@ -2939,7 +2950,11 @@ void PlugInNormalizeViewport ( PlugIn_ViewPort *vp, float lat, float lon )
     vp->clon = ocpn_vp.clon;
     vp->view_scale_ppm = ocpn_vp.view_scale_ppm;
     vp->rotation = ocpn_vp.rotation;
+<<<<<<< HEAD
     vp->skew = ocpn_vp.skew;
+=======
+    vp->rotation = ocpn_vp.skew;
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 #endif
 }
 
@@ -3931,6 +3946,7 @@ double ChartPlugInWrapper::GetNormalScaleMax(double canvas_scale_factor, int can
         return 2.0e7;
 }
 
+<<<<<<< HEAD
 /*              RectRegion:
  *                      This is the Screen region desired to be updated.  Will be either 1 rectangle(full screen)
  *                      or two rectangles (panning with FBO accelerated pan logic)
@@ -3941,6 +3957,8 @@ double ChartPlugInWrapper::GetNormalScaleMax(double canvas_scale_factor, int can
  *              So, Actual rendering area onscreen should be clipped to the intersection of the two regions.
  */
 
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 bool ChartPlugInWrapper::RenderRegionViewOnGL(const wxGLContext &glc, const ViewPort& VPoint,
                                               const OCPNRegion &RectRegion, const LLRegion &Region)
 {
@@ -3950,6 +3968,7 @@ bool ChartPlugInWrapper::RenderRegionViewOnGL(const wxGLContext &glc, const View
         ViewPort vp = VPoint;           // non-const copy
 
         gs_plib_flags = 0;               // reset the CAPs flag
+<<<<<<< HEAD
 
         PlugInChartBaseGL *ppicb_gl = dynamic_cast<PlugInChartBaseGL*>(m_ppicb);
         if(!Region.Empty() && ppicb_gl)
@@ -3980,6 +3999,17 @@ bool ChartPlugInWrapper::RenderRegionViewOnGL(const wxGLContext &glc, const View
                 }  //!empty
             } //for
             delete r;
+=======
+        PlugIn_ViewPort pivp = CreatePlugInViewport( VPoint);
+        PlugInChartBaseGL *ppicb_gl = dynamic_cast<PlugInChartBaseGL*>(m_ppicb);
+        if(!Region.Empty() && ppicb_gl)
+        {
+            // TODO: test with s63 plugin
+            wxRegion *r = RectRegion.GetNew_wxRegion();
+            ppicb_gl->RenderRegionViewOnGL( glc, pivp, *r, glChartCanvas::s_b_useStencil);
+            delete r;
+            return true;
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         }
     }
     else
@@ -5310,6 +5340,7 @@ _OCPN_DLStatus OCPN_downloadFileBackground( const wxString& url, const wxString 
     if ( !g_pi_manager->HandleCurlThreadError( g_pi_manager->m_pCurlThread->SetURL( url ), g_pi_manager->m_pCurlThread, url ) )
         failed = true;
     
+<<<<<<< HEAD
     if (!failed)
     {
         if (!g_pi_manager->HandleCurlThreadError(g_pi_manager->m_pCurlThread->SetOutputStream(new wxFileOutputStream(outputFile)), g_pi_manager->m_pCurlThread))
@@ -5327,6 +5358,20 @@ _OCPN_DLStatus OCPN_downloadFileBackground( const wxString& url, const wxString 
             g_pi_manager->m_pCurlThread->Abort();
             failed = true;
         }
+=======
+    if ( !g_pi_manager->HandleCurlThreadError( g_pi_manager->m_pCurlThread->SetOutputStream( new wxFileOutputStream( outputFile ) ), g_pi_manager->m_pCurlThread) )
+        failed = true;
+    
+    g_pi_manager->m_download_evHandler = handler;
+    g_pi_manager->m_downloadHandle = handle;
+    
+    wxCurlThreadError err = g_pi_manager->m_pCurlThread->Download();
+    if (err != wxCTE_NO_ERROR)
+    {
+        g_pi_manager->HandleCurlThreadError(err, g_pi_manager->m_pCurlThread);     // shows a message to the user
+        g_pi_manager->m_pCurlThread->Abort();
+        failed = true;
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     }
     
     if( !failed )
@@ -5334,11 +5379,16 @@ _OCPN_DLStatus OCPN_downloadFileBackground( const wxString& url, const wxString 
     
     if( g_pi_manager->m_pCurlThread )
     {
+<<<<<<< HEAD
         if (g_pi_manager->m_pCurlThread->IsAlive())
             g_pi_manager->m_pCurlThread->Abort();
         if (g_pi_manager->m_pCurlThread->GetOutputStream())
             delete (g_pi_manager->m_pCurlThread->GetOutputStream());
         wxDELETE(g_pi_manager->m_pCurlThread);
+=======
+        wxDELETE( g_pi_manager->m_pCurlThread );
+        g_pi_manager->m_pCurlThread = NULL;
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         g_pi_manager->m_download_evHandler = NULL;
         g_pi_manager->m_downloadHandle = NULL;
     }
@@ -5359,6 +5409,7 @@ void OCPN_cancelDownloadFileBackground( long handle )
 #else
     if( g_pi_manager->m_pCurlThread )
     {
+<<<<<<< HEAD
         g_pi_manager->m_pCurlThread->Abort();
         delete (g_pi_manager->m_pCurlThread->GetOutputStream());
         wxDELETE(g_pi_manager->m_pCurlThread);
@@ -5403,9 +5454,43 @@ bool OCPN_isOnline()
         g_pi_manager->m_last_online_chk = wxDateTime::GetTimeNow();
     }
     return g_pi_manager->m_last_online;
+=======
+        if( g_pi_manager->m_pCurlThread->IsAlive() )
+            g_pi_manager->m_pCurlThread->Abort();
+        wxDELETE( g_pi_manager->m_pCurlThread );
+        g_pi_manager->m_pCurlThread = NULL;
+        g_pi_manager->m_download_evHandler = NULL;
+        g_pi_manager->m_downloadHandle = NULL;
+    }
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
+#endif
 #endif
 }
+#ifndef __WXOSX__
+#ifndef __OCPN__ANDROID__
+void PlugInManager::OnEndPerformCurlDownload(wxCurlEndPerformEvent &ev)
+{
+    OCPN_downloadEvent event( wxEVT_DOWNLOAD_EVENT, 0 );
+    event.setDLEventStatus( OCPN_DL_NO_ERROR );
+    event.setDLEventCondition( OCPN_DL_EVENT_TYPE_END );
+    event.setComplete(true);
+    
+    if(m_download_evHandler){
+        m_download_evHandler->AddPendingEvent(event);
+        m_download_evHandler = NULL;
+        m_downloadHandle = NULL;
+    }
+    
+    if( m_pCurlThread )
+    {
+        if(!m_pCurlThread->IsAborting()){
+            wxDELETE( m_pCurlThread );
+            m_pCurlThread = NULL;
+        }
+    }
+}
 
+<<<<<<< HEAD
 #ifndef __OCPN__ANDROID__
 void PlugInManager::OnEndPerformCurlDownload(wxCurlEndPerformEvent &ev)
 {
@@ -5430,6 +5515,8 @@ void PlugInManager::OnEndPerformCurlDownload(wxCurlEndPerformEvent &ev)
     }
 }
 
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 void PlugInManager::OnCurlDownload(wxCurlDownloadEvent &ev)
 {
     OCPN_downloadEvent event( wxEVT_DOWNLOAD_EVENT, 0 );

@@ -6094,6 +6094,7 @@ void MyFrame::DoStackDelta( int direction )
 void MyFrame::OnInitTimer(wxTimerEvent& event)
 {
     switch(m_iInitCount++) {
+<<<<<<< HEAD
         case 0:
         {
             if( g_toolbar )
@@ -6113,6 +6114,24 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
             }
             
             pConfig->LoadNavObjects();
+=======
+    case 0:
+    {
+        // Set persistent Fullscreen mode
+        g_Platform->SetFullscreen(g_bFullscreen);
+
+        // Load the waypoints.. both of these routines are very slow to execute which is why
+        // they have been to defered until here
+        pWayPointMan = new WayPointman();
+
+        // Reload the ownship icon from UserIcons, if present
+        if(cc1){
+            if(cc1->SetUserOwnship())
+                cc1->SetColorScheme(global_color_scheme);
+        }
+
+        pConfig->LoadNavObjects();
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
             //    Re-enable anchor watches if set in config file
             if( !g_AW1GUID.IsEmpty() ) {
@@ -9757,7 +9776,10 @@ void MyFrame::applySettingsString( wxString settings)
             *pInit_Chart_Dir = val;
         }
 
+<<<<<<< HEAD
 #ifdef USE_S57
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         if(ps52plib){
             float conv = 1;
             int depthUnit = ps52plib->m_nDepthUnitDisplay;
@@ -9888,7 +9910,10 @@ void MyFrame::applySettingsString( wxString settings)
                 }
             }
         }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     }
 
     // Process Connections

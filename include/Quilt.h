@@ -66,9 +66,14 @@ public:
     int ChartScale;
     bool b_include;
     bool b_eclipsed;
+<<<<<<< HEAD
     bool b_locked;
 
 private:
+=======
+    
+private:    
+>>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     LLRegion candidate_region;
 
 };

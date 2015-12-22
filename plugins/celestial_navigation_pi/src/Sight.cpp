@@ -758,6 +758,9 @@ void Sight::BuildAltitudeLineOfPosition(double tracestep,
 
       l = p;
    }
+#ifdef __WXOSX__  //Otherwise potential leak of memory
+    delete l;
+#endif
 }
 
 void Sight::RebuildPolygonsAzimuth()
@@ -788,7 +791,7 @@ bool Sight::BearingPoint( double altitude, double bearing,
 
     localbearing = resolve_heading(localbearing);
 	
-    double rangle;
+    double rangle = 0.0;
     double mdb = 1000;
     double mdl = 1001;
     double b;

@@ -1,4 +1,8 @@
+<<<<<<< .merge_file_JuctmM
 /***************************************************************************
+=======
+/******************************************************************************
+>>>>>>> .merge_file_ng687D
  *
  * Project:  OpenCPN
  * Purpose:  AIS Decoder Object
@@ -21,7 +25,13 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+<<<<<<< .merge_file_JuctmM
  ***************************************************************************/
+=======
+ ***************************************************************************
+ *
+ */
+>>>>>>> .merge_file_ng687D
 
 #ifndef __AIS_H__
 #define __AIS_H__
