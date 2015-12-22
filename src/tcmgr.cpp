@@ -1150,7 +1150,7 @@ int TCMgr::GetStationIDXbyNameType(const wxString & prefix, double xlat, double 
 #define INFERRED_SEMI_DIURNAL_COUNT                 10
 #define INFERRED_DIURNAL_COUNT                      10
 
-#ifdef __WXMSW__
+#ifdef __MSVC__
 #pragma warning (disable : 4305)                // conversion loss, double to float
 #endif
 
@@ -4966,7 +4966,9 @@ database should be rebuilt from the original data if possible.\n");
 #endif
     hd.node_factor = (NV_FLOAT32 **) calloc (hd.pub.constituents,
                      sizeof (NV_FLOAT32 *));
-
+#ifdef __WXOSX__
+ if(hd.pub.number_of_years)
+#endif
     for (i = 0 ; i < hd.pub.constituents ; ++i)
     {
         hd.node_factor[i] =

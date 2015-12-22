@@ -51,8 +51,12 @@ extern about *g_pAboutDlg;
 extern bool g_bresponsive;
 
 wxString OpenCPNVersion =
-    wxString::Format( wxT("\n      Version %i.%i.%i Build %s"),
-        VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_DATE );
+wxString::Format( wxT("\n      Version %i.%i.%i Build "),
+                 VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH )
++ wxString::FromAscii(VERSION_DATE);
+
+wxString OpenCPNVersionAndroid = wxString::Format(_T("Android Version 1.0.0<br>Base %i.%i.%i<br>Build Date %s"),
+                                                  VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_DATE);
 
 const wxString AboutText =
     wxT("<br>OpenCPN<br>")
@@ -104,13 +108,15 @@ const wxString AuthorText =
     wxT("   David S Register\n")
     wxT("      OpenCPN Lead Developer\n\n")
     wxT("    Pavel Kalian\n")
-    wxT("      S52 Rasterization Improvements\n\n")
+    wxT("      Packaging and PlugIn development\n\n")
     wxT("    Sean D'Epagnier\n")
     wxT("      OpenGL Architecture\n\n")
     wxT("    J.P. Joubert\n")
     wxT("      GRIB PlugIn enhancements\n\n")
     wxT("    Thomas Höckne\n")
     wxT("      Documentation and Wiki support\n\n")
+    wxT("    Didier Gautheron\n")
+    wxT("      App debugging and optimization\n\n")
     wxT("    Caesar Schinas\n")
     wxT("      User Interface and OS X improvements\n\n")
     wxT("    Jesper Weissglas\n")
@@ -287,7 +293,7 @@ void about::Populate( void )
         aboutText.Append( _T("<i>") );
 
 #ifdef __OCPN__ANDROID__    
-    aboutText.Append( AboutText + OpenCPNVersion + OpenCPNInfoAlt );
+    aboutText.Append( AboutText + OpenCPNVersionAndroid  + OpenCPNInfoAlt );
 #else
     aboutText.Append( AboutText + OpenCPNVersion + OpenCPNInfo );
 #endif    

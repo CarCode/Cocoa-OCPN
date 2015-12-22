@@ -1,4 +1,4 @@
-/****************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Toolbar
@@ -349,6 +349,7 @@ public:
       void RePosition();
       void LockPosition(bool lock){ m_block = lock; }
       void SetColorScheme( ColorScheme cs );
+      ColorScheme GetColorScheme(){ return m_cs; }
       bool CheckSurfaceRequest( wxMouseEvent &event );
 
       void SetGeometry(bool bAvoid, wxRect rectAvoid);

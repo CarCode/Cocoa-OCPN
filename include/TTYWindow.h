@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __TTYWINDOW_H__
 #define __TTYWINDOW_H__
@@ -29,6 +28,7 @@
 #include <wx/bitmap.h>
 
 class wxButton;
+class wxTextCtrl;
 class TTYScroll;
 class WindowDestroyListener;
 
@@ -54,6 +54,7 @@ class TTYWindow : public wxDialog
         wxButton    *m_buttonPause;
         bool        bpause;
         wxBitmap    m_bm_legend;
+        wxTextCtrl *m_tFilter;
 };
 
 #endif

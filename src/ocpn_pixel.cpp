@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Optimized wxBitmap Object
@@ -21,9 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
 
 
 //      Original comment header for xshm test code
@@ -403,6 +401,15 @@ PixelCache::~PixelCache()
       delete m_pbm;
 #endif
 
+}
+
+size_t PixelCache::GetLength(void)
+{
+#ifdef __PIX_CACHE_WXIMAGE__
+    return m_width * m_height * 3;
+#else
+    return 0;
+#endif
 }
 
 void PixelCache::Update(void)

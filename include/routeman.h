@@ -56,6 +56,12 @@ class markicon_bitmap_list_type;
 class markicon_key_list_type;
 class markicon_description_list_type;
 
+#ifdef __WXOSX__
+//    List definitions for Waypoint Manager Icons
+WX_DECLARE_LIST(wxBitmap, markicon_bitmap_list_type);
+WX_DECLARE_LIST(wxString, markicon_key_list_type);
+WX_DECLARE_LIST(wxString, markicon_description_list_type);
+#endif
 //----------------------------------------------------------------------------
 //   Routeman
 //----------------------------------------------------------------------------

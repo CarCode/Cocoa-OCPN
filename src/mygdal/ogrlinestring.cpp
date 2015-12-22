@@ -470,11 +470,15 @@ void OGRLineString::setPoint( int iPoint, double xIn, double yIn, double zIn )
 
 {
     if( iPoint >= nPointCount )
-        setNumPoints( iPoint+1 );
-
+        setNumPoints( iPoint + 1 );
+#ifdef __WXOSX__
+    if(nPointCount) {
+#endif
     paoPoints[iPoint].x = xIn;
     paoPoints[iPoint].y = yIn;
-
+#ifdef __WXOSX__
+    }
+#endif
     if( zIn != 0.0 )
     {
         Make3D();
@@ -625,9 +629,15 @@ void OGRLineString::setPoints( int nPointsIn, double * padfX, double * padfY,
         if( !bIs3D )
             padfZ = NULL;
     }
-
+#ifdef __WXOSX__
+    if( padfZ == NULL ) {
+        Make2D();
+        return;
+    }
+#else
     if( padfZ == NULL )
         Make2D();
+#endif
     else
         Make3D();
 

@@ -269,7 +269,7 @@ TCWin::~TCWin()
 void TCWin::RecalculateSize()
 {
     wxSize parent_size(2000,2000);
-    if(pParent)
+    if( pParent )
         parent_size = pParent->GetClientSize();
     
     if(m_created)
@@ -294,10 +294,9 @@ void TCWin::RecalculateSize()
     //  Don't let the window origin move out of client area
     if( yc < 0 ) yc = 0;
     if( xc < 0 ) xc = 0;
-#ifdef __WXOSX__
-    if(pParent)
-#endif
-    pParent->ClientToScreen( &xc, &yc );
+
+    if( pParent )
+        pParent->ClientToScreen( &xc, &yc );
     m_position = wxPoint( xc, yc );
     
     if(m_created){

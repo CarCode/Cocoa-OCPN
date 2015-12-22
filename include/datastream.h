@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA Data Object
@@ -21,12 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- *
- *
- *
- */
+ ***************************************************************************/
 
 
 #ifndef __DATASTREAM_H__
@@ -119,6 +114,8 @@ class GarminProtocolHandler;
 
 extern  const wxEventType wxEVT_OCPN_DATASTREAM;
 extern  const wxEventType wxEVT_OCPN_THREADMSG;
+
+bool CheckSumCheck(const std::string& sentence);
 
 //----------------------------------------------------------------------------
 // DataStream

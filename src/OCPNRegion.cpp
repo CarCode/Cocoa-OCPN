@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 /////////////////////////////////////////////////////////////////////////////
 // Name:        src/gtk/region.cpp
@@ -477,14 +476,9 @@ OCPNRegion::OCPNRegion( size_t n, const wxPoint *points, int fillStyle )
 {
 }
 
-wxRegion &OCPNRegion::ConvertTowxRegion()
+wxRegion *OCPNRegion::GetNew_wxRegion() const
 {
-    return *(wxRegion *)this;
-}
-
-wxRegion *OCPNRegion::GetNew_wxRegion()
-{
-    return (wxRegion *)this;
+    return new wxRegion(this);
 }
 
 #endif    
@@ -598,7 +592,11 @@ bool OCPNRegion::ODoIsEqual(const OCPNRegion& region) const
         return false;
     
     OGdkRegion *b = ((OCPNRegionRefData *)(region.m_refData))->m_region;
+#ifndef __WXOSX__  // to use a and b in OSX
     return ogdk_region_equal(M_REGIONDATA->m_region, M_REGIONDATA_OF(region)->m_region);
+#else
+    return ogdk_region_equal(a,b);
+#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -805,36 +803,7 @@ void *OCPNRegion::GetRegion() const
 }
 
 
-wxRegion &OCPNRegion::ConvertTowxRegion()
-{
-    wxRegion *r = new wxRegion;
-    
-    OGdkRectangle *gdkrects = NULL;
-    int numRects = 0;
-    gdk_region_get_rectangles( (OGdkRegion *)GetRegion(), &gdkrects, &numRects );
-    
-    if (numRects)
-    {
-        for (int i=0; i < numRects; ++i)
-        {
-            OGdkRectangle &gr = gdkrects[i];
-            
-            wxRect wr;
-            wr.x = gr.x;
-            wr.y = gr.y;
-            wr.width = gr.width;
-            wr.height = gr.height;
-            
-            r->Union(wr);
-        }
-    }
-    free( gdkrects );
-    
-    return *r;
-}
-
-
-wxRegion *OCPNRegion::GetNew_wxRegion()
+wxRegion *OCPNRegion::GetNew_wxRegion() const
 {
     wxRegion *r = new wxRegion;
     r->Clear();
@@ -1408,159 +1377,156 @@ else gdk_region_intersect (a,b)
     #define ZShiftRegion(a,b) if (xdir) gdk_region_offset (a,b,0); \
     else gdk_region_offset (a,0,b)
         
-        static void
-        Compress(OGdkRegion *r,
+static void Compress(OGdkRegion *r,
                  OGdkRegion *s,
                  OGdkRegion *t,
                  unsigned int dx,
                  int        xdir,
                  int        grow)
+{
+    unsigned int shift = 1;
+
+    miRegionCopy (s, r);
+    while (dx)
+    {
+        if (dx & shift)
         {
-            unsigned int shift = 1;
-            
-            miRegionCopy (s, r);
-            while (dx)
-            {
-                if (dx & shift)
-                {
-                    ZShiftRegion(r, -(int)shift);
-                    ZOpRegion(r, s);
-                    dx -= shift;
-                    if (!dx) break;
-                }
-                miRegionCopy (t, s);
-                ZShiftRegion(s, -(int)shift);
-                ZOpRegion(s, t);
-                shift <<= 1;
-            }
+            ZShiftRegion(r, -(int)shift);
+            ZOpRegion(r, s);
+            dx -= shift;
+            if (!dx) break;
         }
-        
-        #undef ZOpRegion
-        #undef ZShiftRegion
-        #undef ZCopyRegion
-        
-        /**
-         * gdk_region_shrink:
-         * @region: a #GdkRegion
-         * @dx: the number of pixels to shrink the region horizontally
-         * @dy: the number of pixels to shrink the region vertically
-         *
-         * Resizes a region by the specified amount.
-         * Positive values shrink the region. Negative values expand it.
-         */
-        void
-        gdk_region_shrink (OGdkRegion *region,
-                           int        dx,
-                           int        dy)
-        {
-            OGdkRegion *s, *t;
-            int grow;
-            
+        miRegionCopy (t, s);
+        ZShiftRegion(s, -(int)shift);
+        ZOpRegion(s, t);
+        shift <<= 1;
+    }
+}
+
+#undef ZOpRegion
+#undef ZShiftRegion
+#undef ZCopyRegion
+
+/**
+ * gdk_region_shrink:
+ * @region: a #GdkRegion
+ * @dx: the number of pixels to shrink the region horizontally
+ * @dy: the number of pixels to shrink the region vertically
+ *
+ * Resizes a region by the specified amount.
+ * Positive values shrink the region. Negative values expand it.
+ */
+void gdk_region_shrink (OGdkRegion *region,
+                        int        dx,
+                        int        dy)
+{
+    OGdkRegion *s, *t;
+    int grow;
+
 ///            g_return_if_fail (region != NULL);
-            
-            if (!dx && !dy)
-                return;
-            
-            s = gdk_region_new ();
-            t = gdk_region_new ();
-            
-            grow = (dx < 0);
-            if (grow)
-                dx = -dx;
-            if (dx)
-                Compress(region, s, t, (unsigned) 2*dx, TRUE, grow);
-            
-            grow = (dy < 0);
-            if (grow)
-                dy = -dy;
-            if (dy)
-                Compress(region, s, t, (unsigned) 2*dy, FALSE, grow);
-            
-            gdk_region_offset (region, dx, dy);
-            gdk_region_destroy (s);
-            gdk_region_destroy (t);
-        }
-        
-        
-        /*======================================================================
-         *          Region Intersection
-         *====================================================================*/
-        /*-
-         * -----------------------------------------------------------------------
-         * miIntersectO --
-         *      Handle an overlapping band for miIntersect.
-         *
-         * Results:
-         *      None.
-         *
-         * Side Effects:
-         *      Rectangles may be added to the region.
-         *
-         *-----------------------------------------------------------------------
-         */
-        /* static void*/
-        static void
-        miIntersectO (OGdkRegion    *pReg,
+
+    if (!dx && !dy)
+        return;
+
+    s = gdk_region_new ();
+    t = gdk_region_new ();
+
+    grow = (dx < 0);
+    if (grow)
+        dx = -dx;
+    if (dx)
+        Compress(region, s, t, (unsigned) 2*dx, TRUE, grow);
+
+    grow = (dy < 0);
+    if (grow)
+        dy = -dy;
+    if (dy)
+        Compress(region, s, t, (unsigned) 2*dy, FALSE, grow);
+
+    gdk_region_offset (region, dx, dy);
+    gdk_region_destroy (s);
+    gdk_region_destroy (t);
+}
+
+
+/*======================================================================
+ *          Region Intersection
+ *====================================================================*/
+/*-
+ * -----------------------------------------------------------------------
+ * miIntersectO --
+ *      Handle an overlapping band for miIntersect.
+ *
+ * Results:
+ *      None.
+ *
+ * Side Effects:
+ *      Rectangles may be added to the region.
+ *
+ *-----------------------------------------------------------------------
+ */
+/* static void*/
+static void miIntersectO (OGdkRegion    *pReg,
                       OGdkRegionBox *r1,
                       OGdkRegionBox *r1End,
                       OGdkRegionBox *r2,
                       OGdkRegionBox *r2End,
                       int          y1,
                       int          y2)
+{
+    int   x1;
+    int   x2;
+    OGdkRegionBox *pNextRect;
+
+    pNextRect = &pReg->rects[pReg->numRects];
+
+    while ((r1 != r1End) && (r2 != r2End))
+    {
+        x1 = MAX (r1->x1,r2->x1);
+        x2 = MIN (r1->x2,r2->x2);
+
+        /*
+         * If there's any overlap between the two rectangles, add that
+         * overlap to the new region.
+         * There's no need to check for subsumption because the only way
+         * such a need could arise is if some region has two rectangles
+         * right next to each other. Since that should never happen...
+         */
+        if (x1 < x2)
         {
-            int   x1;
-            int   x2;
-            OGdkRegionBox *pNextRect;
-            
-            pNextRect = &pReg->rects[pReg->numRects];
-            
-            while ((r1 != r1End) && (r2 != r2End))
-            {
-                x1 = MAX (r1->x1,r2->x1);
-                x2 = MIN (r1->x2,r2->x2);
-                
-                /*
-                 * If there's any overlap between the two rectangles, add that
-                 * overlap to the new region.
-                 * There's no need to check for subsumption because the only way
-                 * such a need could arise is if some region has two rectangles
-                 * right next to each other. Since that should never happen...
-                 */
-                if (x1 < x2)
-                {
-///                    g_assert (y1<y2);
-                    
-                    OMEMCHECK (pReg, pNextRect, pReg->rects);
-                    pNextRect->x1 = x1;
-                    pNextRect->y1 = y1;
-                    pNextRect->x2 = x2;
-                    pNextRect->y2 = y2;
-                    pReg->numRects += 1;
-                    pNextRect++;
- //                   g_assert (pReg->numRects <= pReg->size);
-                }
-                
-                /*
-                 * Need to advance the pointers. Shift the one that extends
-                 * to the right the least, since the other still has a chance to
-                 * overlap with that region's next rectangle, if you see what I mean.
-                 */
-                if (r1->x2 < r2->x2)
-                {
-                    r1++;
-                }
-                else if (r2->x2 < r1->x2)
-                {
-                    r2++;
-                }
-                else
-                {
-                    r1++;
-                    r2++;
-                }
-            }
+///             g_assert (y1<y2);
+
+            OMEMCHECK (pReg, pNextRect, pReg->rects);
+            pNextRect->x1 = x1;
+            pNextRect->y1 = y1;
+            pNextRect->x2 = x2;
+            pNextRect->y2 = y2;
+            pReg->numRects += 1;
+            pNextRect++;
+//                g_assert (pReg->numRects <= pReg->size);
         }
-        
+
+        /*
+         * Need to advance the pointers. Shift the one that extends
+         * to the right the least, since the other still has a chance to
+         * overlap with that region's next rectangle, if you see what I mean.
+         */
+        if (r1->x2 < r2->x2)
+        {
+            r1++;
+        }
+        else if (r2->x2 < r1->x2)
+        {
+            r2++;
+        }
+        else
+        {
+            r1++;
+            r2++;
+        }
+    }
+}
+
         /**
          * gdk_region_intersect:
          * @source1: a #GdkRegion

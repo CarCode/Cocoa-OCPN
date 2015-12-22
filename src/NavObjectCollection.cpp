@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "NavObjectCollection.h"
 #include "RoutePoint.h"
@@ -286,7 +285,7 @@ Track *GPXLoadTrack1( pugi::xml_node &trk_node, bool b_fullviz,
                     if( tpChildName == _T("trkpt") ) {
                         pWp = ::GPXLoadWaypoint1(tpchild, _T("empty"), _T("noGUID"), false, b_layer, b_layerviz, layer_id);
                         pWp->m_bIsolatedMark = false;
-                        pTentTrack->AddPoint( pWp, false, true, true );          // defer BBox calculation
+                        pTentTrack->AddPoint( pWp, false, true );          // defer BBox calculation
                         pWp->m_bIsInRoute = false;                      // Hack
                         pWp->m_bIsInTrack = true;
                         pWp->m_GPXTrkSegNo = GPXSeg;
@@ -409,10 +408,7 @@ Track *GPXLoadTrack1( pugi::xml_node &trk_node, bool b_fullviz,
         delete pTentTrack->m_HyperlinkList;                    // created in RoutePoint ctor
         pTentTrack->m_HyperlinkList = linklist;
     }
-#ifdef __WXOSX__
-    if(pTentTrack)
-#endif
-    pTentTrack->UpdateSegmentDistances();
+
     return pTentTrack;
 }
 
@@ -532,7 +528,7 @@ Route *GPXLoadRoute1( pugi::xml_node &wpt_node, bool b_fullviz,
                         }
                     }
                     
-                    pTentRoute->AddPoint( pWp, false, true, true );          // defer BBox calculation
+                    pTentRoute->AddPoint( pWp, false, true );          // defer BBox calculation
                     pWp->m_bIsInRoute = true;                      // Hack
                     pWp->m_bIsInTrack = false;
                     
@@ -609,10 +605,7 @@ Route *GPXLoadRoute1( pugi::xml_node &wpt_node, bool b_fullviz,
         delete pTentRoute->m_HyperlinkList;                    // created in RoutePoint ctor
         pTentRoute->m_HyperlinkList = linklist;
     }
-#ifdef __WXOSX__
-    if(pTentRoute)
-#endif
-    pTentRoute->UpdateSegmentDistances();
+
     return pTentRoute;
 }
 

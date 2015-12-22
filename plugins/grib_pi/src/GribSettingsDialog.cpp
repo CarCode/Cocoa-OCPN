@@ -840,9 +840,8 @@ void GribSettingsDialog::OnApply( wxCommandEvent& event )
 void GribSettingsDialog::OnIntepolateChange( wxCommandEvent& event )
 {
     if( m_cInterpolate->IsChecked() ) {
-        wxMessageDialog mes(this, _("You have chosen to authorize interpolation.\nDon't forget that data displayed will not be real but recomputed and this can decrease accuracy!"),
-                            _("Warning!"), wxOK);
-        mes.ShowModal();
+        OCPNMessageBox_PlugIn(this, _("You have chosen to authorize interpolation.\nDon't forget that data displayed will not be real but recomputed\nThis can decrease accuracy!"),
+                            _("Warning!") );
         m_tSlicesPerUpdate->Show();
         m_sSlicesPerUpdate->Show();
     } else {                                        //hide no suiting parameters
@@ -879,9 +878,8 @@ void GribSettingsDialog::OnSpacingModeChange( wxCommandEvent& event )
     }
     
     if( message ) {
-        wxMessageDialog mes(this, _("This option imply you authorize intrepolation\nDon't forget that data displayed will not be real but recomputed and this can decrease accuracy!"),
-                            _("Warning!"), wxOK);
-        mes.ShowModal();
+        OCPNMessageBox_PlugIn(this, _("This option imply you authorize intrepolation\nDon't forget that data displayed will not be real but recomputed\nThis can decrease accuracy!"),
+                            _("Warning!") );
     }
 }
 

@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 /////////////////////////////////////////////////////////////////////////////
 // Author:      Robert Roebling
@@ -64,8 +63,7 @@ public:
     
     virtual ~OCPNRegion();
     
-    wxRegion &ConvertTowxRegion();
-    wxRegion *GetNew_wxRegion();
+    wxRegion *GetNew_wxRegion() const;
     
     
 #ifdef USE_NEW_REGION    

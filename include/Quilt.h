@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,14 +19,16 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __QUIT_H__
 #define __QUIT_H__
 
 #include "chart1.h"
+#include "LLRegion.h"
 #include "OCPNRegion.h"
+
+extern bool g_bopengl;
 
 struct ChartTableEntry;
 
@@ -40,12 +42,12 @@ public:
         b_overlay = false;
     }
     int dbIndex;
-    OCPNRegion ActiveRegion;
+    LLRegion ActiveRegion;
     int ProjType;
     bool b_Valid;
     bool b_eclipsed;
     bool b_overlay;
-    OCPNRegion quilt_region;
+    LLRegion quilt_region;
 };
 
 class QuiltCandidate
@@ -55,17 +57,19 @@ public:
     {
         b_include = false;
         b_eclipsed = false;
+        b_locked = false;
     }
 
-    OCPNRegion &GetCandidateVPRegion( ViewPort &vp );
+    LLRegion &GetCandidateRegion();
     
     int dbIndex;
     int ChartScale;
     bool b_include;
     bool b_eclipsed;
-    
-private:    
-    OCPNRegion candidate_region;
+    bool b_locked;
+
+private:
+    LLRegion candidate_region;
 
 };
 
@@ -124,19 +128,24 @@ public:
     void ComputeRenderRegion( ViewPort &vp, OCPNRegion &chart_region );
     bool RenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion &chart_region );
     bool IsVPBlittable( ViewPort &VPoint, int dx, int dy, bool b_allow_vector = false );
-    ChartBase *GetChartAtPix( wxPoint p );
-    ChartBase *GetOverlayChartAtPix( wxPoint p );
-    int GetChartdbIndexAtPix( wxPoint p );
+    ChartBase *GetChartAtPix( ViewPort &VPoint, wxPoint p );
+    ChartBase *GetOverlayChartAtPix( ViewPort &VPoint, wxPoint p );
+    int GetChartdbIndexAtPix( ViewPort &VPoint, wxPoint p );
     void InvalidateAllQuiltPatchs( void );
     void Invalidate( void )
     {
         m_bcomposed = false;
         m_vp_quilt.Invalidate();
         m_zout_dbindex = -1;
+
+        //  Quilting of skewed raster charts is allowed for OpenGL only
+        m_bquiltskew = g_bopengl;
+        //  Quilting of different projections is allowed for OpenGL only
+        m_bquiltanyproj = g_bopengl;
     }
     void AdjustQuiltVP( ViewPort &vp_last, ViewPort &vp_proposed );
 
-    OCPNRegion &GetFullQuiltRegion( void ) {
+    LLRegion &GetFullQuiltRegion( void ) {
         return m_covered_region;
     }
     OCPNRegion &GetFullQuiltRenderedRegion( void ) {
@@ -153,6 +162,9 @@ public:
     }
     void SetReferenceChart( int dbIndex ) {
         m_refchart_dbIndex = dbIndex;
+        if (dbIndex >= 0) {
+            m_zout_family = -1;
+        }
     }
     int GetRefChartdbIndex( void ) {
         return m_refchart_dbIndex;
@@ -194,12 +206,10 @@ public:
     bool IsChartInQuilt( wxString &full_path);
     
     bool IsQuiltVector( void );
-    OCPNRegion GetHiliteRegion( ViewPort &vp );
-    static OCPNRegion GetChartQuiltRegion( const ChartTableEntry &cte, ViewPort &vp );
+    LLRegion GetHiliteRegion( );
+    static LLRegion GetChartQuiltRegion( const ChartTableEntry &cte, ViewPort &vp );
     
 private:
-    wxRect GetChartQuiltBoundingRect( const ChartTableEntry &cte, ViewPort &vp );
-    
     void EmptyCandidateArray( void );
     void SubstituteClearDC( wxMemoryDC &dc, ViewPort &vp );
     int GetNewRefChart( void );
@@ -209,8 +219,8 @@ private:
     
     bool IsChartS57Overlay( int db_index );
     
-    OCPNRegion m_covered_region;
-    OCPNRegion m_rendered_region;
+    LLRegion m_covered_region;
+    OCPNRegion m_rendered_region; // used only in dc mode
 
     PatchList m_PatchList;
     wxBitmap *m_pBM;
@@ -235,7 +245,7 @@ private:
     int m_reference_type;
     int m_reference_family;
     bool m_bneed_clear;
-    OCPNRegion m_back_region;
+    LLRegion m_back_region;
     wxString m_quilt_depth_unit;
     double m_max_error_factor;
     double m_canvas_scale_factor;
@@ -250,6 +260,7 @@ private:
     bool m_b_hidef;
 
     bool m_bquiltskew;
+    bool m_bquiltanyproj;
 };
 
 #endif

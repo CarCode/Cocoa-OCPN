@@ -178,7 +178,7 @@ RoutePoint *WaypointExists( const wxString& guid);
 Route *RouteExists( const wxString& guid);
 Route *RouteExists( Route * pTentRoute );
 const wxChar *ParseGPXDateTime( wxDateTime &dt, const wxChar *datetime );
-
+// bool SetPermissions(int permissions);
 //----------------------------------------------------------------------------
 //    Config
 //----------------------------------------------------------------------------

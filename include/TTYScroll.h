@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __TTYSCROLL_H__
 #define __TTYSCROLL_H__
@@ -31,7 +30,7 @@
 class TTYScroll : public wxScrolledWindow
 {
     public:
-        TTYScroll(wxWindow *parent, int n_lines);
+        TTYScroll(wxWindow *parent, int n_lines, wxTextCtrl &tFilter);
         virtual ~TTYScroll();
         virtual void OnDraw(wxDC& dc);
         virtual void Add(const wxString &line);
@@ -44,6 +43,7 @@ class TTYScroll : public wxScrolledWindow
         size_t m_nLines;  // the number of lines we draw
 
         wxArrayString *m_plineArray;
+        wxTextCtrl    &m_tFilter;
         bool           bpause;
 };
 

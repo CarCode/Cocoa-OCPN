@@ -21,10 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- *
- */
+ ***************************************************************************/
 
 #ifndef __CUTIL_H__
 #define __CUTIL_H__
@@ -34,6 +31,7 @@
 #include <windows.h>
 #endif
 
+#include <wx/dynarray.h>
 
 typedef struct  {
       double x;
@@ -52,6 +50,8 @@ typedef struct {
           
       extern "C" int mysnprintf( char *buffer, int count, const char *format, ... );
       extern "C" int NextPow2(int size);
+      extern "C" void DouglasPeucker(double *PointList, int fp, int lp, double epsilon, wxArrayInt *keep);
+
 #else /* __cplusplus */
       extern int G_PtInPolygon(MyPoint *, int, float, float) ;
       extern int mysnprintf( char *buffer, int count, const char *format, ... );

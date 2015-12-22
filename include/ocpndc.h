@@ -36,14 +36,10 @@
 #ifdef __WXMSW__
 #  define DECL_EXP     __declspec(dllexport)
 #else
-#  define DECL_EXP
+# ifdef __GNUC__
+#  define DECL_EXP       __attribute__((visibility("default")))
+# endif
 #endif
-#endif
-
-
-#ifdef __GNUC__
-#undef  DECL_EXP
-#define DECL_EXP       __attribute__((visibility("default")))
 #endif
 
 void DrawGLThickLine( float x1, float y1, float x2, float y2, wxPen pen, bool b_hiqual );
@@ -100,7 +96,7 @@ public:
 
      void DrawText(const wxString &text, wxCoord x, wxCoord y);
      void GetTextExtent(const wxString &string, wxCoord *w, wxCoord *h, wxCoord *descent = NULL,
-                        wxCoord *externalLeading = NULL, wxFont *font = NULL) const;
+                        wxCoord *externalLeading = NULL, wxFont *font = NULL);
 
      void ResetBoundingBox();
      void CalcBoundingBox(wxCoord x, wxCoord y);

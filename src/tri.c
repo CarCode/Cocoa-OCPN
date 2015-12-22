@@ -101,17 +101,13 @@ Bibliography:
 
 #include "triangulate.h"
 
-#ifdef __MSVC__
+#if defined(__MSVC__)
 #include <windows.h>
-#endif
+#else
 
-#ifndef __MSVC__
 #include <signal.h>
 #include <setjmp.h>
-#endif
 
-
-#ifndef __MSVC__
 extern struct sigaction sa_all;
 extern struct sigaction sa_all_old;
 extern jmp_buf           env;                    // the context saved by setjmp();
@@ -247,7 +243,11 @@ static int initialise( int n)
 static int alloc_mem(int ncontours, int contours[])
 {
 #ifndef STATIC
+#ifdef __WXOSX__
+    int nsegp = 1;
+#else
     int nsegp = 0;
+#endif
     int i;
 
     for(i=0 ; i<ncontours ; i++)
@@ -465,7 +465,7 @@ polyout  *triangulate_polygon(int ncontours, int cntr[], double (*vertices)[2])
     
     //    In a MS WIndows environment, use SEH to catch bad code in the tesselator
     //    Polygons producing faults will not be drawn
-    #ifdef __MSVC__
+#if defined(__MSVC__)
     __try
     {
         ret_val = do_triangulate_polygon(ncontours, cntr, vertices);
@@ -474,7 +474,10 @@ polyout  *triangulate_polygon(int ncontours, int cntr[], double (*vertices)[2])
     {
         ret_val = NULL;
     }
-    #else
+#elif defined(__MINGW32__)
+    /* for now, don't catch exceptions in windows with mingw compiler */
+    ret_val = do_triangulate_polygon(ncontours, cntr, vertices);
+#else
     //    In a Posix environment, use sigaction, etc.. to catch bad code in the tesselator
     //    Polygons producing faults will not be drawn
     
@@ -494,7 +497,7 @@ polyout  *triangulate_polygon(int ncontours, int cntr[], double (*vertices)[2])
       
       sigaction(SIGSEGV, &sa_all_old, NULL);        // reset signal handler
       
-      #endif
+#endif
       
       return ret_val;
 }
@@ -686,7 +689,7 @@ polyout  *do_triangulate_polygon(int ncontours, int cntr[], double (*vertices)[2
       
       
       // FNV1a, 32 bits, byte inputs, manually unrolled
-      pp->index_hash = 2166136261;
+      pp->index_hash = 2166136261U;
       
       pp->index_hash = pp->index_hash ^ (a & 255);
       pp->index_hash = pp->index_hash * 16777619;
@@ -2926,7 +2929,11 @@ static isegment_t *iseg;
 static int int_alloc_mem(int ncontours, int contours[])
 {
 #ifndef STATIC
+#ifdef __WXOSX__
+    int nsegp = 1;
+#else
       int nsegp = 0;
+#endif
       int i;
 
       for(i=0 ; i<ncontours ; i++)
@@ -3033,11 +3040,7 @@ inline int int_less_than(ipoint_t *v0, ipoint_t *v1)
 }
 
 /* Return the maximum of the two points into the yval structure */
-#ifdef __WXOSX__
 inline int int_max(ipoint_t *yval, ipoint_t *v0, ipoint_t *v1)
-#else
-inline static int int_max(ipoint_t *yval, ipoint_t *v0, ipoint_t *v1)
-#endif
 {
       if (v0->y > v1->y)
             *yval = *v0;
@@ -3056,11 +3059,7 @@ inline static int int_max(ipoint_t *yval, ipoint_t *v0, ipoint_t *v1)
 
 
 /* Return the minimum of the two points into the yval structure */
-#ifdef __WXOSX__
 inline int int_min(ipoint_t *yval, ipoint_t *v0, ipoint_t *v1)
-#else
-inline static int int_min(ipoint_t *yval, ipoint_t *v0, ipoint_t *v1)
-#endif
 {
       if (v0->y < v1->y)
             *yval = *v0;
@@ -3092,11 +3091,7 @@ double iCROSS(int v0x, int v0y, int v1x, int v1y, int v2x, int v2y)
  * segnum. Takes care of the degenerate cases when both the vertices
  * have the same y--cood, etc.
  */
-#ifdef __WXOSX__
 inline int int_is_left_of(int segnum, ipoint_t *v)
-#else
-inline static int int_is_left_of(int segnum, ipoint_t *v)
-#endif
 {
       isegment_t *s = &iseg[segnum];
       double area;
@@ -4521,7 +4516,7 @@ int int_trapezate_polygon(int ncontours, int cntr[], double (*vertices)[2], itra
 
       //    In a MS WIndows environment, use SEH to catch bad code in the tesselator
       //    Polygons producing faults will not be drawn
-#ifdef __MSVC__
+#if defined(__MSVC__)
       __try
       {
             ret_val = do_int_trapezate_polygon(ncontours, cntr, vertices, trap_return,iseg_return, n_traps);
@@ -4533,6 +4528,9 @@ int int_trapezate_polygon(int ncontours, int cntr[], double (*vertices)[2], itra
             *trap_return = NULL;
             *iseg_return = NULL;
       }
+#elif defined(__MINGW32__)
+    /* for now, don't catch exceptions in windows with mingw compiler */
+    ret_val = do_int_trapezate_polygon(ncontours, cntr, vertices, trap_return,iseg_return, n_traps);
 #else
       //    In a Posix environment, use sigaction, etc.. to catch bad code in the tesselator
       //    Polygons producing faults will not be drawn

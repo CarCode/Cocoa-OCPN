@@ -374,6 +374,7 @@ RouteProp::RouteProp( wxWindow* parent, wxWindowID id, const wxString& caption, 
     m_pEnroutePoint = NULL;
     m_bStartNow = false;
 
+    m_pRoute = 0;
     m_pEnroutePoint = NULL;
     m_bStartNow = false;
     long wstyle = style;
@@ -1856,8 +1857,8 @@ bool RouteProp::UpdateProperties()
             bool starting_point = false;
 
             starting_point = ( i == 0 ) && enroute;
-            if( m_pEnroutePoint && !starting_point ) starting_point = ( prp->m_GUID
-                    == m_pEnroutePoint->m_GUID );
+            if( m_pEnroutePoint && !starting_point )
+                starting_point = ( prp->m_GUID == m_pEnroutePoint->m_GUID );
 
             if( starting_point ) {
                 slat = gLat;
@@ -1904,8 +1905,13 @@ bool RouteProp::UpdateProperties()
         prp->SetDistance(leg_dist); // save the course to the next waypoint for printing.
 
             //  Bearing
-        if( g_bShowMag )
-            t.Printf( _T("%03.0f Deg. M"), gFrame->GetTrueOrMag( brg ) );
+        if( g_bShowMag ){
+            double latAverage = (prp->m_lat + slat)/2;
+            double lonAverage = (prp->m_lon + slon)/2;
+            double varBrg = gFrame->GetTrueOrMag( brg, latAverage, lonAverage);
+
+            t.Printf( _T("%03.0f Deg. M"), varBrg );
+        }
         else
             t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( brg ) );
 
@@ -1916,8 +1922,20 @@ bool RouteProp::UpdateProperties()
 
         // Course (bearing of next )
         if (_next_prp){
-            if( g_bShowMag )
-                t.Printf( _T("%03.0f Deg. M"), gFrame->GetTrueOrMag( course ) );
+            if( g_bShowMag ){
+                double next_lat = prp->m_lat;
+                double next_lon = prp->m_lon;
+                if (_next_prp ){
+                    next_lat = _next_prp->m_lat;
+                    next_lon = _next_prp->m_lon;
+                }
+
+                double latAverage = (prp->m_lat + next_lat)/2;
+                double lonAverage = (prp->m_lon + next_lon)/2;
+                double varCourse = gFrame->GetTrueOrMag( course, latAverage, lonAverage);
+
+                t.Printf( _T("%03.0f Deg. M"), varCourse );
+            }
             else
                 t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( course ) );
             if( arrival )
@@ -2118,9 +2136,6 @@ wxString RouteProp::MakeTideInfo( int jx, time_t tm, int tz_selection, long LMT_
 
 bool RouteProp::SaveChanges( void )
 {
-#ifdef __WXOSX__
-    if( NULL == m_pRoute ) return false;
-#endif
     //  Save the current planning speed
     g_PlanSpeed = m_planspeed;
     g_StartTime = m_starttime;    // both always UTC
@@ -2154,7 +2169,7 @@ bool RouteProp::SaveChanges( void )
         pConfig->UpdateSettings();
     }
 
-    if( m_pRoute->IsActive() || ((Track*) m_pRoute)->IsRunning() )
+    if( m_pRoute && ( m_pRoute->IsActive() || ((Track*) m_pRoute)->IsRunning() ) )
     {
         wxJSONValue v;
         v[_T("Name")] =  m_pRoute->m_RouteNameString;
@@ -2312,9 +2327,6 @@ const wxEventType EVT_LLCHANGE = wxNewEventType();
 //    LatLonTextCtrl Window Implementation
 //------------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(LatLonTextCtrl, wxWindow)
-
-EVT_KILL_FOCUS(LatLonTextCtrl::OnKillFocus)
-
 END_EVENT_TABLE()
 
 // constructor
@@ -2705,6 +2717,8 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 
     bSizer1->Add( m_sdbSizerButtons, 0, wxALL | wxEXPAND, 5 );
 
+    Fit();
+
     RecalculateSize();
     
     // Connect Events
@@ -2759,27 +2773,33 @@ void MarkInfoDef::RecalculateSize( void )
     
     Layout();
 
+    // X size is correctly computed by sizers, except on MSW....
+    // We change only Y size, unless X is too big for the parent client size....
+
     wxSize esize;
 #ifdef __WXOSX__
     esize.x = GetCharWidth() * 60;
-    esize.y = GetCharHeight() * 100;
+    esize.y = GetCharHeight() * 50;
 #else
-    esize.x = GetCharWidth() * 110;
-    esize.y = GetCharHeight() * 40;
+#ifdef __WXMSW__
+    esize.x = GetCharWidth() * 46;
+#else
+    esize.x = -1;
+#endif
+    esize.y = GetCharHeight() * 30;
 #endif
     wxSize dsize = GetParent()->GetClientSize();
     esize.y = wxMin(esize.y, dsize.y - (2 * GetCharHeight()));
     esize.x = wxMin(esize.x, dsize.x - (1 * GetCharHeight()));
-    SetClientSize(esize);
+    SetClientSize(wxSize(esize.x, esize.y));
     
     wxSize fsize = GetSize();
     fsize.y = wxMin(fsize.y, dsize.y - (2 * GetCharHeight()));
     fsize.x = wxMin(fsize.x, dsize.x - (1 * GetCharHeight()));
-    SetSize(fsize);
+    SetSize(wxSize(-1, fsize.y));
     
     m_defaultClientSize = GetClientSize();
     
-    Centre( wxBOTH );
 }
 
 void MarkInfoDef::OnShowWaypointRangeRingSelect( wxCommandEvent& event )
@@ -3039,7 +3059,19 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
         if( fillCombo  && icons){
             for( int i = 0; i < pWayPointMan->GetNumIcons(); i++ ) {
                 wxString *ps = pWayPointMan->GetIconDescription( i );
-                m_bcomboBoxIcon->Append( *ps, icons->GetBitmap( i ) );
+                wxBitmap bmp = icons->GetBitmap( i );
+                
+#ifdef __WXMSW__
+                int target = 16;
+                int h = bmp.GetHeight();
+                if(bmp.GetHeight() > target){
+                    wxBitmap bmpl = bmp;
+                    wxImage img = bmpl.ConvertToImage();
+                    img.Rescale(target, target, wxIMAGE_QUALITY_HIGH);
+                    bmp = wxBitmap(img);
+                }
+#endif
+                m_bcomboBoxIcon->Append( *ps, bmp );
             }
         }
         
@@ -3052,11 +3084,7 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
 
         //  not found, so add  it to the list, with a generic bitmap and using the name as description
         // n.b.  This should never happen...
-#ifdef __WXOSX__
-        if( -1 == iconToSelect && icons){
-#else
-        if( -1 == iconToSelect){
-#endif
+        if( icons && -1 == iconToSelect){
             m_bcomboBoxIcon->Append( m_pRoutePoint->GetIconName(), icons->GetBitmap( 0 ) );
             iconToSelect = m_bcomboBoxIcon->GetCount() - 1;
         }
@@ -3377,7 +3405,7 @@ void MarkInfoImpl::OnMarkInfoOKClick( wxCommandEvent& event )
     if( pRoutePropDialog && pRoutePropDialog->IsShown() )
         pRoutePropDialog->UpdateProperties();
 
-    SetClientSize(m_defaultClientSize);
+//    SetClientSize(m_defaultClientSize);
 
 #ifdef __OCPN__ANDROID__
     androidEnableBackButton( true );
@@ -3417,7 +3445,7 @@ void MarkInfoImpl::OnMarkInfoCancelClick( wxCommandEvent& event )
     Show( false );
     delete m_pMyLinkList;
     m_pMyLinkList = NULL;
-    SetClientSize(m_defaultClientSize);
+//    SetClientSize(m_defaultClientSize);
 
 #ifdef __OCPN__ANDROID__
     androidEnableBackButton( true );

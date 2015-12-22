@@ -40,6 +40,8 @@ TexFont::TexFont( )
 
 TexFont::~TexFont( )
 {
+    Delete( );
+
 }
 
 

@@ -71,10 +71,19 @@ wxString OCPNListCtrl::GetTargetColumnData( AIS_Target_Data *pAISTarget, long co
     if( pAISTarget ) {
         switch( column ){
             case tlTRK:
+#ifdef __WXOSX__
                 if( pAISTarget->b_show_track )
+#else
+                    if ((pAISTarget->b_show_track) && !((pAISTarget-> b_NoTrack || pAISTarget->Class == AIS_ATON) || (pAISTarget->Class == AIS_BASE)))              
+#endif
                     ret = _("Yes");
                 else
                     ret = _("No");
+#ifdef __WXOSX__
+                if( ( pAISTarget->Class == AIS_ATON ) || ( pAISTarget->Class == AIS_BASE )
+                   || ( pAISTarget->Class == AIS_ARPA ) || pAISTarget->b_SarAircraftPosnReport)
+                    ret = _("-");
+#endif
                 break;
                 
             case tlNAME:

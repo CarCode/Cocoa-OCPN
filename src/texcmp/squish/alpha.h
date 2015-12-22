@@ -25,11 +25,9 @@
    
 #ifndef SQUISH_ALPHA_H
 #define SQUISH_ALPHA_H
-#ifdef __WXOSX__
+
 #include "squish.h"
-#else
-#include <squish.h>
-#endif
+
 namespace squish {
 
 void CompressAlphaDxt3( u8 const* rgba, int mask, void* block );

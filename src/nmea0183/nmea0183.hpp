@@ -212,7 +212,7 @@ class NMEA0183
        GSV Gsv;
        GPWPL GPwpl;
        APB Apb;
-//       XTE Xte;
+       XTE Xte;
 #ifdef __WXOSX__
         VLW Vlw;
         STALK Stalk;

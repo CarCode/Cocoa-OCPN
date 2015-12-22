@@ -1,11 +1,11 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  GPX utility classes
  * Author:   David S. Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                                      *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,9 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
-*/
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #include <wx/wx.h>
 #include <wx/ffile.h>
@@ -692,14 +691,12 @@ void GpxTrkElement::SetProperty(const wxString &name, const wxString &value)
                   ReplaceChild(curelement, *element);
                   element->Clear();
                   delete element;
-#ifdef __WXOSX__
-                found = true;
-#endif
+                  element = NULL;
                   break;
             }
             curelement = curelement->NextSiblingElement();
       }
-      if (!found)
+      if (!found && element)
             LinkEndChild(element);
 }
 

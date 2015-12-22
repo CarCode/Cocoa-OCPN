@@ -1,11 +1,11 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Tesselation of Polygon Object
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,11 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 
 #ifndef __MYGEOM_H
@@ -35,8 +32,8 @@
 #include <wx/wfstream.h>
 
 
-#include <ogr_geometry.h>
-//#include "s52s57.h"
+class OGRGeometry;
+class OGRPolygon;
 
 #define TESS_VERT   0                           // constants describing preferred tess orientation
 #define TESS_HORZ   1
@@ -59,7 +56,6 @@
 #define DATA_TYPE_FLOAT         0
 #define DATA_TYPE_DOUBLE        1
 
-void DouglasPeucker(double *PointList, int fp, int lp, double epsilon, wxArrayInt *keep);
 
 //--------------------------------------------------------------------------------------------------
 //

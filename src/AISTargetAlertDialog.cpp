@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include <wx/html/htmlwin.h>
 
@@ -135,6 +134,7 @@ void AISTargetAlertDialog::Init()
     m_target_mmsi = 0;
     m_max_nline = 20;
     m_adj_height = 0;
+    m_bsizeSet = false;
 
 }
 
@@ -247,7 +247,7 @@ void AISTargetAlertDialog::UpdateText()
 {
     if( GetAlertText() ) {
 
-        wxFont *dFont = FontMgr::Get().GetFont( _("AISTargetQuery"), 12 );
+        wxFont *dFont = FontMgr::Get().GetFont( _("AISTargetAlert"), 12 );
         wxString face = dFont->GetFaceName();
         int sizes[7];
         for( int i = -2; i < 5; i++ ) {
@@ -297,14 +297,25 @@ void AISTargetAlertDialog::RecalculateSize( void )
     m_adj_height = wxMax(m_adj_height, adj_height);
 
     esize.y = wxMin(esize.y, m_adj_height);
-    SetClientSize(esize);
-
+///    SetClientSize(esize);
+/*
     wxSize dsize = GetParent()->GetClientSize();
 
     wxSize fsize = GetSize();
     fsize.y = wxMin(fsize.y, dsize.y - (1 * GetCharHeight()));
     fsize.x = wxMin(fsize.x, dsize.x - (1 * GetCharHeight()));
     SetSize(fsize);
+ */
+
+
+    if(!m_bsizeSet){
+        Fit();          // Sets the horizontal size OK
+        m_bsizeSet = true;
+    }
+
+    wxSize gSize = GetClientSize();
+    if(gSize.y != esize.y)
+        SetClientSize(gSize.x, esize.y);
 
     g_Platform->PositionAISAlert( this );
 

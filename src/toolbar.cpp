@@ -322,6 +322,8 @@ ocpnFloatingToolbarDialog::ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint 
     m_bAutoHideToolbar = false;
     m_nAutoHideToolbar = 5;
 
+    m_cs = (ColorScheme)-1;
+
     m_style = g_StyleManager->GetCurrentStyle();
 
 // A top-level sizer
@@ -518,6 +520,7 @@ void ocpnFloatingToolbarDialog::Surface()
 {
 
     if(m_pRecoverwin){
+        //SurfaceFromGrabber();
         m_pRecoverwin->Show();
         m_pRecoverwin->Raise();
     }
@@ -590,8 +593,11 @@ void ocpnFloatingToolbarDialog::SurfaceFromGrabber()
     Raise();
 #endif
 
-    m_destroyGrabber = m_pRecoverwin;
-    m_destroyTimer.Start( 5, wxTIMER_ONE_SHOT );           //  Destor the unneeded recovery grabber
+    if(!m_destroyTimer.IsRunning()){
+        m_destroyGrabber = m_pRecoverwin;
+        m_pRecoverwin = NULL;
+        m_destroyTimer.Start( 5, wxTIMER_ONE_SHOT );           //  Destor the unneeded recovery grabber
+    }
 
 }
 
@@ -599,7 +605,7 @@ void ocpnFloatingToolbarDialog::DestroyTimerEvent( wxTimerEvent& event )
 {
     delete m_destroyGrabber;
     m_destroyGrabber = NULL;
-    m_pRecoverwin = NULL;
+
 }
 
 void ocpnFloatingToolbarDialog::HideTooltip()
@@ -977,8 +983,11 @@ void ocpnFloatingToolbarDialog::DestroyToolBar()
         m_ptoolbar = NULL;
     }
 
-    m_destroyGrabber = m_pRecoverwin;
-    m_destroyTimer.Start( 5, wxTIMER_ONE_SHOT );           //  Destor the unneeded recovery grabber
+    if(!m_destroyTimer.IsRunning()){
+        m_destroyGrabber = m_pRecoverwin;
+        m_pRecoverwin = NULL;
+        m_destroyTimer.Start( 5, wxTIMER_ONE_SHOT );           //  Destor the unneeded recovery grabber
+    }
 
 }
 
@@ -1701,11 +1710,11 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
             m_currentTool = -1;
             OnMouseEnter( -1 );
         }
-
+#ifndef __WXOSX__
         wxMouseEvent *pev = (wxMouseEvent *) event.Clone();
         GetParent()->GetEventHandler()->AddPendingEvent( *pev );
         wxDELETE( pev );
-
+#endif
         return;
     }
 
@@ -1726,11 +1735,11 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
             m_currentTool = tool->GetId();
             OnMouseEnter( m_currentTool );
         }
-
+#ifndef __WXOSX__
         wxMouseEvent *pev = (wxMouseEvent *) event.Clone();
         GetParent()->GetEventHandler()->AddPendingEvent( *pev );
         wxDELETE( pev );
-
+#endif
         return;
     }
 
@@ -1779,10 +1788,11 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
 
         DoPluginToolUp();
     }
-
+#ifndef __WXOSX__
     wxMouseEvent *pev = (wxMouseEvent *) event.Clone();
     GetParent()->GetEventHandler()->AddPendingEvent( *pev );
     wxDELETE( pev );
+#endif
     event.Skip();
 }
 
@@ -1978,6 +1988,8 @@ wxRect ocpnToolBarSimple::GetToolRect( int tool_id )
 
 void ocpnToolBarSimple::DoEnableTool( wxToolBarToolBase *tool, bool WXUNUSED(enable) )
 {
+    ocpnToolBarTool *t = (ocpnToolBarTool *) tool;
+    t->bitmapOK = false;
     DrawTool( tool );
 }
 
@@ -2100,8 +2112,10 @@ void ocpnToolBarSimple::EnableTool( int id, bool enable )
             DoEnableTool( tool, enable );
         }
     }
+
     wxMenuItem* configItem = g_FloatingToolbarConfigMenu->FindItem( id );
-    configItem->Check( true );
+    if(configItem)
+        configItem->Check( true );
 }
 
 void ocpnToolBarSimple::SetToolBitmaps( int id, wxBitmap *bmp, wxBitmap *bmpRollover )

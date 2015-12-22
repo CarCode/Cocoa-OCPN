@@ -25,11 +25,8 @@
    
 #ifndef SQUISH_RANGEFIT_H
 #define SQUISH_RANGEFIT_H
-#ifdef __WXOSX__
+
 #include "squish.h"
-#else
-#include <squish.h>
-#endif
 #include "colourfit.h"
 #include "maths.h"
 
@@ -40,12 +37,12 @@ class ColourSet;
 class RangeFit : public ColourFit
 {
 public:
-	RangeFit( ColourSet const* colours, int flags );
+	RangeFit( ColourSet * colours, int flags );
 	
-private:
 	virtual void Compress3( void* block );
 	virtual void Compress4( void* block );
 	
+private:
 	Vec3 m_metric;
 	Vec3 m_start;
 	Vec3 m_end;

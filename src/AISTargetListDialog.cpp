@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include <wx/textctrl.h>
 #include <wx/sizer.h>
@@ -945,13 +944,10 @@ void AISTargetListDialog::UpdateAISTargetList( void )
     if(m_pListCtrlAISTargets && !m_pListCtrlAISTargets->IsVirtual())
         return UpdateNVAISTargetList();
 
-    if( m_pdecoder ) {
+    if( m_pdecoder && m_pListCtrlAISTargets ) {
 
         //    Capture the MMSI of the curently selected list item
         long selItemID = -1;
-#ifdef __WXOSX__
-        if(m_pListCtrlAISTargets > 0)
-#endif
         selItemID = m_pListCtrlAISTargets->GetNextItem( selItemID, wxLIST_NEXT_ALL,
                 wxLIST_STATE_SELECTED );
 

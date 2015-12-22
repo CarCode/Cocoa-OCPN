@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "glTextureDescriptor.h"
 #include <wx/thread.h>
@@ -61,9 +60,6 @@ void glTextureDescriptor::FreeAll()
         comp_array[i] = NULL;
         compcomp_array[i] = NULL;
         compcomp_size[i] = 0;
-        
-        map_array[i] = 0;
-        comp_array[i] = 0;
     }
 }
 
@@ -81,14 +77,22 @@ void glTextureDescriptor::FreeCompLevel(int level)
     comp_array[level] = NULL;
 }
     
+void glTextureDescriptor::FreeCompComp()
+{
+    for( int i = 0; i < 10; i++ ){
+        free( compcomp_array[i] );
+        compcomp_array[i] = NULL;
+        compcomp_size[i] = 0;
+    }
+}
 
 unsigned char *glTextureDescriptor::CompressedArrayAccess( int mode, unsigned char *write_data, int level)
 {
     wxCriticalSectionLocker locker(gs_critSect);
-    
-    if(mode == CA_WRITE)
+    if(mode == CA_WRITE) {
+        free( comp_array[level] );
         comp_array[level] = write_data;
-
+    }
     return comp_array[level];
 }
 
@@ -96,9 +100,10 @@ unsigned char *glTextureDescriptor::CompCompArrayAccess( int mode, unsigned char
 {
     wxCriticalSectionLocker locker(gs_critSect);
     
-    if(mode == CA_WRITE)
+    if(mode == CA_WRITE) {
+        // XXX Call free here ? currently compcomp_array is always 0
         compcomp_array[level] = write_data;
-    
+    }
     return compcomp_array[level];
 }
 

@@ -290,9 +290,8 @@ void wmm_pi::SetColorScheme(PI_ColorScheme cs)
 {
 	if (NULL == m_pWmmDialog)
 		return;
-#ifndef __WXOSX__
+
 	DimeWindow(m_pWmmDialog);
-#endif
 }
 
 void wmm_pi::RearrangeWindow()
@@ -540,7 +539,7 @@ void wmm_pi::SendVariationAt(double lat, double lon, int year, int month, int da
 {
 	wxJSONValue v;
 	v[_T("Lat")] = lat;
-	v[_T("Lon")] = lat;
+	v[_T("Lon")] = lon;
 	v[_T("Year")] = year;
 	v[_T("Month")] = month;
 	v[_T("Day")] = day;
@@ -631,11 +630,7 @@ void wmm_pi::SendCursorVariation()
 
 wxString wmm_pi::AngleToText(double angle)
 {
-#ifdef __WXOSX__
-    int deg = std::abs(angle);
-#else
-	int deg = abs(angle);
-#endif
+    int deg = (int)fabs(angle);
 	int min = (fabs(angle) - deg) * 60;
 	if (angle < 0)
 		return wxString::Format(_T("%u\u00B0%u' W"), deg, min);

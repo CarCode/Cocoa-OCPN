@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Optimized wxBitmap Object
@@ -183,6 +183,7 @@ class PixelCache
         int GetLinePitch() const { return line_pitch_bytes; }
         int GetWidth(void){ return m_width; }
         int GetHeight(void){ return m_height; }
+        size_t GetLength(void);
 
       //    Data storage
     private:

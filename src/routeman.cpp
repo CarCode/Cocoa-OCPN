@@ -96,12 +96,12 @@ extern bool             g_bAdvanceRouteWaypointOnArrivalOnly;
 extern Route            *pAISMOBRoute;
 extern bool             g_btouch;
 extern float            g_ChartScaleFactorExp;
-
-//    List definitions for Waypoint Manager Icons
+#ifndef __WXOSX__
+//    List definitions for Waypoint Manager Icons.  Goes to routeman.h for OSX
 WX_DECLARE_LIST(wxBitmap, markicon_bitmap_list_type);
 WX_DECLARE_LIST(wxString, markicon_key_list_type);
 WX_DECLARE_LIST(wxString, markicon_description_list_type);
-
+#endif
 //    List implementation for Waypoint Manager Icons
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(markicon_bitmap_list_type);
@@ -535,19 +535,19 @@ bool Routeman::DeactivateRoute( bool b_arrival )
     if( pActiveRoute ) {
         pActiveRoute->m_bRtIsActive = false;
         pActiveRoute->m_pRouteActivePoint = NULL;
-    }
 
-    wxJSONValue v;
-    if( !b_arrival ) {
-        v[_T("Route_deactivated")] = pActiveRoute->m_RouteNameString;
-        v[_T("GUID")] = pActiveRoute->m_GUID;
-        wxString msg_id( _T("OCPN_RTE_DEACTIVATED") );
-        g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
-    } else {
-        v[_T("GUID")] = pActiveRoute->m_GUID;
-        v[_T("Route_ended")] = pActiveRoute->m_RouteNameString;
-        wxString msg_id( _T("OCPN_RTE_ENDED") );
-        g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
+        wxJSONValue v;
+        if( !b_arrival ) {
+            v[_T("Route_deactivated")] = pActiveRoute->m_RouteNameString;
+            v[_T("GUID")] = pActiveRoute->m_GUID;
+            wxString msg_id( _T("OCPN_RTE_DEACTIVATED") );
+            g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
+        } else {
+            v[_T("GUID")] = pActiveRoute->m_GUID;
+            v[_T("Route_ended")] = pActiveRoute->m_RouteNameString;
+            wxString msg_id( _T("OCPN_RTE_ENDED") );
+            g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
+        }
     }
 
     pActiveRoute = NULL;

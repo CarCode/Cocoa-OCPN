@@ -70,6 +70,9 @@ void Osenc::init( void )
     m_senc_file_version = 0;
     s_ProgDialog = NULL;
 
+    m_ref_lat = 0;
+    m_ref_lon = 0;
+
 }
 
 int Osenc::ingestHeader(const wxString &senc_file_name)
@@ -600,6 +603,8 @@ int Osenc::createSenc124(const wxString& FullPath000, const wxString& SENCFileNa
     }
 
     delete s_ProgDialog;
+
+    delete poS57DS;
 
     return ret_code;
 
@@ -1171,11 +1176,11 @@ int Osenc::ingestCell( const wxString &FullPath000, const wxString &working_dir 
 
     bool bcont = true;
     int iObj = 0;
-    OGRwkbGeometryType geoType;
+//    OGRwkbGeometryType geoType;
     wxString sobj;
 
     //  Here comes the actual ISO8211 file reading
-    OGRS57DataSource *poS57DS = new OGRS57DataSource;
+    poS57DS = new OGRS57DataSource;
     poS57DS->SetS57Registrar( m_poRegistrar );
 
     //  Set up the options
@@ -1422,7 +1427,9 @@ void Osenc::CreateSENCVectorEdgeTable( FILE * fpOut, S57Reader *poReader )
     OGRLineString *pLS = NULL;
     OGRGeometry *pGeo;
     OGRFeature *pEdgeVectorRecordFeature = poReader->ReadVector( feid, RCNM_VE );
-
+#ifdef __WXOSX__
+    double MyPoint;
+#endif
     while( NULL != pEdgeVectorRecordFeature ) {
         int record_id = pEdgeVectorRecordFeature->GetFieldAsInteger( "RCID" );
         fwrite( &record_id, 1, sizeof(int), fpOut );
@@ -1503,7 +1510,7 @@ void Osenc::CreateSENCVectorEdgeTable( FILE * fpOut, S57Reader *poReader )
             fwrite( &nPoints, 1, sizeof(int), fpOut );
         }
 
-        #if 0            
+#if 0
         fwrite( &nPoints, 1, sizeof(int), fpOut );
 
         for( int i = 0; i < nPoints; i++ ) {
@@ -1519,7 +1526,7 @@ void Osenc::CreateSENCVectorEdgeTable( FILE * fpOut, S57Reader *poReader )
             pd.y = northing;
             fwrite( &pd, 1, sizeof(MyPoint), fpOut );
     }
-    #endif
+#endif
 
     //    Next vector record
     feid++;

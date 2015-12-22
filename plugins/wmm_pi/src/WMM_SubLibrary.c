@@ -354,11 +354,17 @@ int WMM_DateToYear (WMMtype_Date *CalendarDate, char *Error)
 	/******************Validation********************************/
 	if(CalendarDate->Month <= 0 || CalendarDate->Month > 12)
 	{
+#ifdef __WXOSX__
+        if(Error)
+#endif
         strcpy(Error, "WMM Error: The Month entered is invalid, valid months are '1 to 12'\n");
 		return 0;
 	}
 	if(CalendarDate->Day <= 0 || CalendarDate->Day > MonthDays[CalendarDate->Month])
 	{
+#ifdef __WXOSX__
+        if(Error)
+#endif
         strcpy(Error, "WMM Error: The day entered is invalid\n");
 		return 0;
 	}
@@ -956,7 +962,11 @@ int WMM_ConvertGeoidToEllipsoidHeight (WMMtype_CoordGeodetic *CoordGeodetic, WMM
 
  */
 {
+#ifdef __WXOSX__
+double  DeltaHeight = 0.0;
+#else
 double  DeltaHeight;
+#endif
 int Error_Code;
 
 if (Geoid->UseGeoid == 1) {      /* Geoid correction required */
@@ -1766,21 +1776,27 @@ WMMtype_LegendreFunction *WMM_AllocateLegendreFunctionMemory(int NumTerms)
 	if (!LegendreFunction) {
 		WMM_Error(1);
 		//printf("error allocating in WMM_AllocateLegendreFunctionMemory\n");
-		return FALSE;
+		return NULL;
 					}
 	LegendreFunction->Pcup = (double *) 	malloc	( (NumTerms +1) * sizeof ( double ) );
 	if (LegendreFunction->Pcup == 0)
 	{
+#ifdef __WXOSX__
+        free (LegendreFunction);
+#endif
 		WMM_Error(1);
 		//printf("error allocating in WMM_AllocateLegendreFunctionMemory\n");
-		return FALSE;
+		return NULL;
 	}
 	LegendreFunction->dPcup = (double *) 	malloc	( (NumTerms +1) * sizeof ( double ) );
 	if (LegendreFunction->dPcup == 0)
 	{
+#ifdef __WXOSX__
+        free (LegendreFunction);
+#endif
 		WMM_Error(1);
 		//printf("error allocating in WMM_AllocateLegendreFunctionMemory\n");
-		return FALSE;
+		return NULL;
 	}
 	return LegendreFunction;
 	}  /*WMMtype_LegendreFunction*/
@@ -1818,39 +1834,51 @@ WMMtype_MagneticModel *WMM_AllocateModelMemory(int NumTerms)
 	if (MagneticModel == NULL) {
 		WMM_Error(2);
 		//printf("error allocating in WMM_AllocateModelMemory\n");
-		return FALSE;
+		return NULL;
 					}
 
 	MagneticModel->Main_Field_Coeff_G =  (double *) 	malloc	( (NumTerms +1) * sizeof ( double ) );
 
 	if (MagneticModel->Main_Field_Coeff_G == NULL)
 	{
+#ifdef __WXOSX__
+        free (MagneticModel);
+#endif
 		WMM_Error(2);
 		//printf("error allocating in WMM_AllocateModelMemory\n");
-		return FALSE;
+		return NULL;
 	}
 
 	MagneticModel->Main_Field_Coeff_H =  (double *) 	malloc	( (NumTerms +1) * sizeof ( double ) );
 
 	if (MagneticModel->Main_Field_Coeff_H == NULL)
 	{
+#ifdef __WXOSX__
+        free (MagneticModel);
+#endif
 		WMM_Error(2);
 		//printf("error allocating in WMM_AllocateModelMemory\n");
-		return FALSE;
+		return NULL;
 	}
 	MagneticModel->Secular_Var_Coeff_G =  (double *) 	malloc	( (NumTerms +1) * sizeof ( double ) );
 	if (MagneticModel->Secular_Var_Coeff_G == NULL)
 	{
+#ifdef __WXOSX__
+        free (MagneticModel);
+#endif
 		WMM_Error(2);
 		//printf("error allocating in WMM_AllocateModelMemory\n");
-		return FALSE;
+		return NULL;
 	}
 	MagneticModel->Secular_Var_Coeff_H =  (double *) 	malloc	( (NumTerms +1) * sizeof ( double ) );
 	if (MagneticModel->Secular_Var_Coeff_H == NULL)
 	{
+#ifdef __WXOSX__
+        free (MagneticModel);
+#endif
 		WMM_Error(2);
 		//printf("error allocating in WMM_AllocateModelMemory\n");
-		return FALSE;
+		return NULL;
 	}
 	return MagneticModel;
 
@@ -1927,6 +1955,7 @@ int WMM_PcupHigh(double *Pcup, double *dPcup, double x, int nMax)
 	if (PreSqr == 0)
 	{
 		free(PreSqr);
+        free(f1);
 		WMM_Error(18);
 		//printf("error allocating in WMM_PcupHigh\n");
 		return FALSE;
@@ -1936,6 +1965,8 @@ int WMM_PcupHigh(double *Pcup, double *dPcup, double x, int nMax)
 
 	if (f2 == 0)
 	{
+        free(PreSqr);
+        free(f1);
 		free(f2);
 		WMM_Error(18);
 		//printf("error allocating in WMM_PcupHigh\n");
@@ -1970,8 +2001,12 @@ int WMM_PcupHigh(double *Pcup, double *dPcup, double x, int nMax)
 	pm2  = 1.0;
 	Pcup[0] = 1.0;
 	dPcup[0] = 0.0;
-	if (nMax == 0)
-		return FALSE;
+    if (nMax == 0){
+        free(f2);
+        free(f1);
+        free(PreSqr);
+        return FALSE;
+    }
 	pm1  		= x;
 	Pcup[1] 	= pm1;
 	dPcup[1] 	= z;
@@ -2417,7 +2452,7 @@ int WMM_SecVarSummation(WMMtype_LegendreFunction *LegendreFunction, WMMtype_Magn
 			MagneticResults->Bz -= 	SphVariables.RelativeRadiusPower[n] *
 					(	MagneticModel->Secular_Var_Coeff_G[index]*SphVariables.cos_mlambda[m] +
 						MagneticModel->Secular_Var_Coeff_H[index]*SphVariables.sin_mlambda[m]	)
-						* (double) (n+1) * LegendreFunction-> Pcup[index];
+						* (double) (n+1) * LegendreFunction->Pcup[index];
 
 /*		  1 nMax  (n+2)    n     m            m           m
 	By =    SUM (a/r) (m)  SUM  [g cos(m p) + h sin(m p)] dP (sin(phi))
@@ -3024,7 +3059,7 @@ int WMM_Comparison(WMMtype_MagneticModel *MagneticModel, WMMtype_Ellipsoid Ellip
 		WMM_GeodeticToSpherical(Ellip, CoordGeodetic, &CoordSpherical);
 		WMM_Geomag(Ellip, CoordSpherical, CoordGeodetic, TimedMagneticModel, &Results);
 		if(fabs(Results.X - Bx) > 10.0 || fabs(Results.Y - By) > 10.0 || fabs(Results.Z - Bz) > 10.0)
-			fprintf(fileout, "%lf %lf %lf %lf: %lf => %lf, %lf => %lf, %lf => %lf\n", CoordGeodetic.phi, CoordGeodetic.lambda, CoordGeodetic.HeightAboveEllipsoid, Date.DecimalYear, Results.X, Results.X - Bx, Results.Y, Results.Y - By, Results.Z, Results.Z - Bz);+
+            fprintf(fileout, "%lf %lf %lf %lf: %lf => %lf, %lf => %lf, %lf => %lf\n", CoordGeodetic.phi, CoordGeodetic.lambda, CoordGeodetic.HeightAboveEllipsoid, Date.DecimalYear, Results.X, Results.X - Bx, Results.Y, Results.Y - By, Results.Z, Results.Z - Bz);
 		printf("%lf %lf %lf %lf:\n %lf => %lf, %lf => %lf, %lf => %lf\n", CoordGeodetic.phi, CoordGeodetic.lambda, CoordGeodetic.HeightAboveEllipsoid, Date.DecimalYear, Results.X, Results.X - Bx, Results.Y, Results.Y - By, Results.Z, Results.Z - Bz);
 		tot_RMSx += (Results.X - Bx) * (Results.X - Bx);
 		tot_RMSy += (Results.Y - By) * (Results.Y - By);
@@ -3032,6 +3067,9 @@ int WMM_Comparison(WMMtype_MagneticModel *MagneticModel, WMMtype_Ellipsoid Ellip
 		n++;
 		i = feof(filein);
 	}
+#ifdef __WXOSX__
+    free(TimedMagneticModel);
+#endif
 	tot_RMSx = sqrt(tot_RMSx) / n;
 	tot_RMSy = sqrt(tot_RMSy) / n;
 	tot_RMSz = sqrt(tot_RMSz) / n;
@@ -3125,7 +3163,11 @@ int WMM_GetTransverseMercator(WMMtype_CoordGeodetic CoordGeodetic, WMMtype_UTMPa
     double Eps, Epssq;//, invfla, fla, n1, R4oa;
 //   double A, R4;
     double Acoeff[8];//, Bcoeff[8], Ccoeff[8], Dcoeff[8];
-	double Lam0, K0, falseE, falseN;
+#ifdef __WXOSX__
+	double Lam0 = 0.0, K0, falseE, falseN = 0.0;
+#else
+    double Lam0, K0, falseE, falseN;
+#endif
     double K0R4, K0R4oa;//, K0R4i, psfact;
 //   double Dnest[6], Dderiv[7];
 //   int TestId;
@@ -3135,8 +3177,11 @@ int WMM_GetTransverseMercator(WMMtype_CoordGeodetic CoordGeodetic, WMMtype_UTMPa
 	double X, Y, pscale, CoM;
 //   int LLonly;
     int /*Xkm, Ykm,*/ Zone;
+#ifdef __WXOSX__
+    char Hemisphere = ' ';
+#else
     char Hemisphere;
-
+#endif
 /*   Get the map projection  parameters */
 	Lambda = DEG2RAD (CoordGeodetic.lambda);
 	Phi = DEG2RAD (CoordGeodetic.phi);
@@ -3144,11 +3189,11 @@ int WMM_GetTransverseMercator(WMMtype_CoordGeodetic CoordGeodetic, WMMtype_UTMPa
 	WMM_GetUTMParameters (Phi, Lambda, &Zone, &Hemisphere, &Lam0);
 	K0 =  0.9996;
 
-	if(Hemisphere=='n' || Hemisphere=='N')
+	if(Hemisphere == 'n' || Hemisphere == 'N')
 	{
 		falseN=0;
 	}
-	if(Hemisphere=='s' || Hemisphere=='S')
+	if(Hemisphere == 's' || Hemisphere == 'S')
 	{
 		falseN=10000000;
 	}
@@ -3188,7 +3233,11 @@ int WMM_GetTransverseMercator(WMMtype_CoordGeodetic CoordGeodetic, WMMtype_UTMPa
 
 	UTMParameters->Easting = X; /* UTM Easting (X) in meters*/
 	UTMParameters->Northing = Y;/* UTM Northing (Y) in meters */
-	UTMParameters->Zone = Zone;/*UTM Zone*/
+#ifdef __WXOSX__
+	UTMParameters->Zone = Zone = 0;/*UTM Zone*/
+#else
+    UTMParameters->Zone = Zone;/*UTM Zone*/
+#endif
 	UTMParameters->HemiSphere = Hemisphere;
 	UTMParameters->CentralMeridian = RAD2DEG (Lam0);  /* Central Meridian of the UTM Zone */
 	UTMParameters->ConvergenceOfMeridians = RAD2DEG (CoM) ;  /* Convergence of meridians of the UTM Zone and location */
@@ -3504,14 +3553,17 @@ void assignheadervalues(WMMtype_MagneticModel *model, char values[][MAXLINELENGT
 	strcpy(model->ModelName,values[MODELNAME]);
 
 	sscanf(values[RELEASEDATE],"%d-%d-%d",&releasedate.Year,&releasedate.Month,&releasedate.Day);
+#ifdef __WXOSX__
+    if(model) {
+#endif
 	if(WMM_DateToYear (&releasedate, NULL))
-	model->EditionDate = releasedate.DecimalYear;
-
+        model->EditionDate = releasedate.DecimalYear;
 	model->epoch = atof(values[MODELSTARTYEAR]);
 	model->nMax = atoi(values[INTERNALSTATICDEGREE]);
 	model->nMaxSecVar = atoi(values[INTERNALSECVARDEGREE]);
 	if(model->nMaxSecVar > 0)
-	model->SecularVariationUsed = 1;
+        model->SecularVariationUsed = 1;
+    }
 }
 
 int WMM_readMagneticModel_ISO(char *filename, WMMtype_MagneticModel *magneticmodels[],int array_size)
@@ -3570,7 +3622,7 @@ int WMM_readMagneticModel_ISO(char *filename, WMMtype_MagneticModel *magneticmod
 	double gnm,hnm,dgnm,dhnm;
 	int index;
 
-	WMMtype_MagneticModel *model = NULL;
+    WMMtype_MagneticModel *model = NULL;
 
 	FILE *stream;
 	stream = fopen(filename, READONLYMODE);
@@ -3639,10 +3691,14 @@ int WMM_readMagneticModel_ISO(char *filename, WMMtype_MagneticModel *magneticmod
 			if (m <= n)
 			{
 			index = (n * (n + 1) / 2 + m);
+#ifdef __WXOSX__
+                if(model) {
+#endif
 			model->Main_Field_Coeff_G[index] = gnm;
 			model->Secular_Var_Coeff_G[index] = dgnm;
 			model->Main_Field_Coeff_H[index] = hnm;
 			model->Secular_Var_Coeff_H[index] = dhnm;
+                }
 			}
 		}
 	}

@@ -26,11 +26,8 @@
    
 #ifndef SQUISH_CLUSTERFIT_H
 #define SQUISH_CLUSTERFIT_H
-#ifdef __WXOSX__
+
 #include "squish.h"
-#else
-#include <squish.h>
-#endif
 #include "maths.h"
 #include "simd.h"
 #include "colourfit.h"
@@ -40,14 +37,14 @@ namespace squish {
 class ClusterFit : public ColourFit
 {
 public:
-	ClusterFit( ColourSet const* colours, int flags );
+	ClusterFit( ColourSet * colours, int flags );
 	
-private:
 	bool ConstructOrdering( Vec3 const& axis, int iteration );
 
 	virtual void Compress3( void* block );
 	virtual void Compress4( void* block );
 
+private:
 	enum { kMaxIterations = 8 };
 
 	int m_iterationCount;

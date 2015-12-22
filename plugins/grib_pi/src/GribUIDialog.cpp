@@ -50,7 +50,7 @@
 double  m_cursor_lat, m_cursor_lon;
 int     m_Altitude;
 int     m_DialogStyle;
-bool    m_OldZoneSelMode;
+int     m_SavedZoneSelMode;
 int     m_ZoneSelMode;
 
 #if defined (_WIN32)
@@ -178,6 +178,21 @@ void GribTimelineRecordSet::ClearCachedData()
     }
 }
 
+wxBitmap GetScaledBitmap( const char **pxpm, double scale_factor){
+
+    if(scale_factor > 1.0){
+        wxBitmap a = wxBitmap( pxpm );
+        wxImage b = a.ConvertToImage();
+        int w = a.GetWidth() * scale_factor;
+        int h = a.GetHeight() * scale_factor;
+        b.Rescale( w, h );
+        wxBitmap c = wxBitmap( b );
+        return c;
+    }
+    else
+        return wxBitmap( pxpm );
+}
+
 //---------------------------------------------------------------------------------------
 //          GRIB CtrlBar Implementation
 //---------------------------------------------------------------------------------------
@@ -228,21 +243,10 @@ GRIBUICtrlBar::GRIBUICtrlBar(wxWindow *parent, wxWindowID id, const wxString& ti
         pConf->Read ( _T ( "GRIBDirectory" ), &m_grib_dir, spath.GetDocumentsDir()  );
         
         pConf->SetPath ( _T( "/PlugIns/GRIB" ) );
-        pConf->Read ( _T( "ManualRequestZoneSizing" ), &m_OldZoneSelMode, false );
+        pConf->Read ( _T( "ManualRequestZoneSizing" ), &m_SavedZoneSelMode, 0 );
     }
     //init zone selection parameters
-    m_ZoneSelMode = m_OldZoneSelMode ? START_SELECTION : AUTO_SELECTION;                       ////init zone selection parameters
-    //set buttons bitmap
-    m_bpPrev->SetBitmapLabel(wxBitmap( prev ));
-    m_bpNext->SetBitmapLabel(wxBitmap( next ));
-    m_bpAltitude->SetBitmapLabel(wxBitmap( altitude ));
-    m_bpNow->SetBitmapLabel(wxBitmap( now ));
-    m_bpZoomToCenter->SetBitmapLabel(wxBitmap( zoomto ));
-    m_bpPlay->SetBitmapLabel(wxBitmap( play ));
-    m_bpShowCursorData->SetBitmapLabel(wxBitmap( m_CDataIsShown ? curdata : ncurdata ));
-    m_bpOpenFile->SetBitmapLabel(wxBitmap( openfile ));
-    m_bpSettings->SetBitmapLabel(wxBitmap( setting ));
-    SetRequestBitmap( m_ZoneSelMode );
+    m_ZoneSelMode = m_SavedZoneSelMode;
     
     //connect Timer
     m_tPlayStop.Connect(wxEVT_TIMER, wxTimerEventHandler( GRIBUICtrlBar::OnPlayStopTimer ), NULL, this);
@@ -288,27 +292,48 @@ GRIBUICtrlBar::~GRIBUICtrlBar()
     delete m_pTimelineSet;
 }
 
+void GRIBUICtrlBar::SetScaledBitmap( double factor )
+{
+    m_ScaledFactor = factor > 1 ? factor * 1.2: factor;
+    //set buttons bitmap
+    m_bpPrev->SetBitmapLabel(GetScaledBitmap( prev, m_ScaledFactor ));
+    m_bpNext->SetBitmapLabel(GetScaledBitmap( next, m_ScaledFactor ));
+    m_bpAltitude->SetBitmapLabel(GetScaledBitmap( altitude, m_ScaledFactor ));
+    m_bpNow->SetBitmapLabel(GetScaledBitmap( now, m_ScaledFactor ));
+    m_bpZoomToCenter->SetBitmapLabel(GetScaledBitmap( zoomto , m_ScaledFactor));
+    m_bpPlay->SetBitmapLabel(GetScaledBitmap( play, m_ScaledFactor ));
+    m_bpShowCursorData->SetBitmapLabel(GetScaledBitmap( m_CDataIsShown ? curdata : ncurdata, m_ScaledFactor ));
+    m_bpOpenFile->SetBitmapLabel(GetScaledBitmap( openfile, m_ScaledFactor ));
+    m_bpSettings->SetBitmapLabel(GetScaledBitmap( setting, m_ScaledFactor ));
+    SetRequestBitmap( m_ZoneSelMode );
+
+    m_sTimeline->SetSize( wxSize( 90 * m_ScaledFactor , -1 ) );
+    m_sTimeline->SetMinSize( wxSize( 90 * m_ScaledFactor , -1 ) );
+
+}
+
 void GRIBUICtrlBar::SetRequestBitmap( int type )
 {
     switch( type ) {
         case AUTO_SELECTION:
+        case SAVED_SELECTION:
         case START_SELECTION:
-            m_bpRequest->SetBitmapLabel(wxBitmap( request));
+            m_bpRequest->SetBitmapLabel( GetScaledBitmap( request, m_ScaledFactor));
             m_bpRequest->SetToolTip(_("Start a request"));
             break;
         case DRAW_SELECTION:
-            m_bpRequest->SetBitmapLabel(wxBitmap( selzone ));
+            m_bpRequest->SetBitmapLabel( GetScaledBitmap( selzone, m_ScaledFactor));
             m_bpRequest->SetToolTip(_("Stop request"));
             break;
         case COMPLETE_SELECTION:
-            m_bpRequest->SetBitmapLabel(wxBitmap(request_end));
+            m_bpRequest->SetBitmapLabel(GetScaledBitmap(request_end, m_ScaledFactor));
             m_bpRequest->SetToolTip(_("Valid request"));
     }
 }
 
 void GRIBUICtrlBar::OpenFile(bool newestFile)
 {
-    m_bpPlay->SetBitmapLabel(wxBitmap( play ));
+    m_bpPlay->SetBitmapLabel( GetScaledBitmap( play, m_ScaledFactor ) );
     m_cRecordForecast->Clear();
     pPlugIn->GetGRIBOverlayFactory()->ClearParticles();
     m_Altitude = 0;
@@ -434,8 +459,8 @@ wxString GRIBUICtrlBar::GetNewestFileInDirectory()
     wxArrayString file_array;
     int m_n_files = 0;
     m_n_files = wxDir::GetAllFiles( m_grib_dir, &file_array, _T ( "*.grb" ), wxDIR_FILES );
-    m_n_files += wxDir::GetAllFiles( m_grib_dir, &file_array, _T ( "*.bz2" ),
-            wxDIR_FILES );
+    m_n_files += wxDir::GetAllFiles( m_grib_dir, &file_array, _T ( "*.bz2" ), wxDIR_FILES );
+    m_n_files += wxDir::GetAllFiles( m_grib_dir, &file_array, _T ( "*.gz" ), wxDIR_FILES );
     if( m_n_files ) {
         file_array.Sort( CompareFileStringTime );              //sort the files by File Modification Date
 
@@ -476,7 +501,7 @@ void GRIBUICtrlBar::OnShowCursorData( wxCommandEvent& event )
 {
     m_CDataIsShown = !m_CDataIsShown;
 
-    m_bpShowCursorData->SetBitmapLabel(wxBitmap( m_CDataIsShown ? curdata : ncurdata ));
+    m_bpShowCursorData->SetBitmapLabel(GetScaledBitmap( m_CDataIsShown ? curdata : ncurdata, m_ScaledFactor ));
     
     SetDialogsStyleSizePosition( true );
 }
@@ -519,7 +544,7 @@ void GRIBUICtrlBar::SetDialogsStyleSizePosition( bool force_recompute )
     
     if( (m_DialogStyle >> 1 == SEPARATED || !m_CDataIsShown) && !m_HasCaption ) {                   // Size and show grabber if necessary
         Fit();                                                                                      // each time CtrlData dialog will be alone
-        m_gGrabber->Size( GetSize().y );                                                            // or separated
+        m_gGrabber->Size( m_ScaledFactor );                                                         // or separated
         m_gGrabber->Show();
     }
     
@@ -698,10 +723,10 @@ void GRIBUICtrlBar::OnMouseEvent( wxMouseEvent& event )
                    wxITEM_NORMAL, wxBitmap( m_tPlayStop.IsRunning() ? stop : play ) );
         MenuAppend( xmenu, ID_BTNOPENFILE, _("Open a new file"), wxITEM_NORMAL, wxBitmap( openfile ) );
         MenuAppend( xmenu, ID_BTNSETTING, _("Settings"), wxITEM_NORMAL, wxBitmap( setting ) );
-        MenuAppend( xmenu, ID_BTNREQUEST, (m_ZoneSelMode == AUTO_SELECTION || m_ZoneSelMode == START_SELECTION) ?
+        MenuAppend( xmenu, ID_BTNREQUEST, (m_ZoneSelMode == AUTO_SELECTION || m_ZoneSelMode == SAVED_SELECTION || m_ZoneSelMode == START_SELECTION) ?
                    _("Start a request") : m_ZoneSelMode == DRAW_SELECTION ? _( "Stop request" ) : _("Valid request"),
-                   wxITEM_NORMAL, wxBitmap( (m_ZoneSelMode == AUTO_SELECTION ||
-                                             m_ZoneSelMode == START_SELECTION) ? request : m_ZoneSelMode == DRAW_SELECTION ? selzone : request_end ) );
+                   wxITEM_NORMAL, wxBitmap( (m_ZoneSelMode == AUTO_SELECTION || m_ZoneSelMode == SAVED_SELECTION ||
+                                             m_ZoneSelMode == START_SELECTION ) ? request : m_ZoneSelMode == DRAW_SELECTION ? selzone : request_end ) );
         
         PopupMenu( xmenu );
         
@@ -781,6 +806,22 @@ void GRIBUICtrlBar::OnSize( wxSizeEvent& event )
     event.Skip();
 }
 
+void GRIBUICtrlBar::OnPaint( wxPaintEvent& event )
+{
+    wxWindowListNode *node =  this->GetChildren().GetFirst();
+    wxPaintDC dc( this );
+    while( node ) {
+        wxWindow *win = node->GetData();
+        if( win->IsKindOf(CLASSINFO(wxBitmapButton)) )
+#if wxCHECK_VERSION(3,0,0)
+            dc.DrawBitmap(((wxBitmapButton*) win)->GetBitmap() , 5, 5, false );
+#else
+        dc.DrawBitmap(((wxBitmapButton*) win)->GetBitmapSelected() , 5, 5, false );
+#endif
+        node = node->GetNext();
+    }
+}
+
 void GRIBUICtrlBar::OnRequest(  wxCommandEvent& event )
 {
     if( m_tPlayStop.IsRunning() ) return;                            // do nothing when play back is running !
@@ -802,7 +843,7 @@ void GRIBUICtrlBar::OnRequest(  wxCommandEvent& event )
     }
 
     /*create new request dialog*/
-    if( m_ZoneSelMode == AUTO_SELECTION || m_ZoneSelMode == START_SELECTION ) {
+    if( m_ZoneSelMode == AUTO_SELECTION || m_ZoneSelMode == SAVED_SELECTION || m_ZoneSelMode == START_SELECTION ) {
         
         delete pReq_Dialog;     //delete to be re-created
         
@@ -819,9 +860,9 @@ void GRIBUICtrlBar::OnRequest(  wxCommandEvent& event )
 
 #ifdef __WXOSX__
     if(pReq_Dialog)
-    pReq_Dialog->Show( m_ZoneSelMode == AUTO_SELECTION || m_ZoneSelMode == COMPLETE_SELECTION );
+    pReq_Dialog->Show( m_ZoneSelMode == AUTO_SELECTION || m_ZoneSelMode == SAVED_SELECTION || m_ZoneSelMode == COMPLETE_SELECTION );
 #else
-    pReq_Dialog->Show( m_ZoneSelMode == AUTO_SELECTION || m_ZoneSelMode == COMPLETE_SELECTION );
+    pReq_Dialog->Show( m_ZoneSelMode == AUTO_SELECTION || m_ZoneSelMode == SAVED_SELECTION || m_ZoneSelMode == COMPLETE_SELECTION );
 #endif
     m_ZoneSelMode = m_ZoneSelMode == START_SELECTION ? DRAW_SELECTION : m_ZoneSelMode == COMPLETE_SELECTION ? START_SELECTION : m_ZoneSelMode;
 #ifdef __WXOSX__
@@ -881,7 +922,7 @@ void GRIBUICtrlBar::OnPlayStop( wxCommandEvent& event )
     if( m_tPlayStop.IsRunning() ) {
         StopPlayBack();
     } else {
-        m_bpPlay->SetBitmapLabel(wxBitmap( stop ));
+        m_bpPlay->SetBitmapLabel( GetScaledBitmap( stop, m_ScaledFactor ) );
         m_bpPlay->SetToolTip( _("Stop play back") );
         m_tPlayStop.Start( 1000/m_OverlaySettings.m_UpdatesPerSecond, wxTIMER_CONTINUOUS );
         m_InterpolateMode = m_OverlaySettings.m_bInterpolate;
@@ -917,7 +958,7 @@ void GRIBUICtrlBar::StopPlayBack()
 {
     if( m_tPlayStop.IsRunning() ) {
         m_tPlayStop.Stop();
-        m_bpPlay->SetBitmapLabel(wxBitmap( play ));
+        m_bpPlay->SetBitmapLabel( GetScaledBitmap( play, m_ScaledFactor ) );
         m_bpPlay->SetToolTip( _("Start play back") );
     }
 }
@@ -1096,7 +1137,7 @@ void GRIBUICtrlBar::OnOpenFile( wxCommandEvent& event )
         m_grib_dir = path.GetDocumentsDir();
     }
     wxFileDialog *dialog = new wxFileDialog(NULL, _("Select a GRIB file"), m_grib_dir,
-                                            _T(""), wxT ( "Grib files (*.grb;*.bz2)|*.grb;*.bz2|All files (*)|*.*"), wxFD_OPEN, wxDefaultPosition,
+                                            _T(""), wxT ( "Grib files (*.grb;*.bz2;*.gz)|*.grb;*.bz2;*.gz|All files (*)|*.*"), wxFD_OPEN, wxDefaultPosition,
                                             wxDefaultSize, _T("File Dialog") );
 
     if( dialog->ShowModal() == wxID_OK ) {

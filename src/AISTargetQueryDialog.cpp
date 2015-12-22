@@ -61,6 +61,7 @@ BEGIN_EVENT_TABLE ( AISTargetQueryDialog, wxDialog )
     EVT_BUTTON( xID_TRK_CREATE, AISTargetQueryDialog::OnIdTrkCreateClick )
     EVT_CLOSE(AISTargetQueryDialog::OnClose)
     EVT_MOVE( AISTargetQueryDialog::OnMove )
+    EVT_SIZE( AISTargetQueryDialog::OnSize )
 END_EVENT_TABLE()
 
 AISTargetQueryDialog::AISTargetQueryDialog()
@@ -90,6 +91,7 @@ void AISTargetQueryDialog::Init()
     m_bsize_set = false;
     m_bautoCentre = false;
     m_bautosize = false;
+
 }
 
 void AISTargetQueryDialog::OnClose( wxCloseEvent& event )
@@ -222,10 +224,19 @@ bool AISTargetQueryDialog::Create( wxWindow* parent, wxWindowID id, const wxStri
 
     if(!m_bautosize){
         Fit();          // Sets the horizontal size OK
+        Layout();
         SetSize( -1, m_adjustedFontSize * 30);          // Estimated vertical size
     }
 
     return true;
+}
+
+void AISTargetQueryDialog::SetMMSI(int mmsi)
+{
+    m_MMSI = mmsi;
+
+    AIS_Target_Data *td = g_pAIS->Get_Target_Data_From_MMSI( m_MMSI );
+    AdjustBestSize(td);
 }
 
 void AISTargetQueryDialog::RecalculateSize()
@@ -286,7 +297,7 @@ void AISTargetQueryDialog::CreateControls()
 
     m_pQueryTextCtl = new wxHtmlWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                        wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION );
-    m_pQueryTextCtl->SetBorders( 5 );
+    m_pQueryTextCtl->SetBorders( 1 );
 #ifdef __WXOSX__
     topSizer->Add( m_pQueryTextCtl, 1, wxALL | wxEXPAND, 5 );
 #else
@@ -303,6 +314,9 @@ void AISTargetQueryDialog::CreateControls()
 
     wxSizer* ok = CreateButtonSizer( wxOK );
     topSizer->Add( ok, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 5 );
+
+    Fit();
+
 }
 
 void AISTargetQueryDialog::UpdateText()
@@ -315,7 +329,7 @@ void AISTargetQueryDialog::UpdateText()
     m_pQueryTextCtl->GetViewStart(&scroll_x, &scroll_y);
 
     AIS_Target_Data *td = g_pAIS->Get_Target_Data_From_MMSI( m_MMSI );
-    AdjustBestSize(td);
+//    AdjustBestSize(td);
 
     DimeControl( this );
     wxColor bg = GetBackgroundColour();
@@ -353,46 +367,61 @@ void AISTargetQueryDialog::OnMove( wxMoveEvent& event )
     event.Skip();
 }
 
+void AISTargetQueryDialog::OnSize( wxSizeEvent& event )
+{
+    event.Skip();
+}
+
 void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
 {
     if(!td)
         return;
     
-    if(!m_bautosize)
-        return;
-
     wxSize origSize = GetSize();
 
     //  First pass, try to set the size using the user specified font sizes completely
     if(!m_bsize_set){
-        RenderHTMLQuery(td);
-        m_pQueryTextCtl->Refresh();
-        m_pQueryTextCtl->Update();
         Fit();
+        RenderHTMLQuery(td);
         m_bsize_set = true;
      }
-    
+
+    int target_x = -1;
+    int target_y = -1;
+
     //  Width adjustments
-    
-    //  Reduce the font size if necessary to eliminate horizontal scroll bars.
-    wxSize szv = m_pQueryTextCtl->GetVirtualSize();
-    if(szv.x > m_pQueryTextCtl->GetSize().x){
-        
-        while( (szv.x > m_pQueryTextCtl->GetSize().x) &&  (m_adjustedFontSize > 8)){       // fluff
-            m_adjustedFontSize --;
+
+    if(m_bautosize){
+
+        //  Reduce the font size if necessary to eliminate horizontal scroll bars.
+        wxSize szv = m_pQueryTextCtl->GetVirtualSize();
+        if(szv.x > m_pQueryTextCtl->GetSize().x){
             
-            RenderHTMLQuery(td);
-            m_pQueryTextCtl->Refresh();
-            m_pQueryTextCtl->Update();
-            Layout();
-            szv = m_pQueryTextCtl->GetVirtualSize();
+            while( (szv.x > m_pQueryTextCtl->GetSize().x) &&  (m_adjustedFontSize > 8)){       // fluff
+                m_adjustedFontSize --;
+                
+                RenderHTMLQuery(td);
+                m_pQueryTextCtl->Refresh();
+                m_pQueryTextCtl->Update();
+                Layout();
+                szv = m_pQueryTextCtl->GetVirtualSize();
+            }
+
+            m_adjustedFontSize --;
+
         }
-        
-        m_adjustedFontSize --;
-        
+    }
+    else{
+        wxSize szv = m_pQueryTextCtl->GetVirtualSize();
+        int csz = g_Platform->getDisplaySize().x * 8 / 10;
+        if((szv.x) < csz){
+            if(szv.x > m_pQueryTextCtl->GetSize().x)
+                target_x = szv.x;// * 11/10;
+        }
     }
     
     // Now adjust the font size used for the control buttons.
+    // This adjustment makes sure that the two horizontal buttons are not wider than the platform display allows.
 
     if( m_createWptBtn && m_createTrkBtn ){
         
@@ -428,22 +457,18 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
     // Try to avoid vertical scroll bar if possible.
 
     //  Estimate the control button area height
-#ifdef __WXOSX__
     int yb = 0;
-    if( m_createWptBtn > 0)
+    if( m_createWptBtn)
         yb = m_createWptBtn->GetSize().y * 4;
-#else
-    int yb = m_createWptBtn->GetSize().y * 4;
-#endif
 
     wxSize szyv = m_pQueryTextCtl->GetVirtualSize();
     int csz = g_Platform->getDisplaySize().y * 8 / 10;
     if((szyv.y + yb) < csz){
         if(szyv.y > m_pQueryTextCtl->GetSize().y)
-            SetSize(-1, szyv.y + yb);
+            target_y = (szyv.y * 11 / 10) + yb;
     }
-    else
-        SetSize(-1, csz);
+
+    SetSize(target_x, target_y);
     
     wxSize nowSize = GetSize();
     

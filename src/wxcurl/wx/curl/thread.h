@@ -87,6 +87,11 @@ public:
         m_bAbort = false;
     }
 
+    ~wxCurlBaseThread()
+    {
+        wxDELETE(m_pCurl);
+    }
+
 public:     // thread execution management
 
     //! Returns true if this thread is ready to be started using e.g. #StartTransfer.
@@ -129,6 +134,9 @@ public:     // getters
         { return m_pHandler; }
     int GetId() const
         { return m_nId; }
+
+    bool IsAborting()
+        { return m_bAbort; }
 
     //! Returns the wxCurlBase-derived object which is being used for the transfer.
     //! Note that the returned value will be NULL if you've not called #SetURL yet.

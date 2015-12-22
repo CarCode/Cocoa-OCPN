@@ -30,6 +30,17 @@ a.  Opencpn was built with the following objectives in mind.
 ----------------------------------------------------------------------
 2. Eigene Bemerkungen
 ----------------------------------------------------------------------
+Warum überhaupt diese eigene OpenCPN Version?
+  Zunächst gab es jahrelang überhaupt keine Version für Mac OS X.
+  Es war mühsam aufgrund früherer Versuche den Quellcode für OS X zu
+  kompilieren. Die daraus gewonnenen Erkenntnisse wollten die Programmierer
+  von OpenCPN zunächst nicht übernehmen. Erst später wurde dann erkannt,
+  daß z.B. nur neuere Versionen von wxWidgets für Mac OS X verwendet
+  werden können und daß z.B. eine Steuerung über Menüs doch nicht so
+  schlecht ist. Viele Texte im Quellcode waren nicht übersetzbar und
+  das Hilfesystem wie auch andere Funktionen entsprachen nicht dem bei
+  Apple gewohnten Umfeld. Weitere Abweichungen zum Original Code sind:
+
 a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    Mavericks (10.9) und Yosemite (10.10). Es soll soweit wie möglich das
    Mac OS X Betriebssystem unterstützt werden, einschl. Mac Menüs,

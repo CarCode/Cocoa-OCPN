@@ -731,7 +731,7 @@ void TrackPropDlg::CreateControls( void )
       m_lcPoints->InsertColumn( 6, _("Timestamp"), wxLIST_FORMAT_LEFT, dx * 14/*135*/ );
       m_lcPoints->InsertColumn( 7, _("Speed"), wxLIST_FORMAT_CENTER, dx * 8/*100*/ );
 
-    m_lcPoints->SetMinSize(wxSize(-1, 50) );
+      m_lcPoints->SetMinSize(wxSize(-1, 50) );
 
 #ifdef __OCPN__ANDROID__
     m_lcPoints->GetHandle()->setStyleSheet( getQtStyleSheet());
@@ -1018,7 +1018,7 @@ bool TrackPropDlg::UpdateProperties()
     m_tName->SetValue( m_pRoute->m_RouteNameString );
     m_tFrom->SetValue( m_pRoute->m_RouteStartString );
     m_tTo->SetValue( m_pRoute->m_RouteEndString );
-    if(m_tDescription)m_tDescription->SetValue( m_pRoute->m_RouteDescription );
+    if(m_tDescription) m_tDescription->SetValue( m_pRoute->m_RouteDescription );
 
     m_tTotDistance->SetValue( _T("") );
     m_tTimeEnroute->SetValue( _T("") );
@@ -1101,7 +1101,7 @@ bool TrackPropDlg::UpdateProperties()
         m_tName->SetEditable( false );
         m_tFrom->SetEditable( false );
         m_tTo->SetEditable( false );
-        if(m_tDescription)m_tDescription->SetEditable( false );
+        if(m_tDescription) m_tDescription->SetEditable( false );
         m_cbShow->Enable( false );
         m_cColor->Enable( false );
         m_cStyle->Enable( false );
@@ -1113,7 +1113,7 @@ bool TrackPropDlg::UpdateProperties()
         m_tName->SetEditable( true );
         m_tFrom->SetEditable( true );
         m_tTo->SetEditable( true );
-        if(m_tDescription)m_tDescription->SetEditable( true );
+        if(m_tDescription) m_tDescription->SetEditable( true );
         m_cbShow->Enable( true );
         m_cColor->Enable( true );
         m_cStyle->Enable( true );
@@ -1550,9 +1550,6 @@ void TrackPropDlg::OnShowTimeTZ ( wxCommandEvent &event )
 
 bool TrackPropDlg::SaveChanges( void )
 {
-#ifdef __WXOSX__
-    assert(m_pRoute);
-#endif
     if( m_pRoute && !m_pRoute->m_bIsInLayer ) {
         //  Get User input Text Fields
         m_pRoute->m_RouteNameString = m_tName->GetValue();
@@ -1571,7 +1568,7 @@ bool TrackPropDlg::SaveChanges( void )
         pConfig->UpdateSettings();
     }
 
-    if( ((Track*) m_pRoute)->IsRunning() )
+    if( m_pRoute && ((Track*) m_pRoute)->IsRunning() )
     {
         wxJSONValue v;
         v[_T("Name")] =  m_pRoute->m_RouteNameString;
@@ -1742,13 +1739,15 @@ wxString OCPNTrackListCtrl::OnGetItemText( long item, long column ) const
                 slat = gLat;
                 slon = gLon;
             }
-            else
+            else if( g_prev_point )
             {
-#ifdef __WXOSX__
-                if (!g_prev_point) break;
-#endif
                 slat = g_prev_point->m_lat;
                 slon = g_prev_point->m_lon;
+            }
+            else
+            {
+                slat = gLat;
+                slon = gLon;
             }
 
             DistanceBearingMercator( g_this_point->m_lat, g_this_point->m_lon, slat, slon, &gt_brg, &gt_leg_dist );

@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __EMBOSS_DATA_H__
 #define __EMBOSS_DATA_H__
@@ -38,7 +37,7 @@ class emboss_data
             int         height;
             int         x, y;
 
-            GLuint      gltexind;
+            unsigned int      gltexind;
             int         glwidth, glheight; // next power of 2 larger than width/height
 };
 
