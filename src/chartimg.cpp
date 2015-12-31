@@ -190,17 +190,17 @@ ChartBase::~ChartBase()
 
       for(unsigned int j=0 ; j<(unsigned int)m_nCOVREntries ; j++)
             free( m_pCOVRTable[j] );
-
-      free( m_pCOVRTable );
-    free( m_pCOVRTablePoints );
+// WXOSX: if(..
+      if( m_pCOVRTable ) free( m_pCOVRTable );
+      if( m_pCOVRTablePoints ) free( m_pCOVRTablePoints );
 
     //    Free the No COVR tables
     
     for(unsigned int j=0 ; j<(unsigned int)m_nNoCOVREntries ; j++)
         free( m_pNoCOVRTable[j] );
     
-    free( m_pNoCOVRTable );
-    free( m_pNoCOVRTablePoints );
+      if( m_pNoCOVRTable ) free( m_pNoCOVRTable );
+      if( m_pNoCOVRTablePoints ) free( m_pNoCOVRTablePoints );
 
 }
 /*
@@ -1434,17 +1434,13 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
      TODO: should this be added as a subroutine for GEO chartso? */
     if((m_projection != PROJECTION_MERCATOR && m_projection != PROJECTION_TRANSVERSE_MERCATOR)
        || m_Chart_Skew > 2) {
-<<<<<<< HEAD
         //   Analyze Refpoints early because we need georef coefficient here.
         AnalyzeRefpoints( false );              // no post test needed
 
-=======
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         int count = nPlypoint;
         nPlypoint = 0;
         Plypoint *pOldPlyTable = pPlyTable;
         pPlyTable = NULL;
-<<<<<<< HEAD
         double lastplylat=0.0, lastplylon=0.0, x1=0.0, y1=0.0, x2, y2;
         double plylat, plylon;
         for( int i = 0; i < count+1; i++ ) {
@@ -1460,25 +1456,6 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
                 // use 2 degree steps
                 double steps = ceil( (fabs(lastplylat-plylat) + fabs(lastplylon-plylon)) / 2 );
                 for( double c = 0; c < steps; c++ ) {
-=======
-#ifdef __WXOSX__
-        double lastplylat=0.0, lastplylon=0.0, x1=0.0, y1=0.0, x2, y2;
-#else
-        double lastplylat, lastplylon, x1, y1, x2, y2;
-#endif
-        for( int i = 0; i < count+1; i++ ) {
-            double plylat = pOldPlyTable[i%count].ltp, plylon = pOldPlyTable[i%count].lnp;
-            latlong_to_chartpix(plylat, plylon, x2, y2);
-            if(i>0) {
-                if(lastplylon - plylon > 180)
-                    lastplylon -= 360;
-                else if(lastplylon - plylon < -180)
-                    lastplylon += 360;
-                
-                // use 2 degree steps
-                double steps = ceil((fabs(lastplylat-plylat) + fabs(lastplylon-plylon))/2);
-                for(double c=0; c<steps; c++) {
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
                     double d = c/steps, lat, lon;
                     wxPoint2DDouble s;
                     double x = (1-d)*x1 + d*x2, y = (1-d)*y1 + d*y2;
@@ -1892,11 +1869,7 @@ InitReturn ChartBaseBSB::PostInit(void)
 
       ifs_bitmap->SeekI((Size_Y+1) * -4, wxFromEnd);                 // go to Beginning of offset table
       pline_table[Size_Y] = ifs_bitmap->TellI();                     // fill in useful last table entry
-#ifdef __WXOSX__
-      unsigned char *tmp = (unsigned char*)malloc((unsigned char)(Size_Y * sizeof(int)));
-#else
-    unsigned char *tmp = (unsigned char*)malloc(Size_Y * sizeof(int));
-#endif
+      unsigned char *tmp = (unsigned char*)malloc(Size_Y * sizeof(int));
       ifs_bitmap->Read(tmp, Size_Y * sizeof(int));
       if ( ifs_bitmap->LastRead() != Size_Y * sizeof(int)) {
           wxString msg(_("   Chart File corrupt in PostInit() on chart "));
@@ -3437,11 +3410,6 @@ bool ChartBaseBSB::GetViewUsingCache( wxRect& source, wxRect& dest, const OCPNRe
     return false;
 }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 int s_dc;
 
 bool ChartBaseBSB::RenderViewOnDC(wxMemoryDC& dc, const ViewPort& VPoint)

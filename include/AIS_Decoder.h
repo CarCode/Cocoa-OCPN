@@ -74,7 +74,7 @@ public:
     AIS_Error DecodeSingleVDO( const wxString& str, GenericPosDatEx *pos, wxString *acc );
     void DeletePersistentTrack( Track *track );
     std::map<int, Track*> m_persistent_tracks;
-    
+
 private:
     wxString GetShipNameFromFile(int nmmsi);
     wxString ProcessNMEA4Tags( wxString msg);
@@ -83,7 +83,7 @@ private:
     void OnTimerAIS(wxTimerEvent& event);
     void OnTimerAISAudio(wxTimerEvent& event);
     void OnTimerDSC( wxTimerEvent& event );
-    
+
     bool NMEACheckSumOK(const wxString& str);
     bool Parse_VDXBitstring(AIS_Bitstring *bstr, AIS_Target_Data *ptd);
     void UpdateAllCPA(void);
@@ -93,7 +93,8 @@ private:
     void UpdateOneTrack(AIS_Target_Data *ptarget);
     void BuildERIShipTypeHash(void);
     AIS_Target_Data *ProcessDSx( const wxString& str, bool b_take_dsc = false );
-    
+    void SendJSONMsg( AIS_Target_Data *pTarget );
+
     AIS_Target_Hash *AISTargetList;
     AIS_Target_Hash *AIS_AreaNotice_Sources;
     AIS_Target_Name_Hash *AISTargetNames;

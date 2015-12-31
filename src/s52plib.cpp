@@ -541,27 +541,26 @@ LUPrec *s52plib::FindBestLUP( wxArrayOfLUPrec *LUPArray, unsigned int startIndex
             char *slatc = NULL;
             wxCharBuffer buffer=LATTC.ToUTF8();
             slatc = buffer.data();
+            //  Get the LUP attribute value as a string
+
+            if( buffer.length() < 6 )
+                goto next_LUP_Attr;         // LUP attribute value not UTF8 convertible (never seen in PLIB 3.x)
 
             if( slatc ){
+                char *slatv = slatc + 6;
                 while( attIdx < pObj->n_attr ) {
                     if( 0 == strncmp( slatc, currATT, 6 ) ) {
                         //OK we have an attribute name match
-                        
-                        //  Get the LUP attribute value as a string
-                        wxCharBuffer vbuffer=LATTC.Mid(6).ToUTF8();
-                        char *slatv = vbuffer.data();
-                        
-                        if( !slatv )
-                            goto next_LUP_Attr;         // LUP attribute value not UTF8 convertible (never seen in PLIB 3.x)
-                        
+
+
                         bool attValMatch = false;
-                        
+
                         // special case (i)
                         if( !strncmp( slatv, " ", 1 ) ) {        // any object value will match wild card (S52 para 8.3.3.4)
                             ++countATT;
                             goto next_LUP_Attr;
                         }
-                        
+
                         // special case (ii)
                         //TODO  Find an ENC with "UNKNOWN" DRVAL1 or DRVAL2 and debug this code
                         if( !strncmp( slatv, "?", 1) ){          // if LUP attribute value is "undefined"
@@ -620,8 +619,9 @@ LUPrec *s52plib::FindBestLUP( wxArrayOfLUPrec *LUPArray, unsigned int startIndex
                                 //    Strings must be exact match
                                 //    n.b. OGR_STR is used for S-57 attribute type 'L', comma-separated list
                                 
-                                wxString cs( (char *) v->value, wxConvUTF8 ); // Attribute from object
-                                if( LATTC.Mid( 6 ) == cs )
+                                //wxString cs( (char *) v->value, wxConvUTF8 ); // Attribute from object
+                                //if( LATTC.Mid( 6 ) == cs )
+                                if( !strcmp((char *) v->value, slatv))
                                     attValMatch = true;
                                 break;
                             }
@@ -1609,6 +1609,18 @@ S52_TextC *S52_PL_parseTE( ObjRazRules *rzRules, Rules *rules, char *cmd )
     return text;
 }
 
+static void rotate(wxRect *r, ViewPort const &vp)
+{
+    float cx = vp.pix_width/2.;
+    float cy = vp.pix_height/2.;
+    float c = cosf(vp.rotation );
+    float s = sinf(vp.rotation );
+    float x = r->GetX() -cx;
+    float y = r->GetY() -cy;
+    r->SetX( x*c - y*s +cx);
+    r->SetY( x*s + y*c +cy);
+}
+
 bool s52plib::RenderText( wxDC *pdc, S52_TextC *ptext, int x, int y, wxRect *pRectDrawn,
                           S57Obj *pobj, bool bCheckOverlap, ViewPort *vp )
 {
@@ -1833,15 +1845,18 @@ bool s52plib::RenderText( wxDC *pdc, S52_TextC *ptext, int x, int y, wxRect *pRe
             //  Add in the offsets, specified in units of nominal font height
             yp += ptext->yoffs * ( ptext->rendered_char_height );
             xp += ptext->xoffs * ( ptext->rendered_char_height );
-    
+
             pRectDrawn->SetX( xp );
             pRectDrawn->SetY( yp );
             pRectDrawn->SetWidth( w );
             pRectDrawn->SetHeight( h );
 
-            if( bCheckOverlap )
+            if( bCheckOverlap ) {
+                if(fabs( vp->rotation ) > .01){
+                    rotate(pRectDrawn, *vp );
+                }
                 if( CheckTextRectList( *pRectDrawn, ptext ) ) bdraw = false;
-
+            }
 
             if( bdraw ) {
                 wxColour wcolor = FontMgr::Get().GetFontColor(_("ChartTexts"));
@@ -2545,11 +2560,30 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
     wxBoundingBox symbox;
     double plat, plon;
 
-    GetPixPointSingle( r.x - pivot_x, r.y - pivot_y + b_height, &plat, &plon, vp );
-    symbox.SetMin( plon, plat );
+    if( !m_pdc && fabs( vp->rotation ) > .01)          // opengl
+    {
+        float cx = vp->pix_width/2.;
+        float cy = vp->pix_height/2.;
+        float c = cosf(vp->rotation );
+        float s = sinf(vp->rotation );
+        float x = r.x - pivot_x -cx;
+        float y = r.y - pivot_y + b_height -cy;
+        GetPixPointSingle( x*c - y*s +cx, x*s + y*c +cy, &plat, &plon, vp );
+        symbox.SetMin( plon, plat );
 
-    GetPixPointSingle( r.x - pivot_x + b_width, r.y - pivot_y, &plat, &plon, vp );
-    symbox.SetMax( plon, plat );
+        x = r.x - pivot_x + b_width -cx;
+        y = r.y - pivot_y -cy;
+        GetPixPointSingle( x*c - y*s +cx, x*s + y*c +cy, &plat, &plon, vp );
+        symbox.SetMax( plon, plat );
+
+    }
+    else {
+        GetPixPointSingle( r.x - pivot_x, r.y - pivot_y + b_height, &plat, &plon, vp );
+        symbox.SetMin( plon, plat );
+        
+        GetPixPointSingle( r.x - pivot_x + b_width, r.y - pivot_y, &plat, &plon, vp );
+        symbox.SetMax( plon, plat );
+    }
 
     //  Special case for GEO_AREA objects with centred symbols
     if( rzRules->obj->Primitive_type == GEO_AREA ) {
@@ -3179,11 +3213,7 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
                             // Do not draw null segments
                             if( ( x0 == x1 ) && ( y0 == y1 ) ) continue;
                             
-<<<<<<< HEAD
                             if( m_pdc ) {  // DC mode
-=======
-                            if( m_pdc ) {
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
                                 if( cohen_sutherland_line_clip_i( &x0, &y0, &x1, &y1, xmin_, xmax_,
                                                                  ymin_, ymax_ ) != Invisible )
                                     m_pdc->DrawLine( x0, y0, x1, y1 );
@@ -4306,60 +4336,7 @@ int s52plib::RenderCARC_VBO( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     return 1;
 }
 
-<<<<<<< HEAD
 int s52plib::RenderCARC_DisplayList( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
-=======
-// Conditional Symbology
-char *s52plib::RenderCS( ObjRazRules *rzRules, Rules *rules )
-{
-    void *ret;
-    void* (*f)( void* );
-
-    static int f05;
-
-    if( rules->razRule == NULL ) {
-        if( !f05 )
-        //                  CPLError ( ( CPLErr ) 0, 0,"S52plib:_renderCS(): ERROR no conditional symbology for: %s\n", rules->INSTstr );
-        f05++;
-        return 0;
-    }
-
-    void *g = (void *) rules->razRule;
-
-#ifdef FIX_FOR_MSVC  //__WXMSW__
-//#warning Fix this cast, somehow...
-//      dsr             sigh... can't get the cast right
-    _asm
-    {
-        mov eax,[dword ptr g]
-        mov [dword ptr f],eax
-    }
-    ret = f ( ( void * ) rzRules ); // call cond symb
-#else
-
-    f = (void * (*)( void * ) ) g;ret
-    = f( (void *) rzRules );
-
-#endif
-
-    return (char *) ret;
-}
-
-int s52plib::RenderObjectToDC( wxDC *pdcin, ObjRazRules *rzRules, ViewPort *vp )
-{
-    return DoRenderObject( pdcin, rzRules, vp );
-}
-
-
-int s52plib::RenderObjectToGL( const wxGLContext &glcc, ObjRazRules *rzRules, ViewPort *vp )
-{
-    m_glcc = (wxGLContext *) &glcc;
-    return DoRenderObject( NULL, rzRules, vp );
-}
-
-
-int s52plib::DoRenderObject( wxDC *pdcin, ObjRazRules *rzRules, ViewPort *vp )
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 {
     char *str = (char*) rules->INSTstr;
     
@@ -6394,7 +6371,6 @@ int s52plib::RenderToGLAC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             glScalef( vp->view_scale_ppm, -vp->view_scale_ppm, 0 );
             glTranslatef( -rzRules->sm_transform_parms->easting_vp_center, -rzRules->sm_transform_parms->northing_vp_center, 0 );
             //  Next, the per-object transform
-<<<<<<< HEAD
 
             float x_origin = rzRules->obj->x_origin;
             if( ( rzRules->obj->m_chart_context->chart->GetChartType() == CHART_TYPE_CM93COMP )
@@ -6416,29 +6392,6 @@ int s52plib::RenderToGLAC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             glScalef( rzRules->obj->x_rate, rzRules->obj->y_rate, 0 );
         }
         
-=======
-            
-            //      For some chart types (e.g. cm93), the viewport bounding box is constructed
-            //      so as to be positive semi-definite. That is, the right hand side may have a longitude > 360.
-            //      In this case, we may need to translate object coordinates by 360 degrees to conform.
-            if( BBView.GetMaxX() > 360. ) {
-            
-                wxBoundingBox bbRight ( 0., vp->GetBBox().GetMinY(),
-                                       vp->GetBBox().GetMaxX() - 360., vp->GetBBox().GetMaxY() );
-//            if ( !bbRight.IntersectOut ( rzRules->obj->BBObj ) )
-//                glTranslatef( mercator_k0 * WGS84_semimajor_axis_meters * 2.0 * PI, 0, 0);
-                if(  (rzRules->obj->BBObj.GetMinX() >= 0) &&
-                   (rzRules->obj->BBObj.GetMinX() < BBView.GetMaxX() - 360.) ){
-                    glTranslatef( mercator_k0 * WGS84_semimajor_axis_meters * 2.0 * PI, 0, 0);
-                }
-            }
-        
-            glTranslatef( rzRules->obj->x_origin, rzRules->obj->y_origin, 0);
-            glScalef( rzRules->obj->x_rate, rzRules->obj->y_rate, 0 );
-            
-        }
-        
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         // perform deferred tesselation
         if( !rzRules->obj->pPolyTessGeo->IsOk() ) 
             rzRules->obj->pPolyTessGeo->BuildDeferredTess();
@@ -7784,13 +7737,8 @@ void s52plib::GetPixPointSingle( int pixx, int pixy, double *plat, double *plon,
 {
 #if 1
     vpt->GetLLFromPix(wxPoint(pixx, pixy), plat, plon);
-<<<<<<< HEAD
 //    if(*plon < 0 && vpt->clon > 180)
     //      *plon += 360;
-=======
-    if(*plon < 0 && vpt->clon > 180) // cm93 uses positive viewport, s57doesn't... gah
-        *plon += 360;
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 #else
     //    Use Mercator estimator
     int dx = pixx - ( vpt->pix_width / 2 );

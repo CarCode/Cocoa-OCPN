@@ -520,15 +520,9 @@ void ocpnFloatingToolbarDialog::Surface()
 {
 
     if(m_pRecoverwin){
-<<<<<<< HEAD
         //SurfaceFromGrabber();
         m_pRecoverwin->Show();
         m_pRecoverwin->Raise();
-=======
-        SurfaceFromGrabber();
-        //m_pRecoverwin->Show();
-        //m_pRecoverwin->Raise();
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     }
     else {
         m_bsubmerged = false;
@@ -1827,22 +1821,16 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
         if( tool->IsEnabled() ) {
             bmp = tool->GetNormalBitmap();
             if( !bmp.IsOk() ){
-                bmp = m_style->GetToolIcon( tool->GetToolname(), TOOLICON_NORMAL, tool->rollover );
-                if(m_sizefactor > 1.0 ){
-                    wxImage scaled_image = bmp.ConvertToImage();
-                    bmp = wxBitmap(scaled_image.Scale(tool->m_width, tool->m_height, wxIMAGE_QUALITY_HIGH));
-                }
+                bmp = m_style->GetToolIcon( tool->GetToolname(), TOOLICON_NORMAL, tool->rollover,
+                                           tool->m_width, tool->m_height );
                 tool->SetNormalBitmap( bmp );
                 tool->bitmapOK = true;
             }
         } else {
             bmp = tool->GetDisabledBitmap();
             if( !bmp.IsOk() ){
-                bmp = m_style->GetToolIcon( tool->GetToolname(), TOOLICON_DISABLED );
-                if(m_sizefactor > 1.0 ){
-                    wxImage scaled_image = bmp.ConvertToImage();
-                    bmp = wxBitmap(scaled_image.Scale(tool->m_width, tool->m_height, wxIMAGE_QUALITY_HIGH));
-                }
+                bmp = m_style->GetToolIcon( tool->GetToolname(), TOOLICON_DISABLED, false,
+                                           tool->m_width, tool->m_height );
                 tool->SetDisabledBitmap( bmp );
                 tool->bitmapOK = true;
             }
@@ -1885,22 +1873,17 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
         } else {
             if( tool->IsEnabled() ) {
                 if( tool->IsToggled() )
-                    bmp = m_style->GetToolIcon( tool->GetToolname(), TOOLICON_TOGGLED, tool->rollover );
+                    bmp = m_style->GetToolIcon( tool->GetToolname(), TOOLICON_TOGGLED, tool->rollover,
+                                               tool->m_width, tool->m_height );
                 else
-                    bmp = m_style->GetToolIcon( tool->GetIconName(), TOOLICON_NORMAL, tool->rollover );
+                    bmp = m_style->GetToolIcon( tool->GetIconName(), TOOLICON_NORMAL, tool->rollover,
+                                               tool->m_width, tool->m_height );
 
-                if(m_sizefactor > 1.0 ){
-                    wxImage scaled_image = bmp.ConvertToImage();
-                    bmp = wxBitmap(scaled_image.Scale(tool->m_width, tool->m_height, wxIMAGE_QUALITY_HIGH));
-                }
                 tool->SetNormalBitmap( bmp );
                 tool->bitmapOK = true;
             } else {
-                bmp = m_style->GetToolIcon( tool->GetToolname(), TOOLICON_DISABLED );
-                if(m_sizefactor > 1.0 ){
-                    wxImage scaled_image = bmp.ConvertToImage();
-                    bmp = wxBitmap(scaled_image.Scale(tool->m_width, tool->m_height, wxIMAGE_QUALITY_HIGH));
-                }
+                bmp = m_style->GetToolIcon( tool->GetToolname(), TOOLICON_DISABLED, false,
+                                           tool->m_width, tool->m_height );
                 tool->SetDisabledBitmap( bmp );
                 tool->bitmapOK = true;
             }
@@ -2387,12 +2370,8 @@ void ocpnToolBarSimple::SetToolNormalBitmapEx(wxToolBarToolBase *tool, const wxS
         if(otool){
             ocpnStyle::Style *style = g_StyleManager->GetCurrentStyle();
 
-            wxBitmap bmp = style->GetToolIcon( iconName, TOOLICON_NORMAL );
-            if(m_sizefactor > 1.0 ){
-                wxImage scaled_image = bmp.ConvertToImage();
-                bmp = wxBitmap(scaled_image.Scale(otool->m_width, otool->m_height, wxIMAGE_QUALITY_HIGH));
-            }
-            
+            wxBitmap bmp = style->GetToolIcon( iconName, TOOLICON_NORMAL, false,
+                                              otool->m_width, otool->m_height );
             tool->SetNormalBitmap( bmp );
             otool->SetIconName( iconName );
         }

@@ -53,7 +53,7 @@ int     m_DialogStyle;
 int     m_SavedZoneSelMode;
 int     m_ZoneSelMode;
 
-#ifdef __MSVC__
+#if defined (_WIN32)
 #if _MSC_VER < 1700
 int round (double x) {
 	int i = (int) x;
@@ -333,6 +333,9 @@ void GRIBUICtrlBar::SetRequestBitmap( int type )
 
 void GRIBUICtrlBar::OpenFile(bool newestFile)
 {
+#ifdef __WXOSX__
+    if( newestFile)
+#endif
     m_bpPlay->SetBitmapLabel( GetScaledBitmap( play, m_ScaledFactor ) );
     m_cRecordForecast->Clear();
     pPlugIn->GetGRIBOverlayFactory()->ClearParticles();

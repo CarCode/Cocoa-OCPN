@@ -101,8 +101,6 @@ WX_DEFINE_OBJARRAY ( Array_Of_M_COVR_Desc );
 WX_DEFINE_LIST ( List_Of_M_COVR_Desc );
 
 
-bool s_b_busy_shown;
-
 void appendOSDirSep ( wxString* pString )
 {
       wxChar sep = wxFileName::GetPathSeparator();
@@ -2036,7 +2034,6 @@ void cm93chart::GetPointPix ( ObjRazRules *rzRules, wxPoint2DDouble *en, wxPoint
       double yr =  obj->y_rate;
       double yo =  obj->y_origin;
 
-<<<<<<< HEAD
     if(m_vp_current.m_projection_type == PROJECTION_MERCATOR) {
         if ( m_vp_current.GetBBox().GetMaxX() >= 180. &&
             rzRules->obj->BBObj.GetMaxX() < m_vp_current.GetBBox().GetMinX() )
@@ -2046,21 +2043,6 @@ void cm93chart::GetPointPix ( ObjRazRules *rzRules, wxPoint2DDouble *en, wxPoint
                   rzRules->obj->BBObj.GetMinX() > m_vp_current.GetBBox().GetMaxX()) ||
                 (rzRules->obj->BBObj.GetMaxX() >= 180 && m_vp_current.GetBBox().GetMinX() <= 0.))
                 xo -= mercator_k0 * WGS84_semimajor_axis_meters * 2.0 * PI;
-=======
-    bool mercator = m_vp_current.m_projection_type == PROJECTION_MERCATOR;
-    
-    if(mercator) {
-        //    Crossing Greenwich right
-        if ( m_vp_current.GetBBox().GetMaxX() > 360. )
-        {
-            wxBoundingBox bbRight ( 0., m_vp_current.GetBBox().GetMinY(), m_vp_current.GetBBox().GetMaxX() - 360., m_vp_current.GetBBox().GetMaxY() );
-            if ( !bbRight.IntersectOut ( rzRules->obj->BBObj ) )
-            {
-                  xo += mercator_k0 * WGS84_semimajor_axis_meters * 2.0 * PI;
-            }
-        }
-
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
         for ( int i=0 ; i < nPoints ; i++ )
         {
@@ -2088,13 +2070,8 @@ void cm93chart::GetPixPoint ( int pixx, int pixy, double *plat, double *plon, Vi
 #if 1
     vpt->GetLLFromPix(wxPoint(pixx, pixy), plat, plon);
     
-<<<<<<< HEAD
     //    if ( *plon < 0. )
     //        *plon += 360.;
-=======
-    if ( *plon < 0. )
-        *plon += 360.;
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     
 #else
       //    Use Mercator estimator
@@ -2262,10 +2239,6 @@ void cm93chart::SetVPParms ( const ViewPort &vpt )
       if (recalc_depth) {
         ClearDepthContourArray();
         BuildDepthContourArray();
-      }
-      if( s_b_busy_shown){
-          OCPNPlatform::HideBusySpinner();
-          s_b_busy_shown = false;
       }
 }
 
@@ -4474,18 +4447,6 @@ bool cm93chart::IsPointInLoadedM_COVR ( double xc, double yc )
 
 LLRegion cm93chart::GetValidRegion()
 {
-<<<<<<< HEAD
-=======
-    if(m_region.Empty())
-        for ( unsigned int im=0 ; im < m_pcovr_array_loaded.GetCount() ; im++ )
-        {
-            M_COVR_Desc *pmcd = m_pcovr_array_loaded.Item ( im );
-            
-            LLRegion rgn_covr(pmcd->m_nvertices, ( float * ) pmcd->pvertices);
-            m_region.Union( rgn_covr );
-        }
-    
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     return m_region;
 }
 
@@ -4592,11 +4553,8 @@ int cm93chart::loadsubcell ( int cellindex, wxChar sub_char )
 
       //    File is known to exist
 
-      if(!s_b_busy_shown) {
-          ::wxBeginBusyCursor();
-          s_b_busy_shown = true;
-      }
-      
+      OCPNPlatform::ShowBusySpinner();
+    
       wxString msg ( _T ( "Loading CM93 cell " ) );
       msg += file;
       wxLogMessage ( msg );
@@ -4756,22 +4714,6 @@ cm93_dictionary *cm93manager::FindAndLoadDict ( const wxString &file )
 }
 
 
-<<<<<<< HEAD
-=======
-void SetVPPositive ( ViewPort *pvp )
-{
-      while ( pvp->GetBBox().GetMinX() < 0 )
-      {
-            wxPoint2DDouble t ( 360., 0. );
-            pvp->GetBBox().Translate ( t );
-            if(pvp->clon < pvp->GetBBox().GetMinX())
-                pvp->clon += 360.;
-
-      }
-}
-
-
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 //----------------------------------------------------------------------------
 // cm93 Composite Chart object class Implementation
 //----------------------------------------------------------------------------
@@ -5442,13 +5384,7 @@ bool cm93compchart::DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPo
 
 //      CALLGRIND_START_INSTRUMENTATION
 
-<<<<<<< HEAD
       ViewPort vp = VPoint;
-=======
-      ViewPort vp_positive = VPoint;
-
-      SetVPPositive ( &vp_positive );
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
       bool render_return = false;
       if ( m_pcm93chart_current )
@@ -5460,7 +5396,6 @@ bool cm93compchart::DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPo
             {
                 LLRegion vpr_empty = Region;
                 LLRegion chart_region = GetValidRegion();
-<<<<<<< HEAD
 
 
                 // old method which draws the regions from large to small scale, then finishes with the largest
@@ -5476,9 +5411,6 @@ bool cm93compchart::DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPo
                 //  This logic has the advantage that only the minimum necessary Object rendering is actually performed, and
                 //  only within the minimum necessary region.
 
-=======
-
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
                 if ( !chart_region.Empty() )
                         vpr_empty.Subtract ( chart_region );
 
@@ -5500,16 +5432,6 @@ bool cm93compchart::DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPo
                               if ( m_pcm93chart_current )
                               {
                                   LLRegion sscale_region = GetValidRegion();
-<<<<<<< HEAD
-=======
-
-                                    //    Only need to render that part of the vp that is not yet full
-                                    sscale_region.Intersect ( vpr_empty );
-
-                                  if(!sscale_region.Empty())
-                                      render_return |= m_pcm93chart_current->RenderRegionViewOnGL
-                                      ( glc, vp_positive, RectRegion, sscale_region );
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
                                   //  Save the calculated per-scale region in the array
                                   region_vect[m_cmscale] = sscale_region;
@@ -5522,7 +5444,6 @@ bool cm93compchart::DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPo
                         }     // while
 
 
-<<<<<<< HEAD
                     //  Render all non-empty regions saved in the array, from small to large scale.
                     for( int i=0 ; i < 8 ; i++) {
                         if(!region_vect[i].Empty()){
@@ -5538,27 +5459,13 @@ bool cm93compchart::DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPo
                 
                 //  Render the on-top Reference region/scale
                 render_return |= m_pcm93chart_current->RenderRegionViewOnGL( glc, vp, RectRegion, Region );
-=======
-                        //    Finally, render the target scale chart
-                    if ( !chart_region.Empty() )
-                        render_return |= m_pcm93chart_current->RenderRegionViewOnGL
-                        ( glc, vp_positive, RectRegion, chart_region );
-                  }
-                  else
-                      render_return = m_pcm93chart_current->RenderRegionViewOnGL
-                      ( glc, vp_positive, RectRegion, Region );
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
                   m_Name = m_pcm93chart_current->GetName();
 
             }
             else  // Single chart mode
             {
-<<<<<<< HEAD
                 render_return = m_pcm93chart_current->RenderRegionViewOnGL ( glc, vp, RectRegion, Region );
-=======
-                render_return = m_pcm93chart_current->RenderRegionViewOnGL ( glc, vp_positive, RectRegion, Region );
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
                 m_Name = m_pcm93chart_current->GetLastFileName();
             }
       }
@@ -6248,20 +6155,12 @@ void cm93compchart::RenderCellOutlinesOnGL( ViewPort& vp, M_COVR_Desc *mcd )
     // if needed, cache normalized vertices
     if(!mcd->gl_screen_vertices) {
         // first compute a buffer size
-<<<<<<< HEAD
         double lastlat, lastlon = 0;
-=======
-        double lastlon = 0;
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         int count = 0;
         float_2Dpt *p = mcd->pvertices;
         for ( int ip = 0 ; ip < mcd->m_nvertices ; ip++, p++ ) {
             double lon = p->x;
-<<<<<<< HEAD
             if(lon >= 180)
-=======
-            if(lon > 180)
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
                 lon -= 360;
             
             // crosses IDL? if so break up into two segments
@@ -6283,21 +6182,13 @@ void cm93compchart::RenderCellOutlinesOnGL( ViewPort& vp, M_COVR_Desc *mcd )
         for ( int ip = 0 ; ip < mcd->m_nvertices ; ip++, p++ ) {
             double lat = p->y;
             double lon = p->x;
-<<<<<<< HEAD
             if(lon >= 180)
-=======
-            if(lon > 180)
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
                 lon -= 360;
             
             // crosses IDL? if so break up into two segments
             if(fabs(lon - lastlon) > 180) {
                 if(lastvalid) {
-<<<<<<< HEAD
                     wxPoint2DDouble r = vp.GetDoublePixFromLL(lastlat, lastlon > 0 ? 180 : -180);
-=======
-                    wxPoint2DDouble r = vp.GetDoublePixFromLL(lat, lastlon > 0 ? fabs(lon) : -fabs(lon) );
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
                     if(!wxIsNaN(r.m_x)) {
                         q->y = l.m_x;
                         q->x = l.m_y;
@@ -6313,18 +6204,13 @@ void cm93compchart::RenderCellOutlinesOnGL( ViewPort& vp, M_COVR_Desc *mcd )
                     }
                 }
 
-<<<<<<< HEAD
                 wxPoint2DDouble r = vp.GetDoublePixFromLL(lat, lon > 0 ? 180 : -180);
-=======
-                wxPoint2DDouble r = vp.GetDoublePixFromLL(lat, lon > 0 ? fabs(lastlon) : -fabs(lastlon) );
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
                 if((lastvalid = !wxIsNaN(r.m_x))) {
                     r.m_x -= mcd->user_xoff * vp.view_scale_ppm;
                     r.m_y -= mcd->user_yoff * vp.view_scale_ppm;
                     l.m_x = r.m_x;
                 }
             }
-<<<<<<< HEAD
 
             lastlat = lat;
             lastlon = lon;
@@ -6351,33 +6237,6 @@ void cm93compchart::RenderCellOutlinesOnGL( ViewPort& vp, M_COVR_Desc *mcd )
                 lastvalid = false;
         }
 
-=======
-            
-            lastlon = lon;
-            
-            wxPoint2DDouble s = vp.GetDoublePixFromLL( lat, lon );
-            if(!wxIsNaN(s.m_x)) {
-                //    Outlines stored in MCDs are not adjusted for offsets
-                s.m_x -= mcd->user_xoff * vp.view_scale_ppm;
-                s.m_y -= mcd->user_yoff * vp.view_scale_ppm;
-                
-                if(lastvalid) {
-                    q->y = l.m_x;
-                    q->x = l.m_y;
-                    q++;
-                    
-                    q->y = s.m_x;
-                    q->x = s.m_y;
-                    q++;
-                }
-                
-                l = s;
-                lastvalid = true;
-            } else
-                lastvalid = false;
-        }
-
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         mcd->m_ngl_vertices = q - mcd->gl_screen_vertices;
         mcd->gl_screen_projection_type = vp.m_projection_type;
     }

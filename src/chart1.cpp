@@ -543,8 +543,7 @@ bool                      g_bShowCOG;
 double                    g_ShowCOG_Mins;
 bool                      g_bAISShowTracks;
 double                    g_AISShowTracks_Mins;
-bool                      g_bShowMoored;
-bool                      g_bAllowHideMoored;
+bool                      g_bHideMoored;
 bool                      g_bAllowShowScaled;
 double                    g_ShowMoored_Kts;
 wxString                  g_sAIS_Alert_Sound_File;
@@ -2833,7 +2832,17 @@ ocpnToolBarSimple *MyFrame::CreateAToolbar()
             style->GetToolIcon( _T("settings"), TOOLICON_NORMAL ), tipString, wxITEM_NORMAL );
 
     CheckAndAddPlugInTool( tb );
-    tipString = wxString( _("Show ENC Text") ) << _T(" (T)");
+    bool gs = false;
+#ifdef USE_S57
+    if (ps52plib)
+        gs = ps52plib->GetShowS57Text();
+#endif
+    
+    if (gs)
+        tipString = wxString( _("Hide ENC Text") ) << _T(" (T)");
+    else
+        tipString = wxString( _("Show ENC Text") ) << _T(" (T)");
+
     if( _toolbarConfigMenuUtil( ID_ENC_TEXT, tipString ) )
         tb->AddTool( ID_ENC_TEXT, _T("text"),
             style->GetToolIcon( _T("text"), TOOLICON_NORMAL ),
@@ -2914,6 +2923,7 @@ ocpnToolBarSimple *MyFrame::CreateAToolbar()
 
 
 // Realize() the toolbar
+    style->Unload();
     g_FloatingToolbarDialog->Realize();
 
 //      Set up the toggle states
@@ -2934,7 +2944,14 @@ ocpnToolBarSimple *MyFrame::CreateAToolbar()
 
     wxString initiconName;
     if( g_bShowAIS ) {
-        tb->SetToolShortHelp( ID_AIS, _("Hide AIS Targets") );
+        if (g_bAllowShowScaled){
+            if(!g_bShowScaled)
+                tb->SetToolShortHelp( ID_AIS, _("Attenuate less critical AIS Targets") );
+            else
+                tb->SetToolShortHelp( ID_AIS, _("Hide AIS Targets") );
+        }
+        else
+            tb->SetToolShortHelp( ID_AIS, _("Hide AIS Targets") );
         initiconName = _T("AIS");
     }
     else {
@@ -4010,22 +4027,19 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
 #endif
 
         case ID_MENU_AIS_TARGETS: {
-            if ( g_bShowAIS ) SetAISDisplayStyle(0);
-            else SetAISDisplayStyle(1);
+            if ( g_bShowAIS ) SetAISDisplayStyle(2);
+            else SetAISDisplayStyle(0);
             break;
         }
         case ID_MENU_AIS_MOORED_TARGETS: {
-            if(g_bShowMoored)
-                SetAISDisplayStyle(2);
-            else
-                SetAISDisplayStyle(0);
+            g_bHideMoored = !g_bHideMoored;
             break;
         }
         case ID_MENU_AIS_SCALED_TARGETS: {
             if(g_bShowScaled)
                 SetAISDisplayStyle(0);
             else
-                SetAISDisplayStyle(3);
+                SetAISDisplayStyle(1);
             break;
         }
         case ID_AIS: {
@@ -4309,40 +4323,41 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
 void MyFrame::SetAISDisplayStyle(int StyleIndx)
 {
     // make some arrays to hold the dfferences between cycle steps
-    //show all, hide all, hide moored, scaled
-    bool g_bShowAIS_Array[4] = {true, false, true, true};
-    bool g_bShowMoored_Array[4] = {true, false, false, true};
-    bool g_bShowScaled_Array[4] = {false, false, false, true};
-    wxString ToolShortHelp_Array[4] = { _("Show all AIS Targets"), _("Hide AIS Targets"),  _("Hide MooredAIS Targets"), _("Scale less important AIS Targets") };
-    wxString iconName_Array[4] = { _("AIS"),  _("AIS_Disabled"),  _("AIS_Suppressed"),  _("AIS_Suppressed")};
-    int ArraySize = 4;
+    //show all, scaled, hide all
+    bool g_bShowAIS_Array[3] = {true, true, false};
+    bool g_bShowScaled_Array[3] = {false, true, true};
+    wxString ToolShortHelp_Array[3] = { _("Show all AIS Targets"),
+        _("Attenuate less critical AIS Targets"),
+        _("Hide AIS Targets") };
+    wxString iconName_Array[3] = { _("AIS"),  _("AIS_Suppressed"), _("AIS_Disabled")};
+    int ArraySize = 3;
     int AIS_Toolbar_Switch = 0;
     if (StyleIndx == -1){// -1 means coming from toolbar button
         //find current state of switch
         for ( int i = 1; i < ArraySize; i++){
-            if( (g_bShowAIS_Array[i] == g_bShowAIS) &&
-               (g_bShowMoored_Array[i] == g_bShowMoored) &&
-               (g_bShowScaled_Array[i] == g_bShowScaled) ) AIS_Toolbar_Switch = i;
+            if( (g_bShowAIS_Array[i] == g_bShowAIS) && (g_bShowScaled_Array[i] == g_bShowScaled) )
+                AIS_Toolbar_Switch = i;
         }
         AIS_Toolbar_Switch++; // we did click so continu with next item
-        if ( (!g_bAllowHideMoored) && (AIS_Toolbar_Switch == 2) ) AIS_Toolbar_Switch++;
-        if ( (!g_bAllowShowScaled) && (AIS_Toolbar_Switch == 3) ) AIS_Toolbar_Switch++;
+        if ( (!g_bAllowShowScaled) && (AIS_Toolbar_Switch == 1) )
+            AIS_Toolbar_Switch++;
 
     }
     else { // coming from menu bar.
         AIS_Toolbar_Switch = StyleIndx;
     }
     //make sure we are not above array
-    if (AIS_Toolbar_Switch >= ArraySize ) AIS_Toolbar_Switch=0;
+    if (AIS_Toolbar_Switch >= ArraySize )
+        AIS_Toolbar_Switch=0;
 
     int AIS_Toolbar_Switch_Next = AIS_Toolbar_Switch+1; //Find out what will happen at next click
-    if ( (!g_bAllowHideMoored) && (AIS_Toolbar_Switch_Next == 2) ) AIS_Toolbar_Switch_Next++;
-    if ( (!g_bAllowShowScaled) && (AIS_Toolbar_Switch_Next == 3) ) AIS_Toolbar_Switch_Next++;
-    if (AIS_Toolbar_Switch_Next >= ArraySize ) AIS_Toolbar_Switch_Next=0; // If at end of cycle start at 0
+    if ( (!g_bAllowShowScaled) && (AIS_Toolbar_Switch_Next == 1) )
+        AIS_Toolbar_Switch_Next++;
+    if (AIS_Toolbar_Switch_Next >= ArraySize )
+        AIS_Toolbar_Switch_Next=0; // If at end of cycle start at 0
 
     //Set found values to variables
     g_bShowAIS = g_bShowAIS_Array[AIS_Toolbar_Switch];
-    g_bShowMoored = g_bShowMoored_Array[AIS_Toolbar_Switch];
     g_bShowScaled = g_bShowScaled_Array[AIS_Toolbar_Switch];
     if( g_toolbar ) {
         g_toolbar->SetToolShortHelp( ID_AIS, ToolShortHelp_Array[AIS_Toolbar_Switch_Next] );
@@ -5127,9 +5142,9 @@ void MyFrame::RegisterGlobalMenuItems()
 
     wxMenu* ais_menu = new wxMenu();
     ais_menu->AppendCheckItem( ID_MENU_AIS_TARGETS, _("Show AIS Targets") );
-    ais_menu->AppendCheckItem( ID_MENU_AIS_MOORED_TARGETS, _("   Hide Moored AIS Targets") );
-    ais_menu->AppendCheckItem( ID_MENU_AIS_SCALED_TARGETS, _("   Scale Less Important AIS Targets") );
-    ais_menu->AppendCheckItem( ID_MENU_AIS_TRACKS, _("Show Target Tracks") );
+    ais_menu->AppendCheckItem( ID_MENU_AIS_MOORED_TARGETS, _("Hide Moored AIS Targets") );
+    ais_menu->AppendCheckItem( ID_MENU_AIS_SCALED_TARGETS, _("Attenuate Less Critical AIS Targets") );
+    ais_menu->AppendCheckItem( ID_MENU_AIS_TRACKS, _("Show AIS Target Tracks") );
     ais_menu->AppendCheckItem( ID_MENU_AIS_CPADIALOG, _("Show CPA Alert Dialogs") );
     ais_menu->AppendCheckItem( ID_MENU_AIS_CPASOUND, _("Sound CPA Alarms") );
     ais_menu->AppendSeparator();
@@ -5202,8 +5217,7 @@ void MyFrame::UpdateGlobalMenuItems()
     m_pMenuBar->FindItem( ID_MENU_CHART_QUILTING )->Check( g_bQuiltEnable );
     m_pMenuBar->FindItem( ID_MENU_UI_CHARTBAR )->Check( g_bShowChartBar );
     m_pMenuBar->FindItem( ID_MENU_AIS_TARGETS )->Check( g_bShowAIS );
-    m_pMenuBar->FindItem( ID_MENU_AIS_MOORED_TARGETS )->Check( !g_bShowMoored );
-    m_pMenuBar->FindItem( ID_MENU_AIS_MOORED_TARGETS )->Enable(g_bAllowHideMoored);
+    m_pMenuBar->FindItem( ID_MENU_AIS_MOORED_TARGETS )->Check( g_bHideMoored );
     m_pMenuBar->FindItem( ID_MENU_AIS_SCALED_TARGETS )->Check( g_bShowScaled );
     m_pMenuBar->FindItem( ID_MENU_AIS_SCALED_TARGETS )->Enable(g_bAllowShowScaled);
     m_pMenuBar->FindItem( ID_MENU_AIS_TRACKS )->Check( g_bAISShowTracks );
@@ -5321,11 +5335,10 @@ int MyFrame::DoOptionsDialog()
 
     g_boptionsactive = true;
 
-    g_Platform->ShowBusySpinner();
-
-    if(NULL == g_options)
+    if(NULL == g_options) {
+        g_Platform->ShowBusySpinner();
         g_options = new options( this, -1, _("Options") );
-
+    }
     g_Platform->HideBusySpinner();
 
 
@@ -6094,7 +6107,6 @@ void MyFrame::DoStackDelta( int direction )
 void MyFrame::OnInitTimer(wxTimerEvent& event)
 {
     switch(m_iInitCount++) {
-<<<<<<< HEAD
         case 0:
         {
             if( g_toolbar )
@@ -6114,24 +6126,6 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
             }
             
             pConfig->LoadNavObjects();
-=======
-    case 0:
-    {
-        // Set persistent Fullscreen mode
-        g_Platform->SetFullscreen(g_bFullscreen);
-
-        // Load the waypoints.. both of these routines are very slow to execute which is why
-        // they have been to defered until here
-        pWayPointMan = new WayPointman();
-
-        // Reload the ownship icon from UserIcons, if present
-        if(cc1){
-            if(cc1->SetUserOwnship())
-                cc1->SetColorScheme(global_color_scheme);
-        }
-
-        pConfig->LoadNavObjects();
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
             //    Re-enable anchor watches if set in config file
             if( !g_AW1GUID.IsEmpty() ) {
@@ -9776,10 +9770,7 @@ void MyFrame::applySettingsString( wxString settings)
             *pInit_Chart_Dir = val;
         }
 
-<<<<<<< HEAD
 #ifdef USE_S57
-=======
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         if(ps52plib){
             float conv = 1;
             int depthUnit = ps52plib->m_nDepthUnitDisplay;
@@ -9910,10 +9901,7 @@ void MyFrame::applySettingsString( wxString settings)
                 }
             }
         }
-<<<<<<< HEAD
 #endif
-=======
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     }
 
     // Process Connections

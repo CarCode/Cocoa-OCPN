@@ -152,7 +152,7 @@ extern bool                      g_bShowCOG;
 extern double                    g_ShowCOG_Mins;
 extern bool                      g_bAISShowTracks;
 extern double                    g_AISShowTracks_Mins;
-extern bool                      g_bShowMoored;
+extern bool                      g_bHideMoored;
 extern double                    g_ShowMoored_Kts;
 extern wxString                  g_sAIS_Alert_Sound_File;
 extern bool                      g_bAIS_CPA_Alert_Suppress_Moored;
@@ -554,7 +554,7 @@ void OCPNPlatform::SetDefaultOptions( void )
     g_RemoveLost_Mins = 10;
     g_bShowCOG = true;
     g_ShowCOG_Mins = 6;
-    g_bShowMoored = true;
+    g_bHideMoored = false;
     g_ShowMoored_Kts = 0.2;
     g_bTrackDaily = false;
     g_PlanSpeed = 6.;
@@ -1117,9 +1117,11 @@ void OCPNPlatform::ShowBusySpinner( void )
 #ifdef __OCPN__ANDROID__
     androidShowBusyIcon();
 #else
+#if wxCHECK_VERSION(2, 9, 0 )
     if( !::wxIsBusy() ){
         ::wxBeginBusyCursor();
     }
+#endif
 #endif
 }
 
@@ -1130,10 +1132,10 @@ void OCPNPlatform::HideBusySpinner( void )
 #else
 #if wxCHECK_VERSION(2, 9, 0 )
     if( ::wxIsBusy() )
-#endif
     {
         ::wxEndBusyCursor();
     }
+#endif
 #endif
 }
 

@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  * $Id: from_ownship.cpp
  *
  * Project:  OpenCPN
@@ -22,8 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "from_ownship.h"
 
@@ -53,7 +52,7 @@ void DashboardInstrument_FromOwnship::Draw(wxGCDC* dc)
 
     dc->SetFont(*g_pFontData);
     //dc.SetTextForeground(pFontMgr->GetFontColor(_T("Dashboard Data")));
-    GetGlobalColor(_T("BLUE2"), &cl);
+    GetGlobalColor(_T("DASHF"), &cl);
     dc->SetTextForeground(cl);
 
     dc->DrawText(m_data1, 10, m_TitleHeight);

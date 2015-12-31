@@ -34,7 +34,7 @@
 
 class glTextureDescriptor;
 
-#define COMPRESSED_CACHE_MAGIC 0xf010  // change this when the format changes
+#define COMPRESSED_CACHE_MAGIC 0xf011  // change this when the format changes
 
 #define FACTORY_TIMER                   10000
 
@@ -88,11 +88,7 @@ WX_DEFINE_ARRAY(CatalogEntry*, ArrayOfCatalogEntries);
 class glTexTile
 {
 public:
-<<<<<<< HEAD
     glTexTile() { m_coords = m_texcoords = NULL;  m_ncoords = 0;}
-=======
-    glTexTile() { m_coords = m_texcoords = NULL; }
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     virtual ~glTexTile() { delete [] m_coords; delete [] m_texcoords; }
     
     wxRect rect;
@@ -103,7 +99,7 @@ public:
     float *m_coords, *m_texcoords;
 };
 
-#define MAX_TEX_LEVEL 5
+#define MAX_TEX_LEVEL 10
 
 class glTexFactory : public wxEvtHandler
 {
@@ -132,14 +128,8 @@ public:
     void FreeSome( long target );
 
     glTextureDescriptor *GetpTD( wxRect & rect );
-<<<<<<< HEAD
 
     void PrepareTiles(const ViewPort &vp, bool use_norm_vp, ChartBase *pChart);
-=======
-    //    GLuint GetRasterFormat() { return g_raster_format; }
-
-    void PrepareTiles(const ViewPort &vp, bool use_norm_vp, ChartBaseBSB *pChartBSB);
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     glTexTile** GetTiles(int &num) { num = m_ntex; return m_tiles; }
     void GetCenter(double &lat, double &lon) { lat = m_clat, lon = m_clon; }
 
@@ -172,6 +162,7 @@ private:
     int         m_catalog_offset;
     bool        m_hdrOK;
     bool        m_catalogOK;
+    bool        m_newCatalog;
 
     bool	m_catalogCorrupted;
 

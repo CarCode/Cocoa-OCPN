@@ -136,8 +136,8 @@ extern bool             g_bShowCOG;
 extern double           g_ShowCOG_Mins;
 extern bool             g_bAISShowTracks;
 extern double           g_AISShowTracks_Mins;
-extern bool             g_bAllowHideMoored;
 extern double           g_ShowMoored_Kts;
+extern bool             g_bHideMoored;
 extern bool             g_bAllowShowScaled;
 extern int              g_ShowScaled_Num;
 extern bool             g_bAIS_CPA_Alert;
@@ -1009,7 +1009,6 @@ void options::Init( void )
     m_bVisitLang = FALSE;
     m_itemFontElementListBox = NULL;
     m_topImgList = NULL;
-    m_pSerialArray = EnumerateSerialPorts();
 
     m_pListbook = NULL;
     m_pGroupArray = NULL;
@@ -1550,10 +1549,6 @@ void options::CreatePanel_NMEA_Compact( size_t parent, int border_size,
 
     m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnableMouse), NULL, this );
 #if wxCHECK_VERSION(2, 9, 0)
-<<<<<<< HEAD
-=======
-    m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnableMouse), NULL, this );
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     m_lcSources->Connect( wxEVT_LIST_ITEM_ACTIVATED, wxListEventHandler( options::OnConnectionToggleEnable ), NULL, this );
 #endif
 
@@ -1591,12 +1586,6 @@ void options::CreatePanel_NMEA_Compact( size_t parent, int border_size,
 
     m_lcSources->Refresh();
     FillSourceList();
-
-    if ( m_pSerialArray ) {
-        for ( size_t i = 0; i < m_pSerialArray->Count() ; i++ ) {
-            m_comboPort->Append( m_pSerialArray->Item( i ) );
-        }
-    }
 
     ShowNMEACommon( FALSE );
     ShowNMEASerial( FALSE );
@@ -2006,10 +1995,6 @@ void options::CreatePanel_NMEA( size_t parent, int border_size,
 
     m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnableMouse), NULL, this);
 #if wxCHECK_VERSION(2, 9, 0)
-<<<<<<< HEAD
-=======
-    m_lcSources->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler(options::OnConnectionToggleEnableMouse), NULL, this);
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     m_lcSources->Connect( wxEVT_LIST_ITEM_ACTIVATED, wxListEventHandler( options::OnConnectionToggleEnable ), NULL, this );
 #endif
 
@@ -2047,12 +2032,6 @@ void options::CreatePanel_NMEA( size_t parent, int border_size,
 
     m_lcSources->Refresh();
     FillSourceList();
-
-    if ( m_pSerialArray ) {
-        for ( size_t i = 0; i < m_pSerialArray->Count() ; i++ ) {
-            m_comboPort->Append( m_pSerialArray->Item( i ) );
-        }
-    }
 
     ShowNMEACommon( FALSE );
     ShowNMEASerial( FALSE );
@@ -3634,13 +3613,14 @@ void options::CreatePanel_AIS( size_t parent, int border_size,
     m_pText_Track_Length = new wxTextCtrl( panelAIS, -1 );
     pDisplayGrid->Add( m_pText_Track_Length, 1, wxALL | wxALIGN_RIGHT, group_item_spacing );
 
-    m_pCheck_Hide_Moored = new wxCheckBox( panelAIS, -1, _("Allow hiding anchored/moored targets, speed max (kn)"));
+    m_pCheck_Hide_Moored = new wxCheckBox( panelAIS, -1, _("Suppress anchored/moored targets, speed max (kn)"));
     pDisplayGrid->Add(m_pCheck_Hide_Moored, 1, wxALL, group_item_spacing);
 
     m_pText_Moored_Speed = new wxTextCtrl( panelAIS, -1 );
     pDisplayGrid->Add( m_pText_Moored_Speed, 1, wxALL | wxALIGN_RIGHT, group_item_spacing );
 
-    m_pCheck_Scale_Priority = new wxCheckBox( panelAIS, -1, _("Allow scaling down targets if more than ... targets"));
+    m_pCheck_Scale_Priority = new wxCheckBox( panelAIS, -1, _("Allow attenuation of less critical targets if more than ... targets"));
+
     pDisplayGrid->Add(m_pCheck_Scale_Priority, 1, wxALL, group_item_spacing);
 
     m_pText_Scale_Priority = new wxTextCtrl(panelAIS, -1);
@@ -4395,7 +4375,7 @@ void options::SetInitialSettings( void )
     s.Printf( _T("%4.0f"), g_AISShowTracks_Mins );
     m_pText_Track_Length->SetValue( s );
 
-    m_pCheck_Hide_Moored->SetValue(g_bAllowHideMoored);
+    m_pCheck_Hide_Moored->SetValue(g_bHideMoored);
 
     s.Printf( _T("%4.1f"), g_ShowMoored_Kts );
     m_pText_Moored_Speed->SetValue( s );
@@ -4456,6 +4436,20 @@ void options::SetInitialSettings( void )
 
     s.Printf( _T("%d"), g_nAutoHideToolbar );
     pToolbarHideSecs->SetValue( s );
+
+    //  Serial ports
+    
+    delete m_pSerialArray;
+    m_pSerialArray = NULL;
+    m_pSerialArray = EnumerateSerialPorts();
+    
+    if (m_pSerialArray) {
+        m_comboPort->Clear();
+        for (size_t i = 0; i < m_pSerialArray->Count(); i++) {
+            m_comboPort->Append(m_pSerialArray->Item(i));
+        }
+    }
+
 }
 
 void options::SetInitialVectorSettings(void)
@@ -4516,7 +4510,6 @@ void options::SetInitialVectorSettings(void)
                 nset = 3;
                 break;
         }
-<<<<<<< HEAD
         
         pDispCat->SetSelection(nset);
         
@@ -4527,17 +4520,6 @@ void options::SetInitialVectorSettings(void)
         itemButtonSelectList->Enable(MARINERS_STANDARD ==
                                      ps52plib->GetDisplayCategory());
         
-=======
-
-        pDispCat->SetSelection( nset );
-#ifdef __WXOSX__
-    if(ps57CtlListBox)
-#endif
-        ps57CtlListBox->Enable( MARINERS_STANDARD == ps52plib->GetDisplayCategory() );
-        itemButtonClearList->Enable( MARINERS_STANDARD == ps52plib->GetDisplayCategory() );
-        itemButtonSelectList->Enable( MARINERS_STANDARD == ps52plib->GetDisplayCategory() );
-
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
         //  Other Display Filters
         pCheck_SOUNDG->SetValue(ps52plib->m_bShowSoundg);
         pCheck_META->SetValue(ps52plib->m_bShowMeta);
@@ -4719,22 +4701,30 @@ void options::OnOpenGLOptions( wxCommandEvent& event )
         g_GLOptions.m_bUseAcceleratedPanning = g_bGLexpert ?
             dlg.GetAcceleratedPanning() :
             cc1->GetglCanvas()->CanAcceleratePanning();
-        g_GLOptions.m_bTextureCompression = dlg.GetTextureCompression();
+
         g_bShowFPS = dlg.GetShowFPS();
         g_bSoftwareGL = dlg.GetSoftwareGL();
+
         if ( g_bGLexpert ) {
+          // user defined
             g_GLOptions.m_bTextureCompressionCaching = dlg.GetTextureCompressionCaching();
             g_GLOptions.m_iTextureMemorySize = dlg.GetTextureMemorySize();
         } else {
+            // caching is on if textures are compressed
             g_GLOptions.m_bTextureCompressionCaching = dlg.GetTextureCompression();
         }
+
         if ( g_bopengl && g_GLOptions.m_bTextureCompression != dlg.GetTextureCompression() ) {
+            // new g_GLoptions setting is needed in callees
             g_GLOptions.m_bTextureCompression = dlg.GetTextureCompression();
             ::wxBeginBusyCursor();
             cc1->GetglCanvas()->SetupCompression();
             cc1->GetglCanvas()->ClearAllRasterTextures();
             ::wxEndBusyCursor();
         }
+        else
+            g_GLOptions.m_bTextureCompression = dlg.GetTextureCompression();
+
     }
 
     if ( dlg.GetRebuildCache() ) {
@@ -5334,7 +5324,7 @@ void options::OnApplyClick( wxCommandEvent& event )
         }
     }
 
-    g_bAllowHideMoored = m_pCheck_Hide_Moored->GetValue();
+    g_bHideMoored = m_pCheck_Hide_Moored->GetValue();
     m_pText_Moored_Speed->GetValue().ToDouble( &g_ShowMoored_Kts );
 
     g_bAllowShowScaled = m_pCheck_Scale_Priority->GetValue();
@@ -5533,8 +5523,11 @@ void options::OnApplyClick( wxCommandEvent& event )
 
         cc1->ReloadVP();
     }
-
+#ifdef __WXOSX__
+    if (::wxIsBusy()) ::wxEndBusyCursor();
+#else
     ::wxEndBusyCursor();
+#endif
 }
 
 void options::OnXidOkClick( wxCommandEvent& event )
