@@ -1444,8 +1444,6 @@ void GRIBOverlayFactory::DrawNumbers( wxPoint p, double value, int settings, wxC
         glColor4ub(back_color.Red(), back_color.Green(),
                    back_color.Blue(), m_Settings.m_iOverlayTransparency);
 
-        glLineWidth(1);
-
         wxString label = getLabelString(value, settings);
         int w, h;
         m_TexFontNumbers.GetTextExtent( label, &w, &h );
@@ -2026,7 +2024,6 @@ void GRIBOverlayFactory::DrawGLTexture( GLuint texture, int width, int height,
 
         //    Rotations occur around 0,0, so calculate a post-rotate translation factor
         double angle = vp->rotation;
-        angle -= vp->skew;
 
         glTranslatef( xd, yd, 0 );
         glRotatef( angle * 180. / PI, 0, 0, 1 );

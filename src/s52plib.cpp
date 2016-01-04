@@ -543,7 +543,7 @@ LUPrec *s52plib::FindBestLUP( wxArrayOfLUPrec *LUPArray, unsigned int startIndex
             slatc = buffer.data();
             //  Get the LUP attribute value as a string
 
-            if( buffer.length() < 6 )
+            if( slatc && (strlen(slatc) < 6) )
                 goto next_LUP_Attr;         // LUP attribute value not UTF8 convertible (never seen in PLIB 3.x)
 
             if( slatc ){
@@ -6373,19 +6373,22 @@ int s52plib::RenderToGLAC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             //  Next, the per-object transform
 
             float x_origin = rzRules->obj->x_origin;
-            if( ( rzRules->obj->m_chart_context->chart->GetChartType() == CHART_TYPE_CM93COMP )
-               || ( rzRules->obj->m_chart_context->chart->GetChartType() == CHART_TYPE_CM93 ) )
-            {
-                //      We may need to translate object coordinates by 360 degrees to conform.
-                if( BBView.GetMaxX() >= 180. ) {
-                    if(rzRules->obj->BBObj.GetMinX() < BBView.GetMaxX() - 360.)
-                        x_origin += mercator_k0 * WGS84_semimajor_axis_meters * 2.0 * PI;
+
+            if(rzRules->obj->m_chart_context->chart) {          // not a PlugIn Chart
+                if( ( rzRules->obj->m_chart_context->chart->GetChartType() == CHART_TYPE_CM93COMP )
+                   || ( rzRules->obj->m_chart_context->chart->GetChartType() == CHART_TYPE_CM93 ) )
+                {
+                    //      We may need to translate object coordinates by 360 degrees to conform.
+                    if( BBView.GetMaxX() >= 180. ) {
+                        if(rzRules->obj->BBObj.GetMinX() < BBView.GetMaxX() - 360.)
+                            x_origin += mercator_k0 * WGS84_semimajor_axis_meters * 2.0 * PI;
+                    }
+                    else
+                        if( (BBView.GetMinX() <= -180. && rzRules->obj->BBObj.GetMaxX() > BBView.GetMinX() + 360.)
+                           || (rzRules->obj->BBObj.GetMaxX() > 180 && BBView.GetMinX() + 360 < rzRules->obj->BBObj.GetMaxX() )
+                           )
+                            x_origin -= mercator_k0 * WGS84_semimajor_axis_meters * 2.0 * PI;
                 }
-                else
-                    if( (BBView.GetMinX() <= -180. && rzRules->obj->BBObj.GetMaxX() > BBView.GetMinX() + 360.)
-                       || (rzRules->obj->BBObj.GetMaxX() > 180 && BBView.GetMinX() + 360 < rzRules->obj->BBObj.GetMaxX() )
-                       )
-                        x_origin -= mercator_k0 * WGS84_semimajor_axis_meters * 2.0 * PI;
             }
             
             glTranslatef( x_origin, rzRules->obj->y_origin, 0);
