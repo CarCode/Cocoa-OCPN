@@ -35,6 +35,16 @@ static inline double cross(const contour_pt &v1, const contour_pt &v2)
     return v1.y*v2.x - v1.x*v2.y;
 }
 
+static inline double dot(const contour_pt &v1, const contour_pt &v2)
+{
+    return v1.x*v2.x + v1.y*v2.y;
+}
+
+static inline double dist2(const contour_pt &v)
+{
+    return dot(v, v);
+}
+
 static inline contour_pt vector(const contour_pt &p1, const contour_pt &p2)
 {
     contour_pt r = {p2.y - p1.y, p2.x - p1.x};
@@ -69,21 +79,9 @@ LLRegion::LLRegion( size_t n, const double *points )
 bool LLRegion::PointsCCW( size_t n, const double *points )
 {
     double total = 0;
-<<<<<<< HEAD
     for(unsigned int i=0; i<2*n; i+=2) {
         int pn = i < 2*(n-1) ? i + 2 : 0;
         total += (points[pn+0] - points[i+0]) * (points[pn+1] + points[i+1]);
-=======
-    int pl = 2*(n-1);
-    double x0 = points[0] - points[pl+0];
-    double y0 = points[1] - points[pl+1];
-    for(unsigned int i=0; i<2*n; i+=2) {
-        int pn = i < 2*(n-1) ? i + 2 : 0;
-        double x1 = points[pn+0] - points[i+0];
-        double y1 = points[pn+1] - points[i+1];
-        total += x1*y0 - x0*y1;
-        x0 = x1, y0 = y1;
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     }
     return total > 0;
 }
@@ -98,7 +96,6 @@ void LLRegion::Print() const
     }
 }
 
-<<<<<<< HEAD
 void LLRegion::plot(const char*fn) const
 {
     char filename[100] = "/home/sean/";
@@ -114,8 +111,6 @@ void LLRegion::plot(const char*fn) const
     fclose(f);
 }
 
-=======
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 LLBBox LLRegion::GetBox() const
 {
     if(contours.empty())
@@ -278,11 +273,7 @@ struct work
 };
 
 
-<<<<<<< HEAD
 static void /*APIENTRY*/ LLvertexCallback(GLvoid *vertex, void *user_data)
-=======
-static void APIENTRY LLvertexCallback(GLvoid *vertex, void *user_data)
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 {
     work *w = (work*)user_data;
     const GLdouble *pointer = (GLdouble *)vertex;
@@ -291,17 +282,10 @@ static void APIENTRY LLvertexCallback(GLvoid *vertex, void *user_data)
     w->contour.push_back(p);
 }
 
-<<<<<<< HEAD
 static void /*APIENTRY*/ LLbeginCallback(GLenum which) {
 }
 
 static void /*APIENTRY*/ LLendCallback(void *user_data)
-=======
-static void APIENTRY LLbeginCallback(GLenum which) {
-}
-
-static void APIENTRY LLendCallback(void *user_data)
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 {
     work *w = (work*)user_data;
     if(w->contour.size()) {
@@ -310,11 +294,7 @@ static void APIENTRY LLendCallback(void *user_data)
     }    
 }
 
-<<<<<<< HEAD
 static void /*APIENTRY*/ LLcombineCallback( GLdouble coords[3], GLdouble *vertex_data[4], GLfloat weight[4],
-=======
-static void APIENTRY LLcombineCallback( GLdouble coords[3], GLdouble *vertex_data[4], GLfloat weight[4],
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
                       GLdouble **dataOut, void *user_data )
 {
     work *w = (work*)user_data;
@@ -323,11 +303,7 @@ static void APIENTRY LLcombineCallback( GLdouble coords[3], GLdouble *vertex_dat
     *dataOut = vertex;    
 }
 
-<<<<<<< HEAD
 static void /*APIENTRY*/ LLerrorCallback(GLenum errorCode)
-=======
-static void APIENTRY LLerrorCallback(GLenum errorCode)
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 {
     const GLubyte *estring;
     estring = gluErrorString(errorCode);
@@ -363,15 +339,45 @@ void LLRegion::Subtract(const LLRegion& region)
     Put(region, GLU_TESS_WINDING_POSITIVE, true);
 }
 
+void LLRegion::Reduce(double factor)
+{
+    double factor2 = factor*factor;
+
+    std::list<poly_contour>::iterator i = contours.begin();
+    while(i != contours.end()) {
+        if(i->size() < 3) {
+            printf("invalid contour");
+            continue;
+        }
+
+        // reduce segments
+        contour_pt l = *i->rbegin();
+        poly_contour::iterator j = i->begin(), k;
+        while(j != i->end()) {
+            k = j;
+            j++;
+            if(dist2(vector(*k, l)) < factor2)
+                i->erase(k);
+            else
+                l = *k;
+        }
+
+        // erase zero contours
+        if(i->size() < 3)
+            i = contours.erase(i);
+        else
+            i++;
+    }
+
+    //Optimize();
+}
+
 // slightly ugly, but efficient intersection algorithm
 bool LLRegion::NoIntersection(const LLBBox& box) const
 {
     return false; // there are occasional false positives we must fix first
 
-<<<<<<< HEAD
 #if 0
-=======
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     double minx = box.GetMinX(), maxx = box.GetMaxX(), miny = box.GetMinY(), maxy = box.GetMaxY();
     if(Contains(miny, minx))
         return false;
@@ -443,7 +449,6 @@ bool LLRegion::NoIntersection(const LLBBox& box) const
     }
 
     return true;
-<<<<<<< HEAD
 #endif
 }
 
@@ -453,13 +458,6 @@ bool LLRegion::NoIntersection(const LLRegion& region) const
     if(Empty() || region.Empty())
         return true;
 
-=======
-}
-
-// internal test to seem if if regions don't intersect (optimization)
-bool LLRegion::NoIntersection(const LLRegion& region) const
-{
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     LLBBox box = GetBox(), rbox = region.GetBox();
     return box.IntersectOut(rbox) || NoIntersection(rbox) || region.NoIntersection(box);
 }

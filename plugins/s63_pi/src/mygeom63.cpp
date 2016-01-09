@@ -37,8 +37,7 @@
 #include "mygeom63.h"
 #ifdef __WXOSX__
 #include "georef.h"
-#include "bbox.h"
-//#include "pi_s52s57.h"
+#include "../../../include/bbox.h"
 #endif
 #include <math.h>
 #include "triangulate.h"
@@ -162,10 +161,19 @@ static double         s_transform_x_origin;
 static double         s_transform_y_rate;
 static double         s_transform_y_origin;
 wxArrayPtrVoid        *s_pCombineVertexArray;
-
-static const double   CM93_semimajor_axis_meters = 6378388.0;            // CM93 semimajor axis
-//#endif   WXOSX !!!
 #endif
+#ifndef __WXOSX__
+static const double   CM93_semimajor_axis_meters = 6378388.0;            // CM93 semimajor axis
+
+//#endif siehe alte Fassung
+#else
+//#endif
+static const double   CM93_semimajor_axis_meters = 6378388.0;            // CM93 semimajor axis
+static bool           s_bSENC_SM;
+
+static int            tess_orient;
+#endif
+
 int s_idx;
 
 
@@ -430,7 +438,7 @@ PolyTessGeo::PolyTessGeo(unsigned char *polybuf, int nrecl, int index,  int senc
             else{
                 int byte_size = nvert * 2 * sizeof(double);
                 total_byte_size += byte_size;
-                
+
                 tp->p_vertex = (double *)malloc(byte_size);
                 memmove(tp->p_vertex, m_buf_ptr, byte_size);
                 m_buf_ptr += byte_size;
@@ -461,7 +469,7 @@ PolyTessGeo::PolyTessGeo(unsigned char *polybuf, int nrecl, int index,  int senc
             not_finished = false;
     }                   // while
 
-    //  Convert the vertex arrays into a single float memory allocation to enable efficient access later
+   //  Convert the vertex arrays into a single float memory allocation to enable efficient access later
     if(senc_file_version > 122){
         unsigned char *vbuf = (unsigned char *)malloc(total_byte_size);
         TriPrim *p_tp = ppg->tri_prim_head;
@@ -1182,7 +1190,7 @@ void PolyTessGeo::GetRefPos( double *lat, double *lon)
 }
 
 
-#ifdef USE_GLU_TESS  // Soll bis Zeile:
+#ifdef USE_GLU_TESS
 
 
 #ifdef __WXMSW__
@@ -1199,9 +1207,8 @@ void __CALL_CONVENTION vertexCallback(GLvoid *vertex);
 void __CALL_CONVENTION combineCallback(GLdouble coords[3],
                      GLdouble *vertex_data[4],
                      GLfloat weight[4], GLdouble **dataOut );
-#endif  // WXOSX
-#if 0 //Anfang auskommentiert bis Zeile 1962 Fehler WXOSX
 
+#if 0  // WXOSX
 //      Build PolyTessGeo Object from OGR Polygon
 //      Using OpenGL/GLU tesselator
 int PolyTessGeo::PolyTessGeoGL(OGRPolygon *poly, bool bSENC_SM, double ref_lat, double ref_lon)
@@ -1589,7 +1596,7 @@ int PolyTessGeo::PolyTessGeoGL(OGRPolygon *poly, bool bSENC_SM, double ref_lat, 
 
     //  Convert the Triangle vertex arrays into a single memory allocation of floats
     //  to reduce SENC size and enable efficient access later
-    
+
     //  First calculate the total byte size
     int total_byte_size = 0;
     TriPrim *p_tp = m_ppg_head->tri_prim_head;
@@ -1597,7 +1604,7 @@ int PolyTessGeo::PolyTessGeoGL(OGRPolygon *poly, bool bSENC_SM, double ref_lat, 
         total_byte_size += p_tp->nVert * 2 * sizeof(float);
         p_tp = p_tp->p_next; // pick up the next in chain
     }
-    
+
     float *vbuf = (float *)malloc(total_byte_size);
     p_tp = m_ppg_head->tri_prim_head;
     float *p_run = vbuf;
@@ -1607,7 +1614,7 @@ int PolyTessGeo::PolyTessGeoGL(OGRPolygon *poly, bool bSENC_SM, double ref_lat, 
             float x = (float)(p_tp->p_vertex[i]);
             *p_run++ = x;
         }
-        
+
         free(p_tp->p_vertex);
         p_tp->p_vertex = (double *)pfbuf;
         p_tp = p_tp->p_next; // pick up the next in chain
@@ -1616,6 +1623,7 @@ int PolyTessGeo::PolyTessGeoGL(OGRPolygon *poly, bool bSENC_SM, double ref_lat, 
     m_ppg_head->single_buffer = (unsigned char *)vbuf;
     m_ppg_head->single_buffer_size = total_byte_size;
     m_ppg_head->data_type = DATA_TYPE_FLOAT;
+
 
     gluDeleteTess(GLUtessobj);
 
@@ -1631,11 +1639,11 @@ int PolyTessGeo::PolyTessGeoGL(OGRPolygon *poly, bool bSENC_SM, double ref_lat, 
 
     m_bOK = true;
 
-//#endif          //    #ifdef ocpnUSE_GL
+#endif          //    #ifdef ocpnUSE_GL
 
     return 0;
 }
-
+#endif
 int PolyTessGeo::BuildTessGL(void)
 {
 #ifdef ocpnUSE_GL
@@ -1956,13 +1964,17 @@ int PolyTessGeo::BuildTessGL(void)
 //  allowing for tess_orient
 //  Also, convert to SM if requested
 
-      int nptfinal = npta;
-    
+    int nptfinal; // Not used:  = npta;
+
       //  No longer need the full geometry in the SENC,
       nptfinal = 1;
-
+#ifdef __WXOSX__
+    nwkb = (nptfinal +1) * 2 * sizeof(float);
+    m_ppg_head->pgroup_geom = (float *)malloc(nwkb);
+#else
       m_nwkb = (nptfinal +1) * 2 * sizeof(float);
       m_ppg_head->pgroup_geom = (float *)malloc(m_nwkb);
+#endif
       float *vro = m_ppg_head->pgroup_geom;
       ppt = geoPt;
       float tx,ty;
@@ -1999,13 +2011,35 @@ int PolyTessGeo::BuildTessGL(void)
 
       m_ppg_head->tri_prim_head = s_pTPG_Head;         // head of linked list of TriPrims
 
-    int nptfinal = npta;
-    
-    //  No longer need the full geometry in the SENC,
-    nptfinal = 1;
-    
-    m_nwkb = (nptfinal +1) * 2 * sizeof(float);
-    m_ppg_head->pgroup_geom = (float *)malloc(m_nwkb);
+      //  Convert the Triangle vertex arrays into a single memory allocation of floats
+      //  to reduce SENC size and enable efficient access later
+
+      //  First calculate the total byte size
+      int total_byte_size = 0;
+      TriPrim *p_tp = m_ppg_head->tri_prim_head;
+      while( p_tp ) {
+          total_byte_size += p_tp->nVert * 2 * sizeof(float);
+          p_tp = p_tp->p_next; // pick up the next in chain
+      }
+
+      float *vbuf = (float *)malloc(total_byte_size);
+      p_tp = m_ppg_head->tri_prim_head;
+      float *p_run = vbuf;
+      while( p_tp ) {
+          float *pfbuf = p_run;
+          for( int i=0 ; i < p_tp->nVert * 2 ; ++i){
+              float x = (float)(p_tp->p_vertex[i]);
+              *p_run++ = x;
+          }
+
+          free(p_tp->p_vertex);
+          p_tp->p_vertex = (double *)pfbuf;
+          p_tp = p_tp->p_next; // pick up the next in chain
+      }
+      m_ppg_head->bsingle_alloc = true;
+      m_ppg_head->single_buffer = (unsigned char *)vbuf;
+      m_ppg_head->single_buffer_size = total_byte_size;
+      m_ppg_head->data_type = DATA_TYPE_FLOAT;
 
       gluDeleteTess(GLUtessobj);
 
@@ -2033,7 +2067,7 @@ int PolyTessGeo::BuildTessGL(void)
       return 0;
 }
 
-#endif // Ende WXOSX Fehler
+
 
 
 
@@ -2055,7 +2089,7 @@ void __CALL_CONVENTION errorCallback(GLenum errorCode)
     exit(0);
 }
 */
-
+#if 0  //  WXOSX
 void __CALL_CONVENTION endCallback(void)
 {
     //      Create a TriPrim
@@ -2166,7 +2200,7 @@ void __CALL_CONVENTION endCallback(void)
         }
     }
 }
-
+#endif
 void __CALL_CONVENTION vertexCallback(GLvoid *vertex)
 {
     GLdouble *pointer;

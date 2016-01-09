@@ -21,18 +21,12 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
-<<<<<<< HEAD
  ***************************************************************************/
-=======
- ***************************************************************************
- */
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
 #ifndef _LLREGION_H_
 #define _LLREGION_H_
 
 #include <list>
-<<<<<<< HEAD
 
 #ifdef __WXMSW__
 #include "GL/gl.h"            // local copy for Windows
@@ -47,9 +41,6 @@
 #include <GL/gl_private.h>              // this is a cut-down version of gl.h
 #endif
 #endif
-=======
-#include <GL/glu.h>
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
 
 #include "bbox.h"
 #include "cutil.h"
@@ -79,10 +70,7 @@ public:
     static bool PointsCCW( size_t n, const double *points );
     
     void Print() const;
-<<<<<<< HEAD
     void plot(const char*fn) const;
-=======
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
     
     LLBBox GetBox() const;
     bool IntersectOut(const LLBBox &box) const;
@@ -95,6 +83,8 @@ public:
     void Intersect(const LLRegion& region);
     void Union(const LLRegion& region);
     void Subtract(const LLRegion& region);
+
+    void Reduce(double factor);
 
     std::list<poly_contour> contours;
 

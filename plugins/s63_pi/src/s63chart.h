@@ -7,6 +7,7 @@
 
 #ifndef _S63CH_H_
 #define _S63CH_H_
+
 #include "wx/wxprec.h"
 #include <wx/wfstream.h>
 #include <wx/dynarray.h>
@@ -28,6 +29,7 @@ WX_DECLARE_HASH_MAP( unsigned int, PI_VC_Element *, wxIntegerHash, wxIntegerEqua
 WX_DECLARE_STRING_HASH_MAP( PI_connector_segment *, PI_connected_segment_hash );
 
 WX_DEFINE_ARRAY_DOUBLE(double, ArrayOfSortedDoubles);
+
 
 class PI_S57Light;
 
@@ -100,7 +102,7 @@ public:
 
 class  ChartS63 : public PlugInChartBaseGL
 {
-    wxDECLARE_DYNAMIC_CLASS(ChartS63);
+      DECLARE_DYNAMIC_CLASS(ChartS63)
 
     public:
       //    Public methods
@@ -187,13 +189,13 @@ protected:
       void              ResetPointBBoxes(const PlugIn_ViewPort &vp_last, const PlugIn_ViewPort &vp_this);
       void              SetLinePriorities(void);
       unsigned char     *GetSENCCryptKeyBuffer( const wxString& FullPath, size_t* bufsize );
-
-      void              FreeObjectsAndRules();
       
+      void              FreeObjectsAndRules();
+
       void              BuildLineVBO( void );
       void              AssembleLineGeometry( void );
-
-      // Rendering
+      
+        // Rendering
       bool DoRenderViewOnDC(wxMemoryDC& dc, const PlugIn_ViewPort& VPoint, bool force_new_view);
       bool DoRenderRegionViewOnDC(wxMemoryDC& dc, const PlugIn_ViewPort& VPoint, const wxRegion &Region, bool b_overlay);
       int DCRenderRect(wxMemoryDC& dcinput, const PlugIn_ViewPort& vp, wxRect *rect);
@@ -221,6 +223,8 @@ protected:
       
       void BuildDepthContourArray( void );
       void SetSafetyContour(void);
+      
+      
       int               my_fgets( char *buf, int buf_len_max, CryptInputStream &ifs );
 
       int               m_global_color_scheme;
@@ -276,12 +280,13 @@ protected:
       
       PI_VE_Hash     m_ve_hash;
       PI_VC_Hash     m_vc_hash;
-      
+
       PI_connected_segment_hash m_connector_hash;
       float      *m_line_vertex_buffer;
       size_t      m_vbo_byte_length;
       int         m_LineVBO_name;
-
+      
+      
       PI_S57Obj *razRules[PI_PRIO_NUM][PI_LUPNAME_NUM];
       
       //  Object arrays used by S52PLIB TOPMAR rendering logic
@@ -299,7 +304,7 @@ protected:
       bool              m_bcrypt_buffer_OK;
       unsigned char     *m_crypt_buffer;
       size_t            m_crypt_size;
-
+      
       double            m_next_safe_contour;
       bool              m_bexpired;
 
@@ -345,7 +350,7 @@ public:
     double      *pPoints;
     int         max_priority;
     size_t      vbo_offset;
-    //    wxBoundingBox BBox;
+//    wxBoundingBox BBox;
 };
 
 class PI_VC_Element

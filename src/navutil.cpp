@@ -2088,6 +2088,8 @@ void MyConfig::LoadS57Config()
 
     SetPath( _T ( "/Settings/GlobalState" ) );
     Read( _T ( "S52_DEPTH_UNIT_SHOW" ), &read_int, 1 );   // default is metres
+    read_int = wxMax(read_int, 0);                      // qualify value
+    read_int = wxMin(read_int, 2);
     ps52plib->m_nDepthUnitDisplay = read_int;
 
 //    S57 Object Class Visibility
@@ -3005,7 +3007,7 @@ bool MyConfig::ExportGPXRoutes( wxWindow* parent, RouteList *pRoutes, const wxSt
 {
     wxString path;
 
-    int response = g_Platform->DoFileSelectorDialog( NULL, &path,
+    int response = g_Platform->DoFileSelectorDialog( parent, &path,
                                                     _( "Export GPX file" ),
                                                     m_gpx_path,
                                                     suggestedName,
@@ -3064,7 +3066,7 @@ bool MyConfig::ExportGPXWaypoints( wxWindow* parent, RoutePointList *pRoutePoint
 {
     wxString path;
     
-    int response = g_Platform->DoFileSelectorDialog( NULL, &path,
+    int response = g_Platform->DoFileSelectorDialog( parent, &path,
                                                     _( "Export GPX file" ),
                                                     m_gpx_path,
                                                     suggestedName,
@@ -3113,7 +3115,7 @@ void MyConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
 {
     wxString path;
 
-    int response = g_Platform->DoFileSelectorDialog( NULL, &path,
+    int response = g_Platform->DoFileSelectorDialog( parent, &path,
                                                     _( "Export GPX file" ),
                                                     m_gpx_path,
                                                     _T("userobjects.gpx"),
@@ -3238,11 +3240,22 @@ void MyConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
                 wxT ( "GPX files (*.gpx)|*.gpx|All files (*.*)|*.*" ),
                 wxFD_OPEN | wxFD_MULTIPLE );
 
-        if(g_bresponsive)
+        if(g_bresponsive && parent)
             popenDialog = g_Platform->AdjustFileDialogFont(parent, popenDialog);
         
         popenDialog->Centre();
+
+#ifdef __WXOSX__
+        if(parent)
+            parent->HideWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
+
         response = popenDialog->ShowModal();
+
+#ifdef __WXOSX__
+        if(parent)
+            parent->ShowWithEffect(wxSHOW_EFFECT_BLEND );
+#endif
 
         if( response == wxID_OK ) {
             popenDialog->GetPaths( file_array );

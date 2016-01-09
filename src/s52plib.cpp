@@ -1655,7 +1655,7 @@ bool s52plib::RenderText( wxDC *pdc, S52_TextC *ptext, int x, int y, wxRect *pRe
   
             int old_size = ptext->pFont->GetPointSize();
             int new_size = old_size * scale_factor;
-            scaled_font = wxTheFontList->FindOrCreateFont( new_size, ptext->pFont->GetFamily(),
+            scaled_font = FontMgr::Get().FindOrCreateFont( new_size, ptext->pFont->GetFamily(),
                                                            ptext->pFont->GetStyle(), ptext->pFont->GetWeight(), false,
                                                            ptext->pFont->GetFaceName() );
             wxScreenDC sdc;
@@ -1892,7 +1892,7 @@ bool s52plib::RenderText( wxDC *pdc, S52_TextC *ptext, int x, int y, wxRect *pRe
                 wxFont *pf = ptext->pFont;
                 int old_size = pf->GetPointSize();
                 int new_size = old_size * scale_factor;
-                wxFont *scaled_font = wxTheFontList->FindOrCreateFont( new_size, pf->GetFamily(),
+                wxFont *scaled_font = FontMgr::Get().FindOrCreateFont( new_size, pf->GetFamily(),
                                                                        pf->GetStyle(), pf->GetWeight(), false,
                                                                        pf->GetFaceName() );
                 pdc->SetFont( *scaled_font);
@@ -2052,7 +2052,7 @@ int s52plib::RenderT_All( ObjRazRules *rzRules, Rules *rules, ViewPort *vp, bool
                     else
                         fontweight = wxFONTWEIGHT_BOLD;
 
-                text->pFont = wxTheFontList->FindOrCreateFont( text->bsize, wxFONTFAMILY_SWISS,
+                text->pFont = FontMgr::Get().FindOrCreateFont( text->bsize, wxFONTFAMILY_SWISS,
                         wxFONTSTYLE_NORMAL, fontweight );
             } else {
                 int spec_weight = text->weight - 0x30;
@@ -2088,7 +2088,7 @@ int s52plib::RenderT_All( ObjRazRules *rzRules, Rules *rules, ViewPort *vp, bool
                 // In no case should font size be less than 10, since it becomes unreadable
                 fontSize = wxMax(10, fontSize);
 
-                text->pFont = wxTheFontList->FindOrCreateFont( fontSize, wxFONTFAMILY_SWISS,
+                text->pFont = FontMgr::Get().FindOrCreateFont( fontSize, wxFONTFAMILY_SWISS,
                         templateFont->GetStyle(), fontweight, false, templateFont->GetFaceName() );
             }
         }
@@ -2397,9 +2397,15 @@ bool s52plib::RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
         scale_factor = wxMax((sfactor - g_overzoom_emphasis_base)  / 4., scale_factor);
         scale_factor = wxMin(scale_factor, 20);
     }
-    
-    int pivot_x = prule->pos.line.pivot_x.SYCL * scale_factor;
-    int pivot_y = prule->pos.line.pivot_y.SYRW * scale_factor;
+
+    int pivot_x = prule->pos.line.pivot_x.SYCL;
+    int pivot_y = prule->pos.line.pivot_y.SYRW;
+
+    //  bitmaps are not scaled down, only up.
+    if(scale_factor > 1.0){
+        pivot_x *= scale_factor;
+        pivot_y *= scale_factor;
+    }
 
     // For opengl, hopefully the symbols are loaded in a texture
     unsigned int texture = 0;
@@ -4116,9 +4122,11 @@ int s52plib::RenderCARC_VBO( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     CARC_Buffer buffer;
 
     float scale_factor = 1.0;
-    if(g_bresponsive){
-        scale_factor *= g_ChartScaleFactorExp;
-    }
+
+    // Light arcs are specified in terms of absolute dimensions on screen, and should not be scaled.
+//     if(g_bresponsive){
+//         scale_factor *= g_ChartScaleFactorExp;
+//     }
 
     if( !m_pdc ) // opengl
     {
@@ -7854,11 +7862,13 @@ void RenderFromHPGL::SetPen()
     // plib->canvas_pix_per_mm;
     scaleFactor = 100.0 / plib->GetPPMM();
 
-    if(g_bresponsive){
-        double scale_factor = 1.0;
-        scale_factor *=  g_ChartScaleFactorExp;
-        scaleFactor /= scale_factor;
-    }
+    // Vector rendered (HPGL) features are specified in terms of absolute dimensions on screen, and should not be scaled.
+
+//     if(g_bresponsive){
+//         double scale_factor = 1.0;
+//         scale_factor *=  g_ChartScaleFactorExp;
+//         scaleFactor /= scale_factor;
+//     }
 
     if( renderToDC ) {
         pen = wxThePenList->FindOrCreatePen( penColor, penWidth, wxPENSTYLE_SOLID );

@@ -56,15 +56,15 @@
 			buildPhases = (
 			);
 			dependencies = (
-				A65D60391C23442C00988D56 /* PBXTargetDependency */,
-				A6F037B61B73FBF000E82ECC /* PBXTargetDependency */,
-				A68035B31B2890A8007A4045 /* PBXTargetDependency */,
 				EAAB4E87696645CDAEA03510 /* PBXTargetDependency */,
 				785D38FA2EB248D992323ED9 /* PBXTargetDependency */,
 				71ADD26CEFF44A5FB372EE29 /* PBXTargetDependency */,
 				A645151F1AE50A3700933404 /* PBXTargetDependency */,
 				9D1F24F095AC45E38CA1BC4A /* PBXTargetDependency */,
+				A65D60391C23442C00988D56 /* PBXTargetDependency */,
 				99AA407E955648AB95C0E429 /* PBXTargetDependency */,
+				A6F037B61B73FBF000E82ECC /* PBXTargetDependency */,
+				A68035B31B2890A8007A4045 /* PBXTargetDependency */,
 				A68FF415184A686400C65557 /* PBXTargetDependency */,
 				A68EAB3E188745FB00893250 /* PBXTargetDependency */,
 				F77DFCA13D2344B689AE1176 /* PBXTargetDependency */,
@@ -77,7 +77,6 @@
 				C586B25222B24792A0958778 /* PBXTargetDependency */,
 				2494F4E9329A42DD8959E42C /* PBXTargetDependency */,
 				A60F749617A0321500A6160F /* PBXTargetDependency */,
-				A647085317A14AE400A16918 /* PBXTargetDependency */,
 				A683CEC71958BD52004A0137 /* PBXTargetDependency */,
 				A6B4A58317A5229300E3A5D0 /* PBXTargetDependency */,
 				A647C90619C3652D0034EA04 /* PBXTargetDependency */,
@@ -394,18 +393,6 @@
 		A64515101AE501CC00933404 /* telnet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A645150C1AE501CC00933404 /* telnet.cpp */; };
 		A64515111AE501CC00933404 /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A645150D1AE501CC00933404 /* thread.cpp */; };
 		A64515121AE501CC00933404 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A645150E1AE501CC00933404 /* utils.cpp */; };
-		A647084717A14A2800A16918 /* AboutDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084617A14A2800A16918 /* AboutDialog.cpp */; };
-		A647084917A14A4600A16918 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084817A14A4500A16918 /* icons.cpp */; };
-		A647084B17A14A6100A16918 /* watchman_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084A17A14A6100A16918 /* watchman_pi.cpp */; };
-		A647084D17A14A7B00A16918 /* WatchmanDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084C17A14A7B00A16918 /* WatchmanDialog.cpp */; };
-		A647084F17A14A9500A16918 /* WatchmanPrefsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647084E17A14A9500A16918 /* WatchmanPrefsDialog.cpp */; };
-		A647085117A14AB200A16918 /* WatchmanUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647085017A14AB200A16918 /* WatchmanUI.cpp */; };
-		A647A56D189EA3B000B71153 /* ddffield.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647A567189EA3B000B71153 /* ddffield.cpp */; };
-		A647A56E189EA3B000B71153 /* ddffielddefn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647A568189EA3B000B71153 /* ddffielddefn.cpp */; };
-		A647A56F189EA3B000B71153 /* ddfmodule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647A569189EA3B000B71153 /* ddfmodule.cpp */; };
-		A647A570189EA3B000B71153 /* ddfrecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647A56A189EA3B000B71153 /* ddfrecord.cpp */; };
-		A647A571189EA3B000B71153 /* ddfsubfielddefn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647A56B189EA3B000B71153 /* ddfsubfielddefn.cpp */; };
-		A647A572189EA3B000B71153 /* ddfutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A647A56C189EA3B000B71153 /* ddfutils.cpp */; };
 		A647C90719C365AD0034EA04 /* libsquiddio_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A671BCC719BE44BC00019119 /* libsquiddio_pi.dylib */; };
 		A64D13BC1A0FD5C600B92F84 /* xte.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64D13BB1A0FD5C600B92F84 /* xte.cpp */; };
 		A64EBB4F1B26FCB200F861D0 /* GuardZoneBogey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64EBB4D1B26FCB200F861D0 /* GuardZoneBogey.cpp */; };
@@ -453,7 +440,7 @@
 		A669B2041B37300100C440BF /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B2031B37300100C440BF /* md5.cpp */; };
 		A669B2061B37301F00C440BF /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B2051B37301F00C440BF /* pugixml.cpp */; };
 		A669B2081B37304100C440BF /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B2071B37304100C440BF /* TexFont.cpp */; };
-		A669B20D1B37496900C440BF /* libac_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A669B1E01B372B7400C440BF /* libac_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A669B20D1B37496900C440BF /* libac_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A669B1E01B372B7400C440BF /* libac_pi.dylib */; };
 		A669D4C51A2282860078BFB1 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A669D4C41A2282860078BFB1 /* sha1.c */; };
 		A66D8E2F18D2584E00BC8747 /* routeprintout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66D8E2E18D2584E00BC8747 /* routeprintout.cpp */; };
 		A66D8E3118D2607A00BC8747 /* printtable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66D8E3018D2607A00BC8747 /* printtable.cpp */; };
@@ -483,12 +470,13 @@
 		A6728C2119D4385100070B45 /* clcpopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6728C2019D4385100070B45 /* clcpopup.cpp */; };
 		A6728C2319D4388800070B45 /* wxsqlite3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6728C2219D4388800070B45 /* wxsqlite3.cpp */; };
 		A6728C2519D438B000070B45 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = A6728C2419D438B000070B45 /* sqlite3.c */; };
+		A6788BE81C3D64FF00E689C8 /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6788BE71C3D64A200E689C8 /* TexFont.cpp */; };
 		A67A0F1D178C3B540056F9C0 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F1C178C3B540056F9C0 /* pugixml.cpp */; };
 		A67A0F1F178C3B7F0056F9C0 /* OCPNRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F1E178C3B7F0056F9C0 /* OCPNRegion.cpp */; };
 		A67A0F22178C3C5D0056F9C0 /* NMEALogWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67A0F21178C3C5D0056F9C0 /* NMEALogWindow.cpp */; };
 		A68035B01B28857C007A4045 /* NmeaConverter_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68035A11B288376007A4045 /* NmeaConverter_pi.cpp */; };
 		A68035B11B28857C007A4045 /* ec_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68035A01B28835C007A4045 /* ec_engine.cpp */; };
-		A68035B41B2890D7007A4045 /* libnmeaconverter_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68035AF1B288508007A4045 /* libnmeaconverter_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A68035B41B2890D7007A4045 /* libnmeaconverter_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68035AF1B288508007A4045 /* libnmeaconverter_pi.dylib */; };
 		A683CEBB1958BC02004A0137 /* Alarm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A683CEBA1958BC02004A0137 /* Alarm.cpp */; };
 		A683CEBD1958BC19004A0137 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A683CEBC1958BC19004A0137 /* icons.cpp */; };
 		A683CEBF1958BC2E004A0137 /* watchdog_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A683CEBE1958BC2E004A0137 /* watchdog_pi.cpp */; };
@@ -501,13 +489,6 @@
 		A68EAB2818873DA300893250 /* mygeom63.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB2718873DA300893250 /* mygeom63.cpp */; };
 		A68EAB2A18873DC200893250 /* s63_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB2918873DC200893250 /* s63_pi.cpp */; };
 		A68EAB2E18873DFB00893250 /* tri.c in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB2D18873DFB00893250 /* tri.c */; };
-		A68EAB3018873E1A00893250 /* cpl_conv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB2F18873E1A00893250 /* cpl_conv.cpp */; };
-		A68EAB3218873E4D00893250 /* cpl_csv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB3118873E4D00893250 /* cpl_csv.cpp */; };
-		A68EAB3418873E7C00893250 /* cpl_error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB3318873E7C00893250 /* cpl_error.cpp */; };
-		A68EAB3718873EAE00893250 /* cpl_findfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB3518873EAE00893250 /* cpl_findfile.cpp */; };
-		A68EAB3818873EAE00893250 /* cpl_path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB3618873EAE00893250 /* cpl_path.cpp */; };
-		A68EAB3A18873ED000893250 /* cpl_string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB3918873ED000893250 /* cpl_string.cpp */; };
-		A68EAB3C18873EEE00893250 /* cpl_vsisimple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB3B18873EEE00893250 /* cpl_vsisimple.cpp */; };
 		A68FF40B184A673D00C65557 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF40A184A673D00C65557 /* icons.cpp */; };
 		A68FF40D184A676100C65557 /* PreferencesDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68FF40C184A676100C65557 /* PreferencesDialog.cpp */; };
 		A68FF416184A7B4D00C65557 /* libtrimplot_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68FF3FB184A62A700C65557 /* libtrimplot_pi.dylib */; };
@@ -538,7 +519,6 @@
 		A6AC8E7917EC64FC00872D7E /* libweatherfax_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = E267273284874D9283C4E4A5 /* libweatherfax_pi.dylib */; };
 		A6AC8E7A17EC64FC00872D7E /* libwmm_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 77C6E38DCF7B4BADA941B142 /* libwmm_pi.dylib */; };
 		A6AC8E7B17EC64FC00872D7E /* libcalculator_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A60F746517A0217D00A6160F /* libcalculator_pi.dylib */; };
-		A6AC8E7C17EC64FC00872D7E /* libwatchman_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6D583A617A141110094D709 /* libwatchman_pi.dylib */; };
 		A6AC8E7D17EC64FC00872D7E /* libweather_routing_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */; };
 		A6AD109D19B8CB7A009AC900 /* opencpn.icns in Resources */ = {isa = PBXBuildFile; fileRef = A6AD109C19B8CB7A009AC900 /* opencpn.icns */; };
 		A6AFFE691A29E0A900D10C76 /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6AFFE681A29E0A900D10C76 /* TexFont.cpp */; };
@@ -625,7 +605,7 @@
 		A6E0822D1AAB591B002CC7F0 /* viewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E0822C1AAB591B002CC7F0 /* viewport.cpp */; };
 		A6E0822F1AAB5931002CC7F0 /* canvasMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E0822E1AAB5931002CC7F0 /* canvasMenu.cpp */; };
 		A6E082311AAB5956002CC7F0 /* OCPNPlatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E082301AAB5956002CC7F0 /* OCPNPlatform.cpp */; };
-		A6F037B71B73FC2900E82ECC /* libdraw_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6DB33551B736C0400163272 /* libdraw_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A6F037B71B73FC2900E82ECC /* libdraw_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6DB33551B736C0400163272 /* libdraw_pi.dylib */; };
 		A6F5FF5A1AEB9B120034F6CF /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F5FF591AEB9B120034F6CF /* TexFont.cpp */; };
 		A7D85A911CD9440D88990DE9 /* lat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A34D3BDAF9D408F9D08642A /* lat.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A7FB0E99BAB54FE18BFC2CF1 /* PositionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1A7C66C95E44197A749D5E9 /* PositionParser.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -850,13 +830,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = A64514CB1AE4FF3000933404;
 			remoteInfo = wxCurl;
-		};
-		A647085217A14AE400A16918 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A6D5839C17A141110094D709;
-			remoteInfo = watchman_pi;
 		};
 		A647C90519C3652D0034EA04 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1098,7 +1071,6 @@
 				A6AC8E7917EC64FC00872D7E /* libweatherfax_pi.dylib in Copy Files */,
 				A6AC8E7A17EC64FC00872D7E /* libwmm_pi.dylib in Copy Files */,
 				A6AC8E7B17EC64FC00872D7E /* libcalculator_pi.dylib in Copy Files */,
-				A6AC8E7C17EC64FC00872D7E /* libwatchman_pi.dylib in Copy Files */,
 				A6AC8E7D17EC64FC00872D7E /* libweather_routing_pi.dylib in Copy Files */,
 			);
 			name = "Copy Files";
@@ -1641,25 +1613,6 @@
 		A645151C1AE501EA00933404 /* thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = thread.h; path = src/wxcurl/wx/curl/thread.h; sourceTree = "<group>"; };
 		A645151D1AE501EA00933404 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utils.h; path = src/wxcurl/wx/curl/utils.h; sourceTree = "<group>"; };
 		A64633D41956EE4100784D5B /* GribRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribRecord.h; path = plugins/grib_pi/src/GribRecord.h; sourceTree = "<group>"; };
-		A647084017A1486500A16918 /* AboutDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AboutDialog.h; path = plugins/watchman_pi/src/AboutDialog.h; sourceTree = "<group>"; };
-		A647084117A1489A00A16918 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/watchman_pi/src/icons.h; sourceTree = "<group>"; };
-		A647084217A148B600A16918 /* watchman_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = watchman_pi.h; path = plugins/watchman_pi/src/watchman_pi.h; sourceTree = "<group>"; };
-		A647084317A148D200A16918 /* WatchmanDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WatchmanDialog.h; path = plugins/watchman_pi/src/WatchmanDialog.h; sourceTree = "<group>"; };
-		A647084417A148EE00A16918 /* WatchmanPrefsDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WatchmanPrefsDialog.h; path = plugins/watchman_pi/src/WatchmanPrefsDialog.h; sourceTree = "<group>"; };
-		A647084517A1490E00A16918 /* WatchmanUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WatchmanUI.h; path = plugins/watchman_pi/src/WatchmanUI.h; sourceTree = "<group>"; };
-		A647084617A14A2800A16918 /* AboutDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AboutDialog.cpp; path = plugins/watchman_pi/src/AboutDialog.cpp; sourceTree = "<group>"; };
-		A647084817A14A4500A16918 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/watchman_pi/src/icons.cpp; sourceTree = "<group>"; };
-		A647084A17A14A6100A16918 /* watchman_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = watchman_pi.cpp; path = plugins/watchman_pi/src/watchman_pi.cpp; sourceTree = "<group>"; };
-		A647084C17A14A7B00A16918 /* WatchmanDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WatchmanDialog.cpp; path = plugins/watchman_pi/src/WatchmanDialog.cpp; sourceTree = "<group>"; };
-		A647084E17A14A9500A16918 /* WatchmanPrefsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WatchmanPrefsDialog.cpp; path = plugins/watchman_pi/src/WatchmanPrefsDialog.cpp; sourceTree = "<group>"; };
-		A647085017A14AB200A16918 /* WatchmanUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WatchmanUI.cpp; path = plugins/watchman_pi/src/WatchmanUI.cpp; sourceTree = "<group>"; };
-		A647A566189EA31100B71153 /* iso8211.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iso8211.h; path = plugins/S63_pi/src/myiso8211/iso8211.h; sourceTree = "<group>"; };
-		A647A567189EA3B000B71153 /* ddffield.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ddffield.cpp; path = plugins/S63_pi/src/myiso8211/ddffield.cpp; sourceTree = "<group>"; };
-		A647A568189EA3B000B71153 /* ddffielddefn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ddffielddefn.cpp; path = plugins/S63_pi/src/myiso8211/ddffielddefn.cpp; sourceTree = "<group>"; };
-		A647A569189EA3B000B71153 /* ddfmodule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ddfmodule.cpp; path = plugins/S63_pi/src/myiso8211/ddfmodule.cpp; sourceTree = "<group>"; };
-		A647A56A189EA3B000B71153 /* ddfrecord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ddfrecord.cpp; path = plugins/S63_pi/src/myiso8211/ddfrecord.cpp; sourceTree = "<group>"; };
-		A647A56B189EA3B000B71153 /* ddfsubfielddefn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ddfsubfielddefn.cpp; path = plugins/S63_pi/src/myiso8211/ddfsubfielddefn.cpp; sourceTree = "<group>"; };
-		A647A56C189EA3B000B71153 /* ddfutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ddfutils.cpp; path = plugins/S63_pi/src/myiso8211/ddfutils.cpp; sourceTree = "<group>"; };
 		A64D13BA1A0FD5A400B92F84 /* xte.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = xte.hpp; path = src/nmea0183/xte.hpp; sourceTree = "<group>"; };
 		A64D13BB1A0FD5C600B92F84 /* xte.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xte.cpp; path = src/nmea0183/xte.cpp; sourceTree = "<group>"; };
 		A64EBB4D1B26FCB200F861D0 /* GuardZoneBogey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GuardZoneBogey.cpp; path = plugins/BR24radar_pi/src/GuardZoneBogey.cpp; sourceTree = "<group>"; };
@@ -1799,6 +1752,7 @@
 		A6728C2419D438B000070B45 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sqlite3.c; path = "plugins/objsearch_pi/sqlite-amalgamation-3080600/sqlite3.c"; sourceTree = "<group>"; };
 		A6760CFC17DDE8E5009D4067 /* osx_helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = osx_helpers.h; path = include/osx_helpers.h; sourceTree = "<group>"; };
 		A677CF8018BB784100970057 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = include/version.h; sourceTree = "<group>"; };
+		A6788BE71C3D64A200E689C8 /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/S63_pi/src/TexFont.cpp; sourceTree = "<group>"; };
 		A67A0F1B178C3AFF0056F9C0 /* OCPNRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCPNRegion.h; path = include/OCPNRegion.h; sourceTree = "<group>"; };
 		A67A0F1C178C3B540056F9C0 /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pugixml.cpp; path = src/pugixml.cpp; sourceTree = "<group>"; };
 		A67A0F1E178C3B7F0056F9C0 /* OCPNRegion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OCPNRegion.cpp; path = src/OCPNRegion.cpp; sourceTree = "<group>"; };
@@ -1842,13 +1796,6 @@
 		A68EAB0C18873BC500893250 /* s63_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = s63_pi.h; path = plugins/S63_pi/src/s63_pi.h; sourceTree = "<group>"; };
 		A68EAB0F18873C3300893250 /* s63chart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = s63chart.h; path = plugins/S63_pi/src/s63chart.h; sourceTree = "<group>"; };
 		A68EAB1118873C5800893250 /* triangulate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = triangulate.h; path = plugins/S63_pi/src/triangulate.h; sourceTree = "<group>"; };
-		A68EAB1318873CA500893250 /* cpl_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpl_config.h; path = plugins/S63_pi/src/cpl/cpl_config.h; sourceTree = "<group>"; };
-		A68EAB1518873CC400893250 /* cpl_conv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpl_conv.h; path = plugins/S63_pi/src/cpl/cpl_conv.h; sourceTree = "<group>"; };
-		A68EAB1718873CEE00893250 /* cpl_csv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpl_csv.h; path = plugins/S63_pi/src/cpl/cpl_csv.h; sourceTree = "<group>"; };
-		A68EAB1918873D0D00893250 /* cpl_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpl_error.h; path = plugins/S63_pi/src/cpl/cpl_error.h; sourceTree = "<group>"; };
-		A68EAB1B18873D3000893250 /* cpl_port.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpl_port.h; path = plugins/S63_pi/src/cpl/cpl_port.h; sourceTree = "<group>"; };
-		A68EAB1D18873D5300893250 /* cpl_string.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpl_string.h; path = plugins/S63_pi/src/cpl/cpl_string.h; sourceTree = "<group>"; };
-		A68EAB1E18873D5300893250 /* cpl_vsi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpl_vsi.h; path = plugins/S63_pi/src/cpl/cpl_vsi.h; sourceTree = "<group>"; };
 		A68EAB2118873D7A00893250 /* gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gl.h; path = plugins/S63_pi/src/GL/gl.h; sourceTree = "<group>"; };
 		A68EAB2218873D7A00893250 /* glext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glext.h; path = plugins/S63_pi/src/GL/glext.h; sourceTree = "<group>"; };
 		A68EAB2318873D7A00893250 /* glu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glu.h; path = plugins/S63_pi/src/GL/glu.h; sourceTree = "<group>"; };
@@ -1856,13 +1803,6 @@
 		A68EAB2918873DC200893250 /* s63_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = s63_pi.cpp; path = plugins/S63_pi/src/s63_pi.cpp; sourceTree = "<group>"; };
 		A68EAB2B18873DDF00893250 /* s63chart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = s63chart.cpp; path = plugins/S63_pi/src/s63chart.cpp; sourceTree = "<group>"; };
 		A68EAB2D18873DFB00893250 /* tri.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tri.c; path = plugins/S63_pi/src/tri.c; sourceTree = "<group>"; };
-		A68EAB2F18873E1A00893250 /* cpl_conv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpl_conv.cpp; path = plugins/S63_pi/src/cpl/cpl_conv.cpp; sourceTree = "<group>"; };
-		A68EAB3118873E4D00893250 /* cpl_csv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpl_csv.cpp; path = plugins/S63_pi/src/cpl/cpl_csv.cpp; sourceTree = "<group>"; };
-		A68EAB3318873E7C00893250 /* cpl_error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpl_error.cpp; path = plugins/S63_pi/src/cpl/cpl_error.cpp; sourceTree = "<group>"; };
-		A68EAB3518873EAE00893250 /* cpl_findfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpl_findfile.cpp; path = plugins/S63_pi/src/cpl/cpl_findfile.cpp; sourceTree = "<group>"; };
-		A68EAB3618873EAE00893250 /* cpl_path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpl_path.cpp; path = plugins/S63_pi/src/cpl/cpl_path.cpp; sourceTree = "<group>"; };
-		A68EAB3918873ED000893250 /* cpl_string.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpl_string.cpp; path = plugins/S63_pi/src/cpl/cpl_string.cpp; sourceTree = "<group>"; };
-		A68EAB3B18873EEE00893250 /* cpl_vsisimple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cpl_vsisimple.cpp; path = plugins/S63_pi/src/cpl/cpl_vsisimple.cpp; sourceTree = "<group>"; };
 		A68FF3FB184A62A700C65557 /* libtrimplot_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libtrimplot_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A68FF405184A669700C65557 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/trimplot_pi/src/icons.h; sourceTree = "<group>"; };
 		A68FF406184A66B900C65557 /* PreferencesDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencesDialog.h; path = plugins/trimplot_pi/src/PreferencesDialog.h; sourceTree = "<group>"; };
@@ -1975,7 +1915,7 @@
 		A6D0E73217A915000031E658 /* SchedulesDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SchedulesDialog.cpp; path = plugins/weatherfax_pi/src/SchedulesDialog.cpp; sourceTree = "<group>"; };
 		A6D0E73417A915330031E658 /* AboutDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AboutDialog.cpp; path = plugins/weatherfax_pi/src/AboutDialog.cpp; sourceTree = "<group>"; };
 		A6D0E73617A9155C0031E658 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/weatherfax_pi/src/icons.cpp; sourceTree = "<group>"; };
-		A6D583A617A141110094D709 /* libwatchman_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libwatchman_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6D8BDA71C2DCF48006AD24B /* wddc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wddc.h; path = plugins/watchdog_pi/src/wddc.h; sourceTree = "<group>"; };
 		A6DB19DC18EDCDD400E643D2 /* libBR24radar_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libBR24radar_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6DB19DD18EDCE2600E643D2 /* br24radar_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = br24radar_pi.h; path = plugins/BR24radar_pi/src/br24radar_pi.h; sourceTree = "<group>"; };
 		A6DB19DE18EDCE4200E643D2 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/BR24radar_pi/src/icons.h; sourceTree = "<group>"; };
@@ -2738,7 +2678,6 @@
 				A68FF402184A660100C65557 /* trimplot_pi */,
 				A68EAAFB1887381400893250 /* s63_pi */,
 				A683CEB11958A663004A0137 /* watchdog_pi */,
-				A6D583AB17A141880094D709 /* watchman_pi */,
 				A6B4A53A17A5163C00E3A5D0 /* weather_routing_pi */,
 				BAEF057CB9D547249F4426BB /* weatherfax_pi */,
 				434C4673FD18472FAE1F6B03 /* wmm_pi */,
@@ -3459,6 +3398,7 @@
 				A683CEB71958BB1F004A0137 /* WatchdogDialog.h */,
 				A683CEB81958BB41004A0137 /* WatchdogPrefsDialog.h */,
 				A683CEB91958BB60004A0137 /* WatchdogUI.h */,
+				A6D8BDA71C2DCF48006AD24B /* wddc.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -3486,14 +3426,6 @@
 				A68EAB1118873C5800893250 /* triangulate.h */,
 				A68EAB0A18873BA200893250 /* pi_s52s57.h */,
 				A68EAB0818873B7F00893250 /* ocpn_plugin.h */,
-				A68EAB1318873CA500893250 /* cpl_config.h */,
-				A68EAB1518873CC400893250 /* cpl_conv.h */,
-				A68EAB1718873CEE00893250 /* cpl_csv.h */,
-				A68EAB1918873D0D00893250 /* cpl_error.h */,
-				A68EAB1B18873D3000893250 /* cpl_port.h */,
-				A68EAB1D18873D5300893250 /* cpl_string.h */,
-				A68EAB1E18873D5300893250 /* cpl_vsi.h */,
-				A647A566189EA31100B71153 /* iso8211.h */,
 				A62034EF18B910E9000A2376 /* dsa_utils.h */,
 				A62034F018B91129000A2376 /* mp_math.h */,
 				A62034F118B91185000A2376 /* sha1.h */,
@@ -3505,22 +3437,10 @@
 			isa = PBXGroup;
 			children = (
 				A68EAB2718873DA300893250 /* mygeom63.cpp */,
-				A68EAB3B18873EEE00893250 /* cpl_vsisimple.cpp */,
-				A68EAB3918873ED000893250 /* cpl_string.cpp */,
-				A68EAB3518873EAE00893250 /* cpl_findfile.cpp */,
-				A68EAB3618873EAE00893250 /* cpl_path.cpp */,
-				A68EAB3318873E7C00893250 /* cpl_error.cpp */,
-				A68EAB3118873E4D00893250 /* cpl_csv.cpp */,
-				A68EAB2F18873E1A00893250 /* cpl_conv.cpp */,
 				A68EAB2D18873DFB00893250 /* tri.c */,
 				A68EAB2B18873DDF00893250 /* s63chart.cpp */,
 				A68EAB2918873DC200893250 /* s63_pi.cpp */,
-				A647A567189EA3B000B71153 /* ddffield.cpp */,
-				A647A568189EA3B000B71153 /* ddffielddefn.cpp */,
-				A647A569189EA3B000B71153 /* ddfmodule.cpp */,
-				A647A56A189EA3B000B71153 /* ddfrecord.cpp */,
-				A647A56B189EA3B000B71153 /* ddfsubfielddefn.cpp */,
-				A647A56C189EA3B000B71153 /* ddfutils.cpp */,
+				A6788BE71C3D64A200E689C8 /* TexFont.cpp */,
 				A62034F218B911BC000A2376 /* dsa_utils.cpp */,
 				A62034F418B9126E000A2376 /* mp_math.c */,
 				A62034F618B91291000A2376 /* sha1.c */,
@@ -3647,41 +3567,6 @@
 				A6520DEB19013911006FB056 /* decompress.c */,
 				A6520DED1901392B006FB056 /* huffman.c */,
 				A6520DEF19013947006FB056 /* randtable.c */,
-			);
-			name = "Source Files";
-			sourceTree = "<group>";
-		};
-		A6D583AB17A141880094D709 /* watchman_pi */ = {
-			isa = PBXGroup;
-			children = (
-				A6D583AC17A1419B0094D709 /* Header Files */,
-				A6D583AD17A141AE0094D709 /* Source Files */,
-			);
-			name = watchman_pi;
-			sourceTree = "<group>";
-		};
-		A6D583AC17A1419B0094D709 /* Header Files */ = {
-			isa = PBXGroup;
-			children = (
-				A647084017A1486500A16918 /* AboutDialog.h */,
-				A647084117A1489A00A16918 /* icons.h */,
-				A647084217A148B600A16918 /* watchman_pi.h */,
-				A647084317A148D200A16918 /* WatchmanDialog.h */,
-				A647084417A148EE00A16918 /* WatchmanPrefsDialog.h */,
-				A647084517A1490E00A16918 /* WatchmanUI.h */,
-			);
-			name = "Header Files";
-			sourceTree = "<group>";
-		};
-		A6D583AD17A141AE0094D709 /* Source Files */ = {
-			isa = PBXGroup;
-			children = (
-				A647084617A14A2800A16918 /* AboutDialog.cpp */,
-				A647084817A14A4500A16918 /* icons.cpp */,
-				A647084A17A14A6100A16918 /* watchman_pi.cpp */,
-				A647084C17A14A7B00A16918 /* WatchmanDialog.cpp */,
-				A647084E17A14A9500A16918 /* WatchmanPrefsDialog.cpp */,
-				A647085017A14AB200A16918 /* WatchmanUI.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3954,7 +3839,6 @@
 				E267273284874D9283C4E4A5 /* libweatherfax_pi.dylib */,
 				77C6E38DCF7B4BADA941B142 /* libwmm_pi.dylib */,
 				A60F746517A0217D00A6160F /* libcalculator_pi.dylib */,
-				A6D583A617A141110094D709 /* libwatchman_pi.dylib */,
 				A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */,
 				A68FF3FB184A62A700C65557 /* libtrimplot_pi.dylib */,
 				A68EAB02188739ED00893250 /* libs63_pi.dylib */,
@@ -4508,22 +4392,6 @@
 			productReference = A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		A6D5839C17A141110094D709 /* watchman_pi */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A6D583A317A141110094D709 /* Build configuration list for PBXNativeTarget "watchman_pi" */;
-			buildPhases = (
-				A6D5839F17A141110094D709 /* Sources */,
-				A6B7B9041AD87DE3004FFAF2 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = watchman_pi;
-			productName = gradar_pi;
-			productReference = A6D583A617A141110094D709 /* libwatchman_pi.dylib */;
-			productType = "com.apple.product-type.library.dynamic";
-		};
 		A6DB19BA18EDCDD300E643D2 /* BR24radar_pi */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A6DB19D918EDCDD300E643D2 /* Build configuration list for PBXNativeTarget "BR24radar_pi" */;
@@ -4693,12 +4561,11 @@
 				EC9D9FEC13434F67B90D988A /* weatherfax_pi */,
 				D06C62D335654D1D99D14B3F /* wmm_pi */,
 				A60F745B17A0217D00A6160F /* calculator_pi */,
-				A6D5839C17A141110094D709 /* watchman_pi */,
+				A683CEA31958A550004A0137 /* watchdog_pi */,
 				A6B4A52F17A515FA00E3A5D0 /* weather_routing_pi */,
 				A68FF3D8184A62A700C65557 /* trimplot_pi */,
 				A68EAB01188739ED00893250 /* s63_pi */,
 				A6DB19BA18EDCDD300E643D2 /* BR24radar_pi */,
-				A683CEA31958A550004A0137 /* watchdog_pi */,
 				A671BCBC19BE44BC00019119 /* squiddio_pi */,
 				A6728C0219D4327900070B45 /* objsearch_pi */,
 				A632207B1AE047E700A52EAC /* chartdldr_pi */,
@@ -4945,20 +4812,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwmm_pi.dylib\n";
-			showEnvVarsInLog = 0;
-		};
-		A6B7B9041AD87DE3004FFAF2 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwatchman_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwatchman_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwatchman_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwatchman_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwatchman_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwatchman_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwatchman_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwatchman_pi.dylib\n";
 			showEnvVarsInLog = 0;
 		};
 		A6B7B9051AD87EAA004FFAF2 /* ShellScript */ = {
@@ -5542,26 +5395,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A62034F718B91291000A2376 /* sha1.c in Sources */,
-				A68EAB3718873EAE00893250 /* cpl_findfile.cpp in Sources */,
-				A68EAB2E18873DFB00893250 /* tri.c in Sources */,
-				A68EAB3818873EAE00893250 /* cpl_path.cpp in Sources */,
-				A62034F518B9126E000A2376 /* mp_math.c in Sources */,
-				A68EAB3A18873ED000893250 /* cpl_string.cpp in Sources */,
-				A647A56E189EA3B000B71153 /* ddffielddefn.cpp in Sources */,
-				A647A570189EA3B000B71153 /* ddfrecord.cpp in Sources */,
-				A686855D1888546800427E41 /* s63chart.cpp in Sources */,
-				A68EAB3418873E7C00893250 /* cpl_error.cpp in Sources */,
-				A68EAB3218873E4D00893250 /* cpl_csv.cpp in Sources */,
-				A68EAB3C18873EEE00893250 /* cpl_vsisimple.cpp in Sources */,
-				A68EAB2818873DA300893250 /* mygeom63.cpp in Sources */,
-				A647A56F189EA3B000B71153 /* ddfmodule.cpp in Sources */,
 				A68EAB2A18873DC200893250 /* s63_pi.cpp in Sources */,
-				A647A571189EA3B000B71153 /* ddfsubfielddefn.cpp in Sources */,
+				A62034F718B91291000A2376 /* sha1.c in Sources */,
+				A68EAB2E18873DFB00893250 /* tri.c in Sources */,
+				A62034F518B9126E000A2376 /* mp_math.c in Sources */,
+				A686855D1888546800427E41 /* s63chart.cpp in Sources */,
+				A6788BE81C3D64FF00E689C8 /* TexFont.cpp in Sources */,
+				A68EAB2818873DA300893250 /* mygeom63.cpp in Sources */,
 				A62034F318B911BC000A2376 /* dsa_utils.cpp in Sources */,
-				A68EAB3018873E1A00893250 /* cpl_conv.cpp in Sources */,
-				A647A572189EA3B000B71153 /* ddfutils.cpp in Sources */,
-				A647A56D189EA3B000B71153 /* ddffield.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5617,19 +5458,6 @@
 				A6520DCB190039A3006FB056 /* tinyxmlparser.cpp in Sources */,
 				A6B4A58617A528B400E3A5D0 /* GribRecord.cpp in Sources */,
 				A6B4A58717A528FF00E3A5D0 /* zuFile.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A6D5839F17A141110094D709 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A647084717A14A2800A16918 /* AboutDialog.cpp in Sources */,
-				A647084917A14A4600A16918 /* icons.cpp in Sources */,
-				A647084B17A14A6100A16918 /* watchman_pi.cpp in Sources */,
-				A647084D17A14A7B00A16918 /* WatchmanDialog.cpp in Sources */,
-				A647084F17A14A9500A16918 /* WatchmanPrefsDialog.cpp in Sources */,
-				A647085117A14AB200A16918 /* WatchmanUI.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5917,11 +5745,6 @@
 			isa = PBXTargetDependency;
 			target = A64514CB1AE4FF3000933404 /* wxCurl */;
 			targetProxy = A645151E1AE50A3700933404 /* PBXContainerItemProxy */;
-		};
-		A647085317A14AE400A16918 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A6D5839C17A141110094D709 /* watchman_pi */;
-			targetProxy = A647085217A14AE400A16918 /* PBXContainerItemProxy */;
 		};
 		A647C90619C3652D0034EA04 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9448,7 +9271,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					watchman_pi_EXPORTS,
+					watchdog_pi_EXPORTS,
 					"'_FILE_OFFSET_BITS=64'",
 					WXUSINGDLL,
 					__WXMAC__,
@@ -9475,6 +9298,7 @@
 					/usr/X11/include/GL,
 				);
 				INSTALL_PATH = Debug;
+				LD_GENERATE_MAP_FILE = YES;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -9559,7 +9383,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					watchman_pi_EXPORTS,
+					watchdog_pi_EXPORTS,
 					"'_FILE_OFFSET_BITS=64'",
 					WXUSINGDLL,
 					__WXMAC__,
@@ -9586,6 +9410,7 @@
 					/usr/X11/include/GL,
 				);
 				INSTALL_PATH = Release;
+				LD_GENERATE_MAP_FILE = YES;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -9674,6 +9499,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
 				EXECUTABLE_SUFFIX = .dylib;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -9715,9 +9542,10 @@
 					/usr/X11/include/GL,
 				);
 				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
+				LD_GENERATE_MAP_FILE = YES;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CFLAGS = (
 					"-arch",
 					x86_64,
@@ -9803,8 +9631,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
+				DEBUG_INFORMATION_FORMAT = "";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				ENABLE_NS_ASSERTIONS = YES;
 				EXECUTABLE_PREFIX = lib;
 				EXECUTABLE_SUFFIX = .dylib;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -9845,9 +9675,10 @@
 					/usr/X11/include/GL,
 				);
 				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
+				LD_GENERATE_MAP_FILE = YES;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CFLAGS = (
 					"-arch",
 					x86_64,
@@ -10352,230 +10183,6 @@
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = weather_routing_pi;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Release;
-		};
-		A6D583A417A141110094D709 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_COMPATIBILITY_VERSION = "";
-				DYLIB_CURRENT_VERSION = "";
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .dylib;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					watchman_pi_EXPORTS,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					ocpnUSE_GL,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src",
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src/libaudiofile",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
-				LIBRARY_STYLE = DYNAMIC;
-				OTHER_CFLAGS = (
-					"-arch",
-					x86_64,
-					"-fPIC",
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-g",
-					"-fno-strict-aliasing",
-					"-O3",
-					"-fvisibility=hidden",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"-arch",
-					x86_64,
-					"-Wno-deprecated",
-					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-3.1",
-					"-fPIC",
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-g",
-					"-fno-strict-aliasing",
-					"-O3",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-					"-dynamiclib",
-					"-headerpad_max_install_names",
-					"-L/usr/local/lib",
-					"-framework",
-					IOKit,
-					"-framework",
-					Carbon,
-					"-framework",
-					Cocoa,
-					"-framework",
-					AudioToolbox,
-					"-framework",
-					System,
-					"-framework",
-					OpenGL,
-					"-lwx_baseu-3.1",
-					"-lwx_osx_cocoau_core-3.1",
-					"-lwx_baseu_net-3.1",
-					"-lwx_baseu_xml-3.1",
-					"-lwx_osx_cocoau_html-3.1",
-					"-lwx_osx_cocoau_adv-3.1",
-					"-lwx_osx_cocoau_aui-3.1",
-					"-lwx_osx_cocoau_gl-3.1",
-					"-framework",
-					AGL,
-				);
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = watchman_pi;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(PROJECT_DIR)/buildXcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Debug;
-		};
-		A6D583A517A141110094D709 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_COMPATIBILITY_VERSION = "";
-				DYLIB_CURRENT_VERSION = "";
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .dylib;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					watchman_pi_EXPORTS,
-					"'_FILE_OFFSET_BITS=64'",
-					WXUSINGDLL,
-					__WXMAC__,
-					__WXOSX__,
-					__WXOSX_COCOA__,
-					ocpnUSE_GL,
-					USE_GLU_TESS,
-					TIXML_USE_STL,
-					USE_S57,
-					USE_GARMINHOST,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src",
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/plugins/watchman_pi/src/libaudiofile",
-					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
-					"/usr/local/include/wx-3.1",
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/include",
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/src",
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
-					/opt/local/include,
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
-					"/Volumes/MacBook\\ HD/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
-					/usr/X11/include,
-					/usr/X11/include/GL,
-				);
-				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
-				LIBRARY_STYLE = DYNAMIC;
-				OTHER_CFLAGS = (
-					"-arch",
-					x86_64,
-					"-fPIC",
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-g",
-					"-fno-strict-aliasing",
-					"-O3",
-					"-fvisibility=hidden",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"-arch",
-					x86_64,
-					"-Wno-deprecated",
-					"-Wno-deprecated-declarations",
-					"-I/usr/local/include/wx-3.1",
-					"-fPIC",
-					"-Wall",
-					"-Wno-unused",
-					"-fexceptions",
-					"-g",
-					"-fno-strict-aliasing",
-					"-O3",
-					"-fvisibility=hidden",
-				);
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-					"-dynamiclib",
-					"-headerpad_max_install_names",
-					"-L/usr/local/lib",
-					"-framework",
-					IOKit,
-					"-framework",
-					Carbon,
-					"-framework",
-					Cocoa,
-					"-framework",
-					AudioToolbox,
-					"-framework",
-					System,
-					"-framework",
-					OpenGL,
-					"-lwx_baseu-3.1",
-					"-lwx_osx_cocoau_core-3.1",
-					"-lwx_baseu_net-3.1",
-					"-lwx_baseu_xml-3.1",
-					"-lwx_osx_cocoau_html-3.1",
-					"-lwx_osx_cocoau_adv-3.1",
-					"-lwx_osx_cocoau_aui-3.1",
-					"-lwx_osx_cocoau_gl-3.1",
-					"-framework",
-					AGL,
-				);
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = watchman_pi;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";
 				USE_HEADERMAP = NO;
@@ -12784,15 +12391,6 @@
 			buildConfigurations = (
 				A6B4A53717A515FA00E3A5D0 /* Debug */,
 				A6B4A53817A515FA00E3A5D0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		A6D583A317A141110094D709 /* Build configuration list for PBXNativeTarget "watchman_pi" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A6D583A417A141110094D709 /* Debug */,
-				A6D583A517A141110094D709 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

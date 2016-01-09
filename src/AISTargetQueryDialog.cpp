@@ -206,7 +206,7 @@ bool AISTargetQueryDialog::Create( wxWindow* parent, wxWindowID id, const wxStri
 #ifdef __WXGTK__
     face = _T("Monospace");
 #endif
-    m_basefont = wxTheFontList->FindOrCreateFont( font_size, wxFONTFAMILY_MODERN,
+    m_basefont = FontMgr::Get().FindOrCreateFont( font_size, wxFONTFAMILY_MODERN,
                       wxFONTSTYLE_NORMAL, dFont->GetWeight(), false, face );
 
     SetFont( *m_basefont );
@@ -255,7 +255,7 @@ void AISTargetQueryDialog::RecalculateSize()
 #ifdef __WXGTK__
     face = _T("Monospace");
 #endif
-    m_basefont = wxTheFontList->FindOrCreateFont( font_size, wxFONTFAMILY_MODERN,
+    m_basefont = FontMgr::Get().FindOrCreateFont( font_size, wxFONTFAMILY_MODERN,
                                                  wxFONTSTYLE_NORMAL, dFont->GetWeight(), false, face );
     
     SetFont( *m_basefont );
@@ -428,7 +428,7 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
         wxSize psz = g_Platform->getDisplaySize();
         
         wxScreenDC dc;
-        wxFont *tFont = wxTheFontList->FindOrCreateFont( m_control_font_size, wxFONTFAMILY_MODERN,
+        wxFont *tFont = FontMgr::Get().FindOrCreateFont( m_control_font_size, wxFONTFAMILY_MODERN,
                                                         wxFONTSTYLE_NORMAL, m_basefont->GetWeight(), false,
                                                         m_basefont->GetFaceName() );
         dc.SetFont(*tFont);
@@ -442,7 +442,7 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
             
             float font_size = m_control_font_size / delta;
             
-            wxFont *fp_font = wxTheFontList->FindOrCreateFont( font_size, wxFONTFAMILY_MODERN,
+            wxFont *fp_font = FontMgr::Get().FindOrCreateFont( font_size, wxFONTFAMILY_MODERN,
                                                               wxFONTSTYLE_NORMAL, m_basefont->GetWeight(), false,
                                                               m_basefont->GetFaceName() );
             
@@ -482,7 +482,7 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
 void AISTargetQueryDialog::RenderHTMLQuery(AIS_Target_Data *td)
 {
     int font_size = m_adjustedFontSize;
-    wxFont *fp_font = wxTheFontList->FindOrCreateFont( font_size, wxFONTFAMILY_MODERN,
+    wxFont *fp_font = FontMgr::Get().FindOrCreateFont( font_size, wxFONTFAMILY_MODERN,
                                                       wxFONTSTYLE_NORMAL, m_basefont->GetWeight(),
                                                       false, m_basefont->GetFaceName() );
     

@@ -58,23 +58,21 @@ public:
         b_include = false;
         b_eclipsed = false;
         b_locked = false;
+        last_factor = -1;
     }
 
-    LLRegion &GetCandidateRegion();
+    const LLRegion &GetCandidateRegion();
+    LLRegion &GetReducedCandidateRegion(double factor);
     
     int dbIndex;
     int ChartScale;
     bool b_include;
     bool b_eclipsed;
-<<<<<<< HEAD
     bool b_locked;
 
 private:
-=======
-    
-private:    
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
-    LLRegion candidate_region;
+    double last_factor;
+    LLRegion reduced_candidate_region;
 
 };
 

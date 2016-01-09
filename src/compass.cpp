@@ -54,11 +54,14 @@ ocpnCompass::ocpnCompass()
     m_pStatBoxToolStaticBmp = NULL;
 
     m_rect = wxRect(style->GetCompassXOffset(), style->GetCompassYOffset(),
-            _img_compass.GetWidth() + _img_gpsRed.GetWidth() + style->GetCompassLeftMargin() * 2
+                    _img_compass.GetWidth() + _img_gpsRed.GetWidth() + style->GetCompassLeftMargin() * 2
                     + style->GetToolSeparation(),
                     _img_compass.GetHeight() + style->GetCompassTopMargin() + style->GetCompassBottomMargin() );
-    texobj = 0;
 
+#ifdef ocpnUSE_GL
+    texobj = 0;
+#endif
+    
 }
 
 ocpnCompass::~ocpnCompass()
@@ -188,6 +191,7 @@ void ocpnCompass::CreateBmp( bool newColorScheme )
         topmargin = style->GetCompassTopMargin();
         toolsize = style->GetToolSize();
         toolsize.x *= 2;
+        toolsize.x += leftmargin * 2;
         radius = style->GetCompassCornerRadius();
 
         if( orient ) style->SetOrientation( wxTB_VERTICAL );
@@ -221,10 +225,14 @@ void ocpnCompass::CreateBmp( bool newColorScheme )
     if( !b_need_refresh )
         return;
 
+    //     m_StatBmp.Create(
+    //         m_scale * ( ( _img_compass.GetWidth() + _img_gpsRed.GetWidth() ) + style->GetCompassLeftMargin() * 2
+    //         + style->GetToolSeparation()),
+    //                    m_scale * (_img_compass.GetHeight() + style->GetCompassTopMargin() + style->GetCompassBottomMargin()) );
+
     m_StatBmp.Create(
-        m_scale * ( ( _img_compass.GetWidth() + _img_gpsRed.GetWidth() ) + style->GetCompassLeftMargin() * 2
-        + style->GetToolSeparation()),
-                   m_scale * (_img_compass.GetHeight() + style->GetCompassTopMargin() + style->GetCompassBottomMargin()) );
+        ( ( compassBg.GetWidth() + gpsBg.GetWidth() ) + leftmargin * 2 + style->GetToolSeparation()),
+                     (compassBg.GetHeight() + topmargin + style->GetCompassBottomMargin()) );
     
     if( !m_StatBmp.IsOk() )
         return;
@@ -293,6 +301,7 @@ void ocpnCompass::CreateBmp( bool newColorScheme )
 
     mdc.DrawBitmap( iconBm, offset );
     offset.x += iconBm.GetWidth();
+    offset.x += style->GetToolSeparation();
 
     m_rose_angle = rose_angle;
 

@@ -55,12 +55,9 @@ void bmdump(wxBitmap bm, wxString name)
 #ifdef ocpnUSE_SVG
 static wxBitmap LoadSVG( const wxString filename, unsigned int width, unsigned int height )
 {
-    unsigned char *data = NULL;
-    wxBitmap ret;
-
-    wxSVGDocument* svgDoc = new wxSVGDocument;
-    if( svgDoc->Load(filename) )
-        return wxBitmap( svgDoc->Render( width, height, NULL, true, true ) );
+    wxSVGDocument svgDoc;
+    if( svgDoc.Load(filename) )
+        return wxBitmap( svgDoc.Render( width, height, NULL, true, true ) );
     else
         return wxBitmap(width, height);
 }
@@ -108,7 +105,7 @@ wxBitmap MergeBitmaps( wxBitmap back, wxBitmap front, wxSize offset )
     aresult = im_result.GetAlpha();
 
     // Do alpha blending, associative version of "over" operator.
-    if(presult && pback && pfront){ 
+    if(presult && pback && pfront && afront && aback && aresult){ 
         for( int i = 0; i < back.GetHeight(); i++ ) {
             for( int j = 0; j < back.GetWidth(); j++ ) {
 
@@ -225,7 +222,7 @@ wxBitmap Style::GetIcon(const wxString & name, int width, int height, bool bforc
 
     wxBitmap bm;
 #ifdef ocpnUSE_SVG
-    wxString fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + name + ".svg";
+    wxString fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + name + _T(".svg");
     if( wxFileExists( fullFilePath ) )
         bm = LoadSVG( fullFilePath, retSize.x, retSize.y);
     else
@@ -292,14 +289,14 @@ wxBitmap Style::GetToolIcon(const wxString & toolname, int iconType, bool rollov
 #ifdef ocpnUSE_SVG
             wxString fullFilePath;
             if( rollover )
-                fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + "_rollover.svg";
+                fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + _T("_rollover.svg");
             else
-                fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + ".svg";
+                fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + _T(".svg");
             if( wxFileExists( fullFilePath ) )
                 bm = LoadSVG( fullFilePath, retSize.x, retSize.y );
             else
             {
-                wxLogMessage( _T("Can't find SVG: ") + fullFilePath );
+                ///wxLogMessage( _T("Can't find SVG: ") + fullFilePath );
 #endif // ocpnUSE_SVG
                 bm = graphics->GetSubBitmap( location );
 
@@ -363,14 +360,14 @@ wxBitmap Style::GetToolIcon(const wxString & toolname, int iconType, bool rollov
 #ifdef ocpnUSE_SVG
             wxString fullFilePath;
             if( rollover )
-                fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + "_rollover_toggled.svg";
+                fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + _T("_rollover_toggled.svg");
             else
-                fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + "_toggled.svg";
+                fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + _T("_toggled.svg");
             if( wxFileExists( fullFilePath ) )
                 bm = LoadSVG( fullFilePath, retSize.x, retSize.y );
             else
             {
-                wxLogMessage( _T("Can't find SVG: ") + fullFilePath );
+                ///wxLogMessage( _T("Can't find SVG: ") + fullFilePath );
 #endif // ocpnUSE_SVG
                 bm = graphics->GetSubBitmap( location );
                 bm = MergeBitmaps( GetToggledBG(), bm, offset );
@@ -399,12 +396,12 @@ wxBitmap Style::GetToolIcon(const wxString & toolname, int iconType, bool rollov
 
             wxBitmap bm;
 #ifdef ocpnUSE_SVG
-            wxString fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + "_disabled.svg";
+            wxString fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + _T("_disabled.svg");
             if( wxFileExists( fullFilePath ) )
                 bm = LoadSVG( fullFilePath, retSize.x, retSize.y );
             else
             {
-                wxLogMessage( _T("Can't find SVG: ") + fullFilePath );
+                ///wxLogMessage( _T("Can't find SVG: ") + fullFilePath );
 #endif // ocpnUSE_SVG
                 bm = graphics->GetSubBitmap( location );
 

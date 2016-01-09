@@ -23,6 +23,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
+
 #ifndef __MYGEOM_H
 #define __MYGEOM_H
 
@@ -31,9 +32,9 @@
 #include <wx/wfstream.h>
 
 #ifdef __WXOSX__
-#include "bbox.h"
+#include "../../../include/bbox.h"
 #endif
-//#include <ogr_geometry.h>
+#include "../../../src/mygdal/ogr_geometry.h"
 //#include "s52s57.h"
 
 #define TESS_VERT   0                           // constants describing preferred tess orientation
@@ -99,7 +100,7 @@ public:
         TriPrim();
         ~TriPrim();
         void FreeMem();
-
+        
         unsigned int type;                  // Type of triangle primitive
                                             //  May be PTG_TRIANGLES
                                             //         PTG_TRIANGLE_STRIP
@@ -132,7 +133,7 @@ public:
         unsigned char   *single_buffer;
         int             single_buffer_size;
         int             data_type;              //  p_vertex in TriPrim chain is FLOAT or DOUBLE
-
+        
     private:
         int my_bufgets( char *buf, int buf_len_max );
 
@@ -224,6 +225,7 @@ class PolyTessGeo
         double         m_ref_lat, m_ref_lon;
 
 };
+
 
 
 

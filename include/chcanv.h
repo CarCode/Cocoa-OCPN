@@ -659,16 +659,16 @@ private:
       wxDateTime m_last_movement_time;
 
       bool        m_b_paint_enable;
-      
+
       int         m_AISRollover_MMSI;
       bool        m_bsectors_shown;
       bool        m_bedge_pan;
       double      m_displayed_scale_factor;
-      
+
       wxColour    m_fog_color;      
       bool        m_disable_edge_pan;
-      
-      
+      wxFont      *m_pgridFont;
+    
 DECLARE_EVENT_TABLE()
 };
 

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: wmm_pi 3.4.64\n"
+"Project-Id-Version: wmm_pi 15.8.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 13:18+0100\n"
+"POT-Creation-Date: 2016-01-08 14:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,11 +33,11 @@ msgstr ""
 msgid "Field Strength"
 msgstr ""
 
-#: ../src/wmm_pi.cpp:76
+#: ../src/wmm_pi.cpp:79
 msgid ""
 "\n"
 "World Magnetic Model Plotting allows users to cross reference the magnetic "
-"deviation values printed on many raster charts.\n"
+"declination values printed on many raster charts.\n"
 "\n"
 "Declination is the angle between true and magnetic north.\n"
 "Inclination is the vertical angle of the magnetic field.\n"
@@ -55,19 +55,19 @@ msgid ""
 "Sean D'Epagnier to support plotting."
 msgstr ""
 
-#: ../src/wmm_pi.cpp:92
+#: ../src/wmm_pi.cpp:95
 msgid "WMM Plugin"
 msgstr ""
 
-#: ../src/wmm_pi.cpp:185 ../src/wmm_pi.cpp:256 ../src/WmmUIDialog.h:87
+#: ../src/wmm_pi.cpp:192 ../src/wmm_pi.cpp:263 ../src/WmmUIDialog.h:87
 msgid "WMM"
 msgstr ""
 
-#: ../src/wmm_pi.cpp:262
+#: ../src/wmm_pi.cpp:269
 msgid "World Magnetic Model PlugIn for OpenCPN"
 msgstr ""
 
-#: ../src/wmm_pi.cpp:267
+#: ../src/wmm_pi.cpp:274
 msgid ""
 "World Magnetic Model PlugIn for OpenCPN\n"
 "Implements the NOAA World Magnetic Model\n"
@@ -78,11 +78,11 @@ msgid ""
 "location you can find in the OpenCPN logfile."
 msgstr ""
 
-#: ../src/wmm_pi.cpp:419 ../src/wmm_pi.cpp:489
+#: ../src/wmm_pi.cpp:431 ../src/wmm_pi.cpp:501
 msgid "Error, see log."
 msgstr ""
 
-#: ../src/wmm_pi.cpp:719 ../src/WmmUIDialog.h:111
+#: ../src/wmm_pi.cpp:732 ../src/WmmUIDialog.h:111
 msgid "WMM Preferences"
 msgstr ""
 

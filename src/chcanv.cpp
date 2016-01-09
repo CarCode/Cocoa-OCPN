@@ -914,7 +914,13 @@ ChartCanvas::ChartCanvas ( wxFrame *frame ) :
     if ( !g_bdisable_opengl )
         m_pQuilt->EnableHighDefinitionZoom( true );
 #endif
-    
+#ifdef __WXOSX__
+    m_pgridFont = FontMgr::Get().FindOrCreateFont( 20, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,
+                                                  wxFONTWEIGHT_NORMAL, FALSE, wxString( _T ( "Arial" ) ) );
+#else
+    m_pgridFont = FontMgr::Get().FindOrCreateFont( 8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,
+                                                  wxFONTWEIGHT_NORMAL, FALSE, wxString( _T ( "Arial" ) ) );
+#endif
 }
 
 ChartCanvas::~ChartCanvas()
@@ -1513,7 +1519,18 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
         break;
     }
     case WXK_F4:
-        StartMeasureRoute();
+            if( !m_bMeasure_Active )
+                StartMeasureRoute();
+            else{
+                CancelMeasureRoute();
+
+                SetCursor( *pCursorArrow );
+
+                gFrame->SurfaceToolbar();
+                InvalidateGL();
+                Refresh( false );
+            }
+
         break;
 
     case WXK_F5:
@@ -2220,7 +2237,7 @@ wxBitmap ChartCanvas::CreateDimBitmap( wxBitmap &Bitmap, double factor )
 
 void ChartCanvas::ShowBrightnessLevelTimedPopup( int brightness, int min, int max )
 {
-    wxFont *pfont = wxTheFontList->FindOrCreateFont( 40, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD );
+    wxFont *pfont = FontMgr::Get().FindOrCreateFont( 40, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD );
 
     if( !m_pBrightPopup ) {
         //    Calculate size
@@ -2321,7 +2338,8 @@ void ChartCanvas::OnRolloverPopupTimerEvent( wxTimerEvent& event )
                     m_pAISRolloverWin->SetString( s );
 
                     wxSize win_size = GetSize();
-                    if( console->IsShown() ) win_size.x -= console->GetSize().x;
+                    if( console && console->IsShown() ) win_size.x -= console->GetSize().x;
+
                     m_pAISRolloverWin->SetBestPosition( mouse_x, mouse_y, 16, 16, AIS_ROLLOVER, win_size );
 
                     m_pAISRolloverWin->SetBitmap( AIS_ROLLOVER );
@@ -4100,15 +4118,8 @@ void ChartCanvas::GridDraw( ocpnDC& dc )
     float gridlatMajor, gridlatMinor, gridlonMajor, gridlonMinor;
     wxCoord w, h;
     wxPen GridPen( GetGlobalColor( _T ( "SNDG1" ) ), 1, wxPENSTYLE_SOLID );
-#ifdef __WXOSX__
-    wxFont *font = wxTheFontList->FindOrCreateFont( 20, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,
-                    wxFONTWEIGHT_NORMAL, FALSE, wxString( _T ( "Arial" ) ) );
-#else
-    wxFont *font = wxTheFontList->FindOrCreateFont( 8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,
-                   wxFONTWEIGHT_NORMAL, FALSE, wxString( _T ( "Arial" ) ) );
-#endif
     dc.SetPen( GridPen );
-    dc.SetFont( *font );
+    dc.SetFont( *m_pgridFont );
 #ifdef __WXOSX__
     dc.SetTextForeground( GetGlobalColor( _T ( "CHBLK" ) ) );
 #else
@@ -8983,7 +8994,7 @@ wxString ChartCanvas::FormatDistanceAdaptive( double distance ) {
     return result;
 }
 
-void RenderExtraRouteLegInfo( ocpnDC &dc, wxPoint ref_point, wxString s )
+static void RouteLegInfo( ocpnDC &dc, wxPoint ref_point, int row, wxString s )
 {
     wxFont *dFont = FontMgr::Get().GetFont( _("RouteLegInfoRollover") );
     dc.SetFont( *dFont );
@@ -8999,12 +9010,12 @@ void RenderExtraRouteLegInfo( ocpnDC &dc, wxPoint ref_point, wxString s )
 #endif
 
     xp = ref_point.x - w;
-    yp = ref_point.y + h;
+    yp = ref_point.y + h*row;
     yp += hilite_offset;
 
+    dc.SetPen( wxPen( GetGlobalColor( _T ( "UBLCK" ) ) ) );
     AlphaBlending( dc, xp, yp, w, h, 0.0, GetGlobalColor( _T ( "YELO1" ) ), 172 );
 
-    dc.SetPen( wxPen( GetGlobalColor( _T ( "UBLCK" ) ) ) );
     dc.DrawText( s, xp, yp );
 }
 
@@ -9092,26 +9103,7 @@ void ChartCanvas::RenderRouteLegs( ocpnDC &dc )
 
         routeInfo << _T(" ") << FormatDistanceAdaptive( dist );
 
-        wxFont *dFont = FontMgr::Get().GetFont( _("RouteLegInfoRollover") );
-        dc.SetFont( *dFont );
-
-        int w, h;
-        int xp, yp;
-        int hilite_offset = 3;
-#ifdef __WXOSX__
-        wxScreenDC sdc;
-        sdc.GetTextExtent(routeInfo, &w, &h, NULL, NULL, dFont);
-#else
-        dc.GetTextExtent( routeInfo, &w, &h );
-#endif
-        xp = r_rband.x - w;
-        yp = r_rband.y;
-        yp += hilite_offset;
-
-        AlphaBlending( dc, xp, yp, w, h, 0.0, GetGlobalColor( _T ( "YELO1" ) ), 172 );
-
-        dc.SetPen( wxPen( GetGlobalColor( _T ( "UBLCK" ) ) ) );
-        dc.DrawText( routeInfo, xp, yp );
+        RouteLegInfo( dc, r_rband, 0, routeInfo );
 
         wxString s0;
         if( !route->m_bIsInLayer )
@@ -9123,7 +9115,7 @@ void ChartCanvas::RenderRouteLegs( ocpnDC &dc )
         if( !g_btouch)
             disp_length += dist;
         s0 += FormatDistanceAdaptive( disp_length );
-        RenderExtraRouteLegInfo( dc, r_rband, s0 );
+        RouteLegInfo( dc, r_rband, 1, s0 );
         m_brepaint_piano = true;
     }
 }
@@ -9227,12 +9219,10 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
         b_newview = false;
     }
 
-    //  If the ViewPort is rotated, we may be able to use the cached rotated bitmap
+    //  If the ViewPort is skewed or rotated, we may be able to use the cached rotated bitmap.
     bool b_rcache_ok = false;
-    b_rcache_ok = !b_newview;
-
-    //  If in skew compensation mode, with a skewed VP shown, we may be able to use the cached rotated bitmap
-    if(  fabs( VPoint.skew ) > 0.01 ) b_rcache_ok = !b_newview;
+    if( fabs( VPoint.skew ) > 0.01 || fabs( VPoint.rotation ) > 0.01)
+        b_rcache_ok = !b_newview;
 
     //  Make a special VP
     if( VPoint.b_MercatorProjectionOverride ) VPoint.SetProjectionType( PROJECTION_MERCATOR );
@@ -9452,6 +9442,9 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
     wxMemoryDC *pChartDC; // = &temp_dc;  // Not used
     wxMemoryDC rotd_dc;
 
+    if( ( ( fabs( GetVP().rotation ) > 0.01 ) )
+       ||   ( fabs( GetVP().skew ) > 0.01 ) )  {
+
         //  Can we use the current rotated image cache?
         if( !b_rcache_ok ) {
 #ifdef __WXMSW__
@@ -9507,6 +9500,10 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
             pChartDC = &temp_dc;
             m_roffset = wxPoint( 0, 0 );
         }
+    } else {            // unrotated
+        pChartDC = &temp_dc;
+        m_roffset = wxPoint( 0, 0 );
+    }
 
     wxPoint offset = m_roffset;
 
@@ -10442,7 +10439,7 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
     wxFont *dFont = FontMgr::Get().GetFont( _("ExtendedTideIcon") );
     dc.SetTextForeground( FontMgr::Get().GetFontColor( _("ExtendedTideIcon") ) );
     int font_size = wxMax(8, dFont->GetPointSize());
-    wxFont *plabelFont = wxTheFontList->FindOrCreateFont( font_size, dFont->GetFamily(),
+    wxFont *plabelFont = FontMgr::Get().FindOrCreateFont( font_size, dFont->GetFamily(),
                          dFont->GetStyle(), dFont->GetWeight() );
 
     dc.SetPen( *pblack_pen );

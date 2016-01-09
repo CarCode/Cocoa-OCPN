@@ -29,6 +29,7 @@
 //#include "chart1.h"
 #include "ocpn_types.h"
 #include "bbox.h"
+#include "LLRegion.h"
 
 class wxProgressDialog;
 class ChartBase;
@@ -60,18 +61,18 @@ struct ChartTableEntry_onDisk_18
     float       LatMin;
     float       LonMax;
     float       LonMin;
-    
+
     int         Scale;
     int         edition_date;
     int         file_date;
-    
+
     int         nPlyEntries;
     int         nAuxPlyEntries;
-    
+
     float       skew;
     int         ProjectionType;
     bool        bValid;
-    
+
     int         nNoCovrPlyEntries;
 };
 
@@ -206,9 +207,9 @@ struct ChartTableEntry
     int GetnNoCovrPlyEntries() const { return nNoCovrPlyEntries; }
     float *GetpNoCovrPlyTableEntry(int index) const { return pNoCovrPlyTable[index];}
     int GetNoCovrCntTableEntry(int index) const { return pNoCovrCntTable[index];}
-    
+
     const wxBoundingBox &GetBBox() const { return m_bbox; } 
-    
+
     char *GetpFullPath() const { return pFullPath; }
     float GetLonMax() const { return LonMax; }
     float GetLonMin() const { return LonMin; }
@@ -224,12 +225,13 @@ struct ChartTableEntry
     void SetEntryOffset(int n) { EntryOffset = n;}
     const wxString *GetpFileName(void) const { return m_pfilename; }
     wxString *GetpsFullPath(void){ return m_psFullPath; }
-    
+
     const ArrayOfInts &GetGroupArray(void) const { return m_GroupArray; }
     void ClearGroupArray(void) { m_GroupArray.Clear(); }
     void AddIntToGroupArray( int val ) { m_GroupArray.Add( val ); }
     void SetAvailable(bool avail ){ m_bavail = avail;}
-    
+
+    LLRegion quilt_candidate_region;
   private:
     int         EntryOffset;
     int         ChartType;

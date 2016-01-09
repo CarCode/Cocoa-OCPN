@@ -902,7 +902,7 @@ int OCPNPlatform::DoFileSelectorDialog( wxWindow *parent, wxString *file_spec, w
     
     wxFileDialog *psaveDialog = new wxFileDialog( parent, Title, initDir, suggestedName, mask, flag );
     
-    if(g_bresponsive)
+    if(g_bresponsive && parent)
         psaveDialog = g_Platform->AdjustFileDialogFont(parent, psaveDialog);
     
 #ifdef __WXOSX__
@@ -916,14 +916,13 @@ int OCPNPlatform::DoFileSelectorDialog( wxWindow *parent, wxString *file_spec, w
     if(parent)
         parent->ShowWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
-    
-    
+
     if(file_spec)
         *file_spec = psaveDialog->GetPath();
     delete psaveDialog;
-    
+
 #endif
-    
+
     return result;
 }
 
@@ -947,19 +946,19 @@ int OCPNPlatform::DoDirSelectorDialog( wxWindow *parent, wxString *file_spec, wx
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     dirSelector->SetFont(*qFont);
     
-    if(g_bresponsive)
+    if(g_bresponsive && parent)
         dirSelector = AdjustDirDialogFont(parent, dirSelector);
     
 #ifdef __WXOSX__
-    if(parent)
-        parent->HideWithEffect(wxSHOW_EFFECT_BLEND );
+//    if(parent)
+//        parent->HideWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
     
     result = dirSelector->ShowModal();
     
 #ifdef __WXOSX__
-    if(parent)
-        parent->ShowWithEffect(wxSHOW_EFFECT_BLEND );
+//    if(parent)
+//        parent->ShowWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
     
     if( result == wxID_CANCEL ){
@@ -1183,7 +1182,7 @@ double OCPNPlatform::getFontPointsperPixel( void )
     //  Make a measurement...
     wxScreenDC dc;
 
-    wxFont *f = wxTheFontList->FindOrCreateFont( 12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, FALSE,
+    wxFont *f = FontMgr::Get().FindOrCreateFont( 12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, FALSE,
                                                 wxString( _T ( "" ) ), wxFONTENCODING_SYSTEM );
     dc.SetFont(*f);
 

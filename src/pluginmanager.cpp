@@ -274,6 +274,7 @@ bool PlugInManager::LoadAllPlugIns(const wxString &plugin_dir, bool load_enabled
     m_benable_blackdialog = b_enable_blackdialog;
     
     m_plugin_location = plugin_dir;
+//    m_plugin_location = _T("/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/");
 
     wxString msg(_T("PlugInManager searching for PlugIns in location "));
     msg += m_plugin_location;
@@ -316,7 +317,6 @@ bool PlugInManager::LoadAllPlugIns(const wxString &plugin_dir, bool load_enabled
     
     for(unsigned int i=0 ; i < file_list.GetCount() ; i++) {
         wxString file_name = file_list[i];
-//wxMessageBox("Alle Plugins: "+file_name);
         wxString plugin_file = wxFileName(file_name).GetFullName();
         wxDateTime plugin_modification = wxFileName(file_name).GetModificationTime();
         
@@ -366,13 +366,11 @@ bool PlugInManager::LoadAllPlugIns(const wxString &plugin_dir, bool load_enabled
             wxLogMessage(wxString::Format(_("    Incompatible PlugIn detected: %s"), file_name.c_str()));
             OCPNMessageBox( NULL, wxString::Format(_("The plugin %s is not compatible with this version of OpenCPN, please get an updated version."), plugin_file.c_str()), wxString(_("OpenCPN Info")), wxICON_INFORMATION | wxOK, 10 );
         }
-//        else wxMessageBox("Kompatibel OK: "+file_name);
         PlugInContainer *pic = NULL;
         if(b_compat)
             pic = LoadPlugIn(file_name);
         if(pic)
         {
-//wxMessageBox("pic fuer Plugin: "+file_name);
             if(pic->m_pplugin)
             {
                 plugin_array.Add(pic);
@@ -409,7 +407,6 @@ bool PlugInManager::LoadAllPlugIns(const wxString &plugin_dir, bool load_enabled
                 delete pic;
             }
         }
-//wxMessageBox("ForLoop Lade Plugins: "+plugin_file);
     }
 
     std::map<int, PlugInContainer*> ap;
@@ -494,6 +491,20 @@ void PlugInManager::SendVectorChartObjectInfo(const wxString &chart, const wxStr
     }
 }
 
+bool PlugInManager::IsAnyPlugInChartEnabled()
+{
+    //  Is there a PlugIn installed and active that implements PlugIn Chart type(s)?
+    for(unsigned int i = 0 ; i < plugin_array.GetCount() ; i++)
+    {
+        PlugInContainer *pic = plugin_array.Item(i);
+        if(pic->m_bEnabled && pic->m_bInitState)
+        {
+            if( (pic->m_cap_flag & INSTALLS_PLUGIN_CHART) || (pic->m_cap_flag & INSTALLS_PLUGIN_CHART_GL) )
+                return true;
+        }
+    }
+    return false;
+}
 
 bool PlugInManager::UpdatePlugIns()
 {
@@ -721,7 +732,6 @@ bool PlugInManager::CheckPluginCompatibility(wxString plugin_file)
         {
             //Get the name of each DLL
             libname[i] = (PCHAR)((DWORD_PTR)virtualpointer + Rva2Offset(pImportDescriptor->Name, pSech, ntheaders));
-            //wxMessageBox(wxString::Format(_T("%s"), libname[i]));
             if (strstr(libname[i], "wx") != NULL)
             {
                 if (strstr(libname[i], strver) == NULL)
@@ -832,7 +842,7 @@ PlugInContainer *PlugInManager::LoadPlugIn(wxString plugin_file)
     // load the library
     wxDynamicLibrary *plugin = new wxDynamicLibrary(plugin_file);
     pic->m_plibrary = plugin;     // Save a pointer to the wxDynamicLibrary for later deletion
-//wxMessageBox("Plugin: "+plugin_file);
+
     if( !wxIsReadable(plugin_file) )
     {
         msg = _("Unreadable PlugIn library detected, check the file permissions:\n");
@@ -888,9 +898,6 @@ PlugInContainer *PlugInManager::LoadPlugIn(wxString plugin_file)
         delete pic;
         return NULL;
     }
-#ifdef __WXOSX__
-    if(plugin->HasSymbol("create_pi")) wxMessageBox("Symbol gefunden fuer: "+plugin_file);
-#endif
 
     // load the factory symbols
     create_t* create_plugin = (create_t*)plugin->GetSymbol(_T("create_pi"));

@@ -522,7 +522,7 @@ void BuildCompressedCache()
     wxSize csz = GetOCPNCanvasWindow()->GetClientSize();
     if(csz.x < 600 || csz.y < 600){
         wxFont *qFont = GetOCPNScaledFont(_("Dialog"));         // to get type, weight, etc...
-        wxFont *sFont = wxTheFontList->FindOrCreateFont( 10, qFont->GetFamily(), qFont->GetStyle(), qFont->GetWeight());
+        wxFont *sFont = FontMgr::Get().FindOrCreateFont( 10, qFont->GetFamily(), qFont->GetStyle(), qFont->GetWeight());
         pprog->SetFont( *sFont );
     }
 
@@ -2643,30 +2643,42 @@ void glChartCanvas::DrawChartBar( ocpnDC &dc )
 
 void glChartCanvas::DrawQuiting()
 {
-    GLubyte pattern[4 * 32];
-    for( int y = 0; y < 32; y++ ) {
-        GLubyte mask = 1 << y % 8;
-        for( int x = 0; x < 4; x++ )
-            pattern[y * 4 + x] = mask;
-    }
-
-    glEnable( GL_POLYGON_STIPPLE );
-    glPolygonStipple( pattern );
-    glBegin( GL_QUADS );
+    GLubyte pattern[8][8];
+    for( int y = 0; y < 8; y++ )
+        for( int x = 0; x < 8; x++ )
+            pattern[y][x] = (y == x) * 255;
+    
+    glEnable( GL_BLEND );
+    glEnable( GL_TEXTURE_2D );
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_ALPHA, 8, 8,
+                 0, GL_ALPHA, GL_UNSIGNED_BYTE, pattern );
     glColor3f( 0, 0, 0 );
-    glVertex2i( 0, 0 );
-    glVertex2i( 0, GetSize().y );
-    glVertex2i( GetSize().x, GetSize().y );
-    glVertex2i( GetSize().x, 0 );
+
+    float x = GetSize().x, y = GetSize().y;
+    float u = x / 8, v = y / 8;
+    
+    glBegin( GL_QUADS );
+    glTexCoord2f(0, 0); glVertex2f( 0, 0 );
+    glTexCoord2f(0, v); glVertex2f( 0, y );
+    glTexCoord2f(u, v); glVertex2f( x, y );
+    glTexCoord2f(u, 0); glVertex2f( x, 0 );
     glEnd();
-    glDisable( GL_POLYGON_STIPPLE );
+
+    glDisable( GL_TEXTURE_2D );
+    glDisable( GL_BLEND );
 }
 
 void glChartCanvas::DrawCloseMessage(wxString msg)
 {
     if(1){
 
-        wxFont *pfont = wxTheFontList->FindOrCreateFont(12, wxFONTFAMILY_DEFAULT,
+        wxFont *pfont = FontMgr::Get().FindOrCreateFont(12, wxFONTFAMILY_DEFAULT,
                                                         wxFONTSTYLE_NORMAL,
                                                         wxFONTWEIGHT_NORMAL);
 
@@ -3245,7 +3257,7 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
                             b_rendered = true;
                         }
                         } else if(chart->GetChartFamily() == CHART_FAMILY_VECTOR ) {
-                            RenderNoDTA(vp, pqp->ActiveRegion/*pqp->quilt_region*/);
+                            RenderNoDTA(vp, get_region);
                             b_rendered = chart->RenderRegionViewOnGL( *m_pcontext, vp, rect_region, get_region );
                         }
                     }
@@ -3558,6 +3570,7 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, const OCPNRegion &rect_region)
         if( Current_Ch->GetChartFamily() == CHART_FAMILY_RASTER )
             RenderRasterChartRegionGL( Current_Ch, vp, region );
         else if( Current_Ch->GetChartFamily() == CHART_FAMILY_VECTOR ) {
+            chart_region.Intersect(region);
             RenderNoDTA(vp, chart_region);
             Current_Ch->RenderRegionViewOnGL( *m_pcontext, vp, rect_region, region );
         }
@@ -3578,11 +3591,7 @@ void glChartCanvas::RenderNoDTA(ViewPort &vp, const LLRegion &region)
     else
         glColor3ub( 163, 180, 183 );
 
-    wxRect rect(0, 0, vp.pix_width, vp.pix_height);
-    LLRegion draw_region = region, screen_region = vp.GetLLRegion(rect);
-    draw_region.Intersect(screen_region);
-
-    DrawRegion(vp, draw_region);
+    DrawRegion(vp, region);
 }
 
 void glChartCanvas::RenderNoDTA(ViewPort &vp, ChartBase *chart)

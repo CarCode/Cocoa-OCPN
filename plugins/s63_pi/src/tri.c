@@ -235,7 +235,11 @@ static int initialise( int n)
 static int alloc_mem(int ncontours, int contours[])
 {
 #ifndef STATIC
+#ifdef __WXOSX__
+    int nsegp = 1;
+#else
     int nsegp = 0;
+#endif
     int i;
 
     for(i=0 ; i<ncontours ; i++)
@@ -1432,7 +1436,7 @@ int triangulate_monotone_polygons(int nvert, int nmonpoly, int op[][3])
 {
   register int i;
   point_t ymax, ymin;
-  int p, vfirst, posmax, v;  // Not used: posmin
+  int p, vfirst, posmax, /*posmin,*/ v;  //  psmin not used
   int vcount, processed;
 
 #if 1 //ifdef DEBUG
@@ -1478,7 +1482,7 @@ int triangulate_monotone_polygons(int nvert, int nmonpoly, int op[][3])
       processed = FALSE;
       vfirst = mchain[mon[i]].vnum;
       ymax = ymin = vert[vfirst].pt;
-      posmax = mon[i];  // Not used: = posmin =
+      posmax = /*posmin =*/ mon[i];  // posmin not used
       mchain[mon[i]].marked = TRUE;
       p = mchain[mon[i]].next;
       while ((v = mchain[p].vnum) != vfirst)
@@ -2509,14 +2513,14 @@ static int add_segment(int segnum)
 //          int tmpseg = tr[tr[t].d0].rseg;
           double y0, yt;
           point_t tmppt;
-            int tnext, i_d0; // Not used: , i_d1;
+          int tnext, i_d0, i_d1;
 
-            i_d0 = FALSE; // Not used: i_d1 = FALSE;
+          i_d0 = i_d1 = FALSE;
           if (FP_EQUAL(tr[t].lo.y, s.v0.y))
             {
               if (tr[t].lo.x > s.v0.x)
                 i_d0 = TRUE;
-//              else  // Not used
+//              else  //  Not used
 //                i_d1 = TRUE;  // Not used
             }
           else
@@ -2527,8 +2531,8 @@ static int add_segment(int segnum)
 
               if (_less_than(&tmppt, &tr[t].lo))
                 i_d0 = TRUE;
-//              else  // Not used
-//                i_d1 = TRUE;  // Not used
+//              else  //  Not used
+//                i_d1 = TRUE;  //  Not used
             }
 
           /* check continuity from the top so that the lower-neighbour */
@@ -2750,7 +2754,11 @@ static isegment_t *iseg;
 static int int_alloc_mem(int ncontours, int contours[])
 {
 #ifndef STATIC
+#ifdef __WXOSX__
+    int nsegp = 1;
+#else
       int nsegp = 0;
+#endif
       int i;
 
       for(i=0 ; i<ncontours ; i++)
@@ -3908,19 +3916,19 @@ static int int_add_segment(int segnum)
 //          int tmpseg = itr[itr[t].d0].rseg;
               double y0, yt;
               point_t tmppt;
-            int tnext, i_d0; // Not used: , i_d1;
+              int tnext, i_d0, i_d1;
               point_t tpt;
 
               tpt.x = (double)itr[t].lo.x;
               tpt.y = (double)itr[t].lo.y;
 
-            i_d0 = FALSE; // Not used: i_d1 = FALSE;
+              i_d0 = i_d1 = FALSE;
               if (itr[t].lo.y == s.v0.y)
               {
                     if (itr[t].lo.x > s.v0.x)
                           i_d0 = TRUE;
-//                    else  // Not used
-//                          i_d1 = TRUE;  // Not used
+//                    else  //  Not used
+//                          i_d1 = TRUE;  //  Not used
               }
               else
               {
@@ -3930,8 +3938,8 @@ static int int_add_segment(int segnum)
 
                     if (_less_than(&tmppt, &tpt))           //&itr[t].lo))
                           i_d0 = TRUE;
-//                    else  // Not used
-//                          i_d1 = TRUE;  // Not used
+//                    else  //  Not used
+//                          i_d1 = TRUE;  //  Not used
               }
 
               /* check continuity from the top so that the lower-neighbour */
@@ -4175,7 +4183,7 @@ int int_construct_trapezoids(int nseg)
 
 //      nvtrap = 0;
 
-//      h=0;  // Not used
+//      h=0;  //  Not used
       /* Add the first segment and get the query structure and trapezoid */
       /* list initialised */
 
@@ -4314,7 +4322,7 @@ int do_int_trapezate_polygon(int ncontours, int cntr[], double (*vertices)[2], i
 
  //     if(n > 14000) n = 14000;
 
-//      ret_val = 0;  // Not used
+//      ret_val = 0;  //  Not used
       ret_val = int_construct_trapezoids(n);
 
       for(i=1 ; i< tr_idx ; i++)
