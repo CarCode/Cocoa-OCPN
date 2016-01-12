@@ -550,6 +550,9 @@
 		A6BE1136178C9BE9001B4E60 /* GRadarUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6BE1135178C9BE9001B4E60 /* GRadarUI.cpp */; };
 		A6BEB5D51B209EF200BA9823 /* libwxCurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A6BEB5D41B209EF200BA9823 /* libwxCurl.dylib */; };
 		A6BEB5D61B209F1900BA9823 /* libwxCurl.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6BEB5D41B209EF200BA9823 /* libwxCurl.dylib */; };
+		A6C704BC1C45201A0083746C /* Dashboard_rollover.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6C704B91C451FF30083746C /* Dashboard_rollover.svg */; };
+		A6C704BD1C45201A0083746C /* Dashboard_toggled.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6C704BA1C451FF30083746C /* Dashboard_toggled.svg */; };
+		A6C704BE1C45201A0083746C /* Dashboard.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6C704BB1C451FF30083746C /* Dashboard.svg */; };
 		A6CE035E1AC9DA1E0025E180 /* DecoderOptionsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6CE035D1AC9DA1E0025E180 /* DecoderOptionsDialog.cpp */; };
 		A6CF666118D38235004DF279 /* georef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6CF666018D38235004DF279 /* georef.cpp */; };
 		A6CF666418D38323004DF279 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6CF666318D38323004DF279 /* icons.cpp */; };
@@ -1084,6 +1087,18 @@
 			files = (
 				A68EA3E318D0E44300E8AC13 /* libs63_pi.dylib in CopyFiles */,
 				A68EA3E218D0E41600E8AC13 /* OCPNsenc in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A6C704B71C451EDD0083746C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = ../SharedSupport/plugins/dashboard_pi/data;
+			dstSubfolderSpec = 6;
+			files = (
+				A6C704BC1C45201A0083746C /* Dashboard_rollover.svg in CopyFiles */,
+				A6C704BD1C45201A0083746C /* Dashboard_toggled.svg in CopyFiles */,
+				A6C704BE1C45201A0083746C /* Dashboard.svg in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1904,6 +1919,9 @@
 		A6BE1135178C9BE9001B4E60 /* GRadarUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GRadarUI.cpp; path = plugins/gradar_pi/src/GRadarUI.cpp; sourceTree = "<group>"; };
 		A6BEB5D41B209EF200BA9823 /* libwxCurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libwxCurl.dylib; path = Frameworks/libwxCurl.dylib; sourceTree = SOURCE_ROOT; };
 		A6BFE97817D5F4A9007433A2 /* defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = defs.h; path = plugins/weatherfax_pi/src/defs.h; sourceTree = "<group>"; };
+		A6C704B91C451FF30083746C /* Dashboard_rollover.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Dashboard_rollover.svg; path = plugins/dashboard_pi/data/Dashboard_rollover.svg; sourceTree = "<group>"; };
+		A6C704BA1C451FF30083746C /* Dashboard_toggled.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Dashboard_toggled.svg; path = plugins/dashboard_pi/data/Dashboard_toggled.svg; sourceTree = "<group>"; };
+		A6C704BB1C451FF30083746C /* Dashboard.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Dashboard.svg; path = plugins/dashboard_pi/data/Dashboard.svg; sourceTree = "<group>"; };
 		A6CE035D1AC9DA1E0025E180 /* DecoderOptionsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DecoderOptionsDialog.cpp; path = plugins/weatherfax_pi/src/DecoderOptionsDialog.cpp; sourceTree = "<group>"; };
 		A6CF665F18D38216004DF279 /* georef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = georef.h; path = plugins/gradar_pi/src/georef.h; sourceTree = "<group>"; };
 		A6CF666018D38235004DF279 /* georef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = georef.cpp; path = plugins/gradar_pi/src/georef.cpp; sourceTree = "<group>"; };
@@ -2228,6 +2246,7 @@
 		052DB85431F44C8CBA6858BF /* dashboard_pi */ = {
 			isa = PBXGroup;
 			children = (
+				A6C704B81C451FC60083746C /* data */,
 				692ADED67AA1434A9A9368DE /* Header Files */,
 				53D51C88ACD1488287FB8729 /* Source Files */,
 			);
@@ -3571,6 +3590,16 @@
 			name = "Source Files";
 			sourceTree = "<group>";
 		};
+		A6C704B81C451FC60083746C /* data */ = {
+			isa = PBXGroup;
+			children = (
+				A6C704B91C451FF30083746C /* Dashboard_rollover.svg */,
+				A6C704BA1C451FF30083746C /* Dashboard_toggled.svg */,
+				A6C704BB1C451FF30083746C /* Dashboard.svg */,
+			);
+			name = data;
+			sourceTree = "<group>";
+		};
 		A6DB19B718EDCC1700E643D2 /* BR24radar_pi */ = {
 			isa = PBXGroup;
 			children = (
@@ -4479,6 +4508,7 @@
 				9D0491C9A89540BA83B26955 /* Resources */,
 				4962B95EFBB7451DBB9C0F0E /* CopyFiles */,
 				8F847A759C74489F8040D9CA /* CopyFiles */,
+				A6C704B71C451EDD0083746C /* CopyFiles */,
 				1D6AC28C6D4444DB8D4DD430 /* CopyFiles */,
 				2981BFBEE8B1461083EFD003 /* CopyFiles */,
 				3B5296F4970E4372ACC86314 /* CopyFiles */,
@@ -5932,6 +5962,7 @@
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libNMEA0183.a",
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libS57ENC.a",
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libGARMINHOST.a",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib",
 					"-framework",
 					AGL,
 					/usr/lib/libbz2.dylib,
@@ -7963,6 +7994,7 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
+					__OCPN_USE_CURL__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -8038,6 +8070,7 @@
 					"-lwx_osx_cocoau_gl-3.1",
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib",
 					/usr/lib/libz.dylib,
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib",
 				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = chartdldr_pi;
@@ -8081,6 +8114,7 @@
 					TIXML_USE_STL,
 					USE_S57,
 					USE_GARMINHOST,
+					__OCPN_USE_CURL__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (

@@ -93,7 +93,8 @@ protected:
 
 public:
     wxCheckedListCtrl()
-        : wxListCtrl(), m_imageList(16, 16, TRUE) {}
+    : wxListCtrl(), m_imageList(16, 16, TRUE) {}
+//    wxCheckedListCtrl() {}  //  for Curl 2.Version
 
     wxCheckedListCtrl(wxWindow *parent, wxWindowID id = -1,
                         const wxPoint& pt = wxDefaultPosition,
@@ -101,8 +102,10 @@ public:
                         long style = wxCLC_CHECK_WHEN_SELECTING,
                         const wxValidator& validator = wxDefaultValidator,
                         const wxString& name = wxListCtrlNameStr)
+//                        : wxListCtrl(), m_imageList(16, 16, TRUE)  //  for Curl 2.Version
+//            { Create(parent, id, pt, sz, style, validator, name); }  //  for Curl 2.Version
                         : wxListCtrl(), m_imageList(16, 16, TRUE)
-        { Create(parent, id, pt, sz, style, validator, name); }
+                        { Create(parent, id, pt, sz, style, validator, name); }
 
     bool Create(wxWindow *parent, wxWindowID id = -1,
                         const wxPoint& pt = wxDefaultPosition,

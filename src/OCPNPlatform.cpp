@@ -44,6 +44,7 @@
 #include "navutil.h"
 #include "ConnectionParams.h"
 #include "FontMgr.h"
+#include "s52s57.h"
 
 #ifdef __OCPN__ANDROID__
 #include "androidUTIL.h"
@@ -216,6 +217,7 @@ extern double                   g_overzoom_emphasis_base;
 extern bool                     g_oz_vector_scale;
 extern int                      g_nTrackPrecision;
 extern wxString                 g_toolbarConfig;
+extern bool                     g_bPreserveScaleOnX;
 
 #ifdef ocpnUSE_GL
 extern ocpnGLOptions            g_GLOptions;
@@ -526,7 +528,7 @@ void OCPNPlatform::OnExit_1( void ){
 }
 
 void OCPNPlatform::OnExit_2( void ){
-    
+
 #ifdef OCPN_USE_CRASHRPT
 #ifndef _DEBUG
     // Uninstall Windows crash reporting
@@ -544,7 +546,7 @@ void OCPNPlatform::SetDefaultOptions( void )
 {
     //  General options, applied to all platforms
     g_bShowOutlines = true;
-    
+
     g_CPAMax_NM = 20.;
     g_CPAWarn_NM = 2.;
     g_TCPA_Max = 30.;
@@ -565,7 +567,32 @@ void OCPNPlatform::SetDefaultOptions( void )
     g_bDrawAISSize = false;
     g_bShowAISName = false;
     g_nTrackPrecision = 2;
+    g_bPreserveScaleOnX = true;
 
+    // Initial S52/S57 options
+    if(pConfig){
+        pConfig->SetPath( _T ( "/Settings/GlobalState" ) );
+        pConfig->Write( _T ( "bShowS57Text" ), false );
+        pConfig->Write( _T ( "bShowS57ImportantTextOnly" ), false );
+        pConfig->Write( _T ( "nDisplayCategory" ), (int)(_DisCat)STANDARD );
+        pConfig->Write( _T ( "nSymbolStyle" ), (int)(_LUPname)PAPER_CHART );
+        pConfig->Write( _T ( "nBoundaryStyle" ), (int)(_LUPname)PLAIN_BOUNDARIES );
+
+        pConfig->Write( _T ( "bShowSoundg" ), false );
+        pConfig->Write( _T ( "bShowMeta" ), false );
+        pConfig->Write( _T ( "bUseSCAMIN" ), true );
+        pConfig->Write( _T ( "bShowAtonText" ), false );
+        pConfig->Write( _T ( "bShowLightDescription" ), false );
+        pConfig->Write( _T ( "bExtendLightSectors" ), true );
+        pConfig->Write( _T ( "bDeClutterText" ), true );
+        pConfig->Write( _T ( "bShowNationalText" ), false );
+
+        pConfig->Write( _T ( "S52_MAR_SAFETY_CONTOUR" ), 5 );
+        pConfig->Write( _T ( "S52_MAR_SHALLOW_CONTOUR" ), 2 );
+        pConfig->Write( _T ( "S52_MAR_DEEP_CONTOUR" ), 10 );
+        pConfig->Write( _T ( "S52_MAR_TWO_SHADES" ), 0  );
+        pConfig->Write( _T ( "S52_DEPTH_UNIT_SHOW" ), 1 );
+    }
 
 #ifdef __OCPN__ANDROID__
     
@@ -950,15 +977,15 @@ int OCPNPlatform::DoDirSelectorDialog( wxWindow *parent, wxString *file_spec, wx
         dirSelector = AdjustDirDialogFont(parent, dirSelector);
     
 #ifdef __WXOSX__
-//    if(parent)
-//        parent->HideWithEffect(wxSHOW_EFFECT_BLEND );
+    if(parent)
+        parent->HideWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
     
     result = dirSelector->ShowModal();
     
 #ifdef __WXOSX__
-//    if(parent)
-//        parent->ShowWithEffect(wxSHOW_EFFECT_BLEND );
+    if(parent)
+        parent->ShowWithEffect(wxSHOW_EFFECT_BLEND );
 #endif
     
     if( result == wxID_CANCEL ){

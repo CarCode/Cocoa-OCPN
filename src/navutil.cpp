@@ -3014,9 +3014,6 @@ bool MyConfig::ExportGPXRoutes( wxWindow* parent, RouteList *pRoutes, const wxSt
                                                     wxT ( "*.gpx" )
                                                     );
 
-    wxFileName fn( path );
-    m_gpx_path = fn.GetPath();
-
 #if 0
     wxFileDialog *psaveDialog = new wxFileDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName,
             wxT ( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
@@ -3037,14 +3034,16 @@ bool MyConfig::ExportGPXRoutes( wxWindow* parent, RouteList *pRoutes, const wxSt
 #endif
 
     wxString path = psaveDialog->GetPath();
-    wxFileName fn( path );
-    m_gpx_path = fn.GetPath();
+    //    wxFileName fn( path );
+    //    m_gpx_path = fn.GetPath();
     delete psaveDialog;
 
 #endif
 
     if( response == wxID_OK ) {
-        fn.SetExt( _T ( "gpx" ) );
+        wxFileName fn(path);
+        m_gpx_path = fn.GetPath();
+        fn.SetExt(_T("gpx"));
 
         if( wxFileExists( fn.GetFullPath() ) ) {
             int answer = OCPNMessageBox( NULL, _("Overwrite existing file?"), _T("Confirm"),
@@ -3073,9 +3072,6 @@ bool MyConfig::ExportGPXWaypoints( wxWindow* parent, RoutePointList *pRoutePoint
                                                     wxT ( "*.gpx" )
                                                     );
     
-    wxFileName fn( path );
-    m_gpx_path = fn.GetPath();
-    
     
 #if 0
     wxFileDialog *psaveDialog = new wxFileDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName,
@@ -3087,13 +3083,15 @@ bool MyConfig::ExportGPXWaypoints( wxWindow* parent, RoutePointList *pRoutePoint
     int response = psaveDialog->ShowModal();
 
     wxString path = psaveDialog->GetPath();
-    wxFileName fn( path );
-    m_gpx_path = fn.GetPath();
+    //    wxFileName fn( path );
+    //    m_gpx_path = fn.GetPath();
     delete psaveDialog;
 #endif
 
     if( response == wxID_OK ) {
-        fn.SetExt( _T ( "gpx" ) );
+        wxFileName fn( path );
+        m_gpx_path = fn.GetPath();
+        fn.SetExt(_T("gpx"));
 
         if( wxFileExists( fn.GetFullPath() ) ) {
             int answer = OCPNMessageBox(NULL,  _("Overwrite existing file?"), _T("Confirm"),
@@ -3122,8 +3120,6 @@ void MyConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
                                                     wxT ( "*.gpx" )
                                                     );
 
-    wxFileName fn( path );
-    m_gpx_path = fn.GetPath();
 
 
 #if 0
@@ -3136,13 +3132,15 @@ void MyConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
     int response = psaveDialog->ShowModal();
 
     wxString path = psaveDialog->GetPath();
-    wxFileName fn( path );
-    m_gpx_path = fn.GetPath();
+    //wxFileName fn( path );
+    //m_gpx_path = fn.GetPath();
     delete psaveDialog;
 #endif
 
     if( response == wxID_OK ) {
-        fn.SetExt( _T ( "gpx" ) );
+        wxFileName fn(path);
+        m_gpx_path = fn.GetPath();
+        fn.SetExt(_T("gpx"));
 
         if( wxFileExists( fn.GetFullPath() ) ) {
             int answer = OCPNMessageBox( NULL, _("Overwrite existing file?"), _T("Confirm"),

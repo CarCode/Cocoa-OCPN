@@ -1482,39 +1482,66 @@ InitReturn ChartKAP::Init( const wxString& name, ChartInitFlag init_flags )
       free(pPlyTable);
 
 
+      //    Setup the datum transform parameters
+      char d_str[100];
+      strncpy(d_str, m_datum_str.mb_str(), 99);
+      d_str[99] = 0;
+#ifdef __WXOSX__
+      datum_index = GetDatumIndex(d_str);
+#else
+      int datum_index = GetDatumIndex(d_str);
+#endif
+      m_datum_index = datum_index;
+
+      if(datum_index < 0)
+          m_ExtraInfo = _("---<<< Warning:  Chart Datum may be incorrect. >>>---");
+
+      //    Establish defaults, may be overridden later
+      m_lon_datum_adjust = (-m_dtm_lon) / 3600.;
+      m_lat_datum_adjust = (-m_dtm_lat) / 3600.;
+
       //    Adjust the PLY points to WGS84 datum
       Plypoint *ppp = (Plypoint *)GetCOVRTableHead(0);
       int cnPlypoint = GetCOVRTablenPoints(0);
-#ifndef __WXOSX__
-      //  n.b. this is not precisely right for non-wgs84 charts.
-      //  should use molodensky transform, and then consider SHOM Ver 1.1 charts
-#endif
+
+
       for(int u=0 ; u<cnPlypoint ; u++)
       {
-#ifndef __WXOSX__
-            ppp->lnp += m_dtm_lon / 3600;
-            ppp->ltp += m_dtm_lat / 3600;
-            ppp++;
-      }
-#else
-        double tlon,tlat;
-        if ( ( datum_index != DATUM_INDEX_UNKNOWN ) && ( datum_index != DATUM_INDEX_WGS84 ) ) {
-            MolodenskyTransform( ppp->ltp,ppp->lnp, &tlat,&tlon, datum_index, DATUM_INDEX_WGS84 );
-        } else {
-            tlat=ppp->ltp;
-            tlon=ppp->lnp;
-        }
+          double dlat = 0;
+          double dlon = 0;
 
-        ppp->lnp = (float) ( tlon + ( m_b_apply_dtm ? m_dtm_lon / 3600 : 0 ));
-        ppp->ltp = (float) ( tlat + ( m_b_apply_dtm ? m_dtm_lat / 3600 : 0 ));
-        ppp++;
-    }
-#endif
+          if(m_datum_index == DATUM_INDEX_WGS84){
+          }
+
+          else if(m_datum_index == DATUM_INDEX_UNKNOWN)
+          {
+              dlon = m_dtm_lon / 3600.;
+              dlat = m_dtm_lat / 3600.;
+          }
+
+
+          else{
+              double to_lat, to_lon;
+              MolodenskyTransform (ppp->ltp, ppp->lnp, &to_lat, &to_lon, m_datum_index, DATUM_INDEX_WGS84);
+              dlon = (to_lon - ppp->lnp);
+              dlat = (to_lat - ppp->ltp);
+              if(m_b_apply_dtm)
+              {
+                  dlon += m_dtm_lon / 3600.;
+                  dlat += m_dtm_lat / 3600.;
+              }
+          }
+
+          ppp->lnp += dlon;
+          ppp->ltp += dlat;
+          ppp++;
+      }
+
       if(!SetMinMax())
             return INIT_FAIL_REMOVE;          // have to bail here
 
       AnalyzeSkew();
-      
+
       if(init_flags == HEADER_ONLY)
             return INIT_OK;
 
@@ -2025,22 +2052,6 @@ InitReturn ChartBaseBSB::PostInit(void)
       else if(test_str.Find(_T("METERS")) != wxNOT_FOUND)             // Special case for "Meters and decimeters"
             m_depth_unit_id = DEPTH_UNIT_METERS;
 
-           //    Setup the datum transform parameters
-      char d_str[100];
-      strncpy(d_str, m_datum_str.mb_str(), 99);
-      d_str[99] = 0;
-
-      int datum_index = GetDatumIndex(d_str);
-      if(datum_index < 0){
-          m_datum_index = DATUM_INDEX_WGS84;
-          m_ExtraInfo = _("---<<< Warning:  Chart Datum may be incorrect. >>>---");
-      }
-      else
-          m_datum_index = datum_index;
-
-      //    Establish defaults, may be overridden later
-      m_lon_datum_adjust = (-m_dtm_lon) / 3600.;
-      m_lat_datum_adjust = (-m_dtm_lat) / 3600.;
 
       //   Analyze Refpoints
       int analyze_ret_val = AnalyzeRefpoints();
@@ -5387,7 +5398,9 @@ int   ChartBaseBSB::AnalyzeRefpoints(bool b_testSolution)
         double chart_error_pixels = chart_error_meters * 4000. / m_Chart_Scale;
         
         //        Good enough for navigation?
-        if(chart_error_pixels > 10)
+        int max_pixel_error = 4;
+
+        if(chart_error_pixels > max_pixel_error)
         {
                     wxString msg = _("   VP Final Check: Georeference Chart_Error_Factor on chart ");
                     msg.Append(m_FullPath);
@@ -5402,7 +5415,7 @@ int   ChartBaseBSB::AnalyzeRefpoints(bool b_testSolution)
 
         //  Try again with my calculated georef
         //  This problem was found on NOAA 514_1.KAP.  The embedded coefficients are just wrong....
-        if((chart_error_pixels > 10) && bHaveEmbeddedGeoref)
+        if((chart_error_pixels > max_pixel_error) && bHaveEmbeddedGeoref)
         {
               wxString msg = _("   Trying again with internally calculated georef solution ");
               wxLogMessage(msg);
@@ -5455,7 +5468,7 @@ int   ChartBaseBSB::AnalyzeRefpoints(bool b_testSolution)
               chart_error_pixels = chart_error_meters * 4000. / m_Chart_Scale;
               
         //        Good enough for navigation?
-              if(chart_error_pixels > 10)
+              if(chart_error_pixels > max_pixel_error)
               {
                     wxString msg = _("   VP Final Check with internal georef: Georeference Chart_Error_Factor on chart ");
                     msg.Append(m_FullPath);

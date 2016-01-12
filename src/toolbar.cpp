@@ -40,6 +40,10 @@
 #include "FontMgr.h"
 #include "OCPNPlatform.h"
 
+#ifdef ocpnUSE_SVG
+#include "wxsvg/include/wxSVG/svg.h"
+#endif // ocpnUSE_SVG
+
 extern ocpnFloatingToolbarDialog* g_FloatingToolbarDialog;
 extern bool                       g_bTransparentToolbar;
 extern bool                       g_bTransparentToolbarInOpenGLOK;
@@ -148,17 +152,18 @@ void GrabberWin::MouseEvent( wxMouseEvent& event )
     
     if( event.RightDown() ){
         if(m_ptoolbar){
-            m_dragging = true;
-            
-            if( !m_ptoolbar->m_bnavgrabber ){
-                m_ptoolbar->m_bnavgrabber = true;
-                m_ptoolbar->SetGrabber(_T("4WayMove") );
+            if(!m_ptoolbar->m_bsubmerged){
+                m_dragging = true;
+                
+                if( !m_ptoolbar->m_bnavgrabber ){
+                    m_ptoolbar->m_bnavgrabber = true;
+                    m_ptoolbar->SetGrabber(_T("4WayMove") );
+                }
+                else{
+                    m_ptoolbar->m_bnavgrabber = false;
+                    m_ptoolbar->SetGrabber(_T("grabber_hi") );
+                }
             }
-            else{
-                m_ptoolbar->m_bnavgrabber = false;
-                m_ptoolbar->SetGrabber(_T("grabber_hi") );
-            }
-            
         }
     }
     
@@ -271,6 +276,7 @@ public:
     wxString iconName;
     const wxBitmap* pluginNormalIcon;
     const wxBitmap* pluginRolloverIcon;
+    const wxBitmap* pluginToggledIcon;
     bool firstInLine;
     bool lastInLine;
     bool rollover;
@@ -279,6 +285,9 @@ public:
     bool b_hilite;
     bool m_btooltip_hiviz;
     wxRect last_rect;
+    wxString pluginNormalIconSVG;
+    wxString pluginRolloverIconSVG;
+    wxString pluginToggledIconSVG;
 };
 
 //---------------------------------------------------------------------------------------
@@ -617,6 +626,11 @@ void ocpnFloatingToolbarDialog::DestroyTimerEvent( wxTimerEvent& event )
     delete m_destroyGrabber;
     m_destroyGrabber = NULL;
 
+}
+
+bool ocpnFloatingToolbarDialog::isSubmergedToGrabber()
+{
+    return (m_pRecoverwin != 0);
 }
 
 void ocpnFloatingToolbarDialog::HideTooltip()
@@ -1848,41 +1862,59 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
         }
     } else {
         if ( tool->isPluginTool ) {
+            int toggleFlag = tool->IsToggled()?TOOLICON_TOGGLED:TOOLICON_NORMAL;
 
-            // First try getting the icon from the Style.
-            // If it is not in the style we build a new icon from the style BG and the plugin icon.
+            // First try getting the icon from an SVG definition.
+            // If it is not found, try to see if it is available in the style
+            // If not there, we build a new icon from the style BG and the (default) plugin icon.
 
-            if( tool->IsToggled() ) {
-                bmp = m_style->GetToolIcon( tool->GetToolname(), TOOLICON_TOGGLED, tool->rollover,
-                                           tool->m_width, tool->m_height );
+            wxString svgFile = tool->pluginNormalIconSVG;
+            if( toggleFlag ) {
+                if(tool->pluginToggledIconSVG.Length())
+                    svgFile = tool->pluginToggledIconSVG;
+            }
+            if( tool->rollover ) {
+                if(tool->pluginRolloverIconSVG.Length())
+                    svgFile = tool->pluginRolloverIconSVG;
+            }
 
-                if( bmp.GetDepth() == 1 ) {     // Tool icon not found
-                    if( tool->rollover ) {
-                        bmp = m_style->BuildPluginIcon( tool->pluginRolloverIcon, TOOLICON_TOGGLED );
-                        if( ! bmp.IsOk() )
-                            bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_TOGGLED );
-                    }
-                    else
-                        bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_TOGGLED );
-                }
-            } else {
-                bmp = m_style->GetToolIcon( tool->GetToolname(), TOOLICON_NORMAL, tool->rollover,
-                                           tool->m_width, tool->m_height );
-                
-                if( bmp.GetDepth() == 1 ) {      // Tool icon not found
-                    if( tool->rollover ) {
-                        bmp = m_style->BuildPluginIcon( tool->pluginRolloverIcon, TOOLICON_NORMAL );
-                        if( ! bmp.IsOk() )
-                            bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_NORMAL );
+            if(m_style->sysname.Lower() != _T("traditional") )
+                svgFile.Clear();
+
+            if(svgFile.Length()){         // try SVG
+#ifdef ocpnUSE_SVG
+                if( wxFileExists( svgFile ) ){
+                    wxSVGDocument svgDoc;
+                    if( svgDoc.Load(svgFile) ){
+                        bmp = wxBitmap( svgDoc.Render( tool->m_width, tool->m_height, NULL, true, true ) );
                     }
                     else
                         bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_NORMAL );
                 }
+#endif
             }
-            if( m_sizefactor > 1.0 ){
-                wxImage scaled_image = bmp.ConvertToImage();
-                bmp = wxBitmap(scaled_image.Scale(tool->m_width, tool->m_height, wxIMAGE_QUALITY_HIGH));
+
+            if( !bmp.IsOk() ){
+                
+                bmp = m_style->GetToolIcon( tool->GetToolname(), toggleFlag, tool->rollover,
+                                           tool->m_width, tool->m_height );
+                
+                if( bmp.GetDepth() == 1 ) {     // Tool icon not found
+                    if( tool->rollover ) {
+                        bmp = m_style->BuildPluginIcon( tool->pluginRolloverIcon, toggleFlag );
+                        if( ! bmp.IsOk() )
+                            bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, toggleFlag );
+                    }
+                    else
+                        bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, toggleFlag );
+                    
+                    if( m_sizefactor > 1.0 ){
+                        wxImage scaled_image = bmp.ConvertToImage();
+                        bmp = wxBitmap(scaled_image.Scale(tool->m_width, tool->m_height, wxIMAGE_QUALITY_HIGH));
+                    }
+                }
             }
+            bmp = m_style->SetBitmapBrightness(bmp);
             tool->SetNormalBitmap( bmp );
             tool->bitmapOK = true;
         } else {
@@ -2120,16 +2152,6 @@ void ocpnToolBarSimple::EnableTool( int id, bool enable )
     wxMenuItem* configItem = g_FloatingToolbarConfigMenu->FindItem( id );
     if(configItem)
         configItem->Check( true );
-}
-
-void ocpnToolBarSimple::SetToolBitmaps( int id, wxBitmap *bmp, wxBitmap *bmpRollover )
-{
-    ocpnToolBarTool *tool = (ocpnToolBarTool*)FindById( id );
-    if( tool ) {
-        tool->pluginNormalIcon = bmp;
-        tool->pluginRolloverIcon = bmpRollover;
-        tool->bitmapOK = false;
-    }
 }
 
 void ocpnToolBarSimple::SetToolTooltipHiViz( int id, bool b_hiviz )
@@ -2393,6 +2415,37 @@ void ocpnToolBarSimple::SetToolNormalBitmapEx(wxToolBarToolBase *tool, const wxS
     }
 }
 
+void ocpnToolBarSimple::SetToolNormalBitmapSVG(wxToolBarToolBase *tool, wxString fileSVG)
+{
+    if( tool ) {
+        ocpnToolBarTool *otool = (ocpnToolBarTool *) tool;
+        if(otool){
+            otool->pluginNormalIconSVG = fileSVG;
+        }
+    }
+}
+
+
+void ocpnToolBarSimple::SetToolBitmaps( int id, wxBitmap *bmp, wxBitmap *bmpRollover )
+{
+    ocpnToolBarTool *tool = (ocpnToolBarTool*)FindById( id );
+    if( tool ) {
+        tool->pluginNormalIcon = bmp;
+        tool->pluginRolloverIcon = bmpRollover;
+        tool->bitmapOK = false;
+    }
+}
+
+void ocpnToolBarSimple::SetToolBitmapsSVG( int id, wxString fileSVGNormal, wxString fileSVGRollover, wxString fileSVGToggled )
+{
+    ocpnToolBarTool *tool = (ocpnToolBarTool*)FindById( id );
+    if( tool ) {
+        tool->pluginNormalIconSVG = fileSVGNormal;
+        tool->pluginRolloverIconSVG = fileSVGRollover;
+        tool->pluginToggledIconSVG = fileSVGToggled;
+        tool->bitmapOK = false;
+    }
+}
 
 //-------------------------------------------------------------------------------------
 

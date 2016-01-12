@@ -202,7 +202,7 @@ void IACFleetUIDialog::OnIdAnimateClick( wxCommandEvent& event )
                 wxFileName fn(m_currentDir, m_FilenameArray[selectedFiles[i]]);
                 m_filesToAnimate.Add(fn.GetFullPath());
             }
-
+            
             m_bAnimation->SetLabel(_("Stop &animation"));
             m_timer->Start( ANIMATION_FRAME_MS );
         }
@@ -291,22 +291,22 @@ void IACFleetUIDialog::CreateControls()
 
     wxBoxSizer* bSizerSort;
     bSizerSort = new wxBoxSizer( wxHORIZONTAL );
-
+    
     m_stSort = new wxStaticText( filepanel, wxID_ANY, _("Sort by"), wxDefaultPosition, wxDefaultSize, 0 );
     m_stSort->Wrap( -1 );
     bSizerSort->Add( m_stSort, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
+    
     m_rbSortName = new wxRadioButton( filepanel, wxID_ANY, _("Name"), wxDefaultPosition, wxDefaultSize, 0 );
     bSizerSort->Add( m_rbSortName, 0, wxALL, 5 );
-
+    
     m_rbSortTime = new wxRadioButton( filepanel, wxID_ANY, _("File timestamp"), wxDefaultPosition, wxDefaultSize, 0 );
     bSizerSort->Add( m_rbSortTime, 0, wxALL, 5 );
-
+    
     if( m_sortType == SORT_NAME )
         m_rbSortName->SetValue( true );
     else
         m_rbSortTime->SetValue( true );
-
+    
     fpsizer->Add( bSizerSort, 0, wxEXPAND, 5 );
 
     m_pFileListCtrl = new wxListBox(filepanel,ID_FILESELECTED,
@@ -494,12 +494,18 @@ void IACFleetUIDialog::CreateControls()
 void IACFleetUIDialog::updateFileList( void )
 {
     m_FilenameArray.Empty();
-    if( m_currentDir == wxEmptyString || !wxDirExists( m_currentDir ) )
-        return;
-    wxDir::GetAllFiles(m_currentDir,
+#ifdef __WXOSX__
+    int dateien = wxDir::GetAllFiles(m_currentDir,
             &m_FilenameArray,
             wxEmptyString,
             wxDIR_FILES);
+    if(dateien <= 0) return;
+#else
+    wxDir::GetAllFiles(m_currentDir,
+                       &m_FilenameArray,
+                       wxEmptyString,
+                       wxDIR_FILES);
+#endif
     for( int i = m_FilenameArray.GetCount() - 1; i >= 0; i-- )
     {
         // remove dirname from file
@@ -676,10 +682,10 @@ void IACFleetUIDialog::OnBrDownload( wxCommandEvent& event )
         wxMessageBox(_("Sorry, the data is not available before September 1, 2006..."), _(""), wxOK | wxICON_HAND );
         return;
     }
-
+    
     wxString showfile = wxEmptyString;
     wxString showfilename = wxEmptyString;
-
+    
     for( int i = 0; i < m_spHist->GetValue(); i++ )
     {
         wxString filename = wxString::Format(_T("P%u%02u%02u%02u.iac"),
@@ -687,7 +693,7 @@ void IACFleetUIDialog::OnBrDownload( wxCommandEvent& event )
                                              dt.GetHour() );
         dt.Subtract( wxTimeSpan( 12) );
         wxString url = _T("http://www.mar.mil.br/dhn/chm/meteo/prev/iac/") + filename;
-
+        
         wxFileName tfn = wxFileName::CreateTempFileName( _T("iacfleet") );
         wxFileName fn(m_currentDir, filename);
         wxFileOutputStream output( tfn.GetFullPath() );
@@ -747,13 +753,13 @@ void IACFleetUIDialog::OnSortChange( wxCommandEvent& event )
 void IACFleetUIDialog::OnNoaaDownload( wxCommandEvent& event )
 {
     wxDateTime dt = wxDateTime::Now();
-
+    
     wxString showfile = wxEmptyString;
     wxString showfilename = wxEmptyString;
-
+    
     wxString url;
     wxString prefix;
-
+    
     if( m_rbAnalysis->GetValue() )
     {
         prefix = _T("IAC_NOAA_A");
@@ -764,7 +770,7 @@ void IACFleetUIDialog::OnNoaaDownload( wxCommandEvent& event )
         prefix = _T("IAC_NOAA_F");
         url = _T("http://weather.noaa.gov/pub/data/raw/fs/fsxx21.egrr..txt");
     }
-
+    
     wxString filename = wxString::Format(_T("%s_%i-%i-%i_%i-%i.txt"), prefix.c_str(),
                                          dt.GetYear(), dt.GetMonth() + 1, dt.GetDay(),
                                          dt.GetHour(), dt.GetMinute() );

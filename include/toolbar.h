@@ -136,6 +136,7 @@ public:
       int GetVisibleToolCount();
 
       void SetToolNormalBitmapEx(wxToolBarToolBase *tool, const wxString & iconname);
+      void SetToolNormalBitmapSVG(wxToolBarToolBase *tool, wxString fileSVG);
 
       // get the control with the given id or return NULL
       virtual wxControl *FindControl( int toolid );
@@ -166,6 +167,10 @@ public:
       virtual void ToggleTool( int toolid, bool toggle );
 
       virtual void SetToolBitmaps( int toolid, wxBitmap *bmp, wxBitmap *bmpRollover );
+      virtual void SetToolBitmapsSVG( int id, wxString fileSVGNormal,
+                                   wxString fileSVGRollover,
+                                   wxString fileSVGToggled );
+
       void InvalidateBitmaps();
 
       // set/get tools client data (not for controls)
@@ -336,6 +341,7 @@ public:
       ocpnToolBarSimple *GetToolbar();
       void Submerge();
       void SubmergeToGrabber();
+      bool isSubmergedToGrabber();
       void Surface();
       void SurfaceFromGrabber();
       void HideTooltip();

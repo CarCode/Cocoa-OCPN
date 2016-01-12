@@ -52,16 +52,19 @@ void bmdump(wxBitmap bm, wxString name)
     img.SaveFile( name << _T(".png"), wxBITMAP_TYPE_PNG );
 }
 
-#ifdef ocpnUSE_SVG
 static wxBitmap LoadSVG( const wxString filename, unsigned int width, unsigned int height )
 {
+#ifdef ocpnUSE_SVG
     wxSVGDocument svgDoc;
     if( svgDoc.Load(filename) )
         return wxBitmap( svgDoc.Render( width, height, NULL, true, true ) );
     else
         return wxBitmap(width, height);
-}
+#else
+    return wxBitmap(width, height);
 #endif // ocpnUSE_SVG
+}
+
 
 // This function can be used to create custom bitmap blending for all platforms
 // where 32 bit bitmap ops are broken. Can hopefully be removed for wxWidgets 3.0...
@@ -367,8 +370,26 @@ wxBitmap Style::GetToolIcon(const wxString & toolname, int iconType, bool rollov
                 bm = LoadSVG( fullFilePath, retSize.x, retSize.y );
             else
             {
-                ///wxLogMessage( _T("Can't find SVG: ") + fullFilePath );
+                // Could not find a toggled SVG, so try to make one
+                if( rollover )
+                    fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + _T("_rollover.svg");
+                else
+                    fullFilePath = myConfigFileDir + this->sysname + wxFileName::GetPathSeparator() + toolname + _T(".svg");
+
+                if( wxFileExists( fullFilePath ) ){
+                    bm = LoadSVG( fullFilePath, retSize.x, retSize.y );
+                    
+                    wxBitmap bmBack = GetToggledBG();
+                    if( (bmBack.GetWidth() != retSize.x) || (bmBack.GetHeight() != retSize.y) ){
+                        wxImage scaled_back = bmBack.ConvertToImage();
+                        bmBack = wxBitmap(scaled_back.Scale(retSize.x, retSize.y, wxIMAGE_QUALITY_HIGH));
+                    }
+                    bm = MergeBitmaps( bmBack, bm, wxSize(0,0) );
+                }
+            }
+
 #endif // ocpnUSE_SVG
+            if(!bm.Ok()){
                 bm = graphics->GetSubBitmap( location );
                 bm = MergeBitmaps( GetToggledBG(), bm, offset );
 
@@ -376,10 +397,8 @@ wxBitmap Style::GetToolIcon(const wxString & toolname, int iconType, bool rollov
                     wxImage scaled_image = bm.ConvertToImage();
                     bm = wxBitmap(scaled_image.Scale(retSize.x, retSize.y, wxIMAGE_QUALITY_HIGH));
                 }
-
-#ifdef ocpnUSE_SVG
             }
-#endif // ocpnUSE_SVG
+
             if( rollover ) {
                 tool->rolloverToggled = SetBitmapBrightness( bm );
                 tool->rolloverToggledLoaded = true;
