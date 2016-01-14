@@ -217,6 +217,7 @@ public:
 
       wxBitmap &GetTideBitmap(){ return m_cTideBitmap; }
 
+      void UnlockQuilt();
       void SetQuiltMode(bool b_quilt);
       bool GetQuiltMode(void);
       ArrayOfInts GetQuiltIndexArray(void);

@@ -201,7 +201,7 @@ protected:
 #ifdef __WXMSW__
           wxLaunchDefaultBrowser( _T("file:///") + *GetpSharedDataLocation() + _T("plugins/chartdldr_pi/data/doc/index.html") );
 #elif defined __WXOSX__
-          wxMessageBox(_("Siehe Mac OS X Menüleiste: OpenCPN-Hilfe"), _("Information"), wxOK | wxICON_INFORMATION);
+          wxMessageBox(_("See Mac OS X menubar: OpenCPN-Help"), _("Information"), wxOK | wxICON_INFORMATION);
 #else
           wxLaunchDefaultBrowser( _T("file://") + *GetpSharedDataLocation() + _T("plugins/chartdldr_pi/data/doc/index.html") ); 
 #endif
