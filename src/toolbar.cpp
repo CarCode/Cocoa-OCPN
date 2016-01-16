@@ -401,8 +401,6 @@ void ocpnFloatingToolbarDialog::SetColorScheme( ColorScheme cs )
     ClearBackground();
 
     if( m_ptoolbar ) {
-        wxColour back_color = GetGlobalColor( _T("GREY2") );
-
         //  Set background
         m_ptoolbar->SetBackgroundColour( back_color );
         m_ptoolbar->ClearBackground();
@@ -1092,6 +1090,9 @@ void ToolTipWin::SetColorScheme( ColorScheme cs )
 {
     m_back_color = GetGlobalColor( _T ( "UIBCK" ) );
     m_text_color = FontMgr::Get().GetFontColor( _("ToolTips") );
+    // assume black is the default
+    if (m_text_color == *wxBLACK)
+        m_text_color = GetGlobalColor( _T ( "UITX1" ) );
 
     m_cs = cs;
 }
@@ -1881,15 +1882,13 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
                     svgFile = tool->pluginRolloverIconSVG;
             }
 
-            if(m_style->sysname.Lower() != _T("traditional") )
-                svgFile.Clear();
-
             if(svgFile.Length()){         // try SVG
 #ifdef ocpnUSE_SVG
                 if( wxFileExists( svgFile ) ){
                     wxSVGDocument svgDoc;
                     if( svgDoc.Load(svgFile) ){
                         bmp = wxBitmap( svgDoc.Render( tool->m_width, tool->m_height, NULL, true, true ) );
+                        bmp = m_style->SetBitmapBrightness(bmp);
                     }
                     else
                         bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_NORMAL );
@@ -1917,7 +1916,6 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
                     }
                 }
             }
-            bmp = m_style->SetBitmapBrightness(bmp);
             tool->SetNormalBitmap( bmp );
             tool->bitmapOK = true;
         } else {

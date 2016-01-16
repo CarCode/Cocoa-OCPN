@@ -460,7 +460,7 @@ wxBitmap Style::BuildPluginIcon( const wxBitmap* bm, int iconType )
         case TOOLICON_NORMAL: {
             if( hasBackground ) {
                 wxBitmap bg = GetNormalBG();
-                bg = SetBitmapBrightness( bg );
+
                 wxSize offset = wxSize( bg.GetWidth() - bm->GetWidth(), bg.GetHeight() - bm->GetHeight() );
                 offset /= 2;
                 iconbm = MergeBitmaps( bg, *bm, offset );
@@ -480,8 +480,11 @@ wxBitmap Style::BuildPluginIcon( const wxBitmap* bm, int iconType )
             iconbm = MergeBitmaps( GetToggledBG(), *bm, wxSize( 0, 0 ) );
             break;
         }
+        default:
+            return wxNullBitmap;
+            break;
     }
-    return iconbm;
+    return SetBitmapBrightness( iconbm );
 }
 
 wxBitmap Style::SetBitmapBrightness( wxBitmap& bitmap )

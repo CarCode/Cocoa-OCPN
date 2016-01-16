@@ -1643,8 +1643,6 @@ ChartBaseBSB::ChartBaseBSB()
       m_dtm_lat = 0.;
       m_dtm_lon = 0.;
 
-      m_bIDLcross = false;
-
       m_dx = 0.;
       m_dy = 0.;
       m_proj_lat = 0.;
@@ -2667,11 +2665,7 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, double &pixx, double
           alon = lon + m_lon_datum_adjust;
           alat = lat + m_lat_datum_adjust;
 
-          if(m_bIDLcross)
-          {
-                if(alon < 0.)
-                      alon += 360.;
-          }
+          AdjustLongitude(alon);
 
           if(1)
           {
@@ -2751,11 +2745,7 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, double &pixx, double
 
                 //      Get e/n from  Projection
                 xlon = alon;
-                if(m_bIDLcross)
-                {
-                      if(xlon < 0.)
-                            xlon += 360.;
-                }
+                AdjustLongitude(xlon);
                 toSM_ECC(alat, xlon, m_proj_lat, m_proj_lon, &easting, &northing);
 
                 //      Apply poly solution to target point
@@ -2764,11 +2754,7 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, double &pixx, double
 
                 //      Apply poly solution to vp center point
                 double xlonc = vp.clon;
-                if(m_bIDLcross)
-                {
-                      if(xlonc < 0.)
-                            xlonc += 360.;
-                }
+                AdjustLongitude(xlonc);
 
                 toSM_ECC(vp.clat + m_lat_datum_adjust, xlonc + m_lon_datum_adjust, m_proj_lat, m_proj_lon, &easting, &northing);
                 double xc = polytrans( cPoints.wpx, easting, northing );
@@ -2792,12 +2778,7 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, double &pixx, double
                 alat = lat + m_lat_datum_adjust;
 
                 //      Get e/n from  Projection
-                xlon = alon;
-                if(m_bIDLcross)
-                {
-                      if(xlon < 0.)
-                            xlon += 360.;
-                }
+                xlon = AdjustLongitude(alon);
                 toPOLY(alat, xlon, m_proj_lat, m_proj_lon, &easting, &northing);
 
                 //      Apply poly solution to target point
@@ -2805,12 +2786,7 @@ int ChartBaseBSB::latlong_to_pix_vp(double lat, double lon, double &pixx, double
                 double yd = polytrans( cPoints.wpy, easting, northing );
 
                 //      Apply poly solution to vp center point
-                double xlonc = vp.clon;
-                if(m_bIDLcross)
-                {
-                      if(xlonc < 0.)
-                            xlonc += 360.;
-                }
+                double xlonc = AdjustLongitude(vp.clon);
 
                 toPOLY(vp.clat + m_lat_datum_adjust, xlonc + m_lon_datum_adjust, m_proj_lat, m_proj_lon, &easting, &northing);
                 double xc = polytrans( cPoints.wpx, easting, northing );
@@ -2859,12 +2835,7 @@ void ChartBaseBSB::latlong_to_chartpix(double lat, double lon, double &pixx, dou
             alon = lon + m_lon_datum_adjust;
             alat = lat + m_lat_datum_adjust;
 
-            if(m_bIDLcross)
-            {
-                  if(alon < 0.)
-                        alon += 360.;
-            }
-
+            alon = AdjustLongitude(alon);
 
             /* change longitude phase (CPH) */
             double lonp = (alon < 0) ? alon + m_cph : alon - m_cph;
@@ -2896,16 +2867,12 @@ void ChartBaseBSB::latlong_to_chartpix(double lat, double lon, double &pixx, dou
             {
                 //      Use Projected Polynomial algorithm
 
-                  alon = lon + m_lon_datum_adjust;
+//                  alon = lon + m_lon_datum_adjust;  //  Not used
                   alat = lat + m_lat_datum_adjust;
 
                 //      Get e/n from  Projection
-                  xlon = alon;
-                  if(m_bIDLcross)
-                  {
-                        if(xlon < 0.)
-                              xlon += 360.;
-                  }
+                  xlon = AdjustLongitude(xlon);
+
                   toSM_ECC(alat, xlon, m_proj_lat, m_proj_lon, &easting, &northing);
 
                 //      Apply poly solution to target point
@@ -2922,12 +2889,7 @@ void ChartBaseBSB::latlong_to_chartpix(double lat, double lon, double &pixx, dou
                   alat = lat + m_lat_datum_adjust;
 
                 //      Get e/n from  Projection
-                  xlon = alon;
-                  if(m_bIDLcross)
-                  {
-                        if(xlon < 0.)
-                              xlon += 360.;
-                  }
+                  xlon = AdjustLongitude(alon);
                   toPOLY(alat, xlon, m_proj_lat, m_proj_lon, &easting, &northing);
 
                 //      Apply poly solution to target point
@@ -4829,7 +4791,6 @@ bool ChartBaseBSB::AnalyzeSkew(void)
 //                    nlatmax = n;  // Not used
                 }
             }
-            m_bIDLcross = true;
         }
     }
     
@@ -5052,7 +5013,6 @@ int   ChartBaseBSB::AnalyzeRefpoints(bool b_testSolution)
 //                              nlatmax = n;  // Not used
                         }
                   }
-                  m_bIDLcross = true;
             }
       }
 
@@ -5496,6 +5456,15 @@ int   ChartBaseBSB::AnalyzeRefpoints(bool b_testSolution)
 
 }
 
+double ChartBaseBSB::AdjustLongitude(double lon)
+{
+    double lond = (m_LonMin + m_LonMax)/2 - lon;
+    if(lond > 180)
+        return lon + 360;
+    else if(lond < -180)
+        return lon - 360;
+    return lon;
+}
 
 /*
 *  Extracted from bsb_io.c - implementation of libbsb reading and writing
