@@ -610,6 +610,9 @@
 		A6E082311AAB5956002CC7F0 /* OCPNPlatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E082301AAB5956002CC7F0 /* OCPNPlatform.cpp */; };
 		A6F037B71B73FC2900E82ECC /* libdraw_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6DB33551B736C0400163272 /* libdraw_pi.dylib */; };
 		A6F5FF5A1AEB9B120034F6CF /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F5FF591AEB9B120034F6CF /* TexFont.cpp */; };
+		A6FD71341C4905CD008CF9F7 /* grib_rollover.svg in Copy Files */ = {isa = PBXBuildFile; fileRef = A6FD71311C4905A0008CF9F7 /* grib_rollover.svg */; };
+		A6FD71351C4905CD008CF9F7 /* grib_toggled.svg in Copy Files */ = {isa = PBXBuildFile; fileRef = A6FD71321C4905A0008CF9F7 /* grib_toggled.svg */; };
+		A6FD71361C4905CD008CF9F7 /* grib.svg in Copy Files */ = {isa = PBXBuildFile; fileRef = A6FD71331C4905A0008CF9F7 /* grib.svg */; };
 		A7D85A911CD9440D88990DE9 /* lat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A34D3BDAF9D408F9D08642A /* lat.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A7FB0E99BAB54FE18BFC2CF1 /* PositionParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1A7C66C95E44197A749D5E9 /* PositionParser.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 		A926F111F93F452498044653 /* dicts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9BF6F7114A5401DB8A705FB /* dicts.cpp */; settings = {COMPILER_FLAGS = ""; }; };
@@ -1100,6 +1103,19 @@
 				A6C704BD1C45201A0083746C /* Dashboard_toggled.svg in CopyFiles */,
 				A6C704BE1C45201A0083746C /* Dashboard.svg in CopyFiles */,
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A6FD712F1C4904A6008CF9F7 /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = ../SharedSupport/plugins/grib_pi/data;
+			dstSubfolderSpec = 6;
+			files = (
+				A6FD71341C4905CD008CF9F7 /* grib_rollover.svg in Copy Files */,
+				A6FD71351C4905CD008CF9F7 /* grib_toggled.svg in Copy Files */,
+				A6FD71361C4905CD008CF9F7 /* grib.svg in Copy Files */,
+			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -2012,6 +2028,9 @@
 		A6F5FF591AEB9B120034F6CF /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/iacfleet_pi/src/TexFont.cpp; sourceTree = "<group>"; };
 		A6F5FF5B1AEB9DA10034F6CF /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/iacfleet_pi/src/TexFont.h; sourceTree = "<group>"; };
 		A6FABA6218CDDFA400922E48 /* RMC.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = RMC.hpp; path = src/nmea0183/RMC.hpp; sourceTree = "<group>"; };
+		A6FD71311C4905A0008CF9F7 /* grib_rollover.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = grib_rollover.svg; path = plugins/grib_pi/data/grib_rollover.svg; sourceTree = "<group>"; };
+		A6FD71321C4905A0008CF9F7 /* grib_toggled.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = grib_toggled.svg; path = plugins/grib_pi/data/grib_toggled.svg; sourceTree = "<group>"; };
+		A6FD71331C4905A0008CF9F7 /* grib.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = grib.svg; path = plugins/grib_pi/data/grib.svg; sourceTree = "<group>"; };
 		A76934330B0A4AF2877C4238 /* gpxdocument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gpxdocument.cpp; path = src/gpxdocument.cpp; sourceTree = SOURCE_ROOT; };
 		A8CB7EA0F7D54C8BA1AD0EDA /* bbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bbox.cpp; path = src/bbox.cpp; sourceTree = SOURCE_ROOT; };
 		A8E0DEAB602C4C2881731A87 /* TC_Error_Code.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TC_Error_Code.h; path = include/TC_Error_Code.h; sourceTree = SOURCE_ROOT; };
@@ -2396,6 +2415,7 @@
 		2ACA7EDA82E04275B3BF121A /* grib_pi */ = {
 			isa = PBXGroup;
 			children = (
+				A6FD71301C490578008CF9F7 /* data */,
 				12F1B40629F946D0AFE59BDD /* Header Files */,
 				7801A2C16E2F4F3C98D86D6B /* Source Files */,
 			);
@@ -3716,6 +3736,16 @@
 			name = "Header Files";
 			sourceTree = "<group>";
 		};
+		A6FD71301C490578008CF9F7 /* data */ = {
+			isa = PBXGroup;
+			children = (
+				A6FD71311C4905A0008CF9F7 /* grib_rollover.svg */,
+				A6FD71321C4905A0008CF9F7 /* grib_toggled.svg */,
+				A6FD71331C4905A0008CF9F7 /* grib.svg */,
+			);
+			name = data;
+			sourceTree = "<group>";
+		};
 		A9DFE84696B94EA5B2A4099C /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -4509,6 +4539,7 @@
 				4962B95EFBB7451DBB9C0F0E /* CopyFiles */,
 				8F847A759C74489F8040D9CA /* CopyFiles */,
 				A6C704B71C451EDD0083746C /* CopyFiles */,
+				A6FD712F1C4904A6008CF9F7 /* Copy Files */,
 				1D6AC28C6D4444DB8D4DD430 /* CopyFiles */,
 				2981BFBEE8B1461083EFD003 /* CopyFiles */,
 				3B5296F4970E4372ACC86314 /* CopyFiles */,

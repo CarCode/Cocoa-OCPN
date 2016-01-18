@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -48,7 +47,7 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 //---------------------------------------------------------------------------------------------------------
 
 weatherfax_pi::weatherfax_pi(void *ppimgr)
-    : opencpn_plugin_18(ppimgr)
+    : opencpn_plugin_113(ppimgr)
 {
     // Create the PlugIn icons
     initialize_images();
@@ -104,7 +103,11 @@ bool weatherfax_pi::DeInit(void)
     SetWeatherFaxX(p.x);
     SetWeatherFaxY(p.y);
 
+    m_pWeatherFax->m_SchedulesDialog.Close();
+    m_pWeatherFax->m_InternetRetrievalDialog.Close();
     m_pWeatherFax->Close();
+    delete m_pWeatherFax;
+    m_pWeatherFax = NULL;
 
     SaveConfig();
 
@@ -233,7 +236,8 @@ wxString weatherfax_pi::StandardPath()
     wxString stdPath  = std_path.GetUserDataDir();
 #endif
 #ifdef __WXOSX__
-    wxString stdPath  = std_path.GetUserConfigDir();   // should be ~/Library/Preferences	
+    wxString stdPath  = std_path.GetUserConfigDir();   // should be ~/Library/Preferences
+    stdPath = stdPath + _T("/opencpn");
 #endif
 
     wxString s = wxFileName::GetPathSeparator(), path = stdPath + s + _T("plugins") + s;

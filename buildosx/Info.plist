@@ -6,11 +6,6 @@
 	<string>14D136</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-	<key>CFBundleLocalisations</key>
-	<array>
-		<string>en</string>
-		<string>de</string>
-	</array>
 	<key>CFBundleExecutable</key>
 	<string>OpenCPN</string>
 	<key>CFBundleHelpBookFolder</key>
@@ -20,21 +15,26 @@
 	<key>CFBundleIconFile</key>
 	<string>opencpn.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>de.topperdiek.opencpn</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalisations</key>
+	<array>
+		<string>en</string>
+		<string>de</string>
+	</array>
 	<key>CFBundleLongVersionString</key>
-	<string>15.8.4</string>
+	<string>16.1.20</string>
 	<key>CFBundleName</key>
 	<string>OpenCPN</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>15.8.4</string>
+	<string>16.1.20</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>15.8</string>
+	<string>16.1</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>DTCompiler</key>
@@ -56,7 +56,7 @@
 	<key>LSRequiresCarbon</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>CarCode 2015</string>
+	<string>CarCode 2016</string>
 	<key>SUFeedURL</key>
 	<string>http://topperdiek.de/dl/app/ocpncast.xml</string>
 	<key>SUPublicDSAKeyFile</key>

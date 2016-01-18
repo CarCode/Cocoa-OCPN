@@ -1226,6 +1226,7 @@ void ocpnToolBarSimple::Init()
     m_sizefactor = 1.0f;
 
     m_last_plugin_down_id = -1;
+    m_leftDown = false;
 
     EnableTooltips();
 }
@@ -1643,6 +1644,7 @@ void ocpnToolBarSimple::OnToolTipOffTimerEvent( wxTimerEvent& event )
 
 
 int s_dragx, s_dragy;
+bool leftDown;
 
 void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
 {
@@ -1773,6 +1775,9 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
     }
 
     // Left button pressed.
+    if( event.LeftDown() )
+        m_leftDown = true;                      // trigger on
+
     if( event.LeftDown() && tool->IsEnabled() ) {
         if( tool->CanBeToggled() ) {
             tool->Toggle();
@@ -1806,7 +1811,7 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
     // If the button is enabled and it is not a toggle tool and it is
     // in the pressed state, then raise the button and call OnLeftClick.
     //
-    if( event.LeftUp() && tool->IsEnabled() ) {
+    if( event.LeftUp() && tool->IsEnabled() && m_leftDown) {
         // Pass the OnLeftClick event to tool
         if( !OnLeftClick( tool->GetId(), tool->IsToggled() ) && tool->CanBeToggled() ) {
             // If it was a toggle, and OnLeftClick says No Toggle allowed,
@@ -1816,6 +1821,7 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
         }
 
         DoPluginToolUp();
+        m_leftDown = false;
     }
 #ifndef __WXOSX__
     wxMouseEvent *pev = (wxMouseEvent *) event.Clone();

@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,10 +33,10 @@
 #include "version.h"
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    3
+#define     PLUGIN_VERSION_MINOR    5
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    8
+#define     MY_API_VERSION_MINOR    13
 
 #define ABOUT_AUTHOR_URL "http://seandepagnier.users.sourceforge.net"
 
@@ -54,7 +53,7 @@
 class WeatherFaxImage;
 class WeatherFax;
 
-class weatherfax_pi : public opencpn_plugin_18
+class weatherfax_pi : public opencpn_plugin_113
 {
 public:
       weatherfax_pi(void *ppimgr);
@@ -114,7 +113,7 @@ private:
 
       bool              LoadConfig(void);
       bool              SaveConfig(void);
-
+    
       void SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix);
 
       int               m_weatherfax_dialog_x, m_weatherfax_dialog_y;
@@ -123,6 +122,9 @@ private:
       int               m_leftclick_tool_id;
 
       void              RearrangeWindow();
+#ifdef __WXOSX__
+    wxString          m_weatherfax_dir;
+#endif
 };
 
 #endif
