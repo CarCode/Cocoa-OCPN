@@ -585,13 +585,22 @@ void s63_pi::OnSetupOptions(){
     //  FPR File Permit
     wxStaticBoxSizer* sbSizerFPR= new wxStaticBoxSizer( new wxStaticBox( m_s63chartPanelKeys, wxID_ANY, _("System Identification") ), wxHORIZONTAL );
     m_fpr_text = new wxStaticText(m_s63chartPanelKeys, wxID_ANY, _T(" "));
-    
-    sbSizerFPR->Add(m_fpr_text, wxEXPAND);
-    
-    m_buttonNewFPR = new wxButton( m_s63chartPanelKeys, wxID_ANY, _("Create System Identifier file..."), wxDefaultPosition, wxDefaultSize, 0 );
+    if(g_fpr_file.Len())
 #ifdef __WXOSX__
-    sbSizerFPR->Add( m_buttonNewFPR, 0, wxALL, 5 );
+        m_fpr_text->SetLabel( _T("Datei vorhanden, siehe Ordner ~/Library/Preferences/opencpn/") );
 #else
+        m_fpr_text->SetLabel( g_fpr_file );
+#endif
+    sbSizerFPR->Add(m_fpr_text, wxEXPAND);
+
+#ifdef __WXOSX__
+    if(g_fpr_file.Len())
+        m_buttonNewFPR = new wxButton( m_s63chartPanelKeys, wxID_ANY, _("Existing file renew?"), wxDefaultPosition, wxDefaultSize, 0 );
+    else
+        m_buttonNewFPR = new wxButton( m_s63chartPanelKeys, wxID_ANY, _("Create System Identifier file..."), wxDefaultPosition, wxDefaultSize, 0 );
+        sbSizerFPR->Add( m_buttonNewFPR, 0, wxALL, 5 );
+#else
+    m_buttonNewFPR = new wxButton( m_s63chartPanelKeys, wxID_ANY, _("Create System Identifier file..."), wxDefaultPosition, wxDefaultSize, 0 );
     sbSizerFPR->Add( m_buttonNewFPR, 0, wxALL | wxALIGN_RIGHT, 5 );
 #endif
     chartPanelSizerKeys->AddSpacer( 5 );
@@ -780,7 +789,9 @@ int s63_pi::ImportCells( void )
         delete DiropenDialog;
         return 0;
     }
-
+#ifdef __WXOSX__
+    wxDELETE(DiropenDialog);
+#endif
     m_last_enc_root_dir = enc_root_dir;
     SaveConfig();
     
@@ -2069,7 +2080,8 @@ bool s63_pi::LoadConfig( void )
         pConf->Read( _T("S63CommonDataDir"), &g_CommonDataDir);
         pConf->Read( _T("ShowScreenLog"), &g_buser_enable_screenlog);
         pConf->Read( _T("NoShowSSE25"), &g_bnoShow_sse25);
-    }        
+        pConf->Read( _T("LastFPRFile"), &g_fpr_file);
+    }
      
     return true;
 }
@@ -2085,6 +2097,7 @@ bool s63_pi::SaveConfig( void )
         pConf->Write( _T("Userpermit"), g_userpermit );
         pConf->Write( _T("Installpermit"), g_installpermit );
         pConf->Write( _T("LastENCROOT"), m_last_enc_root_dir );
+        pConf->Write( _T("LastFPRFile"), g_fpr_file );
         
     }
 
@@ -2191,10 +2204,9 @@ void s63_pi_event_handler::OnNewFPRClick( wxCommandEvent &event )
     wxString msg = _("To obtain an Install Permit, you must generate a unique System Identifier File.\n");
     msg += _("This file is also known as a\"fingerprint\" file.\n");
     msg += _("The fingerprint file contains information to uniquely identifiy this computer.\n\n");
-    msg += _("After creating this file, you must send the file by email to o-charts.org.\n");
-    msg += _("You may then arrange to purchase an Install Permit.\n\n");
+    msg += _("After creating this file, you will need it to generate your InstallPermit at the o-charts.org shop.\n");
     msg += _("Proceed to create Fingerprint file?");
-    
+
     int ret = OCPNMessageBox_PlugIn(NULL, msg, _("S63_PI Message"), wxYES_NO);
    
     if(ret == wxID_YES){

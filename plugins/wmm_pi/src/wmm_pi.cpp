@@ -105,6 +105,7 @@ and extended by Sean D'Epagnier to support plotting."));
 
 wmm_pi::wmm_pi(void *ppimgr)
 	: opencpn_plugin_18(ppimgr),
+    m_bShowPlot(false),
 	m_DeclinationMap(DECLINATION, MagneticModel, TimedMagneticModel, &Ellip),
 	m_InclinationMap(INCLINATION, MagneticModel, TimedMagneticModel, &Ellip),
 	m_FieldStrengthMap(FIELD_STRENGTH, MagneticModel, TimedMagneticModel, &Ellip),
@@ -136,6 +137,12 @@ int wmm_pi::Init(void)
 	m_buseable = true;
 
 	m_LastVal = wxEmptyString;
+
+    pFontSmall = new wxFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
+    m_shareLocn =*GetpSharedDataLocation() +
+    _T("plugins") + wxFileName::GetPathSeparator() +
+    _T("wmm_pi") + wxFileName::GetPathSeparator() +
+    _T("data") + wxFileName::GetPathSeparator();
 
 	//    WMM initialization
 	/* Memory allocation */
@@ -189,8 +196,9 @@ int wmm_pi::Init(void)
 
 //    This PlugIn needs a toolbar icon, so request its insertion
 	m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_wmm, _img_wmm, wxITEM_NORMAL,
-		_("WMM"), _T(""), NULL,
-		WMM_TOOL_POSITION, 0, this);
+                                            _("WMM"), _T(""), NULL, WMM_TOOL_POSITION, 0, this);
+    
+    SetIconType();          // SVGs allowed if not showing live icon
 
 	m_pWmmDialog = NULL;
 
@@ -230,6 +238,7 @@ bool wmm_pi::DeInit(void)
             free(Geoid.GeoidHeightBuffer);
             Geoid.GeoidHeightBuffer = NULL;
       }*/
+    delete pFontSmall;
 	return true;
 }
 
@@ -292,6 +301,23 @@ void wmm_pi::SetColorScheme(PI_ColorScheme cs)
 		return;
 
 	DimeWindow(m_pWmmDialog);
+}
+
+void wmm_pi::SetIconType()
+{
+    if(m_bShowLiveIcon){
+        SetToolbarToolBitmaps(m_leftclick_tool_id, _img_wmm, _img_wmm);
+        SetToolbarToolBitmapsSVG(m_leftclick_tool_id, _T(""), _T(""), _T(""));
+        m_LastVal.Empty();
+    }
+    else{
+        wxString normalIcon = m_shareLocn + _T("wmm_pi.svg");
+        wxString toggledIcon = m_shareLocn + _T("wmm_pi.svg");
+        wxString rolloverIcon = m_shareLocn + _T("wmm_pi.svg");
+
+        SetToolbarToolBitmapsSVG(m_leftclick_tool_id, normalIcon, rolloverIcon, toggledIcon);
+    }
+
 }
 
 void wmm_pi::RearrangeWindow()
@@ -357,6 +383,7 @@ void wmm_pi::OnToolbarToolCallback(int id)
 	/*m_pWmmDialog->SetMaxSize(m_pWmmDialog->GetSize());
 	m_pWmmDialog->SetMinSize(m_pWmmDialog->GetSize());*/
 	m_pWmmDialog->Show(!m_pWmmDialog->IsShown());
+    m_pWmmDialog->Layout();     // Some platforms need a re-Layout at this point (gtk, at least)
 	if (m_pWmmDialog->IsShown())
 		SendPluginMessage(_T("WMM_WINDOW_SHOWN"), wxEmptyString);
 	else
@@ -479,19 +506,73 @@ void wmm_pi::SetPositionFix(PlugIn_Position_Fix &pfix)
 	SendBoatVariation();
 
 	wxString NewVal = wxString::Format(_T("%.1f"), GeoMagneticElements.Decl);
-	if(m_bShowLiveIcon && m_LastVal != NewVal)
+    double scale = GetOCPNGUIToolScaleFactor_PlugIn();
+    scale = wxRound(scale * 4.0) / 4.0;
+    scale = wxMax(1.0, scale);          // Let the upstream processing handle minification.
+    
+    if( m_bShowIcon && m_bShowLiveIcon && ((m_LastVal != NewVal) || (scale != m_scale)) )
 	{
+        m_scale = scale;
 		m_LastVal = NewVal;
-		wxBitmap icon(_img_wmm_live->GetWidth(), _img_wmm_live->GetHeight());
+        int w = _img_wmm_live->GetWidth() * scale;
+        int h = _img_wmm_live->GetHeight() * scale;
 		wxMemoryDC dc;
-		dc.SelectObject(icon);
-		dc.DrawBitmap(*_img_wmm_live, 0, 0, true);
+        wxBitmap icon;
+
+        //  Is SVG available?
+        wxBitmap live = GetBitmapFromSVGFile(m_shareLocn + _T("wmm_live.svg"), w, h);
+        if( ! live.IsOk() ){
+            icon = wxBitmap(_img_wmm_live->GetWidth(), _img_wmm_live->GetHeight());
+            dc.SelectObject(icon);
+            dc.DrawBitmap(*_img_wmm_live, 0, 0, true);
+        }
+        else{
+            icon = wxBitmap(w, h);
+            dc.SelectObject(icon);
+            wxColour col;
+            dc.SetBackground( *wxTRANSPARENT_BRUSH );
+            dc.Clear();
+
+            dc.DrawBitmap(live, 0, 0, true);
+        }
 		wxColour cf;
 		GetGlobalColor(_T("CHBLK"), &cf);
 		dc.SetTextForeground(cf);
+        if(pFontSmall->IsOk()){
+            if(live.IsOk()){
+                int point_size = wxMax(10, 10 * scale);
+                pFontSmall->SetPointSize(point_size);
+            }
+            dc.SetFont(*pFontSmall);
+        }
 		wxSize s = dc.GetTextExtent(NewVal);
-		dc.DrawText(NewVal, (_img_wmm_live->GetWidth() - s.GetWidth()) / 2, (_img_wmm_live->GetHeight() - s.GetHeight()) / 2);
-		SetToolbarToolBitmaps(m_leftclick_tool_id, &icon, &icon);
+        dc.DrawText(NewVal, (icon.GetWidth() - s.GetWidth()) / 2, (icon.GetHeight() - s.GetHeight()) / 2);
+        dc.SelectObject(wxNullBitmap);
+
+        if(live.IsOk()){
+            //  By using a DC to modify the bitmap, we have lost the original bitmap's alpha channel
+            //  Recover it by copying from the original to the target, bit by bit
+            wxImage imo = live.ConvertToImage();
+            wxImage im = icon.ConvertToImage();
+            
+            if(!imo.HasAlpha())
+                imo.InitAlpha();
+            if(!im.HasAlpha())
+                im.InitAlpha();
+            
+            unsigned char *alive = imo.GetAlpha();
+            unsigned char *target = im.GetAlpha();
+            
+            for(int i=0 ; i < h ; i ++){
+                for(int j=0 ; j < w ; j++){
+                    int index = (i * w) + j;
+                    target[index] = alive[index];
+                }
+            }
+            icon = wxBitmap(im);
+        }
+
+        SetToolbarToolBitmaps(m_leftclick_tool_id, &icon, &icon);
 	}
 
 	if (NULL == m_pWmmDialog || !m_pWmmDialog->IsShown())
@@ -750,6 +831,7 @@ void wmm_pi::ShowPreferencesDialog( wxWindow* parent )
 		m_iOpacity = dialog->m_sOpacity->GetValue();
 
 		RearrangeWindow();
+        SetIconType();
 
 		SaveConfig();
 	}

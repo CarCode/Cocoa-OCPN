@@ -287,11 +287,11 @@ bool GribRecord::GetInterpolatedParameters
 {
     if(!rec1.isOk() || !rec2.isOk())
         return false;
-    
+
     /* make sure Dj both have same sign */
     if(rec1.getDj() * rec2.getDj() <= 0)
         return false;
-    
+
     Di = wxMax(rec1.getDi(), rec2.getDi());
     Dj = rec1.getDj() > 0 ?
     wxMax(rec1.getDj(), rec2.getDj()):
@@ -302,9 +302,9 @@ bool GribRecord::GetInterpolatedParameters
         La1 = wxMax(rec1.La1, rec2.La1), La2 = wxMin(rec1.La2, rec2.La2);
     else
         La1 = wxMin(rec1.La1, rec2.La1), La2 = wxMax(rec1.La2, rec2.La2);
-    
+
     Lo1 = wxMax(rec1.Lo1, rec2.Lo1), Lo2 = wxMin(rec1.Lo2, rec2.Lo2);
-    
+
     // align gribs on integer boundaries
     int i, j;
 #ifdef __WXOSX__
@@ -314,45 +314,45 @@ bool GribRecord::GetInterpolatedParameters
     double rec1offdi, rec2offdi;
     double rec1offdj, rec2offdj;
 #endif
-    
+
     double iiters = rec2.Di / rec1.Di;
     if(iiters < 1) {
         iiters = 1/iiters;
         im1 = 1, im2 = iiters;
     } else
         im1 = iiters, im2 = 1;
-    
+
     for(i=0; i<iiters; i++) {
         rec1offdi = (Lo1 - rec1.Lo1)/rec1.Di;
         rec2offdi = (Lo1 - rec2.Lo1)/rec2.Di;
         if(rec1offdi == floor(rec1offdi) && rec2offdi == floor(rec2offdi))
             break;
-        
+
         Lo1 += wxMin(rec1.Di, rec2.Di);
     }
     if(i == iiters) // failed to align, would need spacial interpolation to work
         return false;
-    
+
     double jiters = rec2.Dj / rec1.Dj;
     if(jiters < 1) {
         jiters = 1/jiters;
         jm1 = 1, jm2 = iiters;
     } else
         jm1 = jiters, jm2 = 1;
-    
+
     for(j=0; j<jiters; j++) {
         rec1offdj = (La1 - rec1.La1)/rec1.Dj;
         rec2offdj = (La1 - rec2.La1)/rec2.Dj;
         if(rec1offdj == floor(rec1offdj) && rec2offdj == floor(rec2offdj))
             break;
-        
+
         La1 += Dj < 0 ?
         wxMax(rec1.getDj(), rec2.getDj()):
         wxMin(rec1.getDj(), rec2.getDj());
     }
     if(j == jiters) // failed to align
         return false;
-    
+
     /* no overlap */
     if(La1*Dj > La2*Dj || Lo1 > Lo2)
         return false;
@@ -365,10 +365,10 @@ bool GribRecord::GetInterpolatedParameters
 
     rec1offi = rec1offdi, rec2offi = rec2offdi;
     rec1offj = rec1offdj, rec2offj = rec2offdj;
-    
+
     if (!rec1.data || !rec2.data)
         return false;
-    
+
     return true;
 }
 
@@ -384,7 +384,7 @@ GribRecord * GribRecord::InterpolatedRecord(const GribRecord &rec1, const GribRe
                                   im1, jm1, im2, jm2,
                                   Ni, Nj, rec1offi, rec1offj, rec2offi, rec2offj))
         return NULL;
-    
+
     // recopie les champs de bits
     int size = Ni*Nj;
     double *data = new double[size];
@@ -407,7 +407,7 @@ GribRecord * GribRecord::InterpolatedRecord(const GribRecord &rec1, const GribRe
                 else
                     data[in] = interp_angle(data1, data2, d, 180.);
             }
-            
+
             if(BMSbits) {
                 int b1 = rec1.BMSbits[i1>>3] & 1<<(i1&7);
                 int b2 = rec2.BMSbits[i2>>3] & 1<<(i2&7);
@@ -419,22 +419,22 @@ GribRecord * GribRecord::InterpolatedRecord(const GribRecord &rec1, const GribRe
         }
 
     /* should maybe update strCurDate ? */
-    
+
     GribRecord *ret = new GribRecord;
     *ret = rec1;
-    
+
     ret->Di = Di, ret->Dj = Dj;
     ret->Ni = Ni, ret->Nj = Nj;
-    
+
     ret->La1 = La1, ret->La2 = La2;
     ret->Lo1 = Lo1, ret->Lo2 = Lo2;
-    
+
     ret->data = data;
     ret->BMSbits = BMSbits;
-    
+
     ret->latMin = wxMin(La1, La2), ret->latMax = wxMax(La1, La2);
     ret->lonMin = Lo1, ret->lonMax = Lo2;
-    
+
     return ret;
 }
 
@@ -452,8 +452,8 @@ GribRecord *GribRecord::Interpolated2DRecord(GribRecord *&rety,
                                   im1, jm1, im2, jm2,
                                   Ni, Nj, rec1offi, rec1offj, rec2offi, rec2offj))
         return NULL;
-    
-    
+
+
     if(!rec1y.data || !rec2y.data || !rec1y.isOk() || !rec2y.isOk() ||
        rec1x.Di != rec1y.Di ||rec1x.Dj != rec1y.Dj ||
        rec2x.Di != rec2y.Di ||rec2x.Dj != rec2y.Dj ||
@@ -461,7 +461,7 @@ GribRecord *GribRecord::Interpolated2DRecord(GribRecord *&rety,
        rec2x.Ni != rec2y.Ni ||rec2x.Nj != rec2y.Nj)
         // could also make sure lat and lon min/max are the same...
         return NULL;
-    
+
     // recopie les champs de bits
     int size = Ni*Nj;
     double *datax = new double[size], *datay = new double[size];
@@ -480,13 +480,13 @@ GribRecord *GribRecord::Interpolated2DRecord(GribRecord *&rety,
                 double data1m = sqrt(pow(data1x, 2) + pow(data1y, 2));
                 double data2m = sqrt(pow(data2x, 2) + pow(data2y, 2));
                 double datam = (1-d)*data1m + d*data2m;
-                
+
                 double data1a = atan2(data1y, data1x);
                 double data2a = atan2(data2y, data2x);
                 if(data1a - data2a > M_PI) data1a -= 2*M_PI;
                 else if(data2a - data1a > M_PI) data2a -= 2*M_PI;
                 double dataa = (1-d)*data1a + d*data2a;
-                
+
                datax[in] = datam*cos(dataa);
                datay[in] = datam*sin(dataa);
             }
@@ -498,17 +498,17 @@ GribRecord *GribRecord::Interpolated2DRecord(GribRecord *&rety,
     GribRecord *ret = new GribRecord;
 
     *ret = rec1x;
-    
+
     ret->Di = Di, ret->Dj = Dj;
     ret->Ni = Ni, ret->Nj = Nj;
-    
+
     ret->La1 = La1, ret->La2 = La2;
     ret->Lo1 = Lo1, ret->Lo2 = Lo2;
-    
+
     ret->data = datax;
     ret->BMSbits = NULL;
     ret->hasBMS = false; // I don't think wind or current ever use BMS correct?
-    
+
     ret->latMin = wxMin(La1, La2), ret->latMax = wxMax(La1, La2);
     ret->lonMin = Lo1, ret->lonMax = Lo2;
 
@@ -518,7 +518,7 @@ GribRecord *GribRecord::Interpolated2DRecord(GribRecord *&rety,
     rety->data = datay;
     rety->BMSbits = NULL;
     rety->hasBMS = false;
-    
+
     return ret;
 }
 
@@ -1180,14 +1180,14 @@ double GribRecord::getInterpolatedValue(double px, double py, bool numericalInte
     // distances to 00
     double dx = pi-i0;
     double dy = pj-j0;
-    
+
     if (! numericalInterpolation)
     {
         if (dx >= 0.5)
             i0 = i1;
         if (dy >= 0.5)
             j0 = j1;
-        
+
         return getValue(i0, j0);
     }
 
@@ -1267,14 +1267,14 @@ double GribRecord::getInterpolatedValue(double px, double py, bool numericalInte
         kx = dx;
         ky = dy;
     }
-    
+
     double k = kx + ky;
     if (k<0 || k>1)
         return GRIB_NOTDEF;
-    
+
     if (k == 0)
         return xa;
-    
+
     // axes interpolation
     double vx = k*xb + (1-k)*xa;
     double vy = k*xc + (1-k)*xa;
@@ -1289,10 +1289,10 @@ bool GribRecord::getInterpolatedValues(double &M, double &A,
 {
     if(!GRX || !GRY)
         return false;
-    
+
     if (!GRX->ok || !GRY->ok || GRX->Di==0 || GRX->Dj==0)
         return false;
-    
+
     if (!GRX->isPointInMap(px,py) || !GRY->isPointInMap(px,py)) {
         px += 360.0;               // tour du monde à droite ?
         if (!GRX->isPointInMap(px,py) || !GRY->isPointInMap(px,py)) {
@@ -1305,20 +1305,23 @@ bool GribRecord::getInterpolatedValues(double &M, double &A,
     double pi, pj;     // coord. in grid unit
     pi = (px-GRX->Lo1)/GRX->Di;
     pj = (py-GRX->La1)/GRX->Dj;
-    
+
     // 00 10      point is in a square
     // 01 11
     int i0 = (int) pi;  // point 00
     int j0 = (int) pj;
-    
+
     unsigned int i1 = pi+1, j1 = pj+1;
     if(i1 >= GRX->Ni)
-        i1 -= GRX->Ni;
-    
+        i1 = i0;
+
+    if(j1 >= GRX->Nj)
+        j1 = j0;
+
     // distances to 00
     double dx = pi-i0;
     double dy = pj-j0;
-    
+
     if (! numericalInterpolation)
     {
         double vx, vy;
@@ -1326,17 +1329,15 @@ bool GribRecord::getInterpolatedValues(double &M, double &A,
             i0 = i1;
         if (dy >= 0.5)
             j0 = j1;
-        
+
         vx = GRX->getValue(i0, j0);
         vy = GRY->getValue(i0, j0);
-        if (vx == GRIB_NOTDEF || vy == GRIB_NOTDEF)
-            return false;
 
         M = sqrt(vx*vx + vy*vy);
         A = atan2(-vx, -vy) * 180 / M_PI;
         return true;
     }
-    
+
     bool h00,h01,h10,h11;
     int nbval = 0;     // how many values in grid ?
     if ((h00=GRX->isDefined(i0, j0) && GRX->isDefined(i0, j0)))
@@ -1347,13 +1348,13 @@ bool GribRecord::getInterpolatedValues(double &M, double &A,
         nbval ++;
     if ((h11=GRX->isDefined(i1, j1) && GRY->isDefined(i1, j1)))
         nbval ++;
-    
+
     if (nbval < 3)
         return false;
-    
+
     dx = (3.0 - 2.0*dx)*dx*dx;   // pseudo hermite interpolation
     dy = (3.0 - 2.0*dy)*dy*dy;
-    
+
     // Triangle :
     //   xa  xb
     //   xc
@@ -1363,28 +1364,28 @@ bool GribRecord::getInterpolatedValues(double &M, double &A,
     {
         double x00x = GRX->getValue(i0, j0), x00y = GRY->getValue(i0, j0);
         double x00m = sqrt(x00x*x00x + x00y*x00y), x00a = atan2(x00x, x00y);
-        
+
         double x01x = GRX->getValue(i0, j1), x01y = GRY->getValue(i0, j1);
         double x01m = sqrt(x01x*x01x + x01y*x01y), x01a = atan2(x01x, x01y);
-        
+
         double x10x = GRX->getValue(i1, j0), x10y = GRY->getValue(i1, j0);
         double x10m = sqrt(x10x*x10x + x10y*x10y), x10a = atan2(x10x, x10y);
-        
+
         double x11x = GRX->getValue(i1, j1), x11y = GRY->getValue(i1, j1);
         double x11m = sqrt(x11x*x11x + x11y*x11y), x11a = atan2(x11x, x11y);
-        
+
         double x0m = (1-dx)*x00m + dx*x10m, x0a = interp_angle(x00a, x10a, dx, M_PI);
-        
+
         double x1m = (1-dx)*x01m + dx*x11m, x1a = interp_angle(x01a, x11a, dx, M_PI);
-        
+
         M = (1-dy)*x0m + dy*x1m;
         A = interp_angle(x0a, x1a, dy, M_PI);
         A *= 180 / M_PI; // degrees
         A += 180;
-        
+
         return true;
     }
-    
+
     return false; // TODO: make this work in the cases of only 3 points
 #if 0
     double xa, xb, xc, kx, ky;

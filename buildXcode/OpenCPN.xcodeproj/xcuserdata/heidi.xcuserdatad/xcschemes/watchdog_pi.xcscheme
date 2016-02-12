@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A671BCBC19BE44BC00019119"
-               BuildableName = "libsquiddio_pi.dylib"
-               BlueprintName = "squiddio_pi"
+               BlueprintIdentifier = "A683CEA31958A550004A0137"
+               BuildableName = "libwatchdog_pi.dylib"
+               BlueprintName = "watchdog_pi"
                ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A671BCBC19BE44BC00019119"
-            BuildableName = "libsquiddio_pi.dylib"
-            BlueprintName = "squiddio_pi"
+            BlueprintIdentifier = "A683CEA31958A550004A0137"
+            BuildableName = "libwatchdog_pi.dylib"
+            BlueprintName = "watchdog_pi"
             ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A671BCBC19BE44BC00019119"
-            BuildableName = "libsquiddio_pi.dylib"
-            BlueprintName = "squiddio_pi"
+            BlueprintIdentifier = "A683CEA31958A550004A0137"
+            BuildableName = "libwatchdog_pi.dylib"
+            BlueprintName = "watchdog_pi"
             ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

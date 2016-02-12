@@ -268,9 +268,6 @@ extern bool             g_config_display_size_manual;
 
 extern "C" bool CheckSerialAccess( void );
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY(ArrayOfDirCtrls);
-
 // sort callback for Connections list  Sort by priority.
 #if wxCHECK_VERSION(2, 9, 0)
 int wxCALLBACK SortConnectionOnPriority(long item1, long item2, wxIntPtr list)
@@ -742,7 +739,7 @@ MMSI_Props_Panel::MMSI_Props_Panel( wxWindow *parent ):
     int width;
     long lwidth;
 
-    m_pListCtrlMMSI = new MMSIListCtrl( this, ID_MMSI_PROPS_LIST, wxDefaultPosition, wxSize(-1, 450),
+    m_pListCtrlMMSI = new MMSIListCtrl( this, ID_MMSI_PROPS_LIST, wxDefaultPosition, wxSize(-1, -1),
             wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES | wxBORDER_SUNKEN | wxLC_VIRTUAL );
     wxImageList *imglist = new wxImageList( 16, 16, TRUE, 2 );
 
@@ -5946,124 +5943,67 @@ void options::DoOnPageChange( size_t page )
 */
 //}
 
-
-void options::OnButtonSelectSound( wxCommandEvent& event )
-{
+void options::OnButtonSelectSound(wxCommandEvent& event) {
     wxString sound_dir = g_Platform->GetSharedDataDir();
-    sound_dir.Append( _T("sounds") );
-    wxFileDialog *openDialog = new wxFileDialog( NULL, _("Select Sound File"), sound_dir, wxT(""),
-                                                _("WAV files (*.wav)|*.wav|All files (*.*)|*.*"), wxFD_OPEN );
-    
-    if(g_bresponsive)
-        openDialog = g_Platform->AdjustFileDialogFont(this, openDialog);
-    
-    int response = openDialog->ShowModal();
-    if( response == wxID_OK ) {
-        if( g_bportable ) {
-            wxFileName f( openDialog->GetPath() );
-            f.MakeRelativeTo( g_Platform->GetHomeDir() );
-            g_sAIS_Alert_Sound_File = f.GetFullPath();
-        } else
-            g_sAIS_Alert_Sound_File = openDialog->GetPath();
-        
-        g_anchorwatch_sound.UnLoad();
-    }
-    
-    delete openDialog;
-}
-
-void options::OnButtonTestSound( wxCommandEvent& event )
-{
-    
-    OCPN_Sound AIS_Sound;
-    AIS_Sound.Create( g_sAIS_Alert_Sound_File );
-    
-    if( AIS_Sound.IsOk() ) {
-// /*
-#ifndef __WXMSW__
-        AIS_Sound.Play();
-        int t = 0;
-        while( AIS_Sound.IsPlaying() && (t < 10) ) {
-            wxSleep(1);
-            t++;
-        }
-        if( AIS_Sound.IsPlaying() )
-            AIS_Sound.Stop();
-        
-#else
-        AIS_Sound.Play(wxSOUND_SYNC);
-#endif
-// */
-//        AIS_Sound.Play(wxSOUND_ASYNC);
-    }
-}
-/*
-void options::OnButtonSelectSound( wxCommandEvent& event )
-{
-    wxString sound_dir = g_Platform->GetSharedDataDir();
-    sound_dir.Append( _T("sounds") );
+    sound_dir.Append(_T("sounds"));
     wxString sel_file;
     int response;
-
+    
 #ifndef __OCPN__ANDROID__
-    wxFileDialog *popenDialog =
-        new wxFileDialog( NULL, _( "Select Sound File" ), sound_dir,
-                          wxEmptyString,
-                          _T("WAV files (*.wav)|*.wav|All files (*.*)|*.*"),
-                          wxFD_OPEN );
-    if ( g_bresponsive )
-        popenDialog = g_Platform->AdjustFileDialogFont( this, popenDialog );
-
+    wxFileDialog* popenDialog = new wxFileDialog(
+                                                 NULL, _("Select Sound File"), sound_dir, wxEmptyString,
+                                                 _T("WAV files (*.wav)|*.wav|All files (*.*)|*.*"), wxFD_OPEN);
+    if (g_bresponsive)
+        popenDialog = g_Platform->AdjustFileDialogFont(this, popenDialog);
+    
     response = popenDialog->ShowModal();
     sel_file = popenDialog->GetPath();
     delete popenDialog;
-
+    
 #else
     response =
-        g_Platform->DoFileSelectorDialog( this, &sel_file,
-                                          _( "Select Sound File" ), sound_dir,
-                                          wxEmptyString, wxT( "*.*" ) );
+    g_Platform->DoFileSelectorDialog(this, &sel_file, _("Select Sound File"),
+                                     sound_dir, wxEmptyString, wxT("*.*"));
 #endif
-
-    if ( response == wxID_OK ) {
-        if ( g_bportable ) {
-            wxFileName f( sel_file );
-            f.MakeRelativeTo( g_Platform->GetHomeDir() );
+    
+    if (response == wxID_OK) {
+        if (g_bportable) {
+            wxFileName f(sel_file);
+            f.MakeRelativeTo(g_Platform->GetHomeDir());
             g_sAIS_Alert_Sound_File = f.GetFullPath();
         } else
             g_sAIS_Alert_Sound_File = sel_file;
-
+        
         g_anchorwatch_sound.UnLoad();
     }
 }
 
 void options::OnButtonTestSound( wxCommandEvent& event )
 {
+    
     OCPN_Sound AIS_Sound;
     AIS_Sound.Create( g_sAIS_Alert_Sound_File );
-
+    
     if( AIS_Sound.IsOk() ) {
-
 #if defined(__OCPN__ANDROID__)
-    qDebug() << "Options play";
-    AIS_Sound.Play();
+        qDebug() << "Options play";
+        AIS_Sound.Play();
 #else
-#if defined(__WXMSW__)
-    AIS_Sound.Play(wxSOUND_SYNC);
+#if defined(__WXMSW__) || defined(__WXOSX__)
+        AIS_Sound.Play(wxSOUND_SYNC);
 #else
         AIS_Sound.Play();
         int t = 0;
-        while( AIS_Sound.IsPlaying() && (t < 20) ) {
+        while (AIS_Sound.IsPlaying() && (t < 5)) {
             wxSleep(1);
             t++;
         }
-        if( AIS_Sound.IsPlaying() )
-            AIS_Sound.Stop();
+        if (AIS_Sound.IsPlaying()) AIS_Sound.Stop();
 #endif
 #endif
     }
 }
-*/
+
 wxString GetOCPNKnownLanguage( wxString lang_canonical, wxString &lang_dir )
 {
     wxString return_string;
@@ -6180,16 +6120,17 @@ ChartGroupArray* ChartGroupsUI::CloneChartGroupArray( ChartGroupArray* s )
 void ChartGroupsUI::EmptyChartGroupArray( ChartGroupArray* s )
 {
     if( !s ) return;
-    for( unsigned int i = 0; i < s->GetCount(); i++ ) {
-        ChartGroup *psg = s->Item( i );
 
-        for( unsigned int j = 0; j < psg->m_element_array.GetCount(); j++ ) {
-            ChartGroupElement *pe = psg->m_element_array.Item( j );
+    while (s->GetCount() != 0) {
+        ChartGroup* psg = s->Item(0);
+
+        while (psg->m_element_array.GetCount() != 0) {
+            ChartGroupElement* pe = psg->m_element_array.Item(0);
             pe->m_missing_name_array.Clear();
-            psg->m_element_array.RemoveAt( j );
+            psg->m_element_array.RemoveAt(0);
             delete pe;
         }
-        s->RemoveAt( i );
+        s->RemoveAt(0);
         delete psg;
     }
 
@@ -6397,6 +6338,7 @@ void ChartGroupsUI::OnRemoveChartItem( wxCommandEvent &event )
                 }
                 modified = TRUE;
                 lastSelectedCtl->Unselect();
+                lastSelectedCtl = 0;
                 m_pRemoveButton->Disable();
                 wxLogMessage( _T("Disable"));
             }
@@ -6409,7 +6351,10 @@ void ChartGroupsUI::OnGroupPageChange( wxNotebookEvent& event )
 {
     m_GroupSelectedPage = event.GetSelection();
     allAvailableCtl->GetTreeCtrl()->UnselectAll();
-    if( lastSelectedCtl ) lastSelectedCtl->UnselectAll();
+    if (lastSelectedCtl) {
+        lastSelectedCtl->UnselectAll();
+        lastSelectedCtl = 0;
+    }
     m_pRemoveButton->Disable();
     m_pAddButton->Disable();
 }
@@ -6598,6 +6543,9 @@ wxTreeCtrl *ChartGroupsUI::AddEmptyGroupPage( const wxString& label )
 
 void ChartGroupsUI::ClearGroupPages()
 {
+    if (m_GroupNB->GetPageCount() == 0)
+        return;
+
     for(unsigned int i = m_GroupNB->GetPageCount()-1 ; i > 0 ; i--){
         m_DirCtrlArray.RemoveAt(i);
         m_GroupNB->DeletePage(i);

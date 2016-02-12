@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: grib_pi 15.8.4\n"
+"Project-Id-Version: grib_pi 16.1.20\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-29 17:08+0100\n"
+"POT-Creation-Date: 2016-01-22 12:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/CursorData.cpp:145 ../src/grib_pi.cpp:392 ../src/grib_pi.h:103
+#: ../src/CursorData.cpp:145 ../src/grib_pi.cpp:417 ../src/grib_pi.h:103
 #: ../src/GribRequestDialog.cpp:120 ../src/GribRequestDialog.cpp:193
 #: ../src/GribRequestDialog.cpp:453
 msgid "Dialog"
@@ -113,23 +113,23 @@ msgstr ""
 msgid "Direction Arrows"
 msgstr ""
 
-#: ../src/CursorData.cpp:541 ../src/grib_pi.cpp:376 ../src/GribUIDialog.cpp:682
+#: ../src/CursorData.cpp:541 ../src/grib_pi.cpp:401 ../src/GribUIDialog.cpp:690
 msgid "Menu"
 msgstr ""
 
-#: ../src/grib_pi.cpp:116
+#: ../src/grib_pi.cpp:117 ../src/grib_pi.cpp:139
 msgid "Grib"
 msgstr ""
 
-#: ../src/grib_pi.cpp:174
+#: ../src/grib_pi.cpp:197
 msgid "GRIB"
 msgstr ""
 
-#: ../src/grib_pi.cpp:180
+#: ../src/grib_pi.cpp:203
 msgid "GRIB PlugIn for OpenCPN"
 msgstr ""
 
-#: ../src/grib_pi.cpp:186
+#: ../src/grib_pi.cpp:209
 msgid ""
 "GRIB PlugIn for OpenCPN\n"
 "Provides basic GRIB file overlay capabilities for several GRIB file types\n"
@@ -149,23 +149,23 @@ msgid ""
 "- wind, altitude, temperature and relative humidity at 300, 500, 700, 850 hPa."
 msgstr ""
 
-#: ../src/grib_pi.cpp:347
+#: ../src/grib_pi.cpp:370
 msgid ""
 "The Gribs Dialogs are probably too wide for the screen size\n"
 "In this case, please try a smaller Font size"
 msgstr ""
 
-#: ../src/grib_pi.cpp:348 ../src/grib_pi.cpp:651
+#: ../src/grib_pi.cpp:371 ../src/grib_pi.cpp:676
 #: ../src/GribRequestDialog.cpp:623 ../src/GribSettingsDialog.cpp:832
 #: ../src/GribSettingsDialog.cpp:870
 msgid "Warning!"
 msgstr ""
 
-#: ../src/grib_pi.cpp:374
+#: ../src/grib_pi.cpp:399
 msgid "Weather table"
 msgstr ""
 
-#: ../src/grib_pi.cpp:650
+#: ../src/grib_pi.cpp:675
 msgid ""
 "You have chosen to authorize interpolation.\n"
 "Don't forget that data displayed at current time will not be real but "
@@ -505,94 +505,104 @@ msgid ""
 "Temperature"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:322 ../src/GribUIDialog.cpp:730
+#: ../src/GribUIDialog.cpp:330 ../src/GribUIDialog.cpp:738
 msgid "Start a request"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:326 ../src/GribUIDialog.cpp:730
-msgid "Stop request"
+#: ../src/GribUIDialog.cpp:334
+msgid ""
+"Draw requested Area\n"
+"or Click here to stop request"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:330 ../src/GribUIDialog.cpp:730
-msgid "Valid request"
+#: ../src/GribUIDialog.cpp:338
+msgid "Valid Area and Continue"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:364
+#: ../src/GribUIDialog.cpp:372
 msgid "File"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:371 ../src/GribUIDialog.cpp:397
+#: ../src/GribUIDialog.cpp:379 ../src/GribUIDialog.cpp:405
 msgid "Error! "
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:371
+#: ../src/GribUIDialog.cpp:379
 msgid " contains no valid data!"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:394
+#: ../src/GribUIDialog.cpp:402
 msgid "Warning:  Empty directory!"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:532
+#: ../src/GribUIDialog.cpp:540
 msgid "Hide Data at cursor"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:532
+#: ../src/GribUIDialog.cpp:540
 msgid "Show Data at cursor"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:533 ../src/GribUIDialog.cpp:725
-#: ../src/GribUIDialog.cpp:965
+#: ../src/GribUIDialog.cpp:541 ../src/GribUIDialog.cpp:733
+#: ../src/GribUIDialog.cpp:973
 msgid "Start play back"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:719
+#: ../src/GribUIDialog.cpp:727
 msgid "Select geopotential altitude"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:721 ../src/GribUIDialogBase.cpp:59
+#: ../src/GribUIDialog.cpp:729 ../src/GribUIDialogBase.cpp:59
 #: ../src/GribUIDialogBase.cpp:992
 msgid "Now"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:722 ../src/GribUIDialogBase.cpp:64
+#: ../src/GribUIDialog.cpp:730 ../src/GribUIDialogBase.cpp:64
 msgid "Zoom To Center"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:723
+#: ../src/GribUIDialog.cpp:731
 msgid "Hide data at cursor"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:723
+#: ../src/GribUIDialog.cpp:731
 msgid "Show data at cursor"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:725 ../src/GribUIDialog.cpp:929
+#: ../src/GribUIDialog.cpp:733 ../src/GribUIDialog.cpp:937
 msgid "Stop play back"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:727 ../src/GribUIDialogBase.cpp:83
+#: ../src/GribUIDialog.cpp:735 ../src/GribUIDialogBase.cpp:83
 msgid "Open a new file"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:728 ../src/GribUIDialogBase.cpp:88
+#: ../src/GribUIDialog.cpp:736 ../src/GribUIDialogBase.cpp:88
 #: ../src/GribUIDialogBase.cpp:1088
 msgid "Settings"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:770
+#: ../src/GribUIDialog.cpp:738
+msgid "Stop request"
+msgstr ""
+
+#: ../src/GribUIDialog.cpp:738
+msgid "Valid request"
+msgstr ""
+
+#: ../src/GribUIDialog.cpp:778
 msgid "Close"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:1142
+#: ../src/GribUIDialog.cpp:1150
 msgid "Select a GRIB file"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:1372
+#: ../src/GribUIDialog.cpp:1380
 msgid " does not exist!"
 msgstr ""
 
-#: ../src/GribUIDialog.cpp:1385
+#: ../src/GribUIDialog.cpp:1393
 msgid " can't be read!"
 msgstr ""
 

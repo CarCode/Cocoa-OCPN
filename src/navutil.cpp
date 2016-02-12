@@ -1564,9 +1564,8 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "bAISRolloverShowCOG" ), &g_bAISRolloverShowCOG );
     Read( _T ( "bAISRolloverShowCPA" ), &g_bAISRolloverShowCPA );
 
-    g_S57_dialog_sx = Read( _T ( "S57QueryDialogSizeX" ), 400L );
-    g_S57_dialog_sy = Read( _T ( "S57QueryDialogSizeY" ), 400L );
-
+    Read( _T ( "S57QueryDialogSizeX" ), &g_S57_dialog_sx, 400 );
+    Read( _T ( "S57QueryDialogSizeY" ), &g_S57_dialog_sy, 400 );
 
     wxString strpres( _T ( "PresentationLibraryData" ) );
     wxString valpres;
@@ -4621,8 +4620,9 @@ double fromDMM( wxString sdms )
     if( sdms.Contains( _T("N") ) || sdms.Contains( _T("S") ) || sdms.Contains( _T("E") )
             || sdms.Contains( _T("W") ) ) sdms.Replace( _T("-"), _T(" ") );
 
-    wcsncpy( buf, sdms.wc_str( wxConvUTF8 ), 64 );
-    len = wcslen( buf );
+    wcsncpy( buf, sdms.wc_str( wxConvUTF8 ), 63 );
+    buf[63] = 0;
+    len = wxMin( wcslen( buf ), sizeof(narrowbuf)-1);;
 
     for( i = 0; i < len; i++ ) {
         wchar_t c = buf[i];

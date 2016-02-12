@@ -111,6 +111,12 @@ int grib_pi::Init(void)
 
 //      int m_height = GetChartbarHeight();
       //    This PlugIn needs a CtrlBar icon, so request its insertion if enabled locally
+#ifdef __WXOSX__  // No SVG icons
+    if(m_bGRIBShowIcon)
+        m_leftclick_tool_id = InsertPlugInTool(_T(""), _img_grib, _img_grib, wxITEM_CHECK,
+                                               _("Grib"), _T(""), NULL,
+                                               GRIB_TOOL_POSITION, 0, this);
+#else
     if (m_bGRIBShowIcon) {
         wxString shareLocn = *GetpSharedDataLocation() +
         _T("plugins") + wxFileName::GetPathSeparator() +
@@ -132,7 +138,7 @@ int grib_pi::Init(void)
         m_leftclick_tool_id = InsertPlugInToolSVG(_T(""), normalIcon, rolloverIcon, toggledIcon, wxITEM_CHECK,
                                                   _("Grib"), _T(""), NULL, GRIB_TOOL_POSITION, 0, this);
     }
-
+#endif
       m_bInitIsOK = QualifyCtrlBarPosition( m_CtrlBarxy, m_CtrlBar_Sizexy );
 
       return (WANTS_OVERLAY_CALLBACK |
@@ -369,15 +375,7 @@ void grib_pi::OnToolbarToolCallback(int id)
     
     bool starting = false;
 
-    wxFileConfig *pConf = (wxFileConfig *)m_pconfig;
-    int scale_factor = 1;
-    bool isResponsive = true;
-    if(pConf) {
-        pConf->SetPath( _T ( "/Settings" ) );
-        pConf->Read( _T ( "GUIScaleFactor" ), &scale_factor, 1 );
-        pConf->Read( _T ( "ResponsiveGraphics" ), &isResponsive, 1 );
-    }
-    if( !isResponsive ) scale_factor = 1;
+    double scale_factor = GetOCPNGUIToolScaleFactor_PlugIn();
     if( scale_factor != m_GUIScaleFactor ) starting = true;
 
     if(!m_pGribCtrlBar)
@@ -386,6 +384,7 @@ void grib_pi::OnToolbarToolCallback(int id)
         long style = m_DialogStyle == ATTACHED_HAS_CAPTION ? wxCAPTION|wxCLOSE_BOX|wxSYSTEM_MENU : wxBORDER_NONE|wxSYSTEM_MENU;
         m_pGribCtrlBar = new GRIBUICtrlBar(m_parent_window, wxID_ANY, wxEmptyString, wxDefaultPosition,
                                            wxDefaultSize, style, this);
+        m_pGribCtrlBar->SetScaledBitmap(scale_factor);
 
         wxMenu* dummy = new wxMenu(_T("Plugin"));
         wxMenuItem* table = new wxMenuItem( dummy, wxID_ANY, wxString( _("Weather table") ), wxEmptyString, wxITEM_NORMAL );
@@ -414,10 +413,11 @@ void grib_pi::OnToolbarToolCallback(int id)
     //    Toggle dialog?
     if(m_bShowGrib) {
         if( starting ) {
-            m_GUIScaleFactor = scale_factor;
             SetDialogFont( m_pGribCtrlBar );
-            m_pGribCtrlBar->SetScaledBitmap( GetOCPNGUIToolScaleFactor_PlugIn(m_GUIScaleFactor) );
+            m_GUIScaleFactor = scale_factor;
+            m_pGribCtrlBar->SetScaledBitmap( m_GUIScaleFactor );
             m_pGribCtrlBar->SetDialogsStyleSizePosition( true );
+            m_pGribCtrlBar->Refresh();
         } else {
             MoveDialog( m_pGribCtrlBar, GetCtrlBarXY(), wxPoint( 20, 60) );
             if( m_DialogStyle >> 1 == SEPARATED ) {

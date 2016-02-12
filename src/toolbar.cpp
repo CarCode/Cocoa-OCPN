@@ -1893,8 +1893,9 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
                 if( wxFileExists( svgFile ) ){
                     wxSVGDocument svgDoc;
                     if( svgDoc.Load(svgFile) ){
-                        bmp = wxBitmap( svgDoc.Render( tool->m_width, tool->m_height, NULL, true, true ) );
-                        bmp = m_style->SetBitmapBrightness(bmp);
+                        bool square = (tool->m_width == tool->m_height);
+                        bmp = wxBitmap( svgDoc.Render( tool->m_width, tool->m_height, NULL, !square, true ) );
+                        bmp = m_style->BuildPluginIcon( &bmp, toggleFlag, m_sizefactor );
                     }
                     else
                         bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, TOOLICON_NORMAL );
@@ -1916,9 +1917,11 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
                     else
                         bmp = m_style->BuildPluginIcon( tool->pluginNormalIcon, toggleFlag );
                     
-                    if( m_sizefactor > 1.0 ){
-                        wxImage scaled_image = bmp.ConvertToImage();
-                        bmp = wxBitmap(scaled_image.Scale(tool->m_width, tool->m_height, wxIMAGE_QUALITY_HIGH));
+                    if( fabs(m_sizefactor - 1.0) > 0.01){
+                        if(tool->m_width && tool->m_height){
+                            wxImage scaled_image = bmp.ConvertToImage();
+                            bmp = wxBitmap(scaled_image.Scale(tool->m_width, tool->m_height, wxIMAGE_QUALITY_HIGH));
+                        }
                     }
                 }
             }
@@ -1945,10 +1948,10 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
     }
 
     if( tool->firstInLine ) {
-        m_style->DrawToolbarLineStart( bmp );
+        m_style->DrawToolbarLineStart( bmp, m_sizefactor );
     }
     if( tool->lastInLine ) {
-        m_style->DrawToolbarLineEnd( bmp );
+        m_style->DrawToolbarLineEnd( bmp, m_sizefactor );
     }
 
     if( bmp.GetWidth() != m_style->GetToolSize().x

@@ -594,6 +594,55 @@ void OCPNPlatform::SetDefaultOptions( void )
         pConfig->Write( _T ( "S52_DEPTH_UNIT_SHOW" ), 1 );
     }
 
+#ifdef __WXMSW__
+    //  Enable some default PlugIns, and their default options
+    if(pConfig){
+        pConfig->SetPath( _T ( "/PlugIns/chartdldr_pi.dll" ) );
+        pConfig->Write( _T ( "bEnabled" ), true );
+
+        pConfig->SetPath( _T ( "/PlugIns/wmm_pi.dll" ) );
+        pConfig->Write( _T ( "bEnabled" ), true );
+
+        pConfig->SetPath ( _T ( "/Settings/WMM" ) );
+        pConfig->Write ( _T ( "ShowIcon" ), true );
+        pConfig->Write ( _T ( "ShowLiveIcon" ), true );
+
+    }
+#endif
+
+#ifdef __WXOSX__
+    //  Enable some default PlugIns, and their default options
+    if(pConfig){
+        pConfig->SetPath( _T ( "/PlugIns/libchartdldr_pi.dylib" ) );
+        pConfig->Write( _T ( "bEnabled" ), true );
+
+        pConfig->SetPath( _T ( "/PlugIns/libwmm_pi.dylib" ) );
+        pConfig->Write( _T ( "bEnabled" ), true );
+
+        pConfig->SetPath ( _T ( "/Settings/WMM" ) );
+        pConfig->Write ( _T ( "ShowIcon" ), true );
+        pConfig->Write ( _T ( "ShowLiveIcon" ), true );
+
+    }
+#endif
+
+#ifdef __LINUX__
+    //  Enable some default PlugIns, and their default options
+    if(pConfig){
+        pConfig->SetPath( _T ( "/PlugIns/libchartdldr_pi.so" ) );
+        pConfig->Write( _T ( "bEnabled" ), true );
+
+        pConfig->SetPath( _T ( "/PlugIns/libwmm_pi.so" ) );
+        pConfig->Write( _T ( "bEnabled" ), true );
+
+        pConfig->SetPath ( _T ( "/Settings/WMM" ) );
+        pConfig->Write ( _T ( "ShowIcon" ), true );
+        pConfig->Write ( _T ( "ShowLiveIcon" ), true );
+
+    }
+#endif
+
+
 #ifdef __OCPN__ANDROID__
     
 #ifdef ocpnUSE_GL
@@ -1460,7 +1509,7 @@ double OCPNPlatform::GetToolbarScaleFactor( int GUIScaleFactor )
 
     rv = premult * postmult;
     rv = wxMin(rv, 3.0);      //  Clamp at 3.0
-    rv = wxMax(rv, 1.0);
+    rv = wxMax(rv, 0.5);      //  and at 0.5
 
 #endif
     
@@ -1527,7 +1576,7 @@ double OCPNPlatform::GetCompassScaleFactor( int GUIScaleFactor )
     
     rv = premult * postmult;
     rv = wxMin(rv, 3.0);      //  Clamp at 3.0
-    rv = wxMax(rv, 1.0);
+    rv = wxMax(rv, 0.5);      //  and at 0.5
 
 #endif
 

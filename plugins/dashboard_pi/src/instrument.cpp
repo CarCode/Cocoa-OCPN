@@ -106,12 +106,18 @@ void DashboardInstrument::OnPaint( wxPaintEvent& WXUNUSED(event) )
         return;
     }
 
-#if wxUSE_GRAPHICS_CONTEXT
-    wxGCDC dc( pdc );
-#else
-    wxDC &dc( pdc );
+    wxBitmap bm( size.x, size.y, 32 );
+#if !wxCHECK_VERSION(2,9,4)
+    bm.UseAlpha();
+#elif !wxCHECK_VERSION(3, 0, 0)  // Do we need this? 2.9.5 has worked.
+    bm.UseAlpha();
 #endif
-
+    wxMemoryDC mdc( bm );
+#if wxUSE_GRAPHICS_CONTEXT
+    wxGCDC dc( mdc );
+#else
+    wxMemoryDC &dc( mdc );
+#endif
     wxColour cl;
     GetGlobalColor( _T("DASHB"), &cl );
     dc.SetBackground( cl );
@@ -119,7 +125,11 @@ void DashboardInstrument::OnPaint( wxPaintEvent& WXUNUSED(event) )
 
     Draw( &dc );
 
-    if(!m_drawSoloInPane) {
+    if(m_drawSoloInPane) {
+        mdc.SelectObject( wxNullBitmap );
+        pdc.DrawBitmap( bm, 0, 0, false );
+    }
+    else {
 
     //  Windows GCDC does a terrible job of rendering small texts
     //  Workaround by using plain old DC for title box if text size is too small
@@ -140,27 +150,38 @@ void DashboardInstrument::OnPaint( wxPaintEvent& WXUNUSED(event) )
             dc.SetTextForeground( cl );
             dc.DrawText( m_title, 5, 0 );
 
+            mdc.SelectObject( wxNullBitmap );
+            pdc.DrawBitmap( bm, 0, 0, false );
         }
 
 #ifdef __WXMSW__
         if( g_pFontTitle->GetPointSize() <= 12 ) {
+            mdc.SelectObject( wxNullBitmap );           // the instrument body
+            pdc.DrawBitmap( bm, 0, 0, false );
+
+            wxBitmap tbm( size.x, m_TitleHeight, -1 );
+            wxMemoryDC tdc( tbm );
             wxColour cl;
             GetGlobalColor( _T("DASHB"), &cl );
-            pdc.SetBrush(cl);
-            pdc.DrawRectangle(0, 0, size.x, m_TitleHeight);
+            tdc.SetBackground( cl );
+            tdc.Clear();
 
             wxPen pen;
             pen.SetStyle( wxSOLID );
             GetGlobalColor( _T("DASHL"), &cl );
             pen.SetColour( cl );
-            pdc.SetPen( pen );
-            pdc.SetBrush( cl );
-            pdc.DrawRoundedRectangle( 0, 0, size.x, m_TitleHeight, 3 );
+            tdc.SetPen( pen );
+            tdc.SetBrush( cl );
+            tdc.DrawRoundedRectangle( 0, 0, size.x, m_TitleHeight, 3 );
 
-            pdc.SetFont( *g_pFontTitle );
+            tdc.SetFont( *g_pFontTitle );
             GetGlobalColor( _T("DASHF"), &cl );
-            pdc.SetTextForeground( cl );
-            pdc.DrawText( m_title, 5, 0 );
+            tdc.SetTextForeground( cl );
+            tdc.DrawText( m_title, 5, 0 );
+
+            tdc.SelectObject( wxNullBitmap );
+            pdc.DrawBitmap( tbm, 0, 0, false );
+
         }
 #endif
     }
@@ -227,7 +248,7 @@ void DashboardInstrument_Single::Draw(wxGCDC* dc)
 void DashboardInstrument_Single::SetData(int st, double data, wxString unit)
 {
       if (m_cap_flag & st){
-            if(!wxIsNaN(data)){
+          if(!wxIsNaN(data) && (data < 999)){
                 if (unit == _T("C"))
                   m_data = wxString::Format(m_format, data)+DEGREE_SIGN+_T("C");
                 else if (unit == _T("Deg"))

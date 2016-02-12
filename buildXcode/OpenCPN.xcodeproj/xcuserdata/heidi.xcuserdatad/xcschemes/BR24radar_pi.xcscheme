@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A6D5839C17A141110094D709"
-               BuildableName = "libwatchman_pi.dylib"
-               BlueprintName = "watchman_pi"
+               BlueprintIdentifier = "A6DB19BA18EDCDD300E643D2"
+               BuildableName = "libBR24radar_pi.dylib"
+               BlueprintName = "BR24radar_pi"
                ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A6D5839C17A141110094D709"
-            BuildableName = "libwatchman_pi.dylib"
-            BlueprintName = "watchman_pi"
+            BlueprintIdentifier = "A6DB19BA18EDCDD300E643D2"
+            BuildableName = "libBR24radar_pi.dylib"
+            BlueprintName = "BR24radar_pi"
             ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A6D5839C17A141110094D709"
-            BuildableName = "libwatchman_pi.dylib"
-            BlueprintName = "watchman_pi"
+            BlueprintIdentifier = "A6DB19BA18EDCDD300E643D2"
+            BuildableName = "libBR24radar_pi.dylib"
+            BlueprintName = "BR24radar_pi"
             ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose   Squiddio plugin
@@ -22,8 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "NavObjectCollection.h"
 #include "Poi.h"
@@ -407,7 +406,7 @@ bool NavObjectCollection1::LoadAllGPXObjects()
     for (pugi::xml_node object = objects.first_child(); object; object = object.next_sibling())
     {
         if( !strcmp(object.name(), "wpt") ) {
-            Poi *pWp = ::GPXLoadWaypoint1( object, _("circle"), _(""), false, false, false, 0 );
+            Poi *pWp = ::GPXLoadWaypoint1( object, _("circle"), _T(""), false, false, false, 0 );
             pWp->m_bIsolatedMark = true;      // This is an isolated mark
             
             if(pWp) {
@@ -437,7 +436,7 @@ int NavObjectCollection1::LoadAllGPXObjectsAsLayer(int layer_id, bool b_layerviz
     for (pugi::xml_node object = objects.first_child(); object; object = object.next_sibling())
     {
         if( !strcmp(object.name(), "wpt") ) {
-            Poi *pWp = ::GPXLoadWaypoint1( object, _("circle"), _(""), true, true, b_layerviz, layer_id );
+            Poi *pWp = ::GPXLoadWaypoint1( object, _("circle"), _T(""), true, true, b_layerviz, layer_id );
             pWp->m_bIsolatedMark = true;      // This is an isolated mark
             
             if(pWp) {
@@ -462,7 +461,7 @@ Poi *NavObjectCollection1::WaypointExists( const wxString& name, double lat, dou
     Poi *pret = NULL;
 //    if( g_bIsNewLayer ) return NULL;
     wxPoiListNode *node = pPoiMan->GetWaypointList()->GetFirst();
-    bool Exists = false;
+//    bool Exists = false;  //  Not used
     while( node ) {
         Poi *pr = node->GetData();
 
@@ -470,7 +469,7 @@ Poi *NavObjectCollection1::WaypointExists( const wxString& name, double lat, dou
 
         if( name == pr->GetName() ) {
             if( fabs( lat - pr->m_lat ) < 1.e-6 && fabs( lon - pr->m_lon ) < 1.e-6 ) {
-                Exists = true;
+//                Exists = true;  //  Not used
                 pret = pr;
                 break;
             }

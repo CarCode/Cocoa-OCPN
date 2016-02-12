@@ -78,16 +78,31 @@ wxBitmap MergeBitmaps( wxBitmap back, wxBitmap front, wxSize offset )
     if(!im_front.HasAlpha() && (front.GetWidth() == back.GetWidth()) )
         return front;
 
+#ifdef __WXMSW__
+    //  WxWidgets still has some trouble overlaying bitmaps with transparency.
+    //  This is true on wx2.8 as well as wx3.0
+    //  In the specific case where the back bitmap has alpha, but the front does not,
+    //  we obviously mean for the front to be drawn over the back, with 100% opacity.
+    //  To do this, we need to convert the back bitmap to simple no-alpha model.
+    if(!im_front.HasAlpha()){
+        wxImage im_back = back.ConvertToImage();
+        back = wxBitmap(im_back);
+    }
+#endif
+
     wxBitmap merged( back.GetWidth(), back.GetHeight(), back.GetDepth() );
+
+    // Manual alpha blending for broken wxWidgets alpha bitmap support, pervasive in wx2.8.
+    // And also in wx3, at least on Windows...
+#if 1 //!wxCHECK_VERSION(2,9,4)
 
 #if !wxCHECK_VERSION(2,9,4)
 
-    // Manual alpha blending for broken wxWidgets alpha bitmap support, pervasive in wx2.8.
     merged.UseAlpha();
     back.UseAlpha();
     front.UseAlpha();
+#endif
 
-//    wxImage im_front = front.ConvertToImage();
     wxImage im_back = back.ConvertToImage();
     wxImage im_result = back.ConvertToImage();// Only way to make result have alpha channel in wxW 2.8.
 
@@ -146,7 +161,6 @@ wxBitmap MergeBitmaps( wxBitmap back, wxBitmap front, wxSize offset )
         }
     }
     merged = wxBitmap( im_result );
-
 #else
     wxMemoryDC mdc( merged );
     mdc.Clear();
@@ -454,20 +468,48 @@ wxBitmap Style::GetToolIcon(const wxString & toolname, int iconType, bool rollov
     return wxBitmap( GetToolSize().x, GetToolSize().y ); // Prevents crashing.
 }
 
-wxBitmap Style::BuildPluginIcon( const wxBitmap* bm, int iconType )
+wxBitmap Style::BuildPluginIcon( const wxBitmap* bm, int iconType, double factor )
 {
 	if( ! bm || ! bm->IsOk() ) return wxNullBitmap;
 
     wxBitmap iconbm;
 
     switch( iconType ){
-        case TOOLICON_NORMAL: {
+        case TOOLICON_NORMAL:
+        case TOOLICON_TOGGLED:
+            {
             if( hasBackground ) {
-                wxBitmap bg = GetNormalBG();
+                wxBitmap bg;
+                if(iconType == TOOLICON_NORMAL)
+                    bg = GetNormalBG();
+                else
+                    bg = GetToggledBG();
 
-                wxSize offset = wxSize( bg.GetWidth() - bm->GetWidth(), bg.GetHeight() - bm->GetHeight() );
-                offset /= 2;
-                iconbm = MergeBitmaps( bg, *bm, offset );
+                if((bg.GetWidth() >= bm->GetWidth()) && (bg.GetHeight() >= bm->GetHeight())){
+                    int w = bg.GetWidth() * factor;
+                    int h = bg.GetHeight() * factor;
+                    wxImage scaled_image = bg.ConvertToImage();
+                    bg = wxBitmap(scaled_image.Scale(w, h, wxIMAGE_QUALITY_HIGH));
+
+                    wxSize offset = wxSize( bg.GetWidth() - bm->GetWidth(), bg.GetHeight() - bm->GetHeight() );
+                    offset /= 2;
+                    iconbm = MergeBitmaps( bg, *bm, offset );
+                }
+                else{
+                    // A bit of contorted logic for non-square backgrounds...
+                    double factor = ((double)bm->GetHeight()) / bg.GetHeight();
+                    int nw = bg.GetWidth() * factor;
+                    int nh = bm->GetHeight();
+                    if(bg.GetWidth() == bg.GetHeight())
+                        nw = nh;
+                    wxImage scaled_image = bg.ConvertToImage();
+                    bg = wxBitmap(scaled_image.Scale(nw, nh, wxIMAGE_QUALITY_HIGH));
+
+                    wxSize offset = wxSize( bg.GetWidth() - bm->GetWidth(), bg.GetHeight() - bm->GetHeight() );
+                    offset /= 2;
+                    iconbm = MergeBitmaps( bg, *bm, offset );
+                }
+
             } else {
                 wxBitmap bg( GetToolSize().x, GetToolSize().y );
                 wxMemoryDC mdc( bg );
@@ -478,10 +520,6 @@ wxBitmap Style::BuildPluginIcon( const wxBitmap* bm, int iconType )
                 mdc.SelectObject( wxNullBitmap );
                 iconbm = MergeBitmaps( bg, *bm, offset );
             }
-            break;
-        }
-        case TOOLICON_TOGGLED: {
-            iconbm = MergeBitmaps( GetToggledBG(), *bm, wxSize( 0, 0 ) );
             break;
         }
         default:
@@ -580,22 +618,41 @@ int Style::GetToolbarCornerRadius()
     return cornerRadius[currentOrientation];
 }
 
-void Style::DrawToolbarLineStart( wxBitmap& bmp )
+void Style::DrawToolbarLineStart( wxBitmap& bmp, double scale )
 {
     if( !HasToolbarStart() ) return;
     wxMemoryDC dc( bmp );
-    dc.DrawBitmap( GetToolbarStart(), 0, 0, true );
+    wxBitmap sbmp = GetToolbarStart();
+    if( fabs(scale - 1.0) > 0.01){
+        int h = sbmp.GetHeight() * scale;
+        int w = sbmp.GetWidth() * scale;
+        if( (h > 0) && (w > 0)){
+            wxImage scaled_image = sbmp.ConvertToImage();
+            sbmp = wxBitmap(scaled_image.Scale(w, h, wxIMAGE_QUALITY_HIGH));
+        }
+    }
+    dc.DrawBitmap( sbmp, 0, 0, true );
     dc.SelectObject( wxNullBitmap );
 }
 
-void Style::DrawToolbarLineEnd( wxBitmap& bmp )
+void Style::DrawToolbarLineEnd( wxBitmap& bmp, double scale )
 {
     if( !HasToolbarStart() ) return;
     wxMemoryDC dc( bmp );
+    wxBitmap sbmp = GetToolbarEnd();
+    if( fabs(scale - 1.0) > 0.01){
+        int h = sbmp.GetHeight() * scale;
+        int w = sbmp.GetWidth() * scale;
+        if( (h > 0) && (w > 0)){
+            wxImage scaled_image = sbmp.ConvertToImage();
+            sbmp = wxBitmap(scaled_image.Scale(w, h, wxIMAGE_QUALITY_HIGH));
+        }
+    }
+
     if( currentOrientation ) {
-        dc.DrawBitmap( GetToolbarEnd(), 0, bmp.GetHeight() - GetToolbarEnd().GetHeight(), true );
+        dc.DrawBitmap( sbmp, 0, bmp.GetHeight() - sbmp.GetHeight(), true );
     } else {
-        dc.DrawBitmap( GetToolbarEnd(), bmp.GetWidth() - GetToolbarEnd().GetWidth(), 0, true );
+        dc.DrawBitmap( sbmp, bmp.GetWidth() - sbmp.GetWidth(), 0, true );
     }
     dc.SelectObject( wxNullBitmap );
 }
@@ -700,6 +757,11 @@ StyleManager::StyleManager(void)
     Init( g_Platform->GetHomeDir() + _T(".opencpn") + wxFileName::GetPathSeparator() );
 #endif
     SetStyle( _T("") );
+#ifdef ocpnUSE_SVG
+    wxLogMessage(_T)("Using SVG Icons"));
+#else
+    wxLogMessage(_T("Using PNG Icons"));
+#endif
 }
 
 StyleManager::StyleManager(const wxString & configDir)

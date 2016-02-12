@@ -96,7 +96,11 @@ static wxString TToString( const wxDateTime date_time, const int time_zone )
         case 0:
             if( (wxDateTime::Now() == (wxDateTime::Now().ToGMT())) && t.IsDST() )  //bug in wxWingets 3.0 for UTC meridien ?
                 t.Add( wxTimeSpan( 1, 0, 0, 0 ) );
+#ifdef __WXOSX__
+            return t.Format( _T(" %a %d-%b-%Y  %H:%M "), wxDateTime::Local ) + _T("lokal");
+#else
             return t.Format( _T(" %a %d-%b-%Y  %H:%M "), wxDateTime::Local ) + _T("LOC");
+#endif
         case 1:
         default: return t.Format( _T(" %a %d-%b-%Y %H:%M  "), wxDateTime::UTC ) + _T("UTC");
     }
@@ -294,7 +298,11 @@ GRIBUICtrlBar::~GRIBUICtrlBar()
 
 void GRIBUICtrlBar::SetScaledBitmap( double factor )
 {
+#ifdef __WXOSX__
+    m_ScaledFactor = 1.0;
+#else
     m_ScaledFactor = factor > 1 ? factor * 1.2: factor;
+#endif
     //set buttons bitmap
     m_bpPrev->SetBitmapLabel(GetScaledBitmap( prev, m_ScaledFactor ));
     m_bpNext->SetBitmapLabel(GetScaledBitmap( next, m_ScaledFactor ));
@@ -323,11 +331,11 @@ void GRIBUICtrlBar::SetRequestBitmap( int type )
             break;
         case DRAW_SELECTION:
             m_bpRequest->SetBitmapLabel( GetScaledBitmap( selzone, m_ScaledFactor));
-            m_bpRequest->SetToolTip(_("Stop request"));
+            m_bpRequest->SetToolTip(_("Draw requested Area\nor Click here to stop request"));
             break;
         case COMPLETE_SELECTION:
             m_bpRequest->SetBitmapLabel(GetScaledBitmap(request_end, m_ScaledFactor));
-            m_bpRequest->SetToolTip(_("Valid request"));
+            m_bpRequest->SetToolTip(_("Valid Area and Continue"));
     }
 }
 
@@ -717,7 +725,7 @@ void GRIBUICtrlBar::OnMouseEvent( wxMouseEvent& event )
             }
             smenu->Check( ID_CTRLALTITUDE + 1000 + m_Altitude, true );
             MenuAppend( xmenu, wxID_ANY, _("Select geopotential altitude"), wxITEM_NORMAL, wxBitmap( altitude ), smenu);
-        }
+        }  // To be updated, not done yet:
         MenuAppend( xmenu, ID_BTNNOW, _("Now"), wxITEM_NORMAL, wxBitmap( now ) );
         MenuAppend( xmenu, ID_BTNZOOMTC, _("Zoom To Center"), wxITEM_NORMAL, wxBitmap( zoomto ) );
         MenuAppend( xmenu, ID_BTNSHOWCDATA, m_CDataIsShown ? _("Hide data at cursor") : _("Show data at cursor"),

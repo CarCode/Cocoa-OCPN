@@ -122,7 +122,8 @@ protected:
 #ifdef ocpnUSE_GL
      TexFont m_texfont;
 #endif
-    
+    bool m_buseTex;
+
 #if  wxUSE_GRAPHICS_CONTEXT
      wxGraphicsContext *pgc;
 #endif

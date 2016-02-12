@@ -39,6 +39,10 @@
 
 #include <wx/xml/xml.h>
 
+#ifdef ocpnUSE_SVG
+#include "wxsvg/include/wxSVG/svg.h"
+#endif // ocpnUSE_SVG
+
 class wxGLContext;
 #ifdef ocpnUSE_GL
 #include <wx/glcanvas.h>
@@ -751,7 +755,7 @@ extern  DECL_EXP wxString GetPlugInPath(opencpn_plugin *pplugin);
 
 extern "C"  DECL_EXP int AddChartToDBInPlace( wxString &full_path, bool b_RefreshCanvas );
 extern "C"  DECL_EXP int RemoveChartFromDBInPlace( wxString &full_path );
-
+extern  DECL_EXP wxString GetLocaleCanonicalName();
 
 //  API 1.11 adds access to S52 Presentation library
 //Types
@@ -1025,6 +1029,7 @@ extern DECL_EXP wxFont *GetOCPNScaledFont_PlugIn(wxString TextElement, int defau
 extern DECL_EXP wxFont GetOCPNGUIScaledFont_PlugIn(wxString item);
 extern DECL_EXP double GetOCPNGUIToolScaleFactor_PlugIn(int GUIScaledFactor);
 extern DECL_EXP double GetOCPNGUIToolScaleFactor_PlugIn();
+extern DECL_EXP float  GetOCPNChartScaleFactor_Plugin();
 extern DECL_EXP wxColour GetFontColour_PlugIn(wxString TextElement);
 
 extern DECL_EXP void AddChartDirectory( wxString &path );
@@ -1036,6 +1041,9 @@ extern  DECL_EXP wxArrayString GetWaypointGUIDArray( void );
 
 extern  DECL_EXP bool AddPersistentFontKey(wxString TextElement);
 extern  DECL_EXP wxString GetActiveStyleName();
+
+extern  DECL_EXP wxBitmap GetBitmapFromSVGFile(wxString filename, unsigned int width, unsigned int height);
+extern  DECL_EXP bool IsTouchInterface_PlugIn(void);
 
 /*  Platform optimized File/Dir selector dialogs */
 extern  DECL_EXP int PlatformDirSelectorDialog( wxWindow *parent, wxString *file_spec, wxString Title, wxString initDir);

@@ -305,7 +305,7 @@ private:
 
     LUPrec *FindBestLUP( wxArrayOfLUPrec *LUPArray, unsigned int startIndex, unsigned int count,
                               S57Obj *pObj, bool bStrict );
-        
+
     Rules *StringToRules( const wxString& str_in );
     void GetAndAddCSRules( ObjRazRules *rzRules, Rules *rules );
 
@@ -319,7 +319,8 @@ private:
     bool GetPointPixArray( ObjRazRules *rzRules, wxPoint2DDouble* pd, wxPoint *pp, int nv, ViewPort *vp );
     bool GetPointPixSingle( ObjRazRules *rzRules, float north, float east, wxPoint *r, ViewPort *vp );
     void GetPixPointSingle( int pixx, int pixy, double *plat, double *plon, ViewPort *vp );
-    
+    void GetPixPointSingleNoRotate( int pixx, int pixy, double *plat, double *plon, ViewPort *vpt );
+
     wxString m_plib_file;
 
     float canvas_pix_per_mm; // Set by parent, used to scale symbols/lines/patterns

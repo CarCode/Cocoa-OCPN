@@ -161,13 +161,18 @@ bool OCPN_Sound::Create(const wxString& fileName, int deviceIndex, bool isResour
  
     PaError err;
     m_stream = NULL;
-
+/*
     if(g_iSoundDeviceIndex == -1)
         g_iSoundDeviceIndex = Pa_GetDefaultOutputDevice();
 
     if(deviceIndex == -1)
         deviceIndex = g_iSoundDeviceIndex;
-    
+*/
+    if(g_iSoundDeviceIndex != -1)
+        deviceIndex = g_iSoundDeviceIndex;
+    else
+        deviceIndex = Pa_GetDefaultOutputDevice();
+
     PaStreamParameters outputParameters;
     outputParameters.device = deviceIndex;
     outputParameters.channelCount = m_osdata->m_channels;
@@ -376,7 +381,7 @@ void OCPN_Sound::FreeMem(void)
 
 #else  //OCPN_USE_PORTAUDIO
 
-#ifndef __OCPN__ANDROID__
+#ifndef __OCPN__ANDROID__  //                   No PortAudio and no Android
 OCPN_Sound::OCPN_Sound()
 {
     m_OK = false;
@@ -428,7 +433,7 @@ void OCPN_Sound::Stop()
 {
     wxSound::Stop();
 }
-#else           // __OCPN__ANDROID__
+#else           // __OCPN__ANDROID__                    ab hier nur Android
 OCPN_Sound::OCPN_Sound()
 {
     m_OK = false;

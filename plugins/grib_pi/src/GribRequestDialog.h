@@ -99,6 +99,7 @@ private:
       int  m_MailError_Nb;
       int  m_SendMethod;
       bool m_AllowSend;
+      bool  m_IsMaxLong;
 };
 
 #endif

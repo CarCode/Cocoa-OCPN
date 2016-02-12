@@ -40,6 +40,8 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 
 int NmeaConverter_pi::Init(void)
 {
+    AddLocaleCatalog ( _T ( "opencpn-nmeaconverter_pi" ) );
+
     prefDlg = NULL;
     p_nmeaSendObjectDlg=NULL;
     b_CheckChecksum = true;
@@ -47,7 +49,10 @@ int NmeaConverter_pi::Init(void)
     m_pconfig = GetOCPNConfigObject();
     //    And load the configuration items
     LoadConfig();
-    return ( WANTS_NMEA_SENTENCES | WANTS_PREFERENCES );
+    return
+        ( WANTS_NMEA_SENTENCES  |
+          WANTS_PREFERENCES     |
+          WANTS_CONFIG);
 }
 
 bool NmeaConverter_pi::DeInit(void)
@@ -283,8 +288,9 @@ wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxStri
         wxString SubString;
         unsigned int i = startpos;
       
-        while ( AllowdCharStr.Find(FormatStr.Mid(i,1)) != wxNOT_FOUND & i < FormatStr.Length() )
-        {  
+        while ( ( AllowdCharStr.Find(FormatStr.Mid(i,1)) != wxNOT_FOUND ) &
+               ( i < FormatStr.Length() ) )
+        {
             i++;
         }
         SubString.Append( FormatStr.SubString( startpos, i-1 ) ); 
@@ -315,8 +321,8 @@ void nmeaSendObj::SetNMEASentence(wxString &sentence)
     {
          ReceivedSentencesrray[NmeaID] = sentence;
          int i = NeededSentencesMinusReceived.Index(NmeaID);
-         if (  i != wxNOT_FOUND )
-             NeededSentencesMinusReceived.RemoveAt(i);
+        if (  i != wxNOT_FOUND ){
+            NeededSentencesMinusReceived.RemoveAt(i);}
          if ( NeededSentencesMinusReceived.IsEmpty() )
          {
              if ( ( NeededSentences.IsEmpty() ) & ( SendMode == TIMED )  )
@@ -338,7 +344,7 @@ void nmeaSendObj::ComputeOutputSentence()
     wxString sendFormat = FormatString;
     //iterate thru variables and update values
     //The variablesArray is set in SetFormatString()
-    for( int i = 0; i < NeededVariables.GetCount(); i++ )
+    for( int i = 0; i < (int)NeededVariables.GetCount(); i++ )
     {
         //split variable inname and number
         wxString Varkey = NeededVariables[i];
@@ -353,7 +359,7 @@ void nmeaSendObj::ComputeOutputSentence()
         while ( tkznmea.HasMoreTokens() )
             nmeatokenarray.Add( tkznmea.GetNextToken() );
         //replace variable name by value
-        if (nmeatokenarray.GetCount() > 0 )
+        if ((long)nmeatokenarray.GetCount() >= FieldNo )
             sendFormat.Replace( Varkey , nmeatokenarray[FieldNo] );
         else
             sendFormat.Replace( Varkey , wxT("noData") );
@@ -365,13 +371,30 @@ void nmeaSendObj::ComputeOutputSentence()
     wxStringTokenizer tkzformat(sendFormat, wxT(","));
         while ( tkzformat.HasMoreTokens() )
             formattokenarray.Add( tkzformat.GetNextToken() );
-    for (int j=1 ; j < formattokenarray.GetCount(); j++)
+    for (int j=1 ; j < (int)formattokenarray.GetCount(); j++)
     {
+        // find max number of decimals so we can set the output later to the right amount of needed decimals.
+        int NoOfDecimals = 0;
+        int IinString = 0;
+        wxString s=formattokenarray[j];
+        while ( s.find( _("."), IinString) !=  wxNOT_FOUND )
+        {
+            IinString = s.find( _("."), IinString);
+            int n=0;
+            while ( (IinString + 1 < (int)s.Len() ) &
+                   ( VarDigit.Find(s.Mid(IinString+1,1)) != wxNOT_FOUND ) )
+            {
+                n++;
+                IinString++;
+            }
+            if ( n > NoOfDecimals )
+                NoOfDecimals = n;
+        }
         wxString result;
         wxEcEngine calc;
         if (calc.SetFormula( formattokenarray[j] ))
         {
-            result = wxString::Format(wxT("%.1f"), calc.Compute() );
+            result = wxString::Format(wxT("%.*f"), NoOfDecimals, calc.Compute() );
             if (calc.GetLastError() == wxECE_NOERROR)
             {
                  formattokenarray[j] = result;
@@ -386,7 +409,7 @@ void nmeaSendObj::ComputeOutputSentence()
     // finaly glue the seperate tokens back to one sentence
     
     sendFormat = formattokenarray[0];
-    for (int j=1 ; j < formattokenarray.GetCount(); j++)
+    for (int j=1 ; j < (int)formattokenarray.GetCount(); j++)
     {
         sendFormat.Append(_(","));
         sendFormat.Append( formattokenarray[j] );
@@ -731,7 +754,7 @@ void nmeaSendObjectDlg::CreateControls()
     nmeaSendObjectDlg* itemDialog1 = this;
     
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
-    itemDialog1->SetSizer(itemBoxSizer2);
+
     
     itemRadioButtonVal = new wxRadioButton( itemDialog1, ID_RADIOBUTTON, _("Send after update all variables"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
     itemRadioButtonVal->SetValue(true);
@@ -756,7 +779,7 @@ void nmeaSendObjectDlg::CreateControls()
     itemStaticTextSendString->SetForegroundColour(wxColour(0, 0, 255));
  //   itemStaticTextSendString->SetFont(wxFont(11, , wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Sans")));
     itemBoxSizer2->Add(itemStaticTextSendString, 0, wxGROW|wxALL, 5);
-    
+
     itemTextCtrlFormatStrCtr = new wxTextCtrl( itemDialog1, ID_TEXTCTRL, wxEmptyString, wxPoint(5, 80), wxSize(300, 75), wxTE_MULTILINE|wxTE_WORDWRAP );
     itemBoxSizer2->Add(itemTextCtrlFormatStrCtr, 0, wxGROW|wxALL, 5);
 
@@ -770,11 +793,9 @@ void nmeaSendObjectDlg::CreateControls()
     itemStdDialogButtonSizer1->AddButton(itemButton12);
 
     itemStdDialogButtonSizer1->Realize();
-    
-//    itemOKButton = new wxButton( itemDialog1, ID_BUTTON_OK1, _("OK"), wxPoint(230, 160), wxSize(70, 25), 0 );
-
- //   itemCancelButton = new wxButton( itemDialog1, ID_BUTTON_CANCEL, _("Cancel"), wxPoint(150, 160), wxSize(70, 25), 0 );
-
+    itemStdDialogButtonSizer1->Fit(this);
+    itemDialog1->SetSizer(itemBoxSizer2);
+    itemBoxSizer2->Fit(this);
 }
 
 void nmeaSendObjectDlg::SetSendObjOfThisDlg( nmeaSendObj* object)

@@ -37,7 +37,7 @@
 #include <wx/fileconf.h>
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    0
+#define     PLUGIN_VERSION_MINOR    1
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    8
@@ -153,6 +153,7 @@ private:
     bool    m_bShowPlotOptions;
 	bool    m_bShowAtCursor;
 	bool    m_bShowLiveIcon;
+    bool          m_bShowIcon;
 	int     m_iOpacity;
 
 	wxString m_LastVal;
@@ -168,6 +169,7 @@ private:
 	int m_MapPoleAccuracy;
 
 	void RearrangeWindow();
+    void SetIconType();
 	wxString m_wmm_dir;
 	bool m_buseable, m_busegeoid;
 
@@ -179,6 +181,9 @@ private:
 	WMMtype_GeoMagneticElements m_boatVariation;
 
 	bool m_bComputingPlot;
+    wxFont        *pFontSmall;
+    double        m_scale;
+    wxString      m_shareLocn;
 };
 
 int WMM_setupMagneticModel(char *data, WMMtype_MagneticModel * MagneticModel);
