@@ -10,6 +10,7 @@
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
+#include <wx/intl.h>
 #include <wx/gdicmn.h>
 #include <wx/toolbar.h>
 #include <wx/font.h>
@@ -34,13 +35,18 @@ class ODToolbarDialog : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnActivate( wxActivateEvent& event ) { event.Skip(); }
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
+		virtual void OnKeyDown( wxKeyEvent& event ) { event.Skip(); }
+		virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnSize( wxSizeEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		wxToolBar* m_toolBarODToolbar;
-		
-        ODToolbarDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Draw Toolbar"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxCLOSE_BOX|wxRESIZE_BORDER|wxSTAY_ON_TOP ); 
+#ifdef __WXOSX__
+    ODToolbarDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Draw Toolbar"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxCLOSE_BOX|wxRESIZE_BORDER| wxSTAY_ON_TOP);
+#else
+		ODToolbarDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Draw Toolbar"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxCLOSE_BOX|wxRESIZE_BORDER );
+#endif
 		~ODToolbarDialog();
 	
 };

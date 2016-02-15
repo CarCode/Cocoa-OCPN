@@ -26,12 +26,17 @@
 
 #include <wx/object.h>
 #include <wx/list.h>
-
+#ifdef __WXOSX__
 #include "../../../include/Quilt.h"
 #include "../../../include/ocpn_types.h"
 #include "ODPoint.h"
 #include "../../../include/Hyperlink.h"
-
+#else
+#include "Quilt.h"
+#include "ocpn_types.h"
+#include "ODPoint.h"
+#include "Hyperlink.h"
+#endif
 
 #define STYLE_UNDEFINED -1
 
@@ -43,17 +48,13 @@
 
 class ODDC;
 
-class Path : public wxObject
+class ODPath : public wxObject
 {
 public:
-    Path(void);
-    virtual ~Path(void);
+    ODPath(void);
+    virtual ~ODPath(void);
 
-    virtual void AddPoint(ODPoint* pNewPoint, 
-                  bool b_rename_in_sequence = true,
-                  bool b_deferBoxCalc = false,
-                  bool b_isLoading = false);
-
+    virtual void AddPoint(ODPoint* pNewPoint, bool b_rename_in_sequence = true, bool b_deferBoxCalc = false, bool b_isLoading = false);
     void AddTentativePoint(const wxString& GUID);
     ODPoint *GetPoint(int nPoint);
     ODPoint *GetPoint ( const wxString &guid );
@@ -83,8 +84,8 @@ public:
     void ReloadPathPointIcons();
     wxString GetNewMarkSequenced(void);
     void AssemblePath();
-    bool IsEqualTo(Path *ptargetboundary);
-    void ClonePath(Path *psourceboundary, int start_nPoint, int end_nPoint, const wxString & suffix);
+    bool IsEqualTo(ODPath *ptargetboundary);
+    void ClonePath(ODPath *psourceboundary, int start_nPoint, int end_nPoint, const wxString & suffix);
     void CloneAddedODPoint(ODPoint *ptargetpoint, ODPoint *psourcepoint);
     void ClearHighlights(void);
     void RenderSegment(ODDC& dc, int xa, int ya, int xb, int yb, PlugIn_ViewPort &VP, bool bdraw_arrow, int hilite_width = 0);
@@ -93,7 +94,7 @@ public:
     virtual wxColour GetCurrentColour( void );
 
     bool CrossesIDL(){ return m_bcrosses_idl; }
-    void SetVisible(bool visible = true, bool includeWpts = true);
+    void SetVisible(bool visible = true, bool includeODPoints = true);
     void SetListed(bool visible = true);
     bool IsVisible() { return m_bVisible; }
     bool IsListed() { return m_bListed; }
@@ -104,8 +105,8 @@ public:
 
     double GetRouteArrivalRadius(void){ return m_ArrivalRadius;}
     void SetRouteArrivalRadius(double radius){m_ArrivalRadius = radius;}
-
-    void RemovePointFromPath( ODPoint* point, Path* path );
+    
+    void RemovePointFromPath( ODPoint* point, ODPath* path );
     virtual void MoveAllPoints( double inc_lat, double inc_lon );
 
     int         m_ConfigPathNum;
@@ -143,9 +144,13 @@ public:
     bool        m_bTemporary;
     int         m_hiliteWidth;
     wxPoint     *m_bpts;
-    int         m_iBlink;
+    
+    bool        m_bPathManagerBlink;
+    bool        m_bPathPropertiesBlink;
+    
     bool        m_bDrawArrow;
-
+    bool        m_bSaveUpdates;
+    
 protected:    
     bool m_bNeedsUpdateBBox;
     wxBoundingBox     RBBox;
@@ -158,12 +163,13 @@ protected:
     double      m_ArrivalRadius;
     bool        m_bcrosses_idl;
     wxColour    m_col;
-
+    
+    
 private:
 
-
+    
 };
 
-WX_DECLARE_LIST(Path, PathList); // establish class Path as list member
+WX_DECLARE_LIST(ODPath, PathList); // establish class Path as list member
 
 #endif

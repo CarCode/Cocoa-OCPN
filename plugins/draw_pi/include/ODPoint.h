@@ -29,12 +29,19 @@
 #include <wx/gdicmn.h>
 #include <wx/gauge.h>
 #include <wx/colour.h>
+#ifdef __WXOSX__
 #include "../../../include/Hyperlink.h"
 #include "../../../include/ocpn_types.h"
 #include "../../../include/ocpn_plugin.h"
 #include "../../../include/OCPNRegion.h"
 #include "../../../include/viewport.h"
-
+#else
+#include "Hyperlink.h"
+#include "ocpn_types.h"
+#include "ocpn_plugin.h"
+#include "OCPNRegion.h"
+#include "viewport.h"
+#endif
 class ODDC;
 class wxDC;
 
@@ -63,8 +70,8 @@ public:
       void SetVisible(bool viz = true){ m_bIsVisible = viz; }
       void SetListed(bool viz = true){ m_bIsListed = viz; }
       void SetNameShown(bool viz = true) { m_bShowName = viz; }
-      wxString GetName(void){ return m_MarkName; }
-      wxString GetDescription(void) { return m_MarkDescription; }
+      wxString GetName(void){ return m_ODPointName; }
+      wxString GetDescription(void) { return m_ODPointDescription; }
       
       wxString GetIconName(void){ return m_IconName; }
       wxBitmap *GetIconBitmap(){ return m_pbmIcon; }
@@ -98,6 +105,8 @@ public:
       void  SetODPointRangeRingsStep(float f_ODPointRangeRingsStep) { m_fODPointRangeRingsStep = f_ODPointRangeRingsStep; };
       void  SetODPointRangeRingsStepUnits(int i_ODPointRangeRingsStepUnits) { m_iODPointRangeRingsStepUnits = i_ODPointRangeRingsStepUnits; };
       void  SetODPointRangeRingsColour( wxColour wxc_ODPointRangeRingsColour ) { m_wxcODPointRangeRingsColour = wxc_ODPointRangeRingsColour; };
+      void  SetODPointRangeRingWidth( int i_ODPointRangeRingWidth ) { m_iRangeRingWidth = i_ODPointRangeRingWidth; };
+      void  SetODPointRangeRingStyle( int i_ODPointRangeRingStyle ) { m_iRangeRingStyle = i_ODPointRangeRingStyle; };
       void  SetTypeString( wxString sTypeString ) { m_sTypeString = sTypeString; }
       void  SetMarkDescription( wxString sMarkDescription );
 
@@ -128,7 +137,7 @@ public:
       bool              m_bIsVisible;           // true if should be drawn, false if invisible
       bool              m_bIsListed;
       bool              m_bIsActive;
-      wxString          m_MarkDescription;
+      wxString          m_ODPointDescription;
       wxString          m_GUID;
 
       wxFont            *m_pMarkFont;
@@ -136,7 +145,9 @@ public:
 
       wxSize            m_NameExtents;
 
-      int               m_iBlink;
+      bool              m_bPointPropertiesBlink;
+      bool              m_bPathManagerBlink;
+      
       bool              m_bDynamicName;
       bool              m_bShowName;
       wxRect            CurrentRect_in_DC;
@@ -170,16 +181,18 @@ public:
       int               m_iODPointRangeRingsNumber;
       float             m_fODPointRangeRingsStep;
       int               m_iODPointRangeRingsStepUnits;
+      int               m_iRangeRingWidth;
+      int               m_iRangeRingStyle;
       wxColour          m_wxcODPointRangeRingsColour;
       wxString          m_sTypeString;
       wxString          m_IconName;
-      wxString          m_MarkName;
+      wxString          m_ODPointName;
       wxDateTime        m_CreateTimeX;
       wxBitmap          *m_pbmIcon;
       
       
 private:
-      //wxString          m_MarkName;
+      //wxString          m_ODPointName;
       //wxDateTime        m_CreateTimeX;
       //wxBitmap          *m_pbmIcon;
       //wxString          m_IconName;
@@ -187,6 +200,8 @@ private:
       
       void              *m_SelectNode;
       void              *m_ManagerNode;
+      float             m_fIconScaleFactor;
+      wxBitmap          m_ScaledBMP;
       
 };
 

@@ -30,7 +30,7 @@
 
 #include <vector>
 
-#include "../../../include/TexFont.h"
+#include "TexFont.h"
 
 #ifndef DECL_EXP
 #ifdef __WXMSW__
@@ -89,11 +89,14 @@ public:
      void DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, wxCoord rr );
      void DrawCircle(wxCoord x, wxCoord y, wxCoord radius);
      void DrawCircle(const wxPoint &pt, wxCoord radius) { DrawCircle(pt.x, pt.y, radius); }
+     void DrawDisk( wxCoord x, wxCoord y, wxCoord innerRadius, wxCoord outerRadius );
+     //void DrawDisk( wxPoint &pt, wxCoord innerRadius, wxCoord outerRadius );
      void StrokeCircle(wxCoord x, wxCoord y, wxCoord radius);
 
      void DrawEllipse(wxCoord x, wxCoord y, wxCoord width, wxCoord height);
      void DrawPolygon(int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0, float scale =1.0);
      void DrawPolygonTessellated(int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0);
+     void DrawPolygonsTessellated(int n, int npoint[], wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0);
      void StrokePolygon(int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0, float scale = 1.0);
 
      void DrawBitmap(const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usemask);

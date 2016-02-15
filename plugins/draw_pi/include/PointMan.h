@@ -26,11 +26,23 @@
 #ifndef POINTMAN_H
 #define POINTMAN_H
 
-#include "../../../include/chart1.h"                 // for ColorScheme definition
+#ifdef __WXOSX__
+#include "../../../include/chart1.h"
+#else
+#include "chart1.h"                 // for ColorScheme definition
+#endif
 #include <wx/imaglist.h>
+#ifdef __WXOSX__
 #include "../../../include/styles.h"
-//#include "../../../include/Select.h"
+#else
+#include "styles.h"
+#endif
+//#include "Select.h"
+#ifdef __WXOSX__
 #include "../../../src/nmea0183/nmea0183.h"
+#else
+#include "nmea0183.h"
+#endif
 #include "ODPoint.h"
 
 //----------------------------------------------------------------------------
@@ -46,7 +58,7 @@
 //    forward class declarations
 //----------------------------------------------------------------------------
 
-class Path;
+class ODPath;
 class ODPoint;
 class ODPointList;
 class wxFontEnumerator;

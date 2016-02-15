@@ -594,7 +594,6 @@
 		A6DB33861B73761500163272 /* ODSelect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33851B73761500163272 /* ODSelect.cpp */; };
 		A6DB33891B73763800163272 /* PathMan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33871B73763800163272 /* PathMan.cpp */; };
 		A6DB338A1B73763800163272 /* pathmanagerdialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33881B73763800163272 /* pathmanagerdialog.cpp */; };
-		A6DB338C1B73765E00163272 /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB338B1B73765E00163272 /* Path.cpp */; };
 		A6DB338E1B73767700163272 /* ODPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB338D1B73767700163272 /* ODPoint.cpp */; };
 		A6DB33921B73769800163272 /* ODConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB338F1B73769800163272 /* ODConfig.cpp */; };
 		A6DB33931B73769800163272 /* ODdc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33901B73769800163272 /* ODdc.cpp */; };
@@ -635,6 +634,12 @@
 		A6E6CD1A1C6E63E300C07649 /* logs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6E6CD161C6E633D00C07649 /* logs.cpp */; };
 		A6F037B71B73FC2900E82ECC /* libdraw_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6DB33551B736C0400163272 /* libdraw_pi.dylib */; };
 		A6F5FF5A1AEB9B120034F6CF /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F5FF591AEB9B120034F6CF /* TexFont.cpp */; };
+		A6F73D101C71050400F87CB8 /* DR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F73D0A1C70C60600F87CB8 /* DR.cpp */; };
+		A6F73D111C71050400F87CB8 /* DRProp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F73D0B1C70C60600F87CB8 /* DRProp.cpp */; };
+		A6F73D121C71050400F87CB8 /* ODDRDialogDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F73D0C1C70D1B100F87CB8 /* ODDRDialogDef.cpp */; };
+		A6F73D131C71050400F87CB8 /* ODDRDialogImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F73D0D1C70D1B100F87CB8 /* ODDRDialogImpl.cpp */; };
+		A6F73D141C71050400F87CB8 /* ODPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F73D0E1C70D70800F87CB8 /* ODPath.cpp */; };
+		A6F73D161C71050400F87CB8 /* clipper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6F73D091C70C04200F87CB8 /* clipper.cpp */; };
 		A6FD71341C4905CD008CF9F7 /* grib_rollover.svg in Copy Files */ = {isa = PBXBuildFile; fileRef = A6FD71311C4905A0008CF9F7 /* grib_rollover.svg */; };
 		A6FD71351C4905CD008CF9F7 /* grib_toggled.svg in Copy Files */ = {isa = PBXBuildFile; fileRef = A6FD71321C4905A0008CF9F7 /* grib_toggled.svg */; };
 		A6FD71361C4905CD008CF9F7 /* grib.svg in Copy Files */ = {isa = PBXBuildFile; fileRef = A6FD71331C4905A0008CF9F7 /* grib.svg */; };
@@ -2038,7 +2043,6 @@
 		A6DB335E1B736EBD00163272 /* ODSelect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODSelect.h; path = plugins/draw_pi/include/ODSelect.h; sourceTree = "<group>"; };
 		A6DB335F1B736EFB00163272 /* PathMan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PathMan.h; path = plugins/draw_pi/include/PathMan.h; sourceTree = "<group>"; };
 		A6DB33601B736EFB00163272 /* pathmanagerdialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pathmanagerdialog.h; path = plugins/draw_pi/include/pathmanagerdialog.h; sourceTree = "<group>"; };
-		A6DB33611B736F3300163272 /* Path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Path.h; path = plugins/draw_pi/include/Path.h; sourceTree = "<group>"; };
 		A6DB33621B736F5800163272 /* ODPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODPoint.h; path = plugins/draw_pi/include/ODPoint.h; sourceTree = "<group>"; };
 		A6DB33631B736F8300163272 /* ODConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODConfig.h; path = plugins/draw_pi/include/ODConfig.h; sourceTree = "<group>"; };
 		A6DB33641B736F8300163272 /* ODdc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODdc.h; path = plugins/draw_pi/include/ODdc.h; sourceTree = "<group>"; };
@@ -2069,7 +2073,6 @@
 		A6DB33851B73761500163272 /* ODSelect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODSelect.cpp; path = plugins/draw_pi/src/ODSelect.cpp; sourceTree = "<group>"; };
 		A6DB33871B73763800163272 /* PathMan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PathMan.cpp; path = plugins/draw_pi/src/PathMan.cpp; sourceTree = "<group>"; };
 		A6DB33881B73763800163272 /* pathmanagerdialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pathmanagerdialog.cpp; path = plugins/draw_pi/src/pathmanagerdialog.cpp; sourceTree = "<group>"; };
-		A6DB338B1B73765E00163272 /* Path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Path.cpp; path = plugins/draw_pi/src/Path.cpp; sourceTree = "<group>"; };
 		A6DB338D1B73767700163272 /* ODPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODPoint.cpp; path = plugins/draw_pi/src/ODPoint.cpp; sourceTree = "<group>"; };
 		A6DB338F1B73769800163272 /* ODConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODConfig.cpp; path = plugins/draw_pi/src/ODConfig.cpp; sourceTree = "<group>"; };
 		A6DB33901B73769800163272 /* ODdc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODdc.cpp; path = plugins/draw_pi/src/ODdc.cpp; sourceTree = "<group>"; };
@@ -2088,7 +2091,6 @@
 		A6DB33AB1B7377CE00163272 /* ODUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODUtils.cpp; path = plugins/draw_pi/src/ODUtils.cpp; sourceTree = "<group>"; };
 		A6DB33AD1B7377E700163272 /* ODicons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODicons.cpp; path = plugins/draw_pi/src/ODicons.cpp; sourceTree = "<group>"; };
 		A6DB33AF1B73780200163272 /* TextPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextPoint.cpp; path = plugins/draw_pi/src/TextPoint.cpp; sourceTree = "<group>"; };
-		A6DB33B11B73834600163272 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = plugins/draw_pi/include/version.h; sourceTree = "<group>"; };
 		A6E082291AAB5889002CC7F0 /* viewport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = viewport.h; path = include/viewport.h; sourceTree = "<group>"; };
 		A6E0822A1AAB58C1002CC7F0 /* canvasMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = canvasMenu.h; path = include/canvasMenu.h; sourceTree = "<group>"; };
 		A6E0822B1AAB58F1002CC7F0 /* OCPNPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OCPNPlatform.h; path = include/OCPNPlatform.h; sourceTree = "<group>"; };
@@ -2112,6 +2114,21 @@
 		A6E8B2C71C5BB37C00D85D95 /* NewAlarmDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewAlarmDialog.h; path = plugins/watchdog_pi/src/NewAlarmDialog.h; sourceTree = "<group>"; };
 		A6F5FF591AEB9B120034F6CF /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/iacfleet_pi/src/TexFont.cpp; sourceTree = "<group>"; };
 		A6F5FF5B1AEB9DA10034F6CF /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/iacfleet_pi/src/TexFont.h; sourceTree = "<group>"; };
+		A6F73D011C709D8200F87CB8 /* DR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DR.h; path = plugins/draw_pi/include/DR.h; sourceTree = "<group>"; };
+		A6F73D021C709D8200F87CB8 /* DRProp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DRProp.h; path = plugins/draw_pi/include/DRProp.h; sourceTree = "<group>"; };
+		A6F73D031C709F3900F87CB8 /* ODDRDialogDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODDRDialogDef.h; path = plugins/draw_pi/include/ODDRDialogDef.h; sourceTree = "<group>"; };
+		A6F73D041C709F3900F87CB8 /* ODDRDialogImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODDRDialogImpl.h; path = plugins/draw_pi/include/ODDRDialogImpl.h; sourceTree = "<group>"; };
+		A6F73D051C70A11E00F87CB8 /* ODPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODPath.h; path = plugins/draw_pi/include/ODPath.h; sourceTree = "<group>"; };
+		A6F73D061C70A52900F87CB8 /* ODText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODText.h; path = plugins/draw_pi/include/ODText.h; sourceTree = "<group>"; };
+		A6F73D071C70A58600F87CB8 /* ODUndo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ODUndo.h; path = plugins/draw_pi/include/ODUndo.h; sourceTree = "<group>"; };
+		A6F73D081C70C01E00F87CB8 /* clipper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = clipper.hpp; path = plugins/draw_pi/include/clipper.hpp; sourceTree = "<group>"; };
+		A6F73D091C70C04200F87CB8 /* clipper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = clipper.cpp; path = plugins/draw_pi/src/clipper.cpp; sourceTree = "<group>"; };
+		A6F73D0A1C70C60600F87CB8 /* DR.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DR.cpp; path = plugins/draw_pi/src/DR.cpp; sourceTree = "<group>"; };
+		A6F73D0B1C70C60600F87CB8 /* DRProp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DRProp.cpp; path = plugins/draw_pi/src/DRProp.cpp; sourceTree = "<group>"; };
+		A6F73D0C1C70D1B100F87CB8 /* ODDRDialogDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODDRDialogDef.cpp; path = plugins/draw_pi/src/ODDRDialogDef.cpp; sourceTree = "<group>"; };
+		A6F73D0D1C70D1B100F87CB8 /* ODDRDialogImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODDRDialogImpl.cpp; path = plugins/draw_pi/src/ODDRDialogImpl.cpp; sourceTree = "<group>"; };
+		A6F73D0E1C70D70800F87CB8 /* ODPath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODPath.cpp; path = plugins/draw_pi/src/ODPath.cpp; sourceTree = "<group>"; };
+		A6F73D0F1C70EA3400F87CB8 /* ODUndo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ODUndo.cpp; path = plugins/draw_pi/src/ODUndo.cpp; sourceTree = "<group>"; };
 		A6FABA6218CDDFA400922E48 /* RMC.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = RMC.hpp; path = src/nmea0183/RMC.hpp; sourceTree = "<group>"; };
 		A6FD71311C4905A0008CF9F7 /* grib_rollover.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = grib_rollover.svg; path = plugins/grib_pi/data/grib_rollover.svg; sourceTree = "<group>"; };
 		A6FD71321C4905A0008CF9F7 /* grib_toggled.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = grib_toggled.svg; path = plugins/grib_pi/data/grib_toggled.svg; sourceTree = "<group>"; };
@@ -3803,31 +3820,37 @@
 				A6DB33781B73758D00163272 /* BoundaryMan.cpp */,
 				A6DB33791B73758D00163272 /* BoundaryPoint.cpp */,
 				A6DB337A1B73758D00163272 /* BoundaryProp.cpp */,
+				A6F73D0A1C70C60600F87CB8 /* DR.cpp */,
+				A6F73D0B1C70C60600F87CB8 /* DRProp.cpp */,
 				A6DB337F1B7375B700163272 /* EBL.cpp */,
 				A6DB33801B7375B700163272 /* EBLProp.cpp */,
-				A6DB33831B7375F600163272 /* PointMan.cpp */,
-				A6DB33851B73761500163272 /* ODSelect.cpp */,
-				A6DB33871B73763800163272 /* PathMan.cpp */,
-				A6DB33881B73763800163272 /* pathmanagerdialog.cpp */,
-				A6DB338B1B73765E00163272 /* Path.cpp */,
-				A6DB338D1B73767700163272 /* ODPoint.cpp */,
 				A6DB338F1B73769800163272 /* ODConfig.cpp */,
 				A6DB33901B73769800163272 /* ODdc.cpp */,
+				A6F73D0C1C70D1B100F87CB8 /* ODDRDialogDef.cpp */,
+				A6F73D0D1C70D1B100F87CB8 /* ODDRDialogImpl.cpp */,
 				A6DB33911B73769800163272 /* ODEventHandler.cpp */,
+				A6DB33AD1B7377E700163272 /* ODicons.cpp */,
 				A6DB33951B7376CD00163272 /* ODNavObjectChanges.cpp */,
-				A6DB33971B7376F200163272 /* ODPropertiesDialogDef.cpp */,
-				A6DB33981B7376F200163272 /* ODPropertiesDialogImpl.cpp */,
+				A6F73D0E1C70D70800F87CB8 /* ODPath.cpp */,
 				A6DB339B1B73771200163272 /* ODPathPropertiesDialogDef.cpp */,
 				A6DB339C1B73771200163272 /* ODPathPropertiesDialogImpl.cpp */,
+				A6DB338D1B73767700163272 /* ODPoint.cpp */,
 				A6DB339F1B73775900163272 /* ODPointPropertiesDialog.cpp */,
 				A6DB33A01B73775900163272 /* ODPointPropertiesImpl.cpp */,
 				A6DB33A11B73775900163272 /* ODPositionParser.cpp */,
+				A6DB33971B7376F200163272 /* ODPropertiesDialogDef.cpp */,
+				A6DB33981B7376F200163272 /* ODPropertiesDialogImpl.cpp */,
 				A6DB33A51B73777700163272 /* ODRolloverWin.cpp */,
+				A6DB33851B73761500163272 /* ODSelect.cpp */,
 				A6DB33A71B73779A00163272 /* ODToolbarDef.cpp */,
 				A6DB33A81B73779A00163272 /* ODToolbarImpl.cpp */,
+				A6F73D0F1C70EA3400F87CB8 /* ODUndo.cpp */,
 				A6DB33AB1B7377CE00163272 /* ODUtils.cpp */,
-				A6DB33AD1B7377E700163272 /* ODicons.cpp */,
+				A6DB33871B73763800163272 /* PathMan.cpp */,
+				A6DB33881B73763800163272 /* pathmanagerdialog.cpp */,
+				A6DB33831B7375F600163272 /* PointMan.cpp */,
 				A6DB33AF1B73780200163272 /* TextPoint.cpp */,
+				A6F73D091C70C04200F87CB8 /* clipper.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3840,33 +3863,39 @@
 				A6DB33581B736E6400163272 /* BoundaryMan.h */,
 				A6DB33591B736E6400163272 /* BoundaryPoint.h */,
 				A6DB335A1B736E6400163272 /* BoundaryProp.h */,
+				A6F73D011C709D8200F87CB8 /* DR.h */,
+				A6F73D021C709D8200F87CB8 /* DRProp.h */,
 				A6DB335B1B736E6400163272 /* EBL.h */,
 				A6DB335C1B736E6400163272 /* EBLProp.h */,
-				A6DB335D1B736E9D00163272 /* PointMan.h */,
-				A6DB335E1B736EBD00163272 /* ODSelect.h */,
-				A6DB335F1B736EFB00163272 /* PathMan.h */,
-				A6DB33601B736EFB00163272 /* pathmanagerdialog.h */,
-				A6DB33611B736F3300163272 /* Path.h */,
-				A6DB33621B736F5800163272 /* ODPoint.h */,
 				A6DB33631B736F8300163272 /* ODConfig.h */,
 				A6DB33641B736F8300163272 /* ODdc.h */,
+				A6F73D031C709F3900F87CB8 /* ODDRDialogDef.h */,
+				A6F73D041C709F3900F87CB8 /* ODDRDialogImpl.h */,
 				A6DB33651B736F8300163272 /* ODEventHandler.h */,
+				A6DB33731B7370EE00163272 /* ODicons.h */,
 				A6DB33661B736FBC00163272 /* ODNavObjectChanges.h */,
-				A6DB33671B736FF900163272 /* ODPropertiesDialogDef.h */,
-				A6DB33681B736FF900163272 /* ODPropertiesDialogImpl.h */,
+				A6F73D051C70A11E00F87CB8 /* ODPath.h */,
 				A6DB33691B73702A00163272 /* ODPathPropertiesDialogDef.h */,
 				A6DB336A1B73702A00163272 /* ODPathPropertiesDialogImpl.h */,
+				A6DB33621B736F5800163272 /* ODPoint.h */,
 				A6DB336B1B73705100163272 /* ODPointPropertiesDialog.h */,
 				A6DB336C1B73705100163272 /* ODPointPropertiesImpl.h */,
 				A6DB336D1B73705100163272 /* ODPositionParser.h */,
+				A6DB33671B736FF900163272 /* ODPropertiesDialogDef.h */,
+				A6DB33681B736FF900163272 /* ODPropertiesDialogImpl.h */,
 				A6DB336E1B73706D00163272 /* ODRolloverWin.h */,
+				A6DB335E1B736EBD00163272 /* ODSelect.h */,
+				A6F73D061C70A52900F87CB8 /* ODText.h */,
 				A6DB336F1B73709400163272 /* ODToolbarDef.h */,
 				A6DB33701B73709400163272 /* ODToolbarImpl.h */,
+				A6F73D071C70A58600F87CB8 /* ODUndo.h */,
 				A6DB33711B7370B200163272 /* ODUtils.h */,
 				A6DB33721B7370D100163272 /* ODvector2D.h */,
-				A6DB33731B7370EE00163272 /* ODicons.h */,
+				A6DB335F1B736EFB00163272 /* PathMan.h */,
+				A6DB33601B736EFB00163272 /* pathmanagerdialog.h */,
+				A6DB335D1B736E9D00163272 /* PointMan.h */,
 				A6DB33741B73710D00163272 /* TextPoint.h */,
-				A6DB33B11B73834600163272 /* version.h */,
+				A6F73D081C70C01E00F87CB8 /* clipper.hpp */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -5737,36 +5766,41 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6DB33761B73752F00163272 /* ocpn_draw_pi.cpp in Sources */,
+				A6DB337B1B73758D00163272 /* Boundary.cpp in Sources */,
+				A6DB337C1B73758D00163272 /* BoundaryMan.cpp in Sources */,
+				A6DB337D1B73758D00163272 /* BoundaryPoint.cpp in Sources */,
+				A6DB337E1B73758D00163272 /* BoundaryProp.cpp in Sources */,
+				A6F73D101C71050400F87CB8 /* DR.cpp in Sources */,
+				A6F73D111C71050400F87CB8 /* DRProp.cpp in Sources */,
+				A6DB33811B7375B700163272 /* EBL.cpp in Sources */,
+				A6DB33821B7375B700163272 /* EBLProp.cpp in Sources */,
+				A6DB33921B73769800163272 /* ODConfig.cpp in Sources */,
+				A6DB33931B73769800163272 /* ODdc.cpp in Sources */,
+				A6F73D121C71050400F87CB8 /* ODDRDialogDef.cpp in Sources */,
+				A6F73D131C71050400F87CB8 /* ODDRDialogImpl.cpp in Sources */,
+				A6DB33941B73769800163272 /* ODEventHandler.cpp in Sources */,
+				A6DB33AE1B7377E700163272 /* ODicons.cpp in Sources */,
+				A6DB33961B7376CD00163272 /* ODNavObjectChanges.cpp in Sources */,
+				A6F73D141C71050400F87CB8 /* ODPath.cpp in Sources */,
 				A6DB33A21B73775900163272 /* ODPointPropertiesDialog.cpp in Sources */,
 				A6DB33A61B73777700163272 /* ODRolloverWin.cpp in Sources */,
 				A6DB339A1B7376F200163272 /* ODPropertiesDialogImpl.cpp in Sources */,
 				A6DB33A41B73775900163272 /* ODPositionParser.cpp in Sources */,
-				A6DB337D1B73758D00163272 /* BoundaryPoint.cpp in Sources */,
 				A6DB339D1B73771200163272 /* ODPathPropertiesDialogDef.cpp in Sources */,
-				A6DB33761B73752F00163272 /* ocpn_draw_pi.cpp in Sources */,
-				A6DB338A1B73763800163272 /* pathmanagerdialog.cpp in Sources */,
-				A6DB337B1B73758D00163272 /* Boundary.cpp in Sources */,
-				A6DB33B01B73780200163272 /* TextPoint.cpp in Sources */,
-				A6DB33921B73769800163272 /* ODConfig.cpp in Sources */,
-				A6DB33841B7375F600163272 /* PointMan.cpp in Sources */,
-				A6DB33941B73769800163272 /* ODEventHandler.cpp in Sources */,
-				A6DB33AE1B7377E700163272 /* ODicons.cpp in Sources */,
 				A6DB33861B73761500163272 /* ODSelect.cpp in Sources */,
 				A6DB338E1B73767700163272 /* ODPoint.cpp in Sources */,
 				A6DB33991B7376F200163272 /* ODPropertiesDialogDef.cpp in Sources */,
-				A6DB338C1B73765E00163272 /* Path.cpp in Sources */,
 				A6DB339E1B73771200163272 /* ODPathPropertiesDialogImpl.cpp in Sources */,
 				A6DB33A31B73775900163272 /* ODPointPropertiesImpl.cpp in Sources */,
-				A6DB33931B73769800163272 /* ODdc.cpp in Sources */,
-				A6DB33811B7375B700163272 /* EBL.cpp in Sources */,
-				A6DB33AC1B7377CE00163272 /* ODUtils.cpp in Sources */,
-				A6DB33961B7376CD00163272 /* ODNavObjectChanges.cpp in Sources */,
-				A6DB337E1B73758D00163272 /* BoundaryProp.cpp in Sources */,
-				A6DB337C1B73758D00163272 /* BoundaryMan.cpp in Sources */,
-				A6DB33821B7375B700163272 /* EBLProp.cpp in Sources */,
 				A6DB33AA1B73779A00163272 /* ODToolbarImpl.cpp in Sources */,
 				A6DB33A91B73779A00163272 /* ODToolbarDef.cpp in Sources */,
+				A6DB33AC1B7377CE00163272 /* ODUtils.cpp in Sources */,
 				A6DB33891B73763800163272 /* PathMan.cpp in Sources */,
+				A6DB338A1B73763800163272 /* pathmanagerdialog.cpp in Sources */,
+				A6DB33841B7375F600163272 /* PointMan.cpp in Sources */,
+				A6DB33B01B73780200163272 /* TextPoint.cpp in Sources */,
+				A6F73D161C71050400F87CB8 /* clipper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

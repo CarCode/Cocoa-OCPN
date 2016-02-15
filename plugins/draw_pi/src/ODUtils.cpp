@@ -23,14 +23,22 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  **************************************************************************/
 
+#include "wx/wxprec.h"
+
 #ifndef  WX_PRECOMP
 #include "wx/wx.h"
 #endif //precompiled headers
  
-#include "wx/wxprec.h"
- 
 #include "ODUtils.h"
+#ifdef __WXOSX__
 #include "../../../include/ocpn_plugin.h"
+#else
+#include "ocpn_plugin.h"
+#endif
+#include "ocpn_draw_pi.h"
+
+extern int      g_iLocaleDepth;
+extern wxString *g_locale;
 
 /*!
  * Helper stuff for calculating Path
@@ -185,24 +193,35 @@ int GetRandomNumber(int range_min, int range_max)
 void MenuPrepend( wxMenu *menu, int id, wxString label)
 {
     wxMenuItem *item = new wxMenuItem(menu, id, label);
-    #ifdef __WXMSW__
-    wxFont *qFont = OCPNGetFont( wxS("Menu"), 0 );
+#ifdef __WXMSW__
+//    wxFont *qFont = OCPNGetFont( _("Menu"), 0 );
+    wxFont *qFont = GetOCPNScaledFont_PlugIn(_T("Menu"), 0);
     item->SetFont(*qFont);
-    #endif
+#endif
+#ifdef __WXQT__
+    wxFont sFont = GetOCPNGUIScaledFont_PlugIn(_T("Menu"));
+    item->SetFont(sFont);
+#endif
+    
     menu->Prepend(item);
 }
 
 void MenuAppend( wxMenu *menu, int id, wxString label)
 {
     wxMenuItem *item = new wxMenuItem(menu, id, label);
-    #ifdef __WXMSW__
-    wxFont *qFont = OCPNGetFont(wxS("Menu"), 0);
+#ifdef __WXMSW__
+//    wxFont *qFont = OCPNGetFont(wxS("Menu"), 0);
+    wxFont *qFont = GetOCPNScaledFont_PlugIn(_T("Menu"));
     item->SetFont(*qFont);
-    #endif
+#endif
+#ifdef __WXQT__
+    wxFont sFont = GetOCPNGUIScaledFont_PlugIn(_T("Menu"));
+    item->SetFont(sFont);
+#endif
     menu->Append(item);
 }
 
-
+// Helper functions
 double sign( double x )
 {
     if( x < 0. ) return -1.;
@@ -237,4 +256,38 @@ double getLMT( double ut, double lon )
         return ( t - 24. );
     else
         return ( t + 24. );
+}
+
+// International helper functions
+void SetGlobalLocale( void )
+{
+#ifndef __WXMSW__
+    if(g_iLocaleDepth == 0) { 
+        g_locale = new wxString(wxSetlocale(LC_NUMERIC, NULL));
+#if wxCHECK_VERSION(3,0,0)        
+        wxSetlocale(LC_NUMERIC, "");
+#else
+        setlocale(LC_NUMERIC, "");
+#endif
+    }
+    g_iLocaleDepth++;
+#endif
+}
+
+void ResetGlobalLocale( void )
+{
+#ifndef __WXMSW__
+    g_iLocaleDepth--;
+    if(g_iLocaleDepth < 0) 
+        g_iLocaleDepth = 0;
+    if(g_iLocaleDepth == 0 && g_locale) {
+#if wxCHECK_VERSION(3,0,0)        
+        wxSetlocale(LC_NUMERIC, g_locale->ToAscii());
+#else
+        setlocale(LC_NUMERIC, g_locale->ToAscii());
+#endif
+        delete g_locale;
+        g_locale = NULL;
+    } 
+#endif
 }

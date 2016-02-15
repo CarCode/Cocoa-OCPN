@@ -25,9 +25,10 @@
 
 #include "ODConfig.h"
 #include "ODNavObjectChanges.h"
-#include "../../../include/Layer.h"
+#include "EBL.h"
+#include "Layer.h"
 #include "PointMan.h"
-#include "../../../include/pugixml.hpp"
+#include "pugixml.hpp"
 #include <wx/progdlg.h>
 #include <wx/filename.h>
 #include <wx/file.h>
@@ -47,6 +48,8 @@ extern LayerList        *pLayerList;
 extern PointMan         *g_pODPointMan;  
 extern PathList         *g_pPathList;
 extern int              g_navobjbackups;
+extern EBLList          *g_pEBLList;
+
 
 //ODConfig::ODConfig(const wxString &appName, const wxString &vendorName,
 //                              const wxString &LocalFileName) : MyConfig( appName, vendorName, LocalFileName)
@@ -75,7 +78,7 @@ ODConfig::~ODConfig()
     //dtor
 }
 
-bool ODConfig::AddNewPath( Path *pb, int crm )
+bool ODConfig::AddNewPath( ODPath *pb, int crm )
 {
     if( pb->m_bIsInLayer )
         return true;
@@ -88,20 +91,20 @@ bool ODConfig::AddNewPath( Path *pb, int crm )
     return true;
 }
 
-bool ODConfig::UpdatePath( Path *pb )
+bool ODConfig::UpdatePath( ODPath *pb )
 {
     if( pb->m_bIsInLayer ) return true;
 
-
     if( !m_bSkipChangeSetUpdate ) {
-        m_pODNavObjectChangesSet->AddPath( pb, "update" );
+        if(pb->m_bSaveUpdates)
+            m_pODNavObjectChangesSet->AddPath( pb, "update" );
 
     }
 
     return true;
 }
 
-bool ODConfig::DeleteConfigPath( Path *pb )
+bool ODConfig::DeleteConfigPath( ODPath *pb )
 {
     if( pb->m_bIsInLayer ) return true;
     
@@ -153,7 +156,8 @@ bool ODConfig::DeleteODPoint( ODPoint *pWP )
 
 bool ODConfig::ExportGPXPaths( wxWindow* parent, PathList *pPaths, const wxString suggestedName )
 {
-    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName, _( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
+    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName,
+            wxT ( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
 
 #ifdef __WXOSX__
     if(parent)
@@ -175,7 +179,7 @@ bool ODConfig::ExportGPXPaths( wxWindow* parent, PathList *pPaths, const wxStrin
         fn.SetExt( _T ( "gpx" ) );
 
         if( wxFileExists( fn.GetFullPath() ) ) {
-            int answer = OCPNMessageBox_PlugIn( NULL, _("Overwrite existing file?"), _T("Confirm"),
+            int answer = OCPNMessageBox_PlugIn( NULL, _("Overwrite existing file?"), _("Confirm"),
                     wxICON_QUESTION | wxYES_NO | wxCANCEL );
             if( answer != wxID_YES ) return false;
         }
@@ -192,7 +196,8 @@ bool ODConfig::ExportGPXPaths( wxWindow* parent, PathList *pPaths, const wxStrin
 
 bool ODConfig::ExportGPXODPoints( wxWindow* parent, ODPointList *pODPoints, const wxString suggestedName )
 {
-    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName, _( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
+    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, suggestedName,
+            wxT ( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
 
     int response = saveDialog.ShowModal();
 
@@ -204,7 +209,7 @@ bool ODConfig::ExportGPXODPoints( wxWindow* parent, ODPointList *pODPoints, cons
         fn.SetExt( _T ( "gpx" ) );
 
         if( wxFileExists( fn.GetFullPath() ) ) {
-            int answer = OCPNMessageBox_PlugIn(NULL,  _("Overwrite existing file?"), _T("Confirm"),
+            int answer = OCPNMessageBox_PlugIn(NULL,  _("Overwrite existing file?"), _("Confirm"),
                     wxICON_QUESTION | wxYES_NO | wxCANCEL );
             if( answer != wxID_YES ) return false;
         }
@@ -229,8 +234,6 @@ void ODConfig::UpdateNavObj( void )
 
     delete pNavObjectSet;
 
-    m_pODNavObjectChangesSet->RemoveChangesFile();
-    
     delete m_pODNavObjectChangesSet;
     m_pODNavObjectChangesSet = new ODNavObjectChanges(m_sODNavObjSetChangesFile);
 
@@ -240,7 +243,7 @@ void ODConfig::LoadNavObjects()
 {
     //      next thing to do is read tracks, etc from the NavObject XML file,
     wxString sLogMessage;
-    sLogMessage.append( _T("Loading ODnavobjects from ") );
+    sLogMessage.append( _("Loading navobjects from ") );
     sLogMessage.append(m_sODNavObjSetFile );
     wxLogMessage( sLogMessage );
     CreateRotatingNavObjBackup();
@@ -272,7 +275,7 @@ void ODConfig::LoadNavObjects()
         
         if(size != 0){
             wxString sLogMessage;
-            sLogMessage.append( _T("Applying changes from ") );
+            sLogMessage.append( _("Applying changes from ") );
             sLogMessage.append( m_sODNavObjSetChangesFile );
             wxLogMessage( sLogMessage );
             m_pODNavObjectChangesSet->ApplyChanges();
@@ -282,6 +285,8 @@ void ODConfig::LoadNavObjects()
         if( wxFileExists( m_sODNavObjSetChangesFile ) )
             wxRemoveFile( m_sODNavObjSetChangesFile);
 #endif
+//        delete m_pODNavObjectChangesSet;
+           
     }
 
 //    m_pODNavObjectChangesSet = new ODNavObjectChanges(m_sODNavObjSetChangesFile);
@@ -289,7 +294,8 @@ void ODConfig::LoadNavObjects()
 
 void ODConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
 {
-    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, wxT ( "" ), _( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
+    wxFileDialog saveDialog( NULL, _( "Export GPX file" ), m_gpx_path, wxT ( "" ),
+            wxT ( "GPX files (*.gpx)|*.gpx" ), wxFD_SAVE );
 
     int response = saveDialog.ShowModal();
 
@@ -301,7 +307,7 @@ void ODConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
         fn.SetExt( _T ( "gpx" ) );
 
         if( wxFileExists( fn.GetFullPath() ) ) {
-            int answer = OCPNMessageBox_PlugIn( NULL, _("Overwrite existing file?"), _T("Confirm"),
+            int answer = OCPNMessageBox_PlugIn( NULL, _("Overwrite existing file?"), _("Confirm"),
                     wxICON_QUESTION | wxYES_NO | wxCANCEL );
             if( answer != wxID_YES ) return;
         }
@@ -320,7 +326,7 @@ void ODConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
             pprog->Centre();
         }
 
-        //WPTs
+        //Points
         int ic = 0;
 
         wxODPointListNode *node = g_pODPointMan->GetODPointList()->GetFirst();
@@ -352,7 +358,7 @@ void ODConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
         //Paths
         wxPathListNode *node1 = g_pPathList->GetFirst();
         while( node1 ) {
-            Path *pPath = node1->GetData();
+            ODPath *pPath = node1->GetData();
 
             bool b_add = true;
 
@@ -385,7 +391,8 @@ void ODConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
     Layer *l = NULL;
 
     if( !islayer || dirpath.IsSameAs( _T("") ) ) {
-        wxFileDialog openDialog( NULL, _( "Import GPX file" ), m_gpx_path, wxT( "" ), _( "GPX files (*.gpx)|*.gpx|All files (*.*)|*.*" ),
+        wxFileDialog openDialog( NULL, _( "Import GPX file" ), m_gpx_path, wxT ( "" ),
+                wxT ( "GPX files (*.gpx)|*.gpx|All files (*.*)|*.*" ),
                 wxFD_OPEN | wxFD_MULTIPLE );
         openDialog.Centre();
         response = openDialog.ShowModal();
@@ -432,7 +439,7 @@ void ODConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
             l->m_bIsVisibleOnChart = bLayerViz;
 
             wxString laymsg;
-            laymsg.Printf( _T("New layer %d: %s"), l->m_LayerID, l->m_LayerName.c_str() );
+            laymsg.Printf( _("New layer %d: %s"), l->m_LayerID, l->m_LayerName.c_str() );
             wxLogMessage( laymsg );
 
             pLayerList->Insert( l );
@@ -454,6 +461,19 @@ void ODConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
 
                 delete pSet;
             }
+        }
+
+        // make sure any EBL hanging of the boat is repositioned
+        wxEBLListNode *node = g_pEBLList->GetFirst();
+        for(size_t i = 0; i < g_pEBLList->GetCount(); i++) {
+            EBL *ebl = (EBL *)node->GetData();
+            if(ebl->m_bCentreOnBoat)  {
+                bool l_bSaveUpdatesState = ebl->m_bSaveUpdates;
+                ebl->m_bSaveUpdates = false;
+                ebl->CentreOnBoat(true);
+                ebl->m_bSaveUpdates = l_bSaveUpdatesState;
+            }
+            node = node->GetNext();
         }
     }
 }
@@ -514,7 +534,7 @@ bool ODConfig::ODPointIsInPathList( ODPoint *pr )
 
     wxPathListNode *node1 = g_pPathList->GetFirst();
     while( node1 ) {
-        Path *pPath = node1->GetData();
+        ODPath *pPath = node1->GetData();
         ODPointList *pODPointList = pPath->m_pODPointList;
 
         wxODPointListNode *node2 = pODPointList->GetFirst();

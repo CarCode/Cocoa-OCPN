@@ -21,23 +21,39 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  **************************************************************************/
 
+#include "wx/wxprec.h"
+
+#ifndef WX_PRECOMP
+#include "wx/wx.h"
+#endif
+
 #include "PointMan.h"
 
 #include "ocpn_draw_pi.h"
 //#include "styles.h"
-#include "../../../include/MarkIcon.h"
+#include "MarkIcon.h"
 #include "ODConfig.h"
 #include "ODSelect.h"
 #include "PathMan.h"
 #include "ODUtils.h"
+#ifdef __WXOSX__
 #include "../../../include/cutil.h"
+#else
+#include "cutil.h"
+#endif
 #include "TextPoint.h"
+#include <stddef.h>                     // for NULL
 
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/apptrait.h>
 #include <wx/fontenum.h>
+#ifdef __WXOSX__
+#include "../../../include/GL/gl.h"
+#else
+#include "GL/gl.h"
+#endif
 
 //extern ocpnStyle::StyleManager* g_ODStyleManager;
 extern wxString         *g_PrivateDataDir;
@@ -141,33 +157,33 @@ void PointMan::ProcessUserIcons( )
     wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
     wxString UserIconPath = std_path.GetUserConfigDir();
     UserIconPath += wxS("/opencpn/UserIcons");
-
+    
     if( wxDir::Exists( UserIconPath ) ) {
         wxArrayString FileList;
-
+        
         wxDir dir( UserIconPath );
         int n_files = dir.GetAllFiles( UserIconPath, &FileList );
 #else
     wxString *UserIconPath = g_PrivateDataDir;
     wxChar sep = wxFileName::GetPathSeparator();
     if ( UserIconPath->IsNull() ) return;
-
+    
     if( UserIconPath->Last() != sep ) UserIconPath->Append( sep );
     UserIconPath->Append( _T("UserIcons") );
-
+    
     if( wxDir::Exists( *UserIconPath ) ) {
         wxArrayString FileList;
-
+        
         wxDir dir( *UserIconPath );
         int n_files = dir.GetAllFiles( *UserIconPath, &FileList );
-#endif
+#endif   
         for( int ifile = 0; ifile < n_files; ifile++ ) {
             wxString name = FileList.Item( ifile );
-
+            
             wxFileName fn( name );
             wxString iconname = fn.GetName();
             wxBitmap icon1;
-
+            
             if( fn.GetExt().Lower() == _T("xpm") ) {
                 if( icon1.LoadFile( name, wxBITMAP_TYPE_XPM ) ) {
                     ProcessIcon( icon1, iconname, iconname );
@@ -679,7 +695,7 @@ void PointMan::DeleteAllODPoints( bool b_delete_used )
     wxODPointListNode *node = m_pODPointList->GetFirst();
     while( node ) {
         ODPoint *prp = node->GetData();
-        // if argument is false, then only delete non-route waypoints
+        // if argument is false, then only delete non-path ODPoints
         if( !prp->m_bIsInLayer && ( prp->GetIconName() != _T("mob") )
             && ( ( b_delete_used && prp->m_bKeepXPath )
                         || ( ( !prp->m_bIsInPath ) && !( prp == pAnchorWatchPoint1 ) && !( prp == pAnchorWatchPoint2 ) ) ) ) {
@@ -708,7 +724,7 @@ void PointMan::DestroyODPoint( ODPoint *pRp, bool b_update_changeset )
         wxArrayPtrVoid *ppath_array = g_pPathMan->GetPathArrayContaining( pRp );
         if( ppath_array ) {
             for( unsigned int ib = 0; ib < ppath_array->GetCount(); ib++ ) {
-                Path *pb = (Path *) ppath_array->Item( ib );
+                ODPath *pb = (ODPath *) ppath_array->Item( ib );
 
                 pb->RemovePoint( pRp );
 
@@ -716,7 +732,7 @@ void PointMan::DestroyODPoint( ODPoint *pRp, bool b_update_changeset )
 
             //    Scrub the paths, looking for one-point routes
             for( unsigned int ib = 0; ib < ppath_array->GetCount(); ib++ ) {
-                Path *pb = (Path *) ppath_array->Item( ib );
+                ODPath *pb = (ODPath *) ppath_array->Item( ib );
                 if( pb->GetnPoints() < 2 ) {
                     bool prev_bskip = g_pODConfig->m_bSkipChangeSetUpdate;
                     g_pODConfig->m_bSkipChangeSetUpdate = true;

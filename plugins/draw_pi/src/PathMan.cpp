@@ -34,9 +34,11 @@
 #include "wx/image.h"
 #include "wx/tokenzr.h"
 #include <wx/progdlg.h>
-
+#ifdef __WXOSX__
 #include "../../../include/dychart.h"
-
+#else
+#include "dychart.h"
+#endif
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
@@ -48,10 +50,16 @@
 #include "ODConfig.h"
 #include "Boundary.h"
 #include "EBL.h"
-
+#include "DR.h"
+#ifdef __WXOSX__
 #include "../../../include/georef.h"
 #include "../../../include/pluginmanager.h"
 #include "../../../include/cutil.h"
+#else
+#include "georef.h"
+#include "pluginmanager.h"
+#include "cutil.h"
+#endif
 
 #include <wx/dir.h>
 #include <wx/filename.h>
@@ -59,9 +67,11 @@
 #include <wx/apptrait.h>
 
 //    List definitions for Point Manager Icons
+#ifndef __WXOSX__
 WX_DECLARE_LIST(wxBitmap, markicon_bitmap_list_type);
 WX_DECLARE_LIST(wxString, markicon_key_list_type);
 WX_DECLARE_LIST(wxString, markicon_description_list_type);
+#endif
 
 //    List implementation for Point Manager Icons
 #include <wx/listimpl.cpp>
@@ -73,6 +83,7 @@ extern ocpn_draw_pi *g_ocpn_draw_pi;
 extern PathList     *g_pPathList;
 extern BoundaryList *g_pBoundaryList;
 extern EBLList      *g_pEBLList;
+extern DRList       *g_pDRList;
 extern ODConfig  *g_pODConfig;
 extern ODSelect      *g_pODSelect;
 extern PlugInManager  *g_OD_pi_manager;
@@ -95,7 +106,7 @@ PathMan::~PathMan()
     if( pPathActivatePoint ) delete pPathActivatePoint;
 }
 
-bool PathMan::IsPathValid( Path *pPath )
+bool PathMan::IsPathValid( ODPath *pPath )
 {
     wxPathListNode *node = g_pPathList->GetFirst();
     while( node ) {
@@ -105,7 +116,7 @@ bool PathMan::IsPathValid( Path *pPath )
     return false;
 }
 
-bool PathMan::ActivatePath(Path *pPathToActivate )
+bool PathMan::ActivatePath(ODPath *pPathToActivate )
 {
     wxString msg_id( wxS("OCPN_PATH_ACTIVATED") );
     wxString msg;
@@ -121,7 +132,7 @@ bool PathMan::ActivatePath(Path *pPathToActivate )
     return true;
 }
 
-bool PathMan::DeactivatePath( Path *pPathToDeactivate )
+bool PathMan::DeactivatePath( ODPath *pPathToDeactivate )
 {
     wxString msg_id( _T("OCPN_PATH_DEACTIVATED") );
     wxString msg;
@@ -140,7 +151,7 @@ bool PathMan::DeactivatePath( Path *pPathToDeactivate )
     return true;
 }
 
-bool PathMan::DeletePath( Path *pPath )
+bool PathMan::DeletePath( ODPath *pPath )
 {
     if( pPath ) {
 
@@ -156,22 +167,23 @@ bool PathMan::DeletePath( Path *pPath )
         g_pPathList->DeleteObject( pPath );
         if(pPath->m_sTypeString == wxT("Boundary")) g_pBoundaryList->DeleteObject( (Boundary *)pPath );
         if(pPath->m_sTypeString == wxT("EBL")) g_pEBLList->DeleteObject( (EBL *)pPath );
-
+        if(pPath->m_sTypeString == wxT("DR")) g_pDRList->DeleteObject( (DR *)pPath );
+        
         // walk the path, tentatively deleting/marking points used only by this route
         wxODPointListNode *pnode = ( pPath->m_pODPointList )->GetFirst();
         while( pnode ) {
             ODPoint *prp = pnode->GetData();
 
             // check all other paths to see if this point appears in any other route
-            Path *pcontainer_path = FindPathContainingODPoint( prp );
+            ODPath *pcontainer_path = FindPathContainingODPoint( prp );
 
             if( pcontainer_path == NULL && prp->m_bIsInPath ) {
                 prp->m_bIsInPath = false;          // Take this point out of this (and only) path
                 if( !prp->m_bKeepXPath ) {
-//    This does not need to be done with navobj.xml storage, since the waypoints are stored with the route
-//                              g_pODConfig->DeleteWayPoint(prp);
+//    This does not need to be done with navobj.xml storage, since the ODPoints are stored with the route
+//                              g_pODConfig->DeleteODPoint(prp);
 
-                    g_pODSelect->DeleteSelectablePoint( prp, SELTYPE_OCPNPOINT );
+                    g_pODSelect->DeleteSelectablePoint( prp, SELTYPE_ODPOINT );
 
                     // Remove all instances of this point from the list.
                     wxODPointListNode *pdnode = pnode;
@@ -180,7 +192,7 @@ bool PathMan::DeletePath( Path *pPath )
                         pdnode = pPath->m_pODPointList->Find( prp );
                     }
 
-                    if(prp->m_MarkName == wxT("Boat") && pPath->m_sTypeString == wxT("EBL") ) g_ocpn_draw_pi->m_pEBLBoatPoint = NULL;
+                    if(prp->m_ODPointName == wxT("Boat") && pPath->m_sTypeString == wxT("EBL") ) g_ocpn_draw_pi->m_pEBLBoatPoint = NULL;
                     pnode = NULL;
                     delete prp;
                 } else {
@@ -203,7 +215,7 @@ bool PathMan::DeletePath( Path *pPath )
     return true;
 }
 
-bool PathMan::DoesPathContainSharedPoints( Path *pPath )
+bool PathMan::DoesPathContainSharedPoints( ODPath *pPath )
 {
     if( pPath ) {
         // walk the route, looking at each point to see if it is used by another route
@@ -217,7 +229,7 @@ bool PathMan::DoesPathContainSharedPoints( Path *pPath )
             
              if( pRA ) {
                  for( unsigned int ir = 0; ir < pRA->GetCount(); ir++ ) {
-                    Path *pb = (Path *) pRA->Item( ir );
+                    ODPath *pb = (ODPath *) pRA->Item( ir );
                     if( pb == pPath)
                         continue;               // self
                     else 
@@ -228,7 +240,7 @@ bool PathMan::DoesPathContainSharedPoints( Path *pPath )
             if( pnode ) pnode = pnode->GetNext();
         }
         
-        //      Now walk the path again, looking for isolated type shared waypoints
+        //      Now walk the path again, looking for isolated type shared ODPoints
         pnode = ( pPath->m_pODPointList )->GetFirst();
         while( pnode ) {
             ODPoint *prp = pnode->GetData();
@@ -248,7 +260,7 @@ wxArrayPtrVoid *PathMan::GetPathArrayContaining( ODPoint *pWP )
 
     wxPathListNode *path_node = g_pPathList->GetFirst();
     while( path_node ) {
-        Path *ppath = path_node->GetData();
+        ODPath *ppath = path_node->GetData();
 
         wxODPointListNode *OCPNpoint_node = ( ppath->m_pODPointList )->GetFirst();
         while( OCPNpoint_node ) {
@@ -256,7 +268,7 @@ wxArrayPtrVoid *PathMan::GetPathArrayContaining( ODPoint *pWP )
             if( prp == pWP )                // success
             pArray->Add( (void *) ppath );
 
-            OCPNpoint_node = OCPNpoint_node->GetNext();           // next waypoint
+            OCPNpoint_node = OCPNpoint_node->GetNext();           // next ODPoint
         }
 
         path_node = path_node->GetNext();                         // next route
@@ -277,7 +289,7 @@ void PathMan::DeleteAllPaths( void )
     //    Iterate on the RouteList
     wxPathListNode *node = g_pPathList->GetFirst();
     while( node ) {
-        Path *ppath = node->GetData();
+        ODPath *ppath = node->GetData();
         if( ppath->m_bIsInLayer ) {
             node = node->GetNext();
             continue;
@@ -294,11 +306,11 @@ void PathMan::DeleteAllPaths( void )
 
 }
 
-Path *PathMan::FindPathContainingODPoint( ODPoint *pWP )
+ODPath *PathMan::FindPathContainingODPoint( ODPoint *pWP )
 {
     wxPathListNode *node = g_pPathList->GetFirst();
     while( node ) {
-        Path *ppath = node->GetData();
+        ODPath *ppath = node->GetData();
 
         wxODPointListNode *pnode = ( ppath->m_pODPointList )->GetFirst();
         while( pnode ) {
@@ -313,11 +325,11 @@ Path *PathMan::FindPathContainingODPoint( ODPoint *pWP )
     return NULL;                              // not found
 }
 
-Path *PathMan::FindPathByGUID( wxString guid )
+ODPath *PathMan::FindPathByGUID( wxString guid )
 {
     wxPathListNode *node = g_pPathList->GetFirst();
     while( node ) {
-        Path *ppath = node->GetData();
+        ODPath *ppath = node->GetData();
         if(ppath->m_GUID == guid) return ppath;
         node = node->GetNext();
     }
@@ -329,30 +341,30 @@ void PathMan::SetColorScheme( PI_ColorScheme cs )
 {
     // Re-Create the pens and colors
 
-    m_pActiveODPointPen = wxThePenList->FindOrCreatePen( wxColour( 0, 0, 255 ), g_path_line_width, wxSOLID );
-    m_pODPointPen = wxThePenList->FindOrCreatePen( wxColour( 0, 0, 255 ), g_path_line_width, wxSOLID );
+    m_pActiveODPointPen = wxThePenList->FindOrCreatePen( wxColour( 0, 0, 255 ), g_path_line_width, wxPENSTYLE_SOLID );
+    m_pODPointPen = wxThePenList->FindOrCreatePen( wxColour( 0, 0, 255 ), g_path_line_width, wxPENSTYLE_SOLID );
 
 //    Or in something like S-52 compliance
     wxColour tColour;
     GetGlobalColor( wxS("UINFB"), &tColour );
-    m_pPathPen = wxThePenList->FindOrCreatePen( tColour, g_path_line_width, wxSOLID );
-    m_pPathBrush = wxTheBrushList->FindOrCreateBrush( tColour, wxSOLID );
+    m_pPathPen = wxThePenList->FindOrCreatePen( tColour, g_path_line_width, wxPENSTYLE_SOLID );
+    m_pPathBrush = wxTheBrushList->FindOrCreateBrush( tColour, wxPENSTYLE_SOLID );
 
     GetGlobalColor( wxS("UINFO"), &tColour );
-    m_pSelectedPathPen = wxThePenList->FindOrCreatePen( tColour, g_path_line_width, wxSOLID );
-    m_pSelectedPathBrush = wxTheBrushList->FindOrCreateBrush( tColour, wxSOLID );
+    m_pSelectedPathPen = wxThePenList->FindOrCreatePen( tColour, g_path_line_width, wxPENSTYLE_SOLID );
+    m_pSelectedPathBrush = wxTheBrushList->FindOrCreateBrush( tColour, wxPENSTYLE_SOLID );
 
     GetGlobalColor( wxS("UARTE"), &tColour );
-    m_pActivePathPen = wxThePenList->FindOrCreatePen( tColour, g_path_line_width, wxSOLID );
+    m_pActivePathPen = wxThePenList->FindOrCreatePen( tColour, g_path_line_width, wxPENSTYLE_SOLID );
 
     GetGlobalColor( wxS("PLRTE"), &tColour );
-    m_pActivePathBrush = wxTheBrushList->FindOrCreateBrush( tColour, wxSOLID );
-    m_pActiveODPointBrush =  wxTheBrushList->FindOrCreateBrush( tColour, wxSOLID);
+    m_pActivePathBrush = wxTheBrushList->FindOrCreateBrush( tColour, wxPENSTYLE_SOLID );
+    m_pActiveODPointBrush =  wxTheBrushList->FindOrCreateBrush( tColour, wxPENSTYLE_SOLID);
 
-    m_pActiveODPointPen = wxThePenList->FindOrCreatePen( tColour, g_path_line_width, wxSOLID );
+    m_pActiveODPointPen = wxThePenList->FindOrCreatePen( tColour, g_path_line_width, wxPENSTYLE_SOLID );
     GetGlobalColor( wxS("CHBLK"), &tColour );
-    m_pODPointPen = wxThePenList->FindOrCreatePen( tColour, g_path_line_width, wxSOLID );
-    m_pODPointBrush = wxTheBrushList->FindOrCreateBrush( tColour, wxSOLID);
+    m_pODPointPen = wxThePenList->FindOrCreatePen( tColour, g_path_line_width, wxPENSTYLE_SOLID );
+    m_pODPointBrush = wxTheBrushList->FindOrCreateBrush( tColour, wxPENSTYLE_SOLID);
 
 }
 

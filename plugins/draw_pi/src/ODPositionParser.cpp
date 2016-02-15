@@ -1,7 +1,9 @@
-/***************************************************************************
-*
-* Project:  OpenCPN
-*
+/*************************************************************************
+ * 
+ * Project:  OpenCPN
+ * Purpose:  OCPN Draw Point Properties Dialog support
+ * Author:   Jon Gough
+ *
 ***************************************************************************
 *   Copyright (C) 2010 by David S. Register                               *
 *                                                                         *
@@ -20,20 +22,26 @@
 *   Free Software Foundation, Inc.,                                       *
 *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
 **************************************************************************/
-#ifdef __WXOSX__
-#include <wx/wxprec.h>
 
 #ifndef  WX_PRECOMP
-#include <wx/wx.h>
+#include "wx/wx.h"
 #endif //precompiled headers
-#endif
+
+#include "wx/wxprec.h"
+
+#ifndef  WX_PRECOMP
+#include "wx/wx.h"
+#endif //precompiled headers
 
 #include <wx/tokenzr.h>
 #include <wx/regex.h>
-#include <wx/dcmemory.h>
 
 #include "ODPositionParser.h"
+#ifdef __WXOSX__
 #include "../../../include/ocpn_plugin.h"
+#else
+#include "ocpn_plugin.h"
+#endif
 
 PositionParser::PositionParser(const wxString & src)
 {

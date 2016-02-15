@@ -25,48 +25,98 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
-#ifdef DEBUG_BUILD
+#ifndef _OCPNDRAWPI_H_
+#define _OCPNDRAWPI_H_
+
+#ifdef __WXMSW__
+#ifdef _DEBUG
 #  define DEBUGSL(x) do { \
 time_t now = time(0); \
 tm* localtm = localtime(&now); \
 char *stime = asctime(localtm); \
 stime[strlen(stime) - 1 ] = 0; \
-std::cout << stime << " : " << x << std::endl; } while (0)
+std::string s1(x); \
+std::string s = stime; \
+s += " :: "; \
+s += s1; \
+s += "\n"; \
+std::wstring stemp = std::wstring(s.begin(), s.end()); \
+LPCWSTR sw = stemp.c_str(); \
+OutputDebugString(sw); } while (0) 
 
 #  define DEBUGST(x) do { \
+std::string s(""); \
 time_t now = time(0); \
 tm* localtm = localtime(&now); \
 char *stime = asctime(localtm); \
 stime[strlen(stime) - 1 ] = 0; \
-std::cout << stime << " : " << x; } while (0)
+do { \
+std::string s1(x); \
+s += stime; \
+s += " :: "; \
+s += s1; } while (0);
 
 #  define DEBUGCONT(x) do { \
-std::cout << x ; } while (0)
+std::string s1(x); \
+s += s1 ; } while (0);
 
 #  define DEBUGEND(x) do { \
-std::cout << x << std::endl; } while (0)
+std::string s1(""); \
+s1 = x; \
+s += s1; } while (0); \
+s += "\n" ; \
+std::wstring stemp = std::wstring(s.begin(), s.end()); \
+LPCWSTR sw = stemp.c_str(); \
+OutputDebugString(sw); } while (0) 
 #else
 #  define DEBUGSL(x) do {} while (0)
 #  define DEBUGST(x) do {} while (0)
 #  define DEBUGCONT(x) do {} while (0)
 #  define DEBUGEND(x) do {} while (0)
 #endif
+#else
+#ifdef DEBUG_BUILD
+#  define DEBUGSL(x) do { \
+time_t now = time(0); \
+tm* localtm = localtime(&now); \
+char *stime = asctime(localtm); \
+stime[strlen(stime) - 1 ] = 0; \
+std::cout << stime << " :: "; \
+std::cout << x << std::endl ;} while (0)
+
+#  define DEBUGST(x) do { \
+time_t now = time(0); \
+tm* localtm = localtime(&now); \
+char *stime = asctime(localtm); \
+stime[strlen(stime) - 1 ] = 0; \
+std::cout << stime << " :: " ; \
+std::cout << x; } while (0)
+
+#  define DEBUGCONT(x) do { \
+std::cout << x ; } while (0)
+
+#  define DEBUGEND(x) do { \
+std::cout << x  << std::endl ; } while (0)
+#else
+#  define DEBUGSL(x) do {} while (0)
+#  define DEBUGST(x) do {} while (0)
+#  define DEBUGCONT(x) do {} while (0)
+#  define DEBUGEND(x) do {} while (0)
+#endif
+#endif
+
+#ifdef __WXOSX__
+#define PLUGIN_VERSION_MAJOR 0
+#define PLUGIN_VERSION_MINOR 4
+#define PLUGIN_VERSION_PATCH 657
+#define PLUGIN_VERSION_DATE "14.02.2016"
+#endif
 
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 
-#ifndef _OCPNDRAWPI_H_
-#define _OCPNDRAWPI_H_
-
-#include "wx/wxprec.h"
-
-#ifndef  WX_PRECOMP
-  #include "wx/wx.h"
-#endif //precompiled headers
-
-
-#include "../../../include/ocpn_plugin.h"
-#include "../../../include/undo.h"
+#include "ocpn_plugin.h"
+#include "undo.h"
 #include "ODPoint.h"
 #include "ODConfig.h"
 #include "pathmanagerdialog.h"
@@ -74,7 +124,7 @@ std::cout << x << std::endl; } while (0)
 
 #include "georef.h"
 //#include "chartbarwin.h"
-
+#include "wx28compat.h"
 #include <wx/aui/aui.h>
 #include <wx/string.h>
 #include <wx/settings.h>
@@ -91,15 +141,16 @@ std::cout << x << std::endl; } while (0)
 //----------------------------------------------------------------------------------------------------------
 
 #define OCPN_DRAW_POSITION -1
-
+#define ID_NONE -1
 //    Constants for right click menus
 enum
 {
-    ID_OCPNPOINT_MENU_GOTO = 1,
-    ID_OCPNPOINT_MENU_MOVE,
-    ID_OCPNPOINT_MENU_DELPOINT,
-    ID_OCPNPOINT_MENU_PROPERTIES,
-    ID_OCPNPOINT_MENU_COPY,
+    ID_ODPOINT_MENU_GOTO = 1,
+    ID_ODPOINT_MENU_MOVE,
+    ID_ODPOINT_MENU_DELPOINT,
+    ID_ODPOINT_MENU_PROPERTIES,
+    ID_ODPOINT_MENU_COPY,
+    ID_ODPOINT_MENU_COPY_GUID,
 
     ID_PATH_MENU_ACTIVATE,
     ID_PATH_MENU_DEACTIVATE,
@@ -119,19 +170,21 @@ enum
     ID_PATH_MENU_ACTNXTPOINT,
     ID_PATH_MENU_REMPOINT,
     ID_PATH_MENU_PROPERTIES,
+    ID_PATH_MENU_COPY_GUID,
     ID_EBL_MENU_CENTRE_ON_BOAT,
     ID_EBL_MENU_CENTRE_ON_BOAT_LATLON,
     ID_EBL_MENU_PICK_NEW_START,
     ID_EBL_MENU_VRM_MATCH_EBL_COLOUR,
+    ID_DR_MENU_UPDATE_INITIAL_CONDITIONS,
 
     ID_UNDO,
     ID_REDO,
 
-    ID_OCPNPOINT_MENU_ADDITIONAL_INFO,
+    ID_ODPOINT_MENU_ADDITIONAL_INFO,
 
-    ID_DEF_MENU_GROUPBASE,  // Must be last entry, as chart group identifiers are created dynamically
+    ID_DEF_MENU_GROUPBASE,  
 
-
+    
     ID_DEF_MENU_LAST
 };
 
@@ -142,8 +195,9 @@ enum
     ID_MODE_POINT,
     ID_MODE_TEXT_POINT,
     ID_MODE_EBL,
-
-    ID_LAST_MODE
+    ID_MODE_DR,
+    
+    ID_MODE_LAST
 };
 
 enum {
@@ -158,17 +212,35 @@ enum {
     ID_TEXT_POSTION_LAST
 };
 
+// Boundary types
+enum {
+    ID_BOUNDARY_EXCLUSION = 0,
+    ID_BOUNDARY_INCLUSION,
+    ID_BOUNDARY_NIETHER,
+    ID_BOUNDARY_ANY,
+    
+    ID_BOUNDARY_TYPE_LAST
+};
+
+
+//#define PI 3.14159265
+
 class Boundary;
 class BoundaryProp;
 class EBL;
+class DR;
 class SelectItem;
+class ODicons;
 
-const int StyleValues[] = { wxSOLID, wxDOT, wxLONG_DASH, wxSHORT_DASH, wxDOT_DASH };
+const int StyleValues[] = { wxPENSTYLE_SOLID, wxPENSTYLE_DOT, wxPENSTYLE_LONG_DASH, wxPENSTYLE_SHORT_DASH, wxPENSTYLE_DOT_DASH };
 const int WidthValues[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
-extern DECL_EXP bool FindPointInBoundary( double lat, double lon );
-extern DECL_EXP bool FindPointInBoundary( Boundary *pBoundary, double lat, double lon);
-extern DECL_EXP wxString GetBoundaryWithPointInBoundary( double lat, double lon );
+class  ODPlugIn_Position_Fix_Ex : public PlugIn_Position_Fix_Ex
+{
+public:
+    bool    valid;
+};
+
 
 class ocpn_draw_pi : public opencpn_plugin_113
 {
@@ -196,6 +268,7 @@ public:
     bool            m_bEBLEditing;
     bool            m_bEBLMoveOrigin;
 
+    
 
     //    The required PlugIn Methods
     int Init(void);
@@ -236,7 +309,7 @@ public:
     void loadLayouts(wxWindow * parent);
 //    void startLogbook();
     void shutdown(bool menu);
-
+    
     bool MouseEventHook( wxMouseEvent &event );
     bool KeyboardEventHook( wxKeyEvent &event );
     void SetCursorLatLon(double lat, double lon);
@@ -251,20 +324,17 @@ public:
     void CanvasPopupMenu( int x, int y, int seltype );
     double  GetTrueOrMag(double a);
     void SetPositionFixEx( PlugIn_Position_Fix_Ex &pfix );
-
+    
     void RenderPathLegs( ODDC &dc );
-
+    
     // OD Methods
     void    ProcessTimerEvent(wxTimerEvent& ev);
     void    PopupMenuHandler(wxCommandEvent& ev);
-
+    
     void    SaveConfig();
-
+    
     void    AlphaBlending( ODDC &dc, int x, int y, int size_x, int size_y, float radius, wxColour color, unsigned char transparency );
 
-    void    DimeControl( wxWindow* ctrl );
-    void    DimeControl( wxWindow* ctrl, wxColour col, wxColour window_back_color, wxColour ctrl_back_color,
-                  wxColour text_color, wxColour uitext, wxColour udkrd, wxColour gridline );
     void    SetToolbarTool( void );
 
     wxCursor    *pCursorLeft;
@@ -280,23 +350,30 @@ public:
     wxCursor    *pCursorArrow;
     wxCursor    *pCursorCross;
     wxCursor    *m_pTextCursorCross;
-
+    
     wxCursor    *m_pCurrentCursor;
-
+    
     int         nConfig_State;
-
+    
     int         nPath_State;
     int         nBoundary_State;
-    Boundary    *m_pMouseBoundary;
-    EBL         *m_pMouseEBL;
-    ODPoint     *m_pEBLBoatPoint;
-    Path        *m_pSelectedPath;
-    ODPoint   *m_pFoundODPoint;
-    ODPoint   *m_pFoundODPointSecond;
-    wxPoint     r_rband;
     int         nPoint_State;
     int         nTextPoint_State;
     int         nEBL_State;
+    int         nDR_State;
+    bool        bKey_Path_Pressed;
+    bool        bKey_Boundary_Pressed;
+    bool        bKey_Point_Pressed;
+    bool        bKey_TextPoint_Pressed;
+    bool        bKey_EBL_Pressed;
+    bool        bKey_DR_Pressed;
+    Boundary    *m_pMouseBoundary;
+    EBL         *m_pMouseEBL;
+    ODPoint     *m_pEBLBoatPoint;
+    ODPath        *m_pSelectedPath;
+    ODPoint   *m_pFoundODPoint;
+    ODPoint   *m_pFoundODPointSecond;
+    wxPoint     r_rband;
     double      m_dStartLat;
     double      m_dStartLon;
     double      m_cursor_lon, m_cursor_lat;
@@ -307,30 +384,32 @@ public:
     double      m_lat, m_lon;
     double      m_pixx, m_pixy;
     wxPoint     m_cursorPoint;
-
+    
     Undo        *undo;
-
-    PlugIn_ViewPort *m_vp;
+    
+    PlugIn_ViewPort *m_pVP;
     wxGLContext     *m_pcontext;
     wxMemoryDC      *pmdc;
-    wxGLCanvas      *m_glcc;
-
+//    wxGLCanvas      *m_glcc;
+    
     int         nBlinkerTick;
     int         m_Mode;
     int                m_draw_button_id;
-
+    
     void    appendOSDirSlash(wxString* pString);  
-
+    
     double  m_chart_scale;
     double  m_view_scale;
-
+    
+    ODicons     *m_pODicons;
+    
 
 private:
     void    OnTimer(wxTimerEvent& ev);
 
     void    LoadConfig();
     void    RenderExtraPathLegInfo(ODDC &dc, wxPoint ref_point, wxString s );
-    wxString CreateExtraPathLegInfo(ODDC &dc, Path *path, double brg, double dist, wxPoint ref_point);
+    wxString CreateExtraPathLegInfo(ODDC &dc, ODPath *path, double brg, double dist, wxPoint ref_point);
     void    FinishBoundary();
 //    ArrayOfGridColWidth    readCols(ArrayOfGridColWidth ar, wxString str);
 //    void                    writeCols(wxFileConfig *pConf, ArrayOfGridColWidth ar, wxString entry);
@@ -342,14 +421,15 @@ private:
     bool    CreatePointLeftClick( wxMouseEvent &event );
     bool    CreateTextPointLeftClick( wxMouseEvent &event );
     bool    CreateEBLLeftClick( wxMouseEvent &event );
-
+    bool    CreateDRLeftClick( wxMouseEvent &event );
+    
     void    MenuPrepend( wxMenu *menu, int id, wxString label);
     void    MenuAppend( wxMenu *menu, int id, wxString label);
     void    FindSelectedObject( void )    ;
-
+    
     wxTimer         m_RolloverPopupTimer;
-
-
+    
+    
     int               m_show_id;
     int               m_hide_id;
     bool                show;
@@ -357,28 +437,29 @@ private:
 
     bool              m_bLOGShowIcon;
     PI_ColorScheme               global_color_scheme;
-
+    
     Boundary    *m_pSelectedBoundary;
     EBL         *m_pSelectedEBL;
-
+    DR          *m_pSelectedDR;
+    
     bool        m_bDrawingBoundary;
-
+    
     int         popx, popy;
     wxString m_sNavObjSetChangesFile;
-
+    
     wxString    m_Data;
 
     int         m_numModes;
 
     int         m_rollover_popup_timer_msec;
-
+    
     int         m_seltype;
-
+    
     double      m_PathMove_cursor_start_lat;
     double      m_PathMove_cursor_start_lon;
-
+    
     wxDateTime  m_LastFixTime;
-
+    
 };
 
 #endif

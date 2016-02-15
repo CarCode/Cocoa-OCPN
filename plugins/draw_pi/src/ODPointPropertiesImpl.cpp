@@ -32,7 +32,11 @@
 
 #include "ODPointPropertiesImpl.h"
 #include "ocpn_draw_pi.h"
+#ifdef __WXOSX__
 #include "../../../include/ocpn_plugin.h"
+#else
+#include "ocpn_plugin.h"
+#endif
 #include "ODConfig.h"
 #include "ODPoint.h"
 #include "ODSelect.h"
@@ -40,11 +44,14 @@
 #include "ODPathPropertiesDialogImpl.h"
 #include "PointMan.h"
 #include "ODPositionParser.h"
-#include "../../../include/FontMgr.h"
 #include <wx/clipbrd.h>
 #include <wx/menu.h>
 #include <wx/window.h>
 #include <wx/fontdlg.h>
+
+#if wxCHECK_VERSION(3,0,0) 
+#include <wx/valnum.h>
+#endif
 
 extern ODSelect             *g_pODSelect;
 extern ocpn_draw_pi         *g_ocpn_draw_pi;
@@ -54,6 +61,8 @@ extern ODConfig             *g_pODConfig;
 extern PathManagerDialog    *g_pPathManagerDialog;
 extern ODPathPropertiesDialogImpl *g_pODPathPropDialog;
 extern int                  g_iTextPosition;
+extern int                  g_iBoundaryPointRangeRingLineWidth;
+extern int                  g_iBoundaryPointRangeRingLineStyle;
 
 
 ODPointPropertiesImpl::ODPointPropertiesImpl( wxWindow* parent )
@@ -73,7 +82,27 @@ ODPointPropertiesDialog( parent )
 #endif
     m_pODPoint = NULL;
     m_pfdDialog = NULL;
+    
+#if wxCHECK_VERSION(3,0,0)  && not defined(_WXMSW_)
+    wxFloatingPointValidator<double> dODPointRangeRingSteps(3, &m_dODPointRangeRingSteps, wxNUM_VAL_DEFAULT);
+    wxFloatingPointValidator<double> dODPointArrivalRadius(3, &m_dODPointArrivalRadius, wxNUM_VAL_DEFAULT);
+    dODPointRangeRingSteps.SetMin(0);
+    dODPointArrivalRadius.SetMin(0);
+    m_textCtrlODPointRangeRingsSteps->SetValidator( dODPointRangeRingSteps );
+    m_textCtrlODPointArrivalRadius->SetValidator( dODPointArrivalRadius );
+#endif
+}
 
+ODPointPropertiesImpl::~ODPointPropertiesImpl()
+{
+    this->Disconnect( ID_RCLK_MENU_COPY, wxEVT_COMMAND_MENU_SELECTED,
+                   wxCommandEventHandler( ODPointPropertiesImpl::OnCopyPasteLatLon ) );
+    this->Disconnect( ID_RCLK_MENU_COPY_LL, wxEVT_COMMAND_MENU_SELECTED,
+                   wxCommandEventHandler( ODPointPropertiesImpl::OnCopyPasteLatLon ) );
+    this->Disconnect( ID_RCLK_MENU_PASTE, wxEVT_COMMAND_MENU_SELECTED,
+                   wxCommandEventHandler( ODPointPropertiesImpl::OnCopyPasteLatLon ) );
+    this->Disconnect( ID_RCLK_MENU_PASTE_LL, wxEVT_COMMAND_MENU_SELECTED,
+                   wxCommandEventHandler( ODPointPropertiesImpl::OnCopyPasteLatLon ) );
 }
 
 void ODPointPropertiesImpl::SetDialogSize( void )
@@ -91,8 +120,8 @@ void ODPointPropertiesImpl::SetDialogSize( void )
     fsize.y = wxMin(fsize.y, dsize.y-80);
     fsize.x = wxMin(fsize.x, dsize.x-80);
     SetSize(fsize);
-    this->Layout();
     this->GetSizer()->Fit(this);
+    this->Layout();
 }
 
 void ODPointPropertiesImpl::onRightClick( wxMouseEvent& event )
@@ -115,7 +144,7 @@ void ODPointPropertiesImpl::OnPositionCtlUpdated( wxCommandEvent& event )
 
     if( !m_pODPoint->m_bIsInLayer ) {
         m_pODPoint->SetPosition( lat, lon );
-        g_pODSelect->ModifySelectablePoint( lat, lon, (void *) m_pODPoint, SELTYPE_OCPNPOINT );
+        g_pODSelect->ModifySelectablePoint( lat, lon, (void *) m_pODPoint, SELTYPE_ODPOINT );
     }
 
     // Update the mark position dynamically
@@ -130,18 +159,6 @@ void ODPointPropertiesImpl::OnArrivalRadiusChange( wxCommandEvent& event )
 void ODPointPropertiesImpl::OnShowRangeRingsSelect( wxCommandEvent& event )
 {
     // TODO: Implement OnShowRangeRingsSelect
-/*    if( m_checkBoxShowODPointRangeRings->GetValue() == FALSE ) {
-        m_SizerODPointRangeRingsSelect->ShowItems( false );
-        m_SizerPointRangeGrid->ShowItems( false );
-    } else {
-        m_SizerODPointRangeRingsSelect->ShowItems( true );
-        if ( m_choicePointRangeRingsNumber->GetSelection() != 0 ) 
-            m_SizerPointRangeGrid->ShowItems( true );
-    }
-    m_SizerBasicProperties->Layout();
-    RequestRefresh( g_ocpn_draw_pi->m_parent_window );
-    event.Skip();
-*/    
 }
 
 void ODPointPropertiesImpl::OnRangeRingsStepChange( wxCommandEvent& event )
@@ -179,9 +196,8 @@ void ODPointPropertiesImpl::OnPointPropertiesOKClick( wxCommandEvent& event )
 {
     if( m_pODPoint ) {
         m_pODPoint->m_bIsBeingEdited = FALSE;
-        m_pODPoint->m_iBlink--;
+        m_pODPoint->m_bPointPropertiesBlink = false;
         m_pODPoint->m_bPtIsSelected = false;
-        if( m_pODPoint->m_iBlink < 0 ) m_pODPoint->m_iBlink = 0;
         SaveChanges(); // write changes to globals and update config
         OnPositionCtlUpdated( event );
     }
@@ -191,7 +207,7 @@ void ODPointPropertiesImpl::OnPointPropertiesOKClick( wxCommandEvent& event )
         g_pPathManagerDialog->UpdateODPointsListCtrl();
         
     if( g_pODPathPropDialog && g_pODPathPropDialog->IsShown() )
-        g_pODPathPropDialog->UpdateProperties();
+        g_pODPathPropDialog->UpdateProperties(  );
 
     SetClientSize(m_defaultClientSize);
     
@@ -199,7 +215,7 @@ void ODPointPropertiesImpl::OnPointPropertiesOKClick( wxCommandEvent& event )
     m_notebookProperties->ChangeSelection( 0 );
     m_notebookProperties->Refresh();
     
-    //RequestRefresh( g_ocpn_draw_pi->m_parent_window );
+    RequestRefresh( g_ocpn_draw_pi->m_parent_window );
     
     event.Skip();
 }
@@ -214,9 +230,8 @@ void ODPointPropertiesImpl::OnPointPropertiesCancelClick( wxCommandEvent& event 
 {
     if( m_pODPoint ) {
         m_pODPoint->m_bIsBeingEdited = FALSE;
-        m_pODPoint->m_iBlink--;
+        m_pODPoint->m_bPointPropertiesBlink = false;
         m_pODPoint->m_bPtIsSelected = false;
-        if( m_pODPoint->m_iBlink < 0 ) m_pODPoint->m_iBlink = 0;
         m_pODPoint->SetVisible( m_bIsVisible_save );
         m_pODPoint->SetNameShown( m_bShowName_save );
         m_pODPoint->SetPosition( m_lat_save, m_lon_save );
@@ -232,7 +247,7 @@ void ODPointPropertiesImpl::OnPointPropertiesCancelClick( wxCommandEvent& event 
     m_notebookProperties->ChangeSelection( 0 );
     m_notebookProperties->Refresh();
 
-    //RequestRefresh( g_ocpn_draw_pi->m_parent_window );
+    RequestRefresh( g_ocpn_draw_pi->m_parent_window );
     
     event.Skip();
 }
@@ -244,13 +259,14 @@ void ODPointPropertiesImpl::SaveChanges()
 
         // Get User input Text Fields
         m_pODPoint->m_iODPointRangeRingsNumber = m_choicePointRangeRingsNumber->GetSelection();
-        m_pODPoint->m_fODPointRangeRingsStep = atof( m_textCtrlPointRangeRingsSteps->GetValue().mb_str() );
+        m_pODPoint->m_fODPointRangeRingsStep = atof( m_textCtrlODPointRangeRingsSteps->GetValue().mb_str() );
+//        m_pODPoint->m_fODPointRangeRingsStep = m_RangeRingSteps;
         m_pODPoint->m_iODPointRangeRingsStepUnits = m_choiceDistanceUnitsString->GetSelection();
         m_pODPoint->m_wxcODPointRangeRingsColour = m_colourPickerRangeRingsColour->GetColour();
         m_pODPoint->SetName( m_textName->GetValue() );
-        m_pODPoint->SetODPointArrivalRadius( m_textArrivalRadius->GetValue() );
+        m_pODPoint->SetODPointArrivalRadius( m_textCtrlODPointArrivalRadius->GetValue() );
         m_pODPoint->SetShowODPointRangeRings( m_checkBoxShowODPointRangeRings->GetValue() );
-        m_pODPoint->m_MarkDescription = m_textDescription->GetValue();
+        m_pODPoint->m_ODPointDescription = m_textDescription->GetValue();
         if(m_pODPoint->m_sTypeString == wxT("Text Point")) {
             m_pTextPoint->m_TextPointText = m_textDisplayText->GetValue();
             m_pTextPoint->m_bTextChanged = true;
@@ -263,8 +279,34 @@ void ODPointPropertiesImpl::SaveChanges()
                 wxFont twxfFont = twxfdData.GetChosenFont();
                 m_pTextPoint->m_DisplayTextFont = twxfdData.m_chosenFont;
             }
+            m_pTextPoint->m_iDisplayTextWhen = m_radioBoxShowDisplayText->GetSelection();
         } else if(m_pODPoint->m_sTypeString == wxT("Boundary Point")){
-            m_pBoundaryPoint->m_bFill = m_checkBoxFill->GetValue();
+            m_pBoundaryPoint->m_uiBoundaryPointFillTransparency = m_sliderBoundaryPointFillTransparency->GetValue();
+            m_pBoundaryPoint->m_iInclusionBoundaryPointSize = m_sliderBoundaryPointInclusionSize->GetValue();
+            m_pBoundaryPoint->m_iRangeRingStyle = ::StyleValues[m_choiceRangeRingLineStyle->GetSelection()];
+            m_pBoundaryPoint->m_iRangeRingWidth = ::WidthValues[m_choiceRangeRingLineWidth->GetSelection()];
+            int l_BoundaryPointType;
+            l_BoundaryPointType = m_radioBoxBoundaryPointType->GetSelection();
+            switch (l_BoundaryPointType) {
+                case ID_BOUNDARY_EXCLUSION:
+                    m_pBoundaryPoint->m_bExclusionBoundaryPoint = true;
+                    m_pBoundaryPoint->m_bInclusionBoundaryPoint = false;
+                    break;
+                case ID_BOUNDARY_INCLUSION:
+                    m_pBoundaryPoint->m_bExclusionBoundaryPoint = false;
+                    m_pBoundaryPoint->m_bInclusionBoundaryPoint = true;
+                    break;
+                case ID_BOUNDARY_NIETHER:
+                    m_pBoundaryPoint->m_bExclusionBoundaryPoint = false;
+                    m_pBoundaryPoint->m_bInclusionBoundaryPoint = false;
+                    break;
+                default:
+                    m_pBoundaryPoint->m_bExclusionBoundaryPoint = true;
+                    m_pBoundaryPoint->m_bInclusionBoundaryPoint = false;
+                    break;
+            }
+            
+            
         }
         m_pODPoint->SetVisible( m_checkBoxVisible->GetValue() );
         m_pODPoint->SetNameShown( m_checkBoxShowName->GetValue() );
@@ -298,7 +340,7 @@ void ODPointPropertiesImpl::SaveChanges()
 
             if( pEditPathArray ) {
                 for( unsigned int ip = 0; ip < pEditPathArray->GetCount(); ip++ ) {
-                    Path *pp = (Path *) pEditPathArray->Item( ip );
+                    ODPath *pp = (ODPath *) pEditPathArray->Item( ip );
                     pp->FinalizeForRendering();
                     pp->UpdateSegmentDistances();
 
@@ -329,8 +371,7 @@ void ODPointPropertiesImpl::SetODPoint( ODPoint *pOP )
     if( m_pODPoint ) {
         m_pODPoint->m_bIsBeingEdited = FALSE;
         m_pODPoint->m_bPtIsSelected = FALSE;
-        m_pODPoint->m_iBlink--;
-        if( m_pODPoint->m_iBlink < 0 ) m_pODPoint->m_iBlink = 0;
+        m_pODPoint->m_bPointPropertiesBlink = false;
     }
     if(pOP->m_sTypeString == wxT("Text Point")) {
         m_pTextPoint = (TextPoint *)pOP;
@@ -344,7 +385,7 @@ void ODPointPropertiesImpl::SetODPoint( ODPoint *pOP )
     
     if( m_pODPoint ) {
         m_pODPoint->m_bIsBeingEdited = TRUE;
-        m_pODPoint->m_iBlink++;
+        m_pODPoint->m_bPointPropertiesBlink = true;
         m_lat_save = m_pODPoint->m_lat;
         m_lon_save = m_pODPoint->m_lon;
         m_IconName_save = m_pODPoint->GetIconName();
@@ -357,6 +398,50 @@ void ODPointPropertiesImpl::SetODPoint( ODPoint *pOP )
 bool ODPointPropertiesImpl::UpdateProperties( bool positionOnly )
 {
     if( m_pODPoint ) {
+        if(m_pODPoint->m_sTypeString == wxT("Text Point")) {
+            m_panelDisplayText->Enable( true );
+            m_panelDisplayText->Show();
+            m_radioBoxBoundaryPointType->Enable( false );
+            m_radioBoxBoundaryPointType->Hide();
+            m_staticTextBoundaryPointInclusionSize->Hide();
+            m_sliderBoundaryPointInclusionSize->Enable( false );
+            m_sliderBoundaryPointInclusionSize->Hide();
+            m_staticTextFillDensity->Hide();
+            m_sliderBoundaryPointFillTransparency->Enable( false );
+            m_sliderBoundaryPointFillTransparency->Hide();
+            m_bSizerOuterProperties->Hide( m_bSizerFill );
+        } else if (m_pODPoint->m_sTypeString == wxT("Boundary Point")) {
+            m_panelDisplayText->Enable( false );
+            m_panelDisplayText->Hide();
+            m_radioBoxBoundaryPointType->Enable( true );
+            m_radioBoxBoundaryPointType->Show();
+            m_staticTextBoundaryPointInclusionSize->Show();
+            m_sliderBoundaryPointInclusionSize->Enable( true );
+#ifdef __WXOSX__
+            m_sliderBoundaryPointInclusionSize->Show(true);
+#else
+            m_sliderBoundaryPointInclusionSize->Show();
+#endif
+            m_staticTextFillDensity->Show();
+            m_sliderBoundaryPointFillTransparency->Enable( true );
+#ifdef __WXOSX__
+            m_sliderBoundaryPointFillTransparency->Show(true);
+#else
+            m_sliderBoundaryPointFillTransparency->Show();
+#endif
+            m_bSizerOuterProperties->Show( m_bSizerFill );
+        } else if (m_pODPoint->m_sTypeString == wxT("EBL Point") || m_pODPoint->m_sTypeString == wxT("DR Point")) {
+            m_radioBoxBoundaryPointType->Enable( false );
+            m_radioBoxBoundaryPointType->Hide();
+            m_staticTextBoundaryPointInclusionSize->Hide();
+            m_sliderBoundaryPointInclusionSize->Enable( false );
+            m_sliderBoundaryPointInclusionSize->Hide();
+            m_staticTextFillDensity->Hide();
+            m_sliderBoundaryPointFillTransparency->Enable( false );
+            m_sliderBoundaryPointFillTransparency->Hide();
+            m_bSizerOuterProperties->Hide( m_bSizerFill );
+        }
+        
         m_textLatitude->SetValue( toSDMM_PlugIn( 1, m_pODPoint->m_lat ) );
         m_textLongitude->SetValue( toSDMM_PlugIn( 2, m_pODPoint->m_lon ) );
         m_lat_save = m_pODPoint->m_lat;
@@ -375,11 +460,11 @@ bool ODPointPropertiesImpl::UpdateProperties( bool positionOnly )
             m_checkBoxShowName->Enable( false );
             m_checkBoxVisible->Enable( false );
             m_checkBoxChangeAllPointIcons->Enable( false );
-            m_textArrivalRadius->SetEditable ( false );
+            m_textCtrlODPointArrivalRadius->SetEditable ( false );
             m_checkBoxShowODPointRangeRings->Enable( false );
             m_choiceDistanceUnitsString->Enable( false );
             m_choicePointRangeRingsNumber->Enable( false );
-            m_textCtrlPointRangeRingsSteps->SetEditable( false );
+            m_textCtrlODPointRangeRingsSteps->SetEditable( false );
             m_colourPickerRangeRingsColour->Enable( false );
         } else {
             m_textName->SetEditable( true );
@@ -390,20 +475,20 @@ bool ODPointPropertiesImpl::UpdateProperties( bool positionOnly )
             m_bcomboBoxODPointIconName->Enable( true );
             m_checkBoxShowName->Enable( true );
             m_checkBoxVisible->Enable( true );
-            m_textArrivalRadius->SetEditable ( true );
+            m_textCtrlODPointArrivalRadius->SetEditable ( true );
             m_checkBoxShowODPointRangeRings->Enable( true );
             m_choiceDistanceUnitsString->Enable( true );
             m_choicePointRangeRingsNumber->Enable( true );
-            m_textCtrlPointRangeRingsSteps->SetEditable( true );
+            m_textCtrlODPointRangeRingsSteps->SetEditable( true );
             m_colourPickerRangeRingsColour->Enable( true );
         }
         m_textName->SetValue( m_pODPoint->GetName() );
 
         wxString s_ArrivalRadius;
         s_ArrivalRadius.Printf( _T("%.3f"), m_pODPoint->GetODPointArrivalRadius() );
-        m_textArrivalRadius->SetValue( s_ArrivalRadius );        
+        m_textCtrlODPointArrivalRadius->SetValue( s_ArrivalRadius );        
         
-        m_textDescription->SetValue( m_pODPoint->m_MarkDescription );
+        m_textDescription->SetValue( m_pODPoint->m_ODPointDescription );
         if(m_pODPoint->m_sTypeString == wxT("Text Point")) {
             m_textDisplayText->Clear();
             m_textDisplayText->SetValue( m_pTextPoint->m_TextPointText );
@@ -411,11 +496,25 @@ bool ODPointPropertiesImpl::UpdateProperties( bool positionOnly )
             m_colourPickerText->SetColour( m_pTextPoint->m_colourTextColour );
             m_colourPickerBacgroundColour->SetColour( m_pTextPoint->m_colourTextBackgroundColour );
             m_sliderBackgroundTransparency->SetValue( m_pTextPoint->m_iBackgroundTransparency );
-            m_checkBoxFill->Enable( false );
             m_staticTextFontFaceExample->SetFont( m_pTextPoint->m_DisplayTextFont );
+            m_radioBoxShowDisplayText->SetSelection( m_pTextPoint->m_iDisplayTextWhen );
         } else if(m_pODPoint->m_sTypeString == wxT("Boundary Point")) {
-            m_checkBoxFill->Enable( true );
-            m_checkBoxFill->SetValue( m_pBoundaryPoint->m_bFill );
+            if( m_pBoundaryPoint->m_bExclusionBoundaryPoint && !m_pBoundaryPoint->m_bInclusionBoundaryPoint ) m_radioBoxBoundaryPointType->SetSelection( ID_BOUNDARY_EXCLUSION );
+            else if( !m_pBoundaryPoint->m_bExclusionBoundaryPoint && m_pBoundaryPoint->m_bInclusionBoundaryPoint ) m_radioBoxBoundaryPointType->SetSelection( ID_BOUNDARY_INCLUSION );
+            else if( !m_pBoundaryPoint->m_bExclusionBoundaryPoint && !m_pBoundaryPoint->m_bInclusionBoundaryPoint ) m_radioBoxBoundaryPointType->SetSelection( ID_BOUNDARY_NIETHER );
+            else m_radioBoxBoundaryPointType->SetSelection( ID_BOUNDARY_EXCLUSION );
+            m_sliderBoundaryPointInclusionSize->SetValue( m_pBoundaryPoint->m_iInclusionBoundaryPointSize );
+            m_sliderBoundaryPointFillTransparency->SetValue( m_pBoundaryPoint->m_uiBoundaryPointFillTransparency );
+            for( unsigned int i = 0; i < sizeof( ::WidthValues ) / sizeof(int); i++ ) {
+                if( m_pBoundaryPoint->m_iRangeRingWidth == ::WidthValues[i] ) {
+                    m_choiceRangeRingLineWidth->SetSelection( i );
+                    break;
+                }
+            }
+            for( unsigned int i = 0; i < sizeof( ::StyleValues ) / sizeof(int); i++ ) {
+                if( m_pBoundaryPoint->m_iRangeRingStyle == ::StyleValues[i] )
+                    m_choiceRangeRingLineStyle->SetSelection( i );
+            }
         }
         
         m_checkBoxShowName->SetValue( m_pODPoint->m_bShowName );
@@ -426,11 +525,9 @@ bool ODPointPropertiesImpl::UpdateProperties( bool positionOnly )
         m_choiceDistanceUnitsString->SetSelection( m_pODPoint->GetODPointRangeRingsStepUnits() );
         wxString buf;
         buf.Printf( _T("%.3f" ), m_pODPoint->GetODPointRangeRingsStep() );
-        m_textCtrlPointRangeRingsSteps->SetValue( buf );
+        m_textCtrlODPointRangeRingsSteps->SetValue( buf );
+//        m_RangeRingSteps = m_pODPoint->GetODPointRangeRingsStep();
         m_colourPickerRangeRingsColour->SetColour( m_pODPoint->GetODPointRangeRingsColour() );
-        
-        wxCommandEvent eDummy;
-        OnShowRangeRingsSelect( eDummy );
         
 
         m_bcomboBoxODPointIconName->Clear();
@@ -475,7 +572,7 @@ bool ODPointPropertiesImpl::UpdateProperties( bool positionOnly )
         //    Get an array of all paths using this point
         wxArrayPtrVoid *ppath_array = g_pPathMan->GetPathArrayContaining( m_pODPoint );
         if( ppath_array ) {
-            Path *path = (Path *)ppath_array->front();
+            ODPath *path = (ODPath *)ppath_array->front();
             if(path->m_sTypeString == wxT("EBL"))
                 m_checkBoxChangeAllPointIcons->Disable();
             else
@@ -484,38 +581,44 @@ bool ODPointPropertiesImpl::UpdateProperties( bool positionOnly )
             m_checkBoxChangeAllPointIcons->Disable();
         }
         m_checkBoxChangeAllPointIcons->SetValue( false );
-        this->Layout();
-        this->GetSizer()->Fit(this);
         
         icons = NULL;
         
         wxString caption( wxS("") );
-        if ( m_pODPoint->GetTypeString().IsNull() || m_pODPoint->GetTypeString().IsEmpty() )
-            caption.append( wxS("OCPN Draw Point") );
-        else
-            caption.append( m_pODPoint->GetTypeString() );
-        caption.append( _(" Properties") );
-        
-        if( m_pODPoint->m_bIsInLayer ) {
-            caption.append( _(", Layer: ") );
+        if(m_pODPoint->m_bIsInLayer) {
+            if ( m_pODPoint->GetTypeString().IsNull() || m_pODPoint->GetTypeString().IsEmpty() )
+                caption.append( _("OCPN Draw Point, Layer: ") );
+            else if(m_pODPoint->m_sTypeString == wxT("Boundary Point"))
+                caption.append(_("Boundary Point Properties, Layer: "));
+            else if(m_pODPoint->m_sTypeString == wxT("EBL Point"))
+                caption.append(_("EBL Point Properties, Layer: "));
+            else if(m_pODPoint->m_sTypeString == wxT("DR Point"))
+                caption.append(_("DR Point Properties, Layer: "));
+#if wxCHECK_VERSION(3,0,0)
+            caption.Append( _(g_pPathManagerDialog->GetLayerName( m_pODPoint->m_LayerID )) );
+#else
             caption.Append( g_pPathManagerDialog->GetLayerName( m_pODPoint->m_LayerID ) );
+#endif
+        } else {
+            if ( m_pODPoint->GetTypeString().IsNull() || m_pODPoint->GetTypeString().IsEmpty() )
+                caption.append( _("OCPN Draw Point") );
+            else if(m_pODPoint->m_sTypeString == wxT("Boundary Point"))
+                caption.append(_("Boundary Point Properties"));
+            else if(m_pODPoint->m_sTypeString == wxT("EBL Point"))
+                caption.append(_("EBL Point Properties"));
+            else if(m_pODPoint->m_sTypeString == wxT("DR Point"))
+                caption.append(_("DR Point Properties"));
         }
         SetTitle( caption );
-        if( m_pODPoint->m_sTypeString == wxT("Text Point") ) {
-            m_panelDisplayText->Show( true );
-            m_panelDisplayText->Enable();
-        }
-        else {
-            m_panelDisplayText->Show( false );
-            m_panelDisplayText->Disable();
-        }
         
         m_notebookProperties->SetSelection(1);
         m_notebookProperties->SetSelection(0);
         
         //this->GetSizer()->Fit(this);
     }
-
+    this->GetSizer()->Fit( this );
+    this->Layout();
+    
     return true;
 }
 
@@ -575,7 +678,7 @@ void ODPointPropertiesImpl::OnCopyPasteLatLon( wxCommandEvent& event )
 
 void ODPointPropertiesImpl::ValidateMark( void )
 {
-    //    Look in the master list of Waypoints to see if the currently selected waypoint is still valid
+    //    Look in the master list of ODPoints to see if the currently selected ODPpoint is still valid
     //    It may have been deleted as part of a route
     wxODPointListNode *node = g_pODPointMan->GetODPointList()->GetFirst();
     

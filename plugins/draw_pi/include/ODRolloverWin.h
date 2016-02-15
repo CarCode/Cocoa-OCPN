@@ -26,13 +26,17 @@
 
 #include <wx/window.h>
 #include <wx/timer.h>
+#ifdef __WXOSX__
 #include "../../../include/ocpn_types.h"
-
+#else
+#include "ocpn_types.h"
+#endif
 
 //constants for rollovers fonts
 enum
 {
-    PATH_ROLLOVER = 1
+    PATH_ROLLOVER = 1,
+    POINT_ROLLOVER
 };
 
 class ODRolloverWin: public wxWindow

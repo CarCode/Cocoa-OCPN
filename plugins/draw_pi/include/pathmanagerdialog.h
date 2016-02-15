@@ -40,7 +40,7 @@ enum TrackContextMenu {
 };
 
 class wxButton;
-class Path;
+class ODPath;
 class ODPoint;
 class Layer;
 
@@ -58,14 +58,14 @@ class PathManagerDialog : public wxDialog {
             
             void OnTabSwitch(wxNotebookEvent& event);
             static void ODPointShowPropertiesDialog( ODPoint* wp, wxWindow* parent );
-            void ShowPathPropertiesDialog ( Path *path );
+            void ShowPathPropertiesDialog ( ODPath *path );
 //            void TrackToRoute( Track *track );
             static wxString GetLayerName( int id );
 
       private:
             void Create();
             void MakeAllPathsInvisible();  // Mark all boundaries as invisible. Does not flush settings.
-            void ZoomtoPath(Path *path); // Attempt to zoom path into the view
+            void ZoomtoPath(ODPath *path); // Attempt to zoom path into the view
             void UpdatePathButtons();
             void UpdateODPointButtons();
             void UpdateLayButtons();           // Correct button state
@@ -143,7 +143,6 @@ class PathManagerDialog : public wxDialog {
             wxButton *btnODPointProperties;
             wxButton *btnODPointZoomto;
             wxButton *btnODPointDelete;
-            wxButton *btnODPointGoTo;
             wxButton *btnODPointExport;
             wxButton *btnODPointSendToGPS;
             wxButton *btnODPointDeleteAll;

@@ -26,8 +26,6 @@
 #ifndef ODUTILS_H
 #define ODUTILS_H
  
-#include "wx/wxprec.h"
- 
  const wxChar   *ParseGPXDateTime( wxDateTime &dt, const wxChar *datetime );
  wxString       GetUUID(void);
  int            GetRandomNumber(int range_min, int range_max); 
@@ -38,4 +36,6 @@
  double         FNday( int y, int m, int d, int h );
  double         FNrange( double x );
  double         getLMT( double ut, double lon );
+ void           SetGlobalLocale( void );
+ void           ResetGlobalLocale( void );
 #endif

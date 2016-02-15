@@ -36,7 +36,7 @@
 class ODPathPropertiesDialogDef : public wxDialog 
 {
 	private:
-
+	
 	protected:
 		wxStaticText* m_staticTextName;
 		wxTextCtrl* m_textCtrlName;
@@ -47,6 +47,7 @@ class ODPathPropertiesDialogDef : public wxDialog
 		wxCheckBox* m_checkBoxActive;
 		wxStaticText* m_staticTextTotalLength;
 		wxTextCtrl* m_textCtrlTotalLength;
+		wxStaticText* m_staticTextDistUntis;
 		wxStaticText* m_staticTextLineColour;
 		wxColourPickerCtrl* m_colourPickerLineColour;
 		wxStaticText* m_staticTextLineStyle;
@@ -57,32 +58,49 @@ class ODPathPropertiesDialogDef : public wxDialog
 		wxColourPickerCtrl* m_colourPickerFillColour;
 		wxStaticText* m_staticTextFillTransparency;
 		wxSlider* m_sliderFillTransparency;
-        wxFlexGridSizer* m_fgSizerEBL;
+		wxStaticText* m_staticTextIncluseionBoundarySize;
+		wxSlider* m_sliderInclusionBoundarySize;
+		wxBoxSizer* m_bSizerBoundaryType;
+		wxRadioBox* m_radioBoxBoundaryType;
+		wxFlexGridSizer* m_fgSizerEBL;
+		wxCheckBox* m_checkBoxRotateWithBoat;
+		wxRadioBox* m_radioBoxMaintainWith;
+		wxStaticText* m_staticTextEBLAngle;
+		wxTextCtrl* m_textCtrlEBLAngle;
 		wxCheckBox* m_checkBoxEBLFixedEndPosition;
-		wxRadioBox* m_radioBoxEBLPersistence;
-        wxCheckBox* m_checkBoxEBLShowArrow;
-        wxCheckBox* m_checkBoxShowVRM;
+		wxCheckBox* m_checkBoxShowVRM;
+		wxFlexGridSizer* m_fgSizerPath;
+		wxCheckBox* m_checkBoxPathShowArrow;
+		wxRadioBox* m_radioBoxPathPersistence;
 		wxStaticText* m_staticTextODPoints;
 		wxListCtrl* m_listCtrlODPoints;
 		wxButton* m_buttonOK;
 		wxButton* m_buttonCancel;
-
+		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
-        virtual void OnColourChangedLineColour( wxColourPickerEvent& event ) { event.Skip(); }
-        virtual void OnChoiceLineStyle( wxCommandEvent& event ) { event.Skip(); }
-        virtual void OnChoiceLineWidth( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnKillFocus( wxFocusEvent& event ) { event.Skip(); }
+		virtual void OnSetFocus( wxFocusEvent& event ) { event.Skip(); }
+		virtual void OnColourChangedLineColour( wxColourPickerEvent& event ) { event.Skip(); }
+		virtual void OnChoiceLineStyle( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnKillFocusChoiceLineStyle( wxFocusEvent& event ) { event.Skip(); }
+		virtual void OnSetFocusChoiceLineStyle( wxFocusEvent& event ) { event.Skip(); }
+		virtual void OnChoiceLineWidth( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnKillFocusChoiceLineWidth( wxFocusEvent& event ) { event.Skip(); }
+		virtual void OnSetFocusChoiceLineWidth( wxFocusEvent& event ) { event.Skip(); }
+		virtual void OnRotateWithBoat( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnFixedEndPosition( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnLeftDoubleClick( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnRightClick( wxMouseEvent& event ) { event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
-
-
+		
+	
 	public:
-
-        ODPathPropertiesDialogDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Path Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		
+		ODPathPropertiesDialogDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Path Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
 		~ODPathPropertiesDialogDef();
-
+	
 };
 
 #endif //__ODPATHPROPERTIESDIALOGDEF_H__

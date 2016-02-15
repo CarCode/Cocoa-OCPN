@@ -42,7 +42,7 @@ Warum überhaupt diese eigene OpenCPN Version?
   Apple gewohnten Umfeld. Weitere Abweichungen zum Original Code sind:
 
 a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
-   Mavericks (10.9), Yosemite (10.10) und El Capitan (10.11). Es soll
+   El Capitan (10.11) Ältere Versionen funktionieren nicht mehr. Es soll
    soweit wie möglich das Mac OS X Betriebssystem unterstützt werden,
    einschl. Mac Menüs, Mac Hilfe usw. El Capitane (10.11) wird ab
    Erscheinen Ende September 2015 ebenfalls unterstützt.
@@ -75,10 +75,10 @@ Größte Änderung ist jedoch die Verwendung von Clang/LLVM mit Xcode statt
 der Befehlszeilen orientierten Cmake Version.
 
 Compiler:
-Xcode 7.0.1
-Apple LLVM version 7.0.0 (clang-700.0.72) (based on LLVM 3.6.0svn)
-Target: x86_64-apple-darwin14.5.0
-SDK 10.10.5 Yosemite
+Xcode 7.2.1
+Apple LLVM version 7.0.2 (clang-700.1.81) (based on LLVM 3.6.0svn)
+Target: x86_64-apple-darwin15.3.0
+SDK 10.11.2 El Capitan
 Thread model: posix
 
 wxWidgets Direktive:

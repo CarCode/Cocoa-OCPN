@@ -22,7 +22,9 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ */
 
 #include "wx/wxprec.h"
 
@@ -60,8 +62,11 @@
 
 #include "ocpn_draw_pi.h"
 #include "ODdc.h"
+#ifdef __WXOSX__
 #include "../../../include/wx28compat.h"
-
+#else
+#include "wx28compat.h"
+#endif
 #ifdef __WXMSW__
 #define __CALL_CONVENTION __stdcall
 #else
@@ -232,22 +237,22 @@ void ODDC::SetGLStipple() const
 #ifdef ocpnUSE_GL
     
     switch( m_pen.GetStyle() ) {
-        case wxDOT: {
+        case wxPENSTYLE_DOT: {
             glLineStipple( 1, 0xF8F8 );
             glEnable( GL_LINE_STIPPLE );
             break;
         }
-        case wxLONG_DASH: {
+        case wxPENSTYLE_LONG_DASH: {
             glLineStipple( 2, 0x3FFF );
             glEnable( GL_LINE_STIPPLE );
             break;
         }
-        case wxSHORT_DASH: {
+        case wxPENSTYLE_SHORT_DASH: {
             glLineStipple( 1, 0x0FFF );
             glEnable( GL_LINE_STIPPLE );
             break;
         }
-        case wxDOT_DASH: {
+        case wxPENSTYLE_DOT_DASH: {
             glLineStipple( 2, 0xDEDE );
             glEnable( GL_LINE_STIPPLE );
             break;
@@ -372,9 +377,11 @@ void ODDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hiqu
         if( b_hiqual ) {
             SetGLStipple();
 
+#ifndef __WXQT__
             glEnable( GL_BLEND );
             glEnable( GL_LINE_SMOOTH );
-
+#endif            
+            
             if( pen_width > 1.0 ) {
                 GLint parms[2];
                 glGetIntegerv( GL_SMOOTH_LINE_WIDTH_RANGE, &parms[0] );
@@ -559,7 +566,6 @@ void ODDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset,
     else if( ConfigurePen() ) {
 
         SetGLAttrs( b_hiqual );
-
         bool b_draw_thick = false;
 
         glDisable( GL_LINE_STIPPLE );
@@ -567,6 +573,7 @@ void ODDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset,
 
         //      Enable anti-aliased lines, at best quality
         if( b_hiqual ) {
+            glEnable( GL_BLEND );
             if( m_pen.GetWidth() > 1 ) {
                 GLint parms[2];
                 glGetIntegerv( GL_SMOOTH_LINE_WIDTH_RANGE, &parms[0] );
@@ -589,6 +596,9 @@ void ODDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset,
         if( b_draw_thick) {
             DrawGLThickLines( n, points, xoffset, yoffset, m_pen, b_hiqual );
         } else {
+            if( b_hiqual ) {
+                glEnable( GL_LINE_SMOOTH );
+            }
             glBegin( GL_LINE_STRIP );
             for( int i = 0; i < n; i++ )
                 glVertex2i( points[i].x + xoffset, points[i].y + yoffset );
@@ -720,6 +730,62 @@ void ODDC::DrawCircle( wxCoord x, wxCoord y, wxCoord radius )
     DrawEllipse( x - radius, y - radius, 2 * radius, 2 * radius );
 }
 
+void ODDC::DrawDisk( wxCoord x, wxCoord y, wxCoord innerRadius, wxCoord outerRadius )
+{
+    if( dc ) {
+        wxGraphicsContext *wxGC = NULL;
+        wxMemoryDC *pmdc = wxDynamicCast(GetDC(), wxMemoryDC);
+        if( pmdc ) wxGC = wxGraphicsContext::Create( *pmdc );
+        else {
+            wxClientDC *pcdc = wxDynamicCast(GetDC(), wxClientDC);
+            if( pcdc ) wxGC = wxGraphicsContext::Create( *pcdc );
+        }
+#ifdef __WXOSX__
+        if(wxGC) {
+#endif
+        wxGC->SetPen(dc->GetPen());
+        wxGC->SetBrush(dc->GetBrush());
+        wxGraphicsPath p = wxGC->CreatePath();
+        p.AddCircle( x, y, innerRadius );
+        p.AddCircle( x, y, outerRadius );
+        wxGC->FillPath(p);
+#ifdef __WXOSX__
+}
+#endif
+    }
+#ifdef ocpnUSE_GL
+    else {
+        //      Enable anti-aliased lines, at best quality
+        
+        //float steps = floorf(wxMax(sqrtf(sqrtf((float)(width*width + height*height))), 1) * M_PI);
+        float innerSteps = floorf(wxMax(sqrtf(sqrtf( ((innerRadius * 2) * (innerRadius * 2)) * 2) ), 1) *M_PI);
+        float outerSteps = floorf(wxMax(sqrtf(sqrtf( ((outerRadius * 2) * (outerRadius * 2)) * 2) ), 1) *M_PI);
+        wxPoint *disk = new wxPoint[ (int) innerSteps +(int) outerSteps + 2 ];
+        float a = 0.;
+        for( int i = 0; i < (int) innerSteps; i++ ) {
+            disk[i].x = x + innerRadius * sinf( a );
+            disk[i].y = y + innerRadius * cosf( a );
+            a += 2 * M_PI /innerSteps;
+        }
+        //a = 0;
+        for( int i = 0; i < (int) outerSteps; i++) {
+            disk[i + (int) innerSteps].x = x + outerRadius * sinf( a );
+            disk[i + (int) innerSteps].y = y + outerRadius * cosf( a );
+            a -= 2 * M_PI / outerSteps;
+        }
+        int npoints[2];
+        npoints[0] = (int) innerSteps;
+        npoints[1] = (int) outerSteps;
+        DrawPolygonsTessellated( 2, npoints, disk, 0, 0 );
+#ifdef __WXOSX__
+        delete [] disk;
+#else
+        wxDELETE( disk );
+#endif
+    }
+#endif
+}
+
 void ODDC::StrokeCircle( wxCoord x, wxCoord y, wxCoord radius )
 {
 #if wxUSE_GRAPHICS_CONTEXT
@@ -763,9 +829,11 @@ void ODDC::DrawEllipse( wxCoord x, wxCoord y, wxCoord width, wxCoord height )
         }
 
         if( ConfigurePen() ) {
-            glBegin( GL_LINE_LOOP );
-            for( float a = 0; a < 2 * M_PI - M_PI/steps; a += 2 * M_PI / steps )
+            glBegin( GL_LINE_STRIP );
+            float a;
+            for( a = 0; a < 2 * M_PI - M_PI/steps; a += 2 * M_PI / steps )
                 glVertex2f( cx + r1 * sinf( a ), cy + r2 * cosf( a ) );
+            glVertex2f( cx + r1 * sinf( a ), cy + r2 * cosf( a ) ); // added to ensure line is closed and no holes are shown when not using solid line
             glEnd();
         }
 
@@ -846,7 +914,7 @@ void __CALL_CONVENTION ODDCerrorCallback(GLenum errorCode)
 {
    const GLubyte *estring;
    estring = gluErrorString(errorCode);
-   wxLogMessage( _T("OpenGL Tessellation Error: %s"), (char *)estring );
+   wxLogMessage( wxT("OpenGL Tessellation Error: %s"), (char *)estring );
 }
 
 void __CALL_CONVENTION ODDCbeginCallback(GLenum type)
@@ -876,7 +944,7 @@ void ODDC::DrawPolygonTessellated( int n, wxPoint points[], wxCoord xoffset, wxC
         gluTessCallback( tobj, GLU_TESS_ERROR, (_GLUfuncptr) &ODDCerrorCallback );
 
         gluTessNormal( tobj, 0, 0, 1);
-		gluTessProperty(tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
+        gluTessProperty(tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_ODD);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         gluTessProperty(tobj, GLU_TESS_BOUNDARY_ONLY, GL_FALSE);
 
@@ -910,6 +978,67 @@ void ODDC::DrawPolygonTessellated( int n, wxPoint points[], wxCoord xoffset, wxC
         
     }
 #endif    
+}
+
+void ODDC::DrawPolygonsTessellated( int n, int npoints[], wxPoint points[], wxCoord xoffset, wxCoord yoffset )
+{
+    if( dc ) {
+        int prev = 0;
+        for( int i = 0; i < n; i++ ) {
+            dc->DrawPolygon( npoints[i], &points[i + prev], xoffset, yoffset );
+            prev += npoints[i];
+        }
+    }
+    #ifdef ocpnUSE_GL
+    else {
+        
+        GLUtesselator *tobj = gluNewTess();
+        
+        gluTessCallback( tobj, GLU_TESS_VERTEX, (_GLUfuncptr) &ODDCvertexCallback );
+        gluTessCallback( tobj, GLU_TESS_BEGIN, (_GLUfuncptr) &ODDCbeginCallback );
+        gluTessCallback( tobj, GLU_TESS_END, (_GLUfuncptr) &ODDCendCallback );
+        gluTessCallback( tobj, GLU_TESS_COMBINE, (_GLUfuncptr) &ODDCcombineCallback );
+        gluTessCallback( tobj, GLU_TESS_ERROR, (_GLUfuncptr) &ODDCerrorCallback );
+        
+        gluTessNormal( tobj, 0, 0, 1);
+        gluTessProperty(tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_ODD);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        gluTessProperty(tobj, GLU_TESS_BOUNDARY_ONLY, GL_FALSE);
+        
+        if(glIsEnabled(GL_TEXTURE_2D)) g_bTexture2D = true;
+        else g_bTexture2D = false;
+        
+        ConfigurePen();
+        if( ConfigureBrush() ) {
+            gluTessBeginPolygon(tobj, NULL);
+            int prev = 0;
+            for( int j = 0; j < n; j++ ) {
+                gluTessBeginContour(tobj);
+                for( int i = 0; i < npoints[j]; i++ ) {
+                    GLvertex* vertex = new GLvertex();
+                    gTesselatorVertices.Add( vertex );
+                    vertex->info.x = (GLdouble) points[i + prev].x;
+                    vertex->info.y = (GLdouble) points[i + prev].y;
+                    vertex->info.z = (GLdouble) 0.0;
+                    vertex->info.r = (GLdouble) 0.0;
+                    vertex->info.g = (GLdouble) 0.0;
+                    vertex->info.b = (GLdouble) 0.0;
+                    vertex->info.a = (GLdouble) 0.0;
+                    gluTessVertex( tobj, (GLdouble*)vertex, (GLdouble*)vertex );
+                }
+                gluTessEndContour( tobj );
+                prev += npoints[j];
+            }
+            gluTessEndPolygon(tobj);
+        }
+        
+        gluDeleteTess(tobj);
+        for (unsigned int i = 0; i<gTesselatorVertices.Count(); i++)
+            delete (GLvertex*)gTesselatorVertices.Item(i);
+        gTesselatorVertices.Clear();
+        
+    }
+    #endif    
 }
 
 void ODDC::StrokePolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset, float scale )

@@ -1,7 +1,7 @@
 /***************************************************************************
  *
  * Project:  OpenCPN
- * Purpose:  Path Properties
+ * Purpose:  ODPath Properties
  * Author:   Jon Gough
  *
  ***************************************************************************
@@ -42,14 +42,35 @@ class EBLProp : public ODPathPropertiesDialogImpl
         EBLProp( wxWindow* parent, wxWindowID id = SYMBOL_PATHPROP_IDNAME, const wxString& caption = SYMBOL_PATHPROP_TITLE, const wxPoint& pos = SYMBOL_PATHPROP_POSITION,
                         const wxSize& size = SYMBOL_PATHPROP_SIZE, long style = SYMBOL_PATHPROP_STYLE );
         virtual ~EBLProp();
-        
+
+        void OnRotateWithBoat( wxCommandEvent& event );
+        void OnFixedEndPosition( wxCommandEvent& event );
+        void OnSetFocus( wxFocusEvent& event );
+        void OnKillFocus( wxFocusEvent& event );
         bool UpdateProperties( EBL *pInEBL );
         bool UpdateProperties( void );
         bool SaveChanges( void );
         
+        void OnOK( wxCommandEvent& event );
+        void OnClose( wxCloseEvent& event );
+        void OnCancel( wxCommandEvent& event );
+        void OnChoiceLineWidth( wxCommandEvent& event );
+        void OnChoiceLineStyle( wxCommandEvent& event );
+        void OnSetFocusChoiceLineWidth( wxFocusEvent& event );
+        void OnKillFocusChoiceLineWidth( wxFocusEvent& event );
+        void OnSetFocusChoiceLineStyle( wxFocusEvent& event );
+        void OnKillFocusChoiceLineStyle( wxFocusEvent& event );
+        
     protected:
         
     private:
+        double  m_dODEBLAngleValidator;
+        double  m_dODEBLLengthValidator;
+        bool    m_bLockEBLAngle;
+        bool    m_bLockEBLLength;
+        bool    m_bSetLocale;
+        bool    m_bLockUpdate;
+        
 };
 
 #endif // EBLPROP_H

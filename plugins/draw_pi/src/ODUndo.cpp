@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Framework for Undo features
@@ -21,10 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- *
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -36,19 +33,35 @@
 #include <wx/datetime.h>
 #include <wx/clipbrd.h>
 
+#ifdef __WXOSX__
+#include "ODConfig.h"
+#include "ODSelect.h"
+
+#endif
 //#include "navutil.h"
 //#include "styles.h"
 #include "PathMan.h"
-#include "PathProp.h"
 #include "pathmanagerdialog.h"
+#ifdef __WXOSX__
+#include "../../../include/tinyxml.h"
+#else
 #include "tinyxml.h"
+#endif
+#ifdef __WXOSX__
+#include "ODUndo.h"
+#else
 #include "ODundo.h"
+#endif
 
 extern PathMan *g_pPathMan;
 extern ODConfig *g_pODConfig;
 extern ODSelect *g_pODSelect;
 extern PathManagerDialog *g_pPathManagerDialog;
+#ifdef __WXOSX__
+extern PointMan *g_pODPointMan;
+#else
 extern ODPointman *g_pODPointMan;
+#endif
 extern ChartCanvas *cc1;
 extern MyFrame *gFrame;
 extern MarkInfoImpl *pMarkPropDialog;
@@ -77,16 +90,16 @@ wxString UndoAction::Description()
     wxString descr;
     switch( type ){
         case Undo_CreateODPoint:
-            descr = _("Create ODPoint");
+            descr = wxT("Create ODPoint");
             break;
         case Undo_DeleteODPoint:
-            descr = _("Delete ODPoint");
+            descr = wxT("Delete ODPoint");
             break;
         case Undo_MoveODPoint:
-            descr = _("Move ODPoint");
+            descr = wxT("Move ODPoint");
             break;
         case Undo_AppendODPoint:
-            descr = _("Append ODPoint");
+            descr = wxT("Append ODPoint");
             break;
     default:
             descr = _T("");
@@ -116,7 +129,7 @@ void doUndoMoveODPoint( UndoAction* action ) {
     wxArrayPtrVoid* pathArray = g_pPathMan->GetPathArrayContaining( currentPoint );
     if( pathArray ) {
         for( unsigned int ir = 0; ir < pathArray->GetCount(); ir++ ) {
-            Path *pp = (Path *) pathArray->Item( ir );
+            ODPath *pp = (ODPath *) pathArray->Item( ir );
             pp->FinalizeForRendering();
             pp->UpdateSegmentDistances();
             g_pODConfig->UpdatePath( pp );
@@ -138,7 +151,7 @@ void doRedoDeleteODPoint( UndoAction* action )
 {
     ODPoint* point = (ODPoint*) action->before[0];
     g_pODConfig->DeleteODPoint( point );
-    g_pODSelect->DeleteSelectablePoint( point, SELTYPE_OCPNPOINT );
+    g_pODSelect->DeleteSelectablePoint( point, SELTYPE_ODPOINT );
     if( NULL != g_pODPointMan ) g_pODPointMan->RemoveODPoint( point );
     if( g_pPathManagerDialog && g_pPathManagerDialog->IsShown() ) g_pPathManagerDialog->UpdateODPointsListCtrl();
 }
@@ -146,7 +159,7 @@ void doRedoDeleteODPoint( UndoAction* action )
 void doUndoAppenODPoint( UndoAction* action )
 {
     ODPoint* point = (ODPoint*) action->before[0];
-    Path* path = (Path*) action->after[0];
+    ODPath* path = (ODPath*) action->after[0];
 
     bool noPathLeftToRedo = false;
     if( (path->GetnPoints() == 2) && (gFrame->nPath_State == 0) )
@@ -178,14 +191,14 @@ void doUndoAppenODPoint( UndoAction* action )
 void doRedoAppendWaypoint( UndoAction* action )
 {
     ODPoint* point = (ODPoint*) action->before[0];
-    Path* path = (Path*) action->after[0];
+    ODPath* path = (ODPath*) action->after[0];
 
     if( action->beforeType[0] == Undo_IsOrphanded ) {
         pConfig->AddNewODPoint( point, -1 );
         pSelect->AddSelectableODPoint( point->m_lat, point->m_lon, point );
     }
 
-    ODPoint* prevpoint = Path->GetLastPoint();
+    ODPoint* prevpoint = ODPath->GetLastPoint();
 
     path->AddPoint( point );
     pSelect->AddSelectablePathSegment( prevpoint->m_lat, prevpoint->m_lon,
@@ -295,7 +308,7 @@ bool Undo::RedoNextAction()
             break;
 
         case Undo_MoveWaypoint:
-            doUndoMoveWaypoint( action ); // For Wpt move, redo is same as undo (swap lat/long);
+            doUndoMoveWaypoint( action ); // For point move, redo is same as undo (swap lat/long);
             stackpointer--;
             break;
 

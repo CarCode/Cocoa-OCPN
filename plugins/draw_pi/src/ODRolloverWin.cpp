@@ -23,18 +23,29 @@
 
 #include "wx/wxprec.h"
 
-#include <wx/bitmap.h>
-#include <wx/dcmemory.h>
-#include <wx/dcscreen.h>
+#ifndef  WX_PRECOMP
+#include "wx/wx.h"
+#endif //precompiled headers
+
+//#include <wx/bitmap.h>
+//#include <wx/dcmemory.h>
+//#include <wx/dcscreen.h>
 
 #include "ocpn_draw_pi.h"
+#ifdef __WXOSX__
 #include "../../../include/ocpn_plugin.h"
+#else
+#include "ocpn_plugin.h"
+#endif
 #include "ODRolloverWin.h"
 #include "ODdc.h"
+#ifdef __WXOSX__
 #include "../../../include/timers.h"
 #include "../../../include/chart1.h"
-//#include "navutil.h"
-#include "../../../include/FontMgr.h"
+#else
+#include "timers.h"
+#include "chart1.h"
+#endif
 
 extern ocpn_draw_pi     *g_ocpn_draw_pi;
 
@@ -47,7 +58,7 @@ END_EVENT_TABLE()
 
 // Define a constructor
 ODRolloverWin::ODRolloverWin( wxWindow *parent, int timeout ) :
-    wxWindow( parent, wxID_ANY, wxPoint( 0, 0 ), wxDefaultSize, wxNO_BORDER )
+    wxWindow( parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER )
 {
     m_pbm = NULL;
     m_parent = parent;
@@ -61,6 +72,7 @@ ODRolloverWin::ODRolloverWin( wxWindow *parent, int timeout ) :
 
 ODRolloverWin::~ODRolloverWin()
 {
+    m_timer_timeout.Stop();
     delete m_pbm;
 }
 void ODRolloverWin::OnTimer( wxTimerEvent& event )
@@ -83,7 +95,7 @@ void ODRolloverWin::SetBitmap( int rollover )
     wxDC* cdc = new wxScreenDC();
 //    wxPoint canvasPos = GetParent()->GetScreenPosition();
     wxPoint canvasPos = g_ocpn_draw_pi->m_parent_window->GetScreenPosition();
-
+    
     wxMemoryDC mdc;
     delete m_pbm;
     m_pbm = new wxBitmap( m_size.x, m_size.y, -1 );
@@ -95,15 +107,19 @@ void ODRolloverWin::SetBitmap( int rollover )
 
     ODDC dc( mdc );
 
+    wxColour wxCol;
+    GetGlobalColor( wxT("YELO1"), &wxCol );
+    g_ocpn_draw_pi->AlphaBlending( dc, 0, 0, m_size.x, m_size.y, 6.0, wxCol, 172 );
+
     switch( rollover ) {
         default:
         case PATH_ROLLOVER:
-            wxColour wxCol;
-            GetGlobalColor( wxT("YELO1"), &wxCol );
-            g_ocpn_draw_pi->AlphaBlending( dc, 0, 0, m_size.x, m_size.y, 6.0, wxCol, 172 );
-            mdc.SetTextForeground( FontMgr::Get().GetFontColor( wxT("PathLegInfoRollover") ) );
+            mdc.SetTextForeground( GetFontColour_PlugIn( wxT("OD_PathLegInfoRollover") ) );
             break;
-
+        case POINT_ROLLOVER:
+            mdc.SetTextForeground( GetFontColour_PlugIn( wxT("OD_PointInfoRollover") ) );
+            break;
+            
     }
 
 
@@ -113,7 +129,7 @@ void ODRolloverWin::SetBitmap( int rollover )
         mdc.SetFont( *m_plabelFont );
 
         mdc.DrawLabel( m_string, wxRect( 0, 0, m_size.x, m_size.y ), wxALIGN_CENTRE_HORIZONTAL | wxALIGN_CENTRE_VERTICAL);
-
+        
     }
 
     SetSize( m_position.x, m_position.y, m_size.x, m_size.y );   // Assumes a nominal 32 x 32 cursor
@@ -145,9 +161,12 @@ void ODRolloverWin::SetBestPosition( int x, int y, int off_x, int off_y, int rol
 
     default:
     case PATH_ROLLOVER:
-        dFont = FontMgr::Get().GetFont( wxT("PathLegInfoRollover") );
+        dFont = GetOCPNScaledFont_PlugIn( wxT("OD_PathLegInfoRollover") );
         break;
-
+    case POINT_ROLLOVER:
+        dFont = GetOCPNScaledFont_PlugIn( wxT("OD_PointInfoRollover") );
+        break;
+        
     }
 
     int font_size = wxMax(8, dFont->GetPointSize());
@@ -187,3 +206,4 @@ void ODRolloverWin::SetBestPosition( int x, int y, int off_x, int off_y, int rol
     SetPosition( wxPoint( xp, yp ) );
 
 }
+

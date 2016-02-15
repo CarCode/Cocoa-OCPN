@@ -44,25 +44,39 @@ class ODPropertiesDialogImpl : public ODPropertiesDialogDef
 protected:
     // Handlers for ODPropertiesForm events.
     void OnODPointComboboxSelected( wxCommandEvent& event );
+    void OnTextPointIconComboboxSelected( wxCommandEvent& event );
     void OnEBLEndIconComboboxSelected( wxCommandEvent& event );
     void OnEBLStartIconComboboxSelected( wxCommandEvent& event );
+    void OnEBLRotateWithBoat( wxCommandEvent& event );
+    void OnEBLFixedEndPosition( wxCommandEvent& event );
+    void OnDRPointIconComboboxSelected( wxCommandEvent& event );
     void OnButtonClickFonts( wxCommandEvent& event );
     void OnDrawPropertiesOKClick( wxCommandEvent& event );
     void OnDrawPropertiesCancelClick( wxCommandEvent& event );
     void OnDrawPropertiesApplyClick( wxCommandEvent& event );
-
+    
     void SaveChanges();
-
+    
     wxSize              m_defaultClientSize;
 
-
+    
 public:
     /** Constructor */
     ODPropertiesDialogImpl( wxWindow* parent );
     void UpdateProperties( void );
     void SetDialogSize( void );
     wxFontDialog  *m_pfdDialog;
-
+    
+private:
+    double      m_dValidator;
+    double      m_dODPointRangRingStepValidator;
+    double      m_dSOGValidator;
+    double      m_dODPointArrivalRadiusValidator;
+    double      m_dDRPathLengthValidator;
+    double      m_dODPointIntervalValidator;
+    double      m_dDRPointRangRingStepValidator;
+    int         m_iCOGValidator;
+    
 };
 
 #endif // __ODPropertiesDialogImpl__
