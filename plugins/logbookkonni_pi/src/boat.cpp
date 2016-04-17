@@ -1,6 +1,6 @@
 //#pragma once
 #ifndef WX_PRECOMP
-      #include <wx/wx.h>
+#include <wx/wx.h>
 #endif
 
 #include "boat.h"
@@ -11,19 +11,19 @@
 
 #include <wx/textctrl.h>
 #include <wx/filefn.h>
-#include <wx/dir.h> 
+#include <wx/dir.h>
 #include <wx/event.h>
 #include <wx/object.h>
 #include <wx/tokenzr.h>
 #include <wx/filename.h>
-#include <wx/wfstream.h> 
-#include <wx/txtstrm.h> 
-#include <wx/zipstrm.h> 
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
+#include <wx/zipstrm.h>
 #include <memory>
 using namespace std;
 
 
-Boat::Boat(LogbookDialog* d, wxString data, wxString lay, wxString layoutODT)
+Boat::Boat( LogbookDialog* d, wxString data, wxString lay, wxString layoutODT )
 {
 	parent = d;
 	modified = false;
@@ -35,7 +35,7 @@ Boat::Boat(LogbookDialog* d, wxString data, wxString lay, wxString layoutODT)
 	createStaticTextList();
 }
 
-Boat::~Boat(void)
+Boat::~Boat( void )
 {
 	saveData();
 	for(unsigned int i = 0; i < ctrl.GetCount(); i++)

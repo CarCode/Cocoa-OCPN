@@ -108,8 +108,8 @@ std::cout << x  << std::endl ; } while (0)
 #ifdef __WXOSX__
 #define PLUGIN_VERSION_MAJOR 0
 #define PLUGIN_VERSION_MINOR 4
-#define PLUGIN_VERSION_PATCH 657
-#define PLUGIN_VERSION_DATE "14.02.2016"
+#define PLUGIN_VERSION_PATCH 665
+#define PLUGIN_VERSION_DATE "20.02.2016"
 #endif
 
 #define STRINGIFY(x) #x
@@ -222,6 +222,14 @@ enum {
     ID_BOUNDARY_TYPE_LAST
 };
 
+// Boundary states
+enum {
+    ID_BOUNDARY_STATE_ANY = 0,
+    ID_BOUNDARY_STATE_ACTIVE,
+    ID_BOUNDARY_STATE_INACTIVE,
+    
+    ID_BOUNDARY_STATE_LAST
+};
 
 //#define PI 3.14159265
 

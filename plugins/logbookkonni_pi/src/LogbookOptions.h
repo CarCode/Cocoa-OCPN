@@ -11,7 +11,7 @@
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif //precompiled headers
 
 #ifdef __WXOSX__
@@ -220,6 +220,8 @@ class LogbookOptions : public wxDialog
 		wxButton* m_sdbSizer1OK;
 		wxButton* m_sdbSizer1Cancel;
         wxCheckBox* m_checkBoxSailsDown;
+        wxCheckBox* m_checkBoxWindspeeds;
+        wxCheckBox* m_checkBoxOverview;
 
 		wxDateTime textCtrlDate;
 
@@ -243,6 +245,7 @@ class LogbookOptions : public wxDialog
         virtual void OnCheckBoxEngineMessage( wxCommandEvent& event );
         virtual void OnCheckBoxGeneratorMessage( wxCommandEvent& event );
         virtual void OnCheckBoxEngineRunning( wxCommandEvent& event );
+        virtual void OnCheckBoxOverview( wxCommandEvent& event );
         virtual void onCheckBoNoGPS( wxCommandEvent& event );
         virtual void onButtonClickInstallHTMLFiles( wxCommandEvent& event );
         virtual void onButtonClickInstallLanguages( wxCommandEvent& event );

@@ -22,6 +22,32 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
+#ifdef DEBUG_BUILD
+#  define DEBUGSL(x) do { \
+time_t now = time(0); \
+tm* localtm = localtime(&now); \
+char *stime = asctime(localtm); \
+stime[strlen(stime) - 1 ] = 0; \
+std::cout << stime << " : " << x << std::endl; } while (0)
+
+#  define DEBUGST(x) do { \
+time_t now = time(0); \
+tm* localtm = localtime(&now); \
+char *stime = asctime(localtm); \
+stime[strlen(stime) - 1 ] = 0; \
+std::cout << stime << " : " << x; } while (0)
+
+#  define DEBUGCONT(x) do { \
+std::cout << x ; } while (0)
+
+#  define DEBUGEND(x) do { \
+std::cout << x << std::endl; } while (0)
+#else
+#  define DEBUGSL(x) do {} while (0)
+#  define DEBUGST(x) do {} while (0)
+#  define DEBUGCONT(x) do {} while (0)
+#  define DEBUGEND(x) do {} while (0)
+#endif
 
 #ifndef _WATCHDOGPI_H_
 #define _WATCHDOGPI_H_
@@ -31,7 +57,7 @@
 #include <wx/fileconf.h>
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    4
+#define     PLUGIN_VERSION_MINOR    9
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    10
@@ -41,37 +67,7 @@
 #include "../../../include/ocpn_plugin.h"
 
 #ifdef __MSVC__
-#include <float.h>
-#include <iostream>
-#include <limits>
-
-# if !defined(M_PI)
-# define M_PI		3.14159265358979323846	/* pi */
-# endif
-
-# if !defined(NAN)
-# define NAN std::numeric_limits<double>::quiet_NaN ()
-# endif
-
-# if !defined(INFINITY)
-# define INFINITY std::numeric_limits<double>::infinity ()
-# endif
-
-#define isnan _isnan
-#define isinf(x) (!_finite(x) && !_isnan(x))
-
-inline double trunc(double d){ return (d>0) ? floor(d) : ceil(d) ; }
-inline double round(double n) { return n < 0.0 ? ceil(n - 0.5) : floor(n + 0.5); }
-
-# if !defined(snprintf)
-# define snprintf _snprintf
-# endif
-#define vsnprintf _vsnprintf
-#define strcasecmp _stricmp
-#define strncasecmp _strnicmp
-
-#define strtok_r strtok_s
-
+#include "msvcdefs.h"
 #endif
 
 double heading_resolve(double degrees);
@@ -86,7 +82,14 @@ double heading_resolve(double degrees);
 
 class wdDC;
 class WatchdogDialog;
-class WatchdogPrefsDialog;
+class ConfigurationDialog;
+
+enum {
+    ID_ALARM_NEVER = 0,
+    ID_ALARM_ALWAYS,
+    ID_ALARM_ONCE,
+    ID_ALARM_VISIBLE
+};
 
 class watchdog_pi : public wxEvtHandler, public opencpn_plugin_110
 {
@@ -94,7 +97,6 @@ public:
 
     watchdog_pi(void *ppimgr);
 
-//    The required PlugIn Methods
       int Init(void);
       bool DeInit(void);
 
@@ -123,9 +125,10 @@ public:
 
 //    Other public methods
       void OnWatchdogDialogClose();
-      void    ShowPreferencesDialog( wxWindow* );
+      void ShowConfigurationDialog( wxWindow* );
+      static wxString StandardPath();
 
-      void UpdatePreferences();
+      void UpdateConfiguration();
 
       PlugIn_Position_Fix_Ex &LastFix() { return m_lastfix; }
 
@@ -133,29 +136,29 @@ public:
 
       wxDateTime m_LastFixTime;
       wxDateTime m_cursor_time;
-      WatchdogDialog   *m_pWatchdogDialog;
+      WatchdogDialog   *m_WatchdogDialog;
+
+      int       m_iEnableType;
+      bool      m_bWatchdogDialogShown;
 
 protected:
       double m_cursor_lat, m_cursor_lon;
 
       PlugIn_Position_Fix_Ex m_lastfix, m_lasttimerfix;
 
-      int m_iAlarm, m_iLastAlarm;
-
 private:
-      bool    LoadConfig(void);
-      bool    SaveConfig(void);
+      void SetCursorLatLon(double lat, double lon);
+      void SetNMEASentence(wxString &sentence);
+      void SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix);
+      void SetPluginMessage(wxString &message_id, wxString &message_body);
 
-      void    SetCursorLatLon(double lat, double lon);
-      void    SetNMEASentence(wxString &sentence);
-      void    SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix);
-
-      WatchdogPrefsDialog *m_pWatchdogPrefsDialog;
+      ConfigurationDialog *m_ConfigurationDialog;
       int               m_leftclick_tool_id;
 
       void              RearrangeWindow();
 
       wxTimer m_Timer;
+
 };
 
 extern watchdog_pi *g_watchdog_pi;

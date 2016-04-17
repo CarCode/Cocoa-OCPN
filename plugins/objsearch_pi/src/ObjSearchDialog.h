@@ -83,6 +83,7 @@ class SettingsDialog : public wxDialog
         wxNotebook* m_notebookSettings;
         wxPanel* m_panelPopulate;
         wxStaticText* m_stScanCharts;
+        wxStaticText* m_stScanChartsExplain;
         wxStaticText* m_staticTextFromLat;
 		wxSpinCtrl* m_spFromLat;
 		wxStaticText* m_staticTextFromLon;
@@ -115,7 +116,7 @@ class SettingsDialog : public wxDialog
 #ifdef __WXOSX__
     SettingsDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_DIALOG_STYLE );
 #else
-    SettingsDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,440 ), long style = wxDEFAULT_DIALOG_STYLE );
+    SettingsDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,480 ), long style = wxDEFAULT_DIALOG_STYLE );
 #endif
     ~SettingsDialog();
 	

@@ -33,7 +33,7 @@
 
 #include <wx/progdlg.h>
 #include "wx/wxsqlite3.h"
-//#include <sqlite3.h>  // Siehe Commits...
+//#include <sqlite3.h>  // Siehe CommitsOptimierSeit1712.txt
 
 #include <iostream>
 #include <fstream>
@@ -142,11 +142,12 @@ wxSQLite3Database* objsearch_pi::initDB(void)
         QueryDB( db, _T("PRAGMA count_changes=OFF") );
         QueryDB( db, _T("PRAGMA journal_mode=MEMORY") );
         QueryDB( db, _T("PRAGMA temp_store=MEMORY") );
-        
+/*
         //Fix the broken objects created by v 0.1 and 0.2
         QueryDB( db, _T("UPDATE object SET lon = lon - 360 WHERE lon > 180") );
         QueryDB( db, _T("UPDATE object SET lon = lon + 360 WHERE lon < - 180") );
         QueryDB( db, _T("DELETE FROM object WHERE lon < - 180 OR lon > 180 OR lat < -90 OR lat > 90") );
+ */
 	}
 	
     return db;
@@ -202,7 +203,7 @@ void objsearch_pi::clearDB(wxSQLite3Database* db)
 }
 
 objsearch_pi::objsearch_pi ( void *ppimgr )
-    : opencpn_plugin_112 ( ppimgr )
+    : opencpn_plugin_113 ( ppimgr )
 {
     // Create the PlugIn icons
     initialize_images();
@@ -274,9 +275,12 @@ int objsearch_pi::Init ( void )
     // Get a pointer to the opencpn display canvas, to use as a parent for the OBJSEARCH dialog
     m_parent_window = GetOCPNCanvasWindow();
 
+#ifdef OBJSEARCH_USE_SVG
+    m_leftclick_tool_id = InsertPlugInToolSVG( _T( "Object Search" ), _svg_objsearch, _svg_objsearch_rollover, _svg_objsearch_toggled, wxITEM_CHECK, _( "Object Search" ), _T( "" ), NULL, OBJSEARCH_TOOL_POSITION, 0, this);
+#else
     m_leftclick_tool_id = InsertPlugInTool ( _T ( "" ), _img_objsearch, _img_objsearch, wxITEM_CHECK,
-                          _ ( "Object Search" ), _T ( "" ), NULL,
-                          OBJSEARCH_TOOL_POSITION, 0, this );
+                                            _( "Object Search" ), _T ( "" ), NULL, OBJSEARCH_TOOL_POSITION, 0, this );
+#endif
 
     m_pObjSearchDialog = new ObjSearchDialogImpl( this, m_parent_window );
     
@@ -971,10 +975,8 @@ wxString ObjSearchDialogImpl::HumanizeFeatureName(const wxString& feature_name_c
         return inland + _("Cargo transshipment area");
     if ( feature_name == _T("CAUSWY") )
         return inland + _("Causeway");
-#ifdef __WXOSX__
     if ( feature_name == _T("CHIMNY") )
         return inland + _("Chimney");
-#endif
     if ( feature_name == _T("CHKPNT") )
         return inland + _("Checkpoint");
     if ( feature_name == _T("CGUSTA") )
@@ -1173,10 +1175,8 @@ wxString ObjSearchDialogImpl::HumanizeFeatureName(const wxString& feature_name_c
         return inland + _("Tidal stream - time series");
     if ( feature_name == _T("TIDEWY") )
         return inland + _("Tideway");
-#ifdef __WXOSX__
     if ( feature_name == _T("TREPNT") )
         return inland + _("Tree");
-#endif
     if ( feature_name == _T("TUNNEL") )
         return inland + _("Tunnel");
     if ( feature_name == _T("UWTROC") )
@@ -1253,10 +1253,8 @@ wxString ObjSearchDialogImpl::HumanizeFeatureName(const wxString& feature_name_c
     //CM93, "special case"
     if ( feature_name_chart == _T("_texto") )
         return _("Text label");
-#ifdef __WXOSX__
     if ( feature_name_chart == _T("_extgn") )
         return _("Extended navigational add");
-#endif
 
     //We don't know that object, just return the mnemonic
     return feature_name_chart;

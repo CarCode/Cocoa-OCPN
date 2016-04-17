@@ -2084,24 +2084,25 @@ void glChartCanvas::GridDraw( )
     }
 
     glEnd();
-    
+
     glDisable( GL_LINE_SMOOTH );
-    
+    glEnable( GL_BLEND );
+
     // draw text labels
     glEnable(GL_TEXTURE_2D);
     for(lat = startlat; lat < nlat; lat += gridlatMajor) {
         if( fabs( lat - wxRound( lat ) ) < 1e-5 )
             lat = wxRound( lat );
-        
+
         wxString st = CalcGridText( lat, gridlatMajor, true ); // get text for grid line
         int iy;
         m_gridfont.GetTextExtent(st, 0, &iy);
-        
+
         if(straight_latitudes) {
             wxPoint r, s;
             cc1->GetCanvasPointPix( lat, elon, &r );
             cc1->GetCanvasPointPix( lat, wlon, &s );
-            
+
             float x = 0, y = -1;
             y = (float)(r.y*s.x - s.y*r.x) / (s.x - r.x);
             if(y < 0 || y > h) {
@@ -2114,35 +2115,35 @@ void glChartCanvas::GridDraw( )
             // iteratively attempt to find where the latitude line crosses x=0
             wxPoint2DDouble r;
             double y1, y2, lat1, lon1, lat2, lon2;
-            
+
             y1 = 0, y2 = vp.pix_height;
             double error = vp.pix_width, lasterror;
             int maxiters = 10;
             do {
                 cc1->GetCanvasPixPoint(0, y1, lat1, lon1);
                 cc1->GetCanvasPixPoint(0, y2, lat2, lon2);
-                
+
                 double y = y1 + (lat1 - lat) * (y2 - y1) / (lat1 - lat2);
-                
+
                 cc1->GetDoubleCanvasPointPix( lat, lon1 + (y1 - y) * (lon2 - lon1) / (y1 - y2), &r);
                 
                 if(fabs(y - y1) < fabs(y - y2))
                     y1 = y;
                 else
                     y2 = y;
-                
+
                 lasterror = error;
                 error = fabs(r.m_x);
                 if(--maxiters == 0)
                     break;
             } while(error > 1 && error < lasterror);
-            
+
             if(error < 1 && r.m_y >= 0 && r.m_y <= vp.pix_height - iy )
                 r.m_x = 0;
             else
                 // just draw at center longitude
                 cc1->GetDoubleCanvasPointPix( lat, vp.clon, &r);
-            
+
             m_gridfont.RenderString(st, r.m_x, r.m_y);
         }
     }

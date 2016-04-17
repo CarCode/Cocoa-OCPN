@@ -45,14 +45,14 @@ class ODicons
 public:
     ODicons();
     ~ODicons();
-    
+
     void    initialize_images(void);
     bool    ScaleIcons(void);
     wxSize  GetIconSize(void);
     bool    SetScaleFactor(void);
     void    SetColourScheme( PI_ColorScheme cs );
     void    ChangeScheme(void);
-    
+
     wxBitmap    *m_p_bm_ocpn_draw_pi;
     wxBitmap    *m_p_bm_ocpn_draw_grey_pi;
     wxBitmap    *m_p_bm_ocpn_draw_boundary;
@@ -65,7 +65,7 @@ public:
     wxBitmap    *m_p_bm_ocpn_draw_ebl_grey;
     wxBitmap    *m_p_bm_ocpn_draw_dr;
     wxBitmap    *m_p_bm_ocpn_draw_dr_grey;
-    
+
     wxString    m_s_ocpn_draw_pi;
     wxString    m_s_ocpn_draw_grey_pi;
     wxString    m_s_ocpn_draw_boundary;
@@ -78,18 +78,18 @@ public:
     wxString    m_s_ocpn_draw_ebl_grey;
     wxString    m_s_ocpn_draw_dr;
     wxString    m_s_ocpn_draw_dr_grey;
-    
+
     bool        m_bUpdateIcons;
 
 private:
     wxBitmap    *ScaleIcon( wxBitmap *p_wxBitmap, double sf );
     void        CreateSchemeIcons(void);
     wxBitmap    *BuildDimmedToolBitmap(wxBitmap *pbmp_normal, unsigned char dim_ratio);
-    
+
 #ifdef ODraw_USE_SVG
     wxBitmap    *LoadSVG( const wxString filename, wxSVGDocument **svgDco, wxImage **Image, unsigned int width = -1, unsigned int height = -1 );
     wxBitmap    *ScaleIcon( wxSVGDocument *p_svgDoc, wxImage *p_wxImage, double sf );
-    
+
     wxSVGDocument   *m_p_svgd_ocpn_draw_pi;
     wxSVGDocument   *m_p_svgd_ocpn_draw_grey_pi;
     wxSVGDocument   *m_p_svgd_ocpn_draw_boundary;
@@ -103,7 +103,7 @@ private:
     wxSVGDocument   *m_p_svgd_ocpn_draw_dr;
     wxSVGDocument   *m_p_svgd_ocpn_draw_dr_grey;
 #endif  // ODraw_USE_SVG  Comment sign for WXOSX
-    
+
     wxImage         *m_p_img_ocpn_draw_pi;
     wxImage         *m_p_img_ocpn_draw_grey_pi;
     wxImage         *m_p_img_ocpn_draw_boundary;
@@ -116,7 +116,7 @@ private:
     wxImage         *m_p_img_ocpn_draw_ebl_grey;
     wxImage         *m_p_img_ocpn_draw_dr;
     wxImage         *m_p_img_ocpn_draw_dr_grey;
-    
+
     wxBitmap    *m_p_bm_day_ocpn_draw_pi;
     wxBitmap    *m_p_bm_day_ocpn_draw_grey_pi;
     wxBitmap    *m_p_bm_day_ocpn_draw_boundary;
@@ -129,7 +129,7 @@ private:
     wxBitmap    *m_p_bm_day_ocpn_draw_ebl_grey;
     wxBitmap    *m_p_bm_day_ocpn_draw_dr;
     wxBitmap    *m_p_bm_day_ocpn_draw_dr_grey;
-    
+
     wxBitmap    *m_p_bm_dusk_ocpn_draw_pi;
     wxBitmap    *m_p_bm_dusk_ocpn_draw_grey_pi;
     wxBitmap    *m_p_bm_dusk_ocpn_draw_boundary;
@@ -142,7 +142,7 @@ private:
     wxBitmap    *m_p_bm_dusk_ocpn_draw_ebl_grey;
     wxBitmap    *m_p_bm_dusk_ocpn_draw_dr;
     wxBitmap    *m_p_bm_dusk_ocpn_draw_dr_grey;
-    
+
     wxBitmap    *m_p_bm_night_ocpn_draw_pi;
     wxBitmap    *m_p_bm_night_ocpn_draw_grey_pi;
     wxBitmap    *m_p_bm_night_ocpn_draw_boundary;
@@ -155,7 +155,7 @@ private:
     wxBitmap    *m_p_bm_night_ocpn_draw_ebl_grey;
     wxBitmap    *m_p_bm_night_ocpn_draw_dr;
     wxBitmap    *m_p_bm_night_ocpn_draw_dr_grey;
-    
+
     double          m_dScaleFactor;
     PI_ColorScheme  m_ColourScheme;
 };

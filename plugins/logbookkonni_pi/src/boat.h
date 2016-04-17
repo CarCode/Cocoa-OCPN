@@ -1,12 +1,12 @@
 #pragma once
 #ifndef  WX_PRECOMP
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif //precompiled headers
 
 #include <wx/textfile.h>
-#include <wx/wfstream.h> 
-#include <wx/txtstrm.h> 
-#include <wx/zipstrm.h> 
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
+#include <wx/zipstrm.h>
 
 class LogbookDialog;
 
@@ -38,7 +38,7 @@ public:
 
 	bool			modified;
 private:
-	LogbookDialog*	parent; 
+	LogbookDialog*	parent;
 	wxTextFile*		boatFile;
 	wxTextFile*		equipFile;
 	wxTextFile*		boatLayoutFile;
@@ -62,6 +62,6 @@ private:
 	wxString repeatArea(wxString html);
 	wxString repeatAreaODT(wxString odt);
 
- //   DECLARE_EVENT_TABLE()
+//   DECLARE_EVENT_TABLE()
 
 };

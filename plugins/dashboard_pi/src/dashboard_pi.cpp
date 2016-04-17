@@ -32,7 +32,9 @@
 
 // xw 2.8
 #include <wx/filename.h>
-
+#ifdef __WXOSX__
+#include <wx/stdpaths.h>
+#endif
 #include <typeinfo>
 #include "dashboard_pi.h"
 #include "icons.h"
@@ -356,12 +358,17 @@ int dashboard_pi::Init( void )
     //    This PlugIn needs a toolbar icon
 //    m_toolbar_item_id = InsertPlugInTool( _T(""), _img_dashboard, _img_dashboard, wxITEM_CHECK,
 //            _("Dashboard"), _T(""), NULL, DASHBOARD_TOOL_POSITION, 0, this );
-
+#ifdef __WXOSX__
+    wxString shareLocn = *GetpPrivateApplicationDataLocation() +
+    _T("opencpn/plugins") + wxFileName::GetPathSeparator() +
+    _T("dashboard_pi") + wxFileName::GetPathSeparator()
+    +_T("data") + wxFileName::GetPathSeparator();
+#else
     wxString shareLocn =*GetpSharedDataLocation() +
     _T("plugins") + wxFileName::GetPathSeparator() +
     _T("dashboard_pi") + wxFileName::GetPathSeparator()
     +_T("data") + wxFileName::GetPathSeparator();
-
+#endif
     wxString normalIcon = shareLocn + _T("Dashboard.svg");
     wxString toggledIcon = shareLocn + _T("Dashboard_toggled.svg");
     wxString rolloverIcon = shareLocn + _T("Dashboard_rollover.svg");
@@ -1415,11 +1422,14 @@ bool dashboard_pi::LoadConfig( void )
                 ar.Add( ID_DBP_D_GPS );
             }
 
-            m_ArrayOfDashboardWindow.Add(
-                    new DashboardWindowContainer( NULL, GetUUID(), _("Dashboard"), _T("V"), ar ) );
+            DashboardWindowContainer *cont = new DashboardWindowContainer( NULL, GetUUID(), _("Dashboard"), _T("V"), ar );
+            cont->m_bPersVisible = true;
+            m_ArrayOfDashboardWindow.Add(cont);
+
         } else {
             // Version 2
             m_config_version = 2;
+            bool b_onePersisted = false;
             for( int i = 0; i < d_cnt; i++ ) {
                 pConf->SetPath( wxString::Format( _T("/PlugIns/Dashboard/Dashboard%d"), i + 1 ) );
                 wxString name;
@@ -1444,9 +1454,20 @@ bool dashboard_pi::LoadConfig( void )
                 DashboardWindowContainer *cont = new DashboardWindowContainer( NULL, name, caption, orient, ar );
                 cont->m_bPersVisible = b_persist;
 
+                if(b_persist)
+                    b_onePersisted = true;
+
                 m_ArrayOfDashboardWindow.Add(cont);
 
             }
+
+            // Make sure at least one dashboard is scheduled to be visible
+            if( m_ArrayOfDashboardWindow.Count() && !b_onePersisted){
+                DashboardWindowContainer *cont = m_ArrayOfDashboardWindow.Item(0);
+                if(cont)
+                    cont->m_bPersVisible = true;
+            }
+
         }
 
         return true;

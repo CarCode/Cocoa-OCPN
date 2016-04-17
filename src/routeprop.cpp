@@ -2590,7 +2590,11 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     bSizer14 = new wxBoxSizer( wxHORIZONTAL );
 
     m_textDescription = new wxTextCtrl( m_panelBasicProperties, wxID_ANY, wxEmptyString,
-            wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
+#ifdef __WXOSX__
+            wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_PROCESS_ENTER);
+#else
+    wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
+#endif
     m_textDescription->SetMinSize( wxSize( -1, 60 ) );
 
     bSizer14->Add( m_textDescription, 1, wxALL | wxEXPAND, 5 );
@@ -2672,7 +2676,11 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     bSizer15 = new wxBoxSizer( wxVERTICAL );
 
     m_textCtrlExtDescription = new wxTextCtrl( m_panelDescription, wxID_ANY, wxEmptyString,
+#ifdef __WXOSX__
+            wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_PROCESS_ENTER);
+#else
             wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
+#endif
     bSizer15->Add( m_textCtrlExtDescription, 1, wxALL | wxEXPAND, 5 );
 
     m_panelDescription->SetSizer( bSizer15 );
@@ -2730,21 +2738,25 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     SetMinSize(wxSize(-1, 600));
     RecalculateSize();
     
-    // Connect Events
-    m_textLatitude->Connect( wxEVT_COMMAND_TEXT_ENTER,
-            wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-    m_textLongitude->Connect( wxEVT_COMMAND_TEXT_ENTER,
-            wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-
+    // Connect Events  war: wxEVT_COMMAND_TEXT_ENTER statt wxEVT_COMMAND_TEXT_UPDATED (4x)
+#ifdef __WXOSX__
+    m_textLatitude->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+    m_textLongitude->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+#else
+    m_textLatitude->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+    m_textLongitude->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+#endif
     m_textLatitude->Connect( wxEVT_CONTEXT_MENU,
             wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
     m_textLongitude->Connect( wxEVT_CONTEXT_MENU,
             wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
-    m_textArrivalRadius->Connect( wxEVT_COMMAND_TEXT_ENTER,
-            wxCommandEventHandler( MarkInfoDef::OnArrivalRadiusChange ), NULL, this );
-    m_textWaypointRangeRingsStep->Connect( wxEVT_COMMAND_TEXT_ENTER,
-            wxCommandEventHandler( MarkInfoDef::OnWaypointRangeRingsStepChange ), NULL, this );
-
+#ifdef __WXOSX__
+    m_textArrivalRadius->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnArrivalRadiusChange ), NULL, this );
+    m_textWaypointRangeRingsStep->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnWaypointRangeRingsStepChange ), NULL, this );
+#else
+    m_textArrivalRadius->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnArrivalRadiusChange ), NULL, this );
+    m_textWaypointRangeRingsStep->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnWaypointRangeRingsStepChange ), NULL, this );
+#endif
     m_textDescription->Connect( wxEVT_COMMAND_TEXT_UPDATED,
             wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
     m_buttonExtDescription->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
@@ -3477,7 +3489,7 @@ void MarkInfoImpl::OnPositionCtlUpdated( wxCommandEvent& event )
 
     if( !m_pRoutePoint->m_bIsInLayer ) {
         m_pRoutePoint->SetPosition( lat, lon );
-        pSelect->ModifySelectablePoint( lat, lon, (void *) m_pRoutePoint, SELTYPE_ROUTEPOINT );
+       pSelect->ModifySelectablePoint( lat, lon, (void *) m_pRoutePoint, SELTYPE_ROUTEPOINT );
     }
 
     // Update the mark position dynamically

@@ -852,12 +852,14 @@
           <location>http://www.topperdiek.de/dl/GE-RNC_Africa_Catalog.xml</location>
           <dir>{USERDATA}/RNC/AFRICA</dir>
         </catalog>
+<!-- Currently not avaialable
         <catalog>
           <name>Argentina RNC Nautical Charts</name>
           <type>RNC</type>
           <location>https://raw.githubusercontent.com/chartcatalogs/catalogs/master/AR_RNC_Catalog.xml</location>
           <dir>{USERDATA}/RNC/ARGENTINA</dir>
         </catalog>
+-->
         <catalog>
           <name>Atlantic GE RNC Charts</name>
           <type>RNC</type>

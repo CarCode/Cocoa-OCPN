@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Layer to perform wxDC drawing using wxDC or opengl
@@ -20,16 +20,16 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
 #include "wx/wx.h"
 #endif
+
+#include "../../../include/wx28compat.h"
 
 #ifdef __MSVC__
 #include <windows.h>
@@ -1047,7 +1047,7 @@ bool wdDC::ConfigurePen()
 
 bool wdDC::ConfigureBrush()
 {
-    if( m_brush == wxNullBrush || m_brush.GetStyle() == wxTRANSPARENT )
+    if( m_brush == wxNullBrush || m_brush.GetStyle() == wxBRUSHSTYLE_TRANSPARENT )
         return false;
 #ifdef ocpnUSE_GL
     wxColour c = m_brush.GetColour();

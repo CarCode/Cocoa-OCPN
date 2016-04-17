@@ -1,12 +1,11 @@
 /***************************************************************************
  *
  * Project:  OpenCPN
- * Purpose:  trimplot Plugin
+ * Purpose:  sweepplot Plugin
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,19 +23,35 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
-#include "TrimPlotUI.h"
+#include "SweepPlotUI.h"
 
-class trimplot_pi;
+class sweepplot_pi;
 
 class PreferencesDialog: public PreferencesDialogBase
 {
 public:
-    PreferencesDialog(wxWindow* parent, trimplot_pi &_trimplot_pi);
+    PreferencesDialog(wxWindow* parent, sweepplot_pi &_sweepplot_pi);
     ~PreferencesDialog();
 
-    void OnPlotChange( wxCommandEvent& event );
+    void OnPlotChange( wxFontPickerEvent& event ) { PlotChange(); }
+    void OnPlotChange( wxCommandEvent& event ) { PlotChange(); }
+    void OnPlotChange( wxSpinEvent& event ) { PlotChange(); }
+
+    void OnPDS( wxCommandEvent& event );
     void OnAbout( wxCommandEvent& event );
 
+    int PlotMinHeight() { return m_sPlotMinHeight->GetValue(); }
+
 private:
-    trimplot_pi &m_trimplot_pi;
+    void PlotChange();
+
+    sweepplot_pi &m_sweepplot_pi;
+
+    struct cbState {
+       cbState(wxCheckBox *a, wxString n) : cb(a), name(n) { }
+        wxCheckBox *cb;
+        wxString name;
+    };
+
+    std::list<cbState> m_cbStates;
 };

@@ -42,7 +42,7 @@ extern PointMan         *g_pODPointMan;
 
 
 
-wxString BoundaryMan::FindPointInBoundary( double lat, double lon, int type )
+wxString BoundaryMan::FindPointInBoundary( double lat, double lon, int type, int state )
 {
     wxBoundaryListNode *boundary_node = g_pBoundaryList->GetFirst();
     Boundary *pboundary = NULL;
@@ -54,6 +54,20 @@ wxString BoundaryMan::FindPointInBoundary( double lat, double lon, int type )
     while( boundary_node ) {
         bool    l_bNext = false;
         pboundary = boundary_node->GetData();
+        switch (state) {
+            case ID_BOUNDARY_STATE_ANY:
+                l_bNext = false;
+                break;
+            case ID_BOUNDARY_STATE_ACTIVE:
+                if(pboundary->IsActive()) l_bNext = false;
+                else l_bNext = true;
+                break;
+            case ID_BOUNDARY_STATE_INACTIVE:
+                if(!pboundary->IsActive()) l_bNext = false;
+                else l_bNext = true;
+                break;
+        }
+
         switch (type) {
             case ID_BOUNDARY_ANY:
                 l_bNext = false;

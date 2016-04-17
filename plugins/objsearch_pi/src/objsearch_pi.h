@@ -39,10 +39,10 @@
 //#include <wx/event.h>
 
 #define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    5
+#define     PLUGIN_VERSION_MINOR    7
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    12
+#define     MY_API_VERSION_MINOR    13
 
 #include "../../../include/ocpn_plugin.h"
 
@@ -97,7 +97,7 @@ public:
 #ifdef __WXOSX__
     SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_DIALOG_STYLE | wxSTAY_ON_TOP );
 #else
-    SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,470 ), long style = wxDEFAULT_DIALOG_STYLE );
+    SettingsDialogImpl( objsearch_pi* plugin, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_DIALOG_STYLE );
 #endif
     ~SettingsDialogImpl();
     void OnBrowse( wxCommandEvent& event );
@@ -144,7 +144,7 @@ private:
     objsearch_pi *p_plugin;
 };
 
-class objsearch_pi : public opencpn_plugin_112
+class objsearch_pi : public opencpn_plugin_113
 {
 public:
     objsearch_pi ( void *ppimgr );

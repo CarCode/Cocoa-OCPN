@@ -291,26 +291,18 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
         double cog) {
     wxString reply = wxEmptyString;
     wxString parameters;
-    myCurlHTTP post;
-    post.SetOpt(CURLOPT_TIMEOUT, 5);
 
     parameters.Printf(
             _T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f&source=ocpn"),
             p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), lat, lon,
             sog, cog);
 
-    wxApp::IsMainLoopRunning();
+    _OCPN_DLStatus res = OCPN_postDataHttp(_T("http://squidd.io/positions.json"), parameters, reply, 5);
 
-    size_t result = post.Post(parameters.ToAscii(), parameters.Len(),
-            //_T("https://squidd.io/positions.json"));
-            _T("http://squidd.io/positions.json"));
-
-
-    if (result) {
-        reply = post.GetResponseBody();
+    if( res == OCPN_DL_NO_ERROR )
+    {
         wxLogMessage(_("Created sQuiddio log update:") + reply);
-    } else
-        reply = wxEmptyString;
+    }
 
     return reply;
 }

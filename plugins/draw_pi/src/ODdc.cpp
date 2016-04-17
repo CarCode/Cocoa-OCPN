@@ -22,9 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -41,13 +39,13 @@
     #include <GL/glu.h>
 #else
 
-    #ifndef __OCPN__ANDROID__
-        #include <GL/gl.h>
-        #include <GL/glu.h>
-    #else
-        #include "qopengl.h"                  // this gives us the qt runtime gles2.h
-        #include "GL/gl_private.h"
-    #endif
+#ifndef __OCPN__ANDROID__
+    #include <GL/gl.h>
+    #include <GL/glu.h>
+#else
+    #include "qopengl.h"                  // this gives us the qt runtime gles2.h
+    #include "GL/gl_private.h"
+#endif
 
 #endif
 
@@ -109,7 +107,7 @@ ODDC::ODDC( wxDC &pdc ) :
 #endif
     m_textforegroundcolour = wxColour( 0, 0, 0 );
     g_bTexture2D = false;
-    
+
 }
 
 ODDC::ODDC() :
@@ -157,7 +155,7 @@ void ODDC::SetBackground( const wxBrush &brush )
 void ODDC::SetGLAttrs( bool highQuality )
 {
 #ifdef ocpnUSE_GL
-    
+
     //      Enable anti-aliased polys, at best quality
     if( highQuality ) {
         glEnable( GL_LINE_SMOOTH );
@@ -168,7 +166,7 @@ void ODDC::SetGLAttrs( bool highQuality )
         glDisable( GL_POLYGON_SMOOTH );
         glDisable( GL_BLEND );
     }
-    
+
 #endif
 }
 
@@ -235,7 +233,7 @@ void ODDC::GetSize( wxCoord *width, wxCoord *height ) const
 void ODDC::SetGLStipple() const
 {
 #ifdef ocpnUSE_GL
-    
+
     switch( m_pen.GetStyle() ) {
         case wxPENSTYLE_DOT: {
             glLineStipple( 1, 0xF8F8 );
@@ -290,7 +288,7 @@ void DrawEndCap(float x1, float y1, float t1, float angle)
 void DrawGLThickLine( float x1, float y1, float x2, float y2, wxPen pen, bool b_hiqual )
 {
 #ifdef ocpnUSE_GL
-    
+
     float angle = atan2f( y2 - y1, x2 - x1 );
     float t1 = pen.GetWidth();
     float t2sina1 = t1 / 2 * sinf( angle );
@@ -381,7 +379,7 @@ void ODDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hiqu
             glEnable( GL_BLEND );
             glEnable( GL_LINE_SMOOTH );
 #endif            
-            
+
             if( pen_width > 1.0 ) {
                 GLint parms[2];
                 glGetIntegerv( GL_SMOOTH_LINE_WIDTH_RANGE, &parms[0] );
@@ -400,7 +398,7 @@ void ODDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hiqu
             } else
                 glLineWidth( pen_width );
         }
-        
+
         if( b_draw_thick ) DrawGLThickLine( x1, y1, x2, y2, m_pen, b_hiqual );
         else {
             wxDash *dashes;
@@ -410,14 +408,14 @@ void ODDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hiqu
                 float cosa = cosf( angle );
                 float sina = sinf( angle );
                 float t1 = m_pen.GetWidth();
-                    
+
                 float lpix = sqrtf( powf(x1 - x2, 2) + powf(y1 - y2, 2) );
                 float lrun = 0.;
                 float xa = x1;
                 float ya = y1;
                 float ldraw = t1 * dashes[0];
                 float lspace = t1 * dashes[1];
-                    
+
                 glBegin( GL_LINES );
                 while( lrun < lpix ) {
                     //    Dash
@@ -555,7 +553,7 @@ void DrawGLThickLines( int n, wxPoint points[],wxCoord xoffset,
 
     delete [] cpoints;
 
- #endif    
+#endif
  }
 
 void ODDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset, bool b_hiqual )
@@ -756,7 +754,7 @@ void ODDC::DrawDisk( wxCoord x, wxCoord y, wxCoord innerRadius, wxCoord outerRad
 #ifdef ocpnUSE_GL
     else {
         //      Enable anti-aliased lines, at best quality
-        
+
         //float steps = floorf(wxMax(sqrtf(sqrtf((float)(width*width + height*height))), 1) * M_PI);
         float innerSteps = floorf(wxMax(sqrtf(sqrtf( ((innerRadius * 2) * (innerRadius * 2)) * 2) ), 1) *M_PI);
         float outerSteps = floorf(wxMax(sqrtf(sqrtf( ((outerRadius * 2) * (outerRadius * 2)) * 2) ), 1) *M_PI);
@@ -970,12 +968,12 @@ void ODDC::DrawPolygonTessellated( int n, wxPoint points[], wxCoord xoffset, wxC
             gluTessEndContour( tobj );
 			gluTessEndPolygon(tobj);
 		}
-        
+
 		gluDeleteTess(tobj);
 		for (unsigned int i = 0; i<gTesselatorVertices.Count(); i++)
             delete (GLvertex*)gTesselatorVertices.Item(i);
         gTesselatorVertices.Clear();
-        
+
     }
 #endif    
 }
@@ -989,25 +987,25 @@ void ODDC::DrawPolygonsTessellated( int n, int npoints[], wxPoint points[], wxCo
             prev += npoints[i];
         }
     }
-    #ifdef ocpnUSE_GL
+#ifdef ocpnUSE_GL
     else {
-        
+
         GLUtesselator *tobj = gluNewTess();
-        
+
         gluTessCallback( tobj, GLU_TESS_VERTEX, (_GLUfuncptr) &ODDCvertexCallback );
         gluTessCallback( tobj, GLU_TESS_BEGIN, (_GLUfuncptr) &ODDCbeginCallback );
         gluTessCallback( tobj, GLU_TESS_END, (_GLUfuncptr) &ODDCendCallback );
         gluTessCallback( tobj, GLU_TESS_COMBINE, (_GLUfuncptr) &ODDCcombineCallback );
         gluTessCallback( tobj, GLU_TESS_ERROR, (_GLUfuncptr) &ODDCerrorCallback );
-        
+
         gluTessNormal( tobj, 0, 0, 1);
         gluTessProperty(tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_ODD);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         gluTessProperty(tobj, GLU_TESS_BOUNDARY_ONLY, GL_FALSE);
-        
+
         if(glIsEnabled(GL_TEXTURE_2D)) g_bTexture2D = true;
         else g_bTexture2D = false;
-        
+
         ConfigurePen();
         if( ConfigureBrush() ) {
             gluTessBeginPolygon(tobj, NULL);
@@ -1031,14 +1029,14 @@ void ODDC::DrawPolygonsTessellated( int n, int npoints[], wxPoint points[], wxCo
             }
             gluTessEndPolygon(tobj);
         }
-        
+
         gluDeleteTess(tobj);
         for (unsigned int i = 0; i<gTesselatorVertices.Count(); i++)
             delete (GLvertex*)gTesselatorVertices.Item(i);
         gTesselatorVertices.Clear();
-        
+
     }
-    #endif    
+#endif
 }
 
 void ODDC::StrokePolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset, float scale )
@@ -1141,12 +1139,12 @@ void ODDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
         wxCoord h = 0;
 
 #ifndef __WXMAC__
-        
+
         m_texfont.Build( m_font );      // make sure the font is ready
         m_texfont.GetTextExtent(text, &w, &h);
-        
+
         if( w && h ) {
-            
+
             glEnable( GL_BLEND );
             glEnable( GL_TEXTURE_2D );
             glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -1154,7 +1152,7 @@ void ODDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
 
             glPushMatrix();
             glTranslatef(x, y, 0);
-            
+
             glColor3ub( m_textforegroundcolour.Red(), m_textforegroundcolour.Green(),
                         m_textforegroundcolour.Blue() );
             
@@ -1169,7 +1167,7 @@ void ODDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
 #else            
             wxScreenDC sdc;
             sdc.GetTextExtent(text, &w, &h, NULL, NULL, &m_font);
-            
+
             /* create bitmap of appropriate size and select it */
             wxBitmap bmp( w, h );
             wxMemoryDC temp_dc;
@@ -1222,7 +1220,7 @@ void ODDC::GetTextExtent( const wxString &string, wxCoord *w, wxCoord *h, wxCoor
     //  Give at least reasonable results on failure.
     if(w) *w = 100;
     if(h) *h = 100;
-    
+
     if( dc ) dc->GetTextExtent( string, w, h, descent, externalLeading, font );
     else {
         wxFont f = m_font;
@@ -1232,7 +1230,7 @@ void ODDC::GetTextExtent( const wxString &string, wxCoord *w, wxCoord *h, wxCoor
         temp_dc.GetTextExtent( string, w, h, descent, externalLeading, &f );
         
      }
-     
+
      //  Sometimes GetTextExtent returns really wrong, uninitialized results.
      //  Dunno why....
      if( w && (*w > 500) ) *w = 500;

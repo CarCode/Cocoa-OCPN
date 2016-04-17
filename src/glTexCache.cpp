@@ -930,6 +930,7 @@ glTexFactory::glTexFactory(ChartBase *chart, int raster_format)
     m_catalog_offset = sizeof(CompressedCacheHeader);
     wxDateTime ed = chart->GetEditionDate();
     m_chart_date_binary = (uint32_t)ed.GetTicks();
+    m_chartfile_date_binary = ::wxFileModificationTime(chart->GetFullPath());
 
     m_CompressedCacheFilePath = CompressedCachePath(chart->GetFullPath());
     m_hdrOK = false;
@@ -1994,6 +1995,7 @@ bool glTexFactory::LoadHeader(void)
             if( sizeof( hdr) == m_fs->Read(&hdr, sizeof( hdr ))) {
                 if( hdr.magic != COMPRESSED_CACHE_MAGIC ||
                    hdr.chartdate != m_chart_date_binary ||
+                   hdr.chartfile_date != m_chartfile_date_binary ||
                    hdr.format != g_raster_format) {
 
                     //  Bad header signature
@@ -2146,6 +2148,7 @@ bool glTexFactory::WriteCatalogAndHeader()
         hdr.m_nentries = n_catalog_entries;
         hdr.catalog_offset = m_catalog_offset;
         hdr.chartdate = m_chart_date_binary;
+        hdr.chartfile_date = m_chartfile_date_binary;
 
         m_fs->Write( &hdr, sizeof(hdr));
         m_fs->Flush();

@@ -28,7 +28,7 @@
 #include <wx/textctrl.h>
 #include <wx/html/htmlwin.h>
 #include <wx/dialog.h>
-#include <wx/dirdlg.h> 
+#include <wx/dirdlg.h>
 #include <wx/splitter.h>
 #include <wx/treectrl.h>
 #include "wx/stdpaths.h"
@@ -38,14 +38,14 @@
 #include "wx/grid.h"
 #include <wx/msgdlg.h>
 #include <wx/textctrl.h>
-#include <wx/dir.h> 
+#include <wx/dir.h>
 #include <wx/filefn.h>
 #include <wx/msgdlg.h> 
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
 #include <wx/mimetype.h>
 #include <wx/platinfo.h>
-#include <wx/timer.h> 
+#include <wx/timer.h>
 #include <wx/arrimpl.cpp>
 #include <wx/uiaction.h>
 
@@ -361,9 +361,19 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 	m_gridWeather->SetColLabelValue( 2, _("Air") );
 	m_gridWeather->SetColLabelValue( 3, _("Water") );
     m_gridWeather->SetColLabelValue( 4, _("TWA") );
-    m_gridWeather->SetColLabelValue( 5, _("TWS") );
-    m_gridWeather->SetColLabelValue( 6, _("AWA") );
-    m_gridWeather->SetColLabelValue( 7, _("AWS") );
+
+    if (logbookPlugIn->opt->windspeeds)
+    {
+        m_gridWeather->SetColLabelValue( 5, _("TWS\nMin|Avg|Max") );
+        m_gridWeather->SetColLabelValue( 6, _("AWA") );
+        m_gridWeather->SetColLabelValue( 7, _("AWS\nMin|Avg|Max") );
+    }
+    else
+    {
+        m_gridWeather->SetColLabelValue( 5, _("TWS") );
+        m_gridWeather->SetColLabelValue( 6, _("AWA") );
+        m_gridWeather->SetColLabelValue( 7, _("AWS") );
+    }
     m_gridWeather->SetColLabelValue( 8, _("Current") );
     m_gridWeather->SetColLabelValue( 9, _("C/Strength") );
     m_gridWeather->SetColLabelValue( 10, _("Wave") );

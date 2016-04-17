@@ -6,14 +6,14 @@
 #include "Export.h"
 
 #ifndef WX_PRECOMP
-     #include <wx/wx.h>
+#include <wx/wx.h>
 #endif
 
 #include <wx/tokenzr.h>
-#include <wx/filename.h> 
+#include <wx/filename.h>
 #include <wx/mimetype.h>
-#include <wx/wfstream.h> 
-#include <wx/txtstrm.h> 
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
 #include <wx/zipstrm.h>
 #include <wx/arrstr.h>
 

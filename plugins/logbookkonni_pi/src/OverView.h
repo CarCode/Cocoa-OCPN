@@ -3,14 +3,14 @@
 #define _OVERVIEW_H_
 
 #ifndef  WX_PRECOMP
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif //precompiled headers
 
 #include "wx/generic/gridctrl.h"
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
 #include <wx/wfstream.h> 
-#include <wx/txtstrm.h> 
+#include <wx/txtstrm.h>
 
 #include "Export.h"
 

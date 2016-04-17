@@ -34,6 +34,7 @@
 
 #include <wx/treectrl.h>
 #include <wx/fileconf.h>
+#include <wx/stdpaths.h>
 
 #include <typeinfo>
 #include "iacfleet.h"
@@ -65,7 +66,7 @@ extern "C" DECL_EXP void destroy_pi( opencpn_plugin* p )
 //
 //---------------------------------------------------------------------------------------------------------
 
-iacfleet_pi::iacfleet_pi( void *ppimgr ) : opencpn_plugin_17( ppimgr )
+iacfleet_pi::iacfleet_pi( void *ppimgr ) : opencpn_plugin_113( ppimgr )
 {
 
     // Set some default private member parameters
@@ -104,9 +105,13 @@ int iacfleet_pi::Init( void )
     LoadConfig();
 
     //    This PlugIn needs a toolbar icon, so request its insertion if enabled locally
+#ifdef IACFLEET_USE_SVG
+    m_leftclick_tool_id = InsertPlugInToolSVG( _T( "IACFleet" ), _svg_iacfleet, _svg_iacfleet_rollover, _svg_iacfleet_toggled, wxITEM_CHECK, _( "IACFleet" ), _T( "" ), NULL, IACFLEET_TOOL_POSITION, 0, this);
+#else
     m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_iacfleet_pi, _img_iacfleet_pi, wxITEM_NORMAL,
             _("IACFleet"), _T(""), NULL,
             IACFLEET_TOOL_POSITION, 0, this);
+#endif
 
     return (WANTS_OVERLAY_CALLBACK |
             WANTS_OPENGL_OVERLAY_CALLBACK |
@@ -241,7 +246,7 @@ bool iacfleet_pi::LoadConfig( void )
         m_sort_type =  pConf->Read ( _T ( "IACFleetSortType" ), SORT_NAME );
 
         pConf->SetPath ( _T ( "/Directories" ) );
-        pConf->Read ( _T ( "IACFleetDirectory" ), &m_dir );
+        pConf->Read ( _T ( "IACFleetDirectory" ), &m_dir, wxStandardPaths::Get().GetDocumentsDir() );
 
         return true;
     }

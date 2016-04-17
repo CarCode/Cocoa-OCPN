@@ -31,6 +31,7 @@
 
 #include "ODPropertiesDialogImpl.h"
 #include "ocpn_draw_pi.h"
+#include "ODicons.h"
 #include "ODToolbarImpl.h"
 #include "ODUtils.h"
 #include "PointMan.h"
@@ -43,6 +44,7 @@
 #include <wx/valnum.h>
 #endif
 
+extern ocpn_draw_pi *g_ocpn_draw_pi;
 extern PointMan     *g_pODPointMan;
 extern int          g_path_line_width;
 extern wxString     g_OD_default_wp_icon;
@@ -154,15 +156,39 @@ ODPropertiesDialogImpl::ODPropertiesDialogImpl( wxWindow* parent )
 :
 ODPropertiesDialogDef( parent )
 {
-    
+
     m_staticTextNameVal->SetLabel( wxT("OpenCPN Draw Plugin") );
     m_staticTextMajorVal->SetLabel(wxString::Format(wxT("%i"), PLUGIN_VERSION_MAJOR ));
     m_staticTextMinorVal->SetLabel(wxString::Format(wxT("%i"), PLUGIN_VERSION_MINOR ));
     m_staticTextPatchVal->SetLabel( wxT(TOSTRING(PLUGIN_VERSION_PATCH)) );
     m_staticTextDateVal->SetLabel( wxT(TOSTRING(PLUGIN_VERSION_DATE)) );
-    
+
+    m_gridODWDInteractions->SetCellValue(0, 0, _("OD\\WD"));
+    m_gridODWDInteractions->SetCellValue(0, 1, _("All"));
+    m_gridODWDInteractions->SetCellValue(0, 2, _("Exclusion"));
+    m_gridODWDInteractions->SetCellValue(0, 3, _("Inclusion"));
+    m_gridODWDInteractions->SetCellValue(0, 4, _("Neither "));
+    m_gridODWDInteractions->SetCellValue(1, 0, _("Exclusion"));
+    m_gridODWDInteractions->SetCellValue(2, 0, _("Inclusion"));
+    m_gridODWDInteractions->SetCellValue(3, 0, _("Neither "));
+
+    m_gridODWDInteractions->SetCellValue(1, 1, _("Ring"));
+    m_gridODWDInteractions->SetCellValue(2, 1, _("Ring"));
+    m_gridODWDInteractions->SetCellValue(3, 1, _("Ring"));
+    m_gridODWDInteractions->SetCellValue(1, 2, _("Ring"));
+    m_gridODWDInteractions->SetCellValue(2, 2, _("No alarm"));
+    m_gridODWDInteractions->SetCellValue(3, 2, _("No alarm"));
+    m_gridODWDInteractions->SetCellValue(1, 3, _("No alarm"));
+    m_gridODWDInteractions->SetCellValue(2, 3, _("Ring"));
+    m_gridODWDInteractions->SetCellValue(3, 3, _("No alarm"));
+    m_gridODWDInteractions->SetCellValue(1, 4, _("No alarm"));
+    m_gridODWDInteractions->SetCellValue(2, 4, _("No alarm"));
+    m_gridODWDInteractions->SetCellValue(3, 4, _("Ring"));
+
+    SetTableCellBackgroundColours();
+
     m_pfdDialog = NULL;
-    
+
 #if wxCHECK_VERSION(3,0,0)  && not defined(_WXMSW_)
     wxFloatingPointValidator<double> dODPointRangeRingStepVal(3, &m_dODPointRangRingStepValidator, wxNUM_VAL_DEFAULT);
     wxFloatingPointValidator<double> dODPointArrivalRadiusVal(3, &m_dODPointArrivalRadiusValidator, wxNUM_VAL_DEFAULT);
@@ -186,7 +212,7 @@ ODPropertiesDialogDef( parent )
     m_textCtrlDRPathLength->SetValidator( dDRPathLengthVal );
     m_textCtrlDRPointInterval->SetValidator( dDRPointIntervalVal );
     m_textCtrlDRPointRangeRingSteps->SetValidator( dDRPointRangeRingStepVal );
-    
+
     int l_iPage = m_notebookProperties->FindPage(m_panelPath);
     m_notebookProperties->DeletePage(l_iPage);
 #else
@@ -228,12 +254,12 @@ void ODPropertiesDialogImpl::OnDRPointIconComboboxSelected( wxCommandEvent& even
 void ODPropertiesDialogImpl::OnButtonClickFonts( wxCommandEvent& event )
 {
     if(m_pfdDialog) delete m_pfdDialog;
-    
+
     wxFontData l_FontData;
     l_FontData.SetInitialFont( g_DisplayTextFont );
     m_pfdDialog = new wxFontDialog( this, l_FontData );
     m_pfdDialog->Centre( wxBOTH );
-    
+
     int iRet = m_pfdDialog->ShowModal();
     if(iRet == wxID_OK) {
         //wxFontData wsfdData = m_pfdDialog->GetFontData();
@@ -302,7 +328,7 @@ void ODPropertiesDialogImpl::SaveChanges()
     g_iBoundaryPointRangeRingLineStyle = ::StyleValues[ m_choiceRangeRingStyle->GetSelection() ];
     g_iInclusionBoundarySize = m_sliderInclusionBoundarySize->GetValue();
     g_iInclusionBoundaryPointSize = m_sliderInclusionBoundaryPointSize->GetValue();
-    
+
     int l_BoundaryType;
     l_BoundaryType = m_radioBoxBoundaryType->GetSelection();
     switch (l_BoundaryType) {
@@ -323,7 +349,7 @@ void ODPropertiesDialogImpl::SaveChanges()
             g_bInclusionBoundary = false;
             break;
     }
-    
+
     int l_BoundaryPointType;
     l_BoundaryPointType = m_radioBoxBoundaryPointType->GetSelection();
     switch (l_BoundaryPointType) {
@@ -344,13 +370,13 @@ void ODPropertiesDialogImpl::SaveChanges()
             g_bInclusionBoundaryPoint = false;
             break;
     }
-    
+
 //    g_colourActivePathLineColour = m_colourPickerActivePathLineColour->GetColour();
 //    g_colourInActivePathLineColour = m_colourPickerInActivePathLineColour->GetColour();
 
 //    g_PathLineWidth = ::WidthValues[ m_choicePathLineWidth->GetSelection() ];
 //    g_PathLineStyle = ::StyleValues[ m_choicePathLineStyle->GetSelection()];
-    
+
     g_colourEBLLineColour = m_colourPickerEBLLineColour->GetColour();
     g_EBLLineWidth = ::WidthValues[ m_choiceEBLLineWidth->GetSelection() ];
     g_EBLLineStyle = ::StyleValues[ m_choiceEBLLineStyle->GetSelection() ];
@@ -362,7 +388,7 @@ void ODPropertiesDialogImpl::SaveChanges()
     g_bEBLFixedEndPosition = m_checkBoxEBLFixedEndPosition->GetValue();
     g_sEBLEndIconName = m_bcomboBoxEBLEndIconName->GetValue();
     g_sEBLStartIconName = m_bcomboBoxEBLStartIconName->GetValue();;
-    
+
     g_sDRPointIconName = m_bcomboBoxDRPointIconName->GetValue();
     g_colourDRLineColour = m_colourPickerDRLineColour->GetColour();
     g_colourInActiveDRLineColour = m_colourPickerInActiveDRLineColour->GetColour();
@@ -385,7 +411,7 @@ void ODPropertiesDialogImpl::SaveChanges()
     g_colourDRPointRangeRingsColour = m_colourPickerDRPointRangeRingColours->GetColour();
     g_iDRPointRangeRingLineWidth = ::WidthValues[ m_choiceDRPointRangeRingWidth->GetSelection() ];
     g_iDRPointRangeRingLineStyle = ::StyleValues[ m_choiceDRPointRangeRingStyle->GetSelection() ];
-    
+
     g_iODPointRangeRingsNumber = m_choiceODPointRangeRingNumber->GetSelection();
     g_fODPointRangeRingsStep = atof( m_textCtrlODPointRangeRingSteps->GetValue().mb_str() );
     g_iODPointRangeRingsStepUnits = m_choiceODPointDistanceUnit->GetSelection();
@@ -393,11 +419,11 @@ void ODPropertiesDialogImpl::SaveChanges()
     m_textCtrlODPointArrivalRadius->GetValue().ToDouble( &g_n_arrival_circle_radius );
     g_bODPointShowRangeRings = m_checkBoxShowODPointRangeRings->GetValue();
     g_sODPointIconName = m_bcomboBoxODPointIconName->GetValue();
-    
+
     g_bConfirmObjectDelete = m_checkBoxConfirmObjectDelete->GetValue();
     g_bShowMag = m_checkBoxShowMagBearings->GetValue();
     g_navobjbackups = m_spinCtrlNavObjBackups->GetValue();
-    
+
     g_sTextPointIconName = m_bcomboBoxTextPointIconName->GetValue();
     g_iTextPosition = m_choiceTextPosition->GetSelection();
     g_colourDefaultTextColour = m_colourPickerTextColour->GetColour();
@@ -405,10 +431,10 @@ void ODPropertiesDialogImpl::SaveChanges()
     g_iTextBackgroundTransparency = m_sliderBackgroundTransparency->GetValue();
     if(m_pfdDialog) g_DisplayTextFont = m_pfdDialog->GetFontData().GetChosenFont();
     g_iTextPointDisplayTextWhen  = m_radioBoxShowDisplayText->GetSelection();
-    
+
     g_EdgePanSensitivity = m_sliderEdgePan->GetValue();
     g_InitialEdgePanSensitivity = m_sliderInitialEdgePan->GetValue();
-    
+
     g_iDisplayToolbar = m_choiceToolbar->GetSelection();
     switch (g_iDisplayToolbar) {
         case ID_DISPLAY_NEVER:
@@ -427,7 +453,7 @@ void ODPropertiesDialogImpl::SetDialogSize( void )
 #else
     m_notebookProperties->SetSelection(0);
 #endif
-    
+
     wxSize sz = m_SizerProperties->CalcMin();
     sz.IncBy( 20 );   // Account for some decorations?
     wxSize dsize = ::wxGetDisplaySize();
@@ -444,16 +470,17 @@ void ODPropertiesDialogImpl::SetDialogSize( void )
     this->Layout();
     m_notebookProperties->Layout();
     this->GetSizer()->Fit(this);
-    
+
 }
 
 void ODPropertiesDialogImpl::UpdateProperties( void )
 {
     SetGlobalLocale();
+    SetTableCellBackgroundColours();
     wxString s;
     s.Printf( _T("%.3f"), g_n_arrival_circle_radius );
     m_textCtrlODPointArrivalRadius->SetValue( s );
-    
+
     m_checkBoxShowName->SetValue( g_bODPointShowName );
     m_checkBoxShowODPointRangeRings->SetValue( g_bODPointShowRangeRings );
     m_choiceODPointRangeRingNumber->SetSelection( g_iODPointRangeRingsNumber );
@@ -462,10 +489,10 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
     m_textCtrlODPointRangeRingSteps->SetValue( s_RangeRingStep );
     m_choiceODPointDistanceUnit->SetSelection( g_iODPointRangeRingsStepUnits );
     m_colourPickerODPointRangeRingColours->SetColour( g_colourODPointRangeRingsColour );
-    
+
     m_sliderBoundaryPointFillTransparency->SetValue( g_uiBoundaryPointFillTransparency );
     m_sliderInclusionBoundaryPointSize->SetValue( g_iInclusionBoundaryPointSize );
-    
+
     if( g_bExclusionBoundaryPoint && !g_bInclusionBoundaryPoint ) m_radioBoxBoundaryPointType->SetSelection( ID_BOUNDARY_EXCLUSION );
     else if( !g_bExclusionBoundaryPoint && g_bInclusionBoundaryPoint ) m_radioBoxBoundaryPointType->SetSelection( ID_BOUNDARY_INCLUSION );
     else if( !g_bExclusionBoundaryPoint && !g_bInclusionBoundaryPoint ) m_radioBoxBoundaryPointType->SetSelection( ID_BOUNDARY_NIETHER );
@@ -478,7 +505,7 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
     m_bcomboBoxDRPointIconName->Clear();
     //      Iterate on the Icon Descriptions, filling in the combo control
     if( g_pODPointMan == NULL ) g_pODPointMan = new PointMan();
-    
+
     bool fillCombo = m_bcomboBoxODPointIconName->GetCount() == 0;
     wxImageList *icons = g_pODPointMan->Getpmarkicon_image_list();
 
@@ -492,7 +519,7 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
             m_bcomboBoxDRPointIconName->Append( *ps, icons->GetBitmap( i ) );
         }
     }
-    
+
     // find the correct item in the ODPoint Icon combo box
     int iconToSelect = -1;
     for( int i = 0; i < g_pODPointMan->GetNumIcons(); i++ ) {
@@ -507,10 +534,10 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
         m_bcomboBoxODPointIconName->Append( g_sODPointIconName, icons->GetBitmap( 0 ) );
         iconToSelect = m_bcomboBoxODPointIconName->GetCount() - 1;
     } 
-    
+
     m_bcomboBoxODPointIconName->SetSelection( iconToSelect );
     m_bitmapPointBitmap->SetBitmap( m_bcomboBoxODPointIconName->GetItemBitmap( m_bcomboBoxODPointIconName->GetSelection() ) );
-    
+
     // find the correct item in the Text Point Icon combo box
     iconToSelect = -1;
     for( int i = 0; i < g_pODPointMan->GetNumIcons(); i++ ) {
@@ -525,10 +552,10 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
         m_bcomboBoxTextPointIconName->Append( g_sTextPointIconName, icons->GetBitmap( 0 ) );
         iconToSelect = m_bcomboBoxTextPointIconName->GetCount() - 1;
     } 
-    
+
     m_bcomboBoxTextPointIconName->SetSelection( iconToSelect );
     m_bitmapTextPointBitmap->SetBitmap( m_bcomboBoxTextPointIconName->GetItemBitmap( m_bcomboBoxTextPointIconName->GetSelection() ) );
-    
+
     // find the correct item in the EBL End Point Icon combo box
     iconToSelect = -1;
     for( int i = 0; i < g_pODPointMan->GetNumIcons(); i++ ) {
@@ -543,10 +570,10 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
         m_bcomboBoxEBLEndIconName->Append( g_sEBLEndIconName, icons->GetBitmap( 0 ) );
         iconToSelect = m_bcomboBoxEBLEndIconName->GetCount() - 1;
     } 
-    
+
     m_bcomboBoxEBLEndIconName->SetSelection( iconToSelect );
     m_bitmapEBLEndBitmap->SetBitmap( m_bcomboBoxEBLEndIconName->GetItemBitmap( m_bcomboBoxEBLEndIconName->GetSelection() ) );
-    
+
     // find the correct item in the EBL Start Point Icon combo box
     iconToSelect = -1;
     for( int i = 0; i < g_pODPointMan->GetNumIcons(); i++ ) {
@@ -561,10 +588,10 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
         m_bcomboBoxEBLStartIconName->Append( g_sEBLStartIconName, icons->GetBitmap( 0 ) );
         iconToSelect = m_bcomboBoxEBLStartIconName->GetCount() - 1;
     } 
-    
+
     m_bcomboBoxEBLStartIconName->SetSelection( iconToSelect );
     m_bitmapEBLStartBitmap->SetBitmap( m_bcomboBoxEBLStartIconName->GetItemBitmap( m_bcomboBoxEBLStartIconName->GetSelection() ) );
-    
+
     // find the correct item in the DR Point Icon combo box
     iconToSelect = -1;
     for( int i = 0; i < g_pODPointMan->GetNumIcons(); i++ ) {
@@ -579,17 +606,17 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
         m_bcomboBoxDRPointIconName->Append( g_sDRPointIconName, icons->GetBitmap( 0 ) );
         iconToSelect = m_bcomboBoxDRPointIconName->GetCount() - 1;
     } 
-    
+
     m_bcomboBoxDRPointIconName->SetSelection( iconToSelect );
     m_bitmapDRPointBitmap->SetBitmap( m_bcomboBoxDRPointIconName->GetItemBitmap( m_bcomboBoxDRPointIconName->GetSelection() ) );
-    
+
     icons = NULL;
 
     m_colourPickerActiveBoundaryLineColour->SetColour( g_colourActiveBoundaryLineColour );
     m_colourPickerInActiveBoundaryLineColour->SetColour( g_colourInActiveBoundaryLineColour );
     m_colourPickerActiveBoundaryFillColour->SetColour( g_colourActiveBoundaryFillColour );
     m_colourPickerInActiveBoundaryFillColour->SetColour( g_colourInActiveBoundaryFillColour );
-    
+
 //        m_colourPickerActivePathLineColour->SetColour( g_colourActivePathLineColour );
 //        m_colourPickerInActivePathLineColour->SetColour( g_colourInActivePathLineColour );
     
@@ -627,7 +654,7 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
     else if( !g_bExclusionBoundary && g_bInclusionBoundary ) m_radioBoxBoundaryType->SetSelection( ID_BOUNDARY_INCLUSION );
     else if( !g_bExclusionBoundary && !g_bInclusionBoundary ) m_radioBoxBoundaryType->SetSelection( ID_BOUNDARY_NIETHER );
     else m_radioBoxBoundaryType->SetSelection( ID_BOUNDARY_EXCLUSION );
-    
+
     m_colourPickerEBLLineColour->SetColour( g_colourEBLLineColour );
     m_checkBoxRotateWithBoat->SetValue( g_bEBLRotateWithBoat);
     m_radioBoxMaintainWith->SetSelection( g_iEBLMaintainWith );
@@ -635,21 +662,21 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
     m_radioBoxEBLPersistence->SetSelection( g_EBLPersistenceType );
     m_checkBoxEBLShowArrow->SetValue( g_bEBLShowArrow );
     m_checkBoxShowVRM->SetValue( g_bEBLVRM );
-    
+
     m_choiceTextPosition->SetSelection( g_iTextPosition );
     m_colourPickerTextColour->SetColour( g_colourDefaultTextColour );
     m_colourPickerBackgroundColour->SetColour( g_colourDefaultTextBackgroundColour );
     m_sliderBackgroundTransparency->SetValue( g_iTextBackgroundTransparency );
     m_staticTextFontFaceExample->SetFont( g_DisplayTextFont );
     m_radioBoxShowDisplayText->SetSelection( g_iTextPointDisplayTextWhen );
-    
+
     m_checkBoxConfirmObjectDelete->SetValue( g_bConfirmObjectDelete );
     m_checkBoxShowMagBearings->SetValue( g_bShowMag );
     m_spinCtrlNavObjBackups->SetValue( g_navobjbackups );
     m_sliderInitialEdgePan->SetValue( g_InitialEdgePanSensitivity );
     m_sliderEdgePan->SetValue( g_EdgePanSensitivity );
     m_choiceToolbar->Select( g_iDisplayToolbar );
-    
+
     m_colourPickerDRLineColour->SetColour( g_colourDRLineColour );
     m_colourPickerInActiveDRLineColour->SetColour( g_colourInActiveDRLineColour );
     m_choiceDRLineWidth->SetSelection( g_DRLineWidth - 1 );
@@ -665,8 +692,8 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
     m_textCtrlDRPointRangeRingSteps->SetValue( s_DRRangeRingStep );
     m_choiceDRPointDistanceUnit->SetSelection( g_iDRPointRangeRingsStepUnits );
     m_colourPickerDRPointRangeRingColours->SetColour( g_colourDRPointRangeRingsColour );
-    
-    
+
+
 
     s.Printf( _T("%.3f"), g_dDRSOG );
     m_textCtrlSOG->SetValue( s );
@@ -676,9 +703,42 @@ void ODPropertiesDialogImpl::UpdateProperties( void )
     m_textCtrlDRPathLength->SetValue( s );
     s.Printf( _T("%.3f"), g_dDRPointInterval );
     m_textCtrlDRPointInterval->SetValue( s );
-    
+
 
     SetDialogSize();
+
+    return;
+}
+
+void ODPropertiesDialogImpl::SetTableCellBackgroundColours()
+{
+    wxColour wxRed;
+    GetGlobalColor( wxS( "URED" ), &wxRed );
+    wxColour wxGreen;
+    GetGlobalColor( wxS( "UGREN" ), &wxGreen );
+    wxColour wxGray;
+    GetGlobalColor( wxS( "GREY1" ), &wxGray );
+
+    m_gridODWDInteractions->SetCellBackgroundColour(0, 0, wxGray);
+    m_gridODWDInteractions->SetCellBackgroundColour(0, 1, wxGray);
+    m_gridODWDInteractions->SetCellBackgroundColour(0, 2, wxGray);
+    m_gridODWDInteractions->SetCellBackgroundColour(0, 3, wxGray);
+    m_gridODWDInteractions->SetCellBackgroundColour(0, 4, wxGray);
+    m_gridODWDInteractions->SetCellBackgroundColour(1, 0, wxGray);
+    m_gridODWDInteractions->SetCellBackgroundColour(2, 0, wxGray);
+    m_gridODWDInteractions->SetCellBackgroundColour(3, 0, wxGray);
+    m_gridODWDInteractions->SetCellBackgroundColour(1, 1, wxGreen);
+    m_gridODWDInteractions->SetCellBackgroundColour(2, 1, wxGreen);
+    m_gridODWDInteractions->SetCellBackgroundColour(3, 1, wxGreen);
+    m_gridODWDInteractions->SetCellBackgroundColour(1, 2, wxGreen);
+    m_gridODWDInteractions->SetCellBackgroundColour(2, 2, wxRed);
+    m_gridODWDInteractions->SetCellBackgroundColour(3, 2, wxRed);
+    m_gridODWDInteractions->SetCellBackgroundColour(1, 3, wxRed);
+    m_gridODWDInteractions->SetCellBackgroundColour(2, 3, wxGreen);
+    m_gridODWDInteractions->SetCellBackgroundColour(3, 3, wxRed);
+    m_gridODWDInteractions->SetCellBackgroundColour(1, 4, wxRed);
+    m_gridODWDInteractions->SetCellBackgroundColour(2, 4, wxRed);
+    m_gridODWDInteractions->SetCellBackgroundColour(3, 4, wxGreen);
 
     return;
 }

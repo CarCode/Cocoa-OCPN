@@ -137,6 +137,14 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
     m_stScanCharts->Wrap( -1 );
     bSizerPopulate->Add( m_stScanCharts, 0, wxALL, 5 );
 
+    m_stScanChartsExplain = new wxStaticText( m_panelPopulate, wxID_ANY, _("0-80S/N, 0-180E/W, W longitudes and S latitudes are expressed as negative numbers.\nThe area selected can't cross the IDL (180W/E)"), wxDefaultPosition, wxDefaultSize, 0 );
+#ifndef __WXOSX__
+    wxFont fnt;
+    m_stScanChartsExplain->SetFont(fnt.Smaller());
+#endif
+    m_stScanChartsExplain->Wrap( -1 );
+    bSizerPopulate->Add( m_stScanChartsExplain, 0, wxALL, 5 );
+
     wxBoxSizer* bSizerParams;
 	bSizerParams = new wxBoxSizer( wxHORIZONTAL );
 	
@@ -144,7 +152,7 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	bSizerArea = new wxBoxSizer( wxVERTICAL );
 	
 	wxStaticBoxSizer* sbSizerFrom;
-    sbSizerFrom = new wxStaticBoxSizer( new wxStaticBox( m_panelPopulate, wxID_ANY, _("From") ), wxVERTICAL );
+    sbSizerFrom = new wxStaticBoxSizer( new wxStaticBox( m_panelPopulate, wxID_ANY, _("Start from") ), wxVERTICAL );
 	
 	wxGridSizer* gSizerFrom;
 	gSizerFrom = new wxGridSizer( 0, 2, 0, 0 );
@@ -170,7 +178,7 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
     bSizerArea->Add( sbSizerFrom, 0, wxALL|wxEXPAND, 5 );
     
 	wxStaticBoxSizer* sbSizerTo;
-    sbSizerTo = new wxStaticBoxSizer( new wxStaticBox( m_panelPopulate, wxID_ANY, _("To") ), wxVERTICAL );
+    sbSizerTo = new wxStaticBoxSizer( new wxStaticBox( m_panelPopulate, wxID_ANY, _("End to") ), wxVERTICAL );
 	
 	wxGridSizer* gSizerTo;
 	gSizerTo = new wxGridSizer( 0, 2, 0, 0 );
@@ -212,10 +220,9 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
     m_cb200000 = new wxCheckBox( m_panelPopulate, wxID_ANY, _("1:200000"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerScales->Add( m_cb200000, 0, wxALL, 5 );
 	
-    m_cb20000 = new wxCheckBox( m_panelPopulate, wxID_ANY, _("1:20000 (Very time consuming)"), wxDefaultPosition, wxDefaultSize, 0 );
-#ifndef __WXOSX__
-    m_cb20000->Enable( false );
-#endif
+    m_cb20000 = new wxCheckBox( m_panelPopulate, wxID_ANY, _("1:20000 (Very time consuming,\nuse for really small areas only)"), wxDefaultPosition, wxDefaultSize, 0 );
+    //m_cb20000->Enable( false );
+
 	sbSizerScales->Add( m_cb20000, 0, wxALL, 5 );
 	
 	

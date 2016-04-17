@@ -441,6 +441,7 @@ class options: private Uncopyable, public wxScrollingDialog
     wxCheckBox *pUpdateCheckBox, *pScanCheckBox;
     wxButton *m_removeBtn;
     int k_charts;
+    int m_nCharWidthMax;
 
     // For the "Charts->Display Options" page
     wxScrolledWindow *m_ChartDisplayPage;

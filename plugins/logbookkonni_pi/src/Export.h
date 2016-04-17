@@ -3,7 +3,7 @@
 #define _EXPORT_H_
 
 #ifndef  WX_PRECOMP
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif //precompiled headers
 
 #include <wx/textfile.h>

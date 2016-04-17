@@ -1,6 +1,6 @@
 //#pragma once
 #ifndef WX_PRECOMP
-      #include <wx/wx.h>
+#include <wx/wx.h>
 #endif
 
 #include "OverView.h"
@@ -10,8 +10,8 @@
 #include "Logbook.h"
 
 #include <wx/filename.h>
-#include <wx/txtstrm.h> 
-#include <wx/zipstrm.h> 
+#include <wx/txtstrm.h>
+#include <wx/zipstrm.h>
 #include <wx/generic/gridctrl.h>
 #include <wx/dir.h>
 
@@ -197,12 +197,16 @@ void OverView::clearGrid()
 
 void OverView::loadLogbookData(wxString logbook, bool colour)
 {
-	wxString t,s;
+    wxString t,s,temp;
 	bool test = true;
+    bool overviewflag = false;
 //	bool write = true;
 	double x = 0;
 	wxStringTokenizer tkz1;
 	wxTimeSpan span;
+    wxDateSpan oneday(0,0,0,1);
+    wxDateTime enddt;
+
 	collection::iterator it;
 
 	resetValues();
@@ -243,88 +247,115 @@ void OverView::loadLogbookData(wxString logbook, bool colour)
 
 			switch(c)
 			{
-			case ROUTE:				if(route != s)
-									{
-										//write = true;
-										resetValues();
-										grid->AppendRows();
-										route = s;
-										row++;
-										lastrow = row;
-										test = true;
-										grid->SetCellValue(row,FROUTE,s);
-									}
-									else ;
-										//write = false;
+			case ROUTE:
+                if(route != s)
+                {
+                    //write = true;
+                    resetValues();
+                    grid->AppendRows();
+                    route = s;
+                    row++;
+                    lastrow = row;
+                    test = true;
+                    grid->SetCellValue(row,FROUTE,s);
+                }
+                    else ;
+                    //write = false;
 
-				break;
-			case DATEM:			
-								if(s.IsEmpty())
-									month = -1;
-								else
-									month = wxAtoi(s);
-				break;
-			case DATED:			
-								if(s.IsEmpty())
-									day = -1;
-								else
-									day = wxAtoi(s);
-				break;
-			case DATEY:			{
-								year = wxAtoi(s);
-								if(day == -1 || month == -1) continue;
+                break;
+			case DATEM:
+                if(s.IsEmpty())
+                    month = -1;
+                else
+                    month = wxAtoi(s);
+                break;
+			case DATED:
+                if(s.IsEmpty())
+                    day = -1;
+                else
+                    day = wxAtoi(s);
+                break;
+			case DATEY:
+                {
+                    year = wxAtoi(s);
+                    if(day == -1 || month == -1) continue;
 
-								wxDateTime tmp;
-								tmp.Set(day,(wxDateTime::Month) month,year);
-								s = tmp.Format(opt->sdateformat);
+                    wxDateTime tmp;
+                    tmp.Set(day,(wxDateTime::Month) month,year);
+                    s = tmp.Format(opt->sdateformat);
 
-								if(test)
-								{
-									startdate = s;
-									enddate = s;
-									if(rowNewLogbook == 0)
-										oneLogbookTotal.logbookStart = oneLogbookTotal.logbookEnd = s;
-								}
-								else
-									enddate = s;
+                if ( s != startdate && !test && !showAllLogbooks && opt->overviewlines )
+                {
+                    temp = route;
+                    endtime = "00:00";
+                    parent->myParseDate( startdate,enddt );
+                    enddt.Add( oneday );
+                    enddate = enddt.Format(opt->sdateformat);
+                    //write = true;
+                    writeSumColumn( lastrow, logbook, path, colour );
+                    resetValues();
+                    grid->AppendRows();
+                    route = temp;
+                    overviewflag = true;
+                    row++;
+                    lastrow = row;
+                    test = true;
+                    grid->SetCellValue( row,FROUTE,route );
+                }
 
-								if(etmaldate != s)
-								{
-									etmaldate = s;
-									etmalcount++;
-									bestetmaltemp = 0;
-								}
+                if(test)
+                {
+                    startdate = s;
+                    enddate = s;
+                    if(rowNewLogbook == 0)
+                        oneLogbookTotal.logbookStart = oneLogbookTotal.logbookEnd = s;
+                }
+                else
+                    enddate = s;
 
-									date = s;
-								}
+                if(etmaldate != s)
+                {
+                    etmaldate = s;
+                    etmalcount++;
+                    bestetmaltemp = 0;
+                }
+
+                date = s;
+                }
 				break;
-			case TIMEH:			if(s.IsEmpty()) 
-									hour = -1;
-								else
-								hour = wxAtoi(s);
+			case TIMEH:
+                if(s.IsEmpty())
+                    hour = -1;
+                else
+                    hour = wxAtoi(s);
 				break;
-			case TIMEM:			if(s.IsEmpty())
-									min = -1;
-								else
-									min = wxAtoi(s);
+			case TIMEM:
+                if(s.IsEmpty())
+                    min = -1;
+                else
+                    min = wxAtoi(s);
 				break;
-			case TIMES:			{
-								if(hour == -1 || min == -1) continue;
-								sec = wxAtoi(s);
-								wxDateTime tmp;
-								tmp.Set(hour,min,sec);
-								s = tmp.Format(opt->stimeformat);
+			case TIMES:
+                {
+                    if(hour == -1 || min == -1) continue;
+                    sec = wxAtoi(s);
+                    wxDateTime tmp;
+                    tmp.Set(hour,min,sec);
+                    s = tmp.Format(opt->stimeformat);
 
-								if(test)
-								{
-									starttime = s;
-									endtime = s;
-									if(rowNewLogbook == 0)
-										oneLogbookTotal.logbookTimeStart = oneLogbookTotal.logbookTimeEnd = s;
-								}
-								else
-									endtime = s;
-								}
+                    if(test)
+                    {
+                        if ( overviewflag )
+                            starttime = "00:00";
+                        else
+                            starttime = s;
+                        endtime = s;
+                        if(rowNewLogbook == 0)
+                            oneLogbookTotal.logbookTimeStart = oneLogbookTotal.logbookTimeEnd = s;
+                    }
+                    else
+                        endtime = s;
+                }
 				break;
             case STATUS:
                 sign = s;
@@ -332,45 +363,47 @@ void OverView::loadLogbookData(wxString logbook, bool colour)
 			case WATCH:	
 				break;
 			case DISTANCE:			
-									if(!s.IsEmpty() && sign != 'S') break;
-									s.ToDouble(&x);
+                if(!s.IsEmpty() && sign != 'S') break;
+                s.ToDouble(&x);
 
-									distance += x;
-									etmal = distance/etmalcount;
+                distance += x;
+                etmal = distance/etmalcount;
 
-									if(date == etmaldate)
-									{
-										bestetmaltemp += x;
-										if(bestetmaltemp > bestetmal)
-											bestetmal = bestetmaltemp;
-										if(bestetmaltemp > oneLogbookTotal.bestetmal)
-											 oneLogbookTotal.bestetmal = bestetmaltemp;
-									}
-									oneLogbookTotal.distance += x;
-									//allLogbooksTotal.distance += x;
+                if(date == etmaldate)
+                {
+                    bestetmaltemp += x;
+                    if(bestetmaltemp > bestetmal)
+                        bestetmal = bestetmaltemp;
+                    if(bestetmaltemp > oneLogbookTotal.bestetmal)
+                        oneLogbookTotal.bestetmal = bestetmaltemp;
+                }
+                oneLogbookTotal.distance += x;
+                //allLogbooksTotal.distance += x;
 				break;
 			case DISTANCETOTAL:		
 			case POSITION:			
 			case COG:				
 			case HEADING:	
 				break;
-			case SOG:				if(!s.IsEmpty() && sign == _T("S"))
-									{
-										s.ToDouble(&x);
-										speed += x;	oneLogbookTotal.speed += x;
-										speedcount++; oneLogbookTotal.speedcount++;
-										if(x > speedpeak) speedpeak = x;
-										if(x > oneLogbookTotal.speedpeak) oneLogbookTotal.speedpeak = x;
-									}
+			case SOG:
+                if(!s.IsEmpty() && sign == _T("S"))
+                {
+                    s.ToDouble(&x);
+                    speed += x;	oneLogbookTotal.speed += x;
+                    speedcount++; oneLogbookTotal.speedcount++;
+                    if(x > speedpeak) speedpeak = x;
+                    if(x > oneLogbookTotal.speedpeak) oneLogbookTotal.speedpeak = x;
+                }
 				break;
-			case STW:				if(!s.IsEmpty() && sign == _T("S"))
-									{
-										s.ToDouble(&x);
-										speedSTW += x; oneLogbookTotal.speedSTW += x;
-										speedcountSTW++; oneLogbookTotal.speedcountSTW++;
-										if(x > speedpeakSTW) speedpeakSTW = x;
-										if(x > oneLogbookTotal.speedpeakSTW) oneLogbookTotal.speedpeakSTW = x;
-									}
+			case STW:
+                if(!s.IsEmpty() && sign == _T("S"))
+                {
+                    s.ToDouble(&x);
+                    speedSTW += x; oneLogbookTotal.speedSTW += x;
+                    speedcountSTW++; oneLogbookTotal.speedcountSTW++;
+                    if(x > speedpeakSTW) speedpeakSTW = x;
+                    if(x > oneLogbookTotal.speedpeakSTW) oneLogbookTotal.speedpeakSTW = x;
+                }
 				break;
 			case DEPTH:				
 			case REMARKS:			
@@ -379,193 +412,222 @@ void OverView::loadLogbookData(wxString logbook, bool colour)
 			case TEMPAIR:
 			case TEMPWATER:
 				break;
-			case WIND:				if(!s.IsEmpty())
-									{
-									s.ToDouble(&x);
-									winddir += x; oneLogbookTotal.winddir += x;
-									windcount++; oneLogbookTotal.windcount++;
-									}
+			case WIND:
+                if(!s.IsEmpty())
+                {
+                    s.ToDouble(&x);
+                    winddir += x; oneLogbookTotal.winddir += x;
+                    windcount++; oneLogbookTotal.windcount++;
+                }
 				break;
-			case WINDFORCE:			if(!s.IsEmpty())
-									{
-									s.ToDouble(&x);
-									wind += x; oneLogbookTotal.wind += x;
-									if(x > windpeak) windpeak = x; 
-									if(x > oneLogbookTotal.windpeak) oneLogbookTotal.windpeak = x;
-									}
+			case WINDFORCE:
+                if(!s.IsEmpty())
+                {
+                    if (s.Length() < 11 )
+                    {
+                        s.ToDouble(&x);
+                        wind += x; oneLogbookTotal.wind += x;
+                        if(x > windpeak) windpeak = x;
+                        if(x > oneLogbookTotal.windpeak) oneLogbookTotal.windpeak = x;
+                    }
+                    else
+                    {
+                        wxArrayString WS;
+                        WS = wxStringTokenize(s,_T("|"));
+                        WS[1].ToDouble(&x);
+                        wind += x; oneLogbookTotal.wind += x;
+                        WS[2].ToDouble(&x);
+                        if(x > windpeak) windpeak = x;
+                        if(x > oneLogbookTotal.windpeak) oneLogbookTotal.windpeak = x;
+                    }
+                }
 				break;
-			case CURRENT:			if(!s.IsEmpty())
-									{
-									s.ToDouble(&x);
-									currentdir += x; oneLogbookTotal.currentdir += x;
-									currentcount++; oneLogbookTotal.currentcount++;
-									}
+			case CURRENT:
+                if(!s.IsEmpty())
+                {
+                    s.ToDouble(&x);
+                    currentdir += x; oneLogbookTotal.currentdir += x;
+                    currentcount++; oneLogbookTotal.currentcount++;
+                }
 				break;
-			case CURRENTFORCE:		if(!s.IsEmpty())
-									{
-									s.ToDouble(&x);
-									current += x; oneLogbookTotal.current += x;
-									if(x > currentpeak) currentpeak = x; 
-									if(x > oneLogbookTotal.currentpeak) oneLogbookTotal.currentpeak = x;
-									}
+			case CURRENTFORCE:
+                if(!s.IsEmpty())
+                {
+                    s.ToDouble(&x);
+                    current += x; oneLogbookTotal.current += x;
+                    if(x > currentpeak) currentpeak = x;
+                    if(x > oneLogbookTotal.currentpeak) oneLogbookTotal.currentpeak = x;
+                }
 				break;
-			case WAVE:				if(!s.IsEmpty())
-									{
-									s.ToDouble(&x);
-									wave += x; oneLogbookTotal.wave += x;
-									wavecount++; oneLogbookTotal.wavecount++;
-									if(x > wavepeak) wavepeak = x; 
-									if(x > oneLogbookTotal.wavepeak) oneLogbookTotal.wavepeak = x;
-									}
+			case WAVE:
+                if(!s.IsEmpty())
+                {
+                    s.ToDouble(&x);
+                    wave += x; oneLogbookTotal.wave += x;
+                    wavecount++; oneLogbookTotal.wavecount++;
+                    if(x > wavepeak) wavepeak = x;
+                    if(x > oneLogbookTotal.wavepeak) oneLogbookTotal.wavepeak = x;
+                }
 				break;
-			case SWELL:				if(!s.IsEmpty())
-									{
-									s.ToDouble(&x);
-									swell += x; oneLogbookTotal.swell += x;
-									swellcount++; oneLogbookTotal.swellcount++;
-									if(x > swellpeak) swellpeak = x; 
-									if(x > oneLogbookTotal.swellpeak) oneLogbookTotal.swellpeak = x;
-									}
+			case SWELL:
+                if(!s.IsEmpty())
+                {
+                    s.ToDouble(&x);
+                    swell += x; oneLogbookTotal.swell += x;
+                    swellcount++; oneLogbookTotal.swellcount++;
+                    if(x > swellpeak) swellpeak = x;
+                    if(x > oneLogbookTotal.swellpeak) oneLogbookTotal.swellpeak = x;
+                }
 				break;
 			case WEATHER:			
 			case CLOUDS:			
 			case VISIBILITY:
 				break;
-			case ENGINE1:			if(s.IsEmpty()) continue;
+			case ENGINE1:
+                if(s.IsEmpty()) continue;
 
-									tkz1.SetString(s, _T(":"),wxTOKEN_RET_EMPTY );
-									long hours, minutes;
-									tkz1.GetNextToken().ToLong(&hours);
-									tkz1.GetNextToken().ToLong(&minutes);
-									enginehours += hours; enginemin += minutes;
-									if(enginemin >= 60) { enginehours++; enginemin -= 60; }
-									oneLogbookTotal.enginehours += hours; oneLogbookTotal.enginemin += minutes;
-									if(oneLogbookTotal.enginemin >= 60) { oneLogbookTotal.enginehours++; oneLogbookTotal.enginemin -= 60; }
+                tkz1.SetString(s, _T(":"),wxTOKEN_RET_EMPTY );
+                long hours, minutes;
+                tkz1.GetNextToken().ToLong(&hours);
+                tkz1.GetNextToken().ToLong(&minutes);
+                enginehours += hours; enginemin += minutes;
+                if(enginemin >= 60) { enginehours++; enginemin -= 60; }
+                oneLogbookTotal.enginehours += hours; oneLogbookTotal.enginemin += minutes;
+                if(oneLogbookTotal.enginemin >= 60) { oneLogbookTotal.enginehours++; oneLogbookTotal.enginemin -= 60; }
 				break;
-			case ENGINE2:			if(s.IsEmpty()) continue;
+			case ENGINE2:
+                if(s.IsEmpty()) continue;
 
-									{	tkz1.SetString(s, _T(":"),wxTOKEN_RET_EMPTY );
-										long hours, minutes;
-										tkz1.GetNextToken().ToLong(&hours);
-										tkz1.GetNextToken().ToLong(&minutes);
-										enginehours2 += hours; enginemin2 += minutes;
-										if(enginemin2 >= 60) { enginehours2++; enginemin2 -= 60; }
-										oneLogbookTotal.enginehours2 += hours; oneLogbookTotal.enginemin2 += minutes;
-										if(oneLogbookTotal.enginemin2 >= 60) { oneLogbookTotal.enginehours2++; oneLogbookTotal.enginemin2 -= 60; }
-									}					
+                {	tkz1.SetString(s, _T(":"),wxTOKEN_RET_EMPTY );
+                    long hours, minutes;
+                    tkz1.GetNextToken().ToLong(&hours);
+                    tkz1.GetNextToken().ToLong(&minutes);
+                    enginehours2 += hours; enginemin2 += minutes;
+                    if(enginemin2 >= 60) { enginehours2++; enginemin2 -= 60; }
+                    oneLogbookTotal.enginehours2 += hours; oneLogbookTotal.enginemin2 += minutes;
+                    if(oneLogbookTotal.enginemin2 >= 60) { oneLogbookTotal.enginehours2++; oneLogbookTotal.enginemin2 -= 60; }
+                }
 				break;
-			case GENERATOR:			if(s.IsEmpty()) continue;
+			case GENERATOR:
+                if(s.IsEmpty()) continue;
 
-									{	tkz1.SetString(s, _T(":"),wxTOKEN_RET_EMPTY );
-										long hours, minutes;
-										tkz1.GetNextToken().ToLong(&hours);
-										tkz1.GetNextToken().ToLong(&minutes);
-										generatorhours += hours; generatormin += minutes;
-										if(generatormin >= 60) { generatorhours++; generatormin -= 60; }
-										oneLogbookTotal.generatorhours += hours; oneLogbookTotal.generatormin += minutes;
-										if(oneLogbookTotal.generatormin >= 60) { oneLogbookTotal.generatorhours++; oneLogbookTotal.generatormin -= 60; }
-									}					
+                {	tkz1.SetString(s, _T(":"),wxTOKEN_RET_EMPTY );
+                    long hours, minutes;
+                    tkz1.GetNextToken().ToLong(&hours);
+                    tkz1.GetNextToken().ToLong(&minutes);
+                    generatorhours += hours; generatormin += minutes;
+                    if(generatormin >= 60) { generatorhours++; generatormin -= 60; }
+                    oneLogbookTotal.generatorhours += hours; oneLogbookTotal.generatormin += minutes;
+                    if(oneLogbookTotal.generatormin >= 60) { oneLogbookTotal.generatorhours++; oneLogbookTotal.generatormin -= 60; }
+                }
 				break;
-			case WATERM:			if(s.IsEmpty()) continue;
+			case WATERM:
+                if(s.IsEmpty()) continue;
 
-									{	tkz1.SetString(s, _T(":"),wxTOKEN_RET_EMPTY );
-										long hours, minutes;
-										tkz1.GetNextToken().ToLong(&hours);
-										tkz1.GetNextToken().ToLong(&minutes);
-										watermhours += hours; watermmin += minutes;
-										if(watermmin >= 60) { watermhours++; watermmin -= 60; }
-										oneLogbookTotal.watermhours += hours; oneLogbookTotal.watermmin += minutes;
-										if(oneLogbookTotal.watermmin >= 60) { oneLogbookTotal.watermhours++; oneLogbookTotal.watermmin -= 60; }
-									}					
+                {	tkz1.SetString(s, _T(":"),wxTOKEN_RET_EMPTY );
+                    long hours, minutes;
+                    tkz1.GetNextToken().ToLong(&hours);
+                    tkz1.GetNextToken().ToLong(&minutes);
+                    watermhours += hours; watermmin += minutes;
+                    if(watermmin >= 60) { watermhours++; watermmin -= 60; }
+                    oneLogbookTotal.watermhours += hours; oneLogbookTotal.watermmin += minutes;
+                    if(oneLogbookTotal.watermmin >= 60) { oneLogbookTotal.watermhours++; oneLogbookTotal.watermmin -= 60; }
+                }
 				break;
 			case ENGINE1T:		
 				break;
-			case FUEL:				if(s.IsEmpty()) continue;
+			case FUEL:
+                if(s.IsEmpty()) continue;
 
-									if(s.GetChar(0) == '+') break;									
-				                    s.ToDouble(&x);
-									if(s.GetChar(0) != '-') s.Prepend(_T("-"));  // version 0.910 has no minus sign
+                if(s.GetChar(0) == '+') break;
+                s.ToDouble(&x);
+                if(s.GetChar(0) != '-') s.Prepend(_T("-"));  // version 0.910 has no minus sign
 
-								//	if(x < 0)
-								//	{
-										fuel += x;
-										oneLogbookTotal.fuel += x;
-								//	}
+                //	if(x < 0)
+                //	{
+                        fuel += x;
+                        oneLogbookTotal.fuel += x;
+                //	}
 				break;
-			case WATERMO:			if(s.IsEmpty()) continue;
-									s.ToDouble(&x);
-								//	if(x < 0)
-								//	{
-										watermo += x;
-										oneLogbookTotal.watermo += x;
-								//	}
+			case WATERMO:
+                if(s.IsEmpty()) continue;
+                s.ToDouble(&x);
+                //	if(x < 0)
+                //	{
+                        watermo += x;
+                        oneLogbookTotal.watermo += x;
+                //	}
 				break;
 			case FUELTOTAL:			
 				break;
-			case SAILS:				if(!s.empty())
-									{
-										bool found = false;
-										wxString result;
-										for(it = t_coll.begin(); it != t_coll.end(); ++it)
-										{
-											if( s == it->first)
-											{
-												int a = it->second;
-												it->second = ++a;
-												result += it->first+_T("\n");
-												found = true;
-											}
-										}
-										if(!found)
-										{
-											t_coll.insert(pair(s,1)); 
-											wxString result;
-                                            for(it = t_coll.begin(); it != t_coll.end(); ++it)
-                                            {
-                                                result = it->first;
-                                            }
-										}
-									}
+			case SAILS:
+                if(!s.empty())
+                {
+                    bool found = false;
+                    wxString result;
+                    for(it = t_coll.begin(); it != t_coll.end(); ++it)
+                    {
+                        if( s == it->first)
+                        {
+                            int a = it->second;
+                            it->second = ++a;
+                            result += it->first+_T("\n");
+                            found = true;
+                        }
+                    }
+                    if(!found)
+                    {
+                        t_coll.insert(pair(s,1));
+                        wxString result;
+                        for(it = t_coll.begin(); it != t_coll.end(); ++it)
+                        {
+                            result = it->first;
+                        }
+                    }
+                }
 				break;
 			case REEF:				
 				break;
-			case WATER:				if(s.IsEmpty()) continue;
-									if(s.GetChar(0) == '+') break;				 // add water used only
-									if(s.GetChar(0) != '-') s.Prepend(_T("-"));  // version 0.910 has no minus sign
-									s.ToDouble(&x);
-									
-									x = fabs(x);
-								//	if(x < 0)
-								//	{
-										water += x;
-										oneLogbookTotal.water += x;
-								//	}
+			case WATER:
+                if(s.IsEmpty()) continue;
+                if(s.GetChar(0) == '+') break;				 // add water used only
+                if(s.GetChar(0) != '-') s.Prepend(_T("-"));  // version 0.910 has no minus sign
+                s.ToDouble(&x);
+
+                x = fabs(x);
+                //	if(x < 0)
+                //	{
+                        water += x;
+                        oneLogbookTotal.water += x;
+                //	}
 				break;
-			case BANK1:			if(s.IsEmpty()) continue;
-								s.ToDouble(&x);
-								if(x >= 0)
-								{
-									bank1g += x;
-									oneLogbookTotal.bank1g += x;
-								}
-								else
-								{
-									bank1u += fabs(x); 
-									oneLogbookTotal.bank1u += bank1u;
-								}
+			case BANK1:
+                if(s.IsEmpty()) continue;
+                s.ToDouble(&x);
+                if(x >= 0)
+                {
+                    bank1g += x;
+                    oneLogbookTotal.bank1g += x;
+                }
+                else
+                {
+                    bank1u += fabs(x);
+                    oneLogbookTotal.bank1u += bank1u;
+                }
 				break;
-			case BANK2:			if(s.IsEmpty()) continue;
-								s.ToDouble(&x);
-								if(x >= 0)
-								{
-									bank2g += x;
-									oneLogbookTotal.bank2g += x;
-								}
-								else
-								{
-									bank2u += fabs(x); 
-									oneLogbookTotal.bank2u += bank2u;
-								}
+			case BANK2:
+                if(s.IsEmpty()) continue;
+                s.ToDouble(&x);
+                if(x >= 0)
+                {
+                    bank2g += x;
+                    oneLogbookTotal.bank2g += x;
+                }
+                else
+                {
+                    bank2u += fabs(x);
+                    oneLogbookTotal.bank2u += bank2u;
+                }
 				break;
 			case WATERTOTAL:		
 				break;
@@ -577,6 +639,7 @@ void OverView::loadLogbookData(wxString logbook, bool colour)
 //		if(write)
 			writeSumColumn(lastrow, logbook, path, colour);
 		test = false;
+        overviewflag = false;
 	}
 	if(!showAllLogbooks)
 		writeSumColumnLogbook(oneLogbookTotal,lastrow, logbook, colour);
@@ -978,20 +1041,20 @@ void OverView::writeSumColumnLogbook(total data, int row, wxString logbook, bool
 	grid->SetCellValue(row,FSWELLPEAK,temp);
 
 	if(data.currentcount)
-		wxString::Format(_T("%6.2f %s"),data.currentdir/data.currentcount,opt->Deg.c_str());
+        temp = wxString::Format(_T("%6.2f %s"),data.currentdir/data.currentcount,opt->Deg.c_str());
 	else
 		temp = nothing;
 	temp.Replace(_T("."),parent->decimalPoint);
 	grid->SetCellValue(row,FCURRENTDIR,temp);
 
 	if(data.currentcount)
-		temp = wxString::Format(_T("%6.2f %s"),data.current/data.currentcount,d.c_str());
+        temp = wxString::Format(_T("%6.2f %s"),data.current/data.currentcount,opt->speed.c_str());
 	else
 		temp = nothing;
 	temp.Replace(_T("."),parent->decimalPoint);
 	grid->SetCellValue(row,FCURRENT,temp);
 
-	temp = wxString::Format(_T("%6.2f %s"),data.currentpeak,d.c_str());
+    temp = wxString::Format(_T("%6.2f %s"),data.currentpeak,opt->speed.c_str());
 	temp.Replace(_T("."),parent->decimalPoint);
 	grid->SetCellValue(row,FCURRENTPEAK,temp);
 

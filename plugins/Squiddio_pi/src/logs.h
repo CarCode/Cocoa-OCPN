@@ -25,7 +25,6 @@
 #ifndef LOGS_H_
 #define LOGS_H_
 
-#include "squiddio_pi_utils.h"
 #include "squiddio_pi.h"
 #include "../../../include/wx/jsonreader.h"
 //#include "wxJSON/jsonwriter.h"

@@ -4,7 +4,7 @@
 
 
 #include "Options.h"
-#include <wx/msgdlg.h> 
+#include <wx/msgdlg.h>
 #include <wx/mimetype.h>
 #include <wx/tokenzr.h>
 #include "LogbookDialog.h"
@@ -57,6 +57,7 @@ Options::Options(void)
     engineMessageSails = false;
     engineMessageRunning = false;
     engineAllwaysSailsDown = false;
+    windspeeds = false;
 
     abrSails.Add(_("Ma"),0);
     abrSails.Add(_("Tr"),1);

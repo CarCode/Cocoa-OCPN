@@ -11,18 +11,18 @@
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/intl.h>
-#include <wx/panel.h>
+#include <wx/string.h>
+#include <wx/checkbox.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
-#include <wx/string.h>
-#include <wx/checkbox.h>
 #include <wx/stattext.h>
 #include <wx/spinctrl.h>
 #include <wx/slider.h>
 #include <wx/choice.h>
 #include <wx/sizer.h>
+#include <wx/panel.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
@@ -32,6 +32,7 @@
 #include <wx/statbmp.h>
 #include <wx/bmpcbox.h>
 #include <wx/button.h>
+#include <wx/grid.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
 
@@ -39,28 +40,12 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class MyPanel1
-///////////////////////////////////////////////////////////////////////////////
-class MyPanel1 : public wxPanel 
-{
-	private:
-	
-	protected:
-	
-	public:
-		
-		MyPanel1( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
-		~MyPanel1();
-	
-};
-
-///////////////////////////////////////////////////////////////////////////////
 /// Class ODPropertiesDialogDef
 ///////////////////////////////////////////////////////////////////////////////
 class ODPropertiesDialogDef : public wxDialog 
 {
 	private:
-	
+
 	protected:
 		wxBoxSizer* m_SizerProperties;
 		wxNotebook* m_notebookProperties;
@@ -221,10 +206,12 @@ class ODPropertiesDialogDef : public wxDialog
 		wxStaticText* m_staticTextDateVal;
 		wxStaticText* m_staticTextOther;
 		wxStaticText* m_staticText34;
+        wxPanel* m_panelHelp;
+        wxStaticText* m_staticTextHelp;
 		wxButton* m_buttonOK;
 		wxButton* m_buttonCancel;
 		wxButton* m_buttonApply;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnODPointComboboxSelected( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnTextPointIconComboboxSelected( wxCommandEvent& event ) { event.Skip(); }
@@ -237,14 +224,15 @@ class ODPropertiesDialogDef : public wxDialog
 		virtual void OnDrawPropertiesOKClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnDrawPropertiesCancelClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnDrawPropertiesApplyClick( wxCommandEvent& event ) { event.Skip(); }
-		
-	
+
+
 	public:
 		wxChoice* m_choiceToolbar;
-		
+        wxGrid* m_gridODWDInteractions;
+
 		ODPropertiesDialogDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("OCPN Draw Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 591,554 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~ODPropertiesDialogDef();
-	
+
 };
 
 #endif //__ODPROPERTIESDIALOGDEF_H__

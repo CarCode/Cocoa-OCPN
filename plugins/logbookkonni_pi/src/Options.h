@@ -4,7 +4,7 @@
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif //precompiled headers
 
 #include <wx/dynarray.h>
@@ -45,6 +45,8 @@ public:
     bool		engineMessageSails;
     bool		engineMessageRunning;
     bool		engineAllwaysSailsDown;
+    bool		windspeeds;
+    bool        overviewlines;
 
 	wxString    layoutPrefix[7];
     bool		filterLayout[7];

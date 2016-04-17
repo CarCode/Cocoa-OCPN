@@ -2,7 +2,7 @@
 #define _LOGBOOK_H_
 
 #ifndef  WX_PRECOMP
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif //precompiled headers
 
 #include "../../../include/ocpn_plugin.h"
@@ -84,6 +84,14 @@ private:
     bool		waypointArrived;
     bool		oldLogbook;
     bool		wimdaSentence;
+    double		minwindA;
+    double		avgwindA;
+    double		maxwindA;
+    double		minwindT;
+    double		avgwindT;
+    double		maxwindT;
+    wxString	swindspeedsA;
+    wxString	swindspeedsT;
 
     wxString	toSDMM ( int NEflag, double a, bool mode );
     wxString	toSDMMOpenCPN ( int NEflag, double a, bool hi_precision );

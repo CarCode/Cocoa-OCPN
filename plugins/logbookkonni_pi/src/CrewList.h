@@ -1,9 +1,9 @@
 #pragma once
 #ifndef  WX_PRECOMP
-  #include "wx/wx.h"
+#include "wx/wx.h"
 #endif //precompiled headers
 
-#include <wx/textfile.h> 
+#include <wx/textfile.h>
 #include <wx/grid.h>
 #include <wx/object.h>
 #include <wx/arrstr.h>
@@ -11,7 +11,7 @@
 #include <wx/tokenzr.h>
 #include "Options.h"
 
-#define CREWFIELDS 13 
+#define CREWFIELDS 13
 
 class LogbookDialog;
 
@@ -24,7 +24,7 @@ public:
 	static int			 col;
 	static wxTimeSpan	 time;
 	static wxDateTime	 start, end;
-	static wxString		 member; 
+	static wxString		 member;
 	static wxArrayString menuMembers;
 };
 

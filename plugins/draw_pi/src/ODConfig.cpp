@@ -285,11 +285,7 @@ void ODConfig::LoadNavObjects()
         if( wxFileExists( m_sODNavObjSetChangesFile ) )
             wxRemoveFile( m_sODNavObjSetChangesFile);
 #endif
-//        delete m_pODNavObjectChangesSet;
-           
     }
-
-//    m_pODNavObjectChangesSet = new ODNavObjectChanges(m_sODNavObjSetChangesFile);
 }
 
 void ODConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )

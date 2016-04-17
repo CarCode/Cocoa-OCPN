@@ -9,14 +9,6 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-MyPanel1::MyPanel1( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
-{
-}
-
-MyPanel1::~MyPanel1()
-{
-}
-
 ODPropertiesDialogDef::ODPropertiesDialogDef( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
@@ -85,7 +77,7 @@ ODPropertiesDialogDef::ODPropertiesDialogDef( wxWindow* parent, wxWindowID id, c
 	m_panelGeneral->SetSizer( bSizerGeneral );
 	m_panelGeneral->Layout();
 	bSizerGeneral->Fit( m_panelGeneral );
-	m_notebookProperties->AddPage( m_panelGeneral, _("General"), true );
+    m_notebookProperties->AddPage( m_panelGeneral, _("General"), true );
 	m_panelBoundary = new wxPanel( m_notebookProperties, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizerBoundarySettings;
 	fgSizerBoundarySettings = new wxFlexGridSizer( 0, 1, 0, 0 );
@@ -919,7 +911,59 @@ ODPropertiesDialogDef::ODPropertiesDialogDef( wxWindow* parent, wxWindowID id, c
 	m_panelAbout->Layout();
 	bSizerAbout->Fit( m_panelAbout );
 	m_notebookProperties->AddPage( m_panelAbout, _("About"), false );
+
+    m_panelHelp = new wxPanel( m_notebookProperties, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+    wxFlexGridSizer* fgSizer22;
+    fgSizer22 = new wxFlexGridSizer( 0, 1, 0, 0 );
+    fgSizer22->SetFlexibleDirection( wxBOTH );
+    fgSizer22->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+    m_staticTextHelp = new wxStaticText( m_panelHelp, wxID_ANY, _("This chart shows the interactions between Boundaries and WatchDog alam boundaries"), wxDefaultPosition, wxDefaultSize, 0 );
+
+    m_staticTextHelp->Wrap( -1 );
+    fgSizer22->Add( m_staticTextHelp, 0, wxALL, 5 );
+
+    m_gridODWDInteractions = new wxGrid( m_panelHelp, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	
+	// Grid
+	m_gridODWDInteractions->CreateGrid( 4, 5 );
+	m_gridODWDInteractions->EnableEditing( false );
+	m_gridODWDInteractions->EnableGridLines( true );
+	m_gridODWDInteractions->EnableDragGridSize( false );
+	m_gridODWDInteractions->SetMargins( 0, 0 );
+	
+	// Columns
+	m_gridODWDInteractions->EnableDragColMove( false );
+	m_gridODWDInteractions->EnableDragColSize( false );
+	m_gridODWDInteractions->SetColLabelSize( 0 );
+	m_gridODWDInteractions->SetColLabelValue( 0, _("WD") );
+	m_gridODWDInteractions->SetColLabelValue( 1, _("All") );
+	m_gridODWDInteractions->SetColLabelValue( 2, _("Exclusion") );
+	m_gridODWDInteractions->SetColLabelValue( 3, _("Inclusion") );
+	m_gridODWDInteractions->SetColLabelValue( 4, _("Neither") );
+	m_gridODWDInteractions->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Rows
+	m_gridODWDInteractions->EnableDragRowSize( true );
+	m_gridODWDInteractions->SetRowLabelSize( 0 );
+	m_gridODWDInteractions->SetRowLabelValue( 0, _("OD") );
+	m_gridODWDInteractions->SetRowLabelValue( 1, _("Exclusion") );
+	m_gridODWDInteractions->SetRowLabelValue( 2, _("Inclusion") );
+	m_gridODWDInteractions->SetRowLabelValue( 3, _("Neither") );
+	m_gridODWDInteractions->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Label Appearance
+	
+	// Cell Defaults
+	m_gridODWDInteractions->SetDefaultCellBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
+	m_gridODWDInteractions->SetDefaultCellAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	fgSizer22->Add( m_gridODWDInteractions, 0, wxALL, 5 );
+
+ 
+    m_panelHelp->SetSizer( fgSizer22 );
+    m_panelHelp->Layout();
+    fgSizer22->Fit( m_panelHelp );
+    m_notebookProperties->AddPage( m_panelHelp, _("Help"), false );
+
 	m_SizerProperties->Add( m_notebookProperties, 0, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizerOKCancelApply;

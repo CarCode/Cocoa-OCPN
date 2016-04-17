@@ -447,10 +447,6 @@ void EBL::MaintainWith( void )
 {
     ODPoint *pStartPoint = m_pODPointList->GetFirst()->GetData();
     ODPoint *pEndPoint = m_pODPointList->GetLast()->GetData();
-//    double l_dHdt = g_pfFix.Hdt;  //  Not used for WXOSX
-//    double l_dCog = g_pfFix.Cog;  //  Not used for WXOSX
-//    if(isnan(l_dHdt)) l_dHdt = 0.;  //  Not used for WXOSX
-//    if(isnan(l_dCog)) l_dCog = 0.;  //  Not used for WXOSX
     switch(m_iMaintainWith) {
         case ID_EBL_MAINTAIN_WITH_HEADING:
             if(!isnan(g_pfFix.Hdt))

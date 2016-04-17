@@ -37,9 +37,9 @@
 #include "LogbookOptions.h"
 #include "Options.h"
 #include "wx/stdpaths.h"
-#include <wx/timer.h> 
-#include <wx/event.h> 
-#include <wx/sysopt.h> 
+#include <wx/timer.h>
+#include <wx/event.h>
+#include <wx/sysopt.h>
 #include <wx/dir.h>
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
@@ -52,9 +52,9 @@ using namespace std;
 
 #ifndef DECL_EXP
 #ifdef __WXMSW__
-  #define DECL_EXP     __declspec(dllexport)
+#define DECL_EXP     __declspec(dllexport)
 #else
-  #define DECL_EXP
+#define DECL_EXP
 #endif
 #endif
 
@@ -764,7 +764,7 @@ void logbookkonni_pi::ShowPreferencesDialog( wxWindow* parent )
 	optionsDialog = new LogbookOptions(parent, opt, this, -1, _("Logbook Preferences"), wxDefaultPosition,  wxSize( 692,660  ),
 		wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 #elif defined __WXOSX__
-    optionsDialog = new LogbookOptions(parent, opt, this, -1, _("Logbook Preferences"), wxDefaultPosition,  wxSize( 770,685 ) ,
+    optionsDialog = new LogbookOptions(parent, opt, this, -1, _("Logbook Preferences"), wxDefaultPosition,  wxSize( 790,685 ) ,
 		wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 #else
 	optionsDialog = new LogbookOptions(parent, opt, this, -1, _("Logbook Preferences"), wxDefaultPosition,  wxSize( 740,700 ) ,
@@ -982,6 +982,10 @@ void logbookkonni_pi::SaveConfig()
             pConf->Write ( _T ( "EngineMessageSails" ), opt->engineMessageSails);
             pConf->Write ( _T ( "WriteEngineRun" ), opt->engineMessageRunning);
             pConf->Write ( _T ( "SailsDown" ), opt->engineAllwaysSailsDown);
+//            pConf->Write ( _T ( "StatusBar" ), opt->statusbar);
+            pConf->Write ( _T ( "WindSpeeds" ), opt->windspeeds);
+            pConf->Write ( _T ( "OverviewLines" ), opt->overviewlines );
+
             wxString str = wxEmptyString;
             for(int i = 0; i < 7; i++)
                 str += wxString::Format(_T("%i,%s,"),opt->filterLayout[i],opt->layoutPrefix[i].c_str());
@@ -1202,6 +1206,9 @@ void logbookkonni_pi::LoadConfig()
             pConf->Read ( _T ( "EngineMessageSails" ), &opt->engineMessageSails);
             pConf->Read ( _T ( "WriteEngineRun" ), &opt->engineMessageRunning);
             pConf->Read ( _T ( "SailsDown" ), &opt->engineAllwaysSailsDown);
+//            pConf->Read ( _T ( "StatusBar" ), &opt->statusbar);
+            pConf->Read ( _T ( "WindSpeeds" ), &opt->windspeeds);
+            pConf->Read ( _T ( "OverviewLines" ), &opt->overviewlines );
 
             wxString str = wxEmptyString;
             pConf->Read ( _T ( "PrefixLayouts" ), &str);
@@ -1567,7 +1574,7 @@ void logbookkonni_pi::loadLayouts(wxWindow *parent)
 		}
 	wxString ok = wxString::Format(_("Layouts %sinstalled at\n\n%s\n%s\n%s\n%s"),
 				       (!ret)?n.c_str():wxEmptyString,data.c_str(),data1.c_str(),data2.c_str(),data3.c_str());
-		wxMessageBox(ok,_(""),wxOK | wxICON_INFORMATION);
+		wxMessageBox(ok,_T(""),wxOK | wxICON_INFORMATION);
 	}
 	if(opt->firstTime)
 		loadLanguages(parent);

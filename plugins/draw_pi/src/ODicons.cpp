@@ -158,6 +158,7 @@ void ODicons::initialize_images(void)
     fn.SetFullName(wxT("DRgrey.png"));
     m_p_bm_ocpn_draw_dr_grey = new wxBitmap( fn.GetFullPath(), wxBITMAP_TYPE_PNG );
 #endif
+
     CreateSchemeIcons();
     ScaleIcons();
 }

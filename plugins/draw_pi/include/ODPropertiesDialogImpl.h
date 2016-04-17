@@ -54,20 +54,22 @@ protected:
     void OnDrawPropertiesOKClick( wxCommandEvent& event );
     void OnDrawPropertiesCancelClick( wxCommandEvent& event );
     void OnDrawPropertiesApplyClick( wxCommandEvent& event );
-    
+
     void SaveChanges();
-    
+
     wxSize              m_defaultClientSize;
 
-    
+
 public:
     /** Constructor */
     ODPropertiesDialogImpl( wxWindow* parent );
     void UpdateProperties( void );
     void SetDialogSize( void );
     wxFontDialog  *m_pfdDialog;
-    
+
 private:
+    void        SetTableCellBackgroundColours(void);
+
     double      m_dValidator;
     double      m_dODPointRangRingStepValidator;
     double      m_dSOGValidator;
@@ -76,7 +78,7 @@ private:
     double      m_dODPointIntervalValidator;
     double      m_dDRPointRangRingStepValidator;
     int         m_iCOGValidator;
-    
+
 };
 
 #endif // __ODPropertiesDialogImpl__

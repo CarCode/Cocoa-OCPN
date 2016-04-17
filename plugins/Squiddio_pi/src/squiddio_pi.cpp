@@ -32,14 +32,12 @@
 #include <wx/fileconf.h>
 
 #ifdef __WXOSX__
-#include <cmath>
+#include <cmath>   // for std::abs()
 #endif
 
 WX_DEFINE_LIST (LayerList);
 WX_DEFINE_LIST (HyperlinkList);
 WX_DEFINE_LIST (Plugin_HyperlinkList);
-
-#define ONLINE_CHECK_RETRY 10
 
 // the class factories, used to create and destroy instances of the PlugIn
 //
@@ -82,7 +80,7 @@ BEGIN_EVENT_TABLE( squiddio_pi, wxEvtHandler )
 END_EVENT_TABLE()
 
 squiddio_pi::squiddio_pi(void *ppimgr) :
-        opencpn_plugin_110(ppimgr) // constructor initialization
+        opencpn_plugin_113(ppimgr) // constructor initialization
 {
     // Create the PlugIn icons
     initialize_images();
@@ -120,8 +118,6 @@ int squiddio_pi::Init(void) {
     g_PostPeriod = 0;
     g_RetrievePeriod = 0;
     
-    wxCurlHTTP::Init();
-
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
 
@@ -236,7 +232,6 @@ int squiddio_pi::Init(void) {
 }
 
 bool squiddio_pi::DeInit(void) {
-    wxCurlHTTP::Shutdown();
     RemovePlugInTool(m_leftclick_tool_id);
 
     if (m_plogs_window) {
@@ -668,8 +663,7 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
             pLayerList->DeleteObject(local_sq_layer);
         }
         m_rgn_to_dld = local_region;
-        if( IsThreadRunning() )
-            m_pThread->GetData();
+        RefreshLayer();
     } else if (id == m_report_id) {
         wxString url_path = _T("http://squidd.io/locations/new?lat=");
         url_path.Append(
@@ -682,14 +676,18 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
 
 wxString squiddio_pi::DownloadLayer(wxString url_path) {
     wxString res = wxEmptyString;
-    char * response;
-    myCurlHTTP http;
     //size_t result = http.Get( response, _T("https://squidd.io") + url_path );
-    size_t result = http.Get( response, _T("http://squidd.io") + url_path );
+    //size_t result = http.Get( response, _T("http://squidd.io") + url_path );
+    
+    wxString fn = wxFileName::CreateTempFileName( _T("squiddio_pi") );
+    _OCPN_DLStatus result = OCPN_downloadFile( _T("http://squidd.io") + url_path, fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10 );
 
-    if( result )
+    if( result == OCPN_DL_NO_ERROR )
     {
-        res = wxString::FromUTF8(response);
+        wxFile f( fn );
+        f.ReadAll( &res );
+        f.Close();
+        wxRemoveFile( fn );
     }
     else
     {
@@ -719,18 +717,7 @@ bool squiddio_pi::SaveLayer(wxString layerStr, wxString file_path) {
 
 bool squiddio_pi::CheckIsOnline()
 {
-    if (wxDateTime::GetTimeNow() > last_online_chk + ONLINE_CHECK_RETRY)
-    {
-        myCurlHTTP get;
-        get.Head( _T("http://yahoo.com/") );
-        last_online = get.GetResponseCode() > 0;
-
-        SetCanvasContextMenuItemViz(m_update_id, last_online);
-        SetCanvasContextMenuItemViz(m_report_id, last_online);
-
-        last_online_chk = wxDateTime::GetTimeNow();
-    }
-    return last_online;
+    return OCPN_isOnline();
 }
 
 Layer * squiddio_pi::GetLocalLayer() {
@@ -1011,4 +998,3 @@ void SquiddioPrefsDialog::OnShareChoice(wxCommandEvent& event) {
     }
     Refresh(false);
 }
-

@@ -149,7 +149,7 @@ int NmeaConverter_pi::AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode
     if ( ObjectMap.empty() ) // map is wxEmptyString
         index = 0;
     else 
-        index = ObjectMap.begin()->first  + 1;
+        index = ObjectMap.size();
     ObjectMap[index] = object;
     object->SetSendMode( Mode );
     object->SetRepeatTime( RepTime );

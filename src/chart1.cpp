@@ -708,6 +708,7 @@ int              g_chart_zoom_modifier;
 int              g_NMEAAPBPrecision;
 
 wxString         g_TalkerIdText;
+int              g_maxWPNameLength;
 
 bool             g_bAdvanceRouteWaypointOnArrivalOnly;
 
@@ -1272,7 +1273,7 @@ bool MyApp::OnInit()
     wxString platform = os_name + _T(" ") +
     platforminfo.GetArchName()+ _T(" ") +
     platforminfo.GetPortIdName();
-
+//  result: Mac OS X 64 bit wxMac
     wxLogMessage( wxver + _T(" ") + platform );
 #ifndef __WXOSX__
     wxLogMessage( _T("MemoryStatus:  mem_total: %d mb,  mem_initial: %d mb"), g_mem_total / 1024,
@@ -1400,9 +1401,10 @@ bool MyApp::OnInit()
     pWayPointMan = NULL;
 
     g_display_size_mm = wxMax(100, g_Platform->GetDisplaySizeMM());
-    double dsmm = g_display_size_mm;
 
-    if(fabs(dsmm - g_display_size_mm) > 1){
+    // User override....
+    if((g_config_display_size_mm > 0) &&(g_config_display_size_manual)){
+        g_display_size_mm = g_config_display_size_mm;
         wxString msg;
         msg.Printf(_T("Display size (horizontal) config override: %d mm"), (int) g_display_size_mm);
         wxLogMessage(msg);
@@ -2046,7 +2048,10 @@ bool MyApp::OnInit()
 
     //  Verify any saved chart database startup index
     if(g_restore_dbindex >= 0){
-        if(g_restore_dbindex > (ChartData->GetChartTableEntries()-1))
+        if(ChartData->GetChartTableEntries() == 0)
+            g_restore_dbindex = -1;
+
+        else if(g_restore_dbindex > (ChartData->GetChartTableEntries()-1))
             g_restore_dbindex = 0;
     }
 
@@ -3394,6 +3399,8 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     if( pCurrentStack ) {
         g_restore_stackindex = pCurrentStack->CurrentStackEntry;
         g_restore_dbindex = pCurrentStack->GetCurrentEntrydbIndex();
+        if(cc1 && cc1->GetQuiltMode())
+            g_restore_dbindex = cc1->GetQuiltReferenceChartIndex();
     }
 
     if( g_FloatingToolbarDialog ) {
@@ -4322,6 +4329,23 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             break;
         }
 
+        case ID_CMD_POST_JSON_TO_PLUGINS:{
+
+            // Extract the Message ID which is embedded in the JSON string passed in the event
+            wxJSONValue  root;
+            wxJSONReader reader;
+
+            int numErrors = reader.Parse( event.GetString(), &root );
+            if ( numErrors == 0 )  {
+                if(root[_T("MessageID")].IsString()){
+                    wxString MsgID = root[_T("MessageID")].AsString();
+                    SendPluginMessage( MsgID, event.GetString() );  // Send to all PlugIns
+                }
+            }
+
+            break;
+        }
+
         default: {
             //        Look for PlugIn tools
             //        If found, make the callback.
@@ -4951,6 +4975,8 @@ void MyFrame::SetbFollow( void )
 #ifdef __OCPN__ANDROID__
     androidSetFollowTool(true);
 #endif
+
+//    JumpToPosition(gLat, gLon, cc1->GetVPScale());  Laut Hakan Fehler!
 
     DoChartUpdate();
     cc1->ReloadVP();
@@ -5660,6 +5686,10 @@ int MyFrame::ProcessOptionsDialog( int rr, ArrayOfCDI *pNewDirArray )
         ChartsRefresh( index_hint, cc1->GetVP() );
     }
 
+    //  The zoom-scale factor may have changed
+    //  so, trigger a recalculation of the reference chart
+    cc1->DoZoomCanvas(1.0001);
+
     return 0;
 }
 
@@ -5925,7 +5955,7 @@ void MyFrame::SetupQuiltMode( void )
         //    Select the proper Ref chart
         int target_new_dbindex = -1;
         if( pCurrentStack ) {
-            target_new_dbindex = pCurrentStack->GetCurrentEntrydbIndex();
+            target_new_dbindex = cc1->GetQuiltReferenceChartIndex();    //pCurrentStack->GetCurrentEntrydbIndex();
 
             if(-1 != target_new_dbindex){
                 if( !cc1->IsChartQuiltableRef( target_new_dbindex ) ){
@@ -6935,7 +6965,7 @@ void MyFrame::TouchAISActive( void )
     if( m_pAISTool ) {
         if( ( !g_pAIS->IsAISSuppressed() ) && ( !g_pAIS->IsAISAlertGeneral() ) ) {
 #ifdef __WXOSX__
-            g_nAIS_activity_timer = 40;                // seconds
+            g_nAIS_activity_timer = 50;                // seconds
 #else
             g_nAIS_activity_timer = 5;
 #endif
@@ -8003,8 +8033,14 @@ bool MyFrame::DoChartUpdate( void )
                 if( ChartData ) {
                     ChartBase *pc = ChartData->OpenChartFromDB( initial_db_index, FULL_INIT );
                     if( pc ) {
+
+                        // If the chart zoom modifier is greater than 1, allow corresponding underzoom (with a 10% fluff) on startup
+                        double mod = ((double)g_chart_zoom_modifier + 5.)/5.;  // 0->2
+                        mod = wxMax(mod, 1.0);
+                        mod = wxMin(mod, 2.0);
+
                         proposed_scale_onscreen =
-                                wxMin(proposed_scale_onscreen, pc->GetNormalScaleMax(cc1->GetCanvasScaleFactor(), cc1->GetCanvasWidth()));
+                        wxMin(proposed_scale_onscreen, mod * 1.10 * pc->GetNormalScaleMax(cc1->GetCanvasScaleFactor(), cc1->GetCanvasWidth()));
                         proposed_scale_onscreen =
                                 wxMax(proposed_scale_onscreen, pc->GetNormalScaleMin(cc1->GetCanvasScaleFactor(), g_b_overzoom_x));
                     }
