@@ -1280,7 +1280,7 @@ void glChartCanvas::SetupOpenGL()
 
     g_GLOptions.m_bUseCanvasPanning = false;
 #ifdef __OCPN__ANDROID__
-    g_GLOptions.m_bUseCanvasPanning = true;
+    g_GLOptions.m_bUseCanvasPanning = isPlatformCapable(PLATFORM_CAP_FASTPAN);
 #endif
 
     //      Maybe build FBO(s)
@@ -4941,8 +4941,7 @@ void glChartCanvas::OnEvtPanGesture( wxQT_PanGestureEvent &event)
 
         case GestureFinished:
             if(m_binPan){
-                if (g_GLOptions.m_bUseCanvasPanning)
-                    cc1->PanCanvas( -panx, pany );
+                cc1->PanCanvas( -panx, pany );
 
 #ifdef __OCPN__ANDROID__
                 androidSetFollowTool(false);
