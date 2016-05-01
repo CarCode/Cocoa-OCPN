@@ -38,6 +38,7 @@
 #include <wx/notebook.h>
 #include <wx/filesys.h>
 #include <wx/clrpicker.h>
+#include <wx/odcombo.h>
 #include "LinkPropDlg.h"
 
 #if wxCHECK_VERSION(2, 9, 0)
@@ -54,6 +55,7 @@ class   wxListCtrl;
 class   Route;
 class   RoutePoint;
 class   HyperlinkList;
+class   OCPNIconCombo;
 
 /*!
  * Control identifiers
@@ -125,6 +127,10 @@ class   HyperlinkList;
 #endif
 #ifndef wxFIXED_MINSIZE
 #define wxFIXED_MINSIZE 0
+#endif
+
+#ifdef __WXOSX__
+WX_DECLARE_LIST(wxBitmap, BitmapList);  //  for OS X goes to routeprop.h
 #endif
 
 /*!
@@ -282,7 +288,7 @@ class MarkInfoDef : public wxDialog
 
 	protected:
         wxBoxSizer*             bSizerLinks;
-        wxBitmapComboBox*       m_bcomboBoxIcon;
+        OCPNIconCombo*          m_bcomboBoxIcon;
         wxStaticBitmap*         m_bitmapIcon;
         wxButton*               m_buttonAddLink;
         wxButton*               m_buttonExtDescription;

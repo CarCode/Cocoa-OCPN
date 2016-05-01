@@ -4951,6 +4951,7 @@ ConnectionParams *options::CreateConnectionParamsFromSelectedItem( void )
     //  Save the existing addr/port to allow closing of existing port
     pConnectionParams->LastNetworkAddress = pConnectionParams->NetworkAddress;
     pConnectionParams->LastNetworkPort = pConnectionParams->NetworkPort;
+    pConnectionParams->LastNetProtocol = pConnectionParams->NetProtocol;
 
     pConnectionParams->NetworkAddress = m_tNetAddress->GetValue();
     pConnectionParams->NetworkPort = wxAtoi(m_tNetPort->GetValue());
@@ -5147,12 +5148,15 @@ void options::OnApplyClick( wxCommandEvent& event )
     //  to facility identification and allow stop and restart of the stream
     wxString lastAddr;
     int lastPort = 0;
+    NetworkProtocol lastNetProtocol;
+
     if ( itemIndex >= 0 ) {
         int params_index = m_lcSources->GetItemData( itemIndex );
         ConnectionParams *cpo = g_pConnectionParams->Item( params_index );
         if ( cpo ) {
             lastAddr = cpo->NetworkAddress;
             lastPort = cpo->NetworkPort;
+            lastNetProtocol = cpo->NetProtocol;
         }
     }
 
@@ -5169,6 +5173,7 @@ void options::OnApplyClick( wxCommandEvent& event )
             }
 
             //  Record the previous parameters, if any
+            cp->LastNetProtocol = lastNetProtocol;
             cp->LastNetworkAddress = lastAddr;
             cp->LastNetworkPort = lastPort;
 
@@ -5185,6 +5190,7 @@ void options::OnApplyClick( wxCommandEvent& event )
     //Recreate datastreams that are new, or have been edited
     for ( size_t i = 0; i < g_pConnectionParams->Count(); i++ ) {
         ConnectionParams *cp = g_pConnectionParams->Item( i );
+
         // Stream is new, or edited
         if ( cp->b_IsSetup ) continue;
         // Terminate and remove any existing stream with the same port name
