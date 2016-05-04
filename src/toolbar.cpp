@@ -546,7 +546,7 @@ void ocpnFloatingToolbarDialog::Surface()
     }
     else {
         m_bsubmerged = false;
-#ifndef __WXOSX__
+#ifdef __WXMSW__
         Hide();
         Move( 0, 0 );
 #endif

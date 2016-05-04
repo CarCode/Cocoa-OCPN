@@ -76,7 +76,7 @@ Größte Änderung ist jedoch die Verwendung von Clang/LLVM mit Xcode statt
 der Befehlszeilen orientierten Cmake Version.
 
 Compiler:
-Xcode 7.3
+Xcode 7.3.1
 Apple LLVM version 7.0.2 (clang-700.1.81) (based on LLVM 3.6.0svn)
 Target: x86_64-apple-darwin15.3.0
 SDK 10.11.4 El Capitan
@@ -104,5 +104,5 @@ Siehe batchwx.sh bzw. Xcode Scripts.
 
 wxCurl wurde auf diese Art ebenfalls als dynamische Library compiliert.
 -----------------------------------------------------------------------
-17. April 2016
+03. Mai 2016
 
