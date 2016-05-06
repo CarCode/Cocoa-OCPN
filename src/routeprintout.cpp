@@ -437,7 +437,7 @@ void RoutePrintSelection::SetDialogTitle(const wxString & title)
 
 void RoutePrintSelection::OnRoutepropCancelClick( wxCommandEvent& event )
 {
-    Hide();
+    Close(); //Hide();
     event.Skip();
 }
 
@@ -476,6 +476,6 @@ void RoutePrintSelection::OnRoutepropOkClick( wxCommandEvent& event )
         }
     }
 
-    Hide();
+    Close(); //Hide();
     event.Skip();
 }

@@ -61,6 +61,7 @@
 				71ADD26CEFF44A5FB372EE29 /* PBXTargetDependency */,
 				A645151F1AE50A3700933404 /* PBXTargetDependency */,
 				9D1F24F095AC45E38CA1BC4A /* PBXTargetDependency */,
+				A6148F8D1CD7E1D1000CBF74 /* PBXTargetDependency */,
 				A65D60391C23442C00988D56 /* PBXTargetDependency */,
 				99AA407E955648AB95C0E429 /* PBXTargetDependency */,
 				A6F037B61B73FBF000E82ECC /* PBXTargetDependency */,
@@ -298,6 +299,7 @@
 		A60F748C17A0304A00A6160F /* variablelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F748B17A0304900A6160F /* variablelist.cpp */; };
 		A60F748D17A030F800A6160F /* calculator_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F747517A02EB700A6160F /* calculator_pi.cpp */; };
 		A60F748E17A0312200A6160F /* calculatorgui_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F747717A02EE600A6160F /* calculatorgui_impl.cpp */; };
+		A6148F8E1CD7E2A4000CBF74 /* libDR_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68D5C5F1C6D0E3A00F40F90 /* libDR_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A617AB05194E3B6800E7D443 /* etcpak.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A617AB04194E3B6800E7D443 /* etcpak.cpp */; };
 		A617AB07194E3BC200E7D443 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = A617AB06194E3BC200E7D443 /* lz4.c */; };
 		A617AB09194E3BE400E7D443 /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = A617AB08194E3BE400E7D443 /* lz4hc.c */; };
@@ -321,6 +323,11 @@
 		A6207BAE19A6A34E00215493 /* Stalk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6207BAD19A6A34E00215493 /* Stalk.cpp */; };
 		A627BE5519D5674400BBFC8A /* libobjsearch_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6728C0D19D4327900070B45 /* libobjsearch_pi.dylib */; };
 		A62F3F4B1AE1559700AFD69B /* libchartdldr_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A63220C81AE047E800A52EAC /* libchartdldr_pi.dylib */; };
+		A631BF0C1CD7C6F60038627B /* DR_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A631BF071CD7C2970038627B /* DR_pi.cpp */; };
+		A631BF0D1CD7C6F60038627B /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A631BF081CD7C2B10038627B /* icons.cpp */; };
+		A631BF0E1CD7C6F60038627B /* DRgui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A631BF091CD7C2CF0038627B /* DRgui.cpp */; };
+		A631BF0F1CD7C6F60038627B /* DRgui_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A631BF0A1CD7C2EA0038627B /* DRgui_impl.cpp */; };
+		A631BF101CD7C6F60038627B /* NavFunc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A631BF0B1CD7C3070038627B /* NavFunc.cpp */; };
 		A63220D31AE04CCE00A52EAC /* chartdldr_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220D21AE04CCE00A52EAC /* chartdldr_pi.cpp */; };
 		A63220D51AE04D1400A52EAC /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220D41AE04D1400A52EAC /* icons.cpp */; };
 		A63220D71AE04D4400A52EAC /* chartdldrgui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63220D61AE04D4400A52EAC /* chartdldrgui.cpp */; };
@@ -486,8 +493,6 @@
 		A683CEC11958BC48004A0137 /* WatchdogDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A683CEC01958BC48004A0137 /* WatchdogDialog.cpp */; };
 		A683CEC51958BC7C004A0137 /* WatchdogUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A683CEC41958BC7C004A0137 /* WatchdogUI.cpp */; };
 		A686855D1888546800427E41 /* s63chart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB2B18873DDF00893250 /* s63chart.cpp */; };
-		A68D5C601C6D0F4800F40F90 /* goodanchorage_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68D5C4D1C6D0D4A00F40F90 /* goodanchorage_pi.cpp */; };
-		A68D5C611C6D0F4800F40F90 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68D5C4C1C6D0D2E00F40F90 /* icons.cpp */; };
 		A68EA3E218D0E41600E8AC13 /* OCPNsenc in CopyFiles */ = {isa = PBXBuildFile; fileRef = A68EA3E018D0E39A00E8AC13 /* OCPNsenc */; };
 		A68EA3E318D0E44300E8AC13 /* libs63_pi.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = A68EAB02188739ED00893250 /* libs63_pi.dylib */; };
 		A68EAB2818873DA300893250 /* mygeom63.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68EAB2718873DA300893250 /* mygeom63.cpp */; };
@@ -528,8 +533,6 @@
 		A6AFFE691A29E0A900D10C76 /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6AFFE681A29E0A900D10C76 /* TexFont.cpp */; };
 		A6B1506F1B3430B6007DC7B4 /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B1506E1B3430B6007DC7B4 /* TexFont.cpp */; };
 		A6B150711B3430D9007DC7B4 /* wddc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B150701B3430D9007DC7B4 /* wddc.cpp */; };
-		A6B426CA1C7F58BE008C3065 /* GribV1Record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B426C81C7F5839008C3065 /* GribV1Record.cpp */; };
-		A6B426CD1C7F5F92008C3065 /* GribV2Record.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B426CC1C7F5F92008C3065 /* GribV2Record.cpp */; };
 		A6B4A55417A51C6F00E3A5D0 /* weather_routing_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55317A51C6F00E3A5D0 /* weather_routing_pi.cpp */; };
 		A6B4A55617A51CA000E3A5D0 /* WeatherRouting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55517A51CA000E3A5D0 /* WeatherRouting.cpp */; };
 		A6B4A55817A51CC800E3A5D0 /* ConfigurationDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6B4A55717A51CC800E3A5D0 /* ConfigurationDialog.cpp */; };
@@ -824,6 +827,13 @@
 			remoteGlobalIDString = A60F745B17A0217D00A6160F;
 			remoteInfo = calculator_pi;
 		};
+		A6148F8C1CD7E1D1000CBF74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A68D5C4E1C6D0E3A00F40F90;
+			remoteInfo = DR_pi;
+		};
 		A62F3F491AE13D9200AFD69B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
@@ -1065,6 +1075,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				A6148F8E1CD7E2A4000CBF74 /* libDR_pi.dylib in Copy Files */,
 				A6F037B71B73FC2900E82ECC /* libdraw_pi.dylib in Copy Files */,
 				A669B20D1B37496900C440BF /* libac_pi.dylib in Copy Files */,
 				A68035B41B2890D7007A4045 /* libnmeaconverter_pi.dylib in Copy Files */,
@@ -1541,6 +1552,16 @@
 		A630F3211C4FB480007706A5 /* slider.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = slider.svg; path = plugins/grib_pi/data/slider.svg; sourceTree = "<group>"; };
 		A630F3221C4FB480007706A5 /* stop.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = stop.svg; path = plugins/grib_pi/data/stop.svg; sourceTree = "<group>"; };
 		A630F3231C4FB480007706A5 /* zoomto.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = zoomto.svg; path = plugins/grib_pi/data/zoomto.svg; sourceTree = "<group>"; };
+		A631BF021CD7C1EE0038627B /* DR_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DR_pi.h; path = plugins/DR_pi/src/DR_pi.h; sourceTree = "<group>"; };
+		A631BF031CD7C2130038627B /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/DR_pi/src/icons.h; sourceTree = "<group>"; };
+		A631BF041CD7C2330038627B /* DRgui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DRgui.h; path = plugins/DR_pi/src/DRgui.h; sourceTree = "<group>"; };
+		A631BF051CD7C2560038627B /* DRgui_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DRgui_impl.h; path = plugins/DR_pi/src/DRgui_impl.h; sourceTree = "<group>"; };
+		A631BF061CD7C2790038627B /* NavFunc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavFunc.h; path = plugins/DR_pi/src/NavFunc.h; sourceTree = "<group>"; };
+		A631BF071CD7C2970038627B /* DR_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DR_pi.cpp; path = plugins/DR_pi/src/DR_pi.cpp; sourceTree = "<group>"; };
+		A631BF081CD7C2B10038627B /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/DR_pi/src/icons.cpp; sourceTree = "<group>"; };
+		A631BF091CD7C2CF0038627B /* DRgui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DRgui.cpp; path = plugins/DR_pi/src/DRgui.cpp; sourceTree = "<group>"; };
+		A631BF0A1CD7C2EA0038627B /* DRgui_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DRgui_impl.cpp; path = plugins/DR_pi/src/DRgui_impl.cpp; sourceTree = "<group>"; };
+		A631BF0B1CD7C3070038627B /* NavFunc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NavFunc.cpp; path = plugins/DR_pi/src/NavFunc.cpp; sourceTree = "<group>"; };
 		A63220C81AE047E800A52EAC /* libchartdldr_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libchartdldr_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A63220CC1AE04B7A00A52EAC /* chartdldr_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartdldr_pi.h; path = plugins/chartdldr_pi/src/chartdldr_pi.h; sourceTree = "<group>"; };
 		A63220CD1AE04BAC00A52EAC /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/chartdldr_pi/src/icons.h; sourceTree = "<group>"; };
@@ -1818,7 +1839,7 @@
 		A68D5C4B1C6D0D0C00F40F90 /* goodanchorage_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = goodanchorage_pi.h; path = plugins/goodanchorage_pi/src/goodanchorage_pi.h; sourceTree = "<group>"; };
 		A68D5C4C1C6D0D2E00F40F90 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/goodanchorage_pi/src/icons.cpp; sourceTree = "<group>"; };
 		A68D5C4D1C6D0D4A00F40F90 /* goodanchorage_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = goodanchorage_pi.cpp; path = plugins/goodanchorage_pi/src/goodanchorage_pi.cpp; sourceTree = "<group>"; };
-		A68D5C5F1C6D0E3A00F40F90 /* libgoodanchorage_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libgoodanchorage_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		A68D5C5F1C6D0E3A00F40F90 /* libDR_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDR_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A68EA3E018D0E39A00E8AC13 /* OCPNsenc */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = OCPNsenc; path = plugins/S63_pi/buildosx/OCPNsenc/OCPNsenc; sourceTree = "<group>"; };
 		A68EAB02188739ED00893250 /* libs63_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libs63_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A68EAB0618873B5500893250 /* mygeom63.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mygeom63.h; path = plugins/S63_pi/src/mygeom63.h; sourceTree = "<group>"; };
@@ -1887,11 +1908,7 @@
 		A6AFFE681A29E0A900D10C76 /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/grib_pi/src/TexFont.cpp; sourceTree = "<group>"; };
 		A6B1506E1B3430B6007DC7B4 /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/watchdog_pi/src/TexFont.cpp; sourceTree = "<group>"; };
 		A6B150701B3430D9007DC7B4 /* wddc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wddc.cpp; path = plugins/watchdog_pi/src/wddc.cpp; sourceTree = "<group>"; };
-		A6B426C81C7F5839008C3065 /* GribV1Record.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GribV1Record.cpp; path = plugins/grib_pi/src/GribV1Record.cpp; sourceTree = "<group>"; };
-		A6B426C91C7F5896008C3065 /* GribV1Record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribV1Record.h; path = plugins/grib_pi/src/GribV1Record.h; sourceTree = "<group>"; };
 		A6B426CB1C7F59D9008C3065 /* GribReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribReader.h; path = plugins/grib_pi/src/GribReader.h; sourceTree = "<group>"; };
-		A6B426CC1C7F5F92008C3065 /* GribV2Record.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GribV2Record.cpp; path = plugins/grib_pi/src/GribV2Record.cpp; sourceTree = "<group>"; };
-		A6B426CE1C7F5FB4008C3065 /* GribV2Record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribV2Record.h; path = plugins/grib_pi/src/GribV2Record.h; sourceTree = "<group>"; };
 		A6B4A53917A515FA00E3A5D0 /* libweather_routing_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libweather_routing_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6B4A53E17A5174300E3A5D0 /* weather_routing_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = weather_routing_pi.h; path = plugins/weather_routing_pi/src/weather_routing_pi.h; sourceTree = "<group>"; };
 		A6B4A53F17A5177500E3A5D0 /* WeatherRouting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeatherRouting.h; path = plugins/weather_routing_pi/src/WeatherRouting.h; sourceTree = "<group>"; };
@@ -2371,8 +2388,6 @@
 				A65034D9186845BB00301CE7 /* folder.xpm */,
 				A65CBD8C1B08E6E100549D28 /* CursorData.h */,
 				A65CBD8D1B08E70F00549D28 /* GrabberWin.h */,
-				A6B426C91C7F5896008C3065 /* GribV1Record.h */,
-				A6B426CE1C7F5FB4008C3065 /* GribV2Record.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -2763,6 +2778,7 @@
 				A680359A1B28823A007A4045 /* nmeaconverter_pi */,
 				A669B1E11B372BB300C440BF /* ac_pi */,
 				A6DB33411B736AEE00163272 /* draw_pi */,
+				A631BEFF1CD7C18B0038627B /* DR_pi */,
 				A68D5C471C6D0C6600F40F90 /* goodanchorage_pi */,
 			);
 			name = Sources;
@@ -2989,8 +3005,6 @@
 				A6AFFE681A29E0A900D10C76 /* TexFont.cpp */,
 				A65CBD8E1B08E73500549D28 /* CursorData.cpp */,
 				A65CBD901B08E76300549D28 /* GrabberWin.cpp */,
-				A6B426C81C7F5839008C3065 /* GribV1Record.cpp */,
-				A6B426CC1C7F5F92008C3065 /* GribV2Record.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3151,6 +3165,39 @@
 				A60F747217A02E4900A6160F /* functions.h */,
 				A60F749717A0338600A6160F /* parser.h */,
 				A60F747417A02E8C00A6160F /* variablelist.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		A631BEFF1CD7C18B0038627B /* DR_pi */ = {
+			isa = PBXGroup;
+			children = (
+				A631BF011CD7C1B90038627B /* Header Files */,
+				A631BF001CD7C1A90038627B /* Source Files */,
+			);
+			name = DR_pi;
+			sourceTree = "<group>";
+		};
+		A631BF001CD7C1A90038627B /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				A631BF071CD7C2970038627B /* DR_pi.cpp */,
+				A631BF081CD7C2B10038627B /* icons.cpp */,
+				A631BF091CD7C2CF0038627B /* DRgui.cpp */,
+				A631BF0A1CD7C2EA0038627B /* DRgui_impl.cpp */,
+				A631BF0B1CD7C3070038627B /* NavFunc.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		A631BF011CD7C1B90038627B /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				A631BF021CD7C1EE0038627B /* DR_pi.h */,
+				A631BF031CD7C2130038627B /* icons.h */,
+				A631BF041CD7C2330038627B /* DRgui.h */,
+				A631BF051CD7C2560038627B /* DRgui_impl.h */,
+				A631BF061CD7C2790038627B /* NavFunc.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -4023,7 +4070,7 @@
 				A68035AF1B288508007A4045 /* libnmeaconverter_pi.dylib */,
 				A669B1E01B372B7400C440BF /* libac_pi.dylib */,
 				A6DB33551B736C0400163272 /* libdraw_pi.dylib */,
-				A68D5C5F1C6D0E3A00F40F90 /* libgoodanchorage_pi.dylib */,
+				A68D5C5F1C6D0E3A00F40F90 /* libDR_pi.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4516,9 +4563,9 @@
 			productReference = A683CEB01958A550004A0137 /* libwatchdog_pi.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		A68D5C4E1C6D0E3A00F40F90 /* goodanchorage_pi */ = {
+		A68D5C4E1C6D0E3A00F40F90 /* DR_pi */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A68D5C5C1C6D0E3A00F40F90 /* Build configuration list for PBXNativeTarget "goodanchorage_pi" */;
+			buildConfigurationList = A68D5C5C1C6D0E3A00F40F90 /* Build configuration list for PBXNativeTarget "DR_pi" */;
 			buildPhases = (
 				A68D5C4F1C6D0E3A00F40F90 /* Sources */,
 				A68D5C5B1C6D0E3A00F40F90 /* ShellScript */,
@@ -4527,9 +4574,9 @@
 			);
 			dependencies = (
 			);
-			name = goodanchorage_pi;
+			name = DR_pi;
 			productName = gradar_pi;
-			productReference = A68D5C5F1C6D0E3A00F40F90 /* libgoodanchorage_pi.dylib */;
+			productReference = A68D5C5F1C6D0E3A00F40F90 /* libDR_pi.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		A68EAB01188739ED00893250 /* s63_pi */ = {
@@ -4715,7 +4762,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0730;
 			};
 			buildConfigurationList = B3FF15EAE22C49A1BCA88BD8 /* Build configuration list for PBXProject "OpenCPN" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -4760,7 +4807,7 @@
 				A68035A21B288508007A4045 /* nmeaconverter_pi */,
 				A669B1D31B372B7400C440BF /* ac_pi */,
 				A6DB33441B736C0400163272 /* draw_pi */,
-				A68D5C4E1C6D0E3A00F40F90 /* goodanchorage_pi */,
+				A68D5C4E1C6D0E3A00F40F90 /* DR_pi */,
 			);
 		};
 /* End PBXProject section */
@@ -4860,7 +4907,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libgoodanchorage_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libgoodanchorage_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libgoodanchorage_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libgoodanchorage_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libgoodanchorage_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libgoodanchorage_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libgoodanchorage_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libgoodanchorage_pi.dylib\n";
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libDR_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libDR_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libDR_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libDR_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libDR_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libDR_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libDR_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libDR_pi.dylib\n";
 			showEnvVarsInLog = 0;
 		};
 		A6B7B8F91AD87335004FFAF2 /* ShellScript */ = {
@@ -5603,8 +5650,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A68D5C601C6D0F4800F40F90 /* goodanchorage_pi.cpp in Sources */,
-				A68D5C611C6D0F4800F40F90 /* icons.cpp in Sources */,
+				A631BF0C1CD7C6F60038627B /* DR_pi.cpp in Sources */,
+				A631BF0D1CD7C6F60038627B /* icons.cpp in Sources */,
+				A631BF0E1CD7C6F60038627B /* DRgui.cpp in Sources */,
+				A631BF0F1CD7C6F60038627B /* DRgui_impl.cpp in Sources */,
+				A631BF101CD7C6F60038627B /* NavFunc.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5749,11 +5799,9 @@
 				A6B5A5D919EFD3B50039E142 /* smapi.cpp in Sources */,
 				2395960E2AA64CE2B47A4BEE /* email.cpp in Sources */,
 				441BAF44978942D3B1CA434A /* icons.cpp in Sources */,
-				A6B426CD1C7F5F92008C3065 /* GribV2Record.cpp in Sources */,
 				487043D2A2EB4160A23D94BB /* GribReader.cpp in Sources */,
 				21D7520CC5F44140B44B3DA5 /* GribRecord.cpp in Sources */,
 				A65034DB186845F700301CE7 /* GribTable.cpp in Sources */,
-				A6B426CA1C7F58BE008C3065 /* GribV1Record.cpp in Sources */,
 				0A749BDC25E8406E9BC8337A /* zuFile.cpp in Sources */,
 				E4CB04FE62D9464D9BAC2880 /* IsoLine.cpp in Sources */,
 			);
@@ -5954,6 +6002,11 @@
 			isa = PBXTargetDependency;
 			target = A60F745B17A0217D00A6160F /* calculator_pi */;
 			targetProxy = A60F749517A0321500A6160F /* PBXContainerItemProxy */;
+		};
+		A6148F8D1CD7E1D1000CBF74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A68D5C4E1C6D0E3A00F40F90 /* DR_pi */;
+			targetProxy = A6148F8C1CD7E1D1000CBF74 /* PBXContainerItemProxy */;
 		};
 		A62F3F4A1AE13D9200AFD69B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9727,7 +9780,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					ac_pi_EXPORTS,
+					DR_pi_EXPORTS,
 					"'_FILE_OFFSET_BITS=64'",
 					WXUSINGDLL,
 					__WXMAC__,
@@ -9742,10 +9795,7 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/src",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/wxsqlite3-3.1.1/include",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/sqlite-amalgamation-3080600",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/DR_pi/src",
 					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
 					"/usr/local/include/wx-3.1",
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
@@ -9839,7 +9889,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					ac_pi_EXPORTS,
+					DR_pi_EXPORTS,
 					"'_FILE_OFFSET_BITS=64'",
 					WXUSINGDLL,
 					__WXMAC__,
@@ -9854,10 +9904,7 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/src",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/wxsqlite3-3.1.1/include",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/ac_pi/sqlite-amalgamation-3080600",
-					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/wxcurl",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/DR_pi/src",
 					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
 					"/usr/local/include/wx-3.1",
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
@@ -12824,7 +12871,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		A68D5C5C1C6D0E3A00F40F90 /* Build configuration list for PBXNativeTarget "goodanchorage_pi" */ = {
+		A68D5C5C1C6D0E3A00F40F90 /* Build configuration list for PBXNativeTarget "DR_pi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A68D5C5D1C6D0E3A00F40F90 /* Debug */,
