@@ -15,6 +15,7 @@ extern ColorScheme global_color_scheme;
 extern IDX_entry *gpIDX;
 extern int gpIDXn;
 extern TCMgr *ptcmgr;
+extern wxString g_locale;
 
 enum
 {
@@ -637,7 +638,7 @@ void TCWin::OnPaint( wxPaintEvent& event )
         int h = station_offset / 60;
         int m = station_offset - ( h * 60 );
         if( m_graphday.IsDST() ) h += 1;
-        m_stz.Printf( _T("Z %+03d:%02d"), h, m );
+        m_stz.Printf( _T("UTC %+03d:%02d"), h, m );
 
 
 
@@ -668,11 +669,13 @@ void TCWin::OnPaint( wxPaintEvent& event )
         dc.SetFont( *pSFont );
         dc.GetTextExtent( m_stz, &w, &h );
         dc.DrawText( m_stz, x / 2 - w / 2, y - 2 * m_button_height );
-#ifdef __WXOSX__
-        wxString sdate = m_graphday.Format( _T ( "%A, %d. %b %Y" ) );
-#else
-        wxString sdate = m_graphday.Format( _T ( "%A %b %d, %Y" ) );
-#endif
+
+        wxString sdate;
+        if(g_locale == _T("en_US"))
+            sdate = m_graphday.Format( _T ( "%A %b %d, %Y" ) );
+        else
+            sdate =  m_graphday.Format( _T ( "%A, %d. %b %Y" ) );
+
         dc.SetFont( *pMFont );
         dc.GetTextExtent( sdate, &w, &h );
         dc.DrawText( sdate, x / 2 - w / 2, y - 1.5 * m_button_height );

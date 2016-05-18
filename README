@@ -44,7 +44,7 @@ Warum überhaupt diese eigene OpenCPN Version?
 a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    El Capitan (10.11) Ältere Versionen funktionieren nicht mehr. Es soll
    soweit wie möglich das Mac OS X Betriebssystem unterstützt werden,
-   einschl. Mac Menüs, Mac Hilfe usw. El Capitane (10.11) wird ab
+   einschl. Mac Menüs, Mac Hilfe usw. El Capitan (10.11) wird ab
    Erscheinen Ende September 2015 nur noch unterstützt, ältere Versionen
    nicht mehr.
 
@@ -79,7 +79,7 @@ Compiler:
 Xcode 7.3.1
 Apple LLVM version 7.0.2 (clang-700.1.81) (based on LLVM 3.6.0svn)
 Target: x86_64-apple-darwin15.3.0
-SDK 10.11.4 El Capitan
+SDK 10.11.5 El Capitan
 Thread model: posix
 
 wxWidgets Direktive:
@@ -104,5 +104,5 @@ Siehe batchwx.sh bzw. Xcode Scripts.
 
 wxCurl wurde auf diese Art ebenfalls als dynamische Library compiliert.
 -----------------------------------------------------------------------
-03. Mai 2016
+18. Mai 2016
 
