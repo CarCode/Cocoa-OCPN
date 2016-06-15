@@ -635,7 +635,7 @@ void Quilt::InvalidateAllQuiltPatchs( void )
 ArrayOfInts Quilt::GetQuiltIndexArray( void )
 {
     return m_index_array;
-
+/*   Code will never be executed
     ArrayOfInts ret;
 
     if( m_bbusy )
@@ -651,7 +651,7 @@ ArrayOfInts Quilt::GetQuiltIndexArray( void )
 
     m_bbusy = false;
 
-    return ret;
+    return ret; */
 }
 
 bool Quilt::IsQuiltDelta( ViewPort &vp )

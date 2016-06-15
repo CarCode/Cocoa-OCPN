@@ -3440,8 +3440,10 @@ inline int int_locate_endpoint(ipoint_t *v, ipoint_t *vo, int r)
 
 //new code
       return int_locate_endpoint_a(v, vo, r);
+#ifdef __WXOSX__
+/*
 
-      nrecurse++;
+      nrecurse++;  // Code will never be executed
 //      int ir;
 //      for(ir=0 ; ir < nrecurse ; ir++)
 //            printf(" ");
@@ -3458,14 +3460,14 @@ inline int int_locate_endpoint(ipoint_t *v, ipoint_t *vo, int r)
                   break;
 
             case T_Y:
-                  if (int_greater_than(v, &rptr->yval)) /* above */
+                  if (int_greater_than(v, &rptr->yval)) // above
                   {
                         if(debug)printf("B\n");
                         ret =  int_locate_endpoint(v, vo, rptr->right);
                   }
-                  else if (int_equal_to(v, &rptr->yval)) /* the point is already */
-                  {                                 /* inserted. */
-                        if (int_greater_than(vo, &rptr->yval)) /* above */
+                  else if (int_equal_to(v, &rptr->yval)) // the point is already inserted
+                  {
+                        if (int_greater_than(vo, &rptr->yval)) // above
                         {
                               if(debug)printf("C\n");
                               ret =  int_locate_endpoint(v, vo, rptr->right);
@@ -3473,13 +3475,13 @@ inline int int_locate_endpoint(ipoint_t *v, ipoint_t *vo, int r)
                         else
                         {
                               if(debug)printf("D\n");
-                              ret =  int_locate_endpoint(v, vo, rptr->left); /* below */
+                              ret =  int_locate_endpoint(v, vo, rptr->left); // below
                         }
                   }
                   else
                   {
                         if(debug)printf("E\n");
-                        ret =  int_locate_endpoint(v, vo, rptr->left); /* below */
+                        ret =  int_locate_endpoint(v, vo, rptr->left); // below
                   }
                   break;
 
@@ -3487,40 +3489,40 @@ inline int int_locate_endpoint(ipoint_t *v, ipoint_t *vo, int r)
                   if (int_equal_to(v, &iseg[rptr->segnum].v0) ||
                       int_equal_to(v, &iseg[rptr->segnum].v1))
                   {
-                        if (v->y == vo->y) /* horizontal segment */
+                        if (v->y == vo->y) // horizontal segment
                         {
                               if (vo->x < v->x)
                               {
                                     if(debug)printf("F\n");
-                                    ret =  int_locate_endpoint(v, vo, rptr->left); /* left */
+                                    ret =  int_locate_endpoint(v, vo, rptr->left); // left
                               }
                               else
                               {
                                     if(debug)printf("G\n");
-                                    ret =  int_locate_endpoint(v, vo, rptr->right); /* right */
+                                    ret =  int_locate_endpoint(v, vo, rptr->right); // right
                               }
                         }
 
                         else if (int_is_left_of(rptr->segnum, vo))
                         {
                               if(debug)printf("H\n");
-                              ret =  int_locate_endpoint(v, vo, rptr->left); /* left */
+                              ret =  int_locate_endpoint(v, vo, rptr->left); // left
                         }
                         else
                         {
                               if(debug)printf("I\n");
-                              ret =  int_locate_endpoint(v, vo, rptr->right); /* right */
+                              ret =  int_locate_endpoint(v, vo, rptr->right); // right
                         }
                   }
                   else if (int_is_left_of(rptr->segnum, v))
                   {
                         if(debug)printf("J\n");
-                        ret =  int_locate_endpoint(v, vo, rptr->left); /* left */
+                        ret =  int_locate_endpoint(v, vo, rptr->left); // left
                   }
                   else
                   {
                         if(debug)printf("K\n");
-                        ret =  int_locate_endpoint(v, vo, rptr->right); /* right */
+                        ret =  int_locate_endpoint(v, vo, rptr->right); // right
                   }
                   break;
 
@@ -3532,9 +3534,10 @@ inline int int_locate_endpoint(ipoint_t *v, ipoint_t *vo, int r)
 
       nrecurse--;
       return ret;
+#ifdef __WXOSX__
+ */
+#endif
 }
-
-
 
 /* Update the roots stored for each of the endpoints of the segment.
  * This is done to speed up the location-query for the endpoint when

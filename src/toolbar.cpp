@@ -1970,15 +1970,15 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
 
     //  could cache this in the tool...
     //  A bit of a hack here.  We only scale tools if they are to be magnified globally
-    if(0/*m_sizefactor > 1.0*/ )
-    {
+//    if(0/*m_sizefactor > 1.0*/ )  // Code will never be executed
+/*    {
         wxImage scaled_image = bmp.ConvertToImage();
         wxBitmap sbmp = wxBitmap(scaled_image.Scale(tool->m_width, tool->m_height, wxIMAGE_QUALITY_HIGH));
         dc.DrawBitmap( sbmp, drawAt );
         tool->last_rect = wxRect(drawAt.x, drawAt.y, sbmp.GetWidth(), sbmp.GetHeight());
 
     }
-    else
+    else */
     {
         dc.DrawBitmap( bmp, drawAt );
         tool->last_rect = wxRect(drawAt.x, drawAt.y, bmp.GetWidth(), bmp.GetHeight());

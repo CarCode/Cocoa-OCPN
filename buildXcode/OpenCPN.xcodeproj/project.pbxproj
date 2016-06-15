@@ -300,6 +300,7 @@
 		A60F748D17A030F800A6160F /* calculator_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F747517A02EB700A6160F /* calculator_pi.cpp */; };
 		A60F748E17A0312200A6160F /* calculatorgui_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60F747717A02EE600A6160F /* calculatorgui_impl.cpp */; };
 		A6148F8E1CD7E2A4000CBF74 /* libDR_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68D5C5F1C6D0E3A00F40F90 /* libDR_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A61498531D10B1F2008AE390 /* foreignDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A61498521D10AA0F008AE390 /* foreignDB.cpp */; };
 		A617AB05194E3B6800E7D443 /* etcpak.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A617AB04194E3B6800E7D443 /* etcpak.cpp */; };
 		A617AB07194E3BC200E7D443 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = A617AB06194E3BC200E7D443 /* lz4.c */; };
 		A617AB09194E3BE400E7D443 /* lz4hc.c in Sources */ = {isa = PBXBuildFile; fileRef = A617AB08194E3BE400E7D443 /* lz4hc.c */; };
@@ -1488,6 +1489,8 @@
 		A60F748B17A0304900A6160F /* variablelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = variablelist.cpp; path = plugins/calculator_pi/src/expression_parser/variablelist.cpp; sourceTree = "<group>"; };
 		A60F749717A0338600A6160F /* parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = parser.h; path = plugins/calculator_pi/src/expression_parser/parser.h; sourceTree = "<group>"; };
 		A612804B183393AF00EFF67B /* GribRecordSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribRecordSet.h; path = plugins/grib_pi/src/GribRecordSet.h; sourceTree = "<group>"; };
+		A61498511D10A9E6008AE390 /* foreignDB.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = foreignDB.hpp; path = plugins/Squiddio_pi/src/foreignDB.hpp; sourceTree = "<group>"; };
+		A61498521D10AA0F008AE390 /* foreignDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = foreignDB.cpp; path = plugins/Squiddio_pi/src/foreignDB.cpp; sourceTree = "<group>"; };
 		A617AAF2194E37DF00E7D443 /* lz4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lz4.h; path = src/texcmp/lz4/lz4.h; sourceTree = "<group>"; };
 		A617AAF3194E380700E7D443 /* lz4hc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lz4hc.h; path = src/texcmp/lz4/lz4hc.h; sourceTree = "<group>"; };
 		A617AAF4194E384D00E7D443 /* alpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = alpha.h; path = src/texcmp/squish/alpha.h; sourceTree = "<group>"; };
@@ -1961,8 +1964,6 @@
 		A6C704B91C451FF30083746C /* Dashboard_rollover.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Dashboard_rollover.svg; path = plugins/dashboard_pi/data/Dashboard_rollover.svg; sourceTree = "<group>"; };
 		A6C704BA1C451FF30083746C /* Dashboard_toggled.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Dashboard_toggled.svg; path = plugins/dashboard_pi/data/Dashboard_toggled.svg; sourceTree = "<group>"; };
 		A6C704BB1C451FF30083746C /* Dashboard.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Dashboard.svg; path = plugins/dashboard_pi/data/Dashboard.svg; sourceTree = "<group>"; };
-		A6C964801C79EAE6003780DA /* foreignDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = foreignDB.cpp; sourceTree = "<group>"; };
-		A6C964811C79EAE6003780DA /* foreignDB.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = foreignDB.hpp; sourceTree = "<group>"; };
 		A6CE035D1AC9DA1E0025E180 /* DecoderOptionsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DecoderOptionsDialog.cpp; path = plugins/weatherfax_pi/src/DecoderOptionsDialog.cpp; sourceTree = "<group>"; };
 		A6CF665F18D38216004DF279 /* georef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = georef.h; path = plugins/gradar_pi/src/georef.h; sourceTree = "<group>"; };
 		A6CF666018D38235004DF279 /* georef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = georef.cpp; path = plugins/gradar_pi/src/georef.cpp; sourceTree = "<group>"; };
@@ -3407,6 +3408,7 @@
 				A6E6CD121C6E548700C07649 /* gpxdocument.h */,
 				A671BCD419BE47F100019119 /* tinystr.h */,
 				A671BCD519BE480900019119 /* tinyxml.h */,
+				A61498511D10A9E6008AE390 /* foreignDB.hpp */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -3423,8 +3425,7 @@
 				A671BCDA19BE487F00019119 /* Poi.cpp */,
 				A671BCDC19BE489900019119 /* PoiMan.cpp */,
 				A671BCDE19BE48BB00019119 /* pugixml.cpp */,
-				A6C964801C79EAE6003780DA /* foreignDB.cpp */,
-				A6C964811C79EAE6003780DA /* foreignDB.hpp */,
+				A61498521D10AA0F008AE390 /* foreignDB.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -5602,6 +5603,7 @@
 				A671BCD919BE485A00019119 /* NavObjectCollection.cpp in Sources */,
 				A671BCDB19BE487F00019119 /* Poi.cpp in Sources */,
 				A671BCDD19BE489900019119 /* PoiMan.cpp in Sources */,
+				A61498531D10B1F2008AE390 /* foreignDB.cpp in Sources */,
 				A671BCDF19BE48BB00019119 /* pugixml.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

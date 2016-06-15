@@ -8298,7 +8298,8 @@ void ChartCanvas::RemovePointFromRoute( RoutePoint* point, Route* route ) {
     InvalidateGL();
 }
 
-void ChartCanvas::ShowMarkPropertiesDialog( RoutePoint* markPoint ) {
+void ChartCanvas::ShowMarkPropertiesDialog( RoutePoint* markPoint )
+{
     pMarkPropDialog = MarkInfoImpl::getInstance( this );     // There is one global instance of the MarkProp Dialog
 
     if( 1/*g_bresponsive*/ ) {
@@ -11333,10 +11334,10 @@ int GetIntEndian(unsigned char *s)
     if(1)
         for(i=sizeof(int)-1; i>-1; --i)
             *p++ = s[i];
-    else
+/*    else  Code will never be executed
         for(i=0; i<(int)sizeof(int); ++i)
             *p++ = s[i];
-
+*/
     return ret;
 }
 
@@ -11351,10 +11352,10 @@ unsigned short GetShortEndian(unsigned char *s)
     if(1)
         for(i=sizeof(unsigned short)-1; i>-1; --i)
             *p++ = s[i];
-    else
+/*    else  Code will never be executed
         for(i=0; i<(int)sizeof(unsigned short); ++i)
             *p++ = s[i];
-
+*/
     return ret;
 }
 

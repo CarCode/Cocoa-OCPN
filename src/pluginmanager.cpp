@@ -62,6 +62,10 @@
 #include "mygeom.h"
 #include "OCPNPlatform.h"
 
+#ifdef __WXOSX__
+#include "ocpn_plugin.h"
+#endif
+
 #ifdef __OCPN__ANDROID__
 #include "androidUTIL.h"
 #endif
@@ -108,12 +112,12 @@ extern wxString         g_locale;
 extern bool             g_btouch;
 
 unsigned int      gs_plib_flags;
-#ifndef __WXOSX__
+//#ifndef __WXOSX__
 enum
 {
     CurlThreadId = wxID_HIGHEST+1
 };
-#endif
+//#endif
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(Plugin_WaypointList);
 WX_DEFINE_LIST(Plugin_HyperlinkList);
@@ -235,14 +239,14 @@ PlugInToolbarToolContainer::~PlugInToolbarToolContainer()
 //
 //-----------------------------------------------------------------------------------------------------
 PlugInManager *s_ppim;
-#ifndef __WXOSX__
+//#ifndef __WXOSX__
 BEGIN_EVENT_TABLE( PlugInManager, wxEvtHandler )
-//#ifdef __OCPN_USE_CURL__
+#ifdef __OCPN_USE_CURL__
 EVT_CURL_END_PERFORM( CurlThreadId, PlugInManager::OnEndPerformCurlDownload )
 EVT_CURL_DOWNLOAD( CurlThreadId, PlugInManager::OnCurlDownload )
-//#endif
-END_EVENT_TABLE()
 #endif
+END_EVENT_TABLE()
+//#endif
 PlugInManager::PlugInManager(MyFrame *parent)
 {
 #ifndef __OCPN__ANDROID__
@@ -5571,7 +5575,11 @@ _OCPN_DLStatus OCPN_postDataHttp( const wxString& url, const wxString& parameter
     
     if( res )
     {
+#ifdef __WXOSX__
+        result = wxString(post.GetResponseBody().c_str()); //, wxConvUTF8);
+#else
         result = wxString(post.GetResponseBody().c_str(), wxConvUTF8);
+#endif
         return OCPN_DL_NO_ERROR;
     } else
         result = wxEmptyString;
@@ -5590,7 +5598,7 @@ bool OCPN_isOnline()
 #ifdef __OCPN__ANDROID__
     //TODO
 #else
-    if (wxDateTime::GetTimeNow() > g_pi_manager->m_last_online_chk + ONLINE_CHECK_RETRY)
+    if (wxDateTime::GetTimeNow() > g_pi_manager->m_last_online_chk + 30) //ONLINE_CHECK_RETRY)
     {
         wxCurlHTTP get;
         get.Head( _T("http://yahoo.com/") );
@@ -5676,7 +5684,11 @@ bool PlugInManager::HandleCurlThreadError(wxCurlThreadError err, wxCurlBaseThrea
         {
             wxString err = wxS("unknown");
             if (p->GetCurlSession())
+#ifdef __WXOSX__
+                err = wxString(p->GetCurlSession()->GetErrorString().c_str()); //, wxConvUTF8);
+#else
                 err = wxString(p->GetCurlSession()->GetErrorString().c_str(), wxConvUTF8);
+#endif
             wxLogError(wxS("Network error: %s"), err.c_str());
         }
             break;

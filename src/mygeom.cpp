@@ -2327,7 +2327,7 @@ int PolyTessGeo::BuildTessGL(void)
                   ty = *ppt++;
             }
 
-            if(0/*bSENC_SM*/)
+            if( (0)/*bSENC_SM*/)
             {
             //  Calculate SM from chart common reference point
                   double easting, northing;

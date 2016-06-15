@@ -346,9 +346,9 @@ private:
       wxArrayString     m_plugin_order;
       void SetPluginOrder( wxString serialized_names );
       wxString GetPluginOrder();
-#ifndef __WXOSX__
+//#ifndef __WXOSX__
 #ifndef __OCPN__ANDROID__
-//#ifdef __OCPN_USE_CURL__
+#ifdef __OCPN_USE_CURL__
 public:
     wxCurlDownloadThread *m_pCurlThread;
     // returns true if the error can be ignored

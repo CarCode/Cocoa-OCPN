@@ -691,6 +691,7 @@ static char nmea_tick_chars[] = { '|', '/', '-', '\\', '|', '/', '-', '\\' };
 static int tick_idx;
 
 int               g_sticky_chart;
+int               g_sticky_projection;
 
 extern wxString OpenCPNVersion; //Gunther
 extern options          *g_pOptions;
@@ -986,7 +987,6 @@ void LoadS57()
 //      Init the s57 chart object, specifying the location of the required csv files
     g_csv_locn = g_Platform->GetSharedDataDir();
     g_csv_locn.Append( _T("s57data") );
-
     if( g_bportable ) {
         g_csv_locn = _T(".");
         appendOSDirSlash( &g_csv_locn );
@@ -1000,7 +1000,6 @@ void LoadS57()
         appendOSDirSlash(&g_SENCPrefix);
         g_SENCPrefix.Append( _T("SENC") );
     }
-
     if( g_bportable ) {
         wxFileName f( g_SENCPrefix );
         if( f.MakeRelativeTo( g_Platform->GetPrivateDataDir() ) )
@@ -1022,7 +1021,6 @@ void LoadS57()
         plib_data = g_UserPresLibData;
         b_force_legacy = true;
     }
-
     ps52plib = new s52plib( plib_data, b_force_legacy );
 
     //  If the library load failed, try looking for the s57 data elsewhere
@@ -1055,7 +1053,6 @@ void LoadS57()
 
         wxLogMessage( _T("Looking for s57data in ") + look_data_dir );
         ps52plib = new s52plib( plib_data );
-
         if( ps52plib->m_bOK ) {
             g_csv_locn = look_data_dir;
 ///???            g_SData_Locn = tentative_SData_Locn;
@@ -1078,8 +1075,7 @@ void LoadS57()
 
         wxLogMessage( _T("Looking for s57data in ") + look_data_dir );
         ps52plib = new s52plib( plib_data );
-
-        if( ps52plib->m_bOK ) g_csv_locn = look_data_dir;
+       if( ps52plib->m_bOK ) g_csv_locn = look_data_dir;
     }
 
     if( ps52plib->m_bOK ) {
@@ -2507,6 +2503,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     m_COGFilterLast = 0.;
 
     g_sticky_chart = -1;
+    g_sticky_projection = -1;
     m_BellsToPlay = 0;
 
     m_resizeTimer.SetOwner(this, RESIZE_TIMER);
@@ -5366,8 +5363,11 @@ void MyFrame::ToggleToolbar( bool b_smooth )
 
 void MyFrame::JumpToPosition( double lat, double lon, double scale )
 {
+    if (lon > 180.0)
+        lon -= 360.0;
     vLat = lat;
     vLon = lon;
+    cc1->StopMovement();
     cc1->m_bFollow = false;
 
     //  is the current chart available at the target location?
@@ -5997,6 +5997,12 @@ void MyFrame::SetupQuiltMode( void )
         //  Re-qualify the quilt reference chart selection
         cc1->AdjustQuiltRefChart(  );
 
+        //  Restore projection type saved on last quilt mode toggle
+        if(g_sticky_projection != -1)
+            cc1->GetVP().SetProjectionType(g_sticky_projection);
+        else
+            cc1->GetVP().SetProjectionType(PROJECTION_MERCATOR);
+
     } else                                                  // going to SC Mode
     {
         ArrayOfInts empty_array;
@@ -6012,7 +6018,7 @@ void MyFrame::SetupQuiltMode( void )
 
 
         g_Piano->SetRoundedRectangles( false );
-
+        g_sticky_projection = cc1->GetVP().m_projection_type;
     }
 
     //    When shifting from quilt to single chart mode, select the "best" single chart to show
@@ -8626,7 +8632,11 @@ void MyFrame::DoPrint( void )
      frame->Initialize();
      frame->Show();
      */
-
+#ifdef __WXGTK__
+    SurfaceToolbar();
+    cc1->SetFocus();
+    Raise();                      // I dunno why...
+#endif
 }
 
 void MyFrame::OnEvtPlugInMessage( OCPN_MsgEvent & event )

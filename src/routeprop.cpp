@@ -2408,6 +2408,9 @@ void RouteProp::OnRoutepropCancelClick( wxCommandEvent& event )
 
     m_bStartNow = false;
 
+#ifdef __WXGTK__
+    gFrame->Raise();
+#endif
     Hide();
     cc1->Refresh( false );
 
@@ -2446,6 +2449,9 @@ void RouteProp::OnRoutepropOkClick( wxCommandEvent& event )
             pRouteManagerDialog->UpdateTrkListCtrl();
     }
 
+#ifdef __WXGTK__
+    gFrame->Raise();
+#endif
     Hide();
     cc1->InvalidateGL();
     cc1->Refresh( false );
@@ -2655,8 +2661,11 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     bSizerArrivalRadius = new wxBoxSizer( wxHORIZONTAL );
     m_staticTextArrivalRadius = new wxStaticText( m_panelBasicProperties, wxID_ANY, _("Arrival Radius"));
     bSizerArrivalRadius->Add( m_staticTextArrivalRadius, 0, wxALL, 0 );
-
+#ifdef __WXOSX__
+    m_textArrivalRadius = new wxTextCtrl( m_panelBasicProperties, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1),wxTE_PROCESS_ENTER );
+#else
     m_textArrivalRadius = new wxTextCtrl( m_panelBasicProperties, wxID_ANY, wxEmptyString);
+#endif
 #ifdef __WXOSX__
     bSizerArrivalRadius->Add( m_textArrivalRadius, 0, wxALL, 5 );
 #else
@@ -2697,9 +2706,13 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 
     wxStaticText* waypointdistanceText = new wxStaticText( m_panelBasicProperties, wxID_STATIC, _("Ring Spacing") );
     waypointradarGrid->Add( waypointdistanceText, 1, wxEXPAND | wxALL, 1 );
-
+#ifdef __WXOSX__
+    m_textWaypointRangeRingsStep = new wxTextCtrl( m_panelBasicProperties, ID_TEXTCTRL, _T(""), wxDefaultPosition,
+                                                  wxSize( 100, -1 ), wxTE_PROCESS_ENTER );
+#else
     m_textWaypointRangeRingsStep = new wxTextCtrl( m_panelBasicProperties, ID_TEXTCTRL, _T(""), wxDefaultPosition,
                                                    wxSize( 100, -1 ), 0 );
+#endif
 #ifdef __WXOSX__
     waypointradarGrid->Add( m_textWaypointRangeRingsStep, 0, wxALL, 4 );
 #else
@@ -2708,7 +2721,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     wxStaticText* waypointunitText = new wxStaticText( m_panelBasicProperties, wxID_STATIC, _("Distance Unit") );
     waypointradarGrid->Add( waypointunitText, 1, wxEXPAND | wxALL, 1 );
 
-    wxString pDistUnitsStrings[] = { _T("Nautical Miles"), _T("Kilometers") };
+    wxString pDistUnitsStrings[] = { _("Nautical Miles"), _("Kilometers") };
     m_choiceWaypointRangeRingsUnits = new wxChoice( m_panelBasicProperties, wxID_ANY, wxDefaultPosition,
                                                     wxSize(250, -1), 2, pDistUnitsStrings );
 #ifdef __WXOSX__
@@ -2902,7 +2915,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     SetMinSize(wxSize(-1, 600));
     RecalculateSize();
     
-    // Connect Events  war: wxEVT_COMMAND_TEXT_ENTER statt wxEVT_COMMAND_TEXT_UPDATED (4x)
+    // Connect Events
     m_textLatitude->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
     m_textLongitude->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
 
@@ -2910,13 +2923,8 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
             wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
     m_textLongitude->Connect( wxEVT_CONTEXT_MENU,
             wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
-#ifdef __WXOSX__
-    m_textArrivalRadius->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnArrivalRadiusChange ), NULL, this );
-    m_textWaypointRangeRingsStep->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnWaypointRangeRingsStepChange ), NULL, this );
-#else
     m_textArrivalRadius->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnArrivalRadiusChange ), NULL, this );
     m_textWaypointRangeRingsStep->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnWaypointRangeRingsStepChange ), NULL, this );
-#endif
     m_textDescription->Connect( wxEVT_COMMAND_TEXT_UPDATED,
             wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
     m_buttonExtDescription->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
@@ -3010,14 +3018,9 @@ void MarkInfoDef::OnWaypointRangeRingSelect( wxCommandEvent& event )
 
 MarkInfoDef::~MarkInfoDef()
 {
-    // Disconnect Events  war: wxEVT_COMMAND_TEXT_ENTER statt wxEVT_COMMAND_TEXT_UPDATED
-#ifdef __WXOSX__
-    m_textLatitude->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-    m_textLongitude->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-#else
+    // Disconnect Events
     m_textLatitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
     m_textLongitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-#endif
     m_textDescription->Disconnect( wxEVT_COMMAND_TEXT_UPDATED,
             wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
     m_textArrivalRadius->Disconnect( wxEVT_COMMAND_TEXT_ENTER,
@@ -3574,6 +3577,11 @@ void MarkInfoImpl::OnMarkInfoOKClick( wxCommandEvent& event )
         SaveChanges(); // write changes to globals and update config
         cc1->RefreshRect( m_pRoutePoint->CurrentRect_in_DC.Inflate( 1000, 100 ), false );
     }
+
+#ifdef __WXGTK__
+    gFrame->Raise();
+#endif
+
     Show( false );
     if( m_pMyLinkList ) {
         delete m_pMyLinkList;
@@ -3622,6 +3630,10 @@ void MarkInfoImpl::OnMarkInfoCancelClick( wxCommandEvent& event )
             }
         }
     }
+
+#ifdef __WXGTK__
+    gFrame->Raise();
+#endif
 
     Show( false );
     delete m_pMyLinkList;

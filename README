@@ -47,9 +47,11 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    einschl. Mac Menüs, Mac Hilfe usw. El Capitan (10.11) wird ab
    Erscheinen Ende September 2015 nur noch unterstützt, ältere Versionen
    nicht mehr.
+   Inzwischen steht macOS Sierra (10.12) vor der Tür und diese OCPN
+   Version wurde bereits dafür compiliert.
 
 b. Diese Version basiert auf Release-Version von wxWidgets 3.1.1 mit
-   entsprechenden dylibs vom 21. März 2016. Die Einbindung der Libs als
+   entsprechenden dylibs vom 15. Juni 2016. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -76,10 +78,10 @@ Größte Änderung ist jedoch die Verwendung von Clang/LLVM mit Xcode statt
 der Befehlszeilen orientierten Cmake Version.
 
 Compiler:
-Xcode 7.3.1
-Apple LLVM version 7.0.2 (clang-700.1.81) (based on LLVM 3.6.0svn)
-Target: x86_64-apple-darwin15.3.0
-SDK 10.11.5 El Capitan
+Xcode Beta 8
+Apple LLVM version 8.0.0 (clang-800.0.24.1) (based on LLVM 3.6.0svn)
+Target: x86_64-apple-darwin15.5.0
+SDK 10.12 Sierra
 Thread model: posix
 
 wxWidgets Direktive:
@@ -90,6 +92,7 @@ Im Sourcen-Tree neues Verzeichnis erstellen z.B. "build-cocoa-debug".
 Im Terminal in dies Verzeichnis wechseln und konfigurieren mit:
 
 ../configure --with-osx_cocoa --enable-debug --enable-shared --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk --with-macosx-version-min=10.10 --enable-mimetype=yes
+ --enable-mediactrl=no
 
 Dann Eingabe von: make
 und schließlich Eingabe von: sudo make install
@@ -104,5 +107,5 @@ Siehe batchwx.sh bzw. Xcode Scripts.
 
 wxCurl wurde auf diese Art ebenfalls als dynamische Library compiliert.
 -----------------------------------------------------------------------
-18. Mai 2016
+15. Juni 2016
 
