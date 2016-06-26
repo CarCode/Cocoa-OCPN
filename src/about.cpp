@@ -61,9 +61,9 @@ wxString OpenCPNVersionAndroid = wxString::Format(_T("Android Version 1.0.0<br>B
 const wxString AboutText =
     wxT("<br>OpenCPN<br>")
 #ifdef __WXOSX__
-    wxT("(c) 2000-2015 Die OpenCPN Autoren<br><br>");
+    wxT("(c) 2000-2016 Die OpenCPN Autoren<br><br>");
 #else
-    wxT("(c) 2000-2015 The OpenCPN Authors<br><br>");
+    wxT("(c) 2000-2016 The OpenCPN Authors<br><br>");
 #endif
 #ifdef __WXOSX__
 const wxString OpenCPNInfo =
@@ -292,29 +292,37 @@ void about::Populate( void )
     if( wxFONTSTYLE_ITALIC == dFont->GetStyle() )
         aboutText.Append( _T("<i>") );
 
-#ifdef __OCPN__ANDROID__    
+#ifdef __OCPN__ANDROID__
     aboutText.Append( AboutText + OpenCPNVersionAndroid  + OpenCPNInfoAlt );
+#elif __WXOSX__
+    wxString wxver(wxVERSION_STRING);
+    wxPlatformInfo platforminfo = wxPlatformInfo::Get();
+    wxString osName, os_name;
+    osName = wxGetOsDescription();
+    wxString platform = os_name + _T(" ") +
+    platforminfo.GetArchName()+ _T(" ") +
+    platforminfo.GetPortIdName() + osName + _T("\n");
+    aboutText.Append( AboutText + OpenCPNVersion + _T("<br><br>") + wxver + (" ") + platform + OpenCPNInfo );
 #else
     aboutText.Append( AboutText + OpenCPNVersion + OpenCPNInfo );
-#endif    
-
+#endif
     // Show where the log file is going to be placed
 #ifdef __WXOSX__
-    wxString log_string = _T("Ort der Logdatei: ") + g_Platform->GetLogFileName();
+    wxString log_string = _T("Ort der Logdatei:<br>") + g_Platform->GetLogFileName();
 #else
     wxString log_string = _T("Logfile location: ") + g_Platform->GetLogFileName();
 #endif
-    log_string.Replace(_T("/"), _T("/ "));      // allow line breaks, in a cheap way...
+//    log_string.Replace(_T("/"), _T("/ "));      // allow line breaks, in a cheap way...
     
     aboutText.Append( log_string );
 
     // Show where the config file is going to be placed
 #ifdef __WXOSX__
-    wxString config_string = _T("<br><br>Ort der Konfig-Datei: ") + g_Platform->GetConfigFileName();
+    wxString config_string = _T("<br><br>Ort der Konfig-Datei:<br>") + g_Platform->GetConfigFileName();
 #else
     wxString config_string = _T("<br><br>Config file location: ") + g_Platform->GetConfigFileName();
 #endif
-    config_string.Replace(_T("/"), _T("/ "));      // allow line breaks, in a cheap way...
+//    config_string.Replace(_T("/"), _T("/ "));      // allow line breaks, in a cheap way...
     aboutText.Append( config_string );
     
     if(wxFONTSTYLE_ITALIC == dFont->GetStyle())
@@ -395,11 +403,27 @@ void about::Populate( void )
     pLicenseTextCtl->SetInsertionPoint( 0 );
 #endif
 #ifdef __WXOSX__
-    const wxString HilfeText = wxT(
-        "Für Hilfe gehen Sie bitte zum OS X Menü Hilfe oben in der Menüzeile. Geben Sie dort Suchbegriffe ein wie z.B. Plugins.");
-    pHelpTextCtl->Clear();
-    pHelpTextCtl->WriteText( HilfeText );
-    pHelpTextCtl->SetInsertionPoint ( 0 );
+    // Help page
+    // The HTML header
+    wxString HilfeText =
+    wxString::Format(_T( "<html><body bgcolor=#%02x%02x%02x><font color=#%02x%02x%02x>" ),
+                     bg.Red(), bg.Blue(), bg.Green(), fg.Red(), fg.Blue(), fg.Green() );
+    pHelpHTMLCtl->SetFonts( face, face, sizes );
+    HilfeText.Append( _T("Für Hilfe gehen Sie bitte zum OS X Menü Hilfe oben in der Menüzeile. Geben Sie dort Suchbegriffe ein wie z.B. Plugins.<br><br>"));
+    HilfeText.Append( _T("Muster für Notfall-Rufe über UKW: Mayday (schwerwiegend, wichtig, sofortige Hilfe) oder PanPan (schnell, keine unmittelbare Gefahr):<br>"));
+    HilfeText.Append(_T("<br><table border=4 cellspacing=5 cellpadding=10>"));
+    HilfeText.Append(_T("<tr><th>Muster Notfall-Ruf Mayday</th><th>Muster Notfall-Ruf Pan Pan</th></tr>"));
+    HilfeText.Append(_T("<tr><td>Mayday, Mayday, Mayday</td><td>Pan Pan, Pan Pan, Pan Pan</td></tr>"));
+    HilfeText.Append(_T("<tr><td>Yacht Name, Yacht Name, Yacht Name</td><td>Hello All Stations, Hello All Stations, Hello All Stations</td></tr>"));
+    HilfeText.Append(_T("<tr><td>Mayday, Yacht Name, Call Sign:</td><td>Yacht Name, Yacht Name, Yacht Name, Call Sign:</td></tr>"));
+    HilfeText.Append(_T("<tr><td>Position: Uncertain. Last recorded position was </td><td>Position: Uncertain. Last recorded position was </td></tr>"));
+    HilfeText.Append(_T("<tr><td>(Notfall-Art, -Beschreibung)</td><td>(Vorfall-Art, -Beschreibung)</td></tr>"));
+    HilfeText.Append(_T("<tr><td>I require immediate assistance, [n] persons aboard</td><td>(Erforderliche Hilfe-Art, -Beschreibung)</td></tr>"));
+    HilfeText.Append(_T("<tr><td>Over</td><td>Over</td></tr>"));
+    HilfeText.Append(_T("</table>"));
+    // The HTML Footer
+    HilfeText.Append( _T("</font></body></html>") );
+    pHelpHTMLCtl->SetPage( HilfeText );
 #endif
     SetColorScheme();
 }
@@ -430,7 +454,7 @@ void about::RecalculateSize( void )
 void about::CreateControls( void )
 {
     //  Set the nominal vertical size of the embedded controls
-    int v_size = g_bresponsive ? -1 : 300;
+//    int v_size = g_bresponsive ? -1 : 300;  // Not used
 
     wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
     SetSizer( mainSizer );
@@ -530,15 +554,14 @@ void about::CreateControls( void )
             wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
     itemPanelTips->InheritAttributes();
     pNotebook->AddPage( itemPanelTips, _("Help") );
-
-    wxBoxSizer* helpSizer = new wxBoxSizer( wxVERTICAL );
-    itemPanelTips->SetSizer( helpSizer );
 #ifdef __WXOSX__
-    pHelpTextCtl = new wxTextCtrl (itemPanelTips, -1, _T(""), wxDefaultPosition,
-                                   wxSize(-1, v_size), wxTE_MULTILINE | wxTE_READONLY );
-    pHelpTextCtl->InheritAttributes();
-    helpSizer->Add(pHelpTextCtl,0, wxEXPAND | wxALL, 5 );
+    pHelpHTMLCtl = new wxHtmlWindow (itemPanelTips, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                                     wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION);
+    pHelpHTMLCtl->SetBorders( 5 );
 #endif
+    wxBoxSizer* helpSizer = new wxBoxSizer( wxVERTICAL );
+    helpSizer->Add( pHelpHTMLCtl, 1, wxEXPAND | wxALL, 5 );
+    itemPanelTips->SetSizer( helpSizer );
     //  Close Button
     wxButton* closeButton = new wxButton( this, xID_OK, _("Close"), wxDefaultPosition,
             wxDefaultSize, 0 );

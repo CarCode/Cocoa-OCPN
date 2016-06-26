@@ -385,7 +385,6 @@
 		A635C8AF17C16F0900B3E5E9 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AC17C16F0900B3E5E9 /* tinyxmlerror.cpp */; };
 		A635C8B017C16F0900B3E5E9 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AD17C16F0900B3E5E9 /* tinyxmlparser.cpp */; };
 		A638304D1950E14100027BFE /* crashprint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A638304C1950E14100027BFE /* crashprint.cpp */; };
-		A639BC381B4C30CC0053AB4A /* chartbarwin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A639BC371B4C30CC0053AB4A /* chartbarwin.cpp */; };
 		A639BC3E1B4C61A70053AB4A /* xdr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A639BC3D1B4C61A70053AB4A /* xdr.cpp */; };
 		A6414F5E19599B6C0007787E /* libwatchdog_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A683CEB01958A550004A0137 /* libwatchdog_pi.dylib */; };
 		A642A17E19D8A4B600441ED3 /* csv_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A642A17D19D8A4B600441ED3 /* csv_parser.cpp */; };
@@ -403,6 +402,7 @@
 		A64515121AE501CC00933404 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A645150E1AE501CC00933404 /* utils.cpp */; };
 		A647C90719C365AD0034EA04 /* libsquiddio_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A671BCC719BE44BC00019119 /* libsquiddio_pi.dylib */; };
 		A64D13BC1A0FD5C600B92F84 /* xte.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64D13BB1A0FD5C600B92F84 /* xte.cpp */; };
+		A64E58DD1D1FDA770056597C /* piano.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64E58DC1D1FD9F60056597C /* piano.cpp */; };
 		A64EBB4F1B26FCB200F861D0 /* GuardZoneBogey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64EBB4D1B26FCB200F861D0 /* GuardZoneBogey.cpp */; };
 		A64EBB501B26FCB200F861D0 /* GuardZoneControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64EBB4E1B26FCB200F861D0 /* GuardZoneControls.cpp */; };
 		A64EBB541B2708EE00F861D0 /* Idle_Dialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64EBB531B2708EE00F861D0 /* Idle_Dialog.cpp */; };
@@ -1632,8 +1632,6 @@
 		A6375E61CE4E433FB0399913 /* gpsdevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpsdevice.h; path = src/garmin/jeeps/gpsdevice.h; sourceTree = SOURCE_ROOT; };
 		A638304B1950DF6200027BFE /* crashprint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crashprint.h; path = include/crashprint.h; sourceTree = "<group>"; };
 		A638304C1950E14100027BFE /* crashprint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = crashprint.cpp; path = src/crashprint.cpp; sourceTree = "<group>"; };
-		A639BC361B4C30A10053AB4A /* chartbarwin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chartbarwin.h; path = include/chartbarwin.h; sourceTree = "<group>"; };
-		A639BC371B4C30CC0053AB4A /* chartbarwin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = chartbarwin.cpp; path = src/chartbarwin.cpp; sourceTree = "<group>"; };
 		A639BC3C1B4C61830053AB4A /* xdr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = xdr.hpp; path = src/nmea0183/xdr.hpp; sourceTree = "<group>"; };
 		A639BC3D1B4C61A70053AB4A /* xdr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xdr.cpp; path = src/nmea0183/xdr.cpp; sourceTree = "<group>"; };
 		A64128E11B59058A0024C916 /* wx28compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wx28compat.h; path = include/wx28compat.h; sourceTree = "<group>"; };
@@ -1667,6 +1665,9 @@
 		A64633D41956EE4100784D5B /* GribRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribRecord.h; path = plugins/grib_pi/src/GribRecord.h; sourceTree = "<group>"; };
 		A64D13BA1A0FD5A400B92F84 /* xte.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = xte.hpp; path = src/nmea0183/xte.hpp; sourceTree = "<group>"; };
 		A64D13BB1A0FD5C600B92F84 /* xte.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xte.cpp; path = src/nmea0183/xte.cpp; sourceTree = "<group>"; };
+		A64E58DB1D1FD9CE0056597C /* piano.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = piano.h; path = include/piano.h; sourceTree = "<group>"; };
+		A64E58DC1D1FD9F60056597C /* piano.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = piano.cpp; path = src/piano.cpp; sourceTree = "<group>"; };
+		A64E58DE1D1FE21C0056597C /* wificlient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wificlient.cpp; path = src/wificlient.cpp; sourceTree = "<group>"; };
 		A64EBB4D1B26FCB200F861D0 /* GuardZoneBogey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GuardZoneBogey.cpp; path = plugins/BR24radar_pi/src/GuardZoneBogey.cpp; sourceTree = "<group>"; };
 		A64EBB4E1B26FCB200F861D0 /* GuardZoneControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GuardZoneControls.cpp; path = plugins/BR24radar_pi/src/GuardZoneControls.cpp; sourceTree = "<group>"; };
 		A64EBB531B2708EE00F861D0 /* Idle_Dialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Idle_Dialog.cpp; path = plugins/BR24radar_pi/src/Idle_Dialog.cpp; sourceTree = "<group>"; };
@@ -2697,13 +2698,14 @@
 				A6581CB11C241CEA007A36A7 /* twocolourfitfast.cpp */,
 				A617AB1A194E3D9300E7D443 /* squish.cpp */,
 				A638304C1950E14100027BFE /* crashprint.cpp */,
+				A64E58DE1D1FE21C0056597C /* wificlient.cpp */,
 				A669D4C41A2282860078BFB1 /* sha1.c */,
 				A6E0822C1AAB591B002CC7F0 /* viewport.cpp */,
 				A6E0822E1AAB5931002CC7F0 /* canvasMenu.cpp */,
 				A6E082301AAB5956002CC7F0 /* OCPNPlatform.cpp */,
-				A639BC371B4C30CC0053AB4A /* chartbarwin.cpp */,
 				A60774D51B761E180034E864 /* compass.cpp */,
 				A6581CAD1C241AF3007A36A7 /* LLRegion.cpp */,
+				A64E58DC1D1FD9F60056597C /* piano.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -2977,11 +2979,11 @@
 				A6E0822A1AAB58C1002CC7F0 /* canvasMenu.h */,
 				A6E0822B1AAB58F1002CC7F0 /* OCPNPlatform.h */,
 				A6B71B441ABAD75700452B84 /* gl_private.h */,
-				A639BC361B4C30A10053AB4A /* chartbarwin.h */,
 				A64128E11B59058A0024C916 /* wx28compat.h */,
 				A60774D41B761DB00034E864 /* compass.h */,
 				A6581CAB1C241A7E007A36A7 /* LLRegion.h */,
 				A6581CAC1C241AA4007A36A7 /* glu.h */,
+				A64E58DB1D1FD9CE0056597C /* piano.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -4763,7 +4765,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 			};
 			buildConfigurationList = B3FF15EAE22C49A1BCA88BD8 /* Build configuration list for PBXProject "OpenCPN" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -5813,12 +5815,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A64E58DD1D1FDA770056597C /* piano.cpp in Sources */,
 				A6E082311AAB5956002CC7F0 /* OCPNPlatform.cpp in Sources */,
 				A65F36E4197473690006DC40 /* jsonreader.cpp in Sources */,
 				A65F36E5197473690006DC40 /* jsonval.cpp in Sources */,
 				A65F36E6197473690006DC40 /* jsonwriter.cpp in Sources */,
 				A66D8E2F18D2584E00BC8747 /* routeprintout.cpp in Sources */,
-				A639BC381B4C30CC0053AB4A /* chartbarwin.cpp in Sources */,
 				A6581CB21C241CEF007A36A7 /* twocolourfitfast.cpp in Sources */,
 				A617AB17194E3CFC00E7D443 /* rangefit.cpp in Sources */,
 				875EDB02E57A46C1AC1A60D4 /* chart1.cpp in Sources */,
@@ -6107,6 +6109,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -6131,6 +6134,7 @@
 					USE_GARMINHOST,
 					USE_SPARKLE,
 					_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_,
+					__OCPN_USE_CURL__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -6238,6 +6242,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -6262,6 +6267,7 @@
 					USE_GARMINHOST,
 					USE_SPARKLE,
 					_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_,
+					__OCPN_USE_CURL__,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
@@ -7140,7 +7146,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				HEADER_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
@@ -9796,6 +9804,7 @@
 					USE_DIALUP_MANAGER,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				HEADER_SEARCH_PATHS = (
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/DR_pi/src",
 					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
@@ -9905,6 +9914,7 @@
 					USE_DIALUP_MANAGER,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				HEADER_SEARCH_PATHS = (
 					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/DR_pi/src",
 					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
@@ -11430,8 +11440,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				HEADER_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;

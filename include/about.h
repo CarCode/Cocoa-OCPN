@@ -89,6 +89,7 @@ class about: public wxDialog
     wxTextCtrl *pLicenseTextCtl;
 #ifdef __WXOSX__
     wxTextCtrl *pHelpTextCtl;
+    wxHtmlWindow *pHelpHTMLCtl;
 #endif
     wxNotebook *pNotebook;
     wxHtmlWindow *pAboutHTMLCtl;

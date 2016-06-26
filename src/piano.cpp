@@ -1,4 +1,4 @@
-/**************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Bar Window
@@ -21,7 +21,10 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ *
+ */
 
 #include "wx/wxprec.h"
 
@@ -31,7 +34,7 @@
 #include "dychart.h"
 
 #include "chcanv.h"
-#include "chartbarwin.h"
+#include "piano.h"
 #include "chartdb.h"
 #include "chart1.h"
 #include "chartbase.h"
@@ -57,122 +60,7 @@ extern bool g_btouch;
 extern int  g_GUIScaleFactor;
 
 extern ChartCanvas               *cc1;
-extern ChartBarWin               *g_ChartBarWin;
 extern Piano                     *g_Piano;
-
-//------------------------------------------------------------------------------
-//    ChartBarWin Implementation
-//------------------------------------------------------------------------------
-BEGIN_EVENT_TABLE(ChartBarWin, wxDialog)
-    EVT_PAINT(ChartBarWin::OnPaint)
-    EVT_SIZE(ChartBarWin::OnSize)
-    EVT_MOUSE_EVENTS(ChartBarWin::MouseEvent)
-END_EVENT_TABLE()
-
-ChartBarWin::ChartBarWin( wxWindow *win )
-{
-
-    long wstyle = wxSIMPLE_BORDER | wxFRAME_NO_TASKBAR;
-#ifndef __WXMAC__
-    wstyle |= wxFRAME_SHAPED;
-#endif
-#ifdef __WXMAC__
-    wstyle |= wxSTAY_ON_TOP;
-#endif
-
-//    wstyle = wxCAPTION | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxRESIZE_BORDER;
-
-    wxDialog::Create( win, wxID_ANY, _T(""), wxPoint( 0, 0 ), wxSize( 200, 20 ), wstyle );
-
-    SetBackgroundColour( GetGlobalColor( _T("UIBDR") ) );
-
-    SetBackgroundStyle( wxBG_STYLE_CUSTOM ); // on WXMSW, this prevents flashing on color scheme change
-
-    //   Create the Children
-
-    Raise();
-
-}
-
-ChartBarWin::~ChartBarWin()
-{
-}
-
-void ChartBarWin::RePosition()
-{
-    wxSize cs = GetParent()->GetClientSize();
-//    wxFrame *frame = dynamic_cast<wxFrame*>(GetParent());  // Not used
-    wxPoint position;
-    position.x = 0;
-    position.y = cs.y;
-    position.y -= GetSize().y;
-
-    wxPoint screen_pos = GetParent()->ClientToScreen( position );
-    Move( screen_pos );
-#ifdef __OCPN__ANDROID__
-    Raise();
-#endif
-}
-
-void ChartBarWin::ReSize()
-{
-    wxSize cs = GetParent()->GetClientSize();
-    SetSize(wxSize(cs.x, g_Piano->GetHeight()));
-}
-
-void ChartBarWin::OnPaint( wxPaintEvent& event )
-{
-    wxPaintDC dc( this );
-
-//    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();  // Not used
-
-    wxBitmap shape = wxBitmap( cc1->GetClientSize().x, g_Piano->GetHeight() );
-    wxMemoryDC shapeDC( shape );
-
-    g_Piano->Paint(0, dc, &shapeDC);
-
-#ifndef __WXMAC__
-    if( style->chartStatusWindowTransparent ) {
-        wxRegion region( shape, *wxBLACK, 0 );
-        if(region.Empty())
-        // SetShape() with a completely empty shape doesn't work, and leaving the shape
-        // but hiding the window causes artifacts when dragging in GL mode on MSW.
-        // The best solution found so far is to show just a single pixel, this is less
-        // disturbing than flashing piano keys when dragging. (wxWidgets 2.8)
-           g_ChartBarWin->SetShape( wxRegion( wxRect(0,0,1,1) ) );
-        else
-            g_ChartBarWin->SetShape( region );
-    }
-#endif
-
-
-#ifdef __WXQT__ // temporary workaround
-    ///g_Piano->Refresh();              //g_Piano is not a wxWindow...
-#endif
-}
-
-void ChartBarWin::OnSize( wxSizeEvent& event )
-{
-    if (!IsShown())
-        return;
-
-    g_Piano->FormatKeys();
-}
-
-void ChartBarWin::MouseEvent( wxMouseEvent& event )
-{
-    g_Piano->MouseEvent( event );
-}
-
-int ChartBarWin::GetFontHeight()
-{
-    wxClientDC dc( this );
-
-    wxCoord w, h;
-    GetTextExtent( _T("TEST"), &w, &h );
-
-    return ( h );
-}
 
 //------------------------------------------------------------------------------
 //          Piano Window Implementation
@@ -191,12 +79,8 @@ Piano::Piano()
     m_hover_last = -1;
     m_brounded = false;
     m_bBusy = false;
+    
     m_nRegions = 0;
-
-    // initially set to true, on startup
-    // the piano doesn't process the first event
-    // if outside its area
-    m_bleaving = true;
 
 //>    SetBackgroundStyle( wxBG_STYLE_CUSTOM ); // on WXMSW, this prevents flashing on color scheme change
 
@@ -209,7 +93,6 @@ Piano::Piano()
     m_eventTimer.SetOwner( this, PIANO_EVENT_TIMER );
     
     m_tex = m_tex_piano_height = 0;
-    m_texh = 0;
 }
 
 Piano::~Piano()
@@ -623,7 +506,6 @@ void Piano::DrawGL(int off)
 // this texture is only updated if the color scheme or chart bar height change
 void Piano::BuildGLTexture()
 {
-#ifdef ocpnUSE_GL
     int h = GetHeight();
 
     wxBrush tbackBrush; // transparent back brush
@@ -684,7 +566,7 @@ void Piano::BuildGLTexture()
 
     wxImage image = bmp.ConvertToImage();
 
-    unsigned char *data = new unsigned char[4*m_texw*m_texh], *d = data, *e = image.GetData(); //, *a = image.GetAlpha(); Not used
+    unsigned char *data = new unsigned char[4*m_texw*m_texh], *d = data, *e = image.GetData(); // Not used: , *a = image.GetAlpha();
     for(unsigned int i=0; i<m_texw*m_texh; i++) {
         if(style->chartStatusWindowTransparent &&
            e[0] == 1 && e[1] == 1 && e[2] == 1)
@@ -716,27 +598,18 @@ void Piano::BuildGLTexture()
         glTexSubImage2D( GL_TEXTURE_2D, 0, 0, off, iw, ih, GL_RGBA, GL_UNSIGNED_BYTE, data );
         delete [] data;
     }
-#endif
 }
 
 void Piano::DrawGL(int off)
 {
-    int nKeys = m_key_array.GetCount();
-    if(!nKeys)
-        return;
-
-#ifdef ocpnUSE_GL
-<<<<<<< HEAD
-    unsigned int w = cc1->GetClientSize().x, h = GetHeight();
-    unsigned int endx = 0;
-=======
-    unsigned int w = cc1->GetClientSize().x, h = GetHeight(), endx;
->>>>>>> 7d5cec547acc2e63829954285e5e871da6655703
-
+    unsigned int w = cc1->GetClientSize().x, h = GetHeight(), endx = 0;
+ 
     if(m_tex_piano_height != h)
         BuildGLTexture();
 
     int y1 = off, y2 = y1 + h;
+
+    int nKeys = m_key_array.GetCount();
 
     // we could cache the coordinates and recompute only when the piano hash changes,
     // but the performance is already fast enough at this point
@@ -881,7 +754,6 @@ void Piano::DrawGL(int off)
     delete [] coords;
 
     glDisable(GL_TEXTURE_2D);
-#endif
 }
 
 void Piano::SetColorScheme( ColorScheme cs )
@@ -900,12 +772,10 @@ void Piano::SetColorScheme( ColorScheme cs )
     m_cBrush = wxBrush( GetGlobalColor( _T("YELO2") ), wxBRUSHSTYLE_SOLID );     // CM93 Chart unselected
     m_scBrush = wxBrush( GetGlobalColor( _T("YELO1") ), wxBRUSHSTYLE_SOLID );    // and selected
 
+
     m_uvBrush = wxBrush( GetGlobalColor( _T("UINFD") ), wxBRUSHSTYLE_SOLID );    // and unavailable
 
     m_tex_piano_height = 0; // force texture to update
-
-    if(g_ChartBarWin)
-        g_ChartBarWin->Refresh();
 }
 
 void Piano::ShowBusy( bool busy )
@@ -1051,16 +921,12 @@ bool Piano::MouseEvent( wxMouseEvent& event )
     int x, y;
     event.GetPosition( &x, &y );
 
-    if(g_ChartBarWin)
-        m_bleaving = event.Leaving();
-    else {
-        if(event.Leaving() || y < cc1->GetCanvasHeight() - GetHeight()) {
-            if(m_bleaving)
-                return false;
-            m_bleaving = true;
-        } else
-            m_bleaving = false;
-    }
+    if(event.Leaving() || y < cc1->GetCanvasHeight() - GetHeight()) {
+        if(m_bleaving)
+            return false;
+        m_bleaving = true;
+    } else
+        m_bleaving = false;
 
 //    Check the regions
 
@@ -1089,8 +955,8 @@ bool Piano::MouseEvent( wxMouseEvent& event )
             if( -1 != sel_index ){
                 m_click_sel_index = sel_index;
                 m_click_sel_dbindex = sel_dbindex;
-                m_action = DEFERRED_KEY_CLICK_UP;
                 if(!m_eventTimer.IsRunning()){
+                    m_action = DEFERRED_KEY_CLICK_UP;
                     m_eventTimer.Start(10, wxTIMER_ONE_SHOT);
                 }
             }
@@ -1098,10 +964,10 @@ bool Piano::MouseEvent( wxMouseEvent& event )
             if( sel_index != m_hover_last ) {
                 gFrame->HandlePianoRollover( sel_index, sel_dbindex );
                 m_hover_last = sel_index;
-
+                
 //                m_action = INFOWIN_TIMEOUT;
 //                m_eventTimer.Start(3000, wxTIMER_ONE_SHOT);
-
+                
             }
         } else if( event.ButtonUp() ) {
             gFrame->HandlePianoRollover( -1, -1 );

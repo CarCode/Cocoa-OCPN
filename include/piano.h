@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Bar Window
@@ -21,7 +21,9 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
+
 
 #ifndef __statwin_H__
 #define __statwin_H__
@@ -132,7 +134,7 @@ private:
       bool        m_brounded;
       bool        m_bleaving;
 
-      unsigned int      m_tex, m_texw, m_texh, m_tex_piano_height;
+      GLuint      m_tex, m_texw, m_texh, m_tex_piano_height;
 
 DECLARE_EVENT_TABLE()
 };

@@ -77,7 +77,7 @@ private:
 #include "ais.h"
 #include "OCPNPlatform.h"
 #include "toolbar.h"
-#include "chartbarwin.h"
+#include "piano.h"
 #include "tcmgr.h"
 #include "compass.h"
 #include "FontMgr.h"
@@ -129,7 +129,6 @@ extern OCPNPlatform *g_Platform;
 extern ocpnFloatingToolbarDialog *g_FloatingToolbarDialog;
 extern ocpnStyle::StyleManager* g_StyleManager;
 extern bool             g_bShowChartBar;
-extern ChartBarWin     *g_ChartBarWin;
 extern Piano           *g_Piano;
 extern ocpnCompass         *g_Compass;
 extern ChartStack *pCurrentStack;
@@ -4444,7 +4443,7 @@ void glChartCanvas::Render()
 
 #endif
     // render the chart bar
-    if(g_bShowChartBar && !g_ChartBarWin)
+    if(g_bShowChartBar)
         DrawChartBar(gldc);
 
     if (g_Compass)

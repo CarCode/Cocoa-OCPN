@@ -992,10 +992,7 @@ void RouteManagerDialog::OnOK(wxCommandEvent& event)
     gFrame->Raise();
 #endif
     Hide();
-    
-    if(g_bresponsive)
-        gFrame->ShowChartBarIfEnabled();
-    
+
 }
 
 void RouteManagerDialog::SetColorScheme()

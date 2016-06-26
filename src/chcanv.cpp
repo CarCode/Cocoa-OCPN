@@ -45,7 +45,7 @@
 #include "geodesic.h"
 #include "styles.h"
 #include "routeman.h"
-#include "chartbarwin.h"
+#include "piano.h"
 #include "navutil.h"
 #include "kml.h"
 #include "concanv.h"
@@ -207,7 +207,6 @@ extern int              g_Show_Target_Name_Scale;
 
 extern MyFrame          *gFrame;
 extern Piano            *g_Piano;
-extern ChartBarWin      *g_ChartBarWin;
 extern ocpnCompass      *g_Compass;
 
 extern int              g_iNavAidRadarRingsNumberVisible;
@@ -4813,7 +4812,7 @@ bool ChartCanvas::MouseEventOverlayWindows( wxMouseEvent& event )
 
 bool ChartCanvas::MouseEventChartBar( wxMouseEvent& event )
 {
-    if(!g_bShowChartBar || g_ChartBarWin)
+    if(!g_bShowChartBar)
         return false;
 
     if (! g_Piano->MouseEvent(event) )
@@ -8643,8 +8642,6 @@ bool ChartCanvas::InvokeCanvasMenu(int x, int y, int seltype)
 #ifdef __WXQT__
     gFrame->SurfaceToolbar();
     //g_FloatingToolbarDialog->Raise();
-    if(g_ChartBarWin && g_ChartBarWin->IsShown())
-        g_ChartBarWin->Raise();
 #endif
 
     return true;
@@ -9224,7 +9221,7 @@ void ChartCanvas::OnPaint( wxPaintEvent& event )
 
     // subtract the chart bar if it isn't transparent, and determine if we need to paint it
     wxRegion rgn_blit = ru;
-    if(g_bShowChartBar && !g_ChartBarWin) {
+    if(g_bShowChartBar) {
         wxRect chart_bar_rect(0, GetClientSize().y - g_Piano->GetHeight(),
                               GetClientSize().x, g_Piano->GetHeight());
         
