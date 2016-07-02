@@ -49,7 +49,7 @@
 #include "ocpn_draw_pi.h"
 #include "ODUtils.h"
 #ifdef __WXOSX__
-#include "../../../include/bbox.h"
+#include "bdbox.h"
 #else
 #include "bbox.h"
 #endif
@@ -264,7 +264,11 @@ void ODPath::Draw( ODDC& dc, PlugIn_ViewPort &VP )
         if ( m_bVisible )
         {
             //    Handle offscreen points
+#ifdef __WXOSX__
+            wxBoundingBox llbb;
+#else
             LLBBox llbb;
+#endif
             llbb.SetMin(VP.lon_min, VP.lat_min);
             llbb.SetMax(VP.lon_max, VP.lat_max);
             bool b_2_on = llbb.PointInBox( pOp2->m_lon, pOp2->m_lat, 0 );

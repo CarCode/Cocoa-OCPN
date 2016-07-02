@@ -69,6 +69,11 @@
 			<key>orderHint</key>
 			<integer>28</integer>
 		</dict>
+		<key>dashboard_pi copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>33</integer>
+		</dict>
 		<key>dashboard_pi.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -393,6 +398,11 @@
 			<true/>
 		</dict>
 		<key>A669B1D31B372B7400C440BF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A669D3381D27D45600D2A1B1</key>
 		<dict>
 			<key>primary</key>
 			<true/>

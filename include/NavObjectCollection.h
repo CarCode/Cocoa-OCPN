@@ -27,8 +27,7 @@
 #include "pugixml.hpp"
 #include "Route.h"
 #include "RoutePoint.h"
-
-class Track;
+#include "Track.h"
 
 //      Bitfield definition controlling the GPX nodes output for point objects
 #define         OUT_TYPE        1 << 1          //  Output point type
@@ -84,7 +83,8 @@ public:
     bool CreateNavObjGPXRoutes(void);
     bool CreateNavObjGPXTracks(void);
 
-    bool AddGPXRoutesList( RouteList *pRoutes );
+    void AddGPXRoutesList( RouteList *pRoutes );
+    void AddGPXTracksList( TrackList *pTracks );
     bool AddGPXPointsList( RoutePointList *pRoutePoints );
     bool AddGPXRoute(Route *pRoute);
     bool AddGPXTrack(Track *pTrk);
@@ -110,10 +110,10 @@ public:
     NavObjectChanges( wxString file_name );
     ~NavObjectChanges();
     
-    bool AddRoute( Route *pr, const char *action );           // support "changes" file set
-    bool AddTrack( Track *pr, const char *action );
-    bool AddWP( RoutePoint *pr, const char *action );
-    bool AddTrackPoint( RoutePoint *pWP, const char *action, const wxString& parent_GUID );
+    void AddRoute( Route *pr, const char *action );           // support "changes" file set
+    void AddTrack( Track *pr, const char *action );
+    void AddWP( RoutePoint *pr, const char *action );
+    void AddTrackPoint( TrackPoint *pWP, const char *action, const wxString& parent_GUID );
     
     bool ApplyChanges(void);
     

@@ -100,24 +100,26 @@ void GribReader::readAllGribRecords()
     int id = 0;
     time_t firstdate = -1;
     bool b_EOF;
-#ifdef __WXOSX__  //Otherwise potential leak of memory
-    rec = new GribRecord(file, id);
-#endif
+
     do {
         id ++;
-#ifndef __WXOSX__  //Otherwise potential leak of memory
         rec = new GribRecord(file, id);
-#endif
-        assert(rec);
-        if (rec->isOk())
+//        assert(rec);
+        if (rec->isOk() == false)
+        {
+             delete rec;
+            rec = NULL;
+        }
+        else
         {
             b_EOF = rec->isEof();
-#ifdef __WXOSX__  //Otherwise potential leak of memory
-        	if (rec->isDataKnown() && !b_EOF)
-#else
-            if (rec->isDataKnown())
-#endif
+
+            if (!rec->isDataKnown())
         	{
+                delete rec;
+            }
+            else
+            {
 				ok = true;   // au moins 1 record ok
 
 				if (firstdate== -1)
@@ -283,29 +285,19 @@ void GribReader::readAllGribRecords()
 
                         else
                         {
-/*
+#if 1
                               fprintf(stderr,
                                       "GribReader: unknown record type: dataType=%d levelType=%d levelValue=%d idCenter==%d && idModel==%d && idGrid==%d\n",
                                       rec->getDataType(), rec->getLevelType(), rec->getLevelValue(),
                               rec->getIdCenter(), rec->getIdModel(), rec->getIdGrid()
                               );
-                              */
+#endif
                               delete rec;
-#ifdef __WXOSX__  //Otherwise potential leak of memory
-                            rec = NULL;
-#endif
                         }
-                  }  // rec->isDataKnown()
+                  }
         }
-        else {    // ! rec-isOk
-            delete rec;
-            rec = NULL;
-        }
+
     } while (rec != NULL &&  !b_EOF);
-#ifdef __WXOSX__  //Otherwise potential leak of memory
-    delete rec;
-    rec = NULL;
-#endif
 }
 
 

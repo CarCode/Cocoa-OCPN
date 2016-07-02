@@ -228,8 +228,6 @@ S57Obj::S57Obj()
     m_lsindex_array = NULL;
     m_n_edge_max_points = 0;
     m_ls_list = 0;
-    
-    bBBObj_valid = false;
 
     //        Set default (unity) auxiliary transform coefficients
     x_rate = 1.0;
@@ -339,7 +337,7 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
     int FEIndex;
 
     int MAX_LINE = size;
-//    int llmax = 0;  // Not used
+    int llmax = 0;
 
     char *br;
     char szAtt[20];
@@ -380,7 +378,7 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                     int nrl = my_bufgetl( mybuf_ptr, hdr_end, buf, MAX_LINE );
                     mybuf_ptr += nrl;
                     if( 0 == nrl ) {
-//                        attdun = 1;  // Not used but break
+                        attdun = 1;
                         my_fgets( buf, MAX_LINE, *pfpx );     // this will be PolyGeo
                         break;
                     }
@@ -407,14 +405,14 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                 }
 
                 else if( !strncmp( buf, geoMatch, 6 ) ) {
-//                    attdun = 1;  // Not used but break
+                    attdun = 1;
                     break;
                 }
 
                 else if( !strncmp( buf, "  MULT", 6 ) )         // Special multipoint
                         {
                     bMulti = true;
-//                    attdun = 1;  // Not used but break
+                    attdun = 1;
                     break;
                 }
 
@@ -450,7 +448,7 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
 
                 szAtt[0] = 0;
                 char t = buf[10];
-                // there's enough other types, testing first is faster
+                // there's enough other types, testing first is faster 
                 // than new/delete
                 if( iua && (t == 'I' || t == 'S' || t == 'R')) {
                     S57attVal *pattValTmp = new S57attVal;
@@ -559,7 +557,7 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                         // ARM need 32 bits alignment, may be faster on some x86 too
                         unsigned int align = 3;
                         pfpx->Read( buf +align, wkb_len );
-
+ 
                         float easting, northing;
                         npt = 1;
 
@@ -577,9 +575,9 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                         m_lon = xll;
                         m_lat = yll;
 
-                        BBObj.SetMin( m_lon - .25, m_lat - .25 );
-                        BBObj.SetMax( m_lon + .25, m_lat + .25 );
-                        bBBObj_valid = false;
+                        BBObj.Set( m_lat - .25, m_lon - .25,
+                                  m_lat + .25, m_lon + .25 );
+                        BBObj.Invalidate();
 
                     } else {
                         Primitive_type = GEO_POINT;
@@ -593,7 +591,7 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                         // ARM need 32 bits alignment, may be faster on some x86 too
                         unsigned int align = 3;
                         pfpx->Read( buf +align, wkb_len );
-                        
+ 
                         npt = *( (int *) ( buf + 5 +align) );
 
                         geoPtz = (double *) malloc( npt * 3 * sizeof(double) );
@@ -626,10 +624,7 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                         float ymax = *pfs++;
                         float ymin = *pfs;
 
-                        BBObj.SetMin( xmin, ymin );
-                        BBObj.SetMax( xmax, ymax );
-                        bBBObj_valid = true;
-
+                        BBObj.Set( ymin, xmin, ymax, xmax );
                     }
                     break;
                 }
@@ -649,7 +644,7 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                         unsigned char *buft;
                         // ARM need 32 bits alignment, may be faster on some x86 too
                         int align = 3;
-                        if (sb_len > MAX_LINE + align)
+                        if (sb_len > MAX_LINE + align) 
                             buft = (unsigned char *) malloc( sb_len +align);
                         else
                             buft = (unsigned char *) buf;
@@ -681,9 +676,7 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                             free( buft );
 
                         // set s57obj bbox as lat/lon
-                        BBObj.SetMin( xmin, ymin );
-                        BBObj.SetMax( xmax, ymax );
-                        bBBObj_valid = true;
+                        BBObj.Set( ymin, xmin, ymax, xmax );
 
                         //  and declare x/y of the object to be average east/north of all points
                         double e1, e2, n1, n2;
@@ -728,8 +721,8 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                     if( !strncmp( FeatureName, "DEPARE", 6 )
                             || !strncmp( FeatureName, "DRGARE", 6 ) ) bIsAssociable = true;
 
-//                    int ll = strlen( buf );  // Not used
-//                    if( ll > llmax ) llmax = ll;  // Not used
+                    int ll = strlen( buf );
+                    if( ll > llmax ) llmax = ll;
 
                     my_fgets( buf, MAX_LINE, *pfpx );     // this will be "  POLYTESSGEO"
 
@@ -756,9 +749,8 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                             pPolyTessGeo = ppg;
 
                             //  Set the s57obj bounding box as lat/lon
-                            BBObj.SetMin( ppg->Get_xmin(), ppg->Get_ymin() );
-                            BBObj.SetMax( ppg->Get_xmax(), ppg->Get_ymax() );
-                            bBBObj_valid = true;
+                            BBObj.Set( ppg->Get_ymin(), ppg->Get_xmin(),
+                                      ppg->Get_ymax(), ppg->Get_xmax() );
 
                             //  and declare x/y of the object to be average east/north of all points
                             double e1, e2, n1, n2;
@@ -1172,9 +1164,9 @@ void s57chart::GetValidCanvasRegion( const ViewPort& VPoint, OCPNRegion *pValidR
 LLRegion s57chart::GetValidRegion()
 {
     double ll[8] = {m_FullExtent.SLAT, m_FullExtent.WLON,
-        m_FullExtent.SLAT, m_FullExtent.ELON,
-        m_FullExtent.NLAT, m_FullExtent.ELON,
-        m_FullExtent.NLAT, m_FullExtent.WLON};
+                    m_FullExtent.SLAT, m_FullExtent.ELON,
+                    m_FullExtent.NLAT, m_FullExtent.ELON,
+                    m_FullExtent.NLAT, m_FullExtent.WLON};
     return LLRegion(4, ll);
 }
 
@@ -1638,7 +1630,7 @@ int s57chart::GetLineFeaturePointArray(S57Obj *obj, void **ret_array)
     //  Allocate the buffer
     float *br = (float *)malloc(nPoints * 2 * sizeof(float));
     *ret_array = br;
-    
+
     // populate the buffer
     unsigned char *source_buffer = (unsigned char *)GetLineVertexBuffer();
     ls_list = obj->m_ls_list;
@@ -1667,8 +1659,8 @@ void s57chart::AssembleLineGeometry( void )
                     nPoints += pedge->nCount;
                 }
             }
-            
-            connector_key key;
+
+            connector_key key;            
             int ndelta = 0;
             //  Get the end node connected segments.  To do this, we
             //  walk the Feature array and process each feature that potetially has a LINE type element
@@ -1701,16 +1693,16 @@ void s57chart::AssembleLineGeometry( void )
                             VC_Element *epnode;
                             epnode = m_vc_hash[enode];
                             
-//                            double e0, n0, e1, n1;  // Not used
-// What for???
+                            double e0, n0, e1, n1;
+                            
                             if( ipnode ) {
-//                                double *ppt = ipnode->pPoint;
-//                                e0 = *ppt++;
-//                                n0 = *ppt;
+                                double *ppt = ipnode->pPoint;
+                                e0 = *ppt++;
+                                n0 = *ppt;
                                 if(pedge && pedge->nCount)
                                 {
-//                                    e1 = pedge->pPoints[0];
-//                                    n1 = pedge->pPoints[1];
+                                    e1 = pedge->pPoints[0];
+                                    n1 = pedge->pPoints[1];
                                     
                                     //      The initial node exists and connects to the start of an edge
                                     key.set(TYPE_CE, inode, venode);
@@ -1726,22 +1718,22 @@ void s57chart::AssembleLineGeometry( void )
                             }
                             
                             if(pedge && pedge->nCount){
-//                                e0 = pedge->pPoints[ (2 * (pedge->nCount - 1))];
-//                                n0 = pedge->pPoints[ (2 * (pedge->nCount - 1)) + 1];
+                                e0 = pedge->pPoints[ (2 * (pedge->nCount - 1))];
+                                n0 = pedge->pPoints[ (2 * (pedge->nCount - 1)) + 1];
                                 
                             }   //pedge
                             
                             // end node
                             if( epnode ) {
-//                                double *ppt = epnode->pPoint;
-//                                e1 = *ppt++;
-//                                n1 = *ppt;
+                                double *ppt = epnode->pPoint;
+                                e1 = *ppt++;
+                                n1 = *ppt;
                                 
                                 if(ipnode){
                                     if(pedge && pedge->nCount){
                                         
                                         key.set(TYPE_EC, venode, enode);
-                                        
+
                                         if(m_connector_hash.find( key ) == m_connector_hash.end()){
                                             ndelta += 2;
                                             connector_segment *pcs = new connector_segment;
@@ -1969,10 +1961,10 @@ void s57chart::AssembleLineGeometry( void )
                                         pls->vbo_offset = pedge->vbo_offset;
                                         pls->n_points = pedge->nCount;
                                         pls->priority = 0;
-                                        pls->lat_max = pedge->BBox.GetMaxY();
-                                        pls->lat_min = pedge->BBox.GetMinY();
-                                        pls->lon_max = pedge->BBox.GetMaxX();
-                                        pls->lon_min = pedge->BBox.GetMinX();
+                                        pls->lat_max = pedge->BBox.GetMaxLat();
+                                        pls->lat_min = pedge->BBox.GetMinLat();
+                                        pls->lon_max = pedge->BBox.GetMaxLon();
+                                        pls->lon_min = pedge->BBox.GetMinLon();
                                         pls->private0 = pedge;
                                         pls->type = TYPE_EE;
                                         
@@ -2008,17 +2000,16 @@ void s57chart::AssembleLineGeometry( void )
                                                     pls->private0 = pcs;
                                                     pls->type = TYPE_EC;
                                                     
-                                                    wxBoundingBox box;
-                                                    double lat, lon;
-                                                    fromSM( e0, n0, ref_lat, ref_lon, &lat, &lon );
-                                                    box.Expand(lon, lat);
-                                                    fromSM( e1, n1, ref_lat, ref_lon, &lat, &lon );
-                                                    box.Expand(lon, lat);
-
-                                                    pls->lat_max = box.GetMaxY();
-                                                    pls->lat_min = box.GetMinY();
-                                                    pls->lon_max = box.GetMaxX();
-                                                    pls->lon_min = box.GetMinX();
+                                                    double lat1, lon1, lat2, lon2;
+                                                    fromSM( e0, n0, ref_lat, ref_lon, &lat1, &lon1 );
+                                                    fromSM( e1, n1, ref_lat, ref_lon, &lat2, &lon2 );
+                                                    
+                                                    LLBBox box;
+                                                    box.SetFromSegment(lat1, lon1, lat2, lon2);
+                                                    pls->lat_max = box.GetMaxLat();
+                                                    pls->lat_min = box.GetMinLat();
+                                                    pls->lon_max = box.GetMaxLon();
+                                                    pls->lon_min = box.GetMinLon();
                                                     
                                                     le_current->next = pls;             // hook it up
                                                     le_current = pls;
@@ -2039,17 +2030,17 @@ void s57chart::AssembleLineGeometry( void )
                                                     pls->private0 = pcs;
                                                     pls->type = TYPE_CC;
 
-                                                    wxBoundingBox box;
-                                                    double lat, lon;
-                                                    fromSM( e0, n0, ref_lat, ref_lon, &lat, &lon );
-                                                    box.Expand(lon, lat);
-                                                    fromSM( e1, n1, ref_lat, ref_lon, &lat, &lon );
-                                                    box.Expand(lon, lat);
-
-                                                    pls->lat_max = box.GetMaxY();
-                                                    pls->lat_min = box.GetMinY();
-                                                    pls->lon_max = box.GetMaxX();
-                                                    pls->lon_min = box.GetMinX();
+                                                    double lat1, lon1, lat2, lon2;
+                                                    fromSM( e0, n0, ref_lat, ref_lon, &lat1, &lon1 );
+                                                    fromSM( e1, n1, ref_lat, ref_lon, &lat2, &lon2 );
+                                                    
+                                                    LLBBox box;
+                                                    box.SetFromSegment(lat1, lon1, lat2, lon2);
+                                                    
+                                                    pls->lat_max = box.GetMaxLat();
+                                                    pls->lat_min = box.GetMinLat();
+                                                    pls->lon_max = box.GetMaxLon();
+                                                    pls->lon_min = box.GetMinLon();
                                                     
                                                     le_current->next = pls;             // hook it up
                                                     le_current = pls;
@@ -2117,30 +2108,31 @@ void s57chart::BuildLineVBO( void )
 #endif    
 }
 
+
 /*              RectRegion:
  *                      This is the Screen region desired to be updated.  Will be either 1 rectangle(full screen)
  *                      or two rectangles (panning with FBO accelerated pan logic)
- *
+ * 
  *              Region:
  *                      This is the LLRegion describing the quilt active region for this chart.
- *
+ * 
  *              So, Actual rendering area onscreen should be clipped to the intersection of the two regions.
  */
 
 bool s57chart::RenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& VPoint,
-                                    const OCPNRegion &RectRegion, const LLRegion &Region )
+                                     const OCPNRegion &RectRegion, const LLRegion &Region )
 {
     return DoRenderRegionViewOnGL( glc, VPoint, RectRegion, Region, false );
 }
 
 bool s57chart::RenderOverlayRegionViewOnGL( const wxGLContext &glc, const ViewPort& VPoint,
-                                           const OCPNRegion &RectRegion, const LLRegion &Region )
+                                            const OCPNRegion &RectRegion, const LLRegion &Region )
 {
     return DoRenderRegionViewOnGL( glc, VPoint, RectRegion, Region, true );
 }
 
 bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& VPoint,
-                                      const OCPNRegion &RectRegion, const LLRegion &Region, bool b_overlay )
+                                       const OCPNRegion &RectRegion, const LLRegion &Region, bool b_overlay )
 {
 #ifdef ocpnUSE_GL
 //     CALLGRIND_START_INSTRUMENTATION
@@ -2151,6 +2143,7 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
     if( g_bDebugS57 ) printf( "\n" );
 
     SetVPParms( VPoint );
+    
     ps52plib->PrepareForRender();
     
     if( m_plib_state_hash != ps52plib->GetStateHash() ) {
@@ -2194,21 +2187,21 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
     for(OCPNRegionIterator upd ( RectRegion ); upd.HaveRects(); upd.NextRect()) {
         LLRegion chart_region = vp.GetLLRegion(upd.GetRect());
         chart_region.Intersect(Region);
-
+        
         if(!chart_region.Empty()) {
-
+            
             //TODO  I think this needs nore work for alternate Projections...
             //  cm93 vpoint crossing Greenwich, panning east, was rendering areas incorrectly.
             ViewPort cvp = glChartCanvas::ClippedViewport(VPoint, chart_region);
 
             if(CHART_TYPE_CM93 == GetChartType()){
                 // for now I will revert to the faster rectangle clipping now that rendering order is resolved
-                //                glChartCanvas::SetClipRegion(cvp, chart_region);
+//                glChartCanvas::SetClipRegion(cvp, chart_region);
                 glChartCanvas::SetClipRect(cvp, upd.GetRect(), false);
             }
             else
                 glChartCanvas::SetClipRect(cvp, upd.GetRect(), false);
-
+            
             ps52plib->m_last_clip_rect = upd.GetRect();
             glPushMatrix(); //    Adjust for rotation
             glChartCanvas::RotateToViewPort(VPoint);
@@ -2424,7 +2417,7 @@ bool s57chart::DoRenderViewOnDC( wxMemoryDC& dc, const ViewPort& VPoint, RenderT
     double easting_ul, northing_ul;
     double easting_lr, northing_lr;
     double prev_easting_ul = 0., prev_northing_ul = 0.;
-//    double prev_easting_lr, prev_northing_lr;  // Not used
+    double prev_easting_lr, prev_northing_lr;
 
     if( ps52plib->GetPLIBColorScheme() != m_lastColorScheme ) bReallyNew = true;
     m_lastColorScheme = ps52plib->GetPLIBColorScheme();
@@ -2465,8 +2458,8 @@ bool s57chart::DoRenderViewOnDC( wxMemoryDC& dc, const ViewPort& VPoint, RenderT
                 - ( ( m_last_vp.pix_width / 2 ) / m_view_scale_ppm );
         prev_northing_ul = last_northing_vp_center
                 + ( ( m_last_vp.pix_height / 2 ) / m_view_scale_ppm );
-//        prev_easting_lr = easting_ul + ( m_last_vp.pix_width / m_view_scale_ppm );  // Not used
-//        prev_northing_lr = northing_ul - ( m_last_vp.pix_height / m_view_scale_ppm );  // Not used
+        prev_easting_lr = easting_ul + ( m_last_vp.pix_width / m_view_scale_ppm );
+        prev_northing_lr = northing_ul - ( m_last_vp.pix_height / m_view_scale_ppm );
 
         double dx = ( easting_ul - prev_easting_ul ) * m_view_scale_ppm;
         double dy = ( prev_northing_ul - northing_ul ) * m_view_scale_ppm;
@@ -2575,12 +2568,12 @@ bool s57chart::DoRenderViewOnDC( wxMemoryDC& dc, const ViewPort& VPoint, RenderT
             fromSM( temp_easting_lr, temp_northing_lr, ref_lat, ref_lon, &temp_lat_bot,
                     &temp_lon_right );
 
-            temp_vp.GetBBox().SetMin( temp_lon_left, temp_lat_bot );
-            temp_vp.GetBBox().SetMax( temp_lon_right, temp_lat_top );
+            temp_vp.GetBBox().Set( temp_lat_bot, temp_lon_left,
+                                  temp_lat_top, temp_lon_right );
 
             //      Allow some slop in the viewport
             //    TODO Investigate why this fails if greater than 5 percent
-            double margin = wxMin(temp_vp.GetBBox().GetWidth(), temp_vp.GetBBox().GetHeight())
+            double margin = wxMin(temp_vp.GetBBox().GetLonRange(), temp_vp.GetBBox().GetLatRange())
                     * 0.05;
             temp_vp.GetBBox().EnLarge( margin );
 
@@ -2907,7 +2900,6 @@ InitReturn s57chart::Init( const wxString& name, ChartInitFlag flags )
         m_SENCFileName = name;
         ret_value = PostInit( flags, m_global_color_scheme );
 
-
     }
 
     s_bInS57--;
@@ -3088,7 +3080,7 @@ InitReturn s57chart::PostInit( ChartInitFlag flags, ColorScheme cs )
 
 void s57chart::ClearDepthContourArray( void )
 {
-
+    
     if( m_nvaldco_alloc ) {
         free (m_pvaldco_array);
     }
@@ -3206,8 +3198,8 @@ bool s57chart::BuildThumbnail( const wxString &bmpname )
 
     vp.m_projection_type = PROJECTION_MERCATOR;
 
-    vp.GetBBox().SetMin( m_FullExtent.WLON, m_FullExtent.SLAT );
-    vp.GetBBox().SetMax( m_FullExtent.ELON, m_FullExtent.NLAT );
+    vp.GetBBox().Set( m_FullExtent.SLAT, m_FullExtent.WLON,
+                     m_FullExtent.NLAT, m_FullExtent.ELON );
 
     vp.chart_scale = 10000000 - 1;
     vp.Validate();
@@ -3237,7 +3229,7 @@ bool s57chart::BuildThumbnail( const wxString &bmpname )
 
 //      Also, save some other settings
     bool bsavem_bShowSoundgp = ps52plib->m_bShowSoundg;
-
+    
     // SetDisplayCategory may clear Noshow array
     ps52plib->SaveObjNoshow();
 
@@ -3384,10 +3376,8 @@ bool s57chart::CreateHeaderDataFromENC( void )
                         pNoCovrCntArray->Add( npt );
                     }
                 }
+                
 
-#ifdef __WXOSX__
-        free( pf);
-#endif
             delete pFeat;
             pFeat = GetChartNextM_COVR( catcov );
     }         // while
@@ -3407,6 +3397,7 @@ bool s57chart::CreateHeaderDataFromENC( void )
             m_pCOVRTable[j] = pAuxPtrArray->Item( j );
         }
     }
+
     else                                     // strange case, found no CATCOV=1 M_COVR objects
     {
         wxString msg( _T("   ENC contains no useable M_COVR, CATCOV=1 features:  ") );
@@ -3433,6 +3424,7 @@ bool s57chart::CreateHeaderDataFromENC( void )
         m_pNoCOVRTablePoints = NULL;
         m_pNoCOVRTable = NULL;
     }
+
     delete pAuxPtrArray;
     delete pAuxCntArray;
     delete pNoCovrPtrArray;
@@ -3533,12 +3525,12 @@ bool s57chart::CreateHeaderDataFromSENC( void )
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-//            dun = 1;  // Not used but break
+            dun = 1;
             break;
         }
 
         if( !strncmp( buf, "OGRF", 4 ) ) {
-//            dun = 1;  // Not used but break
+            dun = 1;
             break;
         }               //OGRF
 
@@ -3550,7 +3542,7 @@ bool s57chart::CreateHeaderDataFromSENC( void )
                 msg.Append( m_SENCFileName.GetFullPath() );
                 wxLogMessage( msg );
 
-//                dun = 1;  // Not used but break
+                dun = 1;
                 ret_val = false;                   // error
                 break;
             }
@@ -3704,7 +3696,7 @@ ListOfS57Obj *s57chart::GetAssociatedObjects( S57Obj *obj )
             top = razRules[disPrioIdx][3];     // PLAIN_BOUNDARIES
             while( top != NULL ) {
                 if( top->obj->bIsAssociable ) {
-                    if( top->obj->BBObj.PointInBox( lon, lat, 0.0 ) ) {
+                    if( top->obj->BBObj.Contains( lat, lon ) ) {
                         if( IsPointInObjArea( lat, lon, 0.0, top->obj ) ) {
                             pobj_list->Append( top->obj );
                             gotit = true;
@@ -3721,7 +3713,7 @@ ListOfS57Obj *s57chart::GetAssociatedObjects( S57Obj *obj )
                 top = razRules[disPrioIdx][4];     // SYMBOLIZED_BOUNDARIES
                 while( top != NULL ) {
                     if( top->obj->bIsAssociable ) {
-                        if( top->obj->BBObj.PointInBox( lon, lat, 0.0 ) ) {
+                        if( top->obj->BBObj.Contains( lat, lon ) ) {
                             if( IsPointInObjArea( lat, lon, 0.0, top->obj ) ) {
                                 pobj_list->Append( top->obj );
                                 break;
@@ -4226,9 +4218,12 @@ int s57chart::BuildRAZFromSENCFile( const wxString& FullPath )
     //    Create a hash map of VE_Element pointers as a chart class member
     int n_ve_elements = VEs.size();
     
+    double scale = gFrame->GetBestVPScale(this);
+    int nativescale = GetNativeScale();
+    
     for( int i = 0; i < n_ve_elements; i++ ) {
+
         VE_Element *vep = VEs.at( i );
-        
         if(vep->nCount){
             //  Get a bounding box for the edge
             double east_max = -1e7; double east_min = 1e7;
@@ -4245,28 +4240,25 @@ int s57chart::BuildRAZFromSENCFile( const wxString& FullPath )
                 vrun++;
             }
             
-            double lat, lon;
-            fromSM( east_min, north_min, ref_lat, ref_lon, &lat, &lon );
-            vep->BBox.SetMin( lon, lat);
-            fromSM( east_max, north_max, ref_lat, ref_lon, &lat, &lon );
-            vep->BBox.SetMax( lon, lat);
+            double lat1, lon1, lat2, lon2;
+            fromSM( east_min, north_min, ref_lat, ref_lon, &lat1, &lon1 );
+            fromSM( east_max, north_max, ref_lat, ref_lon, &lat2, &lon2 );
+            vep->BBox.Set( lat1, lon1, lat2, lon2);
         }
         
         m_ve_hash[vep->index] = vep;
     }
     
+        
     //    Create a hash map VC_Element pointers as a chart class member
     int n_vc_elements = VCs.size();
-
-    double scale = gFrame->GetBestVPScale(this);
-    int nativescale = GetNativeScale();
-
+    
     for( int i = 0; i < n_vc_elements; i++ ) {
         VC_Element *vcp = VCs.at( i );
         m_vc_hash[vcp->index] = vcp;
     }
-
-
+    
+    
     //Walk the vector of S57Objs, associating LUPS, instructions, etc...
     
     for(unsigned int i=0 ; i < Objects.size() ; i++){
@@ -4276,13 +4268,13 @@ int s57chart::BuildRAZFromSENCFile( const wxString& FullPath )
         //      This is where Simplified or Paper-Type point features are selected
         LUPrec *LUP;
         LUPname LUP_Name = PAPER_CHART;
-
+        
         wxString objnam  = obj->GetAttrValueAsString("OBJNAM");
         if (objnam.Len() > 0) {
             wxString fe_name = wxString(obj->FeatureName, wxConvUTF8);
             g_pi_manager->SendVectorChartObjectInfo( FullPath, fe_name, objnam, obj->m_lat, obj->m_lon, scale, nativescale );
         }
-
+        
         switch( obj->Primitive_type ){
             case GEO_POINT:
             case GEO_META:
@@ -4617,23 +4609,23 @@ void s57chart::ResetPointBBoxes( const ViewPort &vp_last, const ViewPort &vp_thi
             while( top != NULL ) {
                 if( !top->obj->geoPtMulti )                      // do not reset multipoints
                 {
-                    if(top->obj->bBBObj_valid) { // scale bbobj
+                    if(top->obj->BBObj.GetValid()) { // scale bbobj
                         double lat = top->obj->m_lat, lon = top->obj->m_lon;
 
-                        double lat1 = (lat - top->obj->BBObj.GetMinY()) * d;
-                        double lat2 = (lat - top->obj->BBObj.GetMaxY()) * d;
+                        double lat1 = (lat - top->obj->BBObj.GetMinLat()) * d;
+                        double lat2 = (lat - top->obj->BBObj.GetMaxLat()) * d;
 
-                        double minx = top->obj->BBObj.GetMinX();
-                        double maxx = top->obj->BBObj.GetMaxX();
+                        double minlon = top->obj->BBObj.GetMinLon();
+                        double maxlon = top->obj->BBObj.GetMaxLon();
 
-                        double lon1 = (lon - minx) * d;
-                        double lon2 = (lon - maxx) * d;
+                        double lon1 = (lon - minlon) * d;
+                        double lon2 = (lon - maxlon) * d;
                         
-                        top->obj->BBObj.SetMin( lon - lon1, lat - lat1 );
-                        top->obj->BBObj.SetMax( lon - lon2, lat - lat2 );
+                        top->obj->BBObj.Set( lat - lat1, lon - lon1,
+                                            lat - lat2, lon - lon2 );
 
                         // this method is very close, but errors accumulate
-                        top->obj->bBBObj_valid = false;
+                        top->obj->BBObj.Invalidate();
                     }
                 }
                 
@@ -5361,11 +5353,7 @@ void s57chart::CreateSENCVectorEdgeTable( FILE * fpOut, S57Reader *poReader )
         //  Transcribe points to a buffer
         
         if(nPoints){
-#ifdef __WXOSX__
-            double *ppd = (double *)malloc(nPoints * sizeof(double));
-#else
             double *ppd = (double *)malloc(nPoints * sizeof(MyPoint));
-#endif
             double *ppr = ppd;
 
             for( int i = 0; i < nPoints; i++ ) {
@@ -5607,7 +5595,7 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
         //  For single Point objects, the integral object bounding box contains the lat/lon of the object,
         //  possibly expanded by text or symbol rendering
         case GEO_POINT: {
-            if( !obj->bBBObj_valid ) return false;
+            if( !obj->BBObj.GetValid() ) return false;
             
             if( 1 == obj->npt ) {
                 //  Special case for LIGHTS
@@ -5623,29 +5611,30 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
                     // Double the select radius to adjust for the fact that LIGHTS has
                     // a 0x0 BBox to start with, which makes it smaller than all other
                     // rendered objects.
-                    wxBoundingBox sbox( olon - 2*select_radius, olat - 2*select_radius,
-                            olon + 2*select_radius, olat + 2*select_radius );
+                    LLBBox sbox;
+                    sbox.Set(olat, olon, olat, olon);
 
-                    if( sbox.PointInBox( lon, lat, 0 ) ) return true;
+                    if( sbox.ContainsMarge( lat, lon, select_radius ) ) return true;
                 }
 
-                else if( obj->BBObj.PointInBox( lon, lat, select_radius ) ) return true;
+                else if( obj->BBObj.ContainsMarge( lat, lon, select_radius ) ) return true;
             }
 
             //  For MultiPoint objects, make a bounding box from each point's lat/lon
             //  and check it
             else {
-                if( !obj->bBBObj_valid ) return false;
+                if( !obj->BBObj.GetValid() ) return false;
 
                 //  Coarse test first
-                if( !obj->BBObj.PointInBox( lon, lat, select_radius ) ) return false;
+                if( !obj->BBObj.ContainsMarge( lat, lon, select_radius ) ) return false;
                 //  Now decomposed soundings, one by one
                 double *pdl = obj->geoPtMulti;
                 for( int ip = 0; ip < obj->npt; ip++ ) {
                     double lon_point = *pdl++;
                     double lat_point = *pdl++;
-                    wxBoundingBox BB_point( lon_point, lat_point, lon_point, lat_point );
-                    if( BB_point.PointInBox( lon, lat, select_radius ) ) {
+                    LLBBox BB_point;
+                    BB_point.Set( lat_point, lon_point, lat_point, lon_point );
+                    if( BB_point.ContainsMarge( lat, lon, select_radius ) ) {
 //                                  index = ip;
                         return true;
                     }
@@ -5656,7 +5645,7 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
         }
         case GEO_AREA: {
             //  Coarse test first
-            if( !obj->BBObj.PointInBox( lon, lat, select_radius ) ) return false;
+            if( !obj->BBObj.ContainsMarge( lat, lon, select_radius ) ) return false;
             else
                 return IsPointInObjArea( lat, lon, select_radius, obj );
         }
@@ -5664,7 +5653,7 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
         case GEO_LINE: {
             if( obj->geoPt ) {
                 //  Coarse test first
-                if( !obj->BBObj.PointInBox( lon, lat, select_radius ) ) return false;
+                if( !obj->BBObj.ContainsMarge( lat, lon, select_radius ) ) return false;
 
                 //  Line geometry is carried in SM or CM93 coordinates, so...
                 //  make the hit test using SM coordinates, converting from object points to SM using per-object conversion factors.
@@ -5679,7 +5668,7 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
 
                 if(!ntp)
                     return false;
-
+                
                 float *pfree = ptest;
 #endif
                 pt *ppt = obj->geoPt;
@@ -5695,18 +5684,17 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
 #if 0
                 float a0 = *ptest++;
                 float b0 = *ptest++;
-#endif
+#endif                
                 ppt++;
 
                 for( int ip = 1; ip < npt; ip++ ) {
-#if 0
-                    
+#if 0                    
                     float a = *ptest++;
                     float b = *ptest++;
                     float c = ppt->y;
                     float d = ppt->x;
                     printf("%g %g %g %g\n", a,b,c,d);
-#endif
+#endif                    
                     
                     double north = ( ppt->y * yr ) + yo;
                     double east = ( ppt->x * xr ) + xo;
@@ -5840,13 +5828,9 @@ bool s57chart::IsPointInObjArea( float lat, float lon, float select_radius, S57O
             easting = easting_scaled;
         }
 
-        wxBoundingBox tp_box;
         while( pTP ) {
 //  Coarse test
-            tp_box.SetMin(pTP->minx, pTP->miny);
-            tp_box.SetMax(pTP->maxx, pTP->maxy);
-
-            if( tp_box.PointInBox( lon, lat, 0 ) ) {
+            if( pTP->box.Contains( lat, lon ) ) {
                 
                 if(ppg->data_type == DATA_TYPE_DOUBLE) {
                     double *p_vertex = pTP->p_vertex;
@@ -6134,12 +6118,12 @@ bool s57chart::InitFromSENCMinimal( const wxString &FullPath )
 
             while( !dun ) {
                 if( my_fgets( pbuf, 256, *pfpx ) == 0 ) {
-//                    dun = 1;  // Not used but break
+                    dun = 1;
                     ret_val = false;
                     break;
                 } else {
                     if( !strncmp( pbuf, "OGRF", 4 ) ) {
-//                        dun = 1;  // Not used but break
+                        dun = 1;
                         break;
                     } else if( !strncmp( pbuf, "UPDT", 4 ) ) {
                         sscanf( pbuf, "UPDT=%i", &last_update );
@@ -6341,7 +6325,7 @@ wxString s57chart::GetAttributeValueAsString( S57attVal *pAttrVal, wxString Attr
 {
     if(NULL == pAttrVal)
         return _T("");
-
+    
     wxString value;
     switch( pAttrVal->valType ){
         case OGR_STR: {
@@ -6499,21 +6483,21 @@ static const char *type2str( GeoPrim_t type)
 {
     const char *r = "Uknown";
     switch(type) {
-        case GEO_POINT:
-            return "Point";
-            break;
-        case GEO_LINE:
-            return "Line";
-            break;
-        case GEO_AREA:
-            return "Area";
-            break;
-        case GEO_META:
-            return "Meta";
-            break;
-        case GEO_PRIM:
-            return "Prim";
-            break;
+    case GEO_POINT:
+        return "Point";
+        break;
+    case GEO_LINE:
+        return "Line";
+        break;
+    case GEO_AREA:
+        return "Area";
+        break;
+    case GEO_META:
+        return "Meta";
+        break;
+    case GEO_PRIM:
+        return "Prim";
+        break;
     }
     return r;
 }
@@ -6574,7 +6558,7 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
         //    Show LUP
         if( g_bDebugS57 ) {
             wxString index;
-
+            
             classAttributes = _T("");
             index.Printf( _T("Feature Index: %d<br>"), current->obj->Index );
             classAttributes << index;
@@ -6584,8 +6568,8 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
             classAttributes << LUPstring;
 
             wxString Bbox;
-            wxBoundingBox bbox = current->obj->BBObj;
-            Bbox.Printf( _T("Bounding box:  %g %g %g %g<br>"), bbox.GetMinY(), bbox.GetMaxY() , bbox.GetMinX(), bbox.GetMaxX() );
+            LLBBox bbox = current->obj->BBObj;
+            Bbox.Printf( _T("Lat/Lon box:  %g %g %g %g<br>"), bbox.GetMinLat(), bbox.GetMaxLat() , bbox.GetMinLon(), bbox.GetMaxLon() );
             classAttributes << Bbox;
 
             wxString Type;
@@ -7289,12 +7273,12 @@ bool s57_CheckExtendedLightSectors( int mx, int my, ViewPort& viewport, std::vec
                         
                         S57attVal *pAttrVal = NULL;
                         if( attValArray ){
-                            if(Chs57)
+                            if(Chs57) 
                                 pAttrVal = attValArray->Item(attrCounter);
                             else if( target_plugin_chart )
                                 pAttrVal = attValArray->Item(attrCounter);
                         }
-
+                        
                         wxString value = s57chart::GetAttributeValueAsString( pAttrVal, curAttrName );
                         
                         if( curAttrName == _T("LITVIS") ){

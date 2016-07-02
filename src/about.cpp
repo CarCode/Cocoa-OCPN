@@ -49,7 +49,9 @@ extern MyFrame *gFrame;
 extern ocpnStyle::StyleManager* g_StyleManager;
 extern about *g_pAboutDlg;
 extern bool g_bresponsive;
-
+#ifdef __WXOSX__
+extern double gLat, gLon;
+#endif
 wxString OpenCPNVersion =
 wxString::Format( wxT("\n      Version %i.%i.%i Build "),
                  VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH )
@@ -410,13 +412,17 @@ void about::Populate( void )
                      bg.Red(), bg.Blue(), bg.Green(), fg.Red(), fg.Blue(), fg.Green() );
     pHelpHTMLCtl->SetFonts( face, face, sizes );
     HilfeText.Append( _T("Für Hilfe gehen Sie bitte zum OS X Menü Hilfe oben in der Menüzeile. Geben Sie dort Suchbegriffe ein wie z.B. Plugins.<br><br>"));
+    wxDateTime aktzeit = wxDateTime::Now();
+    wxString utcakt = aktzeit.FormatISOTime();
+    wxString aktdata;
+    aktdata.Printf( _T(" Lat %10.5f Lon %10.5f "), gLat, gLon );
     HilfeText.Append( _T("Muster für Notfall-Rufe über UKW: Mayday (schwerwiegend, wichtig, sofortige Hilfe) oder PanPan (schnell, keine unmittelbare Gefahr):<br>"));
     HilfeText.Append(_T("<br><table border=4 cellspacing=5 cellpadding=10>"));
     HilfeText.Append(_T("<tr><th>Muster Notfall-Ruf Mayday</th><th>Muster Notfall-Ruf Pan Pan</th></tr>"));
     HilfeText.Append(_T("<tr><td>Mayday, Mayday, Mayday</td><td>Pan Pan, Pan Pan, Pan Pan</td></tr>"));
-    HilfeText.Append(_T("<tr><td>Yacht Name, Yacht Name, Yacht Name</td><td>Hello All Stations, Hello All Stations, Hello All Stations</td></tr>"));
-    HilfeText.Append(_T("<tr><td>Mayday, Yacht Name, Call Sign:</td><td>Yacht Name, Yacht Name, Yacht Name, Call Sign:</td></tr>"));
-    HilfeText.Append(_T("<tr><td>Position: Uncertain. Last recorded position was </td><td>Position: Uncertain. Last recorded position was </td></tr>"));
+    HilfeText.Append(_T("<tr><td>Yacht (Name), Yacht (Name), Yacht (Name)</td><td>Hello All Stations, Hello All Stations, Hello All Stations</td></tr>"));
+    HilfeText.Append(_T("<tr><td>Mayday, Yacht (Name), Call Sign:</td><td>Yacht (Name), Yacht (Name), Yacht (Name), Call Sign:</td></tr>"));
+    HilfeText.Append(_T("<tr><td>Position: Uncertain. Last recorded position was<br>" + aktdata + " at UTC: " + utcakt + "</td><td>Position: Uncertain. Last recorded position was<br>" + aktdata + " at UTC: " + utcakt + "</td></tr>"));
     HilfeText.Append(_T("<tr><td>(Notfall-Art, -Beschreibung)</td><td>(Vorfall-Art, -Beschreibung)</td></tr>"));
     HilfeText.Append(_T("<tr><td>I require immediate assistance, [n] persons aboard</td><td>(Erforderliche Hilfe-Art, -Beschreibung)</td></tr>"));
     HilfeText.Append(_T("<tr><td>Over</td><td>Over</td></tr>"));

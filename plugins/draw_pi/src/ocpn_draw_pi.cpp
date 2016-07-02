@@ -2453,10 +2453,13 @@ bool ocpn_draw_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *pivp)
     m_view_scale = pivp->view_scale_ppm;
 
     g_pDC = new ODDC( dc );
+#ifdef __WXOSX__
+    wxBoundingBox llbb;
+#else
     LLBBox llbb;
+#endif
     llbb.SetMin( pivp->lon_min, pivp->lat_min );
     llbb.SetMax( pivp->lon_max, pivp->lat_max );
-
     DrawAllPathsInBBox( *g_pDC, llbb );
     DrawAllODPointsInBBox( *g_pDC, llbb );
     RenderPathLegs( *g_pDC );
@@ -2475,9 +2478,12 @@ bool ocpn_draw_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *pivp)
 
     g_pDC = new ODDC();
     LLBBox llbb;
+#ifdef __WXOSX__
+    llbb.Set(pivp->lat_min, pivp->lon_min, pivp->lat_max, pivp->lon_max);
+#else
     llbb.SetMin( pivp->lon_min, pivp->lat_min );
     llbb.SetMax( pivp->lon_max, pivp->lat_max );
-
+#endif
     //    DrawAllODPointsInBBox( *g_pDC, llbb );
     RenderPathLegs( *g_pDC );
 
@@ -2710,7 +2716,11 @@ void ocpn_draw_pi::FinishBoundary( void )
     RequestRefresh( m_parent_window );
 }
 
+#ifdef __WXOSX__
+void ocpn_draw_pi::DrawAllPathsInBBox(ODDC &dc,  wxBoundingBox& BltBBox)
+#else
 void ocpn_draw_pi::DrawAllPathsInBBox(ODDC &dc,  LLBBox& BltBBox)
+#endif
 {
     wxPathListNode *pnode = g_pPathList->GetFirst();
     while( pnode ) {
@@ -2736,7 +2746,6 @@ void ocpn_draw_pi::DrawAllPathsInBBox(ODDC &dc,  LLBBox& BltBBox)
         if( pPathDraw ) {
 
             wxBoundingBox test_box = pPathDraw->GetBBox();
-
             if( b_run ) test_box.Expand( m_lon, m_lat );
 
             if( !BltBBox.IntersectOut( test_box ) ) // Path is not wholly outside window
@@ -2745,6 +2754,7 @@ void ocpn_draw_pi::DrawAllPathsInBBox(ODDC &dc,  LLBBox& BltBBox)
                 pPathDraw->Draw( dc, *m_pVP );
             } else if( pPathDraw->CrossesIDL() ) {
                 wxPoint2DDouble xlate( -360., 0. );
+
                 wxBoundingBox test_box1 = pPathDraw->GetBBox();
                 test_box1.Translate( xlate );
                 if( b_run ) test_box1.Expand( m_lon, m_lat );
@@ -2783,9 +2793,13 @@ void ocpn_draw_pi::DrawAllPathsInBBox(ODDC &dc,  LLBBox& BltBBox)
     }
 }
 
+#ifdef __WXOSX__
+void ocpn_draw_pi::DrawAllODPointsInBBox( ODDC& dc, wxBoundingBox& BltBBox )
+#else
 void ocpn_draw_pi::DrawAllODPointsInBBox( ODDC& dc, LLBBox& BltBBox )
+#endif
 {
-    //        wxBoundingBox bbx;
+//    wxBoundingBox bbx;
     if(!g_pODPointMan)
         return;
 

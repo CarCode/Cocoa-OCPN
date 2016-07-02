@@ -326,9 +326,17 @@ public:
     bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
     bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
     wxString FormatDistanceAdaptive( double distance );
+#ifdef __WXOSX__
+    void DrawAllPathsInBBox(ODDC &dc,  wxBoundingBox& BltBBox);
+#else
     void DrawAllPathsInBBox(ODDC &dc,  LLBBox& BltBBox);
+#endif
     void DrawAllPathsAndODPoints( PlugIn_ViewPort &pivp );
+#ifdef __WXOSX__
+    void DrawAllODPointsInBBox( ODDC &dc, wxBoundingBox& BltBBox );
+#else
     void DrawAllODPointsInBBox( ODDC &dc, LLBBox& BltBBox );
+#endif
     void CanvasPopupMenu( int x, int y, int seltype );
     double  GetTrueOrMag(double a);
     void SetPositionFixEx( PlugIn_Position_Fix_Ex &pfix );

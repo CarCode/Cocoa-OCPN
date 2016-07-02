@@ -168,8 +168,11 @@ public:
       virtual void DrawGL( PlugIn_ViewPort &pivp );
       unsigned int m_iTextTexture;
       int m_iTextTextureWidth, m_iTextTextureHeight;
-
+#ifdef __WXOSX__
+    wxBoundingBox m_wpBBox;
+#else
       LLBBox m_wpBBox;
+#endif
       double m_wpBBox_chart_scale, m_wpBBox_rotation;
 
       static bool s_bUpdateWaypointsDisplayList;

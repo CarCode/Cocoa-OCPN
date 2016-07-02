@@ -3896,6 +3896,8 @@ void options::CreateControls( void )
 
     m_small_button_size = wxSize( -1, (int) ( 1.4 * ( font_size_y + font_descent + font_lead ) ) );
 
+    m_nCharWidthMax = GetSize().x / GetCharWidth();
+
     // Some members (pointers to controls) need to initialized
     pEnableZoomToCursor = NULL;
     pSmoothPanZoom = NULL;
@@ -5844,9 +5846,9 @@ void options::DoOnPageChange( size_t page )
                     wxLog::EnableLogging(FALSE);  // avoid "Cannot set locale to..." log message
 
                     wxLocale ltest(lang_list[it], 0);
-#ifndef __WXOSX__
 #if wxCHECK_VERSION(2, 9, 0)
-                    ltest.AddCatalogLookupPathPrefix( wxStandardPaths::Get().GetInstallPrefix() + _T( "/share/locale" ) );
+#ifdef __WXGTK__
+                    ltest.AddCatalogLookupPathPrefix(wxStandardPaths::Get().GetInstallPrefix() + _T( "/share/locale" ) );
 #endif
 #endif
                     ltest.AddCatalog(_T("opencpn"));

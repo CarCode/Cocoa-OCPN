@@ -66,6 +66,7 @@ extern OCPNPlatform     *g_Platform;
 extern ConsoleCanvas    *console;
 
 extern RouteList        *pRouteList;
+extern TrackList        *pTrackList;
 extern Select           *pSelect;
 extern MyConfig         *pConfig;
 extern Routeman         *g_pRouteMan;
@@ -80,7 +81,7 @@ extern bool             g_bMagneticAPB;
 extern RoutePoint       *pAnchorWatchPoint1;
 extern RoutePoint       *pAnchorWatchPoint2;
 
-extern Track            *g_pActiveTrack;
+extern ActiveTrack      *g_pActiveTrack;
 extern RouteProp        *pRoutePropDialog;
 extern RouteManagerDialog *pRouteManagerDialog;
 extern RoutePoint      *pAnchorWatchPoint1;
@@ -875,19 +876,14 @@ void Routeman::DeleteAllRoutes( void )
             ::wxBeginBusyCursor();
         }
 
-        if( proute->m_bIsInLayer ) {
-            node = node->GetNext();
+        node = node->GetNext();
+        if( proute->m_bIsInLayer )
             continue;
-        }
 
-        if( !proute->m_bIsTrack ) {
-            pConfig->m_bSkipChangeSetUpdate = true;
-            pConfig->DeleteConfigRoute( proute );
-            DeleteRoute( proute );
-            node = pRouteList->GetFirst();                   // Route
-            pConfig->m_bSkipChangeSetUpdate = false;
-        } else
-            node = node->GetNext();
+        pConfig->m_bSkipChangeSetUpdate = true;
+        pConfig->DeleteConfigRoute( proute );
+        DeleteRoute( proute );
+        pConfig->m_bSkipChangeSetUpdate = false;
     }
 
     ::wxEndBusyCursor();
@@ -899,40 +895,34 @@ void Routeman::DeleteAllTracks( void )
     ::wxBeginBusyCursor();
 
     //    Iterate on the RouteList
-    wxRouteListNode *node = pRouteList->GetFirst();
+    wxTrackListNode *node = pTrackList->GetFirst();
     while( node ) {
-        Route *proute = node->GetData();
-
-        if( proute->m_bIsInLayer ) {
+        Track *ptrack = node->GetData();
             node = node->GetNext();
+        if( ptrack->m_bIsInLayer )
             continue;
-        }
 
-        if( proute->m_bIsTrack ) {
-            g_pAIS->DeletePersistentTrack( (Track *)proute );
-            pConfig->m_bSkipChangeSetUpdate = true;
-            pConfig->DeleteConfigRoute( proute );
-            DeleteTrack( proute );
-            node = pRouteList->GetFirst();                   // Route
-            pConfig->m_bSkipChangeSetUpdate = false;
-        } else
-            node = node->GetNext();
+        g_pAIS->DeletePersistentTrack( ptrack );
+        pConfig->m_bSkipChangeSetUpdate = true;
+        pConfig->DeleteConfigTrack( ptrack );
+        DeleteTrack( ptrack );
+        pConfig->m_bSkipChangeSetUpdate = false;
     }
 
     ::wxEndBusyCursor();
 
 }
 
-void Routeman::DeleteTrack( Route *pRoute )
+void Routeman::DeleteTrack( Track *pTrack )
 {
-    if( pRoute ) {
-        if( pRoute->m_bIsInLayer ) return;
+    if( pTrack ) {
+        if( pTrack->m_bIsInLayer ) return;
 
         ::wxBeginBusyCursor();
 
         wxProgressDialog *pprog = NULL;
 
-        int count = pRoute->pRoutePointList->GetCount();
+        int count = pTrack->GetnPoints();
         if( count > 10000) {
             pprog = new wxProgressDialog( _("OpenCPN Track Delete"), _T("0/0"), count, NULL, 
                                           wxPD_APP_MODAL | wxPD_SMOOTH |
@@ -942,13 +932,14 @@ void Routeman::DeleteTrack( Route *pRoute )
             
         }
 
-        //    Remove the route from associated lists
-        pSelect->DeleteAllSelectableTrackSegments( pRoute );
-        pRouteList->DeleteObject( pRoute );
+        //    Remove the track from associated lists
+        pSelect->DeleteAllSelectableTrackSegments( pTrack );
+        pTrackList->DeleteObject( pTrack );
         
-        // walk the route, tentatively deleting/marking points used only by this route
+#if 0
+        // walk the track, deleting points used by this track
         int ic = 0;
-        wxRoutePointListNode *pnode = ( pRoute->pRoutePointList )->GetFirst();
+        wxTrackPointListNode *pnode = ( pTrack->pTrackPointList )->GetFirst();
         while( pnode )
         {
             if(pprog)
@@ -960,30 +951,18 @@ void Routeman::DeleteTrack( Route *pRoute )
                 ic++;
             }
 
-            RoutePoint *prp = pnode->GetData();
+            TrackPoint *prp = pnode->GetData();
+            delete prp;
 
-            prp->m_bIsInRoute = false;          // Take this point out of this (and only) route
-            if( !prp->m_bKeepXRoute ) {
-                pSelect->DeleteSelectablePoint( prp, SELTYPE_ROUTEPOINT );
-
-                pRoute->pRoutePointList->DeleteNode( pnode );
-
-                pnode = NULL;
-                delete prp;
-            }
-
-            if( pnode )
-                pnode = pnode->GetNext();
-            else
-                pnode = pRoute->pRoutePointList->GetFirst();                // restart the list
+            pnode = pnode->GetNext();
         }
-
-        if( (Track *) pRoute == g_pActiveTrack ) {
+#endif
+        if( pTrack == g_pActiveTrack ) {
             g_pActiveTrack = NULL;
             m_pparent_app->TrackOff();
         }
 
-        delete pRoute;
+        delete pTrack;
 
         ::wxEndBusyCursor();
 
@@ -1652,7 +1631,7 @@ bool WayPointman::SharedWptsExist()
     wxRoutePointListNode *node = m_pWayPointList->GetFirst();
     while( node ) {
         RoutePoint *prp = node->GetData();
-        if (prp->m_bKeepXRoute && ( prp->m_bIsInRoute || prp->m_bIsInTrack || prp == pAnchorWatchPoint1 || prp == pAnchorWatchPoint2))
+        if (prp->m_bKeepXRoute && ( prp->m_bIsInRoute || prp == pAnchorWatchPoint1 || prp == pAnchorWatchPoint2))
             return true;
         node = node->GetNext();
     }
@@ -1668,7 +1647,7 @@ void WayPointman::DeleteAllWaypoints( bool b_delete_used )
         // if argument is false, then only delete non-route waypoints
         if( !prp->m_bIsInLayer && ( prp->GetIconName() != _T("mob") )
             && ( ( b_delete_used && prp->m_bKeepXRoute )
-                        || ( ( !prp->m_bIsInRoute ) && ( !prp->m_bIsInTrack )
+                || ( ( !prp->m_bIsInRoute )
                                 && !( prp == pAnchorWatchPoint1 ) && !( prp == pAnchorWatchPoint2 ) ) ) ) {
             DestroyWaypoint(prp);
             delete prp;

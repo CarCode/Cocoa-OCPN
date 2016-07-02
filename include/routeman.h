@@ -76,7 +76,7 @@ public:
       void DeleteAllRoutes(void);
       void DeleteAllTracks(void);
 
-      void DeleteTrack(Route *pRoute);
+      void DeleteTrack(Track *pTrack);
 
       bool IsRouteValid(Route *pRoute);
 
