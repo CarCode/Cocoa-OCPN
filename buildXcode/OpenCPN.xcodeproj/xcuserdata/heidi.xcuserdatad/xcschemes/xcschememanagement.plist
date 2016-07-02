@@ -69,11 +69,6 @@
 			<key>orderHint</key>
 			<integer>28</integer>
 		</dict>
-		<key>dashboard_pi copy.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>33</integer>
-		</dict>
 		<key>dashboard_pi.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -158,6 +153,11 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>26</integer>
+		</dict>
+		<key>tactics_pi.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>33</integer>
 		</dict>
 		<key>trimplot_pi.xcscheme</key>
 		<dict>

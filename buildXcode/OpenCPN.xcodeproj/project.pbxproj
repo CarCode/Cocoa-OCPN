@@ -1840,12 +1840,10 @@
 		A67530891D26CA79005B561A /* gps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gps.h; path = plugins/tactics_pi/src/gps.h; sourceTree = "<group>"; };
 		A675308A1D26CA90005B561A /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/tactics_pi/src/icons.h; sourceTree = "<group>"; };
 		A675308B1D26CAAB005B561A /* instrument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = instrument.h; path = plugins/tactics_pi/src/instrument.h; sourceTree = "<group>"; };
-		A675308C1D26CAC8005B561A /* ocpn_plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ocpn_plugin.h; path = plugins/tactics_pi/src/ocpn_plugin.h; sourceTree = "<group>"; };
 		A675308D1D26CAE3005B561A /* performance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = performance.h; path = plugins/tactics_pi/src/performance.h; sourceTree = "<group>"; };
 		A675308E1D26CB0A005B561A /* rudder_angle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rudder_angle.h; path = plugins/tactics_pi/src/rudder_angle.h; sourceTree = "<group>"; };
 		A675308F1D26CB22005B561A /* speedometer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = speedometer.h; path = plugins/tactics_pi/src/speedometer.h; sourceTree = "<group>"; };
 		A67530901D26CB3C005B561A /* tactics_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tactics_pi.h; path = plugins/tactics_pi/src/tactics_pi.h; sourceTree = "<group>"; };
-		A67530911D26CB5D005B561A /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = plugins/tactics_pi/src/version.h; sourceTree = "<group>"; };
 		A67530921D26CBA8005B561A /* wind_history.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wind_history.h; path = plugins/tactics_pi/src/wind_history.h; sourceTree = "<group>"; };
 		A67530931D26CBBD005B561A /* wind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wind.h; path = plugins/tactics_pi/src/wind.h; sourceTree = "<group>"; };
 		A67530941D26CBD7005B561A /* wx28compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wx28compat.h; path = plugins/tactics_pi/src/wx28compat.h; sourceTree = "<group>"; };
@@ -3585,12 +3583,10 @@
 				A67530891D26CA79005B561A /* gps.h */,
 				A675308A1D26CA90005B561A /* icons.h */,
 				A675308B1D26CAAB005B561A /* instrument.h */,
-				A675308C1D26CAC8005B561A /* ocpn_plugin.h */,
 				A675308D1D26CAE3005B561A /* performance.h */,
 				A675308E1D26CB0A005B561A /* rudder_angle.h */,
 				A675308F1D26CB22005B561A /* speedometer.h */,
 				A67530901D26CB3C005B561A /* tactics_pi.h */,
-				A67530911D26CB5D005B561A /* version.h */,
 				A67530921D26CBA8005B561A /* wind_history.h */,
 				A67530931D26CBBD005B561A /* wind.h */,
 				A67530941D26CBD7005B561A /* wx28compat.h */,
