@@ -77,8 +77,8 @@ wxFont *g_pFontSmall;
 int g_iDashSpeedMax;
 int g_iDashSpeedUnit;
 int g_iDashDepthUnit;
-int g_iDashDistanceUnit;
-int g_iDashWindSpeedUnit;
+int g_iDashDistanceUnit;  //0="Nautical miles", 1="Statute miles", 2="Kilometers", 3="Meters"
+int g_iDashWindSpeedUnit; //0="Kts", 1="mph", 2="km/h", 3="m/s"
 //TR
 double g_dalphaDeltCoG;
 double g_dLeewayFactor;
@@ -530,8 +530,8 @@ int tactics_pi::Init( void )
     else
       BoatPolar->loadPolar(_T("NULL"));
     //    This PlugIn needs a toolbar icon
-//TR24.04.    m_toolbar_item_id = InsertPlugInTool( _T(""), _img_tactics, _img_tactics, wxITEM_CHECK,
-//TR24.04.            _("Tactics"), _T(""), NULL, TACTICS_TOOL_POSITION, 0, this );
+    m_toolbar_item_id = InsertPlugInTool( _T(""), _img_tactics, _img_tactics, wxITEM_CHECK,
+            _("Tactics"), _T(""), NULL, TACTICS_TOOL_POSITION, 0, this );
 #ifdef __WXOSX__
     wxString shareLocn = *GetpPrivateApplicationDataLocation() +
     _T("opencpn/plugins") + wxFileName::GetPathSeparator() +
@@ -543,7 +543,7 @@ int tactics_pi::Init( void )
       _T("tactics_pi") + wxFileName::GetPathSeparator()
       + _T("data") + wxFileName::GetPathSeparator();
 #endif
-    
+/*
     wxString normalIcon = shareLocn + _T("Tactics.svg");
     wxString toggledIcon = shareLocn + _T("Tactics_toggled.svg");
     wxString rolloverIcon = shareLocn + _T("Tactics_rollover.svg");
@@ -558,7 +558,7 @@ int tactics_pi::Init( void )
     m_toolbar_item_id = InsertPlugInToolSVG(_T(""), normalIcon, rolloverIcon, toggledIcon, wxITEM_CHECK,
       _("Tactics"), _T(""), NULL, TACTICS_TOOL_POSITION, 0, this);
 
-
+*/
     ApplyConfig();
 
     //  If we loaded a version 1 config setup, convert now to version 2
@@ -3290,11 +3290,11 @@ TacticsPreferencesDialog::TacticsPreferencesDialog( wxWindow *parent, wxWindowID
     //wxButton *m_sdbSizerBtnsOK = new wxButton(this, wxID_OK);
     //m_sdbSizerBtns->AddButton(m_sdbSizerBtnsOK);
     //m_sdbSizerBtns->Realize();
-
+// No Apply Button
 //    m_buttonPrefsApply = new wxButton(this, wxID_APPLY);
 //    DialogButtonSizer->AddButton(m_buttonPrefsApply);
     //DialogButtonSizer->SetAffirmativeButton(m_buttonPrefsApply);
-    m_buttonPrefsApply->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(TacticsPreferencesDialog::ApplyPrefs), NULL, this);
+//    m_buttonPrefsApply->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(TacticsPreferencesDialog::ApplyPrefs), NULL, this);
 //    DialogButtonSizer->Realize();
     //m_buttonPrefOK = new wxButton(DialogButtonSizer, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxOK);
     //m_buttonPrefOK->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(tactics_pi::SaveConfig), NULL, this);
@@ -4346,6 +4346,10 @@ Calculate Current with DES
  based on actual position, we calculate lat/lon of the endpoints of both vectors  (COG/HDT = direction, SOG/STW = length)
  then we take lat/lon from the endpoints of these vectors and calculate current between them with length (=speed) and direction
  return the endpoint of SOG,COG
+ 
+ ToDo :
+ we're already calculating in "user speed data", but the exp. smoothing is done on the value itself.
+ On unit-change, the smoothed data values need to be converted from "old" to "new"
 **********************************************************************************/
 void tactics_pi::CalculateCurrent(int st, double value, wxString unit)
 {

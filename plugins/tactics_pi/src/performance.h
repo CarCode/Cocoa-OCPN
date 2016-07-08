@@ -182,19 +182,19 @@ private:
 class DoubleExpSmooth
 {
 public:
-  DoubleExpSmooth(double a);
-  ~DoubleExpSmooth(void);
+    DoubleExpSmooth(double a);
+    ~DoubleExpSmooth(void);
 
-  double GetSmoothVal(double input);
-  void SetAlpha(double newalpha);
-  void SetInitVal(double init);
-  double GetAlpha(void);
+    double GetSmoothVal(double input);
+    void SetAlpha(double newalpha);
+    void SetInitVal(double init);
+    double GetAlpha(void);
 protected:
 
 private:
-  double alpha;
-  int T;
-  double SpT, oldSpT, Sp2T, oldSp2T, predPosT;
+    double alpha;
+    int T;
+    double SpT, oldSpT, Sp2T, oldSp2T, predPosT;
 
 };
 
@@ -204,48 +204,51 @@ private:
 class TacticsInstrument_PolarPerformance : public TacticsInstrument
 {
 public:
-  TacticsInstrument_PolarPerformance(wxWindow *parent, wxWindowID id, wxString title);
-  ~TacticsInstrument_PolarPerformance(void){}
-  void SetData(int, double, wxString);
-  wxSize GetSize(int orient, wxSize hint);
+    TacticsInstrument_PolarPerformance(wxWindow *parent, wxWindowID id, wxString title);
+    ~TacticsInstrument_PolarPerformance(void){}
+    void SetData(int, double, wxString);
+    wxSize GetSize(int orient, wxSize hint);
 
 private:
-  int m_soloInPane;
-  int    m_SpdRecCnt, m_SpdStartVal, m_DirStartVal;
-  int m_isNULL;
+    int m_soloInPane;
+    int    m_SpdRecCnt, m_SpdStartVal, m_DirStartVal;
+    int m_isNULL;
 
 protected:
-  double alpha;
-  double m_ArrayWindSpdHistory[DATA_RECORD_COUNT];
-  double m_ExpSmoothArrayWindSpd[DATA_RECORD_COUNT];
-  wxDateTime m_ArrayRecTime[DATA_RECORD_COUNT];
+    double alpha;
+    double m_ArrayPercentSpdHistory[DATA_RECORD_COUNT];
+    double m_ArrayBoatSpdHistory[DATA_RECORD_COUNT];
+    double m_ExpSmoothArrayBoatSpd[DATA_RECORD_COUNT];
+    double m_ExpSmoothArrayPercentSpd[DATA_RECORD_COUNT];
+    wxDateTime m_ArrayRecTime[DATA_RECORD_COUNT];
 
-  //double m_MaxWindDir;
-  //double m_MinWindDir;
-  //double m_WindDirRange;
-  double m_MaxPercent;  //...in array
-  double m_TotalMaxBoatSpd; // since O is started
-  double m_TWA, m_TWS, m_STW, m_PolarSpeedPercent, m_PolarSpeed;
-  double m_MaxPercentScale;
-  double m_ratioW;
-  //double m_oldDirVal;
-  bool m_IsRunning;
-  int m_SampleCount;
-  wxString m_STWUnit;
+    double m_MaxBoatSpd;
+    double m_MinBoatSpd;
+    double m_BoatSpeedRange;
+    double m_MaxPercent;  //...in array
+    double m_TotalMaxSpdPercent; // since O is started
+    double m_TWA, m_TWS, m_STW, m_PolarSpeedPercent, m_PolarSpeed;
+    double m_MaxPercentScale, m_MaxBoatSpdScale;
+    double m_ratioW;
+    //double m_oldDirVal;
+    bool m_IsRunning;
+    int m_SampleCount;
+    wxString m_STWUnit, m_PercentUnit;
 
-  wxRect m_WindowRect;
-  wxRect m_DrawAreaRect; //the coordinates of the real darwing area
-  int m_DrawingWidth, m_TopLineHeight, m_DrawingHeight;
-  int m_width, m_height;
-  int m_LeftLegend, m_RightLegend;
-  int m_currSec, m_lastSec, m_SpdCntperSec, m_DirCntperSec;
-  double m_cntSpd, m_cntDir, m_avgSpd, m_avgDir;
+    wxRect m_WindowRect;
+    wxRect m_DrawAreaRect; //the coordinates of the real darwing area
+    int m_DrawingWidth, m_TopLineHeight, m_DrawingHeight;
+    int m_width, m_height;
+    int m_LeftLegend, m_RightLegend;
+    int m_currSec, m_lastSec, m_SpdCntperSec, m_DirCntperSec;
+    double m_cntSpd, m_cntDir, m_avgSpd, m_avgDir;
 
-  void Draw(wxGCDC* dc);
-  void DrawBackground(wxGCDC* dc);
-  void DrawForeground(wxGCDC* dc);
-  void SetMinMaxWindScale();
-  //void DrawWindDirScale(wxGCDC* dc);
-  void DrawBoatSpeedScale(wxGCDC* dc);
-  //wxString GetWindDirStr(wxString WindDir);
+    void Draw(wxGCDC* dc);
+    void DrawBackground(wxGCDC* dc);
+    void DrawForeground(wxGCDC* dc);
+    void SetMinMaxWindScale();
+    //void DrawWindDirScale(wxGCDC* dc);
+    void DrawBoatSpeedScale(wxGCDC* dc);
+    void DrawPercentSpeedScale(wxGCDC* dc);
+    //wxString GetWindDirStr(wxString WindDir);
 };

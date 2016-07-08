@@ -257,5 +257,8 @@ extern inline int int_min(ipoint_t *yval, ipoint_t *v0, ipoint_t *v1);
 extern inline int int_locate_endpoint_a(ipoint_t *v, ipoint_t *vo, int r);
 #endif
 extern inline int int_locate_endpoint(ipoint_t *v, ipoint_t *vo, int r);
+extern inline int int_is_left_of(int segnum, ipoint_t *v);
+extern inline int int_max(ipoint_t *yval, ipoint_t *v0, ipoint_t *v1);
+extern inline int int_min(ipoint_t *yval, ipoint_t *v0, ipoint_t *v1);
 #endif
 #endif /* triangulate_h */
