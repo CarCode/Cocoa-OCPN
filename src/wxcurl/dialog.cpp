@@ -44,8 +44,11 @@
 
 //class WXDLLIMPEXP_CORE wxTextCtrl;
 class WXDLLIMPEXP_CORE wxCheckBox;
+#ifdef __WXOSX__
+#include "../../src/wxcurl/wx/curl/dialog.h"
+#else
 #include "wx/curl/dialog.h"
-
+#endif
 
 // ----------------------------------------------------------------------------
 // wxCurlTransferDialog
@@ -260,7 +263,7 @@ void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &m
     main->SetSizeHints(this);
 }
 
-void wxCurlTransferDialog::CTDSEndModal(wxCurlDialogReturnFlag retCode)
+void wxCurlTransferDialog::EndModal(int retCode)
 {
     wxDialog::EndModal(retCode);
 
@@ -560,6 +563,9 @@ void wxCurlDownloadDialog::OnDownload(wxCurlDownloadEvent &ev)
     // see OnEndPerform for more info.
     if (m_pLastEvent)
         delete m_pLastEvent;
+#ifdef __WXOSX__
+//    delete wxCurlDownloadEvent();
+#endif
     m_pLastEvent = wx_static_cast(wxCurlProgressBaseEvent*, ev.Clone());
 }
 
@@ -608,6 +614,9 @@ void wxCurlUploadDialog::OnUpload(wxCurlUploadEvent &ev)
     // see OnEndPerform for more info.
     if (m_pLastEvent)
         delete m_pLastEvent;
+#ifdef __WXOSX__
+//    delete wxCurlUploadEvent();
+#endif
     m_pLastEvent = wx_static_cast(wxCurlProgressBaseEvent*, ev.Clone());
 }
 

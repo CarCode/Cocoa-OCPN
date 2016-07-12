@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-02 18:15+0200\n"
-"PO-Revision-Date: 2016-07-02 18:16+0200\n"
+"PO-Revision-Date: 2016-07-10 10:46+0200\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -384,7 +384,7 @@ msgstr "Bootgeschw. Einheiten:"
 
 #: ../src/tactics_pi.cpp:2976 ../src/tactics_pi.cpp:2994
 msgid "Honor OpenCPN settings"
-msgstr "Berücksichtige OpenCPN Einstellungen"
+msgstr "Wie bei OCPN"
 
 #: ../src/tactics_pi.cpp:2976 ../src/tactics_pi.cpp:3003
 msgid "Kts"

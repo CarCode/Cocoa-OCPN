@@ -1998,12 +1998,14 @@ double cm93chart::GetNormalScaleMin ( double canvas_scale_factor, bool b_allow_o
       return 1.0;
 }
 
-#ifdef __WXOSX__
-double cm93chart::GetNormalScaleMax2 ( double canvas_scale_factor )
-#else
-double cm93chart::GetNormalScaleMax ( double canvas_scale_factor )
-#endif
+double cm93chart::GetNormalScaleMax ( double canvas_scale_factor, int canvas_width )
 {
+    /*
+     XXX previous declaration hides overloaded virtual function
+     and it was calling:
+     s57chart::GetNormalScaleMax( canvas_scale_factor, canvas_width )
+     should we restore this behavior?
+     */
       switch ( GetNativeScale() )
       {
             case 20000000: return 50000000.;          // Z
@@ -5631,10 +5633,13 @@ bool cm93compchart::DoRenderRegionViewOnDC ( wxMemoryDC& dc, const ViewPort& VPo
                         wxMemoryDC temp_dc;
 #endif
                         if(!chart_region.IsEmpty())
+#ifdef __WXOSX__
+                            m_pcm93chart_current->RenderRegionViewOnDC ( temp_dc, vp, chart_region );
+#else
                             render_return = m_pcm93chart_current->RenderRegionViewOnDC ( temp_dc, vp, chart_region );
                         else
                             render_return = false;
-
+#endif
                         //    Save the current cm93 chart pointer for restoration later
                         cm93chart *m_pcm93chart_save = m_pcm93chart_current;
 

@@ -11,9 +11,15 @@
 #ifndef _WXCURL_DIALOG_H_
 #define _WXCURL_DIALOG_H_
 
-#include "wx/curl/dialog.h"
-#include "wx/curl/thread.h"
-#include "wx/curl/panel.h"
+#ifdef __WXOSX__
+#include "../../src/wxcurl/wx/curl/dialog.h"
+#include "../../src/wxcurl/wx/curl/thread.h"
+#include "../../src/wxcurl/wx/curl/panel.h"
+#else
+ #include "wx/curl/dialog.h"
+ #include "wx/curl/thread.h"
+ #include "wx/curl/panel.h"
+#endif
 
 // forward declarations
 //class WXDLLIMPEXP_CORE wxStaticText;
@@ -129,12 +135,10 @@ public:
     bool IsVerbose() const
         { return m_bVerbose; }
 
+    virtual void EndModal(int retCode);
+
 protected:     // internal utils
-#ifdef __WXOSX__
-    virtual void CTDSEndModal(wxCurlDialogReturnFlag retCode);
-#else
-    virtual void EndModal(wxCurlDialogReturnFlag retCode);
-#endif
+
     wxStaticText *AddSizerRow(wxSizer *sz, const wxString &name);
     void CreateControls(const wxString &url, const wxString &msg, 
                         const wxString& sizeLabel, const wxBitmap &bitmap);

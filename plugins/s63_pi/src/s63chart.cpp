@@ -148,10 +148,13 @@ void validate_SENC_util(void)
 
     //Will it run?
     wxArrayString ret_array;
+    wxArrayString err_array;
     ret_array.Alloc(1000);
+    err_array.Alloc(1000);
     wxString cmd = g_sencutil_bin;
+    cmd.Replace(" ", "\\ ");
     cmd += _T(" -a");                 // get version
-    long rv = wxExecute(cmd, ret_array, ret_array );
+    long rv = wxExecute(cmd, ret_array, err_array );
 
     if(0 != rv) {
         wxString msg = _("Cannot execute OCPNsenc utility at \n");
@@ -227,8 +230,9 @@ wxArrayString exec_SENCutil_sync( wxString cmd, bool bshowlog )
 
         return ret_array;
     }
-
-    cmd.Prepend(g_sencutil_bin + _T(" "));
+    wxString exec = g_sencutil_bin;
+    exec.Replace(" ", "\\ ");
+    cmd.Prepend(exec + _T(" "));
 
     wxLogMessage( cmd );
 
@@ -3967,8 +3971,8 @@ bool ChartS63::DoRenderViewOnDC( wxMemoryDC& dc, const PlugIn_ViewPort& VPoint, 
     }
 
     //      Calculate the desired rectangle in the last cached image space
-    if( 0/*m_last_vp.IsValid()*/ ) {
-        easting_ul = m_easting_vp_center - ( ( VPoint.pix_width / 2 ) / m_view_scale_ppm );
+//    if( 0/*m_last_vp.IsValid()*/ ) {  // Code will never be executed
+/*        easting_ul = m_easting_vp_center - ( ( VPoint.pix_width / 2 ) / m_view_scale_ppm );
         northing_ul = m_northing_vp_center + ( ( VPoint.pix_height / 2 ) / m_view_scale_ppm );
         easting_lr = easting_ul + ( VPoint.pix_width / m_view_scale_ppm );
         northing_lr = northing_ul - ( VPoint.pix_height / m_view_scale_ppm );
@@ -4002,7 +4006,7 @@ bool ChartS63::DoRenderViewOnDC( wxMemoryDC& dc, const PlugIn_ViewPort& VPoint, 
         else if( ( rul.x != 0 ) || ( rul.y != 0 ) ) {
             bNewVP = true;
         }
-    } else {
+    } else */ {
         rul.x = 0;
         rul.y = 0;
         rlr.x = 0;
