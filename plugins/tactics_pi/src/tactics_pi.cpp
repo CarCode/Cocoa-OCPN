@@ -464,6 +464,7 @@ int tactics_pi::Init( void )
     mHDT_Watchdog = 2;
     mGPS_Watchdog = 2;
     mVar_Watchdog = 2;
+    mBRG_Watchdog = 2;
 	//************TR
 	alpha_currspd = 0.2;  //smoothing constant for current speed
 	alpha_CogHdt = 0.1; // smoothing constant for diff. btw. Cog & Hdt
@@ -665,6 +666,11 @@ void tactics_pi::Notify()
         //SendSentenceToAllInstruments( OCPN_DBP_STC_SAT, 0, _T("") );
 		
     }
+    mBRG_Watchdog--;
+    if (mBRG_Watchdog <= 0) {
+        SendSentenceToAllInstruments(OCPN_DBP_STC_BRG, -1, _T("\u00B0"));
+    }
+
 }
 
 int tactics_pi::GetAPIVersionMajor()
@@ -962,20 +968,22 @@ void tactics_pi::DoRenderLaylineGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort
     if (!wxIsNaN(mlat) && !wxIsNaN(mlon)) {
       GetCanvasPixLL(vp, &vpoints[0], mlat, mlon);
       boat = vpoints[0];
-      //Draw wind barb on boat position
-      DrawWindBarb(boat,vp);
+    /*****************************************************************************************
+    Draw wind barb on boat position
+    ******************************************************************************************/
+    DrawWindBarb(boat, vp);
     }
-    wxString GUID = _T("TacticsWP");
-#ifdef __WXOSX__
-    if (!GetSingleWaypoint(GUID, m_pMark)) m_pMark = NULL;
-#else
+    //wxString GUID = _T("TacticsWP");
     if (!GetSingleWaypoint(_T("TacticsWP"), m_pMark)) m_pMark = NULL;
-#endif
-    //Draw wind barb on mark position
     if (m_pMark){
+    /*****************************************************************************************
+    Draw wind barb on mark position
+    ******************************************************************************************/
       GetCanvasPixLL(vp, &mark_center, m_pMark->m_lat, m_pMark->m_lon);
       DrawWindBarb(mark_center,vp);
-      // draw direct line from boat to mark as soon as mark is dropped. Reduces problems to find it ...
+    /*****************************************************************************************
+    Draw direct line from boat to mark as soon as mark is dropped. Reduces problems to find it ...
+    ******************************************************************************************/
       glColor4ub(255, 128, 0, 168); //orange
       glLineWidth(2);
       glBegin(GL_LINES);
@@ -1018,7 +1026,7 @@ void tactics_pi::DoRenderLaylineGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort
 			glVertex2d(vpoints[2].x, vpoints[2].y);
 			glEnd();
 			/*****************************************************************************************
-			Calculate and draw  the second layline (for other tack) :
+			Calculate and draw  the second boat layline (for other tack) :
 			---------------------------------------------------------
 			Approach : we're drawing the first layline on COG, but TWA is based on boat heading (Hdt).
 			To calculate the layline of the other tack, sum up
@@ -1037,16 +1045,19 @@ void tactics_pi::DoRenderLaylineGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort
 			3. calculate angle (and speed) from curr pos to predictedLatCog, predictedLonCog; out : newCog + newSOG
 			********************************************************************************************/
 			double predictedHdG, diffCogHdt;
-            diffCogHdt = getDegRange(mCOG, mHdt); 
+            double tws_kts = fromUsrSpeed_Plugin(mTWS, g_iDashWindSpeedUnit);
+            double stw_kts = fromUsrSpeed_Plugin(mStW, g_iDashSpeedUnit);
+            double currspd_kts = fromUsrSpeed_Plugin(m_ExpSmoothCurrSpd, g_iDashSpeedUnit);
+            diffCogHdt = getDegRange(mCOG, mHdt);
 			mExpSmDiffCogHdt->SetAlpha(alpha_CogHdt);
 			m_ExpSmoothDiffCogHdt = mExpSmDiffCogHdt->GetSmoothVal((diffCogHdt < 0 ? -diffCogHdt : diffCogHdt));
-			if (targetTack == _T("R")){ // currently wind is from port ...
-				predictedHdG = m_LaylineSmoothedCog - m_ExpSmoothDiffCogHdt - 2 * mTWA - fabs(mLeeway); //09.06.16: Leeway is signed now
+            if (targetTack == _T("R")){ // currently wind is from port ...now
+                predictedHdG = m_LaylineSmoothedCog - m_ExpSmoothDiffCogHdt - 2 * mTWA - fabs(mLeeway); //Leeway is signed
 				GLubyte red(0), green(200), blue(0), alpha(128);
 				glColor4ub(0, 200, 0, 128);                 	// red, green, blue,  alpha
 			}
 			else if (targetTack == _T("L")){ //currently wind from starboard
-				predictedHdG = m_LaylineSmoothedCog + m_ExpSmoothDiffCogHdt + 2 * mTWA + fabs(mLeeway); //09.06.16: Leeway is signed now
+                predictedHdG = m_LaylineSmoothedCog + m_ExpSmoothDiffCogHdt + 2 * mTWA + fabs(mLeeway); //Leeway is signed
 				GLubyte red(204), green(41), blue(41), alpha(128);
 				glColor4ub(204, 41, 41, 128);                 	// red, green, blue,  alpha
 			}
@@ -1058,8 +1069,8 @@ void tactics_pi::DoRenderLaylineGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort
 			double predictedLatHdt, predictedLonHdt, predictedLatCog, predictedLonCog;
 			double predictedCoG, predictedSog;
             //apply current on predicted Heading
-			PositionBearingDistanceMercator_Plugin(mlat, mlon, predictedHdG, mStW, &predictedLatHdt, &predictedLonHdt);
-            PositionBearingDistanceMercator_Plugin(predictedLatHdt, predictedLonHdt, m_CurrentDirection, m_ExpSmoothCurrSpd, &predictedLatCog, &predictedLonCog);
+            PositionBearingDistanceMercator_Plugin(mlat, mlon, predictedHdG, stw_kts, &predictedLatHdt, &predictedLonHdt);
+            PositionBearingDistanceMercator_Plugin(predictedLatHdt, predictedLonHdt, m_CurrentDirection, currspd_kts, &predictedLatCog, &predictedLonCog);
 			DistanceBearingMercator_Plugin(predictedLatCog, predictedLonCog, mlat, mlon, &predictedCoG, &predictedSog);
 
 			tackpoints[0] = vpoints[0];
@@ -1073,6 +1084,7 @@ void tactics_pi::DoRenderLaylineGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort
 			glVertex2d(tackpoints[1].x, tackpoints[1].y);
 			glVertex2d(tackpoints[2].x, tackpoints[2].y);
 			glEnd();
+            //wxLogMessage("TWS=%f, STW=%f,currspd=%f,predictedCoG=%f, mTWA=%f,mLeeway=%f, g_iDashSpeedUnit=%d", tws_kts, stw_kts, currspd_kts, predictedCoG, mTWA, mLeeway,g_iDashSpeedUnit);
 			//wxString GUID = _T("TacticsWP");
 			//if (!GetSingleWaypoint(_T("TacticsWP"), m_pMark)) m_pMark = NULL;
 			if (m_pMark)
@@ -1096,10 +1108,10 @@ void tactics_pi::DoRenderLaylineGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort
 				DistanceBearingMercator_Plugin(m_pMark->m_lat, m_pMark->m_lon, mlat, mlon, &CTM, &DistToMark);
                 //calc time-to-mark on direct line, versus opt. TWA and intersection
                 directLineTWA = getMarkTWA(mTWD, CTM);
-                directLineTimeToMark = CalcPolarTimeToMark(DistToMark, directLineTWA, mTWS);
+                directLineTimeToMark = CalcPolarTimeToMark(DistToMark, directLineTWA, tws_kts);
                 if (wxIsNaN(directLineTimeToMark)) directLineTimeToMark = 99999;
                 //use target VMG calculation for laylines-to-mark
-                TargetxMG tvmg = BoatPolar->Calc_TargetVMG(directLineTWA, mTWS); // directLineTWA <= 90° --> upwind, >90 --> downwind
+                TargetxMG tvmg = BoatPolar->Calc_TargetVMG(directLineTWA, tws_kts); // directLineTWA <= 90° --> upwind, >90 --> downwind
                 //optional : use target CMG calculation for laylines-to-mark
                 //TargetxMG tvmg = BoatPolar->Calc_TargetCMG(mTWS,mTWD,CTM); // directLineTWA <= 90° --> upwind, >90 --> downwind
                 double sigCTM_TWA = getSignedDegRange(CTM, mTWD);
@@ -1125,13 +1137,13 @@ void tactics_pi::DoRenderLaylineGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort
                     double lat, lon,curlat,curlon,act_sog;
                     wxRealPoint m_end, m_end2, c_end, c_end2;
                     //apply current on foreward layline
-                    PositionBearingDistanceMercator_Plugin(mlat, mlon, cur_tacklinedir, mStW, &lat, &lon);
-                    PositionBearingDistanceMercator_Plugin(lat, lon, m_CurrentDirection, m_ExpSmoothCurrSpd, &curlat, &curlon);
+                    PositionBearingDistanceMercator_Plugin(mlat, mlon, cur_tacklinedir, stw_kts, &lat, &lon);
+                    PositionBearingDistanceMercator_Plugin(lat, lon, m_CurrentDirection, currspd_kts, &curlat, &curlon);
                     DistanceBearingMercator_Plugin(curlat, curlon, mlat, mlon, &cur_tacklinedir, &act_sog);
                     //cur_tacklinedir=local_bearing(curlat, curlon, mlat, mlon);
                     //apply current on mark layline
-                    PositionBearingDistanceMercator_Plugin(mlat, mlon, target_tacklinedir, mStW, &lat, &lon);
-                    PositionBearingDistanceMercator_Plugin(lat, lon, m_CurrentDirection, m_ExpSmoothCurrSpd, &curlat, &curlon);
+                    PositionBearingDistanceMercator_Plugin(mlat, mlon, target_tacklinedir, stw_kts, &lat, &lon);
+                    PositionBearingDistanceMercator_Plugin(lat, lon, m_CurrentDirection, currspd_kts, &curlat, &curlon);
                     DistanceBearingMercator_Plugin(curlat, curlon, mlat, mlon, &target_tacklinedir, &act_sog);
                     //target_tacklinedir=local_bearing(curlat, curlon, mlat, mlon);
                     double cur_tacklinedir2 = cur_tacklinedir > 180 ? cur_tacklinedir - 180 : cur_tacklinedir + 180;
@@ -1166,7 +1178,7 @@ void tactics_pi::DoRenderLaylineGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort
                       //Total distance as sum of dist1 + dist2
                       //Note : current is NOT yet taken into account here !
                       DistToMarkwInt = dist1 + dist2; 
-                      TimeToMarkwithIntersect = CalcPolarTimeToMark(DistToMarkwInt, tvmg.TargetAngle, mTWS); 
+                        TimeToMarkwithIntersect = CalcPolarTimeToMark(DistToMarkwInt, tvmg.TargetAngle, tws_kts);
                       if (wxIsNaN(TimeToMarkwithIntersect))TimeToMarkwithIntersect = 99999;
                       if (TimeToMarkwithIntersect > 0 && directLineTimeToMark > 0){
                         //only draw the laylines with intersection, if they are faster than the direct course
@@ -1269,7 +1281,7 @@ void tactics_pi::DoRenderLaylineGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort
                   //dist2 = local_distance(pIntersection_pos.y, pIntersection_pos.x, m_pMark->m_lat, m_pMark->m_lon);
                   //Total distance as sum of dist1 + dist2
                   DistToMarkwInt = dist1 + dist2;
-                  TimeToMarkwInt = CalcPolarTimeToMark(DistToMarkwInt, tvmg.TargetAngle, mTWS);
+                    TimeToMarkwInt = CalcPolarTimeToMark(DistToMarkwInt, tvmg.TargetAngle, tws_kts);
                   if (wxIsNaN(TimeToMarkwInt))TimeToMarkwInt = 99999;
                   if (TimeToMarkwInt > 0 && directLineTimeToMark > 0){
                     //only draw the laylines with intersection, if they are faster than the direct course
@@ -1415,6 +1427,7 @@ void tactics_pi::DrawWindBarb(wxPoint pp, PlugIn_ViewPort *vp)
     double barb_length_0_x, barb_length_0_y, barb_length_1_x, barb_length_1_y;
     double barb_length_2_x, barb_length_2_y;
     double barb_3_x, barb_3_y, barb_4_x, barb_4_y, barb_length_3_x, barb_length_3_y, barb_length_4_x, barb_length_4_y;
+      double tws_kts = fromUsrSpeed_Plugin(mTWS, g_iDashWindSpeedUnit);
 
     double barb_length[50] = {
       0, 0, 0, 0, 0,    //  0 knots
@@ -1430,27 +1443,27 @@ void tactics_pi::DrawWindBarb(wxPoint pp, PlugIn_ViewPort *vp)
     };
 
     int p=0;
-    if (mTWS < 3.)
+      if (tws_kts < 3.)
       p = 0;
-    else if (mTWS >= 3. && mTWS < 8.)
+      else if (tws_kts >= 3. && tws_kts < 8.)
       p = 1;
-    else if (mTWS >= 8. && mTWS < 13.)
+      else if (tws_kts >= 8. && tws_kts < 13.)
       p = 2;
-    else if (mTWS >= 13. && mTWS < 18.)
+      else if (tws_kts >= 13. && tws_kts < 18.)
       p = 3;
-    else if (mTWS >= 18. && mTWS < 23.)
+      else if (tws_kts >= 18. && tws_kts < 23.)
       p = 4;
-    else if (mTWS >= 23. && mTWS < 28.)
+      else if (tws_kts >= 23. && tws_kts < 28.)
       p = 5;
-    else if (mTWS >= 28. && mTWS < 33.)
+      else if (tws_kts >= 28. && tws_kts < 33.)
       p = 6;
-    else if (mTWS >= 33. && mTWS < 38.)
+      else if (tws_kts >= 33. && tws_kts < 38.)
       p = 7;
-    else if (mTWS >= 38. && mTWS < 43.)
+      else if (tws_kts >= 38. && tws_kts < 43.)
       p = 8;
-    else if (mTWS >= 43. && mTWS < 48.)
+      else if (tws_kts >= 43. && tws_kts < 48.)
       p = 9;
-    else if (mTWS >= 48.)
+      else if (tws_kts >= 48.)
       p = 9;
     //wxLogMessage("mTWS=%.2f --> p=%d", mTWS, p);
     p = 5 * p;
@@ -1934,7 +1947,11 @@ void tactics_pi::SetNMEASentence( wxString &sentence )
 				}
 				else
 					SendSentenceToAllInstruments(OCPN_DBP_STC_BRG, m_NMEA0183.Rmb.BearingToDestinationDegreesTrue, m_NMEA0183.ErrorMessage);
+                if (!wxIsNaN(m_NMEA0183.Rmb.BearingToDestinationDegreesTrue))
+                    mBRG_Watchdog = gps_watchdog_timeout_ticks;
+
 			}
+
 		}
 
         else if( m_NMEA0183.LastSentenceIDReceived == _T("RMC") ) {
@@ -4258,19 +4275,22 @@ void tactics_pi::CalculateTrueWind(int st, double value, wxString unit)
       spdval = (g_bUseSOGforTWCalc) ? mSOG : mStW ;
       // only start calculating if we have a full set of data
       if ((!m_bTrueWind_available || g_bForceTrueWindCalculation) && mAWA >= 0 && mAWS >= 0 && spdval >= 0 && mAWAUnit != _T("")) {
+          //we have to do the calculation in knots
+          double aws_kts = fromUsrSpeed_Plugin(mAWS, g_iDashWindSpeedUnit);
+          spdval = fromUsrSpeed_Plugin(spdval, g_iDashSpeedUnit);
+
         mTWA = 0;
         mTWD = 0.;
         if (mAWA < 180.) {
-          mTWA = 90. - (180. / M_PI*atan((mAWS*cos(mAWA*M_PI / 180.) - spdval) / (mAWS*sin(mAWA*M_PI / 180.))));
+            mTWA = 90. - (180. / M_PI*atan((aws_kts*cos(mAWA*M_PI / 180.) - spdval) / (aws_kts*sin(mAWA*M_PI / 180.))));
         }
         else if (mAWA > 180.) {
-          mTWA = 360. - (90. - (180. / M_PI*atan((mAWS*cos((180. - (mAWA - 180.))*M_PI / 180.) - spdval) / (mAWS*sin((180. - (mAWA - 180.))*M_PI / 180.)))));
+            mTWA = 360. - (90. - (180. / M_PI*atan((aws_kts*cos((180. - (mAWA - 180.))*M_PI / 180.) - spdval) / (aws_kts*sin((180. - (mAWA - 180.))*M_PI / 180.)))));
         }
         else {
           mTWA = 180.;
         }
-        mTWS = sqrt(pow((mAWS*cos(mAWA*M_PI / 180.)) - spdval, 2) + pow(mAWS*sin(mAWA*M_PI / 180.), 2));
-        //wxLogMessage(_T("TrueWindCalc mTWS=%.2f"), mTWS);
+          mTWS = sqrt(pow((aws_kts*cos(mAWA*M_PI / 180.)) - spdval, 2) + pow(aws_kts*sin(mAWA*M_PI / 180.), 2));
         if (!wxIsNaN(mLeeway) && g_bUseHeelSensor) { //correct TWD with Leeway if heel is available. Makes only sense with heel sensor
           mTWD = (mAWAUnit == _T("\u00B0R")) ? mHdt + mTWA + mLeeway : mHdt - mTWA + mLeeway;
         }
@@ -4279,7 +4299,8 @@ void tactics_pi::CalculateTrueWind(int st, double value, wxString unit)
 
         if (mTWD >= 360) mTWD -= 360;
         if (mTWD < 0) mTWD += 360;
-        //wxLogMessage(_T("TrueWindCalc TWA==%f, mAWAUnit=%s,TWS=%f,TWD=%f,TWA=%f,Leeway=%f\n"), mTWA, mAWAUnit, mTWS, mTWD,mTWA,mLeeway);
+          //convert mTWS back to user wind speed settings
+          mTWS = toUsrSpeed_Plugin(mTWS, g_iDashWindSpeedUnit);
         m_calcTWS = mTWS;
         m_calcTWD = mTWD;
         m_calcTWA = mTWA;
@@ -4307,22 +4328,24 @@ void tactics_pi::CalculateLeeway(int st, double value, wxString unit)
         mLeeway = g_dfixedLeeway; 
         if (wxIsNaN(mheel)) mheel = 0;
 
-        if (mHeelUnit == _T("\u00B0l") && mLeeway > 0) mLeeway = -mLeeway; //22.04.TR
-        if (mHeelUnit == _T("\u00B0r") && mLeeway < 0) mLeeway = -mLeeway; //22.04.TR
+        if (mHeelUnit == _T("\u00B0l") && mLeeway > 0) mLeeway = -mLeeway;
+        if (mHeelUnit == _T("\u00B0r") && mLeeway < 0) mLeeway = -mLeeway;
     }
 
 	else {//g_bUseHeelSensor or g_bManHeelInput
 
 		// only start calculating if we have a full set of data
 		if (!wxIsNaN(mheel) && !wxIsNaN(mStW)) {
+            double stw_kts = fromUsrSpeed_Plugin(mStW, g_iDashSpeedUnit);
+
 			// calculate Leeway based on Heel
 			if (mheel == 0)
 				mLeeway = 0;
 			else if (mStW == 0)
 				mLeeway = g_dfixedLeeway;
 			else
-				mLeeway = (g_dLeewayFactor*mheel) / (mStW*mStW);
-			if (mLeeway > g_dfixedLeeway) mLeeway = g_dfixedLeeway; 
+                mLeeway = (g_dLeewayFactor*mheel) / (stw_kts*stw_kts);
+			if (mLeeway > g_dfixedLeeway) mLeeway = g_dfixedLeeway;
             if (mLeeway < -g_dfixedLeeway) mLeeway = -g_dfixedLeeway; //22.04TR : auf neg. Werte prüfen !!!
             mHeelUnit = (mheel < 0 ) ? _T("\u00B0l") : _T("\u00B0r");
 		}
@@ -4361,11 +4384,14 @@ void tactics_pi::CalculateCurrent(int st, double value, wxString unit)
     if (!wxIsNaN(mheel) && m_LeewayOK && !wxIsNaN(mCOG) && !wxIsNaN(mSOG) && !wxIsNaN(mStW) && !wxIsNaN(mHdt) && !wxIsNaN(mlat) && !wxIsNaN(mlon)) {
 
       double COGlon, COGlat;
-
+        //we have to do the calculation in knots ...
+        double sog_kts, stw_kts;
+        sog_kts = fromUsrSpeed_Plugin(mSOG, g_iDashSpeedUnit);
+        stw_kts = fromUsrSpeed_Plugin(mStW, g_iDashSpeedUnit);
       //calculate endpoint of COG/SOG
-      PositionBearingDistanceMercator_Plugin(mlat, mlon, mCOG, mSOG, &COGlat, &COGlon);
+        PositionBearingDistanceMercator_Plugin(mlat, mlon, mCOG, sog_kts, &COGlat, &COGlon);
 
-      //------------------------------------ 
+      //------------------------------------
       //correct HDT with Leeway
       //------------------------------------
 
@@ -4390,9 +4416,9 @@ void tactics_pi::CalculateCurrent(int st, double value, wxString unit)
       double stw_corr;
       //correct only if not already done before via preference setting
       if (g_bCorrectSTWwithLeeway == true && g_bUseHeelSensor && !wxIsNaN(mLeeway) && !wxIsNaN(mheel)) //in this case STW is already corrected !!!
-        stw_corr = mStW;
+          stw_corr = stw_kts;
       else
-        stw_corr= mStW / cos(mLeeway *M_PI / 180.0); //we have to correct StW for CRS as well.
+          stw_corr= stw_kts / cos(mLeeway *M_PI / 180.0); //we have to correct StW for CRS as well.
       PositionBearingDistanceMercator_Plugin(mlat, mlon, CourseThroughWater, stw_corr, &CRSlat, &CRSlon);
 
       //calculate the Current vector with brg & speed from the 2 endpoints above
@@ -4427,7 +4453,7 @@ void tactics_pi::CalculateCurrent(int st, double value, wxString unit)
         TacticsWindow *tactics_window = m_ArrayOfTacticsWindow.Item(i)->m_pTacticsWindow;
         if (tactics_window){
           tactics_window->SendSentenceToAllInstruments(OCPN_DBP_STC_CURRDIR, m_CurrentDirection, _T("\u00B0"));
-          tactics_window->SendSentenceToAllInstruments(OCPN_DBP_STC_CURRSPD, m_ExpSmoothCurrSpd, getUsrSpeedUnit_Plugin(g_iDashSpeedUnit));
+            tactics_window->SendSentenceToAllInstruments(OCPN_DBP_STC_CURRSPD, toUsrSpeed_Plugin(m_ExpSmoothCurrSpd, g_iDashSpeedUnit), getUsrSpeedUnit_Plugin(g_iDashSpeedUnit));
         }
       }
     }

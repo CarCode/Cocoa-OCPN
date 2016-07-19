@@ -109,6 +109,11 @@
 			<key>orderHint</key>
 			<integer>16</integer>
 		</dict>
+		<key>messages_pi.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>34</integer>
+		</dict>
 		<key>nmeaconverter_pi.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -393,6 +398,11 @@
 			<true/>
 		</dict>
 		<key>A64514CB1AE4FF3000933404</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A6638E211D3AB49600A63076</key>
 		<dict>
 			<key>primary</key>
 			<true/>

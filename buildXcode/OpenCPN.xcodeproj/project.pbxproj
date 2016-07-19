@@ -56,7 +56,6 @@
 			buildPhases = (
 			);
 			dependencies = (
-				A669D35F1D27EE0D00D2A1B1 /* PBXTargetDependency */,
 				EAAB4E87696645CDAEA03510 /* PBXTargetDependency */,
 				785D38FA2EB248D992323ED9 /* PBXTargetDependency */,
 				71ADD26CEFF44A5FB372EE29 /* PBXTargetDependency */,
@@ -85,6 +84,8 @@
 				A62F3F4A1AE13D9200AFD69B /* PBXTargetDependency */,
 				A64EBB521B26FD4800F861D0 /* PBXTargetDependency */,
 				A675307D1D26ACE9005B561A /* PBXTargetDependency */,
+				A669D35F1D27EE0D00D2A1B1 /* PBXTargetDependency */,
+				A6638E3D1D3AB94A00A63076 /* PBXTargetDependency */,
 				43CB8F738129439D86E8716F /* PBXTargetDependency */,
 			);
 			name = ALL_BUILD;
@@ -410,6 +411,7 @@
 		A64EBB551B271D5A00F861D0 /* libBR24radar_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6DB19DC18EDCDD400E643D2 /* libBR24radar_pi.dylib */; };
 		A65009C717DB5C2200FD3148 /* de.lproj in Resources */ = {isa = PBXBuildFile; fileRef = A65009C617DB5C2200FD3148 /* de.lproj */; };
 		A65034DB186845F700301CE7 /* GribTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65034DA186845F700301CE7 /* GribTable.cpp */; };
+		A65181F31D30E42400D29D9E /* iirfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65181F21D30E3F000D29D9E /* iirfilter.cpp */; };
 		A6520DC719003965006FB056 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6520DC619003965006FB056 /* tinyxml.cpp */; };
 		A6520DC919003986006FB056 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6520DC819003986006FB056 /* tinyxmlerror.cpp */; };
 		A6520DCB190039A3006FB056 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6520DCA190039A3006FB056 /* tinyxmlparser.cpp */; };
@@ -437,6 +439,11 @@
 		A65F36E5197473690006DC40 /* jsonval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65F36E21974733D0006DC40 /* jsonval.cpp */; };
 		A65F36E6197473690006DC40 /* jsonwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65F36E31974733D0006DC40 /* jsonwriter.cpp */; };
 		A6632EE417E50BF4002001B9 /* osx_helpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = A6632EE317E50BF4002001B9 /* osx_helpers.mm */; };
+		A6638E381D3AB61A00A63076 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6638E1D1D3AB04A00A63076 /* icons.cpp */; };
+		A6638E391D3AB61A00A63076 /* messagescope_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6638E1E1D3AB07200A63076 /* messagescope_pi.cpp */; };
+		A6638E3A1D3AB61A00A63076 /* MessageScopeDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6638E1F1D3AB09E00A63076 /* MessageScopeDialog.cpp */; };
+		A6638E3B1D3AB61A00A63076 /* MessageScopeUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6638E201D3AB0B800A63076 /* MessageScopeUI.cpp */; };
+		A6638E3E1D3AB98F00A63076 /* libmessages_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6638E371D3AB49600A63076 /* libmessages_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A6654E0D1B8661D3001A2DE8 /* Osenc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6654E0C1B8661D3001A2DE8 /* Osenc.cpp */; };
 		A669B1F31B372EC600C440BF /* ac_pi_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1F21B372EC600C440BF /* ac_pi_draw.cpp */; };
 		A669B1F51B372EFF00C440BF /* ac_pi_gui_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A669B1F41B372EFF00C440BF /* ac_pi_gui_impl.cpp */; };
@@ -896,6 +903,13 @@
 			remoteGlobalIDString = A669B1D31B372B7400C440BF;
 			remoteInfo = ac_pi;
 		};
+		A6638E3C1D3AB94A00A63076 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6638E211D3AB49600A63076;
+			remoteInfo = messages_pi;
+		};
 		A669D35E1D27EE0D00D2A1B1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 49E1829CD3F449C4ADE94FAE /* Project object */;
@@ -1102,6 +1116,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				A6638E3E1D3AB98F00A63076 /* libmessages_pi.dylib in Copy Files */,
 				A669D35D1D27EDFB00D2A1B1 /* libtactics_pi.dylib in Copy Files */,
 				A675307E1D26AD18005B561A /* libdraw_pi.dylib in Copy Files */,
 				A6148F8E1CD7E2A4000CBF74 /* libDR_pi.dylib in Copy Files */,
@@ -1703,6 +1718,8 @@
 		A65034D81868458300301CE7 /* GribTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribTable.h; path = plugins/grib_pi/src/GribTable.h; sourceTree = "<group>"; };
 		A65034D9186845BB00301CE7 /* folder.xpm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = folder.xpm; path = plugins/grib_pi/src/folder.xpm; sourceTree = "<group>"; };
 		A65034DA186845F700301CE7 /* GribTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GribTable.cpp; path = plugins/grib_pi/src/GribTable.cpp; sourceTree = "<group>"; };
+		A65181F11D30E3C000D29D9E /* iirfilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iirfilter.h; path = plugins/dashboard_pi/src/iirfilter.h; sourceTree = "<group>"; };
+		A65181F21D30E3F000D29D9E /* iirfilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iirfilter.cpp; path = plugins/dashboard_pi/src/iirfilter.cpp; sourceTree = "<group>"; };
 		A651DF9019B8B2720086D73E /* dychart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dychart.h; path = include/dychart.h; sourceTree = "<group>"; };
 		A6520DC1190036FC006FB056 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = plugins/weather_routing_pi/src/tinyxml/tinyxml.h; sourceTree = "<group>"; };
 		A6520DC619003965006FB056 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = plugins/weather_routing_pi/src/tinyxml/tinyxml.cpp; sourceTree = "<group>"; };
@@ -1755,6 +1772,15 @@
 		A65F36E31974733D0006DC40 /* jsonwriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsonwriter.cpp; path = src/wxJSON/jsonwriter.cpp; sourceTree = "<group>"; };
 		A66094A419E3D8550066CBBA /* TexFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TexFont.h; path = plugins/S63_pi/src/TexFont.h; sourceTree = "<group>"; };
 		A6632EE317E50BF4002001B9 /* osx_helpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = osx_helpers.mm; path = src/osx_helpers.mm; sourceTree = "<group>"; };
+		A6638E191D3AAFC400A63076 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/messages_pi/src/icons.h; sourceTree = "<group>"; };
+		A6638E1A1D3AAFE500A63076 /* messagescope_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = messagescope_pi.h; path = plugins/messages_pi/src/messagescope_pi.h; sourceTree = "<group>"; };
+		A6638E1B1D3AB00100A63076 /* MessageScopeDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageScopeDialog.h; path = plugins/messages_pi/src/MessageScopeDialog.h; sourceTree = "<group>"; };
+		A6638E1C1D3AB02A00A63076 /* MessageScopeUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageScopeUI.h; path = plugins/messages_pi/src/MessageScopeUI.h; sourceTree = "<group>"; };
+		A6638E1D1D3AB04A00A63076 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/messages_pi/src/icons.cpp; sourceTree = "<group>"; };
+		A6638E1E1D3AB07200A63076 /* messagescope_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = messagescope_pi.cpp; path = plugins/messages_pi/src/messagescope_pi.cpp; sourceTree = "<group>"; };
+		A6638E1F1D3AB09E00A63076 /* MessageScopeDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MessageScopeDialog.cpp; path = plugins/messages_pi/src/MessageScopeDialog.cpp; sourceTree = "<group>"; };
+		A6638E201D3AB0B800A63076 /* MessageScopeUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MessageScopeUI.cpp; path = plugins/messages_pi/src/MessageScopeUI.cpp; sourceTree = "<group>"; };
+		A6638E371D3AB49600A63076 /* libmessages_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libmessages_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6654E0B1B8661B0001A2DE8 /* Osenc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Osenc.h; path = include/Osenc.h; sourceTree = "<group>"; };
 		A6654E0C1B8661D3001A2DE8 /* Osenc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Osenc.cpp; path = src/Osenc.cpp; sourceTree = "<group>"; };
 		A665CBED17CF33C00007CDB7 /* s52s57.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = s52s57.h; path = include/s52s57.h; sourceTree = "<group>"; };
@@ -2791,6 +2817,7 @@
 				1CB043B9ECD54DBF8FBD92D0 /* icons.cpp */,
 				66E36B5994014A458268AE12 /* wind_history.cpp */,
 				A61FC4C718B4CD9800BC5F3D /* baro_history.cpp */,
+				A65181F21D30E3F000D29D9E /* iirfilter.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -2847,6 +2874,7 @@
 				A6DB33411B736AEE00163272 /* draw_pi */,
 				A631BEFF1CD7C18B0038627B /* DR_pi */,
 				A675307F1D26C8E6005B561A /* tactics_pi */,
+				A6638E161D3AAF3300A63076 /* messages_pi */,
 				A68D5C471C6D0C6600F40F90 /* goodanchorage_pi */,
 			);
 			name = Sources;
@@ -2890,6 +2918,7 @@
 				3FE33973DE48409FB648BFBD /* icons.h */,
 				3CDED171E88B440DA3D027A5 /* wind_history.h */,
 				A61FC4C618B4CD6700BC5F3D /* baro_history.h */,
+				A65181F11D30E3C000D29D9E /* iirfilter.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -3396,6 +3425,37 @@
 				A645151B1AE501EA00933404 /* telnet.h */,
 				A645151C1AE501EA00933404 /* thread.h */,
 				A645151D1AE501EA00933404 /* utils.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		A6638E161D3AAF3300A63076 /* messages_pi */ = {
+			isa = PBXGroup;
+			children = (
+				A6638E181D3AAF9200A63076 /* Header Files */,
+				A6638E171D3AAF8200A63076 /* Source Files */,
+			);
+			name = messages_pi;
+			sourceTree = "<group>";
+		};
+		A6638E171D3AAF8200A63076 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				A6638E1D1D3AB04A00A63076 /* icons.cpp */,
+				A6638E1E1D3AB07200A63076 /* messagescope_pi.cpp */,
+				A6638E1F1D3AB09E00A63076 /* MessageScopeDialog.cpp */,
+				A6638E201D3AB0B800A63076 /* MessageScopeUI.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		A6638E181D3AAF9200A63076 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				A6638E191D3AAFC400A63076 /* icons.h */,
+				A6638E1A1D3AAFE500A63076 /* messagescope_pi.h */,
+				A6638E1B1D3AB00100A63076 /* MessageScopeDialog.h */,
+				A6638E1C1D3AB02A00A63076 /* MessageScopeUI.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -4197,6 +4257,7 @@
 				A6DB33551B736C0400163272 /* libdraw_pi.dylib */,
 				A68D5C5F1C6D0E3A00F40F90 /* libDR_pi.dylib */,
 				A669D34C1D27D45600D2A1B1 /* libtactics_pi.dylib */,
+				A6638E371D3AB49600A63076 /* libmessages_pi.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4609,6 +4670,22 @@
 			productReference = A64514F61AE4FF3000933404 /* libwxCurl.dylib */;
 			productType = "com.apple.product-type.library.static";
 		};
+		A6638E211D3AB49600A63076 /* messages_pi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6638E341D3AB49600A63076 /* Build configuration list for PBXNativeTarget "messages_pi" */;
+			buildPhases = (
+				A6638E221D3AB49600A63076 /* Sources */,
+				A6638E331D3AB49600A63076 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = messages_pi;
+			productName = dashboard_pi;
+			productReference = A6638E371D3AB49600A63076 /* libmessages_pi.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		A669B1D31B372B7400C440BF /* ac_pi */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A669B1DD1B372B7400C440BF /* Build configuration list for PBXNativeTarget "ac_pi" */;
@@ -4951,6 +5028,7 @@
 				A6DB33441B736C0400163272 /* draw_pi */,
 				A68D5C4E1C6D0E3A00F40F90 /* DR_pi */,
 				A669D3381D27D45600D2A1B1 /* tactics_pi */,
+				A6638E211D3AB49600A63076 /* messages_pi */,
 			);
 		};
 /* End PBXProject section */
@@ -5009,6 +5087,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib\ninstall_name_tool -change /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib @executable_path/../Frameworks/libwxCurl.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libwxCurl.dylib";
+			showEnvVarsInLog = 0;
+		};
+		A6638E331D3AB49600A63076 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libmessages_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libmessages_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libmessages_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libmessages_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libmessages_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libmessages_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libmessages_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug/libmessages_pi.dylib\n";
 			showEnvVarsInLog = 0;
 		};
 		A669B1DC1B372B7400C440BF /* ShellScript */ = {
@@ -5398,6 +5490,7 @@
 				E78858F56EDF4D169BE34C0D /* wind_history.cpp in Sources */,
 				A69FCA10194F4A5700E613B8 /* from_ownship.cpp in Sources */,
 				A61FC4C818B4CD9800BC5F3D /* baro_history.cpp in Sources */,
+				A65181F31D30E42400D29D9E /* iirfilter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5726,6 +5819,17 @@
 				A64515101AE501CC00933404 /* telnet.cpp in Sources */,
 				A64515111AE501CC00933404 /* thread.cpp in Sources */,
 				A64515121AE501CC00933404 /* utils.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A6638E221D3AB49600A63076 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6638E381D3AB61A00A63076 /* icons.cpp in Sources */,
+				A6638E391D3AB61A00A63076 /* messagescope_pi.cpp in Sources */,
+				A6638E3A1D3AB61A00A63076 /* MessageScopeDialog.cpp in Sources */,
+				A6638E3B1D3AB61A00A63076 /* MessageScopeUI.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6219,6 +6323,11 @@
 			isa = PBXTargetDependency;
 			target = A669B1D31B372B7400C440BF /* ac_pi */;
 			targetProxy = A65D60381C23442C00988D56 /* PBXContainerItemProxy */;
+		};
+		A6638E3D1D3AB94A00A63076 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6638E211D3AB49600A63076 /* messages_pi */;
+			targetProxy = A6638E3C1D3AB94A00A63076 /* PBXContainerItemProxy */;
 		};
 		A669D35F1D27EE0D00D2A1B1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8835,6 +8944,222 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = wxCurl;
 				SDKROOT = macosx;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
+		A6638E351D3AB49600A63076 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					messages_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/messages_pi/src",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
+					/opt/local/include,
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Debug";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SECTORDER_FLAGS = "";
+				SYMROOT = "$(PROJECT_DIR)/buildXcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		A6638E361D3AB49600A63076 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					messages_pi_EXPORTS,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					USE_GLU_TESS,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/plugins/messages_pi/src",
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/include",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/nmea0183",
+					/opt/local/include,
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/mygdal",
+					"/Volumes/MacBookHD/Users/heidi/devel/Cocoa-OCPN/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				INSTALL_PATH = "/Users/heidi/devel/Cocoa-OCPN/buildXcode/Release";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-arch",
+					x86_64,
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-I/usr/local/include/wx-3.1",
+					"-fPIC",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-O3",
+					"-fvisibility=hidden",
+				);
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_baseu-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_gl-3.1",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(PROJECT_DIR)/buildXcode";
 				USE_HEADERMAP = NO;
@@ -13233,6 +13558,15 @@
 			buildConfigurations = (
 				A64514F41AE4FF3000933404 /* Debug */,
 				A64514F51AE4FF3000933404 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A6638E341D3AB49600A63076 /* Build configuration list for PBXNativeTarget "messages_pi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6638E351D3AB49600A63076 /* Debug */,
+				A6638E361D3AB49600A63076 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

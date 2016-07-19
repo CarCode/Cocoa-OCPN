@@ -327,9 +327,11 @@ void Track::Clone( Track *psourcetrack, int start_nPoint, int end_nPoint, const 
     for( i = start_nPoint; i <= end_nPoint; i++ ) {
 
         TrackPoint *psourcepoint = psourcetrack->GetPoint( i );
-        TrackPoint *ptargetpoint = new TrackPoint( psourcepoint->m_lat, psourcepoint->m_lon);
+        if(psourcepoint){
+            TrackPoint *ptargetpoint = new TrackPoint( psourcepoint->m_lat, psourcepoint->m_lon);
 
-        AddPoint( ptargetpoint );
+            AddPoint( ptargetpoint );
+        }
     }
 }
 
@@ -645,7 +647,10 @@ void Track::Draw( ocpnDC& dc, ViewPort &VP, const LLBBox &box )
 
 TrackPoint *Track::GetPoint( int nWhichPoint )
 {
-    return TrackPoints[nWhichPoint];
+    if(nWhichPoint < (int) TrackPoints.size())
+        return TrackPoints[nWhichPoint];
+    else
+        return NULL;
 }
 
 TrackPoint *Track::GetLastPoint()
@@ -1040,7 +1045,6 @@ Route *Track::RouteFromTrack( wxProgressDialog *pprog )
             if( delta_dist >= ( leg_speed * 4.0 ) ) isProminent = true;
             if( !prp_OK ) prp_OK = prp;
         }
-
         while( prpnodeX < TrackPoints.size() ) {
 
             TrackPoint *prpX = TrackPoints[prpnodeX];

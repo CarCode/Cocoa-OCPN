@@ -48,6 +48,8 @@ extern int g_iMaxLaylineWidth;
 extern Polar* BoatPolar;
 extern PlugIn_Waypoint *m_pMark;
 extern int g_iDashDistanceUnit;
+extern int g_iDashSpeedUnit;
+
 extern double g_dalphaDeltCoG;
 extern double  getDegRange(double max, double min);
 /***************************************************************************************
@@ -140,11 +142,11 @@ void TacticsInstrument_BearingCompass::SetData(int st, double data, wxString uni
 		m_diffCogHdt = m_Cog - m_Hdt;
     }
 	if (st == OCPN_DBP_STC_BRG) {
-        wxString tWP = _T("TacticsWP");
-		if (!GetSingleWaypoint(tWP, m_pMark)){
+        //wxString tWP = _T("TacticsWP");
+		//if (!GetSingleWaypoint(tWP, m_pMark)){
 			m_Bearing = data;
 			m_ToWpt = unit;
-		}
+		/*}
 		else{
 			if (m_pMark) {
 				double dist;
@@ -153,9 +155,25 @@ void TacticsInstrument_BearingCompass::SetData(int st, double data, wxString uni
 				m_ExtraValueDTW = toUsrDistance_Plugin(dist, g_iDashDistanceUnit);
 				m_ExtraValueDTWUnit = getUsrDistanceUnit_Plugin(g_iDashDistanceUnit);
 			}
-		}
+		}*/
 		m_BearingUnit = _("\u00B0");
 	}
+    if (!GetSingleWaypoint(_T("TacticsWP"), m_pMark)) m_pMark = NULL;
+    if (m_pMark) {
+        double dist;
+        DistanceBearingMercator_Plugin(m_pMark->m_lat, m_pMark->m_lon, m_lat, m_lon, &m_Bearing, &dist);
+        m_ToWpt = _T("TacticsWP");
+        m_ExtraValueDTW = toUsrDistance_Plugin(dist, g_iDashDistanceUnit);
+        m_ExtraValueDTWUnit = getUsrDistanceUnit_Plugin(g_iDashDistanceUnit);
+        m_BearingUnit = _T("\u00B0");
+    }
+    if (!m_pMark && m_Bearing < 0){
+        m_ToWpt = _T("---");
+        m_ExtraValueDTW = 0;
+        m_predictedSog = 0;
+        m_ExtraValueDTWUnit = getUsrDistanceUnit_Plugin(g_iDashDistanceUnit);
+        m_BearingUnit = _T("\u00B0");
+    }
 
 	CalculateLaylineDegreeRange();
 }
@@ -194,7 +212,8 @@ void TacticsInstrument_BearingCompass::Draw(wxGCDC* bdc)
 	DrawLaylines(bdc);
 	DrawData(bdc, m_MainValue, m_MainValueUnit, _T("%.0f"), DIAL_POSITION_TOPINSIDE);
 
-	DrawData(bdc, m_predictedSog, _T("kn "), _T("pred.SOG: ~%.1f"), DIAL_POSITION_BOTTOMRIGHT);
+//	DrawData(bdc, m_predictedSog, _T("kn "), _T("prd.SOG: ~%.1f"), DIAL_POSITION_BOTTOMRIGHT);
+    DrawData(bdc, m_predictedSog, getUsrSpeedUnit_Plugin(g_iDashSpeedUnit), _T("prd.SOG: ~%.1f"), DIAL_POSITION_BOTTOMRIGHT);
 
 
 }

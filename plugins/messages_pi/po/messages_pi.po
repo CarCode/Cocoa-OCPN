@@ -1,0 +1,62 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: messages_pi 16.1.20\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-16 21:02+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: CarCode <carcode@me.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pi\n"
+"X-Generator: Poedit 1.8.8\n"
+
+#: ../src/MessageScopeDialog.cpp:46
+msgid "Message ID"
+msgstr "Nachrichten ID"
+
+#: ../src/MessageScopeDialog.cpp:47
+msgid "Count"
+msgstr "Zähler"
+
+#: ../src/MessageScopeDialog.cpp:48
+msgid "Time"
+msgstr "Zeit"
+
+#: ../src/MessageScopeDialog.cpp:49
+msgid "Rate"
+msgstr "Rate"
+
+#: ../src/MessageScopeDialog.cpp:56
+msgid "No Message Selected"
+msgstr "Keine Nachricht gewählt"
+
+#: ../src/messagescope_pi.cpp:83 ../src/MessageScopeUI.h:56
+msgid "Messages"
+msgstr "Nachrichten"
+
+#: ../src/messagescope_pi.cpp:148
+msgid "Messages Check PlugIn for OpenCPN"
+msgstr "Nachrichtenprüf PlugIn für OpenCPN"
+
+#: ../src/messagescope_pi.cpp:153
+msgid ""
+"Messages Check PlugIn for OpenCPN\n"
+"This plugin identifys and displays internal messages\n"
+msgstr ""
+"Nachrichtenprüf PlugIn für OpenCPN\n"
+"Dieses Plugin identifiziert und zeigt interne Nachrichten\n"
+
+#: ../src/MessageScopeUI.cpp:82
+msgid "Clear"
+msgstr "Löschen"
+
+#: ../src/MessageScopeUI.cpp:85
+msgid "Close"
+msgstr "Schließen"

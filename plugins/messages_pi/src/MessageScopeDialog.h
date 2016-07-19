@@ -1,13 +1,15 @@
 /***************************************************************************
  *
  * Project:  OpenCPN
+ * Purpose:  Message Scope Plugin
+ * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by David S. Register                               *
+ *   Copyright (C) 2016 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
+ *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
  *   This program is distributed in the hope that it will be useful,       *
@@ -21,55 +23,21 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
-#ifndef __GLTEXTUREDESCRIPTOR_H__
-#define __GLTEXTUREDESCRIPTOR_H__
+#include "MessageScopeUI.h"
 
-#include "wx/wxprec.h"
+class messagescope_pi;
 
-#ifndef  WX_PRECOMP
-#include "wx/wx.h"
-#endif //precompiled headers
-
-#include "dychart.h"
-
-#define CA_READ         0
-#define CA_WRITE        1
-
-#define GPU_TEXTURE_UNKNOWN             0
-#define GPU_TEXTURE_UNCOMPRESSED        1
-#define GPU_TEXTURE_COMPRESSED          2
-
-class glTextureDescriptor
+class MessageScopeDialog: public MessageScopeDialogBase
 {
 public:
-    glTextureDescriptor();
-    ~glTextureDescriptor();
-    void FreeAll();
-    void FreeMap();
-    void FreeCompLevel(int level);
-    void FreeCompComp();
+    MessageScopeDialog( messagescope_pi &_messagescope_pi, wxWindow* parent);
+    
+    void OnClear( wxCommandEvent& event ) { m_lMessages->DeleteAllItems(); }
+    void OnClose( wxCommandEvent& event ) { Hide(); }
 
-    size_t GetMapArrayAlloc(void);
-    size_t GetCompArrayAlloc(void);
-    size_t GetCompCompArrayAlloc(void);
-
-    unsigned char *CompressedArrayAccess( int mode, unsigned char *write_data, int level);
-    unsigned char *CompCompArrayAccess( int mode, unsigned char *write_data, int level);
-    GLuint tex_name;
-    int level_min;
-    int x;
-    int y;
-    int nGPU_compressed;
-    int nCache_Color;
-
-    unsigned char       *map_array[10];
-    bool                miplevel_upload[10];
-    int                 compcomp_size[10];
-
-private:    
-    unsigned char *comp_array[10];
-    unsigned char *compcomp_array[10];
+    void OnMessageSelected( wxListEvent& event );
+    void SetPluginMessage(wxString &message_id, wxString &message_body);
+    
+protected:
+    messagescope_pi &m_messagescope_pi;
 };
-
-
-#endif
