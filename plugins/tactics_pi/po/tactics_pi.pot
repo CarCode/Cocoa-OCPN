@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tactics_pi 16.1.20\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-02 18:13+0200\n"
+"POT-Creation-Date: 2016-07-26 15:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,51 +22,51 @@ msgstr ""
 msgid " Max %.1f since %02d:%02d  Overall Max %.1f Min %.1f "
 msgstr ""
 
-#: ../src/bearingcompass.cpp:162
+#: ../src/bearingcompass.cpp:159
 msgid "\\u00B0"
 msgstr ""
 
-#: ../src/bearingcompass.cpp:719
+#: ../src/bearingcompass.cpp:733
 msgid "R"
 msgstr ""
 
-#: ../src/bearingcompass.cpp:724
+#: ../src/bearingcompass.cpp:738
 msgid "L"
 msgstr ""
 
 #: ../src/clock.cpp:125 ../src/dial.cpp:526 ../src/gps.cpp:141
-#: ../src/wind.cpp:64 ../src/wind_history.cpp:434
+#: ../src/wind.cpp:64 ../src/wind_history.cpp:437
 msgid "N"
 msgstr ""
 
-#: ../src/dial.cpp:526 ../src/wind.cpp:64 ../src/wind_history.cpp:440
+#: ../src/dial.cpp:526 ../src/wind.cpp:64 ../src/wind_history.cpp:443
 msgid "NE"
 msgstr ""
 
 #: ../src/dial.cpp:526 ../src/gps.cpp:145 ../src/wind.cpp:64
-#: ../src/wind_history.cpp:446
+#: ../src/wind_history.cpp:449
 msgid "E"
 msgstr ""
 
-#: ../src/dial.cpp:526 ../src/wind.cpp:64 ../src/wind_history.cpp:452
+#: ../src/dial.cpp:526 ../src/wind.cpp:64 ../src/wind_history.cpp:455
 msgid "SE"
 msgstr ""
 
 #: ../src/dial.cpp:526 ../src/gps.cpp:149 ../src/wind.cpp:64
-#: ../src/wind_history.cpp:458
+#: ../src/wind_history.cpp:461
 msgid "S"
 msgstr ""
 
-#: ../src/dial.cpp:526 ../src/wind.cpp:64 ../src/wind_history.cpp:464
+#: ../src/dial.cpp:526 ../src/wind.cpp:64 ../src/wind_history.cpp:467
 msgid "SW"
 msgstr ""
 
 #: ../src/dial.cpp:526 ../src/gps.cpp:153 ../src/wind.cpp:64
-#: ../src/wind_history.cpp:470
+#: ../src/wind_history.cpp:473
 msgid "W"
 msgstr ""
 
-#: ../src/dial.cpp:526 ../src/wind.cpp:64 ../src/wind_history.cpp:476
+#: ../src/dial.cpp:526 ../src/wind.cpp:64 ../src/wind_history.cpp:479
 msgid "NW"
 msgstr ""
 
@@ -78,25 +78,29 @@ msgstr ""
 msgid " mag"
 msgstr ""
 
-#: ../src/performance.cpp:376
+#: ../src/performance.cpp:388
 msgid "tactics_pi: Select a Polar-File"
 msgstr ""
 
-#: ../src/performance.cpp:444
+#: ../src/performance.cpp:456
 msgid "Format in this file not recognised"
 msgstr ""
 
-#: ../src/performance.cpp:1041 ../src/wind_history.cpp:56
-#: ../src/wind_history.cpp:107
+#: ../src/performance.cpp:1055 ../src/wind_history.cpp:56
 msgid "--"
 msgstr ""
 
-#: ../src/performance.cpp:1172 ../src/wind_history.cpp:332
+#: ../src/performance.cpp:1056
+msgid "%"
+msgstr ""
+
+#: ../src/performance.cpp:1182 ../src/performance.cpp:1249
+#: ../src/wind_history.cpp:335
 #, c-format
 msgid "--- %s"
 msgstr ""
 
-#: ../src/performance.cpp:1304 ../src/wind_history.cpp:580
+#: ../src/performance.cpp:1439
 #, c-format
 msgid "Max %.1f %s since %02d:%02d  Overall %.1f %s"
 msgstr ""
@@ -225,11 +229,11 @@ msgstr ""
 msgid "Pitch"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:274 ../src/tactics_pi.cpp:3113
+#: ../src/tactics_pi.cpp:274 ../src/tactics_pi.cpp:3130
 msgid "Heel"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:276 ../src/tactics_pi.cpp:3069
+#: ../src/tactics_pi.cpp:276 ../src/tactics_pi.cpp:3086
 msgid "Leeway"
 msgstr ""
 
@@ -277,357 +281,373 @@ msgstr ""
 msgid "Polar performance"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:559 ../src/tactics_pi.cpp:697
-#: ../src/tactics_pi.cpp:2574 ../src/tactics_pi.cpp:2584
-#: ../src/tactics_pi.cpp:2806 ../src/tactics_pi.cpp:2845
-#: ../src/tactics_pi.cpp:3489 ../src/tactics_pi.cpp:3643
+#: ../src/tactics_pi.cpp:535 ../src/tactics_pi.cpp:703
+#: ../src/tactics_pi.cpp:2591 ../src/tactics_pi.cpp:2601
+#: ../src/tactics_pi.cpp:2823 ../src/tactics_pi.cpp:2862
+#: ../src/tactics_pi.cpp:3506 ../src/tactics_pi.cpp:3660
 msgid "Tactics"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:702
+#: ../src/tactics_pi.cpp:575
+msgid "Set Tactics Mark "
+msgstr ""
+
+#: ../src/tactics_pi.cpp:708
 msgid "Tactics PlugIn for OpenCPN"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:707
+#: ../src/tactics_pi.cpp:713
 msgid ""
 "Tactics PlugIn for OpenCPN\n"
 "Provides performance data & instrument display from NMEA source and polar "
 "file."
 msgstr ""
 
-#: ../src/tactics_pi.cpp:1523
+#: ../src/tactics_pi.cpp:1536
 msgid "You have to turn on OpenGL to use chart overlay "
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2777
+#: ../src/tactics_pi.cpp:2794
 msgid "Tactics preferences"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2852
+#: ../src/tactics_pi.cpp:2869
 msgid "show this tactics"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2858
+#: ../src/tactics_pi.cpp:2875
 msgid "Caption:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2866
+#: ../src/tactics_pi.cpp:2883
 msgid "Orientation:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2870 ../src/tactics_pi.cpp:3682
+#: ../src/tactics_pi.cpp:2887 ../src/tactics_pi.cpp:3699
 msgid "Vertical"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2871 ../src/tactics_pi.cpp:3684
+#: ../src/tactics_pi.cpp:2888 ../src/tactics_pi.cpp:3701
 msgid "Horizontal"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2878 ../src/tactics_pi.cpp:2886
-#: ../src/tactics_pi.cpp:3608
+#: ../src/tactics_pi.cpp:2895 ../src/tactics_pi.cpp:2903
+#: ../src/tactics_pi.cpp:3625
 msgid "Instruments"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2894
+#: ../src/tactics_pi.cpp:2911
 msgid "Add"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2907
+#: ../src/tactics_pi.cpp:2924
 msgid "Delete"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2913
+#: ../src/tactics_pi.cpp:2930
 msgid "Up"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2918
+#: ../src/tactics_pi.cpp:2935
 msgid "Down"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2928
+#: ../src/tactics_pi.cpp:2945
 msgid "Appearance"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2930
+#: ../src/tactics_pi.cpp:2947
 msgid "Fonts"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2936
+#: ../src/tactics_pi.cpp:2953
 msgid "Title:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2942
+#: ../src/tactics_pi.cpp:2959
 msgid "Data:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2948
+#: ../src/tactics_pi.cpp:2965
 msgid "Label:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2954
+#: ../src/tactics_pi.cpp:2971
 msgid "Small:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2962
+#: ../src/tactics_pi.cpp:2979
 msgid "Units, Ranges, Formats"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2968
+#: ../src/tactics_pi.cpp:2985
 msgid "Speedometer max value:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2973
+#: ../src/tactics_pi.cpp:2990
 msgid "Boat speed units:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2976 ../src/tactics_pi.cpp:2994
+#: ../src/tactics_pi.cpp:2993 ../src/tactics_pi.cpp:3011
 msgid "Honor OpenCPN settings"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2976 ../src/tactics_pi.cpp:3003
+#: ../src/tactics_pi.cpp:2993 ../src/tactics_pi.cpp:3020
 msgid "Kts"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2976 ../src/tactics_pi.cpp:3003
+#: ../src/tactics_pi.cpp:2993 ../src/tactics_pi.cpp:3020
 msgid "mph"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2976 ../src/tactics_pi.cpp:3003
+#: ../src/tactics_pi.cpp:2993 ../src/tactics_pi.cpp:3020
 msgid "km/h"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2976 ../src/tactics_pi.cpp:3003
+#: ../src/tactics_pi.cpp:2993 ../src/tactics_pi.cpp:3020
 msgid "m/s"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2982
+#: ../src/tactics_pi.cpp:2999
 msgid "Depth units:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2985 ../src/tactics_pi.cpp:2994
+#: ../src/tactics_pi.cpp:3002 ../src/tactics_pi.cpp:3011
 msgid "Meters"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2985
+#: ../src/tactics_pi.cpp:3002
 msgid "Feet"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2985
+#: ../src/tactics_pi.cpp:3002
 msgid "Fathoms"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2985
+#: ../src/tactics_pi.cpp:3002
 msgid "Centimeters"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2985
+#: ../src/tactics_pi.cpp:3002
 msgid "Inches"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2991
+#: ../src/tactics_pi.cpp:3008
 msgid "Distance units:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2994
+#: ../src/tactics_pi.cpp:3011
 msgid "Nautical miles"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2994
+#: ../src/tactics_pi.cpp:3011
 msgid "Statute miles"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:2994
+#: ../src/tactics_pi.cpp:3011
 msgid "Kilometers"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3000
+#: ../src/tactics_pi.cpp:3017
 msgid "Wind speed units:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3021
+#: ../src/tactics_pi.cpp:3038
 msgid "Performance Parameters"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3023
+#: ../src/tactics_pi.cpp:3040
 msgid "Laylines"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3032
+#: ../src/tactics_pi.cpp:3049
 msgid "Layline width damping factor [0.025-1]:  "
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3040
+#: ../src/tactics_pi.cpp:3057
 msgid "Layline length on Chart [nm]:  "
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3049
+#: ../src/tactics_pi.cpp:3066
 msgid "Min. Layline Width [Grad]:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3051
+#: ../src/tactics_pi.cpp:3068
 msgid "Min. Layline Width [\\u00B0]:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3060
+#: ../src/tactics_pi.cpp:3077
 msgid "Max. Layline Width [Grad]:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3062
+#: ../src/tactics_pi.cpp:3079
 msgid "Max. Layline Width [\\u00B0]:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3078
+#: ../src/tactics_pi.cpp:3095
 msgid "Boat's Leeway factor [0-20]:  "
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3085
+#: ../src/tactics_pi.cpp:3102
 msgid "Use Heel Sensor"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3092
+#: ../src/tactics_pi.cpp:3109
 msgid "fixed/max Leeway [Grad]:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3094
+#: ../src/tactics_pi.cpp:3111
 msgid "fixed/max Leeway [\\u00B0]:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3105
+#: ../src/tactics_pi.cpp:3122
 msgid "manual Heel input:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3120
+#: ../src/tactics_pi.cpp:3137
 msgid "TWS/TWA "
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3122
+#: ../src/tactics_pi.cpp:3139
 msgid " 45\\u00B0"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3124
+#: ../src/tactics_pi.cpp:3141
 msgid " 90\\u00B0"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3126
+#: ../src/tactics_pi.cpp:3143
 msgid "135\\u00B0"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3129
+#: ../src/tactics_pi.cpp:3146
 msgid "5 kn"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3143
+#: ../src/tactics_pi.cpp:3160
 msgid "10 kn"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3157
+#: ../src/tactics_pi.cpp:3174
 msgid "15 kn"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3172
+#: ../src/tactics_pi.cpp:3189
 msgid "20 kn"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3186
+#: ../src/tactics_pi.cpp:3203
 msgid "25 kn"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3202
+#: ../src/tactics_pi.cpp:3219
 msgid "Current"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3217
+#: ../src/tactics_pi.cpp:3234
 msgid "Current damping factor [1-400]:  "
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3230
+#: ../src/tactics_pi.cpp:3247
 msgid "Display Current on Chart (OpenGL)"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3234
+#: ../src/tactics_pi.cpp:3251
 msgid "True Wind"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3242
+#: ../src/tactics_pi.cpp:3259
 msgid "Correct STW with Leeway"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3246
+#: ../src/tactics_pi.cpp:3263
 msgid "Correct AWS/AWA with Heel"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3251
+#: ../src/tactics_pi.cpp:3268
 msgid "Force True Wind Calculation"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3255
+#: ../src/tactics_pi.cpp:3272
 msgid "Use SOG instead of STW for True Wind Calc."
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3259
+#: ../src/tactics_pi.cpp:3276
 msgid "Show Wind Barb on Chart (OpenGL)"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3267
+#: ../src/tactics_pi.cpp:3284
 msgid "Polar"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3274
+#: ../src/tactics_pi.cpp:3291
 msgid "Polar :"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3280
+#: ../src/tactics_pi.cpp:3297
 msgid "Load"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3362
+#: ../src/tactics_pi.cpp:3379
 msgid "Select a Polar-File"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3591
+#: ../src/tactics_pi.cpp:3608
 msgid "Add instrument"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3597
+#: ../src/tactics_pi.cpp:3614
 msgid "Select instrument to add:"
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3691
+#: ../src/tactics_pi.cpp:3708
 msgid "Preferences..."
 msgstr ""
 
-#: ../src/tactics_pi.cpp:3693
+#: ../src/tactics_pi.cpp:3710
 msgid "Show Laylines"
 msgstr ""
 
-#: ../src/wind_history.cpp:437
+#: ../src/wind_history.cpp:440
 msgid "NNE"
 msgstr ""
 
-#: ../src/wind_history.cpp:443
+#: ../src/wind_history.cpp:446
 msgid "ENE"
 msgstr ""
 
-#: ../src/wind_history.cpp:449
+#: ../src/wind_history.cpp:452
 msgid "ESE"
 msgstr ""
 
-#: ../src/wind_history.cpp:455
+#: ../src/wind_history.cpp:458
 msgid "SSE"
 msgstr ""
 
-#: ../src/wind_history.cpp:461
+#: ../src/wind_history.cpp:464
 msgid "SSW"
 msgstr ""
 
-#: ../src/wind_history.cpp:467
+#: ../src/wind_history.cpp:470
 msgid "WSW"
 msgstr ""
 
-#: ../src/wind_history.cpp:473
+#: ../src/wind_history.cpp:476
 msgid "WNW"
 msgstr ""
 
-#: ../src/wind_history.cpp:479
+#: ../src/wind_history.cpp:482
 msgid "NNW"
+msgstr ""
+
+#: ../src/wind_history.cpp:584
+msgid "Max"
+msgstr ""
+
+#: ../src/wind_history.cpp:585
+msgid "since"
+msgstr ""
+
+#: ../src/wind_history.cpp:586
+msgid "Overall"
 msgstr ""

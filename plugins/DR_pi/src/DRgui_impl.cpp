@@ -253,9 +253,10 @@ void Dlg::Calculate( wxCommandEvent& event, bool write_file, int Pattern  ){
     }
 //       delete root;
 //       delete Route;
-//       delete RouteName;
-//       delete text4;
-       
+#ifndef __WXOSX__
+       delete RouteName;
+       delete text4;
+#endif
     switch ( Pattern ) {
     case 1:
         {		
@@ -459,7 +460,10 @@ void Dlg::Calculate( wxCommandEvent& event, bool write_file, int Pattern  ){
             if (dbg) std::cout<< buffer.data()<<std::endl;
             doc.SaveFile( buffer.data() );}
     //} //end of if no error occured
-
+#ifndef __WXOSX__
+    delete root;
+    delete Route;
+#endif
     if (error_occured==true)  {
         wxLogMessage(_("Error in calculation. Please check input!") );
         wxMessageBox(_("Error in calculation. Please check input!") );

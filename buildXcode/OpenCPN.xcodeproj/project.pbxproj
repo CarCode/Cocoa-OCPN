@@ -495,7 +495,6 @@
 		A671BCD919BE485A00019119 /* NavObjectCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A671BCD819BE485A00019119 /* NavObjectCollection.cpp */; };
 		A671BCDB19BE487F00019119 /* Poi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A671BCDA19BE487F00019119 /* Poi.cpp */; };
 		A671BCDD19BE489900019119 /* PoiMan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A671BCDC19BE489900019119 /* PoiMan.cpp */; };
-		A671BCDF19BE48BB00019119 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A671BCDE19BE48BB00019119 /* pugixml.cpp */; };
 		A671BCE119BE48E800019119 /* squiddio_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A671BCE019BE48E800019119 /* squiddio_pi.cpp */; };
 		A6728C1B19D437AF00070B45 /* objsearch_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6728C1A19D437AF00070B45 /* objsearch_pi.cpp */; };
 		A6728C1D19D437FB00070B45 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6728C1C19D437FB00070B45 /* icons.cpp */; };
@@ -1822,23 +1821,16 @@
 		A66FE66117985E1C00A2DD0D /* WindowDestroyListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WindowDestroyListener.h; path = include/WindowDestroyListener.h; sourceTree = "<group>"; };
 		A671BCAC19BE406F00019119 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		A671BCC719BE44BC00019119 /* libsquiddio_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libsquiddio_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		A671BCC919BE461800019119 /* Hyperlink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hyperlink.h; path = plugins/Squiddio_pi/src/Hyperlink.h; sourceTree = "<group>"; };
 		A671BCCA19BE463A00019119 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/Squiddio_pi/src/icons.h; sourceTree = "<group>"; };
 		A671BCCB19BE466600019119 /* Layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Layer.h; path = plugins/Squiddio_pi/src/Layer.h; sourceTree = "<group>"; };
 		A671BCCC19BE46A700019119 /* NavObjectCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavObjectCollection.h; path = plugins/Squiddio_pi/src/NavObjectCollection.h; sourceTree = "<group>"; };
-		A671BCCE19BE470F00019119 /* ocpn_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ocpn_types.h; path = plugins/Squiddio_pi/src/ocpn_types.h; sourceTree = "<group>"; };
 		A671BCCF19BE472E00019119 /* Poi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Poi.h; path = plugins/Squiddio_pi/src/Poi.h; sourceTree = "<group>"; };
 		A671BCD019BE475400019119 /* PoiMan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PoiMan.h; path = plugins/Squiddio_pi/src/PoiMan.h; sourceTree = "<group>"; };
-		A671BCD119BE477400019119 /* pugiconfig.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugiconfig.hpp; path = plugins/Squiddio_pi/src/pugiconfig.hpp; sourceTree = "<group>"; };
-		A671BCD219BE479800019119 /* pugixml.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = pugixml.hpp; path = plugins/Squiddio_pi/src/pugixml.hpp; sourceTree = "<group>"; };
 		A671BCD319BE47B500019119 /* squiddio_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = squiddio_pi.h; path = plugins/Squiddio_pi/src/squiddio_pi.h; sourceTree = "<group>"; };
-		A671BCD419BE47F100019119 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinystr.h; path = plugins/Squiddio_pi/src/tinystr.h; sourceTree = "<group>"; };
-		A671BCD519BE480900019119 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = plugins/Squiddio_pi/src/tinyxml.h; sourceTree = "<group>"; };
 		A671BCD619BE483200019119 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/Squiddio_pi/src/icons.cpp; sourceTree = "<group>"; };
 		A671BCD819BE485A00019119 /* NavObjectCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NavObjectCollection.cpp; path = plugins/Squiddio_pi/src/NavObjectCollection.cpp; sourceTree = "<group>"; };
 		A671BCDA19BE487F00019119 /* Poi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Poi.cpp; path = plugins/Squiddio_pi/src/Poi.cpp; sourceTree = "<group>"; };
 		A671BCDC19BE489900019119 /* PoiMan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PoiMan.cpp; path = plugins/Squiddio_pi/src/PoiMan.cpp; sourceTree = "<group>"; };
-		A671BCDE19BE48BB00019119 /* pugixml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pugixml.cpp; path = plugins/Squiddio_pi/src/pugixml.cpp; sourceTree = "<group>"; };
 		A671BCE019BE48E800019119 /* squiddio_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = squiddio_pi.cpp; path = plugins/Squiddio_pi/src/squiddio_pi.cpp; sourceTree = "<group>"; };
 		A6728C0D19D4327900070B45 /* libobjsearch_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libobjsearch_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6728C1119D4365800070B45 /* objsearch_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = objsearch_pi.h; path = plugins/objsearch_pi/src/objsearch_pi.h; sourceTree = "<group>"; };
@@ -2141,7 +2133,6 @@
 		A6E6CD0F1C6E538600C07649 /* squiddioPrefsDialogBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = squiddioPrefsDialogBase.h; path = plugins/Squiddio_pi/src/squiddioPrefsDialogBase.h; sourceTree = "<group>"; };
 		A6E6CD101C6E53AD00C07649 /* squiddio_pi_thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = squiddio_pi_thread.h; path = plugins/Squiddio_pi/src/squiddio_pi_thread.h; sourceTree = "<group>"; };
 		A6E6CD111C6E53E700C07649 /* logs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = logs.h; path = plugins/Squiddio_pi/src/logs.h; sourceTree = "<group>"; };
-		A6E6CD121C6E548700C07649 /* gpxdocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpxdocument.h; path = plugins/Squiddio_pi/src/gpxdocument.h; sourceTree = "<group>"; };
 		A6E6CD141C6E62F400C07649 /* squiddioPrefsDialogBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = squiddioPrefsDialogBase.cpp; path = plugins/Squiddio_pi/src/squiddioPrefsDialogBase.cpp; sourceTree = "<group>"; };
 		A6E6CD151C6E631C00C07649 /* squiddio_pi_thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = squiddio_pi_thread.cpp; path = plugins/Squiddio_pi/src/squiddio_pi_thread.cpp; sourceTree = "<group>"; };
 		A6E6CD161C6E633D00C07649 /* logs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = logs.cpp; path = plugins/Squiddio_pi/src/logs.cpp; sourceTree = "<group>"; };
@@ -3529,13 +3520,6 @@
 				A671BCCF19BE472E00019119 /* Poi.h */,
 				A671BCD019BE475400019119 /* PoiMan.h */,
 				A671BCCB19BE466600019119 /* Layer.h */,
-				A671BCD219BE479800019119 /* pugixml.hpp */,
-				A671BCCE19BE470F00019119 /* ocpn_types.h */,
-				A671BCD119BE477400019119 /* pugiconfig.hpp */,
-				A671BCC919BE461800019119 /* Hyperlink.h */,
-				A6E6CD121C6E548700C07649 /* gpxdocument.h */,
-				A671BCD419BE47F100019119 /* tinystr.h */,
-				A671BCD519BE480900019119 /* tinyxml.h */,
 				A61498511D10A9E6008AE390 /* foreignDB.hpp */,
 			);
 			name = "Header Files";
@@ -3552,7 +3536,6 @@
 				A671BCD819BE485A00019119 /* NavObjectCollection.cpp */,
 				A671BCDA19BE487F00019119 /* Poi.cpp */,
 				A671BCDC19BE489900019119 /* PoiMan.cpp */,
-				A671BCDE19BE48BB00019119 /* pugixml.cpp */,
 				A61498521D10AA0F008AE390 /* foreignDB.cpp */,
 			);
 			name = "Source Files";
@@ -5887,7 +5870,6 @@
 				A671BCDB19BE487F00019119 /* Poi.cpp in Sources */,
 				A671BCDD19BE489900019119 /* PoiMan.cpp in Sources */,
 				A61498531D10B1F2008AE390 /* foreignDB.cpp in Sources */,
-				A671BCDF19BE48BB00019119 /* pugixml.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

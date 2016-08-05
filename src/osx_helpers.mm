@@ -52,8 +52,8 @@ void Sparkle_Initialize(bool checkForBeta)
 
         /* TODO: Use feedParametersForUpdater delegate method and append ?beta=1 instead.
                  This code puts SUFeedURL into user defaults! */
-        NSString *url = checkForBeta ? @"http://topperdiek.de/dl/app/ocpncast/beta"
-                                     : @"http://topperdiek.de/dl/app/ocpncast";
+        NSString *url = checkForBeta ? @"https://topperdiek.de/dl/app/ocpncast/beta"
+                                     : @"https://topperdiek.de/dl/app/ocpncast";
         [updater setFeedURL:[NSURL URLWithString:url]];
     }
 }

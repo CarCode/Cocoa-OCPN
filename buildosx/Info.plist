@@ -57,14 +57,19 @@
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>CarCode 2016</string>
-	<key>SUFeedURL</key>
-	<string>http://topperdiek.de/dl/app/ocpncast.xml</string>
-	<key>SUPublicDSAKeyFile</key>
-	<string>dsa_pub.pem</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSExceptionDomains</key>
+	<dict>
+		<key>NSExceptionAllowsInsecureHTTPLoads</key>
+		<true/>
+	</dict>
+	<key>SUFeedURL</key>
+	<string>https://topperdiek.de/dl/app/ocpncast.xml</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>dsa_pub.pem</string>
 </dict>
 </plist>
