@@ -1261,8 +1261,12 @@ void TrackPropDlg::OnTrackPropCopyTxtClick( wxCommandEvent& event )
 
 void TrackPropDlg::OnPrintBtnClick( wxCommandEvent& event )
 {
-//    RoutePrintSelection dlg( this, m_pTrack );
+//    RoutePrintSelection dlg( this, m_pTrack );  //  Siehe routeprintout.cpp
 //    dlg.ShowModal();
+#ifdef __WXOSX__
+    OnCancelBtnClick(event);
+    wxMessageBox("Noch nicht verfügbar für Tracks");
+#endif
 }
 
 void TrackPropDlg::OnTrackPropRightClick( wxListEvent &event )
@@ -1698,6 +1702,7 @@ wxString OCPNTrackListCtrl::OnGetItemText( long item, long column ) const
             break;
 
         case 6:
+            if( prev_point ) {
             if( ( item > 0 ) && this_point->GetCreateTime().IsValid()
                && prev_point->GetCreateTime().IsValid() )
             {
@@ -1711,7 +1716,10 @@ wxString OCPNTrackListCtrl::OnGetItemText( long item, long column ) const
 
                 ret.Printf( _T("%5.2f"), toUsrSpeed( speed ) );
             } else
+            {
                 ret = _("--");
+            }
+            }
             break;
 
         default:

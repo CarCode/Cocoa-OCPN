@@ -310,9 +310,16 @@ RoutePrintSelection::RoutePrintSelection( wxWindow*       parent,
     route = _route;
 
     long wstyle = style;
-
+#ifdef __WXOSX__
+    wstyle |= wxSTAY_ON_TOP;
+#endif
+#ifdef __WXOSX__
+    Create( parent, id, caption, wxPoint(10,60), size, wstyle );
+    SetFocus();
+#else
     Create( parent, id, caption, pos, size, wstyle );
     Centre();
+#endif
 }
 
 
@@ -398,15 +405,25 @@ void RoutePrintSelection::CreateControls()
     itemBoxSizer1->Add( fgSizer2, 5, wxEXPAND, 5 );
 
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
+#ifdef __WXOSX__
+    itemBoxSizer1->Add( itemBoxSizer16, 0, wxALL, 5 );
+#else
     itemBoxSizer1->Add( itemBoxSizer16, 0, wxALIGN_RIGHT | wxALL, 5 );
-
+#endif
     m_CancelButton = new wxButton( itemDialog1, ID_ROUTEPRINT_SELECTION_CANCEL, _( "Cancel" ), wxDefaultPosition,
                                    wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    itemBoxSizer16->Add( m_CancelButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+#else
     itemBoxSizer16->Add( m_CancelButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-
+#endif
     m_OKButton = new wxButton( itemDialog1, ID_ROUTEPRINT_SELECTION_OK, _( "OK" ), wxDefaultPosition,
-                               wxDefaultSize, 0 );
+                              wxDefaultSize, 0 );
+#ifdef __WXOSX__
+    itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+#else
     itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+#endif
     m_OKButton->SetDefault();
 
     SetColorScheme( ( ColorScheme )0 );

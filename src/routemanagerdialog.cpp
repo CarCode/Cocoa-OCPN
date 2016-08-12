@@ -1615,9 +1615,9 @@ void RouteManagerDialog::OnTrkMenuSelected( wxCommandEvent &event )
             while( 1 ) {
                 item = m_pTrkListCtrl->GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
                 if( item == -1 ) break;
-                Track* track = (Track*) pRouteList->Item( m_pTrkListCtrl->GetItemData( item ) )->GetData();
+                Track *track = pTrackList->Item( m_pTrkListCtrl->GetItemData( item ) )->GetData();
                 csvString << track->m_TrackNameString << _T("\t")
-                << wxString::Format( _T("%.1f"), track->Length() ) << _T("\t")
+                        << wxString::Format( _T("%.1f"), track->Length() ) << _T("\t")
                         << _T("\n");
             }
 
@@ -1652,12 +1652,12 @@ void RouteManagerDialog::OnTrkMenuSelected( wxCommandEvent &event )
 
             mergeList.Sort( (CMPFUNC_wxArrayTrackArray) CompareTracks );
 
-            targetTrack = (Track *) mergeList.Item( 0 );
+            targetTrack = mergeList.Item( 0 );
             lastPoint = targetTrack->GetLastPoint();
 
             for( unsigned int t = 1; t < mergeList.Count(); t++ ) {
 
-                mergeTrack = (Track *) mergeList.Item( t );
+                mergeTrack = mergeList.Item( t );
 
                 if( mergeTrack->IsRunning() ) {
                     runningSkipped = true;
@@ -1979,7 +1979,7 @@ void RouteManagerDialog::OnTrkRouteFromTrackClick( wxCommandEvent &event )
     item = m_pTrkListCtrl->GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
     if( item == -1 ) return;
 
-    Track *track = (Track *) pRouteList->Item( m_pTrkListCtrl->GetItemData( item ) )->GetData();
+    Track *track = pTrackList->Item( m_pTrkListCtrl->GetItemData( item ) )->GetData();
     
     TrackToRoute( track );
     

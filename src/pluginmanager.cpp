@@ -389,8 +389,10 @@ bool PlugInManager::LoadAllPlugIns(const wxString &plugin_dir, bool load_enabled
             OCPNMessageBox( NULL, wxString::Format(_("The plugin %s is not compatible with this version of OpenCPN, please get an updated version."), plugin_file.c_str()), wxString(_("OpenCPN Info")), wxICON_INFORMATION | wxOK, 10 );
         }
         PlugInContainer *pic = NULL;
+        wxStopWatch sw;
         if(b_compat)
             pic = LoadPlugIn(file_name);
+
         if(pic)
         {
             if(pic->m_pplugin)
@@ -405,7 +407,14 @@ bool PlugInManager::LoadAllPlugIns(const wxString &plugin_dir, bool load_enabled
                 pic->m_bEnabled = enabled;
                 if(pic->m_bEnabled)
                 {
+                    wxStopWatch sw;
                     pic->m_cap_flag = pic->m_pplugin->Init();
+#ifdef __WXOSX__ // 10 milliseconds is very slow at least on linux or Mac OS X
+                    if(sw.Time() > 10)
+                        wxLogMessage(_T("PlugInManager: ") + pic->m_common_name
+                                     + _T(" has loaded very slowly: %ld ms"),
+                                     sw.Time());
+#endif
                     pic->m_bInitState = true;
                 }
 
@@ -457,6 +466,9 @@ bool PlugInManager::LoadAllPlugIns(const wxString &plugin_dir, bool load_enabled
     //  Only allow the PlugIn compatibility dialogs once per instance of application.
     if(b_enable_blackdialog)
         m_benable_blackdialog_done = true;
+
+    //  And then reload all catalogs.
+    ReloadLocale();
 
     return ret;
 }
@@ -778,7 +790,8 @@ bool PlugInManager::CheckPluginCompatibility(wxString plugin_file)
     if (virtualpointer)
         VirtualFree(virtualpointer, size, MEM_DECOMMIT);
 #endif
-#ifdef __WXGTK__
+#ifdef __WXOSX__  // WXGTK
+#if 0
     wxString cmd = _T("ldd ") + plugin_file + _T(" 2>&1");
     FILE *ldd = popen( cmd.mb_str(), "r" );
     if (ldd != NULL)
@@ -799,7 +812,27 @@ bool PlugInManager::CheckPluginCompatibility(wxString plugin_file)
         }
         fclose(ldd);
     }
-#endif // __WXGTK__
+#else
+    // this is 3x faster than the other method
+    FILE *f = fopen(plugin_file, "r");
+    char strver[26]; //Enough space even for very big integers...
+    sprintf( strver, "libwx_baseu-%i.%i", wxMAJOR_VERSION, wxMINOR_VERSION );
+    
+    b_compat = false;
+    
+    int pos = 0, len = strlen(strver), c;
+    while((c = fgetc(f)) != EOF) {
+        if(c == strver[pos]) {
+            if(++pos == len) {
+                b_compat = true;
+                break;
+            }
+        } else
+            pos = 0;
+    }
+    fclose(f);
+#endif
+#endif // __WXGTK__  WXOSX
 
     return b_compat;
 }
@@ -958,8 +991,8 @@ PlugInContainer *PlugInManager::LoadPlugIn(wxString plugin_file)
 
     int api_major = plug_in->GetAPIVersionMajor();
     int api_minor = plug_in->GetAPIVersionMinor();
-    int ver = (api_major * 100) + api_minor;
-    pic->m_api_version = ver;
+    int api_ver = (api_major * 100) + api_minor;
+    pic->m_api_version = api_ver;
 
     int pi_major = plug_in->GetPlugInVersionMajor();
     int pi_minor = plug_in->GetPlugInVersionMinor();
@@ -971,7 +1004,7 @@ PlugInContainer *PlugInManager::LoadPlugIn(wxString plugin_file)
         return NULL;
     }
 
-    switch(ver)
+    switch(api_ver)
     {
     case 105:
         pic->m_pplugin = dynamic_cast<opencpn_plugin*>(plug_in);
@@ -1018,7 +1051,7 @@ PlugInContainer *PlugInManager::LoadPlugIn(wxString plugin_file)
         msg = _T("  ");
         msg += plugin_file;
         wxString msg1;
-        msg1.Printf(_T("\n              API Version detected: %d"), ver);
+        msg1.Printf(_T("\n              API Version detected: %d"), api_ver);
         msg += msg1;
         msg1.Printf(_T("\n              PlugIn Version detected: %d"), pi_ver);
         msg += msg1;
@@ -2253,8 +2286,9 @@ bool AddLocaleCatalog( wxString catalog )
         // Add this catalog to the persistent catalog array
         g_locale_catalog_array.Add(catalog);
         
-        //  And then reload all catalogs.
-        return ReloadLocale(); // plocale_def_lang->AddCatalog( catalog );
+//        //  And then reload all catalogs.
+//        return ReloadLocale(); // plocale_def_lang->AddCatalog( catalog );
+        return plocale_def_lang->AddCatalog( catalog );
     }
     else
 #endif        
@@ -3043,14 +3077,14 @@ bool DeletePluginTrack( wxString& GUID )
     bool b_found = false;
 
     //  Find the Route
-    Route *pRoute = g_pRouteMan->FindRouteByGUID( GUID );
-    if(pRoute) {
-        g_pRouteMan->DeleteTrack( (Track *)pRoute );
+    Track *pTrack = g_pRouteMan->FindTrackByGUID( GUID );
+    if(pTrack) {
+        g_pRouteMan->DeleteTrack( pTrack );
         b_found = true;
     }
 
     if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
-        pRouteManagerDialog->UpdateRouteListCtrl();
+        pRouteManagerDialog->UpdateTrkListCtrl();
 
     return b_found;
  }
@@ -3060,13 +3094,13 @@ bool UpdatePlugInTrack ( PlugIn_Track *ptrack )
     bool b_found = false;
 
     //  Find the Track
-    Route *pRoute = g_pRouteMan->FindRouteByGUID( ptrack->m_GUID );
-    if(pRoute)
+    Track *pTrack = g_pRouteMan->FindTrackByGUID( ptrack->m_GUID );
+    if(pTrack)
         b_found = true;
 
     if(b_found) {
-        bool b_permanent = (pRoute->m_btemp == false);
-        g_pRouteMan->DeleteTrack( (Track *)pRoute );
+        bool b_permanent = (pTrack->m_btemp == false);
+        g_pRouteMan->DeleteTrack( pTrack );
 
         b_found = AddPlugInTrack( ptrack, b_permanent );
     }

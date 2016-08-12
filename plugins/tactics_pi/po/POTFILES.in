@@ -16,6 +16,8 @@
 ../src/gps.h
 ../src/icons.cpp
 ../src/icons.h
+../src/iirfilter.cpp
+../src/iirfilter.h
 ../src/instrument.cpp
 ../src/instrument.h
 ../src/performance.cpp

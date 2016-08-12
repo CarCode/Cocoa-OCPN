@@ -1139,10 +1139,9 @@ static char *get_X11_property (Display *disp, Window win,
 }
 #endif
 
+static wxStopWatch init_sw;
 bool MyApp::OnInit()
 {
-    wxStopWatch sw;
-
     if( !wxApp::OnInit() ) return false;
 
 #if defined(__WXGTK__) && defined(ARMHF) && defined(ocpnUSE_GLES)
@@ -2131,9 +2130,6 @@ extern ocpnGLOptions g_GLOptions;
     gFrame->Refresh( false );
     gFrame->Raise();
 
-    gFrame->RequestNewToolbar();
-
-
     cc1->Enable();
     cc1->SetFocus();
 
@@ -2177,7 +2173,7 @@ extern ocpnGLOptions g_GLOptions;
     // Start delayed initialization chain after 100 milliseconds
     gFrame->InitTimer.Start( 100, wxTIMER_CONTINUOUS );
 
-    wxLogMessage( wxString::Format(_("OpenCPN Initialized in %ld ms."), sw.Time() ) );
+    wxLogMessage( wxString::Format(_("OpenCPN Initialized in %ld ms."), init_sw.Time() ) );
 
 #ifdef __OCPN__ANDROID__
     androidHideBusyIcon();
@@ -3126,10 +3122,6 @@ void MyFrame::RequestNewToolbar(bool bforcenew)
             g_FloatingToolbarDialog->SetColorScheme(global_color_scheme);
             g_FloatingToolbarDialog->Show(b_reshow && g_bshowToolbar);
         }
-
-#ifndef __WXQT__
-        gFrame->Raise(); // ensure keyboard focus to the chart window (needed by gtk+)
-#endif
     }
 
 #ifdef __OCPN__ANDROID__
@@ -4218,19 +4210,22 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
         case ID_MENU_ROUTE_MANAGER:
         case ID_ROUTEMANAGER: {
             pRouteManagerDialog = RouteManagerDialog::getInstance( cc1 ); // There is one global instance of the Dialog
+            if( pRouteManagerDialog->IsShown() )
+                pRouteManagerDialog->Hide();
+            else {
+                pRouteManagerDialog->UpdateRouteListCtrl();
+                pRouteManagerDialog->UpdateTrkListCtrl();
+                pRouteManagerDialog->UpdateWptListCtrl();
+                pRouteManagerDialog->UpdateLayListCtrl();
 
-            pRouteManagerDialog->UpdateRouteListCtrl();
-            pRouteManagerDialog->UpdateTrkListCtrl();
-            pRouteManagerDialog->UpdateWptListCtrl();
-            pRouteManagerDialog->UpdateLayListCtrl();
-
-            pRouteManagerDialog->Show();
+                pRouteManagerDialog->Show();
 
             //    Required if RMDialog is not STAY_ON_TOP
 #ifdef __WXOSX__
-            pRouteManagerDialog->Centre();
-            pRouteManagerDialog->Raise();
+                pRouteManagerDialog->Centre();
+                pRouteManagerDialog->Raise();
 #endif
+            }
             break;
         }
 
@@ -6233,23 +6228,23 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
                 break;
             m_initializing = true;
             g_pi_manager->LoadAllPlugIns( g_Platform->GetPluginDir(), true, false );
-            
+
             RequestNewToolbar();
             if( g_toolbar )
                 g_toolbar->EnableTool( ID_SETTINGS, false );
-            
+
             wxString perspective;
             pConfig->SetPath( _T ( "/AUI" ) );
             pConfig->Read( _T ( "AUIPerspective" ), &perspective );
-            
+
             // Make sure the perspective saved in the config file is "reasonable"
             // In particular, the perspective should have an entry for every
             // windows added to the AUI manager so far.
             // If any are not found, then use the default layout
-            
+
             bool bno_load = false;
             wxAuiPaneInfoArray pane_array_val = g_pauimgr->GetAllPanes();
-            
+
             for( unsigned int i = 0; i < pane_array_val.GetCount(); i++ ) {
                 wxAuiPaneInfo pane = pane_array_val.Item( i );
                 if( perspective.Find( pane.name ) == wxNOT_FOUND ) {
@@ -6285,20 +6280,22 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
                 g_FloatingToolbarDialog->SetAutoHide(g_bAutoHideToolbar);
                 g_FloatingToolbarDialog->SetAutoHideTimer(g_nAutoHideToolbar);
             }
-            
+
             break;
             }
-            
+
         case 4:
         {
             g_options = new options( this, -1, _("Options") );
-            
+
             if( g_toolbar )
                 g_toolbar->EnableTool( ID_SETTINGS, true );
-            
+
+            // needed to ensure that the chart window starts with keyboard focus
+            SurfaceToolbar();
             break;
         }
-            
+
         default:
         {
             // Last call....
@@ -6308,6 +6305,8 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
 
             if(b_reloadForPlugins)
                 ChartsRefresh(g_restore_dbindex, cc1->GetVP());
+
+            wxLogMessage( wxString::Format(_("OpenCPN Startup in %ld ms."), init_sw.Time() ) );
             break;
         }
     }   // switch
@@ -8199,7 +8198,7 @@ bool MyFrame::DoChartUpdate( void )
                 cc1->GetVPScale(), Current_Ch->GetChartSkew() * PI / 180., cc1->GetVPRotation() );
     }
 
-    update_finish:
+update_finish:
 
     //    Ask for a new tool bar if the stack is going to or coming from only one entry.
     if( pCurrentStack
@@ -8915,7 +8914,7 @@ void MyFrame::OnEvtOCPN_NMEA( OCPN_DataStreamEvent & event )
     bool bis_recognized_sentence = true;
     bool ll_valid = true;
 
-    wxString str_buf = wxString(event.GetNMEAString().c_str(), wxConvUTF8);
+    wxString str_buf = event.ProcessNMEA4Tags();
 
     if( g_nNMEADebug && ( g_total_NMEAerror_messages < g_nNMEADebug ) )
     {

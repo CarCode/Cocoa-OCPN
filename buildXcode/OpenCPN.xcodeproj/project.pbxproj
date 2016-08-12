@@ -383,6 +383,7 @@
 		A632214D1AE0572000A52EAC /* filestr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632214C1AE0572000A52EAC /* filestr.cpp */; };
 		A632214F1AE0574200A52EAC /* scantree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A632214E1AE0574200A52EAC /* scantree.cpp */; };
 		A63221511AE0577100A52EAC /* qopen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63221501AE0577100A52EAC /* qopen.cpp */; };
+		A6337C5B1D5C7E6500F78A08 /* iirfilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6337C5A1D5C793500F78A08 /* iirfilter.cpp */; };
 		A635C8AE17C16F0900B3E5E9 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AB17C16F0900B3E5E9 /* tinyxml.cpp */; };
 		A635C8AF17C16F0900B3E5E9 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AC17C16F0900B3E5E9 /* tinyxmlerror.cpp */; };
 		A635C8B017C16F0900B3E5E9 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A635C8AD17C16F0900B3E5E9 /* tinyxmlparser.cpp */; };
@@ -406,8 +407,6 @@
 		A64D13BC1A0FD5C600B92F84 /* xte.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64D13BB1A0FD5C600B92F84 /* xte.cpp */; };
 		A64E58DD1D1FDA770056597C /* piano.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64E58DC1D1FD9F60056597C /* piano.cpp */; };
 		A64EBB4F1B26FCB200F861D0 /* GuardZoneBogey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64EBB4D1B26FCB200F861D0 /* GuardZoneBogey.cpp */; };
-		A64EBB501B26FCB200F861D0 /* GuardZoneControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64EBB4E1B26FCB200F861D0 /* GuardZoneControls.cpp */; };
-		A64EBB541B2708EE00F861D0 /* Idle_Dialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64EBB531B2708EE00F861D0 /* Idle_Dialog.cpp */; };
 		A64EBB551B271D5A00F861D0 /* libBR24radar_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6DB19DC18EDCDD400E643D2 /* libBR24radar_pi.dylib */; };
 		A65009C717DB5C2200FD3148 /* de.lproj in Resources */ = {isa = PBXBuildFile; fileRef = A65009C617DB5C2200FD3148 /* de.lproj */; };
 		A65034DB186845F700301CE7 /* GribTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65034DA186845F700301CE7 /* GribTable.cpp */; };
@@ -475,6 +474,22 @@
 		A669D35C1D27D5F000D2A1B1 /* wind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A67530A41D26CDE2005B561A /* wind.cpp */; };
 		A669D35D1D27EDFB00D2A1B1 /* libtactics_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A669D34C1D27D45600D2A1B1 /* libtactics_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A669D4C51A2282860078BFB1 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = A669D4C41A2282860078BFB1 /* sha1.c */; };
+		A66A0C1C1D5CC71E004D8A26 /* br24ControlsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C0C1D5CBF5B004D8A26 /* br24ControlsDialog.cpp */; };
+		A66A0C1D1D5CC71E004D8A26 /* br24MessageBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C0D1D5CBF79004D8A26 /* br24MessageBox.cpp */; };
+		A66A0C1E1D5CC71E004D8A26 /* br24OptionsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C0E1D5CBF90004D8A26 /* br24OptionsDialog.cpp */; };
+		A66A0C1F1D5CC71E004D8A26 /* br24Receive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C0F1D5CBFAB004D8A26 /* br24Receive.cpp */; };
+		A66A0C201D5CC71E004D8A26 /* br24Transmit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C101D5CBFC5004D8A26 /* br24Transmit.cpp */; };
+		A66A0C211D5CC71E004D8A26 /* drawutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C111D5CBFDC004D8A26 /* drawutil.cpp */; };
+		A66A0C221D5CC71E004D8A26 /* GuardZone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C121D5CBFF8004D8A26 /* GuardZone.cpp */; };
+		A66A0C231D5CC71E004D8A26 /* RadarCanvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C131D5CC01B004D8A26 /* RadarCanvas.cpp */; };
+		A66A0C241D5CC71E004D8A26 /* RadarDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C141D5CC042004D8A26 /* RadarDraw.cpp */; };
+		A66A0C251D5CC71E004D8A26 /* RadarDrawShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C151D5CC060004D8A26 /* RadarDrawShader.cpp */; };
+		A66A0C261D5CC71E004D8A26 /* RadarDrawVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C161D5CC075004D8A26 /* RadarDrawVertex.cpp */; };
+		A66A0C271D5CC71E004D8A26 /* RadarInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C171D5CC097004D8A26 /* RadarInfo.cpp */; };
+		A66A0C281D5CC71E004D8A26 /* RadarPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C181D5CC0AE004D8A26 /* RadarPanel.cpp */; };
+		A66A0C291D5CC71E004D8A26 /* shaderutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C191D5CC0C4004D8A26 /* shaderutil.cpp */; };
+		A66A0C2A1D5CC71E004D8A26 /* socketutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C1A1D5CC0E5004D8A26 /* socketutil.cpp */; };
+		A66A0C2B1D5CC71E004D8A26 /* TextureFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66A0C1B1D5CC105004D8A26 /* TextureFont.cpp */; };
 		A66D8E2F18D2584E00BC8747 /* routeprintout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66D8E2E18D2584E00BC8747 /* routeprintout.cpp */; };
 		A66D8E3118D2607A00BC8747 /* printtable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66D8E3018D2607A00BC8747 /* printtable.cpp */; };
 		A66FE65E1797E1CC00A2DD0D /* TrackPropDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66FE65D1797E1CC00A2DD0D /* TrackPropDlg.cpp */; };
@@ -593,7 +608,6 @@
 		A6D0E73517A915330031E658 /* AboutDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D0E73417A915330031E658 /* AboutDialog.cpp */; };
 		A6D0E73717A9155C0031E658 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D0E73617A9155C0031E658 /* icons.cpp */; };
 		A6DB19E018EDCE7600E643D2 /* br24radar_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB19DF18EDCE7600E643D2 /* br24radar_pi.cpp */; };
-		A6DB19E418EDCEB500E643D2 /* br24radarcontrol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB19E318EDCEB500E643D2 /* br24radarcontrol.cpp */; };
 		A6DB19E618EDCECE00E643D2 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB19E518EDCECE00E643D2 /* icons.cpp */; };
 		A6DB33761B73752F00163272 /* ocpn_draw_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33751B73752F00163272 /* ocpn_draw_pi.cpp */; };
 		A6DB337B1B73758D00163272 /* Boundary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DB33771B73758D00163272 /* Boundary.cpp */; };
@@ -1666,6 +1680,8 @@
 		A632214E1AE0574200A52EAC /* scantree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scantree.cpp; path = plugins/chartdldr_pi/src/unrar/scantree.cpp; sourceTree = "<group>"; };
 		A63221501AE0577100A52EAC /* qopen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qopen.cpp; path = plugins/chartdldr_pi/src/unrar/qopen.cpp; sourceTree = "<group>"; };
 		A63221521AE0594100A52EAC /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = plugins/chartdldr_pi/src/version.h; sourceTree = "<group>"; };
+		A6337C591D5C791900F78A08 /* iirfilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iirfilter.h; path = plugins/tactics_pi/src/iirfilter.h; sourceTree = "<group>"; };
+		A6337C5A1D5C793500F78A08 /* iirfilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iirfilter.cpp; path = plugins/tactics_pi/src/iirfilter.cpp; sourceTree = "<group>"; };
 		A635C8AA17C16ED600B3E5E9 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = include/tinyxml.h; sourceTree = "<group>"; };
 		A635C8AB17C16F0900B3E5E9 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = src/tinyxml.cpp; sourceTree = "<group>"; };
 		A635C8AC17C16F0900B3E5E9 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlerror.cpp; path = src/tinyxmlerror.cpp; sourceTree = "<group>"; };
@@ -1710,8 +1726,6 @@
 		A64E58DC1D1FD9F60056597C /* piano.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = piano.cpp; path = src/piano.cpp; sourceTree = "<group>"; };
 		A64E58DE1D1FE21C0056597C /* wificlient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wificlient.cpp; path = src/wificlient.cpp; sourceTree = "<group>"; };
 		A64EBB4D1B26FCB200F861D0 /* GuardZoneBogey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GuardZoneBogey.cpp; path = plugins/BR24radar_pi/src/GuardZoneBogey.cpp; sourceTree = "<group>"; };
-		A64EBB4E1B26FCB200F861D0 /* GuardZoneControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GuardZoneControls.cpp; path = plugins/BR24radar_pi/src/GuardZoneControls.cpp; sourceTree = "<group>"; };
-		A64EBB531B2708EE00F861D0 /* Idle_Dialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Idle_Dialog.cpp; path = plugins/BR24radar_pi/src/Idle_Dialog.cpp; sourceTree = "<group>"; };
 		A64FA6FF17EDB7D600710E97 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = buildosx/Info.plist; sourceTree = SOURCE_ROOT; };
 		A65009C617DB5C2200FD3148 /* de.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = de.lproj; sourceTree = "<group>"; };
 		A65034D81868458300301CE7 /* GribTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GribTable.h; path = plugins/grib_pi/src/GribTable.h; sourceTree = "<group>"; };
@@ -1812,6 +1826,40 @@
 		A669D34C1D27D45600D2A1B1 /* libtactics_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libtactics_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A669D4C31A2282610078BFB1 /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sha1.h; path = src/ssl/sha1.h; sourceTree = "<group>"; };
 		A669D4C41A2282860078BFB1 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sha1.c; path = src/ssl/sha1.c; sourceTree = "<group>"; };
+		A66A0BFA1D5CBD2F004D8A26 /* br24ControlsDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = br24ControlsDialog.h; path = plugins/BR24radar_pi/src/br24ControlsDialog.h; sourceTree = "<group>"; };
+		A66A0BFB1D5CBD4E004D8A26 /* br24MessageBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = br24MessageBox.h; path = plugins/BR24radar_pi/src/br24MessageBox.h; sourceTree = "<group>"; };
+		A66A0BFC1D5CBD6F004D8A26 /* br24OptionsDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = br24OptionsDialog.h; path = plugins/BR24radar_pi/src/br24OptionsDialog.h; sourceTree = "<group>"; };
+		A66A0BFD1D5CBD8D004D8A26 /* br24Receive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = br24Receive.h; path = plugins/BR24radar_pi/src/br24Receive.h; sourceTree = "<group>"; };
+		A66A0BFE1D5CBDAA004D8A26 /* br24Transmit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = br24Transmit.h; path = plugins/BR24radar_pi/src/br24Transmit.h; sourceTree = "<group>"; };
+		A66A0BFF1D5CBDC2004D8A26 /* drawutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = drawutil.h; path = plugins/BR24radar_pi/src/drawutil.h; sourceTree = "<group>"; };
+		A66A0C001D5CBDD8004D8A26 /* GuardZone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GuardZone.h; path = plugins/BR24radar_pi/src/GuardZone.h; sourceTree = "<group>"; };
+		A66A0C011D5CBDEF004D8A26 /* GuardZoneBogey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GuardZoneBogey.h; path = plugins/BR24radar_pi/src/GuardZoneBogey.h; sourceTree = "<group>"; };
+		A66A0C021D5CBE10004D8A26 /* pi_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pi_common.h; path = plugins/BR24radar_pi/src/pi_common.h; sourceTree = "<group>"; };
+		A66A0C031D5CBE39004D8A26 /* RadarCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarCanvas.h; path = plugins/BR24radar_pi/src/RadarCanvas.h; sourceTree = "<group>"; };
+		A66A0C041D5CBE56004D8A26 /* RadarDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarDraw.h; path = plugins/BR24radar_pi/src/RadarDraw.h; sourceTree = "<group>"; };
+		A66A0C051D5CBE6F004D8A26 /* RadarDrawShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarDrawShader.h; path = plugins/BR24radar_pi/src/RadarDrawShader.h; sourceTree = "<group>"; };
+		A66A0C061D5CBE94004D8A26 /* RadarDrawVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarDrawVertex.h; path = plugins/BR24radar_pi/src/RadarDrawVertex.h; sourceTree = "<group>"; };
+		A66A0C071D5CBEAE004D8A26 /* RadarInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarInfo.h; path = plugins/BR24radar_pi/src/RadarInfo.h; sourceTree = "<group>"; };
+		A66A0C081D5CBECA004D8A26 /* RadarPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarPanel.h; path = plugins/BR24radar_pi/src/RadarPanel.h; sourceTree = "<group>"; };
+		A66A0C091D5CBEEA004D8A26 /* shaderutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shaderutil.h; path = plugins/BR24radar_pi/src/shaderutil.h; sourceTree = "<group>"; };
+		A66A0C0A1D5CBF05004D8A26 /* socketutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = socketutil.h; path = plugins/BR24radar_pi/src/socketutil.h; sourceTree = "<group>"; };
+		A66A0C0B1D5CBF20004D8A26 /* TextureFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureFont.h; path = plugins/BR24radar_pi/src/TextureFont.h; sourceTree = "<group>"; };
+		A66A0C0C1D5CBF5B004D8A26 /* br24ControlsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = br24ControlsDialog.cpp; path = plugins/BR24radar_pi/src/br24ControlsDialog.cpp; sourceTree = "<group>"; };
+		A66A0C0D1D5CBF79004D8A26 /* br24MessageBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = br24MessageBox.cpp; path = plugins/BR24radar_pi/src/br24MessageBox.cpp; sourceTree = "<group>"; };
+		A66A0C0E1D5CBF90004D8A26 /* br24OptionsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = br24OptionsDialog.cpp; path = plugins/BR24radar_pi/src/br24OptionsDialog.cpp; sourceTree = "<group>"; };
+		A66A0C0F1D5CBFAB004D8A26 /* br24Receive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = br24Receive.cpp; path = plugins/BR24radar_pi/src/br24Receive.cpp; sourceTree = "<group>"; };
+		A66A0C101D5CBFC5004D8A26 /* br24Transmit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = br24Transmit.cpp; path = plugins/BR24radar_pi/src/br24Transmit.cpp; sourceTree = "<group>"; };
+		A66A0C111D5CBFDC004D8A26 /* drawutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = drawutil.cpp; path = plugins/BR24radar_pi/src/drawutil.cpp; sourceTree = "<group>"; };
+		A66A0C121D5CBFF8004D8A26 /* GuardZone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GuardZone.cpp; path = plugins/BR24radar_pi/src/GuardZone.cpp; sourceTree = "<group>"; };
+		A66A0C131D5CC01B004D8A26 /* RadarCanvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarCanvas.cpp; path = plugins/BR24radar_pi/src/RadarCanvas.cpp; sourceTree = "<group>"; };
+		A66A0C141D5CC042004D8A26 /* RadarDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarDraw.cpp; path = plugins/BR24radar_pi/src/RadarDraw.cpp; sourceTree = "<group>"; };
+		A66A0C151D5CC060004D8A26 /* RadarDrawShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarDrawShader.cpp; path = plugins/BR24radar_pi/src/RadarDrawShader.cpp; sourceTree = "<group>"; };
+		A66A0C161D5CC075004D8A26 /* RadarDrawVertex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarDrawVertex.cpp; path = plugins/BR24radar_pi/src/RadarDrawVertex.cpp; sourceTree = "<group>"; };
+		A66A0C171D5CC097004D8A26 /* RadarInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarInfo.cpp; path = plugins/BR24radar_pi/src/RadarInfo.cpp; sourceTree = "<group>"; };
+		A66A0C181D5CC0AE004D8A26 /* RadarPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarPanel.cpp; path = plugins/BR24radar_pi/src/RadarPanel.cpp; sourceTree = "<group>"; };
+		A66A0C191D5CC0C4004D8A26 /* shaderutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shaderutil.cpp; path = plugins/BR24radar_pi/src/shaderutil.cpp; sourceTree = "<group>"; };
+		A66A0C1A1D5CC0E5004D8A26 /* socketutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = socketutil.cpp; path = plugins/BR24radar_pi/src/socketutil.cpp; sourceTree = "<group>"; };
+		A66A0C1B1D5CC105004D8A26 /* TextureFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureFont.cpp; path = plugins/BR24radar_pi/src/TextureFont.cpp; sourceTree = "<group>"; };
 		A66D8E2E18D2584E00BC8747 /* routeprintout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = routeprintout.cpp; path = src/routeprintout.cpp; sourceTree = "<group>"; };
 		A66D8E3018D2607A00BC8747 /* printtable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = printtable.cpp; path = src/printtable.cpp; sourceTree = "<group>"; };
 		A66FE65B1797DF9400A2DD0D /* TrackPropDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackPropDlg.h; path = include/TrackPropDlg.h; sourceTree = "<group>"; };
@@ -2062,7 +2110,6 @@
 		A6DB19DD18EDCE2600E643D2 /* br24radar_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = br24radar_pi.h; path = plugins/BR24radar_pi/src/br24radar_pi.h; sourceTree = "<group>"; };
 		A6DB19DE18EDCE4200E643D2 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/BR24radar_pi/src/icons.h; sourceTree = "<group>"; };
 		A6DB19DF18EDCE7600E643D2 /* br24radar_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = br24radar_pi.cpp; path = plugins/BR24radar_pi/src/br24radar_pi.cpp; sourceTree = "<group>"; };
-		A6DB19E318EDCEB500E643D2 /* br24radarcontrol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = br24radarcontrol.cpp; path = plugins/BR24radar_pi/src/br24radarcontrol.cpp; sourceTree = "<group>"; };
 		A6DB19E518EDCECE00E643D2 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/BR24radar_pi/src/icons.cpp; sourceTree = "<group>"; };
 		A6DB33551B736C0400163272 /* libdraw_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libdraw_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6DB33561B736DEF00163272 /* ocpn_draw_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ocpn_draw_pi.h; path = plugins/draw_pi/include/ocpn_draw_pi.h; sourceTree = "<group>"; };
@@ -3609,6 +3656,7 @@
 				A67530A21D26CDAC005B561A /* tactics_pi.cpp */,
 				A67530A31D26CDC4005B561A /* wind_history.cpp */,
 				A67530A41D26CDE2005B561A /* wind.cpp */,
+				A6337C5A1D5C793500F78A08 /* iirfilter.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3633,6 +3681,7 @@
 				A67530921D26CBA8005B561A /* wind_history.h */,
 				A67530931D26CBBD005B561A /* wind.h */,
 				A67530941D26CBD7005B561A /* wx28compat.h */,
+				A6337C591D5C791900F78A08 /* iirfilter.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -3935,11 +3984,24 @@
 			isa = PBXGroup;
 			children = (
 				A6DB19DF18EDCE7600E643D2 /* br24radar_pi.cpp */,
-				A6DB19E318EDCEB500E643D2 /* br24radarcontrol.cpp */,
+				A66A0C0C1D5CBF5B004D8A26 /* br24ControlsDialog.cpp */,
+				A66A0C0D1D5CBF79004D8A26 /* br24MessageBox.cpp */,
+				A66A0C0E1D5CBF90004D8A26 /* br24OptionsDialog.cpp */,
+				A66A0C0F1D5CBFAB004D8A26 /* br24Receive.cpp */,
+				A66A0C101D5CBFC5004D8A26 /* br24Transmit.cpp */,
+				A66A0C111D5CBFDC004D8A26 /* drawutil.cpp */,
+				A66A0C121D5CBFF8004D8A26 /* GuardZone.cpp */,
 				A64EBB4D1B26FCB200F861D0 /* GuardZoneBogey.cpp */,
-				A64EBB4E1B26FCB200F861D0 /* GuardZoneControls.cpp */,
-				A64EBB531B2708EE00F861D0 /* Idle_Dialog.cpp */,
 				A6DB19E518EDCECE00E643D2 /* icons.cpp */,
+				A66A0C131D5CC01B004D8A26 /* RadarCanvas.cpp */,
+				A66A0C141D5CC042004D8A26 /* RadarDraw.cpp */,
+				A66A0C151D5CC060004D8A26 /* RadarDrawShader.cpp */,
+				A66A0C161D5CC075004D8A26 /* RadarDrawVertex.cpp */,
+				A66A0C171D5CC097004D8A26 /* RadarInfo.cpp */,
+				A66A0C181D5CC0AE004D8A26 /* RadarPanel.cpp */,
+				A66A0C191D5CC0C4004D8A26 /* shaderutil.cpp */,
+				A66A0C1A1D5CC0E5004D8A26 /* socketutil.cpp */,
+				A66A0C1B1D5CC105004D8A26 /* TextureFont.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -3949,6 +4011,24 @@
 			children = (
 				A6DB19DD18EDCE2600E643D2 /* br24radar_pi.h */,
 				A6DB19DE18EDCE4200E643D2 /* icons.h */,
+				A66A0BFA1D5CBD2F004D8A26 /* br24ControlsDialog.h */,
+				A66A0BFB1D5CBD4E004D8A26 /* br24MessageBox.h */,
+				A66A0BFC1D5CBD6F004D8A26 /* br24OptionsDialog.h */,
+				A66A0BFD1D5CBD8D004D8A26 /* br24Receive.h */,
+				A66A0BFE1D5CBDAA004D8A26 /* br24Transmit.h */,
+				A66A0BFF1D5CBDC2004D8A26 /* drawutil.h */,
+				A66A0C001D5CBDD8004D8A26 /* GuardZone.h */,
+				A66A0C011D5CBDEF004D8A26 /* GuardZoneBogey.h */,
+				A66A0C021D5CBE10004D8A26 /* pi_common.h */,
+				A66A0C031D5CBE39004D8A26 /* RadarCanvas.h */,
+				A66A0C041D5CBE56004D8A26 /* RadarDraw.h */,
+				A66A0C051D5CBE6F004D8A26 /* RadarDrawShader.h */,
+				A66A0C061D5CBE94004D8A26 /* RadarDrawVertex.h */,
+				A66A0C071D5CBEAE004D8A26 /* RadarInfo.h */,
+				A66A0C081D5CBECA004D8A26 /* RadarPanel.h */,
+				A66A0C091D5CBEEA004D8A26 /* shaderutil.h */,
+				A66A0C0A1D5CBF05004D8A26 /* socketutil.h */,
+				A66A0C0B1D5CBF20004D8A26 /* TextureFont.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -5838,6 +5918,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6337C5B1D5C7E6500F78A08 /* iirfilter.cpp in Sources */,
 				A669D34D1D27D5F000D2A1B1 /* baro_history.cpp in Sources */,
 				A669D34E1D27D5F000D2A1B1 /* bearingcompass.cpp in Sources */,
 				A669D34F1D27D5F000D2A1B1 /* clock.cpp in Sources */,
@@ -5999,12 +6080,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A66A0C1C1D5CC71E004D8A26 /* br24ControlsDialog.cpp in Sources */,
+				A66A0C1D1D5CC71E004D8A26 /* br24MessageBox.cpp in Sources */,
+				A66A0C1E1D5CC71E004D8A26 /* br24OptionsDialog.cpp in Sources */,
+				A66A0C1F1D5CC71E004D8A26 /* br24Receive.cpp in Sources */,
+				A66A0C201D5CC71E004D8A26 /* br24Transmit.cpp in Sources */,
+				A66A0C211D5CC71E004D8A26 /* drawutil.cpp in Sources */,
+				A66A0C221D5CC71E004D8A26 /* GuardZone.cpp in Sources */,
+				A66A0C231D5CC71E004D8A26 /* RadarCanvas.cpp in Sources */,
+				A66A0C241D5CC71E004D8A26 /* RadarDraw.cpp in Sources */,
+				A66A0C251D5CC71E004D8A26 /* RadarDrawShader.cpp in Sources */,
+				A66A0C261D5CC71E004D8A26 /* RadarDrawVertex.cpp in Sources */,
+				A66A0C271D5CC71E004D8A26 /* RadarInfo.cpp in Sources */,
+				A66A0C281D5CC71E004D8A26 /* RadarPanel.cpp in Sources */,
+				A66A0C291D5CC71E004D8A26 /* shaderutil.cpp in Sources */,
+				A66A0C2A1D5CC71E004D8A26 /* socketutil.cpp in Sources */,
+				A66A0C2B1D5CC71E004D8A26 /* TextureFont.cpp in Sources */,
 				A6DB19E018EDCE7600E643D2 /* br24radar_pi.cpp in Sources */,
 				A6DB19E618EDCECE00E643D2 /* icons.cpp in Sources */,
-				A6DB19E418EDCEB500E643D2 /* br24radarcontrol.cpp in Sources */,
-				A64EBB501B26FCB200F861D0 /* GuardZoneControls.cpp in Sources */,
 				A64EBB4F1B26FCB200F861D0 /* GuardZoneBogey.cpp in Sources */,
-				A64EBB541B2708EE00F861D0 /* Idle_Dialog.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

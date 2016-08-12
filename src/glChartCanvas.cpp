@@ -1892,9 +1892,11 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
                 toSM(plylat, plylon, 0, 0, smj+0, smj+1);
                 if(!sml_valid)
                     toSM(lastplylat, lastplylon, 0, 0, sml+0, sml+1);
+#ifndef __WXOSX__
             }
-            
-            for(double c=0; c<splits; c++) {
+#endif
+            for(double c=0; c<splits; c++)
+            {
                 double lat, lon;
                 if(c == splits - 1)
                     lat = plylat, lon = plylon;
@@ -1916,6 +1918,9 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
                     begin = false;
                 }
             }
+#ifdef __WXOSX__
+            }
+#endif
             if((sml_valid = splits != 1))
                 memcpy(sml, smj, sizeof smj);
             lastplylat = plylat, lastplylon = plylon;
@@ -4368,20 +4373,11 @@ void glChartCanvas::Render()
     DrawEmboss(cc1->EmbossDepthScale() );
     DrawEmboss(cc1->EmbossOverzoomIndicator( gldc ) );
     
-    /* This should be converted to opengl, it is currently caching screen
-     outside render, so the viewport can change without updating, (incorrect)
-     doing alpha blending in software with it and draw pixels (very slow) */
-    if( cc1->m_pRouteRolloverWin && cc1->m_pRouteRolloverWin->IsActive() ) {
-        gldc.DrawBitmap( *(cc1->m_pRouteRolloverWin->GetBitmap()),
-                        cc1->m_pRouteRolloverWin->GetPosition().x,
-                        cc1->m_pRouteRolloverWin->GetPosition().y, false );
-    }
+    if( cc1->m_pRouteRolloverWin )
+        cc1->m_pRouteRolloverWin->Draw(gldc);
     
-    if( cc1->m_pAISRolloverWin && cc1->m_pAISRolloverWin->IsActive() ) {
-        gldc.DrawBitmap( *(cc1->m_pAISRolloverWin->GetBitmap()),
-                        cc1->m_pAISRolloverWin->GetPosition().x,
-                        cc1->m_pAISRolloverWin->GetPosition().y, false );
-    }
+    if( cc1->m_pAISRolloverWin )
+        cc1->m_pAISRolloverWin->Draw(gldc);
 
     //  On some platforms, the opengl context window is always on top of any standard DC windows,
     //  so we need to draw the Chart Info Window and the Thumbnail as overlayed bmps.

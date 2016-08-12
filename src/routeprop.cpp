@@ -1164,7 +1164,7 @@ void RouteProp::CreateControls()
                                         wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
     itemDialog1->SetScrollRate(2, 2);
     
-    #ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__
     //itemDialog1->GetHandle()->setStyleSheet( getQtStyleSheet());
     
     //  Set Dialog Font by custom crafted Qt Stylesheet.
@@ -1178,7 +1178,7 @@ void RouteProp::CreateControls()
     
     itemDialog1->GetHandle()->setStyleSheet( qsb + qsbq );      // Concatenated style sheets
     
-    #endif
+#endif
     itemBoxSizer1->Add( itemDialog1, 2, wxEXPAND | wxALL, 0 );
     
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -1916,8 +1916,8 @@ bool RouteProp::UpdateProperties()
 
         wxString nullify = _T("----");
 
-        int i_prev_point = -1;
-        RoutePoint *prev_route_point = NULL;
+//        int i_prev_point = -1;  //  Not used
+//        RoutePoint *prev_route_point = NULL;  //  Not used
 
         while( node ) {
             RoutePoint *prp = node->GetData();
@@ -1975,69 +1975,68 @@ bool RouteProp::UpdateProperties()
 
             DistanceBearingMercator( prp->m_lat, prp->m_lon, slat, slon, &brg, &leg_dist );
 
-        // calculation of course at current WayPoint.
-        double course=10, tmp_leg_dist=23;
-        wxRoutePointListNode *next_node = node->GetNext();
-        RoutePoint * _next_prp = (next_node)? next_node->GetData(): NULL;
-        if (_next_prp )
-        {
-        DistanceBearingMercator( _next_prp->m_lat, _next_prp->m_lon, prp->m_lat, prp->m_lon, &course, &tmp_leg_dist );
-        }else
-        {
-          course = 0.0;
-          tmp_leg_dist = 0.0;
-        }
+            // calculation of course at current WayPoint.
+            double course=10, tmp_leg_dist=23;
+            wxRoutePointListNode *next_node = node->GetNext();
+            RoutePoint * _next_prp = (next_node)? next_node->GetData(): NULL;
+            if (_next_prp )
+            {
+                DistanceBearingMercator( _next_prp->m_lat, _next_prp->m_lon, prp->m_lat, prp->m_lon, &course, &tmp_leg_dist );
+            }else
+            {
+                course = 0.0;
+                tmp_leg_dist = 0.0;
+            }
 
-        prp->SetCourse(course); // save the course to the next waypoint for printing.
-        // end of calculation
+            prp->SetCourse(course); // save the course to the next waypoint for printing.
+            // end of calculation
 
 
-        t.Printf( _T("%6.2f ") + getUsrDistanceUnit(), toUsrDistance( leg_dist ) );
-        if( arrival )
-            m_wpList->SetItem( item_line_index, 2, t );
-        if( !enroute )
-            m_wpList->SetItem( item_line_index, 2, nullify );
-        prp->SetDistance(leg_dist); // save the course to the next waypoint for printing.
+            t.Printf( _T("%6.2f ") + getUsrDistanceUnit(), toUsrDistance( leg_dist ) );
+            if( arrival )
+                m_wpList->SetItem( item_line_index, 2, t );
+            if( !enroute )
+                m_wpList->SetItem( item_line_index, 2, nullify );
+            prp->SetDistance(leg_dist); // save the course to the next waypoint for printing.
 
             //  Bearing
-        if( g_bShowMag ){
-            double latAverage = (prp->m_lat + slat)/2;
-            double lonAverage = (prp->m_lon + slon)/2;
-            double varBrg = gFrame->GetTrueOrMag( brg, latAverage, lonAverage);
-            
-            t.Printf( _T("%03.0f Deg. M"), varBrg );
-        }
-        else
-            t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( brg ) );
-
-        if( arrival )
-            m_wpList->SetItem( item_line_index, 3, t );
-        if( !enroute )
-            m_wpList->SetItem( item_line_index, 3, nullify );
-
-        // Course (bearing of next )
-        if (_next_prp){
             if( g_bShowMag ){
-                double next_lat = prp->m_lat;
-                double next_lon = prp->m_lon;
-                if (_next_prp ){
-                    next_lat = _next_prp->m_lat;
-                    next_lon = _next_prp->m_lon;
-                }
-                    
-                double latAverage = (prp->m_lat + next_lat)/2;
-                double lonAverage = (prp->m_lon + next_lon)/2;
-                double varCourse = gFrame->GetTrueOrMag( course, latAverage, lonAverage);
-                
-                t.Printf( _T("%03.0f Deg. M"), varCourse );
+                double latAverage = (prp->m_lat + slat)/2;
+                double lonAverage = (prp->m_lon + slon)/2;
+                double varBrg = gFrame->GetTrueOrMag( brg, latAverage, lonAverage);
+
+                t.Printf( _T("%03.0f Deg. M"), varBrg );
             }
             else
-                t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( course ) );
+                t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( brg ) );
             if( arrival )
-                m_wpList->SetItem( item_line_index, 10, t );
-        }
-        else
-            m_wpList->SetItem( item_line_index, 10, nullify );
+                m_wpList->SetItem( item_line_index, 3, t );
+            if( !enroute )
+                m_wpList->SetItem( item_line_index, 3, nullify );
+
+            // Course (bearing of next )
+            if (_next_prp){
+                if( g_bShowMag ){
+                    double next_lat = prp->m_lat;
+                    double next_lon = prp->m_lon;
+                    if (_next_prp ){
+                        next_lat = _next_prp->m_lat;
+                        next_lon = _next_prp->m_lon;
+                    }
+
+                    double latAverage = (prp->m_lat + next_lat)/2;
+                    double lonAverage = (prp->m_lon + next_lon)/2;
+                    double varCourse = gFrame->GetTrueOrMag( course, latAverage, lonAverage);
+                    
+                    t.Printf( _T("%03.0f Deg. M"), varCourse );
+                }
+                else
+                    t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( course ) );
+                if( arrival )
+                    m_wpList->SetItem( item_line_index, 10, t );
+            }
+            else
+                m_wpList->SetItem( item_line_index, 10, nullify );
 
             //  Lat/Lon
             wxString tlat = toSDMM( 1, prp->m_lat, false );  // low precision for routes
@@ -2167,8 +2166,8 @@ bool RouteProp::UpdateProperties()
                 node = node->GetNext();
 
                 //    Record this point info for use as previous point in next iteration.
-                i_prev_point = i - 1;
-                prev_route_point = prp;
+//                i_prev_point = i - 1;  // Not used
+//                prev_route_point = prp;  //  Not used
             }
         }
     }
@@ -2263,15 +2262,6 @@ bool RouteProp::SaveChanges( void )
 
         pConfig->UpdateRoute( m_pRoute );
         pConfig->UpdateSettings();
-    }
-
-    if( m_pRoute && ( m_pRoute->IsActive() || ((Track*) m_pRoute)->IsRunning() ) )
-    {
-        wxJSONValue v;
-        v[_T("Name")] =  m_pRoute->m_RouteNameString;
-        v[_T("GUID")] =  m_pRoute->m_GUID;
-        wxString msg_id( _T("OCPN_TRK_ACTIVATED") );
-        g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
     }
 
     return true;
@@ -2469,7 +2459,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     SetFont( *qFont );
     int metric = GetCharHeight();
     
-    #ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__
     //  Set Dialog Font by custom crafted Qt Stylesheet.
     
     wxString wqs = getFontQtStylesheet(qFont);
@@ -2484,7 +2474,7 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     if(sdc.IsOk())
         sdc.GetTextExtent(_T("W"), NULL, &metric, NULL, NULL, qFont);
     
-    #endif
+#endif
     
     wxBoxSizer* bSizer1;
     bSizer1 = new wxBoxSizer( wxVERTICAL );
@@ -2495,9 +2485,9 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
 
     m_panelBasicProperties = new wxScrolledWindow( m_notebookProperties, wxID_ANY,
                                                    wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL | wxTAB_TRAVERSAL);
-    #ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__
     m_panelBasicProperties->GetHandle()->setStyleSheet( getQtStyleSheet());
-    #endif
+#endif
     
     m_panelBasicProperties->SetScrollRate(0, 2);
 
@@ -3221,9 +3211,9 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
         icons = NULL;
     }
 
-    #ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__
     androidEnableBackButton( false );
-    #endif
+#endif
     
     Fit();
     SetMinSize(wxSize(-1, 600));

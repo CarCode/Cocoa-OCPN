@@ -77,7 +77,6 @@ public:
 
 private:
     wxString GetShipNameFromFile(int nmmsi);
-    wxString ProcessNMEA4Tags( wxString msg);
 
     void OnActivate(wxActivateEvent& event);
     void OnTimerAIS(wxTimerEvent& event);

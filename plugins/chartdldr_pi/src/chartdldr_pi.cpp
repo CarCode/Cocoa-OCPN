@@ -1157,7 +1157,7 @@ After downloading the charts, please extract them to %s"), pPlugIn->m_pChartCata
     }
     DisableForDownload( true );
     m_bDnldCharts->SetLabel( old_label );  //  for Curl 2.Version
-//    m_bDnldCharts->SetLabel( _("Download\n selected charts") );
+//    m_bDnldCharts->SetLabel( _("Download selected charts") );
     DownloadIsCancel = false;
     SetSource(GetSelectedCatalog());
     if( failed_downloads > 0 && !updatingAll )
@@ -1250,7 +1250,7 @@ void ChartDldrPanelImpl::DeleteSource( wxCommandEvent& event )
                                  _("Chart Downloader"), wxYES_NO | wxCENTRE | wxICON_EXCLAMATION, this) )
         return;
 	int ToBeRemoved = GetSelectedCatalog();
-	m_lbChartSources->SetItemState(ToBeRemoved,  0, wxLIST_STATE_SELECTED|wxLIST_STATE_FOCUSED);
+	m_lbChartSources->SetItemState(ToBeRemoved, 0, wxLIST_STATE_SELECTED|wxLIST_STATE_FOCUSED);
     pPlugIn->m_chartSources->RemoveAt(ToBeRemoved);
     m_lbChartSources->DeleteItem(ToBeRemoved);
     CleanForm();
