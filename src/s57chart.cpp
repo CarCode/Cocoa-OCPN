@@ -337,7 +337,7 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
     int FEIndex;
 
     int MAX_LINE = size;
-    int llmax = 0;
+//    int llmax = 0;  //  Not used
 
     char *br;
     char szAtt[20];
@@ -378,7 +378,7 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                     int nrl = my_bufgetl( mybuf_ptr, hdr_end, buf, MAX_LINE );
                     mybuf_ptr += nrl;
                     if( 0 == nrl ) {
-                        attdun = 1;
+//                        attdun = 1;  //  Not used -> break
                         my_fgets( buf, MAX_LINE, *pfpx );     // this will be PolyGeo
                         break;
                     }
@@ -389,7 +389,7 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
 
                 if( !strncmp( buf, "HDRLEN", 6 ) ) {
                     hdr_len = atoi( buf + 7 );
-		    char * tmp = hdr_buf;
+                    char * tmp = hdr_buf;
                     hdr_buf = (char *) realloc( hdr_buf, hdr_len );
                     if (NULL == hdr_buf)
                     {
@@ -405,14 +405,14 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                 }
 
                 else if( !strncmp( buf, geoMatch, 6 ) ) {
-                    attdun = 1;
+//                    attdun = 1;  //  Not used -> break
                     break;
                 }
 
                 else if( !strncmp( buf, "  MULT", 6 ) )         // Special multipoint
                         {
                     bMulti = true;
-                    attdun = 1;
+//                    attdun = 1;  //  Not used -> break
                     break;
                 }
 
@@ -721,8 +721,8 @@ S57Obj::S57Obj( char *buf, int size, wxInputStream *pfpx, double dummy, double d
                     if( !strncmp( FeatureName, "DEPARE", 6 )
                             || !strncmp( FeatureName, "DRGARE", 6 ) ) bIsAssociable = true;
 
-                    int ll = strlen( buf );
-                    if( ll > llmax ) llmax = ll;
+//                   int ll = strlen( buf );  //  Not used
+//                    if( ll > llmax ) llmax = ll;  //  Not used
 
                     my_fgets( buf, MAX_LINE, *pfpx );     // this will be "  POLYTESSGEO"
 
@@ -1692,17 +1692,17 @@ void s57chart::AssembleLineGeometry( void )
                             //  Get end connected node
                             VC_Element *epnode;
                             epnode = m_vc_hash[enode];
-                            
+
                             double e0, n0, e1, n1;
                             
                             if( ipnode ) {
-                                double *ppt = ipnode->pPoint;
-                                e0 = *ppt++;
-                                n0 = *ppt;
+//                                double *ppt = ipnode->pPoint;  //  Not used see ChartS63::...
+//                                e0 = *ppt++;
+//                                n0 = *ppt;
                                 if(pedge && pedge->nCount)
                                 {
-                                    e1 = pedge->pPoints[0];
-                                    n1 = pedge->pPoints[1];
+//                                    e1 = pedge->pPoints[0];
+//                                    n1 = pedge->pPoints[1];
                                     
                                     //      The initial node exists and connects to the start of an edge
                                     key.set(TYPE_CE, inode, venode);
@@ -1716,18 +1716,18 @@ void s57chart::AssembleLineGeometry( void )
                                     }
                                 }
                             }
-                            
+
                             if(pedge && pedge->nCount){
-                                e0 = pedge->pPoints[ (2 * (pedge->nCount - 1))];
-                                n0 = pedge->pPoints[ (2 * (pedge->nCount - 1)) + 1];
+//                                e0 = pedge->pPoints[ (2 * (pedge->nCount - 1))];  //  Not used see ChartS63::...
+//                                n0 = pedge->pPoints[ (2 * (pedge->nCount - 1)) + 1];
                                 
                             }   //pedge
-                            
+
                             // end node
                             if( epnode ) {
-                                double *ppt = epnode->pPoint;
-                                e1 = *ppt++;
-                                n1 = *ppt;
+//                                double *ppt = epnode->pPoint;  //  Not used see Chart63::...
+//                                e1 = *ppt++;
+//                                n1 = *ppt;
                                 
                                 if(ipnode){
                                     if(pedge && pedge->nCount){
@@ -1757,13 +1757,13 @@ void s57chart::AssembleLineGeometry( void )
                                     }
                                 }
                             }
-                            }  // for
+                            }  // for iseg
                             
                             
                             top = top->next;
-                            }
-                        }
-                    }
+                            }  //  while
+                        }  //  for j
+                    }  // for i
                     
                     //  We have the total VBO point count, and a nice hashmap of the connector segments
                     nPoints += ndelta;
@@ -2417,7 +2417,7 @@ bool s57chart::DoRenderViewOnDC( wxMemoryDC& dc, const ViewPort& VPoint, RenderT
     double easting_ul, northing_ul;
     double easting_lr, northing_lr;
     double prev_easting_ul = 0., prev_northing_ul = 0.;
-    double prev_easting_lr, prev_northing_lr;
+//    double prev_easting_lr, prev_northing_lr;  //  Not used
 
     if( ps52plib->GetPLIBColorScheme() != m_lastColorScheme ) bReallyNew = true;
     m_lastColorScheme = ps52plib->GetPLIBColorScheme();
@@ -2454,12 +2454,10 @@ bool s57chart::DoRenderViewOnDC( wxMemoryDC& dc, const ViewPort& VPoint, RenderT
         toSM( m_last_vp.clat, m_last_vp.clon, ref_lat, ref_lon, &last_easting_vp_center,
                 &last_northing_vp_center );
 
-        prev_easting_ul = last_easting_vp_center
-                - ( ( m_last_vp.pix_width / 2 ) / m_view_scale_ppm );
-        prev_northing_ul = last_northing_vp_center
-                + ( ( m_last_vp.pix_height / 2 ) / m_view_scale_ppm );
-        prev_easting_lr = easting_ul + ( m_last_vp.pix_width / m_view_scale_ppm );
-        prev_northing_lr = northing_ul - ( m_last_vp.pix_height / m_view_scale_ppm );
+        prev_easting_ul = last_easting_vp_center - ( ( m_last_vp.pix_width / 2 ) / m_view_scale_ppm );
+        prev_northing_ul = last_northing_vp_center + ( ( m_last_vp.pix_height / 2 ) / m_view_scale_ppm );
+//        prev_easting_lr = easting_ul + ( m_last_vp.pix_width / m_view_scale_ppm );  //  Not used
+//        prev_northing_lr = northing_ul - ( m_last_vp.pix_height / m_view_scale_ppm );  //  Not used
 
         double dx = ( easting_ul - prev_easting_ul ) * m_view_scale_ppm;
         double dy = ( prev_northing_ul - northing_ul ) * m_view_scale_ppm;
@@ -3376,8 +3374,9 @@ bool s57chart::CreateHeaderDataFromENC( void )
                         pNoCovrCntArray->Add( npt );
                     }
                 }
-                
-
+#ifdef __WXOSX__
+        free( pf );
+#endif
             delete pFeat;
             pFeat = GetChartNextM_COVR( catcov );
     }         // while
@@ -3525,12 +3524,12 @@ bool s57chart::CreateHeaderDataFromSENC( void )
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-            dun = 1;
+//            dun = 1;  //  Not used -> break
             break;
         }
 
         if( !strncmp( buf, "OGRF", 4 ) ) {
-            dun = 1;
+//            dun = 1;  //  Not used -> break
             break;
         }               //OGRF
 
@@ -3542,7 +3541,7 @@ bool s57chart::CreateHeaderDataFromSENC( void )
                 msg.Append( m_SENCFileName.GetFullPath() );
                 wxLogMessage( msg );
 
-                dun = 1;
+//                dun = 1;  //  Not used -> break
                 ret_val = false;                   // error
                 break;
             }
@@ -6118,12 +6117,12 @@ bool s57chart::InitFromSENCMinimal( const wxString &FullPath )
 
             while( !dun ) {
                 if( my_fgets( pbuf, 256, *pfpx ) == 0 ) {
-                    dun = 1;
+//                    dun = 1;  //  Not used -> break
                     ret_val = false;
                     break;
                 } else {
                     if( !strncmp( pbuf, "OGRF", 4 ) ) {
-                        dun = 1;
+//                        dun = 1;  //  Not used -> break
                         break;
                     } else if( !strncmp( pbuf, "UPDT", 4 ) ) {
                         sscanf( pbuf, "UPDT=%i", &last_update );

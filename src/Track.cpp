@@ -328,7 +328,7 @@ void Track::Clone( Track *psourcetrack, int start_nPoint, int end_nPoint, const 
 
         TrackPoint *psourcepoint = psourcetrack->GetPoint( i );
         if(psourcepoint){
-            TrackPoint *ptargetpoint = new TrackPoint( psourcepoint->m_lat, psourcepoint->m_lon);
+            TrackPoint *ptargetpoint = new TrackPoint( psourcepoint);
 
             AddPoint( ptargetpoint );
         }
@@ -1050,8 +1050,11 @@ Route *Track::RouteFromTrack( wxProgressDialog *pprog )
             TrackPoint *prpX = TrackPoints[prpnodeX];
             TrackPoint src(pWP_prev->m_lat, pWP_prev->m_lon);
             xte = GetXTE( pWP_src, prpX, prp );
-            if( isProminent || ( xte > g_TrackDeltaDistance ) ) {
-
+#ifdef __WXOSX__
+            if( (isProminent || ( xte > g_TrackDeltaDistance )) && prp_OK) {
+#else
+            if( isProminent || ( xte > g_TrackDeltaDistance ) {    
+#endif
                 pWP_dst = new RoutePoint( prp_OK->m_lat, prp_OK->m_lon, icon, _T ( "" ),
                         GPX_EMPTY_STRING );
 

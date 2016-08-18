@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -54,6 +53,10 @@ WeatherFaxWizard::WeatherFaxWizard( WeatherFaxImage &img,
     m_sSkew->SetValue(m_wfimg.skew);
     m_cFilter->SetSelection(m_wfimg.filter);
 
+    /* reset image */
+    if(!m_wfimg.m_origimg.Ok())
+        m_wfimg.m_origimg.Create(1, 1); /* small image; so orig image is always ok to work with */
+
     MakeNewCoordinates();
 
     m_wfimg.MakePhasedImage();
@@ -96,9 +99,6 @@ WeatherFaxWizard::~WeatherFaxWizard()
 
 void WeatherFaxWizard::StartDecoder()
 {
-    /* reset image */
-    m_wfimg.m_origimg.Create(1, 1); /* small image; so orig image is always ok to work with */
-
     /* periodically check for updates */
     m_tDecoder.Connect(wxEVT_TIMER, wxTimerEventHandler( WeatherFaxWizard::OnDecoderTimer ), NULL, this);
     m_tDecoder.Start(1000, wxTIMER_ONE_SHOT);
@@ -1084,7 +1084,7 @@ void WeatherFaxWizard::OnPaintImage( wxPaintEvent& event)
             m_tTrueRatio->GetValue().ToDouble(&inputtrueratio);
 
             dc.SetPen(wxPen( *wxBLUE, 1 ));
-            dc.SetBrush(wxBrush(*wxBLACK, wxTRANSPARENT));
+            dc.SetBrush(wxBrush(*wxBLACK, wxBRUSHSTYLE_TRANSPARENT));
 
             double d;
 

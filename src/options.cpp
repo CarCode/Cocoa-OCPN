@@ -893,7 +893,9 @@ BEGIN_EVENT_TABLE( options, wxDialog )
     EVT_BUTTON( ID_BUTTONFONTCOLOR, options::OnChooseFontColor )
 #endif
 #ifdef ocpnUSE_GL
+#if ( g_bGLexpert )
     EVT_BUTTON( ID_OPENGLOPTIONS, options::OnOpenGLOptions )
+#endif
 #endif
     EVT_CHOICE( ID_RADARDISTUNIT, options::OnDisplayCategoryRadioButton )
     EVT_CHOICE( ID_DEPTHUNITSCHOICE, options::OnUnitsChoice )
@@ -2421,11 +2423,11 @@ void options::CreatePanel_Advanced( size_t parent, int border_size,
 #ifdef __OCPN__ANDROID__
         pOpenGL->Disable();
 #endif
-
+#ifndef __WXOSX__  // ( g_bGLexpert )
         wxButton *bOpenGL = new wxButton( m_ChartDisplayPage, ID_OPENGLOPTIONS, _("Options...") );
         OpenGLSizer->Add( bOpenGL, inputFlags );
         bOpenGL->Enable(!g_bdisable_opengl);
-
+#endif
         itemBoxSizerUI->Add( 0, border_size*3 );
         itemBoxSizerUI->Add( 0, border_size*3 );
 
@@ -2632,11 +2634,11 @@ void options::CreatePanel_Advanced( size_t parent, int border_size,
 #ifdef __OCPN__ANDROID__
         pOpenGL->Disable();
 #endif
-
+#ifndef __WXOSX__  // ( g_bGLexpert )
         wxButton *bOpenGL = new wxButton( m_ChartDisplayPage, ID_OPENGLOPTIONS, _("Options...") );
         OpenGLSizer->Add( bOpenGL, inputFlags );
         bOpenGL->Enable(!g_bdisable_opengl);
-
+#endif
 
         itemBoxSizerUI->Add( 0, border_size*3 );
         pTransparentToolbar = new wxCheckBox( m_ChartDisplayPage, ID_TRANSTOOLBARCHECKBOX,
@@ -4707,7 +4709,7 @@ void options::OnGLClicked( wxCommandEvent& event )
     if ( !g_bTransparentToolbarInOpenGLOK )
         pTransparentToolbar->Enable( !pOpenGL->GetValue() );
 }
-
+#if ( g_bGLexpert )
 void options::OnOpenGLOptions( wxCommandEvent& event )
 {
 #ifdef ocpnUSE_GL
@@ -4749,7 +4751,7 @@ void options::OnOpenGLOptions( wxCommandEvent& event )
     }
 #endif
 }
-
+#endif
 void options::OnChartDirListSelect( wxCommandEvent& event )
 {
     if ( event.IsSelection() ) {
@@ -5150,7 +5152,7 @@ void options::OnApplyClick( wxCommandEvent& event )
     //  to facility identification and allow stop and restart of the stream
     wxString lastAddr;
     int lastPort = 0;
-    NetworkProtocol lastNetProtocol;
+    NetworkProtocol lastNetProtocol = PROTO_UNDEFINED;
 
     if ( itemIndex >= 0 ) {
         int params_index = m_lcSources->GetItemData( itemIndex );
@@ -7405,7 +7407,7 @@ void SentenceListDlg::OnCheckAllClick( wxCommandEvent& event )
     for ( size_t i = 0; i < m_clbSentences->GetCount(); i++ )
         m_clbSentences->Check( i, TRUE );
 }
-
+#if ( g_bGLexpert )
 // OpenGLOptionsDlg
 enum { ID_BUTTON_REBUILD, ID_BUTTON_CLEAR };
 
@@ -7417,7 +7419,7 @@ END_EVENT_TABLE()
 
 OpenGLOptionsDlg::OpenGLOptionsDlg( wxWindow* parent ) :
 #ifdef __WXOSX__
-wxDialog( parent, wxID_ANY, _T( "OpenGL Optionen" ),
+    wxDialog( parent, wxID_ANY, _T( "OpenGL Optionen" ),
 #else
     wxDialog( parent, wxID_ANY, _T( "OpenGL Options" ),
 #endif
@@ -7618,4 +7620,5 @@ const wxString OpenGLOptionsDlg::GetTextureCacheSize( void )
     mb = mb / 1024.0;
     return wxString::Format( _T( "%.1f GB" ), mb );
 }
+#endif // Options OpenGL
 #endif // ocpnUSE_GL

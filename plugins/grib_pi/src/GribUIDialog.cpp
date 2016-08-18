@@ -32,6 +32,7 @@
 #include <wx/filename.h>
 #include <wx/debug.h>
 #include <wx/graphics.h>
+#include <wx/regex.h>
 
 #include <wx/stdpaths.h>
 
@@ -239,7 +240,18 @@ GRIBUICtrlBar::GRIBUICtrlBar(wxWindow *parent, wxWindowID id, const wxString& ti
         
         pConf->Read ( _T ( "lastdatatype" ), &m_lastdatatype, 0);
         
-        pConf->Read ( _T ( "Filename" ), &m_file_name );
+        pConf->SetPath ( _T ( "/Settings/GRIB/FileNames" ) );
+        m_file_names.Clear();
+        if( pConf->GetNumberOfEntries() ) {
+            wxString str, val;
+            long dummy;
+            bool bCont = pConf->GetFirstEntry( str, dummy );
+            while( bCont ) {
+                pConf->Read( str, &val );              // Get a file name
+                m_file_names.Add(val);
+                bCont = pConf->GetNextEntry( str, dummy );
+            }
+        }
         
         wxStandardPathsBase& spath = wxStandardPaths::Get();
         
@@ -287,7 +299,22 @@ GRIBUICtrlBar::~GRIBUICtrlBar()
         
         pConf->Write( _T ( "lastdatatype" ), m_lastdatatype);
         
-        pConf->Write ( _T ( "Filename" ), m_file_name );
+        pConf->SetPath ( _T ( "/Settings/GRIB/FileNames" ) );
+        int iFileMax = pConf->GetNumberOfEntries();
+        if ( iFileMax ) {
+            wxString key;
+            long dummy;
+            for( int i = 0; i < iFileMax; i++ ) {
+                pConf->GetFirstEntry( key, dummy );
+                pConf->DeleteEntry( key, false );
+            }
+        }
+
+        for( unsigned int i = 0 ; i < m_file_names.GetCount() ; i++ ) {
+            wxString key;
+            key.Printf(_T("Filename%d"), i);
+            pConf->Write ( key, m_file_names[i] );
+        }
         
         pConf->SetPath ( _T ( "/Directories" ) );
         pConf->Write ( _T ( "GRIBDirectory" ), m_grib_dir );
@@ -341,9 +368,6 @@ void GRIBUICtrlBar::SetRequestBitmap( int type )
 
 void GRIBUICtrlBar::OpenFile(bool newestFile)
 {
-#ifdef __WXOSX__
-    if( newestFile)
-#endif
     m_bpPlay->SetBitmapLabel( GetScaledBitmap( play, m_ScaledFactor ) );
     m_cRecordForecast->Clear();
     pPlugIn->GetGRIBOverlayFactory()->ClearParticles();
@@ -359,20 +383,27 @@ void GRIBUICtrlBar::OpenFile(bool newestFile)
     m_HasAltitude = false;
 
     //get more recent file in default directory if necessary
-    wxFileName f( m_file_name );
-    if( newestFile || f.GetFullName().IsEmpty() ) m_file_name = GetNewestFileInDirectory();
+    wxFileName f;
+    if( newestFile )
+        m_file_names.Clear();       //file names list must be cleared if we expect only the newest file! otherwise newest file is
+    //added to the previously recorded, what we don't want
+    if( m_file_names.IsEmpty() ) {    //in any case were there is no filename previously recorded, we must take the newest
+        m_file_names = GetFilesInDirectory();
+        newestFile = true;
+    }
 
-    m_bGRIBActiveFile = new GRIBFile( m_file_name,
+    m_bGRIBActiveFile = new GRIBFile( m_file_names,
                                       pPlugIn->GetCopyFirstCumRec(),
-                                      pPlugIn->GetCopyMissWaveRec() );
+                                     pPlugIn->GetCopyMissWaveRec(),
+                                     newestFile );
 
     ArrayOfGribRecordSets *rsa = m_bGRIBActiveFile->GetRecordSetArrayPtr();
+    wxString title;
 
-    wxFileName fn( m_file_name );
-    wxString title( _("File") );
-    title.Append( _T(": ") ).Append( fn.GetFullName() );
-
-    if( m_bGRIBActiveFile ) {
+    if( m_bGRIBActiveFile->IsOK() ) {
+        wxFileName fn( m_bGRIBActiveFile->GetFileNames()[0] );
+        title = ( _T("Datei: ") );
+        title.Append( fn.GetFullName() );
         if( m_bGRIBActiveFile->IsOK() ) {
             if( rsa->GetCount() == 0 ) {                        //valid but empty file
                 m_bGRIBActiveFile = NULL;
@@ -398,11 +429,9 @@ void GRIBUICtrlBar::OpenFile(bool newestFile)
                 }
             }
         } else {
-            if( fn.IsDir() ) {
-                pPlugIn->GetGRIBOverlayFactory()->SetMessage( _("Warning:  Empty directory!") );
-            }
-            else
-                title.Prepend( _("Error! ") ).Append( m_bGRIBActiveFile->GetLastMessage() );
+            delete m_bGRIBActiveFile;
+            m_bGRIBActiveFile = NULL;
+            title = _T("No valid GRIB file");
         }
         pPlugIn->GetGRIBOverlayFactory()->SetMessage( title );
         SetTitle( title );
@@ -434,6 +463,50 @@ void GRIBUICtrlBar::OpenFile(bool newestFile)
 
     }
     SetCanvasContextMenuItemViz( pPlugIn->m_MenuItem, m_TimeLineHours != 0);
+
+    //
+    if( m_bGRIBActiveFile == NULL)
+    {
+        // there's no data we can use in this file
+        return;
+    }
+    //  Try to verify that there will be at least one parameter in the GRIB file that is enabled for display
+    //  This will ensure that at least "some" data is displayed on file change,
+    //  and so avoid user confusion of no data shown.
+    //  This is especially important if cursor tracking of data is disabled.
+    
+    bool bconfigOK = false;
+    if(m_bDataPlot[GribOverlaySettings::WIND] && (m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_WIND_VX) != wxNOT_FOUND))
+        bconfigOK = true;
+    if(m_bDataPlot[GribOverlaySettings::WIND_GUST] && (m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_WIND_GUST) != wxNOT_FOUND))
+        bconfigOK = true;
+    if(m_bDataPlot[GribOverlaySettings::PRESSURE] && (m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_PRESSURE) != wxNOT_FOUND))
+        bconfigOK = true;
+    if(m_bDataPlot[GribOverlaySettings::WAVE] && (m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_WVDIR) != wxNOT_FOUND))
+        bconfigOK = true;
+    if(m_bDataPlot[GribOverlaySettings::WAVE] && (m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_HTSIGW) != wxNOT_FOUND))
+        bconfigOK = true;
+    if(m_bDataPlot[GribOverlaySettings::CURRENT] && (m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_SEACURRENT_VX) != wxNOT_FOUND))
+        bconfigOK = true;
+    if(m_bDataPlot[GribOverlaySettings::PRECIPITATION] && (m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_PRECIP_TOT) != wxNOT_FOUND))
+        bconfigOK = true;
+    if(m_bDataPlot[GribOverlaySettings::CLOUD] && (m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_CLOUD_TOT) != wxNOT_FOUND))
+        bconfigOK = true;
+    if(m_bDataPlot[GribOverlaySettings::AIR_TEMPERATURE] && (m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_AIR_TEMP) != wxNOT_FOUND))
+        bconfigOK = true;
+    if(m_bDataPlot[GribOverlaySettings::SEA_TEMPERATURE] && (m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_SEA_TEMP) != wxNOT_FOUND))
+        bconfigOK = true;
+    if(m_bDataPlot[GribOverlaySettings::CAPE] && (m_bGRIBActiveFile->m_GribIdxArray.Index(Idx_CAPE) != wxNOT_FOUND))
+        bconfigOK = true;
+    
+    //  If no parameter seems to be enabled by config, enable them all just to be sure something shows.
+    if(!bconfigOK){
+        for(int i=0 ; i < (int)GribOverlaySettings::GEO_ALTITUDE ; i++){
+            if (InDataPlot(i)) {
+                m_bDataPlot[i]  = true;
+            }
+        }
+    }
 }
 
 bool GRIBUICtrlBar::GetGribZoneLimits(GribTimelineRecordSet *timelineSet, double *latmin, double *latmax, double *lonmin, double *lonmax)
@@ -460,7 +533,24 @@ bool GRIBUICtrlBar::GetGribZoneLimits(GribTimelineRecordSet *timelineSet, double
                     return true;
 }
 
-wxString GRIBUICtrlBar::GetNewestFileInDirectory()
+class FileCollector : public wxDirTraverser
+{
+public:
+    FileCollector(wxArrayString& files, const wxRegEx& pattern) : m_files(files), m_pattern(pattern) { }
+    virtual wxDirTraverseResult OnFile(const wxString& filename) {
+        if( m_pattern.Matches(filename) )
+            m_files.Add(filename);
+        return wxDIR_CONTINUE;
+    }
+    virtual wxDirTraverseResult OnDir(const wxString& WXUNUSED(dirname)) {
+        return wxDIR_IGNORE;
+    }
+private:
+    wxArrayString& m_files;
+    const wxRegEx& m_pattern;
+};
+
+wxArrayString GRIBUICtrlBar::GetFilesInDirectory()
 {
     if( !wxDir::Exists( m_grib_dir ) ) {
         wxStandardPathsBase& path = wxStandardPaths::Get();
@@ -468,18 +558,12 @@ wxString GRIBUICtrlBar::GetNewestFileInDirectory()
     }
     //    Get an array of GRIB file names in the target directory, not descending into subdirs
     wxArrayString file_array;
-    int m_n_files = 0;
-    m_n_files = wxDir::GetAllFiles( m_grib_dir, &file_array, _T ( "*.grb" ), wxDIR_FILES );
-    m_n_files += wxDir::GetAllFiles( m_grib_dir, &file_array, _T ( "*.bz2" ), wxDIR_FILES );
-    m_n_files += wxDir::GetAllFiles( m_grib_dir, &file_array, _T ( "*.gz" ), wxDIR_FILES );
-    if( m_n_files ) {
-        file_array.Sort( CompareFileStringTime );              //sort the files by File Modification Date
-
-        return file_array[0];                                  //return the first file (the more recent one)
-    } else {
-        wxFileName d(m_grib_dir);
-        return wxString( m_grib_dir.Append(d.GetPathSeparator()) );   //this directory is empty
-    }
+    wxRegEx pattern( _T(".+\\.gri?b2?(\\.(bz2|gz))?$"), wxRE_EXTENDED|wxRE_ICASE|wxRE_NOSUB );
+    FileCollector collector( file_array, pattern );
+    wxDir dir( m_grib_dir );
+    dir.Traverse( collector );
+    file_array.Sort( CompareFileStringTime );              //sort the files by File Modification Date
+    return file_array;
 }
 
 void GRIBUICtrlBar::SetCursorLatLon( double lat, double lon )
@@ -1143,29 +1227,52 @@ void GRIBUICtrlBar::OnOpenFile( wxCommandEvent& event )
 {
     if( m_tPlayStop.IsRunning() ) return;      // do nothing when play back is running !
 
+#ifndef __OCPN__ANDROID__
     if( !wxDir::Exists( m_grib_dir ) ) {
         wxStandardPathsBase& path = wxStandardPaths::Get();
         m_grib_dir = path.GetDocumentsDir();
     }
+    
     wxFileDialog *dialog = new wxFileDialog(NULL, _("Select a GRIB file"), m_grib_dir,
-                                            _T(""), wxT ( "Grib files (*.grb;*.bz2;*.gz)|*.grb;*.bz2;*.gz|All files (*)|*.*"), wxFD_OPEN, wxDefaultPosition,
-                                            wxDefaultSize, _T("File Dialog") );
-
+                                            _T(""), wxT ( "Grib files (*.grb;*.bz2;*.gz;*.grib2;*.grb2)|*.grb;*.bz2;*.gz;*.grib2;*.grb2|All files (*)|*.*"), wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE
+                                            , wxDefaultPosition, wxDefaultSize, _T("File Dialog") );
+    
     if( dialog->ShowModal() == wxID_OK ) {
+        
+        ::wxBeginBusyCursor();
+        
         m_grib_dir = dialog->GetDirectory();
-        m_file_name = dialog->GetPath();
+        dialog->GetPaths(m_file_names);
         OpenFile();
         SetDialogsStyleSizePosition( true );
     }
-
+#else
+    if( !wxDir::Exists( m_grib_dir ) ) {
+        wxStandardPathsBase& path = wxStandardPaths::Get();
+        m_grib_dir = path.GetDocumentsDir();
+    }
+    
+    wxString file;
+    int response = PlatformFileSelectorDialog( NULL, &file, _("Select a GRIB file"),
+                                              m_grib_dir, _T(""), _T("*.*") );
+    
+    if( response == wxID_OK ) {
+        wxFileName fn(file);
+        m_grib_dir = fn.GetPath();
+        m_file_names.Clear();
+        m_file_names.Add(file);
+        OpenFile();
+        SetDialogsStyleSizePosition( true );
+    }
+#endif
 }
 
-void GRIBUICtrlBar::CreateActiveFileFromName( wxString filename )
+void GRIBUICtrlBar::CreateActiveFileFromNames( const wxArrayString &filenames )
 {
-    if( !filename.IsEmpty() ) {
+    if( filenames.GetCount() != 0 ) {
         m_bGRIBActiveFile = NULL;
-        m_bGRIBActiveFile = new GRIBFile( filename , pPlugIn->GetCopyFirstCumRec(),
-                                          pPlugIn->GetCopyMissWaveRec() );
+        m_bGRIBActiveFile = new GRIBFile( filenames , pPlugIn->GetCopyFirstCumRec(),
+                                         pPlugIn->GetCopyMissWaveRec() );
     }
 }
 
@@ -1370,38 +1477,59 @@ void GRIBUICtrlBar::SetFactoryOptions()
 //          GRIBFile Object Implementation
 //----------------------------------------------------------------------------------------------------------
 
-GRIBFile::GRIBFile( const wxString file_name, bool CumRec, bool WaveRec )
+GRIBFile::GRIBFile( const wxArrayString & file_names, bool CumRec, bool WaveRec, bool newestFile )
 {
-    m_bOK = true;           // Assume ok until proven otherwise
+    m_bOK = false;           // Assume ok until proven otherwise
     m_pGribReader = NULL;
     m_last_message = wxEmptyString;
-
-    if( !::wxFileExists( file_name ) ) {
-        m_last_message = _( " does not exist!" );
-        m_bOK = false;
+    
+    for (unsigned int i = 0; i < file_names.GetCount(); i++) {
+        wxString file_name = file_names[i];
+        if( ::wxFileExists( file_name ) )
+            m_bOK = true;
+    }
+    
+    if ( m_bOK == false) {
+        m_last_message = _( " files don't exist!" );
         return;
     }
-
     //    Use the zyGrib support classes, as (slightly) modified locally....
-
+    
     m_pGribReader = new GribReader();
-
+    
     //    Read and ingest the entire GRIB file.......
-    m_pGribReader->openFile( file_name );
-
-    if( !m_pGribReader->isOk() ) {
+    m_bOK = false;
+    wxString file_name;
+    for (unsigned int i = 0; i < file_names.GetCount(); i++) {
+        file_name = file_names[i];
+        m_pGribReader->openFile( file_name );
+        
+        if( m_pGribReader->isOk() ) {
+            m_bOK = true;
+            if( newestFile ) {
+                break;
+            }
+        }
+    }
+    if ( m_bOK == false) {
         m_last_message = _( " can't be read!" );
-        m_bOK = false;
         return;
     }
-
-    m_FileName = file_name;
-
+    
+    if( newestFile ) {
+        m_FileNames.Clear();
+        m_FileNames.Add(file_name);
+    } else {
+        m_FileNames = file_names;
+    }
+    
+    // fixup Accumulation records
+    m_pGribReader->computeAccumulationRecords(GRB_PRECIP_TOT, LV_GND_SURF, 0);
+    
+    
     if( CumRec ) m_pGribReader->copyFirstCumulativeRecord();            //add missing records if option selected
     if( WaveRec ) m_pGribReader->copyMissingWaveRecords ();             //  ""                   ""
-
-    m_nGribRecords = m_pGribReader->getTotalNumberOfGribRecords();
-
+    
     //    Walk the GribReader date list to populate our array of GribRecordSets
 
     std::set<time_t>::iterator iter;

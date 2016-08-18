@@ -246,7 +246,7 @@ bool RadarInfo::Init(wxString name, int verbose) {
 
   m_name = name;
 
-  ComputeColorMap();
+  ComputeColourMap();
 
   m_transmit = new br24Transmit(m_pi, name, m_radar);
 
@@ -320,41 +320,38 @@ void RadarInfo::StartReceive() {
   }
 }
 
-void RadarInfo::ComputeColorMap() {
-  switch (m_pi->m_settings.display_option) {
-    case 0:
-      for (int i = 0; i <= UINT8_MAX; i++) {
-        m_color_map[i] = (i >= m_pi->m_settings.threshold_blue) ? BLOB_RED : BLOB_NONE;
-      }
-      break;
-    case 1:
-      for (int i = 0; i <= UINT8_MAX; i++) {
-        m_color_map[i] =
-            (i >= m_pi->m_settings.threshold_red) ? BLOB_RED : (i >= m_pi->m_settings.threshold_green)
-                                                                   ? BLOB_GREEN
-                                                                   : (i >= m_pi->m_settings.threshold_blue) ? BLOB_BLUE : BLOB_NONE;
-      }
-      break;
+void RadarInfo::ComputeColourMap() {
+    for (int i = 0; i <= UINT8_MAX; i++) {
+        m_colour_map[i] =
+        (i >= m_pi->m_settings.threshold_red) ? BLOB_STRONG : (i >= m_pi->m_settings.threshold_green)
+        ? BLOB_INTERMEDIATE
+        : (i >= m_pi->m_settings.threshold_blue) ? BLOB_WEAK : BLOB_NONE;
   }
 
-  memset(m_color_map_red, 0, sizeof(m_color_map_red));
-  memset(m_color_map_green, 0, sizeof(m_color_map_green));
-  memset(m_color_map_blue, 0, sizeof(m_color_map_blue));
-  m_color_map_red[BLOB_RED] = 255;
-  m_color_map_green[BLOB_GREEN] = 255;
-  m_color_map_blue[BLOB_BLUE] = 255;
+    for (int i = 0; i < BLOB_COLOURS; i++) {
+        m_colour_map_rgb[i] = wxColour(0, 0, 0);
+    }
+    m_colour_map_rgb[BLOB_STRONG] = m_pi->m_settings.strong_colour;
+    m_colour_map_rgb[BLOB_INTERMEDIATE] = m_pi->m_settings.intermediate_colour;
+    m_colour_map_rgb[BLOB_WEAK] = m_pi->m_settings.weak_colour;
 
-  if (m_pi->m_settings.display_option == 1 && m_target_trails.value > 0) {
-    GLubyte gray = 255;
-    static const GLubyte end_gray = 63;
-    static const GLubyte dec_gray = (gray - end_gray) / BLOB_HISTORY_COLORS;
-    for (BlobColor history = BLOB_HISTORY_0; history <= BLOB_HISTORY_MAX; history = (BlobColor)(history + 1)) {
-      m_color_map[history] = history;
+  if (m_target_trails.value > 0) {
+    float r1 = m_pi->m_settings.trail_start_colour.Red();
+    float g1 = m_pi->m_settings.trail_start_colour.Green();
+    float b1 = m_pi->m_settings.trail_start_colour.Blue();
+    float r2 = m_pi->m_settings.trail_end_colour.Red();
+    float g2 = m_pi->m_settings.trail_end_colour.Green();
+    float b2 = m_pi->m_settings.trail_end_colour.Blue();
+    float delta_r = (r2 - r1) / BLOB_HISTORY_COLOURS;
+    float delta_g = (g2 - g1) / BLOB_HISTORY_COLOURS;
+    float delta_b = (b2 - b1) / BLOB_HISTORY_COLOURS;
+    for (BlobColour history = BLOB_HISTORY_0; history <= BLOB_HISTORY_MAX; history = (BlobColour)(history + 1)) {
+          m_colour_map[history] = history;
 
-      m_color_map_red[history] = (GLubyte)gray;
-      m_color_map_green[history] = (GLubyte)gray;
-      m_color_map_blue[history] = (GLubyte)gray;
-      gray -= dec_gray;
+      m_colour_map_rgb[history] = wxColour(r1, g1, b1);
+      r1 += delta_r;
+      g1 += delta_g;
+      b1 += delta_b;
     }
   }
 }
@@ -415,8 +412,7 @@ void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, UINT
     LOG_VERBOSE(wxT("BR24radar_pi: %s HeadUp/NorthUp change"));
   }
   int north_up = m_orientation.GetButton() == ORIENTATION_NORTH_UP;
-  uint8_t weakest_normal_blob =
-      (m_pi->m_settings.display_option ? m_pi->m_settings.threshold_blue : m_pi->m_settings.threshold_red);
+    uint8_t weakest_normal_blob = m_pi->m_settings.threshold_blue;
 
   bool calc_history = m_multi_sweep_filter;
   for (size_t z = 0; z < GUARD_ZONES; z++) {
@@ -448,12 +444,12 @@ void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, UINT
     }
   }
 
-  bool draw_trails_on_overlay = (m_pi->m_settings.display_option == 1) && (m_pi->m_settings.trails_on_overlay == 1);
+    bool draw_trails_on_overlay = (m_pi->m_settings.trails_on_overlay == 1);
   if (m_draw_overlay.draw && !draw_trails_on_overlay) {
     m_draw_overlay.draw->ProcessRadarSpoke(m_pi->m_settings.overlay_transparency, bearing, data, len);
   }
 
-  if (m_target_trails.value != 0 && m_pi->m_settings.display_option == 1) {
+  if (m_target_trails.value != 0) {
     if (m_trails_motion.value == TARGET_MOTION_TRUE) {
       PolarToCartesianLookupTable *polarLookup;
       polarLookup = GetPolarToCartesianLookupTable();
@@ -470,7 +466,7 @@ void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, UINT
           if (*trail > 0 && *trail < TRAIL_MAX_REVOLUTIONS) {
             (*trail)++;
           }
-          data[radius] = m_trail_color[*trail];
+          data[radius] = m_trail_colour[*trail];
         }
       }
     } else if (m_trails_motion.value == TARGET_MOTION_RELATIVE) {
@@ -482,7 +478,7 @@ void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, UINT
           if (*trail > 0 && *trail < TRAIL_MAX_REVOLUTIONS) {
             (*trail)++;
           }
-          data[radius] = m_trail_color[*trail];
+          data[radius] = m_trail_colour[*trail];
         }
         trail++;
       }
@@ -501,49 +497,75 @@ void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, UINT
 void RadarInfo::UpdateTransmitState() {
   time_t now = time(0);
 
+  if (m_state.value == RADAR_TRANSMIT && TIMED_OUT(now, m_data_timeout)) {
+    m_state.Update(RADAR_STANDBY);
+    LOG_INFO(wxT("BR24radar_pi: %s data lost"), m_name.c_str());
+  }
+
   if (m_state.value == RADAR_STANDBY && TIMED_OUT(now, m_radar_timeout)) {
     static wxString empty;
 
     m_state.Update(RADAR_OFF);
     m_pi->m_pMessageBox->SetRadarIPAddress(empty);
-    LOG_INFO(wxT("BR24radar_pi: Lost %s presence"), m_name.c_str());
-  }
-  if (m_state.value == RADAR_TRANSMIT && TIMED_OUT(now, m_data_timeout)) {
-    m_state.Update(RADAR_STANDBY);
-    LOG_INFO(wxT("BR24radar_pi: Data Lost %s "), m_name.c_str());
-  }
-
-  if (!TIMED_OUT(now, m_stayalive_timeout) || !m_pi->IsRadarOnScreen(m_radar)) {
+    LOG_INFO(wxT("BR24radar_pi: %s lost presence"), m_name.c_str());
     return;
   }
 
-  if (m_wanted_state.value == RADAR_TRANSMIT) {
-    switch (m_state.value) {
-      case RADAR_OFF:
-      case RADAR_WAKING_UP:
-        break;
+  if (!m_pi->IsRadarOnScreen(m_radar)) {
+    return;
+  }
 
-      case RADAR_TRANSMIT:
-        m_transmit->RadarStayAlive();
-        break;
+  if (m_state.value == RADAR_TRANSMIT && TIMED_OUT(now, m_stayalive_timeout)) {
+    m_transmit->RadarStayAlive();
+    m_stayalive_timeout = now + STAYALIVE_TIMEOUT;
+  }
 
-      case RADAR_STANDBY:
-        m_transmit->RadarTxOn();
-        // Refresh radar immediately so that we generate draw mechanisms
-        if (m_pi->m_settings.chart_overlay == m_radar) {
-          GetOCPNCanvasWindow()->Refresh(false);
-        }
-        if (m_radar_panel) {
-          m_radar_panel->Refresh();
-        }
-        break;
+    // If we find we have a radar and the boot flag is still set, turn radar on
+    // Think about interaction with timed_transmit
+    if (m_boot_state.value == RADAR_TRANSMIT && m_state.value == RADAR_STANDBY) {
+        m_boot_state.Update(RADAR_OFF);
+        RequestRadarState(RADAR_TRANSMIT);
     }
-  } else {
-    if (m_state.value == RADAR_TRANSMIT) {
-      m_transmit->RadarTxOff();
+}
+
+void RadarInfo::RequestRadarState(RadarState state) {
+    if (m_pi->IsRadarOnScreen(m_radar) && m_state.value != RADAR_OFF) {  // if radar is visible and detected
+        if (m_state.value != state && !(m_state.value == RADAR_WAKING_UP && state == RADAR_TRANSMIT)) {  // and change is wanted
+            time_t now = time(0);
+            
+            switch (state) {
+                case RADAR_TRANSMIT:
+                    if (m_pi->m_settings.emulator_on) {
+                        m_state.Update(RADAR_TRANSMIT);
+                    } else {
+                        m_transmit->RadarTxOn();
+                    }
+                    // Refresh radar immediately so that we generate draw mechanisms
+                    if (m_pi->m_settings.chart_overlay == m_radar) {
+                        GetOCPNCanvasWindow()->Refresh(false);
+                    }
+                    if (m_radar_panel) {
+                        m_radar_panel->Refresh();
+                    }
+                    m_pi->m_idle_standby = now + wxMax(m_pi->m_settings.idle_run_time, SECONDS_PER_TRANSMIT_BURST);
+                    break;
+                    
+                case RADAR_STANDBY:
+                    if (m_pi->m_settings.emulator_on) {
+                        m_state.Update(RADAR_STANDBY);
+                    } else {
+                        m_transmit->RadarTxOff();
+                    }
+                    m_pi->m_idle_transmit = now + m_pi->m_settings.timed_idle * SECONDS_PER_TIMED_IDLE_SETTING;
+                    break;
+                    
+                case RADAR_WAKING_UP:
+                case RADAR_OFF:
+                    LOG_INFO(wxT("BR24radar_pi: %s unexpected status request %d"), m_name.c_str(), state);
+            }
+            m_stayalive_timeout = time(0) + STAYALIVE_TIMEOUT;
     }
   }
-  m_stayalive_timeout = now + STAYALIVE_TIMEOUT;
 }
 
 void RadarInfo::UpdateTrailPosition() {
@@ -671,8 +693,11 @@ void RadarInfo::RenderGuardZone() {
 }
 
 void RadarInfo::AdjustRange(int adjustment) {
-  const RadarRange *min, *max;
-
+#ifdef __WXOSX__
+  const RadarRange *min=0, *max=0;
+#else
+  const RadarRange *min, *max;  
+#endif
   m_auto_range_mode = false;
   m_previous_auto_range_meters = 0;
 
@@ -773,20 +798,19 @@ void RadarInfo::ResetRadarImage() {
 void RadarInfo::RenderRadarImage(DrawInfo *di) {
   wxCriticalSectionLocker lock(m_exclusive);
   int drawing_method = m_pi->m_settings.drawing_method;
-  bool colorOption = m_pi->m_settings.display_option > 0;
 
-  if (m_state.value != RADAR_TRANSMIT) {
+  if (m_state.value != RADAR_TRANSMIT && m_state.value != RADAR_WAKING_UP) {
     ResetRadarImage();
     return;
   }
 
   // Determine if a new draw method is required
-  if (!di->draw || (drawing_method != di->drawing_method) || (colorOption != di->color_option)) {
+  if (!di->draw || (drawing_method != di->drawing_method)) {
     RadarDraw *newDraw = RadarDraw::make_Draw(this, drawing_method);
     if (!newDraw) {
       wxLogError(wxT("BR24radar_pi: out of memory"));
       return;
-    } else if (newDraw->Init(colorOption)) {
+    } else if (newDraw->Init()) {
       wxArrayString methods;
       RadarDraw::GetDrawingMethods(methods);
       if (di == &m_draw_overlay) {
@@ -799,7 +823,6 @@ void RadarInfo::RenderRadarImage(DrawInfo *di) {
       }
       di->draw = newDraw;
       di->drawing_method = drawing_method;
-      di->color_option = colorOption;
     } else {
       m_pi->m_settings.drawing_method = 0;
       delete newDraw;
@@ -880,19 +903,6 @@ void RadarInfo::RenderRadarImage(wxPoint center, double scale, double rotate, bo
   glPopAttrib();
 }
 
-void RadarInfo::FlipRadarState() {
-  if (m_pi->IsRadarOnScreen(m_radar)) {
-    m_stayalive_timeout = 0;
-    if (m_state.button == RADAR_STANDBY) {
-      m_wanted_state.Update(RADAR_TRANSMIT);
-    } else {
-      m_wanted_state.Update(RADAR_STANDBY);
-    }
-    LOG_VERBOSE(wxT("BR24radar_pi: %s flip state to %d"), m_name.c_str(), m_wanted_state.value);
-    UpdateTransmitState();
-  }
-}
-
 wxString RadarInfo::GetCanvasTextTopLeft() {
   wxString s;
 
@@ -968,8 +978,11 @@ wxString RadarInfo::GetCanvasTextBottomLeft() {
   wxString s = m_pi->GetGuardZoneText(this);
 
   if (m_state.value == RADAR_TRANSMIT) {
+#ifdef __WXOSX__
+    double distance = 0.0, bearing = 0.0;
+#else
     double distance = 0.0, bearing;
-
+#endif
     // Add VRM/EBLs
 
     for (int b = 0; b < BEARING_LINES; b++) {
@@ -1008,23 +1021,37 @@ wxString RadarInfo::GetCanvasTextBottomLeft() {
 wxString RadarInfo::GetCanvasTextCenter() {
   wxString s;
 
-  if (m_state.value == RADAR_OFF) {
-    s << _("No radar");
-  } else if (m_state.value == RADAR_STANDBY) {
-    s << _("Radar is in Standby");
-    switch (m_radar_type) {
-      case RT_BR24:
-        s << wxT("\nBR24");
-        break;
-      case RT_4G:
-        s << wxT("\n4G");
-        break;
-      case RT_UNKNOWN:
-      default:
-        break;
+    switch (m_state.value) {
+        case RADAR_OFF:
+            s << _("No radar");
+            break;
+        case RADAR_STANDBY:
+            s << _("Radar is in Standby");
+            break;
+        case RADAR_WAKING_UP:
+            s << _("Radar is waking up");
+            break;
+        case RADAR_TRANSMIT:
+            if (m_draw_panel.draw) {
+                return s;
+            }
+            s << _("Radar not transmitting");
+            break;
     }
-  } else if (!m_draw_panel.draw) {
-    s << _("Radar not transmitting");
+
+    switch (m_radar_type) {
+        case RT_BR24:
+            s << wxT("\nBR24");
+            break;
+        case RT_3G:
+            s << wxT("\n3G");
+            break;
+        case RT_4G:
+            s << wxT("\n4G");
+            break;
+        case RT_UNKNOWN:
+        default:
+            break;
   }
 
   return s;
@@ -1110,12 +1137,12 @@ void RadarInfo::ComputeTargetTrails() {
 
   TrailRevolutionsAge maxRev = maxRevs[m_target_trails.value];
   TrailRevolutionsAge revolution;
-  double colorsPerRevolution = BLOB_HISTORY_COLORS / (double)maxRev;
-  double color = 0.;
+  double coloursPerRevolution = BLOB_HISTORY_COLOURS / (double)maxRev;
+  double colour = 0.;
 
   // Like plotter, continuous trails are all very white (non transparent)
   if (m_target_trails.value == TRAIL_CONTINUOUS) {
-    colorsPerRevolution = 0.;
+      coloursPerRevolution = 0.;
   }
 
   LOG_VERBOSE(wxT("BR24radar_pi: Target trail value %d = %d revolutions"), m_target_trails.value, maxRev);
@@ -1123,10 +1150,10 @@ void RadarInfo::ComputeTargetTrails() {
   // Disperse the BLOB_HISTORY values over 0..maxrev
   for (revolution = 0; revolution <= TRAIL_MAX_REVOLUTIONS; revolution++) {
     if (revolution >= 1 && revolution <= maxRev) {
-      m_trail_color[revolution] = (BlobColor)(BLOB_HISTORY_0 + (int)color);
-      color += colorsPerRevolution;
+        m_trail_colour[revolution] = (BlobColour)(BLOB_HISTORY_0 + (int)colour);
+        colour += coloursPerRevolution;
     } else {
-      m_trail_color[revolution] = BLOB_NONE;
+        m_trail_colour[revolution] = BLOB_NONE;
     }
   }
 }

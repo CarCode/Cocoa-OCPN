@@ -65,6 +65,9 @@ class GuardZoneBogey;
 #define GUARD_ZONES (2)             // Could be increased if wanted
 #define BEARING_LINES (2)           // And these as well
 
+static const int SECONDS_PER_TIMED_IDLE_SETTING = 5 * 60;  // 5 minutes increment for each setting
+static const int SECONDS_PER_TRANSMIT_BURST = 30;
+
 #define OPENGL_ROTATION (-90.0)  // Difference between 'up' and OpenGL 'up'...
 
 #define ALL_RADARS(var, value) (((var)[0] == (value)) && ((var)[1] == (value)))
@@ -176,13 +179,9 @@ static string ControlTypeNames[CT_MAX] = {"Range",
 
 typedef enum GuardZoneType { GZ_OFF, GZ_ARC, GZ_CIRCLE } GuardZoneType;
 
-typedef enum RadarType {
-  RT_UNKNOWN,
-  RT_BR24,  // 3G is just a fancy BR24
-  RT_4G
-} RadarType;
+typedef enum RadarType { RT_UNKNOWN, RT_BR24, RT_3G, RT_4G } RadarType;
 
-enum BlobColor {
+enum BlobColour {
   BLOB_NONE,
   BLOB_HISTORY_0,
   BLOB_HISTORY_1,
@@ -216,12 +215,13 @@ enum BlobColor {
   BLOB_HISTORY_29,
   BLOB_HISTORY_30,
   BLOB_HISTORY_31,
-  BLOB_BLUE,
-  BLOB_GREEN,
-  BLOB_RED
+  BLOB_WEAK,
+  BLOB_INTERMEDIATE,
+  BLOB_STRONG
 };
 #define BLOB_HISTORY_MAX BLOB_HISTORY_31
-#define BLOB_HISTORY_COLORS (BLOB_HISTORY_MAX - BLOB_NONE)
+#define BLOB_HISTORY_COLOURS (BLOB_HISTORY_MAX - BLOB_NONE)
+#define BLOB_COLOURS (BLOB_STRONG + 1)
 
 extern const char *convertRadarToString(int range_meters, int units, int index);
 extern double local_distance(double lat1, double lon1, double lat2, double lon2);
@@ -260,7 +260,6 @@ struct PersistentSettings {
   int overlay_transparency;
   int range_index;                  // index into range array, see RadarInfo.cpp
   int verbose;                      // Loglevel 0..4.
-  int display_option;               // Monocolor-red or Multi-color
   int guard_zone_threshold;         // How many blobs must be sent by radar before we fire alarm
   int guard_zone_render_style;      // 0 = Shading, 1 = Outline, 2 = Shading + Outline
   int guard_zone_timeout;           // How long before we warn again when bogeys are found
@@ -292,11 +291,17 @@ struct PersistentSettings {
   int threshold_blue;               // Radar data has to be this strong to show as WEAK
   int threshold_multi_sweep;        // Radar data has to be this strong not to be ignored in multisweep
   int main_bang_size;               // Pixels at center to ignore
+  int type_detection_method;        // 0 = default, 1 = ignore reports
   wxPoint control_pos[RADARS];      // Saved position of control menu windows
   wxPoint window_pos[RADARS];       // Saved position of radar windows, when floating and not docked
   wxPoint alarm_pos;                // Saved position of alarm window
   wxString alert_audio_file;        // Filepath of alarm audio file. Must be WAV.
   wxString mcast_address;           // Saved address of radar. Used to speed up next boot.
+  wxColour trail_start_colour;      // Starting colour of a trail
+  wxColour trail_end_colour;        // Ending colour of a trail
+  wxColour strong_colour;           // Colour for STRONG returns
+  wxColour intermediate_colour;     // Colour for INTERMEDIATE returns
+  wxColour weak_colour;             // Colour for WEAK returns
 };
 
 struct scan_line {
@@ -453,7 +458,7 @@ class br24radar_pi : public opencpn_plugin_112 {  //  112
   void PassHeadingToOpenCPN();
   void CacheSetToolbarToolBitmaps();
   void CheckTimedTransmit(RadarState state);
-  void SetDesiredStateAllRadars(RadarState desiredState);
+  void RequestStateAllRadars(RadarState state);
   void SetRadarWindowViz(bool reparent = false);
 
   wxCriticalSection m_exclusive;  // protects callbacks that come from multiple radars

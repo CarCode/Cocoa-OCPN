@@ -103,7 +103,11 @@ typedef struct _OGdkRegion             OGdkRegion;
 struct _OGdkRegion
 {
     long size;
+#ifdef __WXOSX__
+    int numRects;
+#else
     long numRects;
+#endif
     OGdkRegionBox *rects;
     OGdkRegionBox extents;
 };
@@ -2507,19 +2511,18 @@ ogdk_region_equal (const OGdkRegion *region1,
  //     g_return_val_if_fail (region2 != NULL, FALSE);
 
     if (region1->numRects != region2->numRects) return FALSE;
-    else if (region1->numRects == 0) return TRUE;
-    else if (region1->extents.x1 != region2->extents.x1) return FALSE;
-    else if (region1->extents.x2 != region2->extents.x2) return FALSE;
-    else if (region1->extents.y1 != region2->extents.y1) return FALSE;
-    else if (region1->extents.y2 != region2->extents.y2) return FALSE;
-    else
-        for(i = 0; i < region1->numRects; i++ )
-        {
-            if (region1->rects[i].x1 != region2->rects[i].x1) return FALSE;
-            else if (region1->rects[i].x2 != region2->rects[i].x2) return FALSE;
-            else if (region1->rects[i].y1 != region2->rects[i].y1) return FALSE;
-            else if (region1->rects[i].y2 != region2->rects[i].y2) return FALSE;
-        }
+    if (region1->numRects == 0) return TRUE;
+    if (region1->extents.x1 != region2->extents.x1) return FALSE;
+    if (region1->extents.x2 != region2->extents.x2) return FALSE;
+    if (region1->extents.y1 != region2->extents.y1) return FALSE;
+    if (region1->extents.y2 != region2->extents.y2) return FALSE;
+    for(i = 0; i < region1->numRects; i++ )
+    {
+        if (region1->rects[i].x1 != region2->rects[i].x1) return FALSE;
+        if (region1->rects[i].x2 != region2->rects[i].x2) return FALSE;
+        if (region1->rects[i].y1 != region2->rects[i].y1) return FALSE;
+        if (region1->rects[i].y2 != region2->rects[i].y2) return FALSE;
+    }
     return TRUE;
 }
 
@@ -2596,14 +2599,12 @@ gdk_region_rect_in (const OGdkRegion    *region,
     partIn = FALSE;
 
     /* can stop when both partOut and partIn are TRUE, or we reach prect->y2 */
-    for (pbox = region->rects, pboxEnd = pbox + region->numRects;
-         pbox < pboxEnd;
-         pbox++)
+    for (pbox = region->rects, pboxEnd = pbox + region->numRects; pbox < pboxEnd; pbox++)
     {
 
         if (pbox->y2 <= ry)
             continue;       /* getting up to speed or skipping remainder of band */
-
+        
         if (pbox->y1 > ry)
         {
             partOut = TRUE;       /* missed part of rectangle above */
@@ -2611,7 +2612,7 @@ gdk_region_rect_in (const OGdkRegion    *region,
                 break;
             ry = pbox->y1;        /* x guaranteed to be == prect->x1 */
         }
-
+        
         if (pbox->x2 <= rx)
             continue;               /* not far enough over yet */
 
@@ -2621,14 +2622,14 @@ gdk_region_rect_in (const OGdkRegion    *region,
             if (partIn)
                 break;
         }
-
+        
         if (pbox->x1 < prect->x2)
         {
             partIn = TRUE;        /* definitely overlap */
             if (partOut)
                 break;
         }
-
+        
         if (pbox->x2 >= prect->x2)
         {
             ry = pbox->y2;        /* finished with this band */
@@ -2656,7 +2657,7 @@ gdk_region_rect_in (const OGdkRegion    *region,
             OGDK_OVERLAP_RECTANGLE_OUT);
 }
 
-#if 0                   
+#if 0
 static void
 gdk_region_unsorted_spans_intersect_foreach (GdkRegion     *region,
                                              const GdkSpan *spans,

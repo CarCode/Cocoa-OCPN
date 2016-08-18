@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,7 +29,7 @@
 
 #include <list>
 
-#include "tinyxml/tinyxml.h"
+#include "../../../include/tinyxml.h"
 
 #include "weatherfax_pi.h"
 #include "WeatherFaxImage.h"
@@ -54,9 +53,11 @@ SchedulesDialog::SchedulesDialog( weatherfax_pi &_weatherfax_pi, wxWindow* paren
 
 SchedulesDialog::~SchedulesDialog()
 {
+//    wxFileConfig *pConf = GetOCPNConfigObject();  //  Not used
+/*
     wxFileConfig *pConf = m_weatherfax_pi.m_pconfig;
 
-    /* remove from config all cordinate sets */
+    // remove from config all cordinate sets
     pConf->SetPath ( _T ( "/Settings/WeatherFax/Schedules" ) );
 
     pConf->Write ( _T ( "ContainsLat" ), m_tContainsLat->GetValue() );
@@ -92,7 +93,7 @@ SchedulesDialog::~SchedulesDialog()
         captures += wxString::Format(_T("%.1f,%04d;"), (*it)->Frequency, (*it)->Time);
     pConf->Write ( _T ( "captures" ), captures );
 
-    ClearSchedules();
+*/    ClearSchedules();
 
     if(m_ExternalCaptureProcess) {
         m_ExternalCaptureProcess->Disconnect(wxEVT_END_PROCESS, wxProcessEventHandler
@@ -134,7 +135,7 @@ void SchedulesDialog::Load()
                     ( SchedulesDialog::OnProgressTimer ), NULL, this);
     m_ProgressTimer.Start(30 * 1000, false);
 
-    wxFileConfig *pConf = m_weatherfax_pi.m_pconfig;
+    wxFileConfig *pConf = GetOCPNConfigObject();
 
     /* remove from config all cordinate sets */
     pConf->SetPath ( _T ( "/Settings/WeatherFax/Schedules" ) );
@@ -719,11 +720,7 @@ void SchedulesDialog::UpdateProgress()
             int ss = f->StartSeconds();
             if(ss < 60)
             {
-#ifdef __WXOSX__
                 l += wxString::Format( _T(" %d "), ss) + _("second(s)");
-#else
-                l += wxString::Format( _T(" %ld "), ss) + _("second(s)");
-#endif
             }
             else {
                 if(ss >= 3600) {
@@ -731,11 +728,7 @@ void SchedulesDialog::UpdateProgress()
                     l += wxString::Format( _T(" %d "), h) + _("hour(s)");
                     ss -= h*3600;
                 }
-#ifdef __WXOSX__
                 l += wxString::Format( _T(" %d "), ss/60) + _("minute(s)");
-#else
-                l += wxString::Format( _T(" %ld "), ss/60) + _("minute(s)");
-#endif
             }
         }
         m_gCaptureStatus->SetValue(0);

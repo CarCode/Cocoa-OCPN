@@ -164,9 +164,7 @@ bool File::Create(const wchar *Name,uint Mode)
   // before SetFileTime call. So we should use the write only mode if we plan
   // SetFileTime call and do not need to read from file.
   bool WriteMode=(Mode & FMF_WRITE)!=0;
-#ifdef _WIN_ALL
-  bool ShareRead=(Mode & FMF_SHAREREAD)!=0 || File::OpenShared;
-#endif
+//  bool ShareRead=(Mode & FMF_SHAREREAD)!=0 || File::OpenShared;  //  Not used for OSX
 #ifdef _WIN_ALL
   CreateMode=Mode;
   uint Access=WriteMode ? GENERIC_WRITE:GENERIC_READ|GENERIC_WRITE;
@@ -308,7 +306,7 @@ bool File::Write(const void *Data,size_t Size)
   bool Success;
   while (1)
   {
-//    Success=false;  // Not used
+//    Success=false;  //  Not used
 #ifdef _WIN_ALL
     DWORD Written=0;
     if (HandleType!=FILE_HANDLENORMAL)
@@ -326,10 +324,10 @@ bool File::Write(const void *Data,size_t Size)
       Success=WriteFile(hFile,Data,(DWORD)Size,&Written,NULL)==TRUE;
 #else
 #ifdef FILE_USE_OPEN
-    ssize_t Written=write(hFile,Data,Size);
+    size_t Written=static_cast<size_t>(write(hFile,Data,Size));
     Success=Written==Size;
 #else
-    int Written=fwrite(Data,1,Size,hFile);
+    size_t Written=fwrite(Data,1,Size,hFile);
     Success=Written==Size && !ferror(hFile);
 #endif
 #endif

@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -51,9 +50,11 @@ InternetRetrievalDialog::InternetRetrievalDialog( weatherfax_pi &_weatherfax_pi,
 
 InternetRetrievalDialog::~InternetRetrievalDialog()
 {
+//    wxFileConfig *pConf = GetOCPNConfigObject();  //  Not used
+/*
     wxFileConfig *pConf = m_weatherfax_pi.m_pconfig;
 
-    /* remove from config all cordinate sets */
+    // remove from config all cordinate sets
     pConf->SetPath ( _T ( "/Settings/WeatherFax/InternetRetrieval" ) );
 
     pConf->Write ( _T ( "ContainsLat" ), m_tContainsLat->GetValue() );
@@ -77,7 +78,7 @@ InternetRetrievalDialog::~InternetRetrievalDialog()
         if((*it)->Scheduled)
             scheduled += (*it)->Url + _T(";");
     pConf->Write ( _T ( "Scheduled" ), scheduled );
-
+*/
     ClearInternetRetrieval();
 }
 
@@ -100,7 +101,7 @@ void InternetRetrievalDialog::Load()
     m_lUrls->InsertColumn(CONTENTS, _("Contents"));
     m_lUrls->InsertColumn(MAP_AREA, _("Map Area"));
 
-    wxFileConfig *pConf = m_weatherfax_pi.m_pconfig;
+    wxFileConfig *pConf = GetOCPNConfigObject();
 
     /* remove from config all cordinate sets */
     pConf->SetPath ( _T ( "/Settings/WeatherFax/InternetRetrieval" ) );
@@ -409,12 +410,12 @@ int wxCALLBACK SortUrl(long item1, long item2, long list)
     lc->GetItem(it1);
     lc->GetItem(it2);
     
-    if(0) { /* numeric */
+/*    if(0) { // numeric
         double a, b;
         it1.GetText().ToDouble(&a);
         it2.GetText().ToDouble(&b);
         return sortorder * ((a > b) ? 1 : -1);
-    } else
+    } else  */
         return sortorder * it1.GetText().Cmp(it2.GetText());
 }
 
@@ -659,7 +660,7 @@ Use existing file?"), _("Weather Fax"), wxYES | wxNO | wxCANCEL);
 #endif
     }
 
-    loadimage:
+loadimage:
         m_weatherfax_pi.m_pWeatherFax->OpenImage
             (filename, faxurl->Server + _T(" - ") + faxurl->Region, faxurl->area_name, faxurl->Contents);
 

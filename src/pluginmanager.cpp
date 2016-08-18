@@ -1287,10 +1287,9 @@ bool PlugInManager::SendKeyEventToPlugins( wxKeyEvent &event)
                         case 113:
                         {
                             opencpn_plugin_113 *ppi = dynamic_cast<opencpn_plugin_113*>(pic->m_pplugin);
-                            if(ppi)
-                                if(ppi->KeyboardEventHook( event ))
-                                    bret = true;
-                                break;
+                            if(ppi && ppi->KeyboardEventHook( event ))
+                                bret = true;
+                            break;
                         }
                         
                         default:

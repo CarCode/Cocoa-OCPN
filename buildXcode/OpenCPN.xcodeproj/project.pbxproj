@@ -1692,6 +1692,11 @@
 		A639BC3C1B4C61830053AB4A /* xdr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = xdr.hpp; path = src/nmea0183/xdr.hpp; sourceTree = "<group>"; };
 		A639BC3D1B4C61A70053AB4A /* xdr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xdr.cpp; path = src/nmea0183/xdr.cpp; sourceTree = "<group>"; };
 		A64128E11B59058A0024C916 /* wx28compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wx28compat.h; path = include/wx28compat.h; sourceTree = "<group>"; };
+		A64199F61D6069E800E02311 /* coder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = coder.cpp; path = plugins/chartdldr_pi/src/unrar/coder.cpp; sourceTree = "<group>"; };
+		A64199F71D606EAA00E02311 /* ulinks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ulinks.cpp; path = plugins/chartdldr_pi/src/unrar/ulinks.cpp; sourceTree = "<group>"; };
+		A64199F81D606FB300E02311 /* unpack20.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unpack20.cpp; path = plugins/chartdldr_pi/src/unrar/unpack20.cpp; sourceTree = "<group>"; };
+		A64199F91D606FB300E02311 /* unpack30.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unpack30.cpp; path = plugins/chartdldr_pi/src/unrar/unpack30.cpp; sourceTree = "<group>"; };
+		A64199FA1D606FB300E02311 /* unpack50.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = unpack50.cpp; path = plugins/chartdldr_pi/src/unrar/unpack50.cpp; sourceTree = "<group>"; };
 		A642A17D19D8A4B600441ED3 /* csv_parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csv_parser.cpp; path = plugins/objsearch_pi/src/csv_parser.cpp; sourceTree = "<group>"; };
 		A642A17F19D8A4E000441ED3 /* csv_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csv_parser.h; path = plugins/objsearch_pi/src/csv_parser.h; sourceTree = "<group>"; };
 		A64514F61AE4FF3000933404 /* libwxCurl.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libwxCurl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3376,6 +3381,7 @@
 				A63221181AE0531600A52EAC /* resource.cpp */,
 				A632211A1AE0533C00A52EAC /* match.cpp */,
 				A632211C1AE0536F00A52EAC /* timefn.cpp */,
+				A64199F71D606EAA00E02311 /* ulinks.cpp */,
 				A632211E1AE053A000A52EAC /* rdwrfn.cpp */,
 				A63221201AE053BB00A52EAC /* consio.cpp */,
 				A63221221AE053E200A52EAC /* options.cpp */,
@@ -3394,6 +3400,10 @@
 				A632213C1AE055E600A52EAC /* list.cpp */,
 				A632213E1AE0560A00A52EAC /* find.cpp */,
 				A63221401AE0563200A52EAC /* unpack.cpp */,
+				A64199F81D606FB300E02311 /* unpack20.cpp */,
+				A64199F91D606FB300E02311 /* unpack30.cpp */,
+				A64199FA1D606FB300E02311 /* unpack50.cpp */,
+				A64199F61D6069E800E02311 /* coder.cpp */,
 				A63221421AE0566900A52EAC /* headers.cpp */,
 				A63221441AE0568E00A52EAC /* threadpool.cpp */,
 				A63221461AE056B200A52EAC /* rs16.cpp */,

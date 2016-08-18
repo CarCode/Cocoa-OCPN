@@ -96,7 +96,7 @@ public:
     GribTimelineRecordSet* GetTimeLineRecordSet(wxDateTime time);
     void StopPlayBack();
     void TimelineChanged();
-    void CreateActiveFileFromName( wxString filename );
+    void CreateActiveFileFromNames( const wxArrayString &filenames );
     void PopulateComboDataList();
     void ComputeBestForecastForNow();
     void SetViewPort( PlugIn_ViewPort *vp );
@@ -151,7 +151,7 @@ private:
     void OnShowCursorData( wxCommandEvent& event );
 
     wxDateTime MinTime();
-    wxString GetNewestFileInDirectory();
+    wxArrayString GetFilesInDirectory();
     void SetGribTimelineRecordSet(GribTimelineRecordSet *pTimelineSet);
     int GetNearestIndex(wxDateTime time, int model);
     int GetNearestValue(wxDateTime time, int model);
@@ -179,7 +179,7 @@ private:
     bool             m_SelectionIsSaved;
     int              m_Selection_index;
     wxString         m_Selection_label;
-    wxString         m_file_name;   /* selected file */
+    wxArrayString         m_file_names;   /* selected file */
     wxString         m_grib_dir;
     wxSize           m_DialogsOffset;
 };
@@ -191,16 +191,16 @@ class GRIBFile
 {
 public:
 
-    GRIBFile( const wxString file_name, bool CumRec, bool WaveRec );
+    GRIBFile( const wxArrayString & file_names, bool CumRec, bool WaveRec, bool newestFile = false );
     ~GRIBFile();
 
     bool IsOK( void )
     {
         return m_bOK;
     }
-    wxString GetFileName( void )
+    wxArrayString &GetFileNames( void )
     {
-        return m_FileName;
+        return m_FileNames;
     }
     wxString GetLastMessage( void )
     {
@@ -222,7 +222,7 @@ private:
 
     bool m_bOK;
     wxString m_last_message;
-    wxString m_FileName;
+    wxArrayString m_FileNames;
     GribReader *m_pGribReader;
     time_t m_pRefDateTime;
 

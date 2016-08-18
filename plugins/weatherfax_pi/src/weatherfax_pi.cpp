@@ -5,7 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2015 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2016 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -62,29 +62,12 @@ weatherfax_pi::weatherfax_pi(void *ppimgr)
 int weatherfax_pi::Init(void)
 {
     AddLocaleCatalog( _T("opencpn-weatherfax_pi") );
-
-    // Set some default private member parameters
-    m_weatherfax_dialog_x = 0;
-    m_weatherfax_dialog_y = 0;
-
-    ::wxDisplaySize(&m_display_width, &m_display_height);
-
-    //    Get a pointer to the opencpn display canvas, to use as a parent for the POI Manager dialog
-    m_parent_window = GetOCPNCanvasWindow();
-
-    //    Get a pointer to the opencpn configuration object
-    m_pconfig = GetOCPNConfigObject();
-
-    //    And load the configuration items
-    LoadConfig();
-
     m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_weatherfax,
                                             _img_weatherfax, wxITEM_NORMAL,
                                             _("WeatherFax"), _T(""), NULL,
                                             WEATHERFAX_TOOL_POSITION, 0, this);
 
-    m_pWeatherFax = new WeatherFax(*this, m_parent_window);
-    m_pWeatherFax->Move(wxPoint(m_weatherfax_dialog_x, m_weatherfax_dialog_y));
+    m_pWeatherFax = NULL;
 
     return (WANTS_OVERLAY_CALLBACK |
             WANTS_OPENGL_OVERLAY_CALLBACK |
@@ -98,18 +81,15 @@ int weatherfax_pi::Init(void)
 
 bool weatherfax_pi::DeInit(void)
 {
-      //    Record the dialog position
-    wxPoint p = m_pWeatherFax->GetPosition();
-    SetWeatherFaxX(p.x);
-    SetWeatherFaxY(p.y);
-
-    m_pWeatherFax->m_SchedulesDialog.Close();
-    m_pWeatherFax->m_InternetRetrievalDialog.Close();
-    m_pWeatherFax->Close();
-    delete m_pWeatherFax;
-    m_pWeatherFax = NULL;
-
     SaveConfig();
+    //    Record the dialog position
+    if(m_pWeatherFax) {
+        m_pWeatherFax->m_SchedulesDialog.Close();
+        m_pWeatherFax->m_InternetRetrievalDialog.Close();
+        m_pWeatherFax->Close();
+        delete m_pWeatherFax;
+        m_pWeatherFax = NULL;
+    }
 
     RemovePlugInTool(m_leftclick_tool_id);
     return true;
@@ -188,6 +168,23 @@ void weatherfax_pi::RearrangeWindow()
 
 void weatherfax_pi::OnToolbarToolCallback(int id)
 {
+    if(!m_pWeatherFax) {
+        // Set some default private member parameters
+        m_weatherfax_dialog_x = 0;
+        m_weatherfax_dialog_y = 0;
+
+        ::wxDisplaySize(&m_display_width, &m_display_height);
+
+        //    Get a pointer to the opencpn display canvas, to use as a parent for the POI Manager dialog
+        m_parent_window = GetOCPNCanvasWindow();
+
+        //    And load the configuration items
+        LoadConfig();
+
+        m_pWeatherFax = new WeatherFax(*this, m_parent_window);
+        m_pWeatherFax->Move(wxPoint(m_weatherfax_dialog_x, m_weatherfax_dialog_y));
+    }
+
     m_pWeatherFax->Show(!m_pWeatherFax->IsShown());
 
     if(!m_pWeatherFax->IsShown()) {
@@ -256,7 +253,7 @@ wxString weatherfax_pi::StandardPath()
 
 bool weatherfax_pi::LoadConfig(void)
 {
-    wxFileConfig *pConf = m_pconfig;
+    wxFileConfig *pConf = GetOCPNConfigObject();
 
     if(!pConf)
         return false;
@@ -281,7 +278,7 @@ bool weatherfax_pi::LoadConfig(void)
 
 bool weatherfax_pi::SaveConfig(void)
 {
-    wxFileConfig *pConf = m_pconfig;
+    wxFileConfig *pConf = GetOCPNConfigObject();
 
     if(!pConf)
         return false;
@@ -289,10 +286,12 @@ bool weatherfax_pi::SaveConfig(void)
     pConf->SetPath ( _T ( "/Settings/WeatherFax" ) );
     pConf->Write ( _T ( "Path" ), m_path );
     pConf->Write ( _T ( "ExportPath" ), m_export_path );
-    
-    pConf->Write ( _T ( "DialogPosX" ),   m_weatherfax_dialog_x );
-    pConf->Write ( _T ( "DialogPosY" ),   m_weatherfax_dialog_y );
-        
+    if(m_pWeatherFax) {
+        wxPoint p = m_pWeatherFax->GetPosition();
+        pConf->Write ( _T ( "DialogPosX" ),   p.x );
+        pConf->Write ( _T ( "DialogPosY" ),   p.y );
+    }
+
     pConf->SetPath ( _T ( "/Settings/WeatherFax/Schedules" ) );
     pConf->Write ( _T ( "LoadAtStart" ), m_bLoadSchedulesStart );
     

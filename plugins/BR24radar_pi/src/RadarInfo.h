@@ -126,8 +126,8 @@ class RadarInfo : public wxEvtHandler {
 
   /* User radar settings */
 
-  radar_control_item m_state;  // RadarState (observed)
-  radar_control_item m_wanted_state;
+  radar_control_item m_state;       // RadarState (observed)
+  radar_control_item m_boot_state;  // Can contain RADAR_TRANSMIT until radar is seen at boot
 
   radar_control_item m_orientation;  // 0 = Heading Up, 1 = North Up
 #define ORIENTATION_HEAD_UP (0)
@@ -224,13 +224,13 @@ class RadarInfo : public wxEvtHandler {
   void DeleteDialogs();
   void DeleteReceive();
   void UpdateTransmitState();
+  void RequestRadarState(RadarState state);
 
   bool IsPaneShown();
 
   void UpdateControlState(bool all);
-  void ComputeColorMap();
+  void ComputeColourMap();
   void ComputeTargetTrails();
-  void FlipRadarState();
   wxString &GetRangeText();
   const char *GetDisplayRangeStr(size_t idx);
   int GetDisplayRange() { return m_range.value; };
@@ -248,10 +248,8 @@ class RadarInfo : public wxEvtHandler {
   double m_mouse_lat, m_mouse_lon, m_mouse_vrm, m_mouse_ebl;
 
   // Speedup lookup tables of color to r,g,b, set dependent on m_settings.display_option.
-  GLubyte m_color_map_red[BLOB_RED + 1];
-  GLubyte m_color_map_green[BLOB_RED + 1];
-  GLubyte m_color_map_blue[BLOB_RED + 1];
-  BlobColor m_color_map[UINT8_MAX + 1];
+  wxColour m_colour_map_rgb[BLOB_COLOURS];
+  BlobColour m_colour_map[UINT8_MAX + 1];
 
  private:
   void ResetSpokes();
@@ -273,7 +271,7 @@ class RadarInfo : public wxEvtHandler {
 
   wxString m_range_text;
 
-  BlobColor m_trail_color[TRAIL_MAX_REVOLUTIONS + 1];
+  BlobColour m_trail_colour[TRAIL_MAX_REVOLUTIONS + 1];
 
   DECLARE_EVENT_TABLE()
 };

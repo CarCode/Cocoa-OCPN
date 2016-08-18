@@ -2295,7 +2295,10 @@ bool s52plib::RenderHPGL( ObjRazRules *rzRules, Rule *prule, wxPoint &r, ViewPor
         //  Update the object Bounding box
         //  so that subsequent drawing operations will redraw the item fully
 
-        double latmin, lonmin, latmax, lonmax;
+        double latmin=0.0;
+        double lonmin=0.0;
+        double latmax=0.0;
+        double lonmax=0.0;
         GetPixPointSingleNoRotate( r.x + prule->parm2, r.y + prule->parm3 + bm_height, &latmin, &lonmin, vp );
         GetPixPointSingleNoRotate( r.x + prule->parm2 + bm_width, r.y + prule->parm3, &latmax,  &lonmax, vp );
         LLBBox symbox;
@@ -3441,6 +3444,7 @@ int s52plib::RenderLC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
                     npt = rzRules->obj->npt;
                     ptp = (wxPoint *) malloc( npt * sizeof(wxPoint) );
+
                     wxPoint *pr = ptp;
                     wxPoint p;
                     for( int ip = 0; ip < npt; ip++ ) {
@@ -3474,7 +3478,7 @@ void s52plib::draw_lc_poly( wxDC *pdc, wxColor &color, int width, wxPoint *ptp, 
     //  We calculate the winding direction of the poly
     //  in order to know which side to draw symbol on
     double dfSum = 0.0;
-    
+
     for( int iseg = 0; iseg < npt - 1; iseg++ ) {
         dfSum += ptp[iseg].x * ptp[iseg+1].y - ptp[iseg].y * ptp[iseg+1].x;
     }
@@ -4079,6 +4083,9 @@ int s52plib::RenderCARC_VBO( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         }
 
         //      Save the bitmap ptr and aux parms in the rule
+#ifdef __WXOSX__
+        if(sbm)
+#endif
         prule->pixelPtr = sbm;
         prule->parm0 = ID_wxBitmap;
         prule->parm1 = m_colortable_index;
@@ -4297,7 +4304,10 @@ int s52plib::RenderCARC_VBO( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     //  Update the object Bounding box,
     //  so that subsequent drawing operations will redraw the item fully
 
-    double latmin, lonmin, latmax, lonmax;
+    double latmin=0.0;
+    double lonmin=0.0;
+    double latmax=0.0;
+    double lonmax=0.0;
 
     GetPixPointSingleNoRotate( r.x + rules->razRule->parm2, r.y + rules->razRule->parm3 + b_height, &latmin, &lonmin, vp );
     GetPixPointSingleNoRotate( r.x + rules->razRule->parm2 + b_width, r.y + rules->razRule->parm3, &latmax, &lonmax, vp );
@@ -4680,7 +4690,10 @@ int s52plib::RenderCARC_DisplayList( ObjRazRules *rzRules, Rules *rules, ViewPor
     //  Update the object Bounding box,
     //  so that subsequent drawing operations will redraw the item fully
     
-    double latmin, lonmin, latmax, lonmax;
+    double latmin=0.0;
+    double lonmin=0.0;
+    double latmax=0.0;
+    double lonmax=0.0;
     
     GetPixPointSingleNoRotate( r.x + rules->razRule->parm2, r.y + rules->razRule->parm3 + b_height, &latmin, &lonmin, vp );
     GetPixPointSingleNoRotate( r.x + rules->razRule->parm2 + b_width, r.y + rules->razRule->parm3, &latmax, &lonmax, vp );
@@ -6155,7 +6168,15 @@ void s52plib::RenderToBufferFilledPolygon( ObjRazRules *rzRules, S57Obj *obj, S5
 
         TriPrim *p_tp = ppg->tri_prim_head;
         while( p_tp ) {
-            if(!BBView.IntersectOut(p_tp->box)) {
+            LLBBox box;
+            if(!rzRules->obj->m_chart_context->chart) {          // This is a PlugIn Chart
+                LegacyTriPrim *p_ltp = (LegacyTriPrim *)p_tp;
+                box.Set(p_ltp->miny, p_ltp->minx, p_ltp->maxy, p_ltp->maxx);
+            }
+            else
+                box = p_tp->box;
+
+            if(!BBView.IntersectOut(box)) {
                 //      Get and convert the points
                 wxPoint *pr = ptp;
 
@@ -6232,7 +6253,13 @@ void s52plib::RenderToBufferFilledPolygon( ObjRazRules *rzRules, S57Obj *obj, S5
                     }
                 }
             } // if bbox
-            p_tp = p_tp->p_next; // pick up the next in chain
+            TriPrim *next = p_tp->p_next;
+
+            if(!rzRules->obj->m_chart_context->chart) {          // This is a PlugIn Chart
+                LegacyTriPrim *p_ltp = (LegacyTriPrim *)p_tp;
+                next = (TriPrim *)p_ltp->p_next;
+            }
+            p_tp = next; // pick up the next in chain
         } // while
         free( ptp );
         free( pp3 );
@@ -6485,7 +6512,15 @@ int s52plib::RenderToGLAC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         }
             
         while( p_tp ) {
-            if(!BBView.IntersectOut(p_tp->box)) {
+            LLBBox box;
+            if(!rzRules->obj->m_chart_context->chart) {          // This is a PlugIn Chart
+                LegacyTriPrim *p_ltp = (LegacyTriPrim *)p_tp;
+                box.Set(p_ltp->miny, p_ltp->minx, p_ltp->maxy, p_ltp->maxx);
+            }
+            else
+                box = p_tp->box;
+
+            if(!BBView.IntersectOut(box)) {
                 if(b_useVBO) {
                     glVertexPointer(2, array_gl_type, 2 * array_data_size, (GLvoid *)(vbo_offset));
                     glDrawArrays(p_tp->type, 0, p_tp->nVert);
@@ -6522,18 +6557,24 @@ int s52plib::RenderToGLAC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             }
 
             vbo_offset += p_tp->nVert * 2 * array_data_size;
-            p_tp = p_tp->p_next; // pick up the next in chain
-            
+            TriPrim *next = p_tp->p_next;
+
+            if(!rzRules->obj->m_chart_context->chart) {          // This is a PlugIn Chart
+                LegacyTriPrim *p_ltp = (LegacyTriPrim *)p_tp;
+                next = (TriPrim *)p_ltp->p_next;
+            }
+            p_tp = next; // pick up the next in chain
+
         } // while
         
         if(b_useVBO)
             (s_glBindBuffer)(GL_ARRAY_BUFFER_ARB, 0);
-        
+
         glDisableClientState(GL_VERTEX_ARRAY);            // deactivate vertex array
-        
+
         if(vp->m_projection_type == PROJECTION_MERCATOR)
             glPopMatrix();
-        
+
         if( b_useVBO && b_temp_vbo){
             (s_glBufferData)(GL_ARRAY_BUFFER, 0, NULL, GL_STATIC_DRAW);
             s_glDeleteBuffers(1, (unsigned int *)&rzRules->obj->auxParm0);
@@ -6608,7 +6649,7 @@ int s52plib::RenderToGLAP( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
              glClearDepth(.26);
              glClear( GL_DEPTH_BUFFER_BIT ); // for a fresh start
         }
-            //    Overall chart clip buffer was set at z=0.5
+        //    Overall chart clip buffer was set at z=0.5
         //    Draw this clip geometry at z = .25, so still respecting the previously established clip region
         //    Subsequent drawing to this area at z=.25  will pass only this area if using glDepthFunc(GL_EQUAL);
 
@@ -6620,7 +6661,15 @@ int s52plib::RenderToGLAP( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
         TriPrim *p_tp = ppg->tri_prim_head;
         while( p_tp ) {
-            if(!BBView.IntersectOut(p_tp->box)) {
+            LLBBox box;
+            if(!rzRules->obj->m_chart_context->chart) {          // This is a PlugIn Chart
+                LegacyTriPrim *p_ltp = (LegacyTriPrim *)p_tp;
+                box.Set(p_ltp->miny, p_ltp->minx, p_ltp->maxy, p_ltp->maxx);
+            }
+            else
+                box = p_tp->box;
+
+            if(!BBView.IntersectOut(box)) {
                 //      Get and convert the points
 
                 wxPoint *pr = ptp;
@@ -6695,7 +6744,14 @@ int s52plib::RenderToGLAP( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
                     }
                 }
             } // if bbox
-            p_tp = p_tp->p_next; // pick up the next in chain
+            TriPrim *next = p_tp->p_next;
+
+            if(!rzRules->obj->m_chart_context->chart) {          // This is a PlugIn Chart
+                LegacyTriPrim *p_ltp = (LegacyTriPrim *)p_tp;
+                next = (TriPrim *)p_ltp->p_next;
+            }
+            p_tp = next; // pick up the next in chain
+
         } // while
 
 //        obj_xmin = 0;

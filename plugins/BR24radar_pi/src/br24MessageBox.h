@@ -46,14 +46,21 @@ class radar_info_item {
     value = v;
   };
 
-  wxString *GetValue() {
+  bool GetNewValue(wxString *str) {
     if (mod) {
       wxCriticalSectionLocker lock(m_exclusive);
 
       mod = false;
-      return &value;
+      *str = value;
+      return true;
     }
-    return 0;
+      return false;
+  }
+
+  void GetValue(wxString *str) {
+    wxCriticalSectionLocker lock(m_exclusive);
+
+    *str = value;
   }
 
   radar_info_item() { mod = false; }
@@ -81,7 +88,9 @@ class br24MessageBox : public wxDialog {
   void CreateControls();
   bool UpdateMessage(bool force);  // Check whether message box needs to be visible, return true if shown
   // void SetErrorMessage(wxString &msg);
+  void SetRadarBuildInfo(wxString &msg);
   void SetRadarIPAddress(wxString &msg);
+  void SetRadarType(RadarType radar_type);
   void SetMcastIPAddress(wxString &msg);
   void SetTrueHeadingInfo(wxString &msg);
   void SetMagHeadingInfo(wxString &msg);
@@ -103,8 +112,10 @@ class br24MessageBox : public wxDialog {
   wxWindow *m_parent;
   br24radar_pi *m_pi;
 
+  radar_info_item m_build_info;
   // radar_info_item m_error_message_info;
   radar_info_item m_radar_addr_info;
+  radar_info_item m_radar_type_info;
   radar_info_item m_mcast_addr_info;
   radar_info_item m_true_heading_info;
   radar_info_item m_mag_heading_info;

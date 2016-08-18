@@ -549,6 +549,39 @@ GribRecord *GribRecord::MagnitudeRecord(const GribRecord &rec1, const GribRecord
     return rec;
 }
 
+void GribRecord::Substract(const GribRecord &rec, bool pos)
+{
+    // for now only substract records of same size
+    if (rec.data == 0 || !rec.isOk())
+        return;
+    
+    if (data == 0 || !isOk())
+        return;
+    
+    if (Ni != rec.Ni || Nj != rec.Nj)
+        return;
+    
+    zuint size = Ni *Nj;
+    for (zuint i=0; i<size; i++) {
+        if (rec.data[i] == GRIB_NOTDEF)
+            continue;
+        if (data[i] == GRIB_NOTDEF) {
+            data[i] = -rec.data[i];
+            if (BMSbits != 0) {
+                if (BMSsize > i) {
+                    BMSbits[i >>3] |= 1 << (i&7);
+                }
+            }
+        }
+        else
+            data[i] -= rec.data[i];
+        if (data[i] < 0. && pos) {
+            // data type should be positive...
+            data[i] = 0.;
+        }
+    }
+}
+
 //------------------------------------------------------------------------------
 void  GribRecord::setDataType(const zuchar t)
 {
@@ -774,7 +807,7 @@ bool GribRecord::readGribSection2_GDS(ZUFILE* file) {
 		Di = (Lo2-Lo1) / (Ni-1);
 		Dj = (La2-La1) / (Nj-1);
 	}
-
+/*  Code will never be executed
 if (false) {
 printf("====\n");
 printf("Lo1=%f Lo2=%f    La1=%f La2=%f\n", Lo1,Lo2,La1,La2);
@@ -783,7 +816,7 @@ printf("hasDiDj=%d Di,Dj=(%f %f)\n", hasDiDj, Di,Dj);
 printf("hasBMS=%d\n", hasBMS);
 printf("isScanIpositive=%d isScanJpositive=%d isAdjacentI=%d\n",
                         isScanIpositive,isScanJpositive,isAdjacentI );
-}
+} */
     return ok;
 }
 //----------------------------------------------

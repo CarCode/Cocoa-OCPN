@@ -398,7 +398,7 @@ wxString GribOverlaySettings::GetUnitSymbol(int settings)
             case PERCENTAGE:  return _T("%");
         } break;
         case 6: switch(Settings[settings].m_Units) {
-            case JPKG:  return _T("j/kg");
+            case JPKG:  return _T("J/kg");
         } break;
         case 7: switch(Settings[settings].m_Units) {
             case KNOTS:  return _T("kts");

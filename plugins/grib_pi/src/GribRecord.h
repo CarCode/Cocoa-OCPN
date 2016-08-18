@@ -143,6 +143,9 @@ class GribRecord
         static GribRecord *MagnitudeRecord(const GribRecord &rec1, const GribRecord &rec2);
         ~GribRecord();
 
+        void   multiplyAllData(double k);
+        void Substract(const GribRecord &rec, bool positive=true);
+    
         bool  isOk()  const   {return ok;};
         bool  isDataKnown()  const   {return knownData;};
         bool  isEof() const   {return eof;};
@@ -169,7 +172,9 @@ class GribRecord
         //-----------------------------------------
         int    getPeriodP1() const  { return periodP1; }
         int    getPeriodP2() const  { return periodP2; }
-
+        zuint  getPeriodSec() const  { return periodsec; }
+        zuchar getTimeRange() const { return timeRange; }
+    
         // Number of points in the grid
         int    getNi() const     { return Ni; }
         int    getNj() const     { return Nj; }
@@ -282,6 +287,7 @@ class GribRecord
         // SECTION 3: BIT MAP SECTION (BMS)
         zuint  fileOffset3;
         zuint  sectionSize3;
+        zuint  BMSsize;
         zuchar *BMSbits;
         // SECTION 4: BINARY DATA SECTION (BDS)
         zuint  fileOffset4;
@@ -323,7 +329,6 @@ class GribRecord
 
         time_t makeDate(zuint year,zuint month,zuint day,zuint hour,zuint min,zuint sec);
         zuint  periodSeconds(zuchar unit, zuchar P1, zuchar P2, zuchar range);
-        void   multiplyAllData(double k);
 
         void   print();
 };

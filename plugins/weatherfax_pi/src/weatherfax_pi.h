@@ -5,7 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2015 by Sean D'Epagnier                                 *
+ *   Copyright (C) 2016 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,10 +30,10 @@
 #include <wx/stdpaths.h>
 #include <wx/fileconf.h>
 
-#include "version.h"
+//#include "version.h"
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    5
+#define     PLUGIN_VERSION_MINOR    6
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    13
@@ -83,9 +83,6 @@ public:
       void SetColorScheme(PI_ColorScheme cs);
 
 //    Other public methods
-      void SetWeatherFaxX    (int x){ m_weatherfax_dialog_x = x;}
-      void SetWeatherFaxY    (int x){ m_weatherfax_dialog_y = x;}
-
       void OnWeatherFaxClose();
       void ShowPreferencesDialog( wxWindow* parent );
 
@@ -101,8 +98,6 @@ public:
       int m_iExportColors;
       bool m_bExportDepthMeters;
       wxString m_sExportSoundingDatum;
-
-      wxFileConfig     *m_pconfig;
 
       PlugIn_Position_Fix_Ex m_lastfix;
 

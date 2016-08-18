@@ -1892,9 +1892,8 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
                 toSM(plylat, plylon, 0, 0, smj+0, smj+1);
                 if(!sml_valid)
                     toSM(lastplylat, lastplylon, 0, 0, sml+0, sml+1);
-#ifndef __WXOSX__
             }
-#endif
+
             for(double c=0; c<splits; c++)
             {
                 double lat, lon;
@@ -1918,9 +1917,6 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
                     begin = false;
                 }
             }
-#ifdef __WXOSX__
-            }
-#endif
             if((sml_valid = splits != 1))
                 memcpy(sml, smj, sizeof smj);
             lastplylat = plylat, lastplylon = plylon;

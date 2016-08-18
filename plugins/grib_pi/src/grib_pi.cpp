@@ -297,7 +297,7 @@ void grib_pi::ShowPreferencesDialog( wxWindow* parent )
                 break;
              case 3:
                  //rebuild current activefile with new parameters and rebuild data list with current index
-                 m_pGribCtrlBar->CreateActiveFileFromName( m_pGribCtrlBar->m_bGRIBActiveFile->GetFileName() );
+                 m_pGribCtrlBar->CreateActiveFileFromNames( m_pGribCtrlBar->m_bGRIBActiveFile->GetFileNames() );
                  m_pGribCtrlBar->PopulateComboDataList();
                  m_pGribCtrlBar->TimelineChanged();
                  break;

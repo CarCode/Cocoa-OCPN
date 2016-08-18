@@ -190,7 +190,6 @@ int br24radar_pi::Init(void) {
   m_settings.overlay_transparency = DEFAULT_OVERLAY_TRANSPARENCY;
   m_settings.refreshrate = 1;
   m_settings.timed_idle = 0;
-  m_settings.display_option = 0;
   m_settings.threshold_blue = 255;
   m_settings.threshold_red = 255;
   m_settings.threshold_green = 255;
@@ -349,8 +348,13 @@ void br24radar_pi::ShowPreferencesDialog(wxWindow *parent) {
 
   br24OptionsDialog dlg(parent, m_settings, m_radar[0]->m_radar_type);
   if (dlg.ShowModal() == wxID_OK) {
+    bool old_emulator = m_settings.emulator_on;
     m_settings = dlg.GetSettings();
     SaveConfig();
+    if (!m_settings.emulator_on && old_emulator) {  // If the *OLD* setting had emulator on, re-detect radar type
+        m_radar[0]->m_radar_type = RT_UNKNOWN;
+        m_radar[1]->m_radar_type = RT_UNKNOWN;
+    }
     if (m_settings.enable_dual_radar) {
       m_radar[0]->SetName(_("Radar A"));
       m_radar[1]->StartReceive();
@@ -359,7 +363,7 @@ void br24radar_pi::ShowPreferencesDialog(wxWindow *parent) {
       ShowRadarControl(1, false);
     }
     for (size_t r = 0; r < RADARS; r++) {
-      m_radar[r]->ComputeColorMap();
+      m_radar[r]->ComputeColourMap();
       m_radar[r]->UpdateControlState(true);
     }
     if (!m_guard_bogey_confirmed && m_alarm_sound_timeout && m_settings.guard_zone_timeout) {
@@ -631,14 +635,9 @@ void br24radar_pi::CheckGuardZoneBogeys(void) {
   }
 }
 
-void br24radar_pi::SetDesiredStateAllRadars(RadarState desiredState) {
+void br24radar_pi::RequestStateAllRadars(RadarState state) {
   for (size_t r = 0; r < RADARS; r++) {
-    RadarState state = (RadarState)m_radar[r]->m_state.value;
-    if (state != RADAR_OFF) {
-      if (state != desiredState && !(state == RADAR_WAKING_UP && desiredState == RADAR_TRANSMIT)) {
-        m_radar[r]->FlipRadarState();
-      }
-    }
+      m_radar[r]->RequestRadarState(state);
   }
 }
 
@@ -649,9 +648,6 @@ void br24radar_pi::SetDesiredStateAllRadars(RadarState desiredState) {
  * If the OFF timer is running and has run out, stop the radar and start an ON timer.
  */
 void br24radar_pi::CheckTimedTransmit(RadarState state) {
-  static const int SECONDS_PER_TIMED_IDLE_SETTING = 5 * 60;  // 5 minutes increment for each setting
-  static const int SECONDS_PER_TRANSMIT_BURST = 30;
-
   if (m_settings.timed_idle == 0) {
     return;  // User does not want timed idle
   }
@@ -664,12 +660,12 @@ void br24radar_pi::CheckTimedTransmit(RadarState state) {
 
   if (state == RADAR_TRANSMIT) {
     if (TIMED_OUT(now, m_idle_standby)) {
-      SetDesiredStateAllRadars(RADAR_STANDBY);
+        RequestStateAllRadars(RADAR_STANDBY);
       m_idle_transmit = now + m_settings.timed_idle * SECONDS_PER_TIMED_IDLE_SETTING;
     }
   } else {
     if (TIMED_OUT(now, m_idle_transmit)) {
-      SetDesiredStateAllRadars(RADAR_TRANSMIT);
+      RequestStateAllRadars(RADAR_TRANSMIT);
       int burst = wxMax(m_settings.idle_run_time, SECONDS_PER_TRANSMIT_BURST);
       m_idle_standby = now + burst;
     }
@@ -687,7 +683,7 @@ void br24radar_pi::Notify(void) {
 
   time_t now = time(0);
 
-  if (m_radar[0]->m_radar_type == RT_BR24) {
+  if (m_radar[0]->m_radar_type != RT_4G) {
     m_settings.enable_dual_radar = 0;
   }
 
@@ -916,6 +912,7 @@ bool br24radar_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp) {
 bool br24radar_pi::LoadConfig(void) {
   wxFileConfig *pConf = m_pconfig;
   int v, x, y;
+  wxString s;
 
   if (pConf) {
     pConf->SetPath(wxT("Settings"));
@@ -932,7 +929,7 @@ bool br24radar_pi::LoadConfig(void) {
 
       for (int r = 0; r < RADARS; r++) {
         m_radar[r]->m_orientation.Update(0);
-        m_radar[r]->m_wanted_state.Update(0);
+        m_radar[r]->m_boot_state.Update(0);
         SetControlValue(r, CT_TARGET_TRAILS, 0);
         m_settings.show_radar[r] = true;
         LOG_DIALOG(wxT("BR24radar_pi: LoadConfig: show_radar[%d]=%d"), r, v);
@@ -961,7 +958,8 @@ bool br24radar_pi::LoadConfig(void) {
         pConf->Read(wxString::Format(wxT("Radar%dRotation"), r), &v, 0);
         m_radar[r]->m_orientation.Update(v);
         pConf->Read(wxString::Format(wxT("Radar%dTransmit"), r), &v, 0);
-        m_radar[r]->m_wanted_state.Update(v);
+        m_radar[r]->m_boot_state.Update(v);
+
         pConf->Read(wxString::Format(wxT("Radar%dTrails"), r), &v, 0);
         SetControlValue(r, CT_TARGET_TRAILS, v);
         pConf->Read(wxString::Format(wxT("Radar%dTrueMotion"), r), &v, 0);
@@ -993,7 +991,12 @@ bool br24radar_pi::LoadConfig(void) {
 
     pConf->Read(wxT("AlertAudioFile"), &m_settings.alert_audio_file, m_shareLocn + wxT("alarm.wav"));
     pConf->Read(wxT("ChartOverlay"), &m_settings.chart_overlay, 0);
-    pConf->Read(wxT("DisplayOption"), &m_settings.display_option, 1);
+    pConf->Read(wxT("ColourStrong"), &s, "rgb(255,0,0)");
+    m_settings.strong_colour = wxColour(s);
+    pConf->Read(wxT("ColourIntermediate"), &s, "rgb(0,255,0)");
+    m_settings.intermediate_colour = wxColour(s);
+    pConf->Read(wxT("ColourWeak"), &s, "rgb(0,0,255)");
+    m_settings.weak_colour = wxColour(s);
     pConf->Read(wxT("DrawingMethod"), &m_settings.drawing_method, 0);
     pConf->Read(wxT("EmulatorOn"), &m_settings.emulator_on, false);
     pConf->Read(wxT("EnableDualRadar"), &m_settings.enable_dual_radar, false);
@@ -1021,10 +1024,13 @@ bool br24radar_pi::LoadConfig(void) {
     pConf->Read(wxT("ThresholdGreen"), &m_settings.threshold_green, 100);
     pConf->Read(wxT("ThresholdMultiSweep"), &m_settings.threshold_multi_sweep, 20);
     pConf->Read(wxT("ThresholdRed"), &m_settings.threshold_red, 200);
+    pConf->Read(wxT("TrailColourStart"), &s, "rgb(255,255,255)");
+    m_settings.trail_start_colour = wxColour(s);
+    pConf->Read(wxT("TrailColourEnd"), &s, "rgb(63,63,63)");
+    m_settings.trail_end_colour = wxColour(s);
     pConf->Read(wxT("TrailsOnOverlay"), &m_settings.trails_on_overlay, false);
     pConf->Read(wxT("Transparency"), &m_settings.overlay_transparency, DEFAULT_OVERLAY_TRANSPARENCY);
 
-    m_settings.display_option = wxMax(wxMin(m_settings.display_option, 1), 0);
     m_settings.max_age = wxMax(wxMin(m_settings.max_age, MAX_AGE), MIN_AGE);
     m_settings.refreshrate = wxMax(wxMin(m_settings.refreshrate, 5), 1);
 
@@ -1045,7 +1051,6 @@ bool br24radar_pi::SaveConfig(void) {
     pConf->Write(wxT("AlarmPosY"), m_settings.alarm_pos.y);
     pConf->Write(wxT("AlertAudioFile"), m_settings.alert_audio_file);
     pConf->Write(wxT("ChartOverlay"), m_settings.chart_overlay);
-    pConf->Write(wxT("DisplayOption"), m_settings.display_option);
     pConf->Write(wxT("DrawingMethod"), m_settings.drawing_method);
     pConf->Write(wxT("EmulatorOn"), m_settings.emulator_on);
     pConf->Write(wxT("EnableCOGHeading"), m_settings.enable_cog_heading);
@@ -1071,6 +1076,8 @@ bool br24radar_pi::SaveConfig(void) {
     pConf->Write(wxT("ThresholdGreen"), m_settings.threshold_green);
     pConf->Write(wxT("ThresholdMultiSweep"), m_settings.threshold_multi_sweep);
     pConf->Write(wxT("ThresholdRed"), m_settings.threshold_red);
+    pConf->Write(wxT("TrailColourStart"), m_settings.trail_start_colour.GetAsString());
+    pConf->Write(wxT("TrailColourEnd"), m_settings.trail_end_colour.GetAsString());
     pConf->Write(wxT("TrailsOnOverlay"), m_settings.trails_on_overlay);
     pConf->Write(wxT("Transparency"), m_settings.overlay_transparency);
     pConf->Write(wxT("VerboseLog"), m_settings.verbose);
@@ -1247,7 +1254,7 @@ bool br24radar_pi::SetControlValue(int radar, ControlType controlType, int value
     }
     case CT_TARGET_TRAILS: {
       m_radar[radar]->m_target_trails.Update(value);
-      m_radar[radar]->ComputeColorMap();
+      m_radar[radar]->ComputeColourMap();
       m_radar[radar]->ComputeTargetTrails();
       return true;
     }
