@@ -114,7 +114,17 @@ typedef int SpokeBearing;  // A value from 0 -- LINES_PER_ROTATION indicating a 
 
 enum { BM_ID_RED, BM_ID_RED_SLAVE, BM_ID_GREEN, BM_ID_GREEN_SLAVE, BM_ID_AMBER, BM_ID_AMBER_SLAVE, BM_ID_BLANK, BM_ID_BLANK_SLAVE };
 
-enum HeadingSource { HEADING_NONE, HEADING_HDM, HEADING_HDT, HEADING_COG, HEADING_RADAR };
+// Arranged from low to high priority:
+enum HeadingSource {
+    HEADING_NONE,
+    HEADING_FIX_COG,
+    HEADING_FIX_HDM,
+    HEADING_FIX_HDT,
+    HEADING_NMEA_HDM,
+    HEADING_NMEA_HDT,
+    HEADING_RADAR_HDM,
+    HEADING_RADAR_HDT
+};
 
 enum RadarState { RADAR_OFF, RADAR_STANDBY, RADAR_TRANSMIT, RADAR_WAKING_UP };
 
@@ -393,10 +403,16 @@ class br24radar_pi : public opencpn_plugin_112 {  //  112
 
   void SetMcastIPAddress(wxString &msg);
 
-  void SetRadarHeading(double heading = nan(""), time_t timeout = 0) {
+  void SetRadarHeading(double heading = nan(""), bool isTrue = false) {
     wxCriticalSectionLocker lock(m_exclusive);
     m_radar_heading = heading;
-    m_radar_heading_timeout = timeout;
+    m_radar_heading_true = isTrue;
+      if (m_radar_heading_true) {
+          m_hdt = heading;
+      } else {
+          m_hdm = heading;
+          m_hdt = m_hdm + m_var;
+      }
   }
 
   wxFont m_font;      // The dialog font at a normal size
@@ -418,6 +434,7 @@ class br24radar_pi : public opencpn_plugin_112 {  //  112
   double m_hdm;                    // Last magnetic heading obtained
   time_t m_hdm_timeout;            // When we consider heading is lost
   double m_radar_heading;          // Last heading obtained from radar, or nan if none
+  bool m_radar_heading_true;       // Was TRUE flag set on radar heading?
   time_t m_radar_heading_timeout;  // When last heading was obtained from radar, or 0 if not
 
   // Variation. Used to convert magnetic into true heading.

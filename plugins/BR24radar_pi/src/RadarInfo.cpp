@@ -693,11 +693,7 @@ void RadarInfo::RenderGuardZone() {
 }
 
 void RadarInfo::AdjustRange(int adjustment) {
-#ifdef __WXOSX__
-  const RadarRange *min=0, *max=0;
-#else
-  const RadarRange *min, *max;  
-#endif
+  const RadarRange *min, *max;
   m_auto_range_mode = false;
   m_previous_auto_range_meters = 0;
 
@@ -705,12 +701,14 @@ void RadarInfo::AdjustRange(int adjustment) {
   // the plotter in NM, and it chose the last range, we start using nautic miles as well.
 
   if (m_range.range) {
-    if (m_range.range > g_ranges_nautic && m_range.range < g_ranges_nautic + ARRAY_SIZE(g_ranges_nautic)) {
+    if (m_range.range >= g_ranges_nautic && m_range.range < g_ranges_nautic + ARRAY_SIZE(g_ranges_nautic)) {
       min = g_ranges_nautic;
       max = g_ranges_nautic + ARRAY_SIZE(g_ranges_nautic) - 1;
-    } else if (m_range.range > g_ranges_metric && m_range.range < g_ranges_metric + ARRAY_SIZE(g_ranges_metric)) {
+    } else if (m_range.range >= g_ranges_metric && m_range.range < g_ranges_metric + ARRAY_SIZE(g_ranges_metric)) {
       min = g_ranges_metric;
       max = g_ranges_metric + ARRAY_SIZE(g_ranges_metric) - 1;
+    } else {
+        return;
     }
 
     if (m_radar_type != RT_4G) {
@@ -978,11 +976,8 @@ wxString RadarInfo::GetCanvasTextBottomLeft() {
   wxString s = m_pi->GetGuardZoneText(this);
 
   if (m_state.value == RADAR_TRANSMIT) {
-#ifdef __WXOSX__
-    double distance = 0.0, bearing = 0.0;
-#else
-    double distance = 0.0, bearing;
-#endif
+      double distance = 0.0, bearing = nanl(0);
+
     // Add VRM/EBLs
 
     for (int b = 0; b < BEARING_LINES; b++) {
@@ -1127,34 +1122,35 @@ void RadarInfo::SetBearing(int bearing) {
 void RadarInfo::ClearTrails() { memset(&m_trails, 0, sizeof(m_trails)); }
 
 void RadarInfo::ComputeTargetTrails() {
-  static TrailRevolutionsAge maxRevs[TRAIL_ARRAY_SIZE] = {SECONDS_TO_REVOLUTIONS(0),
+    static TrailRevolutionsAge maxRevs[TRAIL_ARRAY_SIZE] = {0,
                                                           SECONDS_TO_REVOLUTIONS(15),
                                                           SECONDS_TO_REVOLUTIONS(30),
                                                           SECONDS_TO_REVOLUTIONS(60),
                                                           SECONDS_TO_REVOLUTIONS(180),
                                                           SECONDS_TO_REVOLUTIONS(600),
-                                                          255};
+                                                          TRAIL_MAX_REVOLUTIONS + 1};
 
   TrailRevolutionsAge maxRev = maxRevs[m_target_trails.value];
   TrailRevolutionsAge revolution;
-  double coloursPerRevolution = BLOB_HISTORY_COLOURS / (double)maxRev;
+  double coloursPerRevolution = 0.;
   double colour = 0.;
 
   // Like plotter, continuous trails are all very white (non transparent)
-  if (m_target_trails.value == TRAIL_CONTINUOUS) {
-      coloursPerRevolution = 0.;
+    if ((m_target_trails.value > 0) && (m_target_trails.value < TRAIL_CONTINUOUS)) {
+        coloursPerRevolution = BLOB_HISTORY_COLOURS / (double)maxRev;
   }
 
   LOG_VERBOSE(wxT("BR24radar_pi: Target trail value %d = %d revolutions"), m_target_trails.value, maxRev);
 
   // Disperse the BLOB_HISTORY values over 0..maxrev
   for (revolution = 0; revolution <= TRAIL_MAX_REVOLUTIONS; revolution++) {
-    if (revolution >= 1 && revolution <= maxRev) {
+      if (revolution >= 1 && revolution < maxRev) {
         m_trail_colour[revolution] = (BlobColour)(BLOB_HISTORY_0 + (int)colour);
         colour += coloursPerRevolution;
     } else {
         m_trail_colour[revolution] = BLOB_NONE;
     }
+    // LOG_VERBOSE(wxT("BR24radar_pi: ComputeTargetTrails rev=%u color=%d"), revolution, m_trail_colour[revolution]);
   }
 }
 

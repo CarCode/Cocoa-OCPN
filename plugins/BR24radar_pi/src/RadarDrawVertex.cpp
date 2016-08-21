@@ -56,19 +56,18 @@ void RadarDrawVertex::SetBlob(VertexLine* line, int angle_begin, int angle_end, 
   if (line->count + VERTEX_PER_QUAD > line->allocated) {
     const size_t extra = 8 * VERTEX_PER_QUAD;
     line->points = (VertexPoint*)realloc(line->points, (line->allocated + extra) * sizeof(VertexPoint));
-    if (!line->points) {
-      if (!m_oom) {
-        wxLogError(wxT("BR24radar_pi: Out of memory"));
-        m_oom = true;
-      }
-      return;
-    }
     line->allocated += extra;
     m_count += extra;
   }
-#ifdef __WXOSX__
-    if (line->points) {
-#endif
+
+    if (!line->points) {
+        if (!m_oom) {
+            wxLogError(wxT("BR24radar_pi: Out of memory"));
+            m_oom = true;
+        }
+        return;
+    }
+
   // First triangle
   ADD_VERTEX_POINT(arc1, r1, red, green, blue, alpha);
   ADD_VERTEX_POINT(arc1, r2, red, green, blue, alpha);
@@ -81,9 +80,6 @@ void RadarDrawVertex::SetBlob(VertexLine* line, int angle_begin, int angle_end, 
   ADD_VERTEX_POINT(arc2, r2, red, green, blue, alpha);
 
   line->count = count;
-#ifdef __WXOSX__
-    }
-#endif
 }
 
 void RadarDrawVertex::ProcessRadarSpoke(int transparency, SpokeBearing angle, UINT8* data, size_t len) {

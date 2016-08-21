@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: br24radar_pi 16.1.20\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 12:49+0200\n"
+"POT-Creation-Date: 2016-08-20 12:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,8 +21,8 @@ msgstr ""
 msgid "Radar A"
 msgstr ""
 
-#: ../src/br24radar_pi.cpp:236 ../src/br24radar_pi.cpp:781
-#: ../src/br24ControlsDialog.h:59 ../src/br24MessageBox.h:85
+#: ../src/br24radar_pi.cpp:236 ../src/br24ControlsDialog.h:59
+#: ../src/br24MessageBox.h:85
 msgid "Radar"
 msgstr ""
 
@@ -58,11 +58,11 @@ msgstr ""
 msgid "Navico Broadband BR24/3G/4G Radar PlugIn for OpenCPN\n"
 msgstr ""
 
-#: ../src/br24radar_pi.cpp:529 ../src/br24ControlsDialog.cpp:1290
+#: ../src/br24radar_pi.cpp:529 ../src/br24ControlsDialog.cpp:1285
 msgid "Standby in"
 msgstr ""
 
-#: ../src/br24radar_pi.cpp:534 ../src/br24ControlsDialog.cpp:1295
+#: ../src/br24radar_pi.cpp:534 ../src/br24ControlsDialog.cpp:1290
 msgid "Transmit in"
 msgstr ""
 
@@ -82,33 +82,37 @@ msgstr ""
 msgid "Next alarm in"
 msgstr ""
 
-#: ../src/br24radar_pi.cpp:772
+#: ../src/br24radar_pi.cpp:814
 msgid "COG"
 msgstr ""
 
-#: ../src/br24radar_pi.cpp:775
-msgid "HDM"
-msgstr ""
-
-#: ../src/br24radar_pi.cpp:775 ../src/br24MessageBox.cpp:194
-#: ../src/br24MessageBox.cpp:476
-msgid "Variation"
-msgstr ""
-
-#: ../src/br24radar_pi.cpp:778
+#: ../src/br24radar_pi.cpp:818
 msgid "HDT"
 msgstr ""
 
-#: ../src/br24radar_pi.cpp:1138
+#: ../src/br24radar_pi.cpp:821 ../src/br24radar_pi.cpp:838
+#: ../src/RadarPanel.cpp:37
+msgid "RADAR"
+msgstr ""
+
+#: ../src/br24radar_pi.cpp:835
+msgid "HDM"
+msgstr ""
+
+#: ../src/br24radar_pi.cpp:1191
 msgid "GPS"
 msgstr ""
 
-#: ../src/br24radar_pi.cpp:1224
+#: ../src/br24radar_pi.cpp:1263
 msgid "WMM"
 msgstr ""
 
+#: ../src/br24radar_pi.cpp:1384
+msgid "NMEA"
+msgstr ""
+
 #: ../src/br24ControlsDialog.cpp:304 ../src/br24ControlsDialog.cpp:530
-#: ../src/RadarInfo.cpp:1073
+#: ../src/RadarInfo.cpp:1068
 msgid "Auto"
 msgstr ""
 
@@ -116,7 +120,7 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:398 ../src/br24ControlsDialog.cpp:1268
+#: ../src/br24ControlsDialog.cpp:398 ../src/br24ControlsDialog.cpp:1263
 msgid "Standby / Transmit"
 msgstr ""
 
@@ -218,7 +222,7 @@ msgid "Clear cursor"
 msgstr ""
 
 #: ../src/br24ControlsDialog.cpp:424 ../src/br24ControlsDialog.cpp:803
-#: ../src/br24ControlsDialog.cpp:1345
+#: ../src/br24ControlsDialog.cpp:1340
 msgid "Place EBL/VRM"
 msgstr ""
 
@@ -228,7 +232,7 @@ msgid "Target trails"
 msgstr ""
 
 #: ../src/br24ControlsDialog.cpp:426 ../src/br24ControlsDialog.cpp:843
-#: ../src/br24ControlsDialog.cpp:1356
+#: ../src/br24ControlsDialog.cpp:1351
 msgid "True/Relative trails"
 msgstr ""
 
@@ -237,7 +241,7 @@ msgid "Clear trails"
 msgstr ""
 
 #: ../src/br24ControlsDialog.cpp:428 ../src/br24ControlsDialog.cpp:860
-#: ../src/br24ControlsDialog.cpp:1367
+#: ../src/br24ControlsDialog.cpp:1362
 msgid "Orientation"
 msgstr ""
 
@@ -250,7 +254,7 @@ msgid "Transparency"
 msgstr ""
 
 #: ../src/br24ControlsDialog.cpp:431 ../src/br24ControlsDialog.cpp:900
-#: ../src/br24ControlsDialog.cpp:1383
+#: ../src/br24ControlsDialog.cpp:1378
 msgid "Overlay"
 msgstr ""
 
@@ -302,9 +306,9 @@ msgstr ""
 #: ../src/br24ControlsDialog.cpp:576 ../src/br24ControlsDialog.cpp:592
 #: ../src/br24ControlsDialog.cpp:617 ../src/br24ControlsDialog.cpp:710
 #: ../src/br24ControlsDialog.cpp:826 ../src/br24ControlsDialog.cpp:854
-#: ../src/br24ControlsDialog.cpp:941 ../src/br24ControlsDialog.cpp:1072
-#: ../src/br24ControlsDialog.cpp:1273 ../src/br24ControlsDialog.cpp:1386
-#: ../src/br24ControlsDialog.cpp:1388
+#: ../src/br24ControlsDialog.cpp:941 ../src/br24ControlsDialog.cpp:1069
+#: ../src/br24ControlsDialog.cpp:1268 ../src/br24ControlsDialog.cpp:1381
+#: ../src/br24ControlsDialog.cpp:1383
 msgid "Off"
 msgstr ""
 
@@ -318,8 +322,8 @@ msgstr ""
 msgid "High"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:565 ../src/br24ControlsDialog.cpp:1069
-#: ../src/br24ControlsDialog.cpp:1388
+#: ../src/br24ControlsDialog.cpp:565 ../src/br24ControlsDialog.cpp:854
+#: ../src/br24ControlsDialog.cpp:1069 ../src/br24ControlsDialog.cpp:1383
 msgid "On"
 msgstr ""
 
@@ -348,7 +352,7 @@ msgid "Circle"
 msgstr ""
 
 #: ../src/br24ControlsDialog.cpp:751 ../src/br24ControlsDialog.cpp:854
-#: ../src/br24ControlsDialog.cpp:1069 ../src/br24ControlsDialog.cpp:1072
+#: ../src/br24ControlsDialog.cpp:1069
 msgid "Multi Sweep Filter"
 msgstr ""
 
@@ -408,67 +412,67 @@ msgstr ""
 msgid "Guard zone"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1276
+#: ../src/br24ControlsDialog.cpp:1271
 msgid "Standby"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1279
+#: ../src/br24ControlsDialog.cpp:1274
 msgid "Waking up"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1282
+#: ../src/br24ControlsDialog.cpp:1277
 msgid "Transmit"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1324
+#: ../src/br24ControlsDialog.cpp:1319
 msgid "Hide both windows"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1326
+#: ../src/br24ControlsDialog.cpp:1321
 msgid "Show other window"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1330
+#: ../src/br24ControlsDialog.cpp:1325
 msgid "Show this window"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1332
+#: ../src/br24ControlsDialog.cpp:1327
 msgid "Show both windows"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1336
+#: ../src/br24ControlsDialog.cpp:1331
 msgid "Hide window"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1336
+#: ../src/br24ControlsDialog.cpp:1331
 msgid "Show window"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1342
+#: ../src/br24ControlsDialog.cpp:1337
 msgid "Clear EBL/VRM"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1359
+#: ../src/br24ControlsDialog.cpp:1354
 msgid "True"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1361
+#: ../src/br24ControlsDialog.cpp:1356
 msgid "Relative"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1371
+#: ../src/br24ControlsDialog.cpp:1366
 msgid "North up"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1374
+#: ../src/br24ControlsDialog.cpp:1369
 msgid "Head up"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1377
+#: ../src/br24ControlsDialog.cpp:1372
 msgid "???"
 msgstr ""
 
-#: ../src/br24ControlsDialog.cpp:1662
+#: ../src/br24ControlsDialog.cpp:1656
 msgid "Guard Zone"
 msgstr ""
 
@@ -518,8 +522,12 @@ msgstr ""
 msgid "or"
 msgstr ""
 
-#: ../src/br24MessageBox.cpp:187 ../src/br24MessageBox.cpp:469
+#: ../src/br24MessageBox.cpp:187 ../src/br24MessageBox.cpp:470
 msgid "Magnetic heading"
+msgstr ""
+
+#: ../src/br24MessageBox.cpp:194 ../src/br24MessageBox.cpp:477
+msgid "Variation"
 msgstr ""
 
 #: ../src/br24MessageBox.cpp:199 ../src/br24MessageBox.cpp:204
@@ -534,31 +542,31 @@ msgstr ""
 msgid "&Hide Radar"
 msgstr ""
 
-#: ../src/br24MessageBox.cpp:339
+#: ../src/br24MessageBox.cpp:340
 msgid "Radar type"
 msgstr ""
 
-#: ../src/br24MessageBox.cpp:343
+#: ../src/br24MessageBox.cpp:344
 msgid "Radar IP"
 msgstr ""
 
-#: ../src/br24MessageBox.cpp:363
+#: ../src/br24MessageBox.cpp:364
 msgid "Radar requirements OK:"
 msgstr ""
 
-#: ../src/br24MessageBox.cpp:365
+#: ../src/br24MessageBox.cpp:366
 msgid "Radar requires the following"
 msgstr ""
 
-#: ../src/br24MessageBox.cpp:447 ../src/RadarInfo.cpp:915
+#: ../src/br24MessageBox.cpp:448 ../src/RadarInfo.cpp:913
 msgid "Emulator"
 msgstr ""
 
-#: ../src/br24MessageBox.cpp:455
+#: ../src/br24MessageBox.cpp:456
 msgid "Ethernet card"
 msgstr ""
 
-#: ../src/br24MessageBox.cpp:462
+#: ../src/br24MessageBox.cpp:463
 msgid "True heading"
 msgstr ""
 
@@ -722,32 +730,28 @@ msgstr ""
 msgid "Shader"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:910
+#: ../src/RadarInfo.cpp:908
 msgid "North Up"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:912
+#: ../src/RadarInfo.cpp:910
 msgid "Head Up"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1026
+#: ../src/RadarInfo.cpp:1021
 msgid "No radar"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1029
+#: ../src/RadarInfo.cpp:1024
 msgid "Radar is in Standby"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1032
+#: ../src/RadarInfo.cpp:1027
 msgid "Radar is waking up"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1038
+#: ../src/RadarInfo.cpp:1033
 msgid "Radar not transmitting"
-msgstr ""
-
-#: ../src/RadarPanel.cpp:37
-msgid "RADAR"
 msgstr ""
 
 #: ../src/RadarPanel.cpp:60 ../src/RadarPanel.cpp:155
