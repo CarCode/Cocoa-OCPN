@@ -99,7 +99,7 @@ int Osenc::ingestHeader(const wxString &senc_file_name)
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-            dun = 1;
+//            dun = 1;  //  Not used
             break;
         }
 
@@ -182,7 +182,7 @@ int Osenc::ingest(const wxString &senc_file_name,
     while( !dun ) {
 
         if( my_fgets( buf, MAX_LINE, fpx ) == 0 ) {
-            dun = 1;
+//            dun = 1;  //  Not used
             break;
         }
 
@@ -504,7 +504,7 @@ int Osenc::createSenc124(const wxString& FullPath000, const wxString& SENCFileNa
     wxStopWatch progsw;
     int nProg = poReader->GetFeatureCount();
     
-    if(b_showProg){
+    if(wxThread::IsMain() && b_showProg){
          s_ProgDialog = new wxProgressDialog( Title, Message, nProg, NULL,
                                          wxPD_AUTO_HIDE | wxPD_SMOOTH | wxSTAY_ON_TOP | wxPD_APP_MODAL);
     }
@@ -807,14 +807,14 @@ void Osenc::CreateSENCRecord124( OGRFeature *pFeature, FILE * fpOut, int mode, S
                         
                         //    Capture the Vector Table geometry indices
                         int *pNAME_RCID;
-                        int *pORNT;
+//                        int *pORNT;  // Not used
                         int nEdgeVectorRecords;
                         OGRFeature *pEdgeVectorRecordFeature;
                         
                         pNAME_RCID = (int *) pFeature->GetFieldAsIntegerList( "NAME_RCID",
                         &nEdgeVectorRecords );
                         
-                        pORNT = (int *) pFeature->GetFieldAsIntegerList( "ORNT", NULL );
+//                        pORNT = (int *) pFeature->GetFieldAsIntegerList( "ORNT", NULL );  //  Not used
                         
                         fprintf( fpOut, "LSINDEXLIST %d\n", nEdgeVectorRecords );
                         //                    fwrite(pNAME_RCID, 1, nEdgeVectorRecords * sizeof(int), fpOut);
@@ -964,7 +964,7 @@ void Osenc::CreateSENCRecord124( OGRFeature *pFeature, FILE * fpOut, int mode, S
                 
                 memcpy( pd, ps, 9 );                                  // byte order, type, count
                 
-                ps += 9;
+//                ps += 9;  //  Not used
                 pd += 9;
                 
                 pdf = (float *) pd;
@@ -1191,8 +1191,8 @@ int Osenc::ingestCell( const wxString &FullPath000, const wxString &working_dir 
     
     //      Open the OGRS57DataSource
     //      This will ingest the .000 file from the working dir, and apply updates
-    
-    int open_return = poS57DS->Open( m_tmpup_array.Item( 0 ).mb_str(), TRUE, NULL/*&s_ProgressCallBack*/ ); ///172
+//  Not used ???
+//    int open_return = poS57DS->Open( m_tmpup_array.Item( 0 ).mb_str(), TRUE, NULL/*&s_ProgressCallBack*/ ); ///172
     //if( open_return == BAD_UPDATE )         ///172
     //    bbad_update = true;
     
@@ -1444,7 +1444,11 @@ void Osenc::CreateSENCVectorEdgeTable( FILE * fpOut, S57Reader *poReader )
         //  Transcribe points to a buffer
         
         if(nPoints){
+#ifdef __WXOSX__
+            double *ppd = (double *)malloc(nPoints * (double)sizeof(MyPoint));
+#else
             double *ppd = (double *)malloc(nPoints * sizeof(MyPoint));
+#endif
             double *ppr = ppd;
             
             for( int i = 0; i < nPoints; i++ ) {

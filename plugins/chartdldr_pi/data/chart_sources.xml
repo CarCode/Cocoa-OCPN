@@ -849,7 +849,7 @@
         <catalog>
           <name>Africa GE RNC Charts</name>
           <type>RNC</type>
-          <location>http://www.topperdiek.de/dl/GE-RNC_Africa_Catalog.xml</location>
+          <location>https://www.topperdiek.de/dl/GE-RNC_Africa_Catalog.xml</location>
           <dir>{USERDATA}/RNC/AFRICA</dir>
         </catalog>
 <!-- Currently not avaialable
@@ -863,13 +863,13 @@
         <catalog>
           <name>Atlantic GE RNC Charts</name>
           <type>RNC</type>
-          <location>http://www.topperdiek.de/dl/GE-RNC_Atlantic_Catalog.xml</location>
+          <location>https://www.topperdiek.de/dl/GE-RNC_Atlantic_Catalog.xml</location>
           <dir>{USERDATA}/RNC/ATLANTIC</dir>
         </catalog>
         <catalog>
           <name>Australia GE RNC Charts</name>
           <type>RNC</type>
-          <location>http://www.topperdiek.de/dl/GE-RNC_Australia_Catalog.xml</location>
+          <location>https://www.topperdiek.de/dl/GE-RNC_Australia_Catalog.xml</location>
           <dir>{USERDATA}/RNC/AUSTRALIA</dir>
         </catalog>
         <catalog>
@@ -893,7 +893,7 @@
         <catalog>
           <name>Brasil GE RNC Charts</name>
           <type>RNC</type>
-          <location>http://www.topperdiek.de/dl/GE-RNC_Brazil_Catalog.xml</location>
+          <location>https://www.topperdiek.de/dl/GE-RNC_Brazil_Catalog.xml</location>
           <dir>{USERDATA}/RNC/GE-BRASIL</dir>
         </catalog>
         <catalog>
@@ -914,10 +914,18 @@
           <location>https://raw.githubusercontent.com/chartcatalogs/catalogs/master/CZ_IENC_Catalog.xml</location>
           <dir>{USERDATA}/ENC/CZ_INLAND</dir>
         </catalog>
+<!-- Currently faulty at github, now at topperdiek
         <catalog>
           <name>France Inland ENC Charts</name>
           <type>ENC</type>
           <location>https://raw.githubusercontent.com/chartcatalogs/catalogs/master/FR_IENC_Catalog.xml</location>
+          <dir>{USERDATA}/ENC/FR_INLAND</dir>
+        </catalog>
+-->
+        <catalog>
+          <name>France Inland ENC Charts</name>
+          <type>ENC</type>
+          <location>https://www.topperdiek.de/dl/FR_IENC_Catalog.xml</location>
           <dir>{USERDATA}/ENC/FR_INLAND</dir>
         </catalog>
         <catalog>
@@ -935,13 +943,13 @@
         <catalog>
           <name>IndeanOcean GE RNC Charts</name>
           <type>RNC</type>
-          <location>http://www.topperdiek.de/dl/GE-RNC_IndeanOcean_Catalog.xml</location>
+          <location>https://www.topperdiek.de/dl/GE-RNC_IndeanOcean_Catalog.xml</location>
           <dir>{USERDATA}/RNC/INDEANOCEAN</dir>
         </catalog>
         <catalog>
           <name>Mediterranean GE RNC Charts</name>
           <type>RNC</type>
-          <location>http://www.topperdiek.de/dl/GE-RNC_Mediterranean_Catalog.xml</location>
+          <location>https://www.topperdiek.de/dl/GE-RNC_Mediterranean_Catalog.xml</location>
           <dir>{USERDATA}/RNC/GE-RNC_MED</dir>
         </catalog>
         <catalog>
@@ -949,6 +957,18 @@
           <type>ENC</type>
           <location>https://raw.githubusercontent.com/chartcatalogs/catalogs/master/NL_IENC_Catalog.xml</location>
           <dir>{USERDATA}/ENC/NL_INLAND</dir>
+        </catalog>
+	<catalog>
+          <name>Netherland OSM RNC Charts</name>
+          <type>RNC</type>
+          <location>https://www.topperdiek.de/dl/OSM-RNC-NL-Catalog.xml</location>
+          <dir>{USERDATA}/RNC/OSM-NL</dir>
+        </catalog>
+        <catalog>
+          <name>Netherland OSM Raster Charts</name>
+          <type>RNC</type>
+          <location>http://www.openwaterkaart.nl/charts/OSM-raster-nl/OSM-raster-nl-catalog.xml</location>
+          <dir>{USERDATA}/ENC/NL_OSMRASTER</dir>
         </catalog>
         <catalog>
           <name>New Zealand RNC Nautical Charts</name>
@@ -959,7 +979,7 @@
         <catalog>
           <name>PacificOcean GE RNC Charts</name>
           <type>RNC</type>
-          <location>http://www.topperdiek.de/dl/GE-RNC_PacificOcean_Catalog.xml</location>
+          <location>https://www.topperdiek.de/dl/GE-RNC_PacificOcean_Catalog.xml</location>
           <dir>{USERDATA}/RNC/GE-RNC_PACIFICOCEAN</dir>
         </catalog>
         <catalog>
@@ -977,7 +997,7 @@
         <catalog>
           <name>SEAsia GE RNC Charts</name>
           <type>ENC</type>
-          <location>http://www.topperdiek.de/dl/GE-RNC_SEAsia_Catalog.xml</location>
+          <location>https://www.topperdiek.de/dl/GE-RNC_SEAsia_Catalog.xml</location>
           <dir>{USERDATA}/RNC/GE-RNC_SEAsia</dir>
         </catalog>
         <catalog>

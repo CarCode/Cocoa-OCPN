@@ -672,6 +672,12 @@ void br24radar_pi::CheckTimedTransmit(RadarState state) {
   }
 }
 
+void br24radar_pi::SetRadarHeading(double heading, bool isTrue) {
+    wxCriticalSectionLocker lock(m_exclusive);
+    m_radar_heading = heading;
+    m_radar_heading_true = isTrue;
+}
+
 // Notify
 // ------
 // Called once a second by the timer on radar[0].
@@ -682,10 +688,6 @@ void br24radar_pi::Notify(void) {
   LOG_VERBOSE(wxT("BR24radar_pi: main timer"));
 
   time_t now = time(0);
-
-  if (m_radar[0]->m_radar_type != RT_4G) {
-    m_settings.enable_dual_radar = 0;
-  }
 
   if (m_opengl_mode_changed || m_notify_radar_window_viz) {
     m_opengl_mode_changed = false;
@@ -810,16 +812,19 @@ void br24radar_pi::Notify(void) {
           info = wxT("");
           break;
     case HEADING_FIX_COG:
-          info = _("COG") + wxT(" ") + wxString::Format(wxT("%3.1f"), m_hdt);
+          info = _("COG");
           break;
     case HEADING_FIX_HDT:
     case HEADING_NMEA_HDT:
-          info = _("HDT") + wxT(" ") + wxString::Format(wxT("%3.1f"), m_hdt);
+          info = _("HDT");
           break;
     case HEADING_RADAR_HDT:
-          info = _("RADAR") + wxT(" ") + wxString::Format(wxT("%3.1f"), m_hdt);
+          info = _("RADAR");
           break;
   }
+    if (info.Len() > 0 && !wxIsNaN(m_hdt)) {
+        info << wxString::Format(wxT(" %3.1f"), m_hdt);
+    }
   m_pMessageBox->SetTrueHeadingInfo(info);
     switch (m_heading_source) {
         case HEADING_NONE:
@@ -831,11 +836,14 @@ void br24radar_pi::Notify(void) {
             break;
         case HEADING_FIX_HDM:
         case HEADING_NMEA_HDM:
-            info = _("HDM") + wxT(" ") + wxString::Format(wxT("%3.1f"), m_hdm);
+            info = _("HDM");
             break;
         case HEADING_RADAR_HDM:
-            info = _("RADAR") + wxT(" ") + wxString::Format(wxT("%3.1f"), m_hdm);
+            info = _("RADAR");
             break;
+    }
+    if (info.Len() > 0 && !wxIsNaN(m_hdm)) {
+        info << wxString::Format(wxT(" %3.1f"), m_hdm);
     }
   m_pMessageBox->SetMagHeadingInfo(info);
   m_pMessageBox->UpdateMessage(false);

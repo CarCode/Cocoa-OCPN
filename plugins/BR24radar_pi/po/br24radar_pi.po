@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: br24radar_pi 3.4.64\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-20 13:01+0200\n"
-"PO-Revision-Date: 2016-08-20 13:01+0200\n"
+"POT-Creation-Date: 2016-08-23 13:00+0200\n"
+"PO-Revision-Date: 2016-08-23 13:00+0200\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: CarCode <carcode@me.com>\n"
 "Language: de_DE\n"
@@ -82,37 +82,37 @@ msgstr "Zone"
 msgid "Next alarm in"
 msgstr "Nächster Alarm in"
 
-#: ../src/br24radar_pi.cpp:814
+#: ../src/br24radar_pi.cpp:815
 msgid "COG"
 msgstr "COG"
 
-#: ../src/br24radar_pi.cpp:818
+#: ../src/br24radar_pi.cpp:819
 msgid "HDT"
 msgstr "HDT"
 
-#: ../src/br24radar_pi.cpp:821 ../src/br24radar_pi.cpp:838
+#: ../src/br24radar_pi.cpp:822 ../src/br24radar_pi.cpp:842
 #: ../src/RadarPanel.cpp:37
 msgid "RADAR"
 msgstr "RADAR"
 
-#: ../src/br24radar_pi.cpp:835
+#: ../src/br24radar_pi.cpp:839
 msgid "HDM"
 msgstr "HDM"
 
-#: ../src/br24radar_pi.cpp:1191
+#: ../src/br24radar_pi.cpp:1198
 msgid "GPS"
 msgstr "GPS"
 
-#: ../src/br24radar_pi.cpp:1263
+#: ../src/br24radar_pi.cpp:1270
 msgid "WMM"
 msgstr "WMM"
 
-#: ../src/br24radar_pi.cpp:1384
+#: ../src/br24radar_pi.cpp:1391
 msgid "NMEA"
 msgstr "NMEA"
 
 #: ../src/br24ControlsDialog.cpp:304 ../src/br24ControlsDialog.cpp:530
-#: ../src/RadarInfo.cpp:1068
+#: ../src/RadarInfo.cpp:1091
 msgid "Auto"
 msgstr "Auto"
 
@@ -558,9 +558,9 @@ msgstr "Radar Erfordernisse OK:"
 
 #: ../src/br24MessageBox.cpp:366
 msgid "Radar requires the following"
-msgstr "Radar erfordert das Folgende"
+msgstr "Radar erfordert das Folgende:"
 
-#: ../src/br24MessageBox.cpp:448 ../src/RadarInfo.cpp:913
+#: ../src/br24MessageBox.cpp:448 ../src/RadarInfo.cpp:936
 msgid "Emulator"
 msgstr "Emulator"
 
@@ -732,27 +732,27 @@ msgstr "Vertex Array"
 msgid "Shader"
 msgstr "Schattierung"
 
-#: ../src/RadarInfo.cpp:908
+#: ../src/RadarInfo.cpp:931
 msgid "North Up"
 msgstr "Nord oben"
 
-#: ../src/RadarInfo.cpp:910
+#: ../src/RadarInfo.cpp:933
 msgid "Head Up"
 msgstr "Richtung oben"
 
-#: ../src/RadarInfo.cpp:1021
+#: ../src/RadarInfo.cpp:1044
 msgid "No radar"
 msgstr "Kein Radar"
 
-#: ../src/RadarInfo.cpp:1024
+#: ../src/RadarInfo.cpp:1047
 msgid "Radar is in Standby"
 msgstr "Radar ist in Standby"
 
-#: ../src/RadarInfo.cpp:1027
+#: ../src/RadarInfo.cpp:1050
 msgid "Radar is waking up"
 msgstr "Radar wacht auf"
 
-#: ../src/RadarInfo.cpp:1033
+#: ../src/RadarInfo.cpp:1056
 msgid "Radar not transmitting"
 msgstr "Radar sendet nicht"
 
@@ -789,6 +789,7 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #
 #
 #
+#
 #~ msgid ""
 #~ "<<\n"
 #~ "Back"
@@ -796,6 +797,7 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #~ "<<\n"
 #~ "Zurück"
 
+#
 #
 #
 #
@@ -809,9 +811,11 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #
 #
 #
+#
 #~ msgid "Data sources"
 #~ msgstr "Datenquellen"
 
+#
 #
 #
 #
@@ -825,9 +829,11 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #
 #
 #
+#
 #~ msgid "Downsample"
 #~ msgstr "Downsample"
 
+#
 #
 #
 #
@@ -838,9 +844,11 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 
 #
 #
+#
 #~ msgid "Guard Zone Display"
 #~ msgstr "Überwachungszone Anzeige"
 
+#
 #
 #
 #
@@ -858,14 +866,17 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #
 #
 #
+#
 #~ msgid "Idle time is set to"
 #~ msgstr "Leerlaufzeit ist auf"
 
 #
 #
+#
 #~ msgid "Monocolor-Red"
 #~ msgstr "Einfarbig-Rot"
 
+#
 #
 #
 #~ msgid "Multi-color"
@@ -876,9 +887,11 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #
 #
 #
+#
 #~ msgid "Multi-color 2"
 #~ msgstr "Mehrfarbig 2"
 
+#
 #
 #
 #~ msgid "Overlay Display Options"
@@ -889,9 +902,11 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #
 #
 #
+#
 #~ msgid "Radar scanner is Idling"
 #~ msgstr "Radar Scanner im Leerlauf"
 
+#
 #
 #
 #~ msgid "Radar window and overlay"
@@ -899,9 +914,11 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 
 #
 #
+#
 #~ msgid "Radar window only"
 #~ msgstr "Nur Radar Fenster"
 
+#
 #
 #
 #
@@ -915,9 +932,11 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #
 #
 #
+#
 #~ msgid "Set Guard Point"
 #~ msgstr "Setze Überwachpunkt"
 
+#
 #
 #
 #
@@ -928,6 +947,7 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 
 #
 #
+#
 #~ msgid "Trail Display"
 #~ msgstr "Spuren Anzeige"
 
@@ -936,9 +956,11 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #
 #
 #
+#
 #~ msgid "Turn Radar always ON"
 #~ msgstr "Schalte Radar immer EIN"
 
+#
 #
 #
 #
@@ -958,9 +980,11 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #
 #
 #
+#
 #~ msgid "ca."
 #~ msgstr "ca."
 
+#
 #
 #
 #
@@ -974,6 +998,7 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #
 #
 #
+#
 #~ msgid "minutes"
 #~ msgstr "Minuten"
 
@@ -982,9 +1007,11 @@ msgstr "Ungültige IP Adresse für UDP Multicast"
 #
 #
 #
+#
 #~ msgid "minutes until next run"
 #~ msgstr "Minuten bis nächster Lauf"
 
+#
 #
 #
 #
