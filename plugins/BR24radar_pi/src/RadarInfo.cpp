@@ -472,38 +472,37 @@ void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, UINT
   }
 
   if (m_target_trails.value != 0) {
-    if (m_trails_motion.value == TARGET_MOTION_TRUE) {
       PolarToCartesianLookupTable *polarLookup;
       polarLookup = GetPolarToCartesianLookupTable();
-      if (angle % 32 == 0) {  // run 1 out of 32 spokes
-        UpdateTrailPosition();
-      }
-
+      UpdateTrailPosition();
+      
       for (size_t radius = 0; radius < len; radius++) {
-        UINT8 *trail = &m_trails.true_trails[polarLookup->intx[bearing][radius] +
-                                             RETURNS_PER_LINE][polarLookup->inty[bearing][radius] + RETURNS_PER_LINE];
-        if (data[radius] >= weakest_normal_blob) {
-          *trail = 1;
-        } else {
-          if (*trail > 0 && *trail < TRAIL_MAX_REVOLUTIONS) {
-            (*trail)++;
-          }
-          data[radius] = m_trail_colour[*trail];
+          UINT8 *trail = &m_trails.true_trails[polarLookup->intx[bearing][radius] +
+                                               RETURNS_PER_LINE][polarLookup->inty[bearing][radius] + RETURNS_PER_LINE];
+          if (data[radius] >= weakest_normal_blob) {
+              *trail = 1;
+          } else {
+              if (*trail > 0 && *trail < TRAIL_MAX_REVOLUTIONS) {
+                  (*trail)++;
+              }
+              if (m_trails_motion.value == TARGET_MOTION_TRUE) {
+                  data[radius] = m_trail_colour[*trail];
         }
       }
-    } else if (m_trails_motion.value == TARGET_MOTION_RELATIVE) {
+    }
       UINT8 *trail = m_trails.relative_trails[angle];
       for (size_t radius = 0; radius < len; radius++) {
-        if (data[radius] >= weakest_normal_blob) {
-          *trail = 1;
-        } else {
-          if (*trail > 0 && *trail < TRAIL_MAX_REVOLUTIONS) {
-            (*trail)++;
-          }
-          data[radius] = m_trail_colour[*trail];
+          if (data[radius] >= weakest_normal_blob) {
+              *trail = 1;
+          } else {
+              if (*trail > 0 && *trail < TRAIL_MAX_REVOLUTIONS) {
+                  (*trail)++;
+              }
+              if (m_trails_motion.value == TARGET_MOTION_RELATIVE) {
+                  data[radius] = m_trail_colour[*trail];
         }
-        trail++;
       }
+          trail++;
     }
   }
 
@@ -737,11 +736,11 @@ void RadarInfo::AdjustRange(int adjustment) {
       max--;  // only 4G has longest ranges
     }
 
-    if (adjustment < 0 && m_range.range > min) {
+    if (adjustment > 0 && m_range.range > min) {
       LOG_VERBOSE(wxT("BR24radar_pi: Change radar range from %d/%d to %d/%d"), m_range.range[0].meters,
                   m_range.range[0].actual_meters, m_range.range[-1].meters, m_range.range[-1].actual_meters);
       m_transmit->SetRange(m_range.range[-1].meters);
-    } else if (adjustment > 0 && m_range.range < max) {
+    } else if (adjustment < 0 && m_range.range < max) {
       LOG_VERBOSE(wxT("BR24radar_pi: Change radar range from %d/%d to %d/%d"), m_range.range[0].meters,
                   m_range.range[0].actual_meters, m_range.range[+1].meters, m_range.range[+1].actual_meters);
       m_transmit->SetRange(m_range.range[+1].meters);
