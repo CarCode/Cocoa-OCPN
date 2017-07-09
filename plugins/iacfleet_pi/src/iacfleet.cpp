@@ -94,8 +94,11 @@ bool IACFleetUIDialog::Create ( wxWindow *parent, iacfleet_pi *ppi, wxWindowID i
 
     m_currentDir = initial_dir;
     m_sortType = sort_type;
-    long wstyle = wxDEFAULT_FRAME_STYLE;
-
+#ifdef __WXMAC__
+    long wstyle = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP;
+#else
+    long wstyle = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER;
+#endif
     if( !wxDialog::Create( parent, id, caption, pos, size, wstyle ) )
         return false;
 #include "folder.xpm"
@@ -758,12 +761,12 @@ void IACFleetUIDialog::OnNoaaDownload( wxCommandEvent& event )
     if( m_rbAnalysis->GetValue() )
     {
         prefix = _T("IAC_NOAA_A");
-        url = _T("http://weather.noaa.gov/pub/data/raw/as/asxx21.egrr..txt");
+        url = _T("http://tgftp.nws.noaa.gov/data/raw/as/asxx21.egrr..txt");
     }
     else
     {
         prefix = _T("IAC_NOAA_F");
-        url = _T("http://weather.noaa.gov/pub/data/raw/fs/fsxx21.egrr..txt");
+        url = _T("http://tgftp.nws.noaa.gov/data/raw/fs/fsxx21.egrr..txt");
     }
 
     wxString filename = wxString::Format(_T("%s_%i-%i-%i_%i-%i.txt"), prefix.c_str(),

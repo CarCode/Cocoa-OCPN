@@ -109,6 +109,8 @@ public:
     bool GetFullscreen();
     bool SetFullscreen( bool bFull );
     double GetDisplayDensityFactor();
+
+    double m_pt_per_pixel;
 //--------------------------------------------------------------------------
 //      Per-Platform file/directory support
 //--------------------------------------------------------------------------
@@ -149,7 +151,17 @@ public:
 #define PLATFORM_CAP_FASTPAN   2
     void LaunchLocalHelp();
 
+    void SetLocaleSearchPrefixes( void );
+    wxString GetDefaultSystemLocale();
+    wxString GetAdjustedAppLocale();
+
+#if wxUSE_XLOCALE
+    wxString ChangeLocale(wxString &newLocaleID, wxLocale *presentLocale, wxLocale** newLocale);
+#endif
+
 private:
+    bool        GetWindowsMonitorSize( int *width, int *height);
+
     wxString    m_homeDir;
     wxString    m_exePath;
     wxString    m_SData_Dir;
@@ -160,9 +172,10 @@ private:
     FILE        *flog;
     wxLog       *m_Oldlogger;
     wxString    large_log_message;
-
-
-
+    wxSize      m_displaySize;
+    wxSize      m_displaySizeMM;
+    int         m_monitorWidth, m_monitorHeight;
+    bool        m_bdisableWindowsDisplayEnum;
 };
 
 

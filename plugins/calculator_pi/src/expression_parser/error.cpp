@@ -61,6 +61,35 @@ Error::Error(const int row, const int col, const int id, ...)
  */
 const char* Error::msgdesc(const int id)
 {
+#ifdef __WXOSX__
+    switch (id)
+    {
+            // syntax errors
+        case 1: return "Syntax Fehler in Teil \"%s\"";
+        case 2: return "Syntax Fehler";
+        case 3: return "Klammer ) fehlt";
+        case 4: return "Leerer Ausdruck";
+        case 5: return "Unerwarteter Teil \"%s\"";
+        case 6: return "Unerwartetes Ende des Ausdrucks";
+        case 7: return "Wert erwartet";
+            
+            // wrong or unknown operators, functions, variables
+        case 101: return "Unbekannter Operator %s";
+        case 102: return "Unbekannte Funktion %s";
+        case 103: return "Unbekannte Variabele %s";
+            
+            // domain errors
+        case 200: return "Zu langer Ausdruck, maximale Anzahl Zeichen erreicht";
+            
+            // error in assignments of variables
+        case 300: return "Definition Variabele fehlgeschlagen";
+            
+            // error in functions
+        case 400: return "Integer Wert erwartet in Funktion %s";
+    }
+    
+    return "Unbekannter Fehler";
+#else
     switch (id)
     {
         // syntax errors
@@ -88,4 +117,5 @@ const char* Error::msgdesc(const int id)
     }
 
     return "Unknown error";
+#endif
 }

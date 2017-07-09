@@ -87,12 +87,12 @@ iacfleet_pi::iacfleet_pi( void *ppimgr ) : opencpn_plugin_113( ppimgr )
 
     // Create the PlugIn icons
     initialize_images();
-    wxCurlBase::Init();
+//    wxCurlBase::Init();
 }
 
 iacfleet_pi::~iacfleet_pi()
 {
-    wxCurlBase::Shutdown();
+//    wxCurlBase::Shutdown();
     deinitialize_images();
 }
 
@@ -196,17 +196,25 @@ void iacfleet_pi::OnToolbarToolCallback( int id )
     if( NULL == m_pDialog )
     {
         m_pDialog = new IACFleetUIDialog();
+        long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER;
+#ifdef __WXMAC__
+        style |= wxSTAY_ON_TOP;
+#endif
+        wxPoint pos = wxPoint( m_dialog_x, m_dialog_y);
+        if( !m_parent_window->GetRect().Contains( pos ) )
+            pos = wxDefaultPosition; // If it seems we are off position, move to the default position
         m_pDialog->Create( m_parent_window,
                 this,
                 -1,
                 _("IACFleet Display Control"),
                 m_dir,
                 m_sort_type,
-                wxPoint( m_dialog_x, m_dialog_y),
-                wxSize( m_dialog_sx, m_dialog_sy) );
+                pos,
+                wxSize( m_dialog_sx, m_dialog_sy),
+                style );
     }
 
-    m_pDialog->Show();                        // Show modeless, so it stays on the screen
+    m_pDialog->Show( !m_pDialog->IsShown() ); // Show modeless, so it stays on the screen
 }
 
 void iacfleet_pi::OnDialogClose()

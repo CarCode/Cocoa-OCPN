@@ -113,6 +113,7 @@ public:
     void RenderRasterChartRegionGL(ChartBase *chart, ViewPort &vp, LLRegion &region);
     bool PurgeChartTextures(ChartBase *pc, bool b_purge_factory = false);
     void ClearAllRasterTextures(void);
+
     void DrawGLOverLayObjects(void);
     void GridDraw( );
     void FlushFBO( void );
@@ -136,6 +137,8 @@ public:
     double mvmatrix[16], projmatrix[16];
 protected:
     void RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_region );
+    void RenderQuiltViewGLText( ViewPort &vp, const OCPNRegion &rect_region );
+
     void BuildFBO();
     void SetupOpenGL();
     bool TextureCrunch(double factor);
@@ -229,6 +232,8 @@ protected:
 };
 
 extern void BuildCompressedCache();
-
+// für Archiv Oktober2016
+//#include "glTextureManager.h"
+//extern glTextureManager   *g_glTextureManager;
 
 #endif

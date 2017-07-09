@@ -38,10 +38,10 @@
 
 //#include "version.h"
 #define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    5
+#define     PLUGIN_VERSION_MINOR    9
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    7
+#define     MY_API_VERSION_MINOR    13
 
 //#include "../../../include/ocpn_plugin.h"
 #include "ocpn_plugin.h"
@@ -52,7 +52,7 @@
 //    The PlugIn Class Definition
 //----------------------------------------------------------------------------------------------------------
 class IACFleetUIDialog;
-class iacfleet_pi : public opencpn_plugin_17
+class iacfleet_pi : public opencpn_plugin_113
 {
 public:
     iacfleet_pi( void *ppimgr );

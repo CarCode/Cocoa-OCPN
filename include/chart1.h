@@ -45,10 +45,10 @@
 #include "viewport.h"
 #include "nmea0183.h"
 #include "chartdbs.h"
+#include "s52s57.h"
 
 #ifdef USE_S57
 #include "cpl_error.h"
-
 //    Global Static error reporting function
 extern "C" void MyCPLErrorHandler( CPLErr eErrClass, int nError,
                              const char * pszErrorMsg );
@@ -70,6 +70,7 @@ double AnchorDistFix( double const d, double const AnchorPointMinDist, double co
 
 bool TestGLCanvas(wxString prog_dir);
 bool ReloadLocale();
+void ApplyLocale( void );
 
 void LoadS57();
 
@@ -84,6 +85,7 @@ class OCPN_MsgEvent;
 class options;
 class Track;
 class OCPN_ThreadMessageEvent;
+class wxHtmlWindow;
 
 //----------------------------------------------------------------------------
 //   constants
@@ -374,6 +376,7 @@ class MyFrame: public wxFrame
 
     void ProcessCanvasResize(void);
 
+    void BuildMenuBar( void );
     void ApplyGlobalSettings(bool bFlyingUpdate, bool bnewtoolbar);
     void RegisterGlobalMenuItems();
     void UpdateGlobalMenuItems();
@@ -395,6 +398,8 @@ class MyFrame: public wxFrame
     bool ToggleLights( bool doToggle = true, bool temporary = false );
     void ToggleAnchor(void);
     void TrackOn(void);
+    void SetENCDisplayCategory( enum _DisCat nset );
+
     Track *TrackOff(bool do_add_point = false);
     void TrackDailyRestart(void);
     bool ShouldRestartTrack();
@@ -408,6 +413,7 @@ class MyFrame: public wxFrame
                            wxString toggledSVGfile );
     void ToggleQuiltMode(void);
     void ToggleCourseUp(void);
+    
     void SetQuiltMode(bool bquilt);
     bool GetQuiltMode(void);
     void UpdateControlBar(void);
@@ -517,7 +523,7 @@ class MyFrame: public wxFrame
     void SetChartUpdatePeriod(ViewPort &vp);
 
     void ApplyGlobalColorSchemetoStatusBar(void);
-    void PostProcessNNEA(bool pos_valid, const wxString &sfixtime);
+    void PostProcessNNEA(bool pos_valid, bool cog_sog_valid, const wxString &sfixtime);
 
     bool ScrubGroupArray();
     wxString GetGroupName(int igroup);
@@ -549,7 +555,6 @@ class MyFrame: public wxFrame
     //      Plugin Support
     int                 m_next_available_plugin_tool_id;
 
-    double              m_COGFilterLast;
     double              COGFilterTable[MAX_COGSOG_FILTER_SECONDS];
     double              SOGFilterTable[MAX_COGSOG_FILTER_SECONDS];
 
@@ -674,5 +679,31 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
+class  OCPN_TimedHTMLMessageDialog: public wxDialog
+{
+
+public:
+    OCPN_TimedHTMLMessageDialog(wxWindow *parent, const wxString& message,
+                                const wxString& caption = wxMessageBoxCaptionStr,
+                                int tSeconds = -1,
+                                long style = wxOK|wxCENTRE,
+                                bool bFixedFont = false,
+                                const wxPoint& pos = wxDefaultPosition);
+
+    void OnYes(wxCommandEvent& event);
+    void OnNo(wxCommandEvent& event);
+    void OnCancel(wxCommandEvent& event);
+    void OnClose( wxCloseEvent& event );
+    void OnTimer(wxTimerEvent &evt);
+    void RecalculateSize( void );
+
+
+private:
+    int m_style;
+    wxTimer m_timer;
+    wxHtmlWindow *msgWindow;
+
+    DECLARE_EVENT_TABLE()
+};
 
 #endif

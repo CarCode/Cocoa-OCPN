@@ -306,6 +306,11 @@ void CompressImageRGBpow2_Flatten_Throttle( u8 const* rgb, int width, int height
     }
     
     // loop over blocks
+    double tt = 0;
+
+    int bw = std::min(width, 4);
+    int bh = std::min(height, 4);
+
     for( int y = 0; y < height; y += 4 )
     {
         for( int x = 0; x < width; x += 4 )
@@ -319,8 +324,8 @@ void CompressImageRGBpow2_Flatten_Throttle( u8 const* rgb, int width, int height
                 for( int px = 0; px < 4; ++px )
                 {
                     // get the source pixel in the image
-                    int sx = x + px;
-                    int sy = y + py;
+                    int sx = x + (px % bw);
+                    int sy = y + (py % bh);
                     
                     // copy the rgba value
                     u8 const* sourcePixel = rgb + 3*( width*sy + sx );

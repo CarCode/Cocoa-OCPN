@@ -31,6 +31,7 @@
 #include "pluginmanager.h"
 #include "OCPNPlatform.h"
 #include "TrackPropDlg.h"
+#include "Track.h"
 
 extern double               gLat, gLon;
 extern RouteList           *pRouteList;
@@ -505,25 +506,6 @@ void TrackPropDlg::CreateControlsCompact()
     itemBoxSizer16->Add( m_sdbBtmBtnsSizerOK, 0, wxALIGN_RIGHT | wxALIGN_BOTTOM | wxALL, 5 );
     m_sdbBtmBtnsSizerOK->SetDefault();
     
-    /*
-     //Make it look nice and add the needed non-standard buttons
-     int w1, w2, h;
-     ((wxWindowBase *)m_stName)->GetSize( &w1, &h );
-     ((wxWindowBase *)m_stFrom)->GetSize( &w2, &h );
-     ((wxWindowBase *)m_stName)->SetMinSize( wxSize(wxMax(w1, w2), h) );
-     ((wxWindowBase *)m_stFrom)->SetMinSize( wxSize(wxMax(w1, w2), h) );
-     */
-#if 0
-    Connect( m_menuItemDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( TrackPropDlg::OnDeleteLink ) );
-    Connect( m_menuItemEdit->GetId(), wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( TrackPropDlg::OnEditLink ) );
-    Connect( m_menuItemAdd->GetId(), wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler( TrackPropDlg::OnAddLink ) );
-#endif
-    
-    
-    
 //    int char_size = GetCharWidth();  // Not used
     //Set the maximum size of the entire  dialog
     int width, height;
@@ -885,14 +867,6 @@ void TrackPropDlg::CreateControls( void )
       ((wxWindowBase *)m_stName)->SetMinSize( wxSize(wxMax(w1, w2), h) );
       ((wxWindowBase *)m_stFrom)->SetMinSize( wxSize(wxMax(w1, w2), h) );
 
-#if 0
-      Connect( m_menuItemDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED,
-               wxCommandEventHandler( TrackPropDlg::OnDeleteLink ) );
-      Connect( m_menuItemEdit->GetId(), wxEVT_COMMAND_MENU_SELECTED,
-               wxCommandEventHandler( TrackPropDlg::OnEditLink ) );
-      Connect( m_menuItemAdd->GetId(), wxEVT_COMMAND_MENU_SELECTED,
-               wxCommandEventHandler( TrackPropDlg::OnAddLink ) );
-#endif               
 
     m_panelBasic->SetScrollRate(5, 5);
     m_panelAdvanced->SetScrollRate(5, 5);
@@ -962,7 +936,6 @@ void TrackPropDlg::InitializeList()
                 item.SetText(m_lcPoints->OnGetItemText( in, j) );
                 m_lcPoints->SetItem(item);
             }
-            in++;
         }
     }
 }
@@ -992,7 +965,7 @@ bool TrackPropDlg::UpdateProperties()
         int NbrOfLinks = m_pTrack->m_HyperlinkList->GetCount();
         HyperlinkList *hyperlinklist = m_pTrack->m_HyperlinkList;
     //            int len = 0;
-            if( NbrOfLinks > 0 ) {
+        if( NbrOfLinks > 0 ) {
             wxHyperlinkListNode *linknode = hyperlinklist->GetFirst();
             while( linknode ) {
                 Hyperlink *link = linknode->GetData();
@@ -1028,6 +1001,9 @@ bool TrackPropDlg::UpdateProperties()
     // Calculate AVG speed if we are showing a track and total time
     TrackPoint *last_point = m_pTrack->GetLastPoint();
     TrackPoint *first_point = m_pTrack->GetPoint( 0 );
+#ifdef __WXOSX__
+    double trackLength = m_pTrack->Length( );
+#endif
     double total_seconds = 0.;
 
     wxString speed( _T("--") );
@@ -1037,7 +1013,11 @@ bool TrackPropDlg::UpdateProperties()
             total_seconds =
                     last_point->GetCreateTime().Subtract( first_point->GetCreateTime() ).GetSeconds().ToDouble();
             if( total_seconds != 0. ) {
+#ifdef __WXOSX__
+                m_avgspeed = trackLength / total_seconds * 3600;
+#else
                 m_avgspeed = m_pTrack->Length() / total_seconds * 3600;
+#endif
             } else {
                 m_avgspeed = 0;
             }
@@ -1049,8 +1029,11 @@ bool TrackPropDlg::UpdateProperties()
 
     //  Total length
     wxString slen;
+#ifdef __WXOSX__
+    slen.Printf( wxT("%5.2f ") + getUsrDistanceUnit(), toUsrDistance( trackLength ) );
+#else
     slen.Printf( wxT("%5.2f ") + getUsrDistanceUnit(), toUsrDistance( m_pTrack->Length() ) );
-
+#endif
     m_tTotDistance->SetValue( slen );
 
     //  Time
@@ -1292,22 +1275,27 @@ void TrackPropDlg::OnTrackPropListClick( wxListEvent& event )
     else
         selected_no = itemno;
 
-//    m_pRoute->ClearHighlights();
+    m_pTrack->m_HighlightedTrackPoint = -1;
 
     if( itemno >= 0 ) {
         TrackPoint *prp = m_pTrack->GetPoint(itemno);
         if( prp ) {
-//            prp->m_bPtIsSelected = true;                // highlight the trackpoint
+            m_pTrack->m_HighlightedTrackPoint = itemno; // highlight the trackpoint
 
             if( !( m_pTrack->m_bIsInLayer ) && !( m_pTrack == g_pActiveTrack ) ) {
                 m_nSelected = selected_no + 1;
                 m_sdbBtmBtnsSizerSplit->Enable( true );
             }
             gFrame->JumpToPosition( prp->m_lat, prp->m_lon, cc1->GetVPScale() );
+#ifdef __WXMSW__
+            if(m_lcPoints)
+                m_lcPoints->SetFocus();
+#endif
         }
     }
     if( selected_no == 0 || selected_no == m_pTrack->GetnPoints() - 1)
         m_sdbBtmBtnsSizerSplit->Enable( false );
+
 }
 
 void TrackPropDlg::OnTrackPropMenuSelected( wxCommandEvent& event )
@@ -1591,7 +1579,7 @@ void TrackPropDlg::OnOKBtnClick( wxCommandEvent& event )
 
     if( b_found_track ) {
         SaveChanges();              // write changes to globals and update config
-//        m_pRoute->ClearHighlights();
+        m_pTrack->ClearHighlights();
     }
 
     m_bStartNow = false;
@@ -1608,7 +1596,23 @@ void TrackPropDlg::OnOKBtnClick( wxCommandEvent& event )
 
 void TrackPropDlg::OnCancelBtnClick( wxCommandEvent& event )
 {
+    bool b_found_track = false;
+    wxTrackListNode *node = pTrackList->GetFirst();
+    while( node ) {
+        Track *ptrack = node->GetData();
+
+        if( ptrack == m_pTrack ) {
+            b_found_track = true;
+            break;
+        }
+        node = node->GetNext();
+    }
+
+    if( b_found_track )
+        m_pTrack->ClearHighlights();
+
     Hide();
+    cc1->InvalidateGL();
     cc1->Refresh( false );
 
     event.Skip();

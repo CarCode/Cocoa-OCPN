@@ -678,7 +678,7 @@ wxString IACFile::ReadToken( wxInputStream &file )
 
 // draw the fleet code data
 // returns true if anything was drawn
-bool IACFile::Draw( wxDC *pmdc, PlugIn_ViewPort *vp )
+bool IACFile::Draw( wxDC *dc, PlugIn_ViewPort *vp )
 {
     bool retval = false;
     // draw only if file was successfully read and decoded
@@ -706,13 +706,13 @@ bool IACFile::Draw( wxDC *pmdc, PlugIn_ViewPort *vp )
         GetCanvasPixLL(vp, &p2, m_maxlat, minlon);
         GetCanvasPixLL(vp, &p3, m_maxlat, maxlon);
         GetCanvasPixLL(vp, &p4, m_minlat, maxlon);
-        if( pmdc )
+        if( dc )
         {
             if( p3.x > 0 && p1.x < vp->pix_width )
             {
-                pmdc->SetPen( wxPen( colour, ISOBAR_WIDTH ) );
+                dc->SetPen( wxPen( colour, ISOBAR_WIDTH ) );
                 wxPoint points[] = { p1, p2, p3, p4, p1 };
-                pmdc->DrawLines( 5, points );
+                dc->DrawLines( 5, points );
             }
         }
         else
@@ -739,10 +739,10 @@ bool IACFile::Draw( wxDC *pmdc, PlugIn_ViewPort *vp )
         // I love this kind of crazy code - it is like in the good
         // old days of programming where everything was allowed.
         srand(77);
-        retval |= DrawSystems( pmdc, vp, (IACSystems &)m_pressure );
-        retval |= DrawSystems( pmdc, vp, (IACSystems &)m_frontal );
-        retval |= DrawSystems( pmdc, vp, (IACSystems &)m_isobars );
-        retval |= DrawSystems( pmdc, vp, (IACSystems &)m_tropical );
+        retval |= DrawSystems( dc, vp, (IACSystems &)m_pressure );
+        retval |= DrawSystems( dc, vp, (IACSystems &)m_frontal );
+        retval |= DrawSystems( dc, vp, (IACSystems &)m_isobars );
+        retval |= DrawSystems( dc, vp, (IACSystems &)m_tropical );
     }
     return retval;
 }

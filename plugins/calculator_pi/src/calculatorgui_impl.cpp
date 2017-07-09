@@ -454,49 +454,49 @@ wxString Dlg::OnCalculate( void )
     i_counter=i_buffer;
 
     bool error_check=false;
-    if ((Text.StartsWith(_("Error"))) || (Text.StartsWith(_("Ans")))){
+    if ((Text.StartsWith(_T("Error"))) || (Text.StartsWith(_T("Ans")))){
         error_check=true;
     }
 
-    if ((Text.StartsWith(_("clear"))) || (Text.StartsWith(_("Clear")))|| (Text.StartsWith(_("CLEAR")))){ //clear old results
+    if ((Text.StartsWith(_T("clear"))) || (Text.StartsWith(_T("Clear")))|| (Text.StartsWith(_T("CLEAR")))){ //clear old results
         m_listCtrl->ClearAll();
         error_check=true;
     }
-    if ((Text.StartsWith(_("HideHelp"))) || (Text.StartsWith(_("hidehelp")))|| (Text.StartsWith(_("HIDEHELP"))) ||(Text.StartsWith(_("ShowHelp"))) || (Text.StartsWith(_("showhelp")))|| (Text.StartsWith(_("SHOWHELP"))) ){
+    if ((Text.StartsWith(_T("HideHelp"))) || (Text.StartsWith(_T("hidehelp")))|| (Text.StartsWith(_T("HIDEHELP"))) ||(Text.StartsWith(_T("ShowHelp"))) || (Text.StartsWith(_T("showhelp")))|| (Text.StartsWith(_T("SHOWHELP"))) ){
         m_bshowhelpB=(!m_bshowhelpB);
         this->set_Buttons();
         error_check=true;
     }
 
-    if ((Text.StartsWith(_("HideHistory"))) || (Text.StartsWith(_("hidehistory")))|| (Text.StartsWith(_("HIDEHISTORY")))||(Text.StartsWith(_("ShowHistory"))) || (Text.StartsWith(_("showhistory")))|| (Text.StartsWith(_("SHOWHISTORY")))){
+    if ((Text.StartsWith(_T("HideHistory"))) || (Text.StartsWith(_T("hidehistory")))|| (Text.StartsWith(_T("HIDEHISTORY")))||(Text.StartsWith(_T("ShowHistory"))) || (Text.StartsWith(_T("showhistory")))|| (Text.StartsWith(_T("SHOWHISTORY")))){
         m_bshowhistoryB=(!m_bshowhistoryB);
         this->set_Buttons();
         error_check=true;
     }
 
-    if ((Text.StartsWith(_("HideCalculate"))) || (Text.StartsWith(_("hidecalculate")))|| (Text.StartsWith(_("HIDECALCULATE"))) || (Text.StartsWith(_("ShowCalculate"))) || (Text.StartsWith(_("showcalculate")))|| (Text.StartsWith(_("SHOWCALCULATE")))){
+    if ((Text.StartsWith(_T("HideCalculate"))) || (Text.StartsWith(_T("hidecalculate")))|| (Text.StartsWith(_T("HIDECALCULATE"))) || (Text.StartsWith(_T("ShowCalculate"))) || (Text.StartsWith(_T("showcalculate")))|| (Text.StartsWith(_T("SHOWCALCULATE")))){
         m_bCalculateB=(!m_bCalculateB);
         this->set_Buttons();
         error_check=true;
     }
 
-    if ((Text.StartsWith(_("HideFunction"))) || (Text.StartsWith(_("hidefunction")))|| (Text.StartsWith(_("HIDEFUNCTION"))) || (Text.StartsWith(_("showfunction")))|| (Text.StartsWith(_("ShowFunction")))|| (Text.StartsWith(_("SHOWFUNCTION")))){
+    if ((Text.StartsWith(_T("HideFunction"))) || (Text.StartsWith(_T("hidefunction")))|| (Text.StartsWith(_T("HIDEFUNCTION"))) || (Text.StartsWith(_T("showfunction")))|| (Text.StartsWith(_T("ShowFunction")))|| (Text.StartsWith(_T("SHOWFUNCTION")))){
         m_bshowFunction=(!m_bshowFunction);
         this->set_Buttons();
         error_check=true;
     }
 
-    if ((Text.StartsWith(_("Help"))) || (Text.StartsWith(_("HELP")))|| (Text.StartsWith(_("help")))){
+    if ((Text.StartsWith(_T("Help"))) || (Text.StartsWith(_T("HELP")))|| (Text.StartsWith(_T("help")))){
         this->OnHelp ();
         error_check=true;
     }
 
-    if ((Text.StartsWith(_("Function"))) || (Text.StartsWith(_("function")))|| (Text.StartsWith(_("FUNCTION")))){
+    if ((Text.StartsWith(_T("Function"))) || (Text.StartsWith(_T("function")))|| (Text.StartsWith(_T("FUNCTION")))){
         this->OnFunction ();
         error_check=true;
     }
 
-    if ((Text.StartsWith(_("history"))) || (Text.StartsWith(_("History")))|| (Text.StartsWith(_("HISTORY")))){
+    if ((Text.StartsWith(_T("history"))) || (Text.StartsWith(_("History")))|| (Text.StartsWith(_T("HISTORY")))){
         m_bshowhistory=(!m_bshowhistory);
         this->m_Help->SetValue(m_bshowhistory);
         this->set_History();

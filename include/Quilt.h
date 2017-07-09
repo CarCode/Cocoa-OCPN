@@ -63,7 +63,7 @@ public:
 
     const LLRegion &GetCandidateRegion();
     LLRegion &GetReducedCandidateRegion(double factor);
-    
+
     int dbIndex;
     int ChartScale;
     bool b_include;
@@ -93,7 +93,7 @@ public:
     }
 
     void EnableHighDefinitionZoom( bool value ) { m_b_hidef = value;}
-    
+
     bool BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_db_index, ViewPort &vp_in);
     void UnlockQuilt();
     bool Compose( const ViewPort &vp );
@@ -103,6 +103,8 @@ public:
     ChartBase *GetFirstChart();
     ChartBase *GetNextChart();
     ChartBase *GetLargestScaleChart();
+    ChartBase *GetNextSmallerScaleChart();
+
     ArrayOfInts GetQuiltIndexArray( void );
     bool IsQuiltDelta( ViewPort &vp );
     bool IsChartQuiltableRef( int db_index );
@@ -127,10 +129,11 @@ public:
         return m_PatchList.GetCount();
     }
     double GetBestStartScale(int dbi_ref_hint, const ViewPort &vp_in);
-    
 
     void ComputeRenderRegion( ViewPort &vp, OCPNRegion &chart_region );
-    bool RenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion &chart_region );
+    bool RenderQuiltRegionViewOnDCNoText( wxMemoryDC &dc, ViewPort &vp, OCPNRegion &chart_region );
+    bool RenderQuiltRegionViewOnDCTextOnly( wxMemoryDC &dc, ViewPort &vp, OCPNRegion &chart_region );
+
     bool IsVPBlittable( ViewPort &VPoint, int dx, int dy, bool b_allow_vector = false );
     ChartBase *GetChartAtPix( ViewPort &VPoint, wxPoint p );
     ChartBase *GetOverlayChartAtPix( ViewPort &VPoint, wxPoint p );
@@ -160,7 +163,7 @@ public:
     int AdjustRefOnZoomOut( double proposed_scale_onscreen );
     int AdjustRefOnZoomIn( double proposed_scale_onscreen );
     int AdjustRefOnZoom( bool b_zin, ChartFamilyEnum family, ChartTypeEnum type, double proposed_scale_onscreen );
-    
+
     void SetHiliteIndex( int index ) {
         m_nHiLiteIndex = index;
     }
@@ -173,6 +176,9 @@ public:
     int GetRefChartdbIndex( void ) {
         return m_refchart_dbIndex;
     }
+
+    ChartBase *GetRefChart();
+
     int GetQuiltProj( void )
     {
         return m_quilt_proj;
@@ -208,21 +214,24 @@ public:
     QuiltPatch *GetCurrentPatch();
     bool IsChartInQuilt( ChartBase *pc );
     bool IsChartInQuilt( wxString &full_path);
-    
+
     bool IsQuiltVector( void );
     LLRegion GetHiliteRegion( );
     static LLRegion GetChartQuiltRegion( const ChartTableEntry &cte, ViewPort &vp );
-    
+
+    int GetNomScaleMin(int scale, ChartTypeEnum type, ChartFamilyEnum family);
+    int GetNomScaleMax(int scale, ChartTypeEnum type, ChartFamilyEnum family);
+
 private:
+    bool DoRenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion &chart_region );
+    bool DoRenderQuiltRegionViewOnDCTextOnly( wxMemoryDC& dc, ViewPort &vp, OCPNRegion &chart_region );
+
     void EmptyCandidateArray( void );
     void SubstituteClearDC( wxMemoryDC &dc, ViewPort &vp );
     int GetNewRefChart( void );
 
-    int GetNomScaleMin(int scale, ChartTypeEnum type, ChartFamilyEnum family);
-    int GetNomScaleMax(int scale, ChartTypeEnum type, ChartFamilyEnum family);
-    
     bool IsChartS57Overlay( int db_index );
-    
+
     LLRegion m_covered_region;
     OCPNRegion m_rendered_region; // used only in dc mode
 
@@ -259,7 +268,7 @@ private:
     int m_zout_dbindex;
     int m_zout_family;
     int m_zout_type;
-    
+
     int m_lost_refchart_dbIndex;
     bool m_b_hidef;
 

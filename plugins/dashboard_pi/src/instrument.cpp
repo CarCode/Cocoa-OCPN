@@ -393,8 +393,11 @@ wxString toSDMM ( int NEflag, double a )
                         d = -d;
                         c = 'S';
                   }
-
+#ifdef __WXOSX__
+                  s.Printf ( _T ( "%03d %02ld.%04ld %c" ), d, m / 1000, ( m % 1000 ), c );
+#else
                   s.Printf ( _T ( "%03d %02ld.%03ld %c" ), d, m / 1000, ( m % 1000 ), c );
+#endif
             }
             else if ( NEflag == 2 )
             {
@@ -408,7 +411,11 @@ wxString toSDMM ( int NEflag, double a )
                         d = -d;
                         c = 'W';
                   }
+#ifdef __WXOSX__
+                  s.Printf ( _T ( "%03d %02ld.%04ld %c" ), d, m / 1000, ( m % 1000 ), c );
+#else
                   s.Printf ( _T ( "%03d %02ld.%03ld %c" ), d, m / 1000, ( m % 1000 ), c );
+#endif
             }
       }
       return s;

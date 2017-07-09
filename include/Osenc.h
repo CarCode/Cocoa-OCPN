@@ -35,6 +35,9 @@
 
 #include "s52s57.h"
 #include "mygdal/ogr_s57.h"
+#include "mygdal/cpl_csv.h"
+#include "chartbase.h"
+
 
 //      Various error return enums
 #define         SENC_NO_ERROR                           0
@@ -50,7 +53,7 @@
 
 
 //      Fwd Definitions
-class wxProgressDialog;
+class wxGenericProgressDialog;
 
 //--------------------------------------------------------------------------
 //      Osenc definition
@@ -131,7 +134,7 @@ private:
     S57ClassRegistrar   *m_poRegistrar;
     wxArrayString       m_tmpup_array;
 
-    wxProgressDialog    *s_ProgDialog;
+    wxGenericProgressDialog    *m_ProgDialog;
 
 
 

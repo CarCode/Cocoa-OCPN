@@ -80,12 +80,19 @@ void LATITUDE::Set( double position, const wxString& north_or_south )
 
    Latitude = position;
    wxString ts = north_or_south;
-
+#ifdef __WXOSX__
+    if ( !ts.IsEmpty( ) && ts.Trim(false)[ 0 ] == _T('N') )
+#else
    if ( ts.Trim(false)[ 0 ] == _T('N') )
+#endif
    {
       Northing = North;
    }
+#ifdef __WXOSX__
+    else if ( !ts.IsEmpty( ) && ts.Trim(false)[ 0 ] == _T('S') )
+#else
    else if (ts.Trim(false)[ 0 ] == _T('S') )
+#endif
    {
       Northing = South;
    }

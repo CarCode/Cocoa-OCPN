@@ -43,16 +43,32 @@
 #include "TexFont.h"
 
 #include "../../../include/ocpn_plugin.h"
-//#include "ocpn_plugin.h"
+
+#ifdef ocpnUSE_GL
+#ifdef __WXMSW__
+#include "GL/gl.h"            // local copy for Windows
+#include <GL/glu.h>
+#else
+
+#ifndef __OCPN__ANDROID__
+#include <GL/gl.h>
+#include <GL/glu.h>
+#else
+#include "qopengl.h"                  // this gives us the qt runtime gles2.h
+#include "GL/gl_private.h"
+#endif
+
+#endif
+#endif
 
 #include <vector>
 #include <algorithm>
 
-#define ISOBAR_WIDTH 2
-#define FRONT_WIDTH 5
-#define GL_MIN_LINE_WIDTH 1.5
-#define NUMBERS_FONT_SIZE 9
-#define SYSTEMS_FONT_SIZE 15
+#define ISOBAR_WIDTH        2
+#define FRONT_WIDTH         5
+#define GL_MIN_LINE_WIDTH   1.5
+#define NUMBERS_FONT_SIZE   9
+#define SYSTEMS_FONT_SIZE   15
 
 #define QUASISTATIONARY_SURFACE           0
 #define QUASISTATIONARY_ABOVE_SURFACE     1
@@ -94,21 +110,21 @@ class IACSystem
 public:
     IACSystem( void );
     //void SetMovement(unsigned int m, unsigned int d, unsigned int s);
-#ifndef __WXOSX__
-    wxString ToString( bool includePosition = true ) const;
-    bool Draw( wxDC *pmdc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont );  // war virtual
-#else
+//#ifndef __WXOSX__
+//    wxString ToString( bool includePosition = true ) const;
+//    bool Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont );  // war virtual
+//#else
     virtual wxString ToString( bool includePosition = true ) const;
     virtual bool Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont );
-#endif
+//#endif
     wxString GetTab( const wxChar*(tab[]), size_t index ) const;
     wxString PositionsToString( void ) const;
     bool DrawPositions( wxDC *dc, PlugIn_ViewPort *vp );
-#ifndef __WXOSX__
-    bool FindAtPos( GeoPoint &pos, double deviation );
-#else
+//#ifndef __WXOSX__
+//    bool FindAtPos( GeoPoint &pos, double deviation );
+//#else
     virtual bool FindAtPos( GeoPoint &pos, double deviation );
-#endif
+//#endif
     GeoPoints   m_positions;
     int         m_type;
     int         m_char;
@@ -117,25 +133,28 @@ public:
     unsigned int m_movement;  //
     unsigned int m_direction; // in deg
     unsigned int m_speed;     // in knots, 99=unknown
+//#ifndef __WXOSX_COCOA__
+//    virtual ~IACSystem(void);    // _wxObjArrayIACSystems kein Destructor ???
+//#endif
 
 protected:
     wxColor     m_isoLineColor;
     float       m_isoLineWidth;
 
 private:
-#ifndef __WXOSX__
-    wxString GetType( size_t index ) const;
-    wxString GetShortType( size_t index ) const;
-    wxString GetCharacteristic( size_t index ) const;
-    wxString GetValue( void ) const {return wxEmptyString;}
-    wxString GetIntensity( void ) const {return wxEmptyString;}
-#else
+//#ifndef __WXOSX__
+//    wxString GetType( size_t index ) const;
+//    wxString GetShortType( size_t index ) const;
+//    wxString GetCharacteristic( size_t index ) const;
+//    wxString GetValue( void ) const {return wxEmptyString;}
+//    wxString GetIntensity( void ) const {return wxEmptyString;}
+//#else
     virtual wxString GetType( size_t index ) const;
     virtual wxString GetShortType( size_t index ) const;
     virtual wxString GetCharacteristic( size_t index ) const;
     virtual wxString GetValue( void ) const {return wxEmptyString;}
     virtual wxString GetIntensity( void ) const {return wxEmptyString;}
-#endif
+//#endif
     wxString GetMovement( void ) const;
 };
 
@@ -155,14 +174,14 @@ private:
     wxString GetType( size_t index ) const;
     wxString GetCharacteristic( size_t index ) const;
     wxString GetIntensity( void ) const;
-    bool Draw( wxDC *pmdc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont );
+    bool Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont );
 };
 
 class IACIsobarSystem : public IACSystem
 {
 public:
     wxString ToString( bool includePosition = true ) const;
-    bool Draw( wxDC *pmdc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont );
+    bool Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont );
 };
 
 class IACTropicalSystem : public IACSystem
@@ -174,7 +193,7 @@ private:
     wxString GetIntensity( void ) const;
     wxString GetCharacteristic( size_t index ) const;
     wxString GetValue( void ) const;
-    bool Draw( wxDC *pmdc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont );
+    bool Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont );
 };
 
 
@@ -196,7 +215,7 @@ public:
 
     bool Read( wxInputStream &stream );
     bool IsOk(void) { return m_isok; }
-    bool Draw( wxDC *pmdc, PlugIn_ViewPort *vp );
+    bool Draw( wxDC *dc, PlugIn_ViewPort *vp );
     static int TokenNumber( wxString &token, size_t start, size_t end );
     static wxFileInputStream* GetStream( wxString &filename );
     wxString &GetRawData( void ) { return m_RawData; }
@@ -222,7 +241,7 @@ private:
     bool ParseIsobarSection( void );
     bool ParseTropicalSection( void );
     GeoPoint ParsePosition( void );
-    bool DrawSystems( wxDC *pmdc, PlugIn_ViewPort *vp, IACSystems &iacsystem );
+    bool DrawSystems( wxDC *dc, PlugIn_ViewPort *vp, IACSystems &iacsystem );
 
     bool              m_isok;
     wxArrayString     m_tokens;

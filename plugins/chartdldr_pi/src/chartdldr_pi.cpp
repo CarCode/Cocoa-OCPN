@@ -361,9 +361,7 @@ void chartdldr_pi::ShowPreferencesDialog( wxWindow* parent )
             m_dldrpanel->SetBulkUpdate( m_allow_bulk_update );
 
     }
-    dialog->Close();
-    dialog->Destroy();
-    wxDELETE(dialog);
+    delete dialog;
 }
 
 ChartSource::ChartSource( wxString name, wxString url, wxString localdir )
@@ -429,7 +427,7 @@ void ChartDldrPanelImpl::OnContextMenu( wxMouseEvent& event )
     wxPoint point = event.GetPosition();
     wxPoint p1 = ((wxWindow *)m_clCharts)->GetPosition();
 
-#ifdef __WXQT__  //  for Curl 2.Version
+#ifdef __OCPN_ANDROID__
     wxFont *pf = OCPNGetFont(_T("Menu"), 0);
 
     // add stuff
@@ -1022,13 +1020,21 @@ void ChartDldrPanelImpl::DownloadCharts()
 
     if( !m_lbChartSources->GetSelectedItemCount() && !updatingAll )
     {
+#ifdef __WXOSX__
+        wxMessageBox(_("No charts selected for download."), ("Nachricht"));
+#else
         wxMessageBox(_("No charts selected for download."));
+#endif
         return;
     }
     ChartSource *cs = pPlugIn->m_chartSources->Item(GetSelectedCatalog());
     if( m_clCharts->GetCheckedItemCount() == 0 && !updatingAll )
     {
+#ifdef __WXOSX__
+        wxMessageBox(_("No charts selected for download."),("Nachricht"));
+#else
         wxMessageBox(_("No charts selected for download."));
+#endif
         return;
     }
 
@@ -1299,12 +1305,19 @@ void ChartDldrPanelImpl::AddSource( wxCommandEvent& event )
         SelectCatalog(m_lbChartSources->GetItemCount() - 1);
         pPlugIn->SaveConfig();
     }
+#ifdef __WXOSX__
     dialog->Close();  //  for Curl 2.Version
     dialog->Destroy();
     wxDELETE(dialog);
     event.Skip();
 
 //    Show();  //  For Curl 2.Version
+#else
+    delete dialog;
+    event.Skip();
+
+    Show();
+#endif
 }
 
 void ChartDldrPanelImpl::DoEditSource()
@@ -1360,11 +1373,18 @@ void ChartDldrPanelImpl::DoEditSource()
         pPlugIn->SaveConfig();
         SetSource(cat);
     }
+#ifdef __WXOSX__
     dialog->Close();  //  for Curl 2.Version
     dialog->Destroy();
     wxDELETE(dialog);
 
 //    Show();  //  For Curl 2.Version
+#else
+    delete dialog;
+
+    Show();
+
+#endif
 }
 
 void ChartDldrPanelImpl::EditSource( wxCommandEvent& event )

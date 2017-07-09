@@ -86,12 +86,12 @@ extern double parseLatLon(wxString latlon);
 
 class Route;
 class NavObjectCollection;
-class wxProgressDialog;
+class wxGenericProgressDialog;
 class ocpnDC;
 class NavObjectCollection1;
 class NavObjectChanges;
-
-#include "Track.h"
+class TrackPoint;
+class TrackList;
 
 //----------------------------------------------------------------------------
 //    Static XML Helpers
@@ -184,7 +184,7 @@ public:
 
 };
 
-
+void SwitchInlandEcdisMode( bool Switch );
 /*
 #include <wx/fontdlg.h>
 

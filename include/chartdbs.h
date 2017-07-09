@@ -26,12 +26,12 @@
 #ifndef __CHARTDBS_H__
 #define __CHARTDBS_H__
 
-//#include "chart1.h"
+#include <map>
 #include "ocpn_types.h"
 #include "bbox.h"
 #include "LLRegion.h"
 
-class wxProgressDialog;
+class wxGenericProgressDialog;
 class ChartBase;
 
 //    A small class used in an array to describe chart directories
@@ -194,6 +194,8 @@ struct ChartTableEntry
     bool Write(const ChartDatabase *pDb, wxOutputStream &os);
     void Clear();
     void Disable();
+    void ReEnable();
+
     void SetValid(bool valid) { bValid = valid; }
     time_t GetFileTime() const { return file_date; }
 
@@ -255,7 +257,7 @@ struct ChartTableEntry
     int         nNoCovrPlyEntries;
     int         *pNoCovrCntTable;
     float       **pNoCovrPlyTable;
-    
+
     ArrayOfInts m_GroupArray;
     wxString    *m_pfilename;             // a helper member, not on disk
     wxString    *m_psFullPath;
@@ -297,8 +299,8 @@ public:
     ChartDatabase();
     virtual ~ChartDatabase(){};
 
-    bool Create(ArrayOfCDI& dir_array, wxProgressDialog *pprog);
-    bool Update(ArrayOfCDI& dir_array, bool bForce, wxProgressDialog *pprog);
+    bool Create(ArrayOfCDI& dir_array, wxGenericProgressDialog *pprog);
+    bool Update(ArrayOfCDI& dir_array, bool bForce, wxGenericProgressDialog *pprog);
 
     bool Read(const wxString &filePath);
     bool Write(const wxString &filePath);
@@ -319,7 +321,7 @@ public:
     const ChartTableEntry &GetChartTableEntry(int index) const;
     ChartTableEntry *GetpChartTableEntry(int index) const;
     inline ChartTable &GetChartTable(){ return active_chartTable; }
-    
+
     bool IsValid() const { return bValid; }
     int DisableChart(wxString& PathToDisable);
     bool GetCentroidOfLargestScaleChart(double *clat, double *clon, ChartFamilyEnum family);
@@ -342,7 +344,8 @@ public:
     void ApplyGroupArray(ChartGroupArray *pGroupArray);
     bool IsChartAvailable( int dbIndex );
     ChartTable    active_chartTable;
-    
+    std::map <wxString, int> active_chartTable_pathindex;
+
 protected:
     virtual ChartBase *GetChart(const wxChar *theFilePath, ChartClassDescriptor &chart_desc) const;
     int AddChartDirectory(const wxString &theDir, bool bshow_prog);
@@ -355,12 +358,12 @@ protected:
 private:
     bool IsChartDirUsed(const wxString &theDir);
 
-    int SearchDirAndAddCharts(wxString& dir_name_base, ChartClassDescriptor &chart_desc, wxProgressDialog *pprog);
+    int SearchDirAndAddCharts(wxString& dir_name_base, ChartClassDescriptor &chart_desc, wxGenericProgressDialog *pprog);
 
-    int TraverseDirAndAddCharts(ChartDirInfo& dir_info, wxProgressDialog *pprog, wxString& dir_magic, bool bForce);
-    bool DetectDirChange(const wxString & dir_path, const wxString & magic, wxString &new_magic, wxProgressDialog *pprog);
+    int TraverseDirAndAddCharts(ChartDirInfo& dir_info, wxGenericProgressDialog *pprog, wxString& dir_magic, bool bForce);
+    bool DetectDirChange(const wxString & dir_path, const wxString & magic, wxString &new_magic, wxGenericProgressDialog *pprog);
 
-    bool AddChart( wxString &chartfilename, ChartClassDescriptor &chart_desc, wxProgressDialog *pprog,
+    bool AddChart( wxString &chartfilename, ChartClassDescriptor &chart_desc, wxGenericProgressDialog *pprog,
                    int isearch, bool bthis_dir_in_dB );
 
     bool Check_CM93_Structure(wxString dir_name);
@@ -371,10 +374,10 @@ private:
 
     ChartTableEntry           m_ChartTableEntryDummy;   // used for return value if database is not valid
     wxString      m_DBFileName;
-    
+
     int           m_pdifile;
     int           m_pdnFile;
-    
+
     int         m_nentries;
 
     LLBBox m_dummy_bbox;
@@ -404,7 +407,7 @@ class ChartGroup
 public:
       ChartGroup(){};
       ~ChartGroup(){ for (unsigned int i=0 ; i < m_element_array.GetCount() ; i++){ delete m_element_array.Item(i);}}
-      
+
       wxString                m_group_name;
       ChartGroupElementArray  m_element_array;
 };

@@ -30,6 +30,7 @@
 #include "ais.h"
 
 void make_hash_ERI(int key, const wxString & description);
+void clear_hash_ERI( void );
 
 class AIS_Target_Data
 {

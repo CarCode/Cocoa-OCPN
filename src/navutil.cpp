@@ -73,6 +73,7 @@
 #include "NMEALogWindow.h"
 #include "AIS_Decoder.h"
 #include "OCPNPlatform.h"
+#include "Track.h"
 
 #ifdef USE_S57
 #include "s52plib.h"
@@ -109,6 +110,7 @@ extern double           g_UserVar;
 extern bool             g_bShowStatusBar;
 extern bool             g_bUIexpert;
 extern bool             g_bFullscreen;
+extern int              g_nDepthUnitDisplay;
 
 extern wxToolBarBase    *toolBar;
 
@@ -271,11 +273,13 @@ extern int              g_n_ownship_min_mm;
 extern double           g_n_arrival_circle_radius;
 
 extern bool             g_bPreserveScaleOnX;
+extern bool             g_bsimplifiedScalebar;
 
 extern bool             g_bUseRMC;
 extern bool             g_bUseGLL;
 
 extern wxString         g_locale;
+extern wxString         g_localeOverride;
 
 extern bool             g_bUseRaster;
 extern bool             g_bUseVector;
@@ -305,7 +309,6 @@ extern bool             g_bAISRolloverShowClass;
 extern bool             g_bAISRolloverShowCOG;
 extern bool             g_bAISRolloverShowCPA;
 
-extern bool             g_blocale_changed;
 extern bool             g_bDebugGPSD;
 
 extern bool             g_bfilter_cogsog;
@@ -320,9 +323,9 @@ extern bool             g_bQuiltStart;
 
 extern int              g_SkewCompUpdatePeriod;
 
-extern int              g_toolbar_x;
-extern int              g_toolbar_y;
-extern long             g_toolbar_orient;
+extern int              g_maintoolbar_x;
+extern int              g_maintoolbar_y;
+extern long             g_maintoolbar_orient;
 
 extern int              g_GPU_MemSize;
 
@@ -344,6 +347,8 @@ extern int              g_GroupIndex;
 
 extern bool             g_bDebugOGL;
 extern int              g_current_arrow_scale;
+extern int              g_tide_rectangle_scale;
+extern int              g_tcwin_scale;
 extern wxString         g_GPS_Ident;
 extern bool             g_bGarminHostUpload;
 extern wxString         g_uploadConnection;
@@ -364,6 +369,7 @@ extern int              g_SENC_LOD_pixels;
 extern ArrayOfMMSIProperties   g_MMSI_Props_Array;
 
 extern int              g_chart_zoom_modifier;
+extern int              g_chart_zoom_modifier_vector;
 
 extern int              g_NMEAAPBPrecision;
 
@@ -385,6 +391,12 @@ extern int              g_nAutoHideToolbar;
 extern int              g_GUIScaleFactor;
 extern int              g_ChartScaleFactor;
 extern float            g_ChartScaleFactorExp;
+
+extern bool             g_bInlandEcdis;
+extern int              g_iENCToolbarPosX;
+extern int              g_iENCToolbarPosY;
+
+extern bool             g_bSpaceDropMark;
 
 extern wxString         g_uiStyle;
 
@@ -515,6 +527,9 @@ int MyConfig::LoadMyConfig()
 
     Read( _T ( "NCacheLimit" ), &g_nCacheLimit, 0 );
 
+    Read( _T ( "InlandEcdis" ), &g_bInlandEcdis, 0 );// First read if in iENC mode as this will override some config settings
+
+    Read( _T( "SpaceDropMark" ), &g_bSpaceDropMark, 0 );
     int mem_limit;
     Read( _T ( "MEMCacheLimit" ), &mem_limit, 0 );
     
@@ -549,6 +564,8 @@ int MyConfig::LoadMyConfig()
 
     Read( _T ( "AutoHideToolbar" ), &g_bAutoHideToolbar, 0 );
     Read( _T ( "AutoHideToolbarSecs" ), &g_nAutoHideToolbar, 0 );
+
+    Read( _T ( "UseSimplifiedScalebar" ), &g_bsimplifiedScalebar, 0 );
 
     int size_mm;
     Read( _T ( "DisplaySizeMM" ), &size_mm, -1 );
@@ -594,9 +611,14 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "CourseUpMode" ), &g_bCourseUp, 0 );
     Read( _T ( "COGUPAvgSeconds" ), &g_COGAvgSec, 15 );
     g_COGAvgSec = wxMin(g_COGAvgSec, MAX_COG_AVERAGE_SECONDS);        // Bound the array size
-    Read( _T ( "LookAheadMode" ), &g_bLookAhead, 0 );
+    if( g_bInlandEcdis ) g_bLookAhead=1;
+    else Read( _T ( "LookAheadMode" ), &g_bLookAhead, 0 );
     Read( _T ( "SkewToNorthUp" ), &g_bskew_comp, 0 );
+#ifdef __WXOSX__
+    Read( _T ( "OpenGL" ), &g_bopengl, 1 );
+#else
     Read( _T ( "OpenGL" ), &g_bopengl, 0 );
+#endif
     if ( g_bdisable_opengl )
         g_bopengl = false;
     Read( _T ( "SoftwareGL" ), &g_bSoftwareGL, 0 );
@@ -628,11 +650,17 @@ int MyConfig::LoadMyConfig()
 #endif
     Read( _T ( "SmoothPanZoom" ), &g_bsmoothpanzoom, 0 );
 
-    Read( _T ( "ToolbarX"), &g_toolbar_x, 0 );
-    Read( _T ( "ToolbarY" ), &g_toolbar_y, 0 );
-    Read( _T ( "ToolbarOrient" ), &g_toolbar_orient, wxTB_HORIZONTAL );
+    Read( _T ( "ToolbarX"), &g_maintoolbar_x, 0 );
+    Read( _T ( "ToolbarY" ), &g_maintoolbar_y, 0 );
+    Read( _T ( "ToolbarOrient" ), &g_maintoolbar_orient, wxTB_HORIZONTAL );
     Read( _T ( "ToolbarConfig" ), &g_toolbarConfig );
-
+#ifdef __WXOSX__
+    Read( _T ( "iENCToolbarX"), &g_iENCToolbarPosX, 0 );
+    Read( _T ( "iENCToolbarY"), &g_iENCToolbarPosY, 0 );
+#else
+    Read( _T ( "iENCToolbarX"), &g_iENCToolbarPosX, -1 );
+    Read( _T ( "iENCToolbarY"), &g_iENCToolbarPosY, -1 );
+#endif
     Read( _T ( "AnchorWatch1GUID" ), &g_AW1GUID, _T("") );
     Read( _T ( "AnchorWatch2GUID" ), &g_AW2GUID, _T("") );
 
@@ -647,6 +675,10 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "ZoomDetailFactor" ), &g_chart_zoom_modifier, 0 );
     g_chart_zoom_modifier = wxMin(g_chart_zoom_modifier,5);
     g_chart_zoom_modifier = wxMax(g_chart_zoom_modifier,-5);
+
+    Read( _T ( "ZoomDetailFactorVector" ), &g_chart_zoom_modifier_vector, 0 );
+    g_chart_zoom_modifier_vector = wxMin(g_chart_zoom_modifier_vector,5);
+    g_chart_zoom_modifier_vector = wxMax(g_chart_zoom_modifier_vector,-5);
 
     Read( _T ( "FogOnOverzoom" ), &g_fog_overzoom, 1 );
     Read( _T ( "OverzoomVectorScale" ), &g_oz_vector_scale, 1 );
@@ -732,10 +764,11 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "VisibleLayers" ), &g_VisibleLayers );
     Read( _T ( "InvisibleLayers" ), &g_InvisibleLayers );
 
-    Read( _T ( "PreserveScaleOnX" ), &g_bPreserveScaleOnX, 0 );
+    Read( _T ( "PreserveScaleOnX" ), &g_bPreserveScaleOnX, 1 );
 
     g_locale = _T("en_US");
     Read( _T ( "Locale" ), &g_locale );
+    Read( _T ( "LocaleOverride" ), &g_localeOverride );
 
     //We allow 0-99 backups ov navobj.xml
     Read( _T ( "KeepNavobjBackups" ), &g_navobjbackups, 5 );
@@ -876,6 +909,7 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "S57QueryDialogSizeX" ), &g_S57_dialog_sx, 400 );
     Read( _T ( "S57QueryDialogSizeY" ), &g_S57_dialog_sy, 400 );
 
+
     wxString strpres( _T ( "PresentationLibraryData" ) );
     wxString valpres;
     SetPath( _T ( "/Directories" ) );
@@ -883,22 +917,6 @@ int MyConfig::LoadMyConfig()
     g_UserPresLibData = valpres;
 
 #ifdef USE_S57
-    /*
-     wxString strd ( _T ( "S57DataLocation" ) );
-     SetPath ( _T ( "/Directories" ) );
-     Read ( strd, &val );              // Get the Directory name
-
-
-     wxString dirname ( val );
-     if ( !dirname.IsEmpty() )
-     {
-     if ( g_pcsv_locn->IsEmpty() )   // on second pass, don't overwrite
-     {
-     g_pcsv_locn->Clear();
-     g_pcsv_locn->Append ( val );
-     }
-     }
-     */
     wxString strs( _T ( "SENCFileLocation" ) );
     SetPath( _T ( "/Directories" ) );
     wxString vals;
@@ -907,6 +925,8 @@ int MyConfig::LoadMyConfig()
     g_SENCPrefix = vals;
 
 #endif
+
+    SwitchInlandEcdisMode( g_bInlandEcdis );
 
     SetPath( _T ( "/Directories" ) );
     wxString vald;
@@ -925,10 +945,16 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "TCDataDir" ), &g_TCData_Dir );           // Get the Directory name
 
     SetPath( _T ( "/Settings/GlobalState" ) );
+#ifdef __WXOSX__
     Read( _T ( "nColorScheme" ), &read_int, 0 );
     global_color_scheme = (ColorScheme) read_int;
-
-
+#else
+    if ( g_bInlandEcdis ) global_color_scheme = GLOBAL_COLOR_SCHEME_DUSK; //startup in duskmode if inlandEcdis
+    else{
+        Read( _T ( "nColorScheme" ), &read_int, 0 );
+        global_color_scheme = (ColorScheme) read_int;
+    }
+#endif
     SetPath( _T ( "/Settings/NMEADataSource" ) );
 
     wxString connectionconfigs;
@@ -1312,6 +1338,8 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "RouteLineWidth" ), &g_route_line_width, 2 );
     Read( _T ( "TrackLineWidth" ), &g_track_line_width, 2 );
     Read( _T ( "CurrentArrowScale" ), &g_current_arrow_scale, 100 );
+    Read( _T ( "TideRectangleScale" ), &g_tide_rectangle_scale, 100 );
+    Read( _T ( "TideCurrentWindowScale" ), &g_tcwin_scale, 100 );
     Read( _T ( "DefaultWPIcon" ), &g_default_wp_icon, _T("triangle") );
 
     SetPath( _T ( "/MMSIProperties" ) );
@@ -1406,6 +1434,7 @@ void MyConfig::LoadS57Config()
     read_int = wxMax(read_int, 0);                      // qualify value
     read_int = wxMin(read_int, 2);
     ps52plib->m_nDepthUnitDisplay = read_int;
+    g_nDepthUnitDisplay = read_int;
 
 //    S57 Object Class Visibility
 
@@ -1455,7 +1484,7 @@ void MyConfig::LoadS57Config()
 void MyConfig::LoadNavObjects()
 {
     //      next thing to do is read tracks, etc from the NavObject XML file,
-    wxLogMessage( _T("Loading navobjects from navobj.xml") );
+    wxLogMessage( _T("Loading navobjects from " + m_sNavObjSetFile) );
     CreateRotatingNavObjBackup();
 
     if( NULL == m_pNavObjectInputSet )
@@ -1840,9 +1869,9 @@ void MyConfig::UpdateSettings()
 
     Write( _T ( "ConfigVersionString" ), g_config_version_string );
     Write( _T ( "NavMessageShown" ), n_NavMessageShown );
-
+    Write( _T ( "InlandEcdis" ), g_bInlandEcdis );
     Write( _T ( "UIexpert" ), g_bUIexpert );
-
+    Write( _T( "SpaceDropMark" ), g_bSpaceDropMark );
     Write( _T ( "UIStyle" ), g_StyleManager->GetStyleNextInvocation() );
     Write( _T ( "ChartNotRenderScaleFactor" ), g_ChartNotRenderScaleFactor );
     Write( _T ( "ShowStatusBar" ), g_bShowStatusBar );
@@ -1861,14 +1890,11 @@ void MyConfig::UpdateSettings()
     Write( _T ( "TransparentToolbar" ), g_bTransparentToolbar );
     Write( _T ( "PermanentMOBIcon" ), g_bPermanentMOBIcon );
     Write( _T ( "ShowLayers" ), g_bShowLayers );
-    Write( _T ( "ShowDepthUnits" ), g_bShowDepthUnits );
     Write( _T ( "AutoAnchorDrop" ), g_bAutoAnchorMark );
     Write( _T ( "ShowChartOutlines" ), g_bShowOutlines );
     Write( _T ( "ShowActiveRouteTotal" ), g_bShowRouteTotal );
     Write( _T ( "ShowActiveRouteHighway" ), g_bShowActiveRouteHighway );
     Write( _T ( "SDMMFormat" ), g_iSDMMFormat );
-    Write( _T ( "DistanceFormat" ), g_iDistanceFormat );
-    Write( _T ( "SpeedFormat" ), g_iSpeedFormat );
     Write( _T ( "MostRecentGPSUploadConnection" ), g_uploadConnection );
     Write( _T ( "ShowChartBar" ), g_bShowChartBar );
 
@@ -1892,7 +1918,8 @@ void MyConfig::UpdateSettings()
     Write( _T ( "ShowFPS" ), g_bShowFPS );
     
     Write( _T ( "ZoomDetailFactor" ), g_chart_zoom_modifier );
-    
+    Write( _T ( "ZoomDetailFactorVector" ), g_chart_zoom_modifier_vector );
+
     Write( _T ( "FogOnOverzoom" ), g_fog_overzoom );
     Write( _T ( "OverzoomVectorScale" ), g_oz_vector_scale );
     Write( _T ( "OverzoomEmphasisBase" ), g_overzoom_emphasis_base );
@@ -1916,7 +1943,7 @@ void MyConfig::UpdateSettings()
     Write( _T ( "UseCM93Charts" ), g_bUseCM93 );
 
     Write( _T ( "CourseUpMode" ), g_bCourseUp );
-    Write( _T ( "LookAheadMode" ), g_bLookAhead );
+    if (!g_bInlandEcdis ) Write( _T ( "LookAheadMode" ), g_bLookAhead );
     Write( _T ( "COGUPAvgSeconds" ), g_COGAvgSec );
     Write( _T ( "UseMagAPB" ), g_bMagneticAPB );
 
@@ -1964,11 +1991,19 @@ void MyConfig::UpdateSettings()
     Write( _T ( "AnchorWatch1GUID" ), g_AW1GUID );
     Write( _T ( "AnchorWatch2GUID" ), g_AW2GUID );
 
-    Write( _T ( "ToolbarX" ), g_toolbar_x );
-    Write( _T ( "ToolbarY" ), g_toolbar_y );
-    Write( _T ( "ToolbarOrient" ), g_toolbar_orient );
-    Write( _T ( "ToolbarConfig" ), g_toolbarConfig );
+    Write( _T ( "ToolbarX" ), g_maintoolbar_x );
+    Write( _T ( "ToolbarY" ), g_maintoolbar_y );
+    Write( _T ( "ToolbarOrient" ), g_maintoolbar_orient );
 
+    Write( _T ( "iENCToolbarX" ), g_iENCToolbarPosX );
+    Write( _T ( "iENCToolbarY" ), g_iENCToolbarPosY );
+
+    if ( !g_bInlandEcdis ){
+        Write( _T ( "ToolbarConfig" ), g_toolbarConfig );
+        Write( _T ( "DistanceFormat" ), g_iDistanceFormat );
+        Write( _T ( "SpeedFormat" ), g_iSpeedFormat );
+        Write( _T ( "ShowDepthUnits" ), g_bShowDepthUnits );
+    }
     Write( _T ( "GPSIdent" ), g_GPS_Ident );
     Write( _T ( "UseGarminHostUpload" ), g_bGarminHostUpload );
 
@@ -1998,6 +2033,7 @@ void MyConfig::UpdateSettings()
     Write( _T ( "InvisibleLayers" ), invis );
 
     Write( _T ( "Locale" ), g_locale );
+    Write( _T ( "LocaleOverride" ), g_localeOverride );
 
     Write( _T ( "KeepNavobjBackups" ), g_navobjbackups );
     Write( _T ( "LegacyInputCOMPortFilterBehaviour" ), g_b_legacy_input_filter_behaviour );
@@ -2051,7 +2087,7 @@ void MyConfig::UpdateSettings()
 #else
     if( cc1 ) Write( _T ( "bFollow" ), cc1->m_bFollow );
 #endif
-    Write( _T ( "nColorScheme" ), (int) gFrame->GetColorScheme() );
+    if ( !g_bInlandEcdis ) Write( _T ( "nColorScheme" ), (int) gFrame->GetColorScheme() );
 
     Write( _T ( "FrameWinX" ), g_nframewin_x );
     Write( _T ( "FrameWinY" ), g_nframewin_y );
@@ -2132,7 +2168,7 @@ void MyConfig::UpdateSettings()
     if( ps52plib ) {
         Write( _T ( "bShowS57Text" ), ps52plib->GetShowS57Text() );
         Write( _T ( "bShowS57ImportantTextOnly" ), ps52plib->GetShowS57ImportantTextOnly() );
-        Write( _T ( "nDisplayCategory" ), (long) ps52plib->GetDisplayCategory() );
+        if ( !g_bInlandEcdis ) Write( _T ( "nDisplayCategory" ), (long) ps52plib->GetDisplayCategory() );
         Write( _T ( "nSymbolStyle" ), (int) ps52plib->m_nSymbolStyle );
         Write( _T ( "nBoundaryStyle" ), (int) ps52plib->m_nBoundaryStyle );
 
@@ -2256,6 +2292,8 @@ void MyConfig::UpdateSettings()
     Write( _T ( "RouteLineWidth" ), g_route_line_width );
     Write( _T ( "TrackLineWidth" ), g_track_line_width );
     Write( _T ( "CurrentArrowScale" ), g_current_arrow_scale );
+    Write( _T ( "TideRectangleScale" ), g_tide_rectangle_scale );
+    Write( _T ( "TideCurrentWindowScale" ), g_tcwin_scale );
     Write( _T ( "DefaultWPIcon" ), g_default_wp_icon );
 
     DeleteGroup(_T ( "/MMSIProperties" ));
@@ -2307,12 +2345,14 @@ bool MyConfig::ExportGPXRoutes( wxWindow* parent, RouteList *pRoutes, const wxSt
         m_gpx_path = fn.GetPath();
         fn.SetExt(_T("gpx"));
 
+#ifndef __WXMAC__
         if( wxFileExists( fn.GetFullPath() ) ) {
             int answer = OCPNMessageBox( NULL, _("Overwrite existing file?"), _T("Confirm"),
                     wxICON_QUESTION | wxYES_NO | wxCANCEL );
             if( answer != wxID_YES ) return false;
         }
-
+#endif
+    
         NavObjectCollection1 *pgpx = new NavObjectCollection1;
         pgpx->AddGPXRoutesList( pRoutes );
         pgpx->SaveFile(fn.GetFullPath());
@@ -2339,11 +2379,13 @@ bool MyConfig::ExportGPXTracks( wxWindow* parent, TrackList *pTracks, const wxSt
         m_gpx_path = fn.GetPath();
         fn.SetExt(_T("gpx"));
 
+#ifndef __WXMAC__
         if( wxFileExists( fn.GetFullPath() ) ) {
             int answer = OCPNMessageBox( NULL, _("Overwrite existing file?"), _T("Confirm"),
                                         wxICON_QUESTION | wxYES_NO | wxCANCEL );
             if( answer != wxID_YES ) return false;
         }
+#endif
 
         NavObjectCollection1 *pgpx = new NavObjectCollection1;
         pgpx->AddGPXTracksList( pTracks );
@@ -2372,11 +2414,13 @@ bool MyConfig::ExportGPXWaypoints( wxWindow* parent, RoutePointList *pRoutePoint
         m_gpx_path = fn.GetPath();
         fn.SetExt(_T("gpx"));
 
+#ifndef __WXMAC__
         if( wxFileExists( fn.GetFullPath() ) ) {
             int answer = OCPNMessageBox(NULL,  _("Overwrite existing file?"), _T("Confirm"),
                     wxICON_QUESTION | wxYES_NO | wxCANCEL );
             if( answer != wxID_YES ) return false;
         }
+#endif
 
         NavObjectCollection1 *pgpx = new NavObjectCollection1;
         pgpx->AddGPXPointsList( pRoutePoints );
@@ -2406,11 +2450,13 @@ void MyConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
         m_gpx_path = fn.GetPath();
         fn.SetExt(_T("gpx"));
 
+#ifndef __WXMAC__
         if( wxFileExists( fn.GetFullPath() ) ) {
             int answer = OCPNMessageBox( NULL, _("Overwrite existing file?"), _T("Confirm"),
                     wxICON_QUESTION | wxYES_NO | wxCANCEL );
             if( answer != wxID_YES ) return;
         }
+#endif
 
         ::wxBeginBusyCursor();
 
@@ -2614,6 +2660,45 @@ void MyConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
                 delete pSet;
             }
         }
+    }
+}
+
+//-------------------------------------------------------------------------
+//           Static Routine Switch to Inland Ecdis Mode
+//-------------------------------------------------------------------------
+void SwitchInlandEcdisMode( bool Switch )
+{
+    if ( Switch ){
+        wxLogMessage( _T("Switch InlandEcdis mode On") );
+        LoadS57();
+        //Overule some sewttings to comply with InlandEcdis
+        g_toolbarConfig = _T ( ".....XXXX.X...XX.XXXXXXXXXXXX" );
+        g_iDistanceFormat = 2; //0 = "Nautical miles"), 1 = "Statute miles", 2 = "Kilometers", 3 = "Meters"
+        g_iSpeedFormat =2; //0 = "kts"), 1 = "mph", 2 = "km/h", 3 = "m/s"
+        if ( ps52plib ) ps52plib->SetDisplayCategory( STANDARD );
+        g_bDrawAISSize = false;
+        if (gFrame) gFrame->RequestNewToolbar(true);
+    }
+    else{
+        wxLogMessage( _T("Switch InlandEcdis mode Off") );
+        //reread the settings overruled by inlandEcdis
+        if (pConfig){
+            pConfig->SetPath( _T ( "/Settings" ) );
+            pConfig->Read( _T ( "ToolbarConfig" ), &g_toolbarConfig );
+            pConfig->Read( _T ( "DistanceFormat" ), &g_iDistanceFormat );
+            pConfig->Read( _T ( "SpeedFormat" ), &g_iSpeedFormat );
+            pConfig->Read( _T ( "ShowDepthUnits" ), &g_bShowDepthUnits, 1 );
+            int read_int;
+#ifdef __WXOSX__
+            pConfig->Read( _T ( "nDisplayCategory" ), &read_int, (enum _DisCat) MARINERS_STANDARD );
+#else
+            pConfig->Read( _T ( "nDisplayCategory" ), &read_int, (enum _DisCat) STANDARD );
+#endif
+            if ( ps52plib ) ps52plib->SetDisplayCategory((enum _DisCat) read_int );
+            pConfig->SetPath( _T ( "/Settings/AIS" ) );
+            pConfig->Read( _T ( "bDrawAISSize" ), &g_bDrawAISSize );
+        }
+        if (gFrame) gFrame->RequestNewToolbar(true);
     }
 }
 
@@ -2836,7 +2921,6 @@ const wxChar *ParseGPXDateTime( wxDateTime &dt, const wxChar *datetime )
 #include <wx/fontdlg.h>
 #include <wx/fontenum.h>
 #include "wx/encinfo.h"
-#include "wx/fontutil.h"
 
 #ifdef __WXX11__
 #include "/usr/X11R6/include/X11/Xlib.h"
@@ -3695,6 +3779,9 @@ double fromUsrDistance( double usr_distance, int unit )
         case DISTANCE_M:
             ret = usr_distance / 1852;
             break;
+        case DISTANCE_FT:
+            ret = usr_distance / 6076.12;
+            break;
     }
     return ret;
 }
@@ -3842,8 +3929,11 @@ wxString toSDMM( int NEflag, double a, bool hi_precision )
             }
         } else
             if( NEflag == 2 ) {
+#ifdef __WXOSX__
+                c = 'O';
+#else
                 c = 'E';
-
+#endif
                 if( neg ) {
                     d = -d;
                     c = 'W';

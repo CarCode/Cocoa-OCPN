@@ -34,7 +34,7 @@
 #include <wx/mstream.h>
 
 #ifdef USE_S57
-#include <ogr_geometry.h>
+#include "mygdal/ogr_geometry.h"
 #endif
 
 #include "cutil.h"
@@ -381,7 +381,7 @@ PolyTessGeo::PolyTessGeo(unsigned char *polybuf, int nrecl, int index, int senc_
                 
 
             //  Read the triangle primitive bounding box as lat/lon
-            double *pbb = (double *)m_buf_ptr;
+//            double *pbb = (double *)m_buf_ptr;  //  Not used
 
             m_buf_ptr += 4 * sizeof(double);
 
@@ -1853,13 +1853,16 @@ int PolyTessGeo::PolyTessGeoGL(OGRPolygon *poly, bool bSENC_SM, double ref_lat, 
         nptfinal += cntr[i+1] + 2;
     
     //  No longer need the full geometry in the SENC,
+#ifdef __WXOSX__
+    nptfinal = 0;
+#else
     nptfinal = 1;
-
+#endif
     m_nwkb = (nptfinal + 1) * 2 * sizeof(float);
     m_ppg_head->pgroup_geom = (float *)calloc(sizeof(float), (nptfinal + 1) * 2);
     float *vro = m_ppg_head->pgroup_geom;
     ppt = geoPt;
-    float tx,ty;
+    float tx, ty;
 
     for(ip = 0 ; ip < nptfinal ; ip++)
     {
@@ -2278,8 +2281,11 @@ int PolyTessGeo::BuildTessGL(void)
     int nptfinal; // Not used: = npta;
       
       //  No longer need the full geometry in the SENC,
+#ifdef __WXOSX__
+    nptfinal = 0;
+#else
       nptfinal = 1;
-      
+#endif
       m_nwkb = (nptfinal +1) * 2 * sizeof(float);
       m_ppg_head->pgroup_geom = (float *)malloc(m_nwkb);
       float *vro = m_ppg_head->pgroup_geom;
@@ -2521,6 +2527,9 @@ void __CALL_CONVENTION vertexCallback(GLvoid *vertex)
         {
             free(tmp);
             tmp = NULL;
+#ifdef __WXOSX__
+            return;
+#endif
         }
         else
             s_buf_len = new_buf_len;

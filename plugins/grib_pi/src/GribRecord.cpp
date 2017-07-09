@@ -618,6 +618,9 @@ GribRecord::~GribRecord()
 //-------------------------------------------------------------------------------
 void  GribRecord::multiplyAllData(double k)
 {
+    if (data == 0 || !isOk())
+        return;
+
 	for (zuint j=0; j<Nj; j++) {
 		for (zuint i=0; i<Ni; i++)
 		{
@@ -836,10 +839,7 @@ bool GribRecord::readGribSection3_BMS(ZUFILE* file) {
         return ok;
     }
     BMSbits = new zuchar[sectionSize3-6];
-    if (!BMSbits) {
-        erreur("Record %d: out of memory",id);
-        ok = false;
-    }
+
     for (zuint i=0; i<sectionSize3-6; i++) {
         BMSbits[i] = readChar(file);
     }
@@ -883,18 +883,11 @@ bool GribRecord::readGribSection4_BDS(ZUFILE* file) {
 
     // Allocate memory for the data
     data = new double[Ni*Nj];
-    if (!data) {
-        erreur("Record %d: out of memory",id);
-        ok = false;
-    }
 
     zuint  startbit  = 0;
     int  datasize = sectionSize4-11;
     zuchar *buf = new zuchar[datasize+4]();  // +4 pour simplifier les décalages ds readPackedBits
-    if (!buf) {
-        erreur("Record %d: out of memory",id);
-        ok = false;
-    }
+
     if (zu_read(file, buf, datasize) != datasize) {
         erreur("Record %d: data read error",id);
         ok = false;
@@ -948,10 +941,7 @@ bool GribRecord::readGribSection4_BDS(ZUFILE* file) {
         }
     }
 
-    if (buf) {
-        delete [] buf;
-        buf = NULL;
-    }
+    delete [] buf;
     return ok;
 }
 

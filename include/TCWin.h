@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __TCWIN_H__
 #define __TCWIN_H__
@@ -62,57 +61,64 @@ public:
       void RecalculateSize();
 
 private:
-    wxTextCtrl  *m_ptextctrl;
+    wxTextCtrl   *m_ptextctrl;
     wxTimer	  m_TCWinPopupTimer;
-    RolloverWin *m_pTCRolloverWin;
+    RolloverWin  *m_pTCRolloverWin;
     int           curs_x;
     int           curs_y;
-    int          m_plot_type;
+    int           m_plot_type;
     wxSize        m_tc_size;
-    wxPoint       m_position;
-    int           m_x;
-    int           m_y;
+    wxPoint       m_position; // window ULC in screen coordinates
+    int           m_x;        // x coord of mouse click that launched window
+    int           m_y;        // y coord of mouse click that launched window
     bool          m_created;
-    int           m_tsx;
-    int           m_tsy;
+    int           m_tsx;      // test button width
+    int           m_tsy;      // test button height
+    float         m_tcwin_scaler; // factor to scale TCWin and contents by
 
-      IDX_entry   *pIDX;
-      wxButton    *OK_button;
-      wxButton    *NX_button;
-      wxButton    *PR_button;
+    IDX_entry   *pIDX;
+    wxButton    *OK_button;
+    wxButton    *NX_button;
+    wxButton    *PR_button;
 
-      int         im;
-      int         ib;
-      int         it;
-      int         val_off;
-      wxRect    m_graph_rect;
+    int         im;  // span of values to graph
+    int         ib;  // minimum value to graph
+    int         it;  // maximum value to graph
+    int         val_off; // offset
+    int         i_skip; // vertical stride in graph
+    wxRect    m_graph_rect;
 
 
-      float       tcv[26];
-      wxListBox   *m_tList ;
-      bool        btc_valid;
-      ChartCanvas *pParent;
-      int         m_corr_mins;
-      wxString    m_stz;
-      int         m_t_graphday_00_at_station;
-      wxDateTime  m_graphday;
-      int         m_plot_y_offset;
+    float       tcv[26];
+    time_t      tt_tcv[26];
 
-      SplineList  m_sList;
+    wxListBox   *m_tList ;
+    bool        btc_valid;
+    ChartCanvas *pParent;
+    int         m_corr_mins;
+    wxString    m_stz;
+    int         m_t_graphday_00_at_station;
+    wxDateTime  m_graphday;
+    int         m_plot_y_offset;
 
-      wxFont *pSFont;
-      wxFont *pSMFont;
-      wxFont *pMFont;
-      wxFont *pLFont;
+    SplineList  m_sList;
 
-      wxPen *pblack_1;
-      wxPen *pblack_2;
-      wxPen *pblack_3;
-      wxPen *pred_2;
-      wxBrush *pltgray;
-      wxBrush *pltgray2;
+    wxFont *pSFont;
+    wxFont *pSMFont;
+    wxFont *pMFont;
+    wxFont *pLFont;
 
-      int         m_button_height;
+    wxPen *pblack_1;
+    wxPen *pblack_2;
+    wxPen *pblack_3;
+    wxPen *pred_2;
+    wxBrush *pltgray;
+    wxBrush *pltgray2;
+
+    int         m_button_height;
+
+    int xSpot;
+    int ySpot;
 
 DECLARE_EVENT_TABLE()
 };

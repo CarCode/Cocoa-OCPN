@@ -91,13 +91,13 @@ AddSourceDlg::AddSourceDlg( wxWindow* parent, wxWindowID id, const wxString& tit
 
     wxBoxSizer* bSizerMain;
     bSizerMain = new wxBoxSizer( wxVERTICAL );
-    
+
     wxStaticBoxSizer* sbSizerSourceSel;
     sbSizerSourceSel = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Catalog") ), wxVERTICAL );
 
 //    wxBoxSizer* bSizerMain = new wxBoxSizer( wxVERTICAL );
 //    this->SetSizer( bSizerMain );
-    
+
 //    wxStaticBoxSizer* sbSizerSourceSel = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Catalog") ), wxVERTICAL );
 //    bSizerMain->Add( sbSizerSourceSel, 1, wxALL|wxEXPAND, 5 );
 
@@ -111,7 +111,7 @@ AddSourceDlg::AddSourceDlg( wxWindow* parent, wxWindowID id, const wxString& tit
     m_panelPredefined = new wxPanel( m_nbChoice, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
     wxBoxSizer* bSizerPredefTree;
     bSizerPredefTree = new wxBoxSizer( wxVERTICAL );
-    
+
     m_treeCtrlPredefSrcs = new wxTreeCtrl( m_panelPredefined, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE|wxTR_HIDE_ROOT );
 //    m_nbChoice->AddPage( m_panelPredefined, _("Predefined"), false );
 
@@ -165,16 +165,19 @@ AddSourceDlg::AddSourceDlg( wxWindow* parent, wxWindowID id, const wxString& tit
     m_nbChoice->AddPage( m_panelCustom, _("Custom"), true );
 //  for Curl 2.Version:
     sbSizerSourceSel->Add( m_nbChoice, 1, wxEXPAND | wxALL, 5 );
-    
-    
+
+
     bSizerMain->Add( sbSizerSourceSel, 1, wxALL|wxEXPAND, 5 );
 
 	wxStaticBoxSizer* sbSizerChartDir;
 	sbSizerChartDir = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Chart Directory") ), wxVERTICAL );
 
     m_dpChartDirectory = new wxDirPickerCtrl( this, wxID_ANY, wxEmptyString, _("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_USE_TEXTCTRL );
+#ifdef __WXOSX__
+    sbSizerChartDir->Add( m_dpChartDirectory, 1, wxALL|wxEXPAND, 5 );
+#else
     sbSizerChartDir->Add( m_dpChartDirectory, 1, wxALIGN_CENTER_VERTICAL|wxALL|wxEXPAND, 5 );
-
+#endif
 //    wxBoxSizer *dirbox = new wxBoxSizer(wxHORIZONTAL);
 //    sbSizerChartDir->Add(dirbox);
     
@@ -184,7 +187,7 @@ AddSourceDlg::AddSourceDlg( wxWindow* parent, wxWindowID id, const wxString& tit
     
 //    m_buttonChartDirectory = new wxButton(this, wxID_ANY,_("Select a folder"));
 //    dirbox->Add( m_buttonChartDirectory, 1, wxALL|wxEXPAND, 5 );
-	
+
 	bSizerMain->Add( sbSizerChartDir, 0, wxALL|wxEXPAND, 5 );
 
 	m_sdbSizerBtns = new wxStdDialogButtonSizer();
@@ -200,7 +203,7 @@ AddSourceDlg::AddSourceDlg( wxWindow* parent, wxWindowID id, const wxString& tit
 
 	this->Layout();
     bSizerMain->Fit( this );
-    
+
     this->Centre( wxBOTH );
 
 	// Connect Events
@@ -235,13 +238,13 @@ ChartDldrPanel::ChartDldrPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
 {
     wxBoxSizer* bSizerChartDlg;
     bSizerChartDlg = new wxBoxSizer( wxVERTICAL );
-    
+
     wxStaticBoxSizer* sbSchartsource;
     sbSchartsource = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Catalogs") ), wxVERTICAL );
-    
+
     wxBoxSizer* bSizerCatalogs;
     bSizerCatalogs = new wxBoxSizer( wxHORIZONTAL );
-    
+
     m_lbChartSources = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_NO_SORT_HEADER|wxLC_REPORT|wxLC_SINGLE_SEL );
     bSizerCatalogs->Add( m_lbChartSources, 1, wxALL|wxEXPAND, 5 );
 
@@ -282,7 +285,7 @@ ChartDldrPanel::ChartDldrPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
     wxBoxSizer* bSizerCatalogBtns;
     bSizerCatalogBtns = new wxBoxSizer( wxVERTICAL );
 //    groupsSizer->Add( bSizerCatalogBtns, 0, wxALL | wxEXPAND, border_size );
-	
+
 	m_bAddSource = new wxButton( this, wxID_ANY, _("Add"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	m_bAddSource->SetToolTip( _("Add a new chart catalog.") );
 
@@ -303,19 +306,16 @@ ChartDldrPanel::ChartDldrPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
     bSizerCatalogBtns->Add( m_bUpdateChartList, 0, wxALL|wxEXPAND, 5 );
 
 	m_bUpdateAllCharts = new wxButton( this, wxID_ANY, _("Update All"), wxDefaultPosition, wxDefaultSize, 0 );
-#ifdef __WXOSX__
     bSizerCatalogBtns->Add( m_bUpdateAllCharts, 0, wxALL|wxEXPAND, 5 );
-#else
-    bSizerCatalogBtns->Add( m_bUpdateAllCharts, 0, wxALIGN_BOTTOM|wxALL|wxEXPAND, 5 );
-#endif
+
     bSizerCatalogs->Add( bSizerCatalogBtns, 0, wxEXPAND, 5 );
-    
-    
+
+
     sbSchartsource->Add( bSizerCatalogs, 1, wxEXPAND, 0 );
-    
-    
+
+
     bSizerChartDlg->Add( sbSchartsource, 0, wxALL|wxEXPAND, 5 );
-    
+
     wxStaticBoxSizer* sbSCharts;
     sbSCharts = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Charts") ), wxVERTICAL );
 /*
@@ -334,7 +334,7 @@ ChartDldrPanel::ChartDldrPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
     //m_clCharts>SetImagesForList(wxLC_REPORT|wxLC_SINGLE_SEL);
     //m_clCharts>UpdateStyle();
     m_clCharts->SetMinSize( wxSize( -1,100 ) );
-    
+
     sbSCharts->Add( m_clCharts, 1, wxALL|wxEXPAND, 5 );
 /*
     m_clCharts->SetMinSize( wxSize( 100,100 ) );
@@ -359,29 +359,29 @@ ChartDldrPanel::ChartDldrPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
 	m_stCatalogInfo = new wxStaticText( this, wxID_ANY, _("%u charts total, %u updated, %u new"), wxDefaultPosition, wxDefaultSize, 0 );
     m_stCatalogInfo->Wrap( -1 );
     sbSCharts->Add( m_stCatalogInfo, 0, wxALL, 5 );
-    
+
     wxBoxSizer* bSizerBtns;
     bSizerBtns = new wxBoxSizer( wxHORIZONTAL );
-    
+
     m_bHelp = new wxButton( this, wxID_ANY, _("Help"), wxDefaultPosition, wxDefaultSize, 0 );
     bSizerBtns->Add( m_bHelp, 0, wxALL, 5 );
-    
-    
+
+
     bSizerBtns->Add( 0, 0, 1, wxEXPAND, 5 );
-    
+
     m_bDnldCharts = new wxButton( this, wxID_ANY, _("Download selected charts"), wxDefaultPosition, wxDefaultSize, 0 );
     bSizerBtns->Add( m_bDnldCharts, 1, wxALIGN_CENTER|wxALL, 5 );
-    
+
     m_bShowLocal = new wxButton( this, wxID_ANY, _("Show local files"), wxDefaultPosition, wxDefaultSize, 0 );
     bSizerBtns->Add( m_bShowLocal, 0, wxALL, 5 );
-    
-    
+
+
     sbSCharts->Add( bSizerBtns, 0, wxEXPAND, 5 );
-    
-    
+
+
     bSizerChartDlg->Add( sbSCharts, 1, wxALL|wxEXPAND, 5 );
-    
-    
+
+
     this->SetSizer( bSizerChartDlg );
     this->Layout();
     bSizerChartDlg->Fit( this );

@@ -51,11 +51,11 @@ public:
 
       wxDateTime GetCreateTime(void);
       void SetCreateTime( wxDateTime dt );
+      void Draw(ocpnDC& dc );
 
       double            m_lat, m_lon;
       int               m_GPXTrkSegNo;
       wxString          m_timestring;
-
 private:
       wxDateTime        m_CreateTimeX;
 };
@@ -90,7 +90,9 @@ public:
 
     double Length();
     int Simplify( double maxDelta );
-    Route *RouteFromTrack(wxProgressDialog *pprog);
+    Route *RouteFromTrack(wxGenericProgressDialog *pprog);
+
+    void ClearHighlights();
 
     wxString    m_GUID;
     bool        m_bIsInLayer;
@@ -113,6 +115,7 @@ public:
     int               m_CurrentTrackSeg;
 
     HyperlinkList     *m_HyperlinkList;
+    int m_HighlightedTrackPoint;
 
     void Clone( Track *psourcetrack, int start_nPoint, int end_nPoint, const wxString & suffix);
 

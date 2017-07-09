@@ -110,6 +110,16 @@ char* Parser::parse(const char new_expr[])
     }
     catch (Error err)
     {
+#ifdef __WXOSX__
+        if (err.get_row() == -1)
+        {
+            snprintf(ans_str, sizeof(ans_str), "Fehler: %s (col %i)", err.get_msg(), err.get_col());
+        }
+        else
+        {
+            snprintf(ans_str, sizeof(ans_str), "Fehler: %s (ln %i, col %i)", err.get_msg(), err.get_row(), err.get_col());
+        }
+#else
         if (err.get_row() == -1)
         {
             snprintf(ans_str, sizeof(ans_str), "Error: %s (col %i)", err.get_msg(), err.get_col());
@@ -118,6 +128,7 @@ char* Parser::parse(const char new_expr[])
         {
             snprintf(ans_str, sizeof(ans_str), "Error: %s (ln %i, col %i)", err.get_msg(), err.get_row(), err.get_col());
         }
+#endif
     }
 
     return ans_str;

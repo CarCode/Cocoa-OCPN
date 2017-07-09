@@ -39,6 +39,7 @@
 ../include/gshhs.h
 ../include/Hyperlink.h
 ../include/IDX_entry.h
+../include/iENCToolbar.h
 ../include/kml.h
 ../include/Layer.h
 ../include/LinkPropDlg.h
@@ -110,7 +111,6 @@
 ../include/tinyxml.h
 ../include/toolbar.h
 ../include/TrackPropDlg.h
-../include/triangulate.h
 ../include/TTYScroll.h
 ../include/TTYWindow.h
 ../include/tzdata.h
@@ -157,6 +157,7 @@
 ../src/gshhs.cpp
 ../src/Hyperlink.cpp
 ../src/IDX_entry.cpp
+../src/iENCToolbar.cpp
 ../src/kml.cpp
 ../src/Layer.cpp
 ../src/LinkPropDlg.cpp
@@ -355,7 +356,6 @@
 ../src/tinyxmlparser.cpp
 ../src/toolbar.cpp
 ../src/TrackPropDlg.cpp
-../src/tri.c
 ../src/TTYScroll.cpp
 ../src/TTYWindow.cpp
 ../src/undo.cpp

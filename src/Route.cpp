@@ -200,7 +200,7 @@ void Route::DrawSegment( ocpnDC& dc, wxPoint *rp1, wxPoint *rp2, ViewPort &vp, b
 
 void Route::Draw( ocpnDC& dc, ViewPort &vp, const LLBBox &box )
 {
-    if( pRoutePointList->empty() )
+    if( pRoutePointList->IsEmpty() )
         return;
 
     LLBBox test_box = GetBBox();
@@ -472,18 +472,19 @@ void Route::DrawGLLines( ViewPort &vp, ocpnDC *dc )
 void Route::DrawGL( ViewPort &vp )
 {
 #ifdef ocpnUSE_GL
-    if( pRoutePointList->empty() || !m_bVisible ) return;
+    if( pRoutePointList->IsEmpty() || !m_bVisible ) return;
 
-    if(!vp.GetBBox().IntersectOut(GetBBox()))
+    if(!vp.GetBBox().IntersectOut(GetBBox())){
         DrawGLRouteLines(vp);
 
-    /*  Route points  */
-    for(wxRoutePointListNode *node = pRoutePointList->GetFirst(); node; node = node->GetNext()) {
-        RoutePoint *prp = node->GetData();
-        if ( !m_bVisible && prp->m_bKeepXRoute )
-            prp->DrawGL( vp );
-        else if (m_bVisible)
-            prp->DrawGL( vp );
+        /*  Route points  */
+        for(wxRoutePointListNode *node = pRoutePointList->GetFirst(); node; node = node->GetNext()) {
+            RoutePoint *prp = node->GetData();
+            if ( !m_bVisible && prp->m_bKeepXRoute )
+                prp->DrawGL( vp );
+            else if (m_bVisible)
+                prp->DrawGL( vp );
+        }
     }
 #endif
 }

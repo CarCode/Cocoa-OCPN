@@ -45,6 +45,7 @@
 #include "ConnectionParams.h"
 #include "FontMgr.h"
 #include "s52s57.h"
+#include "Select.h"
 
 #ifdef __OCPN__ANDROID__
 #include "androidUTIL.h"
@@ -94,6 +95,7 @@ extern sigjmp_buf env;                    // the context saved by sigsetjmp();
 #endif
 
 extern OCPNPlatform              *g_Platform;
+extern bool                      g_bFirstRun;
 
 extern int                       quitflag;
 extern MyFrame                   *gFrame;
@@ -219,6 +221,10 @@ extern int                      g_nTrackPrecision;
 extern wxString                 g_toolbarConfig;
 extern bool                     g_bPreserveScaleOnX;
 
+extern Select                    *pSelect;
+extern Select                    *pSelectTC;
+extern Select                    *pSelectAIS;
+
 #ifdef ocpnUSE_GL
 extern ocpnGLOptions            g_GLOptions;
 #endif
@@ -231,6 +237,11 @@ extern int                       g_ais_alert_dialog_sx, g_ais_alert_dialog_sy;
 
 #if wxUSE_XLOCALE || !wxCHECK_VERSION(3,0,0)
 extern wxLocale                  *plocale_def_lang;
+
+extern wxString                  g_locale;
+extern wxString                  g_localeOverride;
+extern wxArrayString             g_locale_catalog_array;
+
 #endif
 
 
@@ -238,6 +249,12 @@ extern wxLocale                  *plocale_def_lang;
 
 OCPNPlatform::OCPNPlatform()
 {
+    m_pt_per_pixel = 0;                 // cached value
+    m_bdisableWindowsDisplayEnum = false;
+    m_displaySize = wxSize(0,0);
+    m_displaySizeMM = wxSize(0,0);
+    m_monitorWidth = m_monitorHeight = 0;
+
 }
 
 OCPNPlatform::~OCPNPlatform()
@@ -311,37 +328,45 @@ int CALLBACK CrashCallback(CR_CRASH_CALLBACK_INFO* pInfo)
 //  Called from MyApp() immediately upon entry to MyApp::OnInit()
 void OCPNPlatform::Initialize_1( void )
 {
-    
+
 #ifdef OCPN_USE_CRASHRPT
 #ifndef _DEBUG
     // Install Windows crash reporting
-    
+
     CR_INSTALL_INFO info;
     memset(&info, 0, sizeof(CR_INSTALL_INFO));
     info.cb = sizeof(CR_INSTALL_INFO);
     info.pszAppName = _T("OpenCPN");
-    
+
     info.pszAppVersion = OpenCPNVersion.c_str();
-    
-    int type = MiniDumpWithDataSegs;  // Include the data sections from all loaded modules.
+
+    int type =  MiniDumpNormal;
+
     // This results in the inclusion of global variables
-    
-    type |=  MiniDumpNormal;// | MiniDumpWithPrivateReadWriteMemory | MiniDumpWithIndirectlyReferencedMemory;
+    type |= MiniDumpWithDataSegs;
+
+    //If this flag is specified, the contents of every readable and writeable private memory page will be included into the minidump.
+    //type |=  MiniDumpWithPrivateReadWriteMemory;
+
+    //If this flag is specified, MiniDumpWriteDump function will scan the stack memory of every thread looking for pointers
+    //that point to other readable memory pages in the process’ address space.
+    //type |=  MiniDumpWithIndirectlyReferencedMemory;
+
     info.uMiniDumpType = (MINIDUMP_TYPE)type;
-    
+
     // Install all available exception handlers....
     info.dwFlags = CR_INST_ALL_POSSIBLE_HANDLERS;
-    
+
     //  Except memory allocation failures
     info.dwFlags &= ~CR_INST_NEW_OPERATOR_ERROR_HANDLER;
-    
+
     //  Allow user to attach files
     info.dwFlags |= CR_INST_ALLOW_ATTACH_MORE_FILES;
-    
+
     //  Allow user to add more info
     info.dwFlags |= CR_INST_SHOW_ADDITIONAL_INFO_FIELDS;
-    
-    
+
+
     // URL for sending error reports over HTTP.
     if(1/*g_bEmailCrashReport*/){
         info.pszEmailTo = _T("opencpn@bigdumboat.com");
@@ -353,10 +378,10 @@ void OCPNPlatform::Initialize_1( void )
         info.dwFlags |= CR_INST_DONT_SEND_REPORT;
         info.uPriorities[CR_HTTP] = CR_NEGATIVE_PRIORITY;       // don't send at all
     }
-    
+
     info.uPriorities[CR_SMTP] = CR_NEGATIVE_PRIORITY;  // Second try send report over SMTP
     info.uPriorities[CR_SMAPI] = CR_NEGATIVE_PRIORITY; //1; // Third try send report over Simple MAPI
-    
+
     wxStandardPaths& crash_std_path = g_Platform->GetStdPaths();
 
     wxString crash_rpt_save_locn = crash_std_path.GetConfigDir();
@@ -364,12 +389,12 @@ void OCPNPlatform::Initialize_1( void )
         wxFileName exec_path_crash( crash_std_path.GetExecutablePath() );
         crash_rpt_save_locn = exec_path_crash.GetPath( wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR );
     }
-    
+
     wxString locn = crash_rpt_save_locn + _T("\\CrashReports");
-    
+
     if(!wxDirExists( locn ) )
         wxMkdir( locn );
-    
+
     if(wxDirExists( locn ) ){
         wxCharBuffer buf = locn.ToUTF8();
         wchar_t wlocn[256];
@@ -378,28 +403,28 @@ void OCPNPlatform::Initialize_1( void )
             info.pszErrorReportSaveDir = (LPCWSTR)wlocn;
         }
     }
-    
+
     // Provide privacy policy URL
     wxFileName exec_path_crash( crash_std_path.GetExecutablePath() );
     wxString policy_file =  exec_path_crash.GetPath( wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR );
     policy_file += _T("PrivacyPolicy.txt");
     policy_file.Prepend(_T("file:"));
-    
+
     info.pszPrivacyPolicyURL = policy_file.c_str();;
-    
+
     int nResult = crInstall(&info);
     if(nResult!=0) {
         TCHAR buff[256];
         crGetLastErrorMsg(buff, 256);
         MessageBox(NULL, buff, _T("crInstall error, Crash Reporting disabled."), MB_OK);
     }
-    
+
     // Establish the crash callback function
     crSetCrashCallback( CrashCallback, NULL );
-    
+
     // Take screenshot of the app window at the moment of crash
     crAddScreenshot2(CR_AS_PROCESS_WINDOWS|CR_AS_USE_JPEG_FORMAT, 95);
-    
+
     //  Mark some files to add to the crash report
     wxString home_data_crash = crash_std_path.GetConfigDir();
     if( g_bportable ) {
@@ -407,19 +432,19 @@ void OCPNPlatform::Initialize_1( void )
         home_data_crash = f.GetPath();
     }
     appendOSDirSlash( &home_data_crash );
-    
+
     wxString config_crash = _T("opencpn.ini");
     config_crash.Prepend( home_data_crash );
     crAddFile2( config_crash.c_str(), NULL, NULL, CR_AF_MISSING_FILE_OK | CR_AF_ALLOW_DELETE );
-    
+
     wxString log_crash = _T("opencpn.log");
     log_crash.Prepend( home_data_crash );
     crAddFile2( log_crash.c_str(), NULL, NULL, CR_AF_MISSING_FILE_OK | CR_AF_ALLOW_DELETE );
-    
+
 #endif
 #endif
 
-    
+
 #ifdef LINUX_CRASHRPT
 #if wxUSE_ON_FATAL_EXCEPTION
     // fatal exceptions handling
@@ -432,22 +457,22 @@ void OCPNPlatform::Initialize_1( void )
     _set_new_handler( MyNewHandler );
     //  configure malloc to call the New failure handler on failure
     _set_new_mode(1);
-#endif    
-    
-    //    On MSW, force the entire process to run on one CPU core only
-    //    This resolves some difficulty with wxThread syncronization
+#endif
+
 #if 0
 #ifdef __WXMSW__
+    //    On MSW, force the entire process to run on one CPU core only
+    //    This resolves some difficulty with wxThread syncronization
     //Gets the current process handle
     HANDLE hProc = GetCurrentProcess();
     DWORD procMask;
     DWORD sysMask;
     HANDLE hDup;
     DuplicateHandle( hProc, hProc, hProc, &hDup, 0, FALSE, DUPLICATE_SAME_ACCESS );
-    
+
     //Gets the current process affinity mask
     GetProcessAffinityMask( hDup, &procMask, &sysMask );
-    
+
     // Take a simple approach, and assume up to 4 processors
     DWORD newMask;
     if( ( procMask & 1 ) == 1 ) newMask = 1;
@@ -457,18 +482,18 @@ void OCPNPlatform::Initialize_1( void )
             if( ( procMask & 4 ) == 4 ) newMask = 4;
             else
                 if( ( procMask & 8 ) == 8 ) newMask = 8;
-                
+
                 //Set te affinity mask for the process
                 BOOL res = SetProcessAffinityMask( hDup, (DWORD_PTR) newMask );
-            
+
             if( res == 0 ) {
                 //Error setting affinity mask!!
             }
 #endif
 #endif
-            
+
 #ifdef __MSVC__
-            
+
             //    Handle any Floating Point Exceptions which may leak thru from other
             //    processes.  The exception filter is in cutil.c
             //    Seems to only happen for W98
@@ -476,15 +501,15 @@ void OCPNPlatform::Initialize_1( void )
             wxPlatformInfo Platform;
             if( Platform.GetOperatingSystemId() == wxOS_WINDOWS_9X ) SetUnhandledExceptionFilter (&MyUnhandledExceptionFilter);
 #endif
-            
+
 #ifdef __WXMSW__
             //     _CrtSetBreakAlloc(25503);
 #endif
-            
+
 
 #ifndef __WXMSW__
             //      Setup Linux SIGNAL handling, for external program control
-            
+
             //      Build the sigaction structure
             sa_all.sa_handler = catch_signals;// point to my handler
             sigemptyset(&sa_all.sa_mask);// make the blocking set
@@ -492,14 +517,14 @@ void OCPNPlatform::Initialize_1( void )
             // other signals will be
             // unblocked during my handler
             sa_all.sa_flags = 0;
-            
+
             sigaction(SIGUSR1, NULL, &sa_all_old);// save existing action for this signal
-            
+
             //      Register my request for some signals
             sigaction(SIGUSR1, &sa_all, NULL);
-            
+
             sigaction(SIGUSR1, NULL, &sa_all_old);// inspect existing action for this signal
-            
+
             sigaction(SIGTERM, &sa_all, NULL);
             sigaction(SIGTERM, NULL, &sa_all_old);
 #endif
@@ -521,7 +546,13 @@ void OCPNPlatform::Initialize_2( void )
 }
 
 //  Called from MyApp() just before end of MyApp::OnInit()
-void OCPNPlatform::Initialize_3( void ){
+void OCPNPlatform::Initialize_3( void )
+{
+#ifdef __OCPN__ANDROID__
+    if(pSelect) pSelect->SetSelectPixelRadius(wxMax( 25, 6.0 * getAndroidDPmm()) );
+    if(pSelectTC) pSelectTC->SetSelectPixelRadius( wxMax( 25, 6.0 * getAndroidDPmm()) );
+    if(pSelectAIS) pSelectAIS->SetSelectPixelRadius( wxMax( 25, 6.0 * getAndroidDPmm()) );
+#endif
 }
 
 void OCPNPlatform::OnExit_1( void ){
@@ -537,6 +568,203 @@ void OCPNPlatform::OnExit_2( void ){
 #endif
 
 }
+
+void OCPNPlatform::SetLocaleSearchPrefixes( void )
+{
+#if wxUSE_XLOCALE
+    // Add a new prefixes for search order.
+#if defined(__WINDOWS__)
+
+    wxString locale_location = GetSharedDataDir();
+    locale_location += _T("share/locale");
+    wxLocale::AddCatalogLookupPathPrefix( locale_location );
+
+#elif defined(__OCPN__ANDROID__)
+
+    wxString locale_location = GetSharedDataDir() + _T("locale");
+    wxLocale::AddCatalogLookupPathPrefix( locale_location );
+
+#elif defined(__UNIX__) && !defined(__WINE__)
+    
+    // On Unix, wxWidgets defaults to installation prefix of its own, usually "/usr".
+    // On the other hand, canonical installation prefix for OpenCPN is "/usr/local".
+    wxString locale_location;
+    if( !wxGetEnv( _T("OPENCPN_PREFIX"), &locale_location ) )
+    {
+        locale_location = _T("/usr/local");
+    }
+    wxFileName location;
+    location.AssignDir( locale_location );
+    location.AppendDir( _T("share") );
+    location.SetName( _T("locale") );
+    locale_location = location.GetFullPath();
+    wxLocale::AddCatalogLookupPathPrefix( locale_location );
+    
+#endif
+
+#endif
+}
+
+wxString OCPNPlatform::GetDefaultSystemLocale()
+{
+    wxLogMessage(_T("Getting DefaultSystemLocale..."));
+
+    wxString retval = _T("en_US");
+
+#if wxUSE_XLOCALE
+
+    const wxLanguageInfo* languageInfo = wxLocale::GetLanguageInfo(wxLANGUAGE_DEFAULT);
+    if (languageInfo)
+        retval = languageInfo->CanonicalName;
+    
+#if defined(__WXMSW__)
+    LANGID lang_id = GetUserDefaultUILanguage();
+
+    wchar_t lngcp[101];
+    const wxLanguageInfo* languageInfoW = 0;
+    if (0 != GetLocaleInfo(MAKELCID(lang_id, SORT_DEFAULT), LOCALE_SENGLANGUAGE, lngcp, 100)){
+        wxString lstring = wxString(lngcp);
+
+        languageInfoW = wxLocale::FindLanguageInfo(lngcp);
+        if(languageInfoW)
+            wxLogMessage(_T("Found LanguageInfo for: ") + lstring);
+        else
+            wxLogMessage(_T("Could not find LanguageInfo for: ") + lstring);
+    }
+    else{
+        wxLogMessage(_T("Could not get LocaleInfo, using wxLANGUAGE_DEFAULT"));
+        languageInfoW = wxLocale::GetLanguageInfo(wxLANGUAGE_DEFAULT);
+    }
+
+    if(languageInfoW)
+        retval = languageInfoW->CanonicalName;
+#endif
+
+
+#if defined(__OCPN__ANDROID__)
+    retval = androidGetAndroidSystemLocale();
+#endif
+
+#endif
+
+    return retval;
+}
+
+wxString OCPNPlatform::GetAdjustedAppLocale()
+{
+    wxString adjLocale = g_locale;
+
+    //  For windows, installer may have left information in the registry defining the
+    //  user's selected install language.
+    //  If so, override the config file value and use this selection for opencpn...
+#if defined(__WXMSW__)
+    if( g_bFirstRun ) {
+        wxRegKey RegKey( wxString( _T("HKEY_LOCAL_MACHINE\\SOFTWARE\\OpenCPN") ) );
+        if( RegKey.Exists() ) {
+            wxLogMessage( _("Retrieving initial language selection from Windows Registry") );
+            RegKey.QueryValue( wxString( _T("InstallerLanguage") ), adjLocale );
+        }
+    }
+#endif
+
+#if defined(__OCPN__ANDROID__)
+    if(g_localeOverride.Length())
+        adjLocale = g_localeOverride;
+    else
+        adjLocale = GetDefaultSystemLocale();
+#endif
+
+    return adjLocale;
+}
+
+
+#if wxUSE_XLOCALE || !wxCHECK_VERSION(3,0,0)
+
+wxString OCPNPlatform::ChangeLocale(wxString &newLocaleID, wxLocale *presentLocale, wxLocale** newLocale)
+{
+    wxString return_val;
+
+
+    //  Old locale is done.
+    delete (wxLocale*)presentLocale;
+
+    wxLocale *locale = new wxLocale;
+    wxString loc_lang_canonical;
+
+    const wxLanguageInfo *pli = wxLocale::FindLanguageInfo( newLocaleID );
+    bool b_initok = false;
+
+    if( pli ) {
+        locale->Init( pli->Language, 1 );
+        // If the locale was not initialized OK, it may be that the wxstd.mo translations
+        // of the wxWidgets strings is not present.
+        // So try again, without attempting to load defaults wxstd.mo.
+        if( !locale->IsOk() ){
+            delete locale;
+            locale = new wxLocale;
+            locale->Init( pli->Language, 0 );
+        }
+        loc_lang_canonical = pli->CanonicalName;
+
+        b_initok = locale->IsOk();
+#ifdef __OCPN__ANDROID__
+        b_initok = true;
+#endif
+    }
+
+    if( !b_initok ) {
+        delete locale;
+        locale = new wxLocale;
+        locale->Init( wxLANGUAGE_ENGLISH_US, 0 );
+        loc_lang_canonical = wxLocale::GetLanguageInfo( wxLANGUAGE_ENGLISH_US )->CanonicalName;
+    }
+
+    if(b_initok){
+        wxString imsg = _T("Opencpn language load for:  ");
+        imsg += loc_lang_canonical;
+        wxLogMessage( imsg );
+
+        //  wxWidgets assigneds precedence to message catalogs in reverse order of loading.
+        //  That is, the last catalog containing a certain translatable item takes precedence.
+
+        //  So, Load the catalogs saved in a global string array which is populated as PlugIns request a catalog load.
+        //  We want to load the PlugIn catalogs first, so that core opencpn translations loaded later will become precedent.
+
+        //        wxLog::SetVerbose(true);            // log all messages for debugging language stuff
+
+
+        for(unsigned int i=0 ; i < g_locale_catalog_array.GetCount() ; i++){
+            wxString imsg = _T("Loading catalog for:  ");
+            imsg += g_locale_catalog_array.Item(i);
+            wxLogMessage( imsg );
+            locale->AddCatalog( g_locale_catalog_array.Item(i) );
+        }
+
+
+        // Get core opencpn catalog translation (.mo) file
+        wxLogMessage( _T("Loading catalog for opencpn core.") );
+        locale->AddCatalog( _T("opencpn") );
+
+
+        return_val = locale->GetCanonicalName();
+
+        // We may want to override the default system locale, so set a flag.
+        if(return_val != GetDefaultSystemLocale())
+            g_localeOverride = return_val;
+        else
+            g_localeOverride = _T("");
+
+
+    }
+
+    *newLocale = locale;                    // return the new locale
+
+    //    Always use dot as decimal
+    setlocale( LC_NUMERIC, "C" );
+
+    return return_val;
+}
+#endif
 
 //      Setup default global options when config file is unavailable,
 //      as on initial startup after new install
@@ -572,7 +800,7 @@ void OCPNPlatform::SetDefaultOptions( void )
     // Initial S52/S57 options
     if(pConfig){
         pConfig->SetPath( _T ( "/Settings/GlobalState" ) );
-        pConfig->Write( _T ( "bShowS57Text" ), false );
+        pConfig->Write( _T ( "bShowS57Text" ), true );
         pConfig->Write( _T ( "bShowS57ImportantTextOnly" ), false );
         pConfig->Write( _T ( "nDisplayCategory" ), (int)(_DisCat)STANDARD );
         pConfig->Write( _T ( "nSymbolStyle" ), (int)(_LUPname)PAPER_CHART );
@@ -585,13 +813,16 @@ void OCPNPlatform::SetDefaultOptions( void )
         pConfig->Write( _T ( "bShowLightDescription" ), false );
         pConfig->Write( _T ( "bExtendLightSectors" ), true );
         pConfig->Write( _T ( "bDeClutterText" ), true );
-        pConfig->Write( _T ( "bShowNationalText" ), false );
+        pConfig->Write( _T ( "bShowS57Text" ), true );
 
-        pConfig->Write( _T ( "S52_MAR_SAFETY_CONTOUR" ), 5 );
-        pConfig->Write( _T ( "S52_MAR_SHALLOW_CONTOUR" ), 2 );
-        pConfig->Write( _T ( "S52_MAR_DEEP_CONTOUR" ), 10 );
+        pConfig->Write( _T ( "S52_MAR_SAFETY_CONTOUR" ), 3 );
+        pConfig->Write( _T ( "S52_MAR_SHALLOW_CONTOUR" ), 4 );
+        pConfig->Write( _T ( "S52_MAR_DEEP_CONTOUR" ), 6 );
         pConfig->Write( _T ( "S52_MAR_TWO_SHADES" ), 0  );
         pConfig->Write( _T ( "S52_DEPTH_UNIT_SHOW" ), 1 );
+
+        pConfig->Write( _T ( "ZoomDetailFactorVector" ), 3 );
+
     }
 
 #ifdef __WXMSW__
@@ -1205,7 +1436,8 @@ void OCPNPlatform::ShowBusySpinner( void )
     androidShowBusyIcon();
 #else
 #if wxCHECK_VERSION(2, 9, 0 )
-    if( !::wxIsBusy() ){
+    if( !::wxIsBusy() )
+    {
         ::wxBeginBusyCursor();
     }
 #endif
@@ -1276,19 +1508,24 @@ double OCPNPlatform::getFontPointsperPixel( void )
     pt_per_pixel = 14.0 / (31.11 * getAndroidDisplayDensity()) ;
     
 #else
+
+    if(m_pt_per_pixel == 0){
     //  Make a measurement...
-    wxScreenDC dc;
+        wxScreenDC dc;
 
-    wxFont *f = FontMgr::Get().FindOrCreateFont( 12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, FALSE,
+        wxFont *f = FontMgr::Get().FindOrCreateFont( 12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, FALSE,
                                                 wxString( _T ( "" ) ), wxFONTENCODING_SYSTEM );
-    dc.SetFont(*f);
+        dc.SetFont(*f);
 
-    wxSize sz = dc.GetTextExtent(_T("H"));
-    pt_per_pixel = 12.0 / (double)sz.y;
+        wxSize sz = dc.GetTextExtent(_T("H"));
+        if(sz.y > 0)
+            m_pt_per_pixel = 12.0 / (double)sz.y;
+    }
+    if(m_pt_per_pixel > 0)
+        pt_per_pixel = m_pt_per_pixel;
 #endif
 
     return pt_per_pixel;
-
 
 }
 
@@ -1298,38 +1535,47 @@ wxSize OCPNPlatform::getDisplaySize()
 #ifdef __OCPN__ANDROID__
     return getAndroidDisplayDimensions();
 #else
-    return (::wxGetDisplaySize());               // default, for most platforms
+    if(m_displaySize.x < 10)
+        m_displaySize = ::wxGetDisplaySize();               // default, for most platforms
+    return m_displaySize;
 #endif
     
 }
 
 double  OCPNPlatform::GetDisplaySizeMM()
 {
-    double ret; // = wxGetDisplaySizeMM().GetWidth();  // Not used
+    if(m_displaySizeMM.x < 1)
+        m_displaySizeMM = wxGetDisplaySizeMM();
+    
+    double ret; // Not used = m_displaySizeMM.GetWidth();
     
 #ifdef __WXMSW__
     int w,h;
     
-    bool GetWindowsMonitorSize( int *w, int *h );
-    
-    if( GetWindowsMonitorSize( &w, &h) ){
-        if(w > 100)             // sanity check
+    if( !m_bdisableWindowsDisplayEnum){
+        if(GetWindowsMonitorSize( &w, &h) && (w > 100) ){             // sanity check
+            m_displaySizeMM == wxSize(w, h);
             ret = w;
+        }
+        else
+            m_bdisableWindowsDisplayEnum = true;        // disable permanently
     }
+
 #endif
     
 #ifdef __WXOSX__
     ret = GetMacMonitorSize();
+// oben alt aus MacUtils. Neu am 9.8.2016: wxGetDisplaySizeMM() jetzt funktionsfähig in wxWidgets 3.1.1
 #endif
     
 #ifdef __OCPN__ANDROID__
     ret = GetAndroidDisplaySize();
 #endif
-    
+#ifndef __WXOSX__
     wxString msg;
     msg.Printf(_T("Detected display size (horizontal): %d mm"), (int) ret);
     wxLogMessage(msg);
-    
+#endif
     return ret;
 }
 
@@ -1338,8 +1584,12 @@ double OCPNPlatform::GetDisplayDPmm()
 #ifdef __OCPN__ANDROID__
     return getAndroidDPmm();
 #else
-    double r = ::wxGetDisplaySize().x;            // dots
+    double r = getDisplaySize().x;            // dots
+#ifndef __WXOSX__
+    return r / wxGetDisplaySizeMM().GetWidth();
+#else
     return r / GetDisplaySizeMM();
+#endif
 #endif
 }
 
@@ -1392,7 +1642,8 @@ void OCPNPlatform::PositionAISAlert(wxWindow *alert_window)
 wxDirDialog* OCPNPlatform::AdjustDirDialogFont(wxWindow *container, wxDirDialog* dlg)
 {
     wxDirDialog* ret_dlg = dlg;
-    
+#ifndef __WXGTK__
+
     dlg->Show();
     dlg->SetSize( container->GetSize());
     dlg->Centre();
@@ -1422,14 +1673,15 @@ wxDirDialog* OCPNPlatform::AdjustDirDialogFont(wxWindow *container, wxDirDialog*
         
     }
     ret_dlg->Hide();
-    
+#endif
     return ret_dlg;
 }
 
 wxFileDialog* OCPNPlatform::AdjustFileDialogFont(wxWindow *container, wxFileDialog* dlg)
 {
     wxFileDialog* ret_dlg = dlg;
-    
+#ifndef __WXGTK__
+
     dlg->Show();
     dlg->SetSize( container->GetSize());
     dlg->Centre();
@@ -1461,7 +1713,7 @@ wxFileDialog* OCPNPlatform::AdjustFileDialogFont(wxWindow *container, wxFileDial
         
     }
     ret_dlg->Hide();
-    
+#endif
     return ret_dlg;
 }
 
@@ -1631,26 +1883,26 @@ bool GetMonitorSizeFromEDID(const HKEY hDevRegKey, int *WidthMm, int *HeightMm)
 {
     DWORD dwType, AcutalValueNameLength = NAME_SIZE;
     TCHAR valueName[NAME_SIZE];
-    
+
     BYTE EDIDdata[1024];
     DWORD edidsize=sizeof(EDIDdata);
-    
+
     for (LONG i = 0, retValue = ERROR_SUCCESS; retValue != ERROR_NO_MORE_ITEMS; ++i)
     {
         retValue = RegEnumValue ( hDevRegKey, i, &valueName[0],
                                  &AcutalValueNameLength, NULL, &dwType,
                                  EDIDdata, // buffer
                                  &edidsize); // buffer size
-        
+
         if (retValue != ERROR_SUCCESS || 0 != _tcscmp(valueName,_T("EDID")))
             continue;
-        
+
         *WidthMm  = ((EDIDdata[68] & 0xF0) << 4) + EDIDdata[66];
         *HeightMm = ((EDIDdata[68] & 0x0F) << 8) + EDIDdata[67];
-        
+
         return true; // valid EDID found
     }
-    
+
     return false; // EDID not found
 }
 
@@ -1664,18 +1916,18 @@ bool GetSizeForDevID(wxString &TargetDevID, int *WidthMm, int *HeightMm)
                                              NULL, // device info, create a new one.
                                              NULL, // machine name, local machine
                                              NULL);// reserved
-    
+
     if (NULL == devInfo)
         return false;
-    
+
     bool bRes = false;
-    
+
     for (ULONG i=0; ERROR_NO_MORE_ITEMS != GetLastError(); ++i)
     {
         SP_DEVINFO_DATA devInfoData;
         memset(&devInfoData,0,sizeof(devInfoData));
         devInfoData.cbSize = sizeof(devInfoData);
-        
+
         if (SetupDiEnumDeviceInfo(devInfo,i,&devInfoData))
         {
             wchar_t    Instance[80];
@@ -1683,15 +1935,15 @@ bool GetSizeForDevID(wxString &TargetDevID, int *WidthMm, int *HeightMm)
             wxString instance(Instance);
             if(instance.Upper().Find( TargetDevID.Upper() ) == wxNOT_FOUND )
                 continue;
-            
+
             HKEY hDevRegKey = SetupDiOpenDevRegKey(devInfo,&devInfoData,
                                                    DICS_FLAG_GLOBAL, 0, DIREG_DEV, KEY_READ);
-            
+
             if(!hDevRegKey || (hDevRegKey == INVALID_HANDLE_VALUE))
                 continue;
-            
+
             bRes = GetMonitorSizeFromEDID(hDevRegKey, WidthMm, HeightMm);
-            
+
             RegCloseKey(hDevRegKey);
         }
     }
@@ -1699,52 +1951,60 @@ bool GetSizeForDevID(wxString &TargetDevID, int *WidthMm, int *HeightMm)
     return bRes;
 }
 
-bool GetWindowsMonitorSize( int *width, int *height)
+bool OCPNPlatform::GetWindowsMonitorSize( int *width, int *height)
 {
-    int WidthMm = 0;
-    int HeightMm = 0;
-    
-    DISPLAY_DEVICE dd;
-    dd.cb = sizeof(dd);
-    DWORD dev = 0; // device index
-    int id = 1; // monitor number, as used by Display Properties > Settings
-    
-    wxString DeviceID;
-    bool bFoundDevice = false;
-    while (EnumDisplayDevices(0, dev, &dd, 0) && !bFoundDevice)
-    {
-        DISPLAY_DEVICE ddMon;
-        ZeroMemory(&ddMon, sizeof(ddMon));
-        ddMon.cb = sizeof(ddMon);
-        DWORD devMon = 0;
-        
-        while (EnumDisplayDevices(dd.DeviceName, devMon, &ddMon, 0) && !bFoundDevice)
+    bool bFoundDevice = true;
+
+    if(m_monitorWidth < 10){
+
+        int WidthMm = 0;
+        int HeightMm = 0;
+
+        DISPLAY_DEVICE dd;
+        dd.cb = sizeof(dd);
+        DWORD dev = 0; // device index
+        int id = 1; // monitor number, as used by Display Properties > Settings
+
+        wxString DeviceID;
+        bFoundDevice = false;
+        while (EnumDisplayDevices(0, dev, &dd, 0) && !bFoundDevice)
         {
-            if (ddMon.StateFlags & DISPLAY_DEVICE_ACTIVE &&
-                !(ddMon.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER))
-            {
-                DeviceID = wxString(ddMon.DeviceID, wxConvUTF8);
-                DeviceID = DeviceID.Mid (8);
-                DeviceID = DeviceID.Mid (0, DeviceID.Find ( '\\' ));
-                
-                bFoundDevice = GetSizeForDevID(DeviceID, &WidthMm, &HeightMm);
-            }
-            devMon++;
-            
+            DISPLAY_DEVICE ddMon;
             ZeroMemory(&ddMon, sizeof(ddMon));
             ddMon.cb = sizeof(ddMon);
+            DWORD devMon = 0;
+
+            while (EnumDisplayDevices(dd.DeviceName, devMon, &ddMon, 0) && !bFoundDevice)
+            {
+                if (ddMon.StateFlags & DISPLAY_DEVICE_ACTIVE &&
+                    !(ddMon.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER))
+                {
+                    DeviceID = wxString(ddMon.DeviceID, wxConvUTF8);
+                    DeviceID = DeviceID.Mid (8);
+                    DeviceID = DeviceID.Mid (0, DeviceID.Find ( '\\' ));
+
+                    bFoundDevice = GetSizeForDevID(DeviceID, &WidthMm, &HeightMm);
+                }
+                devMon++;
+
+                ZeroMemory(&ddMon, sizeof(ddMon));
+                ddMon.cb = sizeof(ddMon);
+            }
+
+            ZeroMemory(&ddMon, sizeof(ddMon));
+            ddMon.cb = sizeof(ddMon);
+
         }
-        
-        ZeroMemory(&dd, sizeof(dd));
-        dd.cb = sizeof(dd);
-        dev++;
+        m_monitorWidth = WidthMm;
+        m_monitorHeight = HeightMm;
+
     }
-    
+
     if(width)
-        *width = WidthMm;
+        *width = m_monitorWidth;
     if(height)
-        *height = HeightMm;
-    
+        *height = m_monitorHeight;
+
     return bFoundDevice;
 }
 
@@ -1814,7 +2074,7 @@ void OCPNPlatform::setChartTypeMaskSel(int mask, wxString &indicator)
     
 }
 
-#ifdef __WXQT__
+#ifdef __OCPN_ANDROID__
 QString g_qtStyleSheet;
 
 bool LoadQtStyleSheet(wxString &sheet_file)

@@ -6,48 +6,48 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "src/chcanv.cpp"
-            timestampString = "492783328.651225"
+            filePath = "src/chartdbs.cpp"
+            timestampString = "506971217.461912"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "8740"
-            endingLineNumber = "8740"
-            landmarkName = "ChartCanvas::RenderAllChartOutlines( ocpnDC &amp;dc, ViewPort&amp; vp )"
+            startingLineNumber = "2364"
+            endingLineNumber = "2364"
+            landmarkName = "ChartDatabase::CreateChartTableEntry(const wxString &amp;filePath, ChartClassDescriptor &amp;chart_desc)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "src/chcanv.cpp"
-            timestampString = "492783334.804132"
+            filePath = "src/options.cpp"
+            timestampString = "507583926.259624"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "8796"
-            endingLineNumber = "8796"
-            landmarkName = "ChartCanvas::RenderChartOutline( ocpnDC &amp;dc, int dbIndex, ViewPort&amp; vp )"
+            startingLineNumber = "2421"
+            endingLineNumber = "2421"
+            landmarkName = "options::CreatePanel_Advanced( size_t parent, int border_size, int group_item_spacing )"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "src/cm93.cpp"
-            timestampString = "492783478.695424"
+            filePath = "src/options.cpp"
+            timestampString = "507583958.520668"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "5963"
-            endingLineNumber = "5963"
-            landmarkName = "cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &amp;dc, ViewPort&amp; vp )"
+            startingLineNumber = "2632"
+            endingLineNumber = "2632"
+            landmarkName = "options::CreatePanel_Advanced( size_t parent, int border_size, int group_item_spacing )"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

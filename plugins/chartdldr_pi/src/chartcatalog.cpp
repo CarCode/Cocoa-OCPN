@@ -120,7 +120,10 @@ bool ChartCatalog::LoadFromXml( TiXmlDocument * doc, bool headerOnly )
                 charts->Add( new EncCell(child) );
         }
     }
-    else if( rootName.StartsWith(_T("IENCU37ProductCatalog")) )
+    // "IENCBuoyProductCatalog" and "IENCSouthwestPassProductCatalog" added by .Paul.
+    else if( rootName.StartsWith(_T("IENCU37ProductCatalog")) ||
+            rootName.StartsWith(_T("IENCBuoyProductCatalog")) ||
+            rootName.StartsWith(_T("IENCSouthwestPassProductCatalog")) )
     {
         if( !ParseNoaaHeader(root->FirstChildElement()) )
         {
@@ -424,7 +427,7 @@ RasterChart::RasterChart( TiXmlNode * xmldata ) : Chart( xmldata )
 EncCell::EncCell( TiXmlNode * xmldata ) : Chart( xmldata )
 {
     TiXmlNode *child;
-    name = wxEmptyString;
+    number = wxEmptyString;  //  Use number (not name) for zip file name and cell name  .Paul.
     src_chart = wxEmptyString;
     cscale = -1;
     status = wxEmptyString;
@@ -439,8 +442,8 @@ EncCell::EncCell( TiXmlNode * xmldata ) : Chart( xmldata )
         {
             if( !child->NoChildren() )
             {
-                name = wxString::FromUTF8(child->FirstChild()->Value());
-                number = name;
+                number = wxString::FromUTF8(child->FirstChild()->Value());  //  .Paul.
+                //  name = number;  //  .Paul.
             }
         }
         else if( s == _T("src_chart") )
@@ -483,7 +486,8 @@ EncCell::EncCell( TiXmlNode * xmldata ) : Chart( xmldata )
 
 IEncCell::IEncCell( TiXmlNode * xmldata ) : Chart( xmldata )
 {
-    name = wxEmptyString;
+    //  Use number (not name) for zip file name and cell name  .Paul.
+    number = wxEmptyString;
     location = NULL;
     river_name = wxEmptyString;
     river_miles = NULL;
@@ -500,8 +504,9 @@ IEncCell::IEncCell( TiXmlNode * xmldata ) : Chart( xmldata )
         {
             if( !child->NoChildren() )
             {
-                name = wxString::FromUTF8(child->FirstChild()->Value());
-                zipfile_location = wxString::Format(_T("%s.zip"), name.c_str());
+                //  Use number (not name) for zip file name and cell name  .Paul.
+                number = wxString::FromUTF8(child->FirstChild()->Value());
+                zipfile_location = wxString::Format(_T("%s.zip"), number.c_str());
             }
         }
         else if( s == _T("location") )
@@ -551,8 +556,21 @@ IEncCell::~IEncCell()
 }
 
 wxString IEncCell::GetChartTitle()
+// Revised by .Paul. to support IENC catalogs that do not identify rivers or river miles.
 {
-    return wxString::Format(_("%s (%s to %s), river miles %3.1f - %3.1f"), river_name.c_str(), location->from.c_str(), location->to.c_str(), river_miles->begin, river_miles->end);
+    if( river_name != wxEmptyString )
+    {
+        // This formatting of river_name.c_str() ... river_miles->end works for "IENCU37ProductCatalog"
+        // where river_name is specified.
+        return wxString::Format(_("%s (%s to %s), river miles %3.1f - %3.1f"), river_name.c_str(), location->from.c_str(), location->to.c_str(), river_miles->begin, river_miles->end);
+    }
+    else
+    {
+        // Simply use the Cell_name for "IENCBuoyProductCatalog" or "IENCSouthwestPassProductCatalog"
+        // where river_name is not specified.
+        // Cell_name is in number.c_str()     Cell_name was in name.c_str()
+        return wxString::Format(_("%s"), number.c_str());// .Paul.
+    }
 }
 
 wxString IEncCell::GetDownloadLocation()

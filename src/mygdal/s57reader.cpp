@@ -24,7 +24,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************/
+ ******************************************************************************
+ *
+ * *
+ */
 
 #include "s57.h"
 #include "ogr_api.h"
@@ -349,7 +352,7 @@ int S57Reader::Ingest(CallBackFunction pcallback)
                     const char *pachData = poField->GetSubfieldData(poSFDefn, &nBytesRemaining, 0);
                     nRCNM = poSFDefn->ExtractIntData( pachData, nBytesRemaining, NULL );
                 }
-                
+
                 poSFDefn = poField->GetFieldDefn()->FindSubfieldDefn( "RCID" );
                 if( poSFDefn ) {
                     const char *pachData = poField->GetSubfieldData(poSFDefn, &nBytesRemaining, 0);
@@ -1462,15 +1465,12 @@ void S57Reader::AssembleSoundingGeometry( DDFRecord * poFRecord,
     poField = poSRecord->FindField( "SG2D" );
     if( poField == NULL )
         poField = poSRecord->FindField( "SG3D" );
-    if( poField == NULL )
+    if( poField == NULL ) {
 #ifdef __WXOSX__
-    {
         delete poMP;
+#endif
         return;
     }
-#else
-    return;
-#endif
 
     poXCOO = poField->GetFieldDefn()->FindSubfieldDefn( "XCOO" );
     poYCOO = poField->GetFieldDefn()->FindSubfieldDefn( "YCOO" );
@@ -2281,16 +2281,33 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
         /* If we don't have SG2D, check for SG3D */
         if( poDstSG2D == NULL )
         {
-            poSrcSG2D = poUpdate->FindField( "SG3D" );
             poDstSG2D = poTarget->FindField( "SG3D" );
+            if (poDstSG2D != NULL)
+            {
+                poSrcSG2D = poUpdate->FindField("SG3D");
+            }
         }
-
-        if( (poSrcSG2D == NULL && nCCUI != 2) || poDstSG2D == NULL )
+        
+        if( (poSrcSG2D == NULL && nCCUI != 2)
+            || (poDstSG2D == NULL && nCCUI != 1) )
         {
-            CPLAssert( FALSE );
+            //CPLAssert( FALSE );
             return FALSE;
         }
-
+        
+        if (poDstSG2D == NULL)
+        {
+            poTarget->AddField(poTarget->GetModule()->FindFieldDefn("SG2D"));
+            poDstSG2D = poTarget->FindField("SG2D");
+            if (poDstSG2D == NULL) {
+                //CPLAssert( FALSE );
+                return FALSE;
+            }
+            
+            // Delete null default data that was created
+            poTarget->SetFieldRaw( poDstSG2D, 0, NULL, 0 );
+        }
+        
         nCoordSize = poDstSG2D->GetFieldDefn()->GetFixedWidth();
 
         if( nCCUI == 1 ) /* INSERT */
@@ -2357,16 +2374,21 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
 /* -------------------------------------------------------------------- */
     if( poUpdate->FindField( "ATTF" ) != NULL )
     {
-        DDFSubfieldDefn *poSrcATVLDefn;
+        bool b_newField = false;
+//        DDFSubfieldDefn *poSrcATVLDefn;  // Not used
         DDFField *poSrcATTF = poUpdate->FindField( "ATTF" );
         DDFField *poDstATTF = poTarget->FindField( "ATTF" );
 
         if(NULL == poDstATTF)
         {
-              //  This probably means that the update applies to an attribute that doesn't (yet) exist
-              //  To fix, we need to add an attribute, then update it.
-              CPLDebug( "S57","Could not find target ATTF field for attribute update");
-              return FALSE;
+            //  This probably means that the update applies to an attribute that doesn't (yet) exist
+            //  To fix, we need to add an attribute, then update it.
+
+            DDFFieldDefn *poATTF = poTarget->GetModule()->FindFieldDefn( "ATTF" );
+            poTarget->AddField(poATTF);
+            poDstATTF = poTarget->FindField( "ATTF" );
+            b_newField = true;
+
         }
 
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
@@ -2388,6 +2410,15 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
             if( iTAtt == -1 )
                 iTAtt = poDstATTF->GetRepeatCount();
 
+            //  If we just added a new field above, then the first attribute will be 0.
+            //   We should replace this one    
+            if(b_newField){
+                if( poTarget->GetIntSubfield( "ATTF", 0, "ATTL", 0 ) == 0){
+                    iTAtt = 0;
+                    b_newField = false;
+                }
+            }
+
             pszRawData = poSrcATTF->GetInstanceData( iAtt, &nDataBytes );
             poTarget->SetFieldRaw( poDstATTF, iTAtt, pszRawData, nDataBytes );
         }
@@ -2396,41 +2427,41 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
     if( poUpdate->FindField( "NATF" ) != NULL )
     {
         bool b_newField = false;
-        DDFSubfieldDefn *poSrcATVLDefn;
+//        DDFSubfieldDefn *poSrcATVLDefn;  // Not used
         DDFField *poSrcATTF = poUpdate->FindField( "NATF" );
         DDFField *poDstATTF = poTarget->FindField( "NATF" );
- 
+
 //        int up_FIDN = poUpdate->GetIntSubfield( "FOID", 0, "FIDN", 0 );
 //        if(up_FIDN == 1103712044 /*1225530334*/){
 //            poTarget->Dump(stdout);
 //        }
-        
+
         if(NULL == poDstATTF)
         {
             //  This probably means that the update applies to an attribute that doesn't (yet) exist
             //  To fix, we need to add an attribute, then update it.
-            
+
             DDFFieldDefn *poNATF = poTarget->GetModule()->FindFieldDefn( "NATF" );
             poTarget->AddField(poNATF);
             poDstATTF = poTarget->FindField( "NATF" );
             b_newField = true;
-            
+
 //            poTarget->Dump(stdout);
-            
+
 //            CPLDebug( "S57","Could not find target ATTF field for attribute update");
 //           return FALSE;
         }
-        
+
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
-        
+
 //        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );  // Not used
-        
+
         for( int iAtt = 0; iAtt < nRepeatCount; iAtt++ )
         {
             int nATTL = poUpdate->GetIntSubfield( "NATF", 0, "ATTL", iAtt );
             int iTAtt, nDataBytes;
             const char *pszRawData;
-            
+
             for( iTAtt = poDstATTF->GetRepeatCount()-1; iTAtt >= 0; iTAtt-- )
             {
                 if( poTarget->GetIntSubfield( "NATF", 0, "ATTL", iTAtt ) == nATTL )
@@ -2447,17 +2478,17 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
                     b_newField = false;
                 }
             }
-            
-                
+
+
             pszRawData = poSrcATTF->GetInstanceData( iAtt, &nDataBytes );
-            
+
 //            poTarget->Dump(stdout);
             poTarget->SetFieldRaw( poDstATTF, iTAtt, pszRawData, nDataBytes ); ///dsr
 //            poTarget->Dump(stdout);
-            
+
         }
     }
-    
+
     return TRUE;
 }
 

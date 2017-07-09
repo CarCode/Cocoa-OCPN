@@ -78,7 +78,7 @@ Größte Änderung ist jedoch die Verwendung von Clang/LLVM mit Xcode statt
 der Befehlszeilen orientierten Cmake Version.
 
 Compiler:
-Xcode Beta 8
+Xcode 8
 Apple LLVM version 8.0.0 (clang-800.0.24.1) (based on LLVM 3.6.0svn)
 Target: x86_64-apple-darwin15.5.0
 SDK 10.12 Sierra
@@ -107,5 +107,5 @@ Siehe batchwx.sh bzw. Xcode Scripts.
 
 wxCurl wurde auf diese Art ebenfalls als dynamische Library compiliert.
 -----------------------------------------------------------------------
-15. Juni 2016
+10. September 2016
 

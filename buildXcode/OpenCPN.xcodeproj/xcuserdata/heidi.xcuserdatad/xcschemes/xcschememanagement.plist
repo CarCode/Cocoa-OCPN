@@ -84,6 +84,11 @@
 			<key>orderHint</key>
 			<integer>12</integer>
 		</dict>
+		<key>goodanchorage_pi.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>35</integer>
+		</dict>
 		<key>gradar_pi.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -123,11 +128,6 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>44</integer>
-		</dict>
-		<key>objsearch_pi copy.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>43</integer>
 		</dict>
 		<key>objsearch_pi.xcscheme</key>
 		<dict>
@@ -493,6 +493,11 @@
 			<true/>
 		</dict>
 		<key>A6DB33441B736C0400163272</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A6FA8E721DB62D5400D3516F</key>
 		<dict>
 			<key>primary</key>
 			<true/>

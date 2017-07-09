@@ -87,6 +87,7 @@ extern wxPrintData               *g_printData;
 extern wxPageSetupData*          g_pageSetupData;
 
 extern float g_ChartScaleFactorExp;
+extern int   g_GUIScaleFactor;
 
 /*!
 * Helper stuff for calculating Route Plans
@@ -447,7 +448,6 @@ BEGIN_EVENT_TABLE( RouteProp, wxDialog )
     EVT_BUTTON( ID_ROUTEPROP_CANCEL, RouteProp::OnRoutepropCancelClick )
     EVT_BUTTON( ID_ROUTEPROP_OK, RouteProp::OnRoutepropOkClick )
     EVT_LIST_ITEM_SELECTED( ID_LISTCTRL, RouteProp::OnRoutepropListClick )
-    EVT_LIST_ITEM_SELECTED( ID_TRACKLISTCTRL, RouteProp::OnRoutepropListClick )
     EVT_BUTTON( ID_ROUTEPROP_SPLIT, RouteProp::OnRoutepropSplitClick )
     EVT_BUTTON( ID_ROUTEPROP_EXTEND, RouteProp::OnRoutepropExtendClick )
     EVT_BUTTON( ID_ROUTEPROP_PRINT, RouteProp::OnRoutepropPrintClick )
@@ -560,7 +560,7 @@ void RouteProp::OnRoutePropRightClick( wxListEvent &event )
 
     if( ! m_pRoute->m_bIsInLayer ) {
         
-#ifdef __WXQT__
+#ifdef __OCPN_ANDROID__
         wxFont *pf = OCPNGetFont(_T("Menu"), 0);
 
         // add stuff
@@ -2004,11 +2004,18 @@ bool RouteProp::UpdateProperties()
                 double latAverage = (prp->m_lat + slat)/2;
                 double lonAverage = (prp->m_lon + slon)/2;
                 double varBrg = gFrame->GetTrueOrMag( brg, latAverage, lonAverage);
-
+#ifdef __WXOSX__
+                t.Printf( _T("%03.0f Grad M"), varBrg );
+#else
                 t.Printf( _T("%03.0f Deg. M"), varBrg );
+#endif
             }
             else
+#ifdef __WXOSX__
+                t.Printf( _T("%03.0f Grad T"), gFrame->GetTrueOrMag( brg ) );
+#else
                 t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( brg ) );
+#endif
             if( arrival )
                 m_wpList->SetItem( item_line_index, 3, t );
             if( !enroute )
@@ -2017,26 +2024,53 @@ bool RouteProp::UpdateProperties()
             // Course (bearing of next )
             if (_next_prp){
                 if( g_bShowMag ){
+#ifndef __WXOSX__
                     double next_lat = prp->m_lat;
                     double next_lon = prp->m_lon;
                     if (_next_prp ){
                         next_lat = _next_prp->m_lat;
                         next_lon = _next_prp->m_lon;
                     }
-
-                    double latAverage = (prp->m_lat + next_lat)/2;
-                    double lonAverage = (prp->m_lon + next_lon)/2;
-                    double varCourse = gFrame->GetTrueOrMag( course, latAverage, lonAverage);
-                    
-                    t.Printf( _T("%03.0f Deg. M"), varCourse );
+#else
+                    if ( arrival ) {
+                        double next_lat = prp->m_lat;
+                        double next_lon = prp->m_lon;
+                        if (_next_prp ){
+                            next_lat = _next_prp->m_lat;
+                            next_lon = _next_prp->m_lon;
+                        }
+#endif
+                        double latAverage = (prp->m_lat + next_lat)/2;
+                        double lonAverage = (prp->m_lon + next_lon)/2;
+                        double varCourse = gFrame->GetTrueOrMag( course, latAverage, lonAverage);
+#ifdef __WXOSX__
+                        t.Printf( _T("%03.0f Grad M"), varCourse );
+#else
+                        t.Printf( _T("%03.0f Deg. M"), varCourse );
+#endif
+                        m_wpList->SetItem( item_line_index, 10, t );
+                    }
+                    else
+                        m_wpList->SetItem( item_line_index, 10, nullify );
                 }
-                else
-                    t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( course ) );
-                if( arrival )
-                    m_wpList->SetItem( item_line_index, 10, t );
+                else {
+                    if ( arrival ) {
+#ifdef __WXOSX__
+                        t.Printf( _T("%03.0f Grad T"), course );
+#else
+                        t.Printf( _T("%03.0f Deg. T"), course );
+#endif
+                        m_wpList->SetItem( item_line_index, 10, t );
+                    } else
+                        m_wpList->SetItem( item_line_index, 10, nullify );
+                }
+//                else
+//                    t.Printf( _T("%03.0f Deg. T"), gFrame->GetTrueOrMag( course ) );
+//                if( arrival )
+//                        m_wpList->SetItem( item_line_index, 10, t );
             }
-            else
-                m_wpList->SetItem( item_line_index, 10, nullify );
+//            else
+//                m_wpList->SetItem( item_line_index, 10, nullify );
 
             //  Lat/Lon
             wxString tlat = toSDMM( 1, prp->m_lat, false );  // low precision for routes
@@ -2852,15 +2886,18 @@ MarkInfoDef::MarkInfoDef( wxWindow* parent, wxWindowID id, const wxString& title
     RecalculateSize();
     
     // Connect Events
+#ifndef __WXOSX__
     m_textLatitude->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
     m_textLongitude->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
-
+#endif
     m_textLatitude->Connect( wxEVT_CONTEXT_MENU,
             wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
     m_textLongitude->Connect( wxEVT_CONTEXT_MENU,
             wxCommandEventHandler( MarkInfoImpl::OnRightClick ), NULL, this );
+#ifndef __WXOSX__
     m_textArrivalRadius->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnArrivalRadiusChange ), NULL, this );
     m_textWaypointRangeRingsStep->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnWaypointRangeRingsStepChange ), NULL, this );
+#endif
     m_textDescription->Connect( wxEVT_COMMAND_TEXT_UPDATED,
             wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
     m_buttonExtDescription->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
@@ -2955,14 +2992,18 @@ void MarkInfoDef::OnWaypointRangeRingSelect( wxCommandEvent& event )
 MarkInfoDef::~MarkInfoDef()
 {
     // Disconnect Events
+#ifndef __WXOSX__
     m_textLatitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
     m_textLongitude->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MarkInfoDef::OnPositionCtlUpdated ), NULL, this );
+#endif
     m_textDescription->Disconnect( wxEVT_COMMAND_TEXT_UPDATED,
             wxCommandEventHandler( MarkInfoDef::OnDescChangedBasic ), NULL, this );
+#ifndef __WXOSX__
     m_textArrivalRadius->Disconnect( wxEVT_COMMAND_TEXT_ENTER,
             wxCommandEventHandler( MarkInfoDef::OnArrivalRadiusChange ), NULL, this );
     m_textWaypointRangeRingsStep->Disconnect( wxEVT_COMMAND_TEXT_ENTER,
             wxCommandEventHandler( MarkInfoDef::OnWaypointRangeRingsStepChange ), NULL, this );
+#endif
     m_buttonExtDescription->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
             wxCommandEventHandler( MarkInfoDef::OnExtDescriptionClick ), NULL, this );
     this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED,
@@ -3173,21 +3214,25 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
         m_bcomboBoxIcon->Clear();
         //      Iterate on the Icon Descriptions, filling in the combo control
         bool fillCombo = m_bcomboBoxIcon->GetCount() == 0;
-        wxImageList *icons = pWayPointMan->Getpmarkicon_image_list();
+#ifndef __WXOSX__  //  Geht das jetzt???
+        double factor = (0.7 * (double)GetCharHeight()) / (double)16.0;   // Because I know what the base icon size is....
+        factor = wxMin(3.0, factor);            // not greater than 3
+        factor = wxMax(1.0, factor);            // nor less than 1
+#else
+        double factor = 0.6;
+#endif
+
+        //  A little optimization for "normal" situations, requiring no scaling
+        if(factor < 2.) factor = 1.;
+
+        wxImageList *icon_list = pWayPointMan->Getpmarkicon_image_list( factor );
 
         int target = 16;
-        if( fillCombo  && icons){
+        if( fillCombo  && icon_list){
             for( int i = 0; i < pWayPointMan->GetNumIcons(); i++ ) {
                 wxString *ps = pWayPointMan->GetIconDescription( i );
-                wxBitmap bmp = icons->GetBitmap( i );
+                wxBitmap bmp = icon_list->GetBitmap( i );
 
-                if(g_ChartScaleFactorExp > 1.0){
-                    target = bmp.GetHeight() * g_ChartScaleFactorExp;
-                    wxImage img = bmp.ConvertToImage();
-                    img.Rescale(target, target, wxIMAGE_QUALITY_HIGH);
-                    bmp = wxBitmap(img);
-                }
-                
                 m_bcomboBoxIcon->Append( *ps, bmp );
             }
         }
@@ -3201,14 +3246,14 @@ bool MarkInfoImpl::UpdateProperties( bool positionOnly )
 
         //  not found, so add  it to the list, with a generic bitmap and using the name as description
         // n.b.  This should never happen...
-        if( icons && -1 == iconToSelect){
-            m_bcomboBoxIcon->Append( m_pRoutePoint->GetIconName(), icons->GetBitmap( 0 ) );
+        if( icon_list && -1 == iconToSelect){
+            m_bcomboBoxIcon->Append( m_pRoutePoint->GetIconName(), icon_list->GetBitmap( 0 ) );
             iconToSelect = m_bcomboBoxIcon->GetCount() - 1;
         }
         
         
         m_bcomboBoxIcon->Select( iconToSelect );
-        icons = NULL;
+        icon_list = NULL;
     }
 
 #ifdef __OCPN__ANDROID__

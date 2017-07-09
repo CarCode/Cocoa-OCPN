@@ -83,7 +83,11 @@ public:
             const wxString initial_dir = wxEmptyString, int sort_type = SORT_NAME,
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize,
-            long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU );
+#ifdef __WXMAC__
+            long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP );
+#else
+            long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+#endif
     void CreateControls();
     void OnClose( wxCloseEvent& event );
     void OnIdOKClick( wxCommandEvent& event );

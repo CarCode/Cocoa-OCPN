@@ -305,6 +305,8 @@ public:
       bool SendMouseEventToPlugins( wxMouseEvent &event);
       bool SendKeyEventToPlugins( wxKeyEvent &event);
 
+      void SendConfigToAllPlugIns();
+
       wxArrayString GetPlugInChartClassNameArray(void);
 
       ListOfPI_S57Obj *GetPlugInObjRuleListAtLatLon( ChartPlugInWrapper *target, float zlat, float zlon,

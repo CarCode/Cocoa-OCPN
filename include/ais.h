@@ -1,8 +1,4 @@
-<<<<<<< .merge_file_JuctmM
 /***************************************************************************
-=======
-/******************************************************************************
->>>>>>> .merge_file_ng687D
  *
  * Project:  OpenCPN
  * Purpose:  AIS Decoder Object
@@ -25,13 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
-<<<<<<< .merge_file_JuctmM
  ***************************************************************************/
-=======
- ***************************************************************************
- *
- */
->>>>>>> .merge_file_ng687D
 
 #ifndef __AIS_H__
 #define __AIS_H__
@@ -236,8 +226,8 @@ wxString ais_get_status(int index);
 wxString ais_get_type(int index);
 wxString ais_get_short_type(int index);
 
-void AISDrawAreaNotices (ocpnDC& dc );
-void AISDraw(ocpnDC& dc);
+void AISDrawAreaNotices (ocpnDC& dc, ViewPort &vp, ChartCanvas *cp );
+void AISDraw(ocpnDC& dc, ViewPort &vp, ChartCanvas *cp );
 bool AnyAISTargetsOnscreen( ViewPort &vp );
 
 

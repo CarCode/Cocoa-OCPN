@@ -115,7 +115,7 @@ std::cout << x  << std::endl ; } while (0)
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 
-#include "ocpn_plugin.h"
+#include "../../../include/ocpn_plugin.h"
 #include "undo.h"
 #include "ODPoint.h"
 #include "ODConfig.h"

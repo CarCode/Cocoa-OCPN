@@ -92,7 +92,7 @@ void GribOverlaySettings::Read()
     pConf->Read ( _T ( "LoopMode" ), &m_bLoopMode, false );
     pConf->Read ( _T ( "LoopStartPoint" ), &m_LoopStartPoint, 0 );
     pConf->Read ( _T ( "SlicesPerUpdate" ), &m_SlicesPerUpdate, 5);
-    pConf->Read ( _T ( "UpdatesPerSecond" ), &m_UpdatesPerSecond, 2);
+    pConf->Read ( _T ( "UpdatesPerSecond" ), &m_UpdatesPerSecond, 4);
     pConf->Read ( _T ( "Interpolate" ), &m_bInterpolate, false );
     //gui options
     m_iCtrlandDataStyle = m_DialogStyle;
@@ -473,9 +473,13 @@ GribSettingsDialog::GribSettingsDialog(GRIBUICtrlBar &parent, GribOverlaySetting
     m_sSlicesPerUpdate->SetSelection(m_Settings.m_SlicesPerUpdate);
     m_sUpdatesPerSecond->SetValue(m_Settings.m_UpdatesPerSecond);
     m_sTransparency->SetValue(100. - ((float) m_Settings.m_iOverlayTransparency * 100. / 254.));
-    if(!m_cInterpolate->IsChecked() ) {              //hide no suiting parameters
-        m_tSlicesPerUpdate->Hide();
-        m_sSlicesPerUpdate->Hide();
+    if(!m_cInterpolate->IsChecked() ) {              //eventually disable parameters
+        m_tSlicesPerUpdate->Disable();
+        m_sSlicesPerUpdate->Disable();
+    }
+    if( !m_cLoopMode->IsChecked() ) {
+        m_staticText26->Disable();
+        m_cLoopStartPoint->Disable();
     }
 
     m_rbCurDataAttaWCap->SetValue( m_Settings.m_iCtrlandDataStyle == 0 );
@@ -830,13 +834,21 @@ void GribSettingsDialog::OnIntepolateChange( wxCommandEvent& event )
     if( m_cInterpolate->IsChecked() ) {
         OCPNMessageBox_PlugIn(this, _("You have chosen to authorize interpolation.\nDon't forget that data displayed will not be real but recomputed\nThis can decrease accuracy!"),
                             _("Warning!") );
-        m_tSlicesPerUpdate->Show();
-        m_sSlicesPerUpdate->Show();
+        m_tSlicesPerUpdate->Enable();
+        m_sSlicesPerUpdate->Enable();
     } else {                                        //hide no suiting parameters
-        m_tSlicesPerUpdate->Hide();
-        m_sSlicesPerUpdate->Hide();
+        m_tSlicesPerUpdate->Disable();
+        m_sSlicesPerUpdate->Disable();
     }
-    SetSettingsDialogSize();
+    if( m_cLoopMode->IsChecked() ) {
+        m_staticText26->Enable();
+        m_cLoopStartPoint->Enable();
+    } else {
+        m_staticText26->Disable();
+        m_cLoopStartPoint->Disable();
+    }
+    Refresh();
+    // SetSettingsDialogSize();
 }
 
 void GribSettingsDialog::OnSpacingModeChange( wxCommandEvent& event )

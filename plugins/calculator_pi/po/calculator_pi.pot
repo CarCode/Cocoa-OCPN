@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: calculator_pi 3.4.64\n"
+"Project-Id-Version: calculator_pi 16.1.20\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-05 14:03+0100\n"
+"POT-Creation-Date: 2017-01-12 15:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,157 +69,8 @@ msgstr ""
 msgid "List"
 msgstr ""
 
-#: ../src/calculatorgui_impl.cpp:457 ../src/calculatorgui_impl.cpp:526
-#: ../src/calculatorgui_impl.cpp:538
-msgid "Error"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:457
-msgid "Ans"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:461
-msgid "clear"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:461
-msgid "Clear"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:461
-msgid "CLEAR"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:465
-msgid "HideHelp"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:465
-msgid "hidehelp"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:465
-msgid "HIDEHELP"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:465
-msgid "ShowHelp"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:465
-msgid "showhelp"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:465
-msgid "SHOWHELP"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:471
-msgid "HideHistory"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:471
-msgid "hidehistory"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:471
-msgid "HIDEHISTORY"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:471
-msgid "ShowHistory"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:471
-msgid "showhistory"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:471
-msgid "SHOWHISTORY"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:477
-msgid "HideCalculate"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:477
-msgid "hidecalculate"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:477
-msgid "HIDECALCULATE"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:477
-msgid "ShowCalculate"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:477
-msgid "showcalculate"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:477
-msgid "SHOWCALCULATE"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:483
-msgid "HideFunction"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:483
-msgid "hidefunction"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:483
-msgid "HIDEFUNCTION"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:483
-msgid "showfunction"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:483
-msgid "ShowFunction"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:483
-msgid "SHOWFUNCTION"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:489
-msgid "Help"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:489
-msgid "HELP"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:489
-msgid "help"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:494 ../src/calculatorgui.cpp:40
-msgid "Function"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:494
-msgid "function"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:494
-msgid "FUNCTION"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:499
-msgid "history"
-msgstr ""
-
 #: ../src/calculatorgui_impl.cpp:499 ../src/calculatorgui.cpp:43
 msgid "History"
-msgstr ""
-
-#: ../src/calculatorgui_impl.cpp:499
-msgid "HISTORY"
 msgstr ""
 
 #: ../src/calculatorgui_impl.cpp:518 ../src/calculatorgui_impl.cpp:520
@@ -230,8 +81,16 @@ msgstr ""
 msgid " Calculator output:"
 msgstr ""
 
+#: ../src/calculatorgui_impl.cpp:526 ../src/calculatorgui_impl.cpp:538
+msgid "Error"
+msgstr ""
+
 #: ../src/calculatorgui.cpp:34 ../src/calculatorgui.cpp:893
 msgid "Calculate"
+msgstr ""
+
+#: ../src/calculatorgui.cpp:40
+msgid "Function"
 msgstr ""
 
 #: ../src/calculatorgui.cpp:46
@@ -483,7 +342,7 @@ msgstr ""
 msgid "ere"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:631 ../src/calculatorgui.cpp:899
+#: ../src/calculatorgui.cpp:631 ../src/calculatorgui.cpp:902
 msgid "Description"
 msgstr ""
 
@@ -507,7 +366,7 @@ msgstr ""
 msgid "Parameter"
 msgstr ""
 
-#: ../src/calculatorgui.cpp:896
+#: ../src/calculatorgui.cpp:899
 msgid "Close"
 msgstr ""
 

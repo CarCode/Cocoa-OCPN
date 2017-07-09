@@ -1,4 +1,4 @@
-/******************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Bar Window
@@ -21,10 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- *
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -160,15 +157,6 @@ void Piano::Paint( int y, ocpnDC& dc, wxDC *shapeDC )
                 dc.SetBrush( m_tBrush );
         }
 
-#if 0
-        // Check to see if this box appears in the sub_light array
-        // If so, add a crosshatch pattern to the brush
-        if(InArray(m_eclipsed_index_array, key_db_index)) {
-            wxBrush ebrush( dc.GetBrush().GetColour(), wxCROSSDIAG_HATCH );
-            dc.SetBrush(ebrush);
-        }
-#endif
-
         if(m_bBusy)
             dc.SetBrush( m_uvBrush );
             
@@ -291,14 +279,6 @@ void Piano::UpdateGLTexture()
                 SetColor(color, m_tBrush );
         }
 
-#if 0
-        // Check to see if this box appears in the sub_light array
-        // If so, add a crosshatch pattern to the brush
-        if(InArray(m_eclipsed_index_array, key_db_index)) {
-            wxBrush ebrush( dc.GetBrush().GetColour(), wxCROSSDIAG_HATCH );
-            dc.SetBrush(ebrush);
-        }
-#endif
         if(m_bBusy)
             SetColor(color, m_uvBrush );
             
@@ -508,6 +488,7 @@ void Piano::DrawGL(int off)
 // this texture is only updated if the color scheme or chart bar height change
 void Piano::BuildGLTexture()
 {
+#ifdef ocpnUSE_GL
     int h = GetHeight();
 
     wxBrush tbackBrush; // transparent back brush
@@ -600,10 +581,12 @@ void Piano::BuildGLTexture()
         glTexSubImage2D( GL_TEXTURE_2D, 0, 0, off, iw, ih, GL_RGBA, GL_UNSIGNED_BYTE, data );
         delete [] data;
     }
+#endif
 }
 
 void Piano::DrawGL(int off)
 {
+#ifdef ocpnUSE_GL
     unsigned int w = cc1->GetClientSize().x, h = GetHeight(), endx = 0;
  
     if(m_tex_piano_height != h)
@@ -756,6 +739,7 @@ void Piano::DrawGL(int off)
     delete [] coords;
 
     glDisable(GL_TEXTURE_2D);
+#endif
 }
 
 void Piano::SetColorScheme( ColorScheme cs )

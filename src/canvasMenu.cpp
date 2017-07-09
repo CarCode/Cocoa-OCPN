@@ -63,6 +63,7 @@
 #include "AIS_Decoder.h"
 #include "AIS_Target_Data.h"
 #include "SendToGpsDlg.h"
+#include "Track.h"
 
 
 #ifdef USE_S57
@@ -181,6 +182,9 @@ enum
     ID_RC_MENU_ZOOM_OUT,
     ID_RC_MENU_FINISH,
     ID_DEF_MENU_AIS_QUERY,
+#ifdef __WXOSX__
+    ID_DEF_MENU_AIS_MMSI,
+#endif
     ID_DEF_MENU_AIS_CPA,
     ID_DEF_MENU_AISSHOWTRACK,
     ID_DEF_MENU_ACTIVATE_MEASURE,
@@ -212,6 +216,10 @@ enum
 //------------------------------------------------------------------------------
 //    CanvasMenuHandler Implementation
 //------------------------------------------------------------------------------
+int CanvasMenuHandler::GetNextContextMenuId()
+{
+    return ID_DEF_MENU_LAST + 100;  //Allowing for 100 dynamic menu item identifiers
+}
 
 // Define a constructor for my canvas
 CanvasMenuHandler::CanvasMenuHandler(ChartCanvas *parentCanvas,
@@ -248,7 +256,7 @@ void MenuPrepend1( wxMenu *menu, int id, wxString label)
     item->SetFont(*qFont);
 #endif
 
-#ifdef __WXQT__
+#ifdef __OCPN_ANDROID__
     wxFont sFont = GetOCPNGUIScaledFont(_T("Menu"));
     item->SetFont(sFont);
 #endif
@@ -264,7 +272,7 @@ void MenuAppend1( wxMenu *menu, int id, wxString label)
     item->SetFont(*qFont);
 #endif
 
-#ifdef __WXQT__
+#ifdef __OCPN_ANDROID__
     wxFont sFont = GetOCPNGUIScaledFont(_T("Menu"));
     item->SetFont(sFont);
 #endif
@@ -575,6 +583,9 @@ void CanvasMenuHandler::CanvasPopupMenu( int x, int y, int seltype )
             if( g_bShowAIS && (seltype & SELTYPE_AISTARGET) ) {
                 MenuAppend1( menuAIS, ID_DEF_MENU_AIS_QUERY, _( "Target Query..." ) );
                 AIS_Target_Data *myptarget = g_pAIS->Get_Target_Data_From_MMSI( m_FoundAIS_MMSI );
+#ifdef __WXOSX__
+                MenuAppend1( menuAIS, ID_DEF_MENU_AIS_MMSI, _( "Copy MMSI" ) );
+#endif
                 if( myptarget && myptarget->bCPA_Valid && (myptarget->n_alert_state != AIS_ALERT_SET) ) {
                     if( myptarget->b_show_AIS_CPA )
                         MenuAppend1( menuAIS, ID_DEF_MENU_AIS_CPA, _( "Hide Target CPA" ) );
@@ -1094,8 +1105,27 @@ void CanvasMenuHandler::PopupMenuHandler( wxCommandEvent& event )
         ShowAISTargetQueryDialog( pwin, m_FoundAIS_MMSI );
         break;
     }
-
-    case ID_DEF_MENU_AIS_CPA: {             
+#ifdef __WXOSX__
+    case ID_DEF_MENU_AIS_MMSI: {
+        if( g_pAIS->Get_Target_Data_From_MMSI( m_FoundAIS_MMSI ) ) {
+            wxString nr_mmsi = wxString::Format( _T("%09d"), abs( m_FoundAIS_MMSI ) );
+            wxMessageBox(_("MMSI Clipboard: " + nr_mmsi), _("Nachricht"));
+            
+            ::wxBeginBusyCursor();
+            if( wxTheClipboard->Open() ) {
+                if( !wxTheClipboard->SetData( new wxTextDataObject( nr_mmsi ) ) )
+                    wxLogMessage( _T("wxTheClipboard->Open() failed.") );
+                wxTheClipboard->Close();
+            } else {
+                wxLogMessage( _T("wxTheClipboard->Open() failed.") );
+            }
+            ::wxEndBusyCursor();
+        }
+ 
+        break;
+    }
+#endif
+    case ID_DEF_MENU_AIS_CPA: {
         AIS_Target_Data *myptarget = g_pAIS->Get_Target_Data_From_MMSI(m_FoundAIS_MMSI); 
         if ( myptarget )                    
             myptarget->Toggle_AIS_CPA();     
