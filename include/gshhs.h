@@ -1,4 +1,4 @@
-/**************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  GSHHS Chart Object (Global Self-consistent, Hierarchical, High-resolution Shoreline)
@@ -99,9 +99,9 @@ public:
     ~GshhsPolyCell();
 
     void ClearPolyV();
-    
+
     void drawMapPlain( ocpnDC &pnt, double dx, ViewPort &vp, wxColor seaColor,
-                      wxColor landColor, bool idl );
+                       wxColor landColor, bool idl );
 
     void drawSeaBorderLines( ocpnDC &pnt, double dx, ViewPort &vp );
     std::vector<wxLineF> * getCoasts() { return &coasts; }
@@ -126,8 +126,8 @@ private:
     int polyc[6];
 
     void DrawPolygonFilled( ocpnDC &pnt, contour_list * poly, double dx, ViewPort &vp,
-                           wxColor const &color );
-#ifdef ocpnUSE_GL
+            wxColor const &color );
+#ifdef ocpnUSE_GL        
     void DrawPolygonFilledGL( contour_list * p, float_2Dpt **pv, int *pvc, ViewPort &vp,  wxColor const &color, bool idl );
 #endif
     void DrawPolygonContour( ocpnDC &pnt, contour_list * poly, double dx, ViewPort &vp );
@@ -142,7 +142,7 @@ public:
     ~GshhsPolyReader();
 
     void drawGshhsPolyMapPlain( ocpnDC &pnt, ViewPort &vp, wxColor const &seaColor,
-                               wxColor const &landColor );
+            wxColor const &landColor );
 
     void drawGshhsPolyMapSeaBorders( ocpnDC &pnt, ViewPort &vp );
 
@@ -248,11 +248,16 @@ public:
     bool qualityAvailable[6];
 
     void LoadQuality( int quality );
+    int GetMinAvailableQuality() { return minQualityAvailable; }
+    int GetMaxAvailableQuality() { return maxQualityAvailable; }
 
 private:
     int quality;  // 5 levels: 0=low ... 4=full
     int selectBestQuality( void );
     int selectBestQuality( ViewPort &vp );
+
+    int maxQualityAvailable;
+    int minQualityAvailable;
 
     std::string fpath;     // directory containing gshhs files
 
@@ -287,15 +292,19 @@ public:
     ~GSHHSChart();
     void SetColorScheme( ColorScheme scheme );
     void RenderViewOnDC( ocpnDC& dc, ViewPort& VPoint );
+    void Reset();
 
     wxColor land;
     wxColor water;
+    int GetMinAvailableQuality();
+    int GetMaxAvailableQuality();
 
 private:
     GshhsReader* reader;
 };
 
 void gshhsCrossesLandInit();
+void gshhsCrossesLandReset();
 bool gshhsCrossesLand(double lat1, double lon1, double lat2, double lon2);
 
 #endif

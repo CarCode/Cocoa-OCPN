@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "OCPN_DataStreamEvent.h"
 
@@ -40,25 +39,26 @@ OCPN_DataStreamEvent::~OCPN_DataStreamEvent()
 wxString OCPN_DataStreamEvent::ProcessNMEA4Tags()
 {
     wxString msg = wxString(GetNMEAString().c_str(), wxConvUTF8);
-
+   
     int idxFirst =  msg.Find('\\');
-
+    
     if(wxNOT_FOUND == idxFirst)
         return msg;
-
+    
     if(idxFirst < (int)msg.Length()-1){
         int idxSecond = msg.Mid(idxFirst + 1).Find('\\') + 1;
         if(wxNOT_FOUND != idxSecond){
             if(idxSecond < (int)msg.Length()-1){
-
-                // wxString tag = msg.Mid(idxFirst+1, (idxSecond - idxFirst) -1);
+                
+               // wxString tag = msg.Mid(idxFirst+1, (idxSecond - idxFirst) -1);
                 return msg.Mid(idxSecond + 1);
             }
         }
     }
-
+    
     return msg;
 }
+
 
 wxEvent* OCPN_DataStreamEvent::Clone() const
 {

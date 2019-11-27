@@ -1,4 +1,4 @@
-/********************************************************************
+/* *******************************************************************
 ** @source JEEPS packet construction, sending and ack functions
 **
 ** @author Copyright (C) 1999 Alan Bleasby

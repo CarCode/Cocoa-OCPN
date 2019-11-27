@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Optimized wxBitmap Object
@@ -409,8 +409,9 @@ size_t PixelCache::GetLength(void)
     return m_width * m_height * 3;
 #else
     return 0;
-#endif
+#endif    
 }
+    
 
 void PixelCache::Update(void)
 {

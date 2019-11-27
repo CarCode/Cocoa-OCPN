@@ -15,7 +15,7 @@
 #ifndef _WXCURLDAVTOOL_H__INCLUDED_
 #define _WXCURLDAVTOOL_H__INCLUDED_
 
-#include "wx/curl/dav.h"
+#include <wx/curl/dav.h>
 
 // davtool.h: interface for the wxCurlDAVFs class.
 //

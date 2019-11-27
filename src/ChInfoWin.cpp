@@ -1,4 +1,4 @@
-/******************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -29,6 +28,7 @@
 #include "ChInfoWin.h"
 #include "chart1.h"
 #include "OCPNPlatform.h"
+#include "FontMgr.h"
 
 #ifdef __OCPN__ANDROID__
 #include "androidUTIL.h"
@@ -69,14 +69,15 @@ void ChInfoWin::MouseEvent( wxMouseEvent& event )
     if(g_btouch){
         if( event.LeftDown() ) {
             Hide();
-
-#ifdef __OCPN__ANDROID__
+            
+            #ifdef __OCPN__ANDROID__        
             androidForceFullRepaint();
-#endif
+            #endif
         }
     }
 }
 
+    
 void ChInfoWin::OnPaint( wxPaintEvent& event )
 {
     int width, height;
@@ -97,8 +98,13 @@ void ChInfoWin::SetBitmap()
 
     m_pInfoTextCtl->SetSize( 1, 1, m_size.x - 2, m_size.y - 2 );
     m_pInfoTextCtl->SetLabel( m_string );
-
+#ifdef __WXOSX__
     SetSize( m_position.x, m_position.y, m_size.x, m_size.y );
+#else
+    wxPoint top_position = GetParent()->ClientToScreen( m_position);
+    SetSize( top_position.x, top_position.y, m_size.x, m_size.y );
+    SetClientSize( m_size.x, m_size.y );
+#endif
 }
 
 void ChInfoWin::FitToChars( int char_width, int char_height )
@@ -106,16 +112,18 @@ void ChInfoWin::FitToChars( int char_width, int char_height )
     wxSize size;
 
     int adjust = 1;
+    
 #ifdef __WXOSX__
     adjust = 2;
 #endif
-
+    
 #ifdef __OCPN__ANDROID__
     adjust = 4;
 #endif
-
+    
     size.x = GetCharWidth() * char_width;
     size.y = GetCharHeight() * ( char_height + adjust );
     size.x = wxMin(size.x, g_Platform->getDisplaySize().x-10);
     SetWinSize( size );
 }
+

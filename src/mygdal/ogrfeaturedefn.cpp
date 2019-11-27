@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  OpenGIS Simple Features Reference Implementation
  * Purpose:  The OGRFeatureDefn class implementation.

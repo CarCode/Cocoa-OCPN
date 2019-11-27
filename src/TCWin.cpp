@@ -18,6 +18,7 @@ extern int gpIDXn;
 extern TCMgr *ptcmgr;
 extern wxString g_locale;
 extern OCPNPlatform *g_Platform;
+
 int g_tcwin_scale;
 
 enum
@@ -62,21 +63,21 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
 #ifdef __WXOSX__
      wstyle |= wxSTAY_ON_TOP;
 #endif
-
+   
     pParent = parent;
     m_x = x;
     m_y = y;
-
+    
     m_created = false;
     RecalculateSize();
-    
+     
     wxDialog::Create( parent, wxID_ANY, wxString( _T ( "" ) ), m_position ,
-                     m_tc_size, wstyle );
+                      m_tc_size, wstyle );
 
     m_created = true;
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     SetFont( *qFont );
-
+    
 
     pIDX = (IDX_entry *) pvIDX;
     gpIDXn++;
@@ -97,7 +98,7 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
 
     int sx, sy;
     GetClientSize( &sx, &sy );
-
+    
 //    Figure out this computer timezone minute offset
     wxDateTime this_now = wxDateTime::Now();
     wxDateTime this_gmt = this_now.ToGMT();
@@ -117,7 +118,6 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
     if( diff_mins == 0 && this_now.IsDST() )
         diff_mins +=60;
 #endif
-
     int station_offset = ptcmgr->GetStationTimeOffset( pIDX );
 
     m_corr_mins = station_offset - diff_mins;
@@ -146,7 +146,7 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
     test_button->GetSize( &m_tsx, &m_tsy );
     delete test_button;
     
-    //  In the interest of readability, if the width of the dialog is too narrow,
+    //  In the interest of readability, if the width of the dialog is too narrow, 
     //  simply skip showing the "Hi/Lo" list control.
     
     if( (m_tsy * 15) > sx )
@@ -163,9 +163,9 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
     if( !m_tList->IsShown()){
         texc_size = wxSize( ( sx * 90 / 100 ), ( sy *29 / 100 ) );
     }
-
+        
     m_ptextctrl = new wxTextCtrl( this, -1, _T(""), wxPoint( sx * 3 / 100, 6 ),
-                                 texc_size ,
+                                  texc_size ,
                                   wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP);
     int bsx, bsy, bpx, bpy;
     PR_button->GetSize( &bsx, &bsy );
@@ -200,16 +200,17 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
                                                       FALSE, wxString( _T ( "Arial" ) ) );
 
     pblack_1 = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFD" ) ), wxMax(1,(int)(m_tcwin_scaler+0.5)),
-                                             wxPENSTYLE_SOLID );
+					      wxPENSTYLE_SOLID );
     pblack_2 = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFD" ) ), wxMax(2,(int)(2*m_tcwin_scaler+0.5)),
-                                             wxPENSTYLE_SOLID );
+					      wxPENSTYLE_SOLID );
     pblack_3 = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UWHIT" ) ), wxMax(1,(int)(m_tcwin_scaler+0.5)),
-                                             wxPENSTYLE_SOLID );
-    pred_2 = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFR" ) ), wxMax(4,(int)(4*m_tcwin_scaler+0.5)), wxPENSTYLE_SOLID );
+                                                                          wxPENSTYLE_SOLID );
+    pred_2 = wxThePenList->FindOrCreatePen( GetGlobalColor( _T ( "UINFR" ) ), wxMax(4,(int)(4*m_tcwin_scaler+0.5)),
+                                                                        wxPENSTYLE_SOLID );
     pltgray = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "UIBCK" ) ),
-                                                wxBRUSHSTYLE_SOLID );
+                                                                               wxBRUSHSTYLE_SOLID );
     pltgray2 = wxTheBrushList->FindOrCreateBrush( GetGlobalColor( _T ( "DILG1" ) ),
-                                                 wxBRUSHSTYLE_SOLID );
+                                                                                wxBRUSHSTYLE_SOLID );
 
     DimeControl( this );
 
@@ -282,22 +283,22 @@ void TCWin::RecalculateSize()
     wxSize parent_size(2000,2000);
     if( pParent )
         parent_size = pParent->GetClientSize();
-
+    
     int unscaledheight = 600;
     int unscaledwidth  = 650;
-    
+
     // value of m_tcwin_scaler should be about unity on a 100 dpi display,
     // when scale parameter g_tcwin_scale is 100
     // parameter g_tcwin_scale is set in config file as value of TideCurrentWindowScale
     g_tcwin_scale = wxMax(g_tcwin_scale,10); // sanity check on g_tcwin_scale
     m_tcwin_scaler = g_Platform->GetDisplayDPmm() * 0.254 * g_tcwin_scale / 100.0;
-    
+
     m_tc_size.x = (int) (unscaledwidth * m_tcwin_scaler + 0.5);
     m_tc_size.y = (int) (unscaledheight * m_tcwin_scaler + 0.5);
-
+    
     m_tc_size.x = wxMin(m_tc_size.x, parent_size.x);
     m_tc_size.y = wxMin(m_tc_size.y, parent_size.y);
-
+   
     int xc = m_x + 8;
     int yc = m_y;
     
@@ -309,7 +310,7 @@ void TCWin::RecalculateSize()
     //  Don't let the window origin move out of client area
     if( yc < 0 ) yc = 0;
     if( xc < 0 ) xc = 0;
-
+    
     if( pParent )
         pParent->ClientToScreen( &xc, &yc );
     m_position = wxPoint( xc, yc );
@@ -319,6 +320,9 @@ void TCWin::RecalculateSize()
         Move(m_position);
     }
 }
+
+
+
 
 void TCWin::OKEvent( wxCommandEvent& event )
 {
@@ -394,31 +398,37 @@ void TCWin::RePosition( void )
 
 void TCWin::OnPaint( wxPaintEvent& event )
 {
+    if(!IsShown()) {
+        return;
+    }
     int x, y;
     int i;
     char sbuf[100];
     int w;
     float tcmax, tcmin;
 
-    GetClientSize( &x, &y );
-    //    qDebug() << "OnPaint" << x << y;
+    if(m_graph_rect.x == 0)
+        return;
     
-#if 0
+    GetClientSize( &x, &y );
+//    qDebug() << "OnPaint" << x << y;
+
+#if 0    
     //  establish some graphic element sizes/locations
     int x_graph = x * 1 / 10;
     int y_graph = y * 32 / 100;
     int x_graph_w = x * 8 / 10;
     int y_graph_h = (y * .7)  - (3 * m_button_height);
     m_graph_rect = wxRect(x_graph, y_graph, x_graph_w, y_graph_h);
-    
+
     wxSize texc_size = wxSize( ( x * 60 / 100 ), ( y *29 / 100 ) );
     if( !m_tList->IsShown()){
         texc_size = wxSize( ( x * 90 / 100 ), ( y *29 / 100 ) );
     }
     
     m_ptextctrl->SetSize(texc_size);
-#endif
-
+#endif                                  
+    
     wxPaintDC dc( this );
 
     wxString tlocn( pIDX->IDX_station_name, wxConvUTF8 );
@@ -454,9 +464,9 @@ void TCWin::OnPaint( wxPaintEvent& event )
         //  So, reduce the complexity of horizontal axis time labels
 #ifndef __WXMSW__
         hour_delta = 4;
-#endif
-
-
+#endif        
+        
+        
         //    Horizontal axis
         dc.SetFont( *pSFont );
         for( i = 0; i < 25; i++ ) {
@@ -566,7 +576,7 @@ void TCWin::OnPaint( wxPaintEvent& event )
 
 //    Set up the vertical parameters based on Tide or Current plot
             if( CURRENT_PLOT == m_plot_type ) {
-                it = __max ( abs (( int ) tcmin - 1 ), abs ( ( int ) tcmax + 1 ) );
+                it = std::max ( abs (( int ) tcmin - 1 ), abs ( ( int ) tcmax + 1 ) );
                 ib = -it;
 
                 im = 2 * it;
@@ -582,18 +592,18 @@ void TCWin::OnPaint( wxPaintEvent& event )
                 val_off = ib;
             }
 
-            // Arrange to skip some lines and legends if there are too many for the vertical space we have
-            int height_stext;
-            dc.GetTextExtent( _T("1"), NULL, &height_stext );
-            float available_lines = (float) m_graph_rect.height / height_stext;
-            i_skip = (int) ceil(im / available_lines);
-
-            if( CURRENT_PLOT == m_plot_type && i_skip != 1) {
-                // Adjust steps so slack current "0" line is always drawn on graph
-                ib -= it % i_skip;
-                it = -ib;
-                im = 2 * it;
-            }
+	    // Arrange to skip some lines and legends if there are too many for the vertical space we have
+	    int height_stext;
+	    dc.GetTextExtent( _T("1"), NULL, &height_stext );
+	    float available_lines = (float) m_graph_rect.height / height_stext;
+	    i_skip = (int) ceil(im / available_lines); 
+	    
+	    if( CURRENT_PLOT == m_plot_type && i_skip != 1) {
+	      // Adjust steps so slack current "0" line is always drawn on graph
+	      ib -= it % i_skip;
+	      it = -ib;
+	      im = 2 * it;
+	    }
 
 //    Build spline list of points
 
@@ -621,10 +631,10 @@ void TCWin::OnPaint( wxPaintEvent& event )
         while( i < it + 1 ) {
             int yd = m_graph_rect.y + ( m_plot_y_offset ) - ( ( i - val_off ) * m_graph_rect.height / im );
 
-            if( ( m_plot_y_offset + m_graph_rect.y ) == yd )
-                dc.SetPen( *pblack_2 );
+            if( ( m_plot_y_offset + m_graph_rect.y ) == yd ) 
+	      dc.SetPen( *pblack_2 );
             else
-                dc.SetPen( *pblack_1 );
+	      dc.SetPen( *pblack_1 );
 
             dc.DrawLine( m_graph_rect.x, yd, m_graph_rect.x + m_graph_rect.width, yd );
             snprintf( sbuf, 99, "%d", i );
@@ -655,23 +665,23 @@ void TCWin::OnPaint( wxPaintEvent& event )
         if( m_graphday.IsDST() ) h += 1;
         m_stz.Printf( _T("UTC %+03d:%02d"), h, m );
 
-
-
+         
+        
 //    Make the "nice" (for the US) station time-zone string, brutally by hand
         double lat = ptcmgr->GetStationLat(pIDX);
-
+        
         if( lat > 20.0 ){
             wxString mtz;
             switch( ptcmgr->GetStationTimeOffset( pIDX ) ) {
-                case -240:
-                    mtz = _T( "AST" );
-                    break;
-                case -300:
-                    mtz = _T( "EST" );
-                    break;
-                case -360:
-                    mtz = _T( "CST" );
-                    break;
+            case -240:
+                mtz = _T( "AST" );
+                break;
+            case -300:
+                mtz = _T( "EST" );
+                break;
+            case -360:
+                mtz = _T( "CST" );
+                break;
             }
 
             if( mtz.Len() ) {
@@ -683,14 +693,15 @@ void TCWin::OnPaint( wxPaintEvent& event )
 
         dc.SetFont( *pSFont );
         dc.GetTextExtent( m_stz, &w, &h );
+#ifndef __WXOSX__  // Text "UTC..." überschreibt Stundenzahlen
         dc.DrawText( m_stz, x / 2 - w / 2, y - 2.5 * m_button_height );
-
+#endif
         wxString sdate;
         if(g_locale == _T("en_US"))
             sdate = m_graphday.Format( _T ( "%A %b %d, %Y" ) );
         else
-            sdate =  m_graphday.Format( _T ( "%A, %d. %b %Y" ) );
-
+            sdate =  m_graphday.Format( _T ( "%A %d %b %Y" ) );
+        
         dc.SetFont( *pMFont );
         dc.GetTextExtent( sdate, &w, &h );
         dc.DrawText( sdate, x / 2 - w / 2, y - 2.0 * m_button_height );
@@ -728,14 +739,14 @@ void TCWin::OnPaint( wxPaintEvent& event )
                 else
                     sday.Append( m_graphday.GetWeekDayName( m_graphday.GetWeekDay() ) );
             } else if( m_graphday.GetYear() == this_now.GetYear() + 1
-                      && day == this_now.Add( wxTimeSpan::Day() ).GetDayOfYear() ) sday.Append(
-                                                                                               _( "Tomorrow" ) );
+                    && day == this_now.Add( wxTimeSpan::Day() ).GetDayOfYear() ) sday.Append(
+                            _( "Tomorrow" ) );
 
             dc.SetFont( *pSFont );
             dc.GetTextExtent( sday, &w, &h );
             dc.DrawText( sday, 55 - w / 2, y - 2 * m_button_height );
         }
-
+        
         //  Render "Spot of interest"
         double spotDim = 4 * g_Platform->GetDisplayDPmm();
         
@@ -748,6 +759,7 @@ void TCWin::OnPaint( wxPaintEvent& event )
         
         double ispotDim = spotDim / 5.;
         dc.DrawRoundedRectangle(xSpot - ispotDim/2, ySpot - ispotDim/2, ispotDim, ispotDim, ispotDim/2);
+        
 
     }
 }
@@ -764,10 +776,12 @@ void TCWin::OnSize( wxSizeEvent& event )
     int y_graph = y * 32 / 100;
     int x_graph_w = x * 8 / 10;
     int y_graph_h = (y * .7)  - (7 * m_button_height / 2);
+    y_graph_h = wxMax( y_graph_h, 2);           // ensure minimum size is positive, at least.
+    
     m_graph_rect = wxRect(x_graph, y_graph, x_graph_w, y_graph_h);
     
     
-    //  In the interest of readability, if the width of the dialog is too narrow,
+    //  In the interest of readability, if the width of the dialog is too narrow, 
     //  simply skip showing the "Hi/Lo" list control.
     
     if( (m_tsy * 15) > x )
@@ -783,9 +797,13 @@ void TCWin::OnSize( wxSizeEvent& event )
     }
     m_ptextctrl->SetSize(texc_size);
     
+#ifdef __WXOSX__
+    OK_button->Move( wxPoint( x - (4 * m_tsy + 10), y - (m_tsy + 10) ));
+#else
     OK_button->Move( wxPoint( x - (3 * m_tsy + 10), y - (m_tsy + 10) ));
+#endif
     PR_button->Move( wxPoint( 10, y - (m_tsy + 10) ) );
-    
+ 
     int bsx, bsy, bpx, bpy;
     PR_button->GetSize( &bsx, &bsy );
     PR_button->GetPosition( &bpx, &bpy );
@@ -793,7 +811,7 @@ void TCWin::OnSize( wxSizeEvent& event )
     NX_button->Move( wxPoint( bpx + bsx + 5, y - (m_tsy + 10) ) );
     
     btc_valid = false;
-
+    
     Refresh(true);
     Update();
 }
@@ -818,6 +836,9 @@ void TCWin::OnTCWinPopupTimerEvent( wxTimerEvent& event )
         SetCursor( *pParent->pCursorCross );
         if( NULL == m_pTCRolloverWin ) {
             m_pTCRolloverWin = new RolloverWin( this, -1, false );
+            // doesn't really work, mouse positions are relative to rollover window
+            // not this window.
+            // effect: hide rollover window if mouse on rollover
             m_pTCRolloverWin->SetMousePropogation( 1 );
             m_pTCRolloverWin->Hide();
         }
@@ -857,14 +878,14 @@ void TCWin::OnTCWinPopupTimerEvent( wxTimerEvent& event )
         m_pTCRolloverWin->SetBitmap( TC_ROLLOVER );
         m_pTCRolloverWin->Refresh();
         m_pTCRolloverWin->Show();
-
+        
         //  Mark the actual spot on the curve
         // x value is clear...
         //  Find the point in the window that is used for the curev rendering, rounding as necessary
 
-        int idx = 0;  // Initialized for macOS
+        int idx = 1; // in case m_graph_rect.width is weird ie ppx never > curs_x
         for( int i = 0; i < 26; i++ ) {
-            float ppx = m_graph_rect.x + ( ( i ) * m_graph_rect.width / 25 );
+            float ppx = m_graph_rect.x + ( ( i ) * m_graph_rect.width / 25.f );
             if(ppx > curs_x){
                 idx = i;
                 break;
@@ -874,15 +895,16 @@ void TCWin::OnTCWinPopupTimerEvent( wxTimerEvent& event )
         wxPointList *list = (wxPointList *)&m_sList;
         wxPoint *a = list->Item(idx-1)->GetData();
         wxPoint *b = list->Item(idx)->GetData();
-
+        
         float pct = (curs_x  - a->x) / (float)((b->x - a->x));
         float dy = pct * (b->y - a->y);
-
+        
         ySpot = a->y + dy;
         xSpot = curs_x;
-
+        
         Refresh(true);
-
+        
+        
     } else {
         SetCursor( *pParent->pCursorArrow );
         ShowRollover = false;
@@ -890,7 +912,6 @@ void TCWin::OnTCWinPopupTimerEvent( wxTimerEvent& event )
 
     if( m_pTCRolloverWin && m_pTCRolloverWin->IsShown() && !ShowRollover ) {
         m_pTCRolloverWin->Hide();
-        m_pTCRolloverWin = NULL;
     }
 
 }

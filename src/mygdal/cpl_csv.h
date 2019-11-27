@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  Common Portability Library
  * Purpose:  Functions for reading and scaning CSV (comma separated,
@@ -25,10 +25,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************
- *
- *
- */
+ ******************************************************************************/
 
 #ifndef CPL_CSV_H_INCLUDED
 #define CPL_CSV_H_INCLUDED

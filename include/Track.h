@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Navigation Utility Functions
@@ -35,6 +35,8 @@
 #include <list>
 #include <deque>
 
+#include "Route.h"
+
 struct SubTrack
 {
     SubTrack() {}
@@ -46,18 +48,21 @@ struct SubTrack
 class TrackPoint
 {
 public:
-      TrackPoint(double lat, double lon) : m_lat(lat), m_lon(lon) {}
+      TrackPoint(double lat, double lon, wxString ts="");
+      TrackPoint(double lat, double lon, wxDateTime dt);
       TrackPoint( TrackPoint* orig );
+      ~TrackPoint();
 
       wxDateTime GetCreateTime(void);
       void SetCreateTime( wxDateTime dt );
       void Draw(ocpnDC& dc );
-
+      const char *GetTimeString() { return m_timestring; }
+      
       double            m_lat, m_lon;
       int               m_GPXTrkSegNo;
-      wxString          m_timestring;
 private:
-      wxDateTime        m_CreateTimeX;
+      void SetCreateTime( wxString ts );
+      char             *m_timestring;
 };
 
 //----------------------------------------------------------------------------
@@ -71,14 +76,16 @@ public:
     virtual ~Track();
 
     void Draw(ocpnDC& dc, ViewPort &VP, const LLBBox &box);
-    TrackPoint *GetPoint( int nWhichPoint );
     int GetnPoints(void){ return TrackPoints.size(); }
+    
+    
+    void SetVisible(bool visible = true) { m_bVisible = visible; }
+    TrackPoint *GetPoint( int nWhichPoint );
     TrackPoint *GetLastPoint();
     void AddPoint( TrackPoint *pNewPoint );
     void AddPointFinalized( TrackPoint *pNewPoint );
     TrackPoint* AddNewPoint( vector2D point, wxDateTime time );
-
-    void SetVisible(bool visible = true) { m_bVisible = visible; }
+    
     void SetListed(bool listed = true) { m_bListed = listed; }
     virtual bool IsRunning() { return false; }
 
@@ -94,11 +101,27 @@ public:
 
     void ClearHighlights();
 
+    wxString GetName( bool auto_if_empty = false ) const {
+        if( !auto_if_empty || !m_TrackNameString.IsEmpty() ) {
+            return m_TrackNameString;
+        } else {
+            wxString name;
+            TrackPoint *rp = NULL;
+            if((int) TrackPoints.size() > 0)
+                rp = TrackPoints[0];
+            if( rp && rp->GetCreateTime().IsValid() ) name = rp->GetCreateTime().FormatISODate() + _T(" ")
+                + rp->GetCreateTime().FormatISOTime();   //name = rp->m_CreateTime.Format();
+            else
+                name = _("(Unnamed Track)");
+            return name;
+        }
+    }
+    void SetName( const wxString name ) { m_TrackNameString = name; }
+
     wxString    m_GUID;
     bool        m_bIsInLayer;
     int         m_LayerID;
 
-    wxString    m_TrackNameString;
     wxString    m_TrackDescription;
 
     wxString    m_TrackStartString;
@@ -141,6 +164,8 @@ private:
     void AddPointToLists(std::list< std::list<wxPoint> > &pointlists, int &last, int n);
 
     void Assemble(std::list< std::list<wxPoint> > &pointlists, const LLBBox &box, double scale, int &last, int level, int pos);
+
+    wxString    m_TrackNameString;
 };
 
 WX_DECLARE_LIST(Track, TrackList); // establish class Route as list member

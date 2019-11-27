@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -54,7 +54,7 @@ public:
             RoutePoint *pRoutePointAdd1, RoutePoint *pRoutePointAdd2, Route *pRoute );
 
     bool AddSelectableTrackSegment( float slat1, float slon1, float slat2, float slon2,
-            TrackPoint *pTrackPointAdd1, TrackPoint *pTrackPointAdd2, Track *pTrack );
+                                    TrackPoint *pTrackPointAdd1, TrackPoint *pTrackPointAdd2, Track *pTrack );
 
     SelectItem *FindSelection( float slat, float slon, int fseltype );
     SelectableItemList FindSelectionList( float slat, float slon, int fseltype );

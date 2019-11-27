@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -22,7 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -86,8 +85,23 @@ bool DPT::Parse( const SENTENCE& sentence )
 
    if ( sentence.IsChecksumBad( 3 ) == TRUE )
    {
-      SetErrorMessage( _T("Invalid Checksum") );
-      return( FALSE );
+       /*
+        * * This may be an NMEA Version 3 sentence, with "Max depth range" field
+        */
+       wxString checksum_in_sentence = sentence.Field( 3 );
+       if(checksum_in_sentence.StartsWith(_T("*")))       // Field is a valid erroneous checksum
+       {
+           SetErrorMessage( _T("Invalid Checksum") );
+           return( FALSE );
+       }
+       else
+       {
+           if( sentence.IsChecksumBad( 4 ) == TRUE)
+           {
+               SetErrorMessage( _T("Invalid Checksum") );
+               return( FALSE );
+           }
+       }
    } 
 
    DepthMeters                = sentence.Double( 1 );

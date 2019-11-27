@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -53,7 +53,7 @@ public:
     wxString    m_ShipName;
 };
 
-WX_DECLARE_OBJARRAY(MMSIProperties *,      ArrayOfMMSIProperties);
+WX_DECLARE_OBJARRAY(MMSIProperties *,   ArrayOfMMSIProperties);
 
 class AIS_Decoder : public wxEvtHandler
 {
@@ -74,15 +74,15 @@ public:
     AIS_Error DecodeSingleVDO( const wxString& str, GenericPosDatEx *pos, wxString *acc );
     void DeletePersistentTrack( Track *track );
     std::map<int, Track*> m_persistent_tracks;
-
+    
 private:
     wxString GetShipNameFromFile(int nmmsi);
-
+    
     void OnActivate(wxActivateEvent& event);
     void OnTimerAIS(wxTimerEvent& event);
     void OnTimerAISAudio(wxTimerEvent& event);
     void OnTimerDSC( wxTimerEvent& event );
-
+    
     bool NMEACheckSumOK(const wxString& str);
     bool Parse_VDXBitstring(AIS_Bitstring *bstr, AIS_Target_Data *ptd);
     void UpdateAllCPA(void);
@@ -93,7 +93,7 @@ private:
     void BuildERIShipTypeHash(void);
     AIS_Target_Data *ProcessDSx( const wxString& str, bool b_take_dsc = false );
     void SendJSONMsg( AIS_Target_Data *pTarget );
-
+    
     AIS_Target_Hash *AISTargetList;
     AIS_Target_Hash *AIS_AreaNotice_Sources;
     AIS_Target_Name_Hash *AISTargetNames;
@@ -119,7 +119,7 @@ private:
     wxTimer          m_dsc_timer;
     wxString         m_dsc_last_string;
     std::vector<int> m_MMSI_MismatchVec;
-
+    
 DECLARE_EVENT_TABLE()
 };
 

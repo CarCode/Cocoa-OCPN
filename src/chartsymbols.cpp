@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Symbols
@@ -101,31 +101,30 @@ void ChartSymbols::DeleteGlobals( void )
 void ChartSymbols::ProcessColorTables( pugi::xml_node &node )
 {
     for( pugi::xml_node child = node.first_child(); child != 0; child = child.next_sibling() ) {
-        const char *pcn = child.name();  // pcn
-
-        if( !strcmp( pcn, "color-table" ) ) {  //  pcn
+        const char *pcn = child.name();
+        
+        if( !strcmp( pcn, "color-table" ) ) {
             colTable *colortable = new colTable;
             colortable->tableName = new wxString( child.first_attribute().value(), wxConvUTF8 );
-
-            pugi::xml_node colorNode = child.first_child();
-
-            while(colorNode) {
+            
+            pugi::xml_node colorNode =child.first_child();
+            while(colorNode){
                 if(!strcmp(colorNode.name(), "graphics-file")){
                     colortable->rasterFileName = wxString( colorNode.first_attribute().value(), wxConvUTF8 );
                 }
 
-                if(!strcmp(colorNode.name(), "color")) {
+                if(!strcmp(colorNode.name(), "color")){
                     wxString key;
                     S52color color;
-
+                    
                     for ( pugi::xml_attribute attr = colorNode.first_attribute(); attr; attr = attr.next_attribute() ) {
                         const char *pca = attr.name();
                         if(!strcmp(pca, "name")){
                             strncpy(color.colName, attr.value(), 5);
                             color.colName[5] = 0;
                             key = wxString( attr.value(), wxConvUTF8 );
-
-                        }
+                            
+                        }                        
                         else if(!strcmp(pca, "r")){
                             color.R = attr.as_int();
                         }
@@ -135,23 +134,31 @@ void ChartSymbols::ProcessColorTables( pugi::xml_node &node )
                         else if(!strcmp(pca, "b")){
                             color.B = attr.as_int();
                         }
-
+                        
                     }
-
+                    
                     colortable->colors[key] = color;
                     wxColour wxcolor( color.R, color.G, color.B );
                     colortable->wxColors[key] = wxcolor;
-
+                    
                 }
-next:
-                colorNode = colorNode.next_sibling();
-            }  // while
-
+            
+next:           colorNode = colorNode.next_sibling();
+            }
+            
             colorTables->Add( (void *) colortable );
         }
     }
 }
 */
+
+
+
+
+
+
+
+
 #define TGET_INT_PROPERTY_VALUE( node, name, target )  \
       propVal = wxString(node->Attribute(name), wxConvUTF8); \
       propVal.ToLong( &numVal, 0 ); \
@@ -192,8 +199,8 @@ void ChartSymbols::ProcessColorTables( TiXmlElement* colortableNodes )
                 wxColour wxcolor( color.R, color.G, color.B );
                 colortable->wxColors[key] = wxcolor;
             }
-next:
-            colorNode = colorNode->NextSiblingElement();
+
+next: colorNode = colorNode->NextSiblingElement();
         }
 
         colorTables->Add( (void *) colortable );
@@ -204,11 +211,11 @@ next:
 void ChartSymbols::ProcessLookups( pugi::xml_node &node )
 {
     Lookup lookup;
-
+    
     for( pugi::xml_node child = node.first_child(); child != 0; child = child.next_sibling() ) {
         const char *pcn = child.name();
-
-
+        
+        
         if( !strcmp( pcn, "lookup" ) ) {
             for ( pugi::xml_attribute attr = child.first_attribute(); attr; attr = attr.next_attribute() ) {
                 const char *pca = attr.name();
@@ -224,11 +231,11 @@ void ChartSymbols::ProcessLookups( pugi::xml_node &node )
                 }
             }
         }
-
+        
         pugi::xml_node lookupNode = child.first_child();
         while(lookupNode){
             const char *nodeText = lookupNode.first_child().value();
-
+ 
             if(!strcmp( lookupNode.name(), "type")){
                 if(!strcmp(nodeText, "Area")) lookup.type = AREAS_T;
                 else if(!strcmp(nodeText, "Line")) lookup.type = LINES_T;
@@ -245,14 +252,14 @@ void ChartSymbols::ProcessLookups( pugi::xml_node &node )
                 else if( !strcmp(nodeText,"Hazards") ) lookup.displayPrio = PRIO_HAZARDS;
                 else if( !strcmp(nodeText,"Mariners") ) lookup.displayPrio = PRIO_MARINERS;
                 else lookup.displayPrio = PRIO_NODATA;
-
+                
             }
 
             else if(!strcmp( lookupNode.name(), "radar-prio")){
                 if( !strcmp(nodeText,"On Top") ) lookup.radarPrio = RAD_OVER;
                 else lookup.radarPrio = RAD_SUPP;
-            }
-
+            }                
+            
             else if( !strcmp( lookupNode.name(), "table-name") ) {
                 if( !strcmp(nodeText, "Simplified") ) lookup.tableName = SIMPLIFIED;
                 else if( !strcmp(nodeText, "Lines") ) lookup.tableName = LINES;
@@ -260,7 +267,7 @@ void ChartSymbols::ProcessLookups( pugi::xml_node &node )
                 else if( !strcmp(nodeText,"Symbolized") ) lookup.tableName = SYMBOLIZED_BOUNDARIES;
                 else  lookup.tableName = PAPER_CHART;
             }
-
+            
             else if( !strcmp( lookupNode.name(), "display-cat") ) {
                 if( !strcmp( nodeText,"Displaybase") ) lookup.displayCat = DISPLAYBASE;
                 else  if( !strcmp( nodeText,"Standard") ) lookup.displayCat = STANDARD;
@@ -268,18 +275,18 @@ void ChartSymbols::ProcessLookups( pugi::xml_node &node )
                 else  if( !strcmp( nodeText,"Mariners") ) lookup.displayCat = MARINERS_STANDARD;
                 else  lookup.displayCat = OTHER;
             }
-
+            
             else if( !strcmp( lookupNode.name(), "comment") ) {
                 lookup.comment = lookupNode.first_child().text().as_int();
             }
-
+            
             else if( !strcmp( lookupNode.name(), "instruction") ) {
                 wxString inst(nodeText, wxConvUTF8);
                 lookup.instruction = inst;
                 lookup.instruction.Append( '\037' );
-
+                
             }
-
+            
             else if( !strcmp( lookupNode.name(), "attrib-code") ) {
                 if( !lookup.attributeCodeArray )
                     lookup.attributeCodeArray = new wxArrayString();
@@ -287,26 +294,26 @@ void ChartSymbols::ProcessLookups( pugi::xml_node &node )
                 if( value.length() == 6 )
                     value << _T(" ");
                 lookup.attributeCodeArray->Add( value );
-
+                
             }
-
+        
             lookupNode = lookupNode.next_sibling();
         }
-
+        
         BuildLookup( lookup );
     }
-
+            
 }
 
 void ChartSymbols::ProcessVectorTag( pugi::xml_node &vectorNode, SymbolSizeInfo_t &vectorSize )
 {
     vectorSize.size.x = vectorNode.attribute("width").as_int();
     vectorSize.size.y = vectorNode.attribute("height").as_int();
-
-
+    
+    
     for( pugi::xml_node child = vectorNode.first_child(); child != 0; child = child.next_sibling() ) {
         const char *nodeType = child.name();
-
+        
         if( !strcmp(nodeType,"distance") ){
             vectorSize.minDistance = child.attribute("min").as_int();
             vectorSize.maxDistance = child.attribute("max").as_int();
@@ -316,7 +323,7 @@ void ChartSymbols::ProcessVectorTag( pugi::xml_node &vectorNode, SymbolSizeInfo_
             vectorSize.origin.x = child.attribute("x").as_int();
             vectorSize.origin.y = child.attribute("y").as_int();
         }
-
+    
         else if( !strcmp(nodeType,"pivot") ){
             vectorSize.pivot.x = child.attribute("x").as_int();
             vectorSize.pivot.y = child.attribute("y").as_int();
@@ -327,43 +334,44 @@ void ChartSymbols::ProcessVectorTag( pugi::xml_node &vectorNode, SymbolSizeInfo_
 void ChartSymbols::ProcessLinestyles( pugi::xml_node &node )
 {
     LineStyle lineStyle;
-
+    
     for( pugi::xml_node child = node.first_child(); child != 0; child = child.next_sibling() ) {
         lineStyle.RCID = child.attribute("RCID").as_int();
-
+        
         pugi::xml_node lineNode = child.first_child();
         while(lineNode){
             const char *nodeText = lineNode.first_child().value();
             const char *nodeType = lineNode.name();
-
+            
             if( !strcmp(nodeType,"description") ) lineStyle.description = nodeText;
             else if( !strcmp(nodeType,"name") ) lineStyle.name = nodeText;
             else if( !strcmp(nodeType,"color-ref") ) lineStyle.colorRef = nodeText;
             else if( !strcmp(nodeType,"HPGL") ) lineStyle.HPGL = nodeText;
             else if( !strcmp(nodeType,"vector") ) ProcessVectorTag( lineNode, lineStyle.vectorSize );
-
+        
             lineNode = lineNode.next_sibling();
         }
         BuildLineStyle( lineStyle );
-    }
+    }            
 }
+
 
 void ChartSymbols::ProcessPatterns( pugi::xml_node &node )
 {
     OCPNPattern pattern;
-
+ 
     for( pugi::xml_node child = node.first_child(); child != 0; child = child.next_sibling() ) {
         pattern.RCID = child.attribute("RCID").as_int();
-
+    
         pattern.hasVector = false;
         pattern.hasBitmap = false;
         pattern.preferBitmap = true;
-
+        
         pugi::xml_node pattNode = child.first_child();
         while(pattNode){
             const char *nodeText = pattNode.first_child().value();
             const char *nodeType = pattNode.name();
-
+            
             if( !strcmp(nodeType,"description") ) pattern.description = nodeText;
             else if( !strcmp(nodeType,"name") ) pattern.name = nodeText;
             else if( !strcmp(nodeType,"filltype") ) pattern.fillType = nodeText[0];
@@ -371,19 +379,19 @@ void ChartSymbols::ProcessPatterns( pugi::xml_node &node )
             else if( !strcmp(nodeType,"definition") ) pattern.hasVector = !strcmp(nodeText, "V");
             else if( !strcmp(nodeType,"color-ref") ) pattern.colorRef = nodeText;
             else if( !strcmp(nodeType,"HPGL") ) { pattern.HPGL = nodeText; pattern.hasVector = true; }
-
+            
             else if( !strcmp(nodeType,"prefer-bitmap") ){
                 if(!strcmp(nodeText, "no")) pattern.preferBitmap = false;
                 else if(!strcmp(nodeText, "false")) pattern.preferBitmap = false;
             }
-
+                
             else if( !strcmp(nodeType,"bitmap") ){
                 pattern.bitmapSize.size.x = pattNode.attribute("width").as_int();
                 pattern.bitmapSize.size.y = pattNode.attribute("height").as_int();
-
+                
                 for( pugi::xml_node child = pattNode.first_child(); child != 0; child = child.next_sibling() ) {
                     const char *nodeType = child.name();
-
+                    
                     if( !strcmp(nodeType,"distance") ){
                         pattern.bitmapSize.minDistance = child.attribute("min").as_int();
                         pattern.bitmapSize.maxDistance = child.attribute("max").as_int();
@@ -402,53 +410,55 @@ void ChartSymbols::ProcessPatterns( pugi::xml_node &node )
                     }
                 }
             }
-
+            
             else if( !strcmp(nodeType,"vector") )
                 ProcessVectorTag( pattNode, pattern.vectorSize );
-
-
+                
+            
             pattNode = pattNode.next_sibling();
         }
-
-
+        
+        
         BuildPattern( pattern );
     }
 }
 
+
+
 void ChartSymbols::ProcessSymbols( pugi::xml_node &node )
 {
     ChartSymbol symbol;
-
+    
     for( pugi::xml_node child = node.first_child(); child != 0; child = child.next_sibling() ) {
         symbol.RCID = child.attribute("RCID").as_int();
-
+ 
         symbol.hasVector = false;
         symbol.hasBitmap = false;
         symbol.preferBitmap = true;
-
+        
         pugi::xml_node symbolNode = child.first_child();
         while(symbolNode){
             const char *nodeText = symbolNode.first_child().value();
             const char *nodeType = symbolNode.name();
-
+            
             if( !strcmp(nodeType,"description") ) symbol.description = nodeText;
             else if( !strcmp(nodeType,"name") ) symbol.name = nodeText;
             else if( !strcmp(nodeType,"definition") ) symbol.hasVector = !strcmp(nodeText, "V");
             else if( !strcmp(nodeType,"color-ref") ) symbol.colorRef = nodeText;
-
+            
             else if( !strcmp(nodeType,"prefer-bitmap") ){
                 if(!strcmp(nodeText, "no")) symbol.preferBitmap = false;
                 else if(!strcmp(nodeText, "false")) symbol.preferBitmap = false;
             }
-
+            
             else if( !strcmp(nodeType,"bitmap") ){
                 symbol.bitmapSize.size.x = symbolNode.attribute("width").as_int();
                 symbol.bitmapSize.size.y = symbolNode.attribute("height").as_int();
                 symbol.hasBitmap = true;
-
+                
                 for( pugi::xml_node child = symbolNode.first_child(); child != 0; child = child.next_sibling() ) {
                     const char *nodeType = child.name();
-
+                    
                     if( !strcmp(nodeType,"distance") ){
                         symbol.bitmapSize.minDistance = child.attribute("min").as_int();
                         symbol.bitmapSize.maxDistance = child.attribute("max").as_int();
@@ -467,12 +477,12 @@ void ChartSymbols::ProcessSymbols( pugi::xml_node &node )
                     }
                 }
             }
-
+            
             else if( !strcmp(nodeType,"vector") ){
                 symbol.vectorSize.size.x = symbolNode.attribute("width").as_int();
                 symbol.vectorSize.size.y = symbolNode.attribute("height").as_int();
                 symbol.hasVector = true;
-
+                
                 for( pugi::xml_node child = symbolNode.first_child(); child != 0; child = child.next_sibling() ) {
                     const char *nodeType = child.name();
                     
@@ -493,14 +503,14 @@ void ChartSymbols::ProcessSymbols( pugi::xml_node &node )
                     }
                 }
             }
-
-
+            
+            
             symbolNode = symbolNode.next_sibling();
         }
-
+        
         BuildSymbol( symbol );
     }
-
+    
 }
 
 void ChartSymbols::ProcessLookups( TiXmlElement* lookupNodes )
@@ -688,6 +698,7 @@ void ChartSymbols::ProcessVectorTag( TiXmlElement* vectorNode, SymbolSizeInfo_t 
         nextVector: vectorNodes = vectorNodes->NextSiblingElement();
     }
 }
+
 
 void ChartSymbols::ProcessLinestyles( TiXmlElement* linestyleNodes )
 {
@@ -1134,19 +1145,12 @@ bool ChartSymbols::LoadConfigFile(s52plib* plibArg, const wxString & s52ilePath)
         return false;
     }
 
-    if( !doc.LoadFile( (const char *) fullFilePath.mb_str() ) ) {
-        wxString msg( _T("    ChartSymbols ConfigFile Failed to load ") );
+#if 0  // war 1, void ChartSymbols::ProcessColorTables( pugi::xml_node &node ) funktioniert nicht
+    if(m_symbolsDoc.load_file( fullFilePath.fn_str() ) ){
+        wxString msg( _T("ChartSymbols loaded from ") );
         msg += fullFilePath;
         wxLogMessage( msg );
-        return false;
-    }
-
-    wxString msg( _T("ChartSymbols loaded from ") );
-    msg += fullFilePath;
-    wxLogMessage( msg );
-
-#if 0 // war 1, void ChartSymbols::ProcessColorTables( pugi::xml_node &node ) funktioniert nicht
-    if(m_symbolsDoc.load_file( fullFilePath.fn_str() ) ){
+        
         pugi::xml_node elements = m_symbolsDoc.child("chartsymbols");
         
         for (pugi::xml_node element = elements.first_child(); element; element = element.next_sibling()){
@@ -1159,11 +1163,22 @@ bool ChartSymbols::LoadConfigFile(s52plib* plibArg, const wxString & s52ilePath)
         }
         m_symbolsDoc.reset();           // purge the document to recover memory;
         
-    }
+    }    
     
 #else
-    TiXmlHandle hRoot( doc.RootElement() );
+    if( !doc.LoadFile( (const char *) fullFilePath.mb_str() ) ) {
+        wxString msg( _T("    ChartSymbols ConfigFile Failed to load ") );
+        msg += fullFilePath;
+        wxLogMessage( msg );
+        return false;
+    }
 
+    wxString msg( _T("ChartSymbols loaded from ") );
+    msg += fullFilePath;
+    wxLogMessage( msg );
+    
+    TiXmlHandle hRoot( doc.RootElement() );
+    
     wxString root = wxString( doc.RootElement()->Value(), wxConvUTF8 );
     if( root != _T("chartsymbols" ) ) {
         wxLogMessage(

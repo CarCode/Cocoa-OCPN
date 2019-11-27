@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  ViewPort
@@ -52,7 +52,6 @@
 #include "chartimg.h"
 #include "chart1.h"
 #include "cutil.h"
-#include "routeprop.h"
 #include "TrackPropDlg.h"
 #include "tcmgr.h"
 #include "routemanagerdialog.h"
@@ -139,9 +138,9 @@ ViewPort::ViewPort()
 wxPoint ViewPort::GetPixFromLL( double lat, double lon )
 {
     wxPoint2DDouble p = GetDoublePixFromLL(lat, lon);
-    if(wxIsNaN(p.m_x) || wxIsNaN(p.m_y))
-        return wxPoint(INVALID_COORD, INVALID_COORD);
-    return wxPoint(wxRound(p.m_x), wxRound(p.m_y));
+    if(wxFinite(p.m_x) && wxFinite(p.m_y))
+        return wxPoint(wxRound(p.m_x), wxRound(p.m_y));
+    return wxPoint(INVALID_COORD, INVALID_COORD);
 }
 
 wxPoint2DDouble ViewPort::GetDoublePixFromLL( double lat, double lon )
@@ -167,28 +166,34 @@ wxPoint2DDouble ViewPort::GetDoublePixFromLL( double lat, double lon )
     if(clat != lat0_cache) {
         lat0_cache = clat;
         switch( m_projection_type ) {
-            case PROJECTION_MERCATOR:
-                cache0 = toSMcache_y30(clat);
-                break;
-            case PROJECTION_POLAR:
-                cache0 = toPOLARcache_e(clat);
-                break;
-            case PROJECTION_ORTHOGRAPHIC:
-            case PROJECTION_STEREOGRAPHIC:
-            case PROJECTION_GNOMONIC:
-                cache_phi0(clat, &cache0, &cache1);
-                break;
+        case PROJECTION_MERCATOR:
+#ifndef __WXOSX__  // noch nicht tiles
+        case PROJECTION_WEB_MERCATOR:
+#endif
+            cache0 = toSMcache_y30(clat);
+            break;
+        case PROJECTION_POLAR:
+            cache0 = toPOLARcache_e(clat);
+            break;
+        case PROJECTION_ORTHOGRAPHIC:
+        case PROJECTION_STEREOGRAPHIC:
+        case PROJECTION_GNOMONIC:
+            cache_phi0(clat, &cache0, &cache1);
+            break;
         }
     }
 
     switch( m_projection_type ) {
     case PROJECTION_MERCATOR:
+#ifndef __WXOSX__  // noch nicht tiles
+    case PROJECTION_WEB_MERCATOR:
+#endif
         toSMcache( lat, xlon, cache0, clon, &easting, &northing );
         break;
 
     case PROJECTION_TRANSVERSE_MERCATOR:
-            //    We calculate northings as referenced to the equator
-            //    And eastings as though the projection point is midscreen.
+        //    We calculate northings as referenced to the equator
+        //    And eastings as though the projection point is midscreen.
 
         double tmeasting, tmnorthing;
         double tmceasting, tmcnorthing;
@@ -197,7 +202,7 @@ wxPoint2DDouble ViewPort::GetDoublePixFromLL( double lat, double lon )
 
         northing = tmnorthing - tmcnorthing;
         easting = tmeasting - tmceasting;
-            break;
+        break;
 
     case PROJECTION_POLYCONIC:
 
@@ -213,29 +218,28 @@ wxPoint2DDouble ViewPort::GetDoublePixFromLL( double lat, double lon )
         northing = pnorthing - pcnorthing;
         break;
 
-        case PROJECTION_ORTHOGRAPHIC:
-            toORTHO( lat, xlon, cache0, cache1, clon, &easting, &northing );
-            break;
-            
-        case PROJECTION_POLAR:
-            toPOLAR( lat, xlon, cache0, clat, clon, &easting, &northing );
-            break;
-            
-        case PROJECTION_STEREOGRAPHIC:
-            toSTEREO( lat, xlon, cache0, cache1, clon, &easting, &northing );
-            break;
-            
-        case PROJECTION_GNOMONIC:
-            toGNO( lat, xlon, cache0, cache1, clon, &easting, &northing );
-            break;
-            
-        case PROJECTION_EQUIRECTANGULAR:
-            toEQUIRECT( lat, xlon, clat, clon, &easting, &northing );
-            break;
-            
-        default:
-            printf("unhandled projection\n");
+    case PROJECTION_ORTHOGRAPHIC:
+        toORTHO( lat, xlon, cache0, cache1, clon, &easting, &northing );
+        break;
 
+    case PROJECTION_POLAR:
+        toPOLAR( lat, xlon, cache0, clat, clon, &easting, &northing );
+        break;
+
+    case PROJECTION_STEREOGRAPHIC:
+        toSTEREO( lat, xlon, cache0, cache1, clon, &easting, &northing );
+        break;
+
+    case PROJECTION_GNOMONIC:
+        toGNO( lat, xlon, cache0, cache1, clon, &easting, &northing );
+        break;
+
+    case PROJECTION_EQUIRECTANGULAR:
+        toEQUIRECT( lat, xlon, clat, clon, &easting, &northing );
+        break;
+
+    default:
+        printf("unhandled projection\n");
     }
 
     if( !wxFinite(easting) || !wxFinite(northing) )
@@ -274,57 +278,57 @@ void ViewPort::GetLLFromPix( const wxPoint2DDouble &p, double *lat, double *lon 
     }
     double d_east = xpr / view_scale_ppm;
     double d_north = ypr / view_scale_ppm;
-#ifdef __WXOSX__
-    double slat=0.0, slon=0.0;
-#else
-    double slat, slon;
-#endif
+
+    double slat = 0.0, slon = 0.0;
     switch( m_projection_type ) {
-        case PROJECTION_MERCATOR:
-            //TODO  This could be fromSM_ECC to better match some Raster charts
-            //      However, it seems that cm93 (and S57) prefer no eccentricity correction
-            //      Think about it....
-            fromSM( d_east, d_north, clat, clon, &slat, &slon );
-            break;
-            
-        case PROJECTION_TRANSVERSE_MERCATOR:
-        {
+    case PROJECTION_MERCATOR:
+#ifndef __WXOSX__  // noch nicht
+    case PROJECTION_WEB_MERCATOR:
+#endif
+        //TODO  This could be fromSM_ECC to better match some Raster charts
+        //      However, it seems that cm93 (and S57) prefer no eccentricity correction
+        //      Think about it....
+        fromSM( d_east, d_north, clat, clon, &slat, &slon );
+        break;
+        
+    case PROJECTION_TRANSVERSE_MERCATOR:
+    {
         double tmceasting, tmcnorthing;
         toTM( clat, clon, 0., clon, &tmceasting, &tmcnorthing );
 
         fromTM( d_east, d_north + tmcnorthing, 0., clon, &slat, &slon );
-        } break;
-            
-        case PROJECTION_POLYCONIC:
-        {
+    } break;
+
+    case PROJECTION_POLYCONIC:
+    {
         double polyeasting, polynorthing;
         toPOLY( clat, clon, 0., clon, &polyeasting, &polynorthing );
 
         fromPOLY( d_east, d_north + polynorthing, 0., clon, &slat, &slon );
-        } break;
+    } break;
 
-        case PROJECTION_ORTHOGRAPHIC:
-            fromORTHO( d_east, d_north, clat, clon, &slat, &slon );
-            break;
-            
-        case PROJECTION_POLAR:
-            fromPOLAR( d_east, d_north, clat, clon, &slat, &slon );
-            break;
-            
-        case PROJECTION_STEREOGRAPHIC:
-            fromSTEREO( d_east, d_north, clat, clon, &slat, &slon );
-            break;
-            
-        case PROJECTION_GNOMONIC:
-            fromGNO( d_east, d_north, clat, clon, &slat, &slon );
-            break;
-            
-        case PROJECTION_EQUIRECTANGULAR:
-            fromEQUIRECT( d_east, d_north, clat, clon, &slat, &slon );
-            break;
-            
-        default:
-            printf("unhandled projection\n");
+    case PROJECTION_ORTHOGRAPHIC:
+        fromORTHO( d_east, d_north, clat, clon, &slat, &slon );
+        break;
+
+    case PROJECTION_POLAR:
+        fromPOLAR( d_east, d_north, clat, clon, &slat, &slon );
+        break;
+
+    case PROJECTION_STEREOGRAPHIC:
+        fromSTEREO( d_east, d_north, clat, clon, &slat, &slon );
+        break;
+
+    case PROJECTION_GNOMONIC:
+        fromGNO( d_east, d_north, clat, clon, &slat, &slon );
+        break;
+
+    case PROJECTION_EQUIRECTANGULAR:
+        fromEQUIRECT( d_east, d_north, clat, clon, &slat, &slon );
+        break;
+
+    default:
+        printf("unhandled projection\n");
     }
 
     *lat = slat;
@@ -340,23 +344,23 @@ LLRegion ViewPort::GetLLRegion( const OCPNRegion &region )
     //       method in SetBoxes here
 #ifndef ocpnUSE_GL
     return LLRegion(GetBBox());
-#else
+#else    
 
     if(!glChartCanvas::CanClipViewport(*this))
         return LLRegion(GetBBox());
-    
+
     OCPNRegionIterator it( region );
     LLRegion r;
     while( it.HaveRects() ) {
         wxRect rect = it.GetRect();
-        
+
         int x1 = rect.x, y1 = rect.y, x2 = x1 + rect.width, y2 = y1 + rect.height;
         int p[8] = {x1, y1, x2, y1, x2, y2, x1, y2};
         double pll[540];
         int j;
-        
+
         /* if the viewport is rotated, we must split the segments as straight lines in lat/lon
-         coordinates map to curves in projected coordinate space */
+           coordinates map to curves in projected coordinate space */
         if(fabs( rotation ) >= 0.0001) {
             j=0;
             double lastlat, lastlon;
@@ -365,14 +369,14 @@ LLRegion ViewPort::GetLLRegion( const OCPNRegion &region )
             for(int i=0; i<8; i+=2) {
                 double lat, lon;
                 GetLLFromPix(wxPoint(p[i], p[i+1]), &lat, &lon);
-                
+
                 // use 2 degree grid
                 double grid = 2;
                 int lat_splits = floor(fabs(lat-lastlat) / grid);
                 double lond = fabs(lon-lastlon);
                 int lon_splits = floor((lond > 180 ? 360-lond : lond) / grid);
                 int splits = wxMax(lat_splits, lon_splits) + 1;
-                
+
                 for(int k = 1; k<splits; k++) {
                     float d = (float)k / splits;
                     GetLLFromPix(wxPoint((1-d)*p[li] + d*p[i], (1-d)*p[li+1] + d*p[i+1]), pll+j, pll+j+1);
@@ -388,7 +392,7 @@ LLRegion ViewPort::GetLLRegion( const OCPNRegion &region )
             for(int i=0; i<j; i+=2)
                 GetLLFromPix(wxPoint(p[i], p[i+1]), pll+i, pll+i+1);
         }
-        
+
         // resolve (this works even if rectangle crosses both 0 and 180)
         for(int i=0; i<j; i+=2) {
             if(pll[i+1] <= clon - 180)
@@ -396,12 +400,12 @@ LLRegion ViewPort::GetLLRegion( const OCPNRegion &region )
             else if(pll[i+1] >= clon + 180)
                 pll[i+1] -= 360;
         }
-        
+
         r.Union(LLRegion(j/2, pll));
         it.NextRect();
     }
     return r;
-#endif
+#endif    
 }
 
 struct ContourRegion
@@ -415,7 +419,7 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &region, const LLReg
 {
     double rotation_save = rotation;
     rotation = 0;
-    
+
     std::list<ContourRegion> cregions;
     for(std::list<poly_contour>::const_iterator i = llregion.contours.begin(); i != llregion.contours.end(); i++) {
         float *contour_points = new float[2*i->size()];
@@ -425,7 +429,7 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &region, const LLReg
             contour_points[idx++] = j->y;
             contour_points[idx++] = j->x;
         }
-        
+
         double total = 0, maxlat = -90;
         int pl = idx - 2;
         double x0 = contour_points[0] - contour_points[pl+0];
@@ -439,13 +443,13 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &region, const LLReg
             total += x1*y0 - x0*y1;
             x0 = x1, y0 = y1;
         }
-        
+
         ContourRegion s;
         s.maxlat = maxlat;
         s.subtract = total < 0;
         s.r = GetVPRegionIntersect(region, i->size(), contour_points, chart_native_scale, NULL);
         delete [] contour_points;
-        
+
         std::list<ContourRegion>::iterator k = cregions.begin();
         while(k!=cregions.end()) {
             if(k->maxlat < s.maxlat)
@@ -454,7 +458,7 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &region, const LLReg
         }
         cregions.insert(k, s);
     }
-    
+
     OCPNRegion r;
     for(std::list<ContourRegion>::iterator k = cregions.begin(); k!=cregions.end(); k++){
         
@@ -465,13 +469,13 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &region, const LLReg
                 r.Union(k->r);
         }
     }
-    
+
     rotation = rotation_save;
     return r;
 }
 
-OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &Region, size_t nPoints, float *llpoints,
-                                          int chart_native_scale, wxPoint *ppoints )
+OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &Region, int nPoints, float *llpoints,
+                                           int chart_native_scale, wxPoint *ppoints )
 {
     //  Calculate the intersection between a given OCPNRegion (Region) and a polygon specified by lat/lon points.
 
@@ -534,11 +538,11 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &Region, size_t nPoi
         pp = ppoints;
 
     float *pfp = llpoints;
-
+    
     wxPoint p = GetPixFromLL( pfp[0], pfp[1] );
     int poly_x_max = INVALID_COORD, poly_y_max = INVALID_COORD,
         poly_x_min = INVALID_COORD, poly_y_min = INVALID_COORD;
-
+    
     bool valid = false;
     int npPoints = 0;
     for( int ip=0; ip < nPoints; ip++ ) {
@@ -562,13 +566,13 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &Region, size_t nPoi
         }
         pfp += 2;
     }
- 
+
     if(!valid)
     {
-        delete[] pp;
+        if ( ppoints == NULL ) delete[] pp;
         return OCPNRegion(); //empty;
     }
-
+ 
     //  We want to avoid processing regions with very large rectangle counts,
     //  so make some tests for special cases
 
@@ -597,7 +601,7 @@ OCPNRegion ViewPort::GetVPRegionIntersect( const OCPNRegion &Region, size_t nPoi
         p3.y = lat; p3.x = lon;
         
         
-        for(size_t i=0 ; i < npPoints-1 ; i++){
+        for(size_t i=0 ; i < npPoints-1 ; i++){            
             //  Quick check on y dimension
             int y0 = pp[i].y; int y1 = pp[i+1].y;
 
@@ -811,14 +815,14 @@ void ViewPort::SetBoxes( void )
         double rotator = rotation;
         double lpixh = pix_height;
         double lpixw = pix_width;
-        
+
         lpixh = wxMax(lpixh, (fabs(pix_height * cos(skew)) + fabs(pix_width * sin(skew))));
         lpixw = wxMax(lpixw, (fabs(pix_width * cos(skew)) + fabs(pix_height * sin(skew))));
 
         int dy = wxRound(
-                    fabs( lpixh * cos( rotator ) ) + fabs( lpixw * sin( rotator ) ) );
+                     fabs( lpixh * cos( rotator ) ) + fabs( lpixw * sin( rotator ) ) );
         int dx = wxRound(
-                    fabs( lpixw * cos( rotator ) ) + fabs( lpixh * sin( rotator ) ) );
+                     fabs( lpixw * cos( rotator ) ) + fabs( lpixh * sin( rotator ) ) );
 
         //  It is important for MSW build that viewport pixel dimensions be multiples of 4.....
         if( dy % 4 ) dy += 4 - ( dy % 4 );
@@ -839,88 +843,89 @@ void ViewPort::SetBoxes( void )
 
     wxPoint ul( rv_rect.x, rv_rect.y ), lr( rv_rect.x + rv_rect.width, rv_rect.y + rv_rect.height );
     double dlat_min, dlat_max, dlon_min, dlon_max;
-    
+
     bool hourglass = false;
     switch(m_projection_type) {
-        case PROJECTION_TRANSVERSE_MERCATOR:
-        case PROJECTION_STEREOGRAPHIC:
-        case PROJECTION_GNOMONIC:
-            hourglass = true;
-        case PROJECTION_POLYCONIC:
-        case PROJECTION_POLAR:
-        case PROJECTION_ORTHOGRAPHIC:
-        {
-            double d;
-            
-            if( clat > 0 ) { // north polar
-                wxPoint u( rv_rect.x + rv_rect.width/2, rv_rect.y );
-                wxPoint ur( rv_rect.x + rv_rect.width, rv_rect.y );
-                GetLLFromPix( ul, &d, &dlon_min );
-                GetLLFromPix( ur, &d, &dlon_max );
-                GetLLFromPix( lr, &dlat_min, &d );
-                GetLLFromPix( u, &dlat_max, &d );
-                
-                if(fabs(fabs(d - clon) - 180) < 1) { // the pole is onscreen
-                    dlat_max = 90;
-                    dlon_min = -180;
-                    dlon_max = 180;
-                } else if(wxIsNaN(dlat_max))
-                    dlat_max = 90;
-                
-                if(hourglass) {
-                    // near equator, center may be less
-                    wxPoint l( rv_rect.x + rv_rect.width/2, rv_rect.y + rv_rect.height );
-                    double dlat_min2;
-                    GetLLFromPix( l, &dlat_min2, &d );
-                    dlat_min = wxMin(dlat_min, dlat_min2);
-                }
+    case PROJECTION_TRANSVERSE_MERCATOR:
+    case PROJECTION_STEREOGRAPHIC:
+    case PROJECTION_GNOMONIC:
+        hourglass = true;
+        // fall through
+    case PROJECTION_POLYCONIC:
+    case PROJECTION_POLAR:
+    case PROJECTION_ORTHOGRAPHIC:
+    {
+        double d;
 
-                if(wxIsNaN(dlat_min)) //  world is off-screen
-                    dlat_min = clat - 90;
-            } else { // south polar
+        if( clat > 0 ) { // north polar
+            wxPoint u( rv_rect.x + rv_rect.width/2, rv_rect.y );
+            wxPoint ur( rv_rect.x + rv_rect.width, rv_rect.y );
+            GetLLFromPix( ul, &d, &dlon_min );
+            GetLLFromPix( ur, &d, &dlon_max );
+            GetLLFromPix( lr, &dlat_min, &d );
+            GetLLFromPix( u, &dlat_max, &d );
+
+            if(fabs(fabs(d - clon) - 180) < 1) { // the pole is onscreen
+                dlat_max = 90;
+                dlon_min = -180;
+                dlon_max = 180;
+            } else if(wxIsNaN(dlat_max))
+                dlat_max = 90;
+
+            if(hourglass) {
+                // near equator, center may be less
                 wxPoint l( rv_rect.x + rv_rect.width/2, rv_rect.y + rv_rect.height );
-                wxPoint ll( rv_rect.x, rv_rect.y + rv_rect.height );
-                GetLLFromPix( ul, &dlat_max, &d );
-                GetLLFromPix( lr, &d, &dlon_max );
-                GetLLFromPix( ll, &d, &dlon_min );
-                GetLLFromPix( l, &dlat_min, &d );
-                
-                if(fabs(fabs(d - clon) - 180) < 1) { // the pole is onscreen
-                    dlat_min = -90;
-                    dlon_min = -180;
-                    dlon_max = 180;
-                } else if(wxIsNaN(dlat_min))
-                    dlat_min = -90;
-                
-                if(hourglass) {
-                    // near equator, center may be less
-                    wxPoint u( rv_rect.x + rv_rect.width/2, rv_rect.y );
-                    double dlat_max2;
-                    GetLLFromPix( u, &dlat_max2, &d );
-                    dlat_max = wxMax(dlat_max, dlat_max2);
-                }
+                double dlat_min2;
+                GetLLFromPix( l, &dlat_min2, &d );
+                dlat_min = wxMin(dlat_min, dlat_min2);
+            }
 
-                if(wxIsNaN(dlat_max)) //  world is off-screen
-                    dlat_max = clat + 90;
+            if(wxIsNaN(dlat_min)) //  world is off-screen
+                dlat_min = clat - 90;
+        } else { // south polar
+            wxPoint l( rv_rect.x + rv_rect.width/2, rv_rect.y + rv_rect.height );
+            wxPoint ll( rv_rect.x, rv_rect.y + rv_rect.height );
+            GetLLFromPix( ul, &dlat_max, &d );
+            GetLLFromPix( lr, &d, &dlon_max );
+            GetLLFromPix( ll, &d, &dlon_min );
+            GetLLFromPix( l, &dlat_min, &d );            
+
+            if(fabs(fabs(d - clon) - 180) < 1) { // the pole is onscreen
+                dlat_min = -90;
+                dlon_min = -180;
+                dlon_max = 180;
+            } else if(wxIsNaN(dlat_min))
+                dlat_min = -90;
+
+            if(hourglass) {
+                // near equator, center may be less
+                wxPoint u( rv_rect.x + rv_rect.width/2, rv_rect.y );
+                double dlat_max2;
+                GetLLFromPix( u, &dlat_max2, &d );
+                dlat_max = wxMax(dlat_max, dlat_max2);
+            }
+
+            if(wxIsNaN(dlat_max)) //  world is off-screen
+                dlat_max = clat + 90;
         }
 
-            if(wxIsNaN(dlon_min)) {
-                // if neither pole is visible, but left and right of the screen are in space
-                // we can avoid drawing the far side of the earth
-                if(dlat_max < 90 && dlat_min > -90) {
-                    dlon_min = clon - 90 - fabs(clat); // this logic is not optimal, is it always correct?
-                    dlon_max = clon + 90 + fabs(clat);
-                } else {
-                    dlon_min = -180;
-                    dlon_max = 180;
-                }
+        if(wxIsNaN(dlon_min)) {
+            // if neither pole is visible, but left and right of the screen are in space
+            // we can avoid drawing the far side of the earth
+            if(dlat_max < 90 && dlat_min > -90) {
+                dlon_min = clon - 90 - fabs(clat); // this logic is not optimal, is it always correct?
+                dlon_max = clon + 90 + fabs(clat);
+            } else {
+                dlon_min = -180;
+                dlon_max = 180;
+            }
         }
-        } break;
+    } break;
 
-        default: // works for mercator and equirectangular
-        {
-            GetLLFromPix( ul, &dlat_max, &dlon_min );
-            GetLLFromPix( lr, &dlat_min, &dlon_max );
+    default: // works for mercator and equirectangular
+    {
+        GetLLFromPix( ul, &dlat_max, &dlon_min );
+        GetLLFromPix( lr, &dlat_min, &dlon_max );
     }
     }
 

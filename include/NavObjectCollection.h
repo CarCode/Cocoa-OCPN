@@ -1,4 +1,4 @@
-/**************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -93,14 +93,14 @@ public:
     bool AddGPXWaypoint(RoutePoint *pWP );
 
     bool CreateAllGPXObjects();
-    bool LoadAllGPXObjects( bool b_full_viz = false);
+    bool LoadAllGPXObjects( bool b_full_viz, int &wpt_duplicates );
     int LoadAllGPXObjectsAsLayer(int layer_id, bool b_layerviz);
-
+    
     bool SaveFile( const wxString filename );
 
     void SetRootGPXNode(void);
     bool IsOpenCPN();
-
+    
     pugi::xml_node      m_gpx_root;
 };
 

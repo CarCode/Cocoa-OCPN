@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  OpenGIS Simple Features Reference Implementation
  * Purpose:  The OGRLineString geometry class.
@@ -641,8 +641,11 @@ void OGRLineString::setPoints( int nPointsIn, double * padfX, double * padfY,
         paoPoints[i].x = padfX[i];
         paoPoints[i].y = padfY[i];
     }
-
+#ifdef __WXOSX__
+    if( this->padfZ && padfZ != NULL )
+#else
     if( this->padfZ != NULL )
+#endif
         memcpy( this->padfZ, padfZ, sizeof(double) * nPointsIn );
 }
 
@@ -691,7 +694,6 @@ OGRErr OGRLineString::importFromWkb( unsigned char * pabyData,
 #else
     CPLAssert( eGeometryType == wkbLineString );
 #endif
-
 /* -------------------------------------------------------------------- */
 /*      Get the vertex count.                                           */
 /* -------------------------------------------------------------------- */

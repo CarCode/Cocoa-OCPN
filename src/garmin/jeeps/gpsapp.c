@@ -1,4 +1,4 @@
-/********************************************************************
+/* *******************************************************************
 ** @source JEEPS application and data functions
 **
 ** @author Copyright (C) 1999 Alan Bleasby
@@ -1616,14 +1616,14 @@ static void GPS_D109_Get(GPS_PWay *way, UC *s, int protoid)
 
     p += 4; /* Skip over "outbound link ete in seconds */
     if (protoid == 110) {
-	float gps_temp;
-	int gps_time;
-	gps_temp = GPS_Util_Get_Float(p);
-	p+=4;
-	if (gps_temp <= 1.0e24) {
-		(*way)->temperature_populated = 1;
-		(*way)->temperature = gps_temp;
-	}
+        float gps_temp;
+        uint32 gps_time;
+        gps_temp = GPS_Util_Get_Float(p);
+        p+=4;
+        if (gps_temp <= 1.0e24) {
+            (*way)->temperature_populated = 1;
+            (*way)->temperature = gps_temp;
+        }
 
 	gps_time = GPS_Util_Get_Uint(p);
 	p+=4;
@@ -1632,7 +1632,7 @@ static void GPS_D109_Get(GPS_PWay *way, UC *s, int protoid)
 	 */
 	if (gps_time != 0xffffffff && gps_time != 0) {
 		(*way)->time_populated = 1;
-		(*way)->time = GPS_Math_Gtime_To_Utime(gps_time);
+		(*way)->time = GPS_Math_Gtime_To_Utime((long int)gps_time);
 	}
 	(*way)->category = GPS_Util_Get_Short(p);
 	p += 2;

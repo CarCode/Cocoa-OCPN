@@ -45,11 +45,8 @@ public:
 
     bool LineIntersect(const wxPoint2DDouble& begin, const wxPoint2DDouble& end ) const;
     bool PointInBox( const wxPoint2DDouble&, double Marge = 0) const;
-#ifdef __WXOSX__
-    bool PointInBox( double, double, double Marge = 0) const;
-#else
     virtual bool PointInBox( double, double, double Marge = 0) const;
-#endif
+
     void Reset();
 
     void Translate( wxPoint2DDouble& );
@@ -99,23 +96,23 @@ public:
     bool ContainsMarge(double Lat, double Lon, double Marge) const;
     bool GetValid() const { return m_valid; }
     void Invalidate() { m_valid = false; }
-    
+
     bool IntersectIn( const LLBBox &other ) const;
     inline bool IntersectOut( const LLBBox &other ) const
     {
         // allow -180 to 180 or 0 to 360
         if( !GetValid() || !other.GetValid() )
             return true;
-        
+
         if((m_maxlat < other.m_minlat) || (m_minlat > other.m_maxlat))
             return true;
-        
+
         double minlon = m_minlon, maxlon = m_maxlon;
         if(m_maxlon < other.m_minlon)
             minlon += 360, maxlon += 360;
         else if(m_minlon > other.m_maxlon)
             minlon -= 360, maxlon -= 360;
-        
+
         return (minlon > other.m_maxlon) || (maxlon < other.m_minlon);
     }
     bool IntersectOutGetBias( const LLBBox &other, double bias ) const;
@@ -124,13 +121,13 @@ public:
     double GetMinLon() const {return m_minlon;};
     double GetMaxLat() const {return m_maxlat;};
     double GetMaxLon() const {return m_maxlon;};
-    
+
     void EnLarge(const double Marge);
     double GetLonRange() const {return m_maxlon - m_minlon; }
     double GetLatRange() const {return m_maxlat - m_minlat;};
-    
+
 private:
-    
+
     double        m_minlat;
     double        m_minlon;
     double        m_maxlat;

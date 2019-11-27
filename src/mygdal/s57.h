@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  S-57 Translator
  * Purpose:  Declarations for S-57 translator not including the
@@ -244,6 +244,7 @@ class S57Reader
     int                 GetAall(){ return Aall; }
 
     int                 GetFeatureCount() { return oFE_Index.GetCount(); }
+    
  };
 
 /************************************************************************/

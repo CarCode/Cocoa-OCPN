@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Navigation Utility Functions
@@ -43,13 +43,12 @@
 
 #include "bbox.h"
 #include "chcanv.h"
-#include "tinyxml.h"
 #include "chartdbs.h"
 #include "RoutePoint.h"
 #include "vector2D.h"
 #include "Route.h"
 #include "SelectItem.h"
-
+#include "ocpndc.h"
 enum
 {
     DISTANCE_NMI = 0,
@@ -78,6 +77,13 @@ extern double fromUsrSpeed( double usr_speed, int unit = -1 );
 extern wxString getUsrDistanceUnit( int unit = -1 );
 extern wxString getUsrSpeedUnit( int unit = -1 );
 extern wxString toSDMM(int NEflag, double a, bool hi_precision = true);
+#ifdef __WXOSX__
+extern wxString FormatDistanceAdaptive( double distance );
+extern wxString formatTimeDelta(wxTimeSpan span);
+extern wxString formatTimeDelta(wxDateTime startTime, wxDateTime endTime);
+extern wxString formatTimeDelta(wxLongLong secs);
+extern wxString formatAngle(double angle);
+#endif
 extern void AlphaBlending( ocpnDC& dc, int x, int y, int size_x, int size_y, float radius,
                                       wxColour color, unsigned char transparency );
 
@@ -105,9 +111,9 @@ class TrackList;
 //void InsertRoute(Route *pTentRoute, int routenum);
 //void UpdateRoute(Route *pTentRoute);
 
-GpxWptElement *CreateGPXWpt ( RoutePoint *pr, char * waypoint_type, bool b_props_explicit = false, bool b_props_minimal = false );
-GpxRteElement *CreateGPXRte ( Route *pRoute );
-GpxTrkElement *CreateGPXTrk ( Route *pRoute );
+//GpxWptElement *CreateGPXWpt ( RoutePoint *pr, char * waypoint_type, bool b_props_explicit = false, bool b_props_minimal = false );
+//GpxRteElement *CreateGPXRte ( Route *pRoute );
+//GpxTrkElement *CreateGPXTrk ( Route *pRoute );
 
 bool WptIsInRouteList(RoutePoint *pr);
 RoutePoint *WaypointExists( const wxString& name, double lat, double lon);
@@ -130,7 +136,6 @@ public:
       int LoadMyConfig();
       void LoadS57Config();
       void LoadNavObjects();
-
       virtual void AddNewRoute(Route *pr);
       virtual void UpdateRoute(Route *pr);
       virtual void DeleteConfigRoute(Route *pr);
@@ -275,10 +280,13 @@ class WXDLLEXPORT X11FontPicker : public wxFontDialogBase
                         DECLARE_DYNAMIC_CLASS(X11FontPicker)
 };
 
-
-//      Simple and fast CRC32 calculator
-
-extern "C" unsigned int crc32buf(unsigned char *buf, size_t len);
-
+class GpxDocument
+{
+public:
+    static wxString GetUUID(void);
+    static void SeedRandom();
+private:
+    static int GetRandomNumber(int min, int max);
+};
 
 #endif

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -63,7 +63,7 @@ class NMEALogWindow : public WindowDestroyListener
         virtual void DestroyWindow();
         static void Shutdown();
         wxWindow *GetTTYWindow( void ){ return (wxWindow *)window; }
-
+        
     private: // prevent class from being copied, needed by singleton
         NMEALogWindow();
         NMEALogWindow(const NMEALogWindow &) {}

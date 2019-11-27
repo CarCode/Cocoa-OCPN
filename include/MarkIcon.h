@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __MARKICON_H__
 #define __MARKICON_H__
@@ -31,11 +30,16 @@
 class MarkIcon
 {
 public:
-    wxBitmap *picon_bitmap;
+    MarkIcon(){ m_blistImageOK = false; piconBitmap = NULL; icon_texture = 0; preScaled = false; listIndex = 0; } 
+    wxBitmap *piconBitmap;
     wxString icon_name;
     wxString icon_description;
+    bool preScaled;
 
     unsigned int icon_texture, tex_w, tex_h;
+    wxImage iconImage;
+    bool m_blistImageOK;
+    int listIndex;
 };
 
 #endif

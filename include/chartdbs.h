@@ -1,4 +1,4 @@
-/**************************************************************************
+/* *************************************************************************
 *
 * Project:  ChartManager
 * Purpose:  Basic Chart Info Storage
@@ -27,6 +27,8 @@
 #define __CHARTDBS_H__
 
 #include <map>
+#include <vector>
+
 #include "ocpn_types.h"
 #include "bbox.h"
 #include "LLRegion.h"
@@ -61,18 +63,18 @@ struct ChartTableEntry_onDisk_18
     float       LatMin;
     float       LonMax;
     float       LonMin;
-
+    
     int         Scale;
     int         edition_date;
     int         file_date;
-
+    
     int         nPlyEntries;
     int         nAuxPlyEntries;
-
+    
     float       skew;
     int         ProjectionType;
     bool        bValid;
-
+    
     int         nNoCovrPlyEntries;
 };
 
@@ -195,7 +197,7 @@ struct ChartTableEntry
     void Clear();
     void Disable();
     void ReEnable();
-
+    
     void SetValid(bool valid) { bValid = valid; }
     time_t GetFileTime() const { return file_date; }
 
@@ -209,9 +211,9 @@ struct ChartTableEntry
     int GetnNoCovrPlyEntries() const { return nNoCovrPlyEntries; }
     float *GetpNoCovrPlyTableEntry(int index) const { return pNoCovrPlyTable[index];}
     int GetNoCovrCntTableEntry(int index) const { return pNoCovrCntTable[index];}
-
-    const LLBBox &GetBBox() const { return m_bbox; }
-
+    
+    const LLBBox &GetBBox() const { return m_bbox; } 
+    
     char *GetpFullPath() const { return pFullPath; }
     float GetLonMax() const { return LonMax; }
     float GetLonMin() const { return LonMin; }
@@ -227,13 +229,22 @@ struct ChartTableEntry
     void SetEntryOffset(int n) { EntryOffset = n;}
     const wxString *GetpFileName(void) const { return m_pfilename; }
     wxString *GetpsFullPath(void){ return m_psFullPath; }
-
-    const ArrayOfInts &GetGroupArray(void) const { return m_GroupArray; }
-    void ClearGroupArray(void) { m_GroupArray.Clear(); }
-    void AddIntToGroupArray( int val ) { m_GroupArray.Add( val ); }
+    
+    const std::vector<int> &GetGroupArray(void) const { return m_GroupArray; }
+    void ClearGroupArray(void) { m_GroupArray.clear(); }
+    void AddIntToGroupArray( int val ) { m_GroupArray.push_back( val ); }
     void SetAvailable(bool avail ){ m_bavail = avail;}
 
+    std::vector<float> GetReducedPlyPoints();
+    std::vector<float> GetReducedAuxPlyPoints( int iTable);
+
     LLRegion quilt_candidate_region;
+
+    void        SetScale(int scale);
+    bool	Scale_eq( int b ) const { return abs ( Scale - b) <= rounding; }
+    bool        Scale_ge( int b ) const { return  Scale_eq( b ) || Scale > b; }
+    bool        Scale_gt( int b ) const { return  Scale > b && !Scale_eq( b ); }
+
   private:
     int         EntryOffset;
     int         ChartType;
@@ -243,6 +254,7 @@ struct ChartTableEntry
     float       LonMax;
     float       LonMin;
     char        *pFullPath;
+    int		rounding;
     int         Scale;
     time_t      edition_date;
     time_t      file_date;
@@ -257,12 +269,16 @@ struct ChartTableEntry
     int         nNoCovrPlyEntries;
     int         *pNoCovrCntTable;
     float       **pNoCovrPlyTable;
-
-    ArrayOfInts m_GroupArray;
+    
+    std::vector<int> m_GroupArray;
     wxString    *m_pfilename;             // a helper member, not on disk
     wxString    *m_psFullPath;
     LLBBox m_bbox;
     bool        m_bavail;
+    
+    std::vector<float> m_reducedPlyPoints;
+    
+    std::vector<std::vector<float> > m_reducedAuxPlyPointsVector;
 };
 
 enum
@@ -307,21 +323,21 @@ public:
 
     bool AddSingleChart( wxString &fullpath, bool b_force_full_search = true );
     bool RemoveSingleChart( wxString &ChartFullPath );
-
+    
     const wxString & GetDBFileName() const { return m_DBFileName; }
     ArrayOfCDI& GetChartDirArray(){ return m_dir_array; }
     wxArrayString &GetChartDirArrayString(){ return m_chartDirs; }
     void SetChartDirArray( ArrayOfCDI array ){ m_dir_array = array; }
     bool CompareChartDirArray( ArrayOfCDI& test_array );
     wxString GetMagicNumberCached(wxString dir);
-
+    
     void UpdateChartClassDescriptorArray(void);
 
     int GetChartTableEntries() const { return active_chartTable.size(); }
     const ChartTableEntry &GetChartTableEntry(int index) const;
     ChartTableEntry *GetpChartTableEntry(int index) const;
     inline ChartTable &GetChartTable(){ return active_chartTable; }
-
+    
     bool IsValid() const { return bValid; }
     int DisableChart(wxString& PathToDisable);
     bool GetCentroidOfLargestScaleChart(double *clat, double *clon, ChartFamilyEnum family);
@@ -333,7 +349,7 @@ public:
 
     bool GetDBBoundingBox(int dbindex, LLBBox &box);
     const LLBBox &GetDBBoundingBox(int dbIndex);
-
+    
     int  GetnAuxPlyEntries(int dbIndex);
     int  GetDBPlyPoint(int dbIndex, int plyindex, float *lat, float *lon);
     int  GetDBAuxPlyPoint(int dbIndex, int plyindex, int iAuxPly, float *lat, float *lon);
@@ -345,6 +361,9 @@ public:
     bool IsChartAvailable( int dbIndex );
     ChartTable    active_chartTable;
     std::map <wxString, int> active_chartTable_pathindex;
+    
+    std::vector<float> GetReducedPlyPoints(int dbIndex);
+    std::vector<float> GetReducedAuxPlyPoints(int dbIndex, int iTable);
 
 protected:
     virtual ChartBase *GetChart(const wxChar *theFilePath, ChartClassDescriptor &chart_desc) const;
@@ -374,10 +393,10 @@ private:
 
     ChartTableEntry           m_ChartTableEntryDummy;   // used for return value if database is not valid
     wxString      m_DBFileName;
-
+    
     int           m_pdifile;
     int           m_pdnFile;
-
+    
     int         m_nentries;
 
     LLBBox m_dummy_bbox;
@@ -407,7 +426,7 @@ class ChartGroup
 public:
       ChartGroup(){};
       ~ChartGroup(){ for (unsigned int i=0 ; i < m_element_array.GetCount() ; i++){ delete m_element_array.Item(i);}}
-
+      
       wxString                m_group_name;
       ChartGroupElementArray  m_element_array;
 };

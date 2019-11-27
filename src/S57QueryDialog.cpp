@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -87,9 +87,9 @@ bool S57QueryDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
 
     SetFont( *dFont );
     CreateControls();
-
+    
     m_createsize = size;
-    /*
+/*
 // This ensures that the dialog cannot be sized smaller
 // than the minimum size
     GetSizer()->SetSizeHints( this );
@@ -99,9 +99,9 @@ bool S57QueryDialog::Create( wxWindow* parent, wxWindowID id, const wxString& ca
 
 // Centre the dialog on the parent or (if none) screen
     Centre();
-     */
+*/
     RecalculateSize();
-
+    
     DimeControl( this );
     return true;
 
@@ -139,7 +139,7 @@ void S57QueryDialog::CreateControls()
     long style = wxHW_SCROLLBAR_AUTO;
     if(g_btouch)
         style |= wxHW_NO_SELECTION;
-
+        
     m_phtml = new wxHtmlWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, style);
     
     m_phtml->SetBorders( 5 );
@@ -161,11 +161,11 @@ void S57QueryDialog::SetColorScheme( void )
     SetBackgroundColour( bg );                  // This looks like non-sense, but is needed for __WXGTK__
                                                 // to get colours to propagate down the control's family tree.
 
-#ifdef __WXQT__
+#ifdef __WXQT__    
     //  wxQT has some trouble clearing the background of HTML window...
     wxBitmap tbm( GetSize().x, GetSize().y, -1 );
     wxMemoryDC tdc( tbm );
-    //    wxColour cback = GetGlobalColor( _T("YELO1") );
+//    wxColour cback = GetGlobalColor( _T("YELO1") );
     tdc.SetBackground( bg );
     tdc.Clear();
     m_phtml->SetBackgroundImage(tbm);

@@ -1,4 +1,4 @@
-/********************************************************************
+/* *******************************************************************
 ** @source JEEPS command functions
 **
 ** @author Copyright (C) 1999 Alan Bleasby
@@ -809,7 +809,11 @@ int32  GPS_Command_Send_Course
     switch(gps_course_limits_transfer)
     {
        case pA1009:
+#ifdef __WXOSX__
+            GPS_A1009_Get(port,&limits);
+#else
            ret = GPS_A1009_Get(port,&limits);
+#endif
            break;
        default:
            GPS_Error("Send_Course: Unknown course limitsprotocol");
@@ -886,12 +890,9 @@ int32  GPS_Command_Send_Course
 
     if(!GPS_Device_Off(fd))
         return gps_errno;
-#ifdef __WXOSX__
-    return ret * ret_crs * ret_clp * ret_trk * ret_cpt;
-#else
+
 
     return ret_crs * ret_clp * ret_trk * ret_cpt;
-#endif
 }
 
 

@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////
 // Name:        SVGCanvasImageCairo.h
 // Purpose:     Cairo canvas image
 // Author:      Alex Thuering
@@ -6,13 +6,13 @@
 // RCS-ID:      $Id: SVGCanvasImageCairo.h,v 1.4 2013/09/12 08:46:01 ntalex Exp $
 // Copyright:   (c) 2011 Alex Thuering
 // Licence:     wxWindows licence
-//////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////
 
 #ifndef WX_SVG_CANVAS_IMAGE_CAIRO_H
 #define WX_SVG_CANVAS_IMAGE_CAIRO_H
 
 #include "SVGCanvasItem.h"
-#include <cairo/cairo.h>
+#include <cairo.h>
 
 class wxSVGCanvasImageCairoData {
 public:

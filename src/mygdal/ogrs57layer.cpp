@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  S-57 Translator
  * Purpose:  Implements OGRS57Layer class.
@@ -24,9 +24,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************
- *
- */
+ ******************************************************************************/
 
 #include "ogr_s57.h"
 #include "cpl_conv.h"
@@ -303,9 +301,13 @@ OGRErr OGRS57Layer::CreateFeature( OGRFeature *poFeature )
     if( iRCNMFld != -1 )
     {
         if( !poFeature->IsFieldSet( iRCNMFld ) )
+        {
             poFeature->SetField( iRCNMFld, nRCNM );
+        }
         else
+        {
             CPLAssert( poFeature->GetFieldAsInteger( iRCNMFld ) == nRCNM );
+        }
     }
 
 /* -------------------------------------------------------------------- */
@@ -316,9 +318,13 @@ OGRErr OGRS57Layer::CreateFeature( OGRFeature *poFeature )
         int iOBJLFld = poFeature->GetFieldIndex( "OBJL" );
 
         if( !poFeature->IsFieldSet( iOBJLFld ) )
+        {
             poFeature->SetField( iOBJLFld, nOBJL );
+        }
         else
+        {
             CPLAssert( poFeature->GetFieldAsInteger( iOBJLFld ) == nOBJL );
+        }
     }
 
 /* -------------------------------------------------------------------- */

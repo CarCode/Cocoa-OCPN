@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -40,7 +40,7 @@ public:
                              const wxString& face = wxEmptyString,
                              wxFontEncoding encoding = wxFONTENCODING_DEFAULT);
     void FreeAll( void );
-
+    
 private:
     bool isSame(wxFont *font, int pointSize, wxFontFamily family,
                 wxFontStyle style,
@@ -49,6 +49,7 @@ private:
                 const wxString& facename,
                 wxFontEncoding encoding);
 };
+
 
 extern wxString g_locale;
 extern OCPNPlatform     *g_Platform;
@@ -84,7 +85,7 @@ FontMgr::FontMgr()
     m_fontlist->DeleteContents( true );
 
     s_locale = g_locale;
-
+    
     //    Get a nice generic font as default
     pDefFont = FindOrCreateFont( 12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, FALSE,
             wxString( _T ( "" ) ), wxFONTENCODING_SYSTEM );
@@ -95,7 +96,7 @@ FontMgr::~FontMgr()
 {
     m_fontlist->Clear();
     delete m_fontlist;
-
+    
     delete m_wxFontCache;
 }
 
@@ -123,21 +124,21 @@ wxColour FontMgr::GetFontColor( const wxString &TextElement ) const
 
 bool FontMgr::SetFontColor( const wxString &TextElement, const wxColour color ) const
 {
-    //    Look thru the font list for a match
-    MyFontDesc *pmfd;
-    wxNode *node = (wxNode *) ( m_fontlist->GetFirst() );
-    while( node ) {
-        pmfd = (MyFontDesc *) node->GetData();
-        if( pmfd->m_dialogstring == TextElement ) {
-            if(pmfd->m_configstring.BeforeFirst('-') == s_locale) {
-                pmfd->m_color = color;
-                return true;
-            }
-        }
-        node = node->GetNext();
+  //    Look thru the font list for a match
+  MyFontDesc *pmfd;
+  wxNode *node = (wxNode *) ( m_fontlist->GetFirst() );
+  while( node ) {
+    pmfd = (MyFontDesc *) node->GetData();
+    if( pmfd->m_dialogstring == TextElement ) {
+      if(pmfd->m_configstring.BeforeFirst('-') == s_locale) {
+        pmfd->m_color = color;
+        return true;
+      }
     }
+    node = node->GetNext();
+  }
 
-    return false;
+  return false;
 }
 
 wxString FontMgr::GetFontConfigKey( const wxString &description )
@@ -153,17 +154,17 @@ wxString FontMgr::GetFontConfigKey( const wxString &description )
     using namespace std;
     locale loc;
     const collate<char>& coll = use_facet<collate<char> >( loc );
-    //    char cFontDesc[101];
-    //    wcstombs( cFontDesc, description.c_str(), 100 );
-    //    cFontDesc[100] = 0;
+//    char cFontDesc[101];
+//    wcstombs( cFontDesc, description.c_str(), 100 );
+//    cFontDesc[100] = 0;
 
     wxCharBuffer abuf = description.ToUTF8();
-
+    
     int fdLen = strlen( abuf );
 
     configkey.Append(
             wxString::Format( _T("%08lx"),
-                             coll.hash( abuf.data(), abuf.data() + fdLen ) ) );
+                              coll.hash( abuf.data(), abuf.data() + fdLen ) ) );
     return configkey;
 }
 
@@ -186,16 +187,17 @@ wxFont *FontMgr::GetFont( const wxString &TextElement, int user_default_size )
 
     //    Now create a benign, always present native font
     //    with optional user requested default size
-
+    
     //    Get the system default font.
     wxFont sys_font = *wxNORMAL_FONT;
     int sys_font_size = sys_font.GetPointSize();
     wxString FaceName = sys_font.GetFaceName();
-
+    
 #ifdef __OCPN__ANDROID__
     sys_font_size = 18;
     FaceName = _T("Roboto");
-#endif
+#endif    
+    
 
     int new_size;
     if( 0 == user_default_size )
@@ -204,9 +206,8 @@ wxFont *FontMgr::GetFont( const wxString &TextElement, int user_default_size )
         new_size = user_default_size;
 
     wxString nativefont = GetSimpleNativeFont( new_size, FaceName );
-
     wxFont *nf = wxFont::New( nativefont );
-
+    
     wxColor color( *wxBLACK );
 
     MyFontDesc *pnewfd = new MyFontDesc( TextElement, configkey, nf, color );
@@ -237,7 +238,7 @@ bool FontMgr::SetFont(const wxString &TextElement, wxFont *pFont, wxColour color
         pmfd = (MyFontDesc *) node->GetData();
         if( pmfd->m_dialogstring == TextElement ) {
             if(pmfd->m_configstring.BeforeFirst('-') == s_locale) {
-
+                
             // Todo Think about this
             //
 
@@ -329,13 +330,13 @@ void FontMgr::LoadFontNative( wxString *pConfigString, wxString *pNativeDesc )
     if( !node ) {
 
         wxFont *nf0 = new wxFont();
-
+        
 #ifdef __OCPN__ANDROID__
         wxFont *nf = new wxFont( nativefont );
 #else
         wxFont *nf = nf0->New( nativefont );
 #endif
-
+        
 //        double font_size = nf->GetPointSize();  // Not used
         wxString s = nf->GetNativeFontInfoDesc();
 
@@ -357,29 +358,29 @@ void FontMgr::LoadFontNative( wxString *pConfigString, wxString *pNativeDesc )
     }
 }
 
-wxFont* FontMgr::FindOrCreateFont( int point_size, wxFontFamily family,
-                                  wxFontStyle style, wxFontWeight weight, bool underline,
-                                  const wxString &facename,
-                                  wxFontEncoding encoding)
+wxFont* FontMgr::FindOrCreateFont( int point_size, wxFontFamily family, 
+                    wxFontStyle style, wxFontWeight weight, bool underline,
+                    const wxString &facename,
+                    wxFontEncoding encoding)
 {
     if (m_wxFontCache == 0)
         m_wxFontCache = new OCPNwxFontList;
     return m_wxFontCache->FindOrCreateFont( point_size, family, style, weight,
-                                           underline, facename, encoding);
-}
+        underline, facename, encoding);
+}        
 
 bool OCPNwxFontList::isSame(wxFont *font, int pointSize, wxFontFamily family,
-                            wxFontStyle style,
-                            wxFontWeight weight,
-                            bool underline,
-                            const wxString& facename,
-                            wxFontEncoding encoding)
+                             wxFontStyle style,
+                             wxFontWeight weight,
+                             bool underline,
+                             const wxString& facename,
+                             wxFontEncoding encoding)
 {
     if (
-        font->GetPointSize () == pointSize &&
-        font->GetStyle () == style &&
-        font->GetWeight () == weight &&
-        font->GetUnderlined () == underline )
+         font->GetPointSize () == pointSize &&
+         font->GetStyle () == style &&
+         font->GetWeight () == weight &&
+         font->GetUnderlined () == underline )
     {
         bool same;
 
@@ -391,11 +392,11 @@ bool OCPNwxFontList::isSame(wxFont *font, int pointSize, wxFontFamily family,
         if ( !facename.empty() )
         {
             const wxString& fontFace = font->GetFaceName();
-            
+
             // empty facename matches everything
             same = !fontFace || fontFace == facename;
         }
-        else
+        else 
         {
             same = font->GetFamily() == family;
         }
@@ -410,12 +411,12 @@ bool OCPNwxFontList::isSame(wxFont *font, int pointSize, wxFontFamily family,
 }
 
 wxFont *OCPNwxFontList::FindOrCreateFont(int pointSize,
-                                         wxFontFamily family,
-                                         wxFontStyle style,
-                                         wxFontWeight weight,
-                                         bool underline,
-                                         const wxString& facename,
-                                         wxFontEncoding encoding)
+                                     wxFontFamily family,
+                                     wxFontStyle style,
+                                     wxFontWeight weight,
+                                     bool underline,
+                                     const wxString& facename,
+                                     wxFontEncoding encoding)
 {
     // from wx source code
     // In all ports but wxOSX, the effective family of a font created using
@@ -445,7 +446,7 @@ wxFont *OCPNwxFontList::FindOrCreateFont(int pointSize,
     {
         font = new wxFont(fontTmp);
         list.Append(font);
-
+        
         // double check the font really roundtrip
         //  Removed after verification.
         //wxASSERT(isSame(font, pointSize, family, style, weight, underline, facename, encoding));
@@ -465,7 +466,7 @@ void OCPNwxFontList::FreeAll( void )
     }
 }
 
-wxString FontCandidates[] = {
+static wxString FontCandidates[] = {
     _T("AISTargetAlert"), 
     _T("AISTargetQuery"),
     _T("StatusBar"),
@@ -491,41 +492,39 @@ void FontMgr::ScrubList( )
 {
     wxString now_locale = g_locale;
     wxArrayString string_array;
-
+    
     //  Build the composite candidate array
     wxArrayString candidateArray;
-    bool done = false;
     unsigned int i = 0;
-
+    
     // The fixed, static list
-    while( ! done ){
+    while( true ){
         wxString candidate = FontCandidates[i];
         if(candidate == _T("END_OF_LIST") ) {
-//            done = true;  // Not used but break
             break;
         }
-
+        
         candidateArray.Add(candidate);
         i++;
     }
-
-    //  The Aux Key array
+        
+    //  The Aux Key array    
     for(unsigned int i=0 ; i <  m_AuxKeyArray.GetCount() ; i++){
         candidateArray.Add(m_AuxKeyArray[i]);
     }
-
-
+    
+    
     for(unsigned int i = 0; i < candidateArray.GetCount() ; i++ ){
         wxString candidate = candidateArray[i];
-
+        
         //  For each font identifier string in the FontCandidate array...
         
         //  In the current locale, walk the loaded list looking for a translation
         //  that is correct, according to the currently load .mo file.
         //  If found, add to a temporary array
-
+        
         wxString trans = wxGetTranslation(candidate);
-
+        
         MyFontDesc *pmfd;
         wxNode *node = (wxNode *) ( m_fontlist->GetFirst() );
         while( node ) {
@@ -539,12 +538,12 @@ void FontMgr::ScrubList( )
  
             node = node->GetNext();
         }
-    }
+    }        
 
     // now we have an array of correct translations    
     // Walk the loaded list again.
     // If a list item's translation is not in the "good" array, mark it for removal
-
+    
     MyFontDesc *pmfd;
     wxNode *node = (wxNode *) ( m_fontlist->GetFirst() );
     while( node ) {
@@ -563,10 +562,10 @@ void FontMgr::ScrubList( )
                 pmfd->m_configstring = _T("");
             }
         }
-
+        
         node = node->GetNext();
     }
-
+    
     //  Remove the marked list items
     node = (wxNode *) ( m_fontlist->GetFirst() );
     while( node ) {
@@ -578,23 +577,23 @@ void FontMgr::ScrubList( )
         }
         else
             node = node->GetNext();
-
+        
     }
-
+ 
     //  And finally, for good measure, make sure that everything in the candidate array has a valid entry in the list
-    done = false;
     i = 0;
-    while( ! done ){
+    while( true ){
         wxString candidate = FontCandidates[i];
         if(candidate == _T("END_OF_LIST") ) {
-//            done = true;  // Not used but break
             break;
         }
 
         GetFont( wxGetTranslation(candidate), g_default_font_size );
-
+     
         i++;
     }
+ 
+     
 }
 
 bool FontMgr::AddAuxKey( wxString key )
@@ -606,3 +605,4 @@ bool FontMgr::AddAuxKey( wxString key )
     m_AuxKeyArray.Add(key);
     return true;
 }
+

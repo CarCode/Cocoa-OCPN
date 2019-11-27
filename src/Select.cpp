@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -27,8 +27,10 @@
 #include "navutil.h"
 #include "chcanv.h"
 #include "Track.h"
+#include "routeman.h"
 
 extern ChartCanvas *cc1;
+extern Routeman    *g_pRouteMan;
 
 Select::Select()
 {
@@ -53,7 +55,7 @@ bool Select::IsSelectableRoutePointValid(RoutePoint *pRoutePoint )
 {
     SelectItem *pFindSel;
 
-    //    Iterate on the select list
+//    Iterate on the select list
     wxSelectableItemListNode *node = pSelectList->GetFirst();
 
     while( node ) {
@@ -116,15 +118,15 @@ bool Select::DeleteAllSelectableRouteSegments( Route *pr )
 
     while( node ) {
         pFindSel = node->GetData();
-        if( pFindSel->m_seltype == SELTYPE_ROUTESEGMENT &&
-           (Route *) pFindSel->m_pData3 == pr )
+        if( pFindSel->m_seltype == SELTYPE_ROUTESEGMENT && 
+            (Route *) pFindSel->m_pData3 == pr ) 
         {
                 delete pFindSel;
                 wxSelectableItemListNode *d = node;
                 node = node->GetNext();
                 pSelectList->DeleteNode( d );   //delete node;
         }
-        else
+        else 
             node = node->GetNext();
     }
 
@@ -398,7 +400,7 @@ bool Select::ModifySelectablePoint( float lat, float lon, void *data, int Seltyp
 }
 
 bool Select::AddSelectableTrackSegment( float slat1, float slon1, float slat2, float slon2,
-            TrackPoint *pTrackPointAdd1, TrackPoint *pTrackPointAdd2, Track *pTrack )
+        TrackPoint *pTrackPointAdd1, TrackPoint *pTrackPointAdd2, Track *pTrack )
 {
     SelectItem *pSelItem = new SelectItem;
     pSelItem->m_slat = slat1;
@@ -427,15 +429,15 @@ bool Select::DeleteAllSelectableTrackSegments( Track *pt )
 
     while( node ) {
         pFindSel = node->GetData();
-        if( pFindSel->m_seltype == SELTYPE_TRACKSEGMENT &&
-           (Track *) pFindSel->m_pData3 == pt  )
+        if( pFindSel->m_seltype == SELTYPE_TRACKSEGMENT && 
+          (Track *) pFindSel->m_pData3 == pt  ) 
         {
             delete pFindSel;
             wxSelectableItemListNode *d = node;
             node = node->GetNext();
             pSelectList->DeleteNode( d );   //delete node;
         }
-        else
+        else 
             node = node->GetNext();
     }
     return true;
@@ -451,14 +453,14 @@ bool Select::DeletePointSelectableTrackSegments( TrackPoint *pt )
     while( node ) {
         pFindSel = node->GetData();
         if( pFindSel->m_seltype == SELTYPE_TRACKSEGMENT &&
-           ( (TrackPoint *) pFindSel->m_pData1 == pt ||
-            (TrackPoint *) pFindSel->m_pData2 == pt ) ) {
+            ( (TrackPoint *) pFindSel->m_pData1 == pt ||
+              (TrackPoint *) pFindSel->m_pData2 == pt ) ) {
                 delete pFindSel;
-               wxSelectableItemListNode *d = node;
-               node = node->GetNext();
-               pSelectList->DeleteNode( d );   //delete node;
-           } else
-               node = node->GetNext();
+                wxSelectableItemListNode *d = node;
+                node = node->GetNext();
+                pSelectList->DeleteNode( d );   //delete node;
+        } else
+            node = node->GetNext();
     }
     return true;
 }
@@ -466,6 +468,15 @@ bool Select::DeletePointSelectableTrackSegments( TrackPoint *pt )
 bool Select::IsSegmentSelected( float a, float b, float c, float d, float slat, float slon )
 {
     double adder = 0.;
+
+    // Track segments for some reason can have longitude values > 180.
+    // Therefore, we normalize all the lat/lon values here.
+    if (a > 90.0) a -= 180.0;
+    if (b > 90.0) b -= 180.0;
+    if (c > 180.0) c -= 360.0;
+    if (d > 180.0) d -= 360.0;
+    if (slat > 90.0) slat -= 180.0;
+    if (slon > 180.0) slon -= 360.0;
 
     if( ( c * d ) < 0. ) {
         //    Arrange for points to be increasing longitude, c to d
@@ -562,7 +573,7 @@ SelectItem *Select::FindSelection( float slat, float slon, int fseltype )
     }
 
     return NULL;
-find_ok: return pFindSel;
+    find_ok: return pFindSel;
 }
 
 bool Select::IsSelectableSegmentSelected( float slat, float slon, SelectItem *pFindSel )
@@ -582,7 +593,6 @@ bool Select::IsSelectableSegmentSelected( float slat, float slon, SelectItem *pF
         // not in the list anymore
         return false;
     }
-
     CalcSelectRadius();
 
     float a = pFindSel->m_slat;
@@ -617,6 +627,16 @@ SelectableItemList Select::FindSelectionList( float slat, float slon, int fselty
                         ret_list.Append( pFindSel );
                     }
                     break;
+// DRAGHANDLE fehlt noch:
+/*
+ case SELTYPE_DRAGHANDLE:
+ if( ( fabs( slat - pFindSel->m_slat ) < selectRadius )
+        && ( fabs( slon - pFindSel->m_slon ) < selectRadius ) ) {
+        if(cc1->m_bShowNavobjects || ((RoutePoint *)pFindSel->m_pData1)->m_bIsActive || g_pRouteMan->FindRouteContainingWaypoint( (RoutePoint *)pFindSel->m_pData1 )->IsActive())
+            ret_list.Append( pFindSel );
+ }
+ break;
+*/
                 case SELTYPE_ROUTESEGMENT:
                 case SELTYPE_TRACKSEGMENT: {
                     a = pFindSel->m_slat;
@@ -624,7 +644,9 @@ SelectableItemList Select::FindSelectionList( float slat, float slon, int fselty
                     c = pFindSel->m_slon;
                     d = pFindSel->m_slon2;
 
-                    if( IsSegmentSelected( a, b, c, d, slat, slon ) ) ret_list.Append( pFindSel );
+                    if( IsSegmentSelected( a, b, c, d, slat, slon ) )
+                        if(cc1->m_bShowNavobjects || ((Route *)pFindSel->m_pData3)->m_bRtIsActive)
+                            ret_list.Append( pFindSel );
 
                     break;
                 }

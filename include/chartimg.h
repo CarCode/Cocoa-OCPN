@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  ChartBaseBSB and Friends
@@ -22,7 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
-
 
 #ifndef _CHARTIMG_H_
 #define _CHARTIMG_H_
@@ -98,19 +97,19 @@ public:
 
 };
 
+
+
 struct TileOffsetCache
 {
     int offset; // offset from start of line pointer
     int pixel; // offset from current pixel
 };
 
-
-
 class CachedLine
 {
 public:
-    unsigned char    *pPix;
-    TileOffsetCache  *pTileOffset; // entries for random access
+      unsigned char    *pPix;
+      TileOffsetCache  *pTileOffset; // entries for random access
 
       bool              bValid;
 };
@@ -138,6 +137,8 @@ class  ChartBaseBSB     :public ChartBase
 
       ChartBaseBSB();
       virtual ~ChartBaseBSB();
+      void FreeLineCacheRows(int start=0, int end=-1);
+      bool HaveLineCacheRow(int row);
 
       //    Accessors
       virtual ThumbData *GetThumbData(int tnx, int tny, float lat, float lon);
@@ -179,7 +180,7 @@ class  ChartBaseBSB     :public ChartBase
       virtual int GetSize_Y(){ return Size_Y;}
 
       virtual void latlong_to_chartpix(double lat, double lon, double &pixx, double &pixy);
-      void chartpix_to_latlong(double pixx, double pixy, double *plat, double *plon);
+      virtual void chartpix_to_latlong(double pixx, double pixy, double *plat, double *plon);
 
       double GetPPM(){ return m_ppm_avg;}
 
@@ -188,7 +189,7 @@ protected:
 
       wxRect GetSourceRect(){ return Rsrc; }
 
-    virtual bool GetAndScaleData(unsigned char *ppn, size_t data_size,
+      virtual bool GetAndScaleData(unsigned char *ppn, size_t data_size,
                                    wxRect& source, int source_stride, wxRect& dest, int dest_stride,
                                    double scale_factor, ScaleTypeEnum scale_type);
       bool RenderViewOnDC(wxMemoryDC& dc, const ViewPort& VPoint);
@@ -216,7 +217,7 @@ protected:
 
 
       virtual int BSBScanScanline(wxInputStream *pinStream);
-      virtual int ReadBSBHdrLine( wxFFileInputStream*, char *, int );
+      virtual int ReadBSBHdrLine( wxInputStream*, char *, int );
       virtual int AnalyzeRefpoints(bool b_testSolution = true);
       virtual bool AnalyzeSkew(void);
       
@@ -260,7 +261,6 @@ protected:
       wxRect      Rsrc;                   // Current chart source rectangle
       double      m_raster_scale_factor;
 
-
       int         nRefpoint;
       Refpoint    *pRefTable;
 
@@ -270,8 +270,8 @@ protected:
 
       CachedLine  *pLineCache;
 
-      wxFFileInputStream    *ifs_hdr;
-      wxFFileInputStream    *ifss_bitmap;
+      wxInputStream    *ifs_hdr;
+      wxInputStream    *ifss_bitmap;
       wxBufferedInputStream *ifs_bitmap;
 
       wxString          *pBitmapFilePath;
@@ -370,81 +370,83 @@ class PlugInChartBase;                  // found in ocpn_plugin.h
 
 class ChartPlugInWrapper : public ChartBaseBSB
 {
-public:
-    ChartPlugInWrapper();
-    ChartPlugInWrapper(const wxString &chart_class);
-    virtual ~ChartPlugInWrapper();
+      public:
+            ChartPlugInWrapper();
+            ChartPlugInWrapper(const wxString &chart_class);
+            virtual ~ChartPlugInWrapper();
 
-    virtual wxString GetFileSearchMask(void);
+            virtual wxString GetFileSearchMask(void);
 
-    virtual InitReturn Init( const wxString& name, ChartInitFlag init_flags );
+            virtual InitReturn Init( const wxString& name, ChartInitFlag init_flags );
 
-    //    Accessors
-    virtual ThumbData *GetThumbData(int tnx, int tny, float lat, float lon);
-    virtual ThumbData *GetThumbData();
-    virtual bool UpdateThumbData(double lat, double lon);
+//    Accessors
+            virtual ThumbData *GetThumbData(int tnx, int tny, float lat, float lon);
+            virtual ThumbData *GetThumbData();
+            virtual bool UpdateThumbData(double lat, double lon);
 
-    double GetNormalScaleMin(double canvas_scale_factor, bool b_allow_overzoom);
-    double GetNormalScaleMax(double canvas_scale_factor, int canvas_width);
+            double GetNormalScaleMin(double canvas_scale_factor, bool b_allow_overzoom);
+            double GetNormalScaleMax(double canvas_scale_factor, int canvas_width);
 
-    virtual bool GetChartExtent(Extent *pext);
+            virtual bool GetChartExtent(Extent *pext);
 
-    virtual bool RenderRegionViewOnDC(wxMemoryDC& dc, const ViewPort& VPoint,
-                                      const OCPNRegion &Region);
-
-    virtual bool RenderRegionViewOnGL(const wxGLContext &glc, const ViewPort& VPoint,
-                                      const OCPNRegion &RectRegion, const LLRegion &Region);
-
-    virtual bool AdjustVP(ViewPort &vp_last, ViewPort &vp_proposed);
-
-    virtual void GetValidCanvasRegion(const ViewPort& VPoint, OCPNRegion *pValidRegion);
-
-    virtual void SetColorScheme(ColorScheme cs, bool bApplyImmediate);
-
-    virtual double GetNearestPreferredScalePPM(double target_scale_ppm);
-
-    virtual PlugInChartBase *GetPlugInChart(void){ return m_ppicb; }
-
-    virtual int GetCOVREntries();
-    virtual int GetCOVRTablePoints(int iTable);
-    virtual int GetCOVRTablenPoints(int iTable);
-    virtual float *GetCOVRTableHead(int iTable);
-
-    virtual int GetNoCOVREntries();
-    virtual int GetNoCOVRTablePoints(int iTable);
-    virtual int  GetNoCOVRTablenPoints(int iTable);
-    virtual float *GetNoCOVRTableHead(int iTable);
-
-    //    The following set of methods apply to BSB (i.e. Raster) type PlugIn charts only
-    //    and need not be implemented if the ChartFamily is not CHART_FAMILY_RASTER
-    virtual void ComputeSourceRectangle(const ViewPort &vp, wxRect *pSourceRect);
-    virtual double GetRasterScaleFactor(const ViewPort &vp);
-    virtual bool GetChartBits( wxRect& source, unsigned char *pPix, int sub_samp );
-    virtual int GetSize_X();
-    virtual int GetSize_Y();
-    virtual void latlong_to_chartpix(double lat, double lon, double &pixx, double &pixy);
-    virtual void chartpix_to_latlong(double pixx, double pixy, double *plat, double *plon);
-
-    //  Added for API V 1.14, with PlugInChartBaseExtended
-    virtual bool RenderRegionViewOnDCNoText(wxMemoryDC &dc, const ViewPort& VPoint,
-                                            const OCPNRegion &Region);
-
-    virtual bool RenderRegionViewOnDCTextOnly(wxMemoryDC &dc, const ViewPort& VPoint,
+            virtual bool RenderRegionViewOnDC(wxMemoryDC& dc, const ViewPort& VPoint,
                                               const OCPNRegion &Region);
 
-    virtual bool RenderRegionViewOnGLNoText( const wxGLContext &glc, const ViewPort& VPoint,
-                                            const OCPNRegion &RectRegion, const LLRegion &Region );
+            virtual bool RenderRegionViewOnGL(const wxGLContext &glc, const ViewPort& VPoint,
+                                              const OCPNRegion &RectRegion, const LLRegion &Region);
 
-    virtual bool RenderRegionViewOnGLTextOnly( const wxGLContext &glc, const ViewPort& VPoint,
-                                              const OCPNRegion &RectRegion );
+            virtual bool AdjustVP(ViewPort &vp_last, ViewPort &vp_proposed);
 
-    virtual void ClearPLIBTextList();
+            virtual void GetValidCanvasRegion(const ViewPort& VPoint, OCPNRegion *pValidRegion);
 
-private:
-    PlugInChartBase *m_ppicb;
-    wxObject          *m_ppo;
-    wxCriticalSection m_critSect;
+            virtual void SetColorScheme(ColorScheme cs, bool bApplyImmediate);
 
+            virtual double GetNearestPreferredScalePPM(double target_scale_ppm);
+            
+            virtual PlugInChartBase *GetPlugInChart(void){ return m_ppicb; }
+
+            virtual int GetCOVREntries();
+            virtual int GetCOVRTablePoints(int iTable);
+            virtual int GetCOVRTablenPoints(int iTable);
+            virtual float *GetCOVRTableHead(int iTable);
+
+            virtual int GetNoCOVREntries();
+            virtual int GetNoCOVRTablePoints(int iTable);
+            virtual int  GetNoCOVRTablenPoints(int iTable);
+            virtual float *GetNoCOVRTableHead(int iTable);
+            
+            //    The following set of methods apply to BSB (i.e. Raster) type PlugIn charts only
+            //    and need not be implemented if the ChartFamily is not CHART_FAMILY_RASTER
+            virtual void ComputeSourceRectangle(const ViewPort &vp, wxRect *pSourceRect);
+            virtual double GetRasterScaleFactor(const ViewPort &vp);
+            virtual bool GetChartBits( wxRect& source, unsigned char *pPix, int sub_samp );
+            virtual int GetSize_X();
+            virtual int GetSize_Y();
+            virtual void latlong_to_chartpix(double lat, double lon, double &pixx, double &pixy);
+            virtual void chartpix_to_latlong(double pixx, double pixy, double *plat, double *plon);
+            
+            
+            //  Added for API V 1.14, with PlugInChartBaseExtended
+            virtual bool RenderRegionViewOnDCNoText(wxMemoryDC &dc, const ViewPort& VPoint,
+                                                                const OCPNRegion &Region);
+            
+            virtual bool RenderRegionViewOnDCTextOnly(wxMemoryDC &dc, const ViewPort& VPoint,
+                                                    const OCPNRegion &Region);
+            
+            virtual bool RenderRegionViewOnGLNoText( const wxGLContext &glc, const ViewPort& VPoint,
+                                                       const OCPNRegion &RectRegion, const LLRegion &Region );
+            
+            virtual bool RenderRegionViewOnGLTextOnly( const wxGLContext &glc, const ViewPort& VPoint,
+                                                         const OCPNRegion &RectRegion );
+            
+            virtual void ClearPLIBTextList();
+            
+      private:
+            PlugInChartBase *m_ppicb;
+            wxObject          *m_ppo;
+            wxCriticalSection m_critSect;
+            bool              m_overlayENC;
+            wxMask           *m_pMask;
 };
 
 #endif

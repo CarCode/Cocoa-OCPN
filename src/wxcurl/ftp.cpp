@@ -30,7 +30,7 @@
 #include <wx/mstream.h>
 #include <wx/wfstream.h>
 
-#include "wx/curl/ftp.h"
+#include <wx/curl/ftp.h>
 
 //////////////////////////////////////////////////////////////////////
 // C Functions for LibCURL
@@ -348,7 +348,7 @@ bool wxCurlFTP::RmDir(const wxString& szRemoteLoc /*= wxEmptyString*/)
 			str += wxS("/");
         SetCurlHandleToDefaults(str);
 
-        wxString url(GetURL());
+        wxString url(GetURL().c_str(), wxConvUTF8);
 		m_szCurrFullPath = url.Left(url.Len() - 1).BeforeLast(wxS('/'));
 		m_szCurrFullPath += wxS("/");
 		m_szCurrFilename = url.Left(url.Len() - 1).AfterLast(wxS('/'));
@@ -380,7 +380,7 @@ bool wxCurlFTP::Delete(const wxString& szRemoteLoc /*= wxEmptyString*/)
 	{
 		SetCurlHandleToDefaults(szRemoteLoc);
 
-        wxString url(GetURL());
+        wxString url(GetURL().c_str(), wxConvUTF8);
 		m_szCurrFullPath = url.BeforeLast('/');
 		m_szCurrFullPath += wxS("/");
 		m_szCurrFilename = url.AfterLast('/');
@@ -413,7 +413,7 @@ bool wxCurlFTP::Rename(const wxString& szRemoteLocName,
 	{
 		SetCurlHandleToDefaults(szRemoteFile);
 
-        wxString url(GetURL());
+        wxString url(GetURL().c_str(), wxConvUTF8);
 		m_szCurrFullPath = url.BeforeLast('/');
 		m_szCurrFullPath += wxS("/");
 		m_szCurrFilename = url.AfterLast('/');

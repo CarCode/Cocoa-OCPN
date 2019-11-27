@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Database Object
@@ -40,6 +40,12 @@
 #include "chartimg.h"
 #include "chart1.h"
 #include "thumbwin.h"
+#ifndef __WXOSX__  // noch nicht übernommen
+#include "mbtiles.h"
+#endif
+#ifdef ocpnUSE_GL
+#include "glChartCanvas.h"
+#endif
 
 #include <stdio.h>
 #include <math.h>
@@ -264,32 +270,35 @@ bool ChartDB::LoadBinary(const wxString & filename, ArrayOfCDI& dir_array_check)
 
 void ChartDB::DeleteCacheEntry(CacheEntry *pce, bool bDelTexture, const wxString &msg)
 {
-    ChartBase *ch = (ChartBase *)pce->pChart;
+     ChartBase *ch = (ChartBase *)pce->pChart;
 
-    if (msg != wxEmptyString) {
-        wxLogMessage(_T("%s%s"), msg.c_str(), ch->GetFullPath().c_str());
-    }
+     if (msg != wxEmptyString) {
+         wxLogMessage(_T("%s%s"), msg.c_str(), ch->GetFullPath().c_str());
+     }
 
-    // If this chart should happen to be in the thumbnail window....
-    if(pthumbwin)
-    {
-        if (pthumbwin->pThumbChart == ch)
+     // If this chart should happen to be in the thumbnail window....
+     if(pthumbwin)
+     {
+         if (pthumbwin->pThumbChart == ch)
             pthumbwin->pThumbChart = NULL;
-    }
+     }
 
-    // The glCanvas may be cacheing some information for this chart
-    if (g_bopengl && cc1)
-        cc1->PurgeGLCanvasChartCache(ch, bDelTexture);
-    pChartCache->Remove(pce);
-    delete ch;
-    delete pce;
+#ifdef ocpnUSE_GL
+     // The glCanvas may be cacheing some information for this chart     
+     if (g_bopengl && cc1)
+         g_glTextureManager->PurgeChartTextures(ch, bDelTexture);
+#endif
+
+     pChartCache->Remove(pce);
+     delete ch;
+     delete pce;
 }
 
 void ChartDB::DeleteCacheEntry(int i, bool bDelTexture, const wxString &msg)
 {
-    CacheEntry *pce = (CacheEntry *)(pChartCache->Item(i));
-    if (pce)
-        DeleteCacheEntry(pce, bDelTexture, msg);
+     CacheEntry *pce = (CacheEntry *)(pChartCache->Item(i));
+     if (pce)
+         DeleteCacheEntry(pce, bDelTexture, msg);
 }
 
 void ChartDB::PurgeCache()
@@ -297,17 +306,18 @@ void ChartDB::PurgeCache()
 //    Empty the cache
       wxLogMessage(_T("Chart cache purge"));
 
-    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
+      if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
         unsigned int nCache = pChartCache->GetCount();
         for(unsigned int i=0 ; i<nCache ; i++)
         {
-            DeleteCacheEntry(0, true);
+               DeleteCacheEntry(0, true);
         }
         pChartCache->Clear();
         
         m_cache_mutex.Unlock();
       }
 }
+
 
 void ChartDB::PurgeCachePlugins()
 {
@@ -320,21 +330,22 @@ void ChartDB::PurgeCachePlugins()
         while(i < nCache){
             CacheEntry *pce = (CacheEntry *)(pChartCache->Item(i));
             ChartBase *Ch = (ChartBase *)pce->pChart;
-            
+
             if(CHART_TYPE_PLUGIN == Ch->GetChartType()){
                 DeleteCacheEntry(pce, true);
-
+            
                 nCache = pChartCache->GetCount();       // restart the while loop
                 i = 0;
-
+                
             }
             else
                 i++;
         }
-
+       
         m_cache_mutex.Unlock();
     }
 }
+
 
 void ChartDB::ClearCacheInUseFlags(void)
 {
@@ -366,7 +377,7 @@ void ChartDB::PurgeCacheUnusedCharts( double factor)
                 int mem_limit = g_memCacheLimit * factor;
 
                 int nl = pChartCache->GetCount();       // max loop count, by definition
-
+                    
                 wxString msg(_T("Purging unused chart from cache: "));
                 while( (mem_used > mem_limit) && (nl>0) )
                 {
@@ -384,9 +395,9 @@ void ChartDB::PurgeCacheUnusedCharts( double factor)
                     else {
                         break;
                     }
-
+                    
                     GetMemoryStatus(0, &mem_used);
-
+                    
                     nl--;
                 }
         }
@@ -418,22 +429,34 @@ ChartBase *ChartDB::GetChart(const wxChar *theFilePath, ChartClassDescriptor &ch
 
       wxString chartExt = fn.GetExt().Upper();
 
+      if (chartExt == wxT("XZ")) {
+          wxString npath = theFilePath;
+          npath = npath.Left(npath.length()-3);
+          wxFileName fn(npath);
+          chartExt = fn.GetExt().Upper();
+      }
+      
       if (chartExt == wxT("KAP")) {
             pch = new ChartKAP;
       }
       else if (chartExt == wxT("GEO")) {
             pch = new ChartGEO;
       }
+#ifndef __WXOSX__  // noch nicht
+      else if (chartExt == wxT("MBTILES")) {
+          pch = new ChartMBTiles;
+      }
+#endif
 #ifdef USE_S57
       else if (chartExt == wxT("000") || chartExt == wxT("S57")) {
-          LoadS57();
-          pch = new s57chart;
+            LoadS57();
+            pch = new s57chart;
       }
 #endif
       else if (chart_desc.m_descriptor_type == PLUGIN_DESCRIPTOR) {
-          LoadS57();
-          ChartPlugInWrapper *cpiw = new ChartPlugInWrapper(chart_desc.m_class_name);
-          pch = (ChartBase *)cpiw;
+            LoadS57();
+            ChartPlugInWrapper *cpiw = new ChartPlugInWrapper(chart_desc.m_class_name);
+            pch = (ChartBase *)cpiw;
       }
 
 #ifdef USE_S57
@@ -490,10 +513,10 @@ int ChartDB::BuildChartStack(ChartStack * cstk, float lat, float lon)
             bool b_group_add = false;
             if(g_GroupIndex > 0)
             {
-                  const int ng = cte.GetGroupArray().GetCount();
+                  const int ng = cte.GetGroupArray().size();
                   for(int ig=0 ; ig < ng; ig++)
                   {
-                        if(g_GroupIndex == cte.GetGroupArray().Item(ig))
+                        if(g_GroupIndex == cte.GetGroupArray()[ig])
                         {
                               b_group_add = true;
                               break;
@@ -509,11 +532,11 @@ int ChartDB::BuildChartStack(ChartStack * cstk, float lat, float lon)
                 //  Plugin loading is deferred, so the chart may have been disabled elsewhere.
                 //  Tentatively reenable the chart so that it appears in the piano.
                 //  It will get disabled later if really not useable
-                if(cte.GetChartType() == CHART_TYPE_PLUGIN){
-                    ChartTableEntry *pcte = (ChartTableEntry*)&cte;
-                    pcte->ReEnable();
-                }
-
+                  if(cte.GetChartType() == CHART_TYPE_PLUGIN){
+                      ChartTableEntry *pcte = (ChartTableEntry*)&cte;
+                      pcte->ReEnable();
+                  }
+                  
                   if(CheckPositionWithinChart(db_index, lat, lon)  &&  (j < MAXSTACK) )
                       b_pos_add = true;
 
@@ -547,7 +570,7 @@ int ChartDB::BuildChartStack(ChartStack * cstk, float lat, float lon)
                     pcte->ReEnable();
                 }
             }
-          
+            
             if(b_group_add && b_pos_add && b_available){                // add it
                 j++;
                 cstk->nEntry = j;
@@ -575,7 +598,7 @@ int ChartDB::BuildChartStack(ChartStack * cstk, float lat, float lon)
                         {
                               const ChartTableEntry &cten = GetChartTableEntry(cstk->GetDBIndex(jd));
                               if( ctem.GetFileTime() && cten.GetFileTime()) {
-                                  if( labs(ctem.GetFileTime() - cten.GetFileTime()) < 60 ) {           // simple test
+                                    if( labs(ctem.GetFileTime() - cten.GetFileTime()) < 60 ) {           // simple test
                                         if(cten.GetpFileName()->IsSameAs(*(ctem.GetpFileName())))
                                            cstk->SetDBIndex(jd, -1);           // mark to remove
                                     }
@@ -649,9 +672,9 @@ bool ChartDB::IsChartInGroup(const int db_index, const int group)
       bool b_in_group = false;
       if(group > 0)
       {
-            for(unsigned int ig=0 ; ig < pt->GetGroupArray().GetCount(); ig++)
+            for(unsigned int ig=0 ; ig < pt->GetGroupArray().size(); ig++)
             {
-                  if(group == pt->GetGroupArray().Item(ig))
+                  if(group == pt->GetGroupArray()[ig])
                   {
                         b_in_group = true;
                         break;
@@ -754,8 +777,10 @@ bool ChartDB::CopyStack(ChartStack *pa, ChartStack *pb)
 
 wxString ChartDB::GetFullPath(ChartStack *ps, int stackindex)
 {
-      int dbIndex = ps->GetDBIndex(stackindex);
-      return wxString(GetChartTableEntry(dbIndex).GetpFullPath(),  wxConvUTF8);
+    int dbIndex = ps->GetDBIndex(stackindex);
+    wxASSERT( dbIndex >= 0 );
+
+    return wxString(GetChartTableEntry(dbIndex).GetpFullPath(),  wxConvUTF8);
 }
 
 //-------------------------------------------------------------------
@@ -764,7 +789,10 @@ wxString ChartDB::GetFullPath(ChartStack *ps, int stackindex)
 
 int ChartDB::GetCSPlyPoint(ChartStack *ps, int stackindex, int plyindex, float *lat, float *lon)
 {
-      const ChartTableEntry &entry = GetChartTableEntry(ps->GetDBIndex(stackindex));
+    int dbIndex = ps->GetDBIndex(stackindex);
+    wxASSERT( dbIndex >= 0 );
+    
+    const ChartTableEntry &entry = GetChartTableEntry( dbIndex );
       if(entry.GetnPlyEntries())
       {
             float *fp = entry.GetpPlyTable();
@@ -785,7 +813,10 @@ int ChartDB::GetCSPlyPoint(ChartStack *ps, int stackindex, int plyindex, float *
 //-------------------------------------------------------------------
 int ChartDB::GetStackChartScale(ChartStack *ps, int stackindex, char *buf, int nbuf)
 {
-      const ChartTableEntry &entry = GetChartTableEntry(ps->GetDBIndex(stackindex));
+    int dbindex = ps->GetDBIndex(stackindex);
+    wxASSERT(dbindex >= 0);
+    
+    const ChartTableEntry &entry = GetChartTableEntry( dbindex );
       int sc = entry.GetScale();
       if(buf)
             sprintf(buf, "%d", sc);
@@ -800,7 +831,10 @@ int ChartDB::GetStackEntry(ChartStack *ps, wxString fp)
 {
       for(int i=0 ; i<ps->nEntry ; i++)
       {
-            const ChartTableEntry &entry = GetChartTableEntry(ps->GetDBIndex(i));
+          int dbindex = ps->GetDBIndex( i );
+          wxASSERT(dbindex >= 0);
+          
+          const ChartTableEntry &entry = GetChartTableEntry( dbindex );
             if(fp.IsSameAs( wxString(entry.GetpFullPath(),  wxConvUTF8)) )
                   return i;
       }
@@ -813,18 +847,22 @@ int ChartDB::GetStackEntry(ChartStack *ps, wxString fp)
 //-------------------------------------------------------------------
 ChartTypeEnum ChartDB::GetCSChartType(ChartStack *ps, int stackindex)
 {
-      if((IsValid()) && (stackindex >= 0) && (stackindex < GetChartTableEntries()))
-            return (ChartTypeEnum)GetChartTableEntry(ps->GetDBIndex(stackindex)).GetChartType();
-      else
-            return CHART_TYPE_UNKNOWN;
+    if ( IsValid() ) {
+        int dbindex = ps->GetDBIndex(stackindex);
+        if (dbindex >= 0)
+            return (ChartTypeEnum)GetChartTableEntry(dbindex).GetChartType();
+    }
+    return CHART_TYPE_UNKNOWN;
 }
 
 
 ChartFamilyEnum ChartDB::GetCSChartFamily(ChartStack *ps, int stackindex)
 {
-      if((IsValid()) && (stackindex < GetChartTableEntries()))
+    if( IsValid() )
       {
-            const ChartTableEntry &entry = GetChartTableEntry(ps->GetDBIndex(stackindex));
+          int dbindex = ps->GetDBIndex(stackindex);
+          if (dbindex >= 0) {
+              const ChartTableEntry &entry = GetChartTableEntry( dbindex );
 
             ChartTypeEnum type = (ChartTypeEnum)entry.GetChartType();
             switch(type)
@@ -837,21 +875,22 @@ ChartFamilyEnum ChartDB::GetCSChartFamily(ChartStack *ps, int stackindex)
                   case  CHART_TYPE_DUMMY:        return CHART_FAMILY_RASTER;
                   default:                       return CHART_FAMILY_UNKNOWN;
             }
+          }
       }
-      else
-            return CHART_FAMILY_UNKNOWN;
+    return CHART_FAMILY_UNKNOWN;
 }
 
 
-ArrayOfInts ChartDB::GetCSArray(ChartStack *ps)
+std::vector<int> ChartDB::GetCSArray(ChartStack *ps)
 {
-      ArrayOfInts ret;
+      std::vector<int> ret;
 
       if(ps)
       {
+            ret.reserve(ps->nEntry);
             for(int i=0 ; i<ps->nEntry ; i++)
             {
-                  ret.Add(ps->GetDBIndex(i));
+                ret.push_back(ps->GetDBIndex(i));
             }
       }
 
@@ -864,8 +903,8 @@ bool ChartDB::IsChartInCache(int dbindex)
       bool bInCache = false;
 
 //    Search the cache
-    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
-        
+      if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
+          
         unsigned int nCache = pChartCache->GetCount();
         for(unsigned int i=0 ; i<nCache ; i++)
         {
@@ -1075,10 +1114,10 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
       wxString ChartFullPath(cte.GetpFullPath(), wxConvUTF8 );
       ChartTypeEnum chart_type = (ChartTypeEnum)cte.GetChartType();
       ChartFamilyEnum chart_family = (ChartFamilyEnum)cte.GetChartFamily();
-
-    if(cte.GetLatMax() > 90.0)          // Chart has been disabled...
-        return NULL;
-
+      
+      if(cte.GetLatMax() > 90.0)          // Chart has been disabled...
+          return NULL;
+      
       ChartBase *Ch = NULL;
       CacheEntry *pce = NULL;
       int old_lock = 0;
@@ -1110,18 +1149,18 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
           {
               if(Ch->IsReadyToRender())
               {
-                  if(pce){
-                      pce->RecentTime = m_ticks;           // chart is OK
-                      pce->b_in_use = true;
-                  }
+                    if(pce){
+                        pce->RecentTime = m_ticks;           // chart is OK
+                        pce->b_in_use = true;
+                    }
                     return Ch;
               }
               else
               {
                     if(pthumbwin && pthumbwin->pThumbChart == Ch)
-                        pthumbwin->pThumbChart = NULL;
+                       pthumbwin->pThumbChart = NULL;
                     delete Ch;                                  // chart is not useable
-                  // but may be locked in quilt
+                    // but may be locked in quilt
                     if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
                         old_lock = pce->n_lock;
                         pChartCache->Remove(pce);                   // so remove it
@@ -1129,16 +1168,16 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                         m_cache_mutex.Unlock();
                     }
                     // XXX and if there's a mutex error?
-
+                        
                     bInCache = false;
               }
           }
           else                                                  // assume if in cache, the chart can do thumbnails
           {
-              if(pce){
-                  pce->RecentTime = m_ticks;
-                  pce->b_in_use = true;
-              }
+               if(pce){
+                   pce->RecentTime = m_ticks;
+                   pce->b_in_use = true;
+               }
                return Ch;
           }
       }
@@ -1147,8 +1186,8 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
       {
           m_b_busy = true;
           if( !m_b_locked && wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
-
-
+              
+            
                 //    Use memory limited cache policy, if defined....
                 if(g_memCacheLimit)
                 {
@@ -1163,16 +1202,16 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                         while (1)
                         {
                           CacheEntry *pce = FindOldestDeleteCandidate(true);
-                            if (pce == 0)
+                          if (pce == 0)
                               break;                      // no possible delete candidate
+                          
+                          // purge texture cache, really need memory here
+                          DeleteCacheEntry(pce, true, msg);
 
-                            // purge texture cache, really need memory here
-                            DeleteCacheEntry(pce, true, msg);
-                            
-                            GetMemoryStatus(0, &mem_used);
-                            if((mem_used < g_memCacheLimit * 8 / 10) || (pChartCache->GetCount() <= 2))
-                                break;
-
+                          GetMemoryStatus(0, &mem_used);
+                          if((mem_used < g_memCacheLimit * 8 / 10) || (pChartCache->GetCount() <= 2)) 
+                              break;
+                                
                         }  // while
                     }
                 }
@@ -1181,7 +1220,6 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                 {
     //      Limit cache to n charts, tossing out the oldest when space is needed
                     unsigned int nCache = pChartCache->GetCount();
-                    
                     if (nCache > (unsigned int)g_nCacheLimit && nCache > 2)
                     {
                         wxString msg(_T("Removing oldest chart from cache: "));
@@ -1195,7 +1233,7 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                             nCache--;
                         }
                     }
-
+                    
                 }
                 
                 m_cache_mutex.Unlock();
@@ -1211,13 +1249,16 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
 
             else if(chart_type == CHART_TYPE_GEO)
                   Ch = new ChartGEO();
-
+#ifndef __WXOSX__  // noch nicht
+            else if(chart_type == CHART_TYPE_MBTILES)
+                Ch = new ChartMBTiles();
+#endif
 #ifdef USE_S57
             else if(chart_type == CHART_TYPE_S57)
             {
                   LoadS57();
                   Ch = new s57chart();
-                  s57chart *Chs57 = dynamic_cast<s57chart*>(Ch);
+                  s57chart *Chs57 = static_cast<s57chart*>(Ch);
 
                   Chs57->SetNativeScale(cte.GetScale());
 
@@ -1237,7 +1278,7 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
             {
                   LoadS57();
                   Ch = new cm93chart();
-                  cm93chart *Chcm93 = dynamic_cast<cm93chart*>(Ch);
+                  cm93chart *Chcm93 = static_cast<cm93chart*>(Ch);
 
                   Chcm93->SetNativeScale(cte.GetScale());
 
@@ -1256,7 +1297,7 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                   LoadS57();
                   Ch = new cm93compchart();
 
-                  cm93compchart *Chcm93 = dynamic_cast<cm93compchart*>(Ch);
+                  cm93compchart *Chcm93 = static_cast<cm93compchart*>(Ch);
 
                   Chcm93->SetNativeScale(cte.GetScale());
 
@@ -1288,18 +1329,22 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
 
                   for(unsigned int i=0 ; i < m_ChartClassDescriptorArray.GetCount() ; i++)
                   {
-                        if(m_ChartClassDescriptorArray.Item(i).m_descriptor_type == PLUGIN_DESCRIPTOR)
+                        if(m_ChartClassDescriptorArray[i].m_descriptor_type == PLUGIN_DESCRIPTOR)
                         {
-                              if(m_ChartClassDescriptorArray.Item(i).m_search_mask == ext_upper)
+                              if(m_ChartClassDescriptorArray[i].m_search_mask == ext_upper)
                               {
-                                    chart_class_name = m_ChartClassDescriptorArray.Item(i).m_class_name;
+                                    chart_class_name = m_ChartClassDescriptorArray[i].m_class_name;
                                     break;
                               }
-                              if(m_ChartClassDescriptorArray.Item(i).m_search_mask == ext_lower)
+                              if(m_ChartClassDescriptorArray[i].m_search_mask == ext_lower)
                               {
-                                    chart_class_name = m_ChartClassDescriptorArray.Item(i).m_class_name;
+                                    chart_class_name = m_ChartClassDescriptorArray[i].m_class_name;
                                     break;
                               }
+                              if(ChartFullPath.Matches(m_ChartClassDescriptorArray.Item(i).m_search_mask)) {
+                                  chart_class_name = m_ChartClassDescriptorArray.Item(i).m_class_name;
+                                  break;
+                            }
                         }
                   }
 
@@ -1321,29 +1366,27 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
             if(Ch)
             {
                   InitReturn ir;
-
+                  
 #ifdef USE_S57
-                s52plib *plib = ps52plib;
+                  s52plib *plib = ps52plib;
 #else
-                s52plib *plib = NULL;
-#endif
+                  s52plib *plib = NULL;
+#endif                  
+                wxString msg_fn(ChartFullPath);
+                msg_fn.Replace(_T("%"), _T("%%"));
 
                   //    Vector charts need a PLIB for useful display....
                   if((chart_family != CHART_FAMILY_VECTOR) ||
-                     ((chart_family == CHART_FAMILY_VECTOR) && plib) )
+                      ((chart_family == CHART_FAMILY_VECTOR) && plib) )
                   {
-                        wxString msg(_T("Initializing Chart "));
-                        msg.Append(ChartFullPath);
-                        wxLogMessage(msg);
+                      wxLogMessage(wxString::Format(_T("Initializing Chart %s"), msg_fn.c_str()));
 
                         ir = Ch->Init(ChartFullPath, init_flag);    // using the passed flag
                         Ch->SetColorScheme(/*pParent->*/GetColorScheme());
                   }
                   else
                   {
-                        wxString msg(_T("   No PLIB, Skipping vector chart "));
-                        msg.Append(ChartFullPath);
-                        wxLogMessage(msg);
+                      wxLogMessage(wxString::Format(_T("   No PLIB, Skipping vector chart  %s"), msg_fn.c_str()));
 
                         ir = INIT_FAIL_REMOVE;
 
@@ -1368,6 +1411,9 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                                 pChartCache->Add((void *)pce);
                                 m_cache_mutex.Unlock();
                               }
+                              else {
+                                  delete pce;
+                              }
                         }
                   }
                   else if(INIT_FAIL_REMOVE == ir)                 // some problem in chart Init()
@@ -1389,12 +1435,7 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                   {
                         if(INIT_FAIL_NOERROR != ir)
                         {
-                              wxString fp = ChartFullPath;
-                              fp.Prepend(_T("   OpenChartFromStack...Error opening chart "));
-                              wxString id;
-                              id.Printf(_T("... return code %d"),  ir);
-                              fp.Append(id);
-                              wxLogMessage(fp);
+                            wxLogMessage(wxString::Format(_T("   OpenChartFromStack... Error opening chart %s ... return code %d"), msg_fn.c_str(), ir));
                         }
                   }
 
@@ -1409,13 +1450,13 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
       return NULL;
 }
 
-//
+// 
 bool ChartDB::DeleteCacheChart(ChartBase *pDeleteCandidate)
 {
     bool retval = false;
-
+    
     if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
-
+        
       if(Current_Ch != pDeleteCandidate)
       {
 
@@ -1432,16 +1473,16 @@ bool ChartDB::DeleteCacheChart(ChartBase *pDeleteCandidate)
 
             if(pce)
             {
-                if(pce->n_lock > 0)
+                  if(pce->n_lock > 0)
                     pce->n_lock--;
-                
-                if( pce->n_lock == 0) {
-                    DeleteCacheEntry( pce);
-                    retval = true;
-                }
+
+                  if( pce->n_lock == 0) {
+                      DeleteCacheEntry( pce);
+                      retval = true;
+                  }
             }
       }
-
+      
       m_cache_mutex.Unlock();
     }
 
@@ -1456,8 +1497,8 @@ void ChartDB::ApplyColorSchemeToCachedCharts(ColorScheme cs)
       CacheEntry *pce;
      //    Search the cache
 
-    if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
-        
+      if( wxMUTEX_NO_ERROR == m_cache_mutex.Lock() ){
+          
         unsigned int nCache = pChartCache->GetCount();
         for(unsigned int i=0 ; i<nCache ; i++)
         {
@@ -1536,7 +1577,7 @@ wxXmlDocument ChartDB::GetXMLDescription(int dbIndex, bool b_getGeom)
       if(!IsValid() || (dbIndex >= GetChartTableEntries()))
             return doc;
 
-      bool b_remove; // = !IsChartInCache(dbIndex);  // Not used
+    bool b_remove; // = !IsChartInCache(dbIndex);  // Not used
 
       wxXmlNode *pcell_node = NULL;
       wxXmlNode *node;
@@ -1667,7 +1708,7 @@ wxXmlDocument ChartDB::GetXMLDescription(int dbIndex, bool b_getGeom)
             }
 
 #ifdef USE_S57
-
+            
             s57chart *pcs57 = dynamic_cast<s57chart*>(pc);
             if(pcs57)
             {
@@ -1692,7 +1733,7 @@ wxXmlDocument ChartDB::GetXMLDescription(int dbIndex, bool b_getGeom)
                   node->AddChild ( tnode );
 
             }
-#endif
+#endif            
       }
 
 

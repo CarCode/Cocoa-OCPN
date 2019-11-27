@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Georef utility
@@ -137,6 +137,7 @@ extern "C" void fromEQUIRECT(double x, double y, double lat0, double lon0, doubl
 extern "C" void ll_gc_ll(double lat, double lon, double crs, double dist, double *dlat, double *dlon);
 extern "C" void ll_gc_ll_reverse(double lat1, double lon1, double lat2, double lon2,
                                 double *bearing, double *dist);
+
 
 extern "C" void PositionBearingDistanceMercator(double lat, double lon, double brg, double dist,
                                                 double *dlat, double *dlon);

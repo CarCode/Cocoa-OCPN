@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  S-57 Translator
  * Purpose:  Implements OGRS57DataSource class
@@ -24,10 +24,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************
- *
- *
- */
+ ******************************************************************************/
 
 #include "ogr_s57.h"
 #include "cpl_conv.h"
@@ -307,7 +304,7 @@ int OGRS57DataSource::Open( const char * pszFilename, int bTestOpen, CallBackFun
     {
         OGRFeatureDefn  *poDefn;
         int             *panClassCount;
-        int             iClass; //, bGeneric = FALSE;  // Not used
+        int             iClass; // , bGeneric = FALSE; Not used
 
         for( iModule = 0; iModule < nModules; iModule++ )
         {

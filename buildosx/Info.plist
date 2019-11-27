@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>BuildMachineOSBuild</key>
-	<string>16F73</string>
+	<string>18F132</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleIconFile</key>
 	<string>opencpn.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<string>de.topperdiek.opencpn</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLocalisations</key>
@@ -24,49 +24,61 @@
 		<string>de</string>
 	</array>
 	<key>CFBundleLongVersionString</key>
-	<string>17.4.1</string>
+	<string>18.12.10</string>
 	<key>CFBundleName</key>
 	<string>OpenCPN</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>17.4.1</string>
+	<string>18.12.10</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>17.4</string>
+	<string>18.12</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>DTCompiler</key>
 	<string>Xcode</string>
 	<key>DTPlatformBuild</key>
-	<string>16F73</string>
+	<string>18F132</string>
 	<key>DTPlatformVersion</key>
-	<string>10.12</string>
+	<string>10.14</string>
 	<key>DTSDKBuild</key>
-	<string>16E185</string>
+	<string>18F132</string>
 	<key>DTSDKName</key>
-	<string>macosx10.12</string>
+	<string>macosx10.14</string>
 	<key>DTXcode</key>
-	<string>0833</string>
+	<string>1021</string>
 	<key>DTXcodeBuild</key>
-	<string>8E3004b</string>
+	<string>10E1001</string>
 	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.business</string>
+	<string>public.app-category.productivity</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.14</string>
 	<key>LSRequiresCarbon</key>
 	<true/>
-	<key>NSHumanReadableCopyright</key>
-	<string>CarCode 2017</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSAppleEventAuthorizationMode</key>
+	<string>automatic</string>
+	<key>NSAppleEventUsageDescription</key>
+	<string>Aufgerufene Dialoge eventuell versteckt!</string>
 	<key>NSExceptionDomains</key>
 	<dict>
 		<key>NSExceptionAllowsInsecureHTTPLoads</key>
 		<true/>
 	</dict>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSHumanReadableCopyright</key>
+	<string>CarCode 2019</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSRequiresAquaSystemAppearance</key>
+	<false/>
 	<key>SUFeedURL</key>
 	<string>https://topperdiek.de/dl/app/ocpncast.xml</string>
 	<key>SUPublicDSAKeyFile</key>

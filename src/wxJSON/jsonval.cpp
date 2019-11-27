@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        jsonval.cpp
 // Purpose:     the wxJSON class that holds a JSON value
 // Author:      Luciano Cattani
@@ -6,13 +6,15 @@
 // RCS-ID:      $Id: jsonval.cpp,v 1.12 2008/03/06 10:25:18 luccat Exp $
 // Copyright:   (c) 2007 Luciano Cattani
 // Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
-#ifdef NDEBUG
-// make wxLogTrace a noop if no debug set, it's really slow
+//#ifdef __GNUG__
+//    #pragma implementation "jsonval.cpp"
+//#endif
+
+// make wxLogTrace a noop, it's really slow
 // must be defined before including debug.h
-#define wxDEBUG_LEVEL 0
-#endif
+#define wxDEBUG_LEVEL 1
 
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
@@ -21,8 +23,8 @@
 #pragma hdrstop
 #endif
 
+
 #include <wx/log.h>
-#include <wx/debug.h>
 #include <wx/arrimpl.cpp>
 
 #include <wx/jsonval.h>
@@ -36,9 +38,9 @@ WX_DEFINE_OBJARRAY( wxJSONInternalArray );
 #define compatibleLongLongFmtSpec wxLongLongFmtSpec
 #endif
 
+#if wxDEBUG_LEVEL > 0
 // the trace mask used in wxLogTrace() function
 // static const wxChar* traceMask = _T("jsonval");
-#if wxDEBUG_LEVEL > 0
 static const wxChar* traceMask = _T("jsonval");
 static const wxChar* compareTraceMask = _T("sameas");
 static const wxChar* cowTraceMask = _T("traceCOW" );
@@ -969,20 +971,18 @@ wxJSONValue::AsString() const
             break;
         case wxJSONTYPE_INT :
             #if defined( wxJSON_64BIT_INT )
-//            s.Printf( _T("%") compatibleLongLongFmtSpec _T("i"),
-            s.Printf( _T("%") _T(wxLongLongFmtSpec) _T("i"),
+            s.Printf( _T("%") compatibleLongLongFmtSpec _T("i"),
                         data->m_value.m_valInt64 );
             #else
-                s.Printf( _T("%ld"), data->m_value.m_valLong );
+            s.Printf( _T("%ld"), data->m_value.m_valLong );
             #endif
             break;
         case wxJSONTYPE_UINT :
             #if defined( wxJSON_64BIT_INT )
-//            s.Printf( _T("%") compatibleLongLongFmtSpec _T("u"),
-            s.Printf( _T("%") _T(wxLongLongFmtSpec) _T("u"),
+            s.Printf( _T("%") compatibleLongLongFmtSpec _T("u"),
                         data->m_value.m_valUInt64 );
             #else
-                s.Printf( _T("%lu"), data->m_value.m_valULong );
+            s.Printf( _T("%lu"), data->m_value.m_valULong );
             #endif
             break;
         case wxJSONTYPE_DOUBLE :
@@ -2294,7 +2294,7 @@ wxJSONValue::Dump( bool deep, int indent ) const
   if ( deep )   {
     indent += 3;
     const wxJSONInternalMap* map;
-    int size;
+    int size;;
     wxJSONInternalMap::const_iterator it;
     switch ( type )    {
         case wxJSONTYPE_OBJECT :
@@ -2336,29 +2336,15 @@ wxJSONValue::GetInfo() const
 
     wxString s;
 #if defined( WXJSON_USE_VALUE_CONTER )
-#ifdef __WXOSX__
-    s.Printf( _T("Object: Progr=%ld Type=%s Size=%ld comments=%ld\n"),
-             data->m_progr,
-             wxJSONValue::TypeToString( data->m_type ).c_str(),
-             Size(),
-             data->m_comments.GetCount() );
-#else
     s.Printf( _T("Object: Progr=%d Type=%s Size=%d comments=%d\n"),
             data->m_progr,
             wxJSONValue::TypeToString( data->m_type ).c_str(),
             Size(),
             data->m_comments.GetCount() );
-#endif
-#else
-#ifdef __WXOSX__
-    s.Printf( _T("Object: Type=%s Size=%ld comments=%ld\n"),
-             wxJSONValue::TypeToString( data->m_type ).c_str(),
-             Size(), data->m_comments.GetCount() );
 #else
     s.Printf( _T("Object: Type=%s Size=%d comments=%d\n"),
             wxJSONValue::TypeToString( data->m_type ).c_str(),
             Size(), data->m_comments.GetCount() );
-#endif
 #endif
     if ( data->m_type == wxJSONTYPE_OBJECT ) {
         wxArrayString arr = GetMemberNames();
@@ -2832,7 +2818,7 @@ wxJSONValue::ClearComments()
 wxJSONRefData*
 wxJSONValue::SetType( wxJSONType type )
 {
-    wxJSONRefData* data; // = GetRefData();  //  Not used
+    wxJSONRefData* data; // = GetRefData();  // Not used
     wxJSONType oldType = GetType();
 
     // check that type is within the allowed range
@@ -3017,11 +3003,8 @@ wxJSONValue::GetRefData() const
 wxJSONRefData*
 wxJSONValue::CloneRefData( const wxJSONRefData* otherData ) const
 {
-#ifdef __WXOSX__
-    assert(otherData);
-#else
     wxJSON_ASSERT( otherData );
-#endif
+
     // make a static cast to pointer-to-wxJSONRefData
     const wxJSONRefData* other = otherData;
 
@@ -3084,14 +3067,22 @@ wxJSONValue::CreateRefData() const
 wxJSONRefData*
 wxJSONValue::COW()
 {
+#ifndef __WXOSX__
+    wxJSONRefData* data;
+#else
     wxJSONRefData* data = GetRefData();
+#endif
     wxLogTrace( cowTraceMask, _T("(%s) COW() START data=%p data->m_count=%d"),
              __PRETTY_FUNCTION__, data, data->GetRefCount());
     UnShare();
     data = GetRefData();
     wxLogTrace( cowTraceMask, _T("(%s) COW() END data=%p data->m_count=%d"),
              __PRETTY_FUNCTION__, data, data->GetRefCount());
+#ifdef __WXOSX__
+    return data;
+#else
     return GetRefData();
+#endif
 }
 
 //! Makes a private copy of the referenced data

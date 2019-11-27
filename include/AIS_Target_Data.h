@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -77,7 +77,7 @@ public:
     double                    Euro_Length;            // Extensions for European Inland AIS
     double                    Euro_Beam;
     double                    Euro_Draft;
-    char                      Euro_VIN[8];
+    char                      Euro_VIN[9];          // includes terminator
     int                       UN_shiptype;
     bool                      b_isEuroInland;
     bool                      b_blue_paddle;
@@ -98,6 +98,7 @@ public:
     int                       RecentPeriod;
     bool                      b_active;
     bool                      b_lost;
+    bool                      b_removed;
     ais_alert_type            n_alert_state;
     bool                      b_suppress_audio;
     bool                      b_positionDoubtful;
@@ -139,7 +140,7 @@ public:
     bool                     b_nameFromCache;
     float                    importance;
     float                    last_scale;
-
+    
 };
 
 #endif

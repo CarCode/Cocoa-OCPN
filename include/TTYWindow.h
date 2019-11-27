@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -46,12 +46,14 @@ class TTYWindow : public wxDialog
         void OnCloseWindow(wxCloseEvent& event);
         void Close();
         void OnPauseClick( wxCommandEvent& event );
-
+        void OnCopyClick(wxCommandEvent& event);
+    
     protected:
         void CreateLegendBitmap();
         WindowDestroyListener * m_window_destroy_listener;
         TTYScroll   *m_pScroll;
         wxButton    *m_buttonPause;
+        wxButton    *m_buttonCopy;
         bool        bpause;
         wxBitmap    m_bm_legend;
         wxTextCtrl *m_tFilter;

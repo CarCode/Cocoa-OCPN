@@ -1,4 +1,4 @@
-/********************************************************************
+/* *******************************************************************
 ** @source JEEPS constructor and deconstructor functions
 **
 ** @author Copyright (C) 1999,2000 Alan Bleasby

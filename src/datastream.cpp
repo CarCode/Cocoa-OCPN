@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA Data Stream Object
@@ -66,6 +66,8 @@ static const long long lNaN = 0xfff8000000000000;
 
 const wxEventType wxEVT_OCPN_DATASTREAM = wxNewEventType();
 
+extern bool g_benableUDPNullHeader;
+
 #define N_DOG_TIMEOUT   5
 
 #ifdef __WXMSW__
@@ -82,12 +84,13 @@ int gethostbyaddr_r(const char *, int, int, struct hostent *, char *, size_t, st
 }
 #endif
 
+
 bool CheckSumCheck(const std::string& sentence)
 {
     size_t check_start = sentence.find('*');
     if(check_start == wxString::npos || check_start > sentence.size() - 3)
         return false; // * not found, or it didn't have 2 characters following it.
-    
+        
     std::string check_str = sentence.substr(check_start+1,2);
     unsigned long checksum;
     //    if(!check_str.ToULong(&checksum,16))
@@ -101,6 +104,9 @@ bool CheckSumCheck(const std::string& sentence)
     return calculated_checksum == checksum;
     
 }
+
+
+
 
 //------------------------------------------------------------------------------
 //    DataStream Implementation
@@ -279,7 +285,7 @@ void DataStream::Open(void)
                 m_sock->Notify(TRUE);
                 m_sock->SetTimeout(1);              // Short timeout
 
-                wxSocketClient* tcp_socket = dynamic_cast<wxSocketClient*>(m_sock);
+                wxSocketClient* tcp_socket = static_cast<wxSocketClient*>(m_sock);
                 tcp_socket->Connect(m_addr, FALSE);
                 m_brx_connect_event = false;
             
@@ -400,7 +406,8 @@ void DataStream::Open(void)
         m_bok = androidStartBT(m_consumer, m_portstring );
 #endif
     }
-
+    
+        
     else
         m_bok = false;
 
@@ -483,8 +490,8 @@ void DataStream::Close()
         androidStopBT();
 #endif
     }
-
-
+    
+        
 }
 
 void DataStream::OnSocketReadWatchdogTimer(wxTimerEvent& event)
@@ -498,7 +505,6 @@ void DataStream::OnSocketReadWatchdogTimer(wxTimerEvent& event)
             if(tcp_socket) {
                 tcp_socket->Close();
             }
-
             m_socket_timer.Start(5000, wxTIMER_ONE_SHOT);    // schedule a reconnect
             m_socketread_watchdog_timer.Stop();
         }
@@ -538,9 +544,6 @@ void DataStream::OnSocketEvent(wxSocketEvent& event)
             //    Disable input event notifications to preclude re-entrancy on non-blocking socket
             //           m_sock->SetNotify(wxSOCKET_LOST_FLAG);
 
-            //          Read the reply, one character at a time, looking for 0x0a (lf)
-            //          If the reply contains no lf, break on the buffer full
-
             std::vector<char> data(RD_BUF_SIZE+1);
             event.GetSocket()->Read(&data.front(),RD_BUF_SIZE);
             if(!event.GetSocket()->Error())
@@ -548,9 +551,16 @@ void DataStream::OnSocketEvent(wxSocketEvent& event)
                 size_t count = event.GetSocket()->LastCount();
                 if(count)
                 {
-                    data[count]=0;
-//                    m_sock_buffer.Append(data);
-                    m_sock_buffer += (&data.front());
+                    if(!g_benableUDPNullHeader){
+                        data[count]=0;
+                        m_sock_buffer += (&data.front());
+                    }
+                    else{
+                        // XXX FIXME: is it reliable?
+                        // copy all received bytes
+                        // there's 0 in furuno UDP tags before NMEA sentences.
+                        m_sock_buffer.append(&data.front(), count);
+                    }
                 }
             }
 
@@ -614,8 +624,8 @@ void DataStream::OnSocketEvent(wxSocketEvent& event)
         {
             //          wxSocketError e = m_sock->LastError();          // this produces wxSOCKET_WOULDBLOCK.
             if(m_net_protocol == TCP || m_net_protocol == GPSD) {
-                if (m_brx_connect_event)
-                    wxLogMessage(wxString::Format(_T("Datastream connection lost: %s"), m_portstring.c_str()));
+				if (m_brx_connect_event)
+					wxLogMessage(wxString::Format(_T("Datastream connection lost: %s"), m_portstring.c_str()));
                 if (m_socket_server) {
                     m_sock->Destroy();
                     m_sock=0;
@@ -724,7 +734,7 @@ bool DataStream::SentencePassesFilter(const wxString& sentence, FilterDirection 
     wxString fs;
     for (size_t i = 0; i < filter.Count(); i++)
     {
-        fs = filter.Item(i);
+        fs = filter[i];
         switch (fs.Length())
         {
             case 2:
@@ -750,7 +760,7 @@ bool DataStream::ChecksumOK( const std::string &sentence )
         return true;
 
     return CheckSumCheck(sentence);
-
+    
 }
 
 bool DataStream::SendSentence( const wxString &sentence )
@@ -796,8 +806,10 @@ bool DataStream::SendSentence( const wxString &sentence )
                                     m_sock= 0;
                                 } else {
                                     wxSocketClient* tcp_socket = dynamic_cast<wxSocketClient*>(m_sock);
-                                    tcp_socket->Close();
-                                    m_socket_timer.Start(5000, wxTIMER_ONE_SHOT);    // schedule a reconnect
+                                    if (tcp_socket)
+                                        tcp_socket->Close();
+                                    if(!m_socket_timer.IsRunning())
+                                        m_socket_timer.Start(5000, wxTIMER_ONE_SHOT);    // schedule a reconnect
                                     m_socketread_watchdog_timer.Stop();
                                 }
                                 ret = false;
@@ -809,7 +821,7 @@ bool DataStream::SendSentence( const wxString &sentence )
                         break;
                     case UDP:
                         udp_socket = dynamic_cast<wxDatagramSocket*>(m_tsock);
-                        if( udp_socket->IsOk() ) {
+                        if(udp_socket && udp_socket->IsOk() ) {
                             udp_socket->SendTo(m_addr, payload.mb_str(), payload.size() );
                             if( udp_socket->Error())
                                 ret = false;
@@ -932,7 +944,7 @@ GarminProtocolHandler::GarminProtocolHandler(DataStream *parent, wxEvtHandler *M
 /*  Not used
     char  pvt_on[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};
-
+    
     char  pvt_off[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 50, 0};
 */
@@ -1066,7 +1078,7 @@ void GarminProtocolHandler::OnTimerGarmin1(wxTimerEvent& event)
     TimerGarmin1.Stop();
     
     if(m_busb) {
-#ifdef __WXMSW__
+        #ifdef __WXMSW__    
         //  Try to open the Garmin USB device
         if(INVALID_HANDLE_VALUE == m_usb_handle)
         {
@@ -1078,12 +1090,12 @@ void GarminProtocolHandler::OnTimerGarmin1(wxTimerEvent& event)
                 
                 //    Start the pump
                 m_garmin_usb_thread = new GARMIN_USB_Thread(this, m_pparent,
-                                    m_pMainEventHandler, (wxIntPtr)m_usb_handle, m_max_tx_size);
+						m_pMainEventHandler, (wxIntPtr)m_usb_handle, m_max_tx_size);
                 m_Thread_run_flag = 1;
                 m_garmin_usb_thread->Run();
             }
         }
-#endif
+        #endif
     }
     
     TimerGarmin1.Start(1000);
@@ -1153,22 +1165,22 @@ bool GarminProtocolHandler::ResetGarminUSBDriver()
 bool GarminProtocolHandler::FindGarminDeviceInterface()
 {      //    Search for a useable Garmin Device Interface Class
 
-    HDEVINFO hdevinfo;
-    SP_DEVINFO_DATA devInfo;
+HDEVINFO hdevinfo;
+SP_DEVINFO_DATA devInfo;
 
-    hdevinfo = SetupDiGetClassDevs( (GUID *) &GARMIN_GUID1, NULL, NULL,
+hdevinfo = SetupDiGetClassDevs( (GUID *) &GARMIN_GUID1, NULL, NULL,
                                 DIGCF_PRESENT | DIGCF_INTERFACEDEVICE);
 
-    if (hdevinfo != INVALID_HANDLE_VALUE)
+if (hdevinfo != INVALID_HANDLE_VALUE)
+{
+    devInfo.cbSize = sizeof(devInfo);
+    if(!SetupDiEnumDeviceInfo(hdevinfo,0,&devInfo))
     {
-        devInfo.cbSize = sizeof(devInfo);
-        if(!SetupDiEnumDeviceInfo(hdevinfo,0,&devInfo))
-        {
-            return false;
-        }
+        return false;
     }
+}
 
-    return true;
+return true;
 }
 
 
@@ -1189,8 +1201,8 @@ bool GarminProtocolHandler::IsGarminPlugged()
     infodata.cbSize = sizeof(infodata);
     
     bool bgarmin_unit_found = (SetupDiEnumDeviceInterfaces(hdevinfo,
-                                                           NULL,(GUID *) &GARMIN_GUID, 0, &infodata) != 0);
-
+                                                           NULL,(GUID *) &GARMIN_GUID1, 0, &infodata) != 0);
+    
     if(!bgarmin_unit_found)
         return false;
     
@@ -1234,8 +1246,8 @@ HANDLE GarminProtocolHandler::garmin_usb_start()
     infodata.cbSize = sizeof(infodata);
     
     bool bgarmin_unit_found = (SetupDiEnumDeviceInterfaces(hdevinfo,
-                                                           NULL,(GUID *) &GARMIN_GUID, 0, &infodata) != 0);
-
+                                                           NULL,(GUID *) &GARMIN_GUID1, 0, &infodata) != 0);
+    
     if(!bgarmin_unit_found)
         return INVALID_HANDLE_VALUE;
     
@@ -1392,7 +1404,7 @@ int GarminProtocolHandler::gusb_cmd_get(garmin_usb_packet *ibuf, size_t sz)
     int rv = 0;
     unsigned char *buf = (unsigned char *) &ibuf->dbuf[0];
     int orig_receive_state;
-top:
+    top:
     orig_receive_state = m_receive_state;
     switch (m_receive_state) {
         case rs_fromintr:
@@ -1580,7 +1592,7 @@ void *GARMIN_Serial_Thread::Entry()
     while((not_done) && (m_parent->m_Thread_run_flag > 0)) {
 
         if(TestDestroy()) {
-//            not_done = false;                               // smooth exit, but not used
+//            not_done = false;                               // smooth exit, but Not used
             goto thread_exit;
         }
 
@@ -1733,9 +1745,11 @@ GARMIN_USB_Thread::~GARMIN_USB_Thread()
 void *GARMIN_USB_Thread::Entry()
 {
       garmin_usb_packet iresp;
-          int n_short_read = 0;
+      int n_short_read = 0;
       m_receive_state = rs_fromintr;
-
+#ifdef __WXOSX__
+      memset(&iresp, 0, (sizeof iresp));    // Prevent compiler warnings.
+#endif
       //    Here comes the big while loop
       while(m_parent->m_Thread_run_flag > 0)
       {

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,13 +19,21 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __S57REGISTRARMGR_H__
 #define __S57REGISTRARMGR_H__
 
 #include <wx/string.h>
+
+WX_DECLARE_STRING_HASH_MAP( int, CSVHash1 );
+
+WX_DECLARE_HASH_MAP( int,
+                     std::string,
+                     wxIntegerHash,
+                     wxIntegerEqual,
+                     CSVHash2 );
+
 
 /**
  * s57RegistrarMgr Definition
@@ -33,9 +41,25 @@
  */
 class s57RegistrarMgr
 {
-      public:
-            s57RegistrarMgr(const wxString& csv_dir, FILE *flog);
-            ~s57RegistrarMgr();
+public:
+    s57RegistrarMgr(const wxString& csv_dir, FILE *flog);
+    ~s57RegistrarMgr();
+   
+    int getAttributeID(const char *pAttrName);
+    std::string getAttributeAcronym(int nID);
+    std::string getFeatureAcronym(int nID);
+    
+private:
+    
+    bool s57_attr_init( const wxString& csv_dir );
+    bool s57_feature_init( const wxString& csv_dir );
+    
+    CSVHash1       m_attrHash1;
+    CSVHash2       m_attrHash2;
+
+    CSVHash1       m_featureHash1;
+    CSVHash2       m_featureHash2;
+    
 };
 
 #endif

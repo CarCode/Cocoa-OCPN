@@ -1,4 +1,4 @@
-/**********************************************************************
+/* *********************************************************************
  *
  * Project:  CPL - Common Portability Library
  * Purpose:  Implementation of MiniXML Parser and handling.

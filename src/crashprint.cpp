@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////
 // File:        crashprint.cpp
 // Purpose:     wxCrashPrint
 // Maintainer:  Wyo
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: crashprint.cpp,v 1.11 2005-04-14 19:41:33 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
-//////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////
 
 //----------------------------------------------------------------------------
 // information
@@ -74,7 +74,7 @@ wxCrashPrint::wxCrashPrint (int flags, const wxString &fname) {
 
 //----------------------------------------------------------------------------
 // general functions
-#ifndef __WXOSX__
+
 void wxCrashPrint::Report () {
     wxString appname = wxTheApp->GetAppName();
 
@@ -97,7 +97,7 @@ void wxCrashPrint::Report () {
     wxString cur, addr, func, addrs;
     wxArrayString lines;
     size_t pos1, pos2;
-    for (int i = 0; i < btCount; ++i) {
+    if (m_btStrings) for (int i = 0; i < btCount; ++i) {
         cur = wxString::FromAscii  (m_btStrings[i]);
         pos1 = cur.rfind ('[');
         pos2 = cur.rfind (']');
@@ -138,4 +138,3 @@ void wxCrashPrint::Report () {
     }
 
 }
-#endif

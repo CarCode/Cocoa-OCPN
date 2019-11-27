@@ -1,4 +1,4 @@
-/***************************************************************************
+/* ***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Toolbar
@@ -23,6 +23,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  **************************************************************************/
 
+
 #ifndef _TOOLBAR_H__
 #define _TOOLBAR_H__
 
@@ -38,13 +39,13 @@ class ocpnFloatingToolbarDialog;
 
 class GrabberWin: public wxPanel {
 public:
-    GrabberWin( wxWindow *parent,  ocpnFloatingToolbarDialog *toolbar, float scale_factor,
-               wxString icon_name, wxPoint position = wxDefaultPosition );
+      GrabberWin( wxWindow *parent,  ocpnFloatingToolbarDialog *toolbar, float scale_factor,
+                  wxString icon_name, wxPoint position = wxDefaultPosition );
       void OnPaint( wxPaintEvent& event );
       void MouseEvent( wxMouseEvent& event );
       void SetColorScheme( ColorScheme cs );
       wxBitmap &GetBitmap(){ return m_bitmap; }
-
+      
       wxBitmap m_bitmap;
       bool m_bLeftDown;
       bool m_bRightDown;
@@ -144,7 +145,7 @@ public:
 
       void SetToolNormalBitmapEx(wxToolBarToolBase *tool, const wxString & iconname);
       void SetToolNormalBitmapSVG(wxToolBarToolBase *tool, wxString fileSVG);
-
+      
       // get the control with the given id or return NULL
       virtual wxControl *FindControl( int toolid );
 
@@ -175,9 +176,9 @@ public:
 
       virtual void SetToolBitmaps( int toolid, wxBitmap *bmp, wxBitmap *bmpRollover );
       virtual void SetToolBitmapsSVG( int id, wxString fileSVGNormal,
-                                   wxString fileSVGRollover,
-                                   wxString fileSVGToggled );
-
+                                      wxString fileSVGRollover,
+                                      wxString fileSVGToggled );
+      
       void InvalidateBitmaps();
 
       // set/get tools client data (not for controls)
@@ -346,15 +347,15 @@ public:
       float GetScaleFactor() { return m_sizefactor; }
       void SetGrabber( wxString icon_name );
       void DestroyTimerEvent( wxTimerEvent& event );
-
+      
       void EnableSubmerge(bool enable){ m_benableSubmerge = enable; }
       void Realize();
       ocpnToolBarSimple *GetToolbar();
       ocpnToolBarSimple *CreateNewToolbar();
-
+      
       void CreateConfigMenu();
       bool _toolbarConfigMenuUtil( int toolid, wxString tipString );
-
+      
       void Submerge();
       void SubmergeToGrabber();
       bool isSubmergedToGrabber();
@@ -367,7 +368,7 @@ public:
       void UpdateRecoveryWindow(bool b_toolbarEnable);
       void EnableTool( int toolid, bool enable );
       void SetToolShortHelp( int toolid, const wxString& helpString );
-
+      
       void DestroyToolBar();
       void ToggleOrientation();
       void MoveDialogInScreenCoords( wxPoint posn, wxPoint posn_old );
@@ -376,7 +377,7 @@ public:
       virtual void SetColorScheme( ColorScheme cs );
       ColorScheme GetColorScheme(){ return m_cs; }
       bool CheckSurfaceRequest( wxMouseEvent &event );
-
+      
       void SetGeometry(bool bAvoid, wxRect rectAvoid);
       long GetOrient() {
             return m_orient;
@@ -384,7 +385,7 @@ public:
       void RefreshFadeTimer();
       void SetAutoHideTimer(int time);
       void SetAutoHide( bool hide ){ m_bAutoHideToolbar = hide; }
-
+      
       int GetDockX() {
             return m_dock_x;
       }
@@ -394,18 +395,18 @@ public:
       bool toolbarConfigChanged;
       GrabberWin *m_pRecoverwin;
       bool m_bnavgrabber;
-
+      
       wxMenu  *m_FloatingToolbarConfigMenu;
 
 protected:
-      ocpnToolBarSimple *m_ptoolbar;
-
+    ocpnToolBarSimple *m_ptoolbar;
+    
 private:
       void DoFade( int value );
 
       bool  m_bsubmerged;
       bool  m_bsubmergedToGrabber;
-
+      
       wxWindow *m_pparent;
       wxBoxSizer *m_topSizer;
 
@@ -427,7 +428,7 @@ private:
       wxTimer m_destroyTimer;
       GrabberWin *m_destroyGrabber;
       wxSize m_recoversize;
-
+      
       bool m_bAutoHideToolbar;
       int m_nAutoHideToolbar;
       bool m_benableSubmerge;
@@ -445,38 +446,39 @@ public:
     int GetSelection();
 };
 
+
 #define SYMBOL_ToolbarChoices_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 
 class ToolbarChoicesDialog: public wxDialog
 {
     DECLARE_DYNAMIC_CLASS( ToolbarChoicesDialog )
     DECLARE_EVENT_TABLE()
-
+    
 public:
     /// Constructors
     ToolbarChoicesDialog( );
     ToolbarChoicesDialog( wxWindow* parent, wxWindow *sponsor, wxWindowID id = -1,
-                         const wxString& caption = _T(""),
-                         const wxPoint& pos = wxDefaultPosition,
-                         const wxSize& size = wxDefaultSize,
-                         long style = SYMBOL_ToolbarChoices_STYLE );
-
+                        const wxString& caption = _T(""),
+                          const wxPoint& pos = wxDefaultPosition,
+                          const wxSize& size = wxDefaultSize,
+                          long style = SYMBOL_ToolbarChoices_STYLE );
+    
     ~ToolbarChoicesDialog();
-
+    
     void SetColorScheme(ColorScheme cs);
     void RecalculateSize( void );
     void CreateControls();
-
+    
     void OnCancelClick( wxCommandEvent& event );
     void OnOkClick( wxCommandEvent& event );
-
-
+    
+    
     wxButton*     m_CancelButton;
     wxButton*     m_OKButton;
 
     std::vector<wxCheckBox*> cboxes;
     wxMenu        *m_configMenu;
-
+    
 };
 
 #endif

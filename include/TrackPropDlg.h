@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Track Properties Dialog
@@ -63,7 +63,7 @@
 
 #define ID_RCLK_MENU_COPY_TEXT 7013
 
-/*!
+/*
  * Forward declarations
  */
 
@@ -73,18 +73,18 @@ class   Track;
 class   TrackPoint;
 class   HyperlinkList;
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class TrackPropDlg
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class TrackPropDlg
+// /////////////////////////////////////////////////////////////////////////////
 class TrackPropDlg : public wxDialog 
 {
 private:
         static bool instanceFlag;
         static TrackPropDlg *single;
         TrackPropDlg( wxWindow* parent, wxWindowID id, const wxString& title,
-                 const wxPoint& pos, const wxSize& size,
-                 long style );
-
+                      const wxPoint& pos, const wxSize& size,
+                      long style ); 
+        
         TrackPoint *m_pExtendPoint;
         Track      *m_pExtendTrack;
         TrackPoint *m_pEntrackPoint;
@@ -144,16 +144,16 @@ private:
         wxButton* m_sdbBtmBtnsSizerCancel;
         wxStaticBoxSizer* sbSizerLinks;
         wxBoxSizer* bSizerLinks;
-
+    
         wxButton* m_sdbBtmBtnsSizerPrint;
         wxButton* m_sdbBtmBtnsSizerSplit;
         wxButton* m_sdbBtmBtnsSizerExtend;
         wxButton* m_sdbBtmBtnsSizerToRoute;
         wxButton* m_sdbBtmBtnsSizerExport;
-
+        
         wxScrolledWindow *itemDialog1;
         bool m_bcompact;
-
+        
 
         // Virtual event handlers, overide them in your derived class
         void OnCancelBtnClick( wxCommandEvent& event );
@@ -173,30 +173,35 @@ private:
         void OnEditLinkToggle( wxCommandEvent& event );
         void OnShowTimeTZ( wxCommandEvent& event );
         void CreateControls( void );
-        void CreateControlsCompact( void );
-
+        void CreateControlsCompact( void );  // Nur für Android
+        
 public:
-        static TrackPropDlg *getInstance( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Track Properties"),
-                                     const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 680,440 ),
-                                     long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER );
-        static bool getInstanceFlag(){ return instanceFlag; }
- 
+#ifdef __WXOSX__
+        static TrackPropDlg *getInstance( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Track properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER );
+#else
+        static TrackPropDlg *getInstance( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Track properties"),
+                                      const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 680,440 ),
+                                      long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER );
+#endif
+        static bool getInstanceFlag(){ return instanceFlag; } 
         ~TrackPropDlg();
 
         void m_hyperlink1OnContextMenu( wxMouseEvent &event )
         {
             m_hyperlink1->PopupMenu( m_menuLink, event.GetPosition() );
         }
-
+        
         void SetTrackAndUpdate( Track *pt );
         bool UpdateProperties();
         void InitializeList();
         Track *GetTrack() { return m_pTrack; }
-
+        
         void RecalculateSize( void );
-
+#ifdef __WXOSX__
+        void SaveGeometry(void);
+#endif
         Track      *m_pTrack;
-
+        
         void m_hyperlinkContextMenu( wxMouseEvent &event );
 };
 

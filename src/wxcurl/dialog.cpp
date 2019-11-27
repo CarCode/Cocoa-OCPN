@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        dialog.cpp
 // Purpose:     wxCurlDownloadDialog, wxCurlUploadDialog
 // Author:      Francesco Montorsi
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: dialog.cpp 1240 2010-03-10 23:54:25Z frm $
 // Copyright:   (c) 2007 Francesco Montorsi
 // Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 
 // For compilers that support precompilation, includes "wx.h".
@@ -44,11 +44,8 @@
 
 //class WXDLLIMPEXP_CORE wxTextCtrl;
 class WXDLLIMPEXP_CORE wxCheckBox;
-#ifdef __WXOSX__
-#include "../../src/wxcurl/wx/curl/dialog.h"
-#else
 #include "wx/curl/dialog.h"
-#endif
+
 
 // ----------------------------------------------------------------------------
 // wxCurlTransferDialog
@@ -134,7 +131,7 @@ wxStaticText *wxCurlTransferDialog::AddSizerRow(wxSizer *sz, const wxString &nam
 {
     // the static text
     wxStaticText *st = new wxStaticText( this, wxID_STATIC, name, wxDefaultPosition, wxDefaultSize );
-    st->SetFont(wxFont(8, wxSWISS, wxNORMAL, wxBOLD, false, wxS("")));
+    st->SetFont(wxFont(8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxS("")));
 
     // the value
     wxStaticText *ret = new wxStaticText( this, wxID_STATIC, _("Not available"),
@@ -187,7 +184,7 @@ void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &m
 
     // speed & size row
     if (HasFlag(wxCTDS_SPEED))
-        m_pSpeed = AddSizerRow(leftcolumn, wxS("Speed:"));
+        m_pSpeed = AddSizerRow(leftcolumn, _("Speed:"));
     if (HasFlag(wxCTDS_SIZE))
         m_pSize = AddSizerRow(leftcolumn, sizeLabel);
 
@@ -196,11 +193,11 @@ void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &m
 
     // the time rows
     if (HasFlag(wxCTDS_ELAPSED_TIME))
-        m_pElapsedTime = AddSizerRow(leftcolumn, wxS("Elapsed time:"));
+        m_pElapsedTime = AddSizerRow(leftcolumn, _("Elapsed time:"));
     if (HasFlag(wxCTDS_ESTIMATED_TIME))
-        m_pEstimatedTime = AddSizerRow(leftcolumn, wxS("Estimated total time:"));
+        m_pEstimatedTime = AddSizerRow(leftcolumn, _("Estimated total time:"));
     if (HasFlag(wxCTDS_REMAINING_TIME))
-        m_pRemainingTime = AddSizerRow(leftcolumn, wxS("Estimated remaining time:"));
+        m_pRemainingTime = AddSizerRow(leftcolumn, _("Estimated remaining time:"));
 
     if (bitmap.IsOk())
     {
@@ -253,7 +250,7 @@ void wxCurlTransferDialog::CreateControls(const wxString &url, const wxString &m
             btn->Add(new wxButton( this, PauseResumeButtonId, _("Pause") ), 0);
         if (HasFlag(wxCTDS_CAN_START))
             btn->Add(new wxButton( this, StartButtonId, _("Start") ), 0, wxLEFT, BORDER);
-
+            
         btn->SetMinSize( wxSize( -1, wxButton::GetDefaultSize().GetHeight() + 2 * OUTER_BORDER ) );
 
         main->Add(btn, 0, wxGROW|wxLEFT|wxRIGHT|wxTOP|wxBOTTOM, OUTER_BORDER);
@@ -304,18 +301,21 @@ void wxCurlTransferDialog::UpdateLabels(wxCurlProgressBaseEvent *ev)
         if (m_pEstimatedTime)
             m_pEstimatedTime->SetLabel(ev->GetEstimatedTime().Format());
     }
-
+    
     if (m_pSize)
     {
-        wxString currsize = ev->GetHumanReadableTransferredBytes(),
-                totalsize = ev->GetHumanReadableTotalBytes();
+        wxString currsize(ev->GetHumanReadableTransferredBytes().c_str(), wxConvUTF8);
+        wxString totalsize(ev->GetHumanReadableTotalBytes().c_str(), wxConvUTF8);
         m_pSize->SetLabel(
             wxString::Format(wxS("%s / %s  (%0.1f%%)"),
                                 currsize.c_str(), totalsize.c_str(), ev->GetPercent()));
     }
 
     if (m_pSpeed)
-        m_pSpeed->SetLabel(ev->GetHumanReadableSpeed());
+    {
+        wxString s(ev->GetHumanReadableSpeed().c_str(), wxConvUTF8);
+        m_pSpeed->SetLabel(s);
+    }
 }
 
 bool wxCurlTransferDialog::HandleCurlThreadError(wxCurlThreadError err, wxCurlBaseThread *p, const wxString &url)
@@ -348,7 +348,7 @@ bool wxCurlTransferDialog::HandleCurlThreadError(wxCurlThreadError err, wxCurlBa
             {
                 wxString err = wxS("unknown");
                 if (p->GetCurlSession())
-                    err = p->GetCurlSession()->GetErrorString();
+                    err = wxString(p->GetCurlSession()->GetErrorString().c_str(), wxConvUTF8);
                 wxLogError(wxS("Network error: %s"), err.c_str());
             }
             break;
@@ -396,7 +396,7 @@ void wxCurlTransferDialog::OnAbort(wxCommandEvent &WXUNUSED(ev))
 
 void wxCurlTransferDialog::OnAbortUpdateUI(wxUpdateUIEvent &ev)
 {
-    ev.SetText(m_pThread->IsAlive() ? wxS("Abort") : wxS("Close"));
+    ev.SetText(m_pThread->IsAlive() ? _("Abort") : _("Close"));
 }
 
 void wxCurlTransferDialog::OnPauseResume(wxCommandEvent &WXUNUSED(ev))
@@ -407,17 +407,17 @@ void wxCurlTransferDialog::OnPauseResume(wxCommandEvent &WXUNUSED(ev))
     {
         if (HandleCurlThreadError(m_pThread->Pause(), m_pThread))
         {
-            FindWindowById(PauseResumeButtonId)->SetLabel(wxS("Resume"));
+            FindWindowById(PauseResumeButtonId)->SetLabel(_("Resume"));
 
             if (m_pSpeed)
-                m_pSpeed->SetLabel(wxS("0 (transfer paused)"));
+                m_pSpeed->SetLabel(_("0 (transfer paused)"));
         }
     }
     else
     {
         if (HandleCurlThreadError(m_pThread->Resume(), m_pThread))
         {
-            FindWindowById(PauseResumeButtonId)->SetLabel(wxS("Pause"));
+            FindWindowById(PauseResumeButtonId)->SetLabel(_("Pause"));
         }
     }
 }
@@ -513,7 +513,7 @@ void wxCurlTransferDialog::OnEndPerform(wxCurlEndPerformEvent &ev)
         SetReturnCode(retCode);     // will exit later in OnAbort()
 
         if (m_pSpeed)
-            m_pSpeed->SetLabel(wxS("0 (transfer completed)"));
+            m_pSpeed->SetLabel(_("0 (transfer completed)"));
     }
 }
 
@@ -534,7 +534,7 @@ bool wxCurlDownloadDialog::Create(const wxString &url, wxOutputStream *out,
                                   const wxBitmap& bitmap,
                                   wxWindow *parent, long style)
 {
-    if (!wxCurlTransferDialog::Create(url, title, message, wxS("Downloaded:"), bitmap, parent, style))
+    if (!wxCurlTransferDialog::Create(url, title, message, _("Downloaded:"), bitmap, parent, style))
         return false;
 
     // register as the thread's event handler
@@ -563,9 +563,6 @@ void wxCurlDownloadDialog::OnDownload(wxCurlDownloadEvent &ev)
     // see OnEndPerform for more info.
     if (m_pLastEvent)
         delete m_pLastEvent;
-#ifdef __WXOSX__
-//    delete wxCurlDownloadEvent();
-#endif
     m_pLastEvent = wx_static_cast(wxCurlProgressBaseEvent*, ev.Clone());
 }
 
@@ -585,7 +582,7 @@ bool wxCurlUploadDialog::Create(const wxString &url, wxInputStream *in,
                                   const wxBitmap& bitmap,
                                   wxWindow *parent, long style)
 {
-    if (!wxCurlTransferDialog::Create(url, title, message, wxS("Uploaded:"), bitmap, parent, style))
+    if (!wxCurlTransferDialog::Create(url, title, message, _("Uploaded:"), bitmap, parent, style))
         return false;
 
     // register as the thread's event handler
@@ -614,9 +611,6 @@ void wxCurlUploadDialog::OnUpload(wxCurlUploadEvent &ev)
     // see OnEndPerform for more info.
     if (m_pLastEvent)
         delete m_pLastEvent;
-#ifdef __WXOSX__
-//    delete wxCurlUploadEvent();
-#endif
     m_pLastEvent = wx_static_cast(wxCurlProgressBaseEvent*, ev.Clone());
 }
 

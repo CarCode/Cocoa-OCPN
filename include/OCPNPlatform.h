@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Platform specific support utilities
@@ -54,6 +54,7 @@ extern bool LoadQtStyleSheet(wxString &sheet_file);
 extern QString getQtStyleSheet( void );
 #endif
 
+
 class OCPNPlatform
 {
 public:    
@@ -63,30 +64,31 @@ public:
 
 //      Internal Device Support
     static bool hasInternalGPS(wxString profile = _T(""));      // GPS
-
+#ifdef __OCPN__ANDROID__
     static bool hasInternalBT(wxString profile = _T(""));       // Bluetooth
     bool startBluetoothScan();
     wxArrayString getBluetoothScanResults();
     bool stopBluetoothScan();
-
+#endif
 //  Per-Platform initialization support    
-
+    
     //  Called from MyApp() immediately upon entry to MyApp::OnInit()
     static void Initialize_1( void );
-
+    
     //  Called from MyApp() immediately before creation of MyFrame()
     static void Initialize_2( void );
-
+    
     //  Called from MyApp() just before end of MyApp::OnInit()
     static void Initialize_3( void );
-
+    
     static void OnExit_1( void );
     static void OnExit_2( void );
+    
 
     void SetDefaultOptions( void );
 
     void applyExpertMode(bool mode);
-
+    
 //--------------------------------------------------------------------------
 //      Platform Display Support
 //--------------------------------------------------------------------------
@@ -95,11 +97,12 @@ public:
     double getFontPointsperPixel( void );
     wxSize getDisplaySize();
     double GetDisplaySizeMM();
+    void SetDisplaySizeMM( double size );
     double GetDisplayDPmm();
     double GetToolbarScaleFactor( int GUIScaleFactor );
     double GetCompassScaleFactor( int GUIScaleFactor );
     void onStagedResizeFinal();
-
+    
     wxFileDialog *AdjustFileDialogFont(wxWindow *container, wxFileDialog *dlg);
     wxDirDialog  *AdjustDirDialogFont(wxWindow *container,  wxDirDialog *dlg);
 
@@ -109,7 +112,7 @@ public:
     bool GetFullscreen();
     bool SetFullscreen( bool bFull );
     double GetDisplayDensityFactor();
-
+    
     double m_pt_per_pixel;
 //--------------------------------------------------------------------------
 //      Per-Platform file/directory support
@@ -129,19 +132,19 @@ public:
     wxString &GetLogFileName(){ return mlog_file; }
     MyConfig *GetConfigObject();
     wxString GetSupplementalLicenseString();
+    wxString NormalizePath(const wxString &full_path); //Adapt for portable use
 
     int DoFileSelectorDialog( wxWindow *parent, wxString *file_spec, wxString Title, wxString initDir,
-                             wxString suggestedName, wxString wildcard);
+                                wxString suggestedName, wxString wildcard);
     int DoDirSelectorDialog( wxWindow *parent, wxString *file_spec, wxString Title, wxString initDir);
-
+    
     bool InitializeLogFile( void );
-#ifdef __WXOSX__
-//    wxString &GetLogFileName();
-#endif
     void CloseLogFile( void );
     wxString    &GetLargeLogMessage( void ){ return large_log_message; }
     FILE        *GetLogFilePtr(){ return flog; }
 
+    
+    
 //--------------------------------------------------------------------------
 //      Per-Platform Utility support
 //--------------------------------------------------------------------------
@@ -154,26 +157,29 @@ public:
     void SetLocaleSearchPrefixes( void );
     wxString GetDefaultSystemLocale();
     wxString GetAdjustedAppLocale();
-
-#if wxUSE_XLOCALE
+    
+#if wxUSE_XLOCALE    
     wxString ChangeLocale(wxString &newLocaleID, wxLocale *presentLocale, wxLocale** newLocale);
 #endif
-
+    
 private:
     bool        GetWindowsMonitorSize( int *width, int *height);
-
+    
     wxString    m_homeDir;
     wxString    m_exePath;
     wxString    m_SData_Dir;
     wxString    m_PrivateDataDir;
     wxString    m_PluginsDir;
     wxString    m_config_file_name;
+    
     wxString    mlog_file;
     FILE        *flog;
     wxLog       *m_Oldlogger;
     wxString    large_log_message;
     wxSize      m_displaySize;
     wxSize      m_displaySizeMM;
+    int         m_displaySizeMMOverride;
+    
     int         m_monitorWidth, m_monitorHeight;
     bool        m_bdisableWindowsDisplayEnum;
 };

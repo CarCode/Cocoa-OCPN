@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Global Build Options
@@ -29,6 +29,9 @@
 
 #ifndef _DYCHART_H_
 #define _DYCHART_H_
+
+#include <cmath>
+#include <algorithm>
 
 //    Profiling support
 
@@ -81,28 +84,6 @@
 //    __MSVC__ randomly does not link snprintf, or _snprintf
 //    Replace it with a local version, code is in cutil.c
 #define snprintf mysnprintf
-#endif
-
-//------------------------------------------------------------------------------
-// Some Portable math definitions
-//------------------------------------------------------------------------------
-
-//    Floating Point Max/Min
-
-#ifndef __max
-      #define __max(a,b)  (((a) > (b)) ? (a) : (b))
-#endif
-
-#ifndef __min
-      #define __min(a,b)  (((a) < (b)) ? (a) : (b))
-#endif
-
-#ifdef __MSVC__
-      #define fmin __min
-      #define fmax __max
-
-      #define round(x) round_msvc(x)
-
 #endif
 
 //------------------------------------------------------------------------------
@@ -166,7 +147,7 @@
 
 #ifdef USE_S57
 #define USE_CPL
-#include "cpl_port.h"
+#include "mygdal/cpl_port.h"
 #endif
 
 #ifndef NULL

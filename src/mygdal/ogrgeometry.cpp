@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  OpenGIS Simple Features Reference Implementation
  * Purpose:  Implements a few base methods on OGRGeometry.
@@ -270,6 +270,7 @@ OGRBoolean OGRGeometry::Intersect( OGRGeometry *poOtherGeom ) const
 
 {
     OGREnvelope         oEnv1, oEnv2;
+
     if( poOtherGeom == NULL )
         return FALSE;
 

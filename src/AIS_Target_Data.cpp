@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -67,20 +67,20 @@ static wxString FormatTimeAdaptive( int seconds )
 
 static wxString html_escape ( const wxString &src)
 {
-    // Escape &, <, > as well as single and double quotes for HTML.
-    wxString ret = src;
+  // Escape &, <, > as well as single and double quotes for HTML.
+  wxString ret = src;
 
-    ret.Replace(_T("<"), _T("&lt;"));
-    ret.Replace(_T(">"), _T("&gt;"));
+  ret.Replace(_T("<"), _T("&lt;"));
+  ret.Replace(_T(">"), _T("&gt;"));
 
-    // only < and > in 6 bits AIS ascii
-    // ret.Replace(_T("\""), _T("&quot;"));
-    // ret.Replace(_T("&"), _T("&amp;"));
-    // ret.Replace(_T("'"), _T("&#39;"));
+  // only < and > in 6 bits AIS ascii
+  // ret.Replace(_T("\""), _T("&quot;"));
+  // ret.Replace(_T("&"), _T("&amp;"));
+  // ret.Replace(_T("'"), _T("&#39;"));
 
-    // Do we care about multiple spaces?
-    //   ret.Replace(_T(" "), _T("&nbsp;"));
-    return ret;
+  // Do we care about multiple spaces?
+  //   ret.Replace(_T(" "), _T("&nbsp;"));
+  return ret;
 }
 
 AIS_Target_Data::AIS_Target_Data()
@@ -103,6 +103,7 @@ AIS_Target_Data::AIS_Target_Data()
     PositionReportTicks = now.GetTicks();       // Default is my idea of NOW
     StaticReportTicks = now.GetTicks();
     b_lost = false;
+    b_removed = false;
 
     IMO = 0;
     MID = 555;
@@ -187,7 +188,8 @@ void AIS_Target_Data::CloneFrom( AIS_Target_Data* q )
     PositionReportTicks = q->PositionReportTicks;
     StaticReportTicks = q->StaticReportTicks;
     b_lost = q->b_lost;
-    
+    b_removed = q->b_removed;
+
     IMO = q->IMO;
     MID = q->MID;
     MMSI = q->MMSI;
@@ -353,18 +355,10 @@ wxString AIS_Target_Data::BuildQueryResult( void )
             << rowStartH << _T("<b>") << MMSIstr << _T("</b></td><td>&nbsp;</td><td align=right><b>")
             << ClassStr << rowEnd << _T("</table></td></tr>");
 
-#ifdef __WXOSX__
     if ((Class != AIS_SART) && (Class != AIS_DSC))
-#else
-    if((Class != AIS_SART ) && ( Class != AIS_BASE ) && ( Class != AIS_DSC ) )
-#endif
         html << _T("<tr><td colspan=2><table width=100% border=0 cellpadding=0 cellspacing=0>")
-#ifdef __WXOSX__
-            << rowStart << ((Class == AIS_BASE || Class == AIS_ATON) ? _("Nation") : _("Flag"))
-            << rowEnd << _T("</font></td></tr>")
-#else
-             << rowStart << _("Flag") << rowEnd << _T("</font></td></tr>")
-#endif
+             << rowStart << ((Class == AIS_BASE || Class == AIS_ATON) ? _("Nation") : _("Flag")) 
+             << rowEnd << _T("</font></td></tr>")
              << rowStartH << _T("<b>")<< GetCountryCode(true) << rowEnd << _T("</table></td></tr>");
     
     html << vertSpacer;
@@ -557,16 +551,12 @@ wxString AIS_Target_Data::BuildQueryResult( void )
             if( crs < 360 ) {
                 wxString magString, trueString;
                 if( g_bShowMag )
-#ifdef __WXOSX__
-                    magString << wxString::Format( wxString("%03d°(M)", wxConvUTF8 ), (int)gFrame->GetTrueOrMag( crs ) );
-#else
                     magString << wxString::Format( wxString("%03d°(M)", wxConvUTF8 ), (int)gFrame->GetMag( crs ) );
-#endif
                 if( g_bShowTrue )
                     trueString << wxString::Format( wxString("%03d°  ", wxConvUTF8 ), (int) crs );
-
+                
                 courseStr << trueString << magString;
-            }
+            }   
             else if( COG == 360.0 )
                 courseStr = _T("---");
             else if( crs == 360 )
@@ -618,9 +608,9 @@ wxString AIS_Target_Data::BuildQueryResult( void )
         wxString magString, trueString;
         if( g_bShowMag )
 #ifdef __WXOSX__
-            magString << wxString::Format( wxString("%03d°(M)  ", wxConvUTF8 ), (int)gFrame->GetTrueOrMag( brg ) );
+            magString << wxString::Format( wxString("%03d°(M)  ", wxConvUTF8 ), (int)gFrame->GetMag( brg ) );
 #else
-            brgStr << wxString::Format( wxString("%03d°(M)  ", wxConvUTF8 ), (int)gFrame->GetTrueOrMag( Brg ) );
+            magString << wxString::Format( wxString("%03d°(M)", wxConvUTF8 ), (int)gFrame->GetMag( Brg ) );
 #endif
         if( g_bShowTrue )
 #ifdef __WXOSX__
@@ -629,7 +619,7 @@ wxString AIS_Target_Data::BuildQueryResult( void )
             trueString << wxString::Format( wxString("%03d°  ", wxConvUTF8 ), (int) Brg );
 #endif
         brgStr << trueString << magString;
-    }
+    }   
     else
         brgStr = _("---");
 
@@ -659,7 +649,7 @@ wxString AIS_Target_Data::BuildQueryResult( void )
     << turnRateHdr << _T("</font></td></tr>")
     << rowStartH << _T("<b>") << rngStr << _T("</b></td><td>&nbsp;</td><td><b>")
     << brgStr << _T("</b></td><td>&nbsp;</td><td align=right><b>");
-
+    
     if(!b_SarAircraftPosnReport)
         html << rotStr;
     html << rowEnd << _T("</table></td></tr>")
@@ -671,6 +661,7 @@ wxString AIS_Target_Data::BuildQueryResult( void )
         << turnRateHdr << _T("</font></td></tr>")
         << rowStartH << _T("<b>") << rngStr << _T("</b></td><td>&nbsp;</td><td><b>")
         << brgStr << _T("</b></td><td>&nbsp;</td><td align=right><b>");
+        
         if(!b_SarAircraftPosnReport)
             html << rotStr;
         html << rowEnd << _T("</table></td></tr>")
@@ -679,7 +670,7 @@ wxString AIS_Target_Data::BuildQueryResult( void )
     if( bCPA_Valid ) {
         wxString tcpaStr;
         tcpaStr << _T("</b> ") << _("in ") << _T("</td><td align=right><b>") << FormatTimeAdaptive( (int)(TCPA*60.) );
-
+                                                                  
         html<< /*vertSpacer << */rowStart << _T("<font size=-2>") <<_("CPA") << _T("</font>") << rowEnd
             << rowStartH << _T("<b>") << cc1->FormatDistanceAdaptive( CPA )
             << tcpaStr << rowEnd;
@@ -804,15 +795,11 @@ wxString AIS_Target_Data::GetRolloverString( void )
             if( crs < 360 ) {
                 wxString magString, trueString;
                 if( g_bShowMag )
-#ifdef __WXOSX__
-                    magString << wxString::Format( wxString("%03d°(M)", wxConvUTF8 ), (int)gFrame->GetTrueOrMag( crs ) );
-#else
-                    magString << wxString::Format( wxString("%03d°(M)", wxConvUTF8 ), (int)gFrame->GetMag( crs ) );
-#endif
+                    magString << wxString::Format( wxString("%03d°(M)  ", wxConvUTF8 ), (int)gFrame->GetMag( crs ) );
                 if( g_bShowTrue )
                     trueString << wxString::Format( wxString("%03d°  ", wxConvUTF8 ), (int) crs );
-
-                result << trueString << magString;
+                
+                result << trueString << magString;    
             }
                 
             else if( COG == 360.0 )
@@ -953,31 +940,22 @@ void AIS_Target_Data::ToggleShowTrack(void)
 }
 
 
-// ALT: Get country name and code according to ISO 3166-2 2014-01 (www.itu.int/online/mms/glad/cga_mids.sh?lng=E)
 //Get country name and code according to ITU 2017-01 (http://www.itu.int/en/ITU-R/terrestrial/fmd/Pages/mid.aspx)
 wxString AIS_Target_Data::GetCountryCode( bool b_CntryLongStr )  //false = Short country code, true = Full country name
 {
-#ifdef __WXOSX__
-    int nMID = MMSI / 1000000;
-    //SAR Aircraft start with 111 and has a MID at pos 4,5,6
-    if (111 == nMID) nMID = (MMSI - 111000000) / 1000;
-    //Base station start with 00 and has a MID at pos 4,5,6
-    if (Class == AIS_BASE) nMID = MMSI / 10000;
-    //AtoN start with 99 and has a MID at pos 3,4,5
-    if (99 == MMSI / 10000000) nMID = (MMSI - 990000000) / 10000;
-    //Check if a proper MID
-    if (nMID < 201 || nMID > 775) return wxEmptyString;
-#else
-  int mmsi_start = MMSI / 1000000;
-  if (mmsi_start == 111) mmsi_start = (MMSI - 111000000)/1000 ; //SAR Aircraft start with 111 and has a MID.
-#endif
+  int nMID = MMSI / 1000000;
+  //SAR Aircraft start with 111 and has a MID at pos 4,5,6
+  if (111 == nMID) nMID = (MMSI - 111000000) / 1000;
+  //Base station start with 00 and has a MID at pos 4,5,6
+  if (Class == AIS_BASE) nMID = MMSI / 10000;
+  //AtoN start with 99 and has a MID at pos 3,4,5
+  if (99 == MMSI / 10000000) nMID = (MMSI - 990000000) / 10000;
+  //Check if a proper MID
+  if (nMID < 201 || nMID > 775) return wxEmptyString;
 
 #if wxUSE_XLOCALE || !wxCHECK_VERSION(3,0,0)
-#ifdef __WXOSX__
-    switch (nMID) {
-#else
-  switch(mmsi_start) {
-#endif
+  
+  switch (nMID) {
     case 201: return b_CntryLongStr ? _("Albania") : _T("AL") ;
     case 202: return b_CntryLongStr ? _("Andorra") : _T("AD") ;
     case 203: return b_CntryLongStr ? _("Austria") : _T("AT") ;

@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  S-57 Translator
  * Purpose:  Implements S57Reader class.
@@ -24,11 +24,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************
- *
- * *
- */
+ ******************************************************************************/
 
+#include <assert.h>
 #include "s57.h"
 #include "ogr_api.h"
 #include "cpl_conv.h"
@@ -852,15 +850,23 @@ void S57Reader::ApplyObjectClassAttributes( DDFRecord * poRecord,
             if( strlen(pszValue) == 0 )
             {
                 if( nOptionFlags & S57M_PRESERVE_EMPTY_NUMBERS )
+                {
                     poFeature->SetField( iField, EMPTY_NUMBER_MARKER );
+                }
                 else
+                {
                     /* leave as null if value was empty string */;
+                }
             }
             else
+            {
                 poFeature->SetField( iField, pszValue );
+            }
         }
         else
+        {
             poFeature->SetField( iField, pszValue );
+        }
     }
 
 /* -------------------------------------------------------------------- */
@@ -1465,13 +1471,15 @@ void S57Reader::AssembleSoundingGeometry( DDFRecord * poFRecord,
     poField = poSRecord->FindField( "SG2D" );
     if( poField == NULL )
         poField = poSRecord->FindField( "SG3D" );
-    if( poField == NULL ) {
+    if( poField == NULL )
 #ifdef __WXOSX__
+    {
         delete poMP;
-#endif
         return;
     }
-
+#else
+    return;
+#endif
     poXCOO = poField->GetFieldDefn()->FindSubfieldDefn( "XCOO" );
     poYCOO = poField->GetFieldDefn()->FindSubfieldDefn( "YCOO" );
     poVE3D = poField->GetFieldDefn()->FindSubfieldDefn( "VE3D" );
@@ -1526,9 +1534,15 @@ void S57Reader::AssembleLineGeometry( DDFRecord * poFRecord,
 /*      Find the FSPT field.                                            */
 /* -------------------------------------------------------------------- */
     poFSPT = poFRecord->FindField( "FSPT" );
+#ifdef __WXOSX__
+    if( poFSPT == NULL ){
+        delete poLine;
+        return;
+    }
+#else
     if( poFSPT == NULL )
         return;
-
+#endif
     nEdgeCount = poFSPT->GetRepeatCount();
 
 /* ==================================================================== */
@@ -2287,7 +2301,14 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
                 poSrcSG2D = poUpdate->FindField("SG3D");
             }
         }
-        
+
+        if(poDstSG2D == NULL && nCCUI == 2){
+            // Trying to delete a coordinate that does not exist...
+            // Theoretically, this is an error.
+            //  But we have seen this from some HOs, (China/HongKong) and seems to be OK to ignore
+            return TRUE;
+        }
+
         if( (poSrcSG2D == NULL && nCCUI != 2)
             || (poDstSG2D == NULL && nCCUI != 1) )
         {
@@ -2383,12 +2404,12 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
         {
             //  This probably means that the update applies to an attribute that doesn't (yet) exist
             //  To fix, we need to add an attribute, then update it.
-
+            
             DDFFieldDefn *poATTF = poTarget->GetModule()->FindFieldDefn( "ATTF" );
             poTarget->AddField(poATTF);
             poDstATTF = poTarget->FindField( "ATTF" );
             b_newField = true;
-
+            
         }
 
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
@@ -2418,7 +2439,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
                     b_newField = false;
                 }
             }
-
+                
             pszRawData = poSrcATTF->GetInstanceData( iAtt, &nDataBytes );
             poTarget->SetFieldRaw( poDstATTF, iTAtt, pszRawData, nDataBytes );
         }
@@ -2430,38 +2451,38 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
 //        DDFSubfieldDefn *poSrcATVLDefn;  // Not used
         DDFField *poSrcATTF = poUpdate->FindField( "NATF" );
         DDFField *poDstATTF = poTarget->FindField( "NATF" );
-
+ 
 //        int up_FIDN = poUpdate->GetIntSubfield( "FOID", 0, "FIDN", 0 );
 //        if(up_FIDN == 1103712044 /*1225530334*/){
 //            poTarget->Dump(stdout);
 //        }
-
+        
         if(NULL == poDstATTF)
         {
             //  This probably means that the update applies to an attribute that doesn't (yet) exist
             //  To fix, we need to add an attribute, then update it.
-
+            
             DDFFieldDefn *poNATF = poTarget->GetModule()->FindFieldDefn( "NATF" );
             poTarget->AddField(poNATF);
             poDstATTF = poTarget->FindField( "NATF" );
             b_newField = true;
-
+            
 //            poTarget->Dump(stdout);
-
+            
 //            CPLDebug( "S57","Could not find target ATTF field for attribute update");
 //           return FALSE;
         }
-
+        
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
-
+        
 //        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );  // Not used
-
+        
         for( int iAtt = 0; iAtt < nRepeatCount; iAtt++ )
         {
             int nATTL = poUpdate->GetIntSubfield( "NATF", 0, "ATTL", iAtt );
             int iTAtt, nDataBytes;
             const char *pszRawData;
-
+            
             for( iTAtt = poDstATTF->GetRepeatCount()-1; iTAtt >= 0; iTAtt-- )
             {
                 if( poTarget->GetIntSubfield( "NATF", 0, "ATTL", iTAtt ) == nATTL )
@@ -2478,17 +2499,17 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
                     b_newField = false;
                 }
             }
-
-
+            
+                
             pszRawData = poSrcATTF->GetInstanceData( iAtt, &nDataBytes );
-
+            
 //            poTarget->Dump(stdout);
             poTarget->SetFieldRaw( poDstATTF, iTAtt, pszRawData, nDataBytes ); ///dsr
 //            poTarget->Dump(stdout);
-
+            
         }
     }
-
+    
     return TRUE;
 }
 
@@ -2669,10 +2690,11 @@ int S57Reader::FindAndApplyUpdates( const char * pszPath )
 
     for( iUpdate = 1; bSuccess; iUpdate++ )
     {
-        char    szExtension[4];
+        char    szExtension[16];
         char    *pszUpdateFilename;
         DDFModule oUpdateModule;
 
+        assert(iUpdate <= 999);
         sprintf( szExtension, "%03d", iUpdate );
 
         pszUpdateFilename = CPLStrdup(CPLResetExtension(pszPath,szExtension));

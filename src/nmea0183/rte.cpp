@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -22,7 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -43,15 +42,15 @@
 
 RTE::RTE()
 {
+   m_complete_char = 'c';
+   m_skip_checksum = 0;
+   
    Mnemonic = _T("RTE");
    Empty();
 }
 
 RTE::~RTE()
 {
-   m_complete_char = 'c';
-   m_skip_checksum = 0;
-
    Mnemonic.Empty();
    Empty();
 }
@@ -153,8 +152,8 @@ bool RTE::Write( SENTENCE& sentence )
       case CompleteRoute:
 
 //            sentence += _T("C");             // uppercase required for GPS MLR FFX312
-           //            sentence += _T("c");             // trying lowercase for generic NMEA device
-           sentence += wxString((wxChar)m_complete_char);
+//            sentence += _T("c");             // trying lowercase for generic NMEA device
+            sentence += wxString((wxChar)m_complete_char);
             break;
 
       case WorkingRoute:
@@ -173,13 +172,13 @@ bool RTE::Write( SENTENCE& sentence )
    for(unsigned int i=0 ; i < Waypoints.GetCount() ; i++)
          sentence += Waypoints[i];
 
-    if(m_skip_checksum){
-        wxString temp_string;
-        temp_string.Printf(_T("%c%c"), CARRIAGE_RETURN, LINE_FEED );
-        sentence.Sentence += temp_string;
-    }
-    else
-        sentence.Finish();
+   if(m_skip_checksum){
+       wxString temp_string;
+       temp_string.Printf(_T("%c%c"), CARRIAGE_RETURN, LINE_FEED );
+       sentence.Sentence += temp_string;
+   }
+   else
+       sentence.Finish();
 
    return( TRUE );
 }

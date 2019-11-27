@@ -1,9 +1,9 @@
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 // C++ code generated with wxFormBuilder (version Jun  5 2014)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 
 #ifndef __GRIBUIDIALOGBASE_H__
 #define __GRIBUIDIALOGBASE_H__
@@ -37,9 +37,10 @@
 #include <wx/notebook.h>
 #include <wx/radiobox.h>
 #include <wx/statline.h>
-#include <wx/grid.h>
+//#include <wx/grid.h>
+#include "CustomGrid.h"
 
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 
 //GRIBUICtrlBarBase
 #define CONTROL_BAR 1000
@@ -100,9 +101,9 @@
 #define MANSELECT 1052
 #define SAVEDZONE 1053
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class GRIBUICtrlBarBase
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class GRIBUICtrlBarBase
+// /////////////////////////////////////////////////////////////////////////////
 class GRIBUICtrlBarBase : public wxDialog
 {
 	private:
@@ -125,8 +126,8 @@ class GRIBUICtrlBarBase : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnMouseEvent( wxMouseEvent& event ) { event.Skip(); }
-		virtual void OnSize( wxSizeEvent& event ) { event.Skip(); }
         virtual void OnPaint( wxPaintEvent& event) { event.Skip(); }
+		virtual void OnSize( wxSizeEvent& event ) { event.Skip(); }
 		virtual void OnPrev( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnRecordForecast( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnNext( wxCommandEvent& event ) { event.Skip(); }
@@ -139,7 +140,8 @@ class GRIBUICtrlBarBase : public wxDialog
 		virtual void OnOpenFile( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSettings( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnRequest( wxCommandEvent& event ) { event.Skip(); }
-
+		virtual void OnCompositeDialog( wxCommandEvent& event ) { event.Skip(); }
+		
 
 	public:
 		wxBitmapButton* m_bpAltitude;
@@ -150,9 +152,9 @@ class GRIBUICtrlBarBase : public wxDialog
 
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class GRIBUICDataBase
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class GRIBUICDataBase
+// /////////////////////////////////////////////////////////////////////////////
 class GRIBUICDataBase : public wxDialog
 {
 	private:
@@ -167,9 +169,9 @@ class GRIBUICDataBase : public wxDialog
 
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class CursorDataBase
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class CursorDataBase
+// /////////////////////////////////////////////////////////////////////////////
 class CursorDataBase : public wxPanel
 {
 	private:
@@ -193,11 +195,11 @@ class CursorDataBase : public wxPanel
 		wxTextCtrl* m_tcAirTemperature;
 		wxTextCtrl* m_tcSeaTemperature;
 		wxTextCtrl* m_tcCAPE;
-        wxCheckBox* m_cbAltitude;
+		wxCheckBox* m_cbAltitude;
 		wxTextCtrl* m_tcAltitude;
-        wxCheckBox* m_cbTemp;
+		wxCheckBox* m_cbTemp;
 		wxTextCtrl* m_tcTemp;
-        wxCheckBox* m_cbRelHumid;
+		wxCheckBox* m_cbRelHumid;
 		wxTextCtrl* m_tcRelHumid;
 
 		// Virtual event handlers, overide them in your derived class
@@ -223,9 +225,9 @@ class CursorDataBase : public wxPanel
 
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class GribSettingsDialogBase
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class GribSettingsDialogBase
+// /////////////////////////////////////////////////////////////////////////////
 class GribSettingsDialogBase : public wxDialog
 {
 	private:
@@ -248,6 +250,7 @@ class GribSettingsDialogBase : public wxDialog
 		wxSpinCtrl* m_sIsoBarSpacing;
 		wxFlexGridSizer* m_fIsoBarVisibility;
 		wxCheckBox* m_sIsoBarVisibility;
+        wxCheckBox* m_cbAbbrIsoBarsNumbers;
 		wxCheckBox* m_cbDirectionArrows;
 		wxFlexGridSizer* m_fgDirArrData1;
 		wxChoice* m_cDirectionArrowForm;
@@ -267,13 +270,12 @@ class GribSettingsDialogBase : public wxDialog
 		wxCheckBox* m_cbParticles;
 		wxStaticText* m_ctParticles;
 		wxSlider* m_sParticleDensity;
-        wxSlider* m_sParticleDensityNo;
 		wxStaticText* m_staticText24;
 		wxSlider* m_sTransparency;
 		wxFlexGridSizer* m_fgSetPlaybackSizer;
 		wxStaticText* m_staticText26;
 		wxChoice* m_cLoopStartPoint;
-        wxSlider* m_sUpdatesPerSecond;
+		wxSlider* m_sUpdatesPerSecond;
 		wxStaticText* m_tSlicesPerUpdate;
 		wxFlexGridSizer* m_fgSetGuiSizer;
 		wxRadioButton* m_rbCurDataAttaWCap;
@@ -311,14 +313,14 @@ class GribSettingsDialogBase : public wxDialog
 		wxButton* m_sButtonApply;
 		wxButton* m_sButtonCancel;
 
-		GribSettingsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Grib Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
+		GribSettingsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~GribSettingsDialogBase();
 
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class GribPreferencesDialogBase
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class GribPreferencesDialogBase
+// /////////////////////////////////////////////////////////////////////////////
 class GribPreferencesDialogBase : public wxDialog
 {
 	private:
@@ -334,18 +336,19 @@ class GribPreferencesDialogBase : public wxDialog
 		wxCheckBox* m_cbUseGradualColors;
 		wxCheckBox* m_cbCopyFirstCumulativeRecord;
 		wxCheckBox* m_cbCopyMissingWaveRecord;
+        wxCheckBox* m_cbDrawBarbedArrowHead;
 		wxRadioBox* m_rbLoadOptions;
 		wxRadioBox* m_rbStartOptions;
 		wxRadioBox* m_rbTimeFormat;
 
-		GribPreferencesDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Grib Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		GribPreferencesDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~GribPreferencesDialogBase();
 
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class GribRequestSettingBase
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class GribRequestSettingBase
+// /////////////////////////////////////////////////////////////////////////////
 class GribRequestSettingBase : public wxDialog
 {
 	private:
@@ -387,9 +390,10 @@ class GribRequestSettingBase : public wxDialog
 		wxCheckBox* m_pRainfall;
 		wxCheckBox* m_pCloudCover;
 		wxCheckBox* m_pAirTemp;
+        wxCheckBox* m_pCAPE;
+        wxCheckBox* m_pReflectivity;
 		wxCheckBox* m_pSeaTemp;
 		wxCheckBox* m_pCurrent;
-		wxCheckBox* m_pCAPE;
 		wxCheckBox* m_pWaves;
 		wxChoice* m_pWModel;
 		wxCheckBox* m_pAltitudeData;
@@ -429,9 +433,9 @@ class GribRequestSettingBase : public wxDialog
 
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class GRIBTableBase
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class GRIBTableBase
+// /////////////////////////////////////////////////////////////////////////////
 class GRIBTableBase : public wxDialog
 {
 	private:
@@ -448,9 +452,9 @@ class GRIBTableBase : public wxDialog
 
 
 	public:
-		wxGrid* m_pGribTable;
-		wxStdDialogButtonSizer* m_pButtonTable;
-		wxButton* m_pButtonTableOK;
+        CustomGrid* m_pGribTable;
+        wxButton* m_pButtonTableOK;
+        int m_pIndex;
 
 		GRIBTableBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Grib Data Table"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxRESIZE_BORDER );
 		~GRIBTableBase();

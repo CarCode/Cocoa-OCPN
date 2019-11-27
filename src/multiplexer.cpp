@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA Data Multiplexer Object
@@ -151,7 +151,7 @@ void Multiplexer::LogOutputMessageColor(const wxString &msg, const wxString & st
         wxString ss;
 #ifndef __WXQT__        //  Date/Time on Qt are broken, at least for android
         ss = now.FormatISOTime();
-#endif
+#endif        
         ss.Prepend(_T("--> "));
         ss.Append( _T(" (") );
         ss.Append( stream_name );
@@ -180,7 +180,7 @@ void Multiplexer::LogInputMessage(const wxString &msg, const wxString & stream_n
         wxString ss;
 #ifndef __WXQT__        //  Date/Time on Qt are broken, at least for android
         ss = now.FormatISOTime();
-#endif
+#endif        
         ss.Append( _T(" (") );
         ss.Append( stream_name );
         ss.Append( _T(") ") );
@@ -247,7 +247,7 @@ void Multiplexer::SetGPSHandler(wxEvtHandler *handler)
 void Multiplexer::OnEvtStream(OCPN_DataStreamEvent& event)
 {
     wxString message = event.ProcessNMEA4Tags();
-
+    
     DataStream *stream = event.GetStream();
     wxString port(_T("Virtual:"));
     if( stream )
@@ -265,7 +265,7 @@ void Multiplexer::OnEvtStream(OCPN_DataStreamEvent& event)
         if( bpass ) {
             if( message.Mid(3,3).IsSameAs(_T("VDM")) ||
                 message.Mid(1,5).IsSameAs(_T("FRPOS")) ||
-                message.Mid(1,2).IsSameAs(_T("CD")) ||
+                message.Mid(1,4).IsSameAs(_T("CDDS")) ||
                 message.Mid(3,3).IsSameAs(_T("TLL")) ||
                 message.Mid(3,3).IsSameAs(_T("TTM")) ||
                 message.Mid(3,3).IsSameAs(_T("OSD")) ||
@@ -293,7 +293,7 @@ void Multiplexer::OnEvtStream(OCPN_DataStreamEvent& event)
                     if( CheckSumCheck(event.GetNMEAString()) )
                         g_pi_manager->SendNMEASentenceToAllPlugIns( message );
                 }
-
+                    
             }
 
            //Send to all the other outputs
@@ -620,7 +620,7 @@ ret_point:
                         //  Furuno has its own talker ID, so do not allow the global override
                         wxString talker_save = g_TalkerIdText;
                         g_TalkerIdText.Clear();
-
+                        
                         oNMEA0183.TalkerID = _T ( "PFEC," );
 
                         if ( prp->m_lat < 0. )
@@ -639,12 +639,12 @@ ret_point:
                         oNMEA0183.GPwpl.To = name;
 
                         oNMEA0183.GPwpl.Write ( snt );
-
+                        
                         g_TalkerIdText = talker_save;
                     }
 
                     wxString payload = snt.Sentence;
-                    
+
                     // for some gps, like some garmin models, they assume the first waypoint
                     // in the route is the boat location, therefore it is dropped.
                     // These gps also can only accept a maximum of up to 20 waypoints at a time before
@@ -697,7 +697,7 @@ ret_point:
             wxString talker_save = g_TalkerIdText;
             if(g_GPS_Ident == _T("FurunoGP3X"))
                 g_TalkerIdText.Clear();
-
+            
             oNMEA0183.Rte.Empty();
             oNMEA0183.Rte.TypeOfRoute = CompleteRoute;
 
@@ -722,13 +722,13 @@ ret_point:
             while ( node )
             {
                 RoutePoint *prp = node->GetData();
-                wxString name = prp->GetName().Truncate ( 6 );
+                wxString name = prp->GetName().Truncate ( g_maxWPNameLength );
 
                 if(g_GPS_Ident == _T("FurunoGP3X"))
                 {
                     name = prp->GetName();
                     name += _T("000000");
-                    wxString name = prp->GetName().Truncate ( g_maxWPNameLength );
+                    name.Truncate( g_maxWPNameLength );
                     name .Prepend( _T(" "));        // What Furuno calls "Skip Code", space means use the WP
                 }
 
@@ -885,7 +885,7 @@ ret_point:
 
                 for(unsigned int ii=0 ; ii < sentence_array.GetCount(); ii++)
                 {
-                    wxString sentence = sentence_array.Item(ii);
+                    wxString sentence = sentence_array[ii];
                     
                     if(dstr->SendSentence( sentence ) )
                         LogOutputMessage( sentence, dstr->GetPort(), false );
@@ -943,10 +943,10 @@ ret_point:
 
             //  All finished with the temp port
             dstr->Close();
-
+            
             if(g_GPS_Ident == _T("FurunoGP3X"))
                 g_TalkerIdText = talker_save;
-
+            
         }
     }
 

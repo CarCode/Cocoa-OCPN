@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        xml.cpp
 // Purpose:     wxSvgXmlDocument - XML parser & data holder class
 // Author:      Vaclav Slavik
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: svgxml.cpp,v 1.9 2014/03/27 19:24:49 ntalex Exp $
 // Copyright:   (c) 2000 Vaclav Slavik
 // Licence:     wxWindows licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 #if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
 #pragma implementation "svgxml.h"
@@ -399,6 +399,7 @@ wxSvgXmlDocument::wxSvgXmlDocument(wxInputStream& stream, const wxString& encodi
 }
 
 wxSvgXmlDocument::wxSvgXmlDocument(const wxSvgXmlDocument& doc)
+: wxObject()
 {
     DoCopy(doc);
 }
@@ -436,6 +437,9 @@ void wxSvgXmlDocument::DoCopy(const wxSvgXmlDocument& doc)
     m_encoding = doc.m_encoding;
 #endif
     m_fileEncoding = doc.m_fileEncoding;
+#ifdef __WXOSX__
+    if( m_root )
+#endif
     m_root = new wxSvgXmlNode(*doc.m_root);
 }
 
@@ -712,7 +716,11 @@ inline static void OutputString(wxOutputStream& stream, const wxString& str,
 {
     if (str.IsEmpty()) return;
 #if wxUSE_UNICODE
+#ifdef __WXOSX__
+    const wxCharBuffer buf(str.mb_str(*(convFile ? convFile : &wxConvUTF8)));
+#else
     const wxWX2MBbuf buf(str.mb_str(*(convFile ? convFile : &wxConvUTF8)));
+#endif
     stream.Write((const char*)buf, strlen((const char*)buf));
 #else
     if ( convFile == NULL )

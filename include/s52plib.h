@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  S52 Presentation Library
@@ -106,9 +106,11 @@ public:
      s52plib( const wxString& PLib, bool b_forceLegacy = false );
     ~s52plib();
 
-    void SetPPMM( float ppmm ) { canvas_pix_per_mm = ppmm;}
+    void SetPPMM( float ppmm );
     float GetPPMM() { return canvas_pix_per_mm; }
 
+    double GetRVScaleFactor() { return m_rv_scale_factor; }
+    
     LUPrec *S52_LUPLookup( LUPname LUP_name, const char * objectName,
         S57Obj *pObj, bool bStrict = 0 );
     int _LUP2rules( LUPrec *LUP, S57Obj *pObj );
@@ -166,9 +168,12 @@ public:
 
     void SetLightsOff(bool val){ m_lightsOff = val; }
     bool GetLightsOff(){ return m_lightsOff; }
-
+    
     void SetAnchorOn(bool val){ m_anchorOn = val; }
     bool GetAnchorOn();
+
+    void SetQualityOfDataOn(bool val){ m_qualityOfDataOn = val; }
+    bool GetQualityOfDataOn();
 
     int GetMajorVersion( void ) { return m_VersionMajor; }
     int GetMinorVersion( void ) { return m_VersionMinor; }
@@ -187,13 +192,13 @@ public:
         
     void DestroyPatternRuleNode( Rule *pR );
     void DestroyRuleNode( Rule *pR );
-    void DestroyRulesChain( Rules *top );
+    static void DestroyRulesChain( Rules *top );
     
     //    For OpenGL
     int RenderObjectToGL( const wxGLContext &glcc, ObjRazRules *rzRules, ViewPort *vp );
     int RenderAreaToGL( const wxGLContext &glcc, ObjRazRules *rzRules, ViewPort *vp );
     int RenderObjectToGLText( const wxGLContext &glcc, ObjRazRules *rzRules, ViewPort *vp );
-   
+    
     void RenderPolytessGL( ObjRazRules *rzRules, ViewPort *vp,double z_clip_geom, wxPoint *ptp );
     
     bool EnableGLLS(bool benable);
@@ -258,7 +263,7 @@ private:
 
     int DoRenderObject( wxDC *pdcin, ObjRazRules *rzRules, ViewPort *vp );
     int DoRenderObjectTextOnly( wxDC *pdcin, ObjRazRules *rzRules, ViewPort *vp );
-
+    
     //    Area Renderers
     int RenderToBufferAC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp,
         render_canvas_parms *pb_spec );
@@ -344,7 +349,8 @@ private:
     wxString m_plib_file;
 
     float canvas_pix_per_mm; // Set by parent, used to scale symbols/lines/patterns
-
+    double m_rv_scale_factor;
+    
     S52color m_unused_color;
     wxColor m_unused_wxColor;
 
@@ -369,7 +375,8 @@ private:
 
     bool m_lightsOff;
     bool m_anchorOn;
-    
+    bool m_qualityOfDataOn;
+
     long m_state_hash;
 
     bool m_txf_ready;
@@ -394,13 +401,13 @@ class RenderFromHPGL {
 public:
     RenderFromHPGL( s52plib* plibarg );
     ~RenderFromHPGL(  );
-
+    
     void SetTargetDC( wxDC* pdc );
     void SetTargetOpenGl();
 #if wxUSE_GRAPHICS_CONTEXT
     void SetTargetGCDC( wxGCDC* gdc );
 #endif
-    bool Render(char *str, char *col, wxPoint &r, wxPoint &pivot, wxPoint origin, float scale, double rot_angle);
+    bool Render(char *str, char *col, wxPoint &r, wxPoint &pivot, wxPoint origin, float scale, double rot_angle, bool bSymbol);
 
 private:
     const char* findColorNameInRef( char colorCode, char* col );
@@ -425,10 +432,10 @@ private:
     wxBrush* brush;
     long penWidth;
     int transparency;
-
+    
     int noPoints;
     wxPoint polygon[100];
-
+    
     float m_currentColor[4];
 
     bool renderToDC;

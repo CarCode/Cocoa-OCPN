@@ -1,4 +1,4 @@
-/******************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __IDX_ENTRY_H__
 #define __IDX_ENTRY_H__
@@ -93,6 +92,13 @@ public:
     int         first_year;
     time_t      epoch;
     int         epoch_year;
+
+    // Cached values
+    time_t      recent_highlow_calc_time;
+    float       recent_high_level;
+    time_t      recent_high_time;
+    float       recent_low_level;
+    time_t      recent_low_time;
 
 };
 

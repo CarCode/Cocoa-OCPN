@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include <wx/utils.h>
 
@@ -66,10 +65,14 @@ unsigned char AIS_Bitstring::to_6bit(const char c)
 
 int AIS_Bitstring::GetInt(int sp, int len, bool signed_flag)
 {
+#ifdef __WXOSX__
+    unsigned int acc = 0;
+#else
     int acc = 0;
+#endif
     int s0p = sp-1;                          // to zero base
 
-    int cp, cx, c0; //, cs;  // Not used
+    int cp, cx, c0; //, cs; Not used
 
 
     for(int i=0 ; i<len ; i++)
@@ -91,13 +94,13 @@ int AIS_Bitstring::GetInt(int sp, int len, bool signed_flag)
 int AIS_Bitstring::GetStr(int sp, int bit_len, char *dest, int max_len)
 {
     //char temp_str[85];
-    char *temp_str = new char[max_len + 1];
+    char *temp_str = dest;
 
     char acc = 0;
     int s0p = sp-1;                          // to zero base
 
     int k=0;
-    int cp, cx, c0; //, cs;  // Not used
+    int cp, cx, c0, cs;
 
     int i = 0;
     while(i < bit_len && k < max_len)
@@ -108,8 +111,8 @@ int AIS_Bitstring::GetStr(int sp, int bit_len, char *dest, int max_len)
             acc  = acc << 1;
             cp = (s0p + i) / 6;
             cx = bitbytes[cp];        // what if cp >= byte_length?
-//            cs = 5 - ((s0p + i) % 6);  // Not used
-            c0 = (cx >> (5 - ((s0p + i) % 6))) & 1;
+            cs = 5 - ((s0p + i) % 6);
+            c0 = (cx >> cs) & 1;
             acc |= c0;
 
             i++;
@@ -124,12 +127,6 @@ int AIS_Bitstring::GetStr(int sp, int bit_len, char *dest, int max_len)
 
     temp_str[k] = 0;
 
-    int copy_len = wxMin((int)strlen(temp_str), max_len);
-    strncpy(dest, temp_str, copy_len);
-    dest[k] = 0;
-
-    delete [] temp_str;
-
-    return copy_len;
+    return k;
 }
 

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -22,7 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *                                                                         *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -149,9 +148,9 @@ unsigned char SENTENCE::ComputeChecksum( void ) const
    int index = 1; // Skip over the $ at the begining of the sentence
 
    while( index < string_length    &&
-         Sentence[ index ] != '*' &&
-         Sentence[ index ] != CARRIAGE_RETURN &&
-         Sentence[ index ] != LINE_FEED )
+       Sentence[ index ] != '*' &&
+       Sentence[ index ] != CARRIAGE_RETURN &&
+       Sentence[ index ] != LINE_FEED )
    {
        checksum_value ^= (char)Sentence[ index ];
          index++;
@@ -167,10 +166,11 @@ double SENTENCE::Double( int field_number ) const
             return (NAN);
 
       wxCharBuffer abuf = Field( field_number).ToUTF8();
-      if( !abuf.data() || abuf.length() == 0 )                            // badly formed sentence?
+      if( !abuf.data() )                            // badly formed sentence?
         return (NAN);
-
+      
       return( ::atof( abuf.data() ));
+      
 }
 
 
@@ -498,20 +498,19 @@ const SENTENCE& SENTENCE::operator += ( double value )
 
 SENTENCE& SENTENCE::Add ( double value, int precision )
 {
-    //   ASSERT_VALID( this );
-    
+//   ASSERT_VALID( this );
+
     wxString temp_string;
     wxString s_Precision;
-    
+
     s_Precision.Printf(_T("%c.%if"), '%', precision );
     temp_string.Printf( s_Precision, value );
-    
+
     Sentence += _T(",");
     Sentence += temp_string;
-    
+
     return( *this );
 }
-
 const SENTENCE& SENTENCE::operator += ( COMMUNICATIONS_MODE mode )
 {
 //   ASSERT_VALID( this );

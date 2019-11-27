@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  CPL - Common Portability Library
  * Purpose:  Convenience functions.
@@ -49,10 +49,8 @@
 #endif
 
 /* Define if you have the ANSI C header files.  */
-#ifndef __WXOSX__
 #ifndef STDC_HEADERS
 #  define STDC_HEADERS
-#endif
 #endif
 
 /* Define if you have the <fcntl.h> header file.  */
@@ -70,10 +68,10 @@
 #define HAVE_LOCALE_H 1
 
 /* Define to 1 if you have the `localtime_r' function. */
-#ifdef __WXOSX__
-#define HAVE_LOCALTIME_R 1
-#else
+#ifndef __WXOSX__
 #undef HAVE_LOCALTIME_R
+#else
+#define HAVE_LOCALTIME_R 1
 #endif
 
 #undef HAVE_DLFCN_H

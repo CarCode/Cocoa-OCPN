@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Authors:  David Register
@@ -30,28 +30,30 @@
 #endif //precompiled headers
 
 #include <wx/tokenzr.h>
-#include "wx/progdlg.h"
 
 #include <stdint.h>
 
-#if defined( __UNIX__ ) && !defined(__WXOSX__)  // high resolution stopwatch for profiling
+//  #ifndef __WXOSX__
+
+#if defined  __UNIX__   // &&  !defined(__WXOSX__)  // high resolution stopwatch for profiling
 class OCPNStopWatch
 {
 public:
     OCPNStopWatch() { Reset(); }
     void Reset() { clock_gettime(CLOCK_REALTIME, &tp); }
-    
+
     double GetTime() {
         timespec tp_end;
         clock_gettime(CLOCK_REALTIME, &tp_end);
         return (tp_end.tv_sec - tp.tv_sec) * 1.e3 + (tp_end.tv_nsec - tp.tv_nsec) / 1.e6;
     }
-    
+
 private:
     timespec tp;
 };
 #endif
 
+//  #endif
 
 #if defined(__OCPN__ANDROID__)
 #include "androidUTIL.h"
@@ -83,7 +85,7 @@ private:
 #include "tcmgr.h"
 #include "compass.h"
 #include "FontMgr.h"
-//#include "mipmap/mipmap.h"  // Still not used
+#include "mipmap/mipmap.h"
 #include "chartimg.h"
 #include "Track.h"
 
@@ -114,7 +116,6 @@ extern "C" void glOrthof(float left,  float right,  float bottom,  float top,  f
 #endif
 
 extern bool GetMemoryStatus(int *mem_total, int *mem_used);
-extern wxString CompressedCachePath(wxString path);
 
 #ifndef GL_DEPTH_STENCIL_ATTACHMENT
 #define GL_DEPTH_STENCIL_ATTACHMENT       0x821A
@@ -123,7 +124,6 @@ extern wxString CompressedCachePath(wxString path);
 extern ChartCanvas *cc1;
 extern s52plib *ps52plib;
 extern bool g_bopengl;
-extern int g_GPU_MemSize;
 extern bool g_bDebugOGL;
 extern bool g_bShowFPS;
 extern bool g_bSoftwareGL;
@@ -135,6 +135,8 @@ extern bool             g_bShowChartBar;
 extern Piano           *g_Piano;
 extern ocpnCompass         *g_Compass;
 extern ChartStack *pCurrentStack;
+extern glTextureManager   *g_glTextureManager;
+extern bool             b_inCompressAllCharts;
 
 GLenum       g_texture_rectangle_format;
 
@@ -145,6 +147,7 @@ extern ColorScheme global_color_scheme;
 extern bool g_bquiting;
 extern ThumbWin         *pthumbwin;
 extern bool             g_bDisplayGrid;
+extern int g_mipmap_max_level;
 
 extern double           gLat, gLon, gCog, gSog, gHdt;
 
@@ -152,13 +155,6 @@ extern int              g_OwnShipIconType;
 extern double           g_ownship_predictor_minutes;
 extern double           g_ownship_HDTpredictor_miles;
 
-extern double           g_n_ownship_length_meters;
-extern double           g_n_ownship_beam_meters;
-
-extern double           gLat, gLon, gCog, gSog, gHdt;
-
-extern int              g_OwnShipIconType;
-extern double           g_ownship_predictor_minutes;
 extern double           g_n_ownship_length_meters;
 extern double           g_n_ownship_beam_meters;
 
@@ -183,7 +179,6 @@ extern bool             g_fog_overzoom;
 extern double           g_overzoom_emphasis_base;
 extern bool             g_oz_vector_scale;
 extern TCMgr            *ptcmgr;
-extern int              g_nCPUCount;
 
 
 ocpnGLOptions g_GLOptions;
@@ -214,6 +209,9 @@ PFNGLBINDBUFFERPROC                 s_glBindBuffer;
 PFNGLBUFFERDATAPROC                 s_glBufferData;
 PFNGLDELETEBUFFERSPROC              s_glDeleteBuffers;
 
+typedef void (APIENTRYP PFNGLGETBUFFERPARAMETERIV) (GLenum target, GLenum value, GLint *data);
+PFNGLGETBUFFERPARAMETERIV s_glGetBufferParameteriv;
+
 #include <wx/arrimpl.cpp>
 //WX_DEFINE_OBJARRAY( ArrayOfTexDescriptors );
 
@@ -227,426 +225,11 @@ double          g_gl_ms_per_frame;
 int g_tile_size;
 int g_uncompressed_tile_size;
 
-extern wxProgressDialog *pprog;
-extern bool b_skipout;
-extern wxSize pprog_size;
-extern int pprog_count;
-extern int pprog_threads;
-
-//#if defined(__MSVC__) && !defined(ocpnUSE_GLES) /* this compiler doesn't support vla */
-//const
-//#endif
-int g_mipmap_max_level = 4;
-
 bool glChartCanvas::s_b_useScissorTest;
 bool glChartCanvas::s_b_useStencil;
 bool glChartCanvas::s_b_useStencilAP;
-bool glChartCanvas::s_b_UploadFullMipmaps;
 //static int s_nquickbind;
 
-long populate_tt_total, mipmap_tt_total, hwmipmap_tt_total, upload_tt_total;
-long uploadcomp_tt_total, downloadcomp_tt_total, decompcomp_tt_total, readcomp_tt_total, writecomp_tt_total;
-
-
-OCPN_CompressProgressEvent::OCPN_CompressProgressEvent(wxEventType commandType, int id)
-:wxEvent(id, commandType)
-{
-}
-
-OCPN_CompressProgressEvent::~OCPN_CompressProgressEvent()
-{
-}
-
-wxEvent* OCPN_CompressProgressEvent::Clone() const
-{
-    OCPN_CompressProgressEvent *newevent=new OCPN_CompressProgressEvent(*this);
-    newevent->m_string=this->m_string;
-    newevent->count=this->count;
-    newevent->thread=this->thread;
-    return newevent;
-}
-
-
-
-bool CompressChart(wxThread *pThread, ChartBase *pchart, wxString CompressedCacheFilePath, wxString filename,
-                   wxEvtHandler *pMessageTarget, const wxString &msg, int thread)
-{
-    bool ret = true;
-    ChartBaseBSB *pBSBChart = dynamic_cast<ChartBaseBSB*>( pchart );
-//    int max_compressed_size = LZ4_COMPRESSBOUND(g_tile_size);  // Not used
-
-    if(pBSBChart) {
-
-        glTexFactory *tex_fact = new glTexFactory(pchart, g_raster_format);
-
-        int size_X = pBSBChart->GetSize_X();
-        int size_Y = pBSBChart->GetSize_Y();
-
-        int tex_dim = g_GLOptions.m_iTextureDimension;
-
-        int nx_tex = ceil( (float)size_X / tex_dim );
-        int ny_tex = ceil( (float)size_Y / tex_dim );
-
-        int nd = 0;
-        int nt = ny_tex * nx_tex;
-
-        wxRect rect;
-        rect.y = 0;
-        for( int y = 0; y < ny_tex; y++ ) {
-            rect.height = tex_dim;
-            rect.x = 0;
-            bool b_compressed = false;
-            for( int x = 0; x < nx_tex; x++ ) {
-                rect.width = tex_dim;
-
-                bool b_needCompress = false;
-                for(int level = 0; level < g_mipmap_max_level + 1; level++ ) {
-                    if(!tex_fact->IsLevelInCache( level, rect, global_color_scheme )){
-                        b_needCompress = true;
-                        break;
-                    }
-                }
-
-                if(b_needCompress){
-                    b_compressed = true;
-                    tex_fact->DoImmediateFullCompress(rect);
-                    tex_fact->UpdateCacheAllLevels( rect, global_color_scheme );
-                }
-
-                //      Free all possible memory
-                tex_fact->DeleteAllTextures();
-                tex_fact->DeleteAllDescriptors();
-
-                if(b_skipout){
-                    ret = false;
-                    goto skipout;
-                }
-
-                nd++;
-                rect.x += rect.width;
-
-                if( pThread && thread == 0)
-                    pThread->Sleep(1);
-            }
-
-
-
-            if(pMessageTarget && (b_compressed || y == 0)){
-                wxString m1;
-                m1.Printf(_T("%04d/%04d \n"), b_compressed?nd:0, nt);
-                m1 += msg;
-
-                std::string stlstring = std::string(m1.mb_str());
-                OCPN_CompressProgressEvent Nevent(wxEVT_OCPN_COMPRESSPROGRESS, 0);
-                Nevent.m_string = stlstring;
-                Nevent.thread = thread;
-
-                pMessageTarget->AddPendingEvent(Nevent);
-
-                if(!pThread)
-                    ::wxYield();
-
-            }
-
-            rect.y += rect.height;
-        }
-skipout:
-        delete tex_fact;
-    }
-    return ret;
-}    
-
-
-class CompressedCacheWorkerThread : public wxThread
-{
-public:
-    CompressedCacheWorkerThread(ChartBase *pc, wxString CCFP, wxString fn, wxString msg, int thread)
-        : wxThread(wxTHREAD_JOINABLE), pchart(pc), CompressedCacheFilePath(CCFP), filename(fn),
-        m_msg(msg), m_thread(thread)
-        { Create(); }
-
-    void *Entry() {
-        CompressChart(this, pchart, CompressedCacheFilePath, filename, cc1, m_msg, m_thread);
-        return 0;
-    }
-
-    ChartBase *pchart;
-    wxString CompressedCacheFilePath;
-    wxString filename;
-    wxString m_msg;
-    int m_thread;
-};
-
-static double chart_dist(int index)
-{
-    double d;
-    float  clon;
-    float  clat;
-    const ChartTableEntry &cte = ChartData->GetChartTableEntry(index);
-    // if the chart contains ownship position set the distance to 0
-    if (cte.GetBBox().Contains( gLat, gLon ))
-        d = 0.;
-    else {
-        // find the nearest edge
-        double t;
-        clon = (cte.GetLonMax() + cte.GetLonMin())/2;
-        d = DistGreatCircle(cte.GetLatMax(), clon, gLat, gLon);
-        t = DistGreatCircle(cte.GetLatMin(), clon, gLat, gLon);
-        if (t < d)
-            d = t;
-        
-        clat = (cte.GetLatMax() + cte.GetLatMin())/2;
-        t = DistGreatCircle(clat, cte.GetLonMin(), gLat, gLon);
-        if (t < d)
-            d = t;
-        t = DistGreatCircle(clat, cte.GetLonMax(), gLat, gLon);
-        if (t < d)
-            d = t;
-    }
-    return d;
-}
-
-WX_DEFINE_SORTED_ARRAY_INT(int, MySortedArrayInt);
-int CompareInts(int n1, int n2)
-{
-    double d1 = chart_dist(n1);
-    double d2 = chart_dist(n2);
-    return (int)(d1 - d2);
-}
-
-MySortedArrayInt idx_sorted_by_distance(CompareInts);
-
-class compress_target
-{
-public:
-    wxString chart_path;
-    double distance;
-};
-
-WX_DECLARE_OBJARRAY(compress_target, ArrayOfCompressTargets);
-WX_DEFINE_OBJARRAY(ArrayOfCompressTargets);
-
-#include <wx/arrimpl.cpp>
-
-
-
-void BuildCompressedCache()
-{
-
-    idx_sorted_by_distance.Clear();
-
-    // Building the cache may take a long time....
-    // Be a little smarter.
-    // Build a sorted array of chart database indices, sorted on distance from the ownship currently.
-    // This way, a user may build a few charts textures for immediate use, then "skip" out on the rest until later.
-    int count = 0;
-    for(int i = 0; i<ChartData->GetChartTableEntries(); i++) {
-        /* skip if not kap */
-        const ChartTableEntry &cte = ChartData->GetChartTableEntry(i);
-        ChartTypeEnum chart_type = (ChartTypeEnum)cte.GetChartType();
-        if(chart_type != CHART_TYPE_KAP)
-            continue;
-
-        wxString CompressedCacheFilePath = CompressedCachePath(ChartData->GetDBChartFileName(i));
-        wxFileName fn(CompressedCacheFilePath);
-//        if(fn.FileExists()) /* skip if file exists */
-//            continue;
-
-        idx_sorted_by_distance.Add(i);
-
-        count++;
-    }
-
-
-    if(count == 0)
-        return;
-
-    wxLogMessage(wxString::Format(_T("BuildCompressedCache() count = %d"), count ));
-
-    b_inCompressAllCharts = true;
-
-    //  Build another array of sorted compression targets.
-    //  We need to do this, as the chart table will not be invariant
-    //  after the compression threads start, so our index array will be invalid.
-
-    ArrayOfCompressTargets ct_array;
-    for(unsigned int j = 0; j<idx_sorted_by_distance.GetCount(); j++) {
-
-        int i = idx_sorted_by_distance.Item(j);
-
-        const ChartTableEntry &cte = ChartData->GetChartTableEntry(i);
-        double distance = chart_dist(i);
-
-        wxString filename(cte.GetpFullPath(), wxConvUTF8);
-
-        compress_target *pct = new compress_target;
-        pct->distance = distance;
-        pct->chart_path = filename;
-
-        ct_array.Add(pct);
-    }
-
-    /* do we compress in ram using builtin libraries, or do we
-       upload to the gpu and use the driver to perform compression?
-       we have builtin libraries for DXT1 (squish) and ETC1 (etcpak)
-       FXT1 must use the driver, ETC1 cannot, and DXT1 can use the driver
-       but the results are worse and don't compress well.
-
-    additionally, if we use the driver we must stay single threaded in this thread
-    (unless we created multiple opengl contexts), but with with our own libraries,
-    we can use multiple threads to take advantage of multiple cores */
-
-    bool ramonly = false;
-
-    if(g_raster_format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT)
-        ramonly = true;
-#ifdef ocpnUSE_GLES
-    if(g_raster_format == GL_ETC1_RGB8_OES)
-        ramonly = true;
-#endif
-
-    int thread_count = 0;
-    pprog_threads = 0;
-    CompressedCacheWorkerThread **workers = NULL;
-    if(ramonly) {
-        if(g_nCPUCount > 0)
-            thread_count = g_nCPUCount;
-        else
-            thread_count = wxThread::GetCPUCount();
-        
-        if (thread_count < 1) {
-            // obviously there's a least one CPU!
-            thread_count = 1;
-        }
-        pprog_threads = thread_count;
-
-        workers = new CompressedCacheWorkerThread*[thread_count];
-        for(int t = 0; t < thread_count; t++)
-            workers[t] = NULL;
-    }
-
-    long style = wxPD_SMOOTH | wxPD_ELAPSED_TIME | wxPD_ESTIMATED_TIME | wxPD_REMAINING_TIME | wxPD_CAN_SKIP;
-//    style |= wxSTAY_ON_TOP;
-
-    wxString msg0;
-#ifdef __WXQT__
-    msg0 = _T("Very longgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg top line ");
-#endif
-    for(int i=0 ; i < thread_count ; i++){msg0 += _T("line\n\n");}
-    pprog = new wxProgressDialog(_("OpenCPN Compressed Cache Update"), msg0, count+1, GetOCPNCanvasWindow(), style );
-    
-    wxSize csz = GetOCPNCanvasWindow()->GetClientSize();
-    if(csz.x < 600 || csz.y < 600){
-        wxFont *qFont = GetOCPNScaledFont(_("Dialog"));         // to get type, weight, etc...
-        wxFont *sFont = FontMgr::Get().FindOrCreateFont( 10, qFont->GetFamily(), qFont->GetStyle(), qFont->GetWeight());
-        pprog->SetFont( *sFont );
-    }
-
-
-    //    Make sure the dialog is big enough to be readable
-    pprog->Hide();
-    wxSize sz = pprog->GetSize();
-    sz.x = csz.x * 8 / 10;
-    sz.y += thread_count * 40;          // allow for multiline messages
-    pprog->SetSize( sz );
-    pprog_size = sz;
-
-    pprog->Centre();
-    pprog->Show();
-    pprog->Raise();
-
-    b_skipout = false;
-
-    //  Create/connect a dynamic event handler slot for messages from the worker threads
-    cc1->Connect( wxEVT_OCPN_COMPRESSPROGRESS,
-             (wxObjectEventFunction) (wxEventFunction) &ChartCanvas::OnEvtCompressProgress );
-
-    // build cached compressed charts
-    pprog_count = 0;
-    for(unsigned int j = 0; j<ct_array.GetCount(); j++) {
-        if(b_skipout)
-            break;
-
-        wxString filename = ct_array.Item(j).chart_path;
-        wxString CompressedCacheFilePath = CompressedCachePath(filename);
-        double distance = ct_array.Item(j).distance;
-
-        ChartBase *pchart = ChartData->OpenChartFromDBAndLock( filename, FULL_INIT );
-        if(!pchart) /* probably a corrupt chart */
-            continue;
-
-        // bad things if more than one texfactory for a chart
-        cc1->PurgeGLCanvasChartCache( pchart, true );
-
-        bool skip = false;
-        wxString msg;
-        msg.Printf( _("Distance from Ownship:  %4.0f NMi"), distance);
-        if(pprog_size.x > 600){
-            msg += _T("   Chart:");
-            msg += pchart->GetFullPath();
-        }
-
-        if(!ramonly)
-            pprog->Update(pprog_count, _T("0000/0000 \n") + msg, &skip );
-
-        if(skip)
-            break;
-
-        if(ramonly) {
-            wxString msgt;
-            int t = 0;
-            for(;;) {
-                if(!workers[t]) {
-                    workers[t] = new CompressedCacheWorkerThread
-                        (pchart, CompressedCacheFilePath, filename, msg, t);
-
-                    msgt.Printf( _T("Starting chart compression on thread %d, count %d  "), t, pprog_count);
-                    msgt += filename;
-                    wxLogMessage(msgt);
-                    workers[t]->Run();
-                    break;
-                } else if(!workers[t]->IsAlive()) {
-                    workers[t]->Wait();
-                    msgt.Printf( _T("Finished chart compression on thread %d  "), t);
-                    wxLogMessage(msgt);
-                    ChartData->DeleteCacheChart(workers[t]->pchart);
-                    delete workers[t];
-                    workers[t] = NULL;
-                    pprog_count++;
-                }
-                if(++t == thread_count) {
-                    ::wxYield();                // allow ChartCanvas main message loop to run 
-                    wxThread::Sleep(1); /* wait for a worker to finish */
-                    t = 0;
-                }
-            }
-        } else {
-            bool bcontinue = CompressChart(NULL, pchart, CompressedCacheFilePath, filename, cc1, msg, 0);
-            ChartData->DeleteCacheChart(pchart);
-            if(!bcontinue)
-                break;
-        }
-    }
-
-    /* wait for workers to finish, and clean up after then */
-    if(ramonly) {
-        for(int t = 0; t<thread_count; t++) {
-            if(workers[t]) {
-                workers[t]->Wait();
-                ChartData->DeleteCacheChart(workers[t]->pchart);
-                delete workers[t];
-            }
-        }
-        delete [] workers;
-    }
-
-    cc1->Disconnect( wxEVT_OCPN_COMPRESSPROGRESS,
-                  (wxObjectEventFunction) (wxEventFunction) &ChartCanvas::OnEvtCompressProgress );
-
-    pprog->Destroy();
-
-    b_inCompressAllCharts = false;
-}
 
 /* for debugging */
 static void print_region(OCPNRegion &Region)
@@ -710,7 +293,7 @@ GenericFunction ocpnGetProcAddress(const char *addr, const char *extension)
     if(!extension)
         return (GenericFunction)NULL;
 
-#ifndef __OCPN__ANDROID__
+#ifndef __OCPN__ANDROID__    
     //  If this is an extension entry point,
     //  We look explicitly in the extensions list to confirm
     //  that the request is actually supported.
@@ -723,12 +306,12 @@ GenericFunction ocpnGetProcAddress(const char *addr, const char *extension)
         s_extension.Prepend(s_family);
 
         s_extension.Prepend(_T("GL_"));
-
+        
         if(!QueryExtension( s_extension.mb_str() )){
             return (GenericFunction)NULL;
         }
     }
-#endif
+#endif    
 
     snprintf(addrbuf, sizeof addrbuf, "%s%s", addr, extension);
     return (GenericFunction)systemGetProcAddress(addrbuf);
@@ -750,7 +333,7 @@ static void GetglEntryPoints( void )
 #else
     const char *extensions[] = {"OES", 0 };
 #endif
-    
+
     unsigned int n_ext = (sizeof extensions) / (sizeof *extensions);
 
     unsigned int i;
@@ -792,6 +375,9 @@ static void GetglEntryPoints( void )
         s_glDeleteBuffers = (PFNGLDELETEBUFFERSPROC)
             ocpnGetProcAddress( "glDeleteBuffers", extensions[i]);
 
+        s_glGetBufferParameteriv = (PFNGLGETBUFFERPARAMETERIV)
+        ocpnGetProcAddress( "glGetBufferParameteriv", extensions[i]);
+
     }
 
     //  Retry VBO entry points with all extensions
@@ -809,7 +395,7 @@ static void GetglEntryPoints( void )
     }
 
 
-#ifndef __OCPN__ANDROID__
+#ifndef __OCPN__ANDROID__            
     for(i=0; i<n_ext; i++) {
         if((s_glCompressedTexImage2D = (PFNGLCOMPRESSEDTEXIMAGE2DPROC)
             ocpnGetProcAddress( "glCompressedTexImage2D", extensions[i])))
@@ -820,8 +406,7 @@ static void GetglEntryPoints( void )
         s_glGetCompressedTexImage = (PFNGLGETCOMPRESSEDTEXIMAGEPROC)
             ocpnGetProcAddress( "glGetCompressedTexImage", extensions[i]);
     }
-
-#else
+#else    
     s_glCompressedTexImage2D =          glCompressedTexImage2D;
 #endif
 
@@ -869,17 +454,14 @@ glChartCanvas::glChartCanvas( wxWindow *parent ) :
     m_bpinchGuard = false;
 
     b_timeGL = true;
-
     m_last_render_time = -1;
-
-    m_prevMemUsed = 0;
 
     m_LRUtime = 0;
 
     m_tideTex = 0;
     m_currentTex = 0;
 
-#ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__    
     //  Create/connect a dynamic event handler slot for gesture events
     Connect( wxEVT_QT_PANGESTURE,
              (wxObjectEventFunction) (wxEventFunction) &glChartCanvas::OnEvtPanGesture, NULL, this );
@@ -888,18 +470,18 @@ glChartCanvas::glChartCanvas( wxWindow *parent ) :
              (wxObjectEventFunction) (wxEventFunction) &glChartCanvas::OnEvtPinchGesture, NULL, this );
 
     Connect( wxEVT_TIMER,
-            (wxObjectEventFunction) (wxEventFunction) &glChartCanvas::onGestureTimerEvent, NULL, this );
+             (wxObjectEventFunction) (wxEventFunction) &glChartCanvas::onGestureTimerEvent, NULL, this );
 
     m_gestureEeventTimer.SetOwner( this, GESTURE_EVENT_TIMER );
     m_bgestureGuard = false;
 
-#endif
+#endif    
 
+    g_glTextureManager = new glTextureManager;
 }
 
 glChartCanvas::~glChartCanvas()
 {
-    ClearAllRasterTextures();
 }
 
 void glChartCanvas::FlushFBO( void ) 
@@ -908,22 +490,6 @@ void glChartCanvas::FlushFBO( void )
         BuildFBO();
 }
 
-
-void glChartCanvas::ClearAllRasterTextures( void )
-{
-
-    //     Delete all the TexFactory instances
-    ChartPathHashTexfactType::iterator itt;
-    for( itt = m_chart_texfactory_hash.begin(); itt != m_chart_texfactory_hash.end(); ++itt ) {
-        glTexFactory *ptf = itt->second;
-
-        delete ptf;
-    }
-    m_chart_texfactory_hash.clear();
-
-    g_tex_mem_used = 0;
-
-}
 
 void glChartCanvas::OnActivate( wxActivateEvent& event )
 {
@@ -939,9 +505,9 @@ void glChartCanvas::OnSize( wxSizeEvent& event )
     }
 
     // this is also necessary to update the context on some platforms
-#if !wxCHECK_VERSION(3,0,0)
+#if !wxCHECK_VERSION(3,0,0)    
     wxGLCanvas::OnSize( event );
-#else  // Kees Verruijt, 8.12.2015
+#else
     // OnSize can be called with a different OpenGL context (when a plugin uses a different GL context).
     if( m_bsetup && m_pcontext && IsShown()) {
         SetCurrent(*m_pcontext);
@@ -964,17 +530,17 @@ void glChartCanvas::MouseEvent( wxMouseEvent& event )
         return;
 
 #ifndef __OCPN__ANDROID__
-    if(cc1->MouseEventSetup( event ))
+    if(cc1->MouseEventSetup( event )) 
         return;                 // handled, no further action required
 
     bool obj_proc = cc1->MouseEventProcessObjects( event );
 
-    if(!obj_proc && !cc1->singleClickEventIsValid )
+    if(!obj_proc && !cc1->singleClickEventIsValid ) 
         cc1->MouseEventProcessCanvas( event );
 
     if( !g_btouch )
         cc1->SetCanvasCursor( event );
-
+ 
 #else
 
     if(m_bgestureGuard){
@@ -988,10 +554,11 @@ void glChartCanvas::MouseEvent( wxMouseEvent& event )
             return;                 // handled, no further action required
         }
     }
-    
+
     cc1->MouseEventProcessObjects( event );
 
-#endif
+
+#endif    
 
 }
 
@@ -1024,10 +591,10 @@ void glChartCanvas::BuildFBO( )
         m_cache_tex_y = wxMax(rb_x, rb_y);
         m_cache_tex_x = wxMax(2048, m_cache_tex_x);
         m_cache_tex_y = wxMax(2048, m_cache_tex_y);
-    } else {
+    } else {            
         m_cache_tex_x = GetSize().x;
         m_cache_tex_y = GetSize().y;
-    }
+    }        
 
     ( s_glGenFramebuffers )( 1, &m_fb0 );
     ( s_glGenRenderbuffers )( 1, &m_renderbuffer );
@@ -1043,6 +610,7 @@ void glChartCanvas::BuildFBO( )
         glTexParameteri( g_texture_rectangle_format, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
         glTexImage2D( g_texture_rectangle_format, 0, GL_RGBA, m_cache_tex_x, m_cache_tex_y, 0, GL_RGBA,
                       GL_UNSIGNED_BYTE, NULL );
+
     }
 
     ( s_glBindRenderbuffer )( GL_RENDERBUFFER_EXT, m_renderbuffer );
@@ -1060,12 +628,12 @@ void glChartCanvas::BuildFBO( )
     } else {
 
         GLenum depth_format = GL_DEPTH_COMPONENT24;
-        
+
         //      Need to check for availability of 24 bit depth buffer extension on GLES
 #ifdef ocpnUSE_GLES
         if( !QueryExtension("GL_OES_depth24") )
             depth_format = GL_DEPTH_COMPONENT16;
-#endif
+#endif        
 
         // initialize depth renderbuffer
         ( s_glRenderbufferStorage )( GL_RENDERBUFFER_EXT, depth_format,
@@ -1131,10 +699,10 @@ void glChartCanvas::SetupOpenGL()
 
     const GLubyte *ext_str = glGetString(GL_EXTENSIONS);
     m_extensions = wxString( (const char *)ext_str, wxConvUTF8 );
-#ifdef __WXQT__
+#ifdef __WXQT__    
     wxLogMessage( _T("OpenGL extensions available: ") );
     wxLogMessage(m_extensions );
-#endif
+#endif    
 
     //  Set the minimum line width
     GLint parms[2];
@@ -1149,7 +717,7 @@ void glChartCanvas::SetupOpenGL()
     if( m_renderer.Upper().Find( _T("MESA") ) != wxNOT_FOUND ){
         GLfloat parf;
         glGetFloatv(  GL_SMOOTH_LINE_WIDTH_GRANULARITY, &parf );
-        
+
         g_GLMinSymbolLineWidth = wxMax(((float)parms[0] + parf), 1);
     }
 
@@ -1176,11 +744,11 @@ void glChartCanvas::SetupOpenGL()
         bad_stencil_code = true;
 
     //XP  Generic Needs stencil buffer
-    //W7 Generic Needs stencil buffer
-    //      if( GetRendererString().Find( _T("Generic") ) != wxNOT_FOUND ) {
-    //          wxLogMessage( _T("OpenGL-> Detected Generic renderer, disabling stencil buffer") );
-    //          bad_stencil_code = true;
-    //      }
+    //W7 Generic Needs stencil buffer    
+//      if( GetRendererString().Find( _T("Generic") ) != wxNOT_FOUND ) {
+//          wxLogMessage( _T("OpenGL-> Detected Generic renderer, disabling stencil buffer") );
+//          bad_stencil_code = true;
+//      }
 
     //          Seen with intel processor on VBox Win7
     if( GetRendererString().Find( _T("Chromium") ) != wxNOT_FOUND ) {
@@ -1210,17 +778,17 @@ void glChartCanvas::SetupOpenGL()
                                    g_texture_rectangle_format));
 
 #ifndef __OCPN__ANDROID__
-    //      We require certain extensions to support FBO rendering
-    if(!g_texture_rectangle_format)
-        m_b_DisableFBO = true;
+        //      We require certain extensions to support FBO rendering
+        if(!g_texture_rectangle_format)
+            m_b_DisableFBO = true;
 
-    if(!QueryExtension( "GL_EXT_framebuffer_object" ))
-        m_b_DisableFBO = true;
+        if(!QueryExtension( "GL_EXT_framebuffer_object" ))
+            m_b_DisableFBO = true;
 #endif
-
+ 
 #ifdef __OCPN__ANDROID__
-    g_texture_rectangle_format = GL_TEXTURE_2D;
-    //        m_b_DisableFBO = false;
+            g_texture_rectangle_format = GL_TEXTURE_2D;
+//        m_b_DisableFBO = false;
 #endif
 
 //    if(b_timeGL)
@@ -1266,6 +834,8 @@ void glChartCanvas::SetupOpenGL()
 #ifdef __OCPN__ANDROID__
     g_b_EnableVBO = false;
 #endif
+
+///    g_b_EnableVBO = false;
 
     if(g_b_EnableVBO)
         wxLogMessage( _T("OpenGL-> Using Vertexbuffer Objects") );
@@ -1370,143 +940,8 @@ void glChartCanvas::SetupOpenGL()
     /* we upload non-aligned memory */
     glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 
-#ifdef ocpnUSE_GLES /* gles requires all levels */
-    int max_level = 0;
-    int tex_dim = g_GLOptions.m_iTextureDimension;
-    for(int dim=tex_dim; dim>0; dim/=2)
-        max_level++;
-    g_mipmap_max_level = max_level - 1;
-
-#ifdef __OCPN__ANDROID__    
-    g_mipmap_max_level = 0;
-#endif
-
-#endif
-
+    MipMap_ResolveRoutines();
     SetupCompression();
-
-    //  Some platforms under some conditions, require a full set of MipMaps, from 0
-    s_b_UploadFullMipmaps = false;
-#ifdef __WXOSX__    
-    s_b_UploadFullMipmaps = true;
-#endif    
-
-#ifdef __WXMSW__    
-    if(g_GLOptions.m_bTextureCompression && (g_raster_format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT) )
-        s_b_UploadFullMipmaps = true;
-#endif    
-
-    //  Parallels virtual machine on Mac host.    
-    if( GetRendererString().Find( _T("Parallels") ) != wxNOT_FOUND )
-        s_b_UploadFullMipmaps = true;
-
-#ifdef ocpnUSE_GLES /* gles requires a complete set of mipmaps starting at 0 */
-    s_b_UploadFullMipmaps = true;
-#endif
-
-
-    if(!g_bGLexpert)
-        g_GLOptions.m_bUseAcceleratedPanning =  !m_b_DisableFBO && m_b_BuiltFBO;
-
-    //  Windows GDI Generic OpenGL driver is non-compliant in mipmap support.
-    //  It needs the entire mipmap pyramid to be complete, and fully uploaded.
-#ifdef __WXMSW__
-    if( GetRendererString().Find( _T("Generic") ) != wxNOT_FOUND ) {
-        s_b_UploadFullMipmaps = true;
-        int max_level = 0;
-        int tex_dim = g_GLOptions.m_iTextureDimension;
-        for(int dim=tex_dim; dim>0; dim/=2)
-            max_level++;
-        g_mipmap_max_level = max_level - 1;
-    }
-#endif
-
-}
-
-void glChartCanvas::SetupCompression()
-{
-    int dim = g_GLOptions.m_iTextureDimension;
-
-#ifdef __WXMSW__
-    if(!::IsProcessorFeaturePresent( PF_XMMI64_INSTRUCTIONS_AVAILABLE )){
-        wxLogMessage( _("OpenGL-> SSE2 Instruction set not available") );
-        goto no_compression;
-    }
-#endif
-
-    g_uncompressed_tile_size = dim*dim*3;
-    if(g_GLOptions.m_bTextureCompression) {
-
-        g_raster_format = GL_RGB;
-        
-        // On GLES, we prefer OES_ETC1 compression, if available
-#ifdef ocpnUSE_GLES
-        if(QueryExtension("GL_OES_compressed_ETC1_RGB8_texture") && s_glCompressedTexImage2D) {
-            g_raster_format = GL_ETC1_RGB8_OES;
-            
-            wxLogMessage( _("OpenGL-> Using oes etc1 compression") );
-        }
-#endif
-        
-        if(GL_RGB == g_raster_format){
-        /* because s3tc is patented, many foss drivers disable
-           support by default, however the extension dxt1 allows
-           us to load this texture type which is enough because we
-           compress in software using libsquish for superior quality anyway */
-
-            if((QueryExtension("GL_EXT_texture_compression_s3tc") ||
-                QueryExtension("GL_EXT_texture_compression_dxt1")) &&
-               s_glCompressedTexImage2D) {
-                /* buggy opensource nvidia driver, renders incorrectly,
-                 workaround is to use format with alpha... */
-                if(GetRendererString().Find( _T("Gallium") ) != wxNOT_FOUND &&
-                   GetRendererString().Find( _T("NV") ) != wxNOT_FOUND )
-                    g_raster_format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-                else
-                    g_raster_format = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
-
-                wxLogMessage( _("OpenGL-> Using s3tc dxt1 compression") );
-            } else if(QueryExtension("GL_3DFX_texture_compression_FXT1") &&
-                      s_glCompressedTexImage2D && s_glGetCompressedTexImage) {
-                g_raster_format = GL_COMPRESSED_RGB_FXT1_3DFX;
-
-                wxLogMessage( _("OpenGL-> Using 3dfx fxt1 compression") );
-            } else {
-                wxLogMessage( _("OpenGL-> No Useable compression format found") );
-                goto no_compression;
-            }
-        }
-
-#ifdef ocpnUSE_GLES /* gles doesn't have GetTexLevelParameter */
-        g_tile_size = 512*512/2; /* 4bpp */
-#else
-        /* determine compressed size of a level 0 single tile */
-        GLuint texture;
-        glGenTextures( 1, &texture );
-        glBindTexture( GL_TEXTURE_2D, texture );
-        glTexImage2D( GL_TEXTURE_2D, 0, g_raster_format, dim, dim,
-                      0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
-        glGetTexLevelParameteriv(GL_TEXTURE_2D, 0,
-                                 GL_TEXTURE_COMPRESSED_IMAGE_SIZE, &g_tile_size);
-        glDeleteTextures(1, &texture);
-#endif
-
-        /* disable texture compression if the tile size is 0 */
-        if(g_tile_size == 0)
-            goto no_compression;
-
-        wxLogMessage( wxString::Format( _T("OpenGL-> Compressed tile size: %dkb (%d:1)"),
-                                        g_tile_size / 1024,
-                                        g_uncompressed_tile_size / g_tile_size));
-    } else
-    if(!g_GLOptions.m_bTextureCompression) {
-no_compression:
-        g_GLOptions.m_bTextureCompression = false;
-
-        g_tile_size = g_uncompressed_tile_size;
-        g_raster_format = GL_RGB;
-        wxLogMessage( wxString::Format( _T("OpenGL-> Not Using compression")));
-    }
 
     wxString lwmsg;
     lwmsg.Printf(_T("OpenGL-> Minimum cartographic line width: %4.1f"), g_GLMinCartographicLineWidth);
@@ -1519,8 +954,104 @@ no_compression:
 #ifdef __OCPN__ANDROID__
     m_benableFog = false;
     m_benableVScale = false;
+#endif    
+
+    if(!g_bGLexpert)
+        g_GLOptions.m_bUseAcceleratedPanning =  !m_b_DisableFBO && m_b_BuiltFBO;
+
+    if(1)     // for now upload all levels
+    {
+        int max_level = 0;
+        int tex_dim = g_GLOptions.m_iTextureDimension;
+        for(int dim=tex_dim; dim>0; dim/=2)
+            max_level++;
+        g_mipmap_max_level = max_level - 1;
+    }   
+}
+
+void glChartCanvas::SetupCompression()
+{
+    int dim = g_GLOptions.m_iTextureDimension;
+
+#ifdef __WXMSW__    
+    if(!::IsProcessorFeaturePresent( PF_XMMI64_INSTRUCTIONS_AVAILABLE )) {
+        wxLogMessage( _("OpenGL-> SSE2 Instruction set not available") );
+        goto no_compression;
+    }
 #endif
 
+    g_uncompressed_tile_size = dim*dim*4; // stored as 32bpp in vram
+    if(!g_GLOptions.m_bTextureCompression)
+        goto no_compression;
+
+    g_raster_format = GL_RGB;
+
+    // On GLES, we prefer OES_ETC1 compression, if available
+#ifdef ocpnUSE_GLES
+    if(QueryExtension("GL_OES_compressed_ETC1_RGB8_texture") && s_glCompressedTexImage2D) {
+        g_raster_format = GL_ETC1_RGB8_OES;
+
+        wxLogMessage( _("OpenGL-> Using oes etc1 compression") );
+    }
+#endif
+
+    if(GL_RGB == g_raster_format) {
+        /* because s3tc is patented, many foss drivers disable
+           support by default, however the extension dxt1 allows
+           us to load this texture type which is enough because we
+           compress in software using libsquish for superior quality anyway */
+
+        if((QueryExtension("GL_EXT_texture_compression_s3tc") ||
+            QueryExtension("GL_EXT_texture_compression_dxt1")) &&
+           s_glCompressedTexImage2D) {
+            /* buggy opensource nvidia driver, renders incorrectly,
+               workaround is to use format with alpha... */
+            if(GetRendererString().Find( _T("Gallium") ) != wxNOT_FOUND &&
+               GetRendererString().Find( _T("NV") ) != wxNOT_FOUND )
+                g_raster_format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+            else
+                g_raster_format = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+
+            wxLogMessage( _("OpenGL-> Using s3tc dxt1 compression") );
+        } else if(QueryExtension("GL_3DFX_texture_compression_FXT1") &&
+                  s_glCompressedTexImage2D && s_glGetCompressedTexImage) {
+            g_raster_format = GL_COMPRESSED_RGB_FXT1_3DFX;
+
+            wxLogMessage( _("OpenGL-> Using 3dfx fxt1 compression") );
+        } else {
+            wxLogMessage( _("OpenGL-> No Useable compression format found") );
+            goto no_compression;
+        }
+    }
+
+#ifdef ocpnUSE_GLES /* gles doesn't have GetTexLevelParameter */
+    g_tile_size = 512*512/2; /* 4bpp */
+#else
+    /* determine compressed size of a level 0 single tile */
+    GLuint texture;
+    glGenTextures( 1, &texture );
+    glBindTexture( GL_TEXTURE_2D, texture );
+    glTexImage2D( GL_TEXTURE_2D, 0, g_raster_format, dim, dim,
+                  0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
+    glGetTexLevelParameteriv(GL_TEXTURE_2D, 0,
+                             GL_TEXTURE_COMPRESSED_IMAGE_SIZE, &g_tile_size);
+    glDeleteTextures(1, &texture);
+#endif
+
+    /* disable texture compression if the tile size is 0 */
+    if(g_tile_size == 0)
+        goto no_compression;
+
+    wxLogMessage( wxString::Format( _T("OpenGL-> Compressed tile size: %dkb (%d:1)"),
+                                    g_tile_size / 1024,
+                                    g_uncompressed_tile_size / g_tile_size));
+    return;
+
+no_compression:
+    g_GLOptions.m_bTextureCompression = false;
+
+    g_tile_size = g_uncompressed_tile_size;
+    wxLogMessage( wxString::Format( _T("OpenGL-> Not Using compression")));    
 }
 
 void glChartCanvas::OnPaint( wxPaintEvent &event )
@@ -1554,7 +1085,6 @@ void glChartCanvas::OnPaint( wxPaintEvent &event )
     //  Paint updates may have been externally disabled (temporarily, to avoid Yield() recursion performance loss)
     if(!m_b_paint_enable)
         return;
-
     //      Recursion test, sometimes seen on GTK systems when wxBusyCursor is activated
     if( m_in_glpaint ) return;
     m_in_glpaint++;
@@ -1563,40 +1093,13 @@ void glChartCanvas::OnPaint( wxPaintEvent &event )
 
 }
 
-bool glChartCanvas::PurgeChartTextures( ChartBase *pc, bool b_purge_factory )
-{
-    //    Look for the texture factory for this chart
-    ChartPathHashTexfactType::iterator ittf = m_chart_texfactory_hash.find( pc->GetFullPath() );
-
-    //    Found ?
-    if( ittf != m_chart_texfactory_hash.end() ) {
-        glTexFactory *pTexFact = ittf->second;
-
-        if(pTexFact){
-
-            if( b_purge_factory){
-                m_chart_texfactory_hash.erase(ittf);                // This chart  becoming invalid
-
-                delete pTexFact;
-            }      
-
-            return true;
-        }
-        else {
-            m_chart_texfactory_hash.erase(ittf);
-            return false;
-        }
-    }
-    else
-        return false;
-}
 
 //   These routines allow reusable coordinates
 bool glChartCanvas::HasNormalizedViewPort(const ViewPort &vp)
 {
     return vp.m_projection_type == PROJECTION_MERCATOR ||
-    vp.m_projection_type == PROJECTION_POLAR ||
-    vp.m_projection_type == PROJECTION_EQUIRECTANGULAR;
+        vp.m_projection_type == PROJECTION_POLAR ||
+        vp.m_projection_type == PROJECTION_EQUIRECTANGULAR;
 }
 
 /* adjust the opengl transformation matrix so that
@@ -1612,25 +1115,28 @@ void glChartCanvas::MultMatrixViewPort(ViewPort &vp, float lat, float lon)
     wxPoint2DDouble point;
 
     switch(vp.m_projection_type) {
-        case PROJECTION_MERCATOR:
-        case PROJECTION_EQUIRECTANGULAR:
-            cc1->GetDoubleCanvasPointPixVP(vp, lat, lon, &point);
-            glTranslated(point.m_x, point.m_y, 0);
-            glScaled(vp.view_scale_ppm/NORM_FACTOR, vp.view_scale_ppm/NORM_FACTOR, 1);
-            break;
-            
-        case PROJECTION_POLAR:
-            cc1->GetDoubleCanvasPointPixVP(vp, vp.clat > 0 ? 90 : -90, vp.clon, &point);
-            glTranslated(point.m_x, point.m_y, 0);
-            glRotatef(vp.clon - lon, 0, 0, vp.clat);
-            glScalef(vp.view_scale_ppm/NORM_FACTOR, vp.view_scale_ppm/NORM_FACTOR, 1);
-            glTranslatef(-vp.pix_width/2, -vp.pix_height/2, 0);
-            break;
-            
-        default:
-            printf("ERROR: Unhandled projection\n");
+    case PROJECTION_MERCATOR:
+    case PROJECTION_EQUIRECTANGULAR:
+#ifndef __WXOSX__  //  noch nicht
+    case PROJECTION_WEB_MERCATOR:
+#endif
+        cc1->GetDoubleCanvasPointPixVP(vp, lat, lon, &point);
+        glTranslated(point.m_x, point.m_y, 0);
+        glScaled(vp.view_scale_ppm/NORM_FACTOR, vp.view_scale_ppm/NORM_FACTOR, 1);
+        break;
+
+    case PROJECTION_POLAR:
+        cc1->GetDoubleCanvasPointPixVP(vp, vp.clat > 0 ? 90 : -90, vp.clon, &point);
+        glTranslated(point.m_x, point.m_y, 0);
+        glRotatef(vp.clon - lon, 0, 0, vp.clat);
+        glScalef(vp.view_scale_ppm/NORM_FACTOR, vp.view_scale_ppm/NORM_FACTOR, 1);
+        glTranslatef(-vp.pix_width/2, -vp.pix_height/2, 0);
+        break;
+
+    default:
+        printf("ERROR: Unhandled projection\n");
     }
-    
+
     double rotation = vp.rotation;
 
     if (rotation)
@@ -1642,19 +1148,22 @@ ViewPort glChartCanvas::NormalizedViewPort(const ViewPort &vp, float lat, float 
     ViewPort cvp = vp;
 
     switch(vp.m_projection_type) {
-        case PROJECTION_MERCATOR:
-        case PROJECTION_EQUIRECTANGULAR:
-            cvp.clat = lat;
-            break;
-            
-        case PROJECTION_POLAR:
-            cvp.clat = vp.clat > 0 ? 90 : -90; // either north or south polar
-            break;
-            
-        default:
-            printf("ERROR: Unhandled projection\n");
+    case PROJECTION_MERCATOR:
+    case PROJECTION_EQUIRECTANGULAR:
+#ifndef __WXOSX__
+    case PROJECTION_WEB_MERCATOR:
+#endif
+        cvp.clat = lat;
+        break;
+
+    case PROJECTION_POLAR:
+        cvp.clat = vp.clat > 0 ? 90 : -90; // either north or south polar
+        break;
+
+    default:
+        printf("ERROR: Unhandled projection\n");
     }
-    
+
     cvp.clon = lon;
     cvp.view_scale_ppm = NORM_FACTOR;
     cvp.rotation = cvp.skew = 0;
@@ -1663,24 +1172,31 @@ ViewPort glChartCanvas::NormalizedViewPort(const ViewPort &vp, float lat, float 
 
 bool glChartCanvas::CanClipViewport(const ViewPort &vp)
 {
+#ifndef __WXOSX__  // noch nicht
+    return vp.m_projection_type == PROJECTION_MERCATOR || vp.m_projection_type == PROJECTION_WEB_MERCATOR ||
+#else
     return vp.m_projection_type == PROJECTION_MERCATOR ||
-    vp.m_projection_type == PROJECTION_EQUIRECTANGULAR;
+#endif
+        vp.m_projection_type == PROJECTION_EQUIRECTANGULAR;
 }
 
 ViewPort glChartCanvas::ClippedViewport(const ViewPort &vp, const LLRegion &region)
 {
     if(!CanClipViewport(vp))
         return vp;
-    
+
     ViewPort cvp = vp;
     LLBBox bbox = region.GetBox();
-    
+
+    if(!bbox.GetValid())
+        return vp;
+
     /* region.GetBox() will always try to give coordinates from -180 to 180 but in
-     the case where the viewport crosses the IDL, we actually want the clipped viewport
-     to use coordinates outside this range to ensure the logic in the various rendering
-     routines works the same here (with accelerated panning) as it does without, so we
-     can adjust the coordinates here */
-    
+       the case where the viewport crosses the IDL, we actually want the clipped viewport
+       to use coordinates outside this range to ensure the logic in the various rendering
+       routines works the same here (with accelerated panning) as it does without, so we
+       can adjust the coordinates here */
+
     if(bbox.GetMaxLon() < cvp.GetBBox().GetMinLon()) {
         bbox.Set(bbox.GetMinLat(), bbox.GetMinLon() + 360,
                  bbox.GetMaxLat(), bbox.GetMaxLon() + 360);
@@ -1698,17 +1214,21 @@ ViewPort glChartCanvas::ClippedViewport(const ViewPort &vp, const LLRegion &regi
 
 void glChartCanvas::DrawStaticRoutesTracksAndWaypoints( ViewPort &vp )
 {
+    if(!cc1->m_bShowNavobjects)
+        return;
     ocpnDC dc(*this);
 
     for(wxTrackListNode *node = pTrackList->GetFirst();
         node; node = node->GetNext() ) {
         Track *pTrackDraw = node->GetData();
-        /* defer rendering active tracks until later */
+            /* defer rendering active tracks until later */
         ActiveTrack *pActiveTrack = dynamic_cast<ActiveTrack *>(pTrackDraw);
         if(pActiveTrack && pActiveTrack->IsRunning() )
             continue;
-
-        pTrackDraw->Draw( dc, vp, vp.GetBBox() );
+#ifdef __WXOSX__
+        if(pTrackDraw)
+#endif
+        pTrackDraw->Draw( dc, vp, vp.GetBBox() );  // pTrackDraw ist Null ???
     }
 
     for(wxRouteListNode *node = pRouteList->GetFirst();
@@ -1717,6 +1237,7 @@ void glChartCanvas::DrawStaticRoutesTracksAndWaypoints( ViewPort &vp )
 
         if( !pRouteDraw )
             continue;
+
         /* defer rendering active routes until later */
         if( pRouteDraw->IsActive() || pRouteDraw->IsSelected() )
             continue;
@@ -1724,9 +1245,10 @@ void glChartCanvas::DrawStaticRoutesTracksAndWaypoints( ViewPort &vp )
         /* defer rendering routes being edited until later */
         if( pRouteDraw->m_bIsBeingEdited )
             continue;
-        
+
         pRouteDraw->DrawGL( vp );
     }
+
     /* Waypoints not drawn as part of routes, and not being edited */
     if( vp.GetBBox().GetValid() && pWayPointMan) {
         for(wxRoutePointListNode *pnode = pWayPointMan->GetWaypointList()->GetFirst(); pnode; pnode = pnode->GetNext() ) {
@@ -1745,7 +1267,7 @@ void glChartCanvas::DrawDynamicRoutesTracksAndWaypoints( ViewPort &vp )
     for(wxTrackListNode *node = pTrackList->GetFirst();
         node; node = node->GetNext() ) {
         Track *pTrackDraw = node->GetData();
-        /* defer rendering active tracks until later */
+            /* defer rendering active tracks until later */
         ActiveTrack *pActiveTrack = dynamic_cast<ActiveTrack *>(pTrackDraw);
         if(pActiveTrack && pActiveTrack->IsRunning() )
             pTrackDraw->Draw( dc, vp, vp.GetBBox() );     // We need Track::Draw() to dynamically render last (ownship) point.
@@ -1753,7 +1275,7 @@ void glChartCanvas::DrawDynamicRoutesTracksAndWaypoints( ViewPort &vp )
 
     for(wxRouteListNode *node = pRouteList->GetFirst(); node; node = node->GetNext() ) {
         Route *pRouteDraw = node->GetData();
-        
+
         int drawit = 0;
         if( !pRouteDraw )
             continue;
@@ -1762,21 +1284,21 @@ void glChartCanvas::DrawDynamicRoutesTracksAndWaypoints( ViewPort &vp )
         if( pRouteDraw->IsActive() || pRouteDraw->IsSelected() )
             drawit++;
 
-
         /* Routes being edited */
         if( pRouteDraw->m_bIsBeingEdited )
             drawit++;
-        
+
         /* Routes Selected */
         if( pRouteDraw->IsSelected() )
             drawit++;
-        
+
         if(drawit) {
             const LLBBox &vp_box = vp.GetBBox(), &test_box = pRouteDraw->GetBBox();
             if(!vp_box.IntersectOut(test_box))
                 pRouteDraw->DrawGL( vp );
         }
     }
+
 
     /* Waypoints not drawn as part of routes, which are being edited right now */
     if( vp.GetBBox().GetValid() && pWayPointMan) {
@@ -1795,30 +1317,30 @@ static void GetLatLonCurveDist(const ViewPort &vp, float &lat_dist, float &lon_d
     // This really could use some more thought, and possibly split at different
     // intervals based on chart skew and other parameters to optimize performance
     switch(vp.m_projection_type) {
-        case PROJECTION_TRANSVERSE_MERCATOR:
-            lat_dist = 4,   lon_dist = 1;        break;
-        case PROJECTION_POLYCONIC:
-            lat_dist = 2,   lon_dist = 1;        break;
-        case PROJECTION_ORTHOGRAPHIC:
-            lat_dist = 2,   lon_dist = 2;        break;
-        case PROJECTION_POLAR:
-            lat_dist = 180, lon_dist = 1;        break;
-        case PROJECTION_STEREOGRAPHIC:
-        case PROJECTION_GNOMONIC:
-            lat_dist = 2, lon_dist = 1;          break;
-        case PROJECTION_EQUIRECTANGULAR:
-            // this is suboptimal because we don't care unless there is
-            // a change in both lat AND lon (skewed chart)
-            lat_dist = 2,   lon_dist = 360;      break;
-        default:
-            lat_dist = 180, lon_dist = 360;
+    case PROJECTION_TRANSVERSE_MERCATOR:
+        lat_dist = 4,   lon_dist = 1;        break;
+    case PROJECTION_POLYCONIC:
+        lat_dist = 2,   lon_dist = 1;        break;
+    case PROJECTION_ORTHOGRAPHIC:
+        lat_dist = 2,   lon_dist = 2;        break;
+    case PROJECTION_POLAR:
+        lat_dist = 180, lon_dist = 1;        break;
+    case PROJECTION_STEREOGRAPHIC:
+    case PROJECTION_GNOMONIC:
+        lat_dist = 2, lon_dist = 1;          break;
+    case PROJECTION_EQUIRECTANGULAR:
+        // this is suboptimal because we don't care unless there is
+        // a change in both lat AND lon (skewed chart)
+        lat_dist = 2,   lon_dist = 360;      break;
+    default:
+        lat_dist = 180, lon_dist = 360;
     }
 }
 
 void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
 {
     if( ChartData->GetDBChartType( dbIndex ) == CHART_TYPE_PLUGIN &&
-       !ChartData->IsChartAvailable( dbIndex ) )
+        !ChartData->IsChartAvailable( dbIndex ) )
         return;
 
     /* quick bounds check */
@@ -1850,8 +1372,8 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
     else
         color = GetGlobalColor( _T ( "UINFR" ) );
 
-//    glEnable( GL_BLEND );
-    glEnable( GL_LINE_SMOOTH );
+    if( g_GLOptions.m_GLLineSmoothing )
+        glEnable( GL_LINE_SMOOTH );
 
     glColor3ub(color.Red(), color.Green(), color.Blue());
     glLineWidth( g_GLMinSymbolLineWidth );
@@ -1872,11 +1394,13 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
         double sml[2];
         float lastplylat = 0.0;
         float lastplylon = 0.0;
+        // modulo is undefined for zero (compiler can use a div operation)
+        int modulo = (nPly == 0)?1:nPly;
         for( int i = 0; i < nPly+1; i++ ) {
             if(nAuxPlyEntries)
-                ChartData->GetDBAuxPlyPoint( dbIndex, i%nPly, j, &plylat, &plylon );
+                ChartData->GetDBAuxPlyPoint( dbIndex, i % modulo, j, &plylat, &plylon );
             else
-                ChartData->GetDBPlyPoint( dbIndex, i%nPly, &plylat, &plylon );
+                ChartData->GetDBPlyPoint( dbIndex, i % modulo, &plylat, &plylon );
 
             plylon += lon_bias;
 
@@ -1884,7 +1408,7 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
                 lastplylon -= 360;
             else if(lastplylon - plylon < -180)
                 lastplylon += 360;
-            
+
             int splits;
             if(i==0)
                 splits = 1;
@@ -1893,7 +1417,7 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
                 int lon_splits = floor(fabs(plylon-lastplylon) / lon_dist);
                 splits = wxMax(lat_splits, lon_splits) + 1;
             }
-            
+
             double smj[2];
             if(splits != 1) {
                 // must perform border interpolation in mercator space as this is what the charts use
@@ -1902,9 +1426,8 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
                     toSM(lastplylat, lastplylon, 0, 0, sml+0, sml+1);
             }
 
-            for(double c=0; c<splits; c++)
-            {
-                double lat=0.0, lon=0.0;
+            for(double c=0; c<splits; c++) {
+                double lat, lon;
                 if(c == splits - 1)
                     lat = plylat, lon = plylon;
                 else {
@@ -1914,7 +1437,7 @@ void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
                     double d = (double)(c+1) / splits;
                     fromSM(d*smj[0] + (1-d)*sml[0], d*smj[1] + (1-d)*sml[1], 0, 0, &lat, &lon);
                 }
-                
+
                 wxPoint2DDouble s;
                 cc1->GetDoubleCanvasPointPix( lat, lon, &s );
                 if(!wxIsNaN(s.m_x)) {
@@ -1952,7 +1475,7 @@ void glChartCanvas::GridDraw( )
 
     // TODO: make minor grid work all the time
     bool minorgrid = fabs( vp.rotation ) < 0.0001 &&
-    vp.m_projection_type == PROJECTION_MERCATOR;
+        vp.m_projection_type == PROJECTION_MERCATOR;
 
     double nlat, elon, slat, wlon;
     float lat, lon;
@@ -1961,7 +1484,7 @@ void glChartCanvas::GridDraw( )
 #ifdef __WXOSX__
     wxColour GridColor = GetGlobalColor( _T ( "CHBLK" ) );
 #else
-    wxColour GridColor = GetGlobalColor( _T ( "SNDG1" ) );
+    wxColour GridColor = GetGlobalColor( _T ( "SNDG1" ) );        
 #endif
 #ifdef __WXOSX__
     if(!m_gridfont.IsBuilt()){
@@ -1969,7 +1492,7 @@ void glChartCanvas::GridDraw( )
         wxFont font = *dFont;
         font.SetPointSize(18);
         font.SetWeight(wxFONTWEIGHT_NORMAL);
-        
+
         m_gridfont.Build(font);
     }
 #else
@@ -1978,11 +1501,10 @@ void glChartCanvas::GridDraw( )
         wxFont font = *dFont;
         font.SetPointSize(8);
         font.SetWeight(wxFONTWEIGHT_NORMAL);
-        
+
         m_gridfont.Build(font);
     }
 #endif
-
     w = vp.pix_width;
     h = vp.pix_height;
 
@@ -1995,17 +1517,23 @@ void glChartCanvas::GridDraw( )
     // calculate distance between latitude grid lines
     CalcGridSpacing( vp.view_scale_ppm, gridlatMajor, gridlatMinor );
     CalcGridSpacing( vp.view_scale_ppm, gridlonMajor, gridlonMinor );
-    
-    
+
+
     // if it is known the grid has straight lines it's a bit faster
     bool straight_latitudes =
-    vp.m_projection_type == PROJECTION_MERCATOR ||
-    vp.m_projection_type == PROJECTION_EQUIRECTANGULAR;
+        vp.m_projection_type == PROJECTION_MERCATOR ||
+#ifndef __WXOSX__  // noch nicht
+        vp.m_projection_type == PROJECTION_WEB_MERCATOR ||
+#endif
+        vp.m_projection_type == PROJECTION_EQUIRECTANGULAR;
     bool straight_longitudes =
-    vp.m_projection_type == PROJECTION_MERCATOR ||
-    vp.m_projection_type == PROJECTION_POLAR ||
-    vp.m_projection_type == PROJECTION_EQUIRECTANGULAR;
-    
+        vp.m_projection_type == PROJECTION_MERCATOR ||
+#ifndef __WXOSX__  // noch nicht
+        vp.m_projection_type == PROJECTION_WEB_MERCATOR ||
+#endif
+        vp.m_projection_type == PROJECTION_POLAR ||
+        vp.m_projection_type == PROJECTION_EQUIRECTANGULAR;
+
     double latmargin;
     if(straight_latitudes)
         latmargin = 0;
@@ -2014,7 +1542,7 @@ void glChartCanvas::GridDraw( )
 
     slat = wxMax(slat, -90 + latmargin);
     nlat = wxMin(nlat,  90 - latmargin);
-    
+
     float startlat = ceil( slat / gridlatMajor ) * gridlatMajor;
     float startlon = ceil( wlon / gridlonMajor ) * gridlonMajor;
     float curved_step = wxMin(sqrt(5e-3 / vp.view_scale_ppm), 3);
@@ -2029,7 +1557,7 @@ void glChartCanvas::GridDraw( )
 
     glLineWidth( g_GLMinSymbolLineWidth );
 
-    // First draw the grid then the text
+    // First draw the grid then tphe text
     glBegin(GL_LINES);
 
     // calculate position of first major latitude grid line
@@ -2040,16 +1568,17 @@ void glChartCanvas::GridDraw( )
     for(lat = startlat; lat < nlat; lat += gridlatMajor) {
         wxPoint2DDouble r, s;
         s.m_x = NAN;
+
         for(lon = wlon; lon < elon+lon_step/2; lon += lon_step) {
             cc1->GetDoubleCanvasPointPix( lat, lon, &r );
             if(!wxIsNaN(s.m_x) && !wxIsNaN(r.m_x)) {
                 glVertex2d(s.m_x, s.m_y);
                 glVertex2d(r.m_x, r.m_y);
             }
-
             s = r;
         }
     }
+
     if(minorgrid) {
         // draw minor latitude grid lines
         for(lat = ceil( slat / gridlatMinor ) * gridlatMinor; lat < nlat; lat += gridlatMinor) {
@@ -2063,6 +1592,7 @@ void glChartCanvas::GridDraw( )
             lat = lat + gridlatMinor;
         }
     }
+
     // draw major longitude grid lines
     float lat_step = nlat - slat;
     if(!straight_longitudes)
@@ -2073,15 +1603,16 @@ void glChartCanvas::GridDraw( )
         s.m_x = NAN;
         for(lat = slat; lat < nlat+lat_step/2; lat+=lat_step) {
             cc1->GetDoubleCanvasPointPix( lat, lon, &r );
-            
+
             if(!wxIsNaN(s.m_x) && !wxIsNaN(r.m_x)) {
                 glVertex2d(s.m_x, s.m_y);
                 glVertex2d(r.m_x, r.m_y);
-
+                
             }
             s = r;
         }
     }
+
     if(minorgrid) {
         // draw minor longitude grid lines
         for(lon = ceil( wlon / gridlonMinor ) * gridlonMinor; lon < elon; lon += gridlonMinor) {
@@ -2137,7 +1668,7 @@ void glChartCanvas::GridDraw( )
                 double y = y1 + (lat1 - lat) * (y2 - y1) / (lat1 - lat2);
 
                 cc1->GetDoubleCanvasPointPix( lat, lon1 + (y1 - y) * (lon2 - lon1) / (y1 - y2), &r);
-                
+
                 if(fabs(y - y1) < fabs(y - y2))
                     y1 = y;
                 else
@@ -2159,9 +1690,11 @@ void glChartCanvas::GridDraw( )
         }
     }
 
+
     for(lon = startlon; lon < elon; lon += gridlonMajor) {
         if( fabs( lon - wxRound( lon ) ) < 1e-5 )
             lon = wxRound( lon );
+
         wxPoint r, s;
         cc1->GetCanvasPointPix( nlat, lon, &r );
         cc1->GetCanvasPointPix( slat, lon, &s );
@@ -2175,7 +1708,7 @@ void glChartCanvas::GridDraw( )
         wxString st = CalcGridText( xlon, gridlonMajor, false );
         int ix;
         m_gridfont.GetTextExtent(st, &ix, 0);
-        
+
         if(straight_longitudes) {
             float x = -1, y = 0;
             x = (float)(r.x*s.y - s.x*r.y) / (s.y - r.y);
@@ -2189,26 +1722,26 @@ void glChartCanvas::GridDraw( )
             // iteratively attempt to find where the latitude line crosses x=0
             wxPoint2DDouble r;
             double x1, x2, lat1, lon1, lat2, lon2;
-            
+
             x1 = 0, x2 = vp.pix_width;
             double error = vp.pix_height, lasterror;
             do {
                 cc1->GetCanvasPixPoint(x1, 0, lat1, lon1);
                 cc1->GetCanvasPixPoint(x2, 0, lat2, lon2);
-                
+
                 double x = x1 + (lon1 - lon) * (x2 - x1) / (lon1 - lon2);
-                
+
                 cc1->GetDoubleCanvasPointPix( lat1 + (x1 - x) * (lat2 - lat1) / (x1 - x2), lon, &r);
-                
+
                 if(fabs(x - x1) < fabs(x - x2))
                     x1 = x;
                 else
                     x2 = x;
-                
+
                 lasterror = error;
                 error = fabs(r.m_y);
             } while(error > 1 && error < lasterror);
-            
+
             if(error < 1 && r.m_x >= 0 && r.m_x <= vp.pix_width - ix)
                 r.m_y = 0;
             else
@@ -2289,39 +1822,14 @@ void glChartCanvas::DrawEmboss( emboss_data *emboss  )
 void glChartCanvas::ShipDraw(ocpnDC& dc)
 {
     if( !cc1->GetVP().IsValid() ) return;
-    wxPoint lGPSPoint, lShipMidPoint, lPredPoint, lHeadPoint, GPSOffsetPixels(0,0);
-
-    double pred_lat, pred_lon;
-
-    int drawit = 0;
-    //    Is ship in Vpoint?
-    if( cc1->GetVP().GetBBox().Contains( gLat,  gLon ) )
-        drawit++;                             // yep
+    wxPoint lGPSPoint, lShipMidPoint, GPSOffsetPixels(0,0);
 
     //  COG/SOG may be undefined in NMEA data stream
-    float pCog = gCog;
-    if( wxIsNaN(pCog) )
-        pCog = 0.0;
-    float pSog = gSog;
-    if( wxIsNaN(pSog) )
-        pSog = 0.0;
-
-    ll_gc_ll( gLat, gLon, pCog, pSog * g_ownship_predictor_minutes / 60., &pred_lat, &pred_lon );
+    float pCog = wxIsNaN(gCog) ? 0 : gCog;
+    float pSog = wxIsNaN(gSog) ? 0 : gSog;
 
     cc1->GetCanvasPointPix( gLat, gLon, &lGPSPoint );
     lShipMidPoint = lGPSPoint;
-    cc1->GetCanvasPointPix( pred_lat, pred_lon, &lPredPoint );
-
-    float cog_rad = atan2f( (float) ( lPredPoint.y - lShipMidPoint.y ),
-                           (float) ( lPredPoint.x - lShipMidPoint.x ) );
-    cog_rad += (float)PI;
-
-    float lpp = sqrtf( powf( (float) (lPredPoint.x - lShipMidPoint.x), 2) +
-                      powf( (float) (lPredPoint.y - lShipMidPoint.y), 2) );
-    
-    //    Is predicted point in the VPoint?
-    if( cc1->GetVP().GetBBox().Contains( pred_lat,  pred_lon ) )
-        drawit++;      // yep
 
     //  Draw the icon rotated to the COG
     //  or to the Hdt if available
@@ -2340,253 +1848,265 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
     cc1->GetCanvasPointPix( osd_head_lat, osd_head_lon, &osd_head_point );
 
     float icon_rad = atan2f( (float) ( osd_head_point.y - lShipMidPoint.y ),
-                            (float) ( osd_head_point.x - lShipMidPoint.x ) );
+                             (float) ( osd_head_point.x - lShipMidPoint.x ) );
     icon_rad += (float)PI;
 
     if( pSog < 0.2 ) icon_rad = ( ( icon_hdt + 90. ) * PI / 180. ) + cc1->GetVP().rotation;
 
-    //    Calculate ownship Heading pointer as a predictor
-    double hdg_pred_lat, hdg_pred_lon;
-
-    ll_gc_ll( gLat, gLon, icon_hdt, g_ownship_HDTpredictor_miles, &hdg_pred_lat,
-             &hdg_pred_lon );
-
-    cc1->GetCanvasPointPix( hdg_pred_lat, hdg_pred_lon, &lHeadPoint );
-
-    //    Is head predicted point in the VPoint?
-    if( cc1->GetVP().GetBBox().Contains( hdg_pred_lat,  hdg_pred_lon ) )
-        drawit++;                     // yep
-
-    //    Should we draw the Head vector?
-    //    Compare the points lHeadPoint and lPredPoint
-    //    If they differ by more than n pixels, and the head vector is valid, then render the head vector
-
-    float ndelta_pix = 10.;
-    bool b_render_hdt = false;
-    if( !wxIsNaN( gHdt ) ) {
-        float dist = sqrtf( powf( (float) (lHeadPoint.x - lPredPoint.x), 2) +
-                           powf( (float) (lHeadPoint.y - lPredPoint.y), 2) );
-        if( dist > ndelta_pix && !wxIsNaN(gSog) )
-            b_render_hdt = true;
-    }
-
     //    Another draw test ,based on pixels, assuming the ship icon is a fixed nominal size
     //    and is just barely outside the viewport        ....
     wxBoundingBox bb_screen( 0, 0, cc1->GetVP().pix_width, cc1->GetVP().pix_height );
-    if( bb_screen.PointInBox( lShipMidPoint, 20 ) ) drawit++;
 
-    // And two more tests to catch the case where COG/HDG line crosses the screen,
-    // but ownship and pred point are both off
-    
-    LLBBox box;
-    box.SetFromSegment(gLon, gLat, pred_lon, pred_lat);
-    if( !cc1->GetVP().GetBBox().IntersectOut( box ) )
-        drawit++;
-    box.SetFromSegment(gLon, gLat, hdg_pred_lon, hdg_pred_lat);
-    if( !cc1->GetVP().GetBBox().IntersectOut(box))
-        drawit++;
+    // TODO: fix to include actual size of boat that will be rendered
+    int img_height = 0;
 
-    //    Do the draw if either the ship or prediction is within the current VPoint
-    if( !drawit )
-        return;
+    if( bb_screen.PointInBox( lShipMidPoint, 20 ) ) {
+        if( g_GLOptions.m_GLLineSmoothing )
+            glEnable( GL_LINE_SMOOTH );
+        if( g_GLOptions.m_GLPolygonSmoothing )
+            glEnable( GL_POLYGON_SMOOTH );
+        glEnableClientState(GL_VERTEX_ARRAY);
 
-    glEnable( GL_LINE_SMOOTH );
-    glEnable( GL_POLYGON_SMOOTH );
-    glEnableClientState(GL_VERTEX_ARRAY);
+        if( cc1->GetVP().chart_scale > 300000 )             // According to S52, this should be 50,000
+        {
+            float scale =  g_ChartScaleFactorExp;
 
-    int img_height;
+            const int v = 12;
+            // start with cross
+            float vertexes[4*v+8] = {-12, 0, 12, 0, 0, -12, 0, 12};
 
-    if( cc1->GetVP().chart_scale > 300000 )             // According to S52, this should be 50,000
-    {
-        float scale =  g_ChartScaleFactorExp;
+            // build two concentric circles
+            for( int i=0; i<2*v; i+=2) {
+                float a = i * (float)PI / v;
+                float s = sinf( a ), c = cosf( a );
+                vertexes[i+8] =  10 * s * scale;
+                vertexes[i+9] =  10 * c * scale;
+                vertexes[i+2*v+8] = 6 * s * scale;
+                vertexes[i+2*v+9] = 6 * c * scale;
+            }
 
-        const int v = 12;
-        // start with cross
-        float vertexes[4*v+8] = {-12, 0, 12, 0, 0, -12, 0, 12};
+            // apply translation
+            for( int i=0; i<4*v+8; i+=2) {
+                vertexes[i] += lShipMidPoint.x;
+                vertexes[i+1] += lShipMidPoint.y;
+            }
 
-        // build two concentric circles
-        for( int i=0; i<2*v; i+=2) {
-            float a = i * (float)PI / v;
-            float s = sinf( a ), c = cosf( a );
-            vertexes[i+8] =  10 * s * scale;
-            vertexes[i+9] =  10 * c * scale;
-            vertexes[i+2*v+8] = 6 * s * scale;
-            vertexes[i+2*v+9] = 6 * c * scale;
-        }
+            glVertexPointer(2, GL_FLOAT, 2*sizeof(GLfloat), vertexes);
 
-        // apply translation
-        for( int i=0; i<4*v+8; i+=2) {
-            vertexes[i] += lShipMidPoint.x;
-            vertexes[i+1] += lShipMidPoint.y;
-        }
+            wxColour c;
+            if( SHIP_NORMAL != cc1->m_ownship_state ) {
+                c = GetGlobalColor( _T ( "YELO1" ) );
 
-        glVertexPointer(2, GL_FLOAT, 2*sizeof(GLfloat), vertexes);
+                glColor4ub(c.Red(), c.Green(), c.Blue(), 255);
+                glDrawArrays(GL_TRIANGLE_FAN, 4, v);
+            }
 
-        wxColour c;
-        if( SHIP_NORMAL != cc1->m_ownship_state ) {
-            c = GetGlobalColor( _T ( "YELO1" ) );
-
+            glLineWidth( 2 );
+            c = cc1->PredColor();
             glColor4ub(c.Red(), c.Green(), c.Blue(), 255);
-            glDrawArrays(GL_TRIANGLE_FAN, 4, v);
-        }
 
-        glLineWidth( 2 );
-        c = cc1->PredColor();
-        glColor4ub(c.Red(), c.Green(), c.Blue(), 255);
+            glDrawArrays(GL_LINE_LOOP, 4, v);
+            glDrawArrays(GL_LINE_LOOP, 4+v, v);
 
-        glDrawArrays(GL_LINE_LOOP, 4, v);
-        glDrawArrays(GL_LINE_LOOP, 4+v, v);
+            glDrawArrays(GL_LINES, 0, 4);
 
-        glDrawArrays(GL_LINES, 0, 4);
+            img_height = 20;
+        } else {
+            int draw_color = SHIP_INVALID;
+            if( SHIP_NORMAL == cc1->m_ownship_state )
+                draw_color = SHIP_NORMAL;
+            else if( SHIP_LOWACCURACY == cc1->m_ownship_state )
+                draw_color = SHIP_LOWACCURACY;
 
-        img_height = 20;
-    } else {
-        int draw_color = SHIP_INVALID;
-        if( SHIP_NORMAL == cc1->m_ownship_state )
-            draw_color = SHIP_NORMAL;
-        else if( SHIP_LOWACCURACY == cc1->m_ownship_state )
-            draw_color = SHIP_LOWACCURACY;
+            if(!ownship_tex || (draw_color != ownship_color)) { /* initial run, create texture for ownship,
+                                                                 also needed at colorscheme changes (not implemented) */
 
-        if(!ownship_tex || (draw_color != ownship_color)) { /* initial run, create texture for ownship,
-                                                             also needed at colorscheme changes (not implemented) */
-            ownship_color = draw_color;
+                ownship_color = draw_color;
 
-            if(ownship_tex)
-                glDeleteTextures(1, &ownship_tex);
+                if(ownship_tex)
+                    glDeleteTextures(1, &ownship_tex);
 
-            glGenTextures( 1, &ownship_tex );
-            glBindTexture(GL_TEXTURE_2D, ownship_tex);
+                glGenTextures( 1, &ownship_tex );
+                glBindTexture(GL_TEXTURE_2D, ownship_tex);
 
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
-            wxImage image;
-            if(cc1->m_pos_image_user) {
-                switch (draw_color) {
+                wxImage image;
+                if(cc1->m_pos_image_user) {
+                    switch (draw_color) {
                     case SHIP_INVALID: image = *cc1->m_pos_image_user_grey; break;
                     case SHIP_NORMAL: image = *cc1->m_pos_image_user; break;
                     case SHIP_LOWACCURACY: image = *cc1->m_pos_image_user_yellow; break;
+                    }
                 }
-            }
-            else {
-                switch (draw_color) {
+                else {
+                    switch (draw_color) {
                     case SHIP_INVALID: image = *cc1->m_pos_image_grey; break;
                     case SHIP_NORMAL: image = *cc1->m_pos_image_red; break;
                     case SHIP_LOWACCURACY: image = *cc1->m_pos_image_yellow; break;
+                    }
                 }
+
+                int w = image.GetWidth(), h = image.GetHeight();
+                int glw = NextPow2(w), glh = NextPow2(h);
+                ownship_size = wxSize(w, h);
+                ownship_tex_size = wxSize(glw, glh);
+
+                unsigned char *d = image.GetData();
+                unsigned char *a = image.GetAlpha();
+                unsigned char *e = new unsigned char[4 * w * h];
+
+                if(d && e && a){
+                    for( int p = 0; p < w*h; p++ ) {
+                        e[4*p+0] = d[3*p+0];
+                        e[4*p+1] = d[3*p+1];
+                        e[4*p+2] = d[3*p+2];
+                        e[4*p+3] = a[p];
+                    }
+                }
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                             glw, glh, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0,
+                                w, h, GL_RGBA, GL_UNSIGNED_BYTE, e);
+                delete [] e;
             }
 
-            int w = image.GetWidth(), h = image.GetHeight();
-            int glw = NextPow2(w), glh = NextPow2(h);
-            ownship_size = wxSize(w, h);
-            ownship_tex_size = wxSize(glw, glh);
+            /* establish ship color */
+            if( cc1->m_pos_image_user )
+                glColor4ub(255, 255, 255, 255);
+            else if( SHIP_NORMAL == cc1->m_ownship_state )
+                glColor4ub(255, 0, 0, 255);
+            else if( SHIP_LOWACCURACY == cc1->m_ownship_state )
+                glColor4ub(255, 255, 0, 255);
+            else
+                glColor4ub(128, 128, 128, 255);
 
-            unsigned char *d = image.GetData();
-            unsigned char *a = image.GetAlpha();
-            unsigned char *e = new unsigned char[4 * w * h];
+            float scale_factor_y = 1.0;
+            float scale_factor_x = 1.0;
 
-            if(d && e && a){
-                for( int p = 0; p < w*h; p++ ) {
-                    e[4*p+0] = d[3*p+0];
-                    e[4*p+1] = d[3*p+1];
-                    e[4*p+2] = d[3*p+2];
-                    e[4*p+3] = a[p];
-                }
+            int ownShipWidth = 22; // Default values from s_ownship_icon
+            int ownShipLength= 84;
+            lShipMidPoint = lGPSPoint;
+
+            /* scaled ship? */
+            if( g_OwnShipIconType != 0 )
+                cc1->ComputeShipScaleFactor
+                (icon_hdt, ownShipWidth, ownShipLength, lShipMidPoint,
+                 GPSOffsetPixels, lGPSPoint, scale_factor_x, scale_factor_y);
+
+            glEnable(GL_BLEND);
+
+            glEnableClientState(GL_VERTEX_ARRAY);
+
+            int x = lShipMidPoint.x, y = lShipMidPoint.y;
+            glPushMatrix();
+            glTranslatef(x, y, 0);
+
+            float deg = 180/PI * ( icon_rad - PI/2 );
+            glRotatef(deg, 0, 0, 1);
+
+
+            // Scale the generic icon to ChartScaleFactor, slightly softened....
+            if((g_ChartScaleFactorExp > 1.0) && ( g_OwnShipIconType == 0 )){
+                scale_factor_x = (log(g_ChartScaleFactorExp) + 1.0) * 1.1;
+                scale_factor_y = (log(g_ChartScaleFactorExp) + 1.0) * 1.1;
             }
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-                         glw, glh, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0,
-                            w, h, GL_RGBA, GL_UNSIGNED_BYTE, e);
-            delete [] e;
+            // Set the size of the little circle showing the GPS reference position
+            // Set a default early, adjust later based on render type
+            float gps_circle_radius = 3.0;
+
+
+            if( g_OwnShipIconType == 0 ) { // Default Bitmap
+
+                glEnable(GL_TEXTURE_2D);
+                glBindTexture(GL_TEXTURE_2D, ownship_tex);
+                glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+                float nominal_ownship_size_pixels_y = 84;
+                float nominal_ownship_size_pixels_x = 22;
+
+                float h = nominal_ownship_size_pixels_y * scale_factor_y;
+                float w = nominal_ownship_size_pixels_x * scale_factor_x;
+
+                float u = (float)ownship_size.x/ownship_tex_size.x, v = (float)ownship_size.y/ownship_tex_size.y;
+
+                // tweak GPS reference point indicator size
+                gps_circle_radius = w / 5;
+
+                glScalef(scale_factor_x, scale_factor_y, 1);
+
+                glBegin(GL_QUADS);
+                glTexCoord2f(0, 0), glVertex2f(-w/2, -h/2);
+                glTexCoord2f(u, 0), glVertex2f(+w/2, -h/2);
+                glTexCoord2f(u, v), glVertex2f(+w/2, +h/2);
+                glTexCoord2f(0, v), glVertex2f(-w/2, +h/2);
+                glEnd();
+
+                glDisable(GL_TEXTURE_2D);
+            } else if( g_OwnShipIconType == 1 ) { // Scaled Bitmap
+
+                glEnable(GL_TEXTURE_2D);
+                glBindTexture(GL_TEXTURE_2D, ownship_tex);
+                glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+                float nominal_ownship_size_mm = cc1->m_display_size_mm / 44.0;
+                nominal_ownship_size_mm = wxMin(nominal_ownship_size_mm, 15.0);
+                nominal_ownship_size_mm = wxMax(nominal_ownship_size_mm, 7.0);
+
+                float nominal_ownship_size_pixels = wxMax(20.0, cc1->GetPixPerMM() * nominal_ownship_size_mm);             // nominal length, but not less than 20 pixel
+                float h = nominal_ownship_size_pixels * scale_factor_y;
+                float w = nominal_ownship_size_pixels * scale_factor_x * ownship_size.x / ownship_size.y ;
+                float glw = ownship_tex_size.x, glh = ownship_tex_size.y;
+                float u = ownship_size.x/glw, v = ownship_size.y/glh;
+
+                // tweak GPS reference point indicator size
+                gps_circle_radius = w / 5;
+
+                glBegin(GL_QUADS);
+                glTexCoord2f(0, 0), glVertex2f(-w/2, -h/2);
+                glTexCoord2f(u, 0), glVertex2f(+w/2, -h/2);
+                glTexCoord2f(u, v), glVertex2f(+w/2, +h/2);
+                glTexCoord2f(0, v), glVertex2f(-w/2, +h/2);
+                glEnd();
+
+                glDisable(GL_TEXTURE_2D);
+            } else if( g_OwnShipIconType == 2 ) { // Scaled Vector
+
+                static const GLint s_ownship_icon[] = { 5, -42, 11, -28, 11, 42, -11, 42,
+                    -11, -28, -5, -42, -11, 0, 11, 0,
+                    0, 42, 0, -42       };
+
+                glVertexPointer(2, GL_INT, 2*sizeof(GLint), s_ownship_icon);
+
+                glScalef(scale_factor_x, scale_factor_y, 1);
+                glDrawArrays(GL_POLYGON, 0, 6);
+
+                glColor4ub(0, 0, 0, 255);
+                glLineWidth(1);
+
+                glDrawArrays(GL_LINE_LOOP, 0, 6);
+                glDrawArrays(GL_LINES, 6, 4);
+            }
+            glPopMatrix();
+
+            img_height = ownShipLength * scale_factor_y;
+
+#if 1
+            //      Reference point, where the GPS antenna is
+            if( cc1->m_pos_image_user ) gps_circle_radius = 1;
+
+            float cx = lGPSPoint.x, cy = lGPSPoint.y;
+            wxPen ppPen1( GetGlobalColor( _T ( "UBLCK" ) ), 1, wxPENSTYLE_SOLID );
+            dc.SetPen( ppPen1 );
+            dc.SetBrush( wxBrush( GetGlobalColor( _T ( "UWHIT" ) ) ) );
+
+            dc.StrokeCircle(cx, cy, gps_circle_radius);
+
         }
-
-        /* establish ship color */
-        if( cc1->m_pos_image_user )
-            glColor4ub(255, 255, 255, 255);
-        else if( SHIP_NORMAL == cc1->m_ownship_state )
-            glColor4ub(255, 0, 0, 255);
-        else if( SHIP_LOWACCURACY == cc1->m_ownship_state )
-            glColor4ub(255, 255, 0, 255);
-        else
-            glColor4ub(128, 128, 128, 255);
-
-        float scale_factor_y = 1.0;
-        float scale_factor_x = 1.0;
-        int ownShipWidth = 22; // Default values from s_ownship_icon
-        int ownShipLength= 84;
-        lShipMidPoint = lGPSPoint;
-
-        if( g_n_ownship_beam_meters > 0.0 &&
-           g_n_ownship_length_meters > 0.0 &&
-           g_OwnShipIconType == 1 )
-        {
-            ownShipWidth = ownship_size.x;
-            ownShipLength= ownship_size.y;
-        }
-
-        /* scaled ship? */
-        if( g_OwnShipIconType != 0 )
-            cc1->ComputeShipScaleFactor
-            (icon_hdt, ownShipWidth, ownShipLength, lShipMidPoint,
-             GPSOffsetPixels, lGPSPoint, scale_factor_x, scale_factor_y);
-
-        glEnable(GL_BLEND);
-
-        glEnableClientState(GL_VERTEX_ARRAY);
-
-        int x = lShipMidPoint.x, y = lShipMidPoint.y;
-        glPushMatrix();
-        glTranslatef(x, y, 0);
-
-        float deg = 180/PI * ( icon_rad - PI/2 );
-        glRotatef(deg, 0, 0, 1);
-
-        // Scale the generic icon to ChartScaleFactor, slightly softened....
-        if((g_ChartScaleFactorExp > 1.0) && ( g_OwnShipIconType == 0 )){
-            scale_factor_x = (log(g_ChartScaleFactorExp) + 1.0) * 1.1;
-            scale_factor_y = (log(g_ChartScaleFactorExp) + 1.0) * 1.1;
-        }
-
-        glScalef(scale_factor_x, scale_factor_y, 1);
-
-        if( g_OwnShipIconType < 2 ) { // Bitmap
-
-            glEnable(GL_TEXTURE_2D);
-            glBindTexture(GL_TEXTURE_2D, ownship_tex);
-            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-            float glw = ownship_tex_size.x, glh = ownship_tex_size.y;
-            float u = ownship_size.x/glw, v = ownship_size.y/glh;
-            float w = ownship_size.x, h = ownship_size.y;
-
-            glBegin(GL_QUADS);
-            glTexCoord2f(0, 0), glVertex2f(-w/2, -h/2);
-            glTexCoord2f(u, 0), glVertex2f(+w/2, -h/2);
-            glTexCoord2f(u, v), glVertex2f(+w/2, +h/2);
-            glTexCoord2f(0, v), glVertex2f(-w/2, +h/2);
-            glEnd();
-
-            glDisable(GL_TEXTURE_2D);
-        } else if( g_OwnShipIconType == 2 ) { // Scaled Vector
-
-            static const GLint s_ownship_icon[] = { 5, -42, 11, -28, 11, 42, -11, 42,
-                -11, -28, -5, -42, -11, 0, 11, 0,
-                0, 42, 0, -42       };
-
-            glVertexPointer(2, GL_INT, 2*sizeof(GLint), s_ownship_icon);
-            glDrawArrays(GL_POLYGON, 0, 6);
-
-            glColor4ub(0, 0, 0, 255);
-            glLineWidth(1);
-
-            glDrawArrays(GL_LINE_LOOP, 0, 6);
-            glDrawArrays(GL_LINES, 6, 4);
-        }
-        glPopMatrix();
-
-        img_height = ownShipLength * scale_factor_y;
-
+#else
         //      Reference point, where the GPS antenna is
         int circle_rad = 3;
         if( cc1->m_pos_image_user ) circle_rad = 1;
@@ -2611,16 +2131,15 @@ void glChartCanvas::ShipDraw(ocpnDC& dc)
         glColor4ub(255, 255, 255, 255);
         glDrawArrays(GL_TRIANGLE_FAN, v, v);
     }
+#endif
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisable( GL_LINE_SMOOTH );
     glDisable( GL_POLYGON_SMOOTH );
     glDisable(GL_BLEND);
+}
 
-    cc1->ShipIndicatorsDraw(dc, lpp,  GPSOffsetPixels,
-                            lGPSPoint,  lHeadPoint,
-                            img_height, cog_rad,
-                            lPredPoint,  b_render_hdt, lShipMidPoint);
+cc1->ShipIndicatorsDraw(dc, img_height,  GPSOffsetPixels, lGPSPoint);
 }
 
 void glChartCanvas::DrawFloatingOverlayObjects( ocpnDC &dc )
@@ -2640,7 +2159,7 @@ void glChartCanvas::DrawFloatingOverlayObjects( ocpnDC &dc )
 
     if( g_pi_manager ) {
         g_pi_manager->SendViewPortToRequestingPlugIns( vp );
-        g_pi_manager->RenderAllGLCanvasOverlayPlugIns( NULL, vp );
+        g_pi_manager->RenderAllGLCanvasOverlayPlugIns( m_pcontext, vp );
     }
 
     // all functions called with cc1-> are still slow because they go through ocpndc
@@ -2667,24 +2186,24 @@ void glChartCanvas::DrawQuiting()
 {
     GLubyte pattern[8][8];
     for( int y = 0; y < 8; y++ )
-        for( int x = 0; x < 8; x++ )
+        for( int x = 0; x < 8; x++ ) 
             pattern[y][x] = (y == x) * 255;
-    
+
     glEnable( GL_BLEND );
     glEnable( GL_TEXTURE_2D );
     glBindTexture(GL_TEXTURE_2D, 0);
-    
+
     glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-    
+
     glTexImage2D( GL_TEXTURE_2D, 0, GL_ALPHA, 8, 8,
-                 0, GL_ALPHA, GL_UNSIGNED_BYTE, pattern );
+                  0, GL_ALPHA, GL_UNSIGNED_BYTE, pattern );
     glColor3f( 0, 0, 0 );
 
     float x = GetSize().x, y = GetSize().y;
     float u = x / 8, v = y / 8;
-    
+
     glBegin( GL_QUADS );
     glTexCoord2f(0, 0); glVertex2f( 0, 0 );
     glTexCoord2f(0, v); glVertex2f( 0, y );
@@ -2728,7 +2247,7 @@ void glChartCanvas::DrawCloseMessage(wxString msg)
         glEnable(GL_TEXTURE_2D);
         texfont.RenderString( msg, xp, yp);
         glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
+        glDisable(GL_BLEND);        
     }
 }
 
@@ -2754,7 +2273,7 @@ static void combineCallbackD(GLdouble coords[3],
 {
     double *vertex = new double[3];
     combine_work_data.push_back(vertex);
-    memcpy(vertex, coords, 3*(sizeof *coords));
+    memcpy(vertex, coords, 3*(sizeof *coords)); 
     *dataOut = vertex;
 }
 
@@ -2777,9 +2296,9 @@ void glChartCanvas::DrawRegion(ViewPort &vp, const LLRegion &region)
 {
     float lat_dist, lon_dist;
     GetLatLonCurveDist(vp, lat_dist, lon_dist);
-    
+
     GLUtesselator *tobj = gluNewTess();
-    
+
     gluTessCallback( tobj, GLU_TESS_VERTEX, (_GLUfuncptr) &vertexCallbackD  );
     gluTessCallback( tobj, GLU_TESS_BEGIN, (_GLUfuncptr) &beginCallbackD  );
     gluTessCallback( tobj, GLU_TESS_END, (_GLUfuncptr) &endCallbackD  );
@@ -2797,7 +2316,7 @@ void glChartCanvas::DrawRegion(ViewPort &vp, const LLRegion &region)
             int lat_splits = floor(fabs(j->y - l.y) / lat_dist);
             int lon_splits = floor(fabs(j->x - l.x) / lon_dist);
             int splits = wxMax(lat_splits, lon_splits) + 1;
-            
+
             double smj[2];
             if(splits != 1) {
                 // must perform border interpolation in mercator space as this is what the charts use
@@ -2817,7 +2336,7 @@ void glChartCanvas::DrawRegion(ViewPort &vp, const LLRegion &region)
                 wxPoint2DDouble q = vp.GetDoublePixFromLL(lat, lon);
                 if(wxIsNaN(q.m_x))
                     continue;
-                
+
                 double *p = new double[6];
                 p[0] = q.m_x, p[1] = q.m_y, p[2] = 0;
                 gluTessVertex(tobj, p, p);
@@ -2831,12 +2350,11 @@ void glChartCanvas::DrawRegion(ViewPort &vp, const LLRegion &region)
         gluTessEndContour(tobj);
     }
     gluTessEndPolygon(tobj);
-    
+
     gluDeleteTess(tobj);
-    
+
     for(std::list<double*>::iterator i = combine_work_data.begin(); i!=combine_work_data.end(); i++)
         delete [] *i;
-
     combine_work_data.clear();
 }
 
@@ -2893,7 +2411,7 @@ void glChartCanvas::SetClipRegion(ViewPort &vp, const LLRegion &region)
 void glChartCanvas::SetClipRect(const ViewPort &vp, const wxRect &rect, bool b_clear)
 {
     /* for some reason this causes an occasional bug in depth mode, I cannot
-     seem to solve it yet, so for now: */
+       seem to solve it yet, so for now: */
     if(s_b_useStencil && s_b_useScissorTest) {
         wxRect vp_rect(0, 0, vp.pix_width, vp.pix_height);
         if(rect != vp_rect) {
@@ -2911,8 +2429,8 @@ void glChartCanvas::SetClipRect(const ViewPort &vp, const wxRect &rect, bool b_c
         }
 
         /* the code in s52plib depends on the depth buffer being
-         initialized to this value, this code should go there instead and
-         only a flag set here. */
+           initialized to this value, this code should go there instead and
+           only a flag set here. */
         if(!s_b_useStencil) {
             glClearDepth( 0.25 );
             glDepthMask( GL_TRUE );    // to allow writes to the depth buffer
@@ -2923,17 +2441,17 @@ void glChartCanvas::SetClipRect(const ViewPort &vp, const wxRect &rect, bool b_c
         }
         return;
     }
-    
+
     // slower way if there is no scissor support
     if(!b_clear)
         glColorMask( GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE );   // disable color buffer
-    
+
     if( s_b_useStencil ) {
         //    Create a stencil buffer for clipping to the region
         glEnable( GL_STENCIL_TEST );
         glStencilMask( 0x1 );                 // write only into bit 0 of the stencil buffer
         glClear( GL_STENCIL_BUFFER_BIT );
-        
+
         //    We are going to write "1" into the stencil buffer wherever the region is valid
         glStencilFunc( GL_ALWAYS, 1, 1 );
         glStencilOp( GL_KEEP, GL_KEEP, GL_REPLACE );
@@ -2942,29 +2460,29 @@ void glChartCanvas::SetClipRect(const ViewPort &vp, const wxRect &rect, bool b_c
         glEnable( GL_DEPTH_TEST ); // to enable writing to the depth buffer
         glDepthFunc( GL_ALWAYS );  // to ensure everything you draw passes
         glDepthMask( GL_TRUE );    // to allow writes to the depth buffer
-        
+
         glClear( GL_DEPTH_BUFFER_BIT ); // for a fresh start
-        
+
         //    Decompose the region into rectangles, and draw as quads
         //    With z = 1
-        // dep buffer clear = 1
-        // 1 makes 0 in dep buffer, works
-        // 0 make .5 in depth buffer
-        // -1 makes 1 in dep buffer
-        
-        //    Depth buffer runs from 0 at z = 1 to 1 at z = -1
-        //    Draw the clip geometry at z = 0.5, giving a depth buffer value of 0.25
-        //    Subsequent drawing at z=0 (depth = 0.5) will pass if using glDepthFunc(GL_GREATER);
+            // dep buffer clear = 1
+            // 1 makes 0 in dep buffer, works
+            // 0 make .5 in depth buffer
+            // -1 makes 1 in dep buffer
+
+            //    Depth buffer runs from 0 at z = 1 to 1 at z = -1
+            //    Draw the clip geometry at z = 0.5, giving a depth buffer value of 0.25
+            //    Subsequent drawing at z=0 (depth = 0.5) will pass if using glDepthFunc(GL_GREATER);
         glTranslatef( 0, 0, .5 );
     }
-    
+
     glBegin(GL_QUADS);
     glVertex2i( rect.x, rect.y );
     glVertex2i( rect.x + rect.width, rect.y );
     glVertex2i( rect.x + rect.width, rect.y + rect.height );
     glVertex2i( rect.x, rect.y + rect.height );
     glEnd();
-    
+
     if( s_b_useStencil ) {
         //    Now set the stencil ops to subsequently render only where the stencil bit is "1"
         glStencilFunc( GL_EQUAL, 1, 1 );
@@ -2974,7 +2492,7 @@ void glChartCanvas::SetClipRect(const ViewPort &vp, const wxRect &rect, bool b_c
         glDepthMask( GL_FALSE );                            // disable depth buffer
         glTranslatef( 0, 0, -.5 ); // reset translation
     }
-    
+
     if(!b_clear)
         glColorMask( GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE );  // re-enable color buffer
 }
@@ -2989,34 +2507,33 @@ void glChartCanvas::DisableClipRegion()
 void glChartCanvas::Invalidate()
 {
     /* should probably use a different flag for this */
-    
+
     cc1->m_glcc->m_cache_vp.Invalidate();
-    
+
 }
 
 void glChartCanvas::RenderRasterChartRegionGL( ChartBase *chart, ViewPort &vp, LLRegion &region )
 {
     ChartBaseBSB *pBSBChart = dynamic_cast<ChartBaseBSB*>( chart );
     if( !pBSBChart ) return;
-    
-    double scalefactor = pBSBChart->GetRasterScaleFactor(vp);
+
+    if(b_inCompressAllCharts) return; // don't want multiple texfactories to exist
+
 
     //    Look for the texture factory for this chart
-    wxString key = chart->GetFullPath();
-
-    /* replace path separators with ! */
-    wxChar separator = wxFileName::GetPathSeparator();
-    for(unsigned int pos = 0; pos < key.size(); pos = key.find(separator, pos))
-        key.replace(pos, 1, _T("!"));
+    wxString key = chart->GetHashKey();
 
     glTexFactory *pTexFact;
-    ChartPathHashTexfactType::iterator ittf = m_chart_texfactory_hash.find( key );
+    ChartPathHashTexfactType &hash = g_glTextureManager->m_chart_texfactory_hash;
+    ChartPathHashTexfactType::iterator ittf = hash.find( key );
 
     //    Not Found ?
-    if( ittf == m_chart_texfactory_hash.end() )
-        m_chart_texfactory_hash[key] = new glTexFactory(chart, g_raster_format);
+    if( ittf == hash.end() ){
+        hash[key] = new glTexFactory(chart, g_raster_format);
+        hash[key]->SetHashKey(key);
+    }
 
-    pTexFact = m_chart_texfactory_hash[key];
+    pTexFact = hash[key];
     pTexFact->SetLRUTime(++m_LRUtime);
 
     // for small scales, don't use normalized coordinates for accuracy (difference is up to 3 meters error)
@@ -3026,25 +2543,26 @@ void glChartCanvas::RenderRasterChartRegionGL( ChartBase *chart, ViewPort &vp, L
     //    For underzoom cases, we will define the textures as having their base levels
     //    equivalent to a level "n" mipmap, where n is calculated, and is always binary
     //    This way we can avoid loading much texture memory
+
     int base_level;
-    if(vp.m_projection_type == PROJECTION_MERCATOR &&
-       chart->GetChartProjectionType() == PROJECTION_MERCATOR) {
+    if(vp.m_projection_type == PROJECTION_MERCATOR && chart->GetChartProjectionType() == PROJECTION_MERCATOR) {
+        double scalefactor = pBSBChart->GetRasterScaleFactor(vp);
         base_level = log(scalefactor) / log(2.0);
-        
+
         if(base_level < 0) /* for overzoom */
             base_level = 0;
         if(base_level > g_mipmap_max_level)
             base_level = g_mipmap_max_level;
     } else
         base_level = 0; // base level should be computed per tile, for now load all
-    
+
     /* setup opengl parameters */
     glEnable( GL_TEXTURE_2D );
     glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
-    
+
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    
+
     if(use_norm_vp) {
         glPushMatrix();
         double lat, lon;
@@ -3064,12 +2582,12 @@ void glChartCanvas::RenderRasterChartRegionGL( ChartBase *chart, ViewPort &vp, L
             if( bGLMemCrunch)
                 pTexFact->DeleteTexture( tile->rect );
         } else {
-            bool texture = pTexFact->PrepareTexture( base_level, tile->rect, global_color_scheme, true );
+            bool texture = pTexFact->PrepareTexture( base_level, tile->rect, global_color_scheme );
             if(!texture) { // failed to load, draw red
                 glDisable(GL_TEXTURE_2D);
                 glColor3f(1, 0, 0);
             }
-            
+
             float *coords;
             if(use_norm_vp)
                 coords = tile->m_coords;
@@ -3086,35 +2604,22 @@ void glChartCanvas::RenderRasterChartRegionGL( ChartBase *chart, ViewPort &vp, L
             glTexCoordPointer(2, GL_FLOAT, 2*sizeof(GLfloat), tile->m_texcoords);
             glVertexPointer(2, GL_FLOAT, 2*sizeof(GLfloat), coords);
             glDrawArrays(GL_QUADS, 0, tile->m_ncoords);
-            
+
             if(!texture)
                 glEnable(GL_TEXTURE_2D);
-            
+
             if(!use_norm_vp)
                 delete [] coords;
         }
     }
 
     glDisable(GL_TEXTURE_2D);
-    
+
     if(use_norm_vp)
         glPopMatrix();
-    
+
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
-
-    if( g_bDebugOGL ) {
-        wxString msg;
-        msg.Printf(_T("Timings: p:%ld m:%ld hwm:%ld u:%ld\tuc:%ld dc:%ld dcc: %ld rc:%ld wc:%ld   base:%d"),
-                   populate_tt_total, mipmap_tt_total, hwmipmap_tt_total, upload_tt_total,
-                   uploadcomp_tt_total, downloadcomp_tt_total, decompcomp_tt_total, readcomp_tt_total, writecomp_tt_total,
-                   -1/*base_level*/);
-        wxLogMessage(msg);
-        
-        printf("%s\n", (const char*)msg.ToUTF8());
-        
-        printf("texmem used: %.0fMB\n", g_tex_mem_used / 1024.0 / 1024.0);
-    }
 }
 
 void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_region )
@@ -3127,12 +2632,12 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
 
     //  Check the first, smallest scale chart
     if(chart) {
-        //            if( ! cc1->IsChartLargeEnoughToRender( chart, vp ) )
-        //            chart = NULL;
+//            if( ! cc1->IsChartLargeEnoughToRender( chart, vp ) )
+//            chart = NULL;
     }
-    
+
     LLRegion region = vp.GetLLRegion(rect_region);
-    
+
     LLRegion rendered_region;
     while( chart ) {
 
@@ -3141,10 +2646,10 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
         //  and that the quilt zoom methods choose a reasonable reference chart.
         if(chart->GetChartFamily() != CHART_FAMILY_RASTER)
         {
-            //                if( ! cc1->IsChartLargeEnoughToRender( chart, vp ) ) {
-            //                    chart = cc1->m_pQuilt->GetNextChart();
-            //                    continue;
-            //                }
+//                if( ! cc1->IsChartLargeEnoughToRender( chart, vp ) ) {
+//                    chart = cc1->m_pQuilt->GetNextChart();
+//                    continue;
+//                }
         }
 
         QuiltPatch *pqp = cc1->m_pQuilt->GetCurrentPatch();
@@ -3156,6 +2661,7 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
                 get_region.Intersect( region );
                 if( !get_region.Empty() ) {
                     if( chart->GetChartFamily() == CHART_FAMILY_RASTER ) {
+
                         ChartBaseBSB *Patch_Ch_BSB = dynamic_cast<ChartBaseBSB*>( chart );
                         if (Patch_Ch_BSB) {
                             SetClipRegion(vp, pqp->ActiveRegion/*pqp->quilt_region*/);
@@ -3163,34 +2669,44 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
                             DisableClipRegion();
                             b_rendered = true;
                         }
-                        } else if(chart->GetChartFamily() == CHART_FAMILY_VECTOR ) {
-                            RenderNoDTA(vp, get_region);
-                            if(chart->GetChartType() == CHART_TYPE_CM93COMP){
-                                chart->RenderRegionViewOnGL( *m_pcontext, vp, rect_region, get_region );
+#ifndef __WXOSX__  // noch nicht
+                        else if(chart->GetChartType() == CHART_TYPE_MBTILES){
+                            SetClipRegion(vp, pqp->ActiveRegion/*pqp->quilt_region*/);
+                            chart->RenderRegionViewOnGL( *m_pcontext, vp, rect_region, get_region );
+                            DisableClipRegion();
+                        }
+#endif
+                    } else if(chart->GetChartFamily() == CHART_FAMILY_VECTOR ) {
+                        RenderNoDTA(vp, get_region);
+
+                        if(chart->GetChartType() == CHART_TYPE_CM93COMP){
+                            chart->RenderRegionViewOnGL( *m_pcontext, vp, rect_region, get_region );
+                        }
+                        else{
+                            s57chart *Chs57 = dynamic_cast<s57chart*>( chart );
+                            if(Chs57){
+                                Chs57->RenderRegionViewOnGLNoText( *m_pcontext, vp, rect_region, get_region );
                             }
                             else{
-                                s57chart *Chs57 = dynamic_cast<s57chart*>( chart );
-                                if(Chs57){
-                                    Chs57->RenderRegionViewOnGLNoText( *m_pcontext, vp, rect_region, get_region );
+                                ChartPlugInWrapper *ChPI = dynamic_cast<ChartPlugInWrapper*>( chart );
+                                if(ChPI){
+                                    ChPI->RenderRegionViewOnGLNoText( *m_pcontext, vp, rect_region, get_region );
                                 }
-                                else{
-                                    ChartPlugInWrapper *ChPI = dynamic_cast<ChartPlugInWrapper*>( chart );
-                                    if(ChPI){
-                                        ChPI->RenderRegionViewOnGLNoText( *m_pcontext, vp, rect_region, get_region );
-                                    }
-                                    else
-                                        chart->RenderRegionViewOnGL( *m_pcontext, vp, rect_region, get_region );
-                                }
+                                else    
+                                    chart->RenderRegionViewOnGL( *m_pcontext, vp, rect_region, get_region );
                             }
                         }
-                    }
+                     }
+                }
             }
+
             if(b_rendered) {
-                //                LLRegion get_region = pqp->ActiveRegion;
-                //                    get_region.Intersect( Region );  not technically required?
-                //                rendered_region.Union(get_region);
+//                LLRegion get_region = pqp->ActiveRegion;
+//                    get_region.Intersect( Region );  not technically required?
+//                rendered_region.Union(get_region);
             }
         }
+
 
         chart = cc1->m_pQuilt->GetNextChart();
     }
@@ -3202,46 +2718,52 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
             QuiltPatch *pqp = cc1->m_pQuilt->GetCurrentPatch();
             if( pqp->b_Valid && pqp->b_overlay && pch->GetChartFamily() == CHART_FAMILY_VECTOR ) {
                 LLRegion get_region = pqp->ActiveRegion;
-                
+
                 get_region.Intersect( region );
 #ifdef USE_S57
                 if( !get_region.Empty()  ) {
                     s57chart *Chs57 = dynamic_cast<s57chart*>( pch );
                     if( Chs57 )
                         Chs57->RenderOverlayRegionViewOnGL( *m_pcontext, vp, rect_region, get_region );
+                    else{
+                        ChartPlugInWrapper *ChPI = dynamic_cast<ChartPlugInWrapper*>( pch );
+                        if(ChPI){
+                            ChPI->RenderRegionViewOnGL( *m_pcontext, vp, rect_region, get_region );
+                        }
+                    }
                 }
-#endif
+#endif                
             }
 
             pch = cc1->m_pQuilt->GetNextChart();
         }
     }
-    
+
     // Hilite rollover patch
     LLRegion hiregion = cc1->m_pQuilt->GetHiliteRegion();
-    //    hiregion.Intersect(region);
-    
+//    hiregion.Intersect(region);
+
     if( !hiregion.Empty() ) {
         glEnable( GL_BLEND );
-        
+
         double hitrans;
         switch( global_color_scheme ) {
-            case GLOBAL_COLOR_SCHEME_DAY:
-                hitrans = .4;
-                break;
-            case GLOBAL_COLOR_SCHEME_DUSK:
-                hitrans = .2;
-                break;
-            case GLOBAL_COLOR_SCHEME_NIGHT:
-                hitrans = .1;
-                break;
-            default:
-                hitrans = .4;
-                break;
+        case GLOBAL_COLOR_SCHEME_DAY:
+            hitrans = .4;
+            break;
+        case GLOBAL_COLOR_SCHEME_DUSK:
+            hitrans = .2;
+            break;
+        case GLOBAL_COLOR_SCHEME_NIGHT:
+            hitrans = .1;
+            break;
+        default:
+            hitrans = .4;
+            break;
         }
-        
+
         glColor4f( (float) .8, (float) .4, (float) .4, (float) hitrans );
-        
+
         DrawRegion(vp, hiregion);
 
         glDisable( GL_BLEND );
@@ -3255,7 +2777,7 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
 
         if( !rendered_region.Empty() ) {
 
-            int width = vp.pix_width;
+            int width = vp.pix_width; 
             int height = vp.pix_height;
 
             // Use MipMap LOD tweaking to produce a blurred, downsampling effect at reasonable speed.
@@ -3270,18 +2792,18 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
 
                 glEnable(GL_TEXTURE_2D);
                 glBindTexture(GL_TEXTURE_2D, screen_capture);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-                
+
                 glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0 );
                 glCopyTexSubImage2D(GL_TEXTURE_2D,  0,  0,  0, 0,  0,  width, height);
 
                 glClear(GL_DEPTH_BUFFER_BIT);
                 glDisable(GL_DEPTH_TEST);
 
-                //  Build MipMaps
+                //  Build MipMaps 
                 int max_mipmap = 3;
                 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0 );
                 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, max_mipmap );
@@ -3313,20 +2835,20 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
                 glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, 0);
                 glDisable(GL_TEXTURE_2D);
             }
-#if 0
-            else if(scale_factor > 25)  {
+#if 0                    
+            else if(scale_factor > 25)  { 
                 // must use POT textures
                 // and we cannot really trust the value that comes from GL_MAX_TEXTURE_SIZE
                 // This method of fogging is very slow, so only activate it if the scale_factor is
                 // very large.
-                
+
                 int tex_size = 512;  // reasonable assumption
                 int ntx = (width / tex_size) + 1;
                 int nty = (height / tex_size) + 1;
-                
+
                 GLuint *screen_capture = new GLuint[ntx * nty];
                 glGenTextures( ntx * nty, screen_capture );
-                
+
                 // Render at reduced LOD (i.e. higher mipmap number)
                 double bias = fog/70;
                 glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS, bias);
@@ -3355,6 +2877,7 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
                         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
 
+
                         unsigned char *ps = (unsigned char *)malloc( tex_size * tex_size * 3 );
                         glReadPixels(screen_x, screen_y, tex_size, tex_size, GL_RGB, GL_UNSIGNED_BYTE, ps );
                         glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, tex_size, tex_size, 0, GL_RGB, GL_UNSIGNED_BYTE, ps );
@@ -3366,13 +2889,14 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
                             HalfScaleChartBits( 2*dim, 2*dim, ps, pd );
 
 <<<<<<< HEAD
-                            MipMap_24( GL_TEXTURE_2D, level, GL_RGB, dim, dim, 0, GL_RGB, GL_UNSIGNED_BYTE, pd );
+                                    MipMap_24( GL_TEXTURE_2D, level, GL_RGB, dim, dim, 0, GL_RGB, GL_UNSIGNED_BYTE, pd );
 =======
                             glTexImage2D( GL_TEXTURE_2D, level, GL_RGB, dim, dim, 0, GL_RGB, GL_UNSIGNED_BYTE, pd );
 >>>>>>> 90e80c0... Initial projections support commit
 
                             free(ps);
                             ps = pd;
+
                             dim /= 2;
                         }
 
@@ -3381,7 +2905,7 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
                 }
 
                 for(int i=0 ; i < ntx ; i++){
-                    int ybase =  height - tex_size;
+                    int ybase =  height - tex_size; 
                     for(int j=0 ; j < nty ; j++){
 
                         int screen_x = i * tex_size;
@@ -3404,7 +2928,7 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
                         ybase -= tex_size;
                     }
                 }
-                
+
                 glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS, 0);
                 glDeleteTextures(ntx * nty, screen_capture);
                 glDisable(GL_TEXTURE_2D);
@@ -3413,21 +2937,21 @@ void glChartCanvas::RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_regi
 #endif
 
 #if 1
-            else if(scale_factor > 20){
-                // Fogging by alpha blending
+            else if(scale_factor > 20){ 
+                // Fogging by alpha blending                
                 fog = ((scale_factor - 20) * 255.) / 20.;
 
                 glEnable( GL_BLEND );
 
                 fog = wxMin(fog, 150.);         // Don't fog out completely
 
-                wxColour color = cc1->GetFogColor();
+                wxColour color = cc1->GetFogColor(); 
                 glColor4ub( color.Red(), color.Green(), color.Blue(), (int)fog );
 
                 DrawRegion(vp, rendered_region);
                 glDisable( GL_BLEND );
             }
-#endif
+#endif                
         }
     }
 }
@@ -3438,62 +2962,62 @@ void glChartCanvas::RenderQuiltViewGLText( ViewPort &vp, const OCPNRegion &rect_
         return;
 
     //  render the quilt
-    ChartBase *chart = cc1->m_pQuilt->GetLargestScaleChart();
+        ChartBase *chart = cc1->m_pQuilt->GetLargestScaleChart();
 
-    LLRegion region = vp.GetLLRegion(rect_region);
+        LLRegion region = vp.GetLLRegion(rect_region);
 
-    LLRegion rendered_region;
-    while( chart ) {
+        LLRegion rendered_region;
+        while( chart ) {
 
-        QuiltPatch *pqp = cc1->m_pQuilt->GetCurrentPatch();
-        if( pqp->b_Valid ) {
-            LLRegion get_region = pqp->ActiveRegion;
-            bool b_rendered = false;
+            QuiltPatch *pqp = cc1->m_pQuilt->GetCurrentPatch();
+            if( pqp->b_Valid ) {
+                LLRegion get_region = pqp->ActiveRegion;
+                bool b_rendered = false;
 
-            if( !pqp->b_overlay ) {
-                if(chart->GetChartFamily() == CHART_FAMILY_VECTOR ) {
+                if( !pqp->b_overlay ) {
+                    if(chart->GetChartFamily() == CHART_FAMILY_VECTOR ) {
 
-                    s57chart *Chs57 = dynamic_cast<s57chart*>( chart );
-                    if(Chs57){
-                        Chs57->RenderViewOnGLTextOnly( *m_pcontext, vp);
-                    }
-                    else{
-                        ChartPlugInWrapper *ChPI = dynamic_cast<ChartPlugInWrapper*>( chart );
-                        if(ChPI){
-                            ChPI->RenderRegionViewOnGLTextOnly( *m_pcontext, vp, rect_region);
+                        s57chart *Chs57 = dynamic_cast<s57chart*>( chart );
+                        if(Chs57){
+                            Chs57->RenderViewOnGLTextOnly( *m_pcontext, vp);
                         }
-                    }
+                        else{
+                            ChartPlugInWrapper *ChPI = dynamic_cast<ChartPlugInWrapper*>( chart );
+                            if(ChPI){
+                                ChPI->RenderRegionViewOnGLTextOnly( *m_pcontext, vp, rect_region);
+                            }
+                        }
+                    }    
                 }
             }
+
+
+            chart = cc1->m_pQuilt->GetNextSmallerScaleChart();
         }
 
+/*        
+        //    Render any Overlay patches for s57 charts(cells)
+        if( cc1->m_pQuilt->HasOverlays() ) {
+            ChartBase *pch = cc1->m_pQuilt->GetFirstChart();
+            while( pch ) {
+                QuiltPatch *pqp = cc1->m_pQuilt->GetCurrentPatch();
+                if( pqp->b_Valid && pqp->b_overlay && pch->GetChartFamily() == CHART_FAMILY_VECTOR ) {
+                    LLRegion get_region = pqp->ActiveRegion;
 
-        chart = cc1->m_pQuilt->GetNextSmallerScaleChart();
-    }
+                    get_region.Intersect( region );
+                    #ifdef USE_S57
+                    if( !get_region.Empty()  ) {
+                        s57chart *Chs57 = dynamic_cast<s57chart*>( pch );
+                        if( Chs57 )
+                            Chs57->RenderOverlayRegionViewOnGL( *m_pcontext, vp, rect_region, get_region );
+                    }
+                    #endif                
+                }
 
-    /*
-     //    Render any Overlay patches for s57 charts(cells)
-     if( cc1->m_pQuilt->HasOverlays() ) {
-     ChartBase *pch = cc1->m_pQuilt->GetFirstChart();
-     while( pch ) {
-     QuiltPatch *pqp = cc1->m_pQuilt->GetCurrentPatch();
-     if( pqp->b_Valid && pqp->b_overlay && pch->GetChartFamily() == CHART_FAMILY_VECTOR ) {
-     LLRegion get_region = pqp->ActiveRegion;
-
-     get_region.Intersect( region );
-     #ifdef USE_S57
-     if( !get_region.Empty()  ) {
-     s57chart *Chs57 = dynamic_cast<s57chart*>( pch );
-     if( Chs57 )
-     Chs57->RenderOverlayRegionViewOnGL( *m_pcontext, vp, rect_region, get_region );
-     }
-     #endif
-     }
-
-     pch = cc1->m_pQuilt->GetNextChart();
-     }
-     }
-     */
+                pch = cc1->m_pQuilt->GetNextChart();
+            }
+        }
+*/        
 }
 
 void glChartCanvas::RenderCharts(ocpnDC &dc, const OCPNRegion &rect_region)
@@ -3501,6 +3025,7 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, const OCPNRegion &rect_region)
     ViewPort &vp = cc1->VPoint;
 
 #ifdef USE_S57
+    
     // Only for cm93 (not quilted), SetVPParms can change the valid region of the chart
     // we need to know this before rendering the chart so we can compute the background region
     // and nodta regions correctly.  I would prefer to just perform this here (or in SetViewPoint)
@@ -3539,9 +3064,9 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, const OCPNRegion &rect_region)
             Current_Ch->GetChartExtent(&ext);
 
             double ll[8] = {ext.SLAT, ext.WLON,
-                ext.SLAT, ext.ELON,
-                ext.NLAT, ext.ELON,
-                ext.NLAT, ext.WLON};
+            ext.SLAT, ext.ELON,
+            ext.NLAT, ext.ELON,
+            ext.NLAT, ext.WLON};
             chart_region = LLRegion(4, ll);
         }
     }
@@ -3565,20 +3090,29 @@ void glChartCanvas::RenderCharts(ocpnDC &dc, const OCPNRegion &rect_region)
         RenderQuiltViewGL( vp, rect_region );
     else {
         LLRegion region = vp.GetLLRegion(rect_region);
+#ifdef __WXOSX__  // noch nicht
         if( Current_Ch->GetChartFamily() == CHART_FAMILY_RASTER )
             RenderRasterChartRegionGL( Current_Ch, vp, region );
+#else
+        if( Current_Ch->GetChartFamily() == CHART_FAMILY_RASTER ){
+            if(Current_Ch->GetChartType() == CHART_TYPE_MBTILES)
+                Current_Ch->RenderRegionViewOnGL( *m_pcontext, vp, rect_region, region );
+            else
+                RenderRasterChartRegionGL( Current_Ch, vp, region );
+        }
+#endif
         else if( Current_Ch->GetChartFamily() == CHART_FAMILY_VECTOR ) {
             chart_region.Intersect(region);
             RenderNoDTA(vp, chart_region);
             Current_Ch->RenderRegionViewOnGL( *m_pcontext, vp, rect_region, region );
-        }
+        } 
     }
-    
-    for(OCPNRegionIterator upd ( rect_region ); upd.HaveRects(); upd.NextRect()) {
-        LLRegion region = vp.GetLLRegion(upd.GetRect()); // could cache this from above
-        ViewPort cvp = ClippedViewport(vp, region);
-        DrawGroundedOverlayObjects(dc, cvp);
-    }
+
+     for(OCPNRegionIterator upd ( rect_region ); upd.HaveRects(); upd.NextRect()) {
+         LLRegion region = vp.GetLLRegion(upd.GetRect()); // could cache this from above
+         ViewPort cvp = ClippedViewport(vp, region);
+         DrawGroundedOverlayObjects(dc, cvp);
+     }
 }
 
 void glChartCanvas::RenderNoDTA(ViewPort &vp, const LLRegion &region)
@@ -3612,6 +3146,7 @@ void glChartCanvas::RenderNoDTA(ViewPort &vp, ChartBase *chart)
         }
 #else
         int j = pCurrentStack->GetDBIndex(i);
+        assert (j >= 0);
         pt = (ChartTableEntry *) &ChartData->GetChartTableEntry( j );
         if(pt->GetpsFullPath()->IsSameAs(chart->GetFullPath())){
             index = j;
@@ -3622,7 +3157,7 @@ void glChartCanvas::RenderNoDTA(ViewPort &vp, ChartBase *chart)
 
     if(index == -1)
         return;
-    
+
     if( ChartData->GetDBChartType( index ) != CHART_TYPE_CM93COMP ) {
         // Maybe it's a good idea to cache the glutesselator results to improve performance
         LLRegion region(pt->GetnPlyEntries(), pt->GetpPlyTable());
@@ -3639,19 +3174,20 @@ void glChartCanvas::RenderNoDTA(ViewPort &vp, ChartBase *chart)
     }
 }
 
+/* render world chart, but only in this rectangle */
 void glChartCanvas::RenderWorldChart(ocpnDC &dc, ViewPort &vp, wxRect &rect, bool &world_view)
 {
     // set gl color to water
     wxColour water = cc1->pWorldBackgroundChart->water;
     glColor3ub(water.Red(), water.Green(), water.Blue());
-    
+
     // clear background
     if(!world_view) {
         if(vp.m_projection_type == PROJECTION_ORTHOGRAPHIC) {
             // for this projection, if zoomed out far enough that the earth does
             // not fill the viewport we need to first clear the screen black and
             // draw a blue circle representing the earth
-            
+
             ViewPort tvp = vp;
             tvp.clat = 0, tvp.clon = 0;
             tvp.rotation = 0;
@@ -3661,7 +3197,7 @@ void glChartCanvas::RenderWorldChart(ocpnDC &dc, ViewPort &vp, wxRect &rect, boo
             const float pi_ovr100 = float(M_PI)/100;
             if(world_r*world_r < w*w + h*h) {
                 glClear( GL_COLOR_BUFFER_BIT );
-                
+
                 glBegin(GL_TRIANGLE_FAN);
                 float w = ((float)vp.pix_width)/2, h = ((float)vp.pix_height)/2;
                 for(float theta = 0; theta < 2*M_PI+.01f; theta+=pi_ovr100)
@@ -3725,99 +3261,101 @@ void glChartCanvas::DrawGroundedOverlayObjects(ocpnDC &dc, ViewPort &vp)
 
     if( cc1->m_bShowCurrent )
         DrawGLCurrentsInBBox( dc, vp.GetBBox() );
-    
-        DisableClipRegion();
+
+    DisableClipRegion();
 }
+
 
 void glChartCanvas::DrawGLTidesInBBox(ocpnDC& dc, LLBBox& BBox)
 {
     // At small scale, we render the Tide icon as a texture for best performance
     if( cc1->GetVP().chart_scale > 500000 ) {
-        
+
         // Prepare the texture if necessary
-        
+
         if(!m_tideTex){
             wxBitmap bmp = cc1->GetTideBitmap();
             if(!bmp.Ok())
                 return;
-            
+
             wxImage image = bmp.ConvertToImage();
             int w = image.GetWidth(), h = image.GetHeight();
-            
+
             int tex_w, tex_h;
             if(g_texture_rectangle_format == GL_TEXTURE_2D)
                 tex_w = w, tex_h = h;
             else
                 tex_w = NextPow2(w), tex_h = NextPow2(h);
-            
+
             m_tideTexWidth = tex_w;
             m_tideTexHeight = tex_h;
-            
+
             unsigned char *d = image.GetData();
             unsigned char *a = image.GetAlpha();
-            
+
             unsigned char mr, mg, mb;
-            image.GetOrFindMaskColour( &mr, &mg, &mb );
-            
+            if (!a)
+                image.GetOrFindMaskColour( &mr, &mg, &mb );
+
             unsigned char *e = new unsigned char[4 * w * h];
             if(e && d){
                 for( int y = 0; y < h; y++ )
                     for( int x = 0; x < w; x++ ) {
                         unsigned char r, g, b;
-                        int off = ( y * image.GetWidth() + x );
+                        int off = ( y * w + x );
                         r = d[off * 3 + 0];
                         g = d[off * 3 + 1];
                         b = d[off * 3 + 2];
-                        
+
                         e[off * 4 + 0] = r;
                         e[off * 4 + 1] = g;
                         e[off * 4 + 2] = b;
-                        
+
                         e[off * 4 + 3] =
                         a ? a[off] : ( ( r == mr ) && ( g == mg ) && ( b == mb ) ? 0 : 255 );
                     }
             }
-            
-            
+
+
             glGenTextures( 1, &m_tideTex );
-            
+
             glBindTexture(GL_TEXTURE_2D, m_tideTex);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
+
             if(g_texture_rectangle_format == GL_TEXTURE_2D)
                 glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, e );
             else {
                 glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, tex_w, tex_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0 );
                 glTexSubImage2D( GL_TEXTURE_2D, 0, 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, e );
             }
-            
+
             delete [] e;
         }
-        
+
         // Texture is ready
-        
+
         glBindTexture( GL_TEXTURE_2D, m_tideTex);
         glEnable( GL_TEXTURE_2D );
         glEnable(GL_BLEND);
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
-        
+
         for( int i = 1; i < ptcmgr->Get_max_IDX() + 1; i++ ) {
             const IDX_entry *pIDX = ptcmgr->GetIDX_entry( i );
-            
+
             char type = pIDX->IDX_type;             // Entry "TCtcIUu" identifier
             if( ( type == 't' ) || ( type == 'T' ) )  // only Tides
             {
                 double lon = pIDX->IDX_lon;
                 double lat = pIDX->IDX_lat;
-                
+
                 if( BBox.Contains( lat,  lon ) ) {
                     wxPoint r;
                     cc1->GetCanvasPointPix( lat, lon, &r );
-                    
+
                     float xp = r.x;
                     float yp = r.y;
-                    
+
                     glBegin( GL_QUADS );
                     glTexCoord2f( 0,  0 );  glVertex2f( xp - m_tideTexWidth/2,  yp - m_tideTexHeight/2 );
                     glTexCoord2f( 0,  1 );  glVertex2f( xp - m_tideTexWidth/2,  yp + m_tideTexHeight/2);
@@ -3827,15 +3365,15 @@ void glChartCanvas::DrawGLTidesInBBox(ocpnDC& dc, LLBBox& BBox)
                 }
             } // type 'T"
         }       //loop
-        
-        
+
+
         glDisable( GL_TEXTURE_2D );
         glDisable(GL_BLEND);
         glBindTexture( GL_TEXTURE_2D, 0);
     }
     else
         cc1->DrawAllTidesInBBox( dc, BBox );
-        cc1->RebuildTideSelectList(BBox);
+    cc1->RebuildTideSelectList(BBox);
 }
 
 void glChartCanvas::DrawGLCurrentsInBBox(ocpnDC& dc, LLBBox& BBox)
@@ -3855,167 +3393,16 @@ void glChartCanvas::SetColorScheme(ColorScheme cs)
     m_tideTex = 0;
     m_currentTex = 0;
     ownship_color = -1;
+
 }
 
-bool glChartCanvas::TextureCrunch(double factor)
-{
-
-    double hysteresis = 0.90;
-
-    bool bGLMemCrunch = g_tex_mem_used > (double)(g_GLOptions.m_iTextureMemorySize * 1024 * 1024) * factor;
-    if( ! bGLMemCrunch )
-        return false;
-    
-
-    ChartPathHashTexfactType::iterator it0;
-    for( it0 = m_chart_texfactory_hash.begin(); it0 != m_chart_texfactory_hash.end(); ++it0 ) {
-        wxString chart_full_path = it0->first;
-        glTexFactory *ptf = it0->second;
-        if(!ptf)
-            continue;
-
-        bGLMemCrunch = g_tex_mem_used > (double)(g_GLOptions.m_iTextureMemorySize * 1024 * 1024) * factor *hysteresis;
-        if(!bGLMemCrunch)
-            break;
-
-        if( cc1->VPoint.b_quilt )          // quilted
-        {
-                if( cc1->m_pQuilt && cc1->m_pQuilt->IsComposed() &&
-                    !cc1->m_pQuilt->IsChartInQuilt( chart_full_path ) ) {
-                    ptf->DeleteSomeTextures( g_GLOptions.m_iTextureMemorySize * 1024 * 1024 * factor *hysteresis);
-                    }
-        }
-        else      // not quilted
-        {
-                if( !Current_Ch->GetFullPath().IsSameAs(chart_full_path))
-                {
-                    ptf->DeleteSomeTextures( g_GLOptions.m_iTextureMemorySize * 1024 * 1024 * factor  *hysteresis);
-                }
-        }
-    }
-
-    return true;
-}
-
-#define MAX_CACHE_FACTORY 50
-bool glChartCanvas::FactoryCrunch(double factor)
-{
-    if (m_chart_texfactory_hash.size() == 0) {
-        /* nothing to free */
-        return false;
-    }
-
-    int mem_used; //, mem_start;  // Not used
-    GetMemoryStatus(0, &mem_used);
-    double hysteresis = 0.90;
-//    mem_start = mem_used;  // Not used
-    
-    bool bGLMemCrunch = mem_used > (double)(g_memCacheLimit) * factor && mem_used > (double)(m_prevMemUsed) *factor;
-    if( ! bGLMemCrunch && (m_chart_texfactory_hash.size() <= MAX_CACHE_FACTORY))
-        return false;
-
-    ChartPathHashTexfactType::iterator it0;
-    if( bGLMemCrunch) {
-        for( it0 = m_chart_texfactory_hash.begin(); it0 != m_chart_texfactory_hash.end(); ++it0 ) {
-            wxString chart_full_path = it0->first;
-            glTexFactory *ptf = it0->second;
-            bool mem_freed = false;
-            if(!ptf)
-                continue;
-
-            if( cc1->VPoint.b_quilt )          // quilted
-            {
-                if( cc1->m_pQuilt && cc1->m_pQuilt->IsComposed() &&
-                   !cc1->m_pQuilt->IsChartInQuilt( chart_full_path ) )
-                {
-                    ptf->FreeSome( g_memCacheLimit * factor * hysteresis);
-                    mem_freed = true;
-                }
-            }
-            else      // not quilted
-            {
-                if( !Current_Ch->GetFullPath().IsSameAs(chart_full_path))
-                {
-                    ptf->DeleteSomeTextures( g_GLOptions.m_iTextureMemorySize * 1024 * 1024 * factor * hysteresis);
-                    mem_freed = true;
-                }
-            }
-            if (mem_freed) {
-                GetMemoryStatus(0, &mem_used);
-                bGLMemCrunch = mem_used > (double)(g_memCacheLimit) * factor * hysteresis;
-                m_prevMemUsed = mem_used;
-                if(!bGLMemCrunch)
-                    break;
-            }
-        }
-    }
-
-    bGLMemCrunch = (mem_used > (double)(g_memCacheLimit) * factor *hysteresis &&
-                    mem_used > (double)(m_prevMemUsed) * factor *hysteresis
-                    )  || (m_chart_texfactory_hash.size() > MAX_CACHE_FACTORY);
-    //  Need more, so delete the oldest factory
-    if(bGLMemCrunch){
-
-        //      Find the oldest unused factory
-        int lru_oldest = 2147483647;
-        glTexFactory *ptf_oldest = NULL;
-
-        for( it0 = m_chart_texfactory_hash.begin(); it0 != m_chart_texfactory_hash.end(); ++it0 ) {
-            wxString chart_full_path = it0->first;
-            glTexFactory *ptf = it0->second;
-            if(!ptf)
-                continue;
-
-            // we better have to find one because glTexFactory keep cache texture open
-            // and ocpn will eventually run out of file descriptors
-            if( cc1->VPoint.b_quilt )          // quilted
-            {
-                if( cc1->m_pQuilt && cc1->m_pQuilt->IsComposed() &&
-                    !cc1->m_pQuilt->IsChartInQuilt( chart_full_path ) ) {
-
-                    int lru = ptf->GetLRUTime();
-                    if(lru < lru_oldest && !ptf->BackgroundCompressionAsJob()){
-                        lru_oldest = lru;
-                        ptf_oldest = ptf;
-                    }
-                }
-            }
-            else {
-                if( !Current_Ch->GetFullPath().IsSameAs(chart_full_path)) {
-                    int lru = ptf->GetLRUTime();
-                    if(lru < lru_oldest && !ptf->BackgroundCompressionAsJob()){
-                        lru_oldest = lru;
-                        ptf_oldest = ptf;
-                    }
-                }
-            }
-        }
-
-        //      Found one?
-        if(ptf_oldest){
-            m_chart_texfactory_hash.erase(ptf_oldest->GetChartPath());                // This chart  becoming invalid
-
-            delete ptf_oldest;
-
-//            int mem_now;
-//            GetMemoryStatus(0, &mem_now);
-//            printf("-------------FactoryDelete\n");
-       }                
-    }
-
-//    int mem_now;
-//    GetMemoryStatus(0, &mem_now);
-//    printf(">>>>FactoryCrunch  was: %d  is:%d \n", mem_start, mem_now);
-    
-    return true;
-}
 
 
 int n_render;
 void glChartCanvas::Render()
 {
-    if( !m_bsetup ||
-        ( cc1->VPoint.b_quilt && cc1->m_pQuilt && !cc1->m_pQuilt->IsComposed() ) ||
+    if( !m_bsetup || !cc1->m_pQuilt ||
+       ( cc1->VPoint.b_quilt && !cc1->m_pQuilt->IsComposed() ) ||
         ( !cc1->VPoint.b_quilt && !Current_Ch ) ) {
 #ifdef __WXGTK__  // for some reason in gtk, a swap is needed here to get an initial screen update
             SwapBuffers();
@@ -4025,9 +3412,15 @@ void glChartCanvas::Render()
 
     m_last_render_time = wxDateTime::Now().GetTicks();
 
+    // we don't care about jobs that are now off screen
+    // clear out and it will be repopulated during render
+    if(g_GLOptions.m_bTextureCompression &&
+       !g_GLOptions.m_bTextureCompressionCaching)
+        g_glTextureManager->ClearJobList();
+
     if(b_timeGL && g_bShowFPS){
         if(n_render % 10){
-            glFinish();   
+            glFinish();
             g_glstopwatch.Start();
         }
     }
@@ -4038,14 +3431,13 @@ void glChartCanvas::Render()
         return;
 
     ViewPort VPoint = cc1->VPoint;
-
     ocpnDC gldc( *this );
 
     int w, h;
     GetClientSize( &w, &h );
 
     OCPNRegion screen_region(wxRect(0, 0, VPoint.pix_width, VPoint.pix_height));
-    
+
     glViewport( 0, 0, (GLint) w, (GLint) h );
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity();
@@ -4064,8 +3456,10 @@ void glChartCanvas::Render()
     // set opengl settings that don't normally change
     // this should be able to go in SetupOpenGL, but it's
     // safer here incase a plugin mangles these
-    glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-    glHint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+    if( g_GLOptions.m_GLLineSmoothing )
+        glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+    if( g_GLOptions.m_GLPolygonSmoothing )
+        glHint( GL_POLYGON_SMOOTH_HINT, GL_NICEST );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
     //  Delete any textures known to the GPU that
@@ -4073,7 +3467,7 @@ void glChartCanvas::Render()
     //  This is done chart-by-chart...later we will scrub for unused textures
     //  that belong to charts which ARE used in this render, if we need to....
 
-    TextureCrunch(0.8);
+    g_glTextureManager->TextureCrunch(0.8);
 
     //  If we plan to post process the display, don't use accelerated panning
     double scale_factor = VPoint.ref_scale/VPoint.chart_scale;
@@ -4090,7 +3484,7 @@ void glChartCanvas::Render()
     // to accelerate drawing this frame (if overlapping)
     if(m_b_BuiltFBO && !m_bfogit && !scale_it && !bpost_hilite
        //&& VPoint.tilt == 0 // disabling fbo in tilt mode gives better quality but slower
-       ) {
+        ) {
         //  Is this viewpoint the same as the previously painted one?
         bool b_newview = true;
 
@@ -4110,10 +3504,10 @@ void glChartCanvas::Render()
 
             bool busy = false;
             if(VPoint.b_quilt && cc1->m_pQuilt->IsQuiltVector() &&
-               ( m_cache_vp.view_scale_ppm != VPoint.view_scale_ppm || m_cache_vp.rotation != VPoint.rotation))
+                ( m_cache_vp.view_scale_ppm != VPoint.view_scale_ppm || m_cache_vp.rotation != VPoint.rotation))
             {
-                OCPNPlatform::ShowBusySpinner();
-                busy = true;
+                    OCPNPlatform::ShowBusySpinner();
+                    busy = true;
             }
 
             // enable rendering to texture in framebuffer object
@@ -4122,14 +3516,14 @@ void glChartCanvas::Render()
             int dx, dy;
             bool accelerated_pan = false;
             if( g_GLOptions.m_bUseAcceleratedPanning && m_cache_vp.IsValid()
-               && ( VPoint.m_projection_type == PROJECTION_MERCATOR
-                   || VPoint.m_projection_type == PROJECTION_EQUIRECTANGULAR )
-               && m_cache_vp.pix_height == VPoint.pix_height )
+                && ( VPoint.m_projection_type == PROJECTION_MERCATOR
+                || VPoint.m_projection_type == PROJECTION_EQUIRECTANGULAR )
+                && m_cache_vp.pix_height == VPoint.pix_height )
             {
                 wxPoint2DDouble c_old = VPoint.GetDoublePixFromLL( VPoint.clat, VPoint.clon );
                 wxPoint2DDouble c_new = m_cache_vp.GetDoublePixFromLL( VPoint.clat, VPoint.clon );
 
-                //                printf("diff: %f %f\n", c_new.m_y - c_old.m_y, c_new.m_x - c_old.m_x);
+//                printf("diff: %f %f\n", c_new.m_y - c_old.m_y, c_new.m_x - c_old.m_x);
                 dy = wxRound(c_new.m_y - c_old.m_y);
                 dx = wxRound(c_new.m_x - c_old.m_x);
 
@@ -4139,16 +3533,16 @@ void glChartCanvas::Render()
                 //   Meanwhile, require the accelerated pans to be whole pixel multiples only.
                 //   This is not as bad as it sounds.  Keyboard and mouse pans are whole_pixel moves.
                 //   However, autofollow at large scale is certainly not.
-                
+
                 double deltax = c_new.m_x - c_old.m_x;
                 double deltay = c_new.m_y - c_old.m_y;
-                
+
                 bool b_whole_pixel = true;
                 if( ( fabs( deltax - dx ) > 1e-2 ) || ( fabs( deltay - dy ) > 1e-2 ) )
                     b_whole_pixel = false;
 
                 accelerated_pan = b_whole_pixel && abs(dx) < m_cache_tex_x && abs(dy) < m_cache_tex_y
-                && sx == m_cache_tex_x && sy == m_cache_tex_y;
+                                  && sx == m_cache_tex_x && sy == m_cache_tex_y;
             }
 
             // do we allow accelerated panning?  can we perform it here?
@@ -4158,23 +3552,23 @@ void glChartCanvas::Render()
 
                     /* perform accelerated pan rendering to the new framebuffer */
                     ( s_glFramebufferTexture2D )
-                    ( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-                     g_texture_rectangle_format, m_cache_tex[m_cache_page], 0 );
+                        ( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+                        g_texture_rectangle_format, m_cache_tex[m_cache_page], 0 );
 
                     //calculate the new regions to render
                     // add an extra pixel avoid coorindate rounding issues
                     OCPNRegion update_region;
-                    
+
                     if( dy > 0 && dy < VPoint.pix_height)
                         update_region.Union(wxRect( 0, VPoint.pix_height - dy, VPoint.pix_width, dy ));
                     else if(dy < 0)
                         update_region.Union(wxRect( 0, 0, VPoint.pix_width, -dy ));
-                    
+
                     if( dx > 0 && dx < VPoint.pix_width )
                         update_region.Union(wxRect( VPoint.pix_width - dx, 0, dx, VPoint.pix_height ));
                     else if (dx < 0)
                         update_region.Union(wxRect( 0, 0, -dx, VPoint.pix_height ));
-                    
+
                     RenderCharts(gldc, update_region);
 
                     // using the old framebuffer
@@ -4215,72 +3609,73 @@ void glChartCanvas::Render()
                     glDisable( g_texture_rectangle_format );
                 }
 
-            } else { // must redraw the entire screen
-                ( s_glFramebufferTexture2D )( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
-                                             g_texture_rectangle_format,
-                                             m_cache_tex[m_cache_page], 0 );
+                } else { // must redraw the entire screen
+                    ( s_glFramebufferTexture2D )( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+                                                g_texture_rectangle_format,
+                                                m_cache_tex[m_cache_page], 0 );
 
-                if(g_GLOptions.m_bUseCanvasPanning) {
-                    bool b_reset = false;
-                    if( (m_fbo_offsetx < 50) ||
-                       ((m_cache_tex_x - (m_fbo_offsetx + sx)) < 50) ||
-                       (m_fbo_offsety < 50) ||
-                       ((m_cache_tex_y - (m_fbo_offsety + sy)) < 50))
-                        b_reset = true;
-                    
-                    if(m_cache_vp.view_scale_ppm != VPoint.view_scale_ppm )
-                        b_reset = true;
-                    if(!m_cache_vp.IsValid())
-                        b_reset = true;
-                    
-                    if( b_reset ){
-                        m_fbo_offsetx = (m_cache_tex_x - GetSize().x)/2;
-                        m_fbo_offsety = (m_cache_tex_y - GetSize().y)/2;
+                    if(g_GLOptions.m_bUseCanvasPanning) {
+                        bool b_reset = false;
+                        if( (m_fbo_offsetx < 50) ||
+                            ((m_cache_tex_x - (m_fbo_offsetx + sx)) < 50) ||
+                            (m_fbo_offsety < 50) ||
+                            ((m_cache_tex_y - (m_fbo_offsety + sy)) < 50))
+                            b_reset = true;
+
+                        if(m_cache_vp.view_scale_ppm != VPoint.view_scale_ppm )
+                            b_reset = true;
+                        if(!m_cache_vp.IsValid())
+                            b_reset = true;
+
+                        if( b_reset ){
+                            m_fbo_offsetx = (m_cache_tex_x - GetSize().x)/2;
+                            m_fbo_offsety = (m_cache_tex_y - GetSize().y)/2;
+                            m_fbo_swidth = sx;
+                            m_fbo_sheight = sy;
+
+                            m_canvasregion = OCPNRegion( m_fbo_offsetx, m_fbo_offsety, sx, sy );
+
+//                             if(m_cache_vp.view_scale_ppm != VPoint.view_scale_ppm )
+//                                 OCPNPlatform::ShowBusySpinner();
+
+                            RenderCanvasBackingChart(gldc, m_canvasregion);
+                        }
+
+
+
+                        glPushMatrix();
+
+                        glViewport( m_fbo_offsetx, m_fbo_offsety, (GLint) sx, (GLint) sy );
+
+                        //g_Platform->ShowBusySpinner();
+                        RenderCharts(gldc, screen_region);
+                        //g_Platform->HideBusySpinner();
+
+    /*                    
+                        wxRect rect( 50, 50, cc1->VPoint.rv_rect.width-100, cc1->VPoint.rv_rect.height-100 );
+                        glColor3ub(250, 0, 0);
+
+                        glBegin( GL_QUADS );
+                        glVertex2f( rect.x,                     rect.y );
+                        glVertex2f( rect.x + rect.width,        rect.y );
+                        glVertex2f( rect.x + rect.width,        rect.y + rect.height );
+                        glVertex2f( rect.x,                     rect.y + rect.height );
+                        glEnd();
+    */                    
+                        glPopMatrix();
+
+                        glViewport( 0, 0, (GLint) sx, (GLint) sy );
+                    }
+                    else{
+                        m_fbo_offsetx = 0;
+                        m_fbo_offsety = 0;
                         m_fbo_swidth = sx;
                         m_fbo_sheight = sy;
-                        
-                        m_canvasregion = OCPNRegion( m_fbo_offsetx, m_fbo_offsety, sx, sy );
-                        
-                        if(m_cache_vp.view_scale_ppm != VPoint.view_scale_ppm )
-                            OCPNPlatform::ShowBusySpinner();
-                        
-                        RenderCanvasBackingChart(gldc, m_canvasregion);
+                        wxRect rect(m_fbo_offsetx, m_fbo_offsety, (GLint) sx, (GLint) sy);
+                        RenderCharts(gldc, screen_region);
                     }
 
-                    glPushMatrix();
-
-
-                    glViewport( m_fbo_offsetx, m_fbo_offsety, (GLint) sx, (GLint) sy );
-
-                    //g_Platform->ShowBusySpinner();
-                    RenderCharts(gldc, screen_region);
-                    //g_Platform->HideBusySpinner();
-                    
-/*
-                     wxRect rect( 50, 50, cc1->VPoint.rv_rect.width-100, cc1->VPoint.rv_rect.height-100 );
-                     glColor3ub(250, 0, 0);
-                     
-                     glBegin( GL_QUADS );
-                     glVertex2f( rect.x,                     rect.y );
-                     glVertex2f( rect.x + rect.width,        rect.y );
-                     glVertex2f( rect.x + rect.width,        rect.y + rect.height );
-                     glVertex2f( rect.x,                     rect.y + rect.height );
-                     glEnd();
-*/
-                    glPopMatrix();
-
-                    glViewport( 0, 0, (GLint) sx, (GLint) sy );
-                }
-                else{
-                    m_fbo_offsetx = 0;
-                    m_fbo_offsety = 0;
-                    m_fbo_swidth = sx;
-                    m_fbo_sheight = sy;
-                    wxRect rect(m_fbo_offsetx, m_fbo_offsety, (GLint) sx, (GLint) sy);
-                    RenderCharts(gldc, screen_region);
-                }
-
-            }
+                } 
             // Disable Render to FBO
             ( s_glBindFramebuffer )( GL_FRAMEBUFFER_EXT, 0 );
 
@@ -4340,7 +3735,7 @@ void glChartCanvas::Render()
         glEnd();
 
         glDisable( g_texture_rectangle_format );
-        
+
         m_cache_vp = VPoint;
         m_cache_current_ch = Current_Ch;
 
@@ -4380,30 +3775,33 @@ void glChartCanvas::Render()
     // Now draw all the objects which normally move around and are not
     // cached from the previous frame
     DrawFloatingOverlayObjects( gldc );
-    
+
     // from this point on don't use perspective
     if(VPoint.tilt) {
         glMatrixMode (GL_PROJECTION);
         glLoadIdentity();
-        
+
         glOrtho( 0, (GLint) w, (GLint) h, 0, -1, 1 );
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
     }
-    
+
     DrawEmboss(cc1->EmbossDepthScale() );
     DrawEmboss(cc1->EmbossOverzoomIndicator( gldc ) );
-    
+
+    if( cc1->m_pTrackRolloverWin )
+        cc1->m_pTrackRolloverWin->Draw(gldc);
+
     if( cc1->m_pRouteRolloverWin )
         cc1->m_pRouteRolloverWin->Draw(gldc);
-    
+
     if( cc1->m_pAISRolloverWin )
         cc1->m_pAISRolloverWin->Draw(gldc);
 
     //  On some platforms, the opengl context window is always on top of any standard DC windows,
     //  so we need to draw the Chart Info Window and the Thumbnail as overlayed bmps.
 
-#ifdef __WXOSX__
+#ifdef __WXOSX__    
     if(cc1->m_pCIWin && cc1->m_pCIWin->IsShown()) {
         int x, y, width, height;
         cc1->m_pCIWin->GetClientSize( &width, &height );
@@ -4413,7 +3811,7 @@ void glChartCanvas::Render()
         if(bmp.IsOk()){
             dc.SetBackground( wxBrush(GetGlobalColor( _T ( "UIBCK" ) ) ));
             dc.Clear();
-
+ 
             dc.SetTextBackground( GetGlobalColor( _T ( "UIBCK" ) ) );
             dc.SetTextForeground( GetGlobalColor( _T ( "UITX1" ) ) );
 
@@ -4450,7 +3848,6 @@ void glChartCanvas::Render()
             gldc.DrawBitmap( g_MainToolbar->m_pRecoverwin->GetBitmap(), recoverx, recovery, true);
     }
 
-
 #endif
     // render the chart bar
     if(g_bShowChartBar)
@@ -4465,11 +3862,11 @@ void glChartCanvas::Render()
     if( g_bcompression_wait)
         DrawCloseMessage( _("Waiting for raster chart compression thread exit."));
 
-#ifdef __WXMSW__
-    //  MSW OpenGL drivers are generally very unstable.
-    //  This helps...
-    glFinish();
-#endif
+#ifdef __WXMSW__    
+     //  MSW OpenGL drivers are generally very unstable.
+     //  This helps...   
+     glFinish();
+#endif    
 
     SwapBuffers();
     if(b_timeGL && g_bShowFPS){
@@ -4481,21 +3878,22 @@ void glChartCanvas::Render()
         // Simple low pass filter
             g_gl_ms_per_frame = g_gl_ms_per_frame * (1. - filter) + ((double)(g_glstopwatch.Time()) * filter);
 //            if(g_gl_ms_per_frame > 0)
-//                printf(" OpenGL frame time: %3.0f  %3.0f\n", g_gl_ms_per_frame, 1000./ g_gl_ms_per_frame);
+            //                printf(" OpenGL frame time: %3.0f  %3.0f\n", g_gl_ms_per_frame, 1000./ g_gl_ms_per_frame);
         }
     }
 
-    TextureCrunch(0.8);
-#ifndef __WXOSX__
-    FactoryCrunch(0.6); // Crash with glTexFactory::FreeSome(long) in (glTexCache.cpp:1086)
-#endif
+    g_glTextureManager->TextureCrunch(0.8);
+    g_glTextureManager->FactoryCrunch(0.6);
+
     cc1->PaintCleanup();
-    OCPNPlatform::HideBusySpinner();
+    //OCPNPlatform::HideBusySpinner();
 
     n_render++;
 }
 
-void glChartCanvas::RenderCanvasBackingChart( ocpnDC dc, OCPNRegion valid_region)
+
+
+void glChartCanvas::RenderCanvasBackingChart( ocpnDC &dc, OCPNRegion valid_region)
 {
 
     glPushMatrix();
@@ -4529,7 +3927,7 @@ void glChartCanvas::RenderCanvasBackingChart( ocpnDC dc, OCPNRegion valid_region
         glEnd();
 
         upd.NextRect();
-    }
+    }        
 
     // 2:  Render World Background chart
 
@@ -4539,15 +3937,15 @@ void glChartCanvas::RenderCanvasBackingChart( ocpnDC dc, OCPNRegion valid_region
     bool world_view = false;
     RenderWorldChart(dc, cvp, rtex, world_view);
 
-/*
-     dc.SetPen(wxPen(wxColour(254,254,0), 3));
-     dc.DrawLine( 0, 0, m_cache_tex_x, m_cache_tex_y);
- 
-     dc.DrawLine( 0, 0, 0, m_cache_tex_y);
-     dc.DrawLine( 0, m_cache_tex_y, m_cache_tex_x, m_cache_tex_y);
-     dc.DrawLine( m_cache_tex_x, m_cache_tex_y, m_cache_tex_x, 0);
-     dc.DrawLine( m_cache_tex_x, 0, 0, 0);
-*/
+/*    
+    dc.SetPen(wxPen(wxColour(254,254,0), 3));
+    dc.DrawLine( 0, 0, m_cache_tex_x, m_cache_tex_y);
+
+    dc.DrawLine( 0, 0, 0, m_cache_tex_y);
+    dc.DrawLine( 0, m_cache_tex_y, m_cache_tex_x, m_cache_tex_y);
+    dc.DrawLine( m_cache_tex_x, m_cache_tex_y, m_cache_tex_x, 0);
+    dc.DrawLine( m_cache_tex_x, 0, 0, 0);
+*/    
 
     // 3:  Use largest scale chart in the current quilt candidate list (which is identical to chart bar)
     //          which covers the entire canvas
@@ -4796,45 +4194,45 @@ void glChartCanvas::FastZoom(float factor)
     if( (m_fbo_sheight > m_cache_tex_y) || (m_fbo_swidth > m_cache_tex_x) ){
         wxColour color = GetGlobalColor(_T("GREY1"));
         glColor3ub(color.Red(), color.Green(), color.Blue());
-        
+
         if( m_fbo_sheight > m_cache_tex_y ){
             float h1 = sy * (1.0 - m_cache_tex_y/m_fbo_sheight) / 2.;
-            
+
             glBegin( GL_QUADS );
             glVertex2f( 0,  0 );
             glVertex2f( w,  0 );
             glVertex2f( w, h1 );
             glVertex2f( 0, h1 );
             glEnd();
-            
+
             glBegin( GL_QUADS );
             glVertex2f( 0,  sy );
             glVertex2f( w,  sy );
             glVertex2f( w, sy - h1 );
             glVertex2f( 0, sy - h1 );
             glEnd();
-            
+
         }
-        
-        // horizontal axis
-        if( m_fbo_swidth > m_cache_tex_x ){
-            float w1 = sx * (1.0 - m_cache_tex_x/m_fbo_swidth) / 2.;
-            
-            glBegin( GL_QUADS );
-            glVertex2f( 0,  0 );
-            glVertex2f( w1,  0 );
-            glVertex2f( w1, sy );
-            glVertex2f( 0, sy );
-            glEnd();
-            
-            glBegin( GL_QUADS );
-            glVertex2f( sx,  0 );
-            glVertex2f( sx - w1,  0 );
-            glVertex2f( sx - w1, sy );
-            glVertex2f( sx, sy );
-            glEnd();
-            
-        }
+
+         // horizontal axis
+         if( m_fbo_swidth > m_cache_tex_x ){
+             float w1 = sx * (1.0 - m_cache_tex_x/m_fbo_swidth) / 2.;
+
+             glBegin( GL_QUADS );
+             glVertex2f( 0,  0 );
+             glVertex2f( w1,  0 );
+             glVertex2f( w1, sy );
+             glVertex2f( 0, sy );
+             glEnd();
+
+             glBegin( GL_QUADS );
+             glVertex2f( sx,  0 );
+             glVertex2f( sx - w1,  0 );
+             glVertex2f( sx - w1, sy );
+             glVertex2f( sx, sy );
+             glEnd();
+
+         }
     }
 
     SwapBuffers();
@@ -4878,8 +4276,9 @@ void glChartCanvas::OnEvtPanGesture( wxQT_PanGestureEvent &event)
                 if(!g_GLOptions.m_bUseCanvasPanning || m_bfogit)
                     cc1->PanCanvas( dx, -dy );
                 else{
-                    FastPan( dx, dy );
+                    FastPan( dx, dy ); 
                 }
+
 
                 panx -= dx;
                 pany -= dy;
@@ -4906,7 +4305,7 @@ void glChartCanvas::OnEvtPanGesture( wxQT_PanGestureEvent &event)
             break;
 
         case GestureCanceled:
-            m_binPan = false;
+            m_binPan = false; 
             break;
 
         default:
@@ -4925,17 +4324,17 @@ void glChartCanvas::OnEvtPinchGesture( wxQT_PinchGestureEvent &event)
     float zoom_gain = 1.0;
     float zoom_val;
     float total_zoom_val;
-    
+
     if( event.GetScaleFactor() > 1)
         zoom_val = ((event.GetScaleFactor() - 1.0) * zoom_gain) + 1.0;
     else
         zoom_val = 1.0 - ((1.0 - event.GetScaleFactor()) * zoom_gain);
-    
+
     if( event.GetTotalScaleFactor() > 1)
         total_zoom_val = ((event.GetTotalScaleFactor() - 1.0) * zoom_gain) + 1.0;
     else
         total_zoom_val = 1.0 - ((1.0 - event.GetTotalScaleFactor()) * zoom_gain);
-    
+
     double projected_scale = cc1->GetVP().chart_scale / total_zoom_val;
 
     switch(event.GetState()){
@@ -4946,7 +4345,7 @@ void glChartCanvas::OnEvtPinchGesture( wxQT_PinchGestureEvent &event)
 
         case GestureUpdated:
             if(g_GLOptions.m_bUseCanvasPanning){
-                
+
                 if( projected_scale < 3e8)
                     FastZoom(zoom_val);
 
@@ -4954,10 +4353,10 @@ void glChartCanvas::OnEvtPinchGesture( wxQT_PinchGestureEvent &event)
             break;
 
         case GestureFinished:{
-            if( projected_scale < 3e8)
-                cc1->ZoomCanvas( total_zoom_val, false );
-            else
-                cc1->ZoomCanvas(cc1->GetVP().chart_scale / 3e8, false);
+                if( projected_scale < 3e8)
+                    cc1->ZoomCanvas( total_zoom_val, false );
+                else
+                    cc1->ZoomCanvas(cc1->GetVP().chart_scale / 3e8, false);
 
              m_binPinch = false;
              break;
@@ -4990,5 +4389,5 @@ void glChartCanvas::onGestureTimerEvent(wxTimerEvent &event)
     m_bpinchGuard = false;
 }
 
-#endif
 
+#endif

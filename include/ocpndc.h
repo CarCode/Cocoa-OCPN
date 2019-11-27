@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Layer to use wxDC or opengl
@@ -64,7 +64,7 @@ public:
      void SetBrush( const wxBrush &brush);
      void SetTextForeground(const wxColour &colour);
      void SetFont(const wxFont& font);
-     static void SetGLAttrs( bool highQuality );
+     static void SetGLAttrs( bool highQuality ); 
      void SetGLStipple() const;
 
      const wxPen& GetPen() const;
@@ -119,10 +119,10 @@ protected:
      wxColour m_textforegroundcolour;
      wxFont m_font;
 
-#ifdef ocpnUSE_GL
+#ifdef ocpnUSE_GL     
      TexFont m_texfont;
 #endif
-    bool m_buseTex;
+     bool m_buseTex;
 
 #if  wxUSE_GRAPHICS_CONTEXT
      wxGraphicsContext *pgc;

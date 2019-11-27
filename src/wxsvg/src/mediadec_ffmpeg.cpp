@@ -3,7 +3,7 @@
 // Purpose:     FFMPEG Media Decoder
 // Author:      Alex Thuering
 // Created:     21.07.2007
-// RCS-ID:      $Id: mediadec_ffmpeg.cpp,v 1.32 2015/09/21 13:23:51 ntalex Exp $
+// RCS-ID:      $Id: mediadec_ffmpeg.cpp,v 1.35 2016/05/03 19:44:45 ntalex Exp $
 // Copyright:   (c) Alex Thuering
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
@@ -24,11 +24,16 @@ extern "C" {
 #include <libswscale/swscale.h>
 #include <libavutil/avutil.h>
 #include <libavutil/mathematics.h>
+#include <libavutil/dict.h>
+#include <libavutil/rational.h>
 }
 
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 28, 1)
 #define av_frame_alloc avcodec_alloc_frame
 #define av_frame_free avcodec_free_frame
+#endif
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 0, 0)
+#define av_packet_unref av_free_packet
 #endif
 
 wxFfmpegMediaDecoder::wxFfmpegMediaDecoder(): m_formatCtx(NULL), m_videoStream(-1), m_codecCtx(NULL), m_frame(NULL),
@@ -263,9 +268,9 @@ wxImage wxFfmpegMediaDecoder::GetNextFrame() {
 			avcodec_decode_video2(m_codecCtx, m_frame, &frameFinished, &packet);
 			if (frameFinished) {
 				SwsContext* imgConvertCtx = sws_getContext(m_codecCtx->width, m_codecCtx->height, m_codecCtx->pix_fmt,
-						m_width, m_height, PIX_FMT_RGB24, SWS_BICUBIC, NULL, NULL, NULL);
+						m_width, m_height, AV_PIX_FMT_RGB24, SWS_BICUBIC, NULL, NULL, NULL);
 				if (imgConvertCtx == NULL) {
-					av_free_packet(&packet);
+					av_packet_unref(&packet);
 					return wxImage();
 				}
 
@@ -273,13 +278,13 @@ wxImage wxFfmpegMediaDecoder::GetNextFrame() {
 				uint8_t *rgbSrc[3] = { img.GetData(), NULL, NULL };
 				int rgbStride[3] = { 3 * m_width, 0, 0 };
 				sws_scale(imgConvertCtx, m_frame->data, m_frame->linesize, 0, m_codecCtx->height, rgbSrc, rgbStride);
-				av_free_packet(&packet);
+				av_packet_unref(&packet);
 				sws_freeContext(imgConvertCtx);
 				return img;
 			}
 		}
 		// free the packet that was allocated by av_read_frame
-		av_free_packet(&packet);
+		av_packet_unref(&packet);
 	}
 	return wxImage();
 }
@@ -317,4 +322,36 @@ float wxFfmpegMediaDecoder::GetCodecTimeBase() {
 	if (m_codecCtx == NULL || !m_codecCtx->time_base.den || !m_codecCtx->time_base.den)
 		return -1;
 	return 1 / av_q2d(m_codecCtx->time_base);
+}
+
+/** Returns list of chapters */
+vector<double> wxFfmpegMediaDecoder::GetChapters() {
+	vector<double> chapters;
+	for (unsigned int i = 0; i < m_formatCtx->nb_chapters; i++) {
+		AVChapter *chapter = m_formatCtx->chapters[i];
+		double d = chapter->start * av_q2d(chapter->time_base);
+		chapters.push_back(d);
+	}
+	return chapters;
+}
+
+/** Returns file metadata */
+map<wxString, wxString> wxFfmpegMediaDecoder::GetMetadata() {
+	map<wxString, wxString> metadata;
+	AVDictionaryEntry *tag = NULL;
+	while ((tag = av_dict_get(m_formatCtx->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
+		metadata[wxString(tag->key, wxConvUTF8)] = wxString(tag->value, wxConvUTF8);
+	}
+	return metadata;
+}
+
+
+/** Returns stream metadata */
+map<wxString, wxString> wxFfmpegMediaDecoder::GetMetadata(unsigned int streamIndex) {
+	map<wxString, wxString> metadata;
+	AVDictionaryEntry *tag = NULL;
+	while ((tag = av_dict_get(m_formatCtx->streams[streamIndex]->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
+		metadata[wxString(tag->key, wxConvUTF8)] = wxString(tag->value, wxConvUTF8);
+	}
+	return metadata;
 }

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -100,18 +100,18 @@ static void Initialize()
 {
     if(portaudio_initialized)
         return;
-    
+
     PaError err = Pa_Initialize();
     if( err != paNoError )
         printf( "PortAudio CTOR error: %s\n", Pa_GetErrorText( err ) );
-    
+
     portaudio_initialized = true;
 }
 
 int OCPN_Sound::DeviceCount()
 {
     Initialize();
-    
+
     return Pa_GetDeviceCount();
 }
 
@@ -161,41 +161,43 @@ bool OCPN_Sound::Create(const wxString& fileName, int deviceIndex, bool isResour
  
     PaError err;
     m_stream = NULL;
-/*
+
+/*    
     if(g_iSoundDeviceIndex == -1)
         g_iSoundDeviceIndex = Pa_GetDefaultOutputDevice();
 
     if(deviceIndex == -1)
         deviceIndex = g_iSoundDeviceIndex;
 */
+
     if(g_iSoundDeviceIndex != -1)
         deviceIndex = g_iSoundDeviceIndex;
-    else
+    else 
         deviceIndex = Pa_GetDefaultOutputDevice();
-
+    
     PaStreamParameters outputParameters;
     outputParameters.device = deviceIndex;
     outputParameters.channelCount = m_osdata->m_channels;
     outputParameters.sampleFormat = paInt16;
     outputParameters.suggestedLatency = 0;
     outputParameters.hostApiSpecificStreamInfo = NULL;
-
+    
     /* Open an audio I/O stream. */
     err = Pa_OpenStream( &m_stream,
-                        NULL, /* no input channels */
-                        &outputParameters,
-                        m_osdata->m_samplingRate,
-                        256, /* frames per buffer, i.e. the number
-                              of sample frames that PortAudio will
-                              request from the callback. Many apps
-                              may want to use
-                              paFramesPerBufferUnspecified, which
-                              tells PortAudio to pick the best,
-                              possibly changing, buffer size.*/
-                        paNoFlag, // flags
-                        OCPNSoundCallback, /* this is your callback function */
-                        sdata ); /*This is a pointer that will be passed to
-                                  your callback*/
+                         NULL, /* no input channels */
+                         &outputParameters,
+                         m_osdata->m_samplingRate,
+                         256, /* frames per buffer, i.e. the number
+                                 of sample frames that PortAudio will
+                                 request from the callback. Many apps
+                                 may want to use
+                                 paFramesPerBufferUnspecified, which
+                                 tells PortAudio to pick the best,
+                                 possibly changing, buffer size.*/
+                         paNoFlag, // flags
+                         OCPNSoundCallback, /* this is your callback function */
+                         sdata ); /*This is a pointer that will be passed to
+                                    your callback*/
     if( err != paNoError )
         printf( "PortAudio Create() error: %s\n", Pa_GetErrorText( err ) );
 
@@ -381,7 +383,7 @@ void OCPN_Sound::FreeMem(void)
 
 #else  //OCPN_USE_PORTAUDIO
 
-#ifndef __OCPN__ANDROID__  //                   No PortAudio and no Android
+#ifndef __OCPN__ANDROID__
 OCPN_Sound::OCPN_Sound()
 {
     m_OK = false;
@@ -433,7 +435,7 @@ void OCPN_Sound::Stop()
 {
     wxSound::Stop();
 }
-#else           // __OCPN__ANDROID__                    ab hier nur Android
+#else           // __OCPN__ANDROID__
 OCPN_Sound::OCPN_Sound()
 {
     m_OK = false;
@@ -465,7 +467,7 @@ void OCPN_Sound::UnLoad(void)
 {
     Stop();
     m_OK = false;
-
+    
 }
 
 bool OCPN_Sound::Play(unsigned flags) const

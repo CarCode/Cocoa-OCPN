@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  ISO 8211 Access
  * Purpose:  Implements the DDFRecord class.
@@ -1388,8 +1388,8 @@ DDFRecord::SetFieldRaw( DDFField *poField, int iIndexWithinField,
         if( !poField->GetFieldDefn()->IsRepeating() && iIndexWithinField != 0 )
             return FALSE;
 
-        bool b_new_16 = false;
-        // is the new data UTF-16?
+        bool b_new_16 = false;    
+        // is the new data UTF-16?    
         if( pachRawData && (pachRawData[nRawDataSize-1] == 0) && (pachRawData[nRawDataSize-2] == DDF_UNIT_TERMINATOR)){
             b_new_16 = true;
         }
@@ -1407,7 +1407,9 @@ DDFRecord::SetFieldRaw( DDFField *poField, int iIndexWithinField,
                return FALSE;
 
            pachFieldData = (char *) poField->GetData();
-           
+#ifdef __WXOSX__
+      if(pachRawData)
+#endif
            memcpy( pachFieldData, pachRawData, nRawDataSize );
  
            if(b_new_16){
@@ -1428,7 +1430,9 @@ DDFRecord::SetFieldRaw( DDFField *poField, int iIndexWithinField,
             
             pachFieldData = (char *) poField->GetData();
 
-       
+#ifdef __WXOSX__
+            if(pachRawData) {
+#endif
         //      We may be appending to a UTF-16 field
             if( (pachFieldData[nOldSize-1] == 0) && (pachFieldData[nOldSize-2] == DDF_UNIT_TERMINATOR)){
                 memcpy( pachFieldData + nOldSize, pachRawData, nRawDataSize );
@@ -1439,7 +1443,9 @@ DDFRecord::SetFieldRaw( DDFField *poField, int iIndexWithinField,
             else{
                 memcpy( pachFieldData + nOldSize - 1, pachRawData, nRawDataSize );
             }
-        
+#ifdef __WXOSX__
+            }
+#endif
             if(b_new_16){
                 pachFieldData[nOldSize+nRawDataSize-2] = DDF_FIELD_TERMINATOR;
                 pachFieldData[nOldSize+nRawDataSize-1] = 0;

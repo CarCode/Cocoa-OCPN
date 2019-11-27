@@ -10,10 +10,10 @@
 
 #ifndef _WX_SVGXML_H_
 #define _WX_SVGXML_H_
-
-#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
-#pragma interface "svgxml.h"
-#endif
+// Not used
+//#if defined(__GNUG__) && !defined(NO_GCC_PRAGMA)
+//#pragma interface "svgxml.h"
+//#endif
 
 #include <wx/string.h>
 #include <wx/object.h>

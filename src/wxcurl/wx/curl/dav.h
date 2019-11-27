@@ -23,7 +23,7 @@
 #include <wx/datetime.h>
 #include <wx/dynarray.h>
 
-#include "wx/curl/http.h"
+#include <wx/curl/http.h>
 
 class wxXmlNode;
 

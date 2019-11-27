@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -135,7 +135,7 @@ void AISTargetAlertDialog::Init()
     m_max_nline = 20;
     m_adj_height = 0;
     m_bsizeSet = false;
-
+    
 }
 
 
@@ -181,20 +181,17 @@ void AISTargetAlertDialog::CreateControls()
     SetSizer( topSizer );
 
     m_pAlertTextCtl = new wxHtmlWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                       wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION);
+                                        wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION);
 #ifdef __OCPN__ANDROID__
     m_pAlertTextCtl->GetHandle()->setStyleSheet( getQtStyleSheet());
 #endif
 
     m_pAlertTextCtl->SetBorders( 5 );
-#ifdef __WXOSX__
     topSizer->Add( m_pAlertTextCtl, 1, wxALL | wxEXPAND, 5 );
-#else
-    topSizer->Add( m_pAlertTextCtl, 1, wxALIGN_CENTER_HORIZONTAL | wxALL | wxEXPAND, 5 );
-#endif
+
     // A horizontal box sizer to contain Ack
     wxBoxSizer* AckBox = new wxBoxSizer( wxHORIZONTAL );
-    topSizer->Add( AckBox, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
+    topSizer->Add( AckBox, 0, wxALL, 5 );
 
     // The Silence button
     if( g_bAIS_CPA_Alert_Audio ){
@@ -223,9 +220,9 @@ void AISTargetAlertDialog::CreateControls()
     
 
     UpdateText();
-
+    
     RecalculateSize();
-
+    
 }
 
 bool AISTargetAlertDialog::GetAlertText()
@@ -246,7 +243,7 @@ bool AISTargetAlertDialog::GetAlertText()
 void AISTargetAlertDialog::UpdateText()
 {
     if( GetAlertText() ) {
-
+        
         wxFont *dFont = FontMgr::Get().GetFont( _("AISTargetAlert"), 12 );
         wxString face = dFont->GetFaceName();
         int sizes[7];
@@ -256,7 +253,7 @@ void AISTargetAlertDialog::UpdateText()
 
         wxString html;
         wxColor bg = GetBackgroundColour();
-
+        
         html.Printf( _T("<html><body bgcolor=#%02x%02x%02x><center>"), bg.Red(), bg.Green(), bg.Blue() );
         
         html << m_alert_text;
@@ -267,7 +264,7 @@ void AISTargetAlertDialog::UpdateText()
 
         RecalculateSize();
     }
-
+    
     SetColorScheme();
     if( !g_bopengl && CanSetTransparent() )
         SetTransparent( 192 );
@@ -286,39 +283,41 @@ void AISTargetAlertDialog::RecalculateSize( void )
 
     if(nline > m_max_nline)
         m_max_nline = nline;
-
+    
     wxSize esize;
     esize.x = GetCharWidth() * 45;
     esize.y = GetCharHeight() * (m_max_nline + 4);
-    //    SetSize(esize);
+//    SetSize(esize);
 
     int height = m_pAlertTextCtl->GetInternalRepresentation()->GetHeight();
     int adj_height = height + (GetCharHeight() * 4);
     m_adj_height = wxMax(m_adj_height, adj_height);
-
+    
     esize.y = wxMin(esize.y, m_adj_height);
-///    SetClientSize(esize);
-/*
+///  SetClientSize(esize);
+    
+/*    
     wxSize dsize = GetParent()->GetClientSize();
-
+    
     wxSize fsize = GetSize();
     fsize.y = wxMin(fsize.y, dsize.y - (1 * GetCharHeight()));
     fsize.x = wxMin(fsize.x, dsize.x - (1 * GetCharHeight()));
     SetSize(fsize);
- */
+    */
 
-
+    
     if(!m_bsizeSet){
         Fit();          // Sets the horizontal size OK
         m_bsizeSet = true;
     }
 
-    wxSize gSize = GetClientSize();
-    if(gSize.y != esize.y)
-        SetClientSize(gSize.x, esize.y);
-
+        wxSize gSize = GetClientSize();
+        if(gSize.y != esize.y)
+            SetClientSize(gSize.x, esize.y);
+        
+    
     g_Platform->PositionAISAlert( this );
-
+    
 }
 
 void AISTargetAlertDialog::SetColorScheme( void )
@@ -328,8 +327,8 @@ void AISTargetAlertDialog::SetColorScheme( void )
     m_pAlertTextCtl->SetBackgroundColour( bg );
     SetBackgroundColour( bg );                  // This looks like non-sense, but is needed for __WXGTK__
     // to get colours to propagate down the control's family tree.
-
-#ifdef __WXQT__
+    
+#ifdef __WXQT__    
     //  wxQT has some trouble clearing the background of HTML window...
     wxBitmap tbm( GetSize().x, GetSize().y, -1 );
     wxMemoryDC tdc( tbm );
@@ -338,7 +337,7 @@ void AISTargetAlertDialog::SetColorScheme( void )
     tdc.Clear();
     m_pAlertTextCtl->SetBackgroundImage(tbm);
 #endif
-
+    
 }
 
 void AISTargetAlertDialog::OnClose( wxCloseEvent& event )
@@ -378,7 +377,7 @@ void AISTargetAlertDialog::OnIdCreateWPClick( wxCommandEvent& event )
     if( m_pdecoder ) { 
         AIS_Target_Data *td =  m_pdecoder->Get_Target_Data_From_MMSI( Get_Dialog_MMSI() );
         if( td ) {
-            RoutePoint *pWP = new RoutePoint( td->Lat, td->Lon, g_default_wp_icon, wxEmptyString, GPX_EMPTY_STRING );
+            RoutePoint *pWP = new RoutePoint( td->Lat, td->Lon, g_default_wp_icon, wxEmptyString, wxEmptyString );
             pWP->m_bIsolatedMark = true;                      // This is an isolated mark
             pSelect->AddSelectableRoutePoint( td->Lat, td->Lon, pWP );
             pConfig->AddNewWayPoint( pWP, -1 );    // use auto next num

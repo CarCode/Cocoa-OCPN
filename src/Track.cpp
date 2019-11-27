@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Navigation Utility Functions
@@ -78,12 +78,21 @@ millions of points.
 #include "Route.h"
 #include "Track.h"
 #include "routeman.h"
+#ifndef __WXOSX__
 #include "routeprop.h"
+#else
+#include "geodesic.h"
+#endif
 #include "ocpndc.h"
 #include "georef.h"
 #include "chartbase.h"
 #include "navutil.h"
 #include "Select.h"
+
+#ifdef ocpnUSE_GL
+#include "glChartCanvas.h"
+extern ocpnGLOptions g_GLOptions;
+#endif
 
 extern ChartCanvas      *cc1;
 extern WayPointman *pWayPointMan;
@@ -96,8 +105,12 @@ extern int              g_nTrackPrecision;
 extern bool             g_bTrackDaily;
 extern bool             g_bHighliteTracks;
 extern double           g_TrackDeltaDistance;
-extern RouteProp                 *pRoutePropDialog;
+#ifndef __WXOSX__
+extern RouteProp        *pRoutePropDialog;
+#endif
 extern float            g_GLMinSymbolLineWidth;
+extern wxColour         g_colourTrackLineColour;
+extern wxColor GetDimColor(wxColor c);
 
 #if defined( __UNIX__ ) && !defined(__WXOSX__)  // high resolution stopwatch for profiling
 class OCPNStopWatch
@@ -120,59 +133,92 @@ private:
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST ( TrackList );
 
+TrackPoint::TrackPoint(double lat, double lon, wxString ts)
+    : m_lat(lat), m_lon(lon), m_GPXTrkSegNo(1), m_timestring(NULL)
+{
+    SetCreateTime(ts);
+}
+
+TrackPoint::TrackPoint(double lat, double lon, wxDateTime dt)
+    : m_lat(lat), m_lon(lon), m_GPXTrkSegNo(1), m_timestring(NULL)
+{
+    SetCreateTime(dt);
+}
+
 // Copy Constructor
 TrackPoint::TrackPoint( TrackPoint* orig )
+    : m_lat(orig->m_lat), m_lon(orig->m_lon), m_GPXTrkSegNo(1), m_timestring(NULL)
 {
-    m_lat = orig->m_lat;
-    m_lon = orig->m_lon;
-    m_CreateTimeX = orig->m_CreateTimeX;
-    m_GPXTrkSegNo = 1;
+    SetCreateTime(orig->GetCreateTime());
+}
+
+TrackPoint::~TrackPoint()
+{
+    delete [] m_timestring;
 }
 
 wxDateTime TrackPoint::GetCreateTime()
 {
-    if(!m_CreateTimeX.IsValid()) {
-        if(m_timestring.Len())
-            ParseGPXDateTime( m_CreateTimeX, m_timestring );
+    wxDateTime CreateTimeX;
+    
+    if(m_timestring) {
+        wxString ts = m_timestring;
+        ParseGPXDateTime( CreateTimeX, ts );
     }
-    return m_CreateTimeX;
+    return CreateTimeX;
 }
 
 void TrackPoint::SetCreateTime( wxDateTime dt )
 {
-    m_CreateTimeX = dt;
+    wxString ts;
+    if(dt.IsValid())
+        ts = dt.FormatISODate().Append(_T("T")).Append(dt.FormatISOTime()).Append(_T("Z"));
+    
+    SetCreateTime(ts);
+}
+
+void TrackPoint::SetCreateTime( wxString ts )
+{
+    delete [] m_timestring;
+    if(ts.Length()) {
+        m_timestring = new char[ts.Length()+1];
+        strcpy(m_timestring, ts.mb_str());
+    } else
+        m_timestring = NULL;
 }
 
 void TrackPoint::Draw(ocpnDC& dc )
 {
     wxPoint r;
     wxRect hilitebox;
-
+ 
     cc1->GetCanvasPointPix( m_lat, m_lon, &r );
-
+    
     wxPen *pen;
     pen = g_pRouteMan->GetRoutePointPen();
-
+        
     int sx2 = 8;
     int sy2 = 8;
-
-    wxRect r1( r.x - sx2, r.y - sy2, sx2 * 2, sy2 * 2 );           // the bitmap extents
-
-    hilitebox = r1;
-    hilitebox.x -= r.x;
-    hilitebox.y -= r.y;
-    float radius;
-    hilitebox.Inflate( 4 );
-    radius = 4.0f;
-
-    wxColour hi_colour = pen->GetColour();
-    unsigned char transparency = 100;
-
-    //  Highlite any selected point
-    AlphaBlending( dc, r.x + hilitebox.x, r.y + hilitebox.y, hilitebox.width, hilitebox.height, radius,
-                  hi_colour, transparency );
-
+            
+     wxRect r1( r.x - sx2, r.y - sy2, sx2 * 2, sy2 * 2 );           // the bitmap extents
+            
+     hilitebox = r1;
+     hilitebox.x -= r.x;
+     hilitebox.y -= r.y;
+     float radius;
+     hilitebox.Inflate( 4 );
+     radius = 4.0f;
+            
+     wxColour hi_colour = pen->GetColour();
+     unsigned char transparency = 100;
+            
+     //  Highlite any selected point
+     AlphaBlending( dc, r.x + hilitebox.x, r.y + hilitebox.y, hilitebox.width, hilitebox.height, radius,
+                               hi_colour, transparency );
+            
 }
+
+
 
 //---------------------------------------------------------------------------------
 //    Track Implementation
@@ -324,8 +370,8 @@ Track *ActiveTrack::DoExtendDaily()
         if( pLastPoint->GetCreateTime() == pExtendPoint->GetCreateTime() ) begin = 2;
         pSelect->DeleteAllSelectableTrackSegments( pExtendTrack );
         wxString suffix = _T("");
-        if( m_TrackNameString.IsNull() ) {
-            suffix = pExtendTrack->m_TrackNameString;
+        if( GetName().IsNull() ) {
+            suffix = pExtendTrack->GetName();
             if( suffix.IsNull() ) suffix = wxDateTime::Today().FormatISODate();
         }
         pExtendTrack->Clone( this, begin, GetnPoints(), suffix );
@@ -334,8 +380,8 @@ Track *ActiveTrack::DoExtendDaily()
 
         return pExtendTrack;
     } else {
-        if( m_TrackNameString.IsNull() )
-            m_TrackNameString = wxDateTime::Today().FormatISODate();
+        if( GetName().IsNull() )
+            SetName(wxDateTime::Today().FormatISODate());
         return NULL;
     }
 }
@@ -361,7 +407,7 @@ void Track::Clone( Track *psourcetrack, int start_nPoint, int end_nPoint, const 
         TrackPoint *psourcepoint = psourcetrack->GetPoint( i );
         if(psourcepoint){
             TrackPoint *ptargetpoint = new TrackPoint( psourcepoint);
-
+            
             AddPoint( ptargetpoint );
         }
     }
@@ -506,8 +552,9 @@ void ActiveTrack::AddPointNow( bool do_add_point )
 
 void Track::AddPointToList(std::list< std::list<wxPoint> > &pointlists, int n)
 {
-    wxPoint r;
-    cc1->GetCanvasPointPix( TrackPoints[n]->m_lat, TrackPoints[n]->m_lon, &r );
+    wxPoint r(INVALID_COORD, INVALID_COORD);
+    if ( (size_t)n < TrackPoints.size() )
+        cc1->GetCanvasPointPix( TrackPoints[n]->m_lat, TrackPoints[n]->m_lon, &r );
 
     std::list<wxPoint> &pointlist = pointlists.back();
     if(r.x == INVALID_COORD) {
@@ -587,7 +634,7 @@ void Track::Draw( ocpnDC& dc, ViewPort &VP, const LLBBox &box )
     if( IsRunning() )
         basic_colour = GetGlobalColor( _T ( "URED" ) );
     else
-        basic_colour = GetGlobalColor( _T ( "CHMGD" ) );
+        basic_colour = GetDimColor(g_colourTrackLineColour);
 
     wxPenStyle style = wxPENSTYLE_SOLID;
     int width = g_pRouteMan->GetTrackPen()->GetWidth();
@@ -615,7 +662,7 @@ void Track::Draw( ocpnDC& dc, ViewPort &VP, const LLBBox &box )
             radius = 0;
     }
 
-    if(dc.GetDC() || radius) {
+    if( dc.GetDC() || radius ) {
         dc.SetPen( *wxThePenList->FindOrCreatePen( col, width, style ) );
         dc.SetBrush( *wxTheBrushList->FindOrCreateBrush( col, wxBRUSHSTYLE_SOLID ) );
         for(std::list< std::list<wxPoint> >::iterator lines = pointlists.begin();
@@ -635,8 +682,8 @@ void Track::Draw( ocpnDC& dc, ViewPort &VP, const LLBBox &box )
 
                 dc.StrokeLines( i, points );
 
-                wxColour y = GetGlobalColor( _T ( "YELO1" ) );
-                wxColour hilt( y.Red(), y.Green(), y.Blue(), 128 );
+                wxColor trackLine_dim_colour = GetDimColor(g_colourTrackLineColour);
+                wxColour hilt( trackLine_dim_colour.Red(), trackLine_dim_colour.Green(), trackLine_dim_colour.Blue(), 128 );
 
                 wxPen HiPen( hilt, hilite_width, wxPENSTYLE_SOLID );
                 dc.SetPen( HiPen );
@@ -654,7 +701,10 @@ void Track::Draw( ocpnDC& dc, ViewPort &VP, const LLBBox &box )
     else { // opengl version
         glColor3ub(col.Red(), col.Green(), col.Blue());
         glLineWidth( wxMax( g_GLMinSymbolLineWidth, width ) );
-
+        if( g_GLOptions.m_GLLineSmoothing )
+            glEnable( GL_LINE_SMOOTH );
+        glEnable( GL_BLEND );
+        
         int size = 0;
         // convert from linked list to array, allocate array just once
         for(std::list< std::list<wxPoint> >::iterator lines = pointlists.begin();
@@ -662,11 +712,11 @@ void Track::Draw( ocpnDC& dc, ViewPort &VP, const LLBBox &box )
             size = wxMax(size, lines->size());
         int *points = new int[2*size];
         glVertexPointer(2, GL_INT, 0, points);
-
+        
         glEnableClientState(GL_VERTEX_ARRAY);
         for(std::list< std::list<wxPoint> >::iterator lines = pointlists.begin();
             lines != pointlists.end(); lines++) {
-
+            
             // convert from linked list to array
             int i = 0;
             for(std::list<wxPoint>::iterator line = lines->begin();
@@ -675,12 +725,15 @@ void Track::Draw( ocpnDC& dc, ViewPort &VP, const LLBBox &box )
                 points[i+1] = line->y;
                 i+=2;
             }
-
+            
             glDrawArrays(GL_LINE_STRIP, 0, i >> 1);
         }
         glDisableClientState(GL_VERTEX_ARRAY);
-
+        
         delete [] points;
+        glDisable( GL_LINE_SMOOTH );
+        glDisable( GL_BLEND );
+
     }
 #endif
 
@@ -796,7 +849,7 @@ void Track::GetPointLists(std::list< std::list<wxPoint> > &pointlists,
     Segments(pointlists, box, VP.view_scale_ppm);
 
 #if 0
-    if(n > 40000) {
+    if(GetnPoints() > 40000) {
         double t = sw.GetTime();
         double c = 0;
         for(std::list< std::list<wxPoint> >::iterator lines = pointlists.begin();
@@ -919,9 +972,7 @@ void Track::AddPointFinalized( TrackPoint *pNewPoint )
 
 TrackPoint* Track::AddNewPoint( vector2D point, wxDateTime time )
 {
-    TrackPoint *tPoint = new TrackPoint( point.lat, point.lon );
-    tPoint->m_GPXTrkSegNo = 1;
-    tPoint->SetCreateTime(time);
+    TrackPoint *tPoint = new TrackPoint( point.lat, point.lon, time );
 
     AddPointFinalized( tPoint );
 
@@ -957,30 +1008,30 @@ void Track::DouglasPeuckerReducer( std::vector<TrackPoint*>& list,
 double Track::Length()
 {
     TrackPoint *l = NULL;
-#ifdef __WXOSX__
     double total = 0.0;
-#else
-    double total = 0;
-#endif
     for(size_t i = 0; i < TrackPoints.size(); i++) {
         TrackPoint *t = TrackPoints[i];
         if(l) {
-#ifdef __WXOSX__
             const double offsetLat = 1e-6;
             const double deltaLat = l->m_lat - t->m_lat;
-            if ( fabs( deltaLat ) > offsetLat )
-                total += DistGreatCircle( l->m_lat, l->m_lon, t->m_lat, t->m_lon );
-            else
-                total += DistGreatCircle( l->m_lat + copysign( offsetLat, deltaLat ), l->m_lon, t->m_lat, t->m_lon );
+            if ( fabs( deltaLat ) > offsetLat ){  // fabs( deltaLat )  l->m_lat muß größer als t->m_lat sein !!! Dito für m_lon
+#ifndef __WXOSX__
+                total += DistGreatCircle( l->m_lat, l->m_lon, t->m_lat, t->m_lon );  // Plus Wert
 #else
-            double dd = DistGreatCircle( l->m_lat, l->m_lon, t->m_lat, t->m_lon );
-            total += dd;
+                total += Geodesic::GreatCircleDistBear(l->m_lon, l->m_lat, t->m_lon, t->m_lat, NULL, NULL, NULL);
 #endif
+            }else{
+#ifndef __WXOSX__
+                total += DistGreatCircle( l->m_lat + copysign( offsetLat, deltaLat ), l->m_lon, t->m_lat, t->m_lon );  // Minus Wert
+#else
+                total += Geodesic::GreatCircleDistBear(l->m_lon, l->m_lat + copysign( offsetLat, deltaLat ), t->m_lon, t->m_lat, NULL, NULL, NULL);
+#endif
+            }
         }
         l = t;
     }
-
-    return total;
+    double mtotal = total /1852.0;
+    return mtotal;
 }
 
 int Track::Simplify( double maxDelta )
@@ -1040,19 +1091,20 @@ Route *Track::RouteFromTrack( wxGenericProgressDialog *pprog )
     double delta_dist = 0.;
     double delta_hdg, xte;
     double leg_speed = 0.1;
-
+#ifndef __WXOSX__
     if( pRoutePropDialog )
         leg_speed = pRoutePropDialog->m_planspeed;
     else
+#endif
         leg_speed = g_PlanSpeed;
 
 // add first point
 
-    pWP_dst = new RoutePoint( pWP_src->m_lat, pWP_src->m_lon, icon, _T ( "" ), GPX_EMPTY_STRING );
+    pWP_dst = new RoutePoint( pWP_src->m_lat, pWP_src->m_lon, icon, _T ( "" ), wxEmptyString );
     route->AddPoint( pWP_dst );
 
     pWP_dst->m_bShowName = false;
-
+    
     pSelect->AddSelectableRoutePoint( pWP_dst->m_lat, pWP_dst->m_lon, pWP_dst );
     pWP_prev = pWP_dst;
 // add intermediate points as needed
@@ -1079,7 +1131,7 @@ Route *Track::RouteFromTrack( wxGenericProgressDialog *pprog )
 
             while( delta_inserts-- ) {
                 ll_gc_ll( pWP_prev->m_lat, pWP_prev->m_lon, delta_hdg, delta_dist, &tlat, &tlon );
-                pWP_dst = new RoutePoint( tlat, tlon, icon, _T ( "" ), GPX_EMPTY_STRING );
+                pWP_dst = new RoutePoint( tlat, tlon, icon, _T ( "" ), wxEmptyString );
                 route->AddPoint( pWP_dst );
                 pWP_dst->m_bShowName = false;
                 pSelect->AddSelectableRoutePoint( pWP_dst->m_lat, pWP_dst->m_lon, pWP_dst );
@@ -1104,15 +1156,15 @@ Route *Track::RouteFromTrack( wxGenericProgressDialog *pprog )
         while( prpnodeX < TrackPoints.size() ) {
 
             TrackPoint *prpX = TrackPoints[prpnodeX];
-            TrackPoint src(pWP_prev->m_lat, pWP_prev->m_lon);
+//            TrackPoint src(pWP_prev->m_lat, pWP_prev->m_lon);
             xte = GetXTE( pWP_src, prpX, prp );
 #ifdef __WXOSX__
             if( (isProminent || ( xte > g_TrackDeltaDistance )) && prp_OK) {
 #else
-            if( isProminent || ( xte > g_TrackDeltaDistance ) {    
+            if( isProminent || ( xte > g_TrackDeltaDistance ) ) {
 #endif
                 pWP_dst = new RoutePoint( prp_OK->m_lat, prp_OK->m_lon, icon, _T ( "" ),
-                        GPX_EMPTY_STRING );
+                                         wxEmptyString );
 
                 route->AddPoint( pWP_dst );
                 pWP_dst->m_bShowName = false;
@@ -1152,7 +1204,7 @@ Route *Track::RouteFromTrack( wxGenericProgressDialog *pprog )
     if( delta_dist >= g_TrackDeltaDistance ) {
         pWP_dst = new RoutePoint( TrackPoints.back()->m_lat,
                                   TrackPoints.back()->m_lon,
-                                  icon, _T ( "" ), GPX_EMPTY_STRING );
+                                 icon, _T ( "" ), wxEmptyString );
         route->AddPoint( pWP_dst );
 
         pWP_dst->m_bShowName = false;

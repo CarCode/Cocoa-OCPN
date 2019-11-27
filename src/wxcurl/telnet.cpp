@@ -27,7 +27,7 @@
     #include <wx/msw/msvcrt.h>      // useful to catch memory leaks when compiling under MSVC 
 #endif
 
-#include "wx/curl/telnet.h"
+#include <wx/curl/telnet.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -22,7 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *                                                                         *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -181,7 +180,6 @@ class NMEA0183
 //      BWC Bwc;
 //      BWR Bwr;
 //      BWW Bww;
-
       DBT Dbt;
 //      DCN Dcn;
       DPT Dpt;
@@ -201,6 +199,7 @@ class NMEA0183
 //      OSD Osd;
 //      P   Proprietary;
 //      RMA Rma;
+
        HDM Hdm;
        HDG Hdg;
        HDT Hdt;
@@ -208,15 +207,18 @@ class NMEA0183
        RMC Rmc;
        WPL Wpl;
        RTE Rte;
+//       GLL Gll;
        VTG Vtg;
        GSV Gsv;
+//       GGA Gga;
        GPWPL GPwpl;
        APB Apb;
        XTE Xte;
 #ifdef __WXOSX__
-        VLW Vlw;
-        STALK Stalk;
+    VLW Vlw;
+    STALK Stalk;
 #endif
+ 
 //      ROT Rot;
 //      RPM Rpm;
       RSA Rsa;

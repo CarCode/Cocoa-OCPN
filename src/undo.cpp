@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Framework for Undo features
@@ -21,10 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- *
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -39,9 +36,12 @@
 #include "navutil.h"
 #include "styles.h"
 #include "routeman.h"
+#ifdef __WXOSX__
+//#include "MarkInfo.h"
+#else
 #include "routeprop.h"
+#endif
 #include "routemanagerdialog.h"
-#include "tinyxml.h"
 #include "undo.h"
 #include "chcanv.h"
 
@@ -52,7 +52,7 @@ extern RouteManagerDialog *pRouteManagerDialog;
 extern WayPointman *pWayPointMan;
 extern ChartCanvas *cc1;
 extern MyFrame *gFrame;
-extern MarkInfoImpl *pMarkPropDialog;
+//extern MarkInfoImpl *pMarkPropDialog;
 
 Undo::Undo()
 {
@@ -109,11 +109,11 @@ void doUndoMoveWaypoint( UndoAction* action ) {
     SelectItem* selectable = (SelectItem*) action->selectable[0];
     selectable->m_slat = currentPoint->m_lat;
     selectable->m_slon = currentPoint->m_lon;
-
+#ifndef __WXOSX__
     if( ( NULL != pMarkPropDialog ) && ( pMarkPropDialog->IsShown() ) ){
        if( currentPoint == pMarkPropDialog->GetRoutePoint() ) pMarkPropDialog->UpdateProperties(true);
        }
-        
+#endif
     wxArrayPtrVoid* routeArray = g_pRouteMan->GetRouteArrayContaining( currentPoint );
     if( routeArray ) {
         for( unsigned int ir = 0; ir < routeArray->GetCount(); ir++ ) {

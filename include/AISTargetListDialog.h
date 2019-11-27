@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -60,6 +60,7 @@ class AISTargetListDialog: public wxPanel
             void SetColorScheme( );
             void UpdateAISTargetList( );     // Rebuild AIS target list
             void UpdateNVAISTargetList( );
+            void CopyMMSItoClipBoard(int);
             AIS_Target_Data   *GetpTarget(unsigned int list_item);
 
             OCPNListCtrl      *m_pListCtrlAISTargets;
@@ -69,7 +70,7 @@ class AISTargetListDialog: public wxPanel
 
       private:
             void CreateControls( void );
-
+           
             void OnPaneClose( wxAuiManagerEvent& event );
             void UpdateButtons();
             void OnTargetSelected( wxListEvent &event );
@@ -80,11 +81,12 @@ class AISTargetListDialog: public wxPanel
             void OnTargetScrollTo( wxCommandEvent& event );
             void OnTargetCreateWpt( wxCommandEvent& event );
 #ifdef __WXOSX__
-            void OnTargetCopyMMSI( wxCommandEvent& event );
+    void OnTargetCopyMMSI( wxCommandEvent& event );
 #endif
             void OnShowAllTracks( wxCommandEvent& event );
             void OnHideAllTracks( wxCommandEvent& event );
             void OnToggleTrack( wxCommandEvent& event );
+            void OnCopyMMSI( wxCommandEvent& event );
             void OnLimitRange( wxCommandEvent& event );
             void OnCloseButton( wxCommandEvent& event );
             void OnAutosortCB( wxCommandEvent &event );
@@ -94,12 +96,10 @@ class AISTargetListDialog: public wxPanel
             wxButton          *m_pButtonInfo;
             wxButton          *m_pButtonJumpTo;
             wxButton          *m_pButtonCreateWpt;
-#ifdef __WXOSX__
-            wxButton          *m_pButtonCopyMMSI;
-#endif
             wxButton          *m_pButtonHideAllTracks;
             wxButton          *m_pButtonShowAllTracks;
             wxButton          *m_pButtonToggleTrack;
+            wxButton          *m_pButtonCopyMMSI;
             wxStaticText      *m_pStaticTextRange;
             wxSpinCtrl        *m_pSpinCtrlRange;
             wxStaticText      *m_pStaticTextCount;

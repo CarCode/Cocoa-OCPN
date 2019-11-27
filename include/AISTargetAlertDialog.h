@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -45,21 +45,14 @@ public:
     
     virtual ~OCPN_AlertDialog( );
     virtual void Init();
-#ifdef __WXOSX__
-    bool Create( wxWindow *parent,
-                wxWindowID id = wxID_ANY,
-                const wxString& caption = _("OpenCPN Alert"),
-                const wxPoint& pos = wxDefaultPosition,
-                const wxSize& size = wxDefaultSize,
-                long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU );
-#else
+    
     virtual bool Create( wxWindow *parent,
                  wxWindowID id = wxID_ANY,
                  const wxString& caption = _("OpenCPN Alert"),
                  const wxPoint& pos = wxDefaultPosition,
                  const wxSize& size = wxDefaultSize,
                  long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU );
-#endif
+
                  
 private:
     wxWindow          *m_pparent;
@@ -88,11 +81,11 @@ class AISTargetAlertDialog: public OCPN_AlertDialog
            int Get_Dialog_MMSI(void){ return m_target_mmsi; }
            void UpdateText();
            void RecalculateSize( void );
-
+           
       private:
-            void CreateControls();
-            bool GetAlertText(void);
-            void SetColorScheme( void );
+          void CreateControls();
+          bool GetAlertText(void);
+          void SetColorScheme( void );
             void OnClose(wxCloseEvent& event);
             void OnIdAckClick( wxCommandEvent& event );
             void OnMove( wxMoveEvent& event );
@@ -113,6 +106,7 @@ class AISTargetAlertDialog: public OCPN_AlertDialog
             int               m_max_nline;
             int               m_adj_height;
             bool              m_bsizeSet;
+            
 
 };
 

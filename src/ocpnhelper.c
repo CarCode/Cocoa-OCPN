@@ -1,6 +1,6 @@
-/***************************************************************************
- *   Copyright (C) 2006 by dsr   *
- *   dsr@mshome.net   *
+/* *************************************************************************
+ *   Copyright (C) 2006 by dsr                                             *
+ *   dsr@mshome.net                                                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,7 +17,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
-
 
 #include <unistd.h>
 #include <stdlib.h>

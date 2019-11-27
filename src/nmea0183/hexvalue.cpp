@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -22,7 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *                                                                         *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -46,11 +45,11 @@ int HexValue( const wxString& hex_string )
 
    long scan_value = 0;
 
-    wxCharBuffer abuf = hex_string.ToUTF8();
-    if( !abuf.data() )                            // badly formed sentence?
+   wxCharBuffer abuf = hex_string.ToUTF8();
+   if( !abuf.data() )                            // badly formed sentence?
         return 0;
-    
-    sscanf( abuf.data(), "%lx",  &scan_value );
+
+   sscanf( abuf.data(), "%lx",  &scan_value );
 
    return_value = (int)scan_value;
    return( return_value );

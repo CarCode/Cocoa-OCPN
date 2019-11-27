@@ -1,11 +1,11 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  OpenCP
  * Purpose:  S52 PLIB and S57 Chart data types
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
 
 
 #ifndef _S52S57_H_
@@ -501,9 +499,6 @@ public:
       unsigned int index;
       float      *pPoint;
 };
-
-WX_DECLARE_OBJARRAY(VE_Element, ArrayOfVE_Elements);
-WX_DECLARE_OBJARRAY(VC_Element, ArrayOfVC_Elements);
 
 typedef std::vector<VE_Element *> VE_ElementVector;
 typedef std::vector<VC_Element *> VC_ElementVector;

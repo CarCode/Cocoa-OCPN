@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  ChartBase Definition
@@ -85,10 +85,10 @@ public:
 
 
 typedef struct _Extent{
-    float SLAT;
-    float WLON;
-    float NLAT;
-    float ELON;
+  float SLAT;
+  float WLON;
+  float NLAT;
+  float ELON;
 }Extent;
 
 //          Depth unit type enum
@@ -112,7 +112,8 @@ typedef enum OcpnProjType
       PROJECTION_POLAR,
       PROJECTION_STEREOGRAPHIC,
       PROJECTION_GNOMONIC,
-      PROJECTION_EQUIRECTANGULAR
+      PROJECTION_EQUIRECTANGULAR,
+      PROJECTION_WEB_MERCATOR
 }_OcpnProjType;
 
 
@@ -158,6 +159,7 @@ public:
       virtual wxString GetPubDate(){ return m_PubYear;}
       virtual int GetNativeScale(){ return m_Chart_Scale;}
       wxString GetFullPath() const { return m_FullPath;}
+      wxString GetHashKey() const;
       wxString GetName(){ return m_Name;}
       wxString GetDescription() { return m_Description;}
       wxString GetID(){ return m_ID;}
@@ -167,8 +169,8 @@ public:
       wxString GetDatumString(){ return m_datum_str;}
       wxString GetExtraInfo(){ return m_ExtraInfo; }
 #ifdef __WXOSX__
-      double  GetLatAdjustment() { return m_lat_datum_adjust; };
-      double  GetLonAdjustment() { return m_lon_datum_adjust; };
+    double  GetLatAdjustment() { return m_lat_datum_adjust; };
+    double  GetLonAdjustment() { return m_lon_datum_adjust; };
 #endif
       double GetChart_Error_Factor(){ return Chart_Error_Factor; }
       ChartTypeEnum GetChartType(){ return m_ChartType;}

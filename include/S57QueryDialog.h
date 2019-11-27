@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -59,7 +59,7 @@ class S57QueryDialog: public wxDialog
             void CreateControls();
             void OnSize(wxSizeEvent& event);
             void RecalculateSize( void );
-
+            
             void OnClose(wxCloseEvent& event);
 
       //    Overrides

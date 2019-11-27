@@ -47,13 +47,9 @@ using namespace std;
 #include <wx/brush.h>
 #include <wx/colour.h>
 
-
-#if wxCHECK_VERSION( 2, 9, 0 )
 #include <wx/dialog.h>
-#else
-//  #include "scrollingdialog.h"
-#endif
 
+#include "navutil.h"
 #include "dychart.h"
 
 #ifdef __WXMSW__
@@ -71,6 +67,8 @@ using namespace std;
 #include "routeprintout.h"
 #include "printtable.h"
 #include "wx28compat.h"
+#include "Track.h"
+#include "Route.h"
 
 #define PRINT_WP_NAME 0
 #define PRINT_WP_POSITION 1
@@ -91,8 +89,8 @@ MyRoutePrintout::MyRoutePrintout( std::vector<bool> _toPrintOut,
                                       toPrintOut( _toPrintOut )
 {
     // Let's have at least some device units margin
-    marginX = 5;
-    marginY = 5;
+    marginX = 100;
+    marginY = 100;
 
     // Offset text from the edge of the cell (Needed on Linux)
     textOffsetX = 5;
@@ -100,35 +98,41 @@ MyRoutePrintout::MyRoutePrintout( std::vector<bool> _toPrintOut,
 
     table.StartFillHeader();
     // setup widths for columns
+    
+    table << _("Leg");
+    
     if ( toPrintOut[ PRINT_WP_NAME ] ) {
-        table << (const char *)wxString(_("Name")).mb_str();
+        table << _("To Waypoint");
     }
     if ( toPrintOut[ PRINT_WP_POSITION ] ) {
-        table << (const char *)wxString(_("Position")).mb_str();
+        table << _("Position");
     }
     if ( toPrintOut[ PRINT_WP_COURSE ] ) {
-        table << (const char *)wxString(_("Course")).mb_str();
+        table << _("Course");
     }
     if ( toPrintOut[ PRINT_WP_DISTANCE ] ) {
-        table << (const char *)wxString(_("Distance")).mb_str();
+        table << _("Distance");
     }
     if ( toPrintOut[ PRINT_WP_DESCRIPTION ] ) {
-        table << (const char *)wxString(_("Description")).mb_str();
+        table << _("Description");
     }
 
     table.StartFillWidths();
+    
+    table << 20;                // "Leg" column
+    
     // setup widths for columns
     if ( toPrintOut[ PRINT_WP_NAME ] ) {
-        table << 23;
+        table << 40;
     }
     if ( toPrintOut[ PRINT_WP_POSITION ] ) {
         table << 40;
     }
     if ( toPrintOut[ PRINT_WP_COURSE ] ) {
-        table << 30;
+        table << 40;
     }
     if ( toPrintOut[ PRINT_WP_DISTANCE ] ) {
-        table << 38;
+        table << 80;
     }
     if ( toPrintOut[ PRINT_WP_DESCRIPTION ] ) {
         table << 100;
@@ -138,7 +142,22 @@ MyRoutePrintout::MyRoutePrintout( std::vector<bool> _toPrintOut,
 
     for ( int n = 1; n <= myRoute->GetnPoints(); n++ ) {
         RoutePoint* point = myRoute->GetPoint( n );
+        
+        RoutePoint* pointm1 = NULL;
+        if(n - 1 >= 0)
+            pointm1 = myRoute->GetPoint( n - 1 );
 
+        if(NULL == point)
+            continue;
+        
+        wxString leg = _T("---");
+        if(n > 1)
+            leg.Printf( _T("%d"), n - 1);
+        
+        string cell( leg.mb_str() );
+        
+        table << cell;
+        
         if ( toPrintOut[ PRINT_WP_NAME ] ) {
             string cell( point->GetName().mb_str() );
             table << cell;
@@ -149,20 +168,24 @@ MyRoutePrintout::MyRoutePrintout( std::vector<bool> _toPrintOut,
             table << cell;
         }
         if ( toPrintOut[ PRINT_WP_COURSE ] ) {
-            wxString point_course;
-            point_course.Printf( _T( "%03.0f Deg" ), point->GetCourse() );
-            string   cell( point_course.mb_str() );
-            table << cell;
+            wxString point_course = "---";
+            if(pointm1) {
+#ifdef __WXOSX__
+                point_course.Printf( _T( "%03.0f Deg" ), pointm1->GetCourse() );
+#else
+                point_course = formatAngle( point->GetCourse() );
+#endif
+            }
+            table << point_course;
         }
         if ( toPrintOut[ PRINT_WP_DISTANCE ] ) {
-            wxString point_distance;
-            point_distance.Printf( _T( "%6.2f" + getUsrDistanceUnit() ), toUsrDistance( point->GetDistance() ) );
-            string   cell( point_distance.mb_str() );
-            table << cell;
+            wxString point_distance = _T("---");
+            if(n > 1)
+                point_distance.Printf( _T( "%6.2f" + getUsrDistanceUnit() ), toUsrDistance( point->GetDistance() ) );
+            table << point_distance;
         }
         if ( toPrintOut[ PRINT_WP_DESCRIPTION ] ) {
-            string cell( point->GetDescription().mb_str() );
-            table << cell;
+            table << point->GetDescription();
         }
         table << "\n";
     }
@@ -238,6 +261,10 @@ void MyRoutePrintout::DrawPage( wxDC* dc )
 
     int header_textOffsetX = 2;
     int header_textOffsetY = 2;
+    
+    dc->DrawText( myRoute->m_RouteNameString,  150, 20 );
+    
+
 
     int currentX = marginX;
     int currentY = marginY;
@@ -310,16 +337,9 @@ RoutePrintSelection::RoutePrintSelection( wxWindow*       parent,
     route = _route;
 
     long wstyle = style;
-#ifdef __WXOSX__
-    wstyle |= wxSTAY_ON_TOP;
-#endif
-#ifdef __WXOSX__
-    Create( parent, id, caption, wxPoint(10,60), size, wstyle );
-    SetFocus();
-#else
+
     Create( parent, id, caption, pos, size, wstyle );
     Centre();
-#endif
 }
 
 
@@ -405,25 +425,15 @@ void RoutePrintSelection::CreateControls()
     itemBoxSizer1->Add( fgSizer2, 5, wxEXPAND, 5 );
 
     wxBoxSizer* itemBoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
-#ifdef __WXOSX__
-    itemBoxSizer1->Add( itemBoxSizer16, 0, wxALL, 5 );
-#else
     itemBoxSizer1->Add( itemBoxSizer16, 0, wxALIGN_RIGHT | wxALL, 5 );
-#endif
+
     m_CancelButton = new wxButton( itemDialog1, ID_ROUTEPRINT_SELECTION_CANCEL, _( "Cancel" ), wxDefaultPosition,
                                    wxDefaultSize, 0 );
-#ifdef __WXOSX__
-    itemBoxSizer16->Add( m_CancelButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-#else
     itemBoxSizer16->Add( m_CancelButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-#endif
+
     m_OKButton = new wxButton( itemDialog1, ID_ROUTEPRINT_SELECTION_OK, _( "OK" ), wxDefaultPosition,
-                              wxDefaultSize, 0 );
-#ifdef __WXOSX__
-    itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-#else
+                               wxDefaultSize, 0 );
     itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-#endif
     m_OKButton->SetDefault();
 
     SetColorScheme( ( ColorScheme )0 );
@@ -470,11 +480,11 @@ void RoutePrintSelection::OnRoutepropOkClick( wxCommandEvent& event )
 
     if ( NULL == g_printData ) {
         g_printData = new wxPrintData;
-        g_printData->SetOrientation( wxLANDSCAPE );
+        g_printData->SetOrientation( wxPORTRAIT );
         g_pageSetupData = new wxPageSetupDialogData;
     }
 
-    MyRoutePrintout*  myrouteprintout1 = new MyRoutePrintout( toPrintOut, route,  _( "Route Print" ) );
+    MyRoutePrintout* myrouteprintout1 = new MyRoutePrintout( toPrintOut, route,  _( "Route Print" ) );
 
     wxPrintDialogData printDialogData( *g_printData );
     printDialogData.EnablePageNumbers( true );
@@ -485,14 +495,10 @@ void RoutePrintSelection::OnRoutepropOkClick( wxCommandEvent& event )
             OCPNMessageBox(
                 NULL,
                 _( "There was a problem printing.\nPerhaps your current printer is not set correctly?" ),
-#ifdef __WXOSX__
-                _T( "OpenCPN" ), wxOK | wxICON_INFORMATION );           
-#else
                 _T( "OpenCPN" ), wxOK );
-#endif
         }
     }
 
-    Close(); //Hide();
+    Close();
     event.Skip();
 }

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Track Properties Dialog
@@ -27,11 +27,15 @@
 #include "georef.h"
 #include "routeman.h"
 #include "routemanagerdialog.h"
-#include "routeprintout.h"
+#include "trackprintout.h"
 #include "pluginmanager.h"
 #include "OCPNPlatform.h"
 #include "TrackPropDlg.h"
 #include "Track.h"
+
+#ifdef __OCPN__ANDROID__
+#include "androidUTIL.h"
+#endif
 
 extern double               gLat, gLon;
 extern RouteList           *pRouteList;
@@ -44,6 +48,10 @@ extern MyConfig            *pConfig;
 extern MyFrame             *gFrame;
 extern ChartCanvas         *cc1;
 extern PlugInManager       *g_pi_manager;
+
+#ifdef __WXOSX__  // Für Dialog Größe und Plazierung
+int g_track_prop_x, g_track_prop_y, g_track_prop_sx, g_track_prop_sy;
+#endif
 
 #define    UTCINPUT         0
 #define    LTINPUT          1    // i.e. this PC local time
@@ -76,7 +84,7 @@ wxString timestamp2s(wxDateTime ts, int tz_selection, long LMT_offset, int forma
     return(s);
 }
 
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 bool TrackPropDlg::instanceFlag = false;
 TrackPropDlg* TrackPropDlg::single = NULL;
 TrackPropDlg* TrackPropDlg::getInstance( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style )
@@ -104,9 +112,9 @@ TrackPropDlg::TrackPropDlg( wxWindow* parent, wxWindowID id, const wxString& tit
 
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     SetFont( *qFont );
-    
+
     SetWindowStyleFlag( wstyle );
-    
+
     
     m_scrolledWindowLinks = NULL;
     m_tDescription = NULL;
@@ -119,17 +127,24 @@ TrackPropDlg::TrackPropDlg( wxWindow* parent, wxWindowID id, const wxString& tit
 #else
     CreateControls();
 #endif
-
-
+    
+#ifdef __WXOSX__
+    if(g_track_prop_sx > 0 && g_track_prop_sy > 0 && g_track_prop_sx < wxGetDisplaySize().x && g_track_prop_sy < wxGetDisplaySize().y) {
+        SetSize(g_track_prop_sx, g_track_prop_sy);
+    }
+    if(g_track_prop_x > 0 && g_track_prop_y > 0 && g_track_prop_x < wxGetDisplaySize().x && g_track_prop_y < wxGetDisplaySize().y) {
+        SetPosition(wxPoint(g_track_prop_x,g_track_prop_y));
+    }
+#else
     RecalculateSize();
-
+#endif
 
     //Centre( );
-    
+
     // Connect Events
     m_sdbBtmBtnsSizerCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnCancelBtnClick ), NULL, this );
     m_sdbBtmBtnsSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnOKBtnClick ), NULL, this );
-    m_sdbBtmBtnsSizerPrint->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnPrintBtnClick ), NULL, this );
+    if(m_sdbBtmBtnsSizerPrint)m_sdbBtmBtnsSizerPrint->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnPrintBtnClick ), NULL, this );
     m_sdbBtmBtnsSizerSplit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnSplitBtnClick ), NULL, this );
     m_sdbBtmBtnsSizerExtend->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnExtendBtnClick ), NULL, this );
     m_sdbBtmBtnsSizerToRoute->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnToRouteBtnClick ), NULL, this );
@@ -138,10 +153,10 @@ TrackPropDlg::TrackPropDlg( wxWindow* parent, wxWindowID id, const wxString& tit
     Connect( wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK, wxListEventHandler(TrackPropDlg::OnTrackPropRightClick), NULL, this );
     Connect( wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(TrackPropDlg::OnTrackPropMenuSelected), NULL, this );
 
-//    m_buttonAddLink->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
-//            wxCommandEventHandler( TrackPropDlg::OnAddLink ), NULL, this );
-//    m_toggleBtnEdit->Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED,
-//            wxCommandEventHandler( TrackPropDlg::OnEditLinkToggle ), NULL, this );
+    m_buttonAddLink->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( TrackPropDlg::OnAddLink ), NULL, this );
+    m_toggleBtnEdit->Connect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED,
+            wxCommandEventHandler( TrackPropDlg::OnEditLinkToggle ), NULL, this );
 
     if(m_rbShowTimeUTC)m_rbShowTimeUTC->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( TrackPropDlg::OnShowTimeTZ), NULL, this );
     if(m_rbShowTimePC)m_rbShowTimePC->Connect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( TrackPropDlg::OnShowTimeTZ), NULL, this );
@@ -149,8 +164,8 @@ TrackPropDlg::TrackPropDlg( wxWindow* parent, wxWindowID id, const wxString& tit
 
     m_pLinkProp = new LinkPropImpl( this );
     m_pMyLinkList = NULL;
-
-
+    
+    
 }
 
 TrackPropDlg::~TrackPropDlg()
@@ -158,7 +173,7 @@ TrackPropDlg::~TrackPropDlg()
     // Disconnect Events
     m_sdbBtmBtnsSizerCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnCancelBtnClick ), NULL, this );
     m_sdbBtmBtnsSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnOKBtnClick ), NULL, this );
-    m_sdbBtmBtnsSizerPrint->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnPrintBtnClick ), NULL, this );
+    if(m_sdbBtmBtnsSizerPrint)m_sdbBtmBtnsSizerPrint->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnPrintBtnClick ), NULL, this );
     m_sdbBtmBtnsSizerSplit->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnSplitBtnClick ), NULL, this );
     m_sdbBtmBtnsSizerExtend->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnExtendBtnClick ), NULL, this );
     m_sdbBtmBtnsSizerToRoute->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackPropDlg::OnToRouteBtnClick ), NULL, this );
@@ -173,10 +188,10 @@ TrackPropDlg::~TrackPropDlg()
             wxCommandEventHandler( TrackPropDlg::OnEditLink ) );
     Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED,
             wxCommandEventHandler( TrackPropDlg::OnAddLink ) );
-//    m_buttonAddLink->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
-//            wxCommandEventHandler( TrackPropDlg::OnAddLink ), NULL, this );
- //   m_toggleBtnEdit->Disconnect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED,
-//            wxCommandEventHandler( TrackPropDlg::OnEditLinkToggle ), NULL, this );
+    m_buttonAddLink->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( TrackPropDlg::OnAddLink ), NULL, this );
+    m_toggleBtnEdit->Disconnect( wxEVT_COMMAND_TOGGLEBUTTON_CLICKED,
+            wxCommandEventHandler( TrackPropDlg::OnEditLinkToggle ), NULL, this );
 
     if(m_rbShowTimeUTC)m_rbShowTimeUTC->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( TrackPropDlg::OnShowTimeTZ), NULL, this );
     if(m_rbShowTimePC)m_rbShowTimePC->Disconnect( wxEVT_COMMAND_RADIOBUTTON_SELECTED, wxCommandEventHandler( TrackPropDlg::OnShowTimeTZ), NULL, this );
@@ -213,305 +228,307 @@ void TrackPropDlg::RecalculateSize( void )
         if(m_lcPoints->GetItemCount())
             Layout();
     }
+    
 
     Centre();
 
 }
 
-void TrackPropDlg::CreateControlsCompact()
+static void addColumns(wxListCtrl *lctrl, int dx) {
+    lctrl->InsertColumn( 0, _("Leg"), wxLIST_FORMAT_LEFT, dx * 6);
+    lctrl->InsertColumn( 1, _("Distance"), wxLIST_FORMAT_LEFT, dx * 10);
+    lctrl->InsertColumn( 2, _("Bearing"), wxLIST_FORMAT_LEFT, dx * 8);
+    lctrl->InsertColumn( 3, _("Latitude"), wxLIST_FORMAT_LEFT, dx * 13);  // war: *11
+    lctrl->InsertColumn( 4, _("Longitude"), wxLIST_FORMAT_LEFT, dx * 13);  // war: *11
+    // Width of timestamp is typically 19 characters: 'MM/DD/YYYY HH:MM:SS'.
+    lctrl->InsertColumn( 5, _("Timestamp"), wxLIST_FORMAT_LEFT, dx * 19);
+    lctrl->InsertColumn( 6, _("Speed"), wxLIST_FORMAT_CENTER, dx * 12);  // war: *8
+
+    lctrl->SetMinSize(wxSize(-1, 50) );
+}
+
+void TrackPropDlg::CreateControlsCompact()  // Nur für Android
 {
 
 
     wxBoxSizer* itemBoxSizer1 = new wxBoxSizer( wxVERTICAL );
     SetSizer( itemBoxSizer1 );
-    
+
     itemDialog1 = new wxScrolledWindow( this, wxID_ANY,
-                                       wxDefaultPosition, wxSize(-1, -1), wxVSCROLL);
+                                      wxDefaultPosition, wxSize(-1, -1), wxVSCROLL);
     itemDialog1->SetScrollRate(0, 1);
 
 
 #ifdef __OCPN__ANDROID__
     //  Set Dialog Font by custom crafted Qt Stylesheet.
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
-    
+
     wxString wqs = getFontQtStylesheet(qFont);
     wxCharBuffer sbuf = wqs.ToUTF8();
     QString qsb = QString(sbuf.data());
-    
+
     QString qsbq = getQtStyleSheet();           // basic scrollbars, etc
-    
+
     itemDialog1->GetHandle()->setStyleSheet( qsb + qsbq );      // Concatenated style sheets
-    
+
 #endif
     itemBoxSizer1->Add( itemDialog1, 1, wxEXPAND | wxALL, 0 );
-    
+
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer( wxVERTICAL );
     itemDialog1->SetSizer( itemBoxSizer2 );
-    
-    
+
+
     wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC, _("Name"),
-                                                     wxDefaultPosition, wxDefaultSize, 0 );
+            wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add( itemStaticText4, 0,
-                       wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
-    
+                              wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
+
     m_tName = new wxTextCtrl( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition,
-                             wxSize( 400, -1 ), 0 );
+            wxSize( 400, -1 ), 0 );
     itemBoxSizer2->Add( m_tName, 0,
-                       wxALIGN_LEFT | wxLEFT | wxRIGHT | wxBOTTOM , 5 );
-    
+                        wxALIGN_LEFT | wxLEFT | wxRIGHT | wxBOTTOM , 5 );
+
     wxStaticText* itemStaticText7 = new wxStaticText( itemDialog1, wxID_STATIC, _("Depart From"),
-                                                     wxDefaultPosition, wxDefaultSize, 0 );
+            wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add( itemStaticText7, 0,
-                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 5 );
-    
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 5 );
+
     m_tFrom = new wxTextCtrl( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition,
-                             wxSize( -1, -1 ), 0 );
+                                      wxSize( -1, -1 ), 0 );
     itemBoxSizer2->Add( m_tFrom, 0,
-                       wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
-    
+                              wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
+
     wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _("Destination"),
-                                                     wxDefaultPosition, wxDefaultSize, 0 );
+            wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add( itemStaticText8, 0,
-                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 5 );
-    
-    
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 5 );
+
+
     m_tTo = new wxTextCtrl( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition,
-                           wxSize( -1, -1 ), 0 );
+            wxSize( -1, -1 ), 0 );
     itemBoxSizer2->Add( m_tTo, 0,
-                       wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
-    
+                        wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
+
     m_cbShow = new wxCheckBox( itemDialog1, wxID_ANY, _("Show on chart"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add( m_cbShow, 0, wxALL, 5 );
     
     
-    
+
     wxFlexGridSizer* itemFlexGridSizer6a = new wxFlexGridSizer( 4, 2, 0, 0 );
     itemFlexGridSizer6a->AddGrowableCol(1, 0);
-    
+
     itemBoxSizer2->Add( itemFlexGridSizer6a, 0, wxEXPAND | wxALIGN_LEFT | wxALL, 5 );
-    
+
     wxStaticText* itemStaticText11 = new wxStaticText( itemDialog1, wxID_STATIC,
-                                                      _("Total Distance"), wxDefaultPosition, wxDefaultSize, 0 );
+            _("Total distance"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6a->Add( itemStaticText11, 0,
-                             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP,
-                             5 );
-    
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP,
+            5 );
+
     m_tTotDistance = new wxTextCtrl( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition,
-                                    wxSize( -1, -1 ), wxTE_READONLY );
+                                     wxSize( -1, -1 ), wxTE_READONLY );
     itemFlexGridSizer6a->Add( m_tTotDistance, 0,
-                             wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
-    
-    
-    
-    
+                              wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
+
+
+
+
     m_stAvgSpeed = new wxStaticText( itemDialog1, wxID_STATIC, _("Avg. speed"),
-                                    wxDefaultPosition, wxDefaultSize, 0 );
+            wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6a->Add( m_stAvgSpeed, 0,
-                             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP,
-                             5 );
-    
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP,
+            5 );
+
     m_tAvgSpeed = new wxTextCtrl( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition,
-                                 wxSize( 150, -1 ), wxTE_PROCESS_ENTER );
+                                     wxSize( 150, -1 ), wxTE_PROCESS_ENTER );
     itemFlexGridSizer6a->Add( m_tAvgSpeed, 0,
-                             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
-    
-    
-    
-    
-    m_stTimeEnroute = new wxStaticText( itemDialog1, wxID_STATIC, _("Time Enroute"),
-                                       wxDefaultPosition, wxDefaultSize, 0 );
+                              wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
+
+
+
+
+   m_stTimeEnroute = new wxStaticText( itemDialog1, wxID_STATIC, _("Time Enroute"),
+            wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer6a->Add( m_stTimeEnroute, 0,
-                             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP,
-                             5 );
-    
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP,
+            5 );
+
     m_tTimeEnroute = new wxTextCtrl( itemDialog1, wxID_ANY, _T(""), wxDefaultPosition,
-                                    wxSize( -1, -1 ), wxTE_READONLY );
+                                       wxSize( -1, -1 ), wxTE_READONLY );
     itemFlexGridSizer6a->Add( m_tTimeEnroute, 0,
-                             wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
-    
-    /*
-     m_StartTimeLabel = new wxStaticText( itemDialog1, wxID_STATIC, _("Departure Time"),
-     wxDefaultPosition, wxDefaultSize, 0 );
-     itemFlexGridSizer6a->Add( m_StartTimeLabel, 0,
-     wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP,
-     5 );
-     
-     m_StartTimeCtl = new wxTextCtrl( itemDialog1, ID_STARTTIMECTL, _T(""), wxDefaultPosition,
-     wxSize( -1, -1 ), wxTE_PROCESS_ENTER );
-     itemFlexGridSizer6a->Add( m_StartTimeCtl, 0,
-     wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
-     */
-    
-    
+                              wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
+
+/*
+    m_StartTimeLabel = new wxStaticText( itemDialog1, wxID_STATIC, _("Departure Time"),
+            wxDefaultPosition, wxDefaultSize, 0 );
+    itemFlexGridSizer6a->Add( m_StartTimeLabel, 0,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP,
+            5 );
+
+    m_StartTimeCtl = new wxTextCtrl( itemDialog1, ID_STARTTIMECTL, _T(""), wxDefaultPosition,
+            wxSize( -1, -1 ), wxTE_PROCESS_ENTER );
+    itemFlexGridSizer6a->Add( m_StartTimeCtl, 0,
+            wxEXPAND | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
+*/
+
+
     wxString pDispTimeZone[] = { _("UTC"), _("Local @ PC"), _("LMT @ Location") };
-    
-    wxStaticText* itemStaticText12b = new wxStaticText( itemDialog1, wxID_STATIC, _("Times shown as"),
-                                                       wxDefaultPosition, wxDefaultSize, 0 );
+
+    wxStaticText* itemStaticText12b = new wxStaticText( itemDialog1, wxID_STATIC, _("Time shown as"),
+                                                                                    wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add( itemStaticText12b, 0, wxEXPAND | wxALL, 5 );
-    
-    
+
+
     m_rbShowTimeUTC = new wxRadioButton(itemDialog1, wxID_ANY, _("UTC"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
     itemBoxSizer2->Add( m_rbShowTimeUTC, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM,5 );
-    
+
     m_rbShowTimePC = new wxRadioButton(itemDialog1, wxID_ANY, _("Local @ PC"));
     itemBoxSizer2->Add( m_rbShowTimePC, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM,5 );
-    
+
     m_rbShowTimeLocal = new wxRadioButton(itemDialog1, wxID_ANY, _("LMT @ Location"));
     itemBoxSizer2->Add( m_rbShowTimeLocal, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM,5 );
-    
-    
+
+
     wxFlexGridSizer* itemFlexGridSizer6b = new wxFlexGridSizer( 3, 2, 0, 0 );
     itemBoxSizer2->Add( itemFlexGridSizer6b, 0, wxEXPAND | wxALIGN_LEFT | wxALL, 5 );
-    
-    wxStaticText *m_staticText1 = new wxStaticText( itemDialog1, wxID_ANY, _("Color:"), wxDefaultPosition, wxDefaultSize,
-                                                   0 );
+
+    wxStaticText *m_staticText1 = new wxStaticText( itemDialog1, wxID_ANY, _("Color") + _T(":"), wxDefaultPosition, wxDefaultSize,
+            0 );
     itemFlexGridSizer6b->Add( m_staticText1, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
+
     wxString m_chColorChoices[] = { _("Default color"), _("Black"), _("Dark Red"), _("Dark Green"),
-        _("Dark Yellow"), _("Dark Blue"), _("Dark Magenta"), _("Dark Cyan"),
-        _("Light Gray"), _("Dark Gray"), _("Red"), _("Green"), _("Yellow"), _("Blue"),
-        _("Magenta"), _("Cyan"), _("White") };
+            _("Dark Yellow"), _("Dark Blue"), _("Dark Magenta"), _("Dark Cyan"),
+            _("Light Gray"), _("Dark Gray"), _("Red"), _("Green"), _("Yellow"), _("Blue"),
+            _("Magenta"), _("Cyan"), _("White") };
     int m_chColorNChoices = sizeof( m_chColorChoices ) / sizeof(wxString);
     m_cColor = new wxChoice( itemDialog1, wxID_ANY, wxDefaultPosition, wxSize(250, -1), m_chColorNChoices,
-                            m_chColorChoices, 0 );
+            m_chColorChoices, 0 );
     m_cColor->SetSelection( 0 );
     itemFlexGridSizer6b->Add( m_cColor, 0,  wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
-    wxStaticText *staticTextStyle = new wxStaticText( itemDialog1, wxID_ANY, _("Style:"), wxDefaultPosition, wxDefaultSize,
-                                                     0 );
+
+    wxStaticText *staticTextStyle = new wxStaticText( itemDialog1, wxID_ANY, _("Style") + _T(":"), wxDefaultPosition, wxDefaultSize,
+            0 );
     itemFlexGridSizer6b->Add( staticTextStyle, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
+
     wxString m_chStyleChoices[] = { _("Default"), _("Solid"), _("Dot"), _("Long dash"),
-        _("Short dash"), _("Dot dash") };
+            _("Short dash"), _("Dot dash") };
     int m_chStyleNChoices = sizeof( m_chStyleChoices ) / sizeof(wxString);
     m_cStyle = new wxChoice( itemDialog1, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_chStyleNChoices,
-                            m_chStyleChoices, 0 );
+            m_chStyleChoices, 0 );
     m_cStyle->SetSelection( 0 );
     itemFlexGridSizer6b->Add( m_cStyle, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
+
 #ifdef ocpnUSE_GLES // linestipple is emulated poorly
     staticTextStyle->Hide();
     m_cStyle->Hide();
 #endif
-    
-    
-    m_stWidth = new wxStaticText( itemDialog1, wxID_ANY, _("Width:"), wxDefaultPosition, wxDefaultSize,
-                                 0 );
+
+
+    m_stWidth = new wxStaticText( itemDialog1, wxID_ANY, _("Width") + _T(":"), wxDefaultPosition, wxDefaultSize,
+            0 );
     itemFlexGridSizer6b->Add( m_stWidth, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
+
     wxString m_chWidthChoices[] = { _("Default"), _("1 pixel"), _("2 pixels"), _("3 pixels"),
-        _("4 pixels"), _("5 pixels"), _("6 pixels"), _("7 pixels"), _("8 pixels"),
-        _("9 pixels"), _("10 pixels") };
+            _("4 pixels"), _("5 pixels"), _("6 pixels"), _("7 pixels"), _("8 pixels"),
+            _("9 pixels"), _("10 pixels") };
     int m_chWidthNChoices = sizeof( m_chWidthChoices ) / sizeof(wxString);
     m_cWidth = new wxChoice( itemDialog1, wxID_ANY, wxDefaultPosition, wxSize(150, -1), m_chWidthNChoices,
-                            m_chWidthChoices, 0 );
+            m_chWidthChoices, 0 );
     m_cWidth->SetSelection( 0 );
     itemFlexGridSizer6b->Add( m_cWidth, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
-    
-    
+
+
+
     wxStaticBox* itemStaticBoxSizer14Static = new wxStaticBox( itemDialog1, wxID_ANY, _("Waypoints") );
     wxStaticBoxSizer *m_pListSizer = new wxStaticBoxSizer( itemStaticBoxSizer14Static, wxVERTICAL );
     itemBoxSizer2->Add( m_pListSizer, 1, wxEXPAND | wxALL, 1 );
-    
-    
+
+
     wxScrolledWindow *itemlistWin = new wxScrolledWindow( itemDialog1, wxID_ANY,
-                                                         wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
+                                                          wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
     itemlistWin->SetScrollRate(2, 2);
-    
-    
-    
+
+
+
     m_pListSizer->Add( itemlistWin, 0, wxEXPAND | wxALL, 6 );
-    
-    
+
+
     long flags = wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxLC_EDIT_LABELS;
 #ifndef __WXQT__                // Does not support Virtual list boxes....
-    flags |= wxLC_VIRTUAL;
+      flags |= wxLC_VIRTUAL;
 #endif
-    
-    m_lcPoints = new OCPNTrackListCtrl( itemlistWin, wxID_ANY, wxDefaultPosition, wxSize( 100, 500 ), flags);
-    
-    
-    // sbSizerPoints->Add( m_lcPoints, 1, wxALL|wxEXPAND, 5 );
-    
-    int dx = GetCharWidth();
-    
-    m_lcPoints->InsertColumn( 0, _("Leg"), wxLIST_FORMAT_LEFT, dx * 6/*45*/ );
-    m_lcPoints->InsertColumn( 1, _("Distance"), wxLIST_FORMAT_LEFT, dx * 10/*70*/ );
-    m_lcPoints->InsertColumn( 2, _("Bearing"), wxLIST_FORMAT_LEFT, dx * 8/*70*/ );
-    m_lcPoints->InsertColumn( 3, _("Latitude"), wxLIST_FORMAT_LEFT, dx * 11/*85*/ );
-    m_lcPoints->InsertColumn( 4, _("Longitude"), wxLIST_FORMAT_LEFT, dx * 11/*90*/ );
-    m_lcPoints->InsertColumn( 5, _("Timestamp"), wxLIST_FORMAT_LEFT, dx * 14/*135*/ );
-    m_lcPoints->InsertColumn( 6, _("Speed"), wxLIST_FORMAT_CENTER, dx * 8/*100*/ );
-    
-    m_lcPoints->SetMinSize(wxSize(-1, 50) );
-    
+
+      m_lcPoints = new OCPNTrackListCtrl( itemlistWin, wxID_ANY, wxDefaultPosition, wxSize( 100, 500 ), flags);
+    addColumns(m_lcPoints, GetCharWidth());
+
+     // sbSizerPoints->Add( m_lcPoints, 1, wxALL|wxEXPAND, 5 );
+
 #ifdef __OCPN__ANDROID__
-    m_lcPoints->GetHandle()->setStyleSheet( getQtStyleSheet());
+      m_lcPoints->GetHandle()->setStyleSheet( getQtStyleSheet());
 #endif
-    
-    
-    //  Buttons, etc...
-    
-    wxBoxSizer* itemBoxSizerBottom = new wxBoxSizer( wxVERTICAL );
-    itemBoxSizer1->Add( itemBoxSizerBottom, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
-    
-    
-    int n_col = 3;
-    
-    wxFlexGridSizer* itemBoxSizerAux = new wxFlexGridSizer( 0, n_col, 0, 0 );
-    itemBoxSizerAux->SetFlexibleDirection( wxBOTH );
-    itemBoxSizerAux->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-    
-    
-    
-    itemBoxSizerBottom->Add( itemBoxSizerAux, 1, wxALIGN_LEFT | wxALL, 5 );
-    
+
+
+         //  Buttons, etc...
+
+      wxBoxSizer* itemBoxSizerBottom = new wxBoxSizer( wxVERTICAL );
+      itemBoxSizer1->Add( itemBoxSizerBottom, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
+
+
+      int n_col = 3;
+
+      wxFlexGridSizer* itemBoxSizerAux = new wxFlexGridSizer( 0, n_col, 0, 0 );
+      itemBoxSizerAux->SetFlexibleDirection( wxBOTH );
+      itemBoxSizerAux->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+
+
+      itemBoxSizerBottom->Add( itemBoxSizerAux, 1, wxALIGN_LEFT | wxALL, 5 );
+
 #ifndef __OCPN__ANDROID__
-    
-    m_sdbBtmBtnsSizerPrint = new wxButton( this, wxID_ANY, _("Print"),
-                                          wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizerAux->Add( m_sdbBtmBtnsSizerPrint, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    m_sdbBtmBtnsSizerPrint->Enable( true );
+
+      m_sdbBtmBtnsSizerPrint = new wxButton( this, wxID_ANY, _("Print"),
+                                                                wxDefaultPosition, wxDefaultSize, 0 );
+      itemBoxSizerAux->Add( m_sdbBtmBtnsSizerPrint, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+      m_sdbBtmBtnsSizerPrint->Enable( true );
 #else
-    m_sdbBtmBtnsSizerPrint = NULL;
+      m_sdbBtmBtnsSizerPrint = NULL;
 #endif
-    
-    m_sdbBtmBtnsSizerSplit = new wxButton( this, wxID_ANY, _("Split"),
-                                          wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizerAux->Add( m_sdbBtmBtnsSizerSplit, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    m_sdbBtmBtnsSizerSplit->Enable( false );
-    
-    m_sdbBtmBtnsSizerExtend = new wxButton( this, wxID_ANY, _("Extend"),
-                                           wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizerAux->Add( m_sdbBtmBtnsSizerExtend, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
-    m_sdbBtmBtnsSizerToRoute = new wxButton( this, wxID_ANY, _("To route"),
-                                            wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizerAux->Add( m_sdbBtmBtnsSizerToRoute, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
-    m_sdbBtmBtnsSizerExport = NULL;
-    //      m_sdbBtmBtnsSizerExport = new wxButton( this, wxID_ANY, _("Export"), wxDefaultPosition, wxDefaultSize, 0 );
-    //      itemBoxSizerAux->Add( m_sdbBtmBtnsSizerExport, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    
-    wxBoxSizer* itemBoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
-    itemBoxSizerBottom->Add( itemBoxSizer16, 0, wxALIGN_RIGHT | wxALL, 5 );
-    
-    m_sdbBtmBtnsSizerCancel = new wxButton( this, wxID_CANCEL, _("Cancel"), wxDefaultPosition,
-                                           wxDefaultSize, 0 );
-    itemBoxSizer16->Add( m_sdbBtmBtnsSizerCancel, 0, wxALIGN_RIGHT | wxALIGN_BOTTOM | wxALL, 5 );
-    
-    m_sdbBtmBtnsSizerOK = new wxButton( this, wxID_OK, _("OK"), wxDefaultPosition,
-                                       wxDefaultSize, 0 );
-    itemBoxSizer16->Add( m_sdbBtmBtnsSizerOK, 0, wxALIGN_RIGHT | wxALIGN_BOTTOM | wxALL, 5 );
-    m_sdbBtmBtnsSizerOK->SetDefault();
-    
+
+      m_sdbBtmBtnsSizerSplit = new wxButton( this, wxID_ANY, _("Split"),
+      wxDefaultPosition, wxDefaultSize, 0 );
+      itemBoxSizerAux->Add( m_sdbBtmBtnsSizerSplit, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+      m_sdbBtmBtnsSizerSplit->Enable( false );
+
+      m_sdbBtmBtnsSizerExtend = new wxButton( this, wxID_ANY, _("Extend"),
+                                     wxDefaultPosition, wxDefaultSize, 0 );
+      itemBoxSizerAux->Add( m_sdbBtmBtnsSizerExtend, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+
+      m_sdbBtmBtnsSizerToRoute = new wxButton( this, wxID_ANY, _("To route"),
+                                              wxDefaultPosition, wxDefaultSize, 0 );
+      itemBoxSizerAux->Add( m_sdbBtmBtnsSizerToRoute, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+
+      m_sdbBtmBtnsSizerExport = NULL;
+//      m_sdbBtmBtnsSizerExport = new wxButton( this, wxID_ANY, _("Export"), wxDefaultPosition, wxDefaultSize, 0 );
+//      itemBoxSizerAux->Add( m_sdbBtmBtnsSizerExport, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+
+      wxBoxSizer* itemBoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
+      itemBoxSizerBottom->Add( itemBoxSizer16, 0, wxALIGN_RIGHT | wxALL, 5 );
+
+      m_sdbBtmBtnsSizerCancel = new wxButton( this, wxID_CANCEL, _("Cancel"), wxDefaultPosition,
+      wxDefaultSize, 0 );
+      itemBoxSizer16->Add( m_sdbBtmBtnsSizerCancel, 0, wxALIGN_RIGHT | wxALIGN_BOTTOM | wxALL, 5 );
+
+      m_sdbBtmBtnsSizerOK = new wxButton( this, wxID_OK, _("OK"), wxDefaultPosition,
+      wxDefaultSize, 0 );
+      itemBoxSizer16->Add( m_sdbBtmBtnsSizerOK, 0, wxALIGN_RIGHT | wxALIGN_BOTTOM | wxALL, 5 );
+      m_sdbBtmBtnsSizerOK->SetDefault();
+
 //    int char_size = GetCharWidth();  // Not used
     //Set the maximum size of the entire  dialog
     int width, height;
     ::wxDisplaySize( &width, &height );
     SetSizeHints( -1, -1, width-100, height-100 );
-    
+
 }
 
 
@@ -536,7 +553,8 @@ void TrackPropDlg::CreateControls( void )
     bSizer0->Add(bSizer1, 1, wxEXPAND | wxALL, 5 );
 
     m_panelBasic = new wxScrolledWindow( m_panel0, wxID_ANY,
-                                        wxDefaultPosition, wxSize(-1, -1), wxHSCROLL | wxVSCROLL | wxTAB_TRAVERSAL);
+                                         wxDefaultPosition, wxSize(-1, -1), wxHSCROLL | wxVSCROLL | wxTAB_TRAVERSAL);
+
 #ifdef __OCPN__ANDROID__
     //  Set Dialog Font by custom crafted Qt Stylesheet.
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
@@ -695,38 +713,28 @@ void TrackPropDlg::CreateControls( void )
 
       sbSizerPoints->Add( bSizerShowTime, 0, wxEXPAND, 5 );
 
-    long flags = wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxLC_EDIT_LABELS;
+      long flags = wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxLC_EDIT_LABELS;
 #ifndef __WXQT__                // Does not support Virtual list boxes....
-    flags |= wxLC_VIRTUAL;
+      flags |= wxLC_VIRTUAL;
 #endif
 
-    m_lcPoints = new OCPNTrackListCtrl( m_panel0, wxID_ANY, wxDefaultPosition, wxDefaultSize, flags);
+      m_lcPoints = new OCPNTrackListCtrl( m_panel0, wxID_ANY, wxDefaultPosition, wxDefaultSize, flags);
+    addColumns(m_lcPoints, GetCharWidth());
 
       sbSizerPoints->Add( m_lcPoints, 1, wxALL|wxEXPAND, 5 );
-
-      int dx = GetCharWidth();
-
-      m_lcPoints->InsertColumn( 0, _("Leg"), wxLIST_FORMAT_LEFT, dx * 6/*45*/ );
-      m_lcPoints->InsertColumn( 2, _("Distance"), wxLIST_FORMAT_LEFT, dx * 10/*70*/ );
-      m_lcPoints->InsertColumn( 3, _("Bearing"), wxLIST_FORMAT_LEFT, dx * 8/*70*/ );
-      m_lcPoints->InsertColumn( 4, _("Latitude"), wxLIST_FORMAT_LEFT, dx * 11/*85*/ );
-      m_lcPoints->InsertColumn( 5, _("Longitude"), wxLIST_FORMAT_LEFT, dx * 11/*90*/ );
-      m_lcPoints->InsertColumn( 6, _("Timestamp"), wxLIST_FORMAT_LEFT, dx * 14/*135*/ );
-      m_lcPoints->InsertColumn( 7, _("Speed"), wxLIST_FORMAT_CENTER, dx * 8/*100*/ );
-
-      m_lcPoints->SetMinSize(wxSize(-1, 50) );
-
 #ifdef __OCPN__ANDROID__
-    m_lcPoints->GetHandle()->setStyleSheet( getQtStyleSheet());
+      m_lcPoints->GetHandle()->setStyleSheet( getQtStyleSheet());
 #endif
 
-//    m_lcPoints = new OCPNTrackListCtrl( m_panel0, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-//                                       wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxLC_EDIT_LABELS | wxLC_VIRTUAL );
+
+//       m_lcPoints = new OCPNTrackListCtrl( m_panel0, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+//                                           wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxLC_EDIT_LABELS | wxLC_VIRTUAL );
 //
-//    m_lcPoints->Hide();
-//    m_rbShowTimeUTC = NULL;
-//    m_rbShowTimePC = NULL;
-//    m_rbShowTimeLocal = NULL;
+//       m_lcPoints->Hide();
+//       m_rbShowTimeUTC = NULL;
+//       m_rbShowTimePC = NULL;
+//       m_rbShowTimeLocal = NULL;
+
 
 
 
@@ -762,7 +770,7 @@ void TrackPropDlg::CreateControls( void )
       m_menuItemDelete = new wxMenuItem( m_menuLink, wxID_ANY, wxString( _("Delete") ) , wxEmptyString, wxITEM_NORMAL );
       m_menuLink->Append( m_menuItemDelete );
 
-      m_hyperlink1->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( TrackPropDlg::m_hyperlink1OnContextMenu ), NULL, this ); 
+      m_hyperlink1->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( TrackPropDlg::m_hyperlink1OnContextMenu ), NULL, this );
 
       bSizerLinks->Add( m_hyperlink1, 0, wxALL, 5 );
 
@@ -795,18 +803,21 @@ void TrackPropDlg::CreateControls( void )
       m_notebook1->AddPage( m_panelAdvanced, _("Advanced"), false );
 
 
-    //  Buttons, etc...
 
-      wxBoxSizer* itemBoxSizerBottom = new wxBoxSizer( wxHORIZONTAL );
+      //  Buttons, etc...
+
+      wxBoxSizer* itemBoxSizerBottom = new wxBoxSizer( wxVERTICAL );
       bSizerMain->Add( itemBoxSizerBottom, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
 
       //wxBoxSizer* itemBoxSizerAux = new wxBoxSizer( wxHORIZONTAL );
 
-    int n_col = 5;
+      int n_col = 5;
 
-    wxFlexGridSizer* itemBoxSizerAux = new wxFlexGridSizer( 0, n_col, 0, 0 );
-    itemBoxSizerAux->SetFlexibleDirection( wxBOTH );
-    itemBoxSizerAux->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+      wxFlexGridSizer* itemBoxSizerAux = new wxFlexGridSizer( 0, n_col, 0, 0 );
+      itemBoxSizerAux->SetFlexibleDirection( wxBOTH );
+      itemBoxSizerAux->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+
 
       itemBoxSizerBottom->Add( itemBoxSizerAux, 1, wxALIGN_LEFT | wxALL, 5 );
 
@@ -817,7 +828,7 @@ void TrackPropDlg::CreateControls( void )
       itemBoxSizerAux->Add( m_sdbBtmBtnsSizerPrint, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
       m_sdbBtmBtnsSizerPrint->Enable( true );
 #else
-    m_sdbBtmBtnsSizerPrint = NULL;
+      m_sdbBtmBtnsSizerPrint = NULL;
 #endif
 
       m_sdbBtmBtnsSizerSplit = new wxButton( this, wxID_ANY, _("Split"),
@@ -839,24 +850,17 @@ void TrackPropDlg::CreateControls( void )
 
       wxBoxSizer* itemBoxSizer16 = new wxBoxSizer( wxHORIZONTAL );
 #ifdef __WXOSX__
-      itemBoxSizerBottom->Add( itemBoxSizer16, 0, wxALL, 5 );
+    itemBoxSizerBottom->Add( itemBoxSizer16, 0, wxALL, 5 );
 #else
       itemBoxSizerBottom->Add( itemBoxSizer16, 0, wxALIGN_RIGHT | wxALL, 5 );
 #endif
       m_sdbBtmBtnsSizerCancel = new wxButton( this, wxID_CANCEL, _("Cancel"), wxDefaultPosition,
       wxDefaultSize, 0 );
-#ifdef __WXOSX__
-      itemBoxSizer16->Add( m_sdbBtmBtnsSizerCancel, 0, wxALIGN_BOTTOM | wxALL, 5 );
-#else
-      itemBoxSizer16->Add( m_sdbBtmBtnsSizerCancel, 0, wxALIGN_RIGHT | wxALIGN_BOTTOM | wxALL, 5 );
-#endif
+    itemBoxSizer16->Add( m_sdbBtmBtnsSizerCancel, 0, wxALIGN_BOTTOM | wxALL, 5 );
+
       m_sdbBtmBtnsSizerOK = new wxButton( this, wxID_OK, _("OK"), wxDefaultPosition,
       wxDefaultSize, 0 );
-#ifdef __WXOSX__
-      itemBoxSizer16->Add( m_sdbBtmBtnsSizerOK, 0, wxALIGN_BOTTOM | wxALL, 5 );
-#else
-      itemBoxSizer16->Add( m_sdbBtmBtnsSizerOK, 0, wxALIGN_RIGHT | wxALIGN_BOTTOM | wxALL, 5 );
-#endif
+    itemBoxSizer16->Add( m_sdbBtmBtnsSizerOK, 0, wxALIGN_BOTTOM | wxALL, 5 );
       m_sdbBtmBtnsSizerOK->SetDefault();
 
 
@@ -868,8 +872,8 @@ void TrackPropDlg::CreateControls( void )
       ((wxWindowBase *)m_stFrom)->SetMinSize( wxSize(wxMax(w1, w2), h) );
 
 
-    m_panelBasic->SetScrollRate(5, 5);
-    m_panelAdvanced->SetScrollRate(5, 5);
+      m_panelBasic->SetScrollRate(5, 5);
+      m_panelAdvanced->SetScrollRate(5, 5);
 
 }
 
@@ -902,9 +906,9 @@ void TrackPropDlg::SetTrackAndUpdate( Track *pt )
 
     InitializeList();
     UpdateProperties();
-
+#ifndef __WXOSX__
     RecalculateSize();
-
+#endif
 }
 
 void TrackPropDlg::InitializeList()
@@ -913,7 +917,7 @@ void TrackPropDlg::InitializeList()
         return;
 
     m_lcPoints->m_pTrack = m_pTrack;
-    
+
     if(m_pTrack->GetnPoints()){
         TrackPoint *prp = m_pTrack->GetPoint(0);
         if(prp)
@@ -938,7 +942,10 @@ void TrackPropDlg::InitializeList()
             }
         }
     }
+
 }
+
+
 
 bool TrackPropDlg::UpdateProperties()
 {
@@ -950,7 +957,7 @@ bool TrackPropDlg::UpdateProperties()
     if(m_scrolledWindowLinks){
         wxWindowList kids = m_scrolledWindowLinks->GetChildren();
         for( unsigned int i = 0; i < kids.GetCount(); i++ ) {
-            wxWindowListNode *node = kids.Item( i );
+            wxWindowListNode *node = kids.Item(i);
             wxWindow *win = node->GetData();
 
             if( win->IsKindOf( CLASSINFO(wxHyperlinkCtrl) ) ) {
@@ -961,7 +968,7 @@ bool TrackPropDlg::UpdateProperties()
                 win->Destroy();
             }
         }
-///        m_scrolledWindowLinks->DestroyChildren();
+// /        m_scrolledWindowLinks->DestroyChildren();
         int NbrOfLinks = m_pTrack->m_HyperlinkList->GetCount();
         HyperlinkList *hyperlinklist = m_pTrack->m_HyperlinkList;
     //            int len = 0;
@@ -987,7 +994,7 @@ bool TrackPropDlg::UpdateProperties()
         bSizerLinks->Fit( m_scrolledWindowLinks );
     }
 
-    m_tName->SetValue( m_pTrack->m_TrackNameString );
+    m_tName->SetValue( m_pTrack->GetName() );
     m_tFrom->SetValue( m_pTrack->m_TrackStartString );
     m_tTo->SetValue( m_pTrack->m_TrackEndString );
     if(m_tDescription)m_tDescription->SetValue( m_pTrack->m_TrackDescription );
@@ -1001,9 +1008,7 @@ bool TrackPropDlg::UpdateProperties()
     // Calculate AVG speed if we are showing a track and total time
     TrackPoint *last_point = m_pTrack->GetLastPoint();
     TrackPoint *first_point = m_pTrack->GetPoint( 0 );
-#ifdef __WXOSX__
-    double trackLength = m_pTrack->Length( );
-#endif
+    double trackLength = m_pTrack->Length( );  // Ist 0 hier, warum?????
     double total_seconds = 0.;
 
     wxString speed( _T("--") );
@@ -1013,11 +1018,7 @@ bool TrackPropDlg::UpdateProperties()
             total_seconds =
                     last_point->GetCreateTime().Subtract( first_point->GetCreateTime() ).GetSeconds().ToDouble();
             if( total_seconds != 0. ) {
-#ifdef __WXOSX__
                 m_avgspeed = trackLength / total_seconds * 3600;
-#else
-                m_avgspeed = m_pTrack->Length() / total_seconds * 3600;
-#endif
             } else {
                 m_avgspeed = 0;
             }
@@ -1029,11 +1030,8 @@ bool TrackPropDlg::UpdateProperties()
 
     //  Total length
     wxString slen;
-#ifdef __WXOSX__
     slen.Printf( wxT("%5.2f ") + getUsrDistanceUnit(), toUsrDistance( trackLength ) );
-#else
-    slen.Printf( wxT("%5.2f ") + getUsrDistanceUnit(), toUsrDistance( m_pTrack->Length() ) );
-#endif
+
     m_tTotDistance->SetValue( slen );
 
     //  Time
@@ -1080,19 +1078,19 @@ bool TrackPropDlg::UpdateProperties()
         m_tName->SetEditable( false );
         m_tFrom->SetEditable( false );
         m_tTo->SetEditable( false );
-        if(m_tDescription) m_tDescription->SetEditable( false );
+        if(m_tDescription)m_tDescription->SetEditable( false );
         m_cbShow->Enable( false );
         m_cColor->Enable( false );
         m_cStyle->Enable( false );
         m_cWidth->Enable( false );
         m_sdbBtmBtnsSizerExtend->Enable( false );
         m_sdbBtmBtnsSizerSplit->Enable( false );
-        SetTitle( wxString::Format( _("Track Properties, Layer: %d"), m_pTrack->m_LayerID ) );
+        SetTitle( wxString::Format( _T("%s, %s: %d"), _("Track properties"), _T("Layer"), m_pTrack->m_LayerID ) );
     } else {
         m_tName->SetEditable( true );
         m_tFrom->SetEditable( true );
         m_tTo->SetEditable( true );
-        if(m_tDescription) m_tDescription->SetEditable( true );
+        if(m_tDescription)m_tDescription->SetEditable( true );
         m_cbShow->Enable( true );
         m_cColor->Enable( true );
         m_cStyle->Enable( true );
@@ -1100,7 +1098,7 @@ bool TrackPropDlg::UpdateProperties()
 
         m_sdbBtmBtnsSizerExtend->Enable( IsThisTrackExtendable() );
         //m_sdbBtmBtnsSizerSplit->Enable( false );
-        SetTitle( _("Track Properties") );
+        SetTitle( _("Track properties") );
     }
 
     ::wxEndBusyCursor();
@@ -1203,13 +1201,13 @@ void TrackPropDlg::OnTrackPropCopyTxtClick( wxCommandEvent& event )
     wxString csvString;
 
     csvString << this->GetTitle() << eol
-            << _("Name") << tab << m_pTrack->m_TrackNameString << eol
+            << _("Name") << tab << m_pTrack->GetName() << eol
             << _("Depart From") << tab << m_pTrack->m_TrackStartString << eol
             << _("Destination") << tab << m_pTrack->m_TrackEndString << eol
-            << _("Total Distance") << tab << m_tTotDistance->GetValue() << eol
+            << _("Total distance") << tab << m_tTotDistance->GetValue() << eol
             << _("Speed") << tab << m_tAvgSpeed->GetValue() << eol
-            << _("Departure Time (m/d/y h:m)") << tab << m_pTrack->GetPoint(1)->GetCreateTime().Format() << eol
-            << _("Time Enroute") << tab << m_tTimeEnroute->GetValue() << eol << eol;
+            << _("Departure Time") + _T(" ") + _("(m/d/y h:m)") << tab << m_pTrack->GetPoint(1)->GetCreateTime().Format() << eol
+            << _("Time enroute") << tab << m_tTimeEnroute->GetValue() << eol << eol;
 
     int noCols;
     int noRows;
@@ -1244,11 +1242,11 @@ void TrackPropDlg::OnTrackPropCopyTxtClick( wxCommandEvent& event )
 
 void TrackPropDlg::OnPrintBtnClick( wxCommandEvent& event )
 {
-//    RoutePrintSelection dlg( this, m_pTrack );  //  Siehe routeprintout.cpp
-//    dlg.ShowModal();
+    TrackPrintSelection dlg( this, m_pTrack, m_lcPoints );
+    dlg.ShowModal();
 #ifdef __WXOSX__
-    OnCancelBtnClick(event);
-    wxMessageBox("Noch nicht verfügbar für Tracks");
+//    OnCancelBtnClick(event);
+//    wxMessageBox("Noch nicht verfügbar für Tracks");
 #endif
 }
 
@@ -1287,15 +1285,15 @@ void TrackPropDlg::OnTrackPropListClick( wxListEvent& event )
                 m_sdbBtmBtnsSizerSplit->Enable( true );
             }
             gFrame->JumpToPosition( prp->m_lat, prp->m_lon, cc1->GetVPScale() );
-#ifdef __WXMSW__
+#ifdef __WXMSW__            
             if(m_lcPoints)
                 m_lcPoints->SetFocus();
-#endif
+#endif            
         }
     }
     if( selected_no == 0 || selected_no == m_pTrack->GetnPoints() - 1)
         m_sdbBtmBtnsSizerSplit->Enable( false );
-
+    
 }
 
 void TrackPropDlg::OnTrackPropMenuSelected( wxCommandEvent& event )
@@ -1319,8 +1317,8 @@ void TrackPropDlg::OnExportBtnClick( wxCommandEvent& event )
     wxString suggested_name = _("track");
     TrackList list;
     list.Append( m_pTrack );
-    if( m_pTrack->m_TrackNameString != wxEmptyString )
-        suggested_name = m_pTrack->m_TrackNameString;
+    if( m_pTrack->GetName() != wxEmptyString )
+        suggested_name = m_pTrack->GetName();
     pConfig->ExportGPXTracks( this, &list, suggested_name );
 }
 
@@ -1341,7 +1339,7 @@ void TrackPropDlg::OnDeleteLink( wxCommandEvent& event )
 
     wxWindowList kids = m_scrolledWindowLinks->GetChildren();
     for( unsigned int i = 0; i < kids.GetCount(); i++ ) {
-        wxWindowListNode *node = kids.Item( i );
+        wxWindowListNode *node = kids.Item(i);
         wxWindow *win = node->GetData();
 
         if( win->IsKindOf( CLASSINFO(wxHyperlinkCtrl) ) ) {
@@ -1353,7 +1351,7 @@ void TrackPropDlg::OnDeleteLink( wxCommandEvent& event )
         }
     }
 
-///    m_scrolledWindowLinks->DestroyChildren();
+// /    m_scrolledWindowLinks->DestroyChildren();
     int NbrOfLinks = m_pTrack->m_HyperlinkList->GetCount();
     HyperlinkList *hyperlinklist = m_pTrack->m_HyperlinkList;
 //      int len = 0;
@@ -1532,7 +1530,7 @@ bool TrackPropDlg::SaveChanges( void )
 {
     if( m_pTrack && !m_pTrack->m_bIsInLayer ) {
         //  Get User input Text Fields
-        m_pTrack->m_TrackNameString = m_tName->GetValue();
+        m_pTrack->SetName(m_tName->GetValue());
         m_pTrack->m_TrackStartString = m_tFrom->GetValue();
         m_pTrack->m_TrackEndString = m_tTo->GetValue();
         if(m_tDescription) m_pTrack->m_TrackDescription = m_tDescription->GetValue();
@@ -1551,7 +1549,7 @@ bool TrackPropDlg::SaveChanges( void )
     if( m_pTrack && m_pTrack->IsRunning() )
     {
         wxJSONValue v;
-        v[_T("Name")] =  m_pTrack->m_TrackNameString;
+        v[_T("Name")] =  m_pTrack->GetName();
         v[_T("GUID")] =  m_pTrack->m_GUID;
         wxString msg_id( _T("OCPN_TRK_ACTIVATED") );
         g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
@@ -1559,6 +1557,13 @@ bool TrackPropDlg::SaveChanges( void )
 
     return true;
 }
+
+#ifdef __WXOSX__
+void TrackPropDlg::SaveGeometry() {
+    GetSize(&g_track_prop_sx, &g_track_prop_sy);
+    GetPosition(&g_track_prop_x, &g_track_prop_y);
+}
+#endif
 
 void TrackPropDlg::OnOKBtnClick( wxCommandEvent& event )
 {
@@ -1588,6 +1593,9 @@ void TrackPropDlg::OnOKBtnClick( wxCommandEvent& event )
         pRouteManagerDialog->UpdateTrkListCtrl();
 
     Hide();
+#ifdef __WXOSX__
+    SaveGeometry();
+#endif
     cc1->InvalidateGL();
     cc1->Refresh( false );
 
@@ -1600,17 +1608,17 @@ void TrackPropDlg::OnCancelBtnClick( wxCommandEvent& event )
     wxTrackListNode *node = pTrackList->GetFirst();
     while( node ) {
         Track *ptrack = node->GetData();
-
+        
         if( ptrack == m_pTrack ) {
             b_found_track = true;
             break;
         }
         node = node->GetNext();
     }
-
+    
     if( b_found_track )
         m_pTrack->ClearHighlights();
-
+        
     Hide();
     cc1->InvalidateGL();
     cc1->Refresh( false );
@@ -1621,7 +1629,7 @@ void TrackPropDlg::OnCancelBtnClick( wxCommandEvent& event )
 //--------------------------------------------------------------------------------------
 //          OCPNTrackListCtrl Implementation
 //---------------------------------------------------------------------------------------
-double                  gt_brg, gt_leg_dist;
+
 
 OCPNTrackListCtrl::OCPNTrackListCtrl( wxWindow* parent, wxWindowID id, const wxPoint& pos,
         const wxSize& size, long style ) :
@@ -1656,15 +1664,10 @@ wxString OCPNTrackListCtrl::OnGetItemText( long item, long column ) const
         slat = gLat;
         slon = gLon;
     }
-    else if( prev_point )
+    else
     {
         slat = prev_point->m_lat;
         slon = prev_point->m_lon;
-    }
-    else
-    {
-        slat = gLat;
-        slon = gLon;
     }
 
     switch( column )
@@ -1706,14 +1709,16 @@ wxString OCPNTrackListCtrl::OnGetItemText( long item, long column ) const
             break;
 
         case 6:
+#ifdef __WXOSX__
             if( prev_point ) {
+#endif
             if( ( item > 0 ) && this_point->GetCreateTime().IsValid()
-               && prev_point->GetCreateTime().IsValid() )
+                    && prev_point->GetCreateTime().IsValid() )
             {
                 DistanceBearingMercator( this_point->m_lat, this_point->m_lon, slat, slon, &gt_brg, &gt_leg_dist );
                 double speed = 0.;
                 double seconds =
-                this_point->GetCreateTime().Subtract( prev_point->GetCreateTime() ).GetSeconds().ToDouble();
+                        this_point->GetCreateTime().Subtract( prev_point->GetCreateTime() ).GetSeconds().ToDouble();
 
                 if( seconds > 0. )
                     speed = gt_leg_dist / seconds * 3600;
@@ -1723,7 +1728,9 @@ wxString OCPNTrackListCtrl::OnGetItemText( long item, long column ) const
             {
                 ret = _("--");
             }
+#ifdef __WXOSX__
             }
+#endif
             break;
 
         default:
@@ -1737,3 +1744,5 @@ int OCPNTrackListCtrl::OnGetItemColumnImage( long item, long column ) const
 {
     return -1;
 }
+
+

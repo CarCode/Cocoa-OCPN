@@ -11,15 +11,9 @@
 #ifndef _WXCURL_DIALOG_H_
 #define _WXCURL_DIALOG_H_
 
-#ifdef __WXOSX__
-#include "../../src/wxcurl/wx/curl/dialog.h"
-#include "../../src/wxcurl/wx/curl/thread.h"
-#include "../../src/wxcurl/wx/curl/panel.h"
-#else
- #include "wx/curl/dialog.h"
- #include "wx/curl/thread.h"
- #include "wx/curl/panel.h"
-#endif
+#include "wx/dialog.h"
+#include "wx/curl/thread.h"
+#include "wx/curl/panel.h"
 
 // forward declarations
 //class WXDLLIMPEXP_CORE wxStaticText;
@@ -93,6 +87,7 @@ public:
         m_pGauge = NULL;
         m_pLastEvent = NULL;
         m_pThread = NULL;
+        m_nStyle = 0;
     }
 
     bool Create(const wxString &url,
@@ -138,6 +133,7 @@ public:
     virtual void EndModal(int retCode);
 
 protected:     // internal utils
+
 
     wxStaticText *AddSizerRow(wxSizer *sz, const wxString &name);
     void CreateControls(const wxString &url, const wxString &msg, 
@@ -295,7 +291,7 @@ private:
 class WXDLLIMPEXP_CURL wxCurlConnectionSettingsDialog : public wxDialog
 {
 public:
-    wxCurlConnectionSettingsDialog() { }
+    wxCurlConnectionSettingsDialog() { m_pPanel = NULL; }
 
     wxCurlConnectionSettingsDialog(const wxString& title,
                                    const wxString& message = wxEmptyString,

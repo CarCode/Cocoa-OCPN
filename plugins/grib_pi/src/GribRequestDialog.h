@@ -33,7 +33,7 @@
 #include "GribUIDialogBase.h"
 #include "GribUIDialog.h"
 
-#include "../../../include/ocpn_plugin.h"
+#include "ocpn_plugin.h"
 
 
 //----------------------------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ class GribRequestSetting : public GribRequestSettingBase
 public:
       GribRequestSetting( GRIBUICtrlBar &parent );
 
-      ~GribRequestSetting() {}
+      ~GribRequestSetting();
 
       void OnClose( wxCloseEvent& event );
       void SetVpSize(PlugIn_ViewPort *vp);
@@ -86,9 +86,9 @@ private:
       void OnCoordinatesChange( wxSpinEvent& event );
       void OnMouseEventTimer( wxTimerEvent & event);
       void SetCoordinatesText();
-    
+
       GRIBUICtrlBar &m_parent;
-    
+
       wxDC           *m_pdc;
       wxTimer        m_tMouseEventTimer;
       wxTimer        m_tMouseClickTimer;
@@ -99,7 +99,7 @@ private:
       int  m_MailError_Nb;
       int  m_SendMethod;
       bool m_AllowSend;
-      bool  m_IsMaxLong;
+	  bool  m_IsMaxLong;
 };
 
 #endif

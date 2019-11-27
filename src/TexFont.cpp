@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  texture OpenGL text rendering built from wxFont
@@ -41,7 +41,6 @@ TexFont::TexFont( )
 TexFont::~TexFont( )
 {
     Delete( );
-
 }
 
 
@@ -56,7 +55,7 @@ void TexFont::Build( wxFont &font, bool blur )
 
     m_maxglyphw = 0;
     m_maxglyphh = 0;
-
+    
     wxScreenDC sdc;
 
     sdc.SetFont( font );
@@ -75,7 +74,8 @@ void TexFont::Build( wxFont &font, bool blur )
         tgi[i].height = gh;
 
         tgi[i].advance = gw;
-
+        
+        
         m_maxglyphw = wxMax(tgi[i].width,  m_maxglyphw);
         m_maxglyphh = wxMax(tgi[i].height, m_maxglyphh);
     }
@@ -84,7 +84,7 @@ void TexFont::Build( wxFont &font, bool blur )
        without this, in some cases a faint line can be see on the edge
        from the character above */
     m_maxglyphh++;
-    
+
     int w = COLS_GLYPHS * m_maxglyphw;
     int h = ROWS_GLYPHS * m_maxglyphh;
 
@@ -98,7 +98,7 @@ void TexFont::Build( wxFont &font, bool blur )
     wxMemoryDC dc;
     dc.SelectObject(tbmp);
     dc.SetFont( font );
-
+    
     /* fill bitmap with black */
     dc.SetBackground( wxBrush( wxColour( 0, 0, 0 ) ) );
     dc.Clear();
@@ -106,11 +106,11 @@ void TexFont::Build( wxFont &font, bool blur )
     /* draw the text white */
     dc.SetTextForeground( wxColour( 255, 255, 255 ) );
 
-    /*    wxPen pen(wxColour( 255, 255, 255 ));
+ /*    wxPen pen(wxColour( 255, 255, 255 ));
      wxBrush brush(wxColour( 255, 255, 255 ), wxTRANSPARENT);
      dc.SetPen(pen);
      dc.SetBrush(brush);
-     */
+  */  
     int row = 0, col = 0;
     for( int i = MIN_GLYPH; i < MAX_GLYPH; i++ ) {
         if(col == COLS_GLYPHS) {
@@ -128,13 +128,13 @@ void TexFont::Build( wxFont &font, bool blur )
             text = wxString::Format(_T("%c"), i);
 
         dc.DrawText(text, tgi[i].x, tgi[i].y );
-
+        
 //        dc.DrawRectangle(tgi[i].x, tgi[i].y, tgi[i].advance, tgi[i].height);
         col++;
     }
 
     dc.SelectObject(wxNullBitmap);
-
+    
     wxImage image = tbmp.ConvertToImage();
 
     GLuint format, internalformat;
@@ -171,7 +171,7 @@ void TexFont::Build( wxFont &font, bool blur )
 
         free(teximage);
     }
-
+    
     m_built = true;
 }
 

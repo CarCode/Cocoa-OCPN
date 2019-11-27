@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -38,7 +38,7 @@ PositionParser::PositionParser(const wxString & src)
 }
 
 bool PositionParser::FindSeparator(const wxString & src)
-{
+{ 
 
     // Used when format is similar to "12 34.56 N 12 34.56 E"
     wxString posPartOfSeparator = _T("");
@@ -82,7 +82,7 @@ bool PositionParser::FindSeparator(const wxString & src)
         longitudeString = tk1.GetNextToken();
         longitudeString.Trim(true);
         longitudeString.Trim(false);
-        
+
         return true;
     }
 
@@ -95,9 +95,9 @@ bool PositionParser::FindSeparator(const wxString & src)
         longitudeString = tk2.GetNextToken();
         longitudeString.Trim(true);
         longitudeString.Trim(false);
-        
+
         return true;
-    }
+    }   
 
     separator = _T(" ");
     wxStringTokenizer tk3(src, separator);
@@ -108,10 +108,10 @@ bool PositionParser::FindSeparator(const wxString & src)
         longitudeString = tk3.GetNextToken();
         longitudeString.Trim(true);
         longitudeString.Trim(false);
-        
+
         return true;
     }
-
+    
     separator = _T("\t");
     wxStringTokenizer tk4(src, separator);
     if (tk4.CountTokens() == 2) {
@@ -121,10 +121,10 @@ bool PositionParser::FindSeparator(const wxString & src)
         longitudeString = tk4.GetNextToken();
         longitudeString.Trim(true);
         longitudeString.Trim(false);
-        
+
         return true;
     }
-
+   
     separator = _T("\n");
     wxStringTokenizer tk5(src, separator);
     if (tk5.CountTokens() == 2) {
@@ -134,11 +134,11 @@ bool PositionParser::FindSeparator(const wxString & src)
         longitudeString = tk5.GetNextToken();
         longitudeString.Trim(true);
         longitudeString.Trim(false);
-        
+
         return true;
     }
-    
-    separator = _T("N");
+  
+    separator = _T("N");   
     posPartOfSeparator = _T("N");
     wxStringTokenizer tk6(src, separator);
     if (tk6.CountTokens() == 2) {
@@ -148,11 +148,11 @@ bool PositionParser::FindSeparator(const wxString & src)
         longitudeString = tk6.GetNextToken();
         longitudeString.Trim(true);
         longitudeString.Trim(false);
-        
+
         return true;
     }
-    
-    separator = _T("S");
+   
+    separator = _T("S");   
     posPartOfSeparator = _T("S");
     wxStringTokenizer tk7(src, separator);
     if (tk7.CountTokens() == 2) {
@@ -162,9 +162,9 @@ bool PositionParser::FindSeparator(const wxString & src)
         longitudeString = tk7.GetNextToken();
         longitudeString.Trim(true);
         longitudeString.Trim(false);
-        
+
         return true;
-    }
+    }   
 
     // Give up.
     return false;

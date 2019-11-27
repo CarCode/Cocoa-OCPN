@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  wx 2.8 compatibility
@@ -22,7 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
-
 
 #ifndef __WX28COMPAT_H__
 #define __WX28COMPAT_H__
@@ -50,7 +49,7 @@ typedef int wxPenStyle;
 enum wxKeyCode_compat
 {
     WXK_NONE    =    0,
-
+    
     WXK_CONTROL_A = 1,
     WXK_CONTROL_B,
     WXK_CONTROL_C,

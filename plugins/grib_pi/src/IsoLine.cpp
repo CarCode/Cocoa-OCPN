@@ -32,6 +32,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "GribSettingsDialog.h"
 #include "GribOverlayFactory.h"
 
+#ifdef __WXGTK__
+#include <gdk/gdk.h>
+#endif
+
 //static void GenerateSpline(int n, wxPoint points[]);
 //static void ClearSplineList();
 wxList ocpn_wx_spline_point_list;
@@ -166,6 +170,13 @@ double      round_msvc (double x)
 //---------------------------------------------------------------
 IsoLine::IsoLine(double val, double coeff, double offset, const GribRecord *rec_)
 {
+    if(wxGetDisplaySize().x > 0){
+        m_pixelMM = PlugInGetDisplaySizeMM() / wxGetDisplaySize().x;
+        m_pixelMM = wxMax(.02, m_pixelMM);          // protect against bad data
+    }
+    else
+        m_pixelMM = 0.27;               // semi-standard number...
+
     value = val/coeff-offset;
 
     rec = rec_;
@@ -398,17 +409,22 @@ void IsoLine::drawIsoLine(GRIBOverlayFactory *pof, wxDC *dc, PlugIn_ViewPort *vp
           dc->SetPen(ppISO);
       } else { /* opengl */
 #ifdef ocpnUSE_GL
+          if(m_pixelMM > 0.2){        // pixel size large enough to render well
           //      Enable anti-aliased lines, at best quality
-          glEnable( GL_LINE_SMOOTH );
-          glEnable( GL_BLEND );
-          glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-          glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-          glLineWidth( 2 );
-
+            glEnable( GL_LINE_SMOOTH );
+            glEnable( GL_BLEND );
+            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+            glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+            glLineWidth( 2 );
+          }
+          else{
+            glLineWidth( 0.4/m_pixelMM);        //  set a target line width by MM
+          }
+          
           glColor4ub(isoLineColor.Red(), isoLineColor.Green(), isoLineColor.Blue(),
                      255/*isoLineColor.Alpha()*/);
           glBegin( GL_LINES );
-#endif
+#endif          
       }
 
       std::list<Segment *>::iterator it;
@@ -420,35 +436,39 @@ void IsoLine::drawIsoLine(GRIBOverlayFactory *pof, wxDC *dc, PlugIn_ViewPort *vp
     {
         Segment *seg = *it;
 
-        /* skip segments that go the wrong way around the world */
-        if(seg->px1+180 < vp->clon && seg->px2+180 > vp->clon)
-            continue;
-        if(seg->px1+180 > vp->clon && seg->px2+180 < vp->clon)
-            continue;
-        if(seg->px1-180 < vp->clon && seg->px2-180 > vp->clon)
-            continue;
-        if(seg->px1-180 > vp->clon && seg->px2-180 < vp->clon)
-            continue;
+        if(vp->m_projection_type == PI_PROJECTION_MERCATOR ||
+           vp->m_projection_type == PI_PROJECTION_EQUIRECTANGULAR) {
+            /* skip segments that go the wrong way around the world */
+            double sx1 = seg->px1, sx2 = seg->px2;
+            if(sx2 - sx1 > 180)
+                sx2 -= 360;
+            else if(sx1 - sx2 > 180)
+                sx1 -= 360;
 
-        {
-            wxPoint ab;
-            GetCanvasPixLL(vp, &ab, seg->py1, seg->px1);
-            wxPoint cd;
-            GetCanvasPixLL(vp, &cd, seg->py2, seg->px2);
+            if((sx1+180 < vp->clon && sx2+180 > vp->clon) ||
+               (sx1+180 > vp->clon && sx2+180 < vp->clon) ||
+               (sx1-180 < vp->clon && sx2-180 > vp->clon) ||
+               (sx1-180 > vp->clon && sx2-180 < vp->clon))
+                continue;
+        }
 
-            if(dc) {
+        wxPoint ab;
+        GetCanvasPixLL(vp, &ab, seg->py1, seg->px1);
+        wxPoint cd;
+        GetCanvasPixLL(vp, &cd, seg->py2, seg->px2);
+
+        if(dc) {
 #if wxUSE_GRAPHICS_CONTEXT
-                  if(bHiDef && pgc)
-                        pgc->StrokeLine(ab.x, ab.y, cd.x, cd.y);
-                  else
+            if(bHiDef && pgc)
+                pgc->StrokeLine(ab.x, ab.y, cd.x, cd.y);
+            else
 #endif
-                      dc->DrawLine(ab.x, ab.y, cd.x, cd.y);
-            } else { /* opengl */
+                dc->DrawLine(ab.x, ab.y, cd.x, cd.y);
+        } else { /* opengl */
 #ifdef ocpnUSE_GL
-                glVertex2d(ab.x, ab.y);
-                glVertex2d(cd.x, cd.y);
-#endif
-            }
+            glVertex2d(ab.x, ab.y);
+            glVertex2d(cd.x, cd.y);
+#endif                
         }
     }
 
@@ -570,8 +590,8 @@ void IsoLine::drawIsoLine(GRIBOverlayFactory *pof, wxDC *dc, PlugIn_ViewPort *vp
       delete pgc;
 #endif
 
-    if(!dc) /* opengl */
-        glEnd();
+      if(!dc) /* opengl */
+          glEnd();
 }
 
 //---------------------------------------------------------------
@@ -613,12 +633,12 @@ void IsoLine::drawIsoLineLabels(GRIBOverlayFactory *pof, wxDC *dc,
                 wxRect r(x ,yd ,w ,h);
                 r.Inflate(w);
                 if (!prev.Intersects(r))  {
-                    prev = r;
-                    
-                    /* don't use alpha for isobars, for some reason draw bitmap ignores
-                     the 4th argument (true or false has same result) */
-                    wxImage img(w, h, imageLabel.GetData(), true);
-                    dc->DrawBitmap(img, xd, yd, false);
+                      prev = r;
+
+                      /* don't use alpha for isobars, for some reason draw bitmap ignores
+                         the 4th argument (true or false has same result) */
+                      wxImage img(w, h, imageLabel.GetData(), true);
+                      dc->DrawBitmap(img, xd, yd, false);
                 }
             }
         }
@@ -632,12 +652,12 @@ void IsoLine::drawIsoLineLabelsGL(GRIBOverlayFactory *pof,
 {
     std::list<Segment *>::iterator it;
     int nb = first;
-    
+
 #ifdef ocpnUSE_GL
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    
-    
+
+
     //---------------------------------------------------------
     // Ecrit les labels
     //---------------------------------------------------------
@@ -647,50 +667,50 @@ void IsoLine::drawIsoLineLabelsGL(GRIBOverlayFactory *pof,
         if (nb % density == 0)
         {
             Segment *seg = *it;
-            
-            //            if(vp->vpBBox.PointInBox((seg->px1 + seg->px2)/2., (seg->py1 + seg->py2)/2., 0.))
+
+//            if(vp->vpBBox.PointInBox((seg->px1 + seg->px2)/2., (seg->py1 + seg->py2)/2., 0.))
             {
                 wxPoint ab;
                 GetCanvasPixLL(vp, &ab, seg->py1, seg->px1);
                 wxPoint cd;
                 GetCanvasPixLL(vp, &cd, seg->py1, seg->px1);
-                
+
                 int w, h;
                 texfont.GetTextExtent(label, &w, &h);
-                
+
                 int label_offsetx = 6, label_offsety = 1;
                 int xd = (ab.x + cd.x-(w+label_offsetx * 2))/2;
                 int yd = (ab.y + cd.y - h)/2;
                 int x = xd - label_offsetx, y = yd - label_offsety;
                 w += 2*label_offsetx, h += 2*label_offsety;
-                
+
                 wxRect r(x,y, w,h);
                 r.Inflate(w);
-                if (!prev.Intersects(r))
+                if (!prev.Intersects(r)) 
                 {
-                    prev = r;
-                    glColor4ub(color.Red(), color.Green(), color.Blue(), color.Alpha());
-                    
-                    /* draw bounding rectangle */
-                    glBegin(GL_QUADS);
-                    glVertex2i(x,   y);
-                    glVertex2i(x+w, y);
-                    glVertex2i(x+w, y+h);
-                    glVertex2i(x,   y+h);
-                    glEnd();
-                    
-                    glColor3ub(0, 0, 0);
-                    
-                    glBegin(GL_LINE_LOOP);
-                    glVertex2i(x,   y);
-                    glVertex2i(x+w, y);
-                    glVertex2i(x+w, y+h);
-                    glVertex2i(x,   y+h);
-                    glEnd();
-                    
-                    glEnable(GL_TEXTURE_2D);
-                    texfont.RenderString(label, xd, yd);
-                    glDisable(GL_TEXTURE_2D);
+                      prev = r;
+                      glColor4ub(color.Red(), color.Green(), color.Blue(), color.Alpha());
+
+                      /* draw bounding rectangle */
+                      glBegin(GL_QUADS);
+                      glVertex2i(x,   y);
+                      glVertex2i(x+w, y);
+                      glVertex2i(x+w, y+h);
+                      glVertex2i(x,   y+h);
+                      glEnd();
+
+                      glColor3ub(0, 0, 0);
+
+                      glBegin(GL_LINE_LOOP);
+                      glVertex2i(x,   y);
+                      glVertex2i(x+w, y);
+                      glVertex2i(x+w, y+h);
+                      glVertex2i(x,   y+h);
+                      glEnd();
+
+                      glEnable(GL_TEXTURE_2D);
+                      texfont.RenderString(label, xd, yd);
+                      glDisable(GL_TEXTURE_2D);
                 }
             }
         }
@@ -703,14 +723,14 @@ void IsoLine::drawIsoLineLabelsGL(GRIBOverlayFactory *pof,
 //==================================================================================
 // Segment
 //==================================================================================
-Segment::Segment(int I, int J,
+Segment::Segment(int I, int w, int J,
                 char c1, char c2, char c3, char c4,
                  const GribRecord *rec, double pressure)
 {
-    traduitCode(I,J, c1, i,j);
-    traduitCode(I,J, c2, k,l);
-    traduitCode(I,J, c3, m,n);
-    traduitCode(I,J, c4, o,p);
+    traduitCode(I, w, J, c1, i,j);
+    traduitCode(I, w, J, c2, k,l);
+    traduitCode(I, w, J, c3, m,n);
+    traduitCode(I, w, J, c4, o,p);
 
     intersectionAreteGrille(i,j, k,l,  &px1,&py1, rec, pressure);
     intersectionAreteGrille(m,n, o,p,  &px2,&py2, rec, pressure);
@@ -731,7 +751,12 @@ void Segment::intersectionAreteGrille(int i,int j, int k,int l, double *x, doubl
         dec = 0.5;
     if (fabs(dec)>1)
         dec = 0.5;
-    *x = a+(b-a)*dec;
+    double xd = b-a;
+    if(xd < -180)
+        xd += 360;
+    else if(xd > 180)
+        xd -= 360;
+    *x = a+xd*dec;
     // Ordonnée
     a = rec->getY(j);
     b = rec->getY(l);
@@ -744,11 +769,12 @@ void Segment::intersectionAreteGrille(int i,int j, int k,int l, double *x, doubl
     *y = a+(b-a)*dec;
 }
 //---------------------------------------------------------------
-void Segment::traduitCode(int I, int J, char c1, int &i, int &j) {
-    switch (c1) {
-        case 'a':  i=I-1;  j=J-1; break;
+void Segment::traduitCode(int I, int w, int J, char c1, int &i, int &j) {
+    int Im1 = I ? I-1 : w - 1;
+ switch (c1) {
+        case 'a':  i=Im1;  j=J-1; break;
         case 'b':  i=I  ;  j=J-1; break;
-        case 'c':  i=I-1;  j=J  ; break;
+        case 'c':  i=Im1;  j=J  ; break;
         case 'd':  i=I  ;  j=J  ; break;
         default:   i=I  ;  j=J  ;
     }
@@ -765,22 +791,29 @@ void IsoLine::extractIsoLine(const GribRecord *rec)
     W = rec->getNi();
     H = rec->getNj();
 
+    int We = W;
+    if(rec->getLonMax() + rec->getDi() - rec->getLonMin() == 360)
+        We++;
+
     for (j=1; j<H; j++)     // !!!! 1 to end
     {
         a = rec->getValue( 0, j-1 );
         c = rec->getValue( 0, j   );
-        for (i=1; i<W; i++, a = b, c = d)
+        for (i=1; i<We; i++, a = b, c = d)
         {
 //            x = rec->getX(i);
 //            y = rec->getY(j);
 
-            b = rec->getValue( i,   j-1 );
-            d = rec->getValue( i,   j   );
+            int ni = i;
+            if (i == W)
+                ni = 0;
+            b = rec->getValue( ni,   j-1 );
+            d = rec->getValue( ni,   j   );
 
             if( a == GRIB_NOTDEF || b == GRIB_NOTDEF || c == GRIB_NOTDEF || d == GRIB_NOTDEF ) continue;
 
             if ((a< value && b< value && c< value  && d < value)
-                || (a>value && b>value && c>value  && d > value))
+                 || (a>value && b>value && c>value  && d > value))
                 continue;
 
             // Détermine si 1 ou 2 segments traversent la case ab-cd
@@ -791,35 +824,35 @@ void IsoLine::extractIsoLine(const GribRecord *rec)
             //--------------------------------
             if     ((a<=value && b<=value && c<=value  && d>value)
                  || (a>value && b>value && c>value  && d<=value))
-                trace.push_back(new Segment(i,j, 'c','d',  'b','d', rec, value));
+                trace.push_back(new Segment(ni,W,j, 'c','d',  'b','d', rec, value));
             else if ((a<=value && c<=value && d<=value  && b>value)
                  || (a>value && c>value && d>value  && b<=value))
-                trace.push_back(new Segment(i,j, 'a','b',  'b','d', rec, value));
+                trace.push_back(new Segment(ni,W,j, 'a','b',  'b','d', rec, value));
             else if ((c<=value && d<=value && b<=value  && a>value)
                  || (c>value && d>value && b>value  && a<=value))
-                trace.push_back(new Segment(i,j, 'a','b',  'a','c', rec, value));
+                trace.push_back(new Segment(ni,W,j, 'a','b',  'a','c', rec, value));
             else if ((a<=value && b<=value && d<=value  && c>value)
                  || (a>value && b>value && d>value  && c<=value))
-                trace.push_back(new Segment(i,j, 'a','c',  'c','d', rec,value));
+                trace.push_back(new Segment(ni,W,j, 'a','c',  'c','d', rec,value));
             //--------------------------------
             // 1 segment H ou V
             //--------------------------------
             else if ((a<=value && b<=value   &&  c>value && d>value)
                  || (a>value && b>value   &&  c<=value && d<=value))
-                trace.push_back(new Segment(i,j, 'a','c',  'b','d', rec,value));
+                trace.push_back(new Segment(ni,W,j, 'a','c',  'b','d', rec,value));
             else if ((a<=value && c<=value   &&  b>value && d>value)
                  || (a>value && c>value   &&  b<=value && d<=value))
-                trace.push_back(new Segment(i,j, 'a','b',  'c','d', rec,value));
+                trace.push_back(new Segment(ni,W,j, 'a','b',  'c','d', rec,value));
             //--------------------------------
             // 2 segments en diagonale
             //--------------------------------
             else if  (a<=value && d<=value   &&  c>value && b>value) {
-                trace.push_back(new Segment(i,j, 'a','b',  'b','d', rec,value));
-                trace.push_back(new Segment(i,j, 'a','c',  'c','d', rec,value));
+                trace.push_back(new Segment(ni,W,j, 'a','b',  'b','d', rec,value));
+                trace.push_back(new Segment(ni,W,j, 'a','c',  'c','d', rec,value));
             }
             else if  (a>value && d>value   &&  c<=value && b<=value) {
-                trace.push_back(new Segment(i,j, 'a','b',  'a','c', rec,value));
-                trace.push_back(new Segment(i,j, 'b','d',  'c','d', rec,value));
+                trace.push_back(new Segment(ni,W,j, 'a','b',  'a','c', rec,value));
+                trace.push_back(new Segment(ni,W,j, 'b','d',  'c','d', rec,value));
             }
 
         }

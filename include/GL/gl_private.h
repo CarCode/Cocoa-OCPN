@@ -60,7 +60,7 @@ typedef double          GLclampd;       /* double precision float in [0,1] */
 
 #ifdef __OCPN__ANDROID__
 #if QT_VERSION >= 0x050500
-    typedef double          GLdouble;       /* double precision float */
+typedef double          GLdouble;       /* double precision float */
 #define GL_DOUBLE                               0x140A
 #endif
 #endif
@@ -185,7 +185,7 @@ GLAPI void GLAPIENTRY glDisableClientState( GLenum cap );  /* 1.1 */
 GLAPI void GLAPIENTRY glVertexPointer( GLint size, GLenum type, GLsizei stride, const GLvoid *ptr );
 GLAPI void GLAPIENTRY glRasterPos2f( GLfloat x, GLfloat y );
 
-    // OES FBO extensions
+// OES FBO extensions
 #ifndef GL_OES_framebuffer_object
 #define GL_NONE_OES                                             0
 #define GL_FRAMEBUFFER_OES                                      0x8D40
@@ -221,42 +221,42 @@ GLAPI void GLAPIENTRY glRasterPos2f( GLfloat x, GLfloat y );
 #define GL_MAX_RENDERBUFFER_SIZE_OES                            0x84E8
 #define GL_INVALID_FRAMEBUFFER_OPERATION_OES                    0x0506
 #endif
-    
+
 #ifndef GL_OES_framebuffer_object
 #define GL_OES_framebuffer_object 1
-    GLAPI GLboolean GLAPIENTRY glIsRenderbufferOES (GLuint renderbuffer);
-    GLAPI void GLAPIENTRY glBindRenderbufferOES (GLenum target, GLuint renderbuffer);
-    GLAPI void GLAPIENTRY glDeleteRenderbuffersOES (GLsizei n, const GLuint* renderbuffers);
-    GLAPI void GLAPIENTRY glGenRenderbuffersOES (GLsizei n, GLuint* renderbuffers);
-    GLAPI void GLAPIENTRY glRenderbufferStorageOES (GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
-    GLAPI void GLAPIENTRY glGetRenderbufferParameterivOES (GLenum target, GLenum pname, GLint* params);
-    GLAPI GLboolean GLAPIENTRY glIsFramebufferOES (GLuint framebuffer);
-    GLAPI void GLAPIENTRY glBindFramebufferOES (GLenum target, GLuint framebuffer);
-    GLAPI void GLAPIENTRY glDeleteFramebuffersOES (GLsizei n, const GLuint* framebuffers);
-    GLAPI void GLAPIENTRY glGenFramebuffersOES (GLsizei n, GLuint* framebuffers);
-    GLAPI GLenum GLAPIENTRY glCheckFramebufferStatusOES (GLenum target);
-    GLAPI void GLAPIENTRY glFramebufferRenderbufferOES (GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer);
-    GLAPI void GLAPIENTRY glFramebufferTexture2DOES (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
-    GLAPI void GLAPIENTRY glGetFramebufferAttachmentParameterivOES (GLenum target, GLenum attachment, GLenum pname, GLint* params);
-    GLAPI void GLAPIENTRY glGenerateMipmapOES (GLenum target);
+GLAPI GLboolean GLAPIENTRY glIsRenderbufferOES (GLuint renderbuffer);
+GLAPI void GLAPIENTRY glBindRenderbufferOES (GLenum target, GLuint renderbuffer);
+GLAPI void GLAPIENTRY glDeleteRenderbuffersOES (GLsizei n, const GLuint* renderbuffers);
+GLAPI void GLAPIENTRY glGenRenderbuffersOES (GLsizei n, GLuint* renderbuffers);
+GLAPI void GLAPIENTRY glRenderbufferStorageOES (GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
+GLAPI void GLAPIENTRY glGetRenderbufferParameterivOES (GLenum target, GLenum pname, GLint* params);
+GLAPI GLboolean GLAPIENTRY glIsFramebufferOES (GLuint framebuffer);
+GLAPI void GLAPIENTRY glBindFramebufferOES (GLenum target, GLuint framebuffer);
+GLAPI void GLAPIENTRY glDeleteFramebuffersOES (GLsizei n, const GLuint* framebuffers);
+GLAPI void GLAPIENTRY glGenFramebuffersOES (GLsizei n, GLuint* framebuffers);
+GLAPI GLenum GLAPIENTRY glCheckFramebufferStatusOES (GLenum target);
+GLAPI void GLAPIENTRY glFramebufferRenderbufferOES (GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer);
+GLAPI void GLAPIENTRY glFramebufferTexture2DOES (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
+GLAPI void GLAPIENTRY glGetFramebufferAttachmentParameterivOES (GLenum target, GLenum attachment, GLenum pname, GLint* params);
+GLAPI void GLAPIENTRY glGenerateMipmapOES (GLenum target);
 #endif
-    
+
 #if 0
-    typedef GLboolean (GL_APIENTRYP PFNGLISRENDERBUFFEROESPROC) (GLuint renderbuffer);
-    typedef void (GL_APIENTRYP PFNGLBINDRENDERBUFFEROESPROC) (GLenum target, GLuint renderbuffer);
-    typedef void (GL_APIENTRYP PFNGLDELETERENDERBUFFERSOESPROC) (GLsizei n, const GLuint* renderbuffers);
-    typedef void (GL_APIENTRYP PFNGLGENRENDERBUFFERSOESPROC) (GLsizei n, GLuint* renderbuffers);
-    typedef void (GL_APIENTRYP PFNGLRENDERBUFFERSTORAGEOESPROC) (GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
-    typedef void (GL_APIENTRYP PFNGLGETRENDERBUFFERPARAMETERIVOESPROC) (GLenum target, GLenum pname, GLint* params);
-    typedef GLboolean (GL_APIENTRYP PFNGLISFRAMEBUFFEROESPROC) (GLuint framebuffer);
-    typedef void (GL_APIENTRYP PFNGLBINDFRAMEBUFFEROESPROC) (GLenum target, GLuint framebuffer);
-    typedef void (GL_APIENTRYP PFNGLDELETEFRAMEBUFFERSOESPROC) (GLsizei n, const GLuint* framebuffers);
-    typedef void (GL_APIENTRYP PFNGLGENFRAMEBUFFERSOESPROC) (GLsizei n, GLuint* framebuffers);
-    typedef GLenum (GL_APIENTRYP PFNGLCHECKFRAMEBUFFERSTATUSOESPROC) (GLenum target);
-    typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERRENDERBUFFEROESPROC) (GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer);
-    typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTURE2DOESPROC) (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
-    typedef void (GL_APIENTRYP PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVOESPROC) (GLenum target, GLenum attachment, GLenum pname, GLint* params);
-    typedef void (GL_APIENTRYP PFNGLGENERATEMIPMAPOESPROC) (GLenum target);
+typedef GLboolean (GL_APIENTRYP PFNGLISRENDERBUFFEROESPROC) (GLuint renderbuffer);
+typedef void (GL_APIENTRYP PFNGLBINDRENDERBUFFEROESPROC) (GLenum target, GLuint renderbuffer);
+typedef void (GL_APIENTRYP PFNGLDELETERENDERBUFFERSOESPROC) (GLsizei n, const GLuint* renderbuffers);
+typedef void (GL_APIENTRYP PFNGLGENRENDERBUFFERSOESPROC) (GLsizei n, GLuint* renderbuffers);
+typedef void (GL_APIENTRYP PFNGLRENDERBUFFERSTORAGEOESPROC) (GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
+typedef void (GL_APIENTRYP PFNGLGETRENDERBUFFERPARAMETERIVOESPROC) (GLenum target, GLenum pname, GLint* params);
+typedef GLboolean (GL_APIENTRYP PFNGLISFRAMEBUFFEROESPROC) (GLuint framebuffer);
+typedef void (GL_APIENTRYP PFNGLBINDFRAMEBUFFEROESPROC) (GLenum target, GLuint framebuffer);
+typedef void (GL_APIENTRYP PFNGLDELETEFRAMEBUFFERSOESPROC) (GLsizei n, const GLuint* framebuffers);
+typedef void (GL_APIENTRYP PFNGLGENFRAMEBUFFERSOESPROC) (GLsizei n, GLuint* framebuffers);
+typedef GLenum (GL_APIENTRYP PFNGLCHECKFRAMEBUFFERSTATUSOESPROC) (GLenum target);
+typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERRENDERBUFFEROESPROC) (GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer);
+typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTURE2DOESPROC) (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
+typedef void (GL_APIENTRYP PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVOESPROC) (GLenum target, GLenum attachment, GLenum pname, GLint* params);
+typedef void (GL_APIENTRYP PFNGLGENERATEMIPMAPOESPROC) (GLenum target);
 #endif
 
 
@@ -414,25 +414,25 @@ void (* eglGetProcAddress(   char const * procname))( void );
 #define GL_UNPACK_SKIP_ROWS                     0x0CF3
 #define GL_UNPACK_SWAP_BYTES                    0x0CF0
 
-    class GLUtesselator;
-    typedef void (GLAPIENTRYP _GLUfuncptr)();
-    
-    GLAPI GLUtesselator* GLAPIENTRY gluNewTess (void);
-    GLAPI void GLAPIENTRY gluDeleteTess (GLUtesselator* tess);
-    GLAPI void GLAPIENTRY gluTessVertex (GLUtesselator* tess, GLdouble *location, GLvoid* data);
-    GLAPI void GLAPIENTRY gluTessBeginContour (GLUtesselator* tess);
-    GLAPI void GLAPIENTRY gluTessBeginPolygon (GLUtesselator* tess, GLvoid* data);
-    GLAPI void GLAPIENTRY gluTessCallback (GLUtesselator* tess, GLenum which, _GLUfuncptr CallBackFunc);
-    GLAPI void GLAPIENTRY gluTessEndContour (GLUtesselator* tess);
-    GLAPI void GLAPIENTRY gluTessEndPolygon (GLUtesselator* tess);
-    GLAPI void GLAPIENTRY gluTessNormal (GLUtesselator* tess, GLdouble valueX, GLdouble valueY, GLdouble valueZ);
-    GLAPI void GLAPIENTRY gluTessProperty (GLUtesselator* tess, GLenum which, GLdouble data);
-    GLAPI const GLubyte * GLAPIENTRY gluErrorString (GLenum error);
+class GLUtesselator;
+typedef void (GLAPIENTRYP _GLUfuncptr)();
 
-    GLAPI void GLAPIENTRY glColorPointer( GLint size, GLenum type,
+GLAPI GLUtesselator* GLAPIENTRY gluNewTess (void);
+GLAPI void GLAPIENTRY gluDeleteTess (GLUtesselator* tess);
+GLAPI void GLAPIENTRY gluTessVertex (GLUtesselator* tess, GLdouble *location, GLvoid* data);
+GLAPI void GLAPIENTRY gluTessBeginContour (GLUtesselator* tess);
+GLAPI void GLAPIENTRY gluTessBeginPolygon (GLUtesselator* tess, GLvoid* data);
+GLAPI void GLAPIENTRY gluTessCallback (GLUtesselator* tess, GLenum which, _GLUfuncptr CallBackFunc);
+GLAPI void GLAPIENTRY gluTessEndContour (GLUtesselator* tess);
+GLAPI void GLAPIENTRY gluTessEndPolygon (GLUtesselator* tess);
+GLAPI void GLAPIENTRY gluTessNormal (GLUtesselator* tess, GLdouble valueX, GLdouble valueY, GLdouble valueZ);
+GLAPI void GLAPIENTRY gluTessProperty (GLUtesselator* tess, GLenum which, GLdouble data);
+GLAPI const GLubyte * GLAPIENTRY gluErrorString (GLenum error);
+
+GLAPI void GLAPIENTRY glColorPointer( GLint size, GLenum type,
+                                      GLsizei stride, const GLvoid *ptr );
+GLAPI void GLAPIENTRY glTexCoordPointer( GLint size, GLenum type,
                                          GLsizei stride, const GLvoid *ptr );
-    GLAPI void GLAPIENTRY glTexCoordPointer( GLint size, GLenum type,
-                                            GLsizei stride, const GLvoid *ptr );
 
 
 #define GLU_TESS_BEGIN                     100100

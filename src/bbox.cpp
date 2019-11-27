@@ -1,10 +1,10 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        bbox.cpp
 // Author:      Klaas Holwerda
 // Created:     XX/XX/XX
 // Copyright:   2000 (c) Klaas Holwerda
 // Licence:     wxWindows Licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -370,7 +370,6 @@ void wxBoundingBox::MapBbox( const wxTransformMatrix& matrix)
 
 void LLBBox::Set(double minlat, double minlon, double maxlat, double maxlon)
 {
-
     m_minlat = minlat;
     m_minlon = minlon;
     m_maxlat = maxlat;
@@ -394,7 +393,7 @@ void LLBBox::SetFromSegment(double lat1, double lon1, double lat2, double lon2)
             lon[i][2] = lon[i][0] - 360;
         }
     }
-
+    
     double d[3];
     for(int k=0; k<3; k++) {
         minlon[k] = wxMin(lon[0][k], lon[1][k]);
@@ -484,12 +483,12 @@ bool LLBBox::Contains(double lat, double lon) const
     if(lat < m_minlat || lat > m_maxlat )
         return FALSE;
 
-    //    Box is centered in East lon, crossing IDL
+//    Box is centered in East lon, crossing IDL
     if(m_maxlon > 180.) {
         if( lon < m_maxlon - 360.)
             lon +=  360.;
     }
-    //    Box is centered in Wlon, crossing IDL
+      //    Box is centered in Wlon, crossing IDL
     else if(m_minlon < -180.)
     {
         if(lon > m_minlon + 360.)
@@ -504,12 +503,11 @@ bool LLBBox::ContainsMarge(double lat, double lon, double Marge) const
     if(lat < (m_minlat - Marge) || lat > (m_maxlat + Marge) )
         return FALSE;
 
-    //    Box is centered in East lon, crossing IDL
+//    Box is centered in East lon, crossing IDL
     if(m_maxlon > 180.) {
         if( lon < m_maxlon - 360.)
             lon +=  360.;
     }
-
       //    Box is centered in Wlon, crossing IDL
     else if(m_minlon < -180.)
     {
@@ -527,14 +525,14 @@ bool LLBBox::IntersectIn( const LLBBox &other ) const
 
     if((m_maxlat <= other.m_maxlat) || (m_minlat >= other.m_minlat))
         return false;
-
+    
     double minlon = m_minlon, maxlon = m_maxlon;
     if(m_maxlon < other.m_minlon)
         minlon += 360, maxlon += 360;
     else if(m_minlon > other.m_maxlon)
         minlon -= 360, maxlon -= 360;
 
-    return (minlon > other.m_minlon) && (maxlon < other.m_maxlon);
+    return (other.m_minlon > minlon) && (other.m_maxlon < maxlon);
 }
 
 bool LLBBox::IntersectOutGetBias( const LLBBox &other, double bias ) const
@@ -542,7 +540,7 @@ bool LLBBox::IntersectOutGetBias( const LLBBox &other, double bias ) const
     // allow -180 to 180 or 0 to 360
     if( !GetValid() || !other.GetValid() )
         return true;
-
+    
     if((m_maxlat < other.m_minlat) || (m_minlat > other.m_maxlat))
         return true;
 

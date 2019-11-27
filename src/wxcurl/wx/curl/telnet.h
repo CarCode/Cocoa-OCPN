@@ -15,7 +15,7 @@
 #ifndef _WXCURLTELNET_H__INCLUDED_
 #define _WXCURLTELNET_H__INCLUDED_
 
-#include "wx/curl/base.h"
+#include <wx/curl/base.h>
 
 //! A specialized interface to TELNET derived from wxCurlBase.
 class WXDLLIMPEXP_CURL wxCurlTelnet : public wxCurlBase

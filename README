@@ -42,16 +42,17 @@ Warum überhaupt diese eigene OpenCPN Version?
   Apple gewohnten Umfeld. Weitere Abweichungen zum Original Code sind:
 
 a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
-   El Capitan (10.11) Ältere Versionen funktionieren nicht mehr. Es soll
-   soweit wie möglich das Mac OS X Betriebssystem unterstützt werden,
-   einschl. Mac Menüs, Mac Hilfe usw. El Capitan (10.11) wird ab
-   Erscheinen Ende September 2015 nur noch unterstützt, ältere Versionen
-   nicht mehr.
-   Inzwischen steht macOS Sierra (10.12) vor der Tür und diese OCPN
-   Version wurde bereits dafür compiliert.
+   (jetzt macOS) Mojave (10.14). Ältere Versionen funktionieren nicht mehr.
+   Es soll soweit wie möglich das macOS Betriebssystem unterstützt werden,
+   einschl. Mac Menüs, Mac Hilfe usw. Mojave (10.14) wird ab Erscheinen
+   Ende September 2017 nur noch unterstützt, ältere Versionen nicht
+   mehr.
+   Vermutlich wird es für neuere Versionen von macOS in absehbarer Zeit
+   überhaupt keine OpenCPN Version mehr geben können, da die Grafik-
+   Bibliothek OpenGL von Apple bald nicht mehr unterstützt wird.
 
-b. Diese Version basiert auf Release-Version von wxWidgets 3.1.1 mit
-   entsprechenden dylibs vom 15. Juni 2016. Die Einbindung der Libs als
+b. Diese Version basiert auf Release-Version von wxWidgets 3.1.3 mit
+   entsprechenden dylibs vom 25. April 2019. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -78,10 +79,10 @@ Größte Änderung ist jedoch die Verwendung von Clang/LLVM mit Xcode statt
 der Befehlszeilen orientierten Cmake Version.
 
 Compiler:
-Xcode 8
-Apple LLVM version 8.0.0 (clang-800.0.24.1) (based on LLVM 3.6.0svn)
-Target: x86_64-apple-darwin15.5.0
-SDK 10.12 Sierra
+Xcode 11.2.1
+Apple LLVM version 10.0.0 (clang-1000.11.45.5)
+Target: x86_64-apple-darwin18.2.0
+SDK 10.14 Mojave
 Thread model: posix
 
 wxWidgets Direktive:
@@ -91,8 +92,7 @@ Ich verwende die SourceTree.app für Mac OS X.
 Im Sourcen-Tree neues Verzeichnis erstellen z.B. "build-cocoa-debug".
 Im Terminal in dies Verzeichnis wechseln und konfigurieren mit:
 
-../configure --with-osx_cocoa --enable-debug --enable-shared --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk --with-macosx-version-min=10.10 --enable-mimetype=yes
- --enable-mediactrl=no
+../configure --with-macosx-version-min=10.9 --with-expat=builtin --enable-unicode --enable-shared --enable-debug --disable-compat28 --with-osx-cocoa --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk --without-liblzma --with-zlib=builtin --with-libpng=builtin --without-libjpeg --without-libtiff CXXFLAGS="-stdlib=libc++ -std=c++14" OBJCXXFLAGS="-stdlib=libc++ -std=c++14" LDFLAGS="-stdlib=libc++" CXX=clang++ CC=clang
 
 Dann Eingabe von: make
 und schließlich Eingabe von: sudo make install
@@ -107,5 +107,5 @@ Siehe batchwx.sh bzw. Xcode Scripts.
 
 wxCurl wurde auf diese Art ebenfalls als dynamische Library compiliert.
 -----------------------------------------------------------------------
-10. September 2016
+25. November 2019
 

@@ -32,7 +32,7 @@
 #include <wx/sstream.h>
 #include <wx/xml/xml.h>
 
-#include "wx/curl/davtool.h"
+#include <wx/curl/davtool.h>
 
 //////////////////////////////////////////////////////////////////////
 // Constants

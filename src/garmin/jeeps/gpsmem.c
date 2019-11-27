@@ -1,4 +1,4 @@
-/********************************************************************
+/* *******************************************************************
 ** @source JEEPS constructor and deconstructor functions
 **
 ** @author Copyright (C) 1999,2000 Alan Bleasby
@@ -47,19 +47,16 @@ GPS_PPacket GPS_Packet_New(void)
 	perror("malloc");
 	fprintf(stderr,"GPS_Packet_New: Insufficient memory");
 	fflush(stderr);
-#ifdef __WXOSX__
-        free(ret);
-#endif
 	return NULL;
     }
     if(!(ret->data = (UC *)calloc(1, MAX_GPS_PACKET_SIZE*sizeof(UC))))
     {
+#ifdef __WXOSX__
+    free((void *)ret);
+#endif
 	perror("malloc");
 	fprintf(stderr,"GPS_Packet_New: Insufficient data memory");
 	fflush(stderr);
-#ifdef __WXOSX__
-        free(ret);
-#endif
 	return NULL;
     }
 

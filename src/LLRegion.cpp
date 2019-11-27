@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Latitude and Longitude regions
@@ -104,7 +104,7 @@ void LLRegion::plot(const char*fn) const
     for(std::list<poly_contour>::const_iterator i = contours.begin(); i != contours.end(); i++) {
         for(poly_contour::const_iterator j = i->begin(); j != i->end(); j++)
             fprintf(f, "%f %f\n", j->x, j->y);
-
+        
         fprintf(f, "%f %f\n", i->begin()->x, i->begin()->y);
         fprintf(f, "\n");
     }
@@ -307,7 +307,8 @@ static void /*APIENTRY*/ LLerrorCallback(GLenum errorCode)
     const GLubyte *estring;
     estring = gluErrorString(errorCode);
     fprintf (stderr, "Tessellation Error: %s\n", estring);
-    exit (0);
+    wxLogMessage( _T("Tessellation Error: %s"), (char *)estring );
+    //exit (0);
 }
 
 void LLRegion::Intersect(const LLRegion& region)
@@ -376,7 +377,7 @@ bool LLRegion::NoIntersection(const LLBBox& box) const
 {
     return false; // there are occasional false positives we must fix first
 
-#if 0
+#if 0    
     double minx = box.GetMinLon(), maxx = box.GetMaxLon(), miny = box.GetMinLat(), maxy = box.GetMaxLat();
     if(Contains(miny, minx))
         return false;
@@ -448,7 +449,7 @@ bool LLRegion::NoIntersection(const LLBBox& box) const
     }
 
     return true;
-#endif
+#endif    
 }
 
 // internal test to see if regions don't intersect (optimization)
@@ -456,7 +457,7 @@ bool LLRegion::NoIntersection(const LLRegion& region) const
 {
     if(Empty() || region.Empty())
         return true;
-
+    
     LLBBox box = GetBox(), rbox = region.GetBox();
     return box.IntersectOut(rbox) || NoIntersection(rbox) || region.NoIntersection(box);
 }
@@ -605,16 +606,28 @@ void LLRegion::Optimize()
 #endif
 
         // eliminiate parallel segments
-        contour_pt l = *i->rbegin();
-        poly_contour::iterator j = i->begin(), k = j;
-        k++;
-        while(k != i->end()) {
-            if(fabs(cross(vector(*j, l), vector(*j, *k))) < 1e-12)
-                i->erase(j);
-            else
-                l = *j;
-            j = k;
+        bool end = false;
+        poly_contour::iterator j = i->begin();
+        int s = i->size();
+        for(int c=0; c<s; c++) {
+            poly_contour::iterator l = j, k = j;
+
+            if (l == i->begin())
+                l = i->end();
+            l--;
+
             k++;
+            if(k == i->end())
+                k = i->begin();
+
+            if(l == k)
+                break;
+            if(fabs(cross(vector(*j, *l), vector(*j, *k))) < 1e-12) {
+                i->erase(j);
+                j = l;
+                c--;
+            } else
+                j = k;
         }
 
         // erase zero contours

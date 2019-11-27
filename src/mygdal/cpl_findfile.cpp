@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  CPL - Common Portability Library
  * Purpose:  Generic data file location finder, with application hooking.

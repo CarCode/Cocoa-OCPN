@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  CM93 Chart Object
@@ -336,7 +336,7 @@ class cm93chart : public s57chart
 
             const wxString & GetLastFileName(void) const { return m_LastFileName; }
 
-            ArrayOfInts GetVPCellArray(const ViewPort &vpt);
+            std::vector<int> GetVPCellArray(const ViewPort &vpt);
 
             Array_Of_M_COVR_Desc_Ptr    m_pcovr_array_loaded;
 
@@ -346,8 +346,6 @@ class cm93chart : public s57chart
             wxPoint *GetDrawBuffer(int nSize);
 
             OCPNRegion          m_render_region;
-
-            LLBBox      m_covr_bbox; /* bounding box for entire covr_set */
 
       private:
             InitReturn CreateHeaderDataFromCM93Cell(void);
@@ -383,11 +381,13 @@ class cm93chart : public s57chart
             cm93manager       *m_pManager;
 
             wxString          m_prefix;
-
+#ifdef __WXOSX__
+            wxString m_datei;
+#endif
             double            m_sfactor;
 
             wxString          m_scalechar;
-            ArrayOfInts       m_cells_loaded_array;
+            std::vector<int>       m_cells_loaded_array;
 
             int               m_current_cell_vearray_offset;
             int               *m_pcontour_array;
@@ -404,6 +404,7 @@ class cm93chart : public s57chart
             wxString          m_LastFileName;
 
             LLRegion            m_region;
+            wxArrayString       m_noFindArray;
 };
 
 //----------------------------------------------------------------------------
@@ -432,7 +433,7 @@ class cm93compchart : public s57chart
             void SetVPParms(const ViewPort &vpt);
             void GetValidCanvasRegion(const ViewPort& VPoint, OCPNRegion *pValidRegion);
             LLRegion GetValidRegion();
-
+            
             ThumbData *GetThumbData(int tnx, int tny, float lat, float lon);
             ThumbData *GetThumbData() {return (ThumbData *)NULL;}
 
@@ -451,7 +452,8 @@ class cm93compchart : public s57chart
             void GetPointPix(ObjRazRules *rzRules, wxPoint2DDouble *en, wxPoint *r, int nPoints);
 
 
-            ListOfObjRazRules *GetObjRuleListAtLatLon(float lat, float lon, float select_radius, ViewPort *VPoint, int selection_mask = MASK_ALL);
+            ListOfObjRazRules *GetObjRuleListAtLatLon(float lat, float lon, float select_radius,
+                                                      ViewPort *VPoint, int selection_mask = MASK_ALL);
             S57ObjectDesc *CreateObjDescription(const ObjRazRules *obj);
 
             VE_Hash&  Get_ve_hash(void);

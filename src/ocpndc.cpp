@@ -1,4 +1,4 @@
-/**************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Layer to perform wxDC drawing using wxDC or opengl
@@ -49,6 +49,11 @@
 #include "wx28compat.h"
 #include "cutil.h"
 
+#ifdef ocpnUSE_GL
+#include "glChartCanvas.h"
+extern ocpnGLOptions g_GLOptions;
+#endif
+
 extern float g_GLMinSymbolLineWidth;
 wxArrayPtrVoid gTesselatorVertices;
 
@@ -62,7 +67,7 @@ ocpnDC::ocpnDC( wxGLCanvas &canvas ) :
 #endif
 #ifdef ocpnUSE_GL
     m_textforegroundcolour = wxColour( 0, 0, 0 );
-#endif
+#endif   
     m_buseTex = GetLocaleCanonicalName().IsSameAs(_T("en_US"));
 }
 
@@ -79,6 +84,7 @@ ocpnDC::ocpnDC( wxDC &pdc ) :
     }
 #endif
     m_textforegroundcolour = wxColour( 0, 0, 0 );
+    m_buseTex = GetLocaleCanonicalName().IsSameAs(_T("en_US"));
 }
 
 ocpnDC::ocpnDC() :
@@ -187,10 +193,12 @@ void ocpnDC::SetGLAttrs( bool highQuality )
 {
 #ifdef ocpnUSE_GL
 
-    // Enable anti-aliased polys, at best quality
+ // Enable anti-aliased polys, at best quality
     if( highQuality ) {
-        glEnable( GL_LINE_SMOOTH );
-        glEnable( GL_POLYGON_SMOOTH );
+        if( g_GLOptions.m_GLLineSmoothing )
+            glEnable( GL_LINE_SMOOTH );
+        if( g_GLOptions.m_GLPolygonSmoothing )
+            glEnable( GL_POLYGON_SMOOTH );
         glEnable( GL_BLEND );
     } else {
         glDisable(GL_LINE_SMOOTH);
@@ -200,35 +208,60 @@ void ocpnDC::SetGLAttrs( bool highQuality )
 #endif
 }
 
+#ifdef ocpnUSE_GL
 void ocpnDC::SetGLStipple() const
 {
-#ifdef ocpnUSE_GL
-    
+#ifdef __WXOSX__
     switch( m_pen.GetStyle() ) {
-        case wxDOT: {
+        case wxPENSTYLE_DOT: {
             glLineStipple( 1, 0x3333 );
             glEnable( GL_LINE_STIPPLE );
             break;
         }
-        case wxLONG_DASH: {
+        case wxPENSTYLE_LONG_DASH: {
             glLineStipple( 1, 0xFFF8 );
             glEnable( GL_LINE_STIPPLE );
             break;
         }
-        case wxSHORT_DASH: {
+        case wxPENSTYLE_SHORT_DASH: {
             glLineStipple( 1, 0x3F3F );
             glEnable( GL_LINE_STIPPLE );
             break;
         }
-        case wxDOT_DASH: {
+        case wxPENSTYLE_DOT_DASH: {
             glLineStipple( 1, 0x8FF1 );
             glEnable( GL_LINE_STIPPLE );
             break;
         }
         default: break;
     }
-#endif    
+#else
+      switch( m_pen.GetStyle() ) {
+              case wxDOT: {
+                      glLineStipple( 1, 0x3333 );
+                      glEnable( GL_LINE_STIPPLE );
+                      break;
+                  }
+              case wxLONG_DASH: {
+                      glLineStipple( 1, 0xFFF8 );
+                      glEnable( GL_LINE_STIPPLE );
+                      break;
+                  }
+              case wxSHORT_DASH: {
+                      glLineStipple( 1, 0x3F3F );
+                      glEnable( GL_LINE_STIPPLE );
+                      break;
+                  }
+              case wxDOT_DASH: {
+                      glLineStipple( 1, 0x8FF1 );
+                      glEnable( GL_LINE_STIPPLE );
+                      break;
+                  }
+                  default: break;
+      }
+#endif
 }
+#endif
 
 #ifdef ocpnUSE_GL
 /* draw a half circle using triangles */
@@ -275,9 +308,14 @@ void DrawGLThickLine( float x1, float y1, float x2, float y2, wxPen pen, bool b_
         float lrun = 0.;
         float xa = x1;
         float ya = y1;
-        float ldraw = t1 * dashes[0];
-        float lspace = t1 * dashes[1];
+        float ldraw = t1 * (unsigned char)dashes[0];
+        float lspace = t1 * (unsigned char)dashes[1];
 
+        if((ldraw < 0) || (lspace < 0)){
+            glEnd();
+            return;
+        }
+        
         while( lrun < lpix ) {
             //    Dash
             float xb = xa + ldraw * cosf( angle );
@@ -347,8 +385,9 @@ void ocpnDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hi
 
 #ifndef __WXQT__
             glEnable( GL_BLEND );
-            glEnable( GL_LINE_SMOOTH );
-#endif
+            if( g_GLOptions.m_GLLineSmoothing )
+                glEnable( GL_LINE_SMOOTH );
+#endif            
 
             if( pen_width > 1.0 ) {
                 GLint parms[2];
@@ -358,7 +397,7 @@ void ocpnDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hi
                     glLineWidth( pen_width );
             } else
                 glLineWidth( pen_width );
-        } else {
+        } else {            
             if( pen_width > 1 ) {
                 GLint parms[2];
                 glGetIntegerv( GL_ALIASED_LINE_WIDTH_RANGE, &parms[0] );
@@ -378,7 +417,7 @@ void ocpnDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hi
                 float cosa = cosf( angle );
                 float sina = sinf( angle );
                 float t1 = m_pen.GetWidth();
-                
+                    
                 float lpix = sqrtf( powf(x1 - x2, 2) + powf(y1 - y2, 2) );
                 float lrun = 0.;
                 float xa = x1;
@@ -389,13 +428,13 @@ void ocpnDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hi
                 ldraw = wxMax(ldraw, 4.0);
                 lspace = wxMax(lspace, 4.0);
                 lpix = wxMin(lpix, 2000.0);
-
+                
                 glBegin( GL_LINES );
                 while( lrun < lpix ) {
                     //    Dash
                     float xb = xa + ldraw * cosa;
                     float yb = ya + ldraw * sina;
-                    
+
                     if( ( lrun + ldraw ) >= lpix )         // last segment is partial draw
                     {
                         xb = x2;
@@ -427,7 +466,7 @@ void ocpnDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hi
             glDisable( GL_BLEND );
         }
     }
-#endif
+#endif    
 }
 
 // Draws thick lines from triangles
@@ -523,8 +562,6 @@ void DrawGLThickLines( int n, wxPoint points[],wxCoord xoffset,
 
     glEnd();
 
-    glPopAttrib();
-
     delete [] cpoints;
 
  #endif    
@@ -537,7 +574,7 @@ void ocpnDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffse
 #ifdef ocpnUSE_GL
     else if( ConfigurePen() ) {
 
-        SetGLAttrs( b_hiqual );
+        SetGLAttrs( b_hiqual ); 
         bool b_draw_thick = false;
 
         glDisable( GL_LINE_STIPPLE );
@@ -570,8 +607,9 @@ void ocpnDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffse
         } else {
 
             if( b_hiqual ) {
-                glEnable( GL_LINE_SMOOTH );
-                ;//                SetGLStipple(m_pen.GetStyle());
+                if( g_GLOptions.m_GLLineSmoothing )
+                    glEnable( GL_LINE_SMOOTH );
+                //                SetGLStipple(m_pen.GetStyle());
             }
 
             glBegin( GL_LINE_STRIP );
@@ -586,7 +624,7 @@ void ocpnDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffse
             glDisable( GL_BLEND );
         }
     }
-#endif
+#endif    
 }
 
 void ocpnDC::StrokeLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2 )
@@ -655,16 +693,16 @@ static void drawrrhelper( wxCoord x0, wxCoord y0, wxCoord r, int quadrant, int s
 #ifdef ocpnUSE_GL
     float step = 1.0/steps, rs = 2.0*r*step, rss = rs*step, x, y, dx, dy, ddx, ddy;
     switch(quadrant) {
-        case 0: x =  r, y =  0, dx =   0, dy = -rs, ddx = -rss, ddy =  rss; break;
-        case 1: x =  0, y = -r, dx = -rs, dy =   0, ddx =  rss, ddy =  rss; break;
-        case 2: x = -r, y =  0, dx =   0, dy =  rs, ddx =  rss, ddy = -rss; break;
-        case 3: x =  0, y =  r, dx =  rs, dy =   0, ddx = -rss, ddy = -rss; break;
-        default: return; // avoid unitialized compiler warnings
+    case 0: x =  r, y =  0, dx =   0, dy = -rs, ddx = -rss, ddy =  rss; break;
+    case 1: x =  0, y = -r, dx = -rs, dy =   0, ddx =  rss, ddy =  rss; break;
+    case 2: x = -r, y =  0, dx =   0, dy =  rs, ddx =  rss, ddy = -rss; break;
+    case 3: x =  0, y =  r, dx =  rs, dy =   0, ddx = -rss, ddy = -rss; break;
+    default: return; // avoid unitialized compiler warnings
     }
-    
+
     for(int i=0; i<steps; i++) {
         glVertex2i( x0 + floor(x), y0 + floor(y) );
-        x += dx+ddx/2,  y += dy+ddy/2;
+         x += dx+ddx/2,  y += dy+ddy/2;
         dx += ddx,      dy += ddy;
     }
     glVertex2i( x0 + floor(x), y0 + floor(y) );
@@ -759,7 +797,7 @@ void ocpnDC::DrawEllipse( wxCoord x, wxCoord y, wxCoord width, wxCoord height )
 
         glDisable( GL_BLEND );
     }
-#endif
+#endif    
 }
 
 void ocpnDC::DrawPolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset, float scale )
@@ -768,15 +806,16 @@ void ocpnDC::DrawPolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yoff
         dc->DrawPolygon( n, points, xoffset, yoffset );
 #ifdef ocpnUSE_GL
     else {
-
-#ifdef __WXQT__
-        SetGLAttrs( false );            // Some QT platforms (Android) have trouble with GL_BLEND / GL_LINE_SMOOTH
+        
+#ifdef __WXQT__        
+        SetGLAttrs( false );            // Some QT platforms (Android) have trouble with GL_BLEND / GL_LINE_SMOOTH 
 #else
         SetGLAttrs( true );
-#endif
+#endif        
 
         if( ConfigureBrush() ) {
-            glEnable( GL_POLYGON_SMOOTH );
+            if( g_GLOptions.m_GLPolygonSmoothing )
+                glEnable( GL_POLYGON_SMOOTH );
             glBegin( GL_POLYGON );
             for( int i = 0; i < n; i++ )
                 glVertex2f( (points[i].x * scale) + xoffset, (points[i].y * scale) + yoffset );
@@ -785,7 +824,8 @@ void ocpnDC::DrawPolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yoff
         }
 
         if( ConfigurePen() ) {
-            glEnable( GL_LINE_SMOOTH );
+            if( g_GLOptions.m_GLLineSmoothing )
+                glEnable( GL_LINE_SMOOTH );
             glBegin( GL_LINE_LOOP );
             for( int i = 0; i < n; i++ )
                 glVertex2f( (points[i].x * scale) + xoffset, (points[i].y * scale) + yoffset );
@@ -793,10 +833,10 @@ void ocpnDC::DrawPolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yoff
             glDisable( GL_LINE_SMOOTH );
         }
 
-        SetGLAttrs( false );
-
+        SetGLAttrs( false ); 
+        
     }
-#endif
+#endif    
 }
 
 #ifdef ocpnUSE_GL
@@ -903,7 +943,7 @@ void ocpnDC::DrawPolygonTessellated( int n, wxPoint points[], wxCoord xoffset, w
         }
 
         for( unsigned int i=0; i<gTesselatorVertices.Count(); i++ )
-            delete (GLvertex*)gTesselatorVertices.Item(i);
+            delete (GLvertex*)gTesselatorVertices[i];
         gTesselatorVertices.Clear();
     }
 #endif    
@@ -914,17 +954,17 @@ void ocpnDC::StrokePolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yo
 #if wxUSE_GRAPHICS_CONTEXT
     if( pgc ) {
         wxGraphicsPath gpath = pgc->CreatePath();
-        gpath.MoveToPoint( points[0].x + xoffset, points[0].y + yoffset );
+        gpath.MoveToPoint( points[0].x * scale + xoffset, points[0].y  * scale + yoffset );
         for( int i = 1; i < n; i++ )
-            gpath.AddLineToPoint( points[i].x + xoffset, points[i].y + yoffset );
-        gpath.AddLineToPoint( points[0].x + xoffset, points[0].y + yoffset );
+            gpath.AddLineToPoint( points[i].x * scale + xoffset, points[i].y * scale + yoffset );
+        gpath.AddLineToPoint( points[0].x * scale + xoffset, points[0].y * scale + yoffset );
 
         pgc->SetPen( GetPen() );
         pgc->SetBrush( GetBrush() );
         pgc->DrawPath( gpath );
 
         for( int i = 0; i < n; i++ )
-            dc->CalcBoundingBox( points[i].x + xoffset, points[i].y + yoffset );
+            dc->CalcBoundingBox( points[i].x * scale + xoffset, points[i].y * scale + yoffset );
     } else
 #endif
         DrawPolygon( n, points, xoffset, yoffset, scale );
@@ -961,22 +1001,21 @@ void ocpnDC::DrawBitmap( const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usem
             unsigned char *d = image.GetData();
             unsigned char *a = image.GetAlpha();
 
-            unsigned char mr, mg, mb;
-            if( !image.GetOrFindMaskColour( &mr, &mg, &mb ) && !a ){
-                printf("trying to use mask to draw a bitmap without alpha or mask\n" );
-            }
-
 #ifdef __WXOSX__
             if(image.HasMask())
                 a=0;
 #endif
+            unsigned char mr, mg, mb;
+            if( !a && !image.GetOrFindMaskColour( &mr, &mg, &mb ) ){
+                printf("trying to use mask to draw a bitmap without alpha or mask\n" );
+            }
 
             unsigned char *e = new unsigned char[4 * w * h];
             if(e && d){
                 for( int y = 0; y < h; y++ )
                     for( int x = 0; x < w; x++ ) {
                         unsigned char r, g, b;
-                        int off = ( y * image.GetWidth() + x );
+                        int off = ( y * w + x );
                         r = d[off * 3 + 0];
                         g = d[off * 3 + 1];
                         b = d[off * 3 + 2];
@@ -1011,26 +1050,27 @@ void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
         dc->DrawText( text, x, y );
 #ifdef ocpnUSE_GL
     else {
-        wxCoord w = 0;
+       wxCoord w = 0;
         wxCoord h = 0;
 
         if(m_buseTex){
-
+        
             m_texfont.Build( m_font );      // make sure the font is ready
             m_texfont.GetTextExtent(text, &w, &h);
-
+            
             if( w && h ) {
                 
                 glEnable( GL_BLEND );
                 glEnable( GL_TEXTURE_2D );
                 glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
                 glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-            
+
                 glPushMatrix();
                 glTranslatef(x, y, 0);
                 
                 glColor3ub( m_textforegroundcolour.Red(), m_textforegroundcolour.Green(),
-                           m_textforegroundcolour.Blue() );
+                            m_textforegroundcolour.Blue() );
+                
 
                 m_texfont.RenderString(text);
                 glPopMatrix();
@@ -1040,11 +1080,11 @@ void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
 
             }
         }
-        else{
+        else{           
             wxScreenDC sdc;
             sdc.SetFont(m_font);
             sdc.GetTextExtent(text, &w, &h, NULL, NULL, &m_font);
-
+            
             /* create bitmap of appropriate size and select it */
             wxBitmap bmp( w, h );
             wxMemoryDC temp_dc;
@@ -1077,8 +1117,8 @@ void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
 
             unsigned char *data = new unsigned char[w * h * 4];
             unsigned char *im = image.GetData();
-
-
+            
+            
             if(im){
                 unsigned int r = m_textforegroundcolour.Red();
                 unsigned int g = m_textforegroundcolour.Green();
@@ -1103,25 +1143,25 @@ void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
             glPixelZoom( 1, 1 );
             glDisable( GL_BLEND );
 #else
-            unsigned int texobj;
-
+            unsigned int texobj;    
+            
             glGenTextures(1, &texobj);
             glBindTexture(GL_TEXTURE_2D, texobj);
-
+            
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-
+            
             int TextureWidth = NextPow2(w);
             int TextureHeight = NextPow2(h);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TextureWidth, TextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
+            
             glEnable(GL_TEXTURE_2D);
             glEnable(GL_BLEND);
             glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-
+            
             glColor3ub(0,0,0);
-
+            
             float u = (float)w/TextureWidth, v = (float)h/TextureHeight;
             glBegin(GL_QUADS);
             glTexCoord2f(0, 0); glVertex2f(x, y);
@@ -1129,39 +1169,38 @@ void ocpnDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
             glTexCoord2f(u, v); glVertex2f(x+w, y+h);
             glTexCoord2f(0, v); glVertex2f(x, y+h);
             glEnd();
-
+            
             glDisable(GL_BLEND);
             glDisable(GL_TEXTURE_2D);
-
+            
             glDeleteTextures(1, &texobj);
-#endif
-
+#endif            
             delete[] data;
-        }
+        }            
     }
 #endif    
 }
 
 void ocpnDC::GetTextExtent( const wxString &string, wxCoord *w, wxCoord *h, wxCoord *descent,
-                           wxCoord *externalLeading, wxFont *font )
+        wxCoord *externalLeading, wxFont *font )
 {
     //  Give at least reasonable results on failure.
     if(w) *w = 100;
     if(h) *h = 100;
-
+    
     if( dc ) dc->GetTextExtent( string, w, h, descent, externalLeading, font );
     else {
         wxFont f = m_font;
         if( font ) f = *font;
 
         if(m_buseTex){
-#ifdef ocpnUSE_GL
+  #ifdef ocpnUSE_GL       
         m_texfont.Build( f );      // make sure the font is ready
         m_texfont.GetTextExtent(string, w, h);
-#else
+  #else        
         wxMemoryDC temp_dc;
         temp_dc.GetTextExtent( string, w, h, descent, externalLeading, &f );
-#endif
+  #endif      
         }
         else{
             wxMemoryDC temp_dc;
@@ -1169,7 +1208,7 @@ void ocpnDC::GetTextExtent( const wxString &string, wxCoord *w, wxCoord *h, wxCo
         }
 
      }
-
+     
      //  Sometimes GetTextExtent returns really wrong, uninitialized results.
      //  Dunno why....
      if( w && (*w > 500) ) *w = 500;
@@ -1196,7 +1235,7 @@ bool ocpnDC::ConfigurePen()
 #ifdef ocpnUSE_GL
     glColor4ub( c.Red(), c.Green(), c.Blue(), c.Alpha() );
     glLineWidth( wxMax(g_GLMinSymbolLineWidth, width) );
-#endif
+#endif    
     return true;
 }
 

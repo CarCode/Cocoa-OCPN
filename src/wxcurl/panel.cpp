@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        panel.cpp
 // Purpose:     wxCurlConnectionSettingsPanel
 // Author:      Francesco Montorsi
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: panel.cpp 1240 2010-03-10 23:54:25Z frm $
 // Copyright:   (c) 2007 Francesco Montorsi
 // Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 
 // For compilers that support precompilation, includes "wx.h".
@@ -131,9 +131,9 @@ void wxCurlConnectionSettingsPanel::CreateControls(const wxString &msg)
     // proxy options
     if (HasFlag(wxCCSP_PROXY_OPTIONS))
     {
-        wxSizer* proxy = new wxStaticBoxSizer(wxVERTICAL, this, wxS("Proxy settings"));
+        wxSizer* proxy = new wxStaticBoxSizer(wxVERTICAL, this, _("Proxy settings"));
 
-        m_pProxyCheckBox = new wxCheckBox(this, UseProxy, wxS("Use proxy"));
+        m_pProxyCheckBox = new wxCheckBox(this, UseProxy, _("Use proxy"));
         m_pProxyCheckBox->SetValue(false);
         proxy->Add(m_pProxyCheckBox, 0, wxLEFT|wxTOP, BORDER);
 
@@ -167,7 +167,7 @@ void wxCurlConnectionSettingsPanel::CreateControls(const wxString &msg)
 void wxCurlConnectionSettingsPanel::SetCURLOptions(wxCurlBase *p)
 {
     wxASSERT(p);
-    if(p) {
+
     if (HasFlag(wxCCSP_PORT_OPTION))
     {
         long port = -1;     // -1 tell libCURL to use the default port
@@ -192,7 +192,6 @@ void wxCurlConnectionSettingsPanel::SetCURLOptions(wxCurlBase *p)
         long port = -1;     // -1 tell libCURL to use the default port
         m_pProxyPort->GetValue().ToLong(&port);
         p->SetProxyPort(port);
-    }
     }
 }
 

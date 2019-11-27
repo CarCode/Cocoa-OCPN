@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __SENDTOGPSDLG_H__
 #define __SENDTOGPSDLG_H__
@@ -34,8 +33,12 @@
 
 //    Constants for SendToGps... Dialog
 #define ID_STGDIALOG 10005
+#ifdef __WXOSX__
+#define SYMBOL_STG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxSTAY_ON_TOP
+#else
 #define SYMBOL_STG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_STG_TITLE _("Send Route To GPS")
+#endif
+#define SYMBOL_STG_TITLE _("Send to GPS")
 #define SYMBOL_STG_IDNAME ID_STGDIALOG
 #define SYMBOL_STG_SIZE wxSize(500, 500)
 #define SYMBOL_STG_POSITION wxDefaultPosition

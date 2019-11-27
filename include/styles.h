@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Symbols
@@ -110,11 +110,11 @@ public:
       void HasBackground( bool b ) { hasBackground = b; }
       wxBitmap GetIcon(const wxString & name, int width = -1, int height = -1, bool bforceReload = false);
       wxBitmap GetToolIcon(const wxString & toolname,
-                         int iconType = TOOLICON_NORMAL, bool rollover = false,
-                         int width = -1, int height = -1);
+                           int iconType = TOOLICON_NORMAL, bool rollover = false,
+                           int width = -1, int height = -1);
       wxBitmap BuildPluginIcon( const wxBitmap* bm, int iconType, double scale = 1.0 );
       bool NativeToolIconExists(const wxString & name);
-
+      
       int GetTopMargin() const { return toolMarginTop[currentOrientation]; }
       int GetRightMargin() const { return toolMarginRight[currentOrientation]; }
       int GetBottomMargin() const { return toolMarginBottom[currentOrientation]; }

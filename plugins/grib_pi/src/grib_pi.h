@@ -33,11 +33,11 @@
   #include <wx/glcanvas.h>
 #endif //precompiled headers
 
-#define     PLUGIN_VERSION_MAJOR    3
-#define     PLUGIN_VERSION_MINOR    0
+#define     PLUGIN_VERSION_MAJOR    4
+#define     PLUGIN_VERSION_MINOR    1
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    12
+#define     MY_API_VERSION_MINOR    15
 
 #include "../../../include/ocpn_plugin.h"
 
@@ -61,7 +61,7 @@
 #define SEPARATED_HORIZONTAL   2          // dialog separated shown honrizontaly
 #define SEPARATED_VERTICAL     3          // dialog separated shown vaerticaly
 
-class grib_pi : public opencpn_plugin_112
+class grib_pi : public opencpn_plugin_115
 {
 public:
       grib_pi(void *ppimgr);
@@ -93,7 +93,7 @@ public:
       void ShowPreferencesDialog( wxWindow* parent );
       void OnToolbarToolCallback(int id);
       bool QualifyCtrlBarPosition( wxPoint position, wxSize size );
-      void MoveDialog( wxDialog *dialog, wxPoint position, wxPoint dfault );
+	  void MoveDialog(wxDialog *dialog, wxPoint position);
 
 // Other public methods
       void SetCtrlBarXY   (wxPoint p){ m_CtrlBarxy = p;}
@@ -101,7 +101,9 @@ public:
       void SetCtrlBarSizeXY(wxSize p){ m_CtrlBar_Sizexy = p;}
       void SetColorScheme(PI_ColorScheme cs);
       void SetDialogFont( wxWindow *window, wxFont *font = OCPNGetFont(_("Dialog"), 10) );
-
+      void SetCurrentViewPort(PlugIn_ViewPort &vp) { m_current_vp = vp; }
+      PlugIn_ViewPort &GetCurrentViewPort() { return m_current_vp; }
+      
       void OnGribCtrlBarClose();
 
       wxPoint GetCtrlBarXY() { return m_CtrlBarxy; }
@@ -121,55 +123,57 @@ private:
       bool LoadConfig(void);
       bool SaveConfig(void);
 
-      wxFileConfig      *m_pconfig;
-      wxWindow          *m_parent_window;
+      wxFileConfig     *m_pconfig;
+      wxWindow         *m_parent_window;
 
       GRIBUICtrlBar     *m_pGribCtrlBar;
 
-      int               m_display_width, m_display_height;
-      int               m_leftclick_tool_id;
+      int              m_display_width, m_display_height;
+      int              m_leftclick_tool_id;
 
       wxPoint          m_CtrlBarxy, m_CursorDataxy;
       wxSize           m_CtrlBar_Sizexy;
 
       //    Controls added to Preferences panel
-      wxCheckBox        *m_pGRIBUseHiDef;
-      wxCheckBox        *m_pGRIBUseGradualColors;
+      wxCheckBox              *m_pGRIBUseHiDef;
+      wxCheckBox              *m_pGRIBUseGradualColors;
 
       GribTimelineRecordSet *m_pLastTimelineSet;
 
       // preference data
       bool              m_bGRIBUseHiDef;
       bool              m_bGRIBUseGradualColors;
-      int               m_bTimeZone;
-      bool              m_bCopyFirstCumRec;
-      bool              m_bCopyMissWaveRec;
-      int               m_bLoadLastOpenFile;
+      bool		m_bDrawBarbedArrowHead;
+      int              m_bTimeZone;
+      bool             m_bCopyFirstCumRec;
+      bool             m_bCopyMissWaveRec;
+      int              m_bLoadLastOpenFile;
       int              m_bStartOptions;
-      wxString          m_RequestConfig;
+      wxString         m_RequestConfig;
       wxString         m_bMailToAddresses;
       wxString         m_bMailFromAddress;
-      wxString          m_ZyGribLogin;
-      wxString          m_ZyGribCode;
+      wxString         m_ZyGribLogin;
+      wxString         m_ZyGribCode;
       double           m_GUIScaleFactor;
 
-      bool              m_bGRIBShowIcon;
+      bool             m_bGRIBShowIcon;
 
-      bool              m_bShowGrib;
-      bool        m_bInitIsOK;
+      bool        m_bShowGrib;
+      PlugIn_ViewPort  m_current_vp;
 };
 
 //----------------------------------------------------------------------------------------
-// Preference dialog definition
+// Prefrence dialog definition
 //----------------------------------------------------------------------------------------
+
 class GribPreferencesDialog : public GribPreferencesDialogBase
 {
 public:
     GribPreferencesDialog( wxWindow *pparent)
     : GribPreferencesDialogBase(pparent) {}
     ~GribPreferencesDialog() {}
+
 private:
     void OnStartOptionChange(wxCommandEvent& event);
-
 };
 #endif

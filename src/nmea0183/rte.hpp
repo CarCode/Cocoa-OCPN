@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -22,7 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -65,11 +64,13 @@ class RTE : public RESPONSE
       int total_number_of_messages;
       int m_skip_checksum;
       char m_complete_char;
-
+      
       virtual void Empty( void );
       virtual bool Parse( const SENTENCE& sentence );
       virtual bool Write( SENTENCE& sentence );
       virtual bool AddWaypoint(const wxString& name);
+      
+      
 };
 
 #endif // RTE_CLASS_HEADER

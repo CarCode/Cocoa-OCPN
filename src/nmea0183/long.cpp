@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -22,7 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -81,11 +80,11 @@ void LONGITUDE::Set( double position, const wxString& east_or_west )
    Longitude = position;
    wxString ts = east_or_west;
 
-   if ( ts.Trim(false)[ 0 ] == 'E' )
+   if ( !ts.IsEmpty( ) && ts.Trim(false)[ 0 ] == 'E' )
    {
       Easting = East;
    }
-   else if ( ts.Trim(false)[ 0 ] == 'W' )
+   else if ( !ts.IsEmpty( ) && ts.Trim(false)[ 0 ] == 'W' )
    {
       Easting = West;
    }
@@ -110,7 +109,7 @@ void LONGITUDE::Write( SENTENCE& sentence )
     d = (int) Longitude;
     double m0 = (Longitude - (double) d) * 60000.0;
     m = (int)wxRound(m0);
-
+    
     if (neg)
             d = -d;
 

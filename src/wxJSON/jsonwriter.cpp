@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        jsonwriter.cpp
 // Purpose:     the wxJSONWriter class: a JSON text generator
 // Author:      Luciano Cattani
@@ -6,13 +6,15 @@
 // RCS-ID:      $Id: jsonwriter.cpp,v 1.6 2008/03/03 19:05:47 luccat Exp $
 // Copyright:   (c) 2007 Luciano Cattani
 // Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
-#ifdef NDEBUG
-// make wxLogTrace a noop if no debug set, it's really slow
+//#ifdef __GNUG__
+//    #pragma implementation "jsonwriter.cpp"
+//#endif
+
+// make wxLogTrace a noop, it's really slow
 // must be defined before including debug.h
-#define wxDEBUG_LEVEL 0
-#endif
+#define wxDEBUG_LEVEL 1
 
 #include <wx/jsonwriter.h>
 
@@ -924,11 +926,7 @@ wxJSONWriter::WriteIntValue( wxOutputStream& os, const wxJSONValue& value )
     size_t len;
 
     wxJSONRefData* data = value.GetRefData();
-#ifdef __WXOSX__
-    assert(data);
-#else
     wxASSERT( data );
-#endif
 
 #if defined( wxJSON_64BIT_INT )
     #if wxCHECK_VERSION(2, 9, 0 ) || !defined( wxJSON_USE_UNICODE )
@@ -982,11 +980,7 @@ wxJSONWriter::WriteUIntValue( wxOutputStream& os, const wxJSONValue& value )
 
     char buffer[32];        // need to store 64-bits integers (max 20 digits)
     wxJSONRefData* data = value.GetRefData();
-#ifdef __WXOSX__
-    assert(data);
-#else
     wxASSERT( data );
-#endif
 
 #if defined( wxJSON_64BIT_INT )
     #if wxCHECK_VERSION(2, 9, 0 ) || !defined( wxJSON_USE_UNICODE )
@@ -1037,11 +1031,7 @@ wxJSONWriter::WriteDoubleValue( wxOutputStream& os, const wxJSONValue& value )
 
     char buffer[32];
     wxJSONRefData* data = value.GetRefData();
-#ifdef __WXOSX__
-    assert(data);
-#else
     wxASSERT( data );
-#endif
     snprintf( buffer, 32, m_fmt, data->m_value.m_valDouble );
     size_t len = strlen( buffer );
     os.Write( buffer, len );
@@ -1064,11 +1054,7 @@ wxJSONWriter::WriteBoolValue( wxOutputStream& os, const wxJSONValue& value )
     int r = 0;
     const char* f = "false"; const char* t = "true";
     wxJSONRefData* data = value.GetRefData();
-#ifdef __WXOSX__
-    assert(data);
-#else
     wxASSERT( data );
-#endif
 
     const char* c = f;    // defaults to FALSE
 
@@ -1158,11 +1144,7 @@ wxJSONWriter::WriteMemoryBuff( wxOutputStream& os, const wxMemoryBuffer& buff )
 
     size_t buffLen = buff.GetDataLen();
     unsigned char* ptr = (unsigned char*) buff.GetData();
-#ifdef __WXOSX__
-    assert(ptr);
-#else
     wxASSERT( ptr );
-#endif
     char openChar = '\'';
     char closeChar = '\'';
     bool asArray = false;

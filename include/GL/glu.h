@@ -56,8 +56,8 @@
 # define GLAPI extern
 #endif /* _STATIC_MESA support */
 
-#define OCPN_GLUAPIENTRY
-#define OCPN_GLUAPIENTRYP *
+#define OCPN_GLUAPIENTRY 
+#define OCPN_GLUAPIENTRYP * 
 
 #ifdef __cplusplus
 extern "C" {
@@ -285,7 +285,6 @@ typedef GLUtesselator GLUtriangulatorObj;
 //typedef void (GLAPIENTRYP _GLUfuncptr)();
 typedef void (*  _GLUfuncptr)();
 
-
 GLAPI void GLAPIENTRY gluBeginCurve (GLUnurbs* nurb);
 GLAPI void GLAPIENTRY gluBeginPolygon (GLUtesselator* tess);
 GLAPI void GLAPIENTRY gluBeginSurface (GLUnurbs* nurb);
@@ -312,7 +311,6 @@ extern const GLubyte * /*GLAPIENTRY*/ gluGetString (GLenum name);
 extern void /*GLAPIENTRY*/ gluGetTessProperty (GLUtesselator* tess, GLenum which, GLdouble* data);
 GLAPI void GLAPIENTRY gluLoadSamplingMatrices (GLUnurbs* nurb, const GLfloat *model, const GLfloat *perspective, const GLint *view);
 extern void /*GLAPIENTRY*/ gluLookAt (GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ, GLdouble centerX, GLdouble centerY, GLdouble centerZ, GLdouble upX, GLdouble upY, GLdouble upZ);
-
 GLAPI GLUnurbs* GLAPIENTRY gluNewNurbsRenderer (void);
 GLAPI GLUquadric* GLAPIENTRY gluNewQuadric (void);
 extern GLUtesselator* /*OCPN_GLUAPIENTRY*/ gluNewTess (void);

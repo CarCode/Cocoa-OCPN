@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN ViewPort
@@ -87,8 +87,8 @@ class ViewPort
 
             LLRegion GetLLRegion( const OCPNRegion &region );
             OCPNRegion GetVPRegionIntersect( const OCPNRegion &region, const LLRegion &llregion, int chart_native_scale );
-            OCPNRegion GetVPRegionIntersect( const OCPNRegion &Region, size_t nPoints, float *llpoints,
-                                    int chart_native_scale, wxPoint *ppoints );
+            OCPNRegion GetVPRegionIntersect( const OCPNRegion &Region, int nPoints, float *llpoints,
+                                             int chart_native_scale, wxPoint *ppoints );
             wxRect GetVPRectIntersect( size_t n, float *llpoints );
             ViewPort BuildExpandedVP(int width, int height);
             
@@ -108,7 +108,7 @@ class ViewPort
             void SetBBoxDirect( double latmin, double lonmin, double latmax, double lonmax);
 
             void InvalidateTransformCache() { lat0_cache = NAN; }
-
+            
 //  Generic
             double   clat;                   // center point
             double   clon;
@@ -136,7 +136,7 @@ class ViewPort
 
             bool     bValid;                 // This VP is valid
 
-                double lat0_cache, cache0, cache1;
+            double lat0_cache, cache0, cache1;
 };
 
 

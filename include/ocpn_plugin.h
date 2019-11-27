@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  PlugIn Object Definition/API
@@ -36,6 +36,11 @@
 #endif
 #endif
 
+#ifdef __WXMSW__
+#ifdef MAKING_PLUGIN
+#  define DECL_IMP     __declspec(dllimport)
+#endif
+#endif
 
 #include <wx/xml/xml.h>
 
@@ -44,24 +49,21 @@
 #endif // ocpnUSE_SVG
 
 class wxGLContext;
-#ifdef ocpnUSE_GL
-#include <wx/glcanvas.h>
-#endif
 
 //    This is the most modern API Version number
 //    It is expected that the API will remain downward compatible, meaning that
 //    PlugIns conforming to API Version less then the most modern will also
 //    be correctly supported.
 #define API_VERSION_MAJOR           1
-#define API_VERSION_MINOR           14
+#define API_VERSION_MINOR           15
 
 //    Fwd Definitions
-class   wxFileConfig;
-class   wxNotebook;
-class   wxFont;
-class   wxAuiManager;
-class   wxScrolledWindow;
-class   wxGLCanvas;
+class       wxFileConfig;
+class       wxNotebook;
+class       wxFont;
+class       wxAuiManager;
+class       wxScrolledWindow;
+class       wxGLCanvas;
 
 //---------------------------------------------------------------------------------------------------------
 //
@@ -236,7 +238,6 @@ typedef enum OcpnProjTypePI
       PI_PROJECTION_STEREOGRAPHIC,
       PI_PROJECTION_GNOMONIC,
       PI_PROJECTION_EQUIRECTANGULAR
-
 }_OcpnProjTypePI;
 
 typedef struct _ExtentPI{
@@ -317,7 +318,7 @@ class DECL_EXP PlugInChartBase : public wxObject
             virtual int GetSize_Y();
             virtual void latlong_to_chartpix(double lat, double lon, double &pixx, double &pixy);
             virtual void chartpix_to_latlong(double pixx, double pixy, double *plat, double *plon);
-
+            
       protected:
             ChartTypeEnumPI     m_ChartType;
             ChartFamilyEnumPI   m_ChartFamily;
@@ -408,7 +409,7 @@ public:
       virtual void OnCloseToolboxPanel(int page_sel, int ok_apply_cancel);
 
       virtual void ShowPreferencesDialog( wxWindow* parent );
-#ifdef __WXOSX__  // Test WXOSX ja oder nein?
+#ifndef __WXOSX__  // Test WXOSX ja oder nein?
     bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
 #else
       virtual bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
@@ -441,8 +442,8 @@ public:
        public:
              opencpn_plugin_16(void *pmgr);
              virtual ~opencpn_plugin_16();
-#ifdef __WXOSX__  // Test WXOSX
-            bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+#ifndef __WXOSX__  // Test WXOSX
+     bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
              virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #endif
@@ -455,7 +456,7 @@ class DECL_EXP opencpn_plugin_17 : public opencpn_plugin
        public:
              opencpn_plugin_17(void *pmgr);
              virtual ~opencpn_plugin_17();
-#ifdef __WXOSX__  // Test WXOSX
+#ifndef __WXOSX__  // Test WXOSX
     bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
              virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
@@ -471,7 +472,7 @@ class DECL_EXP opencpn_plugin_18 : public opencpn_plugin
       public:
             opencpn_plugin_18(void *pmgr);
             virtual ~opencpn_plugin_18();
-#ifdef __WXOSX__  // Test WXOSX
+#ifndef __WXOSX__  // Test WXOSX
     bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
             virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
@@ -534,8 +535,16 @@ public:
 class DECL_EXP opencpn_plugin_114 : public opencpn_plugin_113
 {
 public:
-    opencpn_plugin_114(void *pmgr);
-    virtual ~opencpn_plugin_114();
+  opencpn_plugin_114(void *pmgr);
+  virtual ~opencpn_plugin_114();
+
+};
+
+class DECL_EXP opencpn_plugin_115 : public opencpn_plugin_114
+{
+public:
+    opencpn_plugin_115(void *pmgr);
+    virtual ~opencpn_plugin_115();
 
 };
 
@@ -573,7 +582,7 @@ public:
     wxString          m_MarkName;
     wxString          m_MarkDescription;
     wxDateTime        m_CreateTime;
-    bool			  m_IsVisible;
+	bool			  m_IsVisible;
 
     wxString          m_IconName;
 
@@ -631,8 +640,8 @@ extern "C"  DECL_EXP void SetToolbarItemState(int item, bool toggle);
 extern "C"  DECL_EXP void SetToolbarToolBitmaps(int item, wxBitmap *bitmap, wxBitmap *bmpRollover);
 
 extern "C"  DECL_EXP int InsertPlugInToolSVG(wxString label, wxString SVGfile, wxString SVGfileRollover, wxString SVGfileToggled,
-                                             wxItemKind kind, wxString shortHelp, wxString longHelp,
-                                             wxObject *clientData, int position, int tool_sel, opencpn_plugin *pplugin);
+                                          wxItemKind kind, wxString shortHelp, wxString longHelp,
+                                          wxObject *clientData, int position, int tool_sel, opencpn_plugin *pplugin);
 extern "C"  DECL_EXP void SetToolbarToolBitmapsSVG(int item, wxString SVGfile,
                                                    wxString SVGfileRollover,
                                                    wxString SVGfileToggled );
@@ -805,6 +814,7 @@ public:
     
 };
 
+
 // ----------------------------------------------------------------------------
 // PlugInChartBaseExtended
 //  Derived from PlugInChartBase, add extended chart support methods
@@ -815,30 +825,31 @@ class DECL_EXP PlugInChartBaseExtended : public PlugInChartBase
 public:
     PlugInChartBaseExtended();
     virtual ~PlugInChartBaseExtended();
-
+    
     virtual int RenderRegionViewOnGL( const wxGLContext &glc, const PlugIn_ViewPort& VPoint,
-                                     const wxRegion &Region, bool b_use_stencil );
-
+                                      const wxRegion &Region, bool b_use_stencil );
+    
     virtual wxBitmap &RenderRegionViewOnDCNoText(  const PlugIn_ViewPort& VPoint, const wxRegion &Region);
     virtual bool RenderRegionViewOnDCTextOnly( wxMemoryDC &dc, const PlugIn_ViewPort& VPoint, const wxRegion &Region);
-
+    
     virtual int RenderRegionViewOnGLNoText( const wxGLContext &glc, const PlugIn_ViewPort& VPoint,
-                                           const wxRegion &Region, bool b_use_stencil );
+                                            const wxRegion &Region, bool b_use_stencil );
 
     virtual int RenderRegionViewOnGLTextOnly( const wxGLContext &glc, const PlugIn_ViewPort& VPoint,
-                                             const wxRegion &Region, bool b_use_stencil );
-
+                                              const wxRegion &Region, bool b_use_stencil );
+    
     virtual ListOfPI_S57Obj *GetObjRuleListAtLatLon(float lat, float lon, float select_radius, PlugIn_ViewPort *VPoint);
     virtual wxString CreateObjDescriptions( ListOfPI_S57Obj* obj_list );
-
+    
     virtual int GetNoCOVREntries();
     virtual int GetNoCOVRTablePoints(int iTable);
     virtual int  GetNoCOVRTablenPoints(int iTable);
     virtual float *GetNoCOVRTableHead(int iTable);
-
+    
     virtual void ClearPLIBTextList();
-
+    
 };
+
 
 
 
@@ -902,7 +913,7 @@ public:
     float               lon_min;
     int                 type;
     void                *private0;
-    
+   
     PI_line_segment_element *next;
 };
 
@@ -910,10 +921,10 @@ public:
 class DECL_EXP PI_S57Obj
 {
 public:
-
-      //  Public Methods
-      PI_S57Obj();
-      ~PI_S57Obj();
+    
+    //  Public Methods
+    PI_S57Obj();
+    ~PI_S57Obj();
 
 public:
       // Instance Data
@@ -1056,13 +1067,9 @@ extern "C"  DECL_EXP void GetDoubleCanvasPixLL(PlugIn_ViewPort *vp, wxPoint2DDou
 
 
 extern DECL_EXP double fromDMM_Plugin( wxString sdms );
-
-extern DECL_EXP double GetCanvasTilt();
-extern DECL_EXP void SetCanvasTilt(double tilt);
+extern DECL_EXP void SetCanvasRotation(double rotation);
 extern DECL_EXP void SetCanvasProjection(int projection);
 extern DECL_EXP bool GetSingleWaypoint( wxString GUID, PlugIn_Waypoint *pwaypoint );
-
-extern DECL_EXP bool PlugInPlaySoundEx( wxString &sound_file, int deviceIndex=-1 );
 extern DECL_EXP bool CheckEdgePan_PlugIn( int x, int y, bool dragging, int margin, int delta );
 extern DECL_EXP wxBitmap GetIcon_PlugIn(const wxString & name);
 extern DECL_EXP void SetCursor_PlugIn( wxCursor *pPlugin_Cursor = NULL );
@@ -1073,12 +1080,17 @@ extern DECL_EXP double GetOCPNGUIToolScaleFactor_PlugIn();
 extern DECL_EXP float  GetOCPNChartScaleFactor_Plugin();
 extern DECL_EXP wxColour GetFontColour_PlugIn(wxString TextElement);
 
+extern DECL_EXP double GetCanvasTilt();
+extern DECL_EXP void SetCanvasTilt(double tilt);
+
+extern DECL_EXP bool PlugInPlaySoundEx( wxString &sound_file, int deviceIndex=-1 );
 extern DECL_EXP void AddChartDirectory( wxString &path );
 extern DECL_EXP void ForceChartDBUpdate();
 
 extern  DECL_EXP wxString GetWritableDocumentsDir( void );
 extern  DECL_EXP wxDialog *GetActiveOptionsDialog();
 extern  DECL_EXP wxArrayString GetWaypointGUIDArray( void );
+extern  DECL_EXP wxArrayString GetIconNameArray(void);
 
 extern  DECL_EXP bool AddPersistentFontKey(wxString TextElement);
 extern  DECL_EXP wxString GetActiveStyleName();
@@ -1090,7 +1102,7 @@ extern  DECL_EXP bool IsTouchInterface_PlugIn(void);
 extern  DECL_EXP int PlatformDirSelectorDialog( wxWindow *parent, wxString *file_spec, wxString Title, wxString initDir);
 
 extern  DECL_EXP int PlatformFileSelectorDialog( wxWindow *parent, wxString *file_spec, wxString Title, wxString initDir,
-                                                wxString suggestedName, wxString wildcard);
+                                wxString suggestedName, wxString wildcard);
 
 
 /*  OpenCPN HTTP File Download PlugIn Interface   */
@@ -1144,20 +1156,21 @@ enum OCPN_DLDialogStyle
     // by default all available features are enabled:
     OCPN_DLDS_DEFAULT_STYLE = OCPN_DLDS_CAN_START|OCPN_DLDS_CAN_PAUSE|OCPN_DLDS_CAN_ABORT|OCPN_DLDS_SHOW_ALL|OCPN_DLDS_AUTO_CLOSE
 };
-#ifndef __WXOSX__  // schon für squiddio.cpp
+
 #define ONLINE_CHECK_RETRY 30 // Recheck the Internet connection availability every ONLINE_CHECK_RETRY s
-#endif
+
 /*   Synchronous (Blocking) download of a single file  */
 
-extern DECL_EXP _OCPN_DLStatus OCPN_downloadFile( const wxString& url, const wxString &outputFile,
-                                                 const wxString &title, const wxString &message,
-                                                 const wxBitmap& bitmap,
-                                                 wxWindow *parent, long style, int timeout_secs);
+extern DECL_EXP _OCPN_DLStatus OCPN_downloadFile( const wxString& url, const wxString &outputFile, 
+                                       const wxString &title, const wxString &message, 
+                                       const wxBitmap& bitmap,
+                                       wxWindow *parent, long style, int timeout_secs);
+
 
 /*   Asynchronous (Background) download of a single file  */
 
 extern DECL_EXP _OCPN_DLStatus OCPN_downloadFileBackground( const wxString& url, const wxString &outputFile,
-                                                           wxEvtHandler *handler, long *handle);
+                                                  wxEvtHandler *handler, long *handle);
 
 extern DECL_EXP void OCPN_cancelDownloadFileBackground( long handle );
 
@@ -1172,14 +1185,14 @@ extern DECL_EXP bool OCPN_isOnline();
 /*  Supporting  Event for Background downloading          */
 /*  OCPN_downloadEvent Definition  */
 
-/*  PlugIn should be ready/able to handle this event after initiating a background file transfer
- *
+/*  PlugIn should be ready/able to handle this event after initiating a background file transfer  
+ * 
  * The event as received should be parsed primarily by the getDLEventCondition() method.
  * This will allow identification of download start, progress, and end states.
- *
+ * 
  * Other accessor methods contain status, byte counts, etc.
- *
- * A PlugIn may safely destroy its EvtHandler after receipt of an OCPN_downloadEvent with
+ * 
+ * A PlugIn may safely destroy its EvtHandler after receipt of an OCPN_downloadEvent with 
  *     getDLEventCondition == OCPN_DL_EVENT_TYPE_END
  */
 
@@ -1220,13 +1233,52 @@ private:
 //DECLARE_EVENT_TYPE(wxEVT_DOWNLOAD_EVENT, -1)
 //extern const wxEventType DECL_EXP wxEVT_DOWNLOAD_EVENT;
 
-extern WXDLLIMPEXP_CORE const wxEventType wxEVT_DOWNLOAD_EVENT;
+//extern WXDLLIMPEXP_CORE const wxEventType wxEVT_DOWNLOAD_EVENT;
+
+#ifdef MAKING_PLUGIN
+extern   DECL_IMP wxEventType wxEVT_DOWNLOAD_EVENT;
+#else
+extern   DECL_EXP wxEventType wxEVT_DOWNLOAD_EVENT;
+#endif
 
 // API 1.14 Extra canvas Support
 
 /* Allow drawing of objects onto other OpenGL canvases */
-extern void PlugInAISDrawGL( wxGLCanvas* glcanvas, const PlugIn_ViewPort& vp );
-extern wxColour PlugInGetFontColor(const wxString TextElement);
-extern bool PlugInSetFontColor(const wxString TextElement, const wxColour color);
+extern DECL_EXP void PlugInAISDrawGL( wxGLCanvas* glcanvas, const PlugIn_ViewPort& vp );
+extern DECL_EXP bool PlugInSetFontColor(const wxString TextElement, const wxColour color);
+
+// API 1.15
+extern DECL_EXP double PlugInGetDisplaySizeMM();
+
+//
+extern DECL_EXP wxFont* FindOrCreateFont_PlugIn( int point_size, wxFontFamily family,
+                                                wxFontStyle style, wxFontWeight weight, bool underline = false,
+                                                const wxString &facename = wxEmptyString,
+                                                wxFontEncoding encoding = wxFONTENCODING_DEFAULT );
+
+extern DECL_EXP int PlugInGetMinAvailableGshhgQuality();
+extern DECL_EXP int PlugInGetMaxAvailableGshhgQuality();
+
+extern DECL_EXP void PlugInHandleAutopilotRoute(bool enable);
+
+// API 1.16?
+//
+/**
+ * Return the plugin data directory for a given directory name.
+ *
+ * On Linux, the returned data path is an existing directory ending in
+ * "opencpn/plugins/<plugin_name>" where the last part is the plugin_name
+ * argument. The prefix part is one of the directories listed in the
+ * environment variable XDG_DATA_DIRS, by default
+ * ~/.local/share:/usr/local/share:/usr/share.
+ *
+ * On other platforms, the returned value is GetSharedDataDir() +
+ * "/opencpn/plugins/" + plugin_name (with native path separators)
+ * if that path exists.
+ *
+ * Return "" if no existing directory is found.
+ */
+extern DECL_EXP wxString GetPluginDataDir(const char* plugin_name);
+
 
 #endif //_PLUGIN_H_

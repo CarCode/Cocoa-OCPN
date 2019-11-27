@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -22,7 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -80,19 +79,12 @@ void LATITUDE::Set( double position, const wxString& north_or_south )
 
    Latitude = position;
    wxString ts = north_or_south;
-#ifdef __WXOSX__
-    if ( !ts.IsEmpty( ) && ts.Trim(false)[ 0 ] == _T('N') )
-#else
-   if ( ts.Trim(false)[ 0 ] == _T('N') )
-#endif
+
+   if ( !ts.IsEmpty() && ts.Trim(false)[ 0 ] == _T('N') )
    {
       Northing = North;
    }
-#ifdef __WXOSX__
-    else if ( !ts.IsEmpty( ) && ts.Trim(false)[ 0 ] == _T('S') )
-#else
-   else if (ts.Trim(false)[ 0 ] == _T('S') )
-#endif
+   else if ( !ts.IsEmpty( ) && ts.Trim(false)[ 0 ] == _T('S') )
    {
       Northing = South;
    }

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -36,6 +36,7 @@ class TTYScroll : public wxScrolledWindow
         virtual void Add(const wxString &line);
         void OnSize(wxSizeEvent& event);
         void Pause(bool pause) { bpause = pause; }
+        void Copy();
 
     protected:
 

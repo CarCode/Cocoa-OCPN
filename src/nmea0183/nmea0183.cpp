@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -22,7 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *                                                                         *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -88,13 +87,8 @@ NMEA0183::NMEA0183()
    response_table.Append( (RESPONSE *) &Gga );
    response_table.Append( (RESPONSE *) &GPwpl );
    response_table.Append( (RESPONSE *) &Apb );
-//   response_table.Append( (RESPONSE *) &Xdr );
-   response_table.Append( (RESPONSE *) &Zda );
-
-#ifdef __WXOSX__  // For Autopilot
-    response_table.Append( (RESPONSE *) &Vlw );
-    response_table.Append( (RESPONSE *) &Stalk );
-#endif
+   response_table.Append( (RESPONSE *) &Xte );
+   
 
 /*
    response_table.Add( (RESPONSE *) &Rot );
@@ -116,6 +110,7 @@ NMEA0183::NMEA0183()
    response_table.Add( (RESPONSE *) &Xdr );
    response_table.Add( (RESPONSE *) &Xte );
    response_table.Add( (RESPONSE *) &Xtr );
+   response_table.Add( (RESPONSE *) &Zda );
    response_table.Add( (RESPONSE *) &Zfo );
    response_table.Add( (RESPONSE *) &Ztg );
 */
@@ -242,7 +237,7 @@ bool NMEA0183::PreParse( void )
       wxCharBuffer buf = sentence.Sentence.ToUTF8();
       if( !buf.data() )                            // badly formed sentence?
         return false;
-
+    
       if ( IsGood() )
       {
             wxString mnemonic = sentence.Field( 0 );

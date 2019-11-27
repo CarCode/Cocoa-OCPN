@@ -1,4 +1,4 @@
-/********************************************************************
+/* *******************************************************************
 ** @source JEEPS arithmetic/conversion functions
 **
 ** @author Copyright (C) 1999 Alan Bleasby
@@ -756,7 +756,7 @@ void GPS_Math_Cassini_LatLon_To_EN(double phi, double lambda, double *E,
 				   double E0, double N0, double a, double b)
 {
     double p2;
-//    double po2;  // Not used
+    double po2;
     double a2;
     double b2;
     double e2;
@@ -768,22 +768,22 @@ void GPS_Math_Cassini_LatLon_To_EN(double phi, double lambda, double *E,
     double c2;
     double c3;
     double om0;
-/*    double A0;  // Not used
+    double A0;
     double A1;
     double A2;
-    double A3; */
+    double A3;
     double j;
     double te4;
     double phi0s2;
     double phi0s4;
     double phi0s6;
     double lat;
-//    double x;
-/*    double E1;  // Not used
+    double x;
+    double E1;
     double E2;
     double E3;
     double E4;
-*/
+
     double phis;
     double phic;
     double phit;
@@ -832,12 +832,12 @@ void GPS_Math_Cassini_LatLon_To_EN(double phi, double lambda, double *E,
     AM0 = a * (lat-phi0s2+phi0s4-phi0s6);
 
     om0 = (double)1.0 - e2;
-//    x = pow(om0,(double)0.5);
-//    E1 = ((double)1.0 - x) / ((double)1.0 + x);  // Not used
+//    x = pow(om0,(double)0.5);  // Not used:
+//    E1 = ((double)1.0 - x) / ((double)1.0 + x);
 //    E2 = E1*E1;
 //    E3 = E1*E2;
 //    E4 = E1*E3;
-//    A0 = (double)3.*E1/(double)2.-(double)27.*E3/(double)32.;  // Not used
+//    A0 = (double)3.*E1/(double)2.-(double)27.*E3/(double)32.;
 //    A1 = (double)21.*E2/(double)16.-(double)55.*E4/(double)32.;
 //    A2 = (double)151.*E3/(double)96.;
 //    A3 = (double)1097.*E4/(double)512.;
@@ -2490,7 +2490,7 @@ void GPS_Math_UTM_EN_to_LatLon(int ReferenceEllipsoid,
 	double eccPrimeSquared;
 	double e1;
 	double N1, T1, C1, R1, D, M;
-	double mu, /*phi1,*/ phi1Rad;
+	double mu, phi1, phi1Rad;
 	double x, y;
 
 	a = GPS_Ellipse[ReferenceEllipsoid].a;

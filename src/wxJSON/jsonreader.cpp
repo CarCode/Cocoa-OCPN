@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        jsonreader.cpp
 // Purpose:     the wxJSONReader class: a JSON text parser
 // Author:      Luciano Cattani
@@ -6,13 +6,15 @@
 // RCS-ID:      $Id: jsonreader.cpp,v 1.12 2008/03/12 10:48:19 luccat Exp $
 // Copyright:   (c) 2007 Luciano Cattani
 // Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
-#ifdef NDEBUG
-// make wxLogTrace a noop if no debug set, it's really slow
+//#ifdef __GNUG__
+//    #pragma implementation "jsonreader.cpp"
+//#endif
+
+// make wxLogTrace a noop, it's really slow
 // must be defined before including debug.h
-#define wxDEBUG_LEVEL 0
-#endif
+#define wxDEBUG_LEVEL 1
 
 #include <wx/jsonreader.h>
 
@@ -20,7 +22,6 @@
 #include <wx/sstream.h>
 #include <wx/debug.h>
 #include <wx/log.h>
-
 
 
 /*! \class wxJSONReader

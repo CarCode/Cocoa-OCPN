@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -31,6 +31,8 @@
 #endif //precompiled headers
 
 #include "dychart.h"
+#include "ocpn_types.h"
+
 
 #define CA_READ         0
 #define CA_WRITE        1
@@ -39,6 +41,7 @@
 #define GPU_TEXTURE_UNCOMPRESSED        1
 #define GPU_TEXTURE_COMPRESSED          2
 
+class glTexFactory;
 class glTextureDescriptor
 {
 public:
@@ -46,29 +49,30 @@ public:
     ~glTextureDescriptor();
     void FreeAll();
     void FreeMap();
-    void FreeCompLevel(int level);
+    void FreeComp();
     void FreeCompComp();
 
     size_t GetMapArrayAlloc(void);
     size_t GetCompArrayAlloc(void);
     size_t GetCompCompArrayAlloc(void);
 
-    unsigned char *CompressedArrayAccess( int mode, unsigned char *write_data, int level);
-    unsigned char *CompCompArrayAccess( int mode, unsigned char *write_data, int level);
+    bool IsCompCompArrayComplete( int base_level );
+
     GLuint tex_name;
     int level_min;
     int x;
     int y;
     int nGPU_compressed;
-    int nCache_Color;
+    ColorScheme m_colorscheme;
 
-    unsigned char       *map_array[10];
-    bool                miplevel_upload[10];
+    int                tex_mem_used;
+
+    unsigned char      *map_array[10];
+    unsigned char      *comp_array[10];
+    unsigned char      *compcomp_array[10];
     int                 compcomp_size[10];
 
-private:    
-    unsigned char *comp_array[10];
-    unsigned char *compcomp_array[10];
+    int compdata_ticks;
 };
 
 

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -20,9 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
  *   S Blackburn's original source license:                                *
  *         "You can use it any way you like."                              *
  *   More recent (2010) license statement:                                 *
@@ -40,6 +39,7 @@
 ** You can use it any way you like.
 */
 
+extern wxString g_TalkerIdText;
 
 RESPONSE::RESPONSE()
 {
@@ -76,9 +76,15 @@ bool RESPONSE::Write( SENTENCE& sentence )
 
     if(NULL == container_p)
           sentence.Sentence.Append(_T("--"));
-    else
+    else {
+        if ( g_TalkerIdText.length() == 0) {
           sentence.Sentence.Append(container_p->TalkerID);
-
+        }
+        else {
+            sentence.Sentence.Append( g_TalkerIdText );
+        }
+    }
+    
     sentence.Sentence.Append(Mnemonic);
 
    return( TRUE );

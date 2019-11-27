@@ -1,4 +1,4 @@
-/**************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -48,6 +48,7 @@ extern Select *pSelect;
 extern MyConfig *pConfig;
 extern RouteManagerDialog *pRouteManagerDialog;
 extern ChartCanvas *cc1;
+extern RouteList *pRouteList;
 extern TrackList *pTrackList;
 extern OCPNPlatform  *g_Platform;
 
@@ -92,9 +93,8 @@ void AISTargetQueryDialog::Init()
     m_bsize_set = false;
     m_bautoCentre = false;
     m_bautosize = false;
-
+    
 }
-
 void AISTargetQueryDialog::OnClose( wxCloseEvent& event )
 {
     Destroy();
@@ -111,7 +111,8 @@ void AISTargetQueryDialog::OnIdWptCreateClick( wxCommandEvent& event )
     if( m_MMSI != 0 ) { //  Faulty MMSI could be reported as 0
         AIS_Target_Data *td = g_pAIS->Get_Target_Data_From_MMSI( m_MMSI );
         if( td ) {
-            RoutePoint *pWP = new RoutePoint( td->Lat, td->Lon, g_default_wp_icon, wxEmptyString, GPX_EMPTY_STRING );
+            wxString n =  wxString::Format(wxT("\"%s\"  %i "),td->ShipName,  td->MMSI).append(wxDateTime::Now().Format(wxT("%H:%M")));
+            RoutePoint *pWP = new RoutePoint( td->Lat, td->Lon, g_default_wp_icon, n, wxEmptyString );
             pWP->m_bIsolatedMark = true;                      // This is an isolated mark
             pSelect->AddSelectableRoutePoint( td->Lat, td->Lon, pWP );
             pConfig->AddNewWayPoint( pWP, -1 );    // use auto next num
@@ -141,10 +142,10 @@ void AISTargetQueryDialog::OnIdTrkCreateClick( wxCommandEvent& event )
             {
                 TrackPoint *tp = NULL;
                 TrackPoint *tp1 = NULL;
-                
+                    
                 Track *t = new Track();
 
-                t->m_TrackNameString = wxString::Format( _T("AIS %s (%u) %s %s"), td->GetFullName().c_str(), td->MMSI, wxDateTime::Now().FormatISODate().c_str(), wxDateTime::Now().FormatISOTime().c_str() );
+                t->SetName( wxString::Format( _T("AIS %s (%u) %s %s"), td->GetFullName().c_str(), td->MMSI, wxDateTime::Now().FormatISODate().c_str(), wxDateTime::Now().FormatISOTime().c_str() ) );
                 wxAISTargetTrackListNode *node = td->m_ptrack->GetFirst();
                 while( node )
                 {
@@ -154,7 +155,7 @@ void AISTargetQueryDialog::OnIdTrkCreateClick( wxCommandEvent& event )
                     if( tp )
                     {
                         pSelect->AddSelectableTrackSegment( tp->m_lat, tp->m_lon, tp1->m_lat,
-                                tp1->m_lon, tp, tp1, t );
+                            tp1->m_lon, tp, tp1, t );
                     }
                     tp = tp1;
                     node = node->GetNext();
@@ -171,7 +172,7 @@ void AISTargetQueryDialog::OnIdTrkCreateClick( wxCommandEvent& event )
                 if( wxID_YES == OCPNMessageBox(NULL,
                     _("The recently captured track of this target has been recorded.\nDo you want to continue recording until the end of the current OpenCPN session?"),
 #ifdef __WXOSX__
-                    _("OpenCPN Info"), wxYES_NO | wxCENTER| wxICON_QUESTION, 60 ) )                           
+                    _("OpenCPN Info"), wxYES_NO | wxCENTER| wxICON_QUESTION, 60 ) )
 #else
                     _("OpenCPN Info"), wxYES_NO | wxCENTER, 60 ) )
 #endif
@@ -193,14 +194,14 @@ bool AISTargetQueryDialog::Create( wxWindow* parent, wxWindowID id, const wxStri
     //    This way, any window decorations set by external themes, etc
     //    will not detract from night-vision
 
-    long wstyle = wxDEFAULT_FRAME_STYLE;
+    long wstyle = AIS_TARGET_QUERY_STYLE;
     if( ( global_color_scheme != GLOBAL_COLOR_SCHEME_DAY )
             && ( global_color_scheme != GLOBAL_COLOR_SCHEME_RGB ) ) wstyle |= ( wxNO_BORDER );
 
     if( !wxDialog::Create( parent, id, caption, pos, size, wstyle ) ) return false;
 
     m_parent = parent;
-
+    
     wxFont *dFont = FontMgr::Get().GetFont( _("AISTargetQuery") );
     int font_size = wxMax(8, dFont->GetPointSize());
     wxString face = dFont->GetFaceName();
@@ -213,7 +214,7 @@ bool AISTargetQueryDialog::Create( wxWindow* parent, wxWindowID id, const wxStri
     SetFont( *m_basefont );
     m_adjustedFontSize = dFont->GetPointSize();
     m_control_font_size = dFont->GetPointSize();
-
+    
     CreateControls();
 
     SetColorScheme( global_color_scheme );
@@ -222,10 +223,10 @@ bool AISTargetQueryDialog::Create( wxWindow* parent, wxWindowID id, const wxStri
     //Set the maximum size of the entire settings dialog
     wxSize sz = g_Platform->getDisplaySize();
     SetSizeHints( 50, 50, sz.x-20, sz.y-40 );
-
+    
     if(!m_bautosize){
         Fit();          // Sets the horizontal size OK
-        Layout();
+        Layout(); 
         SetSize( -1, m_adjustedFontSize * 30);          // Estimated vertical size
     }
 
@@ -233,9 +234,9 @@ bool AISTargetQueryDialog::Create( wxWindow* parent, wxWindowID id, const wxStri
 }
 
 void AISTargetQueryDialog::SetMMSI(int mmsi)
-{
+{ 
     m_MMSI = mmsi;
-
+    
     AIS_Target_Data *td = g_pAIS->Get_Target_Data_From_MMSI( m_MMSI );
     AdjustBestSize(td);
 }
@@ -247,17 +248,17 @@ void AISTargetQueryDialog::RecalculateSize()
     //Set the maximum size of the entire settings dialog
     wxSize sz = g_Platform->getDisplaySize();
     SetSizeHints( 50, 50, sz.x-20, sz.y-40 );
-    
+
     m_bsize_set = false;
-    
+
     wxFont *dFont = FontMgr::Get().GetFont( _("AISTargetQuery") );
     int font_size = wxMax(8, dFont->GetPointSize());
     wxString face = dFont->GetFaceName();
-#ifdef __WXGTK__
+    #ifdef __WXGTK__
     face = _T("Monospace");
-#endif
+    #endif
     m_basefont = FontMgr::Get().FindOrCreateFont( font_size, wxFONTFAMILY_MODERN,
-                                                 wxFONTSTYLE_NORMAL, dFont->GetWeight(), false, face );
+                                                  wxFONTSTYLE_NORMAL, dFont->GetWeight(), false, face );
     
     SetFont( *m_basefont );
     m_adjustedFontSize = dFont->GetPointSize();
@@ -274,7 +275,7 @@ void AISTargetQueryDialog::SetColorScheme( ColorScheme cs )
     SetBackgroundColour( bg );                  // This looks like non-sense, but is needed for __WXGTK__
                                                 // to get colours to propagate down the control's family tree.
 
-#ifdef __WXQT__
+#ifdef __WXQT__    
     //  wxQT has some trouble clearing the background of HTML window...
     wxBitmap tbm( GetSize().x, GetSize().y, -1 );
     wxMemoryDC tdc( tbm );
@@ -283,7 +284,7 @@ void AISTargetQueryDialog::SetColorScheme( ColorScheme cs )
     tdc.Clear();
     m_pQueryTextCtl->SetBackgroundImage(tbm);
 #endif
-
+    
     if( cs != m_colorscheme ) {
         Refresh();
     }
@@ -297,12 +298,12 @@ void AISTargetQueryDialog::CreateControls()
     SetSizer( topSizer );
 
     m_pQueryTextCtl = new wxHtmlWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                                       wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION );
+                                        wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION );
     m_pQueryTextCtl->SetBorders( 1 );
-#ifdef __WXOSX__
+#ifndef __WXOSX__
     topSizer->Add( m_pQueryTextCtl, 1, wxALL | wxEXPAND, 5 );
 #else
-    topSizer->Add( m_pQueryTextCtl, 1, wxALIGN_CENTER_HORIZONTAL | wxALL | wxEXPAND, 5 );
+    topSizer->Add( m_pQueryTextCtl, 1, wxEXPAND, 5 );
 #endif
     wxSizer* opt = new wxBoxSizer( wxHORIZONTAL );
     m_createWptBtn = new wxButton( this, xID_WPT_CREATE, _("Create Waypoint"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -311,13 +312,12 @@ void AISTargetQueryDialog::CreateControls()
     m_createTrkBtn = new wxButton( this, xID_TRK_CREATE, _("Record Track"), wxDefaultPosition, wxDefaultSize, 0 );
     opt->Add( m_createTrkBtn, 0, wxALL|wxEXPAND, 5 );
     topSizer->Add( opt, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 5 );
-    
 
     wxSizer* ok = CreateButtonSizer( wxOK );
     topSizer->Add( ok, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 5 );
-
+    
     Fit();
-
+    
 }
 
 void AISTargetQueryDialog::UpdateText()
@@ -328,10 +328,10 @@ void AISTargetQueryDialog::UpdateText()
 
     int scroll_x, scroll_y;
     m_pQueryTextCtl->GetViewStart(&scroll_x, &scroll_y);
-
+    
     AIS_Target_Data *td = g_pAIS->Get_Target_Data_From_MMSI( m_MMSI );
 //    AdjustBestSize(td);
-
+    
     DimeControl( this );
     wxColor bg = GetBackgroundColour();
     m_pQueryTextCtl->SetBackgroundColour( bg );
@@ -346,12 +346,13 @@ void AISTargetQueryDialog::UpdateText()
 
             m_createWptBtn->Enable( td->b_positionOnceValid );
             m_createTrkBtn->Enable( td->b_show_track );
-
+            
             RenderHTMLQuery(td);
-
+ 
+                
         }
-
-#ifdef __WXQT__
+  
+#ifdef __WXQT__ 
     SetColorScheme( m_colorscheme );
 #endif
     
@@ -364,7 +365,7 @@ void AISTargetQueryDialog::OnMove( wxMoveEvent& event )
     wxPoint p = event.GetPosition();
     g_ais_query_dialog_x = p.x;
     g_ais_query_dialog_y = p.y;
-
+    
     event.Skip();
 }
 
@@ -373,27 +374,30 @@ void AISTargetQueryDialog::OnSize( wxSizeEvent& event )
     event.Skip();
 }
 
+
 void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
 {
     if(!td)
         return;
-    
-    wxSize origSize = GetSize();
 
+    wxSize origSize = GetSize();
+    
     //  First pass, try to set the size using the user specified font sizes completely
     if(!m_bsize_set){
         Fit();
         RenderHTMLQuery(td);
         m_bsize_set = true;
-     }
-
+    }
+        
+ 
     int target_x = -1;
     int target_y = -1;
-
+    
     //  Width adjustments
 
-    if(m_bautosize){
 
+    if(m_bautosize){
+    
         //  Reduce the font size if necessary to eliminate horizontal scroll bars.
         wxSize szv = m_pQueryTextCtl->GetVirtualSize();
         if(szv.x > m_pQueryTextCtl->GetSize().x){
@@ -407,9 +411,9 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
                 Layout();
                 szv = m_pQueryTextCtl->GetVirtualSize();
             }
-
+            
             m_adjustedFontSize --;
-
+            
         }
     }
     else{
@@ -421,31 +425,32 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
         }
     }
     
+    
     // Now adjust the font size used for the control buttons.
     // This adjustment makes sure that the two horizontal buttons are not wider than the platform display allows.
-
+    
     if( m_createWptBtn && m_createTrkBtn ){
-        
+   
         wxSize psz = g_Platform->getDisplaySize();
         
         wxScreenDC dc;
         wxFont *tFont = FontMgr::Get().FindOrCreateFont( m_control_font_size, wxFONTFAMILY_MODERN,
-                                                        wxFONTSTYLE_NORMAL, m_basefont->GetWeight(), false,
-                                                        m_basefont->GetFaceName() );
+                                                           wxFONTSTYLE_NORMAL, m_basefont->GetWeight(), false,
+                                                           m_basefont->GetFaceName() );
         dc.SetFont(*tFont);
         
         wxSize tsz = dc.GetTextExtent(m_createWptBtn->GetLabel() + m_createTrkBtn->GetLabel());
         
-        float totalButtonWidth = tsz.x;
+        float totalButtonWidth = tsz.x; 
         
         if( totalButtonWidth * 1.5 > psz.x ){
             float delta = (float)totalButtonWidth * 2. / psz.x;
             
             float font_size = m_control_font_size / delta;
-            
+
             wxFont *fp_font = FontMgr::Get().FindOrCreateFont( font_size, wxFONTFAMILY_MODERN,
-                                                              wxFONTSTYLE_NORMAL, m_basefont->GetWeight(), false,
-                                                              m_basefont->GetFaceName() );
+                                              wxFONTSTYLE_NORMAL, m_basefont->GetWeight(), false,
+                                              m_basefont->GetFaceName() );
             
             m_createWptBtn->SetFont(*fp_font);
             m_createTrkBtn->SetFont(*fp_font);
@@ -456,12 +461,12 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
     
     // Height adjustments
     // Try to avoid vertical scroll bar if possible.
-
+    
     //  Estimate the control button area height
     int yb = 0;
-    if( m_createWptBtn)
+    if( m_createWptBtn )
         yb = m_createWptBtn->GetSize().y * 4;
-
+    
     wxSize szyv = m_pQueryTextCtl->GetVirtualSize();
     int csz = g_Platform->getDisplaySize().y * 8 / 10;
     if((szyv.y + yb) < csz){
@@ -469,7 +474,10 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
             target_y = (szyv.y * 11 / 10) + yb;
     }
 
+    
     SetSize(target_x, target_y);
+    
+    
     
     wxSize nowSize = GetSize();
     
@@ -477,15 +485,16 @@ void AISTargetQueryDialog::AdjustBestSize( AIS_Target_Data *td )
         if(m_bautoCentre)
             Centre();
     }
+
     
 }
 
 void AISTargetQueryDialog::RenderHTMLQuery(AIS_Target_Data *td)
 {
-    int font_size = m_adjustedFontSize;
+    int font_size = m_adjustedFontSize; 
     wxFont *fp_font = FontMgr::Get().FindOrCreateFont( font_size, wxFONTFAMILY_MODERN,
-                                                      wxFONTSTYLE_NORMAL, m_basefont->GetWeight(),
-                                                      false, m_basefont->GetFaceName() );
+                                                       wxFONTSTYLE_NORMAL, m_basefont->GetWeight(),
+                                                       false, m_basefont->GetFaceName() );
     
     SetFont( *fp_font );
     
@@ -507,6 +516,9 @@ void AISTargetQueryDialog::RenderHTMLQuery(AIS_Target_Data *td)
     
     wxCharBuffer buf = html.ToUTF8();
     if( buf.data() )                            // string OK?
-        m_pQueryTextCtl->SetPage( html );
-
+                 m_pQueryTextCtl->SetPage( html );
+    
 }
+
+
+

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Navigation Utility Functions
@@ -54,11 +54,13 @@
 #include "cutil.h"
 #include "styles.h"
 #include "routeman.h"
+#ifdef __WXOSX__
+#include "RoutePropDlgImpl.h"
+#else
 #include "routeprop.h"
+#endif
 #include "s52utils.h"
 #include "chartbase.h"
-#include "tinyxml.h"
-#include "gpxdocument.h"
 #include "ocpndc.h"
 #include "geodesic.h"
 #include "datastream.h"
@@ -105,7 +107,7 @@ extern double           kLat, kLon;
 extern double           initial_scale_ppm, initial_rotation;
 extern ColorScheme      global_color_scheme;
 extern int              g_nbrightness;
-extern bool             g_bShowMag;
+extern bool             g_bShowTrue, g_bShowMag;
 extern double           g_UserVar;
 extern bool             g_bShowStatusBar;
 extern bool             g_bUIexpert;
@@ -122,9 +124,10 @@ extern wxString         g_UserPresLibData;
 
 extern AIS_Decoder      *g_pAIS;
 extern wxString         *pInit_Chart_Dir;
+extern wxString         gWorldMapLocation;
 extern WayPointman      *pWayPointMan;
 extern Routeman         *g_pRouteMan;
-extern RouteProp        *pRoutePropDialog;
+extern RoutePropDlg        *pRoutePropDialog;
 
 extern bool             s_bSetSystemTime;
 extern bool             g_bDisplayGrid;         //Flag indicating if grid is to be displayed
@@ -171,6 +174,11 @@ extern wxString         g_InvisibleLayers;
 extern wxRect           g_blink_rect;
 
 extern wxArrayString    *pMessageOnceArray;
+
+// LIVE ETA OPTION
+extern bool             g_bShowLiveETA;
+extern double           g_defaultBoatSpeed;
+extern double           g_defaultBoatSpeedUserUnit;
 
 //    AIS Global configuration
 extern bool             g_bCPAMax;
@@ -251,14 +259,17 @@ extern bool             g_bDebugS57;
 extern double           g_ownship_predictor_minutes;
 extern double           g_ownship_HDTpredictor_miles;
 
+extern bool             g_own_ship_sog_cog_calc;
+extern int              g_own_ship_sog_cog_calc_damp_sec;
+
 #ifdef USE_S57
 extern s52plib          *ps52plib;
 #endif
 
 extern int              g_cm93_zoom_factor;
 extern bool             g_b_legacy_input_filter_behaviour;
-extern bool             g_bShowCM93DetailSlider;
-extern int              g_cm93detail_dialog_x, g_cm93detail_dialog_y;
+extern bool             g_bShowDetailSlider;
+extern int              g_detailslider_dialog_x, g_detailslider_dialog_y;
 
 extern bool             g_bUseGreenShip;
 
@@ -340,8 +351,11 @@ extern int              g_ais_cog_predictor_width;
 
 extern int              g_route_line_width;
 extern int              g_track_line_width;
+extern wxColour         g_colourTrackLineColour;
 extern wxString         g_default_wp_icon;
-
+#ifdef __WXOSX__
+extern wxString         g_default_routepoint_icon;
+#endif
 extern ChartGroupArray  *g_pGroupArray;
 extern int              g_GroupIndex;
 
@@ -398,10 +412,19 @@ extern int              g_iENCToolbarPosY;
 
 extern bool             g_bSpaceDropMark;
 
+extern bool             g_benableUDPNullHeader;
+
 extern wxString         g_uiStyle;
 
 int                     g_nCPUCount;
 
+extern bool             g_bDarkDecorations;
+#ifdef __WXOSX__
+extern int              g_route_prop_x, g_route_prop_y;
+extern int              g_route_prop_sx, g_route_prop_sy;
+extern int              g_track_prop_x, g_track_prop_y;
+extern int              g_track_prop_sx, g_track_prop_sy;
+#endif
 #ifdef ocpnUSE_GL
 extern ocpnGLOptions g_GLOptions;
 #endif
@@ -410,6 +433,7 @@ extern ocpnGLOptions g_GLOptions;
 static const long long lNaN = 0xfff8000000000000;
 #define NAN (*(double*)&lNaN)
 #endif
+
 
 
 // Layer helper function
@@ -422,7 +446,8 @@ wxString GetLayerName( int id )
     int index = 0;
     for( it = ( *pLayerList ).begin(); it != ( *pLayerList ).end(); ++it, ++index ) {
         Layer *lay = (Layer *) ( *it );
-        if( lay->m_LayerID == id ) return ( lay->m_LayerName );
+        if( lay->m_LayerID == id )
+            return ( lay->m_LayerName );
     }
     return ( name );
 }
@@ -453,14 +478,14 @@ void MyConfig::CreateRotatingNavObjBackup()
 {
 
     // Avoid nonsense log errors...
-#ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__    
     wxLogNull logNo;
-#endif
+#endif    
 
     //Rotate navobj backups, but just in case there are some changes in the current version
     //to prevent the user trying to "fix" the problem by continuously starting the
     //application to overwrite all of his good backups...
-    if( g_navobjbackups > 0 ) {  // aktuell 5
+    if( g_navobjbackups > 0 ) {
         wxFile f;
         wxString oldname = m_sNavObjSetFile;
         wxString newname = wxString::Format( _T("%s.1"), m_sNavObjSetFile.c_str() );
@@ -493,14 +518,14 @@ void MyConfig::CreateRotatingNavObjBackup()
             if( wxFile::Exists( m_sNavObjSetFile ) )
             {
                 newname = wxString::Format( _T("%s.1"), m_sNavObjSetFile.c_str() );
-                wxCopyFile( m_sNavObjSetFile, newname);
+                wxCopyFile( m_sNavObjSetFile, newname );
             }
         }
     }
     //try to clean the backups the user doesn't want - breaks if he deleted some by hand as it tries to be effective...
     for( int i = g_navobjbackups + 1; i <= 99; i++ )
-        if( wxFile::Exists( wxString::Format( _T("%s.%d"), m_sNavObjSetFile.c_str(), i ) ) )
-            wxRemoveFile( wxString::Format( _T("%s.%d"), m_sNavObjSetFile.c_str(), i ) );
+        if( wxFile::Exists( wxString::Format( _T("%s.%d"), m_sNavObjSetFile.c_str(), i ) ) ) wxRemoveFile(
+                wxString::Format( _T("%s.%d"), m_sNavObjSetFile.c_str(), i ) );
         else
             break;
 }
@@ -515,7 +540,7 @@ int MyConfig::LoadMyConfig()
     wxDisplaySize( &display_width, &display_height );
 
 //    Global options and settings
-    SetPath( _T ( "/Settings" ) );
+    SetPath( _T ( "/Settings" ) );    
 
     // Some undocumented values
     Read( _T ( "ConfigVersionString" ), &g_config_version_string, _T("") );
@@ -529,14 +554,16 @@ int MyConfig::LoadMyConfig()
 
     Read( _T ( "InlandEcdis" ), &g_bInlandEcdis, 0 );// First read if in iENC mode as this will override some config settings
 
+    Read( _T ("DarkDecorations" ), &g_bDarkDecorations, 0 );
+
     Read( _T( "SpaceDropMark" ), &g_bSpaceDropMark, 0 );
     int mem_limit;
     Read( _T ( "MEMCacheLimit" ), &mem_limit, 0 );
-    
+
     if(mem_limit > 0)
         g_memCacheLimit = mem_limit * 1024;       // convert from MBytes to kBytes
 
-    Read( _T( "NCPUCount" ), &g_nCPUCount, -1);
+    Read( _T( "NCPUCount" ), &g_nCPUCount, -1);    
 
     Read( _T ( "DebugGDAL" ), &g_bGDAL_Debug, 0 );
     Read( _T ( "DebugNMEA" ), &g_nNMEADebug, 0 );
@@ -585,7 +612,12 @@ int MyConfig::LoadMyConfig()
     g_COGFilterSec = wxMax(g_COGFilterSec, 1);
     g_SOGFilterSec = g_COGFilterSec;
 
+    Read( _T ( "ShowTrue" ), &g_bShowTrue, 1 );
     Read( _T ( "ShowMag" ), &g_bShowMag, 0 );
+
+    if(!g_bShowTrue && !g_bShowMag)
+        g_bShowTrue = true;
+
     g_UserVar = 0.0;
     wxString umv;
     Read( _T ( "UserMagVariation" ), &umv );
@@ -612,7 +644,7 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "COGUPAvgSeconds" ), &g_COGAvgSec, 15 );
     g_COGAvgSec = wxMin(g_COGAvgSec, MAX_COG_AVERAGE_SECONDS);        // Bound the array size
     if( g_bInlandEcdis ) g_bLookAhead=1;
-    else Read( _T ( "LookAheadMode" ), &g_bLookAhead, 0 );
+        else Read( _T ( "LookAheadMode" ), &g_bLookAhead, 0 );
     Read( _T ( "SkewToNorthUp" ), &g_bskew_comp, 0 );
 #ifdef __WXOSX__
     Read( _T ( "OpenGL" ), &g_bopengl, 1 );
@@ -624,11 +656,11 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "SoftwareGL" ), &g_bSoftwareGL, 0 );
 
     Read( _T ( "ShowFPS" ), &g_bShowFPS, 0 );
-    
+
     Read( _T ( "ActiveChartGroup" ), &g_GroupIndex, 0 );
 
     Read( _T( "NMEAAPBPrecision" ), &g_NMEAAPBPrecision, 3 );
-    
+
     Read( _T( "TalkerIdText" ), &g_TalkerIdText, _T("EC") );
     Read( _T( "MaxWaypointNameLength" ), &g_maxWPNameLength, 6 );
 
@@ -639,6 +671,8 @@ int MyConfig::LoadMyConfig()
 
     Read( _T ( "GPUTextureCompression" ), &g_GLOptions.m_bTextureCompression, 0);
     Read( _T ( "GPUTextureCompressionCaching" ), &g_GLOptions.m_bTextureCompressionCaching, 0);
+    Read( _T ( "PolygonSmoothing" ), &g_GLOptions.m_GLPolygonSmoothing, true);
+    Read( _T ( "LineSmoothing" ), &g_GLOptions.m_GLLineSmoothing, true);
 
     Read( _T ( "GPUTextureDimension" ), &g_GLOptions.m_iTextureDimension, 512 );
     Read( _T ( "GPUTextureMemSize" ), &g_GLOptions.m_iTextureMemorySize, 128 );
@@ -661,6 +695,9 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "iENCToolbarX"), &g_iENCToolbarPosX, -1 );
     Read( _T ( "iENCToolbarY"), &g_iENCToolbarPosY, -1 );
 #endif
+    Read( _T ( "iENCToolbarX"), &g_iENCToolbarPosX, -1 );
+    Read( _T ( "iENCToolbarY"), &g_iENCToolbarPosY, -1 );
+
     Read( _T ( "AnchorWatch1GUID" ), &g_AW1GUID, _T("") );
     Read( _T ( "AnchorWatch2GUID" ), &g_AW2GUID, _T("") );
 
@@ -683,20 +720,20 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "FogOnOverzoom" ), &g_fog_overzoom, 1 );
     Read( _T ( "OverzoomVectorScale" ), &g_oz_vector_scale, 1 );
     Read( _T ( "OverzoomEmphasisBase" ), &g_overzoom_emphasis_base, 10.0 );
-    
+
 #ifdef USE_S57
     Read( _T ( "CM93DetailFactor" ), &g_cm93_zoom_factor, 0 );
     g_cm93_zoom_factor = wxMin(g_cm93_zoom_factor,CM93_ZOOM_FACTOR_MAX_RANGE);
     g_cm93_zoom_factor = wxMax(g_cm93_zoom_factor,(-CM93_ZOOM_FACTOR_MAX_RANGE));
 
-    g_cm93detail_dialog_x = Read( _T ( "CM93DetailZoomPosX" ), 200L );
-    g_cm93detail_dialog_y = Read( _T ( "CM93DetailZoomPosY" ), 200L );
-    if( ( g_cm93detail_dialog_x < 0 ) || ( g_cm93detail_dialog_x > display_width ) ) g_cm93detail_dialog_x =
+    g_detailslider_dialog_x = Read( _T ( "CM93DetailZoomPosX" ), 200L );
+    g_detailslider_dialog_y = Read( _T ( "CM93DetailZoomPosY" ), 200L );
+    if( ( g_detailslider_dialog_x < 0 ) || ( g_detailslider_dialog_x > display_width ) ) g_detailslider_dialog_x =
             5;
-    if( ( g_cm93detail_dialog_y < 0 ) || ( g_cm93detail_dialog_y > display_height ) ) g_cm93detail_dialog_y =
+    if( ( g_detailslider_dialog_y < 0 ) || ( g_detailslider_dialog_y > display_height ) ) g_detailslider_dialog_y =
             5;
 
-    Read( _T ( "ShowCM93DetailSlider" ), &g_bShowCM93DetailSlider, 0 );
+    Read( _T ( "ShowCM93DetailSlider" ), &g_bShowDetailSlider, 0 );
 
     Read( _T ( "SENC_LOD_Pixels" ), &g_SENC_LOD_pixels, 2 );
 
@@ -725,10 +762,16 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "ShowActiveRouteTotal" ), &g_bShowRouteTotal, 0 );
     Read( _T ( "MostRecentGPSUploadConnection" ), &g_uploadConnection, _T("") );
     Read( _T ( "ShowChartBar" ), &g_bShowChartBar, 1 );
-    
     Read( _T ( "SDMMFormat" ), &g_iSDMMFormat, 0 ); //0 = "Degrees, Decimal minutes"), 1 = "Decimal degrees", 2 = "Degrees,Minutes, Seconds"
+
     Read( _T ( "DistanceFormat" ), &g_iDistanceFormat, 0 ); //0 = "Nautical miles"), 1 = "Statute miles", 2 = "Kilometers", 3 = "Meters"
     Read( _T ( "SpeedFormat" ), &g_iSpeedFormat, 0 ); //0 = "kts"), 1 = "mph", 2 = "km/h", 3 = "m/s"
+
+    // LIVE ETA OPTION
+    Read( _T ( "LiveETA" ), &g_bShowLiveETA, 0 );
+    Read( _T ( "DefaultBoatSpeed" ), &g_defaultBoatSpeed, 6.0 );
+    // Calculate user selected speed unit
+    g_defaultBoatSpeedUserUnit = toUsrSpeed(g_defaultBoatSpeed, -1);
 
     Read( _T ( "OwnshipCOGPredictorMinutes" ), &g_ownship_predictor_minutes, 5 );
     Read( _T ( "OwnshipCOGPredictorWidth" ), &g_cog_predictor_width, 3 );
@@ -740,6 +783,8 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "OwnShipGPSOffsetX" ), &g_n_gps_antenna_offset_x, 0 );
     Read( _T ( "OwnShipGPSOffsetY" ), &g_n_gps_antenna_offset_y, 0 );
     Read( _T ( "OwnShipMinSize" ), &g_n_ownship_min_mm, 1 );
+    Read( _T ( "OwnShipSogCogCalc" ), &g_own_ship_sog_cog_calc, false );
+    Read( _T ( "OwnShipSogCogCalcDampSec"), &g_own_ship_sog_cog_calc_damp_sec, 1 );
     g_n_ownship_min_mm = wxMax(g_n_ownship_min_mm, 1);
 
     g_n_arrival_circle_radius = .050;           // default
@@ -781,16 +826,18 @@ int MyConfig::LoadMyConfig()
 
     // Boolean to cater for legacy Input COM Port filer behaviour, i.e. show msg filtered but put msg on bus.
     Read( _T ( "LegacyInputCOMPortFilterBehaviour" ), &g_b_legacy_input_filter_behaviour, 0 );
-    
+
     // Boolean to cater for sailing when not approaching waypoint
     Read( _T( "AdvanceRouteWaypointOnArrivalOnly" ), &g_bAdvanceRouteWaypointOnArrivalOnly, 0);
 
     Read( _T ( "EnableRotateKeys" ),  &g_benable_rotate );
     Read( _T ( "EmailCrashReport" ),  &g_bEmailCrashReport );
-    
+
     g_benableAISNameCache = true;
     Read( _T ( "EnableAISNameCache" ),  &g_benableAISNameCache );
-    
+
+    Read( _T ( "EnableUDPNullHeader" ),  &g_benableUDPNullHeader, 0 );
+
     SetPath( _T ( "/Settings/GlobalState" ) );
     Read( _T ( "bFollow" ), &st_bFollow );
 
@@ -804,6 +851,20 @@ int MyConfig::LoadMyConfig()
     Read( _T ( "ClientPosY" ), &g_lastClientRecty, 0 );
     Read( _T ( "ClientSzX" ), &g_lastClientRectw, 0 );
     Read( _T ( "ClientSzY" ), &g_lastClientRecth, 0 );
+#ifdef __WXOSX__
+    Read( _T( "RoutePropSizeX" ), &g_route_prop_sx );
+    Read( _T( "RoutePropSizeY" ), &g_route_prop_sy );
+    Read( _T( "RoutePropPosX" ), &g_route_prop_x );
+    Read( _T( "RoutePropPosY" ), &g_route_prop_y );
+    Read( _T( "TrackPropSizeX" ), &g_track_prop_sx );
+    Read( _T( "TrackPropSizeY" ), &g_track_prop_sy );
+    Read( _T( "TrackPropPosX" ), &g_track_prop_x );
+    Read( _T( "TrackPropPosY" ), &g_track_prop_y );
+#endif
+    Read( _T ( "S52_DEPTH_UNIT_SHOW" ), &read_int, 1 );   // default is metres
+    read_int = wxMax(read_int, 0);                      // qualify value
+    read_int = wxMin(read_int, 2);
+    g_nDepthUnitDisplay = read_int;
 
     //    AIS
     wxString s;
@@ -844,7 +905,7 @@ int MyConfig::LoadMyConfig()
     if( Read( _T ( "TargetTracksMinutes" ), &s ) ) {
         s.ToDouble( &g_AISShowTracks_Mins );
         g_AISShowTracks_Mins = wxMax(1.0, g_AISShowTracks_Mins);
-        g_AISShowTracks_Mins = wxMin(60.0, g_AISShowTracks_Mins);
+        g_AISShowTracks_Mins = wxMin(300.0, g_AISShowTracks_Mins);
     } else
         g_AISShowTracks_Mins = 20;
 
@@ -943,6 +1004,7 @@ int MyConfig::LoadMyConfig()
 
     Read( _T ( "GPXIODir" ), &m_gpx_path );           // Get the Directory name
     Read( _T ( "TCDataDir" ), &g_TCData_Dir );           // Get the Directory name
+    Read( _T ( "BasemapDir"), &gWorldMapLocation );
 
     SetPath( _T ( "/Settings/GlobalState" ) );
 #ifdef __WXOSX__
@@ -1208,7 +1270,7 @@ int MyConfig::LoadMyConfig()
 #ifdef __WXQT__
     SetPath ( _T ( "/Settings/QTFonts" ) );
 #endif
-    
+
     wxString str;
     long dummy;
     wxString *pval = new wxString;
@@ -1294,7 +1356,7 @@ int MyConfig::LoadMyConfig()
 
     g_iWaypointRangeRingsStepUnits = 0;
     Read( _T ( "WaypointRangeRingsStepUnits" ), &g_iWaypointRangeRingsStepUnits );
-    
+
     g_colourWaypointRangeRingsColour = wxColour( *wxRED );
     wxString l_wxsWaypointRangeRingsColour;
     Read( _T( "WaypointRangeRingsColour" ), &l_wxsWaypointRangeRingsColour );
@@ -1337,11 +1399,18 @@ int MyConfig::LoadMyConfig()
 
     Read( _T ( "RouteLineWidth" ), &g_route_line_width, 2 );
     Read( _T ( "TrackLineWidth" ), &g_track_line_width, 2 );
+    g_colourTrackLineColour = wxColour( 243, 229, 47 );
+    wxString l_wxsTrackLineColour;
+    Read( _T( "TrackLineColour" ), &l_wxsTrackLineColour );
+    g_colourTrackLineColour.Set( l_wxsTrackLineColour );
+
     Read( _T ( "CurrentArrowScale" ), &g_current_arrow_scale, 100 );
     Read( _T ( "TideRectangleScale" ), &g_tide_rectangle_scale, 100 );
     Read( _T ( "TideCurrentWindowScale" ), &g_tcwin_scale, 100 );
     Read( _T ( "DefaultWPIcon" ), &g_default_wp_icon, _T("triangle") );
-
+#ifdef __WXOSX__
+    Read( _T ( "DefaultRPIcon" ), &g_default_routepoint_icon );
+#endif
     SetPath( _T ( "/MMSIProperties" ) );
     int iPMax = GetNumberOfEntries();
     if( iPMax ) {
@@ -1484,17 +1553,18 @@ void MyConfig::LoadS57Config()
 void MyConfig::LoadNavObjects()
 {
     //      next thing to do is read tracks, etc from the NavObject XML file,
-    wxLogMessage( _T("Loading navobjects from " + m_sNavObjSetFile) );
+    wxLogMessage( _T("Loading navobjects from navobj.xml") );
     CreateRotatingNavObjBackup();
 
     if( NULL == m_pNavObjectInputSet )
         m_pNavObjectInputSet = new NavObjectCollection1();
 
+    int wpt_dups = 0;
     if( ::wxFileExists( m_sNavObjSetFile ) &&
         m_pNavObjectInputSet->load_file( m_sNavObjSetFile.fn_str() ) )
-        m_pNavObjectInputSet->LoadAllGPXObjects();
+        m_pNavObjectInputSet->LoadAllGPXObjects(false, wpt_dups);
 
-    wxLogMessage( _T("Done loading navobjects") );
+    wxLogMessage( _T("Done loading navobjects, %d duplicate waypoints ignored"), wpt_dups );
     delete m_pNavObjectInputSet;
 
     if( ::wxFileExists( m_sNavObjSetChangesFile ) ) {
@@ -1512,15 +1582,15 @@ void MyConfig::LoadNavObjects()
         //  If it does fault, at least the next restart will proceed without fault.
         if( ::wxFileExists( m_sNavObjSetChangesFile ) )
             ::wxRemoveFile( m_sNavObjSetChangesFile );
-        
+
         if(size != 0){
             wxLogMessage( _T("Applying NavObjChanges") );
             pNavObjectChangesSet->ApplyChanges();
             UpdateNavObj();
         }
-        
+
         delete pNavObjectChangesSet;
-           
+
     }
 
     m_pNavObjectChangesSet = new NavObjectChanges(m_sNavObjSetChangesFile);
@@ -1540,7 +1610,7 @@ bool MyConfig::LoadLayers(wxString &path)
             filename.Prepend( wxFileName::GetPathSeparator() );
             filename.Prepend( path );
             wxFileName f( filename );
-//            size_t nfiles = 0;  // Not used
+            size_t nfiles = 0;
             if( f.GetExt().IsSameAs( wxT("gpx") ) )
                 file_array.Add( filename); // single-gpx-file layer
             else{
@@ -1667,27 +1737,25 @@ bool MyConfig::LoadChartDirArray( ArrayOfCDI &ChartDirArray )
 
 void MyConfig::AddNewRoute( Route *pr )
 {
-    //    if( pr->m_bIsInLayer )
-    //        return true;
+//    if( pr->m_bIsInLayer )
+//        return true;
     if( !m_bSkipChangeSetUpdate )
         m_pNavObjectChangesSet->AddRoute( pr, "add" );
-
-    
 }
 
 void MyConfig::UpdateRoute( Route *pr )
 {
-    //    if( pr->m_bIsInLayer ) return true;
+//    if( pr->m_bIsInLayer ) return true;
     if( !m_bSkipChangeSetUpdate )
             m_pNavObjectChangesSet->AddRoute( pr, "update" );
 }
 
 void MyConfig::DeleteConfigRoute( Route *pr )
 {
-    //    if( pr->m_bIsInLayer )
-    //        return true;
+//    if( pr->m_bIsInLayer )
+//        return true;
     if( !m_bSkipChangeSetUpdate )
-        m_pNavObjectChangesSet->AddRoute( pr, "delete" );
+            m_pNavObjectChangesSet->AddRoute( pr, "delete" );
 }
 
 void MyConfig::AddNewTrack( Track *pt )
@@ -1752,7 +1820,7 @@ bool MyConfig::UpdateChartDirs( ArrayOfCDI& dir_array )
     iDirMax = dir_array.GetCount();
 
     for( int iDir = 0; iDir < iDirMax; iDir++ ) {
-        ChartDirInfo cdi = dir_array.Item( iDir );
+        ChartDirInfo cdi = dir_array[iDir];
 
         wxString dirn = cdi.fullpath;
         dirn.Append( _T("^") );
@@ -1790,13 +1858,13 @@ void MyConfig::CreateConfigGroups( ChartGroupArray *pGroupArray )
             sg.Printf( _T("Group%d/Item%d"), i + 1, j );
             sg.Prepend( _T ( "/Groups/" ) );
             SetPath( sg );
-            Write( _T ( "IncludeItem" ), pGroup->m_element_array.Item( j )->m_element_name );
+            Write( _T ( "IncludeItem" ), pGroup->m_element_array[j]->m_element_name );
 
             wxString t;
-            wxArrayString u = pGroup->m_element_array.Item( j )->m_missing_name_array;
+            wxArrayString u = pGroup->m_element_array[j]->m_missing_name_array;
             if( u.GetCount() ) {
                 for( unsigned int k = 0; k < u.GetCount(); k++ ) {
-                    t += u.Item( k );
+                    t += u[k];
                     t += _T(";");
                 }
                 Write( _T ( "ExcludeItems" ), t );
@@ -1860,9 +1928,10 @@ void MyConfig::LoadConfigGroups( ChartGroupArray *pGroupArray )
 void MyConfig::UpdateSettings()
 {
     //  Temporarily suppress logging of trivial non-fatal wxLogSysError() messages provoked by Android security...
-#ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__    
     wxLogNull logNo;
-#endif
+#endif    
+
 
 //    Global options and settings
     SetPath( _T ( "/Settings" ) );
@@ -1870,10 +1939,14 @@ void MyConfig::UpdateSettings()
     Write( _T ( "ConfigVersionString" ), g_config_version_string );
     Write( _T ( "NavMessageShown" ), n_NavMessageShown );
     Write( _T ( "InlandEcdis" ), g_bInlandEcdis );
+
+    Write( _T ( "DarkDecorations"), g_bDarkDecorations );
+
     Write( _T ( "UIexpert" ), g_bUIexpert );
     Write( _T( "SpaceDropMark" ), g_bSpaceDropMark );
     Write( _T ( "UIStyle" ), g_StyleManager->GetStyleNextInvocation() );
     Write( _T ( "ChartNotRenderScaleFactor" ), g_ChartNotRenderScaleFactor );
+
     Write( _T ( "ShowStatusBar" ), g_bShowStatusBar );
 #ifndef __WXOSX__
     Write( _T ( "ShowMenuBar" ), m_bShowMenuBar );
@@ -1904,19 +1977,20 @@ void MyConfig::UpdateSettings()
     Write( _T ( "FilterNMEA_Avg" ), g_bfilter_cogsog );
     Write( _T ( "FilterNMEA_Sec" ), g_COGFilterSec );
 
+    Write( _T ( "ShowTrue" ), g_bShowTrue );
     Write( _T ( "ShowMag" ), g_bShowMag );
     Write( _T ( "UserMagVariation" ), wxString::Format( _T("%.2f"), g_UserVar ) );
 
     Write( _T ( "CM93DetailFactor" ), g_cm93_zoom_factor );
-    Write( _T ( "CM93DetailZoomPosX" ), g_cm93detail_dialog_x );
-    Write( _T ( "CM93DetailZoomPosY" ), g_cm93detail_dialog_y );
-    Write( _T ( "ShowCM93DetailSlider" ), g_bShowCM93DetailSlider );
+    Write( _T ( "CM93DetailZoomPosX" ), g_detailslider_dialog_x );
+    Write( _T ( "CM93DetailZoomPosY" ), g_detailslider_dialog_y );
+    Write( _T ( "ShowCM93DetailSlider" ), g_bShowDetailSlider );
 
     Write( _T ( "SkewToNorthUp" ), g_bskew_comp );
     Write( _T ( "OpenGL" ), g_bopengl );
     Write( _T ( "SoftwareGL" ), g_bSoftwareGL );
     Write( _T ( "ShowFPS" ), g_bShowFPS );
-    
+
     Write( _T ( "ZoomDetailFactor" ), g_chart_zoom_modifier );
     Write( _T ( "ZoomDetailFactorVector" ), g_chart_zoom_modifier_vector );
 
@@ -1935,6 +2009,8 @@ void MyConfig::UpdateSettings()
     Write( _T ( "GPUTextureCompressionCaching" ), g_GLOptions.m_bTextureCompressionCaching);
     Write( _T ( "GPUTextureDimension" ), g_GLOptions.m_iTextureDimension );
     Write( _T ( "GPUTextureMemSize" ), g_GLOptions.m_iTextureMemorySize );
+    Write( _T ( "PolygonSmoothing" ), g_GLOptions.m_GLPolygonSmoothing);
+    Write( _T ( "LineSmoothing" ), g_GLOptions.m_GLLineSmoothing);
 #endif
     Write( _T ( "SmoothPanZoom" ), g_bsmoothpanzoom );
 
@@ -1956,6 +2032,8 @@ void MyConfig::UpdateSettings()
     Write( _T ( "OwnShipGPSOffsetX" ), g_n_gps_antenna_offset_x );
     Write( _T ( "OwnShipGPSOffsetY" ), g_n_gps_antenna_offset_y );
     Write( _T ( "OwnShipMinSize" ), g_n_ownship_min_mm );
+    Write( _T ( "OwnShipSogCogCalc" ), g_own_ship_sog_cog_calc );
+    Write( _T ( "OwnShipSogCogCalcDampSec"), g_own_ship_sog_cog_calc_damp_sec );
 
     wxString racr;
  //   racr.Printf( _T ( "%g" ), g_n_arrival_circle_radius );
@@ -1985,7 +2063,7 @@ void MyConfig::UpdateSettings()
     Write( _T ( "ActiveChartGroup" ), g_GroupIndex );
 
     Write( _T( "NMEAAPBPrecision" ), g_NMEAAPBPrecision );
-    
+
     Write( _T("TalkerIdText"), g_TalkerIdText );
 
     Write( _T ( "AnchorWatch1GUID" ), g_AW1GUID );
@@ -1998,7 +2076,7 @@ void MyConfig::UpdateSettings()
     Write( _T ( "iENCToolbarX" ), g_iENCToolbarPosX );
     Write( _T ( "iENCToolbarY" ), g_iENCToolbarPosY );
 
-    if ( !g_bInlandEcdis ){
+    if ( !g_bInlandEcdis ){  
         Write( _T ( "ToolbarConfig" ), g_toolbarConfig );
         Write( _T ( "DistanceFormat" ), g_iDistanceFormat );
         Write( _T ( "SpeedFormat" ), g_iSpeedFormat );
@@ -2038,7 +2116,11 @@ void MyConfig::UpdateSettings()
     Write( _T ( "KeepNavobjBackups" ), g_navobjbackups );
     Write( _T ( "LegacyInputCOMPortFilterBehaviour" ), g_b_legacy_input_filter_behaviour );
     Write( _T( "AdvanceRouteWaypointOnArrivalOnly" ), g_bAdvanceRouteWaypointOnArrivalOnly);
-    
+
+    // LIVE ETA OPTION
+    Write( _T( "LiveETA" ), g_bShowLiveETA);
+    Write( _T( "DefaultBoatSpeed" ), g_defaultBoatSpeed);
+
 //    S57 Object Filter Settings
 
     SetPath( _T ( "/Settings/ObjectFilter" ) );
@@ -2100,6 +2182,17 @@ void MyConfig::UpdateSettings()
     Write( _T ( "ClientSzX" ), g_lastClientRectw );
     Write( _T ( "ClientSzY" ), g_lastClientRecth );
 
+    Write( _T ( "S52_DEPTH_UNIT_SHOW" ), g_nDepthUnitDisplay );
+#ifdef __WXOSX__
+    Write( _T( "RoutePropSizeX" ), g_route_prop_sx );
+    Write( _T( "RoutePropSizeY" ), g_route_prop_sy );
+    Write( _T( "RoutePropPosX" ), g_route_prop_x );
+    Write( _T( "RoutePropPosY" ), g_route_prop_y );
+    Write( _T( "TrackPropSizeX" ), g_track_prop_sx );
+    Write( _T( "TrackPropSizeY" ), g_track_prop_sy );
+    Write( _T( "TrackPropPosX" ), g_track_prop_x );
+    Write( _T( "TrackPropPosY" ), g_track_prop_y );
+#endif
     //    AIS
     SetPath( _T ( "/Settings/AIS" ) );
 
@@ -2132,12 +2225,12 @@ void MyConfig::UpdateSettings()
     Write( _T ( "bWplIsAprsPositionReport" ), g_bWplIsAprsPosition );
     Write( _T ( "AISCOGPredictorWidth" ), g_ais_cog_predictor_width );
     Write( _T ( "bShowScaledTargets" ), g_bAllowShowScaled );
-    Write( _T ( "AISScaledNumber" ), g_ShowScaled_Num );
+    Write( _T ( "AISScaledNumber" ), g_ShowScaled_Num );    
     Write( _T ( "AISScaledNumberWeightSOG" ), g_ScaledNumWeightSOG );
     Write( _T ( "AISScaledNumberWeightCPA" ), g_ScaledNumWeightCPA );
     Write( _T ( "AISScaledNumberWeightTCPA" ), g_ScaledNumWeightTCPA );
     Write( _T ( "AISScaledNumberWeightRange" ), g_ScaledNumWeightRange );
-    Write( _T ( "AISScaledNumberWeightSizeOfTarget" ), g_ScaledNumWeightSizeOfT );
+    Write( _T ( "AISScaledNumberWeightSizeOfTarget" ), g_ScaledNumWeightSizeOfT ); 
     Write( _T ( "AISScaledSizeMinimal" ), g_ScaledSizeMinimal );
     Write( _T ( "AISShowScaled"), g_bShowScaled);
 
@@ -2197,6 +2290,7 @@ void MyConfig::UpdateSettings()
     Write( _T ( "InitChartDir" ), *pInit_Chart_Dir );
     Write( _T ( "GPXIODir" ), m_gpx_path );
     Write( _T ( "TCDataDir" ), g_TCData_Dir );
+    Write( _T ( "BasemapDir" ), g_Platform->NormalizePath(gWorldMapLocation) );
 
     SetPath( _T ( "/Settings/NMEADataSource" ) );
     wxString connectionconfigs;
@@ -2241,9 +2335,9 @@ void MyConfig::UpdateSettings()
 #ifdef __WXQT__
     font_path = ( _T ( "/Settings/QTFonts" ) );
 #endif
-    
+
     DeleteGroup(font_path);
-    
+
     SetPath( font_path );
 
     int nFonts = FontMgr::Get().GetNumFonts();
@@ -2261,7 +2355,7 @@ void MyConfig::UpdateSettings()
     for( unsigned int id = 0 ; id < iDirMax ; id++ ) {
         wxString key;
         key.Printf(_T("tcds%d"), id);
-        Write( key, TideCurrentDataSet.Item(id) );
+        Write( key, TideCurrentDataSet[id] );
     }
 
     SetPath( _T ( "/Settings/Others" ) );
@@ -2291,17 +2385,20 @@ void MyConfig::UpdateSettings()
 
     Write( _T ( "RouteLineWidth" ), g_route_line_width );
     Write( _T ( "TrackLineWidth" ), g_track_line_width );
+    Write( _T ( "TrackLineColour" ), g_colourTrackLineColour.GetAsString( wxC2S_HTML_SYNTAX ) );
     Write( _T ( "CurrentArrowScale" ), g_current_arrow_scale );
     Write( _T ( "TideRectangleScale" ), g_tide_rectangle_scale );
     Write( _T ( "TideCurrentWindowScale" ), g_tcwin_scale );
     Write( _T ( "DefaultWPIcon" ), g_default_wp_icon );
-
+#ifdef __WXOSX__
+    Write( _T ( "DefaultRPIcon" ), g_default_routepoint_icon );
+#endif
     DeleteGroup(_T ( "/MMSIProperties" ));
     SetPath( _T ( "/MMSIProperties" ) );
     for(unsigned int i=0 ; i < g_MMSI_Props_Array.GetCount() ; i++){
         wxString p;
         p.Printf(_T("Props%d"), i);
-        Write( p, g_MMSI_Props_Array.Item(i)->Serialize() );
+        Write( p, g_MMSI_Props_Array[i]->Serialize() );
     }
 
 
@@ -2323,7 +2420,7 @@ void MyConfig::UpdateNavObj( void )
         wxLogNull logNo;                // avoid silly log error message.
         wxRemoveFile( m_sNavObjSetChangesFile );
     }
-    
+
     //delete m_pNavObjectChangesSet;
     //m_pNavObjectChangesSet = new NavObjectChanges(m_sNavObjSetChangesFile);
 
@@ -2334,11 +2431,11 @@ bool MyConfig::ExportGPXRoutes( wxWindow* parent, RouteList *pRoutes, const wxSt
     wxString path;
 
     int response = g_Platform->DoFileSelectorDialog( parent, &path,
-                                                    _( "Export GPX file" ),
-                                                    m_gpx_path,
-                                                    suggestedName,
-                                                    wxT ( "*.gpx" )
-                                                    );
+                                                     _( "Export GPX file" ),
+                                                     m_gpx_path,
+                                                     suggestedName,
+                                                     wxT ( "*.gpx" )
+    );
 
     if( response == wxID_OK ) {
         wxFileName fn(path);
@@ -2352,7 +2449,7 @@ bool MyConfig::ExportGPXRoutes( wxWindow* parent, RouteList *pRoutes, const wxSt
             if( answer != wxID_YES ) return false;
         }
 #endif
-    
+
         NavObjectCollection1 *pgpx = new NavObjectCollection1;
         pgpx->AddGPXRoutesList( pRoutes );
         pgpx->SaveFile(fn.GetFullPath());
@@ -2368,11 +2465,11 @@ bool MyConfig::ExportGPXTracks( wxWindow* parent, TrackList *pTracks, const wxSt
     wxString path;
 
     int response = g_Platform->DoFileSelectorDialog( parent, &path,
-                                                    _( "Export GPX file" ),
-                                                    m_gpx_path,
-                                                    suggestedName,
-                                                    wxT ( "*.gpx" )
-                                                    );
+                                                     _( "Export GPX file" ),
+                                                     m_gpx_path,
+                                                     suggestedName,
+                                                     wxT ( "*.gpx" )
+    );
 
     if( response == wxID_OK ) {
         wxFileName fn(path);
@@ -2382,7 +2479,7 @@ bool MyConfig::ExportGPXTracks( wxWindow* parent, TrackList *pTracks, const wxSt
 #ifndef __WXMAC__
         if( wxFileExists( fn.GetFullPath() ) ) {
             int answer = OCPNMessageBox( NULL, _("Overwrite existing file?"), _T("Confirm"),
-                                        wxICON_QUESTION | wxYES_NO | wxCANCEL );
+                    wxICON_QUESTION | wxYES_NO | wxCANCEL );
             if( answer != wxID_YES ) return false;
         }
 #endif
@@ -2400,15 +2497,15 @@ bool MyConfig::ExportGPXTracks( wxWindow* parent, TrackList *pTracks, const wxSt
 bool MyConfig::ExportGPXWaypoints( wxWindow* parent, RoutePointList *pRoutePoints, const wxString suggestedName )
 {
     wxString path;
-    
+
     int response = g_Platform->DoFileSelectorDialog( parent, &path,
-                                                    _( "Export GPX file" ),
-                                                    m_gpx_path,
-                                                    suggestedName,
-                                                    wxT ( "*.gpx" )
-                                                    );
-    
-    
+                                                     _( "Export GPX file" ),
+                                                     m_gpx_path,
+                                                     suggestedName,
+                                                     wxT ( "*.gpx" )
+                                                     );
+
+
     if( response == wxID_OK ) {
         wxFileName fn( path );
         m_gpx_path = fn.GetPath();
@@ -2437,11 +2534,11 @@ void MyConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
     wxString path;
 
     int response = g_Platform->DoFileSelectorDialog( parent, &path,
-                                                    _( "Export GPX file" ),
-                                                    m_gpx_path,
-                                                    _T("userobjects.gpx"),
-                                                    wxT ( "*.gpx" )
-                                                    );
+                                                     _( "Export GPX file" ),
+                                                     m_gpx_path,
+                                                     _T("userobjects.gpx"),
+                                                     wxT ( "*.gpx" )
+    );
 
 
 
@@ -2523,19 +2620,20 @@ void MyConfig::ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
         wxTrackListNode *node2 = pTrackList->GetFirst();
         while( node2 ) {
             Track *pTrack = node2->GetData();
-            
+
             bool b_add = true;
-            
+
             if( bviz_only && !pTrack->IsVisible() )
                 b_add = false;
-            
+
             if(  pTrack->m_bIsInLayer && !blayer )
                 b_add = false;
-            
+
             if( b_add )
-                pgpx->AddGPXTrack( pTrack );
+                    pgpx->AddGPXTrack( pTrack );
             node2 = node2->GetNext();
         }
+
 
         pgpx->SaveFile( fn.GetFullPath() );
         delete pgpx;
@@ -2555,16 +2653,16 @@ void MyConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
 
     if( !islayer || dirpath.IsSameAs( _T("") ) ) {
 
-        //  Platform DoFileSelectorDialog method does not properly handle multiple selections
+        //  Platform DoFileSelectorDialog method does not properly handle multiple selections  
         //  So use native method if not Android, which means Android gets single selection only.
-#ifndef __OCPN__ANDROID__
+#ifndef __OCPN__ANDROID__        
         wxFileDialog *popenDialog = new wxFileDialog( NULL, _( "Import GPX file" ), m_gpx_path, wxT ( "" ),
                 wxT ( "GPX files (*.gpx)|*.gpx|All files (*.*)|*.*" ),
                 wxFD_OPEN | wxFD_MULTIPLE );
 
         if(g_bresponsive && parent)
             popenDialog = g_Platform->AdjustFileDialogFont(parent, popenDialog);
-        
+
         popenDialog->Centre();
 
 #ifdef __WXOSX__
@@ -2592,11 +2690,11 @@ void MyConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
 #else
         wxString path;
         response = g_Platform->DoFileSelectorDialog( NULL, &path,
-                                                        _( "Import GPX file" ),
-                                                        m_gpx_path,
-                                                        _T(""),
-                                                        wxT ( "*.gpx" )
-                                                        );
+                                                         _( "Import GPX file" ),
+                                                         m_gpx_path,
+                                                         _T(""),
+                                                         wxT ( "*.gpx" )
+                                                         );
 
         file_array.Add(path);
         wxFileName fn( path );
@@ -2654,9 +2752,13 @@ void MyConfig::UI_ImportGPX( wxWindow* parent, bool islayer, wxString dirpath, b
                 if(islayer){
                     l->m_NoOfItems = pSet->LoadAllGPXObjectsAsLayer(l->m_LayerID, l->m_bIsVisibleOnChart);
                 }
-                else
-                    pSet->LoadAllGPXObjects( !pSet->IsOpenCPN() ); // Import with full vizibility of names and objects
-
+                else {
+                    int wpt_dups;
+                    pSet->LoadAllGPXObjects( !pSet->IsOpenCPN(), wpt_dups ); // Import with full visibility of names and objects
+                    if(wpt_dups > 0) {
+                        OCPNMessageBox(parent, wxString::Format(_("%d duplicate waypoints detected during import and ignored."), wpt_dups), _("OpenCPN Info"), wxICON_INFORMATION|wxOK, 10);
+                    }
+                }
                 delete pSet;
             }
         }
@@ -2679,7 +2781,7 @@ void SwitchInlandEcdisMode( bool Switch )
         g_bDrawAISSize = false;
         if (gFrame) gFrame->RequestNewToolbar(true);
     }
-    else{
+    else{      
         wxLogMessage( _T("Switch InlandEcdis mode Off") );
         //reread the settings overruled by inlandEcdis
         if (pConfig){
@@ -2699,7 +2801,7 @@ void SwitchInlandEcdisMode( bool Switch )
             pConfig->Read( _T ( "bDrawAISSize" ), &g_bDrawAISSize );
         }
         if (gFrame) gFrame->RequestNewToolbar(true);
-    }
+    }        
 }
 
 //-------------------------------------------------------------------------
@@ -2720,7 +2822,7 @@ RoutePoint *WaypointExists( const wxString& name, double lat, double lon )
 
         if( name == pr->GetName() ) {
             if( fabs( lat - pr->m_lat ) < 1.e-6 && fabs( lon - pr->m_lon ) < 1.e-6 ) {
-//                Exists = true;  // Not used but break
+//                Exists = true;  // Not used
                 pret = pr;
                 break;
             }
@@ -2809,13 +2911,15 @@ Track *TrackExists( const wxString& guid )
 
     while( track_node ) {
         Track *ptrack = track_node->GetData();
-        
+
         if( guid == ptrack->m_GUID ) return ptrack;
 
         track_node = track_node->GetNext();
     }
     return NULL;
 }
+
+
 
 // This function formats the input date/time into a valid GPX ISO 8601
 // time string specified in the UTC time zone.
@@ -3004,7 +3108,8 @@ static wxString scaleable_pointsize[SCALEABLE_SIZES] =
 };
 
 #define NUM_COLS 49
-static wxString wxColourDialogNames[NUM_COLS]= {wxT ( "ORANGE" ),
+static wxString wxColourDialogNames[NUM_COLS]= {
+    wxT ( "ORANGE" ),
     wxT ( "GOLDENROD" ),
     wxT ( "WHEAT" ),
     wxT ( "SPRING GREEN" ),
@@ -3437,7 +3542,7 @@ void X11FontPicker::SetChoiceOptionsFromFacename (const wxString &facename)
             //           printf("%s\n",facename.mb_str());
             for ( jname=0; jname<PointSizeArray.GetCount(); jname++ )
             {
-                if ( pointsize == PointSizeArray.Item ( jname ) )
+                if ( pointsize == PointSizeArray[jname] )
                 break;
             }
             if ( jname >= PointSizeArray.GetCount() )
@@ -3465,7 +3570,7 @@ void X11FontPicker::SetChoiceOptionsFromFacename (const wxString &facename)
         unsigned int jname;
         for ( jname=0; jname<WeightArray.GetCount(); jname++ )
         {
-            if ( weight == WeightArray.Item ( jname ) )
+            if ( weight == WeightArray[jname] )
             break;
         }
         if ( jname >= WeightArray.GetCount() )
@@ -3697,9 +3802,9 @@ double vVectorMagnitude( pVector2D v0 )
     return ( dMagnitude );
 }
 
-/**************************************************************************/
+/* *************************************************************************/
 /*          LogMessageOnce                                                */
-/**************************************************************************/
+/* *************************************************************************/
 
 bool LogMessageOnce(const wxString &msg)
 {
@@ -3717,13 +3822,13 @@ bool LogMessageOnce(const wxString &msg)
     return true;
 }
 
-/**************************************************************************/
+/* *************************************************************************/
 /*          Some assorted utilities                                       */
-/**************************************************************************/
+/* *************************************************************************/
 
-/**************************************************************************/
+/* *************************************************************************/
 /*          Converts the distance to the units selected by user           */
-/**************************************************************************/
+/* *************************************************************************/
 double toUsrDistance( double nm_distance, int unit  )
 {
     double ret = NAN;
@@ -3758,9 +3863,9 @@ double toUsrDistance( double nm_distance, int unit  )
     return ret;
 }
 
-/**************************************************************************/
+/* *************************************************************************/
 /*          Converts the distance from the units selected by user to NMi  */
-/**************************************************************************/
+/* *************************************************************************/
 double fromUsrDistance( double usr_distance, int unit )
 {
     double ret = NAN;
@@ -3786,9 +3891,9 @@ double fromUsrDistance( double usr_distance, int unit )
     return ret;
 }
 
-/**************************************************************************/
+/* *************************************************************************/
 /*          Returns the abbreviation of user selected distance unit       */
-/**************************************************************************/
+/* *************************************************************************/
 wxString getUsrDistanceUnit( int unit )
 {
     wxString ret;
@@ -3823,9 +3928,9 @@ wxString getUsrDistanceUnit( int unit )
     return ret;
 }
 
-/**************************************************************************/
+/* *************************************************************************/
 /*          Converts the speed to the units selected by user              */
-/**************************************************************************/
+/* *************************************************************************/
 double toUsrSpeed( double kts_speed, int unit )
 {
     double ret = NAN;
@@ -3849,9 +3954,9 @@ double toUsrSpeed( double kts_speed, int unit )
     return ret;
 }
 
-/**************************************************************************/
+/* *************************************************************************/
 /*          Converts the speed from the units selected by user to knots   */
-/**************************************************************************/
+/* *************************************************************************/
 double fromUsrSpeed( double usr_speed, int unit )
 {
     double ret = NAN;
@@ -3875,9 +3980,9 @@ double fromUsrSpeed( double usr_speed, int unit )
     return ret;
 }
 
-/**************************************************************************/
+/* *************************************************************************/
 /*          Returns the abbreviation of user selected speed unit          */
-/**************************************************************************/
+/* *************************************************************************/
 wxString getUsrSpeedUnit( int unit )
 {
     wxString ret;
@@ -3900,9 +4005,69 @@ wxString getUsrSpeedUnit( int unit )
     return ret;
 }
 
-/**************************************************************************/
+wxString formatTimeDelta(wxTimeSpan span)
+{
+    wxString timeStr;
+    int days = span.GetDays();
+    span -= wxTimeSpan::Days(days);
+    int hours = span.GetHours();
+    span -= wxTimeSpan::Hours(hours);
+    double minutes = (double)span.GetSeconds().ToLong()/60.0;
+    span -= wxTimeSpan::Minutes(span.GetMinutes());
+    int seconds = (double)span.GetSeconds().ToLong();
+
+    timeStr = (days ? wxString::Format(_("%dd "), days) : _T("")) +
+    (hours || days ? wxString::Format(_("%2dH %2dM"), hours, (int)round(minutes)) :
+     wxString::Format(_("%2dM %2dS"), (int)floor(minutes), seconds));
+
+    return timeStr;
+}
+
+wxString formatTimeDelta(wxDateTime startTime, wxDateTime endTime)
+{
+    wxString timeStr;
+    if(startTime.IsValid() && endTime.IsValid())
+    {
+        wxTimeSpan span = endTime - startTime;
+        return formatTimeDelta(span);
+    } else {
+        return _("N/A");
+    }
+}
+
+wxString formatTimeDelta(wxLongLong secs)
+{
+    wxString timeStr;
+
+    wxTimeSpan span(0, 0, secs);
+    return formatTimeDelta(span);
+}
+
+wxString FormatDistanceAdaptive( double distance ) {
+    wxString result;
+    int unit = g_iDistanceFormat;
+    double usrDistance = toUsrDistance( distance, unit );
+    if( usrDistance < 0.1 &&  ( unit == DISTANCE_KM || unit == DISTANCE_MI || unit == DISTANCE_NMI ) ) {
+        unit = ( unit == DISTANCE_MI ) ? DISTANCE_FT : DISTANCE_M;
+        usrDistance = toUsrDistance( distance, unit );
+    }
+    wxString format;
+    if( usrDistance < 5.0 ) {
+        format = _T("%1.2f ");
+    } else if( usrDistance < 100.0 ) {
+        format = _T("%2.1f ");
+    } else if( usrDistance < 1000.0 ) {
+        format = _T("%3.0f ");
+    } else {
+        format = _T("%4.0f ");
+    }
+    result << wxString::Format(format, usrDistance ) << getUsrDistanceUnit( unit );
+    return result;
+}
+
+/* *************************************************************************/
 /*          Formats the coordinates to string                             */
-/**************************************************************************/
+/* *************************************************************************/
 wxString toSDMM( int NEflag, double a, bool hi_precision )
 {
     wxString s;
@@ -4000,7 +4165,7 @@ wxString toSDMM( int NEflag, double a, bool hi_precision )
     return s;
 }
 
-/****************************************************************************/
+/* ***************************************************************************/
 // Modified from the code posted by Andy Ross at
 //     http://www.mail-archive.com/flightgear-devel@flightgear.org/msg06702.html
 // Basically, it looks for a list of decimal numbers embedded in the
@@ -4021,12 +4186,12 @@ wxString toSDMM( int NEflag, double a, bool hi_precision )
 // 122°18.621' W
 // 122w 18 37
 // -122.31035
-/****************************************************************************/
+/* ***************************************************************************/
 double fromDMM( wxString sdms )
 {
     wchar_t buf[64];
     char narrowbuf[64];
-    int i=0, len=0, top = 0;
+    int i, len, top = 0;
     double stk[32], sign = 1;
 
     //First round of string modifications to accomodate some known strange formats
@@ -4082,6 +4247,19 @@ double fromDMM( wxString sdms )
     return sign * ( stk[0] + ( stk[1] + stk[2] / 60 ) / 60 );
 }
 
+wxString formatAngle(double angle)
+{
+    wxString out;
+    if( g_bShowMag && g_bShowTrue ) {
+        out.Printf(wxT("%.0f \u00B0T (%.0f \u00B0M)"), angle, gFrame->GetMag(angle));
+    } else if( g_bShowTrue ) {
+        out.Printf(wxT("%.0f \u00B0T"), angle);
+    } else {
+        out.Printf(wxT("%.0f \u00B0M"), gFrame->GetMag(angle));
+    }
+    return out;
+}
+
 /* render a rectangle at a given color and transparency */
 void AlphaBlending( ocpnDC &dc, int x, int y, int size_x, int size_y, float radius, wxColour color,
         unsigned char transparency )
@@ -4119,7 +4297,7 @@ void AlphaBlending( ocpnDC &dc, int x, int y, int size_x, int size_y, float radi
         //  Sometimes, on Windows, the destination image is corrupt...
         if(NULL == box)
         {
-            free( d );
+            free(d);
             return;
         }
         float alpha = 1.0 - (float)transparency / 255.0;
@@ -4169,72 +4347,59 @@ void AlphaBlending( ocpnDC &dc, int x, int y, int size_x, int size_y, float radi
     }
 }
 
-
-
-//      CRC calculation for a byte buffer
-
-static unsigned int crc_32_tab[] = { /* CRC polynomial 0xedb88320 */
-0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f,
-0xe963a535, 0x9e6495a3, 0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
-0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2,
-0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7,
-0x136c9856, 0x646ba8c0, 0xfd62f97a, 0x8a65c9ec, 0x14015c4f, 0x63066cd9,
-0xfa0f3d63, 0x8d080df5, 0x3b6e20c8, 0x4c69105e, 0xd56041e4, 0xa2677172,
-0x3c03e4d1, 0x4b04d447, 0xd20d85fd, 0xa50ab56b, 0x35b5a8fa, 0x42b2986c,
-0xdbbbc9d6, 0xacbcf940, 0x32d86ce3, 0x45df5c75, 0xdcd60dcf, 0xabd13d59,
-0x26d930ac, 0x51de003a, 0xc8d75180, 0xbfd06116, 0x21b4f4b5, 0x56b3c423,
-0xcfba9599, 0xb8bda50f, 0x2802b89e, 0x5f058808, 0xc60cd9b2, 0xb10be924,
-0x2f6f7c87, 0x58684c11, 0xc1611dab, 0xb6662d3d, 0x76dc4190, 0x01db7106,
-0x98d220bc, 0xefd5102a, 0x71b18589, 0x06b6b51f, 0x9fbfe4a5, 0xe8b8d433,
-0x7807c9a2, 0x0f00f934, 0x9609a88e, 0xe10e9818, 0x7f6a0dbb, 0x086d3d2d,
-0x91646c97, 0xe6635c01, 0x6b6b51f4, 0x1c6c6162, 0x856530d8, 0xf262004e,
-0x6c0695ed, 0x1b01a57b, 0x8208f4c1, 0xf50fc457, 0x65b0d9c6, 0x12b7e950,
-0x8bbeb8ea, 0xfcb9887c, 0x62dd1ddf, 0x15da2d49, 0x8cd37cf3, 0xfbd44c65,
-0x4db26158, 0x3ab551ce, 0xa3bc0074, 0xd4bb30e2, 0x4adfa541, 0x3dd895d7,
-0xa4d1c46d, 0xd3d6f4fb, 0x4369e96a, 0x346ed9fc, 0xad678846, 0xda60b8d0,
-0x44042d73, 0x33031de5, 0xaa0a4c5f, 0xdd0d7cc9, 0x5005713c, 0x270241aa,
-0xbe0b1010, 0xc90c2086, 0x5768b525, 0x206f85b3, 0xb966d409, 0xce61e49f,
-0x5edef90e, 0x29d9c998, 0xb0d09822, 0xc7d7a8b4, 0x59b33d17, 0x2eb40d81,
-0xb7bd5c3b, 0xc0ba6cad, 0xedb88320, 0x9abfb3b6, 0x03b6e20c, 0x74b1d29a,
-0xead54739, 0x9dd277af, 0x04db2615, 0x73dc1683, 0xe3630b12, 0x94643b84,
-0x0d6d6a3e, 0x7a6a5aa8, 0xe40ecf0b, 0x9309ff9d, 0x0a00ae27, 0x7d079eb1,
-0xf00f9344, 0x8708a3d2, 0x1e01f268, 0x6906c2fe, 0xf762575d, 0x806567cb,
-0x196c3671, 0x6e6b06e7, 0xfed41b76, 0x89d32be0, 0x10da7a5a, 0x67dd4acc,
-0xf9b9df6f, 0x8ebeeff9, 0x17b7be43, 0x60b08ed5, 0xd6d6a3e8, 0xa1d1937e,
-0x38d8c2c4, 0x4fdff252, 0xd1bb67f1, 0xa6bc5767, 0x3fb506dd, 0x48b2364b,
-0xd80d2bda, 0xaf0a1b4c, 0x36034af6, 0x41047a60, 0xdf60efc3, 0xa867df55,
-0x316e8eef, 0x4669be79, 0xcb61b38c, 0xbc66831a, 0x256fd2a0, 0x5268e236,
-0xcc0c7795, 0xbb0b4703, 0x220216b9, 0x5505262f, 0xc5ba3bbe, 0xb2bd0b28,
-0x2bb45a92, 0x5cb36a04, 0xc2d7ffa7, 0xb5d0cf31, 0x2cd99e8b, 0x5bdeae1d,
-0x9b64c2b0, 0xec63f226, 0x756aa39c, 0x026d930a, 0x9c0906a9, 0xeb0e363f,
-0x72076785, 0x05005713, 0x95bf4a82, 0xe2b87a14, 0x7bb12bae, 0x0cb61b38,
-0x92d28e9b, 0xe5d5be0d, 0x7cdcefb7, 0x0bdbdf21, 0x86d3d2d4, 0xf1d4e242,
-0x68ddb3f8, 0x1fda836e, 0x81be16cd, 0xf6b9265b, 0x6fb077e1, 0x18b74777,
-0x88085ae6, 0xff0f6a70, 0x66063bca, 0x11010b5c, 0x8f659eff, 0xf862ae69,
-0x616bffd3, 0x166ccf45, 0xa00ae278, 0xd70dd2ee, 0x4e048354, 0x3903b3c2,
-0xa7672661, 0xd06016f7, 0x4969474d, 0x3e6e77db, 0xaed16a4a, 0xd9d65adc,
-0x40df0b66, 0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9,
-0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693,
-0x54de5729, 0x23d967bf, 0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94,
-0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
-};
-
-#define UPDC32(octet,crc) (crc_32_tab[((crc)\
-^ ((unsigned char)octet)) & 0xff] ^ ((crc) >> 8))
-
-
-unsigned int crc32buf(unsigned char *buf, size_t len)
+// RFC4122 version 4 compliant random UUIDs generator.
+wxString GpxDocument::GetUUID(void)
 {
-    unsigned int oldcrc32;
+    wxString str;
+    struct {
+        int time_low;
+        int time_mid;
+        int time_hi_and_version;
+        int clock_seq_hi_and_rsv;
+        int clock_seq_low;
+        int node_hi;
+        int node_low;
+    } uuid;
 
-    oldcrc32 = 0xFFFFFFFF;
+    uuid.time_low = GetRandomNumber(0, 2147483647);//FIXME: the max should be set to something like MAXINT32, but it doesn't compile un gcc...
+    uuid.time_mid = GetRandomNumber(0, 65535);
+    uuid.time_hi_and_version = GetRandomNumber(0, 65535);
+    uuid.clock_seq_hi_and_rsv = GetRandomNumber(0, 255);
+    uuid.clock_seq_low = GetRandomNumber(0, 255);
+    uuid.node_hi = GetRandomNumber(0, 65535);
+    uuid.node_low = GetRandomNumber(0, 2147483647);
 
-    for ( ; len; --len, ++buf)
-    {
-        oldcrc32 = UPDC32(*buf, oldcrc32);
-    }
+    /* Set the two most significant bits (bits 6 and 7) of the
+     * clock_seq_hi_and_rsv to zero and one, respectively. */
+    uuid.clock_seq_hi_and_rsv = (uuid.clock_seq_hi_and_rsv & 0x3F) | 0x80;
 
-    return ~oldcrc32;
+    /* Set the four most significant bits (bits 12 through 15) of the
+     * time_hi_and_version field to 4 */
+    uuid.time_hi_and_version = (uuid.time_hi_and_version & 0x0fff) | 0x4000;
 
+    str.Printf(_T("%08x-%04x-%04x-%02x%02x-%04x%08x"),
+                uuid.time_low,
+                uuid.time_mid,
+                uuid.time_hi_and_version,
+                uuid.clock_seq_hi_and_rsv,
+                uuid.clock_seq_low,
+                uuid.node_hi,
+                uuid.node_low);
+
+    return str;
 }
 
+int GpxDocument::GetRandomNumber(int range_min, int range_max)
+{
+    long u = (long)wxRound(((double)rand() / ((double)(RAND_MAX) + 1) * (range_max - range_min)) + range_min);
+    return (int)u;
+}
+
+void GpxDocument::SeedRandom()
+{
+    /* Fill with random. Miliseconds hopefully good enough for our usage, reading /dev/random would be much better on linux and system guid function on Windows as well */
+    wxDateTime x = wxDateTime::UNow();
+    long seed = x.GetMillisecond();
+    seed *= x.GetTicks();
+    srand(seed);
+}

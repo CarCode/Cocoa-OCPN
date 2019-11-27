@@ -34,7 +34,7 @@ public:
         const wxString& sendMail2 = wxT("/usr/sbin/sendmail -t"),           //sendmail
         const wxString& sendMail1 = wxT("/usr/bin/xdg-email"),              //xdg in bin folder
         const wxString& sendMail0 = wxT("/usr/sbin/xdg-email"));            //xdg in sbin folder
-    
+
 protected:
 };
 

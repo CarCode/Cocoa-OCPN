@@ -11,7 +11,7 @@
 #ifndef _WXCURL_PANEL_H_
 #define _WXCURL_PANEL_H_
 
-#include "wx/curl/panel.h"
+#include "wx/panel.h"
 #include "wx/curl/base.h"
 
 // forward declarations

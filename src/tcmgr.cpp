@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Tide and Current Manager
@@ -729,10 +729,10 @@ TC_Error_Code TCMgr::LoadDataSources(wxArrayString &sources)
 
     for(unsigned int i=0 ; i < sources.GetCount() ; i++) {
         TCDataSource *s = new TCDataSource;
-        TC_Error_Code r = s->LoadData(sources.Item(i));
+        TC_Error_Code r = s->LoadData(sources[i]);
         if(r != TC_NO_ERROR) {
             wxString msg;
-            msg.Printf(_T("   Error loading Tide/Currect data source %s "), sources.Item(i).c_str());
+            msg.Printf(_T("   Error loading Tide/Currect data source %s "), sources[i].c_str());
             if( r == TC_FILE_NOT_FOUND)
                 msg += _T("Error Code: TC_FILE_NOT_FOUND");
             else {
@@ -771,7 +771,7 @@ TC_Error_Code TCMgr::LoadDataSources(wxArrayString &sources)
 const IDX_entry *TCMgr::GetIDX_entry(int index) const
 {
     if((unsigned int)index < m_Combined_IDX_array.GetCount())
-        return &m_Combined_IDX_array.Item(index);
+        return &m_Combined_IDX_array[index];
     else
         return NULL;
 }
@@ -784,7 +784,7 @@ bool TCMgr::GetTideOrCurrent(time_t t, int idx, float &tcvalue, float& dir)
     tcvalue = 0;
 
     //    Load up this location data
-    IDX_entry *pIDX = &m_Combined_IDX_array.Item( idx );    // point to the index entry
+    IDX_entry *pIDX = &m_Combined_IDX_array[idx];    // point to the index entry
 
     if( !pIDX ) {
         dir = 0;
@@ -824,7 +824,7 @@ bool TCMgr::GetTideOrCurrent(time_t t, int idx, float &tcvalue, float& dir)
 bool TCMgr::GetTideOrCurrent15(time_t t, int idx, float &tcvalue, float& dir, bool &bnew_val)
 {
     int ret;
-    IDX_entry *pIDX = &m_Combined_IDX_array.Item( idx );             // point to the index entry
+    IDX_entry *pIDX = &m_Combined_IDX_array[idx];             // point to the index entry
 
     if( !pIDX ) {
         dir = 0;
@@ -902,7 +902,7 @@ bool TCMgr::GetTideFlowSens(time_t t, int sch_step, int idx, float &tcvalue_now,
 
 
     //    Load up this location data
-    IDX_entry *pIDX = &m_Combined_IDX_array.Item( idx );             // point to the index entry
+    IDX_entry *pIDX = &m_Combined_IDX_array[idx];             // point to the index entry
 
     if( !pIDX )
         return false;
@@ -936,7 +936,7 @@ void TCMgr::GetHightOrLowTide(time_t t, int sch_step_1, int sch_step_2, float ti
     tctime = t;
 
     //    Load up this location data
-    IDX_entry *pIDX = &m_Combined_IDX_array.Item( idx );             // point to the index entry
+    IDX_entry *pIDX = &m_Combined_IDX_array[idx];             // point to the index entry
 
     if( !pIDX )
         return;
@@ -947,6 +947,18 @@ void TCMgr::GetHightOrLowTide(time_t t, int sch_step_1, int sch_step_2, float ti
     if(pIDX->pDataSource) {
         if(pIDX->pDataSource->LoadHarmonicData(pIDX) != TC_NO_ERROR)
             return;
+    }
+
+    // Is the cache data reasonably fresh?
+    if( abs(t - pIDX->recent_highlow_calc_time) < 60){
+        if(w_t){
+            tcvalue = pIDX->recent_high_level;
+            tctime = pIDX->recent_high_time;
+        }else{
+            tcvalue = pIDX->recent_low_level;
+            tctime = pIDX->recent_low_time;
+        }
+        return;
     }
 
     pIDX->max_amplitude = 0.0;                // Force multiplier re-compute
@@ -977,6 +989,17 @@ void TCMgr::GetHightOrLowTide(time_t t, int sch_step_1, int sch_step_2, float ti
     tcvalue = newval;
     tctime = ttt + sch_step_2 ;
 
+    // Cache the data
+    pIDX->recent_highlow_calc_time = t;
+    if(w_t){
+        pIDX->recent_high_level = newval;
+        pIDX->recent_high_time = tctime;
+    }
+    else{
+        pIDX->recent_low_level = newval;
+        pIDX->recent_low_time = tctime;
+    }
+
 }
 
 int TCMgr::GetStationTimeOffset(IDX_entry *pIDX)
@@ -1001,10 +1024,10 @@ int TCMgr::GetNextBigEvent(time_t *tm, int idx)
 //    bool ret;  // Not used
     double p, q;
     int flags = 0, slope = 0;
-    /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+    /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);  // Not used
     p = tcvalue[0];
     *tm += 60;
-    /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+    /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);  // Not used
     q = tcvalue[0];
     *tm += 60;
     if (p < q)
@@ -1021,7 +1044,7 @@ int TCMgr::GetNextBigEvent(time_t *tm, int idx)
             return flags;
         }
         p = q;
-        /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
+        /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);  // Not used
         q = tcvalue[0];
         *tm += 60;
     }
@@ -2517,10 +2540,10 @@ NV_INT32 get_time (const NV_CHAR *string)
 NV_CHAR *ret_time (NV_INT32 time)
 {
     NV_INT32          hour, minute;
-    static NV_CHAR    tname[10];
+    static NV_CHAR    tname[16];
 
     hour = abs (time) / 100;
-    assert (hour < 100000); /* 9 chars: +99999:99 */
+    assert (hour <= 99999 && hour >= -99999); /* 9 chars: +99999:99 */
     minute = abs (time) % 100;
 
     if (time < 0)
@@ -2542,10 +2565,10 @@ NV_CHAR *ret_time (NV_INT32 time)
 NV_CHAR *ret_time_neat (NV_INT32 time)
 {
     NV_INT32          hour, minute;
-    static NV_CHAR    tname[10];
+    static NV_CHAR    tname[16];
 
     hour = abs (time) / 100;
-    assert (hour < 100000); /* 9 chars: +99999:99 */
+    assert (hour <= 99999 && hour >= -99999); /* 9 chars: +99999:99 */
     minute = abs (time) % 100;
 
     if (time < 0)
@@ -4204,8 +4227,11 @@ static void write_tide_db_header ()
     /*  Write speeds.  */
 
     pos = 0;
-    size = bits2bytes (hd.pub.constituents * hd.speed_bits +1);
-
+#ifdef __WXOSX__
+    size = bits2bytes (hd.pub.constituents * hd.speed_bits + 1);
+#else
+    size = bits2bytes (hd.pub.constituents * hd.speed_bits);
+#endif
     if ((buf = (NV_U_BYTE *) calloc (size, sizeof (NV_U_BYTE))) == NULL)
     {
         perror ("Allocating speed write buffer");
@@ -4228,9 +4254,12 @@ static void write_tide_db_header ()
     /*  Write equilibrium arguments.  */
 
     pos = 0;
+#ifdef __WXOSX__
+    size = bits2bytes (hd.pub.constituents *  hd.pub.number_of_years * hd.equilibrium_bits + 1);
+#else
     size = bits2bytes (hd.pub.constituents *  hd.pub.number_of_years *
-                       hd.equilibrium_bits + 1);
-
+                       hd.equilibrium_bits);
+#endif
     if ((buf = (NV_U_BYTE *) calloc (size, sizeof (NV_U_BYTE))) == NULL)
     {
         perror ("Allocating equilibrium write buffer");
@@ -4258,9 +4287,12 @@ static void write_tide_db_header ()
     /*  Write node factors.  */
 
     pos = 0;
+#ifdef __WXOSX__
+    size = bits2bytes (hd.pub.constituents * hd.pub.number_of_years * hd.node_bits + 1);
+#else
     size = bits2bytes (hd.pub.constituents * hd.pub.number_of_years *
-                       hd.node_bits + 1);
-
+                       hd.node_bits);
+#endif
     if ((buf = (NV_U_BYTE *) calloc (size, sizeof (NV_U_BYTE))) == NULL)
     {
         perror ("Allocating node write buffer");
@@ -4455,7 +4487,7 @@ static NV_INT32 read_partial_tide_record (NV_INT32 num, TIDE_RECORD *rec)
     /* DWF 2007-12-02:  This is the one place where a short read would not
        necessarily mean catastrophe.  We don't know how long the partial
        record actually is yet, and it's possible that the full record will
-     be shorter than maximum_possible_size. */
+       be shorter than maximum_possible_size. */
     size_t size = fread (buf, 1, maximum_possible_size, fp);
     unpack_partial_tide_record (buf, size, rec, &pos);
     free (buf);
@@ -4967,7 +4999,7 @@ database should be rebuilt from the original data if possible.\n");
     hd.node_factor = (NV_FLOAT32 **) calloc (hd.pub.constituents,
                      sizeof (NV_FLOAT32 *));
 #ifdef __WXOSX__
- if(hd.pub.number_of_years)
+    if(hd.pub.number_of_years)
 #endif
     for (i = 0 ; i < hd.pub.constituents ; ++i)
     {
@@ -4983,8 +5015,12 @@ database should be rebuilt from the original data if possible.\n");
         size = ((hd.pub.constituents * hd.pub.number_of_years *
                  hd.node_bits) / 8) + 1;
     else
+#ifdef __WXOSX__
+        size = bits2bytes (hd.pub.constituents * hd.pub.number_of_years * hd.node_bits + 1);
+#else
         size = bits2bytes (hd.pub.constituents * hd.pub.number_of_years *
-                           hd.node_bits + 1);
+                           hd.node_bits);
+#endif
 
     if ((buf = (NV_U_BYTE *) calloc (size, sizeof (NV_U_BYTE))) == NULL)
     {

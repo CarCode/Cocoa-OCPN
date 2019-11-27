@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        thread.cpp
 // Purpose:     wxCurlDownloadThread, wxCurlUploadThread
 // Author:      Francesco Montorsi
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: thread.cpp 1240 2010-03-10 23:54:25Z frm $
 // Copyright:   (c) 2007 Francesco Montorsi
 // Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 
 // For compilers that support precompilation, includes "wx.h".
@@ -134,6 +134,9 @@ void wxCurlBaseThread::Abort()
 
     if (IsPaused())
         Resume();
+	else
+        if (m_pCurl)
+            m_pCurl->SetAbort(true);
 
     Wait();     // should always return wxCTE_ABORTED in this case
 }

@@ -1,4 +1,4 @@
-/**************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -23,6 +23,9 @@
 
 #ifndef __VECTOR2D_H__
 #define __VECTOR2D_H__
+
+
+
 
 class vector2D
 {
@@ -51,5 +54,6 @@ extern "C" pVector2D vAddVectors(pVector2D v0, pVector2D v1, pVector2D v);
 extern "C" pVector2D vSubtractVectors(pVector2D v0, pVector2D v1, pVector2D v);
 extern "C" double vVectorMagnitude(pVector2D v0);
 extern "C" double vVectorSquared(pVector2D v0);
+
 
 #endif

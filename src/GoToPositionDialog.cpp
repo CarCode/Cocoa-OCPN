@@ -1,4 +1,4 @@
-/******************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 #include <wx/sizer.h>
@@ -31,33 +30,37 @@
 
 #include "GoToPositionDialog.h"
 #include "PositionParser.h"
+#ifdef __WXOSX__
+#include "MarkInfo.h"
+#else
 #include "routeprop.h"
+#endif
 #include "navutil.h"
 
 extern ChartCanvas *cc1;
 extern MyFrame *gFrame;
 
-/*!
+/*
  * GoToPositionDialog type definition
  */
 
 IMPLEMENT_DYNAMIC_CLASS( GoToPositionDialog, wxDialog )
-/*!
+/*
  * GoToPositionDialog event table definition
  */BEGIN_EVENT_TABLE( GoToPositionDialog, wxDialog )
 
-////@begin GoToPositionDialog event table entries
+// //@begin GoToPositionDialog event table entries
 
     EVT_BUTTON( ID_GOTOPOS_CANCEL, GoToPositionDialog::OnGoToPosCancelClick )
     EVT_BUTTON( ID_GOTOPOS_OK, GoToPositionDialog::OnGoToPosOkClick )
     EVT_COMMAND(ID_LATCTRL, EVT_LLCHANGE, GoToPositionDialog::OnPositionCtlUpdated)
     EVT_COMMAND(ID_LONCTRL, EVT_LLCHANGE, GoToPositionDialog::OnPositionCtlUpdated)
 
-////@end GoToPositionDialog event table entries
+// //@end GoToPositionDialog event table entries
 
 END_EVENT_TABLE()
 
-/*!
+/*
  * GoToPositionDialog constructors
  */
 
@@ -68,8 +71,11 @@ GoToPositionDialog::GoToPositionDialog()
 GoToPositionDialog::GoToPositionDialog( wxWindow* parent, wxWindowID id, const wxString& caption,
                                         const wxPoint& pos, const wxSize& size, long style )
 {
-
+#ifdef __WXOSX__
+    long wstyle = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxSTAY_ON_TOP;
+#else
     long wstyle = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER;
+#endif
     wxDialog::Create( parent, id, caption, pos, size, wstyle );
 
     CreateControls();
@@ -84,7 +90,7 @@ GoToPositionDialog::~GoToPositionDialog()
     delete m_MarkLonCtl;
 }
 
-/*!
+/*
  * GoToPositionDialog creator
  */
 
@@ -101,7 +107,7 @@ bool GoToPositionDialog::Create( wxWindow* parent, wxWindowID id, const wxString
     return TRUE;
 }
 
-/*!
+/*
  * Control creation for GoToPositionDialog
  */
 
@@ -122,7 +128,7 @@ void GoToPositionDialog::CreateControls()
     wxStaticText* itemStaticText5 = new wxStaticText( itemDialog1, wxID_STATIC, _("Latitude"),
             wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer4->Add( itemStaticText5, 0,
-                             wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
+                              wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
 
     m_MarkLatCtl = new LatLonTextCtrl( itemDialog1, ID_LATCTRL, _T(""), wxDefaultPosition,
                                        wxSize( 180, -1 ), 0 );
@@ -132,7 +138,7 @@ void GoToPositionDialog::CreateControls()
     wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _("Longitude"),
             wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer4->Add( itemStaticText6, 0,
-                             wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
+                              wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP, 5 );
 
     m_MarkLonCtl = new LatLonTextCtrl( itemDialog1, ID_LONCTRL, _T(""), wxDefaultPosition,
                                        wxSize( 180, -1 ), 0 );

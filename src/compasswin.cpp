@@ -1,11 +1,11 @@
-/******************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Main wxWidgets Program
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
+
 #include "wx/wxprec.h"
 #ifndef  WX_PRECOMP
 #include "wx/wx.h"
@@ -50,10 +49,7 @@ extern MyFrame *gFrame;
 ocpnFloatingCompassWindow::ocpnFloatingCompassWindow( wxWindow *parent )
 {
     m_pparent = parent;
-    long wstyle = wxNO_BORDER | wxFRAME_NO_TASKBAR;
-#ifndef __WXMAC__
-    wstyle |= wxFRAME_SHAPED;
-#endif    
+    long wstyle = wxNO_BORDER | wxFRAME_NO_TASKBAR | wxFRAME_SHAPED;
 #ifdef __WXMAC__
     wstyle |= wxSTAY_ON_TOP;
 #endif
@@ -70,8 +66,8 @@ ocpnFloatingCompassWindow::ocpnFloatingCompassWindow( wxWindow *parent )
     m_scale = 1.0;
     SetSize(
         m_scale * ( ( _img_compass.GetWidth() + _img_gpsRed.GetWidth() ) + style->GetCompassLeftMargin() * 2
-                       + style->GetToolSeparation()),
-        m_scale * (_img_compass.GetHeight() + style->GetCompassTopMargin() + style->GetCompassBottomMargin()) );
+        + style->GetToolSeparation()),
+                   m_scale * (_img_compass.GetHeight() + style->GetCompassTopMargin() + style->GetCompassBottomMargin()) );
     
     m_xoffset = style->GetCompassXOffset();
     m_yoffset = style->GetCompassYOffset();
@@ -121,7 +117,7 @@ void ocpnFloatingCompassWindow::UpdateStatus( bool bnew )
 
 void ocpnFloatingCompassWindow::SetScaleFactor( float factor)
 {
-    //    qDebug() << m_scale << factor;
+//    qDebug() << m_scale << factor;
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
     
     if(factor > 0.1)
@@ -130,11 +126,12 @@ void ocpnFloatingCompassWindow::SetScaleFactor( float factor)
         m_scale = 1.0;
     
     SetSize(
-            m_scale * ( ( _img_compass.GetWidth() + _img_gpsRed.GetWidth() ) + style->GetCompassLeftMargin() * 2
-                       + style->GetToolSeparation()),
+        m_scale * ( ( _img_compass.GetWidth() + _img_gpsRed.GetWidth() ) + style->GetCompassLeftMargin() * 2
+        + style->GetToolSeparation()),
             m_scale * (_img_compass.GetHeight() + style->GetCompassTopMargin() + style->GetCompassBottomMargin()) );
     
 }
+
 
 wxBitmap ocpnFloatingCompassWindow::CreateBmp( bool newColorScheme )
 {
@@ -158,7 +155,7 @@ wxBitmap ocpnFloatingCompassWindow::CreateBmp( bool newColorScheme )
             gpsBg = style->GetNormalBG();
             style->DrawToolbarLineEnd( gpsBg );
             gpsBg = style->SetBitmapBrightness( gpsBg );
-
+            
             if(fabs(m_scale-1.0) > 0.1){
                 wxImage bg_img = compassBg.ConvertToImage();
                 bg_img.Rescale(compassBg.GetWidth() * m_scale, compassBg.GetHeight() *m_scale, wxIMAGE_QUALITY_NORMAL);
@@ -228,13 +225,13 @@ wxBitmap ocpnFloatingCompassWindow::CreateBmp( bool newColorScheme )
             mdc.SetBrush( wxBrush( GetGlobalColor( _T("UITX1") ), wxBRUSHSTYLE_TRANSPARENT ) );
 
             mdc.DrawRoundedRectangle( 0, 0, StatBmp.GetWidth(), StatBmp.GetHeight(),
-                                     m_scale * style->GetCompassCornerRadius() );
+                    m_scale * style->GetCompassCornerRadius() );
 
             wxPoint offset( style->GetCompassLeftMargin(), style->GetCompassTopMargin() );
 
             wxBitmap iconBm;
-
-
+            
+            
             //    Build Compass Rose, rotated...
             wxBitmap BMPRose;
             wxPoint after_rotate;
@@ -243,17 +240,17 @@ wxBitmap ocpnFloatingCompassWindow::CreateBmp( bool newColorScheme )
                 BMPRose = style->GetIcon( _T("CompassRose") );
             else
                 BMPRose = style->GetIcon( _T("CompassRoseBlue") );
-
+            
             if( ( fabs( cc1->GetVPRotation() ) > .01 ) || ( fabs( cc1->GetVPSkew() ) > .01 )  || (fabs(m_scale-1.0) > 0.1) ) {
                 int width = BMPRose.GetWidth() * m_scale;
                 int height = BMPRose.GetHeight() * m_scale;
-
+                
                 wxImage rose_img = BMPRose.ConvertToImage();
-
+                
                 if(fabs(m_scale-1.0) > 0.1)
                     rose_img.Rescale(width, height, wxIMAGE_QUALITY_NORMAL);
                 
-                
+
                 if(fabs(rose_angle) > 0.01){
                     wxPoint rot_ctr( width / 2, height / 2 );
                     wxImage rot_image = rose_img.Rotate( rose_angle, rot_ctr, true, &after_rotate );
@@ -261,7 +258,7 @@ wxBitmap ocpnFloatingCompassWindow::CreateBmp( bool newColorScheme )
                 }
                 else
                     BMPRose = wxBitmap( rose_img );
-
+                
             }
 
 

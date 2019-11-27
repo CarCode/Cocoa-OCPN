@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN private types and ENUMs
@@ -23,9 +23,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
-
 #ifndef __OCPNTYPES_H__
 #define __OCPNTYPES_H__
+
 
 typedef struct _S52color{
     char colName[20];
@@ -46,7 +46,6 @@ typedef struct _colTable {
 } colTable;
 
 
-WX_DEFINE_ARRAY_INT(int, ArrayOfInts);
 
 //    ChartType constants
 typedef enum ChartTypeEnum
@@ -59,7 +58,8 @@ typedef enum ChartTypeEnum
       CHART_TYPE_S57,
       CHART_TYPE_CM93,
       CHART_TYPE_CM93COMP,
-      CHART_TYPE_PLUGIN
+      CHART_TYPE_PLUGIN,
+      CHART_TYPE_MBTILES
 }_ChartTypeEnum;
 
 //    ChartFamily constants

@@ -69,7 +69,8 @@ enum ZoneSelection { AUTO_SELECTION, SAVED_SELECTION, START_SELECTION, DRAW_SELE
 class GribTimelineRecordSet : public GribRecordSet
 {
 public:
-    GribTimelineRecordSet(GribRecordSet &GRS1, GribRecordSet &GRS2, double interp_const);
+    GribTimelineRecordSet();
+//    GribTimelineRecordSet(GribRecordSet &GRS1, GribRecordSet &GRS2, double interp_const);
     ~GribTimelineRecordSet();
 
     void ClearCachedData();
@@ -102,32 +103,31 @@ public:
     void SetViewPort( PlugIn_ViewPort *vp );
     void SetDataBackGroundColor();
     void SetTimeLineMax( bool SetValue );
-    void SetCursorLatLon( double lat, double lon );
+	void SetCursorLatLon( double lat, double lon );
     void UpdateTrackingControl();
-    void SetDialogsStyleSizePosition( bool force_recompute = false );
+	void SetDialogsStyleSizePosition( bool force_recompute = false );
     void SetRequestBitmap( int type );
     void OnMouseEvent( wxMouseEvent& event );
     GRIBUICData *GetCDataDialog() { return m_gGRIBUICData; }
-    bool InDataPlot (int id) { return id >= 0 && id < (int)GribOverlaySettings::GEO_ALTITUDE; }
+    bool InDataPlot (int id) { return id > wxID_ANY && id < (int)GribOverlaySettings::GEO_ALTITUDE; }
     void SetScaledBitmap( double factor );
-
+    wxBitmap GetScaledBitmap(wxBitmap bitmap, const wxString svgFileName, double scale_factor);
+    void OpenFileFromJSON( wxString json);
+        
     wxWindow *pParent;
     GribOverlaySettings m_OverlaySettings;
 
-    GribTimelineRecordSet *m_pTimelineSet;
+	GribTimelineRecordSet *m_pTimelineSet;
 
     wxTimer         m_tPlayStop;
     grib_pi         *pPlugIn;
     GribRequestSetting  *pReq_Dialog;
     GRIBFile        *m_bGRIBActiveFile;
-#ifdef __WXOSX__
-    bool            m_bDataPlot[GribOverlaySettings::SETTINGS_COUNT];
-#else
-    bool            m_bDataPlot[GribOverlaySettings::GEO_ALTITUDE];  //only for no altitude parameters
-#endif
-    bool            m_CDataIsShown;
+	bool            m_bDataPlot[GribOverlaySettings::GEO_ALTITUDE];  //only for no altitude parameters
+	bool            m_CDataIsShown;
     int             m_ZoneSelAllowed;
     int             m_old_DialogStyle;
+	double			m_ScaledFactor;
 private:
     void OnClose( wxCloseEvent& event );
     void OnSize( wxSizeEvent& event );
@@ -135,7 +135,7 @@ private:
     void OnSettings( wxCommandEvent& event );
     void OnPlayStop( wxCommandEvent& event );
     void OnPlayStopTimer( wxTimerEvent & event);
-    void OnMove( wxMoveEvent& event );
+	void OnMove( wxMoveEvent& event );
     void OnMenuEvent( wxMenuEvent& event );
     void MenuAppend( wxMenu *menu, int id, wxString label, wxItemKind kind, wxBitmap bitmap = wxNullBitmap, wxMenu *submenu = NULL );
     void OnZoomToCenterClick( wxCommandEvent& event );
@@ -146,9 +146,10 @@ private:
     void OnAltitude( wxCommandEvent& event );
     void OnOpenFile( wxCommandEvent& event );
     void OnRequest(  wxCommandEvent& event );
-
+    void OnCompositeDialog( wxCommandEvent& event );
+    
     void OnTimeline( wxScrollEvent& event );
-    void OnShowCursorData( wxCommandEvent& event );
+	void OnShowCursorData( wxCommandEvent& event );
 
     wxDateTime MinTime();
     wxArrayString GetFilesInDirectory();
@@ -162,7 +163,7 @@ private:
             m_Selection_label = m_cRecordForecast->GetString( m_Selection_index); }
 
     //    Data
-    CursorData        *m_gCursorData;
+	CursorData        *m_gCursorData;
     GribGrabberWin    *m_gGrabber;
     GRIBUICData       *m_gGRIBUICData;
 
@@ -174,21 +175,19 @@ private:
     bool m_InterpolateMode;
     bool m_pNowMode;
     bool m_HasAltitude;
-    double m_ScaledFactor;
 
     bool             m_SelectionIsSaved;
     int              m_Selection_index;
     wxString         m_Selection_label;
-    wxArrayString         m_file_names;   /* selected file */
+    wxArrayString    m_file_names;   /* selected files */
     wxString         m_grib_dir;
-    wxSize           m_DialogsOffset;
+	wxSize           m_DialogsOffset;
 };
 
 //----------------------------------------------------------------------------------------------------------
 //    GRIBFile Object Specification
 //----------------------------------------------------------------------------------------------------------
-class GRIBFile
-{
+class GRIBFile {
 public:
 
     GRIBFile( const wxArrayString & file_names, bool CumRec, bool WaveRec, bool newestFile = false );
@@ -232,21 +231,21 @@ private:
     int m_nGribRecords;
 };
 
-    //----------------------------------------------------------------------------------------------------------
-    //    GRIB CursorData Dialog Specification
-    //----------------------------------------------------------------------------------------------------------
-    class GRIBUICData: public GRIBUICDataBase
-    {
-    public:
-        
-        GRIBUICData( GRIBUICtrlBar &parent );
-        ~GRIBUICData() {}
-        
-        GribGrabberWin      *m_gGrabber;
-        GRIBUICtrlBar       &m_gpparent;
-        CursorData          *m_gCursorData;
-    private:
-        void OnMove( wxMoveEvent& event );
-    };
+//----------------------------------------------------------------------------------------------------------
+//    GRIB CursorData Dialog Specification
+//----------------------------------------------------------------------------------------------------------
+class GRIBUICData: public GRIBUICDataBase
+{
+public:
+
+    GRIBUICData( GRIBUICtrlBar &parent );
+    ~GRIBUICData() {}
+
+    GribGrabberWin      *m_gGrabber;
+    GRIBUICtrlBar       &m_gpparent;
+    CursorData          *m_gCursorData;
+private:
+    void OnMove( wxMoveEvent& event );
+};
 
 #endif

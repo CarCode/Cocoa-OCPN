@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  *
  * Project:  OpenCPN
@@ -42,7 +42,6 @@
 #include "chartimg.h"
 
 #ifdef USE_S57
-#include "s52s57.h"
 #include "s57chart.h"               // for Object list
 #endif
 
@@ -54,8 +53,8 @@
 
 #ifndef __OCPN__ANDROID__
 #ifdef __OCPN_USE_CURL__
-#include "../../../src/wxcurl/wx/curl/dialog.h"
-#include "../../../src/wxcurl/wx/curl/http.h"
+#include "wx/curl/http.h"
+#include "wx/curl/dialog.h"
 #endif
 #endif
 
@@ -204,7 +203,7 @@ class PlugInToolbarToolContainer
             wxBitmap          *bitmap_Rollover_day;
             wxBitmap          *bitmap_Rollover_dusk;
             wxBitmap          *bitmap_Rollover_night;
-
+            
             wxItemKind        kind;
             wxString          shortHelp;
             wxString          longHelp;
@@ -216,7 +215,7 @@ class PlugInToolbarToolContainer
             wxString          pluginNormalIconSVG;
             wxString          pluginRolloverIconSVG;
             wxString          pluginToggledIconSVG;
-
+            
 };
 
 //    Define an array of PlugIn ToolbarTool Containers
@@ -265,16 +264,16 @@ public:
       void SetToolbarToolViz(int tool_id, bool viz);
       void SetToolbarItemState(int tool_id, bool toggle);
       void SetToolbarItemBitmaps(int item, wxBitmap *bitmap, wxBitmap *bmpDisabled);
-
+      
       int AddToolbarTool(wxString label, wxString SVGfile, wxString SVGRolloverfile, wxString SVGToggledfile,
-                       wxItemKind kind, wxString shortHelp, wxString longHelp,
-                       wxObject *clientData, int position,
-                       int tool_sel, opencpn_plugin *pplugin );
-
+                         wxItemKind kind, wxString shortHelp, wxString longHelp,
+                         wxObject *clientData, int position,
+                         int tool_sel, opencpn_plugin *pplugin );
+      
       void SetToolbarItemBitmaps(int item, wxString SVGfile,
                                  wxString SVGfileRollover,
                                  wxString SVGfileToggled);
-
+      
       opencpn_plugin *FindToolOwner(const int id);
       wxString GetToolOwnerCommonName(const int id);
       void ShowDeferredBlacklistMessages();
@@ -291,41 +290,41 @@ public:
       void SendJSONMessageToAllPlugins(const wxString &message_id, wxJSONValue v);
       void SendMessageToAllPlugins(const wxString &message_id, const wxString &message_body);
       int GetJSONMessageTargetCount();
-
+      
       void SendResizeEventToAllPlugIns(int x, int y);
       void SetColorSchemeForAllPlugIns(ColorScheme cs);
       void NotifyAuiPlugIns(void);
       bool CallLateInit(void);
-
+      
       bool IsPlugInAvailable(wxString commonName);
       bool IsAnyPlugInChartEnabled();
-
+      
       void SendVectorChartObjectInfo(const wxString &chart, const wxString &feature, const wxString &objname, double &lat, double &lon, double &scale, int &nativescale);
 
       bool SendMouseEventToPlugins( wxMouseEvent &event);
       bool SendKeyEventToPlugins( wxKeyEvent &event);
 
       void SendConfigToAllPlugIns();
-
+      
       wxArrayString GetPlugInChartClassNameArray(void);
 
       ListOfPI_S57Obj *GetPlugInObjRuleListAtLatLon( ChartPlugInWrapper *target, float zlat, float zlon,
                                                        float SelectRadius, const ViewPort& vp );
       wxString CreateObjDescriptions( ChartPlugInWrapper *target, ListOfPI_S57Obj *rule_list );
-
+      
       wxString GetLastError();
       MyFrame *GetParentFrame(){ return pParent; }
 
       void DimeWindow(wxWindow *win);
-
       OCPN_Sound        m_plugin_sound;
-
+      
 private:
       bool CheckBlacklistedPlugin(opencpn_plugin* plugin);
       bool DeactivatePlugIn(PlugInContainer *pic);
       wxBitmap *BuildDimmedToolBitmap(wxBitmap *pbmp_normal, unsigned char dim_ratio);
       bool UpDateChartDataTypes(void);
       bool CheckPluginCompatibility(wxString plugin_file);
+      bool LoadPlugInDirectory(const wxString &plugin_dir, bool enabled_plugins, bool b_enable_blackdialog);
 
       MyFrame                 *pParent;
 
@@ -344,29 +343,30 @@ private:
       bool              m_benable_blackdialog;
       bool              m_benable_blackdialog_done;
       wxArrayString     m_deferred_blacklist_messages;
-
+      
       wxArrayString     m_plugin_order;
       void SetPluginOrder( wxString serialized_names );
       wxString GetPluginOrder();
-//#ifndef __WXOSX__
+    
 #ifndef __OCPN__ANDROID__
 #ifdef __OCPN_USE_CURL__
+      
 public:
-    wxCurlDownloadThread *m_pCurlThread;
-    // returns true if the error can be ignored
-    bool            HandleCurlThreadError(wxCurlThreadError err, wxCurlBaseThread *p,
-                                          const wxString &url = wxEmptyString);
-    void            OnEndPerformCurlDownload(wxCurlEndPerformEvent &ev);
-    void            OnCurlDownload(wxCurlDownloadEvent &ev);
-    
-    wxEvtHandler   *m_download_evHandler;
-    long           *m_downloadHandle;
-    bool m_last_online;
-    long m_last_online_chk;
+      wxCurlDownloadThread *m_pCurlThread;
+      // returns true if the error can be ignored
+      bool            HandleCurlThreadError(wxCurlThreadError err, wxCurlBaseThread *p,
+                               const wxString &url = wxEmptyString);
+      void            OnEndPerformCurlDownload(wxCurlEndPerformEvent &ev);
+      void            OnCurlDownload(wxCurlDownloadEvent &ev);
+      
+      wxEvtHandler   *m_download_evHandler;
+      long           *m_downloadHandle;
+      bool m_last_online;
+      long m_last_online_chk;
+#endif
 #endif
 
-    DECLARE_EVENT_TABLE()
-#endif
+DECLARE_EVENT_TABLE()
 };
 
 WX_DEFINE_ARRAY_PTR(PluginPanel *, ArrayOfPluginPanel);
@@ -387,7 +387,7 @@ private:
       ArrayOfPlugIns     *m_pPluginArray;
       ArrayOfPluginPanel  m_PluginItems;
       PluginPanel        *m_PluginSelected;
-
+      
       wxBoxSizer         *m_pitemBoxSizer01;
 };
 
@@ -417,15 +417,16 @@ private:
       wxFlexGridSizer      *m_pButtons;
       wxButton        *m_pButtonEnable;
       wxButton        *m_pButtonPreferences;
-
+      
       wxBoxSizer      *m_pButtonsUpDown;
       wxButton        *m_pButtonUp;
-      wxButton        *m_pButtonDown;
+      wxButton        *m_pButtonDown;    
 };
 
 
 //  API 1.11 adds access to S52 Presentation library
 //  These are some wrapper conversion utilities
+
 #ifdef USE_S57
 
 class S52PLIB_Context
@@ -464,5 +465,6 @@ public:
 void CreateCompatibleS57Object( PI_S57Obj *pObj, S57Obj *cobj, chart_context *pctx );
 void UpdatePIObjectPlibContext( PI_S57Obj *pObj, S57Obj *cobj );
 #endif
+
 #endif            // _PLUGINMGR_H_
 
