@@ -106,6 +106,12 @@ mit "install_name_tool -change" bearbeitet werden!
 Siehe batchwx.sh bzw. Xcode Scripts.
 
 wxCurl wurde auf diese Art ebenfalls als dynamische Library compiliert.
+
+HINWEIS:
+Große Dateien ( > 100 MB) nimmt GitHub nicht mehr ohne weiteres.
+Die Datei /data/gshhs/poly-f-1.dat mit ~172 MB muß daher separat geholt werden
+und nach /data/gshhs/ kopiert werden:
+https://topperdiek.de/dl/ocpn/poly-f-1.dat
 -----------------------------------------------------------------------
 25. November 2019
 
