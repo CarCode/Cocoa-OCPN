@@ -1,4 +1,4 @@
-// ///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 // Name:        jsonval.cpp
 // Purpose:     the wxJSON class that holds a JSON value
 // Author:      Luciano Cattani
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: jsonval.cpp,v 1.12 2008/03/06 10:25:18 luccat Exp $
 // Copyright:   (c) 2007 Luciano Cattani
 // Licence:     wxWidgets licence
-// ///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 //#ifdef __GNUG__
 //    #pragma implementation "jsonval.cpp"
@@ -14,7 +14,7 @@
 
 // make wxLogTrace a noop, it's really slow
 // must be defined before including debug.h
-#define wxDEBUG_LEVEL 1
+#define wxDEBUG_LEVEL 0
 
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
@@ -1315,11 +1315,7 @@ wxJSONValue::AsCString( wxChar* ch ) const
 {
     bool r = IsCString();
     if ( r )    {
-#ifdef __WXOSX__
-        (wxChar*) AsCString();
-#else
         ch = (wxChar*) AsCString();
-#endif
     }
     return r;
 }
@@ -2299,7 +2295,7 @@ wxJSONValue::Dump( bool deep, int indent ) const
     switch ( type )    {
         case wxJSONTYPE_OBJECT :
             map = AsMap();
-//            size = Size();  // Not used
+            size = Size();
             for ( it = map->begin(); it != map->end(); ++it )  {
                 const wxJSONValue& v = it->second;
                 sub = v.Dump( true, indent );
@@ -2818,7 +2814,7 @@ wxJSONValue::ClearComments()
 wxJSONRefData*
 wxJSONValue::SetType( wxJSONType type )
 {
-    wxJSONRefData* data; // = GetRefData();  // Not used
+    wxJSONRefData* data = GetRefData();
     wxJSONType oldType = GetType();
 
     // check that type is within the allowed range
@@ -3067,22 +3063,14 @@ wxJSONValue::CreateRefData() const
 wxJSONRefData*
 wxJSONValue::COW()
 {
-#ifndef __WXOSX__
-    wxJSONRefData* data;
-#else
     wxJSONRefData* data = GetRefData();
-#endif
     wxLogTrace( cowTraceMask, _T("(%s) COW() START data=%p data->m_count=%d"),
              __PRETTY_FUNCTION__, data, data->GetRefCount());
     UnShare();
     data = GetRefData();
     wxLogTrace( cowTraceMask, _T("(%s) COW() END data=%p data->m_count=%d"),
              __PRETTY_FUNCTION__, data, data->GetRefCount());
-#ifdef __WXOSX__
-    return data;
-#else
     return GetRefData();
-#endif
 }
 
 //! Makes a private copy of the referenced data

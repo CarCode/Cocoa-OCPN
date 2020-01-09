@@ -243,10 +243,8 @@ static int jpc_pi_nextrpcl(register jpc_pi_t *pi)
 	if (!pi->prgvolfirst) {
 		goto skip;
 	} else {
-#ifndef __WXOSX__
 		pi->xstep = 0;
 		pi->ystep = 0;
-#endif
 		for (compno = 0, picomp = pi->picomps; compno < pi->numcomps;
 		  ++compno, ++picomp) {
 			for (rlvlno = 0, pirlvl = picomp->pirlvls; rlvlno <
@@ -265,7 +263,7 @@ static int jpc_pi_nextrpcl(register jpc_pi_t *pi)
 	for (pi->rlvlno = pchg->rlvlnostart; pi->rlvlno < pchg->rlvlnoend &&
 	  pi->rlvlno < pi->maxrlvls; ++pi->rlvlno) {
 		for (pi->y = pi->ystart; pi->y < pi->yend; pi->y +=
-          pi->ystep - (pi->y % pi->ystep)) {
+		  pi->ystep - (pi->y % pi->ystep)) {
 			for (pi->x = pi->xstart; pi->x < pi->xend; pi->x +=
 			  pi->xstep - (pi->x % pi->xstep)) {
 				for (pi->compno = pchg->compnostart,
@@ -357,14 +355,9 @@ static int jpc_pi_nextpcrl(register jpc_pi_t *pi)
 		}
 		pi->prgvolfirst = 0;
 	}
-#ifdef __WXOSX__
-    if(pi->ystep > 0)
-#endif
+
 	for (pi->y = pi->ystart; pi->y < pi->yend; pi->y += pi->ystep -
 	  (pi->y % pi->ystep)) {
-#ifdef __WXOSX__
-        if(pi->xstep > 0)
-#endif
 		for (pi->x = pi->xstart; pi->x < pi->xend; pi->x += pi->xstep -
 		  (pi->x % pi->xstep)) {
 			for (pi->compno = pchg->compnostart, pi->picomp =

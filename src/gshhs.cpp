@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  GSHHS Chart Object (Global Self-consistent, Hierarchical, High-resolution Shoreline)
@@ -36,6 +36,8 @@
 
 #include <wx/file.h>
 
+#include "dychart.h"
+
 #ifdef ocpnUSE_GL
 #include "glChartCanvas.h"
 #endif
@@ -44,7 +46,6 @@
 #include "chartbase.h" // for projections
 #include "wx28compat.h"
 
-#include "dychart.h"
 
 
 #ifdef __WXMSW__
@@ -61,6 +62,9 @@ extern wxString gWorldMapLocation;
 
 GSHHSChart::GSHHSChart() {
     reader = NULL;
+    land = wxColor( 250, 250, 250 );
+    water = wxColor( 0, 0, 0 );
+    
 }
 
 GSHHSChart::~GSHHSChart() {
@@ -89,6 +93,12 @@ void GSHHSChart::SetColorScheme( ColorScheme scheme ) {
     water.Set( water.Red()*dim, water.Green()*dim, water.Blue()*dim );
 }
 
+void GSHHSChart::SetColorsDirect( wxColour newLand, wxColour newWater ) {
+    land =  newLand;
+    water = newWater;
+}
+    
+
 void GSHHSChart::Reset() {
     if( reader )
         delete reader;
@@ -98,13 +108,13 @@ void GSHHSChart::Reset() {
 
 int GSHHSChart::GetMinAvailableQuality() {
     if( !reader )
-        reader = new GshhsReader( );
+        reader = new GshhsReader();
     return reader->GetMinAvailableQuality();
 }
 
 int GSHHSChart::GetMaxAvailableQuality() {
     if( !reader )
-        reader = new GshhsReader( );
+        reader = new GshhsReader();
     return reader->GetMaxAvailableQuality();
 }
 
@@ -118,7 +128,7 @@ void GSHHSChart::RenderViewOnDC( ocpnDC& dc, ViewPort& vp )
         } else {
             wxLogMessage(
                     _T("Background world map loaded from GSHHS datafiles found in: ") +
-                         gWorldMapLocation );
+                    gWorldMapLocation );
         }
     }
 
@@ -257,7 +267,7 @@ void GshhsPolyCell::DrawPolygonFilled( ocpnDC &pnt, contour_list * p, double dx,
         for( v = 0; v < p->at( c ).size(); v++ ) {
             wxRealPoint &ccp = cp.at( v );
             wxPoint2DDouble q = GetDoublePixFromLL(vp, ccp.y, ccp.x + dx );
-            if(wxIsNaN(q.m_x)) {
+            if(std::isnan(q.m_x)) {
                 pointCount = 0;
                 break;
             }
@@ -594,7 +604,6 @@ GshhsPolyReader::~GshhsPolyReader()
 //-------------------------------------------------------------------------
 int GshhsPolyReader::ReadPolyVersion()
 {
-    char txtn = 'c';
     wxString fname = GshhsReader::getFileName_Land( 0 );
     if( fpoly ) fclose( fpoly );
     fpoly = fopen( fname.mb_str(), "rb" );
@@ -817,11 +826,12 @@ void GshhsPolyReader::drawGshhsPolyMapPlain( ocpnDC &pnt, ViewPort &vp, wxColor 
         glEnableClientState(GL_VERTEX_ARRAY);
         
         // use a viewport that allows the vertexes to be reused over many frames
-        if(glChartCanvas::HasNormalizedViewPort(vp)) {
-            glPushMatrix();
-            glChartCanvas::MultMatrixViewPort(vp);
-            nvp = glChartCanvas::NormalizedViewPort(vp);
-        }
+        // TODO fix for multicanvas
+         if(glChartCanvas::HasNormalizedViewPort(vp)) {
+             glPushMatrix();
+             glChartCanvas::MultMatrixViewPort(vp);
+             nvp = glChartCanvas::NormalizedViewPort(vp);
+         }
     }
 #endif
     for( clon = clonmin; clon < clonmax; clon++ ) {
@@ -1347,13 +1357,13 @@ int GshhsReader::selectBestQuality( ViewPort &vp )
 {
     int bestQuality = 0;
 
-    if(vp.chart_scale <   500000 && qualityAvailable[4]) bestQuality = 4;
+         if(vp.chart_scale <   500000 && qualityAvailable[4]) bestQuality = 4;
     else if(vp.chart_scale <  2000000 && qualityAvailable[3]) bestQuality = 3;
     else if(vp.chart_scale <  8000000 && qualityAvailable[2]) bestQuality = 2;
     else if(vp.chart_scale < 20000000 && qualityAvailable[1]) bestQuality = 1;
     else if(qualityAvailable[0]) bestQuality = 0;
     else while( !qualityAvailable[bestQuality] && bestQuality <= 4 ) //Find the worst quality actually available and use that (normally we would use crude, but it is missing)
-        bestQuality++;
+             bestQuality++;
 
     while( !qualityAvailable[bestQuality] ) {
         bestQuality--;
@@ -1391,6 +1401,9 @@ void gshhsCrossesLandReset() {
 
 bool gshhsCrossesLand(double lat1, double lon1, double lat2, double lon2)
 {
+    if( ! reader ) {
+        gshhsCrossesLandInit();
+    }
     if(lon1 < 0)
         lon1 += 360;
     if(lon2 < 0)

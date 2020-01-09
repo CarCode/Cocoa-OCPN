@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  * $Id: IACFile.cpp, v1.0 2010/08/05 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -27,7 +27,7 @@
 
 #include "wx/wxprec.h"
 
-#ifndef  WX_PRECOMP
+#ifndef WX_PRECOMP
 #include "wx/wx.h"
 #endif //precompiled headers
 
@@ -46,12 +46,11 @@ WX_DEFINE_OBJARRAY(GeoPoints);
 // Is the given point in the vp ??
 // because of a the vp-implementation we need
 // to check the latitude three times! (+-360)
-static bool PointInLLBox( PlugIn_ViewPort *vp, double x, double y )
+static bool PointInLLBox(PlugIn_ViewPort *vp, double x, double y)
 {
-    if (  ((x >= (vp->lon_min) && x <= (vp->lon_max))
-            || ((x+360.) >= (vp->lon_min) && (x+360.) <= (vp->lon_max))
-            || ((x-360.) >= (vp->lon_min) && (x-360.) <= (vp->lon_max))
-          ) && (y >= (vp->lat_min) && y <= (vp->lat_max)) )
+    if (((x >= (vp->lon_min) && x <= (vp->lon_max)) || ((x + 360.) >= (vp->lon_min) && (x + 360.) <= (vp->lon_max)) ||
+         ((x - 360.) >= (vp->lon_min) && (x - 360.) <= (vp->lon_max))) &&
+        (y >= (vp->lat_min) && y <= (vp->lat_max)))
         return TRUE;
     return FALSE;
 }
@@ -101,9 +100,7 @@ wxFileInputStream* IACFile::GetStream( wxString &filename )
     if( file.FileExists() && (file.GetSize() < IACMaxSize) )
     {
         return new wxFileInputStream(filename);
-    }
-    else
-    {
+    } else {
         return NULL;
     }
 }
@@ -215,9 +212,7 @@ bool IACFile::ReadHeader( void )
             if( !timestr.IsEmpty() )
             {
                 // parse time, format 0DDHH, DD=date, HH=UTC hours
-                m_issueDate = _("Day ") + timestr.Mid(1, 2) +
-                _(" Hour ") + timestr.Mid(3, 2) +
-                _T(" UTC");
+                m_issueDate = _("Day ") + timestr.Mid(1, 2) + _(" Hour ") + timestr.Mid(3, 2) + _T(" UTC");
                 return true;
             }
         }
@@ -240,101 +235,77 @@ bool IACFile::ParsePositions( IACSystem &sys, int section )
         // either on illegal octant "4" or by a step of more than 1
         // in octant
         int lastoct = TokenNumber(lasttoken, 0, 1);
-        int oct     = TokenNumber(token, 0, 1);
+        int oct = TokenNumber(token, 0, 1);
         int diff = abs(lastoct - oct);
 
-        if( m_positionsType == POS_OCTANTS && oct == 4 )
-        {
+        if (m_positionsType == POS_OCTANTS && oct == 4) {
             morepos = false;
-        }
-        else if( m_positionsType == POS_OCTANTS && (diff > 1) && (diff < 8) )
-        {
+        } else if (m_positionsType == POS_OCTANTS && (diff > 1) && (diff < 8)) {
             morepos = false;
-        }
-        else if( section == SECTION_FRONTAL && token.Matches(_T("66???"))
-                && ( m_positionsType == 88 || m_newlineTokens.size() < 10 //In case the file seems formatted with new lines, we take advantage of it and say that new system must start on new line
-                    || std::find(m_newlineTokens.begin(), m_newlineTokens.end(), m_tokensI - 1 ) != m_newlineTokens.end() ) )
-        {
+        } else if (section == SECTION_FRONTAL && token.Matches(_T("66???")) &&
+                   (m_positionsType == 88 ||
+                    m_newlineTokens.size() < 10  // In case the file seems formatted with new lines, we take advantage of it and say
+                    // that new system must start on new line
+                    || std::find(m_newlineTokens.begin(), m_newlineTokens.end(), m_tokensI - 1) != m_newlineTokens.end())) {
             morepos = false;
-        }
-        else if( section == SECTION_PRESSURE && token.StartsWith(_T("8"))
-                && ( m_positionsType == 88 || m_newlineTokens.size() < 10 //In case the file seems formatted with new lines, we take advantage of it and say that new system must start on new line
-                    || std::find(m_newlineTokens.begin(), m_newlineTokens.end(), m_tokensI - 1 ) != m_newlineTokens.end() ) )
-        {
+        } else if (section == SECTION_PRESSURE && token.StartsWith(_T("8")) &&
+                              (m_positionsType == 88 ||
+                               m_newlineTokens.size() < 10  // In case the file seems formatted with new lines, we take advantage of it and say
+                               // that new system must start on new line
+                               || std::find(m_newlineTokens.begin(), m_newlineTokens.end(), m_tokensI - 1) != m_newlineTokens.end())) {
             morepos = false;
-        }
-        else if( token.Matches( _T("999??") ) )
-        {
+        } else if (token.Matches(_T("999??"))) {
             morepos = false;
-        }
-        else if( section == SECTION_ISOBAR && ( token.Matches(_T("440??")) || token.Matches(_T("449??")) || token.Matches(_T("448??")) ) )
-        {
+        } else if (section == SECTION_ISOBAR &&
+                   (token.Matches(_T("440??")) || token.Matches(_T("449??")) || token.Matches(_T("448??")))) {
             morepos = false;
-        }
-        else if( token == _T("19191"))
-        {
+        } else if (token == _T("19191")) {
             morepos = false;
         }
 
         /*
-        // lets be even more strict and limit positions to
-        // SW-Pacific
+         // lets be even more strict and limit positions to
+         // SW-Pacific
          if( !((oct == 6) || (oct == 7)))
-        {
-            morepos = false;
-        }
-
-        GeoPoint pos(token); // decode position
-        // Position must be in the area bounded by 0S..35S and 120W/150E
-        if( (pos.y < -35.0) ||
-                (pos.y > 0.0) ||
-                ((pos.x > -120.0) && (pos.x < 150))
-          )
-        {
-            morepos = false;
-        }
+                {
+                    morepos = false;
+                }
+                GeoPoint pos(token); // decode position
+                // Position must be in the area bounded by 0S..35S and 120W/150E
+                if( (pos.y < -35.0) ||
+                    (pos.y > 0.0) ||
+                    ((pos.x > -120.0) && (pos.x < 150))
+                )
+                {
+                    morepos = false;
+                }
          */
-        if( !token.IsEmpty() && (firsttime || morepos ) )
-        {
+        if (!token.IsEmpty() && (firsttime || morepos)) {
             // ignore double entries following eachother
-            if( token != lasttoken )
-            {
-                GeoPoint pos( token, m_positionsType );
+            if (token != lasttoken) {
+                GeoPoint pos(token, m_positionsType);
                 sys.m_positions.Add(pos);
-                if( pos.x >= 0.0)
-                {
-                    if( pos.x < m_minlone )
-                        m_minlone = pos.x;
-                    if( pos.x > m_maxlone )
-                        m_maxlone = pos.x;
+                if (pos.x >= 0.0) {
+                    if (pos.x < m_minlone) m_minlone = pos.x;
+                    if (pos.x > m_maxlone) m_maxlone = pos.x;
+                } else {
+                    if (pos.x < m_minlonw) m_minlonw = pos.x;
+                    if (pos.x > m_maxlonw) m_maxlonw = pos.x;
                 }
-                else
-                {
-                    if( pos.x < m_minlonw )
-                        m_minlonw = pos.x;
-                    if( pos.x > m_maxlonw )
-                        m_maxlonw = pos.x;
-                }
-                if( pos.y < m_minlat )
-                    m_minlat = pos.y;
-                if( pos.y > m_maxlat )
-                    m_maxlat = pos.y;
-//                if( pos.x < 0.1 && pos.x > -0.1 )
-//                    wxMessageBox( token );
-            }
-            else
-            {
+                if (pos.y < m_minlat) m_minlat = pos.y;
+                if (pos.y > m_maxlat) m_maxlat = pos.y;
+                //                if( pos.x < 0.1 && pos.x > -0.1 )
+                //                    wxMessageBox( token );
+            } else {
+
                 // we got two identical position entries
                 // meaning "no more"
                 // stop parsing positions, but read one
                 // more token to stay in sync
-                if( m_positionsType == 88 )
-                    token = tokenFind();
-                //break;
+                if (m_positionsType == 88) token = tokenFind();
+                // break;
             }
-        }
-        else
-        {
+        } else {
             break;
         }
         if( firsttime )
@@ -343,12 +314,9 @@ bool IACFile::ParsePositions( IACSystem &sys, int section )
         }
     }
     PushbackToken();
-    if( token.IsEmpty() )
-    {
+    if( token.IsEmpty() ) {
         return false;
-    }
-    else
-    {
+    } else {
         return true;
     }
 }
@@ -358,28 +326,21 @@ bool IACFile::ParseMovement( IACSystem &sys )
     wxString token;
 
     token = tokenFind();
-    if( !token.IsEmpty() )
-    {
+    if( !token.IsEmpty() ) {
         // if invalid movement, ignore, push back
         int dir = 10 * TokenNumber(token, 1, 2);
-        if( dir < 361 )
-        {
-
-            sys.m_movement  = TokenNumber(token, 0, 1);
+        if( dir < 361 ) {
+            sys.m_movement = TokenNumber(token, 0, 1);
             sys.m_direction = dir;
-            sys.m_speed     = TokenNumber(token, 3, 2);
+            sys.m_speed = TokenNumber(token, 3, 2);
             return true;
-        }
-        else
-        {
+        } else {
             // invalif movement, push back
             PushbackToken();
             return false;
         }
 
-    }
-    else
-    {
+    } else {
         return false;
     }
 }
@@ -387,11 +348,9 @@ bool IACFile::ParseMovement( IACSystem &sys )
 bool IACFile::ParseSections( void )
 {
     wxString token;
-    do
-    {
+    do {
         token = tokenFind(_T("999??"), true);
-        if( !token.IsEmpty() )
-        {
+        if( !token.IsEmpty() ) {
             //?? 00=>Pressure Systems
             //   11=>Frontal Systems
             //   22=>Isobars
@@ -432,23 +391,18 @@ bool IACFile::ParsePressureSection(void)
             IACPressureSystem sys;
             sys.m_type = TokenNumber(token, 1, 1);
             sys.m_char = TokenNumber(token, 2, 1);
-            sys.m_val  = TokenNumber(token, 3, 2);
-            sys.m_int  = -1;
+            sys.m_val = TokenNumber(token, 3, 2);
+            sys.m_int = -1;
             // guess pressure offset
-            if( sys.m_type == 1 && sys.m_val > 30 )
-            {
+            if( sys.m_type == 1 && sys.m_val > 30 ) {
                 sys.m_val += 900;
             }
-            else if( sys.m_type == 5 && sys.m_val < 70 )
-            {
+            else if( sys.m_type == 5 && sys.m_val < 70 ) {
                 sys.m_val += 1000;
             }
-            else if( sys.m_val > 50 )
-            {
+            else if( sys.m_val > 50 ) {
                 sys.m_val += 900;
-            }
-            else
-            {
+            } else {
                 sys.m_val += 1000;
             }
 
@@ -456,9 +410,7 @@ bool IACFile::ParsePressureSection(void)
             if( !m_tokens[m_tokensI].StartsWith(_T("8")) )
                 ParseMovement(sys);
             m_pressure.Add(sys);
-        }
-        else
-        {
+        } else {
             PushbackToken();
             break;
         }
@@ -477,17 +429,15 @@ bool IACFile::ParseFrontalSection( void )
             // parse pressure system token
             IACFrontalSystem sys;
             sys.m_type = TokenNumber(token, 2, 1);
-            sys.m_val  = -1;
-            sys.m_int  = TokenNumber(token, 3, 1);
+            sys.m_val = -1;
+            sys.m_int = TokenNumber(token, 3, 1);
             sys.m_char = TokenNumber(token, 4, 1);
 
 
             ParsePositions(sys, SECTION_FRONTAL);
             ParseMovement(sys);
             m_frontal.Add(sys);
-        }
-        else
-        {
+        } else {
             // no more frontal systems.
             PushbackToken();
             break;
@@ -514,9 +464,7 @@ bool IACFile::ParseIsobarSection( void )
             // Position
             ParsePositions(sys, SECTION_ISOBAR);
             m_isobars.Add(sys);
-        }
-        else
-        {
+        } else {
             // no more frontal systems.
             PushbackToken();
             break;
@@ -536,7 +484,7 @@ bool IACFile::ParseTropicalSection( void )
             // parse pressure system token
             IACTropicalSystem sys;
             sys.m_type = TokenNumber(token, 2, 1);
-            sys.m_int  = TokenNumber(token, 3, 1);
+            sys.m_int = TokenNumber(token, 3, 1);
             sys.m_char = TokenNumber(token, 4, 1);
 
             // tropical system token MAY be followed by 555PP pressure token
@@ -546,26 +494,20 @@ bool IACFile::ParseTropicalSection( void )
             {
                 // no, push back token - it is a position
                 PushbackToken();
-            }
-            else
-            {
+            } else {
                 sys.m_val = TokenNumber(token, 3, 2);
                 // guess pressure offset
                 if( sys.m_val > 50 )
                 {
                     sys.m_val += 900;
-                }
-                else
-                {
+                } else {
                     sys.m_val += 1000;
                 }
             }
             ParsePositions(sys, SECTION_TROPICAL);
             ParseMovement(sys);
             m_tropical.Add(sys);
-        }
-        else
-        {
+        } else {
             PushbackToken();
             break;
         }
@@ -580,9 +522,7 @@ int IACFile::TokenNumber( wxString &token, size_t start, size_t end )
     {
         //success
         return ul;
-    }
-    else
-    {
+    } else {
         //failure
         return -1;
     }
@@ -648,23 +588,21 @@ wxString IACFile::ReadToken( wxInputStream &file )
                 if( isdigit(c) || c == '/' )
                 {
                     token.Append( (char)c );
-                }
-                else
-                {
+                } else {
                     if( token.Len() == 5 )
                     {
                         // token found!!
                         mode = 2;
-                    }
-                    else
-                    {
+                    } else {
                         token.Empty();
                     }
                 }
                 break;
+/* this is dead code
             case 2:
                 mode = 0;
                 break;
+ */
             }// case
         }
     }// while
@@ -685,7 +623,7 @@ bool IACFile::Draw( wxDC *dc, PlugIn_ViewPort *vp )
     if( IsOk() )
     {
         wxColor colour;
-        GetGlobalColor ( _T ( "SNDG1" ), &colour );
+        GetGlobalColor( _T ( "SNDG1" ), &colour);
         wxPoint p1, p2, p3, p4;
         double minlon, maxlon;
         if( m_minlone < 999 )
@@ -714,9 +652,7 @@ bool IACFile::Draw( wxDC *dc, PlugIn_ViewPort *vp )
                 wxPoint points[] = { p1, p2, p3, p4, p1 };
                 dc->DrawLines( 5, points );
             }
-        }
-        else
-        {
+        } else {
             wxFont font_numbers( NUMBERS_FONT_SIZE, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
             m_TexFontNumbers.Build(font_numbers);
             wxFont font_systems( SYSTEMS_FONT_SIZE, wxFONTFAMILY_ROMAN, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_BOLD );
@@ -787,12 +723,10 @@ IACSystem * IACFile::FindSystem( IACSystems &systems, GeoPoint &pos, double devi
     return pSystem;
 }
 
-
 //---------------------------
 // implementatin of GeoPoint
 //---------------------------
 const double GeoPoint::INVALID_KOORD = 9999.9;
-
 
 // initialize from IAC lat/lon token
 void GeoPoint::Set( wxString &token, int coordsys )
@@ -821,9 +755,7 @@ void GeoPoint::Set( wxString &token, int coordsys )
                 if ( lon < 90 )
                 {
                     lon = - (100 + lon);
-                }
-                else
-                {
+                } else {
                     lon = - lon;
                 }
                 break;
@@ -885,9 +817,7 @@ void GeoPoint::Set( wxString &token, int coordsys )
         }
         else
             Set();
-    }
-    else
-    {
+    } else {
         Set(); // invalid token. set to invalid koordinates
     }
 }
@@ -897,9 +827,9 @@ wxString GeoPoint::ToString( void )
     wxString t;
     // latitude
     unsigned int latdeg = floor(fabs(y));
-    wxChar       lats   = (y < 0) ? 'S' : 'N';
+    wxChar lats = (y < 0) ? 'S' : 'N';
     unsigned int londeg = floor(fabs(x));
-    wxChar       lons   = (x < 0) ? 'W' : 'E';
+    wxChar lons = (x < 0) ? 'W' : 'E';
     t.Printf(wxT("%02u%c %03u%c"), latdeg, lats, londeg, lons);
     return t;
 }
@@ -909,9 +839,7 @@ bool GeoPoint::MatchPosition( GeoPoint &refPos, double deviation )
     if( (fabs(x - refPos.x) <= deviation) && (fabs(y - refPos.y) <= deviation) )
     {
         return true;
-    }
-    else
-    {
+    } else {
         return false;
     }
 }
@@ -921,18 +849,13 @@ bool GeoPoint::MatchPosition( GeoPoint &refPos, double deviation )
 // implementation of IACSystem
 //-----------------------------
 
-IACSystem::IACSystem( void ):
-    m_positions(),
-    m_type(-1),
-    m_char(-1),
-    m_val(-1),
-    m_int(-1),
-    m_movement(99),
-    m_direction(99),
-    m_speed(99),
-    m_isoLineWidth(2)
-{
+IACSystem::IACSystem(void)
+    : m_positions(), m_type(-1), m_char(-1), m_val(-1), m_int(-1), m_movement(99), m_direction(99), m_speed(99), m_isoLineWidth(2) {
     m_isoLineColor = *wxBLACK;
+}
+
+IACSystem::~IACSystem()
+{
 }
 
 bool IACSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont )
@@ -956,42 +879,34 @@ bool IACSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &
                     dc->SetTextForeground( colour );
                     wxFont sfont = dc->GetFont();
 
-                    wxFont *font1 = wxTheFontList->FindOrCreateFont ( SYSTEMS_FONT_SIZE,
-                            wxFONTFAMILY_ROMAN, wxNORMAL, wxFONTWEIGHT_BOLD,
-                            FALSE, wxString ( _T ( "Arial" ) ) );
+                    wxFont *font1 = wxTheFontList->FindOrCreateFont(SYSTEMS_FONT_SIZE, wxFONTFAMILY_ROMAN, wxNORMAL,
+                                                                    wxFONTWEIGHT_BOLD, FALSE, wxString(_T ( "Arial" )));
                     dc->SetFont(*font1);
                     wxSize s1 = dc->GetTextExtent(msg1);
                     dc->DrawText(msg1, p.x - (s1.GetWidth() / 2), p.y - (s1.GetHeight() / 2));
-                    wxFont *font2 = wxTheFontList->FindOrCreateFont ( NUMBERS_FONT_SIZE,
-                            wxFONTFAMILY_SWISS, wxITALIC, wxFONTWEIGHT_NORMAL,
-                            FALSE, wxString ( _T ( "Arial" ) ) );
+                    wxFont *font2 = wxTheFontList->FindOrCreateFont(NUMBERS_FONT_SIZE, wxFONTFAMILY_SWISS, wxITALIC,
+                                                                    wxFONTWEIGHT_NORMAL, FALSE, wxString(_T ( "Arial" )));
                     dc->SetFont(*font2);
                     wxString msg2 = GetValue();
                     if( !msg2.IsEmpty() )
                     {
                         wxSize s2 = dc->GetTextExtent(msg2);
-                        dc->DrawText(msg2,
-                                p.x - (s2.GetWidth() / 2),
-                                p.y + (s1.GetHeight() / 2) + (s2.GetHeight() / 2));
+                        dc->DrawText(msg2, p.x - (s2.GetWidth() / 2), p.y + (s1.GetHeight() / 2) + (s2.GetHeight() / 2));
 
                         dc->SetFont(sfont);
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             wxColour colour;
             wxPen pen;
             pen = dc->GetPen();
-            GetGlobalColor ( _T ( "GREEN2" ), &colour );
+            GetGlobalColor( _T ( "GREEN2" ), &colour );
             dc->SetPen(wxPen( colour, m_isoLineWidth ));
             DrawPositions( dc, vp );
             dc->SetPen(pen);
         }
-    }
-    else
-    {
+    } else {
         if( m_positions.GetCount() == 1 )
         {
             GeoPoint &Pos = m_positions[0];
@@ -1015,7 +930,7 @@ bool IACSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &
                     int xd = p.x - (w / 2);
                     int yd = p.y - (h / 2);
                     
-                    GetGlobalColor ( _T ( "UBLCK" ), &colour );
+                    GetGlobalColor( _T ( "UBLCK" ), &colour );
                     glColor3ub(colour.Red() , colour.Green(), colour.Blue());
 
                     glEnable( GL_TEXTURE_2D );
@@ -1031,11 +946,9 @@ bool IACSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &
                     glDisable( GL_BLEND );
                 }
             }
-        }
-        else
-        {
+        } else {
             wxColour colour = m_isoLineColor;
-            GetGlobalColor ( _T ( "GREEN2" ), &m_isoLineColor );
+            GetGlobalColor( _T ( "GREEN2" ), &m_isoLineColor );
             DrawPositions( dc, vp );
             m_isoLineColor = colour;
         }
@@ -1051,7 +964,7 @@ bool IACSystem::DrawPositions( wxDC *dc, PlugIn_ViewPort *vp )
         for( size_t pointIndex = 0; pointIndex < m_positions.GetCount() - 1 ; pointIndex++ )
         {
             GeoPoint &startP = m_positions[pointIndex];
-            GeoPoint &endP   = m_positions[pointIndex+1];
+            GeoPoint &endP = m_positions[pointIndex+1];
             if( PointInLLBox(vp, startP.x, startP.y) || PointInLLBox(vp, endP.x, endP.y) )
             {
                 wxPoint startpl;
@@ -1062,9 +975,7 @@ bool IACSystem::DrawPositions( wxDC *dc, PlugIn_ViewPort *vp )
                 hasDrawn = true;
             }
         }
-    }
-    else
-    {
+    } else {
         //      Enable anti-aliased lines, at best quality
         glEnable( GL_LINE_SMOOTH );
         glEnable( GL_BLEND );
@@ -1100,9 +1011,7 @@ wxString IACSystem::GetTab( const wxChar*(tab[10]), size_t index ) const
     if( index < 10 )
     {
         return wxString(tab[index]);
-    }
-    else
-    {
+    } else {
         return wxEmptyString;
     }
 }
@@ -1128,9 +1037,7 @@ wxString IACSystem::GetMovement( void ) const
             if(m_speed >= 99)
             {
                 t.Append(_("with unknown speed"));
-            }
-            else
-            {
+            } else {
                 hlp.Printf(_("with %uknots"),m_speed);
                 t.Append(hlp);
             }
@@ -1171,7 +1078,7 @@ bool IACSystem::FindAtPos( GeoPoint &pos, double deviation )
     {
         if( m_positions[i - 1].MatchPosition(pos, deviation) )
         {
-            found=true;
+            found = true;
             break;
         }
 
@@ -1182,17 +1089,17 @@ bool IACSystem::FindAtPos( GeoPoint &pos, double deviation )
 
 wxString IACSystem::GetType( size_t index ) const
 {
-    return(wxEmptyString);
+    return (wxEmptyString);
 }
 
 wxString IACSystem::GetShortType( size_t index ) const
 {
-    return(wxEmptyString);
+    return (wxEmptyString);
 }
 
 wxString IACSystem::GetCharacteristic( size_t index ) const
 {
-    return(wxEmptyString);
+    return (wxEmptyString);
 }
 
 wxString IACSystem::PositionsToString( void ) const
@@ -1221,7 +1128,7 @@ wxString IACPressureSystem::GetValue( void ) const
 
 wxString IACPressureSystem::GetType( size_t index ) const
 {
-    static const wxChar* (tab[])=
+    static const wxChar* (tab[]) =
     {
 #ifdef __WXOSX__
         _("Complex Low"), _("Tief"), _("Secondary Low"), _("Trough"), _("Wave"),
@@ -1230,68 +1137,72 @@ wxString IACPressureSystem::GetType( size_t index ) const
 #endif
         _("High"), _("Uniform pressure"), _("Ridge"), _("Col"), _("Tropical Storm")
     };
-    return(wxString(tab[index]));
+    return (wxString(tab[index]));
 }
 
 wxString IACPressureSystem::GetShortType( size_t index ) const
 {
-    static const wxChar* (tab[])=
-    {
-        wxT("L"), wxT("L"), wxT("L"), wxT("T"), wxT("W"),
-        wxT("H"), wxT("U"), wxT("R"), wxT("C"), wxT("TS")
-    };
-    return(wxString(tab[index]));
+    static const wxChar* (tab[]) = {wxT("L"), wxT("L"), wxT("L"), wxT("T"), wxT("W"),
+        wxT("H"), wxT("U"), wxT("R"), wxT("C"), wxT("TS")};
+    return (wxString(tab[index]));
 }
 
 wxString IACPressureSystem::GetCharacteristic( size_t index ) const
 {
-    static const wxChar* (tab[])=
-    {
-        wxEmptyString, _("weakening"), _("little change"), _("intensifying"), _("complex"),
-        _("forming"), _("weakening but not disappearing"), _("general rise"),
-        _("general fall"), _("position doubtful")
-    };
-    return(wxString(tab[index]));
+    static const wxChar* (tab[]) = {wxEmptyString,
+                                    _("weakening"),
+                                    _("little change"),
+                                    _("intensifying"),
+                                    _("complex"),
+                                    _("forming"),
+                                    _("weakening but not disappearing"),
+                                    _("general rise"),
+                                    _("general fall"),
+                                    _("position doubtful")};
+    return (wxString(tab[index]));
 }
 
 wxString IACFrontalSystem::GetType( size_t index ) const
 {
-    static const wxChar* (tab[])=
-    {
-        _("Quasistationary at surface"), _("Quasistationary above surface"),
-        _("Warm surface"), _("Warm above surface"),
-        _("Cold surface"), _("Cold above surface"), _("Occlusion"),
-        _("Instability line"), _("Intertropical"), _("Convergence line")
-    };
-    return(wxString(tab[index]));
+    static const wxChar* (tab[]) = {_("Quasistationary at surface"),
+                                    _("Quasistationary above surface"),
+                                    _("Warm surface"),
+                                    _("Warm above surface"),
+                                    _("Cold surface"),
+                                    _("Cold above surface"),
+                                    _("Occlusion"),
+                                    _("Instability line"),
+                                    _("Intertropical"),
+                                    _("Convergence line")};
+    return (wxString(tab[index]));
 }
 
 wxString IACFrontalSystem::GetCharacteristic( size_t index ) const
 {
-    static const wxChar* (tab[])=
-    {
-        wxEmptyString, _("frontal area decreasing"), _("little change"), _("frontal area increasing"),
-        _("intertropical"), _("forming"), _("quasistationary"),
-        _("with waves"), _("diffuse"), _("strong, increasing")
-    };
-    return(wxString(tab[index]));
+    static const wxChar* (tab[]) = {wxEmptyString, _("frontal area decreasing"),
+                                    _("little change"), _("frontal area increasing"),
+                                    _("intertropical"), _("forming"),
+                                    _("quasistationary"), _("with waves"),
+                                    _("diffuse"), _("strong, increasing")};
+    return (wxString(tab[index]));
 }
 
 wxString IACFrontalSystem::GetIntensity( void ) const
 {
-    static const wxChar* (tab[])=
-    {
-        wxEmptyString,
-        _("weak, decreasing"), _("weak, no change"), _("weak, increasing"),
-        _("moderate, decreasing"), _("moderate, no change"), _("moderate, increasing"),
-        _("strong, decreasing"), _("strong, no change"), _("strong, increasing")
-    };
+    static const wxChar* (tab[]) = {wxEmptyString,
+                                    _("weak, decreasing"),
+                                    _("weak, no change"),
+                                    _("weak, increasing"),
+                                    _("moderate, decreasing"),
+                                    _("moderate, no change"),
+                                    _("moderate, increasing"),
+                                    _("strong, decreasing"),
+                                    _("strong, no change"),
+                                    _("strong, increasing")};
     if( m_int > 0 )
     {
-        return(GetTab(tab, m_int));
-    }
-    else
-    {
+        return (GetTab(tab, m_int));
+    } else {
         return wxEmptyString;
     }
 }
@@ -1301,13 +1212,13 @@ bool IACFrontalSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, Te
     bool hasDrawn = false;
     wxColour colour;
     if( m_type == WARM_SURFACE || m_type == WARM_ABOVE_SURFACE )
-        GetGlobalColor ( _T ( "URED" ), &colour );
+        GetGlobalColor( _T ( "URED" ), &colour );
     else if ( m_type == COLD_SURFACE || m_type == COLD_ABOVE_SURFACE )
-        GetGlobalColor ( _T ( "BLUE3" ), &colour );
+        GetGlobalColor( _T ( "BLUE3" ), &colour );
     else if ( m_type == OCCLUSION )
-        GetGlobalColor ( _T ( "CHMGD" ), &colour );
+        GetGlobalColor( _T ( "CHMGD" ), &colour );
     else
-        GetGlobalColor ( _T ( "DASHN" ), &colour );
+        GetGlobalColor( _T ( "DASHN" ), &colour );
 
     if( dc )
     {
@@ -1315,9 +1226,7 @@ bool IACFrontalSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, Te
         dc->SetPen(pen);
         dc->SetBrush(*wxTRANSPARENT_BRUSH);
         hasDrawn = DrawPositions( dc, vp );
-    }
-    else
-    {
+    } else {
         m_isoLineColor = colour;
         m_isoLineWidth = wxMax(FRONT_WIDTH, GL_MIN_LINE_WIDTH);
         hasDrawn = DrawPositions( dc, vp );
@@ -1327,51 +1236,51 @@ bool IACFrontalSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, Te
 
 wxString IACTropicalSystem::GetType( size_t index ) const
 {
-    static const wxChar* (tab[])=
-    {
-        _("Intertropical convergence zone"), _("Shear line"),
-        _("Line or Zone of convergence"), _("Axis of doldrum belt"),
-        _("Through in westerlies"), _("Through in easterlies"), _("LOW area"),
-        _("Surge line"), _("Divergence zone"), _("Tropical cyclone")
-    };
-    return(GetTab(tab,index));
+    static const wxChar* (tab[]) = {_("Intertropical convergence zone"),
+                                    _("Shear line"),
+                                    _("Line or Zone of convergence"),
+                                    _("Axis of doldrum belt"),
+                                    _("Through in westerlies"),
+                                    _("Through in easterlies"),
+                                    _("LOW area"),
+                                    _("Surge line"),
+                                    _("Divergence zone"),
+                                    _("Tropical cyclone")};
+    return (GetTab(tab,index));
 }
 
 wxString IACTropicalSystem::GetShortType( size_t index ) const
 {
-    static const wxChar* (tab[])=
-    {
-        _T("ICZ"), _T("SL"), _T("LC"), _T("ADB"), _T("TW"),
-        _T("TE"), _T("TL"), _T("SU"), _T("LD"), _T("TC")
-    };
-    return(wxString(tab[index]));
+    static const wxChar* (tab[]) = {_T("ICZ"), _T("SL"), _T("LC"), _T("ADB"), _T("TW"),
+                                    _T("TE"), _T("TL"), _T("SU"), _T("LD"), _T("TC")};
+    return (wxString(tab[index]));
 }
 
 wxString IACTropicalSystem::GetCharacteristic( size_t index ) const
 {
-    static const wxChar* (tab[])=
-    {
-        wxEmptyString, _("diffuse"), _("sharply defines"), _("quasistationary"),
-        _("existance certain"), _("existance uncertain"), _("formation expected"),
-        _("position certain"), _("position uncertain"), _("movement doubtful")
-    };
-    return(GetTab(tab, index));
+    static const wxChar* (tab[]) = {wxEmptyString, _("diffuse"), _("sharply defines"),
+                                    _("quasistationary"), _("existance certain"), _("existance uncertain"),
+                                    _("formation expected"), _("position certain"), _("position uncertain"),
+                                    _("movement doubtful")};
+    return (GetTab(tab, index));
 }
 
 wxString IACTropicalSystem::GetIntensity( void ) const
 {
-    static const wxChar* (tab[])=
-    {
-        wxT("-"), _("weak, decreasing"), _("weak, no change"), _("weak, increasing"),
-        _("moderate, decreasing"), _("moderate, no change"), _("moderate, increasing"),
-        _("strong, decreasing"), _("strong, no change"), _("strong, increasing")
-    };
+    static const wxChar* (tab[]) = {wxT("-"),
+                                    _("weak, decreasing"),
+                                    _("weak, no change"),
+                                    _("weak, increasing"),
+                                    _("moderate, decreasing"),
+                                    _("moderate, no change"),
+                                    _("moderate, increasing"),
+                                    _("strong, decreasing"),
+                                    _("strong, no change"),
+                                    _("strong, increasing")};
     if( m_int > 0 )
     {
-        return(GetTab(tab, m_int));
-    }
-    else
-    {
+        return (GetTab(tab, m_int));
+    } else {
         return wxEmptyString;
     }
 }
@@ -1392,16 +1301,15 @@ bool IACTropicalSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, T
     if( dc )
     {
         wxColour colour;
-        GetGlobalColor ( _T ( "YELO1" ), &colour );
+        GetGlobalColor( _T ( "YELO1" ), &colour );
         wxPen pen( colour, FRONT_WIDTH);
         dc->SetPen(pen);
         dc->SetBrush(*wxTRANSPARENT_BRUSH);
     }
     else
     {
-        GetGlobalColor ( _T ( "YELO1" ), &m_isoLineColor );
+        GetGlobalColor( _T ( "YELO1" ), &m_isoLineColor );
         m_isoLineWidth = wxMax(FRONT_WIDTH, GL_MIN_LINE_WIDTH);
-//        hasDrawn = DrawPositions( dc, vp );  // Not used
     }
     hasDrawn = DrawPositions( dc, vp );
     if( dc )
@@ -1418,7 +1326,7 @@ bool IACTropicalSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, T
                 if( !msg1.IsEmpty() )
                 {
                     hasDrawn = true;
-                    GetGlobalColor ( _T ( "SNDG1" ), &colour );
+                    GetGlobalColor( _T ( "SNDG1" ), &colour );
                     dc->SetTextForeground( colour );
                     wxFont sfont = dc->GetFont();
                     
@@ -1432,9 +1340,7 @@ bool IACTropicalSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, T
                 }
             }
         }
-    }
-    else
-    {
+    } else {
         if( m_positions.GetCount() > 0 )
         {
             GeoPoint &Pos = m_positions[0];
@@ -1458,7 +1364,7 @@ bool IACTropicalSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, T
                     int xd = p.x - (w / 2);
                     int yd = p.y - (h / 2);
                     
-                    GetGlobalColor ( _T ( "SNDG1" ), &colour );
+                    GetGlobalColor( _T ( "SNDG1" ), &colour );
                     glColor3ub(colour.Red() , colour.Green(), colour.Blue());
                     
                     glEnable( GL_TEXTURE_2D );
@@ -1494,7 +1400,7 @@ bool IACIsobarSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, Tex
     if( dc )
     {
         wxColour colour;
-        GetGlobalColor ( _T ( "CHBLK" ), &colour );
+        GetGlobalColor( _T ( "CHBLK" ), &colour );
         wxPen pen( colour, ISOBAR_WIDTH);
         dc->SetPen(pen);
         dc->SetBrush(*wxTRANSPARENT_BRUSH);
@@ -1521,13 +1427,13 @@ bool IACIsobarSystem::Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, Tex
     }
     else
     {
-        GetGlobalColor ( _T ( "CHBLK" ), &m_isoLineColor );
+        GetGlobalColor( _T ( "CHBLK" ), &m_isoLineColor );
         m_isoLineWidth = wxMax(ISOBAR_WIDTH, GL_MIN_LINE_WIDTH);
         hasDrawn = DrawPositions( dc, vp );
         if( hasDrawn )
         {
             wxColour colour;
-            GetGlobalColor ( _T ( "CHBLK" ), &colour );
+            GetGlobalColor( _T ( "CHBLK" ), &colour );
             GeoPoint &Pos = m_positions[randomPositionIndex];
             wxPoint p;
             GetCanvasPixLL( vp, &p, Pos.y, Pos.x );

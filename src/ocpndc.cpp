@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Layer to perform wxDC drawing using wxDC or opengl
@@ -236,30 +236,30 @@ void ocpnDC::SetGLStipple() const
         default: break;
     }
 #else
-      switch( m_pen.GetStyle() ) {
-              case wxDOT: {
-                      glLineStipple( 1, 0x3333 );
-                      glEnable( GL_LINE_STIPPLE );
-                      break;
-                  }
-              case wxLONG_DASH: {
-                      glLineStipple( 1, 0xFFF8 );
-                      glEnable( GL_LINE_STIPPLE );
-                      break;
-                  }
-              case wxSHORT_DASH: {
-                      glLineStipple( 1, 0x3F3F );
-                      glEnable( GL_LINE_STIPPLE );
-                      break;
-                  }
-              case wxDOT_DASH: {
-                      glLineStipple( 1, 0x8FF1 );
-                      glEnable( GL_LINE_STIPPLE );
-                      break;
-                  }
-                  default: break;
-      }
-#endif
+    switch( m_pen.GetStyle() ) {
+        case wxDOT: {
+            glLineStipple( 1, 0x3333 );
+            glEnable( GL_LINE_STIPPLE );
+            break;
+        }
+        case wxLONG_DASH: {
+            glLineStipple( 1, 0xFFF8 );
+            glEnable( GL_LINE_STIPPLE );
+            break;
+        }
+        case wxSHORT_DASH: {
+            glLineStipple( 1, 0x3F3F );
+            glEnable( GL_LINE_STIPPLE );
+            break;
+        }
+        case wxDOT_DASH: {
+            glLineStipple( 1, 0x8FF1 );
+            glEnable( GL_LINE_STIPPLE );
+            break;
+        }
+        default: break;
+    }
+#endif    
 }
 #endif
 
@@ -1001,7 +1001,7 @@ void ocpnDC::DrawBitmap( const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usem
             unsigned char *d = image.GetData();
             unsigned char *a = image.GetAlpha();
 
-#ifdef __WXOSX__
+#ifdef __WXOSX__            
             if(image.HasMask())
                 a=0;
 #endif
@@ -1010,6 +1010,7 @@ void ocpnDC::DrawBitmap( const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usem
                 printf("trying to use mask to draw a bitmap without alpha or mask\n" );
             }
 
+            
             unsigned char *e = new unsigned char[4 * w * h];
             if(e && d){
                 for( int y = 0; y < h; y++ )

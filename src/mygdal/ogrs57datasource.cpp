@@ -1,4 +1,4 @@
-/* *****************************************************************************
+/******************************************************************************
  *
  * Project:  S-57 Translator
  * Purpose:  Implements OGRS57DataSource class
@@ -24,13 +24,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************/
+ ******************************************************************************
+ *
+ *
+ */
 
 #include "ogr_s57.h"
 #include "cpl_conv.h"
 #include "cpl_string.h"
 
-S57ClassRegistrar *OGRS57DataSource::poRegistrar = NULL;
+//S57ClassRegistrar *OGRS57DataSource::poRegistrar = NULL;
 
 /************************************************************************/
 /*                          OGRS57DataSource()                          */
@@ -304,7 +307,7 @@ int OGRS57DataSource::Open( const char * pszFilename, int bTestOpen, CallBackFun
     {
         OGRFeatureDefn  *poDefn;
         int             *panClassCount;
-        int             iClass; // , bGeneric = FALSE; Not used
+        int             iClass, bGeneric = FALSE;
 
         for( iModule = 0; iModule < nModules; iModule++ )
         {
@@ -346,7 +349,7 @@ int OGRS57DataSource::Open( const char * pszFilename, int bTestOpen, CallBackFun
                                                panClassCount[iClass] ) );
                 else
                 {
-//                    bGeneric = TRUE;  // Not used
+                    bGeneric = TRUE;
                     CPLDebug( "S57",
                               "Unable to find definition for OBJL=%d\n",
                               iClass );

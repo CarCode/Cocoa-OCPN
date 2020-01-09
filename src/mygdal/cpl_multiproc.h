@@ -1,4 +1,4 @@
-/* *********************************************************************
+/**********************************************************************
  *
  * Project:  CPL - Common Portability Library
  * Purpose:  CPL Multi-Threading, and process handling portability functions.

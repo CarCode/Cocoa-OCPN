@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -54,7 +54,6 @@ typedef enum DS_ENUM_BUFFER_STATE
       DS_RX_BUFFER_EMPTY,
       DS_RX_BUFFER_FULL
 }_DS_ENUM_BUFFER_STATE;
-
 
 /**
  * This thread manages reading the data stream from the declared serial port.
@@ -158,10 +157,10 @@ void OCP_DataStreamInput_Thread::Parse_And_Send_Posn(const char *buf)
         OCPN_DataStreamEvent Nevent(wxEVT_OCPN_DATASTREAM, 0);
         Nevent.SetNMEAString( buf );
         Nevent.SetStream( m_launcher );
-
+        
         m_pMessageTarget->AddPendingEvent(Nevent);
     }
-
+    
     return;
 }
 
@@ -176,18 +175,18 @@ bool OCP_DataStreamInput_Thread::SetOutMsg(const wxString &msg)
             return true;
         }
     }
-
+    
     return false;
 }
 
 void *OCP_DataStreamInput_Thread::Entry()
 {
-
+    
     bool not_done = true;
     bool nl_found = false;
     wxString msg;
-
-
+    
+    
     //    Request the com port from the comm manager
     if (!OpenComPortPhysical(m_PortName, m_baud))
     {
@@ -196,9 +195,9 @@ void *OCP_DataStreamInput_Thread::Entry()
         ThreadMessage(msg);
         //goto thread_exit; // This means we will not be trying to connect = The device must be connected when the thread is created. Does not seem to be needed/what we want as the reconnection logic is able to pick it up whenever it actually appears (Of course given it appears with the expected device name).
     }
-
+    
     m_launcher->SetSecThreadActive();               // I am alive
-
+    
     //    The main loop
     static size_t retries = 0;
 
@@ -206,7 +205,7 @@ void *OCP_DataStreamInput_Thread::Entry()
     {
         if(TestDestroy())
             not_done = false;                               // smooth exit
-
+        
         uint8_t next_byte = 0;
         size_t newdata = -1;
         if( m_serial.isOpen() ) {
@@ -237,43 +236,43 @@ void *OCP_DataStreamInput_Thread::Entry()
             *put_ptr++ = next_byte;
             if((put_ptr - rx_buffer) > DS_RX_BUFFER_SIZE)
                 put_ptr = rx_buffer;
-
+            
             if(0x0a == next_byte)
                 nl_found = true;
-
+            
             //    Found a NL char, thus end of message?
             if(nl_found)
             {
                 char *tptr;
                 char *ptmpbuf;
-
+                
                 //    Copy the message into a temporary _buffer
-
+                
                 tptr = tak_ptr;
                 ptmpbuf = temp_buf;
-
+                
                 while((*tptr != 0x0a) && (tptr != put_ptr))
                 {
                     *ptmpbuf++ = *tptr++;
-
+                    
                     if((tptr - rx_buffer) > DS_RX_BUFFER_SIZE)
                         tptr = rx_buffer;
-
-                    wxASSERT_MSG((ptmpbuf - temp_buf) < DS_RX_BUFFER_SIZE, (const wxChar *)"temp_buf overrun1");
-
+                    
+                    wxASSERT_MSG((ptmpbuf - temp_buf) < DS_RX_BUFFER_SIZE, (const wxChar *)L"temp_buf overrun1");
+                    
                 }
                 if((*tptr == 0x0a) && (tptr != put_ptr))    // well formed sentence
                 {
                     *ptmpbuf++ = *tptr++;
                     if((tptr - rx_buffer) > DS_RX_BUFFER_SIZE)
                         tptr = rx_buffer;
-
-                    wxASSERT_MSG((ptmpbuf - temp_buf) < DS_RX_BUFFER_SIZE, (const wxChar *)"temp_buf overrun2");
-
+                    
+                    wxASSERT_MSG((ptmpbuf - temp_buf) < DS_RX_BUFFER_SIZE, (const wxChar *)L"temp_buf overrun2");
+                    
                     *ptmpbuf = 0;
-
+                    
                     tak_ptr = tptr;
-
+                    
                     //    Message is ready to parse and send out
                     //    Messages may be coming in as <blah blah><lf><cr>.
                     //    One example device is KVH1000 heading sensor.
@@ -284,16 +283,16 @@ void *OCP_DataStreamInput_Thread::Entry()
                         Parse_And_Send_Posn(&temp_buf[1]);
                     else
                         Parse_And_Send_Posn(temp_buf);
-
+                    
                 }
-
+                
             }                   //if nl
         }                       // if newdata > 0
-
+        
         //      Check for any pending output message
 
         bool b_qdata = !out_que.empty();
-
+        
         while(b_qdata){
             //  Take a copy of message
             char *qmsg = out_que.front();
@@ -302,22 +301,22 @@ void *OCP_DataStreamInput_Thread::Entry()
             char msg[MAX_OUT_QUEUE_MESSAGE_LENGTH];
             strncpy( msg, qmsg, MAX_OUT_QUEUE_MESSAGE_LENGTH-1 );
             free(qmsg);
-
-            if( -1 == WriteComPortPhysical(msg) && 10 < retries++ ) {
+            
+            if( static_cast<size_t>(-1) == WriteComPortPhysical(msg) && 10 < retries++ ) {
                 // We failed to write the port 10 times, let's close the port so that the reconnection logic kicks in and tries to fix our connection.
                 retries = 0;
                 CloseComPortPhysical();
             }
-
+            
             b_qdata = !out_que.empty();
         } //while b_qdata
 
     }
-thread_exit:
+//thread_exit:
     CloseComPortPhysical();
     m_launcher->SetSecThreadInActive();             // I am dead
     m_launcher->m_Thread_run_flag = -1;
-
+    
     return 0;
 }
 #else //ocpnUSE_NEWSERIAL
@@ -342,7 +341,6 @@ void *OCP_DataStreamInput_Thread::Entry()
         msg.Append(m_PortName);
         ThreadMessage(msg);
         goto thread_exit;
-        // This means we will not be trying to connect = The device must be connected when the thread is created. Does not seem to be needed/what we want as the reconnection logic is able to pick it up whenever it actually appears (Of course given it appears with the expected device name).
     }
 
     m_launcher->SetSecThreadActive();               // I am alive
@@ -491,10 +489,12 @@ void *OCP_DataStreamInput_Thread::Entry()
                     
                     b_qdata = !out_que.empty();
                 
+                
             } //while b_qdata
         }
         m_outCritical.Leave();
-
+        
+        
     }                          // the big while...
 
 //          Close the port cleanly
@@ -594,8 +594,8 @@ void *OCP_DataStreamInput_Thread::Entry()
     
     bool fWaitingOnRead = false;
     bool fWaitingOnWrite = false;
-
-
+    
+    
 //    The main loop
 
     while(not_done)
@@ -614,13 +614,13 @@ void *OCP_DataStreamInput_Thread::Entry()
 
                 while(n_reopen_wait > 0){
                     wxThread::Sleep(nrwd10);                        // stall for a bit
-
+                    
                     if((TestDestroy()) || (m_launcher->m_Thread_run_flag == 0))
                         goto thread_exit;                               // smooth exit
-
+                    
                     n_reopen_wait -= nrwd10;
                 }
-
+                        
                 n_reopen_wait = 0;
             }
 
@@ -630,30 +630,30 @@ void *OCP_DataStreamInput_Thread::Entry()
                 hSerialComm = (HANDLE)m_gps_fd;
 
                 wxThread::Sleep(100);                        // stall for a bit
-
+                
                 if (!SetCommTimeouts(hSerialComm, &timeouts)){ // Error setting time-outs.
                       int errt = GetLastError();                // so just retry
                       CloseComPortPhysical(m_gps_fd);
                       m_gps_fd = 0;
-
+                      
                 }
-
+                
                 fWaitingOnWrite = FALSE;
                 fWaitingOnRead = FALSE;
                 n_timeout = 0;
-
+                
             }
             else
             {
                 m_gps_fd = 0;
-
+                
                 int nwait = 2000;
                 while(nwait > 0){
                     wxThread::Sleep(200);                        // stall for a bit
-
+                    
                     if((TestDestroy()) || (m_launcher->m_Thread_run_flag == 0))
                         goto thread_exit;                               // smooth exit
-
+                        
                     nwait -= 200;
                 }
             }
@@ -662,18 +662,18 @@ void *OCP_DataStreamInput_Thread::Entry()
         if( (m_io_select == DS_TYPE_INPUT_OUTPUT) || (m_io_select == DS_TYPE_OUTPUT) ) {
                 m_outCritical.Enter();
                 bool b_qdata = !out_que.empty();
-
+                    
                 bool b_break = false;
                 while(!b_break && b_qdata){
                     char msg[MAX_OUT_QUEUE_MESSAGE_LENGTH];
-
+                    
 //                    printf("wl %d\n", out_que.size());
                     {
-
+                        
                         if(fWaitingOnWrite){
 //                            printf("wow\n");
                             dwRes = WaitForSingleObject(osWriter.hEvent, INFINITE);
-
+                            
                             switch(dwRes)
                             {
                                 case WAIT_OBJECT_0:
@@ -685,7 +685,7 @@ void *OCP_DataStreamInput_Thread::Entry()
                                             b_break = true;
                                         }
                                     }
-
+                                    
                                     if (dwWritten != dwToWrite) {
                                         //ErrorReporter("Error writing data to port (overlapped)");
                                         fWaitingOnWrite = false;        //Stop waiting for this op to complete.  Just abort it.
@@ -696,21 +696,21 @@ void *OCP_DataStreamInput_Thread::Entry()
 //                                        printf("-wow\n");
                                     }
                                     break;
-
+                                    
                                 //                
                                 // wait timed out
                                 //
                                 case WAIT_TIMEOUT:
                                     break;
-
+                                    
                                 case WAIT_FAILED:
                                 default:
                                     break;
                             }
-
+                            
                         }
                         if(!fWaitingOnWrite){          // not waiting on Write, OK to issue another
-
+                        
                         //  Take a copy of message
                             char *qmsg = out_que.front();
                             strncpy( msg, qmsg, MAX_OUT_QUEUE_MESSAGE_LENGTH-1 );
@@ -722,7 +722,7 @@ void *OCP_DataStreamInput_Thread::Entry()
                             // issue write
                             //
                             n_timeout = 0;
-
+                            
 //                            printf("w\n");
                             if (!WriteFile(hSerialComm, msg, dwToWrite, &dwWritten, &osWriter)) {
                                 if (GetLastError() == ERROR_IO_PENDING) { 
@@ -743,17 +743,18 @@ void *OCP_DataStreamInput_Thread::Entry()
                             }
 
                             b_qdata = !out_que.empty();
-
+                            
                         }
                     }
+                    
                 } //while b_qdata
+                
 
-
-
+            
                 m_outCritical.Leave();
         }
-
-
+        
+        
         //
         // if no read is outstanding, then issue another one
         //
@@ -771,18 +772,18 @@ void *OCP_DataStreamInput_Thread::Entry()
             }
             else {    // read completed immediately
                 n_timeout = 0;
-
+                
                 if (dwRead)
                     HandleASuccessfulRead(szBuf, dwRead);
             }
         }
-
+        
         //
         // wait for pending operations to complete
         //
         if ( fWaitingOnRead ) {
             dwRes = WaitForSingleObject(osReader.hEvent, READ_TIMEOUT);
-
+            
             switch(dwRes)
             {
                 //
@@ -804,26 +805,26 @@ void *OCP_DataStreamInput_Thread::Entry()
                         if (dwRead)
                             HandleASuccessfulRead(szBuf, dwRead);
                     }
-
+                    
                     fWaitingOnRead = FALSE;
                     n_timeout = 0;
-
+                    
                     break;
-
+                    
                 case WAIT_TIMEOUT:
                     n_timeout++;
-
+                        
                     break;                       
-
+                    
                 default:                // error of some kind with handles
                     fWaitingOnRead = FALSE;
                     break;
             }
         }
-
+        
         if(m_launcher->m_Thread_run_flag <= 0)
             not_done = false;
-
+        
     }           // the big while...
 
 
@@ -851,19 +852,19 @@ void OCP_DataStreamInput_Thread::HandleASuccessfulRead( char *szBuf, int nread )
             msg.Printf(_T("NMEA activity...%d bytes"), nread);
             ThreadMessage(msg);
         }
-
+        
         int nchar = nread;
         char *pb = szBuf;
-
+        
         while(nchar)
         {
             if(0x0a == *pb)
                 m_nl_found = true;
-
+            
             *put_ptr++ = *pb++;
             if((put_ptr - rx_buffer) > DS_RX_BUFFER_SIZE)
                 put_ptr = rx_buffer;
-
+            
             nchar--;
         }
         if((g_total_NMEAerror_messages < g_nNMEADebug) && (g_nNMEADebug > 1000))
@@ -886,36 +887,36 @@ void OCP_DataStreamInput_Thread::HandleASuccessfulRead( char *szBuf, int nread )
     {
         char *tptr;
         char *ptmpbuf;
-
+        
         bool partial = false;
         while (!partial)
         {
-
+            
             //    Copy the message into a temp buffer
-
+            
             tptr = tak_ptr;
             ptmpbuf = temp_buf;
-
+            
             while((*tptr != 0x0a) && (tptr != put_ptr))
             {
                 *ptmpbuf++ = *tptr++;
-
+                
                 if((tptr - rx_buffer) > RX_BUFFER_SIZE)
                     tptr = rx_buffer;
                 //                    wxASSERT_MSG((ptmpbuf - temp_buf) < DS_RX_BUFFER_SIZE, "temp_buf overrun");
             }
-
+            
             if((*tptr == 0x0a) && (tptr != put_ptr))    // well formed sentence
                     {
                         *ptmpbuf++ = *tptr++;
                         if((tptr - rx_buffer) > DS_RX_BUFFER_SIZE)
                             tptr = rx_buffer;
                         //                    wxASSERT_MSG((ptmpbuf - temp_buf) < DS_RX_BUFFER_SIZE, "temp_buf overrun");
-
+                            
                             *ptmpbuf = 0;
-
+                            
                             tak_ptr = tptr;
-
+                            
                             // parse and send the message
                             //                    wxString str_temp_buf(temp_buf, wxConvUTF8);
                             if(temp_buf[0] == '\r')
@@ -928,7 +929,7 @@ void OCP_DataStreamInput_Thread::HandleASuccessfulRead( char *szBuf, int nread )
                         partial = true;
                     }
         }                 // while !partial
-
+        
     }        // nl found
 }
 
@@ -963,7 +964,7 @@ bool OCP_DataStreamInput_Thread::SetOutMsg(const wxString &msg)
 {
     //  Assume that the caller already owns the mutex
     wxCriticalSectionLocker locker( m_outCritical );
-
+    
     if(out_que.size() < OUT_QUEUE_LENGTH){
         wxCharBuffer buf = msg.ToUTF8();
         if(buf.data()){
@@ -973,9 +974,9 @@ bool OCP_DataStreamInput_Thread::SetOutMsg(const wxString &msg)
             return true;
         }
     }
-
+    
     return false;
-
+    
 #if 0
     if((m_takIndex==0 && m_putIndex==OUT_QUEUE_LENGTH-1) || (m_takIndex==(m_putIndex+1)))
     {
@@ -1042,7 +1043,7 @@ int OCP_DataStreamInput_Thread::OpenComPortPhysical(const wxString &com_name, in
         case  38400: baud_parm =  B38400; break;
         case  57600: baud_parm =  B57600; break;
         case 115200: baud_parm = B115200; break;
-        // Some POSIX systems have higher possible baud rates
+// Some POSIX systems have higher possible baud rates
 #ifdef B230400
         case 230400: baud_parm = B230400; break;
 #endif /* B230400 */
@@ -1052,7 +1053,7 @@ int OCP_DataStreamInput_Thread::OpenComPortPhysical(const wxString &com_name, in
 #ifdef B921600
         case 921600: baud_parm = B921600; break;
 #endif /* B921600 */
-
+        
         default: baud_parm = B4800; break;
     }
 
@@ -1183,7 +1184,7 @@ int OCP_DataStreamInput_Thread::OpenComPortPhysical(const wxString &com_name, in
 #else
     DWORD open_flags = 0;
 #endif
-
+    
     HANDLE hSerialComm = CreateFile(xcom_name.fn_str(),      // Port Name
                              GENERIC_READ | GENERIC_WRITE,     // Desired Access
                              0,                               // Shared Mode
@@ -1297,13 +1298,13 @@ int OCP_DataStreamInput_Thread::WriteComPortPhysical(int port_descriptor, char *
 {
     DWORD dwWritten;
     int fRes;
-
+    
     // Issue write.
     if (!WriteFile((HANDLE)port_descriptor, msg, strlen(msg), &dwWritten, NULL))
         fRes = 0;         // WriteFile failed, . Report error and abort.
     else
         fRes = dwWritten;      // WriteFile completed immediately.
-
+            
     return fRes;
 }
 
@@ -1320,3 +1321,4 @@ bool OCP_DataStreamInput_Thread::CheckComPortPhysical(int port_descriptor)
 
 #endif            // __WXMSW__
 #endif //ocpnUSE_NEWSERIAL
+

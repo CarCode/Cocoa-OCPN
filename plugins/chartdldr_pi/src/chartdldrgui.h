@@ -36,7 +36,7 @@
 #include <wx/statline.h>
 #include <wx/dcmemory.h>
 
-#include "../../../include/ocpn_plugin.h"
+#include "ocpn_plugin.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -44,36 +44,36 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class AddSourceDlg
 ///////////////////////////////////////////////////////////////////////////////
-class AddSourceDlg : public wxDialog 
+class AddSourceDlg : public wxDialog
 {
 	private:
-	
+
 	protected:
-        wxPanel* m_panelPredefined;
-        wxPanel* m_panelCustom;
+		wxPanel* m_panelPredefined;
+		wxPanel* m_panelCustom;
 		wxStaticText* m_stName;
 		wxStaticText* m_stUrl;
 		wxStdDialogButtonSizer* m_sdbSizerBtns;
 		wxButton* m_sdbSizerBtnsOK;
 		wxButton* m_sdbSizerBtnsCancel;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnSourceSelected( wxTreeEvent& event ) { event.Skip(); }
 		virtual void OnOkClick( wxCommandEvent& event ) { event.Skip(); }
-//        virtual void OnCancelClick( wxCommandEvent& event ) { event.Skip(); }  //  for Curl 2.Version
-//        void OnDirSelClick( wxCommandEvent& event );  //  for Curl 2.Version
-//        void applyStyle();  //  for Curl 2.Version
-
+		virtual void OnCancelClick( wxCommandEvent& event ) { event.Skip(); }
+                void OnDirSelClick( wxCommandEvent& event );
+                void applyStyle();
+                
 	public:
 		wxNotebook* m_nbChoice;
-        wxTreeCtrl* m_treeCtrlPredefSrcs;
+		wxTreeCtrl* m_treeCtrlPredefSrcs;
 		wxTextCtrl* m_tSourceName;
 		wxTextCtrl* m_tChartSourceUrl;
-        wxDirPickerCtrl* m_dpChartDirectory;  //  for Curl 2.Version
-//        wxTextCtrl *m_tcChartDirectory;  //  for Curl 2.Version
-//        wxButton *m_buttonChartDirectory;  //  for Curl 2.Version
-//        wxScrolledWindow *m_sourceswin;  //  for Curl 2.Version
-
+		//wxDirPickerCtrl* m_dpChartDirectory;
+                wxTextCtrl *m_tcChartDirectory;
+                wxButton *m_buttonChartDirectory;
+                wxScrolledWindow *m_sourceswin;
+                
 		AddSourceDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("New chart source"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~AddSourceDlg();
 
@@ -82,7 +82,7 @@ class AddSourceDlg : public wxDialog
 ///////////////////////////////////////////////////////////////////////////////
 /// Class ChartDldrPanel
 ///////////////////////////////////////////////////////////////////////////////
-class ChartDldrPanel : public wxPanel 
+class ChartDldrPanel : public wxPanel
 {
 	private:
 
@@ -115,21 +115,21 @@ class ChartDldrPanel : public wxPanel
 
 	public:
 		wxCheckedListCtrl *m_clCharts;
-		
-		ChartDldrPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL ); 
+
+		ChartDldrPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
 		~ChartDldrPanel();
-        ChartDldrPanel() { }
+        //ChartDldrPanel() { }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 /// Class ChartDldrPrefsDlg
 ///////////////////////////////////////////////////////////////////////////////
-class ChartDldrPrefsDlg : public wxDialog 
+class ChartDldrPrefsDlg : public wxDialog
 {
 	private:
 
 	protected:
-		wxDirPickerCtrl* m_dpDefaultDir;  //  for Curl 2.Version
+		//wxDirPickerCtrl* m_dpDefaultDir;
 		wxStaticText* m_stPreselect;
 		wxCheckBox* m_cbSelectUpdated;
 		wxCheckBox* m_cbSelectNew;
@@ -138,19 +138,22 @@ class ChartDldrPrefsDlg : public wxDialog
 		wxStdDialogButtonSizer* m_sdbSizerBtns;
 		wxButton* m_sdbSizerBtnsOK;
 		wxButton* m_sdbSizerBtnsCancel;
-//        wxButton* m_buttonChartDirectory;  //  for Curl 2.Version
-//        wxTextCtrl* m_tcDefaultDir;  //  for Curl 2.Version
-
-//        void OnDirSelClick( wxCommandEvent& event );  //  for Curl 2.Version
-
+        wxButton* m_buttonChartDirectory;
+        wxButton* m_buttonDownloadMasterCatalog;
+        wxTextCtrl* m_tcDefaultDir;
+    
+        void OnDirSelClick( wxCommandEvent& event );
+        void OnDownloadMasterCatalog( wxCommandEvent& event );
+                
+                
 		// Virtual event handlers, overide them in your derived class
-        virtual void OnCancelClick( wxCommandEvent& event ) ;
-        virtual void OnOkClick( wxCommandEvent& event );
+		virtual void OnCancelClick( wxCommandEvent& event ) ;
+		virtual void OnOkClick( wxCommandEvent& event );
 
 
 	public:
 
-		ChartDldrPrefsDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Chart Downloader Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 462,331 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		ChartDldrPrefsDlg( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Chart Downloader Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 462,331 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~ChartDldrPrefsDlg();
 
 };

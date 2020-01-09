@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -80,9 +80,6 @@ class AISTargetListDialog: public wxPanel
             void OnTargetListColumnClicked( wxListEvent &event );
             void OnTargetScrollTo( wxCommandEvent& event );
             void OnTargetCreateWpt( wxCommandEvent& event );
-#ifdef __WXOSX__
-    void OnTargetCopyMMSI( wxCommandEvent& event );
-#endif
             void OnShowAllTracks( wxCommandEvent& event );
             void OnHideAllTracks( wxCommandEvent& event );
             void OnToggleTrack( wxCommandEvent& event );

@@ -69,6 +69,7 @@
 #define ID_RCLK_MENU_ADD_LINK    7025
 
 #include "tcmgr.h"
+#include "OCPNPlatform.h"
 
 /*
  * Forward declarations
@@ -231,14 +232,14 @@ class MarkInfoDlg : public wxFrame
         wxBoxSizer*             bSizerLinks;
         wxButton*               m_buttonExtDescription;
         wxButton*               m_buttonLinksMenu;
-        wxButton*               m_buttonShowTides;
+        wxBitmapButton*         m_buttonShowTides;
         wxButton*               DefaultsBtn;
         wxCheckBox*             m_checkBoxScaMin;
         wxCheckBox*             m_checkBoxShowName;
         wxCheckBox*             m_checkBoxShowNameExt;
         wxCheckBox*             m_checkBoxVisible;
         wxChoice*               m_choiceWaypointRangeRingsUnits;
-        wxColourPickerCtrl*     m_PickColor;
+        wxColourPickerCtrl*   m_PickColor;
         wxCheckBox*             m_cbEtaPresent;
         wxDatePickerCtrl*       m_EtaDatePickerCtrl;
         wxBoxSizer*             bMainSizer;
@@ -249,9 +250,9 @@ class MarkInfoDlg : public wxFrame
         wxFlexGridSizer*        gbSizerInnerProperties;
         wxNotebook*             m_notebookProperties;
         wxObject*               m_contextObject;
-        wxPanel*                m_PanelBasicProperties;
-        wxPanel*                m_PanelDescription;
-        wxPanel*                m_PanelExtendedProperties;
+        wxScrolledWindow*       m_panelBasicProperties;
+        wxPanel*                m_panelDescription;
+        wxScrolledWindow*       m_panelExtendedProperties;
         wxSimpleHtmlListBox*    m_htmlList;
         wxSize                  m_defaultClientSize;
         wxSpinCtrl*             m_SpinWaypointRangeRingsNumber;
@@ -302,7 +303,12 @@ class MarkInfoDlg : public wxFrame
         wxTimePickerCtrl*       m_EtaTimePickerCtrl;
 #endif
         wxBitmap*               _img_MUI_settings_svg;
-        
+        wxButton*               m_sdbSizerButtonsCancel;
+        wxButton*               m_sdbSizerButtonsOK;
+        wxArrayString           m_choiceTideChoices;
+        wxBitmap                m_bmTide;
+        int                     m_sizeMetric;
+
         void initialize_images(void);
         void OnBitmapCombClick(wxCommandEvent& event);
         void OnPositionCtlUpdated( wxCommandEvent& event );

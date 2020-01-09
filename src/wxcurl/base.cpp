@@ -28,6 +28,7 @@
 
 #include <wx/curl/base.h>
 #include <wx/filename.h>
+#include <cmath> // for isnan
 
 
 // ////////////////////////////////////////////////////////////////////
@@ -157,6 +158,11 @@ extern "C"
     /* reads from a string */
     size_t wxcurl_string_read(void* ptr, size_t size, size_t nmemb, void* pcharbuf)
     {
+#pragma GCC diagnostic push
+#if defined(__GNUC__) && __GNUC__ >= 8
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
         size_t iRealSize = size * nmemb;
         size_t iRetVal = 0;
 
@@ -182,6 +188,7 @@ extern "C"
         }
 
         return iRetVal;
+#pragma GCC diagnostic pop
     }
 
     /* reads from a stream */
@@ -202,7 +209,6 @@ extern "C"
     }
 }
 
-
 // base.cpp: implementation of the wxCurlProgressBaseEvent class.
 //
 // ////////////////////////////////////////////////////////////////////
@@ -222,7 +228,7 @@ wxTimeSpan wxCurlProgressBaseEvent::GetElapsedTime() const
 wxTimeSpan wxCurlProgressBaseEvent::GetEstimatedTime() const
 {
     double nBytesPerSec = GetSpeed();
-    if (nBytesPerSec == 0 || wxIsNaN(nBytesPerSec))
+    if (nBytesPerSec == 0 || std::isnan(nBytesPerSec))
         return wxTimeSpan(0);       // avoid division by zero
 
     // compute remaining seconds; here we assume that the current
@@ -248,7 +254,7 @@ wxTimeSpan wxCurlProgressBaseEvent::GetEstimatedRemainingTime() const
 std::string wxCurlProgressBaseEvent::GetHumanReadableSpeed(const std::string &invalid, int precision) const
 {
     double speed = GetSpeed();
-    if (speed == 0 || wxIsNaN(speed))
+    if (speed == 0 || std::isnan(speed))
         return invalid;
 
     wxULongLong ull((wxULongLong_t)speed);
@@ -430,13 +436,14 @@ wxCurlBase::~wxCurlBase()
     ResetHeaders();
 }
 
-// ////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
 // LibCURL Abstraction Methods
-// ////////////////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////////
 typedef int (*func_T)(void);
-bool wxCurlBase::SetOpt(int opt, ...)
+bool wxCurlBase::SetOpt(CURLoption option, ...)
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wvarargs"
     va_list arg;
 
     func_T param_func = (func_T)0;
@@ -444,12 +451,8 @@ bool wxCurlBase::SetOpt(int opt, ...)
     void *param_obj = NULL;
     curl_off_t param_offset = 0;
 
-    va_start(arg, opt);
-    CURLoption option = (CURLoption)opt;
-// https://www.securecoding.cert.org/confluence/display/cplusplus/EXP58-CPP.+Pass+an+object+of+the+correct+type+to+va_start
-// CURLoption ist enum und müßte int sein (siehe curl.h)
-// Neu mit clang-3.9 ? Mit clang-3.8 und 4.0 soll es gehen. 3.9: -Wno-varargs
-// https://bugs.llvm.org/show_bug.cgi?id=29140
+    va_start(arg, option);
+
     CURLcode res = CURLE_OK;
 
     // This code stolen from easy.c from LibCURL - It is needed to ensure that
@@ -478,6 +481,7 @@ bool wxCurlBase::SetOpt(int opt, ...)
 
     DumpErrorIfNeed(res);
     return (res == CURLE_OK);
+#pragma clang diagnostic pop
 }
 
 bool wxCurlBase::SetStringOpt(CURLoption option, const wxCharBuffer &str)
@@ -495,24 +499,24 @@ bool wxCurlBase::SetStringOpt(CURLoption option, const wxCharBuffer &str)
     return SetOpt(option, (const char*)str);
 }
 
-bool wxCurlBase::GetInfo(int info, ...) const
+bool wxCurlBase::GetInfo(CURLINFO info, ...) const
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wvarargs"
     va_list arg;
     void* pParam;
-// https://www.securecoding.cert.org/confluence/display/cplusplus/EXP58-CPP.+Pass+an+object+of+the+correct+type+to+va_start
-// CURLINFO ist enum und müßte int sein (siehe curl.h)
-// Neu mit clang-3.9 ? Mit clang-3.8 und 4.0 soll es gehen. 3.9: -Wno-varargs
-// https://bugs.llvm.org/show_bug.cgi?id=29140
+
     va_start(arg, info);
     pParam = va_arg(arg, void*);
 
     CURLcode res = CURLE_OK;
-    CURLINFO cInfo = (CURLINFO)info;
-    res = curl_easy_getinfo(m_pCURL, cInfo, pParam);
+
+    res = curl_easy_getinfo(m_pCURL, info, pParam);
 
     DumpErrorIfNeed(res);
     va_end(arg);
     return (res == CURLE_OK);
+#pragma clang diagnostic pop
 }
 
 bool wxCurlBase::Perform()
@@ -828,7 +832,7 @@ void wxCurlBase::SetCurlHandleToDefaults(const wxString& relativeURL)
         SetOpt(CURLOPT_WRITEHEADER, &m_szResponseHeader);
         SetOpt(CURLOPT_ERRORBUFFER, m_szDetailedErrorBuffer);
         SetOpt(CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0\r\n" \
-                    "Accept: application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8\r\n" \
+                    "Accept: */*\r\n" \
                     "Connection: keep-alive"); //Pretend we are a normal browser
         SetOpt(CURLOPT_FOLLOWLOCATION, 1L);
 #ifdef __WXMSW__

@@ -1,4 +1,4 @@
-/**************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Vector Chart Object Search Plugin
@@ -34,12 +34,16 @@
 #include <wx/progdlg.h>
 #include "wx/wxsqlite3.h"
 //#include <sqlite3.h>  // Siehe CommitsOptimierSeit1712.txt
+#ifdef __WXOSX__
+#include <wx/stdpaths.h>
+#endif
 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include "csv_parser.h"
 #include "objsearch_pi.h"
+#include "icons.h"
 
 //SQLite user functions
 
@@ -219,7 +223,9 @@ objsearch_pi::objsearch_pi ( void *ppimgr )
     m_db = initDB();
     
     wxSQLite3ResultSet set;
-    
+
+    m_vpppm = 0.1;
+
     if (m_bDBUsable)
     {
         set = SelectFromDB( m_db, wxT("SELECT id, chartname, scale, nativescale FROM chart") );
@@ -275,7 +281,7 @@ int objsearch_pi::Init ( void )
     // Get a pointer to the opencpn display canvas, to use as a parent for the OBJSEARCH dialog
     m_parent_window = GetOCPNCanvasWindow();
 
-#ifdef OBJSEARCH_USE_SVG
+#ifndef ocpnUSE_SVG  // externes svg will nicht anzeigen
     m_leftclick_tool_id = InsertPlugInToolSVG( _T( "Object Search" ), _svg_objsearch, _svg_objsearch_rollover, _svg_objsearch_toggled, wxITEM_CHECK, _( "Object Search" ), _T( "" ), NULL, OBJSEARCH_TOOL_POSITION, 0, this);
 #else
     m_leftclick_tool_id = InsertPlugInTool ( _T ( "" ), _img_objsearch, _img_objsearch, wxITEM_CHECK,

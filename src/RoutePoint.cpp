@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -46,11 +46,7 @@ extern Routeman     *g_pRouteMan;
 extern wxRect       g_blink_rect;
 extern Multiplexer  *g_pMUX;
 extern MyFrame      *gFrame;
-#ifdef __WXOSX__
-extern ChartCanvas  *cc1;
-#endif
 extern bool         g_btouch;
-extern bool         g_bresponsive;
 extern ocpnStyle::StyleManager* g_StyleManager;
 extern double       g_n_arrival_circle_radius;
 extern int          g_iWaypointRangeRingsNumber;
@@ -58,7 +54,6 @@ extern float        g_fWaypointRangeRingsStep;
 extern int          g_iWaypointRangeRingsStepUnits;
 extern wxColour     g_colourWaypointRangeRingsColour;
 extern OCPNPlatform *g_Platform;
-extern Select       *pSelect;
 extern float        g_ChartScaleFactorExp;
 extern int          g_iWpt_ScaMin;
 extern bool         g_bUseWptScaMin;
@@ -532,9 +527,7 @@ bool RoutePoint::IsVisibleSelectable(ChartCanvas *canvas)
         if (g_bOverruleScaMin)
             return true;
         else
-#ifndef __WXOSX__
-            if (canvas->GetScaleValue() > m_ScaMin)  // Kein GetScaleValue() hier
-#endif
+            if (canvas->GetScaleValue() > m_ScaMin) 
                 return false;
     }
     return true;
@@ -697,22 +690,15 @@ void RoutePoint::Draw( ocpnDC& dc, ChartCanvas *canvas, wxPoint *rpn )
 }
 
 #ifdef ocpnUSE_GL
-#ifdef __WXOSX__
-void RoutePoint::DrawGL( ViewPort &vp, bool use_cached_screen_coords )
-#else
 void RoutePoint::DrawGL( ViewPort &vp, ChartCanvas *canvas, bool use_cached_screen_coords )
-#endif
 {
 //     if( !m_bIsVisible ) 
 //         return;
 //     if( !m_bIsActive)  //  An active route point must always be visible
 //         if( !IsScaVisible( canvas) )          
 //             return;  ;
-#ifdef __WXOSX__
-    if( !m_bIsVisible ) return;
-#else
     if ( !IsVisibleSelectable(canvas) ) return;
-#endif
+    
     //    Optimization, especially apparent on tracks in normal cases
     if( m_IconName == _T("empty") && !m_bShowName && !m_bPtIsSelected ) return;
 
@@ -749,11 +735,8 @@ void RoutePoint::DrawGL( ViewPort &vp, ChartCanvas *canvas, bool use_cached_scre
     if(use_cached_screen_coords && m_pos_on_screen)
         r.x = m_screen_pos.m_x, r.y = m_screen_pos.m_y;
     else
-#ifdef __WXOSX__
-      cc1->GetCanvasPointPix( m_lat, m_lon, &r );
-#else
         canvas->GetCanvasPointPix( m_lat, m_lon, &r );
-#endif
+
     if(r.x == INVALID_COORD)
         return;
 
@@ -813,13 +796,9 @@ void RoutePoint::DrawGL( ViewPort &vp, ChartCanvas *canvas, bool use_cached_scre
     /* update bounding box */
     if(!m_wpBBox.GetValid() || vp.view_scale_ppm != m_wpBBox_view_scale_ppm || vp.rotation != m_wpBBox_rotation) {
         double lat1, lon1, lat2, lon2;
-#ifdef __WXOSX__
-        cc1->GetCanvasPixPoint(r.x+hilitebox.x, r.y+hilitebox.y+hilitebox.height, lat1, lon1);
-        cc1->GetCanvasPixPoint(r.x+hilitebox.x+hilitebox.width, r.y+hilitebox.y, lat2, lon2);
-#else
         canvas->GetCanvasPixPoint(r.x+hilitebox.x, r.y+hilitebox.y+hilitebox.height, lat1, lon1);
         canvas->GetCanvasPixPoint(r.x+hilitebox.x+hilitebox.width, r.y+hilitebox.y, lat2, lon2);
-#endif
+
         if(lon1 > lon2)
             m_wpBBox.Set(lat1, lon1, lat2, lon2+360);
         else
@@ -869,7 +848,7 @@ void RoutePoint::DrawGL( ViewPort &vp, ChartCanvas *canvas, bool use_cached_scre
         
         glColor3f(1, 1, 1);
         
-        int /*x = r1.x, y = r1.y,*/ w = r1.width, h = r1.height;  // Not used
+        int w = r1.width, h = r1.height;
         
         float scale = 1.0;
         if(!m_bPreScaled){
@@ -972,11 +951,8 @@ void RoutePoint::DrawGL( ViewPort &vp, ChartCanvas *canvas, bool use_cached_scre
         double tlat, tlon;
         wxPoint r1;
         ll_gc_ll( m_lat, m_lon, 0, factor, &tlat, &tlon );
-#ifdef __WXOSX__
-        cc1->GetCanvasPointPix( tlat, tlon, &r1 );
-#else
         canvas->GetCanvasPointPix( tlat, tlon, &r1 );
-#endif
+        
         double lpp = sqrt( pow( (double) (r.x - r1.x), 2) +
         pow( (double) (r.y - r1.y), 2 ) );
         int pix_radius = (int) lpp;
@@ -1178,12 +1154,7 @@ void RoutePoint::ShowScaleWarningMessage(ChartCanvas *canvas)
     wxString strA = _("The ScaMin value for new waypoints is set to");
     wxString strB = _("but current chartscale is");
     wxString strC = _("Therefore the new waypoint will not be visible at this zoom level.");
-#ifdef __WXOSX__
-    wxString strD = _(" unbekannt."); // GetScaleValue hier nicht da
-    wxString MessStr = wxString::Format(_T("%s %i,\n %s %i.\n%s"),strA, (int)GetScaMin(), strB, strD, strC);
-#else
     wxString MessStr = wxString::Format(_T("%s %i,\n %s %i.\n%s"),strA, (int)GetScaMin(), strB, canvas->GetScaleValue(), strC);
-#endif
     OCPNMessageBox( canvas, MessStr);
 }
 

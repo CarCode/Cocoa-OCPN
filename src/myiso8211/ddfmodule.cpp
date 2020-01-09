@@ -1,4 +1,4 @@
-/* *****************************************************************************
+/******************************************************************************
  *
  * Project:  ISO 8211 Access
  * Purpose:  Implements the DDFModule class.
@@ -168,11 +168,7 @@ void DDFModule::Close()
 /*      Cleanup the clones.  Deleting them will cause a callback to     */
 /*      remove them from the list.                                      */
 /* -------------------------------------------------------------------- */
-#ifdef __WXOSX__
-    while( nCloneCount > 0 && !papoClones[0])
-#else
     while( nCloneCount > 0 )
-#endif
         delete papoClones[0];
 
     nMaxCloneCount = 0;
@@ -475,7 +471,7 @@ int DDFModule::Create( const char *pszFilename )
     achLeader[9] = _appIndicator;
     sprintf( achLeader+10, "%02d", (int) _fieldControlLength );
     sprintf( achLeader+12, "%05d", (int) _fieldAreaStart );
-    strncpy( achLeader+17, _extendedCharSet, 3 );
+    memcpy( achLeader+17, _extendedCharSet, 3 );
     sprintf( achLeader+20, "%1d", (int) _sizeFieldLength );
     sprintf( achLeader+21, "%1d", (int) _sizeFieldPos );
     achLeader[22] = '0';

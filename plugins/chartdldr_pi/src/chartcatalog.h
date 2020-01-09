@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  * $Id: chartcatalog.h,v 1.0 2011/02/26 01:54:37 nohal Exp $
  *
  * Project:  OpenCPN
@@ -6,8 +6,8 @@
  * Author:   Pavel Kalian
  *
  ***************************************************************************
- *   Copyright (C) 2011 by Pavel Kalian                                    *
- *   $EMAIL$                                                               *
+ *   Copyright (C) 2011 by Pavel Kalian   *
+ *   $EMAIL$   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,7 +23,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef _CHARTCATALOG_H_
 #define _CHARTCATALOG_H_
@@ -34,7 +35,7 @@
   #include "wx/wx.h"
 #endif //precompiled headers
 
-#include "../../../include/tinyxml.h"
+#include "tinyxml.h"
 
 //Forward declarations
 class NoticeToMariners;
@@ -70,7 +71,7 @@ public:
     wxString ref_spec;
     wxString ref_spec_vers;
     wxString s62AgencyCode;
-    wxArrayOfCharts *charts;
+    wxArrayOfCharts charts;
 private:
     bool ParseNoaaHeader( TiXmlElement * xmldata );
 };
@@ -79,31 +80,17 @@ class Chart
 {
 public:
     Chart( TiXmlNode * xmldata );
-    ~Chart();
+    virtual ~Chart();
     // public methods
-#ifdef __WXOSX__
-    wxString GetChartTitle() { return title; }
-    wxString GetDownloadLocation() { return zipfile_location; }
-#else
     virtual wxString GetChartTitle() { return title; }
     virtual wxString GetDownloadLocation() { return zipfile_location; }
-#endif
-#ifdef __WXOSX__
-    bool NeedsManualDownload() { return manual_download_url != wxEmptyString; }
-    wxString GetManualDownloadUrl() { return manual_download_url; }
-    wxString GetChartFilename( bool to_check = false );
-#else
     virtual bool NeedsManualDownload() { return manual_download_url != wxEmptyString; }
     virtual wxString GetManualDownloadUrl() { return manual_download_url; }
     virtual wxString GetChartFilename( bool to_check = false );
-#endif
-#ifdef __WXOSX__
-    wxDateTime GetUpdateDatetime() { return zipfile_datetime_iso8601; }
-#else
     virtual wxDateTime GetUpdateDatetime() { return zipfile_datetime_iso8601; }
-#endif
+
     // public properties
-    wxString number; // chart number used for zip file name, BSB name, cell number  .Paul.
+    wxString number; // chart number used for zip file name, BSB name, cell number  .Paul. 
     wxString title; //RNC: <title>, ENC:<lname>
     wxArrayString *coast_guard_districts;
     wxArrayString *states;
@@ -118,7 +105,7 @@ public:
 
     NoticeToMariners *nm;
     NoticeToMariners *lnm;
-    wxArrayOfPanels *coverage;
+    wxArrayOfPanels coverage;
 };
 
 class RasterChart : public Chart //<chart>
@@ -241,6 +228,7 @@ class Vertex
 {
 public:
     Vertex( TiXmlNode * xmldata );
+    virtual ~Vertex() {};
     // public methods
 
     //public properties
@@ -252,12 +240,12 @@ class Panel
 {
 public:
     Panel( TiXmlNode * xmldata );
-    ~Panel();
+    virtual ~Panel();
     // public methods
 
     //public properties
     int panel_no;
-    wxArrayOfVertexes *vertexes;
+    wxArrayOfVertexes vertexes;
 };
 
 class RncPanel : public Panel

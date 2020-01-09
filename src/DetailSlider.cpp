@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -39,12 +39,9 @@ extern int         g_chart_zoom_modifier;
 extern int         g_chart_zoom_modifier_vector;
 extern int         g_detailslider_dialog_x;
 extern int         g_detailslider_dialog_y;
-extern ChartCanvas *cc1;
 extern MyFrame     *gFrame;
-extern bool        g_bQuiltEnable;
-extern ChartStack  *pCurrentStack;
 
-BEGIN_EVENT_TABLE(PopUpDSlide, wxDialog)
+BEGIN_EVENT_TABLE(PopUpDSlide, wxFrame)
     EVT_KEY_DOWN(PopUpDSlide::OnKeyDown )
     EVT_MOVE( PopUpDSlide::OnMove )
     EVT_COMMAND_SCROLL_THUMBRELEASE(-1, PopUpDSlide::OnChangeValue)
@@ -100,20 +97,17 @@ bool PopUpDSlide::Create( wxWindow *parent, wxWindowID id, ChartTypeEnum ChartT,
                 return false;                
             }
     
-    long wstyle = wxDEFAULT_DIALOG_STYLE;
-#ifdef __WXOSX__
-    wstyle |= wxSTAY_ON_TOP;
-#endif
+    long wstyle = wxDEFAULT_DIALOG_STYLE|wxFRAME_FLOAT_ON_PARENT;
     
-    if( !wxDialog::Create( parent, id, WindowText, pos, size, wstyle ) ) return false;
+    if( !wxFrame::Create( parent, id, WindowText, pos, size, wstyle ) ) return false;
 
     m_pparent = parent;
     
 int minValue = -5;
 int maxValue = 5;
     m_p_DetailSlider = new wxSlider( this, id, value, minValue, maxValue, wxPoint( 0, 0 ),
-                                    wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS, wxDefaultValidator,
-                                    WindowText );
+                                        wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS, wxDefaultValidator,
+                                        WindowText );
 
     m_p_DetailSlider->SetSize( wxSize( 350, -1 ) );
 
@@ -139,8 +133,9 @@ void PopUpDSlide::OnCancelClick( wxCommandEvent& event )
 void PopUpDSlide::OnClose( wxCloseEvent& event )
 {
     g_bShowDetailSlider = false;
-
-    m_p_DetailSlider->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler(PopUpDSlide::OnKeyDown), NULL, this );
+    
+    if( m_p_DetailSlider )
+       m_p_DetailSlider->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler(PopUpDSlide::OnKeyDown), NULL, this );
     Destroy();
     pPopupDetailSlider = NULL;
 }
@@ -168,12 +163,13 @@ void PopUpDSlide::OnChangeValue( wxScrollEvent& event )
 
 {
     ::wxBeginBusyCursor();
-    int delta=0;
 
     if ( (ChartType == CHART_TYPE_CM93COMP ) || (ChartType == CHART_TYPE_CM93 )){
         g_cm93_zoom_factor = m_p_DetailSlider->GetValue();
-        cc1->ReloadVP();
-        cc1->Refresh();
+        ChartCanvas *parentCanvas = dynamic_cast<ChartCanvas *>( GetParent() );
+        
+        parentCanvas->ReloadVP();
+        parentCanvas->Refresh();
         ::wxEndBusyCursor();
         return;
     }

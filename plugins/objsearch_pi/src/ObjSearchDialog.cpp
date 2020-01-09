@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  6 2014)
+// C++ code generated with wxFormBuilder (version Jan 25 2018)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -11,7 +11,7 @@
 
 ObjSearchDialog::ObjSearchDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+    this->SetSizeHints( wxSize( 300,300 ), wxDefaultSize );
 	
 	wxBoxSizer* bMainSizer;
 	bMainSizer = new wxBoxSizer( wxVERTICAL );
@@ -52,12 +52,6 @@ ObjSearchDialog::ObjSearchDialog( wxWindow* parent, wxWindowID id, const wxStrin
     bSizerButtons->Add( m_btnShowOnChart, 0, wxALL, 5 );
 #else
     bSizerButtons->Add( m_btnShowOnChart, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-#endif
-	m_btnClose = new wxButton( this, wxID_ANY, _("Close"), wxDefaultPosition, wxDefaultSize, 0 );
-#ifdef __WXOSX__
-    bSizerButtons->Add( m_btnClose, 0, wxALL, 5 );
-#else
-    bSizerButtons->Add( m_btnClose, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 #endif
 	m_cAutoClose = new wxCheckBox( this, wxID_ANY, _("Close on show"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_cAutoClose->SetValue(true);
@@ -105,7 +99,6 @@ ObjSearchDialog::ObjSearchDialog( wxWindow* parent, wxWindowID id, const wxStrin
 	m_buttonSearch->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjSearchDialog::OnSearch ), NULL, this );
 	m_listCtrlResults->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( ObjSearchDialog::OnItemSelected ), NULL, this );
 	m_btnShowOnChart->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjSearchDialog::OnShowOnChart ), NULL, this );
-	m_btnClose->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjSearchDialog::OnClose ), NULL, this );
     m_btnSettings->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjSearchDialog::OnSettings ), NULL, this );
 }
 
@@ -116,19 +109,23 @@ ObjSearchDialog::~ObjSearchDialog()
 	m_buttonSearch->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjSearchDialog::OnSearch ), NULL, this );
 	m_listCtrlResults->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( ObjSearchDialog::OnItemSelected ), NULL, this );
 	m_btnShowOnChart->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjSearchDialog::OnShowOnChart ), NULL, this );
-	m_btnClose->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjSearchDialog::OnClose ), NULL, this );
     m_btnSettings->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ObjSearchDialog::OnSettings ), NULL, this );
 	
 }
 
 SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+    this->SetSizeHints( wxSize( 300,300 ), wxDefaultSize );
 	
 	wxBoxSizer* bSizerMain;
 	bSizerMain = new wxBoxSizer( wxVERTICAL );
 	
-    m_notebookSettings = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+    m_swMain = new wxScrolledWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
+    m_swMain->SetScrollRate( 5, 5 );
+    wxBoxSizer* bSizerCintentMain;
+    bSizerCintentMain = new wxBoxSizer( wxVERTICAL );
+
+    m_notebookSettings = new wxNotebook( m_swMain, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
     m_panelPopulate = new wxPanel( m_notebookSettings, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
     wxBoxSizer* bSizerPopulate;
     bSizerPopulate = new wxBoxSizer( wxVERTICAL );
@@ -136,15 +133,21 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
     m_stScanCharts = new wxStaticText( m_panelPopulate, wxID_ANY, _("Scan charts"), wxDefaultPosition, wxDefaultSize, 0 );
     m_stScanCharts->Wrap( -1 );
     bSizerPopulate->Add( m_stScanCharts, 0, wxALL, 5 );
-
-    m_stScanChartsExplain = new wxStaticText( m_panelPopulate, wxID_ANY, _("0-80S/N, 0-180E/W, W longitudes and S latitudes are expressed as negative numbers.\nThe area selected can't cross the IDL (180W/E)"), wxDefaultPosition, wxDefaultSize, 0 );
 #ifndef __WXOSX__
+    m_stScanChartsExplain = new wxStaticText( m_panelPopulate, wxID_ANY, _("0-80S/N, 0-180E/W, W longitudes and S latitudes are expressed as negative numbers.\nThe area selected can't cross the IDL (180W/E)"), wxDefaultPosition, wxDefaultSize, 0 );
+//#ifndef __WXOSX__
     wxFont fnt;
     m_stScanChartsExplain->SetFont(fnt.Smaller());
-#endif
+//#endif
     m_stScanChartsExplain->Wrap( -1 );
     bSizerPopulate->Add( m_stScanChartsExplain, 0, wxALL, 5 );
+#else
+    m_stScanChartsExplain = new wxStaticText( m_panelPopulate, wxID_ANY, _("0-80S/N, 0-180E/W, W longitudes and S latitudes are expressed as negative numbers.\nThe area selected can't cross the IDL (180W/E)"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_stScanChartsExplain->Wrap( -1 );
+    m_stScanChartsExplain->SetFont( wxFont( 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT("Lucida Grande") ) );
 
+    bSizerPopulate->Add( m_stScanChartsExplain, 0, wxALL|wxEXPAND, 5 );
+#endif
     wxBoxSizer* bSizerParams;
 	bSizerParams = new wxBoxSizer( wxHORIZONTAL );
 	
@@ -157,25 +160,25 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	wxGridSizer* gSizerFrom;
 	gSizerFrom = new wxGridSizer( 0, 2, 0, 0 );
 	
-    m_staticTextFromLat = new wxStaticText( m_panelPopulate, wxID_ANY, _("Latitude"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_staticTextFromLat = new wxStaticText( sbSizerFrom->GetStaticBox(), wxID_ANY, _("Latitude"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextFromLat->Wrap( -1 );
 	gSizerFrom->Add( m_staticTextFromLat, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-    m_spFromLat = new wxSpinCtrl( m_panelPopulate, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -80, 80, 0 );
+    m_spFromLat = new wxSpinCtrl( sbSizerFrom->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -80, 80, 0 );
 	gSizerFrom->Add( m_spFromLat, 0, wxALL, 5 );
 	
-    m_staticTextFromLon = new wxStaticText( m_panelPopulate, wxID_ANY, _("Longitude"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_staticTextFromLon = new wxStaticText( sbSizerFrom->GetStaticBox(), wxID_ANY, _("Longitude"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextFromLon->Wrap( -1 );
 	gSizerFrom->Add( m_staticTextFromLon, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-    m_spFromLon = new wxSpinCtrl( m_panelPopulate, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -180, 180, 0 );
+    m_spFromLon = new wxSpinCtrl( sbSizerFrom->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -180, 180, 0 );
 	gSizerFrom->Add( m_spFromLon, 0, wxALL, 5 );
 	
 	
 	sbSizerFrom->Add( gSizerFrom, 0, wxEXPAND, 5 );
 	
 	
-    bSizerArea->Add( sbSizerFrom, 0, wxALL|wxEXPAND, 5 );
+    bSizerArea->Add( sbSizerFrom, 1, wxALL|wxEXPAND, 5 );
     
 	wxStaticBoxSizer* sbSizerTo;
     sbSizerTo = new wxStaticBoxSizer( new wxStaticBox( m_panelPopulate, wxID_ANY, _("End to") ), wxVERTICAL );
@@ -183,25 +186,25 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	wxGridSizer* gSizerTo;
 	gSizerTo = new wxGridSizer( 0, 2, 0, 0 );
 	
-    m_staticTextToLat = new wxStaticText( m_panelPopulate, wxID_ANY, _("Latitude"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_staticTextToLat = new wxStaticText( sbSizerTo->GetStaticBox(), wxID_ANY, _("Latitude"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextToLat->Wrap( -1 );
 	gSizerTo->Add( m_staticTextToLat, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-    m_spToLat = new wxSpinCtrl( m_panelPopulate, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -80, 80, 0 );
+    m_spToLat = new wxSpinCtrl( sbSizerTo->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -80, 80, 0 );
 	gSizerTo->Add( m_spToLat, 0, wxALL, 5 );
 	
-    m_staticTextToLon = new wxStaticText( m_panelPopulate, wxID_ANY, _("Longitude"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_staticTextToLon = new wxStaticText( sbSizerTo->GetStaticBox(), wxID_ANY, _("Longitude"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextToLon->Wrap( -1 );
 	gSizerTo->Add( m_staticTextToLon, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-    m_spToLon = new wxSpinCtrl( m_panelPopulate, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -180, 180, 0 );
+    m_spToLon = new wxSpinCtrl( sbSizerTo->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -180, 180, 0 );
 	gSizerTo->Add( m_spToLon, 0, wxALL, 5 );
 	
 	
 	sbSizerTo->Add( gSizerTo, 0, wxEXPAND, 5 );
 	
 	
-    bSizerArea->Add( sbSizerTo, 0, wxALL|wxEXPAND, 5 );
+    bSizerArea->Add( sbSizerTo, 1, wxALL|wxEXPAND, 5 );
 	
 	
     bSizerParams->Add( bSizerArea, 0, wxEXPAND, 5 );
@@ -209,19 +212,19 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	wxStaticBoxSizer* sbSizerScales;
     sbSizerScales = new wxStaticBoxSizer( new wxStaticBox( m_panelPopulate, wxID_ANY, _("Scales") ), wxVERTICAL );
 	
-    m_cb5000000 = new wxCheckBox( m_panelPopulate, wxID_ANY, _("1:5000000"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_cb5000000 = new wxCheckBox( sbSizerScales->GetStaticBox(), wxID_ANY, _("1:5000000"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_cb5000000->SetValue(true); 
 	sbSizerScales->Add( m_cb5000000, 0, wxALL, 5 );
 	
-    m_cb1000000 = new wxCheckBox( m_panelPopulate, wxID_ANY, _("1:1000000"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_cb1000000 = new wxCheckBox( sbSizerScales->GetStaticBox(), wxID_ANY, _("1:1000000"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_cb1000000->SetValue(true); 
 	sbSizerScales->Add( m_cb1000000, 0, wxALL, 5 );
 	
-    m_cb200000 = new wxCheckBox( m_panelPopulate, wxID_ANY, _("1:200000"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_cb200000 = new wxCheckBox( sbSizerScales->GetStaticBox(), wxID_ANY, _("1:200000"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizerScales->Add( m_cb200000, 0, wxALL, 5 );
 	
-    m_cb20000 = new wxCheckBox( m_panelPopulate, wxID_ANY, _("1:20000 (Very time consuming,\nuse for really small areas only)"), wxDefaultPosition, wxDefaultSize, 0 );
-    //m_cb20000->Enable( false );
+    m_cb20000 = new wxCheckBox( sbSizerScales->GetStaticBox(), wxID_ANY, _("1:20000 (Very time consuming)"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_cb20000->Enable( false );
 
 	sbSizerScales->Add( m_cb20000, 0, wxALL, 5 );
 	
@@ -231,38 +234,43 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	
     bSizerPopulate->Add( bSizerParams, 1, wxEXPAND, 5 );
     
-    m_stOr = new wxStaticText( m_panelPopulate, wxID_ANY, _("or"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_stOr->Wrap( -1 );
-    bSizerPopulate->Add( m_stOr, 0, wxALL, 5 );
-    
-    wxStaticBoxSizer* sbSizerCSV;
-    sbSizerCSV = new wxStaticBoxSizer( new wxStaticBox( m_panelPopulate, wxID_ANY, _("Import data") ), wxHORIZONTAL );
-    
-    m_stFile = new wxStaticText( m_panelPopulate, wxID_ANY, _("File"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_stFile->Wrap( -1 );
-    sbSizerCSV->Add( m_stFile, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-    
-    m_tPath = new wxTextCtrl( m_panelPopulate, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-    sbSizerCSV->Add( m_tPath, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-    
-    m_button4 = new wxButton( m_panelPopulate, wxID_ANY, _("Browse..."), wxDefaultPosition, wxDefaultSize, 0 );
-    sbSizerCSV->Add( m_button4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-    
-    
-    bSizerPopulate->Add( sbSizerCSV, 0, wxALL|wxEXPAND, 5 );
-    
-    
     m_panelPopulate->SetSizer( bSizerPopulate );
     m_panelPopulate->Layout();
     bSizerPopulate->Fit( m_panelPopulate );
     m_notebookSettings->AddPage( m_panelPopulate, _("Populate database"), true );
     m_panelManage = new wxPanel( m_notebookSettings, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-    m_panelManage->Enable( false );
-    m_panelManage->Hide();
+    wxBoxSizer* bSizerManageDB;
+    bSizerManageDB = new wxBoxSizer( wxVERTICAL );
     
+    wxStaticBoxSizer* sbSizerCSV;
+    sbSizerCSV = new wxStaticBoxSizer( new wxStaticBox( m_panelManage, wxID_ANY, _("Import data") ), wxHORIZONTAL );
+    
+    m_stFile = new wxStaticText( sbSizerCSV->GetStaticBox(), wxID_ANY, _("File"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_stFile->Wrap( -1 );
+    sbSizerCSV->Add( m_stFile, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    m_tPath = new wxTextCtrl( sbSizerCSV->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+    sbSizerCSV->Add( m_tPath, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+    m_button4 = new wxButton( sbSizerCSV->GetStaticBox(), wxID_ANY, _("Browse..."), wxDefaultPosition, wxDefaultSize, 0 );
+    sbSizerCSV->Add( m_button4, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+
+    bSizerManageDB->Add( sbSizerCSV, 0, wxALL|wxEXPAND, 5 );
+
+
+    m_panelManage->SetSizer( bSizerManageDB );
+    m_panelManage->Layout();
+    bSizerManageDB->Fit( m_panelManage );
     m_notebookSettings->AddPage( m_panelManage, _("Manage Database"), false );
-    
-    bSizerMain->Add( m_notebookSettings, 1, wxEXPAND | wxALL, 5 );
+
+    bSizerCintentMain->Add( m_notebookSettings, 1, wxEXPAND | wxALL, 5 );
+
+
+    m_swMain->SetSizer( bSizerCintentMain );
+    m_swMain->Layout();
+    bSizerCintentMain->Fit( m_swMain );
+    bSizerMain->Add( m_swMain, 1, wxEXPAND | wxALL, 5 );
 
 	m_sdbSizerBtns = new wxStdDialogButtonSizer();
 	m_sdbSizerBtnsOK = new wxButton( this, wxID_OK );

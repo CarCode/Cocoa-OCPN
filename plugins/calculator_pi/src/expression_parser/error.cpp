@@ -1,4 +1,4 @@
-/**
+/* *
  * @file error.cpp
  *
  * @brief Class handling a predefined list with errors
@@ -28,7 +28,7 @@
 using namespace std;
 
 
-/**
+/* *
  * Create an error with given message id and fill in given string in message
  * @PARAM rpw   row where the error occured (0 to neglect)
  * @PARAM col   column where the error occured (0 to neglect)
@@ -55,7 +55,7 @@ Error::Error(const int row, const int col, const int id, ...)
     va_end(args);
 }
 
-/**
+/* *
  * Returns a pointer to the message description for the given message id.
  * Returns "Unknown error" if id was not recognized.
  */

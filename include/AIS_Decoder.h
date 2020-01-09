@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -53,7 +53,7 @@ public:
     wxString    m_ShipName;
 };
 
-WX_DECLARE_OBJARRAY(MMSIProperties *,   ArrayOfMMSIProperties);
+WX_DEFINE_ARRAY_PTR(MMSIProperties *, ArrayOfMMSIProperties);
 
 class AIS_Decoder : public wxEvtHandler
 {
@@ -74,13 +74,14 @@ public:
     AIS_Error DecodeSingleVDO( const wxString& str, GenericPosDatEx *pos, wxString *acc );
     void DeletePersistentTrack( Track *track );
     std::map<int, Track*> m_persistent_tracks;
-    
+    bool AIS_AlertPlaying(void) { return m_bAIS_AlertPlaying; };
+
 private:
     wxString GetShipNameFromFile(int nmmsi);
     
     void OnActivate(wxActivateEvent& event);
     void OnTimerAIS(wxTimerEvent& event);
-    void OnTimerAISAudio(wxTimerEvent& event);
+    void OnSoundFinishedAISAudio(wxCommandEvent& event);
     void OnTimerDSC( wxTimerEvent& event );
     
     bool NMEACheckSumOK(const wxString& str);
@@ -96,7 +97,8 @@ private:
     
     AIS_Target_Hash *AISTargetList;
     AIS_Target_Hash *AIS_AreaNotice_Sources;
-    AIS_Target_Name_Hash *AISTargetNames;
+    AIS_Target_Name_Hash *AISTargetNamesC;
+    AIS_Target_Name_Hash *AISTargetNamesNC;
 
     bool              m_busy;
     wxTimer           TimerAIS;
@@ -111,7 +113,7 @@ private:
 
     bool             m_bAIS_Audio_Alert_On;
     wxTimer          m_AIS_Audio_Alert_Timer;
-    OCPN_Sound       m_AIS_Sound;
+    OcpnSound*       m_AIS_Sound;
     int              m_n_targets;
     bool             m_bSuppressed;
     bool             m_bGeneralAlert;
@@ -120,6 +122,7 @@ private:
     wxString         m_dsc_last_string;
     std::vector<int> m_MMSI_MismatchVec;
     
+    bool             m_bAIS_AlertPlaying;
 DECLARE_EVENT_TABLE()
 };
 

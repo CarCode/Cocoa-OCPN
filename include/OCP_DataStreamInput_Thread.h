@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -41,6 +41,10 @@
 
 #include "dsPortType.h"
 
+#ifdef ocpnUSE_NEWSERIAL
+#include "serial/serial.h"
+#endif
+
 #define OUT_QUEUE_LENGTH                20
 #define MAX_OUT_QUEUE_MESSAGE_LENGTH    100
 
@@ -55,35 +59,37 @@ public:
         std::lock_guard<std::mutex> lock(m_mutex);
         return m_queque.size();
     }
-
+    
     bool empty()
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         return m_queque.empty();
     }
-
+    
     const T& front()
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         return m_queque.front();
     }
-
+    
     void push( const T& value )
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         m_queque.push(value);
     }
-
+    
     void pop()
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         m_queque.pop();
     }
-
+    
 private:
     std::queue<T> m_queque;
     mutable std::mutex m_mutex;
 };
+
+
 
 /**
  * This thread manages reading the data stream from the declared serial port.
@@ -151,9 +157,9 @@ private:
     //int                     m_takIndex;
     //int                     m_putIndex;
     //char                    *m_poutQueue[OUT_QUEUE_LENGTH];
-
+    
     atomic_queue<char *>  out_que;
-
+    
 
 #ifdef __WXMSW__
     HANDLE                  m_hSerialComm;

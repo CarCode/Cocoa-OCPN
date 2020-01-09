@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Tide and Current Manager
@@ -519,7 +519,7 @@ double blend_tide (time_t t, unsigned int deriv, int first_year, double blend, I
         f += fact * w[n] * (fr[deriv-n] - fl[deriv-n]);
         fact *= (double)(deriv - n)/(n+1) * (1.0/TIDE_BLEND_TIME);
     }
-    printf(" %ld  %g     %g %g %g\n", t, blend, fr[0], fl[0], f);
+    printf(" %ld  %g     %g %g %g\n", (long)t, blend, fr[0], fl[0], f);
     return f;
 }
 
@@ -758,13 +758,9 @@ TC_Error_Code TCMgr::LoadDataSources(wxArrayString &sources)
     bTCMReady = true;
     
     if (m_Combined_IDX_array.Count() <= 1)
-#ifdef __WXOSX__
-        OCPNMessageBox( NULL, _("It seems you have no tide/current harmonic data installed."),
-                       _("OpenCPN Info"), wxOK | wxCENTER | wxICON_INFORMATION );
-#else
         OCPNMessageBox( NULL, _("It seems you have no tide/current harmonic data installed."),
                         _("OpenCPN Info"), wxOK | wxCENTER );
-#endif
+        
     return  TC_NO_ERROR ;
 }
 
@@ -821,7 +817,9 @@ bool TCMgr::GetTideOrCurrent(time_t t, int idx, float &tcvalue, float& dir)
     return(true); // Got it!
 }
 
-bool TCMgr::GetTideOrCurrent15(time_t t, int idx, float &tcvalue, float& dir, bool &bnew_val)
+extern wxDateTime gTimeSource;
+
+bool TCMgr::GetTideOrCurrent15(time_t t_d, int idx, float &tcvalue, float& dir, bool &bnew_val)
 {
     int ret;
     IDX_entry *pIDX = &m_Combined_IDX_array[idx];             // point to the index entry
@@ -833,7 +831,9 @@ bool TCMgr::GetTideOrCurrent15(time_t t, int idx, float &tcvalue, float& dir, bo
     }
 
     //    Figure out this computer timezone minute offset
-    wxDateTime this_now = wxDateTime::Now();
+    wxDateTime this_now = gTimeSource; // wxDateTime::Now();
+    if (this_now.IsValid() == false)
+        this_now = wxDateTime::Now();
     wxDateTime this_gmt = this_now.ToGMT();
     wxTimeSpan diff = this_gmt.Subtract(this_now);
     int diff_mins = diff.GetMinutes();
@@ -843,7 +843,8 @@ bool TCMgr::GetTideOrCurrent15(time_t t, int idx, float &tcvalue, float& dir, bo
         station_offset += 60;
     int corr_mins = station_offset - diff_mins;
 
-    wxDateTime today_00 = wxDateTime::Today();
+    wxDateTime today_00 = this_now;
+    today_00.ResetTime();
     int t_today_00 = today_00.GetTicks();
     int t_today_00_at_station = t_today_00 - (corr_mins * 60);
 
@@ -961,6 +962,7 @@ void TCMgr::GetHightOrLowTide(time_t t, int sch_step_1, int sch_step_2, float ti
         return;
     }
 
+
     pIDX->max_amplitude = 0.0;                // Force multiplier re-compute
     int yott = yearoftimet( t );
     happy_new_year (pIDX, yott);
@@ -988,7 +990,7 @@ void TCMgr::GetHightOrLowTide(time_t t, int sch_step_1, int sch_step_2, float ti
     }
     tcvalue = newval;
     tctime = ttt + sch_step_2 ;
-
+    
     // Cache the data
     pIDX->recent_highlow_calc_time = t;
     if(w_t){
@@ -999,6 +1001,7 @@ void TCMgr::GetHightOrLowTide(time_t t, int sch_step_1, int sch_step_2, float ti
         pIDX->recent_low_level = newval;
         pIDX->recent_low_time = tctime;
     }
+        
 
 }
 
@@ -1021,13 +1024,13 @@ int TCMgr::GetNextBigEvent(time_t *tm, int idx)
 {
     float tcvalue[1];
     float dir;
-//    bool ret;  // Not used
+    bool ret;
     double p, q;
     int flags = 0, slope = 0;
-    /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);  // Not used
+    ret = GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
     p = tcvalue[0];
     *tm += 60;
-    /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);  // Not used
+    ret = GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
     q = tcvalue[0];
     *tm += 60;
     if (p < q)
@@ -1044,11 +1047,31 @@ int TCMgr::GetNextBigEvent(time_t *tm, int idx)
             return flags;
         }
         p = q;
-        /*ret = */GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);  // Not used
+        ret = GetTideOrCurrent(*tm, idx, tcvalue[0],  dir);
         q = tcvalue[0];
         *tm += 60;
     }
     return 0;
+}
+
+std::map<double, const IDX_entry*> TCMgr::GetStationsForLL(double xlat, double xlon) const
+{
+    std::map<double, const IDX_entry*> x;
+    const IDX_entry *lpIDX;
+    
+    for ( int j=1 ; j<Get_max_IDX() +1 ; j++ ) {
+        lpIDX = GetIDX_entry ( j );
+        char type = lpIDX->IDX_type;
+        wxString locnx ( lpIDX->IDX_station_name, wxConvUTF8 );
+        
+        if ( type == 't' || type == 'T' ) {
+            double brg, dist;
+            DistanceBearingMercator(xlat, xlon, lpIDX->IDX_lat, lpIDX->IDX_lon, &brg, &dist);
+            x.emplace(std::make_pair(dist, lpIDX));
+        }
+    }
+    
+    return x;
 }
 
 int TCMgr::GetStationIDXbyName(const wxString & prefix, double xlat, double xlon) const
@@ -1058,7 +1081,7 @@ int TCMgr::GetStationIDXbyName(const wxString & prefix, double xlat, double xlon
     wxString locn;
     double distx = 100000.;
 
-//    int jmax = Get_max_IDX();  // Not used
+    int jmax = Get_max_IDX();
 
     for ( int j=1 ; j<Get_max_IDX() +1 ; j++ ) {
         lpIDX = GetIDX_entry ( j );
@@ -1089,7 +1112,7 @@ int TCMgr::GetStationIDXbyNameType(const wxString & prefix, double xlat, double 
 
     // if (prp->m_MarkName.Find(_T("@~~")) != wxNOT_FOUND) {
     //tide_form = prp->m_MarkName.Mid(prp->m_MarkName.Find(_T("@~~"))+3);
-//    int jmax = Get_max_IDX();  // Not used
+    int jmax = Get_max_IDX();
 
     for ( int j=1 ; j<Get_max_IDX() +1 ; j++ ) {
         lpIDX = GetIDX_entry ( j );
@@ -4227,11 +4250,8 @@ static void write_tide_db_header ()
     /*  Write speeds.  */
 
     pos = 0;
-#ifdef __WXOSX__
-    size = bits2bytes (hd.pub.constituents * hd.speed_bits + 1);
-#else
     size = bits2bytes (hd.pub.constituents * hd.speed_bits);
-#endif
+
     if ((buf = (NV_U_BYTE *) calloc (size, sizeof (NV_U_BYTE))) == NULL)
     {
         perror ("Allocating speed write buffer");
@@ -4254,12 +4274,9 @@ static void write_tide_db_header ()
     /*  Write equilibrium arguments.  */
 
     pos = 0;
-#ifdef __WXOSX__
-    size = bits2bytes (hd.pub.constituents *  hd.pub.number_of_years * hd.equilibrium_bits + 1);
-#else
     size = bits2bytes (hd.pub.constituents *  hd.pub.number_of_years *
                        hd.equilibrium_bits);
-#endif
+
     if ((buf = (NV_U_BYTE *) calloc (size, sizeof (NV_U_BYTE))) == NULL)
     {
         perror ("Allocating equilibrium write buffer");
@@ -4287,12 +4304,9 @@ static void write_tide_db_header ()
     /*  Write node factors.  */
 
     pos = 0;
-#ifdef __WXOSX__
-    size = bits2bytes (hd.pub.constituents * hd.pub.number_of_years * hd.node_bits + 1);
-#else
     size = bits2bytes (hd.pub.constituents * hd.pub.number_of_years *
                        hd.node_bits);
-#endif
+
     if ((buf = (NV_U_BYTE *) calloc (size, sizeof (NV_U_BYTE))) == NULL)
     {
         perror ("Allocating node write buffer");
@@ -4914,9 +4928,7 @@ database should be rebuilt from the original data if possible.\n");
     /*  NOTE: Using bit_unpack to get integers.  */
 
     /*  Read speeds.  */
-#ifdef __WXOSX__
-    if(hd.pub.constituents)
-#endif
+
     hd.speed = (NV_FLOAT64 *) calloc (hd.pub.constituents,
                                       sizeof (NV_FLOAT64));
 
@@ -4993,14 +5005,10 @@ database should be rebuilt from the original data if possible.\n");
 
 
     /*  Read node factors.  */
-#ifdef __WXOSX__
-    if(hd.pub.constituents)
-#endif
+
     hd.node_factor = (NV_FLOAT32 **) calloc (hd.pub.constituents,
                      sizeof (NV_FLOAT32 *));
-#ifdef __WXOSX__
-    if(hd.pub.number_of_years)
-#endif
+
     for (i = 0 ; i < hd.pub.constituents ; ++i)
     {
         hd.node_factor[i] =
@@ -5015,12 +5023,9 @@ database should be rebuilt from the original data if possible.\n");
         size = ((hd.pub.constituents * hd.pub.number_of_years *
                  hd.node_bits) / 8) + 1;
     else
-#ifdef __WXOSX__
-        size = bits2bytes (hd.pub.constituents * hd.pub.number_of_years * hd.node_bits + 1);
-#else
         size = bits2bytes (hd.pub.constituents * hd.pub.number_of_years *
                            hd.node_bits);
-#endif
+
 
     if ((buf = (NV_U_BYTE *) calloc (size, sizeof (NV_U_BYTE))) == NULL)
     {
@@ -5349,9 +5354,7 @@ NV_BOOL create_tide_db (const NV_CHAR *file, NV_U_INT32 constituents, NV_CHAR
 
 
     /*  Constituent names.  */
-#ifdef __WXOSX__
-    if(hd.pub.constituents)
-#endif
+
     hd.constituent =
         (NV_CHAR **) calloc (hd.pub.constituents, sizeof (NV_CHAR *));
     for (i = 0 ; i < hd.pub.constituents ; ++i)

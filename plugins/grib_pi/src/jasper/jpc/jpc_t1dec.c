@@ -592,9 +592,8 @@ static int dec_refpass(jpc_dec_t *dec, register jpc_mqdec_t *mqdec, int bitpos,
 
 	/* Avoid compiler warning about unused parameters. */
 	dec = 0;
-#ifndef __WXOSX__
 	vcausalflag = 0;
-#endif
+
 	width = jas_matrix_numcols(data);
 	height = jas_matrix_numrows(data);
 	frowstep = jas_matrix_rowstep(flags);
@@ -691,9 +690,8 @@ static int dec_rawrefpass(jpc_dec_t *dec, jpc_bitstream_t *in, int bitpos, int v
 
 	/* Avoid compiler warning about unused parameters. */
 	dec = 0;
-#ifndef __WXOSX__
 	vcausalflag = 0;
-#endif
+
 	width = jas_matrix_numcols(data);
 	height = jas_matrix_numrows(data);
 	frowstep = jas_matrix_rowstep(flags);

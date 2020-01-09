@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -27,7 +27,9 @@
 #include <wx/window.h>
 #include <wx/stattext.h>
 
-class ChInfoWin: public wxWindow
+#include "chart1.h"
+
+class ChInfoWin: public wxPanel
 {
 public:
     ChInfoWin( wxWindow *parent );

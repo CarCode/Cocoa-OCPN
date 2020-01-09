@@ -410,7 +410,7 @@ void jpc_ms_dump(jpc_ms_t *ms, FILE *out)
 	fprintf(out, "type = 0x%04"  PRIxFAST16 " (%s);", ms->id, mstabent->name);
 	if (JPC_MS_HASPARMS(ms->id)) {
 #ifndef __WXOSX__
-		fprintf(out, " len = %" PRIuFAST16 ";", ms->len + 2);
+        fprintf(out, " len = %" PRIuFAST16 ";", ms->len + 2);
 #else
         fprintf(out, " len = %d" PRIuFAST16 ";", ms->len + 2);
 #endif

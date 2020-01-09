@@ -413,10 +413,8 @@ int jpc_bitstream_outalign(jpc_bitstream_t *bitstream, int filldata)
 		n = bitstream->cnt_;
 		v = filldata >> (7 - n);
 	} else {
-#ifndef __WXOSX__
 		n = 0;
 		v = 0;
-#endif
 		return 0;
 	}
 

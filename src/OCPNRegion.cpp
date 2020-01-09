@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -21,7 +21,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        src/gtk/region.cpp
 // Purpose:
 // Author:      Robert Roebling
@@ -29,7 +29,7 @@
 // Id:          $Id: region.cpp 42903 2006-11-01 12:56:38Z RR $
 // Copyright:   (c) 1998 Robert Roebling
 // Licence:     wxWindows licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 // ============================================================================
 // declarations
@@ -103,11 +103,7 @@ typedef struct _OGdkRegion             OGdkRegion;
 struct _OGdkRegion
 {
     long size;
-#ifdef __WXOSX__
-    int numRects;
-#else
     long numRects;
-#endif
     OGdkRegionBox *rects;
     OGdkRegionBox extents;
 };
@@ -590,17 +586,10 @@ wxObjectRefData *OCPNRegion::CloneRefData(const wxObjectRefData *data) const
 
 bool OCPNRegion::ODoIsEqual(const OCPNRegion& region) const
 {
-    OGdkRegion *a = ((OCPNRegionRefData *)m_refData)->m_region;
-    
     if(!region.m_refData)
         return false;
     
-    OGdkRegion *b = ((OCPNRegionRefData *)(region.m_refData))->m_region;
-#ifndef __WXOSX__  // to use a and b in OSX
     return ogdk_region_equal(M_REGIONDATA->m_region, M_REGIONDATA_OF(region)->m_region);
-#else
-    return ogdk_region_equal(a,b);
-#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -642,11 +631,8 @@ bool OCPNRegion::ODoUnionWithRect(const wxRect& r)
 
 bool OCPNRegion::ODoUnionWithRegion( const OCPNRegion& region )
 {
-#ifdef __WXOSX__
-    wxCHECK_MSG( region.Ok(), false, _T("invalid region in ODoUnionWithRegion") );   // Assert???
-#else
     wxCHECK_MSG( region.Ok(), false, _T("invalid region") );
-#endif
+
     if (!m_refData)
     {
         m_refData = new OCPNRegionRefData();
@@ -664,11 +650,8 @@ bool OCPNRegion::ODoUnionWithRegion( const OCPNRegion& region )
 
 bool OCPNRegion::ODoIntersect( const OCPNRegion& region )
 {
-#ifdef __WXOSX__
-    wxCHECK_MSG( region.Ok(), false, _T("invalid region in ODoIntersect") );  // Assert with GPS + Quilt only???
-#else
     wxCHECK_MSG( region.Ok(), false, _T("invalid region") );
-#endif
+
     if (!m_refData)
     {
         // intersecting with invalid region doesn't make sense

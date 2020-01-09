@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  GRIB Plugin Friends - gribtable
@@ -36,13 +36,12 @@
 
 #include "GribUIDialogBase.h"
 #include "grib_pi.h"
-#include "../../include/ocpn_plugin.h"
+#include "ocpn_plugin.h"
 #include "CustomGrid.h"
 
 class GRIBUICtrlBar;
 
 enum NumericalRows {R_WIND, R_WAVES, R_CURRENT};
-
 //----------------------------------------------------------------------------------------------------------
 //    GRIB table dialog Specification
 //----------------------------------------------------------------------------------------------------------
@@ -52,7 +51,7 @@ public:
 
     GRIBTable( GRIBUICtrlBar &parent);
     
-    ~GRIBTable(){ delete m_pGribTable; }
+     ~GRIBTable(){ delete m_pGribTable; }
 
     void InitGribTable( int zone, ArrayOfGribRecordSets *rsa);
     void InitGribTable( int zone, ArrayOfGribRecordSets *rsa, int NowIndex );
@@ -70,7 +69,7 @@ private:
     wxString GetWind(GribRecord **recordarray, int datatype, double& wdir);
     wxString GetWindGust(GribRecord **recordarray, int datatype );
     wxString GetPressure(GribRecord **recordarray);
-    wxString GetWaves(GribRecord **recordarray, int datatype, double& wdir);
+     wxString GetWaves(GribRecord **recordarray, int datatype, double& wdir);
     wxString GetRainfall(GribRecord **recordarray);
     wxString GetCloudCover(GribRecord **recordarray);
     wxString GetAirTemp(GribRecord **recordarray);

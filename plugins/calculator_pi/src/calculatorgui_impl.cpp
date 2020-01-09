@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  ROUTE Plugin
@@ -84,7 +84,11 @@ void FunDlg::OnCategorySelect( wxCommandEvent& event )
 
 void FunDlg::OnClose( wxCommandEvent& event )
 {
+#ifdef __WXOSX__
+    this->Close();
+#else
     this->Destroy();
+#endif
 }
 
 void FunDlg::OnItemSelect( wxCommandEvent& event )
@@ -97,7 +101,7 @@ void FunDlg::OnItemSelect( wxCommandEvent& event )
 
 void FunDlg::OnItemSelect(void)
 {
-    wxString Selected_Result=	this->m_Function_Dropdown->GetString( this->m_Function_Dropdown->GetCurrentSelection());
+    wxString Selected_Result = this->m_Function_Dropdown->GetString( this->m_Function_Dropdown->GetCurrentSelection());
     unsigned int n;
     for ( n = 0; n < testf.m_Formula.GetCount() ; n++)
     {

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  * $Id: gps.cpp, v1.0 2010/08/26 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -101,8 +101,6 @@ void DashboardInstrument_GPS::Draw(wxGCDC* dc)
 
 void DashboardInstrument_GPS::DrawFrame(wxGCDC* dc)
 {
-//      AddLocaleCatalog( _T("opencpn-dashboard_pi") );
-    
       wxSize size = GetClientSize();
       wxColour cb;
 
@@ -174,7 +172,7 @@ void DashboardInstrument_GPS::DrawFrame(wxGCDC* dc)
 
       //        wxSHORT_DASH is not supported on GTK, and it destroys the pen.
 #ifndef __WXGTK__
-      pen.SetStyle(wxSHORT_DASH);
+      pen.SetStyle(wxPENSTYLE_SHORT_DASH);
       dc->SetPen(pen);
 #endif
       dc->DrawLine(3, 110, size.x-3, 110);

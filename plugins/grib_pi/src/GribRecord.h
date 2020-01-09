@@ -1,4 +1,4 @@
-/**********************************************************************
+/* *********************************************************************
 zyGrib: meteorological GRIB file viewer
 Copyright (C) 2008 - Jacques Zaninetti - http://www.zygrib.org
 
@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***********************************************************************/
 
 
-/******************************************
+/* *****************************************
 Elément de base d'un fichier GRIB
 ******************************************/
 
@@ -77,6 +77,8 @@ Elément de base d'un fichier GRIB
 #define GRB_PERPW         108
 #define GRB_DIRSW         109
 #define GRB_PERSW         110
+#define GRB_PER           209
+#define GRB_DIR           210
 
 #define GRB_CRAIN         140   /* "Categorical rain", "yes=1;no=0" */
 #define GRB_FRZRAIN_CATEG 141   /* 1=yes 0=no */
@@ -153,6 +155,7 @@ class GribRecord
 
         void   multiplyAllData(double k);
         void Substract(const GribRecord &rec, bool positive=true);
+        void   Average(const GribRecord &rec);
 
         bool  isOk()  const   {return ok;};
         bool  isDataKnown()  const   {return knownData;};
@@ -205,16 +208,13 @@ class GribRecord
         // coordiantes of grid point
         inline double  getX(int i) const   { return Lo1+i*Di;}
         inline double  getY(int j) const   { return La1+j*Dj;}
+        void    getXY(int i, int j, double *x, double *y) const { *x = getX(i); *y = getY(j);};
 
         double  getLatMin() const   { return latMin;}
         double  getLonMin() const   { return lonMin;}
         double  getLatMax() const   { return latMax;}
         double  getLonMax() const   { return lonMax;}
 
-        // Is a point within the extent of the grid?
-        inline bool   isPointInMap(double x, double y) const;
-        inline bool   isXInMap(double x) const;
-        inline bool   isYInMap(double y) const;
         // Is there a value at a particular grid point ?
         inline bool   hasValue(int i, int j) const;
         // Is there a value that is not GRIB_NOTDEF ?
@@ -232,6 +232,12 @@ class GribRecord
         void   print();
         bool isFilled(){ return m_bfilled; }
         void setFilled(bool val=true){ m_bfilled = val;}
+
+    private:
+        // Is a point within the extent of the grid?
+        inline bool   isPointInMap(double x, double y) const;
+        inline bool   isXInMap(double x) const;
+        inline bool   isYInMap(double y) const;
 
     protected:
     //private:
@@ -355,6 +361,3 @@ inline bool GribRecord::isYInMap(double y) const
 }
 
 #endif
-
-
-

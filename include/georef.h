@@ -1,11 +1,11 @@
-/* **************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Georef utility
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,13 +20,15 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
 
  ***************************************************************************
  *  Parts of this file were adapted from source code found in              *
  *  John F. Waers (jfwaers@csn.net) public domain program MacGPS45         *
- ***************************************************************************/
+ ***************************************************************************
+
+ */
 
 #ifndef     __GEOREF_H__
 #define     __GEOREF_H__
@@ -108,6 +110,7 @@ extern "C" void toSM(double lat, double lon, double lat0, double lon0, double *x
 extern "C" double toSMcache_y30(double lat0);
 extern "C" void toSMcache(double lat, double lon, double y30, double lon0, double *x, double *y);
 extern "C" void fromSM(double x, double y, double lat0, double lon0, double *lat, double *lon);
+extern "C" void fromSMR(double x, double y, double lat0, double lon0, double axis_meters, double *lat, double *lon);
 
 extern "C" void toSM_ECC(double lat, double lon, double lat0, double lon0, double *x, double *y);
 extern "C" void fromSM_ECC(double x, double y, double lat0, double lon0, double *lat, double *lon);
@@ -142,6 +145,7 @@ extern "C" void ll_gc_ll_reverse(double lat1, double lon1, double lat2, double l
 extern "C" void PositionBearingDistanceMercator(double lat, double lon, double brg, double dist,
                                                 double *dlat, double *dlon);
 extern "C" double DistGreatCircle(double slat, double slon, double dlat, double dlon);
+extern "C" double DistLoxodrome(double slat, double slon, double dlat, double dlon);
 
 extern "C" int GetDatumIndex(const char *str);
 extern "C" void MolodenskyTransform (double lat, double lon, double *to_lat, double *to_lon, int from_datum_index, int to_datum_index);

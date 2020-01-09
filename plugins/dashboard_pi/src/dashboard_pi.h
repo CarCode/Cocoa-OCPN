@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  * $Id: dashboard_pi.h, v1.0 2010/08/05 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -49,7 +49,7 @@
 //wx2.9 #include <wx/wrapsizer.h>
 #include "../../../include/ocpn_plugin.h"
 
-#include "../../../src/nmea0183/nmea0183.h"
+#include "nmea0183/nmea0183.h"
 #include "instrument.h"
 #include "speedometer.h"
 #include "compass.h"
@@ -79,8 +79,8 @@ class DashboardWindowContainer
 
             ~DashboardWindowContainer(){}
             DashboardWindow              *m_pDashboardWindow;
-            bool                          m_bIsVisible;
-            bool                          m_bIsDeleted;
+            bool                          m_bIsVisible; 
+            bool                          m_bIsDeleted; 
             bool                          m_bPersVisible;  // Persists visibility, even when Dashboard tool is toggled off.
             wxString                      m_sName;
             wxString                      m_sCaption;
@@ -164,9 +164,8 @@ private:
       int              m_toolbar_item_id;
 
       wxArrayOfDashboard       m_ArrayOfDashboardWindow;
-// Not used
-//      int               m_show_id;
-//      int               m_hide_id;
+      int               m_show_id;
+      int               m_hide_id;
 
       NMEA0183             m_NMEA0183;                 // Used to parse NMEA Sentences
       short                mPriPosition, mPriCOGSOG, mPriHeadingM, mPriHeadingT, mPriVar, mPriDateTime, mPriAWA, mPriTWA, mPriDepth;
@@ -181,6 +180,10 @@ private:
       int                  mHDT_Watchdog;
       int                  mGPS_Watchdog;
       int                  mVar_Watchdog;
+      int                  mMWVA_Watchdog;
+      int                  mMWVT_Watchdog;
+      int                  mDPT_DBT_Watchdog;
+      int                  mSTW_Watchdog;
 
       iirfilter            mSOGFilter;
       iirfilter            mCOGFilter;
@@ -214,8 +217,10 @@ public:
       wxSpinCtrl                   *m_pSpinSpeedMax;
       wxSpinCtrl                   *m_pSpinCOGDamp;
       wxSpinCtrl                   *m_pSpinSOGDamp;
+      wxChoice                     *m_pChoiceUTCOffset;
       wxChoice                     *m_pChoiceSpeedUnit;
       wxChoice                     *m_pChoiceDepthUnit;
+      wxSpinCtrlDouble             *m_pSpinDBTOffset;
       wxChoice                     *m_pChoiceDistanceUnit;
       wxChoice                     *m_pChoiceWindSpeedUnit;
 
@@ -232,7 +237,7 @@ private:
       wxChoice                     *m_pChoiceOrientation;
       wxListCtrl                   *m_pListCtrlInstruments;
       wxButton                     *m_pButtonAdd;
-//      wxButton                     *m_pButtonEdit;  Not used yet
+      wxButton                     *m_pButtonEdit;
       wxButton                     *m_pButtonDelete;
       wxButton                     *m_pButtonUp;
       wxButton                     *m_pButtonDown;
@@ -259,7 +264,8 @@ enum
 {
       ID_DASH_PREFS = 999,
       ID_DASH_VERTICAL,
-      ID_DASH_HORIZONTAL
+      ID_DASH_HORIZONTAL,
+      ID_DASH_UNDOCK
 };
 
 class DashboardWindow : public wxWindow

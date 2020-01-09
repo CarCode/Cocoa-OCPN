@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  texture OpenGL text rendering built from wxFont
@@ -23,13 +23,22 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  **************************************************************************/
 
-//#ifdef ocpnUSE_GL
+#ifdef ocpnUSE_GL
 
-#include <wx/wx.h>
 #include "../include/GL/gl.h"
 #include "../include/GL/glu.h"
+#include <wx/wx.h>
 
 #include "TexFont.h"
+
+TexFont::TexFont() {
+    texobj = 0;
+    m_blur = false;
+    tex_w = 0;
+    tex_h = 0;
+}
+
+TexFont::~TexFont() { Delete(); }
 
 void TexFont::Build( wxFont &font, bool blur, bool luminance )
 {
@@ -76,8 +85,8 @@ void TexFont::Build( wxFont &font, bool blur, bool luminance )
     wxASSERT(w < 2048 && h < 2048);
 
     /* make power of 2 */
-    for(tex_w = 1; tex_w < w; tex_w *= 2);
-    for(tex_h = 1; tex_h < h; tex_h *= 2);
+    for (tex_w = 1; tex_w < w; tex_w *= 2);
+    for (tex_h = 1; tex_h < h; tex_h *= 2);
 
     wxBitmap tbmp(tex_w, tex_h);
     dc.SelectObject(tbmp);
@@ -85,7 +94,7 @@ void TexFont::Build( wxFont &font, bool blur, bool luminance )
     /* fill bitmap with black */
     dc.SetBackground( wxBrush( wxColour( 0, 0, 0 ) ) );
     dc.Clear();
-        
+
     /* draw the text white */
     dc.SetTextForeground( wxColour( 255, 255, 255 ) );
 
@@ -146,8 +155,7 @@ void TexFont::Build( wxFont &font, bool blur, bool luminance )
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 
-    glTexImage2D( GL_TEXTURE_2D, 0, internalformat, tex_w, tex_h, 0,
-                  format, GL_UNSIGNED_BYTE, teximage );
+    glTexImage2D( GL_TEXTURE_2D, 0, internalformat, tex_w, tex_h, 0, format, GL_UNSIGNED_BYTE, teximage );
 
     free(teximage);
 }
@@ -299,4 +307,4 @@ void TexFont::RenderString( const wxString &string, int x, int y )
     glPopMatrix();
 }
 
-//#endif     //#ifdef ocpnUSE_GL
+#endif     //#ifdef ocpnUSE_GL

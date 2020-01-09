@@ -1,4 +1,4 @@
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Name:        SVGCanvas.cpp
 // Purpose:     wxSVGCanvas - Base class for SVG renders (backends)
 // Author:      Alex Thuering
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: SVGCanvas.cpp,v 1.27 2016/01/09 23:31:14 ntalex Exp $
 // Copyright:   (c) 2005 Alex Thuering
 // Licence:     wxWindows licence
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 #include "SVGCanvas.h"
 #include <math.h>
@@ -126,35 +126,23 @@ void wxSVGCanvas::DrawCanvasText(wxSVGCanvasText& canvasText,
 		DrawItem(*chunk.chars[j].path, pathMatrix, chunk.style, svgElem);
   }
 }
-// reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to false [-Wtautological-undefined-compare]
+
 wxSVGPatternElement* wxSVGCanvas::GetPatternElement(const wxSVGSVGElement& svgElem, const wxString& href) {
-#ifdef __WXOSX__
-    if (href.length() == 0 || href[0] != wxT('#'))
-#else
-	if (href.length() == 0 || href[0] != wxT('#') || &svgElem == NULL)
-#endif
+	if (href.length() == 0 || href[0] != wxT('#'))
 	    return NULL;
 	wxSVGElement* elem = (wxSVGElement*) svgElem.GetElementById(href.substr(1));
 	return elem != NULL && elem->GetDtd() == wxSVG_PATTERN_ELEMENT ? (wxSVGPatternElement*) elem : NULL;
 }
 
 wxSVGMarkerElement* wxSVGCanvas::GetMarkerElement(const wxSVGSVGElement& svgElem, const wxString& href) {
-#ifdef __WXOSX__
-    if (href.length() == 0 || href[0] != wxT('#'))
-#else
-	if (href.length() == 0 || href[0] != wxT('#') || &svgElem == NULL)
-#endif
+	if (href.length() == 0 || href[0] != wxT('#'))
 		return NULL;
 	wxSVGElement* elem = (wxSVGElement*) svgElem.GetElementById(href.substr(1));
 	return elem != NULL && elem->GetDtd() == wxSVG_MARKER_ELEMENT ? (wxSVGMarkerElement*) elem : NULL;
 }
 
 wxSVGGradientElement* wxSVGCanvas::GetGradientElement(const wxSVGSVGElement& svgElem, const wxString& href) {
-#ifdef __WXOSX__
-    if (href.length() == 0 || href[0] != wxT('#'))
-#else
-	if (href.length() == 0 || href[0] != wxT('#') || &svgElem == NULL)
-#endif
+	if (href.length() == 0 || href[0] != wxT('#'))
 	    return NULL;
 	wxSVGGradientElement* elem = (wxSVGGradientElement*) svgElem.GetElementById(href.substr(1));
 	return elem != NULL && (elem->GetDtd() == wxSVG_LINEARGRADIENT_ELEMENT
@@ -196,14 +184,13 @@ unsigned int wxSVGCanvas::GetGradientStops(const wxSVGSVGElement& svgElem, wxSVG
 	int i = 0;
 	while (stop_elem) {
 		if (stop_elem->GetDtd() == wxSVG_STOP_ELEMENT) {
-                wxSVGColor color = stop_elem->GetStopColor();
-                //
-                if (color.GetColorType() == wxSVG_COLORTYPE_UNKNOWN)
-                        color = wxSVGColor(0,0,0);
-			SetStopValue(i++, stop_elem->GetOffset(),
-				     stop_elem->GetStopOpacity() * opacity,
-				     color.GetRGBColor());
-	}
+			wxSVGColor color = stop_elem->GetStopColor();
+ 			// no color, default is black
+ 			if (color.GetColorType() == wxSVG_COLORTYPE_UNKNOWN)
+				color = wxSVGColor(0,0,0);
+			SetStopValue(i++, stop_elem->GetOffset(), stop_elem->GetStopOpacity() * opacity,
+					color.GetRGBColor());
+		}
 		stop_elem = (wxSVGStopElement*) stop_elem->GetNext();
 	}
 	return stop_count;

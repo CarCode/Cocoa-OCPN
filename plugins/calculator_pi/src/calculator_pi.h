@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  CALCULATOR Plugin
@@ -22,8 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef _CALCULATOR_PI_H_
 #define _CALCULATOR_PI_H_
@@ -88,7 +87,7 @@ public:
       void SetCalculatorDialogWidth     (int x){ m_calculator_dialog_width = x;};
       void SetCalculatorDialogHeight    (int x){ m_calculator_dialog_height = x;};
       //void GetMaxResults                (int x){ m_iMaxResults = x;};
-
+      wxBitmap m_panelBitmap;
 
      // void OnSurveyDialogClose();
 
@@ -105,8 +104,8 @@ private:
       int               m_display_width, m_display_height;
       int               m_iOpacity;
       int               m_iMaxResults;
-      int               m_leftclick_tool_id;
-      //bool              m_ShowHelp;
+      int               m_Calculator_tool_id;
+//      int               m_CalculatorFX_tool_id;  // Not used yet
       bool              m_bshowhelpB;
       bool              m_bshowhistoryB;
       bool              m_bCalculateB;
@@ -114,7 +113,8 @@ private:
       bool              m_bshowhistory;
       bool              m_bcapturehidden;
       bool              m_blogresults;
-;
+
+      bool              m_bShowCalculator;
 };
 
 #endif

@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA Data Stream Object
@@ -26,8 +26,9 @@
  ***************************************************************************
  *  Parts of this file were adapted from source code found in              *
  *  John F. Waers (jfwaers@csn.net) public domain program MacGPS45         *
- ***************************************************************************/
-
+ ***************************************************************************
+ *
+ */
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
@@ -52,6 +53,7 @@
 #include "OCPN_DataStreamEvent.h"
 #include "OCP_DataStreamInput_Thread.h"
 #include "garmin/jeeps/garmin_wrapper.h"
+#include "nmea0183.h"
 
 #ifdef __OCPN__ANDROID__
 #include "androidUTIL.h"
@@ -92,9 +94,8 @@ bool CheckSumCheck(const std::string& sentence)
         return false; // * not found, or it didn't have 2 characters following it.
         
     std::string check_str = sentence.substr(check_start+1,2);
-    unsigned long checksum;
-    //    if(!check_str.ToULong(&checksum,16))
-    if(!(checksum = strtol(check_str.c_str(), 0, 16)))
+    unsigned long checksum = strtol(check_str.c_str(), 0, 16);
+    if(checksum == 0L && check_str != "00")
         return false;
     
     unsigned char calculated_checksum = 0;
@@ -309,11 +310,7 @@ void DataStream::Open(void)
                     m_socket_server->SetEventHandler(*this, DS_SERVERSOCKET_ID);
                     m_socket_server->SetNotify( wxSOCKET_CONNECTION_FLAG );
                     m_socket_server->Notify(TRUE);
-#ifdef __WXOSX__
-                    tsock->SetTimeout(1);
-#else
                     m_socket_server->SetTimeout(1);    // Short timeout
-#endif
                 }
                 else {
                     m_sock->SetEventHandler(*this, DS_SOCKET_ID);
@@ -324,11 +321,8 @@ void DataStream::Open(void)
                         notify_flags |= wxSOCKET_INPUT_FLAG;
                     m_sock->SetNotify(notify_flags);
                     m_sock->Notify(TRUE);
-#ifdef __WXOSX__
-                    tsock->SetTimeout(1);
-#else
                     m_sock->SetTimeout(1);              // Short timeout
-#endif
+
                     m_brx_connect_event = false;
                     m_socket_timer.Start(100, wxTIMER_ONE_SHOT);    // schedule a connection
                 }
@@ -375,11 +369,6 @@ void DataStream::Open(void)
                     if ((!m_is_multicast) && ( m_addr.IPAddress().EndsWith(_T("255")))) {
                         int broadcastEnable=1;
                         bool bam = m_tsock->SetOption(SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable));
-#ifdef __WXOSX__
-                        if (!bam) {
-                            wxLogError(wxT("Unable to listen to multicast group: %d"), m_tsock->LastError());
-                        }
-#endif
                     }
                 }
                 
@@ -648,6 +637,7 @@ void DataStream::OnSocketEvent(wxSocketEvent& event)
                 break;
             }
         }
+        // FALL THROUGH
 
         case wxSOCKET_CONNECTION :
         {
@@ -941,13 +931,13 @@ GarminProtocolHandler::GarminProtocolHandler(DataStream *parent, wxEvtHandler *M
     m_busb = bsel_usb;
     
     //      Connect(wxEVT_OCPN_GARMIN, (wxObjectEventFunction)(wxEventFunction)&GarminProtocolHandler::OnEvtGarmin);
-/*  Not used
+    
     char  pvt_on[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};
     
     char  pvt_off[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 50, 0};
-*/
+    
 #ifdef __WXMSW__    
     if(m_busb) {
         m_usb_handle = INVALID_HANDLE_VALUE;
@@ -1071,10 +1061,9 @@ void GarminProtocolHandler::RestartIOThread(void)
 
 void GarminProtocolHandler::OnTimerGarmin1(wxTimerEvent& event)
 {
-#ifndef __WXOSX__
     char  pvt_on[14] =
     {20, 0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0, 49, 0};
-#endif
+    
     TimerGarmin1.Stop();
     
     if(m_busb) {
@@ -1592,7 +1581,7 @@ void *GARMIN_Serial_Thread::Entry()
     while((not_done) && (m_parent->m_Thread_run_flag > 0)) {
 
         if(TestDestroy()) {
-//            not_done = false;                               // smooth exit, but Not used
+            not_done = false;                               // smooth exit
             goto thread_exit;
         }
 
@@ -1747,9 +1736,8 @@ void *GARMIN_USB_Thread::Entry()
       garmin_usb_packet iresp;
       int n_short_read = 0;
       m_receive_state = rs_fromintr;
-#ifdef __WXOSX__
       memset(&iresp, 0, (sizeof iresp));    // Prevent compiler warnings.
-#endif
+
       //    Here comes the big while loop
       while(m_parent->m_Thread_run_flag > 0)
       {
@@ -1757,11 +1745,9 @@ void *GARMIN_USB_Thread::Entry()
                   goto thread_prexit;                               // smooth exit
 
       //    Get one  packet
-#ifdef __WXOSX__
-          gusb_cmd_get(&iresp, sizeof(iresp));
-#else
+
             int nr = gusb_cmd_get(&iresp, sizeof(iresp));
-#endif
+
             if(iresp.gusb_pkt.pkt_id[0] == GUSB_RESPONSE_SDR)     //Satellite Data Record
             {
                   unsigned char *t = (unsigned char *)&(iresp.gusb_pkt.databuf[0]);
@@ -1867,15 +1853,11 @@ thread_prexit:
 int GARMIN_USB_Thread::gusb_cmd_get(garmin_usb_packet *ibuf, size_t sz)
 {
       int rv = 0;
-//      unsigned char *buf = (unsigned char *) &ibuf->dbuf[0];  // Not used
+      unsigned char *buf = (unsigned char *) &ibuf->dbuf[0];
       int orig_receive_state;
 top:
       orig_receive_state = m_receive_state;
-#ifdef __WXOSX__
-    switch (orig_receive_state) {
-#else
       switch (m_receive_state) {
-#endif
             case rs_fromintr:
                   rv = gusb_win_get(ibuf, sz);
                   break;

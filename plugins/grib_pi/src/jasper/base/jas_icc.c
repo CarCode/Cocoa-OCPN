@@ -617,9 +617,7 @@ static int jas_icctagtabent_cmp(const void *src, const void *dst)
 static jas_iccattrvalinfo_t *jas_iccattrvalinfo_lookup(jas_iccsig_t type)
 {
 	jas_iccattrvalinfo_t *info;
-#ifndef __WXOSX__
 	info = jas_iccattrvalinfos;
-#endif
 	for (info = jas_iccattrvalinfos; info->type; ++info) {
 		if (info->type == type) {
 			return info;
@@ -734,8 +732,8 @@ void jas_iccattrtab_dump(jas_iccattrtab_t *attrtab, FILE *out)
 		info = jas_iccattrvalinfo_lookup(attrval->type);
 		if (!info) abort();
 #ifndef __WXOSX__
-		fprintf(out, "attrno=%d; attrname=\"%s\"(0x%08" PRIxFAST16 "); "
-		  "attrtype=\"%s\"(0x%08" PRIxFAST16 ")\n",
+        fprintf(out, "attrno=%d; attrname=\"%s\"(0x%08" PRIxFAST16 "); "
+            "attrtype=\"%s\"(0x%08" PRIxFAST16 ")\n",
 #else
         fprintf(out, "attrno=%d; attrname=\"%s\"(0x%08x" PRIxFAST16 "); "
                         "attrtype=\"%s\"(0x%08x" PRIxFAST16 ")\n",

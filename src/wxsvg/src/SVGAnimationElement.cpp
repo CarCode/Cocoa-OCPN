@@ -1,4 +1,4 @@
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Name:        SVGAnimationElement.cpp
 // Purpose:     Implementation of wxSVGAnimationElement
 // Author:      Alex Thuering
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: SVGAnimationElement.cpp,v 1.10 2016/05/16 21:08:52 ntalex Exp $
 // Copyright:   (c) 2005 Alex Thuering
 // Licence:     wxWindows licence
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 #include "SVGAnimationElement.h"
 #include "SVGDocument.h"
@@ -37,11 +37,7 @@ wxString wxSVGAnimationElement::GetCustomAttribute(const wxString& name) const {
 	if (name == wxT("repeatCount"))
 		return m_repeatCount < 0 ? wxT("indefinite") : wxString::Format(wxT("%d"), m_repeatCount);
 	else if (name == wxT("values"))
-#ifdef __WXOSX__
-        return m_values.GetValueAsString();
-#else
 		return m_values.GetValueAsString(wxT(';'));
-#endif
 	return wxT("");
 }
 

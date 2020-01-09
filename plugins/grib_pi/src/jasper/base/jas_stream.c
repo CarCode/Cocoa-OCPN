@@ -292,7 +292,7 @@ jas_stream_t *jas_stream_fopen(const char *filename, const char *mode)
 
 	return stream;
 }
-#ifndef __WXOSX__
+
 jas_stream_t *jas_stream_freopen(const char *path, const char *mode, FILE *fp)
 {
 	jas_stream_t *stream;
@@ -340,7 +340,7 @@ jas_stream_t *jas_stream_freopen(const char *path, const char *mode, FILE *fp)
 
 	return stream;
 }
-#endif
+
 jas_stream_t *jas_stream_tmpfile()
 {
 #if defined( _MSC_VER )
@@ -597,9 +597,7 @@ char *jas_stream_gets(jas_stream_t *stream, char *buf, int bufsize)
 int jas_stream_gobble(jas_stream_t *stream, int n)
 {
 	int m;
-#ifndef __WXOSX__
 	m = n;
-#endif
 	for (m = n; m > 0; --m) {
 		if (jas_stream_getc(stream) == EOF) {
 			return n - m;
@@ -611,9 +609,7 @@ int jas_stream_gobble(jas_stream_t *stream, int n)
 int jas_stream_pad(jas_stream_t *stream, int n, int c)
 {
 	int m;
-#ifndef __WXOSX__
 	m = n;
-#endif
 	for (m = n; m > 0; --m) {
 		if (jas_stream_putc(stream, c) == EOF)
 			return n - m;

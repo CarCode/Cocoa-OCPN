@@ -1,4 +1,4 @@
-/* *********************************************************************
+/**********************************************************************
  *
  * Project:  CPL - Common Portability Library
  * Purpose:  Implementation of MiniXML Parser and handling.
@@ -135,9 +135,6 @@
  */
 
 #include <ctype.h>
-#ifdef __WXOSX__
-#include <assert.h>
-#endif
 #include "cpl_minixml.h"
 #include "cpl_error.h"
 #include "cpl_conv.h"
@@ -339,11 +336,8 @@ static TokenType ReadToken( ParseContext *psContext )
              && psContext->pszInput[psContext->nInputOffset] == '>' )
     {
         chNext = ReadChar( psContext );
-#ifdef __WXOSX__
-        assert( chNext == '>' );
-#else
         CPLAssert( chNext == '>' );
-#endif
+
         psContext->eTokenType = TSlashClose;
         psContext->bInElement = FALSE;
     }
@@ -354,11 +348,9 @@ static TokenType ReadToken( ParseContext *psContext )
              && psContext->pszInput[psContext->nInputOffset] == '>' )
     {
         chNext = ReadChar( psContext );
-#ifdef __WXOSX__
-        assert( chNext == '>' );
-#else
+
         CPLAssert( chNext == '>' );
-#endif
+
         psContext->eTokenType = TQuestionClose;
         psContext->bInElement = FALSE;
     }

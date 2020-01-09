@@ -1,4 +1,4 @@
-/* *****************************************************************************
+/******************************************************************************
  *
  * Project:  OpenGIS Simple Features Reference Implementation
  * Purpose:  The OGRLinearRing geometry class.

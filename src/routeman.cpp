@@ -69,9 +69,8 @@
 #include "wxSVG/svg.h"
 #endif // ocpnUSE_SVG
 
-#ifdef __WXOSX__
-extern ChartCanvas *cc1;
-#endif
+// void appendOSDirSlash(wxString* pString);  // Wofür????
+
 extern MyFrame          *gFrame;
 extern OCPNPlatform     *g_Platform;
 extern ConsoleCanvas    *console;
@@ -87,6 +86,7 @@ extern wxRect           g_blink_rect;
 extern double           gLat, gLon, gSog, gCog;
 extern double           gVar;
 
+extern wxString         gRmcDate, gRmcTime;
 extern bool             g_bMagneticAPB;
 
 extern RoutePoint       *pAnchorWatchPoint1;
@@ -106,7 +106,6 @@ extern AIS_Decoder     *g_pAIS;
 
 extern PlugInManager    *g_pi_manager;
 extern ocpnStyle::StyleManager* g_StyleManager;
-extern wxString         g_uploadConnection;
 extern bool             g_bAdvanceRouteWaypointOnArrivalOnly;
 extern Route            *pAISMOBRoute;
 extern bool             g_btouch;
@@ -247,11 +246,8 @@ void Routeman::RemovePointFromRoute( RoutePoint* point, Route* route, ChartCanva
     if( pRoutePropDialog && ( pRoutePropDialog->IsShown() ) ) {
         pRoutePropDialog->SetRouteAndUpdate( route, true );
     }
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
+    
     gFrame->InvalidateAllGL();
-#endif
 }
 
 RoutePoint *Routeman::FindBestActivatePoint( Route *pR, double lat, double lon, double cog,
@@ -704,13 +700,20 @@ bool Routeman::UpdateAutopilot()
             } else
                 m_NMEA0183.Rmc.MagneticVariation = 361.; // A signal to NMEA converter, gVAR is unknown
 
-            wxDateTime now = wxDateTime::Now();
-            wxDateTime utc = now.ToUTC();
-            wxString time = utc.Format( _T("%H%M%S") );
-            m_NMEA0183.Rmc.UTCTime = time;
+            // Send GPS time to autopilot if available else send local system time
+            if ( !gRmcTime.IsEmpty() && !gRmcDate.IsEmpty() ) {
+                m_NMEA0183.Rmc.UTCTime = gRmcTime;
+                m_NMEA0183.Rmc.Date = gRmcDate;
+            }
+            else {
+                wxDateTime now = wxDateTime::Now();
+                wxDateTime utc = now.ToUTC();
+                wxString time = utc.Format( _T("%H%M%S") );
+                m_NMEA0183.Rmc.UTCTime = time;
+                wxString date = utc.Format( _T("%d%m%y") );
+                m_NMEA0183.Rmc.Date = date;
+            }
 
-            wxString date = utc.Format( _T("%d%m%y") );
-            m_NMEA0183.Rmc.Date = date;
             m_NMEA0183.Rmc.FAAModeIndicator = "A";
             m_NMEA0183.Rmc.Write( snt );
 
@@ -932,11 +935,7 @@ void Routeman::DeleteAllRoutes( void )
         if( proute == pAISMOBRoute )
         {
             ::wxEndBusyCursor();
-#ifdef __WXOSX__
-            int ret = OCPNMessageBox( NULL, _("You are trying to delete an active AIS MOB route, are you REALLY sure?"), _("OpenCPN Warning"), wxYES_NO | wxICON_EXCLAMATION );
-#else
             int ret = OCPNMessageBox( NULL, _("You are trying to delete an active AIS MOB route, are you REALLY sure?"), _("OpenCPN Warning"), wxYES_NO );
-#endif
             if( ret == wxID_NO )
                 return;
             else
@@ -945,9 +944,6 @@ void Routeman::DeleteAllRoutes( void )
         }
 
         node = node->GetNext();
-#ifdef __WXOSX__
-        if(proute)
-#endif
         if( proute->m_bIsInLayer )
             continue;
 
@@ -1052,11 +1048,15 @@ void Routeman::SetColorScheme( ColorScheme cs )
     int scaled_line_width = g_route_line_width;
     int track_scaled_line_width = g_track_line_width;
     if(g_btouch){
-        double size_mult =  g_ChartScaleFactorExp; // * 1.5;
-        double sline_width = wxRound(size_mult * scaled_line_width);
-        double tsline_width = wxRound( size_mult * track_scaled_line_width );
-        scaled_line_width = wxMax( sline_width, 1);
-        track_scaled_line_width = wxMax( tsline_width, 1 );
+        double nominal_line_width_pix = wxMax(1.5, floor(g_Platform->GetDisplayDPmm() / 5.0));   //0.2 mm nominal, but not less than 1 pixel
+
+        double sline_width = wxMax(nominal_line_width_pix, g_route_line_width);
+        sline_width *= g_ChartScaleFactorExp;
+        scaled_line_width = wxMax( sline_width, 2);
+
+        double tsline_width = wxMax(nominal_line_width_pix, g_track_line_width);
+        tsline_width *= g_ChartScaleFactorExp;
+        track_scaled_line_width = wxMax( tsline_width, 2);
     }
 
     m_pActiveRoutePointPen = wxThePenList->FindOrCreatePen( wxColour( 0, 0, 255 ),
@@ -1146,9 +1146,7 @@ WayPointman::WayPointman()
     m_pExtendedIconArray = NULL;
     
     m_cs = (ColorScheme)-1;
-    #ifdef __WXOSX__
-        ProcessIcons( style );
-    #endif
+    
     m_nGUID = 0;
     m_iconListScale = -999.0;
     m_iconListHeight = -1;

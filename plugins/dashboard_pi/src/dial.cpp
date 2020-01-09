@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  * $Id: dial.cpp, v1.0 2010/08/05 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -41,6 +41,7 @@
     #include <wx/wx.h>
 #endif
 
+#include <cmath>
 #include "wx/tokenzr.h"
 
 double rad2deg(double angle)
@@ -92,18 +93,16 @@ wxSize DashboardInstrument_Dial::GetSize( int orient, wxSize hint )
 
 void DashboardInstrument_Dial::SetData(int st, double data, wxString unit)
 {
-    // Filter out undefined data, normally comes through as "999".
-    // Test value must be greater than 360 to enable some compass-type displays.
-    if ( (st == m_MainValueCap) && (data < 1200.0) )
-    {
-        m_MainValue = data;
-        m_MainValueUnit = unit;
-    }
-    else if ( (st == m_ExtraValueCap) && (data < 1200.0) )
-    {
-        m_ExtraValue = data;
-        m_ExtraValueUnit = unit;
-    }
+    if (st == m_MainValueCap)
+      {
+            m_MainValue = data;
+            m_MainValueUnit = unit;
+      }
+      else if (st == m_ExtraValueCap)
+      {
+            m_ExtraValue = data;
+            m_ExtraValueUnit = unit;
+      }
 }
 
 void DashboardInstrument_Dial::Draw(wxGCDC* bdc)
@@ -140,10 +139,10 @@ void DashboardInstrument_Dial::DrawFrame( wxGCDC* dc )
     GetGlobalColor( _T("DASHL"), &cl );
     dc->SetTextForeground( cl );
     dc->SetBrush( *wxTRANSPARENT_BRUSH);
-
+    
     int penwidth = 1 + size.x / 100;
     wxPen pen( cl, penwidth, wxPENSTYLE_SOLID );
-
+    
     if( m_MarkerOption == DIAL_MARKER_REDGREENBAR ) {
         pen.SetWidth( penwidth * 2 );
         GetGlobalColor( _T("DASHR"), &cl );
@@ -157,7 +156,7 @@ void DashboardInstrument_Dial::DrawFrame( wxGCDC* dc )
         wxCoord x2 = m_cx + ( ( radi ) * cos( angle2 ) );
         wxCoord y2 = m_cy + ( ( radi ) * sin( angle2 ) );
         dc->DrawArc( x1, y1, x2, y2, m_cx, m_cy );
-
+        
         GetGlobalColor( _T("DASHG"), &cl );
         pen.SetColour( cl );
         dc->SetPen( pen );
@@ -175,17 +174,17 @@ void DashboardInstrument_Dial::DrawFrame( wxGCDC* dc )
         pen.SetWidth( penwidth );
         pen.SetColour( cl );
         dc->SetPen( pen );
-        angle1 = deg2rad( 0 );
+        angle1 = deg2rad( 0 ); 
         angle2 = deg2rad( 180 );
         radi = m_radius - 1;
-
+        
         x1 = m_cx + ( ( radi ) * cos( angle1 ) );
         y1 = m_cy + ( ( radi ) * sin( angle1 ) );
         x2 = m_cx + ( ( radi ) * cos( angle2 ) );
         y2 = m_cy + ( ( radi ) * sin( angle2 ) );
         dc->DrawArc( x1, y1, x2, y2, m_cx, m_cy );
         dc->DrawArc( x2, y2, x1, y1, m_cx, m_cy );
-
+        
     }
     else{
         GetGlobalColor( _T("DASHF"), &cl );
@@ -359,7 +358,7 @@ void DashboardInstrument_Dial::DrawData(wxGCDC* dc, double value,
       wxSize size = GetClientSize();
 
       wxString text;
-      if(!wxIsNaN(value))
+      if(!std::isnan(value))
       {
           if (unit == _T("\u00B0"))
                text = wxString::Format(format, value)+DEGREE_SIGN;
@@ -489,7 +488,7 @@ void DashboardInstrument_Dial::DrawForeground(wxGCDC* dc)
       /* this is fix for a +/-180° round instrument, when m_MainValue is supplied as <0..180><L | R>
        * for example TWA & AWA */
       double data;
-    if(m_MainValueUnit == _T("\u00B0L"))
+      if(m_MainValueUnit == _T("\u00B0L"))
           data=360-m_MainValue;
       else
           data=m_MainValue;
@@ -517,12 +516,11 @@ void DashboardInstrument_Dial::DrawForeground(wxGCDC* dc)
 /* Shared functions */
 void DrawCompassRose(wxGCDC* dc, int cx, int cy, int radius, int startangle, bool showlabels)
 {
-//      AddLocaleCatalog( _T("opencpn-dashboard_pi") );
-
       wxPoint pt, points[3];
       wxString Value;
       int width, height;
       wxString CompassArray[] = {_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
+
       dc->SetFont(*g_pFontSmall);
 
       wxColour cl;

@@ -11,4 +11,9 @@ extern void initialize_images(void);
 
 extern wxBitmap *_img_calc;
 
+#ifdef CALCULATOR_USE_SVG
+extern wxString _svg_calculator;
+extern wxString _svg_calculator_toggled;
+#endif
+
 #endif /* ICONS_H */

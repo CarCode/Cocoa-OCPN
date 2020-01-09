@@ -1163,9 +1163,8 @@ int numgbits;
 		if (jas_getdbglevel() >= 10) {
 			jpc_enc_dump(enc);
 		}
-#ifndef __WXOSX__
+
 		endcomps = &tile->tcmpts[tile->numtcmpts];
-#endif
 		for (cmptno = 0, comp = tile->tcmpts; cmptno < tile->numtcmpts; ++cmptno, ++comp) {
 			if (!cp->ccps[cmptno].sgnd) {
 				adjust = 1 << (cp->ccps[cmptno].prec - 1);
@@ -1226,9 +1225,7 @@ assert(jas_image_numcmpts(enc->image) == 3);
 						++absbandno;
 						continue;
 					}
-#ifndef __WXOSX__
 					actualnumbps = 0;
-#endif
 					mxmag = 0;
 					for (y = 0; y < JAS_CAST(uint_fast32_t, jas_matrix_numrows(band->data)); ++y) {
 						for (x = 0; x < JAS_CAST(uint_fast32_t, jas_matrix_numcols(band->data)); ++x) {

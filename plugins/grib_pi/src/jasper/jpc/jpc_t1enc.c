@@ -247,9 +247,7 @@ assert(pass->term == 1);
 	pass = cblk->passes;
 	n = cblk->numpasses;
 	while (--n >= 0) {
-#ifdef __WXOSX__
-        if(pass){
-#endif
+
 		if (pass->type == JPC_SEG_MQ) {
 			/* NOP */
 		} else {
@@ -259,7 +257,7 @@ assert(pass->term == 1);
 				assert(bout);
 			}
 		}
-        
+
 #if 1
 		passtype = (pass - cblk->passes + 2) % 3;
 #else
@@ -352,9 +350,7 @@ assert(jas_stream_tell(cblk->stream) == jas_stream_getrwcount(cblk->stream));
 		}
 		++pass;
 	}
-#ifdef __WXOSX__
-    }
-#endif
+
 #if 0
 dump_passes(cblk->passes, cblk->numpasses, cblk);
 #endif
@@ -605,10 +601,9 @@ static int jpc_encrawsigpass(jpc_bitstream_t *out, int bitpos, int vcausalflag, 
 			if (--k <= 0) {
 				continue;
 			}
-#ifndef __WXOSX__
 			fp += frowstep;
 			dp += drowstep;
-#endif
+
 		}
 	}
 
@@ -920,9 +915,7 @@ static int jpc_encclnpass(jpc_mqenc_t *mqenc, int bitpos, int orient, int vcausa
 					break;
 				}
 			} else {
-#ifndef __WXOSX__
 				runlen = 0;
-#endif
 				fp = fvscanstart;
 				dp = dvscanstart;
 				k = vscanlen;

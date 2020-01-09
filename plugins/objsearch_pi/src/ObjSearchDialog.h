@@ -1,9 +1,9 @@
-///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  6 2014)
+// /////////////////////////////////////////////////////////////////////////
+// C++ code generated with wxFormBuilder (version Jan 25 2018)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 
 #ifndef __OBJSEARCHDIALOG_H__
 #define __OBJSEARCHDIALOG_H__
@@ -33,13 +33,14 @@
 #include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/notebook.h>
+#include <wx/scrolwin.h>
 
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class ObjSearchDialog
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class ObjSearchDialog
+// /////////////////////////////////////////////////////////////////////////////
 class ObjSearchDialog : public wxDialog
 {
 	private:
@@ -50,7 +51,6 @@ class ObjSearchDialog : public wxDialog
 		wxButton* m_buttonSearch;
 		wxListCtrl* m_listCtrlResults;
 		wxButton* m_btnShowOnChart;
-		wxButton* m_btnClose;
 		wxCheckBox* m_cAutoClose;
 		wxStaticText* m_stRange;
 		wxSpinCtrl* m_scRange;
@@ -61,25 +61,25 @@ class ObjSearchDialog : public wxDialog
 		virtual void OnSearch( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnItemSelected( wxListEvent& event ) { event.Skip(); }
 		virtual void OnShowOnChart( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnClose( wxCommandEvent& event ) { event.Skip(); }
         virtual void OnSettings( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		ObjSearchDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Chart Object Search"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 660,480 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+    ObjSearchDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Chart Object Search"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 660,480 ), long style = wxCAPTION|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxRESIZE_BORDER|wxSYSTEM_MENU );
 		~ObjSearchDialog();
 	
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class SettingsDialog
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class SettingsDialog
+// /////////////////////////////////////////////////////////////////////////////
 class SettingsDialog : public wxDialog
 {
 	private:
 	
 	protected:
+        wxScrolledWindow* m_swMain;
         wxNotebook* m_notebookSettings;
         wxPanel* m_panelPopulate;
         wxStaticText* m_stScanCharts;
@@ -96,11 +96,10 @@ class SettingsDialog : public wxDialog
 		wxCheckBox* m_cb1000000;
 		wxCheckBox* m_cb200000;
 		wxCheckBox* m_cb20000;
-        wxStaticText* m_stOr;
+        wxPanel* m_panelManage;
         wxStaticText* m_stFile;
         wxTextCtrl* m_tPath;
         wxButton* m_button4;
-        wxPanel* m_panelManage;
 		wxStdDialogButtonSizer* m_sdbSizerBtns;
 		wxButton* m_sdbSizerBtnsOK;
 		wxButton* m_sdbSizerBtnsCancel;
@@ -113,11 +112,7 @@ class SettingsDialog : public wxDialog
         virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
 
 	public:
-#ifdef __WXOSX__
-    SettingsDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,500 ), long style = wxDEFAULT_DIALOG_STYLE );
-#else
-    SettingsDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,480 ), long style = wxDEFAULT_DIALOG_STYLE );
-#endif
+    SettingsDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Object Search Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,450 ), long style = wxDEFAULT_DIALOG_STYLE );
     ~SettingsDialog();
 	
 };

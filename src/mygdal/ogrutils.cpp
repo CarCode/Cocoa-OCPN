@@ -1,4 +1,4 @@
-/* *****************************************************************************
+/******************************************************************************
  *
  * Project:  OpenGIS Simple Features Reference Implementation
  * Purpose:  Utility functions for OGR classes, including some related to

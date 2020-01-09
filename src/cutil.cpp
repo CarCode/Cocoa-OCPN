@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Extern C Linked Utilities
@@ -40,7 +40,7 @@ int Intersect_FL(float_2Dpt, float_2Dpt, float_2Dpt, float_2Dpt) ;
 int CCW_FL(float_2Dpt, float_2Dpt, float_2Dpt) ;
 
 
-/*************************************************************************
+/* ************************************************************************
 
 
  * FUNCTION:   G_PtInPolygon
@@ -92,7 +92,7 @@ int  G_PtInPolygon(MyPoint *rgpts, int wnumpts, float x, float y)
 }
 
 
-/*************************************************************************
+/* ************************************************************************
 
               0
  * FUNCTION:   Intersect
@@ -106,18 +106,16 @@ int  G_PtInPolygon(MyPoint *rgpts, int wnumpts, float x, float y)
 
 
 int Intersect(MyPoint p1, MyPoint p2, MyPoint p3, MyPoint p4) {
-#ifndef __WXOSX__  // Not used
       int i;
       i = CCW(p1, p2, p3);
       i = CCW(p1, p2, p4);
       i = CCW(p3, p4, p1);
       i = CCW(p3, p4, p2);
-#endif
    return ((( CCW(p1, p2, p3) * CCW(p1, p2, p4)) <= 0)
         && (( CCW(p3, p4, p1) * CCW(p3, p4, p2)  <= 0) )) ;
 
 }
-/*************************************************************************
+/* ************************************************************************
 
 
  * FUNCTION:   CCW (CounterClockWise)
@@ -182,7 +180,7 @@ int  G_PtInPolygon_FL(float_2Dpt *rgpts, int wnumpts, float x, float y)
 }
 
 
-/*************************************************************************
+/* ************************************************************************
 
  * FUNCTION:   Intersect_FL
  *
@@ -195,18 +193,16 @@ int  G_PtInPolygon_FL(float_2Dpt *rgpts, int wnumpts, float x, float y)
 
 
 int Intersect_FL(float_2Dpt p1, float_2Dpt p2, float_2Dpt p3, float_2Dpt p4) {
-#ifndef __WXOSX__  // Not used
       int i;
       i = CCW_FL(p1, p2, p3);
       i = CCW_FL(p1, p2, p4);
       i = CCW_FL(p3, p4, p1);
       i = CCW_FL(p3, p4, p2);
-#endif
       return ((( CCW_FL(p1, p2, p3) * CCW_FL(p1, p2, p4)) <= 0)
                   && (( CCW_FL(p3, p4, p1) * CCW_FL(p3, p4, p2)  <= 0) )) ;
 
 }
-/*************************************************************************
+/* ************************************************************************
 
 
  * FUNCTION:   CCW_FL (CounterClockWise)
@@ -274,7 +270,7 @@ ClipResult cohen_sutherland_line_clip_d (double *x0, double *y0, double *x1, dou
       /* Cohen-Sutherland clipping algorithm for line P0=(x1,y0) to P1=(x1,y1)
     and clip rectangle with diagonal from (xmin,ymin) to (xmax,ymax).*/
     struct LOC_cohen_sutherland_line_clip V;
-    int accept = CFALSE, done = CFALSE;
+    int done = CFALSE;
     ClipResult clip = Visible;
     outcode outcode0, outcode1, outcodeOut;
     /*Outcodes for P0,P1, and whichever point lies outside the clip rectangle*/
@@ -288,7 +284,6 @@ ClipResult cohen_sutherland_line_clip_d (double *x0, double *y0, double *x1, dou
     CompOutCode(*x1, *y1, &outcode1, &V);
     do {
         if (outcode0 == 0 && outcode1 == 0) {   /*Trivial accept and exit*/
-//            accept = CTRUE;  // Not used
             done = CTRUE;
         } else if ((outcode0 & outcode1) != 0) {
             clip = Invisible;
@@ -465,24 +460,122 @@ void DouglasPeucker(double *PointList, int fp, int lp, double epsilon, std::vect
     }
 }
 
-void DouglasPeuckerM(double *PointList, int fp, int lp, double epsilon, wxArrayInt *keep)
+void DouglasPeuckerF(float *PointList, int fp, int lp, double epsilon, std::vector<int> *keep)
 {
     // Find the point with the maximum distance
     double dmax = 0;
     int index = 0;
-    double lmax = 0;
-
+    
     vector2D va(PointList[2*fp] - PointList[2*lp],
                 PointList[2*fp+1] - PointList[2*lp+1]);
-#ifdef __WXOSX__
-    va.x*va.x + va.y*va.y;
-#else
+    
     double da = va.x*va.x + va.y*va.y;
-#endif
     for(int i = fp+1 ; i < lp ; ++i) {
         vector2D vb(PointList[2*i] - PointList[2*fp],
                     PointList[2*i + 1] - PointList[2*fp+1]);
+        
+        double dab = va.x*vb.x + va.y*vb.y;
+        double db = vb.x*vb.x + vb.y*vb.y;
+        double d = da - dab*dab/db;
+        if ( d > dmax ) {
+            index = i;
+            dmax = d;
+        }
+    }
+    // If max distance is greater than epsilon, recursively simplify
+    if ( dmax > epsilon*epsilon ) {
+        keep->push_back(index);
+        
+        // Recursive call
+        DouglasPeuckerF(PointList, fp, index, epsilon, keep);
+        DouglasPeuckerF(PointList, index, lp, epsilon, keep);
+        
+    }
+}
 
+void DouglasPeuckerFI(float *PointList, int fp, int lp, double epsilon, std::vector<bool> &keep)
+{
+    keep[fp] = true;
+    keep[lp] = true;
+
+    // Find the point with the maximum distance
+    double dmax = 0;
+    int maxdistIndex = -1;
+    
+    vector2D va(PointList[2*fp] - PointList[2*lp],
+                PointList[2*fp+1] - PointList[2*lp+1]);
+    
+    double da = va.x*va.x + va.y*va.y;
+    for(int i = fp+1 ; i < lp ; ++i) {
+        vector2D vb(PointList[2*i] - PointList[2*fp],
+                    PointList[2*i + 1] - PointList[2*fp+1]);
+        
+        double dab = va.x*vb.x + va.y*vb.y;
+        double db = vb.x*vb.x + vb.y*vb.y;
+        double d = da - dab*dab/db;
+        if ( d > dmax ) {
+            maxdistIndex = i;
+            dmax = d;
+        }
+    }
+    // If max distance is greater than epsilon, recursively simplify
+    if ( dmax > epsilon*epsilon ) {
+        
+        // Recursive call
+        DouglasPeuckerFI(PointList, fp, maxdistIndex, epsilon, keep);
+        DouglasPeuckerFI(PointList, maxdistIndex, lp, epsilon, keep);
+        
+    }
+}
+
+void DouglasPeuckerDI(double *PointList, int fp, int lp, double epsilon, std::vector<bool> &keep)
+{
+    keep[fp] = true;
+    keep[lp] = true;
+
+    // Find the point with the maximum distance
+    double dmax = 0;
+    int maxdistIndex = -1;
+    
+    vector2D va(PointList[2*fp] - PointList[2*lp],
+                PointList[2*fp+1] - PointList[2*lp+1]);
+    
+    double da = va.x*va.x + va.y*va.y;
+    for(int i = fp+1 ; i < lp ; ++i) {
+        vector2D vb(PointList[2*i] - PointList[2*fp],
+                    PointList[2*i + 1] - PointList[2*fp+1]);
+        
+        double dab = va.x*vb.x + va.y*vb.y;
+        double db = vb.x*vb.x + vb.y*vb.y;
+        double d = da - dab*dab/db;
+        if ( d > dmax ) {
+            maxdistIndex = i;
+            dmax = d;
+        }
+    }
+    // If max distance is greater than epsilon, recursively simplify
+    if ( dmax > epsilon*epsilon ) {
+        
+        // Recursive call
+        DouglasPeuckerDI(PointList, fp, maxdistIndex, epsilon, keep);
+        DouglasPeuckerDI(PointList, maxdistIndex, lp, epsilon, keep);
+        
+    }
+}
+
+void DouglasPeuckerM(double *PointList, int fp, int lp, double epsilon, std::vector<int> *keep)
+{
+    // Find the point with the maximum distance
+    int index = 0;
+    double lmax = 0;
+    
+    vector2D va(PointList[2*fp] - PointList[2*lp],
+                PointList[2*fp+1] - PointList[2*lp+1]);
+    
+    for(int i = fp+1 ; i < lp ; ++i) {
+        vector2D vb(PointList[2*i] - PointList[2*fp],
+                    PointList[2*i + 1] - PointList[2*fp+1]);
+        
         vector2D vn;
         double l = vGetLengthOfNormal( &vb, &va, &vn );
         if(l > lmax){
@@ -492,14 +585,15 @@ void DouglasPeuckerM(double *PointList, int fp, int lp, double epsilon, wxArrayI
     }
     // If max distance is greater than epsilon, recursively simplify
     if(lmax > epsilon){
-        keep->Add(index);
-
+        keep->push_back(index);
+        
         // Recursive call
         DouglasPeuckerM(PointList, fp, index, epsilon, keep);
         DouglasPeuckerM(PointList, index, lp, epsilon, keep);
-
+        
     }
 }
+
 
 //      CRC calculation for a byte buffer
 

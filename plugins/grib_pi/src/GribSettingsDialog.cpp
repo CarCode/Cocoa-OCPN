@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Grib Settings Dialog
@@ -21,7 +21,9 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ */
 
 #include "grib_pi.h"
 #include "folder.xpm"
@@ -59,7 +61,7 @@ static const wxString altitude_from_index[3][5] = {
     };
 
 enum SettingsDisplay {B_ARROWS, ISO_LINE, ISO_ABBR, ISO_LINE_VISI, ISO_LINE_SHORT, D_ARROWS, OVERLAY,
-    NUMBERS, PARTICLES};
+                        NUMBERS, PARTICLES};
 
 #ifdef __OCPN__ANDROID__
 
@@ -593,8 +595,11 @@ void GribSettingsDialog::SetSettingsDialogSize()
 	wxSize scroll(0, 0);
 #else        
     /*Sizing do not work with wxScolledWindow so we need to compute it*/
-    int w = GetOCPNCanvasWindow()->GetClientSize().x;           // the display size
-    int h = GetOCPNCanvasWindow()->GetClientSize().y;
+    
+    wxWindow *frame = wxTheApp->GetTopWindow();  
+
+    int w = frame->GetClientSize().x;           // the display size
+    int h = frame->GetClientSize().y;
     int dMargin = 80;                          //set a margin
 	w -= dMargin;								//width available for the scrolled window
     h -= (2 * m_sButton->GetSize().GetY()) + dMargin; //height available for the scrolled window
@@ -1069,99 +1074,101 @@ bool GribOverlaySettings::JSONToSettings(wxString json)
         transparency = wxMin(100, transparency);
         m_iOverlayTransparency = transparency * (double)(254. / 100.);
     }
-
+ 
     for(int i=0; i<SETTINGS_COUNT; i++) {
         wxString Name=name_from_index[i];
         wxString s;
-
+        
         if(root[Name + _T ( "Units" )].IsString()){
             wxString s = root[Name + _T ( "Units" )].AsString(); long units = -1; s.ToLong(&units);
             for( int j=0; !unit_names[unittype[i]][j].empty(); j++)
                 Settings[i].m_Units = ( units < 0 || units > j - 1 ) ? (SettingsType) 0 : (SettingsType)units;
         }
-
+    
         if(root[Name + _T ( "BarbedArrows" )].IsBool())
             Settings[i].m_bBarbedArrows = root[Name + _T ( "BarbedArrows" )].AsBool();
 
         if(root[Name + _T ( "BarbedVisibility" )].IsBool())
             Settings[i].m_iBarbedVisibility = root[Name + _T ( "BarbedVisibility" )].AsBool();
-
+        
         if(root[Name + _T ( "BarbedColors" )].IsString()){
             wxString s = root[Name + _T ( "BarbedColors" )].AsString(); long val = -1; s.ToLong(&val);
             Settings[i].m_iBarbedColour = val;
         }
-
+        
         if(root[Name + _T ( "BarbedArrowFixedSpacing" )].IsBool())
             Settings[i].m_bBarbArrFixSpac = root[Name + _T ( "BarbedArrowFixedSpacing" )].AsBool();
-
+        
          if(root[Name + _T ( "BarbedArrowSpacing" )].IsString()){
             wxString s = root[Name + _T ( "BarbedArrowSpacing" )].AsString(); long val = -1; s.ToLong(&val);
             Settings[i].m_iBarbArrSpacing = val;
         }
-
+        
         if(root[Name + _T ( "DisplayIsobars" )].IsBool())
             Settings[i].m_bIsoBars = root[Name + _T ( "DisplayIsobars" )].AsBool();
-
+        
         if(root[Name + _T ( "IsoBarSpacing" )].IsString()){
             wxString s = root[Name + _T ( "IsoBarSpacing" )].AsString(); long val = -1; s.ToLong(&val);
             Settings[i].m_iIsoBarSpacing = val;
         }
-
+        
         if(root[Name + _T ( "AbbrIsobarsNumbers" )].IsBool())
             Settings[i].m_bAbbrIsoBarsNumbers = root[Name + _T ( "AbbrIsobarsNumbers" )].AsBool();
 
         if(root[Name + _T ( "IsoBarVisibility" )].IsBool())
             Settings[i].m_iIsoBarVisibility = root[Name + _T ( "IsoBarVisibility" )].AsBool();
-
+        
         if(root[Name + _T ( "DirectionArrows" )].IsBool())
             Settings[i].m_bDirectionArrows = root[Name + _T ( "DirectionArrows" )].AsBool();
-
+        
         if(root[Name + _T ( "DirectionArrowForm" )].IsString()){
             wxString s = root[Name + _T ( "DirectionArrowForm" )].AsString(); long val = -1; s.ToLong(&val);
             Settings[i].m_iDirectionArrowForm = val;
         }
-
+        
         if(root[Name + _T ( "DirectionArrowSize" )].IsString()){
             wxString s = root[Name + _T ( "DirectionArrowSize" )].AsString(); long val = -1; s.ToLong(&val);
             Settings[i].m_iDirectionArrowSize = val;
         }
-
+        
         if(root[Name + _T ( "DirectionArrowFixedSpacing" )].IsBool())
             Settings[i].m_bDirArrFixSpac = root[Name + _T ( "DirectionArrowFixedSpacing" )].AsBool();
-
+        
         if(root[Name + _T ( "DirectionArrowSpacing" )].IsString()){
             wxString s = root[Name + _T ( "DirectionArrowSpacing" )].AsString(); long val = -1; s.ToLong(&val);
             Settings[i].m_iDirArrSpacing = val;
         }
-
+        
         if(root[Name + _T ( "OverlayMap" )].IsBool())
             Settings[i].m_bOverlayMap = root[Name + _T ( "OverlayMap" )].AsBool();
-
+        
         if(root[Name + _T ( "OverlayMapColors" )].IsString()){
             wxString s = root[Name + _T ( "OverlayMapColors" )].AsString(); long val = -1; s.ToLong(&val);
             Settings[i].m_iOverlayMapColors = val;
         }
-
+        
         if(root[Name + _T ( "Numbers" )].IsBool())
             Settings[i].m_bNumbers = root[Name + _T ( "Numbers" )].AsBool();
-
+        
         if(root[Name + _T ( "NumbersFixedSpacing" )].IsBool())
             Settings[i].m_bNumFixSpac = root[Name + _T ( "NumbersFixedSpacing" )].AsBool();
-
+        
         if(root[Name + _T ( "NumbersSpacing" )].IsString()){
             wxString s = root[Name + _T ( "NumbersSpacing" )].AsString(); long val = -1; s.ToLong(&val);
             Settings[i].m_iNumbersSpacing = val;
         }
-
+        
         if(root[Name + _T ( "Particles" )].IsBool())
             Settings[i].m_bParticles = root[Name + _T ( "Particles" )].AsBool();
-
+        
         if(root[Name + _T ( "ParticleDensity" )].IsString()){
             wxString s = root[Name + _T ( "ParticleDensity" )].AsString(); double val = -1; s.ToDouble(&val);
             Settings[i].m_dParticleDensity = val;
         }
-
+        
     }
  
     return true;    
 }
+
+

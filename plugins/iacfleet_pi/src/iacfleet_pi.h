@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  * $Id: iacfleet_pi.h, v1.0 2010/08/05 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -30,23 +30,19 @@
 
 #include "wx/wxprec.h"
 
-#ifndef  WX_PRECOMP
+#ifndef WX_PRECOMP
 #include "wx/wx.h"
 #endif //precompiled headers
 
-#include "../../../src/wxcurl/wx/curl/dialog.h"
-
-//#include "version.h"
 #define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    9
+#define     PLUGIN_VERSION_MINOR    10
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    13
 
-//#include "../../../include/ocpn_plugin.h"
-#include "ocpn_plugin.h"
+#include "../../../include/ocpn_plugin.h"
 
-#define IACFLEET_TOOL_POSITION -1          // Request default positioning of toolbar tool
+#define IACFLEET_TOOL_POSITION -1     // Request default positioning of toolbar tool
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition

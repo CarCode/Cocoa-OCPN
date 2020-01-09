@@ -1,4 +1,4 @@
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Name:        SVGCanvasTextCairo.h
 // Purpose:     Cairo canvas text
 // Author:      Alex Thuering
@@ -6,19 +6,18 @@
 // RCS-ID:      $Id: SVGCanvasTextCairo.cpp,v 1.13 2014/06/16 19:40:46 ntalex Exp $
 // Copyright:   (c) 2011 Alex Thuering
 // Licence:     wxWindows licence
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 #include "SVGCanvasTextCairo.h"
 #include "SVGCanvasPathCairo.h"
 #include <wx/log.h>
 #include <wx/font.h>
 #include <wx/tokenzr.h>
-#include <cairo.h>
+#include <cairo/cairo.h>
 #if defined(__WXMSW__)
 #include <cairo/cairo-win32.h>
 #elif defined(__WXMAC__) 
-#include <cairo-quartz.h>
-#define CAIRO_HAS_QUARTZ_SURFACE 1
+#include <cairo/cairo-quartz.h>
 #else
 #include <pango/pangocairo.h>
 #include <glib-object.h>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1120"
+   LastUpgradeVersion = "1130"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A6050B351F42CE480094E316"
+               BlueprintIdentifier = "A68B064A23A0067C00A19ED8"
                BuildableName = "liblogbookkonni_pi.dylib"
                BlueprintName = "logbookkonni_pi"
-               ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
+               ReferencedContainer = "container:Build-Debug/OpenCPN.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -40,15 +40,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A6050B351F42CE480094E316"
-            BuildableName = "liblogbookkonni_pi.dylib"
-            BlueprintName = "logbookkonni_pi"
-            ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -59,10 +50,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A6050B351F42CE480094E316"
+            BlueprintIdentifier = "A68B064A23A0067C00A19ED8"
             BuildableName = "liblogbookkonni_pi.dylib"
             BlueprintName = "logbookkonni_pi"
-            ReferencedContainer = "container:buildXcode/OpenCPN.xcodeproj">
+            ReferencedContainer = "container:Build-Debug/OpenCPN.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

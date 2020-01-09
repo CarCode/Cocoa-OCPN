@@ -34,6 +34,9 @@
 
 #include <wx/log.h>
 #include <wx/stdpaths.h>
+#include <wx/clrpicker.h>
+#include <wx/colourdata.h>
+#include <wx/colordlg.h>
 
 #include <stdio.h>
 
@@ -64,31 +67,34 @@ public:
 
 //      Internal Device Support
     static bool hasInternalGPS(wxString profile = _T(""));      // GPS
-#ifdef __OCPN__ANDROID__
+
     static bool hasInternalBT(wxString profile = _T(""));       // Bluetooth
     bool startBluetoothScan();
     wxArrayString getBluetoothScanResults();
     bool stopBluetoothScan();
-#endif
+
 //  Per-Platform initialization support    
-    
+
     //  Called from MyApp() immediately upon entry to MyApp::OnInit()
     static void Initialize_1( void );
-    
+
     //  Called from MyApp() immediately before creation of MyFrame()
-    static void Initialize_2( void );
-    
+    void Initialize_2( void );
+
+    //  Called from MyApp()::OnInit() just after gFrame is created, so gFrame is available
+    void Initialize_3( void );
+
     //  Called from MyApp() just before end of MyApp::OnInit()
-    static void Initialize_3( void );
-    
+    static void Initialize_4( void );
+
     static void OnExit_1( void );
     static void OnExit_2( void );
-    
+
 
     void SetDefaultOptions( void );
 
     void applyExpertMode(bool mode);
-    
+
 //--------------------------------------------------------------------------
 //      Platform Display Support
 //--------------------------------------------------------------------------
@@ -97,12 +103,14 @@ public:
     double getFontPointsperPixel( void );
     wxSize getDisplaySize();
     double GetDisplaySizeMM();
+    double GetDisplayAreaCM2();
+
     void SetDisplaySizeMM( double size );
     double GetDisplayDPmm();
+    unsigned int GetSelectRadiusPix();
     double GetToolbarScaleFactor( int GUIScaleFactor );
     double GetCompassScaleFactor( int GUIScaleFactor );
-    void onStagedResizeFinal();
-    
+
     wxFileDialog *AdjustFileDialogFont(wxWindow *container, wxFileDialog *dlg);
     wxDirDialog  *AdjustDirDialogFont(wxWindow *container,  wxDirDialog *dlg);
 
@@ -112,7 +120,7 @@ public:
     bool GetFullscreen();
     bool SetFullscreen( bool bFull );
     double GetDisplayDensityFactor();
-    
+
     double m_pt_per_pixel;
 //--------------------------------------------------------------------------
 //      Per-Platform file/directory support
@@ -137,14 +145,14 @@ public:
     int DoFileSelectorDialog( wxWindow *parent, wxString *file_spec, wxString Title, wxString initDir,
                                 wxString suggestedName, wxString wildcard);
     int DoDirSelectorDialog( wxWindow *parent, wxString *file_spec, wxString Title, wxString initDir);
-    
+
     bool InitializeLogFile( void );
     void CloseLogFile( void );
     wxString    &GetLargeLogMessage( void ){ return large_log_message; }
     FILE        *GetLogFilePtr(){ return flog; }
 
-    
-    
+
+
 //--------------------------------------------------------------------------
 //      Per-Platform Utility support
 //--------------------------------------------------------------------------
@@ -156,22 +164,29 @@ public:
 
     void SetLocaleSearchPrefixes( void );
     wxString GetDefaultSystemLocale();
-    wxString GetAdjustedAppLocale();
-    
+
 #if wxUSE_XLOCALE    
+    wxString GetAdjustedAppLocale();
     wxString ChangeLocale(wxString &newLocaleID, wxLocale *presentLocale, wxLocale** newLocale);
 #endif
-    
+
+
+//--------------------------------------------------------------------------
+//      Per-Platform OpenGL support
+//--------------------------------------------------------------------------
+    bool BuildGLCaps( void *pbuf );
+    bool IsGLCapable();
+
 private:
     bool        GetWindowsMonitorSize( int *width, int *height);
-    
+
     wxString    m_homeDir;
     wxString    m_exePath;
     wxString    m_SData_Dir;
     wxString    m_PrivateDataDir;
     wxString    m_PluginsDir;
     wxString    m_config_file_name;
-    
+
     wxString    mlog_file;
     FILE        *flog;
     wxLog       *m_Oldlogger;
@@ -179,10 +194,51 @@ private:
     wxSize      m_displaySize;
     wxSize      m_displaySizeMM;
     int         m_displaySizeMMOverride;
-    
+
     int         m_monitorWidth, m_monitorHeight;
     bool        m_bdisableWindowsDisplayEnum;
 };
 
+//--------------------------------------------------------------------------
+//      Private colourPicker control
+//--------------------------------------------------------------------------
+
+class OCPNColourPickerCtrl : public wxBitmapButton
+{
+public:
+    OCPNColourPickerCtrl();
+    OCPNColourPickerCtrl(wxWindow *parent,
+                   wxWindowID id,
+                   const wxColour& initial = *wxBLACK,
+                   const wxPoint& pos = wxDefaultPosition,
+                   const wxSize& size = wxDefaultSize,
+                   long style = 0,
+                   const wxValidator& validator = wxDefaultValidator,
+                   const wxString& name = _T(""));
+
+    bool Create(wxWindow *parent,
+                wxWindowID id,
+                const wxColour& initial = *wxBLACK,
+                const wxPoint& pos = wxDefaultPosition,
+                const wxSize& size = wxDefaultSize,
+                long style = 0,
+                const wxValidator& validator = wxDefaultValidator,
+                const wxString& name = _T(""));
+
+    void OnButtonClick(wxCommandEvent& WXUNUSED(ev));
+    void InitColourData();
+    void SetColour( wxColour& c);
+    wxColour GetColour( void );
+
+protected:
+    virtual void UpdateColour();
+    wxSize DoGetBestSize() const;
+
+private:
+    wxBitmap m_bitmap;
+    wxColour m_colour;
+    wxColourData ms_data;
+
+};
 
 #endif          //guard

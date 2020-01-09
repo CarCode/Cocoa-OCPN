@@ -1,11 +1,11 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  ChartBase Definition
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -168,10 +168,6 @@ public:
       wxString GetSoundingsDatum(){ return m_SoundingsDatum;}
       wxString GetDatumString(){ return m_datum_str;}
       wxString GetExtraInfo(){ return m_ExtraInfo; }
-#ifdef __WXOSX__
-    double  GetLatAdjustment() { return m_lat_datum_adjust; };
-    double  GetLonAdjustment() { return m_lon_datum_adjust; };
-#endif
       double GetChart_Error_Factor(){ return Chart_Error_Factor; }
       ChartTypeEnum GetChartType(){ return m_ChartType;}
       ChartFamilyEnum GetChartFamily(){ return m_ChartFamily;}

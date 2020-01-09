@@ -373,9 +373,8 @@ jas_cmxform_t *jas_cmxform_create(jas_cmprof_t *inprof, jas_cmprof_t *outprof,
 	int prfintent;
 
 	/* Avoid compiler warnings about unused parameters. */
-#ifndef __WXOSX__
 	optimize = 0;
-#endif
+
 	prfintent = intent;
 
 	if (!(xform = jas_malloc(sizeof(jas_cmxform_t))))
@@ -479,11 +478,7 @@ int jas_cmxform_apply(jas_cmxform_t *xform, jas_cmpixmap_t *in, jas_cmpixmap_t *
 	jas_cmpxform_t *pxform;
 	long *dataptr;
 	int maxchans;
-#ifdef __WXOSX__
-    int bufmax = 0;
-#else
 	int bufmax;
-#endif
 	int m;
 	int bias;
 	jas_cmreal_t scale;
@@ -520,9 +515,6 @@ int jas_cmxform_apply(jas_cmxform_t *xform, jas_cmpixmap_t *in, jas_cmpixmap_t *
 			maxchans = pxform->numoutchans;
 		}
 	}
-#ifdef __WXOSX__
-    if(maxchans > 0)
-#endif
 	bufmax = APPLYBUFSIZ / maxchans;
 	assert(bufmax > 0);
 
@@ -892,9 +884,7 @@ static int jas_cmshapmatlut_set(jas_cmshapmatlut_t *lut, jas_icccurv_t *curv)
 {
 	jas_cmreal_t gamma;
 	int i;
-#ifndef __WXOSX__
 	gamma = 0;
-#endif
 	jas_cmshapmatlut_cleanup(lut);
 	if (curv->numents == 0) {
 		lut->size = 2;

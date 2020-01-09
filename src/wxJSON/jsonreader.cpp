@@ -1,4 +1,4 @@
-// ///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 // Name:        jsonreader.cpp
 // Purpose:     the wxJSONReader class: a JSON text parser
 // Author:      Luciano Cattani
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: jsonreader.cpp,v 1.12 2008/03/12 10:48:19 luccat Exp $
 // Copyright:   (c) 2007 Luciano Cattani
 // Licence:     wxWidgets licence
-// ///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 //#ifdef __GNUG__
 //    #pragma implementation "jsonreader.cpp"
@@ -14,7 +14,7 @@
 
 // make wxLogTrace a noop, it's really slow
 // must be defined before including debug.h
-#define wxDEBUG_LEVEL 1
+#define wxDEBUG_LEVEL 0
 
 #include <wx/jsonreader.h>
 
@@ -386,11 +386,7 @@ wxJSONReader::Parse( wxInputStream& is, wxJSONValue* val )
     // of close-object/array characters
     // note that the missing close-chars error messages are
     // added by the DoRead() function
-#ifdef __WXOSX__
-    DoRead( is, *val );
-#else
     ch = DoRead( is, *val );
-#endif
     return m_errors.size();
 }
 
@@ -1043,11 +1039,7 @@ wxJSONReader::SkipComment( wxInputStream& is )
             if ( ch == '*' )    {
                 ch = PeekChar( is );
                 if ( ch == '/' )    {
-#ifdef __WXOSX__
-                    ReadChar( is );
-#else
                     ch = ReadChar( is );  // read the '/' char
-#endif
                     ch = ReadChar( is );  // read the next char that will be returned
                     utf8Buff.AppendData( "*/", 2 );
                     break;

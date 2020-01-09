@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Bar Window
@@ -23,6 +23,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
+
 #ifndef __statwin_H__
 #define __statwin_H__
 
@@ -41,6 +42,7 @@
 WX_DECLARE_OBJARRAY(wxRect, RectArray);
 
 class MyFrame;
+class ChartCanvas;
 
 //----------------------------------------------------------------------------
 // Piano
@@ -48,7 +50,7 @@ class MyFrame;
 class Piano : public wxEvtHandler
 {
 public:
-      Piano();
+      Piano( ChartCanvas *parent );
       ~Piano();
 
       void Paint(int y, wxDC &dc, wxDC *shapeDC=NULL);
@@ -66,6 +68,8 @@ public:
       void SetTmercIndexArray(std::vector<int> array);
       void SetPolyIndexArray(std::vector<int> array);
 
+      std::vector<int>  GetActiveKeyArray() { return m_active_index_array; }
+
       void SetVizIcon(wxBitmap *picon_bmp){ if( m_pVizIconBmp ) delete m_pVizIconBmp; m_pVizIconBmp = picon_bmp; }
       void SetInVizIcon(wxBitmap *picon_bmp){ if( m_pInVizIconBmp ) delete m_pInVizIconBmp; m_pInVizIconBmp = picon_bmp; }
       void SetSkewIcon(wxBitmap *picon_bmp){ if( m_pSkewIconBmp ) delete m_pSkewIconBmp; m_pSkewIconBmp = picon_bmp; }
@@ -79,6 +83,7 @@ public:
       void SetRoundedRectangles(bool val){ m_brounded = val; m_hash.Clear();}
 
       int GetHeight();
+      int GetWidth();
       
       wxString &GenerateAndStoreNewHash();
       wxString &GetStoredHash();
@@ -92,17 +97,18 @@ private:
       wxString GetStateHash();
       wxString    m_hash;
       
+      ChartCanvas *m_parentCanvas;
+      
       int         m_nRegions;
       int         m_index_last;
       int         m_hover_icon_last;
       int         m_hover_last;
 
       wxBrush     m_backBrush;
-      wxBrush     m_tBrush;
-      wxBrush     m_vBrush;
-      wxBrush     m_svBrush;
-      wxBrush     m_uvBrush;
-      wxBrush     m_slBrush;
+      wxBrush     m_srBrush, m_rBrush;
+      wxBrush     m_svBrush, m_vBrush;
+      wxBrush     m_unavailableBrush;
+      wxBrush     m_utileBrush, m_tileBrush;
 
       wxBrush     m_cBrush;
       wxBrush     m_scBrush;
@@ -120,7 +126,8 @@ private:
       int         m_click_sel_dbindex;
       int         m_action;
       
-      RectArray KeyRect;
+      //RectArray KeyRect;
+      std::vector<wxRect> KeyRect;
       
       wxBitmap    *m_pVizIconBmp;
       wxBitmap    *m_pInVizIconBmp;
@@ -133,7 +140,10 @@ private:
       bool        m_bleaving;
 
       GLuint      m_tex, m_texw, m_texh, m_tex_piano_height;
+      int         m_ref, m_pad, m_radius, m_texPitch;
 
+      int         m_width;
+      
 DECLARE_EVENT_TABLE()
 };
 

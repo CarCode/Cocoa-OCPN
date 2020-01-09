@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  * $Id: depth.cpp, v1.0 2010/08/30 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -27,6 +27,7 @@
 #include "depth.h"
 #include "wx28compat.h"
 extern int g_iDashDepthUnit;
+
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -70,13 +71,13 @@ void DashboardInstrument_Depth::SetData(int st, double data, wxString unit)
 {
       if (st == OCPN_DBP_STC_DPT)
       {
-            m_Depth = data;
+            m_Depth = std::isnan(data) ? 0.0 : data;
 
             for (int idx = 1; idx < DEPTH_RECORD_COUNT; idx++)
             {
-                  m_ArrayDepth[idx-1] = m_ArrayDepth[idx];
+                  m_ArrayDepth[idx - 1] = m_ArrayDepth[idx];
             }
-            m_ArrayDepth[DEPTH_RECORD_COUNT-1] = data;
+            m_ArrayDepth[DEPTH_RECORD_COUNT - 1] = m_Depth;
             m_DepthUnit = unit;
       }
       else if (st == OCPN_DBP_STC_TMP)
@@ -109,13 +110,13 @@ void DashboardInstrument_Depth::DrawBackground(wxGCDC* dc)
       dc->DrawLine(3, 50, size.x-3, 50);
       dc->DrawLine(3, 140, size.x-3, 140);
 
-#ifdef __WXMSW__
+#ifdef __WXMSW__      
       pen.SetStyle(wxPENSTYLE_SHORT_DASH);
 #else
       pen.SetStyle(wxPENSTYLE_DOT);
       pen.SetWidth(1);
-#endif
-
+#endif      
+      
       dc->SetPen(pen);
       dc->DrawLine(3, 65, size.x-3, 65);
       dc->DrawLine(3, 90, size.x-3, 90);
@@ -147,15 +148,6 @@ void DashboardInstrument_Depth::DrawForeground(wxGCDC* dc)
 {
       wxSize size = GetClientSize();
       wxColour cl;
-      GetGlobalColor(_T("DASHF"), &cl);
-      dc->SetTextForeground( cl );
-      dc->SetFont(*g_pFontData);
-      dc->DrawText(wxString::Format(_T("%.1f "), m_Depth)+m_DepthUnit, 10, m_TitleHeight);
-
-      dc->SetFont(*g_pFontLabel);
-      int width, height;
-      dc->GetTextExtent(m_Temp, &width, &height, 0, 0, g_pFontLabel);
-      dc->DrawText(m_Temp, 0, size.y-height);
 
       GetGlobalColor(_T("DASHL"), &cl);
       wxBrush brush;
@@ -180,5 +172,18 @@ void DashboardInstrument_Depth::DrawForeground(wxGCDC* dc)
       points[DEPTH_RECORD_COUNT+1].x = 3;
       points[DEPTH_RECORD_COUNT+1].y = 140;
       dc->DrawPolygon(DEPTH_RECORD_COUNT+2, points);
+      
+      GetGlobalColor(_T("DASHF"), &cl);
+      dc->SetTextForeground( cl );
+      dc->SetFont(*g_pFontData);
+      if (m_DepthUnit != _T("-")) { //Watchdog
+          dc->DrawText(wxString::Format(_T("%.1f "), m_Depth) + m_DepthUnit, 10, m_TitleHeight);
+      } else
+          dc->DrawText(_T("---"), 10, m_TitleHeight);
+
+      dc->SetFont(*g_pFontLabel);
+      int width, height;
+      dc->GetTextExtent(m_Temp, &width, &height, 0, 0, g_pFontLabel);
+      dc->DrawText(m_Temp, 0, size.y-height);
 }
 

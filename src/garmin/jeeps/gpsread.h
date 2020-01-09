@@ -1,4 +1,4 @@
-/* *******************************************************************
+/********************************************************************
 ** @source JEEPS packet reading and acknowledging functions
 **
 ** @author Copyright (C) 1999 Alan Bleasby

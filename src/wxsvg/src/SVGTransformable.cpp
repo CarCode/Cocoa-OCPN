@@ -1,4 +1,4 @@
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Name:        SVGTransformable.cpp
 // Purpose:     
 // Author:      Alex Thuering
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: SVGTransformable.cpp,v 1.8 2014/03/27 21:20:10 ntalex Exp $
 // Copyright:   (c) 2005 Alex Thuering
 // Licence:     wxWindows licence
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 #include "SVGTransformable.h"
 #include "svg.h"
@@ -59,12 +59,7 @@ case the_dtd:\
   return &((the_class&)element);
 
 wxSVGTransformable* wxSVGTransformable::GetSVGTransformable(wxSVGElement& element) {
-// reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to false [-Wtautological-undefined-compare]
-#ifdef __WXOSX__
   if (element.GetType() != wxSVGXML_ELEMENT_NODE) {
-#else
-  if (&element == NULL || element.GetType() != wxSVGXML_ELEMENT_NODE) {
-#endif
       return NULL;
   }
   switch (element.GetDtd()) {

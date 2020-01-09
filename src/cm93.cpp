@@ -54,6 +54,8 @@
 #include "OCPNPlatform.h"
 #include "wx28compat.h"
 #include "ChartDataInputStream.h"
+#include "DetailSlider.h"
+#include "chcanv.h"
 
 #include <stdio.h>
 
@@ -71,23 +73,14 @@ extern ocpnGLOptions g_GLOptions;
 #define new DEBUG_NEW
 #endif
 
-extern ChartCanvas               *cc1;
 extern CM93OffsetDialog          *g_pCM93OffsetDialog;
 extern OCPNPlatform     *g_Platform;
-extern wxString         g_SENCPrefix;
 extern s52plib          *ps52plib;
-extern MyConfig         *pConfig;
 extern bool             g_bDebugCM93;
 extern int              g_cm93_zoom_factor;
 extern PopUpDSlide       *pPopupDetailSlider;
 extern int              g_detailslider_dialog_x, g_detailslider_dialog_y;
-extern bool             g_bShowDetailSlider;
-extern wxString         g_PrivateDataDir;
 
-// Flav add for CM93Offset manual setup
-extern double           g_CM93Maps_Offset_x;
-extern double           g_CM93Maps_Offset_y;
-extern bool             g_CM93Maps_Offset_on;
 extern bool             g_bopengl;
 extern PlugInManager    *g_pi_manager;
 extern float            g_GLMinSymbolLineWidth;
@@ -1277,8 +1270,8 @@ bool Is_CM93Cell_Present ( wxString &fileprefix, double lat, double lon, int sca
       int ilonroot = ( ilon / 60 ) * 60;
 
       wxString fileroot;
-      fileroot.Printf ( _T ( "%04d%04d/" ), ilatroot, ilonroot );
-
+      fileroot.Printf ( _T ( "%04d%04d" ), ilatroot, ilonroot );
+      appendOSDirSep(&fileroot);
 
       wxString sdir ( fileprefix );
       sdir += fileroot;
@@ -1332,26 +1325,6 @@ bool Is_CM93Cell_Present ( wxString &fileprefix, double lat, double lon, int sca
 
       return false;
 }
-
-
-static int get_dval ( int native_scale )
-{
-      int dval;
-      switch ( native_scale )
-      {
-            case 20000000: dval = 120; break;         // Z
-            case  3000000: dval =  60; break;         // A
-            case  1000000: dval =  30; break;         // B
-            case   200000: dval =  12; break;         // C
-            case   100000: dval =   3; break;         // D
-            case    50000: dval =   1; break;         // E
-            case    20000: dval =   1; break;         // F
-            case     7500: dval =   1; break;         // G
-            default: dval =   1; break;
-      }
-      return dval;
-}
-
 
 static bool read_header_and_populate_cib ( FILE *stream, Cell_Info_Block *pCIB )
 {
@@ -1414,6 +1387,9 @@ static bool read_header_and_populate_cib ( FILE *stream, Cell_Info_Block *pCIB )
       pCIB->transform_x_origin = header.easting_min;
       pCIB->transform_y_origin = header.northing_min;
 
+      pCIB->min_lat = header.lat_min;
+      pCIB->min_lon = header.lon_min;
+      
 //      pCIB->m_cell_mcovr_array.Empty();
 
       //    Extract some table sizes from the header, and pre-allocate the tables
@@ -1949,6 +1925,7 @@ cm93chart::cm93chart()
       //  Set up the chart context
       m_this_chart_context = (chart_context *)calloc( sizeof(chart_context), 1);
       m_this_chart_context->chart = this;
+      m_RAZBuilt = true;
       
 }
 
@@ -2196,7 +2173,7 @@ void cm93chart::SetVPParms ( const ViewPort &vpt )
       for ( unsigned int i=0 ; i < vpcells.size() ; i++ )
       {
             bcell_is_in = false;
-          for ( unsigned int j=0 ; j < m_cells_loaded_array.size() ; j++ )
+            for ( unsigned int j=0 ; j < m_cells_loaded_array.size() ; j++ )
             {
                   if ( vpcells[i] == m_cells_loaded_array[j] )
                   {
@@ -2235,13 +2212,37 @@ void cm93chart::SetVPParms ( const ViewPort &vpt )
                         
                         ForceEdgePriorityEvaluate();              // need to re-evaluate priorities
 
-                      if (std::find(m_cells_loaded_array.begin(), m_cells_loaded_array.end(), cell_index) == m_cells_loaded_array.end())
-                          m_cells_loaded_array.push_back ( cell_index );
+                        if (std::find(m_cells_loaded_array.begin(), m_cells_loaded_array.end(), cell_index) == m_cells_loaded_array.end())
+                              m_cells_loaded_array.push_back ( cell_index );
 
                         Unload_CM93_Cell();
 
                         loadcell_key++;
                   }
+                  
+                  AssembleLineGeometry();
+
+                      //  Set up the chart context
+                    m_this_chart_context->m_pvc_hash = (void *)&Get_vc_hash();
+                    m_this_chart_context->m_pve_hash = (void *)&Get_ve_hash();
+                    
+                    m_this_chart_context->pFloatingATONArray = pFloatingATONArray;
+                    m_this_chart_context->pRigidATONArray = pRigidATONArray;
+                    m_this_chart_context->chart = this;
+                    m_this_chart_context->safety_contour = 1e6;    // to be evaluated later
+                    m_this_chart_context->vertex_buffer = GetLineVertexBuffer();
+                    
+                    //  Loop and populate all the objects
+                    for( int i = 0; i < PI_PRIO_NUM; ++i ) {
+                        for( int j = 0; j < PI_LUPNAME_NUM; j++ ) {
+                            ObjRazRules *top = razRules[i][j];
+                            while(top){
+                                if(top->obj)
+                                    top->obj->m_chart_context = m_this_chart_context;
+                                top = top->next;
+                            }
+                        }
+                    }
                 OCPNPlatform::HideBusySpinner();
             }
       }
@@ -2590,21 +2591,21 @@ int cm93chart::CreateObjChain ( int cell_index, int subcell, double view_scale_p
 
 InitReturn cm93chart::Init ( const wxString& name, ChartInitFlag flags )
 {
+
       m_FullPath = name;
       m_Description = m_FullPath;
 
       wxFileName fn ( name );
 
       if(!m_prefix.Len())
+            m_prefix = fn.GetPath ( wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR );
 
-    m_prefix = fn.GetPath ( wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR );
-#ifdef __WXOSX__
-    if(!m_LastFileName.Len())
-        m_LastFileName = fn.GetFullPath();
-#endif
-      m_scalechar = fn.GetExt(); // Hole Dateiname-Erweiterung
+      m_scalechar = fn.GetExt();
+
+
 
       //    Figure out the scale from the file name
+
       int scale;
       switch ( ( m_scalechar.mb_str() ) [ ( size_t ) 0] )
       {
@@ -2621,6 +2622,7 @@ InitReturn cm93chart::Init ( const wxString& name, ChartInitFlag flags )
 
       m_Chart_Scale = scale;
 
+
       switch ( GetNativeScale() )
       {
             case 20000000: m_dval = 120; break;         // Z
@@ -2635,22 +2637,17 @@ InitReturn cm93chart::Init ( const wxString& name, ChartInitFlag flags )
       }
 
       //    Set the nice name
-//      wxString data = _T ( "CM93Chart " );
-      wxString data = _T ( "CM93Karte " );
-//      data.Append ( m_scalechar );  // Dateiname-Erweiterung
-//      wxString s;
-//      s.Printf ( _T ( "  1/%d" ), m_Chart_Scale );
-//      data.Append ( s );  // Maßstab
-#ifdef __WXOSX__
-//    data.Append(m_LastFileName);
-//    m_pcm93chart_current = m_pcm93chart_array[scale];
-//    data.Append(m_pcm93chart_current->GetLastFileName());
-#endif
+      wxString data = _T ( "CM93Chart " );
+      data.Append ( m_scalechar );
+      wxString s;
+      s.Printf ( _T ( "  1/%d" ), m_Chart_Scale );
+      data.Append ( s );
       m_Name = data;
 
       //    Initialize the covr_set
       if ( scale != 20000000 )
             m_pcovr_set->Init ( m_scalechar.mb_str() [ ( size_t ) 0], m_prefix );
+
 
       if ( flags == THUMB_ONLY )
       {
@@ -2662,8 +2659,10 @@ InitReturn cm93chart::Init ( const wxString& name, ChartInitFlag flags )
       if(!m_pManager)
             m_pManager = new cm93manager;
 
+
       if ( flags == HEADER_ONLY )
             return CreateHeaderDataFromCM93Cell();
+
 
       //    Load the cm93 dictionary if necessary
       if ( !m_pDict )
@@ -2680,9 +2679,12 @@ InitReturn cm93chart::Init ( const wxString& name, ChartInitFlag flags )
             }
       }
 
+
+
       bReadyToRender = true;
 
       return INIT_OK;
+
 }
 
 Extended_Geometry *cm93chart::BuildGeom ( Object *pobject, wxFileOutputStream *postream, int iobject )
@@ -3368,16 +3370,8 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
       char u[201];
       strncpy ( u, sclass_sub.mb_str(), 199 );
       u[200] = '\0';
-      strncpy ( pobj->FeatureName, u, 7 );
-#ifndef __WXOSX__
-      //  Touch up the geom types
-      int geomtype_sub = geomtype;
-      if ( geomtype == 8 )                    // sounding....
-            geomtype_sub = 1;
+      memcpy ( pobj->FeatureName, u, 7 );
 
-      if ( geomtype == 4 )                    // convert cm93 area(4) to GDAL area(3)...
-            geomtype_sub = 3;
-#endif
       pobj->attVal =  new wxArrayOfS57attVal();
 
 
@@ -3482,18 +3476,24 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
                         break;
                   }
                   case 'R':
+                {
                       pAVR = ( double * ) malloc ( sizeof ( double ) );   //new double;
                       pf = ( float * ) aval;
 #ifdef __ARM_ARCH
-                        float tf1;
-                        memcpy(&tf1, pf, sizeof(float));
-                        *pAVR = tf1;
+                {
+                    float __attribute__((aligned(16))) tf1;
+                    unsigned char *pucf = (unsigned char *)pf;
+
+                    memcpy(&tf1, pucf, sizeof(float));
+                    *pAVR = tf1;
+                }
 #else
                         *pAVR = *pf;
 #endif
                         pattValTmp->valType = OGR_REAL;
                         pattValTmp->value   = pAVR;
                         break;
+                }
                   default:
                         sattr.Clear();               // Unknown, TODO track occasional case '?'
                         break;
@@ -3791,6 +3791,9 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
                   p.x = ( int ) xgeom->xmin;
                   p.y = ( int ) xgeom->ymin;
                   Transform ( &p, trans_WGS84_offset_x, trans_WGS84_offset_y, &lat1, &lon1 );
+                  xgeom->ref_lat = lat1;
+                  xgeom->ref_lon = lon1;
+
                   p.x = ( int ) xgeom->xmax;
                   p.y = ( int ) xgeom->ymax;
                   Transform ( &p, trans_WGS84_offset_x, trans_WGS84_offset_y, &lat2, &lon2 );
@@ -3813,7 +3816,7 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
                         xgeom->x_offset = m_CIB.transform_x_origin - trans_WGS84_offset_x;
                         xgeom->y_rate   = m_CIB.transform_y_rate;
                         xgeom->y_offset = m_CIB.transform_y_origin - trans_WGS84_offset_y;
-
+                        
                         pobj->pPolyTessGeo = new PolyTessGeo ( xgeom );
                   }
 
@@ -4066,6 +4069,9 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
       pobj->x_origin -= trans_WGS84_offset_x;
       pobj->y_origin -= trans_WGS84_offset_y;
 
+      // Mark the object chart type, for the convenience of S52PLIB
+      pobj->auxParm3 = CHART_TYPE_CM93;
+      
       return pobj;
 }
 
@@ -4281,8 +4287,9 @@ void cm93chart::ProcessMCOVRObjects ( int cell_index, char subcell )
                                     {
                                           float *pf = ( float * ) aval;
 #ifdef __ARM_ARCH
-                                          float tf1;
-                                          memcpy(&tf1, pf, sizeof(float));
+                                          float __attribute__((aligned(16))) tf1;
+                                          unsigned char *pucf = (unsigned char *)pf;
+                                          memcpy(&tf1, pucf, sizeof(float));
                                           if ( sattr.IsSameAs ( _T ( "_wgsox" ) ) )
                                               tmp_transform_x = tf1;
                                           else if ( sattr.IsSameAs ( _T ( "_wgsoy" ) ) )
@@ -4423,7 +4430,7 @@ bool cm93chart::IsPointInLoadedM_COVR ( double xc, double yc )
 #else
       for ( unsigned int im=0 ; im < m_pcovr_array_loaded.GetCount() ; im++ )
       {
-          if ( G_PtInPolygon_FL ( m_pcovr_array_loaded[im]->pvertices, m_pcovr_array_loaded[im]->m_nvertices, xc, yc ) )
+            if ( G_PtInPolygon_FL ( m_pcovr_array_loaded[im]->pvertices, m_pcovr_array_loaded[im]->m_nvertices, xc, yc ) )
                   return true;
       }
       return false;
@@ -4474,13 +4481,8 @@ int cm93chart::loadsubcell ( int cellindex, wxChar sub_char )
       file.Printf ( _T ( "%04d%04d." ), jlat, jlon );
       file += m_scalechar;
       file[0] = sub_char;
-/*
-#ifdef __WXOSX__
-    wxString text("Lade Zelle ");
-    text += file;
-    wxLogMessage(text);
-#endif
-*/
+      
+
       // We prefer to make use of the NoFind array to avoid file system access to cells known not to exist.
       // However, when the arra becomes "large", then searching the array becomes slower than actually accessing the file system.
       // So, detect this case, and skip the NoFind array if the array size is larger than nnn items.
@@ -4492,27 +4494,16 @@ int cm93chart::loadsubcell ( int cellindex, wxChar sub_char )
       
       
       wxString fileroot;
-      fileroot.Printf ( _T ( "%04d%04d/" ), ilatroot, ilonroot );
-      fileroot += m_scalechar;
-      fileroot += _T ( "/" );
+      fileroot.Printf ( _T ( "%04d%04d" ), ilatroot, ilonroot );
+      appendOSDirSep( &fileroot );
+      fileroot.append( m_scalechar );
+      appendOSDirSep( &fileroot );
       wxString key = fileroot;
-      key += file;
+      key.append( file );
       fileroot.Prepend ( m_prefix );
 
       file.Prepend ( fileroot );
-#ifdef __WXOSX__
-//    char sfile[200];
-//    strncpy ( sfile, file.mb_str(), 199 );
-//    sfile[199] = 0;
-//    wxMessageBox( sfile, "Datei ", wxOK );
-//    wxString sfile = wxString::Format( _T("%200s"), file );
-//    if( wxFileExists(file))
-//        wxMessageBox("Text");
-//   int WXDLLIMPEXP_CORE wxMessageBox(("Datei: ", (int)sfile));
 
-//    wxMessageBox("%s", file, wxOK);
-    // wxMessageDialog::ShowModal ???
-#endif
       if ( g_bDebugCM93 )
       {
             char sfile[200];
@@ -4520,6 +4511,7 @@ int cm93chart::loadsubcell ( int cellindex, wxChar sub_char )
             sfile[199] = 0;
             printf ( "    filename: %s\n", sfile );
       }
+
       bool bfound = false;
       wxString compfile;
       if(b_useNoFind){
@@ -4562,11 +4554,12 @@ int cm93chart::loadsubcell ( int cellindex, wxChar sub_char )
             file1 += new_scalechar;
             file1[0] = sub_char;
 
-            fileroot.Printf ( _T ( "%04d%04d/" ), ilatroot, ilonroot );
-            fileroot += new_scalechar;
-            fileroot += _T ( "/" );
+            fileroot.Printf ( _T ( "%04d%04d" ), ilatroot, ilonroot );
+            appendOSDirSep( &fileroot );
+            fileroot.append( new_scalechar );
+            appendOSDirSep( &fileroot );
             key = fileroot;
-            key += file1;
+            key.append( file1 );
 
             fileroot.Prepend ( m_prefix );
 
@@ -4755,9 +4748,7 @@ cm93_dictionary *cm93manager::FindAndLoadDict ( const wxString &file )
       //    Search for the dictionary files all along the path of the passed parameter filename
 
       wxFileName fn ( file );
-
-    wxString path = fn.GetPath ( ( int ) ( wxPATH_GET_SEPARATOR | wxPATH_GET_VOLUME ) );
-
+      wxString path = fn.GetPath ( ( int ) ( wxPATH_GET_SEPARATOR | wxPATH_GET_VOLUME ) );
       wxString target;
       unsigned int i = 0;
 
@@ -4852,16 +4843,16 @@ InitReturn cm93compchart::Init ( const wxString& name, ChartInitFlag flags )
       wxString target;
       wxString path;
 
-      wxString sep(wxFileName::GetPathSeparator());
-
       //    Verify that the passed file name exists
       if ( !fn.FileExists() )
       {
             // It may be a directory
             if( wxDir::Exists(name) )
             {
-                  target = name + sep;
-                  path = name + sep;
+                target = name;
+                appendOSDirSep(&target);
+                path = name;
+                appendOSDirSep(&path);
             }
             else {
                   wxString msg ( _T ( "   CM93Composite Chart Init cannot find " ) );
@@ -4873,8 +4864,7 @@ InitReturn cm93compchart::Init ( const wxString& name, ChartInitFlag flags )
       else              // its a file that exists
       {
             //    Get the cm93 cell database prefix
-
-          path = fn.GetPath ( ( int ) ( wxPATH_GET_SEPARATOR | wxPATH_GET_VOLUME ) );
+            path = fn.GetPath ( ( int ) ( wxPATH_GET_SEPARATOR | wxPATH_GET_VOLUME ) );
 
             //    Remove two subdirectories from the passed file name
             //    This will give a normal CM93 root
@@ -4882,7 +4872,7 @@ InitReturn cm93compchart::Init ( const wxString& name, ChartInitFlag flags )
             file_path.RemoveLastDir();
             file_path.RemoveLastDir();
 
-          target = file_path.GetPath ( wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR );
+            target = file_path.GetPath ( wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR );
       }
 
       m_prefixComposite = target;
@@ -5068,12 +5058,8 @@ int cm93compchart::PrepareChartScale ( const ViewPort &vpt, int cmscale, bool bO
                         if ( cmscale == 0 )
                               ext = 'Z';
 
-                      wxString file;
-                      file.Printf ( _T ( "%.4i%.4i." ), (unsigned int)vpt.clat, (unsigned int)vpt.clon );
-                      file += ext;
-                      wxString file_dummy = file;
-//                      wxString file_dummy =  file;
-//                        file_dummy << ext;
+                        wxString file_dummy = _T ( "CM93." );
+                        file_dummy << ext;
 
                         m_pcm93chart_array[cmscale]->SetCM93Dict ( m_pDictComposite );
                         m_pcm93chart_array[cmscale]->SetCM93Prefix ( m_prefixComposite );
@@ -5142,9 +5128,8 @@ int cm93compchart::PrepareChartScale ( const ViewPort &vpt, int cmscale, bool bO
                   {
                         if ( g_bDebugCM93 )
                               printf ( " chart %c contains clat/clon\n", ( char ) ( 'A' + cmscale -1 ) );
-#ifndef __WXOSX__
+
                         cellscale_is_useable = true;
-#endif
                         break;
                   }
 
@@ -5225,13 +5210,9 @@ int cm93compchart::PrepareChartScale ( const ViewPort &vpt, int cmscale, bool bO
                             ext = ( wxChar ) ( 'A' + new_scale - 1 );
                             if ( new_scale == 0 )
                                 ext = 'Z';
-
-                            wxString file;
-                            file.Printf ( _T ( "%.4i%.4i." ), (unsigned int)vpt.clat, (unsigned int)vpt.clon );
-                            file += ext;
-                            wxString file_dummy = file;
-//                            wxString file_dummy =  _T ( "CM93." );
-//                            file_dummy << ext;
+                            
+                            wxString file_dummy = _T ( "CM93." );
+                            file_dummy << ext;
                             
                             m_pcm93chart_array[new_scale]->SetCM93Dict ( m_pDictComposite );
                             m_pcm93chart_array[new_scale]->SetCM93Prefix ( m_prefixComposite );
@@ -5540,9 +5521,10 @@ bool cm93compchart::DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPo
                   }
 
                   //  Render the on-top Reference region/scale
-                  render_return |= m_pcm93chart_current->RenderRegionViewOnGL( glc, vp, RectRegion, Region );
-
-                  m_Name = m_pcm93chart_current->GetName();
+                  if(m_pcm93chart_current){
+                    render_return |= m_pcm93chart_current->RenderRegionViewOnGL( glc, vp, RectRegion, Region );
+                    m_Name = m_pcm93chart_current->GetName();
+                  }
 
             }
             else  // Single chart mode
@@ -5556,11 +5538,7 @@ bool cm93compchart::DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPo
           return render_return; // TODO: fix below for non-mercator
 
       //    Render the cm93 cell's M_COVR outlines if called for
-#ifdef __WXOSX__
-    if ( m_cell_index_special_outline && m_pcm93chart_current)
-#else
       if ( m_cell_index_special_outline )
-#endif
       {
             ocpnDC dc;
             covr_set *pcover = m_pcm93chart_current->GetCoverSet();
@@ -5728,13 +5706,10 @@ bool cm93compchart::DoRenderRegionViewOnDC ( wxMemoryDC& dc, const ViewPort& VPo
                         wxMemoryDC temp_dc;
 #endif
                         if(!chart_region.IsEmpty())
-#ifdef __WXOSX__
-                            m_pcm93chart_current->RenderRegionViewOnDC ( temp_dc, vp, chart_region );
-#else
                             render_return = m_pcm93chart_current->RenderRegionViewOnDC ( temp_dc, vp, chart_region );
                         else
                             render_return = false;
-#endif
+
                         //    Save the current cm93 chart pointer for restoration later
                         cm93chart *m_pcm93chart_save = m_pcm93chart_current;
 
@@ -6046,7 +6021,7 @@ void cm93compchart::SetSpecialCellIndexOffset ( int cell_index, int object_id, i
             m_pcm93chart_current->SetUserOffsets ( cell_index, object_id, subcell, xoff, yoff );
 }
 
-bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
+bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp, ChartCanvas *cc )
 {
       if ( m_cmscale >= 7 )
           return false;
@@ -6054,6 +6029,10 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
 #ifdef ocpnUSE_GL        
       ViewPort nvp;
       bool secondpass = false;
+      glChartCanvas *glcc = cc->GetglCanvas();
+      if(!glcc)
+          return false;
+      
       if(g_bopengl) /* opengl */ {
           wxPen pen = dc.GetPen();
           wxColour col = pen.GetColour();
@@ -6077,8 +6056,9 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
           // use a viewport that allows the vertexes to be reused over many frames
           glPushMatrix();
 
+          //TODO this needs fixing for multicanvas
           if(glChartCanvas::HasNormalizedViewPort(vp)) {
-              glChartCanvas::MultMatrixViewPort(vp);
+              glcc->MultMatrixViewPort(vp);
               nvp = glChartCanvas::NormalizedViewPort(vp);
           } else
               nvp = vp;
@@ -6105,7 +6085,6 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
       bool bdrawn = false;
 
       nss_max = 7;
-      int cnt = 0;
 
 #if 0 /* only if chart outlines are rendered grounded to the charts */
       if(g_bopengl) { /* for opengl: lets keep this simple yet also functioning
@@ -6129,12 +6108,8 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
               if ( nss == 0 )
                   ext = 'Z';
 
-              wxString file;
-              file.Printf ( _T ( "%.4i%.4i." ), (unsigned int)vp.clat, (unsigned int)vp.clon );
-              file += ext;
-              wxString file_dummy = file;
-//              wxString file_dummy =  _T ( "CM93." );
-//              file_dummy << ext;
+              wxString file_dummy = _T ( "CM93." );
+              file_dummy << ext;
 
               psc->SetCM93Dict ( m_pDictComposite );
               psc->SetCM93Prefix ( m_prefixComposite );
@@ -6160,8 +6135,13 @@ bool cm93compchart::RenderNextSmallerCellOutlines ( ocpnDC &dc, ViewPort& vp )
                       continue;
 #ifdef ocpnUSE_GL        
                   if (g_bopengl) {
+#ifndef USE_ANDROID_GLES2
+                      wxPen pen = dc.GetPen();
+                      wxColour col = pen.GetColour();
+
+                      glColor3ub(col.Red(), col.Green(), col.Blue());
                       RenderCellOutlinesOnGL(nvp, mcd);
-                                      
+#endif
                       // if signs don't agree we need to render a second pass
                       // translating around the world
                       if( secondpass ) {
@@ -6276,7 +6256,7 @@ void cm93compchart::RenderCellOutlinesOnGL( ViewPort& vp, M_COVR_Desc *mcd )
             if(fabs(lon - lastlon) > 180) {
                 if(lastvalid) {
                     wxPoint2DDouble r = vp.GetDoublePixFromLL(lastlat, lastlon > 0 ? 180 : -180);
-                    if(!wxIsNaN(r.m_x)) {
+                    if(!std::isnan(r.m_x)) {
                         q->y = l.m_x;
                         q->x = l.m_y;
                         q++;
@@ -6292,7 +6272,7 @@ void cm93compchart::RenderCellOutlinesOnGL( ViewPort& vp, M_COVR_Desc *mcd )
                 }
 
                 wxPoint2DDouble r = vp.GetDoublePixFromLL(lat, lon > 0 ? 180 : -180);
-                if((lastvalid = !wxIsNaN(r.m_x))) {
+                if((lastvalid = !std::isnan(r.m_x))) {
                     r.m_x -= mcd->user_xoff * vp.view_scale_ppm;
                     r.m_y -= mcd->user_yoff * vp.view_scale_ppm;
                     l.m_x = r.m_x;
@@ -6303,7 +6283,7 @@ void cm93compchart::RenderCellOutlinesOnGL( ViewPort& vp, M_COVR_Desc *mcd )
             lastlon = lon;
                                               
             wxPoint2DDouble s = vp.GetDoublePixFromLL( lat, lon );
-            if(!wxIsNaN(s.m_x)) {
+            if(!std::isnan(s.m_x)) {
                 //    Outlines stored in MCDs are not adjusted for offsets
                 s.m_x -= mcd->user_xoff * vp.view_scale_ppm;
                 s.m_y -= mcd->user_yoff * vp.view_scale_ppm;
@@ -6468,8 +6448,9 @@ bool cm93compchart::AdjustVP ( ViewPort &vp_last, ViewPort &vp_proposed )
 #ifdef ocpnUSE_GL
       if(g_bopengl) {
           /* need a full refresh if not in quilted mode, and the cell changed */
-          if ( !vp_last.b_quilt && m_last_cell_adjustvp != m_pcm93chart_current )
-              glChartCanvas::Invalidate();
+          //TODO re-add this for multicanvas
+          //if ( !vp_last.b_quilt && m_last_cell_adjustvp != m_pcm93chart_current )
+              //glChartCanvas::Invalidate();
 
           m_last_cell_adjustvp = m_pcm93chart_current;
       }
@@ -6644,9 +6625,7 @@ cm93_dictionary *cm93compchart::FindAndLoadDictFromDir ( const wxString &dir )
 
             if ( ( path.Len() == 0 ) || path.IsSameAs ( fnc.GetPathSeparator() ) )
             {
-#ifndef __WXOSX__
                   bdone = true;
-#endif
                   wxLogMessage ( _T ( "Early break1" ) );
                   break;
             }
@@ -6654,9 +6633,7 @@ cm93_dictionary *cm93compchart::FindAndLoadDictFromDir ( const wxString &dir )
             //    Abort the search loop if the directory tree does not contain some indication of CM93
             if ( ( wxNOT_FOUND == path.Lower().Find ( _T ( "cm93" ) ) ) )
             {
-#ifndef __WXOSX__
                   bdone = true;
-#endif
                   wxLogMessage ( _T ( "Early break2" ) );
                   break;
             }
@@ -6679,8 +6656,7 @@ cm93_dictionary *cm93compchart::FindAndLoadDictFromDir ( const wxString &dir )
       if ( found_dict_file_name.Len() )
       {
             wxFileName fnd ( found_dict_file_name );
-
-          wxString dpath = fnd.GetPath ( ( int ) ( wxPATH_GET_SEPARATOR | wxPATH_GET_VOLUME ) );
+            wxString dpath = fnd.GetPath ( ( int ) ( wxPATH_GET_SEPARATOR | wxPATH_GET_VOLUME ) );
 
             if ( pdict->LoadDictionary ( dpath ) )
                   retval = pdict;
@@ -6923,7 +6899,7 @@ void CM93OffsetDialog::OnClose ( wxCloseEvent& event )
 
             if ( m_pparent ) {
                   m_pparent->Refresh ( true );
-                  cc1->InvalidateGL();
+                  gFrame->InvalidateAllGL();
             }
       }
 
@@ -6968,7 +6944,7 @@ void CM93OffsetDialog::UpdateOffsets ( void )
 
             if ( m_pparent ) {
                   m_pparent->Refresh ( true );
-                  cc1->InvalidateGL();
+                  gFrame->InvalidateAllGL();
             }
       }
 }
@@ -7016,7 +6992,7 @@ void CM93OffsetDialog::OnCellSelected ( wxListEvent &event )
 
       if ( m_pparent ) {
             m_pparent->Refresh ( true );
-            cc1->InvalidateGL();
+            gFrame->InvalidateAllGL();
       }
     }
 }

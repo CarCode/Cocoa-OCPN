@@ -127,9 +127,7 @@ int JPC_PASSTYPE(int passno)
 		break;
 	default:
 		passtype = -1;
-#ifndef __WXOSX__
 		assert(0);
-#endif
 		break;
 	}
 	return passtype;
@@ -138,9 +136,7 @@ int JPC_PASSTYPE(int passno)
 int JPC_NOMINALGAIN(int qmfbid, int numlvls, int lvlno, int orient)
 {
 	/* Avoid compiler warnings about unused parameters. */
-#ifndef __WXOSX__
 	numlvls = 0;
-#endif
 
 if (qmfbid == JPC_COX_INS) {
 	return 0;
@@ -205,9 +201,7 @@ int JPC_SEGPASSCNT(int passno, int firstpassno, int numpasses, int bypass, int t
 				break;
 			default:
 				ret = -1;
-#ifndef __WXOSX__
 				assert(0);
-#endif
 				break;
 			}
 		}

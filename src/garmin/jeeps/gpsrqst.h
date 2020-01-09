@@ -1,4 +1,4 @@
-/* *******************************************************************
+/********************************************************************
 ** @source JEEPS time/position request from GPS functions
 **
 ** @author Copyright (C) 1999 Alan Bleasby

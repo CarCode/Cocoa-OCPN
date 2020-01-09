@@ -1,4 +1,4 @@
-/**
+/* *
  * @file main.cpp
  *
  * @license
@@ -45,8 +45,11 @@ int main(int argc, char *argv[])
     {
         // request an expression
         printf("> ");
+#ifdef __WXOSX__
+        fgets(expr, 255, stdin);
+#else
         gets(expr);
-
+#endif
         if (strcmp(expr, "") != 0)
         {
             try

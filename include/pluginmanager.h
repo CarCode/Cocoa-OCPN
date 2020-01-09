@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  *
  * Project:  OpenCPN
@@ -37,7 +37,7 @@
 
 #include "ocpn_plugin.h"
 #include "chart1.h"                 // for MyFrame
-#include "chcanv.h"                 // for ViewPort
+//#include "chcanv.h"                 // for ViewPort
 #include "OCPN_Sound.h"
 #include "chartimg.h"
 
@@ -89,14 +89,14 @@ typedef struct {
 } BlackListedPlugin;
 
 const BlackListedPlugin PluginBlacklist[] = {
-//    { _T("aisradar_pi"), 0, 95, true, true },
-//    { _T("radar_pi"), 0, 95, true, true },             // GCC alias for aisradar_pi
-//    { _T("watchdog_pi"), 1, 00, true, true },
-//    { _T("squiddio_pi"), 0, 2, true, true },
-//    { _T("objsearch_pi"), 0, 3, true, true },
-//#ifdef __WXOSX__
-//    { _T("s63_pi"), 0, 6, true, true },
-//#endif
+    { _T("aisradar_pi"), 0, 95, true, true },
+    { _T("radar_pi"), 0, 95, true, true },             // GCC alias for aisradar_pi
+    { _T("watchdog_pi"), 1, 00, true, true },
+    { _T("squiddio_pi"), 0, 2, true, true },
+    { _T("objsearch_pi"), 0, 3, true, true },
+#ifdef __WXOSX__
+    { _T("s63_pi"), 0, 6, true, true },
+#endif    
 };
 
 //----------------------------------------------------------------------------
@@ -182,6 +182,7 @@ class PlugInMenuItemContainer
             bool              b_viz;
             bool              b_grey;
             int               id;
+            wxString          m_in_menu;
 };
 
 //    Define an array of PlugIn MenuItem Containers
@@ -246,10 +247,11 @@ public:
       PlugInContainer *LoadPlugIn(wxString plugin_file);
       ArrayOfPlugIns *GetPlugInArray(){ return &plugin_array; }
 
-      bool RenderAllCanvasOverlayPlugIns( ocpnDC &dc, const ViewPort &vp);
-      bool RenderAllGLCanvasOverlayPlugIns( wxGLContext *pcontext, const ViewPort &vp);
+      bool RenderAllCanvasOverlayPlugIns( ocpnDC &dc, const ViewPort &vp, int canvasIndex);
+      bool RenderAllGLCanvasOverlayPlugIns( wxGLContext *pcontext, const ViewPort &vp, int canvasIndex);
       void SendCursorLatLonToAllPlugIns( double lat, double lon);
       void SendViewPortToRequestingPlugIns( ViewPort &vp );
+      void PrepareAllPluginContextMenus();
 
       void NotifySetupOptions();
       void CloseAllPlugInPanels( int );
@@ -279,10 +281,10 @@ public:
       void ShowDeferredBlacklistMessages();
 
       ArrayOfPlugInMenuItems &GetPluginContextMenuItemArray(){ return m_PlugInMenuItems; }
-      int AddCanvasContextMenuItem(wxMenuItem *pitem, opencpn_plugin *pplugin );
-      void RemoveCanvasContextMenuItem(int item);
-      void SetCanvasContextMenuItemViz(int item, bool viz);
-      void SetCanvasContextMenuItemGrey(int item, bool grey);
+      int AddCanvasContextMenuItem(wxMenuItem *pitem, opencpn_plugin *pplugin, const char *name = "" );
+      void RemoveCanvasContextMenuItem(int item, const char *name = "" );
+      void SetCanvasContextMenuItemViz(int item, bool viz, const char *name = "" );
+      void SetCanvasContextMenuItemGrey(int item, bool grey, const char *name = "" );
 
       void SendNMEASentenceToAllPlugIns(const wxString &sentence);
       void SendPositionFixToAllPlugIns(GenericPosDatEx *ppos);
@@ -304,7 +306,8 @@ public:
       bool SendMouseEventToPlugins( wxMouseEvent &event);
       bool SendKeyEventToPlugins( wxKeyEvent &event);
 
-      void SendConfigToAllPlugIns();
+      void SendBaseConfigToAllPlugIns();
+      void SendS52ConfigToAllPlugIns( bool bReconfig = false );
       
       wxArrayString GetPlugInChartClassNameArray(void);
 
@@ -316,7 +319,6 @@ public:
       MyFrame *GetParentFrame(){ return pParent; }
 
       void DimeWindow(wxWindow *win);
-      OCPN_Sound        m_plugin_sound;
       
 private:
       bool CheckBlacklistedPlugin(opencpn_plugin* plugin);
@@ -325,6 +327,7 @@ private:
       bool UpDateChartDataTypes(void);
       bool CheckPluginCompatibility(wxString plugin_file);
       bool LoadPlugInDirectory(const wxString &plugin_dir, bool enabled_plugins, bool b_enable_blackdialog);
+      void ProcessLateInit(PlugInContainer *pic);
 
       MyFrame                 *pParent;
 
@@ -353,6 +356,9 @@ private:
       
 public:
       wxCurlDownloadThread *m_pCurlThread;
+      // The libcurl handle being re used for the transfer.
+      std::shared_ptr<wxCurlBase> m_pCurl;
+
       // returns true if the error can be ignored
       bool            HandleCurlThreadError(wxCurlThreadError err, wxCurlBaseThread *p,
                                const wxString &url = wxEmptyString);

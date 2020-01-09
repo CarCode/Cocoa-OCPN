@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  * $Id: instrument.cpp, v1.0 2010/08/30 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -29,6 +29,7 @@
 #ifndef  WX_PRECOMP
   #include "wx/wx.h"
 #endif //precompiled headers
+#include <cmath>
 
 #include "instrument.h"
 #include "wx28compat.h"
@@ -53,25 +54,25 @@ DashboardInstrument::DashboardInstrument(wxWindow *pparent, wxWindowID id, wxStr
 
       Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(DashboardInstrument::OnEraseBackground));
       Connect(wxEVT_PAINT, wxPaintEventHandler(DashboardInstrument::OnPaint));
-
-    //  On OSX, there is an orphan mouse event that comes from the automatic
-    //  exEVT_CONTEXT_MENU synthesis on the main wxWindow mouse handler.
-    //  The event goes to an instrument window (here) that may have been deleted by the
-    //  preferences dialog.  Result is NULL deref.
-    //  Solution:  Handle right-click here, and DO NOT skip()
-    //  Strangely, this does not work for GTK...
-    //  See: http://trac.wxwidgets.org/ticket/15417
-    
+      
+      //  On OSX, there is an orphan mouse event that comes from the automatic
+      //  exEVT_CONTEXT_MENU synthesis on the main wxWindow mouse handler.
+      //  The event goes to an instrument window (here) that may have been deleted by the
+      //  preferences dialog.  Result is NULL deref.
+      //  Solution:  Handle right-click here, and DO NOT skip()
+      //  Strangely, this does not work for GTK...
+      //  See: http://trac.wxwidgets.org/ticket/15417
+      
 #ifdef __WXOSX__
-    Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(DashboardInstrument::MouseEvent), NULL, this);
-#endif
+      Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(DashboardInstrument::MouseEvent), NULL, this);
+#endif      
 }
 
 void DashboardInstrument::MouseEvent( wxMouseEvent &event )
 {
     if ( event.GetEventType() == wxEVT_RIGHT_DOWN )
     {
-        wxContextMenuEvent evtCtx(wxEVT_CONTEXT_MENU,
+       wxContextMenuEvent evtCtx(wxEVT_CONTEXT_MENU,
                                   this->GetId(),
                                   this->ClientToScreen(event.GetPosition()));
         evtCtx.SetEventObject(this);
@@ -94,9 +95,9 @@ void DashboardInstrument::OnEraseBackground(wxEraseEvent& WXUNUSED(evt))
 
 void DashboardInstrument::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
-    wxBufferedPaintDC pdc( this );
+    wxAutoBufferedPaintDC pdc( this );
     if( !pdc.IsOk() ) {
-        wxLogMessage( _T("DashboardInstrument::OnPaint() fatal: wxBufferedPaintDC.IsOk() false.") );
+        wxLogMessage( _T("DashboardInstrument::OnPaint() fatal: wxAutoBufferedPaintDC.IsOk() false.") );
         return;
     }
 
@@ -106,30 +107,25 @@ void DashboardInstrument::OnPaint( wxPaintEvent& WXUNUSED(event) )
         return;
     }
 
-    wxBitmap bm( size.x, size.y, 32 );
-#if !wxCHECK_VERSION(2,9,4)
-    bm.UseAlpha();
-#elif !wxCHECK_VERSION(3, 0, 0)  // Do we need this? 2.9.5 has worked.
-    bm.UseAlpha();
-#endif
-    wxMemoryDC mdc( bm );
 #if wxUSE_GRAPHICS_CONTEXT
-    wxGCDC dc( mdc );
+    wxGCDC dc( pdc );
 #else
-    wxMemoryDC &dc( mdc );
+    wxDC &dc( pdc );
 #endif
+
     wxColour cl;
     GetGlobalColor( _T("DASHB"), &cl );
     dc.SetBackground( cl );
+#ifdef __WXGTK__
+    dc.SetBrush( cl );
+    dc.SetPen( *wxTRANSPARENT_PEN );
+    dc.DrawRectangle( 0, 0, size.x, size.y );
+#endif
     dc.Clear();
 
     Draw( &dc );
 
-    if(m_drawSoloInPane) {
-        mdc.SelectObject( wxNullBitmap );
-        pdc.DrawBitmap( bm, 0, 0, false );
-    }
-    else {
+    if(!m_drawSoloInPane) {
 
     //  Windows GCDC does a terrible job of rendering small texts
     //  Workaround by using plain old DC for title box if text size is too small
@@ -149,39 +145,27 @@ void DashboardInstrument::OnPaint( wxPaintEvent& WXUNUSED(event) )
             GetGlobalColor( _T("DASHF"), &cl );
             dc.SetTextForeground( cl );
             dc.DrawText( m_title, 5, 0 );
-
-            mdc.SelectObject( wxNullBitmap );
-            pdc.DrawBitmap( bm, 0, 0, false );
         }
 
 #ifdef __WXMSW__
         if( g_pFontTitle->GetPointSize() <= 12 ) {
-            mdc.SelectObject( wxNullBitmap );           // the instrument body
-            pdc.DrawBitmap( bm, 0, 0, false );
-
-            wxBitmap tbm( size.x, m_TitleHeight, -1 );
-            wxMemoryDC tdc( tbm );
             wxColour cl;
             GetGlobalColor( _T("DASHB"), &cl );
-            tdc.SetBackground( cl );
-            tdc.Clear();
+            pdc.SetBrush(cl);
+            pdc.DrawRectangle(0, 0, size.x, m_TitleHeight);
 
             wxPen pen;
-            pen.SetStyle( wxSOLID );
+            pen.SetStyle( wxPENSTYLE_SOLID );
             GetGlobalColor( _T("DASHL"), &cl );
             pen.SetColour( cl );
-            tdc.SetPen( pen );
-            tdc.SetBrush( cl );
-            tdc.DrawRoundedRectangle( 0, 0, size.x, m_TitleHeight, 3 );
+            pdc.SetPen( pen );
+            pdc.SetBrush( cl );
+            pdc.DrawRoundedRectangle( 0, 0, size.x, m_TitleHeight, 3 );
 
-            tdc.SetFont( *g_pFontTitle );
+            pdc.SetFont( *g_pFontTitle );
             GetGlobalColor( _T("DASHF"), &cl );
-            tdc.SetTextForeground( cl );
-            tdc.DrawText( m_title, 5, 0 );
-
-            tdc.SelectObject( wxNullBitmap );
-            pdc.DrawBitmap( tbm, 0, 0, false );
-
+            pdc.SetTextForeground( cl );
+            pdc.DrawText( m_title, 5, 0 );
         }
 #endif
     }
@@ -198,6 +182,7 @@ DashboardInstrument_Single::DashboardInstrument_Single(wxWindow *pparent, wxWind
 {
       m_format = format;
       m_data = _T("---");
+      m_DataHeight = 0;
 }
 
 wxSize DashboardInstrument_Single::GetSize( int orient, wxSize hint )
@@ -248,18 +233,18 @@ void DashboardInstrument_Single::Draw(wxGCDC* dc)
 void DashboardInstrument_Single::SetData(int st, double data, wxString unit)
 {
       if (m_cap_flag & st){
-          if(!wxIsNaN(data) && (data < 9999)){
+            if(!std::isnan(data) && (data < 9999)){
                 if (unit == _T("C"))
                   m_data = wxString::Format(m_format, data)+DEGREE_SIGN+_T("C");
-                else if (unit == _T("Deg"))
+                else if (unit == _T("\u00B0"))
                   m_data = wxString::Format(m_format, data)+DEGREE_SIGN;
-                else if (unit == _T("DegT"))
+                else if (unit == _T("\u00B0T"))
                   m_data = wxString::Format(m_format, data)+DEGREE_SIGN+_(" true");
-                else if (unit == _T("DegM"))
+                else if (unit == _T("\u00B0M"))
                   m_data = wxString::Format(m_format, data)+DEGREE_SIGN+_(" mag");
-                else if (unit == _T("DegL"))
+                else if (unit == _T("\u00B0L"))
                   m_data = _T(">")+ wxString::Format(m_format, data)+DEGREE_SIGN;
-                else if (unit == _T("DegR"))
+                else if (unit == _T("\u00B0R"))
                   m_data = wxString::Format(m_format, data)+DEGREE_SIGN+_T("<");
                 else if (unit == _T("N")) //Knots
                   m_data = wxString::Format(m_format, data)+_T(" Kts");
@@ -292,6 +277,7 @@ DashboardInstrument_Position::DashboardInstrument_Position(wxWindow *pparent, wx
       m_data2 = _T("---");
       m_cap_flag1 = cap_flag1;
       m_cap_flag2 = cap_flag2;
+      m_DataHeight = 0;
 }
 
 wxSize DashboardInstrument_Position::GetSize( int orient, wxSize hint )
@@ -357,9 +343,9 @@ void DashboardInstrument_Position::SetData(int st, double data, wxString unit)
       Refresh();
 }
 
-/**************************************************************************/
+/* *************************************************************************/
 /*          Some assorted utilities                                       */
-/**************************************************************************/
+/* *************************************************************************/
 
 wxString toSDMM ( int NEflag, double a )
 {
@@ -394,7 +380,7 @@ wxString toSDMM ( int NEflag, double a )
                         c = 'S';
                   }
 #ifdef __WXOSX__
-                  s.Printf ( _T ( "%03d %02ld.%04ld %c" ), d, m / 1000, ( m % 1000 ), c );
+                s.Printf ( _T ( "%03d %02ld.%04ld %c" ), d, m / 1000, ( m % 1000 ), c );
 #else
                   s.Printf ( _T ( "%03d %02ld.%03ld %c" ), d, m / 1000, ( m % 1000 ), c );
 #endif
@@ -402,7 +388,7 @@ wxString toSDMM ( int NEflag, double a )
             else if ( NEflag == 2 )
             {
 #ifdef __WXOSX__
-                  char c = 'O';
+                char c = 'O';
 #else
                   char c = 'E';
 #endif
@@ -412,7 +398,7 @@ wxString toSDMM ( int NEflag, double a )
                         c = 'W';
                   }
 #ifdef __WXOSX__
-                  s.Printf ( _T ( "%03d %02ld.%04ld %c" ), d, m / 1000, ( m % 1000 ), c );
+                s.Printf ( _T ( "%03d %02ld.%04ld %c" ), d, m / 1000, ( m % 1000 ), c );
 #else
                   s.Printf ( _T ( "%03d %02ld.%03ld %c" ), d, m / 1000, ( m % 1000 ), c );
 #endif
@@ -420,4 +406,3 @@ wxString toSDMM ( int NEflag, double a )
       }
       return s;
 }
-

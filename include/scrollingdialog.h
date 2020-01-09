@@ -1,4 +1,4 @@
-// ///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 // Name:        scrollingdialog.h
 // Purpose:     wxScrollingDialog
 // Author:      Julian Smart
@@ -6,7 +6,7 @@
 // Created:     2007-12-11
 // Copyright:   (c) Julian Smart
 // Licence:     wxWindows licence
-// ///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 #ifndef _WX_SCROLLINGDIALOG_H_
 #define _WX_SCROLLINGDIALOG_H_
@@ -143,7 +143,7 @@ protected:
 
     wxDialog*                           m_dialog;
     bool                                m_layoutLayoutAdaptationDone;
-    std::vector<int>                    m_buttonIds;
+    std::vector<int>                          m_buttonIds;
     int                                 m_layoutAdaptationLevel;
     static wxDialogLayoutAdapter*       sm_layoutAdapter;
     static bool                         sm_layoutAdaptation;

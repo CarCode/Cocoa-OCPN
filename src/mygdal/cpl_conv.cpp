@@ -1,4 +1,4 @@
-/* *****************************************************************************
+/******************************************************************************
  *
  * Project:  CPL - Common Portability Library
  * Purpose:  Convenience functions.
@@ -24,18 +24,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************/
+ ******************************************************************************
+ *
+ */
 
 #include "cpl_conv.h"
 #include "cpl_string.h"
 
 static char **papszConfigOptions = NULL;
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                             CPLCalloc()                              */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Safe version of calloc().
  *
  * This function is like the C library calloc(), but raises a CE_Fatal
@@ -65,17 +67,17 @@ void *CPLCalloc( size_t nCount, size_t nSize )
     {
         CPLError( CE_Fatal, CPLE_OutOfMemory,
                   "CPLCalloc(): Out of memory allocating %d bytes.\n",
-                  nSize * nCount );
+                  (int) (nSize * nCount) );
     }
 
     return pReturn;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                             CPLMalloc()                              */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Safe version of malloc().
  *
  * This function is like the C library malloc(), but raises a CE_Fatal
@@ -105,17 +107,17 @@ void *CPLMalloc( size_t nSize )
     {
         CPLError( CE_Fatal, CPLE_OutOfMemory,
                   "CPLMalloc(): Out of memory allocating %d bytes.\n",
-                  nSize );
+                  (int) nSize );
     }
 
     return pReturn;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                             CPLRealloc()                             */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Safe version of realloc().
  *
  * This function is like the C library realloc(), but raises a CE_Fatal
@@ -155,17 +157,17 @@ void * CPLRealloc( void * pData, size_t nNewSize )
     {
         CPLError( CE_Fatal, CPLE_OutOfMemory,
                   "CPLRealloc(): Out of memory allocating %d bytes.\n",
-                  nNewSize );
+                  (int) nNewSize );
     }
 
     return pReturn;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                             CPLStrdup()                              */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Safe version of strdup() function.
  *
  * This function is similar to the C library strdup() function, but if
@@ -197,21 +199,21 @@ char *CPLStrdup( const char * pszString )
     {
         CPLError( CE_Fatal, CPLE_OutOfMemory,
                   "CPLStrdup(): Out of memory allocating %d bytes.\n",
-                  strlen(pszString) );
+                  (int) strlen(pszString) );
 
     }
 
     return( pszReturn );
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                              CPLFGets()                              */
 /*                                                                      */
 /*      Note: CR = \r = ASCII 13                                        */
 /*            LF = \n = ASCII 10                                        */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Reads in at most one less than nBufferSize characters from the fp
  * stream and stores them into the buffer pointed to by pszBuffer.
  * Reading stops after an EOF or a newline. If a newline is read, it
@@ -308,11 +310,11 @@ char *CPLFGets( char *pszBuffer, int nBufferSize, FILE * fp )
     return pszBuffer;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                            CPLReadLine()                             */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Simplified line reading from text file.
  *
  * Read a line of text from the given file handle, taking care
@@ -395,11 +397,11 @@ const char *CPLReadLine( FILE * fp )
     return( pszRLBuffer );
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                            CPLScanString()                           */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Scan up to a maximum number of characters from a given string,
  * allocate a buffer for a new string and fill it with scanned characters.
  *
@@ -457,11 +459,11 @@ char *CPLScanString( char *pszString, int nMaxLength,
     return pszBuffer;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                             CPLScanLong()                            */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Scan up to a maximum number of characters from a string and convert
  * the result to a long.
  *
@@ -495,11 +497,11 @@ long CPLScanLong( char *pszString, int nMaxLength )
     return iValue;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                             CPLScanDouble()                          */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Scan up to a maximum number of characters from a string and convert
  * the result to a double.
  *
@@ -521,27 +523,31 @@ long CPLScanLong( char *pszString, int nMaxLength )
  * @return Double value, converted from its ASCII form.
  */
 
-double CPLScanDouble( char *pszString, int nMaxLength, char *pszLocale )
+double CPLScanDouble( const char *pszString, int nMaxLength, char *pszLocale )
 {
-    int     i;
-    double  dfValue;
-    char    *pszValue = (char *)CPLMalloc( nMaxLength + 1);
+    char szValue[32] = {};
+    char *pszValue = nullptr;
+
+    if( nMaxLength + 1 < static_cast<int>(sizeof(szValue)) )
+        pszValue = szValue;
+    else
+        pszValue = static_cast<char *>(CPLMalloc(nMaxLength + 1));
 
 /* -------------------------------------------------------------------- */
-/*	Compute string into local buffer, and terminate it.		*/
+/*      Compute string into local buffer, and terminate it.             */
 /* -------------------------------------------------------------------- */
-    strncpy( pszValue, pszString, nMaxLength );
+    strncpy(pszValue, pszString, nMaxLength);
     pszValue[nMaxLength] = '\0';
 
 /* -------------------------------------------------------------------- */
-/*	Make a pass through converting 'D's to 'E's.			*/
+/*      Make a pass through converting 'D's to 'E's.                    */
 /* -------------------------------------------------------------------- */
-    for( i = 0; i < nMaxLength; i++ )
-        if ( pszValue[i] == 'd' || pszValue[i] == 'D' )
+    for( int i = 0; i < nMaxLength; i++ )
+        if( pszValue[i] == 'd' || pszValue[i] == 'D' )
             pszValue[i] = 'E';
 
 /* -------------------------------------------------------------------- */
-/*	Use atof() to fetch out the result                              */
+/*      The conversion itself.                                          */
 /* -------------------------------------------------------------------- */
 #if defined(HAVE_LOCALE_H) && defined(HAVE_SETLOCALE)
     char        *pszCurLocale = NULL;
@@ -555,7 +561,7 @@ double CPLScanDouble( char *pszString, int nMaxLength, char *pszLocale )
     }
 #endif
 
-    dfValue = atof( pszValue );
+    const double dfValue = atof(pszValue);
 
 #if defined(HAVE_LOCALE_H) && defined(HAVE_SETLOCALE)
     // Restore stored locale back
@@ -563,15 +569,16 @@ double CPLScanDouble( char *pszString, int nMaxLength, char *pszLocale )
         setlocale(LC_ALL, pszCurLocale );
 #endif
 
-    CPLFree( pszValue );
+    if( pszValue != szValue )
+        CPLFree(pszValue);
     return dfValue;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                      CPLPrintString()                                */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Copy the string pointed to by pszSrc, _not_ including the terminating
  * `\0' character, to the array pointed to by pszDest.
  *
@@ -608,11 +615,11 @@ char *CPLPrintString( char *pszDest, const char *pszSrc, int nMaxLen )
     return pszDest;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                         CPLPrintStringFill()                         */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Copy the string pointed to by pszSrc, _not_ including the terminating
  * `\0' character, to the array pointed to by pszDest. Remainder of the
  * destination string will be filled with space characters. This is only
@@ -654,11 +661,11 @@ char *CPLPrintStringFill( char *pszDest, const char *pszSrc, int nMaxLen )
     return pszDest;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                          CPLPrintInt32()                             */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Print GInt32 value into specified string buffer. This string will not
  * be NULL-terminated.
  *
@@ -693,11 +700,11 @@ char *CPLPrintInt32( char *pszBuffer, GInt32 iValue, int nMaxLen )
     return CPLPrintString( pszBuffer, szTemp, nMaxLen );
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                          CPLPrintUIntBig()                           */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Print GUIntBig value into specified string buffer. This string will not
  * be NULL-terminated.
  *
@@ -734,11 +741,11 @@ char *CPLPrintUIntBig( char *pszBuffer, GUIntBig iValue, int nMaxLen )
     return CPLPrintString( pszBuffer, szTemp, nMaxLen );
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                          CPLPrintDouble()                            */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Print double value into specified string buffer. Exponential character
  * flag 'E' (or 'e') will be replaced with 'D', as in Fortran. Resulting
  * string will not to be NULL-terminated.
@@ -810,11 +817,11 @@ char *CPLPrintDouble( char *pszBuffer, const char *pszFormat,
 
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                            CPLPrintTime()                            */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Print specified time value accordingly to the format options and
  * specified locale name. This function does following:
  *
@@ -880,9 +887,9 @@ char *CPLPrintTime( char *pszBuffer, int nMaxLen, const char *pszFormat,
     return pszBuffer;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                       CPLVerifyConfiguration()                       */
-/* ***********************************************************************/
+/************************************************************************/
 
 void CPLVerifyConfiguration()
 
@@ -916,9 +923,9 @@ void CPLVerifyConfiguration()
                   "CPLVerifyConfiguration(): byte order set wrong.\n" );
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                         CPLGetConfigOption()                         */
-/* ***********************************************************************/
+/************************************************************************/
 
 const char *CPLGetConfigOption( const char *pszKey, const char *pszDefault )
 
@@ -934,9 +941,9 @@ const char *CPLGetConfigOption( const char *pszKey, const char *pszDefault )
         return pszResult;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                         CPLSetConfigOption()                         */
-/* ***********************************************************************/
+/************************************************************************/
 
 void CPLSetConfigOption( const char *pszKey, const char *pszValue )
 
@@ -945,9 +952,9 @@ void CPLSetConfigOption( const char *pszKey, const char *pszValue )
         CSLSetNameValue( papszConfigOptions, pszKey, pszValue );
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                           CPLFreeConfig()                            */
-/* ***********************************************************************/
+/************************************************************************/
 
 void CPLFreeConfig()
 
@@ -956,12 +963,12 @@ void CPLFreeConfig()
     papszConfigOptions = NULL;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                              CPLStat()                               */
 /*                                                                      */
 /*      Same as VSIStat() except it works on "C:" as if it were         */
 /*      "C:\".                                                          */
-/* ***********************************************************************/
+/************************************************************************/
 
 int CPLStat( const char *pszPath, VSIStatBuf *psStatBuf )
 
@@ -979,9 +986,9 @@ int CPLStat( const char *pszPath, VSIStatBuf *psStatBuf )
         return VSIStat( pszPath, psStatBuf );
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                            proj_strtod()                             */
-/* ***********************************************************************/
+/************************************************************************/
 static double
 proj_strtod(char *nptr, char **endptr)
 
@@ -1012,9 +1019,9 @@ proj_strtod(char *nptr, char **endptr)
     return strtod(nptr, endptr);
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                            CPLDMSToDec()                             */
-/* ***********************************************************************/
+/************************************************************************/
 
 static const char*sym = "NnEeSsWw";
 static const double vm[] = { 1.0, 0.0166666666667, 0.00027777778 };
@@ -1077,12 +1084,12 @@ double CPLDMSToDec( const char *is )
 }
 
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                            CPLDecToDMS()                             */
 /*                                                                      */
 /*      Translate a decimal degrees value to a DMS string with          */
 /*      hemisphere.                                                     */
-/* ***********************************************************************/
+/************************************************************************/
 
 const char *CPLDecToDMS( double dfAngle, const char * pszAxis,
                          int nPrecision )
@@ -1120,11 +1127,11 @@ const char *CPLDecToDMS( double dfAngle, const char * pszAxis,
     return( szBuffer );
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                         CPLPackedDMSToDec()                          */
-/* ***********************************************************************/
+/************************************************************************/
 
-/* *
+/**
  * Convert a packed DMS value (DDDMMMSSS.SS) into decimal degrees.
  *
  * This function converts a packed DMS angle to seconds. The standard
@@ -1184,10 +1191,10 @@ double CPLPackedDMSToDec( double dfPacked )
     return dfDegrees;
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                         CPLDecToPackedDMS()                          */
-/* ***********************************************************************/
-/* *
+/************************************************************************/
+/**
  * Convert decimal degrees into packed DMS value (DDDMMMSSS.SS).
  *
  * This function converts a value, specified in decimal degrees into
@@ -1217,9 +1224,9 @@ double CPLDecToPackedDMS( double dfDec )
     return dfSign * (dfDegrees * 1000000.0 + dfMinutes * 1000.0 + dfSeconds);
 }
 
-/* ***********************************************************************/
+/************************************************************************/
 /*                         CPLStringToComplex()                         */
-/* ***********************************************************************/
+/************************************************************************/
 
 void CPL_DLL CPLStringToComplex( const char *pszString,
                                  double *pdfReal, double *pdfImag )

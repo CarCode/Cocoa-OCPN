@@ -135,12 +135,8 @@ public:
       wxDateTime        m_seg_etd;
       wxDateTime        m_seg_eta;
       wxLongLong        m_seg_ete = 0;
-#ifdef __WXOSX__
-    bool              m_manual_etd = false;  // Für glChartCanvas
-    bool            m_bIsBeingEdited;
-#else
       bool              m_manual_etd{false};
-#endif
+
       bool              m_bPtIsSelected;
       bool              m_bRPIsBeingEdited;
 
@@ -186,11 +182,7 @@ public:
       
 
 #ifdef ocpnUSE_GL
-#ifdef __WXOSX__
-      void DrawGL( ViewPort &vp, bool use_cached_screen_coords=false );
-#else
       void DrawGL( ViewPort &vp, ChartCanvas *canvas, bool use_cached_screen_coords=false );
-#endif
       unsigned int m_iTextTexture;
       int m_iTextTextureWidth, m_iTextTextureHeight;
 

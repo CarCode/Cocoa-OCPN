@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Route table printout
@@ -27,7 +27,6 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
-using namespace std;
 
 #include "wx/wxprec.h"
 
@@ -72,6 +71,8 @@ using namespace std;
 #endif
 
 #include "printtable.h"
+
+using namespace std;
 
 void PrintCell::Init( const wxString& _content, wxDC* _dc, int _width, int _cellpadding, bool _bold_font )
 {
@@ -199,6 +200,8 @@ Table& Table::operator<<( const wxString& cellcontent )
     data[ data.size() - 1 ].push_back( cellcontent );
     return *this;
 }
+
+
 
 
 Table& Table::operator<<( const int& cellcontent )

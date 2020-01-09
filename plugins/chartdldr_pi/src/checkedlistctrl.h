@@ -62,20 +62,6 @@
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxEVT_COMMAND_LIST_ITEM_CHECKED, -1);
 DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_WEBUPDATE, wxEVT_COMMAND_LIST_ITEM_UNCHECKED, -1);
 
-#define EVT_LIST_ITEM_CHECKED(id, fn) \
-    DECLARE_EVENT_TABLE_ENTRY( \
-        wxEVT_COMMAND_LIST_ITEM_CHECKED, id, -1, \
-        (wxObjectEventFunction)(wxEventFunction)(wxListEventFunction)&fn, \
-        (wxObject *) NULL \
-    ),
-
-#define EVT_LIST_ITEM_UNCHECKED(id, fn) \
-    DECLARE_EVENT_TABLE_ENTRY( \
-        wxEVT_COMMAND_LIST_ITEM_UNCHECKED, id, -1, \
-        (wxObjectEventFunction)(wxEventFunction)(wxListEventFunction)&fn, \
-        (wxObject *) NULL \
-    ),
-
 
 
 //! This is the class which performs all transactions with the server.
@@ -92,9 +78,7 @@ protected:
     wxImageList m_imageList;
 
 public:
-    wxCheckedListCtrl()
-    : wxListCtrl(), m_imageList(16, 16, TRUE) {}
-//    wxCheckedListCtrl() {}  //  for Curl 2.Version
+    wxCheckedListCtrl() {}
 
     wxCheckedListCtrl(wxWindow *parent, wxWindowID id = -1,
                         const wxPoint& pt = wxDefaultPosition,
@@ -102,10 +86,7 @@ public:
                         long style = wxCLC_CHECK_WHEN_SELECTING,
                         const wxValidator& validator = wxDefaultValidator,
                         const wxString& name = wxListCtrlNameStr)
-//                        : wxListCtrl(), m_imageList(16, 16, TRUE)  //  for Curl 2.Version
-//            { Create(parent, id, pt, sz, style, validator, name); }  //  for Curl 2.Version
-                        : wxListCtrl(), m_imageList(16, 16, TRUE)
-                        { Create(parent, id, pt, sz, style, validator, name); }
+             { Create(parent, id, pt, sz, style, validator, name); }
 
     bool Create(wxWindow *parent, wxWindowID id = -1,
                         const wxPoint& pt = wxDefaultPosition,
@@ -170,6 +151,7 @@ public:			// utilities
 protected:		// event handlers
 
     void OnMouseEvent(wxMouseEvent& event);
+    void OnActivateEvent(wxListEvent& event);
 
 protected:		// internal utilities
 

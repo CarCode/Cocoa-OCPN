@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Bar Window
@@ -53,12 +53,9 @@ WX_DEFINE_OBJARRAY(RectArray);
 //------------------------------------------------------------------------------
 extern ChartDB *ChartData;
 extern ocpnStyle::StyleManager* g_StyleManager;
-extern MyFrame *gFrame;
 extern bool g_btouch;
 extern int  g_GUIScaleFactor;
 
-extern ChartCanvas               *cc1;
-extern Piano                     *g_Piano;
 extern OCPNPlatform              *g_Platform;
 
 //------------------------------------------------------------------------------
@@ -69,8 +66,10 @@ BEGIN_EVENT_TABLE(Piano, wxEvtHandler)
 END_EVENT_TABLE()
 
 // Define a constructor
-Piano::Piano()
+Piano::Piano(ChartCanvas *parent)
 {
+    m_parentCanvas = parent;;
+    
     m_index_last = -1;
     m_iactive = -1;
 
@@ -80,6 +79,8 @@ Piano::Piano()
     m_bBusy = false;
     
     m_nRegions = 0;
+    m_width = 0;
+    
 
 //>    SetBackgroundStyle( wxBG_STYLE_CUSTOM ); // on WXMSW, this prevents flashing on color scheme change
 
@@ -88,9 +89,11 @@ Piano::Piano()
     m_pPolyIconBmp = NULL;
     m_pSkewIconBmp = NULL;
     m_pTmercIconBmp = NULL;
+
+    SetColorScheme( GLOBAL_COLOR_SCHEME_RGB );      // default
     
     m_eventTimer.SetOwner( this, PIANO_EVENT_TIMER );
-    
+
     m_tex = m_tex_piano_height = 0;
 }
 
@@ -122,7 +125,7 @@ void Piano::Paint( int y, ocpnDC& dc, wxDC *shapeDC )
     if(!style->chartStatusWindowTransparent) {
         dc.SetPen( *wxTRANSPARENT_PEN );
         dc.SetBrush( m_backBrush );
-        dc.DrawRectangle( 0, y, cc1->GetClientSize().x, GetHeight() );
+        dc.DrawRectangle( 0, y, m_parentCanvas->GetClientSize().x, GetHeight() );
     }
 
 //    Create the Piano Keys
@@ -145,6 +148,11 @@ void Piano::Paint( int y, ocpnDC& dc, wxDC *shapeDC )
                 dc.SetBrush( m_scBrush );
             else
                 dc.SetBrush( m_cBrush );
+        } else if( ChartData->GetDBChartType( key_db_index ) == CHART_TYPE_MBTILES){
+            if(selected)
+                dc.SetBrush( m_tileBrush );
+            else
+                dc.SetBrush( m_utileBrush );
         } else if( ChartData->GetDBChartFamily( key_db_index ) == CHART_FAMILY_VECTOR ) {
             if(selected)
                 dc.SetBrush( m_svBrush );
@@ -152,13 +160,13 @@ void Piano::Paint( int y, ocpnDC& dc, wxDC *shapeDC )
                 dc.SetBrush( m_vBrush );
         } else { // Raster Chart
             if(selected)
-                dc.SetBrush( m_slBrush );
+                dc.SetBrush( m_srBrush );
             else
-                dc.SetBrush( m_tBrush );
+                dc.SetBrush( m_rBrush );
         }
 
         if(m_bBusy)
-            dc.SetBrush( m_uvBrush );
+            dc.SetBrush( m_unavailableBrush );
             
         wxRect box = KeyRect[i];
         box.y += y;
@@ -205,13 +213,13 @@ void Piano::Paint( int y, ocpnDC& dc, wxDC *shapeDC )
                           box.x + box.width - m_pPolyIconBmp->GetWidth() - 4, box.y + 2, false );
     }
 }
-
+#if 0
 static void SetColor(unsigned char color[4], const wxBrush &brush)
 {
     const wxColour &c = brush.GetColour();
     color[0] = c.Red(), color[1] = c.Green(), color[2] = c.Blue(), color[3] = 255;
 }
-
+#endif
 #if 0 // alternate implementation, it is much faster most frames (only a single quad is rendered),
 // but requires updating the texture if the piano changes which is slower (although still quite fast)
 // the other problem is the code is difficult to follow and maintain
@@ -488,7 +496,12 @@ void Piano::DrawGL(int off)
 // this texture is only updated if the color scheme or chart bar height change
 void Piano::BuildGLTexture()
 {
-#ifdef ocpnUSE_GL    
+#ifdef ocpnUSE_GL
+
+    // Defer building until auxiliary bitmaps have been loaded
+    if( !m_pInVizIconBmp || !m_pTmercIconBmp || !m_pSkewIconBmp ||! m_pPolyIconBmp)
+        return;
+
     int h = GetHeight();
 
     wxBrush tbackBrush; // transparent back brush
@@ -498,14 +511,21 @@ void Piano::BuildGLTexture()
     else
         tbackBrush = m_backBrush;
 
-    wxBrush brushes[] = { m_scBrush, m_cBrush, m_svBrush, m_vBrush, m_slBrush, m_tBrush, m_uvBrush };
+    wxBrush brushes[] = { m_scBrush, m_cBrush, m_svBrush, m_vBrush, m_srBrush, m_rBrush, m_tileBrush, m_utileBrush, m_unavailableBrush };
+
+    m_ref = h;
+    m_pad = h / 7;                  // spacing between buttons
+    m_radius = h / 4;
+    m_texPitch = ((2*m_ref) + (2*m_pad));
 
     m_tex_piano_height = h;
-    m_texw = 64;
+    m_texw = m_texPitch * 3;
+
     m_texh = ((sizeof brushes) / (sizeof *brushes)) * h;
-    m_texh += 4*16; // for icons;
+    m_texh += 4 * m_ref; // for icons;
 
     m_texh = NextPow2(m_texh);
+    m_texw= NextPow2(m_texw);
 
     if(!m_tex)
         glGenTextures( 1, &m_tex );
@@ -521,35 +541,36 @@ void Piano::BuildGLTexture()
     dc.SetBrush(tbackBrush);
     dc.DrawRectangle(0, 0, m_texw, m_texh);
 
-    // draw the needed rectangles with minimal width
-    wxPen ppPen( GetGlobalColor( _T("CHBLK") ), 1, wxPENSTYLE_SOLID );
+    double nominal_line_width_pix = wxMax(1.0, floor(g_Platform->GetDisplayDPmm() / 2.0));    //0.5 mm nominal, but not less than 1 pixel
+    
+    // draw the needed rectangles
+    wxPen ppPen( GetGlobalColor( _T("CHBLK") ), nominal_line_width_pix, wxPENSTYLE_SOLID );
+
     dc.SetPen( ppPen );
     for(unsigned int b = 0; b < (sizeof brushes) / (sizeof *brushes); b++) {
         unsigned int x = 0, y = h * b;
 
         dc.SetBrush(brushes[b]);
 
-        int u = 3, v = 2;
-        dc.DrawRectangle(x+u, y+v, 3, h-2*v);
-        x+=3+2*u;
+        int v = 2;
+        dc.DrawRectangle(x + m_pad, y+v, 2*m_ref, h-2*v);
+         
+        x += m_texPitch;
+        dc.DrawRoundedRectangle(x + m_pad, y+v, 2*m_ref, h-2*v, m_radius);
         
-        dc.DrawRoundedRectangle(x+u, y+v, 9, h-2*v, 4);
-        x+=9+2*u;
+        int w = m_ref / 6;      // border width of eclipsed chart
 
-        int w = 3;
-        dc.DrawRoundedRectangle(x+u, y+v, 12, h-2*v, 4);
+        x += m_texPitch;
+        dc.DrawRoundedRectangle(x + m_pad, y+v, 2*m_ref, h-2*v, m_radius);
         dc.SetBrush( m_backBrush );
-        dc.DrawRoundedRectangle(x+u+w, y+v+w, 12-2*w, h-2*v-2*w, 3);
-        x+=12+2*u;
-
-        if(x >= m_texw)
-            printf("texture too small\n");
+        dc.DrawRoundedRectangle(x + m_pad +w, y+v+w, (2*m_ref)-(2*w), h-2*v-2*w, m_radius * (h-2*v-2*w) / (h-2*v));  // slightly smaller radius
     }
+
     dc.SelectObject( wxNullBitmap );
 
     wxImage image = bmp.ConvertToImage();
 
-    unsigned char *data = new unsigned char[4*m_texw*m_texh], *d = data, *e = image.GetData();// Not used: , *a = image.GetAlpha();
+    unsigned char *data = new unsigned char[4*m_texw*m_texh], *d = data, *e = image.GetData(), *a = image.GetAlpha();
     for(unsigned int i=0; i<m_texw*m_texh; i++) {
         if(style->chartStatusWindowTransparent &&
            e[0] == 1 && e[1] == 1 && e[2] == 1)
@@ -566,9 +587,8 @@ void Piano::BuildGLTexture()
     // put the bitmaps in below
     wxBitmap *bitmaps[] = {m_pInVizIconBmp, m_pTmercIconBmp, m_pSkewIconBmp, m_pPolyIconBmp};
 
-    for(unsigned int i = 0; i < (sizeof bitmaps) / (sizeof *bitmaps); i++) {
+    for(unsigned int i = 0; i < 4; i++) {
         int iw = bitmaps[i]->GetWidth(), ih = bitmaps[i]->GetHeight();
-        wxASSERT(ih <= 16);
 
         wxImage im = bitmaps[i]->ConvertToImage();
         unsigned char *data = new unsigned char[4*iw*ih], *d = data, *e = im.GetData(), *a = im.GetAlpha();
@@ -577,7 +597,7 @@ void Piano::BuildGLTexture()
             *d = *a, d++, a++;
         }
 
-        int off = ((sizeof brushes) / (sizeof *brushes))*h + 16*i;
+        int off = ((sizeof brushes) / (sizeof *brushes))*h + m_ref*i;
         glTexSubImage2D( GL_TEXTURE_2D, 0, 0, off, iw, ih, GL_RGBA, GL_UNSIGNED_BYTE, data );
         delete [] data;
     }
@@ -587,10 +607,13 @@ void Piano::BuildGLTexture()
 void Piano::DrawGL(int off)
 {
 #ifdef ocpnUSE_GL    
-    unsigned int w = cc1->GetClientSize().x, h = GetHeight(), endx = 0;
+    unsigned int w = m_parentCanvas->GetClientSize().x, h = GetHeight(), endx = 0;
  
     if(m_tex_piano_height != h)
         BuildGLTexture();
+
+    if(m_tex_piano_height != h)
+        return;
 
     int y1 = off, y2 = y1 + h;
 
@@ -610,6 +633,8 @@ void Piano::DrawGL(int off)
         if( ChartData->GetDBChartType( key_db_index ) == CHART_TYPE_CM93 ||
             ChartData->GetDBChartType( key_db_index ) == CHART_TYPE_CM93COMP )
             b = 0;
+        else if( ChartData->GetDBChartType( key_db_index ) == CHART_TYPE_MBTILES)
+            b = 6;
         else if( ChartData->GetDBChartFamily( key_db_index ) == CHART_FAMILY_VECTOR )
             b = 2;
         else // Raster Chart
@@ -620,10 +645,10 @@ void Piano::DrawGL(int off)
 
         wxRect box = KeyRect[i];
         float y = h*b, v1 = (y+.5)/m_texh, v2 = (y+h-.5)/m_texh;
-        // u contains the pixel coordinates in the texture for the three possible rectangles
-        const float u[3][6] = {{0, 3, 4, 4, 5, 8},
-                               {9, 14, 15, 15, 18, 23},
-                               {24, 31, 32, 32, 34, 41}};
+
+        // texcord contains the texture pixel coordinates in the texture for the three rectangle parts
+        const float texcord[6] = {0, (float)m_ref-1, (float)m_ref, (float)m_ref, (float)m_ref+1, (float)m_texPitch-1};
+
         int uindex;
         if(m_brounded) {
             if(InArray(m_eclipsed_index_array, key_db_index))
@@ -640,10 +665,16 @@ void Piano::DrawGL(int off)
 
         // the minimal width rectangles are texture mapped to the
         // width needed by mapping 3 quads: left middle and right
-        const int x[6] = {x1 - 3, x1 + w, x2 - w, x2+3};
+        int x[6] = {x1 - 3, x1 + m_ref, x2 - m_ref, x2+3};
+
+        // adjust for very narrow keys
+        if(x[1] > x[2]){
+            int avg = (x[1] + x[2])/2;
+            x[1] = x[2] = avg;
+        }
 
         for(int i=0; i<3; i++ ) {
-            float u1 = (u[uindex][2*i]+.5)/m_texw, u2 = (u[uindex][2*i+1]+.5)/m_texw;
+            float u1 = ((uindex * m_texPitch) + texcord[2*i]+.5)/m_texw, u2 = ((uindex * m_texPitch) + texcord[2*i+1]+.5)/m_texw;
             int x1 = x[i], x2 = x[i+1];
             texcoords[tc++] = u1, texcoords[tc++] = v1, coords[vc++] = x1, coords[vc++] = y1;
             texcoords[tc++] = u2, texcoords[tc++] = v1, coords[vc++] = x2, coords[vc++] = y1;
@@ -712,7 +743,7 @@ void Piano::DrawGL(int off)
         y1 += off;
         int x2 = x1 + iw, y2 = y1 + ih;
 
-        wxBrush brushes[] = { m_scBrush, m_cBrush, m_svBrush, m_vBrush, m_slBrush, m_tBrush, m_uvBrush };
+        wxBrush brushes[] = { m_scBrush, m_cBrush, m_svBrush, m_vBrush, m_srBrush, m_rBrush, m_tileBrush, m_utileBrush, m_unavailableBrush };
 
         float yoff = ((sizeof brushes) / (sizeof *brushes))*h + 16*index;
         float u1 = 0, u2 = (float)iw / m_texw;
@@ -749,17 +780,20 @@ void Piano::SetColorScheme( ColorScheme cs )
 
     m_backBrush = wxBrush( GetGlobalColor( _T("UIBDR") ), wxBRUSHSTYLE_SOLID );
 
-    m_tBrush = wxBrush( GetGlobalColor( _T("BLUE2") ), wxBRUSHSTYLE_SOLID );    // Raster Chart unselected
-    m_slBrush = wxBrush( GetGlobalColor( _T("BLUE1") ), wxBRUSHSTYLE_SOLID );    // and selected
+    m_rBrush = wxBrush( GetGlobalColor( _T("BLUE2") ), wxBRUSHSTYLE_SOLID );    // Raster Chart unselected
+    m_srBrush = wxBrush( GetGlobalColor( _T("BLUE1") ), wxBRUSHSTYLE_SOLID );    // and selected
 
     m_vBrush = wxBrush( GetGlobalColor( _T("GREEN2") ), wxBRUSHSTYLE_SOLID );    // Vector Chart unselected
     m_svBrush = wxBrush( GetGlobalColor( _T("GREEN1") ), wxBRUSHSTYLE_SOLID );    // and selected
+
+    m_utileBrush = wxBrush( GetGlobalColor( _T("VIO01") ), wxBRUSHSTYLE_SOLID );     // MBTiles Chart unselected
+    m_tileBrush = wxBrush( GetGlobalColor(  _T("VIO02") ), wxBRUSHSTYLE_SOLID );    // and selected
 
     m_cBrush = wxBrush( GetGlobalColor( _T("YELO2") ), wxBRUSHSTYLE_SOLID );     // CM93 Chart unselected
     m_scBrush = wxBrush( GetGlobalColor( _T("YELO1") ), wxBRUSHSTYLE_SOLID );    // and selected
 
 
-    m_uvBrush = wxBrush( GetGlobalColor( _T("UINFD") ), wxBRUSHSTYLE_SOLID );    // and unavailable
+    m_unavailableBrush = wxBrush( GetGlobalColor( _T("UINFD") ), wxBRUSHSTYLE_SOLID );    // and unavailable
 
     m_tex_piano_height = 0; // force texture to update
 }
@@ -774,7 +808,7 @@ void Piano::ShowBusy( bool busy )
 void Piano::SetKeyArray( std::vector<int> array )
 {
     m_key_array = array;
-    FormatKeys();
+    //v5FormatKeys();
 }
 
 void Piano::SetNoshowIndexArray( std::vector<int> array )
@@ -872,21 +906,26 @@ wxString &Piano::GetStoredHash()
 void Piano::FormatKeys( void )
 {
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
-    int width = cc1->GetClientSize().x, height = GetHeight();
+    int width = m_parentCanvas->GetClientSize().x, height = GetHeight();
     width *= g_btouch ? 0.98f : 0.6f;
 
     int nKeys = m_key_array.size();
+    int kw = style->chartStatusIconWidth;
     if( nKeys ) {
-        int kw = style->chartStatusIconWidth;
-        if( !kw ) kw = width / nKeys;
+        if( !kw )
+            kw = width / nKeys;
 
+        kw = wxMin(kw, (m_parentCanvas->GetClientSize().x * 3 / 4) / nKeys);
+        kw = wxMax(kw, 6);
+        
 //    Build the Key Regions
 
-        KeyRect.Empty();
-        KeyRect.Alloc( nKeys );
+        KeyRect.clear();
+        m_width = 0;
         for( int i = 0; i < nKeys; i++ ) {
             wxRect r( ( i * kw ) + 3, 2, kw - 6, height - 4 );
-            KeyRect.Add( r );
+            KeyRect.push_back( r );
+            m_width = r.x + r.width;
         }
     }
     m_nRegions = nKeys;
@@ -907,7 +946,7 @@ bool Piano::MouseEvent( wxMouseEvent& event )
     int x, y;
     event.GetPosition( &x, &y );
 
-    if(event.Leaving() || y < cc1->GetCanvasHeight() - GetHeight()) {
+    if(event.Leaving() || y < m_parentCanvas->GetCanvasHeight() - GetHeight()) {
         if(m_bleaving)
             return false;
         m_bleaving = true;
@@ -948,7 +987,7 @@ bool Piano::MouseEvent( wxMouseEvent& event )
             }
         } else if( event.RightDown() ) {
             if( sel_index != m_hover_last ) {
-                gFrame->HandlePianoRollover( sel_index, sel_dbindex );
+                m_parentCanvas->HandlePianoRollover( sel_index, sel_dbindex );
                 m_hover_last = sel_index;
                 
 //                m_action = INFOWIN_TIMEOUT;
@@ -956,29 +995,29 @@ bool Piano::MouseEvent( wxMouseEvent& event )
                 
             }
         } else if( event.ButtonUp() ) {
-            gFrame->HandlePianoRollover( -1, -1 );
+            m_parentCanvas->HandlePianoRollover( -1, -1 );
             ResetRollover();
         }
     }
     else{
         if( m_bleaving ) {
-            gFrame->HandlePianoRollover( -1, -1 );
+            m_parentCanvas->HandlePianoRollover( -1, -1 );
             ResetRollover();
         } else if( event.LeftDown() ) {
             if( -1 != sel_index ) {
-                gFrame->HandlePianoClick( sel_index, sel_dbindex );
-                gFrame->Raise();
+                m_parentCanvas->HandlePianoClick( sel_index, sel_dbindex );
+                m_parentCanvas->Raise();
             } else
                 return false;
         } else if( event.RightDown() ) {
             if( -1 != sel_index ) {
-                gFrame->HandlePianoRClick( x, y, sel_index, sel_dbindex );
-                gFrame->Raise();
+                m_parentCanvas->HandlePianoRClick( x, y, sel_index, sel_dbindex );
+                m_parentCanvas->Raise();
             } else
                 return false;
         } else if(!event.ButtonUp()){
             if( sel_index != m_hover_last ) {
-                gFrame->HandlePianoRollover( sel_index, sel_dbindex );
+                m_parentCanvas->HandlePianoRollover( sel_index, sel_dbindex );
                 m_hover_last = sel_index;
             }
         }
@@ -1020,6 +1059,12 @@ int Piano::GetHeight()
     return height;
 }
 
+int Piano::GetWidth()
+{
+    return m_width;
+}
+
+    
 void Piano::onTimerEvent(wxTimerEvent &event)
 {
     switch(m_action){
@@ -1028,16 +1073,16 @@ void Piano::onTimerEvent(wxTimerEvent &event)
         case DEFERRED_KEY_CLICK_UP:
             ShowBusy( false );
             if(m_hover_last >= 0){              // turn it off, and return
-                gFrame->HandlePianoRollover( -1, -1 );
+                m_parentCanvas->HandlePianoRollover( -1, -1 );
                 ResetRollover();
             }
             else{
-                gFrame->HandlePianoClick( m_click_sel_index, m_click_sel_dbindex );
+                m_parentCanvas->HandlePianoClick( m_click_sel_index, m_click_sel_dbindex );
 //            ShowBusy( false );
             }
             break;
         case INFOWIN_TIMEOUT:
-            gFrame->HandlePianoRollover( -1, -1 );
+            m_parentCanvas->HandlePianoRollover( -1, -1 );
             ResetRollover();
             break;
         default:

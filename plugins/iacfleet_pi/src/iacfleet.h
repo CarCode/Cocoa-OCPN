@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  * $Id: IACFleet.h, v1.0 2010/08/05 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -30,36 +30,34 @@
 
 #include "wx/wxprec.h"
 
-#ifndef  WX_PRECOMP
+#ifndef WX_PRECOMP
 #include "wx/wx.h"
 #endif //precompiled headers
 
-#include <wx/treectrl.h>
-#include <wx/fileconf.h>
-#include <wx/notebook.h>
-#include <wx/textfile.h>
 #include <wx/arrstr.h>
-#include <wx/timer.h>
-#include <wx/dirctrl.h>
-#include <wx/tipwin.h>
+#include <wx/button.h>
+#include <wx/choice.h>
 #include <wx/datectrl.h>
 #include <wx/dateevt.h>
-#include <wx/choice.h>
-#include <wx/button.h>
+#include <wx/dirctrl.h>
+#include <wx/fileconf.h>
 #include <wx/hyperlink.h>
+#include <wx/notebook.h>
 #include <wx/spinctrl.h>
+#include <wx/textfile.h>
+#include <wx/timer.h>
+#include <wx/tipwin.h>
+#include <wx/treectrl.h>
 
-//#include "../../../include/ocpn_plugin.h"
-#include "ocpn_plugin.h"
+#include "../../../include/ocpn_plugin.h"
 #include "iacfile.h"
 
-#define SORT_NAME           1
-#define SORT_TIME           2
+#define SORT_NAME 1
+#define SORT_TIME 2
 
-#define ANIMATION_FRAME_MS  1000
+#define ANIMATION_FRAME_MS 1000
 
-enum
-{
+enum {
     ID_OK = 11001,
     ID_CHOOSEIACFLEETDIR,
     ID_FILESELECTED,
@@ -76,17 +74,15 @@ class IACFleetUIDialog: public wxDialog
     DECLARE_CLASS( IACFleetUIDialog )
     DECLARE_EVENT_TABLE()
 public:
-    IACFleetUIDialog( void );
-    ~IACFleetUIDialog( void );
-    bool Create( wxWindow *parent, iacfleet_pi *ppi, wxWindowID id = wxID_ANY,
-            const wxString& caption = _("IACFleet Display Control"),
-            const wxString initial_dir = wxEmptyString, int sort_type = SORT_NAME,
-            const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxDefaultSize,
+    // IACFleetUIDialog( void );
+    ~IACFleetUIDialog(void);
+    IACFleetUIDialog(wxWindow *parent = NULL, iacfleet_pi *ppi = NULL, wxWindowID id = wxID_ANY,
+                     const wxString &caption = _("IACFleet Display Control"), const wxString initial_dir = wxEmptyString,
+                     int sort_type = SORT_NAME, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize,
 #ifdef __WXMAC__
-            long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxSTAY_ON_TOP );
+                    long style = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxSTAY_ON_TOP );
 #else
-            long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+                    long style = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
 #endif
     void CreateControls();
     void OnClose( wxCloseEvent& event );
@@ -133,6 +129,7 @@ private:
     wxListBox         *m_pFileListCtrl;
     wxTextCtrl        *m_pTextCtrl;
     wxTextCtrl        *m_pRawCtrl;
+    wxStaticText      *m_pIssueDate;
     wxStaticText      *m_pFileTime;
     wxTipWindow       *m_pTipWindow;
     wxRadioButton     *m_rbSortName;
@@ -141,6 +138,7 @@ private:
     wxButton          *m_bAnimation;
 
     //Download panel
+    wxStaticText      *m_stHint;
     wxStaticText      *m_stDate;
     wxDatePickerCtrl  *m_dpBrazil;
     wxStaticText      *m_stHour;

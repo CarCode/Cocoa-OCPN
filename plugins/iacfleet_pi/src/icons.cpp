@@ -1,15 +1,15 @@
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
-#	include <wx/wx.h>
+#include <wx/wx.h>
 #endif
-#include <wx/mstream.h>
 #include <wx/filename.h>
+#include <wx/mstream.h>
 #include "icons.h"
 
 wxBitmap *_img_iacfleet_pi;
 
 #ifdef IACFLEET_USE_SVG
-#include "ocpn_plugin.h"
+#include "../../../include/ocpn_plugin.h"
 wxString _svg_iacfleet;
 wxString _svg_iacfleet_rollover;
 wxString _svg_iacfleet_toggled;
@@ -24,7 +24,11 @@ void initialize_images(void)
 
 #ifdef IACFLEET_USE_SVG
     wxFileName fn;
+#ifdef __WXOSX__
+    fn.SetPath(*GetpPrivateApplicationDataLocation());
+#else
     fn.SetPath(*GetpSharedDataLocation());
+#endif
     fn.AppendDir(_T("plugins"));
     fn.AppendDir(_T("iacfleet_pi"));
     fn.AppendDir(_T("data"));

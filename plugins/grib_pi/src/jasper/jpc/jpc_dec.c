@@ -1064,9 +1064,7 @@ static int jpc_dec_tiledecode(jpc_dec_t *dec, jpc_dec_tile_t *tile)
 	/* Apply an inverse wavelet transform if necessary. */
 	for (compno = 0, tcomp = tile->tcomps; compno < dec->numcomps;
 	  ++compno, ++tcomp) {
-#ifndef __WXOSX__
 		ccp = &tile->cp->ccps[compno];
-#endif
 		jpc_tsfb_synthesize(tcomp->tsfb, tcomp->data);
 	}
 

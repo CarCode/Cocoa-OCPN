@@ -8,6 +8,12 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef NDEBUG
+// make wxLogTrace a noop if no debug set, it's really slow
+// must be defined before including debug.h
+#define wxDEBUG_LEVEL 0
+#endif
+
 #include <wx/jsonreader.h>
 
 #include <wx/mstream.h>
@@ -167,9 +173,10 @@
 // trace messages by setting the:
 // WXTRACE=traceReader StoreComment
 // environment variable
+#if wxDEBUG_LEVEL > 0
 static const wxChar* traceMask = _T("traceReader");
 static const wxChar* storeTraceMask = _T("StoreComment");
-
+#endif
 
 //! Ctor
 /*!
@@ -1979,7 +1986,7 @@ wxJSONReader::Strtoll( const wxString& str, wxInt64* i64 )
                 }
                 break;
 
-                // case '+' :
+            // case '+' :
             default :
                 if ( ui64 > LLONG_MAX )  {
                     r = false;

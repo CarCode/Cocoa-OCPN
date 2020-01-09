@@ -1,4 +1,4 @@
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // File:        crashprint.cpp
 // Purpose:     wxCrashPrint
 // Maintainer:  Wyo
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: crashprint.cpp,v 1.11 2005-04-14 19:41:33 wyo Exp $
 // Copyright:   (c) 2004 wxCode
 // Licence:     wxWindows
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 //----------------------------------------------------------------------------
 // information
@@ -76,6 +76,7 @@ wxCrashPrint::wxCrashPrint (int flags, const wxString &fname) {
 // general functions
 
 void wxCrashPrint::Report () {
+#if defined(__linux__)
     wxString appname = wxTheApp->GetAppName();
 
     // get the backtrace with symbols
@@ -136,5 +137,5 @@ void wxCrashPrint::Report () {
             wxPrintf (_T("%s\n"), lines[i].c_str());
         }
     }
-
+#endif
 }

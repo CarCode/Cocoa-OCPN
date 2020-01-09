@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Database Object
@@ -103,8 +103,8 @@ public:
       bool LoadBinary(const wxString & filename, ArrayOfCDI& dir_array_check);
       bool SaveBinary(const wxString & filename) { return ChartDatabase::Write(filename); }
 
-      int  BuildChartStack(ChartStack * cstk, float lat, float lon);
-      int  BuildChartStack(ChartStack * cstk, float lat, float lon, int db_add );
+      int  BuildChartStack(ChartStack * cstk, float lat, float lon, int groupIndex);
+      int  BuildChartStack(ChartStack * cstk, float lat, float lon, int db_add, int groupIndex );
       bool EqualStacks(ChartStack *, ChartStack *);
       bool CopyStack(ChartStack *pa, ChartStack *pb);
       wxString GetFullPath(ChartStack *ps, int stackindex);
@@ -122,6 +122,7 @@ public:
       bool IsChartInCache(int dbindex);
       bool IsChartInCache(wxString path);
       bool IsChartInGroup(const int db_index, const int group);
+      bool IsENCInGroup(const int group);
 
       ChartBase *OpenChartFromStack(ChartStack *pStack, int StackEntry, ChartInitFlag iflag = FULL_INIT);
       ChartBase *OpenChartFromDB(int index, ChartInitFlag init_flag);
@@ -149,7 +150,6 @@ public:
       void ClearCacheInUseFlags(void);
       void PurgeCacheUnusedCharts( double factor );
 
-      bool IsBusy(){ return m_b_busy; }
 protected:
       virtual ChartBase *GetChart(const wxChar *theFilePath, ChartClassDescriptor &chart_desc) const;
 
@@ -169,7 +169,6 @@ private:
       int              m_ticks;
 
       bool              m_b_locked;
-      bool              m_b_busy;
 
       wxCriticalSection m_critSect;
       wxMutex           m_cache_mutex;

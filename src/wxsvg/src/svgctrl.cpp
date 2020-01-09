@@ -1,4 +1,4 @@
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Name:        svgctrl.cpp
 // Purpose:     svg control widget
 // Author:      Alex Thuering
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: svgctrl.cpp,v 1.20 2016/05/07 10:18:27 ntalex Exp $
 // Copyright:   (c) 2005 Alex Thuering
 // Licence:     wxWindows licence
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 #include "svgctrl.h"
 #include <SVGSVGElement.h>
@@ -100,7 +100,7 @@ void wxSVGCtrlBase::OnPaint(wxPaintEvent& event) {
 #ifdef __WXMSW__
 	int w = GetClientSize().GetWidth();
 	int h = GetClientSize().GetHeight();
-    dc.SetPen(*wxTRANSPARENT_PEN);
+	dc.SetPen(*wxTRANSPARENT_PEN);
 	dc.DrawRectangle(m_buffer.GetWidth(), 0, w - m_buffer.GetWidth(), h);
 	dc.DrawRectangle(0, m_buffer.GetHeight(), m_buffer.GetWidth(), h - m_buffer.GetHeight());
 #endif

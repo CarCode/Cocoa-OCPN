@@ -1,4 +1,4 @@
-/* *******************************************************************
+/********************************************************************
 ** @source JEEPS application and data functions
 **
 ** @author Copyright (C) 1999 Alan Bleasby
@@ -1616,14 +1616,14 @@ static void GPS_D109_Get(GPS_PWay *way, UC *s, int protoid)
 
     p += 4; /* Skip over "outbound link ete in seconds */
     if (protoid == 110) {
-        float gps_temp;
-        uint32 gps_time;
-        gps_temp = GPS_Util_Get_Float(p);
-        p+=4;
-        if (gps_temp <= 1.0e24) {
-            (*way)->temperature_populated = 1;
-            (*way)->temperature = gps_temp;
-        }
+	float gps_temp;
+	uint32 gps_time;
+	gps_temp = GPS_Util_Get_Float(p);
+	p+=4;
+	if (gps_temp <= 1.0e24) {
+		(*way)->temperature_populated = 1;
+		(*way)->temperature = gps_temp;
+	}
 
 	gps_time = GPS_Util_Get_Uint(p);
 	p+=4;
@@ -4393,11 +4393,7 @@ void GPS_D311_Get(GPS_PTrack *trk, UC *s)
     p=s;
 
     /* Forerunner */
-#ifdef __WXOSX__
-    identifier = GPS_Util_Get_Short(p);
-#else
     identifier = GPS_Util_Get_Short(s);
-#endif
     sprintf((*trk)->trk_ident, "%d", identifier);
 
     return;
@@ -5490,11 +5486,8 @@ static void GPS_A500_Translate(UC *s, GPS_PAlmanac *alm)
     p+=sizeof(float);
 
     (*alm)->i = GPS_Util_Get_Float(p);
-#ifdef __WXOSX__
-    //    p+=sizeof(float);  // Not used ???
-#else
     p+=sizeof(float);
-#endif
+
     return;
 }
 
@@ -6629,11 +6622,7 @@ void GPS_D1006_Get(GPS_PCourse *crs, UC *p)
     for(i=0;i<16;++i)
       (*crs)->course_name[i] = *p++;
     (*crs)->track_index = GPS_Util_Get_Short(p);
-#ifdef __WXOSX__
-    //    p+=sizeof(uint16);  // Not used ???
-#else
     p+=sizeof(uint16);
-#endif
 }
 
 
@@ -7276,11 +7265,7 @@ void GPS_D1013_Get(GPS_PCourse_Limits limits, UC *p)
     p+=sizeof(uint32);
 
     limits->max_course_trk_pnt = GPS_Util_Get_Uint(p);
-#ifdef __WXOSX__
-    //    p+=sizeof(uint32);  // Not used ???
-#else
     p+=sizeof(uint32);
-#endif
 }
 
 

@@ -1,4 +1,4 @@
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Name:        SVGDocument.cpp
 // Purpose:     wxSVGDocument - SVG render & data holder class
 // Author:      Alex Thuering
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: SVGDocument.cpp,v 1.52 2016/05/16 21:08:52 ntalex Exp $
 // Copyright:   (c) 2005 Alex Thuering
 // Licence:     wxWindows licence
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 #include "SVGDocument.h"
 
@@ -79,16 +79,10 @@ void wxSVGDocument::SetTitle(const wxString& title) {
 		titleElem = new wxSVGTitleElement;
 		GetRootElement()->AppendChild(titleElem);
 	}
-#ifdef __WXOSX__
-    while (elem) {
-#endif
 	if (titleElem->GetChildren() && elem->GetFirstChild()->GetType() == wxSVGXML_TEXT_NODE)
 		elem->GetFirstChild()->SetContent(title);
 	else
 		elem->AddChild(new wxSvgXmlNode(wxSVGXML_TEXT_NODE, wxEmptyString, title));
-#ifdef __WXOSX__
-    }
-#endif
 }
 
 wxSVGElement* wxSVGDocument::GetElementById(const wxString& id) {

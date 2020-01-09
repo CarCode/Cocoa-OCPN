@@ -1,4 +1,4 @@
-/*********************************************************************
+/* ********************************************************************
  * Name:      	main.h
  * Purpose:   	Declares simple wxWidgets application with GUI
  * 				created using wxFormBuilder.

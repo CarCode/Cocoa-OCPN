@@ -33,13 +33,18 @@
 #include <wx/choice.h>
 #include <wx/collpane.h>
 #include <wx/clrpicker.h>
+
 #if wxCHECK_VERSION(2, 9, 0)
  #include <wx/timectrl.h>
+#endif
+#ifdef __WXGTK__
+//wxTimePickerCtrl is completely broken in Gnome based desktop environments as of wxGTK 3.0
+#include "time_textbox.h"
 #endif
 #include <vector>
 
 #if wxCHECK_VERSION(2, 9, 0)
-#include <wx/dialog.h>
+#include <wx/frame.h>
 #else
 #include "scrollingdialog.h"
 #endif
@@ -61,6 +66,9 @@ class ChartGroup;
 class MMSI_Props_Panel;
 class MMSIProperties;
 class OCPNCheckedListCtrl;
+class CanvasConfigSelect;
+class OCPNIconCombo;
+class OCPNColourPickerCtrl;
 
 #define ID_DIALOG 10001
 #define SYMBOL_OPTIONS_STYLE \
@@ -69,9 +77,7 @@ class OCPNCheckedListCtrl;
 #define SYMBOL_OPTIONS_IDNAME ID_DIALOG
 #define SYMBOL_OPTIONS_SIZE wxSize(500, 500)
 #define SYMBOL_OPTIONS_POSITION wxDefaultPosition
-#ifdef __WXOSX__
-WX_DECLARE_LIST(wxCheckBox , CBList);
-#endif
+
 enum {
   ID_AISALERTAUDIO = 10000,
   ID_AISALERTDIALOG,
@@ -188,7 +194,11 @@ enum {
   // LIVE ETA OPTION
   ID_CHECK_LIVEETA,
   ID_DEFAULT_BOAT_SPEED,
-  ID_DARKDECORATIONSBOX
+  ID_DARKDECORATIONSBOX,
+  ID_SCREENCONFIG1,
+  ID_SCREENCONFIG2,
+  ID_CONFIGEDIT_OK,
+  ID_CONFIGEDIT_CANCEL
 };
 
 /* Define an int bit field for dialog return value
@@ -207,6 +217,7 @@ enum {
 #define TIDES_CHANGED 2048
 #define GL_CHANGED 4096
 #define REBUILD_RASTER_CACHE 8192
+#define CONFIG_CHANGED 8192 * 2
 
 #ifndef wxCLOSE_BOX
 #define wxCLOSE_BOX 0x1000
@@ -247,7 +258,7 @@ class options : private Uncopyable,
 #if wxCHECK_VERSION(3,0,0)
   bool SendIdleEvents(wxIdleEvent &event );
 #endif  
-  void SetInitialPage(int page_sel);
+  void SetInitialPage(int page_sel, int sub_page = -1);
   void Finish(void);
 
   void OnClose(wxCloseEvent &event);
@@ -263,7 +274,7 @@ class options : private Uncopyable,
   void SetInitChartDir(const wxString &dir) { m_init_chart_dir = dir; }
   void SetInitialSettings(void);
   void SetInitialVectorSettings(void);
-
+  
   void SetCurrentDirList(ArrayOfCDI p) { m_CurrentDirList = p; }
   void SetWorkDirListPtr(ArrayOfCDI *p) { m_pWorkDirList = p; }
   ArrayOfCDI *GetWorkDirListPtr(void) { return m_pWorkDirList; }
@@ -320,12 +331,21 @@ class options : private Uncopyable,
   void OnUnitsChoice(wxCommandEvent &event);
   void OnScanBTClick(wxCommandEvent &event);
   void onBTScanTimer(wxTimerEvent &event);
-#ifdef __OCPN__ANDROID__
   void StopBTScan(void);
-#endif
 
   void UpdateWorkArrayFromTextCtl(void);
 
+  void OnCreateConfig( wxCommandEvent &event);
+  void OnEditConfig( wxCommandEvent &event);
+  void OnDeleteConfig( wxCommandEvent &event);
+  void OnApplyConfig( wxCommandEvent &event);
+  void SetConfigButtonState();
+  void ClearConfigList();
+  void BuildConfigList();
+  void OnConfigMouseSelected( wxMouseEvent &event);
+
+  void SetSelectedConnectionPanel( ConnectionParamsPanel *panel );
+  
   // Should we show tooltips?
   static bool ShowToolTips(void);
 
@@ -355,22 +375,24 @@ class options : private Uncopyable,
   wxCheckBox *pPrintShowIcon, *pCDOOutlines, *pSDepthUnits, *pSDisplayGrid;
   wxCheckBox *pAutoAnchorMark, *pCDOQuilting, *pCBRaster, *pCBVector;
   wxCheckBox *pCBCM93, *pCBLookAhead, *pSkewComp, *pOpenGL, *pSmoothPanZoom;
-  wxCheckBox *pFullScreenQuilt, *pMobile, *pResponsive, *pOverzoomEmphasis; // No more fog
-  wxCheckBox *pOZScaleVector, *pToolbarAutoHideCB, *pInlandEcdis, *pDarkDecorations;  // No more OverzoomVector
+  wxCheckBox *pFullScreenQuilt, *pMobile, *pResponsive, *pOverzoomEmphasis;
+  wxCheckBox *pOZScaleVector, *pToolbarAutoHideCB, *pInlandEcdis, *pDarkDecorations;
   wxTextCtrl *pCOGUPUpdateSecs, *m_pText_OSCOG_Predictor, *pScreenMM;
   wxTextCtrl *pToolbarHideSecs, *m_pText_OSHDT_Predictor;
+
+  wxTextCtrl *pCmdSoundString;
+
   wxChoice *m_pShipIconType, *m_pcTCDatasets;
-  wxSlider *m_pSlider_Zoom, *m_pSlider_GUI_Factor, *m_pSlider_Chart_Factor;
+  wxSlider *m_pSlider_Zoom, *m_pSlider_GUI_Factor, *m_pSlider_Chart_Factor, *m_pSlider_Ship_Factor;
   wxSlider *m_pSlider_Zoom_Vector;
   // LIVE ETA OPTION
   wxCheckBox *pSLiveETA;
   wxTextCtrl *pSDefaultBoatSpeed;
-
+  
   wxRadioButton *pCBCourseUp, *pCBNorthUp, *pRBSizeAuto, *pRBSizeManual;
   int k_tides;
 
   // For the GPS page
-  wxListCtrl *m_lcSources;
   wxButton *m_buttonAdd, *m_buttonRemove, *m_buttonScanBT, *m_btnInputStcList;
   wxButton *m_btnOutputStcList, *m_sdbSizerDlgButtonsOK;
   wxButton *m_sdbSizerDlgButtonsApply, *m_sdbSizerDlgButtonsCancel;
@@ -384,8 +406,14 @@ class options : private Uncopyable,
   wxStaticText *m_stSerPort, *m_stSerBaudrate, *m_stSerProtocol;
   wxStaticText *m_stPriority, *m_stFilterSec, *m_stPrecision;
   wxStaticText *m_stTalkerIdText;
+  wxStaticText *m_stNetComment, *m_stSerialComment;
+  wxTextCtrl *m_tNetComment, *m_tSerialComment;
+  wxStaticBox *m_sbConnEdit;
   wxChoice *m_choiceBTDataSources, *m_choiceBaudRate, *m_choiceSerialProtocol;
   wxChoice *m_choicePriority, *m_choicePrecision;
+  wxScrolledWindow *m_scrollWinConnections; 
+  wxBoxSizer *boxSizerConnections;
+  ConnectionParams *mSelectedConnection;
   
   // For the Display\Units page
   wxStaticText* itemStaticTextUserVar;
@@ -399,7 +427,8 @@ class options : private Uncopyable,
   wxCheckBox *m_cbOutput, *m_cbAPBMagnetic;
   wxComboBox *m_comboPort;
   wxStdDialogButtonSizer *m_sdbSizerDlgButtons;
-
+  wxButton *m_configDeleteButton, *m_configApplyButton;
+  
   void OnSelectDatasource(wxListEvent &event);
   void OnAddDatasourceClick(wxCommandEvent &event);
   void OnRemoveDatasourceClick(wxCommandEvent &event);
@@ -423,10 +452,11 @@ class options : private Uncopyable,
   void OnConnValChange(wxCommandEvent &event);
   void OnValChange(wxCommandEvent &event);
   void OnUploadFormatChange(wxCommandEvent &event);
-  void EnableItem(const long index);
-  void OnConnectionToggleEnable(wxListEvent &event);
-  void OnConnectionToggleEnableMouse(wxMouseEvent &event);
+  void EnableConnection( ConnectionParams *conn, bool value);
 
+  
+  void OnCanvasConfigSelectClick( int ID, bool selected);
+  
   bool connectionsaved;
   bool m_connection_enabled;
 
@@ -438,11 +468,11 @@ class options : private Uncopyable,
   wxBoxSizer *vectorPanel;
   wxScrolledWindow *ps57Ctl;
 
-#if defined(__WXMSW__) || defined(__WXOSX__)
-   wxCheckListBox *ps57CtlListBox;
-#else
+// #if defined(__WXMSW__) || defined(__WXOSX__)
+//   wxCheckListBox *ps57CtlListBox;
+// #else
   OCPNCheckedListCtrl *ps57CtlListBox;
-#endif
+// #endif
 
   wxChoice *pDispCat, *pPointStyle, *pBoundStyle, *p24Color;
   wxButton *itemButtonClearList, *itemButtonSelectList, *itemButtonSetStd;
@@ -490,14 +520,31 @@ class options : private Uncopyable,
   wxTextCtrl *m_pText_Track_Length, *m_pText_Moored_Speed, *m_pText_Scale_Priority;
   wxTextCtrl *m_pText_ACK_Timeout, *m_pText_Show_Target_Name_Scale;
 
+  // For Display->Configs page...
+  wxScrolledWindow *m_DisplayConfigsPage;
+  
+  CanvasConfigSelect *m_sconfigSelect_single;
+  CanvasConfigSelect *m_sconfigSelect_twovertical;
+  
+  // For Configuration Template panel
+  wxScrolledWindow *m_scrollWinConfigList;
+  wxStaticText *m_templateTitleText;
+  wxStaticText *m_staticTextLastAppled;
+  wxStaticBoxSizer *m_templateStatusBoxSizer;
+  
   // For the ship page
   wxFlexGridSizer *realSizes;
   wxTextCtrl *m_pOSLength, *m_pOSWidth, *m_pOSGPSOffsetX, *m_pOSGPSOffsetY;
   wxTextCtrl *m_pOSMinSize, *m_pText_ACRadius;
   wxStaticBoxSizer *dispOptions, *dispWaypointOptions;
-  wxScrolledWindow *itemPanelShip;
-  wxBoxSizer *ownShip;
+  wxScrolledWindow *itemPanelShip, *itemPanelRoutes;
+  wxBoxSizer *ownShip, *Routes;
 
+  OCPNIconCombo *pWaypointDefaultIconChoice;
+  OCPNIconCombo *pRoutepointDefaultIconChoice;
+  wxCheckBox    *pScaMinChckB, *pScaMinOverruleChckB;
+  wxTextCtrl*   m_pText_ScaMin;
+  
   // For the font page
   wxBoxSizer *m_itemBoxSizerFontPanel;
   wxChoice *m_itemFontElementListBox, *m_itemStyleListBox, *m_itemLangListBox;
@@ -513,8 +560,9 @@ class options : private Uncopyable,
   wxBoxSizer *itemBoxSizerPanelPlugins;
   wxFlexGridSizer *radarGrid, *waypointradarGrid;
   wxChoice *pNavAidRadarRingsNumberVisible, *pWaypointRangeRingsNumber;
+  wxColourPickerCtrl *m_colourOwnshipRangeRingColour;
   wxChoice *m_itemRadarRingsUnits, *m_itemWaypointRangeRingsUnits;
-  wxColourPickerCtrl *m_colourTrackLineColour;;
+  wxColourPickerCtrl *m_colourTrackLineColour;
   wxChoice *pTrackPrecision;
   wxTextCtrl *pNavAidRadarRingsStep, *pWaypointRangeRingsStep;
   wxCheckBox *pSogCogFromLLCheckBox;
@@ -522,15 +570,19 @@ class options : private Uncopyable,
   wxTextCtrl *m_pText_TP_Secs, *m_pText_TP_Dist;
   wxCheckBox *pWayPointPreventDragging, *pConfirmObjectDeletion;
   wxCheckBox *pEnableZoomToCursor, *pPreserveScale, *pPlayShipsBells;
-  wxCheckBox *pFullScreenToolbar, *pTransparentToolbar;
+  wxCheckBox *pTransparentToolbar;
   wxCheckBox *pAdvanceRouteWaypointOnArrivalOnly, *pTrackShowIcon;
   wxCheckBox *pTrackDaily, *pTrackHighlite;
 #if wxCHECK_VERSION(2, 9, 0)
+#ifdef __WXGTK__
+  TimeCtrl *pTrackRotateTime;
+#else
   wxTimePickerCtrl *pTrackRotateTime;
+#endif
 #endif  
   wxRadioButton *pTrackRotateComputerTime, *pTrackRotateUTC, *pTrackRotateLMT;
   wxColourPickerCtrl *m_colourWaypointRangeRingsColour;
-  wxSpinCtrl *pSoundDeviceIndex;
+  wxChoice *pSoundDeviceIndex;
   wxArrayPtrVoid OBJLBoxArray;
   wxString m_init_chart_dir;
   wxArrayString *m_pSerialArray;
@@ -545,27 +597,22 @@ class options : private Uncopyable,
   void Init(void);
   void CreatePanel_MMSI(size_t parent, int border_size, int group_item_spacing);
   void CreatePanel_AIS(size_t parent, int border_size, int group_item_spacing);
-  void CreatePanel_Ownship(size_t parent, int border_size,
-                           int group_item_spacing);
+  void CreatePanel_Ownship(size_t parent, int border_size, int group_item_spacing);
   void CreatePanel_NMEA(size_t parent, int border_size, int group_item_spacing);
-  void CreatePanel_NMEA_Compact(size_t parent, int border_size,
-                                int group_item_spacing);
-  void CreatePanel_ChartsLoad(size_t parent, int border_size,
-                              int group_item_spacing);
-  void CreatePanel_VectorCharts(size_t parent, int border_size,
-                                int group_item_spacing);
-  void CreatePanel_TidesCurrents(size_t parent, int border_size,
-                                 int group_item_spacing);
-  void CreatePanel_ChartGroups(size_t parent, int border_size,
-                               int group_item_spacing);
-  void CreatePanel_Display(size_t parent, int border_size,
-                           int group_item_spacing);
+  void CreatePanel_NMEA_Compact(size_t parent, int border_size, int group_item_spacing);
+  void CreatePanel_ChartsLoad(size_t parent, int border_size, int group_item_spacing);
+  void CreatePanel_VectorCharts(size_t parent, int border_size, int group_item_spacing);
+  void CreatePanel_TidesCurrents(size_t parent, int border_size, int group_item_spacing);
+  void CreatePanel_ChartGroups(size_t parent, int border_size, int group_item_spacing);
+  void CreatePanel_Display(size_t parent, int border_size, int group_item_spacing);
   void CreatePanel_UI(size_t parent, int border_size, int group_item_spacing);
-  void CreatePanel_Units(size_t parent, int border_size,
-                         int group_item_spacing);
-  void CreatePanel_Advanced(size_t parent, int border_size,
-                            int group_item_spacing);
+  void CreatePanel_Units(size_t parent, int border_size, int group_item_spacing);
+  void CreatePanel_Advanced(size_t parent, int border_size, int group_item_spacing);
+  void CreatePanel_Configs(size_t parent, int border_size, int group_item_spacing);
+  void CreatePanel_Routes(size_t parent, int border_size, int group_item_spacing);
 
+  void UpdateTemplateTitleText();
+  void CheckDeviceAccess(wxString &path);
   int m_returnChanges;
   wxListBox *tcDataSelected;
   std::vector<int> marinersStdXref;
@@ -594,8 +641,14 @@ class options : private Uncopyable,
   void SetDefaultConnectionParams(void);
   void SetDSFormRWStates();
   void FillSourceList();
-  ConnectionParams *CreateConnectionParamsFromSelectedItem();
+  void UpdateSourceList( bool bResort );
+  bool SortSourceList(void);
 
+  ConnectionParams *CreateConnectionParamsFromSelectedItem();
+  ConnectionParams *UpdateConnectionParamsFromSelectedItem(ConnectionParams *pConnectionParams);
+
+  int m_screenConfig;
+  
   wxNotebookPage *m_groupsPage;
   wxFont smallFont;
   wxFont *dialogFont;
@@ -609,7 +662,34 @@ class options : private Uncopyable,
   bool m_bfontChanged;
   bool m_bVectorInit;
   
+  wxBoxSizer *m_boxSizerConfigs;
+  wxColour m_panelBackgroundUnselected;
+  wxString m_selectedConfigPanelGUID;
+  
   DECLARE_EVENT_TABLE()
+};
+
+class CanvasConfigSelect: public wxPanel
+{
+public:
+    CanvasConfigSelect( wxWindow *parent, options *parentOptions, int id, wxBitmap &bmp, 
+                        const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize );
+    ~CanvasConfigSelect();
+    
+    void OnMouseSelected( wxMouseEvent &event );
+    void SetSelected( bool selected );
+    void OnPaint( wxPaintEvent &event );
+    
+    bool GetSelected(){ return m_bSelected; }
+    
+private:
+    options *m_parentOptions;
+    bool m_bSelected;
+    wxColour m_boxColour;
+    wxBitmap m_bmpNormal;
+    int m_borderWidth;
+    
+    DECLARE_EVENT_TABLE()
 };
 
 class ChartGroupsUI : private Uncopyable, public wxScrolledWindow {
@@ -666,102 +746,10 @@ class ChartGroupsUI : private Uncopyable, public wxScrolledWindow {
   ChartGroupArray *m_pGroupArray;
 
   int m_border_size, m_group_item_spacing, m_GroupSelectedPage;
-
+  
   DECLARE_EVENT_TABLE()
 };
 
-#if wxUSE_XLOCALE || !wxCHECK_VERSION(3, 0, 0)
-static int lang_list[] = {
-    wxLANGUAGE_DEFAULT, wxLANGUAGE_ABKHAZIAN, wxLANGUAGE_AFAR,
-    wxLANGUAGE_AFRIKAANS, wxLANGUAGE_ALBANIAN, wxLANGUAGE_AMHARIC,
-    wxLANGUAGE_ARABIC, wxLANGUAGE_ARABIC_ALGERIA, wxLANGUAGE_ARABIC_BAHRAIN,
-    wxLANGUAGE_ARABIC_EGYPT, wxLANGUAGE_ARABIC_IRAQ, wxLANGUAGE_ARABIC_JORDAN,
-    wxLANGUAGE_ARABIC_KUWAIT, wxLANGUAGE_ARABIC_LEBANON,
-    wxLANGUAGE_ARABIC_LIBYA, wxLANGUAGE_ARABIC_MOROCCO, wxLANGUAGE_ARABIC_OMAN,
-    wxLANGUAGE_ARABIC_QATAR, wxLANGUAGE_ARABIC_SAUDI_ARABIA,
-    wxLANGUAGE_ARABIC_SUDAN, wxLANGUAGE_ARABIC_SYRIA, wxLANGUAGE_ARABIC_TUNISIA,
-    //    wxLANGUAGE_ARABIC_UAE,
-    wxLANGUAGE_ARABIC_YEMEN, wxLANGUAGE_ARMENIAN, wxLANGUAGE_ASSAMESE,
-    wxLANGUAGE_AYMARA, wxLANGUAGE_AZERI, wxLANGUAGE_AZERI_CYRILLIC,
-    wxLANGUAGE_AZERI_LATIN, wxLANGUAGE_BASHKIR, wxLANGUAGE_BASQUE,
-    wxLANGUAGE_BELARUSIAN, wxLANGUAGE_BENGALI, wxLANGUAGE_BHUTANI,
-    wxLANGUAGE_BIHARI, wxLANGUAGE_BISLAMA, wxLANGUAGE_BRETON,
-    wxLANGUAGE_BULGARIAN, wxLANGUAGE_BURMESE, wxLANGUAGE_CAMBODIAN,
-    wxLANGUAGE_CATALAN,
-    //    wxLANGUAGE_CHINESE,
-    //    wxLANGUAGE_CHINESE_SIMPLIFIED,
-    //    wxLANGUAGE_CHINESE_TRADITIONAL,
-    //    wxLANGUAGE_CHINESE_HONGKONG,
-    //    wxLANGUAGE_CHINESE_MACAU,
-    //    wxLANGUAGE_CHINESE_SINGAPORE,
-    wxLANGUAGE_CHINESE_TAIWAN, wxLANGUAGE_CORSICAN, wxLANGUAGE_CROATIAN,
-    wxLANGUAGE_CZECH, wxLANGUAGE_DANISH, wxLANGUAGE_DUTCH,
-    wxLANGUAGE_DUTCH_BELGIAN, wxLANGUAGE_ENGLISH, wxLANGUAGE_ENGLISH_UK,
-    wxLANGUAGE_ENGLISH_US, wxLANGUAGE_ENGLISH_AUSTRALIA,
-    wxLANGUAGE_ENGLISH_BELIZE, wxLANGUAGE_ENGLISH_BOTSWANA,
-    wxLANGUAGE_ENGLISH_CANADA, wxLANGUAGE_ENGLISH_CARIBBEAN,
-    wxLANGUAGE_ENGLISH_DENMARK, wxLANGUAGE_ENGLISH_EIRE,
-    wxLANGUAGE_ENGLISH_JAMAICA, wxLANGUAGE_ENGLISH_NEW_ZEALAND,
-    wxLANGUAGE_ENGLISH_PHILIPPINES, wxLANGUAGE_ENGLISH_SOUTH_AFRICA,
-    wxLANGUAGE_ENGLISH_TRINIDAD, wxLANGUAGE_ENGLISH_ZIMBABWE,
-    wxLANGUAGE_ESPERANTO, wxLANGUAGE_ESTONIAN, wxLANGUAGE_FAEROESE,
-    wxLANGUAGE_FARSI, wxLANGUAGE_FIJI, wxLANGUAGE_FINNISH, wxLANGUAGE_FRENCH,
-    wxLANGUAGE_FRENCH_BELGIAN, wxLANGUAGE_FRENCH_CANADIAN,
-    wxLANGUAGE_FRENCH_LUXEMBOURG, wxLANGUAGE_FRENCH_MONACO,
-    wxLANGUAGE_FRENCH_SWISS, wxLANGUAGE_FRISIAN, wxLANGUAGE_GALICIAN,
-    wxLANGUAGE_GEORGIAN, wxLANGUAGE_GERMAN, wxLANGUAGE_GERMAN_AUSTRIAN,
-    wxLANGUAGE_GERMAN_BELGIUM, wxLANGUAGE_GERMAN_LIECHTENSTEIN,
-    wxLANGUAGE_GERMAN_LUXEMBOURG, wxLANGUAGE_GERMAN_SWISS, wxLANGUAGE_GREEK,
-    wxLANGUAGE_GREENLANDIC, wxLANGUAGE_GUARANI, wxLANGUAGE_GUJARATI,
-    wxLANGUAGE_HAUSA, wxLANGUAGE_HEBREW, wxLANGUAGE_HINDI, wxLANGUAGE_HUNGARIAN,
-    wxLANGUAGE_ICELANDIC, wxLANGUAGE_INDONESIAN, wxLANGUAGE_INTERLINGUA,
-    wxLANGUAGE_INTERLINGUE, wxLANGUAGE_INUKTITUT, wxLANGUAGE_INUPIAK,
-    wxLANGUAGE_IRISH, wxLANGUAGE_ITALIAN, wxLANGUAGE_ITALIAN_SWISS,
-    wxLANGUAGE_JAPANESE, wxLANGUAGE_JAVANESE, wxLANGUAGE_KANNADA,
-    wxLANGUAGE_KASHMIRI, wxLANGUAGE_KASHMIRI_INDIA, wxLANGUAGE_KAZAKH,
-    wxLANGUAGE_KERNEWEK, wxLANGUAGE_KINYARWANDA, wxLANGUAGE_KIRGHIZ,
-    wxLANGUAGE_KIRUNDI,
-    //    wxLANGUAGE_KONKANI,
-    wxLANGUAGE_KOREAN, wxLANGUAGE_KURDISH, wxLANGUAGE_LAOTHIAN,
-    wxLANGUAGE_LATIN, wxLANGUAGE_LATVIAN, wxLANGUAGE_LINGALA,
-    wxLANGUAGE_LITHUANIAN, wxLANGUAGE_MACEDONIAN, wxLANGUAGE_MALAGASY,
-    wxLANGUAGE_MALAY, wxLANGUAGE_MALAYALAM, wxLANGUAGE_MALAY_BRUNEI_DARUSSALAM,
-    wxLANGUAGE_MALAY_MALAYSIA, wxLANGUAGE_MALTESE,
-    //    wxLANGUAGE_MANIPURI,
-    wxLANGUAGE_MAORI, wxLANGUAGE_MARATHI, wxLANGUAGE_MOLDAVIAN,
-    wxLANGUAGE_MONGOLIAN, wxLANGUAGE_NAURU, wxLANGUAGE_NEPALI,
-    wxLANGUAGE_NEPALI_INDIA, wxLANGUAGE_NORWEGIAN_BOKMAL,
-    wxLANGUAGE_NORWEGIAN_NYNORSK, wxLANGUAGE_OCCITAN, wxLANGUAGE_ORIYA,
-    wxLANGUAGE_OROMO, wxLANGUAGE_PASHTO, wxLANGUAGE_POLISH,
-    wxLANGUAGE_PORTUGUESE, wxLANGUAGE_PORTUGUESE_BRAZILIAN, wxLANGUAGE_PUNJABI,
-    wxLANGUAGE_QUECHUA, wxLANGUAGE_RHAETO_ROMANCE, wxLANGUAGE_ROMANIAN,
-    wxLANGUAGE_RUSSIAN, wxLANGUAGE_RUSSIAN_UKRAINE, wxLANGUAGE_SAMOAN,
-    wxLANGUAGE_SANGHO, wxLANGUAGE_SANSKRIT, wxLANGUAGE_SCOTS_GAELIC,
-    wxLANGUAGE_SERBIAN, wxLANGUAGE_SERBIAN_CYRILLIC, wxLANGUAGE_SERBIAN_LATIN,
-    wxLANGUAGE_SERBO_CROATIAN, wxLANGUAGE_SESOTHO, wxLANGUAGE_SETSWANA,
-    wxLANGUAGE_SHONA, wxLANGUAGE_SINDHI, wxLANGUAGE_SINHALESE,
-    wxLANGUAGE_SISWATI, wxLANGUAGE_SLOVAK, wxLANGUAGE_SLOVENIAN,
-    wxLANGUAGE_SOMALI, wxLANGUAGE_SPANISH, wxLANGUAGE_SPANISH_ARGENTINA,
-    wxLANGUAGE_SPANISH_BOLIVIA, wxLANGUAGE_SPANISH_CHILE,
-    wxLANGUAGE_SPANISH_COLOMBIA, wxLANGUAGE_SPANISH_COSTA_RICA,
-    wxLANGUAGE_SPANISH_DOMINICAN_REPUBLIC, wxLANGUAGE_SPANISH_ECUADOR,
-    wxLANGUAGE_SPANISH_EL_SALVADOR, wxLANGUAGE_SPANISH_GUATEMALA,
-    wxLANGUAGE_SPANISH_HONDURAS, wxLANGUAGE_SPANISH_MEXICAN,
-    //    wxLANGUAGE_SPANISH_MODERN,
-    wxLANGUAGE_SPANISH_NICARAGUA, wxLANGUAGE_SPANISH_PANAMA,
-    wxLANGUAGE_SPANISH_PARAGUAY, wxLANGUAGE_SPANISH_PERU,
-    wxLANGUAGE_SPANISH_PUERTO_RICO, wxLANGUAGE_SPANISH_URUGUAY,
-    wxLANGUAGE_SPANISH_US, wxLANGUAGE_SPANISH_VENEZUELA, wxLANGUAGE_SUNDANESE,
-    wxLANGUAGE_SWAHILI, wxLANGUAGE_SWEDISH, wxLANGUAGE_SWEDISH_FINLAND,
-    wxLANGUAGE_TAGALOG, wxLANGUAGE_TAJIK, wxLANGUAGE_TAMIL, wxLANGUAGE_TATAR,
-    wxLANGUAGE_TELUGU, wxLANGUAGE_THAI, wxLANGUAGE_TIBETAN, wxLANGUAGE_TIGRINYA,
-    wxLANGUAGE_TONGA, wxLANGUAGE_TSONGA, wxLANGUAGE_TURKISH, wxLANGUAGE_TURKMEN,
-    wxLANGUAGE_TWI, wxLANGUAGE_UIGHUR, wxLANGUAGE_UKRAINIAN, wxLANGUAGE_URDU,
-    wxLANGUAGE_URDU_INDIA, wxLANGUAGE_URDU_PAKISTAN, wxLANGUAGE_UZBEK,
-    wxLANGUAGE_UZBEK_CYRILLIC, wxLANGUAGE_UZBEK_LATIN, wxLANGUAGE_VIETNAMESE,
-    wxLANGUAGE_VOLAPUK, wxLANGUAGE_WELSH, wxLANGUAGE_WOLOF, wxLANGUAGE_XHOSA,
-    wxLANGUAGE_YIDDISH, wxLANGUAGE_YORUBA, wxLANGUAGE_ZHUANG, wxLANGUAGE_ZULU};
-#endif
 
 class SentenceListDlg : private Uncopyable, public wxDialog {
  public:
@@ -809,7 +797,7 @@ class OpenGLOptionsDlg : private Uncopyable, public wxDialog {
 
   wxCheckBox *m_cbUseAcceleratedPanning, *m_cbTextureCompression;
   wxCheckBox *m_cbTextureCompressionCaching, *m_cbShowFPS, *m_cbSoftwareGL,
-    *m_cbPolygonSmoothing, *m_cbLineSmoothing;
+      *m_cbPolygonSmoothing, *m_cbLineSmoothing;
   wxSpinCtrl *m_sTextureDimension, *m_sTextureMemorySize;
   wxStaticText *m_cacheSize, *m_memorySize;
 
@@ -845,7 +833,7 @@ class MMSIListCtrl : private Uncopyable, public wxListCtrl {
 
   wxWindow *m_parent;
   int m_context_item;
-
+  
   DECLARE_EVENT_TABLE()
 };
 
@@ -877,6 +865,9 @@ class MMSIEditDialog : private Uncopyable, public wxDialog {
   wxCheckBox *m_cbTrackPersist, *m_IgnoreButton, *m_MOBButton, *m_VDMButton, *m_FollowerButton;
   wxButton *m_CancelButton, *m_OKButton;
 
+private:
+    void Persist();
+
   DECLARE_EVENT_TABLE()
 };
 
@@ -894,6 +885,27 @@ class MMSI_Props_Panel : private Uncopyable, public wxPanel {
 
  private:
   wxWindow *m_pparent;
+};
+
+class ConfigCreateDialog : private Uncopyable, public wxDialog
+{
+public:
+    explicit ConfigCreateDialog(wxWindow *parent, wxWindowID id = wxID_ANY,
+                            const wxString &caption = wxEmptyString,
+                            const wxPoint &pos = wxDefaultPosition,
+                            const wxSize &size = wxDefaultSize, long style = 0);
+    ~ConfigCreateDialog(void);
+    
+    void SetColorScheme(ColorScheme cs);
+    void CreateControls(void);
+    void OnConfigEditCancelClick(wxCommandEvent& event);
+    void OnConfigEditOKClick(wxCommandEvent& event);
+    wxString GetCreatedTemplateGUID(){ return m_createdTemplateGUID; }
+    
+    wxTextCtrl *m_TitleCtl, *m_DescriptionCtl; 
+    wxButton *m_CancelButton, *m_OKButton;
+    wxString m_createdTemplateGUID;
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA Data Multiplexer Object
@@ -34,6 +34,9 @@
 
 #include "pluginmanager.h"  // for PlugInManager
 #include "datastream.h"
+
+class RoutePoint;
+class Route;
 
 WX_DEFINE_ARRAY(DataStream *, wxArrayOfDataStreams);
 

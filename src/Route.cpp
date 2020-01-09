@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -35,8 +35,6 @@
 #include "chcanv.h"
 
 extern WayPointman *pWayPointMan;
-extern bool g_bIsNewLayer;
-extern int g_LayerIdx;
 extern Routeman *g_pRouteMan;
 extern int g_route_line_width;
 extern Select *pSelect;
@@ -46,9 +44,7 @@ extern double g_n_arrival_circle_radius;
 extern float g_GLMinSymbolLineWidth;
 extern double g_PlanSpeed;
 extern wxString g_default_routepoint_icon;
-#ifdef __WXOSX__
-extern ChartCanvas  *cc1;
-#endif
+
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST ( RouteList );
 
@@ -199,19 +195,14 @@ void Route::DrawSegment( ocpnDC& dc, ChartCanvas *canvas, wxPoint *rp1, wxPoint 
 
     RenderSegment( dc, rp1->x, rp1->y, rp2->x, rp2->y, vp, bdraw_arrow );
 }
-#ifdef __WXOSX__
-void Route::Draw( ocpnDC& dc, ViewPort &pvp, const LLBBox &box )
-#else
+
 void Route::Draw( ocpnDC& dc, ChartCanvas *canvas, const LLBBox &box )
-#endif
 {
     if( pRoutePointList->empty() )
         return;
-#ifdef __WXOSX__
-    ViewPort vp = cc1->GetVP();
-#else
+
     ViewPort vp = canvas->GetVP();
-#endif
+    
     LLBBox test_box = GetBBox();
     if( box.IntersectOut( test_box ) ) // Route is wholly outside window
         return;
@@ -254,34 +245,23 @@ void Route::Draw( ocpnDC& dc, ChartCanvas *canvas, const LLBBox &box )
 
     wxPoint rpt1, rpt2;
     if ( m_bVisible )
-#ifdef __WXOSX__
-        DrawPointWhich( dc, cc1, 1, &rpt1 );
-#else
         DrawPointWhich( dc, canvas, 1, &rpt1 );
-#endif
+
     wxRoutePointListNode *node = pRoutePointList->GetFirst();
     RoutePoint *prp1 = node->GetData();
     node = node->GetNext();
 
     if ( !m_bVisible && prp1->m_bKeepXRoute )
-#ifdef __WXOSX__
-        prp1->Draw( dc, cc1 );
-#else
             prp1->Draw( dc, canvas );
-#endif
+
     while( node ) {
 
         RoutePoint *prp2 = node->GetData();
         if ( !m_bVisible && prp2->m_bKeepXRoute )
-#ifdef __WXOSX__
-            prp2->Draw( dc, cc1 );
-            else if (m_bVisible)
-                prp2->Draw( dc, cc1, &rpt2 );
-#else
             prp2->Draw( dc, canvas );
         else if (m_bVisible)
             prp2->Draw( dc, canvas, &rpt2 );
-#endif
+
         if ( m_bVisible )
         {
             //    Handle offscreen points
@@ -354,11 +334,8 @@ static void TestLongitude(double lon, double min, double max, bool &lonl, bool &
             lonr = true;
     }
 }
-#ifdef __WXOSX__
-void Route::DrawGLLines( ViewPort &vp, ocpnDC *dc )
-#else
+
 void Route::DrawGLLines( ViewPort &vp, ocpnDC *dc, ChartCanvas *canvas )
-#endif
 {
 #ifdef ocpnUSE_GL    
     float pix_full_circle = WGS84_semimajor_axis_meters * mercator_k0 * 2 * PI * vp.view_scale_ppm;
@@ -369,17 +346,10 @@ void Route::DrawGLLines( ViewPort &vp, ocpnDC *dc, ChartCanvas *canvas )
     
     wxRoutePointListNode *node = pRoutePointList->GetFirst();
     RoutePoint *prp2 = node->GetData();
-#ifdef __WXOSX__
-    cc1->GetDoubleCanvasPointPix( prp2->m_lat, prp2->m_lon, &lastpoint);
-#else
     canvas->GetDoubleCanvasPointPix( prp2->m_lat, prp2->m_lon, &lastpoint);
-#endif
+    
     if(GetnPoints() == 1 && dc) { // single point.. make sure it shows up for highlighting
-#ifdef __WXOSX__
-      cc1->GetDoubleCanvasPointPix( prp2->m_lat, prp2->m_lon, &r1);
-#else
         canvas->GetDoubleCanvasPointPix( prp2->m_lat, prp2->m_lon, &r1);
-#endif
         dc->DrawLine(r1.m_x, r1.m_y, r1.m_x+2, r1.m_y+2);
         return;
     }
@@ -400,11 +370,7 @@ void Route::DrawGLLines( ViewPort &vp, ocpnDC *dc, ChartCanvas *canvas )
         {
             
             wxPoint2DDouble r2;
-#ifdef __WXOSX__
-      cc1->GetDoubleCanvasPointPix( prp2->m_lat, prp2->m_lon, &r2);
-#else
             canvas->GetDoubleCanvasPointPix( prp2->m_lat, prp2->m_lon, &r2);
-#endif
             if(std::isnan(r2.m_x)) {
                 r1valid = false;
                 continue;
@@ -433,11 +399,7 @@ void Route::DrawGLLines( ViewPort &vp, ocpnDC *dc, ChartCanvas *canvas )
             }
 
             if(!r1valid) {
-#ifdef __WXOSX__
-      cc1->GetDoubleCanvasPointPix( prp1->m_lat, prp1->m_lon, &r1);
-#else
                 canvas->GetDoubleCanvasPointPix( prp1->m_lat, prp1->m_lon, &r1);
-#endif
                 if(std::isnan(r1.m_x))
                     continue;
             }
@@ -504,21 +466,15 @@ void Route::DrawGLLines( ViewPort &vp, ocpnDC *dc, ChartCanvas *canvas )
         glEnd();
 #endif    
 }
-#ifdef __WXOSX__
-void Route::DrawGL( ViewPort &vp )
-#else
+
 void Route::DrawGL( ViewPort &vp, ChartCanvas *canvas )
-#endif
 {
 #ifdef ocpnUSE_GL
-    if( pRoutePointList->empty() || !m_bVisible ) return;
+    if( pRoutePointList->empty() ) return;
 
-    if(!vp.GetBBox().IntersectOut(GetBBox()))
-#ifdef __WXOSX__
-        DrawGLRouteLines(vp);
-#else
+    if(!vp.GetBBox().IntersectOut(GetBBox()) && m_bVisible)
         DrawGLRouteLines(vp, canvas);
-#endif
+
     /*  Route points  */
     for(wxRoutePointListNode *node = pRoutePointList->GetFirst(); node; node = node->GetNext()) {
         RoutePoint *prp = node->GetData();
@@ -528,26 +484,17 @@ void Route::DrawGL( ViewPort &vp, ChartCanvas *canvas )
         if(vp.GetBBox().ContainsMarge(prp->m_lat, prp->m_lon, .5)){
                 
             if ( !m_bVisible && prp->m_bKeepXRoute )
-#ifdef __WXOSX__
-                prp->DrawGL( vp );
-                else if (m_bVisible)
-                    prp->DrawGL( vp );
-#else
                 prp->DrawGL( vp, canvas );
             else if (m_bVisible)
                 prp->DrawGL( vp, canvas );
-#endif
         }
     }
     
 #endif
 }
 
-#ifdef __WXOSX__
-void Route::DrawGLRouteLines( ViewPort &vp)
-#else
+    
 void Route::DrawGLRouteLines( ViewPort &vp, ChartCanvas *canvas )
-#endif
 {
 #ifdef ocpnUSE_GL
     //  Hiliting first
@@ -561,11 +508,8 @@ void Route::DrawGLRouteLines( ViewPort &vp, ChartCanvas *canvas )
 
         ocpnDC dc;
         dc.SetPen( HiPen );
-#ifdef __WXOSX__
-        DrawGLLines(vp, &dc);
-#else
+        
         DrawGLLines(vp, &dc, canvas);
-#endif
     }
     
     /* determine color and width */
@@ -601,11 +545,9 @@ void Route::DrawGLRouteLines( ViewPort &vp, ChartCanvas *canvas )
     glLineWidth( wxMax( g_GLMinSymbolLineWidth, width ) );
 
     dc.SetGLStipple();
-#ifdef __WXOSX__
-    DrawGLLines(vp, NULL);
-#else
+
     DrawGLLines(vp, NULL, canvas);
-#endif
+
     glDisable (GL_LINE_STIPPLE);
 
     /* direction arrows.. could probably be further optimized for opengl */
@@ -613,11 +555,7 @@ void Route::DrawGLRouteLines( ViewPort &vp, ChartCanvas *canvas )
     wxPoint rpt1, rpt2;
     while(node) {
         RoutePoint *prp = node->GetData();
-#ifdef __WXOSX__
-      cc1->GetCanvasPointPix( prp->m_lat, prp->m_lon, &rpt2 );
-#else
         canvas->GetCanvasPointPix( prp->m_lat, prp->m_lon, &rpt2 );
-#endif
         if(node != pRoutePointList->GetFirst())
             RenderSegmentArrowsGL( rpt1.x, rpt1.y, rpt2.x, rpt2.y, vp );
         rpt1 = rpt2;

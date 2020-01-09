@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  * $Id: iacfleet_pi.cpp, v1.0 2010/08/05 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -28,12 +28,13 @@
 
 #include "wx/wxprec.h"
 
-#ifndef  WX_PRECOMP
+#ifndef WX_PRECOMP
 #include "wx/wx.h"
 #endif //precompiled headers
 
-#include <wx/treectrl.h>
 #include <wx/fileconf.h>
+#include <wx/stdpaths.h>
+#include <wx/treectrl.h>
 #include <wx/stdpaths.h>
 
 #include <typeinfo>
@@ -68,7 +69,6 @@ extern "C" DECL_EXP void destroy_pi( opencpn_plugin* p )
 
 iacfleet_pi::iacfleet_pi( void *ppimgr ) : opencpn_plugin_113( ppimgr )
 {
-
     // Set some default private member parameters
     m_dialog_x = 0;
     m_dialog_y = 0;
@@ -81,18 +81,15 @@ iacfleet_pi::iacfleet_pi( void *ppimgr ) : opencpn_plugin_113( ppimgr )
     m_bShowIcon = false;
     m_leftclick_tool_id = -1;
 
-
     // Get a pointer to the opencpn display canvas, to use as a parent for the GRIB dialog
     m_parent_window = GetOCPNCanvasWindow();
 
     // Create the PlugIn icons
     initialize_images();
-//    wxCurlBase::Init();
 }
 
 iacfleet_pi::~iacfleet_pi()
 {
-//    wxCurlBase::Shutdown();
     deinitialize_images();
 }
 
@@ -105,7 +102,8 @@ int iacfleet_pi::Init( void )
     LoadConfig();
 
     //    This PlugIn needs a toolbar icon, so request its insertion if enabled locally
-#ifdef IACFLEET_USE_SVG
+
+#ifndef IACFLEET_USE_SVG  // svg funktioniert nicht???
     m_leftclick_tool_id = InsertPlugInToolSVG( _T( "IACFleet" ), _svg_iacfleet, _svg_iacfleet_rollover, _svg_iacfleet_toggled, wxITEM_CHECK, _( "IACFleet" ), _T( "" ), NULL, IACFLEET_TOOL_POSITION, 0, this);
 #else
     m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_iacfleet_pi, _img_iacfleet_pi, wxITEM_NORMAL,
@@ -195,7 +193,7 @@ void iacfleet_pi::OnToolbarToolCallback( int id )
     // show the IACFleet dialog
     if( NULL == m_pDialog )
     {
-        m_pDialog = new IACFleetUIDialog();
+        //m_pDialog = new IACFleetUIDialog();
         long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER;
 #ifdef __WXMAC__
         style |= wxSTAY_ON_TOP;
@@ -203,15 +201,8 @@ void iacfleet_pi::OnToolbarToolCallback( int id )
         wxPoint pos = wxPoint( m_dialog_x, m_dialog_y);
         if( !m_parent_window->GetRect().Contains( pos ) )
             pos = wxDefaultPosition; // If it seems we are off position, move to the default position
-        m_pDialog->Create( m_parent_window,
-                this,
-                -1,
-                _("IACFleet Display Control"),
-                m_dir,
-                m_sort_type,
-                pos,
-                wxSize( m_dialog_sx, m_dialog_sy),
-                style );
+        m_pDialog = new IACFleetUIDialog(m_parent_window, this, -1, _("IACFleet Display Control"), m_dir, m_sort_type, pos,
+                                         wxSize(m_dialog_sx, m_dialog_sy), style);
     }
 
     m_pDialog->Show( !m_pDialog->IsShown() ); // Show modeless, so it stays on the screen
@@ -257,8 +248,7 @@ bool iacfleet_pi::LoadConfig( void )
         pConf->Read ( _T ( "IACFleetDirectory" ), &m_dir, wxStandardPaths::Get().GetDocumentsDir() );
 
         return true;
-    }
-    else
+    } else
         return false;
 }
 
@@ -280,7 +270,6 @@ bool iacfleet_pi::SaveConfig( void )
         pConf->Write ( _T ( "IACFleetDirectory" ), m_dir );
 
         return true;
-    }
-    else
+    } else
         return false;
 }

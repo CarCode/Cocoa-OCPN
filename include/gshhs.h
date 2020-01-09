@@ -1,4 +1,4 @@
-/* **************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  GSHHS Chart Object (Global Self-consistent, Hierarchical, High-resolution Shoreline)
@@ -26,7 +26,10 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ *
+ */
 
 #ifndef GSHHS_H
 #define GSHHS_H
@@ -293,6 +296,7 @@ public:
     void SetColorScheme( ColorScheme scheme );
     void RenderViewOnDC( ocpnDC& dc, ViewPort& VPoint );
     void Reset();
+    void SetColorsDirect( wxColour newLand, wxColour newWater );
 
     wxColor land;
     wxColor water;

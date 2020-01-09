@@ -1,4 +1,4 @@
-/* *************************************************************************
+/***************************************************************************
  *   Copyright (C) 2007..2010 by David S. Register, Richard M Smith        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -15,16 +15,21 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ */
 
 #ifndef MACUTILS_H_INCLUDED_H__
 #define MACUTILS_H_INCLUDED_H__
 
 #ifdef __WXOSX__
+
+#ifndef ocpnUSE_NEWSERIAL
 #define MAX_SERIAL_PORTS 10
 
 extern "C" int FindSerialPortNames(char** pNames, int iMaxNames) ;
 extern "C" bool ValidateSerialPortName(const char* pPortName, int iMaxNamesToSearch) ;
+#endif
 
 extern "C" int GetMacMonitorSize();
 

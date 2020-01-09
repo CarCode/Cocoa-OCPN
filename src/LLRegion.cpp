@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Latitude and Longitude regions
@@ -606,20 +606,19 @@ void LLRegion::Optimize()
 #endif
 
         // eliminiate parallel segments
-        bool end = false;
         poly_contour::iterator j = i->begin();
         int s = i->size();
         for(int c=0; c<s; c++) {
             poly_contour::iterator l = j, k = j;
-
+            
             if (l == i->begin())
                 l = i->end();
             l--;
-
+            
             k++;
             if(k == i->end())
                 k = i->begin();
-
+            
             if(l == k)
                 break;
             if(fabs(cross(vector(*j, *l), vector(*j, *k))) < 1e-12) {

@@ -1,4 +1,4 @@
-/* *************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __TIMERS_H__
 #define __TIMERS_H__
@@ -36,5 +37,7 @@
 #define DBLCLICK_TIMER   10
 #define POPUP_TIMER      11
 #define MOUSEWHEEL_TIMER 12
+#define DEFERRED_FOCUS_TIMER 13
+#define ROUTEFINISH_TIMER  14
 
 #endif

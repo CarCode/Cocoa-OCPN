@@ -51,7 +51,7 @@
 // When we stop building against 10.7 we will probably want to link agains CoreGraphics directly:
 //#include <CoreGraphics/CoreGraphics.h>
 
-
+#ifndef ocpnUSE_NEWSERIAL
 // Returns an iterator across all known serial ports. Caller is responsible for
 // releasing the iterator when iteration is complete.
 static kern_return_t FindSerialPorts(io_iterator_t *matchingServices)
@@ -59,7 +59,7 @@ static kern_return_t FindSerialPorts(io_iterator_t *matchingServices)
     kern_return_t			kernResult;
     CFMutableDictionaryRef	classesToMatch;
 
-/*! @function IOServiceMatching
+/* @function IOServiceMatching
     @abstract Create a matching dictionary that specifies an IOService class match.
     @discussion A very common matching criteria for IOService is based on its class. IOServiceMatching will create a matching dictionary that specifies any IOService of a class, or its subclasses. The class is specified by C-string name.
     @param name The class name, as a const C-string. Class matching is successful on IOService's of this class or any subclass.
@@ -72,7 +72,7 @@ static kern_return_t FindSerialPorts(io_iterator_t *matchingServices)
         printf("IOServiceMatching returned a NULL dictionary.\n");
     }
     else {
-/*!
+/*
 	@function CFDictionarySetValue
 	Sets the value of the key in the dictionary.
 	@param theDict The dictionary to which the value is to be set. If this
@@ -109,7 +109,7 @@ static kern_return_t FindSerialPorts(io_iterator_t *matchingServices)
         // such as built-in and USB serial ports. However, this match won't find serial serial ports.
     }
 
-    /*! @function IOServiceGetMatchingServices
+    /* @function IOServiceGetMatchingServices
         @abstract Look up registered IOService objects that match a matching dictionary.
         @discussion This is the preferred method of finding IOService objects currently registered by IOKit. IOServiceAddNotification can also supply this information and install a notification of new IOServices. The matching information used in the matching dictionary may vary depending on the class of service being looked up.
         @param masterPort The master port obtained from IOMasterPort().
@@ -187,11 +187,9 @@ int FindSerialPortNames(char** pNames, int iMaxNames)
     kern_return_t	kernResult; // on PowerPC this is an int (4 bytes)
 
     io_iterator_t	serialPortIterator;
-#ifdef __WXOSX__
-    FindSerialPorts(&serialPortIterator);
-#else
+
     kernResult = FindSerialPorts(&serialPortIterator);
-#endif
+
     iActiveNameCount = GetSerialPortPath(serialPortIterator, pNames, iMaxNames, MAXPATHLEN);
 
     IOObjectRelease(serialPortIterator);	// Release the iterator.
@@ -226,9 +224,9 @@ bool ValidateSerialPortName(char* pPortName, int iMaxNamestoSearch)
 	}
 	return bPortFound ;
 }
+#endif
 
-
-/**
+/*
  * Returns the width of the monitor in millimetres
  */
 int GetMacMonitorSize()

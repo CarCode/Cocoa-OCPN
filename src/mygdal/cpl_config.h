@@ -1,4 +1,4 @@
-/* *****************************************************************************
+/******************************************************************************
  *
  * Project:  CPL - Common Portability Library
  * Purpose:  Convenience functions.
@@ -68,11 +68,7 @@
 #define HAVE_LOCALE_H 1
 
 /* Define to 1 if you have the `localtime_r' function. */
-#ifndef __WXOSX__
 #undef HAVE_LOCALTIME_R
-#else
-#define HAVE_LOCALTIME_R 1
-#endif
 
 #undef HAVE_DLFCN_H
 #undef HAVE_DBMALLOC_H

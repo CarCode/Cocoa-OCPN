@@ -18,8 +18,6 @@
     Copyright (C) 2010, Anders Lund <anders@alweb.dk>
  */
 
-#include "config.h"
-
 #include "routemanagerdialog.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -66,17 +64,14 @@ enum { colLAYVISIBLE = 0, colLAYNAME, colLAYITEMS, colLAYPERSIST };
 enum { colWPTICON = 0, colWPTSCALE, colWPTNAME, colWPTDIST };
 
 // GLOBALS :0
-#ifdef __WXOSX__
-extern ChartCanvas *cc1;
-#endif
 extern RouteList *pRouteList;
 extern TrackList *pTrackList;
 extern LayerList *pLayerList;
 extern wxString GetLayerName(int id);
 extern RoutePropDlgImpl *pRoutePropDialog;
-extern TrackPropDlg     *pTrackPropDialog;
-extern Routeman         *g_pRouteMan;
-extern MyConfig         *pConfig;
+extern TrackPropDlg *pTrackPropDialog;
+extern Routeman  *g_pRouteMan;
+extern MyConfig  *pConfig;
 extern ActiveTrack      *g_pActiveTrack;
 extern WayPointman      *pWayPointMan;
 extern MarkInfoDlg      *g_pMarkInfoDialog;
@@ -87,7 +82,6 @@ extern double           gCog, gSog;
 extern bool             g_bShowLayers;
 extern wxString         g_default_wp_icon;
 extern AIS_Decoder      *g_pAIS;
-extern bool             g_bresponsive;
 extern OCPNPlatform     *g_Platform;
 extern bool             g_bOverruleScaMin;
 
@@ -178,8 +172,6 @@ int wxCALLBACK SortWaypointsOnName(long item1, long item2, long list)
 #endif
 
 {
-    wxListCtrl *lc = (wxListCtrl*)list;
-
     RoutePoint *pRP1 = (RoutePoint *)item1;
     RoutePoint *pRP2 = (RoutePoint *)item2;
 
@@ -709,11 +701,8 @@ void RouteManagerDialog::Create()
                              wxListEventHandler(RouteManagerDialog::OnLayColumnClicked), NULL, this );
     bSizerLayContents->Add( m_pLayListCtrl, 1, wxEXPAND | wxALL, DIALOG_MARGIN );
     sbsLayers->Add( bSizerLayContents, 1, wxEXPAND, 5 );
-#ifdef __WXOSX__
-    m_pLayListCtrl->InsertColumn( colLAYVISIBLE, _T("Zeige"), wxLIST_FORMAT_LEFT, 4 * char_width );
-#else
+    
     m_pLayListCtrl->InsertColumn( colLAYVISIBLE, _T(""), wxLIST_FORMAT_LEFT, 4 * char_width );
-#endif
     m_pLayListCtrl->InsertColumn( colLAYNAME, _("Layer Name"), wxLIST_FORMAT_LEFT, 14 * char_width );
     m_pLayListCtrl->InsertColumn( colLAYITEMS, _("No. of items"), wxLIST_FORMAT_LEFT, 10 * char_width );
     m_pLayListCtrl->InsertColumn( colLAYPERSIST, _("Layer type"), wxLIST_FORMAT_LEFT, 10 * char_width);
@@ -858,13 +847,13 @@ void RouteManagerDialog::RecalculateSize()
     sz.y = 30 * char_height;
     
     wxSize dsize = GetParent()->GetClientSize();
-    sz.y = wxMin(sz.y, dsize.y - (1 * char_height));
-    sz.x = wxMin(sz.x, dsize.x - (1 * char_height));
+    sz.y = wxMin(sz.y, dsize.y - (0 * char_height));
+    sz.x = wxMin(sz.x, dsize.x - (0 * char_height));
     SetClientSize(sz);
     
     wxSize fsize = GetSize();
-    fsize.y = wxMin(fsize.y, dsize.y - (1 * char_height));
-    fsize.x = wxMin(fsize.x, dsize.x - (1 * char_height));
+    fsize.y = wxMin(fsize.y, dsize.y - (0 * char_height));
+    fsize.x = wxMin(fsize.x, dsize.x - (0 * char_height));
     SetSize(fsize);
     
     CentreOnParent();
@@ -873,18 +862,18 @@ void RouteManagerDialog::RecalculateSize()
 
 void RouteManagerDialog::OnClose(wxCloseEvent& event)
 {
-#ifdef __WXGTK__
+    #ifdef __WXGTK__ 
     gFrame->Raise();
-#endif
+    #endif
     Hide();
     //    pRouteManagerDialog = NULL;
 }
 
 void RouteManagerDialog::OnOK(wxCommandEvent& event)
 {
-#ifdef __WXGTK__
+    #ifdef __WXGTK__ 
     gFrame->Raise();
-#endif
+    #endif
     Hide();
     
 }
@@ -1027,36 +1016,30 @@ void RouteManagerDialog::MakeAllRoutesInvisible()
 
 void RouteManagerDialog::ZoomtoRoute( Route *route )
 {
-#ifdef __WXOSX__
-        // Calculate bbox center
-        LLBBox RBBox = route->GetBBox();
-        double clat = (RBBox.GetMinLat() + RBBox.GetMaxLat()) / 2;
-        double clon = (RBBox.GetMinLon() + RBBox.GetMaxLon()) / 2;
 
-        // Calculate ppm
-        double rw, rh, ppm; // route width, height, final ppm scale to use
-        int ww, wh; // chart window width, height
-        // route bbox width in nm
-        DistanceBearingMercator( RBBox.GetMinLat(), RBBox.GetMinLon(), RBBox.GetMinLat(),
-                                 RBBox.GetMaxLon(), NULL, &rw );
-        // route bbox height in nm
-        DistanceBearingMercator( RBBox.GetMinLat(), RBBox.GetMinLon(), RBBox.GetMaxLat(),
-                                 RBBox.GetMinLon(), NULL, &rh );
+    // Calculate bbox center
+    LLBBox RBBox = route->GetBBox();
+    double clat = (RBBox.GetMinLat() + RBBox.GetMaxLat()) / 2;
+    double clon = (RBBox.GetMinLon() + RBBox.GetMaxLon()) / 2;
 
-        cc1->GetSize( &ww, &wh );
+    // Calculate ppm
+    double rw, rh, ppm; // route width, height, final ppm scale to use
+    int ww, wh; // chart window width, height
+    // route bbox width in nm
+    DistanceBearingMercator( RBBox.GetMinLat(), RBBox.GetMinLon(), RBBox.GetMinLat(),
+                             RBBox.GetMaxLon(), NULL, &rw );
+    // route bbox height in nm
+    DistanceBearingMercator( RBBox.GetMinLat(), RBBox.GetMinLon(), RBBox.GetMaxLat(),
+                             RBBox.GetMinLon(), NULL, &rh );
 
-        ppm = wxMin(ww/(rw*1852), wh/(rh*1852)) * ( 100 - fabs( clat ) ) / 90;
+    gFrame->GetPrimaryCanvas()->GetSize( &ww, &wh );
 
-        ppm = wxMin(ppm, 1.0);
+    ppm = wxMin(ww/(rw*1852), wh/(rh*1852)) * ( 100 - fabs( clat ) ) / 90;
 
-    //      cc1->ClearbFollow();
-    //      cc1->SetViewPoint(clat, clon, ppm, 0, cc1->GetVPRotation(), CURRENT_RENDER);
-    //      cc1->Refresh();
+    ppm = wxMin(ppm, 1.0);
 
-        gFrame->JumpToPosition( clat, clon, ppm );  // Nicht in ChartCanvac??
-#else
-    gFrame->CenterView( gFrame->GetPrimaryCanvas(), route->GetBBox() );
-#endif
+    gFrame->JumpToPosition( gFrame->GetPrimaryCanvas(), clat, clon, ppm );
+
     m_bNeedConfigFlush = true;
 }
 
@@ -1064,22 +1047,15 @@ void RouteManagerDialog::ZoomtoRoute( Route *route )
 void RouteManagerDialog::OnRteDeleteClick( wxCommandEvent &event )
 {
     RouteList list;
-#ifdef __WXOSX__
-    int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION );
-#else
+
     int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO );
-#endif
     if ( answer != wxID_YES )
         return;
 
     bool busy = false;
     if( m_pRouteListCtrl->GetSelectedItemCount() ) {
         ::wxBeginBusyCursor();
-#ifdef __WXOSX__
-        cc1->CancelMouseRoute();
-#else
         gFrame->CancelAllMouseRoute();
-#endif
         m_bNeedConfigFlush = true;
         busy = true;
     }
@@ -1110,13 +1086,9 @@ void RouteManagerDialog::OnRteDeleteClick( wxCommandEvent &event )
         m_lastRteItem = -1;
         UpdateRouteListCtrl();
         UpdateTrkListCtrl();
-#ifdef __WXOSX__
-        cc1->undo->InvalidateUndo();
-        cc1->Refresh();
-#else
-        gFrame->InvalidateAllUndo();
+
+        gFrame->InvalidateAllCanvasUndo();
         gFrame->RefreshAllCanvas();
-#endif
         ::wxEndBusyCursor();
     }
 
@@ -1124,20 +1096,14 @@ void RouteManagerDialog::OnRteDeleteClick( wxCommandEvent &event )
 
 void RouteManagerDialog::OnRteDeleteAllClick( wxCommandEvent &event )
 {
-#ifdef __WXOSX__
-    int dialog_ret = OCPNMessageBox( this, _("Are you sure you want to delete <ALL> routes?"),
-                                        wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION );
-#else
     int dialog_ret = OCPNMessageBox( this, _("Are you sure you want to delete <ALL> routes?"),
             wxString( _("OpenCPN Alert") ), wxYES_NO );
-#endif
+
     if( dialog_ret == wxID_YES ) {
         if( g_pRouteMan->GetpActiveRoute() ) g_pRouteMan->DeactivateRoute();
-#ifdef __WXOSX__
-        cc1->CancelMouseRoute();
-#else
+
         gFrame->CancelAllMouseRoute();
-#endif
+
         g_pRouteMan->DeleteAllRoutes();
 // TODO Seth
 //            m_pSelectedRoute = NULL;
@@ -1151,13 +1117,9 @@ void RouteManagerDialog::OnRteDeleteAllClick( wxCommandEvent &event )
         UpdateTrkListCtrl();
 
         if( pRoutePropDialog ) pRoutePropDialog->Hide();
-#ifdef __WXOSX__
-        cc1->undo->InvalidateUndo();
-        cc1->Refresh();
-#else
         gFrame->InvalidateAllCanvasUndo();
         gFrame->RefreshAllCanvas();
-#endif
+
         m_bNeedConfigFlush = true;
     }
 }
@@ -1220,13 +1182,9 @@ void RouteManagerDialog::OnRteReverseClick( wxCommandEvent &event )
 
     if( !route ) return;
     if( route->m_bIsInLayer ) return;
-#ifdef __WXOSX__
-    int ask_return = OCPNMessageBox( this, g_pRouteMan->GetRouteReverseMessage(), _("Rename Waypoints?"),
-                                        wxYES_NO | wxCANCEL | wxICON_QUESTION );
-#else
+
     int ask_return = OCPNMessageBox( this, g_pRouteMan->GetRouteReverseMessage(), _("Rename Waypoints?"),
             wxYES_NO | wxCANCEL );
-#endif
     if( ask_return != wxID_CANCEL ) {
         bool rename = ( ask_return == wxID_YES );
 
@@ -1240,11 +1198,7 @@ void RouteManagerDialog::OnRteReverseClick( wxCommandEvent &event )
         m_pRouteListCtrl->SetItem( item, 2, startend );
 
         pConfig->UpdateRoute( route );
-#ifdef __WXOSX__
-        cc1->Refresh();
-#else
         gFrame->RefreshAllCanvas();
-#endif
     }
 
     m_bNeedConfigFlush = true;
@@ -1271,11 +1225,8 @@ void RouteManagerDialog::OnRteExportClick( wxCommandEvent &event )
                 suggested_name = proute_to_export->m_RouteNameString;
         }
     }
-#ifdef __WXOSX__
-    pConfig->ExportGPXRoutes( this, &list, suggested_name );
-#else
+
     ExportGPXRoutes( this, &list, suggested_name );
-#endif
 }
 
 void RouteManagerDialog::OnRteActivateClick( wxCommandEvent &event )
@@ -1309,11 +1260,9 @@ void RouteManagerDialog::OnRteActivateClick( wxCommandEvent &event )
     UpdateRouteListCtrl();
 
     pConfig->UpdateRoute( route );
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
+
     gFrame->RefreshAllCanvas();
-#endif
+
 //      btnRteActivate->SetLabel(route->m_bRtIsActive ? _("Deactivate") : _("Activate"));
 
     m_bNeedConfigFlush = true;
@@ -1344,11 +1293,8 @@ void RouteManagerDialog::OnRteToggleVisibility( wxMouseEvent &event )
         ::wxBeginBusyCursor();
 
         pConfig->UpdateRoute( route );
-#ifdef __WXOSX__
-        cc1->Refresh();
-#else
         gFrame->RefreshAllCanvas();
-#endif
+        
         //   We need to update the waypoint list control only if the visibility of shared waypoints might have changed.
         if( has_shared_wpts )
             UpdateWptListCtrlViz();
@@ -1395,11 +1341,9 @@ void RouteManagerDialog::OnRteSelected( wxListEvent &event )
 //    route->SetVisible(!route->IsVisible());
     m_pRouteListCtrl->SetItemImage( clicked_index, route->IsVisible() ? 0 : 1 );
 //    pConfig->UpdateRoute(route);
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
+
     gFrame->RefreshAllCanvas();
-#endif
+    
     UpdateRteButtons();
 
 }
@@ -1520,11 +1464,8 @@ void RouteManagerDialog::OnTrkMenuSelected( wxCommandEvent &event )
             int pointsBefore = track->GetnPoints();
 
             int reduction = track->Simplify( precision );
-#ifdef __WXOSX__
-            cc1->Refresh( false );
-#else
             gFrame->Refresh( false );
-#endif
+
             reduction = 100 * reduction / pointsBefore;
             wxString msg = wxString::Format( _("The amount of data used by the track\n was reduced by %d%%."),
                     reduction );
@@ -1559,7 +1500,6 @@ void RouteManagerDialog::OnTrkMenuSelected( wxCommandEvent &event )
 
         case TRACK_MERGE: {
             Track* targetTrack = NULL;
-            Track* mergeTrack = NULL;
             TrackPoint* tPoint;
             TrackPoint* newPoint;
             TrackPoint* lastPoint;
@@ -1617,11 +1557,8 @@ void RouteManagerDialog::OnTrkMenuSelected( wxCommandEvent &event )
 
             UpdateTrkListCtrl();
             UpdateRouteListCtrl();
-#ifdef __WXOSX__
-            cc1->Refresh();
-#else
             gFrame->RefreshAllCanvas();
-#endif
+            
 
             if( runningSkipped ) {
                 wxMessageDialog skipWarning( this,
@@ -1765,11 +1702,8 @@ void RouteManagerDialog::OnTrkToggleVisibility( wxMouseEvent &event )
             track->SetVisible( !track->IsVisible() );
             m_pTrkListCtrl->SetItemImage( clicked_index, track->IsVisible() ? 0 : 1 );
         }
-#ifdef __WXOSX__
-        cc1->Refresh();
-#else
+        
         gFrame->RefreshAllCanvas();
-#endif
     }
 
     // Allow wx to process...
@@ -1778,13 +1712,9 @@ void RouteManagerDialog::OnTrkToggleVisibility( wxMouseEvent &event )
 
 void RouteManagerDialog::OnTrkNewClick( wxCommandEvent &event )
 {
-#ifndef __WXOSX__
-    cc1->TrackOff();  // Nicht in ChartCanvas??
-    cc1->TrackOn();  // Nicht in ChartCanvas??
-#else
     gFrame->TrackOff();
     gFrame->TrackOn();
-#endif
+
     UpdateTrkListCtrl();
 }
 
@@ -1798,11 +1728,8 @@ void RouteManagerDialog::OnTrkPropertiesClick( wxCommandEvent &event )
     Track *track = (Track*)m_pTrkListCtrl->GetItemData( item );
 
     if( !track ) return;
-#ifdef __WXOSX__
-    pTrackPropDialog = TrackPropDlg::getInstance( this );
-#else
+
     pTrackPropDialog = TrackPropDlg::getInstance( GetParent() );
-#endif
     pTrackPropDialog->SetTrackAndUpdate( track );
 
     if( !pTrackPropDialog->IsShown() )
@@ -1815,11 +1742,8 @@ void RouteManagerDialog::OnTrkPropertiesClick( wxCommandEvent &event )
 void RouteManagerDialog::OnTrkDeleteClick( wxCommandEvent &event )
 {
     TrackList list;
-#ifdef __WXOSX__
-    int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION);
-#else
+
     int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO );
-#endif
     if ( answer != wxID_YES )
         return;
 
@@ -1856,13 +1780,9 @@ void RouteManagerDialog::OnTrkDeleteClick( wxCommandEvent &event )
         m_lastTrkItem = -1;
 //        UpdateRouteListCtrl();
         UpdateTrkListCtrl();
-#ifdef __WXOSX__
-        cc1->undo->InvalidateUndo();
-        cc1->Refresh();
-#else
+
         gFrame->InvalidateAllCanvasUndo();
         gFrame->RefreshAllCanvas();
-#endif
         ::wxEndBusyCursor();
     }
 }
@@ -1887,11 +1807,8 @@ void RouteManagerDialog::OnTrkExportClick( wxCommandEvent &event )
                 suggested_name = ptrack_to_export->GetName();
         }
     }
-#ifdef __WXOSX__
-        pConfig->ExportGPXTracks( this, &list, suggested_name );
-#else
+
     ExportGPXTracks( this, &list, suggested_name );
-#endif
 }
 
 void RouteManagerDialog::TrackToRoute( Track *track )
@@ -1911,11 +1828,9 @@ void RouteManagerDialog::TrackToRoute( Track *track )
     pRouteList->Append( route );
 
     pprog.Update( 101, _("Done.") );
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
+
     gFrame->RefreshAllCanvas();
-#endif
+    
     ::wxEndBusyCursor();
 }
 
@@ -1934,13 +1849,9 @@ void RouteManagerDialog::OnTrkRouteFromTrackClick( wxCommandEvent &event )
 
 void RouteManagerDialog::OnTrkDeleteAllClick( wxCommandEvent &event )
 {
-#ifdef __WXOSX__
-    int dialog_ret = OCPNMessageBox( this, _("Are you sure you want to delete <ALL> tracks?"),
-                                        wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION );
-#else
     int dialog_ret = OCPNMessageBox( this, _("Are you sure you want to delete <ALL> tracks?"),
             wxString( _("OpenCPN Alert") ), wxYES_NO );
-#endif
+
     if( dialog_ret == wxID_YES ) {
         g_pRouteMan->DeleteAllTracks();
     }
@@ -1955,11 +1866,9 @@ void RouteManagerDialog::OnTrkDeleteAllClick( wxCommandEvent &event )
 
     if( pRoutePropDialog )
         pRoutePropDialog->Hide();
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
+
     gFrame->RefreshAllCanvas();
-#endif
+    
     m_bNeedConfigFlush = true;
 }
 
@@ -2005,11 +1914,7 @@ void RouteManagerDialog::UpdateWptListCtrl( RoutePoint *rp_select, bool b_retain
             long idx = m_pWptListCtrl->InsertItem( li );
             
             wxString scamin = wxString::Format( _T("%i"), (int)rp->GetScaMin() );
-#ifdef __WXOSX__
-            if ( !rp->GetUseSca()) scamin = _("Egal");
-#else
             if ( !rp->GetUseSca()) scamin = _("Always");
-#endif
             if ( g_bOverruleScaMin ) scamin = _("Overruled");
             m_pWptListCtrl->SetItem( idx, colWPTSCALE, scamin );
 
@@ -2175,22 +2080,15 @@ void RouteManagerDialog::OnWptToggleVisibility( wxMouseEvent &event )
                                                       : pWayPointMan->GetXIconImageListIndex( wp->GetIconBitmap() ) );
 
         pConfig->UpdateWayPoint( wp );
-#ifdef __WXOSX__
-        cc1->Refresh();
-#else
+
         gFrame->RefreshAllCanvas();
-#endif
     }
     else //  clicked on ScaMin column??
         if( clicked_index > -1 && event.GetX() > m_pWptListCtrl->GetColumnWidth( colTRKVISIBLE ) &&  event.GetX() < ( m_pWptListCtrl->GetColumnWidth( colTRKVISIBLE )+ m_pWptListCtrl->GetColumnWidth( colWPTSCALE ) ) && !g_bOverruleScaMin ){ 
             RoutePoint *wp = (RoutePoint *) m_pWptListCtrl->GetItemData( clicked_index );
             wp->SetUseSca( !wp->GetUseSca() );
             pConfig->UpdateWayPoint( wp );
-#ifdef __WXOSX__
-            cc1->Refresh();
-#else
             gFrame->RefreshAllCanvas();
-#endif
             wxString scamin = wxString::Format( _T("%i"), (int)wp->GetScaMin() );
             if ( !wp->GetUseSca()) scamin = _("Always");
             m_pWptListCtrl->SetItem( clicked_index, colWPTSCALE, scamin );
@@ -2207,11 +2105,8 @@ void RouteManagerDialog::OnWptNewClick( wxCommandEvent &event )
     pWP->m_bIsolatedMark = true;                      // This is an isolated mark
     pSelect->AddSelectableRoutePoint( gLat, gLon, pWP );
     pConfig->AddNewWayPoint( pWP, -1 );    // use auto next num
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
     gFrame->RefreshAllCanvas();
-#endif
+    
     //g_pMarkInfoDialog = MarkInfoImpl::getInstance( GetParent() );
     if ( !g_pMarkInfoDialog )    // There is one global instance of the MarkProp Dialog
         g_pMarkInfoDialog = new MarkInfoDlg(GetParent());
@@ -2265,21 +2160,16 @@ void RouteManagerDialog::OnWptZoomtoClick( wxCommandEvent &event )
     RoutePoint *wp = (RoutePoint *) m_pWptListCtrl->GetItemData( item );
 
     if( !wp ) return;
-#ifdef __WXOSX__
-    gFrame->JumpToPosition( wp->m_lat, wp->m_lon, cc1->GetVPScale() );  // Nicht in ChartCanvas??
-#else
+
     gFrame->JumpToPosition( gFrame->GetPrimaryCanvas(), wp->m_lat, wp->m_lon, gFrame->GetPrimaryCanvas()->GetVPScale() );
-#endif
+
 }
 
 void RouteManagerDialog::OnWptDeleteClick( wxCommandEvent &event )
 {
     RoutePointList list;
-#ifdef __WXOSX__
-    int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION );
-#else
+
     int answer = OCPNMessageBox( this, _("Are you sure you want to delete the selected object(s)"), wxString( _("OpenCPN Alert") ), wxYES_NO );
-#endif
     if ( answer != wxID_YES )
         return;
 
@@ -2312,13 +2202,8 @@ void RouteManagerDialog::OnWptDeleteClick( wxCommandEvent &event )
 
                 if ( wp->m_bIsInRoute )
                 {
-#ifdef __WXOSX__
-                    if ( wxID_YES == OCPNMessageBox(this,  _( "The waypoint you want to delete is used in a route, do you really want to delete it?" ), _( "OpenCPN Alert" ), wxYES_NO | wxICON_EXCLAMATION ))
-                                            pWayPointMan->DestroyWaypoint( wp );
-#else
                     if ( wxID_YES == OCPNMessageBox(this,  _( "The waypoint you want to delete is used in a route, do you really want to delete it?" ), _( "OpenCPN Alert" ), wxYES_NO ))
                             pWayPointMan->DestroyWaypoint( wp );
-#endif
                 }
                 else
                     pWayPointMan->DestroyWaypoint( wp );
@@ -2341,13 +2226,9 @@ void RouteManagerDialog::OnWptDeleteClick( wxCommandEvent &event )
             g_pMarkInfoDialog->SetRoutePoint( NULL );
             g_pMarkInfoDialog->UpdateProperties();
         }
-#ifdef __WXOSX__
-        cc1->undo->InvalidateUndo();
-        cc1->Refresh();
-#else
+
         gFrame->InvalidateAllCanvasUndo();
         gFrame->RefreshAllCanvas();
-#endif
         ::wxEndBusyCursor();
     }
 
@@ -2413,11 +2294,8 @@ void RouteManagerDialog::OnWptExportClick( wxCommandEvent &event )
                 suggested_name = wp->GetName();
         }
     }
-#ifdef __WXOSX__
-    pConfig->ExportGPXWaypoints( this, &list, suggested_name );
-#else
+
     ExportGPXWaypoints( this, &list, suggested_name );
-#endif
 }
 
 void RouteManagerDialog::OnWptSendToGPSClick( wxCommandEvent &event )
@@ -2463,11 +2341,7 @@ void RouteManagerDialog::OnWptDeleteAllClick( wxCommandEvent &event )
         buttons = wxYES_NO | wxCANCEL;
         type = 2;
     }
-#ifdef __WXOSX__
-    int answer = OCPNMessageBox( this, prompt, wxString( _("OpenCPN Alert") ), buttons | wxICON_QUESTION );
-#else
     int answer = OCPNMessageBox( this, prompt, wxString( _("OpenCPN Alert") ), buttons );
-#endif
     if ( answer == wxID_YES )
         pWayPointMan->DeleteAllWaypoints( true );
     if ( answer == wxID_NO && type == 2 )
@@ -2481,13 +2355,8 @@ void RouteManagerDialog::OnWptDeleteAllClick( wxCommandEvent &event )
     m_lastWptItem = -1;
     UpdateRouteListCtrl();
     UpdateWptListCtrl();
-#ifdef __WXOSX__
-    cc1->undo->InvalidateUndo();
-    cc1->Refresh();
-#else
     gFrame->InvalidateAllCanvasUndo();
     gFrame->RefreshAllCanvas();
-#endif
 }
 
 void RouteManagerDialog::OnLaySelected( wxListEvent &event )
@@ -2520,28 +2389,12 @@ void RouteManagerDialog::UpdateLayButtons()
     cbLayToggleNames->Enable( enable );
 
     if( item >= 0 ) {
-#ifdef __WXOSX__
-        if( pLayerList->Item( m_pLayListCtrl->GetItemData( item ) )->GetData()->IsVisibleOnChart() ) cbLayToggleChart->SetLabel(
-                _("Hide from chart") );
-        else
-            cbLayToggleChart->SetLabel( _("Show on chart") );
-
-        if( pLayerList->Item( m_pLayListCtrl->GetItemData( item ) )->GetData()->HasVisibleNames() ) cbLayToggleNames->SetLabel(
-                _("Hide WPT names") );
-        else
-            cbLayToggleNames->SetLabel( _("Show WPT names") );
-
-        if( pLayerList->Item( m_pLayListCtrl->GetItemData( item ) )->GetData()->IsVisibleOnListing() ) cbLayToggleListing->SetLabel(
-                _("Unlist contents") );
-        else
-            cbLayToggleListing->SetLabel( _("List contents") );
-#else
         cbLayToggleChart->SetValue(((Layer*)m_pLayListCtrl->GetItemData( item ))->IsVisibleOnChart());
 
         cbLayToggleNames->Set3StateValue( ((Layer*)m_pLayListCtrl->GetItemData( item ))->HasVisibleNames() );
         
         cbLayToggleListing->SetValue( ((Layer*)m_pLayListCtrl->GetItemData( item ))->IsVisibleOnListing() );
-#endif
+
     } else {
         cbLayToggleChart->SetValue(true);
         cbLayToggleNames->Set3StateValue( wxCHK_UNDETERMINED );
@@ -2592,18 +2445,12 @@ void RouteManagerDialog::AddNewLayer( bool isPersistent )
 {
     bool show_flag = g_bShowLayers;
     g_bShowLayers = true;
-#ifdef __WXOSX__
-    pConfig->UI_ImportGPX(this, true, _T(""), true);
-#else
+
     UI_ImportGPX(this, true, _T(""), true, isPersistent);
-#endif
+
     g_bShowLayers = show_flag;
     UpdateLists();
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
     gFrame->RefreshAllCanvas();
-#endif
 }
 
 void RouteManagerDialog::OnLayPropertiesClick( wxCommandEvent &event )
@@ -2625,11 +2472,7 @@ void RouteManagerDialog::OnLayDeleteClick( wxCommandEvent &event )
     if( !layer ) return;
     // Check if this file is a persistent layer.
     // If added in this session the listctrl file path is origin dir and not yet /layers
-#ifdef __WXOSX__
     bool ispers = false;
-#else
-    bool ispers;
-#endif
     wxString destf, f, name, ext;
     f = layer->m_LayerFileName;
     wxFileName::SplitPath(f, NULL, NULL, &name, &ext);
@@ -2638,7 +2481,7 @@ void RouteManagerDialog::OnLayDeleteClick( wxCommandEvent &event )
     destf.Append( _T("layers") );
     appendOSDirSlash(&destf);
     destf << name << _T(".") << ext;
-
+    
     wxString prompt = _("Are you sure you want to delete this layer and <ALL> of its contents?");
     if (wxFileExists(destf))
     {
@@ -2647,11 +2490,7 @@ void RouteManagerDialog::OnLayDeleteClick( wxCommandEvent &event )
         prompt.Append( _T("\n (") +  destf + _T(")" ) );
         ispers = true;
     }
-#ifdef __WXOSX__
-    int answer = OCPNMessageBox( this, prompt, wxString( _("OpenCPN Alert") ), wxYES_NO | wxICON_EXCLAMATION );
-#else
     int answer = OCPNMessageBox( this, prompt, wxString( _("OpenCPN Alert") ), wxYES_NO );
-#endif
     if ( answer == wxID_NO )
         return;
     
@@ -2717,11 +2556,9 @@ void RouteManagerDialog::OnLayDeleteClick( wxCommandEvent &event )
     pLayerList->DeleteObject( layer );
 
     UpdateLists();
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
+
     gFrame->RefreshAllCanvas();
-#endif
+    
     m_bNeedConfigFlush = false;
 }
 
@@ -2777,11 +2614,8 @@ void RouteManagerDialog::ToggleLayerContentsOnChart( Layer *layer )
     UpdateLists();
 
     UpdateLayButtons();
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
+
     gFrame->RefreshAllCanvas();
-#endif
 }
 
 void RouteManagerDialog::OnLayToggleNamesClick( wxCommandEvent &event )
@@ -2810,17 +2644,12 @@ void RouteManagerDialog::ToggleLayerContentsNames( Layer *layer )
             wxRoutePointListNode *node = pRoute->pRoutePointList->GetFirst();
             RoutePoint *prp1 = node->GetData();
             while( node ) {
-#ifdef __WXOSX__
-                prp1->m_bShowName = layer->HasVisibleNames();
-                node = node->GetNext();
-#else
                 if( layer->HasVisibleNames() == wxCHK_UNDETERMINED ) {
                     prp1->m_bShowName = prp1->m_bShowNameData;
                 } else {
                     prp1->m_bShowName = (layer->HasVisibleNames() == wxCHK_CHECKED);
                 }
                 node = node->GetNext();
-#endif
             }
         }
         node1 = node1->GetNext();
@@ -2832,22 +2661,15 @@ void RouteManagerDialog::ToggleLayerContentsNames( Layer *layer )
     while( node ) {
         RoutePoint *rp = node->GetData();
         if( rp && ( rp->m_LayerID == layer->m_LayerID ) ) {
-#ifdef __WXOSX__
-            rp->SetNameShown( layer->HasVisibleNames() );
-#else
             rp->SetNameShown( layer->HasVisibleNames() == wxCHK_CHECKED || (rp->m_bShowNameData && layer->HasVisibleNames() == wxCHK_UNDETERMINED) );
-#endif
         }
 
         node = node->GetNext();
     }
 
     UpdateLayButtons();
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
+
     gFrame->RefreshAllCanvas();
-#endif
 }
 
 void RouteManagerDialog::OnLayToggleListingClick( wxCommandEvent &event )
@@ -2906,11 +2728,8 @@ void RouteManagerDialog::ToggleLayerContentsOnListing( Layer *layer )
     UpdateLists();
 
     ::wxEndBusyCursor();
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
+
     gFrame->RefreshAllCanvas();
-#endif
 }
 
 void RouteManagerDialog::OnLayDefaultAction( wxListEvent &event )
@@ -2962,9 +2781,8 @@ void RouteManagerDialog::UpdateLayListCtrl()
         wxString len;
         len.Printf( wxT("%d"), (int) lay->m_NoOfItems );
         m_pLayListCtrl->SetItem( idx, colLAYITEMS, len );
-#ifndef __WXOSX__
         m_pLayListCtrl->SetItem(idx, colLAYPERSIST, lay->m_LayerType);
-#endif
+        
         wxListItem lic;
         lic.SetId( index );
         lic.SetColumn(1);
@@ -2995,34 +2813,21 @@ void RouteManagerDialog::OnImportClick( wxCommandEvent &event )
     // Import routes
     // FIXME there is no way to instruct this function about what to import.
     // Suggest to add that!
-#ifdef __WXOSX__
-    pConfig->UI_ImportGPX( this );
-#else
+    
     UI_ImportGPX( this );
-#endif
+    
     UpdateLists();
-#ifdef __WXOSX__
-    cc1->Refresh();
-#else
+
     gFrame->RefreshAllCanvas();
-#endif
 }
 void RouteManagerDialog::OnExportClick( wxCommandEvent &event )
 {
-#ifdef __WXOSX__
-    pConfig->ExportGPX( this );
-#else
     ExportGPX( this );
-#endif
 }
 
 void RouteManagerDialog::OnExportVizClick( wxCommandEvent &event )
 {
-#ifdef __WXOSX__
-    pConfig->ExportGPX( this, true, true );
-#else
     ExportGPX( this, true, true );     // only visible objects, layers included
-#endif
 }
 
 void RouteManagerDialog::OnFilterChanged( wxCommandEvent &event )

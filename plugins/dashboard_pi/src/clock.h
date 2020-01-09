@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  * $Id: clock.h, v1.0 2011/05/15 nohal Exp $
  *
  * Project:  OpenCPN
@@ -22,7 +22,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __CLOCK_H__
 #define __CLOCK_H__
@@ -41,6 +42,7 @@
 #endif
 
 #include "instrument.h"
+extern int g_iUTCOffset;    // get offset from dashboard_pi.cpp
 
 class DashboardInstrument_Clock: public DashboardInstrument_Single
 {
@@ -52,6 +54,12 @@ public:
     wxSize GetSize( int orient, wxSize hint );
     void SetData(int, double, wxString);
     virtual void SetUtcTime(wxDateTime value);
+    wxString GetDisplayTime( wxDateTime UTCtime );
+    bool getUTC() { return bUTC; }
+    void setUTC( bool flag ) { bUTC = flag; }
+
+private:
+    bool bUTC;
 };
 
 class DashboardInstrument_Moon : public DashboardInstrument_Clock
@@ -75,7 +83,7 @@ private:
 class DashboardInstrument_Sun : public DashboardInstrument_Clock
 {
 public:
-    DashboardInstrument_Sun( wxWindow *parent, wxWindowID id, wxString title );
+    DashboardInstrument_Sun( wxWindow *parent, wxWindowID id, wxString title, wxString format = _T( "%02i:%02i:%02i UTC" ) );
 
     ~DashboardInstrument_Sun(){}
 
@@ -94,5 +102,16 @@ private:
     void calculateSun( double latit, double longit, wxDateTime &sunrise, wxDateTime &sunset );
 };
 
+class DashboardInstrument_CPUClock : public DashboardInstrument_Clock
+{
+public:
+    DashboardInstrument_CPUClock( wxWindow *parent, wxWindowID id, wxString title, wxString format = _T( "%02i:%02i:%02i UTC" ) );
+
+    ~DashboardInstrument_CPUClock() {}
+
+    void SetData( int, double, wxString );
+
+    void SetUtcTime( wxDateTime value );
+};
 #endif // __CLOCK_H__
 

@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __NMEALOGWINDOW_H__
 #define __NMEALOGWINDOW_H__
@@ -60,6 +61,7 @@ class NMEALogWindow : public WindowDestroyListener
         void SetPos(int x, int y);
         void SetPos(const wxPoint & pos);
         void CheckPos(int display_width, int display_height);
+        void Move();
         virtual void DestroyWindow();
         static void Shutdown();
         wxWindow *GetTTYWindow( void ){ return (wxWindow *)window; }

@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -37,6 +37,7 @@
 #include "routemanagerdialog.h"
 #include "OCPNPlatform.h"
 #include "Track.h"
+#include "RoutePoint.h"
 
 extern AISTargetQueryDialog *g_pais_query_dialog_active;
 extern int g_ais_query_dialog_x;
@@ -47,17 +48,16 @@ extern wxString g_default_wp_icon;
 extern Select *pSelect;
 extern MyConfig *pConfig;
 extern RouteManagerDialog *pRouteManagerDialog;
-extern ChartCanvas *cc1;
-extern RouteList *pRouteList;
 extern TrackList *pTrackList;
 extern OCPNPlatform  *g_Platform;
+extern MyFrame *gFrame;
 
 #define xID_OK 10009
 #define xID_WPT_CREATE 10010
 #define xID_TRK_CREATE 10011
 IMPLEMENT_CLASS ( AISTargetQueryDialog, wxDialog )
 // AISTargetQueryDialog event table definition
-BEGIN_EVENT_TABLE ( AISTargetQueryDialog, wxDialog )
+BEGIN_EVENT_TABLE ( AISTargetQueryDialog, wxFrame )
     EVT_BUTTON( xID_OK, AISTargetQueryDialog::OnIdOKClick )
     EVT_BUTTON( xID_WPT_CREATE, AISTargetQueryDialog::OnIdWptCreateClick )
     EVT_BUTTON( xID_TRK_CREATE, AISTargetQueryDialog::OnIdTrkCreateClick )
@@ -119,8 +119,8 @@ void AISTargetQueryDialog::OnIdWptCreateClick( wxCommandEvent& event )
 
             if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
                 pRouteManagerDialog->UpdateWptListCtrl();
-            cc1->undo->BeforeUndoableAction( Undo_CreateWaypoint, pWP, Undo_HasParent, NULL );
-            cc1->undo->AfterUndoableAction( NULL );
+            gFrame->GetPrimaryCanvas()->undo->BeforeUndoableAction( Undo_CreateWaypoint, pWP, Undo_HasParent, NULL );
+            gFrame->GetPrimaryCanvas()->undo->AfterUndoableAction( NULL );
             Refresh( false );
         }
     }
@@ -171,11 +171,7 @@ void AISTargetQueryDialog::OnIdTrkCreateClick( wxCommandEvent& event )
          
                 if( wxID_YES == OCPNMessageBox(NULL,
                     _("The recently captured track of this target has been recorded.\nDo you want to continue recording until the end of the current OpenCPN session?"),
-#ifdef __WXOSX__
-                    _("OpenCPN Info"), wxYES_NO | wxCENTER| wxICON_QUESTION, 60 ) )
-#else
                     _("OpenCPN Info"), wxYES_NO | wxCENTER, 60 ) )
-#endif
                 {
                     td->b_PersistTrack = true;
                     g_pAIS->m_persistent_tracks[td->MMSI] = t;
@@ -198,7 +194,8 @@ bool AISTargetQueryDialog::Create( wxWindow* parent, wxWindowID id, const wxStri
     if( ( global_color_scheme != GLOBAL_COLOR_SCHEME_DAY )
             && ( global_color_scheme != GLOBAL_COLOR_SCHEME_RGB ) ) wstyle |= ( wxNO_BORDER );
 
-    if( !wxDialog::Create( parent, id, caption, pos, size, wstyle ) ) return false;
+    if( !wxFrame::Create( parent, id, caption, pos, size, wstyle ) )
+        return false;
 
     m_parent = parent;
     
@@ -300,11 +297,8 @@ void AISTargetQueryDialog::CreateControls()
     m_pQueryTextCtl = new wxHtmlWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                                         wxHW_SCROLLBAR_AUTO | wxHW_NO_SELECTION );
     m_pQueryTextCtl->SetBorders( 1 );
-#ifndef __WXOSX__
-    topSizer->Add( m_pQueryTextCtl, 1, wxALL | wxEXPAND, 5 );
-#else
     topSizer->Add( m_pQueryTextCtl, 1, wxEXPAND, 5 );
-#endif
+
     wxSizer* opt = new wxBoxSizer( wxHORIZONTAL );
     m_createWptBtn = new wxButton( this, xID_WPT_CREATE, _("Create Waypoint"), wxDefaultPosition, wxDefaultSize, 0 );
     opt->Add( m_createWptBtn, 0, wxALL|wxEXPAND, 5 );
@@ -312,9 +306,8 @@ void AISTargetQueryDialog::CreateControls()
     m_createTrkBtn = new wxButton( this, xID_TRK_CREATE, _("Record Track"), wxDefaultPosition, wxDefaultSize, 0 );
     opt->Add( m_createTrkBtn, 0, wxALL|wxEXPAND, 5 );
     topSizer->Add( opt, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 5 );
-
-    wxSizer* ok = CreateButtonSizer( wxOK );
-    topSizer->Add( ok, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 5 );
+    
+    topSizer->Add(new wxButton(this, xID_OK, _("OK")), 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 5 );
     
     Fit();
     
@@ -505,8 +498,9 @@ void AISTargetQueryDialog::RenderHTMLQuery(AIS_Target_Data *td)
     
     wxString html;
     wxColor bg = GetBackgroundColour();
+    wxColor fg = GetForegroundColour();
     
-    html.Printf( _T("<html><body bgcolor=#%02x%02x%02x><center>"), bg.Red(), bg.Green(), bg.Blue() );
+    html.Printf( _T("<html><body bgcolor=#%02x%02x%02x><font color=#%02x%02x%02x><center>"), bg.Red(), bg.Green(), bg.Blue(), fg.Red(), fg.Green(), fg.Blue() );
     
     html << td->BuildQueryResult();
     

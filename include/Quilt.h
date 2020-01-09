@@ -1,4 +1,4 @@
-/* **************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __QUIT_H__
 #define __QUIT_H__
@@ -27,6 +28,7 @@
 #include "chart1.h"
 #include "LLRegion.h"
 #include "OCPNRegion.h"
+//#include "chcanv.h"
 
 extern bool g_bopengl;
 
@@ -63,9 +65,13 @@ public:
 
     const LLRegion &GetCandidateRegion();
     LLRegion &GetReducedCandidateRegion(double factor);
-
+    void SetScale(int scale);
+    bool Scale_eq( int b ) const { return abs ( ChartScale - b) <= rounding; }
+    bool Scale_ge( int b ) const { return  Scale_eq( b ) || ChartScale > b; }
+    
     int dbIndex;
     int ChartScale;
+    int rounding;
     bool b_include;
     bool b_eclipsed;
     bool b_locked;
@@ -83,7 +89,7 @@ class Quilt
 {
 public:
 
-    Quilt();
+    Quilt( ChartCanvas *parent);
     ~Quilt();
 
     void SetQuiltParameters( double CanvasScaleFactor, int CanvasWidth )
@@ -94,7 +100,6 @@ public:
 
     void EnableHighDefinitionZoom( bool value ) { m_b_hidef = value;}
     
-    bool BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_db_index, ViewPort &vp_in);
     void UnlockQuilt();
     bool Compose( const ViewPort &vp );
     bool IsComposed() {
@@ -163,7 +168,6 @@ public:
 
     int AdjustRefOnZoomOut( double proposed_scale_onscreen );
     int AdjustRefOnZoomIn( double proposed_scale_onscreen );
-    int AdjustRefOnZoom( bool b_zin, ChartFamilyEnum family, ChartTypeEnum type, double proposed_scale_onscreen );
     
     void SetHiliteIndex( int index ) {
         m_nHiLiteIndex = index;
@@ -217,6 +221,8 @@ public:
     bool IsChartInQuilt( wxString &full_path);
     
     bool IsQuiltVector( void );
+    bool DoesQuiltContainPlugins( void );
+    
     LLRegion GetHiliteRegion( );
     static LLRegion GetChartQuiltRegion( const ChartTableEntry &cte, ViewPort &vp );
 
@@ -224,6 +230,9 @@ public:
     int GetNomScaleMax(int scale, ChartTypeEnum type, ChartFamilyEnum family);
     
 private:
+    bool BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_db_index, ViewPort &vp_in);
+    int AdjustRefOnZoom( bool b_zin, ChartFamilyEnum family, ChartTypeEnum type, double proposed_scale_onscreen );
+
     bool DoRenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion &chart_region );
     bool DoRenderQuiltRegionViewOnDCTextOnly( wxMemoryDC& dc, ViewPort &vp, OCPNRegion &chart_region );
     
@@ -276,6 +285,8 @@ private:
     
     bool m_bquiltskew;
     bool m_bquiltanyproj;
+    ChartCanvas *m_parent;
+    
 };
 
 #endif

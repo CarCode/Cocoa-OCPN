@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  S57 SENC File Object
@@ -33,6 +33,8 @@
   #include "wx/wx.h"
 #endif //precompiled headers
 
+#include <wx/filename.h>
+
 #include "mygdal/ogr_s57.h"
 #include "mygdal/cpl_csv.h"
 #include "chartbase.h"
@@ -40,6 +42,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <vector>
+#include <mutex>
 
 WX_DEFINE_ARRAY_PTR(float *, SENCFloatPtrArray);
 
@@ -327,6 +330,7 @@ class VE_Element;
 class VC_Element;
 class PolyTessGeo;
 class LineGeometryDescriptor;
+class wxFFileInputStream;
 
 typedef std::vector<S57Obj *> S57ObjVector;
 typedef std::vector<VE_Element *> VE_ElementVector;
@@ -443,6 +447,7 @@ public:
 
     wxString getLastError(){ return errorMessage; }
     void setVerbose(bool verbose );
+    void setNoErrDialog( bool val ){ m_NoErrDialog = val; }
     
     int ingestHeader(const wxString &senc_file_name);
     int ingest(const wxString &senc_file_name,
@@ -490,6 +495,8 @@ public:
     
     int getNativeScale(){ return m_native_scale; }
     int GetBaseFileInfo(const wxString& FullPath000, const wxString& SENCFileName);
+
+    std::unique_lock<std::mutex> lockCR;
     
 private:
     void init();
@@ -538,7 +545,6 @@ private:
     int                 m_read_last_applied_update;
     
     S57Reader           *poReader;
-    OGRS57DataSource    *poS57DS;
     
     wxDateTime          m_date000;
     wxString            m_sdate000;
@@ -580,9 +586,9 @@ private:
     
     //  Arrays used to accumulate coverage regions on oSENC load
     SENCFloatPtrArray     m_AuxPtrArray;
-    std::vector<int>      m_AuxCntArray;
+    std::vector<int>            m_AuxCntArray;
     SENCFloatPtrArray     m_NoCovrPtrArray;
-    std::vector<int>      m_NoCovrCntArray;
+    std::vector<int>            m_NoCovrCntArray;
     
     
     Osenc_outstream       *m_pauxOutstream;
@@ -593,7 +599,8 @@ private:
 
     bool                  m_bVerbose;
     wxArrayString         *m_UpFiles;
-
+    bool                  m_bPrivateRegistrar;
+    bool                  m_NoErrDialog;
 };
 
 

@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA Data Multiplexer Object
@@ -30,6 +30,7 @@
 #include "NMEALogWindow.h"
 #include "garmin/jeeps/garmin_wrapper.h"
 #include "OCPN_DataStreamEvent.h"
+#include "Route.h"
 
 extern PlugInManager    *g_pi_manager;
 extern wxString         g_GPS_Ident;
@@ -49,6 +50,8 @@ Multiplexer::Multiplexer()
     m_gpsconsumer = NULL;
     Connect(wxEVT_OCPN_DATASTREAM, (wxObjectEventFunction)(wxEventFunction)&Multiplexer::OnEvtStream);
     m_pdatastreams = new wxArrayOfDataStreams();
+    if(g_GPS_Ident.IsEmpty())
+        g_GPS_Ident = wxT("Generic");
 }
 
 Multiplexer::~Multiplexer()
@@ -281,6 +284,28 @@ void Multiplexer::OnEvtStream(OCPN_DataStreamEvent& event)
             }
         }
 
+            //Send to the Debug Window, if open
+            //  Special formatting for non-printable characters helps debugging NMEA problems
+        if (NMEALogWindow::Get().Active()) {
+            std::string str= event.GetNMEAString();    
+            wxString fmsg;
+            
+            bool b_error = false;
+            for ( std::string::iterator it=str.begin(); it!=str.end(); ++it){
+                if(isprint(*it))
+                    fmsg += *it;
+                else{
+                    wxString bin_print;
+                    bin_print.Printf(_T("<0x%02X>"), *it);
+                    fmsg += bin_print;
+                    if((*it != 0x0a) && (*it != 0x0d))
+                        b_error = true;
+                }
+                
+            }
+            LogInputMessage( fmsg, port, !bpass, b_error );
+        }
+
         if ((g_b_legacy_input_filter_behaviour && !bpass) || bpass) {
 
             //Send to plugins
@@ -324,28 +349,6 @@ void Multiplexer::OnEvtStream(OCPN_DataStreamEvent& event)
                     }
                 }
             }
-        }
-
-            //Send to the Debug Window, if open
-            //  Special formatting for non-printable characters helps debugging NMEA problems
-        if (NMEALogWindow::Get().Active()) {
-            std::string str= event.GetNMEAString();    
-            wxString fmsg;
-            
-            bool b_error = false;
-            for ( std::string::iterator it=str.begin(); it!=str.end(); ++it){
-                if(isprint(*it))
-                    fmsg += *it;
-                else{
-                    wxString bin_print;
-                    bin_print.Printf(_T("<0x%02X>"), *it);
-                    fmsg += bin_print;
-                    if((*it != 0x0a) && (*it != 0x0d))
-                        b_error = true;
-                }
-                
-            }
-            LogInputMessage( fmsg, port, !bpass, b_error );
         }
     }
 }
@@ -1050,14 +1053,7 @@ int Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, wx
             wxLogMessage(msg);
 
             ret_val = ERR_GARMIN_INITIALIZE;
-#ifdef __WXOSX__
-            if( old_stream )
-                CreateAndRestoreSavedStreamProperties();
-            
-            return ret_val;
-#else
             goto ret_point;
-#endif
         }
         else
         {
@@ -1087,25 +1083,12 @@ int Multiplexer::SendWaypointToGPS(RoutePoint *prp, const wxString &com_name, wx
             wxLogMessage(msg);
 
             ret_val = ERR_GARMIN_GENERAL;
-#ifdef __WXOSX__
-            if( old_stream )
-                CreateAndRestoreSavedStreamProperties();
-            
-            return ret_val;
-#else
             goto ret_point;
-#endif
         }
         else
             ret_val = 0;
-#ifdef __WXOSX__
-        if( old_stream )
-            CreateAndRestoreSavedStreamProperties();
-        
-        return ret_val;
-#else
+
         goto ret_point;
-#endif
     }
     else
 #endif //USE_GARMINHOST

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  * $Id: chartcatalog.cpp,v 1.0 2011/02/26 01:54:37 nohal Exp $
  *
  * Project:  OpenCPN
@@ -50,7 +50,7 @@ bool ChartCatalog::LoadFromFile( wxString path, bool headerOnly )
     if (ret)
         ret = LoadFromXml( doc, headerOnly );
     else
-        charts->Clear();
+        charts.Clear();
     doc->Clear();
     wxDELETE(doc);
 
@@ -59,13 +59,10 @@ bool ChartCatalog::LoadFromFile( wxString path, bool headerOnly )
 
 ChartCatalog::ChartCatalog()
 {
-    charts = new wxArrayOfCharts();
 }
 
 ChartCatalog::~ChartCatalog()
 {
-    charts->Clear();
-    wxDELETE(charts);
 }
 
 wxDateTime ChartCatalog::GetReleaseDate()
@@ -89,7 +86,7 @@ bool ChartCatalog::LoadFromXml( TiXmlDocument * doc, bool headerOnly )
 {
     TiXmlElement * root = doc->RootElement();
     wxString rootName = wxString::FromUTF8( root->Value() );
-    charts->Clear();
+    charts.Clear();
 
     if( rootName.StartsWith( _T("RncProductCatalog") ) )
     {
@@ -103,7 +100,7 @@ bool ChartCatalog::LoadFromXml( TiXmlDocument * doc, bool headerOnly )
         for ( child = root->FirstChildElement()->NextSibling(); child != 0; child = child->NextSibling() )
         {
             if( _T("chart") == wxString::FromUTF8( child->Value() ) )
-                charts->Add(new RasterChart(child));
+                charts.Add(new RasterChart(child));
         }
     }
     else if( rootName.StartsWith(_T("EncProductCatalog")) )
@@ -117,13 +114,13 @@ bool ChartCatalog::LoadFromXml( TiXmlDocument * doc, bool headerOnly )
         for( child = root->FirstChildElement()->NextSibling(); child != 0; child = child->NextSibling() )
         {
             if( _T("cell") == wxString::FromUTF8( child->Value() ) )
-                charts->Add( new EncCell(child) );
+                charts.Add( new EncCell(child) );
         }
     }
     // "IENCBuoyProductCatalog" and "IENCSouthwestPassProductCatalog" added by .Paul.
     else if( rootName.StartsWith(_T("IENCU37ProductCatalog")) ||
-            rootName.StartsWith(_T("IENCBuoyProductCatalog")) ||
-            rootName.StartsWith(_T("IENCSouthwestPassProductCatalog")) )
+             rootName.StartsWith(_T("IENCBuoyProductCatalog")) ||
+             rootName.StartsWith(_T("IENCSouthwestPassProductCatalog")) )
     {
         if( !ParseNoaaHeader(root->FirstChildElement()) )
         {
@@ -135,7 +132,7 @@ bool ChartCatalog::LoadFromXml( TiXmlDocument * doc, bool headerOnly )
         for( child = root->FirstChildElement()->NextSibling(); child != 0; child = child->NextSibling())
         {
             if( _T("Cell") == wxString::FromUTF8( child->Value() ) )
-                charts->Add(new IEncCell(child));
+                charts.Add(new IEncCell(child));
         }
     }
     else
@@ -228,8 +225,6 @@ Chart::~Chart()
     wxDELETE(regions);
     wxDELETE(nm);
     wxDELETE(lnm);
-    coverage->Clear();
-    wxDELETE(coverage);
 }
 
 Chart::Chart( TiXmlNode * xmldata )
@@ -237,7 +232,6 @@ Chart::Chart( TiXmlNode * xmldata )
     coast_guard_districts = new wxArrayString();
     states = new wxArrayString();
     regions = new wxArrayString();
-    coverage = new wxArrayOfPanels();
     TiXmlNode *child;
     target_filename = wxEmptyString;
     reference_file = wxEmptyString;
@@ -325,7 +319,7 @@ Chart::Chart( TiXmlNode * xmldata )
             TiXmlNode *mychild;
             for( mychild = child->FirstChild(); mychild != 0; mychild = mychild->NextSibling() )
             {
-                coverage->Add(new Panel(mychild));
+                coverage.Add(new Panel(mychild));
             }
         }
         else if( s == _T("target_filename") )
@@ -726,7 +720,6 @@ NoticeToMariners::NoticeToMariners( TiXmlNode * xmldata )
 Panel::Panel( TiXmlNode * xmldata )
 {
     panel_no = -1;
-    vertexes = new wxArrayOfVertexes();
     TiXmlNode *child;
     for( child = xmldata->FirstChild(); child != 0; child = child->NextSibling() )
     {
@@ -746,8 +739,6 @@ Panel::Panel( TiXmlNode * xmldata )
 
 Panel::~Panel()
 {
-    vertexes->Clear();
-    wxDELETE(vertexes);
 }
 
 RncPanel::RncPanel( TiXmlNode * xmldata ) : Panel( xmldata )

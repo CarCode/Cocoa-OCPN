@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  ROUTE Plugin
@@ -22,8 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef _CALCULATORGUI_IMPL_H_
 #define _CALCULATORGUI_IMPL_H_
@@ -141,7 +140,7 @@ private:
         bool              m_bcapturehidden;
         bool              m_blogresults;
         HlpDlg            *m_pHelpdialog;
-        FunDlg            *m_pFunctiondialog;
+//        FunDlg            *m_pFunctiondialog;  // Not used ???
 
 };
 

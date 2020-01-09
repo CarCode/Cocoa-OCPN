@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  GRIB Plugin Freinds
@@ -21,7 +21,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include <map>
 
@@ -61,6 +62,8 @@ public:
     }
 
     unsigned int m_iTexture, m_iTextureDim[2]; /* opengl mode */
+    unsigned int m_iTexDataDim[2];
+
     wxBitmap *m_pDCBitmap; /* dc mode */
 };
 

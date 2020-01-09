@@ -1,11 +1,11 @@
-/***************************************************************************
+/************************************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  personalized GRID
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,9 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ */
 
 #include "CustomGrid.h"
 
@@ -53,9 +55,9 @@ CustomGrid::CustomGrid( wxWindow *parent, wxWindowID id, const wxPoint &pos,
     wxFileConfig *pConf = GetOCPNConfigObject();
     if (pConf) {
         pConf->SetPath(_T("/Settings/GRIB"));
-        m_IsDigit = pConf->Read(_T("GribDataTableRowPref"), _T("..."));
+        m_IsDigit = pConf->Read(_T("GribDataTableRowPref"), _T("XXX"));
     }
-    if( m_IsDigit.Len() != wxString(_T("...")).Len() ) m_IsDigit = _T("...");
+    if( m_IsDigit.Len() != wxString(_T("XXX")).Len() ) m_IsDigit = _T("XXX");
     //create structure for all numerical rows
     for( unsigned int i = 0; i < m_IsDigit.Len(); i++ ){
         m_NumRow.push_back(wxNOT_FOUND);
@@ -70,11 +72,7 @@ CustomGrid::CustomGrid( wxWindow *parent, wxWindowID id, const wxPoint &pos,
     //set row label size
     int w;
     GetTextExtent( _T("Ab"), &w, NULL, 0, 0, &labelfont);
-#ifdef __WXOSX__
-    double x = (double)w * 7.5;
-#else
     double x = (double)w * 6.5;
-#endif
     SetRowLabelSize((int)x);
     //colour settings
     GetGlobalColor(_T("GREEN1"), &m_greenColour);
@@ -137,17 +135,11 @@ void CustomGrid::DrawColLabel( wxDC& dc, int col )
 
 void CustomGrid::DrawRowLabel( wxDC& dc, int row )
 {
-// Zusammengesetzte Zeilenbezeichnung in Spalte 1 der GridTabelle
     //init dc font and colours
     dc.SetFont( m_labelFont );
     dc.SetPen(GetDefaultGridLinePen());
 	dc.SetBrush( wxBrush( m_labelBackgroundColour, wxBRUSHSTYLE_SOLID ) );
-// Maß für Textlänge der 2. Bezeichnung:
-#ifdef __WXOSX__
-    int w = dc.GetTextExtent(_T("Speed     ")).x;
-#else
     int w = dc.GetTextExtent(_T("Speed")).x;
-#endif
     wxString label1,label2;
     label1 = GetRowLabelValue(row).BeforeFirst(',', &label2);
     bool pline = true;
@@ -414,11 +406,7 @@ void CustomRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wx
 
 #if wxUSE_GRAPHICS_CONTEXT
         wxGraphicsContext *gdc;
-#ifdef __WXOSX__
-        wxClientDC *cdc;
-#else
         wxClientDC *cdc = new wxClientDC(wxDynamicCast( &grid, wxWindow));
-#endif
         cdc = wxDynamicCast(&dc, wxClientDC);
         if( cdc ) {
             gdc = wxGraphicsContext::Create(*cdc);

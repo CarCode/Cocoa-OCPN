@@ -8,6 +8,11 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
+#ifdef NDEBUG
+// make wxLogTrace a noop if no debug set, it's really slow
+// must be defined before including debug.h
+#define wxDEBUG_LEVEL 0
+#endif
 
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
@@ -25,13 +30,20 @@
 
 WX_DEFINE_OBJARRAY( wxJSONInternalArray );
 
+#if wxCHECK_VERSION(3, 0, 0)
+#define compatibleLongLongFmtSpec _T(wxLongLongFmtSpec)
+#else
+#define compatibleLongLongFmtSpec wxLongLongFmtSpec
+#endif
+
 
 // the trace mask used in wxLogTrace() function
 // static const wxChar* traceMask = _T("jsonval");
+#if wxDEBUG_LEVEL > 0
 static const wxChar* traceMask = _T("jsonval");
 static const wxChar* compareTraceMask = _T("sameas");
 static const wxChar* cowTraceMask = _T("traceCOW" );
-
+#endif
 
 
 /*******************************************************************
@@ -958,7 +970,7 @@ wxJSONValue::AsString() const
             break;
         case wxJSONTYPE_INT :
             #if defined( wxJSON_64BIT_INT )
-                  s.Printf( _T("%") wxLongLongFmtSpec _T("i"),
+            s.Printf( _T("%") compatibleLongLongFmtSpec _T("i"),
                         data->m_value.m_valInt64 );
             #else
             s.Printf( _T("%ld"), data->m_value.m_valLong );
@@ -966,7 +978,7 @@ wxJSONValue::AsString() const
             break;
         case wxJSONTYPE_UINT :
             #if defined( wxJSON_64BIT_INT )
-            s.Printf( _T("%") wxLongLongFmtSpec _T("u"),
+            s.Printf( _T("%") compatibleLongLongFmtSpec _T("u"),
                         data->m_value.m_valUInt64 );
             #else
             s.Printf( _T("%lu"), data->m_value.m_valULong );
@@ -1814,6 +1826,7 @@ wxJSONValue::Item( const wxString& key )
 #if !wxCHECK_VERSION(2,9,0)
     wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str());
 #endif
+
     wxJSONRefData* data = COW();
     wxJSON_ASSERT( data );
 
@@ -1861,11 +1874,8 @@ wxJSONValue
 wxJSONValue::ItemAt( const wxString& key ) const
 {
     wxLogTrace( traceMask, _T("(%s) searched key=\'%s\'"), __PRETTY_FUNCTION__, key.c_str());
-#ifdef __WXOSX__
-//    wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str());
-#else
     wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str());
-#endif
+
     wxJSONRefData* data = GetRefData();
     wxJSON_ASSERT( data );
 
@@ -2319,29 +2329,15 @@ wxJSONValue::GetInfo() const
 
     wxString s;
 #if defined( WXJSON_USE_VALUE_CONTER )
-#ifdef __WXOSX__
-    s.Printf( _T("Object: Progr=%ld Type=%s Size=%ld comments=%ld\n"),
-             data->m_progr,
-             wxJSONValue::TypeToString( data->m_type ).c_str(),
-             Size(),
-             data->m_comments.GetCount() );
-#else
     s.Printf( _T("Object: Progr=%d Type=%s Size=%d comments=%d\n"),
             data->m_progr,
             wxJSONValue::TypeToString( data->m_type ).c_str(),
             Size(),
             data->m_comments.GetCount() );
-#endif
-#else
-#ifdef __WXOSX__
-    s.Printf( _T("Object: Type=%s Size=%ld comments=%ld\n"),
-             wxJSONValue::TypeToString( data->m_type ).c_str(),
-             Size(), data->m_comments.GetCount() );
 #else
     s.Printf( _T("Object: Type=%s Size=%d comments=%d\n"),
             wxJSONValue::TypeToString( data->m_type ).c_str(),
             Size(), data->m_comments.GetCount() );
-#endif
 #endif
     if ( data->m_type == wxJSONTYPE_OBJECT ) {
         wxArrayString arr = GetMemberNames();

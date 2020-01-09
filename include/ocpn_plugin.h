@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  PlugIn Object Definition/API
@@ -40,13 +40,16 @@
 #ifdef MAKING_PLUGIN
 #  define DECL_IMP     __declspec(dllimport)
 #endif
-#endif
+#endif    
 
 #include <wx/xml/xml.h>
 
 #ifdef ocpnUSE_SVG
-#include "wxsvg/include/wxSVG/svg.h"
+#include "wxSVG/svg.h"
 #endif // ocpnUSE_SVG
+
+#include <memory>
+#include <vector>
 
 class wxGLContext;
 
@@ -55,7 +58,7 @@ class wxGLContext;
 //    PlugIns conforming to API Version less then the most modern will also
 //    be correctly supported.
 #define API_VERSION_MAJOR           1
-#define API_VERSION_MINOR           15
+#define API_VERSION_MINOR           16
 
 //    Fwd Definitions
 class       wxFileConfig;
@@ -409,8 +412,8 @@ public:
       virtual void OnCloseToolboxPanel(int page_sel, int ok_apply_cancel);
 
       virtual void ShowPreferencesDialog( wxWindow* parent );
-#ifndef __WXOSX__  // Test WXOSX ja oder nein?
-    bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
+#ifdef __WXOSX__  // Test WXOSX ja oder nein?
+        bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
 #else
       virtual bool RenderOverlay(wxMemoryDC *pmdc, PlugIn_ViewPort *vp);
 #endif
@@ -442,8 +445,8 @@ public:
        public:
              opencpn_plugin_16(void *pmgr);
              virtual ~opencpn_plugin_16();
-#ifndef __WXOSX__  // Test WXOSX
-     bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+#ifdef __WXOSX__  // Test WXOSX
+          bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
              virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #endif
@@ -456,8 +459,8 @@ class DECL_EXP opencpn_plugin_17 : public opencpn_plugin
        public:
              opencpn_plugin_17(void *pmgr);
              virtual ~opencpn_plugin_17();
-#ifndef __WXOSX__  // Test WXOSX
-    bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+#ifdef __WXOSX__  // Test WXOSX
+        bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
              virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #endif
@@ -472,13 +475,12 @@ class DECL_EXP opencpn_plugin_18 : public opencpn_plugin
       public:
             opencpn_plugin_18(void *pmgr);
             virtual ~opencpn_plugin_18();
-#ifndef __WXOSX__  // Test WXOSX
-    bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
+#ifdef __WXOSX__  // Test WXOSX
+        bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #else
             virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
 #endif
             virtual bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
-
             virtual void SetPluginMessage(wxString &message_id, wxString &message_body);
             virtual void SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix);
 
@@ -545,6 +547,17 @@ class DECL_EXP opencpn_plugin_115 : public opencpn_plugin_114
 public:
     opencpn_plugin_115(void *pmgr);
     virtual ~opencpn_plugin_115();
+
+};
+
+class DECL_EXP opencpn_plugin_116 : public opencpn_plugin_115
+{
+public:
+    opencpn_plugin_116(void *pmgr);
+    virtual ~opencpn_plugin_116();
+    virtual bool RenderGLOverlayMultiCanvas(wxGLContext *pcontext, PlugIn_ViewPort *vp, int canvasIndex);
+    virtual bool RenderOverlayMultiCanvas(wxDC &dc, PlugIn_ViewPort *vp, int canvasIndex);
+    virtual void PrepareContextMenu( int canvasIndex);
 
 };
 
@@ -733,6 +746,10 @@ extern DECL_EXP wxString getUsrDistanceUnit_Plugin( int unit = -1 );
 extern DECL_EXP wxString getUsrSpeedUnit_Plugin( int unit = -1 );
 extern DECL_EXP wxString GetNewGUID();
 extern "C" DECL_EXP bool PlugIn_GSHHS_CrossesLand(double lat1, double lon1, double lat2, double lon2);
+/**
+ * Start playing a sound file asynchronously. Supported formats depends
+ * on sound backend.
+ */
 extern DECL_EXP void PlugInPlaySound( wxString &sound_file );
 
 
@@ -921,10 +938,10 @@ public:
 class DECL_EXP PI_S57Obj
 {
 public:
-    
-    //  Public Methods
-    PI_S57Obj();
-    ~PI_S57Obj();
+
+      //  Public Methods
+      PI_S57Obj();
+      ~PI_S57Obj();
 
 public:
       // Instance Data
@@ -1083,6 +1100,11 @@ extern DECL_EXP wxColour GetFontColour_PlugIn(wxString TextElement);
 extern DECL_EXP double GetCanvasTilt();
 extern DECL_EXP void SetCanvasTilt(double tilt);
 
+/**
+ * Start playing a sound file asynchronously. Supported formats depends
+ * on sound backend. The deviceIx is only used on platforms using the
+ * portaudio sound backend where -1 indicates the default device.
+ */
 extern DECL_EXP bool PlugInPlaySoundEx( wxString &sound_file, int deviceIndex=-1 );
 extern DECL_EXP void AddChartDirectory( wxString &path );
 extern DECL_EXP void ForceChartDBUpdate();
@@ -1230,8 +1252,6 @@ private:
     bool m_b_complete;
 };
 
-//DECLARE_EVENT_TYPE(wxEVT_DOWNLOAD_EVENT, -1)
-//extern const wxEventType DECL_EXP wxEVT_DOWNLOAD_EVENT;
 
 //extern WXDLLIMPEXP_CORE const wxEventType wxEVT_DOWNLOAD_EVENT;
 
@@ -1250,18 +1270,18 @@ extern DECL_EXP bool PlugInSetFontColor(const wxString TextElement, const wxColo
 // API 1.15
 extern DECL_EXP double PlugInGetDisplaySizeMM();
 
-//
-extern DECL_EXP wxFont* FindOrCreateFont_PlugIn( int point_size, wxFontFamily family,
-                                                wxFontStyle style, wxFontWeight weight, bool underline = false,
-                                                const wxString &facename = wxEmptyString,
-                                                wxFontEncoding encoding = wxFONTENCODING_DEFAULT );
+// 
+extern DECL_EXP wxFont* FindOrCreateFont_PlugIn( int point_size, wxFontFamily family, 
+                    wxFontStyle style, wxFontWeight weight, bool underline = false,
+                    const wxString &facename = wxEmptyString,
+                    wxFontEncoding encoding = wxFONTENCODING_DEFAULT );
 
 extern DECL_EXP int PlugInGetMinAvailableGshhgQuality();
 extern DECL_EXP int PlugInGetMaxAvailableGshhgQuality();
 
 extern DECL_EXP void PlugInHandleAutopilotRoute(bool enable);
 
-// API 1.16?
+// API 1.16
 //
 /**
  * Return the plugin data directory for a given directory name.
@@ -1280,5 +1300,44 @@ extern DECL_EXP void PlugInHandleAutopilotRoute(bool enable);
  */
 extern DECL_EXP wxString GetPluginDataDir(const char* plugin_name);
 
+extern DECL_EXP bool ShuttingDown( void );
+
+//  Support for MUI MultiCanvas model
+
+extern DECL_EXP wxWindow* PluginGetFocusCanvas();
+extern DECL_EXP wxWindow* PluginGetOverlayRenderCanvas();
+
+extern "C"  DECL_EXP void CanvasJumpToPosition( wxWindow *canvas, double lat, double lon, double scale);
+extern "C"  DECL_EXP  int AddCanvasMenuItem(wxMenuItem *pitem, opencpn_plugin *pplugin, const char *name = "");
+extern "C"  DECL_EXP void RemoveCanvasMenuItem(int item, const char *name = "");      // Fully remove this item
+extern "C"  DECL_EXP void SetCanvasMenuItemViz(int item, bool viz, const char *name = ""); // Temporarily change context menu options
+extern "C"  DECL_EXP void SetCanvasMenuItemGrey(int item, bool grey, const char *name = "");
+
+// Extract waypoints, routes and tracks
+extern DECL_EXP wxString GetSelectedWaypointGUID_Plugin( );
+extern DECL_EXP wxString GetSelectedRouteGUID_Plugin( );
+extern DECL_EXP wxString GetSelectedTrackGUID_Plugin( );
+
+extern DECL_EXP std::unique_ptr<PlugIn_Waypoint> GetWaypoint_Plugin( const wxString& ); // doublon with GetSingleWaypoint
+extern DECL_EXP std::unique_ptr<PlugIn_Route> GetRoute_Plugin( const wxString& );
+extern DECL_EXP std::unique_ptr<PlugIn_Track> GetTrack_Plugin( const wxString& );
+
+extern DECL_EXP wxWindow* GetCanvasUnderMouse( );
+extern DECL_EXP int GetCanvasIndexUnderMouse( );
+//extern DECL_EXP std::vector<wxWindow *> GetCanvasArray();
+extern DECL_EXP wxWindow *GetCanvasByIndex( int canvasIndex );
+extern DECL_EXP int GetCanvasCount( );
+extern DECL_EXP bool CheckMUIEdgePan_PlugIn( int x, int y, bool dragging, int margin, int delta, int canvasIndex );
+extern DECL_EXP void SetMUICursor_PlugIn( wxCursor *pCursor, int canvasIndex );
+
+enum SDDMFORMAT
+{
+    DEGREES_DECIMAL_MINUTES = 0,
+    DECIMAL_DEGREES,
+    DEGREES_MINUTES_SECONDS,
+    END_SDDMFORMATS
+};
+
+extern DECL_EXP int GetLatLonFormat(void);
 
 #endif //_PLUGIN_H_

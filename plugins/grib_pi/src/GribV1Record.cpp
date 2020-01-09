@@ -139,25 +139,25 @@ void  GribV1Record::translateDataType()
 		}
 	}
 	//------------------------
-    // EMCWF grib1...
-    //------------------------
-    else if (idCenter==98 /*&& idModel==148*/ && idGrid==255)
-    {
+	// EMCWF grib1...
+	//------------------------
+	else if (idCenter==98 /*&& idModel==148*/ && idGrid==255)
+	{
         dataCenterModel = OTHER_DATA_CENTER;
-        if (dataType == GRB_PRECIP_RATE) {    // mm/s -> mm/h
+		if (dataType == GRB_PRECIP_RATE) {	// mm/s -> mm/h
             //dataType=71 levelType=1 levelValue=0
             multiplyAllData( 3600.0 );
-        }
-        else if (getDataType()==GRB_CLOUD_TOT && getLevelType()==LV_GND_SURF && getLevelValue()==0) {
-            // dataType=59 levelType=1 levelValue=0
-            levelType = LV_ATMOS_ALL;
-        }
-        else if (getDataType()==GRB_PRESSURE && getLevelType()==LV_GND_SURF && getLevelValue()==0) {
-            // dataType=2 levelType=1 levelValue=0
-            levelType = LV_MSL;
-        }
-    }
-    //------------------------
+		}
+		else if (getDataType()==GRB_CLOUD_TOT && getLevelType()==LV_GND_SURF && getLevelValue()==0) {
+		    // dataType=59 levelType=1 levelValue=0
+		    levelType = LV_ATMOS_ALL;
+		}
+		else if (getDataType()==GRB_PRESSURE && getLevelType()==LV_GND_SURF && getLevelValue()==0) {
+		    // dataType=2 levelType=1 levelValue=0
+		    levelType = LV_MSL;
+		}
+	}
+	//------------------------
 	// Unknown center
 	//------------------------
 	else
@@ -283,9 +283,11 @@ GribV1Record::GribV1Record(ZUFILE* file, int id_)
 //-------------------------------------------------------------------------------
 // Constructeur de recopie
 //-------------------------------------------------------------------------------
+#pragma warning(disable: 4717)
 GribV1Record::GribV1Record(const GribRecord &rec) : GribRecord(rec)
 {
     *this = rec;
+    #pragma warning(default: 4717)
 }
 
 GribV1Record::~GribV1Record()
@@ -791,9 +793,7 @@ zuint GribV1Record::periodSeconds(zuchar unit,zuchar P1,zuchar P2,zuchar range) 
             ok = false;
     }
     grib_debug("id=%d: PDS unit %d (time range) b21=%d %d P1=%d P2=%d\n",id,unit, range,res,P1,P2);
-#ifndef __WXOSX__
     dur = 0;
-#endif
     // (grib1/5.table)
     switch (range) {
         case 0:

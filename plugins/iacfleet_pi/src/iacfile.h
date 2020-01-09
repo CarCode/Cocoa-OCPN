@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  * $Id: iacfile.h, v1.0 2010/08/05 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -30,39 +30,37 @@
 
 #include "wx/wxprec.h"
 
-#ifndef  WX_PRECOMP
+#ifndef WX_PRECOMP
 #include "wx/wx.h"
 #endif //precompiled headers
 
+#include <wx/dynarray.h>
+#include <wx/gdicmn.h>
+#include <wx/object.h>
 #include <wx/stream.h>
 #include <wx/wfstream.h>
-#include <wx/dynarray.h>
-#include <wx/object.h>
-#include <wx/gdicmn.h>
-
 #include "TexFont.h"
 
 #include "../../../include/ocpn_plugin.h"
-
 #ifdef ocpnUSE_GL
 #ifdef __WXMSW__
-#include "GL/gl.h"            // local copy for Windows
 #include <GL/glu.h>
+#include "GL/gl.h"            // local copy for Windows
 #else
 
 #ifndef __OCPN__ANDROID__
 #include <GL/gl.h>
 #include <GL/glu.h>
 #else
-#include "qopengl.h"                  // this gives us the qt runtime gles2.h
 #include "GL/gl_private.h"
+#include "qopengl.h"                  // this gives us the qt runtime gles2.h
 #endif
 
 #endif
 #endif
 
-#include <vector>
 #include <algorithm>
+#include <vector>
 
 #define ISOBAR_WIDTH        2
 #define FRONT_WIDTH         5
@@ -70,29 +68,28 @@
 #define NUMBERS_FONT_SIZE   9
 #define SYSTEMS_FONT_SIZE   15
 
-#define QUASISTATIONARY_SURFACE           0
-#define QUASISTATIONARY_ABOVE_SURFACE     1
-#define WARM_SURFACE                      2
-#define WARM_ABOVE_SURFACE                3
-#define COLD_SURFACE                      4
-#define COLD_ABOVE_SURFACE                5
-#define OCCLUSION                         6
-#define INSTABILITY_LINE                  7
-#define INTERTROPICAL                     8
-#define CONVERGENCE_LINE                  9
+#define QUASISTATIONARY_SURFACE 0
+#define QUASISTATIONARY_ABOVE_SURFACE 1
+#define WARM_SURFACE 2
+#define WARM_ABOVE_SURFACE 3
+#define COLD_SURFACE 4
+#define COLD_ABOVE_SURFACE 5
+#define OCCLUSION 6
+#define INSTABILITY_LINE 7
+#define INTERTROPICAL 8
+#define CONVERGENCE_LINE 9
 
-#define SECTION_PRESSURE                  0
-#define SECTION_FRONTAL                   11
-#define SECTION_ISOBAR                    22
-#define SECTION_TROPICAL                  55
+#define SECTION_PRESSURE 0
+#define SECTION_FRONTAL 11
+#define SECTION_ISOBAR 22
+#define SECTION_TROPICAL 55
 
-#define POS_NH_HALF_DEG                   0
-#define POS_OCTANTS                       88
+#define POS_NH_HALF_DEG 0
+#define POS_OCTANTS 88
 
-#define MAX_FILESIZE                      20000
+#define MAX_FILESIZE 20000
 
-class GeoPoint:public wxRealPoint
-{
+class GeoPoint : public wxRealPoint {
 public:
     static const double INVALID_KOORD;
     GeoPoint( double lon = INVALID_KOORD, double lat = INVALID_KOORD ) { Set(lon, lat); }
@@ -109,22 +106,14 @@ class IACSystem
 {
 public:
     IACSystem( void );
+    virtual ~IACSystem();
     //void SetMovement(unsigned int m, unsigned int d, unsigned int s);
-//#ifndef __WXOSX__
-//    wxString ToString( bool includePosition = true ) const;
-//    bool Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont );  // war virtual
-//#else
     virtual wxString ToString( bool includePosition = true ) const;
     virtual bool Draw( wxDC *dc, PlugIn_ViewPort *vp, TexFont &numfont, TexFont &sysfont );
-//#endif
     wxString GetTab( const wxChar*(tab[]), size_t index ) const;
     wxString PositionsToString( void ) const;
     bool DrawPositions( wxDC *dc, PlugIn_ViewPort *vp );
-//#ifndef __WXOSX__
-//    bool FindAtPos( GeoPoint &pos, double deviation );
-//#else
     virtual bool FindAtPos( GeoPoint &pos, double deviation );
-//#endif
     GeoPoints   m_positions;
     int         m_type;
     int         m_char;
@@ -133,28 +122,17 @@ public:
     unsigned int m_movement;  //
     unsigned int m_direction; // in deg
     unsigned int m_speed;     // in knots, 99=unknown
-//#ifndef __WXOSX_COCOA__
-//    virtual ~IACSystem(void);    // _wxObjArrayIACSystems kein Destructor ???
-//#endif
 
 protected:
     wxColor     m_isoLineColor;
     float       m_isoLineWidth;
 
 private:
-//#ifndef __WXOSX__
-//    wxString GetType( size_t index ) const;
-//    wxString GetShortType( size_t index ) const;
-//    wxString GetCharacteristic( size_t index ) const;
-//    wxString GetValue( void ) const {return wxEmptyString;}
-//    wxString GetIntensity( void ) const {return wxEmptyString;}
-//#else
     virtual wxString GetType( size_t index ) const;
     virtual wxString GetShortType( size_t index ) const;
     virtual wxString GetCharacteristic( size_t index ) const;
     virtual wxString GetValue( void ) const {return wxEmptyString;}
     virtual wxString GetIntensity( void ) const {return wxEmptyString;}
-//#endif
     wxString GetMovement( void ) const;
 };
 
@@ -212,6 +190,7 @@ public:
 
     wxString ToString( void );
     wxString GetIssueDate( void ) { return m_issueDate; }
+    bool IsForecast(void) { return m_RawData.StartsWith(_T("F")); }
 
     bool Read( wxInputStream &stream );
     bool IsOk(void) { return m_isok; }

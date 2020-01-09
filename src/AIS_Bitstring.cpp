@@ -21,8 +21,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
 
-#include <wx/utils.h>
-
 #include "AIS_Bitstring.h"
 #include <string.h>
 
@@ -65,14 +63,10 @@ unsigned char AIS_Bitstring::to_6bit(const char c)
 
 int AIS_Bitstring::GetInt(int sp, int len, bool signed_flag)
 {
-#ifdef __WXOSX__
-    unsigned int acc = 0;
-#else
     int acc = 0;
-#endif
     int s0p = sp-1;                          // to zero base
 
-    int cp, cx, c0; //, cs; Not used
+    int cp, cx, c0;
 
 
     for(int i=0 ; i<len ; i++)
@@ -80,7 +74,6 @@ int AIS_Bitstring::GetInt(int sp, int len, bool signed_flag)
         acc  = acc << 1;
         cp = (s0p + i) / 6;
         cx = bitbytes[cp];        // what if cp >= byte_length?
-//        cs = 5 - ((s0p + i) % 6);  // Not used
         c0 = (cx >> (5 - ((s0p + i) % 6))) & 1;
         if(i == 0 && signed_flag && c0) // if signed value and first bit is 1, pad with 1's
             acc = ~acc;

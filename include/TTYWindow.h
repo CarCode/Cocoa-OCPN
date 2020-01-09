@@ -1,4 +1,4 @@
-/* **************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,12 +19,13 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __TTYWINDOW_H__
 #define __TTYWINDOW_H__
 
-#include <wx/dialog.h>
+#include <wx/frame.h>
 #include <wx/bitmap.h>
 
 class wxButton;
@@ -32,7 +33,7 @@ class wxTextCtrl;
 class TTYScroll;
 class WindowDestroyListener;
 
-class TTYWindow : public wxDialog
+class TTYWindow : public wxFrame
 {
     DECLARE_DYNAMIC_CLASS( TTYWindow )
     DECLARE_EVENT_TABLE()
@@ -47,7 +48,7 @@ class TTYWindow : public wxDialog
         void Close();
         void OnPauseClick( wxCommandEvent& event );
         void OnCopyClick(wxCommandEvent& event);
-    
+
     protected:
         void CreateLegendBitmap();
         WindowDestroyListener * m_window_destroy_listener;

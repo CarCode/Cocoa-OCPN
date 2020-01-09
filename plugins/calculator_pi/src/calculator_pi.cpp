@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  ROUTE Plugin
@@ -22,8 +22,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 
@@ -31,6 +30,7 @@
   #include "wx/wx.h"
 #endif //precompiled headers
 
+#include <wx/stdpaths.h>
 #include "calculator_pi.h"
 
 // the class factories, used to create and destroy instances of the PlugIn
@@ -64,6 +64,27 @@ calculator_pi::calculator_pi(void *ppimgr)
 {
       // Create the PlugIn icons
       initialize_images();
+
+#ifdef __WXOSX__  // Ist: ~/Library/Preferences/opencpn/plugins/calculator_pi/data/...
+    wxString shareLocn = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator() +
+                        _T("plugins") + wxFileName::GetPathSeparator() +
+                        _T("calculator_pi") + wxFileName::GetPathSeparator()
+                        + _T("data") + wxFileName::GetPathSeparator();
+    wxImage panelIcon(  shareLocn + _T("calculator_panel_icon.png"));
+#else
+    wxString shareLocn = *GetpSharedDataLocation() +
+        _T("plugins") + wxFileName::GetPathSeparator() +
+        _T("calculator_pi") + wxFileName::GetPathSeparator()
+        + _T("data") + wxFileName::GetPathSeparator();
+    wxImage panelIcon(shareLocn + _T("calculator_panel_icon.png"));
+#endif
+    wxLogMessage(_T("Pfad: %s"),  shareLocn);
+    if (panelIcon.IsOk())
+        m_panelBitmap = wxBitmap(panelIcon);
+    else
+        wxLogMessage(_T("    calculator_pi panel icon NOT loaded"));
+
+    m_bShowCalculator = false;
 }
 
 int calculator_pi::Init(void)
@@ -86,12 +107,17 @@ int calculator_pi::Init(void)
 
       //    And load the configuration items
       LoadConfig();
-
       //    This PlugIn needs a toolbar icon, so request its insertion
-      m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_calc, _img_calc, wxITEM_NORMAL,
-            _("Calculator"), _T(""), NULL,
-             CALCULATOR_TOOL_POSITION, 0, this);
-
+#ifdef CALCULATOR_USE_SVG
+      m_Calculator_tool_id = InsertPlugInToolSVG(_T("Calculator"), _svg_calculator, _svg_calculator , _svg_calculator_toggled,
+        wxITEM_CHECK, _("Calculator"), _T(""), NULL, CALCULATOR_TOOL_POSITION, 0, this);
+#else
+/*
+      if((bool)m_bshowfunction_Open_CPN_BAR) {
+      m_CalculatorFX_tool_id  = InsertPlugInTool(_T(""), _img_calc_fx, _img_calc_fx, wxITEM_NORMAL, _("Functions"), _T(""), NULL, CALCULATOR_TOOL_POSITION, 0, this);}
+*/
+        m_Calculator_tool_id  = InsertPlugInTool(_T(""), _img_calc, _img_calc, wxITEM_NORMAL, _("Calculator"), _T(""), NULL, CALCULATOR_TOOL_POSITION, 0, this);
+#endif
       m_pDialog = NULL;
 
       return (WANTS_TOOLBAR_CALLBACK   |
@@ -118,6 +144,9 @@ bool calculator_pi::DeInit(void)
             m_pDialog->Close();
             delete m_pDialog;
             m_pDialog = NULL;
+
+            m_bShowCalculator = false;
+//            SetToolbarItemState(m_Calculator_tool_id, m_bShowCalculator);
       }
       SaveConfig();
       return true;
@@ -145,7 +174,8 @@ int calculator_pi::GetPlugInVersionMinor()
 
 wxBitmap *calculator_pi::GetPlugInBitmap()
 {
-      return _img_calc;
+    return &m_panelBitmap;
+//    return _img_calc;
 }
 
 wxString calculator_pi::GetCommonName()

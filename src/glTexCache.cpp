@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Authors:  David Register
@@ -26,6 +26,7 @@
 #include <wx/wxprec.h>
 #include <wx/tokenzr.h>
 #include <wx/filename.h>
+#include <wx/wx.h>
 
 #include <stdint.h>
 
@@ -52,27 +53,19 @@
 #include "lz4.h"
 #include "lz4hc.h"
 
-extern bool g_bopengl;
-extern bool g_bDebugOGL;
 extern long g_tex_mem_used;
 extern int g_mipmap_max_level;
 extern GLuint g_raster_format;
-extern int          g_nCacheLimit;
 extern int          g_memCacheLimit;
 
-extern ChartCanvas *cc1;
-extern ChartBase *Current_Ch;
 extern ColorScheme global_color_scheme;
 
 extern ChartDB      *ChartData;
 extern ocpnGLOptions    g_GLOptions;
-extern wxString         g_PrivateDataDir;
 
 extern int              g_tile_size;
-extern int              g_uncompressed_tile_size;
 
 extern PFNGLCOMPRESSEDTEXIMAGE2DPROC s_glCompressedTexImage2D;
-extern PFNGLGENERATEMIPMAPEXTPROC          s_glGenerateMipmap;
 extern bool GetMemoryStatus( int *mem_total, int *mem_used );
 
 extern wxString CompressedCachePath(wxString path);
@@ -556,7 +549,7 @@ bool glTexFactory::BuildTexture(glTextureDescriptor *ptd, int base_level, const 
         int texture_level = 0;
         for(int level = base_level; level < ptd->level_min; level++ ) {
             int size = TextureTileSize(level, true);
-//            int status = GetTextureLevel( ptd, rect, level, ptd->m_colorscheme );  // Not used
+            int status = GetTextureLevel( ptd, rect, level, ptd->m_colorscheme );
             int dim = TextureDim(level);
             s_glCompressedTexImage2D( GL_TEXTURE_2D, texture_level,
                                       g_raster_format, dim, dim, 0, size,
@@ -590,7 +583,7 @@ bool glTexFactory::BuildTexture(glTextureDescriptor *ptd, int base_level, const 
             g_glTextureManager->ScheduleJob( this, rect, base_level, true, false, true, true);
             ptd->FreeMap();
             ptd->nGPU_compressed = GPU_TEXTURE_COMPRESSED;
-//            b_use_mipmaps = b_use_compressed_mipmaps;  // Not used
+            b_use_mipmaps = b_use_compressed_mipmaps;
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
         } else
 #endif
@@ -600,7 +593,7 @@ bool glTexFactory::BuildTexture(glTextureDescriptor *ptd, int base_level, const 
                 uc_base_level++;
             int texture_level = 0;
             for(int level = uc_base_level; level < ptd->level_min + b_lowmem; level++) {
-//                int status = GetTextureLevel( ptd, rect, level, ptd->m_colorscheme );  // Not used
+                int status = GetTextureLevel( ptd, rect, level, ptd->m_colorscheme );
                 int dim = TextureDim(level);
                 glTexImage2D( GL_TEXTURE_2D, texture_level, GL_RGB,
                               dim, dim, 0, FORMAT_BITS, GL_UNSIGNED_BYTE, ptd->map_array[level] );
@@ -690,9 +683,9 @@ bool glTexFactory::PrepareTexture( int base_level, const wxRect &rect, ColorSche
 void glTexFactory::PrepareTiles(const ViewPort &vp, bool use_norm_vp, ChartBase *chart)
 {
     ChartBaseBSB *pChartBSB = dynamic_cast<ChartBaseBSB*>( chart );
-    if( !pChartBSB )
-        return;
-    
+    if( !pChartBSB ) 
+      return;
+
     // detect changing north/south polar
     if(vp.m_projection_type == PROJECTION_POLAR) {
         bool north = vp.clat > 0;
@@ -800,9 +793,6 @@ void glTexFactory::PrepareTiles(const ViewPort &vp, bool use_norm_vp, ChartBase 
 
             tile->box.Set(latmin, lonmin, latmax, lonmax);
 
-//            double sx = rect.width;  // Not used
-//            double sy = rect.height;  // Not used
-                                
             double xs = rect.width / xsplits;
             double ys = rect.height / ysplits;
             double x1 = rect.x, u1 = 0;
@@ -931,7 +921,7 @@ int glTexFactory::GetTextureLevel( glTextureDescriptor *ptd, const wxRect &rect,
                 if(m_fs->IsOpened()){
                     m_fs->Seek(p->texture_offset);
                     ptd->comp_array[level] = (unsigned char*)malloc(size);
-//                    int max_compressed_size = LZ4_COMPRESSBOUND(g_tile_size);  // Not used
+                    int max_compressed_size = LZ4_COMPRESSBOUND(g_tile_size);
                     char *compressed_data = (char*)malloc(p->compressed_size);
                     m_fs->Read(compressed_data, p->compressed_size);
                     LZ4_decompress_fast(compressed_data, (char*)ptd->comp_array[level], size);
@@ -971,7 +961,7 @@ bool glTexFactory::LoadHeader(void)
             
             //  Header is located at the end of the file
             wxFileOffset hdr_offset = m_fs->Length() -sizeof( hdr);
-            /*hdr_offset = */m_fs->Seek( hdr_offset );  // Not used
+            hdr_offset = m_fs->Seek( hdr_offset );
             
             if( sizeof( hdr) == m_fs->Read(&hdr, sizeof( hdr ))) {
                 if( hdr.magic != COMPRESSED_CACHE_MAGIC ||

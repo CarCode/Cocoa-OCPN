@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  texture OpenGL text rendering built from wxFont
@@ -47,7 +47,7 @@ TexFont::~TexFont( )
 void TexFont::Build( wxFont &font, bool blur )
 {
     /* avoid rebuilding if the parameters are the same */
-    if(font == m_font && blur == m_blur)
+    if(m_built && (font == m_font) && (blur == m_blur))
         return;
     
     m_font = font;
@@ -181,6 +181,7 @@ void TexFont::Delete( )
         glDeleteTextures(1, &texobj);
         texobj = 0;
     }
+    m_built = false;
 }
 
 void TexFont::GetTextExtent(const char *string, int *width, int *height)

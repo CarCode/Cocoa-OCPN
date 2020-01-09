@@ -1,4 +1,4 @@
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Name:        SVGCanvasPathCairo.h
 // Purpose:     Cairo canvas path
 // Author:      Alex Thuering
@@ -6,13 +6,13 @@
 // RCS-ID:      $Id: SVGCanvasPathCairo.h,v 1.7 2016/07/27 08:54:21 ntalex Exp $
 // Copyright:   (c) 2005 Alex Thuering
 // Licence:     wxWindows licence
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 #ifndef WX_SVG_CANVAS_PATH_CAIRO_H
 #define WX_SVG_CANVAS_PATH_CAIRO_H
 
 #include "SVGCanvas.h"
-#include <cairo.h>
+#include <cairo/cairo.h>
 
 class wxSVGCanvasPathCairo: public wxSVGCanvasPath {
 protected:

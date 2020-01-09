@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  * $Id: findit_pi.cpp,v 1.8 2010/06/21 01:54:37 bdbcat Exp $
  *
  * Project:  OpenCPN
@@ -33,6 +33,7 @@
 
 #include <wx/aui/aui.h>
 #include <wx/fileconf.h>
+#include <wx/stdpaths.h>
 
 #include "findit_pi.h"
 #include "../../../include/wx/jsonval.h"
@@ -73,8 +74,6 @@ int findit_pi::Init(void)
 {
 	  AddLocaleCatalog( _T("opencpn-findit_pi") );
 
-      m_pFindItWindow = NULL;
-
 	  isLogbookReady = FALSE;;
 	  isLogbookWindowShown = FALSE;
 
@@ -83,21 +82,39 @@ int findit_pi::Init(void)
 
 	  m_pconfig = GetOCPNConfigObject();
 	  LoadConfig();
-
+/*
       // Create the Context Menu Items
 
       //    In order to avoid an ASSERT on msw debug builds,
       //    we need to create a dummy menu to act as a surrogate parent of the created MenuItems
       //    The Items will be re-parented when added to the real context meenu
       wxMenu dummy_menu;
-	  m_bFINDITShowIcon = true;
-	  if(m_bFINDITShowIcon)
-            m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_findit, _img_findit, wxITEM_NORMAL,
-                  _("FindIt"), _T(""), NULL,
-                   FINDIT_TOOL_POSITION, 0, this);
+    
+    wxString shareLocn = *GetpSharedDataLocation() +
+    _T("plugins") + wxFileName::GetPathSeparator() +
+    _T("findit") + wxFileName::GetPathSeparator()
+    + _T("data") + wxFileName::GetPathSeparator();
 
-      return (
+    wxString normalIcon = shareLocn + _T("findit.svg");
+    wxString toggledIcon = shareLocn + _T("findit-toggled.svg");
+    wxString rolloverIcon = shareLocn + _T("findit-rollover.svg");
+
+    //  For journeyman styles, we prefer the built-in raster icons which match the rest of the toolbar.
+    if (GetActiveStyleName().Lower() != _T("traditional")){
+        normalIcon = _T("");
+        toggledIcon = _T("");
+        rolloverIcon = _T("");
+    }
+    
+    wxLogMessage(normalIcon); */
+    m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_findit, _img_findit, wxITEM_NORMAL,
+                     _("FindIt"), _T(""), NULL,
+                      FINDIT_TOOL_POSITION, 0, this);
+
+    m_pFindItWindow = NULL;
+    return (
 			WANTS_TOOLBAR_CALLBACK    |
+            INSTALLS_TOOLBAR_TOOL     |
 		    WANTS_PREFERENCES         |
 			WANTS_PLUGIN_MESSAGING 
             );
@@ -176,7 +193,6 @@ void findit_pi::SetColorScheme(PI_ColorScheme cs)
 {
     if (NULL == m_pFindItWindow)
         return;
-//    DimeWindow(m_pFindItWindow);
 }
 
 void findit_pi::OnToolbarToolCallback(int id)
@@ -184,29 +200,16 @@ void findit_pi::OnToolbarToolCallback(int id)
 	SendPluginMessage(_T("LOGBOOK_IS_READY_FOR_REQUEST"), wxEmptyString);
 	if(NULL == m_pFindItWindow)
 		m_pFindItWindow = new MainDialog(this->m_parent_window,this);
-	else
-	{
-		if(m_pFindItWindow->IsIconized()) 
-			m_pFindItWindow->Iconize(false);
-	}
 	
     SetColorScheme(PI_ColorScheme());
     
-    m_pFindItWindow->Show();
-	m_pFindItWindow->SetFocus();
+    m_pFindItWindow->Show( !m_pFindItWindow->IsShown() );
 }
 
-void findit_pi::SetDefaults(void)
+void findit_pi::OnDialogClose()
 {
-      // If the config somehow says NOT to show the icon, override it so the user gets good feedback
-      if(!m_bFINDITShowIcon)
-      {
-            m_bFINDITShowIcon = true;
-
-            m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_findit, _img_findit, wxITEM_NORMAL,
-                    _("FindIt"), _T(""), NULL, FINDIT_TOOL_POSITION, 0, this);
-				   
-      }
+    m_pFindItWindow = NULL;
+    SaveConfig();
 }
 
 void findit_pi::UpdateAuiStatus(void)
@@ -238,17 +241,6 @@ void findit_pi::ShowPreferencesDialog( wxWindow* parent )
             if(m_pFindItWindow)
                 m_pFindItWindow->reloadData();
         
-        //    Show Icon changed value?
-        if(m_bFINDITShowIcon != dlg->m_checkBoxFindItIcon->GetValue())
-        {
-            m_bFINDITShowIcon = dlg->m_checkBoxFindItIcon->GetValue();
-            
-            if(m_bFINDITShowIcon)
-                m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_findit, _img_findit, wxITEM_NORMAL,
-                                                        _("FindIt"), _T(""), NULL, FINDIT_TOOL_POSITION, 0, this);
-            else
-                RemovePlugInTool(m_leftclick_tool_id);
-        }
         SaveConfig();
     }
     else
@@ -265,7 +257,6 @@ void findit_pi::SaveConfig()
       if(m_pconfig)
       {
 			m_pconfig->SetPath ( _T ( "/PlugIns/FindIt" ) );
-			m_pconfig->Write ( _T( "ShowFindItIcon" ), m_bFINDITShowIcon );
 			m_pconfig->Write ( _T( "buyNo" ), buyNo );
 			m_pconfig->Write ( _T( "toBuyZero" ), toBuyZero );
 			m_pconfig->Write ( _T( "lastRowDefault" ), lastRowDefault );
@@ -277,17 +268,16 @@ void findit_pi::LoadConfig()
       if(m_pconfig)
       {
             m_pconfig->SetPath ( _T( "/PlugIns/FindIt" ) );
-            m_pconfig->Read ( _T( "ShowFindItIcon" ),  &m_bFINDITShowIcon, 1 );
 			m_pconfig->Read ( _T( "buyNo" ),  &buyNo, 0 );
 			m_pconfig->Read ( _T( "toBuyZero" ),  &toBuyZero, 0 );
 			m_pconfig->Read ( _T( "lastRowDefault" ), &lastRowDefault, 0 );
 	  }
 }
-//////////////////////OptionsDialog ////////////////////
-////////////////////////////////////////////////////////
+// ////////////////////OptionsDialog ////////////////////
+// //////////////////////////////////////////////////////
 void OptionsDialog::OnInitDialog(wxInitDialogEvent& event)
 {
-	this->m_checkBoxFindItIcon->SetValue(parent->m_bFINDITShowIcon);
+//	this->m_checkBoxFindItIcon->SetValue(parent->m_bFINDITShowIcon);
 	this->m_radioBox1->SetSelection(parent->toBuyZero);
 	this->m_radioBox11->SetSelection(parent->buyNo);
 	this->m_radioBox5->SetSelection(parent->lastRowDefault);

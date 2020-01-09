@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  * $Id: wind_history.h, v1.0 2010/08/30 tom-r Exp $
  *
  * Project:  OpenCPN
@@ -6,7 +6,7 @@
  * Author:   Thomas Rauch
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,8 +21,9 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ ***************************************************************************
+ */
 
 #ifndef __WIND_HISTORY_H__
 #define __WIND_HISTORY_H__
@@ -68,7 +69,7 @@ class DashboardInstrument_WindDirHistory: public DashboardInstrument
         double m_ArrayWindSpdHistory[WIND_RECORD_COUNT];
         double m_ExpSmoothArrayWindSpd[WIND_RECORD_COUNT];
         double m_ExpSmoothArrayWindDir[WIND_RECORD_COUNT];
-        wxDateTime m_ArrayRecTime[WIND_RECORD_COUNT];
+        wxDateTime::Tm m_ArrayRecTime[WIND_RECORD_COUNT];
             
         double m_MaxWindDir;
         double m_MinWindDir;

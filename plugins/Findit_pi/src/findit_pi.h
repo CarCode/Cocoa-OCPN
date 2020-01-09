@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  * $Id: findit_pi.h,v 1.8 2010/06/21 01:54:37 bdbcat Exp $
  *
  * Project:  OpenCPN
@@ -78,7 +78,7 @@ public:
 	  void ShowPreferencesDialog( wxWindow* parent );
       void UpdateAuiStatus(void);
       
-	  void SetDefaults(void);
+	  void OnDialogClose();
 
 	  bool isLogbookReady;
 	  bool isLogbookWindowShown;
@@ -86,19 +86,15 @@ public:
 	  int		buyNo;
 	  int		toBuyZero;
 	  int		lastRowDefault;
-	  bool		m_bFINDITShowIcon;
 
 private:
       wxWindow         *m_parent_window;
 
       MainDialog       *m_pFindItWindow;
 #ifdef __WXOSX__  // Test WXOSX
-      wxAuiManager     *m_AUImgr;
+//     wxAuiManager     *m_AUImgr;
 #endif
 	  wxFileConfig     *m_pconfig;
-// not used
-//      int               m_show_id;
-//      int               m_hide_id;
 
 	  int				m_leftclick_tool_id;
 

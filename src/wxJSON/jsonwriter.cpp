@@ -1,4 +1,4 @@
-// ///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 // Name:        jsonwriter.cpp
 // Purpose:     the wxJSONWriter class: a JSON text generator
 // Author:      Luciano Cattani
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: jsonwriter.cpp,v 1.6 2008/03/03 19:05:47 luccat Exp $
 // Copyright:   (c) 2007 Luciano Cattani
 // Licence:     wxWidgets licence
-// ///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 //#ifdef __GNUG__
 //    #pragma implementation "jsonwriter.cpp"
@@ -14,7 +14,7 @@
 
 // make wxLogTrace a noop, it's really slow
 // must be defined before including debug.h
-#define wxDEBUG_LEVEL 1
+#define wxDEBUG_LEVEL 0
 
 #include <wx/jsonwriter.h>
 
@@ -449,11 +449,7 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
                 return lastChar;
             }
             if ( lastChar != '\n' )   {
-#ifdef __WXOSX__
-                WriteSeparator( os );  // lastChar Dead Store
-#else
                 lastChar = WriteSeparator( os );
-#endif
             }
         }
         else   {    // comment is not to be printed inline, so write a LF
@@ -501,11 +497,7 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
             }
         }
         else   {
-#ifdef __WXOSX__
-            WriteSeparator( os );  // lastChar Dead Store
-#else
             lastChar = WriteSeparator( os );
-#endif
         }
 
         map = value.AsMap();

@@ -1,4 +1,4 @@
-/* *******************************************************************
+/********************************************************************
 ** @source JEEPS protocol table lookup functions (GPS' without A001)
 **
 ** @author Copyright (C) 1999 Alan Bleasby

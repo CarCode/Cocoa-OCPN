@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -35,6 +35,8 @@
 #include "Select.h"
 #include "routemanagerdialog.h"
 #include "OCPNPlatform.h"
+#include "RoutePoint.h"
+#include "chcanv.h"
 
 static AIS_Decoder *s_p_sort_decoder;
 
@@ -43,19 +45,17 @@ extern bool g_bAisTargetList_sortReverse;
 extern bool g_bAisTargetList_autosort;
 extern int g_AisTargetList_sortColumn;
 extern wxString g_AisTargetList_column_spec;
+extern wxString g_AisTargetList_column_order;
 extern ocpnStyle::StyleManager* g_StyleManager;
 extern int g_AisTargetList_range;
 extern wxString g_AisTargetList_perspective;
 extern MyConfig *pConfig;
 extern AISTargetListDialog *g_pAISTargetList;
 extern MyFrame *gFrame;
-extern ChartCanvas *cc1;
 extern wxString g_default_wp_icon;
 extern Select *pSelect;
 extern RouteManagerDialog *pRouteManagerDialog;
-extern bool g_bAISShowTracks;
 extern bool g_btouch;
-extern bool g_bresponsive;
 
 IMPLEMENT_CLASS ( AISTargetListDialog, wxPanel )
 
@@ -312,17 +312,17 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
         wxAuiPaneInfo paneproto =
                 wxAuiPaneInfo().Name( _T("AISTargetList") ).CaptionVisible( true ).Float().FloatingPosition( 50, 50 )
                 .FloatingSize(400, 200).BestSize(700, GetCharHeight() * 10);
-
-
+                
+ 
         //      Force and/or override any perspective information that is not applicable
         paneproto.Caption( wxGetTranslation( _("AIS target list") ) );
         paneproto.Name( _T("AISTargetList") );
         paneproto.DestroyOnClose( true );
         paneproto.TopDockable( false ).BottomDockable( true ).LeftDockable( false ).RightDockable( false );
         paneproto.Show( true );
-        
+
         m_pAuiManager->AddPane( this, paneproto );
-        
+
         wxAuiPaneInfo &pane = m_pAuiManager->GetPane(_T("AISTargetList"));
         
         if(g_AisTargetList_perspective.IsEmpty()){
@@ -332,7 +332,7 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
             m_pAuiManager->LoadPaneInfo( g_AisTargetList_perspective, pane );
             m_pAuiManager->Update();
         }
-        
+
         pane = m_pAuiManager->GetPane(_T("AISTargetList"));     // Refresh the reference
         
         //  Some special setup for touch screens
@@ -345,7 +345,7 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
             pane.FloatingPosition(screen_size.x * 2/10, screen_size.y * 1/10);
             m_pAuiManager->Update();
         }
-
+        
         
         bool b_reset_pos = false;
         if( (pane.floating_size.x != -1) && (pane.floating_size.y != -1)){
@@ -399,8 +399,8 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
         
         m_pAuiManager->Connect( wxEVT_AUI_PANE_CLOSE,
                 wxAuiManagerEventHandler( AISTargetListDialog::OnPaneClose ), NULL, this );
+        
     }
-
     else {
         //  Make an estimate of the default dialog size
         //  for the case when the AUI Perspective for this dialog is undefined
@@ -409,7 +409,7 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
         esize.y = GetCharHeight() * 10; //18;
         SetSize( esize );    
     }
-
+    
 }
 
 AISTargetListDialog::~AISTargetListDialog()
@@ -561,11 +561,7 @@ void AISTargetListDialog::CreateControls()
         width = wxMax(dx * 2, lwidth);
         width = wxMin(width, dx * 30);
     }
-#ifdef __WXOSX__
-    m_pListCtrlAISTargets->InsertColumn( tlRNG, _("Entfernung"), wxLIST_FORMAT_RIGHT, width );
-#else
     m_pListCtrlAISTargets->InsertColumn( tlRNG, _("Range"), wxLIST_FORMAT_RIGHT, width );
-#endif
     s_width = tkz.GetNextToken();
     
     width = dx * 6;
@@ -601,7 +597,25 @@ void AISTargetListDialog::CreateControls()
     item.SetImage( g_bAisTargetList_sortReverse ? 1 : 0 );
     g_AisTargetList_sortColumn = wxMax(g_AisTargetList_sortColumn, 0);
     m_pListCtrlAISTargets->SetColumn( g_AisTargetList_sortColumn, item );
-    
+
+#ifdef wxHAS_LISTCTRL_COLUMN_ORDER 
+    wxStringTokenizer tkz_order(g_AisTargetList_column_order, _T(";"));
+    wxString s_order = tkz_order.GetNextToken();
+    int i_columns = m_pListCtrlAISTargets->GetColumnCount();
+    wxArrayInt a_order(i_columns);    
+    for (int i = 0; i < i_columns; i++) {
+        long l_order=(long)i;
+        s_order.ToLong(&l_order);
+        if (l_order<0 || l_order>i_columns) {
+            l_order = i;
+        }
+        a_order[i] = l_order;
+        s_order= tkz_order.GetNextToken();
+    }
+
+    m_pListCtrlAISTargets->SetColumnsOrder(a_order);
+#endif
+
     topSizer->Add( m_pListCtrlAISTargets, 1, wxEXPAND | wxALL, 0 );
     
     wxBoxSizer* boxSizer02 = new wxBoxSizer( wxVERTICAL );
@@ -653,7 +667,7 @@ void AISTargetListDialog::CreateControls()
     m_pButtonToggleTrack->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
                                    wxCommandEventHandler( AISTargetListDialog::OnToggleTrack ), NULL, this );
     bsRouteButtonsInner->Add( m_pButtonToggleTrack, 0, wxEXPAND | wxALL, 0 );
-
+    
     m_pButtonCopyMMSI = new wxButton( winr, wxID_ANY, _("Copy MMSI"), wxDefaultPosition,
         wxDefaultSize, wxBU_AUTODRAW );
     m_pButtonCopyMMSI->Connect(wxEVT_COMMAND_BUTTON_CLICKED,
@@ -674,13 +688,8 @@ void AISTargetListDialog::CreateControls()
                                            wxDefaultSize, 0 );
     bsRouteButtonsInner->Add( m_pStaticTextRange, 0, wxALL, 0 );
     bsRouteButtonsInner->AddSpacer( 2 );
-#ifdef __WXOSX__
-    m_pSpinCtrlRange = new wxSpinCtrl( winr, wxID_ANY, wxString::Format(wxT("%i"),g_AisTargetList_range), wxDefaultPosition,
-                                      wxSize( 50, -1 ), wxSP_ARROW_KEYS, 1, 20000  );
-#else
     m_pSpinCtrlRange = new wxSpinCtrl( winr, wxID_ANY, wxEmptyString, wxDefaultPosition,
                                        wxSize( 50, -1 ), wxSP_ARROW_KEYS, 1, 20000, g_AisTargetList_range );
-#endif
     m_pSpinCtrlRange->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED,
                                wxCommandEventHandler( AISTargetListDialog::OnLimitRange ), NULL, this );
     m_pSpinCtrlRange->Connect( wxEVT_COMMAND_TEXT_UPDATED,
@@ -733,7 +742,6 @@ void AISTargetListDialog::SetColorScheme()
 
 void AISTargetListDialog::OnPaneClose( wxAuiManagerEvent& event )
 {
-    wxAuiPaneInfo *pane; // = event.pane;  // Not used
     if( event.pane->name == _T("AISTargetList") ) {
         g_AisTargetList_perspective = m_pAuiManager->SavePaneInfo( *event.pane );
     }
@@ -864,27 +872,27 @@ void AISTargetListDialog::OnTargetListColumnClicked( wxListEvent &event )
 void AISTargetListDialog::OnTargetScrollTo( wxCommandEvent& event )
 {
     long selItemID = -1;
-    selItemID = m_pListCtrlAISTargets->GetNextItem( selItemID, wxLIST_NEXT_ALL,
-            wxLIST_STATE_SELECTED );
-    if( selItemID == -1 ) return;
+    selItemID = m_pListCtrlAISTargets->GetNextItem( selItemID, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
+    if( selItemID == -1 )
+        return;
 
     AIS_Target_Data *pAISTarget = NULL;
-    if( m_pdecoder ) pAISTarget = m_pdecoder->Get_Target_Data_From_MMSI(
-            m_pMMSI_array->Item( selItemID ) );
+    if( m_pdecoder ) pAISTarget = m_pdecoder->Get_Target_Data_From_MMSI( m_pMMSI_array->Item( selItemID ) );
 
-    if( pAISTarget ) gFrame->JumpToPosition( pAISTarget->Lat, pAISTarget->Lon, cc1->GetVPScale() );
+    if( pAISTarget )
+        gFrame->JumpToPosition( gFrame->GetPrimaryCanvas(), pAISTarget->Lat, pAISTarget->Lon, gFrame->GetPrimaryCanvas()->GetVPScale() );
 }
 
 void AISTargetListDialog::OnTargetCreateWpt( wxCommandEvent& event )
 {
     long selItemID = -1;
-    selItemID = m_pListCtrlAISTargets->GetNextItem( selItemID, wxLIST_NEXT_ALL,
-            wxLIST_STATE_SELECTED );
-    if( selItemID == -1 ) return;
+    selItemID = m_pListCtrlAISTargets->GetNextItem( selItemID, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
+    if( selItemID == -1 )
+        return;
 
     AIS_Target_Data *pAISTarget = NULL;
-    if( m_pdecoder ) pAISTarget = m_pdecoder->Get_Target_Data_From_MMSI(
-            m_pMMSI_array->Item( selItemID ) );
+    if( m_pdecoder )
+        pAISTarget = m_pdecoder->Get_Target_Data_From_MMSI( m_pMMSI_array->Item( selItemID ) );
 
     if( pAISTarget ) {
         RoutePoint *pWP = new RoutePoint( pAISTarget->Lat, pAISTarget->Lon, g_default_wp_icon, wxEmptyString, wxEmptyString );
@@ -894,37 +902,12 @@ void AISTargetListDialog::OnTargetCreateWpt( wxCommandEvent& event )
 
         if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
             pRouteManagerDialog->UpdateWptListCtrl();
-        cc1->undo->BeforeUndoableAction( Undo_CreateWaypoint, pWP, Undo_HasParent, NULL );
-        cc1->undo->AfterUndoableAction( NULL );
+        gFrame->GetPrimaryCanvas()->undo->BeforeUndoableAction( Undo_CreateWaypoint, pWP, Undo_HasParent, NULL );
+        gFrame->GetPrimaryCanvas()->undo->AfterUndoableAction( NULL );
         Refresh( false );
     }
 }
-#ifdef __WXOSX__
-void AISTargetListDialog::OnTargetCopyMMSI( wxCommandEvent& event )
-{
-    long selItemID = -1;
-    selItemID = m_pListCtrlAISTargets->GetNextItem( selItemID, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
-    if( selItemID == -1 ) return;
-    
-    AIS_Target_Data *pAISTarget = NULL;
-    if( m_pdecoder ) pAISTarget = m_pdecoder->Get_Target_Data_From_MMSI( m_pMMSI_array->Item( selItemID ) );
-    
-    if( pAISTarget ) {
-        wxString nr_mmsi = wxString::Format( _T("%09d"), abs( pAISTarget->MMSI ) );
-        wxMessageBox(_("MMSI Clipboard: " + nr_mmsi), _("Nachricht"));
-        
-        ::wxBeginBusyCursor();
-        if( wxTheClipboard->Open() ) {
-            if( !wxTheClipboard->SetData( new wxTextDataObject( nr_mmsi ) ) )
-                wxLogMessage( _T("wxTheClipboard->Open() failed.") );
-            wxTheClipboard->Close();
-        } else {
-            wxLogMessage( _T("wxTheClipboard->Open() failed.") );
-        }
-        ::wxEndBusyCursor();
-    }
-}
-#endif
+
 void AISTargetListDialog::OnShowAllTracks( wxCommandEvent& event )
 {
     if(m_pdecoder){
@@ -1044,9 +1027,7 @@ void AISTargetListDialog::UpdateAISTargetList( void )
         }
 
         g_bsort_once = false;
-#ifdef __WXOSX__
-//        if(m_pListCtrlAISTargets > 0)
-#endif
+        
         m_pListCtrlAISTargets->SetItemCount( m_pMMSI_array->GetCount() );
 
         g_AisTargetList_count = m_pMMSI_array->GetCount();
@@ -1067,17 +1048,13 @@ void AISTargetListDialog::UpdateAISTargetList( void )
                 }
             }
         }
-#ifdef __WXOSX__
-//        if(m_pListCtrlAISTargets > 0) {
-#endif
+
         if( m_pMMSI_array->GetCount() ) m_pListCtrlAISTargets->SetItemState( item_sel,
                 wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
                 wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED );
         else
             m_pListCtrlAISTargets->DeleteAllItems();
-#ifdef __WXOSX__
-//        }
-#endif
+
         wxString count;
         count.Printf( _T("%lu"), (unsigned long)m_pMMSI_array->GetCount() );
         m_pTextTargetCount->ChangeValue( count );
@@ -1169,7 +1146,7 @@ void AISTargetListDialog::UpdateNVAISTargetList( void )
             m_pListCtrlAISTargets->DeleteAllItems();
 
         wxString count;
-        count.Printf( _T("%d"), m_pMMSI_array->GetCount() );
+        count.Printf( _T("%zu"), m_pMMSI_array->GetCount() );
         m_pTextTargetCount->ChangeValue( count );
 
 #ifdef __WXMSW__

@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef __S57CLASSREGISTRAR_H__
 #define __S57CLASSREGISTRAR_H__
@@ -52,8 +53,13 @@ class S57ClassRegistrar
                           int bReportErr, FILE **fp );
 
     const char *ReadLine( FILE * fp );
+    const char *OCPLReadLine( FILE * fp );
+    
     char      **papszNextLine;
     void        DestroySparseStringlist(char **papszStrList);
+
+    char *pszRLBuffer = NULL;
+    int  nRLBufferSize = 0;
 
 public:
                 S57ClassRegistrar();

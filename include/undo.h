@@ -1,4 +1,4 @@
-/* *************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Framework for Undo features
@@ -21,7 +21,10 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ *
+ */
 
 #ifndef UNDO_H
 #define UNDO_H
@@ -58,7 +61,7 @@ public:
 
 class Undo {
 public:
-    Undo();
+    Undo( ChartCanvas *parent);
     ~Undo();
     bool AnythingToUndo();
     bool AnythingToRedo();
@@ -74,8 +77,10 @@ public:
             UndoItemPointer selectable );
     bool AfterUndoableAction( UndoItemPointer after );
     bool CancelUndoableAction( bool noDataDelete = false );
+    ChartCanvas *GetParent(){ return m_parent; }
 
 private:
+    ChartCanvas *m_parent;
     bool isInsideUndoableAction;
     UndoAction* candidate;
     unsigned int stackpointer;

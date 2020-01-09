@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -44,6 +44,7 @@ public:
     void SetEnroutePoint( RoutePoint* rp ) { return; } //TODO
     void UpdatePoints();
     void SetColorScheme( ColorScheme cs );
+    static bool getInstanceFlag();
     
 protected:
     void RoutePropDlgOnClose( wxCloseEvent& event ) { SaveGeometry(); ResetChanges(); Hide(); event.Veto(); }

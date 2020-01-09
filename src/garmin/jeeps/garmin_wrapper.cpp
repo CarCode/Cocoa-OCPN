@@ -24,6 +24,8 @@
 #include "gpsapp.h"
 #include "garmin_gps.h"
 #include "gpsserial.h"
+#include "Route.h"
+#include "chart1.h"
 
 #define GPS_DEBUG
 
@@ -180,11 +182,8 @@ GPS_SWay **Garmin_GPS_Create_A200_Route(Route *pr, int route_number, int *size)
       //    Now fill in the useful elements
 
       //    Element 0 is a route record
-#ifdef __WXOSX__
-      GPS_PWay pway = ppway[0] = GPS_Way_New();
-#else
+
       GPS_PWay pway = ppway[0];
-#endif
       pway->isrte = true;
       pway->rte_num = route_number;
       strncpy(pway->rte_ident, (pr->m_RouteNameString.Truncate ( 255 )).mb_str(), 255);
@@ -240,11 +239,8 @@ GPS_SWay **Garmin_GPS_Create_A201_Route(Route *pr, int route_number, int *size)
       //    Now fill in the useful elements
 
       //    Element 0 is a route record
-#ifdef __WXOSX__
-      GPS_PWay pway = ppway[0] = GPS_Way_New();
-#else
+
       GPS_PWay pway = ppway[0];
-#endif
       pway->isrte = true;
       pway->rte_num = route_number;
       strncpy(pway->rte_ident, (pr->m_RouteNameString.Truncate ( 255 )).mb_str(), 255);

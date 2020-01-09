@@ -12,7 +12,7 @@ extern void initialize_images(void);
 extern wxBitmap *_img_objsearch_pi;
 extern wxBitmap *_img_objsearch;
 
-#ifdef OBJSEARCH_USE_SVG
+#ifdef ocpnUSE_SVG
 extern wxString _svg_objsearch;
 extern wxString _svg_objsearch_rollover;
 extern wxString _svg_objsearch_toggled;

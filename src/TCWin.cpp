@@ -11,6 +11,7 @@
 #include "FontMgr.h"
 #include "wx28compat.h"
 #include "OCPNPlatform.h"
+#include "navutil.h"
 
 extern ColorScheme global_color_scheme;
 extern IDX_entry *gpIDX;
@@ -47,6 +48,7 @@ BEGIN_EVENT_TABLE ( TCWin, wxWindow ) EVT_PAINT ( TCWin::OnPaint )
 END_EVENT_TABLE()
 
 // Define a constructor
+extern wxDateTime gTimeSource;
 TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
 {
 
@@ -56,22 +58,24 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
     //    This way, any window decorations set by external themes, etc
     //    will not detract from night-vision
 
-    long wstyle = wxCLIP_CHILDREN | wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ;
+    m_created = false;
+    xSpot = 0;
+    ySpot = 0;
+
+    m_pTCRolloverWin = NULL;
+    m_ptextctrl = NULL;
+
+    long wstyle = wxCLIP_CHILDREN | wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxFRAME_FLOAT_ON_PARENT;
     if( ( global_color_scheme != GLOBAL_COLOR_SCHEME_DAY )
             && ( global_color_scheme != GLOBAL_COLOR_SCHEME_RGB ) ) wstyle |= ( wxNO_BORDER );
 
-#ifdef __WXOSX__
-     wstyle |= wxSTAY_ON_TOP;
-#endif
-   
     pParent = parent;
     m_x = x;
     m_y = y;
     
-    m_created = false;
     RecalculateSize();
      
-    wxDialog::Create( parent, wxID_ANY, wxString( _T ( "" ) ), m_position ,
+    wxFrame::Create( parent, wxID_ANY, wxString( _T ( "" ) ), m_position ,
                       m_tc_size, wstyle );
 
     m_created = true;
@@ -93,14 +97,18 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
         SetTitle( wxString( _( "Current" ) ) );
     }
 
-    m_pTCRolloverWin = NULL;
 
 
     int sx, sy;
     GetClientSize( &sx, &sy );
     
 //    Figure out this computer timezone minute offset
-    wxDateTime this_now = wxDateTime::Now();
+    wxDateTime this_now = gTimeSource;
+    bool cur_time = !gTimeSource.IsValid();
+
+    if (cur_time) {
+        this_now = wxDateTime::Now();
+    }
     wxDateTime this_gmt = this_now.ToGMT();
 
 #if wxCHECK_VERSION(2, 6, 2)
@@ -124,8 +132,9 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
     if( this_now.IsDST() ) m_corr_mins += 60;
 
 //    Establish the inital drawing day as today
-    m_graphday = wxDateTime::Now();
-    wxDateTime graphday_00 = wxDateTime::Today();
+    m_graphday = this_now;
+    wxDateTime graphday_00 = this_now;
+    graphday_00.ResetTime();
     time_t t_graphday_00 = graphday_00.GetTicks();
 
     //    Correct a Bug in wxWidgets time support
@@ -170,13 +179,10 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
     int bsx, bsy, bpx, bpy;
     PR_button->GetSize( &bsx, &bsy );
     PR_button->GetPosition( &bpx, &bpy );
-#ifdef __WXOSX__
-    NX_button = new wxButton( this, ID_TCWIN_NX, _T( "vor" ), wxPoint( bpx + bsx + 5, sy - (m_tsy + 10) ),
-                             wxSize( -1, -1 ) );
-#else
+
     NX_button = new wxButton( this, ID_TCWIN_NX, _( "Next" ), wxPoint( bpx + bsx + 5, sy - (m_tsy + 10) ),
                               wxSize( -1, -1 ) );
-#endif
+
     m_TCWinPopupTimer.SetOwner( this, TCWININF_TIMER );
 
     wxScreenDC dc;
@@ -427,6 +433,14 @@ void TCWin::OnPaint( wxPaintEvent& event )
     }
     
     m_ptextctrl->SetSize(texc_size);
+NEU:
+    if(m_ptextctrl){
+        wxSize texc_size = wxSize( ( m_tc_size.x * 60 / 100 ), ( m_tc_size.y *29 / 100 ) );
+        if( m_created && m_tList && !m_tList->IsShown()){
+            texc_size = wxSize( ( m_tc_size.x * 90 / 100 ), ( m_tc_size.y *29 / 100 ) );
+        }
+        m_ptextctrl->SetSize(texc_size);
+    }
 #endif                                  
     
     wxPaintDC dc( this );
@@ -458,12 +472,13 @@ void TCWin::OnPaint( wxPaintEvent& event )
         dc.SetBrush( *pltgray );
         dc.DrawRectangle( m_graph_rect.x, m_graph_rect.y, m_graph_rect.width, m_graph_rect.height );
 
-        int hour_delta = 1;
         
         //  On some platforms, we cannot draw rotated text.
         //  So, reduce the complexity of horizontal axis time labels
 #ifndef __WXMSW__
-        hour_delta = 4;
+        const int hour_delta = 4;
+#else
+        const int hour_delta = 1;
 #endif        
         
         
@@ -495,9 +510,14 @@ void TCWin::OnPaint( wxPaintEvent& event )
         }
 
         //    Make a line for "right now"
-        time_t t_now = wxDateTime::Now().GetTicks();       // now, in ticks
+        wxDateTime this_now = gTimeSource;
+        bool cur_time = !gTimeSource.IsValid();
+        if (cur_time)
+            this_now = wxDateTime::Now();
 
-        float t_ratio = m_graph_rect.width * ( t_now - m_t_graphday_00_at_station ) / ( 25 * 3600 );
+        time_t t_now = this_now.GetTicks();       // now, in ticks
+
+        float t_ratio = m_graph_rect.width * ( t_now - m_t_graphday_00_at_station ) / ( 25 * 3600.0f );
 
         //must eliminate line outside the graph (in that case put it outside the window)
         int xnow = ( t_ratio < 0 || t_ratio > m_graph_rect.width ) ? -1 : m_graph_rect.x + (int) t_ratio;
@@ -658,7 +678,7 @@ void TCWin::OnPaint( wxPaintEvent& event )
 #endif
         //  More Info
 
-///
+//
         int station_offset = ptcmgr->GetStationTimeOffset( pIDX );
         int h = station_offset / 60;
         int m = station_offset - ( h * 60 );
@@ -693,9 +713,8 @@ void TCWin::OnPaint( wxPaintEvent& event )
 
         dc.SetFont( *pSFont );
         dc.GetTextExtent( m_stz, &w, &h );
-#ifndef __WXOSX__  // Text "UTC..." überschreibt Stundenzahlen
         dc.DrawText( m_stz, x / 2 - w / 2, y - 2.5 * m_button_height );
-#endif
+
         wxString sdate;
         if(g_locale == _T("en_US"))
             sdate = m_graphday.Format( _T ( "%A %b %d, %Y" ) );
@@ -728,9 +747,8 @@ void TCWin::OnPaint( wxPaintEvent& event )
         }
 
 //    Today or tomorrow
-        if( (m_button_height * 15) < x ){        // large enough horizontally?
+        if( (m_button_height * 15) < x && cur_time){        // large enough horizontally?
             wxString sday;
-            wxDateTime this_now = wxDateTime::Now();
 
             int day = m_graphday.GetDayOfYear();
             if( m_graphday.GetYear() == this_now.GetYear() ) {
@@ -882,7 +900,7 @@ void TCWin::OnTCWinPopupTimerEvent( wxTimerEvent& event )
         //  Mark the actual spot on the curve
         // x value is clear...
         //  Find the point in the window that is used for the curev rendering, rounding as necessary
-
+        
         int idx = 1; // in case m_graph_rect.width is weird ie ppx never > curs_x
         for( int i = 0; i < 26; i++ ) {
             float ppx = m_graph_rect.x + ( ( i ) * m_graph_rect.width / 25.f );

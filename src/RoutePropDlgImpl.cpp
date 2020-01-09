@@ -32,6 +32,7 @@
 #include "routeprintout.h"
 #include "chcanv.h"
 #include "tcmgr.h"
+#include "ocpn_plugin.h"
 
 #define ID_RCLK_MENU_COPY_TEXT 7013
 #define ID_RCLK_MENU_EDIT_WP   7014
@@ -41,12 +42,9 @@
 #define COLUMN_ETD 12
 
 extern wxString GetLayerName(int id);
-#ifdef __WXOSX__
-extern ChartCanvas  *cc1;
-#endif
+
 extern double gLat;
 extern double gLon;
-extern MarkInfoDlg *g_pMarkInfoDialog;
 extern WayPointman *pWayPointMan;
 extern Routeman *g_pRouteMan;
 extern MyConfig *pConfig;
@@ -236,15 +234,15 @@ RoutePropDlgImpl::RoutePropDlgImpl( wxWindow* parent, wxWindowID id, const wxStr
     if(g_route_prop_sx > 0 && g_route_prop_sy > 0 && g_route_prop_sx < wxGetDisplaySize().x && g_route_prop_sy < wxGetDisplaySize().y) {
         SetSize(g_route_prop_sx, g_route_prop_sy);
     }
+    
+    if(g_route_prop_x > 0 && g_route_prop_y > 0 && g_route_prop_x < wxGetDisplaySize().x && g_route_prop_y < wxGetDisplaySize().y) {
 #ifdef __WXOSX__
-    if(g_route_prop_x > 0 && g_route_prop_y > 0 && g_route_prop_x < wxGetDisplaySize().x && g_route_prop_y < wxGetDisplaySize().y) {
-        SetPosition(wxPoint(g_route_prop_x,g_route_prop_y));
-    }
+        SetPosition(wxPoint(g_route_prop_x, g_route_prop_y));
 #else
-    if(g_route_prop_x > 0 && g_route_prop_y > 0 && g_route_prop_x < wxGetDisplaySize().x && g_route_prop_y < wxGetDisplaySize().y) {
         SetPosition(wxPoint(10,10));
-    }
 #endif
+    }
+    
     Connect( wxEVT_COMMAND_MENU_SELECTED,
         wxCommandEventHandler(RoutePropDlgImpl::OnRoutePropMenuSelected), NULL, this );
 }
@@ -257,6 +255,8 @@ RoutePropDlgImpl::~RoutePropDlgImpl()
 }
 
 bool RoutePropDlgImpl::instanceFlag = false;
+bool RoutePropDlgImpl::getInstanceFlag(){ return  RoutePropDlgImpl::instanceFlag; }
+
 RoutePropDlgImpl* RoutePropDlgImpl::single = NULL;
 RoutePropDlgImpl* RoutePropDlgImpl::getInstance( wxWindow* parent )
 {
@@ -275,9 +275,7 @@ void RoutePropDlgImpl::UpdatePoints()
     wxDataViewItem selection = m_dvlcWaypoints->GetSelection();
     int selected_row = m_dvlcWaypoints->GetSelectedRow();
     m_dvlcWaypoints->DeleteAllItems();
-    
-    if( NULL == m_pRoute )
-        return;
+
     wxVector<wxVariant> data;
     
     m_pRoute->UpdateSegmentDistances( m_pRoute->m_PlannedSpeed );           // to fix ETA properties
@@ -342,7 +340,7 @@ void RoutePropDlgImpl::UpdatePoints()
             crs = _("Arrived");
         }
 
-        data.push_back( wxVariant(in == 0 ? "---" : std::to_string(in)) );
+        data.push_back( wxVariant(in == 0 ? "---" : std::to_string(in)) ); // Leere Spalte? evtl. entfernen
         data.push_back( wxVariant(name) ); // To
         slen.Printf( wxT("%5.1f ") + getUsrDistanceUnit(), toUsrDistance(distance) );
         data.push_back( wxVariant(slen) ); // Distance
@@ -422,10 +420,10 @@ void RoutePropDlgImpl::SetRouteAndUpdate( Route *pR, bool only_points )
  
     if( m_pRoute && m_pRoute != pR ) // We had unsaved changes, but now display another route
         ResetChanges();
-    
+
     m_OrigRoute.m_PlannedDeparture = pR->m_PlannedDeparture;
     m_OrigRoute.m_PlannedSpeed = pR->m_PlannedSpeed;
-    
+
     wxString title = pR->GetName() == wxEmptyString ? _("Route Properties") : pR->GetName();
     if( !pR->m_bIsInLayer )
         SetTitle( title );
@@ -433,18 +431,15 @@ void RoutePropDlgImpl::SetRouteAndUpdate( Route *pR, bool only_points )
         wxString caption( wxString::Format( _T("%s, %s: %s"), title, _("Layer"), GetLayerName( pR->m_LayerID ) ) );
         SetTitle( caption );
     }
-    
+
     //  Fetch any config file values
     if ( !only_points )
     {
+        if( !pR->m_PlannedDeparture.IsValid() )
+            pR->m_PlannedDeparture = wxDateTime::Now().ToUTC();
+
         m_tz_selection = 1; // Local PC time by default
-        
-        if( pR == m_pRoute ) {
-            if( !pR->m_PlannedDeparture.IsValid() )
-                pR->m_PlannedDeparture = wxDateTime::Now();
-        } else {
-            if( !pR->m_PlannedDeparture.IsValid() )
-                pR->m_PlannedDeparture = wxDateTime::Now();
+        if( pR != m_pRoute ) {
 
             if( pR->m_TimeDisplayFormat == RTE_TIME_DISP_UTC)
                 m_tz_selection = 0;
@@ -515,7 +510,11 @@ void RoutePropDlgImpl::SetRouteAndUpdate( Route *pR, bool only_points )
             m_tpDepartureTime->SetValue(toUsrDateTime(wxDateTime::Now(), m_tz_selection , m_pRoute->pRoutePointList->GetFirst()->GetData()->m_lon));
         }
     }
-    
+
+    m_btnSplit->Enable(false);
+    if (!m_pRoute)
+        return;
+
     if( m_pRoute->m_Colour == wxEmptyString ) {
         m_choiceColor->Select( 0 );
     } else {
@@ -540,10 +539,9 @@ void RoutePropDlgImpl::SetRouteAndUpdate( Route *pR, bool only_points )
             break;
         }
     }
-    
+
     UpdatePoints();
-    
-    m_btnSplit->Enable(false);
+
     m_btnExtend->Enable(IsThisRouteExtendable());
 }
 
@@ -654,8 +652,7 @@ void RoutePropDlgImpl::WaypointsOnDataViewListCtrlItemValueChanged( wxDataViewEv
 
 void RoutePropDlgImpl::WaypointsOnDataViewListCtrlSelectionChanged( wxDataViewEvent& event )
 {
-    long selected_row = m_dvlcWaypoints->GetSelectedRow();
-    if( selected_row > 0 && selected_row < m_dvlcWaypoints->GetItemCount() - 1 ) {
+    if( m_dvlcWaypoints->GetSelectedRow() > 0 && m_dvlcWaypoints->GetSelectedRow() < m_dvlcWaypoints->GetItemCount() - 1 ) {
         m_btnSplit->Enable(true);
     } else {
         m_btnSplit->Enable(false);
@@ -664,20 +661,6 @@ void RoutePropDlgImpl::WaypointsOnDataViewListCtrlSelectionChanged( wxDataViewEv
         m_btnExtend->Enable(true);
     } else {
         m_btnExtend->Enable(false);
-    }
-    if( selected_row >= 0 && selected_row < m_dvlcWaypoints->GetItemCount()) {
-        RoutePoint *prp = m_pRoute->GetPoint(selected_row + 1);
-        if( prp ) {
-#ifdef __WXOSX__
-            gFrame->JumpToPosition( prp->m_lat, prp->m_lon, cc1->GetVPScale() );
-#else
-            gFrame->JumpToPosition( gFrame->GetPrimaryCanvas(), prp->m_lat, prp->m_lon, gFrame->GetPrimaryCanvas()->GetVPScale() );
-#endif
-#ifdef __WXMSW__
-            if(m_dvlcWaypoints)
-                m_dvlcWaypoints->SetFocus();
-#endif
-        }
     }
 }
 
@@ -789,18 +772,14 @@ void RoutePropDlgImpl::WaypointsOnDataViewListCtrlItemContextMenu( wxDataViewEve
 #else
         wxMenuItem* editItem = menu.Append( ID_RCLK_MENU_EDIT_WP, _("&Waypoint Properties...") );
         wxMenuItem* delItem = menu.Append( ID_RCLK_MENU_DELETE, _("&Remove Selected") );
-#ifndef __WXOSX__
-        wxMenuItem* copyItem = menu.Append( ID_RCLK_MENU_COPY_TEXT, _("&Copy all as text") );
-#endif
 #endif
         editItem->Enable( m_dvlcWaypoints->GetSelectedRow() >= 0 );
         delItem->Enable( m_dvlcWaypoints->GetSelectedRow() >= 0 && m_dvlcWaypoints->GetItemCount() > 2 );
     }
-/*  // Never read here, not enabled?
 #ifndef __WXQT__
     wxMenuItem* copyItem = menu.Append( ID_RCLK_MENU_COPY_TEXT, _("&Copy all as text") );
 #endif
-*/
+    
     PopupMenu( &menu );
 }
 
@@ -950,11 +929,7 @@ bool RoutePropDlgImpl::IsThisRouteExtendable()
         m_pExtendPoint = pLastPoint;
     } else {
         if( pEditRouteArray->GetCount() == 0 ) {
-#ifdef __WXOSX__
-            int nearby_radius_meters = (int) ( 8. / cc1->GetCanvasTrueScale() );
-#else
             int nearby_radius_meters = (int) ( 8. / gFrame->GetPrimaryCanvas()->GetCanvasTrueScale() );
-#endif
             double rlat = pLastPoint->m_lat;
             double rlon = pLastPoint->m_lon;
             

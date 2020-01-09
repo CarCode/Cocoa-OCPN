@@ -1,4 +1,4 @@
-/* **************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Route printout
@@ -360,18 +360,11 @@ void TrackPrintSelection::CreateControls()
 
     m_CancelButton = new wxButton( itemDialog1, ID_TRACKPRINT_SELECTION_CANCEL, _( "Cancel" ), wxDefaultPosition,
                                    wxDefaultSize, 0 );
-#ifdef __WXOSX__
-    itemBoxSizer16->Add( m_CancelButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-#else
     itemBoxSizer16->Add( m_CancelButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-#endif
+
     m_OKButton = new wxButton( itemDialog1, ID_TRACKPRINT_SELECTION_OK, _( "OK" ), wxDefaultPosition,
                                wxDefaultSize, 0 );
-#ifdef __WXOSX__
-    itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-#else
     itemBoxSizer16->Add( m_OKButton, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-#endif
     m_OKButton->SetDefault();
 
     SetColorScheme( ( ColorScheme )0 );

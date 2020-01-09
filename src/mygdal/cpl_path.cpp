@@ -1,4 +1,4 @@
-/* *********************************************************************
+/**********************************************************************
  *
  * Project:  CPL - Common Portability Library
  * Purpose:  Portable filename/path parsing, and forming ala "Glob API".
@@ -441,7 +441,7 @@ const char *CPLFormFilename( const char * pszPath,
                strlen(pszBasename) + strlen(pszAddedExtSep) +
                strlen(pszExtension) + 1 < CPL_PATH_BUF_SIZE );
 
-    strncpy( szStaticResult, pszPath, CPL_PATH_BUF_SIZE );
+    strncpy( szStaticResult, pszPath, CPL_PATH_BUF_SIZE - 1 );
     strncat( szStaticResult, pszAddedPathSep, sizeof(szStaticResult)-strlen(szStaticResult)-1);
     strncat( szStaticResult, pszBasename,     sizeof(szStaticResult)-strlen(szStaticResult)-1);
     strncat( szStaticResult, pszAddedExtSep,  sizeof(szStaticResult)-strlen(szStaticResult)-1);

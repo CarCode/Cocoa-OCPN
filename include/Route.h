@@ -53,11 +53,8 @@ class Route : public wxObject
 public:
       Route();
       ~Route();
-#ifdef __WXOSX__
-      virtual void Draw(ocpnDC& dc, ViewPort &pvp, const LLBBox &box);
-#else
+
       virtual void Draw(ocpnDC& dc, ChartCanvas *canvas, const LLBBox &box);
-#endif
       virtual int GetnPoints(void) { return pRoutePointList->GetCount(); }
       
       void AddPoint(RoutePoint *pNewPoint,
@@ -72,16 +69,11 @@ public:
       
       void DrawPointWhich(ocpnDC& dc, ChartCanvas *canvas, int iPoint, wxPoint *rpn);
       void DrawSegment(ocpnDC& dc, ChartCanvas *canvas, wxPoint *rp1, wxPoint *rp2, ViewPort &vp, bool bdraw_arrow);
-
-#ifdef __WXOSX__
-    void DrawGLLines( ViewPort &vp, ocpnDC *dc );
-    void DrawGL( ViewPort &vp );
-    void DrawGLRouteLines( ViewPort &vp );
-#else
+      
       void DrawGLLines( ViewPort &vp, ocpnDC *dc, ChartCanvas *canvas );
       void DrawGL( ViewPort &vp, ChartCanvas *canvas );
       void DrawGLRouteLines( ViewPort &vp, ChartCanvas *canvas );
-#endif
+      
       RoutePoint *GetLastPoint();
       void DeletePoint(RoutePoint *rp, bool bRenamePoints = false);
       void RemovePoint(RoutePoint *rp, bool bRenamePoints = false);

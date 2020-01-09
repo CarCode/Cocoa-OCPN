@@ -1,4 +1,4 @@
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Name:        SVGCanvasCairo.cpp
 // Purpose:     Cairo render
 // Author:      Alex Thuering
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: SVGCanvasCairo.cpp,v 1.34 2016/07/27 08:54:21 ntalex Exp $
 // Copyright:   (c) 2005 Alex Thuering
 // Licence:     wxWindows licence
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 #include "SVGCanvasCairo.h"
 #include "SVGCanvasPathCairo.h"
@@ -14,6 +14,12 @@
 #include "SVGCanvasImageCairo.h"
 #include <wx/log.h>
 #include <wx/file.h>
+
+#ifdef __WXMSW__
+ inline long lround(double d) {
+    return (long)(d>0 ? d+0.5 : ceil(d-0.5));
+    }
+#endif
 
 wxSVGCanvasCairo::~wxSVGCanvasCairo() {
 	Destroy();
@@ -241,24 +247,19 @@ void wxSVGCanvasCairo::SetPaint(cairo_t* cr, const wxSVGPaint& paint, float opac
 	}
 }
 
-#ifndef __WXOSX__
-void wxSVGCanvasCairo::SetStopValue(unsigned int index, float offset, float opacity, const wxRGBColor& rgbColor) {
-cairo_pattern_add_color_stop_rgba(m_pattern, offset, rgbColor.red() / 255.0, rgbColor.green() / 255.0, rgbColor.blue() / 255.0, opacity);
-#else
-//    void InitRGBA(wxColourBase::ChannelType r, wxColourBase::ChannelType g, wxColourBase::ChannelType b, wxColourBase::ChannelType a);
-    
-void wxSVGCanvasCairo::SetStopValue(unsigned int index, float offset, float opacity, const wxRGBColor& rgbColor) {
-// double statt float ???
-//    InitRGBA();   ????
-    cairo_pattern_add_color_stop_rgba(m_pattern, offset, rgbColor.Red() / 255.0, rgbColor.Green() / 255.0, rgbColor.Blue() / 255.0, opacity);
-#endif
+
+void wxSVGCanvasCairo::SetStopValue(unsigned int index, float offset,
+		float opacity, const wxRGBColor& rgbColor) {
+	cairo_pattern_add_color_stop_rgba(m_pattern, offset, rgbColor.Red() / 255.0, rgbColor.Green() / 255.0,
+			rgbColor.Blue() / 255.0, opacity);
 }
 
 void wxSVGCanvasCairo::AllocateGradientStops(unsigned int stop_count) {
 	// nothing to do
 }
 
-void boxBlurH(unsigned char *aInput, unsigned char *aOutput, int aStride, const wxRect &aRegion, unsigned int leftLobe,	unsigned int rightLobe, const unsigned char *prediv) {
+void boxBlurH(unsigned char *aInput, unsigned char *aOutput, int aStride, const wxRect &aRegion, unsigned int leftLobe,
+		unsigned int rightLobe, const unsigned char *prediv) {
 	int boxSize = leftLobe + rightLobe + 1;
 	int posStart = aRegion.x - leftLobe;
 	

@@ -1,4 +1,4 @@
-/* *****************************************************************************
+/******************************************************************************
  *
  * Project:  S-57 Reader
  * Purpose:  Implements polygon assembly from a bunch of arcs.
@@ -333,7 +333,7 @@ OGRGeometryH OGRBuildPolygonFromEdges( OGRGeometryH hLines,
         //  Clearly unuseable as a contour, so discard it.
         if(poRing->getNumPoints() >= 3)
             poPolygon->addRingDirectly( poRing );
-
+        
     } /* next ring */
 
 /* -------------------------------------------------------------------- */

@@ -1,4 +1,4 @@
-/* *****************************************************************************
+/******************************************************************************
  *
  * Project:  S-57 Translator
  * Purpose:  Implements S57Reader class.
@@ -24,7 +24,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************/
+ ******************************************************************************
+ *
+ * *
+ */
 
 #include <assert.h>
 #include "s57.h"
@@ -688,8 +691,19 @@ OGRFeature *S57Reader::AssembleFeature( DDFRecord * poRecord,
 /*      others.                                                         */
 /* -------------------------------------------------------------------- */
     poFDefn = FindFDefn( poRecord );
-    if( poFDefn == NULL )
-        return NULL;
+    if( poFDefn == NULL ){
+        
+        //  It is possible that a Feature was added by update, whose Class
+        //  was not already present in the module before updates.
+        //  So, if necessary, try to create and add an OGRFeatureDefn for this Feature.
+        int     nOBJL = poRecord->GetIntSubfield( "FRID", 0, "OBJL", 0 );
+        poFDefn = S57GenerateObjectClassDefn( poRegistrar, nOBJL,
+                                    this->GetOptionFlags() );
+        if(poFDefn)
+            AddFeatureDefn( poFDefn );
+        else
+            return NULL;
+    }
 
 /* -------------------------------------------------------------------- */
 /*      Does this match our target feature definition?  If not skip     */
@@ -787,7 +801,7 @@ void S57Reader::ApplyObjectClassAttributes( DDFRecord * poRecord,
     if( poATTF == NULL )
         return;
 
-//    DDFFieldDefn *poDefn = poATTF->GetFieldDefn();  // Not used
+    DDFFieldDefn *poDefn = poATTF->GetFieldDefn();
     
     nAttrCount = poATTF->GetRepeatCount();
     for( iAttr = 0; iAttr < nAttrCount; iAttr++ )
@@ -1472,14 +1486,8 @@ void S57Reader::AssembleSoundingGeometry( DDFRecord * poFRecord,
     if( poField == NULL )
         poField = poSRecord->FindField( "SG3D" );
     if( poField == NULL )
-#ifdef __WXOSX__
-    {
-        delete poMP;
         return;
-    }
-#else
-    return;
-#endif
+
     poXCOO = poField->GetFieldDefn()->FindSubfieldDefn( "XCOO" );
     poYCOO = poField->GetFieldDefn()->FindSubfieldDefn( "YCOO" );
     poVE3D = poField->GetFieldDefn()->FindSubfieldDefn( "VE3D" );
@@ -1534,15 +1542,9 @@ void S57Reader::AssembleLineGeometry( DDFRecord * poFRecord,
 /*      Find the FSPT field.                                            */
 /* -------------------------------------------------------------------- */
     poFSPT = poFRecord->FindField( "FSPT" );
-#ifdef __WXOSX__
-    if( poFSPT == NULL ){
-        delete poLine;
-        return;
-    }
-#else
     if( poFSPT == NULL )
         return;
-#endif
+
     nEdgeCount = poFSPT->GetRepeatCount();
 
 /* ==================================================================== */
@@ -2124,7 +2126,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
 /* -------------------------------------------------------------------- */
 /*      Update the target version.                                      */
 /* -------------------------------------------------------------------- */
-    unsigned char       *pnRVER;
+    unsigned int       *pnRVER;
     DDFField    *poKey = poTarget->FindField( pszKey );
     DDFSubfieldDefn *poRVER_SFD;
 
@@ -2138,7 +2140,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
     if( poRVER_SFD == NULL )
         return FALSE;
 
-    pnRVER = (unsigned char *) poKey->GetSubfieldData( poRVER_SFD, NULL, 0 );
+    pnRVER = (unsigned int *) poKey->GetSubfieldData( poRVER_SFD, NULL, 0 );
 
     *pnRVER += 1;
 
@@ -2301,7 +2303,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
                 poSrcSG2D = poUpdate->FindField("SG3D");
             }
         }
-
+        
         if(poDstSG2D == NULL && nCCUI == 2){
             // Trying to delete a coordinate that does not exist...
             // Theoretically, this is an error.
@@ -2396,7 +2398,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
     if( poUpdate->FindField( "ATTF" ) != NULL )
     {
         bool b_newField = false;
-//        DDFSubfieldDefn *poSrcATVLDefn;  // Not used
+        DDFSubfieldDefn *poSrcATVLDefn;
         DDFField *poSrcATTF = poUpdate->FindField( "ATTF" );
         DDFField *poDstATTF = poTarget->FindField( "ATTF" );
 
@@ -2414,7 +2416,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
 
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
 
-//        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );  // Not used
+        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );
 
         for( int iAtt = 0; iAtt < nRepeatCount; iAtt++ )
         {
@@ -2448,7 +2450,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
     if( poUpdate->FindField( "NATF" ) != NULL )
     {
         bool b_newField = false;
-//        DDFSubfieldDefn *poSrcATVLDefn;  // Not used
+        DDFSubfieldDefn *poSrcATVLDefn;
         DDFField *poSrcATTF = poUpdate->FindField( "NATF" );
         DDFField *poDstATTF = poTarget->FindField( "NATF" );
  
@@ -2475,7 +2477,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
         
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
         
-//        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );  // Not used
+        poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );
         
         for( int iAtt = 0; iAtt < nRepeatCount; iAtt++ )
         {

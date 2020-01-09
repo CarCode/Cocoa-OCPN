@@ -1,4 +1,4 @@
-/* *************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,7 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include <wx/sizer.h>
 #include <wx/statbox.h>
@@ -31,9 +32,9 @@
 #include "WindowDestroyListener.h"
 #include "chart1.h"
 
-IMPLEMENT_DYNAMIC_CLASS( TTYWindow, wxDialog )
+IMPLEMENT_DYNAMIC_CLASS( TTYWindow, wxFrame )
 
-BEGIN_EVENT_TABLE( TTYWindow, wxDialog )
+BEGIN_EVENT_TABLE( TTYWindow, wxFrame )
     EVT_CLOSE(TTYWindow::OnCloseWindow)
 END_EVENT_TABLE()
 
@@ -47,11 +48,8 @@ TTYWindow::TTYWindow(wxWindow *parent, int n_lines, WindowDestroyListener * list
     : m_window_destroy_listener(listener)
     , m_pScroll(NULL)
 {
-#ifdef __WXOSX__
-    wxDialog::Create( parent, -1, _T("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxSTAY_ON_TOP );
-#else
-    wxDialog::Create( parent, -1, _T("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
-#endif
+    wxFrame::Create( parent, -1, _T("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxFRAME_FLOAT_ON_PARENT );
+
     wxBoxSizer* bSizerOuterContainer = new wxBoxSizer( wxVERTICAL );
     SetSizer( bSizerOuterContainer );
 
@@ -110,7 +108,7 @@ void TTYWindow::CreateLegendBitmap()
     dc.SelectObject( m_bm_legend );
     if( m_bm_legend.IsOk()) {
 
-        dc.SetBackground( wxBrush(GetGlobalColor(_T("DILG1"))) );
+        dc.SetBackground( wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)) );
         dc.Clear();
 
         wxFont f(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);

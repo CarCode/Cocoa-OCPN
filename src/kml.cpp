@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Read and write KML Format (http://en.wikipedia.org/wiki/Keyhole_Markup_Language)
@@ -40,6 +40,8 @@
 #include "tinyxml.h"
 #include "kml.h"
 #include "Track.h"
+#include "Route.h"
+#include "chart1.h"
 
 extern MyFrame *gFrame;
 extern double gLat;
@@ -87,7 +89,6 @@ KmlPastebufferType Kml::ParseTrack( TiXmlNode* node, wxString& name ) {
         dPointList coordinates;
         if( ParseCoordinates( node, coordinates ) > 2 ) {
             TrackPoint* trackpoint = NULL;
-            TrackPoint* prevPoint = NULL;
 
             for( unsigned int i=0; i<coordinates.size(); i++ ) {
                 trackpoint = new TrackPoint(coordinates[i].y, coordinates[i].x);
@@ -262,7 +263,6 @@ KmlPastebufferType Kml::ParsePasteBuffer() {
     if( element )
         parsedRoute->m_RouteNameString = wxString( element->GetText(), wxConvUTF8 );
 
-    RoutePoint* rp = NULL;
     placemark = docHandle.FirstChild( "Document" ).FirstChild( "Placemark" ).ToElement();
     for( ; placemark; placemark=placemark->NextSiblingElement() ) {
 

@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -29,8 +29,14 @@
 
 #include "ais.h"
 
+#define SHIP_NAME_LEN  21
+#define CALL_SIGN_LEN  8
+#define EURO_VIN_LEN   9
+
 void make_hash_ERI(int key, const wxString & description);
 void clear_hash_ERI( void );
+
+
 
 class AIS_Target_Data
 {
@@ -63,8 +69,8 @@ public:
     double                    Lat;
     int                       ROTAIS;
     int                       ROTIND;
-    char                      CallSign[8];                // includes terminator
-    char                      ShipName[21];
+    char                      CallSign[CALL_SIGN_LEN];                // includes terminator
+    char                      ShipName[SHIP_NAME_LEN];
     char                      ShipNameExtension[15];
     unsigned char             ShipType;
     int                       IMO;
@@ -77,7 +83,7 @@ public:
     double                    Euro_Length;            // Extensions for European Inland AIS
     double                    Euro_Beam;
     double                    Euro_Draft;
-    char                      Euro_VIN[9];          // includes terminator
+    char                      Euro_VIN[EURO_VIN_LEN];	      // includes terminator
     int                       UN_shiptype;
     bool                      b_isEuroInland;
     bool                      b_blue_paddle;
@@ -139,7 +145,7 @@ public:
     int                      altitude;                  // Metres, from special position report(9)
     bool                     b_nameFromCache;
     float                    importance;
-    float                    last_scale;
+    short                    last_scale[AIS_TARGETDATA_MAX_CANVAS]; // where AIS_TARGETDATA_MAX_CANVAS is the max number of chartcanvas
     
 };
 

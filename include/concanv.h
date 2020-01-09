@@ -1,11 +1,11 @@
-/* **************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Console Canvas
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,8 +20,10 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ ***************************************************************************
+ *
+ */
 
 #ifndef __concanv_H__
 #define __concanv_H__
@@ -33,6 +35,9 @@
 
 #include "chart1.h"             // for ColorScheme
 
+
+#define SPEED_VMG 0
+#define SPEED_SOG 1
 
 #define ID_LEGROUTE 1000
 #define SECONDS_PER_DAY 86400
@@ -106,7 +111,7 @@ DECLARE_EVENT_TABLE()
 //----------------------------------------------------------------------------
 // ConsoleCanvas
 //----------------------------------------------------------------------------
-class ConsoleCanvas: public wxDialog
+class ConsoleCanvas: public wxFrame
 {
 public:
       ConsoleCanvas(wxWindow *frame);
@@ -122,7 +127,7 @@ public:
       void ToggleRouteTotalDisplay();
       
       wxWindow          *m_pParent;
-      wxStaticText       *pThisLegText;
+      wxStaticText      *pThisLegText;
       wxBoxSizer        *m_pitemBoxSizerLeg;
 
       AnnunText         *pXTE;
@@ -139,6 +144,7 @@ public:
 private:
       void OnPaint(wxPaintEvent& event);
       void OnShow(wxShowEvent& event);
+      char m_speedUsed;
 
 DECLARE_EVENT_TABLE()
 };

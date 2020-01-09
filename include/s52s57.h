@@ -1,11 +1,11 @@
-/* *****************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCP
  * Purpose:  S52 PLIB and S57 Chart data types
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,9 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ *
+ */
 
 
 #ifndef _S52S57_H_
@@ -33,6 +35,8 @@
 #include <vector>
 
 #define CURRENT_SENC_FORMAT_VERSION  200
+
+#define OBJL_NAME_LEN  6
 
 //    Fwd Defns
 class wxArrayOfS57attVal;
@@ -188,7 +192,7 @@ public:
    DisPrio        DPRI;             // Display Priority
    RadPrio        RPRI;             // 'O' or 'S', Radar Priority
    LUPname        TNAM;             // FTYP:  areas, points, lines
-   wxArrayString *ATTCArray;        // ArrayString of LUP Attributes
+   std::vector<char *> ATTArray;    // Array of LUP Attributes
    wxString       *INST;            // Instruction Field (rules)
    DisCat         DISC;             // Display Categorie: D/S/O, DisplayBase, Standard, Other
    int            LUCM;             // Look-Up Comment (PLib3.x put 'groupes' here,
@@ -210,8 +214,8 @@ typedef struct _Cond{
 class S52_TextC
 {
 public:
-      S52_TextC(){ pcol = NULL, pFont = NULL, m_pRGBA = NULL, bnat = false, bspecial_char = false; }
-      ~S52_TextC(){ free(m_pRGBA); }
+      S52_TextC();
+      ~S52_TextC();
 
     wxString   frmtd;       // formated text string
     char       hjust;
@@ -227,7 +231,6 @@ public:
     int        dis;         // display
     wxFont     *pFont;
     int        rul_seq_creator;  // sequence number of the Rule creating this object
-    unsigned char *m_pRGBA;
     int           RGBA_width;
     int           RGBA_height;
     int           rendered_char_height;
@@ -235,6 +238,10 @@ public:
     bool        bnat;           // frmtd is National text, UTF-8 encoded
     bool        bspecial_char;  // frmtd has special ASCII characters, i.e. > 127
     int         avgCharWidth;
+    int         texobj;
+    int         text_width;
+    int         text_height;
+    
 };
 
 
@@ -259,7 +266,7 @@ typedef struct _S57attVal {
 WX_DEFINE_ARRAY( S57attVal *, wxArrayOfS57attVal );
 
 typedef struct _OBJLElement {
-    char OBJLName[6];
+    char OBJLName[OBJL_NAME_LEN];
     int nViz;
 } OBJLElement;
 
@@ -284,7 +291,6 @@ class s57chart;
 class S57Obj;
 class OGRFeature;
 class PolyTessGeo;
-class PolyTessGeoTrap;
 class line_segment_element;
 class PI_line_segment_element;
 

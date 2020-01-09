@@ -1,11 +1,11 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  personalized GRID
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2010 by David S. Register   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,8 +21,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
-
+ ***************************************************************************
+ */
 #ifndef __CUSTOMGRID_H__
 #define __CUSTOMGRID_H__
 
@@ -33,7 +33,7 @@
 #endif //precompiled headers
 
 #include <wx/grid.h>
-#include "../../include/ocpn_plugin.h"
+#include "ocpn_plugin.h"
 #include <wx/graphics.h>
 #include <vector>
 

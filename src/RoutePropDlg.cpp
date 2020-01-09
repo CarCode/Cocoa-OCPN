@@ -1,9 +1,9 @@
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 // C++ code generated with wxFormBuilder (version Oct 26 2018)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 
 #include "RoutePropDlg.h"
 
@@ -13,7 +13,7 @@
   #define CELL_EDITABLE wxDATAVIEW_CELL_INERT
 #endif
 
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 
 RoutePropDlg::RoutePropDlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
@@ -117,6 +117,7 @@ RoutePropDlg::RoutePropDlg( wxWindow* parent, wxWindowID id, const wxString& tit
 
 	wxBoxSizer* bSizerDepartureTS;
 	bSizerDepartureTS = new wxBoxSizer( wxHORIZONTAL );
+    bSizerDeparture->Add( bSizerDepartureTS, 0, 0, 5 );
 
 	m_dpDepartureDate = new wxDatePickerCtrl( m_pnlBasic, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxDP_DEFAULT );
 	bSizerDepartureTS->Add( m_dpDepartureDate, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
@@ -127,10 +128,6 @@ RoutePropDlg::RoutePropDlg( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_tpDepartureTime = new wxTimePickerCtrl( m_pnlBasic, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxDP_DEFAULT );
 #endif
 	bSizerDepartureTS->Add( m_tpDepartureTime, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-
-	bSizerDeparture->Add( bSizerDepartureTS, 0, 0, 5 );
-
 
 	wSizerParams->Add( bSizerDeparture, 1, wxEXPAND, 0 );
 

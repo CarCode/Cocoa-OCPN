@@ -1,11 +1,11 @@
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Name:        SVGCanvasItem.cpp
 // Author:      Alex Thuering
 // Created:     2005/05/09
 // RCS-ID:      $Id: SVGCanvasItem.cpp,v 1.58 2016/12/28 17:59:30 ntalex Exp $
 // Copyright:   (c) Alex Thuering
 // Licence:     wxWindows licence
-// ////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 #include <wx/wx.h>
 #include <wx/tokenzr.h>
@@ -540,7 +540,7 @@ bool IsQuadraticType(wxPATHSEG segType) {
 }
 
 double AngleBisect(float a1, float a2) {
-	double delta = (double) fmod(a2 - a1, 2 * M_PI);
+    double delta = (double) fmod(a2 - a1, 2 * M_PI);
 	if (delta < 0) {
 		delta += 2 * M_PI;
 	}

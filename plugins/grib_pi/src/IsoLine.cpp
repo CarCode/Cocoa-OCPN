@@ -1,4 +1,4 @@
-/**********************************************************************
+/* *********************************************************************
 zyGrib: meteorological GRIB file viewer
 Copyright (C) 2008 - Jacques Zaninetti - http://www.zygrib.org
 
@@ -31,10 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "IsoLine.h"
 #include "GribSettingsDialog.h"
 #include "GribOverlayFactory.h"
-
-#ifdef __WXGTK__
-#include <gdk/gdk.h>
-#endif
 
 //static void GenerateSpline(int n, wxPoint points[]);
 //static void ClearSplineList();
@@ -739,34 +735,35 @@ Segment::Segment(int I, int w, int J,
 void Segment::intersectionAreteGrille(int i,int j, int k,int l, double *x, double *y,
                                       const GribRecord *rec, double pressure)
 {
-    double a,b, pa, pb, dec;
+    double xa, xb, ya, yb, pa, pb, dec;
     pa = rec->getValue(i,j);
     pb = rec->getValue(k,l);
+
+    rec->getXY(i, j, &xa, &ya);
+    rec->getXY(k, l, &xb, &yb);
+
     // Abscisse
-    a = rec->getX(i);
-    b = rec->getX(k);
     if (pb != pa)
         dec = (pressure-pa)/(pb-pa);
     else
         dec = 0.5;
     if (fabs(dec)>1)
         dec = 0.5;
-    double xd = b-a;
+    double xd = xb -xa;
     if(xd < -180)
         xd += 360;
     else if(xd > 180)
         xd -= 360;
-    *x = a+xd*dec;
+    *x = xa +xd*dec;
+
     // Ordonnée
-    a = rec->getY(j);
-    b = rec->getY(l);
     if (pb != pa)
         dec = (pressure-pa)/(pb-pa);
     else
         dec = 0.5;
     if (fabs(dec)>1)
         dec = 0.5;
-    *y = a+(b-a)*dec;
+    *y = ya +(yb -ya)*dec;
 }
 //---------------------------------------------------------------
 void Segment::traduitCode(int I, int w, int J, char c1, int &i, int &j) {
