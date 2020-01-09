@@ -79,10 +79,10 @@ Größte Änderung ist jedoch die Verwendung von Clang/LLVM mit Xcode statt
 der Befehlszeilen orientierten Cmake Version.
 
 Compiler:
-Xcode 11.2.1
-Apple LLVM version 10.0.0 (clang-1000.11.45.5)
+Xcode 11.3
+Apple LLVM version 11.0.0 (clang-1100.33.16)
 Target: x86_64-apple-darwin18.2.0
-SDK 10.14 Mojave
+SDK 10.15 Catalina
 Thread model: posix
 
 wxWidgets Direktive:
@@ -113,5 +113,5 @@ Die Datei /data/gshhs/poly-f-1.dat mit ~172 MB muß daher separat geholt werden
 und nach /data/gshhs/ kopiert werden:
 https://topperdiek.de/dl/ocpn/poly-f-1.dat
 -----------------------------------------------------------------------
-25. November 2019
+09. Januar 2020
 
