@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the wmm_pi package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: wmm_pi 15.8.4\n"
+"Project-Id-Version: wmm_pi 20.01.01\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-08 14:03+0100\n"
+"POT-Creation-Date: 2020-01-12 13:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,30 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/MagneticPlotMap.cpp:350
-msgid "Building Magnetic Map"
-msgstr ""
-
-#: ../src/MagneticPlotMap.cpp:351 ../src/WmmUIDialog.cpp:321
-msgid "Declination"
-msgstr ""
-
-#: ../src/MagneticPlotMap.cpp:352 ../src/WmmUIDialog.cpp:332
-msgid "Inclination"
-msgstr ""
-
-#: ../src/MagneticPlotMap.cpp:352 ../src/WmmUIDialog.cpp:342
-msgid "Field Strength"
-msgstr ""
-
-#: ../src/wmm_pi.cpp:79
+#: ../src/wmm_pi.cpp:84
 msgid ""
 "\n"
 "World Magnetic Model Plotting allows users to cross reference the magnetic "
-"declination values printed on many raster charts.\n"
+"variation values printed on many raster charts.\n"
 "\n"
-"Declination is the angle between true and magnetic north.\n"
-"Inclination is the vertical angle of the magnetic field.\n"
+"Variation is the angle between true and magnetic north.\n"
+"Inclination or dip, is the vertical angle of the magnetic field.\n"
 "\t(+- 90 at the magnetic poles)\n"
 "Field Strength is the magnetic field in nano tesla from\n"
 "\t20000 to 66000\n"
@@ -55,38 +39,38 @@ msgid ""
 "Sean D'Epagnier to support plotting."
 msgstr ""
 
-#: ../src/wmm_pi.cpp:95
+#: ../src/wmm_pi.cpp:100
 msgid "WMM Plugin"
 msgstr ""
 
-#: ../src/wmm_pi.cpp:192 ../src/wmm_pi.cpp:263 ../src/WmmUIDialog.h:87
+#: ../src/wmm_pi.cpp:211 ../src/wmm_pi.cpp:283 ../src/WmmUIDialog.h:87
 msgid "WMM"
 msgstr ""
 
-#: ../src/wmm_pi.cpp:269
+#: ../src/wmm_pi.cpp:289
 msgid "World Magnetic Model PlugIn for OpenCPN"
 msgstr ""
 
-#: ../src/wmm_pi.cpp:274
+#: ../src/wmm_pi.cpp:294
 msgid ""
 "World Magnetic Model PlugIn for OpenCPN\n"
 "Implements the NOAA World Magnetic Model\n"
 "More information: http://www.ngdc.noaa.gov/geomag/WMM/\n"
-"The bundled WMM2015 model expires on December 31, 2019.\n"
+"The bundled WMM2020 model expires on December 31, 2025.\n"
 "After then, if new version of the plugin will not be released\n"
 "in time, get a new WMM.COF from NOAA and place it to the\n"
 "location you can find in the OpenCPN logfile."
 msgstr ""
 
-#: ../src/wmm_pi.cpp:431 ../src/wmm_pi.cpp:501
+#: ../src/wmm_pi.cpp:478 ../src/wmm_pi.cpp:619
 msgid "Error, see log."
 msgstr ""
 
-#: ../src/wmm_pi.cpp:732 ../src/WmmUIDialog.h:111
+#: ../src/wmm_pi.cpp:853 ../src/WmmUIDialog.h:112
 msgid "WMM Preferences"
 msgstr ""
 
-#: ../src/wmm_pi.h:78 ../src/WmmUIDialog.h:151
+#: ../src/wmm_pi.h:77 ../src/WmmUIDialog.h:152
 msgid "Magnetic Plot Settings"
 msgstr ""
 
@@ -95,7 +79,7 @@ msgid "Boat"
 msgstr ""
 
 #: ../src/WmmUIDialog.cpp:33 ../src/WmmUIDialog.cpp:129
-msgid "F"
+msgid "F "
 msgstr ""
 
 #: ../src/WmmUIDialog.cpp:35 ../src/WmmUIDialog.cpp:131
@@ -103,7 +87,7 @@ msgid "Total Intensity"
 msgstr ""
 
 #: ../src/WmmUIDialog.cpp:43 ../src/WmmUIDialog.cpp:139
-msgid "H"
+msgid "H "
 msgstr ""
 
 #: ../src/WmmUIDialog.cpp:45 ../src/WmmUIDialog.cpp:141
@@ -111,7 +95,7 @@ msgid "Horizontal Intensity"
 msgstr ""
 
 #: ../src/WmmUIDialog.cpp:53 ../src/WmmUIDialog.cpp:149
-msgid "X"
+msgid "X "
 msgstr ""
 
 #: ../src/WmmUIDialog.cpp:55 ../src/WmmUIDialog.cpp:151
@@ -119,7 +103,7 @@ msgid "North Component"
 msgstr ""
 
 #: ../src/WmmUIDialog.cpp:63 ../src/WmmUIDialog.cpp:159
-msgid "Y"
+msgid "Y "
 msgstr ""
 
 #: ../src/WmmUIDialog.cpp:65 ../src/WmmUIDialog.cpp:161
@@ -127,7 +111,7 @@ msgid "East Component"
 msgstr ""
 
 #: ../src/WmmUIDialog.cpp:73 ../src/WmmUIDialog.cpp:169
-msgid "Z"
+msgid "Z "
 msgstr ""
 
 #: ../src/WmmUIDialog.cpp:75 ../src/WmmUIDialog.cpp:171
@@ -154,66 +138,90 @@ msgstr ""
 msgid "Cursor"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:228
-msgid "enable plot"
+#: ../src/WmmUIDialog.cpp:222
+msgid "Plot"
 msgstr ""
 
 #: ../src/WmmUIDialog.cpp:231
+msgid "Enable plot"
+msgstr ""
+
+#: ../src/WmmUIDialog.cpp:235
 msgid "Settings..."
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:266
+#: ../src/WmmUIDialog.cpp:274
 msgid "Extended"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:266
+#: ../src/WmmUIDialog.cpp:274
 msgid "Variation only"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:268
+#: ../src/WmmUIDialog.cpp:276
 msgid "View"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:272
+#: ../src/WmmUIDialog.cpp:280
 msgid "Show Plot Options"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:275
+#: ../src/WmmUIDialog.cpp:283
 msgid "Show also data at cursor position"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:278
+#: ../src/WmmUIDialog.cpp:286
+msgid "Show toolbar icon"
+msgstr ""
+
+#: ../src/WmmUIDialog.cpp:289
 msgid "Show data in toolbar icon"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:282
+#: ../src/WmmUIDialog.cpp:293
 msgid "Window transparency"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:328 ../src/WmmUIDialog.cpp:338
+#: ../src/WmmUIDialog.cpp:304 ../src/WmmUIDialog.cpp:387
+msgid "Cancel"
+msgstr ""
+
+#: ../src/WmmUIDialog.cpp:329 ../src/MagneticPlotMap.cpp:357
+msgid "Variation"
+msgstr ""
+
+#: ../src/WmmUIDialog.cpp:336 ../src/WmmUIDialog.cpp:346
 msgid "Degrees"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:348
+#: ../src/WmmUIDialog.cpp:340 ../src/MagneticPlotMap.cpp:358
+msgid "Inclination"
+msgstr ""
+
+#: ../src/WmmUIDialog.cpp:350 ../src/MagneticPlotMap.cpp:358
+msgid "Field Strength"
+msgstr ""
+
+#: ../src/WmmUIDialog.cpp:356
 msgid "Nano Tesla"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:358
+#: ../src/WmmUIDialog.cpp:366
 msgid "Step Size"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:369
+#: ../src/WmmUIDialog.cpp:377
 msgid "Pole Accuracy"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:373
+#: ../src/WmmUIDialog.cpp:381
 msgid "About"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:376
+#: ../src/WmmUIDialog.cpp:384
 msgid "Save"
 msgstr ""
 
-#: ../src/WmmUIDialog.cpp:379
-msgid "Cancel"
+#: ../src/MagneticPlotMap.cpp:356
+msgid "Building Magnetic Map"
 msgstr ""
