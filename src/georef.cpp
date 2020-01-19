@@ -1183,7 +1183,7 @@ void ll_gc_ll_reverse(double lat1, double lon1, double lat2, double lon2,
     // For small distances do an ordinary mercator calc. (To prevent return of nan's )
     if ((fabs(lon2-lon1)<0.1) &&  (fabs(lat2-lat1)<0.1))
     {
-        DistanceBearingMercator( lat1, lon1, lat2, lon2, bearing, dist);
+        DistanceBearingMercator( lat2, lon2, lat1, lon1, bearing, dist);
         return;
     }
     else{
@@ -1411,10 +1411,10 @@ double DistGreatCircle(double slat, double slon, double dlat, double dlon)
 }
 
 
-void DistanceBearingMercator(double lat0, double lon0, double lat1, double lon1, double *brg, double *dist)
+void DistanceBearingMercator(double lat1, double lon1, double lat0, double lon0, double *brg, double *dist)
 {
       //Calculate bearing and distance between two points
-      double latm = (lat0 + lat1)/2 * DEGREE; //median of latitude
+      double latm = (lat0 + lat1)/2 * DEGREE; //median of latitude (PI/180.0)
       double delta_lat = (lat1 - lat0);
       double delta_lon = (lon1 - lon0);
       double ex_lat0, ex_lat1;
@@ -1447,15 +1447,17 @@ void DistanceBearingMercator(double lat0, double lon0, double lat1, double lon1,
         bearing = fabs( bearing );
         if ( lat1 > lat0){
             if ( delta_lon < 0)
-                bearing = 2*PI - bearing;} //NW
+                bearing = 2*PI - bearing; //NW
+        }
         else{
             if ( delta_lon > 0)
                 bearing = PI - bearing; //SE
             else
-                bearing = PI + bearing;} //SW
+                bearing = PI + bearing; //SW
+            }
         
     if(brg)
-        *brg = bearing * RADIAN; //in degrees
+        *brg = bearing * RADIAN; //in degrees (180.0/PI)
     if(dist)
         *dist = distance * 60; //in NM
 }
@@ -1767,7 +1769,7 @@ void lm_print_default( int n_par, double* par, int m_dat, double* fvec,
 
 
 
-///=================================================================================
+// /=================================================================================
 
 /* *********************** high-level interface **************************** */
 

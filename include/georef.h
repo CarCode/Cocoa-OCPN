@@ -1,11 +1,11 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN Georef utility
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,15 +20,13 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
 
  ***************************************************************************
  *  Parts of this file were adapted from source code found in              *
  *  John F. Waers (jfwaers@csn.net) public domain program MacGPS45         *
- ***************************************************************************
-
- */
+ ***************************************************************************/
 
 #ifndef     __GEOREF_H__
 #define     __GEOREF_H__
@@ -80,8 +78,8 @@ struct GeoRef {
 #ifndef PI
       #define PI        3.1415926535897931160E0      /* pi */
 #endif
-#define DEGREE    (PI/180.0)
-#define RADIAN    (180.0/PI)
+#define DEGREE    (PI/180.0) // 0.017453292519943
+#define RADIAN    (180.0/PI) // 57.295779513082321
 
 #define DATUM_INDEX_WGS84     101
 #define DATUM_INDEX_UNKNOWN   -1
@@ -136,7 +134,7 @@ extern "C" void fromGNO(double x, double y, double lat0, double lon0, double *la
 extern "C" void toEQUIRECT(double lat, double lon, double lat0, double lon0, double *x, double *y);
 extern "C" void fromEQUIRECT(double x, double y, double lat0, double lon0, double *lat, double *lon);
 
-/// distance in nautical miles
+// distance in nautical miles
 extern "C" void ll_gc_ll(double lat, double lon, double crs, double dist, double *dlat, double *dlon);
 extern "C" void ll_gc_ll_reverse(double lat1, double lon1, double lat2, double lon2,
                                 double *bearing, double *dist);
@@ -150,7 +148,7 @@ extern "C" double DistLoxodrome(double slat, double slon, double dlat, double dl
 extern "C" int GetDatumIndex(const char *str);
 extern "C" void MolodenskyTransform (double lat, double lon, double *to_lat, double *to_lon, int from_datum_index, int to_datum_index);
 
-extern "C" void DistanceBearingMercator(double lat0, double lon0, double lat1, double lon1, double *brg, double *dist);
+extern "C" void DistanceBearingMercator(double lat1, double lon1, double lat0, double lon0, double *brg, double *dist);
 
 extern "C" int Georef_Calculate_Coefficients(struct GeoRef *cp, int nlin_lon);
 extern "C" int Georef_Calculate_Coefficients_Proj(struct GeoRef *cp);
