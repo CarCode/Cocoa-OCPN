@@ -115,7 +115,7 @@ public:
     
     wxIcon GetIconResource( const wxString& name );
     
-    /// Should we show tooltips?
+    // Should we show tooltips?
     static bool ShowToolTips();
     
 private:
@@ -535,15 +535,24 @@ void MUIBar::CreateControls()
         // Buttons
         
         m_zinButton = new MUIButton( this, ID_ZOOMIN, m_scaleFactor, iconDir + _T("MUI_zoom-in.svg"));
+#ifdef __WXOSX__
+        m_zinButton->SetToolTip( _("Zoom in"));
+#endif
         barSizer->Add(m_zinButton, 0, wxSHAPED);
     
         m_zoutButton = new MUIButton( this, ID_ZOOMOUT, m_scaleFactor, iconDir + _T("MUI_zoom-out.svg"));
+#ifdef __WXOSX__
+        m_zoutButton->SetToolTip( _("Zoom out"));
+#endif
         barSizer->Add(m_zoutButton, 0, wxSHAPED);
     
         barSizer->AddSpacer(2);
         
         //  Scale 
         m_scaleTextBox = new wxStaticText(this, wxID_ANY, _("1:400000"));
+#ifdef __WXOSX__
+        m_scaleTextBox->SetToolTip( _("Scale"));
+#endif
         wxColour textbackColor = GetGlobalColor( _T("GREY1") );
         m_scaleTextBox->SetForegroundColour(textbackColor);
         barSizer->Add(m_scaleTextBox, 0, wxALIGN_CENTER_VERTICAL );
@@ -555,11 +564,17 @@ void MUIBar::CreateControls()
         
         m_followButton = new MUIButton( this, ID_FOLLOW, m_scaleFactor,
                                         iconDir + _T("MUI_follow.svg"), iconDir + _T("MUI_follow_active.svg"), iconDir + _T("MUI_follow_ahead.svg"));
+#ifdef __WXOSX__
+        m_followButton->SetToolTip( _("Autofollow"));
+#endif
         barSizer->Add(m_followButton, 0, wxSHAPED);
         
         barSizer->AddSpacer(2);
         
         m_menuButton = new MUIButton( this, ID_MUI_MENU, m_scaleFactor, iconDir + _T("MUI_menu.svg"));
+#ifdef __WXOSX__
+        m_menuButton->SetToolTip( _("Chart Menu"));
+#endif
         barSizer->Add(m_menuButton, 0,  wxSHAPED);
     }
     else{
@@ -572,9 +587,15 @@ void MUIBar::CreateControls()
         // Buttons
         
         m_zinButton = new MUIButton( this, ID_ZOOMIN, m_scaleFactor, iconDir + _T("MUI_zoom-in.svg"));
+#ifdef __WXOSX__
+        m_zinButton->SetToolTip( _("Zoom in"));
+#endif
         barSizer->Add(m_zinButton, 1, wxSHAPED);
         
         m_zoutButton = new MUIButton( this, ID_ZOOMOUT, m_scaleFactor, iconDir + _T("MUI_zoom-out.svg"));
+#ifdef __WXOSX__
+        m_zoutButton->SetToolTip( _("Zoom out"));
+#endif
         barSizer->Add(m_zoutButton, 1, wxSHAPED);
         
         barSizer->AddSpacer(5);
@@ -591,11 +612,17 @@ void MUIBar::CreateControls()
         
         m_followButton = new MUIButton( this, ID_FOLLOW, m_scaleFactor,
                                         iconDir + _T("MUI_follow.svg"), iconDir + _T("MUI_follow_active.svg"), iconDir + _T("MUI_follow_ahead.svg"));
+#ifdef __WXOSX__
+        m_followButton->SetToolTip( _("Autofollow"));
+#endif
         barSizer->Add(m_followButton, 1, wxSHAPED);
         
         barSizer->AddSpacer(5);
         
         m_menuButton = new MUIButton( this, ID_MUI_MENU, m_scaleFactor, iconDir + _T("MUI_menu.svg"));
+#ifdef __WXOSX__
+        m_menuButton->SetToolTip( _("Chart Menu"));
+#endif
         barSizer->Add(m_menuButton, 1,  wxALIGN_RIGHT | wxSHAPED);
         
         

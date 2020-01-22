@@ -595,6 +595,7 @@ double                    g_AckTimeout_Mins;
 bool                      g_bShowScaled;
 bool                      g_bShowAreaNotices;
 bool                      g_bDrawAISSize;
+bool                      g_bDrawAISRealtime;
 bool                      g_bShowAISName;
 int                       g_Show_Target_Name_Scale;
 bool                      g_bWplIsAprsPosition;
@@ -1504,7 +1505,7 @@ void ParseAllENC(wxWindow* parent)
                     break;
             }
             
-            #if 1
+#if 1
             if(ps52plib){
                 s57chart *newChart = new s57chart;
                 
@@ -1531,7 +1532,7 @@ void ParseAllENC(wxWindow* parent)
             }
             
             
-            #else        
+#else
             for(int t = 0;; t=(t+1)%thread_count) {
                 if(!workers[t]) {
                     workers[t] = new ParseENCWorkerThread(filename);
@@ -1549,7 +1550,7 @@ void ParseAllENC(wxWindow* parent)
                     wxThread::Sleep(1); /* wait for a worker to finish */
                 }
             }
-            #endif 
+#endif
             
 #if defined(__WXMSW__) || defined (__WXOSX__)
             ::wxSafeYield();
@@ -1704,6 +1705,7 @@ bool MyApp::OnInit()
     //  result: Mac OS X 64 bit wxMac
     //  result new: wxWidgets version: wxWidgets 3.1.3 Apple Mac OS X 64 bit wxMacOS X El Capitan Version 10.11.5 (Build 15F34)
     //  result aktuell: wxWidgets version: wxWidgets 3.1.3 Apple Mac OS X 64 bit wxMacmacOS Sierra Version 10.12 (Build 16A323)
+    // result now: wxWidgets version: wxWidgets 3.1.3 Apple Mac OS X 64 bit wxMac macOS Mojave Version 10.14.6 (Build 18G2022)
 
     wxLogMessage( wxver + _T(" ") + platform );
     
@@ -2015,7 +2017,7 @@ bool MyApp::OnInit()
 #ifdef __OCPN__ANDROID__
     g_memCacheLimit = 100 * 1024;
 #endif
-    
+
 //      Establish location and name of chart database
     ChartListFileName = newPrivateFileName(g_Platform->GetPrivateDataDir(), "chartlist.dat", "CHRTLIST.DAT");
 
@@ -3289,31 +3291,31 @@ void MyFrame::CreateCanvasLayout( bool b_useStoredSize )
            g_pauimgr->GetPane( cc ).RightDockable(true);
            g_pauimgr->GetPane( cc ).Right();
 
-            
-           // If switching fromsingle canvas to 2-canvas mode dynamically,
+
+           // If switching from single canvas to 2-canvas mode dynamically,
            //  try to use the latest persisted size for the new second canvas.
            if(b_useStoredSize){
                 int ccw = g_canvasConfigArray.Item(1)->canvasSize.x;
                 int cch = g_canvasConfigArray.Item(1)->canvasSize.y;
-                
+
                 // Check for undefined size, and set a nice default size if necessary.
                 if( ccw < GetClientSize().x / 10){
                     ccw = GetClientSize().x / 2;
                     cch = GetClientSize().y;
                 }
-                
+
                 g_pauimgr->GetPane( cc ).BestSize( ccw, cch );
                 cc->SetSize(ccw, cch);
             }
-           
+
            break;
         }
-            
+
         case 2:                                                 // two canvas, vertical
 
             break;
     }
-    
+
     g_focusCanvas = GetPrimaryCanvas();
 
 }
@@ -4488,7 +4490,7 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
         case ID_MENU_SETTINGS_BASIC:
         {
  #ifdef __OCPN__ANDROID__
-            ///LoadS57();
+            // LoadS57();
             DoAndroidPreferences();
  #else
             DoSettings();
@@ -4922,9 +4924,9 @@ void MyFrame::ToggleFullScreen()
     bool to = !IsFullScreen();
 
  //    long style = wxFULLSCREEN_NOBORDER | wxFULLSCREEN_NOCAPTION;; // | wxFULLSCREEN_NOMENUBAR;
- #ifdef __WXOSX__
+#ifdef __WXOSX__
      ShowFullScreen( to );
- #else
+#else
      long style = wxFULLSCREEN_NOBORDER | wxFULLSCREEN_NOCAPTION;; // | wxFULLSCREEN_NOMENUBAR;
      ShowFullScreen( to, style );
 #endif
@@ -5334,9 +5336,9 @@ void MyFrame::SetbFollow( ChartCanvas *cc )
     cc->SetCanvasToolbarItemState( ID_FOLLOW, true );
     SetMenubarItemState( ID_MENU_NAV_FOLLOW, true );
     
-    #ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__
     androidSetFollowTool(true);
-    #endif
+#endif
 
     DoChartUpdate();
     cc->ReloadVP();
@@ -5349,9 +5351,9 @@ void MyFrame::ClearbFollow( ChartCanvas *cc )
     vLat = gLat;
     vLon = gLon;
 
-    #ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__
     androidSetFollowTool(false);
-    #endif
+#endif
 
     cc->m_bFollow = false;
     cc->SetCanvasToolbarItemState(ID_FOLLOW, false );
@@ -5773,7 +5775,7 @@ void MyFrame::SurfaceAllCanvasToolbars( void )
 
 #ifndef __WXQT__
        //  removed to show MUIBars on MSVC
-       ///Raise();
+       // Raise();
 #endif
 }
 
@@ -7049,7 +7051,7 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
                     cc->SelectdbChart( ut_index );
 
                 double ppm; // final ppm scale to use
-                if (g_unit_test_1) {
+                if (g_unit_test_1) {  // Nur bei Command Line Start von OCPN
                     ppm = cc->GetCanvasScaleFactor() / cte->GetScale();
                     ppm /= 2;
                 }
@@ -10987,7 +10989,7 @@ void appendOSDirSlash( wxString* pString )
     if( pString->Last() != sep ) pString->Append( sep );
 }
 
-/*************************************************************************
+/* ************************************************************************
  * Global color management routines
  *
  *************************************************************************/
@@ -11833,7 +11835,7 @@ wxEvent* OCPN_ThreadMessageEvent::Clone() const
 
 
 #if 0
-/*************************************************************************
+/* ************************************************************************
  * Serial port enumeration routines
  *
  * The EnumSerialPort function will populate an array of SSerInfo structs,

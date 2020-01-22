@@ -489,7 +489,7 @@ bool Routeman::UpdateProgress()
         CurrentRangeToActiveNormalCrossing = vVectorMagnitude( &vToArriveNormal );
 
 //          Compute current segment course
-//          Using simple Mercater projection
+//          Using simple Mercator projection
         double x1, y1, x2, y2;
         toSM( pActiveRouteSegmentBeginPoint->m_lat, pActiveRouteSegmentBeginPoint->m_lon,
                 pActiveRouteSegmentBeginPoint->m_lat, pActiveRouteSegmentBeginPoint->m_lon, &x1,

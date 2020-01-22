@@ -300,12 +300,12 @@ void MyRoutePrintout::DrawPage( wxDC* dc )
 
 // ---------- RoutePrintSelection dialof implementation
 
-/*!
+/*
  * RoutePrintSelection type definition
  */
 
 IMPLEMENT_DYNAMIC_CLASS( RoutePrintSelection, wxDialog )
-/*!
+/*
  * RouteProp event table definition
  */
 
@@ -314,7 +314,7 @@ EVT_BUTTON( ID_ROUTEPRINT_SELECTION_CANCEL, RoutePrintSelection::OnRoutepropCanc
 EVT_BUTTON( ID_ROUTEPRINT_SELECTION_OK, RoutePrintSelection::OnRoutepropOkClick )
 END_EVENT_TABLE()
 
-/*!
+/*
  * RouteProp constructors
  */
 
@@ -345,7 +345,7 @@ RoutePrintSelection::~RoutePrintSelection()
 }
 
 
-/*!
+/*
  * RouteProp creator
  */
 
@@ -366,7 +366,7 @@ bool RoutePrintSelection::Create( wxWindow* parent, wxWindowID id, const wxStrin
 }
 
 
-/*!
+/*
  * Control creation for RouteProp
  */
 

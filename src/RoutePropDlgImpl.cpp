@@ -888,7 +888,8 @@ void RoutePropDlgImpl::PrintOnButtonClick( wxCommandEvent& event )
     dlg->ShowWindowModalThenDo([this,dlg](int retcode){
         if ( retcode == wxID_OK ) {
         }
-    });}
+    });
+}
 
 void RoutePropDlgImpl::ExtendOnButtonClick( wxCommandEvent& event )
 {

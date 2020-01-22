@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "wx/wxprec.h"
 #include <wx/sizer.h>
@@ -37,27 +36,28 @@
 
 extern MyFrame *gFrame;
 
-/*!
+/*
  * GoToPositionDialog type definition
  */
 
 IMPLEMENT_DYNAMIC_CLASS( GoToPositionDialog, wxDialog )
-/*!
+/*
  * GoToPositionDialog event table definition
- */BEGIN_EVENT_TABLE( GoToPositionDialog, wxDialog )
+ */
+BEGIN_EVENT_TABLE( GoToPositionDialog, wxDialog )
 
-////@begin GoToPositionDialog event table entries
+// @begin GoToPositionDialog event table entries
 
     EVT_BUTTON( ID_GOTOPOS_CANCEL, GoToPositionDialog::OnGoToPosCancelClick )
     EVT_BUTTON( ID_GOTOPOS_OK, GoToPositionDialog::OnGoToPosOkClick )
     EVT_COMMAND(ID_LATCTRL, EVT_LLCHANGE, GoToPositionDialog::OnPositionCtlUpdated)
     EVT_COMMAND(ID_LONCTRL, EVT_LLCHANGE, GoToPositionDialog::OnPositionCtlUpdated)
 
-////@end GoToPositionDialog event table entries
+// @end GoToPositionDialog event table entries
 
 END_EVENT_TABLE()
 
-/*!
+/*
  * GoToPositionDialog constructors
  */
 
@@ -78,7 +78,7 @@ GoToPositionDialog::~GoToPositionDialog()
     delete m_MarkLonCtl;
 }
 
-/*!
+/*
  * GoToPositionDialog creator
  */
 
@@ -97,7 +97,7 @@ bool GoToPositionDialog::Create( wxWindow* parent, wxWindowID id, const wxString
     return TRUE;
 }
 
-/*!
+/*
  * Control creation for GoToPositionDialog
  */
 

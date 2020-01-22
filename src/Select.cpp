@@ -481,7 +481,7 @@ bool Select::IsSegmentSelected( float a, float b, float c, float d, float slat, 
         double dist, brg;
         DistanceBearingMercator( a, c, b, d, &brg, &dist );
         if( brg < 180. )             // swap points?
-                {
+        {
             double tmp;
             tmp = c;
             c = d;
@@ -491,7 +491,7 @@ bool Select::IsSegmentSelected( float a, float b, float c, float d, float slat, 
             b = tmp;
         }
         if( d < 0. )     // idl?
-                {
+        {
             d += 360.;
             if( slon < 0. ) adder = 360.;
         }
@@ -571,7 +571,8 @@ SelectItem *Select::FindSelection( ChartCanvas *cc, float slat, float slon, int 
     }
 
     return NULL;
-    find_ok: return pFindSel;
+find_ok:
+    return pFindSel;
 }
 
 bool Select::IsSelectableSegmentSelected( ChartCanvas *cc, float slat, float slon, SelectItem *pFindSel )

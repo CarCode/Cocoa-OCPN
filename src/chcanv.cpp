@@ -7849,6 +7849,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                         else{
                             m_pRoutePointEditTarget->m_lat = m_cursor_lat;    // update the RoutePoint entry
                             m_pRoutePointEditTarget->m_lon = m_cursor_lon;
+                            m_pRoutePointEditTarget->m_wpBBox.Invalidate();
                             m_pFoundPoint->m_slat = m_cursor_lat;             // update the SelectList entry
                             m_pFoundPoint->m_slon = m_cursor_lon;
                         }

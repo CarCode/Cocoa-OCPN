@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Tide and Current Manager
@@ -60,7 +60,7 @@ double time2tide (time_t t, IDX_entry *pIDX)
 
 
 
-/** BOGUS amplitude stuff - Added mgh
+/* BOGUS amplitude stuff - Added mgh
  * For knots^2 current stations, returns square root of (value * amplitude),
  * For normal stations, returns value * amplitude */
 
@@ -1064,7 +1064,7 @@ std::map<double, const IDX_entry*> TCMgr::GetStationsForLL(double xlat, double x
         char type = lpIDX->IDX_type;
         wxString locnx ( lpIDX->IDX_station_name, wxConvUTF8 );
         
-        if ( type == 't' || type == 'T' ) {
+        if ( type == 't' || type == 'T' ) { // Nur Tiden
             double brg, dist;
             DistanceBearingMercator(xlat, xlon, lpIDX->IDX_lat, lpIDX->IDX_lon, &brg, &dist);
             x.emplace(std::make_pair(dist, lpIDX));
@@ -1138,7 +1138,7 @@ int TCMgr::GetStationIDXbyNameType(const wxString & prefix, double xlat, double 
 
 
 
-/*****************************************************************************
+/* ****************************************************************************
  *
  *                            DISTRIBUTION STATEMENT
  *
@@ -1527,7 +1527,7 @@ const NV_CHAR *inferred_semi_diurnal[INFERRED_SEMI_DIURNAL_COUNT] = {
 #endif
 
 
-/****************************************************************************
+/* ***************************************************************************
 
                             DISTRIBUTION STATEMENT
 
@@ -1543,7 +1543,7 @@ const NV_CHAR *inferred_semi_diurnal[INFERRED_SEMI_DIURNAL_COUNT] = {
 /* Some of the following commentary is out of date.  See the new
    documentation in libtcd.html. */
 
-/****************************************************************************
+/* ***************************************************************************
 
     Tide Constituent Database API
 
@@ -1859,7 +1859,7 @@ static NV_INT32             current_record, current_index;
 static NV_CHAR              filename[MONOLOGUE_LENGTH];
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   Checked fread and fwrite wrappers
   DWF 2007-12-02
 
@@ -1890,7 +1890,7 @@ static void chk_fwrite (const void *ptr, size_t size, size_t nmemb,
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        dump_tide_record - prints out all of the fields in the
                     input tide record
@@ -1976,7 +1976,7 @@ void dump_tide_record (const TIDE_RECORD *rec)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        write_protect - prevent trying to modify TCD files of
                     an earlier version.  Nothing to do with file locking.
@@ -1993,7 +1993,7 @@ static void write_protect () {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_country - gets the country field for record "num"
 
@@ -2023,7 +2023,7 @@ const NV_CHAR *get_country (NV_INT32 num)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_tzfile - gets the time zone name for record "num"
 
@@ -2051,7 +2051,7 @@ const NV_CHAR *get_tzfile (NV_INT32 num)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_station - get the name of the station for record "num"
 
@@ -2079,7 +2079,7 @@ const NV_CHAR *get_station (NV_INT32 num)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_constituent - get the constituent name for constituent
                     number "num"
@@ -2108,7 +2108,7 @@ const NV_CHAR *get_constituent (NV_INT32 num)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_level_units - get the level units for level units
                     number "num"
@@ -2137,7 +2137,7 @@ const NV_CHAR *get_level_units (NV_INT32 num)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_dir_units - get the direction units for direction
                     units number "num"
@@ -2166,7 +2166,7 @@ const NV_CHAR *get_dir_units (NV_INT32 num)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_restriction - gets the restriction description for
                     restriction number "num"
@@ -2196,7 +2196,7 @@ const NV_CHAR *get_restriction (NV_INT32 num)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_pedigree - gets the pedigree description for pedigree
                     number "num"
@@ -2221,7 +2221,7 @@ NV_CHAR *get_pedigree (NV_INT32 num) {
 #endif
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_datum - gets the datum name for datum number "num"
 
@@ -2249,7 +2249,7 @@ const NV_CHAR *get_datum (NV_INT32 num)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 DWF 2004-10-14
 \*****************************************************************************/
 const NV_CHAR *get_legalese (NV_INT32 num)
@@ -2263,7 +2263,7 @@ const NV_CHAR *get_legalese (NV_INT32 num)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_speed - gets the speed value for constituent number
                     "num"
@@ -2292,7 +2292,7 @@ NV_FLOAT64 get_speed (NV_INT32 num)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_equilibrium - gets the equilibrium value for
                     constituent number "num" and year "year"
@@ -2322,7 +2322,7 @@ NV_FLOAT32 get_equilibrium (NV_INT32 num, NV_INT32 year)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-04
 \*****************************************************************************/
 NV_FLOAT32 *get_equilibriums (NV_INT32 num) {
@@ -2335,7 +2335,7 @@ NV_FLOAT32 *get_equilibriums (NV_INT32 num) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_node_factor - gets the node factor value for
                     constituent number "num" and year "year"
@@ -2365,7 +2365,7 @@ NV_FLOAT32 get_node_factor (NV_INT32 num, NV_INT32 year)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-04
 \*****************************************************************************/
 NV_FLOAT32 *get_node_factors (NV_INT32 num) {
@@ -2378,7 +2378,7 @@ NV_FLOAT32 *get_node_factors (NV_INT32 num) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_partial_tide_record - gets "header" portion of record
                     "num" from the index that is stored in memory.  This is
@@ -2427,7 +2427,7 @@ NV_BOOL get_partial_tide_record (NV_INT32 num, TIDE_STATION_HEADER *rec)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_next_partial_tide_record - gets "header" portion of
                     the next record from the index that is stored in memory.
@@ -2453,7 +2453,7 @@ NV_INT32 get_next_partial_tide_record (TIDE_STATION_HEADER *rec)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_nearest_partial_tide_record - gets "header" portion of
                     the record closest geographically to the input position.
@@ -2499,7 +2499,7 @@ NV_INT32 get_nearest_partial_tide_record (NV_FLOAT64 lat, NV_FLOAT64 lon,
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_time - converts a time string in +/-HH:MM form to an
                     integer in +/-HHMM form
@@ -2542,7 +2542,7 @@ NV_INT32 get_time (const NV_CHAR *string)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        ret_time - converts a time value in +/-HHMM form to a
                     time string in +/-HH:MM form
@@ -2582,7 +2582,7 @@ NV_CHAR *ret_time (NV_INT32 time)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-04
 \*****************************************************************************/
 NV_CHAR *ret_time_neat (NV_INT32 time)
@@ -2605,7 +2605,7 @@ NV_CHAR *ret_time_neat (NV_INT32 time)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-04
 \*****************************************************************************/
 NV_CHAR *ret_date (NV_U_INT32 date) {
@@ -2624,7 +2624,7 @@ NV_CHAR *ret_date (NV_U_INT32 date) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        get_tide_db_header - gets the public portion of the tide
                     database header
@@ -2650,7 +2650,7 @@ DB_HEADER_PUBLIC get_tide_db_header ()
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
    DWF 2004-09-30
    Prevent buffer overflows for MONOLOGUE_LENGTH strings.
 \*****************************************************************************/
@@ -2667,7 +2667,7 @@ static void boundscheck_monologue (const NV_CHAR *string) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
    DWF 2004-09-30
    Prevent buffer overflows for ONELINER_LENGTH strings.
 \*****************************************************************************/
@@ -2684,7 +2684,7 @@ static void boundscheck_oneliner (const NV_CHAR *string) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        clip_string - removes leading and trailing spaces from
                     search strings.
@@ -2733,7 +2733,7 @@ static NV_CHAR *clip_string (const NV_CHAR *string)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        search_station - returns record numbers of all stations
                     that have the string "string" anywhere in the station
@@ -2790,7 +2790,7 @@ NV_INT32 search_station (const NV_CHAR *string)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        find_station - finds the record number of the station
                     that has name "name"
@@ -2827,7 +2827,7 @@ NV_INT32 find_station (const NV_CHAR *name)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        find_tzfile - gets the timezone number (index into
                     tzfile array) given the tzfile name
@@ -2872,7 +2872,7 @@ NV_INT32 find_tzfile (const NV_CHAR *name)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        find_country - gets the timezone number (index into
                     country array) given the country name
@@ -2917,7 +2917,7 @@ NV_INT32 find_country (const NV_CHAR *name)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        find_level_units - gets the index into the level_units
                     array given the level units name
@@ -2962,7 +2962,7 @@ NV_INT32 find_level_units (const NV_CHAR *name)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        find_dir_units - gets the index into the dir_units
                     array given the direction units name
@@ -3007,7 +3007,7 @@ NV_INT32 find_dir_units (const NV_CHAR *name)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        find_pedigree - gets the index into the pedigree array
                     given the pedigree name
@@ -3032,7 +3032,7 @@ NV_INT32 find_pedigree (const NV_CHAR *name) {
 #endif
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        find_datum - gets the index into the datum array given the
                     datum name
@@ -3077,7 +3077,7 @@ NV_INT32 find_datum (const NV_CHAR *name)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-14
 \*****************************************************************************/
 NV_INT32 find_legalese (const NV_CHAR *name)
@@ -3107,7 +3107,7 @@ NV_INT32 find_legalese (const NV_CHAR *name)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        find_constituent - gets the index into the constituent
                     arrays for the named constituent.
@@ -3147,7 +3147,7 @@ NV_INT32 find_constituent (const NV_CHAR *name)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        find_restriction - gets the index into the restriction
                     array given the restriction name
@@ -3191,7 +3191,7 @@ NV_INT32 find_restriction (const NV_CHAR *name)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        set_speed - sets the speed value for constituent "num"
 
@@ -3226,7 +3226,7 @@ void set_speed (NV_INT32 num, NV_FLOAT64 value)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        set_equilibrium - sets the equilibrium argument for
                     constituent "num" and year "year"
@@ -3259,7 +3259,7 @@ void set_equilibrium (NV_INT32 num, NV_INT32 year, NV_FLOAT32 value)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        set_node_factor - sets the node factor for constituent
                     "num" and year "year"
@@ -3296,7 +3296,7 @@ void set_node_factor (NV_INT32 num, NV_INT32 year, NV_FLOAT32 value)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        add_pedigree - adds a new pedigree to the database
 
@@ -3321,7 +3321,7 @@ NV_INT32 add_pedigree (const NV_CHAR *name, const DB_HEADER_PUBLIC *db) {
 #endif
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        add_tzfile - adds a new tzfile to the database
 
@@ -3387,7 +3387,7 @@ NV_INT32 add_tzfile (const NV_CHAR *name, DB_HEADER_PUBLIC *db)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        add_country - adds a new country to the database
 
@@ -3453,7 +3453,7 @@ NV_INT32 add_country (const NV_CHAR *name, DB_HEADER_PUBLIC *db)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        add_datum - adds a new datum to the database
 
@@ -3519,7 +3519,7 @@ NV_INT32 add_datum (const NV_CHAR *name, DB_HEADER_PUBLIC *db)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-14
 \*****************************************************************************/
 NV_INT32 add_legalese (const NV_CHAR *name, DB_HEADER_PUBLIC *db)
@@ -3570,7 +3570,7 @@ NV_INT32 add_legalese (const NV_CHAR *name, DB_HEADER_PUBLIC *db)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        add_restriction - adds a new restriction to the database
 
@@ -3636,7 +3636,7 @@ NV_INT32 add_restriction (const NV_CHAR *name, DB_HEADER_PUBLIC *db)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-04
 \*****************************************************************************/
 NV_INT32 find_or_add_restriction (const NV_CHAR *name, DB_HEADER_PUBLIC *db) {
@@ -3649,7 +3649,7 @@ NV_INT32 find_or_add_restriction (const NV_CHAR *name, DB_HEADER_PUBLIC *db) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-04
 \*****************************************************************************/
 NV_INT32 find_or_add_tzfile (const NV_CHAR *name, DB_HEADER_PUBLIC *db) {
@@ -3662,7 +3662,7 @@ NV_INT32 find_or_add_tzfile (const NV_CHAR *name, DB_HEADER_PUBLIC *db) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-04
 \*****************************************************************************/
 NV_INT32 find_or_add_country (const NV_CHAR *name, DB_HEADER_PUBLIC *db) {
@@ -3675,7 +3675,7 @@ NV_INT32 find_or_add_country (const NV_CHAR *name, DB_HEADER_PUBLIC *db) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-04
 \*****************************************************************************/
 NV_INT32 find_or_add_datum (const NV_CHAR *name, DB_HEADER_PUBLIC *db) {
@@ -3688,7 +3688,7 @@ NV_INT32 find_or_add_datum (const NV_CHAR *name, DB_HEADER_PUBLIC *db) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-14
 \*****************************************************************************/
 NV_INT32 find_or_add_legalese (const NV_CHAR *name, DB_HEADER_PUBLIC *db) {
@@ -3701,7 +3701,7 @@ NV_INT32 find_or_add_legalese (const NV_CHAR *name, DB_HEADER_PUBLIC *db) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        check_simple - checks tide record to see if it is a
                     "simple" subordinate station.
@@ -3744,7 +3744,7 @@ NV_BOOL check_simple (TIDE_RECORD rec)
 #endif
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        header_checksum - compute the checksum for the ASCII
                     portion of the database header
@@ -3844,7 +3844,7 @@ static NV_U_INT32 header_checksum ()
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        old_header_checksum - compute the old-style checksum for
                     the ASCII portion of the database header just in case this
@@ -3896,7 +3896,7 @@ static NV_U_INT32 old_header_checksum ()
 #endif
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
    DWF 2004-10-01
    Get current time in preferred format.
 \*****************************************************************************/
@@ -3908,7 +3908,7 @@ static NV_CHAR *curtime () {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
    DWF 2004-10-15
    Calculate bytes for number of bits.
 \*****************************************************************************/
@@ -3919,7 +3919,7 @@ static NV_U_INT32 bits2bytes (NV_U_INT32 nbits) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        write_tide_db_header - writes the database header to the
                     file
@@ -4332,7 +4332,7 @@ static void write_tide_db_header ()
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        unpack_string - Safely unpack a string into a
                     fixed-length buffer.
@@ -4387,7 +4387,7 @@ static void unpack_string (NV_U_BYTE *buf, NV_U_INT32 bufsize, NV_U_INT32 *pos,
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        unpack_partial_tide_record - unpacks the "header" portion
                     of a tide record from the supplied buffer
@@ -4450,7 +4450,7 @@ static void unpack_partial_tide_record (NV_U_BYTE *buf, NV_U_INT32 bufsize,
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        read_partial_tide_record - reads the "header" portion
                     of a tide record from the database.  This is used to index
@@ -4509,7 +4509,7 @@ static NV_INT32 read_partial_tide_record (NV_INT32 num, TIDE_RECORD *rec)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        read_tide_db_header - reads the tide database header
 
@@ -5103,7 +5103,7 @@ database should be rebuilt from the original data if possible.\n");
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        open_tide_db - opens the tide database
 
@@ -5138,7 +5138,7 @@ NV_BOOL open_tide_db (const NV_CHAR *file)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        close_tide_db - closes the tide database
 
@@ -5276,7 +5276,7 @@ void close_tide_db ()
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        create_tide_db - creates the tide database
 
@@ -5640,7 +5640,7 @@ NV_BOOL create_tide_db (const NV_CHAR *file, NV_U_INT32 constituents, NV_CHAR
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-13
   Used in check_tide_record.
 \*****************************************************************************/
@@ -5657,7 +5657,7 @@ static NV_BOOL check_date (NV_U_INT32 date) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-13
   Returns true iff a record is valid enough to write.  Reports all problems
   to stderr.  The checks are not designed to be airtight (e.g., if you
@@ -5871,7 +5871,7 @@ static NV_BOOL check_tide_record (TIDE_RECORD *rec) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
   DWF 2004-10-13
   Calculate size of a tide record as it would be encoded in the TCD file.
   Size is stored in record_size field.  Return is number of constituents
@@ -5964,7 +5964,7 @@ static NV_U_INT32 figure_size (TIDE_RECORD *rec) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 DWF 2004-10-14
 \*****************************************************************************/
 static void pack_string (NV_U_BYTE *buf, NV_U_INT32 *pos, NV_CHAR *s) {
@@ -5980,7 +5980,7 @@ static void pack_string (NV_U_BYTE *buf, NV_U_INT32 *pos, NV_CHAR *s) {
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        pack_tide_record - convert TIDE_RECORD to packed form
 
@@ -6185,7 +6185,7 @@ static void pack_tide_record (TIDE_RECORD *rec, NV_U_BYTE **bufptr,
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        write_tide_record - writes a tide record to the database
 
@@ -6234,7 +6234,7 @@ static NV_BOOL write_tide_record (NV_INT32 num, TIDE_RECORD *rec)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        read_next_tide_record - reads the next tide record from
                     the database
@@ -6258,7 +6258,7 @@ NV_INT32 read_next_tide_record (TIDE_RECORD *rec)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        unpack_tide_record - convert TIDE_RECORD from packed form
 
@@ -6311,7 +6311,7 @@ static void unpack_tide_record (NV_U_BYTE *buf, NV_U_INT32 bufsize,
 
     switch (hd.pub.major_rev) {
 
-        /************************* TCD V1 *****************************/
+        /* ************************ TCD V1 *****************************/
     case 0:
     case 1:
 
@@ -6438,7 +6438,7 @@ static void unpack_tide_record (NV_U_BYTE *buf, NV_U_INT32 bufsize,
         }
         break;
 
-        /************************* TCD V2 *****************************/
+        /* ************************ TCD V2 *****************************/
     case 2:
         rec->country = bit_unpack (buf, pos, hd.country_bits);
         pos += hd.country_bits;
@@ -6566,7 +6566,7 @@ static void unpack_tide_record (NV_U_BYTE *buf, NV_U_INT32 bufsize,
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        read_tide_record - reads tide record "num" from the
                     database
@@ -6617,7 +6617,7 @@ NV_INT32 read_tide_record (NV_INT32 num, TIDE_RECORD *rec)
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        add_tide_record - adds a tide record to the database
 
@@ -6701,7 +6701,7 @@ NV_BOOL add_tide_record (TIDE_RECORD *rec, DB_HEADER_PUBLIC *db)
 }
 
 #if 0
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        delete_tide_record - deletes a record and all subordinate
                     records from the database
@@ -6813,7 +6813,7 @@ NV_BOOL delete_tide_record (NV_INT32 num, DB_HEADER_PUBLIC *db)
 
 #endif
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        update_tide_record - updates a tide record in the database
 
@@ -6927,7 +6927,7 @@ NV_BOOL update_tide_record (NV_INT32 num, TIDE_RECORD *rec, DB_HEADER_PUBLIC *db
 }
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
     Function        infer_constituents - computes inferred constituents when
                     M2, S2, K1, and O1 are given.  This function fills the
@@ -7052,7 +7052,7 @@ static NV_U_BYTE        mask[8] = {0x00, 0x80, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc,
                                                   };
 
 
-/*****************************************************************************\
+/* ****************************************************************************\
 
                             DISTRIBUTION STATEMENT
 
@@ -7065,7 +7065,7 @@ static NV_U_BYTE        mask[8] = {0x00, 0x80, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc,
 
 
 
-/***************************************************************************\
+/* **************************************************************************\
 *                                                                           *
 *   Function        calculate_bits - Computes the number of bits needed     *
 *                   to store a specified value.                             *
@@ -7105,7 +7105,7 @@ NV_U_INT32 calculate_bits (NV_U_INT32 value) {
 
 
 
-/***************************************************************************\
+/* **************************************************************************\
 *                                                                           *
 *   Function        bit_pack - Packs a long value into consecutive bits in  *
 *                   buffer.                                                 *
@@ -7231,7 +7231,7 @@ void bit_pack (NV_U_BYTE buffer[], NV_U_INT32 start, NV_U_INT32 numbits,
 
 
 
-/***************************************************************************\
+/* **************************************************************************\
 *                                                                           *
 *   Function        bit_unpack - Unpacks a long value from consecutive bits *
 *                   in buffer.                                              *
@@ -7336,7 +7336,7 @@ NV_U_INT32 bit_unpack (NV_U_BYTE buffer[], NV_U_INT32 start, NV_U_INT32 numbits)
 
 
 
-/***************************************************************************\
+/* **************************************************************************\
 *                                                                           *
 *   Function        signed_bit_unpack - Unpacks a signed long value from    *
 *                   consecutive bits in buffer.                             *
