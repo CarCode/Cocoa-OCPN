@@ -148,7 +148,7 @@ int grib_pi::Init(void)
 			  rolloverIcon = _T("");
 		  }
 
-		  wxLogMessage(normalIcon);
+//		  wxLogMessage(normalIcon);
 		  m_leftclick_tool_id = InsertPlugInToolSVG(_T(""), normalIcon, rolloverIcon, toggledIcon, wxITEM_CHECK,
 			  _("Grib"), _T(""), NULL, GRIB_TOOL_POSITION, 0, this);
                   

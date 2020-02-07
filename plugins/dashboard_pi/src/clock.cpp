@@ -132,8 +132,8 @@ wxSize DashboardInstrument_Moon::GetSize( int orient, wxSize hint )
 
 void DashboardInstrument_Moon::SetData( int st, double value, wxString format )
 {
-    if( st == OCPN_DBP_STC_LAT ) {
-        m_hemisphere = (value < 0 ? _T("S") : _T("N") );
+    if( st == OCPN_DBP_STC_LAT && !std::isnan(value)) {
+        m_hemisphere = (value < 0 ? _T("S") : _T("N"));
     }
 }
 

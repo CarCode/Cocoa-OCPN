@@ -282,8 +282,8 @@ bool chartdldr_pi::LoadConfig( void )
         fn.AppendDir(_T(CHART_DIR));
         
         pConf->Read ( _T ( "BaseChartDir" ), &m_base_chart_dir,  fn.GetPath() );
-        wxLogMessage( _T ( "chartdldr_pi: " ) + m_base_chart_dir );
-        wxLogMessage( _T ( "chartdldr_pi: " ) + fn.GetPath() );
+        wxLogMessage( _T ( "chartdldr_pi:(Basiskarten) " ) + m_base_chart_dir );
+        wxLogMessage( _T ( "chartdldr_pi:(Pfad) " ) + fn.GetPath() );
         
         pConf->Read ( _T ( "PreselectNew" ), &m_preselect_new, true );
         pConf->Read ( _T ( "PreselectUpdated" ), &m_preselect_updated, true );
@@ -484,6 +484,7 @@ void ChartDldrPanelImpl::SetSource( int id )
         cs->UpdateLocalFiles();
         pPlugIn->m_pChartSource = cs;
         FillFromFile(cs->GetUrl(), cs->GetDir(), pPlugIn->m_preselect_new, pPlugIn->m_preselect_updated);
+//        m_chartsLabel->SetLabel(wxString::Format(_("Charts: %s"), cs->GetName().c_str()));  // m_chartsLabel unbekannt
         if (::wxIsBusy()) ::wxEndBusyCursor();
     }
     else
@@ -696,6 +697,8 @@ void ChartDldrPanelImpl::UpdateAllCharts( wxCommandEvent& event )
     }
     updatingAll = true;
     cancelled = false;
+    // Flip to the list of charts so user can observe the download progress
+//    int oldPage = m_DLoadNB->SetSelection(1);  // m_DLoadNB unbekannt
     for( long chartIndex = 0; chartIndex < m_lbChartSources->GetItemCount(); chartIndex++ )
     {
         m_lbChartSources->SetItemState(chartIndex, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
@@ -714,6 +717,8 @@ void ChartDldrPanelImpl::UpdateAllCharts( wxCommandEvent& event )
         ForceChartDBUpdate();
     updatingAll = false;
     cancelled = false;
+    // Flip back to the original page
+//    m_DLoadNB->SetSelection(oldPage);  // m_DLoadNB unbekannt
 }
 
 
@@ -799,8 +804,8 @@ void ChartDldrPanelImpl::UpdateChartList( wxCommandEvent& event )
             {
                 long id = GetSelectedCatalog();
                 SetSource(id);
-                
-                FillFromFile(url.GetPath(), fn.GetPath(), pPlugIn->m_preselect_new, pPlugIn->m_preselect_updated);
+
+//                FillFromFile(url.GetPath(), fn.GetPath(), pPlugIn->m_preselect_new, pPlugIn->m_preselect_updated);
                 m_lbChartSources->SetItem(id, 0, pPlugIn->m_pChartCatalog->title);
                 m_lbChartSources->SetItem(id, 1, pPlugIn->m_pChartCatalog->GetReleaseDate().Format(_T("%Y-%m-%d %H:%M")));
                 m_lbChartSources->SetItem(id, 2, cs->GetDir());
@@ -986,7 +991,7 @@ void ChartDldrPanelImpl::DownloadCharts()
     wxFileName downloaded_p;
     int idx = -1;
 
-    for( int i = 0; i < m_clCharts->GetItemCount(); i++ )
+    for( int i = 0; i < m_clCharts->GetItemCount() && to_download; i++ )
     {
         if( cancelled )
             break;

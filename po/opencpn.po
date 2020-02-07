@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-01-22 20:24+0100\n"
-"PO-Revision-Date: 2020-01-22 20:26+0100\n"
+"PO-Revision-Date: 2020-02-07 12:12+0100\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -3372,7 +3372,7 @@ msgstr "Genordeter Modus"
 #
 #: ../src/canvasMenu.cpp:435 ../src/canvasMenu.cpp:442
 msgid "Toggle Full Screen"
-msgstr "Umschalten auf Vollbild"
+msgstr "Umschaltung Vollbild"
 
 #
 #: ../src/canvasMenu.cpp:447 ../src/canvasMenu.cpp:604
@@ -4091,7 +4091,7 @@ msgstr "Farbschema wechseln"
 #
 #: ../src/chart1.cpp:5572 ../src/chart1.cpp:5574
 msgid "Enter Full Screen"
-msgstr "Wechsel zum Vollbild"
+msgstr "Umschaltung Vollbild"
 
 #
 #: ../src/chart1.cpp:5576
@@ -6111,7 +6111,7 @@ msgstr "Voraus-Anzeige KüG-Pfeil (in Minuten)"
 #
 #: ../src/options.cpp:2836
 msgid "Heading Predictor Length (NMi)"
-msgstr "Länge des Kursvektors (NM)"
+msgstr "Länge des Kursvektors (HDT) (in sm)"
 
 #
 #: ../src/options.cpp:2843
@@ -6156,7 +6156,7 @@ msgstr "Min. Bildschirm (mm)"
 #
 #: ../src/options.cpp:2897
 msgid "Show range rings"
-msgstr "Range Ringe anzeigen"
+msgstr "Bereich-Ringe anzeigen"
 
 #
 #: ../src/options.cpp:2900 ../src/options.cpp:3040 ../src/options.cpp:3385
@@ -6290,7 +6290,7 @@ msgstr "Wegpunkt Ankunftsradius (sm)"
 #
 #: ../src/options.cpp:3093
 msgid "Advance route waypoint on arrival only"
-msgstr "Nächsten Waypoint erst nach Ankunft ansteuern"
+msgstr "Nächsten Wegpunkt erst nach Ankunft ansteuern"
 
 #
 #: ../src/options.cpp:3104

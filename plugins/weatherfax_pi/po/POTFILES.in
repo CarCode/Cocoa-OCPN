@@ -1,5 +1,7 @@
 ../src/AboutDialog.cpp
 ../src/AboutDialog.h
+../src/DecoderOptionsDialog.cpp
+../src/DecoderOptionsDialog.h
 ../src/FaxDecoder.cpp
 ../src/FaxDecoder.h
 ../src/InternetRetrievalDialog.cpp
@@ -92,7 +94,8 @@
 ../src/libaudiofile/VOC.h
 ../src/libaudiofile/WAVE.cpp
 ../src/libaudiofile/WAVE.h
-../src/weatherfax_icon.h
+../src/SchedulesDialog.cpp
+../src/SchedulesDialog.h
 ../src/weatherfax_pi.cpp
 ../src/weatherfax_pi.h
 ../src/WeatherFax.cpp
@@ -103,7 +106,17 @@
 ../src/WeatherFaxUI.h
 ../src/WeatherFaxWizard.cpp
 ../src/WeatherFaxWizard.h
-../src/SchedulesDialog.cpp
-../src/SchedulesDialog.h
 ../src/wximgkap.cpp
 ../src/wximgkap.h
+../src/wxcurl/base.cpp
+../src/wxcurl/dav.cpp
+../src/wxcurl/davtool.cpp
+../src/wxcurl/dialog.cpp
+../src/wxcurl/ftp.cpp
+../src/wxcurl/ftpparse.cpp
+../src/wxcurl/ftptool.cpp
+../src/wxcurl/http.cpp
+../src/wxcurl/panel.cpp
+../src/wxcurl/telnet.cpp
+../src/wxcurl/thread.cpp
+../src/wxcurl/utils.cpp

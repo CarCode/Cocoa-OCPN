@@ -38,6 +38,8 @@
 				034427F6F71543F09BE2E2D0 /* CMake Rules */,
 			);
 			dependencies = (
+				A6EEF12123E32FC400A13ED0 /* PBXTargetDependency */,
+				A6AF9B0823DA0FC500C5CAE3 /* PBXTargetDependency */,
 				A71FA96D342945E082A072E4 /* PBXTargetDependency */,
 				4BB90747966E40CE9AB1F8D4 /* PBXTargetDependency */,
 				A31655792F9C413E94AFE534 /* PBXTargetDependency */,
@@ -717,6 +719,10 @@
 		A616391C23A666DB0017C37E /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A616391B23A666DA0017C37E /* TexFont.cpp */; };
 		A64B191D23AFFC8A007E24FE /* sJSON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64B191C23AFFC8A007E24FE /* sJSON.cpp */; };
 		A66AC34A239D09740078858A /* hilfe.html in CopyFiles */ = {isa = PBXBuildFile; fileRef = A66AC349239D09730078858A /* hilfe.html */; };
+		A677B96223C79C7C00D0804B /* libfontconfig.1.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A677B95F23C79C4500D0804B /* libfontconfig.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A677B96323C79C7C00D0804B /* libfreetype.6.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A677B95E23C79C4500D0804B /* libfreetype.6.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A677B96423C79C7C00D0804B /* libpixman-1.0.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A677B96123C79C5300D0804B /* libpixman-1.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A677B96523C79C7C00D0804B /* libpng16.16.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A677B96023C79C5300D0804B /* libpng16.16.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A6798BCF23AFCC13009782C4 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D40123A2DB040028F17B /* icons.cpp */; };
 		A6798BD023AFCC13009782C4 /* logs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6798BAD23AFC2C6009782C4 /* logs.cpp */; };
 		A6798BD123AFCC13009782C4 /* NavObjectCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D40323A2DB510028F17B /* NavObjectCollection.cpp */; };
@@ -726,16 +732,16 @@
 		A6798BD523AFCC13009782C4 /* squiddio_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D40823A2DC150028F17B /* squiddio_pi.cpp */; };
 		A6798BD623AFCC13009782C4 /* squiddioPrefsDialogBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D40923A2DC440028F17B /* squiddioPrefsDialogBase.cpp */; };
 		A6798BD823AFCC13009782C4 /* libNMEA0183.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CD4970BD1C404C09AFC7B698 /* libNMEA0183.a */; };
-		A6798BDF23AFDC7A009782C4 /* libsquiddio_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6798BDE23AFCC13009782C4 /* libsquiddio_pi.dylib */; };
-		A684D3F523A263DF0028F17B /* libchartdldr_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A558A486A6DB4191B71E5EC2 /* libchartdldr_pi.dylib */; };
-		A684D3F623A263DF0028F17B /* libdashboard_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = EF96EA586BC1484A8E01C521 /* libdashboard_pi.dylib */; };
-		A684D3F723A263DF0028F17B /* libgrib_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = E8D6E2E5C3AF4657BE6C7EF6 /* libgrib_pi.dylib */; };
-		A684D3F823A264070028F17B /* libwmm_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 5F959E44B2AD451DA3407F7B /* libwmm_pi.dylib */; };
-		A684D3F923A264070028F17B /* libvdr_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A69EA2B7239E62BB005F613A /* libvdr_pi.dylib */; };
-		A684D3FA23A264070028F17B /* libcalculator_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A69EA2DF239E8B4B005F613A /* libcalculator_pi.dylib */; };
-		A684D3FB23A264070028F17B /* libfindit_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A69EA301239EAD9C005F613A /* libfindit_pi.dylib */; };
-		A684D3FC23A264070028F17B /* libiacfleet_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68B061A239FE74300A19ED8 /* libiacfleet_pi.dylib */; };
-		A684D3FD23A264070028F17B /* liblogbookkonni_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68B065523A0067C00A19ED8 /* liblogbookkonni_pi.dylib */; };
+		A6798BDF23AFDC7A009782C4 /* libsquiddio_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6798BDE23AFCC13009782C4 /* libsquiddio_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A684D3F523A263DF0028F17B /* libchartdldr_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A558A486A6DB4191B71E5EC2 /* libchartdldr_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A684D3F623A263DF0028F17B /* libdashboard_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = EF96EA586BC1484A8E01C521 /* libdashboard_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A684D3F723A263DF0028F17B /* libgrib_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = E8D6E2E5C3AF4657BE6C7EF6 /* libgrib_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A684D3F823A264070028F17B /* libwmm_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = 5F959E44B2AD451DA3407F7B /* libwmm_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A684D3F923A264070028F17B /* libvdr_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A69EA2B7239E62BB005F613A /* libvdr_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A684D3FA23A264070028F17B /* libcalculator_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A69EA2DF239E8B4B005F613A /* libcalculator_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A684D3FB23A264070028F17B /* libfindit_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A69EA301239EAD9C005F613A /* libfindit_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A684D3FC23A264070028F17B /* libiacfleet_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68B061A239FE74300A19ED8 /* libiacfleet_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A684D3FD23A264070028F17B /* liblogbookkonni_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A68B065523A0067C00A19ED8 /* liblogbookkonni_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A684D3FF23A2C3CE0028F17B /* libWXSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 971A3B59FA3443AB9DA036A1 /* libWXSVG.a */; };
 		A688B93223A117C600D770A5 /* Sparkle.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = A6F06FE8239D88E1008E9FAF /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A68B061B239FE86200A19ED8 /* iacfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68B060B239FE4A500A19ED8 /* iacfile.cpp */; };
@@ -771,6 +777,79 @@
 		A68B068023A0351200A19ED8 /* vwt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68B067F23A0351200A19ED8 /* vwt.cpp */; };
 		A68B068223A0353D00A19ED8 /* xdr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68B068123A0353C00A19ED8 /* xdr.cpp */; };
 		A68B068423A0355C00A19ED8 /* zda.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68B068323A0355C00A19ED8 /* zda.cpp */; };
+		A69DA3FF23DC931900B169CA /* ALACEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA3FE23DC931900B169CA /* ALACEncoder.cpp */; };
+		A69DA40223DC935A00B169CA /* ag_dec.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA40023DC935A00B169CA /* ag_dec.c */; };
+		A69DA40323DC935A00B169CA /* ag_enc.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA40123DC935A00B169CA /* ag_enc.c */; };
+		A69DA40523DC939200B169CA /* ALACBitUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA40423DC939200B169CA /* ALACBitUtilities.c */; };
+		A69DA40823DC93D700B169CA /* dp_dec.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA40623DC93D700B169CA /* dp_dec.c */; };
+		A69DA40923DC93D700B169CA /* dp_enc.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA40723DC93D700B169CA /* dp_enc.c */; };
+		A69DA40B23DC941100B169CA /* EndianPortable.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA40A23DC941100B169CA /* EndianPortable.c */; };
+		A69DA40E23DC947700B169CA /* matrix_dec.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA40C23DC947600B169CA /* matrix_dec.c */; };
+		A69DA40F23DC947700B169CA /* matrix_enc.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA40D23DC947600B169CA /* matrix_enc.c */; };
+		A69DA41123DC94C100B169CA /* ALAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA41023DC94C100B169CA /* ALAC.cpp */; };
+		A69DA41323DC94F400B169CA /* BlockCodec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA41223DC94F400B169CA /* BlockCodec.cpp */; };
+		A69DA41523DC956400B169CA /* FLAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA41423DC956300B169CA /* FLAC.cpp */; };
+		A69DA41723DC967900B169CA /* aupv.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA41623DC967900B169CA /* aupv.c */; };
+		A69DA41923DC96B800B169CA /* error.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA41823DC96B700B169CA /* error.c */; };
+		A69DA41B23DC96DE00B169CA /* extended.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA41A23DC96DD00B169CA /* extended.c */; };
+		A69DA41D23DC970500B169CA /* g711.c in Sources */ = {isa = PBXBuildFile; fileRef = A69DA41C23DC970500B169CA /* g711.c */; };
+		A69DA41F23DC973D00B169CA /* AIFF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA41E23DC973D00B169CA /* AIFF.cpp */; };
+		A69DA42123DC976A00B169CA /* AVR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA42023DC976A00B169CA /* AVR.cpp */; };
+		A69DA42323DC980D00B169CA /* CAF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA42223DC980C00B169CA /* CAF.cpp */; };
+		A69DA42523DC984E00B169CA /* IFF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA42423DC984E00B169CA /* IFF.cpp */; };
+		A69DA42723DC989B00B169CA /* IRCAM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA42623DC989B00B169CA /* IRCAM.cpp */; };
+		A69DA42923DC98CA00B169CA /* NIST.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA42823DC98C900B169CA /* NIST.cpp */; };
+		A69DA42B23DC98E400B169CA /* NeXT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA42A23DC98E400B169CA /* NeXT.cpp */; };
+		A69DA42D23DC991500B169CA /* Raw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA42C23DC991400B169CA /* Raw.cpp */; };
+		A69DA42F23DC997300B169CA /* SampleVision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA42E23DC997300B169CA /* SampleVision.cpp */; };
+		A69DA43123DC99A100B169CA /* VOC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA43023DC99A100B169CA /* VOC.cpp */; };
+		A69DA43323DC99E700B169CA /* AudioFormat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA43223DC99E600B169CA /* AudioFormat.cpp */; };
+		A69DA43523DC9A1000B169CA /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA43423DC9A1000B169CA /* File.cpp */; };
+		A69DA43723DC9A3600B169CA /* FileHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA43623DC9A3600B169CA /* FileHandle.cpp */; };
+		A69DA43923DC9A6100B169CA /* Instrument.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA43823DC9A6000B169CA /* Instrument.cpp */; };
+		A69DA43B23DC9A7F00B169CA /* Loop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA43A23DC9A7F00B169CA /* Loop.cpp */; };
+		A69DA43D23DC9AAF00B169CA /* Marker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA43C23DC9AAF00B169CA /* Marker.cpp */; };
+		A69DA43F23DC9ACD00B169CA /* Miscellaneous.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA43E23DC9ACD00B169CA /* Miscellaneous.cpp */; };
+		A69DA44123DC9AEE00B169CA /* Setup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA44023DC9AEE00B169CA /* Setup.cpp */; };
+		A69DA44323DC9B1500B169CA /* Track.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA44223DC9B1500B169CA /* Track.cpp */; };
+		A69DA44523DC9B4100B169CA /* UUID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA44423DC9B4100B169CA /* UUID.cpp */; };
+		A69DA44723DC9B6500B169CA /* WAVE.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA44623DC9B6500B169CA /* WAVE.cpp */; };
+		A69DA44A23DC9B8D00B169CA /* aes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA44823DC9B8D00B169CA /* aes.cpp */; };
+		A69DA44B23DC9B8D00B169CA /* af_vfs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA44923DC9B8D00B169CA /* af_vfs.cpp */; };
+		A69DA44D23DC9BBC00B169CA /* compression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA44C23DC9BBB00B169CA /* compression.cpp */; };
+		A69DA45023DC9BDD00B169CA /* data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA44E23DC9BDC00B169CA /* data.cpp */; };
+		A69DA45123DC9BDD00B169CA /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA44F23DC9BDC00B169CA /* debug.cpp */; };
+		A69DA45323DC9C1100B169CA /* format.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA45223DC9C1000B169CA /* format.cpp */; };
+		A69DA45523DC9C5100B169CA /* openclose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA45423DC9C5000B169CA /* openclose.cpp */; };
+		A69DA45723DC9CC700B169CA /* pcm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA45623DC9CC600B169CA /* pcm.cpp */; };
+		A69DA45923DC9D3200B169CA /* query.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA45823DC9D3200B169CA /* query.cpp */; };
+		A69DA45B23DC9D9400B169CA /* units.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA45A23DC9D9400B169CA /* units.cpp */; };
+		A69DA45D23DC9DFB00B169CA /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA45C23DC9DFB00B169CA /* util.cpp */; };
+		A69DA45F23DC9E3D00B169CA /* FileModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA45E23DC9E3D00B169CA /* FileModule.cpp */; };
+		A69DA46123DC9E8A00B169CA /* G711.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA46023DC9E8900B169CA /* G711.cpp */; };
+		A69DA46323DC9EB700B169CA /* IMA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA46223DC9EB700B169CA /* IMA.cpp */; };
+		A69DA46523DC9EDB00B169CA /* MSADPCM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA46423DC9EDA00B169CA /* MSADPCM.cpp */; };
+		A69DA46723DC9EFF00B169CA /* Module.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA46623DC9EFE00B169CA /* Module.cpp */; };
+		A69DA46923DC9F3400B169CA /* ModuleState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA46823DC9F3400B169CA /* ModuleState.cpp */; };
+		A69DA46B23DC9F5C00B169CA /* PCM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA46A23DC9F5C00B169CA /* PCM.cpp */; };
+		A69DA46D23DC9F9100B169CA /* RebufferModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA46C23DC9F9100B169CA /* RebufferModule.cpp */; };
+		A69DA46F23DC9FB300B169CA /* SimpleModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA46E23DC9FB300B169CA /* SimpleModule.cpp */; };
+		A69DA47023DCBF8F00B169CA /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA3FA23DC918B00B169CA /* Buffer.cpp */; };
+		A69DA47123DCBF8F00B169CA /* FLACFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA3FB23DC91CD00B169CA /* FLACFile.cpp */; };
+		A69DA47223DCBF8F00B169CA /* PacketTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA3FC23DC921900B169CA /* PacketTable.cpp */; };
+		A69DA47323DCBF8F00B169CA /* ALACDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69DA3FD23DC92E800B169CA /* ALACDecoder.cpp */; };
+		A69DA47423DCBF8F00B169CA /* weatherfax_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D43323A2E23D0028F17B /* weatherfax_pi.cpp */; };
+		A69DA47523DCBF8F00B169CA /* FaxDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D42F23A2E1BA0028F17B /* FaxDecoder.cpp */; };
+		A69DA47623DCBF8F00B169CA /* WeatherFax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D43423A2E2660028F17B /* WeatherFax.cpp */; };
+		A69DA47723DCBF8F00B169CA /* WeatherFaxWizard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D43723A2E2D20028F17B /* WeatherFaxWizard.cpp */; };
+		A69DA47823DCBF8F00B169CA /* WeatherFaxUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D43623A2E2B00028F17B /* WeatherFaxUI.cpp */; };
+		A69DA47923DCBF8F00B169CA /* WeatherFaxImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D43523A2E28A0028F17B /* WeatherFaxImage.cpp */; };
+		A69DA47A23DCBF8F00B169CA /* SchedulesDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D43223A2E2090028F17B /* SchedulesDialog.cpp */; };
+		A69DA47B23DCBF8F00B169CA /* InternetRetrievalDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D43123A2E1F00028F17B /* InternetRetrievalDialog.cpp */; };
+		A69DA47C23DCBF8F00B169CA /* AboutDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D42D23A2E1800028F17B /* AboutDialog.cpp */; };
+		A69DA47D23DCBF8F00B169CA /* DecoderOptionsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D42E23A2E19C0028F17B /* DecoderOptionsDialog.cpp */; };
+		A69DA47E23DCBF8F00B169CA /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D43023A2E1DC0028F17B /* icons.cpp */; };
+		A69DA47F23DCBF8F00B169CA /* wximgkap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D43823A2E2EA0028F17B /* wximgkap.cpp */; };
 		A69EA2B8239E6387005F613A /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69EA2A7239E6098005F613A /* icons.cpp */; };
 		A69EA2B9239E6387005F613A /* vdr_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69EA2A8239E60BF005F613A /* vdr_pi.cpp */; };
 		A69EA2E0239E8D0C005F613A /* calculator_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69EA2C6239E80C2005F613A /* calculator_pi.cpp */; };
@@ -789,6 +868,16 @@
 		A69EA304239EB021005F613A /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69EA2F2239EA563005F613A /* icons.cpp */; };
 		A69EA308239EB72E005F613A /* gui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A69EA306239EB6E4005F613A /* gui.cpp */; };
 		A6A4F3F442144762A510F7EF /* Symbol-Star-Red.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9E7FD09EEDB545A09CA44280 /* Symbol-Star-Red.svg */; };
+		A6AF9AFA23DA0D6C00C5CAE3 /* Alarm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41523A2DDF50028F17B /* Alarm.cpp */; };
+		A6AF9AFB23DA0D6C00C5CAE3 /* ConfigurationDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41623A2DE0D0028F17B /* ConfigurationDialog.cpp */; };
+		A6AF9AFC23DA0D6C00C5CAE3 /* EditAlarmDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41723A2DE250028F17B /* EditAlarmDialog.cpp */; };
+		A6AF9AFD23DA0D6C00C5CAE3 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41823A2DE3D0028F17B /* icons.cpp */; };
+		A6AF9AFE23DA0D6C00C5CAE3 /* NewAlarmDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41923A2DE9C0028F17B /* NewAlarmDialog.cpp */; };
+		A6AF9AFF23DA0D6C00C5CAE3 /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41A23A2DED00028F17B /* TexFont.cpp */; };
+		A6AF9B0023DA0D6C00C5CAE3 /* watchdog_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41B23A2DEF10028F17B /* watchdog_pi.cpp */; };
+		A6AF9B0123DA0D6C00C5CAE3 /* WatchdogDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41C23A2DF120028F17B /* WatchdogDialog.cpp */; };
+		A6AF9B0223DA0D6C00C5CAE3 /* WatchdogUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41D23A2DF330028F17B /* WatchdogUI.cpp */; };
+		A6AF9B0323DA0D6C00C5CAE3 /* wddc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41E23A2DF4D0028F17B /* wddc.cpp */; };
 		A6CA0302A5274A25AD2F3A95 /* Sea-Height-Blue.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = D56DEA018EC34A6AB2D1FB8D /* Sea-Height-Blue.svg */; };
 		A6E58602239BC6750007E4A1 /* de.lproj in Copy Files */ = {isa = PBXBuildFile; fileRef = A6E58601239BC6750007E4A1 /* de.lproj */; };
 		A6E58604239BC71C0007E4A1 /* libcairo.2.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6E585FA239BC03F0007E4A1 /* libcairo.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -804,6 +893,7 @@
 		A6E5860E239BC71C0007E4A1 /* libwx_osx_cocoau_qa-3.1.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6E585FB239BC03F0007E4A1 /* libwx_osx_cocoau_qa-3.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A6E5860F239BC71C0007E4A1 /* libwx_osx_cocoau_webview-3.1.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6E585FD239BC0400007E4A1 /* libwx_osx_cocoau_webview-3.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A6E58610239BC71C0007E4A1 /* libwx_osx_cocoau_xrc-3.1.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6E585F7239BC03F0007E4A1 /* libwx_osx_cocoau_xrc-3.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A6EEF11F23E32F5900A13ED0 /* libweatherfax_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A663595A23B10EB50006E5DA /* libweatherfax_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A6F06FDB239D65CA008E9FAF /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = A6F06FD8239D6583008E9FAF /* dsa_pub.pem */; };
 		A6F06FDD239D883A008E9FAF /* libGARMINHOST.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A34EF7D537F4914BA44B0C3 /* libGARMINHOST.a */; };
 		A6F06FDE239D883A008E9FAF /* libGLU.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ECC9881D0E3246A5B5746BB1 /* libGLU.a */; };
@@ -1458,6 +1548,20 @@
 			remoteGlobalIDString = A68B060F239FE74300A19ED8;
 			remoteInfo = iacfleet_pi;
 		};
+		A6AF9B0723DA0FC500C5CAE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A29A9A92B1454C089B9F9E07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A663594F23B10E390006E5DA;
+			remoteInfo = watchdog_pi;
+		};
+		A6EEF12023E32FC400A13ED0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A29A9A92B1454C089B9F9E07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A663595923B10EB50006E5DA;
+			remoteInfo = weatherfax_pi;
+		};
 		A6FDB09123C238F6005B7028 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A29A9A92B1454C089B9F9E07 /* Project object */;
@@ -2046,6 +2150,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				A6EEF11F23E32F5900A13ED0 /* libweatherfax_pi.dylib in Copy Files */,
 				A6FDB09323C23950005B7028 /* libobjsearch_pi.dylib in Copy Files */,
 				A6798BDF23AFDC7A009782C4 /* libsquiddio_pi.dylib in Copy Files */,
 				A684D3F823A264070028F17B /* libwmm_pi.dylib in Copy Files */,
@@ -2078,6 +2183,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				A677B96223C79C7C00D0804B /* libfontconfig.1.dylib in Copy Files */,
+				A677B96323C79C7C00D0804B /* libfreetype.6.dylib in Copy Files */,
+				A677B96423C79C7C00D0804B /* libpixman-1.0.dylib in Copy Files */,
+				A677B96523C79C7C00D0804B /* libpng16.16.dylib in Copy Files */,
 				A688B93223A117C600D770A5 /* Sparkle.framework in Copy Files */,
 				A6E58604239BC71C0007E4A1 /* libcairo.2.dylib in Copy Files */,
 				A6E58605239BC71C0007E4A1 /* liblzma.5.dylib in Copy Files */,
@@ -3149,6 +3258,7 @@
 		A5FE3F0651DD477D934E7ADA /* CSSStyleDeclaration.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CSSStyleDeclaration.cpp; path = src/wxsvg/src/CSSStyleDeclaration.cpp; sourceTree = SOURCE_ROOT; };
 		A616391423A642AD0017C37E /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = plugins/grib_pi/src/version.h; sourceTree = "<group>"; };
 		A616391B23A666DA0017C37E /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/grib_pi/src/TexFont.cpp; sourceTree = "<group>"; };
+		A62DEFE023D6F767000A4914 /* dychart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dychart.h; path = include/dychart.h; sourceTree = "<group>"; };
 		A63FE3B423AB855A00E524CF /* CanvasOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CanvasOptions.h; path = include/CanvasOptions.h; sourceTree = "<group>"; };
 		A64AC6D9966B4EC08D113E2F /* ocpn_types.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ocpn_types.h; path = include/ocpn_types.h; sourceTree = SOURCE_ROOT; };
 		A64B191C23AFFC8A007E24FE /* sJSON.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sJSON.cpp; path = plugins/Squiddio_pi/src/sJSON.cpp; sourceTree = "<group>"; };
@@ -3157,6 +3267,10 @@
 		A663595023B10E390006E5DA /* libwatchdog_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libwatchdog_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A663595A23B10EB50006E5DA /* libweatherfax_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libweatherfax_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A66AC349239D09730078858A /* hilfe.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = hilfe.html; path = data/hilfe.html; sourceTree = "<group>"; };
+		A677B95E23C79C4500D0804B /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfreetype.6.dylib; sourceTree = "<group>"; };
+		A677B95F23C79C4500D0804B /* libfontconfig.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libfontconfig.1.dylib; sourceTree = "<group>"; };
+		A677B96023C79C5300D0804B /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpng16.16.dylib; sourceTree = "<group>"; };
+		A677B96123C79C5300D0804B /* libpixman-1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libpixman-1.0.dylib"; sourceTree = "<group>"; };
 		A6798BAD23AFC2C6009782C4 /* logs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = logs.cpp; path = plugins/Squiddio_pi/src/logs.cpp; sourceTree = "<group>"; };
 		A6798BDE23AFCC13009782C4 /* libsquiddio_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libsquiddio_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A684D40123A2DB040028F17B /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/Squiddio_pi/src/icons.cpp; sourceTree = "<group>"; };
@@ -3283,6 +3397,67 @@
 		A68B069323A0385E00A19ED8 /* vwt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vwt.hpp; path = src/nmea0183/vwt.hpp; sourceTree = "<group>"; };
 		A68B069423A0388B00A19ED8 /* xdr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = xdr.hpp; path = src/nmea0183/xdr.hpp; sourceTree = "<group>"; };
 		A68B069523A038A200A19ED8 /* zda.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = zda.hpp; path = src/nmea0183/zda.hpp; sourceTree = "<group>"; };
+		A69DA3FA23DC918B00B169CA /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Buffer.cpp; path = plugins/weatherfax_pi/src/libaudiofile/Buffer.cpp; sourceTree = "<group>"; };
+		A69DA3FB23DC91CD00B169CA /* FLACFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FLACFile.cpp; path = plugins/weatherfax_pi/src/libaudiofile/FLACFile.cpp; sourceTree = "<group>"; };
+		A69DA3FC23DC921900B169CA /* PacketTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PacketTable.cpp; path = plugins/weatherfax_pi/src/libaudiofile/PacketTable.cpp; sourceTree = "<group>"; };
+		A69DA3FD23DC92E800B169CA /* ALACDecoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ALACDecoder.cpp; path = plugins/weatherfax_pi/src/libaudiofile/alac/ALACDecoder.cpp; sourceTree = "<group>"; };
+		A69DA3FE23DC931900B169CA /* ALACEncoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ALACEncoder.cpp; path = plugins/weatherfax_pi/src/libaudiofile/alac/ALACEncoder.cpp; sourceTree = "<group>"; };
+		A69DA40023DC935A00B169CA /* ag_dec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ag_dec.c; path = plugins/weatherfax_pi/src/libaudiofile/alac/ag_dec.c; sourceTree = "<group>"; };
+		A69DA40123DC935A00B169CA /* ag_enc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ag_enc.c; path = plugins/weatherfax_pi/src/libaudiofile/alac/ag_enc.c; sourceTree = "<group>"; };
+		A69DA40423DC939200B169CA /* ALACBitUtilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ALACBitUtilities.c; path = plugins/weatherfax_pi/src/libaudiofile/alac/ALACBitUtilities.c; sourceTree = "<group>"; };
+		A69DA40623DC93D700B169CA /* dp_dec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dp_dec.c; path = plugins/weatherfax_pi/src/libaudiofile/alac/dp_dec.c; sourceTree = "<group>"; };
+		A69DA40723DC93D700B169CA /* dp_enc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dp_enc.c; path = plugins/weatherfax_pi/src/libaudiofile/alac/dp_enc.c; sourceTree = "<group>"; };
+		A69DA40A23DC941100B169CA /* EndianPortable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = EndianPortable.c; path = plugins/weatherfax_pi/src/libaudiofile/alac/EndianPortable.c; sourceTree = "<group>"; };
+		A69DA40C23DC947600B169CA /* matrix_dec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = matrix_dec.c; path = plugins/weatherfax_pi/src/libaudiofile/alac/matrix_dec.c; sourceTree = "<group>"; };
+		A69DA40D23DC947600B169CA /* matrix_enc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = matrix_enc.c; path = plugins/weatherfax_pi/src/libaudiofile/alac/matrix_enc.c; sourceTree = "<group>"; };
+		A69DA41023DC94C100B169CA /* ALAC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ALAC.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/ALAC.cpp; sourceTree = "<group>"; };
+		A69DA41223DC94F400B169CA /* BlockCodec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BlockCodec.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/BlockCodec.cpp; sourceTree = "<group>"; };
+		A69DA41423DC956300B169CA /* FLAC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FLAC.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/FLAC.cpp; sourceTree = "<group>"; };
+		A69DA41623DC967900B169CA /* aupv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = aupv.c; path = plugins/weatherfax_pi/src/libaudiofile/aupv.c; sourceTree = "<group>"; };
+		A69DA41823DC96B700B169CA /* error.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = error.c; path = plugins/weatherfax_pi/src/libaudiofile/error.c; sourceTree = "<group>"; };
+		A69DA41A23DC96DD00B169CA /* extended.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = extended.c; path = plugins/weatherfax_pi/src/libaudiofile/extended.c; sourceTree = "<group>"; };
+		A69DA41C23DC970500B169CA /* g711.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = g711.c; path = plugins/weatherfax_pi/src/libaudiofile/g711.c; sourceTree = "<group>"; };
+		A69DA41E23DC973D00B169CA /* AIFF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AIFF.cpp; path = plugins/weatherfax_pi/src/libaudiofile/AIFF.cpp; sourceTree = "<group>"; };
+		A69DA42023DC976A00B169CA /* AVR.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AVR.cpp; path = plugins/weatherfax_pi/src/libaudiofile/AVR.cpp; sourceTree = "<group>"; };
+		A69DA42223DC980C00B169CA /* CAF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CAF.cpp; path = plugins/weatherfax_pi/src/libaudiofile/CAF.cpp; sourceTree = "<group>"; };
+		A69DA42423DC984E00B169CA /* IFF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IFF.cpp; path = plugins/weatherfax_pi/src/libaudiofile/IFF.cpp; sourceTree = "<group>"; };
+		A69DA42623DC989B00B169CA /* IRCAM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IRCAM.cpp; path = plugins/weatherfax_pi/src/libaudiofile/IRCAM.cpp; sourceTree = "<group>"; };
+		A69DA42823DC98C900B169CA /* NIST.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NIST.cpp; path = plugins/weatherfax_pi/src/libaudiofile/NIST.cpp; sourceTree = "<group>"; };
+		A69DA42A23DC98E400B169CA /* NeXT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NeXT.cpp; path = plugins/weatherfax_pi/src/libaudiofile/NeXT.cpp; sourceTree = "<group>"; };
+		A69DA42C23DC991400B169CA /* Raw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Raw.cpp; path = plugins/weatherfax_pi/src/libaudiofile/Raw.cpp; sourceTree = "<group>"; };
+		A69DA42E23DC997300B169CA /* SampleVision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SampleVision.cpp; path = plugins/weatherfax_pi/src/libaudiofile/SampleVision.cpp; sourceTree = "<group>"; };
+		A69DA43023DC99A100B169CA /* VOC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VOC.cpp; path = plugins/weatherfax_pi/src/libaudiofile/VOC.cpp; sourceTree = "<group>"; };
+		A69DA43223DC99E600B169CA /* AudioFormat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioFormat.cpp; path = plugins/weatherfax_pi/src/libaudiofile/AudioFormat.cpp; sourceTree = "<group>"; };
+		A69DA43423DC9A1000B169CA /* File.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = File.cpp; path = plugins/weatherfax_pi/src/libaudiofile/File.cpp; sourceTree = "<group>"; };
+		A69DA43623DC9A3600B169CA /* FileHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileHandle.cpp; path = plugins/weatherfax_pi/src/libaudiofile/FileHandle.cpp; sourceTree = "<group>"; };
+		A69DA43823DC9A6000B169CA /* Instrument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Instrument.cpp; path = plugins/weatherfax_pi/src/libaudiofile/Instrument.cpp; sourceTree = "<group>"; };
+		A69DA43A23DC9A7F00B169CA /* Loop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Loop.cpp; path = plugins/weatherfax_pi/src/libaudiofile/Loop.cpp; sourceTree = "<group>"; };
+		A69DA43C23DC9AAF00B169CA /* Marker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Marker.cpp; path = plugins/weatherfax_pi/src/libaudiofile/Marker.cpp; sourceTree = "<group>"; };
+		A69DA43E23DC9ACD00B169CA /* Miscellaneous.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Miscellaneous.cpp; path = plugins/weatherfax_pi/src/libaudiofile/Miscellaneous.cpp; sourceTree = "<group>"; };
+		A69DA44023DC9AEE00B169CA /* Setup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Setup.cpp; path = plugins/weatherfax_pi/src/libaudiofile/Setup.cpp; sourceTree = "<group>"; };
+		A69DA44223DC9B1500B169CA /* Track.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Track.cpp; path = plugins/weatherfax_pi/src/libaudiofile/Track.cpp; sourceTree = "<group>"; };
+		A69DA44423DC9B4100B169CA /* UUID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UUID.cpp; path = plugins/weatherfax_pi/src/libaudiofile/UUID.cpp; sourceTree = "<group>"; };
+		A69DA44623DC9B6500B169CA /* WAVE.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WAVE.cpp; path = plugins/weatherfax_pi/src/libaudiofile/WAVE.cpp; sourceTree = "<group>"; };
+		A69DA44823DC9B8D00B169CA /* aes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = aes.cpp; path = plugins/weatherfax_pi/src/libaudiofile/aes.cpp; sourceTree = "<group>"; };
+		A69DA44923DC9B8D00B169CA /* af_vfs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = af_vfs.cpp; path = plugins/weatherfax_pi/src/libaudiofile/af_vfs.cpp; sourceTree = "<group>"; };
+		A69DA44C23DC9BBB00B169CA /* compression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = compression.cpp; path = plugins/weatherfax_pi/src/libaudiofile/compression.cpp; sourceTree = "<group>"; };
+		A69DA44E23DC9BDC00B169CA /* data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = data.cpp; path = plugins/weatherfax_pi/src/libaudiofile/data.cpp; sourceTree = "<group>"; };
+		A69DA44F23DC9BDC00B169CA /* debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug.cpp; path = plugins/weatherfax_pi/src/libaudiofile/debug.cpp; sourceTree = "<group>"; };
+		A69DA45223DC9C1000B169CA /* format.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = format.cpp; path = plugins/weatherfax_pi/src/libaudiofile/format.cpp; sourceTree = "<group>"; };
+		A69DA45423DC9C5000B169CA /* openclose.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = openclose.cpp; path = plugins/weatherfax_pi/src/libaudiofile/openclose.cpp; sourceTree = "<group>"; };
+		A69DA45623DC9CC600B169CA /* pcm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pcm.cpp; path = plugins/weatherfax_pi/src/libaudiofile/pcm.cpp; sourceTree = "<group>"; };
+		A69DA45823DC9D3200B169CA /* query.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = query.cpp; path = plugins/weatherfax_pi/src/libaudiofile/query.cpp; sourceTree = "<group>"; };
+		A69DA45A23DC9D9400B169CA /* units.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = units.cpp; path = plugins/weatherfax_pi/src/libaudiofile/units.cpp; sourceTree = "<group>"; };
+		A69DA45C23DC9DFB00B169CA /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = plugins/weatherfax_pi/src/libaudiofile/util.cpp; sourceTree = "<group>"; };
+		A69DA45E23DC9E3D00B169CA /* FileModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileModule.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/FileModule.cpp; sourceTree = "<group>"; };
+		A69DA46023DC9E8900B169CA /* G711.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = G711.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/G711.cpp; sourceTree = "<group>"; };
+		A69DA46223DC9EB700B169CA /* IMA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IMA.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/IMA.cpp; sourceTree = "<group>"; };
+		A69DA46423DC9EDA00B169CA /* MSADPCM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MSADPCM.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/MSADPCM.cpp; sourceTree = "<group>"; };
+		A69DA46623DC9EFE00B169CA /* Module.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Module.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/Module.cpp; sourceTree = "<group>"; };
+		A69DA46823DC9F3400B169CA /* ModuleState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ModuleState.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/ModuleState.cpp; sourceTree = "<group>"; };
+		A69DA46A23DC9F5C00B169CA /* PCM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PCM.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/PCM.cpp; sourceTree = "<group>"; };
+		A69DA46C23DC9F9100B169CA /* RebufferModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RebufferModule.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/RebufferModule.cpp; sourceTree = "<group>"; };
+		A69DA46E23DC9FB300B169CA /* SimpleModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SimpleModule.cpp; path = plugins/weatherfax_pi/src/libaudiofile/modules/SimpleModule.cpp; sourceTree = "<group>"; };
 		A69EA2A5239E6057005F613A /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/vdr_pi/src/icons.h; sourceTree = "<group>"; };
 		A69EA2A6239E607A005F613A /* vdr_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vdr_pi.h; path = plugins/vdr_pi/src/vdr_pi.h; sourceTree = "<group>"; };
 		A69EA2A7239E6098005F613A /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/vdr_pi/src/icons.cpp; sourceTree = "<group>"; };
@@ -4537,6 +4712,7 @@
 				7137FE1C6D904B7DAEB49B64 /* datastream.h */,
 				C0AC506444594EA6A9DC9330 /* DetailSlider.h */,
 				99D6C745116A4EB48A12C20D /* dsPortType.h */,
+				A62DEFE023D6F767000A4914 /* dychart.h */,
 				34F82800041D474C92524A9B /* emboss_data.h */,
 				0675387C27DA45C2BDEBBB74 /* FlexHash.h */,
 				2739672B9C524EA5B1868D93 /* FontDesc.h */,
@@ -4857,17 +5033,78 @@
 		9383C663E52948AC83475360 /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
+				A69DA3FA23DC918B00B169CA /* Buffer.cpp */,
+				A69DA3FB23DC91CD00B169CA /* FLACFile.cpp */,
+				A69DA3FC23DC921900B169CA /* PacketTable.cpp */,
+				A69DA3FE23DC931900B169CA /* ALACEncoder.cpp */,
+				A69DA3FD23DC92E800B169CA /* ALACDecoder.cpp */,
+				A69DA40023DC935A00B169CA /* ag_dec.c */,
+				A69DA40123DC935A00B169CA /* ag_enc.c */,
+				A69DA40423DC939200B169CA /* ALACBitUtilities.c */,
+				A69DA40623DC93D700B169CA /* dp_dec.c */,
+				A69DA40723DC93D700B169CA /* dp_enc.c */,
+				A69DA40A23DC941100B169CA /* EndianPortable.c */,
+				A69DA40C23DC947600B169CA /* matrix_dec.c */,
+				A69DA40D23DC947600B169CA /* matrix_enc.c */,
+				A69DA41023DC94C100B169CA /* ALAC.cpp */,
+				A69DA41223DC94F400B169CA /* BlockCodec.cpp */,
+				A69DA41423DC956300B169CA /* FLAC.cpp */,
+				A684D43323A2E23D0028F17B /* weatherfax_pi.cpp */,
+				A684D42F23A2E1BA0028F17B /* FaxDecoder.cpp */,
+				A684D43423A2E2660028F17B /* WeatherFax.cpp */,
+				A684D43723A2E2D20028F17B /* WeatherFaxWizard.cpp */,
+				A684D43623A2E2B00028F17B /* WeatherFaxUI.cpp */,
+				A684D43523A2E28A0028F17B /* WeatherFaxImage.cpp */,
+				A684D43223A2E2090028F17B /* SchedulesDialog.cpp */,
+				A684D43123A2E1F00028F17B /* InternetRetrievalDialog.cpp */,
 				A684D42D23A2E1800028F17B /* AboutDialog.cpp */,
 				A684D42E23A2E19C0028F17B /* DecoderOptionsDialog.cpp */,
-				A684D42F23A2E1BA0028F17B /* FaxDecoder.cpp */,
 				A684D43023A2E1DC0028F17B /* icons.cpp */,
-				A684D43123A2E1F00028F17B /* InternetRetrievalDialog.cpp */,
-				A684D43223A2E2090028F17B /* SchedulesDialog.cpp */,
-				A684D43323A2E23D0028F17B /* weatherfax_pi.cpp */,
-				A684D43423A2E2660028F17B /* WeatherFax.cpp */,
-				A684D43523A2E28A0028F17B /* WeatherFaxImage.cpp */,
-				A684D43623A2E2B00028F17B /* WeatherFaxUI.cpp */,
-				A684D43723A2E2D20028F17B /* WeatherFaxWizard.cpp */,
+				A69DA41623DC967900B169CA /* aupv.c */,
+				A69DA41823DC96B700B169CA /* error.c */,
+				A69DA41A23DC96DD00B169CA /* extended.c */,
+				A69DA41C23DC970500B169CA /* g711.c */,
+				A69DA41E23DC973D00B169CA /* AIFF.cpp */,
+				A69DA42023DC976A00B169CA /* AVR.cpp */,
+				A69DA42223DC980C00B169CA /* CAF.cpp */,
+				A69DA42423DC984E00B169CA /* IFF.cpp */,
+				A69DA42623DC989B00B169CA /* IRCAM.cpp */,
+				A69DA42823DC98C900B169CA /* NIST.cpp */,
+				A69DA42A23DC98E400B169CA /* NeXT.cpp */,
+				A69DA42C23DC991400B169CA /* Raw.cpp */,
+				A69DA42E23DC997300B169CA /* SampleVision.cpp */,
+				A69DA43023DC99A100B169CA /* VOC.cpp */,
+				A69DA43223DC99E600B169CA /* AudioFormat.cpp */,
+				A69DA43423DC9A1000B169CA /* File.cpp */,
+				A69DA43623DC9A3600B169CA /* FileHandle.cpp */,
+				A69DA43823DC9A6000B169CA /* Instrument.cpp */,
+				A69DA43A23DC9A7F00B169CA /* Loop.cpp */,
+				A69DA43C23DC9AAF00B169CA /* Marker.cpp */,
+				A69DA43E23DC9ACD00B169CA /* Miscellaneous.cpp */,
+				A69DA44023DC9AEE00B169CA /* Setup.cpp */,
+				A69DA44223DC9B1500B169CA /* Track.cpp */,
+				A69DA44423DC9B4100B169CA /* UUID.cpp */,
+				A69DA44623DC9B6500B169CA /* WAVE.cpp */,
+				A69DA44823DC9B8D00B169CA /* aes.cpp */,
+				A69DA44923DC9B8D00B169CA /* af_vfs.cpp */,
+				A69DA44C23DC9BBB00B169CA /* compression.cpp */,
+				A69DA44E23DC9BDC00B169CA /* data.cpp */,
+				A69DA44F23DC9BDC00B169CA /* debug.cpp */,
+				A69DA45223DC9C1000B169CA /* format.cpp */,
+				A69DA45423DC9C5000B169CA /* openclose.cpp */,
+				A69DA45623DC9CC600B169CA /* pcm.cpp */,
+				A69DA45823DC9D3200B169CA /* query.cpp */,
+				A69DA45A23DC9D9400B169CA /* units.cpp */,
+				A69DA45C23DC9DFB00B169CA /* util.cpp */,
+				A69DA45E23DC9E3D00B169CA /* FileModule.cpp */,
+				A69DA46023DC9E8900B169CA /* G711.cpp */,
+				A69DA46223DC9EB700B169CA /* IMA.cpp */,
+				A69DA46423DC9EDA00B169CA /* MSADPCM.cpp */,
+				A69DA46623DC9EFE00B169CA /* Module.cpp */,
+				A69DA46823DC9F3400B169CA /* ModuleState.cpp */,
+				A69DA46A23DC9F5C00B169CA /* PCM.cpp */,
+				A69DA46C23DC9F9100B169CA /* RebufferModule.cpp */,
+				A69DA46E23DC9FB300B169CA /* SimpleModule.cpp */,
 				A684D43823A2E2EA0028F17B /* wximgkap.cpp */,
 			);
 			name = "Source Files";
@@ -4891,7 +5128,11 @@
 			children = (
 				A6F06FE8239D88E1008E9FAF /* Sparkle.framework */,
 				A6E585FA239BC03F0007E4A1 /* libcairo.2.dylib */,
+				A677B95F23C79C4500D0804B /* libfontconfig.1.dylib */,
+				A677B95E23C79C4500D0804B /* libfreetype.6.dylib */,
 				A6E585F6239BC03E0007E4A1 /* liblzma.5.dylib */,
+				A677B96123C79C5300D0804B /* libpixman-1.0.dylib */,
+				A677B96023C79C5300D0804B /* libpng16.16.dylib */,
 				A6E585F4239BC03E0007E4A1 /* libwx_baseu_net-3.1.dylib */,
 				A6E585FE239BC0400007E4A1 /* libwx_baseu_xml-3.1.dylib */,
 				A6E585F5239BC03E0007E4A1 /* libwx_baseu-3.1.dylib */,
@@ -6514,7 +6755,7 @@
 			buildConfigurationList = 18A4A12C571D42ECB3D0397A /* Build configuration list for PBXNativeTarget "wmm_pi" */;
 			buildPhases = (
 				4688382FCAC144069182AF8D /* Sources */,
-				FA3A0D2BB52E463992187154 /* CMake PostBuild Rules */,
+				A603198123CBA30200D78665 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -6566,6 +6807,7 @@
 				A663594C23B10E390006E5DA /* Headers */,
 				A663594D23B10E390006E5DA /* Sources */,
 				A663594E23B10E390006E5DA /* Frameworks */,
+				A6AF9B0523DA0F3300C5CAE3 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -6583,6 +6825,7 @@
 				A663595623B10EB50006E5DA /* Headers */,
 				A663595723B10EB50006E5DA /* Sources */,
 				A663595823B10EB50006E5DA /* Frameworks */,
+				A69DA48023DCBFAB00B169CA /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -7018,6 +7261,23 @@
 			shellScript = "make -C /Users/heidi/devel/Cocoa-501/Build-Debug -f /Users/heidi/devel/Cocoa-501/Build-Debug/CMakeScripts/dummy_cmakeRulesBuildPhase.make$CONFIGURATION OBJDIR=$(basename \"$OBJECT_FILE_DIR_normal\") all\n";
 			showEnvVarsInLog = 0;
 		};
+		A603198123CBA30200D78665 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwmm_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwmm_pi.dylib\n";
+		};
 		A612227123B8F77100C63626 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -7205,16 +7465,39 @@
 			shellPath = /bin/sh;
 			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libobjsearch_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libobjsearch_pi.dylib\n\n";
 		};
-		FA3A0D2BB52E463992187154 /* CMake PostBuild Rules */ = {
+		A69DA48023DCBFAB00B169CA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			name = "CMake PostBuild Rules";
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "make -C /Users/heidi/devel/Cocoa-501/Build-Debug/plugins/wmm_pi -f /Users/heidi/devel/Cocoa-501/Build-Debug/plugins/wmm_pi/CMakeScripts/wmm_pi_postBuildPhase.make$CONFIGURATION OBJDIR=$(basename \"$OBJECT_FILE_DIR_normal\") all\n";
-			showEnvVarsInLog = 0;
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libweatherfax_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libweatherfax_pi.dylib\n";
+		};
+		A6AF9B0523DA0F3300C5CAE3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwatchdog_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwatchdog_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwatchdog_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwatchdog_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwatchdog_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwatchdog_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwatchdog_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libwatchdog_pi.dylib\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -7793,6 +8076,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6AF9AFA23DA0D6C00C5CAE3 /* Alarm.cpp in Sources */,
+				A6AF9AFB23DA0D6C00C5CAE3 /* ConfigurationDialog.cpp in Sources */,
+				A6AF9AFC23DA0D6C00C5CAE3 /* EditAlarmDialog.cpp in Sources */,
+				A6AF9AFD23DA0D6C00C5CAE3 /* icons.cpp in Sources */,
+				A6AF9AFE23DA0D6C00C5CAE3 /* NewAlarmDialog.cpp in Sources */,
+				A6AF9AFF23DA0D6C00C5CAE3 /* TexFont.cpp in Sources */,
+				A6AF9B0023DA0D6C00C5CAE3 /* watchdog_pi.cpp in Sources */,
+				A6AF9B0123DA0D6C00C5CAE3 /* WatchdogDialog.cpp in Sources */,
+				A6AF9B0223DA0D6C00C5CAE3 /* WatchdogUI.cpp in Sources */,
+				A6AF9B0323DA0D6C00C5CAE3 /* wddc.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7800,6 +8093,79 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A69DA47023DCBF8F00B169CA /* Buffer.cpp in Sources */,
+				A69DA47123DCBF8F00B169CA /* FLACFile.cpp in Sources */,
+				A69DA47223DCBF8F00B169CA /* PacketTable.cpp in Sources */,
+				A69DA47323DCBF8F00B169CA /* ALACDecoder.cpp in Sources */,
+				A69DA47423DCBF8F00B169CA /* weatherfax_pi.cpp in Sources */,
+				A69DA47523DCBF8F00B169CA /* FaxDecoder.cpp in Sources */,
+				A69DA47623DCBF8F00B169CA /* WeatherFax.cpp in Sources */,
+				A69DA47723DCBF8F00B169CA /* WeatherFaxWizard.cpp in Sources */,
+				A69DA47823DCBF8F00B169CA /* WeatherFaxUI.cpp in Sources */,
+				A69DA47923DCBF8F00B169CA /* WeatherFaxImage.cpp in Sources */,
+				A69DA47A23DCBF8F00B169CA /* SchedulesDialog.cpp in Sources */,
+				A69DA47B23DCBF8F00B169CA /* InternetRetrievalDialog.cpp in Sources */,
+				A69DA47C23DCBF8F00B169CA /* AboutDialog.cpp in Sources */,
+				A69DA47D23DCBF8F00B169CA /* DecoderOptionsDialog.cpp in Sources */,
+				A69DA47E23DCBF8F00B169CA /* icons.cpp in Sources */,
+				A69DA47F23DCBF8F00B169CA /* wximgkap.cpp in Sources */,
+				A69DA44523DC9B4100B169CA /* UUID.cpp in Sources */,
+				A69DA41723DC967900B169CA /* aupv.c in Sources */,
+				A69DA46D23DC9F9100B169CA /* RebufferModule.cpp in Sources */,
+				A69DA40223DC935A00B169CA /* ag_dec.c in Sources */,
+				A69DA40323DC935A00B169CA /* ag_enc.c in Sources */,
+				A69DA41323DC94F400B169CA /* BlockCodec.cpp in Sources */,
+				A69DA45023DC9BDD00B169CA /* data.cpp in Sources */,
+				A69DA41523DC956400B169CA /* FLAC.cpp in Sources */,
+				A69DA43F23DC9ACD00B169CA /* Miscellaneous.cpp in Sources */,
+				A69DA45B23DC9D9400B169CA /* units.cpp in Sources */,
+				A69DA46123DC9E8A00B169CA /* G711.cpp in Sources */,
+				A69DA42F23DC997300B169CA /* SampleVision.cpp in Sources */,
+				A69DA44323DC9B1500B169CA /* Track.cpp in Sources */,
+				A69DA44123DC9AEE00B169CA /* Setup.cpp in Sources */,
+				A69DA3FF23DC931900B169CA /* ALACEncoder.cpp in Sources */,
+				A69DA41B23DC96DE00B169CA /* extended.c in Sources */,
+				A69DA45123DC9BDD00B169CA /* debug.cpp in Sources */,
+				A69DA43123DC99A100B169CA /* VOC.cpp in Sources */,
+				A69DA45323DC9C1100B169CA /* format.cpp in Sources */,
+				A69DA41D23DC970500B169CA /* g711.c in Sources */,
+				A69DA43323DC99E700B169CA /* AudioFormat.cpp in Sources */,
+				A69DA44723DC9B6500B169CA /* WAVE.cpp in Sources */,
+				A69DA40F23DC947700B169CA /* matrix_enc.c in Sources */,
+				A69DA42123DC976A00B169CA /* AVR.cpp in Sources */,
+				A69DA43723DC9A3600B169CA /* FileHandle.cpp in Sources */,
+				A69DA45D23DC9DFB00B169CA /* util.cpp in Sources */,
+				A69DA43523DC9A1000B169CA /* File.cpp in Sources */,
+				A69DA41123DC94C100B169CA /* ALAC.cpp in Sources */,
+				A69DA46F23DC9FB300B169CA /* SimpleModule.cpp in Sources */,
+				A69DA46323DC9EB700B169CA /* IMA.cpp in Sources */,
+				A69DA45923DC9D3200B169CA /* query.cpp in Sources */,
+				A69DA42323DC980D00B169CA /* CAF.cpp in Sources */,
+				A69DA40823DC93D700B169CA /* dp_dec.c in Sources */,
+				A69DA44B23DC9B8D00B169CA /* af_vfs.cpp in Sources */,
+				A69DA42723DC989B00B169CA /* IRCAM.cpp in Sources */,
+				A69DA42523DC984E00B169CA /* IFF.cpp in Sources */,
+				A69DA42923DC98CA00B169CA /* NIST.cpp in Sources */,
+				A69DA45723DC9CC700B169CA /* pcm.cpp in Sources */,
+				A69DA45523DC9C5100B169CA /* openclose.cpp in Sources */,
+				A69DA41F23DC973D00B169CA /* AIFF.cpp in Sources */,
+				A69DA40923DC93D700B169CA /* dp_enc.c in Sources */,
+				A69DA42D23DC991500B169CA /* Raw.cpp in Sources */,
+				A69DA44A23DC9B8D00B169CA /* aes.cpp in Sources */,
+				A69DA41923DC96B800B169CA /* error.c in Sources */,
+				A69DA40E23DC947700B169CA /* matrix_dec.c in Sources */,
+				A69DA40B23DC941100B169CA /* EndianPortable.c in Sources */,
+				A69DA46B23DC9F5C00B169CA /* PCM.cpp in Sources */,
+				A69DA45F23DC9E3D00B169CA /* FileModule.cpp in Sources */,
+				A69DA44D23DC9BBC00B169CA /* compression.cpp in Sources */,
+				A69DA46723DC9EFF00B169CA /* Module.cpp in Sources */,
+				A69DA46923DC9F3400B169CA /* ModuleState.cpp in Sources */,
+				A69DA42B23DC98E400B169CA /* NeXT.cpp in Sources */,
+				A69DA43923DC9A6100B169CA /* Instrument.cpp in Sources */,
+				A69DA43D23DC9AAF00B169CA /* Marker.cpp in Sources */,
+				A69DA46523DC9EDB00B169CA /* MSADPCM.cpp in Sources */,
+				A69DA43B23DC9A7F00B169CA /* Loop.cpp in Sources */,
+				A69DA40523DC939200B169CA /* ALACBitUtilities.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8141,6 +8507,16 @@
 			isa = PBXTargetDependency;
 			target = A68B060F239FE74300A19ED8 /* iacfleet_pi */;
 			targetProxy = A688B92B23A10A5800D770A5 /* PBXContainerItemProxy */;
+		};
+		A6AF9B0823DA0FC500C5CAE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A663594F23B10E390006E5DA /* watchdog_pi */;
+			targetProxy = A6AF9B0723DA0FC500C5CAE3 /* PBXContainerItemProxy */;
+		};
+		A6EEF12123E32FC400A13ED0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A663595923B10EB50006E5DA /* weatherfax_pi */;
+			targetProxy = A6EEF12023E32FC400A13ED0 /* PBXContainerItemProxy */;
 		};
 		A6FDB09223C238F6005B7028 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9246,11 +9622,12 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = M3RNRGTLV6;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -9416,6 +9793,7 @@
 				PRODUCT_NAME = chartdldr_pi;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
+				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
 				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
 				USE_HEADERMAP = NO;
@@ -9704,7 +10082,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -10149,7 +10530,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -10639,10 +11023,11 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = M3RNRGTLV6;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -11605,11 +11990,12 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = M3RNRGTLV6;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -11775,6 +12161,7 @@
 				PRODUCT_NAME = chartdldr_pi;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
+				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
 				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
 				USE_HEADERMAP = NO;
@@ -12079,7 +12466,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -12244,7 +12634,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -12827,7 +13220,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -13141,11 +13537,12 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = M3RNRGTLV6;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -13311,6 +13708,7 @@
 				PRODUCT_NAME = chartdldr_pi;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
+				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
 				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
 				USE_HEADERMAP = NO;
@@ -13482,10 +13880,11 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = M3RNRGTLV6;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -14526,10 +14925,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
 				CLANG_WARN_UNREACHABLE_CODE = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
@@ -14674,10 +15074,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
 				CLANG_WARN_UNREACHABLE_CODE = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -14804,10 +15205,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
 				CLANG_WARN_UNREACHABLE_CODE = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -14934,10 +15336,11 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
 				CLANG_WARN_UNREACHABLE_CODE = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -15038,59 +15441,143 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = NO;
+				CLANG_WARN_BOOL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_COMMA = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_INFINITE_RECURSION = NO;
+				CLANG_WARN_INT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					watchdog_pi_EXPORTS,
+					ocpnUSE_GL,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					__OCPN_USE_CURL__,
+					USE_RENDER_CAIRO,
+					USE_LZMA,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+					ocpnUSE_SVG,
 				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/plugins/watchdog_pi/src",
+					"/Users/heidi/devel/Cocoa-501/src",
+					/usr/local/include/cairo,
+					/usr/local/include/cairo/..,
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/Build-Debug/Debug",
+					/usr/local/lib/cairo,
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-fexceptions",
+					"-Wno-overloaded-virtual",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated-declarations",
+					"-Wno-unknown-pragmas",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-Wno-unused-result",
+					"-ftest-coverage",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_gl-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = Debug;
 		};
@@ -15100,54 +15587,125 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = NO;
+				CLANG_WARN_BOOL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_COMMA = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_INFINITE_RECURSION = NO;
+				CLANG_WARN_INT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/plugins/watchdog_pi/src",
+					"/Users/heidi/devel/Cocoa-501/src",
+					/usr/local/include/cairo,
+					/usr/local/include/cairo/..,
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/Build-Debug/Debug",
+					/usr/local/lib/cairo,
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-fexceptions",
+					"-Wno-overloaded-virtual",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated-declarations",
+					"-Wno-unknown-pragmas",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-Wno-unused-result",
+					"-ftest-coverage",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_gl-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = Release;
 		};
@@ -15157,54 +15715,125 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = NO;
+				CLANG_WARN_BOOL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_COMMA = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_INFINITE_RECURSION = NO;
+				CLANG_WARN_INT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/plugins/watchdog_pi/src",
+					"/Users/heidi/devel/Cocoa-501/src",
+					/usr/local/include/cairo,
+					/usr/local/include/cairo/..,
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/Build-Debug/Debug",
+					/usr/local/lib/cairo,
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-fexceptions",
+					"-Wno-overloaded-virtual",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated-declarations",
+					"-Wno-unknown-pragmas",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-Wno-unused-result",
+					"-ftest-coverage",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_gl-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = MinSizeRel;
 		};
@@ -15214,287 +15843,718 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = NO;
+				CLANG_WARN_BOOL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_COMMA = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_INFINITE_RECURSION = NO;
+				CLANG_WARN_INT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/plugins/watchdog_pi/src",
+					"/Users/heidi/devel/Cocoa-501/src",
+					/usr/local/include/cairo,
+					/usr/local/include/cairo/..,
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+				);
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/Build-Debug/Debug",
+					/usr/local/lib/cairo,
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-fexceptions",
+					"-Wno-overloaded-virtual",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated-declarations",
+					"-Wno-unknown-pragmas",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-Wno-unused-result",
+					"-ftest-coverage",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_gl-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = RelWithDebInfo;
 		};
 		A663595C23B10EB50006E5DA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_MEMORY_MANAGEMENT = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_STATIC_ANALYZER_MODE_ON_ANALYZE_ACTION = shallow;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = NO;
+				CLANG_WARN_BOOL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_COMMA = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_INFINITE_RECURSION = NO;
+				CLANG_WARN_INT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CLANG_WARN_SUSPICIOUS_MOVE = NO;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					weatherfax_pi_EXPORTS,
+					ocpnUSE_GL,
+					"'_FILE_OFFSET_BITS=64'",
+					_LARGEFILE_SOURCE,
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					__OCPN_USE_CURL__,
+					USE_RENDER_CAIRO,
+					USE_LZMA,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+					LIBUNRAR_BUILD,
+					RARDLL,
+					UNRAR,
+					SILENT,
 				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"/User/heidi/devel/Cocoa-501/src",
+					"/User/heidi/devel/Cocoa-501/include",
+					"/User/heidi/devel/Cocoa-501/src/wxcurl",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/User/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					"/usr/local/lib/wx/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/User/heidi/devel/Cocoa-501/src/nmea0183",
+					"/User/heidi/devel/Cocoa-501/src/mygdal",
+					"/User/heidi/devel/Cocoa-501/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+					"/Users/heidi/devel/Cocoa-501/plugins/weatherfax_pi/src",
+					"/Users/heidi/devel/Cocoa-501/plugins/weatherfax_pi/src/libaudiofile",
+				);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/Build-Debug/Debug",
+					/usr/local/lib/cairo,
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-fexceptions",
+					"-Wno-overloaded-virtual",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-Wno-unknown-pragmas",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-Wno-unused",
+					"-Wno-unused-result",
+					"-ftest-coverage",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_gl-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+					"-lcurl",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = Debug;
 		};
 		A663595D23B10EB50006E5DA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_MEMORY_MANAGEMENT = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_STATIC_ANALYZER_MODE_ON_ANALYZE_ACTION = shallow;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = NO;
+				CLANG_WARN_BOOL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_COMMA = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_INFINITE_RECURSION = NO;
+				CLANG_WARN_INT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CLANG_WARN_SUSPICIOUS_MOVE = NO;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"/User/heidi/devel/Cocoa-501/src",
+					"/User/heidi/devel/Cocoa-501/include",
+					"/User/heidi/devel/Cocoa-501/src/wxcurl",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/User/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					"/usr/local/lib/wx/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/User/heidi/devel/Cocoa-501/src/nmea0183",
+					"/User/heidi/devel/Cocoa-501/src/mygdal",
+					"/User/heidi/devel/Cocoa-501/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+					"/Users/heidi/devel/Cocoa-501/plugins/weatherfax_pi/src",
+					"/Users/heidi/devel/Cocoa-501/plugins/weatherfax_pi/src/libaudiofile",
+				);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/Build-Debug/Debug",
+					/usr/local/lib/cairo,
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-fexceptions",
+					"-Wno-overloaded-virtual",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-Wno-unknown-pragmas",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-Wno-unused",
+					"-Wno-unused-result",
+					"-ftest-coverage",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_gl-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+					"-lcurl",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = Release;
 		};
 		A663595E23B10EB50006E5DA /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_MEMORY_MANAGEMENT = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_STATIC_ANALYZER_MODE_ON_ANALYZE_ACTION = shallow;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = NO;
+				CLANG_WARN_BOOL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_COMMA = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_INFINITE_RECURSION = NO;
+				CLANG_WARN_INT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CLANG_WARN_SUSPICIOUS_MOVE = NO;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"/User/heidi/devel/Cocoa-501/src",
+					"/User/heidi/devel/Cocoa-501/include",
+					"/User/heidi/devel/Cocoa-501/src/wxcurl",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/User/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					"/usr/local/lib/wx/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/User/heidi/devel/Cocoa-501/src/nmea0183",
+					"/User/heidi/devel/Cocoa-501/src/mygdal",
+					"/User/heidi/devel/Cocoa-501/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+					"/Users/heidi/devel/Cocoa-501/plugins/weatherfax_pi/src",
+					"/Users/heidi/devel/Cocoa-501/plugins/weatherfax_pi/src/libaudiofile",
+				);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/Build-Debug/Debug",
+					/usr/local/lib/cairo,
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-fexceptions",
+					"-Wno-overloaded-virtual",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-Wno-unknown-pragmas",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-Wno-unused",
+					"-Wno-unused-result",
+					"-ftest-coverage",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_gl-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+					"-lcurl",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = MinSizeRel;
 		};
 		A663595F23B10EB50006E5DA /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_MEMORY_MANAGEMENT = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_STATIC_ANALYZER_MODE_ON_ANALYZE_ACTION = shallow;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = NO;
+				CLANG_WARN_BOOL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_COMMA = NO;
+				CLANG_WARN_CONSTANT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CLANG_WARN_EMPTY_BODY = NO;
+				CLANG_WARN_ENUM_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_INFINITE_RECURSION = NO;
+				CLANG_WARN_INT_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = "$(CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION)";
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = NO;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
+				CLANG_WARN_SUSPICIOUS_MOVE = NO;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = NO;
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = A269R4Z552;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_NO_COMMON_BLOCKS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"/User/heidi/devel/Cocoa-501/src",
+					"/User/heidi/devel/Cocoa-501/include",
+					"/User/heidi/devel/Cocoa-501/src/wxcurl",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/User/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					"/usr/local/lib/wx/osx_cocoa-unicode-3.1",
+					"/usr/local/include/wx-3.1",
+					"/User/heidi/devel/Cocoa-501/src/nmea0183",
+					"/User/heidi/devel/Cocoa-501/src/mygdal",
+					"/User/heidi/devel/Cocoa-501/src/garmin/jeeps",
+					/usr/X11/include,
+					/usr/X11/include/GL,
+					"/Users/heidi/devel/Cocoa-501/plugins/weatherfax_pi/src",
+					"/Users/heidi/devel/Cocoa-501/plugins/weatherfax_pi/src/libaudiofile",
+				);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/Build-Debug/Debug",
+					/usr/local/lib/cairo,
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wall",
+					"-fexceptions",
+					"-Wno-overloaded-virtual",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-Wno-unknown-pragmas",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-Wno-unused",
+					"-Wno-unused-result",
+					"-ftest-coverage",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_gl-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_adv-3.1",
+					"-lwx_osx_cocoau_aui-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+					"-lcurl",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = RelWithDebInfo;
 		};
@@ -15503,7 +16563,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -15666,7 +16729,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -15829,7 +16895,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -15992,7 +17061,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -16155,7 +17227,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -16320,7 +17395,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -16485,7 +17563,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -16650,7 +17731,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -16815,7 +17899,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -16979,7 +18066,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -17143,7 +18233,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -17307,7 +18400,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -17471,7 +18567,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -17635,7 +18734,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -17799,7 +18901,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -17963,7 +19068,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -18127,7 +19235,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -18292,7 +19403,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -18457,7 +19571,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -18622,7 +19739,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -18787,7 +19907,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -18951,7 +20074,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -19115,7 +20241,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -19279,7 +20408,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -19540,7 +20672,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -20253,7 +21388,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
@@ -20713,11 +21851,12 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = M3RNRGTLV6;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -20883,6 +22022,7 @@
 				PRODUCT_NAME = chartdldr_pi;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SECTORDER_FLAGS = "";
+				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
 				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
 				USE_HEADERMAP = NO;
@@ -21123,10 +22263,11 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = M3RNRGTLV6;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -21601,10 +22742,11 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = M3RNRGTLV6;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -21743,7 +22885,10 @@
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_PREFIX = lib;
