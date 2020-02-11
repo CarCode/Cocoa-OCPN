@@ -4,7 +4,7 @@
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
-	#include <wx/wx.h>
+#	include <wx/wx.h>
 #endif
 
 extern void initialize_images(void);
@@ -13,5 +13,4 @@ extern wxBitmap *_img_wmm;
 extern wxBitmap *_img_wmm_pi;
 extern wxBitmap *_img_wmm_live;
 
-#endif //ICONS_H
-
+#endif /* ICONS_H */

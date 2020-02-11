@@ -3921,6 +3921,18 @@ static wxString _LITDSN01(S57Obj *obj)
       return return_value;
 }
 
+static void *SYMINS01(void *param)
+{
+    ObjRazRules *rzRules = (ObjRazRules *)param;
+    S57Obj *obj = rzRules->obj;
+    char symins[80] = {'\0'};
+    GetStringAttr(obj, "SYMINS", symins, 79);
+
+    char *r = (char *)malloc(strlen(symins) + 1);
+    strcpy(r, symins);
+
+   return r;
+}
 
 //--------------------------------
 //
