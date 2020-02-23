@@ -228,6 +228,7 @@ extern PopUpDSlide       *pPopupDetailSlider;
 extern int              g_detailslider_dialog_x, g_detailslider_dialog_y;
 
 extern bool             g_b_overzoom_x;                      // Allow high overzoom
+extern double           g_plus_minus_zoom_factor;
 
 extern int              g_OwnShipIconType;
 extern double           g_n_ownship_length_meters;
@@ -285,6 +286,7 @@ extern int               g_nAutoHideToolbar;
 extern bool              g_bDeferredInitDone;
 
 extern wxString          g_CmdSoundString;
+extern bool              g_boptionsactive;
 
 //  TODO why are these static?
 static int mouse_x;
@@ -1610,9 +1612,14 @@ bool ChartCanvas::DoCanvasUpdate( void )
 
                 // Check proposed scale, see how much underzoom results
                 // Adjust as necessary to prevent slow loading on initial startup
+                // For MBTILES we skip this test because they are always shown in reasonable range of scale
                 if(pc){
-                    double chart_scale = pc->GetNativeScale();
-                    proposed_scale_onscreen = wxMin(proposed_scale_onscreen, chart_scale * 4);
+                    if (pc->GetChartType() != CHART_TYPE_MBTILES)
+                        proposed_scale_onscreen = wxMin(proposed_scale_onscreen,
+                                                        4.0 * pc->GetNativeScale());
+                    else
+                        proposed_scale_onscreen = wxMin(proposed_scale_onscreen,
+                                                        32.0 * pc->GetNativeScale());
                 }
             }
 
@@ -2780,12 +2787,12 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
     //NUMERIC PAD
     case WXK_NUMPAD_ADD:              // '+' on NUM PAD
     case WXK_PAGEUP:{
-        ZoomCanvas( 2.0, false );
+        ZoomCanvas( g_plus_minus_zoom_factor, false );
         break;
     }
     case WXK_NUMPAD_SUBTRACT:   // '-' on NUM PAD
     case WXK_PAGEDOWN:{
-        ZoomCanvas( .5, false );
+        ZoomCanvas( 1.0 / g_plus_minus_zoom_factor, false );
         break;
     }
 	case WXK_DELETE:
@@ -2816,11 +2823,11 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
         if( !g_b_assume_azerty ) {
             switch( key_char ) {
             case '+': case '=':
-                ZoomCanvas( 2.0, false );
+                ZoomCanvas( g_plus_minus_zoom_factor, false );
                 break;
 
             case '-': case '_':
-                ZoomCanvas( 0.5, false );
+                ZoomCanvas( 1.0 / g_plus_minus_zoom_factor, false );
                 break;
 
             }
@@ -2848,13 +2855,13 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
 #endif
         } else {   //AZERTY
             switch( key_char ) {
-            case 43:
-                ZoomCanvas( 2.0, false );
+            case 43:  // '+' '='
+                ZoomCanvas( g_plus_minus_zoom_factor, false );
                 break;
 
             case 54:                     // '-'  alpha/num pad
 //            case 56:                     // '_'  alpha/num pad
-                ZoomCanvas( 0.5, false );
+                ZoomCanvas( 1.0 / g_plus_minus_zoom_factor, false );
                 break;
             }
         }
@@ -3922,8 +3929,8 @@ void ChartCanvas::OnRolloverPopupTimerEvent( wxTimerEvent& event )
         showTrackRollover = false;
 
     //TODO  We only show tracks on primary canvas....
-    if(!IsPrimaryCanvas())
-        showTrackRollover = false;
+//    if(!IsPrimaryCanvas())
+//        showTrackRollover = false;
 
     if( m_pTrackRolloverWin /*&& m_pTrackRolloverWin->IsActive()*/ && !showTrackRollover ) {
         m_pTrackRolloverWin->IsActive( false );
@@ -11884,12 +11891,12 @@ void ChartCanvas::OnToolLeftClick( wxCommandEvent& event )
     switch( event.GetId() ){
 
         case ID_ZOOMIN: {
-            ZoomCanvas( 2.0, false );
+            ZoomCanvas( g_plus_minus_zoom_factor, false );
             break;
         }
 
         case ID_ZOOMOUT: {
-            ZoomCanvas( 0.5, false );
+            ZoomCanvas( 1.0 / g_plus_minus_zoom_factor, false );
             break;
         }
 
@@ -12470,6 +12477,7 @@ void ChartCanvas::selectCanvasChartDisplay( int type, int family)
 
 void ChartCanvas::HandlePianoClick( int selected_index, int selected_dbIndex )
 {
+    if (g_boptionsactive) return;              // Piano might be invalid due to chartset updates.
     if( !m_pCurrentStack ) return;
     if( !ChartData) return;
     
@@ -12575,6 +12583,7 @@ void ChartCanvas::HandlePianoClick( int selected_index, int selected_dbIndex )
 
 void ChartCanvas::HandlePianoRClick( int x, int y, int selected_index, int selected_dbIndex )
 {
+    if (g_boptionsactive) return;              // Piano might be invalid due to chartset updates.
     if( !GetpCurrentStack() ) return;
 
     PianoPopupMenu( x, y, selected_index, selected_dbIndex );
@@ -12585,6 +12594,7 @@ void ChartCanvas::HandlePianoRClick( int x, int y, int selected_index, int selec
 
 void ChartCanvas::HandlePianoRollover( int selected_index, int selected_dbIndex )
 {
+    if (g_boptionsactive) return;              // Piano might be invalid due to chartset updates.
     if( !GetpCurrentStack() ) return;
     if( !ChartData ) return;
 

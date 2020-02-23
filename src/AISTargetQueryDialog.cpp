@@ -57,7 +57,11 @@ extern MyFrame *gFrame;
 #define xID_TRK_CREATE 10011
 IMPLEMENT_CLASS ( AISTargetQueryDialog, wxDialog )
 // AISTargetQueryDialog event table definition
+#ifdef __WXOSX__
+BEGIN_EVENT_TABLE ( AISTargetQueryDialog, wxDialog)
+#else
 BEGIN_EVENT_TABLE ( AISTargetQueryDialog, wxFrame )
+#endif
     EVT_BUTTON( xID_OK, AISTargetQueryDialog::OnIdOKClick )
     EVT_BUTTON( xID_WPT_CREATE, AISTargetQueryDialog::OnIdWptCreateClick )
     EVT_BUTTON( xID_TRK_CREATE, AISTargetQueryDialog::OnIdTrkCreateClick )
@@ -171,7 +175,11 @@ void AISTargetQueryDialog::OnIdTrkCreateClick( wxCommandEvent& event )
          
                 if( wxID_YES == OCPNMessageBox(NULL,
                     _("The recently captured track of this target has been recorded.\nDo you want to continue recording until the end of the current OpenCPN session?"),
+#ifdef __WXOSX__
+                    _("OpenCPN Info"), wxYES_NO | wxCENTER| wxICON_QUESTION, 60 ) )
+#else
                     _("OpenCPN Info"), wxYES_NO | wxCENTER, 60 ) )
+#endif
                 {
                     td->b_PersistTrack = true;
                     g_pAIS->m_persistent_tracks[td->MMSI] = t;
@@ -193,8 +201,11 @@ bool AISTargetQueryDialog::Create( wxWindow* parent, wxWindowID id, const wxStri
     long wstyle = AIS_TARGET_QUERY_STYLE;
     if( ( global_color_scheme != GLOBAL_COLOR_SCHEME_DAY )
             && ( global_color_scheme != GLOBAL_COLOR_SCHEME_RGB ) ) wstyle |= ( wxNO_BORDER );
-
+#ifdef __WXOSX__
+    if( !wxDialog::Create( parent, id, caption, pos, size, wstyle ) )
+#else
     if( !wxFrame::Create( parent, id, caption, pos, size, wstyle ) )
+#endif
         return false;
 
     m_parent = parent;

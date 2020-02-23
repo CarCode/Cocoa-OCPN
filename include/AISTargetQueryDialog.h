@@ -24,23 +24,35 @@
 #ifndef __AISTARGETQUERYDIALOG_H__
 #define __AISTARGETQUERYDIALOG_H__
 
+#ifdef __WXOSX__
+#include <wx/dialog.h>
+#else
 #include <wx/frame.h>
+#endif
 #include <wx/sizer.h>
 
 #include "ocpn_types.h"
 
+#ifdef __WXOSX__
+#define AIS_TARGET_QUERY_STYLE wxDEFAULT_FRAME_STYLE|wxSTAY_ON_TOP
+#else
 #define AIS_TARGET_QUERY_STYLE wxDEFAULT_FRAME_STYLE|wxFRAME_FLOAT_ON_PARENT
+#endif
 
 class wxHtmlWindow;
 class AIS_Target_Data;
 
+#ifdef __WXOSX__
+class AISTargetQueryDialog: public wxDialog
+#else
 class AISTargetQueryDialog: public wxFrame
+#endif
 {
 DECLARE_CLASS( AISTargetQueryDialog )
 DECLARE_EVENT_TABLE()
 public:
 
-      /// Constructors
+      // Constructors
 
       AISTargetQueryDialog( );
       AISTargetQueryDialog( wxWindow* parent,
@@ -51,10 +63,10 @@ public:
             long style = AIS_TARGET_QUERY_STYLE );
 
       ~AISTargetQueryDialog( );
-      /// Initialise our variables
+      // Initialise our variables
       void Init();
 
-      /// Creation
+      // Creation
       bool Create( wxWindow* parent,
             wxWindowID id = wxID_ANY,
             const wxString& caption = _("Object Query"),

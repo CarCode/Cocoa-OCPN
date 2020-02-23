@@ -122,8 +122,8 @@ bool ocpnCompass::MouseEvent( wxMouseEvent& event )
 
 void ocpnCompass::SetColorScheme( ColorScheme cs )
 {
-    UpdateStatus( true );
     m_cs = cs;
+    UpdateStatus( true );
 }
 
 void ocpnCompass::UpdateStatus( bool bnew )

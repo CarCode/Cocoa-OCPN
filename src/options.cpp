@@ -5193,7 +5193,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
   pDisplayGrid->Add(pStatic_Dummy6, 1, wxALL, group_item_spacing);
 
   m_pCheck_Draw_Realtime_Prediction =
-        new wxCheckBox(panelAIS, -1, _("Draw AIS realtime prediction"));
+    new wxCheckBox(panelAIS, -1, _("Draw AIS realtime prediction"));
   pDisplayGrid->Add(m_pCheck_Draw_Realtime_Prediction, 1, wxALL, group_item_spacing);
 
   wxStaticText* pStatic_Dummy6a = new wxStaticText(panelAIS, -1, _T(""));

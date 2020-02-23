@@ -952,7 +952,8 @@ void CanvasMenuHandler::PopupMenuHandler( wxCommandEvent& event )
 
     case ID_DEF_MENU_SCALE_IN:
         parent->DoCanvasStackDelta( -1 );
-
+        break;
+            
     case ID_DEF_MENU_SCALE_OUT:
         parent->DoCanvasStackDelta( 1 );
         break;

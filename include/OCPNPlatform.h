@@ -48,6 +48,19 @@ typedef struct {
     char    msdk[20];
 } PlatSpec;
 
+class OCPN_OSDetail
+{
+public:
+    OCPN_OSDetail() {};
+    ~OCPN_OSDetail() {};
+
+    std::string         osd_name;
+    std::string         osd_version;
+    std::string         osd_name_like;
+    std::string         osd_arch;
+
+};
+
 //--------------------------------------------------------------------------
 //      Per-Platform Utility support
 //--------------------------------------------------------------------------
@@ -94,6 +107,9 @@ public:
     void SetDefaultOptions( void );
 
     void applyExpertMode(bool mode);
+    OCPN_OSDetail *GetOSDetail();
+
+    bool DetectOSDetail( OCPN_OSDetail *detail);
 
 //--------------------------------------------------------------------------
 //      Platform Display Support
@@ -197,6 +213,7 @@ private:
 
     int         m_monitorWidth, m_monitorHeight;
     bool        m_bdisableWindowsDisplayEnum;
+    OCPN_OSDetail *m_osDetail;
 };
 
 //--------------------------------------------------------------------------

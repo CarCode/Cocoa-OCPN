@@ -486,6 +486,7 @@ bool                      g_bsmoothpanzoom;
 bool                      g_fog_overzoom;
 double                    g_overzoom_emphasis_base;
 bool                      g_oz_vector_scale;
+double                    g_plus_minus_zoom_factor;
 
 int                       g_nCOMPortCheck = 32;
 
@@ -3066,7 +3067,7 @@ void MyFrame::SetAndApplyColorScheme( ColorScheme cs )
     if( pRoutePropDialog ) {
         pRoutePropDialog->SetColorScheme( cs );
     }
-    
+
     //    For the AIS target query dialog, we must rebuild it to incorporate the style desired for the colorscheme selected
     if( g_pais_query_dialog_active ) {
         bool b_isshown = g_pais_query_dialog_active->IsShown();
@@ -4152,24 +4153,24 @@ void MyFrame::ODoSetSize( void )
 #endif
 
         // get the user's preferred font, or if none set then the system default with the size overridden
-        wxFont* templateFont = FontMgr::Get().GetFont( _("StatusBar"), try_font_size );
-        int font_size = templateFont->GetPointSize();
+        wxFont* statusBarFont = FontMgr::Get().GetFont( _("StatusBar"), try_font_size );
+        int font_size = statusBarFont->GetPointSize();
 
         font_size = wxMin( font_size, max_font_size );  // maximum to fit in the statusbar boxes
         font_size = wxMax( font_size, min_font_size );  // minimum to stop it being unreadable
 
 #ifdef __OCPN__ANDROID__
-        font_size = templateFont->GetPointSize();
+        font_size = statusBarFont->GetPointSize();
 #endif
 
 
-        wxFont *pstat_font = FontMgr::Get().FindOrCreateFont( font_size,
-              wxFONTFAMILY_DEFAULT, templateFont->GetStyle(), templateFont->GetWeight(), false,
-              templateFont->GetFaceName() );
+        wxFont *pstat_font = FontMgr::Get().FindOrCreateFont(font_size, statusBarFont->GetFamily(),
+            statusBarFont->GetStyle(), statusBarFont->GetWeight(), false, statusBarFont->GetFaceName());
 
         int min_height = stat_box.height;
 
         m_pStatusBar->SetFont( *pstat_font );
+        m_pStatusBar->SetForegroundColour(FontMgr::Get().GetFontColor(_("StatusBar")));
 #ifdef __OCPN__ANDROID__
         min_height = ( pstat_font->GetPointSize() * getAndroidDisplayDensity() ) + 10;
         m_pStatusBar->SetMinHeight( min_height );
@@ -4358,12 +4359,12 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             break;
 
         case ID_MENU_ZOOM_IN:{
-            GetPrimaryCanvas()->ZoomCanvas( 2.0, false );
+            GetPrimaryCanvas()->ZoomCanvas( g_plus_minus_zoom_factor, false );
             break;
         }
 
         case ID_MENU_ZOOM_OUT:{
-            GetPrimaryCanvas()->ZoomCanvas( 0.5, false );
+            GetPrimaryCanvas()->ZoomCanvas( 1.0 / g_plus_minus_zoom_factor, false );
             break;
         }
 
@@ -4910,11 +4911,16 @@ void MyFrame::ToggleChartBar( ChartCanvas *cc)
 
 void MyFrame::ToggleColorScheme()
 {
+    static bool lastIsNight;
     ColorScheme s = GetColorScheme();
     int is = (int) s;
     is++;
+    if (lastIsNight && is == 3)         // Back from step 3
+        { is = 1; lastIsNight = false; }//      Goto to Day
+    if (lastIsNight) is = 2;            // Back to Dusk on step 3
+    if ( is == 3 ) lastIsNight = true;  // Step 2 Night
     s = (ColorScheme) is;
-    if( s == N_COLOR_SCHEMES ) s = GLOBAL_COLOR_SCHEME_RGB;
+    if (s == N_COLOR_SCHEMES) s = GLOBAL_COLOR_SCHEME_RGB;
 
     SetAndApplyColorScheme( s );
 }

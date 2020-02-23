@@ -33,6 +33,8 @@
 #include <wx/apptrait.h>
 #include "wx/stdpaths.h"
 #include <wx/filename.h>
+#include <wx/tokenzr.h>
+#include <wx/textfile.h>
 
 #include "dychart.h"
 #include "OCPNPlatform.h"
@@ -208,6 +210,10 @@ OCPNPlatform::OCPNPlatform()
     m_displaySizeMM = wxSize(0,0);
     m_monitorWidth = m_monitorHeight = 0;
     m_displaySizeMMOverride = 0;
+
+    // Detect the OS detail parameters
+    m_osDetail = new OCPN_OSDetail;
+    DetectOSDetail( m_osDetail );
 }
 
 OCPNPlatform::~OCPNPlatform()
@@ -289,6 +295,72 @@ int CALLBACK CrashCallback(CR_CRASH_CALLBACK_INFO* pInfo)
 }
 #endif
 
+bool OCPNPlatform::DetectOSDetail( OCPN_OSDetail *detail)
+{
+    if(!detail)
+        return false;
+    
+    // We take some defaults from build-time definitions
+// Siehe PluginHandler.h Class PluginHandler Zeile 77
+// /** Return true if given plugin is loadable on given os/version. */
+//  static bool isCompatible(const PluginMetadata& metadata,
+//  const char* os = PKG_TARGET,
+//  const char* os_version = PKG_TARGET_VERSION);
+#ifndef __WXOSX__
+    detail->osd_name = std::string(PKG_TARGET);
+    detail->osd_version = std::string(PKG_TARGET_VERSION);
+#endif
+    // Now parse by basic platform
+#ifdef __linux__
+    if(wxFileExists(_T("/etc/os-release"))){
+        wxTextFile release_file( _T("/etc/os-release") );
+        if ( release_file.Open() ) {
+            wxString val;
+            for ( wxString str = release_file.GetFirstLine(); !release_file.Eof() ; str = release_file.GetNextLine() ){
+                if(str.StartsWith(_T("NAME"))){
+                    val = str.AfterFirst('=').Mid(1);  val = val.Mid(0, val.Length()-1);
+                    if(val.Length())  detail->osd_name = std::string(val.mb_str());
+                }
+                else if(str.StartsWith(_T("VERSION_ID"))){
+                    val = str.AfterFirst('=').Mid(1);  val = val.Mid(0, val.Length()-1);
+                    if(val.Length())  detail->osd_version = std::string(val.mb_str());
+                }
+                else if(str.StartsWith(_T("ID_LIKE"))){
+                    val = str.AfterFirst('=');
+                    if(val.Length())  detail->osd_name_like = std::string(val.mb_str());
+                }
+
+            }
+                
+            release_file.Close();
+        }
+    }
+#endif
+
+    //  Set the default processor architecture
+    detail->osd_arch = std::string("X86_64");
+    
+    // then see what is actually running.
+    wxPlatformInfo platformInfo = wxPlatformInfo::Get();
+    wxArchitecture arch = platformInfo.GetArchitecture();
+    if(arch == wxARCH_32)
+        detail->osd_arch = std::string("X86_32");
+    
+#ifdef ocpnARM
+    detail->osd_arch = std::string("ARM64");
+    if(arch == wxARCH_32)
+        detail->osd_arch = std::string("ARMHF");
+#endif
+    
+    
+     
+    return true;
+}
+
+OCPN_OSDetail *OCPNPlatform::GetOSDetail()
+{
+    return m_osDetail;
+}
 
 
 //  Called from MyApp() immediately upon entry to MyApp::OnInit()

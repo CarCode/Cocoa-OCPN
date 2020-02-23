@@ -366,13 +366,13 @@ PlugInManager::PlugInManager(MyFrame *parent)
         m_plugin_menu_item_id_next = CanvasMenuHandler::GetNextContextMenuId();
         m_plugin_tool_id_next = pFrame->GetNextToolbarToolId();
     }
-    #ifdef __OCPN_USE_CURL__
-    #ifndef __OCPN__ANDROID__
+#ifdef __OCPN_USE_CURL__
+#ifndef __OCPN__ANDROID__
     wxCurlBase::Init();
-    #endif
+#endif
     m_last_online = false;
     m_last_online_chk = -1;
-    #endif
+#endif
     
     m_benable_blackdialog_done = false;
 }
@@ -380,9 +380,9 @@ PlugInManager::PlugInManager(MyFrame *parent)
 PlugInManager::~PlugInManager()
 {
 #ifdef __OCPN_USE_CURL__
-    #ifndef __OCPN__ANDROID__
+#ifndef __OCPN__ANDROID__
     wxCurlBase::Shutdown();
-    #endif
+#endif
 #endif    
 }
 
@@ -6600,7 +6600,7 @@ void OCPN_cancelDownloadFileBackground( long handle )
         g_pi_manager->m_downloadHandle = NULL;
     }
     g_pi_manager->m_pCurl = 0;
- #endif
+#endif
 #endif
 }
 
