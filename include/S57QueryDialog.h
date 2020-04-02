@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __S57QUERYDIALOG_H__
 #define __S57QUERYDIALOG_H__
@@ -65,6 +64,7 @@ class S57QueryDialog: public wxFrame
             void OnHtmlLinkClicked(wxHtmlLinkEvent& event);
     
             void OnOKClick(wxCommandEvent& event) { Close(); }
+            void OnKey( wxKeyEvent& ke );
 
       //    Overrides
             void OnPaint ( wxPaintEvent& event );

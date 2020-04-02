@@ -188,6 +188,9 @@
 187,Water level effect,WATLEV,E,F
 188,Category of Tidal stream,CAT_TS,E,F
 189,Positional accuracy units,PUNITS,E,F
+190,Object class definition,CLSDEF,S,$
+191,Object class name,CLSNAM,S,$
+192,Symbol instruction,SYMINS,S,$
 300,Information in national language,NINFOM,S,N
 301,Object name in national language,NOBJNM,S,N
 302,Pilot district in national language,NPLDST,S,N
@@ -304,6 +307,8 @@
 22227,New type 1,NEWTY1,S,F
 33066,Type of Ship,shptyp,E,F
 40000,Update message,updmsg,S,F
+50000,Geometry Primitive Category,catgeo,E,F
+
 
 
 

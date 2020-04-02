@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        jsonwriter.cpp
 // Purpose:     the wxJSONWriter class: a JSON text generator
 // Author:      Luciano Cattani
@@ -6,15 +6,17 @@
 // RCS-ID:      $Id: jsonwriter.cpp,v 1.6 2008/03/03 19:05:47 luccat Exp $
 // Copyright:   (c) 2007 Luciano Cattani
 // Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 //#ifdef __GNUG__
 //    #pragma implementation "jsonwriter.cpp"
 //#endif
 
+#ifdef NDEBUG
 // make wxLogTrace a noop, it's really slow
 // must be defined before including debug.h
 #define wxDEBUG_LEVEL 0
+#endif
 
 #include <wx/jsonwriter.h>
 
@@ -27,7 +29,7 @@
 static const wxChar* writerTraceMask = _T("traceWriter");
 #endif
 
-/*! \class wxJSONWriter
+/* \class wxJSONWriter
  \brief The JSON document writer
 
  This class is a JSON document writer and it is used to write a
@@ -125,8 +127,8 @@ static const wxChar* writerTraceMask = _T("traceWriter");
  read \ref wxjson_tutorial_write_doubles
 */
 
-//! Ctor.
-/*!
+// Ctor.
+/*
  Construct the JSON writer object with the specified parameters.
  Note that if \c styled is FALSE the indentation is totally suppressed
  and the values of the other two parameters are simply ignored.
@@ -218,13 +220,13 @@ wxJSONWriter::wxJSONWriter( int style, int indent, int step )
 #endif
 }
 
-//! Dtor - does nothing
+// Dtor - does nothing
 wxJSONWriter::~wxJSONWriter()
 {
 }
 
-//! Write the JSONvalue object to a JSON text.
-/*!
+// Write the JSONvalue object to a JSON text.
+/*
  The two overloaded versions of this function let the user choose
  the output object which can be:
 
@@ -292,7 +294,7 @@ wxJSONWriter::Write( const wxJSONValue& value, wxString& str )
 #endif
 }
 
-//! \overload Write( const wxJSONValue&, wxString& )
+// \overload Write( const wxJSONValue&, wxString& )
 void
 wxJSONWriter::Write( const wxJSONValue& value, wxOutputStream& os )
 {
@@ -300,8 +302,8 @@ wxJSONWriter::Write( const wxJSONValue& value, wxOutputStream& os )
     DoWrite( os, value, 0, false );
 }
 
-//! Set the format string for double values.
-/*!
+// Set the format string for double values.
+/*
  This function sets the format string used for printing double values.
  Double values are outputted to JSON text using the \b snprintf function
  with a default format string of:
@@ -323,8 +325,8 @@ wxJSONWriter::SetDoubleFmtString( const char* fmt )
 
 
 
-//! Perform the real write operation.
-/*!
+// Perform the real write operation.
+/*
  This is a recursive function that gets the type of the \c value object and
  calls several protected functions depending on the type:
 
@@ -556,7 +558,7 @@ wxJSONWriter::DoWrite( wxOutputStream& os, const wxJSONValue& value, const wxStr
 }
 
 
-//! Write the comment strings, if any.
+// Write the comment strings, if any.
 int
 wxJSONWriter::WriteComment( wxOutputStream& os, const wxJSONValue& value, bool indent )
 {
@@ -589,8 +591,8 @@ wxJSONWriter::WriteComment( wxOutputStream& os, const wxJSONValue& value, bool i
     return lastChar;
 }
 
-//! Writes the indentation to the JSON text.
-/*!
+// Writes the indentation to the JSON text.
+/*
  The two functions write the indentation as \e spaces in the JSON output
  text. When called with a int parameter, the function
  writes the specified number of spaces.
@@ -609,8 +611,8 @@ wxJSONWriter::WriteIndent( wxOutputStream& os )
     return lastChar;
 }
 
-//! Write the specified number of indentation (spaces or tabs)
-/*!
+// Write the specified number of indentation (spaces or tabs)
+/*
  The function is called by WriteIndent() and other writer's functions.
  It writes the indentation as specified in the \c num parameter which is
  the actual \b level of annidation.
@@ -650,8 +652,8 @@ wxJSONWriter::WriteIndent( wxOutputStream& os, int num )
 }
 
 
-//! Write the provided string to the output object.
-/*!
+// Write the provided string to the output object.
+/*
  The function writes the string \c str to the output object that
  was specified in the wxJSONWriter::Write() function.
  The function may split strings in two or more lines if the
@@ -838,8 +840,8 @@ wxJSONWriter::WriteStringValue( wxOutputStream& os, const wxString& str )
 
 
 
-//! Write a generic string
-/*!
+// Write a generic string
+/*
  The function writes the wxString object \c str to the output object.
  The string is written as is; you cannot use it to write JSON strings
  to the output text.
@@ -888,8 +890,8 @@ wxJSONWriter::WriteString( wxOutputStream& os, const wxString& str )
     return lastChar;
 }
 
-//! Write the NULL JSON value to the output stream.
-/*!
+// Write the NULL JSON value to the output stream.
+/*
  The function writes the \b null literal string to the output stream.
 */
 int
@@ -903,8 +905,8 @@ wxJSONWriter::WriteNullValue( wxOutputStream& os )
 }
 
 
-//! Writes a value of type INT.
-/*!
+// Writes a value of type INT.
+/*
  This function is called for every value objects of INT type.
  This function uses the \n snprintf function to get the US-ASCII
  representation of the integer and simply copy it to the output stream.
@@ -950,8 +952,8 @@ wxJSONWriter::WriteIntValue( wxOutputStream& os, const wxJSONValue& value )
     return r;
 }
 
-//! Writes a value of type UNSIGNED INT.
-/*!
+// Writes a value of type UNSIGNED INT.
+/*
  This function is called for every value objects of UINT type.
  This function uses the \n snprintf function to get the US-ASCII
  representation of the integer and simply copy it to the output stream.
@@ -1004,8 +1006,8 @@ wxJSONWriter::WriteUIntValue( wxOutputStream& os, const wxJSONValue& value )
     return r;
 }
 
-//! Writes a value of type DOUBLE.
-/*!
+// Writes a value of type DOUBLE.
+/*
  This function is called for every value objects of DOUBLE type.
  This function uses the \n snprintf function to get the US-ASCII
  representation of the integer and simply copy it to the output stream.
@@ -1033,8 +1035,8 @@ wxJSONWriter::WriteDoubleValue( wxOutputStream& os, const wxJSONValue& value )
     return r;
 }
 
-//! Writes a value of type BOOL.
-/*!
+// Writes a value of type BOOL.
+/*
  This function is called for every value objects of BOOL type.
  This function prints the literals \b true or \b false depending on the
  value in \c value.
@@ -1065,7 +1067,7 @@ wxJSONWriter::WriteBoolValue( wxOutputStream& os, const wxJSONValue& value )
 
 
 
-//! Write the key of a key/value element to the output stream.
+// Write the key of a key/value element to the output stream.
 int
 wxJSONWriter::WriteKey( wxOutputStream& os, const wxString& key )
 {
@@ -1077,8 +1079,8 @@ wxJSONWriter::WriteKey( wxOutputStream& os, const wxString& key )
     return lastChar;
 }
 
-//! Write the invalid JSON value to the output stream.
-/*!
+// Write the invalid JSON value to the output stream.
+/*
  An invalid wxJSONValue is a value that was not initialized and it is
  an error. You should never write invalid values to JSON text because
  the output is not valid JSON text.
@@ -1102,8 +1104,8 @@ wxJSONWriter::WriteInvalid( wxOutputStream& os )
     return lastChar;
 }
 
-//! Write a JSON value of type \e memory \e buffer
-/*!
+// Write a JSON value of type \e memory \e buffer
+/*
  The type wxJSONTYPE_MEMORYBUFF is a \b wxJSON extension that is not correctly read by
  other JSON implementations.
  By default, the function writes such a type as an array of INTs as follows:
@@ -1210,8 +1212,8 @@ wxJSONWriter::WriteMemoryBuff( wxOutputStream& os, const wxMemoryBuffer& buff )
 }
 
 
-//! Writes the separator between values
-/*!
+// Writes the separator between values
+/*
  The function is called when a value has been written to the JSON
  text output and it writes the separator character: LF.
  The LF char is actually written only if the wxJSONWRITER_STYLED flag
@@ -1250,7 +1252,7 @@ wxJSONWriter::IsSpace( wxChar ch )
     return r;
 }
 
-//! Returns TRUE if the character if a puctuation character
+// Returns TRUE if the character if a puctuation character
 bool
 wxJSONWriter::IsPunctuation( wxChar ch )
 {

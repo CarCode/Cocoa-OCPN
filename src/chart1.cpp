@@ -75,6 +75,7 @@
 #include "chart1.h"
 #include "chcanv.h"
 #include "chartdb.h"
+#include "logger.h"
 #include "navutil.h"
 #include "styles.h"
 #include "routeman.h"
@@ -1009,9 +1010,28 @@ void MyApp::OnInitCmdLine( wxCmdLineParser& parser )
     parser.AddSwitch( _T("no_opengl"), wxEmptyString, _("Disable OpenGL video acceleration. This setting will be remembered.") );
     parser.AddSwitch( _T("rebuild_gl_raster_cache"), wxEmptyString, _T("Rebuild OpenGL raster cache on start.") );
     parser.AddSwitch( _T("parse_all_enc"), wxEmptyString, _T("Convert all S-57 charts to OpenCPN's internal format on start.") );
+    parser.AddOption( _T("l"), _T("loglevel"), _("Amount of logging: error, warning, message, info, debug or trace"));
     parser.AddOption( _T("unit_test_1"), wxEmptyString, _("Display a slideshow of <num> charts and then exit. Zero or negative <num> specifies no limit."), wxCMD_LINE_VAL_NUMBER );
 
     parser.AddSwitch( _T("unit_test_2") );
+}
+
+/* Parse --loglevel and set up logging, falling back to defaults. */
+static void ParseLoglevel(wxCmdLineParser& parser)
+{
+    const char* strLevel = std::getenv("OPENCPN_LOGLEVEL");
+    strLevel = strLevel ? strLevel : "info";
+    wxString wxLevel;
+    if (parser.Found("l", &wxLevel)) {
+        strLevel = wxLevel.c_str();
+    }
+    wxLogLevel level = OcpnLog::str2level(strLevel);
+    if (level == OcpnLog::LOG_BADLEVEL) {
+        fprintf(stderr, "Bad loglevel %s, using \"info\"", strLevel);
+        strLevel = "info";
+        level = wxLOG_Info;
+    }
+    wxLog::SetLogLevel(level);
 }
 
 bool MyApp::OnCmdLineParsed( wxCmdLineParser& parser )
@@ -1030,6 +1050,7 @@ bool MyApp::OnCmdLineParsed( wxCmdLineParser& parser )
         if( g_unit_test_1 == 0 )
             g_unit_test_1 = -1;
     }
+    ParseLoglevel(parser);
 
     return true;
 }
@@ -1596,7 +1617,7 @@ bool MyApp::OnInit()
     //  On Windows
     //  We allow only one instance unless the portable option is used
 #ifdef __WXMSW__
-    m_checker = new wxSingleInstanceChecker(_T("OpenCPN"));
+    m_checker = new wxSingleInstanceChecker(_T("_OpenCPN_SILock"), g_Platform->GetPrivateDataDir());
     if(!g_bportable) {
         if ( m_checker->IsAnotherRunning() )
             return false;               // exit quietly
@@ -1668,18 +1689,12 @@ bool MyApp::OnInit()
 //      Send init message
     wxLogMessage( _T("\n\n________\n") );
 
-    wxDateTime date_now = wxDateTime::Now();
-
-    wxString imsg = date_now.FormatISODate();
-    wxLogMessage( imsg );
-
-    imsg = _T(" ------- Starting OpenCPN -------");
-    wxLogMessage( imsg );
-
-    wxString version = VERSION_FULL;
-    wxString vs = version.Trim( true );
-    vs = vs.Trim( false );
-    wxLogMessage( vs );
+    wxString g_vs = wxString(VERSION_FULL).Trim(true).Trim(false);
+    wxDateTime now = wxDateTime::Now();
+    LOG_INFO("------- OpenCPN version %s restarted at %s -------\n",
+             VERSION_FULL, now.FormatISODate().mb_str().data());
+    wxLogLevel level = wxLog::GetLogLevel();
+    LOG_INFO("Using loglevel %s", OcpnLog::level2str(level).c_str());
 
     wxString wxver(wxVERSION_STRING);
     wxver.Prepend( _T("wxWidgets version: ") );
@@ -1722,7 +1737,7 @@ bool MyApp::OnInit()
     ::wxInitAllImageHandlers();
 
 
-    imsg = _T("SData_Locn is ");
+    wxString imsg = _T("SData_Locn is ");
     imsg += g_Platform->GetSharedDataDir();
     wxLogMessage( imsg );
 
@@ -1931,7 +1946,9 @@ bool MyApp::OnInit()
     // Instantiate and initialize the Config Manager
     ConfigMgr::Get();
 
-    // Is this an upgrade? 
+    // Is this an upgrade?
+    wxString vs =
+        wxString("Version ") +  VERSION_FULL + " Build " + VERSION_DATE;
     g_bUpgradeInProcess = (vs != g_config_version_string);
     
 //  Send the Welcome/warning message if it has never been sent before,
@@ -4216,6 +4233,14 @@ void MyFrame::ODoSetSize( void )
     if( g_MainToolbar){
         bool bShow = g_MainToolbar->IsShown();
         wxSize szBefore = g_MainToolbar->GetSize();
+#ifdef __WXGTK__
+        // For large vertical size changes on some platforms, it is necessary to hide the toolbar
+        // in order to correctly set its rounded-rectangle shape
+        // It will be shown again before exit of this method.
+        double deltay = g_nframewin_y - GetSize().y;
+        if((fabs(deltay) > (g_Platform->getDisplaySize().y / 5)))
+            g_MainToolbar->Hide();
+#endif
         g_MainToolbar->RePosition();
         //g_MainToolbar->SetGeometry(false, wxRect());
         g_MainToolbar->Realize();
@@ -4948,8 +4973,10 @@ void MyFrame::ActivateMOB( void )
     //    The MOB point
     wxDateTime mob_time = wxDateTime::Now();
     wxString mob_label( _( "MAN OVERBOARD" ) );
-    mob_label += _T(" at ");
+    mob_label += _(" at ");
     mob_label += mob_time.FormatTime();
+    mob_label += _(" on ");
+    mob_label += mob_time.FormatISODate();
 
     RoutePoint *pWP_MOB = new RoutePoint( gLat, gLon, _T ( "mob" ), mob_label, wxEmptyString );
     pWP_MOB->m_bKeepXRoute = true;
@@ -5004,9 +5031,9 @@ void MyFrame::ActivateMOB( void )
     RefreshAllCanvas( false );
 
     wxString mob_message( _( "MAN OVERBOARD" ) );
-    mob_message += _T(" Time: ");
+    mob_message += _(" Time: ");
     mob_message += mob_time.Format();
-    mob_message += _T("  Position: ");
+    mob_message += _("  Position: ");
     mob_message += toSDMM( 1, gLat );
     mob_message += _T("   ");
     mob_message += toSDMM( 2, gLon );
@@ -5030,9 +5057,9 @@ void MyFrame::TrackOn( void )
 
     SetMenubarItemState( ID_MENU_NAV_TRACK, g_bTrackActive );
 
-    #ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__
     androidSetTrackTool(true);
-    #endif
+#endif
 
 
     if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
@@ -7777,7 +7804,7 @@ void MyFrame::SetChartUpdatePeriod( )
 }
 
 void MyFrame::SetChartThumbnail( int index )
-{
+{/*
     //TODO
 #if 0
     if( bDBUpdateInProgress ) return;
@@ -7886,7 +7913,7 @@ void MyFrame::SetChartThumbnail( int index )
             }
             
         }
-#endif
+#endif */
 }
 
 void MyFrame::UpdateControlBar( ChartCanvas *cc )
@@ -8226,11 +8253,11 @@ void MyFrame::DoPrint( void )
      frame->Show();
      */
 
-    #ifdef __WXGTK__
+#ifdef __WXGTK__
     SurfaceAllCanvasToolbars();
     GetPrimaryCanvas()->SetFocus();
     Raise();                      // I dunno why...
-    #endif
+#endif
 }
 
 wxDateTime gTimeSource;
@@ -9255,8 +9282,10 @@ void MyFrame::ActivateAISMOBRoute( AIS_Target_Data *ptarget )
     //    The MOB point
     wxDateTime mob_time = wxDateTime::Now();
     wxString mob_label( _( "AIS MAN OVERBOARD" ) );
-    mob_label += _T(" at ");
+    mob_label += _(" at ");
     mob_label += mob_time.FormatTime();
+    mob_label += _(" on ");
+    mob_label += mob_time.FormatISODate();
 
     RoutePoint *pWP_MOB = new RoutePoint( ptarget->Lat, ptarget->Lon, _T ( "mob" ), mob_label, wxEmptyString );
     pWP_MOB->m_bKeepXRoute = true;
@@ -9305,13 +9334,13 @@ void MyFrame::ActivateAISMOBRoute( AIS_Target_Data *ptarget )
     RefreshAllCanvas( false );
 
     wxString mob_message( _( "AIS MAN OVERBOARD" ) );
-    mob_message += _T(" Time: ");
+    mob_message += _(" Time: ");
     mob_message += mob_time.Format();
-    mob_message += _T("  Ownship Position: ");
+    mob_message += _("  Ownship Position: ");
     mob_message += toSDMM( 1, gLat );
     mob_message += _T("   ");
     mob_message += toSDMM( 2, gLon );
-    mob_message += _T("  MOB Position: ");
+    mob_message += _("  MOB Position: ");
     mob_message += toSDMM( 1, ptarget->Lat );
     mob_message += _T("   ");
     mob_message += toSDMM( 2, ptarget->Lon );
@@ -9349,13 +9378,13 @@ void MyFrame::UpdateAISMOBRoute( AIS_Target_Data *ptarget )
         wxDateTime mob_time = wxDateTime::Now();
 
         wxString mob_message( _( "AIS MAN OVERBOARD UPDATE" ) );
-        mob_message += _T(" Time: ");
+        mob_message += _(" Time: ");
         mob_message += mob_time.Format();
-        mob_message += _T("  Ownship Position: ");
+        mob_message += _("  Ownship Position: ");
         mob_message += toSDMM( 1, gLat );
         mob_message += _T("   ");
         mob_message += toSDMM( 2, gLon );
-        mob_message += _T("  MOB Position: ");
+        mob_message += _("  MOB Position: ");
         mob_message += toSDMM( 1, ptarget->Lat );
         mob_message += _T("   ");
         mob_message += toSDMM( 2, ptarget->Lon );
@@ -11054,8 +11083,8 @@ static const char *usercolors[] = { "Table:DAY", "GREEN1;120;255;120;", "GREEN2;
 
         "NODTA; 163; 180; 183;",
         "CHBLK;   7;   7;   7;",
-        "SNDG1; 125; 137; 140;",
-        "SNDG2;   7;   7;   7;",
+        "SNDG1; 125; 137; 140;",            // Tiefenzahlen Grau (125;137;140)
+        "SNDG2;   7;   7;   7;",            // Tiefenzahlen Schwarz
         "SCLBR; 235; 125;  54;",
         "UIBDR; 125; 137; 140;",
         "UINFB;  58; 120; 240;",
@@ -11436,7 +11465,7 @@ OCPNMessageDialog::OCPNMessageDialog( wxWindow *parent,
 
     wxBoxSizer *icon_text = new wxBoxSizer( wxHORIZONTAL );
 
-    #if wxUSE_STATBMP
+#if wxUSE_STATBMP
     // 1) icon
     if (style & wxICON_MASK)
     {
@@ -11466,14 +11495,14 @@ OCPNMessageDialog::OCPNMessageDialog( wxWindow *parent,
         wxStaticBitmap *icon = new wxStaticBitmap(this, wxID_ANY, bitmap);
         icon_text->Add( icon, 0, wxCENTER );
     }
-    #endif // wxUSE_STATBMP
+#endif // wxUSE_STATBMP
 
-    #if wxUSE_STATTEXT
+#if wxUSE_STATTEXT
     // 2) text
     icon_text->Add( CreateTextSizer( message ), 0, wxALIGN_CENTER | wxLEFT, 10 );
 
     topsizer->Add( icon_text, 1, wxCENTER | wxLEFT|wxRIGHT|wxTOP, 10 );
-    #endif // wxUSE_STATTEXT
+#endif // wxUSE_STATTEXT
 
     // 3) buttons
     int AllButtonSizerFlags = wxOK|wxCANCEL|wxYES|wxNO|wxHELP|wxNO_DEFAULT;

@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////
 // Name:        CSSValue.h
 // Purpose:     
 // Author:      Alex Thuering
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: CSSValue.h,v 1.10 2014/06/30 19:06:11 ntalex Exp $
 // Copyright:   (c) 2005 Alex Thuering
 // Licence:     wxWindows licence
-//////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////
 
 #ifndef wxSVG_CSS_VALUE_H
 #define wxSVG_CSS_VALUE_H
@@ -139,8 +139,11 @@ public:
 	virtual wxCSSValue* Clone() const { return new wxCSSValueList(*this); }
 	virtual wxString GetCSSText() const;
 	virtual void SetCSSText(const wxString& value);
-	
-	int GetLength() const { return m_values.size(); }
+#ifdef __WXOSX__
+	int GetLength() const { return (int)m_values.size(); }
+#else
+    int GetLength() const { return m_values.size(); }
+#endif
 	wxCSSPrimitiveValue Item(int index) const { return wxCSSPrimitiveValue(m_values[index]); }
 };
 

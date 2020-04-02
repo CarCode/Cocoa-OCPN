@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Creator: CorelDRAW X6 -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xml:space="preserve"
+   width="18mm"
+   height="18mm"
+   version="1.1"
+   shape-rendering="geometricPrecision"
+   text-rendering="geometricPrecision"
+   image-rendering="optimizeQuality"
+   fill-rule="evenodd"
+   clip-rule="evenodd"
+   viewBox="0 0 1800 1800"
+   id="svg13"
+   sodipodi:docname="activewpt.svg"
+   inkscape:version="0.92.4 (unknown)"><metadata
+   id="metadata19"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs17" /><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="1366"
+   inkscape:window-height="716"
+   id="namedview15"
+   showgrid="false"
+   inkscape:zoom="3.4689815"
+   inkscape:cx="-20.034699"
+   inkscape:cy="34.015748"
+   inkscape:window-x="0"
+   inkscape:window-y="0"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="_271487512" />
+ <g
+   id="Layer_x0020_1">
+  <metadata
+   id="CorelCorpID_0Corel-Layer" />
+  <rect
+   fill="none"
+   width="1800"
+   height="1800"
+   id="rect3" />
+  
+ <g
+   id="_271487512">
+   <path
+   d="M900 600c166,0 300,134 300,300 0,166 -134,300 -300,300 -166,0 -300,-134 -300,-300 0,-166 134,-300 300,-300z"
+   id="path5"
+   fill="red"
+   style="stroke:#00ff00;fill:#00ff00" />
+   <path
+   d="M900 725c97,0 175,78 175,175 0,97 -78,175 -175,175 -97,0 -175,-78 -175,-175 0,-97 78,-175 175,-175z"
+   id="path7"
+   fill="#FFDB12" />
+   <path
+   d="M879 879c12,-12 31,-12 42,0 12,12 12,31 0,42 -11,12 -30,12 -42,0 -12,-11 -12,-30 0,-42z"
+   id="path9"
+   fill="black" />
+  </g></g>
+</svg>

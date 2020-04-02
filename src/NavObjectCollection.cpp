@@ -249,6 +249,13 @@ static RoutePoint * GPXLoadWaypoint1( pugi::xml_node &wpt_node,
     pWP->SetWaypointRangeRingsStep( l_fWaypointRangeRingsStep );
     pWP->SetWaypointRangeRingsStepUnits( l_pWaypointRangeRingsStepUnits );
     pWP->SetShowWaypointRangeRings( l_bWaypointRangeRingsVisible );
+
+    // Migrate from O4.x XML format.
+    // In O5, the attribute "range rings visible" is synonymous with ( "range rings number" != 0 )
+    // So, if we see an attribute "visible"=false in importing from XML, we must set "number" = 0 to be consistent
+    if(!l_bWaypointRangeRingsVisible)
+        pWP->SetWaypointRangeRingsNumber(0);
+
     pWP->SetWaypointRangeRingsColour( l_wxcWaypointRangeRingsColour );
     pWP->SetScaMin( l_iWaypointScaleMin );
     pWP->SetScaMax( l_iWaypoinScaleMax );

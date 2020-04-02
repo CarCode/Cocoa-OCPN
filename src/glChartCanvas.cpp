@@ -773,9 +773,9 @@ void glChartCanvas::SetupOpenGL()
     msg += m_renderer;
     wxLogMessage( msg );
 
-    #ifdef USE_S57
+#ifdef USE_S57
     if( ps52plib ) ps52plib->SetGLRendererString( m_renderer );
-    #endif
+#endif
     
     char version_string[80];
     strncpy( version_string, (char *) glGetString( GL_VERSION ), 79 );
@@ -1175,10 +1175,10 @@ void glChartCanvas::OnPaint( wxPaintEvent &event )
     if( !m_bsetup ) {
         SetupOpenGL();
         
-        #ifdef USE_S57
+#ifdef USE_S57
         if( ps52plib )
             ps52plib->FlushSymbolCaches();
-        #endif
+#endif
         
         m_bsetup = true;
 //        g_bDebugOGL = true;
@@ -3940,7 +3940,7 @@ void glChartCanvas::Render()
     //  On some platforms, the opengl context window is always on top of any standard DC windows,
     //  so we need to draw the Chart Info Window and the Thumbnail as overlayed bmps.
 
-#ifdef __WXOSX__    
+#ifdef __WXOSX__    // ChartInfoWindow
         if(m_pParentCanvas->m_pCIWin && m_pParentCanvas->m_pCIWin->IsShown()) {
         int x, y, width, height;
         m_pParentCanvas->m_pCIWin->GetClientSize( &width, &height );
@@ -3973,7 +3973,7 @@ void glChartCanvas::Render()
         }
     }
 
-    if( pthumbwin && pthumbwin->IsShown()) {
+    if( pthumbwin && pthumbwin->IsShown()) {  // Miniatur Karte gibt es nicht mehr????
         int thumbx, thumby;
         pthumbwin->GetPosition( &thumbx, &thumby );
         if( pthumbwin->GetBitmap().IsOk())
@@ -3988,7 +3988,7 @@ void glChartCanvas::Render()
     }
 */
     
-#endif
+#endif  // WXOSX
     // render the chart bar
     if(g_bShowChartBar)
         DrawChartBar(gldc);

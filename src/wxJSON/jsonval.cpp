@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        jsonval.cpp
 // Purpose:     the wxJSON class that holds a JSON value
 // Author:      Luciano Cattani
@@ -6,15 +6,17 @@
 // RCS-ID:      $Id: jsonval.cpp,v 1.12 2008/03/06 10:25:18 luccat Exp $
 // Copyright:   (c) 2007 Luciano Cattani
 // Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 //#ifdef __GNUG__
 //    #pragma implementation "jsonval.cpp"
 //#endif
 
+#ifdef NDEBUG
 // make wxLogTrace a noop, it's really slow
 // must be defined before including debug.h
 #define wxDEBUG_LEVEL 0
+#endif
 
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
@@ -47,14 +49,14 @@ static const wxChar* cowTraceMask = _T("traceCOW" );
 #endif
 
 
-/*******************************************************************
+/* ******************************************************************
 
             class wxJSONRefData
 
 *******************************************************************/
 
 
-/*! \class wxJSONRefData
+/* \class wxJSONRefData
  \brief The reference counted JSON value data (internal use).
 
  Starting from version 0.4, the JSON value class use the reference
@@ -70,7 +72,7 @@ static const wxChar* cowTraceMask = _T("traceCOW" );
     int          wxJSONRefData::sm_progr = 1;
 #endif
 
-//! Constructor.
+// Constructor.
 wxJSONRefData::wxJSONRefData()
 {
     m_lineNo   = -1;
@@ -101,14 +103,14 @@ wxJSONRefData::GetRefCount() const
 }
 
 
-/*******************************************************************
+/* ******************************************************************
 
             class wxJSONValue
 
 *******************************************************************/
 
 
-/*! \class wxJSONValue
+/* \class wxJSONValue
  \brief The JSON value class implementation.
 
 This class holds a JSON value which may be of variuos types (see the
@@ -173,8 +175,8 @@ The following is an example:
     int          wxJSONValue::sm_progr = 1;
 #endif
 
-//! Constructors.
-/*!
+// Constructors.
+/*
  The overloaded constructors allow the user to construct a JSON value
  object that holds the specified value and type of value.
  The default ctor construct a valid JSON object that constains a \b null
@@ -197,8 +199,8 @@ wxJSONValue::wxJSONValue()
     Init( wxJSONTYPE_NULL );
 }
 
-//! Initialize the JSON value class.
-/*!
+// Initialize the JSON value class.
+/*
  The function is called by the ctors and allocates a new instance of
  the wxJSONRefData class and sets the type of the JSON value.
  Note that only the type is set, not the value.
@@ -235,14 +237,14 @@ wxJSONValue::Init( wxJSONType type )
 }
 
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( wxJSONType type )
 {
     m_refData = 0;
     Init( type );
 }
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( int i )
 {
     m_refData = 0;
@@ -256,7 +258,7 @@ wxJSONValue::wxJSONValue( int i )
 }
 
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( unsigned int ui )
 {
     m_refData = 0;
@@ -269,7 +271,7 @@ wxJSONValue::wxJSONValue( unsigned int ui )
     }
 }
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( short int i )
 {
     m_refData = 0;
@@ -283,7 +285,7 @@ wxJSONValue::wxJSONValue( short int i )
 }
 
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( unsigned short ui )
 {
     m_refData = 0;
@@ -296,7 +298,7 @@ wxJSONValue::wxJSONValue( unsigned short ui )
     }
 }
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( bool b  )
 {
     m_refData = 0;
@@ -307,7 +309,7 @@ wxJSONValue::wxJSONValue( bool b  )
     }
 }
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( double d )
 {
     m_refData = 0;
@@ -318,7 +320,7 @@ wxJSONValue::wxJSONValue( double d )
     }
 }
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( const wxChar* str )
 {
     m_refData = 0;
@@ -334,7 +336,7 @@ wxJSONValue::wxJSONValue( const wxChar* str )
     }
 }
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( const wxString& str )
 {
     m_refData = 0;
@@ -345,7 +347,7 @@ wxJSONValue::wxJSONValue( const wxString& str )
     }
 }
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( long int l )
 {
     m_refData = 0;
@@ -356,7 +358,7 @@ wxJSONValue::wxJSONValue( long int l )
     }
 }
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( unsigned long int ul )
 {
     m_refData = 0;
@@ -367,8 +369,8 @@ wxJSONValue::wxJSONValue( unsigned long int ul )
     }
 }
 
-//! Construct a JSON value object of type \e memory \e buffer
-/*!
+// Construct a JSON value object of type \e memory \e buffer
+/*
  Note that this ctor makes a deep copy of \c buff so changes made
  to the original buffer does not reflect to the buffer stored in this
  JSON value.
@@ -388,8 +390,8 @@ wxJSONValue::wxJSONValue( const wxMemoryBuffer& buff )
     }
 }
 
-//! Construct a JSON value object of type \e memory \e buffer
-/*!
+// Construct a JSON value object of type \e memory \e buffer
+/*
  Note that this ctor makes a deep copy of \c buff so changes made
  to the original buffer does not reflect to the buffer stored in this
  JSON value.
@@ -405,8 +407,8 @@ wxJSONValue::wxJSONValue( const void* buff, size_t len )
     }
 }
 
-//! Copy constructor
-/*!
+// Copy constructor
+/*
  The function copies the content of \c other in this
  object.
  Note that the JSON value object is not really copied;
@@ -431,7 +433,7 @@ wxJSONValue::wxJSONValue( const wxJSONValue& other )
 }
 
 
-//! Dtor - calls UnRef().
+// Dtor - calls UnRef().
 wxJSONValue::~wxJSONValue()
 {
     UnRef();
@@ -441,8 +443,8 @@ wxJSONValue::~wxJSONValue()
 // functions for retreiving the value type: they are all 'const'
 
 
-//! Return the type of the value stored in the object.
-/*!
+// Return the type of the value stored in the object.
+/*
  This function is the only one that does not ASSERT that the
  \c m_refData data member is not NULL.
  In fact, if the JSON value object does not contain a pointer
@@ -539,7 +541,7 @@ wxJSONValue::GetType() const
 }
 
 
-//! Return TRUE if the type of the value is wxJSONTYPE_NULL.
+// Return TRUE if the type of the value is wxJSONTYPE_NULL.
 bool
 wxJSONValue::IsNull() const
 {
@@ -552,8 +554,8 @@ wxJSONValue::IsNull() const
 }
 
 
-//! Return TRUE if the value stored is valid
-/*!
+// Return TRUE if the value stored is valid
+/*
  The function returns TRUE if the wxJSONValue object was correctly
  initialized - that is it contains a valid value.
  A JSON object is valid if its type is not equal to wxJSONTYPE_INVALID.
@@ -575,8 +577,8 @@ wxJSONValue::IsValid() const
     return r;
 }
 
-//! Return TRUE if the type of the value stored is integer.
-/*!
+// Return TRUE if the type of the value stored is integer.
+/*
  This function returns TRUE if the stored value is of
  type signed integer and the numeric value fits in a
  \b int data type.
@@ -615,8 +617,8 @@ wxJSONValue::IsInt() const
     return r;
 }
 
-//! Return TRUE if the type of the value stored is 16-bit integer.
-/*!
+// Return TRUE if the type of the value stored is 16-bit integer.
+/*
  This function returns TRUE if the stored value is of
  type signed integer and the numeric value fits in a
  \b short \b int data type (16-bit integer).
@@ -640,8 +642,8 @@ wxJSONValue::IsShort() const
     return r;
 }
 
-//! Return TRUE if the type of the value stored is a unsigned int.
-/*!
+// Return TRUE if the type of the value stored is a unsigned int.
+/*
  This function returns TRUE if the stored value is of
  type unsigned integer and the numeric value fits int a
  \b int data type.
@@ -679,8 +681,8 @@ wxJSONValue::IsUInt() const
     return r;
 }
 
-//! Return TRUE if the type of the value stored is a unsigned short.
-/*!
+// Return TRUE if the type of the value stored is a unsigned short.
+/*
  This function returns TRUE if the stored value is of
  type unsigned integer and the numeric value fits in a
  \b unsigned \b short \b int data type.
@@ -705,8 +707,8 @@ wxJSONValue::IsUShort() const
 }
 
 
-//! Return TRUE if the stored value is an integer which fits in a long int
-/*!
+// Return TRUE if the stored value is an integer which fits in a long int
+/*
  This function returns TRUE if the stored value is of
  type signed LONG integer and the numeric value fits int a
  \b long \b int data type.
@@ -730,8 +732,8 @@ wxJSONValue::IsLong() const
     return r;
 }
 
-//! Return TRUE if the stored value is an integer which fits in a unsigned long int
-/*!
+// Return TRUE if the stored value is an integer which fits in a unsigned long int
+/*
  This function returns TRUE if the stored value is of
  type unsigned LONG integer and the numeric value fits int a
  \b unsigned \b long \b int data type.
@@ -757,7 +759,7 @@ wxJSONValue::IsULong() const
 
 
 
-//! Return TRUE if the type of the value stored is a boolean.
+// Return TRUE if the type of the value stored is a boolean.
 bool
 wxJSONValue::IsBool() const
 {
@@ -769,7 +771,7 @@ wxJSONValue::IsBool() const
     return r;
 }
 
-//! Return TRUE if the type of the value stored is a double.
+// Return TRUE if the type of the value stored is a double.
 bool
 wxJSONValue::IsDouble() const
 {
@@ -781,7 +783,7 @@ wxJSONValue::IsDouble() const
     return r;
 }
 
-//! Return TRUE if the type of the value stored is a wxString object.
+// Return TRUE if the type of the value stored is a wxString object.
 bool
 wxJSONValue::IsString() const
 {
@@ -793,8 +795,8 @@ wxJSONValue::IsString() const
     return r;
 }
 
-//! Return TRUE if the type of the value stored is a pointer to a static C string.
-/*!
+// Return TRUE if the type of the value stored is a pointer to a static C string.
+/*
  This function returns TRUE if, and only if the stored value is a
  pointer to a static C-string and the C-string storage is enabled in
  the wxJSON library.
@@ -813,7 +815,7 @@ wxJSONValue::IsCString() const
     return r;
 }
 
-//! Return TRUE if the type of the value stored is an array type.
+// Return TRUE if the type of the value stored is an array type.
 bool
 wxJSONValue::IsArray() const
 {
@@ -825,7 +827,7 @@ wxJSONValue::IsArray() const
     return r;
 }
 
-//! Return TRUE if the type of this value is a key/value map.
+// Return TRUE if the type of this value is a key/value map.
 bool
 wxJSONValue::IsObject() const
 {
@@ -837,7 +839,7 @@ wxJSONValue::IsObject() const
     return r;
 }
 
-//! Return TRUE if the type of this value is a binary memory buffer.
+// Return TRUE if the type of this value is a binary memory buffer.
 bool
 wxJSONValue::IsMemoryBuff() const
 {
@@ -853,8 +855,8 @@ wxJSONValue::IsMemoryBuff() const
 
 // get the stored value; all these functions are 'const'
 
-//! Return the stored value as an integer.
-/*!
+// Return the stored value as an integer.
+/*
  The function returns the stored value as an integer.
  Note that the function does not check that the type of the
  value is actually an integer and it just returns the content
@@ -876,8 +878,8 @@ wxJSONValue::AsInt() const
     return i;
 }
 
-//! Return the stored value as a boolean.
-/*!
+// Return the stored value as a boolean.
+/*
  The function returns the stored value as a boolean.
  Note that the function does not check that the type of the
  value is actually a boolean and it just returns the content
@@ -896,8 +898,8 @@ wxJSONValue::AsBool() const
     return data->m_value.m_valBool;
 }
 
-//! Return the stored value as a double.
-/*!
+// Return the stored value as a double.
+/*
  The function returns the stored value as a double.
  Note that the function does not check that the type of the
  value is actually a double and it just returns the content
@@ -918,8 +920,8 @@ wxJSONValue::AsDouble() const
 }
 
 
-//! Return the stored value as a wxWidget's string.
-/*!
+// Return the stored value as a wxWidget's string.
+/*
  The function returns a string representation of the value
  stored in the JSON object.
  All value types are converted to a string by this function
@@ -1017,8 +1019,8 @@ wxJSONValue::AsString() const
     return s;
 }
 
-//! Return the stored value as a pointer to a static C string.
-/*!
+// Return the stored value as a pointer to a static C string.
+/*
  If the type of the value is stored as a C-string data type the
  function just returns that pointer.
  If the stored value is a wxString object, the function returns the
@@ -1052,8 +1054,8 @@ wxJSONValue::AsCString() const
 }
 
 
-//! Return the stored value as a unsigned int.
-/*!
+// Return the stored value as a unsigned int.
+/*
  The function returns the stored value as a unsigned integer.
  Note that the function does not check that the type of the
  value is actually a unsigned integer and it just returns the content
@@ -1076,8 +1078,8 @@ wxJSONValue::AsUInt() const
 }
 
 
-//! Returns the value as a long integer
-/*!
+// Returns the value as a long integer
+/*
  The function returns the stored value as a long integer.
  Note that the function does not check that the type of the
  value is actually a long integer and it just returns the content
@@ -1100,8 +1102,8 @@ wxJSONValue::AsLong() const
     return l;
 }
 
-//! Returns the value as a unsigned long integer
-/*!
+// Returns the value as a unsigned long integer
+/*
  The function returns the stored value as a unsigned long integer.
  Note that the function does not check that the type of the
  value is actually a unsigned long integer and it just returns the content
@@ -1124,8 +1126,8 @@ wxJSONValue::AsULong() const
 }
 
 
-//! Returns the value as a short integer
-/*!
+// Returns the value as a short integer
+/*
  The function returns the stored value as a short integer.
  Note that the function does not check that the type of the
  value is actually a short integer and it just returns the content
@@ -1148,8 +1150,8 @@ wxJSONValue::AsShort() const
     return i;
 }
 
-//! Returns the value as a unsigned short integer
-/*!
+// Returns the value as a unsigned short integer
+/*
  The function returns the stored value as a unsigned short integer.
  Note that the function does not check that the type of the
  value is actually a unsigned short and it just returns the content
@@ -1174,8 +1176,8 @@ wxJSONValue::AsUShort() const
 
 
 
-//! Stores the value of this object in the provided argument
-/*!
+// Stores the value of this object in the provided argument
+/*
  The functions of the form \c AsXxxxxx(T&) are the same as the \c AsXxxxxxx()
  but store the value in the provided argument and return TRUE if the value of
  this object is of the correct type.
@@ -1289,8 +1291,8 @@ wxJSONValue::AsDouble( double& d ) const
     return r;
 }
 
-//! Return this string value in the provided argument
-/*!
+// Return this string value in the provided argument
+/*
  This function is different from \c AsString because the latter always returns
  a string also when this object does not contain a string. In that case, a string
  representation of this value is returned.
@@ -1320,8 +1322,8 @@ wxJSONValue::AsCString( wxChar* ch ) const
     return r;
 }
 
-//! Returns the value as a memory buffer
-/*!
+// Returns the value as a memory buffer
+/*
  The function returns the \e memory \e buffer object stored in
  this JSON object.
  Note that as of wxWidgets 2.8 and 2.9 the \b wxMemoryBuffer object uses
@@ -1354,8 +1356,8 @@ wxJSONValue::AsMemoryBuff() const
 }
 
 
-//! Returns the value as a memory buffer
-/*!
+// Returns the value as a memory buffer
+/*
  The function returns the \e memory \e buffer object stored in
  this JSON object.
  Note that as of wxWidgets 2.8 and 2.9 the \b wxMemoryBuffer object uses
@@ -1386,8 +1388,8 @@ wxJSONValue::AsMemoryBuff( wxMemoryBuffer& buff ) const
 
 // internal use
 
-//! Return the stored value as a map object.
-/*!
+// Return the stored value as a map object.
+/*
  This function is for testing and debugging purposes and you shold never use it.
  To retreive values from an array or map JSON object use the \c Item() or ItemAt()
  memberfunctions or the subscript operator.
@@ -1406,8 +1408,8 @@ wxJSONValue::AsMap() const
     return v;
 }
 
-//! Return the stored value as an array object.
-/*!
+// Return the stored value as an array object.
+/*
  This function is for testing and debugging purposes and you shold never use it.
  To retreive values from an array or map JSON object use the \c Item() or ItemAt()
  memberfunctions or the subscript operator.
@@ -1429,8 +1431,8 @@ wxJSONValue::AsArray() const
 // retrieve the members and other info
 
 
-//! Return TRUE if the object contains an element at the specified index.
-/*!
+// Return TRUE if the object contains an element at the specified index.
+/*
  If the stoerd value is not an array or a map, the function returns FALSE.
 */
 bool
@@ -1444,8 +1446,8 @@ wxJSONValue::HasMember( unsigned index ) const
     return r;
 }
 
-//! Return TRUE if the object contains an element at the specified key.
-/*!
+// Return TRUE if the object contains an element at the specified key.
+/*
  If the stored value is not a key/map map, the function returns FALSE.
 */
 bool
@@ -1464,8 +1466,8 @@ wxJSONValue::HasMember( const wxString& key ) const
     return r;
 }
 
-//! Return the size of the array or map stored in this value.
-/*!
+// Return the size of the array or map stored in this value.
+/*
  Note that both the array and the key/value map may have a size of
  ZERO elements.
  If the stored value is not an array nor a key/value hashmap, the
@@ -1487,8 +1489,8 @@ wxJSONValue::Size() const
     return size;
 }
 
-//! Return the array of keys of this JSON object.
-/*!
+// Return the array of keys of this JSON object.
+/*
  If the stored value is a key/value map, the function returns an
  array of strings containing the \e key of all elements.
  Note that the returned array may be empty if the map has ZERO
@@ -1520,8 +1522,8 @@ wxJSONValue::GetMemberNames() const
 // NOTE: these functions are not 'const' so we have to call
 // the COW() function before accessing data
 
-//! Append the specified value in the array.
-/*!
+// Append the specified value in the array.
+/*
  The function appends the value specified in the parameter to the array
  contained in this object.
  If this object does not contain an array type, the actual content is
@@ -1547,7 +1549,7 @@ wxJSONValue::Append( const wxJSONValue& value )
 }
 
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( int i )
 {
@@ -1556,7 +1558,7 @@ wxJSONValue::Append( int i )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( short int i )
 {
@@ -1565,7 +1567,7 @@ wxJSONValue::Append( short int i )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( long int l )
 {
@@ -1574,7 +1576,7 @@ wxJSONValue::Append( long int l )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( bool b )
 {
@@ -1583,7 +1585,7 @@ wxJSONValue::Append( bool b )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( unsigned int ui )
 {
@@ -1592,7 +1594,7 @@ wxJSONValue::Append( unsigned int ui )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( unsigned short ui )
 {
@@ -1601,7 +1603,7 @@ wxJSONValue::Append( unsigned short ui )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( unsigned long ul )
 {
@@ -1610,7 +1612,7 @@ wxJSONValue::Append( unsigned long ul )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( double d )
 {
@@ -1619,7 +1621,7 @@ wxJSONValue::Append( double d )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( const wxChar* str )
 {
@@ -1628,7 +1630,7 @@ wxJSONValue::Append( const wxChar* str )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( const wxString& str )
 {
@@ -1637,7 +1639,7 @@ wxJSONValue::Append( const wxString& str )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( const wxMemoryBuffer& buff )
 {
@@ -1646,7 +1648,7 @@ wxJSONValue::Append( const wxMemoryBuffer& buff )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( const void* buff, size_t len )
 {
@@ -1656,8 +1658,8 @@ wxJSONValue::Append( const void* buff, size_t len )
 }
 
 
-//! Concatenate a string to this string object.
-/*!
+// Concatenate a string to this string object.
+/*
  The function concatenates \c str to the string contained
  in this object and returns TRUE if the operation is succefull.
  If the value stored in this value is not a string object
@@ -1681,8 +1683,8 @@ wxJSONValue::Cat( const wxString& str )
     return r;
 }
 
-//! Concatenate a memory buffer to this memory buffer object.
-/*!
+// Concatenate a memory buffer to this memory buffer object.
+/*
  The function concatenates \c buff to the \b wxMemoryBuffer object contained
  in this object and returns TRUE if the operation is succefull.
  If the value stored in this value is not a memory buffer object
@@ -1705,7 +1707,7 @@ wxJSONValue::Cat( const wxMemoryBuffer& buff )
 }
 
 
-//! \overload Cat( const wxString& )
+// \overload Cat( const wxString& )
 bool
 wxJSONValue::Cat( const wxChar* str )
 {
@@ -1723,8 +1725,8 @@ wxJSONValue::Cat( const wxChar* str )
 }
 
 
-//! Remove the item at the specified index or key.
-/*!
+// Remove the item at the specified index or key.
+/*
  The function removes the item at index \c index or at the specified
  key in the array or map.
  If this object does not contain an array (for a index parameter) or a map
@@ -1746,7 +1748,7 @@ wxJSONValue::Remove( int index )
 }
 
 
-//! \overload Remove( int )
+// \overload Remove( int )
 bool
 wxJSONValue::Remove( const wxString& key )
 {
@@ -1764,8 +1766,8 @@ wxJSONValue::Remove( const wxString& key )
 }
 
 
-//! Clear the object value.
-/*!
+// Clear the object value.
+/*
  This function causes the object to be empty.
  The function simply calls UnRef() making this object to become
  invalid and set its type to wxJSONTYPE_INVALID.
@@ -1779,8 +1781,8 @@ wxJSONValue::Clear()
 
 // retrieve an item
 
-//! Return the item at the specified index.
-/*!
+// Return the item at the specified index.
+/*
  The function returns a reference to the object at the specified
  index.
  If the element does not exist, the array is enlarged to \c index + 1
@@ -1811,8 +1813,8 @@ wxJSONValue::Item( unsigned index )
     return data->m_valArray.Item( index );
 }
 
-//! Return the item at the specified key.
-/*!
+// Return the item at the specified key.
+/*
  The function returns a reference to the object in the map
  that has the specified key.
  If \c key does not exist, a new NULL value is created with
@@ -1842,8 +1844,8 @@ wxJSONValue::Item( const wxString& key )
 }
 
 
-//! Return the item at the specified index.
-/*!
+// Return the item at the specified index.
+/*
  The function returns a copy of the object at the specified
  index.
  If the element does not exist, the function returns an \b invalid value.
@@ -1865,8 +1867,8 @@ wxJSONValue::ItemAt( unsigned index ) const
     return v;
 }
 
-//! Return the item at the specified key.
-/*!
+// Return the item at the specified key.
+/*
  The function returns a copy of the object in the map
  that has the specified key.
  If \c key does not exist, an \b invalid value is returned.
@@ -1893,8 +1895,8 @@ wxJSONValue::ItemAt( const wxString& key ) const
 }
 
 
-//! Return the item at the specified index.
-/*!
+// Return the item at the specified index.
+/*
  The function returns a reference to the object at the specified
  index.
  If the element does not exist, the array is enlarged to \c index + 1
@@ -1910,8 +1912,8 @@ wxJSONValue::operator [] ( unsigned index )
     return v;
 }
 
-//! Return the item at the specified key.
-/*!
+// Return the item at the specified key.
+/*
  The function returns a reference to the object in the map
  that has the specified key.
  If \c key does not exist, a new NULL value is created with
@@ -1934,8 +1936,8 @@ wxJSONValue::operator [] ( const wxString& key )
 // content and assigns the new one
 
 
-//! Assign the specified value to this object replacing the old value.
-/*!
+// Assign the specified value to this object replacing the old value.
+/*
  The assignment operator assigns to this object the value specified in the
  right operand of the assignment operator.
  Note that the old value is deleted but not the other data members
@@ -1957,7 +1959,7 @@ wxJSONValue::operator = ( int i )
 }
 
 
-//! \overload operator = (int)
+// \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( bool b )
 {
@@ -1966,7 +1968,7 @@ wxJSONValue::operator = ( bool b )
     return *this;
 }
 
-//! \overload operator = (int)
+// \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( unsigned int ui )
 {
@@ -1975,7 +1977,7 @@ wxJSONValue::operator = ( unsigned int ui )
     return *this;
 }
 
-//! \overload operator = (int)
+// \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( long l )
 {
@@ -1984,7 +1986,7 @@ wxJSONValue::operator = ( long l )
     return *this;
 }
 
-//! \overload operator = (int)
+// \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( unsigned  long ul )
 {
@@ -1994,7 +1996,7 @@ wxJSONValue::operator = ( unsigned  long ul )
 }
 
 
-//! \overload operator = (int)
+// \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( short i )
 {
@@ -2004,7 +2006,7 @@ wxJSONValue::operator = ( short i )
 }
 
 
-//! \overload operator = (int)
+// \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( unsigned short ui )
 {
@@ -2013,7 +2015,7 @@ wxJSONValue::operator = ( unsigned short ui )
     return *this;
 }
 
-//! \overload operator = (int)
+// \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( double d )
 {
@@ -2023,7 +2025,7 @@ wxJSONValue::operator = ( double d )
 }
 
 
-//! \overload operator = (int)
+// \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( const wxChar* str )
 {
@@ -2036,7 +2038,7 @@ wxJSONValue::operator = ( const wxChar* str )
     return *this;
 }
 
-//! \overload operator = (int)
+// \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( const wxString& str )
 {
@@ -2046,8 +2048,8 @@ wxJSONValue::operator = ( const wxString& str )
 }
 
 
-//! Assigns to this object a memory buffer type
-/*!
+// Assigns to this object a memory buffer type
+/*
  As with the ctor, this function makes a deep copy of the
  memory buffer \c buff so changes made to the original buffer
  does not reflect to the memory buffer stored in this JSON value.
@@ -2066,8 +2068,8 @@ wxJSONValue::operator = ( const wxMemoryBuffer& buff )
 }
 
 
-//! Assignment operator using reference counting.
-/*!
+// Assignment operator using reference counting.
+/*
  Unlike all other assignment operators, this one makes a
  swallow copy of the other JSON value object.
  The function calls \c Ref() to get a shared referenced
@@ -2085,8 +2087,8 @@ wxJSONValue::operator = ( const wxJSONValue& other )
 // finding elements
 
 
-//! Return a value or a default value.
-/*!
+// Return a value or a default value.
+/*
  This function returns a copy of the value object for the specified key.
  If the key is not found, a copy of \c defaultValue is returned.
  Note that the returned values are not real copy of the \c key or the
@@ -2134,8 +2136,8 @@ wxJSONValue::Get( const wxString& key, const wxJSONValue& defaultValue ) const
 
 // protected functions
 
-//! Find an element
-/*!
+// Find an element
+/*
  The function returns a pointer to the element at index \c index
  or a NULL pointer if \c index does not exist.
  A NULL pointer is also returned if the object does not contain an
@@ -2158,8 +2160,8 @@ wxJSONValue::Find( unsigned index ) const
     return vp;
 }
 
-//! Find an element
-/*!
+// Find an element
+/*
  The function returns a pointer to the element with key \c key
  or a NULL pointer if \c key does not exist.
  A NULL pointer is also returned if the object does not contain a
@@ -2184,8 +2186,8 @@ wxJSONValue::Find( const wxString& key ) const
 
 
 
-//! Return a string description of the type
-/*!
+// Return a string description of the type
+/*
  This static function is only usefull for debugging purposes and
  should not be used by users of this class.
  It simply returns a string representation of the JSON value
@@ -2226,8 +2228,8 @@ wxJSONValue::TypeToString( wxJSONType type )
     return s;
 }
 
-//! Returns informations about the object
-/*!
+// Returns informations about the object
+/*
  The function is only usefull for debugging purposes and will probably
  be dropped in future versions.
  Returns a string that contains info about the object such as:
@@ -2318,8 +2320,8 @@ wxJSONValue::Dump( bool deep, int indent ) const
     return s;
 }
 
-//! Returns informations about the object
-/*!
+// Returns informations about the object
+/*
  The function is only usefull for debugging purposes and will probably
  be dropped in future versions.
  You should not rely on this function to exist in future versions.
@@ -2353,8 +2355,8 @@ wxJSONValue::GetInfo() const
     return s;
 }
 
-//! The comparison function
-/*!
+// The comparison function
+/*
  This function returns TRUE if this object looks like \c other.
  Note that this class does not define a comparison operator
  (the classical \b operator== function) because the notion
@@ -2579,8 +2581,8 @@ wxJSONValue::IsSameAs( const wxJSONValue& other ) const
     return r;
 }
 
-//! Add a comment to this JSON value object.
-/*!
+// Add a comment to this JSON value object.
+/*
  The function adds a comment string to this JSON value object and returns
  the total number of comment strings belonging to this value.
  Note that the comment string must be a valid C/C++ comment because the
@@ -2659,8 +2661,8 @@ wxJSONValue::AddComment( const wxString& str, int position )
     return r;
 }
 
-//! Add one or more comments to this JSON value object.
-/*!
+// Add one or more comments to this JSON value object.
+/*
  The function adds the strings contained in \c comments to the comment's
  string array of this value object by calling the AddComment( const wxString&,int)
  function for every string in the \c comment array.
@@ -2679,8 +2681,8 @@ wxJSONValue::AddComment( const wxArrayString& comments, int position )
     return r;
 }
 
-//! Return a comment string.
-/*!
+// Return a comment string.
+/*
  The function returns the comment string at index \c idx.
  If \c idx is out of range, an empty string is returned.
  If \c idx is equal to -1, then the function returns a string
@@ -2705,7 +2707,7 @@ wxJSONValue::GetComment( int idx ) const
     return s;
 }
 
-//! Return the number of comment strings.
+// Return the number of comment strings.
 int
 wxJSONValue::GetCommentCount() const
 {
@@ -2717,7 +2719,7 @@ wxJSONValue::GetCommentCount() const
     return d;
 }
 
-//! Return the comment position.
+// Return the comment position.
 int
 wxJSONValue::GetCommentPos() const
 {
@@ -2726,7 +2728,7 @@ wxJSONValue::GetCommentPos() const
     return data->m_commentPos;
 }
 
-//! Get the comment string's array.
+// Get the comment string's array.
 const wxArrayString&
 wxJSONValue::GetCommentArray() const
 {
@@ -2736,7 +2738,7 @@ wxJSONValue::GetCommentArray() const
     return data->m_comments;
 }
 
-//! Clear all comment strings
+// Clear all comment strings
 void
 wxJSONValue::ClearComments()
 {
@@ -2747,8 +2749,8 @@ wxJSONValue::ClearComments()
 }
 
 
-//! Set the type of the stored value.
-/*!
+// Set the type of the stored value.
+/*
  The function sets the type of the stored value as specified in
  the provided argument.
  If the actual type is equal to \c type, nothing happens and this
@@ -2882,8 +2884,8 @@ wxJSONValue::SetType( wxJSONType type )
     return data;
 }
 
-//! Return the line number of this JSON value object
-/*!
+// Return the line number of this JSON value object
+/*
  The line number of a JSON value object is set to -1 when the
  object is constructed.
  The line number is set by the parser class, wxJSONReader, when
@@ -2904,7 +2906,7 @@ wxJSONValue::GetLineNo() const
     return n;
 }
 
-//! Set the line number of this JSON value object.
+// Set the line number of this JSON value object.
 void
 wxJSONValue::SetLineNo( int num )
 {
@@ -2913,14 +2915,14 @@ wxJSONValue::SetLineNo( int num )
     data->m_lineNo = num;
 }
 
-//! Set the pointer to the referenced data.
+// Set the pointer to the referenced data.
 void
 wxJSONValue::SetRefData(wxJSONRefData* data)
 {
     m_refData = data;
 }
 
-//! Increments the referenced data counter.
+// Increments the referenced data counter.
 void
 wxJSONValue::Ref(const wxJSONValue& clone)
 {
@@ -2938,8 +2940,8 @@ wxJSONValue::Ref(const wxJSONValue& clone)
     }
 }
 
-//! Unreferences the shared data
-/*!
+// Unreferences the shared data
+/*
  The function decrements the number of shares in wxJSONRefData::m_refCount
  and if it is ZERO, deletes the referenced data.
  It is called by the destructor and by the copy-on-write functions.
@@ -2957,7 +2959,7 @@ wxJSONValue::UnRef()
     }
 }
 
-//! Makes an exclusive copy of shared data
+// Makes an exclusive copy of shared data
 void
 wxJSONValue::UnShare()
 {
@@ -2965,8 +2967,8 @@ wxJSONValue::UnShare()
 }
 
 
-//! Do a deep copy of the other object.
-/*!
+// Do a deep copy of the other object.
+/*
  This function allocates a new ref-data structure and copies it
  from the object \c other.
 */
@@ -2978,7 +2980,7 @@ wxJSONValue::DeepCopy( const wxJSONValue& other )
     SetRefData( data );
 }
 
-//! Return the pointer to the referenced data structure.
+// Return the pointer to the referenced data structure.
 wxJSONRefData*
 wxJSONValue::GetRefData() const
 {
@@ -2987,8 +2989,8 @@ wxJSONValue::GetRefData() const
 }
 
 
-//! Make a copy of the referenced data.
-/*!
+// Make a copy of the referenced data.
+/*
  The function allocates a new instance of the wxJSONRefData
  structure, copies the content of \c other and returns the pointer
  to the newly created structure.
@@ -3036,8 +3038,8 @@ wxJSONValue::CloneRefData( const wxJSONRefData* otherData ) const
     return data;
 }
 
-//! Create a new data structure
-/*!
+// Create a new data structure
+/*
  The function allocates a new instance of the wxJSONRefData
  structure and returns its pointer.
  The type of the JSON value is set to wxJSONTYPE_INVALID (=
@@ -3053,8 +3055,8 @@ wxJSONValue::CreateRefData() const
 
 
 
-//! Make sure the referenced data is unique
-/*!
+// Make sure the referenced data is unique
+/*
  This function is called by all non-const member functions and makes
  sure that the referenced data is unique by calling \b UnShare()
  If the referenced data is shared acrosss other wxJSONValue instances,
@@ -3073,7 +3075,7 @@ wxJSONValue::COW()
     return GetRefData();
 }
 
-//! Makes a private copy of the referenced data
+// Makes a private copy of the referenced data
 void
 wxJSONValue::AllocExclusive()
 {
@@ -3094,8 +3096,8 @@ wxJSONValue::AllocExclusive()
                   _T("wxObject::AllocExclusive() failed.") );
 }
 
-//! Convert memory buffer object to a string representation.
-/*/
+// Convert memory buffer object to a string representation.
+/*
  The fucntion returns a string representation of the data contained in the
  memory buffer object \c buff.
  The string is conposed of two hexadecimal digits for every byte contained
@@ -3122,8 +3124,8 @@ wxJSONValue::MemoryBuffToString( const wxMemoryBuffer& buff, size_t len )
 }
 
 
-//! Convert a binary memory buffer to a string representation.
-/*/
+// Convert a binary memory buffer to a string representation.
+/*
  The function returns a string representation of the data contained in the
  binary memory buffer pointed to by \c buff for \c len bytes.
  The string is composed of two hexadecimal digits for every byte contained
@@ -3174,8 +3176,8 @@ wxJSONValue::MemoryBuffToString( const void* buff, size_t len, size_t actualLen 
     return s;
 }
 
-//! Compares two memory buffer objects
-/*!
+// Compares two memory buffer objects
+/*
  The function is the counterpart of the comparison operator == for two wxMemoryBuffer
  objects.
  You may noticed that the wxMemoryBuffer class does not define comparison operators so
@@ -3219,8 +3221,8 @@ wxJSONValue::CompareMemoryBuff( const wxMemoryBuffer& buff1, const wxMemoryBuffe
     return r;
 }
 
-//! Compares a memory buffer object and a memory buffer
-/*!
+// Compares a memory buffer object and a memory buffer
+/*
  The function compares the data contained in a memory buffer object with a
  memory buffer.
  This function uses the (fast) \b memcmp function to compare the actual data
@@ -3241,8 +3243,8 @@ wxJSONValue::CompareMemoryBuff( const wxMemoryBuffer& buff1, const void* buff2 )
 }
 
 
-//! Converts an array of INTs to a memory buffer
-/*!
+// Converts an array of INTs to a memory buffer
+/*
  This static function converts an array of INTs stored in a wxJSONvalue object
  into a memory buffer object.
  The wxJSONvalue object passed as parameter must be of type ARRAY and must contain
@@ -3284,7 +3286,7 @@ wxJSONValue::ArrayToMemoryBuff( const wxJSONValue& value )
 }
 
 
-/*************************************************************************
+/* ************************************************************************
 
             64-bits integer support
 
@@ -3293,7 +3295,7 @@ wxJSONValue::ArrayToMemoryBuff( const wxJSONValue& value )
 #if defined( wxJSON_64BIT_INT)
 
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( wxInt64 i )
 {
     m_refData = 0;
@@ -3304,7 +3306,7 @@ wxJSONValue::wxJSONValue( wxInt64 i )
     }
 }
 
-//! \overload wxJSONValue()
+// \overload wxJSONValue()
 wxJSONValue::wxJSONValue( wxUint64 ui )
 {
     m_refData = 0;
@@ -3315,8 +3317,8 @@ wxJSONValue::wxJSONValue( wxUint64 ui )
     }
 }
 
-//! Return TRUE if the stored value is a 32-bits integer
-/*!
+// Return TRUE if the stored value is a 32-bits integer
+/*
  This function is only available on 64-bits platforms and returns
  TRUE if, and only if, the stored value is of type \b wxJSONTYPE_INT
  and the numeric value fits in a 32-bits signed integer.
@@ -3331,8 +3333,8 @@ wxJSONValue::IsInt32() const
     return r;
 }
 
-//! Return TRUE if the stored value is a unsigned 32-bits integer
-/*!
+// Return TRUE if the stored value is a unsigned 32-bits integer
+/*
  This function is only available on 64-bits platforms and returns
  TRUE if, and only if, the stored value is of type \b wxJSONTYPE_UINT
  and the numeric value fits in a 32-bits unsigned integer.
@@ -3348,8 +3350,8 @@ wxJSONValue::IsUInt32() const
 }
 
 
-//! Return TRUE if the stored value is integer.
-/*!
+// Return TRUE if the stored value is integer.
+/*
  This function returns TRUE if the stored value is of
  type signed integer.
  In other words, the function returns TRUE if the \c wxJSONRefData::m_type
@@ -3371,8 +3373,8 @@ wxJSONValue::IsInt64() const
 }
 
 
-//! Return TRUE if the stored value is a unsigned integer
-/*!
+// Return TRUE if the stored value is a unsigned integer
+/*
  This function returns TRUE if the stored value is of
  type unsigned integer.
  In other words, the function returns TRUE if the \c wxJSONRefData::m_type
@@ -3393,8 +3395,8 @@ wxJSONValue::IsUInt64() const
     return r;
 }
 
-//! Returns the low-order 32 bits of the value as an integer
-/*!
+// Returns the low-order 32 bits of the value as an integer
+/*
  This function is only available on 64-bits platforms and returns
  the low-order 32-bits of the integer stored in the JSON value.
  Note that all integer types are stored as \b wx(U)Int64 data types by
@@ -3413,8 +3415,8 @@ wxJSONValue::AsInt32() const
     return i;
 }
 
-//! Returns the low-order 32 bits of the value as an unsigned integer
-/*!
+// Returns the low-order 32 bits of the value as an unsigned integer
+/*
  This function is only available on 64-bits platforms and returns
  the low-order 32-bits of the integer stored in the JSON value.
  Note that all integer types are stored as \b wx(U)Int64 data types by
@@ -3434,8 +3436,8 @@ wxJSONValue::AsUInt32() const
 }
 
 
-//! Return the numeric value as a 64-bit integer.
-/*!
+// Return the numeric value as a 64-bit integer.
+/*
  This function is only available on 64-bits platforms and returns
  the numeric value as a 64-bit integer.
 
@@ -3459,8 +3461,8 @@ wxJSONValue::AsInt64() const
     return i64;
 }
 
-//! Return the numeric value as a 64-bit unsigned integer.
-/*!
+// Return the numeric value as a 64-bit unsigned integer.
+/*
  This function is only available on 64-bits platforms and returns
  the numeric value as a 64-bit unsigned integer.
 
@@ -3524,7 +3526,7 @@ wxJSONValue::AsUInt64( wxUint64& ui64 ) const
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( wxInt64 i )
 {
@@ -3533,7 +3535,7 @@ wxJSONValue::Append( wxInt64 i )
     return r;
 }
 
-//! \overload Append( const wxJSONValue& )
+// \overload Append( const wxJSONValue& )
 wxJSONValue&
 wxJSONValue::Append( wxUint64 ui )
 {
@@ -3543,7 +3545,7 @@ wxJSONValue::Append( wxUint64 ui )
 }
 
 
-//! \overload operator = (int)
+// \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( wxInt64 i )
 {
@@ -3552,7 +3554,7 @@ wxJSONValue::operator = ( wxInt64 i )
     return *this;
 }
 
-//! \overload operator = (int)
+// \overload operator = (int)
 wxJSONValue&
 wxJSONValue::operator = ( wxUint64 ui )
 {

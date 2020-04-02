@@ -1,0 +1,171 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OCPN navdata\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-04-02 17:26+0300\n"
+"PO-Revision-Date: 2020-04-02 17:28+0300\n"
+"Last-Translator: CarCode <carcode@me.com>\n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 2.3\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#
+#: ../src/customgrid.cpp:265 ../src/datadialogbase.h:107
+msgid "Settings"
+msgstr "Einstellungen"
+
+#
+#: ../src/customgrid.cpp:276 ../src/datatable.cpp:123
+msgid "SOG"
+msgstr "SOG"
+
+#
+#: ../src/customgrid.cpp:276 ../src/datatable.cpp:123
+msgid "VMG"
+msgstr "VMG"
+
+#
+#: ../src/customgrid.cpp:277 ../src/datatable.cpp:118
+msgid "TTG @ "
+msgstr "TTG @ "
+
+#
+#: ../src/customgrid.cpp:278 ../src/datatable.cpp:118
+msgid "ETA @ "
+msgstr "ETA @ "
+
+#
+#: ../src/datadialogbase.h:88
+msgid "Navigation Data"
+msgstr "Navigationsdaten"
+
+#
+#: ../src/datadialogbase.cpp:64
+msgid "Trip"
+msgstr "Trip"
+
+#
+#: ../src/datadialogbase.cpp:70
+msgid "Started"
+msgstr "Gestartet"
+
+#
+#: ../src/datadialogbase.cpp:76
+msgid "at"
+msgstr "bei"
+
+#
+#: ../src/datadialogbase.cpp:82
+msgid "TimeSpent"
+msgstr "Verstrichene Zeit"
+
+#
+#: ../src/datadialogbase.cpp:88
+msgid "Distance"
+msgstr "Entfernung"
+
+#
+#: ../src/datadialogbase.cpp:94
+msgid "Avg.speed"
+msgstr "Mittlere Geschw."
+
+#
+#: ../src/datadialogbase.cpp:137 ../src/datatable.cpp:71
+#: ../src/datatable.cpp:417
+msgid "Dialog"
+msgstr "Dialog"
+
+#
+#: ../src/datadialogbase.cpp:139
+msgid "Show Trip Data"
+msgstr "Zeige Trip Daten"
+
+#
+#: ../src/datadialogbase.cpp:143
+msgid "at VMG"
+msgstr "bei VMG"
+
+#
+#: ../src/datadialogbase.cpp:143
+msgid "at SOG"
+msgstr "bei SOG"
+
+#
+#: ../src/datadialogbase.cpp:144
+msgid "Compute and Show TTG and ETA"
+msgstr "Berechne und zeige TTG und ETA"
+
+#
+#: ../src/datadialogbase.cpp:150
+msgid "OK"
+msgstr "OK"
+
+#
+#: ../src/datatable.cpp:117
+msgid "RNG"
+msgstr "RNG"
+
+#
+#: ../src/datatable.cpp:118
+msgid "BRG"
+msgstr "BRG"
+
+#
+#: ../src/datatable.cpp:118
+msgid "Total RNG"
+msgstr "Total RNG"
+
+#
+#: ../src/datatable.cpp:183
+msgid "Unnamed route"
+msgstr "Unbenannte Route"
+
+#
+#: ../src/datatable.cpp:337
+msgid "No Active Route!"
+msgstr "Keine aktive Route!"
+
+#
+#: ../src/navdata_pi.cpp:141 ../src/navdata_pi.cpp:144
+msgid "Navigation data"
+msgstr "Navigationsdaten"
+
+#
+#: ../src/navdata_pi.cpp:203
+msgid "Navigation data plugin for OpenCPN"
+msgstr "Plugin für Navigationsdaten für OpenCPN"
+
+#
+#: ../src/navdata_pi.cpp:208
+msgid ""
+"Navigation data plugin for OpenCPN\n"
+"Shows RNG (range),TTG (time to go) and ETA (estimated time of arrival)\n"
+"for all active route points.\n"
+"Also shows current trip summary:\n"
+"start time, time spent, distance, mean speed since departure..."
+msgstr ""
+"Navigationsdaten Plugin für OpenCPN\n"
+"Zeigt RNG (Bereich), TTG ( Rest-Zeit) und ETA (erwartete Ankunftszeit)\n"
+"für alle aktuell aktiven Routenpunkte.\n"
+"Zeigt auch aktuellen Track Gesamtfortschritt:\n"
+"Startzeit, Entfernung, Durchnittsgeschw. seit Start…"
+
+#
+#
+#~ msgid ""
+#~ "There is no Active Route!\n"
+#~ "You must active one before using navdata_pi"
+#~ msgstr ""
+#~ "Keine aktive Route!\n"
+#~ "Erst eine Route aktivieren zur Verwendung dieses Plugin."
+
+#
+#
+#~ msgid "Warning!"
+#~ msgstr "Warnung!"

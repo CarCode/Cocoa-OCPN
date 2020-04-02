@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  PlugIn Manager Object
@@ -62,6 +62,8 @@
 #include "styles.h"
 #include "options.h"
 #include "multiplexer.h"
+#include "logger.h"
+#include "ocpn_utils.h"
 #include "piano.h"
 #include "routeman.h"
 #include "FontMgr.h"
@@ -1455,14 +1457,11 @@ PlugInContainer *PlugInManager::LoadPlugIn(wxString plugin_file)
 
     if(pic->m_pplugin)
     {
-        msg = _T("PlugInManager:  ");
-        msg += plugin_file;
-        wxString msg1;
-        msg1.Printf(_T("\n              API Version detected: %d"), api_ver);
-        msg += msg1;
-        msg1.Printf(_T("\n              PlugIn Version detected: %d"), pi_ver);
-        msg += msg1;
-        wxLogMessage(msg);
+        INFO_LOG  << "PlugInManager:  " << plugin_file;
+        INFO_LOG  << "        Plugin common name: "
+            << pic->m_pplugin->GetCommonName();
+        INFO_LOG  << "        API Version detected: " << api_ver;
+        INFO_LOG  << "        PlugIn Version detected: " << pi_ver;
     }
     else
     {

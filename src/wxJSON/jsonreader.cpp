@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        jsonreader.cpp
 // Purpose:     the wxJSONReader class: a JSON text parser
 // Author:      Luciano Cattani
@@ -6,15 +6,17 @@
 // RCS-ID:      $Id: jsonreader.cpp,v 1.12 2008/03/12 10:48:19 luccat Exp $
 // Copyright:   (c) 2007 Luciano Cattani
 // Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 //#ifdef __GNUG__
 //    #pragma implementation "jsonreader.cpp"
 //#endif
 
+#ifdef NDEBUG
 // make wxLogTrace a noop, it's really slow
 // must be defined before including debug.h
 #define wxDEBUG_LEVEL 0
+#endif
 
 #include <wx/jsonreader.h>
 
@@ -24,7 +26,7 @@
 #include <wx/log.h>
 
 
-/*! \class wxJSONReader
+/* \class wxJSONReader
  \brief The JSON parser
 
  The class is a JSON parser which reads a JSON formatted text and stores
@@ -179,8 +181,8 @@ static const wxChar* traceMask = _T("traceReader");
 static const wxChar* storeTraceMask = _T("StoreComment");
 #endif
 
-//! Ctor
-/*!
+// Ctor
+/*
  Construct a JSON parser object with the given parameters.
 
  JSON parser objects should always be constructed on the stack but
@@ -252,13 +254,13 @@ wxJSONReader::wxJSONReader( int flags, int maxErrors )
 
 }
 
-//! Dtor - does nothing
+// Dtor - does nothing
 wxJSONReader::~wxJSONReader()
 {
 }
 
-//! Parse the JSON document.
-/*!
+// Parse the JSON document.
+/*
  The two overloaded versions of the \c Parse() function read a
  JSON text stored in a wxString object or in a wxInputStream
  object.
@@ -338,7 +340,7 @@ wxJSONReader:: Parse( const wxString& doc, wxJSONValue* val )
     return numErr;
 }
 
-//! \overload Parse( const wxString&, wxJSONValue* )
+// \overload Parse( const wxString&, wxJSONValue* )
 int
 wxJSONReader::Parse( wxInputStream& is, wxJSONValue* val )
 {
@@ -391,8 +393,8 @@ wxJSONReader::Parse( wxInputStream& is, wxJSONValue* val )
 }
 
 
-//! Returns the start of the document
-/*!
+// Returns the start of the document
+/*
  This is the first function called by the Parse() function and it searches
  the input stream for the starting character of a JSON text and returns it.
  JSON text start with '{' or '['.
@@ -444,8 +446,8 @@ wxJSONReader::GetWarnings() const
     return m_warnings;
 }
 
-//! Return the depth of the JSON input text
-/*!
+// Return the depth of the JSON input text
+/*
  The function returns the number of times the recursive \c DoRead function was
  called in the parsing process thus returning the maximum depth of the JSON
  input text.
@@ -458,14 +460,14 @@ wxJSONReader::GetDepth() const
 
 
 
-//! Return the size of the error message's array.
+// Return the size of the error message's array.
 int
 wxJSONReader::GetErrorCount() const
 {
     return m_errors.size();
 }
 
-//! Return the size of the warning message's array.
+// Return the size of the warning message's array.
 int
 wxJSONReader::GetWarningCount() const
 {
@@ -473,8 +475,8 @@ wxJSONReader::GetWarningCount() const
 }
 
 
-//! Read a character from the input JSON document.
-/*!
+// Read a character from the input JSON document.
+/*
  The function returns the next byte from the UTF-8 stream as an INT.
  In case of errors or EOF, the function returns -1.
  The function also updates the \c m_lineNo and \c m_colNo data
@@ -526,8 +528,8 @@ wxJSONReader::ReadChar( wxInputStream& is )
 }
 
 
-//! Peek a character from the input JSON document
-/*!
+// Peek a character from the input JSON document
+/*
  This function just calls the \b Peek() function on the stream
  and returns it.
 
@@ -546,8 +548,8 @@ wxJSONReader::PeekChar( wxInputStream& is )
 }
 
 
-//! Reads the JSON text document (internal use)
-/*!
+// Reads the JSON text document (internal use)
+/*
  This is a recursive function that is called by \c Parse()
  and by the \c DoRead() function itself when a new object /
  array character is encontered.
@@ -757,8 +759,8 @@ wxJSONReader::DoRead( wxInputStream& is, wxJSONValue& parent )
     return ch;
 }
 
-//! Store a value in the parent object.
-/*!
+// Store a value in the parent object.
+/*
  The function is called by \c DoRead() when a the comma
  or a close-object/array character is encontered and stores the current
  value read by the parser in the parent object.
@@ -839,8 +841,8 @@ wxJSONReader::StoreValue( int ch, const wxString& key, wxJSONValue& value, wxJSO
     value.ClearComments();
 }
 
-//! Add a error message to the error's array
-/*!
+// Add a error message to the error's array
+/*
  The overloaded versions of this function add an error message to the
  error's array stored in \c m_errors.
  The error message is formatted as follows:
@@ -873,7 +875,7 @@ wxJSONReader::AddError( const wxString& msg )
     // else if ( m_errors > m_maxErrors ) do nothing, thus ignore the error message
 }
 
-//! \overload AddError( const wxString& )
+// \overload AddError( const wxString& )
 void
 wxJSONReader::AddError( const wxString& fmt, const wxString& str )
 {
@@ -882,7 +884,7 @@ wxJSONReader::AddError( const wxString& fmt, const wxString& str )
     AddError( s );
 }
 
-//! \overload AddError( const wxString& )
+// \overload AddError( const wxString& )
 void
 wxJSONReader::AddError( const wxString& fmt, wxChar c )
 {
@@ -891,8 +893,8 @@ wxJSONReader::AddError( const wxString& fmt, wxChar c )
     AddError( s );
 }
 
-//! Add a warning message to the warning's array
-/*!
+// Add a warning message to the warning's array
+/*
  The warning description is as follows:
  \code
    Warning: line xxx, col xxx - <warning_description>
@@ -939,8 +941,8 @@ wxJSONReader::AddWarning( int type, const wxString& msg )
     // else do nothing, thus ignore the warning message
 }
 
-//! Skip all whitespaces.
-/*!
+// Skip all whitespaces.
+/*
  The function reads characters from the input text
  and returns the first non-whitespace character read or -1
  if EOF.
@@ -965,8 +967,8 @@ wxJSONReader::SkipWhiteSpace( wxInputStream& is )
     return ch;
 }
 
-//! Skip a comment
-/*!
+// Skip a comment
+/*
  The function is called by DoRead() when a '/' (slash) character
  is read from the input stream assuming that a C/C++ comment is starting.
  Returns the first character that follows the comment or
@@ -1086,8 +1088,8 @@ wxJSONReader::SkipComment( wxInputStream& is )
     return ch;
 }
 
-//! Read a string value
-/*!
+// Read a string value
+/*
  The function reads a string value from input stream and it is
  called by the \c DoRead() function when it enconters the
  double quote characters.
@@ -1268,8 +1270,8 @@ wxJSONReader::ReadString( wxInputStream& is, wxJSONValue& val )
     return ch;
 }
 
-//! Reads a token string
-/*!
+// Reads a token string
+/*
  This function is called by the ReadValue() when the
  first character encontered is not a special char
  and it is not a double-quote.
@@ -1325,8 +1327,8 @@ wxJSONReader::ReadToken( wxInputStream& is, int ch, wxString& s )
     return nextCh;
 }
 
-//! Read a value from input stream
-/*!
+// Read a value from input stream
+/*
  The function is called by DoRead() when it enconters a char that is
  not a special char nor a double-quote.
  It assumes that the string is a numeric value or a literal
@@ -1504,8 +1506,8 @@ wxJSONReader::ReadValue( wxInputStream& is, int ch, wxJSONValue& val )
 }
 
 
-//! Read a 4-hex-digit unicode character.
-/*!
+// Read a 4-hex-digit unicode character.
+/*
  The function is called by ReadString() when the \b \\u sequence is
  encontered; the sequence introduces a control character in the form:
  \code
@@ -1540,8 +1542,8 @@ wxJSONReader::ReadUES( wxInputStream& is, char* uesBuffer )
 }
 
 
-//! The function appends a Unice Escaped Sequence to the temporary UTF8 buffer
-/*!
+// The function appends a Unice Escaped Sequence to the temporary UTF8 buffer
+/*
  This function is called by \c ReadString() when a \e unicode \e escaped
  \e sequence is read from the input text as for example:
 
@@ -1595,8 +1597,8 @@ wxJSONReader::AppendUES( wxMemoryBuffer& utf8Buff, const char* uesBuffer )
     return 0;
 }
 
-//! Store the comment string in the value it refers to.
-/*!
+// Store the comment string in the value it refers to.
+/*
  The function searches a suitable value object for storing the
  comment line that was read by the parser and temporarly
  stored in \c m_comment.
@@ -1715,8 +1717,8 @@ wxJSONReader::StoreComment( const wxJSONValue* parent )
 }
 
 
-//! Return the number of bytes that make a character in stream input
-/*!
+// Return the number of bytes that make a character in stream input
+/*
  This function returns the number of bytes that represent a unicode
  code point in various encoding.
  For example, if the input stream is UTF-32 the function returns 4.
@@ -1732,8 +1734,8 @@ wxJSONReader::NumBytes( char ch )
     return n;
 }
 
-//! Compute the number of bytes that makes a UTF-8 encoded wide character.
-/*!
+// Compute the number of bytes that makes a UTF-8 encoded wide character.
+/*
  The function counts the number of '1' bit in the character \c ch and
  returns it.
  The UTF-8 encoding specifies the number of bytes needed by a wide character
@@ -1776,8 +1778,8 @@ wxJSONReader::UTF8NumBytes( char ch )
     return num;
 }
 
-//! Convert a UTF-8 memory buffer one char at a time
-/*!
+// Convert a UTF-8 memory buffer one char at a time
+/*
  This function is used in ANSI mode when input from a stream is in UTF-8
  format and the UTF-8 buffer read cannot be converted to the locale
  wxString object.
@@ -1838,8 +1840,8 @@ wxJSONReader::ConvertCharByChar( wxString& s, const wxMemoryBuffer& utf8Buffer )
     return result;
 }
 
-//! Read a memory buffer type
-/*!
+// Read a memory buffer type
+/*
  This function is called by DoRead() when the single-quote character is
  encontered which starts a \e memory \e buffer type.
  This type is a \b wxJSON extension so the function emits a warning
@@ -1941,8 +1943,8 @@ wxJSONReader::ReadMemoryBuff( wxInputStream& is, wxJSONValue& val )
 
 
 #if defined( wxJSON_64BIT_INT )
-//! Converts a decimal string to a 64-bit signed integer
-/*!
+// Converts a decimal string to a 64-bit signed integer
+/*
  This function implements a simple variant
  of the \b strtoll C-library function.
  I needed this implementation because the wxString::To(U)LongLong
@@ -2002,8 +2004,8 @@ wxJSONReader::Strtoll( const wxString& str, wxInt64* i64 )
 }
 
 
-//! Converts a decimal string to a 64-bit unsigned integer.
-/*!
+// Converts a decimal string to a 64-bit unsigned integer.
+/*
  Similar to \c Strtoll but for unsigned integers
 */
 bool
@@ -2017,8 +2019,8 @@ wxJSONReader::Strtoull( const wxString& str, wxUint64* ui64 )
     return r;
 }
 
-//! Perform the actual conversion from a string to a 64-bit integer
-/*!
+// Perform the actual conversion from a string to a 64-bit integer
+/*
  This function is called internally by the \c Strtoll and \c Strtoull functions
  and it does the actual conversion.
  The function is also able to check numeric overflow.

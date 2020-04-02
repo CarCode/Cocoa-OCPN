@@ -999,8 +999,8 @@ void Route::UpdateSegmentDistance( RoutePoint *prp0, RoutePoint *prp, double pla
             prp0->m_manual_etd = false;
             if( prp0->GetETA().IsValid() ) {
                 prp0->m_seg_etd = prp0->GetETA();
-            } else if (!prp0->GetETD().IsValid()) {
-                prp0->m_seg_etd = m_PlannedDeparture + wxTimeSpan(0, 0, m_route_time);
+            } else {
+                prp0->m_seg_etd = m_PlannedDeparture + wxTimeSpan(0, 0, m_route_time - duration);
             }
         }
         prp->m_seg_eta = prp0->GetETD() + ts;

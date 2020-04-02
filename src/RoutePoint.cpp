@@ -588,8 +588,8 @@ void RoutePoint::Draw( ocpnDC& dc, ChartCanvas *canvas, wxPoint *rpn )
 
     if( m_bShowName ) {
         if( 0 == m_pMarkFont ) {
-            m_pMarkFont = FontMgr::Get().GetFont( _( "Marks" ) );
-            m_FontColor = FontMgr::Get().GetFontColor( _( "Marks" ) );
+            m_pMarkFont = FontMgr::Get().GetFont( _T( "Marks" ) );
+            m_FontColor = FontMgr::Get().GetFontColor( _T( "Marks" ) );
             CalculateNameExtents();
         }
 
@@ -760,8 +760,8 @@ void RoutePoint::DrawGL( ViewPort &vp, ChartCanvas *canvas, bool use_cached_scre
     wxRect r3 = r1;
     if( m_bShowName ) {
         if( !m_pMarkFont ) {
-            m_pMarkFont = FontMgr::Get().GetFont( _( "Marks" ) );
-            m_FontColor = FontMgr::Get().GetFontColor( _( "Marks" ) );
+            m_pMarkFont = FontMgr::Get().GetFont( _T( "Marks" ) );
+            m_FontColor = FontMgr::Get().GetFontColor( _T( "Marks" ) );
             CalculateNameExtents();
         }
 
