@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Squidd.io Plugin background thread
@@ -42,7 +42,7 @@ wxEvent* SquiddioEvent::Clone() const
     return newevent;
 }
 
-/** \brief Worker method of the Squidd.io server communication thread
+/* \brief Worker method of the Squidd.io server communication thread
  *
  * \return void*
  *
@@ -56,14 +56,7 @@ void *SquiddioThread::Entry()
         if( !m_bIsWorking )
         {
             m_bIsWorking = true;
-            if( m_getdata )
-            {
-                m_getdata = false;
-                m_pHandler->RefreshLayer();
-                SquiddioEvent evt;
-                m_pHandler->AddPendingEvent(evt);
-            }
-            else if ( m_bCheckOnline )
+            if ( m_bCheckOnline )
             {
                 m_pHandler->CheckIsOnline();
                 m_bCheckOnline = false;
@@ -86,7 +79,7 @@ void *SquiddioThread::Entry()
     return 0;
 }
 
-/** \brief Squidd.io server communication worker thread constructor
+/* \brief Squidd.io server communication worker thread constructor
  *
  * \param handler squiddio_pi* Pointer to the plug-in
  *
@@ -101,7 +94,7 @@ SquiddioThread::SquiddioThread(squiddio_pi * handler) : wxThread()
     Create();
 }
 
-/** \brief Squidd.io server communication worker thread destructor
+/* \brief Squidd.io server communication worker thread destructor
  */
 SquiddioThread::~SquiddioThread()
 {
@@ -110,7 +103,7 @@ SquiddioThread::~SquiddioThread()
     m_pHandler->SetThreadRunning( false );
 }
 
-/** \brief Entry point to invoke the retrieval of POI list from the Squidd.io server on the background
+/* \brief Entry point to invoke the retrieval of POI list from the Squidd.io server on the background
  *
  * \param lat double
  * \param lon double
@@ -122,7 +115,7 @@ void SquiddioThread::GetData()
     m_getdata = true;
 }
 
-/** \brief Checks whether Internet connection is available
+/* \brief Checks whether Internet connection is available
  *
  * \return void
  *
@@ -132,7 +125,7 @@ void SquiddioThread::CheckIsOnline()
     m_bCheckOnline = true;
 }
 
-/** \brief Sends a position report
+/* \brief Sends a position report
  *
  * \param lat double
  * \param lon double
@@ -149,3 +142,4 @@ void SquiddioThread::ReportPosition( double lat, double lon, double sog, double 
     m_reportcog = cog;
     m_bPositionReport = true;
 }
+

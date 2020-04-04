@@ -1,10 +1,10 @@
-/**************************************************************************
+/* ************************************************************************
  *
  * Project:  OpenCPN
  * Purpose   Squiddio plugin
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Mauro Calvi                                     *
+ *   Copyright (C) 2020 by Mauro Calvi                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,15 +26,18 @@
 #define LOGS_H_
 
 #include "squiddio_pi.h"
-#include "../../../include/wx/jsonreader.h"
+#include "wxJSON/jsonreader.h"
+#include <wx/tokenzr.h>
 //#include "wxJSON/jsonwriter.h"
 
 enum
 {
-    TIMER_ID= 10,
-    TIMER_ID1
+    TIMER_ID0= 10,
+    TIMER_ID1,
+    TIMER_ID2
 };
 
+WX_DECLARE_STRING_HASH_MAP( int, Samples );
 
 class squiddio_pi;
 
@@ -43,10 +46,13 @@ class logsWindow : public wxWindow
 public:
       logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
       ~logsWindow();
-      //~logsWindow(){}
-      void OnTimerTimeout(wxTimerEvent& event);
+      void OnRecTimerTimeout(wxTimerEvent& event);
+      void OnSenTimerTimeout(wxTimerEvent& event);
       void OnRefreshTimeout(wxTimerEvent& event);
-      void SetTimer(int RetrieveSecs);
+//       void OnClose(wxCloseEvent& event);
+      void OnClose(wxAuiManagerEvent& event);
+      void SetRecTimer(int RetrieveSecs);
+      void SetSenTimer(int SendSecs);
       void OnPaint(wxPaintEvent& event);
       void SetSentence(wxString &sentence);
       wxString PostPosition(double lat, double lon, double sog, double cog);
@@ -56,25 +62,31 @@ public:
 
       NMEA0183     m_NMEA0183;
       wxString     m_NMEASentence;
-      double      mLat, mLon, mSog, mCog, mVar;
+//       double      mLat, mLon, mSog, mCog, mVar;
+      double      mLat, mLon, mSog, mCog;
 
       Layer       *m_LogsLayer;
 
-      wxTimer      * m_pTimer;
+      wxTimer      * m_pRecTimer;
+      wxTimer      * m_pSenTimer;
       wxTimer      * m_pRefreshTimer;
       wxStaticText * m_pStaticText;
-      wxDateTime   m_LastLogsRcvd;
-      wxDateTime   m_LastLogSent;
       wxString     m_ErrorCondition;
       wxString     m_Notice;
       double       m_last_lat, m_last_lon;
-
-private:
+      bool         m_nmea_ready;
+      Samples      m_NmeaLog;
+      int           g_SendSecs;
       int           g_RetrieveSecs;
+private:
       wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;
-      //myCurlHTTP    post;
+      wxFile        m_NmeaFile;
+      wxString      m_NmeaFileName;
+      wxDateTime    lastRcvd;
+      wxDateTime    lastSent;
+    wxAuiManager  *m_pauimgr;
 
 DECLARE_EVENT_TABLE()
 };

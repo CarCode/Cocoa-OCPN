@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Squidd.io Plugin background thread
@@ -21,7 +21,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #ifndef _SQUIDDIOPITHREAD_H_
 #define _SQUIDDIOPITHREAD_H_
@@ -75,7 +76,7 @@ private:
     bool m_bIsWorking;
     bool m_bCheckOnline;
     bool m_bPositionReport;
-    int m_QueryRegion;
+//    int m_QueryRegion;  // Not used
     double m_reportlat;
     double m_reportlon;
     double m_reportsog;

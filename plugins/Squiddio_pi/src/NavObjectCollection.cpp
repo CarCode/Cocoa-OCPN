@@ -1,4 +1,4 @@
-/***************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose   Squiddio plugin
@@ -22,7 +22,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "NavObjectCollection.h"
 #include "Poi.h"
@@ -461,7 +462,7 @@ Poi *NavObjectCollection1::WaypointExists( const wxString& name, double lat, dou
     Poi *pret = NULL;
 //    if( g_bIsNewLayer ) return NULL;
     wxPoiListNode *node = pPoiMan->GetWaypointList()->GetFirst();
-//    bool Exists = false;  //  Not used
+    bool Exists = false;
     while( node ) {
         Poi *pr = node->GetData();
 
@@ -469,7 +470,7 @@ Poi *NavObjectCollection1::WaypointExists( const wxString& name, double lat, dou
 
         if( name == pr->GetName() ) {
             if( fabs( lat - pr->m_lat ) < 1.e-6 && fabs( lon - pr->m_lon ) < 1.e-6 ) {
-//                Exists = true;  //  Not used
+                Exists = true;
                 pret = pr;
                 break;
             }
