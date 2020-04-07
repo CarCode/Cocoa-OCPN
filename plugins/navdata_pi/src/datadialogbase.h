@@ -77,6 +77,8 @@ class DataTableBase : public wxDialog
         wxTextCtrl*   m_pTimeValue;
         wxStaticText* m_pSpeedText;
         wxTextCtrl*   m_pSpeedValue;
+        wxStaticText* m_pEndDText;
+        wxTextCtrl*   m_pEndDate;
         wxFlexGridSizer* m_pTripSizer01;
         wxFlexGridSizer* m_pTripSizer00;
 

@@ -97,6 +97,12 @@ DataTableBase::DataTableBase( wxWindow* parent, wxWindowID id, const wxString& t
     m_pSpeedValue = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1, -1 ), wxTE_READONLY);
     m_pTripSizer01->Add( m_pSpeedValue, 0, wxALL|wxEXPAND, 2 );
 
+    m_pEndDText = new wxStaticText( this, wxID_ANY, _("Ended"), wxDefaultPosition, wxSize( -1, -1 ), 0);
+    m_pTripSizer01->Add( m_pEndDText, 0, wxLEFT|wxTOP|wxEXPAND, 3 );
+
+    m_pEndDate = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1, -1 ), wxTE_READONLY);
+    m_pTripSizer01->Add( m_pEndDate, 0, wxALL|wxEXPAND, 2 );
+
     stboxsizer02->Add( m_pTripSizer01, 1, wxEXPAND, 0 );
 
     m_pTripSizer00->Add( stboxsizer02, 1, wxEXPAND, 0 );

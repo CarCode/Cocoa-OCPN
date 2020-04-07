@@ -93,12 +93,13 @@ public:
       wxString GetLongDescription();
       //
       double GetMag(double a);
-      int GetShowMag() {return m_ocpnShowMag;}
+      int GetOcpnStyleBrg() {return m_ocpnStyleBrg;}
       int GetDistFormat() {return m_ocpnDistFormat;}
       int GetSpeedFormat() {return m_ocpnSpeedFormat;}
       void CloseDataTable();
 
       //Track variables
+      TripData    *m_ptripData;
       wxTimer     m_lenghtTimer;
 
 private:
@@ -112,6 +113,7 @@ private:
       void OnToolbarToolCallback(int id);
       void SetPositionFix(PlugIn_Position_Fix &pfix);
       bool MouseEventHook( wxMouseEvent &event );
+      double GetDistFromLastTrkPoint(double lat, double lon);
       //
       void OnTripLenghtTimer(wxTimerEvent & event);
       void OnRotateTimer(wxTimerEvent & event);
@@ -140,22 +142,36 @@ private:
       int         m_ocpnDistFormat;
       int         m_ocpnSpeedFormat;
       double      m_ocpnUserVar;
-      int         m_ocpnShowMag;
+      int         m_ocpnStyleBrg;
       float       m_selectionRadiusMM;
       bool        m_ocpnOpenGL;
 
       //Track variables
       wxTimer     m_rotateTimer;
       wxString    m_gTrkGuid;
-      wxDateTime  m_gTrkStart;
-      wxDateTime  m_gTrkRotate;
       int         m_gNodeNbr;
       bool        m_gHasRotated;
       bool        m_gMustRotate;
-      double      m_gTrkLenght;
-      double      m_gRotateLenght;
-      wxTimeSpan  m_gTrkRunning;    
       double      m_oldtpLat;
       double      m_oldtpLon;
+      double      m_end_gLat;
+      double      m_end_gLon;
 };
+
+//-------------------------------------------------------------------------------------------
+//                  Trip Data Definition
+//-------------------------------------------------------------------------------------------
+class TripData : public wxObject
+{
+public:
+      TripData();
+      ~TripData();
+
+      wxDateTime  m_startDate;
+      double      m_totalDist;
+      double      m_tempDist;
+      wxDateTime  m_endTime;
+      bool        m_isEnded;
+};
+
 #endif //_NAVDATA_PI_H_

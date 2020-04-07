@@ -113,13 +113,13 @@ int navdata_pi::Init(void){
 
     m_pTable = NULL;
     m_vp = NULL;
+    m_ptripData = NULL;
 
     g_selectedPointGuid = wxEmptyString;
     m_gTrkGuid = wxEmptyString;
     g_activeRouteGuid = wxEmptyString;
     m_gMustRotate = false;
     m_gHasRotated = false;
-    m_gRotateLenght = 0;
     g_blinkTrigger = 0;
 	m_gWmmVar = NAN;
 
@@ -161,6 +161,18 @@ bool navdata_pi::DeInit(void)
     //disconnect timers
     m_lenghtTimer.Disconnect(wxEVT_TIMER, wxTimerEventHandler(navdata_pi::OnTripLenghtTimer), NULL, this );
     m_rotateTimer.Disconnect(wxEVT_TIMER, wxTimerEventHandler(navdata_pi::OnRotateTimer), NULL, this );
+
+    if(m_ptripData){
+        if(!m_ptripData->m_isEnded){
+            m_ptripData->m_totalDist += GetDistFromLastTrkPoint(m_gLat, m_gLon);
+            m_ptripData->m_isEnded = true;
+            m_ptripData->m_endTime = wxDateTime::Now();
+            //wxString s = wxString::Format(wxString(_T("Do you want to save this trip\nlenght = %f")), m_ptripData->m_totalDist);
+            //OCPNMessageBox_PlugIn(GetNAVCanvas(),s, _T("answer"));
+        }
+        delete m_ptripData;
+        m_ptripData = NULL;
+    }
 
     if( m_pTable ){
 		CloseDataTable();
@@ -233,7 +245,7 @@ void navdata_pi::LoadocpnConfig()
               pConf->Read( _T ( "SelectionRadiusMM" ), &m_selectionRadiusMM);
               m_selectionRadiusMM = wxMax(m_selectionRadiusMM, 0.5);
           }
-		  m_ocpnShowMag = showmag ? showtrue ? 2 : 1 : 0;
+          m_ocpnStyleBrg = showmag ? showtrue ? 2 : 1 : 0;
 	  }
 }
 
@@ -254,61 +266,62 @@ void navdata_pi::SetPluginMessage(wxString &message_id, wxString &message_body)
         wxJSONReader reader;
         int rnumErrors = reader.Parse( message_body, &root );
         if ( rnumErrors > 0 ) return;
-        if( root[_T("error")].AsBool() ) return;
+        if( root[_T("error")].AsBool() ){
+            if(m_ptripData->m_isEnded && GetOcpnDailyTrack( NULL, NULL)){
+                /*when "DailyTrack" is set it is impossible to get the last track point as
+                * the GUI of the extended track is unknown so get the distance from the last known
+                * track point to the current boat position*/
+                m_ptripData->m_tempDist = 0;
+                m_ptripData->m_totalDist += GetDistFromLastTrkPoint( m_end_gLat, m_end_gLon );
+                if ( m_pTable )
+                    m_pTable->UpdateTripData( m_ptripData );
+                m_gTrkGuid = wxEmptyString;
+            }
+            return;
+        }
         if( root[_T("Track_ID")].AsString() == m_gTrkGuid ) {
             int NodeNr = root[_T("NodeNr")].AsInt();
             int TotalNodes = root[_T("TotalNodes")].AsInt();
             if( NodeNr >= m_gNodeNbr ){ //skip track point already treated
                 double lat = root[_T("lat")].AsDouble();
                 double lon = root[_T("lon")].AsDouble();
-                if( NodeNr > TRACKPOINT_FIRST ){
-                    /*if more than one track point, compute total lenght*/
-                    const double deltaLat = m_oldtpLat - lat;
-                    if ( fabs( deltaLat ) > OFFSET_LAT )
-                        m_gTrkLenght += DistGreatCircle_Plugin( m_oldtpLat, m_oldtpLon, lat, lon );
-                    else
-                        m_gTrkLenght += DistGreatCircle_Plugin( m_oldtpLat + copysign( OFFSET_LAT,
-                                    deltaLat ), m_oldtpLon, lat, lon );
-                }
+                if( NodeNr > TRACKPOINT_FIRST ) //more than one track point
+                    m_ptripData->m_totalDist += GetDistFromLastTrkPoint(lat, lon);
                 m_oldtpLat = lat;
                 m_oldtpLon = lon;
+                m_gNodeNbr = NodeNr + 1;
             } // NodeNr >= m_gNodeNbr
-            if( NodeNr == TotalNodes ) {
-                /* if the last created track point have been reached
-                 * 1)if it not the first time and no new track point has been created,
-                 * compute distance from the last point
-                 * 2) if we are on first track point and either it's the first time
-                 * or no movement have been made, change continuously the starting time
-                 * except if we are in rotation situation
-                 * 3) eventually update the trip data and re-start the lenght timer for
-                 * the next lap;*/
-
+            if( NodeNr == TotalNodes ) { //the last track point
+                /* 1)if the boat has moved compute and add distance from the last created point
+                 * 2) if we are still on first track point and no movement has been made,
+                 *  change continuously the starting time except if we are in rotation situation
+                 * 3)if the trip is ended, get the last created point then stop calc
+                 * 4)then update the trip data and eventually re-start the lenght timer for
+                 *  the next lap;*/
                 double dist = 0.;
-                if( m_gNodeNbr > TotalNodes ){
-                    const double deltaLat = m_oldtpLat - m_gLat;
-                    if ( fabs( deltaLat ) > OFFSET_LAT )
-                        dist = DistGreatCircle_Plugin( m_oldtpLat, m_oldtpLon, m_gLat, m_gLon );
-                    else
-                        dist = DistGreatCircle_Plugin( m_oldtpLat + copysign( OFFSET_LAT, deltaLat ), m_oldtpLon,  m_gLat, m_gLon );
-                    if( dist < .001 ) dist = 0.; //no movement
-                }// m_gNodeNbr > TotalNodes
-				bool needlength = false;
-                if( TotalNodes == TRACKPOINT_FIRST ){
+                if(m_oldtpLat != m_gLat || m_oldtpLon != m_gLon){ //the boat has moved
+                    if(!m_ptripData->m_isEnded){
+                        dist = GetDistFromLastTrkPoint(m_gLat, m_gLon);
+                        if( dist < .001 ) //no significant movement
+                            dist = 0.;
+                    }
+                } //
+                if( TotalNodes == TRACKPOINT_FIRST ){ //only one point created
 					if (!m_gHasRotated) {
 						if (dist == 0.) { //no movement
-							m_gTrkStart = wxDateTime::Now();
-							needlength = true;
+                            m_ptripData->m_startDate = wxDateTime::Now();
 						}
 					}
-                } else
+                } else //
                     m_gHasRotated = false;
-                m_gTrkRunning = wxDateTime::Now() - m_gTrkStart;
-                m_gNodeNbr = NodeNr + 1;
+                m_ptripData->m_endTime = wxDateTime::Now();
+                m_ptripData->m_tempDist = dist;
 				if ( m_pTable )
-					m_pTable->UpdateTripData(m_gTrkStart, (dist + m_gTrkLenght + m_gRotateLenght), m_gTrkRunning);
-				//re-start lenghth computerization only if needed ie if the trip data are shown or after a date rotation or to update start date
-				if ((m_pTable && g_showTripData) || m_gHasRotated || needlength)
-					m_lenghtTimer.Start(TIMER_INTERVAL_SECOND, wxTIMER_ONE_SHOT);
+                    m_pTable->UpdateTripData(m_ptripData);
+                if( !m_ptripData->m_isEnded ) //re-start lenght calc
+                    m_lenghtTimer.Start(TIMER_INTERVAL_SECOND, wxTIMER_ONE_SHOT);
+                else //end of Trip
+                    m_gTrkGuid = wxEmptyString;
             }//NodeNr == TotalNodes
         }
     }
@@ -338,13 +351,15 @@ void navdata_pi::SetPluginMessage(wxString &message_id, wxString &message_body)
             if( m_pTable )
                 m_pTable->UpdateTripData();
             if( m_gMustRotate ){
-                m_gRotateLenght += m_gTrkLenght;
                 m_gHasRotated = true;
             } else {
                 m_gHasRotated = false;
-                m_gRotateLenght = 0.;
+                if( m_ptripData ){
+                    delete m_ptripData;
+                    m_ptripData = NULL;
+                }
+                m_ptripData = new TripData();
             }
-            m_gTrkLenght = 0.;
 			m_gMustRotate = false;
 			m_lenghtTimer.Start( TIMER_INTERVAL_MSECOND, wxTIMER_ONE_SHOT );
             m_rotateTimer.Start( TIMER_INTERVAL_10SECOND, wxTIMER_ONE_SHOT);
@@ -393,11 +408,18 @@ void navdata_pi::SetPluginMessage(wxString &message_id, wxString &message_body)
 
     else if(message_id == _T("OCPN_TRK_DEACTIVATED"))
     {
-        m_gTrkGuid = wxEmptyString;
         m_rotateTimer.Stop();
-		m_lenghtTimer.Stop();
-        if( m_pTable )
-                m_pTable->UpdateTripData();
+
+        if(m_gMustRotate) return;
+
+        m_end_gLat = m_gLat;
+        m_end_gLon = m_gLon;
+        m_ptripData->m_isEnded = true;
+        m_ptripData->m_endTime = wxDateTime::Now();
+
+        //get the last created track point to complete trip data
+        m_lenghtTimer.Start(TIMER_INTERVAL_10MSECOND, wxTIMER_ONE_SHOT);
+
     }
 
     else if(message_id == _T("WMM_VARIATION_BOAT"))
@@ -408,6 +430,18 @@ void navdata_pi::SetPluginMessage(wxString &message_id, wxString &message_body)
         if ( numErrors == 0 )
             m_gWmmVar = root[_T("Decl")].AsDouble();
     }
+}
+
+double navdata_pi::GetDistFromLastTrkPoint(double lat, double lon)
+{
+    double dist = 0.;
+        const double deltaLat = m_oldtpLat - lat;
+        if ( fabs( deltaLat ) > OFFSET_LAT )
+            dist = DistGreatCircle_Plugin( m_oldtpLat, m_oldtpLon, lat, lon );
+        else
+            dist = DistGreatCircle_Plugin( m_oldtpLat + copysign( OFFSET_LAT, deltaLat ), m_oldtpLon,  lat, lon );
+
+        return dist;
 }
 
 void navdata_pi::SetPositionFix(PlugIn_Position_Fix &pfix)
@@ -725,8 +759,7 @@ void navdata_pi::OnRotateTimer( wxTimerEvent & event)
         m_rotateTimer.Start( TIMER_INTERVAL_SECOND, wxTIMER_ONE_SHOT );
     else {
         m_gMustRotate = true;
-        if( !m_pTable || (m_pTable && !g_showTripData) )
-            m_lenghtTimer.Start( TIMER_INTERVAL_MSECOND, wxTIMER_ONE_SHOT );
+        m_lenghtTimer.Start( TIMER_INTERVAL_MSECOND, wxTIMER_ONE_SHOT );
     }
 }
 
@@ -762,11 +795,9 @@ void navdata_pi::OnToolbarToolCallback(int id)
 		DimeWindow(m_pTable); //apply colour scheme
 		m_pTable->InitDataTable();
 		m_pTable->UpdateRouteData(m_activePointGuid, m_gLat, m_gLon, m_gCog, m_gSog);
-		m_pTable->UpdateTripData();
+        m_pTable->UpdateTripData(m_ptripData);
 		m_pTable->SetTableSizePosition(true);
 		m_pTable->Show();
-		if (!m_gTrkGuid.IsEmpty() && g_showTripData)
-			m_lenghtTimer.Start(TIMER_INTERVAL_MSECOND, wxTIMER_ONE_SHOT);
 	}
 }
 
@@ -782,8 +813,11 @@ bool navdata_pi::GetOcpnDailyTrack( int *roTime, int *rotimeType)
         if( !isdailytrack ) return false;
         pConf->Read( _T ( "TrackRotateAt" ), &rtime, 0 );
         pConf->Read( _T ( "TrackRotateTimeType" ), &rtimetype, 1);
-        *roTime = rtime;
-        *rotimeType = rtimetype;
+
+        if(roTime)
+            *roTime = rtime;
+        if(rotimeType)
+            *rotimeType = rtimetype;
 
         return true;
     }
@@ -799,3 +833,22 @@ void navdata_pi::CloseDataTable()
         m_pTable = NULL;
     }
 }
+
+//-------------------------------------------------------------------------------------------------
+//                  Trip Data Implementation
+//-------------------------------------------------------------------------------------------------
+/*
+#include <wx/listimpl.cpp>
+WX_DEFINE_LIST ( TripData );
+*/
+TripData::TripData()
+{
+    m_startDate = wxDateTime::Now();
+    m_endTime = wxDateTime::Now();
+    m_totalDist = 0.;
+    m_tempDist = 0.;
+    m_isEnded = false;
+}
+
+TripData::~TripData()
+{}

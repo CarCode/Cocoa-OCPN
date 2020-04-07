@@ -1499,7 +1499,7 @@ bool ChartCanvas::DoCanvasUpdate( void )
             double offset_angle = atan2(d_north, d_east);
             double offset_distance = sqrt((d_north * d_north) + (d_east * d_east));
             double chart_angle =  GetVPRotation();
-            double target_angle = chart_angle - offset_angle;
+            double target_angle = chart_angle + offset_angle;
             double d_east_mod = offset_distance * cos( target_angle );
             double d_north_mod = offset_distance * sin( target_angle );
             fromSM( d_east_mod, d_north_mod, gLat, gLon, &vpLat, &vpLon );
@@ -1689,7 +1689,7 @@ bool ChartCanvas::DoCanvasUpdate( void )
             }
         }
 
-        //      Copy the new (by definition empty) stack into the target stack
+//      Copy the new (by definition empty) stack into the target stack
         ChartData->CopyStack( m_pCurrentStack, &WorkStack );
 
         goto update_finish;
@@ -2776,7 +2776,7 @@ void ChartCanvas::OnKeyDown( wxKeyEvent &event )
     case WXK_F9:
         ToggleCanvasQuiltMode();
         break;
-#endif        
+#endif
 
     case WXK_F11:
         parent_frame->ToggleFullScreen();
@@ -4456,15 +4456,7 @@ void ChartCanvas::DoZoomCanvas( double factor,  bool can_zoom_to_cursor )
                 double d_north_mod = offset_distance * sin( target_angle );
 
                 m_OSoffsetx = d_east_mod * old_ppm;
-                m_OSoffsety = d_north_mod * old_ppm;
-
-                 //m_OSoffsetx = offx * old_ppm;
-                 //m_OSoffsety = offy * old_ppm;
-
-                 //double dx = m_OSoffsetx;
-                 //double dy = m_OSoffsety;
-                 //double d_east = dx / new_scale;
-                 //double d_north = dy / new_scale;
+                m_OSoffsety = -d_north_mod * old_ppm;
 
                  double d_east_mods = d_east_mod / new_scale;
                  double d_north_mods = d_north_mod / new_scale;
@@ -4478,7 +4470,7 @@ void ChartCanvas::DoZoomCanvas( double factor,  bool can_zoom_to_cursor )
                 SetVPScale( new_scale );
         }
     }
-    
+
     m_bzooming = false;
 
 }
@@ -6064,7 +6056,7 @@ void ChartCanvas::GridDraw( ocpnDC& dc )
 
 void ChartCanvas::ScaleBarDraw( ocpnDC& dc )
 {
-    if(0 /*!g_bsimplifiedScalebar*/){
+    if(0 /* !g_bsimplifiedScalebar */){
         double blat, blon, tlat, tlon;
         wxPoint r;
 
@@ -8176,7 +8168,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                             //      "Delete On Arrival" state set, as in the case of
                             //      navigating to an isolated waypoint on a temporary route
                             if( g_pRouteMan->IsRouteValid(pr) ) {
-                                //                                pr->SetHiLite(50);
+//                                pr->SetHiLite(50);
                                 wxRect route_rect;
                                 pr->CalculateDCRect( m_dc_route, this, &route_rect );
                                 pre_rect.Union( route_rect );
@@ -8480,7 +8472,7 @@ bool ChartCanvas::MouseEventProcessCanvas( wxMouseEvent& event )
             if( (m_wheelstopwatch.Time() < m_wheelzoom_stop_oneshot) ) {
                 if( wheel_dir == m_last_wheel_dir ) {
                     m_wheelzoom_stop_oneshot += mouse_wheel_oneshot;
-                    //                    m_zoom_target /= factor;
+//                    m_zoom_target /= factor;
                 }
                 else 
                     StopMovement( );
@@ -8488,7 +8480,7 @@ bool ChartCanvas::MouseEventProcessCanvas( wxMouseEvent& event )
             else {    
                 m_wheelzoom_stop_oneshot = mouse_wheel_oneshot;
                 m_wheelstopwatch.Start(0);
-                //                m_zoom_target =  VPoint.chart_scale / factor;
+//                m_zoom_target =  VPoint.chart_scale / factor;
             }
         }
 
@@ -11361,12 +11353,12 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
                                         ltleve = val;
                                     }
 
-				    // draw the tide rectangle:
+                                    // draw the tide rectangle:
 
-				    // tide icon rectangle has default pre-scaled width = 12 , height = 45
-				    int width = (int) (12 * scale_factor + 0.5);
-				    int height = (int) (45 * scale_factor + 0.5);
-				    int linew = wxMax(1, (int) (scale_factor));
+                                    // tide icon rectangle has default pre-scaled width = 12 , height = 45
+                                    int width = (int) (12 * scale_factor + 0.5);
+                                    int height = (int) (45 * scale_factor + 0.5);
+                                    int linew = wxMax(1, (int) (scale_factor));
                                     int xDraw = r.x - (width / 2);
                                     int yDraw = r.y - (height / 2);
 
@@ -11374,12 +11366,12 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
                                     //process tide state  ( %height and flow sens )
                                     float ts = 1 - ( ( nowlev - ltleve ) / ( htleve - ltleve ) );
                                     int hs = ( httime > lttime ) ? -4 : 4;
-				    hs *= (int) (scale_factor + 0.5); 
+                                    hs *= (int) (scale_factor + 0.5);
                                     if( ts > 0.995 || ts < 0.005 ) hs = 0;
                                     int ht_y = (int) ( height * ts );
 
-				    //draw yellow tide rectangle outlined in black
-				    pblack_pen->SetWidth(linew);
+                                    //draw yellow tide rectangle outlined in black
+                                    pblack_pen->SetWidth(linew);
                                     dc.SetPen( *pblack_pen );
                                     dc.SetBrush( *pyelo_brush );
                                     dc.DrawRectangle( xDraw, yDraw, width, height );
@@ -11388,7 +11380,7 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
                                     dc.SetPen( *pblue_pen );
                                     dc.SetBrush( *pblue_brush );
                                     dc.DrawRectangle( (xDraw + 2*linew), yDraw + ht_y, 
-						      (width - (4*linew)), height - ht_y );
+                                                     (width - (4*linew)), height - ht_y );
 
                                     //draw sens arrows (ensure they are not "under-drawn" by top line of blue rectangle )
                                     int hl;
@@ -11396,8 +11388,8 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
                                     arrow[0].x = xDraw + 2*linew;
                                     arrow[1].x = xDraw + width / 2;
                                     arrow[2].x = xDraw + width - 2*linew;
-				    pyelo_pen->SetWidth(linew);
-				    pblue_pen->SetWidth(linew);
+                                    pyelo_pen->SetWidth(linew);
+                                    pblue_pen->SetWidth(linew);
                                     if( ts > 0.35 || ts < 0.15 )      // one arrow at 3/4 hight tide
                                     {
                                         hl = (int) ( height * 0.25 ) + yDraw;
@@ -11405,9 +11397,9 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
                                         arrow[1].y = hl + hs;
                                         arrow[2].y = hl;
                                         if( ts < 0.15 ) 
-					  dc.SetPen( *pyelo_pen );
+                                            dc.SetPen( *pyelo_pen );
                                         else
-					  dc.SetPen( *pblue_pen );
+                                            dc.SetPen( *pblue_pen );
                                         dc.DrawLines( 3, arrow );
                                     }
                                     if( ts > 0.60 || ts < 0.40 )       //one arrow at 1/2 hight tide
@@ -11417,9 +11409,9 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
                                         arrow[1].y = hl + hs;
                                         arrow[2].y = hl;
                                         if( ts < 0.40 ) 
-					  dc.SetPen( *pyelo_pen );
+                                            dc.SetPen( *pyelo_pen );
                                         else
-					  dc.SetPen( *pblue_pen );
+                                            dc.SetPen( *pblue_pen );
                                         dc.DrawLines( 3, arrow );
                                     }
                                     if( ts < 0.65 || ts > 0.85 )       //one arrow at 1/4 Hight tide
@@ -11429,9 +11421,9 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
                                         arrow[1].y = hl + hs;
                                         arrow[2].y = hl;
                                         if( ts < 0.65 ) 
-					  dc.SetPen( *pyelo_pen );
+                                            dc.SetPen( *pyelo_pen );
                                         else
-					  dc.SetPen( *pblue_pen );
+                                            dc.SetPen( *pblue_pen );
                                         dc.DrawLines( 3, arrow );
                                     }
                                     //draw tide level text
@@ -12519,7 +12511,7 @@ void ChartCanvas::HandlePianoClick( int selected_index, int selected_dbIndex )
     if (g_boptionsactive) return;              // Piano might be invalid due to chartset updates.
     if( !m_pCurrentStack ) return;
     if( !ChartData) return;
-    
+
     // stop movement or on slow computer we may get something like :
     // zoom out with the wheel (timer is set)
     // quickly click and display a chart, which may zoom in
@@ -13154,8 +13146,8 @@ int InitScreenBrightness( void )
                 g_pcurtain = new wxDialog( gFrame->GetPrimaryCanvas(), -1, _T(""), wxPoint( 0, 0 ), ::wxGetDisplaySize(),
                                            wxNO_BORDER | wxTRANSPARENT_WINDOW | wxSTAY_ON_TOP | wxDIALOG_NO_PARENT );
 
-                //                  g_pcurtain = new ocpnCurtain(gFrame, wxPoint(0,0),::wxGetDisplaySize(),
-                //                      wxNO_BORDER | wxTRANSPARENT_WINDOW |wxSTAY_ON_TOP | wxDIALOG_NO_PARENT);
+//                  g_pcurtain = new ocpnCurtain(gFrame, wxPoint(0,0),::wxGetDisplaySize(),
+//                      wxNO_BORDER | wxTRANSPARENT_WINDOW |wxSTAY_ON_TOP | wxDIALOG_NO_PARENT);
 
                 g_pcurtain->Hide();
 

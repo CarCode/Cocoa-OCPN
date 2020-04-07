@@ -269,7 +269,6 @@ void CustomGrid::OnLabelClik( wxGridEvent& event)
             if (showTrip != g_showTripData) {
                 if(g_showTripData ){
                     m_pParent->UpdateTripData();
-                    m_pParent->pPlugin->m_lenghtTimer.Start(TIMER_INTERVAL_MSECOND, wxTIMER_ONE_SHOT);
                 }
                 m_pParent->SetTableSizePosition(false, g_showTripData);
             }

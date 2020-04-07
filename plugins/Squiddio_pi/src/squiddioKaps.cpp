@@ -53,7 +53,7 @@ bool squiddio_pi::UnzipFile(const wxString& aZipFile, const wxString& aTargetDir
         wxFileInputStream in(aZipFile);
 
         if (!in) {
-            wxLogMessage(_T("Squiddio_pi: Cannot open ZIP file '") + aZipFile + _T("'."));
+            wxLogMessage(_T("squiddio_pi: Cannot open ZIP file '") + aZipFile + _T("'."));
             ret = false;
             break;
         }
@@ -111,7 +111,7 @@ bool squiddio_pi::ProcessZipFile(wxString chart_dir, wxString tmp_file)
         // not a valid zipped file, i.e. squiddio returned error condition 
         wxString res = wxEmptyString;
         f.ReadAll( &res );
-        wxLogMessage(_T("Squiddio_pi: error in response file: ") + res) ;
+        wxLogMessage(_T("squiddio_pi: error in response file: ") + res) ;
         wxMessageBox(res);
         ret = false;
     } else {
@@ -119,12 +119,12 @@ bool squiddio_pi::ProcessZipFile(wxString chart_dir, wxString tmp_file)
         unzip = UnzipFile(tmp_file, chart_dir);
 
         if (unzip == true) {
-            wxLogMessage(wxString::Format(_T("Squiddio_pi: extracted charts to: %s"), chart_dir));
+            wxLogMessage(wxString::Format(_T("squiddio_pi: extracted charts to: %s"), chart_dir));
             wxRemoveFile(tmp_file); //remove the zip file
             ret = true;
         }
         else {
-            wxLogMessage(wxString::Format(_T("Squiddio_pi: unable to extract charts to: %s"), chart_dir));
+            wxLogMessage(wxString::Format(_T("squiddio_pi: unable to extract charts to: %s"), chart_dir));
             ret = false;
         }
     }
@@ -152,7 +152,7 @@ bool squiddio_pi::IsPOIinLayer(int layer_id)
 
 void squiddio_pi::DownloadSatImages() {
 
-    wxLogMessage(_T("Squiddio_pi: download sat. image: "));
+    wxLogMessage(_T("squiddio_pi: download sat. image: "));
 
     double center_lat = m_vp->clat;
     double center_lon = m_vp->clon;
@@ -206,7 +206,7 @@ void squiddio_pi::DownloadSatImages() {
         mess_prompt += _("\n\nThe estimated compressed file size is approximately ") + download_size_str + " MB. ";
         if (download_size > 20.0)
             mess_prompt += _("\nZoom in to a lower number of visible POIs to reduce download time, or reduce the number of zoom levels. ");
-        mess_prompt += _("\n\nGo to the sQuiddio plugin settings (Downloads tab) to change zoom levels");
+        mess_prompt += _("\n\nSee settings in your squiddio plugin -> Downloads tab");
         if (g_DownloadVPMap)
             mess_prompt += _(" or exclude the viewport map.");
 
@@ -246,12 +246,12 @@ void squiddio_pi::DownloadSatImages() {
                 if (!updated) 
                     wxMessageBox(_("Unable to update the chart database"));
                 else 
-                    wxLogMessage(_T("Squiddio_pi: added KAP files to database:") + tmp_file);
+                    wxLogMessage(_T("squiddio_pi: added KAP files to database:") + tmp_file);
             }    
         }
         else
         {
-            wxLogMessage(_T("Squiddio_pi: unable to connect to host"));
+            wxLogMessage(_T("squiddio_pi: unable to connect to host"));
         }
     }
 }

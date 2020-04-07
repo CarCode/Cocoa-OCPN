@@ -44,7 +44,7 @@
 #endif
 #define SECONDS_PER_DAY             86400
 #define ACTIVE_POINT_IDX            0
-#define SINGLE_BORDER_THICKNESS     3
+#define SINGLE_BORDER_THICKNESS     5
 #define DOUBLE_BORDER_THICKNESS     10
 #ifdef __WXMSW__
     #define SCROLL_BAR_THICKNESS    20
@@ -54,6 +54,7 @@
 
 
 class navdata_pi;
+class TripData;
 
 //----------------------------------------------------------------------------------------------------------
 //    Data table dialog Specification
@@ -71,8 +72,8 @@ public:
     void InitDataTable();
     void UpdateRouteData(wxString pointGuid,
                     double shiplon, double shiplat, double shipcog, double shipsog );
-    void UpdateTripData(wxDateTime starttime, double tdist, wxTimeSpan times);
     void UpdateRouteData();
+    void UpdateTripData(TripData *ptripData);
     void UpdateTripData();
     void SetTableSizePosition(bool moveflag, bool calcTextHeight = false);
     void SetTargetFlag(bool flag) {m_targetFlag = flag;}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navdata_pi 20.01.01\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-02 17:26+0300\n"
+"POT-Creation-Date: 2020-04-06 22:33+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/customgrid.cpp:265 ../src/datadialogbase.h:107
+#: ../src/customgrid.cpp:265 ../src/datadialogbase.h:109
 msgid "Settings"
 msgstr ""
 
-#: ../src/customgrid.cpp:276 ../src/datatable.cpp:123
+#: ../src/customgrid.cpp:275 ../src/datatable.cpp:119
 msgid "SOG"
 msgstr ""
 
-#: ../src/customgrid.cpp:276 ../src/datatable.cpp:123
+#: ../src/customgrid.cpp:275 ../src/datatable.cpp:119
 msgid "VMG"
 msgstr ""
 
-#: ../src/customgrid.cpp:277 ../src/datatable.cpp:118
+#: ../src/customgrid.cpp:276 ../src/datatable.cpp:114
 msgid "TTG @ "
 msgstr ""
 
-#: ../src/customgrid.cpp:278 ../src/datatable.cpp:118
+#: ../src/customgrid.cpp:277 ../src/datatable.cpp:114
 msgid "ETA @ "
 msgstr ""
 
-#: ../src/datadialogbase.h:88
+#: ../src/datadialogbase.h:90
 msgid "Navigation Data"
 msgstr ""
 
@@ -65,48 +65,52 @@ msgstr ""
 msgid "Avg.speed"
 msgstr ""
 
-#: ../src/datadialogbase.cpp:137 ../src/datatable.cpp:71
-#: ../src/datatable.cpp:417
+#: ../src/datadialogbase.cpp:100
+msgid "Ended"
+msgstr ""
+
+#: ../src/datadialogbase.cpp:143 ../src/datatable.cpp:71
+#: ../src/datatable.cpp:427
 msgid "Dialog"
 msgstr ""
 
-#: ../src/datadialogbase.cpp:139
+#: ../src/datadialogbase.cpp:145
 msgid "Show Trip Data"
 msgstr ""
 
-#: ../src/datadialogbase.cpp:143
+#: ../src/datadialogbase.cpp:149
 msgid "at VMG"
 msgstr ""
 
-#: ../src/datadialogbase.cpp:143
+#: ../src/datadialogbase.cpp:149
 msgid "at SOG"
 msgstr ""
 
-#: ../src/datadialogbase.cpp:144
+#: ../src/datadialogbase.cpp:150
 msgid "Compute and Show TTG and ETA"
 msgstr ""
 
-#: ../src/datadialogbase.cpp:150
+#: ../src/datadialogbase.cpp:156
 msgid "OK"
 msgstr ""
 
-#: ../src/datatable.cpp:117
+#: ../src/datatable.cpp:113
 msgid "RNG"
 msgstr ""
 
-#: ../src/datatable.cpp:118
+#: ../src/datatable.cpp:114
 msgid "BRG"
 msgstr ""
 
-#: ../src/datatable.cpp:118
+#: ../src/datatable.cpp:114
 msgid "Total RNG"
 msgstr ""
 
-#: ../src/datatable.cpp:183
+#: ../src/datatable.cpp:180
 msgid "Unnamed route"
 msgstr ""
 
-#: ../src/datatable.cpp:337
+#: ../src/datatable.cpp:334
 msgid "No Active Route!"
 msgstr ""
 
@@ -114,11 +118,11 @@ msgstr ""
 msgid "Navigation data"
 msgstr ""
 
-#: ../src/navdata_pi.cpp:203
+#: ../src/navdata_pi.cpp:215
 msgid "Navigation data plugin for OpenCPN"
 msgstr ""
 
-#: ../src/navdata_pi.cpp:208
+#: ../src/navdata_pi.cpp:220
 msgid ""
 "Navigation data plugin for OpenCPN\n"
 "Shows RNG (range),TTG (time to go) and ETA (estimated time of arrival)\n"

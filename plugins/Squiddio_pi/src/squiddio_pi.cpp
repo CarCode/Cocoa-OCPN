@@ -250,9 +250,9 @@ int squiddio_pi::Init(void) {
     }
 
     if (wxDir::Exists(layerdir)) {
-        wxString laymsg;
-        laymsg.Printf(wxT("squiddio_pi: getting .gpx layer files from: %s"), layerdir.c_str());
-        wxLogMessage(laymsg);
+//         wxString laymsg;
+//         laymsg.Printf(wxT("squiddio_pi: getting .gpx layer files from: %s"), layerdir.c_str());
+                wxLogMessage(wxString::Format(_T("squiddio_pi: getting .gpx layer files from: %s")), layerdir.c_str() );
 
         LoadLayers(layerdir);
 
@@ -330,7 +330,7 @@ bool squiddio_pi::DeInit(void) {
             wxRemoveFile(l->m_LayerFileName);
             if (g_InvisibleLayers.Contains(l->m_LayerName))
                 g_InvisibleLayers.Replace(l->m_LayerName + _T(";"), wxEmptyString);
-            wxLogMessage(_T("Deleting .gpx file (per user setting): ") + l->m_LayerFileName );
+            wxLogMessage(_T("squiddio_pi: Deleting .gpx file (per user setting): ") + l->m_LayerFileName );
         }
     }
     SaveConfig();
@@ -905,11 +905,11 @@ void squiddio_pi::RefreshLayer()
             RenderLayerContentsOnChart(new_layer, true);
 
             if (isLayerUpdate)
-                wxLogMessage( _T("Local destinations have been updated") );
+                wxLogMessage( _T("squiddio_pi: Local destinations have been updated") );
         } else
-            wxLogMessage( _T("No destinations available for the region") );
+            wxLogMessage( _T("squiddio_pi: No destinations available for the region") );
     } else
-        wxLogMessage( _T("Server not responding. Check your Internet connection") );
+        wxLogMessage( _T("squiddio_pi: Server not responding. Check your Internet connection") );
 }
 
 wxString squiddio_pi::DownloadLayer(wxString url_path) {
@@ -1312,6 +1312,8 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                         m_plogs_window->SetSenTimer(0);
                     }
                 }
+                if (g_RetrievePeriod > 0 || g_PostPeriod > 0)
+                    m_plogs_window->m_pRefreshTimer->Start(5000);
                 m_plogs_window->m_ErrorCondition = wxEmptyString;
             }
 
@@ -1356,7 +1358,8 @@ void squiddio_pi::SetLogsWindow() {
             m_AUImgr->GetPane(m_plogs_window).CaptionVisible(false);
             m_AUImgr->GetPane(m_plogs_window).GripperTop(false);
             m_AUImgr->GetPane(m_plogs_window).CloseButton(true);
-            m_AUImgr->GetPane(m_plogs_window).MinimizeButton(true);
+//             m_AUImgr->GetPane(m_plogs_window).PinButton(true);  // can't get the pane to be floatable when docked
+//             m_AUImgr->GetPane(m_plogs_window).Floatable(true);
         }
         // now make it visible
         m_AUImgr->GetPane(m_plogs_window).Show(true);
@@ -1367,6 +1370,7 @@ void squiddio_pi::SetLogsWindow() {
 
         m_AUImgr->GetPane(m_plogs_window).Show(false);
         m_AUImgr->Update();
+//         delete m_plogs_window;
     }
 }
 
@@ -1381,7 +1385,7 @@ void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 
 }
 void squiddio_pi::SetNMEASentence(wxString &sentence) {
-    if (m_plogs_window)
+    if (m_plogs_window && g_PostPeriod > 0)
         m_plogs_window->SetSentence(sentence);
 }
 
@@ -1651,7 +1655,7 @@ void squiddio_pi::MoveDataDir(wxString old_dir, wxString new_dir )
         }
     }
     wxRmDir(old_dir);
-    wxLogMessage(_T("Moved all squiddio file to directory: ") + layerdir);
+    wxLogMessage(_T("squiddio_pi: Moved all files to directory: ") + layerdir);
 }
 
 //---------------------------------------------- preferences dialog event handlers
