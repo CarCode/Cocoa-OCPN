@@ -73,7 +73,7 @@ class DashboardInstrumentContainer;
 #define no_nav_watchdog_timeout_ticks 40    // SignalK motor & environ instr defaults 30 sec
 #define GEODESIC_RAD2DEG(r) ((r)*(180.0/M_PI))
 #define MS2KNOTS(r) ((r)*(1.9438444924406))
-#define KELVIN2C(r) ((r)-(273.13))
+#define KELVIN2C(r) ((r)-(273.15))
 #define PA2HPA(r) ((r)/(100))
 #define METERS2NM(r) ((r)/(1852))
 
@@ -175,7 +175,7 @@ private:
 
       NMEA0183             m_NMEA0183;                 // Used to parse NMEA Sentences
       short                mPriPosition, mPriCOGSOG, mPriHeadingM, mPriHeadingT, mPriVar, mPriDateTime, mPriAWA, mPriTWA, mPriDepth;
-      short                mPriSTW, mPriWTP, mPriATMP;
+      short                mPriSTW, mPriWTP, mPriATMP, mPriWDN;
       double               mVar;
       // FFU
       double               mSatsInView;

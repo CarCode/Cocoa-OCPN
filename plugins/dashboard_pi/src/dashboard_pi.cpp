@@ -55,6 +55,8 @@ int g_iDashDistanceUnit;
 int g_iDashWindSpeedUnit;
 int g_iUTCOffset;
 double g_dDashDBTOffset;
+bool g_iDashUsetruewinddata;
+double g_dHDT;
 
 #if !defined(NAN)
 static const long long lNaN = 0xfff8000000000000;
@@ -353,6 +355,7 @@ int dashboard_pi::Init( void )
     mPriDateTime = 99;
     mPriAWA = 99; // Relative wind
     mPriTWA = 99; // True wind
+    mPriWDN = 99; //True hist. wind
     mPriDepth = 99;
     mPriSTW = 99;
     mPriWTP = 99;
@@ -557,6 +560,7 @@ void dashboard_pi::Notify()
     mWDN_Watchdog--;
     if (mWDN_Watchdog <= 0) {
         SendSentenceToAllInstruments(OCPN_DBP_STC_TWD, NAN, _T("-"));
+        mPriWDN = 99;
     }
     mMDA_Watchdog--;
     if (mMDA_Watchdog <= 0) {
@@ -620,6 +624,9 @@ void dashboard_pi::SendSentenceToAllInstruments( int st, double value, wxString 
     for( size_t i = 0; i < m_ArrayOfDashboardWindow.GetCount(); i++ ) {
         DashboardWindow *dashboard_window = m_ArrayOfDashboardWindow.Item( i )->m_pDashboardWindow;
         if( dashboard_window ) dashboard_window->SendSentenceToAllInstruments( st, value, unit );
+    }
+    if (st == OCPN_DBP_STC_HDT) {
+        g_dHDT = value;
     }
 }
 
@@ -909,14 +916,17 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
             if( m_NMEA0183.Parse() ) {
                 // Option for True vs Magnetic
                 wxString windunit;
-                if( m_NMEA0183.Mwd.WindAngleTrue < 999. ) { //if WindAngleTrue is available, use it ...
-                    SendSentenceToAllInstruments( OCPN_DBP_STC_TWD, m_NMEA0183.Mwd.WindAngleTrue,
-                            _T("\u00B0T") );
-                    mWDN_Watchdog = gps_watchdog_timeout_ticks;
-                } else if( m_NMEA0183.Mwd.WindAngleMagnetic < 999. ) { //otherwise try WindAngleMagnetic ...
-                    SendSentenceToAllInstruments( OCPN_DBP_STC_TWD, m_NMEA0183.Mwd.WindAngleMagnetic,
-                            _T("\u00B0M") );
-                    mWDN_Watchdog = gps_watchdog_timeout_ticks;
+                if (mPriWDN >= 3) {
+                    mPriWDN = 3;
+                    if( m_NMEA0183.Mwd.WindAngleTrue < 999. ) { //if WindAngleTrue is available, use it ...
+                        SendSentenceToAllInstruments( OCPN_DBP_STC_TWD, m_NMEA0183.Mwd.WindAngleTrue,
+                                _T("\u00B0T") );
+                        mWDN_Watchdog = gps_watchdog_timeout_ticks;
+                    } else if( m_NMEA0183.Mwd.WindAngleMagnetic < 999. ) { //otherwise try WindAngleMagnetic ...
+                        SendSentenceToAllInstruments( OCPN_DBP_STC_TWD, m_NMEA0183.Mwd.WindAngleMagnetic,
+                                _T("\u00B0M") );
+                        mWDN_Watchdog = gps_watchdog_timeout_ticks;
+                    }
                 }
 
                 SendSentenceToAllInstruments( OCPN_DBP_STC_TWS, toUsrSpeed_Plugin( m_NMEA0183.Mwd.WindSpeedKnots, g_iDashWindSpeedUnit ),
@@ -962,7 +972,8 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
                         if( mPriTWA >= 3 ) {
                             mPriTWA = 3;
 							wxString m_twaunit;
-							double m_twaangle;						
+                            double m_twaangle;
+                            bool b_R = false;
 							if (m_NMEA0183.Mwv.WindAngle >180) {
 								m_twaunit = _T("\u00B0L");
 								m_twaangle = 180.0 - (m_NMEA0183.Mwv.WindAngle - 180.0);
@@ -970,9 +981,23 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
 							else {
 								m_twaunit = _T("\u00B0R");
 								m_twaangle = m_NMEA0183.Mwv.WindAngle;
+                                b_R = true;
 							}
                             SendSentenceToAllInstruments( OCPN_DBP_STC_TWA,
 								m_twaangle, m_twaunit);
+                            if (mPriWDN >= 4) {
+                                mPriWDN = 4;
+                                //MWV has wind angle relative to the bow. Wind history use angle relative to north.
+                                //If no TWD with higher priority is present and true heading is available calculate it.
+                                if (g_dHDT < 361. && g_dHDT >= 0.0) {
+                                    double g_dCalWdir = (m_NMEA0183.Mwv.WindAngle) + g_dHDT;
+                                    if (g_dCalWdir > 360.) { g_dCalWdir = g_dCalWdir - 360; }
+                                    else if (g_dCalWdir < 0.) { g_dCalWdir = 360 - g_dCalWdir; }
+                                    SendSentenceToAllInstruments(OCPN_DBP_STC_TWD, g_dCalWdir, _T("\u00B0T"));
+                                    mWDN_Watchdog = gps_watchdog_timeout_ticks;
+                                }
+                            }
+
                             SendSentenceToAllInstruments( OCPN_DBP_STC_TWS,
                                     toUsrSpeed_Plugin( m_NMEA0183.Mwv.WindSpeed * m_wSpeedFactor, g_iDashWindSpeedUnit ),
                                     getUsrSpeedUnit_Plugin( g_iDashWindSpeedUnit ) );
@@ -1312,6 +1337,11 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
         }
     }
 }
+
+// SignalK noch nicht übernommen
+// void dashboard_pi::ParseSignalK( wxString &msg)
+// void dashboard_pi::handleSKUpdate(wxJSONValue &update) {
+// void dashboard_pi::updateSKItem(wxJSONValue &item, wxString &sfixtime) {
 
 void dashboard_pi::SetPositionFix( PlugIn_Position_Fix &pfix )
 {
