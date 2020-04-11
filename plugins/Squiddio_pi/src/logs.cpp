@@ -382,8 +382,8 @@ void logsWindow::ShowFriendsLogs() {
     wxString request_url;
     bool isLayerUpdate;
 
-    request_url.Printf(_T("/connections.xml?api_key=%s&email=%s"),
-            p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str());
+    request_url.Printf(_T("/connections.xml?api_key=%s&email=%s&source=ocpn&version=%s"),
+            p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), p_plugin->g_UrlVersion);
 
     layerContents = p_plugin->DownloadLayer(request_url);
 

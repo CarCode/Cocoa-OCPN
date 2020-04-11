@@ -206,7 +206,7 @@ void squiddio_pi::DownloadSatImages() {
         mess_prompt += _("\n\nThe estimated compressed file size is approximately ") + download_size_str + " MB. ";
         if (download_size > 20.0)
             mess_prompt += _("\nZoom in to a lower number of visible POIs to reduce download time, or reduce the number of zoom levels. ");
-        mess_prompt += _("\n\nSee settings in your squiddio plugin -> Downloads tab");
+        mess_prompt += _("\n\nSee settings in your squiddio plugin -> Downloads tab to change your zoom levels");
         if (g_DownloadVPMap)
             mess_prompt += _(" or exclude the viewport map.");
 

@@ -870,7 +870,7 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
         m_rgn_to_dld = local_region;
         RefreshLayer();
     } else if (id == m_report_id) {
-        wxString url_path = _T("http://squidd.io/locations/new?lat=");
+        wxString url_path = g_DomainName +_T("/locations/new?lat=");
         url_path.Append(
                 wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=")
                         << wxString::Format(wxT("%f"), m_cursor_lon));

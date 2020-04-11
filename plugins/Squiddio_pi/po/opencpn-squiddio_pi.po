@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-04 17:09+0300\n"
-"PO-Revision-Date: 2020-04-04 22:18+0300\n"
+"POT-Creation-Date: 2020-04-11 10:48+0300\n"
+"PO-Revision-Date: 2020-04-11 10:56+0300\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -39,7 +39,7 @@ msgstr "sQuiddio: Download lokale Ziele von Interesse"
 #
 #: ../src/squiddio_pi.cpp:193
 msgid "sQuiddio: Update local Points of Interest"
-msgstr "sQuiddio: Update lokale Points of Interest"
+msgstr "sQuiddio: Update lokale Ziele"
 
 #
 #: ../src/squiddio_pi.cpp:198
@@ -57,7 +57,7 @@ msgid "sQuiddio"
 msgstr "sQuiddio"
 
 #
-#: ../src/squiddio_pi.cpp:878 ../src/squiddio_pi.cpp:1709
+#: ../src/squiddio_pi.cpp:878 ../src/squiddio_pi.cpp:1713
 msgid "Could not launch default browser. Check your Internet connection"
 msgstr ""
 "Kann Standard Browser nicht starten. Prüfen Sie die Internet Verbindung"
@@ -189,122 +189,122 @@ msgstr ""
 "Link Profil bearbeiten im Dashboard), Registerkarte \"Numbers & Keys\"."
 
 #
-#: ../src/squiddio_pi.cpp:1355
+#: ../src/squiddio_pi.cpp:1357
 msgid "sQuiddio log updates (drag this to the bottom to minimize)"
 msgstr "sQuiddio Log Updates (zum Boden ziehen zum Minimieren)"
 
 #
-#: ../src/squiddio_pi.cpp:1549
+#: ../src/squiddio_pi.cpp:1553
 msgid "Marina"
 msgstr "Marina"
 
 #
-#: ../src/squiddio_pi.cpp:1553
+#: ../src/squiddio_pi.cpp:1557
 msgid "Anchorage"
 msgstr "Ankerplätze"
 
 #
-#: ../src/squiddio_pi.cpp:1557
+#: ../src/squiddio_pi.cpp:1561
 msgid "Dock/Pier"
 msgstr "Dock/Pier"
 
 #
-#: ../src/squiddio_pi.cpp:1561
+#: ../src/squiddio_pi.cpp:1565
 msgid "Yacht Club"
 msgstr "Yachtclub"
 
 #
-#: ../src/squiddio_pi.cpp:1565 ../src/squiddioPrefsDialogBase.cpp:60
+#: ../src/squiddio_pi.cpp:1569 ../src/squiddioPrefsDialogBase.cpp:60
 msgid "Mooring Buoys"
 msgstr "Mooring Bojen"
 
 #
-#: ../src/squiddio_pi.cpp:1569
+#: ../src/squiddio_pi.cpp:1573
 msgid "Fuel Station"
 msgstr "Tankstelle"
 
 #
-#: ../src/squiddio_pi.cpp:1573
+#: ../src/squiddio_pi.cpp:1577
 msgid "Boat Yard"
 msgstr "Bootsrampe/Werft"
 
 #
-#: ../src/squiddio_pi.cpp:1577
+#: ../src/squiddio_pi.cpp:1581
 msgid "Boat Ramp"
 msgstr "Bootsrampe/Slip"
 
 #
-#: ../src/squiddio_pi.cpp:1581
+#: ../src/squiddio_pi.cpp:1585
 msgid "AIS ATON Marker"
 msgstr "AIS ATON Marker"
 
 #
-#: ../src/squiddio_pi.cpp:1585
+#: ../src/squiddio_pi.cpp:1589
 msgid "NDBC Buoy"
 msgstr "NDBC Boje"
 
 #
-#: ../src/squiddio_pi.cpp:1589
+#: ../src/squiddio_pi.cpp:1593
 msgid "NDBC Ship"
 msgstr "NDBC Schiff"
 
 #
-#: ../src/squiddio_pi.cpp:1593
+#: ../src/squiddio_pi.cpp:1597
 msgid "Generic POI"
 msgstr "Allgemeines Ziel"
 
 #
-#: ../src/squiddio_pi.cpp:1598
+#: ../src/squiddio_pi.cpp:1602
 msgid "North"
 msgstr "Nord"
 
 #
-#: ../src/squiddio_pi.cpp:1602
+#: ../src/squiddio_pi.cpp:1606
 msgid "North East"
 msgstr "Nordost"
 
 #
-#: ../src/squiddio_pi.cpp:1606
+#: ../src/squiddio_pi.cpp:1610
 msgid "East"
 msgstr "Ost"
 
 #
-#: ../src/squiddio_pi.cpp:1610
+#: ../src/squiddio_pi.cpp:1614
 msgid "South East"
 msgstr "Südost"
 
 #
-#: ../src/squiddio_pi.cpp:1614
+#: ../src/squiddio_pi.cpp:1618
 msgid "South"
 msgstr "Süd"
 
 #
-#: ../src/squiddio_pi.cpp:1618
+#: ../src/squiddio_pi.cpp:1622
 msgid "South West"
 msgstr "Südwest"
 
 #
-#: ../src/squiddio_pi.cpp:1622
+#: ../src/squiddio_pi.cpp:1626
 msgid "West"
 msgstr "West"
 
 #
-#: ../src/squiddio_pi.cpp:1626
+#: ../src/squiddio_pi.cpp:1630
 msgid "North West"
 msgstr "Nordwest"
 
 #
-#: ../src/squiddio_pi.cpp:1630
+#: ../src/squiddio_pi.cpp:1634
 msgid "Checked in"
 msgstr "Markiert"
 
 #
-#: ../src/squiddio_pi.cpp:1634
+#: ../src/squiddio_pi.cpp:1638
 msgid "Unknown heading"
 msgstr "Unbekannte Richtung"
 
 #
-#: ../src/squiddio_pi.cpp:1696
+#: ../src/squiddio_pi.cpp:1700
 msgid ""
 "Your GPS positions and other navigational information will be sent to the "
 "server and may be shared with other sQuidd.io users. Check https://squidd.io/"
@@ -315,7 +315,7 @@ msgstr ""
 "https://squidd.io/privacy für weitere Informationen."
 
 #
-#: ../src/squiddio_pi.cpp:1701
+#: ../src/squiddio_pi.cpp:1705
 msgid ""
 "\n"
 "Das sQuiddio Plugin ist eine Informationsquelle fÃ¼r Marinas, AnkerplÃ¤tze "
@@ -328,7 +328,7 @@ msgstr ""
 "gestellt. "
 
 #
-#: ../src/squiddio_pi.cpp:1704
+#: ../src/squiddio_pi.cpp:1708
 msgid "sQuiddio Plugin"
 msgstr "sQuiddio Plugin"
 
@@ -338,107 +338,109 @@ msgid "nmea.txt"
 msgstr "nmea.txt"
 
 #
-#: ../src/logs.cpp:107
+#: ../src/logs.cpp:106
 msgid "Just now"
 msgstr "Gerade eben"
 
 #
-#: ../src/logs.cpp:108
+#: ../src/logs.cpp:107
 msgid "One second ago"
 msgstr "vor einer Sekunde"
 
 #
-#: ../src/logs.cpp:111
+#: ../src/logs.cpp:110
 #, c-format
 msgid "%i seconds ago"
 msgstr "vor %i Sekunden"
 
 #
-#: ../src/logs.cpp:114
+#: ../src/logs.cpp:113
 msgid "About a minute ago"
 msgstr "Vor etwa einer Minute"
 
 #
-#: ../src/logs.cpp:117
+#: ../src/logs.cpp:116
 #, c-format
 msgid "%i minutes ago"
 msgstr "vor %i Minuten"
 
 #
-#: ../src/logs.cpp:120
+#: ../src/logs.cpp:119
 msgid "About an hour ago"
 msgstr "Vor etwa einer Stunde"
 
 #
-#: ../src/logs.cpp:123
+#: ../src/logs.cpp:122
 #, c-format
 msgid "%i hours ago"
 msgstr "vor %i Stunden"
 
 #
-#: ../src/logs.cpp:126
+#: ../src/logs.cpp:125
 msgid "Yesterday"
 msgstr "Gestern"
 
 #
-#: ../src/logs.cpp:129
+#: ../src/logs.cpp:128
 #, c-format
 msgid "%i days ago"
 msgstr "vor %i Tagen"
 
 #
-#: ../src/logs.cpp:234
+#: ../src/logs.cpp:231
 msgid "Buffering NMEA events.."
 msgstr "Speichere NMEA Ereignisse.."
 
 #
-#: ../src/logs.cpp:246 ../src/logs.cpp:250
+#: ../src/logs.cpp:243 ../src/logs.cpp:247
 msgid "Offline"
 msgstr "Offline"
 
 #
-#: ../src/logs.cpp:254
+#: ../src/logs.cpp:251
 msgid "sQuiddio logs sent:"
 msgstr "sQuiddio Logs gesendet:"
 
 #
-#: ../src/logs.cpp:268
+#: ../src/logs.cpp:265
 msgid " (demo)"
 msgstr " (Demo)"
 
 #
-#: ../src/logs.cpp:269
+#: ../src/logs.cpp:266
 msgid "Received"
 msgstr "Empfangen"
 
 #
-#: ../src/logs.cpp:362
+#: ../src/logs.cpp:352
 msgid "\n"
 msgstr "\n"
 
 #
-#: ../src/logs.cpp:371
+#: ../src/logs.cpp:361
 msgid "/positions.json"
 msgstr "/positions.json"
 
 #
-#: ../src/logs.cpp:378
-msgid "Created sQuiddio log update:"
-msgstr "sQuiddio Log-Update erstellt:"
+#: ../src/logs.cpp:368
+msgid "squiddio_pi: Created sQuiddio log update:"
+msgstr "squiddio_pi: Log-Update erstellt:"
 
 #
-#: ../src/logs.cpp:416
+#: ../src/logs.cpp:415
 msgid "Unable to retrieve friends logs: check your credentials and Follow List"
 msgstr ""
 "Kann Logs von Freunden nicht abrufen: Prüfe Zugangsdaten und die Folger-Liste"
 
 #
-#: ../src/logs.cpp:433
+#: ../src/logs.cpp:431
 msgid ""
 "This will deactivate logs sharing.\n"
+"\n"
 " To reactivate, go to the sQuiddio plugin settings -> Logs Sharing tab."
 msgstr ""
-"Damit wird Log Mitbenutzung deaktiviert..\n"
+"Damit wird Log Mitbenutzung deaktiviert.\n"
+"\n"
 " Zum Reaktivieren gehe zu sQuiddio Plugin Einstellungen -> Logs Mitbenutzung "
 "Tab."
 
@@ -517,11 +519,12 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"Go to the sQuiddio plugin settings (Downloads tab) to change zoom levels"
+"See settings in your squiddio plugin -> Downloads tab to change your zoom "
+"levels"
 msgstr ""
 "\n"
 "\n"
-"Gehe zu sQuiddio Plugin Einstellungen (Downloads Tab) zum Ändern der "
+"Siehe Einstellungen im sQuiddio Plugin -> Downloads Tab zum Ändern der "
 "Zoomlevel"
 
 #
@@ -934,16 +937,13 @@ msgstr "Einschließlich NMEA Beispielen mit jeder Sendung"
 #
 #: ../src/squiddioPrefsDialogBase.cpp:304
 msgid ""
-"Include your Navobj.xml file each time you post an automatic update to "
-"sQuidd.io. Your navobj.xml file includes your navigation data (positions, "
-"tracks, routes etc) and other session information. You can retrieve previous "
-"versions of your navobj.xml file online in case of a crash."
+"(Beta feature) Include a sample of your recent NMEA messages each time you "
+"send a log update. See stats about your wind, depth, temperature,  engine "
+"readings etc. online."
 msgstr ""
-"Füge Deine navobj.xml Datei jeder automatischen Update Übertragung an Squidd."
-"io hinzu. Deine navobj.xml Datei enthält Navigationsdaten (Positionen, "
-"Tracks, Routen usw.) und andere Sitzungsinformationen. Ältere Versionen "
-"Deiner navobj.xml Datei können online im Fall eines Crash wieder hergestellt "
-"werden."
+"(Beta Funktion) Fügt ein Beispiel der letzten NMEA Nachricht hinzu beim "
+"Senden eines Log Updates. Siehe Status über Deine Wind, Tiefe, Temperatur, "
+"Motordaten etc. Online."
 
 #
 #: ../src/squiddioPrefsDialogBase.cpp:314
@@ -1034,9 +1034,11 @@ msgstr "circle"
 
 #
 #
+#
 #~ msgid "Anchorage/Buoys"
 #~ msgstr "Ankerplatz/Boje"
 
+#
 #
 #
 #~ msgid "Boat ramps"
@@ -1044,9 +1046,11 @@ msgstr "circle"
 
 #
 #
+#
 #~ msgid "Download local sQuiddio destinations"
 #~ msgstr "Download lokale sQuiddio Ziele"
 
+#
 #
 #
 #~ msgid "Hide local sQuiddio destinations"
@@ -1054,9 +1058,25 @@ msgstr "circle"
 
 #
 #
+#~ msgid ""
+#~ "Include your Navobj.xml file each time you post an automatic update to "
+#~ "sQuidd.io. Your navobj.xml file includes your navigation data (positions, "
+#~ "tracks, routes etc) and other session information. You can retrieve "
+#~ "previous versions of your navobj.xml file online in case of a crash."
+#~ msgstr ""
+#~ "Füge Deine navobj.xml Datei jeder automatischen Update Übertragung an "
+#~ "Squidd.io hinzu. Deine navobj.xml Datei enthält Navigationsdaten "
+#~ "(Positionen, Tracks, Routen usw.) und andere Sitzungsinformationen. "
+#~ "Ältere Versionen Deiner navobj.xml Datei können online im Fall eines "
+#~ "Crash wieder hergestellt werden."
+
+#
+#
+#
 #~ msgid "Local destinations have been updated"
 #~ msgstr "Lokale Ziele wurden aktualisiert"
 
+#
 #
 #
 #~ msgid "Log sent:"
@@ -1064,9 +1084,11 @@ msgstr "circle"
 
 #
 #
+#
 #~ msgid "Logs received"
 #~ msgstr "Log empfangen"
 
+#
 #
 #
 #~ msgid "No destinations available for the region"
@@ -1074,9 +1096,11 @@ msgstr "circle"
 
 #
 #
+#
 #~ msgid "OCPN or ODraw"
 #~ msgstr "OCPN oder ODraw"
 
+#
 #
 #
 #~ msgid "Renderer"
@@ -1084,9 +1108,11 @@ msgstr "circle"
 
 #
 #
+#
 #~ msgid "Server not responding. Check your Internet connection"
 #~ msgstr "Server antwortet nicht. Prüfen Sie die Internetverbindung"
 
+#
 #
 #
 #~ msgid "Show local sQuiddio destinations"
@@ -1094,14 +1120,17 @@ msgstr "circle"
 
 #
 #
+#
 #~ msgid "Squiddio"
 #~ msgstr "Squiddio"
 
 #
 #
+#
 #~ msgid "Squiddio_pi: unable to connect to host"
 #~ msgstr "Squiddio_pi: keine Verbindung zum Host"
 
+#
 #
 #
 #~ msgid "Yacht clubs"
