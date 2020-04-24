@@ -423,7 +423,7 @@ int NextPow2(int size)
         n |= n >> shift;
         shift <<= 1;
     }
-    
+
     return n + 1;
 }
 
@@ -432,15 +432,15 @@ void DouglasPeucker(double *PointList, int fp, int lp, double epsilon, std::vect
     // Find the point with the maximum distance
     double dmax = 0;
     int index = 0;
-    
+
     vector2D va(PointList[2*fp] - PointList[2*lp],
                 PointList[2*fp+1] - PointList[2*lp+1]);
-    
+
     double da = va.x*va.x + va.y*va.y;
     for(int i = fp+1 ; i < lp ; ++i) {
         vector2D vb(PointList[2*i] - PointList[2*fp],
                     PointList[2*i + 1] - PointList[2*fp+1]);
-        
+
         double dab = va.x*vb.x + va.y*vb.y;
         double db = vb.x*vb.x + vb.y*vb.y;
         double d = da - dab*dab/db;
@@ -452,11 +452,11 @@ void DouglasPeucker(double *PointList, int fp, int lp, double epsilon, std::vect
     // If max distance is greater than epsilon, recursively simplify
     if ( dmax > epsilon*epsilon ) {
         keep->push_back(index);
-        
+
         // Recursive call
         DouglasPeucker(PointList, fp, index, epsilon, keep);
         DouglasPeucker(PointList, index, lp, epsilon, keep);
-        
+
     }
 }
 
@@ -465,15 +465,15 @@ void DouglasPeuckerF(float *PointList, int fp, int lp, double epsilon, std::vect
     // Find the point with the maximum distance
     double dmax = 0;
     int index = 0;
-    
+
     vector2D va(PointList[2*fp] - PointList[2*lp],
                 PointList[2*fp+1] - PointList[2*lp+1]);
-    
+
     double da = va.x*va.x + va.y*va.y;
     for(int i = fp+1 ; i < lp ; ++i) {
         vector2D vb(PointList[2*i] - PointList[2*fp],
                     PointList[2*i + 1] - PointList[2*fp+1]);
-        
+
         double dab = va.x*vb.x + va.y*vb.y;
         double db = vb.x*vb.x + vb.y*vb.y;
         double d = da - dab*dab/db;
@@ -485,11 +485,11 @@ void DouglasPeuckerF(float *PointList, int fp, int lp, double epsilon, std::vect
     // If max distance is greater than epsilon, recursively simplify
     if ( dmax > epsilon*epsilon ) {
         keep->push_back(index);
-        
+
         // Recursive call
         DouglasPeuckerF(PointList, fp, index, epsilon, keep);
         DouglasPeuckerF(PointList, index, lp, epsilon, keep);
-        
+
     }
 }
 
@@ -501,15 +501,15 @@ void DouglasPeuckerFI(float *PointList, int fp, int lp, double epsilon, std::vec
     // Find the point with the maximum distance
     double dmax = 0;
     int maxdistIndex = -1;
-    
+
     vector2D va(PointList[2*fp] - PointList[2*lp],
                 PointList[2*fp+1] - PointList[2*lp+1]);
-    
+
     double da = va.x*va.x + va.y*va.y;
     for(int i = fp+1 ; i < lp ; ++i) {
         vector2D vb(PointList[2*i] - PointList[2*fp],
                     PointList[2*i + 1] - PointList[2*fp+1]);
-        
+
         double dab = va.x*vb.x + va.y*vb.y;
         double db = vb.x*vb.x + vb.y*vb.y;
         double d = da - dab*dab/db;
@@ -520,11 +520,11 @@ void DouglasPeuckerFI(float *PointList, int fp, int lp, double epsilon, std::vec
     }
     // If max distance is greater than epsilon, recursively simplify
     if ( dmax > epsilon*epsilon ) {
-        
+
         // Recursive call
         DouglasPeuckerFI(PointList, fp, maxdistIndex, epsilon, keep);
         DouglasPeuckerFI(PointList, maxdistIndex, lp, epsilon, keep);
-        
+
     }
 }
 
@@ -536,15 +536,15 @@ void DouglasPeuckerDI(double *PointList, int fp, int lp, double epsilon, std::ve
     // Find the point with the maximum distance
     double dmax = 0;
     int maxdistIndex = -1;
-    
+
     vector2D va(PointList[2*fp] - PointList[2*lp],
                 PointList[2*fp+1] - PointList[2*lp+1]);
-    
+
     double da = va.x*va.x + va.y*va.y;
     for(int i = fp+1 ; i < lp ; ++i) {
         vector2D vb(PointList[2*i] - PointList[2*fp],
                     PointList[2*i + 1] - PointList[2*fp+1]);
-        
+
         double dab = va.x*vb.x + va.y*vb.y;
         double db = vb.x*vb.x + vb.y*vb.y;
         double d = da - dab*dab/db;
@@ -555,11 +555,11 @@ void DouglasPeuckerDI(double *PointList, int fp, int lp, double epsilon, std::ve
     }
     // If max distance is greater than epsilon, recursively simplify
     if ( dmax > epsilon*epsilon ) {
-        
+
         // Recursive call
         DouglasPeuckerDI(PointList, fp, maxdistIndex, epsilon, keep);
         DouglasPeuckerDI(PointList, maxdistIndex, lp, epsilon, keep);
-        
+
     }
 }
 
@@ -568,14 +568,14 @@ void DouglasPeuckerM(double *PointList, int fp, int lp, double epsilon, std::vec
     // Find the point with the maximum distance
     int index = 0;
     double lmax = 0;
-    
+
     vector2D va(PointList[2*fp] - PointList[2*lp],
                 PointList[2*fp+1] - PointList[2*lp+1]);
-    
+
     for(int i = fp+1 ; i < lp ; ++i) {
         vector2D vb(PointList[2*i] - PointList[2*fp],
                     PointList[2*i + 1] - PointList[2*fp+1]);
-        
+
         vector2D vn;
         double l = vGetLengthOfNormal( &vb, &va, &vn );
         if(l > lmax){
@@ -586,11 +586,11 @@ void DouglasPeuckerM(double *PointList, int fp, int lp, double epsilon, std::vec
     // If max distance is greater than epsilon, recursively simplify
     if(lmax > epsilon){
         keep->push_back(index);
-        
+
         // Recursive call
         DouglasPeuckerM(PointList, fp, index, epsilon, keep);
         DouglasPeuckerM(PointList, index, lp, epsilon, keep);
-        
+
     }
 }
 
@@ -650,14 +650,14 @@ static unsigned int crc_32_tab[] = { /* CRC polynomial 0xedb88320 */
 unsigned int crc32buf(unsigned char *buf, size_t len)
 {
     unsigned int oldcrc32;
-    
+
     oldcrc32 = 0xFFFFFFFF;
-    
+
     for ( ; len; --len, ++buf)
     {
         oldcrc32 = UPDC32(*buf, oldcrc32);
     }
-    
+
     return ~oldcrc32;
-    
+
 }

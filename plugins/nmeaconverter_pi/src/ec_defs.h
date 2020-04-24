@@ -22,7 +22,7 @@
  * software. They are taken into consideration only by Doxygen, a generator of docs.
 --------------------------------------------------------------------------------------*/
 
-/** @mainpage wxEcMath
+/* @mainpage wxEcMath
  *
  * \a wxEcMath is a tiny library to link to your software. It gives you the means to handle
  * mathematical objects : expressions, curves, complex numbers and matrixes. The rich samples
@@ -50,7 +50,7 @@
  * See online : http://sourceforge.net/projects/wxecmath/
  */
 
-/** \page overview Overview
+/* \page overview Overview
  *
  * \a wxEcMath is the name given to the library, which contains sub-classes.
  * You really need to know wxEcEngine, wxEcPlot, wxEcComplex and wxEcMatrix.
@@ -148,7 +148,7 @@
  *          you the content of the matrix.
  */
 
-/** \page naming Naming convention
+/* \page naming Naming convention
  *
  * Symbols included in wxEcMath have a magic prefix named "wxEc" or "wxEC".
  * The first one defines a class or a structure. The second one
@@ -168,7 +168,7 @@
  * Definitions are stored in "ec_defs.h".
  */
 
-/** \page syntax Syntax to load a curve
+/* \page syntax Syntax to load a curve
  *
  * With wxEcPlot, you can draw 4 types of curves :
  *      - cartesian : y = f(x) marked as \a wxECT_CARTESIAN.
@@ -232,7 +232,7 @@
  * the capacity of your buffer. If not, it will result in unexpected bugs.
  */
 
-/** \page funclist Supported functions in wxEcMath
+/* \page funclist Supported functions in wxEcMath
  *
  * The library is able to interpret several functions. Their length cannot be longer than 4 characters.
  * Indeed wxEcEngine::Function2ID() converts the name (8 or 16 bits per char) into an integer (32 bits).
@@ -302,7 +302,7 @@
  *      .
  */
 
-/** \page samples Samples
+/* \page samples Samples
  *
  * Samples are provided to show various possible uses of the library.
  *
@@ -339,7 +339,7 @@
  *      .
  */
 
-/** \page license License
+/* \page license License
  *
  * \a wxEcMath is released under the terms of the "GNU General Public License version 2".
  *
@@ -369,7 +369,7 @@
 
 //--------------------------------------------------------------------------------------
 
-/**
+/*
  * \file ec_defs.h
  * \brief Definition of the simpliest classes and constants
  * \author ecrucru
@@ -396,7 +396,7 @@
 
 //--------------- MODES --------------------
 
-/** \def wxECM_USEDEBUG
+/* \def wxECM_USEDEBUG
  * When defined, extra features are compiled inside wxEcEngine. They were implemented
  * during the development of wxEcMath to track bugs. For a lambda-user, there is no
  * need to use them (performances would be more than 2 times slower).
@@ -420,19 +420,19 @@
 
 //--------------- COPYRIGHT ----------------
 
-/** \def wxECD_SOFTWARE
+/* \def wxECD_SOFTWARE
  * Name of the software.
  */
 #define        wxECD_SOFTWARE               wxT("wxEcMath")
-/** \def wxECD_URL
+/* \def wxECD_URL
  * Internet address where you can download the software.
  */
 #define        wxECD_URL                    wxT("http://sourceforge.net/projects/wxecmath/")
-/** \def wxECD_VERSION
+/* \def wxECD_VERSION
  * Version of the software currently used.
  */
 #define        wxECD_VERSION                wxT("0.6.3")
-/** \def wxECD_AVERAGESPEED
+/* \def wxECD_AVERAGESPEED
  * Average computations you can make in 1 second.
  * Allows you to predict the time needed in complex algorithms.
  * The value depends on \a wxECM_USEDEBUG.
@@ -451,30 +451,30 @@
 
 //--------------- ENGINE -------------------
 
-/** \def wxECD_OPERATORS
+/* \def wxECD_OPERATORS
  * All the operators supported, ordered by mathematical priority.
  */
 #define        wxECD_OPERATORS              wxT("^/*-+")
-/** \def wxECD_ALPHABET
+/* \def wxECD_ALPHABET
  * All the letters of the alphabet, written in lowercase (a-z).
  */
 #define        wxECD_ALPHABET               wxT("abcdefghijklmnopqrstuvwxyz")
-/** \def wxECD_NUMERIC
+/* \def wxECD_NUMERIC
  * All the numbers supported (0-9).
  */
 #define        wxECD_NUMERIC                wxT("0123456789")
-/** \def wxECD_EXTRASYMBOLS
+/* \def wxECD_EXTRASYMBOLS
  * Extra symbols available when evaluated.
  */
 #define        wxECD_EXTRASYMBOLS           wxT("().#")
-/** \def wxECD_PERMITTED
+/* \def wxECD_PERMITTED
  * Allowed ANSI characters are defined here.
  * Since 0.6.1, you can define a constant with the name of your choice.
  * It means you can use a chinese or japanese name if you have enabled "UNICODE".
  * This choice is automatically performed.
  */
 #define        wxECD_PERMITTED              wxT("abcdefghijklmnopqrstuvwxyz0123456789^/*-+().#")
-/** \def wxECD_STACKMAX
+/* \def wxECD_STACKMAX
  * Maximal number of constants you may define.
  *
  * Maximal number of entities that an inline expression may contain (a+b*c = 3 entities).
@@ -482,7 +482,7 @@
 #define        wxECD_STACKMAX               128
 
 
-/** \struct wxEcPosition
+/* \struct wxEcPosition
  *  \brief Stores an expression and two indexes (From/To)
  *
  * This structure is only used by wxEcEngine to mark the position of two brackets in an expression.
@@ -491,12 +491,12 @@
  */
 typedef struct wxEcPosition
 {
-    long From;              /**< Beginning of the tagged area. */
-    long To;                /**< End of the tagged area. */
-    wxString Function;      /**< The expression. */
+    long From;              /* < Beginning of the tagged area. */
+    long To;                /* < End of the tagged area. */
+    wxString Function;      /* < The expression. */
 } wxEcPosition;
 
-/** \struct wxEcConstMap
+/* \struct wxEcConstMap
  *  \brief It is a wxHashMap(string -> double) which can manage a list of constants.
  *
  * Since version 0.6.1, wxHashMap is the new system used to manage constants.
@@ -504,90 +504,90 @@ typedef struct wxEcPosition
  */
 WX_DECLARE_STRING_HASH_MAP(double, wxEcConstMap);
 
-/** Error codes returned by wxEcEngine::Compute().
+/* Error codes returned by wxEcEngine::Compute().
  * \see wxEcEngine::GetLastError()
  */
 enum
 {
-    wxECE_NOERROR = 0,      /**< No error. */
-    wxECE_SYNTAX,           /**< The syntax is not correct. */
-    wxECE_UNDEFCONSTANT,    /**< The constant is not defined. */
-    wxECE_MEMORYEXCEEDED,   /**< The maximal number of constants/curves that you may define is reached.
+    wxECE_NOERROR = 0,      /* < No error. */
+    wxECE_SYNTAX,           /* < The syntax is not correct. */
+    wxECE_UNDEFCONSTANT,    /* < The constant is not defined. */
+    wxECE_MEMORYEXCEEDED,   /* < The maximal number of constants/curves that you may define is reached.
                                  \see wxECD_STACKMAX */
-    wxECE_DIVBYZERO,        /**< Division by zero */
-    wxECE_DOMAINERROR,      /**< The function is not defined for the given value. */
-    wxECE_UNKNOWNFUNC,      /**< The name of the function is unknown. */
-    wxECE_STACKERROR,       /**< The expression is too long to be evaluated.
+    wxECE_DIVBYZERO,        /* < Division by zero */
+    wxECE_DOMAINERROR,      /* < The function is not defined for the given value. */
+    wxECE_UNKNOWNFUNC,      /* < The name of the function is unknown. */
+    wxECE_STACKERROR,       /* < The expression is too long to be evaluated.
                                  \see wxECD_STACKMAX */
-    wxECE_UNCOMPUTABLE      /**< Generic error. */
+    wxECE_UNCOMPUTABLE      /* < Generic error. */
 };
 
-/** Trigonometric modes. Radian is the default mode.
+/* Trigonometric modes. Radian is the default mode.
  * \see wxEcEngine::GetTrigonometricMode()
  * \see wxEcEngine::SetTrigonometricMode()
  */
 enum
 {
-    wxECA_RADIAN = 0,       /**< Radian. */
-    wxECA_DEGREE,           /**< Degree. */
-    wxECA_GRADIAN           /**< Gradian. */
+    wxECA_RADIAN = 0,       /* < Radian. */
+    wxECA_DEGREE,           /* < Degree. */
+    wxECA_GRADIAN           /* < Gradian. */
 };
 
 //--------------- PLOT ---------------------
 
-/** \def wxECD_CURVEMAX
+/* \def wxECD_CURVEMAX
  * Maximal number of curves you can define.
  * \see wxEcPlot::AddCurve()
  */
 #define        wxECD_CURVEMAX               64
-/** \def wxECD_STEPSMAX
+/* \def wxECD_STEPSMAX
  * Maximal number of graduations a plot may contain.
  */
 #define        wxECD_STEPSMAX               30
-/** \def wxECD_RESOLUTION
+/* \def wxECD_RESOLUTION
  * Default number of points used to draw a parametric or a polar curve.
  * The value applies to a curve, not to all the curves loaded in a wxEcPlot.
  * \see wxEcCurve::NumPoints
  */
 #define        wxECD_RESOLUTION             500
-/** \def wxECD_DXSTEP
+/* \def wxECD_DXSTEP
  * The step used to approximate the derivative of a curve at a given point.
  * \see wxEcPlot::DrawDerivative()
  */
 #define        wxECD_DXSTEP                 0.0001
-/** \def wxECD_RETICULESIZE
+/* \def wxECD_RETICULESIZE
  * The radius of the reticule.
  * \see wxEcPlot::SetReticule()
  */
 #define        wxECD_RETICULESIZE           3
-/** \def wxECD_ZOOMFACTOR
+/* \def wxECD_ZOOMFACTOR
  * The default zoom factor.
  * \see wxEcPlot::SetZoomFactor()
  */
 #define        wxECD_ZOOMFACTOR             1.5
 
 
-/** Types of curves you can draw.
+/* Types of curves you can draw.
  * \see wxEcCurve
  */
 enum
 {
-    wxECT_CARTESIAN = 0,    /**< Cartesian: y = f(x) */
-    wxECT_PARAMETRIC,       /**< Parametric: x = f(t) && y = f(t) */
-    wxECT_POLAR,            /**< Polar : r = f(t) */
-    wxECT_CLOUD               /**< Graphical representation : data from experiments, evolution of the stock exchange...*/
+    wxECT_CARTESIAN = 0,    /* < Cartesian: y = f(x) */
+    wxECT_PARAMETRIC,       /* < Parametric: x = f(t) && y = f(t) */
+    wxECT_POLAR,            /* < Polar : r = f(t) */
+    wxECT_CLOUD               /* < Graphical representation : data from experiments, evolution of the stock exchange...*/
 };
 
 //--------------- FUNCS --------------------
-
-static bool wxEcBetween(unsigned int value, unsigned int lowlimit, unsigned int highlimit)
-{
-    return ((lowlimit<=value) && (value<=highlimit));
-}
+// Not used
+//static bool wxEcBetween(unsigned int value, unsigned int lowlimit, unsigned int highlimit)
+//{
+//    return ((lowlimit<=value) && (value<=highlimit));
+//}
 
 //------------------------------------------
 
-/** \class wxEcUPoint
+/* \class wxEcUPoint
  *  \brief Stores 2 unsigned integers.
  *
  * This class is similar to wxPoint but stores unsigned values
@@ -596,13 +596,13 @@ static bool wxEcBetween(unsigned int value, unsigned int lowlimit, unsigned int 
 class WXDLLEXPORT wxEcUPoint
 {
     public:
-        unsigned int x;     /**< X. */
-        unsigned int y;     /**< Y. */
-        /** The default constructor. */
+        unsigned int x;     /* < X. */
+        unsigned int y;     /* < Y. */
+        /* The default constructor. */
         wxEcUPoint() : x(0), y(0) { }
-        /** The constructor with initialization. */
+        /* The constructor with initialization. */
         wxEcUPoint(unsigned int newx, unsigned int newy) : x(newx), y(newy) { }
-        /** Compares two unsigned points. */
+        /* Compares two unsigned points. */
         bool operator==(const wxEcUPoint& up) { return ((x==up.x) && (y==up.y)); }
 };
 

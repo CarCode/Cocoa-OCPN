@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include <wx/html/htmlwin.h>
 
@@ -86,19 +85,19 @@ bool OCPN_AlertDialog::Create( wxWindow *parent, wxWindowID id,
     //    Then create the dialog ..WITHOUT.. borders and title bar.
     //    This way, any window decorations set by external themes, etc
     //    will not detract from night-vision
-    
+
     long wstyle = wxDEFAULT_FRAME_STYLE;
     if( ( global_color_scheme != GLOBAL_COLOR_SCHEME_DAY )
         && ( global_color_scheme != GLOBAL_COLOR_SCHEME_RGB ) ) wstyle |= ( wxNO_BORDER );
-    
+
     wxSize size_min = size;
     size_min.IncTo( wxSize( 500, 600 ) );
     if( !wxDialog::Create( parent, id, caption, pos, size_min, wstyle ) ) return false;
-    
+
     m_pparent = parent;
-    
+
     if( !g_bopengl && CanSetTransparent() ) SetTransparent( 192 );
-    
+
     return true;
 }
 
@@ -146,12 +145,12 @@ bool AISTargetAlertDialog::Create( int target_mmsi, wxWindow *parent, AIS_Decode
                                    const wxPoint& pos,const wxSize& size, long style )
                      
 {
-    
+
     OCPN_AlertDialog::Create(parent, id, caption, pos, size, style);
     m_bjumpto = b_jumpto;
     m_back = b_ack;
     m_bcreateWP = b_createWP;
-    
+
     m_target_mmsi = target_mmsi;
     m_pdecoder = pdecoder;
 
@@ -172,7 +171,7 @@ bool AISTargetAlertDialog::Create( int target_mmsi, wxWindow *parent, AIS_Decode
     wxColor bg = GetBackgroundColour();
     m_pAlertTextCtl->SetBackgroundColour( bg );
     SetBackgroundColour( bg );
-    
+
     return true;
 }
 
@@ -186,7 +185,7 @@ void AISTargetAlertDialog::CreateControls()
     #ifdef __OCPN__ANDROID__
     m_pAlertTextCtl->GetHandle()->setStyleSheet( getQtStyleSheet());
     #endif
-    
+
     m_pAlertTextCtl->SetBorders( 5 );
 
     topSizer->Add( m_pAlertTextCtl, 1, wxALL | wxEXPAND, 5 );
@@ -214,17 +213,17 @@ void AISTargetAlertDialog::CreateControls()
                 wxDefaultSize, 0 );
         AckBox->Add( jumpto, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     }
-    
+
     if( m_bcreateWP ) {
         wxButton *createWptBtn = new wxButton( this, ID_WPT_CREATE, _("Create Waypoint"), wxDefaultPosition, wxDefaultSize, 0 );
         AckBox->Add( createWptBtn, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     }
-    
+
 
     UpdateText();
-    
+
     RecalculateSize();
-    
+
 }
 
 bool AISTargetAlertDialog::GetAlertText()
@@ -245,7 +244,7 @@ bool AISTargetAlertDialog::GetAlertText()
 void AISTargetAlertDialog::UpdateText()
 {
     if( GetAlertText() ) {
-        
+
         wxFont *dFont = FontMgr::Get().GetFont( _("AISTargetAlert"), 12 );
         wxString face = dFont->GetFaceName();
         int sizes[7];
@@ -258,7 +257,7 @@ void AISTargetAlertDialog::UpdateText()
         wxColor fg = GetForegroundColour();
 
         html.Printf( _T("<html><body bgcolor=#%02x%02x%02x><font color=#%02x%02x%02x><center>"), bg.Red(), bg.Green(), bg.Blue(), fg.Red(), fg.Green(), fg.Blue() );
-        
+
         html << m_alert_text;
         html << _T("</center></font></body></html>");
 
@@ -267,7 +266,7 @@ void AISTargetAlertDialog::UpdateText()
 
         RecalculateSize();
     }
-    
+
     SetColorScheme();
     if( !g_bopengl && CanSetTransparent() )
         SetTransparent( 192 );
@@ -286,7 +285,7 @@ void AISTargetAlertDialog::RecalculateSize( void )
 
     if(nline > m_max_nline)
         m_max_nline = nline;
-    
+
     wxSize esize;
     esize.x = GetCharWidth() * 45;
     esize.y = GetCharHeight() * (m_max_nline + 4);
@@ -295,20 +294,20 @@ void AISTargetAlertDialog::RecalculateSize( void )
     int height = m_pAlertTextCtl->GetInternalRepresentation()->GetHeight();
     int adj_height = height + (GetCharHeight() * 4);
     m_adj_height = wxMax(m_adj_height, adj_height);
-    
+
     esize.y = wxMin(esize.y, m_adj_height);
 ///  SetClientSize(esize);
-    
-/*    
+
+/*
     wxSize dsize = GetParent()->GetClientSize();
-    
+
     wxSize fsize = GetSize();
     fsize.y = wxMin(fsize.y, dsize.y - (1 * GetCharHeight()));
     fsize.x = wxMin(fsize.x, dsize.x - (1 * GetCharHeight()));
     SetSize(fsize);
     */
 
-    
+
     if(!m_bsizeSet){
         Fit();          // Sets the horizontal size OK
         m_bsizeSet = true;
@@ -317,10 +316,10 @@ void AISTargetAlertDialog::RecalculateSize( void )
         wxSize gSize = GetClientSize();
         if(gSize.y != esize.y)
             SetClientSize(gSize.x, esize.y);
-        
-    
+
+
     g_Platform->PositionAISAlert( this );
-    
+
 }
 
 void AISTargetAlertDialog::SetColorScheme( void )
@@ -330,7 +329,7 @@ void AISTargetAlertDialog::SetColorScheme( void )
     m_pAlertTextCtl->SetBackgroundColour( bg );
     SetBackgroundColour( bg );                  // This looks like non-sense, but is needed for __WXGTK__
     // to get colours to propagate down the control's family tree.
-    
+
 #ifdef __WXQT__    
     //  wxQT has some trouble clearing the background of HTML window...
     wxBitmap tbm( GetSize().x, GetSize().y, -1 );
@@ -384,7 +383,7 @@ void AISTargetAlertDialog::OnIdCreateWPClick( wxCommandEvent& event )
             pWP->m_bIsolatedMark = true;                      // This is an isolated mark
             pSelect->AddSelectableRoutePoint( td->Lat, td->Lon, pWP );
             pConfig->AddNewWayPoint( pWP, -1 );    // use auto next num
-            
+
             if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
                 pRouteManagerDialog->UpdateWptListCtrl();
             if(gFrame->GetPrimaryCanvas()){

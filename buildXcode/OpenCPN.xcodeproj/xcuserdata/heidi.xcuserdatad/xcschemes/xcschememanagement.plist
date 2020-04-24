@@ -144,6 +144,16 @@
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
+		<key>nmeaconverter_pi.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>32</integer>
+		</dict>
+		<key>nmeaconvertor_pi.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>32</integer>
+		</dict>
 		<key>objsearch_pi.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>

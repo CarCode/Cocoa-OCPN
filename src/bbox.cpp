@@ -1,10 +1,10 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        bbox.cpp
 // Author:      Klaas Holwerda
 // Created:     XX/XX/XX
 // Copyright:   2000 (c) Klaas Holwerda
 // Licence:     wxWindows Licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -393,7 +393,7 @@ void LLBBox::SetFromSegment(double lat1, double lon1, double lat2, double lon2)
             lon[i][2] = lon[i][0] - 360;
         }
     }
-    
+
     double d[3];
     for(int k=0; k<3; k++) {
         minlon[k] = wxMin(lon[0][k], lon[1][k]);

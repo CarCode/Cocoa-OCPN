@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  * updated: 25-04-2015  
  * Project:  OpenCPN
  * Purpose:  nmeaTranslate Plugin
@@ -101,21 +101,28 @@ wxString NmeaConverter_pi::GetLongDescription()
 void NmeaConverter_pi::SetNMEASentence(wxString &sentence)
 {
     wxString s = sentence; //local copy of sentence
-    wxString nmeaID;
     s.Trim(); // Removes white-space (space, tabs, form feed, newline and carriage return)
     if ( b_CheckChecksum )
     {
         if ( nmeaIsValid( s ) )
         {
             //send to all objects
-            for( objit = ObjectMap.begin(); objit != ObjectMap.end(); ++objit )
-                objit->second->SetNMEASentence(s);       
+            for ( auto const &ent1 : ObjectMap)
+                ent1.second->SetNMEASentence(s);
+            //objit->second->SetNMEASentence(s);
         }
     }
+    else
+    {
+        for ( auto const &ent1 : ObjectMap)
+                ent1.second->SetNMEASentence(s);
+    }
+
 }
 
 void NmeaConverter_pi::SendNMEASentence(wxString sentence)
 {
+    sentence.Trim();
     wxString Checksum = ComputeChecksum(sentence);
     sentence = sentence.Append(wxT("*"));
     sentence = sentence.Append(Checksum);
@@ -133,7 +140,7 @@ bool NmeaConverter_pi::nmeaIsValid( wxString &sentence)
         checksum = s.Right(2);        
         s = s.Left( s.Length() -3 );
         if ( ComputeChecksum( s ) == checksum )
-        {            
+        {
             r = true;
         }
     }
@@ -143,17 +150,37 @@ bool NmeaConverter_pi::nmeaIsValid( wxString &sentence)
     return r;
 }
 
-int NmeaConverter_pi::AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode, int RepTime)
+int NmeaConverter_pi::AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode, int RepTime, bool Degr)
 {
     int index;
     if ( ObjectMap.empty() ) // map is wxEmptyString
         index = 0;
-    else 
-        index = ObjectMap.size();
+    else
+#ifdef __WXOSX__
+        index = (int)ObjectMap.size();
+#else
+    index = ObjectMap.size();
+#endif
     ObjectMap[index] = object;
     object->SetSendMode( Mode );
     object->SetRepeatTime( RepTime );
+    object->UseDegrees = Degr;
     return index;
+}
+
+void NmeaConverter_pi::ClearAllObjectsInMap()
+{
+    if ( !ObjectMap.empty() )
+    {
+        unsigned int i = 0;
+        while(i < ObjectMap.size() ) //clear the ojects
+        {
+            nmeaSendObj* CurrObj = ObjectMap[i];
+            delete CurrObj;
+            i++;
+        }
+        ObjectMap.clear(); //and clear the map
+    }
 }
 
 wxString NmeaConverter_pi::ComputeChecksum( wxString sentence )
@@ -168,10 +195,12 @@ wxString NmeaConverter_pi::ComputeChecksum( wxString sentence )
 
 void NmeaConverter_pi::ShowPreferencesDialog( wxWindow* parent )
 {
+    LoadConfig();
     if ( prefDlg == NULL )
-    {        
+    {
         prefDlg = new PreferenceDlg(this, parent);
     }
+
     if ( prefDlg->ShowModal() == wxID_OK )
     {
         SaveConfig();
@@ -180,11 +209,12 @@ void NmeaConverter_pi::ShowPreferencesDialog( wxWindow* parent )
     try
     {
         prefDlg->Destroy();
+        prefDlg = NULL;
  //       p_nmeaSendObjectDlg->Destroy();
     }
     catch(...)
     { wxPuts(_("Dlg already deleted:_)"));}
-    
+
     prefDlg = NULL;
 //    p_nmeaSendObjectDlg=NULL;    
 }
@@ -206,6 +236,7 @@ bool NmeaConverter_pi::SaveConfig( void )
             pConf->Write( _T("FormatString"),CurrObj->GetFormatStr() );
             pConf->Write( _T("SendMode"),int(CurrObj->GetSendMode() ) );
             pConf->Write( _T("RepeatTime"),int(CurrObj->GetRepeatTime() ) );
+            pConf->Write( _T("CalcDegrees"),bool(CurrObj->UseDegrees ) );
             i++;
         }
         return true;
@@ -222,7 +253,7 @@ bool NmeaConverter_pi::LoadConfig( void )
         pConf->Read( _T("DoUseCheckSums"), &b_CheckChecksum, true );
         int o_cnt;
         pConf->Read( _T("ObjectCount"), &o_cnt, -1 );
-        ObjectMap.empty();
+        ClearAllObjectsInMap();
         for( int i = 1; i <= o_cnt; i++ )
         {
             pConf->SetPath( wxString::Format( _T("/PlugIns/NmeaConverter/Object%d"), i  ) );
@@ -232,8 +263,10 @@ bool NmeaConverter_pi::LoadConfig( void )
             pConf->Read( _T("SendMode"), &SendModeInt, int(ALLVAL) );
             int RepTime;
             pConf->Read( _T("RepeatTime"), &RepTime, 1 );
-              AddObjectToMap( new nmeaSendObj( this, FormatS), SentenceSendMode(SendModeInt), RepTime  );
-            
+            bool UseDeg;
+            pConf->Read( _T("CalcDegrees"), &UseDeg, false );
+              AddObjectToMap( new nmeaSendObj( this, FormatS), SentenceSendMode(SendModeInt), RepTime, UseDeg  );
+
         }
         return true;
     } else
@@ -242,7 +275,7 @@ bool NmeaConverter_pi::LoadConfig( void )
 
 //************************************************************************************
 nmeaSendObj::nmeaSendObj()
-{    
+{
 }
 nmeaSendObj::nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr)
 {
@@ -253,52 +286,79 @@ nmeaSendObj::nmeaSendObj(NmeaConverter_pi* pi, wxString FormatStr)
     RepeatTime = 1;
     p_timer = NULL;
     ValidFormatStr = false;
-    VarAlphaDigit = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-    VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    VarAlphaDigit = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789?");
+    VarAlpha = wxT("$ABCDEFGHIJKLMNOPQRSTUVWXYZ?");
     VarDigit = wxT("0123456789");
     //parse Formatstring into arrays
     SetFormatString( FormatStr );
 }
 nmeaSendObj::~nmeaSendObj()
 {
-    if (p_timer) 
-        p_timer->~localTimer();
+    if (p_timer != NULL)
+    {
+        localTimer* t = p_timer;
+        delete t;
+    }
+
 }
 
 void nmeaSendObj::SetFormatString(wxString FormatStr)
 {
     if( FormatStr == wxEmptyString )
-        FormatStr = wxT("$dummy format"); 
+        FormatStr = wxT("$DummyFormat");
     FormatString=FormatStr;   
     //find needed Variables
     NeededVariables = FindStartWithDollarSubSets( FormatStr, VarAlphaDigit);
     //find needed Sentences
-    NeededSentences = FindStartWithDollarSubSets( FormatStr, VarAlpha);
-    NeededSentencesMinusReceived = NeededSentences;  
-    
+    NeededSentences.Clear();
+    unsigned int i = 0;
+
+    while ( i < NeededVariables.Count() )
+    {
+        unsigned int j = 0;
+        while (( ( VarAlpha.Find(NeededVariables[i].Mid(j,1)) >= 0 ) ) &&
+               (j < NeededVariables[i].Length()-1))
+            j++;
+        
+        if ( NeededSentences.Index( NeededVariables[i].Mid(0,j) ) == wxNOT_FOUND )
+            NeededSentences.Add( NeededVariables[i].Mid(0,j) );
+        i++;
+    }
+    NeededSentencesMinusReceived = NeededSentences;
 }
 
 wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxString AllowdCharStr)
 {  //Find pieces of text starting with'$' wich are the variables used
-    int startpos=2;
+    size_t startpos=2;
+
     wxArrayString ReturnArray;
-    while ( FormatStr.find( wxT("$"), startpos ) != wxNOT_FOUND )
+
     {
-        startpos = FormatStr.find( wxT("$"), startpos + 1 );
-        wxString SubString;
-        unsigned int i = startpos;
-      
-        while ( ( AllowdCharStr.Find(FormatStr.Mid(i,1)) != wxNOT_FOUND ) &
-               ( i < FormatStr.Length() ) )
+        while ( (FormatStr.find( wxT("$"), startpos ) != wxNOT_FOUND) &&( startpos < FormatStr.Length() ))
         {
-            i++;
+             startpos = FormatStr.find( wxT("$"), startpos );
+             size_t i = startpos;
+
+
+            while ( ( AllowdCharStr.find(FormatStr.Mid(i,1)) != (size_t)wxNOT_FOUND ) &
+                   ( i < FormatStr.Length() ) )
+            {
+                i++;
+            }
+
+            wxString SubString= FormatStr.SubString( startpos, i-1 );
+            // Check if Substring has a valid value. Should end with a digit
+            long test = 0;
+            wxString s;
+            SplitStringAlphaDigit(SubString, s, test);
+            if (( test > 0 ) && (SubString.Length() > 4))
+                if ( ReturnArray.Index( SubString ) == wxNOT_FOUND )
+                {
+                    ReturnArray.Add( SubString );
+                }
+            startpos = i;
         }
-        SubString.Append( FormatStr.SubString( startpos, i-1 ) ); 
-        if ( ReturnArray.Index( SubString ) == wxNOT_FOUND )
-               ReturnArray.Add( SubString );
-        startpos = i-1;
-    } 
-    
+    }
     return ReturnArray;
 }
 
@@ -315,34 +375,31 @@ void nmeaSendObj::SplitStringAlphaDigit(wxString theStr, wxString &alpha, long &
 
 void nmeaSendObj::SetNMEASentence(wxString &sentence)
 {
-    wxString NmeaID = sentence.Left( sentence.find(wxT(",")) );
-
-    if ( NeededSentences.Index(NmeaID) != wxNOT_FOUND )
+    unsigned int i = 0;
+    while ( i < NeededSentences.GetCount() )
     {
-         ReceivedSentencesrray[NmeaID] = sentence;
-         int i = NeededSentencesMinusReceived.Index(NmeaID);
-        if (  i != wxNOT_FOUND ){
-            NeededSentencesMinusReceived.RemoveAt(i);}
-         if ( NeededSentencesMinusReceived.IsEmpty() )
-         {
-             if ( ( NeededSentences.IsEmpty() ) & ( SendMode == TIMED )  )
-             {
-                 plugin->SendNMEASentence(FormatString);
-             }
-             else                 
-            {
-                this->ComputeOutputSentence();
-                //wxPuts( wxString::Format( _("count: %i"), NeededSentencesMinusReceived.GetCount()));
-                NeededSentencesMinusReceived = NeededSentences;
+        wxString s = sentence.Left( NeededSentences[i].Length() );
+        if  ( s.Matches(NeededSentences[i]) ) //we have a wildcard match
+        {
+            ReceivedSentencesMap[NeededSentences[i]] = sentence; //save sentence
+            int j = NeededSentencesMinusReceived.Index(NeededSentences[i]);
+            if (  j != wxNOT_FOUND ){//!= wxNOT_FOUND )
+                NeededSentencesMinusReceived.RemoveAt(j);
             }
-         }
-    }       
+        }
+        i++;
+    }
+    if ( NeededSentencesMinusReceived.IsEmpty() & ( SendMode == ALLVAL) )
+    {
+        ComputeOutputSentence();
+        NeededSentencesMinusReceived = NeededSentences;
+    }
 }
 
 void nmeaSendObj::ComputeOutputSentence()
 {
     wxString sendFormat = FormatString;
-    //iterate thru variables and update values
+    //iterate through variables and update values
     //The variablesArray is set in SetFormatString()
     for( int i = 0; i < (int)NeededVariables.GetCount(); i++ )
     {
@@ -351,10 +408,10 @@ void nmeaSendObj::ComputeOutputSentence()
         wxString SenteceKey;
         long FieldNo;
         SplitStringAlphaDigit( Varkey, SenteceKey, FieldNo);
-        
+
         //put nmea sentence in array. each field in separate cell
         wxArrayString nmeatokenarray; //array with tokenized nmea sentence
-        wxString s = ReceivedSentencesrray[SenteceKey];
+        wxString s = ReceivedSentencesMap[SenteceKey];
         wxStringTokenizer tkznmea(s, wxT(","));
         while ( tkznmea.HasMoreTokens() )
             nmeatokenarray.Add( tkznmea.GetNextToken() );
@@ -364,8 +421,8 @@ void nmeaSendObj::ComputeOutputSentence()
         else
             sendFormat.Replace( Varkey , wxT("noData") );
     }
-    //by now the variables in our formatstr ar replaced by values.
-    
+    //by now the variables in our formatstr are replaced by values.
+
     //split formatstring in fields, so we can calculate each field apart
     wxArrayString formattokenarray;
     wxStringTokenizer tkzformat(sendFormat, wxT(","));
@@ -377,9 +434,13 @@ void nmeaSendObj::ComputeOutputSentence()
         int NoOfDecimals = 0;
         int IinString = 0;
         wxString s=formattokenarray[j];
-        while ( s.find( _("."), IinString) !=  wxNOT_FOUND )
+        while ( s.find( _("."), IinString) != (size_t)wxNOT_FOUND )
         {
+#ifdef __WXOSX__
+            IinString = (int)s.find( _("."), IinString);
+#else
             IinString = s.find( _("."), IinString);
+#endif
             int n=0;
             while ( (IinString + 1 < (int)s.Len() ) &
                    ( VarDigit.Find(s.Mid(IinString+1,1)) != wxNOT_FOUND ) )
@@ -392,6 +453,7 @@ void nmeaSendObj::ComputeOutputSentence()
         }
         wxString result;
         wxEcEngine calc;
+        if (UseDegrees) calc.SetTrigonometricMode(wxECA_DEGREE);
         if (calc.SetFormula( formattokenarray[j] ))
         {
             result = wxString::Format(wxT("%.*f"), NoOfDecimals, calc.Compute() );
@@ -399,22 +461,17 @@ void nmeaSendObj::ComputeOutputSentence()
             {
                  formattokenarray[j] = result;
             }
-            //else
-                //wxLogError(calc.TranslateError(calc.GetLastError()));
-                //wxPuts(calc.TranslateError(calc.GetLastError()));//better luck next time !
         }
-        //else
-            //wxPuts(calc.TranslateError(calc.GetLastError()));
     }
     // finaly glue the seperate tokens back to one sentence
-    
+
     sendFormat = formattokenarray[0];
     for (int j=1 ; j < (int)formattokenarray.GetCount(); j++)
     {
         sendFormat.Append(_(","));
         sendFormat.Append( formattokenarray[j] );
     }
-    
+
     if ( DlgActive )
         plugin-> p_nmeaSendObjectDlg->SetOutputStrTxt(sendFormat);
     else
@@ -548,17 +605,17 @@ void PreferenceDlg::Init()
 }
 
 void PreferenceDlg::CreateControls()
-{    
-////@begin PreferenceDlg content construction
+{
+// //@begin PreferenceDlg content construction
     PreferenceDlg* itemDialog1 = this;
 
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     itemDialog1->SetSizer(itemBoxSizer2);
 
     itemCheckBoxUseChecksum = new wxCheckBox( itemDialog1, ID_CHECKBOX, _("Block incomming messages with wrong checksum"), wxDefaultPosition, wxDefaultSize, 0 );
-    
+
     itemBoxSizer2->Add(itemCheckBoxUseChecksum, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
-    
+
     itemListView = new wxListView( itemDialog1, ID_LISTCTRL, wxDefaultPosition, wxSize(100, 100), wxLC_REPORT|wxLC_NO_HEADER|wxLC_SINGLE_SEL );
     itemBoxSizer2->Add(itemListView, 0, wxGROW|wxALL, 5);
          // Add first column       
@@ -589,7 +646,7 @@ void PreferenceDlg::CreateControls()
     itemButtonDel = new wxButton( itemPanel5, ID_BUTTON_DEL, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer6->Add(itemButtonDel, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
     itemButtonDel->Enable(false);
-    
+
     wxButton* itemButton10 = new wxButton( itemPanel5, ID_BUTTON_OK, _("OK"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer6->Add(itemButton10, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -601,11 +658,11 @@ void PreferenceDlg::OnCheckboxClick( wxCommandEvent& event )
     event.Skip();
 }
 void PreferenceDlg::OnButtonNewClick( wxCommandEvent& event )
-{    
+{
    //make new object and add it to list so it will receive nmea messages
    nmeaSendObj* newObj = new nmeaSendObj(pi, wxEmptyString);
    int indexno = pi->AddObjectToMap( newObj );
-   
+
    // if not OK then remove again from list
    if ( newObj->ShowModal( parentwindow) != wxID_OK )
    {
@@ -622,9 +679,13 @@ void PreferenceDlg::OnButtonEditClick( wxCommandEvent& event )
     wxString indexstr = itemListView->GetItemText(listi);
     long index;
     if(!indexstr.ToLong(&index)) { /* error! */ }
+#ifdef __WXOSX__
+    if ( pi->ObjectMap[(int)index]->ShowModal(parentwindow) == wxID_OK )
+#else
     if ( pi->ObjectMap[index]->ShowModal(parentwindow) == wxID_OK )
+#endif
         UpdateListCtrFromMap();
-    
+
     event.Skip();
 }
 
@@ -634,9 +695,14 @@ void PreferenceDlg::OnButtonDelClick( wxCommandEvent& event )
     wxString indexstr = itemListView->GetItemText(listi);
     long index;
     if(!indexstr.ToLong(&index)) { /* error! */ }
-    pi->ObjectMap[index]->~nmeaSendObj(); //delete object
+#ifdef __WXOSX__
+    pi->ObjectMap[(int)index]->~nmeaSendObj(); //delete object
+    pi->ObjectMap.erase((int)index);
+#else
+    pi->ObjectMap[index]->~nmeaSendObj();
     pi->ObjectMap.erase(index);
-    
+#endif
+
     UpdateListCtrFromMap();
     event.Skip();
 }
@@ -646,14 +712,15 @@ void PreferenceDlg::OnButtonOkClick( wxCommandEvent& event )
     this->EndModal( wxID_OK );
     event.Skip();
 }
+
 void PreferenceDlg::OnListViewSelected( wxListEvent& event )
 {
     UpdateGUI();
     event.Skip();
 }
+
 void PreferenceDlg::UpdateListCtrFromMap()
 {
-    int index = 0;      
     itemListView->DeleteAllItems();
     for( pi->objit = pi->ObjectMap.begin(); pi->objit != pi->ObjectMap.end(); ++pi->objit )
     {
@@ -663,6 +730,7 @@ void PreferenceDlg::UpdateListCtrFromMap()
     }
     UpdateGUI();
 }
+
 void PreferenceDlg::UpdateGUI()
 {
     if ( itemListView->GetFocusedItem() != -1 ) //something is selected
@@ -675,7 +743,7 @@ void PreferenceDlg::UpdateGUI()
         itemButtonEdit->Enable(false);
         itemButtonDel->Enable(false);
     }
-        
+
 }
 
 
@@ -693,10 +761,10 @@ wxBitmap PreferenceDlg::GetBitmapResource( const wxString& name )
 wxIcon PreferenceDlg::GetIconResource( const wxString& name )
 {
     // Icon retrieval
-////@begin PreferenceDlg icon retrieval
+// //@begin PreferenceDlg icon retrieval
     wxUnusedVar(name);
     return wxNullIcon;
-////@end PreferenceDlg icon retrieval
+// //@end PreferenceDlg icon retrieval
 }
 
 IMPLEMENT_DYNAMIC_CLASS( nmeaSendObjectDlg, wxDialog )
@@ -709,7 +777,7 @@ BEGIN_EVENT_TABLE( nmeaSendObjectDlg, wxDialog )
     EVT_TEXT( ID_TEXTCTRL, nmeaSendObjectDlg::OnTextctrlTextUpdated )
     EVT_BUTTON( ID_BUTTON_OK1, nmeaSendObjectDlg::OnButtonOkClick )
     EVT_BUTTON( ID_BUTTON_CANCEL, nmeaSendObjectDlg::OnButtonCancelClick )
-
+    EVT_CHECKBOX( ID_CHECKBOXDEG, nmeaSendObjectDlg::OnUseDegreesClick )
 END_EVENT_TABLE()
 
 
@@ -724,7 +792,7 @@ nmeaSendObjectDlg::nmeaSendObjectDlg()
 
 nmeaSendObjectDlg::nmeaSendObjectDlg( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
-    
+
     Create(parent, id, caption, pos, size, style);
     Init();
 }
@@ -746,16 +814,15 @@ nmeaSendObjectDlg::~nmeaSendObjectDlg()
 
 void nmeaSendObjectDlg::Init()
 {
-    
+
 }
 
 void nmeaSendObjectDlg::CreateControls()
-{    
+{
     nmeaSendObjectDlg* itemDialog1 = this;
-    
+
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
 
-    
     itemRadioButtonVal = new wxRadioButton( itemDialog1, ID_RADIOBUTTON, _("Send after update all variables"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
     itemRadioButtonVal->SetValue(true);
     itemBoxSizer2->Add(itemRadioButtonVal, 0, wxALIGN_LEFT|wxALL, 5);
@@ -774,6 +841,8 @@ void nmeaSendObjectDlg::CreateControls()
     wxStaticText* itemStaticText1 = new wxStaticText( itemDialog1, wxID_STATIC, _("seconds."), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer4->Add(itemStaticText1, 0, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    itemCheckBoxUseDegrees = new wxCheckBox( itemDialog1, ID_CHECKBOXDEG, _("Calculate using degrees"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer2->Add(itemCheckBoxUseDegrees, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     itemStaticTextSendString = new wxStaticText( itemDialog1, wxID_STATIC, _("Output sentence comes here;-)"), wxPoint(5, 60), wxSize(300, -1), 0 );
     itemStaticTextSendString->SetForegroundColour(wxColour(0, 0, 255));
@@ -803,7 +872,7 @@ void nmeaSendObjectDlg::SetSendObjOfThisDlg( nmeaSendObj* object)
     SendObjOfThisDlg = object;
     itemTextCtrlFormatStrCtr->SetValue( SendObjOfThisDlg->GetFormatStr() );
     if ( SendObjOfThisDlg->GetSendMode() == ALLVAL )
-    { 
+    {
         itemRadioButtonVal->SetValue(true);
         itemRadioButtonTime->SetValue(false);
         itemSpinCtrl->Enable(false);
@@ -815,6 +884,7 @@ void nmeaSendObjectDlg::SetSendObjOfThisDlg( nmeaSendObj* object)
         itemSpinCtrl->Enable(true);
     }
     itemSpinCtrl->SetValue( SendObjOfThisDlg->GetRepeatTime() );
+    itemCheckBoxUseDegrees->SetValue( SendObjOfThisDlg->UseDegrees );
 }
 
 void nmeaSendObjectDlg::SetOutputStrTxt(wxString str)
@@ -849,7 +919,7 @@ void nmeaSendObjectDlg::OnTextctrlTextUpdated( wxCommandEvent& event )
 }
 
 void nmeaSendObjectDlg::OnButtonOkClick( wxCommandEvent& event )
-{  
+{
     this->EndModal( wxID_OK );
     event.Skip();
 }
@@ -860,8 +930,13 @@ void nmeaSendObjectDlg::OnButtonCancelClick( wxCommandEvent& event )
     event.Skip();
 }
 
+void nmeaSendObjectDlg::OnUseDegreesClick ( wxCommandEvent& event )
+{
+    SendObjOfThisDlg->UseDegrees = itemCheckBoxUseDegrees->GetValue();
+}
+
 bool nmeaSendObjectDlg::ShowToolTips()
 {
     return true;
 }
-;
+

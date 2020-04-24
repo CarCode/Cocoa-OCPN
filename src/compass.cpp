@@ -78,17 +78,15 @@ ocpnCompass::~ocpnCompass()
         texobj = 0;
     }
 #endif
-    
+
     delete m_pStatBoxToolStaticBmp;
 }
 
 void ocpnCompass::Paint( ocpnDC& dc )
 {
-    if(m_shown && m_StatBmp.IsOk()){  // m_StatBmp ist wohl das GPS-CompassRose Bild? Nichts wenn auskommentiert und texobj an, weiß wenn texobj aus. Somit wohl texobj das Problem?
+    if(m_shown && m_StatBmp.IsOk()){
 #if defined(ocpnUSE_GLES) || defined(ocpnUSE_GL)  // GLES does not do ocpnDC::DrawBitmap(), so use texture
-        if(g_bopengl && texobj){  // Wenn texobj auskommentiert, dann weißes Feld (immerhin). Schwarz nach Start Grib.
-//            glGenTextures( 1, &texobj ); Test ohne Sinn
-//            if(! texobj) return;  // Ergibt ebenfalls leeren (transparenten) Platzhalter (nicht weiß)
+        if(g_bopengl && texobj){
             glBindTexture( GL_TEXTURE_2D, texobj );
             glEnable( GL_TEXTURE_2D );
 
@@ -104,18 +102,11 @@ void ocpnCompass::Paint( ocpnDC& dc )
             coords[0] = m_rect.x; coords[1] = m_rect.y; coords[2] = m_rect.x + m_rect.width; coords[3] = m_rect.y;
             coords[4] = m_rect.x + m_rect.width; coords[5] = m_rect.y + m_rect.height; coords[6] = m_rect.x; coords[7] = m_rect.y + m_rect.height;
 
-// parent->GetContentScaleFactor() geht hier natürlich auch nicht
             m_parent->GetglCanvas()->RenderTextures(coords, uv, 4, m_parent->GetpVP());
-#else            
+#else
 
 
             glBegin( GL_QUADS );
-/*
-            glTexCoord2f( 0, 0 );  glVertex2i( m_rect.x, m_rect.y );
-            glTexCoord2f( 1, 0 );  glVertex2i( m_rect.x + m_rect.width, m_rect.y );
-            glTexCoord2f( 1, 1 );  glVertex2i( m_rect.x + m_rect.width, m_rect.y + m_rect.height );
-            glTexCoord2f( 0, 1 );  glVertex2i( m_rect.x, m_rect.y + m_rect.height );
-*/
             glTexCoord2f( 0, 0 );  glVertex2i( m_rect.x, m_rect.y );
              glTexCoord2f( (float)m_image_width / m_tex_w, 0 );  glVertex2i( m_rect.x + m_rect.width, m_rect.y );
              glTexCoord2f( (float)m_image_width / m_tex_w, (float)m_image_height / m_tex_h );  glVertex2i( m_rect.x + m_rect.width, m_rect.y + m_rect.height );
@@ -129,22 +120,11 @@ void ocpnCompass::Paint( ocpnDC& dc )
         }
         else {
          dc.DrawBitmap( m_StatBmp, m_rect.x, m_rect.y, true );
-/*            glBindTexture( GL_TEXTURE_2D, texobj );
-            glEnable( GL_TEXTURE_2D );
-            glBegin( GL_QUADS );
-            glTexCoord2f( 0, 0 );  glVertex2i( m_rect.x, m_rect.y );
-             glTexCoord2f( (float)m_image_width / m_tex_w, 0 );  glVertex2i( m_rect.x + m_rect.width, m_rect.y );
-             glTexCoord2f( (float)m_image_width / m_tex_w, (float)m_image_height / m_tex_h );  glVertex2i( m_rect.x + m_rect.width, m_rect.y + m_rect.height );
-             glTexCoord2f( 0, (float)m_image_height / m_tex_h );  glVertex2i( m_rect.x, m_rect.y + m_rect.height );
-            glEnd();
-            glDisable( GL_TEXTURE_2D );
- // Ergibt wiederum weißes Feld, also texobj = 0.
- */
         }
 
 #else
     dc.DrawBitmap( m_StatBmp, m_rect.x, m_rect.y, true );
-#endif        
+#endif
     }
 
 }

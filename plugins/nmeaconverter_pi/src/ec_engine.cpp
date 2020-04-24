@@ -26,11 +26,11 @@ wxEcEngine::wxEcEngine()
 {
     Reset(true, true);
     m_trigomode = wxECA_RADIAN;
-    #ifdef wxECM_USEDEBUG
+#ifdef wxECM_USEDEBUG
     m_internallog = true;
-    #else
+#else
     m_internallog = false;
-    #endif
+#endif
 }
 
 wxEcEngine::~wxEcEngine()
@@ -68,11 +68,11 @@ double wxEcEngine::GetLastResult()
             return;
         m_debugoutput.Add(message);
         if (verbose)
-            #if wxUSE_UNICODE
+#if wxUSE_UNICODE
                 wprintf(wxT("%s\n"), message.wc_str());
-            #else
+#else
                 printf(wxT("%s\n"), message.c_str());
-            #endif
+#endif
     }
 
     wxArrayString wxEcEngine::GetLog()
@@ -84,9 +84,9 @@ double wxEcEngine::GetLastResult()
 void wxEcEngine::Reset(bool formulaToo, bool constantsToo)
 {
     long i;
-    #ifdef wxECM_USEDEBUG
+#ifdef wxECM_USEDEBUG
         m_debugoutput.Clear();
-    #endif
+#endif
     m_errorcode = wxECE_NOERROR;
     m_lastresult = 0;
     m_indicator.Clear();
@@ -156,7 +156,11 @@ bool wxEcEngine::GetConstant(wxString expression, double *destination)
 
 int wxEcEngine::GetConstantCount()
 {
+#ifdef __WXOSX__
+    return (int)m_constants.size();
+#else
     return m_constants.size();
+#endif
 }
 
 bool wxEcEngine::ListAllConstants(wxControlWithItems *destination)
@@ -175,8 +179,8 @@ void wxEcEngine::ResetConstants()
 {
     m_constants.clear();
     SetConstant(wxT("deg"), M_PI/180.0);
-    SetConstant(wxT("e"), exp(1.0));
-    SetConstant(wxT("g"), 9.80665);
+//    SetConstant(wxT("e"), exp(1.0));
+//    SetConstant(wxT("g"), 9.80665);
     SetConstant(wxT("pi"), M_PI);
     SetConstant(wxT("percent"), 0.01);
     return;
@@ -365,11 +369,11 @@ bool wxEcEngine::IsValid(wxString *expression)
     for (i=0 ; i<expression->Len() ; i++)
     {
         car = expression->GetChar(i);
-        #if wxUSE_UNICODE
+#if wxUSE_UNICODE
         if ((wxString(wxECD_PERMITTED).Find(car) == wxNOT_FOUND) && ((unsigned int)(car) <= 255))
-        #else
+#else
         if (wxString(wxECD_PERMITTED).Find(car) == wxNOT_FOUND)
-        #endif
+#endif
             return false;
     }
     //-- Checks the brackets
@@ -442,11 +446,11 @@ void wxEcEngine::Simplify(wxString *expression)
             buffer.Append(wxT("*"));
 
         //-- Char validated
-        #if wxUSE_UNICODE
+#if wxUSE_UNICODE
         if ((wxString(wxECD_PERMITTED).Find(car) != wxNOT_FOUND) || ((unsigned int)(car) > 255))
-        #else
+#else
         if (wxString(wxECD_PERMITTED).Find(car) != wxNOT_FOUND)
-        #endif
+#endif
         {
             buffer.Append(car);
             lastCar = car;
@@ -612,19 +616,19 @@ bool wxEcEngine::ApplyFunction(wxString *function, double *value)
     }
     else
     {
-        #ifdef wxECM_USEDEBUG
+#ifdef wxECM_USEDEBUG
             if (function->Len() > 0)
                 LogAction(wxString::Format(wxT("   > %s applied > %f"), function->uniCStr(), *value));
-        #endif
+#endif
         return true;
     }
 }
 
 double wxEcEngine::Compute()
 {
-    #ifdef wxECM_USEDEBUG
+#ifdef wxECM_USEDEBUG
         LogAction(wxString::Format(wxT("Submitted : %s"), m_formula.uniCStr()));
-    #endif
+#endif
     m_errorcode = wxECE_NOERROR;
     m_offset = 0;
     m_lastresult = evalexp(&m_formula);
@@ -670,8 +674,13 @@ double wxEcEngine::evalf(wxString *expression)
 {
     //-- Initialization
     wxString poolSign, priorities = wxECD_OPERATORS, buffer, value;
-    size_t terms=0, index, j, k;
-    double oldPoolK;
+    size_t terms=0, index, j;
+#ifdef __WXOSX__
+    int k;
+#else
+    size_t k;
+#endif
+ //   double oldPoolK;  //Not used
     struct { size_t NumDeclared; size_t ID; } sharps;
     poolSign.Clear();
 
@@ -679,9 +688,9 @@ double wxEcEngine::evalf(wxString *expression)
     buffer = *expression;
     if (buffer.StartsWith(wxT("-")))           //This forces "-" to be always an operator, not a simple minus indicator.
         buffer = wxT('0') + buffer;            //Try to draw "x^2" without this trick...
-    #ifdef wxECM_USEDEBUG
+#ifdef wxECM_USEDEBUG
         LogAction(wxString::Format(wxT("\r\nReceived: %s"), buffer.uniCStr()));
-    #endif
+#endif
     sharps.NumDeclared = CountChar(&buffer, wxT('#'));
     sharps.ID = 0;
     while (true)
@@ -717,10 +726,10 @@ double wxEcEngine::evalf(wxString *expression)
         return 0;
 
     //-- Everything is now stored in memory, we apply the priorities
-    #ifdef wxECM_USEDEBUG
+#ifdef wxECM_USEDEBUG
         for (j=0 ; j<poolSign.Len() ; j++)
             LogAction(wxString::Format(wxT(" [%d] = %f"), j, m_pool[j]));
-    #endif
+#endif
 
     for (j=0 ; j<priorities.Len() ; j++)
     {
@@ -728,7 +737,7 @@ RedoForOperator:
         k = poolSign.Find(priorities.GetChar(j));
         if (k != wxNOT_FOUND)
         {
-            oldPoolK = m_pool[k];                        //useful to log the operation
+//            oldPoolK = m_pool[k];                        //useful to log the operation, but not used
             wxString switchStr = priorities.GetChar(j);
             
             if ( switchStr == wxT('^') )
@@ -748,9 +757,9 @@ RedoForOperator:
                 m_pool[k] = m_pool[k] - m_pool[k+1];
                 
 
-            #ifdef wxECM_USEDEBUG
+#ifdef wxECM_USEDEBUG
                 LogAction(wxString::Format(wxT("   > %f %c %f = %f"), oldPoolK, priorities.GetChar(j), m_pool[k+1], m_pool[k]));
-            #endif
+#endif
             LeftPool(k);
             poolSign = poolSign.Mid(0, k) + poolSign.Mid(k+1);
             goto RedoForOperator;

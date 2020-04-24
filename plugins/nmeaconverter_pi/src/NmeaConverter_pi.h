@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  * updated: 12-04-2015  
  * Project:  OpenCPN
  * Purpose:  nmeaTranslate Plugin
@@ -34,7 +34,7 @@
 #endif
 
 #define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    2
+#define     PLUGIN_VERSION_MINOR    9
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    8
@@ -52,6 +52,8 @@
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
 //----------------------------------------------------------------------------------------------------------
+
+
 class nmeaSendObj;
 class nmeaSendObjectDlg;
 class PreferenceDlg;
@@ -90,7 +92,8 @@ public:
     bool SaveConfig( void );
     bool LoadConfig( void );
     bool nmeaIsValid( wxString &sentence);
-    int AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode = ALLVAL, int RepTime = 1);
+    int AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode = ALLVAL, int RepTime = 1, bool Degr = false );
+    void ClearAllObjectsInMap();
     wxString ComputeChecksum( wxString sentence );
     wxString ReadNmeaInputToken(wxString SentencePlusNumber);
     nmeaSendObjectDlg* p_nmeaSendObjectDlg;
@@ -124,18 +127,20 @@ public:
     void SetRepeatTime( int rtime);
     int GetRepeatTime(){ return RepeatTime;}
     NmeaConverter_pi* plugin;
+    bool UseDegrees;
 private:
     wxString FormatString;
     wxArrayString NeededVariables;
     wxArrayString NeededSentences;
     wxArrayString NeededSentencesMinusReceived;
-    ReceivedSentences ReceivedSentencesrray;
+    ReceivedSentences ReceivedSentencesMap;
     wxString VarAlphaDigit;
     wxString VarAlpha;
     wxString VarDigit;
-    wxTimer* m_timer;
+    //wxTimer* m_timer;
     bool DlgActive;
     bool ValidFormatStr;
+
     SentenceSendMode SendMode;
     int RepeatTime;
     localTimer* p_timer;
@@ -155,15 +160,15 @@ private:
 //*******************************************************************************************
 
 
-////@begin includes
+// //@begin includes
 
-////@end includes
+// //@end includes
 
-/*!
+/*
  * Control identifiers
  */
 
-////@begin control identifiers
+// //@begin control identifiers
 #define ID_PREFERENCEDLG 10000
 #define ID_CHECKBOX 10001
 #define ID_LISTCTRL 10002
@@ -177,10 +182,10 @@ private:
 #define SYMBOL_PREFERENCEDLG_IDNAME ID_PREFERENCEDLG
 #define SYMBOL_PREFERENCEDLG_SIZE wxSize(400, 300)
 #define SYMBOL_PREFERENCEDLG_POSITION wxDefaultPosition
-////@end control identifiers
+// //@end control identifiers
 
 
-/*!
+/*
  * PreferenceDlg class declaration
  */
 
@@ -190,14 +195,14 @@ class PreferenceDlg: public wxDialog
     DECLARE_EVENT_TABLE()
 
 public:
-    /// Constructors
+    // / Constructors
     PreferenceDlg();
     PreferenceDlg( NmeaConverter_pi* plugin, wxWindow* parent, wxWindowID id = SYMBOL_PREFERENCEDLG_IDNAME, const wxString& caption = SYMBOL_PREFERENCEDLG_TITLE, const wxPoint& pos = SYMBOL_PREFERENCEDLG_POSITION, const wxSize& size = SYMBOL_PREFERENCEDLG_SIZE, long style = SYMBOL_PREFERENCEDLG_STYLE );
 
-    /// Creation
+    // / Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_PREFERENCEDLG_IDNAME, const wxString& caption = SYMBOL_PREFERENCEDLG_TITLE, const wxPoint& pos = SYMBOL_PREFERENCEDLG_POSITION, const wxSize& size = SYMBOL_PREFERENCEDLG_SIZE, long style = SYMBOL_PREFERENCEDLG_STYLE );
 
-    /// Destructor
+    // / Destructor
     ~PreferenceDlg();
     void Init();
     void CreateControls();
@@ -225,11 +230,11 @@ private:
     NmeaConverter_pi* pi;
 };
 
-/*!
+/*
  * Control identifiers
  */
 
-////@begin control identifiers
+// //@begin control identifiers
 #define ID_NMEASENDOBJECT 10020
 #define ID_RADIOBUTTON 10001
 #define ID_RADIOBUTTON1 10002
@@ -237,15 +242,20 @@ private:
 #define ID_TEXTCTRL 10004
 #define ID_BUTTON_OK1 10005
 #define ID_BUTTON_CANCEL 10006
+#define ID_CHECKBOXDEG 10008
 #define SYMBOL_NMEASENDOBJECTDLG_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxTAB_TRAVERSAL
 #define SYMBOL_NMEASENDOBJECTDLG_TITLE _("nmeaSendObjectDlg")
 #define SYMBOL_NMEASENDOBJECTDLG_IDNAME ID_NMEASENDOBJECT
+#ifdef __WXOSX__
+#define SYMBOL_NMEASENDOBJECTDLG_SIZE wxSize(312, 250)
+#else
 #define SYMBOL_NMEASENDOBJECTDLG_SIZE wxSize(312, 200)
+#endif
 #define SYMBOL_NMEASENDOBJECTDLG_POSITION wxDefaultPosition
-////@end control identifiers
+// //@end control identifiers
 
 
-/*!
+/*
  * nmeaSendObjectDlg class declaration
  */
 
@@ -255,7 +265,7 @@ class nmeaSendObjectDlg: public wxDialog
     DECLARE_EVENT_TABLE()
 
 public:
-    /// Constructors
+    // / Constructors
     nmeaSendObjectDlg();
     nmeaSendObjectDlg( wxWindow* parent, wxWindowID id = SYMBOL_NMEASENDOBJECTDLG_IDNAME, const wxString& caption = SYMBOL_NMEASENDOBJECTDLG_TITLE, const wxPoint& pos = SYMBOL_NMEASENDOBJECTDLG_POSITION, const wxSize& size = SYMBOL_NMEASENDOBJECTDLG_SIZE, long style = SYMBOL_NMEASENDOBJECTDLG_STYLE );
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_NMEASENDOBJECTDLG_IDNAME, const wxString& caption = SYMBOL_NMEASENDOBJECTDLG_TITLE, const wxPoint& pos = SYMBOL_NMEASENDOBJECTDLG_POSITION, const wxSize& size = SYMBOL_NMEASENDOBJECTDLG_SIZE, long style = SYMBOL_NMEASENDOBJECTDLG_STYLE );
@@ -270,9 +280,11 @@ public:
     void OnTextctrlTextUpdated( wxCommandEvent& event );
     void OnButtonOkClick( wxCommandEvent& event );
     void OnButtonCancelClick( wxCommandEvent& event );
+    void OnUseDegreesClick ( wxCommandEvent& event );
     wxBitmap GetBitmapResource( const wxString& name );
     wxIcon GetIconResource( const wxString& name );
     static bool ShowToolTips();
+
     nmeaSendObj* SendObjOfThisDlg;
     wxSpinCtrl* itemSpinCtrl;
     wxRadioButton* itemRadioButtonVal;
@@ -281,7 +293,9 @@ public:
     wxTextCtrl* itemTextCtrlFormatStrCtr;
     wxButton* itemOKButton;
     wxButton* itemCancelButton;
+    wxCheckBox* itemCheckBoxUseDegrees;
 };
+
 
 #endif //NMEACONV_H
 
