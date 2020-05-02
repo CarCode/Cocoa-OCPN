@@ -38,6 +38,7 @@
 				034427F6F71543F09BE2E2D0 /* CMake Rules */,
 			);
 			dependencies = (
+				A650C1B7245B40080058E273 /* PBXTargetDependency */,
 				A69D9E5A244F085A002E16E5 /* PBXTargetDependency */,
 				A6EEF12123E32FC400A13ED0 /* PBXTargetDependency */,
 				A6AF9B0823DA0FC500C5CAE3 /* PBXTargetDependency */,
@@ -720,8 +721,48 @@
 		A5517AC819CF4168ABDCC2B2 /* Marks-Buoy-TypeB.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = D660BE31291D4C08BA5798DF /* Marks-Buoy-TypeB.svg */; };
 		A616391C23A666DB0017C37E /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A616391B23A666DA0017C37E /* TexFont.cpp */; };
 		A61802F224275BB200CFEC8D /* libnavdata_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6D147D924267AEA0091EE3A /* libnavdata_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		A63AC785244E2A9E0052C33F /* customgrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A63AC784244E2A610052C33F /* customgrid.cpp */; };
 		A64B191D23AFFC8A007E24FE /* sJSON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A64B191C23AFFC8A007E24FE /* sJSON.cpp */; };
+		A650C11A245AF5050058E273 /* customgrid.h in Headers */ = {isa = PBXBuildFile; fileRef = A650C119245AF5040058E273 /* customgrid.h */; };
+		A650C11C245AF5250058E273 /* datadialogbase.h in Headers */ = {isa = PBXBuildFile; fileRef = A650C11B245AF5250058E273 /* datadialogbase.h */; };
+		A650C11E245AF5410058E273 /* datatable.h in Headers */ = {isa = PBXBuildFile; fileRef = A650C11D245AF5410058E273 /* datatable.h */; };
+		A650C120245AF5690058E273 /* customgrid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C11F245AF5690058E273 /* customgrid.cpp */; };
+		A650C122245AF5810058E273 /* datadialogbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C121245AF5810058E273 /* datadialogbase.cpp */; };
+		A650C124245AF5970058E273 /* datatable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C123245AF5970058E273 /* datatable.cpp */; };
+		A650C193245B13270058E273 /* ControlsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C173245B01590058E273 /* ControlsDialog.cpp */; };
+		A650C194245B13270058E273 /* drawutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C174245B017E0058E273 /* drawutil.cpp */; };
+		A650C195245B13270058E273 /* GuardZone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C175245B01990058E273 /* GuardZone.cpp */; };
+		A650C196245B13270058E273 /* GuardZoneBogey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C176245B01B70058E273 /* GuardZoneBogey.cpp */; };
+		A650C197245B13270058E273 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C177245B01D40058E273 /* icons.cpp */; };
+		A650C198245B13270058E273 /* Kalman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C178245B01EA0058E273 /* Kalman.cpp */; };
+		A650C199245B13270058E273 /* MessageBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C179245B02070058E273 /* MessageBox.cpp */; };
+		A650C19A245B13270058E273 /* OptionsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C17A245B02250058E273 /* OptionsDialog.cpp */; };
+		A650C19B245B13270058E273 /* radar_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C17B245B02410058E273 /* radar_pi.cpp */; };
+		A650C19C245B13270058E273 /* RadarCanvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C17C245B02830058E273 /* RadarCanvas.cpp */; };
+		A650C19D245B13270058E273 /* RadarDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C17D245B02B60058E273 /* RadarDraw.cpp */; };
+		A650C19E245B13270058E273 /* RadarDrawShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C17E245B02CE0058E273 /* RadarDrawShader.cpp */; };
+		A650C19F245B13270058E273 /* RadarDrawVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C17F245B02EA0058E273 /* RadarDrawVertex.cpp */; };
+		A650C1A0245B13270058E273 /* RadarFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C180245B03070058E273 /* RadarFactory.cpp */; };
+		A650C1A1245B13270058E273 /* RadarInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C181245B03230058E273 /* RadarInfo.cpp */; };
+		A650C1A2245B13270058E273 /* RadarMarpa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C182245B03470058E273 /* RadarMarpa.cpp */; };
+		A650C1A3245B13270058E273 /* RadarPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C183245B035D0058E273 /* RadarPanel.cpp */; };
+		A650C1A4245B13270058E273 /* SelectDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C184245B03780058E273 /* SelectDialog.cpp */; };
+		A650C1A5245B13270058E273 /* shaderutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C185245B03930058E273 /* shaderutil.cpp */; };
+		A650C1A6245B13270058E273 /* socketutil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C186245B03A90058E273 /* socketutil.cpp */; };
+		A650C1A7245B13270058E273 /* TextureFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C187245B03C20058E273 /* TextureFont.cpp */; };
+		A650C1A8245B13270058E273 /* TrailBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C188245B03DB0058E273 /* TrailBuffer.cpp */; };
+		A650C1A9245B136F0058E273 /* EmulatorControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C132245AFA620058E273 /* EmulatorControl.cpp */; };
+		A650C1AA245B138F0058E273 /* EmulatorControlsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C12E245AFA610058E273 /* EmulatorControlsDialog.cpp */; };
+		A650C1AB245B13A70058E273 /* EmulatorReceive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C133245AFA620058E273 /* EmulatorReceive.cpp */; };
+		A650C1AC245B13C30058E273 /* GarminxHDControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C13A245AFA9E0058E273 /* GarminxHDControl.cpp */; };
+		A650C1AD245B13DC0058E273 /* GarminxHDControlsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C136245AFA9D0058E273 /* GarminxHDControlsDialog.cpp */; };
+		A650C1AE245B13EE0058E273 /* GarminxHDReceive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C137245AFA9D0058E273 /* GarminxHDReceive.cpp */; };
+		A650C1AF245B140C0058E273 /* GarminHDControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C142245AFADF0058E273 /* GarminHDControl.cpp */; };
+		A650C1B0245B14200058E273 /* GarminHDControlsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C143245AFADF0058E273 /* GarminHDControlsDialog.cpp */; };
+		A650C1B1245B14330058E273 /* GarminHDReceive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C13E245AFADE0058E273 /* GarminHDReceive.cpp */; };
+		A650C1B2245B14500058E273 /* NavicoControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C151245AFB190058E273 /* NavicoControl.cpp */; };
+		A650C1B3245B14640058E273 /* NavicoControlsDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C147245AFB170058E273 /* NavicoControlsDialog.cpp */; };
+		A650C1B4245B14770058E273 /* NavicoReceive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C14B245AFB180058E273 /* NavicoReceive.cpp */; };
+		A650C1B8245B40340058E273 /* libradar_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A650C18D245B0F190058E273 /* libradar_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A65C614323FF003F00B7F09A /* libwatchdog_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A663595023B10E390006E5DA /* libwatchdog_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A66AC34A239D09740078858A /* hilfe.html in CopyFiles */ = {isa = PBXBuildFile; fileRef = A66AC349239D09730078858A /* hilfe.html */; };
 		A677B96223C79C7C00D0804B /* libfontconfig.1.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A677B95F23C79C4500D0804B /* libfontconfig.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -783,6 +824,9 @@
 		A68B068023A0351200A19ED8 /* vwt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68B067F23A0351200A19ED8 /* vwt.cpp */; };
 		A68B068223A0353D00A19ED8 /* xdr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68B068123A0353C00A19ED8 /* xdr.cpp */; };
 		A68B068423A0355C00A19ED8 /* zda.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A68B068323A0355C00A19ED8 /* zda.cpp */; };
+		A69074AB245C09E0009C33BE /* NavicoLocate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A650C145245AFB160058E273 /* NavicoLocate.cpp */; };
+		A69074AC245C1E30009C33BE /* libNMEA0183.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CD4970BD1C404C09AFC7B698 /* libNMEA0183.a */; };
+		A69074AE245C5066009C33BE /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = A69074AD245C5065009C33BE /* version.h */; };
 		A69D9E57244EE329002E16E5 /* ec_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66D8688244C7CCB00DAC1FF /* ec_engine.cpp */; };
 		A69D9E58244EE329002E16E5 /* NmeaConverter_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66D8689244C7CE600DAC1FF /* NmeaConverter_pi.cpp */; };
 		A69D9E5B244F0927002E16E5 /* libnmeaconverter_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A66D868E244C7D9500DAC1FF /* libnmeaconverter_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -888,10 +932,10 @@
 		A6AF9B0123DA0D6C00C5CAE3 /* WatchdogDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41C23A2DF120028F17B /* WatchdogDialog.cpp */; };
 		A6AF9B0223DA0D6C00C5CAE3 /* WatchdogUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41D23A2DF330028F17B /* WatchdogUI.cpp */; };
 		A6AF9B0323DA0D6C00C5CAE3 /* wddc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A684D41E23A2DF4D0028F17B /* wddc.cpp */; };
+		A6C8CD832454731600D16B09 /* icons.h in Headers */ = {isa = PBXBuildFile; fileRef = A6C8CD822454731600D16B09 /* icons.h */; };
+		A6C8CD852454733500D16B09 /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6C8CD842454733400D16B09 /* icons.cpp */; };
 		A6CA0302A5274A25AD2F3A95 /* Sea-Height-Blue.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = D56DEA018EC34A6AB2D1FB8D /* Sea-Height-Blue.svg */; };
 		A6D147DF24267B330091EE3A /* navdata_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D147D0242679790091EE3A /* navdata_pi.cpp */; };
-		A6D147E124267B330091EE3A /* datadialogbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D147D2242679E40091EE3A /* datadialogbase.cpp */; };
-		A6D147E224267B330091EE3A /* datatable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D147D324267A260091EE3A /* datatable.cpp */; };
 		A6D147E324267B330091EE3A /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D147D424267A580091EE3A /* icons.cpp */; };
 		A6D6838324239586008B86BE /* DepthFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D6838224239586008B86BE /* DepthFont.cpp */; };
 		A6E58602239BC6750007E4A1 /* de.lproj in Copy Files */ = {isa = PBXBuildFile; fileRef = A6E58601239BC6750007E4A1 /* de.lproj */; };
@@ -1527,6 +1571,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = A6798BCD23AFCC13009782C4;
 			remoteInfo = squiddio_pi;
+		};
+		A650C1B6245B40080058E273 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A29A9A92B1454C089B9F9E07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A650C18C245B0F190058E273;
+			remoteInfo = radar_pi;
 		};
 		A688B92323A1093E00D770A5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2179,6 +2230,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				A650C1B8245B40340058E273 /* libradar_pi.dylib in Copy Files */,
 				A69D9E5B244F0927002E16E5 /* libnmeaconverter_pi.dylib in Copy Files */,
 				A61802F224275BB200CFEC8D /* libnavdata_pi.dylib in Copy Files */,
 				A65C614323FF003F00B7F09A /* libwatchdog_pi.dylib in Copy Files */,
@@ -3291,11 +3343,109 @@
 		A616391423A642AD0017C37E /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = plugins/grib_pi/src/version.h; sourceTree = "<group>"; };
 		A616391B23A666DA0017C37E /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/grib_pi/src/TexFont.cpp; sourceTree = "<group>"; };
 		A62DEFE023D6F767000A4914 /* dychart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dychart.h; path = include/dychart.h; sourceTree = "<group>"; };
-		A63AC783244E2A2A0052C33F /* customgrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = customgrid.h; path = plugins/navdata_pi/src/customgrid.h; sourceTree = "<group>"; };
-		A63AC784244E2A610052C33F /* customgrid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = customgrid.cpp; path = plugins/navdata_pi/src/customgrid.cpp; sourceTree = "<group>"; };
 		A63FE3B423AB855A00E524CF /* CanvasOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CanvasOptions.h; path = include/CanvasOptions.h; sourceTree = "<group>"; };
 		A64AC6D9966B4EC08D113E2F /* ocpn_types.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ocpn_types.h; path = include/ocpn_types.h; sourceTree = SOURCE_ROOT; };
 		A64B191C23AFFC8A007E24FE /* sJSON.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sJSON.cpp; path = plugins/Squiddio_pi/src/sJSON.cpp; sourceTree = "<group>"; };
+		A650C119245AF5040058E273 /* customgrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = customgrid.h; path = plugins/navdata_pi/src/customgrid.h; sourceTree = "<group>"; };
+		A650C11B245AF5250058E273 /* datadialogbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = datadialogbase.h; path = plugins/navdata_pi/src/datadialogbase.h; sourceTree = "<group>"; };
+		A650C11D245AF5410058E273 /* datatable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = datatable.h; path = plugins/navdata_pi/src/datatable.h; sourceTree = "<group>"; };
+		A650C11F245AF5690058E273 /* customgrid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = customgrid.cpp; path = plugins/navdata_pi/src/customgrid.cpp; sourceTree = "<group>"; };
+		A650C121245AF5810058E273 /* datadialogbase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = datadialogbase.cpp; path = plugins/navdata_pi/src/datadialogbase.cpp; sourceTree = "<group>"; };
+		A650C123245AF5970058E273 /* datatable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = datatable.cpp; path = plugins/navdata_pi/src/datatable.cpp; sourceTree = "<group>"; };
+		A650C12C245AFA600058E273 /* EmulatorReceive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmulatorReceive.h; path = "plugins/opencpn-radar_pi/src/emulator/EmulatorReceive.h"; sourceTree = "<group>"; };
+		A650C12D245AFA610058E273 /* EmulatorControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmulatorControl.h; path = "plugins/opencpn-radar_pi/src/emulator/EmulatorControl.h"; sourceTree = "<group>"; };
+		A650C12E245AFA610058E273 /* EmulatorControlsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EmulatorControlsDialog.cpp; path = "plugins/opencpn-radar_pi/src/emulator/EmulatorControlsDialog.cpp"; sourceTree = "<group>"; };
+		A650C12F245AFA610058E273 /* EmulatorControlsDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmulatorControlsDialog.h; path = "plugins/opencpn-radar_pi/src/emulator/EmulatorControlsDialog.h"; sourceTree = "<group>"; };
+		A650C130245AFA610058E273 /* EmulatorControlSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmulatorControlSet.h; path = "plugins/opencpn-radar_pi/src/emulator/EmulatorControlSet.h"; sourceTree = "<group>"; };
+		A650C131245AFA610058E273 /* emulatortype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = emulatortype.h; path = "plugins/opencpn-radar_pi/src/emulator/emulatortype.h"; sourceTree = "<group>"; };
+		A650C132245AFA620058E273 /* EmulatorControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EmulatorControl.cpp; path = "plugins/opencpn-radar_pi/src/emulator/EmulatorControl.cpp"; sourceTree = "<group>"; };
+		A650C133245AFA620058E273 /* EmulatorReceive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EmulatorReceive.cpp; path = "plugins/opencpn-radar_pi/src/emulator/EmulatorReceive.cpp"; sourceTree = "<group>"; };
+		A650C134245AFA9C0058E273 /* GarminxHDControlSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GarminxHDControlSet.h; path = "plugins/opencpn-radar_pi/src/garminxhd/GarminxHDControlSet.h"; sourceTree = "<group>"; };
+		A650C135245AFA9D0058E273 /* GarminxHDControlsDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GarminxHDControlsDialog.h; path = "plugins/opencpn-radar_pi/src/garminxhd/GarminxHDControlsDialog.h"; sourceTree = "<group>"; };
+		A650C136245AFA9D0058E273 /* GarminxHDControlsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GarminxHDControlsDialog.cpp; path = "plugins/opencpn-radar_pi/src/garminxhd/GarminxHDControlsDialog.cpp"; sourceTree = "<group>"; };
+		A650C137245AFA9D0058E273 /* GarminxHDReceive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GarminxHDReceive.cpp; path = "plugins/opencpn-radar_pi/src/garminxhd/GarminxHDReceive.cpp"; sourceTree = "<group>"; };
+		A650C138245AFA9D0058E273 /* GarminxHDControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GarminxHDControl.h; path = "plugins/opencpn-radar_pi/src/garminxhd/GarminxHDControl.h"; sourceTree = "<group>"; };
+		A650C139245AFA9D0058E273 /* garminxhdtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = garminxhdtype.h; path = "plugins/opencpn-radar_pi/src/garminxhd/garminxhdtype.h"; sourceTree = "<group>"; };
+		A650C13A245AFA9E0058E273 /* GarminxHDControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GarminxHDControl.cpp; path = "plugins/opencpn-radar_pi/src/garminxhd/GarminxHDControl.cpp"; sourceTree = "<group>"; };
+		A650C13B245AFA9E0058E273 /* GarminxHDReceive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GarminxHDReceive.h; path = "plugins/opencpn-radar_pi/src/garminxhd/GarminxHDReceive.h"; sourceTree = "<group>"; };
+		A650C13C245AFADD0058E273 /* GarminHDControlsDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GarminHDControlsDialog.h; path = "plugins/opencpn-radar_pi/src/garminhd/GarminHDControlsDialog.h"; sourceTree = "<group>"; };
+		A650C13D245AFADE0058E273 /* GarminHDControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GarminHDControl.h; path = "plugins/opencpn-radar_pi/src/garminhd/GarminHDControl.h"; sourceTree = "<group>"; };
+		A650C13E245AFADE0058E273 /* GarminHDReceive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GarminHDReceive.cpp; path = "plugins/opencpn-radar_pi/src/garminhd/GarminHDReceive.cpp"; sourceTree = "<group>"; };
+		A650C13F245AFADE0058E273 /* GarminHDControlSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GarminHDControlSet.h; path = "plugins/opencpn-radar_pi/src/garminhd/GarminHDControlSet.h"; sourceTree = "<group>"; };
+		A650C140245AFADE0058E273 /* GarminHDReceive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GarminHDReceive.h; path = "plugins/opencpn-radar_pi/src/garminhd/GarminHDReceive.h"; sourceTree = "<group>"; };
+		A650C141245AFADE0058E273 /* garminhdtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = garminhdtype.h; path = "plugins/opencpn-radar_pi/src/garminhd/garminhdtype.h"; sourceTree = "<group>"; };
+		A650C142245AFADF0058E273 /* GarminHDControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GarminHDControl.cpp; path = "plugins/opencpn-radar_pi/src/garminhd/GarminHDControl.cpp"; sourceTree = "<group>"; };
+		A650C143245AFADF0058E273 /* GarminHDControlsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GarminHDControlsDialog.cpp; path = "plugins/opencpn-radar_pi/src/garminhd/GarminHDControlsDialog.cpp"; sourceTree = "<group>"; };
+		A650C144245AFB160058E273 /* br24type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = br24type.h; path = "plugins/opencpn-radar_pi/src/navico/br24type.h"; sourceTree = "<group>"; };
+		A650C145245AFB160058E273 /* NavicoLocate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NavicoLocate.cpp; path = "plugins/opencpn-radar_pi/src/navico/NavicoLocate.cpp"; sourceTree = "<group>"; };
+		A650C146245AFB160058E273 /* NavicoRadarInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavicoRadarInfo.h; path = "plugins/opencpn-radar_pi/src/navico/NavicoRadarInfo.h"; sourceTree = "<group>"; };
+		A650C147245AFB170058E273 /* NavicoControlsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NavicoControlsDialog.cpp; path = "plugins/opencpn-radar_pi/src/navico/NavicoControlsDialog.cpp"; sourceTree = "<group>"; };
+		A650C148245AFB170058E273 /* NavicoControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavicoControl.h; path = "plugins/opencpn-radar_pi/src/navico/NavicoControl.h"; sourceTree = "<group>"; };
+		A650C149245AFB170058E273 /* halobtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = halobtype.h; path = "plugins/opencpn-radar_pi/src/navico/halobtype.h"; sourceTree = "<group>"; };
+		A650C14A245AFB170058E273 /* br4gbtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = br4gbtype.h; path = "plugins/opencpn-radar_pi/src/navico/br4gbtype.h"; sourceTree = "<group>"; };
+		A650C14B245AFB180058E273 /* NavicoReceive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NavicoReceive.cpp; path = "plugins/opencpn-radar_pi/src/navico/NavicoReceive.cpp"; sourceTree = "<group>"; };
+		A650C14C245AFB180058E273 /* NavicoControlsDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavicoControlsDialog.h; path = "plugins/opencpn-radar_pi/src/navico/NavicoControlsDialog.h"; sourceTree = "<group>"; };
+		A650C14D245AFB180058E273 /* Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Header.h; path = "plugins/opencpn-radar_pi/src/navico/Header.h"; sourceTree = "<group>"; };
+		A650C14E245AFB180058E273 /* haloatype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = haloatype.h; path = "plugins/opencpn-radar_pi/src/navico/haloatype.h"; sourceTree = "<group>"; };
+		A650C14F245AFB180058E273 /* NavicoReceive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavicoReceive.h; path = "plugins/opencpn-radar_pi/src/navico/NavicoReceive.h"; sourceTree = "<group>"; };
+		A650C150245AFB190058E273 /* NavicoCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavicoCommon.h; path = "plugins/opencpn-radar_pi/src/navico/NavicoCommon.h"; sourceTree = "<group>"; };
+		A650C151245AFB190058E273 /* NavicoControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NavicoControl.cpp; path = "plugins/opencpn-radar_pi/src/navico/NavicoControl.cpp"; sourceTree = "<group>"; };
+		A650C152245AFB190058E273 /* br4gatype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = br4gatype.h; path = "plugins/opencpn-radar_pi/src/navico/br4gatype.h"; sourceTree = "<group>"; };
+		A650C153245AFB190058E273 /* br3gtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = br3gtype.h; path = "plugins/opencpn-radar_pi/src/navico/br3gtype.h"; sourceTree = "<group>"; };
+		A650C154245AFB1A0058E273 /* NavicoLocate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavicoLocate.h; path = "plugins/opencpn-radar_pi/src/navico/NavicoLocate.h"; sourceTree = "<group>"; };
+		A650C155245AFB1A0058E273 /* NavicoControlSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NavicoControlSet.h; path = "plugins/opencpn-radar_pi/src/navico/NavicoControlSet.h"; sourceTree = "<group>"; };
+		A650C156245AFB4A0058E273 /* ControlsDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlsDialog.h; path = "plugins/opencpn-radar_pi/src/ControlsDialog.h"; sourceTree = "<group>"; };
+		A650C157245AFB720058E273 /* drawutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = drawutil.h; path = "plugins/opencpn-radar_pi/src/drawutil.h"; sourceTree = "<group>"; };
+		A650C158245AFBA80058E273 /* GuardZone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GuardZone.h; path = "plugins/opencpn-radar_pi/src/GuardZone.h"; sourceTree = "<group>"; };
+		A650C159245AFBF60058E273 /* GuardZoneBogey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GuardZoneBogey.h; path = "plugins/opencpn-radar_pi/src/GuardZoneBogey.h"; sourceTree = "<group>"; };
+		A650C15A245AFC230058E273 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = "plugins/opencpn-radar_pi/src/icons.h"; sourceTree = "<group>"; };
+		A650C15B245AFC580058E273 /* Kalman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Kalman.h; path = "plugins/opencpn-radar_pi/src/Kalman.h"; sourceTree = "<group>"; };
+		A650C15C245AFC590058E273 /* Matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Matrix.h; path = "plugins/opencpn-radar_pi/src/Matrix.h"; sourceTree = "<group>"; };
+		A650C15D245AFC8A0058E273 /* MessageBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageBox.h; path = "plugins/opencpn-radar_pi/src/MessageBox.h"; sourceTree = "<group>"; };
+		A650C15E245AFCB30058E273 /* OptionsDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OptionsDialog.h; path = "plugins/opencpn-radar_pi/src/OptionsDialog.h"; sourceTree = "<group>"; };
+		A650C15F245AFCDE0058E273 /* pi_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pi_common.h; path = "plugins/opencpn-radar_pi/src/pi_common.h"; sourceTree = "<group>"; };
+		A650C160245AFD3F0058E273 /* radar_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = radar_pi.h; path = "plugins/opencpn-radar_pi/src/radar_pi.h"; sourceTree = "<group>"; };
+		A650C161245AFD800058E273 /* RadarCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarCanvas.h; path = "plugins/opencpn-radar_pi/src/RadarCanvas.h"; sourceTree = "<group>"; };
+		A650C162245AFD810058E273 /* RadarControlItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarControlItem.h; path = "plugins/opencpn-radar_pi/src/RadarControlItem.h"; sourceTree = "<group>"; };
+		A650C163245AFD810058E273 /* RadarControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarControl.h; path = "plugins/opencpn-radar_pi/src/RadarControl.h"; sourceTree = "<group>"; };
+		A650C164245AFE410058E273 /* RadarDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarDraw.h; path = "plugins/opencpn-radar_pi/src/RadarDraw.h"; sourceTree = "<group>"; };
+		A650C165245AFE620058E273 /* RadarDrawShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarDrawShader.h; path = "plugins/opencpn-radar_pi/src/RadarDrawShader.h"; sourceTree = "<group>"; };
+		A650C166245AFECF0058E273 /* RadarDrawVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarDrawVertex.h; path = "plugins/opencpn-radar_pi/src/RadarDrawVertex.h"; sourceTree = "<group>"; };
+		A650C167245AFF610058E273 /* RadarFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarFactory.h; path = "plugins/opencpn-radar_pi/src/RadarFactory.h"; sourceTree = "<group>"; };
+		A650C168245AFF7F0058E273 /* RadarInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarInfo.h; path = "plugins/opencpn-radar_pi/src/RadarInfo.h"; sourceTree = "<group>"; };
+		A650C169245AFFED0058E273 /* RadarMarpa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarMarpa.h; path = "plugins/opencpn-radar_pi/src/RadarMarpa.h"; sourceTree = "<group>"; };
+		A650C16A245B000E0058E273 /* RadarPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarPanel.h; path = "plugins/opencpn-radar_pi/src/RadarPanel.h"; sourceTree = "<group>"; };
+		A650C16B245B000F0058E273 /* RadarReceive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarReceive.h; path = "plugins/opencpn-radar_pi/src/RadarReceive.h"; sourceTree = "<group>"; };
+		A650C16C245B000F0058E273 /* RadarType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadarType.h; path = "plugins/opencpn-radar_pi/src/RadarType.h"; sourceTree = "<group>"; };
+		A650C16D245B00680058E273 /* SelectDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectDialog.h; path = "plugins/opencpn-radar_pi/src/SelectDialog.h"; sourceTree = "<group>"; };
+		A650C16E245B00D50058E273 /* shaderutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shaderutil.h; path = "plugins/opencpn-radar_pi/src/shaderutil.h"; sourceTree = "<group>"; };
+		A650C16F245B00F30058E273 /* SoftwareControlSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoftwareControlSet.h; path = "plugins/opencpn-radar_pi/src/SoftwareControlSet.h"; sourceTree = "<group>"; };
+		A650C170245B00F40058E273 /* socketutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = socketutil.h; path = "plugins/opencpn-radar_pi/src/socketutil.h"; sourceTree = "<group>"; };
+		A650C171245B01220058E273 /* TextureFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureFont.h; path = "plugins/opencpn-radar_pi/src/TextureFont.h"; sourceTree = "<group>"; };
+		A650C172245B01390058E273 /* TrailBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrailBuffer.h; path = "plugins/opencpn-radar_pi/src/TrailBuffer.h"; sourceTree = "<group>"; };
+		A650C173245B01590058E273 /* ControlsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControlsDialog.cpp; path = "plugins/opencpn-radar_pi/src/ControlsDialog.cpp"; sourceTree = "<group>"; };
+		A650C174245B017E0058E273 /* drawutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = drawutil.cpp; path = "plugins/opencpn-radar_pi/src/drawutil.cpp"; sourceTree = "<group>"; };
+		A650C175245B01990058E273 /* GuardZone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GuardZone.cpp; path = "plugins/opencpn-radar_pi/src/GuardZone.cpp"; sourceTree = "<group>"; };
+		A650C176245B01B70058E273 /* GuardZoneBogey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GuardZoneBogey.cpp; path = "plugins/opencpn-radar_pi/src/GuardZoneBogey.cpp"; sourceTree = "<group>"; };
+		A650C177245B01D40058E273 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = "plugins/opencpn-radar_pi/src/icons.cpp"; sourceTree = "<group>"; };
+		A650C178245B01EA0058E273 /* Kalman.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Kalman.cpp; path = "plugins/opencpn-radar_pi/src/Kalman.cpp"; sourceTree = "<group>"; };
+		A650C179245B02070058E273 /* MessageBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MessageBox.cpp; path = "plugins/opencpn-radar_pi/src/MessageBox.cpp"; sourceTree = "<group>"; };
+		A650C17A245B02250058E273 /* OptionsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OptionsDialog.cpp; path = "plugins/opencpn-radar_pi/src/OptionsDialog.cpp"; sourceTree = "<group>"; };
+		A650C17B245B02410058E273 /* radar_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = radar_pi.cpp; path = "plugins/opencpn-radar_pi/src/radar_pi.cpp"; sourceTree = "<group>"; };
+		A650C17C245B02830058E273 /* RadarCanvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarCanvas.cpp; path = "plugins/opencpn-radar_pi/src/RadarCanvas.cpp"; sourceTree = "<group>"; };
+		A650C17D245B02B60058E273 /* RadarDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarDraw.cpp; path = "plugins/opencpn-radar_pi/src/RadarDraw.cpp"; sourceTree = "<group>"; };
+		A650C17E245B02CE0058E273 /* RadarDrawShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarDrawShader.cpp; path = "plugins/opencpn-radar_pi/src/RadarDrawShader.cpp"; sourceTree = "<group>"; };
+		A650C17F245B02EA0058E273 /* RadarDrawVertex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarDrawVertex.cpp; path = "plugins/opencpn-radar_pi/src/RadarDrawVertex.cpp"; sourceTree = "<group>"; };
+		A650C180245B03070058E273 /* RadarFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarFactory.cpp; path = "plugins/opencpn-radar_pi/src/RadarFactory.cpp"; sourceTree = "<group>"; };
+		A650C181245B03230058E273 /* RadarInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarInfo.cpp; path = "plugins/opencpn-radar_pi/src/RadarInfo.cpp"; sourceTree = "<group>"; };
+		A650C182245B03470058E273 /* RadarMarpa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarMarpa.cpp; path = "plugins/opencpn-radar_pi/src/RadarMarpa.cpp"; sourceTree = "<group>"; };
+		A650C183245B035D0058E273 /* RadarPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RadarPanel.cpp; path = "plugins/opencpn-radar_pi/src/RadarPanel.cpp"; sourceTree = "<group>"; };
+		A650C184245B03780058E273 /* SelectDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectDialog.cpp; path = "plugins/opencpn-radar_pi/src/SelectDialog.cpp"; sourceTree = "<group>"; };
+		A650C185245B03930058E273 /* shaderutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shaderutil.cpp; path = "plugins/opencpn-radar_pi/src/shaderutil.cpp"; sourceTree = "<group>"; };
+		A650C186245B03A90058E273 /* socketutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = socketutil.cpp; path = "plugins/opencpn-radar_pi/src/socketutil.cpp"; sourceTree = "<group>"; };
+		A650C187245B03C20058E273 /* TextureFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureFont.cpp; path = "plugins/opencpn-radar_pi/src/TextureFont.cpp"; sourceTree = "<group>"; };
+		A650C188245B03DB0058E273 /* TrailBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrailBuffer.cpp; path = "plugins/opencpn-radar_pi/src/TrailBuffer.cpp"; sourceTree = "<group>"; };
+		A650C18D245B0F190058E273 /* libradar_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libradar_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A658FD87BEC54D8D9D75C01E /* Hazard-Power-Cable.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Hazard-Power-Cable.svg"; path = "data/svg/markicons/Hazard-Power-Cable.svg"; sourceTree = SOURCE_ROOT; };
 		A663594623B10D310006E5DA /* libobjsearch_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libobjsearch_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A663595023B10E390006E5DA /* libwatchdog_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libwatchdog_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3440,6 +3590,7 @@
 		A68B069323A0385E00A19ED8 /* vwt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = vwt.hpp; path = src/nmea0183/vwt.hpp; sourceTree = "<group>"; };
 		A68B069423A0388B00A19ED8 /* xdr.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = xdr.hpp; path = src/nmea0183/xdr.hpp; sourceTree = "<group>"; };
 		A68B069523A038A200A19ED8 /* zda.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = zda.hpp; path = src/nmea0183/zda.hpp; sourceTree = "<group>"; };
+		A69074AD245C5065009C33BE /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = "plugins/opencpn-radar_pi/src/version.h"; sourceTree = "<group>"; };
 		A69DA3FA23DC918B00B169CA /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Buffer.cpp; path = plugins/weatherfax_pi/src/libaudiofile/Buffer.cpp; sourceTree = "<group>"; };
 		A69DA3FB23DC91CD00B169CA /* FLACFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FLACFile.cpp; path = plugins/weatherfax_pi/src/libaudiofile/FLACFile.cpp; sourceTree = "<group>"; };
 		A69DA3FC23DC921900B169CA /* PacketTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PacketTable.cpp; path = plugins/weatherfax_pi/src/libaudiofile/PacketTable.cpp; sourceTree = "<group>"; };
@@ -3545,19 +3696,16 @@
 		A6AB52B424379D0900EC6E67 /* squiddioKaps.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = squiddioKaps.cpp; path = plugins/Squiddio_pi/src/squiddioKaps.cpp; sourceTree = "<group>"; };
 		A6C3997B23A7D4D3005DC630 /* ConfigMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigMgr.h; path = include/ConfigMgr.h; sourceTree = "<group>"; };
 		A6C3997C23A7DAD4005DC630 /* MUIBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUIBar.h; path = include/MUIBar.h; sourceTree = "<group>"; };
+		A6C8CD822454731600D16B09 /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/NmeaConverter/src/icons.h; sourceTree = "<group>"; };
+		A6C8CD842454733400D16B09 /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/NmeaConverter/src/icons.cpp; sourceTree = "<group>"; };
 		A6D147CB242677B30091EE3A /* navdata_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = navdata_pi.h; path = plugins/navdata_pi/src/navdata_pi.h; sourceTree = "<group>"; };
-		A6D147CC242677FB0091EE3A /* datadialogbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = datadialogbase.h; path = plugins/navdata_pi/src/datadialogbase.h; sourceTree = "<group>"; };
-		A6D147CD2426786E0091EE3A /* datatable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = datatable.h; path = plugins/navdata_pi/src/datatable.h; sourceTree = "<group>"; };
 		A6D147CE242678AF0091EE3A /* icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = icons.h; path = plugins/navdata_pi/src/icons.h; sourceTree = "<group>"; };
 		A6D147CF242678D00091EE3A /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = plugins/navdata_pi/src/version.h; sourceTree = "<group>"; };
 		A6D147D0242679790091EE3A /* navdata_pi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = navdata_pi.cpp; path = plugins/navdata_pi/src/navdata_pi.cpp; sourceTree = "<group>"; };
-		A6D147D2242679E40091EE3A /* datadialogbase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = datadialogbase.cpp; path = plugins/navdata_pi/src/datadialogbase.cpp; sourceTree = "<group>"; };
-		A6D147D324267A260091EE3A /* datatable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = datatable.cpp; path = plugins/navdata_pi/src/datatable.cpp; sourceTree = "<group>"; };
 		A6D147D424267A580091EE3A /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/navdata_pi/src/icons.cpp; sourceTree = "<group>"; };
 		A6D147D924267AEA0091EE3A /* libnavdata_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libnavdata_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6D6838224239586008B86BE /* DepthFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DepthFont.cpp; path = src/DepthFont.cpp; sourceTree = "<group>"; };
 		A6D6838424239676008B86BE /* DepthFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DepthFont.h; path = include/DepthFont.h; sourceTree = "<group>"; };
-		A6D683852423971B008B86BE /* DepthFont.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DepthFont.cpp; path = src/DepthFont.cpp; sourceTree = "<group>"; };
 		A6E585F3239BC03E0007E4A1 /* libwx_osx_cocoau_core-3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_osx_cocoau_core-3.1.dylib"; sourceTree = "<group>"; };
 		A6E585F4239BC03E0007E4A1 /* libwx_baseu_net-3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_baseu_net-3.1.dylib"; sourceTree = "<group>"; };
 		A6E585F5239BC03E0007E4A1 /* libwx_baseu-3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_baseu-3.1.dylib"; sourceTree = "<group>"; };
@@ -4091,6 +4239,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		A650C18B245B0F190058E273 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A69074AC245C1E30009C33BE /* libNMEA0183.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A663594423B10D310006E5DA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -4366,7 +4522,6 @@
 		2C6060C62421474AA1023C61 = {
 			isa = PBXGroup;
 			children = (
-				A6D683852423971B008B86BE /* DepthFont.cpp */,
 				A6E58601239BC6750007E4A1 /* de.lproj */,
 				A6F06FD8239D6583008E9FAF /* dsa_pub.pem */,
 				A6019BF5239ACD00005D41C0 /* Frameworks */,
@@ -4398,6 +4553,7 @@
 				A6D147C7242675830091EE3A /* navdata_pi */,
 				A66D8682244C76BC00DAC1FF /* nmeaconverter_pi */,
 				7A4CCAFDCB274BDCA8DBE558 /* objsearch_pi */,
+				A650C125245AF72C0058E273 /* radar_pi */,
 				ECA6C094B5EA4887BA4A8B71 /* squiddio_pi */,
 				0D732E032A2C4D9AAB0E41FB /* vdr_pi */,
 				85945BD2F79148FEA058535E /* watchdog_pi */,
@@ -5225,6 +5381,155 @@
 			path = Frameworks;
 			sourceTree = "<group>";
 		};
+		A650C125245AF72C0058E273 /* radar_pi */ = {
+			isa = PBXGroup;
+			children = (
+				A650C127245AF7890058E273 /* Header Files */,
+				A650C126245AF7750058E273 /* Source Files */,
+				A650C128245AF7AB0058E273 /* Emulator */,
+				A650C12A245AF8100058E273 /* Garmin_XHD */,
+				A650C129245AF7DE0058E273 /* Garmin_HD */,
+				A650C12B245AF86B0058E273 /* Navico */,
+			);
+			name = radar_pi;
+			sourceTree = "<group>";
+		};
+		A650C126245AF7750058E273 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				A650C173245B01590058E273 /* ControlsDialog.cpp */,
+				A650C174245B017E0058E273 /* drawutil.cpp */,
+				A650C175245B01990058E273 /* GuardZone.cpp */,
+				A650C176245B01B70058E273 /* GuardZoneBogey.cpp */,
+				A650C177245B01D40058E273 /* icons.cpp */,
+				A650C178245B01EA0058E273 /* Kalman.cpp */,
+				A650C179245B02070058E273 /* MessageBox.cpp */,
+				A650C17A245B02250058E273 /* OptionsDialog.cpp */,
+				A650C17B245B02410058E273 /* radar_pi.cpp */,
+				A650C17C245B02830058E273 /* RadarCanvas.cpp */,
+				A650C17D245B02B60058E273 /* RadarDraw.cpp */,
+				A650C17E245B02CE0058E273 /* RadarDrawShader.cpp */,
+				A650C17F245B02EA0058E273 /* RadarDrawVertex.cpp */,
+				A650C180245B03070058E273 /* RadarFactory.cpp */,
+				A650C181245B03230058E273 /* RadarInfo.cpp */,
+				A650C182245B03470058E273 /* RadarMarpa.cpp */,
+				A650C183245B035D0058E273 /* RadarPanel.cpp */,
+				A650C184245B03780058E273 /* SelectDialog.cpp */,
+				A650C185245B03930058E273 /* shaderutil.cpp */,
+				A650C186245B03A90058E273 /* socketutil.cpp */,
+				A650C187245B03C20058E273 /* TextureFont.cpp */,
+				A650C188245B03DB0058E273 /* TrailBuffer.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		A650C127245AF7890058E273 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				A650C156245AFB4A0058E273 /* ControlsDialog.h */,
+				A650C157245AFB720058E273 /* drawutil.h */,
+				A650C158245AFBA80058E273 /* GuardZone.h */,
+				A650C159245AFBF60058E273 /* GuardZoneBogey.h */,
+				A650C15A245AFC230058E273 /* icons.h */,
+				A650C15B245AFC580058E273 /* Kalman.h */,
+				A650C15C245AFC590058E273 /* Matrix.h */,
+				A650C15D245AFC8A0058E273 /* MessageBox.h */,
+				A650C15E245AFCB30058E273 /* OptionsDialog.h */,
+				A650C15F245AFCDE0058E273 /* pi_common.h */,
+				A650C160245AFD3F0058E273 /* radar_pi.h */,
+				A650C161245AFD800058E273 /* RadarCanvas.h */,
+				A650C163245AFD810058E273 /* RadarControl.h */,
+				A650C162245AFD810058E273 /* RadarControlItem.h */,
+				A650C164245AFE410058E273 /* RadarDraw.h */,
+				A650C165245AFE620058E273 /* RadarDrawShader.h */,
+				A650C166245AFECF0058E273 /* RadarDrawVertex.h */,
+				A650C167245AFF610058E273 /* RadarFactory.h */,
+				A650C168245AFF7F0058E273 /* RadarInfo.h */,
+				A650C169245AFFED0058E273 /* RadarMarpa.h */,
+				A650C16A245B000E0058E273 /* RadarPanel.h */,
+				A650C16B245B000F0058E273 /* RadarReceive.h */,
+				A650C16C245B000F0058E273 /* RadarType.h */,
+				A650C16D245B00680058E273 /* SelectDialog.h */,
+				A650C16E245B00D50058E273 /* shaderutil.h */,
+				A650C170245B00F40058E273 /* socketutil.h */,
+				A650C16F245B00F30058E273 /* SoftwareControlSet.h */,
+				A650C171245B01220058E273 /* TextureFont.h */,
+				A650C172245B01390058E273 /* TrailBuffer.h */,
+				A69074AD245C5065009C33BE /* version.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		A650C128245AF7AB0058E273 /* Emulator */ = {
+			isa = PBXGroup;
+			children = (
+				A650C132245AFA620058E273 /* EmulatorControl.cpp */,
+				A650C12D245AFA610058E273 /* EmulatorControl.h */,
+				A650C12E245AFA610058E273 /* EmulatorControlsDialog.cpp */,
+				A650C12F245AFA610058E273 /* EmulatorControlsDialog.h */,
+				A650C130245AFA610058E273 /* EmulatorControlSet.h */,
+				A650C133245AFA620058E273 /* EmulatorReceive.cpp */,
+				A650C12C245AFA600058E273 /* EmulatorReceive.h */,
+				A650C131245AFA610058E273 /* emulatortype.h */,
+			);
+			name = Emulator;
+			sourceTree = "<group>";
+		};
+		A650C129245AF7DE0058E273 /* Garmin_HD */ = {
+			isa = PBXGroup;
+			children = (
+				A650C142245AFADF0058E273 /* GarminHDControl.cpp */,
+				A650C13D245AFADE0058E273 /* GarminHDControl.h */,
+				A650C143245AFADF0058E273 /* GarminHDControlsDialog.cpp */,
+				A650C13C245AFADD0058E273 /* GarminHDControlsDialog.h */,
+				A650C13F245AFADE0058E273 /* GarminHDControlSet.h */,
+				A650C13E245AFADE0058E273 /* GarminHDReceive.cpp */,
+				A650C140245AFADE0058E273 /* GarminHDReceive.h */,
+				A650C141245AFADE0058E273 /* garminhdtype.h */,
+			);
+			name = Garmin_HD;
+			sourceTree = "<group>";
+		};
+		A650C12A245AF8100058E273 /* Garmin_XHD */ = {
+			isa = PBXGroup;
+			children = (
+				A650C13A245AFA9E0058E273 /* GarminxHDControl.cpp */,
+				A650C138245AFA9D0058E273 /* GarminxHDControl.h */,
+				A650C136245AFA9D0058E273 /* GarminxHDControlsDialog.cpp */,
+				A650C135245AFA9D0058E273 /* GarminxHDControlsDialog.h */,
+				A650C134245AFA9C0058E273 /* GarminxHDControlSet.h */,
+				A650C137245AFA9D0058E273 /* GarminxHDReceive.cpp */,
+				A650C13B245AFA9E0058E273 /* GarminxHDReceive.h */,
+				A650C139245AFA9D0058E273 /* garminxhdtype.h */,
+			);
+			name = Garmin_XHD;
+			sourceTree = "<group>";
+		};
+		A650C12B245AF86B0058E273 /* Navico */ = {
+			isa = PBXGroup;
+			children = (
+				A650C153245AFB190058E273 /* br3gtype.h */,
+				A650C152245AFB190058E273 /* br4gatype.h */,
+				A650C14A245AFB170058E273 /* br4gbtype.h */,
+				A650C144245AFB160058E273 /* br24type.h */,
+				A650C14E245AFB180058E273 /* haloatype.h */,
+				A650C149245AFB170058E273 /* halobtype.h */,
+				A650C14D245AFB180058E273 /* Header.h */,
+				A650C150245AFB190058E273 /* NavicoCommon.h */,
+				A650C151245AFB190058E273 /* NavicoControl.cpp */,
+				A650C148245AFB170058E273 /* NavicoControl.h */,
+				A650C147245AFB170058E273 /* NavicoControlsDialog.cpp */,
+				A650C14C245AFB180058E273 /* NavicoControlsDialog.h */,
+				A650C155245AFB1A0058E273 /* NavicoControlSet.h */,
+				A650C145245AFB160058E273 /* NavicoLocate.cpp */,
+				A650C154245AFB1A0058E273 /* NavicoLocate.h */,
+				A650C146245AFB160058E273 /* NavicoRadarInfo.h */,
+				A650C14B245AFB180058E273 /* NavicoReceive.cpp */,
+				A650C14F245AFB180058E273 /* NavicoReceive.h */,
+			);
+			name = Navico;
+			sourceTree = "<group>";
+		};
 		A66D8682244C76BC00DAC1FF /* nmeaconverter_pi */ = {
 			isa = PBXGroup;
 			children = (
@@ -5238,6 +5543,7 @@
 			isa = PBXGroup;
 			children = (
 				A66D8688244C7CCB00DAC1FF /* ec_engine.cpp */,
+				A6C8CD842454733400D16B09 /* icons.cpp */,
 				A66D8689244C7CE600DAC1FF /* NmeaConverter_pi.cpp */,
 			);
 			name = "Source Files";
@@ -5248,6 +5554,7 @@
 			children = (
 				A66D8685244C7C4E00DAC1FF /* ec_defs.h */,
 				A66D8686244C7C6A00DAC1FF /* ec_engine.h */,
+				A6C8CD822454731600D16B09 /* icons.h */,
 				A66D8687244C7C8400DAC1FF /* NmeaConverter_pi.h */,
 			);
 			name = "Header Files";
@@ -5406,9 +5713,9 @@
 			isa = PBXGroup;
 			children = (
 				A6D147D0242679790091EE3A /* navdata_pi.cpp */,
-				A6D147D2242679E40091EE3A /* datadialogbase.cpp */,
-				A63AC784244E2A610052C33F /* customgrid.cpp */,
-				A6D147D324267A260091EE3A /* datatable.cpp */,
+				A650C11F245AF5690058E273 /* customgrid.cpp */,
+				A650C121245AF5810058E273 /* datadialogbase.cpp */,
+				A650C123245AF5970058E273 /* datatable.cpp */,
 				A6D147D424267A580091EE3A /* icons.cpp */,
 			);
 			name = "Source Files";
@@ -5418,10 +5725,10 @@
 			isa = PBXGroup;
 			children = (
 				A6D147CB242677B30091EE3A /* navdata_pi.h */,
-				A6D147CC242677FB0091EE3A /* datadialogbase.h */,
-				A6D147CD2426786E0091EE3A /* datatable.h */,
-				A63AC783244E2A2A0052C33F /* customgrid.h */,
+				A650C119245AF5040058E273 /* customgrid.h */,
 				A6D147CE242678AF0091EE3A /* icons.h */,
+				A650C11B245AF5250058E273 /* datadialogbase.h */,
+				A650C11D245AF5410058E273 /* datatable.h */,
 				A6D147CF242678D00091EE3A /* version.h */,
 			);
 			name = "Header Files";
@@ -6293,6 +6600,7 @@
 				A663595A23B10EB50006E5DA /* libweatherfax_pi.dylib */,
 				A6D147D924267AEA0091EE3A /* libnavdata_pi.dylib */,
 				A66D868E244C7D9500DAC1FF /* libnmeaconverter_pi.dylib */,
+				A650C18D245B0F190058E273 /* libradar_pi.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -6649,6 +6957,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		A650C189245B0F190058E273 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A69074AE245C5066009C33BE /* version.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A663594223B10D310006E5DA /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -6674,6 +6990,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6C8CD832454731600D16B09 /* icons.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6681,6 +6998,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A650C11A245AF5050058E273 /* customgrid.h in Headers */,
+				A650C11E245AF5410058E273 /* datatable.h in Headers */,
+				A650C11C245AF5250058E273 /* datadialogbase.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6939,6 +7259,24 @@
 			productName = SYMBOLS;
 			productReference = B8F5F1D7D85C4E5AAC0F4C6D /* libSYMBOLS.a */;
 			productType = "com.apple.product-type.library.static";
+		};
+		A650C18C245B0F190058E273 /* radar_pi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A650C18E245B0F190058E273 /* Build configuration list for PBXNativeTarget "radar_pi" */;
+			buildPhases = (
+				A650C189245B0F190058E273 /* Headers */,
+				A650C18A245B0F190058E273 /* Sources */,
+				A650C18B245B0F190058E273 /* Frameworks */,
+				A650C1B5245B14AD0058E273 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = radar_pi;
+			productName = radar_pi;
+			productReference = A650C18D245B0F190058E273 /* libradar_pi.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
 		};
 		A663594523B10D310006E5DA /* objsearch_pi */ = {
 			isa = PBXNativeTarget;
@@ -7279,6 +7617,10 @@
 						DevelopmentTeam = M3RNRGTLV6;
 						ProvisioningStyle = Automatic;
 					};
+					A650C18C245B0F190058E273 = {
+						CreatedOnToolsVersion = 11.3.1;
+						ProvisioningStyle = Automatic;
+					};
 					A663594523B10D310006E5DA = {
 						CreatedOnToolsVersion = 11.3;
 						DevelopmentTeam = A269R4Z552;
@@ -7404,6 +7746,7 @@
 				A69EA2A9239E62BB005F613A /* vdr_pi */,
 				A663594F23B10E390006E5DA /* watchdog_pi */,
 				A663595923B10EB50006E5DA /* weatherfax_pi */,
+				A650C18C245B0F190058E273 /* radar_pi */,
 			);
 		};
 /* End PBXProject section */
@@ -7654,6 +7997,23 @@
 			shellPath = /bin/sh;
 			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libvdr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libvdr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libvdr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libvdr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libvdr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_qa-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_qa-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libvdr_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_xrc-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_xrc-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libvdr_pi.dylib\n";
 		};
+		A650C1B5245B14AD0058E273 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libradar_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libradar_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libradar_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libradar_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libradar_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libradar_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libradar_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libradar_pi.dylib\n\n";
+		};
 		A66D8694244C7DD200DAC1FF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -7669,7 +8029,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\n\n";
+			shellScript = "install_name_tool -change /usr/local/lib/libwx_baseu-3.1.dylib @executable_path/../Frameworks/libwx_baseu-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_core-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_core-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_net-3.1.dylib @executable_path/../Frameworks/libwx_baseu_net-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_baseu_xml-3.1.dylib @executable_path/../Frameworks/libwx_baseu_xml-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_html-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_html-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_adv-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_adv-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_aui-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_aui-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\ninstall_name_tool -change /usr/local/lib/libwx_osx_cocoau_gl-3.1.dylib @executable_path/../Frameworks/libwx_osx_cocoau_gl-3.1.dylib /Users/heidi/devel/Cocoa-501/Build-Debug/Debug/libnmeaconverter_pi.dylib\n";
 		};
 		A68D34D523C4E1F000A8A664 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8300,6 +8660,48 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A650C18A245B0F190058E273 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A69074AB245C09E0009C33BE /* NavicoLocate.cpp in Sources */,
+				A650C1B4245B14770058E273 /* NavicoReceive.cpp in Sources */,
+				A650C1B3245B14640058E273 /* NavicoControlsDialog.cpp in Sources */,
+				A650C1B2245B14500058E273 /* NavicoControl.cpp in Sources */,
+				A650C1B1245B14330058E273 /* GarminHDReceive.cpp in Sources */,
+				A650C1B0245B14200058E273 /* GarminHDControlsDialog.cpp in Sources */,
+				A650C1AF245B140C0058E273 /* GarminHDControl.cpp in Sources */,
+				A650C1AE245B13EE0058E273 /* GarminxHDReceive.cpp in Sources */,
+				A650C1AD245B13DC0058E273 /* GarminxHDControlsDialog.cpp in Sources */,
+				A650C1AC245B13C30058E273 /* GarminxHDControl.cpp in Sources */,
+				A650C1AB245B13A70058E273 /* EmulatorReceive.cpp in Sources */,
+				A650C1AA245B138F0058E273 /* EmulatorControlsDialog.cpp in Sources */,
+				A650C1A9245B136F0058E273 /* EmulatorControl.cpp in Sources */,
+				A650C193245B13270058E273 /* ControlsDialog.cpp in Sources */,
+				A650C194245B13270058E273 /* drawutil.cpp in Sources */,
+				A650C195245B13270058E273 /* GuardZone.cpp in Sources */,
+				A650C196245B13270058E273 /* GuardZoneBogey.cpp in Sources */,
+				A650C197245B13270058E273 /* icons.cpp in Sources */,
+				A650C198245B13270058E273 /* Kalman.cpp in Sources */,
+				A650C199245B13270058E273 /* MessageBox.cpp in Sources */,
+				A650C19A245B13270058E273 /* OptionsDialog.cpp in Sources */,
+				A650C19B245B13270058E273 /* radar_pi.cpp in Sources */,
+				A650C19C245B13270058E273 /* RadarCanvas.cpp in Sources */,
+				A650C19D245B13270058E273 /* RadarDraw.cpp in Sources */,
+				A650C19E245B13270058E273 /* RadarDrawShader.cpp in Sources */,
+				A650C19F245B13270058E273 /* RadarDrawVertex.cpp in Sources */,
+				A650C1A0245B13270058E273 /* RadarFactory.cpp in Sources */,
+				A650C1A1245B13270058E273 /* RadarInfo.cpp in Sources */,
+				A650C1A2245B13270058E273 /* RadarMarpa.cpp in Sources */,
+				A650C1A3245B13270058E273 /* RadarPanel.cpp in Sources */,
+				A650C1A4245B13270058E273 /* SelectDialog.cpp in Sources */,
+				A650C1A5245B13270058E273 /* shaderutil.cpp in Sources */,
+				A650C1A6245B13270058E273 /* socketutil.cpp in Sources */,
+				A650C1A7245B13270058E273 /* TextureFont.cpp in Sources */,
+				A650C1A8245B13270058E273 /* TrailBuffer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A663594323B10D310006E5DA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8417,6 +8819,7 @@
 			files = (
 				A69D9E57244EE329002E16E5 /* ec_engine.cpp in Sources */,
 				A69D9E58244EE329002E16E5 /* NmeaConverter_pi.cpp in Sources */,
+				A6C8CD852454733500D16B09 /* icons.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8510,11 +8913,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A63AC785244E2A9E0052C33F /* customgrid.cpp in Sources */,
+				A650C122245AF5810058E273 /* datadialogbase.cpp in Sources */,
+				A650C124245AF5970058E273 /* datatable.cpp in Sources */,
 				A6D147DF24267B330091EE3A /* navdata_pi.cpp in Sources */,
-				A6D147E124267B330091EE3A /* datadialogbase.cpp in Sources */,
-				A6D147E224267B330091EE3A /* datatable.cpp in Sources */,
 				A6D147E324267B330091EE3A /* icons.cpp in Sources */,
+				A650C120245AF5690058E273 /* customgrid.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8746,6 +9149,11 @@
 			isa = PBXTargetDependency;
 			target = A6798BCD23AFCC13009782C4 /* squiddio_pi */;
 			targetProxy = A603899123B0BBE900F4F46A /* PBXContainerItemProxy */;
+		};
+		A650C1B7245B40080058E273 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A650C18C245B0F190058E273 /* radar_pi */;
+			targetProxy = A650C1B6245B40080058E273 /* PBXContainerItemProxy */;
 		};
 		A688B92423A1093E00D770A5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9976,7 +10384,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/chartdldr_pi/src/tinyxml",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -10435,7 +10843,7 @@
 					/usr/X11/include/GL,
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -10878,7 +11286,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/wmm_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -11374,7 +11782,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/dashboard_pi/src/nmea0183",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -12350,7 +12758,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/chartdldr_pi/src/tinyxml",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -12818,7 +13226,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/wmm_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -12990,7 +13398,7 @@
 					/usr/X11/include/GL,
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -13567,7 +13975,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/wmm_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -13893,7 +14301,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/chartdldr_pi/src/tinyxml",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -14228,7 +14636,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/dashboard_pi/src/nmea0183",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -15185,6 +15593,659 @@
 				);
 			};
 			name = Debug;
+		};
+		A650C18F245B0F190058E273 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "";
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					radar_pi_EXPORTS,
+					ocpnUSE_GL,
+					OCPN_USE_WEBVIEW,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_NEWSERIAL,
+					__OCPN_USE_CURL__,
+					USE_RENDER_CAIRO,
+					ocpnUSE_SVG,
+					USE_LZMA,
+					OCPN_USE_DARKMODE,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/emulator",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/garminhd",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/garminxhd",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/navico",
+					/usr/local/include/cairo,
+					/usr/local/include/cairo/..,
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					"/Users/heidi/devel/Cocoa-501/src/nmea0183",
+				);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					/usr/lib,
+					/usr/local/lib,
+					"$(PROJECT_DIR)/build-Debug/Debug",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wno-unknown-pragmas",
+					"-Wno-overloaded-virtual",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-fvisibility=hidden",
+					"-Wall",
+					"-Wno-unused-result",
+					"-g",
+					"-O2",
+					"-fexceptions",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_xrc-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_qa-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+				);
+				PRODUCT_NAME = radar_pi;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		A650C190245B0F190058E273 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "";
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					radar_pi_EXPORTS,
+					ocpnUSE_GL,
+					OCPN_USE_WEBVIEW,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_NEWSERIAL,
+					__OCPN_USE_CURL__,
+					USE_RENDER_CAIRO,
+					ocpnUSE_SVG,
+					USE_LZMA,
+					OCPN_USE_DARKMODE,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/emulator",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/garminhd",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/garminxhd",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/navico",
+					/usr/local/include/cairo,
+					/usr/local/include/cairo/..,
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					"/Users/heidi/devel/Cocoa-501/src/nmea0183",
+				);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					/usr/lib,
+					/usr/local/lib,
+					"$(PROJECT_DIR)/build-Debug/Debug",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wno-unknown-pragmas",
+					"-Wno-overloaded-virtual",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-fvisibility=hidden",
+					"-Wall",
+					"-Wno-unused-result",
+					"-g",
+					"-O2",
+					"-fexceptions",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_xrc-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_qa-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+				);
+				PRODUCT_NAME = radar_pi;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		A650C191245B0F190058E273 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "";
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					radar_pi_EXPORTS,
+					ocpnUSE_GL,
+					OCPN_USE_WEBVIEW,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_NEWSERIAL,
+					__OCPN_USE_CURL__,
+					USE_RENDER_CAIRO,
+					ocpnUSE_SVG,
+					USE_LZMA,
+					OCPN_USE_DARKMODE,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/emulator",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/garminhd",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/garminxhd",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/navico",
+					/usr/local/include/cairo,
+					/usr/local/include/cairo/..,
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					"/Users/heidi/devel/Cocoa-501/src/nmea0183",
+				);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					/usr/lib,
+					/usr/local/lib,
+					"$(PROJECT_DIR)/build-Debug/Debug",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wno-unknown-pragmas",
+					"-Wno-overloaded-virtual",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-fvisibility=hidden",
+					"-Wall",
+					"-Wno-unused-result",
+					"-g",
+					"-O2",
+					"-fexceptions",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_xrc-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_qa-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+				);
+				PRODUCT_NAME = radar_pi;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		A650C192245B0F190058E273 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "";
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				FRAMEWORK_SEARCH_PATHS = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					radar_pi_EXPORTS,
+					ocpnUSE_GL,
+					OCPN_USE_WEBVIEW,
+					"'_FILE_OFFSET_BITS=64'",
+					WXUSINGDLL,
+					__WXMAC__,
+					__WXOSX__,
+					__WXOSX_COCOA__,
+					ocpnUSE_NEWSERIAL,
+					__OCPN_USE_CURL__,
+					USE_RENDER_CAIRO,
+					ocpnUSE_SVG,
+					USE_LZMA,
+					OCPN_USE_DARKMODE,
+					TIXML_USE_STL,
+					USE_S57,
+					USE_GARMINHOST,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/emulator",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/garminhd",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/garminxhd",
+					"/Users/heidi/devel/Cocoa-501/plugins/opencpn-radar_pi/src/navico",
+					/usr/local/include/cairo,
+					/usr/local/include/cairo/..,
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVG",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include/wxSVGXML",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/include",
+					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
+					"/Users/heidi/devel/Cocoa-501/src/nmea0183",
+				);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					/usr/lib,
+					/usr/local/lib,
+					"$(PROJECT_DIR)/build-Debug/Debug",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = (
+					"-arch",
+					x86_64,
+					"-arch",
+					x86_64,
+					"-fPIC",
+					"-Wno-unknown-pragmas",
+					"-Wno-overloaded-virtual",
+					"-Wall",
+					"-Wno-unused",
+					"-fexceptions",
+					"-g",
+					"-fno-strict-aliasing",
+					"-Wno-deprecated",
+					"-Wno-deprecated-declarations",
+					"-D_WCHAR_H_CPLUSPLUS_98_CONFORMANCE_",
+					"-fvisibility=hidden",
+					"-Wall",
+					"-Wno-unused-result",
+					"-g",
+					"-O2",
+					"-fexceptions",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl",
+					"-undefined",
+					dynamic_lookup,
+					"-dynamiclib",
+					"-Wl,-headerpad_max_install_names",
+					"-L/usr/local/lib",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"-lwx_osx_cocoau_xrc-3.1",
+					"-lwx_osx_cocoau_html-3.1",
+					"-lwx_osx_cocoau_qa-3.1",
+					"-lwx_osx_cocoau_core-3.1",
+					"-lwx_baseu_xml-3.1",
+					"-lwx_baseu_net-3.1",
+					"-lwx_baseu-3.1",
+					/usr/lib/libz.dylib,
+				);
+				PRODUCT_NAME = radar_pi;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SYMROOT = "/Users/heidi/devel/Cocoa-501/Build-Debug";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/lib/wx/include/osx_cocoa-unicode-3.1 /usr/local/include/wx-3.1";
+				USE_HEADERMAP = NO;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
 		};
 		A663594723B10D310006E5DA /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -16948,7 +18009,7 @@
 					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -17128,7 +18189,7 @@
 					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -17308,7 +18369,7 @@
 					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -17487,7 +18548,7 @@
 					"/Users/heidi/devel/Cocoa-501/src/wxsvg/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -18311,7 +19372,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/iacfleet_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -18477,7 +19538,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/iacfleet_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -18643,7 +19704,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/iacfleet_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -18809,7 +19870,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/iacfleet_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -18974,7 +20035,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/logbookkonni_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -19139,7 +20200,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/logbookkonni_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -19304,7 +20365,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/logbookkonni_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -19469,7 +20530,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/logbookkonni_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -19634,7 +20695,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/vdr_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -19792,7 +20853,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/vdr_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -19950,7 +21011,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/vdr_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -20108,7 +21169,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/vdr_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -20267,7 +21328,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/calculator_pi/src/expression_parser",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -20433,7 +21494,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/calculator_pi/src/expression_parser",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -20599,7 +21660,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/calculator_pi/src/expression_parser",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -20765,7 +21826,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/calculator_pi/src/expression_parser",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -20930,7 +21991,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/findit_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -21095,7 +22156,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/findit_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -21260,7 +22321,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/findit_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -21425,7 +22486,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/findit_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -21627,7 +22688,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/navdata_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					/usr/lib,
 					/usr/local/lib,
@@ -21800,7 +22861,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/navdata_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					/usr/lib,
 					/usr/local/lib,
@@ -21973,7 +23034,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/navdata_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					/usr/lib,
 					/usr/local/lib,
@@ -22146,7 +23207,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/navdata_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					/usr/lib,
 					/usr/local/lib,
@@ -22401,7 +23462,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/wmm_pi/src",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -23123,7 +24184,7 @@
 					/usr/X11/include/GL,
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -23591,7 +24652,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/chartdldr_pi/src/tinyxml",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -23996,7 +25057,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/dashboard_pi/src/nmea0183",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -24477,7 +25538,7 @@
 					"/Users/heidi/devel/Cocoa-501/plugins/dashboard_pi/src/nmea0183",
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -24623,7 +25684,7 @@
 					/usr/X11/include/GL,
 				);
 				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_STYLE = DYNAMIC;
 				OTHER_CFLAGS = (
@@ -25332,6 +26393,17 @@
 				91C70D53A2A34EBA99C55ABD /* Release */,
 				5E9F32689D0B4340AECEA937 /* MinSizeRel */,
 				CD5446852A8C411BA231F402 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A650C18E245B0F190058E273 /* Build configuration list for PBXNativeTarget "radar_pi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A650C18F245B0F190058E273 /* Debug */,
+				A650C190245B0F190058E273 /* Release */,
+				A650C191245B0F190058E273 /* MinSizeRel */,
+				A650C192245B0F190058E273 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

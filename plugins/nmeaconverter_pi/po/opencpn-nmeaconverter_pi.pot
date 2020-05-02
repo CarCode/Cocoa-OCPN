@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nmeaconverter_pi 20.01.01\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 14:04+0300\n"
+"POT-Creation-Date: 2020-04-26 14:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,87 +17,116 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/NmeaConverter_pi.cpp:87 ../src/NmeaConverter_pi.cpp:92
+#: ../src/NmeaConverter_pi.cpp:79 ../src/NmeaConverter_pi.cpp:82
+msgid "NmeaKonverter"
+msgstr ""
+
+#: ../src/NmeaConverter_pi.cpp:122
 msgid "NmeaConverter_pi"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:97
-msgid "NmeaConverter_pi."
+#: ../src/NmeaConverter_pi.cpp:127
+msgid "Plugin for manipulating nmea sentences"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:138
+#: ../src/NmeaConverter_pi.cpp:132
+msgid ""
+"Plugin for manipulating nmea sentences.\n"
+"Cherry picking from existing sentences, calculate new data with\n"
+"spreadsheet like formulas or just plain send new sentences.\n"
+"Not easy, although it is easy to make errors and crash OpenCPN"
+msgstr ""
+
+#: ../src/NmeaConverter_pi.cpp:181
 msgid "*"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:188
+#: ../src/NmeaConverter_pi.cpp:235
 #, c-format
 msgid "%02X"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:212
+#: ../src/NmeaConverter_pi.cpp:259
 msgid "Dlg already deleted:_)"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:433 ../src/NmeaConverter_pi.cpp:435
+#: ../src/NmeaConverter_pi.cpp:484 ../src/NmeaConverter_pi.cpp:488
+msgid "0123456789."
+msgstr ""
+
+#: ../src/NmeaConverter_pi.cpp:495 ../src/NmeaConverter_pi.cpp:498
+#: ../src/NmeaConverter_pi.cpp:499 ../src/NmeaConverter_pi.cpp:500
 msgid "."
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:463
+#: ../src/NmeaConverter_pi.cpp:499 ../src/NmeaConverter_pi.cpp:504
+msgid "0"
+msgstr ""
+
+#: ../src/NmeaConverter_pi.cpp:516
+msgid "0000000000"
+msgstr ""
+
+#: ../src/NmeaConverter_pi.cpp:524
+msgid "#Error#"
+msgstr ""
+
+#: ../src/NmeaConverter_pi.cpp:532
 msgid ","
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:607
+#: ../src/NmeaConverter_pi.cpp:676
 msgid "Block incomming messages with wrong checksum"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:631
+#: ../src/NmeaConverter_pi.cpp:700
 msgid "New"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:634
+#: ../src/NmeaConverter_pi.cpp:703
 msgid "Edit"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:638
+#: ../src/NmeaConverter_pi.cpp:707
 msgid "Delete"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:642
+#: ../src/NmeaConverter_pi.cpp:711
 msgid "OK"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:807
+#: ../src/NmeaConverter_pi.cpp:887
 msgid "Send after update all variables"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:814
+#: ../src/NmeaConverter_pi.cpp:894
 msgid "Send every  "
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:822
+#: ../src/NmeaConverter_pi.cpp:902
 msgid "seconds."
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:825
+#: ../src/NmeaConverter_pi.cpp:905
 msgid "Calculate using degrees"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:828
+#: ../src/NmeaConverter_pi.cpp:908
 msgid "Output sentence comes here;-)"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:839
+#: ../src/NmeaConverter_pi.cpp:919
 msgid "&OK"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.cpp:842
+#: ../src/NmeaConverter_pi.cpp:922
 msgid "&Cancel"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.h:181
+#: ../src/NmeaConverter_pi.h:187
 msgid "PreferenceDlg"
 msgstr ""
 
-#: ../src/NmeaConverter_pi.h:247
+#: ../src/NmeaConverter_pi.h:253
 msgid "nmeaSendObjectDlg"
 msgstr ""

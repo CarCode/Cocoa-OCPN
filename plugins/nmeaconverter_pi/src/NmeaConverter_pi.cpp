@@ -27,7 +27,7 @@
 #include <wx/tokenzr.h>
 #include <algorithm>    // std::max
 #include "NmeaConverter_pi.h"
-
+#include "icons.h"
 
 extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr)
 {
@@ -37,6 +37,15 @@ extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr)
 extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 {
     delete p;
+}
+
+// static variables
+wxString       g_shareLocn;
+
+NmeaConverter_pi::NmeaConverter_pi(void *ppimgr):opencpn_plugin_18(ppimgr)
+{
+          // Create the PlugIn icons
+      initialize_images();
 }
 
 int NmeaConverter_pi::Init(void)
@@ -50,9 +59,34 @@ int NmeaConverter_pi::Init(void)
     m_pconfig = GetOCPNConfigObject();
     //    And load the configuration items
     LoadConfig();
+
+        //find and store share path
+#ifdef __WXOSX__
+    g_shareLocn =*GetpPrivateApplicationDataLocation() +
+#else
+    g_shareLocn =*GetpSharedDataLocation() +
+#endif
+            _T("plugins") + wxFileName::GetPathSeparator() +
+            _T("nmeaconverter_pi") + wxFileName::GetPathSeparator()
+            +_T("data") + wxFileName::GetPathSeparator();
+
+        //    This PlugIn needs a toolbar icon, so request its insertion
+        wxString active = g_shareLocn + _T("active.svg");
+        wxString toggled = g_shareLocn + _T("toggled.svg");
+
+        if( wxFile::Exists( active) && wxFile::Exists( toggled) )
+            m_leftclick_tool_id  = InsertPlugInToolSVG(_T(""), active, active, toggled,
+                        wxITEM_CHECK, _("NmeaKonverter"), _T(""), NULL, NMEACONVERTER_TOOL_POSITION, 0, this);
+        else // kein toggled:
+            m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_nmeaconverter_pi, _img_nmeaconverter_pi,
+                            wxITEM_CHECK, _("NmeaKonverter"), _T(""), NULL, NMEACONVERTER_TOOL_POSITION, 0, this);
+
     return
-        ( WANTS_NMEA_SENTENCES  |
-          WANTS_PREFERENCES     |
+        ( WANTS_NMEA_SENTENCES    |
+          WANTS_TOOLBAR_CALLBACK  |
+          INSTALLS_TOOLBAR_TOOL   |
+          WANTS_PREFERENCES       |
+          WANTS_PLUGIN_MESSAGING  |
           WANTS_CONFIG);
 }
 
@@ -90,13 +124,21 @@ wxString NmeaConverter_pi::GetCommonName()
 
 wxString NmeaConverter_pi::GetShortDescription()
 {
-      return _("NmeaConverter_pi");
+      return _("Plugin for manipulating nmea sentences");
 }
 
 wxString NmeaConverter_pi::GetLongDescription()
 {
-      return _("NmeaConverter_pi.");
+        return _("Plugin for manipulating nmea sentences.\n\
+Cherry picking from existing sentences, calculate new data with\n\
+spreadsheet like formulas or just plain send new sentences.\n\
+Not easy, although it is easy to make errors and crash OpenCPN");
 
+}
+
+wxBitmap *NmeaConverter_pi::GetPlugInBitmap()
+{
+      return _img_nmeaconverter_pi;
 }
 
 void NmeaConverter_pi::SetNMEASentence(wxString &sentence)
@@ -335,7 +377,7 @@ wxArrayString nmeaSendObj::FindStartWithDollarSubSets(wxString FormatStr, wxStri
     wxArrayString ReturnArray;
 
     {
-        while ( (FormatStr.find( wxT("$"), startpos ) != wxNOT_FOUND) &&( startpos < FormatStr.Length() ))
+        while ( (FormatStr.find( wxT("$"), startpos ) != (size_t)wxNOT_FOUND) &&( startpos < FormatStr.Length() ))
         {
              startpos = FormatStr.find( wxT("$"), startpos );
              size_t i = startpos;
@@ -434,7 +476,7 @@ void nmeaSendObj::ComputeOutputSentence()
         // find max number of decimals so we can set the output later to the right amount of needed decimals.
         size_t NoOfDecimals = 0;
         size_t NoOfDigits = 0;
-        int IinString = 0;
+        size_t IinString = 0;
         bool IsValidNumber= true;
         wxString s=formattokenarray[j];
         while (IinString < s.Length()){

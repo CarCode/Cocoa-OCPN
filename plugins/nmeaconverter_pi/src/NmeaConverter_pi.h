@@ -34,7 +34,7 @@
 #endif
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    0
+#define     PLUGIN_VERSION_MINOR    2
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    8
@@ -52,7 +52,7 @@
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
 //----------------------------------------------------------------------------------------------------------
-
+#define NMEACONVERTER_TOOL_POSITION -1
 
 class nmeaSendObj;
 class nmeaSendObjectDlg;
@@ -71,7 +71,7 @@ class NmeaConverter_pi : public opencpn_plugin_18
     
 public:
     MapOfnmeaSendObj::iterator objit;
-    NmeaConverter_pi(void *ppimgr):opencpn_plugin_18(ppimgr){}
+    NmeaConverter_pi(void *ppimgr);
 
 //    The required PlugIn Methods
     int Init(void);
@@ -80,10 +80,16 @@ public:
     int GetAPIVersionMinor();
     int GetPlugInVersionMajor();
     int GetPlugInVersionMinor();
+    wxBitmap *GetPlugInBitmap();
     wxString GetCommonName();
     wxString GetShortDescription();
     wxString GetLongDescription();
+#ifdef __WXOSX__
+    //toolbar variables
+    int          m_leftclick_tool_id;
+//    unsigned int m_ToolIconType;
 
+#endif
 //    The optional method overrides
     void SetNMEASentence(wxString &sentence);
     void SendNMEASentence(wxString sentence);

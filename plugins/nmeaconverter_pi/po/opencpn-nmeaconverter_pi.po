@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 14:04+0300\n"
-"PO-Revision-Date: 2020-04-21 14:09+0300\n"
+"POT-Creation-Date: 2020-04-26 14:10+0300\n"
+"PO-Revision-Date: 2020-04-26 14:19+0300\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -17,107 +17,152 @@ msgstr ""
 "X-Crowdin-File: /plugins/NmeaConverter_pi/po/nmeaconverter_pi.pot\n"
 
 #
-#: ../src/NmeaConverter_pi.cpp:87 ../src/NmeaConverter_pi.cpp:92
+#: ../src/NmeaConverter_pi.cpp:79 ../src/NmeaConverter_pi.cpp:82
+msgid "NmeaKonverter"
+msgstr "NmeaKonverter"
+
+#
+#: ../src/NmeaConverter_pi.cpp:122
 msgid "NmeaConverter_pi"
 msgstr "NmeaKonverter"
 
 #
-#: ../src/NmeaConverter_pi.cpp:97
-msgid "NmeaConverter_pi."
-msgstr "NmeaKonverter"
+#: ../src/NmeaConverter_pi.cpp:127
+msgid "Plugin for manipulating nmea sentences"
+msgstr "Plugin zum Ändern von NMEA Datensätzen"
 
 #
-#: ../src/NmeaConverter_pi.cpp:138
+#: ../src/NmeaConverter_pi.cpp:132
+msgid ""
+"Plugin for manipulating nmea sentences.\n"
+"Cherry picking from existing sentences, calculate new data with\n"
+"spreadsheet like formulas or just plain send new sentences.\n"
+"Not easy, although it is easy to make errors and crash OpenCPN"
+msgstr ""
+"Plugin zum Ändern von NMEA Datensätzen.\n"
+"Nimmt vorhandene Datensätze, berechnet neue Daten mit\n"
+"Formeln ähnlich Tabellenkalkulation oder sendet neue Datensätze.\n"
+"Nicht einfach, jedoch einfach zum Fehlermachen und OpenCPN abzustürzen"
+
+#
+#: ../src/NmeaConverter_pi.cpp:181
 msgid "*"
 msgstr "*"
 
 #
-#: ../src/NmeaConverter_pi.cpp:188
+#: ../src/NmeaConverter_pi.cpp:235
 #, c-format
 msgid "%02X"
 msgstr "%02X"
 
 #
-#: ../src/NmeaConverter_pi.cpp:212
+#: ../src/NmeaConverter_pi.cpp:259
 msgid "Dlg already deleted:_)"
 msgstr "Dlg schon gelöscht:_)"
 
 #
-#: ../src/NmeaConverter_pi.cpp:433 ../src/NmeaConverter_pi.cpp:435
+#: ../src/NmeaConverter_pi.cpp:484 ../src/NmeaConverter_pi.cpp:488
+msgid "0123456789."
+msgstr "0123456789."
+
+#
+#: ../src/NmeaConverter_pi.cpp:495 ../src/NmeaConverter_pi.cpp:498
+#: ../src/NmeaConverter_pi.cpp:499 ../src/NmeaConverter_pi.cpp:500
 msgid "."
 msgstr "."
 
 #
-#: ../src/NmeaConverter_pi.cpp:463
+#: ../src/NmeaConverter_pi.cpp:499 ../src/NmeaConverter_pi.cpp:504
+msgid "0"
+msgstr "0"
+
+#
+#: ../src/NmeaConverter_pi.cpp:516
+msgid "0000000000"
+msgstr "0000000000"
+
+#
+#: ../src/NmeaConverter_pi.cpp:524
+msgid "#Error#"
+msgstr "#Fehler#"
+
+#
+#: ../src/NmeaConverter_pi.cpp:532
 msgid ","
 msgstr ","
 
 #
-#: ../src/NmeaConverter_pi.cpp:607
+#: ../src/NmeaConverter_pi.cpp:676
 msgid "Block incomming messages with wrong checksum"
 msgstr "Blocke Nachrichten mit falscher Prüfsumme"
 
 #
-#: ../src/NmeaConverter_pi.cpp:631
+#: ../src/NmeaConverter_pi.cpp:700
 msgid "New"
 msgstr "Neu"
 
 #
-#: ../src/NmeaConverter_pi.cpp:634
+#: ../src/NmeaConverter_pi.cpp:703
 msgid "Edit"
 msgstr "Editiere"
 
 #
-#: ../src/NmeaConverter_pi.cpp:638
+#: ../src/NmeaConverter_pi.cpp:707
 msgid "Delete"
 msgstr "Lösche"
 
 #
-#: ../src/NmeaConverter_pi.cpp:642
+#: ../src/NmeaConverter_pi.cpp:711
 msgid "OK"
 msgstr "OK"
 
 #
-#: ../src/NmeaConverter_pi.cpp:807
+#: ../src/NmeaConverter_pi.cpp:887
 msgid "Send after update all variables"
 msgstr "Sende nach Update aller Variabelen"
 
 #
-#: ../src/NmeaConverter_pi.cpp:814
+#: ../src/NmeaConverter_pi.cpp:894
 msgid "Send every  "
 msgstr "Sende jede "
 
 #
-#: ../src/NmeaConverter_pi.cpp:822
+#: ../src/NmeaConverter_pi.cpp:902
 msgid "seconds."
 msgstr "Sekunde."
 
 #
-#: ../src/NmeaConverter_pi.cpp:825
+#: ../src/NmeaConverter_pi.cpp:905
 msgid "Calculate using degrees"
 msgstr "Berechne mit Grad"
 
 #
-#: ../src/NmeaConverter_pi.cpp:828
+#: ../src/NmeaConverter_pi.cpp:908
 msgid "Output sentence comes here;-)"
 msgstr "Ausgang Sequenzen kommen hier"
 
 #
-#: ../src/NmeaConverter_pi.cpp:839
+#: ../src/NmeaConverter_pi.cpp:919
 msgid "&OK"
 msgstr "&OK"
 
 #
-#: ../src/NmeaConverter_pi.cpp:842
+#: ../src/NmeaConverter_pi.cpp:922
 msgid "&Cancel"
 msgstr "Abbruch"
 
 #
-#: ../src/NmeaConverter_pi.h:181
+#: ../src/NmeaConverter_pi.h:187
 msgid "PreferenceDlg"
 msgstr "Einstellungen"
 
 #
-#: ../src/NmeaConverter_pi.h:247
+#: ../src/NmeaConverter_pi.h:253
 msgid "nmeaSendObjectDlg"
 msgstr "Nmea Sende Objekt"
+
+#
+#
+#
+#~ msgid "NmeaConverter_pi."
+#~ msgstr "NmeaKonverter"

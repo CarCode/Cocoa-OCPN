@@ -503,57 +503,61 @@ void grib_pi::OnGribCtrlBarClose()
 
 bool grib_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
 {
+    return false;
+}
+
+bool grib_pi::DoRenderOverlay(wxDC &dc, PlugIn_ViewPort *vp, int canvasIndex)
+{
     if(!m_pGribCtrlBar ||
        !m_pGribCtrlBar->IsShown() ||
        !m_pGRIBOverlayFactory)
         return false;
 
-    m_pGribCtrlBar->SetViewPort( vp );
     m_pGRIBOverlayFactory->RenderGribOverlay ( dc, vp );
-    if( m_pGribCtrlBar->pReq_Dialog )
-        m_pGribCtrlBar->pReq_Dialog->RenderZoneOverlay( dc );
+    if((canvasIndex > 0) || (GetCanvasCount() == 1)){
+        m_pGribCtrlBar->SetViewPort( vp );
+        if( m_pGribCtrlBar->pReq_Dialog )
+            m_pGribCtrlBar->pReq_Dialog->RenderZoneOverlay( dc );
+    }
     if( ::wxIsBusy() ) ::wxEndBusyCursor();
     return true;
 }
 
 bool grib_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
 {
+    return false;
+}
+
+bool grib_pi::DoRenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp, int canvasIndex)
+{
     if(!m_pGribCtrlBar ||
        !m_pGribCtrlBar->IsShown() ||
        !m_pGRIBOverlayFactory)
         return false;
 
-    m_pGribCtrlBar->SetViewPort( vp );
     m_pGRIBOverlayFactory->RenderGLGribOverlay ( pcontext, vp );
-    if( m_pGribCtrlBar->pReq_Dialog )
-        m_pGribCtrlBar->pReq_Dialog->RenderGlZoneOverlay();
+    if((canvasIndex > 0) || (GetCanvasCount() == 1)){
+        m_pGribCtrlBar->SetViewPort( vp );
+        if( m_pGribCtrlBar->pReq_Dialog )
+            m_pGribCtrlBar->pReq_Dialog->RenderGlZoneOverlay();
+    }
     if( ::wxIsBusy() ) ::wxEndBusyCursor();
     
-    #ifdef __OCPN__ANDROID__
+#ifdef __OCPN__ANDROID__
     m_pGribCtrlBar->Raise();    // Control bar should always be visible
-    #endif
+#endif
     
     return true;
 }
 
 bool grib_pi::RenderGLOverlayMultiCanvas(wxGLContext *pcontext, PlugIn_ViewPort *vp, int canvasIndex)
 {
-    // If multicanvas are active, render the overlay on the right canvas only
-    if(GetCanvasCount() > 1 && canvasIndex != 1){            // multi?
-        return false;
-    }
-
-    return RenderGLOverlay( pcontext, vp);
+    return DoRenderGLOverlay( pcontext, vp, canvasIndex);
 }
 
 bool grib_pi::RenderOverlayMultiCanvas(wxDC &dc, PlugIn_ViewPort *vp, int canvasIndex)
 {
-    // If multicanvas are active, render the overlay on the right canvas only
-    if(GetCanvasCount() > 1 && canvasIndex != 1) {            // multi?
-        return false;
-    }
-
-    return RenderOverlay( dc, vp);
+    return DoRenderOverlay( dc, vp, canvasIndex);
 }
 
 void grib_pi::SetCursorLatLon(double lat, double lon)

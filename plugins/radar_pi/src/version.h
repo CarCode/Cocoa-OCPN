@@ -1,0 +1,6 @@
+#define PLUGIN_VERSION_MAJOR 5
+#define PLUGIN_VERSION_MINOR 0
+#define PLUGIN_VERSION_PATCH "5"
+#define PLUGIN_VERSION_DATE "2020-04-19"
+#define PLUGIN_VERSION "radar_pi v5.0.5"
+#define PLUGIN_VERSION_WITH_DATE "radar_pi v5.0.5 released on 19.04.2020"
