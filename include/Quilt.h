@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __QUIT_H__
 #define __QUIT_H__
@@ -222,25 +221,26 @@ public:
     
     bool IsQuiltVector( void );
     bool DoesQuiltContainPlugins( void );
-    
+
     LLRegion GetHiliteRegion( );
     static LLRegion GetChartQuiltRegion( const ChartTableEntry &cte, ViewPort &vp );
 
     int GetNomScaleMin(int scale, ChartTypeEnum type, ChartFamilyEnum family);
     int GetNomScaleMax(int scale, ChartTypeEnum type, ChartFamilyEnum family);
-    
+
 private:
     bool BuildExtendedChartStackAndCandidateArray(bool b_fullscreen, int ref_db_index, ViewPort &vp_in);
     int AdjustRefOnZoom( bool b_zin, ChartFamilyEnum family, ChartTypeEnum type, double proposed_scale_onscreen );
 
     bool DoRenderQuiltRegionViewOnDC( wxMemoryDC &dc, ViewPort &vp, OCPNRegion &chart_region );
     bool DoRenderQuiltRegionViewOnDCTextOnly( wxMemoryDC& dc, ViewPort &vp, OCPNRegion &chart_region );
-    
+
     void EmptyCandidateArray( void );
     void SubstituteClearDC( wxMemoryDC &dc, ViewPort &vp );
     int GetNewRefChart( void );
+    const LLRegion &GetTilesetRegion( int dbIndex);
 
-    
+
     bool IsChartS57Overlay( int db_index );
     
     LLRegion m_covered_region;

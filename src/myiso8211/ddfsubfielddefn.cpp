@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  ISO 8211 Access
  * Purpose:  Implements the DDFSubfieldDefn class.
@@ -72,13 +72,13 @@
  * New
  *
  */
-
+#include <algorithm>
 #include "iso8211.h"
 #include "mygdal/cpl_conv.h"
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                          DDFSubfieldDefn()                           */
-/************************************************************************/
+/* ***********************************************************************/
 
 DDFSubfieldDefn::DDFSubfieldDefn()
 
@@ -97,9 +97,9 @@ DDFSubfieldDefn::DDFSubfieldDefn()
     pachBuffer = NULL;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                          ~DDFSubfieldDefn()                          */
-/************************************************************************/
+/* ***********************************************************************/
 
 DDFSubfieldDefn::~DDFSubfieldDefn()
 
@@ -109,9 +109,9 @@ DDFSubfieldDefn::~DDFSubfieldDefn()
     CPLFree( pachBuffer );
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                              SetName()                               */
-/************************************************************************/
+/* ***********************************************************************/
 
 void DDFSubfieldDefn::SetName( const char * pszNewName )
 
@@ -126,7 +126,7 @@ void DDFSubfieldDefn::SetName( const char * pszNewName )
         pszName[i] = '\0';
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                             SetFormat()                              */
 /*                                                                      */
 /*      While interpreting the format string we don't support:          */
@@ -135,7 +135,7 @@ void DDFSubfieldDefn::SetName( const char * pszNewName )
 /*       o 'X' for unused data ... this should really be filtered       */
 /*         out by DDFFieldDefn::ApplyFormats(), but isn't.              */
 /*       o 'B' bitstrings that aren't a multiple of eight.              */
-/************************************************************************/
+/* ***********************************************************************/
 
 int DDFSubfieldDefn::SetFormat( const char * pszFormat )
 
@@ -225,11 +225,11 @@ int DDFSubfieldDefn::SetFormat( const char * pszFormat )
     return TRUE;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                                Dump()                                */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Write out subfield definition info to debugging file.
  *
  * A variety of information about this field definition is written to the
@@ -246,13 +246,13 @@ void DDFSubfieldDefn::Dump( FILE * fp )
     fprintf( fp, "        FormatString = `%s'\n", pszFormatString );
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                           GetDataLength()                            */
 /*                                                                      */
 /*      This method will scan for the end of a variable field.          */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Scan for the end of variable length data.  Given a pointer to the data
  * for this subfield (from within a DDFRecord) this method will return the
  * number of bytes which are data for this subfield.  The number of bytes
@@ -422,11 +422,11 @@ int DDFSubfieldDefn::GetDataLength( const char * pachSourceData,
 #endif    
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                         ExtractStringData()                          */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Extract a zero terminated string containing the data for this subfield.
  * Given a pointer to the data
  * for this subfield (from within a DDFRecord) this method will return the
@@ -486,11 +486,11 @@ DDFSubfieldDefn::ExtractStringData( const char * pachSourceData,
     return pachBuffer;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                          ExtractFloatData()                          */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Extract a subfield value as a float.  Given a pointer to the data
  * for this subfield (from within a DDFRecord) this method will return the
  * floating point data for this subfield.  The number of bytes
@@ -613,11 +613,11 @@ DDFSubfieldDefn::ExtractFloatData( const char * pachSourceData,
     return 0.0;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                           ExtractIntData()                           */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Extract a subfield value as an integer.  Given a pointer to the data
  * for this subfield (from within a DDFRecord) this method will return the
  * int data for this subfield.  The number of bytes
@@ -748,14 +748,14 @@ DDFSubfieldDefn::ExtractIntData( const char * pachSourceData,
     return 0;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                              DumpData()                              */
 /*                                                                      */
 /*      Dump the instance data for this subfield from a data            */
 /*      record.  This fits into the output dump stream of a DDFField.   */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Dump subfield value to debugging file.
  *
  * @param pachData Pointer to data for this subfield.
@@ -781,7 +781,7 @@ void DDFSubfieldDefn::DumpData( const char * pachData, int nMaxBytes,
         GByte   *pabyBString = (GByte *) ExtractStringData( pachData, nMaxBytes, &nBytes );
 
         fprintf( fp, "      Subfield `%s' = 0x", pszName );
-        for( i = 0; i < MIN(nBytes,24); i++ )
+        for( i = 0; i < std::min(nBytes,24); i++ )
             fprintf( fp, "%02X", pabyBString[i] );
 
         if( nBytes > 24 )
@@ -795,11 +795,11 @@ void DDFSubfieldDefn::DumpData( const char * pachData, int nMaxBytes,
                  ExtractStringData( pachData, nMaxBytes, NULL ) );
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                          GetDefaultValue()                           */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Get default data.
  *
  * Returns the default subfield data contents for this subfield definition.
@@ -862,11 +862,11 @@ int DDFSubfieldDefn::GetDefaultValue( char *pachData, int nBytesAvailable,
     return TRUE;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                         FormatStringValue()                          */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Format string subfield value.
  *
  * Returns a buffer with the passed in string value reformatted in a way
@@ -924,11 +924,11 @@ int DDFSubfieldDefn::FormatStringValue( char *pachData, int nBytesAvailable,
     return TRUE;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                           FormatIntValue()                           */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Format int subfield value.
  *
  * Returns a buffer with the passed in int value reformatted in a way
@@ -1020,11 +1020,11 @@ int DDFSubfieldDefn::FormatIntValue( char *pachData, int nBytesAvailable,
 #pragma GCC diagnostic pop
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                          FormatFloatValue()                          */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Format float subfield value.
  *
  * Returns a buffer with the passed in float value reformatted in a way

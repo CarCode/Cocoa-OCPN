@@ -693,7 +693,7 @@ bool OCPNRegion::DoXor( const OCPNRegion& region )
 
     AllocExclusive();
 
-    ///    gdk_region_xor( M_REGIONDATA->m_region, (OGdkRegion *)region.GetRegion() );
+    //    gdk_region_xor( M_REGIONDATA->m_region, (OGdkRegion *)region.GetRegion() );
 
     return true;
 }
@@ -958,7 +958,7 @@ wxRect OCPNRegionIterator::GetRect() const
 #ifdef USE_NEW_REGION
 
 /* $TOG: Region.c /main/31 1998/02/06 17:50:22 kaleb $ */
-/************************************************************************
+/* ***********************************************************************
  * 
  * Copyright 1987, 1988, 1998  The Open Group
  * 
@@ -1056,7 +1056,7 @@ static void miRegionOp   (OGdkRegion       *newReg,
                           nonOverlapFunc   nonOverlap1Fn,
                           nonOverlapFunc   nonOverlap2Fn);
 
-/**
+/*
  * gdk_region_new:
  *
  * Creates a new empty #GdkRegion.
@@ -1081,14 +1081,14 @@ gdk_region_new (void)
     return temp;
 }
 
-/**
+/*
  * gdk_region_rectangle:
  * @rectangle: a #GdkRectangle
  * 
  * Creates a new region containing the area @rectangle.
  * 
  * Return value: a new region
- **/
+ */
 OGdkRegion *
 gdk_region_rectangle (const OGdkRectangle *rectangle)
 {
@@ -1112,20 +1112,20 @@ gdk_region_rectangle (const OGdkRectangle *rectangle)
     return temp;
 }
 
-/**
+/*
  * gdk_region_copy:
  * @region: a #GdkRegion
  * 
  * Copies @region, creating an identical new region.
  * 
  * Return value: a new region identical to @region
- **/
+ */
 OGdkRegion *
 gdk_region_copy (const OGdkRegion *region)
 {
     OGdkRegion *temp;
     
- ///   g_return_val_if_fail (region != NULL, NULL);
+ //   g_return_val_if_fail (region != NULL, NULL);
     
     temp = gdk_region_new ();
     
@@ -1134,7 +1134,7 @@ gdk_region_copy (const OGdkRegion *region)
     return temp;
 }
 
-/**
+/*
  * gdk_region_get_clipbox:
  * @region: a #GdkRegion
  * @rectangle: return location for the clipbox
@@ -1146,8 +1146,8 @@ void
 gdk_region_get_clipbox (const OGdkRegion *region,
                         OGdkRectangle    *rectangle)
 {
-///    g_return_if_fail (region != NULL);
-///    g_return_if_fail (rectangle != NULL);
+//    g_return_if_fail (region != NULL);
+//    g_return_if_fail (rectangle != NULL);
     
     rectangle->x = region->extents.x1;
     rectangle->y = region->extents.y1;
@@ -1156,7 +1156,7 @@ gdk_region_get_clipbox (const OGdkRegion *region,
 }
 
 
-/**
+/*
  * gdk_region_get_rectangles:
  * @region: a #GdkRegion
  * @rectangles: return location for an array of rectangles
@@ -1164,7 +1164,7 @@ gdk_region_get_clipbox (const OGdkRegion *region,
  *
  * Obtains the area covered by the region as a list of rectangles.
  * The array returned in @rectangles must be freed with g_free().
- **/
+ */
 void
 gdk_region_get_rectangles (const OGdkRegion  *region,
                            OGdkRectangle    **rectangles,
@@ -1172,9 +1172,9 @@ gdk_region_get_rectangles (const OGdkRegion  *region,
 {
     int i;
     
- ///   g_return_if_fail (region != NULL);
- ///   g_return_if_fail (rectangles != NULL);
- ///   g_return_if_fail (n_rectangles != NULL);
+ //   g_return_if_fail (region != NULL);
+ //   g_return_if_fail (rectangles != NULL);
+ //   g_return_if_fail (n_rectangles != NULL);
     
     *n_rectangles = region->numRects;
     *rectangles = (OGdkRectangle *)malloc (sizeof(OGdkRectangle) * region->numRects);
@@ -1190,7 +1190,7 @@ gdk_region_get_rectangles (const OGdkRegion  *region,
     }
 }
 
-/**
+/*
  * gdk_region_union_with_rect:
  * @region: a #GdkRegion.
  * @rect: a #GdkRectangle.
@@ -1198,7 +1198,7 @@ gdk_region_get_rectangles (const OGdkRegion  *region,
  * Sets the area of @region to the union of the areas of @region and
  * @rect. The resulting area is the set of pixels contained in
  * either @region or @rect.
- **/
+ */
 void
 gdk_region_union_with_rect (OGdkRegion          *region,
                             const OGdkRectangle *rect)
@@ -1267,7 +1267,7 @@ miSetExtents (OGdkRegion *pReg)
     pExtents->x2 = pBoxEnd->x2;
     pExtents->y2 = pBoxEnd->y2;
     
-///    g_assert(pExtents->y1 < pExtents->y2);
+//    g_assert(pExtents->y1 < pExtents->y2);
     while (pBox <= pBoxEnd)
     {
         if (pBox->x1 < pExtents->x1)
@@ -1280,10 +1280,10 @@ miSetExtents (OGdkRegion *pReg)
         }
         pBox++;
     }
-///    g_assert(pExtents->x1 < pExtents->x2);
+//    g_assert(pExtents->x1 < pExtents->x2);
 }
 
-/**
+/*
  * gdk_region_destroy:
  * @region: a #GdkRegion
  *
@@ -1292,15 +1292,15 @@ miSetExtents (OGdkRegion *pReg)
 void
 gdk_region_destroy (OGdkRegion *region)
 {
-///    g_return_if_fail (region != NULL);
+//    g_return_if_fail (region != NULL);
     
     if (region->rects != &region->extents)
         free (region->rects);
- ///   g_slice_free (GdkRegion, region);
+ //   g_slice_free (GdkRegion, region);
 }
 
 
-/**
+/*
  * gdk_region_offset:
  * @region: a #GdkRegion
  * @dx: the distance to move the region horizontally
@@ -1316,7 +1316,7 @@ gdk_region_offset (OGdkRegion *region,
     int nbox;
     OGdkRegionBox *pbox;
     
-///    g_return_if_fail (region != NULL);
+//    g_return_if_fail (region != NULL);
     
     pbox = region->rects;
     nbox = region->numRects;
@@ -1394,7 +1394,7 @@ else gdk_region_intersect (a,b)
         #undef ZShiftRegion
         #undef ZCopyRegion
         
-        /**
+        /*
          * gdk_region_shrink:
          * @region: a #GdkRegion
          * @dx: the number of pixels to shrink the region horizontally
@@ -1516,7 +1516,7 @@ else gdk_region_intersect (a,b)
             }
         }
         
-        /**
+        /*
          * gdk_region_intersect:
          * @source1: a #GdkRegion
          * @source2: another #GdkRegion
@@ -1529,8 +1529,8 @@ else gdk_region_intersect (a,b)
         gdk_region_intersect (OGdkRegion       *source1,
                               const OGdkRegion *source2)
         {
-///            g_return_if_fail (source1 != NULL);
-///            g_return_if_fail (source2 != NULL);
+//            g_return_if_fail (source1 != NULL);
+//            g_return_if_fail (source2 != NULL);
             
             /* check for trivial reject */
             if ((!(source1->numRects)) || (!(source2->numRects))  ||
@@ -2039,11 +2039,11 @@ else gdk_region_intersect (a,b)
                        
                        pNextRect = &pReg->rects[pReg->numRects];
                        
- ///                      g_assert(y1 < y2);
+ //                      g_assert(y1 < y2);
                        
                        while (r != rEnd)
                        {
-///                           g_assert(r->x1 < r->x2);
+//                           g_assert(r->x1 < r->x2);
                            OMEMCHECK(pReg, pNextRect, pReg->rects);
                            pNextRect->x1 = r->x1;
                            pNextRect->y1 = y1;
@@ -2052,7 +2052,7 @@ else gdk_region_intersect (a,b)
                            pReg->numRects += 1;
                            pNextRect++;
                            
-///                           g_assert(pReg->numRects<=pReg->size);
+//                           g_assert(pReg->numRects<=pReg->size);
                            r++;
                        }
                    }
@@ -2139,7 +2139,7 @@ else gdk_region_intersect (a,b)
                    }
                    }
                    
-                   /**
+                   /*
                     * gdk_region_union:
                     * @source1:  a #GdkRegion
                     * @source2: a #GdkRegion 
@@ -2147,13 +2147,13 @@ else gdk_region_intersect (a,b)
                     * Sets the area of @source1 to the union of the areas of @source1 and
                     * @source2. The resulting area is the set of pixels contained in
                     * either @source1 or @source2.
-                    **/
+                    */
                    void
                    gdk_region_union (OGdkRegion       *source1,
                                      const OGdkRegion *source2)
                    {
-///                       g_return_if_fail (source1 != NULL);
-///                       g_return_if_fail (source2 != NULL);
+//                       g_return_if_fail (source1 != NULL);
+//                       g_return_if_fail (source2 != NULL);
                        
                        /*  checks all the simple cases */
                        
@@ -2235,11 +2235,11 @@ else gdk_region_intersect (a,b)
                        
                        pNextRect = &pReg->rects[pReg->numRects];
                        
-///                       g_assert(y1<y2);
+//                       g_assert(y1<y2);
                        
                        while (r != rEnd)
                        {
-///                           g_assert (r->x1<r->x2);
+//                           g_assert (r->x1<r->x2);
                            OMEMCHECK (pReg, pNextRect, pReg->rects);
                            pNextRect->x1 = r->x1;
                            pNextRect->y1 = y1;
@@ -2248,7 +2248,7 @@ else gdk_region_intersect (a,b)
                            pReg->numRects += 1;
                            pNextRect++;
                            
-///                           g_assert (pReg->numRects <= pReg->size);
+//                           g_assert (pReg->numRects <= pReg->size);
                            
                            r++;
                        }
@@ -2283,7 +2283,7 @@ else gdk_region_intersect (a,b)
                        
                        x1 = r1->x1;
                        
- ///                      g_assert(y1<y2);
+ //                      g_assert(y1<y2);
                        pNextRect = &pReg->rects[pReg->numRects];
                        
                        while ((r1 != r1End) && (r2 != r2End))
@@ -2326,7 +2326,7 @@ else gdk_region_intersect (a,b)
                                 * Left part of subtrahend covers part of minuend: add uncovered
                                 * part of minuend to region and skip to next subtrahend.
                                 */
- ///                              g_assert(x1<r2->x1);
+ //                              g_assert(x1<r2->x1);
                                OMEMCHECK(pReg, pNextRect, pReg->rects);
                                pNextRect->x1 = x1;
                                pNextRect->y1 = y1;
@@ -2335,7 +2335,7 @@ else gdk_region_intersect (a,b)
                                pReg->numRects += 1;
                                pNextRect++;
                                
- ///                              g_assert(pReg->numRects<=pReg->size);
+ //                              g_assert(pReg->numRects<=pReg->size);
                                
                                x1 = r2->x2;
                                if (x1 >= r1->x2)
@@ -2382,7 +2382,7 @@ else gdk_region_intersect (a,b)
                         */
                        while (r1 != r1End)
                        {
-///                           g_assert(x1<r1->x2);
+//                           g_assert(x1<r1->x2);
                            OMEMCHECK(pReg, pNextRect, pReg->rects);
                            pNextRect->x1 = x1;
                            pNextRect->y1 = y1;
@@ -2391,7 +2391,7 @@ else gdk_region_intersect (a,b)
                            pReg->numRects += 1;
                            pNextRect++;
                            
-///                           g_assert(pReg->numRects<=pReg->size);
+//                           g_assert(pReg->numRects<=pReg->size);
                            
                            r1++;
                            if (r1 != r1End)
@@ -2401,14 +2401,14 @@ else gdk_region_intersect (a,b)
                        }
                    }
                    
-                   /**
+                   /*
                     * gdk_region_subtract:
                     * @source1: a #GdkRegion
                     * @source2: another #GdkRegion
                     *
                     * Subtracts the area of @source2 from the area @source1. The resulting
                     * area is the set of pixels contained in @source1 but not in @source2.
-                    **/
+                    */
                    void
                    gdk_region_subtract (OGdkRegion       *source1,
                                         const OGdkRegion *source2)
@@ -2433,7 +2433,7 @@ else gdk_region_intersect (a,b)
                        miSetExtents (source1);
                    }
                    
-                   /**
+                   /*
                     * gdk_region_xor:
                     * @source1: a #GdkRegion
                     * @source2: another #GdkRegion
@@ -2441,7 +2441,7 @@ else gdk_region_intersect (a,b)
                     * Sets the area of @source1 to the exclusive-OR of the areas of @source1
                     * and @source2. The resulting area is the set of pixels contained in one
                     * or the other of the two sources but not in both.
-                    **/
+                    */
                    void
                    gdk_region_xor (OGdkRegion       *source1,
                                    const OGdkRegion *source2)
@@ -2461,7 +2461,7 @@ else gdk_region_intersect (a,b)
                        gdk_region_destroy (trb);
                    }
                    
-                   /**
+                   /*
                     * gdk_region_empty: 
                     * @region: a #GdkRegion
                     *
@@ -2480,7 +2480,7 @@ else gdk_region_intersect (a,b)
                            return FALSE;
                    }
                    
-                   /**
+                   /*
                     * gdk_region_equal:
                     * @region1: a #GdkRegion
                     * @region2: a #GdkRegion
@@ -2514,7 +2514,7 @@ else gdk_region_intersect (a,b)
                        return TRUE;
                    }
                    
-                   /**
+                   /*
                     * gdk_region_point_in:
                     * @region: a #GdkRegion
                     * @x: the x coordinate of a point
@@ -2546,7 +2546,7 @@ else gdk_region_intersect (a,b)
                    }
  
 
-                   /**
+                   /*
                     * gdk_region_rect_in: 
                     * @region: a #GdkRegion.
                     * @rectangle: a #GdkRectangle.
@@ -2702,7 +2702,7 @@ else gdk_region_intersect (a,b)
 #endif
 
 #if 0
-                   /**
+                   /*
                     * gdk_region_spans_intersect_foreach:
                     * @region: a #GdkRegion
                     * @spans: an array of #GdkSpans
@@ -2809,7 +2809,7 @@ else gdk_region_intersect (a,b)
  
  
  /* $TOG: PolyReg.c /main/15 1998/02/06 17:47:08 kaleb $ */
- /************************************************************************
+ /* ***********************************************************************
   * 
   * Copyright 1987, 1998  The Open Group
   * 
@@ -3257,7 +3257,7 @@ else gdk_region_intersect (a,b)
      return(TRUE);
  }
  
- /**
+ /*
   * gdk_region_polygon:
   * @points: an array of #GdkPoint structs
   * @n_points: the number of elements in the @points array
@@ -3282,7 +3282,7 @@ else gdk_region_intersect (a,b)
      OScanLineList *pSLL;     /* current scanLineList    */
      OGdkPoint *pts;          /* output buffer           */
      OEdgeTableEntry *pPrevAET;        /* ptr to previous AET     */
-     OEdgeTable ET;                    /* header node for ET      */
+     OEdgeTable ET = {0};                    /* header node for ET      */
      OEdgeTableEntry AET;              /* header node for AET     */
      OEdgeTableEntry *pETEs;           /* EdgeTableEntries pool   */
      OScanLineListBlock SLLBlock;      /* header for scanlinelist */

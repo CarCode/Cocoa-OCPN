@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  ISO 8211 Access
  * Purpose:  Implements the DDFField class.
@@ -83,7 +83,7 @@
  * New
  *
  */
-
+#include <algorithm>
 #include "iso8211.h"
 #include "mygdal/cpl_conv.h"
 
@@ -91,9 +91,9 @@
 // cheaper.  It is required that the Initialize() be called before anything
 // else.
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                             Initialize()                             */
-/************************************************************************/
+/* ***********************************************************************/
 
 void DDFField::Initialize( DDFFieldDefn *poDefnIn, const char * pachDataIn,
                            int nDataSizeIn )
@@ -104,11 +104,11 @@ void DDFField::Initialize( DDFFieldDefn *poDefnIn, const char * pachDataIn,
     poDefn = poDefnIn;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                                Dump()                                */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Write out field contents to debugging file.
  *
  * A variety of information about this field, and all it's
@@ -133,7 +133,7 @@ void DDFField::Dump( FILE * fp )
     fprintf( fp, "      Data = \n" );
     
     int il = 0;
-    for( int i = 0; i < MIN(nDataSize,1000); i++ )
+    for( int i = 0; i < std::min(nDataSize,1000); i++ )
     {
         //if( pachData[i] < 32 || pachData[i] > 126 )
             fprintf( fp, "\\%02X", ((unsigned char *) pachData)[i] );
@@ -180,11 +180,11 @@ void DDFField::Dump( FILE * fp )
     }
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                          GetSubfieldData()                           */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Fetch raw data pointer for a particular subfield of this field.
  *
  * The passed DDFSubfieldDefn (poSFDefn) should be acquired from the
@@ -249,11 +249,11 @@ const char *DDFField::GetSubfieldData( DDFSubfieldDefn *poSFDefn,
     return NULL;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                           GetRepeatCount()                           */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * How many times do the subfields of this record repeat?  This
  * will always be one for non-repeating fields.
  *
@@ -316,11 +316,11 @@ int DDFField::GetRepeatCount()
     }
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                          GetInstanceData()                           */
-/************************************************************************/
+/* ***********************************************************************/
 
-/**
+/*
  * Get field instance data and size.
  *
  * The returned data pointer and size values are suitable for use with

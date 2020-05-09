@@ -58,7 +58,9 @@ CustomArray::CustomArray(const char* filename) : mNbPushedAddies(0), mNbAllocate
 	FILE* fp = fopen(filename, "rb");
 	if(fp)
 	{
-		fread(mCurrentCell->Item.Addy, StartSize, 1, fp);
+        if (fread(mCurrentCell->Item.Addy, StartSize, 1, fp)) {
+            // Ignore
+        };
 		fclose(fp);
 	}
 

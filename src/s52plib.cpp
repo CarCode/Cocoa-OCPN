@@ -3694,21 +3694,15 @@ int s52plib::RenderGLLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
     S52color *c = getColor( str + 7 ); // Colour
     int w = atoi( str + 5 ); // Width
+    if(w > 1)
+        int yyp = 4;
 
     glColor3ub( c->R, c->G, c->B );
 
     //    Set drawing width
     float lineWidth = w;
 
-    if( w > 1 ) {
-        GLint parms[2];
-        glGetIntegerv( GL_ALIASED_LINE_WIDTH_RANGE, &parms[0] );
-        if( w > parms[1] )
-            lineWidth = wxMax(g_GLMinCartographicLineWidth, parms[1]);
-        else
-            lineWidth = wxMax(g_GLMinCartographicLineWidth, w);
-    } else
-        lineWidth = wxMax(g_GLMinCartographicLineWidth, 1);
+    lineWidth = wxMax(g_GLMinCartographicLineWidth, w);
 
     // Manage super high density displays
     float target_w_mm = 0.5 * w;
