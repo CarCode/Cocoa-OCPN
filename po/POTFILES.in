@@ -24,7 +24,6 @@
 ../include/compass.h
 ../include/concanv.h
 ../include/ConnectionParams.h
-../include/crashprint.h
 ../include/cutil.h
 ../include/datastream.h
 ../include/DetailSlider.h
@@ -149,7 +148,6 @@
 ../src/AISTargetAlertDialog.cpp
 ../src/AISTargetListDialog.cpp
 ../src/AISTargetQueryDialog.cpp
-../src/androidUTIL.cpp
 ../src/bbox.cpp
 ../src/CanvasConfig.cpp
 ../src/canvasMenu.cpp
@@ -164,11 +162,9 @@
 ../src/ChInfoWin.cpp
 ../src/cm93.cpp
 ../src/compass.cpp
-../src/compasswin.cpp
 ../src/concanv.cpp
 ../src/ConfigMgr.cpp
 ../src/ConnectionParams.cpp
-../src/crashprint.cpp
 ../src/cutil.cpp
 ../src/datastream.cpp
 ../src/DetailSlider.cpp
