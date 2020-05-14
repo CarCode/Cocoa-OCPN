@@ -1563,6 +1563,7 @@ bool TrackPropDlg::SaveChanges( void )
     if( m_pTrack && m_pTrack->IsRunning() )
     {
         wxJSONValue v;
+        v[_T("Changed")] = true;
         v[_T("Name")] =  m_pTrack->GetName();
         v[_T("GUID")] =  m_pTrack->m_GUID;
         wxString msg_id( _T("OCPN_TRK_ACTIVATED") );

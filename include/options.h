@@ -189,6 +189,7 @@ enum {
   ID_SETSTDLIST,
   ID_VECZOOM,
   ID_INLANDECDISBOX,
+  ID_ROLLOVERBOX,
   ID_SOGCOGFROMLLCHECKBOX,
   ID_SOGCOGDAMPINTTEXTCTRL,
   // LIVE ETA OPTION
@@ -378,7 +379,7 @@ class options : private Uncopyable,
   wxCheckBox *pAutoAnchorMark, *pCDOQuilting, *pCBRaster, *pCBVector;
   wxCheckBox *pCBCM93, *pCBLookAhead, *pSkewComp, *pOpenGL, *pSmoothPanZoom;
   wxCheckBox *pFullScreenQuilt, *pMobile, *pResponsive, *pOverzoomEmphasis;
-  wxCheckBox *pOZScaleVector, *pToolbarAutoHideCB, *pInlandEcdis, *pDarkDecorations;
+  wxCheckBox *pOZScaleVector, *pToolbarAutoHideCB, *pInlandEcdis, *pRollover,  *pDarkDecorations;
   wxTextCtrl *pCOGUPUpdateSecs, *m_pText_OSCOG_Predictor, *pScreenMM;
   wxTextCtrl *pToolbarHideSecs, *m_pText_OSHDT_Predictor;
 
@@ -455,8 +456,9 @@ class options : private Uncopyable,
   void OnValChange(wxCommandEvent &event);
   void OnUploadFormatChange(wxCommandEvent &event);
   void EnableConnection( ConnectionParams *conn, bool value);
+  void OnAISRolloverClick(wxCommandEvent &event);
 
-  
+
   void OnCanvasConfigSelectClick( int ID, bool selected);
   
   bool connectionsaved;
@@ -522,6 +524,7 @@ class options : private Uncopyable,
   wxTextCtrl *m_pText_Mark_Lost, *m_pText_Remove_Lost, *m_pText_COG_Predictor;
   wxTextCtrl *m_pText_Track_Length, *m_pText_Moored_Speed, *m_pText_Scale_Priority;
   wxTextCtrl *m_pText_ACK_Timeout, *m_pText_Show_Target_Name_Scale;
+  wxTextCtrl *m_pText_RealtPred_Speed;
 
   // For Display->Configs page...
   wxScrolledWindow *m_DisplayConfigsPage;
@@ -576,6 +579,8 @@ class options : private Uncopyable,
   wxCheckBox *pTransparentToolbar;
   wxCheckBox *pAdvanceRouteWaypointOnArrivalOnly, *pTrackShowIcon;
   wxCheckBox *pTrackDaily, *pTrackHighlite;
+  wxStaticText* pStatic_CallSign;
+
 #if wxCHECK_VERSION(2, 9, 0)
 #ifdef __WXGTK__
   TimeCtrl *pTrackRotateTime;

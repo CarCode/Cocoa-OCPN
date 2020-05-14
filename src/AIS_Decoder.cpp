@@ -68,6 +68,7 @@ extern double   g_AckTimeout_Mins;
 extern bool     g_bShowAreaNotices;
 extern bool     g_bDrawAISSize;
 extern bool     g_bDrawAISRealtime;
+extern double   g_AIS_RealtPred_Kts;
 extern bool     g_bShowAISName;
 extern int      g_Show_Target_Name_Scale;
 extern bool     g_bAllowShowScaled;
@@ -340,6 +341,13 @@ void AIS_Decoder::OnEvtAIS( OCPN_DataStreamEvent& event )
         }
     }
 }
+
+//----------------------------------------------------------------------------------
+//     Handle events from SignalK DataStream. NICHT übernommen!
+//----------------------------------------------------------------------------------
+//  void AIS_Decoder::OnEvtSignalK(OCPN_SignalKEvent &event)
+//  void AIS_Decoder::handleUpdate(AIS_Target_Data *pTargetData, bool bnewtarget, wxJSONValue &update)
+//  void AIS_Decoder::updateItem(AIS_Target_Data *pTargetData, bool bnewtarget, wxJSONValue &item, wxString &sfixtime) const
 
 //----------------------------------------------------------------------------------
 //      Decode a single AIVDO sentence to a Generic Position Report
