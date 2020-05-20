@@ -782,8 +782,18 @@ bool PlugInManager::DeactivatePlugIn(PlugInContainer *pic)
         wxLogMessage(msg);
 
         if(pic->m_bInitState){
+            // Unload chart cache if this plugin is responsible for any charts
+            if((pic->m_cap_flag & INSTALLS_PLUGIN_CHART) || (pic->m_cap_flag & INSTALLS_PLUGIN_CHART_GL)){
+                ChartData->PurgeCachePlugins();
+                gFrame->InvalidateAllQuilts();
+            }
+
             pic->m_bInitState = false;
             pic->m_pplugin->DeInit();
+        }
+        else {
+             // Already deactivated
+             return true;
         }
 
         //    Deactivate (Remove) any ToolbarTools added by this PlugIn
@@ -1113,28 +1123,7 @@ bool PlugInManager::CheckPluginCompatibility(wxString plugin_file)
         VirtualFree(virtualpointer, size, MEM_DECOMMIT);
 #endif
 #if defined(__WXGTK__) || defined(__WXQT__)
-#if 0
-    wxString cmd = _T("ldd ") + plugin_file + _T(" 2>&1");
-    FILE *ldd = popen( cmd.mb_str(), "r" );
-    if (ldd != NULL)
-    {
-        char buf[1024];
-        
-        char strver[22]; //Enough space even for very big integers...
-        sprintf( strver, "%i.%i", wxMAJOR_VERSION, wxMINOR_VERSION );
-
-        while( fscanf(ldd, "%s", buf) != EOF )
-        {
-            if( strstr(buf, "libwx") != NULL )
-            {
-                if(  strstr(buf, strver) == NULL )
-                    b_compat = false;
-                break;
-            }
-        }
-        fclose(ldd);
-    }
-#elif defined(USE_LIBELF)
+#if defined(USE_LIBELF)
 
     static bool b_own_info_queried = false;
     static bool b_own_info_usable = false;
@@ -1148,11 +1137,7 @@ bool PlugInManager::CheckPluginCompatibility(wxString plugin_file)
         if( app.argc && !app.argv[0].IsEmpty())
         {
             wxString app_path( app.argv[0] );
-#if defined(USE_LIBELF)
             b_own_info_usable = ReadModuleInfoFromELF( app_path, dependencies, own_info );
-#else
-#error No support for other executable formats is implemented.
-#endif
         }
         else
         {
@@ -1165,11 +1150,7 @@ bool PlugInManager::CheckPluginCompatibility(wxString plugin_file)
     {
         bool b_pi_info_usable = false;
         ModuleInfo pi_info;
-#if defined(USE_LIBELF)
         b_pi_info_usable = ReadModuleInfoFromELF( plugin_file, dependencies, pi_info );
-#else
-#error No support for other executable formats is implemented.
-#endif
         if( b_pi_info_usable )
         {
             b_compat = ( pi_info.type_magic == own_info.type_magic );
@@ -1201,16 +1182,23 @@ bool PlugInManager::CheckPluginCompatibility(wxString plugin_file)
         b_compat = true;
     }
 
-#else
-    // this is 3x faster than the other method
+        if(!b_compat){
+            wxLogMessage("Plugin is incompatible by elf library scan.");
+            return false;           // definitely not compatible by ELF lib dependency comparison
+        }
+
+#endif  // LIBELF
+
+    // File scan is 3x faster than the ELF scan method
+
     FILE *f = fopen(plugin_file, "r");
     char strver[26]; //Enough space even for very big integers...
 
     sprintf( strver,
-#if defined(__WXGTK20__)
-             "libwx_gtk2u_core-%i.%i"
-#elif defined(__WXGTK3__)
+#if defined(__WXGTK3__)
              "libwx_gtk3u_core-%i.%i"
+#elif defined(__WXGTK20__)
+            "libwx_gtk2u_core-%i.%i"
 #elif defined(__WXQT__)
              "libwx_qtu_core-%i.%i"
 #else
@@ -1230,9 +1218,9 @@ bool PlugInManager::CheckPluginCompatibility(wxString plugin_file)
             pos = 0;
     }
     fclose(f);
-#endif
-#endif // __WXGTK__
+#endif // __WXGTK__ or __WXQT__
 
+    wxLogMessage("Plugin is compatible: %s", b_compat ? "true" : "false");
     return b_compat;
 }
 
@@ -4326,18 +4314,29 @@ void PluginPanel::SetSelected( bool selected )
         Layout();
         //FitInside();
     }
+
+    bool bUseSysColors = false;
 #ifdef __WXOSX__
-    if( wxPlatformInfo::Get().CheckOSVersion(10, 14) ) {
+        if( wxPlatformInfo::Get().CheckOSVersion(10, 14) )
+            bUseSysColors = true;
+#endif
+#ifdef __WXGTK__
+        bUseSysColors= true;
+#endif
+
+        if(bUseSysColors){
         wxColour bg = wxSystemSettings::GetColour(wxSYS_COLOUR_APPWORKSPACE);
-        if( bg.Red() < 128 ) {
+        if( bg.Red() < 128 ) {          // is Dark...
             if(selected) {
                 SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+//                m_status_icon->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
             } else {
                 SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_APPWORKSPACE));
+//                m_status_icon->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_APPWORKSPACE));
             }
         }
     }
-#endif
+
     // StaticText color change upon selection
     SetEnabled( m_pPlugin->m_bEnabled );
 }
