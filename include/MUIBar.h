@@ -37,7 +37,7 @@ enum
 {
     ID_MUI_MENU = 21500
 };
-    
+
 enum{
     CO_ANIMATION_LINEAR = 0,
     CO_ANIMATION_QUADRATIC,
@@ -64,7 +64,7 @@ public:
     MUIBar(ChartCanvas* parent, int orientation = wxHORIZONTAL,  float size_factor =1.0, wxWindowID id = wxID_ANY, 
            const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
            long style = 0, const wxString& name = wxPanelNameStr);
-    
+
     ~MUIBar();
 
     void OnSize( wxSizeEvent& event );
@@ -72,7 +72,7 @@ public:
     void OnToolLeftClick(  wxCommandEvent& event );
     void OnEraseBackground( wxEraseEvent& event );
     void onCanvasOptionsAnimationTimerEvent( wxTimerEvent &event );
-    
+
     void SetBestPosition( void );
     void UpdateDynamicValues();
     int GetOrientation(){ return m_orientation; }
@@ -81,41 +81,42 @@ public:
     CanvasOptions *GetCanvasOptions(){ return m_canvasOptions; }
     void SetColorScheme( ColorScheme cs );
     void SetCanvasENCAvailable( bool avail );
-    
+    void OnScaleSelected( wxMouseEvent &event );
+
 private:
     void Init( void );
     void CreateControls();
     void PullCanvasOptions();
     void PushCanvasOptions();
-    
+
     void CaptureCanvasOptionsBitmap();
     void CaptureCanvasOptionsBitmapChain( wxTimerEvent& event );
-    
+
     ChartCanvas *m_parentCanvas;
     int         m_orientation;
     float       m_scaleFactor;
-    
+
     MUIButton   *m_zinButton;
     MUIButton   *m_zoutButton;
     MUIButton   *m_menuButton;
     MUIButton   *m_followButton;
     wxStaticText *m_scaleTextBox;
-    
+
     CanvasOptions *m_canvasOptions;
     wxPoint     m_targetCOPos;
     wxPoint     m_currentCOPos;
     wxPoint     m_startCOPos;
     int         m_COTopOffset;
-    
+
     wxSize      m_canvasOptionsFullSize;
-    
+
     wxTimer     m_canvasOptionsAnimationTimer;
     int         m_animateStep;
     int         m_animateSteps;
     int         m_animationType;
     int         m_animationTotalTime;
     int         m_pushPull;
-    
+
     wxString    m_backcolorString;
     wxBitmap    m_animateBitmap;
     wxBitmap    m_backingBitmap;
