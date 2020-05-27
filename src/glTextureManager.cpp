@@ -26,6 +26,7 @@
 #include <wx/wxprec.h>
 #include <wx/progdlg.h>
 #include <wx/wx.h>
+#include <wx/thread.h>
 
 #include "dychart.h"
 #include "viewport.h"
@@ -472,6 +473,8 @@ static void throttle_func(void *data)
     }
 }
 
+static wxMutex s_mutexProtectingChartBitRead;
+
 bool JobTicket::DoJob(const wxRect &rect)
 {
     unsigned char *bit_array[10];
@@ -491,6 +494,8 @@ bool JobTicket::DoJob(const wxRect &rect)
         int index;
     
         if(ChartData){
+            wxMutexLocker lock(s_mutexProtectingChartBitRead);
+
             index =  ChartData->FinddbIndex( m_ChartPath );
             pchart = ChartData->OpenChartFromDBAndLock(index, FULL_INIT );
 

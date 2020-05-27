@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -66,14 +66,14 @@ public:
       int GetIndexOf(RoutePoint *prp);
       RoutePoint *InsertPointBefore(RoutePoint *pRP, double rlat, double rlon, bool bRenamePoints = false);
       RoutePoint *InsertPointAfter(RoutePoint *pRP, double rlat, double rlon, bool bRenamePoints = false);
-      
+
       void DrawPointWhich(ocpnDC& dc, ChartCanvas *canvas, int iPoint, wxPoint *rpn);
       void DrawSegment(ocpnDC& dc, ChartCanvas *canvas, wxPoint *rp1, wxPoint *rp2, ViewPort &vp, bool bdraw_arrow);
-      
+
       void DrawGLLines( ViewPort &vp, ocpnDC *dc, ChartCanvas *canvas );
       void DrawGL( ViewPort &vp, ChartCanvas *canvas );
       void DrawGLRouteLines( ViewPort &vp, ChartCanvas *canvas );
-      
+
       RoutePoint *GetLastPoint();
       void DeletePoint(RoutePoint *rp, bool bRenamePoints = false);
       void RemovePoint(RoutePoint *rp, bool bRenamePoints = false);
@@ -103,12 +103,16 @@ public:
       bool IsActive() { return m_bRtIsActive; }
       bool IsSelected() { return m_bRtIsSelected; }
 
+      bool ContainsSharedWP();
+      void SetSharedWPViz( bool sharedWPVIZ){ m_bsharedWPViz = sharedWPVIZ; }
+      bool GetSharedWPViz(){ return m_bsharedWPViz; }
+
       int SendToGPS(const wxString & com_name, bool bsend_waypoints, wxGauge *pProgress);
 
       double GetRouteArrivalRadius(void){ return m_ArrivalRadius;}
       void SetRouteArrivalRadius(double radius){m_ArrivalRadius = radius;}
       void SetDepartureDate(const wxDateTime &dt) { if( dt.IsValid() ) m_PlannedDeparture = dt; }
-    
+
       wxString GetName() const { return m_RouteNameString; }
       wxString GetTo() const { return m_RouteEndString; }
 
@@ -143,7 +147,7 @@ public:
       bool        m_btemp;
       int         m_hiliteWidth;
       HyperlinkList *m_HyperlinkList;
-      
+
 private:
       LLBBox     RBBox;
 
@@ -151,6 +155,7 @@ private:
       bool        m_bVisible; // should this route be drawn?
       bool        m_bListed;
       double      m_ArrivalRadius;
+      bool        m_bsharedWPViz;
 };
 
 WX_DECLARE_LIST(Route, RouteList); // establish class Route as list member
