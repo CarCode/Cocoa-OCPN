@@ -4565,8 +4565,8 @@
 		2DDC0B38B20E420F99F2AF61 /* TESS2_static */ = {
 			isa = PBXGroup;
 			children = (
-				7724A590DBD644949C811F56 /* Source Files */,
 				FC1F4DD3C5B748AAAC275083 /* Header Files */,
+				7724A590DBD644949C811F56 /* Source Files */,
 				2E9F9047256B4A8CA2B80EB1 /* CMakeLists.txt */,
 			);
 			name = TESS2_static;
@@ -6666,8 +6666,8 @@
 		E793AC24645E4381B8247C59 /* GARMINHOST */ = {
 			isa = PBXGroup;
 			children = (
-				C325A8A7209546D685804950 /* Source Files */,
 				4AFFF817E1AF4EB0AE05F919 /* Header Files */,
+				C325A8A7209546D685804950 /* Source Files */,
 				BA252E6705E0467D959F0C59 /* CMakeLists.txt */,
 			);
 			name = GARMINHOST;
