@@ -4634,9 +4634,16 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             break;
         }
 
-        case ID_MENU_CHART_NORTHUP:
+        case ID_MENU_CHART_NORTHUP:{
+            SetUpMode(GetPrimaryCanvas(), NORTH_UP_MODE);
+            break;
+        }
         case ID_MENU_CHART_COGUP:{
-            ToggleCourseUp(GetPrimaryCanvas());
+                SetUpMode(GetPrimaryCanvas(), COURSE_UP_MODE);
+                break;
+            }
+        case ID_MENU_CHART_HEADUP:{
+                SetUpMode(GetPrimaryCanvas(), HEAD_UP_MODE);
             break;
         }
 
@@ -5206,20 +5213,17 @@ void MyFrame::TrackDailyRestart( void )
     }
 }
 
-void MyFrame::ToggleCourseUp( ChartCanvas *cc )
+void MyFrame::SetUpMode( ChartCanvas *cc, int mode )
 {
     if(cc){
-        cc->ToggleCourseUp();
+        cc->SetUpMode( mode );
 
-        bool bCourseUp = cc->m_bCourseUp;
-
-
-        SetMenubarItemState( ID_MENU_CHART_COGUP, bCourseUp );
-        SetMenubarItemState( ID_MENU_CHART_NORTHUP, !bCourseUp );
+        SetMenubarItemState( ID_MENU_CHART_COGUP, mode == COURSE_UP_MODE );
+        SetMenubarItemState( ID_MENU_CHART_NORTHUP, mode == NORTH_UP_MODE );
+        SetMenubarItemState( ID_MENU_CHART_HEADUP, mode == HEAD_UP_MODE );
 
         if(m_pMenuBar)
             m_pMenuBar->SetLabel( ID_MENU_CHART_NORTHUP, _("North Up Mode") );
-
     }
 }
 
@@ -5547,6 +5551,7 @@ void MyFrame::RegisterGlobalMenuItems()
     nav_menu->AppendSeparator();
     nav_menu->AppendRadioItem( ID_MENU_CHART_NORTHUP, _("North Up Mode") );
     nav_menu->AppendRadioItem( ID_MENU_CHART_COGUP, _("Course Up Mode") );
+    nav_menu->AppendRadioItem( ID_MENU_CHART_HEADUP, _("Head Up Mode") );
     nav_menu->AppendSeparator();
 #ifndef __WXOSX__
     nav_menu->Append( ID_MENU_ZOOM_IN, _menuText(_("Zoom In"), _T("+")) );
@@ -5688,8 +5693,9 @@ void MyFrame::UpdateGlobalMenuItems()
     if ( !m_pMenuBar ) return;  // if there isn't a menu bar
 
     m_pMenuBar->FindItem( ID_MENU_NAV_FOLLOW )->Check( GetPrimaryCanvas()->m_bFollow );
-    m_pMenuBar->FindItem( ID_MENU_CHART_NORTHUP )->Check( !GetPrimaryCanvas()->m_bCourseUp );
-    m_pMenuBar->FindItem( ID_MENU_CHART_COGUP )->Check( GetPrimaryCanvas()->m_bCourseUp );
+    m_pMenuBar->FindItem( ID_MENU_CHART_NORTHUP )->Check( GetPrimaryCanvas()->GetUpMode() == NORTH_UP_MODE );
+    m_pMenuBar->FindItem( ID_MENU_CHART_COGUP )->Check( GetPrimaryCanvas()->GetUpMode() == COURSE_UP_MODE );
+    m_pMenuBar->FindItem( ID_MENU_CHART_HEADUP )->Check( GetPrimaryCanvas()->GetUpMode() == HEAD_UP_MODE );
     m_pMenuBar->FindItem( ID_MENU_NAV_TRACK )->Check( g_bTrackActive );
     m_pMenuBar->FindItem( ID_MENU_CHART_OUTLINES )->Check( g_bShowOutlines );
     m_pMenuBar->FindItem( ID_MENU_CHART_QUILTING )->Check( g_bQuiltEnable );
@@ -5743,8 +5749,14 @@ void MyFrame::UpdateGlobalMenuItems( ChartCanvas *cc)
     if ( !m_pMenuBar ) return;  // if there isn't a menu bar
 
     m_pMenuBar->FindItem( ID_MENU_NAV_FOLLOW )->Check( cc->m_bFollow );
-    m_pMenuBar->FindItem( ID_MENU_CHART_NORTHUP )->Check( !cc->m_bCourseUp );
-    m_pMenuBar->FindItem( ID_MENU_CHART_COGUP )->Check( cc->m_bCourseUp );
+
+    if(cc->GetUpMode() == NORTH_UP_MODE)
+        m_pMenuBar->FindItem( ID_MENU_CHART_NORTHUP )->Check( true  );
+    else if (cc->GetUpMode() == COURSE_UP_MODE)
+        m_pMenuBar->FindItem( ID_MENU_CHART_COGUP )->Check( true );
+    else
+        m_pMenuBar->FindItem( ID_MENU_CHART_HEADUP )->Check( true );
+
     m_pMenuBar->FindItem( ID_MENU_NAV_TRACK )->Check( g_bTrackActive );
     m_pMenuBar->FindItem( ID_MENU_CHART_OUTLINES )->Check( cc->GetShowOutlines() );
     m_pMenuBar->FindItem( ID_MENU_CHART_QUILTING )->Check( cc->GetQuiltMode() );
@@ -7465,7 +7477,7 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
 //    In follow mode, if there has already been a full screen refresh, there is no need to check ownship or AIS,
 //       since they will be always drawn on the full screen paint.
 
-                if( ( !cc->m_bFollow ) || cc->m_bCourseUp ) {
+                if( ( !cc->m_bFollow ) || (cc->GetUpMode() != NORTH_UP_MODE) ) {
                     cc->UpdateShips();
                     cc->UpdateAIS();
                     cc->UpdateAlerts();
@@ -7627,7 +7639,7 @@ void MyFrame::OnFrameCOGTimer( wxTimerEvent& event )
     for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){
         ChartCanvas *cc = g_canvasArray.Item(i);
         if(cc)
-            b_rotate |= cc->m_bCourseUp;
+            b_rotate |= (cc->GetUpMode() != NORTH_UP_MODE);
     }
 
     if(!b_rotate){
@@ -9413,7 +9425,7 @@ void MyFrame::UpdateAISMOBRoute( AIS_Target_Data *ptarget )
 
 }
 
-
+#if 0  // alte Version
 void MyFrame::applySettingsString( wxString settings)
 {
     //  Save some present values
@@ -9819,8 +9831,122 @@ void MyFrame::applySettingsString( wxString settings)
         NMEALogWindow::Get().GetTTYWindow()->Raise();
 
 }
+#endif
+
+void MyFrame::applySettingsString( wxString settings)
+{
+    //  Save some present values
+    int last_UIScaleFactor = g_GUIScaleFactor;
+    bool previous_expert = g_bUIexpert;
+    g_last_ChartScaleFactor = g_ChartScaleFactor;
+    ArrayOfCDI *pNewDirArray = new ArrayOfCDI;
+
+//    int rr = g_Platform->platformApplyPrivateSettingsString( settings, pNewDirArray); // Neu
+    int rr = GENERIC_CHANGED;  // aus Alt
+
+    // And apply the changes
+    pConfig->UpdateSettings();
+
+    //  Might need to rebuild symbols
+    if(g_last_ChartScaleFactor != g_ChartScaleFactor)
+        rr |= S52_CHANGED;
+
+    if(rr & S52_CHANGED){
+        if(ps52plib){
+            ps52plib->FlushSymbolCaches();
+            ps52plib->ClearCNSYLUPArray();      // some CNSY depends on renderer (e.g. CARC)
+            ps52plib->GenerateStateHash();
+        }
+    }
+
+    ProcessOptionsDialog( rr,  pNewDirArray );
+
+    // Try to detect if the toolbar is changing, to avoid a rebuild if not necessary.
+
+    bool b_newToolbar = false;
+
+    if(g_GUIScaleFactor != last_UIScaleFactor)
+        b_newToolbar = true;
+
+    if(previous_expert != g_bUIexpert)
+        b_newToolbar = true;
+
+    if(rr & TOOLBAR_CHANGED)
+        b_newToolbar = true;
+    
+
+    if(b_newToolbar){
+        // .. for each canvas...
+        for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){
+            ChartCanvas *cc = g_canvasArray.Item(i);
+            if(cc)
+                cc->DestroyToolbar();
+        }
+    }
 
 
+    //  We do this is one case only to remove an orphan recovery window
+#ifdef __OCPN__ANDROID__
+     if(previous_expert && !g_bUIexpert){
+         androidForceFullRepaint();
+     }
+#endif
+
+    if(previous_expert != g_bUIexpert)
+        g_Platform->applyExpertMode(g_bUIexpert);
+
+    //  We set the compass size first, since that establishes the available space for the toolbar.
+    SetGPSCompassScale();
+    // ..For each canvas...
+    for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){
+        ChartCanvas *cc = g_canvasArray.Item(i);
+        if(cc)
+            cc->GetCompass()->SetScaleFactor(g_compass_scalefactor);
+    }
+    UpdateGPSCompassStatusBoxes( true );
+
+    if(b_newToolbar){
+        g_Platform->ShowBusySpinner();
+
+        SetAllToolbarScale();
+        RequestNewToolbars(true);    // Force rebuild, to pick up bGUIexpert and scale settings.
+
+        g_Platform->HideBusySpinner();
+        
+        RequestNewMasterToolbar( true );
+    }
+
+    SurfaceAllCanvasToolbars();
+
+    gFrame->Raise();
+
+    InvalidateAllGL();
+    DoChartUpdate();
+    UpdateControlBar( GetPrimaryCanvas());
+    Refresh();
+
+
+#if defined(__WXOSX__) || defined(__WXQT__)
+    if( g_MainToolbar )
+        g_MainToolbar->Raise();
+
+    for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){
+        ChartCanvas *cc = g_canvasArray.Item(i);
+         if(cc && cc->GetMUIBar())
+             cc->GetMUIBar()->Raise();
+    }
+
+#endif
+
+    if(console)
+        console->Raise();
+
+    Refresh( false );
+
+    if (NMEALogWindow::Get().Active())
+        NMEALogWindow::Get().GetTTYWindow()->Raise();
+
+}
 
 #ifdef wxHAS_POWER_EVENTS
 void MyFrame::OnSuspending(wxPowerEvent& event)

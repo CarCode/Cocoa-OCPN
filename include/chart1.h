@@ -164,6 +164,7 @@ enum
 
     ID_MENU_CHART_NORTHUP,
     ID_MENU_CHART_COGUP,
+    ID_MENU_CHART_HEADUP,
     ID_MENU_CHART_QUILTING,
     ID_MENU_CHART_OUTLINES,
 
@@ -386,6 +387,8 @@ class MyFrame: public wxFrame
     void CancelAllMouseRoute();
     void InvalidateAllQuilts();
 
+    void SetUpMode( ChartCanvas *cc, int mode );
+
     wxMenuBar *GetMainMenuBar(){ return m_pMenuBar; }
 
     ChartCanvas *GetPrimaryCanvas();
@@ -455,7 +458,6 @@ class MyFrame: public wxFrame
                             wxString rolloverSVGfile,
                             wxString toggledSVGfile );
     void ToggleQuiltMode(ChartCanvas *cc);
-    void ToggleCourseUp(ChartCanvas *cc);
     void UpdateControlBar(ChartCanvas *cc);
 
     void ShowTides(bool bShow);

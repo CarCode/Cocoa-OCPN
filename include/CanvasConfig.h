@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Canvas Configuration
@@ -44,10 +44,10 @@ public:
     canvasConfig();
     canvasConfig(int index);
     ~canvasConfig();
-    
+
     void Reset();
     void LoadFromLegacyConfig( wxFileConfig *conf );
-    
+
     int configIndex;
     ChartCanvas *canvas;
     double iLat, iLon, iScale, iRotation;
@@ -62,6 +62,7 @@ public:
     bool bShowOutlines;
     bool bShowDepthUnits;
     bool bCourseUp;
+    bool bHeadUp;
     bool bLookahead;
     bool bShowAIS;
     bool bAttenAIS;
@@ -72,9 +73,9 @@ public:
     bool bShowENCBuoyLabels;
     bool bShowENCLightDescriptions;
     bool bShowENCLights;
-    
-    
-     
+
+
+
 };
 
 WX_DEFINE_ARRAY_PTR(canvasConfig*, arrayofCanvasConfigPtr);

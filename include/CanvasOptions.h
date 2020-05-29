@@ -41,6 +41,7 @@ enum {
     IDCO_QUILTCHECKBOX1,
     IDCO_CHECK_LOOKAHEAD,
     IDCO_COURSEUPCHECKBOX,
+    IDCO_HEADUPCHECKBOX,
     IDCO_TIDES_CHECKBOX,
     IDCO_CURRENTS_CHECKBOX,
     IDCO_ENCTEXT_CHECKBOX1,
@@ -91,7 +92,7 @@ private:
     wxChoice *m_pShipIconType, *m_pcTCDatasets;
     wxSlider *m_pSlider_Zoom, *m_pSlider_GUI_Factor, *m_pSlider_Chart_Factor, *m_pSlider_Ship_Factor;
     wxSlider *m_pSlider_Zoom_Vector;
-    wxRadioButton *pCBCourseUp, *pCBNorthUp, *pRBSizeAuto, *pRBSizeManual;
+    wxRadioButton *pCBCourseUp, *pCBNorthUp, *pCBHeadUp, *pRBSizeAuto, *pRBSizeManual;
     wxCheckBox *pEnableZoomToCursor, *pPreserveScale;
     
     wxCheckBox *pCDOTides, *pCDOCurrents;
