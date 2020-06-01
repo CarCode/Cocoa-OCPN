@@ -3665,6 +3665,9 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     //   Save the saved Screen Brightness
     RestoreScreenBrightness();
 
+    // Provisionally save all settings before deactivating plugins
+    pConfig->UpdateSettings();
+
     //    Deactivate the PlugIns
     if( g_pi_manager ) {
         g_pi_manager->DeactivateAllPlugIns();
@@ -8554,7 +8557,7 @@ void MyFrame::OnEvtPlugInMessage( OCPN_MsgEvent & event )
                 v[0][_T("range")] = g_pRouteMan->GetCurrentRngToActivePoint();
                 v[0][_T("bearing")] = g_pRouteMan->GetCurrentBrgToActivePoint();
                 v[0][_T("XTE")] = g_pRouteMan->GetCurrentXTEToActivePoint();
-                v[0][_T("active_route_GUID")] = g_pRouteMan->GetpActiveRoute()->m_RouteNameString;
+                v[0][_T("active_route_GUID")] = g_pRouteMan->GetpActiveRoute()->GetGUID();
                 v[0][_T("active_waypoint_lat")] = g_pRouteMan->GetpActiveRoute()->m_pRouteActivePoint->GetLatitude();
                 v[0][_T("active_waypoint_lon")] = g_pRouteMan->GetpActiveRoute()->m_pRouteActivePoint->GetLongitude();
             }
