@@ -1168,7 +1168,9 @@ void ChartDldrPanelImpl::OnPaint( wxPaintEvent& event )
 #ifdef __WXMAC__
     // Mojave does not paint the controls correctly without this.
     m_lbChartSources->Refresh(true);
+#ifndef NEW_LIST
     m_clCharts->Refresh(true);
+#endif
 #endif
     event.Skip();
 }
@@ -1196,7 +1198,11 @@ void ChartDldrPanelImpl::AddSource( wxCommandEvent& event )
     
     ChartDldrGuiAddSourceDlg *dialog = new ChartDldrGuiAddSourceDlg(this);
     dialog->SetBasePath(pPlugIn->GetBaseChartDir());
-    
+// Next 3 lines OK????
+    wxSize sz = GetParent()->GetGrandParent()->GetSize();          // This is the options panel true size
+    dialog->SetSize(sz.GetWidth(), sz.GetHeight());
+    dialog->Center();
+
     dialog->ShowWindowModalThenDo([this,dialog](int retcode){
         if ( retcode == wxID_OK ) {
             ChartSource *cs = new ChartSource(dialog->m_tSourceName->GetValue(), dialog->m_tChartSourceUrl->GetValue(),

@@ -5956,6 +5956,11 @@ int MyFrame::DoOptionsDialog()
         }
     }
 
+          // Correct some fault in Options dialog layout logic on GTK3 by forcing a re-layout to new slightly reduced size.
+#ifdef __WXGTK3__
+    g_options->SetSize( options_lastWindowSize.x - 1, options_lastWindowSize.y );
+#endif
+
     if( g_MainToolbar)
         g_MainToolbar->DisableTooltips();
 
@@ -6660,6 +6665,9 @@ void MyFrame::PositionIENCToolbar()
 void MyFrame::OnInitTimer(wxTimerEvent& event)
 {
     InitTimer.Stop();
+    wxString msg;
+    msg.Printf(_T("OnInitTimer...%d"), m_iInitCount);
+    wxLogMessage(msg);
 
     switch(m_iInitCount++) {
         case 0:

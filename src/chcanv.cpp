@@ -4336,6 +4336,12 @@ void ChartCanvas::GetCanvasPixPoint( double x, double y, double &lat, double &lo
     }
 }
 
+void ChartCanvas::ZoomCanvasSimple( double factor )
+{
+    DoZoomCanvas( factor, false );
+    extendedSectorLegs.clear();
+}
+
 void ChartCanvas::ZoomCanvas( double factor, bool can_zoom_to_cursor, bool stoptimer )
 {
     m_bzooming_to_cursor = can_zoom_to_cursor && g_bEnableZoomToCursor;
@@ -11968,12 +11974,12 @@ void ChartCanvas::OnToolLeftClick( wxCommandEvent& event )
     switch( event.GetId() ){
 
         case ID_ZOOMIN: {
-            ZoomCanvas( g_plus_minus_zoom_factor, false );
+            ZoomCanvasSimple( g_plus_minus_zoom_factor );
             break;
         }
 
         case ID_ZOOMOUT: {
-            ZoomCanvas( 1.0 / g_plus_minus_zoom_factor, false );
+            ZoomCanvasSimple( 1.0 / g_plus_minus_zoom_factor );
             break;
         }
 
