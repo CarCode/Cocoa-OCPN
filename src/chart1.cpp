@@ -1952,17 +1952,6 @@ bool MyApp::OnInit()
     wxString vs =
         wxString("Version ") +  VERSION_FULL + " Build " + VERSION_DATE;
     g_bUpgradeInProcess = (vs != g_config_version_string);
-    
-//  Send the Welcome/warning message if it has never been sent before,
-//  or if the version string has changed at all
-//  We defer until here to allow for localization of the message
-    if( !n_NavMessageShown || ( vs != g_config_version_string ) ) {
-        if( wxID_CANCEL == ShowNavWarning() )
-            return false;
-        n_NavMessageShown = 1;
-    }
-
-    g_config_version_string = vs;
 
     //  log deferred log restart message, if it exists.
 #ifdef __WXOSX__
@@ -2458,14 +2447,28 @@ extern ocpnGLOptions g_GLOptions;
     wxLogMessage( wxString::Format(_("OpenCPN Initialized in %ld ms."), init_sw.Time() ) );
 
     OCPNPlatform::Initialize_4( );
-    
-    if( n_NavMessageShown == 1 ) {
-        //In case the user accepted the "not for navigation" nag, persist it here...
-        pConfig->UpdateSettings();
-    }
+
 #ifdef __OCPN__ANDROID__
     androidHideBusyIcon();
 #endif
+    wxLogMessage( wxString::Format(_("OpenCPN Initialized in %ld ms."), init_sw.Time() ) );
+
+    //  Send the Welcome/warning message if it has never been sent before,
+    //  or if the version string has changed at all
+    //  We defer until here to allow for localization of the message
+        if( !n_NavMessageShown || ( vs != g_config_version_string ) ) {
+            if( wxID_CANCEL == ShowNavWarning() )
+                return false;
+            n_NavMessageShown = 1;
+        }
+
+    g_config_version_string = vs;
+
+    //The user accepted the "not for navigation" nag, so persist it here...
+    pConfig->UpdateSettings();
+
+    // Start delayed initialization chain after some milliseconds
+    gFrame->InitTimer.Start( 5, wxTIMER_CONTINUOUS );
 
     g_pauimgr->Update();
 
@@ -5488,11 +5491,13 @@ void MyFrame::ApplyGlobalSettings( bool bnewtoolbar )
         }
     }
 
+    wxSize lastOptSize = options_lastWindowSize;
     SendSizeEvent();
 
     BuildMenuBar();
 
     SendSizeEvent();
+    options_lastWindowSize = lastOptSize;
 
     if( bnewtoolbar )
         UpdateAllToolbars( global_color_scheme );
@@ -5958,7 +5963,8 @@ int MyFrame::DoOptionsDialog()
 
           // Correct some fault in Options dialog layout logic on GTK3 by forcing a re-layout to new slightly reduced size.
 #ifdef __WXGTK3__
-    g_options->SetSize( options_lastWindowSize.x - 1, options_lastWindowSize.y );
+    if( options_lastWindowSize != wxSize(0,0) )
+        g_options->SetSize( options_lastWindowSize.x - 1, options_lastWindowSize.y );
 #endif
 
     if( g_MainToolbar)
@@ -6954,18 +6960,11 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
         default:
         {
             // Last call....
+            wxLogMessage(_T("OnInitTimer...Last Call"));
 
             PositionIENCToolbar();
 
             g_bDeferredInitDone = true;
-
-            for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){
-                ChartCanvas *cc = g_canvasArray.Item(i);
-                if(cc){
-                    cc->CreateMUIBar();
-                    cc->CheckGroupValid();
-                }
-            }
 
             GetPrimaryCanvas()->SetFocus();
             g_focusCanvas = GetPrimaryCanvas();
@@ -6975,6 +6974,16 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
             if(b_reloadForPlugins){
                 DoChartUpdate();
                 ChartsRefresh();
+            }
+
+            wxLogMessage(_T("OnInitTimer...Finalize Canvases"));
+
+            for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){
+                ChartCanvas *cc = g_canvasArray.Item(i);
+                if(cc){
+                    cc->CreateMUIBar();
+                    cc->CheckGroupValid();
+                }
             }
 
             break;
