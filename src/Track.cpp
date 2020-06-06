@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Navigation Utility Functions
@@ -155,7 +155,7 @@ TrackPoint::~TrackPoint()
 wxDateTime TrackPoint::GetCreateTime()
 {
     wxDateTime CreateTimeX;
-    
+
     if(m_timestring) {
         wxString ts = m_timestring;
         ParseGPXDateTime( CreateTimeX, ts );
@@ -188,29 +188,29 @@ void TrackPoint::Draw(ChartCanvas *cc, ocpnDC& dc )
     wxRect hilitebox;
  
     cc->GetCanvasPointPix( m_lat, m_lon, &r );
-    
+
     wxPen *pen;
     pen = g_pRouteMan->GetRoutePointPen();
-        
+
     int sx2 = 8;
     int sy2 = 8;
-            
+
      wxRect r1( r.x - sx2, r.y - sy2, sx2 * 2, sy2 * 2 );           // the bitmap extents
-            
+
      hilitebox = r1;
      hilitebox.x -= r.x;
      hilitebox.y -= r.y;
      float radius;
      hilitebox.Inflate( 4 );
      radius = 4.0f;
-            
+
      wxColour hi_colour = pen->GetColour();
      unsigned char transparency = 100;
-            
+
      //  Highlite any selected point
      AlphaBlending( dc, r.x + hilitebox.x, r.y + hilitebox.y, hilitebox.width, hilitebox.height, radius,
                                hi_colour, transparency );
-            
+
 }
 
 
@@ -699,7 +699,7 @@ void Track::Draw( ChartCanvas *cc, ocpnDC& dc, ViewPort &VP, const LLBBox &box )
         if( g_GLOptions.m_GLLineSmoothing )
             glEnable( GL_LINE_SMOOTH );
         glEnable( GL_BLEND );
-        
+
         int size = 0;
         // convert from linked list to array, allocate array just once
         for(std::list< std::list<wxPoint> >::iterator lines = pointlists.begin();
@@ -721,7 +721,8 @@ void Track::Draw( ChartCanvas *cc, ocpnDC& dc, ViewPort &VP, const LLBBox &box )
                 i+=2;
             }
 
-            glDrawArrays(GL_LINE_STRIP, 0, i >> 1);
+            if(i > 2)
+                glDrawArrays(GL_LINE_STRIP, 0, i >> 1);
         }
         glDisableClientState(GL_VERTEX_ARRAY);
 
@@ -805,7 +806,7 @@ double Track::ComputeScale(int left, int right)
             double vy = lat - lata;
             double t = (vx*bx + vy*by) * invLengthSquared;
             double dist;
-        
+
             if (t < 0.0)
                 dist = vx*vx + vy*vy;       // Beyond the 'v' end of the segment
             else if (t > 1.0) {
@@ -938,7 +939,7 @@ void Track::InsertSubTracks(LLBBox &box, int level, int pos)
         int right = wxMin(left + (1 << level), TrackPoints.size() - 1);
         SubTracks[level][pos].m_scale = ComputeScale(left, right);
     }
-    
+
     if(pos > 0)
         InsertSubTracks(box, level + 1, pos >> 1);
 }
@@ -1096,7 +1097,7 @@ Route *Track::RouteFromTrack( wxGenericProgressDialog *pprog )
     route->AddPoint( pWP_dst );
 
     pWP_dst->m_bShowName = false;
-    
+
     pSelect->AddSelectableRoutePoint( pWP_dst->m_lat, pWP_dst->m_lon, pWP_dst );
     pWP_prev = pWP_dst;
 // add intermediate points as needed
