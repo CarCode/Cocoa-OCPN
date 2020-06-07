@@ -124,7 +124,7 @@ extern RouteList        *pRouteList;
 extern wxString         g_default_wp_icon;
 extern bool              g_btouch;
 extern bool             g_bBasicMenus;
-
+extern double           gHdt;
 
 
 //    Constants for right click menus
@@ -422,7 +422,8 @@ if( !g_bBasicMenus && (nChartStack > 1 ) ) {
         if( parent->GetVP().b_quilt){
             if( parent->GetUpMode() == NORTH_UP_MODE ){
                 MenuAppend1( contextMenu, ID_DEF_MENU_COGUP, _("Course Up Mode") );
-                MenuAppend1( contextMenu, ID_DEF_MENU_HEADUP, _("Heading Up Mode") );
+                if(!std::isnan(gHdt))
+                    MenuAppend1( contextMenu, ID_DEF_MENU_HEADUP, _("Heading Up Mode") );
             }
             else{
                 MenuAppend1( contextMenu, ID_DEF_MENU_NORTHUP, _("North Up Mode") );

@@ -42,11 +42,11 @@ Warum überhaupt diese eigene OpenCPN Version?
   Apple gewohnten Umfeld. Weitere Abweichungen zum Original Code sind:
 
 a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
-   (jetzt macOS) Mojave (10.14). Ältere Versionen funktionieren nicht mehr.
+   (jetzt macOS) Mojave (10.14) und Catalina (10.15). Ältere Versionen
+   funktionieren nicht mehr.
    Es soll soweit wie möglich das macOS Betriebssystem unterstützt werden,
-   einschl. Mac Menüs, Mac Hilfe usw. Mojave (10.14) wird ab Erscheinen
-   Ende September 2017 nur noch unterstützt, ältere Versionen nicht
-   mehr.
+   einschl. Mac Menüs, Mac Hilfe usw. Mojave und Catalina wird ab Erscheinen
+   nur noch unterstützt, ältere Versionen nicht mehr.
    Vermutlich wird es für neuere Versionen von macOS in absehbarer Zeit
    überhaupt keine OpenCPN Version mehr geben können, da die Grafik-
    Bibliothek OpenGL von Apple bald nicht mehr unterstützt wird.
@@ -74,6 +74,10 @@ f. Das von den OCPN Programmierern gewünschte Konzept, die Plugins als
    OCPN Versionen laufen sollen. Außerdem wird es umständlicher, Code-
    Änderungen an mehreren Stellen nachzuhalten wie z.B. bei den wxJSON
    Dateien.
+   Außerdem wurde das neue Konzept des OpenCPN Originals für Updates von
+   Plugins nicht übernommen, da immer noch nicht ausgereift und sehr
+   fehleranfällig. Diese eigene OpenCPN Version wird immer mit den Plugins
+   zusammen geliefert, die einigermaßen gut funktionieren.
 
 Größte Änderung ist jedoch die Verwendung von Clang/LLVM mit Xcode statt
 der Befehlszeilen orientierten Cmake Version.
@@ -92,7 +96,7 @@ Ich verwende die SourceTree.app für Mac OS X.
 Im Sourcen-Tree neues Verzeichnis erstellen z.B. "build-cocoa-debug".
 Im Terminal in dies Verzeichnis wechseln und konfigurieren mit:
 
-../configure --with-macosx-version-min=10.9 --with-expat=builtin --enable-unicode --enable-shared --enable-debug --disable-compat28 --with-osx-cocoa --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk --without-liblzma --with-zlib=builtin --with-libpng=builtin --without-libjpeg --without-libtiff CXXFLAGS="-stdlib=libc++ -std=c++14" OBJCXXFLAGS="-stdlib=libc++ -std=c++14" LDFLAGS="-stdlib=libc++" CXX=clang++ CC=clang
+../configure --with-macosx-version-min=10.9 --with-expat=builtin --enable-unicode --enable-shared --enable-debug --disable-compat28 --with-osx-cocoa --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk --without-liblzma --with-zlib=builtin --with-libpng=builtin --with-libjpeg=builtin --without-libtiff CXXFLAGS=-stdlib=libc++ OBJCXXFLAGS=-stdlib=libc++ LDFLAGS=-stdlib=libc++ CXX=clang++ CC=clang
 
 Dann Eingabe von: make
 und schließlich Eingabe von: sudo make install
@@ -113,5 +117,5 @@ Die Datei /data/gshhs/poly-f-1.dat mit ~172 MB muß daher separat geholt werden
 und nach /data/gshhs/ kopiert werden:
 https://topperdiek.de/dl/ocpn/poly-f-1.dat
 -----------------------------------------------------------------------
-09. Januar 2020
+07. Juni 2020
 
