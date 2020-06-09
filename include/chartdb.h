@@ -123,13 +123,14 @@ public:
       bool IsChartInCache(wxString path);
       bool IsChartInGroup(const int db_index, const int group);
       bool IsENCInGroup(const int group);
+      bool IsNonMBTileInGroup(const int group);
 
       ChartBase *OpenChartFromStack(ChartStack *pStack, int StackEntry, ChartInitFlag iflag = FULL_INIT);
       ChartBase *OpenChartFromDB(int index, ChartInitFlag init_flag);
       ChartBase *OpenChartFromDBAndLock(int index, ChartInitFlag init_flag , bool lock = true);
       ChartBase *OpenChartFromDBAndLock(wxString chart_path, ChartInitFlag init_flag);
       ChartBase *OpenChartFromDB(wxString chart_path, ChartInitFlag init_flag);
-      
+
       void ApplyColorSchemeToCachedCharts(ColorScheme cs);
       void PurgeCache();
       void PurgeCachePlugins();
@@ -143,12 +144,16 @@ public:
 
       bool LockCacheChart( int index );
       bool IsChartLocked( int index );
-      
+
       void UnLockCacheChart( int index );
       void UnLockAllCacheCharts();
-      
+
       void ClearCacheInUseFlags(void);
       void PurgeCacheUnusedCharts( double factor );
+
+      bool IsBusy(){ return m_b_busy; }
+      bool CheckExclusiveTileGroup( int canvasIndex );
+      bool CheckAnyCanvasExclusiveTileGroup( );
 
 protected:
       virtual ChartBase *GetChart(const wxChar *theFilePath, ChartClassDescriptor &chart_desc) const;
@@ -163,15 +168,18 @@ private:
       CacheEntry *FindOldestDeleteCandidate( bool blog );
       void DeleteCacheEntry(int i, bool bDelTexture = false, const wxString &msg = wxEmptyString);
       void DeleteCacheEntry(CacheEntry *pce, bool bDelTexture = false, const wxString &msg = wxEmptyString);
-      
-      
+
+
       wxArrayPtrVoid    *pChartCache;
-      int              m_ticks;
+      int               m_ticks;
 
       bool              m_b_locked;
+      bool              m_b_busy;
 
       wxCriticalSection m_critSect;
       wxMutex           m_cache_mutex;
+      int               m_checkGroupIndex[2];
+      bool              m_checkedTileOnly[2];
 };
 
 
