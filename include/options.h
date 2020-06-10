@@ -386,7 +386,7 @@ class options : private Uncopyable,
   wxTextCtrl *pCmdSoundString;
 
   wxChoice *m_pShipIconType, *m_pcTCDatasets;
-  wxSlider *m_pSlider_Zoom, *m_pSlider_GUI_Factor, *m_pSlider_Chart_Factor, *m_pSlider_Ship_Factor;
+  wxSlider *m_pSlider_Zoom, *m_pSlider_GUI_Factor, *m_pSlider_Chart_Factor, *m_pSlider_Ship_Factor, *m_pSlider_Text_Factor;
   wxSlider *m_pSlider_Zoom_Vector;
   // LIVE ETA OPTION
   wxCheckBox *pSLiveETA;
@@ -498,7 +498,7 @@ class options : private Uncopyable,
   wxStaticBoxSizer *activeSizer;
   wxBoxSizer *chartPanel;
   wxTextCtrl *pSelCtl;
-  wxListBox *pActiveChartsList;
+  wxListCtrl *pActiveChartsList;
   wxStaticBox *itemActiveChartStaticBox;
   wxCheckBox *pUpdateCheckBox, *pScanCheckBox;
   wxButton *pParseENCButton;

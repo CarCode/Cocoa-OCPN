@@ -309,6 +309,7 @@ extern int g_ChartScaleFactor;
 extern float g_ChartScaleFactorExp;
 extern int g_ShipScaleFactor;
 extern float g_ShipScaleFactorExp;
+extern int g_ENCSoundingScaleFactor;
 
 extern double g_config_display_size_mm;
 extern bool g_config_display_size_manual;
@@ -3310,14 +3311,16 @@ void options::CreatePanel_ChartsLoad(size_t parent, int border_size,
 
   wxString* pListBoxStrings = NULL;
 
-  pActiveChartsList =
-      new wxListBox(chartPanelWin, ID_LISTBOX, wxDefaultPosition, wxDefaultSize,
-                    0, pListBoxStrings, wxLB_MULTIPLE);
+    pActiveChartsList = new wxListCtrl( chartPanelWin, ID_LISTBOX, wxDefaultPosition, wxDefaultSize,
+                                         wxLC_REPORT | wxLC_NO_HEADER );
+  #ifdef __OCPN__ANDROID__
+      pActiveChartsList->GetHandle()->setStyleSheet(getAdjustedDialogStyleSheet());
+  #endif
 
   activeSizer->Add(pActiveChartsList, 1, wxALL | wxEXPAND, border_size);
 
   pActiveChartsList->Connect(
-      wxEVT_COMMAND_LISTBOX_SELECTED,
+      wxEVT_COMMAND_LIST_ITEM_SELECTED,
       wxCommandEventHandler(options::OnChartDirListSelect), NULL, this);
 
   wxBoxSizer* cmdButtonSizer = new wxBoxSizer(wxVERTICAL);
@@ -3326,11 +3329,23 @@ void options::CreatePanel_ChartsLoad(size_t parent, int border_size,
   // Currently loaded chart dirs
   wxString dirname;
   if (pActiveChartsList) {
-    pActiveChartsList->Clear();
-    int nDir = m_CurrentDirList.GetCount();
-    for (int i = 0; i < nDir; i++) {
-      dirname = m_CurrentDirList[i].fullpath;
-      if (!dirname.IsEmpty()) pActiveChartsList->Append(dirname);
+    pActiveChartsList->DeleteAllItems();
+
+    // Add first column
+    wxListItem col0;
+    col0.SetId(0);
+    col0.SetText( _T("") );
+    col0.SetWidth(500);
+    pActiveChartsList->InsertColumn(0, col0);
+
+    for (size_t i = 0; i < m_CurrentDirList.GetCount(); i++) {
+        wxListItem li;
+        li.SetId( i );
+
+        long idx = pActiveChartsList->InsertItem( li );
+
+        wxString dirname = m_CurrentDirList[i].fullpath;
+        pActiveChartsList->SetItem(i, 0, dirname);
     }
   }
 
@@ -5525,8 +5540,7 @@ void options::CreatePanel_UI(size_t parent, int border_size, int group_item_spac
       wxSize(slider_width, 50), SLIDER_STYLE);
   m_pSlider_Chart_Factor->Hide();
   sliderSizer->Add(
-      new wxStaticText(itemPanelFont, wxID_ANY, _("Chart Object scale factor")),
-      inputFlags);
+      new wxStaticText(itemPanelFont, wxID_ANY, _("Chart Object scale factor")), inputFlags);
   sliderSizer->Add(m_pSlider_Chart_Factor, 0, wxALL, border_size);
 #ifdef __WXOSX__
   m_pSlider_Chart_Factor->Show(true);
@@ -5542,8 +5556,7 @@ void options::CreatePanel_UI(size_t parent, int border_size, int group_item_spac
       wxSize(slider_width, 50), SLIDER_STYLE);
   m_pSlider_Ship_Factor->Hide();
   sliderSizer->Add(
-      new wxStaticText(itemPanelFont, wxID_ANY, _("Ship scale factor")),
-                   inputFlags);
+      new wxStaticText(itemPanelFont, wxID_ANY, _("Ship scale factor")), inputFlags);
   sliderSizer->Add(m_pSlider_Ship_Factor, 0, wxALL, border_size);
 #ifdef __WXOSX__
   m_pSlider_Ship_Factor->Show(true);
@@ -5553,6 +5566,24 @@ void options::CreatePanel_UI(size_t parent, int border_size, int group_item_spac
 #ifdef __OCPN__ANDROID__
   m_pSlider_Ship_Factor->GetHandle()->setStyleSheet(getQtStyleSheet());
 #endif
+#ifdef __WXOSX__
+    m_pSlider_Text_Factor = new wxSlider( itemPanelFont, wxID_ANY, 0, -5, 5, wxDefaultPosition, wxSize(slider_width, 50), SLIDER_STYLE);
+#else
+    m_pSlider_Text_Factor = new wxSlider( itemPanelFont, wxID_ANY, 0, -5, 5, wxDefaultPosition,  m_sliderSize, SLIDER_STYLE);
+#endif
+    m_pSlider_Text_Factor->Hide();
+    sliderSizer->Add(
+        new wxStaticText(itemPanelFont, wxID_ANY, _("ENC Sounding factor")), inputFlags);
+    sliderSizer->Add(m_pSlider_Text_Factor, 0, wxALL, border_size);
+#ifdef __WXOSX__
+    m_pSlider_Text_Factor->Show(true);
+#else
+    m_pSlider_Text_Factor->Show();
+#endif
+#ifdef __OCPN__ANDROID__
+    m_pSlider_Text_Factor->GetHandle()->setStyleSheet(getQtStyleSheet());
+#endif
+
   miscOptions->Add( sliderSizer, 0, wxEXPAND, 5 );
   miscOptions->AddSpacer(20);
 }
@@ -5980,15 +6011,19 @@ void options::SetInitialSettings(void) {
   m_screenConfig = g_canvasConfig;
 
   // ChartsLoad
-  int nDir = m_CurrentDirList.GetCount();
 
   if (pActiveChartsList) {
-    pActiveChartsList->Clear();
-    for (int i = 0; i < nDir; ++i) {
+    pActiveChartsList->DeleteAllItems();
+
+    for (size_t i = 0; i < m_CurrentDirList.GetCount(); i++) {
+        wxListItem li;
+        li.SetId( i );
+
+        long idx = pActiveChartsList->InsertItem( li );
+
         wxString dirname = m_CurrentDirList[i].fullpath;
-        if (!dirname.IsEmpty() && pActiveChartsList) {
-            pActiveChartsList->Append(dirname);
-        }
+        pActiveChartsList->SetItem(i, 0, dirname);
+
     }
   }
 
@@ -6263,6 +6298,7 @@ void options::SetInitialSettings(void) {
   m_pSlider_GUI_Factor->SetValue(g_GUIScaleFactor);
   m_pSlider_Chart_Factor->SetValue(g_ChartScaleFactor);
   m_pSlider_Ship_Factor->SetValue(g_ShipScaleFactor);
+  m_pSlider_Text_Factor->SetValue(g_ENCSoundingScaleFactor);
   wxString screenmm;
 
   if (!g_config_display_size_manual) {
@@ -6666,9 +6702,9 @@ void options::OnOpenGLOptions(wxCommandEvent& event) {
 #endif
 }
 
-void options::OnChartDirListSelect(wxCommandEvent& event) {
-    wxArrayInt sel;
-    bool selected = pActiveChartsList->GetSelections(sel);
+void options::OnChartDirListSelect(wxCommandEvent& event)
+{
+    bool selected = (pActiveChartsList->GetSelectedItemCount() > 0);
     m_removeBtn->Enable(selected);
     if(m_compressBtn)
         m_compressBtn->Enable(selected);
@@ -6736,43 +6772,54 @@ void options::OnButtonaddClick(wxCommandEvent& event) {
 }
 
 void options::AddChartDir(const wxString& dir) {
-  wxFileName dirname = wxFileName(dir);
-  pInit_Chart_Dir->Empty();
+    wxFileName dirname = wxFileName(dir);
+    pInit_Chart_Dir->Empty();
+  
+    wxString dirAdd;
+    if (g_bportable) {
+      wxFileName f(dir);
+      f.MakeRelativeTo(g_Platform->GetHomeDir());
+      dirAdd = f.GetFullPath();
+    } else {
+      pInit_Chart_Dir->Append(dirname.GetPath());
+      dirAdd = dir;
+    }
 
-  if (g_bportable) {
-    wxFileName f(dir);
-    f.MakeRelativeTo(g_Platform->GetHomeDir());
-    pActiveChartsList->Append(f.GetFullPath());
-  } else {
-    pInit_Chart_Dir->Append(dirname.GetPath());
-    pActiveChartsList->Append(dir);
-  }
+  wxListItem li;
+  int id = pActiveChartsList->GetItemCount();      // next index
+  li.SetId( id );
+  long idx = pActiveChartsList->InsertItem( li );
+  pActiveChartsList->SetItem(id, 0, dirAdd);
 
-  k_charts |= CHANGE_CHARTS;
-
-  pScanCheckBox->Disable();
+    k_charts |= CHANGE_CHARTS;
+  
+    pScanCheckBox->Disable();
 }
 
 void options::UpdateDisplayedChartDirList(ArrayOfCDI p) {
-  wxString dirname;
   if (pActiveChartsList) {
-    pActiveChartsList->Clear();
-    int nDir = p.GetCount();
-    for (int i = 0; i < nDir; i++) {
-      dirname = p[i].fullpath;
-      if (!dirname.IsEmpty()) pActiveChartsList->Append(dirname);
-    }
+      pActiveChartsList->DeleteAllItems();
+      for (size_t i = 0; i < p.GetCount(); i++) {
+           wxListItem li;
+           li.SetId( i );
+
+           long idx = pActiveChartsList->InsertItem( li );
+
+           wxString dirname = p[i].fullpath;
+           pActiveChartsList->SetItem(i, 0, dirname);
+       }
   }
 }
 
 void options::UpdateWorkArrayFromTextCtl(void) {
-  wxString dirname;
+   wxString dirname;
 
-  int n = pActiveChartsList->GetCount();
+  int n = pActiveChartsList->GetItemCount();
   if (m_pWorkDirList) {
     m_pWorkDirList->Clear();
     for (int i = 0; i < n; i++) {
-      dirname = pActiveChartsList->GetString(i);
+
+      dirname = pActiveChartsList->GetItemText(i);
       if (!dirname.IsEmpty()) {
         //    This is a fix for OSX, which appends EOL to results of
         //    GetLineText()
@@ -7377,6 +7424,7 @@ void options::OnApplyClick(wxCommandEvent& event) {
   g_ChartScaleFactorExp = g_Platform->getChartScaleFactorExp(g_ChartScaleFactor);
   g_ShipScaleFactor = m_pSlider_Ship_Factor->GetValue();
   g_ShipScaleFactorExp = g_Platform->getChartScaleFactorExp(g_ShipScaleFactor);
+  g_ENCSoundingScaleFactor =  m_pSlider_Text_Factor->GetValue();
 
   //  Only reload the icons if user has actually visted the UI page    
   if(m_bVisitLang)    
@@ -7468,6 +7516,7 @@ void options::OnApplyClick(wxCommandEvent& event) {
     ps52plib->m_nBoundaryStyle = pBoundStyle->GetSelection() == 0
                                      ? PLAIN_BOUNDARIES
                                      : SYMBOLIZED_BOUNDARIES;
+    ps52plib->m_nSoundingFactor = m_pSlider_Text_Factor->GetValue();
 
     S52_setMarinerParam(S52_MAR_TWO_SHADES, (p24Color->GetSelection() == 0) ? 1.0 : 0.0);
 
@@ -7627,33 +7676,30 @@ void options::Finish(void) {
   EndModal(m_returnChanges);
 }
 
-void options::OnButtondeleteClick(wxCommandEvent& event) {
-  wxString dirname;
-
-#ifndef __WXQT__  // Multi selection is not implemented in wxQT
-  wxArrayInt pListBoxSelections;
-  pActiveChartsList->GetSelections(pListBoxSelections);
-  int nSelections = pListBoxSelections.GetCount();
-  for (int i = 0; i < nSelections; i++) {
-    pActiveChartsList->Delete(pListBoxSelections.Item((nSelections - i) - 1));
+void options::OnButtondeleteClick(wxCommandEvent& event)
+{
+  long item = -1;
+  for ( ;; )
+  {
+      item = pActiveChartsList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      if ( item == -1 )
+          break;
+      pActiveChartsList->DeleteItem( item );
+      item = -1;      // Restart
   }
-#else
-  unsigned int n = pActiveChartsList->GetSelection();
-  if( n < pActiveChartsList->GetCount())        // Protect against invalid index
-    pActiveChartsList->Delete(n);
-#endif
 
   UpdateWorkArrayFromTextCtl();
 
   if (m_pWorkDirList) {
-    pActiveChartsList->Clear();
+    pActiveChartsList->DeleteAllItems();
+    for (size_t id = 0; id < m_pWorkDirList->GetCount(); id++) {
+      wxListItem li;
+      li.SetId( id );
 
-    int nDir = m_pWorkDirList->GetCount();
-    for (int id = 0; id < nDir; id++) {
-      dirname = m_pWorkDirList->Item(id).fullpath;
-      if (!dirname.IsEmpty()) {
-        pActiveChartsList->Append(dirname);
-      }
+       long idx = pActiveChartsList->InsertItem( li );
+
+       wxString dirname = m_pWorkDirList->Item(id).fullpath;
+       pActiveChartsList->SetItem(id, 0, dirname);
     }
   }
 
@@ -7864,18 +7910,18 @@ static bool CompressChart(wxString in, wxString out)
     return false;
 }
 
-void options::OnButtoncompressClick(wxCommandEvent& event) {
-  wxString dirname;
-
+void options::OnButtoncompressClick(wxCommandEvent& event)
+{
   wxArrayInt pListBoxSelections;
-#ifndef __WXQT__  // Multi selection is not implemented in wxQT
-  pActiveChartsList->GetSelections(pListBoxSelections);
-  int nSelections = pListBoxSelections.GetCount();
-#else
-  int nSelections = 1;
-  int n = pActiveChartsList->GetSelection();
-  pListBoxSelections += n;
-#endif
+    long item = -1;
+    for ( ;; )
+    {
+        item = pActiveChartsList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+        if ( item == -1 )
+            break;
+        pListBoxSelections.Add((int)item);
+        item = -1;      // Restart
+    }
 
     if(OCPNMessageBox( this, _("Compression will alter chart files on disk.\n\
 This may make them incompatible with other programs or older versions of OpenCPN.\n\
@@ -7906,7 +7952,7 @@ They can be decompressed again using unxz or 7 zip programs."),
 
   wxArrayString charts;
   for(unsigned int i=0; i<pListBoxSelections.GetCount(); i++) {
-      dirname = pActiveChartsList->GetString(pListBoxSelections[i]);
+      wxString dirname = pActiveChartsList->GetItemText( pListBoxSelections[i] );
       if (dirname.IsEmpty())
           continue;
       //    This is a fix for OSX, which appends EOL to results of
@@ -7942,7 +7988,7 @@ They can be decompressed again using unxz or 7 zip programs."),
       return;
   }
 
-    
+
   // TODO: make this use threads
   unsigned long total_size = 0, total_compressed_size = 0, count = 0;
   wxGenericProgressDialog prog(_("OpenCPN Compress Charts"), wxEmptyString, charts.GetCount()+1, this,
@@ -7980,14 +8026,15 @@ They can be decompressed again using unxz or 7 zip programs."),
   UpdateWorkArrayFromTextCtl();
 
   if (m_pWorkDirList) {
-    pActiveChartsList->Clear();
+    pActiveChartsList->DeleteAllItems();
+    for (size_t id = 0; id < m_pWorkDirList->GetCount(); id++) {
+      wxListItem li;
+      li.SetId( id );
 
-    int nDir = m_pWorkDirList->GetCount();
-    for (int id = 0; id < nDir; id++) {
-      dirname = m_pWorkDirList->Item(id).fullpath;
-      if (!dirname.IsEmpty()) {
-        pActiveChartsList->Append(dirname);
-      }
+       long idx = pActiveChartsList->InsertItem( li );
+
+       wxString dirname = m_pWorkDirList->Item(id).fullpath;
+       pActiveChartsList->SetItem(id, 0, dirname);
     }
   }
 
