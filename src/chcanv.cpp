@@ -3234,7 +3234,7 @@ void ChartCanvas::OnKeyUp( wxKeyEvent &event )
               case 54:    case 56:    // '_'  alpha/num pad
                 DoMovement(m_mustmove);
 
-                m_zoom_factor = 1;
+                //m_zoom_factor = 1;
                 break;
             case '[': case ']':
                 DoMovement(m_mustmove);
@@ -3357,7 +3357,7 @@ bool ChartCanvas::StartTimedMovement( bool stoptimer )
 {
     // Start/restart the stop movement timer
     if(stoptimer)
-        pMovementStopTimer->Start( 1000, wxTIMER_ONE_SHOT ); 
+        pMovementStopTimer->Start( 800, wxTIMER_ONE_SHOT );
 
     if(!pMovementTimer->IsRunning()){
 //        printf("timer not running, starting\n");
@@ -3434,7 +3434,8 @@ void ChartCanvas::DoMovement( long dt )
             zoom_factor = 1/zoom_factor;
 
         //  Try to hit the zoom target exactly.
-        if(m_wheelzoom_stop_oneshot > 0) {
+        //if(m_wheelzoom_stop_oneshot > 0)
+        {
             if(zoom_factor > 1){
                 if(  VPoint.chart_scale / zoom_factor <= m_zoom_target)
                     zoom_factor = VPoint.chart_scale / m_zoom_target;

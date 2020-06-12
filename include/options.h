@@ -260,7 +260,7 @@ class options : private Uncopyable,
   ~options(void);
 #if wxCHECK_VERSION(3,0,0)
   bool SendIdleEvents(wxIdleEvent &event );
-#endif  
+#endif
   void SetInitialPage(int page_sel, int sub_page = -1);
   void Finish(void);
 
@@ -277,7 +277,7 @@ class options : private Uncopyable,
   void SetInitChartDir(const wxString &dir) { m_init_chart_dir = dir; }
   void SetInitialSettings(void);
   void SetInitialVectorSettings(void);
-  
+
   void SetCurrentDirList(ArrayOfCDI p) { m_CurrentDirList = p; }
   void SetWorkDirListPtr(ArrayOfCDI *p) { m_pWorkDirList = p; }
   ArrayOfCDI *GetWorkDirListPtr(void) { return m_pWorkDirList; }
@@ -313,9 +313,11 @@ class options : private Uncopyable,
   void OnButtonClearClick(wxCommandEvent &event);
   void OnButtonSelectClick(wxCommandEvent &event);
   void OnButtonSetStd(wxCommandEvent& event);
-      
+
   void OnPageChange(wxListbookEvent &event);
   void OnNBPageChange(wxNotebookEvent &event);
+  void OnTopNBPageChange(wxNotebookEvent &event);
+  void OnSubNBPageChange(wxNotebookEvent &event);
   void DoOnPageChange(size_t page);
 
   void OnButtonSelectSound(wxCommandEvent &event);
@@ -348,7 +350,7 @@ class options : private Uncopyable,
   void OnConfigMouseSelected( wxMouseEvent &event);
 
   void SetSelectedConnectionPanel( ConnectionParamsPanel *panel );
-  
+
   // Should we show tooltips?
   static bool ShowToolTips(void);
 
@@ -360,7 +362,7 @@ class options : private Uncopyable,
 
   size_t m_pageDisplay, m_pageConnections, m_pageCharts, m_pageShips;
   size_t m_pageUI, m_pagePlugins;
-  int lastPage;
+  int lastPage, lastSubPage;
   wxPoint lastWindowPos;
   wxSize lastWindowSize;
   wxButton *m_ApplyButton, *m_OKButton, *m_CancelButton;
@@ -417,7 +419,7 @@ class options : private Uncopyable,
   wxScrolledWindow *m_scrollWinConnections; 
   wxBoxSizer *boxSizerConnections;
   ConnectionParams *mSelectedConnection;
-  
+
   // For the Display\Units page
   wxStaticText* itemStaticTextUserVar;
   wxStaticText* itemStaticTextUserVar2;
@@ -431,7 +433,7 @@ class options : private Uncopyable,
   wxComboBox *m_comboPort;
   wxStdDialogButtonSizer *m_sdbSizerDlgButtons;
   wxButton *m_configDeleteButton, *m_configApplyButton;
-  
+
   void OnSelectDatasource(wxListEvent &event);
   void OnAddDatasourceClick(wxCommandEvent &event);
   void OnRemoveDatasourceClick(wxCommandEvent &event);
@@ -460,14 +462,14 @@ class options : private Uncopyable,
 
 
   void OnCanvasConfigSelectClick( int ID, bool selected);
-  
+
   bool connectionsaved;
   bool m_connection_enabled;
 
   bool b_haveWMM;
   bool b_oldhaveWMM;
   ColorScheme m_cs;
-  
+
   // For "S57" page
   wxBoxSizer *vectorPanel;
   wxScrolledWindow *ps57Ctl;
@@ -505,7 +507,7 @@ class options : private Uncopyable,
   wxButton *m_removeBtn, *m_compressBtn;
   int k_charts;
   int m_nCharWidthMax;
-  
+
   // For the "Charts->Display Options" page
   wxScrolledWindow *m_ChartDisplayPage;
 
@@ -528,16 +530,16 @@ class options : private Uncopyable,
 
   // For Display->Configs page...
   wxScrolledWindow *m_DisplayConfigsPage;
-  
+
   CanvasConfigSelect *m_sconfigSelect_single;
   CanvasConfigSelect *m_sconfigSelect_twovertical;
-  
+
   // For Configuration Template panel
   wxScrolledWindow *m_scrollWinConfigList;
   wxStaticText *m_templateTitleText;
   wxStaticText *m_staticTextLastAppled;
   wxStaticBoxSizer *m_templateStatusBoxSizer;
-  
+
   // For the ship page
   wxFlexGridSizer *realSizes;
   wxTextCtrl *m_pOSLength, *m_pOSWidth, *m_pOSGPSOffsetX, *m_pOSGPSOffsetY;
@@ -550,7 +552,7 @@ class options : private Uncopyable,
   OCPNIconCombo *pRoutepointDefaultIconChoice;
   wxCheckBox    *pScaMinChckB, *pScaMinOverruleChckB;
   wxTextCtrl*   m_pText_ScaMin;
-  
+
   // For the font page
   wxBoxSizer *m_itemBoxSizerFontPanel;
   wxChoice *m_itemFontElementListBox, *m_itemStyleListBox, *m_itemLangListBox;
@@ -622,7 +624,7 @@ class options : private Uncopyable,
   void UpdateTemplateTitleText();
   void CheckDeviceAccess(wxString &path);
   int m_returnChanges;
-  wxListBox *tcDataSelected;
+  wxListCtrl *tcDataSelected;
   std::vector<int> marinersStdXref;
   ChartGroupsUI *groupsPanel;
   wxImageList *m_topImgList;
@@ -642,9 +644,9 @@ class options : private Uncopyable,
 
   void ClearNMEAForm(void);
   bool m_bNMEAParams_shown;
-  
+
   void resetMarStdList(bool bsetConfig, bool bsetStd);
-  
+
   void SetConnectionParams(ConnectionParams *cp);
   void SetDefaultConnectionParams(void);
   void SetDSFormRWStates();
@@ -656,7 +658,7 @@ class options : private Uncopyable,
   ConnectionParams *UpdateConnectionParamsFromSelectedItem(ConnectionParams *pConnectionParams);
 
   int m_screenConfig;
-  
+
   wxNotebookPage *m_groupsPage;
   wxFont smallFont;
   wxFont *dialogFont;
@@ -669,7 +671,7 @@ class options : private Uncopyable,
   int m_btlastResultCount;
   bool m_bfontChanged;
   bool m_bVectorInit;
-  
+
   wxBoxSizer *m_boxSizerConfigs;
   wxColour m_panelBackgroundUnselected;
   wxString m_selectedConfigPanelGUID;
@@ -683,20 +685,20 @@ public:
     CanvasConfigSelect( wxWindow *parent, options *parentOptions, int id, wxBitmap &bmp, 
                         const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize );
     ~CanvasConfigSelect();
-    
+
     void OnMouseSelected( wxMouseEvent &event );
     void SetSelected( bool selected );
     void OnPaint( wxPaintEvent &event );
-    
+
     bool GetSelected(){ return m_bSelected; }
-    
+
 private:
     options *m_parentOptions;
     bool m_bSelected;
     wxColour m_boxColour;
     wxBitmap m_bmpNormal;
     int m_borderWidth;
-    
+
     DECLARE_EVENT_TABLE()
 };
 
@@ -719,7 +721,7 @@ class ChartGroupsUI : private Uncopyable, public wxScrolledWindow {
   void BuildNotebookPages(ChartGroupArray *pGroupArray);
   void EmptyChartGroupArray(ChartGroupArray *s);
   void ClearGroupPages();
-  
+
 
   void OnNodeExpanded(wxTreeEvent &event);
   void OnAvailableSelection(wxTreeEvent &event);
@@ -754,7 +756,7 @@ class ChartGroupsUI : private Uncopyable, public wxScrolledWindow {
   ChartGroupArray *m_pGroupArray;
 
   int m_border_size, m_group_item_spacing, m_GroupSelectedPage;
-  
+
   DECLARE_EVENT_TABLE()
 };
 
@@ -841,7 +843,7 @@ class MMSIListCtrl : private Uncopyable, public wxListCtrl {
 
   wxWindow *m_parent;
   int m_context_item;
-  
+
   DECLARE_EVENT_TABLE()
 };
 
@@ -903,13 +905,13 @@ public:
                             const wxPoint &pos = wxDefaultPosition,
                             const wxSize &size = wxDefaultSize, long style = 0);
     ~ConfigCreateDialog(void);
-    
+
     void SetColorScheme(ColorScheme cs);
     void CreateControls(void);
     void OnConfigEditCancelClick(wxCommandEvent& event);
     void OnConfigEditOKClick(wxCommandEvent& event);
     wxString GetCreatedTemplateGUID(){ return m_createdTemplateGUID; }
-    
+
     wxTextCtrl *m_TitleCtl, *m_DescriptionCtl; 
     wxButton *m_CancelButton, *m_OKButton;
     wxString m_createdTemplateGUID;

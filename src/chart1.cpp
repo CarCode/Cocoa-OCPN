@@ -6006,6 +6006,8 @@ int MyFrame::DoOptionsDialog()
         g_MainToolbar->EnableTooltips();
 
     options_lastPage = g_options->lastPage;
+    options_subpage = g_options->lastSubPage;
+
     options_lastWindowPos = g_options->lastWindowPos;
     options_lastWindowSize = g_options->lastWindowSize;
 

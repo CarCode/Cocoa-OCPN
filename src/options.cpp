@@ -1433,6 +1433,8 @@ wxScrolledWindow* options::AddPage(size_t parent, const wxString& title) {
     m_pListbook->RemovePage(parent + 1);
     wxString previoustitle = page->GetName();
     page->Reparent(nb);
+    nb->Connect(wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler(options::OnSubNBPageChange), NULL,  this);
+
     nb->AddPage(page, previoustitle);
     /* wxNotebookPage is hidden under wxGTK after RemovePage/Reparent
      * we must explicitely Show() it */
@@ -4437,15 +4439,28 @@ void options::CreatePanel_TidesCurrents(size_t parent, int border_size,
   wxStaticBoxSizer* tcSizer = new wxStaticBoxSizer(tcBox, wxHORIZONTAL);
   mainHBoxSizer->Add(tcSizer, 1, wxALL | wxEXPAND, border_size);
 
-  tcDataSelected =
-      new wxListBox(tcPanel, ID_TIDESELECTED, wxDefaultPosition, wxDefaultSize);
+  tcDataSelected =  new wxListCtrl(tcPanel, ID_TIDESELECTED, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxLC_NO_HEADER);
 
   tcSizer->Add(tcDataSelected, 1, wxALL | wxEXPAND, border_size);
 
   //  Populate Selection List Control with the contents
   //  of the Global static array
+  tcDataSelected->DeleteAllItems();
+
+    // Add first column
+  wxListItem col0;
+  col0.SetId(0);
+  col0.SetText( _("") );
+  col0.SetWidth(500);
+  tcDataSelected->InsertColumn(0, col0);
+
   for (unsigned int id = 0; id < TideCurrentDataSet.Count(); id++) {
-    tcDataSelected->Append(TideCurrentDataSet[id]);
+    wxListItem li;
+    li.SetId( id );
+    long idx = tcDataSelected->InsertItem( li );
+
+    wxString setName = TideCurrentDataSet[id];
+    tcDataSelected->SetItem(id, 0, setName);
   }
 
   //    Add the "Insert/Remove" buttons
@@ -5784,7 +5799,7 @@ void options::CreateControls(void) {
   m_pListbook = new wxNotebook(itemDialog1, ID_NOTEBOOK, wxDefaultPosition,
                                wxSize(-1, -1), flags);
   m_pListbook->Connect(wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED,
-                       wxNotebookEventHandler(options::OnNBPageChange), NULL,
+                       wxNotebookEventHandler(options::OnTopNBPageChange), NULL,
                        this);
 #endif
 
@@ -7615,15 +7630,15 @@ void options::OnApplyClick(wxCommandEvent& event) {
   m_returnChanges |= GENERIC_CHANGED | k_vectorcharts | k_charts |
                      m_groups_changed | k_plugins | k_tides;
 
-  // Pick up all the entries in the DataSelected control
+  // Pick up all the entries in the Tide/current DataSelected control
   // and update the global static array
   TideCurrentDataSet.Clear();
-  int nEntry = tcDataSelected->GetCount();
+  int nEntry = tcDataSelected->GetItemCount();
+  for (int i = 0; i < nEntry; i++) {
+      wxString setName = tcDataSelected->GetItemText(i);
+      TideCurrentDataSet.Add(setName);
+  }
 
-  for (int i = 0; i < nEntry; i++)
-    TideCurrentDataSet.Add(tcDataSelected->GetString(i));
-
-  // Canvas configuration
   if (event.GetId() != ID_APPLY)                // only on ID_OK
     g_canvasConfig = m_screenConfig;
 
@@ -8198,6 +8213,26 @@ void options::OnChartsPageChange(wxListbookEvent& event) {
 
 void options::OnPageChange(wxListbookEvent& event) {
   DoOnPageChange(event.GetSelection());
+}
+
+void options::OnSubNBPageChange(wxNotebookEvent& event) {
+  // In the case where wxNotebooks are nested, we need to identify the subpage
+  // But otherwise do nothing
+  if(event.GetEventObject()){
+      if(dynamic_cast<wxWindow*>(event.GetEventObject())){
+          wxWindow *win = dynamic_cast<wxWindow*>(event.GetEventObject());
+          wxWindow *parent = dynamic_cast<wxWindow*>(win->GetParent());
+          if(dynamic_cast<wxNotebook*>(parent)){
+            lastSubPage = event.GetSelection();
+            return;
+          }
+          if(dynamic_cast<wxListbook*>(parent)){
+            lastSubPage = event.GetSelection();
+            return;
+          }
+
+      }
+  }
 }
 
 void options::OnNBPageChange(wxNotebookEvent& event) {
@@ -9029,7 +9064,11 @@ void options::OnInsertTideDataLocation(wxCommandEvent& event) {
 #endif
 
   if (response == wxID_OK) {
-    tcDataSelected->Append(g_Platform->NormalizePath(sel_file));
+     wxListItem li;
+    int id = tcDataSelected->GetItemCount();      // next index
+    li.SetId( id );
+    long idx = tcDataSelected->InsertItem( li );
+    tcDataSelected->SetItem(id, 0, g_Platform->NormalizePath(sel_file));
 
     //    Record the currently selected directory for later use
     wxFileName fn(sel_file);
@@ -9038,24 +9077,17 @@ void options::OnInsertTideDataLocation(wxCommandEvent& event) {
   }
 }
 
-void options::OnRemoveTideDataLocation(wxCommandEvent& event) {
-#ifndef __WXQT__  // Multi selection is not implemented in wxQT
-  wxArrayInt sels;
-  int nSel = tcDataSelected->GetSelections(sels);
-  wxArrayString a;
-  for (int i = 0; i < nSel; i++) {
-    a.Add(tcDataSelected->GetString(sels[i]));
+void options::OnRemoveTideDataLocation(wxCommandEvent& event)
+{
+  long item = -1;
+  for ( ;; )
+  {
+      item = tcDataSelected->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+      if ( item == -1 )
+          break;
+      tcDataSelected->DeleteItem( item );
+      item = -1;      // Restart
   }
-
-  for (unsigned int i = 0; i < a.Count(); i++) {
-    int b = tcDataSelected->FindString(a[i]);
-    wxCharBuffer buf = a[i].ToUTF8();
-    tcDataSelected->Delete(b);
-  }
-#else
-  int iSel = tcDataSelected->GetSelection();
-  tcDataSelected->Delete(iSel);
-#endif
 }
 
 void options::OnValChange(wxCommandEvent& event) { event.Skip(); }
