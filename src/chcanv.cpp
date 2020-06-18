@@ -6580,6 +6580,7 @@ void ChartCanvas::CreateMUIBar()
     if(m_muiBar){
         SetMUIBarPosition();
         UpdateFollowButtonState();
+        m_muiBar->UpdateDynamicValues();
         m_muiBar->SetCanvasENCAvailable( m_bENCGroup );
         m_muiBar->Raise();
     }
