@@ -271,6 +271,7 @@ MarkInfoDlg::MarkInfoDlg( wxWindow* parent, wxWindowID id, const wxString& title
     m_pMyLinkList = NULL;
     SetColorScheme( (ColorScheme) 0 );
     m_pRoutePoint = NULL;
+    CenterOnScreen();
 }
 
 
@@ -715,8 +716,8 @@ void MarkInfoDlg::RecalculateSize( void )
     SetSize(wxSize(-1, fsize.y));
 
     m_defaultClientSize = GetClientSize();
-#endif
     Center();
+#endif
 }
 
 

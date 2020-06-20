@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __TCWIN_H__
 #define __TCWIN_H__
@@ -38,7 +37,7 @@ class wxCommandEvent;
 class wxCloseEvent;
 class wxTextCtrl;
 class wxButton;
-class wxListBox;
+class wxListCtrl;
 
 WX_DECLARE_LIST(wxPoint, SplineList);           // for spline curve points
 
@@ -58,7 +57,7 @@ public:
       void OnCloseWindow(wxCloseEvent& event);
 
       void RePosition(void);
-      
+
       void RecalculateSize();
 
 private:
@@ -76,7 +75,7 @@ private:
     int           m_tsx;      // test button width
     int           m_tsy;      // test button height
     float         m_tcwin_scaler; // factor to scale TCWin and contents by
-    
+
       IDX_entry   *pIDX;
       wxButton    *OK_button;
       wxButton    *NX_button;
@@ -92,8 +91,8 @@ private:
 
       float       tcv[26];
       time_t      tt_tcv[26];
-      
-      wxListBox  *m_tList ;
+
+      wxListCtrl  *m_tList ;
       bool        btc_valid;
       ChartCanvas    *pParent;
       int         m_corr_mins;
@@ -117,7 +116,7 @@ private:
       wxBrush *pltgray2;
 
       int         m_button_height;
-      
+
       int xSpot;
       int ySpot;
 
