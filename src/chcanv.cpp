@@ -6549,6 +6549,8 @@ void ChartCanvas::OnSize( wxSizeEvent& event )
         m_glcc->OnSize( event );
     }
 #endif
+
+    FormatPianoKeys();
     //  Invalidate the whole window
     ReloadVP();
 }
