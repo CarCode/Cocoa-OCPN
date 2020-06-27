@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-10 12:34+0300\n"
-"PO-Revision-Date: 2020-06-10 12:44+0300\n"
+"PO-Revision-Date: 2020-06-23 12:10+0300\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -732,7 +732,7 @@ msgstr "in"
 #: ../src/AIS_Target_Data.cpp:655 ../src/AIS_Target_Data.cpp:798
 #: ../src/AISTargetListDialog.cpp:585
 msgid "CPA"
-msgstr "Ort bei größter Näherung"
+msgstr "CPA"
 
 #
 #: ../src/AIS_Target_Data.cpp:662 ../src/AIS_Target_Data.cpp:665
@@ -3191,7 +3191,7 @@ msgstr "SOG"
 #
 #: ../src/AISTargetListDialog.cpp:592
 msgid "TCPA"
-msgstr "Zeitpunkt der größten Näherung"
+msgstr "TCPA"
 
 #
 #: ../src/AISTargetListDialog.cpp:632
