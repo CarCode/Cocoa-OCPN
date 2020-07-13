@@ -50,19 +50,22 @@ DashboardInstrument_Compass::DashboardInstrument_Compass( wxWindow *parent, wxWi
 
 void DashboardInstrument_Compass::SetData(int st, double data, wxString unit)
 {
+    if (std::isnan(data))
+        return;
       if (st == m_MainValueCap)
       {
-            // Rotate the rose
-            m_AngleStart = -data;
-            // Required to display data
-            m_MainValue = data;
-            m_MainValueUnit = unit;
+          // Rotate the rose
+          m_AngleStart = -data;
+          // Required to display data
+          m_MainValue = data;
+          m_MainValueUnit = unit;
       }
       else if (st == m_ExtraValueCap)
       {
-            m_ExtraValue = data;
-            m_ExtraValueUnit = unit;
+          m_ExtraValue = data;
+          m_ExtraValueUnit = unit;
       }
+      Refresh();
 }
 
 void DashboardInstrument_Compass::DrawBackground(wxGCDC* dc)
