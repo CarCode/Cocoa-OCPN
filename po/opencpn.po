@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-10 12:34+0300\n"
-"PO-Revision-Date: 2020-06-23 12:10+0300\n"
+"PO-Revision-Date: 2020-08-08 11:23+0300\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.3.1\n"
+"X-Generator: Poedit 2.4\n"
 "X-Crowdin-Project: opencpn\n"
 "X-Crowdin-Language: de\n"
 "X-Crowdin-File: /po/opencpn.pot\n"
@@ -4098,7 +4098,7 @@ msgstr "Tiefenangaben der Seekarte anzeigen"
 #
 #: ../src/chart1.cpp:5602 ../src/chart1.cpp:5609
 msgid "Show ENC Anchoring Info"
-msgstr "Ankerinformationen der Seekarte anzeigen"
+msgstr "Ankergrund der Seekarte anzeigen"
 
 #
 #: ../src/chart1.cpp:5603 ../src/chart1.cpp:5610
@@ -5173,7 +5173,7 @@ msgstr "Anzeigen im Maßstab > 1:"
 #
 #: ../src/MarkInfo.cpp:506
 msgid "Show waypoint name"
-msgstr "Zeige Waypoint-Name"
+msgstr "Zeige Wegpunkt-Name"
 
 #
 #: ../src/MarkInfo.cpp:510 ../src/MarkInfo.cpp:1499

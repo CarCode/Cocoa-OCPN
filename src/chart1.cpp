@@ -265,6 +265,8 @@ wxString                  g_VisiNameinLayers;
 wxString                  g_InVisiNameinLayers;
 
 bool                      g_bcompression_wait;
+bool                      g_FlushNavobjChanges;
+int                       g_FlushNavobjChangesTimeout;
 
 wxString                  g_uploadConnection;
 
@@ -2040,7 +2042,7 @@ bool MyApp::OnInit()
 #ifndef __OCPN__ANDROID__
         pInit_Chart_Dir->Append( std_path.GetDocumentsDir() );
 #else
-        pInit_Chart_Dir->Append( g_Platform->GetPrivateDataDir() );
+        pInit_Chart_Dir->Append( androidGetExtStorageDir() );
 #endif
     }
 
@@ -5096,6 +5098,7 @@ void MyFrame::TrackOn( void )
     v[_T("GUID")] = g_pActiveTrack->m_GUID;
     wxString msg_id( _T("OCPN_TRK_ACTIVATED") );
     g_pi_manager->SendJSONMessageToAllPlugins( msg_id, v );
+    g_FlushNavobjChangesTimeout = 30;           //Every thirty seconds, consider flushing navob changes
 }
 
 Track *MyFrame::TrackOff( bool do_add_point )
@@ -5145,6 +5148,8 @@ Track *MyFrame::TrackOff( bool do_add_point )
 #ifdef __OCPN__ANDROID__
     androidSetTrackTool(false);
 #endif
+
+    g_FlushNavobjChangesTimeout = 600;           //Revert to checking/flushing navob changes every 5 minutes
 
     return return_val;
 }
@@ -6483,6 +6488,9 @@ void MyFrame::ChartsRefresh( )
         ChartCanvas *cc = g_canvasArray.Item(i);
         if(cc ){
             int currentIndex = cc->GetpCurrentStack()->GetCurrentEntrydbIndex();
+            if(cc->GetQuiltMode()){
+                currentIndex = cc->GetQuiltReferenceChartIndex();
+                }
             cc->canvasChartsRefresh( currentIndex );
         }
     }
@@ -7539,13 +7547,16 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
 
     // Update the navobj file on a fixed schedule (5 minutes)
     // This will do nothing if the navobj.changes file is empty and clean
-    if((g_tick % 300) == 0){
+    if(((g_tick % g_FlushNavobjChangesTimeout) == 0) || g_FlushNavobjChanges){
         if(pConfig && pConfig->IsChangesFileDirty()){
+            androidShowBusyIcon();
             wxStopWatch update_sw;
             pConfig->UpdateNavObj( true );
             wxString msg = wxString::Format(_T("OpenCPN periodic navobj update took %ld ms."), update_sw.Time());
             wxLogMessage( msg );
             qDebug() << msg.mb_str();
+            g_FlushNavobjChanges = false;
+            androidHideBusyIcon();
         }
     }
 
