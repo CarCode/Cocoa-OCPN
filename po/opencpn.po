@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-10 12:34+0300\n"
-"PO-Revision-Date: 2020-08-08 11:23+0300\n"
+"PO-Revision-Date: 2020-08-17 18:30+0300\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Crowdin-Project: opencpn\n"
 "X-Crowdin-Language: de\n"
 "X-Crowdin-File: /po/opencpn.pot\n"
@@ -5598,7 +5598,7 @@ msgstr "Standard Tracking"
 #
 #: ../src/options.cpp:702
 msgid "Always track"
-msgstr "Immer Trocken"
+msgstr "Immer Tracken"
 
 #
 #: ../src/options.cpp:705
