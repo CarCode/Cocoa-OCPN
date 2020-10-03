@@ -2861,8 +2861,7 @@ void options::CreatePanel_Ownship(size_t parent, int border_size,
   wxString iconTypes[] = {_("Default"), _("Real Scale Bitmap"),
                           _("Real Scale Vector")};
   m_pShipIconType =
-      new wxChoice(itemPanelShip, ID_SHIPICONTYPE, wxDefaultPosition,
-                   wxDefaultSize, 3, iconTypes);
+      new wxChoice(itemPanelShip, ID_SHIPICONTYPE, wxDefaultPosition, wxSize(GetCharWidth() * 20, GetCharHeight() * 2), 3, iconTypes);
   dispOptionsGrid->Add(m_pShipIconType, 0,
                        wxALIGN_RIGHT | wxLEFT | wxRIGHT | wxTOP,
                        group_item_spacing);
@@ -9206,6 +9205,8 @@ void options::OnUploadFormatChange(wxCommandEvent& event) {
     m_cbFurunoGP3X->SetValue(FALSE);
   else if (event.GetEventObject() == m_cbFurunoGP3X && event.IsChecked())
     m_cbGarminUploadHost->SetValue(FALSE);
+
+  OnConnValChange(event);
   event.Skip();
 }
 

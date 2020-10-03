@@ -1645,7 +1645,7 @@ void ocpnToolBarSimple::KillTooltip()
         m_pToolTipWin = NULL;
     }
     m_tooltip_timer.Stop();
-
+/*
     if( m_last_ro_tool ) {
         if( m_last_ro_tool->IsEnabled() ) {
             if( m_last_ro_tool->IsToggled() ) {
@@ -1666,6 +1666,7 @@ void ocpnToolBarSimple::KillTooltip()
             }
         }
     }
+*/
     gFrame->Raise();
     gFrame->GetFocusCanvas()->TriggerDeferredFocus();
 

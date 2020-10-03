@@ -870,12 +870,7 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
                     // Check to see if this MMSI has been configured to be ignored completely...
                     if(props->m_bignore)
                         return AIS_NoError;
-                    // Check to see if we want to persist it's track
-                    if( props->TrackType == TRACKTYPE_ALWAYS){
-                        UpdateOneTrack(pTargetData);
-                        break;
-                    }
-                    // Check to see if this MMSI wants VDM translated to VDO
+                    // Check to see if this MMSI wants VDM translated to VDO or whether we want to persist it's track...
                     else if (props->m_bVDM){
 
                         //Only single line VDM messages to be translated
@@ -1107,6 +1102,9 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
                                     }
                                     if ( g_bUseOnlyConfirmedAISName )
                                         strncpy( pTargetData->ShipName, ( *AISTargetNamesC )[mmsi].mb_str(),  ( *AISTargetNamesC )[mmsi].Left(20).Length() +1 );
+                                }
+                                else { // The C list name is different but no NC entry. Add it.
+                                    (*AISTargetNamesNC)[mmsi] = ship_name;
                                 }
                             }
                         }
@@ -2641,22 +2639,19 @@ void AIS_Decoder::OnTimerAIS( wxTimerEvent& event )
 //      This is an OS specific behavior, not seen on linux or Mac.
 //      This patch will allow the audio alert to occur, and the visual alert will pop up soon
 //      after the user selects the OCPN icon from the taskbar. (on the next timer tick, probably)
-            
-//#ifdef __WXMSW__            
-         if( gFrame->IsIconized() || !gFrame->IsActive() )
+
+#ifndef __OCPN__ANDROID__
+            if( gFrame->IsIconized() || !gFrame->IsActive() )
                 gFrame->RequestUserAttention();
-//#endif
-            
-//#ifdef __WXMSW__            
-            if( !gFrame->IsIconized() )
-//#endif                
-            {
+#endif
+
+            if( !gFrame->IsIconized() ){
                 AISTargetAlertDialog *pAISAlertDialog = new AISTargetAlertDialog();
                 pAISAlertDialog->Create( palert_target->MMSI, m_parent_frame, this,
                                          b_jumpto, b_createWP, b_ack,
                                          -1, _("AIS Alert"));
                 g_Platform->PositionAISAlert(pAISAlertDialog);
-                
+
                 g_pais_alert_dialog_active = pAISAlertDialog;
                 pAISAlertDialog->Show();                     // Show modeless, so it stays on the screen
             }
