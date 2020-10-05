@@ -45,8 +45,9 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    (jetzt macOS) Mojave (10.14) und Catalina (10.15). Ältere Versionen
    funktionieren nicht mehr.
    Es soll soweit wie möglich das macOS Betriebssystem unterstützt werden,
-   einschl. Mac Menüs, Mac Hilfe usw. Mojave und Catalina wird ab Erscheinen
-   nur noch unterstützt, ältere Versionen nicht mehr.
+   einschl. Mac Menüs, Mac Hilfe usw. Nur noch Mojave und Catalina werden
+   unterstützt, ältere Versionen nicht mehr. Ab Erscheinen auch vielleicht
+   Big Sur.
    Vermutlich wird es für neuere Versionen von macOS in absehbarer Zeit
    überhaupt keine OpenCPN Version mehr geben können, da die Grafik-
    Bibliothek OpenGL von Apple bald nicht mehr unterstützt wird.
