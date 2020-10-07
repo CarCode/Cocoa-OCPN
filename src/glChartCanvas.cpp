@@ -3852,10 +3852,15 @@ void glChartCanvas::Render()
                             rit != tiles_to_show.rend(); ++rit) {
             ChartBase *chart = ChartData->OpenChartFromDBAndLock(*rit, FULL_INIT);
 
-            wxFileName tileFile(chart->GetFullPath());
-            wxULongLong tileSize = tileFile.GetSize();
+            // Chart may have been prevented from initial loading due to size, or some other reason...
+            if(chart == NULL)
+                continue;
 
-            if(!ChartData->CheckAnyCanvasExclusiveTileGroup() || (tileSize > 5e9)){
+            wxFileName tileFile(chart->GetFullPath());
+            //Size test for 5 GByte
+            wxULongLong tileSizeMB = tileFile.GetSize() >> 20;
+
+            if(!ChartData->CheckAnyCanvasExclusiveTileGroup() || (tileSizeMB.GetLo() > 5000)){
                 // Check to see if the tile has been "clicked".
                 // If so, do not add to no-show array again.
                 if(!m_pParentCanvas->IsTileOverlayIndexInYesShow(*rit)){
