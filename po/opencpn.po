@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-10 12:34+0300\n"
-"PO-Revision-Date: 2020-08-17 18:30+0300\n"
+"PO-Revision-Date: 2020-10-26 16:48+0100\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -7166,7 +7166,7 @@ msgstr "Einstellungen für Inland-ECDIS-Version 2.3 verwenden"
 #
 #: ../src/options.cpp:5505
 msgid "Use dark window decorations"
-msgstr "Verwende dunkle Fensterattribute"
+msgstr "Verwende dunkle Fensterattribute (nur macOS > Mojave)"
 
 #
 #: ../src/options.cpp:5526
@@ -8821,12 +8821,12 @@ msgstr "Eingabemeldung gefiltert und gelöscht"
 #
 #: ../src/TTYWindow.cpp:144
 msgid "Output Message"
-msgstr "Ausgabe-Message"
+msgstr "Ausgabe-Nachricht"
 
 #
 #: ../src/TTYWindow.cpp:151
 msgid "Information Message or Message with errors"
-msgstr "Informations-Message oder fehlerhafte Message"
+msgstr "Informations-Nachricht oder fehlerhafte Nachricht"
 
 #
 #: ../src/TTYWindow.cpp:161 ../src/wxcurl/dialog.cpp:410
