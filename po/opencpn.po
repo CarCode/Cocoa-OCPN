@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-10 12:34+0300\n"
-"PO-Revision-Date: 2020-10-26 16:48+0100\n"
+"PO-Revision-Date: 2020-11-15 13:08+0100\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Crowdin-Project: opencpn\n"
 "X-Crowdin-Language: de\n"
 "X-Crowdin-File: /po/opencpn.pot\n"
@@ -7166,7 +7166,7 @@ msgstr "Einstellungen für Inland-ECDIS-Version 2.3 verwenden"
 #
 #: ../src/options.cpp:5505
 msgid "Use dark window decorations"
-msgstr "Verwende dunkle Fensterattribute (nur macOS > Mojave)"
+msgstr "Verwende dunkle Fensterattribute (nur macOS < Mojave)"
 
 #
 #: ../src/options.cpp:5526

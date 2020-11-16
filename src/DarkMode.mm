@@ -26,7 +26,10 @@
 void setAppLevelDarkMode(bool enabled)
 {
     if (@available(macOS 10.14, *)) {
-        NSAppearance *appearance = (enabled ? [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua] : nil);
+        NSAppearance *appearance = (enabled ? [NSAppearance appearanceNamed:NSAppearanceNameAqua] : nil);
+        [[NSApplication sharedApplication] setAppearance:appearance];
+    } else {  // Auch bei kein 10.14 ????
+        NSAppearance *appearance = (enabled ? [NSAppearance appearanceNamed:NSAppearanceNameAqua] : nil);
         [[NSApplication sharedApplication] setAppearance:appearance];
     }
 }
