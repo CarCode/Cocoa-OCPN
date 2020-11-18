@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCP Track printout
@@ -48,13 +48,16 @@ public:
                      Track*            track,
                      OCPNTrackListCtrl *lcPoints,
                      const wxString   &title = _T( "My Track printout" ) );
-    virtual
-    bool OnPrintPage( int page );
+    virtual bool OnPrintPage( int page );
     void DrawPage( wxDC* dc );
     virtual void OnPreparePrinting();
     virtual bool HasPage( int num )
     {
+#ifdef __WXOSX__
+        return num > 0 || 1;
+#else
         return num > 0 || num <= 1;
+#endif
     };
 
     virtual void GetPageInfo( int* minPage, int* maxPage, int* selPageFrom, int* selPageTo );
@@ -75,7 +78,7 @@ protected:
 
 
 // track elements selection dialog
-///@begin control identifiers
+// @begin control identifiers
 #define ID_TRACKPRINTSELECTION 9000
 #define SYMBOL_TRACKPRINT_SELECTION_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCLOSE_BOX
 #define SYMBOL_TRACKPRINT_SELECTION_TITLE _( "Print Track Selection" )
@@ -105,8 +108,7 @@ public:
     ~TrackPrintSelection();
 
     // Creation
-    bool
-    Create( wxWindow*       parent,
+    bool Create( wxWindow*       parent,
             wxWindowID      id = SYMBOL_TRACKPRINT_SELECTION_IDNAME,
             const wxString& caption = SYMBOL_TRACKPRINT_SELECTION_TITLE,
             const wxPoint&  pos = SYMBOL_TRACKPRINT_SELECTION_POSITION,

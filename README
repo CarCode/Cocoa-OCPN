@@ -42,12 +42,11 @@ Warum überhaupt diese eigene OpenCPN Version?
   Apple gewohnten Umfeld. Weitere Abweichungen zum Original Code sind:
 
 a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
-   (jetzt macOS) Mojave (10.14) und Catalina (10.15). Ältere Versionen
-   funktionieren nicht mehr.
+   (jetzt macOS) Mojave (10.14) und Catalina (10.15).
    Es soll soweit wie möglich das macOS Betriebssystem unterstützt werden,
    einschl. Mac Menüs, Mac Hilfe usw. Nur noch Mojave und Catalina werden
-   unterstützt, ältere Versionen nicht mehr. Ab Erscheinen auch vielleicht
-   Big Sur.
+   unterstützt, ältere Versionen nicht mehr. Weder Big Sur noch Macs mit
+   M1 Chip sind bisher getestet.
    Vermutlich wird es für neuere Versionen von macOS in absehbarer Zeit
    überhaupt keine OpenCPN Version mehr geben können, da die Grafik-
    Bibliothek OpenGL von Apple bald nicht mehr unterstützt wird.
@@ -84,9 +83,9 @@ Größte Änderung ist jedoch die Verwendung von Clang/LLVM mit Xcode statt
 der Befehlszeilen orientierten Cmake Version.
 
 Compiler:
-Xcode 11.3.1
-Apple LLVM version 11.0.0 (clang-1100.33.16)
-Target: x86_64-apple-darwin18.2.0
+Xcode 12.2
+Apple LLVM version 11.0.0 (clang-1200.32.27)
+Target: x86_64-apple-darwin19.6.0
 SDK 10.15 Catalina
 Thread model: posix
 
@@ -118,5 +117,5 @@ Die Datei /data/gshhs/poly-f-1.dat mit ~172 MB muß daher separat geholt werden
 und nach /data/gshhs/ kopiert werden:
 https://topperdiek.de/dl/ocpn/poly-f-1.dat
 -----------------------------------------------------------------------
-07. Juni 2020
+18. November 2020
 

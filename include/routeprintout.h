@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCP Route printout
@@ -46,25 +46,20 @@ public:
     MyRoutePrintout( std::vector<bool> _toPrintOut,
                      Route*            route,
                      const wxString   &title = _T( "My Route printout" ) );
-    virtual
-    bool
-    OnPrintPage( int page );
-    void
-    DrawPage( wxDC* dc );
-    virtual
-    void
-    OnPreparePrinting();
+    virtual bool OnPrintPage( int page );
+    void DrawPage( wxDC* dc );
+    virtual void OnPreparePrinting();
 
-    virtual
-    bool
-    HasPage( int num )
+    virtual bool HasPage( int num )
     {
+#ifdef __WXOSX__
+        return num > 0 || 1;
+#else
         return num > 0 || num <= 1;
+#endif
     };
 
-    virtual
-    void
-    GetPageInfo( int* minPage,
+    virtual void GetPageInfo( int* minPage,
                  int* maxPage,
                  int* selPageFrom,
                  int* selPageTo );
@@ -85,7 +80,7 @@ protected:
 
 
 // route elements selection dialog
-///@begin control identifiers
+// @begin control identifiers
 #define ID_ROUTEPRINTSELECTION 9000
 #define SYMBOL_ROUTEPRINT_SELECTION_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCLOSE_BOX
 #define SYMBOL_ROUTEPRINT_SELECTION_TITLE _( "Print Route Selection" )
@@ -114,25 +109,19 @@ public:
     ~RoutePrintSelection();
 
     // Creation
-    bool
-    Create( wxWindow*       parent,
+    bool Create( wxWindow*       parent,
             wxWindowID      id = SYMBOL_ROUTEPRINT_SELECTION_IDNAME,
             const wxString& caption = SYMBOL_ROUTEPRINT_SELECTION_TITLE,
             const wxPoint&  pos = SYMBOL_ROUTEPRINT_SELECTION_POSITION,
             const wxSize&   size = SYMBOL_ROUTEPRINT_SELECTION_SIZE,
             long            style = SYMBOL_ROUTEPRINT_SELECTION_STYLE );
 
-    void
-    CreateControls();
+    void CreateControls();
 
-    void
-    SetColorScheme( ColorScheme cs );
-    void
-    SetDialogTitle(const wxString & title);
-    void
-    OnRoutepropCancelClick( wxCommandEvent& event );
-    void
-    OnRoutepropOkClick( wxCommandEvent& event );
+    void SetColorScheme( ColorScheme cs );
+    void SetDialogTitle(const wxString & title);
+    void OnRoutepropCancelClick( wxCommandEvent& event );
+    void OnRoutepropOkClick( wxCommandEvent& event );
 
 
     // Should we show tooltips?

@@ -5,7 +5,7 @@
 	<key>BuildLocationStyle</key>
 	<string>UseTargetSettings</string>
 	<key>BuildSystemType</key>
-	<string>Original</string>
+	<string>Latest</string>
 	<key>CustomBuildLocationType</key>
 	<string>RelativeToDerivedData</string>
 	<key>DerivedDataLocationStyle</key>
@@ -13,6 +13,8 @@
 	<key>IssueFilterStyle</key>
 	<string>ShowAll</string>
 	<key>LiveSourceIssuesEnabled</key>
+	<true/>
+	<key>ShowSharedSchemesAutomaticallyEnabled</key>
 	<true/>
 </dict>
 </plist>
