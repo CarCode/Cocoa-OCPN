@@ -7410,8 +7410,9 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
     // If there is, the two single clicks are ignored.
 
     if( event.LeftDClick() && ( cursor_region == CENTER ) ) {
-#ifdef __WXOSX__  // Wegen AssertTimer, aber immer noch Assert bei DoppelKlick
-        m_DoubleClickTimer->Start(0,true);
+// Assert: /src/osx/core/timer.cpp(69): assert ""m_milli > 0"" failed in Start(): invalid value for timer timeout ?????
+#ifdef __WXOSX__  // Wegen AssertTimer, aber immer noch Assert bei DoppelKlick, geht nun -1 statt 0 ????? Scheint so.
+        m_DoubleClickTimer->Start(-1,true);
 #else
         m_DoubleClickTimer->Start();
 #endif
