@@ -222,7 +222,8 @@ extern bool             g_bDrawAISRealtime;
 extern double           g_AIS_RealtPred_Kts;
 extern bool             g_bShowAISName;
 extern int              g_Show_Target_Name_Scale;
-extern bool             g_bWplIsAprsPosition;
+extern bool             g_bWplUsePosition;
+extern int              g_WplAction;
 extern bool             g_benableAISNameCache;
 extern bool             g_bUseOnlyConfirmedAISName;
 extern int              g_ScaledNumWeightSOG;
@@ -552,7 +553,7 @@ int MyConfig::LoadMyConfig()
     g_maxWPNameLength = 6;
     g_NMEAAPBPrecision = 3;
 
-    #ifdef ocpnUSE_GL
+#ifdef ocpnUSE_GL
     g_GLOptions.m_bUseAcceleratedPanning = true;
     g_GLOptions.m_GLPolygonSmoothing = true;
     g_GLOptions.m_GLLineSmoothing = true;
@@ -562,7 +563,7 @@ int MyConfig::LoadMyConfig()
         g_GLOptions.m_iTextureMemorySize = wxMax(128, g_GLOptions.m_iTextureMemorySize);
         g_GLOptions.m_bTextureCompressionCaching = g_GLOptions.m_bTextureCompression;
     }
-    #endif
+#endif
 
     g_maintoolbar_orient = wxTB_HORIZONTAL;
     g_iENCToolbarPosX = -1;
@@ -608,7 +609,8 @@ int MyConfig::LoadMyConfig()
     g_ScaledNumWeightSizeOfT = 25;
     g_ScaledSizeMinimal = 50;
     g_Show_Target_Name_Scale = 250000;
-    g_bWplIsAprsPosition = 1;
+    g_bWplUsePosition = 0;
+    g_WplAction = 0;
     g_ais_cog_predictor_width = 3;
     g_ais_alert_dialog_sx = 200;
     g_ais_alert_dialog_sy = 200;
@@ -1099,7 +1101,8 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
     Read( _T ( "AISRealtimeMinSpeedKnots" ), &g_AIS_RealtPred_Kts, 0.7 );
     Read( _T ( "bAISAlertDialog" ), &g_bAIS_CPA_Alert );
     Read( _T ( "ShowAISTargetNameScale" ), &g_Show_Target_Name_Scale );
-    Read( _T ( "bWplIsAprsPositionReport" ), &g_bWplIsAprsPosition );
+    Read( _T ( "bWplIsAprsPositionReport" ), &g_bWplUsePosition );
+    Read( _T ( "WplSelAction"), &g_WplAction);
     Read( _T ( "AISCOGPredictorWidth" ), &g_ais_cog_predictor_width );
 
     Read( _T ( "bAISAlertAudio" ), &g_bAIS_CPA_Alert_Audio );
@@ -2524,7 +2527,8 @@ void MyConfig::UpdateSettings()
     Write( _T ( "AISRealtimeMinSpeedKnots" ), g_AIS_RealtPred_Kts );
     Write( _T ( "bShowAISName" ), g_bShowAISName );
     Write( _T ( "ShowAISTargetNameScale" ), g_Show_Target_Name_Scale );
-    Write( _T ( "bWplIsAprsPositionReport" ), g_bWplIsAprsPosition );
+    Write( _T ( "bWplIsAprsPositionReport" ), g_bWplUsePosition );
+    Write( _T ( "WplSelAction" ), g_WplAction );
     Write( _T ( "AISCOGPredictorWidth" ), g_ais_cog_predictor_width );
     Write( _T ( "bShowScaledTargets" ), g_bAllowShowScaled );
     Write( _T ( "AISScaledNumber" ), g_ShowScaled_Num );    
@@ -4542,11 +4546,11 @@ wxString formatAngle(double angle)
 {
     wxString out;
     if( g_bShowMag && g_bShowTrue ) {
-        out.Printf(wxT("%.0f \u00B0T (%.0f \u00B0M)"), angle, gFrame->GetMag(angle));
+        out.Printf(wxT("%03.0f \u00B0T (%.0f \u00B0M)"), angle, gFrame->GetMag(angle));
     } else if( g_bShowTrue ) {
-        out.Printf(wxT("%.0f \u00B0T"), angle);
+        out.Printf(wxT("%03.0f \u00B0T"), angle);
     } else {
-        out.Printf(wxT("%.0f \u00B0M"), gFrame->GetMag(angle));
+        out.Printf(wxT("%03.0f \u00B0M"), gFrame->GetMag(angle));
     }
     return out;
 }
@@ -4742,7 +4746,7 @@ void DimeControl( wxWindow* ctrl, wxColour col, wxColour window_back_color, wxCo
     if ( depth == 0 ) {   // only for the window root, not for every child
         // If the color scheme is DAY or RGB, use the default platform native colour for backgrounds
         if ( !darkMode ) {
-            window_back_color = wxNullColour;
+            window_back_color = wxSystemSettings::GetColour(wxSYS_COLOUR_DESKTOP);  // was: wxNullColour
             col = wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOX);
             uitext = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
         }

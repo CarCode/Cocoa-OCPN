@@ -58,6 +58,18 @@ wxFont GetOCPNGUIScaledFont( wxString item );
 
 wxArrayString *EnumerateSerialPorts(void);
 wxColour GetGlobalColor(wxString colorName);
+enum DialogColor
+{
+    DLG_BACKGROUND,
+    DLG_SELECTED_BACKGROUND,
+    DLG_UNSELECTED_BACKGROUND,
+    DLG_ACCENT,
+    DLG_SELECTED_ACCENT,
+    DLG_UNSELECTED_ACCENT,
+    DLG_TEXT,
+    DLG_HIGHLIGHT
+};
+wxColour GetDialogColor(DialogColor color);
 
 int GetApplicationMemoryUse(void);
 
@@ -627,14 +639,10 @@ class MyPrintout: public wxPrintout
 {
  public:
   MyPrintout(const wxChar *title = _T("My printout")):wxPrintout(title){}
-  virtual
-  bool OnPrintPage(int page);
-  virtual
-  bool HasPage(int page);
-  virtual
-  bool OnBeginDocument(int startPage, int endPage);
-  virtual
-  void GetPageInfo(int *minPage, int *maxPage, int *selPageFrom, int *selPageTo);
+  virtual bool OnPrintPage(int page);
+  virtual bool HasPage(int page);
+  virtual bool OnBeginDocument(int startPage, int endPage);
+  virtual void GetPageInfo(int *minPage, int *maxPage, int *selPageFrom, int *selPageTo);
 
   void DrawPageOne(wxDC *dc);
 

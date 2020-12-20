@@ -51,8 +51,8 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    überhaupt keine OpenCPN Version mehr geben können, da die Grafik-
    Bibliothek OpenGL von Apple bald nicht mehr unterstützt wird.
 
-b. Diese Version basiert auf Release-Version von wxWidgets 3.1.3 mit
-   entsprechenden dylibs vom 25. April 2019. Die Einbindung der Libs als
+b. Diese Version basiert auf Release-Version von wxWidgets 3.1.4 mit
+   entsprechenden dylibs vom 22. Juli 2020. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -96,7 +96,7 @@ Ich verwende die SourceTree.app für Mac OS X.
 Im Sourcen-Tree neues Verzeichnis erstellen z.B. "build-cocoa-debug".
 Im Terminal in dies Verzeichnis wechseln und konfigurieren mit:
 
-../configure --with-macosx-version-min=10.9 --with-expat=builtin --enable-unicode --enable-shared --enable-debug --disable-compat28 --with-osx-cocoa --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk --without-liblzma --with-zlib=builtin --with-libpng=builtin --with-libjpeg=builtin --without-libtiff CXXFLAGS=-stdlib=libc++ OBJCXXFLAGS=-stdlib=libc++ LDFLAGS=-stdlib=libc++ CXX=clang++ CC=clang
+../configure --with-expat=builtin --enable-unicode --enable-shared --enable-debug --disable-compat28 --with-osx-cocoa --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk --without-liblzma --with-zlib=builtin --with-libpng=builtin --with-libjpeg=builtin --without-libtiff CXXFLAGS=-stdlib=libc++ OBJCXXFLAGS=-stdlib=libc++ LDFLAGS=-stdlib=libc++ CXX=clang++ CC=clang
 
 Dann Eingabe von: make
 und schließlich Eingabe von: sudo make install
@@ -117,5 +117,5 @@ Die Datei /data/gshhs/poly-f-1.dat mit ~172 MB muß daher separat geholt werden
 und nach /data/gshhs/ kopiert werden:
 https://topperdiek.de/dl/ocpn/poly-f-1.dat
 -----------------------------------------------------------------------
-18. November 2020
+20. Dezember 2020
 

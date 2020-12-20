@@ -185,7 +185,8 @@ extern bool g_bDrawAISRealtime;
 extern double g_AIS_RealtPred_Kts;
 extern bool g_bShowAISName;
 extern int g_Show_Target_Name_Scale;
-extern bool g_bWplIsAprsPosition;
+extern bool g_bWplUsePosition;
+extern int  g_WplAction;
 
 extern int g_iNavAidRadarRingsNumberVisible;
 extern float g_fNavAidRadarRingsStep;
@@ -2861,7 +2862,7 @@ void options::CreatePanel_Ownship(size_t parent, int border_size,
   wxString iconTypes[] = {_("Default"), _("Real Scale Bitmap"),
                           _("Real Scale Vector")};
   m_pShipIconType =
-      new wxChoice(itemPanelShip, ID_SHIPICONTYPE, wxDefaultPosition, wxSize(GetCharWidth() * 20, GetCharHeight() * 2), 3, iconTypes);
+    new wxChoice(itemPanelShip, ID_SHIPICONTYPE, wxDefaultPosition, wxSize(GetCharWidth() * 20, GetCharHeight() * 2), 3, iconTypes);
   dispOptionsGrid->Add(m_pShipIconType, 0,
                        wxALIGN_RIGHT | wxLEFT | wxRIGHT | wxTOP,
                        group_item_spacing);
@@ -5249,15 +5250,12 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
   pDisplayGrid->Add(m_pText_Show_Target_Name_Scale, 1, wxALL | wxALIGN_RIGHT,
                     group_item_spacing);
 
-  m_pCheck_Wpl_Aprs = new wxCheckBox(
-      panelAIS, -1, _("Treat WPL sentences as APRS position reports"));
-  pDisplayGrid->Add(m_pCheck_Wpl_Aprs, 1, wxALL, group_item_spacing);
+  m_pCheck_use_Wpl = new wxCheckBox( panelAIS, -1, _("Use WPL position messages. Action when received:"));
+    pDisplayGrid->Add(m_pCheck_use_Wpl, 1, wxALL, group_item_spacing);
 
-  wxStaticText* pStatic_Dummy7 = new wxStaticText(panelAIS, -1, _T(""));
-  pDisplayGrid->Add(pStatic_Dummy7, 1, wxALL, group_item_spacing);
-
-  wxStaticText* pStatic_Dummy5a = new wxStaticText(panelAIS, -1, _T(""));
-  pDisplayGrid->Add(pStatic_Dummy5a, 1, wxALL, group_item_spacing);
+  wxString Wpl_Action[] = {_("APRS position report"), _("Create mark")};
+  m_pWplAction = new wxChoice(panelAIS, wxID_ANY, wxDefaultPosition,                                m_pShipIconType->GetSize(), 2, Wpl_Action);
+  pDisplayGrid->Add(m_pWplAction, 0, wxALIGN_RIGHT | wxALL, group_item_spacing);
 
   // Rollover
   wxStaticBox* rolloverBox = new wxStaticBox(panelAIS, wxID_ANY, _("Rollover"));
@@ -6293,7 +6291,8 @@ void options::SetInitialSettings(void) {
   s.Printf(_T("%d"), g_Show_Target_Name_Scale);
   m_pText_Show_Target_Name_Scale->SetValue(s);
 
-  m_pCheck_Wpl_Aprs->SetValue(g_bWplIsAprsPosition);
+  m_pCheck_use_Wpl->SetValue(g_bWplUsePosition);
+  m_pWplAction->SetSelection(g_WplAction);
 
   // Alerts
   m_pCheck_AlertDialog->SetValue(g_bAIS_CPA_Alert);
@@ -7418,8 +7417,8 @@ void options::OnApplyClick(wxCommandEvent& event) {
   long ais_name_scale = 5000;
   m_pText_Show_Target_Name_Scale->GetValue().ToLong(&ais_name_scale);
   g_Show_Target_Name_Scale = (int)wxMax(5000, ais_name_scale);
-
-  g_bWplIsAprsPosition = m_pCheck_Wpl_Aprs->GetValue();
+  g_bWplUsePosition = m_pCheck_use_Wpl->GetValue();
+  g_WplAction = m_pWplAction->GetSelection();
 
   //   Alert
   g_bAIS_CPA_Alert = m_pCheck_AlertDialog->GetValue();
