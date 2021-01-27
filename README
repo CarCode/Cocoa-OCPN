@@ -83,7 +83,7 @@ Größte Änderung ist jedoch die Verwendung von Clang/LLVM mit Xcode statt
 der Befehlszeilen orientierten Cmake Version.
 
 Compiler:
-Xcode 12.3
+Xcode 12.4
 Apple LLVM version 12.0.0 (clang-1200.32.28)
 Target: x86_64-apple-darwin19.6.0
 SDK 10.15 Catalina
