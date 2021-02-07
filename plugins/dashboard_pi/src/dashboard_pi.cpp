@@ -91,8 +91,8 @@ enum {
     ID_DBP_D_RSA, ID_DBP_I_SAT, ID_DBP_D_GPS, ID_DBP_I_PTR, ID_DBP_I_GPSUTC, ID_DBP_I_SUN,
     ID_DBP_D_MON, ID_DBP_I_ATMP, ID_DBP_I_AWA, ID_DBP_I_TWA, ID_DBP_I_TWD, ID_DBP_I_TWS,
     ID_DBP_D_TWD, ID_DBP_I_HDM, ID_DBP_D_HDT, ID_DBP_D_WDH, ID_DBP_I_VLW1, ID_DBP_I_VLW2,
-    ID_DBP_D_MDA, ID_DBP_I_MDA, ID_DBP_D_BPH, ID_DBP_I_FOS,	ID_DBP_M_COG, ID_DBP_I_PITCH, ID_DBP_I_HEEL,
-    ID_DBP_I_SATU, ID_DBP_D_AWA_TWA, ID_DBP_I_GPSLCL, ID_DBP_I_CPULCL, ID_DBP_I_SUNLCL,
+    ID_DBP_D_MDA, ID_DBP_I_MDA, ID_DBP_D_BPH, ID_DBP_I_FOS,	ID_DBP_M_COG, ID_DBP_I_PITCH,
+    ID_DBP_I_HEEL, ID_DBP_D_AWA_TWA, ID_DBP_I_GPSLCL, ID_DBP_I_CPULCL, ID_DBP_I_SUNLCL,
     ID_DBP_LAST_ENTRY //this has a reference in one of the routines; defining a "LAST_ENTRY" and setting the reference to it, is one codeline less to change (and find) when adding new instruments :-)
 };
 
@@ -106,100 +106,98 @@ bool IsObsolete( int id ) {
 wxString getInstrumentCaption( unsigned int id )
 {
     switch( id ){
-        case ID_DBP_I_POS:
+        case ID_DBP_I_POS:          // 0
             return _("Position");
-        case ID_DBP_I_SOG:
+        case ID_DBP_I_SOG:          // 1
             return _("SOG");
-        case ID_DBP_D_SOG:
+        case ID_DBP_D_SOG:          // 2
             return _("Speedometer");
-        case ID_DBP_I_COG:
+        case ID_DBP_I_COG:          // 3
             return _("COG");
-        case ID_DBP_M_COG:
-            return _("Mag COG");
-        case ID_DBP_D_COG:
-            return _("GPS Compass");
-        case ID_DBP_D_HDT:
-            return _("True Compass");
-        case ID_DBP_I_STW:
+        case ID_DBP_D_COG:          // 4
+            return _("GNSS Compass");
+        case ID_DBP_I_STW:          // 5
             return _("STW");
-        case ID_DBP_I_HDT:
+        case ID_DBP_I_HDT:          // 6
             return _("True HDG");
-        case ID_DBP_I_HDM:
-            return _("Mag HDG");
-        case ID_DBP_D_AW:
+        case ID_DBP_D_AW:           // 7
         case ID_DBP_D_AWA:
             return _("App. Wind Angle & Speed");
-        case ID_DBP_D_AWA_TWA:
-            return _("App & True Wind Angle");
-        case ID_DBP_I_AWS:
+        case ID_DBP_I_AWS:          // 8
             return _("App. Wind Speed");
-        case ID_DBP_D_AWS:
+        case ID_DBP_D_AWS:          // 9
             return _("App. Wind Speed");
-        case ID_DBP_D_TW:
+        case ID_DBP_D_TW:           // 10
             return _("True Wind Angle & Speed");
-        case ID_DBP_I_DPT:
+        case ID_DBP_I_DPT:          // 11
             return _("Depth");
-        case ID_DBP_D_DPT:
+        case ID_DBP_D_DPT:          // 12
             return _("Depth");
-        case ID_DBP_D_MDA:
-            return _("Barometric pressure");
-        case ID_DBP_I_MDA:
-            return _("Barometric pressure");
-        case ID_DBP_I_TMP:
+        case ID_DBP_I_TMP:          // 13
             return _("Water Temp.");
-        case ID_DBP_I_ATMP:
-            return _("Air Temp.");
-        case ID_DBP_I_AWA:
-            return _("App. Wind Angle");
-        case ID_DBP_I_TWA:
-            return _("True Wind Angle");
-        case ID_DBP_I_TWD:
-            return _("True Wind Direction");
-        case ID_DBP_I_TWS:
-            return _("True Wind Speed");
-        case ID_DBP_D_TWD:
-            return _("True Wind Dir. & Speed");
-        case ID_DBP_I_VMG:
+        case ID_DBP_I_VMG:          // 14
             return _("VMG");
-        case ID_DBP_D_VMG:
+        case ID_DBP_D_VMG:          // 15
             return _("VMG");
-        case ID_DBP_I_RSA:
+        case ID_DBP_I_RSA:          // 16
             return _("Rudder Angle");
-        case ID_DBP_D_RSA:
+        case ID_DBP_D_RSA:          // 17
             return _("Rudder Angle");
-        case ID_DBP_I_SAT:
-            return _("GPS in View");
-        case ID_DBP_D_GPS:
-            return _("GPS Status");
-        case ID_DBP_I_PTR:
+        case ID_DBP_I_SAT:          // 18
+            return _("GNSS in use");
+        case ID_DBP_D_GPS:          // 19
+            return _("GNSS Status");
+        case ID_DBP_I_PTR:          // 20
             return _("Cursor");
-        case ID_DBP_I_GPSUTC:
-            return _("GPS Clock");
-        case ID_DBP_I_SUN:
+        case ID_DBP_I_GPSUTC:       // 21
+            return _("GNSS Clock");
+        case ID_DBP_I_SUN:          // 22
             return _("Sunrise/Sunset");
-        case ID_DBP_D_MON:
+        case ID_DBP_D_MON:          // 23
             return _("Moon phase");
-        case ID_DBP_D_WDH:
+        case ID_DBP_I_ATMP:         // 24
+            return _("Air Temp.");
+        case ID_DBP_I_AWA:          // 25
+            return _("App. Wind Angle");
+        case ID_DBP_I_TWA:          // 26
+            return _("True Wind Angle");
+        case ID_DBP_I_TWD:          // 27
+            return _("True Wind Direction");
+        case ID_DBP_I_TWS:          // 28
+            return _("True Wind Speed");
+        case ID_DBP_D_TWD:          // 29
+            return _("True Wind Dir. & Speed");
+        case ID_DBP_I_HDM:          // 30
+            return _("Mag HDG");
+        case ID_DBP_D_HDT:          // 31
+            return _("True Compass");
+        case ID_DBP_D_WDH:          // 32
             return _("Wind history");
-        case ID_DBP_D_BPH:
-            return  _("Barometric history");
-        case ID_DBP_I_VLW1:
+        case ID_DBP_I_VLW1:         // 33
             return _("Trip Log");
-        case ID_DBP_I_VLW2:
+        case ID_DBP_I_VLW2:         // 34
             return _("Sum Log");
-        case ID_DBP_I_FOS:
+        case ID_DBP_D_MDA:          // 35
+            return _("Barometric pressure");
+        case ID_DBP_I_MDA:          // 36
+            return _("Barometric pressure");
+        case ID_DBP_D_BPH:          // 37
+            return  _("Barometric history");
+        case ID_DBP_I_FOS:          // 38
             return _("From Ownship");
-        case ID_DBP_I_PITCH:
+        case ID_DBP_M_COG:          // 39
+            return _("Mag COG");
+        case ID_DBP_I_PITCH:        // 40
             return _("Pitch");
-        case ID_DBP_I_HEEL:
+        case ID_DBP_I_HEEL:         // 41
             return _("Heel");
-        case ID_DBP_I_SATU:
-            return _("GPS in Use");
-        case ID_DBP_I_GPSLCL:
-            return _( "Local GPS Clock" );
-        case ID_DBP_I_CPULCL:
+        case ID_DBP_D_AWA_TWA:      // 42
+            return _("App & True Wind Angle");
+        case ID_DBP_I_GPSLCL:       // 43
+            return _( "Local GNSS Clock" );
+        case ID_DBP_I_CPULCL:       // 44
             return _( "Local CPU Clock" );
-        case ID_DBP_I_SUNLCL:
+        case ID_DBP_I_SUNLCL:       // 45
             return _( "Local Sunrise/Sunset" );
     }
     return _T("");
@@ -229,7 +227,6 @@ void getListItemForInstrument( wxListItem &item, unsigned int id )
         case ID_DBP_I_VMG:
         case ID_DBP_I_RSA:
         case ID_DBP_I_SAT:
-        case ID_DBP_I_SATU:
         case ID_DBP_I_PTR:
         case ID_DBP_I_GPSUTC:
         case ID_DBP_I_GPSLCL:
@@ -359,10 +356,13 @@ int dashboard_pi::Init( void )
     mPriDepth = 99;
     mPriSTW = 99;
     mPriWTP = 99;
+    mPriSatStatus = 99;
+    mPriSatUsed = 99;
     m_config_version = -1;
     mHDx_Watchdog = 2;
     mHDT_Watchdog = 2;
-    mGPS_Watchdog = 2;
+    mSatsUsed_Wdog = 2;
+    mSatStatus_Wdog = 2;
     mVar_Watchdog = 2;
     mMWVA_Watchdog = 2;
     mMWVT_Watchdog = 2;
@@ -463,16 +463,17 @@ bool dashboard_pi::DeInit( void )
 
     return true;
 }
-/*  update_path etc. SignalK nicht übernommen. Siehe auch Änderung "Merge pull request #2010 from Hakans" 2.8.2020
+/*  update_path etc. SignalK nicht übernommen. Siehe auch Änderung "Merge pull request #2010 from Hakans" 2.8.2020 und commit "Correct JSON parsing..." vom 16.01.2021
 double GetJsonDouble(wxJSONValue &value) {
-    double d_ret;
+    double d_ret = 0;
     if (value.IsDouble()) {
-        return d_ret = value.AsDouble();
+        d_ret = value.AsDouble();
     }
-    else if (value.IsInt()) {
-        int i_ret = value.AsInt();
-        return d_ret = i_ret;
+    else if (value.IsLong()) {
+        int i_ret = value.AsLong();
+        d_ret = i_ret;
     }
+    return d_ret;
 }
 */
 void dashboard_pi::Notify()
@@ -504,19 +505,26 @@ void dashboard_pi::Notify()
         SendSentenceToAllInstruments( OCPN_DBP_STC_HMV, NAN, _T("\u00B0T") );
     }
 
-    mGPS_Watchdog--;
-    if( mGPS_Watchdog <= 0 ) {
+    mSatsUsed_Wdog--;
+    if (mSatsUsed_Wdog <= 0) {
+        mPriSatUsed = 99;
+        mSatsInView = 0;
+        SendSentenceToAllInstruments(OCPN_DBP_STC_SAT, NAN, _T(""));
+        mSatsUsed_Wdog = gps_watchdog_timeout_ticks;
+    }
+
+    mSatStatus_Wdog--;
+    if( mSatStatus_Wdog <= 0 ) {
         SAT_INFO sats[4];
         for(int i=0 ; i < 4 ; i++) {
             sats[i].SatNumber = 0;
             sats[i].SignalToNoiseRatio = 0;
         }
-        SendSatInfoToAllInstruments( 0, 1, sats );
-        SendSatInfoToAllInstruments( 0, 2, sats );
-        SendSatInfoToAllInstruments( 0, 3, sats );
-
-        mSatsInView = 0;
-        SendSentenceToAllInstruments( OCPN_DBP_STC_SAT, NAN, _T("") );
+        SendSatInfoToAllInstruments( 0, 1, wxEmptyString, sats );
+        SendSatInfoToAllInstruments( 0, 2, wxEmptyString, sats );
+        SendSatInfoToAllInstruments( 0, 3, wxEmptyString, sats );
+        mPriSatStatus = 99;
+        mSatStatus_Wdog = gps_watchdog_timeout_ticks;
     }
 
     mMWVA_Watchdog--;
@@ -649,11 +657,11 @@ void dashboard_pi::SendUtcTimeToAllInstruments( wxDateTime value )
     }
 }
 
-void dashboard_pi::SendSatInfoToAllInstruments( int cnt, int seq, SAT_INFO sats[4] )
+void dashboard_pi::SendSatInfoToAllInstruments( int cnt, int seq, wxString talk, SAT_INFO sats[4] )
 {
     for( size_t i = 0; i < m_ArrayOfDashboardWindow.GetCount(); i++ ) {
         DashboardWindow *dashboard_window = m_ArrayOfDashboardWindow.Item( i )->m_pDashboardWindow;
-        if( dashboard_window ) dashboard_window->SendSatInfoToAllInstruments( cnt, seq, sats );
+        if( dashboard_window ) dashboard_window->SendSatInfoToAllInstruments( cnt, seq, talk, sats );
     }
 }
 
@@ -676,8 +684,12 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
                     if( m_NMEA0183.Dbt.DepthMeters != 999. ) depth = m_NMEA0183.Dbt.DepthMeters;
                     else if( m_NMEA0183.Dbt.DepthFeet != 999. ) depth = m_NMEA0183.Dbt.DepthFeet * 0.3048;
                     else if( m_NMEA0183.Dbt.DepthFathoms != 999. ) depth = m_NMEA0183.Dbt.DepthFathoms * 1.82880;
-                    depth += g_dDashDBTOffset;
-                    SendSentenceToAllInstruments( OCPN_DBP_STC_DPT, toUsrDistance_Plugin( depth / 1852.0, g_iDashDepthUnit ), getUsrDistanceUnit_Plugin( g_iDashDepthUnit ) );
+                    if ( !std::isnan(depth) )
+                        depth += g_dDashDBTOffset;
+                    if ( !std::isnan(depth) )
+                        SendSentenceToAllInstruments( OCPN_DBP_STC_DPT,
+                                toUsrDistance_Plugin( depth / 1852.0, g_iDashDepthUnit ),
+                                getUsrDistanceUnit_Plugin( g_iDashDepthUnit ) );
                 }
                 mDPT_DBT_Watchdog = gps_watchdog_timeout_ticks;
             }
@@ -703,35 +715,43 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
         }
 // TODO: GBS - GPS Satellite fault detection
         else if( m_NMEA0183.LastSentenceIDReceived == _T("GGA") ) {
-            if( m_NMEA0183.Parse() ) {
-                if( m_NMEA0183.Gga.GPSQuality > 0 ) {
-                    if( mPriPosition >= 4 ) {
-                        mPriPosition = 4;
-                        double lat, lon;
-                        float llt = m_NMEA0183.Gga.Position.Latitude.Latitude;
-                        int lat_deg_int = (int) ( llt / 100 );
-                        float lat_deg = lat_deg_int;
-                        float lat_min = llt - ( lat_deg * 100 );
-                        lat = lat_deg + ( lat_min / 60. );
-                        if( m_NMEA0183.Gga.Position.Latitude.Northing == South ) lat = -lat;
-                        SendSentenceToAllInstruments( OCPN_DBP_STC_LAT, lat, _T("SDMM") );
+            if (mPriPosition >= 4 || mPriSatUsed >= 3) {
+                if (m_NMEA0183.Parse()) {
+                    if (m_NMEA0183.Gga.GPSQuality > 0) {
+                        if (mPriPosition >= 4) {
+                            mPriPosition = 4;
+                            double lat, lon;
+                            float llt = m_NMEA0183.Gga.Position.Latitude.Latitude;
+                            int lat_deg_int = (int)(llt / 100);
+                            float lat_deg = lat_deg_int;
+                            float lat_min = llt - (lat_deg * 100);
+                            lat = lat_deg + (lat_min / 60.);
+                            if (m_NMEA0183.Gga.Position.Latitude.Northing == South) lat = -lat;
+                            SendSentenceToAllInstruments(OCPN_DBP_STC_LAT, lat, _T("SDMM"));
 
-                        float lln = m_NMEA0183.Gga.Position.Longitude.Longitude;
-                        int lon_deg_int = (int) ( lln / 100 );
-                        float lon_deg = lon_deg_int;
-                        float lon_min = lln - ( lon_deg * 100 );
-                        lon = lon_deg + ( lon_min / 60. );
-                        if( m_NMEA0183.Gga.Position.Longitude.Easting == West ) lon = -lon;
-                        SendSentenceToAllInstruments( OCPN_DBP_STC_LON, lon, _T("SDMM") );
+                            float lln = m_NMEA0183.Gga.Position.Longitude.Longitude;
+                            int lon_deg_int = (int)(lln / 100);
+                            float lon_deg = lon_deg_int;
+                            float lon_min = lln - (lon_deg * 100);
+                            lon = lon_deg + (lon_min / 60.);
+                            if (m_NMEA0183.Gga.Position.Longitude.Easting == West) lon = -lon;
+                            SendSentenceToAllInstruments(OCPN_DBP_STC_LON, lon, _T("SDMM"));
+                        }
+                        if (mPriSatUsed >= 3) {
+                            mSatsInView = m_NMEA0183.Gga.NumberOfSatellitesInUse;
+                            SendSentenceToAllInstruments (OCPN_DBP_STC_SAT,
+                                                          mSatsInView, _T (""));
+                            mPriSatUsed = 3;
+                            mSatsUsed_Wdog = gps_watchdog_timeout_ticks;
+                        }
+
+                        //if( mPriDateTime >= 4 ) {
+                        //    // Not in use, we need the date too.
+                        //    //mPriDateTime = 4;
+                        //    //mUTCDateTime.ParseFormat( m_NMEA0183.Gga.UTCTime.c_str(), _T("%H%M%S") );
+                        //}
                     }
 
-                    //if( mPriDateTime >= 4 ) {
-                    //    // Not in use, we need the date too.
-                    //    //mPriDateTime = 4;
-                    //    //mUTCDateTime.ParseFormat( m_NMEA0183.Gga.UTCTime.c_str(), _T("%H%M%S") );
-                    //}
-
-                    mSatsInView = m_NMEA0183.Gga.NumberOfSatellitesInUse;
                 }
             }
         }
@@ -769,13 +789,28 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
         }
 
         else if( m_NMEA0183.LastSentenceIDReceived == _T("GSV") ) {
-            if( m_NMEA0183.Parse() ) {
-                mSatsInView = m_NMEA0183.Gsv.SatsInView;
-                // m_NMEA0183.Gsv.NumberOfMessages;
-                SendSentenceToAllInstruments( OCPN_DBP_STC_SAT, m_NMEA0183.Gsv.SatsInView, _T("") );
-                SendSatInfoToAllInstruments( m_NMEA0183.Gsv.SatsInView, m_NMEA0183.Gsv.MessageNumber, m_NMEA0183.Gsv.SatInfo );
+            if (mPriSatStatus >= 2 || mPriSatUsed >= 4) {
+                if (m_NMEA0183.Parse ()) {
 
-                mGPS_Watchdog = gps_watchdog_timeout_ticks;
+                    if (m_NMEA0183.Gsv.MessageNumber == 1) {
+                        //NMEA0183 recommend to not repeat SatsInView in subsequent messages
+                        mSatsInView = m_NMEA0183.Gsv.SatsInView;
+                        if (mPriSatUsed >= 4) {
+                            SendSentenceToAllInstruments (OCPN_DBP_STC_SAT,
+                                                        m_NMEA0183.Gsv.SatsInView, _T (""));
+                            mPriSatUsed = 4;
+                            mSatsUsed_Wdog = gps_watchdog_timeout_ticks;
+                        }
+                    }
+                    if (mPriSatStatus >= 2) {
+                        SendSatInfoToAllInstruments (mSatsInView,
+                                    m_NMEA0183.Gsv.MessageNumber,
+                                    m_NMEA0183.TalkerID,
+                                    m_NMEA0183.Gsv.SatInfo);
+                        mPriSatStatus = 2;
+                        mSatStatus_Wdog = gps_watchdog_timeout_ticks;
+                    }
+                }
             }
         }
 
@@ -1092,7 +1127,75 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
                 mRSA_Watchdog = gps_watchdog_timeout_ticks;
             }
         }
-
+/* SignalK nicht verwendet:
+ +        else if (update_path == _T("navigation.satellitesInView")) { //GNSS satellites
+ +            if (mPriSatUsed >= 2) {
+ +                if (value.HasMember ("count") && value["count"].IsInt ()) {
+ +                    double m_SK_SatsInView = (value["count"].AsInt ());
+ +                    SendSentenceToAllInstruments (OCPN_DBP_STC_SAT, m_SK_SatsInView, _T (""));
+ +                    mPriSatStatus = 2;
+ +                    mSatsUsed_Wdog = gps_watchdog_timeout_ticks;
+ +                }
+ +           }
+ +           if (mPriSatStatus >= 1) {
+ +                if (value.HasMember ("satellites") && value["satellites"].IsArray ()) {
+ +                    // Update satellites data.
+ +                    int iNumSats = value[_T ("satellites")].Size ();
+ +                    SAT_INFO SK_SatInfo[4];
+ +                    for (int idx = 0; idx < 4; idx++) {
+ +                        SK_SatInfo[idx].SatNumber = 0;
+ +                        SK_SatInfo[idx].ElevationDegrees = 0;
+ +                        SK_SatInfo[idx].AzimuthDegreesTrue = 0;
+ +                        SK_SatInfo[idx].SignalToNoiseRatio = 0;
+ +                    }
+ +
+ +                    if (iNumSats) {
+ +                        // Arrange SK's array[12] to max three messages like NMEA GSV
+ +                        int iID = 0;
+ +                        int iSNR = 0;
+ +                        double dElevRad = 0;
+ +                        double dAzimRad = 0;
+ +                        int idx = 0;
+ +                        int arr = 0;
+ +                        for (int iMesNum = 0; iMesNum < 3; iMesNum++) {
+ +                            for (idx = 0; idx < 4; idx++) {
+ +                                arr = idx + 4 * iMesNum;
+ +                                try {
+ +                                    iID =  value["satellites"][arr]["id"].AsInt();
+ +                                    dElevRad = value["satellites"][arr]["elevation"].AsDouble();
+ +                                    dAzimRad = value["satellites"][arr]["azimuth"].AsDouble();
+ +                                    iSNR = value["satellites"][arr]["SNR"].AsInt();
+ +                                } catch (int e) {
+ +                                    wxLogMessage(("_T(SignalK: Could not parse all satellite data: ") + e);
+ +                                }
+ +                                if (iID < 1) break;
+ +                                SK_SatInfo[idx].SatNumber = iID;
+ +                                SK_SatInfo[idx].ElevationDegrees = GEODESIC_RAD2DEG(dElevRad);
+ +                                SK_SatInfo[idx].AzimuthDegreesTrue = GEODESIC_RAD2DEG(dAzimRad);
+ +                                SK_SatInfo[idx].SignalToNoiseRatio = iSNR;
+ +                            }
+ +                            if (idx > 0) {
+ +                                  //TODO. Add talkerID to talk when SignalK has incorporated that.
+ +                                  SendSatInfoToAllInstruments (
+ +                                      iNumSats, iMesNum + 1, wxEmptyString, SK_SatInfo);
+ +                                  mPriSatStatus = 1;
+ +                                  mSatStatus_Wdog = gps_watchdog_timeout_ticks;
+}
+ +                            if (iID < 1) break;
+ +                        }
+ +                    }
+ +                }
+              }
+          }
+ -        //TODO. Add path from GSV after SignK implementation.
+ -            SendSentenceToAllInstruments(OCPN_DBP_STC_SAT, m_NMEA0183.Gsv.SatsInView, _T(""));
+ -            SendSatInfoToAllInstruments(m_NMEA0183.Gsv.SatsInView,
+ -                m_NMEA0183.Gsv.MessageNumber, m_NMEA0183.Gsv.SatInfo);
+ -
+          else if (update_path == _T("navigation.datetime")) {
+              if (mPriDateTime >= 1) {
+                  mPriDateTime = 1;
+ */
         else if( m_NMEA0183.LastSentenceIDReceived == _T("VHW") ) {
             if( m_NMEA0183.Parse() ) {
                 if( mPriHeadingT >= 3 ) {
@@ -1349,12 +1452,14 @@ void dashboard_pi::SetPositionFix( PlugIn_Position_Fix &pfix )
         mUTCDateTime = mUTCDateTime.ToUTC();
         mUTC_Watchdog = gps_watchdog_timeout_ticks;
     }
-#ifndef __WXOSX__
-    mSatsInView = pfix.nSats;
-#else  // funktioniert nicht mehr ?
-    mSatsInView = m_NMEA0183.Gga.NumberOfSatellitesInUse;
-    SendSentenceToAllInstruments( OCPN_DBP_STC_SATU, mSatsInView, _T("") );
-#endif
+    if (mPriSatUsed >= 1) {
+        mSatsInView = pfix.nSats;
+        if (mSatsInView > 0) {
+            SendSentenceToAllInstruments(OCPN_DBP_STC_SAT, mSatsInView, _T(""));
+            mPriSatUsed = 1;
+            mSatsUsed_Wdog = gps_watchdog_timeout_ticks;
+        }
+    }
 }
 
 void dashboard_pi::SetCursorLatLon( double lat, double lon )
@@ -2625,10 +2730,7 @@ void DashboardWindow::SetInstrumentList( wxArrayInt list )
             case ID_DBP_I_HEEL:
                 instrument = new DashboardInstrument_Single(this, wxID_ANY, getInstrumentCaption(id), OCPN_DBP_STC_HEEL, _T("%2.1f"));
                 break;
-            case ID_DBP_I_SATU:
-                instrument = new DashboardInstrument_Single( this, wxID_ANY, getInstrumentCaption( id ), OCPN_DBP_STC_SATU, _T("%5.0f") );
-                break;
-             // any clock display with "LCL" in the format string is converted from UTC to local TZ
+             // any clock display with "LCL" (german: Lok.) in the format string is converted from UTC to local TZ
             case ID_DBP_I_SUNLCL:
                 instrument = new DashboardInstrument_Sun( this, wxID_ANY, getInstrumentCaption( id ), _T( "%02i:%02i:%02i LCL" ) );
                 break;
@@ -2660,10 +2762,14 @@ void DashboardWindow::SendSentenceToAllInstruments( int st, double value, wxStri
     }
 }
 
-void DashboardWindow::SendSatInfoToAllInstruments( int cnt, int seq, SAT_INFO sats[4] )
+void DashboardWindow::SendSatInfoToAllInstruments( int cnt, int seq, wxString talk, SAT_INFO sats[4] )
 {
     for( size_t i = 0; i < m_ArrayOfInstrument.GetCount(); i++ ) {
-        if( ( m_ArrayOfInstrument.Item( i )->m_cap_flag & OCPN_DBP_STC_GPS ) && m_ArrayOfInstrument.Item( i )->m_pInstrument->IsKindOf( CLASSINFO(DashboardInstrument_GPS))) ((DashboardInstrument_GPS*)m_ArrayOfInstrument.Item(i)->m_pInstrument)->SetSatInfo(cnt, seq, sats);
+        if( ( m_ArrayOfInstrument.Item( i )->m_cap_flag & OCPN_DBP_STC_GPS ) &&
+                        m_ArrayOfInstrument.Item( i )->m_pInstrument->
+                        IsKindOf( CLASSINFO(DashboardInstrument_GPS)) )
+                    ((DashboardInstrument_GPS*)m_ArrayOfInstrument.Item(i)->
+                            m_pInstrument)->SetSatInfo(cnt, seq, talk, sats);
                     }
                 }
 

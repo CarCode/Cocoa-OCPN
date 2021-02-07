@@ -369,6 +369,7 @@ bool                      g_bHDT_Rx;
 bool                      g_bVAR_Rx;
 
 int                       gSAT_Watchdog;
+int                       g_priSats;
 int                       g_SatsInView;
 bool                      g_bSatValid;
 
@@ -2369,6 +2370,8 @@ extern ocpnGLOptions g_GLOptions;
     gHDT_Watchdog = 2;
     gSAT_Watchdog = 2;
     gVAR_Watchdog = 2;
+
+    g_priSats = 99;
 
     //  Most likely installations have no ownship heading information
     g_bHDT_Rx = false;
@@ -7244,11 +7247,12 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
         if( g_nNMEADebug && ( gVAR_Watchdog == 0 ) ) wxLogMessage(
             _T("   ***VAR Watchdog timeout...") );
     }
-    //  Update and check watchdog timer for GSV (Satellite data)
+    //  Update and check watchdog timer for GSV, GGA and SignalK (Satellite data)
     gSAT_Watchdog--;
     if( gSAT_Watchdog <= 0 ) {
         g_bSatValid = false;
         g_SatsInView = 0;
+        g_priSats = 99;
         if( g_nNMEADebug && ( gSAT_Watchdog == 0 ) ) wxLogMessage(
                 _T("   ***SAT Watchdog timeout...") );
     }
@@ -8715,6 +8719,14 @@ static void UpdatePositionCalculatedSogCog()
     }
 }
 
+void MyFrame::setSatelitesInView(int no)
+{
+    wxLogDebug(wxString::Format(_T("SatsInView: %d"), no));
+    g_SatsInView = no;
+    gSAT_Watchdog = sat_watchdog_timeout_ticks;
+    g_bSatValid = true;
+}
+
 static bool ParsePosition(const LATLONG &Position)
 {
     bool ll_valid = true;
@@ -8897,9 +8909,13 @@ void MyFrame::OnEvtOCPN_NMEA( OCPN_DataStreamEvent & event )
                 break;
 
             case GSV:
-                g_SatsInView = m_NMEA0183.Gsv.SatsInView;
-                gSAT_Watchdog = sat_watchdog_timeout_ticks;
-                g_bSatValid = true;
+                if (g_priSats >= 2) {
+                    if (m_NMEA0183.Gsv.MessageNumber == 1) {
+                        // Some GNSS print SatsInView in message #1 only
+                        setSatelitesInView (m_NMEA0183.Gsv.SatsInView);
+                        g_priSats = 2;
+                    }
+                }
                 break;
 
             case GGA:
@@ -8907,10 +8923,10 @@ void MyFrame::OnEvtOCPN_NMEA( OCPN_DataStreamEvent & event )
                 {
                     pos_valid = ParsePosition(m_NMEA0183.Gga.Position);
                     sfixtime = m_NMEA0183.Gga.UTCTime;
-
-                    g_SatsInView = m_NMEA0183.Gga.NumberOfSatellitesInUse;
-                    gSAT_Watchdog = sat_watchdog_timeout_ticks;
-                    g_bSatValid = true;
+                    if (g_priSats >= 1) {
+                        setSatelitesInView(m_NMEA0183.Gga.NumberOfSatellitesInUse);
+                        g_priSats = 1;
+                    }
                 }
                 break;
 

@@ -561,6 +561,15 @@ class MyFrame: public wxFrame
     void ScheduleSettingsDialog();
     static void RebuildChartDatabase();
     void PositionIENCToolbar();
+// Für MyFrame::... (nochnicht alle verwendet
+//    bool ParsePosition(const LATLONG &Position);
+    void setSatelitesInView(int no);
+//    void setPosition(double lat, double lon);
+//    void setSpeedOverGround(double sog);
+//    void setCourseOverGround(double cog);
+//    void setHeadingTrue(double heading);
+//    void setHeadingMagnetic(double heading);
+//    void setMagneticVariation(double var);
 
   private:
 
