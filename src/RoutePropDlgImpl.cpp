@@ -325,7 +325,8 @@ void RoutePropDlgImpl::UpdatePoints()
         wxString desc = pnode->GetData()->GetDescription();
         wxString etd;
         if( pnode->GetData()->GetManualETD().IsValid() ) {
-            etd = toUsrDateTime(pnode->GetData()->GetManualETD(), m_tz_selection, pnode->GetData()->m_lon).Format(ETA_FORMAT_STR);
+            // GetManualETD() returns time in UTC, always. So use it as such.
+            etd = toUsrDateTime(pnode->GetData()->GetManualETD(), 0/*m_tz_selection*/, pnode->GetData()->m_lon).Format(ETA_FORMAT_STR);
             if( pnode->GetData()->GetManualETD().IsValid() && eta_dt.IsValid() && pnode->GetData()->GetManualETD() < eta_dt ) {
                 etd.Prepend(_T("!! ")); // Manually entered ETD is before we arrive here!
             }
@@ -986,7 +987,7 @@ wxString RoutePropDlgImpl::MakeTideInfo( wxString stationName, double lat, doubl
     wxString tide_form = wxEmptyString;
     
     if( ev == 1 ) {
-        tide_form.Append( _T("LW: ") );
+        tide_form.Append( _T("NW: ") );  // deutsch: NW:, war LW:
     } else if( ev == 2 ) {
         tide_form.Append( _T("HW: ") );
     }

@@ -219,6 +219,7 @@ extern bool             g_bEnableZoomToCursor;
 extern bool             g_bShowChartBar;
 extern bool             g_bInlandEcdis;
 extern int              g_ENCSoundingScaleFactor;
+extern int              g_maxzoomin;
 
 extern AISTargetQueryDialog    *g_pais_query_dialog_active;
 extern int              g_ais_query_dialog_x, g_ais_query_dialog_y;
@@ -1553,7 +1554,7 @@ bool ChartCanvas::DoCanvasUpdate( void )
         vpLat = m_vLat;
         vpLon = m_vLon;
     }
-
+/*
     // Calculate change in VP, in pixels, using a simple SM projection
     // if change in pixels is smaller than 2% of screen size, do not change the VP
     // This will avoid "jitters" at large scale.
@@ -1566,7 +1567,7 @@ bool ChartCanvas::DoCanvasUpdate( void )
             vpLon = GetVP().clon;
         }
     }
-
+*/
     if( GetQuiltMode() ) {
         int current_db_index = -1;
         if( m_pCurrentStack )
@@ -4417,7 +4418,7 @@ void ChartCanvas::DoZoomCanvas( double factor,  bool can_zoom_to_cursor )
 //             proposed_scale_onscreen = GetCanvasScaleFactor() / target_scale_ppm;
 
             //  Query the chart to determine the appropriate zoom range
-            double min_allowed_scale = 800;    // Roughly, latitude dependent for mercator charts
+            double min_allowed_scale = g_maxzoomin;    // Roughly, latitude dependent for mercator charts
 
             if( proposed_scale_onscreen < min_allowed_scale ) {
                 if( min_allowed_scale == GetCanvasScaleFactor() / ( GetVPScale() ) ) {
@@ -4429,7 +4430,7 @@ void ChartCanvas::DoZoomCanvas( double factor,  bool can_zoom_to_cursor )
 
         }
         else {
-            proposed_scale_onscreen = wxMax( proposed_scale_onscreen, 800.);
+            proposed_scale_onscreen = wxMax( proposed_scale_onscreen, g_maxzoomin);
         }
 
 
