@@ -51,8 +51,8 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    überhaupt keine OpenCPN Version mehr geben können, da die Grafik-
    Bibliothek OpenGL von Apple bald nicht mehr unterstützt wird.
 
-b. Diese Version basiert auf Release-Version von wxWidgets 3.1.4 mit
-   entsprechenden dylibs vom 22. Juli 2020. Die Einbindung der Libs als
+b. Diese Version basiert auf Release-Version von wxWidgets 3.1.5 mit
+   entsprechenden dylibs vom 08. März 2021. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -117,5 +117,5 @@ Die Datei /data/gshhs/poly-f-1.dat mit ~172 MB muß daher separat geholt werden
 und nach /data/gshhs/ kopiert werden:
 https://topperdiek.de/dl/ocpn/poly-f-1.dat
 -----------------------------------------------------------------------
-20. Dezember 2020
+10. März 2021
 
