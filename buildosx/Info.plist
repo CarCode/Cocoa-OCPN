@@ -15,7 +15,7 @@
 	<key>CFBundleIconFile</key>
 	<string>opencpn.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>de.topperdiek.opencpn</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLocalisations</key>
@@ -24,17 +24,17 @@
 		<string>de</string>
 	</array>
 	<key>CFBundleLongVersionString</key>
-	<string>20.01.01</string>
+	<string>21.01.01</string>
 	<key>CFBundleName</key>
 	<string>OpenCPN</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>20.01.01</string>
+	<string>21.01.01</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>20.01</string>
+	<string>21.01</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>DTCompiler</key>
@@ -74,7 +74,7 @@
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>CarCode 2020</string>
+	<string>CarCode 2021</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>NSRequiresAquaSystemAppearance</key>

@@ -401,6 +401,7 @@ bool Routeman::ActivateNextPoint( Route *pr, bool skipped )
 
         v[_T("isSkipped")] = skipped;
         v[_T("GUID")] = pActivePoint->m_GUID;
+        v[_T("GUID_WP_arrived")] = pActivePoint->m_GUID;
         v[_T("WP_arrived")] = pActivePoint->GetName();
     }
     int n_index_active = pActiveRoute->GetIndexOf( pActivePoint );
@@ -411,7 +412,7 @@ bool Routeman::ActivateNextPoint( Route *pr, bool skipped )
 
         pActivePoint = pActiveRoute->GetPoint( n_index_active + 1 );
         v[_T("Next_WP")] = pActivePoint->GetName();
-        v[_T("GUID")] = pActivePoint->m_GUID;
+        v[_T("GUID_Next_WP")] = pActivePoint->m_GUID;
 
         pActivePoint->m_bBlink = true;
         pActivePoint->m_bIsActive = true;
@@ -872,12 +873,15 @@ bool Routeman::DeleteRoute( Route *pRoute )
         if( pRoutePropDialog && ( pRoutePropDialog->IsShown()) && (pRoute == pRoutePropDialog->GetRoute()) ) {
             pRoutePropDialog->Hide();
         }
-            
+
         pConfig->DeleteConfigRoute( pRoute );
 
         //    Remove the route from associated lists
         pSelect->DeleteAllSelectableRouteSegments( pRoute );
         pRouteList->DeleteObject( pRoute );
+
+        if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
+            pRouteManagerDialog->UpdateRouteListCtrl();
 
         // walk the route, tentatively deleting/marking points used only by this route
         wxRoutePointListNode *pnode = ( pRoute->pRoutePointList )->GetFirst();

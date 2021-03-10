@@ -589,7 +589,7 @@ int MyConfig::LoadMyConfig()
     g_ownship_predictor_minutes = 5;
     g_cog_predictor_width = 3;
     g_ownship_HDTpredictor_miles = 1;
-    g_n_ownship_min_mm = 5;
+    g_n_ownship_min_mm = 2;
     g_own_ship_sog_cog_calc_damp_sec = 1;
     g_bFullScreenQuilt = 1;
     g_track_rotate_time_type =  TIME_TYPE_COMPUTER;

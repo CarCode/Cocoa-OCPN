@@ -411,6 +411,9 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
         SetSize( esize );    
     }
 
+    // Connect Events
+    Connect( wxEVT_CONTEXT_MENU, wxCommandEventHandler( AISTargetListDialog::OnRightClickContext ), NULL, this );
+
 }
 
 AISTargetListDialog::~AISTargetListDialog()
@@ -467,9 +470,9 @@ void AISTargetListDialog::CreateControls()
     long lwidth;
 
     long flags = wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES | wxBORDER_SUNKEN;
-    #ifndef __WXQT__
+#ifndef __WXQT__
     flags |=  wxLC_VIRTUAL;
-    #endif
+#endif
 
     m_pListCtrlAISTargets = new OCPNListCtrl( this, ID_AIS_TARGET_LIST, wxDefaultPosition, wxDefaultSize, flags);
 
@@ -1152,4 +1155,25 @@ void AISTargetListDialog::UpdateNVAISTargetList( void )
         m_pListCtrlAISTargets->Refresh( false );
 #endif
     }
+}
+
+void AISTargetListDialog::OnRightClickContext( wxCommandEvent& event )
+{
+    wxAuiPaneInfo &pane = m_pAuiManager->GetPane(_T("AISTargetList"));
+    if(pane.IsDocked()){
+        wxMenu* popup = new wxMenu();
+        popup->Append( ID_RCLK_UNDOCK, _("Undock Target List") );
+        popup->Connect(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(AISTargetListDialog::OnContextUndock), NULL, this);
+
+        PopupMenu( popup );
+        delete popup;
+    }
+}
+
+void AISTargetListDialog::OnContextUndock( wxCommandEvent& event )
+{
+    wxAuiPaneInfo &pane = m_pAuiManager->GetPane(_T("AISTargetList"));
+    pane.Float();
+    m_pAuiManager->Update();
+
 }

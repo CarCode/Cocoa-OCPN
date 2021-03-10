@@ -4765,7 +4765,6 @@
 				C66AD41B88994A77AE565649 /* depth.cpp */,
 				73CF3B924DD941D698671406 /* dial.cpp */,
 				F2FC6C7F604A45F5B4705BE9 /* from_ownship.cpp */,
-				D7C6CD7E74674E1BB1BAA701 /* gps.cpp */,
 				D2D9788C258147A194990B06 /* icons.cpp */,
 				C426733EB7EC4441A411EC88 /* iirfilter.cpp */,
 				FB798F7255F340DBB01C4878 /* instrument.cpp */,
@@ -4774,6 +4773,7 @@
 				6BDCA71D1C8A41E295938CF2 /* expid.cpp */,
 				07D6EF19A0554063B86614FA /* gga.cpp */,
 				2F19915A85C44AA5B6B0C72B /* gll.cpp */,
+				D7C6CD7E74674E1BB1BAA701 /* gps.cpp */,
 				D44F86F0987248C0926D414C /* gsv.cpp */,
 				2F9CF8FBBA7042DB8FA6EBC4 /* hdg.cpp */,
 				4369DCD71F5043DDB6E6530F /* hdm.cpp */,
@@ -7542,7 +7542,7 @@
 			isa = PBXProject;
 			attributes = {
 				DefaultBuildSystemTypeForWorkspace = Original;
-				LastUpgradeCheck = 1230;
+				LastUpgradeCheck = 1240;
 				TargetAttributes = {
 					106183E1F9B44D3997E42762 = {
 						DevelopmentTeam = M3RNRGTLV6;
