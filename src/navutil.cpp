@@ -2099,6 +2099,7 @@ void MyConfig::LoadConfigCanvas( canvasConfig *cConfig, bool bApplyAsTemplate )
     Read( _T ( "canvasENCShowBuoyLabels" ), &cConfig->bShowENCBuoyLabels, 1 );
     Read( _T ( "canvasENCShowLightDescriptions" ), &cConfig->bShowENCLightDescriptions, 1 );
     Read( _T ( "canvasENCShowLights" ), &cConfig->bShowENCLights, 1 );
+    Read( _T ( "canvasENCShowVisibleSectorLights" ), &cConfig->bShowENCVisibleSectorLights, 0 );
 
 
     int sx, sy;
@@ -2208,6 +2209,7 @@ void MyConfig::SaveConfigCanvas( canvasConfig *cConfig )
         Write( _T ( "canvasENCShowBuoyLabels" ), cConfig->canvas->GetShowENCBuoyLabels() );
         Write( _T ( "canvasENCShowLightDescriptions" ), cConfig->canvas->GetShowENCLightDesc() );
         Write( _T ( "canvasENCShowLights" ), cConfig->canvas->GetShowENCLights() );
+        Write( _T ( "canvasENCShowVisibleSectorLights" ), cConfig->canvas->GetShowVisibleSectors() );
 
         Write( _T ( "canvasCourseUp" ), cConfig->canvas->GetUpMode() == COURSE_UP_MODE );
         Write( _T ( "canvasHeadUp" ), cConfig->canvas->GetUpMode() == HEAD_UP_MODE );
@@ -2680,10 +2682,10 @@ void MyConfig::UpdateSettings()
     Write( _T ( "RadarRingsStep" ), g_fNavAidRadarRingsStep );
     Write( _T ( "RadarRingsStepUnits" ), g_pNavAidRadarRingsStepUnits );
     Write( _T ( "RadarRingsColour" ), g_colourOwnshipRangeRingsColour.GetAsString( wxC2S_HTML_SYNTAX ) );
-    Write( _T( "WaypointUseScaMin" ), g_bUseWptScaMin );
-    Write( _T( "WaypointScaMinValue" ), g_iWpt_ScaMin );
-    Write( _T( "WaypointUseScaMinOverrule" ), g_bOverruleScaMin );
-    Write( _T("WaypointsShowName"), g_bShowWptName );
+    Write( _T ( "WaypointUseScaMin" ), g_bUseWptScaMin );
+    Write( _T ( "WaypointScaMinValue" ), g_iWpt_ScaMin );
+    Write( _T ( "WaypointUseScaMinOverrule" ), g_bOverruleScaMin );
+    Write( _T ("WaypointsShowName"), g_bShowWptName );
 
     // Waypoint Radar rings
     Write( _T ( "WaypointRangeRingsNumber" ), g_iWaypointRangeRingsNumber );
@@ -4464,7 +4466,7 @@ wxString toSDMM( int NEflag, double a, bool hi_precision )
     return s;
 }
 
-/****************************************************************************/
+/* ***************************************************************************/
 // Modified from the code posted by Andy Ross at
 //     http://www.mail-archive.com/flightgear-devel@flightgear.org/msg06702.html
 // Basically, it looks for a list of decimal numbers embedded in the
@@ -4485,7 +4487,7 @@ wxString toSDMM( int NEflag, double a, bool hi_precision )
 // 122°18.621' W
 // 122w 18 37
 // -122.31035
-/****************************************************************************/
+/* ***************************************************************************/
 double fromDMM( wxString sdms )
 {
     wchar_t buf[64];

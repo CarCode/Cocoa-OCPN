@@ -968,6 +968,9 @@ bool RoutePropDlgImpl::IsThisRouteExtendable()
 
 wxString RoutePropDlgImpl::MakeTideInfo( wxString stationName, double lat, double lon, wxDateTime utcTime )
 {
+    if(stationName.Find("lind") != wxNOT_FOUND)
+        int yyp = 4;
+
     if( stationName.IsEmpty() ) {
         return wxEmptyString;
     }
@@ -990,6 +993,8 @@ wxString RoutePropDlgImpl::MakeTideInfo( wxString stationName, double lat, doubl
         tide_form.Append( _T("NW: ") );  // deutsch: NW:, war LW:
     } else if( ev == 2 ) {
         tide_form.Append( _T("HW: ") );
+    } else if( ev == 0 ) {
+        tide_form.Append( _("Unavailable: ") );
     }
     
     int offset = ptcmgr->GetStationTimeOffset((IDX_entry*)ptcmgr->GetIDX_entry(stationID));

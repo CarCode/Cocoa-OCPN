@@ -35,7 +35,7 @@
 #include "s52s57.h"
 
 class ChartCanvas;
-
+class wxFileConfig;
 
 //  Class to encapsulate persistant canvas configuration(s)
 class canvasConfig
@@ -73,7 +73,7 @@ public:
     bool bShowENCBuoyLabels;
     bool bShowENCLightDescriptions;
     bool bShowENCLights;
-
+    bool bShowENCVisibleSectorLights;
 
 
 };

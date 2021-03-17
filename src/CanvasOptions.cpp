@@ -230,6 +230,10 @@ CanvasOptions::CanvasOptions( wxWindow *parent)
     boxENC->Add(pCBENCAnchorDetails, verticalInputFlags);
     pCBENCAnchorDetails->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CanvasOptions::OnOptionChange ), NULL, this );
 
+    pCBENCVisibleSectors = new wxCheckBox(pDisplayPanel, IDCO_ENCVISIBLESECTORS_CHECKBOX1, _("Show visible sector lights"));
+    boxENC->Add(pCBENCVisibleSectors, verticalInputFlags);
+    pCBENCVisibleSectors->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CanvasOptions::OnOptionChange ), NULL, this );
+
         // spacer
     boxENC->Add(0, interGroupSpace);
 
@@ -307,6 +311,7 @@ void CanvasOptions::RefreshControlValues( void )
     pCBENCBuoyLabels->SetValue(parentCanvas->GetShowENCBuoyLabels());
     pCBENCLights->SetValue(parentCanvas->GetShowENCLights());
     pCBENCAnchorDetails->SetValue(parentCanvas->GetShowENCAnchor());
+    pCBENCVisibleSectors->SetValue(parentCanvas->GetShowVisibleSectors());
 
     //pCBENCLightDesc->Enable(parentCanvas->GetShowENCLights());
 
@@ -338,6 +343,7 @@ void CanvasOptions::RefreshControlValues( void )
     pCBENCLightDesc->Enable(m_ENCAvail && parentCanvas->GetShowENCLights());
     pCBENCBuoyLabels->Enable(m_ENCAvail);
     pCBENCLights->Enable(m_ENCAvail);
+    pCBENCVisibleSectors->SetValue(parentCanvas->GetShowVisibleSectors());
 
     //  Anchor conditions are only available if display category is "All" or "User Standard"
     pCBENCAnchorDetails->Enable(m_ENCAvail && (nset > 1));  
@@ -349,6 +355,7 @@ void CanvasOptions::RefreshControlValues( void )
         pCBENCLightDesc->Disable();
         pCBENCBuoyLabels->Disable();
         pCBENCLights->Disable();
+        pCBENCVisibleSectors->Disable();
     }
 
     m_pDispCat->Enable(m_ENCAvail);
@@ -443,7 +450,12 @@ void CanvasOptions::UpdateCanvasOptions( void )
         b_needReLoad = true;
     }
 
-    int newMode = NORTH_UP_MODE;
+    if(pCBENCVisibleSectors->GetValue() != parentCanvas->GetShowVisibleSectors()){
+        parentCanvas->SetShowVisibleSectors(pCBENCVisibleSectors->GetValue());
+        b_needReLoad = true;
+    }
+ 
+ int newMode = NORTH_UP_MODE;
     if(pCBCourseUp->GetValue())
         newMode = COURSE_UP_MODE;
     else if(pCBHeadUp->GetValue())
