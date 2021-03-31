@@ -207,6 +207,15 @@ extern int              g_ais_alert_dialog_x, g_ais_alert_dialog_y;
 extern int              g_ais_alert_dialog_sx, g_ais_alert_dialog_sy;
 extern int              g_ais_query_dialog_x, g_ais_query_dialog_y;
 extern wxString         g_sAIS_Alert_Sound_File;
+extern wxString         g_anchorwatch_sound_file;
+extern wxString         g_DSC_sound_file;
+extern wxString         g_SART_sound_file;
+extern wxString         g_AIS_sound_file;
+extern bool             g_bAIS_GCPA_Alert_Audio;
+extern bool             g_bAIS_SART_Alert_Audio;
+extern bool             g_bAIS_DSC_Alert_Audio;
+extern bool             g_bAnchor_Alert_Audio;
+
 extern bool             g_bAIS_CPA_Alert_Suppress_Moored;
 extern bool             g_bAIS_ACK_Timeout;
 extern double           g_AckTimeout_Mins;
@@ -1033,6 +1042,29 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
         read_int = wxMin(read_int, 2);
         g_nDepthUnitDisplay = read_int;
     }
+
+    // Sounds
+    SetPath( _T ( "/Settings/Audio" ) );
+    
+    // Set reasonable defaults
+    wxString sound_dir = g_Platform->GetSharedDataDir();
+    sound_dir.Append(_T("sounds"));
+    sound_dir.Append(wxFileName::GetPathSeparator());
+
+    g_AIS_sound_file = sound_dir + _T("beep_ssl.wav");
+    g_DSC_sound_file = sound_dir + _T("phonering1.wav");
+    g_SART_sound_file = sound_dir + _T("beep3.wav");
+    g_anchorwatch_sound_file = sound_dir + _T("beep1.wav");
+    
+    Read( _T ( "AISAlertSoundFile" ), &g_AIS_sound_file );
+    Read( _T ( "DSCAlertSoundFile" ), &g_DSC_sound_file );
+    Read( _T ( "SARTAlertSoundFile" ), &g_SART_sound_file );
+    Read( _T ( "AnchorAlarmSoundFile" ), &g_anchorwatch_sound_file );
+
+    Read( _T ( "bAIS_GCPA_AlertAudio" ), &g_bAIS_GCPA_Alert_Audio );
+    Read( _T ( "bAIS_SART_AlertAudio" ), &g_bAIS_SART_Alert_Audio );
+    Read( _T ( "bAIS_DSC_AlertAudio" ), &g_bAIS_DSC_Alert_Audio );
+    Read( _T ( "bAnchorAlertAudio" ), &g_bAnchor_Alert_Audio );
 
     //    AIS
     wxString s;
@@ -2501,6 +2533,18 @@ void MyConfig::UpdateSettings()
     Write( _T( "RoutePropSizeY" ), g_route_prop_sy );
     Write( _T( "RoutePropPosX" ), g_route_prop_x );
     Write( _T( "RoutePropPosY" ), g_route_prop_y );
+
+    // Sounds
+    SetPath( _T ( "/Settings/Audio" ) );
+    Write( _T ( "AISAlertSoundFile" ), g_AIS_sound_file );
+    Write( _T ( "DSCAlertSoundFile" ), g_DSC_sound_file );
+    Write( _T ( "SARTAlertSoundFile" ), g_SART_sound_file );
+    Write( _T ( "AnchorAlarmSoundFile" ), g_anchorwatch_sound_file );
+
+    Write( _T ( "bAIS_GCPA_AlertAudio" ), g_bAIS_GCPA_Alert_Audio );
+    Write( _T ( "bAIS_SART_AlertAudio" ), g_bAIS_SART_Alert_Audio );
+    Write( _T ( "bAIS_DSC_AlertAudio" ), g_bAIS_DSC_Alert_Audio );
+    Write( _T ( "bAnchorAlertAudio" ), g_bAnchor_Alert_Audio );
 
     //    AIS
     SetPath( _T ( "/Settings/AIS" ) );
