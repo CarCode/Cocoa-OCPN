@@ -58,10 +58,10 @@ class RouteManagerDialog : public wxFrame {
             static RouteManagerDialog* getInstance(wxWindow *parent);
             static bool getInstanceFlag(){ return instanceFlag; } 
             ~RouteManagerDialog();
-            
+
             void OnClose(wxCloseEvent& event);
             void OnOK(wxCommandEvent& event);
-            
+
             void SetColorScheme();
             void RecalculateSize();
             void UpdateRouteListCtrl();     // Rebuild route list
@@ -79,9 +79,9 @@ class RouteManagerDialog : public wxFrame {
       private:
             static bool instanceFlag;
             static RouteManagerDialog *single;
-            
+
             RouteManagerDialog(wxWindow *parent);
-            
+
             void Create();
             void UpdateRteButtons();           // Correct button state
             void MakeAllRoutesInvisible();  // Mark all routes as invisible. Does not flush settings.
@@ -115,6 +115,9 @@ class RouteManagerDialog : public wxFrame {
             void OnTrkExportClick(wxCommandEvent &event);
             void OnTrkRouteFromTrackClick(wxCommandEvent &event);
             void OnTrkDeleteAllClick(wxCommandEvent &event);
+#ifdef __WXOSX__
+            void OnTrkSumlog(wxCommandEvent &event);
+#endif
             void OnTrkSelected(wxListEvent &event);
             void OnTrkToggleVisibility(wxMouseEvent &event);
             void OnTrkColumnClicked(wxListEvent &event);
@@ -148,6 +151,10 @@ class RouteManagerDialog : public wxFrame {
             void OnExportVizClick(wxCommandEvent &event);
             void OnFilterChanged( wxCommandEvent& event );
             void OnKey( wxKeyEvent& ke );
+            void OnShowAllRteCBClicked(wxCommandEvent& event);
+            void OnShowAllWpCBClicked(wxCommandEvent& event);
+            void OnShowAllTrkCBClicked(wxCommandEvent& event);
+            void OnShowAllLayCBClicked(wxCommandEvent& event);
 
             // properties
             wxNotebook *m_pNotebook;
@@ -182,6 +189,12 @@ class RouteManagerDialog : public wxFrame {
             wxButton *btnTrkExport;
             wxButton *btnTrkRouteFromTrack;
             wxButton *btnTrkDeleteAll;
+#ifdef __WXOSX__
+            wxButton *btnTrkSumlog;
+            wxTextCtrl *m_tSumlogSum;
+            double sumlogsum;
+            wxStaticText *m_stGesSumlog;
+#endif
             wxButton *btnWptNew;
             wxButton *btnWptProperties;
             wxButton *btnWptZoomto;
@@ -200,7 +213,11 @@ class RouteManagerDialog : public wxFrame {
             wxButton *btnImport;
             wxButton *btnExport;
             wxButton *btnExportViz;
-            
+            wxCheckBox *m_cbShowAllRte;
+            wxCheckBox *m_cbShowAllWP;
+            wxCheckBox *m_cbShowAllTrk;
+            wxCheckBox *m_cbShowAllLay;
+
             bool m_bPossibleClick;    // do
             bool m_bCtrlDown;         // record control key state for some action buttons
             bool m_bNeedConfigFlush;  // if true, update config in destructor
@@ -208,7 +225,7 @@ class RouteManagerDialog : public wxFrame {
             int m_lastWptItem;
             int m_lastTrkItem;
             int m_lastRteItem;
-            
+
             int m_charWidth;
             int m_listIconSize;
 };
