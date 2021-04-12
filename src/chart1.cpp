@@ -6787,7 +6787,7 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
                 pAnchorWatchPoint2 = pWayPointMan->FindRoutePointByGUID( g_AW2GUID );
             }
 
-            // Import Layer-wise any .gpx files from /Layers directory
+            // Import Layer-wise any .gpx files from /layers directory
             wxString layerdir = g_Platform->GetPrivateDataDir();
             appendOSDirSlash( &layerdir );
             layerdir.Append( _T("layers") );
@@ -8928,11 +8928,11 @@ void MyFrame::OnEvtOCPN_NMEA( OCPN_DataStreamEvent & event )
                 break;
 
             case GSV:
-                if (g_priSats >= 2) {
+                if (g_priSats >= 4) {
                     if (m_NMEA0183.Gsv.MessageNumber == 1) {
                         // Some GNSS print SatsInView in message #1 only
                         setSatelitesInView (m_NMEA0183.Gsv.SatsInView);
-                        g_priSats = 2;
+                        g_priSats = 4;
                     }
                 }
                 break;
@@ -9038,10 +9038,10 @@ void MyFrame::OnEvtOCPN_NMEA( OCPN_DataStreamEvent & event )
     if( g_own_ship_sog_cog_calc )
         cog_sog_valid = true;
 
-    if( bis_recognized_sentence ) PostProcessNNEA( pos_valid, cog_sog_valid, sfixtime );
+    if( bis_recognized_sentence ) PostProcessNMEA( pos_valid, cog_sog_valid, sfixtime );
 }
 
-void MyFrame::PostProcessNNEA( bool pos_valid, bool cog_sog_valid, const wxString &sfixtime )
+void MyFrame::PostProcessNMEA( bool pos_valid, bool cog_sog_valid, const wxString &sfixtime )
 {
     if(cog_sog_valid) {
         //    Maintain average COG for Course Up Mode

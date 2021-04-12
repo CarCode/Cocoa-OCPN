@@ -60,6 +60,7 @@
 class ChartSource;
 class ChartDldrPanelImpl;
 class ChartDldrGuiAddSourceDlg;
+class ChartDldrPrefsDlgImpl;
 
 WX_DEFINE_ARRAY_PTR(ChartSource *, wxArrayOfChartSources);
 WX_DECLARE_OBJARRAY(wxDateTime, wxArrayOfDateTime);
@@ -102,6 +103,8 @@ public:
 #if defined(CHARTDLDR_RAR_UNARR) || !defined(DLDR_USE_LIBARCHIVE)
     bool            ExtractUnarrFiles(const wxString& aRarFile, const wxString& aTargetDir, bool aStripPath = true, wxDateTime aMTime = wxDateTime::Now(), bool aRemoveRar = false);
 #endif
+
+    void            UpdatePrefs(ChartDldrPrefsDlgImpl *dialog);
 
 //    Public properties
     wxArrayOfChartSources *m_pChartSources;
@@ -159,7 +162,7 @@ private:
     std::map<std::string, time_t> m_update_data;
 };
 
-/** Implementing ChartDldrPanel */
+/* Implementing ChartDldrPanel */
 class ChartDldrPanelImpl : public ChartDldrPanel
 {
 friend class chartdldr_pi;
@@ -183,23 +186,32 @@ private:
     bool            m_bTransferSuccess;
     wxString        m_totalsize;
     wxString        m_transferredsize;
-    int		    m_failed_downloads;
+    int		        m_failed_downloads;
     int             m_downloading;
 
     void            DisableForDownload( bool enabled );
     bool            m_bconnected;
+    bool            m_bInfoHold;    // Don't update chart selection stats right now
+    size_t          m_newCharts;
+    size_t          m_updatedCharts;
 
 protected:
     // Handlers for ChartDldrPanel events.
     void            SetSource( int id );
-	void            SelectSource( wxListEvent& event );
-	void            AddSource( wxCommandEvent& event );
-	void            DeleteSource( wxCommandEvent& event );
-	void            EditSource( wxCommandEvent& event );
-	void            UpdateChartList( wxCommandEvent& event );
-	void            OnDownloadCharts( wxCommandEvent& event );
-	void            DownloadCharts( );
-	void            DoHelp( wxCommandEvent& event )
+    void            SelectSource( wxListEvent& event );
+    void            AddSource( wxCommandEvent& event );
+    void            DeleteSource( wxCommandEvent& event );
+    void            EditSource( wxCommandEvent& event );
+    void            UpdateChartList( wxCommandEvent& event );
+    void            OnDownloadCharts( wxCommandEvent& event );
+
+    void            OnSelectChartItem( wxCommandEvent& event );
+    void            OnSelectNewCharts( wxCommandEvent& event );
+    void            OnSelectUpdatedCharts(wxCommandEvent& event);
+    void            OnSelectAllCharts(wxCommandEvent& event);
+
+    void            DownloadCharts( );
+    void            DoHelp( wxCommandEvent& event )
       {
 #ifdef __WXMSW__
           wxLaunchDefaultBrowser( _T("file:///") + *GetpSharedDataLocation() + _T("plugins/chartdldr_pi/data/doc/index.html") );
@@ -220,6 +232,15 @@ protected:
     void            OnContextMenu( wxMouseEvent& event );
     void            SetBulkUpdate( bool bulk_update );
 
+    int             GetChartCount();
+    int             GetCheckedChartCount();
+    bool            isChartChecked( int i );
+    void            CheckAllCharts( bool value );
+    void            InvertCheckAllCharts( );
+
+    void            CheckNewCharts( bool value );
+    void            CheckUpdatedCharts(bool value);
+
 public:
     //ChartDldrPanelImpl() { m_bconnected = false; DownloadIsCancel = false; }
     ~ChartDldrPanelImpl();
@@ -227,7 +248,7 @@ public:
     void            SelectCatalog( int item );
     void            onDLEvent(OCPN_downloadEvent &ev);
     void            CancelDownload() { Disconnect(wxEVT_DOWNLOAD_EVENT, (wxObjectEventFunction)(wxEventFunction)&ChartDldrPanelImpl::onDLEvent); cancelled = true; m_bconnected = false;}
-    
+
 private:
     DECLARE_DYNAMIC_CLASS( ChartDldrPanelImpl )
     DECLARE_EVENT_TABLE()

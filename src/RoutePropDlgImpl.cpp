@@ -1,4 +1,4 @@
-/* **************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -286,6 +286,7 @@ void RoutePropDlgImpl::UpdatePoints()
     int in = 0;
     wxString slen, eta, ete;
     double bearing, distance, speed;
+    double totalDistance = 0;
     wxDateTime eta_dt = wxInvalidDateTime;
     while( pnode ) {
         speed = pnode->GetData()->GetPlannedSpeed();
@@ -317,6 +318,7 @@ void RoutePropDlgImpl::UpdatePoints()
                 eta = wxEmptyString;
             }
             ete = pnode->GetData()->GetETE();
+            totalDistance += distance;
         }
         wxString name = pnode->GetData()->GetName();
         double lat = pnode->GetData()->GetLatitude();
@@ -341,15 +343,25 @@ void RoutePropDlgImpl::UpdatePoints()
             crs = _("Arrived");
         }
 
-        data.push_back( wxVariant(in == 0 ? "---" : std::to_string(in)) ); // Leere Spalte? evtl. entfernen
-        data.push_back( wxVariant(name) ); // To
+        if(in == 0)
+             data.push_back( wxVariant("---"));
+         else{
+             std::ostringstream stm ;
+             stm << in ;
+             data.push_back( wxVariant(stm.str()));
+         }
+
+         wxString schar = wxEmptyString;
+        data.push_back( wxVariant(name + schar) ); // To
         slen.Printf( wxT("%5.1f ") + getUsrDistanceUnit(), toUsrDistance(distance) );
-        data.push_back( wxVariant(slen) ); // Distance
-        data.push_back( wxVariant(formatAngle(bearing)) ); // Bearing
+        data.push_back( wxVariant(schar + slen + schar) ); // Distance
+        data.push_back( wxVariant(schar + formatAngle(bearing)) ); // Bearing
+        slen.Printf( wxT("%5.1f ") + getUsrDistanceUnit(), toUsrDistance(totalDistance) );
+        data.push_back( wxVariant(schar + slen + schar) ); // Total Distance
         data.push_back( wxVariant(::toSDMM( 1, lat, FALSE)) ); // Lat
         data.push_back( wxVariant(::toSDMM( 2, lon, FALSE)) ); // Lon
-        data.push_back( wxVariant(ete) ); // ETE
-        data.push_back( eta ); //ETA
+        data.push_back( wxVariant(schar + ete + schar) ); // ETE
+        data.push_back( schar + eta + schar ); //ETA
         data.push_back( wxVariant(wxString::FromDouble(toUsrSpeed(speed))) ); // Speed
         data.push_back( wxVariant(MakeTideInfo(tide_station, lat, lon, eta_dt)) ); // Next Tide event
         data.push_back( wxVariant(desc) ); // Description
