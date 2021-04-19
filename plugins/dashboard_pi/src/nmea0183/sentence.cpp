@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -20,7 +20,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
  *
  *   S Blackburn's original source license:                                *
@@ -31,6 +31,7 @@
 
 
 #include "nmea0183.h"
+#include <math.h>
 
 /*
 ** Author: Samuel R. Blackburn
@@ -149,11 +150,22 @@ unsigned char SENTENCE::ComputeChecksum( void ) const
 double SENTENCE::Double( int field_number ) const
 {
  //  ASSERT_VALID( this );
-    wxCharBuffer abuf = Field( field_number).ToUTF8();
-    if( !abuf.data() || strlen(abuf.data()) == 0 )                            // badly formed sentence?
-        return (999.);
- 
-    return( ::atof( abuf.data() ));
+    wxCharBuffer abuf = Field(field_number).ToUTF8();
+    if( !abuf.data() || (abuf.length() == 0) )                            // badly formed sentence?
+        return (NAN);
+    else
+    { // Handle case where extra or misplaced '-' character is embedded in a float field
+       std::string bbuf(abuf.data());
+       auto mpos = bbuf.find_first_of('-', 0);
+       double sign = 1;
+       while ( mpos != std::string::npos )
+       { // Remove any extra '-' characters from string
+          sign = -1;
+          bbuf.erase(bbuf.begin() + mpos);
+          mpos = bbuf.find_first_of('-', mpos);
+       }
+       return( sign * ::atof(bbuf.c_str()) );
+    }
 }
 
 

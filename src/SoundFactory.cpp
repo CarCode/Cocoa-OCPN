@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,21 +19,21 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
+
 #include "config.h"
 #include "SoundFactory.h"
 
 
-#ifdef HAVE_PORTAUDIO
-#include "PortAudioSound.h"
-
-OcpnSound* SoundFactory(void) { return new PortAudioSound(); }
-
-#elif defined(HAVE_SYSTEM_CMD_SOUND)
+#if defined(HAVE_SYSTEM_CMD_SOUND)
 #include "SystemCmdSound.h"
 
 OcpnSound* SoundFactory(void) { return new SystemCmdSound(SYSTEM_SOUND_CMD); }
+
+#elif defined(HAVE_PORTAUDIO)
+#include "PortAudioSound.h"
+
+OcpnSound* SoundFactory(void) { return new PortAudioSound(); }
 
 #elif defined(__OCPN__ANDROID__)
 #include "AndroidSound.h"

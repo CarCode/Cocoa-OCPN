@@ -78,7 +78,6 @@ class IDX_entry;
       class glChartCanvas;
 
 
-
 //----------------------------------------------------------------------------
 // CanvasMenuHandler
 //----------------------------------------------------------------------------
@@ -91,26 +90,26 @@ public:
           RoutePoint *selectedPoint,
           int selectedAIS_MMSI,
           void *selectedTCIndex);
-      
+
       ~CanvasMenuHandler();
- 
+
       void CanvasPopupMenu( int x, int y, int seltype );
       void PopupMenuHandler( wxCommandEvent& event );
       static int GetNextContextMenuId();
-      
+
  private:
-       
+
       int               popx, popy;
       ChartCanvas       *parent;
       Route             *m_pSelectedRoute;
       Track             *m_pSelectedTrack;
       RoutePoint        *m_pFoundRoutePoint;
-      int               m_FoundAIS_MMSI;
-      void *            m_pIDXCandidate;
-      
-      
+      Route             *m_pHead;            //for split function
+      Route             *m_pTail;
+      int                m_SelectedIdx;
+      int                m_FoundAIS_MMSI;
+      void *             m_pIDXCandidate;
+
 };
-
-
 
 #endif

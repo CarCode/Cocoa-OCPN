@@ -1178,6 +1178,14 @@ void OCPNPlatform::SetDefaultOptions( void )
             ::wxMkdir( LayersPath );
         }
 
+        // Force a generally useable sound command, overriding any previous user's selection
+        // That may not be available on new build.
+#ifdef SYSTEM_SOUND_CMD
+        wxString g_CmdSoundString = _T("SYSTEM_SOUND_CMD");
+        pConfig->SetPath( _T ( "/Settings" ) );
+        pConfig->Write( _T( "CmdSoundString" ), g_CmdSoundString );
+#endif /* SYSTEM_SOUND_CMD */
+
 }
 
 

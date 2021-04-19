@@ -236,7 +236,6 @@
 		27BEB69586974C06A20F21DE /* Authority-Immigration.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2B0686B49A244950B4F59B4B /* Authority-Immigration.svg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		28E8DB4B49EF425EB70E8658 /* jpc_bs.c in Sources */ = {isa = PBXBuildFile; fileRef = 38B79E6200C9495EB8DCAC33 /* jpc_bs.c */; };
 		294DB77D345B43A68811B710 /* Hazard-Snag.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 31235FE5D1F74A8FA4F5E09D /* Hazard-Snag.svg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		29721F5553C4419E8A6DB5DD /* checkedlistctrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E60367CBA0D6475BA4F2DDAA /* checkedlistctrl.cpp */; };
 		29838168A0DE4B6C9D5215AC /* CpuArch.c in Sources */ = {isa = PBXBuildFile; fileRef = 62D880A9A9E54669986D940C /* CpuArch.c */; };
 		29E68C710FF4423681159535 /* Dashboard_rollover_toggled.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = D5EF4E8172FD496BB4F3D3FA /* Dashboard_rollover_toggled.svg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		29EE88FCB2354166926569FA /* S52RAZDS.RLE in CopyFiles */ = {isa = PBXBuildFile; fileRef = 51079E8E656C443293D9C1B8 /* S52RAZDS.RLE */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -718,6 +717,10 @@
 		A46F7CEA3B204479A0F1988B /* Service-Ice1.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = AEC47949826549D7AED77827 /* Service-Ice1.svg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A533A2FECCB94068979965C8 /* Symbol-X-Small-Yellow.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = D00DF08BF94046429D6E92C0 /* Symbol-X-Small-Yellow.svg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A5517AC819CF4168ABDCC2B2 /* Marks-Buoy-TypeB.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = D660BE31291D4C08BA5798DF /* Marks-Buoy-TypeB.svg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A61601242614D10E003FE0BF /* beep_ssl.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = A61600FC2614D009003FE0BF /* beep_ssl.wav */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A61601252614D10E003FE0BF /* beep1.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = A61600FB2614D009003FE0BF /* beep1.wav */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A61601262614D10E003FE0BF /* beep3.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = A61600FE2614D00A003FE0BF /* beep3.wav */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		A61601272614D10E003FE0BF /* phonering1.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = A61600FD2614D00A003FE0BF /* phonering1.wav */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A616391C23A666DB0017C37E /* TexFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A616391B23A666DA0017C37E /* TexFont.cpp */; };
 		A61802F224275BB200CFEC8D /* libnavdata_pi.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6D147D924267AEA0091EE3A /* libnavdata_pi.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A63B4EDC253DBE6C00E7A3D8 /* de.lproj in Resources */ = {isa = PBXBuildFile; fileRef = A6E58601239BC6750007E4A1 /* de.lproj */; };
@@ -2206,6 +2209,10 @@
 			dstPath = ../SharedSupport/sounds;
 			dstSubfolderSpec = 6;
 			files = (
+				A61601242614D10E003FE0BF /* beep_ssl.wav in CopyFiles */,
+				A61601252614D10E003FE0BF /* beep1.wav in CopyFiles */,
+				A61601262614D10E003FE0BF /* beep3.wav in CopyFiles */,
+				A61601272614D10E003FE0BF /* phonering1.wav in CopyFiles */,
 				BC875274889C40D49B567AA1 /* 1bells.wav in CopyFiles */,
 				D7EE51F4BB5D43949E1C531F /* 2bells.wav in CopyFiles */,
 				1C1B53E2C2EF43D8A3F58C5C /* README.bells in CopyFiles */,
@@ -2524,7 +2531,6 @@
 		122719104116441DBEFFA944 /* OcpnWxSound.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = OcpnWxSound.cpp; path = src/OcpnWxSound.cpp; sourceTree = SOURCE_ROOT; };
 		122743F4342B4CA58246BF80 /* chartsymbols.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = chartsymbols.cpp; path = src/chartsymbols.cpp; sourceTree = SOURCE_ROOT; };
 		125777C38EFE48E1BDC23760 /* pluginmanager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = pluginmanager.cpp; path = src/pluginmanager.cpp; sourceTree = SOURCE_ROOT; };
-		126C753E8BF64799B347AA7A /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = plugins/chartdldr_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		12A756F5177F4D3F8A6C204E /* hexvalue.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = hexvalue.cpp; path = plugins/dashboard_pi/src/nmea0183/hexvalue.cpp; sourceTree = SOURCE_ROOT; };
 		1317DA799304441399B5FE29 /* tess.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = tess.c; path = src/glu/libtess/tess.c; sourceTree = SOURCE_ROOT; };
 		131855F6D41A483BBE421DD4 /* geodesic.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = geodesic.h; path = include/geodesic.h; sourceTree = SOURCE_ROOT; };
@@ -3304,7 +3310,6 @@
 		A1B464BAF6A34DB6A56F61AB /* glChartCanvas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = glChartCanvas.cpp; path = src/glChartCanvas.cpp; sourceTree = SOURCE_ROOT; };
 		A1BAE6720C484B96929AB122 /* MUI_route_rollover_toggled.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = MUI_route_rollover_toggled.svg; path = data/svg/MUI_flat/MUI_route_rollover_toggled.svg; sourceTree = SOURCE_ROOT; };
 		A1BEF039CE2E4D4B81464599 /* SVGUseElement.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SVGUseElement.cpp; path = src/wxsvg/src/SVGUseElement.cpp; sourceTree = SOURCE_ROOT; };
-		A1D17143DEA54D89A9A43A79 /* checkedlistctrl.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = checkedlistctrl.h; path = plugins/chartdldr_pi/src/checkedlistctrl.h; sourceTree = SOURCE_ROOT; };
 		A1E76733CEEC41B7903E5C75 /* ogrlinearring.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ogrlinearring.cpp; path = src/mygdal/ogrlinearring.cpp; sourceTree = SOURCE_ROOT; };
 		A2003B2E25DB4A329E771CCF /* jas_init.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jas_init.h; path = plugins/grib_pi/src/jasper/include/jasper/jas_init.h; sourceTree = SOURCE_ROOT; };
 		A20AB8318DDF4A6CA9FEC4D7 /* Symbol-Question-Blue.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Question-Blue.svg"; path = "data/svg/markicons/Symbol-Question-Blue.svg"; sourceTree = SOURCE_ROOT; };
@@ -3328,6 +3333,10 @@
 		A5E065B842E24F2B868B0D3B /* authors.html */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = authors.html; path = data/authors.html; sourceTree = SOURCE_ROOT; };
 		A5FE3F0651DD477D934E7ADA /* CSSStyleDeclaration.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CSSStyleDeclaration.cpp; path = src/wxsvg/src/CSSStyleDeclaration.cpp; sourceTree = SOURCE_ROOT; };
 		A60BD999248190E100957418 /* CanvasConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CanvasConfig.h; path = include/CanvasConfig.h; sourceTree = "<group>"; };
+		A61600FB2614D009003FE0BF /* beep1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = beep1.wav; path = data/sounds/beep1.wav; sourceTree = SOURCE_ROOT; };
+		A61600FC2614D009003FE0BF /* beep_ssl.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = beep_ssl.wav; path = data/sounds/beep_ssl.wav; sourceTree = SOURCE_ROOT; };
+		A61600FD2614D00A003FE0BF /* phonering1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = phonering1.wav; path = data/sounds/phonering1.wav; sourceTree = SOURCE_ROOT; };
+		A61600FE2614D00A003FE0BF /* beep3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = beep3.wav; path = data/sounds/beep3.wav; sourceTree = SOURCE_ROOT; };
 		A616391423A642AD0017C37E /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = plugins/grib_pi/src/version.h; sourceTree = "<group>"; };
 		A616391B23A666DA0017C37E /* TexFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TexFont.cpp; path = plugins/grib_pi/src/TexFont.cpp; sourceTree = "<group>"; };
 		A62DEFE023D6F767000A4914 /* dychart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dychart.h; path = include/dychart.h; sourceTree = "<group>"; };
@@ -4079,7 +4088,6 @@
 		E56E1673F1EA454BBFA62E26 /* Hazard-Wreck1.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Hazard-Wreck1.svg"; path = "data/svg/markicons/Hazard-Wreck1.svg"; sourceTree = SOURCE_ROOT; };
 		E594DF8583A14008BA669387 /* help_web.html */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = help_web.html; path = data/doc/help_web.html; sourceTree = SOURCE_ROOT; };
 		E5E9109BE24F4E44A8F53807 /* route_rollover.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = route_rollover.svg; path = data/svg/traditional/route_rollover.svg; sourceTree = SOURCE_ROOT; };
-		E60367CBA0D6475BA4F2DDAA /* checkedlistctrl.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = checkedlistctrl.cpp; path = plugins/chartdldr_pi/src/checkedlistctrl.cpp; sourceTree = SOURCE_ROOT; };
 		E618B535BA184A4CB9453447 /* libUNARR.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libUNARR.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		E668808BAAE1437EB32C4B8B /* S57ClassRegistrar.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = S57ClassRegistrar.h; path = include/S57ClassRegistrar.h; sourceTree = SOURCE_ROOT; };
 		E67E0622A5854349B4E65689 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = plugins/wmm_pi/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
@@ -4655,18 +4663,6 @@
 			children = (
 				7B272AB7C9E744A0B1169E9C /* Info.plist */,
 				C76CA48ED51644E0BC8E4FD4 /* opencpn.png */,
-				26979E32E7F14D669DD300A3 /* rastersymbols-dark.png */,
-				C992D118A9104BFF89336C7E /* rastersymbols-day.png */,
-				5E560109024F49C092ADCAE0 /* rastersymbols-dusk.png */,
-				D5ED1CE6359A4E17BC3E8626 /* iconAll.png */,
-				23D20114147048EE82BD4FC2 /* iconMinimum.png */,
-				67F62AB6B2864417AE401426 /* iconRMinus.png */,
-				5CB3D2345C2F4B7894CC9C0F /* iconRPlus.png */,
-				EA550E7ACEA04A40AE539CA0 /* iconStandard.png */,
-				9FC8E7BF91484DE1905CFA28 /* iconUserStd.png */,
-				35A6C0CE9A6A432382E9292B /* toolicons_journeyman.png */,
-				AFA0F61F90534E558088B463 /* toolicons_journeyman_flat.png */,
-				20371869F1714E30A6198A69 /* toolicons_traditional.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -5054,7 +5050,6 @@
 			children = (
 				C853B5B37C9F4EB797DB0290 /* Header Files */,
 				F7ED4E49A7134856963431F2 /* Source Files */,
-				126C753E8BF64799B347AA7A /* CMakeLists.txt */,
 			);
 			name = chartdldr_pi;
 			sourceTree = "<group>";
@@ -5689,232 +5684,85 @@
 			name = "Source Files";
 			sourceTree = "<group>";
 		};
-		A6D147C7242675830091EE3A /* navdata_pi */ = {
+		A6A684BB262443CC0079039A /* sounds */ = {
 			isa = PBXGroup;
 			children = (
-				A6D147C9242675D40091EE3A /* Header Files */,
-				A6D147C8242675C10091EE3A /* Source Files */,
+				1FD4B101522441C681B70A82 /* README.bells */,
+				A61600FD2614D00A003FE0BF /* phonering1.wav */,
+				A61600FE2614D00A003FE0BF /* beep3.wav */,
+				A61600FB2614D009003FE0BF /* beep1.wav */,
+				A61600FC2614D009003FE0BF /* beep_ssl.wav */,
+				1F9D9744A5854B0AAD1DA59A /* 2bells.wav */,
+				D2407746C97C48779E194DDA /* 1bells.wav */,
 			);
-			name = navdata_pi;
+			name = sounds;
 			sourceTree = "<group>";
 		};
-		A6D147C8242675C10091EE3A /* Source Files */ = {
+		A6A684BC262444CE0079039A /* gshhs */ = {
 			isa = PBXGroup;
 			children = (
-				A6D147D0242679790091EE3A /* navdata_pi.cpp */,
-				A650C11F245AF5690058E273 /* customgrid.cpp */,
-				A650C121245AF5810058E273 /* datadialogbase.cpp */,
-				A650C123245AF5970058E273 /* datatable.cpp */,
-				A6D147D424267A580091EE3A /* icons.cpp */,
-			);
-			name = "Source Files";
-			sourceTree = "<group>";
-		};
-		A6D147C9242675D40091EE3A /* Header Files */ = {
-			isa = PBXGroup;
-			children = (
-				A6D147CB242677B30091EE3A /* navdata_pi.h */,
-				A650C119245AF5040058E273 /* customgrid.h */,
-				A6D147CE242678AF0091EE3A /* icons.h */,
-				A650C11B245AF5250058E273 /* datadialogbase.h */,
-				A650C11D245AF5410058E273 /* datatable.h */,
-				A6D147CF242678D00091EE3A /* version.h */,
-			);
-			name = "Header Files";
-			sourceTree = "<group>";
-		};
-		AD0516FA38BE4F9CA4E036B4 /* Header Files */ = {
-			isa = PBXGroup;
-			children = (
-				11C6E8AF3BB74D069C69D2CF /* baro_history.h */,
-				74C16D8567654FFBB5942D12 /* clock.h */,
-				B0136843E4FA474FB53372EA /* compass.h */,
-				1CAD11D3BA4F4243BF9E9CBF /* dashboard_pi.h */,
-				EBEEE7A7491945DE901C9655 /* depth.h */,
-				22A2EAD3D67F473C96C5032D /* dial.h */,
-				A76B3E49CCE744DB8D84B73A /* from_ownship.h */,
-				A4941864FA6B450893361DFA /* gps.h */,
-				6040E343CA20418DA764BB18 /* icons.h */,
-				C2C57EC881754DAB83F8D15A /* iirfilter.h */,
-				D1626950848B4050AA9B97DF /* instrument.h */,
-				C872122197E947A79CA6791B /* LatLong.hpp */,
-				06D2BE17C5294AC893EFE52D /* RMB.hpp */,
-				694AF2EC82464AE690ABA2C4 /* Response.hpp */,
-				24489E5698AA4F1AB428879E /* SatInfo.h */,
-				1420286DDA0F428FBF129B4F /* Sentence.hpp */,
-				46F2D5D6EF8941E7AA497E0F /* dbt.hpp */,
-				C2ACEA133E334A8597DDE55C /* dpt.hpp */,
-				A96EE1E1F54F4DA2BF7D00C3 /* gga.hpp */,
-				38B05EB5B36A4C5EADE7D994 /* gll.hpp */,
-				8BFCB096654143ADABB75BEE /* gsv.hpp */,
-				534663AF4824493BA0A5D545 /* hdg.hpp */,
-				5B2FBDE7A60044D091D78BFB /* hdm.hpp */,
-				D40EB8AE69D842A1AAC17B2C /* hdt.hpp */,
-				C7F571AA07C84BD68896CED3 /* mda.hpp */,
-				64454BF4299042D3B16E59BF /* mta.hpp */,
-				7F659EC77A3344078C612DFD /* mtw.hpp */,
-				438810DE210C4930AC3FD9C6 /* mwd.hpp */,
-				AD7D0CF9B0744766B6A74D19 /* mwv.hpp */,
-				0B11172462FB4340BB74C1B6 /* nmea0183.hpp */,
-				EC11D67BD804466884B93A19 /* rsa.hpp */,
-				F20B14DF3494408BA5BED443 /* rte.hpp */,
-				325887E4E2684B6488A75B69 /* vhw.hpp */,
-				94C81EF33D624F5AAB11D231 /* vlw.hpp */,
-				666F864E952B42148F1994B3 /* vtg.hpp */,
-				D009AD9F6C8A479C8D4FAD8C /* vwr.hpp */,
-				F1DB8D83D29A48DEB138EC71 /* vwt.hpp */,
-				E148557F04324EF8A7626467 /* wpl.hpp */,
-				A752EBECE51A477AAFDC30D4 /* xdr.hpp */,
-				6CBB3093270E4C988094F1D3 /* zda.hpp */,
-				9E66C605FE2340D3A0F8A38C /* RMC.HPP */,
-				76E29355196E4DB6809CD4C0 /* rudder_angle.h */,
-				6DC0BCECB40A44C883441858 /* speedometer.h */,
-				3B481980BF354352BF8A34E1 /* wind.h */,
-				9670B660E0E443969DA71D00 /* wind_history.h */,
-			);
-			name = "Header Files";
-			sourceTree = "<group>";
-		};
-		B4993FFDB35546B28BC38B80 /* Header Files */ = {
-			isa = PBXGroup;
-			children = (
-				52552EFF5156478EA880D121 /* Osenc.h */,
-				B5258F1125534F0F9E8D28BF /* SencManager.h */,
-				E8B069769EA842F0ABB8CEC8 /* TexFont.h */,
-				070239C7ECDF46DDA6FB304F /* cm93.h */,
-				74F475CC8A7B44339C7F5B58 /* mygeom.h */,
-				3DD8CB3AC43F47BAAF37151A /* s52plib.h */,
-				60195A417A9E4D23889435EE /* s52utils.h */,
-				7D8426E09CB6410B8179A5C6 /* s57RegistrarMgr.h */,
-				51BEDFF28FAC4823AA7371C5 /* s57chart.h */,
-				F953D0E289694A5F9A878A0D /* cpl_config.h */,
-				CABB9158E6C644ECBA4BF912 /* cpl_conv.h */,
-				D1BB37EFA3B44739B8732AE5 /* cpl_csv.h */,
-				F0E30D9BB377416F886A7422 /* cpl_error.h */,
-				A38BCA08A3E04D1EB38CC8FD /* cpl_list.h */,
-				70D7C344644948EA9CC8DE47 /* cpl_minixml.h */,
-				D2BD858F34B24350931BBE13 /* cpl_multiproc.h */,
-				7EA71931C1DF42D4A1791CD2 /* cpl_odbc.h */,
-				F32162683B50455BB7E8A61F /* cpl_port.h */,
-				ADF9110EA3BE41A987D4F1EC /* cpl_string.h */,
-				3474D58FE93C47DFBA8D425C /* cpl_vsi.h */,
-				C72AB277B4E44C06865E81D3 /* gdal.h */,
-				5B6244258D234ED0B9ABA90B /* gdal_frmts.h */,
-				E1FC8D82CB254E268576DB94 /* gdal_priv.h */,
-				E04965E24F4B4DC68D8A386E /* iso8211.h */,
-				DB1249AF24004432B286FB03 /* ogr_api.h */,
-				7A4BD3BB3B79466094F853FA /* ogr_attrind.h */,
-				53D0E8A53239468E9D23E019 /* ogr_core.h */,
-				64C1784B392F4B6DA1EFA162 /* ogr_feature.h */,
-				AF12FA5386814A009400E020 /* ogr_geometry.h */,
-				0B8D7E5F4B7D4FE48ECDFC2A /* ogr_p.h */,
-				832105AF31384CF887CD3E7F /* ogr_s57.h */,
-				B32BC9D26DE94E9BAA453E78 /* ogr_spatialref.h */,
-				262E879B77B64803958FB8FF /* ogrsf_frmts.h */,
-				76059EAAE38E4FF9B44DC43E /* s57.h */,
-			);
-			name = "Header Files";
-			sourceTree = "<group>";
-		};
-		B938DE542E5C4C8592FECA39 /* findit_pi */ = {
-			isa = PBXGroup;
-			children = (
-				E30740720BC047AAB1187DF5 /* Header Files */,
-				A69EA2EB239EA3A4005F613A /* Source Files */,
-			);
-			name = findit_pi;
-			sourceTree = "<group>";
-		};
-		C034EBC13D57441FA844A9C9 /* wmm_pi */ = {
-			isa = PBXGroup;
-			children = (
-				C055A0B8094D45C8A1007FDD /* Header Files */,
-				8B58987CBC0C4FEFAB99ADB8 /* Source Files */,
-				E67E0622A5854349B4E65689 /* CMakeLists.txt */,
-			);
-			name = wmm_pi;
-			sourceTree = "<group>";
-		};
-		C055A0B8094D45C8A1007FDD /* Header Files */ = {
-			isa = PBXGroup;
-			children = (
-				4483606E58CE46D09A497413 /* EGM9615.h */,
-				B30D753320C04957A1DCB281 /* GeomagnetismHeader.h */,
-				A10AA232D5354258B56C1E41 /* MagneticPlotMap.h */,
-				0BCD793DA94D46D192AD90F6 /* TexFont.h */,
-				FD5805FDED4046E789266651 /* WmmUIDialog.h */,
-				69FD8D6ABF0941D1A6DD8295 /* icons.h */,
-				448EE260FF7D449998291B84 /* wmm_pi.h */,
-				A69EA305239EB339005F613A /* version.h */,
-			);
-			name = "Header Files";
-			sourceTree = "<group>";
-		};
-		C185E9A488F9470B8104AABF /* OpenCPN */ = {
-			isa = PBXGroup;
-			children = (
-				59D5DA44B6464BB8B2E9C069 /* Header Files */,
-				FB0236C6B692487B9D6F6B58 /* Source Files */,
-				3CF7B0184FB34E4ABBE5D69E /* Resources */,
-				38B2EB50B6EB432FB08C3DDA /* CMakeLists.txt */,
-				03FF77834E4E4C6AB58C10B6 /* MainMenu.xib */,
-				8D48F3C38C124373B5145A27 /* opencpn.icns */,
-				A5E065B842E24F2B868B0D3B /* authors.html */,
-				E594DF8583A14008BA669387 /* help_web.html */,
-				DBB8F75A4C904B8CBF2513B1 /* poly-c-1.dat */,
-				D091C8CAD0AC44D7B687F54E /* wdb_borders_c.b */,
 				EC9923D170BE424DA0FC203A /* wdb_rivers_c.b */,
-				5156F6061DBA43AC9C429F38 /* license.html */,
-				A66AC349239D09730078858A /* hilfe.html */,
-				51079E8E656C443293D9C1B8 /* S52RAZDS.RLE */,
+				D091C8CAD0AC44D7B687F54E /* wdb_borders_c.b */,
+				DBB8F75A4C904B8CBF2513B1 /* poly-c-1.dat */,
+			);
+			name = gshhs;
+			sourceTree = "<group>";
+		};
+		A6A684BD2624454B0079039A /* s57data */ = {
+			isa = PBXGroup;
+			children = (
 				02E123976D294B1180BE1694 /* attdecode.csv */,
 				F32DAA376F3940A5A0AF5CB0 /* chartsymbols.xml */,
+				26979E32E7F14D669DD300A3 /* rastersymbols-dark.png */,
+				C992D118A9104BFF89336C7E /* rastersymbols-day.png */,
+				5E560109024F49C092ADCAE0 /* rastersymbols-dusk.png */,
+				51079E8E656C443293D9C1B8 /* S52RAZDS.RLE */,
 				06829C99E074444DB4D49AEE /* s57attributes.csv */,
 				B77DC7B160E74F07BF9DABE5 /* s57expectedinput.csv */,
 				AA1434D906B94600A2E8BDF1 /* s57objectclasses.csv */,
-				D2407746C97C48779E194DDA /* 1bells.wav */,
-				1F9D9744A5854B0AAD1DA59A /* 2bells.wav */,
-				1FD4B101522441C681B70A82 /* README.bells */,
-				6E03C6372E0B4B9BB9F2EE68 /* CompassRose.svg */,
-				6061904986EF40849FC58D16 /* CompassRoseBlue.svg */,
-				ACCD1DE1DBEE4673A43FB7B6 /* Dashboard.svg */,
-				845F43A616EF4E538C8898B5 /* Dashboard_rollover.svg */,
-				D5EF4E8172FD496BB4F3D3FA /* Dashboard_rollover_toggled.svg */,
-				BAC072906953418C95487422 /* Dashboard_toggled.svg */,
-				E781C08E7AE44EC3BCFBB9D0 /* GRIB.svg */,
-				229CBE13967B43E892B335A7 /* GRIB_rollover.svg */,
-				C58FE26728DC4F69A991FE74 /* GRIB_rollover_toggled.svg */,
-				A13D9367EECF4F238FA7F23E /* GRIB_toggled.svg */,
-				C961C8EB43EB40E6A6449CF5 /* MUI_RMD.svg */,
-				5AE5A08EFAC2404491C012C0 /* MUI_Sconfig_1.svg */,
-				02002886F1E343D48242057A /* MUI_Sconfig_2.svg */,
-				6382E0A59798428E9CA6F74A /* MUI_colorscheme.svg */,
-				4A34174E8F11429090DDAE54 /* MUI_follow.svg */,
-				8317A9E85E0E4355AA794D4B /* MUI_follow_active.svg */,
-				07875DFD9C8C424BB3B8EE7B /* MUI_follow_ahead.svg */,
-				D1F79E7402E543FF805D0EC9 /* MUI_help.svg */,
-				7DDC84D6F3024A6C975F55E7 /* MUI_menu.svg */,
-				B883153E1C18474C955D08C0 /* MUI_menu_rollover.svg */,
-				3B688AD56A774075A1EE0FE1 /* MUI_print.svg */,
-				BE316C34780D45AC9B46F866 /* MUI_route.svg */,
-				A1BAE6720C484B96929AB122 /* MUI_route_rollover_toggled.svg */,
-				3FB96C1030304F42A5FD4D9A /* MUI_route_toggled.svg */,
-				04642AA46BDF41CDB200F5B5 /* MUI_settings.svg */,
-				C0231C4D8BAB46CC9DB0F76C /* MUI_settings_disabled.svg */,
-				8EC4AE405F6E434EAE705091 /* MUI_track.svg */,
-				99459C3B5AB441AAA3F5C40D /* MUI_track_rollover.svg */,
-				662F723ADA4A4424B6001622 /* MUI_track_rollover_toggled.svg */,
-				57517AD1565B489B8C0D1D8C /* MUI_track_toggled.svg */,
-				EB4CF57C3F0E4320B11379E6 /* MUI_zoom-in.svg */,
-				F4FFE952B3A94D83B21F90B2 /* MUI_zoom-out.svg */,
-				33301EAC86FB47B29289E84D /* WMM.svg */,
-				666FE6273AD945F5BD0B2070 /* gps1Bar.svg */,
-				46C8313296024A138BD287D0 /* gps2Bar.svg */,
-				447463E64DF64D5EBC58529F /* gps3Bar.svg */,
-				87E2FABE517545CB998B8F38 /* gpsGrn.svg */,
-				111ED223808547B08164A508 /* gpsGry.svg */,
-				8D8C78C751704030841AA5E9 /* gpsRed.svg */,
-				79C8172DF58E4CE491C93498 /* mob_btn.svg */,
+			);
+			name = s57data;
+			sourceTree = "<group>";
+		};
+		A6A684BE2624469F0079039A /* tcdata */ = {
+			isa = PBXGroup;
+			children = (
+				49E43876C9FB4C308D0CA086 /* HARMONIC */,
+				BF7E8318E7E5442082DDA0F2 /* HARMONIC.IDX */,
+				8BD77E5A5AB54AD38C342979 /* README.harmonics */,
+			);
+			name = tcdata;
+			sourceTree = "<group>";
+		};
+		A6A684BF262448B70079039A /* uidata */ = {
+			isa = PBXGroup;
+			children = (
+				4025C9C943324B6FAB190550 /* DragHandle.svg */,
+				4AD1A1719FB34FAEA7B5C43E /* eye.svg */,
+				AF9DC2F1F4B147608D1ECA11 /* eyex.svg */,
+				D5ED1CE6359A4E17BC3E8626 /* iconAll.png */,
+				23D20114147048EE82BD4FC2 /* iconMinimum.png */,
+				67F62AB6B2864417AE401426 /* iconRMinus.png */,
+				5CB3D2345C2F4B7894CC9C0F /* iconRPlus.png */,
+				EA550E7ACEA04A40AE539CA0 /* iconStandard.png */,
+				9FC8E7BF91484DE1905CFA28 /* iconUserStd.png */,
+				346A671F408B4442AE919A1C /* iENC_All.svg */,
+				4EFB4B6B0B8943DE8C2C1B21 /* iENC_Minimum.svg */,
+				96B37EA75AC74BD98AA3DBD5 /* iENC_RMinus.svg */,
+				DFA665BC5E38441595D3AAEE /* iENC_RPlus.svg */,
+				3DE83D7AD32745DC959F3238 /* iENC_Standard.svg */,
+				D6F9821CCDCA4ED08959CF9C /* iENC_UserStd.svg */,
+				977AAD3B9C364E5F9DFECB7F /* styles.xml */,
+				35A6C0CE9A6A432382E9292B /* toolicons_journeyman.png */,
+				AFA0F61F90534E558088B463 /* toolicons_journeyman_flat.png */,
+				20371869F1714E30A6198A69 /* toolicons_traditional.png */,
+			);
+			name = uidata;
+			sourceTree = "<group>";
+		};
+		A6A684C02624510F0079039A /* journeyman */ = {
+			isa = PBXGroup;
+			children = (
 				53EA01F172934CFFA190B649 /* CompassRose.svg */,
 				E9AEBAD828CA4811B077E1FC /* CompassRoseBlue.svg */,
 				E4ED85B56E504BAEA600E895 /* gps1Bar.svg */,
@@ -5923,6 +5771,13 @@
 				2CAE9DCA59524B078A8FCF38 /* gpsGrn.svg */,
 				61CE97D88CE84426BFEC2323 /* gpsGry.svg */,
 				0F95D75ED5B34B93A0D7B8ED /* gpsRed.svg */,
+			);
+			name = journeyman;
+			sourceTree = "<group>";
+		};
+		A6A684C1262451390079039A /* journeyman_flat */ = {
+			isa = PBXGroup;
+			children = (
 				B0A34FC67A9348FC919DE87D /* CompassRose.svg */,
 				8E8DCF3DACDA4B58BDB35104 /* CompassRoseBlue.svg */,
 				00863E978F21468BB82F02AA /* gps1Bar.svg */,
@@ -5931,6 +5786,13 @@
 				7CC5841CEC1B4BB28D8464FF /* gpsGrn.svg */,
 				05FD8138B05F4AD5912C0698 /* gpsGry.svg */,
 				BBB6560F841546F6AC1C6062 /* gpsRed.svg */,
+			);
+			name = journeyman_flat;
+			sourceTree = "<group>";
+		};
+		A6A684C22624528E0079039A /* markicons */ = {
+			isa = PBXGroup;
+			children = (
 				58D09FD86A514F83AD7F0308 /* 1st-Active-Waypoint.svg */,
 				1846C1C0A1804815BC7313A6 /* 1st-Anchorage.svg */,
 				3303BB103EE04030856F78AF /* 1st-Diamond.svg */,
@@ -6256,6 +6118,60 @@
 				FD4937EC2C56401F8B7423E7 /* Weather-Tropical High.svg */,
 				76549C9694D74464A67C7BB3 /* Weather-Tropical-Storm-NH.svg */,
 				CD4328671E2C47EDBE44B52D /* Weather-Tropical-Storm-SH.svg */,
+			);
+			name = markicons;
+			sourceTree = "<group>";
+		};
+		A6A684C3262453550079039A /* MUI_flat */ = {
+			isa = PBXGroup;
+			children = (
+				6E03C6372E0B4B9BB9F2EE68 /* CompassRose.svg */,
+				6061904986EF40849FC58D16 /* CompassRoseBlue.svg */,
+				666FE6273AD945F5BD0B2070 /* gps1Bar.svg */,
+				46C8313296024A138BD287D0 /* gps2Bar.svg */,
+				447463E64DF64D5EBC58529F /* gps3Bar.svg */,
+				87E2FABE517545CB998B8F38 /* gpsGrn.svg */,
+				111ED223808547B08164A508 /* gpsGry.svg */,
+				8D8C78C751704030841AA5E9 /* gpsRed.svg */,
+				ACCD1DE1DBEE4673A43FB7B6 /* Dashboard.svg */,
+				845F43A616EF4E538C8898B5 /* Dashboard_rollover.svg */,
+				D5EF4E8172FD496BB4F3D3FA /* Dashboard_rollover_toggled.svg */,
+				BAC072906953418C95487422 /* Dashboard_toggled.svg */,
+				E781C08E7AE44EC3BCFBB9D0 /* GRIB.svg */,
+				229CBE13967B43E892B335A7 /* GRIB_rollover.svg */,
+				C58FE26728DC4F69A991FE74 /* GRIB_rollover_toggled.svg */,
+				A13D9367EECF4F238FA7F23E /* GRIB_toggled.svg */,
+				79C8172DF58E4CE491C93498 /* mob_btn.svg */,
+				C961C8EB43EB40E6A6449CF5 /* MUI_RMD.svg */,
+				5AE5A08EFAC2404491C012C0 /* MUI_Sconfig_1.svg */,
+				02002886F1E343D48242057A /* MUI_Sconfig_2.svg */,
+				6382E0A59798428E9CA6F74A /* MUI_colorscheme.svg */,
+				4A34174E8F11429090DDAE54 /* MUI_follow.svg */,
+				8317A9E85E0E4355AA794D4B /* MUI_follow_active.svg */,
+				07875DFD9C8C424BB3B8EE7B /* MUI_follow_ahead.svg */,
+				D1F79E7402E543FF805D0EC9 /* MUI_help.svg */,
+				7DDC84D6F3024A6C975F55E7 /* MUI_menu.svg */,
+				B883153E1C18474C955D08C0 /* MUI_menu_rollover.svg */,
+				3B688AD56A774075A1EE0FE1 /* MUI_print.svg */,
+				BE316C34780D45AC9B46F866 /* MUI_route.svg */,
+				A1BAE6720C484B96929AB122 /* MUI_route_rollover_toggled.svg */,
+				3FB96C1030304F42A5FD4D9A /* MUI_route_toggled.svg */,
+				04642AA46BDF41CDB200F5B5 /* MUI_settings.svg */,
+				C0231C4D8BAB46CC9DB0F76C /* MUI_settings_disabled.svg */,
+				8EC4AE405F6E434EAE705091 /* MUI_track.svg */,
+				99459C3B5AB441AAA3F5C40D /* MUI_track_rollover.svg */,
+				662F723ADA4A4424B6001622 /* MUI_track_rollover_toggled.svg */,
+				57517AD1565B489B8C0D1D8C /* MUI_track_toggled.svg */,
+				EB4CF57C3F0E4320B11379E6 /* MUI_zoom-in.svg */,
+				F4FFE952B3A94D83B21F90B2 /* MUI_zoom-out.svg */,
+				33301EAC86FB47B29289E84D /* WMM.svg */,
+			);
+			name = MUI_flat;
+			sourceTree = "<group>";
+		};
+		A6A684C426245B890079039A /* traditional */ = {
+			isa = PBXGroup;
+			children = (
 				25E3413884FB438B8AD7B791 /* AIS.svg */,
 				06F7C6B7D9FB43A4B3992015 /* AIS_AlertGeneral.svg */,
 				C924630AD27443B58B247886 /* AIS_AlertGeneral_Active.svg */,
@@ -6270,10 +6186,10 @@
 				EEDC432810BB4FAAB0DB368E /* AIS_Suppressed_Active_rollover.svg */,
 				D3C6923C5BD94843839359C1 /* AIS_Suppressed_rollover.svg */,
 				383E513759B34F9FA0B68EA5 /* AIS_rollover.svg */,
-				AD063A8F75A740B088DA00BF /* CompassRose.svg */,
-				1A608A55738E46C2A07301B5 /* CompassRoseBlue.svg */,
 				A8995E6B5ED84EDA959E1E2B /* colorscheme.svg */,
 				8A475D9A702143F9B9FD616B /* colorscheme_rollover.svg */,
+				AD063A8F75A740B088DA00BF /* CompassRose.svg */,
+				1A608A55738E46C2A07301B5 /* CompassRoseBlue.svg */,
 				290FB362892D49A18A71437C /* current.svg */,
 				AD5E851A3B1D47EAB381F3F5 /* current_rollover.svg */,
 				67196CA1CEC54E1D9A13F39E /* current_rollover_toggled.svg */,
@@ -6331,19 +6247,194 @@
 				F0B88306CA31431994278413 /* zoomin_rollover.svg */,
 				5BE2948FCECE475D9A312FF5 /* zoomout.svg */,
 				EE13C6C454944314B04630C0 /* zoomout_rollover.svg */,
-				49E43876C9FB4C308D0CA086 /* HARMONIC */,
-				BF7E8318E7E5442082DDA0F2 /* HARMONIC.IDX */,
-				8BD77E5A5AB54AD38C342979 /* README.harmonics */,
-				4025C9C943324B6FAB190550 /* DragHandle.svg */,
-				4AD1A1719FB34FAEA7B5C43E /* eye.svg */,
-				AF9DC2F1F4B147608D1ECA11 /* eyex.svg */,
-				346A671F408B4442AE919A1C /* iENC_All.svg */,
-				4EFB4B6B0B8943DE8C2C1B21 /* iENC_Minimum.svg */,
-				96B37EA75AC74BD98AA3DBD5 /* iENC_RMinus.svg */,
-				DFA665BC5E38441595D3AAEE /* iENC_RPlus.svg */,
-				3DE83D7AD32745DC959F3238 /* iENC_Standard.svg */,
-				D6F9821CCDCA4ED08959CF9C /* iENC_UserStd.svg */,
-				977AAD3B9C364E5F9DFECB7F /* styles.xml */,
+			);
+			name = traditional;
+			sourceTree = "<group>";
+		};
+		A6D147C7242675830091EE3A /* navdata_pi */ = {
+			isa = PBXGroup;
+			children = (
+				A6D147C9242675D40091EE3A /* Header Files */,
+				A6D147C8242675C10091EE3A /* Source Files */,
+			);
+			name = navdata_pi;
+			sourceTree = "<group>";
+		};
+		A6D147C8242675C10091EE3A /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				A6D147D0242679790091EE3A /* navdata_pi.cpp */,
+				A650C11F245AF5690058E273 /* customgrid.cpp */,
+				A650C121245AF5810058E273 /* datadialogbase.cpp */,
+				A650C123245AF5970058E273 /* datatable.cpp */,
+				A6D147D424267A580091EE3A /* icons.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		A6D147C9242675D40091EE3A /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				A6D147CB242677B30091EE3A /* navdata_pi.h */,
+				A650C119245AF5040058E273 /* customgrid.h */,
+				A6D147CE242678AF0091EE3A /* icons.h */,
+				A650C11B245AF5250058E273 /* datadialogbase.h */,
+				A650C11D245AF5410058E273 /* datatable.h */,
+				A6D147CF242678D00091EE3A /* version.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		AD0516FA38BE4F9CA4E036B4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				11C6E8AF3BB74D069C69D2CF /* baro_history.h */,
+				74C16D8567654FFBB5942D12 /* clock.h */,
+				B0136843E4FA474FB53372EA /* compass.h */,
+				1CAD11D3BA4F4243BF9E9CBF /* dashboard_pi.h */,
+				EBEEE7A7491945DE901C9655 /* depth.h */,
+				22A2EAD3D67F473C96C5032D /* dial.h */,
+				A76B3E49CCE744DB8D84B73A /* from_ownship.h */,
+				A4941864FA6B450893361DFA /* gps.h */,
+				6040E343CA20418DA764BB18 /* icons.h */,
+				C2C57EC881754DAB83F8D15A /* iirfilter.h */,
+				D1626950848B4050AA9B97DF /* instrument.h */,
+				C872122197E947A79CA6791B /* LatLong.hpp */,
+				06D2BE17C5294AC893EFE52D /* RMB.hpp */,
+				694AF2EC82464AE690ABA2C4 /* Response.hpp */,
+				24489E5698AA4F1AB428879E /* SatInfo.h */,
+				1420286DDA0F428FBF129B4F /* Sentence.hpp */,
+				46F2D5D6EF8941E7AA497E0F /* dbt.hpp */,
+				C2ACEA133E334A8597DDE55C /* dpt.hpp */,
+				A96EE1E1F54F4DA2BF7D00C3 /* gga.hpp */,
+				38B05EB5B36A4C5EADE7D994 /* gll.hpp */,
+				8BFCB096654143ADABB75BEE /* gsv.hpp */,
+				534663AF4824493BA0A5D545 /* hdg.hpp */,
+				5B2FBDE7A60044D091D78BFB /* hdm.hpp */,
+				D40EB8AE69D842A1AAC17B2C /* hdt.hpp */,
+				C7F571AA07C84BD68896CED3 /* mda.hpp */,
+				64454BF4299042D3B16E59BF /* mta.hpp */,
+				7F659EC77A3344078C612DFD /* mtw.hpp */,
+				438810DE210C4930AC3FD9C6 /* mwd.hpp */,
+				AD7D0CF9B0744766B6A74D19 /* mwv.hpp */,
+				0B11172462FB4340BB74C1B6 /* nmea0183.hpp */,
+				EC11D67BD804466884B93A19 /* rsa.hpp */,
+				F20B14DF3494408BA5BED443 /* rte.hpp */,
+				325887E4E2684B6488A75B69 /* vhw.hpp */,
+				94C81EF33D624F5AAB11D231 /* vlw.hpp */,
+				666F864E952B42148F1994B3 /* vtg.hpp */,
+				D009AD9F6C8A479C8D4FAD8C /* vwr.hpp */,
+				F1DB8D83D29A48DEB138EC71 /* vwt.hpp */,
+				E148557F04324EF8A7626467 /* wpl.hpp */,
+				A752EBECE51A477AAFDC30D4 /* xdr.hpp */,
+				6CBB3093270E4C988094F1D3 /* zda.hpp */,
+				9E66C605FE2340D3A0F8A38C /* RMC.HPP */,
+				76E29355196E4DB6809CD4C0 /* rudder_angle.h */,
+				6DC0BCECB40A44C883441858 /* speedometer.h */,
+				3B481980BF354352BF8A34E1 /* wind.h */,
+				9670B660E0E443969DA71D00 /* wind_history.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		B4993FFDB35546B28BC38B80 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				52552EFF5156478EA880D121 /* Osenc.h */,
+				B5258F1125534F0F9E8D28BF /* SencManager.h */,
+				E8B069769EA842F0ABB8CEC8 /* TexFont.h */,
+				070239C7ECDF46DDA6FB304F /* cm93.h */,
+				74F475CC8A7B44339C7F5B58 /* mygeom.h */,
+				3DD8CB3AC43F47BAAF37151A /* s52plib.h */,
+				60195A417A9E4D23889435EE /* s52utils.h */,
+				7D8426E09CB6410B8179A5C6 /* s57RegistrarMgr.h */,
+				51BEDFF28FAC4823AA7371C5 /* s57chart.h */,
+				F953D0E289694A5F9A878A0D /* cpl_config.h */,
+				CABB9158E6C644ECBA4BF912 /* cpl_conv.h */,
+				D1BB37EFA3B44739B8732AE5 /* cpl_csv.h */,
+				F0E30D9BB377416F886A7422 /* cpl_error.h */,
+				A38BCA08A3E04D1EB38CC8FD /* cpl_list.h */,
+				70D7C344644948EA9CC8DE47 /* cpl_minixml.h */,
+				D2BD858F34B24350931BBE13 /* cpl_multiproc.h */,
+				7EA71931C1DF42D4A1791CD2 /* cpl_odbc.h */,
+				F32162683B50455BB7E8A61F /* cpl_port.h */,
+				ADF9110EA3BE41A987D4F1EC /* cpl_string.h */,
+				3474D58FE93C47DFBA8D425C /* cpl_vsi.h */,
+				C72AB277B4E44C06865E81D3 /* gdal.h */,
+				5B6244258D234ED0B9ABA90B /* gdal_frmts.h */,
+				E1FC8D82CB254E268576DB94 /* gdal_priv.h */,
+				E04965E24F4B4DC68D8A386E /* iso8211.h */,
+				DB1249AF24004432B286FB03 /* ogr_api.h */,
+				7A4BD3BB3B79466094F853FA /* ogr_attrind.h */,
+				53D0E8A53239468E9D23E019 /* ogr_core.h */,
+				64C1784B392F4B6DA1EFA162 /* ogr_feature.h */,
+				AF12FA5386814A009400E020 /* ogr_geometry.h */,
+				0B8D7E5F4B7D4FE48ECDFC2A /* ogr_p.h */,
+				832105AF31384CF887CD3E7F /* ogr_s57.h */,
+				B32BC9D26DE94E9BAA453E78 /* ogr_spatialref.h */,
+				262E879B77B64803958FB8FF /* ogrsf_frmts.h */,
+				76059EAAE38E4FF9B44DC43E /* s57.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		B938DE542E5C4C8592FECA39 /* findit_pi */ = {
+			isa = PBXGroup;
+			children = (
+				E30740720BC047AAB1187DF5 /* Header Files */,
+				A69EA2EB239EA3A4005F613A /* Source Files */,
+			);
+			name = findit_pi;
+			sourceTree = "<group>";
+		};
+		C034EBC13D57441FA844A9C9 /* wmm_pi */ = {
+			isa = PBXGroup;
+			children = (
+				C055A0B8094D45C8A1007FDD /* Header Files */,
+				8B58987CBC0C4FEFAB99ADB8 /* Source Files */,
+				E67E0622A5854349B4E65689 /* CMakeLists.txt */,
+			);
+			name = wmm_pi;
+			sourceTree = "<group>";
+		};
+		C055A0B8094D45C8A1007FDD /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				4483606E58CE46D09A497413 /* EGM9615.h */,
+				B30D753320C04957A1DCB281 /* GeomagnetismHeader.h */,
+				A10AA232D5354258B56C1E41 /* MagneticPlotMap.h */,
+				0BCD793DA94D46D192AD90F6 /* TexFont.h */,
+				FD5805FDED4046E789266651 /* WmmUIDialog.h */,
+				69FD8D6ABF0941D1A6DD8295 /* icons.h */,
+				448EE260FF7D449998291B84 /* wmm_pi.h */,
+				A69EA305239EB339005F613A /* version.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		C185E9A488F9470B8104AABF /* OpenCPN */ = {
+			isa = PBXGroup;
+			children = (
+				59D5DA44B6464BB8B2E9C069 /* Header Files */,
+				FB0236C6B692487B9D6F6B58 /* Source Files */,
+				3CF7B0184FB34E4ABBE5D69E /* Resources */,
+				A6A684BB262443CC0079039A /* sounds */,
+				A6A684BC262444CE0079039A /* gshhs */,
+				A6A684BD2624454B0079039A /* s57data */,
+				A6A684BE2624469F0079039A /* tcdata */,
+				A6A684BF262448B70079039A /* uidata */,
+				A6A684C02624510F0079039A /* journeyman */,
+				A6A684C1262451390079039A /* journeyman_flat */,
+				A6A684C22624528E0079039A /* markicons */,
+				A6A684C3262453550079039A /* MUI_flat */,
+				A6A684C426245B890079039A /* traditional */,
+				38B2EB50B6EB432FB08C3DDA /* CMakeLists.txt */,
+				03FF77834E4E4C6AB58C10B6 /* MainMenu.xib */,
+				8D48F3C38C124373B5145A27 /* opencpn.icns */,
+				A5E065B842E24F2B868B0D3B /* authors.html */,
+				E594DF8583A14008BA669387 /* help_web.html */,
+				5156F6061DBA43AC9C429F38 /* license.html */,
+				A66AC349239D09730078858A /* hilfe.html */,
 			);
 			name = OpenCPN;
 			sourceTree = "<group>";
@@ -6464,7 +6555,6 @@
 				3741FC8B6A10425BB837B67F /* chartcatalog.h */,
 				1B5184E64C8C463C8EBFB1BC /* chartdldr_pi.h */,
 				06A8BED4C94844EAAC396A51 /* chartdldrgui.h */,
-				A1D17143DEA54D89A9A43A79 /* checkedlistctrl.h */,
 				80B9C459288843129421C162 /* icons.h */,
 				F600BD4BE7EA4306B754F975 /* _7z.h */,
 				5B95BEE336C24B69825C38EE /* allocator.h */,
@@ -6773,7 +6863,6 @@
 				C363F7F3964B49D0AA49D030 /* chartcatalog.cpp */,
 				1AFB0F424235414B970DE7DC /* chartdldr_pi.cpp */,
 				A748DDB2BB484DFDA2C28A98 /* chartdldrgui.cpp */,
-				E60367CBA0D6475BA4F2DDAA /* checkedlistctrl.cpp */,
 				557CF951583B45929FF45687 /* icons.cpp */,
 				DA7E61D9ED9F42B7862B6F99 /* tinyxml.cpp */,
 				894FDE72A0EC4F17BCA641F9 /* tinyxmlerror.cpp */,
@@ -7816,7 +7905,7 @@
 		};
 		A612227123B8F77100C63626 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -8585,7 +8674,6 @@
 				40DFA495FE8F444B9A2A5DD0 /* chartcatalog.cpp in Sources */,
 				9770C85AA9A2428E95191444 /* chartdldr_pi.cpp in Sources */,
 				2E040CEB2C674973BECAD44B /* chartdldrgui.cpp in Sources */,
-				29721F5553C4419E8A6DB5DD /* checkedlistctrl.cpp in Sources */,
 				50A8F3EE02354B1FA232DBD6 /* icons.cpp in Sources */,
 				ECD44470B0674CBCA7B8422A /* tinyxml.cpp in Sources */,
 				1E3B2D6DA2F54A6A982A7E0B /* tinyxmlerror.cpp in Sources */,
