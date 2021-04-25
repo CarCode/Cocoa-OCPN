@@ -2057,7 +2057,7 @@ void ocpnToolBarSimple::OnMouseEvent( wxMouseEvent & event )
             
         }
         
-        if (event.Dragging()) {
+        if (!g_btouch && event.Dragging()) {
             s_drag = true;
             wxPoint pos_old = GetScreenPosition();
             wxPoint pos_new = pos_old;
@@ -2244,7 +2244,7 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
                 } else {
                     bmp = wxNullBitmap;
                 }
-            
+
                 if( bmp.IsNull() ) {     // Tool icon not found
                     if( tool->rollover ) {
                         bmp = m_style->BuildPluginIcon( tool->pluginRolloverIcon, toggleFlag );
@@ -2277,7 +2277,7 @@ void ocpnToolBarSimple::DrawTool( wxDC& dc, wxToolBarToolBase *toolBase )
                         }
                     }
                  }
-                
+
                 else{
                     if(!tool->bitmapOK){
                         if(m_style->NativeToolIconExists(tool->GetToolname())){

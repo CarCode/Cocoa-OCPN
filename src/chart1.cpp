@@ -1969,6 +1969,8 @@ bool MyApp::OnInit()
         wxString("Version ") +  VERSION_FULL + " Build " + VERSION_DATE;
     g_bUpgradeInProcess = (vs != g_config_version_string);
 
+    g_Platform->SetUpgradeOptions(vs, g_config_version_string);
+
     //  log deferred log restart message, if it exists.
 #ifdef __WXOSX__
     if( !g_Platform->GetLargeLogMessage().IsEmpty() )
@@ -2023,24 +2025,13 @@ bool MyApp::OnInit()
         g_memCacheLimit = (int) ( g_mem_total * 0.5 );
     g_memCacheLimit = wxMin(g_memCacheLimit, 1024 * 1024); // math in kBytes, Max is 1 GB
 #else
-    if( 0 ==  g_nCacheLimit && 0 == g_memCacheLimit ){
-        g_memCacheLimit = (int) ( (g_mem_total - g_mem_initial) * 0.5 );
-        g_memCacheLimit = wxMin(g_memCacheLimit, 1024 * 1024); // Max is 1 GB if unspecified
-#ifdef __WXMAC__
-        if( g_mem_total > 8192 * 1024) {
-            g_memCacheLimit = 1024 * 1024;
-        } else if( g_mem_total > 4096 * 1024) {
-            g_memCacheLimit = 600 * 1024;
-        } else {
-            g_memCacheLimit = 400 * 1024;
-        }
-#endif
-    }
-#endif
-    if( 0 ==  g_nCacheLimit)
+    // All other platforms will use the nCacheLimit policy
+    // sinc on linux it is impossible to accurately measure the application memory footprint without
+    // expensive methods such as malloc/free tracking, and such
+
+    g_memCacheLimit = 0;
+    if( 0 ==  g_nCacheLimit)                            // allow config file override
         g_nCacheLimit = CACHE_N_LIMIT_DEFAULT;
-#ifdef __OCPN__ANDROID__
-    g_memCacheLimit = 100 * 1024;
 #endif
 
 //      Establish location and name of chart database
@@ -7235,6 +7226,8 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
             wxString msg;
             msg.Printf( _T("   ***GPS Watchdog timeout at Lat:%g   Lon: %g"), gLat, gLon );
             wxLogMessage(msg);
+            // There is no valid fix, we need to invalidate the fix time
+            m_fixtime = -1;
         }
         gSog = NAN;
         gCog = NAN;

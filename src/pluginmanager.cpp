@@ -777,11 +777,12 @@ bool PlugInManager::DeactivatePlugIn(PlugInContainer *pic)
 
     if(pic)
     {
-        wxString msg(_T("PlugInManager: Deactivating PlugIn: "));
-        msg += pic->m_plugin_file;
-        wxLogMessage(msg);
-
         if(pic->m_bInitState){
+
+            wxString msg(_T("PlugInManager: Deactivating PlugIn: "));
+            msg += pic->m_plugin_file;
+            wxLogMessage(msg);
+
             // Unload chart cache if this plugin is responsible for any charts
             if((pic->m_cap_flag & INSTALLS_PLUGIN_CHART) || (pic->m_cap_flag & INSTALLS_PLUGIN_CHART_GL)){
                 ChartData->PurgeCachePlugins();
@@ -6861,7 +6862,31 @@ std::unique_ptr<PlugIn_Route> GetRoute_Plugin( const wxString& GUID)
 std::unique_ptr<PlugIn_Track> GetTrack_Plugin( const wxString& GUID)
 {
    std::unique_ptr<PlugIn_Track> t;
-   return t;
+    //  Find the Track
+    Track *pTrack = g_pRouteMan->FindTrackByGUID( GUID );
+    if(!pTrack)
+        return t;
+
+    std::unique_ptr<PlugIn_Track>tk = std::unique_ptr<PlugIn_Track>(new PlugIn_Track);
+    PlugIn_Track *dst_track = tk.get();
+    dst_track->m_NameString = pTrack->GetName();
+    dst_track->m_StartString = pTrack->m_TrackStartString;
+    dst_track->m_EndString = pTrack->m_TrackEndString;
+    dst_track->m_GUID = pTrack->m_GUID;
+
+    for(int i = 0; i < pTrack->GetnPoints(); i++){
+        TrackPoint *ptp = pTrack->GetPoint( i );
+
+        PlugIn_Waypoint *dst_wp = new PlugIn_Waypoint();
+
+        dst_wp->m_lat = ptp->m_lat;
+        dst_wp->m_lon = ptp->m_lon;
+        dst_wp->m_CreateTime = ptp->GetCreateTime(); // not const
+
+        dst_track->pWaypointList->Append( dst_wp );
+    }
+
+   return tk;
 }
 
 wxWindow* PluginGetFocusCanvas()

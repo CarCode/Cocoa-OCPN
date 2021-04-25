@@ -1,4 +1,4 @@
-/******************************************************************************
+/* ***************************************************************************
  *
  * Project:  S-57 Translator
  * Purpose:  Implements S57Reader class.
@@ -24,10 +24,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
- ******************************************************************************
- *
- * *
- */
+ ******************************************************************************/
 
 #include <assert.h>
 #include "s57.h"
@@ -36,9 +33,9 @@
 #include "cpl_string.h"
 #include "ogr_s57.h"
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                             S57Reader()                              */
-/************************************************************************/
+/* ***********************************************************************/
 
 S57Reader::S57Reader( const char * pszFilename )
 
@@ -72,14 +69,14 @@ S57Reader::S57Reader( const char * pszFilename )
 
     bMissingWarningIssued = FALSE;
     bAttrWarningIssued = FALSE;
-    
+
     Nall = 0;
     Aall = 0;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                             ~S57Reader()                             */
-/************************************************************************/
+/* ***********************************************************************/
 
 S57Reader::~S57Reader()
 
@@ -92,9 +89,9 @@ S57Reader::~S57Reader()
     CPLFree( papoFDefnList );
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                                Open()                                */
-/************************************************************************/
+/* ***********************************************************************/
 
 int S57Reader::Open( int bTestOpen )
 
@@ -145,9 +142,9 @@ int S57Reader::Open( int bTestOpen )
     return TRUE;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                               Close()                                */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::Close()
 
@@ -174,9 +171,9 @@ void S57Reader::Close()
     }
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                       ClearPendingMultiPoint()                       */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::ClearPendingMultiPoint()
 
@@ -188,9 +185,9 @@ void S57Reader::ClearPendingMultiPoint()
     }
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                       NextPendingMultiPoint()                        */
-/************************************************************************/
+/* ***********************************************************************/
 
 OGRFeature *S57Reader::NextPendingMultiPoint()
 
@@ -222,9 +219,9 @@ OGRFeature *S57Reader::NextPendingMultiPoint()
     return poPoint;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                             SetOptions()                             */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::SetOptions( char ** papszOptionsIn )
 
@@ -281,9 +278,9 @@ void S57Reader::SetOptions( char ** papszOptionsIn )
         nOptionFlags &= ~S57M_RETURN_LINKAGES;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                           SetClassBased()                            */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::SetClassBased( S57ClassRegistrar * poReg )
 
@@ -291,9 +288,9 @@ void S57Reader::SetClassBased( S57ClassRegistrar * poReg )
     poRegistrar = poReg;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                               Rewind()                               */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::Rewind()
 
@@ -306,12 +303,12 @@ void S57Reader::Rewind()
     nNextVFIndex = 0;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                               Ingest()                               */
 /*                                                                      */
 /*      Read all the records into memory, adding to the appropriate     */
 /*      indexes.                                                        */
-/************************************************************************/
+/* ***********************************************************************/
 
 int S57Reader::Ingest(CallBackFunction pcallback)
 {
@@ -438,9 +435,9 @@ int S57Reader::Ingest(CallBackFunction pcallback)
     return update_return;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                           SetNextFEIndex()                           */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::SetNextFEIndex( int nNewIndex, int nRCNM )
 
@@ -462,9 +459,9 @@ void S57Reader::SetNextFEIndex( int nNewIndex, int nRCNM )
     }
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                           GetNextFEIndex()                           */
-/************************************************************************/
+/* ***********************************************************************/
 
 int S57Reader::GetNextFEIndex( int nRCNM )
 
@@ -481,9 +478,9 @@ int S57Reader::GetNextFEIndex( int nRCNM )
         return nNextFEIndex;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                          ReadNextFeature()                           */
-/************************************************************************/
+/* ***********************************************************************/
 
 OGRFeature * S57Reader::ReadNextFeature( OGRFeatureDefn * poTarget )
 
@@ -600,11 +597,11 @@ OGRFeature * S57Reader::ReadNextFeature( OGRFeatureDefn * poTarget )
 }
 
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                            ReadFeature()                             */
 /*                                                                      */
 /*      Read the features who's id is provided.                         */
-/************************************************************************/
+/* ***********************************************************************/
 /*
 OGRFeature *S57Reader::ReadFeature( int nFeatureId, OGRFeatureDefn *poTarget )
 
@@ -624,11 +621,11 @@ OGRFeature *S57Reader::ReadFeature( int nFeatureId, OGRFeatureDefn *poTarget )
 }
 
 */
-/************************************************************************/
+/* ***********************************************************************/
 /*                            ReadFeature()                             */
 /*                                                                      */
 /*      Read the features who's id is provided.                         */
-/************************************************************************/
+/* ***********************************************************************/
 
 OGRFeature *S57Reader::ReadFeature( int nFeatureId, OGRFeatureDefn *poTarget )
 
@@ -671,11 +668,11 @@ OGRFeature *S57Reader::ReadFeature( int nFeatureId, OGRFeatureDefn *poTarget )
 }
 
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                          AssembleFeature()                           */
 /*                                                                      */
 /*      Assemble an OGR feature based on a feature record.              */
-/************************************************************************/
+/* ***********************************************************************/
 
 OGRFeature *S57Reader::AssembleFeature( DDFRecord * poRecord,
                                         OGRFeatureDefn * poTarget )
@@ -784,9 +781,9 @@ OGRFeature *S57Reader::AssembleFeature( DDFRecord * poRecord,
     return poFeature;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                     ApplyObjectClassAttributes()                     */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::ApplyObjectClassAttributes( DDFRecord * poRecord,
                                             OGRFeature * poFeature )
@@ -856,7 +853,7 @@ void S57Reader::ApplyObjectClassAttributes( DDFRecord * poRecord,
             poFeature->UnsetField( iField );
             continue;
         }
-        
+
         poFldDefn = poFeature->GetDefnRef()->GetFieldDefn( iField );
         if( poFldDefn->GetType() == OFTInteger
             || poFldDefn->GetType() == OFTReal )
@@ -919,6 +916,10 @@ void S57Reader::ApplyObjectClassAttributes( DDFRecord * poRecord,
             continue;
         }
 
+        // Guard against undefined fields
+        if( poFeature->GetFieldIndex(pszAcronym) < 0)
+            continue;
+
         const char *pszValue = poRecord->GetStringSubfield("NATF",0,"ATVL",iAttr);
         if( pszValue != NULL )
         {
@@ -965,9 +966,9 @@ void S57Reader::ApplyObjectClassAttributes( DDFRecord * poRecord,
     }
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                        generatelnamandrefs()                         */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::GenerateLNAMAndRefs( DDFRecord * poRecord,
                                      OGRFeature * poFeature )
@@ -1030,9 +1031,9 @@ void S57Reader::GenerateLNAMAndRefs( DDFRecord * poRecord,
     CPLFree( panRIND );
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                       GenerateFSPTAttributes()                       */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::GenerateFSPTAttributes( DDFRecord * poRecord,
                                         OGRFeature * poFeature )
@@ -1091,12 +1092,12 @@ void S57Reader::GenerateFSPTAttributes( DDFRecord * poRecord,
     CPLFree( panMASK );
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                             ReadVector()                             */
 /*                                                                      */
 /*      Read a vector primitive objects based on the type (RCNM_)       */
 /*      and index within the related index.                             */
-/************************************************************************/
+/* ***********************************************************************/
 
 OGRFeature *S57Reader::ReadVector( int nFeatureId, int nRCNM )
 
@@ -1331,11 +1332,11 @@ OGRFeature *S57Reader::ReadVector( int nFeatureId, int nRCNM )
     return poFeature;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                             FetchPoint()                             */
 /*                                                                      */
 /*      Fetch the location and quality of a spatial point object.       */
-/************************************************************************/
+/* ***********************************************************************/
 
 int S57Reader::FetchPoint( int nRCNM, int nRCID,
                            double * pdfX, double * pdfY, double * pdfZ, int * pnquality )
@@ -1396,9 +1397,9 @@ int S57Reader::FetchPoint( int nRCNM, int nRCID,
     return TRUE;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                       AssemblePointGeometry()                        */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::AssemblePointGeometry( DDFRecord * poFRecord,
                                        OGRFeature * poFeature )
@@ -1441,9 +1442,9 @@ void S57Reader::AssemblePointGeometry( DDFRecord * poFRecord,
     pp->setnQual(nquality);
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                      AssembleSoundingGeometry()                      */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::AssembleSoundingGeometry( DDFRecord * poFRecord,
                                           OGRFeature * poFeature )
@@ -1526,9 +1527,9 @@ void S57Reader::AssembleSoundingGeometry( DDFRecord * poFRecord,
     poFeature->SetGeometryDirectly( poMP );
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                        AssembleLineGeometry()                        */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::AssembleLineGeometry( DDFRecord * poFRecord,
                                       OGRFeature * poFeature )
@@ -1608,7 +1609,7 @@ void S57Reader::AssembleLineGeometry( DDFRecord * poFRecord,
                       poFRecord->GetIntSubfield( "FRID", 0, "RCID", 0 ) );
             continue;
         }
-        
+
         if(poField->GetRepeatCount() > 1)
         {
               nVC_RCID0 = ParseName( poField, 0 );
@@ -1745,9 +1746,9 @@ void S57Reader::AssembleLineGeometry( DDFRecord * poFRecord,
         delete poLine;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                        AssembleAreaGeometry()                        */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::AssembleAreaGeometry( DDFRecord * poFRecord,
                                          OGRFeature * poFeature )
@@ -1937,13 +1938,13 @@ void S57Reader::AssembleAreaGeometry( DDFRecord * poFRecord,
         poFeature->SetGeometryDirectly( poPolygon );
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                             FindFDefn()                              */
 /*                                                                      */
 /*      Find the OGRFeatureDefn corresponding to the passed feature     */
 /*      record.  It will search based on geometry class, or object      */
 /*      class depending on the bClassBased setting.                     */
-/************************************************************************/
+/* ***********************************************************************/
 
 OGRFeatureDefn * S57Reader::FindFDefn( DDFRecord * poRecord )
 
@@ -1995,12 +1996,12 @@ OGRFeatureDefn * S57Reader::FindFDefn( DDFRecord * poRecord )
     return NULL;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                             ParseName()                              */
 /*                                                                      */
 /*      Pull the RCNM and RCID values from a NAME field.  The RCID      */
 /*      is returned and the RCNM can be gotten via the pnRCNM argument. */
-/************************************************************************/
+/* ***********************************************************************/
 
 int S57Reader::ParseName( DDFField * poField, int nIndex, int * pnRCNM )
 
@@ -2021,9 +2022,9 @@ int S57Reader::ParseName( DDFField * poField, int nIndex, int * pnRCNM )
          + pabyData[4] * 256 * 256 * 256;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                           AddFeatureDefn()                           */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57Reader::AddFeatureDefn( OGRFeatureDefn * poFDefn )
 
@@ -2035,12 +2036,12 @@ void S57Reader::AddFeatureDefn( OGRFeatureDefn * poFDefn )
     papoFDefnList[nFDefnCount-1] = poFDefn;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                          CollectClassList()                          */
 /*                                                                      */
 /*      Establish the list of classes (unique OBJL values) that         */
 /*      occur in this dataset.                                          */
-/************************************************************************/
+/* ***********************************************************************/
 
 int S57Reader::CollectClassList(int *panClassCount, int nMaxClass )
 
@@ -2065,12 +2066,12 @@ int S57Reader::CollectClassList(int *panClassCount, int nMaxClass )
     return bSuccess;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                         ApplyRecordUpdate()                          */
 /*                                                                      */
 /*      Update one target record based on an S-57 update record         */
 /*      (RUIN=3).                                                       */
-/************************************************************************/
+/* ***********************************************************************/
 
 int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
 
@@ -2303,7 +2304,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
                 poSrcSG2D = poUpdate->FindField("SG3D");
             }
         }
-        
+
         if(poDstSG2D == NULL && nCCUI == 2){
             // Trying to delete a coordinate that does not exist...
             // Theoretically, this is an error.
@@ -2317,7 +2318,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
             //CPLAssert( FALSE );
             return FALSE;
         }
-        
+
         if (poDstSG2D == NULL)
         {
             poTarget->AddField(poTarget->GetModule()->FindFieldDefn("SG2D"));
@@ -2326,11 +2327,11 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
                 //CPLAssert( FALSE );
                 return FALSE;
             }
-            
+
             // Delete null default data that was created
             poTarget->SetFieldRaw( poDstSG2D, 0, NULL, 0 );
         }
-        
+
         nCoordSize = poDstSG2D->GetFieldDefn()->GetFixedWidth();
 
         if( nCCUI == 1 ) /* INSERT */
@@ -2406,12 +2407,12 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
         {
             //  This probably means that the update applies to an attribute that doesn't (yet) exist
             //  To fix, we need to add an attribute, then update it.
-            
+
             DDFFieldDefn *poATTF = poTarget->GetModule()->FindFieldDefn( "ATTF" );
             poTarget->AddField(poATTF);
             poDstATTF = poTarget->FindField( "ATTF" );
             b_newField = true;
-            
+
         }
 
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
@@ -2441,7 +2442,7 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
                     b_newField = false;
                 }
             }
-                
+
             pszRawData = poSrcATTF->GetInstanceData( iAtt, &nDataBytes );
             poTarget->SetFieldRaw( poDstATTF, iTAtt, pszRawData, nDataBytes );
         }
@@ -2458,33 +2459,33 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
 //        if(up_FIDN == 1103712044 /*1225530334*/){
 //            poTarget->Dump(stdout);
 //        }
-        
+
         if(NULL == poDstATTF)
         {
             //  This probably means that the update applies to an attribute that doesn't (yet) exist
             //  To fix, we need to add an attribute, then update it.
-            
+
             DDFFieldDefn *poNATF = poTarget->GetModule()->FindFieldDefn( "NATF" );
             poTarget->AddField(poNATF);
             poDstATTF = poTarget->FindField( "NATF" );
             b_newField = true;
-            
+
 //            poTarget->Dump(stdout);
-            
+
 //            CPLDebug( "S57","Could not find target ATTF field for attribute update");
 //           return FALSE;
         }
-        
+
         int     nRepeatCount = poSrcATTF->GetRepeatCount();
-        
+
         poSrcATVLDefn = poSrcATTF->GetFieldDefn()->FindSubfieldDefn( "ATVL" );
-        
+
         for( int iAtt = 0; iAtt < nRepeatCount; iAtt++ )
         {
             int nATTL = poUpdate->GetIntSubfield( "NATF", 0, "ATTL", iAtt );
             int iTAtt, nDataBytes;
             const char *pszRawData;
-            
+
             for( iTAtt = poDstATTF->GetRepeatCount()-1; iTAtt >= 0; iTAtt-- )
             {
                 if( poTarget->GetIntSubfield( "NATF", 0, "ATTL", iTAtt ) == nATTL )
@@ -2501,27 +2502,27 @@ int S57Reader::ApplyRecordUpdate( DDFRecord *poTarget, DDFRecord *poUpdate )
                     b_newField = false;
                 }
             }
-            
-                
+
+
             pszRawData = poSrcATTF->GetInstanceData( iAtt, &nDataBytes );
-            
+
 //            poTarget->Dump(stdout);
             poTarget->SetFieldRaw( poDstATTF, iTAtt, pszRawData, nDataBytes ); ///dsr
 //            poTarget->Dump(stdout);
-            
+
         }
     }
-    
+
     return TRUE;
 }
 
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                            ApplyUpdates()                            */
 /*                                                                      */
 /*      Read records from an update file, and apply them to the         */
 /*      currently loaded index of features.                             */
-/************************************************************************/
+/* ***********************************************************************/
 
 int S57Reader::ApplyUpdates( DDFModule *poUpdateModule, int iUpdate )
 
@@ -2665,12 +2666,12 @@ int S57Reader::ApplyUpdates( DDFModule *poUpdateModule, int iUpdate )
     return ret_code;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                        FindAndApplyUpdates()                         */
 /*                                                                      */
 /*      Find all update files that would appear to apply to this        */
 /*      base file.                                                      */
-/************************************************************************/
+/* ***********************************************************************/
 
 int S57Reader::FindAndApplyUpdates( const char * pszPath )
 
@@ -2719,12 +2720,12 @@ int S57Reader::FindAndApplyUpdates( const char * pszPath )
     return ret_code;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                             GetExtent()                              */
 /*                                                                      */
 /*      Scan all the cached records collecting spatial bounds as        */
 /*      efficiently as possible for this transfer.                      */
-/************************************************************************/
+/* ***********************************************************************/
 
 OGRErr S57Reader::GetExtent( OGREnvelope *psExtent, int bForce )
 

@@ -70,8 +70,8 @@ void DashboardInstrument_Clock::SetData( int, double, wxString )
 
 void DashboardInstrument_Clock::SetUtcTime( wxDateTime data )
 {
-    if (data.IsValid())
-        m_data = GetDisplayTime( data );
+    m_data = GetDisplayTime( data );
+    Refresh();
 }
 
 wxString DashboardInstrument_Clock::GetDisplayTime( wxDateTime UTCtime )
@@ -377,6 +377,18 @@ Inputs:
 	N = N1 - (N2 * N3) + day - 30
 */
       int n = m_dt.GetDayOfYear();
+
+/* Test:
+//    n = 81;   22. März 2021
+    int n1 = floor(275 * 3 / 9);
+    int n2 = floor((3 + 9) / 12);
+    int n3 = (1 + floor((2021 - 4 * floor(2021 / 4) + 2) / 3));
+//    n = n1 - (n2 * n3) + 23 - 30;
+    n = m_dt.GetDayOfYear();
+    wxChar mess = wxMessageBox(wxString::Format(_("Jahrestag: %i"), n));
+//    return;
+ */
+
 /*
 2. convert the longitude to hour value and calculate an approximate time
 
@@ -388,9 +400,9 @@ Inputs:
 	  t = N + ((18 - lngHour) / 24)
 */
       double lngHour = longit / 15;
-      double tris = n + ((6 - lngHour) / 24);
-      double tset = n + ((18 - lngHour) / 24);
-/*
+      double tris = n + ((6 - lngHour) / 24);  // Sonnenaufgang ist richtig
+      double tset = n + ((18 - lngHour) / 24); // Fehler 4 Stunden zu wenig, warum ???
+/*              Siehe Zeile 508, wenn ein Breitenproblem warum dann nur bei Sonnenuntergang?
 
 3. calculate the Sun's mean anomaly
 
@@ -504,7 +516,9 @@ Inputs:
       double utset = tset - lngHour;
       if (utset > 24) utset -= 24;
       if (utset <0) utset += 24;
-
+// #ifdef __WXOSX__
+//    utset = utset + 4;
+// #endif
       sunrise = convHrmn(utris);
       if (neverrises) sunrise.SetYear(999);
       sunset = convHrmn(utset);

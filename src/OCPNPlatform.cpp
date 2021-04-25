@@ -146,6 +146,12 @@ extern bool                      g_bDrawAISSize;
 extern bool                      g_bDrawAISRealtime;
 extern double                    g_AIS_RealtPred_Kts;
 extern bool                      g_bShowAISName;
+extern bool                      g_bAIS_GCPA_Alert_Audio;
+extern bool                      g_bAIS_SART_Alert_Audio;
+extern bool                      g_bAIS_DSC_Alert_Audio;
+extern bool                      g_bAIS_CPA_Alert_Audio;
+extern bool                      g_bCPAWarn;
+extern bool                      g_bAIS_CPA_Alert;
 
 extern int                       gps_watchdog_timeout_ticks;
 extern wxString                  *pInit_Chart_Dir;
@@ -1187,6 +1193,110 @@ void OCPNPlatform::SetDefaultOptions( void )
 #endif /* SYSTEM_SOUND_CMD */
 
 }
+
+//      Setup global options on upgrade detected
+//      The global config object (pConfig) has already been loaded, so updates here override values set by config
+//      Direct updates to config for next boot are also allowed
+
+void OCPNPlatform::SetUpgradeOptions( wxString vNew, wxString vOld )
+{
+#ifdef __OCPN__ANDROID__
+
+    qDebug() << "Upgrade check" << "from: " << vOld.mb_str() << " to: " << vNew.mb_str();
+
+    if(androidGetVersionCode() > g_AndroidVersionCode ){            // upgrade
+        qDebug() << "Upgrade detected" << "from VC: " << g_AndroidVersionCode << " to VC: " << androidGetVersionCode();
+
+        // Set some S52/S57 options
+        if(pConfig){
+            pConfig->SetPath( _T ( "/Settings/GlobalState" ) );
+            pConfig->Write( _T ( "bShowS57Text" ), true );
+        }
+
+        g_ChartNotRenderScaleFactor = 2.0;
+        g_n_ownship_min_mm = 8;
+        g_toolbarConfig = _T("X.....XX.......XX.XXXXXXXXXXX");
+
+        //  Experience indicates a slightly larger default font size is better
+        pConfig->DeleteGroup( _T ( "/Settings/QTFonts" ));
+        g_default_font_size = 20;
+        g_default_font_facename = _T("Roboto");
+
+        FontMgr::Get().Shutdown();      // Restart the font manager
+
+        // Reshow the zoom buttons
+        g_bShowMuiZoomButtons = true;
+
+        // Clear the default chart storage location
+        // Will get set to e.g. "/storage/emulated/0" later
+        pInit_Chart_Dir->Clear();
+
+        pConfig->SetPath ( _T ( "/Settings/WMM" ) );
+        pConfig->Write ( _T ( "ShowIcon" ), true );
+        pConfig->Write ( _T ( "ShowLiveIcon" ), true );
+    }
+
+    // Set track default color to magenta
+    g_colourTrackLineColour.Set(197,69,195);
+
+    // This is ugly hack
+    // TODO
+    pConfig->SetPath( _T ( "/PlugIns/liboesenc_pi.so" ) );
+    pConfig->Write( _T ( "bEnabled" ), true );
+
+
+#endif
+
+    // Check for upgrade....
+    if( !vOld.IsSameAs(vNew) ){            // upgrade
+
+        // Verify some default directories, create if necessary
+
+        // UserIcons
+        wxString UserIconPath = GetPrivateDataDir();
+        wxChar sep = wxFileName::GetPathSeparator();
+        if( UserIconPath.Last() != sep ) UserIconPath.Append( sep );
+        UserIconPath.Append( _T("UserIcons") );
+
+        if(!::wxDirExists(UserIconPath)){
+            ::wxMkdir( UserIconPath );
+        }
+
+        // layers
+        wxString LayersPath = GetPrivateDataDir();
+        if( LayersPath.Last() != sep ) LayersPath.Append( sep );
+        LayersPath.Append( _T("layers") );
+
+        if(!::wxDirExists(LayersPath)){
+            ::wxMkdir( LayersPath );
+        }
+
+        // Force a generally useable sound command, overriding any previous user's selection
+        //  that may not be available on new build.
+#ifdef SYSTEM_SOUND_CMD
+        wxString g_CmdSoundString = _T( "SYSTEM_SOUND_CMD" );
+        pConfig->SetPath( _T ( "/Settings" ) );
+        pConfig->Write( _T( "CmdSoundString" ), g_CmdSoundString );
+#endif /* SYSTEM_SOUND_CMD */
+
+        // Force AIS specific sound effects ON, leaving the master control (g_bAIS_CPA_Alert_Audio) as configured
+        g_bAIS_GCPA_Alert_Audio = true;
+        g_bAIS_SART_Alert_Audio = true;
+        g_bAIS_DSC_Alert_Audio = true;
+    }
+
+}
+
+
+//int OCPNPlatform::platformApplyPrivateSettingsString( wxString settings, ArrayOfCDI *pDirArray){
+
+//    int ret_val = 0;
+#ifdef __OCPN__ANDROID__
+//    ret_val = androidApplySettingsString( settings, pDirArray);
+#endif
+
+//    return ret_val;
+//}
 
 
 void OCPNPlatform::applyExpertMode(bool mode)
