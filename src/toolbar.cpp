@@ -63,6 +63,8 @@ extern bool                       g_bmasterToolbarFull;
 extern bool                       g_useMUI;
 extern wxString                   g_toolbarConfig;
 extern double                     g_plus_minus_zoom_factor;
+extern int                        g_maintoolbar_x;
+extern int                        g_maintoolbar_y;
 
 class ocpnToolBarTool: public wxToolBarToolBase {
 public:
@@ -483,7 +485,26 @@ void ocpnFloatingToolbarDialog::SetGeometry(bool bAvoid, wxRect rectAvoid)
     }
  }
 
-void ocpnFloatingToolbarDialog::RePosition()
+void ocpnFloatingToolbarDialog::GetFrameRelativePosition( int* x, int *y)
+{
+    wxPoint parentFramePos = m_pparent->GetPosition();
+    int myPosx, myPosy;
+    GetPosition(&myPosx, &myPosy);
+
+    if(x)
+        *x = myPosx - parentFramePos.x;
+    if(y)
+        *y = myPosy - parentFramePos.y;
+}
+
+void ocpnFloatingToolbarDialog::RestoreRelativePosition( int x, int y )
+{
+    wxPoint parentFramePos = m_pparent->GetPosition();
+    wxPoint screenPos = wxPoint(parentFramePos.x + x, parentFramePos.y + y);
+    Move(wxPoint(screenPos));
+}
+
+void ocpnFloatingToolbarDialog::SetDefaultPosition()
 {
     if(m_block) return;
 
