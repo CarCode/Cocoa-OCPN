@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  * $Id: depth.h, v1.0 2010/08/30 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -6,7 +6,7 @@
  * Author:   Jean-Eudes Onfray
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #ifndef __DEPTH_H__
 #define __DEPTH_H__
@@ -48,26 +47,26 @@
 
 class DashboardInstrument_Depth: public DashboardInstrument
 {
-      public:
-            DashboardInstrument_Depth( wxWindow *parent, wxWindowID id, wxString title);
+public:
+    DashboardInstrument_Depth( wxWindow *parent, wxWindowID id, wxString title);
 
-            ~DashboardInstrument_Depth(void){}
+    ~DashboardInstrument_Depth(void){}
 
-            wxSize GetSize( int orient, wxSize hint );
-            void SetData(int, double, wxString);
+    wxSize GetSize( int orient, wxSize hint );
+    void SetData(DASH_CAP, double, wxString);
 
-      private:
+private:
 
-      protected:
-            double m_ArrayDepth[DEPTH_RECORD_COUNT];
-            double m_MaxDepth;
-            double m_Depth;
-            wxString m_DepthUnit;
-            wxString m_Temp;
+protected:
+    double m_ArrayDepth[DEPTH_RECORD_COUNT];
+    double m_MaxDepth;
+    double m_Depth;
+    wxString m_DepthUnit;
+    wxString m_Temp;
 
-            void Draw(wxGCDC* dc);
-            void DrawBackground(wxGCDC* dc);
-            void DrawForeground(wxGCDC* dc);
+    void Draw(wxGCDC* dc);
+    void DrawBackground(wxGCDC* dc);
+    void DrawForeground(wxGCDC* dc);
 };
 
 #endif // __DEPTH_H__

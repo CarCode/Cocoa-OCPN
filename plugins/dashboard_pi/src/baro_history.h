@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  * $Id: baro_history.h, v1.0 2014/02/10 tom-r Exp $
  *
  * Project:  OpenCPN
@@ -6,7 +6,7 @@
  * Author:   stedy
  * Based on code from  Thomas Rauch
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #ifndef __BARO_HISTORY_H__
 #define __BARO_HISTORY_H__
@@ -51,60 +50,58 @@
 
 class DashboardInstrument_BaroHistory: public DashboardInstrument
 {
-      public:
-            DashboardInstrument_BaroHistory( wxWindow *parent, wxWindowID id, wxString title);
+public:
+    DashboardInstrument_BaroHistory( wxWindow *parent, wxWindowID id, wxString title);
 
-            ~DashboardInstrument_BaroHistory(void){}
+    ~DashboardInstrument_BaroHistory(void){}
 
-            void SetData(int, double, wxString);
-   wxSize GetSize( int orient, wxSize hint );
+    void SetData(DASH_CAP, double, wxString);
+    wxSize GetSize( int orient, wxSize hint );
 
 
-      private:
+private:
     int m_soloInPane ;
     int    m_SpdRecCnt, m_DirRecCnt, m_SpdStartVal,m_DirStartVal;
     int m_isNULL;
     int m_WindDirShift;
 
-      protected:
-      double alpha;
-            double m_ArrayBaroHistory[BARO_RECORD_COUNT];
-            double m_ArrayPressHistory[BARO_RECORD_COUNT];
-            double m_ExpSmoothArrayPressure[BARO_RECORD_COUNT];
+protected:
+    double alpha;
+    double m_ArrayBaroHistory[BARO_RECORD_COUNT];
+    double m_ArrayPressHistory[BARO_RECORD_COUNT];
+    double m_ExpSmoothArrayPressure[BARO_RECORD_COUNT];
 
-            wxDateTime::Tm m_ArrayRecTime[BARO_RECORD_COUNT];
+    wxDateTime::Tm m_ArrayRecTime[BARO_RECORD_COUNT];
 
 
 
-            double m_MaxPress;  //...in array
-            double m_MinPress;  //...in array
-            double m_TotalMaxPress; // since O is started
-            double m_TotalMinPress;
-            double m_Press;
-   double m_MaxPressScale;
-            double m_ratioW;
+    double m_MaxPress;  //...in array
+    double m_MinPress;  //...in array
+    double m_TotalMaxPress; // since O is started
+    double m_TotalMinPress;
+    double m_Press;
+    double m_MaxPressScale;
+    double m_ratioW;
 
-   bool m_IsRunning;
-   int m_SampleCount;
+    bool m_IsRunning;
+    int m_SampleCount;
 
-            wxRect m_WindowRect;
-            wxRect m_DrawAreaRect; //the coordinates of the real darwing area
-            int m_DrawingWidth,m_TopLineHeight,m_DrawingHeight;
-   int m_width,m_height;
-            int m_LeftLegend, m_RightLegend;
-            int m_currSec,m_lastSec,m_SpdCntperSec;
-            double m_cntSpd,m_cntDir,m_avgSpd,m_avgDir;
+    wxRect m_WindowRect;
+    wxRect m_DrawAreaRect; //the coordinates of the real darwing area
+    int m_DrawingWidth,m_TopLineHeight,m_DrawingHeight;
+    int m_width,m_height;
+    int m_LeftLegend, m_RightLegend;
+    int m_currSec,m_lastSec,m_SpdCntperSec;
+    double m_cntSpd,m_cntDir,m_avgSpd,m_avgDir;
 
-            void Draw(wxGCDC* dc);
-            void DrawBackground(wxGCDC* dc);
-            void DrawForeground(wxGCDC* dc);
-            void SetMinMaxWindScale();
+    void Draw(wxGCDC* dc);
+    void DrawBackground(wxGCDC* dc);
+    void DrawForeground(wxGCDC* dc);
+    void SetMinMaxWindScale();
 
-   void DrawWindSpeedScale(wxGCDC* dc);
-   //wxString GetWindDirStr(wxString WindDir);
+    void DrawWindSpeedScale(wxGCDC* dc);
+    //wxString GetWindDirStr(wxString WindDir);
 };
-
-
 
 #endif // __BARO_HISTORY_H__
 

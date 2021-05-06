@@ -204,6 +204,8 @@ extern wxArrayString             g_locale_catalog_array;
 
 #endif
 extern int                       options_lastPage;
+extern int                        g_maintoolbar_x;
+extern int                        g_maintoolbar_y;
 
 
 //  OCPN Platform implementation
@@ -1283,6 +1285,9 @@ void OCPNPlatform::SetUpgradeOptions( wxString vNew, wxString vOld )
         g_bAIS_GCPA_Alert_Audio = true;
         g_bAIS_SART_Alert_Audio = true;
         g_bAIS_DSC_Alert_Audio = true;
+
+        // Force a recalculation of default main toolbar location
+        g_maintoolbar_x = -1;
     }
 
 }

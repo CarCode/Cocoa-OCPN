@@ -641,7 +641,7 @@ Provides navigation instrument display from NMEA source.");
 
 }
 
-void dashboard_pi::SendSentenceToAllInstruments( int st, double value, wxString unit )
+void dashboard_pi::SendSentenceToAllInstruments( DASH_CAP st, double value, wxString unit )
 {
     for( size_t i = 0; i < m_ArrayOfDashboardWindow.GetCount(); i++ ) {
         DashboardWindow *dashboard_window = m_ArrayOfDashboardWindow.Item( i )->m_pDashboardWindow;
@@ -2652,9 +2652,12 @@ void DashboardWindow::SetInstrumentList( wxArrayInt list )
                 ( (DashboardInstrument_Dial *) instrument )->SetOptionExtraValue( OCPN_DBP_STC_TWS, _T("%.1f"), DIAL_POSITION_INSIDE );
                 break;
             case ID_DBP_D_AWA_TWA: //App/True Wind angle +-180° on boat axis
-                instrument = new DashboardInstrument_AppTrueWindAngle(this, wxID_ANY, getInstrumentCaption(id), OCPN_DBP_STC_AWA | OCPN_DBP_STC_TWA);
+                instrument = new DashboardInstrument_AppTrueWindAngle(this, wxID_ANY, getInstrumentCaption(id),    OCPN_DBP_STC_AWA);
+                ((DashboardInstrument_Dial *)instrument)->SetCapFlag(OCPN_DBP_STC_TWA);
                 ((DashboardInstrument_Dial *)instrument)->SetOptionMainValue(_T("%.0f"), DIAL_POSITION_NONE);
-                ((DashboardInstrument_Dial *)instrument)->SetOptionExtraValue( OCPN_DBP_STC_TWS | OCPN_DBP_STC_AWS, _T("%.1f"), DIAL_POSITION_NONE);
+                ((DashboardInstrument_Dial *)instrument)->SetOptionExtraValue(                     OCPN_DBP_STC_TWS, _T("%.1f"), DIAL_POSITION_NONE);
+                ((DashboardInstrument_Dial*)instrument)->SetOptionExtraValue(
+                    OCPN_DBP_STC_AWS, _T("%.1f"), DIAL_POSITION_NONE);
                 break;
             case ID_DBP_D_TWD: //True Wind direction
                 instrument = new DashboardInstrument_WindCompass( this, wxID_ANY, getInstrumentCaption( id ), OCPN_DBP_STC_TWD );
@@ -2775,17 +2778,17 @@ void DashboardWindow::SetInstrumentList( wxArrayInt list )
     SetMinSize( itemBoxSizer->GetMinSize() );
 }
 
-void DashboardWindow::SendSentenceToAllInstruments( int st, double value, wxString unit )
+void DashboardWindow::SendSentenceToAllInstruments( DASH_CAP st, double value, wxString unit )
 {
     for( size_t i = 0; i < m_ArrayOfInstrument.GetCount(); i++ ) {
-        if( m_ArrayOfInstrument.Item( i )->m_cap_flag & st ) m_ArrayOfInstrument.Item( i )->m_pInstrument->SetData( st, value, unit );
+        if( m_ArrayOfInstrument.Item( i )->m_cap_flag.test(st) ) m_ArrayOfInstrument.Item( i )->m_pInstrument->SetData( st, value, unit );
     }
 }
 
 void DashboardWindow::SendSatInfoToAllInstruments( int cnt, int seq, wxString talk, SAT_INFO sats[4] )
 {
     for( size_t i = 0; i < m_ArrayOfInstrument.GetCount(); i++ ) {
-        if( ( m_ArrayOfInstrument.Item( i )->m_cap_flag & OCPN_DBP_STC_GPS ) &&
+        if( ( m_ArrayOfInstrument.Item( i )->m_cap_flag.test(OCPN_DBP_STC_GPS) ) &&
                         m_ArrayOfInstrument.Item( i )->m_pInstrument->
                         IsKindOf( CLASSINFO(DashboardInstrument_GPS)) )
                     ((DashboardInstrument_GPS*)m_ArrayOfInstrument.Item(i)->
@@ -2796,7 +2799,7 @@ void DashboardWindow::SendSatInfoToAllInstruments( int cnt, int seq, wxString ta
 void DashboardWindow::SendUtcTimeToAllInstruments( wxDateTime value )
 {
     for( size_t i = 0; i < m_ArrayOfInstrument.GetCount(); i++ ) {
-        if( ( m_ArrayOfInstrument.Item( i )->m_cap_flag & OCPN_DBP_STC_CLK ) && m_ArrayOfInstrument.Item( i )->m_pInstrument->IsKindOf( CLASSINFO( DashboardInstrument_Clock ) ) )
+        if( ( m_ArrayOfInstrument.Item( i )->m_cap_flag.test(OCPN_DBP_STC_CLK) ) && m_ArrayOfInstrument.Item( i )->m_pInstrument->IsKindOf( CLASSINFO( DashboardInstrument_Clock ) ) )
 //                  || m_ArrayOfInstrument.Item( i )->m_pInstrument->IsKindOf( CLASSINFO( DashboardInstrument_Sun ) )
 //                  || m_ArrayOfInstrument.Item( i )->m_pInstrument->IsKindOf( CLASSINFO( DashboardInstrument_Moon ) ) ) )
             ((DashboardInstrument_Clock*)m_ArrayOfInstrument.Item(i)->m_pInstrument)->SetUtcTime( value );

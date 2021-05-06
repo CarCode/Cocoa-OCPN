@@ -40,28 +40,28 @@
 //
 //----------------------------------------------------------------
 
-DashboardInstrument::DashboardInstrument(wxWindow *pparent, wxWindowID id, wxString title, int cap_flag)
+DashboardInstrument::DashboardInstrument(wxWindow *pparent, wxWindowID id, wxString title, DASH_CAP cap_flag)
       :wxControl(pparent, id, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE)
 {
-      m_title = title;
-      m_cap_flag = cap_flag;
+    m_title = title;
+    m_cap_flag.set(cap_flag);
 
-      SetBackgroundStyle( wxBG_STYLE_CUSTOM );
-      SetDrawSoloInPane(false);
-      wxClientDC dc(this);
-      int width;
-      dc.GetTextExtent(m_title, &width, &m_TitleHeight, 0, 0, g_pFontTitle);
+    SetBackgroundStyle( wxBG_STYLE_CUSTOM );
+    SetDrawSoloInPane(false);
+    wxClientDC dc(this);
+    int width;
+    dc.GetTextExtent(m_title, &width, &m_TitleHeight, 0, 0, g_pFontTitle);
 
-      Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(DashboardInstrument::OnEraseBackground));
-      Connect(wxEVT_PAINT, wxPaintEventHandler(DashboardInstrument::OnPaint));
-      
-      //  On OSX, there is an orphan mouse event that comes from the automatic
-      //  exEVT_CONTEXT_MENU synthesis on the main wxWindow mouse handler.
-      //  The event goes to an instrument window (here) that may have been deleted by the
-      //  preferences dialog.  Result is NULL deref.
-      //  Solution:  Handle right-click here, and DO NOT skip()
-      //  Strangely, this does not work for GTK...
-      //  See: http://trac.wxwidgets.org/ticket/15417
+    Connect(wxEVT_ERASE_BACKGROUND, wxEraseEventHandler(DashboardInstrument::OnEraseBackground));
+    Connect(wxEVT_PAINT, wxPaintEventHandler(DashboardInstrument::OnPaint));
+
+    //  On OSX, there is an orphan mouse event that comes from the automatic
+    //  exEVT_CONTEXT_MENU synthesis on the main wxWindow mouse handler.
+    //  The event goes to an instrument window (here) that may have been deleted by the
+    //  preferences dialog.  Result is NULL deref.
+    //  Solution:  Handle right-click here, and DO NOT skip()
+    //  Strangely, this does not work for GTK...
+    //  See: http://trac.wxwidgets.org/ticket/15417
       
 #ifdef __WXOSX__
       Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(DashboardInstrument::MouseEvent), NULL, this);
@@ -80,7 +80,7 @@ void DashboardInstrument::MouseEvent( wxMouseEvent &event )
     }
 }
 
-int DashboardInstrument::GetCapacity()
+CapType DashboardInstrument::GetCapacity()
 {
       return m_cap_flag;
 }
@@ -177,7 +177,7 @@ void DashboardInstrument::OnPaint( wxPaintEvent& WXUNUSED(event) )
 //
 //----------------------------------------------------------------
 
-DashboardInstrument_Single::DashboardInstrument_Single(wxWindow *pparent, wxWindowID id, wxString title, int cap_flag, wxString format)
+DashboardInstrument_Single::DashboardInstrument_Single(wxWindow *pparent, wxWindowID id, wxString title, DASH_CAP cap_flag, wxString format)
       :DashboardInstrument(pparent, id, title, cap_flag)
 {
       m_format = format;
@@ -230,9 +230,9 @@ void DashboardInstrument_Single::Draw(wxGCDC* dc)
 
 }
 
-void DashboardInstrument_Single::SetData(int st, double data, wxString unit)
+void DashboardInstrument_Single::SetData(DASH_CAP st, double data, wxString unit)
 {
-      if (m_cap_flag & st){
+    if (m_cap_flag.test(st)){
             if(!std::isnan(data) && (data < 9999)){
                 if (unit == _T("C"))
                   m_data = wxString::Format(m_format, data)+DEGREE_SIGN+_T("C");
@@ -269,15 +269,16 @@ void DashboardInstrument_Single::SetData(int st, double data, wxString unit)
 //
 //----------------------------------------------------------------
 
-DashboardInstrument_Position::DashboardInstrument_Position(wxWindow *pparent, wxWindowID id, wxString title, int cap_flag1, int cap_flag2)
-      :DashboardInstrument(pparent, id, title, cap_flag1 | cap_flag2)
+DashboardInstrument_Position::DashboardInstrument_Position(wxWindow *pparent, wxWindowID id, wxString title, DASH_CAP cap_flag1, DASH_CAP cap_flag2)
+      :DashboardInstrument(pparent, id, title, cap_flag1)
 {
+    m_cap_flag.set(cap_flag2);
 
-      m_data1 = _T("---");
-      m_data2 = _T("---");
-      m_cap_flag1 = cap_flag1;
-      m_cap_flag2 = cap_flag2;
-      m_DataHeight = 0;
+    m_data1 = _T("---");
+    m_data2 = _T("---");
+    m_cap_flag1 = cap_flag1;
+    m_cap_flag2 = cap_flag2;
+    m_DataHeight = 0;
 }
 
 wxSize DashboardInstrument_Position::GetSize( int orient, wxSize hint )
@@ -328,8 +329,11 @@ void DashboardInstrument_Position::Draw(wxGCDC* dc)
 
 }
 
-void DashboardInstrument_Position::SetData(int st, double data, wxString unit)
+void DashboardInstrument_Position::SetData(DASH_CAP st, double data, wxString unit)
 {
+    if (std::isnan(data))
+        return;
+
       if (st == m_cap_flag1)
       {
             m_data1 = toSDMM(1, data);
@@ -380,7 +384,7 @@ wxString toSDMM ( int NEflag, double a )
                         c = 'S';
                   }
 #ifdef __WXOSX__
-                s.Printf ( _T ( "%03d %02ld.%04ld %c" ), d, m / 1000, ( m % 1000 ), c );
+                  s.Printf ( _T ( "%03d %02ld.%04ld %c" ), d, m / 1000, ( m % 1000 ), c );
 #else
                   s.Printf ( _T ( "%03d %02ld.%03ld %c" ), d, m / 1000, ( m % 1000 ), c );
 #endif
@@ -388,7 +392,7 @@ wxString toSDMM ( int NEflag, double a )
             else if ( NEflag == 2 )
             {
 #ifdef __WXOSX__
-                char c = 'O';
+                  char c = 'O';
 #else
                   char c = 'E';
 #endif
@@ -398,7 +402,7 @@ wxString toSDMM ( int NEflag, double a )
                         c = 'W';
                   }
 #ifdef __WXOSX__
-                s.Printf ( _T ( "%03d %02ld.%04ld %c" ), d, m / 1000, ( m % 1000 ), c );
+                  s.Printf ( _T ( "%03d %02ld.%04ld %c" ), d, m / 1000, ( m % 1000 ), c );
 #else
                   s.Printf ( _T ( "%03d %02ld.%03ld %c" ), d, m / 1000, ( m % 1000 ), c );
 #endif

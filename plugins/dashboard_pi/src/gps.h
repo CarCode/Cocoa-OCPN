@@ -47,32 +47,32 @@
 
 class DashboardInstrument_GPS: public DashboardInstrument
 {
-      public:
-            DashboardInstrument_GPS( wxWindow *parent, wxWindowID id, wxString title);
+public:
+    DashboardInstrument_GPS( wxWindow *parent, wxWindowID id, wxString title);
 
-            ~DashboardInstrument_GPS(void){}
+    ~DashboardInstrument_GPS(void){}
 
-            wxSize GetSize( int orient, wxSize hint );
-            void SetData(int, double, wxString) {};
-            void SetSatInfo(int cnt, int seq, wxString talk, SAT_INFO sats[4]);
+    wxSize GetSize( int orient, wxSize hint );
+    void SetData(DASH_CAP, double, wxString) {};
+    void SetSatInfo(int cnt, int seq, wxString talk, SAT_INFO sats[4]);
 
-      private:
+private:
 
-      protected:
+protected:
 #define GNSS_SYSTEM 6
-            int m_cx, m_cy, m_radius;
-            int m_SatCount;
-            wxString talkerID;
-            SAT_INFO m_SatInfo[12];
-            bool b_shift;
-            wxDateTime m_lastShift;
-            wxDateTime m_Gtime[GNSS_SYSTEM];
-            int m_iMaster;
-            wxString s_gTalker;
-            void Draw(wxGCDC* dc);
-            void DrawFrame(wxGCDC* dc);
-            void DrawBackground(wxGCDC* dc);
-            void DrawForeground(wxGCDC* dc);
+    int m_cx, m_cy, m_radius;
+    int m_SatCount;
+    wxString talkerID;
+    SAT_INFO m_SatInfo[12];
+    bool b_shift;
+    wxDateTime m_lastShift;
+    wxDateTime m_Gtime[GNSS_SYSTEM];
+    int m_iMaster;
+    wxString s_gTalker;
+    void Draw(wxGCDC* dc);
+    void DrawFrame(wxGCDC* dc);
+    void DrawBackground(wxGCDC* dc);
+    void DrawForeground(wxGCDC* dc);
 };
 
 #endif // __GPS_H__

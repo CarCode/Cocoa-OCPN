@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  * $Id: speedometer.h, v1.0 2010/08/05 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -6,7 +6,7 @@
  * Author:   Jean-Eudes Onfray
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #ifndef __Speedometer_H__
 #define __Speedometer_H__
@@ -54,13 +53,13 @@
 //+------------------------------------------------------------------------------
 class DashboardInstrument_Speedometer: public DashboardInstrument_Dial
 {
-      public:
-            DashboardInstrument_Speedometer( wxWindow *parent, wxWindowID id, wxString title, int cap_flag,
+public:
+    DashboardInstrument_Speedometer( wxWindow *parent, wxWindowID id, wxString title, DASH_CAP cap_flag,
                                     int s_value, int e_value);
 
-            ~DashboardInstrument_Speedometer(void){}
+    ~DashboardInstrument_Speedometer(void){}
 
-      private:
+private:
 
 };
 

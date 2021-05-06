@@ -45,37 +45,38 @@
 // History of wind direction
 //************************************************************************************************************************
 
-DashboardInstrument_WindDirHistory::DashboardInstrument_WindDirHistory( wxWindow *parent, wxWindowID id, wxString title) :
-      DashboardInstrument(parent, id, title, OCPN_DBP_STC_TWD | OCPN_DBP_STC_TWS)
-{     SetDrawSoloInPane(true);
-      m_MaxWindDir = -1;
-      m_WindDir = -1;
-      m_WindDirRange=90;
-      m_MaxWindSpd = 0;
-      m_WindSpeedUnit = _("--");
-      m_TotalMaxWindSpd = 0;
-      m_WindSpd = 0;
-      m_TopLineHeight=30;
-      m_SpdRecCnt=0;
-      m_DirRecCnt=0;
-      m_SpdStartVal=-1;
-      m_DirStartVal=-1;
-      m_IsRunning=false;
-      m_SampleCount=0;
-      m_LeftLegend=3;
-      m_RightLegend=3;
-      for (int idx = 0; idx < WIND_RECORD_COUNT; idx++) {
+DashboardInstrument_WindDirHistory::DashboardInstrument_WindDirHistory( wxWindow *parent, wxWindowID id, wxString title) : DashboardInstrument(parent, id, title, OCPN_DBP_STC_TWD)
+{
+    m_cap_flag.set(OCPN_DBP_STC_TWS);
+    SetDrawSoloInPane(true);
+    m_MaxWindDir = -1;
+    m_WindDir = -1;
+    m_WindDirRange=90;
+    m_MaxWindSpd = 0;
+    m_WindSpeedUnit = _("--");
+    m_TotalMaxWindSpd = 0;
+    m_WindSpd = 0;
+    m_TopLineHeight=30;
+    m_SpdRecCnt=0;
+    m_DirRecCnt=0;
+    m_SpdStartVal=-1;
+    m_DirStartVal=-1;
+    m_IsRunning=false;
+    m_SampleCount=0;
+    m_LeftLegend=3;
+    m_RightLegend=3;
+    for (int idx = 0; idx < WIND_RECORD_COUNT; idx++) {
         m_ArrayWindDirHistory[idx] = -1;
         m_ArrayWindSpdHistory[idx] = -1;
         m_ExpSmoothArrayWindSpd[idx] = -1;
         m_ExpSmoothArrayWindDir[idx] = -1;
         m_ArrayRecTime[idx]=wxDateTime::Now().GetTm( );
         m_ArrayRecTime[idx].year=999;
-      }
-      alpha=0.01;  //smoothing constant
-      m_WindowRect=GetClientRect();
-      m_DrawAreaRect=GetClientRect();
-      m_DrawAreaRect.SetHeight(m_WindowRect.height-m_TopLineHeight-m_TitleHeight);
+    }
+    alpha=0.01;  //smoothing constant
+    m_WindowRect=GetClientRect();
+    m_DrawAreaRect=GetClientRect();
+    m_DrawAreaRect.SetHeight(m_WindowRect.height-m_TopLineHeight-m_TitleHeight);
 }
 
 wxSize DashboardInstrument_WindDirHistory::GetSize( int orient, wxSize hint )
@@ -90,7 +91,8 @@ wxSize DashboardInstrument_WindDirHistory::GetSize( int orient, wxSize hint )
         return wxSize( wxMax(hint.x, DefaultWidth), wxMax(m_TitleHeight+140, hint.y) );
       }
 }
-void DashboardInstrument_WindDirHistory::SetData(int st, double data, wxString unit)
+
+void DashboardInstrument_WindDirHistory::SetData(DASH_CAP st, double data, wxString unit)
 {
   if (st == OCPN_DBP_STC_TWD || st == OCPN_DBP_STC_TWS) {
     if (st == OCPN_DBP_STC_TWD) {
