@@ -1,11 +1,11 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  GRIB Object
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
+ ***************************************************************************/
 
 #include "wx/wx.h"
 
@@ -33,6 +31,7 @@
 #include "GribOverlayFactory.h"
 
 #include "TexFont.h"
+#include <unordered_map>
 
 #define RESOLUTIONS 4
 
@@ -334,7 +333,7 @@ void GribRequestSetting::OnVpChange(PlugIn_ViewPort *vp)
 {
     if(!vp)
         return;
-        
+
     delete m_Vp;
     m_Vp = new PlugIn_ViewPort(*vp);
 
@@ -360,14 +359,18 @@ void GribRequestSetting::ApplyRequestConfig( unsigned rs, unsigned it, unsigned 
 
     //populate resolution choice
     m_pResolution->Clear();
-    for( int i = 0; i < RESOLUTIONS; i++ ) {
-        if( res[m_pModel->GetCurrentSelection()][i] != wxEmptyString )
-            m_pResolution->Append(res[m_pModel->GetCurrentSelection()][i]);
+    if(m_pModel->GetCurrentSelection() >=0 ) {
+        for( int i = 0; i < RESOLUTIONS; i++ ) {
+            if( res[m_pModel->GetCurrentSelection()][i] != wxEmptyString ) {
+                wxString s = res[m_pModel->GetCurrentSelection()][i];
+                m_pResolution->Append(s);
+            }
+        }
     }
-     m_pResolution->SetSelection(rs);
+    m_pResolution->SetSelection(rs);
 
     unsigned l;
-     //populate time interval choice
+    //populate time interval choice
     l = IsGFS ? 3 : IsRTOFS ? 12 : 6;
     m_pInterval->Clear();
     for( unsigned i=l; i<25; i*=2)
@@ -527,8 +530,8 @@ bool GribRequestSetting::DoRenderZoneOverlay()
         im.InitAlpha();
         w = im.GetWidth(), h = im.GetHeight();
         for( int j = 0; j < h; j++ )
-			for( int i = 0; i < w; i++ )
-				im.SetAlpha( i, j, 155 );
+            for( int i = 0; i < w; i++ )
+                im.SetAlpha( i, j, 155 );
 
         m_pdc->DrawBitmap(im, x, y, true);
 
@@ -956,6 +959,28 @@ int GribRequestSetting::EstimateFileSize( double *size )
     return 0;
 }
 
+const wxString EncodeURL(const wxString& uri)
+{
+    static std::unordered_map<int, wxString> sEncodeMap = {
+        { (int)'!', "%21" }, { (int)'#', "%23" }, { (int)'$', "%24" }, { (int)'&', "%26" }, { (int)'\'', "%27" },
+        { (int)'(', "%28" }, { (int)')', "%29" }, { (int)'*', "%2A" }, { (int)'+', "%2B" }, { (int)',', "%2C" },
+        { (int)';', "%3B" }, { (int)'=', "%3D" }, { (int)'?', "%3F" }, { (int)'@', "%40" }, { (int)'[', "%5B" },
+        { (int)']', "%5D" }, { (int)' ', "%20" }, { (int)'|', "%7C" }, { (int)':', "%3A" }, { (int)'\n', "%0A" }
+    };
+
+    wxString encoded;
+    for(size_t i = 0; i < uri.length(); ++i) {
+        wxChar ch = uri[i];
+        std::unordered_map<int, wxString>::iterator iter = sEncodeMap.find((int)ch);
+        if(iter != sEncodeMap.end()) {
+            encoded << iter->second;
+        } else {
+            encoded << ch;
+        }
+    }
+    return encoded;
+}
+
 void GribRequestSetting::OnSendMaiL( wxCommandEvent& event  )
 {
     StopGraphicalZoneSelection();                    //eventually stop graphical zone display
@@ -1002,6 +1027,16 @@ void GribRequestSetting::OnSendMaiL( wxCommandEvent& event  )
         return;
     }
 
+#ifdef __WXMAC__
+    // macOS, at least Big Sur, requires the body to be URLEncoded, otherwise the invocation of the mail application via sh/open in wxEmail fails due to "invalid characters" in "filename" regardless of quotation used (which is weird, but real)
+    wxMailMessage *message = new wxMailMessage(
+        (m_pMailTo->GetCurrentSelection() == SAILDOCS) ? _T("grib-request") : wxT("gribauto"),  //requested subject
+        (m_pMailTo->GetCurrentSelection() == SAILDOCS) ? m_MailToAddresses.BeforeFirst(_T(';'))     //to request address
+            : m_MailToAddresses.AfterFirst(_T(';')).BeforeFirst(_T(';')),
+        EncodeURL(WriteMail()),                                                                                 //message image
+        m_pSenderAddress->GetValue()
+        );
+#else
     wxMailMessage *message = new wxMailMessage(
         (m_pMailTo->GetCurrentSelection() == SAILDOCS) ? _T("grib-request") : wxT("gribauto"),  //requested subject
         (m_pMailTo->GetCurrentSelection() == SAILDOCS) ? m_MailToAddresses.BeforeFirst(_T(';'))     //to request address
@@ -1009,7 +1044,8 @@ void GribRequestSetting::OnSendMaiL( wxCommandEvent& event  )
         WriteMail(),                                                                                 //message image
         m_pSenderAddress->GetValue()
         );
-    
+#endif
+
     wxEmail mail ;
     if(mail.Send( *message, m_SendMethod)) {
 #ifdef __WXMSW__
