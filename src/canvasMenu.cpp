@@ -168,6 +168,7 @@ enum
     ID_RT_MENU_PROPERTIES,
     ID_RT_MENU_SENDTOGPS,
     ID_RT_MENU_SENDTONEWGPS,
+    ID_RT_MENU_SHOWNAMES,
     ID_WP_MENU_SET_ANCHORWATCH,
     ID_WP_MENU_CLEAR_ANCHORWATCH,
     ID_DEF_MENU_AISTARGETLIST,
@@ -643,6 +644,12 @@ if( !g_bBasicMenus && (nChartStack > 1 ) ) {
             MenuAppend1( menuRoute, ID_RT_MENU_COPY, _( "Copy as KML" ) + _T( "..." ) );
             MenuAppend1( menuRoute, ID_RT_MENU_DELETE, _( "Delete" ) + _T( "..." ) );
             MenuAppend1( menuRoute, ID_RT_MENU_REVERSE, _( "Reverse..." ) );
+            if( m_pSelectedRoute ){
+                if(m_pSelectedRoute->AreWaypointNamesVisible())
+                    MenuAppend1( menuRoute, ID_RT_MENU_SHOWNAMES, _( "Hide Waypoint Names" ) );
+                else
+                    MenuAppend1( menuRoute, ID_RT_MENU_SHOWNAMES, _( "Show Waypoint Names" ) );
+            }
 
             wxString port = parent->FindValidUploadPort();
             parent->m_active_upload_port = port;
@@ -1301,6 +1308,15 @@ void CanvasMenuHandler::PopupMenuHandler( wxCommandEvent& event )
             gFrame->RefreshAllCanvas();
 
         }
+        break;
+    }
+
+    case ID_RT_MENU_SHOWNAMES: {
+
+        if( m_pSelectedRoute ){
+            m_pSelectedRoute->ShowWaypointNames( !m_pSelectedRoute->AreWaypointNamesVisible() );
+        }
+
         break;
     }
 
