@@ -169,6 +169,7 @@ enum
     ID_RT_MENU_SENDTOGPS,
     ID_RT_MENU_SENDTONEWGPS,
     ID_RT_MENU_SHOWNAMES,
+    ID_RT_MENU_RESEQUENCE,
     ID_WP_MENU_SET_ANCHORWATCH,
     ID_WP_MENU_CLEAR_ANCHORWATCH,
     ID_DEF_MENU_AISTARGETLIST,
@@ -650,6 +651,7 @@ if( !g_bBasicMenus && (nChartStack > 1 ) ) {
                 else
                     MenuAppend1( menuRoute, ID_RT_MENU_SHOWNAMES, _( "Show Waypoint Names" ) );
             }
+            MenuAppend1( menuRoute, ID_RT_MENU_RESEQUENCE, _( "Resequence Waypoints..." ) );
 
             wxString port = parent->FindValidUploadPort();
             parent->m_active_upload_port = port;
@@ -1316,6 +1318,26 @@ void CanvasMenuHandler::PopupMenuHandler( wxCommandEvent& event )
         if( m_pSelectedRoute ){
             m_pSelectedRoute->ShowWaypointNames( !m_pSelectedRoute->AreWaypointNamesVisible() );
         }
+
+        break;
+    }
+
+    case ID_RT_MENU_RESEQUENCE: {
+
+        if( m_pSelectedRoute ){
+            if( m_pSelectedRoute->m_bIsInLayer ) break;
+
+            int ask_return = OCPNMessageBox( parent, g_pRouteMan->GetRouteResequenceMessage(),
+                                  _("Rename Waypoints?"), wxYES_NO | wxCANCEL );
+
+            if( ask_return != wxID_CANCEL ) {
+                   m_pSelectedRoute->RenameRoutePoints();
+            }
+
+            gFrame->InvalidateAllGL();
+            gFrame->RefreshAllCanvas();
+
+            }
 
         break;
     }
