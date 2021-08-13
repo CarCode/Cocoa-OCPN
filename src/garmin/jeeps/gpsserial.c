@@ -1,4 +1,4 @@
-/********************************************************************
+/* *******************************************************************
 ** @source JEEPS serial port low level functions
 **
 ** @author Copyright (C) 1999,2000 Alan Bleasby
@@ -25,6 +25,10 @@
 ********************************************************************/
 #include "garmin_gps.h"
 #include "gpsserial.h"
+#ifndef __WXOSX__
+#include <chrono>
+#include <thread>
+#endif
 //dsr#include "../gbser.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -320,7 +324,10 @@ int32 GPS_Serial_Open(gpsdevh *dh, const char *port)
 	gps_errno = SERIAL_ERROR;
 	return 0;
     }
-
+#ifndef __WXOSX__
+    // https://stackoverflow.com/questions/13013387
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+#endif
     if(tcgetattr(psd->fd,&psd->gps_ttysave)==-1)
     {
 	gps_errno = HARDWARE_ERROR;
@@ -428,7 +435,10 @@ int32 GPS_Serial_Write(gpsdevh *dh, const void *obuf, int size)
 int32 GPS_Serial_Flush(gpsdevh *fd)
 {
     posix_serial_data *psd = (posix_serial_data *)fd;
-
+#ifndef __WXOSX__
+    // https://stackoverflow.com/questions/13013387
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+#endif
     if(tcflush(psd->fd,TCIOFLUSH))
     {
 	GPS_Serial_Error("SERIAL: tcflush error");

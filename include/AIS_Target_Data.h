@@ -54,7 +54,7 @@ public:
     void Toggle_AIS_CPA(void);
     void ToggleShowTrack(void);
     void CloneFrom( AIS_Target_Data* q );
-    
+
 
     int                       MID;
     int                       MMSI;
@@ -86,6 +86,7 @@ public:
     char                      Euro_VIN[EURO_VIN_LEN];	      // includes terminator
     int                       UN_shiptype;
     bool                      b_isEuroInland;
+    bool                      b_hasInlandDac;  // intermediate storage for EU Inland. SignalK
     bool                      b_blue_paddle;
     int                       blue_paddle;
 
@@ -110,6 +111,7 @@ public:
     bool                      b_positionDoubtful;
     bool                      b_positionOnceValid;
     bool                      b_nameValid;
+    bool                      b_isFollower;
 
     //                     MMSI Properties
     bool                      b_NoTrack;
@@ -120,7 +122,7 @@ public:
     int                       m_utc_min;
     int                       m_utc_sec;
     wxString                  m_date_string;
-    
+
     wxDateTime                m_ack_time;
     bool                      b_in_ack_timeout;
 
@@ -135,7 +137,7 @@ public:
     double                    CPA;                      // Nautical Miles
 
     bool                      b_show_AIS_CPA;           //TR 2012.06.28: Show AIS-CPA
-    
+
     bool                      b_show_track;
 
     AISTargetTrackList        *m_ptrack;
@@ -146,7 +148,7 @@ public:
     bool                     b_nameFromCache;
     float                    importance;
     short                    last_scale[AIS_TARGETDATA_MAX_CANVAS]; // where AIS_TARGETDATA_MAX_CANVAS is the max number of chartcanvas
-    
+
 };
 
 #endif

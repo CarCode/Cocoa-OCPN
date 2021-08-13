@@ -561,12 +561,16 @@ void ocpnFloatingToolbarDialog::SetDefaultPosition()
 
 void ocpnFloatingToolbarDialog::HideTooltip()
 {
+#ifndef __OCPN__ANDROID__
     if( m_ptoolbar ) m_ptoolbar->HideTooltip();
+#endif
 }
 
 void ocpnFloatingToolbarDialog::ShowTooltips()
 {
+#ifndef __OCPN__ANDROID__
     if( m_ptoolbar ) m_ptoolbar->EnableTooltips();
+#endif
 }
 
 void ocpnFloatingToolbarDialog::ToggleOrientation()
@@ -1492,11 +1496,12 @@ void ocpnToolBarSimple::Init()
     m_last_plugin_down_id = -1;
     m_leftDown = false;
     m_nShowTools = 0;
-    
+    m_btooltip_show = false;
+#ifndef __OCPN__ANDROID__
     EnableTooltips();
+#endif
     m_tbenableRolloverBitmaps = false;
-    
- }
+}
 
 wxToolBarToolBase *ocpnToolBarSimple::DoAddTool( int id, const wxString& label,
         const wxBitmap& bitmap, const wxBitmap& bmpDisabled, wxItemKind kind,
@@ -1656,6 +1661,20 @@ ocpnToolBarSimple::~ocpnToolBarSimple()
 
 }
 
+void ocpnToolBarSimple::EnableTooltips()
+{
+#ifndef __OCPN__ANDROID__
+    m_btooltip_show = true;
+#endif
+}
+
+void ocpnToolBarSimple::DisableTooltips()
+{
+#ifndef __OCPN__ANDROID__
+    ocpnToolBarSimple::m_btooltip_show = false;
+#endif
+}
+
 void ocpnToolBarSimple::KillTooltip()
 {
     m_btooltip_show = false;
@@ -1695,18 +1714,21 @@ void ocpnToolBarSimple::KillTooltip()
 
 void ocpnToolBarSimple::HideTooltip()
 {
+#ifndef __OCPN__ANDROID__
     if( m_pToolTipWin ) {
         m_pToolTipWin->Hide();
     }
+#endif
 }
 
 void ocpnToolBarSimple::SetColorScheme( ColorScheme cs )
 {
+#ifndef __OCPN__ANDROID__
     if( m_pToolTipWin ) {
         m_pToolTipWin->Destroy();
         m_pToolTipWin = NULL;
     }
-
+#endif
     m_toolOutlineColour = GetGlobalColor( _T("UIBDR") );
 
     m_currentColorScheme = cs;
@@ -1930,9 +1952,11 @@ void ocpnToolBarSimple::OnToolTipTimerEvent( wxTimerEvent& event )
                 m_pToolTipWin->Show();
 #ifndef __WXOSX__
                 gFrame->Raise();
-#endif                
+#endif
+#ifndef __OCPN__ANDROID__
                 if( g_btouch )
                     m_tooltipoff_timer.Start(m_tooltip_off, wxTIMER_ONE_SHOT);
+#endif
             }
         }
     }

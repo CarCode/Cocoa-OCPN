@@ -156,10 +156,30 @@ wxString& expand_talker_id( const wxString &identifier )
 
          break;
 
-      case 'G': // GP
+      case 'G': // GA, GB, GL, GN, GP
 
          switch( second_character )
          {
+            case 'A': // GA
+
+                 expanded_identifier = _T("Galileo Positioning System");
+                 break;
+
+            case 'B': // GB
+
+                 expanded_identifier = _T("Beidou Positioning System");
+                 break;
+
+            case 'L': // GL
+
+                 expanded_identifier = _T("Glonass Positioning System");
+                 break;
+
+            case 'N': // GN
+
+                 expanded_identifier = _T("Mixed GPS and Glonass");
+                 break;
+
             case 'P': // GP
 
                 expanded_identifier = _T("Global Positioning System (GPS)");

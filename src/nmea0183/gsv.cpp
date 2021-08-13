@@ -85,24 +85,45 @@ Where:
            for up to 4 satellites per sentence
       *75          the checksum data, always begins with *
 */
-
-
+/*
+Muster Kalamata: $GP - GPS; $GL - Glonas
+ $GPGSV,4,1,14,10,79,100,31,27,67,327,31,21,62,314,34,23,52,051,14*74
+ $GPGSV,4,2,14,16,51,230,37,20,47,050,26,49,43,207,34,08,32,314,30*78
+ $GPGSV,4,3,14,26,25,192,23,18,21,067,30,32,15,151,34,11,10,289,23*7F
+ $GPGSV,4,4,14,15,05,038,21,14,03,164,*70
+ GP: 14 Satelliten(10,27,21,23,16,20,49,08,26,18,32,11,15,14)
+ $GLGSV,3,1,09,68,57,086,28,83,49,050,26,84,36,321,25,69,36,165,26*63
+ $GLGSV,3,2,09,74,23,284,25,67,21,032,27,73,19,245,33,82,15,092,28*60
+ $GLGSV,3,3,09,75,05,337,21*5F
+ GL: 9 Satelliten(68,83,84,69,74,67,73,82,75)
+Muster Hannover: $GP - GPS; $GL - Glonas
+ $GPGSV,3,1,10,09,65,075,35,07,60,162,39,02,40,272,39,30,34,192,40*7B
+ $GPGSV,3,2,10,06,32,212,43,05,27,302,46,04,26,076,24,16,19,052,23*75
+ $GPGSV,3,3,10,29,09,331,17,26,06,021,03*7F
+ GP: 10 Satelliten(09,07,02,30,06,05,04,16,29,17)
+ $GLGSV,3,1,09,68,70,332,17,77,50,072,,67,44,088,,78,35,150,*6F
+ $GLGSV,3,2,09,84,33,301,23,69,22,292,30,83,17,238,,76,15,023,*67
+ $GLGSV,3,3,09,85,09,355,*5B
+ GL: 9 Satelliten(68,77,67,78,84,69,83,76,85)
+*/
    /*
    ** GSV - GPS satellite Status
    **
-   **        1 2 3 4 5 6 7         n
-   **        | | | | | | |         |
-   ** $--GSV,x,x,x,x,x,x,x.........*hh<CR><LF>
+   **        1 2 3 4 5 6 7         hn
+   **        | | | | | | |         ||
+   ** $--GSV,x,x,x,x,x,x,x.........h*hh<CR><LF>
    **
    ** Field Number:
-   **  1) Number of sentences for full data
-   **  2) sentence number
+   **  1) Number of sentences for full data (1 - 9)
+   **  2) sentence number (1 - 9)
    **  3) Number of satellites in view
-   **  4) Satellite PRN number
-   **  5) Elevation, degrees
-   **  6) Azimuth, degrees
-   **  7) SNR - higher is better
+   **  4) Satellite PRN number (#1 - #4)
+   **  5) Elevation, degrees (90° max)
+   **  6) Azimuth, degrees (True, 000 zo 359)
+   **  7) SNR - higher is better (NULL when not tracking?)
+    
    **  Fields 4-7 may repeat up to 4 times per sentence
+   **  h) Signal ID (NMEA 0183 4.11 from 2019.05.07)
    **  n) Checksum
    */
 

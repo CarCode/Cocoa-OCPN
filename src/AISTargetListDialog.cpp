@@ -629,7 +629,10 @@ void AISTargetListDialog::CreateControls()
     winr->SetScrollRate(0,5);
 
     boxSizer02->Add( winr, 1, wxALL | wxEXPAND, 3 );
-
+#ifdef __WXOSX__
+    wxColour col = GetGlobalColor( _T("DILG1") );  // Der Fehler muß bei navutil sein, entweder DimeControl oder Font
+    winr->SetBackgroundColour(col);
+#endif
     wxBoxSizer *bsRouteButtonsInner = new wxBoxSizer( wxVERTICAL );
     winr->SetSizer(bsRouteButtonsInner);
 
@@ -882,7 +885,7 @@ void AISTargetListDialog::OnTargetScrollTo( wxCommandEvent& event )
     if( m_pdecoder ) pAISTarget = m_pdecoder->Get_Target_Data_From_MMSI( m_pMMSI_array->Item( selItemID ) );
 
     if( pAISTarget )
-        gFrame->JumpToPosition( gFrame->GetPrimaryCanvas(), pAISTarget->Lat, pAISTarget->Lon, gFrame->GetPrimaryCanvas()->GetVPScale() );
+        gFrame->JumpToPosition( gFrame->GetFocusCanvas(), pAISTarget->Lat, pAISTarget->Lon, gFrame->GetFocusCanvas()->GetVPScale() );
 }
 
 void AISTargetListDialog::OnTargetCreateWpt( wxCommandEvent& event )

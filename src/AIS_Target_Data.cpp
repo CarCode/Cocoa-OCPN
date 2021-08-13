@@ -159,6 +159,7 @@ AIS_Target_Data::AIS_Target_Data()
     b_active = false;
     blue_paddle = 0;
     bCPA_Valid = false;
+    b_isFollower = false;
     ROTIND = 0;
     b_show_track = g_bAISShowTracks;
     b_SarAircraftPosnReport = false;
@@ -659,11 +660,20 @@ wxString AIS_Target_Data::BuildQueryResult( void )
 
     if( Class != AIS_BASE ) {
         if( blue_paddle == 1 ) {
+#ifdef __WXOSX__
+            html << rowStart << _("Inland Blue Flag") << rowEnd
+                 << rowStartH << _T("<b>") << _("Aus") << rowEnd;
+        } else if( blue_paddle == 2 ) {
+            html << rowStart << _("Inland Blue Flag") << rowEnd
+                 << rowStartH << _T("<b>") << _("An") << rowEnd;
+
+#else
             html << rowStart << _("Inland Blue Flag") << rowEnd
                  << rowStartH << _T("<b>") << _("Clear") << rowEnd;
         } else if( blue_paddle == 2 ) {
             html << rowStart << _("Inland Blue Flag") << rowEnd
                  << rowStartH << _T("<b>") << _("Set") << rowEnd;
+#endif
         }
     }
 

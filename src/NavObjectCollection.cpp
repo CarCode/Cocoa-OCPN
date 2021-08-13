@@ -690,6 +690,7 @@ static bool GPXCreateWpt( pugi::xml_node node, RoutePoint *pr, unsigned int flag
     s.Printf(_T("%.9f"), pr->m_lon);
     node.append_attribute("lon") = s.mb_str();
 
+//    if(flags & OUT_TIME && pt->HasValidTimestamp()) {  // kein pt ??? Commit vom 23.05.2021 02:06
     if(flags & OUT_TIME) {
             child = node.append_child("time");
             if( pr->m_timestring.Len() )

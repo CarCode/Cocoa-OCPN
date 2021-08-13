@@ -2,6 +2,7 @@
 #include "wx/wxprec.h"
 
 #include "wx/listctrl.h"
+#include <wx/choice.h>
 
 #include "TCWin.h"
 #include "timers.h"
@@ -21,6 +22,7 @@ extern int gpIDXn;
 extern TCMgr *ptcmgr;
 extern wxString g_locale;
 extern OCPNPlatform *g_Platform;
+extern MyConfig *pConfig;
 
 int g_tcwin_scale;
 
@@ -77,6 +79,12 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
 
     RecalculateSize();
 
+    // Read the config file to get the user specified time zone.
+    if(pConfig){
+        pConfig->SetPath( _T ( "/Settings/Others" ) );
+        pConfig->Read( _T ( "TCWindowTimeZone" ), &m_tzoneDisplay, 0 );
+    }
+
     wxFrame::Create( parent, wxID_ANY, wxString( _T ( "" ) ), m_position ,
                       m_tc_size, wstyle );
 
@@ -104,46 +112,7 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
     int sx, sy;
     GetClientSize( &sx, &sy );
 
-//    Figure out this computer timezone minute offset
-    wxDateTime this_now = gTimeSource;
-    bool cur_time = !gTimeSource.IsValid();
-
-    if (cur_time) {
-        this_now = wxDateTime::Now();
-    }
-    wxDateTime this_gmt = this_now.ToGMT();
-
-#if wxCHECK_VERSION(2, 6, 2)
-    wxTimeSpan diff = this_now.Subtract( this_gmt );
-#else
-    wxTimeSpan diff = this_gmt.Subtract ( this_now );
-#endif
-
-    int diff_mins = diff.GetMinutes();
-
-    //  Correct a bug in wx3.0.2
-    //  If the system TZ happens to be GMT, with DST active (e.g.summer in London),
-    //  then wxDateTime returns incorrect results for toGMT() method
-#if wxCHECK_VERSION(3, 0, 2)
-    if( diff_mins == 0 && this_now.IsDST() )
-        diff_mins +=60;
-#endif
-    int station_offset = ptcmgr->GetStationTimeOffset( pIDX );
-
-    m_corr_mins = station_offset - diff_mins;
-    if( this_now.IsDST() ) m_corr_mins += 60;
-
-//    Establish the inital drawing day as today
-    m_graphday = this_now;
-    wxDateTime graphday_00 = this_now;
-    graphday_00.ResetTime();
-    time_t t_graphday_00 = graphday_00.GetTicks();
-
-    //    Correct a Bug in wxWidgets time support
-    if( !graphday_00.IsDST() && m_graphday.IsDST() ) t_graphday_00 -= 3600;
-    if( graphday_00.IsDST() && !m_graphday.IsDST() ) t_graphday_00 += 3600;
-
-    m_t_graphday_00_at_station = t_graphday_00 - ( m_corr_mins * 60 );
+    SetTimeFactors();
 
     btc_valid = false;
 
@@ -154,7 +123,7 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
     // Add first column
      wxListItem col0;
      col0.SetId(0);
-     col0.SetText( _("") );
+     col0.SetText( _T("") );
      col0.SetAlign(wxLIST_FORMAT_LEFT);
      col0.SetWidth( sx * 30 / 100 );
      m_tList->InsertColumn(0, col0);
@@ -191,6 +160,14 @@ TCWin::TCWin( ChartCanvas *parent, int x, int y, void *pvIDX )
 
     NX_button = new wxButton( this, ID_TCWIN_NX, _( "Next" ), wxPoint( bpx + bsx + 5, sy - (m_tsy + 10) ),
                               wxSize( -1, -1 ) );
+
+    wxString m_choiceTimezoneChoices[] = { _("LMT@Station"), _("UTC") };
+    int m_choiceTimezoneNChoices = sizeof( m_choiceTimezoneChoices ) / sizeof( wxString );
+    m_choiceTimezone = new wxChoice( this, wxID_ANY, wxPoint( (sx - (bsx*2))/2, sy - (m_tsy + 10) ),
+                                     wxSize(2* bsx, bsy), m_choiceTimezoneNChoices, m_choiceTimezoneChoices, 0 );
+
+    m_choiceTimezone->SetSelection( m_tzoneDisplay );
+    m_choiceTimezone->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( TCWin::TimezoneOnChoice ), NULL, this );
 
     m_TCWinPopupTimer.SetOwner( this, TCWININF_TIMER );
 
@@ -293,6 +270,90 @@ TCWin::~TCWin()
     pParent->Refresh( false );
 }
 
+void TCWin::SetTimeFactors()
+{
+    //    Figure out this computer timezone minute offset
+    wxDateTime this_now = gTimeSource;
+    bool cur_time = !gTimeSource.IsValid();
+
+    if (cur_time) {
+        this_now = wxDateTime::Now();
+    }
+    wxDateTime this_gmt = this_now.ToGMT();
+
+#if wxCHECK_VERSION(2, 6, 2)
+    wxTimeSpan diff = this_now.Subtract( this_gmt );
+#else
+    wxTimeSpan diff = this_gmt.Subtract ( this_now );
+#endif
+
+    m_diff_mins = diff.GetMinutes();
+
+    //  Correct a bug in wx3.0.2
+    //  If the system TZ happens to be GMT, with DST active (e.g.summer in London),
+    //  then wxDateTime returns incorrect results for toGMT() method
+#if wxCHECK_VERSION(3, 0, 2)
+    if(  m_diff_mins == 0 && this_now.IsDST() )
+        m_diff_mins +=60;
+#endif
+
+    int station_offset = ptcmgr->GetStationTimeOffset( pIDX );
+
+    m_stationOffset_mins = station_offset;
+    if( this_now.IsDST() )
+        m_stationOffset_mins += 60;
+
+    //  Correct a bug in wx3.0.2
+    //  If the system TZ happens to be GMT, with DST active (e.g.summer in London),
+    //  then wxDateTime returns incorrect results for toGMT() method
+#if wxCHECK_VERSION(3, 0, 2)
+//    if(  this_now.IsDST() )
+//        m_corr_mins +=60;
+#endif
+
+//    Establish the inital drawing day as today, in the timezone of the station
+    m_graphday = this_gmt;
+
+    int day_gmt = this_gmt.GetDayOfYear();
+
+    time_t ttNow = this_now.GetTicks();
+    time_t tt_at_station = ttNow - (m_diff_mins *60) + (m_stationOffset_mins * 60);
+    wxDateTime atStation(tt_at_station);
+    int day_at_station = atStation.GetDayOfYear();
+
+    if(day_gmt > day_at_station){
+        wxTimeSpan dt( 24, 0, 0, 0 );
+        m_graphday.Subtract( dt );
+    }
+    else if(day_gmt < day_at_station){
+        wxTimeSpan dt( 24, 0, 0, 0 );
+        m_graphday.Add( dt );
+    }
+
+    wxDateTime graphday_00 = m_graphday; //this_gmt;
+    graphday_00.ResetTime();
+    time_t t_graphday_00 = graphday_00.GetTicks();
+
+
+    //    Correct a Bug in wxWidgets time support
+//    if( !graphday_00.IsDST() && m_graphday.IsDST() ) t_graphday_00 -= 3600;
+//    if( graphday_00.IsDST() && !m_graphday.IsDST() ) t_graphday_00 += 3600;
+
+    m_t_graphday_GMT = t_graphday_00;
+
+    btc_valid = false;          // Force re-calculation
+
+}
+
+
+void TCWin::TimezoneOnChoice( wxCommandEvent& event )
+{
+    m_tzoneDisplay = m_choiceTimezone->GetSelection();
+    SetTimeFactors();
+
+    Refresh();
+}
+
 void TCWin::RecalculateSize()
 {
     wxSize parent_size(2000,2000);
@@ -347,6 +408,13 @@ void TCWin::OKEvent( wxCommandEvent& event )
     delete m_pTCRolloverWin;
     delete m_tList;
     pParent->Refresh( false );
+
+    // Update the config file to set the user specified time zone.
+    if(pConfig){
+        pConfig->SetPath( _T ( "/Settings/Others" ) );
+        pConfig->Write( _T ( "TCWindowTimeZone" ), m_tzoneDisplay );
+    }
+
     Destroy();                          // that hurts
 }
 
@@ -358,6 +426,12 @@ void TCWin::OnCloseWindow( wxCloseEvent& event )
     delete m_pTCRolloverWin;
     delete m_tList;
 
+    // Update the config file to set the user specified time zone.
+    if(pConfig){
+        pConfig->SetPath( _T ( "/Settings/Others" ) );
+        pConfig->Write( _T ( "TCWindowTimeZone" ), m_tzoneDisplay );
+    }
+
     Destroy();                          // that hurts
 }
 
@@ -368,13 +442,12 @@ void TCWin::NXEvent( wxCommandEvent& event )
     wxDateTime dm = m_graphday;
 
     wxDateTime graphday_00 = dm.ResetTime();
-    if(graphday_00.GetYear() == 2013)
-        int yyp = 4;
-
     time_t t_graphday_00 = graphday_00.GetTicks();
+
     if( !graphday_00.IsDST() && m_graphday.IsDST() ) t_graphday_00 -= 3600;
     if( graphday_00.IsDST() && !m_graphday.IsDST() ) t_graphday_00 += 3600;
-    m_t_graphday_00_at_station = t_graphday_00 - ( m_corr_mins * 60 );
+
+    m_t_graphday_GMT = t_graphday_00;
 
     btc_valid = false;
     Refresh();
@@ -393,7 +466,7 @@ void TCWin::PREvent( wxCommandEvent& event )
     if( !graphday_00.IsDST() && m_graphday.IsDST() ) t_graphday_00 -= 3600;
     if( graphday_00.IsDST() && !m_graphday.IsDST() ) t_graphday_00 += 3600;
 
-    m_t_graphday_00_at_station = t_graphday_00 - ( m_corr_mins * 60 );
+    m_t_graphday_GMT = t_graphday_00;
 
     btc_valid = false;
     Refresh();
@@ -490,6 +563,10 @@ NEU:
         const int hour_delta = 1;
 #endif
 
+        int hour_start = 0;
+//        if(m_tzoneDisplay == 1){                // UTC
+//            hour_start = m_diff_mins / 60;
+//        }
 
         //    Horizontal axis
         dc.SetFont( *pSFont );
@@ -500,7 +577,10 @@ NEU:
                     dc.SetPen( *pblack_2 );
                     dc.DrawLine( xd, m_graph_rect.y, xd, m_graph_rect.y + m_graph_rect.height + 5 );
                     char sbuf[5];
-                    sprintf( sbuf, "%02d", i );
+                    int hour_show = hour_start + i;
+                    if( hour_show >= 24 )
+                        hour_show -= 24;
+                    sprintf( sbuf, "%02d", hour_show );
                     int x_shim = -20;
                     dc.DrawText( wxString( sbuf, wxConvUTF8 ), xd + x_shim + ( m_graph_rect.width / 25 ) / 2, m_graph_rect.y + m_graph_rect.height + 8 );
                 }
@@ -525,8 +605,11 @@ NEU:
             this_now = wxDateTime::Now();
 
         time_t t_now = this_now.GetTicks();       // now, in ticks
+        t_now -= m_diff_mins * 60;
+        if(m_tzoneDisplay == 0)                // LMT @ Station
+            t_now += m_stationOffset_mins * 60;
 
-        float t_ratio = m_graph_rect.width * ( t_now - m_t_graphday_00_at_station ) / ( 25 * 3600.0f );
+        float t_ratio = m_graph_rect.width * ( t_now - m_t_graphday_GMT ) / ( 25 * 3600.0f );
 
         //must eliminate line outside the graph (in that case put it outside the window)
         int xnow = ( t_ratio < 0 || t_ratio > m_graph_rect.width ) ? -1 : m_graph_rect.x + (int) t_ratio;
@@ -541,50 +624,64 @@ NEU:
             float dir;
             tcmax = -10;
             tcmin = 10;
-            float val;
+            float val = -100;
             m_tList->DeleteAllItems();
             int list_index = 0;
-            bool wt;
+            bool wt = false;
 
             wxBeginBusyCursor();
 
+            // The tide/current modules calculate values based on PC local time
+            // We want UTC, so adjust accordingly
+            int tt_localtz = m_t_graphday_GMT  + (m_diff_mins * 60);
+
             // get tide flow sens ( flood or ebb ? )
-            ptcmgr->GetTideFlowSens( m_t_graphday_00_at_station, BACKWARD_ONE_HOUR_STEP,
+            ptcmgr->GetTideFlowSens( tt_localtz , BACKWARD_TEN_MINUTES_STEP,
                                      pIDX->IDX_rec_num, tcv[0], val, wt );
 
+           if(m_tzoneDisplay == 0)
+               tt_localtz -= m_stationOffset_mins * 60;            //LMT at station
+
             for( i = 0; i < 26; i++ ) {
-                int tt = m_t_graphday_00_at_station + ( i * FORWARD_ONE_HOUR_STEP );
+                int tt = tt_localtz + ( i * FORWARD_ONE_HOUR_STEP );
+
                 ptcmgr->GetTideOrCurrent( tt, pIDX->IDX_rec_num, tcv[i], dir );
                 tt_tcv[i] = tt;                         // store the corresponding time_t value
-                if( tcv[i] > tcmax ) tcmax = tcv[i];
+                if( tcv[i] > tcmax )
+                    tcmax = tcv[i];
 
                 if( tcv[i] < tcmin ) tcmin = tcv[i];
                 if( TIDE_PLOT == m_plot_type ) {
-                    if( !( ( tcv[i] > val ) == wt ) )                // if tide flow sens change
+                    if( !( ( tcv[i] > val ) == wt ) && (i > 0))         // if tide flow sense change
                     {
                         float tcvalue;                                  //look backward for HW or LW
                         time_t tctime;
                         ptcmgr->GetHightOrLowTide( tt, BACKWARD_TEN_MINUTES_STEP,
                                                    BACKWARD_ONE_MINUTES_STEP, tcv[i], wt, pIDX->IDX_rec_num, tcvalue,
                                                    tctime );
-                        wxDateTime tcd;                                                 //write date
-                        wxString s, s1;
-                        tcd.Set( tctime + ( m_corr_mins * 60 ) );
-                        s.Printf( tcd.Format( _T("%H:%M  ") ) );
-                        s1.Printf( _T("%05.2f "), tcvalue );                           //write value
-                        s.Append( s1 );
-                        Station_Data *pmsd = pIDX->pref_sta_data;                       //write unit
-                        if( pmsd ) s.Append( wxString( pmsd->units_abbrv, wxConvUTF8 ) );
-                        s.Append( _T("   ") );
-                        ( wt ) ? s.Append( _("HW") ) : s.Append( _("LW") );         //write HW or LT
+                        if(tctime > tt_localtz){                        // Only show events visible in graphic presently shown
+                            wxDateTime tcd;                                                 //write date
+                            wxString s, s1;
+                            tcd.Set( tctime - ( m_diff_mins * 60 ) );
+                            if(m_tzoneDisplay == 0)         // LMT @ Station
+                                tcd.Set( tctime + ( m_stationOffset_mins - m_diff_mins) * 60  );
 
-                        wxListItem li;
-                        li.SetId( list_index );
-                        li.SetAlign(wxLIST_FORMAT_LEFT);
-                        li.SetText(s);
-                        li.SetColumn(0);
-                        m_tList->InsertItem( li );
-                        list_index++;
+                            s.Printf( tcd.Format( _T("%H:%M  ") ) );
+                            s1.Printf( _T("%05.2f "), tcvalue );                           //write value
+                            s.Append( s1 );
+                            Station_Data *pmsd = pIDX->pref_sta_data;                       //write unit
+                            if( pmsd ) s.Append( wxString( pmsd->units_abbrv, wxConvUTF8 ) );
+                            s.Append( _T("   ") );
+                            ( wt ) ? s.Append( _("HW") ) : s.Append( _("LW") );         //write HW or LT
+
+                            wxListItem li;
+                            li.SetId( list_index );
+                            li.SetAlign(wxLIST_FORMAT_LEFT);
+                            li.SetText(s);
+                            li.SetColumn(0);
+                            m_tList->InsertItem( li );
+                            list_index++;
+                        }
                         wt = !wt;                                            //change tide flow sens
                     }
                     val = tcv[i];
@@ -592,7 +689,7 @@ NEU:
                 if( CURRENT_PLOT == m_plot_type ) {
                     wxDateTime thx;                                                     //write date
                     wxString s, s1;
-                    thx.Set( (time_t) ( tt + ( m_corr_mins * 60 ) ) );
+                    thx.Set( (time_t) ( tt + ( m_stationOffset_mins * 60 ) ) );
                     s.Printf( thx.Format( _T("%H:%M  ") ) );
                     s1.Printf( _T("%05.2f "), fabs( tcv[i] ) );                        //write value
                     s.Append( s1 );
@@ -697,39 +794,40 @@ NEU:
 #endif
         //  More Info
 
-//
-        int station_offset = ptcmgr->GetStationTimeOffset( pIDX );
-        int h = station_offset / 60;
-        int m = station_offset - ( h * 60 );
-        if( m_graphday.IsDST() ) h += 1;
-        m_stz.Printf( _T("UTC %+03d:%02d"), h, m );
-
-
+        if(m_tzoneDisplay == 0){
+            int station_offset = ptcmgr->GetStationTimeOffset( pIDX );
+            int h = station_offset / 60;
+            int m = station_offset - ( h * 60 );
+            if( m_graphday.IsDST() ) h += 1;
+            m_stz.Printf( _T("UTC %+03d:%02d"), h, m );
 
 //    Make the "nice" (for the US) station time-zone string, brutally by hand
-        double lat = ptcmgr->GetStationLat(pIDX);
+            double lat = ptcmgr->GetStationLat(pIDX);
 
-        if( lat > 20.0 ){
-            wxString mtz;
-            switch( ptcmgr->GetStationTimeOffset( pIDX ) ) {
-            case -240:
-                mtz = _T( "AST" );
-                break;
-            case -300:
-                mtz = _T( "EST" );
-                break;
-            case -360:
-                mtz = _T( "CST" );
-                break;
-            }
+            if( lat > 20.0 ){
+                wxString mtz;
+                switch( ptcmgr->GetStationTimeOffset( pIDX ) ) {
+                case -240:
+                    mtz = _T( "AST" );
+                    break;
+                case -300:
+                    mtz = _T( "EST" );
+                    break;
+                case -360:
+                    mtz = _T( "CST" );
+                    break;
+                }
 
-            if( mtz.Len() ) {
-                if( m_graphday.IsDST() ) mtz[1] = 'D';
-
-                m_stz = mtz;
+                if( mtz.Len() ) {
+                    if( m_graphday.IsDST() ) mtz[1] = 'D';
+                    m_stz = mtz;
+                }
             }
         }
+        else
+             m_stz = _T("UTC") ;
 
+         int h;
         dc.SetFont( *pSFont );
         dc.GetTextExtent( m_stz, &w, &h );
         dc.DrawText( m_stz, x / 2 - w / 2, y - 2.5 * m_button_height );
@@ -883,15 +981,28 @@ void TCWin::OnTCWinPopupTimerEvent( wxTimerEvent& event )
         wxString p, s;
         //set time on x cursor position
         t = ( 25 / ( (float) x * 8 / 10 ) ) * ( (float) curs_x - ( (float) x * 1 / 10 ) );
-        int tt = m_t_graphday_00_at_station + (int) ( t * 3600 );
+
+        int tt = m_t_graphday_GMT + (int) ( t * 3600 );
+        time_t ths = tt;
+
         wxDateTime thd;
-        time_t ths = tt + ( m_corr_mins * 60 );
         thd.Set( ths );
         p.Printf( thd.Format( _T("%Hh %Mmn") ) );
         p.Append( _T("\n") );
 
+        // The tide/current modules calculate values based on PC local time
+        // We want UTC, so adjust accordingly
+        int tt_localtz = m_t_graphday_GMT  + (m_diff_mins * 60);
+
+        int ttv = tt_localtz + (int) ( t * 3600 );
+        if(m_tzoneDisplay == 0){
+            ttv -= m_stationOffset_mins * 60;            //LMT at station
+        }
+
+        time_t tts = ttv;
+
         //set tide level or current speed at that time
-        ptcmgr->GetTideOrCurrent( tt, pIDX->IDX_rec_num, t, d );
+        ptcmgr->GetTideOrCurrent( tts, pIDX->IDX_rec_num, t, d );
         s.Printf( _T("%3.2f "), ( t < 0 && CURRENT_PLOT == m_plot_type ) ? -t : t ); // always positive if current
         p.Append( s );
 

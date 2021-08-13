@@ -63,6 +63,7 @@
 #include "Osenc.h"
 #include "chcanv.h"
 #include "SencManager.h"
+#include "logger.h"
 
 #ifdef __MSVC__
 #define _CRTDBG_MAP_ALLOC
@@ -291,7 +292,7 @@ s57chart::~s57chart()
  
     for (unsigned i=0; i<m_pve_vector.size(); i++)
         delete m_pve_vector.at(i);
-    
+
     m_pcs_vector.clear();
     m_pve_vector.clear();
 
@@ -451,7 +452,7 @@ bool s57chart::GetChartExtent( Extent *pext )
 
 static void free_mps(mps_container *mps)
 {
-    
+
     if ( mps == 0)
         return;
     if( ps52plib && mps->cs_rules ){
@@ -682,7 +683,7 @@ void  s57chart::LoadThumb()
         m_pDIBThumbDay = pBMP;
         m_pDIBThumbOrphan = 0;
         m_pDIBThumbDim = 0;
-                
+
     }
 }
 
@@ -1019,7 +1020,7 @@ void s57chart::AssembleLineGeometry( void )
     std::map<long long, connector_segment *> cc_connector_hash;
 
     std::map<long long, connector_segment *>::iterator csit;
-    
+
     int ndelta = 0;
 
     //  Define a vector to temporarily hold the geometry for the created pcs elements
@@ -1046,7 +1047,7 @@ void s57chart::AssembleLineGeometry( void )
 
                         if(!obj->m_lsindex_array)
                             continue;
-                        
+
                         int seg_index = iseg * 3;
                         int *index_run = &obj->m_lsindex_array[seg_index];
 
@@ -1086,7 +1087,7 @@ void s57chart::AssembleLineGeometry( void )
                                 //      The initial node exists and connects to the start of an edge
 
                                 long long key = ((unsigned long long)inode << 32) + venode;
-                                
+
                                 connector_segment *pcs = NULL;
                                 csit = ce_connector_hash.find( key );
                                 if( csit == ce_connector_hash.end() ){
@@ -1147,7 +1148,7 @@ void s57chart::AssembleLineGeometry( void )
                             pls->ls_type = TYPE_EE;
                             if( !edge_dir )
                                 pls->ls_type = TYPE_EE_REV;
-                                
+
 
                             le_current->next = pls;             // hook it up
                             le_current = pls;
@@ -1161,7 +1162,7 @@ void s57chart::AssembleLineGeometry( void )
                                 if(pedge && pedge->nCount){
 
                                     long long key = ((unsigned long long)venode << 32) + enode;
-                                    
+
                                     connector_segment *pcs = NULL;
                                     csit = ec_connector_hash.find( key );
                                     if( csit == ec_connector_hash.end() ){
@@ -1214,7 +1215,7 @@ void s57chart::AssembleLineGeometry( void )
                                 }
                                 else {
                                     long long key = ((unsigned long long)inode << 32) + enode;
-                                    
+
                                     connector_segment *pcs = NULL;
                                     csit = cc_connector_hash.find( key );
                                     if( csit == cc_connector_hash.end() ){
@@ -1277,7 +1278,7 @@ void s57chart::AssembleLineGeometry( void )
                     free(obj->m_lsindex_array);
                     obj->m_lsindex_array = NULL;
                 }
-                
+
                 top = top->next;
             }
         }
@@ -1291,7 +1292,7 @@ void s57chart::AssembleLineGeometry( void )
     
     unsigned char *buffer_offset;
     size_t offset;
-    
+
     if(0 == m_vbo_byte_length){
         m_line_vertex_buffer = (float *)malloc( vbo_byte_length);
         m_vbo_byte_length = vbo_byte_length;
@@ -1306,7 +1307,7 @@ void s57chart::AssembleLineGeometry( void )
     }
 
     float *lvr = (float *)buffer_offset;
-    
+
     //      Copy and edge points as floats,
     //      and recording each segment's offset in the array
     for( it = m_ve_hash.begin(); it != m_ve_hash.end(); ++it ) {
@@ -1489,7 +1490,7 @@ bool s57chart::RenderRegionViewOnGLNoText( const wxGLContext &glc, const ViewPor
     ps52plib->m_bShowS57Text = false;
     bool b_ret =  DoRenderRegionViewOnGL( glc, VPoint, RectRegion, Region, false );
     ps52plib->m_bShowS57Text = b_text;
-    
+
     return b_ret;
 }
 
@@ -1498,20 +1499,20 @@ bool s57chart::RenderViewOnGLTextOnly( const wxGLContext &glc, const ViewPort& V
     if(!m_RAZBuilt) return false;
 
 #ifdef ocpnUSE_GL
-    
+
     if( !ps52plib ) return false;
-    
+
     SetVPParms( VPoint );
-    
+
     glPushMatrix(); //    Adjust for rotation
     glChartCanvas::RotateToViewPort(VPoint);
-           
+
     glChartCanvas::DisableClipRegion();
     DoRenderOnGLText( glc, VPoint );
-            
+
     glPopMatrix();
-    
-    
+
+
 #endif
     return true;
 }
@@ -1660,7 +1661,7 @@ bool s57chart::DoRenderOnGL( const wxGLContext &glc, const ViewPort& VPoint )
 bool s57chart::DoRenderOnGLText( const wxGLContext &glc, const ViewPort& VPoint )
 {
 #ifdef ocpnUSE_GL
-    
+
     int i;
     ObjRazRules *top;
     ObjRazRules *crnt;
@@ -1673,7 +1674,7 @@ bool s57chart::DoRenderOnGLText( const wxGLContext &glc, const ViewPort& VPoint 
             top = razRules[i][4]; // Area Symbolized Boundaries
         else
             top = razRules[i][3];           // Area Plain Boundaries
-            
+
             while( top != NULL ) {
                 crnt = top;
                 top = top->next;               // next object
@@ -1682,7 +1683,7 @@ bool s57chart::DoRenderOnGLText( const wxGLContext &glc, const ViewPort& VPoint 
             }
     }
 #endif
-    
+
     //    Render the lines and points
     for( i = 0; i < PRIO_NUM; ++i ) {
         if( ps52plib->m_nBoundaryStyle == SYMBOLIZED_BOUNDARIES ) 
@@ -1696,7 +1697,7 @@ bool s57chart::DoRenderOnGLText( const wxGLContext &glc, const ViewPort& VPoint 
                 crnt->sm_transform_parms = &vp_transform;
                 ps52plib->RenderObjectToGLText( glc, crnt, &tvp );
         }
-            
+
         top = razRules[i][2];           //LINES
         while( top != NULL ) {
                 crnt = top;
@@ -1704,23 +1705,23 @@ bool s57chart::DoRenderOnGLText( const wxGLContext &glc, const ViewPort& VPoint 
                 crnt->sm_transform_parms = &vp_transform;
                 ps52plib->RenderObjectToGLText( glc, crnt, &tvp );
         }
-            
+
         if( ps52plib->m_nSymbolStyle == SIMPLIFIED ) 
             top = razRules[i][0];       //SIMPLIFIED Points
         else
             top = razRules[i][1];           //Paper Chart Points Points
-            
+
         while( top != NULL ) {
                 crnt = top;
                 top = top->next;
                 crnt->sm_transform_parms = &vp_transform;
                 ps52plib->RenderObjectToGLText( glc, crnt, &tvp );
         }
-            
+
     }
-    
+
 #endif          //#ifdef ocpnUSE_GL
-    
+
     return true;
 }
 
@@ -1730,12 +1731,12 @@ bool s57chart::RenderRegionViewOnDCNoText( wxMemoryDC& dc, const ViewPort& VPoin
 {
     if(!m_RAZBuilt)
         return false;
-    
+
     bool b_text = ps52plib->GetShowS57Text();
     ps52plib->m_bShowS57Text = false;
     bool b_ret = DoRenderRegionViewOnDC( dc, VPoint, Region, false );
     ps52plib->m_bShowS57Text = b_text;
-    
+
     return true;
 }
 
@@ -1755,26 +1756,26 @@ bool s57chart::RenderRegionViewOnDCTextOnly( wxMemoryDC& dc, const ViewPort& VPo
     else{
         ViewPort temp_vp = VPoint;
         double temp_lon_left, temp_lat_bot, temp_lon_right, temp_lat_top;
-        
+
         //    Decompose the region into rectangles,
         OCPNRegionIterator upd( Region ); // get the requested rect list
         while( upd.HaveRects() ) {
             wxRect rect = upd.GetRect();
-            
+
             wxPoint p;
             p.x = rect.x;
             p.y = rect.y;
-            
+
             temp_vp.GetLLFromPix( p, &temp_lat_top, &temp_lon_left);
-            
+
             p.x += rect.width;
             p.y += rect.height;
             temp_vp.GetLLFromPix( p, &temp_lat_bot, &temp_lon_right);
-        
+
             if( temp_lon_right < temp_lon_left )        // presumably crossing Greenwich
                     temp_lon_right += 360.;
-        
-        
+
+
             temp_vp.GetBBox().Set(temp_lat_bot, temp_lon_left, temp_lat_top, temp_lon_right);
 
             wxDCClipper clip(dc, rect);
@@ -1783,7 +1784,7 @@ bool s57chart::RenderRegionViewOnDCTextOnly( wxMemoryDC& dc, const ViewPort& VPo
             upd.NextRect();
         }
     }
-    
+
     return true;
 }
 
@@ -2304,9 +2305,9 @@ bool s57chart::DCRenderText( wxMemoryDC& dcinput, const ViewPort& vp )
     ObjRazRules *top;
     ObjRazRules *crnt;
     ViewPort tvp = vp;                    // undo const  TODO fix this in PLIB
-    
+
     for( i = 0; i < PRIO_NUM; ++i ) {
-        
+
         if( ps52plib->m_nBoundaryStyle == SYMBOLIZED_BOUNDARIES ) 
             top = razRules[i][4]; // Area Symbolized Boundaries
         else
@@ -2318,7 +2319,7 @@ bool s57chart::DCRenderText( wxMemoryDC& dcinput, const ViewPort& vp )
                 crnt->sm_transform_parms = &vp_transform;
                 ps52plib->RenderObjectToDCText( &dcinput, crnt, &tvp );
         }
-            
+
         top = razRules[i][2];           //LINES
         while( top != NULL ) {
                 crnt = top;
@@ -2326,12 +2327,12 @@ bool s57chart::DCRenderText( wxMemoryDC& dcinput, const ViewPort& vp )
                 crnt->sm_transform_parms = &vp_transform;
                 ps52plib->RenderObjectToDCText( &dcinput, crnt, &tvp );
         }
-            
+
         if( ps52plib->m_nSymbolStyle == SIMPLIFIED ) 
             top = razRules[i][0];       //SIMPLIFIED Points
         else
             top = razRules[i][1];           //Paper Chart Points Points
-            
+
         while( top != NULL ) {
                 crnt = top;
                 top = top->next;
@@ -2339,7 +2340,7 @@ bool s57chart::DCRenderText( wxMemoryDC& dcinput, const ViewPort& vp )
                 ps52plib->RenderObjectToDCText( &dcinput, crnt, &tvp );
         }
     }
-            
+
     return true;
 }
 
@@ -2362,11 +2363,11 @@ InitReturn s57chart::Init( const wxString& name, ChartInitFlag flags )
     // Really can only Init and use S57 chart if the S52 Presentation Library is present and OK
     if( (NULL ==ps52plib) || !(ps52plib->m_bOK) )
         return INIT_FAIL_REMOVE;
-    
+
     wxString ext;
     if(name.Upper().EndsWith(".XZ")) {
         ext = wxFileName(name.Left(name.Length()-3)).GetExt();
-        
+
         // decompress to temp file to allow seeking
         m_TempFilePath = wxFileName::GetTempDir() + wxFileName::GetPathSeparator() +
             wxFileName(name).GetName();
@@ -2452,7 +2453,7 @@ InitReturn s57chart::Init( const wxString& name, ChartInitFlag flags )
                     s_bInS57--;
                     return INIT_OK;
             }
-            
+
             if( sret != BUILD_SENC_OK ) {
                 if( sret == BUILD_SENC_NOK_RETRY ) ret_value = INIT_FAIL_RETRY;
                 else
@@ -2471,7 +2472,7 @@ InitReturn s57chart::Init( const wxString& name, ChartInitFlag flags )
 
     }
 
-    
+
     s_bInS57--;
     return ret_value;
 
@@ -2482,19 +2483,19 @@ wxString s57chart::buildSENCName( const wxString& name)
     wxFileName fn(name);
     fn.SetExt( _T("S57") );
     wxString file_name = fn.GetFullName();
-    
+
     //      Set the proper directory for the SENC files
     wxString SENCdir = g_SENCPrefix;
-    
+
     if( SENCdir.Last() != wxFileName::GetPathSeparator() )
         SENCdir.Append( wxFileName::GetPathSeparator() );
-    
+
 #if 1
     wxString source_dir = fn.GetPath(wxPATH_GET_SEPARATOR);    
     wxCharBuffer buf = source_dir.ToUTF8();
     unsigned char sha1_out[20];
     sha1( (unsigned char *) buf.data(), strlen(buf.data()), sha1_out );
-    
+
     wxString sha1;
     for (unsigned int i=0 ; i < 6 ; i++){
         wxString s;
@@ -2504,10 +2505,10 @@ wxString s57chart::buildSENCName( const wxString& name)
     sha1 += _T("_");
     file_name.Prepend(sha1);
 #endif    
-    
+
     wxFileName tsfn( SENCdir );
     tsfn.SetFullName( file_name );
-    
+
     return tsfn.GetFullPath();
 }
 
@@ -2521,11 +2522,11 @@ int s57chart::FindOrCreateSenc( const wxString& name, bool b_progress )
     wxString ext;
     if(name.Upper().EndsWith(".XZ")) {
         ext = wxFileName(name.Left(name.Length()-3)).GetExt();
-        
+
         // decompress to temp file to allow seeking
         m_TempFilePath = wxFileName::GetTempDir() + wxFileName::GetPathSeparator() +
         wxFileName(name).GetName();
-        
+
         if(!wxFileExists(m_TempFilePath) && !DecompressXZFile(name, m_TempFilePath)) {
             wxRemoveFile(m_TempFilePath);
             return INIT_FAIL_REMOVE;
@@ -2535,14 +2536,14 @@ int s57chart::FindOrCreateSenc( const wxString& name, bool b_progress )
         ext = wxFileName(name).GetExt();
     }
     m_FullPath = name;
-    
+
     if( !m_bbase_file_attr_known ) {
         if( !GetBaseFileAttr( m_TempFilePath ) )
             return INIT_FAIL_REMOVE;
         else
             m_bbase_file_attr_known = true;
     }
-    
+
     //      Establish location for SENC files
     m_SENCFileName = buildSENCName( name );
     
@@ -2590,7 +2591,7 @@ int s57chart::FindOrCreateSenc( const wxString& name, bool b_progress )
                 senc_base_edtn.ToLong(&isenc_edition);
                 long ifile_edition;
                 m_edtn000.ToLong(&ifile_edition);
-                
+
 //              Anything to do?
 //force_make_senc = 1;
                 //  SENC file version has to be correct for other tests to make sense
@@ -2602,7 +2603,7 @@ int s57chart::FindOrCreateSenc( const wxString& name, bool b_progress )
                 //  Senc EDTN must be the same as .000 file EDTN.
                 //  This test catches the usual case where the .000 file is updated from the web,
                 //  and all updates (.001, .002, etc.)  are subsumed.
-                
+
                 else if( ifile_edition > isenc_edition ){
                     bbuild_new_senc = true;
                     wxLogMessage(_T("    Rebuilding SENC due to cell edition update."));
@@ -2896,7 +2897,7 @@ bool s57chart::BuildThumbnail( const wxString &bmpname )
 //      Also, save some other settings
     bool bsavem_bShowSoundgp = ps52plib->m_bShowSoundg;
     bool bsave_text = ps52plib->m_bShowS57Text;
-    
+
     // SetDisplayCategory may clear Noshow array
     ps52plib->SaveObjNoshow();
 
@@ -2907,22 +2908,22 @@ bool s57chart::BuildThumbnail( const wxString &bmpname )
         if( !strncmp( pOLE->OBJLName, "DEPARE", 6 ) ) pOLE->nViz = 1;
     }
 
-    
+
     ps52plib->m_bShowSoundg = false;
     ps52plib->m_bShowS57Text = false;
-    
+
 //      Use display category MARINERS_STANDARD to force use of OBJLArray
     DisCat dsave = ps52plib->GetDisplayCategory();
     ps52plib->SetDisplayCategory( MARINERS_STANDARD );
 
     ps52plib->AddObjNoshow( "BRIDGE" );
     ps52plib->AddObjNoshow( "GATCON" );
-    
+
     double safety_depth = S52_getMarinerParam(S52_MAR_SAFETY_DEPTH);
     S52_setMarinerParam(S52_MAR_SAFETY_DEPTH, -100);  
     double safety_contour = S52_getMarinerParam(S52_MAR_SAFETY_CONTOUR);
     S52_setMarinerParam(S52_MAR_SAFETY_CONTOUR, -100);
-                        
+
 
 #ifdef ocpnUSE_DIBSECTION
     ocpnMemDC memdc, dc_org;
@@ -2951,13 +2952,13 @@ bool s57chart::BuildThumbnail( const wxString &bmpname )
 
     ps52plib->RemoveObjNoshow( "BRIDGE" );
     ps52plib->RemoveObjNoshow( "GATCON" );
-    
+
     ps52plib->m_bShowSoundg = bsavem_bShowSoundgp;
     ps52plib->m_bShowS57Text = bsave_text;
-    
+
     S52_setMarinerParam(S52_MAR_SAFETY_DEPTH, safety_depth);  
     S52_setMarinerParam(S52_MAR_SAFETY_CONTOUR, safety_contour);
-    
+
 //      Reset the color scheme
     ps52plib->RestoreColorScheme();
 
@@ -3075,7 +3076,7 @@ bool s57chart::CreateHeaderDataFromENC( void )
 
         delete pFeat;
         pFeat = GetChartNextM_COVR( catcov );
-        std::cout << "used" << usedpts << " points" << std::endl;
+        DEBUG_LOG << "used " << usedpts << " points";
 
     }         // while
 
@@ -3304,7 +3305,7 @@ bool s57chart::CreateHeaderDataFromSENC( void )
         return CreateHeaderDataFromoSENC();
 
     return false;
-    
+
  }
 
 /*    This method returns the smallest chart DEPCNT:VALDCO value which
@@ -3510,9 +3511,9 @@ int s57chart::GetUpdateFileArray( const wxFileName file000, wxArrayString *UpFil
             return 0;
         }
     }
-    
+
     int flags = wxDIR_DEFAULT;
-    
+
     // Check dir structure
     //  We look to see if the directory one level above where the .000 file is located happens to be "perfectly numeric" in name.
     //  If so, the dataset is presumed to be organized with each update in its own directory.
@@ -3528,39 +3529,39 @@ int s57chart::GetUpdateFileArray( const wxFileName file000, wxArrayString *UpFil
         DirName000 = sdir;
         flags |= wxDIR_DIRS;
     }
-    
+
     wxString ext;
     wxArrayString *dummy_array;
     int retval = 0;
-    
+
     if( UpFiles == NULL )
         dummy_array = new wxArrayString;
     else
         dummy_array = UpFiles;
-    
+
     wxArrayString possibleFiles;
     wxDir::GetAllFiles( DirName000, &possibleFiles, wxEmptyString, flags );
-    
+
     for(unsigned int i=0 ; i < possibleFiles.GetCount() ; i++){
         wxString filename(possibleFiles[i]);
-        
+
         wxFileName file( filename );
         ext = file.GetExt();
-        
+
         long tmp;
         //  Files of interest have the same base name is the target .000 cell,
         //  and have numeric extension
         if( ext.ToLong( &tmp ) && ( file.GetName() == file000.GetName() ) ) {
             wxString FileToAdd = filename;
-            
+
             wxCharBuffer buffer=FileToAdd.ToUTF8();             // Check file namme for convertability
-            
+
             if( buffer.data() && !filename.IsSameAs( _T("CATALOG.031"), false ) )           // don't process catalogs
             {
                 //          We must check the update file for validity
                 //          1.  Is update field DSID:EDTN  equal to base .000 file DSID:EDTN?
                 //          2.  Is update file DSID.ISDT greater than or equal to base .000 file DSID:ISDT
-                
+
                 wxDateTime umdate;
                 wxString sumdate;
                 wxString umedtn;
@@ -3571,18 +3572,18 @@ int s57chart::GetUpdateFileArray( const wxFileName file000, wxArrayString *UpFil
                     wxLogMessage( msg );
                 } else {
                     poModule->Rewind();
-                    
+
                     //    Read and parse DDFRecord 0 to get some interesting data
                     //    n.b. assumes that the required fields will be in Record 0....  Is this always true?
                     
                     DDFRecord *pr = poModule->ReadRecord();                              // Record 0
                     //    pr->Dump(stdout);
-                    
+
                     //  Fetch ISDT(Issue Date)
                     char *u = NULL;
                     if( pr ) {
                         u = (char *) ( pr->GetStringSubfield( "DSID", 0, "ISDT", 0 ) );
-                        
+
                         if( u ) {
                             if( strlen( u ) ) sumdate = wxString( u, wxConvUTF8 );
                         }
@@ -3591,15 +3592,15 @@ int s57chart::GetUpdateFileArray( const wxFileName file000, wxArrayString *UpFil
                             _T("   s57chart::BuildS57File  DDFRecord 0 does not contain DSID:ISDT in update file ") );
                         msg.Append( FileToAdd );
                         wxLogMessage( msg );
-                        
+
                         sumdate = _T("20000101");           // backstop, very early, so wont be used
                     }
-                    
+
                     umdate.ParseFormat( sumdate, _T("%Y%m%d") );
                     if( !umdate.IsValid() ) umdate.ParseFormat( _T("20000101"), _T("%Y%m%d") );
-                                     
+
                                      umdate.ResetTime();
-                    
+
                     //    Fetch the EDTN(Edition) field
                                      if( pr ) {
                                          u = NULL;
@@ -3612,22 +3613,22 @@ int s57chart::GetUpdateFileArray( const wxFileName file000, wxArrayString *UpFil
                                              _T("   s57chart::BuildS57File  DDFRecord 0 does not contain DSID:EDTN in update file ") );
                                          msg.Append( FileToAdd );
                                          wxLogMessage( msg );
-                                         
+
                                          umedtn = _T("1");                // backstop
                                      }
                 }
-                
+
                 delete poModule;
-                
+
                 if( ( !umdate.IsEarlierThan( date000 ) ) && ( umedtn.IsSameAs( edtn000 ) ) ) // Note polarity on Date compare....
                 dummy_array->Add( FileToAdd );                    // Looking for umdate >= m_date000
             }
         }
     }
-    
+
     //      Sort the candidates
     dummy_array->Sort( ExtensionCompare );
-    
+
     //      Get the update number of the last in the list
     if( dummy_array->GetCount() ) {
         wxString Last = dummy_array->Last();
@@ -3637,9 +3638,9 @@ int s57chart::GetUpdateFileArray( const wxFileName file000, wxArrayString *UpFil
         if(buffer.data())            
             retval = atoi( buffer.data() );
     }
-    
+
     if( UpFiles == NULL ) delete dummy_array;
-                                     
+
     return retval;
 }
 
@@ -3869,7 +3870,7 @@ bool s57chart::GetBaseFileAttr( const wxString& file000 )
 
 int s57chart::BuildSENCFile( const wxString& FullPath000, const wxString& SENCFileName, bool b_progress )
 {
-    
+
     //  LOD calculation
     double display_ppm = 1 / .00025;     // nominal for most LCD displays
     double meters_per_pixel_max_scale = GetNormalScaleMin(0,g_b_overzoom_x)/display_ppm;
@@ -3888,7 +3889,7 @@ int s57chart::BuildSENCFile( const wxString& FullPath000, const wxString& SENCFi
             ticket->m_FullPath000 = FullPath000;
             ticket->m_SENCFileName = SENCFileName;
             ticket->m_chart = this;
-            
+
             m_SENCthreadStatus = g_SencThreadManager->ScheduleJob(ticket);
             bReadyToRender = true;
             return BUILD_SENC_PENDING;
@@ -3910,7 +3911,7 @@ int s57chart::BuildSENCFile( const wxString& FullPath000, const wxString& SENCFi
         int ret = senc.createSenc200( FullPath000, SENCFileName, b_progress );
 
         OCPNPlatform::HideBusySpinner();
-        
+
         if(ret == ERROR_INGESTING000)
             return BUILD_SENC_NOK_PERMANENT;
         else
@@ -4003,7 +4004,7 @@ int s57chart::BuildRAZFromSENCFile( const wxString& FullPath )
 
     VEs.clear();        // destroy contents, no longer needed
     VCs.clear();
-    
+
     //Walk the vector of S57Objs, associating LUPS, instructions, etc...
 
     for(unsigned int i=0 ; i < Objects.size() ; i++){
@@ -4499,7 +4500,7 @@ ListOfObjRazRules *s57chart::GetLightsObjRuleListVisibleAtLatLon( float lat, flo
                         bool hasSectors = GetDoubleAttr( top->obj, "SECTR1", sectrTest );
                         if(hasSectors){
                             if( ps52plib->ObjectRenderCheckCat( top, VPoint ) ) {
-                                
+
                                 int attrCounter;
                                 double valnmr = -1;
                                 wxString curAttrName;
@@ -4536,11 +4537,11 @@ ListOfObjRazRules *s57chart::GetLightsObjRuleListVisibleAtLatLon( float lat, flo
                                         else if( curAttrName == _T("VALNMR") )
                                             value.ToDouble( &valnmr );
 
-                                        
+
                                         attrCounter++;
                                         curr_att += 6;
                                     }
-                                    
+
                                     if(bviz && (valnmr > 0.1)){
                                         // As a quick check, compare the mercator-manhattan distance
                                         double olon, olat;
@@ -4719,7 +4720,7 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
             //  Coarse test first
             if( !obj->BBObj.ContainsMarge( lat, lon, select_radius ) )
                 return false;
-            
+
             float sel_rad_meters = select_radius * 1852 * 60;       // approximately
             double easting, northing;
             toSM( lat, lon, ref_lat, ref_lon, &easting, &northing );
@@ -4761,11 +4762,11 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
             }
             else{                       // in oSENC V2, Array of points is stored in prearranged VBO array.
                 if( obj->m_ls_list ){
-                
+
                     float *ppt;
                     unsigned char *vbo_point = (unsigned char *)obj->m_chart_context->chart->GetLineVertexBuffer();
                     line_segment_element *ls = obj->m_ls_list;
-        
+
                     while(ls && vbo_point){
                         int nPoints;
                         if( (ls->ls_type == TYPE_EE) || (ls->ls_type == TYPE_EE_REV) ){
@@ -4776,30 +4777,30 @@ bool s57chart::DoesLatLonSelectObject( float lat, float lon, float select_radius
                             ppt = (float *)(vbo_point + ls->pcs->vbo_offset);
                             nPoints = 2;
                         }
-                    
+
                         float north0 = ppt[1];
                         float east0 = ppt[0];
-                        
+
                         ppt += 2;
-                    
+
                         for(int ip=0 ; ip < nPoints - 1 ; ip++){
-                            
+
                             float north = ppt[1];
                             float east = ppt[0];
-                            
+
                             if( northing >= ( fmin(north, north0) - sel_rad_meters ) )
                                 if( northing <= ( fmax(north, north0) + sel_rad_meters ) )
                                     if( easting >= ( fmin(east, east0) - sel_rad_meters ) )
                                         if( easting <= ( fmax(east, east0) + sel_rad_meters ) ) {
                                  return true;
                              }
-                                    
+
                              north0 = north;
                              east0 = east;
                                     
                              ppt += 2;
                         }            
-                
+
                         ls = ls->next;
                     }
                 }
@@ -5536,7 +5537,7 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
                 // need to do this in creatsencrecord above, and update the senc format.
 
                 value = GetObjectAttributeValueAsString( current->obj, attrCounter, curAttrName );
-                
+
                 // If the atribute value is a filename, change the value into a link to that file
                 wxString AttrNamesFiles = _T("PICREP,TXTDSC,NTXTDS"); //AttrNames that might have a filename as value
                 if ( AttrNamesFiles.Find( curAttrName) != wxNOT_FOUND )
@@ -5550,7 +5551,7 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
                             else
                                 value = value + _T("&nbsp;&nbsp;<font color=\"red\">[ ") + _("this file is not available") + _T(" ]</font>");
                         }
-                    }                    
+                    }
                 AttrNamesFiles = _T("DATEND,DATSTA,PEREND,PERSTA"); //AttrNames with date info
                 if ( AttrNamesFiles.Find( curAttrName) != wxNOT_FOUND ) {
                     bool d = true;
@@ -5604,7 +5605,7 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
                 } else {
                     if( curAttrName == _T("INFORM") || curAttrName == _T("NINFOM") )
                         value.Replace(_T("|"), _T("<br>") );
-                    
+
                     if(curAttrName == _T("catgeo"))
                         attribStr << type2str(current->obj->Primitive_type);
                     else
@@ -5638,7 +5639,7 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
 
         }
     } // Object for loop
-    
+
     // Add the additional info files
     wxArrayString files;
     file.Assign( GetFullPath() );
@@ -5655,11 +5656,11 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
             if ( files.Count() > ++i){
                 file.Assign( files.Item(i) );
                 AddFiles << wxString::Format( _T("<td valign=top><font size=-2><a href=\"%s\">%s</a></font></td>"), file.GetFullPath(), file.GetFullName() );                
-            }                
+            }
         }
         ret_val << AddFiles <<_T("</table>");
     }
-    
+
     if( !lights.empty() ) {
         assert( curLight != nullptr);
 
@@ -5719,7 +5720,7 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
                     }
                 }
             }
-            
+
             lightsHtml << colorStr;
             
             lightsHtml << _T("</font></td><td><font size=-1><nobr><b>");
@@ -5804,7 +5805,7 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
 
         lights.clear();
     }
-   
+
     return ret_val;
 }
 
@@ -5911,10 +5912,10 @@ int s57chart::GetENCScale( void )
         return 1;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                       OpenCPN_OGRErrorHandler()                      */
 /*                       Use Global wxLog Class                         */
-/************************************************************************/
+/* ***********************************************************************/
 
 void OpenCPN_OGRErrorHandler( CPLErr eErrClass, int nError, const char * pszErrorMsg )
 {
@@ -5943,10 +5944,10 @@ void OpenCPN_OGRErrorHandler( CPLErr eErrClass, int nError, const char * pszErro
 
 //      In GDAL-1.2.0, CSVGetField is not exported.......
 //      So, make my own simplified copy
-/************************************************************************/
+/* ***********************************************************************/
 /*                           MyCSVGetField()                            */
 /*                                                                      */
-/************************************************************************/
+/* ***********************************************************************/
 
 const char *MyCSVGetField( const char * pszFilename, const char * pszKeyFieldName,
         const char * pszKeyFieldValue, CSVCompareCriteria eCriteria, const char * pszTargetField )
@@ -6337,7 +6338,7 @@ bool s57_GetVisibleLightSectors( ChartCanvas *cc, double lat, double lon, ViewPo
 {
     if( !cc )
         return false;
-    
+
     static float lastLat, lastLon;
 
     if( !ps52plib)
@@ -6392,7 +6393,7 @@ bool s57_CheckExtendedLightSectors( ChartCanvas *cc, int mx, int my, ViewPort& v
 {
     if( !cc )
         return false;
-    
+
     double cursor_lat, cursor_lon;
     static float lastLat, lastLon;
 

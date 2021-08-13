@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
+
 #include <stdlib.h>
 #include <thread>
 
@@ -53,6 +53,8 @@ static int do_play(const char* cmd, const char* path)
 {
     char buff[1024];
     snprintf(buff, sizeof( buff ), cmd, path);
+    wxLogDebug("Sound command: %s", buff);
+
     int status = system(buff);
     if (status == -1) {
         wxLogWarning("Cannot fork process running %s", buff);

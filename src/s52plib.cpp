@@ -100,7 +100,7 @@ WX_DEFINE_OBJARRAY(ArrayOfNoshow);
 
 //  S52_TextC Implementation
 S52_TextC::S52_TextC()
-{ 
+{
     pcol = NULL;
     pFont = NULL;
     texobj = 0;
@@ -584,7 +584,7 @@ bool s52plib::GetAnchorOn()
     else if(OTHER == GetDisplayCategory())
         old_vis = true;
 
-    //other cat  
+    //other cat
     //const char * categories[] = { "ACHBRT", "ACHARE", "CBLSUB", "PIPARE", "PIPSOL", "TUNNEL", "SBDARE" };
 
     old_vis &= !IsObjNoshow("SBDARE");
@@ -2598,7 +2598,7 @@ bool s52plib::RenderHPGL( ObjRazRules *rzRules, Rule *prule, wxPoint &r, ViewPor
         || (!strncmp(rzRules->obj->FeatureName, "TWRTPT", 6))
         || (!strncmp(rzRules->obj->FeatureName, "RCTLPT", 6))
     ){
-        // assume the symbol length 
+        // assume the symbol length
         float sym_length = 30;
         float scaled_length = sym_length / vp->view_scale_ppm;
         float target_length = 1852;
@@ -3893,9 +3893,9 @@ int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         if( !strncmp( str, "DOTT", 4 ) ) {
             thispen.SetStyle(wxPENSTYLE_USER_DASH);
             dash1[0] = 1;
-            dash1[1] = 2; 
+            dash1[1] = 2;
             thispen.SetDashes( 2, dash1 );
-        }        
+        }
         else if( !strncmp( str, "DASH", 4 ) ){
             thispen.SetStyle(wxPENSTYLE_SHORT_DASH);
         }
@@ -4097,13 +4097,13 @@ int s52plib::RenderLSLegacy( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         if( !strncmp( str, "DOTT", 4 ) ) {
             thispen.SetStyle(wxPENSTYLE_USER_DASH);
             dash1[0] = 1;
-            dash1[1] = 2; 
+            dash1[1] = 2;
             thispen.SetDashes( 2, dash1 );
         }
         else if( !strncmp( str, "DASH", 4 ) ){
             thispen.SetStyle(wxPENSTYLE_SHORT_DASH);
         }
-         
+
         if(b_wide_line)
             m_pdc->SetPen( wide_pen );
         else
@@ -4168,7 +4168,7 @@ int s52plib::RenderLSLegacy( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         int priority_current = rzRules->LUP->DPRI - '0';
         if(rzRules->obj->m_DPRI >= 0)
             priority_current = rzRules->obj->m_DPRI;
-        
+
         int *index_run;
         float *ppt;
 
@@ -4345,7 +4345,7 @@ int s52plib::RenderLSPlugIn( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         if( !strncmp( str, "DOTT", 4 ) ) {
             thispen.SetStyle(wxPENSTYLE_USER_DASH);
             dash1[0] = 1;
-            dash1[1] = 2; 
+            dash1[1] = 2;
             thispen.SetDashes( 2, dash1 );
         }
         else if( !strncmp( str, "DASH", 4 ) ){
@@ -4564,7 +4564,7 @@ int s52plib::RenderLC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
         int ndraw = 0;
         while(ls){
-            if( ls->priority == priority_current  ) {  
+            if( 1/*ls->priority == priority_current*/  ) {
 
 
                 //transcribe the segment in the proper order into the output buffer
@@ -4605,7 +4605,7 @@ int s52plib::RenderLC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
                     lp = r;
                     vbo_index += vbo_inc;
-                }            
+                }
 
             }  // priority
 
@@ -4761,8 +4761,8 @@ int s52plib::RenderLCLegacy( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
     if( rzRules->obj->m_n_lsindex ) {
 
-        VE_Hash *ve_hash = (VE_Hash *)rzRules->obj->m_chart_context->m_pve_hash; 
-        VC_Hash *vc_hash = (VC_Hash *)rzRules->obj->m_chart_context->m_pvc_hash; 
+        VE_Hash *ve_hash = (VE_Hash *)rzRules->obj->m_chart_context->m_pve_hash;
+        VC_Hash *vc_hash = (VC_Hash *)rzRules->obj->m_chart_context->m_pvc_hash;
 
         unsigned int nls_max;
         if( rzRules->obj->m_n_edge_max_points > 0 ) // size has been precalculated on SENC load
@@ -5106,7 +5106,7 @@ void s52plib::draw_lc_poly( wxDC *pdc, wxColor &color, int width, wxPoint *ptp, 
                     pdc->DrawLine( (int) xs, (int) ys, ptp[iseg + inc].x, ptp[iseg + inc].y );
                 }
             }
-next_seg_dc:            
+next_seg_dc:
             iseg += inc;
             if(iseg == end_seg)
                 done = true;
@@ -5232,14 +5232,14 @@ next_seg_dc:
                     glDisable( GL_BLEND );
                 }
             }
-next_seg:            
+next_seg:
             iseg += inc;
             if(iseg == end_seg)
                 done = true;
         } // while
 
     } //opengl
-#endif    
+#endif
 }
 
 // Multipoint Sounding
@@ -5654,7 +5654,7 @@ int s52plib::RenderCARC_VBO( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
             // delete any old private data
             ClearRulesCache( rules->razRule );
-            
+
         //      Save the bitmap ptr and aux parms in the rule
         prule->pixelPtr = sbm;
         prule->parm0 = ID_wxBitmap;
@@ -5817,7 +5817,7 @@ int s52plib::RenderCARC_VBO( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
             glLineWidth( 2 );
             glColor4f( 0,0,0,0 );
-            
+
             glBegin( GL_LINE_STRIP );
             glVertex2i( x0, y0 );
             glVertex2i( x0 + b_width, y0 );
@@ -8878,7 +8878,7 @@ bool s52plib::ObjectRenderCheckPos( ObjRazRules *rzRules, ViewPort *vp )
 bool s52plib::ObjectRenderCheckCat( ObjRazRules *rzRules, ViewPort *vp )
 {
     g_scaminScale = 1.0;
-    
+
     if( rzRules->obj == NULL ) return false;
 
     bool b_catfilter = true;
@@ -8887,7 +8887,7 @@ bool s52plib::ObjectRenderCheckCat( ObjRazRules *rzRules, ViewPort *vp )
     //      Do Object Type Filtering
     DisCat obj_cat = rzRules->obj->m_DisplayCat;
 
-    //  Meta object filter. 
+    //  Meta object filter.
     // Applied when showing display category OTHER, and
     // only for objects whose decoded S52 display category (by LUP) is also OTHER
     if( m_nDisplayCategory == OTHER ){
@@ -9001,9 +9001,83 @@ bool s52plib::ObjectRenderCheckCat( ObjRazRules *rzRules, ViewPort *vp )
     return b_visible;
 }
 
+bool s52plib::ObjectRenderCheckDates( ObjRazRules *rzRules )
+{
+    // Check DATSTA/DATEND attributes, if present
+    // DATSTA
+    wxString datsta = rzRules->obj->GetAttrValueAsString("DATSTA");
+    if (datsta.Len() > 0) {
+        bool bDateValid = false;
+
+        // CCYYMMDD
+        wxDateTime objDate;
+        wxString::const_iterator end;
+        if ( objDate.ParseFormat(datsta, "%Y%m%d", &end) ){
+            if(end == datsta.end()) {                            // Require perfect parsing
+                if(objDate.IsValid())
+                    bDateValid = true;
+            }
+        }
+        if(bDateValid){
+            objDate.ResetTime();                    // DATSTA specifications take effect at 00:01- on the specified date
+            wxDateTime now = wxDateTime::Now();
+            if(now.IsEarlierThan(objDate))
+                return false;                       // No Show
+        }
+    }
+
+    // DATEND
+    datsta = rzRules->obj->GetAttrValueAsString("DATEND");
+    if (datsta.Len() > 0) {
+        bool bDateValid = false;
+
+        // CCYYMMDD
+        wxDateTime objDate;
+        wxString::const_iterator end;
+        if ( objDate.ParseFormat(datsta, "%Y%m%d", &end) ){
+            if(end == datsta.end()) {                            // Require perfect parsing
+                if(objDate.IsValid())
+                    bDateValid = true;
+            }
+        }
+        if(bDateValid){
+            objDate.ResetTime();                    // DATEND specifications take effect at 23:59+ on the specified date.
+            objDate += wxTimeSpan(24);
+            wxDateTime now = wxDateTime::Now();
+            if(now.IsLaterThan(objDate))
+                return false;                       // No Show
+        }
+    }
+
+    // PEREND
+    datsta = rzRules->obj->GetAttrValueAsString("PEREND");
+    if( (datsta.Len() > 0) && !datsta.StartsWith(_T("--")) ){
+        bool bDateValid = false;
+
+        // CCYYMMDD
+        wxDateTime objDate;
+        wxString::const_iterator end;
+        if ( objDate.ParseFormat(datsta, "%Y%m%d", &end) ){
+            if(end == datsta.end()) {                            // Require perfect parsing
+                if(objDate.IsValid())
+                    bDateValid = true;
+            }
+        }
+        if(bDateValid){
+            objDate.ResetTime();                    // PEREND specifications take effect at 23:59+ on the specified date.
+            objDate += wxTimeSpan(24);
+            wxDateTime now = wxDateTime::Now();
+            if(now.IsLaterThan(objDate))
+                return false;                       // No Show
+        }
+    }
+
+    return true;
+}
+
 bool s52plib::ObjectRenderCheckRules( ObjRazRules *rzRules, ViewPort *vp, bool check_noshow )
 {
-    if( !ObjectRenderCheckPos( rzRules, vp ) ) 
+    if( !ObjectRenderCheckPos( rzRules, vp ) )
         return false;
 
     // The Feature M_QUAL, in MARINERS_STANDARD catagory, is a special case,
@@ -9023,21 +9097,22 @@ bool s52plib::ObjectRenderCheckRules( ObjRazRules *rzRules, ViewPort *vp, bool c
             return false;
     }
 
-    if( ObjectRenderCheckCat( rzRules, vp ) ) 
-        return true;
+    if( ObjectRenderCheckCat( rzRules, vp ) ){
+        return ObjectRenderCheckDates( rzRules );
+    }
 
     //  If this object cannot be moved to a higher category by CS procedures,
     //  then we are done here
     if(!rzRules->obj->m_bcategory_mutable)
         return false;
 
-    // already added, nothing below can change its display category        
+    // already added, nothing below can change its display category
     if(rzRules->obj->bCS_Added ) 
         return false;
 
     //  Otherwise, make sure the CS, if present, has been evaluated,
-    //  and then check the category again    
-    //  no rules 
+    //  and then check the category again
+    //  no rules
     if( !ObjectRenderCheckCS( rzRules, vp ) )
         return false;
 
@@ -9053,10 +9128,10 @@ bool s52plib::ObjectRenderCheckRules( ObjRazRules *rzRules, ViewPort *vp, bool c
     }
 
     // still not displayable
-    if( !ObjectRenderCheckCat( rzRules, vp ) ) 
+    if( !ObjectRenderCheckCat( rzRules, vp ) )
         return false;
 
-    return true;
+    return ObjectRenderCheckDates( rzRules );
 }
 
 
@@ -9109,7 +9184,7 @@ void s52plib::PLIB_LoadS57Config()
 {
     //    Get a pointer to the opencpn configuration object
     wxFileConfig *pconfig = GetOCPNConfigObject();
-    
+
     int read_int;
     double dval;
 

@@ -1615,6 +1615,10 @@ void ParseAllENC(wxWindow* parent)
 bool MyApp::OnInit()
 {
     if( !wxApp::OnInit() ) return false;
+#ifdef __OCPN__ANDROID__
+    androidEnableBackButton( false );
+    androidEnableOptionItems( false );
+#endif
 
     GpxDocument::SeedRandom();
 
@@ -2676,8 +2680,10 @@ END_EVENT_TABLE()
 static void onBellsFinishedCB(void* ptr)
 {
    auto framePtr  = static_cast<MyFrame*>(ptr);
-   wxCommandEvent ev(BELLS_PLAYED_EVTYPE);
-   wxPostEvent(framePtr, ev);
+    if( framePtr){
+     wxCommandEvent ev(BELLS_PLAYED_EVTYPE);
+     wxPostEvent(framePtr, ev);
+    }
 }
 
 
@@ -3934,6 +3940,8 @@ void MyFrame::OnCloseWindow( wxCloseEvent& event )
     this->Destroy();
     gFrame = NULL;
 
+    wxLogMessage(_T("gFrame destroyed."));
+
 #ifdef __OCPN__ANDROID__
     qDebug() << "Calling OnExit()";
     wxTheApp->OnExit();
@@ -4756,7 +4764,7 @@ bool MyFrame::SetGlobalToolbarViz( bool viz )
 #endif
             ToolbarAnimateTimer.Start( 10, wxTIMER_ONE_SHOT );
     }
-    
+
     return viz_now;
 }
 
@@ -4770,7 +4778,10 @@ void MyFrame::ScheduleSettingsDialog()
 
 ChartCanvas *MyFrame::GetFocusCanvas()
 {
-    return g_focusCanvas;
+    if( (g_canvasConfig != 0) && g_focusCanvas )             // multi-canvas?
+        return g_focusCanvas;
+    else
+        return GetPrimaryCanvas();
 }
 
 void MyFrame::OnToolbarAnimateTimer( wxTimerEvent& event )
@@ -5946,8 +5957,10 @@ int MyFrame::DoOptionsDialog()
             cc1SizeBefore = g_canvasArray.Item(0)->GetSize();
     }
 
-    //  Capture the full path names of charts currently shown in all canvases
+    //  Capture the full path names and VPScale of charts currently shown in all canvases
     wxArrayString pathArray;
+    double restoreScale[4];
+
     // ..For each canvas...
     for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){
         ChartCanvas *cc = g_canvasArray.Item(i);
@@ -5962,6 +5975,7 @@ int MyFrame::DoOptionsDialog()
             }
 
             pathArray.Add(chart_file_name);
+            restoreScale[i] = cc->GetVPScale();
         }                
     }
 
@@ -6147,6 +6161,7 @@ int MyFrame::DoOptionsDialog()
 
     // If needed, refresh each canvas,
     // trying to reload the previously displayed chart by name as saved in pathArray
+    // Also, restoring the previous chart VPScale, if possible
     if(b_refresh){
     // ..For each canvas...
         for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){
@@ -6156,10 +6171,11 @@ int MyFrame::DoOptionsDialog()
                 if( i < pathArray.GetCount())
                     index_hint = ChartData->FinddbIndex( pathArray.Item(i));
                 cc->canvasChartsRefresh( index_hint );
+                if(index_hint != -1)
+                    cc->SetVPScale( restoreScale[i] );
             }
         }
     }
-
 
 
     g_boptionsactive = false;

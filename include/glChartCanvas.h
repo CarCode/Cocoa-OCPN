@@ -71,11 +71,11 @@ typedef class{
   public:
     wxString Renderer;
     GLenum TextureRectangleFormat;
-    
+
     bool bOldIntel;
     bool bCanDoVBO;
     bool bCanDoFBO;
-    
+
     //      Vertex Buffer Object (VBO) support
     PFNGLGENBUFFERSPROC                 m_glGenBuffers;
     PFNGLBINDBUFFERPROC                 m_glBindBuffer;
@@ -93,11 +93,11 @@ typedef class{
     PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC  m_glCheckFramebufferStatus;
     PFNGLDELETEFRAMEBUFFERSEXTPROC      m_glDeleteFramebuffers;
     PFNGLDELETERENDERBUFFERSEXTPROC     m_glDeleteRenderbuffers;
-    
+
     PFNGLCOMPRESSEDTEXIMAGE2DPROC       m_glCompressedTexImage2D;
     PFNGLGETCOMPRESSEDTEXIMAGEPROC      m_glGetCompressedTexImage;
 
-    
+
 }OCPN_GLCaps;
 
 void GetglEntryPoints( OCPN_GLCaps *pcaps );
@@ -109,13 +109,13 @@ class ocpnGLOptions
 public:
     bool m_bUseAcceleratedPanning;
     bool m_bUseCanvasPanning;
-    
+
     bool m_bTextureCompression;
     bool m_bTextureCompressionCaching;
 
     int m_iTextureDimension;
     int m_iTextureMemorySize;
-    
+
     bool m_GLPolygonSmoothing;
     bool m_GLLineSmoothing;
 };
@@ -151,14 +151,14 @@ public:
     static void SetClipRect(const ViewPort &vp, const wxRect &rect, bool g_clear=false);
     static void DisableClipRegion();
     void SetColorScheme(ColorScheme cs);
-    
+
     static bool         s_b_useScissorTest;
     static bool         s_b_useStencil;
     static bool         s_b_useStencilAP;
     static bool         s_b_useFBO;
-    
+
     void SendJSONConfigMessage();
-    
+
     glChartCanvas(wxWindow *parent);
 
     ~glChartCanvas();
@@ -174,27 +174,27 @@ public:
     void FastPan(int dx, int dy);
     void FastZoom(float factor);
     void RenderCanvasBackingChart( ocpnDC &dc, OCPNRegion chart_get_region);
-    
+
 #ifdef __OCPN__ANDROID__    
     void OnEvtPanGesture( wxQT_PanGestureEvent &event);
     void OnEvtPinchGesture( wxQT_PinchGestureEvent &event);
     void onGestureTimerEvent(wxTimerEvent &event);
 #endif
-    
+
     wxString GetRendererString(){ return m_renderer; }
     wxString GetVersionString(){ return m_version; }
     void EnablePaint(bool b_enable){ m_b_paint_enable = b_enable; }
 
     void Invalidate();
     void RenderRasterChartRegionGL(ChartBase *chart, ViewPort &vp, LLRegion &region);
-    
+
     void DrawGLOverLayObjects(void);
     void GridDraw( );
     void FlushFBO( void );
-    
+
     void DrawDynamicRoutesTracksAndWaypoints( ViewPort &vp );
     void DrawStaticRoutesTracksAndWaypoints( ViewPort &vp );
-    
+
     void RenderAllChartOutlines( ocpnDC &dc, ViewPort &VP );
     void RenderChartOutline( int dbIndex, ViewPort &VP );
 
@@ -215,10 +215,10 @@ protected:
 
     void RenderQuiltViewGL( ViewPort &vp, const OCPNRegion &rect_region );
     void RenderQuiltViewGLText( ViewPort &vp, const OCPNRegion &rect_region );
-    
+
     void BuildFBO();
     void SetupOpenGL();
-    
+
 //    void ComputeRenderQuiltViewGLRegion( ViewPort &vp, OCPNRegion &Region );
     void RenderCharts(ocpnDC &dc, const OCPNRegion &rect_region);
     void RenderNoDTA(ViewPort &vp, const LLRegion &region, int transparency = 255);
@@ -234,7 +234,7 @@ protected:
 
     void DrawGLTidesInBBox(ocpnDC& dc, LLBBox& BBox);
     void DrawGLCurrentsInBBox(ocpnDC& dc, LLBBox& BBox);
-    
+
     wxGLContext       *m_pcontext;
 
     int max_texture_dimension;
@@ -244,10 +244,10 @@ protected:
     wxString m_renderer;
     wxString m_version;
     wxString m_extensions;    
-    
+
     ViewPort    m_cache_vp;
     ChartBase   *m_cache_current_ch;
-    
+
     bool        m_b_paint_enable;
     int         m_in_glpaint;
 
@@ -268,7 +268,7 @@ protected:
     wxSize      ownship_size, ownship_tex_size;
 
     GLuint      m_piano_tex;
-    
+
     float       m_fbo_offsetx;
     float       m_fbo_offsety;
     float       m_fbo_swidth;
@@ -278,11 +278,11 @@ protected:
     bool        m_bfogit;
     bool        m_benableFog;
     bool        m_benableVScale;
-    
+
     wxTimer     m_gestureEeventTimer;
     bool        m_bgestureGuard;
     bool        m_bpinchGuard;
-    
+
     OCPNRegion  m_canvasregion;
     TexFont     m_gridfont;
 
@@ -294,9 +294,10 @@ protected:
     int          m_tideTexHeight;
     int          m_currentTexWidth;
     int          m_currentTexHeight;
-    
+    int          m_displayScale;
+
     ChartCanvas *m_pParentCanvas;
-    
+
     DECLARE_EVENT_TABLE()
 };
 

@@ -290,8 +290,8 @@ public:
 
       void HideTooltip();
       void KillTooltip();
-      void EnableTooltips() { m_btooltip_show = true; }
-      void DisableTooltips() { m_btooltip_show = false; }
+      void EnableTooltips();
+      void DisableTooltips();
 
 protected:
       // common part of all ctors

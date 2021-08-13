@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include <wx/combobox.h>
 
@@ -139,6 +138,9 @@ void SendToGpsDlg::CreateControls( const wxString& hint )
     m_SendButton->SetDefault();
 
 }
+
+// Nicht übernommen: Add Bluetooth route and waypoint output capability, from android    d239c0073    dsr <bdbcat@yahoo.com>    05.08.2021, 04:12
+
 
 void SendToGpsDlg::OnSendClick( wxCommandEvent& event )
 {

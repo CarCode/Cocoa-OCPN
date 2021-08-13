@@ -512,6 +512,7 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
     int gpsg_mmsi = 0;
     int arpa_mmsi = 0;
     int aprs_mmsi = 0;
+    int follower_mmsi = 0;
     int mmsi = 0;
 
     long arpa_tgt_num = 0;
@@ -896,6 +897,11 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
             for(unsigned int i=0 ; i < g_MMSI_Props_Array.GetCount() ; i++){
                 MMSIProperties *props =  g_MMSI_Props_Array[i];
                 if(mmsi == props->MMSI){
+
+                    // Check to see if this target has been flagged as a "follower"
+                    if(props->m_bFollower)
+                        follower_mmsi = mmsi;
+
                     // Check to see if this MMSI has been configured to be ignored completely...
                     if(props->m_bignore)
                         return AIS_NoError;
@@ -933,6 +939,9 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
                             }
                         }
                         return AIS_NoError;
+                    }
+                    else if(props->m_bFollower){
+                        follower_mmsi = mmsi;
                     }
                     else
                         break;
@@ -1044,6 +1053,11 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
                 // The normal Plain-Old AIS target code path....
                 bdecode_result = Parse_VDXBitstring( &strbit, pTargetData );       // Parse the new data
               }
+
+                //  Catch followers, and set correct flag
+                if(follower_mmsi)
+                    pTargetData->b_isFollower = true;
+
               //     Update the most recent report period
               pTargetData->RecentPeriod = pTargetData->PositionReportTicks - last_report_ticks;
             }
@@ -2253,20 +2267,6 @@ void AIS_Decoder::UpdateAllAlarms( void )
                     td->n_alert_state = AIS_NO_ALERT;
                     continue;
                 }
-
-                //    No alert for my Follower
-                bool hit = false;
-                for(unsigned int i=0 ; i < g_MMSI_Props_Array.GetCount() ; i++){
-                    MMSIProperties *props =  g_MMSI_Props_Array[i];
-                    if(td->MMSI == props->MMSI){
-                        if (props->m_bFollower) {
-                            hit = true;
-                            td->n_alert_state = AIS_NO_ALERT;
-                        }
-                        break;
-                    }
-                }
-                if (hit) continue;
 
                 //    Skip distant targets if requested
                 if( g_bCPAMax ) {

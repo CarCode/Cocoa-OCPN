@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Hyperlink properties Support
@@ -44,40 +44,46 @@
 #include "scrollingdialog.h"
 #endif
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class LinkPropDlgDef
-///////////////////////////////////////////////////////////////////////////////
+#ifdef __WXOSX__
+#define FRAME_WITH_LINKS_STYLE wxCAPTION|wxDEFAULT_FRAME_STYLE|wxMAXIMIZE_BOX|wxRESIZE_BORDER
+#else
+#define FRAME_WITH_LINKS_STYLE wxCAPTION|wxDEFAULT_FRAME_STYLE|wxFRAME_FLOAT_ON_PARENT|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER
+#endif
+
+// /////////////////////////////////////////////////////////////////////////////
+// / Class LinkPropDlgDef
+// /////////////////////////////////////////////////////////////////////////////
 class LinkPropDlgDef : public wxDialog
 {
-	private:
+private:
 
-	protected:
-		wxStaticText* m_staticTextLinkDesc;
-		wxStaticText* m_staticTextLinkUrl;
-		wxButton* m_buttonBrowseLocal;
-		wxStdDialogButtonSizer* m_sdbSizerButtons;
-		wxButton* m_sdbSizerButtonsOK;
-		wxButton* m_sdbSizerButtonsCancel;
+protected:
+    wxStaticText* m_staticTextLinkDesc;
+    wxStaticText* m_staticTextLinkUrl;
+    wxButton* m_buttonBrowseLocal;
+    wxStdDialogButtonSizer* m_sdbSizerButtons;
+    wxButton* m_sdbSizerButtonsOK;
+    wxButton* m_sdbSizerButtonsCancel;
 
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnLocalFileClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCancelClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnOkClick( wxCommandEvent& event ) { event.Skip(); }
+    // Virtual event handlers, overide them in your derived class
+    virtual void OnLocalFileClick( wxCommandEvent& event ) { event.Skip(); }
+    virtual void OnCancelClick( wxCommandEvent& event ) { event.Skip(); }
+    virtual void OnOkClick( wxCommandEvent& event ) { event.Skip(); }
 
 
-	public:
-		wxTextCtrl* m_textCtrlLinkDescription;
-		wxTextCtrl* m_textCtrlLinkUrl;
+public:
+    wxTextCtrl* m_textCtrlLinkDescription;
+    wxTextCtrl* m_textCtrlLinkUrl;
 
-		LinkPropDlgDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Link Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 468,247 ), long style = wxDEFAULT_DIALOG_STYLE );
-		~LinkPropDlgDef();
+    LinkPropDlgDef( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Link Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 468,247 ), long style = wxDEFAULT_DIALOG_STYLE );
+    ~LinkPropDlgDef();
 
 };
 
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class LinkPropImpl
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class LinkPropImpl
+// /////////////////////////////////////////////////////////////////////////////
 class LinkPropImpl : public LinkPropDlgDef
 {
 public :

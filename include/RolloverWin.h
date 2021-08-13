@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -47,6 +47,9 @@ public:
 
     void SetColorScheme( ColorScheme cs );
     void SetString(const wxString &s) { m_string = s; }
+#ifdef __WXOSX__
+    const wxString& GetString(void) { return m_string; }
+#endif
     void SetPosition( wxPoint pt ) { m_position = pt; }
     void SetBitmap( int rollover );
     wxBitmap* GetBitmap() { return m_pbm; }

@@ -43,7 +43,7 @@ Serial::SerialImpl::SerialImpl (const string &port, unsigned long baudrate,
     open ();
   read_mutex = CreateMutex(NULL, false, NULL);
   write_mutex = CreateMutex(NULL, false, NULL);
-
+  
   // Create the reader overlapped event.
   osReader.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
   fWaitingOnRead = false;
@@ -79,7 +79,7 @@ Serial::SerialImpl::open ()
                     0,
                     0,
                     OPEN_EXISTING,
-                    FILE_ATTRIBUTE_NORMAL,
+                    FILE_FLAG_OVERLAPPED,
                     0);
 
   if (fd_ == INVALID_HANDLE_VALUE) {
@@ -98,6 +98,7 @@ Serial::SerialImpl::open ()
 
   reconfigurePort();
   is_open_ = true;
+  fWaitingOnRead = false;
 }
 
 void
@@ -265,6 +266,9 @@ Serial::SerialImpl::reconfigurePort ()
     dcbSerialParams.fInX = false;
   }
 
+  dcbSerialParams.fDtrControl = DTR_CONTROL_ENABLE;
+  dcbSerialParams.fRtsControl = RTS_CONTROL_ENABLE;
+
   // activate settings
   if (!SetCommState(fd_, &dcbSerialParams)){
     CloseHandle(fd_);
@@ -336,18 +340,75 @@ Serial::SerialImpl::waitByteTimes (size_t /*count*/)
   THROW (IOException, "waitByteTimes is not implemented on Windows.");
 }
 
+#define READ_TIMEOUT      500      // milliseconds
+
 size_t
 Serial::SerialImpl::read (uint8_t *buf, size_t size)
 {
+  stringstream ss;
+  DWORD errCode;
+
   if (!is_open_) {
     throw PortNotOpenedException ("Serial::read");
   }
   DWORD bytes_read;
-  if (!ReadFile(fd_, buf, static_cast<DWORD>(size), &bytes_read, NULL)) {
-    stringstream ss;
-    ss << "Error while reading from the serial port: " << GetLastError();
-    THROW (IOException, ss.str().c_str());
+  if (!fWaitingOnRead) {
+    if (!ReadFile(fd_, buf, static_cast<DWORD>(size), &bytes_read, &osReader)) {
+      errCode = GetLastError();  
+      if (errCode == ERROR_IO_PENDING) {  // read delayed?
+        fWaitingOnRead = TRUE;
+      }
+      else if (errCode != 0)    // Some error on read, so trigger retry logic
+      {
+        bytes_read = 0;
+        ss << "Error while reading from the serial port: " << errCode;
+        THROW (IOException, ss.str().c_str());
+      }
+      else
+      {    // read completed immediately without error
+        return (size_t) (bytes_read);
+      }
+    }
   }
+  
+  if ( fWaitingOnRead ) {
+    DWORD dwRes = WaitForSingleObject(osReader.hEvent, READ_TIMEOUT);
+            
+    switch(dwRes)
+            {
+                //
+                // read completed
+                //
+                case WAIT_OBJECT_0:
+                    if (GetOverlappedResult(fd_, &osReader, &bytes_read, FALSE)) {
+                         // read completed successfully
+                      //if (bytes_read)
+                        fWaitingOnRead = FALSE; 
+                    }
+                    else{
+                        errCode = GetLastError();   
+                        fWaitingOnRead = FALSE;
+                    }                        
+                    break;
+                    
+                case WAIT_TIMEOUT:
+                    bytes_read = 0;
+                    ss << "Error while reading from the serial port: " << GetLastError();
+                    THROW (IOException, ss.str().c_str());
+                    break;                       
+                    
+                default:                // error of some kind with handles
+                    fWaitingOnRead = FALSE;
+                    bytes_read = 0;
+                    break;
+            }
+  }
+   
+//   if (!ReadFile(fd_, buf, static_cast<DWORD>(size), &bytes_read, NULL)) {
+//     stringstream ss;
+//     ss << "Error while reading from the serial port: " << GetLastError();
+//     THROW (IOException, ss.str().c_str());
+//   }
   return (size_t) (bytes_read);
 }
 
@@ -358,14 +419,14 @@ Serial::SerialImpl::write (const uint8_t *data, size_t length)
     throw PortNotOpenedException ("Serial::write");
   }
   DWORD bytes_written;
-    DWORD dwRes;
+  DWORD dwRes;
   if (!WriteFile(fd_, data, static_cast<DWORD>(length), &bytes_written, &osWriter)) {
     if (GetLastError() == ERROR_IO_PENDING) { 
         // write is delayed
         fWaitingOnWrite = true;
     }
   }
-
+  
   if(fWaitingOnWrite){
     dwRes = WaitForSingleObject(osWriter.hEvent, INFINITE);
                             

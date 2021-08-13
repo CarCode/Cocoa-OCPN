@@ -800,7 +800,11 @@ void StyleManager::Init(const wxString & fromPath)
     if( !wxDir::Exists( fromPath ) ) {
         wxString msg = _T("No styles found at: ");
         msg << fromPath;
+#ifdef __WXOSX__
+      // macOS: /Users/heidi/Library/Preferences/opencpn/.opencpn/
+#else
         wxLogMessage( msg );
+#endif
         return;
     }
 
@@ -816,7 +820,11 @@ void StyleManager::Init(const wxString & fromPath)
     if( !more ) {
         wxString msg = _T("No styles found at: ");
         msg << fromPath;
+#ifdef __WXOSX__
+        // macOS: /Users/heidi/Library/Preferences/opencpn/
+#else
         wxLogMessage( msg );
+#endif
         return;
     }
 

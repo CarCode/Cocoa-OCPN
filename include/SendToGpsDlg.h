@@ -1,4 +1,4 @@
-/***************************************************************************
+/* ************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __SENDTOGPSDLG_H__
 #define __SENDTOGPSDLG_H__
@@ -52,7 +51,7 @@ class RoutePoint;
 //class wxGauge;
 //class wxComboBox;
 
-/**
+/*
  * Route "Send to GPS..." Dialog Definition
  */
 class SendToGpsDlg : public wxDialog
@@ -70,7 +69,6 @@ class SendToGpsDlg : public wxDialog
                     long style = SYMBOL_STG_STYLE);
        void SetRoute(Route *pRoute){m_pRoute = pRoute;}
        void SetWaypoint(RoutePoint *pRoutePoint){m_pRoutePoint = pRoutePoint;}
-
 private:
       void CreateControls(const wxString& hint);
 

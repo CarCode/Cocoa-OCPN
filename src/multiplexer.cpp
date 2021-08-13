@@ -147,7 +147,7 @@ void Multiplexer::StartAllStreams( void )
 
 }
 
-
+// Nicht übernommen: Commit Add Bluetooth route and waypoint output capability, from android    d239c0073    dsr <bdbcat@yahoo.com>    05.08.2021, 04:12
 
 void Multiplexer::LogOutputMessageColor(const wxString &msg, const wxString & stream_name, const wxString & color)
 {

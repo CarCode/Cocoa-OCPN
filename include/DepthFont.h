@@ -1,11 +1,11 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenGL text rendering
  * Author:   David Register, Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2020 David Register                                    *
+ *   Copyright (C) 2020 David Register                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

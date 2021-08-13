@@ -37,7 +37,7 @@ class RoutePropDlgImpl : public RoutePropDlg
 {
 public:
     ~RoutePropDlgImpl();
-    
+
     static RoutePropDlgImpl* getInstance( wxWindow* parent );
     void SetRouteAndUpdate( Route *pR, bool only_points = FALSE );
     Route *GetRoute(void) { return m_pRoute; }
@@ -45,7 +45,7 @@ public:
     void UpdatePoints();
     void SetColorScheme( ColorScheme cs );
     static bool getInstanceFlag();
-    
+
 protected:
     void RoutePropDlgOnClose( wxCloseEvent& event ) { SaveGeometry(); ResetChanges(); Hide(); event.Veto(); }
     void RoutePropDlgOnSize( wxSizeEvent& event ) { event.Skip(); }
@@ -74,18 +74,18 @@ protected:
     void OnHyperlinkClick( wxHyperlinkEvent& event );
     void HyperlinkContextMenu( wxMouseEvent& event );
     void m_scrolledWindowLinksOnContextMenu( wxMouseEvent &event );
-    
+
     wxDateTime GetDepartureTS();
     void SaveChanges();
     void ResetChanges();
-    
-    RoutePropDlgImpl( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Route Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 550,450 ), long style = wxDEFAULT_FRAME_STYLE|wxFRAME_FLOAT_ON_PARENT|wxMAXIMIZE_BOX|wxRESIZE_BORDER );
-    
+
+    RoutePropDlgImpl( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Route Properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 550,450 ), long style = FRAME_WITH_LINKS_STYLE );
+
 private:
     void SaveGeometry();
     static bool instanceFlag;
     static RoutePropDlgImpl* single;
-    
+
     Route       *m_pRoute;
     Route       m_OrigRoute;
     Route       *m_pHead; // for route splitting
@@ -94,13 +94,13 @@ private:
     Route       *m_pExtendRoute;
     RoutePoint  *m_pEnroutePoint;
     bool        m_bStartNow;
-        
+
     int         m_tz_selection;
-        
+
     wxDataViewColumn *etd_col;
-    
+
     wxHyperlinkCtrl *m_pEditedLink;
-    
+
     bool IsThisRouteExtendable();
     wxDateTime toUsrDateTime( const wxDateTime ts, const int format, const double lon = INFINITY - INFINITY );
     wxDateTime fromUsrDateTime( const wxDateTime ts, const int format, const double lon = INFINITY - INFINITY );

@@ -1289,7 +1289,11 @@ ChartBase *ChartDB::OpenChartUsingCache(int dbindex, ChartInitFlag init_flag)
                     GetMemoryStatus(0, &mem_used);
 
                     wxString msg;
+#ifdef __WXOSX__
+                    msg.Printf(_T("OpenChartUsingCache, NOT in cache:   cache size: %d"),  (int)pChartCache->GetCount());
+#else
                     msg.Printf(_T("OpenChartUsingCache, NOT in cache:   cache size: %d\n"),  (int)pChartCache->GetCount());
+#endif
                     wxLogMessage(msg);
                     wxString msg1;
                     msg1.Printf(_T("   OpenChartUsingCache:  type %d  "), chart_type);
