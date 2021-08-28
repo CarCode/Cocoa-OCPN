@@ -7139,7 +7139,7 @@ void ChartCanvas::CallPopupMenu(int x, int y)
                         break;
                     }
                 }
-                if( !brp_viz  && prp->m_bKeepXRoute)    // is not visible as part of route, but still exists as a waypoint
+                if( !brp_viz  && prp->IsShared())    // is not visible as part of route, but still exists as a waypoint
                     brp_viz = prp->IsVisible();         //  so treat as isolated point
 
             } else
@@ -7451,7 +7451,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                                 break;
                             }
                         }
-                        if( !brp_viz && frp->m_bKeepXRoute ) // is not visible as part of route, but still exists as a waypoint
+                        if( !brp_viz && frp->IsShared() ) // is not visible as part of route, but still exists as a waypoint
                             brp_viz = frp->IsVisible(); // so treat as isolated point
                         } else
                             brp_viz = frp->IsVisible(); // isolated point
@@ -7548,7 +7548,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                             }
                         }
 
-                        if( !brp_viz && pNearbyPoint->m_bKeepXRoute ) // is not visible as part of route, but still exists as a waypoint
+                        if( !brp_viz && pNearbyPoint->IsShared() ) // is not visible as part of route, but still exists as a waypoint
                             brp_viz = pNearbyPoint->IsVisible(); // so treat as isolated point
                     }
                     else
@@ -7572,7 +7572,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                             // check all other routes to see if this point appears in any other route
                             // If it appears in NO other route, then it should e considered an isolated mark
                             if( !g_pRouteMan->FindRouteContainingWaypoint( pMousePoint ) )
-                                pMousePoint->m_bKeepXRoute = true;
+                                pMousePoint->SetShared( true );
                         }
                     }
                 }
@@ -8019,8 +8019,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
 
                     // check all other routes to see if this point appears in any other route
                     // If it appears in NO other route, then it should e considered an isolated mark
-                    if( !g_pRouteMan->FindRouteContainingWaypoint( pMousePoint ) )
-                        pMousePoint->m_bKeepXRoute = true;
+                        if( !g_pRouteMan->FindRouteContainingWaypoint( pMousePoint ) ) pMousePoint->SetShared( true );
                     }
                 }
 
@@ -8343,7 +8342,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                             if( dlg_return == wxID_YES ) {
                                 /*double confirmation if the dragged point has been manually created
                                  * which can be important and could be deleted unintentionally*/
-                                if( m_pRoutePointEditTarget->m_bKeepXRoute ){
+                                if( m_pRoutePointEditTarget->IsShared() ){
                                   //  dlg_return = wxID_NO;
                                     dlg_return = OCPNMessageBox( this, _("Do you really want to delete and replace this WayPoint")
                                                 + _T("\n") + _("which has been created manually?"),
@@ -8354,7 +8353,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                             if( dlg_return == wxID_YES ) {
                                 pMousePoint = pNearbyPoint;
                                 if( pMousePoint->m_bIsolatedMark ) {
-                                    pMousePoint->m_bKeepXRoute = true;
+                                    pMousePoint->SetShared( true );
                                 }
                                 pMousePoint->m_bIsolatedMark = false;       // definitely no longer isolated
                                 pMousePoint->m_bIsInRoute = true;
@@ -8474,7 +8473,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                             if( dlg_return == wxID_YES ) {
                                 /*double confirmation if the dragged point has been manually created
                                 * which can be important and could be deleted unintentionally*/
-                                if( m_pRoutePointEditTarget->m_bKeepXRoute ){
+                                if( m_pRoutePointEditTarget->IsShared() ){
                                     dlg_return = wxID_NO;
                                     dlg_return = OCPNMessageBox( this, _("Do you really want to delete and replace this WayPoint")
                                                 + _T("\n") + _("which has been created manually?"),
@@ -8485,7 +8484,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                             if( dlg_return == wxID_YES ) {
                                 pMousePoint = pNearbyPoint;
                                 if( pMousePoint->m_bIsolatedMark ) {
-                                    pMousePoint->m_bKeepXRoute = true;
+                                    pMousePoint->SetShared( true );
                                 }
                                 pMousePoint->m_bIsolatedMark = false;       // definitely no longer isolated
                                 pMousePoint->m_bIsInRoute = true;
@@ -9220,7 +9219,7 @@ void pupHandler_PasteRoute() {
             newPoint->SetIconName( _T("circle") );
             newPoint->m_bIsVisible = true;
             newPoint->m_bShowName = false;
-            newPoint->m_bKeepXRoute = false;
+            newPoint->SetShared( false );
 
             newRoute->AddPoint( newPoint );
             pSelect->AddSelectableRoutePoint( newPoint->m_lat, newPoint->m_lon, newPoint );

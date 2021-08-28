@@ -335,6 +335,7 @@ bool                      g_bTempShowMenuBar;
 int                       g_iSDMMFormat;
 int                       g_iDistanceFormat;
 int                       g_iSpeedFormat;
+int                       g_iTempFormat;
 
 int                       g_iNavAidRadarRingsNumberVisible;
 float                     g_fNavAidRadarRingsStep;
@@ -4973,7 +4974,7 @@ void MyFrame::ActivateMOB( void )
     mob_label += mob_time.FormatISODate();
 
     RoutePoint *pWP_MOB = new RoutePoint( gLat, gLon, _T ( "mob" ), mob_label, wxEmptyString );
-    pWP_MOB->m_bKeepXRoute = true;
+    pWP_MOB->SetShared( true );
     pWP_MOB->m_bIsolatedMark = true;
     pWP_MOB->SetWaypointArrivalRadius( -1.0 ); // Negative distance is code to signal "Never Arrive"
     pWP_MOB->SetUseSca(false); //Do not use scaled hiding for MOB 
@@ -6467,6 +6468,8 @@ void MyFrame::ChartsRefresh( )
     bool b_run = FrameTimer1.IsRunning();
 
     FrameTimer1.Stop();                  // stop other asynchronous activity
+    bool b_runCOGTimer = FrameCOGTimer.IsRunning();
+    FrameCOGTimer.Stop();
 
     // ..For each canvas...
     for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){
@@ -6504,7 +6507,8 @@ bool MyFrame::UpdateChartDatabaseInplace( ArrayOfCDI &DirArray, bool b_force, bo
 {
     bool b_run = FrameTimer1.IsRunning();
     FrameTimer1.Stop();                  // stop other asynchronous activity
-
+    bool b_runCOGTimer = FrameCOGTimer.IsRunning();
+        FrameCOGTimer.Stop();
     // ..For each canvas...
     for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){
         ChartCanvas *cc = g_canvasArray.Item(i);
@@ -6570,7 +6574,16 @@ bool MyFrame::UpdateChartDatabaseInplace( ArrayOfCDI &DirArray, bool b_force, bo
 
     pConfig->UpdateChartDirs( DirArray );
 
-    if( b_run ) FrameTimer1.Start( TIMER_GFRAME_1, wxTIMER_CONTINUOUS );
+    // Restart timers, if necessary
+    if( b_run )
+        FrameTimer1.Start( TIMER_GFRAME_1, wxTIMER_CONTINUOUS );
+    if( b_runCOGTimer ){
+           //    Restart the COG rotation timer, max frequency is 10 hz.
+        int period_ms = 100;
+        if( g_COGAvgSec > 0 )
+            period_ms = g_COGAvgSec * 1000;
+        FrameCOGTimer.Start( period_ms, wxTIMER_CONTINUOUS );
+    }
 
     return true;
 }
@@ -9338,7 +9351,7 @@ void MyFrame::ActivateAISMOBRoute( AIS_Target_Data *ptarget )
     mob_label += mob_time.FormatISODate();
 
     RoutePoint *pWP_MOB = new RoutePoint( ptarget->Lat, ptarget->Lon, _T ( "mob" ), mob_label, wxEmptyString );
-    pWP_MOB->m_bKeepXRoute = true;
+    pWP_MOB->SetShared( true );
     pWP_MOB->m_bIsolatedMark = true;
     pSelect->AddSelectableRoutePoint( ptarget->Lat, ptarget->Lon, pWP_MOB );
     pConfig->AddNewWayPoint( pWP_MOB, -1 );       // use auto next num

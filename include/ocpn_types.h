@@ -1,11 +1,11 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN private types and ENUMs
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,14 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- *
- *
- */
-
-
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 
 #ifndef __OCPNTYPES_H__
@@ -109,5 +103,14 @@ typedef struct {
     time_t FixTime;
     int    nSats;
 } GenericPosDatEx;
+
+//    A collection of active leg Data structure (nur für pluginmanager?)
+typedef struct {
+  double Xte;               // Left side of the track -> negative XTE
+  double Btw;
+  double Dtw;
+  wxString wp_name;         // Name of destination waypoint for active leg;
+  bool arrival;
+} ActiveLegDat;
 
 #endif

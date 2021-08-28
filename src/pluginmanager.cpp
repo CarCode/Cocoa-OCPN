@@ -3195,6 +3195,16 @@ double fromUsrSpeed_Plugin( double usr_speed, int unit )
     return fromUsrSpeed( usr_speed, unit );
 }
 
+double toUsrTemp_Plugin(double cel_temp, int unit)
+{
+    return toUsrTemp(cel_temp, unit);
+}
+
+double fromUsrTemp_Plugin(double usr_temp, int unit)
+{
+    return fromUsrTemp(usr_temp, unit);
+}
+
 wxString getUsrDistanceUnit_Plugin( int unit )
 {
     return getUsrDistanceUnit( unit );

@@ -941,6 +941,7 @@
 		A6D147DF24267B330091EE3A /* navdata_pi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D147D0242679790091EE3A /* navdata_pi.cpp */; };
 		A6D147E324267B330091EE3A /* icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D147D424267A580091EE3A /* icons.cpp */; };
 		A6D6838324239586008B86BE /* DepthFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6D6838224239586008B86BE /* DepthFont.cpp */; };
+		A6E3D74C26D623E60049612C /* eyeGray.svg in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6E3D74B26D623E60049612C /* eyeGray.svg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A6E58604239BC71C0007E4A1 /* libcairo.2.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6E585FA239BC03F0007E4A1 /* libcairo.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A6E58605239BC71C0007E4A1 /* liblzma.5.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6E585F6239BC03E0007E4A1 /* liblzma.5.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A6E58606239BC71C0007E4A1 /* libwx_baseu_net-3.1.dylib in Copy Files */ = {isa = PBXBuildFile; fileRef = A6E585F4239BC03E0007E4A1 /* libwx_baseu_net-3.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -1769,6 +1770,7 @@
 			dstPath = ../SharedSupport/uidata;
 			dstSubfolderSpec = 6;
 			files = (
+				A6E3D74C26D623E60049612C /* eyeGray.svg in CopyFiles */,
 				F5F500A07E1E4E688EA7E23C /* DragHandle.svg in CopyFiles */,
 				8F08EF1CF89C47DC8119FED6 /* eye.svg in CopyFiles */,
 				17B9963827514C3BB91A4B1A /* eyex.svg in CopyFiles */,
@@ -3704,6 +3706,7 @@
 		A6D147D924267AEA0091EE3A /* libnavdata_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libnavdata_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6D6838224239586008B86BE /* DepthFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DepthFont.cpp; path = src/DepthFont.cpp; sourceTree = "<group>"; };
 		A6D6838424239676008B86BE /* DepthFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DepthFont.h; path = include/DepthFont.h; sourceTree = "<group>"; };
+		A6E3D74B26D623E60049612C /* eyeGray.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = eyeGray.svg; sourceTree = "<group>"; };
 		A6E585F3239BC03E0007E4A1 /* libwx_osx_cocoau_core-3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_osx_cocoau_core-3.1.dylib"; sourceTree = "<group>"; };
 		A6E585F4239BC03E0007E4A1 /* libwx_baseu_net-3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_baseu_net-3.1.dylib"; sourceTree = "<group>"; };
 		A6E585F5239BC03E0007E4A1 /* libwx_baseu-3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_baseu-3.1.dylib"; sourceTree = "<group>"; };
@@ -4518,6 +4521,7 @@
 		2C6060C62421474AA1023C61 = {
 			isa = PBXGroup;
 			children = (
+				A6E3D74B26D623E60049612C /* eyeGray.svg */,
 				A6E58601239BC6750007E4A1 /* de.lproj */,
 				A6019BF5239ACD00005D41C0 /* Frameworks */,
 				E3C850942FDA4CE7B7953DE3 /* ALL_BUILD */,

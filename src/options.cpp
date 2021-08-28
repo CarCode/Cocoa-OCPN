@@ -232,6 +232,7 @@ extern wxColour g_colourTrackLineColour;
 extern int g_iSDMMFormat;
 extern int g_iDistanceFormat;
 extern int g_iSpeedFormat;
+extern int g_iTempFormat;
 
 extern bool g_bAdvanceRouteWaypointOnArrivalOnly;
 
@@ -4888,6 +4889,8 @@ void options::CreatePanel_Units(size_t parent, int border_size,
     // another sizer instead of letting it grow.
     wxBoxSizer* wrapperSizer = new wxBoxSizer(wxVERTICAL);
     panelUnits->SetSizer(wrapperSizer);
+
+    wrapperSizer->Add(1, border_size * 24);  // ???
     wrapperSizer->Add(unitsSizer, 1, wxALL | wxALIGN_CENTER, border_size);
 
     // spacer
@@ -4898,11 +4901,14 @@ void options::CreatePanel_Units(size_t parent, int border_size,
     unitsSizer->Add(new wxStaticText(panelUnits, wxID_ANY, _("Distance")),
                     labelFlags);
     wxString pDistanceFormats[] = {_("Nautical miles"), _("Statute miles"),
-                                   _("Kilometers"), _("Meters")};
+                                    _("Kilometers"), _("Meters")};
     int m_DistanceFormatsNChoices = sizeof(pDistanceFormats) / sizeof(wxString);
     pDistanceFormat = new wxChoice(panelUnits, ID_DISTANCEUNITSCHOICE,
                                    wxDefaultPosition, wxSize(250, -1),
                                    m_DistanceFormatsNChoices, pDistanceFormats);
+#ifdef __OCPN__ANDROID__
+    setChoiceStyleSheet( pDistanceFormat, m_fontHeight *8/10);
+#endif
     unitsSizer->Add(pDistanceFormat, inputFlags);
 
     // speed units
@@ -4913,6 +4919,9 @@ void options::CreatePanel_Units(size_t parent, int border_size,
     pSpeedFormat =
         new wxChoice(panelUnits, ID_SPEEDUNITSCHOICE, wxDefaultPosition,
                      wxSize(250, -1), m_SpeedFormatsNChoices, pSpeedFormats);
+#ifdef __OCPN__ANDROID__
+    setChoiceStyleSheet( pSpeedFormat, m_fontHeight *8/10);
+#endif
     unitsSizer->Add(pSpeedFormat, inputFlags);
 
     // depth units
@@ -4924,7 +4933,24 @@ void options::CreatePanel_Units(size_t parent, int border_size,
     pDepthUnitSelect =
         new wxChoice(panelUnits, ID_DEPTHUNITSCHOICE, wxDefaultPosition,
                      wxSize(250, -1), 3, pDepthUnitStrings);
+#ifdef __OCPN__ANDROID__
+        setChoiceStyleSheet( pDepthUnitSelect, m_fontHeight *8/10);
+#endif
     unitsSizer->Add(pDepthUnitSelect, inputFlags);
+
+    // temperature units
+    unitsSizer->Add(new wxStaticText(panelUnits, wxID_ANY, _("Temperature")),
+                      labelFlags);
+    wxString pTempUnitStrings[] = {
+          _("Celsius"), _("Fahrenheit"), _("Kelvin"),
+    };
+    pTempFormat =
+        new wxChoice(panelUnits, ID_TEMPUNITSCHOICE, wxDefaultPosition,
+                       wxSize(m_fontHeight * 4, -1), 3, pTempUnitStrings);
+#ifdef __OCPN__ANDROID__
+        setChoiceStyleSheet( pTempFormat, m_fontHeight *8/10);
+#endif
+    unitsSizer->Add(pTempFormat, inputFlags);
 
     // spacer
     unitsSizer->Add(new wxStaticText(panelUnits, wxID_ANY, _T("")));
@@ -4940,6 +4966,9 @@ void options::CreatePanel_Units(size_t parent, int border_size,
     pSDMMFormat =
         new wxChoice(panelUnits, ID_SDMMFORMATCHOICE, wxDefaultPosition,
                      wxSize(350, -1), m_SDMMFormatsNChoices, pSDMMFormats);
+#ifdef __OCPN__ANDROID__
+        setChoiceStyleSheet( pSDMMFormat, m_fontHeight *8/10);
+#endif
     unitsSizer->Add(pSDMMFormat, inputFlags);
 
     // spacer
@@ -4954,12 +4983,22 @@ void options::CreatePanel_Units(size_t parent, int border_size,
     pCBTrueShow =
         new wxCheckBox(panelUnits, ID_TRUESHOWCHECKBOX, _("Show true"));
     unitsSizer->Add(pCBTrueShow, 0, wxALL, group_item_spacing);
+
+      unitsSizer->Add(new wxStaticText(panelUnits, wxID_ANY, _T("")));  // ???
     pCBMagShow =
         new wxCheckBox(panelUnits, ID_MAGSHOWCHECKBOX, _("Show magnetic bearings and headings"));
     unitsSizer->Add(pCBMagShow, 0, wxALL, group_item_spacing);
+    unitsSizer->Add(new wxStaticText(panelUnits, wxID_ANY, _T("")));  // ???
 
     //  Mag Heading user variation
 
+    wxStaticBox* itemStaticBoxVar = new wxStaticBox(panelUnits, wxID_ANY, _T(""));
+
+    wxStaticBoxSizer* itemStaticBoxSizerVar = new wxStaticBoxSizer(itemStaticBoxVar, wxVERTICAL);
+    wrapperSizer->Add(itemStaticBoxSizerVar, 0, wxALL | wxEXPAND, 5);
+
+    itemStaticBoxSizerVar->Add(0, border_size * 4);
+/*
     wxStaticBox* itemStaticBoxVar =
         new wxStaticBox(panelUnits, wxID_ANY, _("Assumed magnetic variation"));
     wxStaticBoxSizer* itemStaticBoxSizerVar =
@@ -4972,6 +5011,10 @@ void options::CreatePanel_Units(size_t parent, int border_size,
     //        panelUnits, wxID_ANY, _("Assumed magnetic variation") );
     //       wrapperSizer->Add( itemStaticTextUserVar, 1, wxEXPAND | wxALL |
     //       wxALIGN_CENTRE_VERTICAL, group_item_spacing );
+*/
+
+    itemStaticTextUserVar = new wxStaticText(panelUnits, wxID_ANY, _("Assumed magnetic variation") );
+    itemStaticBoxSizerVar->Add(itemStaticTextUserVar, 1, wxEXPAND | wxALL, group_item_spacing);
 
     wxBoxSizer* magVarSizer = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizerVar->Add(magVarSizer, 1, wxEXPAND | wxALL,
@@ -5033,6 +5076,17 @@ void options::CreatePanel_Units(size_t parent, int border_size,
         new wxChoice(panelUnits, ID_DEPTHUNITSCHOICE, wxDefaultPosition,
                      wxDefaultSize, 3, pDepthUnitStrings);
     unitsSizer->Add(pDepthUnitSelect, inputFlags);
+
+    // temperature units
+    unitsSizer->Add(new wxStaticText(panelUnits, wxID_ANY, _("Temperature")),
+                      labelFlags);
+    wxString pTempUnitStrings[] = {
+          _("Celsius"), _("Fahrenheit"), _("Kelvin"),
+    };
+    pTempFormat =
+          new wxChoice(panelUnits, ID_TEMPUNITSCHOICE, wxDefaultPosition,
+                       wxDefaultSize, 3, pTempUnitStrings);
+    unitsSizer->Add(pTempFormat, inputFlags);
 
     // spacer
     unitsSizer->Add(new wxStaticText(panelUnits, wxID_ANY, _T("")));
@@ -10457,7 +10511,7 @@ void SentenceListDlg::OnAddClick(wxCommandEvent& event) {
 }
 
 void SentenceListDlg::OnDeleteClick(wxCommandEvent& event) {
-  m_clbSentences->Delete(event.GetSelection());
+    m_clbSentences->Delete(m_clbSentences->GetSelection());
 }
 
 void SentenceListDlg::OnClearAllClick(wxCommandEvent& event) {

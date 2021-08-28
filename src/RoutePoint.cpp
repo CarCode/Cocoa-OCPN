@@ -38,6 +38,7 @@
 #include "OCPNPlatform.h"
 #include "Select.h"
 #include "chart1.h"
+#include "Route.h"
 
 extern WayPointman  *pWayPointMan;
 extern bool         g_bIsNewLayer;
@@ -85,7 +86,7 @@ RoutePoint::RoutePoint()
     m_CreateTimeX = wxDateTime::Now();
     m_bIsolatedMark = false;
     m_bShowName = true;
-    m_bKeepXRoute = false;
+    SetShared( false );
     m_bIsVisible = true;
     m_bIsListed = true;
     CurrentRect_in_DC = wxRect( 0, 0, 0, 0 );
@@ -154,7 +155,7 @@ RoutePoint::RoutePoint( RoutePoint* orig )
     m_CreateTimeX = orig->m_CreateTimeX;
     m_bIsolatedMark = orig->m_bIsolatedMark;
     m_bShowName = orig->m_bShowName;
-    m_bKeepXRoute = orig->m_bKeepXRoute;
+    SetShared( orig->IsShared() );
     m_bIsVisible = orig->m_bIsVisible;
     m_bIsListed = orig->m_bIsListed;
     CurrentRect_in_DC = orig->CurrentRect_in_DC;
@@ -222,7 +223,7 @@ RoutePoint::RoutePoint( double lat, double lon, const wxString& icon_ident, cons
     m_CreateTimeX = wxDateTime::Now();
     m_bIsolatedMark = false;
     m_bShowName = true;
-    m_bKeepXRoute = false;
+    SetShared( false );
     m_bIsVisible = true;
     m_bIsListed = true;
     CurrentRect_in_DC = wxRect( 0, 0, 0, 0 );
@@ -535,6 +536,66 @@ bool RoutePoint::IsVisibleSelectable(ChartCanvas *canvas, bool boverrideViz)
                 return false;
     }
     return true;
+}
+
+int RoutePoint::GetIconImageIndex()
+{
+  if(IsShared()){
+      //    Get an array of all routes using this point
+      wxArrayPtrVoid *proute_array = g_pRouteMan->GetRouteArrayContaining( this );
+
+      // Use route array (if any) to determine actual visibility for this point
+      bool brp_viz = false;
+      if( proute_array ) {
+        for( unsigned int ir = 0; ir < proute_array->GetCount(); ir++ ) {
+            Route *pr = (Route *) proute_array->Item( ir );
+            if( pr->IsVisible() ) {
+                brp_viz = true;
+                break;
+            }
+        }
+      }
+
+      if(brp_viz)
+        return(  pWayPointMan->GetFIconImageListIndex( GetIconBitmap() ) );
+      else{
+        if( IsVisible())
+          return(  pWayPointMan->GetIconImageListIndex( GetIconBitmap() ) );
+        else
+          return(  pWayPointMan->GetXIconImageListIndex( GetIconBitmap() ) );
+      }
+  }
+
+  else{                   // point is not shared
+      if( IsVisible())
+        return(  pWayPointMan->GetIconImageListIndex( GetIconBitmap() ) );
+      else
+        return(  pWayPointMan->GetXIconImageListIndex( GetIconBitmap() ) );
+  }
+}
+
+bool RoutePoint::IsSharedInVisibleRoute()
+{
+  if(IsShared()){
+      //    Get an array of all routes using this point
+      wxArrayPtrVoid *proute_array = g_pRouteMan->GetRouteArrayContaining( this );
+
+      // Use route array (if any) to determine actual visibility for this point
+      bool brp_viz = false;
+      if( proute_array ) {
+        for( unsigned int ir = 0; ir < proute_array->GetCount(); ir++ ) {
+            Route *pr = (Route *) proute_array->Item( ir );
+            if( pr->IsVisible() ) {
+                brp_viz = true;
+                break;
+            }
+        }
+      }
+
+      return brp_viz;
+  }
+  else                   // point is not shared
+      return false;
 }
 
 void RoutePoint::Draw( ocpnDC& dc, ChartCanvas *canvas, wxPoint *rpn, bool boverride_viz )

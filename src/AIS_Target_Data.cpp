@@ -306,11 +306,9 @@ wxString AIS_Target_Data::BuildQueryResult( void )
     wxString IMOstr, MMSIstr, ClassStr;
 
     html << tableStart << _T("<tr><td nowrap colspan=2>");
-    if( /*( Class != AIS_BASE ) &&*/ ( Class != AIS_SART ) ) {
-        if( b_nameValid ) {
-            html << _T("<font size=+2><i><b>") << GetFullName() ;
-            html << _T("</b></i></font>&nbsp;&nbsp;<b>");
-        }
+    if( b_nameValid ) {
+        html << _T("<font size=+2><i><b>") << GetFullName() ;
+        html << _T("</b></i></font>&nbsp;&nbsp;<b>");
     }
 
     if( ( Class != AIS_ATON ) && ( Class != AIS_BASE ) && ( Class != AIS_GPSG_BUDDY )
@@ -548,7 +546,7 @@ wxString AIS_Target_Data::BuildQueryResult( void )
             html << rowEnd;
         }
 
-        if( Class == AIS_CLASS_A || Class == AIS_CLASS_B || Class == AIS_ARPA || Class == AIS_APRS ) {
+        if( Class == AIS_CLASS_A || Class == AIS_CLASS_B || Class == AIS_ARPA || Class == AIS_APRS || Class == AIS_SART) {
             int crs = wxRound( COG );
             if( crs < 360 ) {
                 wxString magString, trueString;
