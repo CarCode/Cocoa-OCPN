@@ -3215,6 +3215,11 @@ wxString getUsrSpeedUnit_Plugin( int unit )
     return getUsrSpeedUnit( unit );
 }
 
+wxString getUsrTempUnit_Plugin(int unit)
+{
+    return getUsrTempUnit(unit);
+}
+
 bool PlugIn_GSHHS_CrossesLand(double lat1, double lon1, double lat2, double lon2)
 {
     static bool loaded = false;

@@ -187,7 +187,11 @@ private:
 public:
         static TrackPropDlg *getInstance( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Track properties"),
                                       const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 680,440 ),
+#ifdef __WXOSX__
+                                         long style = wxCAPTION|wxDEFAULT_FRAME_STYLE|wxFRAME_FLOAT_ON_PARENT|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER );
+#else
                                          long style = FRAME_WITH_LINKS_STYLE );
+#endif
         static bool getInstanceFlag(){ return instanceFlag; } 
         ~TrackPropDlg();
 

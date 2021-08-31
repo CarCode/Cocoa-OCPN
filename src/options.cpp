@@ -48,6 +48,8 @@
 #include <wx/mediactrl.h>
 #include "wx/dir.h"
 #include <wx/statline.h>
+#include <wx/regex.h>
+// #include "SignalKDataStream.h"  // Nicht verwendet
 
 #if wxCHECK_VERSION(2, 9, \
                     4) /* does this work in 2.8 too.. do we need a test? */
@@ -7805,8 +7807,10 @@ void options::OnApplyClick(wxCommandEvent& event) {
   g_bShowMag = pCBMagShow->GetValue();
   
   b_haveWMM = g_pi_manager && g_pi_manager->IsPlugInAvailable(_T("WMM"));
-  if(!b_haveWMM  && !b_oldhaveWMM)
+    if(!b_haveWMM  && !b_oldhaveWMM){
     pMagVar->GetValue().ToDouble(&g_UserVar);
+        gVar = g_UserVar;
+      }
 
   m_pText_OSCOG_Predictor->GetValue().ToDouble(&g_ownship_predictor_minutes);
   m_pText_OSHDT_Predictor->GetValue().ToDouble(&g_ownship_HDTpredictor_miles);
@@ -10484,13 +10488,13 @@ void SentenceListDlg::OnCLBSelect(wxCommandEvent& e) {
 
 void SentenceListDlg::OnAddClick(wxCommandEvent& event) {
   wxTextEntryDialog textdlg(
-      this, _("Enter the NMEA sentence (2, 3 or 5 characters) "),
+    this, _("Enter the NMEA sentence (2, 3 or 5 characters)\n  or a valid REGEX expression (6 characters or longer)"),
       _("Enter the NMEA sentence"));
 #if wxCHECK_VERSION(2, 9, 0)
-  textdlg.SetMaxLength(5);
+//  textdlg.SetMaxLength(5);
 #endif
 
-  textdlg.SetTextValidator(wxFILTER_ALPHANUMERIC);
+  textdlg.SetTextValidator(wxFILTER_ASCII);
   if (textdlg.ShowModal() == wxID_CANCEL) return;
   wxString stc = textdlg.GetValue();
 
@@ -10499,15 +10503,34 @@ void SentenceListDlg::OnAddClick(wxCommandEvent& event) {
     m_clbSentences->Check(m_clbSentences->FindString(stc));
     return;
   }
-
-  OCPNMessageBox(
+  else if (stc.Length() < 2){
+      OCPNMessageBox(
       this,
       _("An NMEA sentence is generally 3 characters long (like RMC, GGA etc.)\n \
           It can also have a two letter prefix identifying the source, or TALKER, of the message.\n \
           The whole sentences then looks like GPGGA or AITXT.\n \
-          You may filter out all the sentences with certain TALKER prefix (like GP, AI etc.).\n\n \
-          The filter accepts just these three formats."),
+          You may filter out all the sentences with certain TALKER prefix (like GP, AI etc.).\n \
+          The filter also accepts Regular Expressions (REGEX) with 6 or more characters. \n\n"),
       _("OpenCPN Info"));
+      return;
+  }
+
+  else {
+    // Verify that a longer text entry is a valid RegEx
+    wxRegEx r(stc);
+    if( r.IsValid() ){
+      m_clbSentences->Append(stc);
+      m_clbSentences->Check(m_clbSentences->FindString(stc));
+      return;
+    }
+    else{
+      OCPNMessageBox(
+          this,
+          _("REGEX syntax error: \n") + stc,
+            _("OpenCPN Info"));
+      return;
+    }
+  }
 }
 
 void SentenceListDlg::OnDeleteClick(wxCommandEvent& event) {
