@@ -731,8 +731,6 @@ bool                      g_bMagneticAPB;
 
 bool                      g_bInlandEcdis;
 
-bool                      g_bDarkDecorations;
-
 //                        OpenGL Globals
 int                       g_GPU_MemSize;
 
@@ -2066,19 +2064,25 @@ bool MyApp::OnInit()
     }
 
     //  Check the global Tide/Current data source array
-    //  If empty, preset one default (US) Ascii data source
-    wxString default_tcdata =  ( g_Platform->GetSharedDataDir() + _T("tcdata") +
-             wxFileName::GetPathSeparator() + _T("HARMONIC.IDX"));
+    //  If empty, preset default (US + ROW) data sources
+    wxString default_tcdata0 =
+        ( g_Platform->GetSharedDataDir() + _T("tcdata") +
+         wxFileName::GetPathSeparator() + _T("harmonics-dwf-20210110-free.tcd"));
+    wxString default_tcdata1 =
+        (g_Platform->GetSharedDataDir() + _T("tcdata") +
+         wxFileName::GetPathSeparator() + _T("HARMONICS_NO_US.IDX"));
     
     if(!TideCurrentDataSet.GetCount()) {
-        TideCurrentDataSet.Add(g_Platform->NormalizePath(default_tcdata) );
+        TideCurrentDataSet.Add(g_Platform->NormalizePath(default_tcdata0));
+        TideCurrentDataSet.Add(g_Platform->NormalizePath(default_tcdata1));
     }
     else {
         wxString first_tide = TideCurrentDataSet[0];
         wxFileName ft(first_tide);
         if(!ft.FileExists()){
             TideCurrentDataSet.RemoveAt(0);
-            TideCurrentDataSet.Insert(g_Platform->NormalizePath(default_tcdata), 0 );
+            TideCurrentDataSet.Insert(g_Platform->NormalizePath(default_tcdata0), 0);
+            TideCurrentDataSet.Add(g_Platform->NormalizePath(default_tcdata1));
         }
     }
 
@@ -3004,7 +3008,7 @@ void MyFrame::SetAndApplyColorScheme( ColorScheme cs )
     }
 
 #if defined(__WXOSX__) && defined(OCPN_USE_DARKMODE)
-    bool darkMode = (cs == GLOBAL_COLOR_SCHEME_DUSK || cs == GLOBAL_COLOR_SCHEME_NIGHT || g_bDarkDecorations);
+    bool darkMode = (cs == GLOBAL_COLOR_SCHEME_DUSK || cs == GLOBAL_COLOR_SCHEME_NIGHT);
 
     if (wxPlatformInfo::Get().CheckOSVersion(10, 14)) {
         setAppLevelDarkMode(darkMode);
@@ -5879,8 +5883,6 @@ int MyFrame::DoOptionsDialog()
     if(NULL == g_options) {
         g_Platform->ShowBusySpinner();
         g_options = new options( this, -1, _("Options") );
-        //g_options->SetColorScheme(global_color_scheme);
-        //applyDarkAppearanceToWindow(g_options->MacGetTopLevelWindowRef());
 
         g_Platform->HideBusySpinner();
     }
@@ -6936,8 +6938,6 @@ void MyFrame::OnInitTimer(wxTimerEvent& event)
         case 4:
         {
             g_options = new options( this, -1, _("Options") );
-            //g_options->SetColorScheme(global_color_scheme);
-            //applyDarkAppearanceToWindow(g_options->MacGetTopLevelWindowRef());
 
             if( g_MainToolbar )
                 g_MainToolbar->EnableTool( ID_SETTINGS, true );

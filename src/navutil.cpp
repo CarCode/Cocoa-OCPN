@@ -436,7 +436,6 @@ extern bool             g_useMUI;
 
 int                     g_nCPUCount;
 
-extern bool             g_bDarkDecorations;
 extern unsigned int     g_canvasConfig;
 extern arrayofCanvasConfigPtr g_canvasConfigArray;
 extern wxString         g_lastAppliedTemplateGUID;
@@ -770,8 +769,6 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
     Read( _T ( "NCacheLimit" ), &g_nCacheLimit );
 
     Read( _T ( "InlandEcdis" ), &g_bInlandEcdis );// First read if in iENC mode as this will override some config settings
-
-    Read( _T ("DarkDecorations" ), &g_bDarkDecorations );
 
     Read( _T( "SpaceDropMark" ), &g_bSpaceDropMark );
 
@@ -2287,8 +2284,6 @@ void MyConfig::UpdateSettings()
 #endif /* SYSTEM_SOUND_CMD */
     Write( _T ( "NavMessageShown" ), n_NavMessageShown );
     Write( _T ( "InlandEcdis" ), g_bInlandEcdis );
-
-    Write( _T ( "DarkDecorations"), g_bDarkDecorations );
 
     Write( _T ( "UIexpert" ), g_bUIexpert );
     Write( _T( "SpaceDropMark" ), g_bSpaceDropMark );

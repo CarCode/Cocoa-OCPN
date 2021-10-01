@@ -246,9 +246,9 @@ void RouteManagerDialog::OnTabSwitch( wxNotebookEvent &event )
     if( !m_pNotebook ) return;
     int current_page = m_pNotebook->GetSelection();
     if( current_page == 3 ) {
-//        if( btnImport ) btnImport->Enable( false );
-//        if( btnExport ) btnExport->Enable( false );
-//        if( btnExportViz ) btnExportViz->Enable( false );
+        if( btnImport ) btnImport->Enable( false );
+        if( btnExport ) btnExport->Enable( false );
+        if( btnExportViz ) btnExportViz->Enable( false );
     } else {
         if( btnImport ) btnImport->Enable( true );
         if( btnExport ) btnExport->Enable( true );
@@ -782,7 +782,7 @@ void RouteManagerDialog::Create()
     bsLayButtonsInner->Add( cbLayToggleChart, 0, wxALL | wxEXPAND, DIALOG_MARGIN );
     cbLayToggleChart->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(RouteManagerDialog::OnLayToggleChartClick), NULL, this );
 
-    cbLayToggleNames = new wxCheckBox( winl, -1, _("Show WPT names"), wxDefaultPosition, wxDefaultSize, wxCHK_3STATE|wxCHK_ALLOW_3RD_STATE_FOR_USER );
+    cbLayToggleNames = new wxCheckBox( winl, -1, _("Show WPT names"), wxDefaultPosition, wxDefaultSize, wxCHK_3STATE );
 
     bsLayButtonsInner->Add( cbLayToggleNames, 0, wxALL | wxEXPAND, DIALOG_MARGIN );
     cbLayToggleNames->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(RouteManagerDialog::OnLayToggleNamesClick), NULL, this );

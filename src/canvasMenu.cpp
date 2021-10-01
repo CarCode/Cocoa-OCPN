@@ -127,7 +127,6 @@ extern bool             g_bBasicMenus;
 extern double           gHdt;
 extern bool             g_FlushNavobjChanges;
 
-
 //    Constants for right click menus
 enum
 {

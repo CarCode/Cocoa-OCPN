@@ -148,6 +148,55 @@ void Route::AddPoint( RoutePoint *pNewPoint, bool b_rename_in_sequence, bool b_d
     return;
 }
 
+void Route::AddPointAndSegment(RoutePoint *pNewPoint, bool b_rename_in_sequence,
+  bool b_deferBoxCalc) {
+  int npoints = GetnPoints();
+  RoutePoint *newpoint = pNewPoint;
+  if (newpoint->m_bIsInLayer) {
+    newpoint = new RoutePoint(pNewPoint->m_lat, pNewPoint->m_lon,
+      pNewPoint->GetIconName(), pNewPoint->GetName(), wxEmptyString, false);
+    newpoint->m_bShowName = pNewPoint->m_bShowName; //do not change new wpt's name visibility
+  }
+  AddPoint(newpoint, false);
+  if (npoints != 0) {
+    double rlat = GetPoint(npoints)->m_lat;
+    double rlon = GetPoint(npoints)->m_lon;
+    npoints = GetnPoints();
+    pSelect->AddSelectableRouteSegment(rlat, rlon,
+      GetPoint(npoints)->m_lat, GetPoint(npoints)->m_lon, GetPoint(npoints - 1), GetPoint(npoints), this);
+  }
+  m_lastMousePointIndex = GetnPoints();
+}
+
+void Route::InsertPointAndSegment(RoutePoint *pNewPoint, int insert_after, bool bRenamePoints, bool b_deferBoxCalc)
+{
+  {
+    bool add = false;
+
+    if (pNewPoint->m_bIsolatedMark) {
+      pNewPoint->SetShared(true);
+    }
+    pNewPoint->m_bIsolatedMark = false;       // definitely no longer isolated
+    pNewPoint->m_bIsInRoute = true;
+
+    if (insert_after >= GetnPoints() - 1) {
+      wxLogMessage(wxT("Error insert after last point"));
+      return;
+    }
+
+    int insert = insert_after++;
+    pNewPoint->m_bIsInRoute = true;
+    pNewPoint->m_bDynamicName = true;
+    pNewPoint->SetNameShown(false);
+    pRoutePointList->Insert(insert, pNewPoint);
+    if (bRenamePoints) RenameRoutePoints();
+    m_lastMousePointIndex = GetnPoints();
+    FinalizeForRendering();
+    UpdateSegmentDistances();
+    return;
+  }
+}
+
 RoutePoint *Route::GetPoint( int nWhichPoint )
 {
     RoutePoint *prp;

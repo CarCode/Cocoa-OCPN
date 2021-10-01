@@ -100,10 +100,6 @@ extern GLuint g_raster_format;
 #include "androidUTIL.h"
 #endif
 
-#ifdef __WXOSX__
-#include "DarkMode.h"
-#endif
-
 #include "OCPNPlatform.h"
 #include "ConfigMgr.h"
 
@@ -327,7 +323,6 @@ extern int g_ENCSoundingScaleFactor;
 extern double g_config_display_size_mm;
 extern bool g_config_display_size_manual;
 extern bool g_bInlandEcdis;
-extern bool g_bDarkDecorations;
 extern unsigned int g_canvasConfig;
 extern bool g_useMUI;
 extern wxString g_lastAppliedTemplateGUID;
@@ -1454,6 +1449,7 @@ wxScrolledWindow* options::AddPage(size_t parent, const wxString& title) {
     /* Only remove the tab from listbook, we still have original content in
      * {page} */
     m_pListbook->InsertPage(parent, nb, toptitle, FALSE, parent);
+    m_pListbook->SetSelection( 0 );   // avoid gtk assertions
     m_pListbook->RemovePage(parent + 1);
     wxString previoustitle = page->GetName();
     page->Reparent(nb);
@@ -1474,6 +1470,7 @@ wxScrolledWindow* options::AddPage(size_t parent, const wxString& title) {
     sw->SetScrollRate(m_scrollRate, m_scrollRate);
     wxString toptitle = m_pListbook->GetPageText(parent);
     m_pListbook->InsertPage(parent, sw, toptitle, FALSE, parent);
+    m_pListbook->SetSelection( 0 );   // avoid gtk assertions
     m_pListbook->DeletePage(parent + 1);
   }
 
@@ -5970,14 +5967,6 @@ void options::CreatePanel_UI(size_t parent, int border_size, int group_item_spac
                                 _("Use Settings for Inland ECDIS Version 2.3"));
   miscOptions->Add(pInlandEcdis, 0, wxALL, border_size);
 
-#ifdef __WXOSX__
-  pDarkDecorations = new wxCheckBox(itemPanelFont, ID_DARKDECORATIONSBOX,
-                                  _("Use dark window decorations"));
-  miscOptions->Add(pDarkDecorations, 0, wxALL, border_size);
-  pDarkDecorations->Enable( (osMajor >= 10) && (osMinor >= 12) );
- 
-#endif
-
   miscOptions->AddSpacer(10);
 
   wxFlexGridSizer* sliderSizer;
@@ -6562,9 +6551,6 @@ void options::SetInitialSettings(void) {
   //pOverzoomEmphasis->SetValue(!g_fog_overzoom);
   //pOZScaleVector->SetValue(!g_oz_vector_scale);
   pInlandEcdis->SetValue(g_bInlandEcdis);
-#ifdef __WXOSX__
-  pDarkDecorations->SetValue(g_bDarkDecorations);
-#endif
   pOpenGL->SetValue(g_bopengl);
   if(pSmoothPanZoom) pSmoothPanZoom->SetValue(g_bsmoothpanzoom);
   pCBTrueShow->SetValue(g_bShowTrue);
@@ -8130,15 +8116,6 @@ void options::OnApplyClick(wxCommandEvent& event) {
         SwitchInlandEcdisMode( g_bInlandEcdis );
         m_returnChanges |= TOOLBAR_CHANGED;    
     }
-#ifdef __WXOSX__
-    if ( g_bDarkDecorations != pDarkDecorations->GetValue() ) {
-        g_bDarkDecorations = pDarkDecorations->GetValue();
-
-        OCPNMessageBox(this,
-                       _("The changes to the window decorations will take full effect the next time you start OpenCPN."),
-                       _("OpenCPN"));
-    }
-#endif
   // PlugIn Manager Panel
 
   // Pick up any changes to selections
@@ -8788,6 +8765,8 @@ void options::DoOnPageChange(size_t page) {
   }
 
   else if (m_pageUI == i) {  // 5 is the index of "User Interface" page
+      if(!m_itemLangListBox)
+        return;
 #if wxUSE_XLOCALE || !wxCHECK_VERSION(3, 0, 0)
 
     if (!m_bVisitLang) {

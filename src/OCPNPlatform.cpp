@@ -206,7 +206,7 @@ extern wxArrayString             g_locale_catalog_array;
 extern int                       options_lastPage;
 extern int                        g_maintoolbar_x;
 extern int                        g_maintoolbar_y;
-
+extern wxArrayString TideCurrentDataSet;
 
 //  OCPN Platform implementation
 
@@ -1288,8 +1288,10 @@ void OCPNPlatform::SetUpgradeOptions( wxString vNew, wxString vOld )
 
         // Force a recalculation of default main toolbar location
         g_maintoolbar_x = -1;
-    }
 
+        // Force a reload of updated default tide/current datasets
+        TideCurrentDataSet.Clear();
+    }
 }
 
 
