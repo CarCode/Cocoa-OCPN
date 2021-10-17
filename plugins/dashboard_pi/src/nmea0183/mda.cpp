@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -20,7 +20,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
  *
  *   S Blackburn's original source license:                                *
@@ -59,6 +59,7 @@ void MDA::Empty( void )
 
    Pressure = 0.0;
    UnitOfMeasurement.Empty();
+    AirTemp = 999.0;
 }
 
 bool MDA::Parse( const SENTENCE& sentence )
@@ -95,6 +96,7 @@ bool MDA::Parse( const SENTENCE& sentence )
 
 Pressure       = sentence.Double( 3 );
 UnitOfMeasurement = sentence.Field( 4 );
+AirTemp = sentence.Double(5);
 
 if(UnitOfMeasurement==wxT("B"))
 {

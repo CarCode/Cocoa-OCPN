@@ -443,8 +443,12 @@ extern wxString         g_lastAppliedTemplateGUID;
 extern int              g_route_prop_x, g_route_prop_y;
 extern int              g_route_prop_sx, g_route_prop_sy;
 
+extern wxString g_ObjQFileExt;
+
 wxString                g_gpx_path;
 bool                    g_bLayersLoaded;
+
+int g_trackFilterMax;
 
 #ifdef ocpnUSE_GL
 extern ocpnGLOptions g_GLOptions;
@@ -666,6 +670,7 @@ int MyConfig::LoadMyConfig()
 
     g_nAWDefault = 50;
     g_nAWMax = 1852;
+    g_ObjQFileExt = _T("txt,rtf,png,html,gif,tif");
 
     // Load the raw value, with no defaults, and no processing
     int ret_Val = LoadMyConfigRaw();
@@ -827,6 +832,7 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
     Read( _T ( "ChartObjectScaleFactor" ), &g_ChartScaleFactor );
     Read( _T ( "ShipScaleFactor" ), &g_ShipScaleFactor );
     Read( _T ( "ENCSoundingScaleFactor" ), &g_ENCSoundingScaleFactor );
+    Read( _T ( "ObjQueryAppendFilesExt" ),  &g_ObjQFileExt);
 
     //  NMEA connection options.
     if( !bAsTemplate ){
@@ -836,6 +842,9 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
         Read( _T ( "UseGarminHostUpload" ),  &g_bGarminHostUpload );
         Read( _T ( "UseNMEA_GLL" ), &g_bUseGLL );
         Read( _T ( "UseMagAPB" ), &g_bMagneticAPB );
+//        Read(_T ( "TrackContinuous" ), &g_btrackContinuous, false);  // NEU? Checken!!!
+        Read(_T ( "FilterTrackDropLargeJump" ), &g_trackFilterMax, 0);
+
     }
 
     Read( _T ( "ShowTrue" ), &g_bShowTrue );
@@ -2131,7 +2140,7 @@ void MyConfig::LoadConfigCanvas( canvasConfig *cConfig, bool bApplyAsTemplate )
     Read( _T ( "canvasENCShowLightDescriptions" ), &cConfig->bShowENCLightDescriptions, 1 );
     Read( _T ( "canvasENCShowLights" ), &cConfig->bShowENCLights, 1 );
     Read( _T ( "canvasENCShowVisibleSectorLights" ), &cConfig->bShowENCVisibleSectorLights, 0 );
-
+    Read(_T ( "canvasENCShowAnchorInfo" ), &cConfig->bShowENCAnchorInfo, 0);
 
     int sx, sy;
     Read( _T ( "canvasSizeX" ), &sx, 0 );
@@ -2241,6 +2250,7 @@ void MyConfig::SaveConfigCanvas( canvasConfig *cConfig )
         Write( _T ( "canvasENCShowLightDescriptions" ), cConfig->canvas->GetShowENCLightDesc() );
         Write( _T ( "canvasENCShowLights" ), cConfig->canvas->GetShowENCLights() );
         Write( _T ( "canvasENCShowVisibleSectorLights" ), cConfig->canvas->GetShowVisibleSectors() );
+        Write(_T ( "canvasENCShowAnchorInfo" ), cConfig->canvas->GetShowENCAnchor());
 
         Write( _T ( "canvasCourseUp" ), cConfig->canvas->GetUpMode() == COURSE_UP_MODE );
         Write( _T ( "canvasHeadUp" ), cConfig->canvas->GetUpMode() == HEAD_UP_MODE );
@@ -2317,6 +2327,7 @@ void MyConfig::UpdateSettings()
     Write( _T ( "ChartObjectScaleFactor" ), g_ChartScaleFactor );
     Write( _T ( "ShipScaleFactor" ), g_ShipScaleFactor );
     Write( _T ( "ENCSoundingScaleFactor" ), g_ENCSoundingScaleFactor );
+    Write(_T ( "ObjQueryAppendFilesExt" ), g_ObjQFileExt);
 
     Write( _T ( "FilterNMEA_Avg" ), g_bfilter_cogsog );
     Write( _T ( "FilterNMEA_Sec" ), g_COGFilterSec );

@@ -58,6 +58,7 @@ double g_dDashDBTOffset;
 bool g_iDashUsetruewinddata;
 double g_dHDT;
 double g_dSOG, g_dCOG;
+int g_iDashTempUnit;
 
 #if !defined(NAN)
 static const long long lNaN = 0xfff8000000000000;
@@ -469,12 +470,14 @@ double GetJsonDouble(wxJSONValue &value) {
     double d_ret = 0;
     if (value.IsDouble()) {
         d_ret = value.AsDouble();
+        return d_ret;
     }
     else if (value.IsLong()) {
         int i_ret = value.AsLong();
         d_ret = i_ret;
+        return d_ret;
     }
-    return d_ret;
+    return nan("");
 }
 */
 void dashboard_pi::Notify()
@@ -482,7 +485,20 @@ void dashboard_pi::Notify()
     SendUtcTimeToAllInstruments( mUTCDateTime );
     for( size_t i = 0; i < m_ArrayOfDashboardWindow.GetCount(); i++ ) {
         DashboardWindow *dashboard_window = m_ArrayOfDashboardWindow.Item( i )->m_pDashboardWindow;
-        if( dashboard_window ) dashboard_window->Refresh();
+        if( dashboard_window ){
+            dashboard_window->Refresh();
+#ifdef __OCPN__ANDROID__
+            wxWindowList list = dashboard_window->GetChildren();
+            wxWindowListNode *node = list.GetFirst();
+            for( size_t i = 0; i < list.GetCount(); i++ ) {
+                wxWindow *win = node->GetData();
+//                qDebug() << "Refresh Dash child:" << i;
+                win->Refresh();
+                node = node->GetNext();
+            }
+#endif
+
+        }
     }
     //  Manage the watchdogs
 
@@ -919,7 +935,10 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
             if (mPriATMP >= 3) {
                 if( m_NMEA0183.Parse() ) {
                     mPriATMP = 3;
-                    SendSentenceToAllInstruments(OCPN_DBP_STC_ATMP, m_NMEA0183.Mta.Temperature, m_NMEA0183.Mta.UnitOfMeasurement);
+                    SendSentenceToAllInstruments(OCPN_DBP_STC_ATMP,
+                                                 toUsrTemp_Plugin(m_NMEA0183.Mta.Temperature,
+                                                                  g_iDashTempUnit),
+                                                 getUsrTempUnit_Plugin(g_iDashTempUnit));
                     mATMP_Watchdog = gps_watchdog_timeout_ticks;
                 }
             }
@@ -933,9 +952,19 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
 
                 if( m_NMEA0183.Mda.Pressure > .8 && m_NMEA0183.Mda.Pressure < 1.1 ) {
                     SendSentenceToAllInstruments( OCPN_DBP_STC_MDA, m_NMEA0183.Mda.Pressure *1000, _T("hPa") ); //Convert to hpa befor sending to instruments.
-                    mMDA_Watchdog = gps_watchdog_timeout_ticks;
+                    mMDA_Watchdog = no_nav_watchdog_timeout_ticks;
+                  }
+                  if (mPriATMP >= 4) {
+                    double airtemp = m_NMEA0183.Mda.AirTemp;
+                    if (airtemp < 999.0) {
+                      SendSentenceToAllInstruments(
+                        OCPN_DBP_STC_ATMP,
+                        toUsrTemp_Plugin(airtemp, g_iDashTempUnit),
+                        getUsrTempUnit_Plugin(g_iDashTempUnit));
+                      mATMP_Watchdog = no_nav_watchdog_timeout_ticks;
+                      mPriATMP = 4;
+                    }
                 }
-
             }
 
         }
@@ -943,8 +972,11 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
             if (mPriWTP >= 3) {
                 if( m_NMEA0183.Parse() ) {
                     mPriWTP = 3;
-                    SendSentenceToAllInstruments(OCPN_DBP_STC_TMP, m_NMEA0183.Mtw.Temperature, m_NMEA0183.Mtw.UnitOfMeasurement);
-                    mWTP_Watchdog = no_nav_watchdog_timeout_ticks;
+                    SendSentenceToAllInstruments(OCPN_DBP_STC_TMP,
+                                                 toUsrTemp_Plugin(m_NMEA0183.Mtw.Temperature,
+                                                                  g_iDashTempUnit),
+                                                 getUsrTempUnit_Plugin(g_iDashTempUnit));
+                    mWTP_Watchdog = gps_watchdog_timeout_ticks;
                 }
             }
 
@@ -1196,10 +1228,14 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
  +                            for (idx = 0; idx < 4; idx++) {
  +                                arr = idx + 4 * iMesNum;
  +                                try {
- +                                    iID =  value["satellites"][arr]["id"].AsInt();
- +                                    dElevRad = value["satellites"][arr]["elevation"].AsDouble();
- +                                    dAzimRad = value["satellites"][arr]["azimuth"].AsDouble();
- +                                    iSNR = value["satellites"][arr]["SNR"].AsInt();
+ +                                       if(value["satellites"][arr]["id"].IsInt())
+ +                                          iID =  value["satellites"][arr]["id"].AsInt();
+ +                                        if(value["satellites"][arr]["elevation"].IsDouble())
+ +                                          dElevRad = value["satellites"][arr]["elevation"].AsDouble();
+ +                                       if(value["satellites"][arr]["azimuth"].IsDouble())
+ +                                           dAzimRad = value["satellites"][arr]["azimuth"].AsDouble();
+ +                                        if(value["satellites"][arr]["SNR"].IsInt())
+ +                                           iSNR = value["satellites"][arr]["SNR"].AsInt();
  +                                } catch (int e) {
  +                                    wxLogMessage(("_T(SignalK: Could not parse all satellite data: ") + e);
  +                                }
@@ -1362,8 +1398,8 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
                         if (mPriATMP >= 2) {
                             mPriATMP = 2;
                             SendSentenceToAllInstruments(OCPN_DBP_STC_ATMP,
-                                                         xdrdata,
-                                                         m_NMEA0183.Xdr.TransducerInfo[i].UnitOfMeasurement);
+                                                         toUsrTemp_Plugin(xdrdata, g_iDashTempUnit),
+                                                         getUsrTempUnit_Plugin(g_iDashTempUnit));
                             mATMP_Watchdog = no_nav_watchdog_timeout_ticks;
                         }
                     }
@@ -1411,7 +1447,8 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
                     if (m_NMEA0183.Xdr.TransducerInfo[i].TransducerName == _T("ENV_WATER_T")){
                         if (mPriWTP >= 2) {
                             mPriWTP = 2;
-                            SendSentenceToAllInstruments(OCPN_DBP_STC_TMP, m_NMEA0183.Xdr.TransducerInfo[i].MeasurementData, m_NMEA0183.Xdr.TransducerInfo[i].UnitOfMeasurement);
+                            SendSentenceToAllInstruments(OCPN_DBP_STC_TMP,                                                 toUsrTemp_Plugin(m_NMEA0183.Xdr.TransducerInfo[i].MeasurementData,                                       g_iDashTempUnit),                               getUsrTempUnit_Plugin(g_iDashTempUnit));
+
                             mWTP_Watchdog = no_nav_watchdog_timeout_ticks;
                         }
                     }
@@ -1488,10 +1525,15 @@ void dashboard_pi::CalculateAndUpdateTWDS( double awsKnots, double awaDegrees)
         // Calculate the speed (magnitude of the vector)
         double tws = pow(((twdx * twdx) + (twdy * twdy)), 0.5);
 
-        // calculate the direction
+        // calculate the True Wind Angle
         double twd = atan2(twdy, twdx) * 180. / PI;
 
-        // Re-orient to the ownship HDT
+        if(twd < 0)
+            SendSentenceToAllInstruments(OCPN_DBP_STC_TWA, -twd, _T("\u00B0L"));
+        else
+            SendSentenceToAllInstruments(OCPN_DBP_STC_TWA, twd, _T("\u00B0R"));
+
+        // Calculate the True Wind Direction, by re-orienting to the ownship HDT
         double twdc = twd + g_dHDT;
 
         // Normalize
@@ -1798,6 +1840,7 @@ bool dashboard_pi::LoadConfig( void )
 
         pConf->Read( _T("DistanceUnit"), &g_iDashDistanceUnit, 0 );
         pConf->Read( _T("WindSpeedUnit"), &g_iDashWindSpeedUnit, 0 );
+        pConf->Read(_T("TemperatureUnit"), &g_iDashTempUnit, 0);
 
         pConf->Read( _T("UTCOffset"), &g_iUTCOffset, 0 );
 
@@ -1898,6 +1941,7 @@ bool dashboard_pi::SaveConfig( void )
         pConf->Write( _T("DistanceUnit"), g_iDashDistanceUnit );
         pConf->Write( _T("WindSpeedUnit"), g_iDashWindSpeedUnit );
         pConf->Write( _T("UTCOffset"), g_iUTCOffset );
+        pConf->Write(_T("TemperatureUnit"), g_iDashTempUnit);
 
         pConf->Write( _T("DashboardCount" ), (int) m_ArrayOfDashboardWindow.GetCount() );
         for( unsigned int i = 0; i < m_ArrayOfDashboardWindow.GetCount(); i++ ) {
@@ -2181,7 +2225,13 @@ DashboardPreferencesDialog::DashboardPreferencesDialog( wxWindow *parent, wxWind
     itemFlexGridSizer04->Add( itemStaticText09, 0, wxEXPAND | wxALL, border_size );
     wxString m_SpeedUnitChoices[] = { _("Honor OpenCPN settings"), _("Kts"), _("mph"), _("km/h"), _("m/s") };
     int m_SpeedUnitNChoices = sizeof( m_SpeedUnitChoices ) / sizeof( wxString );
-    m_pChoiceSpeedUnit = new wxChoice( itemPanelNotebook02, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_SpeedUnitNChoices, m_SpeedUnitChoices, 0 );
+    wxSize szSpeedUnit = wxDefaultSize;
+    m_pChoiceSpeedUnit = new wxChoice(itemPanelNotebook02, wxID_ANY, wxDefaultPosition, szSpeedUnit,
+                                      m_SpeedUnitNChoices, m_SpeedUnitChoices, 0);
+    for (auto const &iUnit : m_SpeedUnitChoices) {
+      szSpeedUnit.IncTo(m_pChoiceSpeedUnit->GetTextExtent(iUnit));
+    }
+    m_pChoiceSpeedUnit->SetSize(szSpeedUnit);
     m_pChoiceSpeedUnit->SetSelection( g_iDashSpeedUnit + 1 );
     itemFlexGridSizer04->Add( m_pChoiceSpeedUnit, 0, wxALIGN_RIGHT | wxALL, 0 );
 
@@ -2189,8 +2239,15 @@ DashboardPreferencesDialog::DashboardPreferencesDialog( wxWindow *parent, wxWind
     itemFlexGridSizer04->Add( itemStaticTextDepthU, 0, wxEXPAND | wxALL, border_size );
     wxString m_DepthUnitChoices[] = { _("Meters"), _("Feet"), _("Fathoms"), _("Inches"), _("Centimeters") };
     int m_DepthUnitNChoices = sizeof( m_DepthUnitChoices ) / sizeof( wxString );
-    m_pChoiceDepthUnit = new wxChoice( itemPanelNotebook02, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_DepthUnitNChoices, m_DepthUnitChoices, 0 );
-    m_pChoiceDepthUnit->SetSelection( g_iDashDepthUnit - 3);
+    wxSize szDepthUnit = wxDefaultSize;
+    m_pChoiceDepthUnit =
+        new wxChoice(itemPanelNotebook02, wxID_ANY, wxDefaultPosition,
+                     szDepthUnit, m_DepthUnitNChoices, m_DepthUnitChoices, 0);
+    for (auto const &iUnit : m_DepthUnitChoices) {
+      szDepthUnit.IncTo(m_pChoiceDepthUnit->GetTextExtent(iUnit));
+    }
+    m_pChoiceDepthUnit->SetSize(szDepthUnit);
+    m_pChoiceDepthUnit->SetSelection(g_iDashDepthUnit - 3);
     itemFlexGridSizer04->Add( m_pChoiceDepthUnit, 0, wxALIGN_RIGHT | wxALL, 0 );
     wxString dMess = wxString::Format(_("Depth Offset (%s):"),m_DepthUnitChoices[g_iDashDepthUnit-3]);
     wxStaticText* itemStaticDepthO = new wxStaticText(itemPanelNotebook02, wxID_ANY, dMess, wxDefaultPosition, wxDefaultSize, 0);
@@ -2217,10 +2274,19 @@ DashboardPreferencesDialog::DashboardPreferencesDialog( wxWindow *parent, wxWind
 
     wxStaticText* itemStaticText0b = new wxStaticText( itemPanelNotebook02, wxID_ANY, _("Distance units:"), wxDefaultPosition, wxDefaultSize, 0 );
     itemFlexGridSizer04->Add( itemStaticText0b, 0, wxEXPAND | wxALL, border_size );
-    wxString m_DistanceUnitChoices[] = { _("Honor OpenCPN settings"), _("Nautical miles"), _("Statute miles"), _("Kilometers"), _("Meters") };
-    int m_DistanceUnitNChoices = sizeof( m_DistanceUnitChoices ) / sizeof( wxString );
-    m_pChoiceDistanceUnit = new wxChoice( itemPanelNotebook02, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_DistanceUnitNChoices, m_DistanceUnitChoices, 0 );
-    m_pChoiceDistanceUnit->SetSelection( g_iDashDistanceUnit + 1 );
+
+    wxString m_DistanceUnitChoices[] = { _("Honor OpenCPN settings"), _("Nautical miles"),
+                                         _("Statute miles"), _("Kilometers"), _("Meters") };
+    wxSize szDistanceUnit = wxDefaultSize;
+    int m_DistanceUnitNChoices =
+        sizeof(m_DistanceUnitChoices) / sizeof(wxString);
+    m_pChoiceDistanceUnit = new wxChoice( itemPanelNotebook02, wxID_ANY, wxDefaultPosition,
+                                          szDistanceUnit, m_DistanceUnitNChoices, m_DistanceUnitChoices, 0 );
+    for (auto const &iUnit : m_DistanceUnitChoices) {
+      szDistanceUnit.IncTo(m_pChoiceDistanceUnit->GetTextExtent(iUnit));
+    }
+    m_pChoiceDistanceUnit->SetSize(szDistanceUnit);
+    m_pChoiceDistanceUnit->SetSelection(g_iDashDistanceUnit + 1);
     itemFlexGridSizer04->Add( m_pChoiceDistanceUnit, 0, wxALIGN_RIGHT | wxALL, 0 );
 
     wxStaticText* itemStaticText0a = new wxStaticText( itemPanelNotebook02, wxID_ANY, _("Wind speed units:"),
@@ -2228,10 +2294,32 @@ DashboardPreferencesDialog::DashboardPreferencesDialog( wxWindow *parent, wxWind
     itemFlexGridSizer04->Add( itemStaticText0a, 0, wxEXPAND | wxALL, border_size );
     wxString m_WSpeedUnitChoices[] = { _("Kts"), _("mph"), _("km/h"), _("m/s") };
     int m_WSpeedUnitNChoices = sizeof( m_WSpeedUnitChoices ) / sizeof( wxString );
-    m_pChoiceWindSpeedUnit = new wxChoice( itemPanelNotebook02, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_WSpeedUnitNChoices, m_WSpeedUnitChoices, 0 );
-    m_pChoiceWindSpeedUnit->SetSelection( g_iDashWindSpeedUnit );
+    wxSize szWSpeedUnit = wxDefaultSize;
+    m_pChoiceWindSpeedUnit = new wxChoice(
+        itemPanelNotebook02, wxID_ANY, wxDefaultPosition, szWSpeedUnit,
+        m_WSpeedUnitNChoices, m_WSpeedUnitChoices, 0);
+    for (auto const &iUnit : m_WSpeedUnitChoices) {
+      szWSpeedUnit.IncTo(m_pChoiceWindSpeedUnit->GetTextExtent(iUnit));
+    }
+    m_pChoiceWindSpeedUnit->SetSize(szWSpeedUnit);
+    m_pChoiceWindSpeedUnit->SetSelection(g_iDashWindSpeedUnit);
     itemFlexGridSizer04->Add( m_pChoiceWindSpeedUnit, 0, wxALIGN_RIGHT | wxALL, 0 );
 
+    wxStaticText* itemStaticText0c = new wxStaticText(itemPanelNotebook02, wxID_ANY, _("Temperature units:"),
+      wxDefaultPosition, wxDefaultSize, 0);
+    itemFlexGridSizer04->Add(itemStaticText0c, 0, wxEXPAND | wxALL, border_size);
+    wxString m_TempUnitChoices[] = { _("Celsius"), _("Fahrenheit"), _("Kelvin") };
+    int m_TempUnitNChoices = sizeof(m_TempUnitChoices) / sizeof(wxString);
+    wxSize szTempUnit = wxDefaultSize;
+    m_pChoiceTempUnit =
+        new wxChoice(itemPanelNotebook02, wxID_ANY, wxDefaultPosition,
+                     szTempUnit, m_TempUnitNChoices, m_TempUnitChoices, 0);
+    for (auto const &iUnit : m_TempUnitChoices) {
+      szTempUnit.IncTo(m_pChoiceTempUnit->GetTextExtent(iUnit));
+    }
+    m_pChoiceTempUnit->SetSize(szTempUnit);
+    m_pChoiceTempUnit->SetSelection(g_iDashTempUnit);
+    itemFlexGridSizer04->Add(m_pChoiceTempUnit, 0, wxALIGN_RIGHT | wxALL, 0);
 
     wxStdDialogButtonSizer* DialogButtonSizer = CreateStdDialogButtonSizer( wxOK | wxCANCEL );
     itemBoxSizerMainPanel->Add( DialogButtonSizer, 0, wxALIGN_RIGHT | wxALL, 5 );
@@ -2283,6 +2371,7 @@ void DashboardPreferencesDialog::SaveDashboardConfig()
     g_iDashDepthUnit = m_pChoiceDepthUnit->GetSelection() + 3;
     g_iDashDistanceUnit = m_pChoiceDistanceUnit->GetSelection() - 1;
     g_iDashWindSpeedUnit = m_pChoiceWindSpeedUnit->GetSelection();
+    g_iDashTempUnit = m_pChoiceTempUnit->GetSelection();
     if( curSel != -1 ) {
         DashboardWindowContainer *cont = m_Config.Item( curSel );
         cont->m_bIsVisible = m_pCheckBoxIsVisible->IsChecked();

@@ -1308,7 +1308,7 @@ static void AISDrawTarget( AIS_Target_Data *td, ocpnDC& dc, ViewPort& vp, ChartC
 #ifdef ocpnUSE_GL
 
                         glPushMatrix();
-                        glTranslated(pixx1, pixy1, 0);
+                        glTranslated(PredPoint.x, PredPoint.y, 0);
                         glScalef(AIS_scale_factor, AIS_scale_factor, AIS_scale_factor);
                         // draw circle
                         float points[] = {0.0f, 5.0f, 2.5f, 4.330127f, 4.330127f, 2.5f, 5.0f,

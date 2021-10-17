@@ -1034,11 +1034,11 @@ void ocpnDC::DrawBitmap( const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usem
             GLDrawBlendData( x, y, w, h, GL_RGBA, e );
             delete[] ( e );
         } else {
-            glRasterPos2i( x, y );
-            glPixelZoom( 1, -1 ); /* draw data from top to bottom */
-            if(image.GetData())
+            glRasterPos2i(x, y);
+            glPixelZoom(1, -1); /* draw data from top to bottom */
+            if (image.GetData())
                 glDrawPixels( w, h, GL_RGB, GL_UNSIGNED_BYTE, image.GetData() );
-            glPixelZoom( 1, 1 );
+            glPixelZoom(1, 1);
         }
     }
 #endif    
@@ -1254,11 +1254,11 @@ void ocpnDC::GLDrawBlendData( wxCoord x, wxCoord y, wxCoord w, wxCoord h, int fo
         const unsigned char *data )
 {
 #ifdef ocpnUSE_GL
-    glEnable( GL_BLEND );
-    glRasterPos2i( x, y );
-    glPixelZoom( 1, -1 );
-    glDrawPixels( w, h, format, GL_UNSIGNED_BYTE, data );
-    glPixelZoom( 1, 1 );
-    glDisable( GL_BLEND );
+    glEnable(GL_BLEND);
+    glRasterPos2i(x, y);
+    glPixelZoom(1, -1);
+    glDrawPixels(w, h, format, GL_UNSIGNED_BYTE, data);
+    glPixelZoom(1, 1);
+    glDisable(GL_BLEND);
 #endif
 }
