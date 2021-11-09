@@ -118,7 +118,7 @@ OCPNIconCombo::OCPNIconCombo (wxWindow* parent, wxWindowID id, const wxString& v
 {
     double fontHeight = GetFont().GetPointSize() / g_Platform->getFontPointsperPixel();
     itemHeight = (int)wxRound(fontHeight);
-    
+
 }
 
 OCPNIconCombo::~OCPNIconCombo ()
@@ -130,7 +130,7 @@ void OCPNIconCombo::OnDrawItem( wxDC& dc,
                                        int item,
                                        int flags ) const
 {
-    
+
     int offset_x = bmpArray[item].GetWidth();
     int bmpHeight = bmpArray[item].GetHeight();
     dc.DrawBitmap(bmpArray[item], rect.x, rect.y + (rect.height - bmpHeight)/2, true);
@@ -139,7 +139,7 @@ void OCPNIconCombo::OnDrawItem( wxDC& dc,
     {
         wxString text = GetValue();
         int margin_x = 2;
-        
+
 #if wxCHECK_VERSION(2, 9, 0)
         if ( ShouldUseHintText() )
         {
@@ -147,7 +147,7 @@ void OCPNIconCombo::OnDrawItem( wxDC& dc,
             wxColour col = wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT);
             dc.SetTextForeground(col);
         }
-        
+
         margin_x = GetMargins().x;
 #endif
 
@@ -164,7 +164,7 @@ void OCPNIconCombo::OnDrawItem( wxDC& dc,
 wxCoord OCPNIconCombo::OnMeasureItem( size_t item ) const
 {
     int bmpHeight = bmpArray[item].GetHeight();
-    
+
     return wxMax(itemHeight, bmpHeight);
 }
 
@@ -177,7 +177,7 @@ int OCPNIconCombo::Append(const wxString& item, wxBitmap bmp)
 {
     bmpArray.Add(bmp);
     int idx = wxOwnerDrawnComboBox::Append(item);
-    
+
     return idx;
 }
 
@@ -255,7 +255,7 @@ MarkInfoDlg::MarkInfoDlg( wxWindow* parent, wxWindowID id, const wxString& title
     wxFont *qFont = GetOCPNScaledFont(_("Dialog"));
     SetFont( *qFont );
     int metric = GetCharHeight();
-    
+
 #ifdef __OCPN__ANDROID__
     //  Set Dialog Font by custom crafted Qt Stylesheet.
     wxString wqs = getFontQtStylesheet(qFont);
@@ -277,10 +277,10 @@ MarkInfoDlg::MarkInfoDlg( wxWindow* parent, wxWindowID id, const wxString& title
 
 void MarkInfoDlg::initialize_images(void)
 {  // TODO use svg instead of bitmap
-	{
-		wxMemoryInputStream sm("\211PNG\r\n\032\n\000\000\000\rIHDR\000\000\000\030\000\000\000\030\b\002\000\000\000o\025\252\257\000\000\000\006bKGD\000\377\000\377\000\377\240\275\247\223\000\000\003.IDAT8\215\255\225\313O\352L\030\306\337\266\230\212\244\325\002\006k\214Z\253\201\205\267\270\360F$\321\260\320\304\177\225\235\013bX!1\310\016E\264\255!\210\030n\205\332r\251\205\322\371\026\223\234O\214\3509\211\317\252\351;\363\364\367^:C \204\3407D\376\212\013\000\270\276\211!\204.//\337\336\336\000`vv\366\344\344\344\337\2104M\303\017\345r\271\327\353\035\034\034\354\354\354\350\272\336h4\360{UU\177&\272\271\271\251V\2534M\213\242\370\362\362211\261\270\270\b\000\271\\.\227\313\315\317\317?==\r\006\203\271\271\271\375\375\375\261D\331l\266V\253\205B!\267\333}\177\177\3578\316\306\306\006\016moo\017\207\303|>\3170\314\372\372z\275^\317f\263c\2114M\3438.\030\014\006\203A\3030X\226\375\023\022\004A\020\204n\267\353\361x\000\340\365\365\3250\214\261D\242(6\233\315\347\347g\000\300.\212\242d2\231L&\243(\n\000`\227B\241\240i\232(\212c\211\002\201\000A\020\235N\a\000\336\337\337\223\311\244eY\014\303\000@\255V+\026\213\221H\204\246i\3234\011\202\360\373\375\037\367\022x -\313\222$IU\325v\273}zzJ\323t*\225\352t:{{{\034\307\341\254\323\3514\313\262\341p\330\262\254x<\356\361x|>\037.\350\377\251\335\335\335\225\313\345\311\311\311\315\315M\374MUUWWW\261\013\000p\034\267\266\266\326h4L\323\244izkk\213e\331j\265z{{;R#\313\262\274^\357\341\341\241 \b\000\320j\265\000\200\347\371\217\360<\317#\204phyyyww\327\353\365\332\266=bDQT\273\335\226$\011\3171\313\262\004A|\032<UUI\222\304Mh6\233\371|\3360\014\202 F\214VVV(\212\222e\371\352\352\312q\034\206aX\226\225e\271\337\357\343\005\375~_\226\345\231\231\031\206a\034\307\271\276\276.\024\nn\267;\024\n\215\024\033\253\333\355&\022\211P(\024\014\006u]O\245R\004A\004\002\001\204P\275^\a\200\243\243#\206adY~xx\210F\243x\032\276h\277\3438$IZ\226\005\000\323\323\323\307\307\307\217\217\2178Y\236\347\3774h0\030\220$9\030\014\276h?V:\2356\014#\032\215\222\344\017\307K\"\221p\273\335\341p\370k\"\212\242\206\303\241\256\353\225J\245X,\372\375~Q\024}>\037\256\256\242(\252\252.,,,--Y\226\365\361\a\372Ld\333v2\231\354t:\b!\236\347[\255\226m\333\347\347\347\000pqq\341r\271\374~\177\245R\301\335\210D\".\327\a\0164*\333\266%I\3224\r!T*\225b\261\230i\232\246i\306b\261R\251\204\0202\014CQ\224\341p\370i\343\b\321'\331\266\035\217\307q\355i\232>;;\243(j\334\342\357\214\000\240\327\353\341\003\223\343\270\251\251\251oV\376`\364\367\372\265[\344?Y\017\315\3503.x<\000\000\000\000IEND\256B`\202", 889);
-		_img_MUI_settings_svg = new wxBitmap(wxImage(sm));
-	}
+    {
+        wxMemoryInputStream sm("\211PNG\r\n\032\n\000\000\000\rIHDR\000\000\000\030\000\000\000\030\b\002\000\000\000o\025\252\257\000\000\000\006bKGD\000\377\000\377\000\377\240\275\247\223\000\000\003.IDAT8\215\255\225\313O\352L\030\306\337\266\230\212\244\325\002\006k\214Z\253\201\205\267\270\360F$\321\260\320\304\177\225\235\013bX!1\310\016E\264\255!\210\030n\205\332r\251\205\322\371\026\223\234O\214\3509\211\317\252\351;\363\364\367^:C \204\3407D\376\212\013\000\270\276\211!\204.//\337\336\336\000`vv\366\344\344\344\337\2104M\303\017\345r\271\327\353\035\034\034\354\354\354\350\272\336h4\360{UU\177&\272\271\271\251V\2534M\213\242\370\362\362211\261\270\270\b\000\271\\.\227\313\315\317\317?==\r\006\203\271\271\271\375\375\375\261D\331l\266V\253\205B!\267\333}\177\177\3578\316\306\306\006\016moo\017\207\303|>\3170\314\372\372z\275^\317f\263c\2114M\3438.\030\014\006\203A\3030X\226\375\023\022\004A\020\204n\267\353\361x\000\340\365\365\3250\214\261D\242(6\233\315\347\347g\000\300.\212\242d2\231L&\243(\n\000`\227B\241\240i\232(\212c\211\002\201\000A\020\235N\a\000\336\337\337\223\311\244eY\014\303\000@\255V+\026\213\221H\204\246i\3234\011\202\360\373\375\037\367\022x -\313\222$IU\325v\273}zzJ\323t*\225\352t:{{{\034\307\341\254\323\3514\313\262\341p\330\262\254x<\356\361x|>\037.\350\377\251\335\335\335\225\313\345\311\311\311\315\315M\374MUUWWW\261\013\000p\034\267\266\266\326h4L\323\244izkk\213e\331j\265z{{;R#\313\262\274^\357\341\341\241 \b\000\320j\265\000\200\347\371\217\360<\317#\204phyyyww\327\353\365\332\266=bDQT\273\335\226$\011\3171\313\262\004A|\032<UUI\222\304Mh6\233\371|\3360\014\202 F\214VVV(\212\222e\371\352\352\312q\034\206aX\226\225e\271\337\357\343\005\375~_\226\345\231\231\031\206a\034\307\271\276\276.\024\nn\267;\024\n\215\024\033\253\333\355&\022\211P(\024\014\006u]O\245R\004A\004\002\001\204P\275^\a\200\243\243#\206adY~xx\210F\243x\032\276h\277\3438$IZ\226\005\000\323\323\323\307\307\307\217\217\2178Y\236\347\3774h0\030\220$9\030\014\276h?V:\2356\014#\032\215\222\344\017\307K\"\221p\273\335\341p\370k\"\212\242\206\303\241\256\353\225J\245X,\372\375~Q\024}>\037\256\256\242(\252\252.,,,--Y\226\365\361\a\372Ld\333v2\231\354t:\b!\236\347[\255\226m\333\347\347\347\000pqq\341r\271\374~\177\245R\301\335\210D\".\327\a\0164*\333\266%I\3224\r!T*\225b\261\230i\232\246i\306b\261R\251\204\0202\014CQ\224\341p\370i\343\b\321'\331\266\035\217\307q\355i\232>;;\243(j\334\342\357\214\000\240\327\353\341\003\223\343\270\251\251\251oV\376`\364\367\372\265[\344?Y\017\315\3503.x<\000\000\000\000IEND\256B`\202", 889);
+        _img_MUI_settings_svg = new wxBitmap(wxImage(sm));
+    }
 //      wxString iconDir = g_Platform->GetSharedDataDir() + _T("uidata/MUI_flat/");
 //     _img_MUI_settings_svg = LoadSVG(iconDir + _T("MUI_settings.svg"), 2 * GetCharHeight(), 2 * GetCharHeight());
 // Minibild Pegelstation:
@@ -290,7 +290,7 @@ void MarkInfoDlg::initialize_images(void)
     wxImage tide1s = tide1.Scale(m_sizeMetric * 3/2 , m_sizeMetric * 3/2, wxIMAGE_QUALITY_HIGH);
     m_bmTide = wxBitmap(tide1s);
 
-	return;
+    return;
 }
 
 void MarkInfoDlg::Create()
@@ -392,7 +392,7 @@ void MarkInfoDlg::Create()
 
     m_bcomboBoxIcon = new OCPNIconCombo( m_panelBasicProperties, wxID_ANY, _("Combo!"),
                                         wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY );
-                
+
     m_bcomboBoxIcon->SetPopupMaxHeight(::wxGetDisplaySize().y / 2);
     //  Accomodate scaling of icon
     int min_size = m_sizeMetric * 2;
@@ -469,7 +469,7 @@ void MarkInfoDlg::Create()
 
 
 // ///////////////////////////////////////////////////// EXTENDED ///////////////////////////////////////////////////////
-    
+
     m_panelExtendedProperties = new wxScrolledWindow( m_notebookProperties, wxID_ANY,
                                                    wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL | wxTAB_TRAVERSAL);
 
@@ -494,14 +494,14 @@ void MarkInfoDlg::Create()
     wxStaticText* m_staticTextVisible = new wxStaticText(sbSizerExtProperties->GetStaticBox(), wxID_ANY, _("Show on chart"));
     gbSizerInnerExtProperties->Add(m_staticTextVisible);
     gbSizerInnerExtProperties->Add( 0, 0, 1, wxEXPAND, 0 );
-    
+
     m_checkBoxScaMin = new wxCheckBox(sbSizerExtProperties->GetStaticBox(), ID_CHECKBOX_SCAMIN_VIS, wxEmptyString);
     gbSizerInnerExtProperties->Add(m_checkBoxScaMin, 0, wxALIGN_CENTRE_VERTICAL, 0);
     m_staticTextScaMin = new wxStaticText(sbSizerExtProperties->GetStaticBox(), wxID_ANY, _("Show at scale > 1 :"));
     gbSizerInnerExtProperties->Add(m_staticTextScaMin, 0, wxALIGN_CENTRE_VERTICAL, 0);
     m_textScaMin = new wxTextCtrl(sbSizerExtProperties->GetStaticBox(), wxID_ANY);
     gbSizerInnerExtProperties->Add(m_textScaMin, 0, wxALL|wxEXPAND, 5);
-    
+
     m_checkBoxShowNameExt = new wxCheckBox(sbSizerExtProperties->GetStaticBox(), ID_SHOWNAMECHECKBOX_EXT, wxEmptyString);
     gbSizerInnerExtProperties->Add(m_checkBoxShowNameExt);
     m_staticTextShowNameExt = new wxStaticText(sbSizerExtProperties->GetStaticBox(), wxID_ANY, _("Show waypoint name"));
@@ -520,14 +520,17 @@ void MarkInfoDlg::Create()
     gbRRExtProperties->Add( 0, 0, 1, wxEXPAND, 5 ); // a spacer
     m_staticTextRR4 = new wxStaticText( sbSizerExtProperties->GetStaticBox(), wxID_ANY, _("Color"));
     gbRRExtProperties->Add(m_staticTextRR4, 0, wxLEFT, 5);
-    
+
     m_SpinWaypointRangeRingsNumber = new wxSpinCtrl( sbSizerExtProperties->GetStaticBox(), ID_WPT_RANGERINGS_NO, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_VERTICAL, 0, 10, 0);
     gbRRExtProperties->Add(m_SpinWaypointRangeRingsNumber, 0, wxALL|wxEXPAND, 5);
     m_textWaypointRangeRingsStep = new wxTextCtrl(sbSizerExtProperties->GetStaticBox(), wxID_ANY, _("0.05"), wxDefaultPosition, wxDefaultSize, 0);
     gbRRExtProperties->Add(m_textWaypointRangeRingsStep, 0, wxALL|wxEXPAND, 5);
 
-    m_RangeRingUnits = new wxStaticText( sbSizerExtProperties->GetStaticBox(), wxID_ANY, getUsrDistanceUnit());
-    gbRRExtProperties->Add(m_RangeRingUnits, 0, wxALIGN_CENTRE_VERTICAL|wxALIGN_LEFT, 0);
+    wxString pDistUnitsStrings[] = {_("NMi"), _("km")};
+    m_RangeRingUnits =
+        new wxChoice(sbSizerExtProperties->GetStaticBox(), wxID_ANY, wxDefaultPosition,
+                     wxDefaultSize, 2, pDistUnitsStrings);
+    gbRRExtProperties->Add(m_RangeRingUnits, 0, wxALIGN_CENTRE_VERTICAL, 0);
 
     m_PickColor = new wxColourPickerCtrl(sbSizerExtProperties->GetStaticBox(), wxID_ANY, wxColour(0,0,0), wxDefaultPosition, wxDefaultSize, 0);
     gbRRExtProperties->Add(m_PickColor, 0, wxALL|wxEXPAND, 5);
@@ -537,7 +540,7 @@ void MarkInfoDlg::Create()
 
     wxFlexGridSizer* gbSizerInnerExtProperties2 = new wxFlexGridSizer(2, 0, 0);
     gbSizerInnerExtProperties2->AddGrowableCol(1);
-    
+
     m_staticTextGuid = new wxStaticText( sbSizerExtProperties->GetStaticBox(), wxID_ANY, _("GUID"),
                                         wxDefaultPosition, wxDefaultSize, 0 );
     gbSizerInnerExtProperties2->Add(m_staticTextGuid, 0, wxALIGN_CENTRE_VERTICAL, 0);
@@ -545,17 +548,17 @@ void MarkInfoDlg::Create()
                                     wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
     m_textCtrlGuid->SetEditable(false);
     gbSizerInnerExtProperties2->Add(m_textCtrlGuid, 0, wxALL|wxEXPAND, 5);
-    
+
     wxFlexGridSizer* gbSizerInnerExtProperties1 = new wxFlexGridSizer(3, 0, 0);
     gbSizerInnerExtProperties1->AddGrowableCol(1);
-    
+
     m_staticTextTideStation = new wxStaticText( sbSizerExtProperties->GetStaticBox(), wxID_ANY, _("Tide Station"),
                                                wxDefaultPosition, wxDefaultSize, 0 );
     gbSizerInnerExtProperties1->Add(m_staticTextTideStation, 0, wxALIGN_CENTRE_VERTICAL, 5);
-    
+
     m_comboBoxTideStation = new wxComboBox( sbSizerExtProperties->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY);
     gbSizerInnerExtProperties1->Add(m_comboBoxTideStation, 0, wxALL|wxEXPAND|wxALIGN_CENTRE_VERTICAL, 5);
-    
+
     m_buttonShowTides = new wxBitmapButton( sbSizerExtProperties->GetStaticBox(), ID_BTN_SHOW_TIDES, m_bmTide, wxDefaultPosition, m_bmTide.GetSize(), 0);
 
     gbSizerInnerExtProperties1->Add(m_buttonShowTides, 0, wxALL|wxALIGN_CENTRE_VERTICAL, 5);
@@ -609,7 +612,7 @@ void MarkInfoDlg::Create()
     DefaultsBtn = new wxBitmapButton( this, ID_DEFAULT, *_img_MUI_settings_svg, wxDefaultPosition, _img_MUI_settings_svg->GetSize(), 0);
     btnSizer->Add(DefaultsBtn, 0, wxALL|wxALIGN_LEFT|wxALIGN_BOTTOM, 5);
     btnSizer->Add(0, 0, 1, wxEXPAND);  //spacer
-    
+
     m_sdbSizerButtons = new wxStdDialogButtonSizer();
     m_sdbSizerButtons->AddButton(new wxButton(this, wxID_OK));
     m_sdbSizerButtons->AddButton(new wxButton(this, wxID_CANCEL, _("Cancel")));
@@ -702,7 +705,7 @@ void MarkInfoDlg::RecalculateSize( void )
 
     esize.x = GetCharHeight() * 20;
     esize.y = GetCharHeight() * 40;
-    
+
     esize.y = wxMin(esize.y, dsize.y - (2 * GetCharHeight()));
     esize.x = wxMin(esize.x, dsize.x - (1 * GetCharHeight()));
     SetSize(wxSize(esize.x, esize.y));
@@ -792,7 +795,7 @@ void MarkInfoDlg::UpdateHtmlList()
 {
     GetSimpleBox()->Clear();
     int NbrOfLinks = m_pRoutePoint->m_HyperlinkList->GetCount();
-    
+
     if( NbrOfLinks > 0 ) {
         wxHyperlinkListNode *linknode = m_pRoutePoint->m_HyperlinkList->GetFirst();
         while( linknode ) {
@@ -837,13 +840,13 @@ void MarkInfoDlg::OnHtmlLinkClicked(wxHtmlLinkEvent &event)
                 wxExecute( cl );        // Async, so Fire and Forget...
             }
         }
-	}
-	else {
-		wxString url = event.GetLinkInfo().GetHref().c_str();
-		url.Replace(_T(" "), _T("%20"));
-		::wxLaunchDefaultBrowser(url);
-		event.Skip();
-	}
+    }
+    else {
+        wxString url = event.GetLinkInfo().GetHref().c_str();
+        url.Replace(_T(" "), _T("%20"));
+        ::wxLaunchDefaultBrowser(url);
+        event.Skip();
+    }
 #else
     wxString url = event.GetLinkInfo().GetHref().c_str();
     url.Replace(_T(" "), _T("%20") );
@@ -893,7 +896,7 @@ void MarkInfoDlg::OnWptRangeRingsNoChange( wxSpinEvent& event )
     if( !m_pRoutePoint->m_bIsInLayer ){
         m_textWaypointRangeRingsStep->Enable( (bool)(m_SpinWaypointRangeRingsNumber->GetValue() != 0) );
         m_PickColor->Enable( (bool)(m_SpinWaypointRangeRingsNumber->GetValue() != 0) );        
-    }        
+    }
 }
 
 void MarkInfoDlg::OnSelectScaMinExt( wxCommandEvent& event )
@@ -938,7 +941,7 @@ void MarkInfoDlg::m_htmlListContextMenu( wxMouseEvent &event )
         popup->Append( ID_RCLK_MENU_EDIT_LINK, _("Edit") );
     }
     popup->Append( ID_RCLK_MENU_ADD_LINK, _("Add New") );
-    
+
     m_contextObject = event.GetEventObject();
     popup->Connect(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(MarkInfoDlg::On_html_link_popupmenu_Click), NULL, this);
     PopupMenu( popup );
@@ -953,9 +956,9 @@ void MarkInfoDlg::On_html_link_popupmenu_Click( wxCommandEvent& event )
             wxHyperlinkListNode* node = m_pRoutePoint->m_HyperlinkList->Item(i_htmlList_item);
             m_pRoutePoint->m_HyperlinkList->DeleteNode(node);
             UpdateHtmlList();
- 			break;
+            break;
         }
- 		case ID_RCLK_MENU_EDIT_LINK:
+        case ID_RCLK_MENU_EDIT_LINK:
         {
             Hyperlink *link = m_pRoutePoint->m_HyperlinkList->Item(i_htmlList_item)->GetData();
             LinkPropImpl* LinkPropDlg = new LinkPropImpl( this );
@@ -970,7 +973,7 @@ void MarkInfoDlg::On_html_link_popupmenu_Click( wxCommandEvent& event )
                     UpdateHtmlList();
                 }
             });
- 			break;
+            break;
         }
         case ID_RCLK_MENU_ADD_LINK:
         {
@@ -1133,11 +1136,11 @@ void MarkInfoDlg::OnMarkInfoCancelClick( wxCommandEvent& event )
     }
 
     m_lasttspos.Clear();
-    
+
 #ifdef __WXGTK__
         gFrame->Raise();
 #endif
-    
+
     Show( false );
     delete m_pMyLinkList;
     m_pMyLinkList = NULL;
@@ -1146,7 +1149,7 @@ void MarkInfoDlg::OnMarkInfoCancelClick( wxCommandEvent& event )
 #ifdef __OCPN__ANDROID__
     androidEnableBackButton( true );
 #endif
-    
+
     event.Skip();
 }
 
@@ -1162,21 +1165,21 @@ void MarkInfoDlg::OnMarkInfoOKClick( wxCommandEvent& event )
 #ifdef __WXGTK__
         gFrame->Raise();
 #endif
-    
+
     Show( false );
 
     if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
         pRouteManagerDialog->UpdateWptListCtrl();
-        
+
     if( pRoutePropDialog && pRoutePropDialog->IsShown() )
         pRoutePropDialog->UpdatePoints();
 
     SetClientSize(m_defaultClientSize);
-    
+
 #ifdef __OCPN__ANDROID__
     androidEnableBackButton( true );
 #endif
-    
+
     event.Skip();
 }
 
@@ -1206,19 +1209,7 @@ bool MarkInfoDlg::UpdateProperties( bool positionOnly )
         m_textArrivalRadius->SetValue(buf);
 
         int nUnits = m_pRoutePoint->GetWaypointRangeRingsStepUnits();
-        wxString units(getUsrDistanceUnit());
-        switch(nUnits){
-            case 0:
-                units = _("NMi");
-                break;
-            case 1:
-                units = _("km");
-                break;
-            default:
-                break;
-        }
-
-        m_RangeRingUnits->SetLabel(units);
+        m_RangeRingUnits->SetSelection( nUnits );
 
         wxColour col = m_pRoutePoint->m_wxcWaypointRangeRingsColour;
         m_PickColor->SetColour(col);
@@ -1231,13 +1222,13 @@ bool MarkInfoDlg::UpdateProperties( bool positionOnly )
                 m_comboBoxTideStation->SetSelection(1);
             }
         }
-        
+
         if( m_pRoutePoint->GetPlannedSpeed() > .01 ) {
             m_textCtrlPlSpeed->SetValue(wxString::Format("%.1f", toUsrSpeed(m_pRoutePoint->GetPlannedSpeed())));
         } else {
             m_textCtrlPlSpeed->SetValue(wxEmptyString);
         }
-        
+
         wxDateTime etd;
         etd = m_pRoutePoint->GetManualETD();
         if( etd.IsValid() ) {
@@ -1258,7 +1249,7 @@ bool MarkInfoDlg::UpdateProperties( bool positionOnly )
         m_staticTextArrivalRadius->Show(m_pRoutePoint->m_bIsInRoute);
         m_staticTextArrivalUnits->Show(m_pRoutePoint->m_bIsInRoute);
         m_textArrivalRadius->Show(m_pRoutePoint->m_bIsInRoute);
-        
+
         if( positionOnly ) return true;
 
         //Layer or not?
@@ -1313,13 +1304,13 @@ bool MarkInfoDlg::UpdateProperties( bool positionOnly )
             m_notebookProperties->SetSelection(0);
             m_comboBoxTideStation->Enable(true);
         }
-               
+
  
         // Fill the icon selector combo box
         m_bcomboBoxIcon->Clear();
         //      Iterate on the Icon Descriptions, filling in the combo control
         bool fillCombo = m_bcomboBoxIcon->GetCount() == 0;
-        
+
         if( fillCombo ){
             for( int i = 0; i < pWayPointMan->GetNumIcons(); i++ ) {
                 wxString *ps = pWayPointMan->GetIconDescription( i );
@@ -1344,17 +1335,17 @@ bool MarkInfoDlg::UpdateProperties( bool positionOnly )
         OnSelectScaMinExt(ev);
         UpdateHtmlList();       
     }
-    
+
 
 #ifdef __OCPN__ANDROID__
         androidEnableBackButton( false );
 #endif
-    
+
     Fit();
 
     //SetMinSize(wxSize(-1, 600));
     RecalculateSize();
-    
+
     return true;
 }
 
@@ -1412,7 +1403,10 @@ bool MarkInfoDlg::SaveChanges()
             m_pRoutePoint->SetWaypointRangeRingsStep(fromUsrDistance(value, -1) );
         if(m_textArrivalRadius->GetValue().ToDouble(&value))
             m_pRoutePoint->SetWaypointArrivalRadius(fromUsrDistance(value, -1) );
-        
+
+        if (m_RangeRingUnits->GetSelection() != wxNOT_FOUND)
+          m_pRoutePoint->SetWaypointRangeRingsStepUnits( m_RangeRingUnits->GetSelection());
+
         m_pRoutePoint->m_TideStation = m_comboBoxTideStation->GetStringSelection();
         if( m_textCtrlPlSpeed->GetValue() == wxEmptyString ) {
             m_pRoutePoint->SetPlannedSpeed(0.0);
@@ -1422,7 +1416,7 @@ bool MarkInfoDlg::SaveChanges()
                 m_pRoutePoint->SetPlannedSpeed(fromUsrSpeed(spd));
             }
         }
-        
+
         if( m_cbEtaPresent->GetValue() ) {
             wxDateTime dt = m_EtaDatePickerCtrl->GetValue();
             dt.SetHour(m_EtaTimePickerCtrl->GetValue().GetHour());
@@ -1485,13 +1479,13 @@ SaveDefaultsDialog::SaveDefaultsDialog(MarkInfoDlg* parent) : wxDialog(parent, w
 {
     //(*Initialize(SaveDefaultsDialog)
     this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-    
+
     wxBoxSizer* bSizer1 = new wxBoxSizer(wxVERTICAL);
     wxStdDialogButtonSizer* StdDialogButtonSizer1;
-    
+
     StaticText1 = new wxStaticText(this, wxID_ANY, _("Check which properties of current waypoint\n should be set as default for NEW waypoints."));
     bSizer1->Add(StaticText1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5);
-    
+
     wxFlexGridSizer* fgSizer1 = new wxFlexGridSizer(2);
 
     wxString s = ( g_pMarkInfoDialog->m_checkBoxShowName->GetValue() ? _("Do use"): _("Don't use") );

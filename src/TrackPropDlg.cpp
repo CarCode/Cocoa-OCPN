@@ -60,9 +60,12 @@ wxString timestamp2s(wxDateTime ts, int tz_selection, long LMT_offset, int forma
 {
     wxString s = _T("");
     wxString f;
-    if (format == INPUT_FORMAT) f = _T("%m/%d/%Y %H:%M");
-    else if (format == TIMESTAMP_FORMAT) f = _T("%m/%d/%Y %H:%M:%S");
-    else f = _T(" %m/%d %H:%M");
+    if (format == INPUT_FORMAT)
+        f = _T("%x %H:%M");
+    else if (format == TIMESTAMP_FORMAT)
+        f = _T("%x %H:%M:%S");
+    else
+        f = _T(" %x %H:%M");
     switch (tz_selection) {
         case UTCINPUT:
             s.Append(ts.Format(f));
@@ -104,19 +107,19 @@ TrackPropDlg::TrackPropDlg( wxWindow* parent, wxWindowID id, const wxString& tit
     SetFont( *qFont );
 
     SetWindowStyleFlag( style );
-    
+
     m_scrolledWindowLinks = NULL;
     m_tDescription = NULL;
-    
+
     m_bcompact = false;
-    
+
 #ifdef __OCPN__ANDROID__
     m_bcompact = true;
     CreateControlsCompact();
 #else
     CreateControls();
 #endif
-    
+
 
     RecalculateSize();
 
@@ -206,11 +209,11 @@ void TrackPropDlg::RecalculateSize( void )
         sy = wxMax(sy, 250);
         sy = wxMin(sy, 500);
         m_lcPoints->SetSize(wxSize(GetClientSize().x-40, sy) );
-        
+
         if(m_lcPoints->GetItemCount())
             Layout();
     }
-    
+
 
     Centre();
 
@@ -293,8 +296,8 @@ void TrackPropDlg::CreateControlsCompact()
 
     m_cbShow = new wxCheckBox( itemDialog1, wxID_ANY, _("Show on chart"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer2->Add( m_cbShow, 0, wxALL, 5 );
-    
-    
+
+
 
     wxFlexGridSizer* itemFlexGridSizer6a = new wxFlexGridSizer( 4, 2, 0, 0 );
     itemFlexGridSizer6a->AddGrowableCol(1, 0);
@@ -882,9 +885,9 @@ void TrackPropDlg::SetTrackAndUpdate( Track *pt )
 
     InitializeList();
     UpdateProperties();
-    
+
     RecalculateSize();
-    
+
 }
 
 void TrackPropDlg::InitializeList()
@@ -1276,12 +1279,12 @@ void TrackPropDlg::OnTrackPropListClick( wxListEvent& event )
 #ifdef __WXMSW__            
             if(m_lcPoints)
                 m_lcPoints->SetFocus();
-#endif            
+#endif
         }
     }
     if( selected_no == 0 || selected_no == m_pTrack->GetnPoints() - 1)
         m_sdbBtmBtnsSizerSplit->Enable( false );
-    
+
 }
 
 void TrackPropDlg::OnTrackPropMenuSelected( wxCommandEvent& event )
@@ -1358,7 +1361,7 @@ void TrackPropDlg::OnDeleteLink( wxCommandEvent& event )
         }
     }
 
-///    m_scrolledWindowLinks->DestroyChildren();
+// /    m_scrolledWindowLinks->DestroyChildren();
     int NbrOfLinks = m_pTrack->m_HyperlinkList->GetCount();
     HyperlinkList *hyperlinklist = m_pTrack->m_HyperlinkList;
 //      int len = 0;
@@ -1395,7 +1398,7 @@ void TrackPropDlg::OnEditLink( wxCommandEvent& event )
 {
     wxString findurl = m_pEditedLink->GetURL();
     wxString findlabel = m_pEditedLink->GetLabel();
-    
+
     LinkPropImpl* LinkPropDlg = new LinkPropImpl( this );
     LinkPropDlg->m_textCtrlLinkDescription->SetValue( findlabel );
     LinkPropDlg->m_textCtrlLinkUrl->SetValue( findurl );
@@ -1617,21 +1620,21 @@ void TrackPropDlg::OnCancelBtnClick( wxCommandEvent& event )
     wxTrackListNode *node = pTrackList->GetFirst();
     while( node ) {
         Track *ptrack = node->GetData();
-        
+
         if( ptrack == m_pTrack ) {
             b_found_track = true;
             break;
         }
         node = node->GetNext();
     }
-    
+
     if( b_found_track )
         m_pTrack->ClearHighlights();
-        
+
     Hide();
     gFrame->InvalidateAllGL();
     gFrame->RefreshAllCanvas( false );
-    
+
     event.Skip();
 }
 
@@ -1659,7 +1662,7 @@ wxString OCPNTrackListCtrl::OnGetItemText( long item, long column ) const
 
     if(item < 0 || item >= m_pTrack->GetnPoints())
         return wxEmptyString;
-    
+
     TrackPoint              *this_point = m_pTrack->GetPoint(item);
     TrackPoint              *prev_point = item > 0 ? m_pTrack->GetPoint(item-1) : NULL;
 

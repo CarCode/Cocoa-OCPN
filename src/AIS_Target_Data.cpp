@@ -1146,6 +1146,7 @@ wxString AIS_Target_Data::GetCountryCode( bool b_CntryLongStr )  //false = Short
     case 544: return b_CntryLongStr ? _("Nauru") : _T("NR") ;
     case 546: return b_CntryLongStr ? _("French Polynesia") : _T("PF") ;
     case 548: return b_CntryLongStr ? _("Philippines") : _T("PH") ;
+    case 550: return b_CntryLongStr ? _("East Timor") : _T("TL");
     case 553: return b_CntryLongStr ? _("Papua New Guinea") : _T("PG") ;
     case 555: return b_CntryLongStr ? _("Pitcairn Island") : _T("PN") ;
     case 557: return b_CntryLongStr ? _("Solomon Islands") : _T("SB") ;
@@ -1211,7 +1212,7 @@ wxString AIS_Target_Data::GetCountryCode( bool b_CntryLongStr )  //false = Short
     case 663: return b_CntryLongStr ? _("Senegal") : _T("SN") ;
     case 664: return b_CntryLongStr ? _("Seychelles") : _T("SC") ;
     case 665: return b_CntryLongStr ? _("Saint Helena") : _T("SH") ;
-    case 666: return b_CntryLongStr ? _("Somali Democratic Republic") : _T("SO") ;
+    case 666: return b_CntryLongStr ? _("Somalia") : _T("SO") ;
     case 667: return b_CntryLongStr ? _("Sierra Leone") : _T("SL") ;
     case 668: return b_CntryLongStr ? _("Sao Tome and Principe") : _T("ST") ;
     case 669: return b_CntryLongStr ? _("Eswatini") : _T("SZ") ;

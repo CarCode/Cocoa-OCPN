@@ -696,7 +696,15 @@ static bool GPXCreateWpt( pugi::xml_node node, RoutePoint *pr, unsigned int flag
             if( pr->m_timestring.Len() )
                 child.append_child(pugi::node_pcdata).set_value(pr->m_timestring.mb_str());
             else {
-                wxString t = pr->GetCreateTime().FormatISODate().Append(_T("T")).Append(pr->GetCreateTime().FormatISOTime()).Append(_T("Z"));
+                wxDateTime dt = pr->GetCreateTime();
+                if ( !dt.IsValid() )
+                dt = wxDateTime::Now();
+
+                wxString t = dt.FormatISODate()
+                                .Append(_T("T"))
+                                .Append(dt.FormatISOTime())
+                                .Append(_T("Z"));
+
                 child.append_child(pugi::node_pcdata).set_value(t.mb_str());
             }
     }

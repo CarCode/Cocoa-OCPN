@@ -5310,7 +5310,8 @@ void options::CreatePanel_Sounds(size_t parent, int border_size,
 #ifdef __WXOSX__
       m_anchorAudioFileNameText->SetLabel( _(" Ton-Dateiname: " + g_anchorwatch_sound_file) );
 #else
-    m_anchorAudioFileNameText->SetLabel( _(" Audio file name: " + g_anchorwatch_sound_file) );
+      m_anchorAudioFileNameText->SetLabel( " " + _("Audio file name:") + " " +
+                  g_anchorwatch_sound_file);
 #endif
     StaticBoxSizer1->Add(m_anchorAudioFileNameText, 0, wxLEFT, border_size);
 
@@ -5344,7 +5345,8 @@ void options::CreatePanel_Sounds(size_t parent, int border_size,
 #ifdef __WXOSX__
       m_aisAudioFileNameText->SetLabel( _(" Ton-Dateiname: " + g_AIS_sound_file) );
 #else
-    m_aisAudioFileNameText->SetLabel( _(" Audio file name: " + g_AIS_sound_file) );
+      m_aisAudioFileNameText->SetLabel(" " + _("Audio file name:") + " " +
+              g_AIS_sound_file);
 #endif
     StaticBoxSizer2->Add(m_aisAudioFileNameText, 0, wxLEFT, border_size);
 
@@ -5375,7 +5377,8 @@ void options::CreatePanel_Sounds(size_t parent, int border_size,
 #ifdef __WXOSX__
       m_sartAudioFileNameText->SetLabel( _(" Ton-Dateiname: " + g_SART_sound_file) );
 #else
-    m_sartAudioFileNameText->SetLabel( _(" Audio file name: " + g_SART_sound_file) );
+      m_sartAudioFileNameText->SetLabel(" " + _("Audio file name:") + " " +
+              g_SART_sound_file);
 #endif
     StaticBoxSizer3->Add(m_sartAudioFileNameText, 0, wxLEFT, border_size);
 
@@ -5406,7 +5409,8 @@ void options::CreatePanel_Sounds(size_t parent, int border_size,
 #ifdef __WXOSX__
       m_dscAudioFileNameText->SetLabel( _(" Ton-Dateiname: " + g_DSC_sound_file) );
 #else
-    m_dscAudioFileNameText->SetLabel( _(" Audio file name: " + g_DSC_sound_file) );
+      m_dscAudioFileNameText->SetLabel(" " + _("Audio file name:") + " " +
+              g_DSC_sound_file);
 #endif
     StaticBoxSizer4->Add(m_dscAudioFileNameText, 0, wxLEFT, border_size);
 
@@ -7985,8 +7989,7 @@ void options::OnApplyClick(wxCommandEvent& event) {
     }
     assert(itemIndex >= 0);
     OBJLElement* pOLE = (OBJLElement*)(ps52plib->pOBJLArray->Item(itemIndex));
-    if(pOLE->nViz != ps57CtlListBox->IsChecked(iPtr))
-        bUserStdChange = true;
+      if (pOLE->nViz != (int)(ps57CtlListBox->IsChecked(iPtr))) bUserStdChange = true;
     pOLE->nViz = ps57CtlListBox->IsChecked(iPtr);
   }
 
@@ -8832,7 +8835,8 @@ void options::DoOnPageChange(size_t page) {
             wxString s0 =
                 wxLocale::GetLanguageInfo(lang_list[it])->CanonicalName;
             wxString sl = wxLocale::GetLanguageName(lang_list[it]);
-            if (wxNOT_FOUND == lang_array.Index(s0)) lang_array.Add(s0);
+              if (wxNOT_FOUND == lang_array.Index(s0))
+                lang_array.Add(s0);
           }
         }
       }
@@ -9004,7 +9008,8 @@ void options::OnButtonSelectAnchorSound(wxCommandEvent& event) {
 #ifdef __WXOSX__
       m_anchorAudioFileNameText->SetLabel( _(" Ton-Dateiname: " + g_anchorwatch_sound_file) );
 #else
-    m_anchorAudioFileNameText->SetLabel( _(" Audio file name: " + g_anchorwatch_sound_file) );
+      m_anchorAudioFileNameText->SetLabel(" " + _("Audio file name:") + " " +
+          g_anchorwatch_sound_file);
 #endif
     g_anchorwatch_sound->Stop();
   }
@@ -9032,7 +9037,8 @@ void options::OnButtonSelectDSCSound(wxCommandEvent& event) {
 #ifdef __WXOSX__
       m_dscAudioFileNameText->SetLabel( _(" Ton-Dateiname: " + g_DSC_sound_file) );
 #else
-    m_dscAudioFileNameText->SetLabel( _(" Audio file name: " + g_DSC_sound_file) );
+      m_dscAudioFileNameText->SetLabel(" " + _("Audio file name:") + " " +
+          g_DSC_sound_file);
 #endif
   }
 }
@@ -9058,7 +9064,8 @@ void options::OnButtonSelectSARTSound(wxCommandEvent& event) {
 #ifdef __WXOSX__
       m_sartAudioFileNameText->SetLabel( _(" Ton-Dateiname: " + g_SART_sound_file) );
 #else
-    m_sartAudioFileNameText->SetLabel( _(" Audio file name: " + g_SART_sound_file) );
+      m_sartAudioFileNameText->SetLabel(" " + _("Audio file name:") + " " +
+          g_SART_sound_file);
 #endif
   }
 }
@@ -9084,7 +9091,8 @@ void options::OnButtonSelectAISSound(wxCommandEvent& event) {
 #ifdef __WXOSX__
       m_aisAudioFileNameText->SetLabel( _(" Ton-Dateiname: " + g_AIS_sound_file) );
 #else
-    m_aisAudioFileNameText->SetLabel( _(" Audio file name: " + g_AIS_sound_file) );
+      m_aisAudioFileNameText->SetLabel(" " + _("Audio file name:") + " " +
+          g_AIS_sound_file);
 #endif
   }
 }
