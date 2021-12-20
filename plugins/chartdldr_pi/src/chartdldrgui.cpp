@@ -464,6 +464,7 @@ ChartPanel::ChartPanel(wxWindow *parent, wxWindowID id, const wxPoint &pos, cons
     bUseSysColors= true;
 #endif
 
+
     if(bUseSysColors) {
         wxColour bg = wxSystemSettings::GetColour(wxSYS_COLOUR_APPWORKSPACE);
         if(bg.Red() < 128) {
@@ -471,7 +472,9 @@ ChartPanel::ChartPanel(wxWindow *parent, wxWindowID id, const wxPoint &pos, cons
         }
     }
 
+#ifndef __WXOSX__
     SetBackgroundColour( bColor );
+#endif
 
     wxBoxSizer* m_sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(m_sizer);

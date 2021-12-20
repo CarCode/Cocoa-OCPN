@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-09 09:50+0100\n"
-"PO-Revision-Date: 2021-11-09 09:54+0100\n"
+"PO-Revision-Date: 2021-11-21 10:59+0100\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -7725,7 +7725,7 @@ msgstr "Texture Kompression Caching"
 #
 #: ../src/options.cpp:10567
 msgid "Texture Memory Size (MB)"
-msgstr "Gres texture Speicher (MB)"
+msgstr "Größe Texture Speicher (MB)"
 
 #
 #: ../src/options.cpp:10571 ../src/options.cpp:10744

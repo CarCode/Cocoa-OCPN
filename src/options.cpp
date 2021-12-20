@@ -2792,9 +2792,9 @@ void options::CreatePanel_NMEA(size_t parent, int border_size,
 #endif
   FillSourceList();
 
-  ShowNMEACommon(FALSE);
-  ShowNMEASerial(FALSE);
-  ShowNMEANet(FALSE);
+  ShowNMEACommon(true);
+  ShowNMEASerial(true);
+  ShowNMEANet(true);
   connectionsaved = TRUE;
 }
 
@@ -9368,7 +9368,10 @@ void ChartGroupsUI::PopulateTreeCtrl(wxTreeCtrl* ptc,
       // wxWidgets bug workaraound (Ticket #10085)
       ptc->SetItemText(id, dirname);
       if (pFont) ptc->SetItemFont(id, *pFont);
+        // On MacOS, use the default system dialog color, to honor Dark mode.
+#ifndef __WXOSX__
       ptc->SetItemTextColour(id, col);
+#endif
       ptc->SetItemHasChildren(id);
     }
   }
@@ -10105,8 +10108,10 @@ void options::SetConnectionParams(ConnectionParams* cp) {
 }
 
 void options::SetDefaultConnectionParams(void) {
-  m_comboPort->Select(0);
-  m_comboPort->SetValue(wxEmptyString);
+  if (m_comboPort && !m_comboPort->IsListEmpty()){
+      m_comboPort->Select(0);
+      m_comboPort->SetValue(wxEmptyString);  // These two broke it
+  }
   m_cbCheckCRC->SetValue(TRUE);
   m_cbGarminHost->SetValue(FALSE);
   m_cbInput->SetValue(TRUE);
@@ -10129,15 +10134,29 @@ void options::SetDefaultConnectionParams(void) {
   if (!g_bserial_access_checked) bserial = FALSE;
 #endif
 
+#ifdef __WXOSX__
+  bserial = FALSE;
+#endif
+
+#ifdef __OCPN__ANDROID__
+  if (m_rbTypeInternalGPS) {
+    m_rbTypeInternalGPS->SetValue(true);
+    SetNMEAFormToGPS();
+  } else {
+    m_rbTypeNet->SetValue(true);
+    SetNMEAFormToNet();
+  }
+
+#else
   m_rbTypeSerial->SetValue(bserial);
   m_rbTypeNet->SetValue(!bserial);
-
   bserial ? SetNMEAFormToSerial() : SetNMEAFormToNet();
+#endif
+
   m_connection_enabled = TRUE;
 
   // Reset touch flag
-  connectionsaved = true;
-
+  connectionsaved = false;
 }
 
 bool options::SortSourceList(void) {
@@ -10233,6 +10252,7 @@ void options::OnAddDatasourceClick(wxCommandEvent& event) {
 
   connectionsaved = FALSE;
   SetDefaultConnectionParams();
+
   m_sbConnEdit->SetLabel(_("Configure new connection"));
 
   m_buttonRemove->Hide();//Disable();

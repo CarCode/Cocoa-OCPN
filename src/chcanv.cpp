@@ -861,7 +861,7 @@ void ChartCanvas::RebuildCursors() {
   wxImage ICursorRight = style->GetIcon(_T("right")).ConvertToImage();
   wxImage ICursorUp = style->GetIcon(_T("up")).ConvertToImage();
   wxImage ICursorDown = style->GetIcon(_T("down")).ConvertToImage();
-  wxImage ICursorPencil = style->GetIcon(_T("pencil"), cursorScale).ConvertToImage();
+  wxImage ICursorPencil = style->GetIconScaled(_T("pencil"), cursorScale).ConvertToImage();
   wxImage ICursorCross = style->GetIcon(_T("cross")).ConvertToImage();
 
 #if !defined(__WXMSW__) && !defined(__WXQT__)
@@ -2234,6 +2234,11 @@ void ChartCanvas::SetDisplaySizeMM( double size )
     wxDisplaySize( &sx, &sy );
 
     double max_physical = wxMax(sx, sy);
+
+#ifdef __WXOSX__
+  // Support Mac Retina displays.
+  max_physical /= GetContentScaleFactor();
+#endif
 
     m_pix_per_mm = ( max_physical ) / ( (double) m_display_size_mm );
     m_canvas_scale_factor = ( max_physical ) / (m_display_size_mm /1000.);
@@ -7729,6 +7734,7 @@ bool ChartCanvas::MouseEventProcessObjects( wxMouseEvent& event )
                 RoutePoint *pMousePoint = new RoutePoint( m_cursor_lat, m_cursor_lon,
                                                           wxString( _T ( "circle" ) ), wxEmptyString, wxEmptyString );
                 pMousePoint->m_bShowName = false;
+                pMousePoint->SetShowWaypointRangeRings( false );
 
                 m_pMeasureRoute->AddPoint( pMousePoint );
 
@@ -9239,6 +9245,11 @@ void ChartCanvas::ShowObjectQueryWindow( int x, int y, float zlat, float zlon )
         wxColor bg = g_pObjectQueryDialog->GetBackgroundColour();
         wxColor fg = FontMgr::Get().GetFontColor( _("ObjectQuery") );
 
+#ifdef __WXOSX__
+        // Auto Adjustment for dark mode
+        fg = g_pObjectQueryDialog->GetForegroundColour();
+#endif
+
         objText.Printf( _T("<html><body bgcolor=#%02x%02x%02x><font color=#%02x%02x%02x>"),
                        bg.Red(), bg.Green(), bg.Blue(), fg.Red(), fg.Green(), fg.Blue() );
 
@@ -10057,7 +10068,7 @@ static void RouteLegInfo( ocpnDC &dc, wxPoint ref_point, const wxString &first, 
     AlphaBlending( dc, xp, yp, w, h, 0.0, GetGlobalColor( _T ( "YELO1" ) ), 172 );
 
     dc.SetPen( wxPen( GetGlobalColor( _T ( "UBLCK" ) ) ) );
-    dc.SetTextForeground( FontMgr::Get().GetFontColor( _("RouteLegInfoRollover") ) );
+    dc.SetTextForeground(GetGlobalColor(_T ( "UBLCK" )));
 
     dc.DrawText( first, xp, yp );
     if(second.Len())
@@ -11844,6 +11855,12 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
         user_scale_factor = (log(g_ChartScaleFactorExp) + 1.0) * 1.2;   // soften the scale factor a bit
 
     scale_factor *= user_scale_factor;
+
+    //  TODO  Convert this method to "DPI-Pixel aware"
+#ifdef __WXMSW__
+    double csf = GetContentScaleFactor();
+    scale_factor /= csf;
+#endif
 
     {
 

@@ -360,15 +360,22 @@ bool OCPNPlatform::DetectOSDetail( OCPN_OSDetail *detail)
     wxPlatformInfo platformInfo = wxPlatformInfo::Get();
     wxArchitecture arch = platformInfo.GetArchitecture();
     if(arch == wxARCH_32)
-        detail->osd_arch = std::string("X86_32");
+        detail->osd_arch = std::string("i386");
 
 #ifdef ocpnARM
-    detail->osd_arch = std::string("ARM64");
-    if(arch == wxARCH_32)
-        detail->osd_arch = std::string("ARMHF");
+    //  arm supports a multiarch runtime environment
+    //  That is, the OS may be 64 bit, but OCPN may be built as a 32 bit binary
+    //  So, we cannot trust the wxPlatformInfo architecture determination.
+    detail->osd_arch = std::string("arm64");
+#ifdef ocpnARMHF
+    detail->osd_arch = std::string("armhf");
+#endif
 #endif
 
-
+#ifdef __OCPN__ANDROID__
+  detail->osd_arch = std::string("arm64");
+  if (arch == wxARCH_32) detail->osd_arch = std::string("armhf");
+#endif
 
     return true;
 }

@@ -28,6 +28,7 @@
 
 #include "FontMgr.h"
 #include "OCPNPlatform.h"
+#include "ocpn_plugin.h"
 
 class  OCPNwxFontList: public wxGDIObjListBase
 {
@@ -106,6 +107,12 @@ void FontMgr::SetLocale( wxString& newLocale)
 
 wxColour FontMgr::GetFontColor( const wxString &TextElement ) const
 {
+#ifdef __WXOSX__
+    wxColour rv;
+    GetGlobalColor("CHBLK", &rv);
+    return rv;
+#endif
+
     //    Look thru the font list for a match
     MyFontDesc *pmfd;
     auto node = m_fontlist->GetFirst();
