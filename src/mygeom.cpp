@@ -135,14 +135,7 @@ void poolFree( void* userData, void* ptr )
     TESS_NOTUSED(ptr);
 }
 
-
-
-
-
-
-
-
-/**
+/* *
  * Returns TRUE if the ring has clockwise winding.
  *
  * @return TRUE if clockwise otherwise FALSE.
@@ -669,10 +662,6 @@ int PolyTessGeo::BuildTessGLU()
             gpIndex +=  m_cntr[iir+1];
       }
 #endif
-        
-        
-        
-        
 
     m_pTPG_Last = NULL;
     m_pTPG_Head = NULL;
@@ -781,12 +770,7 @@ int PolyTessGeo::BuildTessGLU()
     m_ppg_head->single_buffer = (unsigned char *)vbuf;
     m_ppg_head->single_buffer_size = total_byte_size;
     m_ppg_head->data_type = DATA_TYPE_FLOAT;
-    
-    
-    
-    
-    
-    
+
     gluDeleteTess(GLUtessobj);
 
     free( m_pwork_buf );
@@ -801,16 +785,14 @@ int PolyTessGeo::BuildTessGLU()
 
     m_bOK = true;
 
-    
     return 0;
 }
-
 
 
 int PolyTessGeo::BuildTess(void)
 {
     //  Setup the tesselator
-    
+
     TESSalloc ma;
     TESStesselator* tess = 0;
     const int nvp = 3;
@@ -882,7 +864,7 @@ int PolyTessGeo::BuildTess(void)
 
       wxPoint2DDouble *pp = (wxPoint2DDouble *)m_vertexPtrArray[0];
       bool cw = isRingClockwise(pp, m_cntr[0]);
-      
+
       //pp++;       // skip 0?
 
       if(cw)
@@ -932,14 +914,13 @@ int PolyTessGeo::BuildTess(void)
             y0 = y;
       }
 
-      
       //  Apply LOD reduction
     int beforeLOD = ptValid;
     int afterLOD = beforeLOD;
    
     std::vector<bool> bool_keep;
     if(ptValid > 5 && (m_LOD_meters > .01)){
-        
+
         for(unsigned int i = 0 ; i < ptValid ; i++)
             bool_keep.push_back(false);
 
@@ -948,14 +929,14 @@ int PolyTessGeo::BuildTess(void)
         bool_keep[1] = true;
         bool_keep[ptValid-1] = true;
         bool_keep[ptValid-2] = true;
-        
+
         DouglasPeuckerFI(geoPt, 1, ptValid-2, m_LOD_meters, bool_keep);
-            
+
         // Create a new buffer
         float *LOD_result = (float *)malloc((npte) * 2 * sizeof(float));     
         float *plod = LOD_result;
         int kept_LOD =0;
-        
+
         for(unsigned int i=0 ; i < ptValid ; i++){
             if(bool_keep[i]){
                 float x = geoPt[i*2];
@@ -968,16 +949,15 @@ int PolyTessGeo::BuildTess(void)
 
         beforeLOD = ptValid;
         afterLOD = kept_LOD;
-    
+
         tessAddContour(tess, 2, LOD_result, sizeof(float)*2, kept_LOD);
-        
+
         free(LOD_result);
     }
     else {
         tessAddContour(tess, 2, geoPt, sizeof(float)*2, ptValid);
     }
-    
-    
+
 
 #if 1
 //  Now the interior contours
@@ -988,7 +968,7 @@ int PolyTessGeo::BuildTess(void)
 
             int npti  = m_cntr[iir+1];
             ptValid = npti;
-            
+
       //  Check and account for winding direction of ring
             bool cw = isRingClockwise(pp, m_cntr[iir+1]);
 
@@ -1070,10 +1050,9 @@ int PolyTessGeo::BuildTess(void)
     const int nverts = tessGetVertexCount(tess);
     int nelems = tessGetElementCount(tess);
 
-      
     bool skip = false;
     //skip = true;
-    
+
     double stripTime = 0;
     //tt0.Reset();
 
@@ -1081,8 +1060,7 @@ int PolyTessGeo::BuildTess(void)
     float *vbo = 0;
     
     if(m_bstripify && nelems && !skip){
-        
-         
+
         STRIPERCREATE sc;
         sc.DFaces                       = (udword *)elems;
         sc.NbFaces                      = nelems;
@@ -1091,10 +1069,9 @@ int PolyTessGeo::BuildTess(void)
         sc.OneSided             = false;
         sc.SGIAlgorithm         = false;
 
-       
         Striper Strip;
         Strip.Init(sc);
-        
+
         STRIPERRESULT sr;
         Strip.Compute(sr);
 
@@ -1116,16 +1093,16 @@ int PolyTessGeo::BuildTess(void)
         }
 */
         // calculate and allocate the final (float) VBO-like buffer for this entire feature
-        
+
         int *Refs = (int *)sr.StripRuns;
         for(unsigned int i=0;i<sr.NbStrips;i++){
             unsigned int NbRefs = sr.StripLengths[i];         //  vertices per strip
             bytes_needed_vbo += NbRefs * 2 * sizeof(float);
         }
-        
+
         vbo = (float *)malloc(bytes_needed_vbo);
         float *vbo_run = vbo;
-        
+
         for(unsigned int i=0;i<sr.NbStrips;i++){
             unsigned int NbRefs = sr.StripLengths[i];         //  vertices per strip
  
@@ -1143,7 +1120,7 @@ int PolyTessGeo::BuildTess(void)
 
                 pTPG->p_next = NULL;
                 pTPG->nVert = NbRefs;
-            
+
 //                pTPG->p_vertex = (double *)malloc(NbRefs * 2 * sizeof(double));
 //                GLdouble *pdd = (GLdouble*)pTPG->p_vertex;
 
@@ -1165,20 +1142,20 @@ int PolyTessGeo::BuildTess(void)
                 vindex[0] = *Refs++;
                 vindex[1] = *Refs++;
                 unsigned int np = 2;         // for the first triangle
-                    
+
                 for(unsigned int i = 2; i < NbRefs ; i++){    
                     vindex[np] = *Refs++;
                     np++;
-                    
+
                     for (unsigned int j = 0; j < np; ++j){
                         double yd = verts[vindex[j]*2];
                         double xd = verts[vindex[j]*2+1];
-                    
+
                     // Calculate LLBox bounding box for each Tri-prim
                         if(m_bmerc_transform){
                             double valx = ( xd * mx_rate ) + mx_offset;
                             double valy = ( yd * my_rate ) + my_offset;
-            
+
                                 //    quickly convert to lat/lon
                             double lat = ( 2.0 * atan ( exp ( valy/CM93_semimajor_axis_meters ) ) - PI/2. ) / DEGREE;
                             double lon= ( valx / ( DEGREE * CM93_semimajor_axis_meters ) );
@@ -1195,7 +1172,7 @@ int PolyTessGeo::BuildTess(void)
                             symax = wxMax(yd, symax);
                             symin = wxMin(yd, symin);
                         }
-                        
+
                     //  Append this point to TriPrim vbo
 
                         *vbo_run++ = (xd) + m_feature_easting;    // adjust to chart ref coordinates
@@ -1222,7 +1199,7 @@ int PolyTessGeo::BuildTess(void)
     else{       // not stripified
         
         m_nvertex_max = nverts;               // record largest vertex count
-        
+
         bytes_needed_vbo = nelems * nvp * 2 * sizeof(float);
         vbo = (float *)malloc(bytes_needed_vbo);
         float *vbo_run = vbo;
@@ -1243,7 +1220,7 @@ int PolyTessGeo::BuildTess(void)
             pTPG->p_next = NULL;
             pTPG->type = GL_TRIANGLES;
             pTPG->nVert = nvp;
-            
+
 //            pTPG->p_vertex = (double *)malloc(nvp * 2 * sizeof(double));
 //            GLdouble *pdd = (GLdouble*)pTPG->p_vertex;
 
@@ -1258,12 +1235,12 @@ int PolyTessGeo::BuildTess(void)
             for (size_t j = 0; j < nvp && p[j] != TESS_UNDEF; ++j){
                 double yd = verts[p[j]*2];
                 double xd = verts[p[j]*2+1];
-                
+
                 // Calculate LLBox bounding box for each Tri-prim
                 if(m_bmerc_transform){
                     double valx = ( xd * mx_rate ) + mx_offset;
                     double valy = ( yd * my_rate ) + my_offset;
-    
+
                         //    quickly convert to lat/lon
                     double lat = ( 2.0 * atan ( exp ( valy/CM93_semimajor_axis_meters ) ) - PI/2. ) / DEGREE;
                     double lon= ( valx / ( DEGREE * CM93_semimajor_axis_meters ) );
@@ -1280,7 +1257,7 @@ int PolyTessGeo::BuildTess(void)
                     symax = wxMax(yd, symax);
                     symin = wxMin(yd, symin);
                 }
-                
+
                 //  Append this point to TriPrim, converting to SM if called for
 
                 if(m_b_senc_sm){
@@ -1294,7 +1271,7 @@ int PolyTessGeo::BuildTess(void)
                     *vbo_run++ = yd;
                 }
             }
-        
+
         pTPG->tri_box.Set(symin, sxmin, symax, sxmax);
         }
     }           // stripify
@@ -1302,17 +1279,17 @@ int PolyTessGeo::BuildTess(void)
     if(m_printStats){
         int nTri = 0;
         int nStrip = 0;
-        
+
         TriPrim *p_tp = pTPG_Head;
         while( p_tp ) {
             if(p_tp->type == GL_TRIANGLES)
                 nTri++;
             if(p_tp->type == GL_TRIANGLE_STRIP)
                 nStrip++;
-            
+
           p_tp = p_tp->p_next; // pick up the next in chain
         }
-        
+
         if((nTri + nStrip) > 10000){
             printf("LOD:  %d/%d\n", afterLOD, beforeLOD);
 
@@ -1323,9 +1300,7 @@ int PolyTessGeo::BuildTess(void)
             printf("\n");
         }
     }
- 
-   
-    
+
       m_ppg_head = new PolyTriGroup;
       m_ppg_head->m_bSMSENC = m_b_senc_sm;
 
@@ -1333,7 +1308,6 @@ int PolyTessGeo::BuildTess(void)
       m_ppg_head->pn_vertex = m_cntr;             // pointer to array of poly vertex counts
       m_ppg_head->tri_prim_head = pTPG_Head;         // head of linked list of TriPrims
       //m_ppg_head->data_type = DATA_TYPE_DOUBLE;
-      
 
 //  Transcribe the raw geometry buffer
 //  Converting to float as we go, and
@@ -1341,10 +1315,10 @@ int PolyTessGeo::BuildTess(void)
 //  Also, convert to SM if requested
 
       int nptfinal = npta;
-      
+
       //  No longer need the full geometry in the SENC,
       nptfinal = 1;
-      
+
       m_nwkb = (nptfinal +1) * 2 * sizeof(float);
       m_ppg_head->pgroup_geom = (float *)malloc(m_nwkb);
       float *vro = m_ppg_head->pgroup_geom;
@@ -1386,7 +1360,7 @@ int PolyTessGeo::BuildTess(void)
       m_ppg_head->single_buffer = (unsigned char *)vbo;
       m_ppg_head->single_buffer_size = bytes_needed_vbo;
       m_ppg_head->data_type = DATA_TYPE_FLOAT;
-      
+
 
       free (geoPt);
 
@@ -1396,14 +1370,10 @@ int PolyTessGeo::BuildTess(void)
       if (tess) tessDeleteTess(tess);
 
       m_bOK = true;
-      
 
       return 0;
-      
 
 }
-
-
 
 
 
@@ -1497,7 +1467,7 @@ void  endCallback(void *polyData)
                        symin = wxMin(valy, symin);
                 }
             }
-            
+
 
             // Compute the final LLbbox for this TriPrim chain
             if(pThis->m_bcm93)
@@ -1582,7 +1552,7 @@ void  combineCallback(GLdouble coords[3],
                      GLfloat weight[4], GLdouble **dataOut, void *polyData )
 {
     PolyTessGeo *pThis = (PolyTessGeo *)polyData;
-    
+
     GLdouble *vertex = (GLdouble *)malloc(6 * sizeof(GLdouble));
 
     vertex[0] = coords[0];
@@ -1624,7 +1594,7 @@ PolyTriGroup::~PolyTriGroup()
     //Walk the list of TriPrims, deleting as we go
     TriPrim *tp_next;
     TriPrim *tp = tri_prim_head;
-    
+
     if(bsingle_alloc){
         free(single_buffer);
         while(tp) {
@@ -1658,9 +1628,4 @@ void TriPrim::FreeMem()
 {
     free(p_vertex);
 }
-
-
-
-
-
 

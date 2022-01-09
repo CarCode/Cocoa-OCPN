@@ -100,9 +100,9 @@ static void *DATCVR01(void *param)
 // - symbolizing the limit of ENC coverage;
 // - symbolizing navigational purpose boundaries ("scale boundarie"); and
 // - indicating overscale display.
-           //
+//
 // Note that the mandatory meta object CATQUA is symbolized by the look-up table.
-           //
+//
 // Because the methods adopted by an ECDIS to meet the IMO and IHO requirements
 // listed on the next page will depend on the manufacturer's software, and cannot be
 // described in terms of a flow chart in the same way as other conditional procedures,
@@ -112,11 +112,11 @@ static void *DATCVR01(void *param)
 //    S57Obj *obj = rzRules->obj;
 
     wxString rule_str;
-       ///////////////////////
+       // /////////////////////
     // 1- REQUIREMENT
     // (IMO/IHO specs. explenation)
 
-       ///////////////////////
+       // /////////////////////
     // 2- ENC COVERAGE
        //
     // 2.1- Limit of ENC coverage
@@ -130,7 +130,7 @@ static void *DATCVR01(void *param)
     // FIXME: ";OP(0---);AC(NODATA)"
     // FIXME: set geo to cover earth (!)
 
-       //////////////////////
+       // ////////////////////
     // 3- SCALE BOUNDARIES
        //
     // 3.1- Chart scale boundaties
@@ -143,7 +143,7 @@ static void *DATCVR01(void *param)
     // 3.2- Graphical index of navigational purpose
     // FIXME: draw extent of available SENC in DB
 
-       //////////////////////
+       // ////////////////////
     // 4- OVERSCALE
        //
     // FIXME: get meta date CSCL of DSPM field
@@ -3421,7 +3421,7 @@ static void *WRECKS02 (void *param)
                   }
         }
 */
-////////////////////////////////////////////////
+// //////////////////////////////////////////////
 //    DSR New Logic Here  (FIXME)
         {
            if (-9 != catwrk)
@@ -3482,7 +3482,7 @@ static void *WRECKS02 (void *param)
         } else {
             // Continuation A (POINT_T)
             if (UNKNOWN != valsou) {
-///////////////////////////////////////////
+// /////////////////////////////////////////
 //    DSR New logic here, FIXME check s52 specs
 
 /*
@@ -3506,7 +3506,7 @@ static void *WRECKS02 (void *param)
 					wrecks02str.Append(_T(";SY(WRECKS07)"));
 
                 wrecks02str.Append(sndfrm02str);       // always show valsou depth
-///////////////////////////////////////////
+// /////////////////////////////////////////
 
                 wrecks02str.Append(*udwhaz03str);
                 wrecks02str.Append(*quapnt01str);
@@ -4229,11 +4229,11 @@ static GString *DATCVR01 (S57_geo *geo)
 {
     GString *datcvr01 = NULL;
 
-    ///////////////////////
+    // /////////////////////
     // 1- REQUIREMENT
     // (IMO/IHO specs. explenation)
 
-    ///////////////////////
+    // /////////////////////
     // 2- ENC COVERAGE
     //
     // 2.1- Limit of ENC coverage
@@ -4245,7 +4245,7 @@ static GString *DATCVR01 (S57_geo *geo)
     // FIXME: ";OP(0---);AC(NODATA)"
     // FIXME: set geo to cover earth (!)
 
-    //////////////////////
+    // ////////////////////
     // 3- SCALE BOUNDARIES
     //
     // 3.1- Chart scale boundaties
@@ -4258,7 +4258,7 @@ static GString *DATCVR01 (S57_geo *geo)
     // 3.2- Graphical index of navigational purpose
     // FIXME: draw extent of available SENC in DB
 
-    //////////////////////
+    // ////////////////////
     // 4- OVERSCALE
     //
     // FIXME: get meta date CSCL of DSPM field

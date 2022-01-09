@@ -1198,7 +1198,7 @@ void LoadS57()
 
         if( ps52plib->m_bOK ) {
             g_csv_locn = look_data_dir;
-///???            g_SData_Locn = tentative_SData_Locn;
+// /???            g_SData_Locn = tentative_SData_Locn;
         }
     }
 
@@ -1753,6 +1753,19 @@ bool MyApp::OnInit()
 
     wxLogMessage( _T("MemoryStatus:  mem_total: %d mb,  mem_initial: %d mb"), g_mem_total / 1024,
             g_mem_initial / 1024 );
+// Commit vom 17.11.2021:
+//    OCPN_OSDetail *detail = g_Platform->GetOSDetail();
+//    wxString msgplat;
+//    wxString like0;
+//    if(!detail->osd_names_like.empty()
+//      like0 = detail->osd_names_like[0].c_str();
+//    msgplat.Printf( "OCPN_OSDetail:  %s ; %s ; %s ; %s ; %s",
+//                detail->osd_arch.c_str(),
+//                detail->osd_name.c_str(),
+//                detail->osd_version.c_str(),
+//                detail->osd_ID.c_str(),
+//                like0.mb_str() );
+//    wxLogMessage(msgplat);
 
     //    Initialize embedded PNG icon graphics
     ::wxInitAllImageHandlers();
@@ -1890,7 +1903,8 @@ bool MyApp::OnInit()
 
     if(g_useMUI){
         ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
-        style->chartStatusWindowTransparent = true;
+        if (style)
+          style->chartStatusWindowTransparent = true;
     }
 
 
@@ -6090,7 +6104,6 @@ int MyFrame::DoOptionsDialog()
     delete pWorkDirArray;
 
 
-    gFrame->Raise();
     DoChartUpdate();
 
     //  We set the compass size first, since that establishes the available space for the toolbar.

@@ -2874,7 +2874,7 @@ Extended_Geometry *cm93chart::BuildGeom ( Object *pobject, wxFileOutputStream *p
                   ret_ptr->ymax = lat_max;
 
                   break;
-            }           // case 3
+            }           // case 3 Areas
 
 
 
@@ -2983,7 +2983,7 @@ Extended_Geometry *cm93chart::BuildGeom ( Object *pobject, wxFileOutputStream *p
                   break;
             }           //case 2  (lines)
 
-            case 8:
+            case 8:         // Wohl Point nach Areas und Lines ?
             {
                   geometry_descriptor *pgd = ( geometry_descriptor* ) pobject->pGeometry;
 
@@ -5480,6 +5480,8 @@ bool cm93compchart::DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPo
 
                   if ( !vpr_empty.Empty() && m_cmscale )        // This chart scale does not fully cover the region
                   {
+                        cm93chart *m_pcm93chart_save = m_pcm93chart_current;  // alte version
+
                       //    Save the current cm93 chart scale for restoration later
                         int cmscale_save = m_cmscale;
 
@@ -5510,14 +5512,15 @@ bool cm93compchart::DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPo
                         for( int i=0 ; i < 8 ; i++) {
                             if(!region_vect[i].Empty()){
                                 m_cmscale = PrepareChartScale ( vp, i, false );
-                                if ( m_pcm93chart_current )
+//                                if ( m_pcm93chart_current )
                                     render_return |= m_pcm93chart_current->RenderRegionViewOnGL( glc, vp, RectRegion, region_vect[i] );
                             }
                         }
 
                         // restore the base chart pointer
+                        m_pcm93chart_current = m_pcm93chart_save;
                         m_cmscale = cmscale_save;
-                        m_pcm93chart_current = m_pcm93chart_array[m_cmscale];
+//                        m_pcm93chart_current = m_pcm93chart_array[m_cmscale];
 
                   }
 
@@ -5530,18 +5533,18 @@ bool cm93compchart::DoRenderRegionViewOnGL (const wxGLContext &glc, const ViewPo
             }
             else  // Single chart mode
             {
-                if ( !m_pcm93chart_current ){
+//                if ( !m_pcm93chart_current ){
                     render_return = m_pcm93chart_current->RenderRegionViewOnGL ( glc, vp, RectRegion, Region );
                     m_Name = m_pcm93chart_current->GetLastFileName();
-                }
+//                }
             }
       }
 
       if(VPoint.m_projection_type != PROJECTION_MERCATOR)
           return render_return; // TODO: fix below for non-mercator
 
-      if ( !m_pcm93chart_current )
-          return render_return;
+//      if ( !m_pcm93chart_current )
+//          return render_return;
 
       //    Render the cm93 cell's M_COVR outlines if called for
       if ( m_cell_index_special_outline )
@@ -6419,10 +6422,7 @@ ListOfObjRazRules *cm93compchart::GetObjRuleListAtLatLon ( float lat, float lon,
                         if ( !m_pcm93chart_array[i]->m_render_region.IsEmpty() )
                         {
                               if ( wxInRegion == m_pcm93chart_array[i]->m_render_region.Contains ( p ) )
-                                    return  m_pcm93chart_array[i]->GetObjRuleListAtLatLon ( lat, alon,
-                                                                                            select_radius, &vp,
-                                                                                            selection_mask
-                                                                                          );
+                                    return  m_pcm93chart_array[i]->GetObjRuleListAtLatLon ( lat, alon, select_radius, &vp, selection_mask );
                         }
                   }
             }

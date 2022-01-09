@@ -425,6 +425,8 @@ s52plib::s52plib( const wxString& PLib, bool b_forceLegacy )
     SetGLPolygonSmoothing( true );
     SetGLLineSmoothing( true );
 
+    m_displayScale = 1.0;
+
 }
 
 s52plib::~s52plib()
@@ -476,7 +478,13 @@ void s52plib::SetGLOptions(bool b_useStencil,
 }
 
 void s52plib::SetPPMM( float ppmm )
-{ 
+{
+
+#ifdef __WXOSX__
+  // Support Mac Retina displays.
+  m_displayScale = GetOCPNCanvasWindow()->GetContentScaleFactor();
+#endif
+
     canvas_pix_per_mm = ppmm;
 
     // We need a supplemental scale factor for HPGL vector symbol rendering.
@@ -486,10 +494,13 @@ void s52plib::SetPPMM( float ppmm )
     // We declare that the nominal size of a "flare" light rendered as HPGL vector should be roughly twice the
     // size of a simplified lateral bouy rendered as raster.
 
-    // Referring to the chartsymbols.xml file, we find that the dimension of a flare light is 810 units, 
-    // and a raster BOYLAT is 16 pix.
+    // Referring to the chartsymbols.xml file, we find that the dimension of a
+    // flare light is 810 units, and a raster BOYLAT is nominally 16 pix.
+    // However, elsewhere we declare that the nominal size of of a flare
+    //  should be 6 mm instead of 8.1 mm
+    // So, do the math with 600 instead of 810.
 
-    m_rv_scale_factor = 2.0 * (1600. / (810 * ppmm));
+    m_rv_scale_factor = 2.0 * (1600. / (600 * ppmm));
 
     // Estimate the display size
 
@@ -497,6 +508,11 @@ void s52plib::SetPPMM( float ppmm )
     ::wxDisplaySize( &ww, &hh);
     m_display_size_mm = wxMax(ww, hh) / GetPPMM();        // accurate enough for internal use
 
+    m_display_size_mm /= m_displayScale;
+
+    wxString msg;
+    msg.Printf("Core s52plib:  ppmm: %g rv_scale_factor: %g  calc_display_size_mm: %g", ppmm, m_rv_scale_factor, m_display_size_mm);
+    wxLogMessage(msg);
 }
 
 //      Various static helper methods
@@ -999,12 +1015,12 @@ Rules *s52plib::StringToRules( const wxString& str_in )
 
             if( r->razRule == NULL ) r->razRule = ( *_symb_sym )[_T ( "QUESMRK1" )];
 
-            SCANFWRD
+            SCANFWRD  // Nächster str
         }
 
 // SHOWLINE
         INSTRUCTION ( "LS",RUL_SIM_LN )
-            SCANFWRD
+            SCANFWRD  // Nächster str
         }
 
         INSTRUCTION ( "LC",RUL_COM_LN )
@@ -1015,12 +1031,12 @@ Rules *s52plib::StringToRules( const wxString& str_in )
             r->razRule = ( *_line_sym )[key];
 
             if( r->razRule == NULL ) r->razRule = ( *_symb_sym )[_T ( "QUESMRK1" )];
-            SCANFWRD
+            SCANFWRD  // Nächster str
         }
 
-        // SHOWAREA
+// SHOWAREA
         INSTRUCTION ( "AC",RUL_ARE_CO )
-            SCANFWRD
+            SCANFWRD  // Nächster str
         }
 
         INSTRUCTION ( "AP",RUL_ARE_PA )
@@ -1030,10 +1046,10 @@ Rules *s52plib::StringToRules( const wxString& str_in )
 
             r->razRule = ( *_patt_sym )[key];
             if( r->razRule == NULL ) r->razRule = ( *_patt_sym )[_T ( "QUESMRK1V" )];
-            SCANFWRD
+            SCANFWRD  // Nächster str
         }
 
-        // CALLSYMPROC
+// CALLSYMPROC   Was soll das sein?
 
         if( 0 == strncmp( "CS", str, 2 ) ) {
             str += 3;
@@ -1047,7 +1063,7 @@ Rules *s52plib::StringToRules( const wxString& str_in )
             wxString index( stt, wxConvUTF8 );
             r->razRule = ( *_cond_sym )[index];
             if( r->razRule == NULL ) r->razRule = ( *_cond_sym )[_T ( "QUESMRK1" )];
-            SCANFWRD
+            SCANFWRD  // Nächster str
         }
 
         ++str;
@@ -8797,7 +8813,7 @@ void s52plib::GetAndAddCSRules( ObjRazRules *rzRules, Rules *rules )
 //  If not found, need to create a dynamic LUP and add to CS LUP Table
 
     if( NULL == LUP ) // Not found
-            {
+    {
 
         NewLUP = (LUPrec*) calloc( 1, sizeof(LUPrec) );
         pAlloc->Add( NewLUP );
