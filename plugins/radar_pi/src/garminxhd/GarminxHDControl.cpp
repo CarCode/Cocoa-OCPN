@@ -1,4 +1,4 @@
-/* *************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Radar Plugin
@@ -26,7 +26,8 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "GarminxHDControl.h"
 
@@ -68,7 +69,7 @@ GarminxHDControl::GarminxHDControl(NetworkAddress sendAddress) {
 GarminxHDControl::~GarminxHDControl() {
   if (m_radar_socket != INVALID_SOCKET) {
     closesocket(m_radar_socket);
-    LOG_TRANSMIT(wxT("radar_pi: %s transmit socket closed"), m_name.c_str());
+    LOG_TRANSMIT(wxT("%s transmit socket closed"), m_name.c_str());
   }
 }
 
@@ -99,12 +100,12 @@ bool GarminxHDControl::Init(radar_pi *pi, RadarInfo *ri, NetworkAddress &ifadr, 
   }
 
   if (r) {
-    wxLogError(wxT("radar_pi: Unable to create UDP sending socket"));
+    wxLogError(wxT("Unable to create UDP sending socket"));
     // Might as well give up now
     return false;
   }
 
-  LOG_TRANSMIT(wxT("radar_pi: %s transmit socket open"), m_name);
+  LOG_TRANSMIT(wxT("%s transmit socket open"), m_name);
   return true;
 }
 
@@ -114,7 +115,7 @@ void GarminxHDControl::logBinaryData(const wxString &what, const void *data, int
   int i = 0;
 
   explain.Alloc(size * 3 + 50);
-  explain += wxT("radar_pi: ") + m_name + wxT(" ");
+  explain += wxT("") + m_name + wxT(" ");
   explain += what;
   explain += wxString::Format(wxT(" %d bytes: "), size);
   for (i = 0; i < size; i++) {
@@ -125,11 +126,11 @@ void GarminxHDControl::logBinaryData(const wxString &what, const void *data, int
 
 bool GarminxHDControl::TransmitCmd(const void *msg, int size) {
   if (m_radar_socket == INVALID_SOCKET) {
-    wxLogError(wxT("radar_pi: Unable to transmit command to unknown radar"));
+    wxLogError(wxT("Unable to transmit command to unknown radar"));
     return false;
   }
   if (sendto(m_radar_socket, (char *)msg, size, 0, (struct sockaddr *)&m_addr, sizeof(m_addr)) < size) {
-    wxLogError(wxT("radar_pi: Unable to transmit command to %s: %s"), m_name.c_str(), SOCKETERRSTR);
+    wxLogError(wxT("Unable to transmit command to %s: %s"), m_name.c_str(), SOCKETERRSTR);
     return false;
   }
   IF_LOG_AT(LOGLEVEL_TRANSMIT, logBinaryData(wxString::Format(wxT("%s transmit"), m_name), msg, size));
@@ -137,7 +138,7 @@ bool GarminxHDControl::TransmitCmd(const void *msg, int size) {
 }
 
 void GarminxHDControl::RadarTxOff() {
-  IF_LOG_AT(LOGLEVEL_VERBOSE | LOGLEVEL_TRANSMIT, wxLogMessage(wxT("radar_pi: %s transmit: turn off"), m_name));
+  IF_LOG_AT(LOGLEVEL_VERBOSE | LOGLEVEL_TRANSMIT, wxLogMessage(wxT("%s transmit: turn off"), m_name));
 
   rad_ctl_pkt_9 packet;
   packet.packet_type = 0x919;
@@ -148,7 +149,7 @@ void GarminxHDControl::RadarTxOff() {
 }
 
 void GarminxHDControl::RadarTxOn() {
-  IF_LOG_AT(LOGLEVEL_VERBOSE | LOGLEVEL_TRANSMIT, wxLogMessage(wxT("radar_pi: %s transmit: turn on"), m_name));
+  IF_LOG_AT(LOGLEVEL_VERBOSE | LOGLEVEL_TRANSMIT, wxLogMessage(wxT("%s transmit: turn on"), m_name));
 
   rad_ctl_pkt_9 packet;
   packet.packet_type = 0x919;
@@ -170,7 +171,7 @@ bool GarminxHDControl::SetRange(int meters) {
     packet.packet_type = 0x91e;
     packet.len1 = sizeof(packet.parm1);
     packet.parm1 = meters;
-    LOG_VERBOSE(wxT("radar_pi: %s transmit: range %d meters"), m_name.c_str(), meters);
+    LOG_VERBOSE(wxT("%s transmit: range %d meters"), m_name.c_str(), meters);
     return TransmitCmd(&packet, sizeof(packet));
   }
   return false;
@@ -192,31 +193,44 @@ bool GarminxHDControl::SetControlValue(ControlType controlType, RadarControlItem
   switch (controlType) {
     // The following are settings that are not radar commands. Made them explicit so the
     // compiler can catch missing control types.
-    case CT_NONE:
-    case CT_RANGE:
-    case CT_TRANSPARENCY:
-    case CT_REFRESHRATE:
-    case CT_TARGET_TRAILS:
-    case CT_TRAILS_MOTION:
-    case CT_MAIN_BANG_SIZE:
-    case CT_MAX:
     case CT_ANTENNA_FORWARD:
     case CT_ANTENNA_STARBOARD:
-    case CT_ORIENTATION:
     case CT_CENTER_VIEW:
+    case CT_MAIN_BANG_SIZE:
+    case CT_MAX:
+    case CT_NONE:
+    case CT_ORIENTATION:
     case CT_OVERLAY_CANVAS:
+    case CT_RANGE:
+    case CT_RANGE_ADJUSTMENT:
+    case CT_REFRESHRATE:
     case CT_TARGET_ON_PPI:
+    case CT_TARGET_TRAILS:
+    case CT_TRAILS_MOTION:
+    case CT_TRANSPARENCY:
 
     // The following are settings not supported by Garmin xHD.
-    case CT_SIDE_LOBE_SUPPRESSION:
-    case CT_TARGET_EXPANSION:
-    case CT_TARGET_BOOST:
-    case CT_LOCAL_INTERFERENCE_REJECTION:
-    case CT_NOISE_REJECTION:
-    case CT_TARGET_SEPARATION:
-    case CT_DOPPLER:
     case CT_ANTENNA_HEIGHT:
+    case CT_AUTOTTRACKDOPPLER:
+    case CT_DISPLAY_TIMING:
+    case CT_DOPPLER:
     case CT_FTC:
+    case CT_LOCAL_INTERFERENCE_REJECTION:
+    case CT_MAIN_BANG_SUPPRESSION:
+#ifdef __WXOSX__
+    case CT_ALL_TO_AUTO:
+    case CT_COLOR_GAIN:
+    case CT_MODE:
+#endif
+    case CT_NOISE_REJECTION:
+    case CT_SIDE_LOBE_SUPPRESSION:
+    case CT_STC:
+    case CT_STC_CURVE:
+    case CT_TARGET_BOOST:
+    case CT_TARGET_EXPANSION:
+    case CT_TARGET_SEPARATION:
+    case CT_TUNE_COARSE:
+    case CT_TUNE_FINE:
 
       break;
 
@@ -227,7 +241,7 @@ bool GarminxHDControl::SetControlValue(ControlType controlType, RadarControlItem
       pck_12.packet_type = 0x930;
       pck_12.parm1 = value << 5;
 
-      LOG_VERBOSE(wxT("radar_pi: %s Bearing alignment: %d"), m_name.c_str(), value);
+      LOG_VERBOSE(wxT("%s Bearing alignment: %d"), m_name.c_str(), value);
       r = TransmitCmd(&pck_12, sizeof(pck_12));
       break;
     }
@@ -247,7 +261,7 @@ bool GarminxHDControl::SetControlValue(ControlType controlType, RadarControlItem
         r = TransmitCmd(&pck_12, sizeof(pck_12));
         m_ri->m_no_transmit_start.Update(value);  // necessary because we hacked "off" as auto value
       }
-      LOG_VERBOSE(wxT("radar_pi: %s No Transmit Start: value=%d state=%d"), m_name.c_str(), value, (int)state);
+      LOG_VERBOSE(wxT("%s No Transmit Start: value=%d state=%d"), m_name.c_str(), value, (int)state);
       break;
     }
 
@@ -265,12 +279,12 @@ bool GarminxHDControl::SetControlValue(ControlType controlType, RadarControlItem
         pck_12.parm1 = value * 32;
         r = TransmitCmd(&pck_12, sizeof(pck_12));
       }
-      LOG_VERBOSE(wxT("radar_pi: %s No Transmit End: value=%d state=%d"), m_name.c_str(), value, (int)state);
+      LOG_VERBOSE(wxT("%s No Transmit End: value=%d state=%d"), m_name.c_str(), value, (int)state);
       break;
     }
 
     case CT_GAIN: {
-      LOG_VERBOSE(wxT("radar_pi: %s Gain: value=%d state=%d"), m_name.c_str(), value, (int)state);
+      LOG_VERBOSE(wxT("%s Gain: value=%d state=%d"), m_name.c_str(), value, (int)state);
 
       if (state >= RCS_AUTO_1) {
         pck_9.packet_type = 0x924;
@@ -291,7 +305,7 @@ bool GarminxHDControl::SetControlValue(ControlType controlType, RadarControlItem
     }
 
     case CT_SEA: {
-      LOG_VERBOSE(wxT("radar_pi: %s Sea: value=%d state=%d"), m_name.c_str(), value, (int)state);
+      LOG_VERBOSE(wxT("%s Sea: value=%d state=%d"), m_name.c_str(), value, (int)state);
 
       if (state >= RCS_AUTO_1) {
         pck_9.packet_type = 0x939;
@@ -316,7 +330,7 @@ bool GarminxHDControl::SetControlValue(ControlType controlType, RadarControlItem
     }
 
     case CT_RAIN: {  // Rain Clutter - Manual. Range is 0x01 to 0x50
-      LOG_VERBOSE(wxT("radar_pi: %s Rain: value=%d state=%d"), m_name.c_str(), value, (int)state);
+      LOG_VERBOSE(wxT("%s Rain: value=%d state=%d"), m_name.c_str(), value, (int)state);
 
       if (state == RCS_OFF) {
         pck_9.packet_type = 0x933;
@@ -334,7 +348,7 @@ bool GarminxHDControl::SetControlValue(ControlType controlType, RadarControlItem
     }
 
     case CT_INTERFERENCE_REJECTION: {
-      LOG_VERBOSE(wxT("radar_pi: %s Interference Rejection / Crosstalk: %d"), m_name.c_str(), value);
+      LOG_VERBOSE(wxT("%s Interference Rejection / Crosstalk: %d"), m_name.c_str(), value);
       pck_9.parm1 = value;
 
       pck_9.packet_type = 0x91b;
@@ -349,7 +363,7 @@ bool GarminxHDControl::SetControlValue(ControlType controlType, RadarControlItem
     }
 
     case CT_SCAN_SPEED: {
-      LOG_VERBOSE(wxT("radar_pi: %s Scan speed: %d"), m_name.c_str(), value);
+      LOG_VERBOSE(wxT("%s Scan speed: %d"), m_name.c_str(), value);
       pck_9.packet_type = 0x916;
       pck_9.parm1 = value * 2;
 
@@ -358,7 +372,7 @@ bool GarminxHDControl::SetControlValue(ControlType controlType, RadarControlItem
     }
 
     case CT_TIMED_IDLE: {
-      LOG_VERBOSE(wxT("radar_pi: %s Timed idle: value=%d state=%d"), m_name.c_str(), value, (int)state);
+      LOG_VERBOSE(wxT("%s Timed idle: value=%d state=%d"), m_name.c_str(), value, (int)state);
       if (state == RCS_OFF) {
         pck_9.packet_type = 0x942;
         pck_9.parm1 = 0;  // off
@@ -375,7 +389,7 @@ bool GarminxHDControl::SetControlValue(ControlType controlType, RadarControlItem
     }
 
     case CT_TIMED_RUN: {
-      LOG_VERBOSE(wxT("radar_pi: %s Timed run: %d"), m_name.c_str(), value);
+      LOG_VERBOSE(wxT("%s Timed run: %d"), m_name.c_str(), value);
       pck_10.packet_type = 0x944;
       pck_10.parm1 = value * 60;
       r = TransmitCmd(&pck_10, sizeof(pck_10));

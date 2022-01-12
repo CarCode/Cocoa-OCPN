@@ -31,18 +31,28 @@
 #ifndef _NAVICOCONTROL_H_
 #define _NAVICOCONTROL_H_
 
-#include "RadarInfo.h"
-#include "pi_common.h"
-#include "socketutil.h"
+#include "../include/RadarInfo.h"
+#include "../include/pi_common.h"
+#include "../include/socketutil.h"
 
 PLUGIN_BEGIN_NAMESPACE
 
 class NavicoControl : public RadarControl {
  public:
-  NavicoControl();
-  ~NavicoControl();
+  NavicoControl(radar_pi *pi, RadarInfo *ri) {
+    m_pi = pi;
+    m_ri = ri;
+    m_send_address = NetworkAddress();
+    m_radar_socket = INVALID_SOCKET;
+    m_name = ri->m_name;
+  }
 
-  void SetMultiCastAddress(NetworkAddress sendMultiCastAddress);
+  ~NavicoControl() {
+    if (m_radar_socket != INVALID_SOCKET) {
+      closesocket(m_radar_socket);
+      LOG_TRANSMIT(wxT("%s transmit socket closed"), m_name.c_str());
+    }
+  }
 
   bool Init(radar_pi *pi, RadarInfo *ri, NetworkAddress &interfaceAddress, NetworkAddress &radarAddress);
   void RadarTxOff();
@@ -51,12 +61,20 @@ class NavicoControl : public RadarControl {
   bool SetRange(int meters);
   bool SetControlValue(ControlType controlType, RadarControlItem &item, RadarControlButton *button);
 
+  /*
+   * Update the send address where to send data; this is variable
+   * on Navico and RME radars, we are told where it is using a message.
+   */
+  void SetSendAddress(NetworkAddress sendSendAddress) { m_send_address = sendSendAddress; }
+
+  bool TransmitCmd(const NetworkAddress &sendAddress, const uint8_t *msg, int size);
+
  private:
   radar_pi *m_pi;
   RadarInfo *m_ri;
-  struct sockaddr_in m_addr;
   SOCKET m_radar_socket;
   wxString m_name;
+  NetworkAddress m_send_address;
 
   bool TransmitCmd(const uint8_t *msg, int size);
   void logBinaryData(const wxString &what, const uint8_t *data, int size);

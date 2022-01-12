@@ -28,8 +28,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "drawutil.h"
-#include "radar_pi.h"
+#include "../include/drawutil.h"
+
+#include "../include/radar_pi.h"
 
 PLUGIN_BEGIN_NAMESPACE
 
@@ -150,13 +151,13 @@ void CheckOpenGLError(const wxString& after) {
     }
 
     if (err == errLast) {
-      wxLogError(wxT("radar_pi: OpenGL error could not be reset"));
+      wxLogError(wxT("OpenGL error could not be reset"));
       return;
     }
 
     errLast = err;
 
-    wxLogError(wxT("radar_pi: OpenGL error %d after %s"), err, after.c_str());
+    wxLogError(wxT("OpenGL error %d after %s"), err, after.c_str());
   }
 }
 

@@ -31,7 +31,7 @@
 #ifndef _NAVICOCONTROLSDIALOG_H_
 #define _NAVICOCONTROLSDIALOG_H_
 
-#include "ControlsDialog.h"
+#include "../include/ControlsDialog.h"
 
 PLUGIN_BEGIN_NAMESPACE
 

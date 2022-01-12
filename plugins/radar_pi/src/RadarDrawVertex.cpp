@@ -1,4 +1,4 @@
-/* *************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Radar Plugin
@@ -26,9 +26,11 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "RadarDrawVertex.h"
+
 #include "RadarCanvas.h"
 #include "RadarInfo.h"
 
@@ -48,7 +50,7 @@ bool RadarDrawVertex::Init(size_t spokes, size_t spoke_len_max) {
   }
   if (!m_vertices) {
     if (!m_oom) {
-      wxLogError(wxT("radar_pi: Out of memory"));
+      wxLogError(wxT("Out of memory"));
       m_oom = true;
     }
     return false;
@@ -96,7 +98,7 @@ void RadarDrawVertex::SetBlob(VertexLine* line, int angle_begin, int angle_end, 
 
   if (!line->points) {
     if (!m_oom) {
-      wxLogError(wxT("radar_pi: Out of memory"));
+      wxLogError(wxT("Out of memory"));
       m_oom = true;
     }
     return;
@@ -138,7 +140,7 @@ void RadarDrawVertex::ProcessRadarSpoke(int transparency, SpokeBearing angle, ui
     line->points = (VertexPoint*)malloc(line->allocated * sizeof(VertexPoint));
     if (!line->points) {
       if (!m_oom) {
-        wxLogError(wxT("radar_pi: Out of memory"));
+        wxLogError(wxT("Out of memory"));
         m_oom = true;
       }
       line->allocated = 0;
@@ -158,11 +160,7 @@ void RadarDrawVertex::ProcessRadarSpoke(int transparency, SpokeBearing angle, ui
       r_end++;
     } else if (previous_colour == BLOB_NONE && actual_colour != BLOB_NONE) {
       // blob starts, no display, just register
-#ifdef __WXOSX__
-      r_begin = (int)radius;
-#else
       r_begin = radius;
-#endif
       r_end = r_begin + 1;
       previous_colour = actual_colour;  // new color
     } else if (previous_colour != BLOB_NONE && (previous_colour != actual_colour)) {
@@ -172,11 +170,7 @@ void RadarDrawVertex::ProcessRadarSpoke(int transparency, SpokeBearing angle, ui
       SetBlob(line, angle, angle + 1, r_begin, r_end, red, green, blue, alpha);
       previous_colour = actual_colour;
       if (actual_colour != BLOB_NONE) {  // change of color, start new blob
-#ifdef __WXOSX__
-        r_begin = (int)radius;
-#else
         r_begin = radius;
-#endif
         r_end = r_begin + 1;
       }
     }
@@ -226,11 +220,7 @@ void RadarDrawVertex::DrawRadarOverlayImage(double radar_scale, double panel_rot
       }
       glVertexPointer(2, GL_FLOAT, sizeof(VertexPoint), &line->points[0].xy);
       glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(VertexPoint), &line->points[0].red);
-#ifdef __WXOSX__
-      glDrawArrays(GL_TRIANGLES, 0, (int)line->count);
-#else
       glDrawArrays(GL_TRIANGLES, 0, line->count);
-#endif
     }
     glPopMatrix();
   }
@@ -279,11 +269,7 @@ void RadarDrawVertex::DrawRadarPanelImage(double panel_scale, double panel_rotat
       }
       glVertexPointer(2, GL_FLOAT, sizeof(VertexPoint), &line->points[0].xy);
       glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(VertexPoint), &line->points[0].red);
-#ifdef __WXOSX__
-      glDrawArrays(GL_TRIANGLES, 0, (int)line->count);
-#else
       glDrawArrays(GL_TRIANGLES, 0, line->count);
-#endif
     }
     glPopMatrix();
   }

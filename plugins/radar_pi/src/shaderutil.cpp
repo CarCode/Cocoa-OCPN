@@ -29,12 +29,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "shaderutil.h"
+#include "../include/shaderutil.h"
 
 #if defined(WIN32)
 #define SET_FUNCTION_POINTER(name) wglGetProcAddress(name)
 typedef PROC FunctionPointer;
-#elif defined(__WXOSX__)
+#elif defined(__WXMAC__)
 #include <dlfcn.h>
 #define SET_FUNCTION_POINTER(name) dlsym(RTLD_DEFAULT, name)
 typedef void *FunctionPointer;
@@ -45,7 +45,7 @@ typedef __GLXextFuncPtr FunctionPointer;
 #endif
 
 #define SHADER_FUNCTION_LIST(proc, name) proc name;
-#include "shaderutil.inc"
+#include "../include/shaderutil.inc"
 #undef SHADER_FUNCTION_LIST
 
 PLUGIN_BEGIN_NAMESPACE
@@ -63,7 +63,7 @@ GLboolean ShadersSupported(void) {
     if (!u.p) ok = 0;                       \
     name = u.f;                             \
   }
-#include "shaderutil.inc"
+#include "../include/shaderutil.inc"
 #undef SHADER_FUNCTION_LIST
 
   return ok;
@@ -82,7 +82,7 @@ bool CompileShaderText(GLuint *shader, GLenum shaderType, const char *text) {
     GLchar log[1000];
     GLsizei len;
     GetShaderInfoLog(*shader, 1000, &len, log);
-    wxLogError(wxT("radar_pi: problem compiling shader: %s"), log);
+    wxLogError(wxT("problem compiling shader: %s"), log);
     return false;
   }
   return true;
@@ -109,7 +109,7 @@ GLuint LinkShaders3(GLuint vertShader, GLuint geomShader, GLuint fragShader) {
       GLchar log[1000];
       GLsizei len;
       GetProgramInfoLog(program, 1000, &len, log);
-      wxLogError(wxT("radar_pi: problem linking program: %s"), log);
+      wxLogError(wxT("problem linking program: %s"), log);
       return 0;
     }
   }
@@ -126,7 +126,7 @@ GLboolean ValidateShaderProgram(GLuint program) {
     GLchar log[1000];
     GLsizei len;
     GetProgramInfoLog(program, 1000, &len, log);
-    wxLogError(wxT("radar_pi: program validation error: %s"), log);
+    wxLogError(wxT("program validation error: %s"), log);
     return 0;
   }
 

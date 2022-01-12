@@ -1,4 +1,4 @@
-/* *************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Radar Plugin, Arpa partition
@@ -26,9 +26,11 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "RadarMarpa.h"
+
 #include "GuardZone.h"
 #include "RadarCanvas.h"
 #include "RadarInfo.h"
@@ -44,6 +46,7 @@ RadarArpa::RadarArpa(radar_pi* pi, RadarInfo* ri) {
   m_pi = pi;
   m_number_of_targets = 0;
   CLEAR_STRUCT(m_targets);
+  CLEAR_STRUCT(m_doppler_arpa_update_time);
 }
 
 ArpaTarget::~ArpaTarget() {
@@ -90,23 +93,36 @@ Polar ArpaTarget::Pos2Polar(ExtendedPosition p, ExtendedPosition own_ship) {
   return pol;
 }
 
-bool RadarArpa::Pix(int ang, int rad) {
+bool RadarArpa::Pix(int ang, int rad, bool doppler) {
   if (rad <= 0 || rad >= (int)m_ri->m_spoke_len_max) {
     return false;
   }
-  return ((m_ri->m_history[MOD_SPOKES(ang)].line[rad] & 128) != 0);
+  int angle = MOD_SPOKES(ang);
+  bool bit0 = (m_ri->m_history[angle].line[rad] & 128) != 0;
+  bool bit2 = (m_ri->m_history[angle].line[rad] & 32) != 0;
+  if (!doppler) {
+    return (bit0);
+  } else {
+    return (bit0 && bit2);
+  }
 }
 
 bool ArpaTarget::Pix(int ang, int rad) {
   if (rad <= 0 || rad >= (int)m_ri->m_spoke_len_max) {
     return false;
   }
+  int angle = MOD_SPOKES(ang);
+  bool bit0 = (m_ri->m_history[angle].line[rad] & 128) > 0;
+  bool bit1 = (m_ri->m_history[angle].line[rad] & 64) > 0;
+  bool bit2 = (m_ri->m_history[angle].line[rad] & 32) > 0;
+
+  if (m_doppler_target > 0 && !bit2) {  // we are looking for doppler targets and this is not doppler
+    return false;
+  }
   if (m_check_for_duplicate) {
-    // check bit 1
-    return ((m_ri->m_history[MOD_SPOKES(ang)].line[rad] & 64) != 0);
+    return (bit1);
   } else {
-    // check bit 0
-    return ((m_ri->m_history[MOD_SPOKES(ang)].line[rad] & 128) != 0);
+    return (bit0);
   }
 }
 
@@ -137,13 +153,8 @@ bool ArpaTarget::MultiPix(int ang, int rad) {  // checks if the blob has a conto
   transl[3].angle = -1;
   transl[3].r = 0;
   int count = 0;
-#ifdef __WXOSX__
   int aa = 0;
   int rr = 0;
-#else
-  int aa;
-  int rr;
-#endif
   bool succes = false;
   int index = 0;
   max_r = current;
@@ -219,7 +230,7 @@ bool ArpaTarget::MultiPix(int ang, int rad) {  // checks if the blob has a conto
   return false;
 }
 
-bool RadarArpa::MultiPix(int ang, int rad) {
+bool RadarArpa::MultiPix(int ang, int rad, bool doppler) {
   // checks the blob has a contour of at least length pixels
   // pol must start on the contour of the blob
   // false if not
@@ -229,7 +240,8 @@ bool RadarArpa::MultiPix(int ang, int rad) {
   Polar start;
   start.angle = ang;
   start.r = rad;
-  if (!Pix(start.angle, start.r)) {
+
+  if (!Pix(start.angle, start.r, doppler)) {
     return false;
   }
   Polar current = start;  // the 4 possible translations to move from a point on the contour to the next
@@ -247,13 +259,8 @@ bool RadarArpa::MultiPix(int ang, int rad) {
   transl[3].angle = -1;
   transl[3].r = 0;
   int count = 0;
-#ifdef __WXOSX__
   int aa = 0;
   int rr = 0;
-#else
-  int aa;
-  int rr;
-#endif
   bool succes = false;
   int index = 0;
   max_r = current;
@@ -271,7 +278,7 @@ bool RadarArpa::MultiPix(int ang, int rad) {
     index = i;
     aa = current.angle + transl[index].angle;
     rr = current.r + transl[index].r;
-    succes = !Pix(aa, rr);
+    succes = !Pix(aa, rr, doppler);
     if (succes) break;
   }
   if (!succes) {
@@ -287,7 +294,7 @@ bool RadarArpa::MultiPix(int ang, int rad) {
       if (index > 3) index -= 4;
       aa = current.angle + transl[index].angle;
       rr = current.r + transl[index].r;
-      succes = Pix(aa, rr);
+      succes = Pix(aa, rr, doppler);
       if (succes) {  // next point found
         break;
       }
@@ -322,7 +329,7 @@ bool RadarArpa::MultiPix(int ang, int rad) {
   }
   for (int a = min_angle.angle; a <= max_angle.angle; a++) {
     for (int r = min_r.r; r <= max_r.r; r++) {
-      m_ri->m_history[MOD_SPOKES(a)].line[r] &= 63;
+      m_ri->m_history[MOD_SPOKES(a)].line[r] &= 63;  // 0x3F
     }
   }
   return false;
@@ -348,11 +355,11 @@ void RadarArpa::AcquireOrDeleteMarpaTarget(ExtendedPosition target_pos, int stat
     i_target = m_number_of_targets;
     m_number_of_targets++;
   } else {
-    LOG_INFO(wxT("radar_pi: RadarArpa:: Error, max targets exceeded "));
+    wxLogError(wxT("Error, max targets exceeded "));
     return;
   }
 
-  LOG_ARPA(wxT("radar_pi: Adding (M)ARPA target at position %f / %f"), target_pos.pos.lat, target_pos.pos.lon);
+  LOG_ARPA(wxT("Adding (M)ARPA target at position %f / %f"), target_pos.pos.lat, target_pos.pos.lon);
 
   ArpaTarget* target = m_targets[i_target];
   target->m_position = target_pos;  // Expected position
@@ -360,7 +367,7 @@ void RadarArpa::AcquireOrDeleteMarpaTarget(ExtendedPosition target_pos, int stat
   target->m_position.dlat_dt = 0.;
   target->m_position.dlon_dt = 0.;
   target->m_status = status;
-
+  target->m_doppler_target = 0;
   target->m_max_angle.angle = 0;
   target->m_min_angle.angle = 0;
   target->m_max_r.r = 0;
@@ -397,7 +404,7 @@ bool ArpaTarget::FindContourFromInside(Polar* pol) {  // moves pol to contour of
   }
 }
 
-/*
+/**
  * Find a contour from the given start position on the edge of a blob.
  *
  * Follows the contour in a clockwise manner.
@@ -423,13 +430,9 @@ int ArpaTarget::GetContour(Polar* pol) {
   int count = 0;
   Polar start = *pol;
   Polar current = *pol;
-#ifdef __WXOSX__
-    int aa = 0;
-    int rr = 0;
-#else
-    int aa;
-    int rr;
-#endif
+  int aa = 0;
+  int rr = 0;
+
   bool succes = false;
   int index = 0;
   m_max_r = current;
@@ -451,7 +454,6 @@ int ArpaTarget::GetContour(Polar* pol) {
     index = i;
     aa = current.angle + transl[index].angle;
     rr = current.r + transl[index].r;
-    //  if (rr > RETURNS_PER_LINE - 1) return 13;  // r too large
     succes = !Pix(aa, rr);
     if (succes) break;
   }
@@ -551,7 +553,7 @@ void RadarArpa::DrawContour(ArpaTarget* target) {
     int angle = target->m_contour[i].angle + (DEGREES_PER_ROTATION + OPENGL_ROTATION) * m_ri->m_spokes / DEGREES_PER_ROTATION;
     int radius = target->m_contour[i].r;
     if (radius <= 0 || radius >= (int)m_ri->m_spoke_len_max) {
-      LOG_INFO(wxT("radar_pi: wrong values in DrawContour"));
+      LOG_INFO(wxT("wrong values in DrawContour"));
       return;
     }
     vertex_array[i] = m_ri->m_polar_lookup->GetPoint(angle, radius);
@@ -722,7 +724,7 @@ void RadarArpa::RefreshArpaTargets() {
   int dist = TARGET_SEARCH_RADIUS1;
   for (int i = 0; i < m_number_of_targets; i++) {
     if (!m_targets[i]) {
-      LOG_INFO(wxT("radar_pi:  error target non existent i=%i"), i);
+      LOG_INFO(wxT(" error target non existent i=%i"), i);
       continue;
     }
     m_targets[i]->m_pass_nr = PASS1;
@@ -736,7 +738,7 @@ void RadarArpa::RefreshArpaTargets() {
   dist = TARGET_SEARCH_RADIUS2;
   for (int i = 0; i < m_number_of_targets; i++) {
     if (!m_targets[i]) {
-      LOG_INFO(wxT("radar_pi: error target non existent i=%i"), i);
+      LOG_INFO(wxT("error target non existent i=%i"), i);
       continue;
     }
     if (m_targets[i]->m_pass1_result == UNKNOWN) continue;
@@ -744,7 +746,12 @@ void RadarArpa::RefreshArpaTargets() {
     m_targets[i]->RefreshTarget(dist);
   }
 
-  for (int i = 0; i < GUARD_ZONES; i++) m_ri->m_guard_zone[i]->SearchTargets();
+  for (int i = 0; i < GUARD_ZONES; i++) {
+    m_ri->m_guard_zone[i]->SearchTargets();
+  }
+  if (m_ri->m_doppler.GetValue() > 0 && m_ri->m_autotrack_doppler.GetValue() > 0) {
+    SearchDopplerTargets();
+  }
 }
 
 void ArpaTarget::RefreshTarget(int dist) {
@@ -772,8 +779,8 @@ void ArpaTarget::RefreshTarget(int dist) {
     wxLongLong now = wxGetUTCTimeMillis();  // millis
     int diff = now.GetLo() - m_refresh.GetLo();
     if (diff > 8000) {
-      LOG_ARPA(wxT("radar_pi: target not refreshed, missing spokes, set lost, status= %i, target_id= %i timediff= %i"), m_status,
-               m_target_id, diff);
+      LOG_ARPA(wxT("target not refreshed, missing spokes, set lost, status= %i, target_id= %i timediff= %i"), m_status, m_target_id,
+               diff);
       SetStatusLost();
     }
     return;
@@ -834,7 +841,7 @@ void ArpaTarget::RefreshTarget(int dist) {
     // check if target has a new later time than previous target
     if (pol.time <= prev_X.time && m_status > 1) {
       // found old target again, reset what we have done
-      LOG_INFO(wxT("radar_pi: Error Gettarget same time found"));
+      LOG_INFO(wxT("Error Gettarget same time found"));
       m_position = prev_X;
       prev_X = prev2_X;
       return;
@@ -960,16 +967,18 @@ void ArpaTarget::RefreshTarget(int dist) {
     pol = Pos2Polar(m_position, own_pos);
     if (m_status >= STATUS_TO_OCPN) {
       OCPN_target_status s;
-      if (m_status >= Q_NUM) s = Q; // 4
-      if (m_status > T_NUM) s = T;  // 6
+      if (m_status >= Q_NUM) s = Q;
+      if (m_status > T_NUM) s = T;
       if (m_lost_count > 0) {
         // if target was not seen last sweep, color yellow
         s = Q;
-      }
+//      }  // WXOSX
       // Check for AIS target at (M)ARPA position
       double dist2target = pol.r / m_ri->m_pixels_per_meter;
-      if (m_pi->FindAIS_at_arpaPos(m_position.pos, dist2target)) s = L;
-      PassARPAtoOCPN(&pol, L); // was "s" but with s it does not work?
+      if (m_pi->FindAIS_at_arpaPos(m_position.pos, dist2target))
+          s = L;
+      PassARPAtoOCPN(&pol, s);
+      }  // WXOSX
     }
   }
   return;
@@ -1036,6 +1045,7 @@ ArpaTarget::ArpaTarget(radar_pi* pi, RadarInfo* ri) {
   m_position.dlon_dt = 0.;
   m_pass1_result = UNKNOWN;
   m_pass_nr = PASS1;
+  m_doppler_target = 0;
 }
 
 ArpaTarget::ArpaTarget() {
@@ -1053,6 +1063,7 @@ ArpaTarget::ArpaTarget() {
   m_position.dlon_dt = 0.;
   m_pass1_result = UNKNOWN;
   m_pass_nr = PASS1;
+  m_doppler_target = 0;
 }
 
 bool ArpaTarget::GetTarget(Polar* pol, int dist1) {
@@ -1080,7 +1091,7 @@ bool ArpaTarget::GetTarget(Polar* pol, int dist1) {
   }
   int cont = GetContour(pol);
   if (cont != 0) {
-    // LOG_ARPA(wxT("radar_pi: ARPA contour error %d at %d, %d"), cont, a, r);
+    LOG_ARPA(wxT("ARPA contour error %d at %d, %d"), cont, a, r);
     // reset pol in case of error
     pol->angle = a;
     pol->r = r;
@@ -1182,11 +1193,10 @@ void RadarArpa::DeleteAllTargets() {
   }
 }
 
-int RadarArpa::AcquireNewARPATarget(Polar pol, int status) {
-  // acquires new target from mouse click position
+int RadarArpa::AcquireNewARPATarget(Polar pol, int status, uint8_t doppler) {
+  // acquires new target at polar position pol
   // no contour taken yet
   // target status status, normally 0, if dummy target to delete a target -2
-  // returns in X metric coordinates of click
   // constructs Kalman filter
   ExtendedPosition own_pos;
   ExtendedPosition target_pos;
@@ -1202,7 +1212,7 @@ int RadarArpa::AcquireNewARPATarget(Polar pol, int status) {
     i = m_number_of_targets;
     m_number_of_targets++;
   } else {
-    LOG_INFO(wxT("radar_pi: RadarArpa:: Error, max targets exceeded %i"), m_number_of_targets);
+    wxLogError(wxT("Error, max targets exceeded %i"), m_number_of_targets);
     return -1;
   }
   ArpaTarget* target = m_targets[i];
@@ -1218,6 +1228,7 @@ int RadarArpa::AcquireNewARPATarget(Polar pol, int status) {
   target->m_min_angle.angle = 0;
   target->m_max_r.r = 0;
   target->m_min_r.r = 0;
+  target->m_doppler_target = doppler;
   if (!target->m_kalman) {
     target->m_kalman = new KalmanFilter(m_ri->m_spokes);
   }
@@ -1233,9 +1244,8 @@ void ArpaTarget::ResetPixels() {
   // We not only reset the blob but all pixels in a radial "square" covering the blob
   for (int r = wxMax(m_min_r.r - DISTANCE_BETWEEN_TARGETS, 0);
        r <= wxMin(m_max_r.r + DISTANCE_BETWEEN_TARGETS, (int)m_ri->m_spoke_len_max - 1); r++) {
-    for (int a = wxMax(m_min_angle.angle - DISTANCE_BETWEEN_TARGETS, 0);
-         a <= wxMin(m_max_angle.angle + DISTANCE_BETWEEN_TARGETS, (int)m_ri->m_spokes - 1); a++) {
-      m_ri->m_history[a].line[r] = m_ri->m_history[a].line[r] & 127;
+    for (int a = m_min_angle.angle - DISTANCE_BETWEEN_TARGETS; a <= m_max_angle.angle + DISTANCE_BETWEEN_TARGETS; a++) {
+      m_ri->m_history[MOD_SPOKES(a)].line[r] = m_ri->m_history[MOD_SPOKES(a)].line[r] & 127;
     }
   }
 }
@@ -1244,6 +1254,72 @@ void RadarArpa::ClearContours() {
   for (int i = 0; i < m_number_of_targets; i++) {
     m_targets[i]->m_contour_length = 0;
   }
+}
+
+bool RadarArpa::IsAtLeastOneRadarTransmitting() {
+  for (size_t r = 0; r < RADARS; r++) {
+    if (m_pi->m_radar[r] != NULL && m_pi->m_radar[r]->m_state.GetValue() == RADAR_TRANSMIT) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void RadarArpa::SearchDopplerTargets() {
+  ExtendedPosition own_pos;
+  if (m_ri->m_arpa->GetTargetCount() >= MAX_NUMBER_OF_TARGETS - 2) {
+    LOG_INFO(wxT("No more scanning for ARPA targets, maximum number of targets reached"));
+    return;
+  }
+  if (!m_pi->m_settings.show                       // No radar shown
+      || !m_ri->GetRadarPosition(&own_pos.pos)) {  // No position
+    return;
+  }
+
+  if (m_ri->m_pixels_per_meter == 0. || !IsAtLeastOneRadarTransmitting()) {
+    return;
+  }
+
+  size_t range_start = 20;                       // Convert from meters to 0..511
+  size_t range_end = m_ri->m_spoke_len_max - 5;  // Convert from meters to 0..511
+
+  SpokeBearing start_bearing = 0;
+  SpokeBearing end_bearing = m_ri->m_spokes;
+
+  // loop with +2 increments as target must be larger than 2 pixels in width
+  for (int angleIter = start_bearing; angleIter < end_bearing; angleIter += 2) {
+    SpokeBearing angle = MOD_SPOKES(angleIter);
+    wxLongLong time1 = m_ri->m_history[angle].time;
+    // time2 must be timed later than the pass 2 in refresh, otherwise target may be found multiple times
+    wxLongLong time2 = m_ri->m_history[MOD_SPOKES(angle + 3 * SCAN_MARGIN)].time;
+
+    // check if target has been refreshed since last time
+    // and if the beam has passed the target location with SCAN_MARGIN spokes
+    if ((time1 > (m_doppler_arpa_update_time[angle] + SCAN_MARGIN2) &&
+         time2 >= time1)) {  // the beam sould have passed our "angle" AND a
+                             // point SCANMARGIN further set new refresh time
+      m_doppler_arpa_update_time[angle] = time1;
+      for (int rrr = (int)range_start; rrr < (int)range_end; rrr++) {
+        if (m_ri->m_arpa->GetTargetCount() >= MAX_NUMBER_OF_TARGETS - 1) {
+          LOG_INFO(wxT("No more scanning for ARPA targets in loop, maximum number of targets reached"));
+          return;
+        }
+
+        if (m_ri->m_arpa->MultiPix(angle, rrr, 1)) {
+          bool next_r = false;
+          if (next_r) continue;
+          // pixel found that does not belong to a known target
+          Polar pol;
+          pol.angle = angle;
+          pol.r = rrr;
+          int target_i = m_ri->m_arpa->AcquireNewARPATarget(pol, 0, 1);
+          if (target_i == -1) break;
+        }
+      }
+    }
+  }
+
+  return;
 }
 
 PLUGIN_END_NAMESPACE

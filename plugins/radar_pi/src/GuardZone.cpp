@@ -27,8 +27,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "GuardZone.h"
-#include "RadarMarpa.h"
+#include "../include/radar_pi.h"
+#include "../include/GuardZone.h"
+
+#include "../include/RadarMarpa.h"
 
 PLUGIN_BEGIN_NAMESPACE
 
@@ -37,11 +39,7 @@ PLUGIN_BEGIN_NAMESPACE
 GuardZone::GuardZone(radar_pi* pi, RadarInfo* ri, int zone) {
   m_pi = pi;
   m_ri = ri;
-#ifdef __WXOSX__  // Geht alles nicht????
-//  m_log_name = wxString::Format(wxT("radar_pi: Radar %s GuardZone %d:"), m_ri->m_radar + 'A', zone + 1);
-#else
-  m_log_name = wxString::Format(wxT("radar_pi: Radar %c GuardZone %d:"), m_ri->m_radar + 'A', zone + 1);
-#endif
+  m_log_name = wxString::Format(wxT("Radar %c GuardZone %d:"), (char)(m_ri->m_radar + 'A'), zone + 1);
   m_type = GZ_CIRCLE;
   m_start_bearing = 0;
   m_end_bearing = 0;
@@ -50,7 +48,7 @@ GuardZone::GuardZone(radar_pi* pi, RadarInfo* ri, int zone) {
   m_arpa_on = 0;
   m_alarm_on = 0;
   m_show_time = 0;
-  CLEAR_STRUCT(arpa_update_time);
+  CLEAR_STRUCT(m_arpa_update_time);
   ResetBogeys();
 }
 
@@ -140,7 +138,7 @@ void GuardZone::SearchTargets() {
     return;
   }
   if (m_ri->m_arpa->GetTargetCount() >= MAX_NUMBER_OF_TARGETS - 2) {
-    LOG_INFO(wxT("radar_pi: No more scanning for ARPA targets, maximum number of targets reached"));
+    LOG_INFO(wxT("No more scanning for ARPA targets, maximum number of targets reached"));
     return;
   }
   if (!m_pi->m_settings.show                       // No radar shown
@@ -150,14 +148,13 @@ void GuardZone::SearchTargets() {
   if (m_pi->m_radar[0] == 0 && m_pi->m_radar[1] == 0) {
     return;
   }
-  for (int r = 0; r < RADARS; r++) {
+  for (size_t r = 0; r < RADARS; r++) {
     if (m_pi->m_radar[r] != 0) {
       if (m_pi->m_radar[r]->m_state.GetValue() == RADAR_TRANSMIT)  // There is at least one radar transmitting
-        break;
+          break;
     }
-//    return; // Otherwise only one loop ?
+    return;
   }
-  
 
   if (m_ri->m_pixels_per_meter == 0.) {
     return;
@@ -165,30 +162,16 @@ void GuardZone::SearchTargets() {
   size_t range_start = m_inner_range * m_ri->m_pixels_per_meter;  // Convert from meters to 0..511
   size_t range_end = m_outer_range * m_ri->m_pixels_per_meter;    // Convert from meters to 0..511
   SpokeBearing hdt = SCALE_DEGREES_TO_SPOKES(m_pi->GetHeadingTrue());
-#ifdef __WXOSX__
-  SpokeBearing start_bearing = (int)SCALE_DEGREES_TO_SPOKES(m_start_bearing) + hdt;
-  SpokeBearing end_bearing = (int)SCALE_DEGREES_TO_SPOKES(m_end_bearing) + hdt;
-#else
   SpokeBearing start_bearing = SCALE_DEGREES_TO_SPOKES(m_start_bearing) + hdt;
   SpokeBearing end_bearing = SCALE_DEGREES_TO_SPOKES(m_end_bearing) + hdt;
-#endif
-#ifdef __WXOSX__
-  start_bearing = (int)MOD_SPOKES(start_bearing);
-  end_bearing = (int)MOD_SPOKES(end_bearing);
-#else
   start_bearing = MOD_SPOKES(start_bearing);
   end_bearing = MOD_SPOKES(end_bearing);
-#endif
   if (start_bearing > end_bearing) {
     end_bearing += m_ri->m_spokes;
   }
   if (m_type == GZ_CIRCLE) {
     start_bearing = 0;
-#ifdef __WXOSX__
-    end_bearing = (int)m_ri->m_spokes;
-#else
     end_bearing = m_ri->m_spokes;
-#endif
   }
   if (range_start < m_ri->m_spoke_len_max) {
     if (range_end > m_ri->m_spoke_len_max) {
@@ -198,33 +181,30 @@ void GuardZone::SearchTargets() {
 
     // loop with +2 increments as target must be larger than 2 pixels in width
     for (int angleIter = start_bearing; angleIter < end_bearing; angleIter += 2) {
-#ifdef __WXOSX__
-      SpokeBearing angle = (int)MOD_SPOKES(angleIter);
-#else
       SpokeBearing angle = MOD_SPOKES(angleIter);
-#endif
       wxLongLong time1 = m_ri->m_history[angle].time;
       // time2 must be timed later than the pass 2 in refresh, otherwise target may be found multiple times
       wxLongLong time2 = m_ri->m_history[MOD_SPOKES(angle + 3 * SCAN_MARGIN)].time;
 
       // check if target has been refreshed since last time
       // and if the beam has passed the target location with SCAN_MARGIN spokes
-      if ((time1 > (arpa_update_time[angle] + SCAN_MARGIN2) && time2 >= time1)) {  // the beam sould have passed our "angle" AND a
-                                                                                   // point SCANMARGIN further set new refresh time
-        arpa_update_time[angle] = time1;
+      if ((time1 > (m_arpa_update_time[angle] + SCAN_MARGIN2) &&
+           time2 >= time1)) {  // the beam sould have passed our "angle" AND a
+                               // point SCANMARGIN further set new refresh time
+        m_arpa_update_time[angle] = time1;
         for (int rrr = (int)range_start; rrr < (int)range_end; rrr++) {
           if (m_ri->m_arpa->GetTargetCount() >= MAX_NUMBER_OF_TARGETS - 1) {
-            LOG_INFO(wxT("radar_pi: No more scanning for ARPA targets in loop, maximum number of targets reached"));
+            LOG_INFO(wxT("No more scanning for ARPA targets in loop, maximum number of targets reached"));
             return;
           }
-          if (m_ri->m_arpa->MultiPix(angle, rrr)) {
+          if (m_ri->m_arpa->MultiPix(angle, rrr, 0)) {
             bool next_r = false;
             if (next_r) continue;
             // pixel found that does not belong to a known target
             Polar pol;
             pol.angle = angle;
             pol.r = rrr;
-            int target_i = m_ri->m_arpa->AcquireNewARPATarget(pol, 0);
+            int target_i = m_ri->m_arpa->AcquireNewARPATarget(pol, 0, 0);
             if (target_i == -1) break;
           }
         }

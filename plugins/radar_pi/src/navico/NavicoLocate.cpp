@@ -1,4 +1,4 @@
-/* *************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Radar Plugin
@@ -27,9 +27,12 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
-#include "NavicoLocate.h"
+#include "navico/NavicoLocate.h"
+
+#include "RadarInfo.h"
 
 PLUGIN_BEGIN_NAMESPACE
 
@@ -74,6 +77,7 @@ void NavicoLocate::UpdateEthernetCards() {
         m_interface_count++;
       }
     }
+    LOG_VERBOSE(wxT("Found %d ethernet cards"), m_interface_count);
 
     // If there are any fill packed array (m_socket, m_interface_addr) with them.
     if (m_interface_count > 0) {
@@ -86,13 +90,15 @@ void NavicoLocate::UpdateEthernetCards() {
           m_interface_addr[i].addr = sa->sin_addr;
           m_interface_addr[i].port = 0;
           m_socket[i] = startUDPMulticastReceiveSocket(m_interface_addr[i], reportNavicoCommon, error);
-          LOG_VERBOSE(wxT("radar_pi: NavicoLocate scanning interface %s for radars"), m_interface_addr[i].FormatNetworkAddress());
+          LOG_VERBOSE(wxT("NavicoLocate scanning interface %s for radars"), m_interface_addr[i].FormatNetworkAddress());
           i++;
         }
       }
     }
 
     freeifaddrs(addr_list);
+  } else {
+    wxLogError(wxT("No ethernet cards found"));
   }
 
   WakeRadar();
@@ -116,14 +122,14 @@ void *NavicoLocate::Entry(void) {
 
   uint8_t data[1500];
 
-  LOG_VERBOSE(wxT("radar_pi: NavicoLocate thread starting"));
+  LOG_VERBOSE(wxT("NavicoLocate thread starting"));
 
   m_is_shutdown = false;
 
   UpdateEthernetCards();
 
   while (!m_shutdown) {
-    struct timeval tv = { (long)1, (long)(0) };
+    struct timeval tv = {1, 0};
     fd_set fdin;
     FD_ZERO(&fdin);
 
@@ -137,7 +143,6 @@ void *NavicoLocate::Entry(void) {
 
     r = select(maxFd + 1, &fdin, 0, 0, &tv);
     if (r == -1 && errno != 0) {
-//      int err = errno;  // Not used
       UpdateEthernetCards();
       rescan_network_cards = 0;
     }
@@ -145,8 +150,8 @@ void *NavicoLocate::Entry(void) {
       for (size_t i = 0; i < m_interface_count; i++) {
         if (m_socket[i] != INVALID_SOCKET && FD_ISSET(m_socket[i], &fdin)) {
           rx_len = sizeof(rx_addr);
-          r = (int)recvfrom(m_socket[i], (char *)data, sizeof(data), 0, (struct sockaddr *)&rx_addr, &rx_len);
-          if (r > 2) {   // we are not interested in 2 byte messages
+          r = recvfrom(m_socket[i], (char *)data, sizeof(data), 0, (struct sockaddr *)&rx_addr, &rx_len);
+          if (r > 2) {  // we are not interested in 2 byte messages
             NetworkAddress radar_address;
             radar_address.addr = rx_addr.ipv4.sin_addr;
             radar_address.port = rx_addr.ipv4.sin_port;
@@ -158,8 +163,7 @@ void *NavicoLocate::Entry(void) {
           }
         }
       }
-    }
-    else {  // no data received -> select timeout
+    } else {  // no data received -> select timeout
       if (++rescan_network_cards >= PERIOD_UNTIL_CARD_REFRESH) {
         UpdateEthernetCards();
         rescan_network_cards = 0;
@@ -176,7 +180,7 @@ void *NavicoLocate::Entry(void) {
 
   CleanupCards();
 
-  LOG_VERBOSE(wxT("radar_pi: NavicoLocate thread stopping"));
+  LOG_VERBOSE(wxT("thread stopping"));
   m_is_shutdown = true;
   return 0;
 }
@@ -195,10 +199,10 @@ void *NavicoLocate::Entry(void) {
 
  */
 
- //
- // The following is the received radar state. It sends this regularly
- // but especially after something sends it a state change.
- //
+//
+// The following is the received radar state. It sends this regularly
+// but especially after something sends it a state change.
+//
 #pragma pack(push, 1)
 
 /*
@@ -274,56 +278,59 @@ struct RadarReport_01B2 {
 
 #pragma pack(pop)
 
-bool NavicoLocate::ProcessReport(const NetworkAddress &radar_address, const NetworkAddress &interface_address, const uint8_t *report, size_t len) {
+bool NavicoLocate::ProcessReport(const NetworkAddress &radar_address, const NetworkAddress &interface_address,
+                                 const uint8_t *report, size_t len) {
   if (report[0] == 01 && report[1] == 0xB1) {  // Wake radar
-    LOG_VERBOSE(wxT("radar_pi: Wake radar request from %s"), radar_address.FormatNetworkAddress());
+    LOG_VERBOSE(wxT("Wake radar request from %s"), radar_address.FormatNetworkAddress());
   }
   if (report[0] == 01 && report[1] == 0xB2) {  // Common Navico message from 4G++
     if (m_pi->m_settings.verbose >= 2) {
-#ifdef __WXOSX__
-      LOG_BINARY_RECEIVE(wxT("radar_pi: NavicoLocate received RadarReport_01B2"), report, (int)len);
-#else
-      LOG_BINARY_RECEIVE(wxT("radar_pi: NavicoLocate received RadarReport_01B2"), report, len);
-#endif
+      LOG_BINARY_RECEIVE(wxT("received RadarReport_01B2"), report, len);
     }
     RadarReport_01B2 *data = (RadarReport_01B2 *)report;
     wxCriticalSectionLocker lock(m_exclusive);
 
-    NavicoRadarInfo infoA;
+    RadarLocationInfo infoA;
     infoA.serialNr = wxString::FromAscii(data->serialno);
     infoA.spoke_data_addr = NetworkAddress(data->addrDataA);
     infoA.report_addr = NetworkAddress(data->addrReportA);
     infoA.send_command_addr = NetworkAddress(data->addrSendA);
-    NetworkAddress radar_ipA = radar_address;
+    NetworkAddress radar_ipA =
+        NetworkAddress(data->addr0);  // This is the address the radar will send data and reports from
+                                      // This address may be different from the address this location info is received from
     radar_ipA.port = htons(RO_PRIMARY);
     if (m_report_count < MAX_REPORT) {
-      LOG_INFO(wxT("radar_pi: Located radar IP %s, interface %s [%s]"), radar_ipA.FormatNetworkAddressPort(), interface_address.FormatNetworkAddress(), infoA.to_string());
+      LOG_INFO(wxT("Located radar IP %s, interface %s [%s]"), radar_ipA.FormatNetworkAddressPort(),
+               interface_address.FormatNetworkAddress(), infoA.to_string());
       m_report_count++;
+    } else {
+      LOG_RECEIVE(wxT("Located radar IP %s, interface %s [%s]"), radar_ipA.FormatNetworkAddressPort(),
+                  interface_address.FormatNetworkAddress(), infoA.to_string());
     }
-    else {
-      LOG_RECEIVE(wxT("radar_pi: Located radar IP %s, interface %s [%s]"), radar_ipA.FormatNetworkAddressPort(), interface_address.FormatNetworkAddress(), infoA.to_string());
-    }
-    m_pi->FoundNavicoRadarInfo(radar_ipA, interface_address, infoA);
+    FoundNavicoLocationInfo(radar_ipA, interface_address, infoA);
 
     if (len > 150) {  // for 3G radar len == 150, no B available
-      NavicoRadarInfo infoB;
+      RadarLocationInfo infoB;
       infoB.serialNr = wxString::FromAscii(data->serialno);
       infoB.spoke_data_addr = NetworkAddress(data->addrDataB);
       infoB.report_addr = NetworkAddress(data->addrReportB);
       infoB.send_command_addr = NetworkAddress(data->addrSendB);
-      NetworkAddress radar_ipB = radar_address;
+      NetworkAddress radar_ipB =
+          NetworkAddress(data->addr0);  // This is the address the radar will send data and reports from
+                                        // This address may be different from the address this location info is received from
       radar_ipB.port = htons(RO_SECONDARY);
       if (m_report_count < MAX_REPORT) {
-        LOG_INFO(wxT("radar_pi: Located radar IP %s, interface %s [%s]"), radar_ipB.FormatNetworkAddressPort(), interface_address.FormatNetworkAddress(), infoB.to_string());
+        LOG_INFO(wxT("Located Navico radar IP %s, interface %s [%s]"), radar_ipB.FormatNetworkAddressPort(),
+                 interface_address.FormatNetworkAddress(), infoB.to_string());
       } else {
-        LOG_RECEIVE(wxT("radar_pi: Located radar IP %s, interface %s [%s]"), radar_ipA.FormatNetworkAddressPort(), interface_address.FormatNetworkAddress(), infoA.to_string());
+        LOG_RECEIVE(wxT("Located Navico radar IP %s, interface %s [%s]"), radar_ipA.FormatNetworkAddressPort(),
+                    interface_address.FormatNetworkAddress(), infoA.to_string());
         m_report_count++;
       }
-      m_pi->FoundNavicoRadarInfo(radar_ipB, interface_address, infoB);
+      FoundNavicoLocationInfo(radar_ipB, interface_address, infoB);
     }
-#define LOG_ADDR_N(n)                                                                                  \
-  LOG_RECEIVE(wxT("radar_pi: NavicoLocate %s addr %s = %s"), radar_address.FormatNetworkAddress(), #n, \
-              FormatPackedAddress(data->addr##n));
+#define LOG_ADDR_N(n) \
+  LOG_RECEIVE(wxT("radar %s addr %s = %s"), radar_address.FormatNetworkAddress(), #n, FormatPackedAddress(data->addr##n));
 
     IF_LOG_AT_LEVEL(LOGLEVEL_RECEIVE) {
       LOG_ADDR_N(0);
@@ -346,16 +353,13 @@ bool NavicoLocate::ProcessReport(const NetworkAddress &radar_address, const Netw
     }
     return true;
   }
-#ifdef __WXOSX__
-  LOG_BINARY_RECEIVE(wxT("radar_pi: NavicoLocate received unknown message"), report, (int)len);
-#else
-  LOG_BINARY_RECEIVE(wxT("radar_pi: NavicoLocate received unknown message"), report, len);
-#endif
+
+  LOG_BINARY_RECEIVE(wxT("received unknown message"), report, len);
   return false;
 }
 
 void NavicoLocate::WakeRadar() {
-  static const uint8_t WAKE_COMMAND[] = { 0x01, 0xb1 };
+  static const uint8_t WAKE_COMMAND[] = {0x01, 0xb1};
   struct sockaddr_in send_addr = NetworkAddress(236, 6, 7, 5, 6878).GetSockAddrIn();
 
   int one = 1;
@@ -366,17 +370,125 @@ void NavicoLocate::WakeRadar() {
 
     if (sock != INVALID_SOCKET) {
       if (!setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char *)&one, sizeof(one)) &&
-        !::bind(sock, (struct sockaddr *)&s, sizeof(s)) &&
-        sendto(sock, (const char *)WAKE_COMMAND, sizeof WAKE_COMMAND, 0, (struct sockaddr *)&send_addr, sizeof(send_addr)) ==
-        sizeof WAKE_COMMAND) {
-        LOG_VERBOSE(wxT("radar_pi: Sent wake command to radar on %s"), m_interface_addr[i].FormatNetworkAddress());
-      }
-      else {
-        wxLogError(wxT("radar_pi: Failed to send wake command to radars on %s"), m_interface_addr[i].FormatNetworkAddress());
+          !::bind(sock, (struct sockaddr *)&s, sizeof(s)) &&
+          sendto(sock, (const char *)WAKE_COMMAND, sizeof WAKE_COMMAND, 0, (struct sockaddr *)&send_addr, sizeof(send_addr)) ==
+              sizeof WAKE_COMMAND) {
+        LOG_VERBOSE(wxT("Sent wake command to radar on %s"), m_interface_addr[i].FormatNetworkAddress());
+      } else {
+        wxLogError(wxT("Failed to send wake command to radars on %s"), m_interface_addr[i].FormatNetworkAddress());
       }
       closesocket(sock);
     }
   }
+}
+
+void NavicoLocate::FoundNavicoLocationInfo(const NetworkAddress &addr, const NetworkAddress &interface_addr,
+                                           const RadarLocationInfo &info) {
+  wxCriticalSectionLocker lock(m_exclusive);
+  bool halo_type = false;
+  int radar_order[RT_MAX];
+  for (int i = 0; i < RT_MAX; i++) {
+    radar_order[i] = RadarOrder[i];
+  }
+  // When NavicoLocate finds a Halo type we should only put it in a info field of an Halo radar
+  /*As far as we know:
+  13 and 14 = 4G
+  15 = old Halo
+  16
+  17
+  18 & serialNr[4] == '4' = new 3G (or 4G?)
+  19 = Halo24
+  */
+
+  // Find the number of physical Navico
+  bool navico[RT_MAX];
+  CLEAR_STRUCT(navico);
+  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+    if (m_pi->m_radar[r]->m_radar_type == RT_3G) navico[RT_3G] = true;
+    if (m_pi->m_radar[r]->m_radar_type == RT_4GA) navico[RT_4GA] = true;
+    if (m_pi->m_radar[r]->m_radar_type == RT_4GB) navico[RT_4GB] = true;
+    if (m_pi->m_radar[r]->m_radar_type == RT_HaloA) navico[RT_HaloA] = true;
+    if (m_pi->m_radar[r]->m_radar_type == RT_HaloB) navico[RT_HaloB] = true;
+  }
+
+  // associate the info found with the right type of radar
+
+  if (info.serialNr[0] == '1' &&
+      (info.serialNr[1] == '9' || info.serialNr[1] == '8' || info.serialNr[1] == '7' || info.serialNr[1] == '6' ||
+       info.serialNr[1] == '5')) {  // It seems that serial # starting with 15 - 19  refers to Halo type radars
+    halo_type = true;
+  }
+  if (info.serialNr[0] != '1') {  // all the new radars are Halo
+    halo_type = true;
+  }
+  if (halo_type) {
+    radar_order[RT_4GA] = 0;
+    radar_order[RT_4GB] = 0;
+  } else {
+    radar_order[RT_HaloA] = 0;
+    radar_order[RT_HaloB] = 0;
+  }
+
+  if (info.serialNr[0] == '1' && info.serialNr[1] == '8' && info.serialNr[4] == '4') {
+    // this is a new 3G or (may be) a 4G which will handle NavicoLocate
+    radar_order[RT_3G] = 1;
+  }
+
+  NetworkAddress int_face_addr = interface_addr;
+  NetworkAddress radar_addr = addr;
+
+  // First, check if we already know this serial#
+  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+    if (ntohs(addr.port) == radar_order[m_pi->m_radar[r]->m_radar_type] &&  // Only put primary in primary slots, etc.
+        m_pi->m_radar[r]->m_radar_location_info.serialNr == info.serialNr) {
+      m_pi->m_radar[r]->SetRadarLocationInfo(info);
+      m_pi->m_radar[r]->SetRadarInterfaceAddress(int_face_addr, radar_addr);
+      return;
+    }
+  }
+
+  // Second loop, put it in radar with same report address but no serial#
+  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+    if (ntohs(addr.port) == radar_order[m_pi->m_radar[r]->m_radar_type] &&  // Only put primary in primary slots, etc.
+        !info.report_addr.IsNull() &&                                       // If the report address fits, override the serial
+        m_pi->m_radar[r]->m_radar_location_info.report_addr == info.report_addr) {
+      m_pi->m_radar[r]->SetRadarLocationInfo(info);
+      m_pi->m_radar[r]->SetRadarInterfaceAddress(int_face_addr, radar_addr);
+      return;
+    }
+  }
+
+  // Third loop, put it in radar with same IP address but no serial# nor report address
+  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+    if (ntohs(addr.port) == radar_order[m_pi->m_radar[r]->m_radar_type] &&  // Only put primary in primary slots, etc.
+        m_pi->m_radar[r]->m_radar_address == addr && m_pi->m_radar[r]->m_radar_location_info.serialNr.IsNull() &&
+        m_pi->m_radar[r]->m_radar_location_info.report_addr.IsNull()) {
+      m_pi->m_radar[r]->SetRadarLocationInfo(info);
+      m_pi->m_radar[r]->SetRadarInterfaceAddress(int_face_addr, radar_addr);
+      return;
+    }
+  }
+
+  // In case of desperation, put it in a free slot without serial# or address
+  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+    if (ntohs(addr.port) == radar_order[m_pi->m_radar[r]->m_radar_type] &&  // Only put primary in primary slots, etc.
+        m_pi->m_radar[r]->m_radar_address.IsNull() && m_pi->m_radar[r]->m_radar_location_info.serialNr.IsNull() &&
+        m_pi->m_radar[r]->m_radar_location_info.report_addr.IsNull()) {
+      m_pi->m_radar[r]->SetRadarLocationInfo(info);
+      m_pi->m_radar[r]->SetRadarInterfaceAddress(int_face_addr, radar_addr);
+      return;
+    }
+  }
+
+  // No free slot, override the first radar A with A, B with B but only Halo with Halo
+  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+    if (ntohs(addr.port) == radar_order[m_pi->m_radar[r]->m_radar_type]) {  // Only put primary in primary slots, etc.
+      m_pi->m_radar[r]->SetRadarLocationInfo(info);
+      m_pi->m_radar[r]->SetRadarInterfaceAddress(int_face_addr, radar_addr);
+      return;
+    }
+  }
+  LOG_INFO(wxT("Failed to allocate info from NavicoLocate to a radar"));
 }
 
 PLUGIN_END_NAMESPACE

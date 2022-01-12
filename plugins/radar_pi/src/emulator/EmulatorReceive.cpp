@@ -1,4 +1,4 @@
-/* *************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Radar Plugin
@@ -27,9 +27,11 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "EmulatorReceive.h"
+
 #include "RadarFactory.h"
 
 #define SCALE_RAW_TO_DEGREES(raw) ((raw) * (double)DEGREES_PER_ROTATION / EMULATOR_SPOKES)
@@ -94,11 +96,7 @@ void EmulatorReceive::EmulateFakeBuffer(void) {
 
   for (int scanline = 0; scanline < scanlines_in_packet; scanline++) {
     int angle = m_next_spoke;
-#ifdef __WXOSX__
-    m_next_spoke = (int)MOD_SPOKES(m_next_spoke + 1);
-#else
     m_next_spoke = MOD_SPOKES(m_next_spoke + 1);
-#endif
     m_ri->m_statistics.spokes++;
 
     if (range_meters == ranges[count - 1]) {
@@ -128,16 +126,13 @@ void EmulatorReceive::EmulateFakeBuffer(void) {
     }
 
     int hdt = SCALE_DEGREES_TO_SPOKES(m_pi->GetHeadingTrue());
-#ifdef __WXOSX__
-    int bearing = (int)MOD_SPOKES(angle + hdt);
-#else
     int bearing = MOD_SPOKES(angle + hdt);
-#endif
+
     wxLongLong time_rec = wxGetUTCTimeMillis();
     m_ri->ProcessRadarSpoke(angle, bearing, data, sizeof(data), range_meters, time_rec);
   }
 
-  LOG_VERBOSE(wxT("radar_pi: emulating %d spokes at range %d with %d spots"), scanlines_in_packet, range_meters, spots);
+  LOG_VERBOSE(wxT("emulating %d spokes at range %d with %d spots"), scanlines_in_packet, range_meters, spots);
 }
 
 /*
@@ -150,7 +145,7 @@ void *EmulatorReceive::Entry(void) {
   int r = 0;
   NetworkAddress fake(127, 0, 0, 10, 3333);
 
-  LOG_VERBOSE(wxT("radar_pi: EmulatorReceive thread %s starting"), m_ri->m_name.c_str());
+  LOG_VERBOSE(wxT("EmulatorReceive thread %s starting"), m_ri->m_name.c_str());
 
   m_ri->DetectedRadar(fake, fake);
 
@@ -158,7 +153,7 @@ void *EmulatorReceive::Entry(void) {
     struct timeval tv;
 
     tv.tv_sec = 0;
-    tv.tv_usec = (long)(MILLIS_PER_SELECT * 1000);
+    tv.tv_usec = (int)(MILLIS_PER_SELECT * 1000);
 
     fd_set fdin;
     FD_ZERO(&fdin);
@@ -176,13 +171,9 @@ void *EmulatorReceive::Entry(void) {
         sockaddr_in rx_addr;
 
         socklen_t rx_len = sizeof(rx_addr);
-#ifdef __WXOSX__
-        r = (int)recvfrom(m_receive_socket, (char *)data, sizeof(data), 0, (struct sockaddr *)&rx_addr, &rx_len);
-#else
         r = recvfrom(m_receive_socket, (char *)data, sizeof(data), 0, (struct sockaddr *)&rx_addr, &rx_len);
-#endif
         if (r > 0) {
-          LOG_VERBOSE(wxT("radar_pi: %s received stop instruction"), m_ri->m_name.c_str());
+          LOG_VERBOSE(wxT("%s received stop instruction"), m_ri->m_name.c_str());
           break;
         }
       }
@@ -192,7 +183,7 @@ void *EmulatorReceive::Entry(void) {
 
   }  // endless loop until thread destroy
 
-  LOG_VERBOSE(wxT("radar_pi: %s receive thread stopping"), m_ri->m_name.c_str());
+  LOG_VERBOSE(wxT("%s receive thread stopping"), m_ri->m_name.c_str());
   return 0;
 }
 
@@ -205,11 +196,11 @@ void EmulatorReceive::Shutdown() {
   m_shutdown = true;
   if (m_send_socket != INVALID_SOCKET) {
     if (send(m_send_socket, "!", 1, MSG_DONTROUTE) > 0) {
-      LOG_VERBOSE(wxT("radar_pi: %s requested receive thread to stop"), m_ri->m_name.c_str());
+      LOG_VERBOSE(wxT("%s requested receive thread to stop"), m_ri->m_name.c_str());
       return;
     }
   }
-  LOG_INFO(wxT("radar_pi: %s receive thread will take long time to stop"), m_ri->m_name.c_str());
+  LOG_INFO(wxT("%s receive thread will take long time to stop"), m_ri->m_name.c_str());
 }
 
 wxString EmulatorReceive::GetInfoStatus() { return _("OK"); }

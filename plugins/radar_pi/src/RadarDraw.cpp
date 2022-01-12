@@ -1,4 +1,4 @@
-/* *************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Radar Plugin
@@ -26,9 +26,11 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "RadarDraw.h"
+
 #include "RadarDrawShader.h"
 #include "RadarDrawVertex.h"
 
@@ -42,7 +44,7 @@ RadarDraw* RadarDraw::make_Draw(RadarInfo* ri, int draw_method) {
     case 1:
       return new RadarDrawShader(ri);
     default:
-      wxLogError(wxT("radar_pi: unsupported draw method %d"), draw_method);
+      wxLogError(wxT("unsupported draw method %d"), draw_method);
   }
   return 0;
 }

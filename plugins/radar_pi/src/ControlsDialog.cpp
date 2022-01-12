@@ -27,15 +27,16 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "ControlsDialog.h"
-#include "GuardZone.h"
-#include "MessageBox.h"
-#include "RadarMarpa.h"
-#include "RadarPanel.h"
+#include "../include/ControlsDialog.h"
+
+#include "../include/GuardZone.h"
+#include "../include/MessageBox.h"
+#include "../include/RadarMarpa.h"
+#include "../include/RadarPanel.h"
 
 PLUGIN_BEGIN_NAMESPACE
 
-#if defined(__WXOSX__) || defined(__WXMSW__) || defined(__WXGTK__)
+#if defined(__WXMAC__) || defined(__WXMSW__) || defined(__WXGTK__)
 #define HAS_UNICODE_CHARS
 #endif
 
@@ -112,7 +113,7 @@ END_EVENT_TABLE()
 string ControlTypeNames[CT_MAX] = {
     "Unused",
 #define CONTROL_TYPE(x, y) y,
-#include "ControlType.inc"
+#include "ControlType.h"
 #undef CONTROL_TYPE
 };
 
@@ -217,16 +218,26 @@ void RadarControlButton::UpdateLabel(bool force) {
         break;
 
       case RCS_MANUAL:
-        if (m_ci.names) {
-          if (value >= 0 && value < m_ci.nameCount) {
-            label << m_ci.names[value];
+        if (m_ci.type != CT_RANGE_ADJUSTMENT) {
+          if (m_ci.names) {
+            if (value >= 0 && value < m_ci.nameCount) {
+              label << m_ci.names[value];
+            }
+          } else {
+            label << value;
+          }
+          if (m_ci.unit.length() > 0) {
+            label << wxT(" ") << m_ci.unit;
           }
         } else {
-          label << value * m_ci.stepValue;
+          // special case for range adjustment to display x.y %
+          double value1 = value / 10.;
+          label << value1;
+          if (m_ci.unit.length() > 0) {
+            label << wxT(" %");
+          }
         }
-        if (m_ci.unit.length() > 0) {
-          label << wxT(" ") << m_ci.unit;
-        }
+
         break;
 
       default:
@@ -240,7 +251,7 @@ void RadarControlButton::UpdateLabel(bool force) {
           label << _("Auto");
         }
         if (m_parent->m_ri->m_showManualValueInAuto) {
-          label << wxString::Format(wxT(" %d"), value * m_ci.stepValue);
+          label << wxString::Format(wxT(" %d"), value);
           if (m_ci.unit.length() > 0) {
             label << wxT(" ") << m_ci.unit;
           }
@@ -277,6 +288,7 @@ void RadarRangeControlButton::SetRangeLabel() {
 void RadarRangeControlButton::AdjustValue(int adjustment) {
   LOG_VERBOSE(wxT("%s Button '%s' adjust by %d"), m_parent->m_log_name.c_str(), GetName(), adjustment);
   m_item->UpdateState(RCS_MANUAL);
+  LOG_VERBOSE(wxT("range AdjustValue adjustment=%i"), adjustment);
   m_parent->m_ri->AdjustRange(adjustment);  // send new value to the radar
 }
 
@@ -318,7 +330,7 @@ bool ControlsDialog::Create(wxWindow* parent, radar_pi* ppi, RadarInfo* ri, wxWi
   m_pi = ppi;
   m_ri = ri;
 
-  m_log_name = wxString::Format(wxT("radar_pi: Radar %c ControlDialog:"), (char)(ri->m_radar + 'A'));
+  m_log_name = wxString::Format(wxT("Radar %c ControlDialog:"), (char)(ri->m_radar + 'A'));
 
 #ifdef __WXMSW__
   long wstyle = wxSYSTEM_MENU | wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN;
@@ -528,45 +540,19 @@ void ControlsDialog::CreateControls() {
    * Here be dragons...
    * Since I haven't been able to create buttons that adapt up, and at the same
    * time calculate the biggest button, and I want all buttons to be the same width I use a trick.
-   * I generate a multiline StaticText containing all the (long) button labels and find out what the
+   * I generate a multiline StaticText containing the longest button labels and find out what the
    * width of that is, and then generate the buttons using that width.
    * I know, this is a hack, but this way it works relatively nicely even with translations.
    */
 
   wxBoxSizer* testBox = new wxBoxSizer(wxVERTICAL);
   m_top_sizer->Add(testBox, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, BORDER);
-
   wxString label;
-  label << _("Scan speed") << wxT("\n");
-  label << _("Installation") << wxT("\n");
-  label << _("Antenna height") << wxT("\n");
-  label << _("Antenna forward of GPS") << wxT("\n");
   label << _("Antenna starboard of GPS") << wxT("\n");
   label << _("Local interference rej.") << wxT("\n");
-  label << _("Guard zones") << wxT("\n");
-  label << _("Zone type") << wxT("\n");
-  label << _("Guard zones") << wxT("\n");
-  label << _("Inner range") << wxT("\n");
-  label << _("Outer range") << wxT("\n");
-  label << _("Start bearing") << wxT("\n");
-  label << _("End bearing") << wxT("\n");
-  label << _("Clear cursor") << wxT("\n");
-  label << _("Place EBL/VRM") << wxT("\n");
   label << _("Off/Relative/True trails") << wxT("\n");
-  label << _("Clear trails") << wxT("\n");
-  label << _("Orientation") << wxT("\n");
   label << _("Overlay transparency") << wxT("\n");
-  label << _("Overlay") << wxT("\n");
-  label << _("Adjust") << wxT("\n");
-  label << _("Advanced") << wxT("\n");
-  label << _("View") << wxT("\n");
-  label << _("EBL/VRM") << wxT("\n");
   label << _("Timed Transmit") << wxT("\n");
-  label << _("Info") << wxT("\n");
-
-  for (int i = 0; i < CT_MAX; i++) {
-    label << _(ControlTypeNames[i]) << wxT("\n");
-  }
 
   wxStaticText* testMessage =
       new wxStaticText(this, ID_BPOS, label, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE | wxST_NO_AUTORESIZE);
@@ -684,6 +670,31 @@ void ControlsDialog::CreateControls() {
     m_advanced_sizer->Add(m_target_expansion_button, 0, wxALL, BORDER);
   }
 
+  // The STC button
+  if (m_ctrl[CT_STC].type) {
+    m_stc_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("STC"), m_ctrl[CT_STC], &m_ri->m_stc);
+    m_advanced_sizer->Add(m_stc_button, 0, wxALL, BORDER);
+  }
+
+  // The Fine tune button
+  if (m_ctrl[CT_TUNE_FINE].type) {
+    m_fine_tune_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("Fine tune"), m_ctrl[CT_TUNE_FINE], &m_ri->m_tune_fine);
+    m_advanced_sizer->Add(m_fine_tune_button, 0, wxALL, BORDER);
+  }
+
+  // The Cloarse tune button
+  if (m_ctrl[CT_TUNE_COARSE].type) {
+    m_coarse_tune_button =
+        new RadarControlButton(this, ID_CONTROL_BUTTON, _("Coarse tune"), m_ctrl[CT_TUNE_COARSE], &m_ri->m_coarse_tune);
+    m_advanced_sizer->Add(m_coarse_tune_button, 0, wxALL, BORDER);
+  }
+
+  // The STC curve button
+  if (m_ctrl[CT_STC_CURVE].type) {
+    m_stc_curve_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("STC curve"), m_ctrl[CT_STC_CURVE], &m_ri->m_stc_curve);
+    m_advanced_sizer->Add(m_stc_curve_button, 0, wxALL, BORDER);
+  }
+
   // The REJECTION button
 
   if (m_ctrl[CT_INTERFERENCE_REJECTION].type) {
@@ -740,6 +751,26 @@ void ControlsDialog::CreateControls() {
     m_installation_sizer->Add(m_bearing_alignment_button, 0, wxALL, BORDER);
   }
 
+  // The SCALING button
+  if (m_ctrl[CT_RANGE_ADJUSTMENT].type) {
+    m_range_adjustment_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("Range adjustment"), m_ctrl[CT_RANGE_ADJUSTMENT], &m_ri->m_range_adjustment);
+    m_installation_sizer->Add(m_range_adjustment_button, 0, wxALL, BORDER);
+  }
+
+  // The DISPLAY TIMING button
+  if (m_ctrl[CT_DISPLAY_TIMING].type) {
+    m_display_timing_button =
+        new RadarControlButton(this, ID_CONTROL_BUTTON, _("Display timing"), m_ctrl[CT_DISPLAY_TIMING], &m_ri->m_display_timing);
+    m_installation_sizer->Add(m_display_timing_button, 0, wxALL, BORDER);
+  }
+
+  // The MAINBANG SUPPRESSION button
+  if (m_ctrl[CT_MAIN_BANG_SUPPRESSION].type) {
+    m_main_bang_suppression_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("Main bang suppression"),
+                                                            m_ctrl[CT_MAIN_BANG_SUPPRESSION], &m_ri->m_main_bang_suppression);
+    m_installation_sizer->Add(m_main_bang_suppression_button, 0, wxALL, BORDER);
+  }
+
   // The NO TRANSMIT START button
   if (m_ctrl[CT_NO_TRANSMIT_START].type) {
     m_no_transmit_start_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("No transmit start"),
@@ -756,8 +787,8 @@ void ControlsDialog::CreateControls() {
 
   // The ANTENNA HEIGHT button
   if (m_ctrl[CT_ANTENNA_HEIGHT].type) {
-    m_antenna_height_button =
-        new RadarControlButton(this, ID_CONTROL_BUTTON, _("Antenna height"), m_ctrl[CT_ANTENNA_HEIGHT], &m_ri->m_antenna_height);
+    m_antenna_height_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("Antenna height"), m_ctrl[CT_ANTENNA_HEIGHT],
+                                                     &m_ri->m_antenna_height, _("m"));
     m_installation_sizer->Add(m_antenna_height_button, 0, wxALL, BORDER);
   }
 
@@ -885,6 +916,12 @@ void ControlsDialog::CreateControls() {
     m_adjust_sizer->Add(m_gain_button, 0, wxALL, BORDER);
   }
 
+  // The COLOR GAIN button
+  if (m_ctrl[CT_COLOR_GAIN].type) {
+    m_color_gain_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("Color Gain"), m_ctrl[CT_COLOR_GAIN], &m_ri->m_color_gain);
+    m_adjust_sizer->Add(m_color_gain_button, 0, wxALL, BORDER);
+  }
+
   // The SEA button
   if (m_ctrl[CT_SEA].type) {
     m_sea_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("Sea clutter"), m_ctrl[CT_SEA], &m_ri->m_sea);
@@ -901,6 +938,19 @@ void ControlsDialog::CreateControls() {
   if (m_ctrl[CT_FTC].type) {
     m_ftc_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("FTC"), m_ctrl[CT_FTC], &m_ri->m_ftc);
     m_adjust_sizer->Add(m_ftc_button, 0, wxALL, BORDER);
+  }
+
+  // The MODE button (Quantum only)
+  if (m_ctrl[CT_MODE].type) {
+    m_mode_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("MODE"), m_ctrl[CT_MODE], &m_ri->m_mode);
+    m_adjust_sizer->Add(m_mode_button, 0, wxALL, BORDER);
+  }
+
+  // The ALL_TO_AUTO button (Quantum only)
+  if (m_ctrl[CT_ALL_TO_AUTO].type) {
+    m_all_to_auto_button =
+        new RadarControlButton(this, ID_CONTROL_BUTTON, _("All_To_Auto"), m_ctrl[CT_ALL_TO_AUTO], &m_ri->m_all_to_auto);
+    m_adjust_sizer->Add(m_all_to_auto_button, 0, wxALL, BORDER);
   }
 
   m_top_sizer->Hide(m_adjust_sizer);
@@ -1000,6 +1050,13 @@ void ControlsDialog::CreateControls() {
   if (m_ctrl[CT_DOPPLER].type) {
     m_doppler_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("Doppler"), m_ctrl[CT_DOPPLER], &m_ri->m_doppler);
     m_view_sizer->Add(m_doppler_button, 0, wxALL, BORDER);
+  }
+
+  // The DOPPLERAUTOTRACK button
+  if (m_ctrl[CT_AUTOTTRACKDOPPLER].type) {
+    m_autotrack_doppler_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("DopplerAutoTrack"),
+                                                        m_ctrl[CT_AUTOTTRACKDOPPLER], &m_ri->m_autotrack_doppler);
+    m_view_sizer->Add(m_autotrack_doppler_button, 0, wxALL, BORDER);
   }
 
   // The TARGET_TRAIL button
@@ -1173,7 +1230,7 @@ void ControlsDialog::OnPlusTenClick(wxCommandEvent& event) {
 }
 
 void ControlsDialog::OnPlusClick(wxCommandEvent& event) {
-  m_from_control->AdjustValue(+1);
+  m_from_control->AdjustValue(m_from_control->m_ci.stepValue);
   m_auto_button->Enable();
   m_off_button->Enable();
 
@@ -1208,7 +1265,7 @@ void ControlsDialog::OnOffClick(wxCommandEvent& event) {
 }
 
 void ControlsDialog::OnMinusClick(wxCommandEvent& event) {
-  m_from_control->AdjustValue(-1);
+  m_from_control->AdjustValue(-m_from_control->m_ci.stepValue);
   m_auto_button->Enable();
   m_off_button->Enable();
 
@@ -1298,8 +1355,8 @@ void ControlsDialog::EnterEditMode(RadarControlButton* button) {
   if (m_from_control->m_ci.unit.length() > 0) {
     label1 << wxT("+") << m_from_control->m_ci.stepValue << wxT(" ") << m_from_control->m_ci.unit;
     label2 << wxT("-") << m_from_control->m_ci.stepValue << wxT(" ") << m_from_control->m_ci.unit;
-    label3 << wxT("+") << (10 * m_from_control->m_ci.stepValue) << wxT(" ") << m_from_control->m_ci.unit;
-    label4 << wxT("-") << (10 * m_from_control->m_ci.stepValue) << wxT(" ") << m_from_control->m_ci.unit;
+    label3 << wxT("+") << 10 << wxT(" ") << m_from_control->m_ci.unit;
+    label4 << wxT("-") << 10 << wxT(" ") << m_from_control->m_ci.unit;
   } else {
     if (m_from_control->m_ci.stepValue > 1) {
       label1 << wxT("+") << m_from_control->m_ci.stepValue;
@@ -1308,8 +1365,8 @@ void ControlsDialog::EnterEditMode(RadarControlButton* button) {
       label1 << wxT("+");
       label2 << wxT("-");
     }
-    label3 << wxT("+") << (10 * m_from_control->m_ci.stepValue);
-    label4 << wxT("-") << (10 * m_from_control->m_ci.stepValue);
+    label3 << wxT("+") << 10;
+    label4 << wxT("-") << 10;
   }
 
   m_plus_button->SetLabel(label1);
@@ -1372,7 +1429,7 @@ void ControlsDialog::OnRadarDockPPIButtonClick(wxCommandEvent& event) {
         newPerspective << wxT("|");
         newPerspective << perspective.AfterFirst(wxT('|'));
         m_ri->m_radar_panel->m_aui_mgr->LoadPerspective(newPerspective);
-        LOG_DIALOG(wxT("radar_pi: %s: new perspective %s"), m_ri->m_name.c_str(), newPerspective.c_str());
+        LOG_DIALOG(wxT("%s: new perspective %s"), m_ri->m_name.c_str(), newPerspective.c_str());
       }
     }
     m_ri->m_radar_panel->m_aui_mgr->Update();
@@ -1387,7 +1444,7 @@ void ControlsDialog::OnRadarDockPPIButtonClick(wxCommandEvent& event) {
       perspective = perspective.Mid(p + m_ri->m_radar_panel->m_dock.length());
       perspective = perspective.BeforeFirst(wxT('|'));
       m_pi->m_settings.dock_size = wxAtoi(perspective);
-      LOG_DIALOG(wxT("radar_pi: %s: replaced=%s, saved dock_size = %d"), m_ri->m_name.c_str(), perspective.c_str(),
+      LOG_DIALOG(wxT("%s: replaced=%s, saved dock_size = %d"), m_ri->m_name.c_str(), perspective.c_str(),
                  m_pi->m_settings.dock_size);
     }
 
@@ -1697,8 +1754,17 @@ void ControlsDialog::DisableRadarControls() {
   if (m_gain_button) {
     m_gain_button->Disable();
   }
+  if (m_color_gain_button) {
+    m_color_gain_button->Disable();
+  }
   if (m_rain_button) {
     m_rain_button->Disable();
+  }
+  if (m_mode_button) {
+    m_mode_button->Disable();
+  }
+  if (m_all_to_auto_button) {
+    m_all_to_auto_button->Disable();
   }
   if (m_interference_rejection_button) {
     m_interference_rejection_button->Disable();
@@ -1720,6 +1786,9 @@ void ControlsDialog::DisableRadarControls() {
   }
   if (m_bearing_alignment_button) {
     m_bearing_alignment_button->Disable();
+  }
+  if (m_range_adjustment_button) {
+    m_range_adjustment_button->Disable();
   }
   if (m_no_transmit_start_button) {
     m_no_transmit_start_button->Disable();
@@ -1748,6 +1817,27 @@ void ControlsDialog::DisableRadarControls() {
   if (m_doppler_button) {
     m_doppler_button->Disable();
   }
+  if (m_autotrack_doppler_button) {
+    m_autotrack_doppler_button->Disable();
+  }
+  if (m_stc_button) {
+    m_stc_button->Disable();
+  }
+  if (m_fine_tune_button) {
+    m_fine_tune_button->Disable();
+  }
+  if (m_coarse_tune_button) {
+    m_coarse_tune_button->Disable();
+  }
+  if (m_stc_curve_button) {
+    m_stc_curve_button->Disable();
+  }
+  if (m_display_timing_button) {
+    m_display_timing_button->Disable();
+  }
+  if (m_main_bang_suppression_button) {
+    m_main_bang_suppression_button->Disable();
+  }
 }
 
 void ControlsDialog::EnableRadarControls() {
@@ -1760,8 +1850,17 @@ void ControlsDialog::EnableRadarControls() {
   if (m_gain_button) {
     m_gain_button->Enable();
   }
+  if (m_color_gain_button) {
+    m_color_gain_button->Enable();
+  }
   if (m_rain_button) {
     m_rain_button->Enable();
+  }
+  if (m_mode_button) {
+    m_mode_button->Enable();
+  }
+  if (m_all_to_auto_button) {
+    m_all_to_auto_button->Enable();
   }
   if (m_interference_rejection_button) {
     m_interference_rejection_button->Enable();
@@ -1783,6 +1882,9 @@ void ControlsDialog::EnableRadarControls() {
   }
   if (m_bearing_alignment_button) {
     m_bearing_alignment_button->Enable();
+  }
+  if (m_range_adjustment_button) {
+    m_range_adjustment_button->Enable();
   }
   if (m_no_transmit_start_button) {
     m_no_transmit_start_button->Enable();
@@ -1810,6 +1912,27 @@ void ControlsDialog::EnableRadarControls() {
   }
   if (m_doppler_button) {
     m_doppler_button->Enable();
+  }
+  if (m_autotrack_doppler_button) {
+    m_autotrack_doppler_button->Enable();
+  }
+  if (m_stc_button) {
+    m_stc_button->Enable();
+  }
+  if (m_fine_tune_button) {
+    m_fine_tune_button->Enable();
+  }
+  if (m_coarse_tune_button) {
+    m_coarse_tune_button->Enable();
+  }
+  if (m_stc_curve_button) {
+    m_stc_curve_button->Enable();
+  }
+  if (m_display_timing_button) {
+    m_display_timing_button->Enable();
+  }
+  if (m_main_bang_suppression_button) {
+    m_main_bang_suppression_button->Enable();
   }
 }
 
@@ -1886,6 +2009,11 @@ void ControlsDialog::UpdateControlValues(bool refreshAll) {
     m_gain_button->UpdateLabel();
   }
 
+  // color gain
+  if (m_color_gain_button) {
+    m_color_gain_button->UpdateLabel();
+  }
+
   //  rain
   if (m_rain_button) {
     m_rain_button->UpdateLabel();
@@ -1899,6 +2027,16 @@ void ControlsDialog::UpdateControlValues(bool refreshAll) {
   //   sea
   if (m_sea_button) {
     m_sea_button->UpdateLabel();
+  }
+
+  //   mode (RM_Quantum)
+  if (m_mode_button) {
+    m_mode_button->UpdateLabel();
+  }
+
+  //   All to auto (RM_Quantum)
+  if (m_all_to_auto_button) {
+    m_all_to_auto_button->UpdateLabel();
   }
 
   //   target_boost
@@ -1941,6 +2079,11 @@ void ControlsDialog::UpdateControlValues(bool refreshAll) {
     m_bearing_alignment_button->UpdateLabel();
   }
 
+  // scaling
+  if (m_range_adjustment_button) {
+    m_range_adjustment_button->UpdateLabel();
+  }
+
   //  no transmit zone
   if (m_no_transmit_start_button) {
     m_no_transmit_start_button->UpdateLabel();
@@ -1969,6 +2112,26 @@ void ControlsDialog::UpdateControlValues(bool refreshAll) {
     m_antenna_forward_button->UpdateLabel();
   }
 
+  if (m_stc_button) {
+    m_stc_button->UpdateLabel();
+  }
+
+  if (m_fine_tune_button) {
+    m_fine_tune_button->UpdateLabel(true);
+  }
+  if (m_coarse_tune_button) {
+    m_coarse_tune_button->UpdateLabel();
+  }
+  if (m_stc_curve_button) {
+    m_stc_curve_button->UpdateLabel();
+  }
+  if (m_display_timing_button) {
+    m_display_timing_button->UpdateLabel();
+  }
+  if (m_main_bang_suppression_button) {
+    m_main_bang_suppression_button->UpdateLabel();
+  }
+
   // For these we can't use the modified state as they are shared amongst all
   // radars and thus the modified state is reset on the first radar checking it.
   if (m_transparency_button) {
@@ -1983,11 +2146,12 @@ void ControlsDialog::UpdateControlValues(bool refreshAll) {
   if (m_refresh_rate_button) {
     m_refresh_rate_button->UpdateLabel(true);
   }
-
   if (m_doppler_button) {
     m_doppler_button->UpdateLabel();
   }
-
+  if (m_autotrack_doppler_button) {
+    m_autotrack_doppler_button->UpdateLabel();
+  }
   if (updateEditDialog) {
     // Update the text that is currently shown in the edit box, this is a copy of the button itself
     EnterEditMode(m_from_control);
@@ -2063,11 +2227,7 @@ void ControlsDialog::UpdateDialogShown(bool resize) {
       SetPosition(newPos);
       LOG_DIALOG(wxT("%s show control menu over menu button"), m_log_name.c_str());
     } else if (controlInitialShow) {  // When all else fails set it to default position
-#ifdef __WXOSX__
-      SetPosition(wxPoint(100 + (int)m_ri->m_radar * 100, 100));
-#else
       SetPosition(wxPoint(100 + m_ri->m_radar * 100, 100));
-#endif
       LOG_DIALOG(wxT("%s show control menu at initial location"), m_log_name.c_str());
     }
     EnsureWindowNearOpenCPNWindow();  // If the position is really weird, move it
@@ -2136,11 +2296,7 @@ void ControlsDialog::OnStart_Bearing_Value(wxCommandEvent& event) {
   while (t < 0) {
     t += 360;
   }
-#ifdef __WXOSX__
-  m_guard_zone->SetStartBearing((int)t);
-#else
   m_guard_zone->SetStartBearing(t);
-#endif
 }
 
 void ControlsDialog::OnEnd_Bearing_Value(wxCommandEvent& event) {
@@ -2154,11 +2310,7 @@ void ControlsDialog::OnEnd_Bearing_Value(wxCommandEvent& event) {
   while (t < 0) {
     t += 360;
   }
-#ifdef __WXOSX__
-  m_guard_zone->SetEndBearing((int)t);
-#else
   m_guard_zone->SetEndBearing(t);
-#endif
 }
 
 void ControlsDialog::OnARPAClick(wxCommandEvent& event) {

@@ -1,5 +1,5 @@
 /* *************************************************************************
- *
+
  * Project:  OpenCPN
  * Purpose:  Radar Plugin
  * Author:   David Register
@@ -28,18 +28,25 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************
- * The filter used here is an "Extended Kalman Filter"
- * For a general introduction see Wikipedia.
- * For the formula used here see "An Introduction to the Kalman Filter"
- * Greg Welch and Gary Bishop, TR45-041, Department of Computer Science,
- * University of North Carolina at Chapel Hill
- * July 24, 2006
+ The filter used here is an "Extended Kalman Filter"  For a general introduction see
+ Wikipedia.
+ For the formula used here see "An Introduction to the Kalman Filter"
+ Greg Welch and Gary Bishop, TR45-041, Department of Computer Science,
+ University of North Carolina at Chapel Hill
+ July 24, 2006
+
  */
 
-#include "Kalman.h"
-#include "RadarInfo.h"
+#include "../include/Kalman.h"
+
+#include "../include/RadarInfo.h"
 
 PLUGIN_BEGIN_NAMESPACE
+
+static Matrix<double, 4, 2> ZeroMatrix42;
+static Matrix<double, 2, 4> ZeroMatrix24;
+static Matrix<double, 4> ZeroMatrix4;
+static Matrix<double, 2> ZeroMatrix2;
 
 KalmanFilter::KalmanFilter(size_t spokes) {
   m_spokes = spokes;

@@ -28,9 +28,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "OptionsDialog.h"
-#include "RadarDraw.h"
-#include "radar_pi.h"
+#include "../include/OptionsDialog.h"
+
+#include "../include/RadarDraw.h"
+#include "../include/radar_pi.h"
 
 PLUGIN_BEGIN_NAMESPACE
 
@@ -367,11 +368,8 @@ void OptionsDialog::OnSelectSoundClick(wxCommandEvent &event) {
 
 void OptionsDialog::OnGuardZoneTimeoutClick(wxCommandEvent &event) {
   wxString temp = m_GuardZoneTimeout->GetValue();
-#ifdef __WXOSX__
-  m_settings.guard_zone_timeout = (int)strtol(temp.c_str(), 0, 0);
-#else
+
   m_settings.guard_zone_timeout = strtol(temp.c_str(), 0, 0);
-#endif
 }
 
 void OptionsDialog::OnEnableCOGHeadingClick(wxCommandEvent &event) { m_settings.enable_cog_heading = m_COGHeading->GetValue(); }

@@ -1,4 +1,4 @@
-/* *************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Radar Plugin
@@ -12,23 +12,25 @@
  *   Copyright (C) 2012-2013 by Dave Cowell                                *
  *   Copyright (C) 2012-2016 by Kees Verruijt         canboat@verruijt.net *
  *                                                                         *
- *   This m_program is free software; you can redistribute it and/or modify*
+ *   This m_program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
- *   This m_program is distributed in the hope that it will be useful,     *
+ *   This m_program is distributed in the hope that it will be useful,       *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
  *                                                                         *
  *   You should have received a copy of the GNU General Public License     *
- *   along with this m_program; if not, write to the                       *
+ *   along with this m_program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "RadarDrawShader.h"
+
 #include "RadarInfo.h"
 #include "drawutil.h"
 #include "shaderutil.h"
@@ -78,7 +80,7 @@ bool RadarDrawShader::Init(size_t spokes, size_t spoke_len_max) {
   m_spoke_len_max = spoke_len_max;
 
   if (!CompileShader && !ShadersSupported()) {
-    wxLogError(wxT("radar_pi: the OpenGL system of this computer does not support shader m_programs"));
+    wxLogError(wxT("the OpenGL system of this computer does not support shader m_programs"));
     return false;
   }
 
@@ -86,13 +88,13 @@ bool RadarDrawShader::Init(size_t spokes, size_t spoke_len_max) {
 
   if (!CompileShaderText(&m_vertex, GL_VERTEX_SHADER, VertexShaderText) ||
       !CompileShaderText(&m_fragment, GL_FRAGMENT_SHADER, FragmentShaderColorText)) {
-    wxLogError(wxT("radar_pi: the OpenGL system of this computer failed to compile shader programs"));
+    wxLogError(wxT("the OpenGL system of this computer failed to compile shader programs"));
     return false;
   }
 
   m_program = LinkShaders(m_vertex, m_fragment);
   if (m_program == 0) {
-    wxLogError(wxT("radar_pi: GPU oriented OpenGL failed to link shader program"));
+    wxLogError(wxT("GPU oriented OpenGL failed to link shader program"));
     return false;
   }
 
@@ -107,13 +109,8 @@ bool RadarDrawShader::Init(size_t spokes, size_t spoke_len_max) {
   glTexImage2D(/* target          = */ GL_TEXTURE_2D,
                /* level           = */ 0,
                /* internal_format = */ m_format,
-#ifdef __WXOSX__
-               /* width           = */ (int)m_spoke_len_max,
-               /* heigth          = */ (int)m_spokes,
-#else
                /* width           = */ m_spoke_len_max,
                /* heigth          = */ m_spokes,
-#endif
                /* border          = */ 0,
                /* format          = */ m_format,
                /* type            = */ GL_UNSIGNED_BYTE,
@@ -182,11 +179,7 @@ void RadarDrawShader::DrawRadarOverlayImage(double radar_scale, double panel_rot
                       /* level =    */ 0,
                       /* x-offset = */ 0,
                       /* y-offset = */ 0,
-#ifdef __WXOSX__
-                      /* width =    */ (int)m_spoke_len_max,
-#else
                       /* width =    */ m_spoke_len_max,
-#endif
                       /* height =   */ end_line,
                       /* format =   */ m_format,
                       /* type =     */ GL_UNSIGNED_BYTE,
@@ -196,13 +189,8 @@ void RadarDrawShader::DrawRadarOverlayImage(double radar_scale, double panel_rot
                       /* level =    */ 0,
                       /* x-offset = */ 0,
                       /* y-offset = */ m_start_line,
-#ifdef __WXOSX__
-                      /* width =    */ (int)m_spoke_len_max,
-                      /* height =   */ (int)m_spokes - m_start_line,
-#else
                       /* width =    */ m_spoke_len_max,
                       /* height =   */ m_spokes - m_start_line,
-#endif
                       /* format =   */ m_format,
                       /* type =     */ GL_UNSIGNED_BYTE,
                       /* pixels =   */ m_data + m_start_line * m_spoke_len_max * m_channels);
@@ -212,11 +200,7 @@ void RadarDrawShader::DrawRadarOverlayImage(double radar_scale, double panel_rot
                       /* level =    */ 0,
                       /* x-offset = */ 0,
                       /* y-offset = */ m_start_line,
-#ifdef __WXOSX__
-                      /* width =    */ (int)m_spoke_len_max,
-#else
                       /* width =    */ m_spoke_len_max,
-#endif
                       /* height =   */ m_lines,
                       /* format =   */ m_format,
                       /* type =     */ GL_UNSIGNED_BYTE,

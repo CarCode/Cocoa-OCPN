@@ -29,7 +29,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "socketutil.h"
+#include "../include/socketutil.h"
 
 PLUGIN_BEGIN_NAMESPACE
 
@@ -61,11 +61,7 @@ int radar_inet_aton(const char *cp, struct in_addr *addr) {
     if (c == '0') {
       c = *++cp;
       if (c == 'x' || c == 'X') {
-#ifdef __WXOSX__
-          base = 16; c = *++cp;
-#else
-          base = 16, c = *++cp;
-#endif
+          static_cast<void>(base = 16), c = *++cp;
       } else {
         base = 8;
       }
@@ -91,11 +87,7 @@ int radar_inet_aton(const char *cp, struct in_addr *addr) {
       if (pp >= parts + 3) {
         return 0;
       }
-#ifdef __WXOSX__
-      *pp++ = (int)val;
-#else
       *pp++ = val;
-#endif
       c = *++cp;
     } else {
       break;
@@ -108,14 +100,10 @@ int radar_inet_aton(const char *cp, struct in_addr *addr) {
     return 0;
   }
   /*
-   * Concoct(?) the address according to
+   * Concoct the address according to
    * the number of parts specified.
    */
-#ifdef __WXOSX__
-  int n = (int)(pp - parts + 1);
-#else
   int n = pp - parts + 1;
-#endif
   switch (n) {
     case 0:
       return 0; /* initial nondigit */
@@ -158,7 +146,7 @@ bool socketReady(SOCKET sockfd, int timeout) {
   FD_ZERO(&fdin);
   if (sockfd != INVALID_SOCKET) {
     FD_SET(sockfd, &fdin);
-    r = select(sockfd + 1, &fdin, 0, &fdin, &tv);
+    r = select(sockfd + 1, &fdin, 0, 0, &tv);
   } else {
 #ifndef __WXMSW__
     // Common UNIX style sleep, unlike 'sleep' this causes no alarms
@@ -180,7 +168,7 @@ SOCKET startUDPMulticastReceiveSocket(const NetworkAddress &interface_address, c
   int one = 1;
 
   CLEAR_STRUCT(listenAddress);
-#ifdef __WXOSX__
+#ifdef __WXMAC__xxx
   listenAddress.sin_len = sizeof(listenAddress);
 #endif
   listenAddress.sin_family = AF_INET;
@@ -223,8 +211,8 @@ bool socketAddMembership(SOCKET socket, const NetworkAddress &interface_address,
   mreq.imr_multiaddr = mcast_address.addr;
 
   if (setsockopt(socket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (const char *)&mreq, sizeof(mreq))) {
-    wxLogMessage(wxT("radar_pi: failed to add multicast reception for %s on interface %s"),
-                 mcast_address.FormatNetworkAddressPort(), interface_address.FormatNetworkAddress());
+    wxLogMessage(wxT("failed to add multicast reception for %s on interface %s"), mcast_address.FormatNetworkAddressPort(),
+                 interface_address.FormatNetworkAddress());
     return true;
   }
 
@@ -237,7 +225,7 @@ SOCKET GetLocalhostServerTCPSocket() {
   struct sockaddr_in adr;
 
   CLEAR_STRUCT(adr);
-#ifdef __WXOSX__
+#ifdef __WXMAC__
   adr.sin_len = sizeof(adr);
 #endif
   adr.sin_family = AF_INET;
@@ -245,12 +233,12 @@ SOCKET GetLocalhostServerTCPSocket() {
   adr.sin_port = 0;
 
   if (server == INVALID_SOCKET) {
-    wxLogError(wxT("radar_pi: cannot get socket"));
+    wxLogError(wxT("cannot get socket"));
     return INVALID_SOCKET;
   }
 
   if (::bind(server, (struct sockaddr *)&adr, sizeof(adr)) < 0) {
-    wxLogError(wxT("radar_pi: cannot bind socket to loopback address"));
+    wxLogError(wxT("cannot bind socket to loopback address"));
     closesocket(server);
     return INVALID_SOCKET;
   }
@@ -267,18 +255,18 @@ SOCKET GetLocalhostSendTCPSocket(SOCKET server) {
   adrlen = sizeof(adr);
 
   if (client == INVALID_SOCKET) {
-    wxLogError(wxT("radar_pi: cannot get socket"));
+    wxLogError(wxT("cannot get socket"));
     return INVALID_SOCKET;
   }
 
   if (getsockname(server, (struct sockaddr *)&adr, &adrlen)) {
-    wxLogError(wxT("radar_pi: cannot get sockname"));
+    wxLogError(wxT("cannot get sockname"));
     closesocket(client);
     return INVALID_SOCKET;
   }
 
   if (connect(client, (struct sockaddr *)&adr, adrlen)) {
-    wxLogError(wxT("radar_pi: cannot connect socket"));
+    wxLogError(wxT("cannot connect socket"));
     closesocket(client);
     return INVALID_SOCKET;
   }
@@ -293,12 +281,12 @@ int getifaddrs(struct ifaddrs **ifap) {
 
   int sock = socket(AF_INET, SOCK_DGRAM, 0);
   if (sock < 0) {
-    wxLogError(wxT("radar_pi: Cannot get socket"));
+    wxLogError(wxT("Cannot get socket"));
     return -1;
   }
 
   if (WSAIoctl(sock, SIO_GET_INTERFACE_LIST, 0, 0, buf, sizeof(buf), &bytesReturned, 0, 0) < 0) {
-    wxLogError(wxT("radar_pi: Cannot get interface list"));
+    wxLogError(wxT("Cannot get interface list"));
     closesocket(sock);
     return -1;
   }

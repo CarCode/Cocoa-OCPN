@@ -7,6 +7,7 @@
  *           Kees Verruijt
  *           Douwe Fokkema
  *           Sean D'Epagnier
+ *           Andrei Bankovs: Raymarine radars
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register              bdbcat@yahoo.com *
  *   Copyright (C) 2012-2013 by Dave Cowell                                *
@@ -28,19 +29,27 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "radar_pi.h"
-#include "GuardZone.h"
-#include "GuardZoneBogey.h"
-#include "Kalman.h"
-#include "MessageBox.h"
-#include "OptionsDialog.h"
-#include "RadarMarpa.h"
-#include "SelectDialog.h"
-#include "icons.h"
-#include "navico/NavicoLocate.h"
-#include "nmea0183/nmea0183.h"
+#define RADAR_PI_GLOBALS
 
-PLUGIN_BEGIN_NAMESPACE
+#include "nmea0183.h"
+#include "nmea0183.hpp"
+#include "../include/radar_pi.h"
+#include "../include/GuardZone.h"
+#include "../include/GuardZoneBogey.h"
+#include "../include/Kalman.h"
+#include "../include/MessageBox.h"
+#include "../include/OptionsDialog.h"
+#include "../include/RadarMarpa.h"
+#include "../include/SelectDialog.h"
+#include "../include/icons.h"
+
+#include "navico/NavicoLocate.h"
+
+
+#include "raymarine/RaymarineLocate.h"
+
+namespace RadarPlugin {
+using ::NMEA0183;
 
 #undef M_SETTINGS
 #define M_SETTINGS m_settings
@@ -51,9 +60,9 @@ extern "C" DECL_EXP opencpn_plugin *create_pi(void *ppimgr) { return new radar_p
 
 extern "C" DECL_EXP void destroy_pi(opencpn_plugin *p) { delete p; }
 
-/********************************************************************************************************/
+/* *****************************************************************************************************/
 //   Distance measurement for simple sphere
-/********************************************************************************************************/
+/* *****************************************************************************************************/
 
 double local_distance(GeoPosition pos1, GeoPosition pos2) {
   double s1 = deg2rad(pos1.lat);
@@ -109,9 +118,12 @@ static double radar_distance(GeoPosition pos1, GeoPosition pos2, char unit) {
 //---------------------------------------------------------------------------------------------------------
 
 enum { TIMER_ID = 51 };
+enum { UPDATE_TIMER_ID = 52 };
 
+#define UPDATE_INTERVAL 500
 BEGIN_EVENT_TABLE(radar_pi, wxEvtHandler)
 EVT_TIMER(TIMER_ID, radar_pi::OnTimerNotify)
+EVT_TIMER(UPDATE_TIMER_ID, radar_pi::TimedUpdate)
 END_EVENT_TABLE()
 
 //---------------------------------------------------------------------------------------------------------
@@ -120,7 +132,10 @@ END_EVENT_TABLE()
 //
 //---------------------------------------------------------------------------------------------------------
 
-radar_pi::radar_pi(void *ppimgr) : opencpn_plugin_116(ppimgr) {
+radar_pi::radar_pi(void *ppimgr) 
+  : opencpn_plugin_116(ppimgr)
+  , m_raymarine_locator(0) 
+{
   m_boot_time = wxGetUTCTimeMillis();
   m_initialized = false;
   m_predicted_position_initialised = false;
@@ -135,6 +150,7 @@ radar_pi::radar_pi(void *ppimgr) : opencpn_plugin_116(ppimgr) {
   m_opencpn_gl_context_broken = false;
 
   m_timer = 0;
+  m_update_timer = 0;
   for (int r = 0; r < RADARS; r++) {
     m_context_menu_control_id[r] = -1;
   }
@@ -159,15 +175,14 @@ int radar_pi::Init(void) {
   if (m_first_init) {
 #ifdef __WXMSW__
     WSADATA wsaData;
-
     // Initialize Winsock
     DWORD r = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (r != 0) {
-      wxLogError(wxT("radar_pi: Unable to initialise Windows Sockets, error %d"), r);
+      wxLogError(wxT("Unable to initialise Windows Sockets, error %d"), r);
       // Might as well give up now
       return 0;
     }
-    wxLogMessage(wxT("radar_pi: Windows sockets initialized"));
+    LOG_TRANSMIT(wxT("Windows sockets initialized"));
 #endif
 
     AddLocaleCatalog(_T("opencpn-radar_pi"));
@@ -209,7 +224,6 @@ int radar_pi::Init(void) {
   m_notify_control_dialog = false;
 
   m_render_busy = false;
-
   m_bogey_dialog = 0;
   m_alarm_sound_timeout = 0;
   m_guard_bogey_timeout = 0;
@@ -222,7 +236,6 @@ int radar_pi::Init(void) {
   m_cog = 0.;
   m_COGAvg = 0.;
   m_heading_source = HEADING_NONE;
-  m_radar_heading = nanl("");
   m_vp_rotation = 0.;
   m_arpa_max_range = BASE_ARPA_DIST;
 
@@ -234,24 +247,22 @@ int radar_pi::Init(void) {
   m_settings.threshold_blue = 255;
   m_settings.threshold_red = 255;
   m_settings.threshold_green = 255;
-  CLEAR_STRUCT(m_settings.radar_interface_address);
   m_settings.radar_count = 0;
 
   // Get a pointer to the opencpn display canvas, to use as a parent for the UI
   // dialog
   m_parent_window = GetOCPNCanvasWindow();
 #ifdef __WXOSX__
-  m_shareLocn = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator() + _T("plugins") + wxFileName::GetPathSeparator() + _T("radar_pi") +
+    m_shareLocn = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator() + _T("plugins") + wxFileName::GetPathSeparator() + _T("radar_pi") + wxFileName::GetPathSeparator() + _T("data") + wxFileName::GetPathSeparator();
 #else
-  m_shareLocn = *GetpSharedDataLocation() + _T("plugins") + wxFileName::GetPathSeparator() + _T("radar_pi") +
+  m_shareLocn = GetPluginDataDir("radar_pi") + wxFileName::GetPathSeparator() + _T("data") + wxFileName::GetPathSeparator();
 #endif
-                wxFileName::GetPathSeparator() + _T("data") + wxFileName::GetPathSeparator();
-
   m_pMessageBox = new MessageBox;
   m_pMessageBox->Create(m_parent_window, this);
   LOG_INFO(wxT(PLUGIN_VERSION_WITH_DATE));
 
-  m_locator = 0;
+  m_navico_locator = 0;
+  m_raymarine_locator = 0;
 
   // Create objects before config, so config can set data in it
   // This does not start any threads or generate any UI.
@@ -270,22 +281,22 @@ int radar_pi::Init(void) {
 
   //    And load the configuration items
   if (LoadConfig()) {
-    LOG_INFO(wxT("radar_pi: Configuration file values initialised"));
-    LOG_INFO(wxT("radar_pi: Log verbosity = %d. To modify, set VerboseLog to sum of:"), m_settings.verbose);
-    LOG_INFO(wxT("radar_pi: VERBOSE  = %d"), LOGLEVEL_VERBOSE);
-    LOG_INFO(wxT("radar_pi: DIALOG   = %d"), LOGLEVEL_DIALOG);
-    LOG_INFO(wxT("radar_pi: TRANSMIT = %d"), LOGLEVEL_TRANSMIT);
-    LOG_INFO(wxT("radar_pi: RECEIVE  = %d"), LOGLEVEL_RECEIVE);
-    LOG_INFO(wxT("radar_pi: GUARD    = %d"), LOGLEVEL_GUARD);
-    LOG_INFO(wxT("radar_pi: ARPA     = %d"), LOGLEVEL_ARPA);
-    LOG_VERBOSE(wxT("radar_pi: VERBOSE  log is enabled"));
-    LOG_DIALOG(wxT("radar_pi: DIALOG   log is enabled"));
-    LOG_TRANSMIT(wxT("radar_pi: TRANSMIT log is enabled"));
-    LOG_RECEIVE(wxT("radar_pi: RECEIVE  log is enabled"));
-    LOG_GUARD(wxT("radar_pi: GUARD    log is enabled"));
-    LOG_ARPA(wxT("radar_pi: ARPA     log is enabled"));
+    LOG_INFO(wxT("Configuration file values initialised"));
+    LOG_INFO(wxT("Log verbosity = %d. To modify, set VerboseLog to sum of:"), m_settings.verbose);
+    LOG_INFO(wxT("VERBOSE  = %d"), LOGLEVEL_VERBOSE);
+    LOG_INFO(wxT("DIALOG   = %d"), LOGLEVEL_DIALOG);
+    LOG_INFO(wxT("TRANSMIT = %d"), LOGLEVEL_TRANSMIT);
+    LOG_INFO(wxT("RECEIVE  = %d"), LOGLEVEL_RECEIVE);
+    LOG_INFO(wxT("GUARD    = %d"), LOGLEVEL_GUARD);
+    LOG_INFO(wxT("ARPA     = %d"), LOGLEVEL_ARPA);
+    LOG_VERBOSE(wxT("VERBOSE  log is enabled"));
+    LOG_DIALOG(wxT("DIALOG   log is enabled"));
+    LOG_TRANSMIT(wxT("TRANSMIT log is enabled"));
+    LOG_RECEIVE(wxT("RECEIVE  log is enabled"));
+    LOG_GUARD(wxT("GUARD    log is enabled"));
+    LOG_ARPA(wxT("ARPA     log is enabled"));
   } else {
-    wxLogError(wxT("radar_pi: configuration file values initialisation failed"));
+    wxLogError(wxT("configuration file values initialisation failed"));
     return 0;  // give up
   }
   //    This PlugIn needs a toolbar icon
@@ -297,21 +308,14 @@ int radar_pi::Init(void) {
                                   _("Radar plugin with support for multiple radars"), NULL, RADAR_TOOL_POSITION, 0, this);
 
   // CacheSetToolbarToolBitmaps(BM_ID_RED, BM_ID_BLANK);
-
   // Now that the settings are made we can initialize the RadarInfos
   for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
     m_radar[r]->Init();
-    if ((m_radar[r]->m_radar_type == RT_3G || m_radar[r]->m_radar_type == RT_4GA || m_radar[r]->m_radar_type == RT_HaloA) && m_locator == NULL) {
-      m_locator = new NavicoLocate(this);
-      if (m_locator->Run() != wxTHREAD_NO_ERROR) {
-        wxLogError(wxT("radar_pi: unable to start Navico Radar Locator thread"));
-        return 0;
-      }
-    }
+    StartRadarLocators(r);
   }
   // and get rid of any radars we're not using
   for (size_t r = M_SETTINGS.radar_count; r < RADARS; r++) {
-    delete m_radar[r];
+    if (m_radar[r]) delete m_radar[r];
     m_radar[r] = 0;
   }
 
@@ -354,15 +358,36 @@ int radar_pi::Init(void) {
   m_context_menu_arpa = false;
   SetCanvasContextMenuItemViz(m_context_menu_show_id, false);
 
-  LOG_VERBOSE(wxT("radar_pi: Initialized plugin transmit=%d/%d "), m_settings.show_radar[0], m_settings.show_radar[1]);
+  LOG_VERBOSE(wxT("Initialized plugin transmit=%d/%d "), m_settings.show_radar[0], m_settings.show_radar[1]);
 
   m_notify_time_ms = 0;
   m_timer = new wxTimer(this, TIMER_ID);
+  m_update_timer = new wxTimer(this, UPDATE_TIMER_ID);
+  m_update_timer->Start(UPDATE_INTERVAL);
 
   return PLUGIN_OPTIONS;
 }
 
-/*
+void radar_pi::StartRadarLocators(size_t r) {
+  if ((m_radar[r]->m_radar_type == RT_3G || m_radar[r]->m_radar_type == RT_4GA || m_radar[r]->m_radar_type == RT_HaloA ||
+       m_radar[r]->m_radar_type == RT_HaloB) &&
+      m_navico_locator == NULL) {
+    m_navico_locator = new NavicoLocate(this);
+    if (m_navico_locator->Run() != wxTHREAD_NO_ERROR) {
+      wxLogError(wxT("unable to start Navico Radar Locator thread"));
+    }
+  }
+  if ((m_radar[r]->m_radar_type == RM_E120 || m_radar[r]->m_radar_type == RM_QUANTUM) && m_raymarine_locator == NULL) {
+    m_raymarine_locator = new RaymarineLocate(this);
+    if (m_raymarine_locator->Run() != wxTHREAD_NO_ERROR) {
+      wxLogError(wxT("unable to start Raymarine Radar Locator thread"));
+    } else {
+      LOG_INFO(wxT("radar_pi Raymarine locator started"));
+    }
+  }
+}
+
+/**
  * DeInit() is called when OpenCPN is quitting or when the user disables the plugin.
  *
  * This should get rid of all on-screen objects and deallocate memory.
@@ -373,7 +398,7 @@ bool radar_pi::DeInit(void) {
     return false;
   }
 
-  LOG_VERBOSE(wxT("radar_pi: DeInit of plugin"));
+  LOG_INFO(wxT("DeInit of plugin"));
 
   m_initialized = false;
 
@@ -382,11 +407,25 @@ bool radar_pi::DeInit(void) {
     delete m_timer;
     m_timer = 0;
   }
-
-  if (m_locator) {
-    m_locator->Shutdown();
+  if (m_update_timer) {
+    m_update_timer->Stop();
+    delete m_update_timer;
+    m_update_timer = 0;
   }
 
+  if (m_navico_locator) {
+    m_navico_locator->Shutdown();
+    m_navico_locator->Wait();
+  }
+  delete m_navico_locator;
+  m_navico_locator = 0;
+
+  if (m_raymarine_locator) {
+    m_raymarine_locator->Shutdown();
+    m_raymarine_locator->Wait();
+  }
+  delete m_raymarine_locator;
+  m_raymarine_locator = 0;
   // Stop processing in all radars.
   // This waits for the receive threads to stop and removes the dialog, so that its settings
   // can be saved.
@@ -398,7 +437,6 @@ bool radar_pi::DeInit(void) {
     delete m_bogey_dialog;  // This will also save its current pos in m_settings
     m_bogey_dialog = 0;
   }
-
   SaveConfig();
 
   RemoveCanvasContextMenuItem(m_context_menu_show_id);
@@ -414,15 +452,28 @@ bool radar_pi::DeInit(void) {
     m_radar[r] = 0;
   }
 
-  if (m_locator != NULL) {
-    delete m_locator;
-    m_locator = 0;
+  if (m_navico_locator != NULL) {
+    delete m_navico_locator;
+    m_navico_locator = 0;
   }
 
-  delete m_pMessageBox;
+  if (m_raymarine_locator != NULL) {
+    delete m_raymarine_locator;
+    m_raymarine_locator = 0;
+  }
+
+  if (m_pMessageBox) {
+    delete m_pMessageBox;
+    m_pMessageBox = 0;
+  }
+
+  if (m_GPS_filter) {
+    delete m_GPS_filter;
+    m_GPS_filter = 0;
+  }
 
   // No need to delete wxWindow stuff, wxWidgets does this for us.
-  LOG_VERBOSE(wxT("radar_pi: DeInit of plugin done"));
+  LOG_VERBOSE(wxT("DeInit of plugin done"));
   return true;
 }
 
@@ -441,7 +492,7 @@ wxString radar_pi::GetCommonName() { return wxT("Radar"); }
 wxString radar_pi::GetShortDescription() { return _("Radar PlugIn"); }
 
 wxString radar_pi::GetLongDescription() {
-  return _("Radar PlugIn with support for Garmin and Navico radars") + wxT("\n") + wxT(PLUGIN_VERSION_WITH_DATE);
+  return _("Radar PlugIn with support for Garmin, Raymarine and Navico radars") + wxT("\n") + wxT(PLUGIN_VERSION_WITH_DATE);
 }
 
 void radar_pi::SetDefaults(void) {
@@ -464,70 +515,63 @@ bool radar_pi::EnsureRadarSelectionComplete(bool force) {
     return true;
   }
 
-  LOG_DIALOG(wxT("radar_pi: EnsureRadarSelectionComplete not yet so show selection dialog"));
+  LOG_DIALOG(wxT("EnsureRadarSelectionComplete not yet so show selection dialog"));
   return MakeRadarSelection();
 }
 
 bool radar_pi::MakeRadarSelection() {
   bool ret = false;
-
-  RadarType oldRadarType[RADARS];
 #ifdef __WXOSX__
     int r;
 #else
   size_t r;
 #endif
-  for (r = 0; r < RADARS; r++) {
-    if (m_radar[r]) {
-      oldRadarType[r] = m_radar[r]->m_radar_type;
-      LOG_INFO(wxT("OLD radarnr= %i, type = %i"), r, m_radar[r]->m_radar_type);
-    } else {
-      oldRadarType[r] = RT_MAX;
-    }
-  }
-
-//  NetworkAddress null = NetworkAddress(wxT(""));  // Not used
-#define CLEAR_RADAR_INFO                         \
-  CLEAR_STRUCT(m_settings.navico_radar_info[r]); \
-  m_settings.navico_radar_info[r].serialNr = wxT(" ");
-
   m_initialized = false;
   SelectDialog dlg(m_parent_window, this);
   if (dlg.ShowModal() == wxID_OK) {
+    // stop the locators, otherwise they keep running without radars
+    if (m_navico_locator) {
+      m_navico_locator->Shutdown();
+      m_navico_locator->Wait();
+    }
+    delete m_navico_locator;
+    m_navico_locator = 0;
+    LOG_INFO(wxT("Navico locator deleted by MakeRadarSelection"));
+    if (m_raymarine_locator) {
+      m_raymarine_locator->Shutdown();
+      m_raymarine_locator->Wait();
+    }
+    delete m_raymarine_locator;
+    m_raymarine_locator = 0;
+    LOG_INFO(wxT("Raymarine locator deleted by MakeRadarSelection"));
+
+    // delete all radars
+    for (size_t r = 0; r < m_settings.radar_count; r++) {
+      if (m_radar[r]) {
+        m_radar[r]->Shutdown();
+        LOG_INFO(wxT("Shutdown radar %i done"), r);
+        RemoveCanvasContextMenuItem(m_context_menu_control_id[r]);
+        delete m_radar[r];
+        m_radar[r] = 0;
+
+        LOG_INFO(wxT("Shutdown radar %i ready"), r);
+      }
+    }
+    LOG_INFO(wxT("All radars deleted by MakeRadarSelection"));
     m_settings.radar_count = 0;
     r = 0;
     for (size_t i = 0; i < RT_MAX; i++) {
       if (dlg.m_selected[i]->GetValue()) {
         if (!m_radar[r]) {
-          m_settings.window_pos[r] = wxPoint(100 + 512 * (int)r, 100);
+          m_settings.window_pos[r] = wxPoint(100 + 512 * r, 100);
           m_settings.control_pos[r] = wxDefaultPosition;
-          CLEAR_RADAR_INFO;
-          m_radar[r] = new RadarInfo(this, (int)r);        
+          m_radar[r] = new RadarInfo(this, r);
         }
-        m_radar[r]->m_radar_type = (RadarType)i;
+        m_radar[r]->m_radar_type = (RadarType)i;  // modify type of existing radar ?
+        StartRadarLocators(r);
         r++;
         m_settings.radar_count = r;
         ret = true;
-      }
-    }
-   
-    for (r = 0; r < M_SETTINGS.radar_count; r++) {
-      if (m_radar[r] && m_radar[r]->m_radar_type != oldRadarType[r]) {
-        m_radar[r]->Shutdown();
-        RemoveCanvasContextMenuItem(m_context_menu_control_id[r]);
-        delete m_radar[r];
-        CLEAR_RADAR_INFO;
-        m_radar[r] = new RadarInfo(this, r);
-      }
-    }
-
-    // And now set the radar types for the selected radars
-    r = 0;
-    for (size_t i = 0; i < RT_MAX; i++) {
-      if (dlg.m_selected[i]->GetValue()) {
-        m_radar[r]->m_radar_type = (RadarType)i;
-        r++;
-        m_settings.radar_count = r;
       }
     }
 
@@ -537,12 +581,10 @@ bool radar_pi::MakeRadarSelection() {
     for (size_t r = M_SETTINGS.radar_count; r < RADARS; r++) {
       if (m_radar[r]) {
         m_radar[r]->Shutdown();
-        CLEAR_RADAR_INFO;
         delete m_radar[r];
         m_radar[r] = 0;
       }
     }
-
     SetRadarWindowViz();
     TimedControlUpdate();
   }
@@ -552,7 +594,7 @@ bool radar_pi::MakeRadarSelection() {
 }
 
 void radar_pi::ShowPreferencesDialog(wxWindow *parent) {
-  LOG_DIALOG(wxT("radar_pi: ShowPreferencesDialog"));
+  LOG_DIALOG(wxT("ShowPreferencesDialog"));
 
   bool oldShow = M_SETTINGS.show;
   M_SETTINGS.show = 0;
@@ -591,7 +633,7 @@ void radar_pi::SetRadarWindowViz(bool reparent) {
   for (size_t r = 0; r < m_settings.radar_count; r++) {
     bool showThisRadar = m_settings.show && m_settings.show_radar[r];
     bool showThisControl = m_settings.show && m_settings.show_radar_control[r];
-    LOG_DIALOG(wxT("radar_pi: RadarWindow[%d] show=%d showcontrol=%d"), r, showThisRadar, showThisControl);
+    LOG_DIALOG(wxT("RadarWindow[%d] show=%d showcontrol=%d"), r, showThisRadar, showThisControl);
     m_radar[r]->ShowRadarWindow(showThisRadar);
 
     m_radar[r]->ShowControlDialog(showThisControl, reparent);
@@ -599,7 +641,7 @@ void radar_pi::SetRadarWindowViz(bool reparent) {
   }
 }
 
-/*
+/**
  * OpenCPN is about to show a context menu.
  *
  * Adjust our context menu items so that they are correct for the given canvas.
@@ -619,8 +661,8 @@ void radar_pi::PrepareContextMenu(int canvasIndex) {
 
   bool show_acq_delete = overlay && targets_tracked;
 
-  LOG_DIALOG(wxT("radar_pi: PrepareContextMenu for canvas %d radar %d"), canvasIndex, m_chart_overlay[canvasIndex]);
-  LOG_DIALOG(wxT("radar_pi: arpa=%d show=%d enableShowRadarControl=%d"), arpa, show, enableShowRadarControl);
+  LOG_DIALOG(wxT("PrepareContextMenu for canvas %d radar %d"), canvasIndex, m_chart_overlay[canvasIndex]);
+  LOG_DIALOG(wxT("arpa=%d show=%d enableShowRadarControl=%d"), arpa, show, enableShowRadarControl);
 
   // SetCanvasContextMenuItemGrey(m_context_menu_delete_radar_target, arpa);
   // SetCanvasContextMenuItemGrey(m_context_menu_delete_all_radar_targets, arpa);
@@ -652,7 +694,7 @@ int radar_pi::GetArpaTargetCount(void) {
 // Operation Dialogs - Control, Manual, and Options
 
 void radar_pi::ShowRadarControl(int radar, bool show, bool reparent) {
-  LOG_DIALOG(wxT("radar_pi: ShowRadarControl(%d, %d)"), radar, (int)show);
+  LOG_DIALOG(wxT("ShowRadarControl(%d, %d)"), radar, (int)show);
   m_settings.show_radar_control[radar] = show;
   m_radar[radar]->ShowControlDialog(show, reparent);
 }
@@ -696,34 +738,34 @@ void radar_pi::OnToolbarToolCallback(int id) {
     return;
   }
 
-  LOG_DIALOG(wxT("radar_pi: OnToolbarToolCallback"));
+  LOG_DIALOG(wxT("OnToolbarToolCallback"));
 
   if (m_pMessageBox->UpdateMessage(false)) {
     // Conditions for radar not satisfied, hide radar windows
     m_settings.show = 0;
-    LOG_DIALOG(wxT("radar_pi: OnToolbarToolCallback set show 0"));
+    LOG_DIALOG(wxT("OnToolbarToolCallback set show 0"));
     SetRadarWindowViz();
     return;
   }
 
   if (m_settings.show) {
-    LOG_DIALOG(wxT("radar_pi: OnToolbarToolCallback show"));
+    LOG_DIALOG(wxT("OnToolbarToolCallback show"));
     // Show the control dialogs of all overlay radars
     for (int i = 0; i < CANVAS_COUNT; i++) {
       if (m_chart_overlay[i] > -1 &&
           (!m_radar[m_chart_overlay[i]]->m_control_dialog || !m_radar[m_chart_overlay[i]]->m_control_dialog->IsShown())) {
-        LOG_DIALOG(wxT("radar_pi: OnToolbarToolCallback: Show control canvas %d"), i);
+        LOG_DIALOG(wxT("OnToolbarToolCallback: Show control canvas %d"), i);
         ShowRadarControl(m_chart_overlay[i], true);
       }
     }
   }
 
   if (m_settings.show) {
-    LOG_DIALOG(wxT("radar_pi: OnToolbarToolCallback: Hide radar windows"));
+    LOG_DIALOG(wxT("OnToolbarToolCallback: Hide radar windows"));
     m_settings.show = 0;
     SetRadarWindowViz();
   } else {
-    LOG_DIALOG(wxT("radar_pi: OnToolbarToolCallback: Show radar windows"));
+    LOG_DIALOG(wxT("OnToolbarToolCallback: Show radar windows"));
     m_settings.show = 1;
     SetRadarWindowViz();
   }
@@ -734,12 +776,10 @@ void radar_pi::OnContextMenuItemCallback(int id) {
   if (!EnsureRadarSelectionComplete(false)) {
     return;
   }
-  int current_canvas_index = -1;
   int current_radar = -1;
   // find out which canvas the click is on
   m_context_menu_canvas_index = GetCanvasIndexUnderMouse();
   if (m_context_menu_canvas_index > -1 && m_context_menu_canvas_index < CANVAS_COUNT) {
-    current_canvas_index = m_context_menu_canvas_index;
     current_radar = m_chart_overlay[m_context_menu_canvas_index];
   }
 
@@ -786,7 +826,7 @@ void radar_pi::OnContextMenuItemCallback(int id) {
     for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
 #endif
       if (id == m_context_menu_control_id[r]) {
-        LOG_DIALOG(wxT("radar_pi: OnToolbarToolCallback: show controls for radar %i"), r);
+        LOG_DIALOG(wxT("OnToolbarToolCallback: show controls for radar %i"), r);
         if (m_settings.show_radar_control[r] == 0) {
           ShowRadarControl(r, true);
         }
@@ -808,11 +848,11 @@ void radar_pi::PassHeadingToOpenCPN() {
   }
 
   nmea.Printf(wxT("$%s*%02X\r\n"), sentence, (unsigned)checksum);
-  LOG_TRANSMIT(wxT("radar_pi: Passing heading '%s'"), nmea.c_str());
+  LOG_TRANSMIT(wxT("Passing heading '%s'"), nmea.c_str());
   PushNMEABuffer(nmea);
 }
 
-/*
+/**
  * Check any guard zones
  *
  */
@@ -847,7 +887,7 @@ void radar_pi::CheckGuardZoneBogeys(void) {
         }
         text << wxT("\n");
       }
-      LOG_GUARD(wxT("radar_pi: Radar %c: CheckGuardZoneBogeys found=%d confirmed=%d"), r + 'A', bogeys_found_this_radar,
+      LOG_GUARD(wxT("Radar %c: CheckGuardZoneBogeys found=%d confirmed=%d"), r + 'A', bogeys_found_this_radar,
                 m_guard_bogey_confirmed);
     }
   }
@@ -894,27 +934,17 @@ void radar_pi::CheckGuardZoneBogeys(void) {
 
 void radar_pi::SetRadarHeading(double heading, bool isTrue) {
   wxCriticalSectionLocker lock(m_exclusive);
-  m_radar_heading = heading;
-  m_radar_heading_true = isTrue;
   time_t now = time(0);
-  if (!wxIsNaN(m_radar_heading)) {
-    if (m_radar_heading_true) {
-      if (m_heading_source != HEADING_RADAR_HDT) {
-        m_heading_source = HEADING_RADAR_HDT;
-      }
-      if (m_heading_source == HEADING_RADAR_HDT) {
-        m_hdt = m_radar_heading;
-        m_hdt_timeout = now + HEADING_TIMEOUT;
-      }
+  if (!wxIsNaN(heading)) {
+    if (isTrue) {
+      m_heading_source = HEADING_RADAR_HDT;
+      m_hdt = heading;
+      m_hdt_timeout = now + HEADING_TIMEOUT;
     } else {
-      if (m_heading_source != HEADING_RADAR_HDM) {
-        m_heading_source = HEADING_RADAR_HDM;
-      }
-      if (m_heading_source == HEADING_RADAR_HDM) {
-        m_hdm = m_radar_heading;
-        m_hdt = m_radar_heading + m_var;
-        m_hdm_timeout = now + HEADING_TIMEOUT;
-      }
+      m_heading_source = HEADING_RADAR_HDM;
+      m_hdm = heading;
+      m_hdt = heading + m_var;
+      m_hdm_timeout = now + HEADING_TIMEOUT;
     }
   } else if (m_heading_source == HEADING_RADAR_HDM || m_heading_source == HEADING_RADAR_HDT) {
     // no heading on radar and heading source is still radar
@@ -932,7 +962,7 @@ void radar_pi::UpdateHeadingPositionState() {
       // Note that the watchdog is reset every time we receive a position.
       m_bpos_set = false;
       m_predicted_position_initialised = false;
-      LOG_VERBOSE(wxT("radar_pi: Lost Boat Position data"));
+      LOG_VERBOSE(wxT("Lost Boat Position data"));
     }
 
     switch (m_heading_source) {
@@ -946,7 +976,7 @@ void radar_pi::UpdateHeadingPositionState() {
           // If the position data is 10s old reset our heading.
           // Note that the watchdog is reset every time we receive a heading.
           m_heading_source = HEADING_NONE;
-          LOG_VERBOSE(wxT("radar_pi: Lost Heading data"));
+          LOG_VERBOSE(wxT("Lost Heading data"));
         }
         break;
       case HEADING_FIX_HDM:
@@ -957,19 +987,19 @@ void radar_pi::UpdateHeadingPositionState() {
           // Note that the watchdog is continuously reset every time we receive a
           // heading
           m_heading_source = HEADING_NONE;
-          LOG_VERBOSE(wxT("radar_pi: Lost Heading data"));
+          LOG_VERBOSE(wxT("Lost Heading data"));
         }
         break;
     }
 
     if (m_var_source != VARIATION_SOURCE_NONE && TIMED_OUT(now, m_var_timeout)) {
       m_var_source = VARIATION_SOURCE_NONE;
-      LOG_VERBOSE(wxT("radar_pi: Lost Variation source"));
+      LOG_VERBOSE(wxT("Lost Variation source"));
     }
   }
 }
 
-/*
+/* *
  * This is called whenever OpenCPN is drawing the chart, about halfway through its
  * process, e.g. as the last part of RenderGLOverlay(), and by the timer.
  *
@@ -980,18 +1010,22 @@ void radar_pi::ScheduleWindowRefresh() {
   int millis;
   int renderPPI[RADARS];
   int render_overlay[MAX_CHART_CANVAS];
+  int doppler_count = 0;
+
   for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
     m_radar[r]->RefreshDisplay();
     drawTime += m_radar[r]->GetDrawTime();
     renderPPI[r] = m_radar[r]->GetDrawTime();
+    doppler_count += m_radar[r]->GetDopplerCount();
   }
+
   int max_canvas = GetCanvasCount();
   for (int r = 0; r < max_canvas; r++) {
     drawTime += m_draw_time_overlay_ms[r];
     render_overlay[r] = m_draw_time_overlay_ms[r];
   }
-  int refreshrate = m_settings.refreshrate.GetValue();
 
+  int refreshrate = m_settings.refreshrate.GetValue();
   if (refreshrate > 1 && drawTime < 500) {
     // 1 = 1 per s, 1000ms between draws, no additional refreshes
     // 2 = 2 per s,  500ms
@@ -1000,13 +1034,14 @@ void radar_pi::ScheduleWindowRefresh() {
     // 5 = 16 per s,  64ms
     millis = (1000 - drawTime) / (1 << (refreshrate - 1)) + drawTime;
 
-    LOG_VERBOSE(wxT("radar_pi: rendering took %i ms, PPI0= %i ms, PPI1= %i, Overlay0= %i, Overlay1= %i next render in %i ms"),
-                drawTime, renderPPI[0], renderPPI[1], render_overlay[0], render_overlay[1], millis);
+    LOG_VERBOSE(wxT("rendering took %i ms, PPI0=%i ms, PPI1=%i, Overlay0=%i, Overlay1=%i, doppler=%d next render in %i ms"),
+                drawTime, renderPPI[0], renderPPI[1], render_overlay[0], render_overlay[1], doppler_count, millis);
 
     m_timer->StartOnce(millis);
 
   } else {
-    LOG_VERBOSE(wxT("radar_pi: rendering took %dms, refreshrate=%d, no next extra render"), drawTime, refreshrate);
+    LOG_VERBOSE(wxT("rendering took %i ms, PPI0=%i ms, PPI1=%i, Overlay0=%i, Overlay1=%i, doppler=%d no next extra render"),
+                drawTime, renderPPI[0], renderPPI[1], render_overlay[0], render_overlay[1], doppler_count);
   }
 }
 
@@ -1049,13 +1084,6 @@ void radar_pi::TimedControlUpdate() {
     return;
   }
 
-  // for overlay testing only, simple trick to get position and heading
-  // wxString nmea;
-  // nmea = wxT("$APHDM,000.0,M*33<0x0D><0x0A>");
-  // PushNMEABuffer(nmea);
-  // nmea = wxT("$GPRMC,123519,A,5326.038,N,00611.000,E,022.4,,230394,,W,*41<0x0D><0x0A>");
-  // PushNMEABuffer(nmea);
-
   m_notify_time_ms = now;
 
   bool updateAllControls = m_notify_control_dialog;
@@ -1065,31 +1093,6 @@ void radar_pi::TimedControlUpdate() {
     m_notify_radar_window_viz = false;
     SetRadarWindowViz(true);
     updateAllControls = true;
-  }
-  UpdateHeadingPositionState();
-
-  // Check the age of "radar_seen", if too old radar_seen = false
-  bool any_data_seen = false;
-  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
-    int state = m_radar[r]->m_state.GetValue();  // Safe, protected by lock
-    if (state == RADAR_TRANSMIT) {
-      any_data_seen = true;
-    }
-    if (!m_settings.show            // No radar shown
-        || state != RADAR_TRANSMIT  // Radar not transmitting
-        || !m_bpos_set) {           // No overlay possible (yet)
-                                    // Conditions for ARPA not fulfilled, delete all targets
-      m_radar[r]->m_arpa->RadarLost();
-    }
-    m_radar[r]->UpdateTransmitState();
-  }
-
-  if (any_data_seen && m_settings.show) {
-    CheckGuardZoneBogeys();
-  }
-
-  if (m_settings.pass_heading_to_opencpn && m_heading_source >= HEADING_RADAR_HDM) {
-    PassHeadingToOpenCPN();
   }
 
   if (m_pMessageBox->IsShown() || (m_settings.verbose != 0)) {
@@ -1102,6 +1105,13 @@ void radar_pi::TimedControlUpdate() {
                               m_radar[r]->m_statistics.packets, m_radar[r]->m_statistics.broken_packets,
                               m_radar[r]->m_statistics.spokes, m_radar[r]->m_statistics.broken_spokes,
                               m_radar[r]->m_statistics.missing_spokes);
+        if (m_radar[r]->m_radar_type == RM_E120) {
+          t << wxString::Format(wxT("Magnetron current %d\n"), m_radar[r]->m_magnetron_current.GetValue());
+          double mag_hours = (double)m_radar[r]->m_magnetron_time.GetValue() / 10.;
+          t << wxString::Format(wxT("Magnetron hours %5.1f\n"), mag_hours);
+          t << wxString::Format(wxT("Rotation period %d msec\n"), m_radar[r]->m_rotation_period.GetValue());
+          t << wxString::Format(wxT("Signal strength %d\n"), m_radar[r]->m_signal_strength.GetValue());
+        }
       }
     }
     m_pMessageBox->SetStatisticsInfo(t);
@@ -1109,7 +1119,7 @@ void radar_pi::TimedControlUpdate() {
     IF_LOG_AT_LEVEL(LOGLEVEL_RECEIVE) {
       if (t.length() > 0) {
         t.Replace(wxT("\n"), wxT(" "));
-        LOG_RECEIVE(wxT("radar_pi: %s"), t.c_str());
+        LOG_RECEIVE(wxT("%s"), t.c_str());
       }
     }
   }
@@ -1131,7 +1141,7 @@ void radar_pi::TimedControlUpdate() {
     case HEADING_FIX_HDM:
     case HEADING_NMEA_HDM:
     case HEADING_RADAR_HDM:
-      info = wxT("");
+      info = wxT(" ");
       break;
     case HEADING_FIX_COG:
       info = _("COG");
@@ -1154,24 +1164,111 @@ void radar_pi::TimedControlUpdate() {
     case HEADING_FIX_HDT:
     case HEADING_NMEA_HDT:
     case HEADING_RADAR_HDT:
-      info = wxT("");
+      info = wxT(" ");
       break;
     case HEADING_FIX_HDM:
     case HEADING_NMEA_HDM:
       info = _("HDM");
+      if (info.Len() > 0 && !wxIsNaN(m_hdm)) {
+        info << wxString::Format(wxT(" %3.1f"), m_hdm);
+      }
       break;
     case HEADING_RADAR_HDM:
       info = _("RADAR");
       break;
   }
-  if (info.Len() > 0 && !wxIsNaN(m_hdm)) {
-    info << wxString::Format(wxT(" %3.1f"), m_hdm);
-  }
+
   m_pMessageBox->SetMagHeadingInfo(info);
   m_pMessageBox->UpdateMessage(false);
 
   UpdateAllControlStates(updateAllControls);
   UpdateState();
+}
+
+void radar_pi::TimedUpdate(wxTimerEvent &event) {
+  // Started in Init(), running every 500 ms
+  // No screen output in this thread
+
+  // Check if initialized
+  if (!m_initialized) {
+    return;
+  }
+  
+   // // for testing only, simple trick to get position and heading
+   //wxString nmea;
+   //nmea = wxT("$APHDM,000.0,M*33");
+   //PushNMEABuffer(nmea);
+   //nmea = wxT("$GPRMC,123519,A,5326.038,N,00611.000,E,022.4,,230394,,W,*41<0x0D><0x0A>");
+   //PushNMEABuffer(nmea);
+
+  // update own ship position to best estimate
+  ExtendedPosition intermediate_pos;
+  if (m_predicted_position_initialised) {
+    m_GPS_filter->Predict(&m_last_fixed, &m_expected_position);
+  }
+  m_ownship = m_expected_position.pos;
+  // Update radar position offset from GPS
+  if (m_heading_source != HEADING_NONE && !wxIsNaN(m_hdt)) {
+    for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+      wxCriticalSectionLocker lock(m_radar[r]->m_exclusive);
+      if (m_radar[r]) {
+        m_radar[r]->SetRadarPosition(m_ownship, m_hdt);
+      }
+    }
+  }
+
+  // refresh ARPA targets
+  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+    bool arpa_on = false;
+    if (m_radar[r]) {
+      wxCriticalSectionLocker lock(m_radar[r]->m_exclusive);
+      if (m_radar[r]->m_arpa) {
+        for (int i = 0; i < GUARD_ZONES; i++) {
+          if (m_radar[r]->m_guard_zone[i]->m_arpa_on) {
+            arpa_on = true;
+          }
+        }
+        if (m_radar[r]->m_arpa->GetTargetCount() > 0) {
+          arpa_on = true;
+        }
+      }
+      if (m_radar[r]->m_doppler.GetValue() > 0 && m_radar[r]->m_autotrack_doppler.GetValue() > 0) {
+        arpa_on = true;
+      }
+      if (arpa_on) {
+        m_radar[r]->m_arpa->RefreshArpaTargets();
+      }
+    }
+  }
+
+    UpdateHeadingPositionState();
+
+    // Check the age of "radar_seen", if too old radar_seen = false
+    bool any_data_seen = false;
+    for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+      if (m_radar[r]) {
+        wxCriticalSectionLocker lock(m_radar[r]->m_exclusive);
+        int state = m_radar[r]->m_state.GetValue();  // Safe, protected by lock
+        if (state == RADAR_TRANSMIT) {
+          any_data_seen = true;
+        }
+        if (!m_settings.show            // No radar shown
+            || state != RADAR_TRANSMIT  // Radar not transmitting
+            || !m_bpos_set) {           // No overlay possible (yet)
+                                        // Conditions for ARPA not fulfilled, delete all targets
+          m_radar[r]->m_arpa->RadarLost();
+        }
+        m_radar[r]->UpdateTransmitState();
+      }
+    }
+    if (any_data_seen && m_settings.show) {
+      CheckGuardZoneBogeys();
+    }
+
+    if (m_settings.pass_heading_to_opencpn && m_heading_source >= HEADING_RADAR_HDM) {
+      PassHeadingToOpenCPN();
+    }
+  
 }
 
 void radar_pi::UpdateAllControlStates(bool all) {
@@ -1217,7 +1314,7 @@ bool radar_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
     return true;
   }
 
-  LOG_DIALOG(wxT("radar_pi: RenderOverlay"));
+  LOG_DIALOG(wxT("RenderOverlay"));
 
   SetOpenGLMode(OPENGL_OFF);
   return true;
@@ -1234,7 +1331,6 @@ bool radar_pi::RenderGLOverlayMultiCanvas(wxGLContext *pcontext, PlugIn_ViewPort
     return true;
   }
   m_render_busy = true;
-
   // update own ship position to best estimate
   ExtendedPosition intermediate_pos;
   if (m_predicted_position_initialised) {
@@ -1273,32 +1369,12 @@ bool radar_pi::RenderGLOverlayMultiCanvas(wxGLContext *pcontext, PlugIn_ViewPort
     return true;
   }
 
-  // refresh ARPA targets only with canvas 0
-  if (canvasIndex == 0) {
-    for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
-      bool arpa_on = false;
-      if (m_radar[r]->m_arpa) {
-        for (int i = 0; i < GUARD_ZONES; i++) {
-          if (m_radar[r]->m_guard_zone[i]->m_arpa_on) {
-            arpa_on = true;
-          }
-        }
-        if (m_radar[r]->m_arpa->GetTargetCount() > 0) {
-          arpa_on = true;
-        }
-      }
-      if (arpa_on) {
-        m_radar[r]->m_arpa->RefreshArpaTargets();
-      }
-    }
-  }
-
   m_vp = vp;
 
-  LOG_DIALOG(wxT("radar_pi: RenderGLOverlayMultiCanvas context=%p canvas=%d"), pcontext, canvasIndex);
+  LOG_DIALOG(wxT("RenderGLOverlayMultiCanvas context=%p canvas=%d"), pcontext, canvasIndex);
   m_opencpn_gl_context = pcontext;
   if (!m_opencpn_gl_context && !m_opencpn_gl_context_broken) {
-    LOG_INFO(wxT("radar_pi: OpenCPN does not pass OpenGL context. Resize of OpenCPN window may be broken!"));
+    LOG_INFO(wxT("OpenCPN does not pass OpenGL context. Resize of OpenCPN window may be broken!"));
   }
   m_opencpn_gl_context_broken = m_opencpn_gl_context == 0;
 
@@ -1339,7 +1415,6 @@ bool radar_pi::RenderGLOverlayMultiCanvas(wxGLContext *pcontext, PlugIn_ViewPort
         highest = i;
       }
     }
-
     if (canvasIndex == highest) {
       m_radar[current_overlay_radar]->SetAutoRangeMeters(auto_range_meters);
     }
@@ -1355,8 +1430,8 @@ bool radar_pi::RenderGLOverlayMultiCanvas(wxGLContext *pcontext, PlugIn_ViewPort
       v_scale_ppm = vp->pix_height / dist_y;  // pixel height of screen div by equivalent meters
     }
     double rotation = fmod(rad2deg(vp->rotation + vp->skew * m_settings.skew_factor) + 720.0, 360);
-    LOG_DIALOG(wxT("radar_pi: RenderRadarOverlay lat=%g lon=%g v_scale_ppm=%g vp_rotation=%g skew=%g scale=%f rot=%g"), vp->clat,
-               vp->clon, vp->view_scale_ppm, vp->rotation, vp->skew, v_scale_ppm, rotation);
+    LOG_DIALOG(wxT("RenderRadarOverlay lat=%g lon=%g v_scale_ppm=%g vp_rotation=%g skew=%g scale=%f rot=%g"), vp->clat, vp->clon,
+               vp->view_scale_ppm, vp->rotation, vp->skew, v_scale_ppm, rotation);
     m_radar[current_overlay_radar]->RenderRadarImage1(boat_center, v_scale_ppm, rotation, true);
   }
 
@@ -1416,13 +1491,13 @@ bool radar_pi::LoadConfig(void) {
       }
 
       pConf->Read(wxString::Format(wxT("Radar%dInterface"), r), &s, "0.0.0.0");
-      radar_inet_aton(s.c_str(), &m_settings.radar_interface_address[n].addr);
-      m_settings.radar_interface_address[n].port = 0;
+      radar_inet_aton(s.c_str(), &ri->m_radar_interface_address.addr);
+      ri->m_radar_interface_address.port = 0;
       pConf->Read(wxString::Format(wxT("Radar%dAddress"), r), &s, "0.0.0.0");
-      radar_inet_aton(s.c_str(), &m_settings.radar_address[n].addr);
-      m_settings.radar_address[n].port = htons(RadarOrder[ri->m_radar_type]);
-      pConf->Read(wxString::Format(wxT("Radar%dNavicoInfo"), r), &s, "");
-      m_settings.navico_radar_info[r] = NavicoRadarInfo(s);
+      radar_inet_aton(s.c_str(), &ri->m_radar_address.addr);
+      ri->m_radar_address.port = htons(RadarOrder[ri->m_radar_type]);
+      pConf->Read(wxString::Format(wxT("Radar%dLocationInfo"), r), &s, " ");
+      ri->SetRadarLocationInfo(RadarLocationInfo(s));
 
       pConf->Read(wxString::Format(wxT("Radar%dRange"), r), &v, 2000);
       ri->m_range.Update(v);
@@ -1436,25 +1511,29 @@ bool radar_pi::LoadConfig(void) {
       ri->m_boot_state.Update(v);
       pConf->Read(wxString::Format(wxT("Radar%dMinContourLength"), r), &ri->m_min_contour_length, 6);
       if (ri->m_min_contour_length > 10) ri->m_min_contour_length = 6;  // Prevent user and system error
+      pConf->Read(wxString::Format(wxT("Radar%dDopplerAutoTrack"), r), &v, 0);
+      ri->m_autotrack_doppler.Update(v);
 
       RadarControlItem item;
       pConf->Read(wxString::Format(wxT("Radar%dTrailsState"), r), &state, RCS_OFF);
       pConf->Read(wxString::Format(wxT("Radar%dTrails"), r), &v, 0);
-      m_radar[r]->m_target_trails.Update(v, (RadarControlState)state);
+      ri->m_target_trails.Update(v, (RadarControlState)state);
       pConf->Read(wxString::Format(wxT("Radar%dTrueTrailsMotion"), r), &v, 1);
-      m_radar[r]->m_trails_motion.Update(v);
+      ri->m_trails_motion.Update(v);
       pConf->Read(wxString::Format(wxT("Radar%dMainBangSize"), r), &v, 0);
-      m_radar[r]->m_main_bang_size.Update(v);
+      ri->m_main_bang_size.Update(v);
       pConf->Read(wxString::Format(wxT("Radar%dAntennaForward"), r), &v, 0);
-      m_radar[r]->m_antenna_forward.Update(v);
+      ri->m_antenna_forward.Update(v);
       pConf->Read(wxString::Format(wxT("Radar%dAntennaStarboard"), r), &v, 0);
-      m_radar[r]->m_antenna_starboard.Update(v);
+      ri->m_antenna_starboard.Update(v);
+      pConf->Read(wxString::Format(wxT("Radar%dRangeAdjustment"), r), &v, 0);
+      ri->m_range_adjustment.Update(v);
       pConf->Read(wxString::Format(wxT("Radar%dRunTimeOnIdle"), r), &v, 1);
-      m_radar[r]->m_timed_run.Update(v);
+      ri->m_timed_run.Update(v);
 
       for (int i = 0; i < MAX_CHART_CANVAS; i++) {
         pConf->Read(wxString::Format(wxT("Radar%dOverlayCanvas%d"), r, i), &v, 0);
-        m_radar[r]->m_overlay_canvas[i].Update(v);
+        ri->m_overlay_canvas[i].Update(v);
       }
 
       pConf->Read(wxString::Format(wxT("Radar%dWindowShow"), r), &m_settings.show_radar[n], true);
@@ -1468,12 +1547,12 @@ bool radar_pi::LoadConfig(void) {
       m_settings.window_pos[n] = wxPoint(x, y);
       pConf->Read(wxString::Format(wxT("Radar%dControlShow"), r), &m_settings.show_radar_control[n], false);
       pConf->Read(wxString::Format(wxT("Radar%dTargetShow"), r), &v, true);
-      m_radar[r]->m_target_on_ppi.Update(v);
+      ri->m_target_on_ppi.Update(v);
 
       pConf->Read(wxString::Format(wxT("Radar%dControlPosX"), r), &x, wxDefaultPosition.x);
       pConf->Read(wxString::Format(wxT("Radar%dControlPosY"), r), &y, wxDefaultPosition.y);
       m_settings.control_pos[n] = wxPoint(x, y);
-      LOG_DIALOG(wxT("radar_pi: LoadConfig: show_radar[%d]=%d control=%d,%d"), n, v, x, y);
+      LOG_DIALOG(wxT("LoadConfig: show_radar[%d]=%d control=%d,%d"), n, v, x, y);
       for (int i = 0; i < GUARD_ZONES; i++) {
         pConf->Read(wxString::Format(wxT("Radar%dZone%dStartBearing"), r, i), &ri->m_guard_zone[i]->m_start_bearing, 0);
         pConf->Read(wxString::Format(wxT("Radar%dZone%dEndBearing"), r, i), &ri->m_guard_zone[i]->m_end_bearing, 0);
@@ -1552,7 +1631,6 @@ bool radar_pi::LoadConfig(void) {
 
 bool radar_pi::SaveConfig(void) {
   wxFileConfig *pConf = m_pconfig;
-
   if (pConf) {
     pConf->DeleteGroup(wxT("/Plugins/Radar"));
     pConf->SetPath(wxT("/Plugins/Radar"));
@@ -1601,9 +1679,9 @@ bool radar_pi::SaveConfig(void) {
 
     for (int r = 0; r < (int)m_settings.radar_count; r++) {
       pConf->Write(wxString::Format(wxT("Radar%dType"), r), RadarTypeName[m_radar[r]->m_radar_type]);
-      pConf->Write(wxString::Format(wxT("Radar%dNavicoInfo"), r), m_settings.navico_radar_info[r].to_string());
-      pConf->Write(wxString::Format(wxT("Radar%dAddress"), r), m_settings.radar_address[r].FormatNetworkAddress());
-      pConf->Write(wxString::Format(wxT("Radar%dInterface"), r), m_settings.radar_interface_address[r].FormatNetworkAddress());
+      pConf->Write(wxString::Format(wxT("Radar%dLocationInfo"), r), m_radar[r]->GetRadarLocationInfo().to_string());
+      pConf->Write(wxString::Format(wxT("Radar%dAddress"), r), m_radar[r]->m_radar_address.FormatNetworkAddress());
+      pConf->Write(wxString::Format(wxT("Radar%dInterface"), r), m_radar[r]->GetRadarInterfaceAddress().FormatNetworkAddress());
       pConf->Write(wxString::Format(wxT("Radar%dRange"), r), m_radar[r]->m_range.GetValue());
       pConf->Write(wxString::Format(wxT("Radar%dRotation"), r), m_radar[r]->m_orientation.GetValue());
       pConf->Write(wxString::Format(wxT("Radar%dTransmit"), r), m_radar[r]->m_state.GetValue());
@@ -1621,12 +1699,16 @@ bool radar_pi::SaveConfig(void) {
       pConf->Write(wxString::Format(wxT("Radar%dMainBangSize"), r), m_radar[r]->m_main_bang_size.GetValue());
       pConf->Write(wxString::Format(wxT("Radar%dAntennaForward"), r), m_radar[r]->m_antenna_forward.GetValue());
       pConf->Write(wxString::Format(wxT("Radar%dAntennaStarboard"), r), m_radar[r]->m_antenna_starboard.GetValue());
+      pConf->Write(wxString::Format(wxT("Radar%dRangeAdjustment"), r), m_radar[r]->m_range_adjustment.GetValue());
       pConf->Write(wxString::Format(wxT("Radar%dRunTimeOnIdle"), r), m_radar[r]->m_timed_run.GetValue());
+      pConf->Write(wxString::Format(wxT("Radar%dDopplerAutoTrack"), r), m_radar[r]->m_autotrack_doppler.GetValue());
+      pConf->Write(wxString::Format(wxT("Radar%dMinContourLength"), r), m_radar[r]->m_min_contour_length);
+
       for (int i = 0; i < MAX_CHART_CANVAS; i++) {
         pConf->Write(wxString::Format(wxT("Radar%dOverlayCanvas%d"), r, i), m_radar[r]->m_overlay_canvas[i].GetValue());
       }
 
-      // LOG_DIALOG(wxT("radar_pi: SaveConfig: show_radar[%d]=%d"), r, m_settings.show_radar[r]);
+      // LOG_DIALOG(wxT("SaveConfig: show_radar[%d]=%d"), r, m_settings.show_radar[r]);
       for (int i = 0; i < GUARD_ZONES; i++) {
         pConf->Write(wxString::Format(wxT("Radar%dZone%dStartBearing"), r, i), m_radar[r]->m_guard_zone[i]->m_start_bearing);
         pConf->Write(wxString::Format(wxT("Radar%dZone%dEndBearing"), r, i), m_radar[r]->m_guard_zone[i]->m_end_bearing);
@@ -1639,161 +1721,11 @@ bool radar_pi::SaveConfig(void) {
     }
 
     pConf->Flush();
-    // LOG_VERBOSE(wxT("radar_pi: Saved settings"));
+    // LOG_VERBOSE(wxT("Saved settings"));
     return true;
   }
 
   return false;
-}
-
-void radar_pi::SetNavicoRadarInfo(size_t r, const NavicoRadarInfo &info) {
-  wxCriticalSectionLocker lock(m_exclusive);
-
-  M_SETTINGS.navico_radar_info[r] = info;
-}
-
-void radar_pi::FoundNavicoRadarInfo(const NetworkAddress &addr, const NetworkAddress &interface_addr, const NavicoRadarInfo &info) {
-  wxCriticalSectionLocker lock(m_exclusive);
-
-  bool halo_type = false;
-  int radar_order[RT_MAX];
-  for (int i = 0; i < RT_MAX; i++) {
-    radar_order[i] = RadarOrder[i];
-  }
-
-  // When NavicoLocate finds a Halo type we should only put it in a info field of an Halo radar
-   /*As far as we know:
-   13 and 14 = 4G
-   15 = old Halo
-   16
-   17
-   18 & serialNr[4] == '4' = new 3G (or 4G?)
-   19 = Halo24
-   */
-
-  // Find the number of physical Navico radars
-  size_t navicos = 0;  // number of hard Navico radars
-  bool navico[RT_MAX];
-  CLEAR_STRUCT(navico);
-  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
-    if (m_radar[r]->m_radar_type == RT_3G)    navico[RT_3G] = true;
-    if (m_radar[r]->m_radar_type == RT_4GA)   navico[RT_4GA] = true;
-    if (m_radar[r]->m_radar_type == RT_4GB)   navico[RT_4GB] = true;
-    if (m_radar[r]->m_radar_type == RT_HaloA) navico[RT_HaloA] = true;
-    if (m_radar[r]->m_radar_type == RT_HaloB) navico[RT_HaloB] = true;
-   }
-  
-  navicos = (size_t) navico[RT_3G] + (size_t) (navico[RT_4GA] || navico[RT_4GB]) + (size_t) (navico[RT_HaloA] || navico[RT_HaloB]);
-
-  // more then 2 Navico radars: associate the info found with the right type of radar 
-  if (navicos > 1) {
-    if (info.serialNr[0] == '1' && (info.serialNr[1] == '9' || info.serialNr[1] == '7' ||
-      info.serialNr[1] == '6' || info.serialNr[1] == '5')) {  // It seems that serial # starting with 15 - 19  refers to Halo type radars
-      halo_type = true;
-    }
-
-    if (halo_type) {
-      radar_order[RT_4GA] = 0;
-      radar_order[RT_4GB] = 0;
-    }
-    else {
-      radar_order[RT_HaloA] = 0;
-      radar_order[RT_HaloB] = 0;
-    }
-  }
-
-  if (info.serialNr[0] == '1' && info.serialNr[1] == '8' && info.serialNr[4] == '4') {
-    // this is a new 3G or (may be) a 4G which will handle NavicoLocate
-    radar_order[RT_3G] = 1;
-  }
-
-  NetworkAddress int_face_addr = interface_addr;
-  NetworkAddress radar_addr = addr;
-
-  // First, check if we already know this serial#
-#ifdef __WXOSX__
-  for (int r = 0; r < M_SETTINGS.radar_count; r++) {
-#else
-  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
-#endif
-    if (ntohs(addr.port) == radar_order[m_radar[r]->m_radar_type] &&  // Only put primary in primary slots, etc.
-      M_SETTINGS.navico_radar_info[r].serialNr == info.serialNr) {
-      SetNavicoRadarInfo(r, info);
-      SetRadarInterfaceAddress(r, int_face_addr, radar_addr);
-      return;
-    }
-  }
-
-  // Second loop, put it in radar with same report address but no serial#
-#ifdef __WXOSX__
-  for (int r = 0; r < M_SETTINGS.radar_count; r++) {
-#else
-  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
-#endif
-    if (ntohs(addr.port) == radar_order[m_radar[r]->m_radar_type] &&  // Only put primary in primary slots, etc.
-      !info.report_addr.IsNull() &&                               // If the report address fits, override the serial
-      M_SETTINGS.navico_radar_info[r].report_addr == info.report_addr) {
-      SetNavicoRadarInfo(r, info);
-      SetRadarInterfaceAddress(r, int_face_addr, radar_addr);
-      return;
-    }
-  }
-
-  // Third loop, put it in radar with same IP address but no serial# nor report address
-#ifdef __WXOSX__
-  for (int r = 0; r < M_SETTINGS.radar_count; r++) {
-#else
-  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
-#endif
-    if (ntohs(addr.port) == radar_order[m_radar[r]->m_radar_type] &&  // Only put primary in primary slots, etc.
-      M_SETTINGS.radar_address[r] == addr && M_SETTINGS.navico_radar_info[r].serialNr.IsNull() &&
-      M_SETTINGS.navico_radar_info[r].report_addr.IsNull()) {
-      SetNavicoRadarInfo(r, info);
-      SetRadarInterfaceAddress(r, int_face_addr, radar_addr);
-      return;
-    }
-  }
-
-  // In case of desperation, put it in a free slot without serial# or address
-#ifdef __WXOSX__
-  for (int r = 0; r < M_SETTINGS.radar_count; r++) {
-#else
-  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
-#endif
-    if (ntohs(addr.port) == radar_order[m_radar[r]->m_radar_type] &&  // Only put primary in primary slots, etc.
-      M_SETTINGS.radar_address[r].IsNull() && M_SETTINGS.navico_radar_info[r].serialNr.IsNull() &&
-      M_SETTINGS.navico_radar_info[r].report_addr.IsNull()) {
-      SetNavicoRadarInfo(r, info);
-      SetRadarInterfaceAddress(r, int_face_addr, radar_addr);
-      return;
-    }
-  }
-
-  // No free slot, override the first radar A with A, B with B but only Halo with Halo
-#ifdef __WXOSX__
-  for (int r = 0; r < M_SETTINGS.radar_count; r++) {
-#else
-  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
-#endif
-    if (ntohs(addr.port) == radar_order[m_radar[r]->m_radar_type]) {  // Only put primary in primary slots, etc.
-      SetNavicoRadarInfo(r, info);
-      SetRadarInterfaceAddress(r, int_face_addr, radar_addr);
-      return;
-    }
-  }
-  LOG_INFO(wxT("radar_pi: Failed to allocate info from NavicoLocate to a radar"));
-}
-
-bool radar_pi::HaveRadarSerialNo(size_t r) {
-  wxCriticalSectionLocker lock(m_exclusive);
-
-  return !M_SETTINGS.navico_radar_info[r].serialNr.IsNull();
-}
-
-NavicoRadarInfo &radar_pi::GetNavicoRadarInfo(size_t r) {
-  wxCriticalSectionLocker lock(m_exclusive);
-
-  return M_SETTINGS.navico_radar_info[r];
 }
 
 // Positional Data passed from NMEA to plugin
@@ -1806,7 +1738,7 @@ void radar_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
   wxString info;
   if (m_var_source <= VARIATION_SOURCE_FIX && !wxIsNaN(pfix.Var) && (fabs(pfix.Var) > 0.0 || m_var == 0.0)) {
     if (m_var_source < VARIATION_SOURCE_FIX || fabs(pfix.Var - m_var) > 0.05) {
-      LOG_VERBOSE(wxT("radar_pi: Position fix provides new magnetic variation %f"), pfix.Var);
+      LOG_VERBOSE(wxT("Position fix provides new magnetic variation %f"), pfix.Var);
       if (m_pMessageBox->IsShown()) {
         info = _("GPS");
         info << wxT(" ") << wxString::Format(wxT("%2.1f"), m_var);
@@ -1818,11 +1750,11 @@ void radar_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
     m_var_timeout = now + WATCHDOG_TIMEOUT;
   }
 
-  LOG_VERBOSE(wxT("radar_pi: SetPositionFixEx var=%f var_wd=%d"), pfix.Var, NOT_TIMED_OUT(now, m_var_timeout));
+  LOG_VERBOSE(wxT("SetPositionFixEx var=%f var_wd=%d"), pfix.Var, NOT_TIMED_OUT(now, m_var_timeout));
 
   if (!wxIsNaN(pfix.Hdt)) {
     if (m_heading_source < HEADING_FIX_HDT) {
-      LOG_VERBOSE(wxT("radar_pi: Heading source is now HDT from OpenCPN (%d->%d)"), m_heading_source, HEADING_FIX_HDT);
+      LOG_VERBOSE(wxT("Heading source is now HDT from OpenCPN (%d->%d)"), m_heading_source, HEADING_FIX_HDT);
       m_heading_source = HEADING_FIX_HDT;
     }
     if (m_heading_source == HEADING_FIX_HDT) {
@@ -1831,7 +1763,7 @@ void radar_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
     }
   } else if (!wxIsNaN(pfix.Hdm) && NOT_TIMED_OUT(now, m_var_timeout)) {
     if (m_heading_source < HEADING_FIX_HDM) {
-      LOG_VERBOSE(wxT("radar_pi: Heading source is now HDM from OpenCPN + VAR (%d->%d)"), m_heading_source, HEADING_FIX_HDM);
+      LOG_VERBOSE(wxT("Heading source is now HDM from OpenCPN + VAR (%d->%d)"), m_heading_source, HEADING_FIX_HDM);
       m_heading_source = HEADING_FIX_HDM;
     }
     if (m_heading_source == HEADING_FIX_HDM) {
@@ -1841,7 +1773,7 @@ void radar_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
     }
   } else if (!wxIsNaN(pfix.Cog) && m_settings.enable_cog_heading) {
     if (m_heading_source < HEADING_FIX_COG) {
-      LOG_VERBOSE(wxT("radar_pi: Heading source is now COG from OpenCPN (%d->%d)"), m_heading_source, HEADING_FIX_COG);
+      LOG_VERBOSE(wxT("Heading source is now COG from OpenCPN (%d->%d)"), m_heading_source, HEADING_FIX_COG);
       m_heading_source = HEADING_FIX_COG;
     }
     if (m_heading_source == HEADING_FIX_COG) {
@@ -1873,8 +1805,7 @@ void radar_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
   GPS_position.sd_speed_kn = 0.;
 
   if (!m_bpos_set) {
-    LOG_VERBOSE(wxT("radar_pi: GPS position is now known m_ownship.lat= %f, m_ownship.lon = %f"), GPS_position.pos.lat,
-                GPS_position.pos.lon);
+    LOG_VERBOSE(wxT("GPS position is now known m_ownship.lat= %f, m_ownship.lon = %f"), GPS_position.pos.lat, GPS_position.pos.lon);
   }
   m_bpos_set = true;
   m_bpos_timestamp = now;
@@ -1965,7 +1896,7 @@ void radar_pi::SetPluginMessage(wxString &message_id, wxString &message_body) {
 
       if (variation != 360.0) {
         if (m_var_source != VARIATION_SOURCE_WMM) {
-          LOG_VERBOSE(wxT("radar_pi: WMM plugin provides new magnetic variation %f"), variation);
+          LOG_VERBOSE(wxT("WMM plugin provides new magnetic variation %f"), variation);
         }
         m_var = variation;
         m_var_source = VARIATION_SOURCE_WMM;
@@ -2105,7 +2036,7 @@ void radar_pi::SetNMEASentence(wxString &sentence) {
   double hdt = nan("");
   double var;
 
-  LOG_RECEIVE(wxT("radar_pi: SetNMEASentence %s"), sentence.c_str());
+  LOG_RECEIVE(wxT("SetNMEASentence %s"), sentence.c_str());
 
   if (m_NMEA0183.PreParse()) {
     if (m_NMEA0183.LastSentenceIDReceived == _T("HDG") && m_NMEA0183.Parse()) {
@@ -2116,7 +2047,7 @@ void radar_pi::SetNMEASentence(wxString &sentence) {
           var = -m_NMEA0183.Hdg.MagneticVariationDegrees;
         }
         if (fabs(var - m_var) >= 0.05 && m_var_source <= VARIATION_SOURCE_NMEA) {
-          //        LOG_INFO(wxT("radar_pi: NMEA provides new magnetic variation %f from %s"), var, sentence.c_str());
+          //        LOG_INFO(wxT("NMEA provides new magnetic variation %f from %s"), var, sentence.c_str());
           m_var = var;
           m_var_source = VARIATION_SOURCE_NMEA;
           m_var_timeout = now + WATCHDOG_TIMEOUT;
@@ -2138,7 +2069,7 @@ void radar_pi::SetNMEASentence(wxString &sentence) {
 
   if (!wxIsNaN(hdt)) {
     if (m_heading_source < HEADING_NMEA_HDT) {
-      //   LOG_INFO(wxT("radar_pi: Heading source is now HDT %d from NMEA %s (%d->%d)"), m_hdt, sentence.c_str(),
+      //   LOG_INFO(wxT("Heading source is now HDT %d from NMEA %s (%d->%d)"), m_hdt, sentence.c_str(),
       //   m_heading_source,
       //           HEADING_NMEA_HDT);    Crashes!!!
       m_heading_source = HEADING_NMEA_HDT;
@@ -2149,7 +2080,7 @@ void radar_pi::SetNMEASentence(wxString &sentence) {
     }
   } else if (!wxIsNaN(hdm) && NOT_TIMED_OUT(now, m_var_timeout)) {
     if (m_heading_source < HEADING_NMEA_HDM) {
-      //   LOG_INFO(wxT("radar_pi: Heading source is now HDM %f + VAR %f from NMEA %s (%d->%d)"), hdm, m_var, sentence.c_str(),
+      //   LOG_INFO(wxT("Heading source is now HDM %f + VAR %f from NMEA %s (%d->%d)"), hdm, m_var, sentence.c_str(),
       //            m_heading_source, HEADING_NMEA_HDT);
       m_heading_source = HEADING_NMEA_HDM;
     }
@@ -2184,19 +2115,23 @@ bool radar_pi::MouseEventHook(wxMouseEvent &event) {
 void radar_pi::logBinaryData(const wxString &what, const uint8_t *data, int size) {
   wxString explain;
   int i = 0;
-
   explain.Alloc(size * 3 + 50);
-  explain += wxT("radar_pi: ");
+  explain += wxT("");
   explain += what;
   explain += wxString::Format(wxT(" %d bytes: "), size);
   for (i = 0; i < size; i++) {
+    if (i % 16 == 0) {
+      explain += wxString::Format(wxT(" \n %3d    "), i);
+    } else if (i % 8 == 0) {
+      explain += wxString::Format(wxT("  "), i);
+    }
     explain += wxString::Format(wxT(" %02X"), data[i]);
   }
-  wxLogMessage(explain);
+  LOG_INFO(explain);
 }
 
 bool radar_pi::IsRadarOnScreen(int radar) {
   return m_settings.show && (m_settings.show_radar[radar] || m_radar[radar]->GetOverlayCanvasIndex() > -1);
 }
 
-PLUGIN_END_NAMESPACE
+}  // namespace

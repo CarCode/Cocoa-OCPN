@@ -1,4 +1,4 @@
-/* *************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  texture OpenGL text rendering built from wxFont
@@ -23,7 +23,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  **************************************************************************/
 
-#include "TextureFont.h"
+#include "../include/TextureFont.h"
 
 PLUGIN_BEGIN_NAMESPACE
 

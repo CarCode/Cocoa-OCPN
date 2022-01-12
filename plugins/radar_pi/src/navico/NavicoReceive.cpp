@@ -1,4 +1,4 @@
-/* *************************************************************************
+/******************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Radar Plugin
@@ -27,9 +27,11 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+ ***************************************************************************
+ */
 
 #include "NavicoReceive.h"
+
 #include "MessageBox.h"
 #include "NavicoControl.h"
 
@@ -41,8 +43,10 @@ PLUGIN_BEGIN_NAMESPACE
  * The rest of the plugin uses a (slightly) abstract definition of the radar.
  */
 
-#define MILLIS_PER_SELECT 250
+// On HALO we need to send data every 50 ms or so, so sleep is short ...
+#define MILLIS_PER_SELECT 50
 #define SECONDS_SELECT(x) ((x)*MILLISECONDS_PER_SECOND / MILLIS_PER_SELECT)
+#define IS_HALO (m_ri->m_radar_type == RT_HaloA || m_ri->m_radar_type == RT_HaloB)
 
 //
 // Navico radars use an internal spoke ID that has range [0..4096> but they
@@ -68,7 +72,70 @@ PLUGIN_BEGIN_NAMESPACE
 #define HEADING_MASK (SPOKES - 1)
 #define HEADING_VALID(x) (((x) & ~(HEADING_TRUE_FLAG | HEADING_MASK)) == 0)
 
+// One MFD or OpenCPN shall send the radar timing and heading info
+// Without this the Doppler function doesn't work
+static const NetworkAddress haloInfoAddress(239, 238, 55, 73, 7527);
+
+SOCKET g_HaloInfoSocket = INVALID_SOCKET;  // Only _one_ radar is able to create this socket at a time.
+wxCriticalSection g_HaloInfoSocketLock;
+
 #pragma pack(push, 1)
+
+struct halo_heading_packet {
+  char marker[4];    // 4 bytes containing 'NKOE'
+  uint8_t u00[4];    // 4 bytes containing '00 01 90 02'
+  uint16_t counter;  // 2 byte counter incrementing by 1 every transmission, in BigEndian
+  // 10
+  uint8_t u01[26];  // 25 bytes of unknown stuff that doesn't seem to vary
+  // 36
+  uint8_t u02[2];  // 2 bytes containing '12 f1'
+  uint8_t u03[2];  // 2 bytes containing '01 00'
+  // 40
+  wxLongLong epoch;  // 8 bytes containing millis since 1970
+  // 48
+  uint64_t u04;  // 8 bytes containing 2
+  // 56
+  uint32_t u05a;  // 4 bytes containing some fixed data, could be position?
+  // 60
+  uint32_t u05b;  // 4 bytes containing some fixed data, could be position?
+  // 64
+  uint8_t u06[1];  // 1 byte containing counter or 0xff
+  // 65
+  uint16_t heading;  // 2 bytes containing heading
+  // 67
+  uint8_t u07[5];  // 5 bytes containing varying unknown data
+  // 72
+};
+
+struct halo_mystery_packet {
+  char marker[4];    // 4 bytes containing 'NKOE'
+  uint8_t u00[4];    // 4 bytes containing '00 01 90 02'
+  uint16_t counter;  // 2 byte counter incrementing by 1 every transmission, in BigEndian
+  // 10
+  uint8_t u01[26];  // 25 bytes of unknown stuff that doesn't seem to vary
+  // 36
+  uint8_t u02[2];  // 2 bytes containing '02 f8'...
+  uint8_t u03[2];  // 2 bytes containing '01 00'
+  // 40
+  wxLongLong epoch;  // 8 bytes containing millis since 1970
+  // 48
+  uint64_t u04;  // 8 bytes containing 2
+  // 56
+  uint32_t u05a;  // 4 bytes containing some fixed data, could be position?
+  // 60
+  uint32_t u05b;  // 4 bytes containing some fixed data, could be position?
+  // 64
+  uint8_t u06[1];  // 1 byte containing counter or 0xff
+  // 65
+  uint8_t u07[1];  // 1 byte containing 0xfc
+  // 66
+  uint16_t mystery1;  // 2 bytes containing some varying field
+  // 68
+  uint16_t mystery2;  // 2 bytes containing some varying field
+  // 70
+  uint8_t u08[2];  // 2 bytes containg 0xff 0xff
+  // 72
+};
 
 struct common_header {
   uint8_t headerLen;       // 1 bytes
@@ -214,7 +281,7 @@ void NavicoReceive::ProcessFrame(const uint8_t *data, size_t len) {
   if (m_first_receive) {
     m_first_receive = false;
     wxLongLong startup_elapsed = wxGetUTCTimeMillis() - m_pi->GetBootMillis();
-    LOG_INFO(wxT("radar_pi: %s first radar spoke received after %llu ms\n"), m_ri->m_name.c_str(), startup_elapsed);
+    LOG_INFO(wxT("%s first radar spoke received after %llu ms\n"), m_ri->m_name.c_str(), startup_elapsed);
   }
 
   for (size_t scanline = 0; scanline < scanlines_in_packet; scanline++) {
@@ -224,14 +291,14 @@ void NavicoReceive::ProcessFrame(const uint8_t *data, size_t len) {
     int spoke = line->common.scan_number[0] | (line->common.scan_number[1] << 8);
     m_ri->m_statistics.spokes++;
     if (line->common.headerLen != 0x18) {
-      LOG_RECEIVE(wxT("radar_pi: strange header length %d"), line->common.headerLen);
+      LOG_RECEIVE(wxT("%s strange header length %d"), m_ri->m_name.c_str(), line->common.headerLen);
       // Do not draw something with this...
       m_ri->m_statistics.missing_spokes++;
       m_next_spoke = (spoke + 1) % SPOKES;
       continue;
     }
     if (line->common.status != 0x02 && line->common.status != 0x12) {
-      LOG_RECEIVE(wxT("radar_pi: strange status %02x"), line->common.status);
+      LOG_RECEIVE(wxT("%s strange status %02x"), m_ri->m_name.c_str(), line->common.status);
       m_ri->m_statistics.broken_spokes++;
     }
     if (m_next_spoke >= 0 && spoke != m_next_spoke) {
@@ -309,23 +376,25 @@ void NavicoReceive::ProcessFrame(const uint8_t *data, size_t len) {
     int bearing_raw;
 
     if (radar_heading_valid && !m_pi->m_settings.ignore_radar_heading) {
-      heading = MOD_DEGREES_FLOAT(SCALE_RAW_TO_DEGREES(heading_raw));
-      m_pi->SetRadarHeading(heading, radar_heading_true);
+      // On HALO, we can be the ones that are sending heading to the radar;
+      // in that case do NOT pass it back down to avoid feedback loop!
+      if (!IS_HALO) {
+        heading = MOD_DEGREES_FLOAT(SCALE_RAW_TO_DEGREES(heading_raw));
+        m_pi->SetRadarHeading(heading, radar_heading_true);
+      }
     } else {
       m_pi->SetRadarHeading();
+      heading = m_pi->GetHeadingTrue();
+      radar_heading_true = true;
+      heading_raw = SCALE_DEGREES_TO_RAW(heading);
     }
     // Guess the heading for the spoke. This is updated much less frequently than the
     // data from the radar (which is accurate 10x per second), likely once per second.
-    heading_raw = SCALE_DEGREES_TO_RAW(m_pi->GetHeadingTrue());  // include variation
     bearing_raw = angle_raw + heading_raw;
     // until here all is based on 4096 (SPOKES) scanlines
-#ifdef __WXOSX__
-    SpokeBearing a = (int)MOD_SPOKES(angle_raw / 2);    // divide by 2 to map on 2048 scanlines
-    SpokeBearing b = (int)MOD_SPOKES(bearing_raw / 2);  // divide by 2 to map on 2048 scanlines
-#else
+
     SpokeBearing a = MOD_SPOKES(angle_raw / 2);    // divide by 2 to map on 2048 scanlines
     SpokeBearing b = MOD_SPOKES(bearing_raw / 2);  // divide by 2 to map on 2048 scanlines
-#endif
     size_t len = NAVICO_SPOKE_LEN;
     uint8_t data_highres[NAVICO_SPOKE_LEN];
 
@@ -345,7 +414,7 @@ void NavicoReceive::ProcessFrame(const uint8_t *data, size_t len) {
 
 SOCKET NavicoReceive::PickNextEthernetCard() {
   SOCKET socket = INVALID_SOCKET;
-  CLEAR_STRUCT(m_interface_addr);
+  m_interface_addr = NetworkAddress();
 
   // Pick the next ethernet card
   // If set, we used this one last time. Go to the next card.
@@ -377,25 +446,27 @@ SOCKET NavicoReceive::PickNextEthernetCard() {
   return socket;
 }
 
-SOCKET NavicoReceive::GetNewReportSocket() {  
+SOCKET NavicoReceive::GetNewReportSocket() {
   SOCKET socket;
-  wxString error = wxT("");
-  wxString s = wxT("");
-  
-  if (!(m_info == m_pi->GetNavicoRadarInfo(m_ri->m_radar))) {   // initial values or NavicoLocate modified the info
-    m_info = m_pi->GetNavicoRadarInfo(m_ri->m_radar);
-#ifdef __WXOSX__
-    m_interface_addr = m_pi->GetRadarInterfaceAddress((int)m_ri->m_radar);
-#else
-    m_interface_addr = m_pi->GetRadarInterfaceAddress(m_ri->m_radar);
-#endif
-    UpdateSendCommand();
-    LOG_INFO(wxT("radar_pi: %s Locator found radar at IP %s [%s]"), m_ri->m_name,
-      M_SETTINGS.radar_address[m_ri->m_radar].FormatNetworkAddressPort(), m_info.to_string());
+  wxString error = wxT(" ");
+  wxString s = wxT(" ");
+  RadarLocationInfo current_info = m_ri->GetRadarLocationInfo();
+
+  if (!(m_info == current_info)) {  // initial values or NavicoLocate modified the info
+    m_info = current_info;
+    m_interface_addr = m_ri->GetRadarInterfaceAddress();
+    LOG_INFO(wxT("%s Locator found radar at IP %s [%s]"), m_ri->m_name.c_str(), m_ri->m_radar_address.FormatNetworkAddressPort(),
+             m_info.to_string());
   };
 
-  if (m_interface_addr.IsNull() || m_info.report_addr.IsNull()) {
-    LOG_RECEIVE(wxT("radar_pi: %s no address to listen on"), m_ri->m_name);
+  if (m_interface_addr.IsNull()) {
+    LOG_RECEIVE(wxT("%s no interface address to listen on"), m_ri->m_name.c_str());
+    wxMilliSleep(200);  // don't make the log too large
+    return INVALID_SOCKET;
+  }
+  if (m_info.report_addr.IsNull()) {
+    LOG_RECEIVE(wxT("%s no report address to listen on"), m_ri->m_name.c_str());
+    wxMilliSleep(200);
     return INVALID_SOCKET;
   }
 
@@ -411,14 +482,14 @@ SOCKET NavicoReceive::GetNewReportSocket() {
     wxString addr = m_interface_addr.FormatNetworkAddress();
     wxString rep_addr = m_info.report_addr.FormatNetworkAddressPort();
 
-    LOG_RECEIVE(wxT("radar_pi: %s scanning interface %s for data from %s"), m_ri->m_name, addr.c_str(), rep_addr.c_str());
+    LOG_RECEIVE(wxT("%s scanning interface %s for data from %s"), m_ri->m_name.c_str(), addr.c_str(), rep_addr.c_str());
 
     s << _("Scanning interface") << wxT(" ") << addr;
     SetInfoStatus(s);
   } else {
     s << error;
     SetInfoStatus(s);
-    wxLogError(wxT("radar_pi: %s Unable to listen to socket: %s"), m_ri->m_name, error.c_str());
+    wxLogError(wxT("%s Unable to listen to socket: %s"), m_ri->m_name.c_str(), error.c_str());
   }
   return socket;
 }
@@ -437,12 +508,126 @@ SOCKET NavicoReceive::GetNewDataSocket() {
     wxString addr = m_interface_addr.FormatNetworkAddress();
     wxString rep_addr = m_info.spoke_data_addr.FormatNetworkAddressPort();
 
-    LOG_RECEIVE(wxT("radar_pi: %s listening for data on %s from %s"), m_ri->m_name.c_str(), addr.c_str(), rep_addr.c_str());
+    LOG_RECEIVE(wxT("%s listening for data on %s from %s"), m_ri->m_name.c_str(), addr.c_str(), rep_addr.c_str());
   } else {
     SetInfoStatus(error);
-    wxLogError(wxT("radar_pi: Unable to listen to socket: %s"), error.c_str());
+    wxLogError(wxT("Unable to listen to socket: %s"), error.c_str());
   }
   return socket;
+}
+
+/*
+ * Get a socket to the multicast address where MFDs send the HALO the course and time
+ * info that was previously done via the RI-10/11.
+ */
+SOCKET NavicoReceive::GetNewInfoSocket() {
+  wxString error;
+
+  // This is only necessary on HALO radars
+  if (!IS_HALO) {
+    LOG_RECEIVE(wxT("%s no halo info socket needed for radar type"), m_ri->m_name.c_str());
+    return INVALID_SOCKET;
+  }
+  if (m_interface_addr.addr.s_addr == 0) {
+    LOG_RECEIVE(wxT("%s no halo info socket needed when no radar address"), m_ri->m_name.c_str());
+    return INVALID_SOCKET;
+  }
+
+  if (g_HaloInfoSocket != INVALID_SOCKET) {
+    // Other thread already has a g_HaloInfoSocket, this thread should NOT use it
+    return INVALID_SOCKET;
+  }
+
+  wxCriticalSectionLocker lock(g_HaloInfoSocketLock);
+
+  error.Printf(wxT("%s info: "), m_ri->m_name.c_str());
+  g_HaloInfoSocket = startUDPMulticastReceiveSocket(m_interface_addr, haloInfoAddress, error);
+  if (g_HaloInfoSocket != INVALID_SOCKET) {
+    wxString addr = m_interface_addr.FormatNetworkAddress();
+    wxString rep_addr = haloInfoAddress.FormatNetworkAddressPort();
+
+    LOG_RECEIVE(wxT("%s listening for halo info on %s"), m_ri->m_name.c_str(), addr.c_str());
+  } else {
+    SetInfoStatus(error);
+    wxLogError(wxT("%s Unable to listen for halo info: %s"), m_ri->m_name.c_str(), error.c_str());
+  }
+  return g_HaloInfoSocket;
+}
+
+void NavicoReceive::ReleaseInfoSocket(void) {
+  wxCriticalSectionLocker lock(g_HaloInfoSocketLock);
+  if (g_HaloInfoSocket != INVALID_SOCKET) {
+    closesocket(g_HaloInfoSocket);
+    g_HaloInfoSocket = INVALID_SOCKET;
+  }
+}
+
+static halo_heading_packet g_heading_msg = {
+    {'N', 'K', 'O', 'E'},  // marker
+    {0, 1, 0x90, 0x02},    // u00 bytes containing '00 01 90 02'
+    0,                     // counter
+    {0, 0, 0x10, 0, 0, 0x14, 0, 0, 4, 0, 0, 0, 0, 0, 5, 0x3C, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x20},  // u01
+    {0x12, 0xf1},                                                                                // u02
+    {0x01, 0x00},                                                                                // u03
+    0,                                                                                           // epoch
+    2,                                                                                           // u04
+    0,                                                                                           // u05a, likely position
+    0,                                                                                           // u05b, likely position
+    {0xff},                                                                                      // u06
+    0,                                                                                           // heading
+    {0xff, 0x7f, 0x79, 0xf8, 0xfc}                                                               // u07
+};
+
+static halo_mystery_packet g_mystery_msg = {
+    {'N', 'K', 'O', 'E'},  // marker
+    {0, 1, 0x90, 0x02},    // u00 bytes containing '00 01 90 02'
+    0,                     // counter
+    {0, 0, 0x10, 0, 0, 0x14, 0, 0, 4, 0, 0, 0, 0, 0, 5, 0x3C, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x20},  // u01
+    {0x02, 0xf8},                                                                                // u02
+    {0x01, 0x00},                                                                                // u03
+    0,                                                                                           // epoch
+    2,                                                                                           // u04
+    0,                                                                                           // u05a, likely position
+    0,                                                                                           // u05b, likely position
+    {0xff},                                                                                      // u06
+    {0xfc},                                                                                      // u07
+    0,                                                                                           // mystery1
+    0,                                                                                           // mystery2
+    {0xff, 0xff}                                                                                 // u08
+};
+
+static uint16_t g_counter;
+
+void NavicoReceive::SendHeadingPacket() {
+  NavicoControl *control = (NavicoControl *)m_ri->m_control;
+
+  if (control != NULL) {
+    g_counter++;
+    g_heading_msg.counter = htons(g_counter);
+    g_heading_msg.epoch = wxGetUTCTimeMillis();
+    g_heading_msg.heading = (uint16_t)(m_pi->GetHeadingTrue() * 63488.0 / 360.0);
+
+    LOG_TRANSMIT(wxT("%s SendHeadingPacket ctr=%u hdt=%g hdg=%u"), m_ri->m_name.c_str(), ntohs(g_heading_msg.counter),
+                 m_pi->GetHeadingTrue(), g_heading_msg.heading);
+
+    control->TransmitCmd(haloInfoAddress, (uint8_t *)&g_heading_msg, sizeof g_heading_msg);
+  }
+}
+
+void NavicoReceive::SendMysteryPacket() {
+  NavicoControl *control = (NavicoControl *)m_ri->m_control;
+
+  if (control != NULL) {
+    g_counter++;
+    g_mystery_msg.counter = htons(g_counter);
+    g_mystery_msg.epoch = wxGetUTCTimeMillis();
+    g_mystery_msg.mystery1 = 0;
+    g_mystery_msg.mystery2 = 0;
+
+    LOG_TRANSMIT(wxT("%s SendMysteryPacket ctr=%u"), m_ri->m_name.c_str(), ntohs(g_mystery_msg.counter));
+
+    control->TransmitCmd(haloInfoAddress, (uint8_t *)&g_mystery_msg, sizeof g_mystery_msg);
+  }
 }
 
 /*
@@ -464,13 +649,13 @@ void *NavicoReceive::Entry(void) {
   uint8_t data[sizeof(radar_frame_pkt)];
   m_interface_array = 0;
   m_interface = 0;
-  struct sockaddr_in radarFoundAddr;
-  sockaddr_in *radar_addr = 0;
+  NetworkAddress radar_address = NetworkAddress();
 
   SOCKET dataSocket = INVALID_SOCKET;
   SOCKET reportSocket = INVALID_SOCKET;
+  SOCKET infoSocket = INVALID_SOCKET;
 
-  LOG_VERBOSE(wxT("radar_pi: NavicoReceive thread %s starting"), m_ri->m_name.c_str());
+  LOG_VERBOSE(wxT("%s thread starting"), m_ri->m_name.c_str());
   reportSocket = GetNewReportSocket();  // Start using the same interface_addr as previous time
 
   while (m_receive_socket != INVALID_SOCKET) {
@@ -481,7 +666,7 @@ void *NavicoReceive::Entry(void) {
         no_spoke_timeout = 0;
       }
     }
-    if (radar_addr) {
+    if (!radar_address.IsNull()) {
       // If we have detected a radar antenna at this address, start opening more sockets.
       // We do this later for 2 reasons:
       // - Resource consumption
@@ -490,15 +675,20 @@ void *NavicoReceive::Entry(void) {
       if (dataSocket == INVALID_SOCKET) {
         dataSocket = GetNewDataSocket();
       }
-    }
-    else {
+      if (infoSocket == INVALID_SOCKET) {
+        // One of the two Halo radars will obtain an InfoSocket.
+        infoSocket = GetNewInfoSocket();
+      }
+    } else {
       if (dataSocket != INVALID_SOCKET) {
         closesocket(dataSocket);
         dataSocket = INVALID_SOCKET;
       }
+      if (infoSocket != INVALID_SOCKET) {
+        ReleaseInfoSocket();
+        infoSocket = INVALID_SOCKET;
+      }
     }
-
-    struct timeval tv = { (long)0, (long)(MILLIS_PER_SELECT * 1000) };
 
     fd_set fdin;
     FD_ZERO(&fdin);
@@ -516,109 +706,150 @@ void *NavicoReceive::Entry(void) {
       FD_SET(dataSocket, &fdin);
       maxFd = MAX(dataSocket, maxFd);
     }
+    if (infoSocket != INVALID_SOCKET) {
+      FD_SET(infoSocket, &fdin);
+      maxFd = MAX(infoSocket, maxFd);
+    }
 
     wxLongLong start = wxGetUTCTimeMillis();
+    int64_t wait = MILLIS_PER_SELECT - (start.GetValue() % MILLIS_PER_SELECT);
+
+    struct timeval tv = {0, (int)(wait * 1000)};
     r = select(maxFd + 1, &fdin, 0, 0, &tv);
-    LOG_RECEIVE(wxT("radar_pi: select maxFd=%d r=%d elapsed=%lld"), maxFd, r, wxGetUTCTimeMillis() - start);
+    wxLongLong now = wxGetUTCTimeMillis();
+    LOG_RECEIVE(wxT("%s select maxFd=%d r=%d elapsed=%lld"), m_ri->m_name.c_str(), maxFd, r, now - start);
 
     if (r > 0) {
       if (m_receive_socket != INVALID_SOCKET && FD_ISSET(m_receive_socket, &fdin)) {
         rx_len = sizeof(rx_addr);
-#ifdef __WXOSX__
-        r = (int)recvfrom(m_receive_socket, (char *)data, sizeof(data), 0, (struct sockaddr *)&rx_addr, &rx_len);
-#else
         r = recvfrom(m_receive_socket, (char *)data, sizeof(data), 0, (struct sockaddr *)&rx_addr, &rx_len);
-#endif
         if (r > 0) {
-          LOG_VERBOSE(wxT("radar_pi: %s received stop instruction"), m_ri->m_name.c_str());
+          LOG_VERBOSE(wxT("%s received stop instruction"), m_ri->m_name.c_str());
           break;
         }
       }
 
       if (dataSocket != INVALID_SOCKET && FD_ISSET(dataSocket, &fdin)) {
         rx_len = sizeof(rx_addr);
-#ifdef __WXOSX__
-        r = (int)recvfrom(dataSocket, (char *)data, sizeof(data), 0, (struct sockaddr *)&rx_addr, &rx_len);
-#else
         r = recvfrom(dataSocket, (char *)data, sizeof(data), 0, (struct sockaddr *)&rx_addr, &rx_len);
-#endif
         if (r > 0) {
           ProcessFrame(data, (size_t)r);
           no_data_timeout = -15;
           no_spoke_timeout = -5;
-        }
-        else {
+        } else {
           closesocket(dataSocket);
           dataSocket = INVALID_SOCKET;
-          wxLogError(wxT("radar_pi: %s illegal frame"), m_ri->m_name.c_str());
+          wxLogError(wxT("%s illegal frame"), m_ri->m_name.c_str());
         }
       }
 
       if (reportSocket != INVALID_SOCKET && FD_ISSET(reportSocket, &fdin)) {
         rx_len = sizeof(rx_addr);
-#ifdef __WXOSX__
-        r = (int)recvfrom(reportSocket, (char *)data, sizeof(data), 0, (struct sockaddr *)&rx_addr, &rx_len);
-#else
         r = recvfrom(reportSocket, (char *)data, sizeof(data), 0, (struct sockaddr *)&rx_addr, &rx_len);
-#endif
         if (r > 0) {
-          NetworkAddress radar_address;
-          radar_address.addr = rx_addr.ipv4.sin_addr;
-          radar_address.port = rx_addr.ipv4.sin_port;
-
           if (ProcessReport(data, (size_t)r)) {
-            if (!radar_addr) {
+            if (radar_address.IsNull()) {
+              radar_address.addr = rx_addr.ipv4.sin_addr;
+              radar_address.port = rx_addr.ipv4.sin_port;
               wxCriticalSectionLocker lock(m_lock);
               m_ri->DetectedRadar(m_interface_addr, radar_address);  // enables transmit data
-              UpdateSendCommand();
+              DetectedRadar(radar_address);
 
               // the dataSocket is opened in the next loop
 
-              radarFoundAddr = rx_addr.ipv4;
-              radar_addr = &radarFoundAddr;
-
               if (m_ri->m_state.GetValue() == RADAR_OFF) {
-                LOG_INFO(wxT("radar_pi: %s detected at %s"), m_ri->m_name.c_str(), radar_address.FormatNetworkAddress());
+                LOG_INFO(wxT("%s detected at %s"), m_ri->m_name.c_str(), radar_address.FormatNetworkAddress());
                 m_ri->m_state.Update(RADAR_STANDBY);
               }
             }
             no_data_timeout = SECONDS_SELECT(-15);
           }
-        }
-        else {
-          wxLogError(wxT("radar_pi: %s illegal report"), m_ri->m_name.c_str());
+        } else {
+          wxLogError(wxT("%s illegal report"), m_ri->m_name.c_str());
           closesocket(reportSocket);
           reportSocket = INVALID_SOCKET;
         }
       }
 
-    }
-    else {  // no data received -> select timeout
+      if (infoSocket != INVALID_SOCKET && FD_ISSET(infoSocket, &fdin)) {
+        rx_len = sizeof(rx_addr);
+        r = recvfrom(infoSocket, (char *)data, sizeof(data), 0, (struct sockaddr *)&rx_addr, &rx_len);
+        if (r > 0) {
+          NetworkAddress mfd_address;
+          mfd_address.addr = rx_addr.ipv4.sin_addr;
+          mfd_address.port = 0;
+          if (m_interface_addr == mfd_address) {
+            LOG_RECEIVE(wxT("%s active mfd detected at %s but that is us"), m_ri->m_name.c_str(),
+                        mfd_address.FormatNetworkAddress());
+          } else {
+            LOG_RECEIVE(wxT("%s active mfd detected at %s"), m_ri->m_name.c_str(), mfd_address.FormatNetworkAddress());
+            m_halo_received_info = wxGetUTCTimeMillis();
+          }
+          IF_LOG_AT(LOGLEVEL_RECEIVE, m_pi->logBinaryData(wxT("halo receive"), data, r));
+
+          halo_heading_packet *msg = (halo_heading_packet *)data;
+
+          if (msg->u02[0] == 0x12 && msg->u02[1] == 0xf1) {
+            double heading = (double)msg->heading * 360.0 / 63488.0;  // assume that this is a true heading ?
+            if (m_pi->m_heading_source <= HEADING_FIX_COG || m_pi->m_heading_source >= HEADING_RADAR_HDM) {
+              LOG_RECEIVE(wxT("Received and set radar_heading from network %f"), heading);
+              m_pi->SetRadarHeading(heading, true);  // only set HEADING_RADAR_HDT if nothing better is available
+            }
+
+            LOG_RECEIVE(wxT("msg.counter = %u"), msg->counter);
+            LOG_RECEIVE(wxT("msg.epoch   = %lld"), msg->epoch);
+            LOG_RECEIVE(wxT("msg.heading = %u -> %f"), msg->heading, (double)msg->heading * 360.0 / 63488.0);
+            LOG_RECEIVE(wxT("msg.u05a    = %x"), msg->u05a);
+            LOG_RECEIVE(wxT("msg.u05b    = %x"), msg->u05b);
+          } else {
+            halo_mystery_packet *msg2 = (halo_mystery_packet *)data;
+            LOG_RECEIVE(wxT("msg.counter = %u"), msg2->counter);
+            LOG_RECEIVE(wxT("msg.epoch   = %lld"), msg2->epoch);
+            LOG_RECEIVE(wxT("msg.mystery1 = %u"), msg2->mystery1);
+            LOG_RECEIVE(wxT("msg.mystery2 = %u"), msg2->mystery2);
+          }
+        }
+      }
+
+    } else {  // no data received -> select timeout
       if (no_data_timeout >= SECONDS_SELECT(2)) {
         no_data_timeout = 0;
         if (reportSocket != INVALID_SOCKET) {
           closesocket(reportSocket);
           reportSocket = INVALID_SOCKET;
           m_ri->m_state.Update(RADAR_OFF);
-          CLEAR_STRUCT(m_interface_addr);
-          radar_addr = 0;
+          m_interface_addr = NetworkAddress();
+          radar_address = NetworkAddress();
         }
-      }
-      else {
+      } else {
         no_data_timeout++;
       }
 
       if (no_spoke_timeout >= SECONDS_SELECT(2)) {
         no_spoke_timeout = 0;
         m_ri->ResetRadarImage();
-      }
-      else {
+      } else {
         no_spoke_timeout++;
       }
     }
 
-    if (!(m_info == m_pi->GetNavicoRadarInfo(m_ri->m_radar))) {
-    // Navicolocate modified the RadarInfo in settings
+    if (m_pi->m_heading_source > HEADING_FIX_COG && m_pi->m_heading_source < HEADING_RADAR_HDM) {
+      LOG_TRANSMIT(wxT("%s infoSocket=%d received=%lld sent=%lld\n"), m_ri->m_name.c_str(), infoSocket, now - m_halo_received_info,
+                   now - m_halo_sent_heading);
+      if (infoSocket != INVALID_SOCKET && m_halo_received_info + 10000 < now) {
+        if (m_halo_sent_heading + 100 < now) {
+          SendHeadingPacket();
+          m_halo_sent_heading = now;
+        }
+        if (m_halo_sent_mystery + 250 < now) {
+          SendMysteryPacket();
+          m_halo_sent_mystery = now;
+        }
+      }
+    }
+
+    if (!(m_info == m_ri->GetRadarLocationInfo())) {
+      // Navicolocate modified the RadarInfo in settings
       closesocket(reportSocket);
       reportSocket = INVALID_SOCKET;
     };
@@ -629,12 +860,19 @@ void *NavicoReceive::Entry(void) {
         closesocket(dataSocket);
         dataSocket = INVALID_SOCKET;
       }
+      if (infoSocket != INVALID_SOCKET) {
+        ReleaseInfoSocket();
+        infoSocket = INVALID_SOCKET;
+      }
     }
-    
+
   }  // endless loop until thread destroy
 
   if (dataSocket != INVALID_SOCKET) {
     closesocket(dataSocket);
+  }
+  if (infoSocket != INVALID_SOCKET) {
+    ReleaseInfoSocket();
   }
   if (reportSocket != INVALID_SOCKET) {
     closesocket(reportSocket);
@@ -652,23 +890,29 @@ void *NavicoReceive::Entry(void) {
   }
 
 #ifdef TEST_THREAD_RACES
-  LOG_VERBOSE(wxT("radar_pi: %s receive thread sleeping"), m_ri->m_name.c_str());
+  LOG_VERBOSE(wxT("%s receive thread sleeping"), m_ri->m_name.c_str());
   wxMilliSleep(1000);
 #endif
-  LOG_VERBOSE(wxT("radar_pi: %s receive thread stopping"), m_ri->m_name.c_str());
+  LOG_VERBOSE(wxT("%s receive thread stopping"), m_ri->m_name.c_str());
   m_is_shutdown = true;
   return 0;
 }
 
+/**
+ * TODO: This function should really be removed, it is undesired to set RadarType on the fly, will create inconsistencies, (DF)
+ */
 void NavicoReceive::SetRadarType(RadarType t) {
   m_ri->m_radar_type = t;
   // m_pi->m_pMessageBox->SetRadarType(t);
 }
 
-void NavicoReceive::UpdateSendCommand() {
+void NavicoReceive::DetectedRadar(NetworkAddress &radar_address) {
+  m_ri->DetectedRadar(m_interface_addr, radar_address);  // enables transmit data
+
+  // The if tests should be superfluous, just be extra careful ...
   if (!m_info.send_command_addr.IsNull() && m_ri->m_control) {
     NavicoControl *control = (NavicoControl *)m_ri->m_control;
-    control->SetMultiCastAddress(m_info.send_command_addr);
+    control->SetSendAddress(m_info.send_command_addr);
   }
 }
 
@@ -732,17 +976,6 @@ struct RadarReport_02C4_99 {       // length 99
   uint8_t field41;                 // 41
   uint8_t target_boost;            // 42
 };
-
-// BR24:
-// 03C40F017A620F017A62000001001E0200000000000003001400000000000A00000020050000E803000040C806000100050002000000090000005300650070002000200031002000320030003100300000000000000000000000310033003A00330034003A00340035002000320037003300000000000000000002000000000000
-// 3G:
-// 03C408005E6608005E66000001001E0200000000000000000000000000000C00000016000000E803000040C806000200010003000000000000004F00630074002000320035002000320030003100320000000000000000000000310032003A00300031003A00310033002000330038000000000000000000000002000000000000
-// 4G:
-// 03C401000500540002000E00EC0700000000A401000000000100000000000D000000DC03000001000000602C0A000200020004000000010000004F00630074002000320036002000320030003100320000000000000000000000310037003A00300032003A00330039002000350037000000000000000000000002000000000000
-// HALO:
-// 03C400000700160009000E00010001000000B400000000000000000000000E0000005C0000000100000080900D000000220005000000020000004400650063002000200032002000320030003100350000000000000000000000320031003A00320038003A00330039002000310038000000000000000000000002000000003201
-// HALO24:
-// 03C400000700DC0009003AC000000100010007000000000000000000000010000000170000000100000080900D0000006B0007000000000000004E006F0076002000200032002000320030003100380000000000000000000000300035003A00320034003A00340039002000370030000000000000000000000002000000006E00
 
 #define REPORT_TYPE_BR24 (0x0f)
 #define REPORT_TYPE_3G (0x08)
@@ -864,33 +1097,28 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
           switch (m_radar_status) {
             case 0x01:
               m_ri->m_state.Update(RADAR_STANDBY);
-              LOG_VERBOSE(wxT("radar_pi: %s reports status STANDBY"), m_ri->m_name.c_str());
+              LOG_VERBOSE(wxT("%s reports status STANDBY"), m_ri->m_name.c_str());
               stat = _("Standby");
               break;
             case 0x02:
               m_ri->m_state.Update(RADAR_TRANSMIT);
-              LOG_VERBOSE(wxT("radar_pi: %s reports status TRANSMIT"), m_ri->m_name.c_str());
+              LOG_VERBOSE(wxT("%s reports status TRANSMIT"), m_ri->m_name.c_str());
               stat = _("Transmit");
               break;
             case 0x05:
               m_ri->m_state.Update(RADAR_SPINNING_UP);
-              LOG_VERBOSE(wxT("radar_pi: %s reports status SPINNING UP"), m_ri->m_name.c_str());
+              LOG_VERBOSE(wxT("%s reports status SPINNING UP"), m_ri->m_name.c_str());
               stat = _("Waking up");
               break;
             default:
-#ifdef __WXOSX__
-              LOG_BINARY_RECEIVE(wxT("received unknown radar status"), report, (int)len);
-#else
               LOG_BINARY_RECEIVE(wxT("received unknown radar status"), report, len);
-#endif
               stat = _("Unknown status");
               break;
           }
 
-          wxString s =
-              wxString::Format(wxT("IP %s %s"), m_pi->m_settings.radar_address[m_ri->m_radar].FormatNetworkAddress(), stat.c_str());
+          wxString s = wxString::Format(wxT("IP %s %s"), m_ri->m_radar_address.FormatNetworkAddress(), stat.c_str());
           if (RadarOrder[m_ri->m_radar_type] >= RO_PRIMARY) {
-            NavicoRadarInfo info = m_pi->GetNavicoRadarInfo(m_ri->m_radar);
+            RadarLocationInfo info = m_ri->GetRadarLocationInfo();
             s << wxT("\n") << _("Serial #") << info.serialNr;
           }
           SetInfoStatus(s);
@@ -915,7 +1143,7 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
         m_ri->m_target_expansion.Update(s->target_expansion);
         m_ri->m_range.Update(s->range / 10);
 
-        LOG_RECEIVE(wxT("radar_pi: %s state range=%u gain=%u sea=%u rain=%u if_rejection=%u tgt_boost=%u tgt_expansion=%u"),
+        LOG_RECEIVE(wxT("%s state range=%u gain=%u sea=%u rain=%u if_rejection=%u tgt_boost=%u tgt_expansion=%u"),
                     m_ri->m_name.c_str(), s->range, s->gain, s->sea, s->rain, s->interference_rejection, s->target_boost,
                     s->target_expansion);
         break;
@@ -923,24 +1151,24 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
 
       case (129 << 8) + 0x03: {  // 129 bytes starting with 03 C4
         RadarReport_03C4_129 *s = (RadarReport_03C4_129 *)report;
-        LOG_RECEIVE(wxT("radar_pi: %s RadarReport_03C4_129 radar_type=%u"), m_ri->m_name.c_str(), s->radar_type);
+        LOG_RECEIVE(wxT("%s RadarReport_03C4_129 radar_type=%u"), m_ri->m_name.c_str(), s->radar_type);
 
         switch (s->radar_type) {
           case REPORT_TYPE_BR24:
             if (m_ri->m_radar_type != RT_BR24) {
-              LOG_INFO(wxT("radar_pi: Radar report tells us this a Navico BR24"));
+              LOG_INFO(wxT("%s radar report tells us this a Navico BR24"), m_ri->m_name.c_str());
               SetRadarType(RT_BR24);
             }
             break;
           case REPORT_TYPE_3G:
             if (m_ri->m_radar_type != RT_3G && m_ri->m_radar_type != RT_BR24) {
-              LOG_INFO(wxT("radar_pi: Radar report tells us this an old Navico 3G, use BR24 instead"));
+              LOG_INFO(wxT("%s radar report tells us this an old Navico 3G, use BR24 instead"), m_ri->m_name.c_str());
               SetRadarType(RT_BR24);
             }
             break;
           case REPORT_TYPE_4G:
             if (m_ri->m_radar_type != RT_4GA && m_ri->m_radar_type != RT_4GB && m_ri->m_radar_type != RT_3G) {
-              LOG_INFO(wxT("radar_pi: 4Radar report tells us this a Navico 4G or a modern 3G"));
+              LOG_INFO(wxT("%s radar report tells us this a Navico 4G or a modern 3G"), m_ri->m_name.c_str());
               if (m_ri->m_radar_type == RT_HaloB) {
                 SetRadarType(RT_4GB);
               } else {
@@ -949,8 +1177,8 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
             }
             break;
           case REPORT_TYPE_HALO:
-            if (m_ri->m_radar_type != RT_HaloA && m_ri->m_radar_type != RT_HaloB) {
-              LOG_INFO(wxT("radar_pi: Radar report tells us this a Navico HALO"));
+            if (!IS_HALO) {
+              LOG_INFO(wxT("%s radar report tells us this a Navico HALO"), m_ri->m_name.c_str());
               if (m_ri->m_radar_type == RT_4GB) {
                 SetRadarType(RT_HaloB);
               } else {
@@ -959,7 +1187,7 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
             }
             break;
           default:
-            LOG_INFO(wxT("radar_pi: Unknown radar_type %u"), s->radar_type);
+            LOG_INFO(wxT("%s: Unknown radar_type %u"), m_ri->m_name.c_str(), s->radar_type);
             return false;
         }
 
@@ -977,11 +1205,7 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
 
       case (66 << 8) + 0x04: {  // 66 bytes starting with 04 C4
         if (m_pi->m_settings.verbose >= 2) {
-#ifdef __WXOSX__
-          LOG_BINARY_RECEIVE(wxT("received RadarReport_04C4_66"), report, (int)len);
-#else
           LOG_BINARY_RECEIVE(wxT("received RadarReport_04C4_66"), report, len);
-#endif
         }
         RadarReport_04C4_66 *data = (RadarReport_04C4_66 *)report;
 
@@ -1000,10 +1224,10 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
 #ifdef TODO
       case (564 << 8) + 0x05: {  // length 564, 05 C4
         // Content unknown, but we know that BR24 radomes send this
-        LOG_RECEIVE(wxT("received familiar BR24 report"), report, len);
+        LOG_RECEIVE(wxT("%s received familiar BR24 report"), m_ri->m_name.c_str());
 
         if (m_ri->m_radar_type == RT_UNKNOWN) {
-          LOG_INFO(wxT("radar_pi: Radar report tells us this a Navico BR24"));
+          LOG_INFO(wxT("%s radar report tells us this a Navico BR24"), m_ri->m_name.c_str());
           m_ri->m_radar_type = RT_BR24;
           m_pi->m_pMessageBox->SetRadarType(RT_BR24);
         }
@@ -1015,24 +1239,26 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
                                 // contains Doppler data in extra 3 bytes
         RadarReport_08C4_21 *s08 = (RadarReport_08C4_21 *)report;
 
-        LOG_RECEIVE(wxT("%u 08C4: doppler=%d speed=%d"), m_ri->m_radar, s08->doppler_state, s08->doppler_speed);
+        LOG_RECEIVE(wxT("%s %u 08C4: doppler=%d speed=%d, state=%d"), m_ri->m_name.c_str(), m_ri->m_radar, s08->doppler_state,
+                    s08->doppler_speed, s08->doppler_state);
         // TODO: Doppler speed
 
         m_ri->m_doppler.Update(s08->doppler_state);
+        m_ri->ComputeColourMap();
       }  // FALLTHRU to old length
 
       case (18 << 8) + 0x08: {  // length 18, 08 C4
         // contains scan speed, noise rejection and target_separation and sidelobe suppression
         RadarReport_08C4_18 *s08 = (RadarReport_08C4_18 *)report;
 
-        LOG_RECEIVE(wxT("%u 08C4: scanspeed=%d noise=%u target_sep=%u"), m_ri->m_radar, s08->scan_speed, s08->noise_rejection,
-                    s08->target_sep);
-        LOG_RECEIVE(wxT("%u 08C4: f2=%u f6=%u f7=%u f8=%u f10=%u"), m_ri->m_radar, s08->field2, s08->field6, s08->field7,
-                    s08->field8, s08->field10);
-        LOG_RECEIVE(wxT("%u 08C4: f11=%u f12=%u f13=%u f14=%u"), m_ri->m_radar, s08->field11, s08->field12, s08->field13,
-                    s08->field14);
-        LOG_RECEIVE(wxT("%u 08C4: if=%u slsa=%u sls=%u"), m_ri->m_radar, s08->local_interference_rejection, s08->sls_auto,
-                    s08->side_lobe_suppression);
+        LOG_RECEIVE(wxT("%s %u 08C4: scanspeed=%d noise=%u target_sep=%u"), m_ri->m_name.c_str(), m_ri->m_radar, s08->scan_speed,
+                    s08->noise_rejection, s08->target_sep);
+        LOG_RECEIVE(wxT("%s %u 08C4: f2=%u f6=%u f7=%u f8=%u f10=%u"), m_ri->m_name.c_str(), m_ri->m_radar, s08->field2,
+                    s08->field6, s08->field7, s08->field8, s08->field10);
+        LOG_RECEIVE(wxT("%s %u 08C4: f11=%u f12=%u f13=%u f14=%u"), m_ri->m_name.c_str(), m_ri->m_radar, s08->field11, s08->field12,
+                    s08->field13, s08->field14);
+        LOG_RECEIVE(wxT("%s %u 08C4: if=%u slsa=%u sls=%u"), m_ri->m_name.c_str(), m_ri->m_radar, s08->local_interference_rejection,
+                    s08->sls_auto, s08->side_lobe_suppression);
 
         m_ri->m_scan_speed.Update(s08->scan_speed);
         m_ri->m_noise_rejection.Update(s08->noise_rejection);
@@ -1041,11 +1267,7 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
         m_ri->m_local_interference_rejection.Update(s08->local_interference_rejection);
 
         if (m_pi->m_settings.verbose >= 2) {
-#ifdef __WXOSX__
-          LOG_BINARY_RECEIVE(wxT("received RadarReport_08C4_18"), report, (int)len);
-#else
           LOG_BINARY_RECEIVE(wxT("received RadarReport_08C4_18"), report, len);
-#endif
         }
         break;
       }
@@ -1054,18 +1276,14 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
         RadarReport_12C4_66 *s = (RadarReport_12C4_66 *)report;
         wxString sn = "#";
         sn << s->serialno;
-        LOG_INFO(wxT("radar_pi: %s serial number is: %s"), m_ri->m_name.c_str(), sn);
-        LOG_RECEIVE(wxT("radar_pi: %s RadarReport_12C4_66 serialno=%s"), m_ri->m_name.c_str(), sn);
+        LOG_INFO(wxT("%s serial number is: %s"), m_ri->m_name.c_str(), sn);
+        LOG_RECEIVE(wxT("%s RadarReport_12C4_66 serialno=%s"), m_ri->m_name.c_str(), sn);
         break;
       }
 
       default: {
         if (m_pi->m_settings.verbose >= 2) {
-#ifdef __WXOSX__
-          LOG_BINARY_RECEIVE(wxT("received unknown report"), report, (int)len);
-#else
           LOG_BINARY_RECEIVE(wxT("received unknown report"), report, len);
-#endif
         }
         break;
       }
@@ -1080,7 +1298,7 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
           LOG_BINARY_RECEIVE(wxT("received BR24 report"), report, len);
         }
         if (m_ri->m_radar_type == RT_UNKNOWN) {
-          LOG_INFO(wxT("radar_pi: Radar report tells us this a Navico BR24"));
+          LOG_INFO(wxT("%s radar report tells us this a Navico BR24"), m_ri->m_name.c_str());
           m_ri->m_radar_type = RT_BR24;
           m_pi->m_pMessageBox->SetRadarType(RT_BR24);
         }
@@ -1105,18 +1323,14 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
 #endif
     return true;
   } else if (report[0] == 0x11 && report[1] == 0xC6) {
-    LOG_RECEIVE(wxT("received heartbeat"));
+    LOG_RECEIVE(wxT("%s received heartbeat"), m_ri->m_name.c_str());
   } else if (report[0] == 01 && report[1] == 0xB2) {  // Common Navico message from 4G++
     if (m_pi->m_settings.verbose >= 2) {
-#ifdef __WXOSX__
-      LOG_BINARY_RECEIVE(wxT("received RadarReport_01B2"), report, (int)len);
-#else
       LOG_BINARY_RECEIVE(wxT("received RadarReport_01B2"), report, len);
-#endif
     }
     RadarReport_01B2 *data = (RadarReport_01B2 *)report;
 
-#define LOG_ADDR_N(n) LOG_RECEIVE(wxT("addr%d = %s"), n, FormatPackedAddress(data->addr##n));
+#define LOG_ADDR_N(n) LOG_RECEIVE(wxT("%s addr%d = %s"), m_ri->m_name.c_str(), n, FormatPackedAddress(data->addr##n));
 
     IF_LOG_AT_LEVEL(LOGLEVEL_RECEIVE) {
       LOG_ADDR_N(1);
@@ -1137,11 +1351,7 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
       LOG_ADDR_N(16);
     }
   } else {
-#ifdef __WXOSX__
-    LOG_BINARY_RECEIVE(wxT("received unknown message"), report, (int)len);
-#else
     LOG_BINARY_RECEIVE(wxT("received unknown message"), report, len);
-#endif
   }
   return false;
 }
@@ -1155,11 +1365,11 @@ void NavicoReceive::Shutdown() {
   if (m_send_socket != INVALID_SOCKET) {
     m_shutdown_time_requested = wxGetUTCTimeMillis();
     if (send(m_send_socket, "!", 1, MSG_DONTROUTE) > 0) {
-      LOG_VERBOSE(wxT("radar_pi: %s requested receive thread to stop"), m_ri->m_name.c_str());
+      LOG_VERBOSE(wxT("%s requested receive thread to stop"), m_ri->m_name.c_str());
       return;
     }
   }
-  LOG_INFO(wxT("radar_pi: %s receive thread will take long time to stop"), m_ri->m_name.c_str());
+  LOG_INFO(wxT("%s receive thread will take long time to stop"), m_ri->m_name.c_str());
 }
 
 wxString NavicoReceive::GetInfoStatus() {

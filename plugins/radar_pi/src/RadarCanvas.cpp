@@ -28,10 +28,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "RadarCanvas.h"
-#include "RadarInfo.h"
-#include "TextureFont.h"
-#include "drawutil.h"
+#include "../include/RadarCanvas.h"
+
+#include "../include/RadarInfo.h"
+#include "../include/TextureFont.h"
+#include "../include/drawutil.h"
 
 PLUGIN_BEGIN_NAMESPACE
 
@@ -58,12 +59,12 @@ RadarCanvas::RadarCanvas(radar_pi *pi, RadarInfo *ri, wxWindow *parent, wxSize s
   m_last_mousewheel_zoom_in = 0;
   m_last_mousewheel_zoom_out = 0;
 
-  LOG_VERBOSE(wxT("radar_pi: %s create OpenGL canvas"), m_ri->m_name.c_str());
+  LOG_VERBOSE(wxT("%s create OpenGL canvas"), m_ri->m_name.c_str());
   Refresh(false);
 }
 
 RadarCanvas::~RadarCanvas() {
-  LOG_VERBOSE(wxT("radar_pi: %s destroy OpenGL canvas"), m_ri->m_name.c_str());
+  LOG_VERBOSE(wxT("%s destroy OpenGL canvas"), m_ri->m_name.c_str());
   delete m_context;
   delete m_zero_context;
   if (m_cursor_texture) {
@@ -74,7 +75,7 @@ RadarCanvas::~RadarCanvas() {
 
 void RadarCanvas::OnSize(wxSizeEvent &evt) {
   wxSize parentSize = m_parent->GetSize();
-  LOG_DIALOG(wxT("radar_pi: %s resize OpenGL canvas to %d, %d"), m_ri->m_name.c_str(), parentSize.x, parentSize.y);
+  LOG_DIALOG(wxT("%s resize OpenGL canvas to %d, %d"), m_ri->m_name.c_str(), parentSize.x, parentSize.y);
   Refresh(false);
   if (GetSize() != parentSize) {
     SetSize(parentSize);
@@ -83,7 +84,23 @@ void RadarCanvas::OnSize(wxSizeEvent &evt) {
 
 void RadarCanvas::OnMove(wxMoveEvent &evt) {
   wxPoint pos = m_parent->GetPosition();
-  LOG_DIALOG(wxT("radar_pi: %s move OpenGL canvas to %d, %d"), m_ri->m_name.c_str(), pos.x, pos.y);
+  LOG_DIALOG(wxT("%s move OpenGL canvas to %d, %d"), m_ri->m_name.c_str(), pos.x, pos.y);
+}
+
+wxSize RadarCanvas::GetScaledSize(wxSize size) {
+#if defined(__WXGTK3__) || defined(__WXMAC__)
+  return size * GetContentScaleFactor();
+#else
+  return size;
+#endif
+}
+
+int RadarCanvas::GetScaledSize(int size) {
+#if defined(__WXGTK3__) || defined(__WXMAC__)
+  return size * GetContentScaleFactor();
+#else
+  return size;
+#endif
 }
 
 void RadarCanvas::RenderTexts(const wxSize &loc) {
@@ -133,7 +150,7 @@ void RadarCanvas::RenderTexts(const wxSize &loc) {
                   m_zoom_size.y, MENU_ROUNDING);
 
     glColor4ub(200, 200, 200, 255);
-    // The Menu text is slightly inside the rect
+    // The -+ text is slightly inside the rect
     m_FontMenuBold.RenderString(s, loc.GetWidth() / 2 - m_zoom_size.x / 2 + MENU_BORDER,
                                 loc.GetHeight() - m_zoom_size.y + MENU_BORDER);
   }
@@ -457,7 +474,7 @@ void RadarCanvas::RenderCursor(const wxSize &clientSize, float radius, double di
     glGenTextures(1, &m_cursor_texture);
     glBindTexture(GL_TEXTURE_2D, m_cursor_texture);
     FillCursorTexture();
-    LOG_DIALOG(wxT("radar_pi: generated cursor texture # %u"), m_cursor_texture);
+    LOG_DIALOG(wxT("generated cursor texture # %u"), m_cursor_texture);
   }
 
   // Drawing in existing color
@@ -519,15 +536,14 @@ void RadarCanvas::Render(wxPaintEvent &evt) {
     return;
   }
 
-  const wxSize clientSize = GetClientSize();
+  const wxSize clientSize = GetScaledSize(GetClientSize());
   wxPaintDC(this);  // only to be used in paint events. use wxClientDC to paint
                     // outside the paint event
 
   if (!m_pi->IsOpenGLEnabled()) {
     return;
   }
-  LOG_VERBOSE(wxT("radar_pi: %s render OpenGL canvas %d by %d "), m_ri->m_name.c_str(), clientSize.GetWidth(),
-              clientSize.GetHeight());
+  LOG_VERBOSE(wxT("%s render OpenGL canvas %d by %d "), m_ri->m_name.c_str(), clientSize.GetWidth(), clientSize.GetHeight());
   double look_forward_dist = (double)wxMax(clientSize.GetWidth(), clientSize.GetHeight()) * ZOOM_FACTOR_OFFSET / 4.;
 
   if (m_ri->m_view_center.GetValue() == CENTER_VIEW) {
@@ -546,17 +562,17 @@ void RadarCanvas::Render(wxPaintEvent &evt) {
   glPushAttrib(GL_ALL_ATTRIB_BITS);
 
   wxFont font = GetOCPNGUIScaledFont_PlugIn(_T("StatusBar"));
+  font.SetPointSize(GetScaledSize(font.GetPointSize()));
   m_FontNormal.Build(font);
-  wxFont bigFont = GetOCPNGUIScaledFont_PlugIn(_T("Dialog"));
-  bigFont.SetPointSize(bigFont.GetPointSize() + 2);
-  bigFont.SetWeight(wxFONTWEIGHT_BOLD);
-  m_FontBig.Build(bigFont);
-  bigFont.SetPointSize(bigFont.GetPointSize() + 2);
-  bigFont.SetWeight(wxFONTWEIGHT_NORMAL);
-  m_FontMenu.Build(bigFont);
-  bigFont.SetPointSize(bigFont.GetPointSize() + 10);
-  bigFont.SetWeight(wxFONTWEIGHT_BOLD);
-  m_FontMenuBold.Build(bigFont);
+
+  font = GetOCPNGUIScaledFont_PlugIn(_T("Dialog"));
+  font.SetPointSize(GetScaledSize(font.GetPointSize() + 2));
+  font.SetWeight(wxFONTWEIGHT_NORMAL);
+  m_FontMenu.Build(font);
+  font.SetWeight(wxFONTWEIGHT_BOLD);
+  m_FontBig.Build(font);
+  font.SetPointSize(font.GetPointSize() * 2);  // Zoom text is really big
+  m_FontMenuBold.Build(font);
 
   wxColour bg = M_SETTINGS.ppi_background_colour;
   glClearColor(bg.Red() / 256.0, bg.Green() / 256.0, bg.Blue() / 256.0, bg.Alpha() / 256.0);
@@ -731,14 +747,10 @@ void RadarCanvas::OnMouseClickUp(wxMouseEvent &event) {
     // double offset = (double)wxMax(w, h) * m_ri->m_radar_radius / 2.;  // half of the radar_radius
     center_x += (m_ri->m_off_center.x + m_ri->m_drag.x);  // horizontal
     center_y += (m_ri->m_off_center.y + m_ri->m_drag.y);
-    LOG_DIALOG(wxT("radar_pi: %s Mouse clicked at %d, %d"), m_ri->m_name.c_str(), x, y);
+    LOG_DIALOG(wxT("%s Mouse clicked at %d, %d"), m_ri->m_name.c_str(), x, y);
     if (x > 0 && x < w && y > 0 && y < h) {
       if (x >= w - m_menu_size.x && y < m_menu_size.y) {
-#ifdef __WXOSX__
-        m_pi->ShowRadarControl((int)m_ri->m_radar, true);
-#else
         m_pi->ShowRadarControl(m_ri->m_radar, true);
-#endif
       } else if ((x >= center_x - m_zoom_size.x / 2) && (x <= center_x + m_zoom_size.x / 2) &&
                  (y > h - m_zoom_size.y + MENU_ROUNDING)) {
         if (x < center_x) {
@@ -760,7 +772,7 @@ void RadarCanvas::OnMouseClickUp(wxMouseEvent &event) {
 
         double range = distance / (1852.0 * full_range / display_range);
 
-        LOG_VERBOSE(wxT("radar_pi: cursor in PPI at angle=%.1fdeg range=%.2fnm"), angle, range);
+        LOG_VERBOSE(wxT("cursor in PPI at angle=%.1fdeg range=%.2fnm"), angle, range);
         m_ri->SetMouseVrmEbl(range, angle);
       }
     }
@@ -783,7 +795,7 @@ void RadarCanvas::OnMouseWheel(wxMouseEvent &event) {
 
   wxLongLong now = wxGetUTCTimeMillis();
 
-  //  LOG_INFO(wxT("radar_pi: %s Mouse range wheel %d / %d"), m_ri->m_name.c_str(), rotation, delta);
+  //  LOG_INFO(wxT("%s Mouse range wheel %d / %d"), m_ri->m_name.c_str(), rotation, delta);
 
   if (rotation) {
     if (m_pi->m_settings.reverse_zoom) {
@@ -791,7 +803,7 @@ void RadarCanvas::OnMouseWheel(wxMouseEvent &event) {
     }
     double zoom_time = m_ri->m_view_center.GetValue() ? ZOOM_TIME_RANGE : ZOOM_TIME_LOCAL;
     if (rotation > ZOOM_SENSITIVITY && m_last_mousewheel_zoom_in < now - zoom_time) {
-      LOG_VERBOSE(wxT("radar_pi: %s Mouse zoom in"), m_ri->m_name.c_str());
+      LOG_VERBOSE(wxT("%s Mouse zoom in"), m_ri->m_name.c_str());
       if (m_ri->m_view_center.GetValue()) {
         m_ri->AdjustRange(+1);
       } else {
@@ -801,7 +813,7 @@ void RadarCanvas::OnMouseWheel(wxMouseEvent &event) {
       }
       m_last_mousewheel_zoom_in = now;
     } else if (rotation < -1 * ZOOM_SENSITIVITY && m_last_mousewheel_zoom_out < now - zoom_time) {
-      LOG_INFO(wxT("radar_pi: %s Mouse zoom out"), m_ri->m_name.c_str());
+      LOG_INFO(wxT("%s Mouse zoom out"), m_ri->m_name.c_str());
       if (m_ri->m_view_center.GetValue()) {
         m_ri->AdjustRange(-1);
       } else {
