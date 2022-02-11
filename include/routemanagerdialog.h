@@ -101,6 +101,7 @@ class RouteManagerDialog : public wxFrame {
             void OnRteActivateClick(wxCommandEvent &event);
             void OnRteReverseClick(wxCommandEvent &event);
             void OnRteExportClick(wxCommandEvent &event);
+            void OnRteRenameClick(wxCommandEvent &event);
             void OnRteToggleVisibility(wxMouseEvent &event);
             void OnRteBtnLeftDown(wxMouseEvent &event); // record control key state for some action buttons
             void OnRteDeleteAllClick(wxCommandEvent &event);
@@ -181,6 +182,7 @@ class RouteManagerDialog : public wxFrame {
             wxButton *btnRteReverse;
             wxButton *btnRteDelete;
             wxButton *btnRteExport;
+            wxButton *btnRteRename;
             wxButton *btnRteSendToGPS;
             wxButton *btnRteDeleteAll;
             wxButton *btnTrkNew;

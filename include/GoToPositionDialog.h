@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  *
@@ -19,8 +19,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef __GOTOPOSITIONDIALOG_H__
 #define __GOTOPOSITIONDIALOG_H__
@@ -30,11 +29,11 @@
 
 class ChartCanvas;
 
-/*!
+/*
  * Control identifiers
  */
 
-////@begin control identifiers
+// //@begin control identifiers
 #define ID_GOTOPOS 8100
 #define SYMBOL_GOTOPOS_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
 #define SYMBOL_GOTOPOS_TITLE _("Center view")
@@ -45,9 +44,9 @@ class ChartCanvas;
 #define ID_GOTOPOS_OK 8102
 
 
-////@end control identifiers
+// //@end control identifiers
 
-/*!
+/*
  * GoToPositionDialog class declaration
  */
 class GoToPositionDialog: public wxDialog
@@ -56,7 +55,7 @@ class GoToPositionDialog: public wxDialog
       DECLARE_EVENT_TABLE()
 
       public:
-    /// Constructors
+    // / Constructors
             GoToPositionDialog( );
             GoToPositionDialog( wxWindow* parent, wxWindowID id = SYMBOL_GOTOPOS_IDNAME,
                                 const wxString& caption = SYMBOL_GOTOPOS_TITLE,
@@ -66,7 +65,7 @@ class GoToPositionDialog: public wxDialog
 
             ~GoToPositionDialog();
 
-    /// Creation
+    // / Creation
             bool Create( wxWindow* parent, wxWindowID id = SYMBOL_GOTOPOS_IDNAME,
                          const wxString& caption = SYMBOL_GOTOPOS_TITLE,
                          const wxPoint& pos = SYMBOL_GOTOPOS_POSITION,
@@ -82,7 +81,7 @@ class GoToPositionDialog: public wxDialog
             void OnPositionCtlUpdated( wxCommandEvent& event );
             void CheckPasteBufferForPosition();
 
-      /// Should we show tooltips?
+      // / Should we show tooltips?
             static bool ShowToolTips();
 
             wxTextCtrl*   m_MarkLatCtl;

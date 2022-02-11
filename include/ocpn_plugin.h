@@ -156,6 +156,15 @@ class PlugIn_Position_Fix_Ex
             int    nSats;
 };
 
+class Plugin_Active_Leg_Info {
+public:
+  double Xte;  // Left side of the track -> negative XTE
+  double Btw;
+  double Dtw;
+  wxString wp_name;  // Name of destination waypoint for active leg
+  bool arrival;      // True when within arrival circle
+};
+
 //    Describe AIS Alarm state
 enum plugin_ais_alarm_type
 {
@@ -568,6 +577,28 @@ public:
     virtual bool RenderOverlayMultiCanvas(wxDC &dc, PlugIn_ViewPort *vp, int canvasIndex);
     virtual void PrepareContextMenu( int canvasIndex);
 
+};
+
+class DECL_EXP opencpn_plugin_117 : public opencpn_plugin_116 {
+public:
+  opencpn_plugin_117(void *pmgr);
+  /*
+   * Forms a semantic version together with GetPlugInVersionMajor() and
+   * GetPlugInVersionMinor(), see https://semver.org/
+   */
+  virtual int GetPlugInVersionPatch();
+
+  /* * Post-release version part, extends the semver spec. */
+  virtual int GetPlugInVersionPost();
+
+  /* * Pre-release tag version part, see GetPlugInVersionPatch() */
+  virtual const char *GetPlugInVersionPre();
+
+  /* * Build version part  see GetPlugInVersionPatch(). */
+  virtual const char *GetPlugInVersionBuild();
+
+  /*Provide active leg data to plugins*/
+  virtual void SetActiveLegInfo(Plugin_Active_Leg_Info &leg_info);
 };
 
 //------------------------------------------------------------------

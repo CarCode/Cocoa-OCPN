@@ -216,13 +216,20 @@ static wxString ExpandWord(wxString word)
 
 wxString GetPluginDataDir(const char* plugin_name)
 {
+#ifdef __WXOSX__
+    const char* const sharedDataLoc = *GetpPrivateApplicationDataLocation();
+#else
     const char* const sharedDataLoc = *GetpSharedDataLocation();
-#ifdef __linux__
-    const char* const envdirs = getenv("XDG_DATA_DIRS");
-    wxString datadirs(envdirs ? envdirs : DEFAULT_DATA_DIRS);
-    if (envdirs == 0 && datadirs.Find(sharedDataLoc) == wxNOT_FOUND)
-        datadirs.Append(wxString(PATH_SEP) + sharedDataLoc);
-    wxLogMessage(_T("PlugInManager: Using data dirs from: ") + datadirs);
+#endif
+//#ifdef __linux__
+//    const char* const envdirs = getenv("XDG_DATA_DIRS");
+//    wxString datadirs(envdirs ? envdirs : DEFAULT_DATA_DIRS);
+//    if (envdirs == 0 && datadirs.Find(sharedDataLoc) == wxNOT_FOUND)
+//        datadirs.Append(wxString(PATH_SEP) + sharedDataLoc);
+//    wxLogMessage(_T("PlugInManager: Using data dirs from: ") + datadirs);
+#ifndef __WXOSX__
+    wxString datadirs = *GetpPrivateApplicationDataLocation(); // + wxFileName::GetPathSeparator(); // + _T("plugins") + wxFileName::GetPathSeparator() + _T("JavaScript_pi")  + wxFileName::GetPathSeparator();
+//    wxMessageBox(_T("datadirs bei 1.: ") + datadirs);
 #else
     wxString datadirs(sharedDataLoc);
 #endif
@@ -230,8 +237,7 @@ wxString GetPluginDataDir(const char* plugin_name)
     wxStringTokenizer dirs(datadirs, PATH_SEP);
     while (dirs.HasMoreTokens()) {
         wxString dir = ExpandWord(dirs.GetNextToken()) + sep;
-	dir +=
-            dir.EndsWith("opencpn") ? "plugins" : "opencpn" + sep + "plugins";
+        dir += dir.EndsWith("opencpn") ? "plugins" : "opencpn" + sep + "plugins";
         wxFileName tryDirName(dir);
         wxDir tryDir;
         if (!tryDir.Open(tryDirName.GetFullPath()))
@@ -247,6 +253,7 @@ wxString GetPluginDataDir(const char* plugin_name)
             more = tryDir.GetNext(&next);
         }
     }
+//    wxMessageBox(datadirs);
     wxLogMessage(_T("Warnińg: no data directory found, using \"\""));
     return "";
 }
@@ -472,7 +479,7 @@ bool PlugInManager::LoadPlugInDirectory(const wxString &plugin_dir, bool load_en
     }
 
     if(!g_Platform->isPlatformCapable(PLATFORM_CAP_PLUGINS)) return false;
-       
+
     wxArrayString file_list;
         
     int get_flags =  wxDIR_FILES | wxDIR_DIRS;
@@ -703,6 +710,9 @@ void PlugInManager::SendVectorChartObjectInfo(const wxString &chart, const wxStr
                 case 114:
                 case 115:
                 case 116:
+#ifdef __WXOSX__
+                case 117:
+#endif
                 {
                     opencpn_plugin_112 *ppi = dynamic_cast<opencpn_plugin_112 *>(pic->m_pplugin);
                     if(ppi)
@@ -1464,7 +1474,11 @@ PlugInContainer *PlugInManager::LoadPlugIn(wxString plugin_file)
     case 116:
         pic->m_pplugin = dynamic_cast<opencpn_plugin_116*>(plug_in);
         break;
-        
+    case 117:
+#ifdef __WXOSX__
+        pic->m_pplugin = dynamic_cast<opencpn_plugin_117*>(plug_in);
+        break;
+#endif
     default:
         break;
     }
@@ -2027,6 +2041,9 @@ void PlugInManager::SendMessageToAllPlugins(const wxString &message_id, const wx
                 case 114:
                 case 115:
                 case 116:
+#ifdef __WXOSX__
+                case 117:
+#endif
                 {
                     opencpn_plugin_18 *ppi = dynamic_cast<opencpn_plugin_18 *>(pic->m_pplugin);
                     if(ppi)
@@ -2109,6 +2126,9 @@ void PlugInManager::SendPositionFixToAllPlugIns(GenericPosDatEx *ppos)
                 case 114:
                 case 115:
                 case 116:
+#ifdef __WXOSX__
+                case 117:
+#endif
                 {
                     opencpn_plugin_18 *ppi = dynamic_cast<opencpn_plugin_18 *>(pic->m_pplugin);
                     if(ppi)
@@ -3774,9 +3794,7 @@ bool AddPlugInTrack( PlugIn_Track *ptrack, bool b_permanent )
     return true;
 }
 
-
-
-bool DeletePluginTrack( wxString& GUID )
+bool DeletePlugInTrack( wxString &GUID )
 {
     bool b_found = false;
 
@@ -4172,6 +4190,19 @@ void opencpn_plugin_116::PrepareContextMenu( int canvasIndex)
 {
     return;
 }
+
+//    Opencpn_Plugin_117 Implementation
+opencpn_plugin_117::opencpn_plugin_117(void *pmgr) : opencpn_plugin_116(pmgr) {}
+
+int opencpn_plugin_117::GetPlugInVersionPatch() { return 0; };
+
+int opencpn_plugin_117::GetPlugInVersionPost() { return 0; };
+
+const char *opencpn_plugin_117::GetPlugInVersionPre() { return ""; };
+
+const char *opencpn_plugin_117::GetPlugInVersionBuild() { return ""; };
+
+void opencpn_plugin_117::SetActiveLegInfo(Plugin_Active_Leg_Info &leg_info) {}
 
 //          Helper and interface classes
 
@@ -4830,7 +4861,11 @@ InitReturn ChartPlugInWrapper::Init( const wxString& name, ChartInitFlag init_fl
             bReadyToRender = m_ppicb->IsReadyToRender();
 
         }
-
+        else{
+          //  Mark the chart as unable to render
+          m_ChartType = CHART_TYPE_UNKNOWN;
+          m_ChartFamily = CHART_FAMILY_UNKNOWN;
+        }
 
         //  PlugIn may invoke wxExecute(), which steals the keyboard focus
         //  So take it back

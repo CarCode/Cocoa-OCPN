@@ -60,7 +60,8 @@ private:
 
 protected:
 #define GNSS_SYSTEM 6
-    int m_cx, m_cy, m_radius;
+//    int m_cx, m_cy, m_radius;
+    int m_cx, m_cy, m_radius, m_refDim, m_scaleDelta, m_scaleBase;  // NEU
     int m_SatCount;
     wxString talkerID;
     SAT_INFO m_SatInfo[12];

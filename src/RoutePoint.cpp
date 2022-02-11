@@ -532,9 +532,8 @@ bool RoutePoint::IsVisibleSelectable(ChartCanvas *canvas, bool boverrideViz)
     if( b_UseScamin ){
         if (g_bOverruleScaMin)
             return true;
-        else
-            if (canvas->GetScaleValue() > m_ScaMin) 
-                return false;
+        else if (canvas->GetScaleValue() >= (double)(m_ScaMin + 1))
+            return false;
     }
     return true;
 }
@@ -823,6 +822,11 @@ void RoutePoint::DrawGL( ViewPort &vp, ChartCanvas *canvas, bool use_cached_scre
         if( !m_pMarkFont ) {
             m_pMarkFont = FontMgr::Get().GetFont( _T( "Marks" ) );
             m_FontColor = FontMgr::Get().GetFontColor( _T( "Marks" ) );
+            if (m_iTextTexture) {
+              glDeleteTextures(1, &m_iTextTexture);
+              m_iTextTexture = 0;
+            }
+
             CalculateNameExtents();
         }
 

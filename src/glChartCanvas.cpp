@@ -3576,6 +3576,11 @@ void glChartCanvas::Render()
                                   && sx == m_cache_tex_x && sy == m_cache_tex_y;
             }
 
+            //  FBO swapping has trouble with Retina display on MacOS Monterey.
+            //  So, disable accelerated pan ops on this case.
+            if (m_displayScale > 1)
+               accelerated_pan = false;
+
             // do we allow accelerated panning?  can we perform it here?
             if(accelerated_pan && !g_GLOptions.m_bUseCanvasPanning) {
                 if((dx != 0) || (dy != 0)){   // Anything to do?

@@ -503,8 +503,8 @@ ChartCanvas::ChartCanvas ( wxFrame *frame, int canvasIndex ) :
     m_bShowGPS = true;
     SetQuiltMode(true);
     SetAlertString(_T(""));
-    m_sector_glat = 200;
-    m_sector_glon = 200;
+    m_sector_glat = 0;
+    m_sector_glon = 0;
 
     SetupGlCanvas( );
 /*
@@ -10196,7 +10196,12 @@ void ChartCanvas::RenderVisibleSectorLights( ocpnDC &dc )
 
     if(g_bDeferredInitDone){
         // need to re-evaluate sectors?
-        if((m_sector_glat != gLat) || (m_sector_glon != gLon)){
+        double rhumbBearing, rhumbDist;
+        DistanceBearingMercator(gLat, gLon, m_sector_glat, m_sector_glon,
+                                          &rhumbBearing, &rhumbDist);
+
+        if (rhumbDist > 0.05)   // miles
+        {
             s57_GetVisibleLightSectors( this, gLat, gLon, GetVP(), m_sectorlegsVisible );
             m_sector_glat = gLat;
             m_sector_glon = gLon;

@@ -1749,7 +1749,7 @@ static void AISDrawTarget( AIS_Target_Data *td, ocpnDC& dc, ViewPort& vp, ChartC
                 break;
         }
     }
-
+/*  // alter Code vor Commit vom 01.02.2022 "Correct AIS target track rendering for no-OpenGL mode."
     if( (!b_noshow && td->b_show_track) || b_forceshow ) {
         wxColour c = GetGlobalColor( _T ( "CHMGD" ) );
         if(dc.GetDC()) {
@@ -1789,6 +1789,57 @@ static void AISDrawTarget( AIS_Target_Data *td, ocpnDC& dc, ViewPort& vp, ChartC
             glEnd();
 #endif
     }           // Draw tracks
+}
+*/
+    int TrackLength = td->m_ptrack->GetCount();
+    if (((!b_noshow && td->b_show_track) || b_forceshow) && (TrackLength > 1))
+    {
+        //  create vector of x-y points
+        int TrackPointCount;
+        wxPoint *TrackPoints = 0;
+        TrackPoints = new wxPoint[TrackLength];
+        wxAISTargetTrackListNode *node = td->m_ptrack->GetFirst();
+        for (TrackPointCount = 0; node && (TrackPointCount < TrackLength);
+             TrackPointCount++) {
+            AISTargetTrackPoint *ptrack_point = node->GetData();
+            GetCanvasPointPix(vp, cp, ptrack_point->m_lat, ptrack_point->m_lon,
+                          &TrackPoints[TrackPointCount]);
+            node = node->GetNext();
+        }
+
+        wxColour c = GetGlobalColor(_T ( "CHMGD" ));
+        dc.SetPen(wxPen(c, 2 * AIS_nominal_line_width_pix));
+
+#ifdef ocpnUSE_GL
+#ifndef USE_ANDROID_GLES2
+        if (!dc.GetDC())
+        {
+            glLineWidth(2);
+            glColor3ub(c.Red(), c.Green(), c.Blue());
+            glBegin(GL_LINE_STRIP);
+
+            for (TrackPointCount = 0; TrackPointCount < TrackLength; TrackPointCount++)
+            glVertex2i(TrackPoints[TrackPointCount].x,
+                       TrackPoints[TrackPointCount].y);
+
+            glEnd();
+        }
+        else {
+            dc.DrawLines(TrackPointCount, TrackPoints);
+        }
+#else
+        dc.DrawLines(TrackPointCount, TrackPoints);
+#endif
+
+#else
+        if (dc.GetDC())
+            dc.StrokeLines(TrackPointCount, TrackPoints);
+
+#endif
+
+        delete[] TrackPoints;
+
+    }  // Draw tracks
 }
 
 void AISDraw( ocpnDC& dc, ViewPort& vp, ChartCanvas *cp )

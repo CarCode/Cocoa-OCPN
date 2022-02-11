@@ -96,7 +96,7 @@ static kern_return_t FindSerialPorts(io_iterator_t *matchingServices)
 */
         CFDictionarySetValue(classesToMatch,
                              CFSTR(kIOSerialBSDTypeKey),
-                             CFSTR(kIOSerialBSDRS232Type));
+                             CFSTR(kIOSerialBSDAllType));  // war: (kIOSerialBSDRS232Type) Commit 20.01.2022
 
 		// Each serial device object has a property with key
         // kIOSerialBSDTypeKey and a value that is one of kIOSerialBSDAllTypes,
