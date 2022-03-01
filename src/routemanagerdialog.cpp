@@ -432,11 +432,11 @@ void RouteManagerDialog::Create()
     btnRteExport->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
                            wxCommandEventHandler(RouteManagerDialog::OnRteExportClick), NULL, this );
 
-    btnRteRename = new wxButton(winr, -1, _("&Rename waypoints"));
-      bsRouteButtonsInner->Add(btnRteRename, 0, wxALL | wxEXPAND, DIALOG_MARGIN);
-      btnRteRename->Connect(
+    btnRteResequence = new wxButton(winr, -1, _("&Rename waypoints"));
+      bsRouteButtonsInner->Add(btnRteResequence, 0, wxALL | wxEXPAND, DIALOG_MARGIN);
+      btnRteResequence->Connect(
           wxEVT_COMMAND_BUTTON_CLICKED,
-          wxCommandEventHandler(RouteManagerDialog::OnRteRenameClick), NULL, this);
+          wxCommandEventHandler(RouteManagerDialog::OnRteResequenceClick), NULL, this);
 
     btnRteSendToGPS = new wxButton( winr, -1, _("&Send to GPS") );
     bsRouteButtonsInner->Add( btnRteSendToGPS, 0, wxALL | wxEXPAND, DIALOG_MARGIN );
@@ -847,7 +847,7 @@ RouteManagerDialog::~RouteManagerDialog()
     delete m_pLayListCtrl;
 
     delete btnRteDelete;
-    delete btnRteRename;
+    delete btnRteResequence;
     delete btnRteExport;
     delete btnRteZoomto;
     delete btnRteProperties;
@@ -1140,7 +1140,7 @@ void RouteManagerDialog::UpdateRteButtons()
     btnRteProperties->Enable( enable1 );
     btnRteReverse->Enable( enable1 );
     btnRteExport->Enable( enablemultiple );
-    btnRteRename->Enable(enable1);
+    btnRteResequence->Enable(enable1);
     btnRteSendToGPS->Enable( enable1 );
     btnRteDeleteAll->Enable( m_pRouteListCtrl->GetItemCount() > 0 );
 
@@ -1392,7 +1392,7 @@ void RouteManagerDialog::OnRteExportClick( wxCommandEvent &event )
     ExportGPXRoutes( this, &list, suggested_name );
 }
 
-void RouteManagerDialog::OnRteRenameClick(wxCommandEvent &event) {
+void RouteManagerDialog::OnRteResequenceClick(wxCommandEvent &event) {
     long item = -1;
     item = m_pRouteListCtrl->GetNextItem(item, wxLIST_NEXT_ALL,
         wxLIST_STATE_SELECTED);

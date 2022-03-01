@@ -1226,7 +1226,7 @@ bool WayPointman::AddRoutePoint(RoutePoint *prp)
 
     wxRoutePointListNode *prpnode = m_pWayPointList->Append(prp);
     prp->SetManagerListNode( prpnode );
-
+/*
     // scrub the list, looking for duplicate GUIDs
     wxRoutePointListNode *node = m_pWayPointList->GetFirst();
     while (node) {
@@ -1252,7 +1252,7 @@ bool WayPointman::AddRoutePoint(RoutePoint *prp)
       node = node->GetNext();
 
     }
-
+*/
     return true;
 }
 

@@ -5933,21 +5933,37 @@ void options::CreatePanel_UI(size_t parent, int border_size, int group_item_spac
       pSoundSizer->Add( pCmdSoundString, 1, wxEXPAND | wxALIGN_LEFT, border_size );
   }
 
-  OcpnSound* sound = SoundFactory();
+  auto sound = std::unique_ptr<OcpnSound>(SoundFactory());
   int deviceCount = sound->DeviceCount();
   wxLogMessage("options: got device count: %d", deviceCount);
   if (deviceCount >= 1) {
     wxArrayString labels;
     for (int i = 0; i < deviceCount; i += 1) {
-        if (!sound->IsOutputDevice(i)) {
-            continue;
-        }
         wxString label(sound->GetDeviceInfo(i));
         if (label == "")  {
-            label = _("Unknown device :") + std::to_string(i);
+            std::ostringstream stm;
+            stm << i;
+            label = _("Unknown device :") + stm.str();
         }
+        if (!sound->IsOutputDevice(i)) {
+           std::ostringstream stm;
+           stm << i;
+           label = _("Input device :") + stm.str();
+         }
         labels.Add(label);
     }
+
+    //  if sound device index is uninitialized, set to "default", if found.
+    // Otherwise, set to 0
+    int iDefault = labels.Index( "default");
+
+    if (g_iSoundDeviceIndex == -1){
+        if (iDefault >= 0)
+            g_iSoundDeviceIndex = iDefault;
+        else
+            g_iSoundDeviceIndex = 0;
+    }
+
     pSoundDeviceIndex = new wxChoice();
     if (pSoundDeviceIndex) {
         pSoundDeviceIndex->Create(itemPanelFont,
