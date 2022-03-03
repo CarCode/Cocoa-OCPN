@@ -85,11 +85,6 @@
 #ifdef ocpnUSE_GL
 #include "glChartCanvas.h"
 #endif
-
-#ifdef __WXOSX__
-#include "DarkMode.h"
-#endif
-
 //    Statics
 
 extern OCPNPlatform     *g_Platform;
@@ -4877,16 +4872,6 @@ void DimeControl( wxWindow* ctrl, wxColour col, wxColour window_back_color, wxCo
         ctrl->SetBackgroundColour( window_back_color );
         if(darkMode)
             ctrl->SetForegroundColour( text_color );
-
-#if defined(__WXOSX__) && defined(OCPN_USE_DARKMODE)
-        // On macOS 10.12, enable dark mode at the window level if appropriate.
-        // This will enable dark window decorations but will not darken the rest of the UI.
-        if ( wxPlatformInfo::Get().CheckOSVersion(10, 12) ) {
-            setWindowLevelDarkMode(ctrl->MacGetTopLevelWindowRef(), darkMode);
-        }
-        // Force consistent coloured UI text; dark in light mode and light in dark mode.
-        uitext = darkMode ? wxColor(228,228,228) : wxColor(0,0,0);
-#endif
     }
 
     wxWindowList kids = ctrl->GetChildren();

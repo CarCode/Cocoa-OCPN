@@ -166,10 +166,6 @@
 #include "crashprint.h"
 #endif
 
-#ifdef __WXOSX__
-#include "DarkMode.h"
-#endif
-
 #ifdef ocpnUSE_NEWSERIAL
 #include "serial/serial.h"
 #endif
@@ -3022,17 +3018,6 @@ void MyFrame::SetAndApplyColorScheme( ColorScheme cs )
             SchemeName = _T("DAY");
             break;
     }
-
-#if defined(__WXOSX__) && defined(OCPN_USE_DARKMODE)
-    bool darkMode = (cs == GLOBAL_COLOR_SCHEME_DUSK || cs == GLOBAL_COLOR_SCHEME_NIGHT);
-
-    if (wxPlatformInfo::Get().CheckOSVersion(10, 14)) {
-        setAppLevelDarkMode(darkMode);
-    }
-    else if (wxPlatformInfo::Get().CheckOSVersion(10, 12)) {
-        setWindowLevelDarkMode(MacGetTopLevelWindowRef(), darkMode);
-    }
-#endif
 
     g_pauidockart->SetMetric(wxAUI_DOCKART_GRADIENT_TYPE, wxAUI_GRADIENT_NONE);
 
