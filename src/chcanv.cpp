@@ -125,6 +125,7 @@
 
 extern float  g_ChartScaleFactorExp;
 extern float  g_ShipScaleFactorExp;
+extern double g_mouse_zoom_sensitivity;
 
 #include <vector>
 //#include <wx-3.0/wx/aui/auibar.h>
@@ -4248,7 +4249,11 @@ bool ChartCanvas::GetCanvasPointPixVP( ViewPort &vp, double rlat, double rlon, w
         return false;
     }
 
-    *r = wxPoint(wxRound(p.m_x), wxRound(p.m_y));
+    if( (abs(p.m_x) < 10000) && (abs(p.m_y) < 10000) )
+      *r = wxPoint(wxRound(p.m_x), wxRound(p.m_y));
+    else
+      *r = wxPoint(INVALID_COORD, INVALID_COORD);
+
     return true;
 }
 
@@ -8944,7 +8949,7 @@ bool ChartCanvas::MouseEventProcessCanvas( wxMouseEvent& event )
         int mouse_wheel_oneshot = abs(wheel_dir)*4;                  //msec
         wheel_dir = wheel_dir > 0 ? 1 : -1; // normalize
 
-        double factor = 2.0;
+        double factor = g_mouse_zoom_sensitivity;
         if(wheel_dir < 0)
             factor = 1/factor;
 

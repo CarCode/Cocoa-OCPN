@@ -2663,7 +2663,8 @@ void MyApp::TrackOff( void )
 //      Frame implementation
 wxDEFINE_EVENT(BELLS_PLAYED_EVTYPE, wxCommandEvent);
 
-BEGIN_EVENT_TABLE(MyFrame, wxFrame) EVT_CLOSE(MyFrame::OnCloseWindow)
+BEGIN_EVENT_TABLE(MyFrame, wxFrame)
+EVT_CLOSE(MyFrame::OnCloseWindow)
 EVT_MENU(wxID_EXIT, MyFrame::OnExit)
 EVT_SIZE(MyFrame::OnSize)
 EVT_MOVE(MyFrame::OnMove)
@@ -7276,7 +7277,12 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
         GPSData.kHdt = gHdt;
         GPSData.nSats = g_SatsInView;
 
-        GPSData.FixTime = m_fixtime;
+        wxDateTime tCheck( (time_t) m_fixtime);
+
+        if (tCheck.IsValid())
+          GPSData.FixTime = m_fixtime;
+        else
+          GPSData.FixTime = wxDateTime::Now().GetTicks();
 
         g_pi_manager->SendPositionFixToAllPlugIns( &GPSData );
     }

@@ -1302,13 +1302,15 @@ bool PlugInManager::CheckBlacklistedPlugin(opencpn_plugin* plugin)
                 msg1= wxString::Format(_T("    PlugIn %s (%s), version %i.%i was detected. Soft blacklisted. Loaded."),
                                               PluginBlacklist[i].name.c_str(), plugin->GetCommonName().c_str(), major, minor);
             }
-            
+
             wxLogMessage(msg1);
-            if(m_benable_blackdialog)
-                OCPNMessageBox ( NULL, msg, wxString( _("OpenCPN Info") ), wxICON_INFORMATION | wxOK, 10 );  // 10 second timeout
+            if (!PluginBlacklist[i].mute_dialog) {
+              if (m_benable_blackdialog)
+                OCPNMessageBox(NULL, msg, wxString(_("OpenCPN Info")), wxICON_INFORMATION | wxOK, 10 );  // 10 second timeout
             else
                 m_deferred_blacklist_messages.Add(msg);
-            
+            }
+
             return PluginBlacklist[i].hard;
         }
     }

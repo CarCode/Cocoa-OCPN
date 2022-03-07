@@ -444,6 +444,8 @@ wxString                g_gpx_path;
 bool                    g_bLayersLoaded;
 
 int g_trackFilterMax;
+double g_mouse_zoom_sensitivity;
+int g_mouse_zoom_sensitivity_ui;
 
 #ifdef ocpnUSE_GL
 extern ocpnGLOptions g_GLOptions;
@@ -607,6 +609,7 @@ int MyConfig::LoadMyConfig()
     g_benableAISNameCache = true;
     g_n_arrival_circle_radius = 0.05;
     g_plus_minus_zoom_factor = 2.0;
+    g_mouse_zoom_sensitivity = 1.5;
 
     g_AISShowTracks_Mins = 20;
     g_AISShowTracks_Limit = 300.0;
@@ -911,6 +914,9 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
     Read( _T ( "ZoomDetailFactor" ), &g_chart_zoom_modifier );
     Read( _T ( "ZoomDetailFactorVector" ), &g_chart_zoom_modifier_vector );
     Read( _T ( "PlusMinusZoomFactor" ), &g_plus_minus_zoom_factor, 2.0);
+    Read("MouseZoomSensitivity", &g_mouse_zoom_sensitivity, 1.3);
+    g_mouse_zoom_sensitivity_ui =
+        MouseZoom::config_to_ui(g_mouse_zoom_sensitivity);
 
 #ifdef USE_S57
     Read( _T ( "CM93DetailFactor" ), &g_cm93_zoom_factor );
@@ -920,7 +926,6 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
     Read( _T ( "ShowCM93DetailSlider" ), &g_bShowDetailSlider );
 
     Read( _T ( "SENC_LOD_Pixels" ), &g_SENC_LOD_pixels );
-
 #endif
 
     Read( _T ( "SkewCompUpdatePeriod" ), &g_SkewCompUpdatePeriod );
@@ -2344,6 +2349,8 @@ void MyConfig::UpdateSettings()
     Write( _T ( "OverzoomVectorScale" ), g_oz_vector_scale );
     Write( _T ( "OverzoomEmphasisBase" ), g_overzoom_emphasis_base );
     Write( _T ( "PlusMinusZoomFactor" ), g_plus_minus_zoom_factor );
+    Write("MouseZoomSensitivity",
+          MouseZoom::ui_to_config(g_mouse_zoom_sensitivity_ui));
 
 #ifdef ocpnUSE_GL
     /* opengl options */
