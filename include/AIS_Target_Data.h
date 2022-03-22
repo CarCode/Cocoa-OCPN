@@ -51,6 +51,7 @@ public:
     wxString Get_class_string(bool b_short = false);
     wxString GetFullName( void );
     wxString GetCountryCode(bool b_CntryLongStr);
+    wxString GetNatureofDistress(int dscnature);
     void Toggle_AIS_CPA(void);
     void ToggleShowTrack(void);
     void CloneFrom( AIS_Target_Data* q );
@@ -112,6 +113,9 @@ public:
     bool                      b_positionOnceValid;
     bool                      b_nameValid;
     bool                      b_isFollower;
+    bool b_isDSCtarget; // DSC flag to a possible simultaneous AIS target
+    int  m_dscNature;
+    int  m_dscTXmmsi;   // MMSI for the DSC relay issuer
 
     //                     MMSI Properties
     bool                      b_NoTrack;
@@ -148,7 +152,8 @@ public:
     bool                     b_nameFromCache;
     float                    importance;
     short                    last_scale[AIS_TARGETDATA_MAX_CANVAS]; // where AIS_TARGETDATA_MAX_CANVAS is the max number of chartcanvas
-
+    wxDateTime dtAlertExpireTime;
+    long dsc_NatureOfDistress;
 };
 
 #endif

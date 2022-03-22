@@ -555,8 +555,17 @@ int ChartDB::BuildChartStack(ChartStack * cstk, float lat, float lon, int groupI
             else
                   b_group_add = true;
 
+          bool b_writable_add = true;
+          //  On android, SDK > 29, we require that the directory of charts be "writable"
+          //  as determined by Android Java file system
+#ifdef __OCPN__ANDROID__
+          wxFileName fn(cte.GetFullSystemPath());
+          if (!androidIsDirWritable( fn.GetPath()))
+            b_writable_add = false;
+#endif
+
             bool b_pos_add = false;
-            if(b_group_add)
+          if (b_group_add && b_writable_add)
             {
                 //  Plugin loading is deferred, so the chart may have been disabled elsewhere.
                 //  Tentatively reenable the chart so that it appears in the piano.
@@ -614,27 +623,34 @@ int ChartDB::BuildChartStack(ChartStack * cstk, float lat, float lon, int groupI
 //    These charts can be in the database due to having the exact same chart in different directories,
 //    as may be desired for some grouping schemes
 //    Note that if the target name is actually a directory, then windows fails to produce a valid
-//    file modification time.  Detect GetFileTime() == 0, and skip the test in this case     
+//    file modification time.  Detect GetFileTime() == 0, and skip the test in this case
+//    Extended to also check for "identical" charts, having exact same EditionDate
+
       for(int id = 0 ; id < j-1 ; id++)
       {
-            if(cstk->GetDBIndex(id) != -1)
-            {
-                  const ChartTableEntry &ctem = GetChartTableEntry(cstk->GetDBIndex(id));
-
-                  for(int jd = id+1; jd < j; jd++)
+          if(cstk->GetDBIndex(id) != -1)
+          {
+              const ChartTableEntry &ctem = GetChartTableEntry(cstk->GetDBIndex(id));
+              for(int jd = id+1; jd < j; jd++)
+              {
+                  if(cstk->GetDBIndex(jd) != -1)
                   {
-                        if(cstk->GetDBIndex(jd) != -1)
-                        {
-                              const ChartTableEntry &cten = GetChartTableEntry(cstk->GetDBIndex(jd));
-                              if( ctem.GetFileTime() && cten.GetFileTime()) {
-                                    if( labs(ctem.GetFileTime() - cten.GetFileTime()) < 60 ) {           // simple test
-                                        if(cten.GetpFileName()->IsSameAs(*(ctem.GetpFileName())))
-                                           cstk->SetDBIndex(jd, -1);           // mark to remove
-                                    }
-                              }
+                      const ChartTableEntry &cten = GetChartTableEntry(cstk->GetDBIndex(jd));
+                      bool bsameTime = false;
+                      if( ctem.GetFileTime() && cten.GetFileTime()) {
+                          if (labs(ctem.GetFileTime() - cten.GetFileTime()) < 60)
+                            bsameTime = true;
+                        }
+                        if (ctem.GetChartEditionDate() == cten.GetChartEditionDate() )
+                          bsameTime = true;
+
+                        if(bsameTime) {
+                            if(cten.GetpFileName()->IsSameAs(*(ctem.GetpFileName())))
+                                cstk->SetDBIndex(jd, -1);           // mark to remove
                         }
                   }
-            }
+              }
+          }
       }
 
       int id = 0;

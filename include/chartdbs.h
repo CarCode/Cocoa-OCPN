@@ -46,7 +46,7 @@ public:
 
 WX_DECLARE_OBJARRAY(ChartDirInfo, ArrayOfCDI);
 
-///////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////
 
 static const int DB_VERSION_PREVIOUS = 17;
 static const int DB_VERSION_CURRENT = 18;
@@ -63,18 +63,18 @@ struct ChartTableEntry_onDisk_18
     float       LatMin;
     float       LonMax;
     float       LonMin;
-    
+
     int         Scale;
     int         edition_date;
     int         file_date;
-    
+
     int         nPlyEntries;
     int         nAuxPlyEntries;
     
     float       skew;
     int         ProjectionType;
     bool        bValid;
-    
+
     int         nNoCovrPlyEntries;
 };
 
@@ -197,9 +197,10 @@ struct ChartTableEntry
     void Clear();
     void Disable();
     void ReEnable();
-    
+
     void SetValid(bool valid) { bValid = valid; }
     time_t GetFileTime() const { return file_date; }
+    time_t GetChartEditionDate() const { return edition_date; }
 
     int GetnPlyEntries() const { return nPlyEntries; }
     float *GetpPlyTable() const { return pPlyTable; }
@@ -211,7 +212,7 @@ struct ChartTableEntry
     int GetnNoCovrPlyEntries() const { return nNoCovrPlyEntries; }
     float *GetpNoCovrPlyTableEntry(int index) const { return pNoCovrPlyTable[index];}
     int GetNoCovrCntTableEntry(int index) const { return pNoCovrCntTable[index];}
-    
+
     const LLBBox &GetBBox() const { return m_bbox; } 
 
     float GetLonMax() const { return LonMax; }
@@ -229,7 +230,7 @@ struct ChartTableEntry
     const wxString *GetpFileName(void) const { return m_pfilename; }
     wxString *GetpsFullPath(void) const { return m_psFullPath; }
     wxString GetFullSystemPath() const { return m_fullSystemPath; }
-    
+
     const std::vector<int> &GetGroupArray(void) const { return m_GroupArray; }
     void ClearGroupArray(void) { m_GroupArray.clear(); }
     void AddIntToGroupArray( int val ) { m_GroupArray.push_back( val ); }
@@ -270,7 +271,7 @@ struct ChartTableEntry
     int         nNoCovrPlyEntries;
     int         *pNoCovrCntTable;
     float       **pNoCovrPlyTable;
-    
+
     std::vector<int> m_GroupArray;
     wxString    *m_pfilename;             // a helper member, not on disk
     wxString    *m_psFullPath;
@@ -278,9 +279,9 @@ struct ChartTableEntry
 
     LLBBox m_bbox;
     bool        m_bavail;
-    
+
     std::vector<float> m_reducedPlyPoints;
-    
+
     std::vector<std::vector<float> > m_reducedAuxPlyPointsVector;
 };
 
@@ -326,21 +327,21 @@ public:
 
     bool AddSingleChart( wxString &fullpath, bool b_force_full_search = true );
     bool RemoveSingleChart( wxString &ChartFullPath );
-    
+
     const wxString & GetDBFileName() const { return m_DBFileName; }
     ArrayOfCDI& GetChartDirArray(){ return m_dir_array; }
     wxArrayString &GetChartDirArrayString(){ return m_chartDirs; }
     void SetChartDirArray( ArrayOfCDI array ){ m_dir_array = array; }
     bool CompareChartDirArray( ArrayOfCDI& test_array );
     wxString GetMagicNumberCached(wxString dir);
-    
+
     void UpdateChartClassDescriptorArray(void);
 
     int GetChartTableEntries() const { return active_chartTable.size(); }
     const ChartTableEntry &GetChartTableEntry(int index) const;
     ChartTableEntry *GetpChartTableEntry(int index) const;
     inline ChartTable &GetChartTable(){ return active_chartTable; }
-    
+
     bool IsValid() const { return bValid; }
     int DisableChart(wxString& PathToDisable);
     bool GetCentroidOfLargestScaleChart(double *clat, double *clon, ChartFamilyEnum family);
@@ -352,7 +353,7 @@ public:
 
     bool GetDBBoundingBox(int dbindex, LLBBox &box);
     const LLBBox &GetDBBoundingBox(int dbIndex);
-    
+
     int  GetnAuxPlyEntries(int dbIndex);
     int  GetDBPlyPoint(int dbIndex, int plyindex, float *lat, float *lon);
     int  GetDBAuxPlyPoint(int dbIndex, int plyindex, int iAuxPly, float *lat, float *lon);
@@ -364,7 +365,7 @@ public:
     bool IsChartAvailable( int dbIndex );
     ChartTable    active_chartTable;
     std::map <wxString, int> active_chartTable_pathindex;
-    
+
     std::vector<float> GetReducedPlyPoints(int dbIndex);
     std::vector<float> GetReducedAuxPlyPoints(int dbIndex, int iTable);
 
@@ -399,10 +400,10 @@ private:
 
     ChartTableEntry           m_ChartTableEntryDummy;   // used for return value if database is not valid
     wxString      m_DBFileName;
-    
+
     int           m_pdifile;
     int           m_pdnFile;
-    
+
     int         m_nentries;
 
     LLBBox m_dummy_bbox;
@@ -432,11 +433,10 @@ class ChartGroup
 public:
       ChartGroup(){};
       ~ChartGroup(){ for (unsigned int i=0 ; i < m_element_array.GetCount() ; i++){ delete m_element_array.Item(i);}}
-      
+
       wxString                m_group_name;
       ChartGroupElementArray  m_element_array;
 };
-
 
 #endif
 

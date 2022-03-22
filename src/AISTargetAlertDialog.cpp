@@ -190,8 +190,8 @@ void AISTargetAlertDialog::CreateControls()
 
     topSizer->Add( m_pAlertTextCtl, 1, wxALL | wxEXPAND, 5 );
 
-    // A horizontal box sizer to contain Ack
-    wxBoxSizer* AckBox = new wxBoxSizer( wxHORIZONTAL );
+    // A flex sizer to contain Ack and more buttons
+    wxFlexGridSizer *AckBox = new wxFlexGridSizer(2);
     topSizer->Add( AckBox, 0, wxALL, 5 );
 
     // The Silence button
@@ -199,13 +199,6 @@ void AISTargetAlertDialog::CreateControls()
         wxButton* silence = new wxButton( this, ID_SILENCE, _( "&Silence Alert" ), wxDefaultPosition,
             wxDefaultSize, 0 );
         AckBox->Add( silence, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    }
-
-    // The Ack button
-    if( m_back ) {
-        wxButton* ack = new wxButton( this, ID_ACKNOWLEDGE, _( "&Acknowledge" ), wxDefaultPosition,
-            wxDefaultSize, 0 );
-        AckBox->Add( ack, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     }
 
     if( m_bjumpto ) {
@@ -218,7 +211,19 @@ void AISTargetAlertDialog::CreateControls()
         wxButton *createWptBtn = new wxButton( this, ID_WPT_CREATE, _("Create Waypoint"), wxDefaultPosition, wxDefaultSize, 0 );
         AckBox->Add( createWptBtn, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     }
-
+    // The Ack button
+    // Also used to close a DSC Alert
+    wxString acktext = _("&Acknowledge");
+    bool show_ack_button = false;
+    if (m_bjumpto && m_bcreateWP) { //DSC Alert only
+      acktext = _("&Close Alert");
+      show_ack_button = true;
+    }
+    if (m_back || show_ack_button) {
+      wxButton *ack = new wxButton(this, ID_ACKNOWLEDGE, acktext,
+                                   wxDefaultPosition, wxDefaultSize, 0);
+      AckBox->Add(ack, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+    }
 
     UpdateText();
 
@@ -352,6 +357,12 @@ void AISTargetAlertDialog::OnClose( wxCloseEvent& event )
                 td->m_ack_time = wxDateTime::Now();
                 td->b_in_ack_timeout = true;
             }
+            if (td->b_isDSCtarget) {
+              td->b_isDSCtarget = false;
+                if (td->n_alert_state) {
+                  td->n_alert_state = AIS_NO_ALERT;
+                }
+              }
         }
     }
 
@@ -369,6 +380,12 @@ void AISTargetAlertDialog::OnIdAckClick( wxCommandEvent& event )
                 td->m_ack_time = wxDateTime::Now();
                 td->b_in_ack_timeout = true;
             }
+            if (td->b_isDSCtarget) {
+              td->b_isDSCtarget = false;
+              if (td->n_alert_state) {
+                td->n_alert_state = AIS_NO_ALERT;
+              }
+            }   
         }
     }
     Destroy();

@@ -371,6 +371,7 @@ class options : private Uncopyable,
   void ClearConfigList();
   void BuildConfigList();
   void OnConfigMouseSelected( wxMouseEvent &event);
+  void OnDialogInit(wxInitDialogEvent& event);
 
   void SetSelectedConnectionPanel( ConnectionParamsPanel *panel );
 
