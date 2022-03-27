@@ -427,6 +427,7 @@ extern bool             g_bShowCurrent;
 extern bool             g_benableUDPNullHeader;
 
 extern wxString         g_uiStyle;
+extern bool g_btrackContinuous;
 extern bool             g_useMUI;
 
 int                     g_nCPUCount;
@@ -838,7 +839,7 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
         Read( _T ( "UseGarminHostUpload" ),  &g_bGarminHostUpload );
         Read( _T ( "UseNMEA_GLL" ), &g_bUseGLL );
         Read( _T ( "UseMagAPB" ), &g_bMagneticAPB );
-//        Read(_T ( "TrackContinuous" ), &g_btrackContinuous, false);  // NEU? Checken!!!
+        Read(_T ( "TrackContinuous" ), &g_btrackContinuous, false);
         Read(_T ( "FilterTrackDropLargeJump" ), &g_trackFilterMax, 0);
 
     }
@@ -2328,6 +2329,8 @@ void MyConfig::UpdateSettings()
     Write( _T ( "FilterNMEA_Avg" ), g_bfilter_cogsog );
     Write( _T ( "FilterNMEA_Sec" ), g_COGFilterSec );
 
+    Write(_T ( "TrackContinuous" ), g_btrackContinuous);
+    
     Write( _T ( "ShowTrue" ), g_bShowTrue );
     Write( _T ( "ShowMag" ), g_bShowMag );
     Write( _T ( "UserMagVariation" ), wxString::Format( _T("%.2f"), g_UserVar ) );
@@ -4535,20 +4538,20 @@ wxString toSDMM( int NEflag, double a, bool hi_precision )
 
             if( !NEflag || NEflag < 1 || NEflag > 2 ) //Does it EVER happen?
                     {
-                if( hi_precision ) s.Printf( _T ( "%d\u00B0 %02ld.%04ld'" ), d, m / 10000, m % 10000 );
+                if( hi_precision ) s.Printf( _T ( "%d%c %02ld.%04ld'" ), d, 0x00B0, m / 10000, m % 10000 );
                 else
-                    s.Printf( _T ( "%d\u00B0 %02ld.%01ld'" ), d, m / 10, m % 10 );
+                    s.Printf( _T ( "%d%c %02ld.%01ld'" ), d, 0x00B0, m / 10, m % 10 );
             } else {
                 if( hi_precision )
                     if (NEflag == 1)
-                        s.Printf( _T ( "%02d\u00B0 %02ld.%04ld' %c" ), d, m / 10000, ( m % 10000 ), c );
+                        s.Printf( _T ( "%02d%c %02ld.%04ld' %c" ), d, 0x00B0, m / 10000, ( m % 10000 ), c );
                     else
-                        s.Printf( _T ( "%03d\u00B0 %02ld.%04ld' %c" ), d, m / 10000, ( m % 10000 ), c );
+                        s.Printf( _T ( "%03d%c %02ld.%04ld' %c" ), d, 0x00B0, m / 10000, ( m % 10000 ), c );
                 else
                     if (NEflag == 1)
-                        s.Printf( _T ( "%02d\u00B0 %02ld.%01ld' %c" ), d, m / 10, ( m % 10 ), c );
+                        s.Printf( _T ( "%02d%c %02ld.%01ld' %c" ), d, 0x00B0, m / 10, ( m % 10 ), c );
                     else
-                        s.Printf( _T ( "%03d\u00B0 %02ld.%01ld' %c" ), d, m / 10, ( m % 10 ), c );
+                        s.Printf( _T ( "%03d%c %02ld.%01ld' %c" ), d, 0x00B0, m / 10, ( m % 10 ), c );
             }
             break;
         case 1:
@@ -4564,21 +4567,21 @@ wxString toSDMM( int NEflag, double a, bool hi_precision )
 
             if( !NEflag || NEflag < 1 || NEflag > 2 ) //Does it EVER happen?
                     {
-                if( hi_precision ) s.Printf( _T ( "%d\u00B0 %ld'%ld.%ld\"" ), d, m, sec / 1000,
+                if( hi_precision ) s.Printf( _T ( "%d%c %ld'%ld.%ld\"" ), d, 0x00B0, m, sec / 1000,
                         sec % 1000 );
                 else
-                    s.Printf( _T ( "%d\u00B0 %ld'%ld.%ld\"" ), d, m, sec / 10, sec % 10 );
+                    s.Printf( _T ( "%d%c %ld'%ld.%ld\"" ), d, 0x00B0, m, sec / 10, sec % 10 );
             } else {
                 if( hi_precision )
                     if (NEflag == 1)
-                        s.Printf( _T ( "%02d\u00B0 %02ld' %02ld.%03ld\" %c" ), d, m, sec / 1000, sec % 1000, c );
+                        s.Printf( _T ( "%02d%c %02ld' %02ld.%03ld\" %c" ), d, 0x00B0, m, sec / 1000, sec % 1000, c );
                     else
-                        s.Printf( _T ( "%03d\u00B0 %02ld' %02ld.%03ld\" %c" ), d, m, sec / 1000, sec % 1000, c );
+                        s.Printf( _T ( "%03d%c %02ld' %02ld.%03ld\" %c" ), d, 0x00B0, m, sec / 1000, sec % 1000, c );
                 else
                     if (NEflag == 1)
-                        s.Printf( _T ( "%02d\u00B0 %02ld' %02ld.%ld\" %c" ), d, m, sec / 10, sec % 10, c );
+                        s.Printf( _T ( "%02d%c %02ld' %02ld.%ld\" %c" ), d, 0x00B0, m, sec / 10, sec % 10, c );
                     else
-                        s.Printf( _T ( "%03d\u00B0 %02ld' %02ld.%ld\" %c" ), d, m, sec / 10, sec % 10, c );
+                        s.Printf( _T ( "%03d%c %02ld' %02ld.%ld\" %c" ), d, 0x00B0, m, sec / 10, sec % 10, c );
             }
             break;
     }
@@ -4671,11 +4674,11 @@ wxString formatAngle(double angle)
 {
     wxString out;
     if( g_bShowMag && g_bShowTrue ) {
-        out.Printf(wxT("%03.0f \u00B0T (%.0f \u00B0M)"), angle, gFrame->GetMag(angle));
+        out.Printf(wxT("%03.0f %cT (%.0f %cM)"), angle, 0x00B0, gFrame->GetMag(angle), 0x00B0);
     } else if( g_bShowTrue ) {
-        out.Printf(wxT("%03.0f \u00B0T"), angle);
+        out.Printf(wxT("%03.0f %cT"), angle, 0x00B0);
     } else {
-        out.Printf(wxT("%03.0f \u00B0M"), gFrame->GetMag(angle));
+        out.Printf(wxT("%03.0f %cM"), gFrame->GetMag(angle), 0x00B0);
     }
     return out;
 }

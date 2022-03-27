@@ -187,7 +187,7 @@ void CustomGrid::DrawCornerLabel( wxDC& dc )
 	dc.SetBrush( wxBrush( m_labelBackgroundColour, wxBRUSHSTYLE_SOLID ) );
     wxRect rect( 0, 0, m_rowLabelWidth, m_colLabelHeight );
     dc.DrawRectangle(rect);
-    ////scale bitmap to near col label height
+    // scale bitmap to near col label height
     double hc = m_colLabelHeight;
     double hb = wxBitmap(now).GetHeight();
     double scfac = ((hc / hb) *4) /4;
@@ -392,7 +392,7 @@ void CustomRenderer::Draw(wxGrid& grid, wxGridCellAttr& attr, wxDC& dc, const wx
     if( m_IsDigit || m_dDir == GRIB_NOTDEF ) {        //digital format
         wxString text(wxEmptyString);
         if( m_dDir != GRIB_NOTDEF )
-            text.Printf(_T("%03d\u00B0"), (int)m_dDir);
+            text.Printf(_T("%03d%c"), (int)m_dDir, 0x00B0);
         dc.DrawLabel(text, rect, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL);
     } else {                                        //graphical format
         double si = sin( (m_dDir - 90) * M_PI / 180. );

@@ -291,7 +291,7 @@ void CursorData::UpdateTrackingControls( void )
                         .Append(wxString::Format(_T("%2d bf"), (int)round( vk))) );
         }
 
-        m_tcWindDirection->SetValue( wxString::Format( _T("%03d\u00B0"), (int) ( ang ) ));
+        m_tcWindDirection->SetValue( wxString::Format( _T("%03d%c"), (int)( ang ), 0x00B0 ));
     } else {
         m_tcWindSpeed->SetValue( _("N/A") );
         m_tcWindSpeedBf->SetValue( _("N/A") );
@@ -354,7 +354,7 @@ void CursorData::UpdateTrackingControls( void )
         double direction = RecordArray[Idx_WVDIR]->
             getInterpolatedValue(m_cursor_lon, m_cursor_lat, true, true );
         if( direction != GRIB_NOTDEF )
-            m_tcWaveDirection->SetValue( wxString::Format( _T("%03d\u00B0"), (int)direction ));
+            m_tcWaveDirection->SetValue( wxString::Format( _T("%03d%c"), (int)direction, 0x00B0 ));
         else
             m_tcWaveDirection->SetValue( _("N/A") );
     }
@@ -376,7 +376,7 @@ void CursorData::UpdateTrackingControls( void )
 
         m_tcCurrentVelocity->SetValue( wxString::Format( _T("%4.1f ") + m_gparent.m_OverlaySettings.GetUnitSymbol(GribOverlaySettings::CURRENT), vkn ) );
 
-        m_tcCurrentDirection->SetValue( wxString::Format( _T("%03d\u00B0"), (int) ( ang ) ) );
+        m_tcCurrentDirection->SetValue( wxString::Format( _T("%03d%c"), (int)( ang ), 0x00B0 ) );
     } else {
         m_tcCurrentVelocity->SetValue( _("N/A") );
         m_tcCurrentDirection->SetValue( _("N/A") );
