@@ -639,7 +639,8 @@ bool PlugInManager::LoadPlugInDirectory(const wxString &plugin_dir, bool load_en
     // Tell all the PlugIns about the current OCPN configuration
     SendBaseConfigToAllPlugIns();
     SendS52ConfigToAllPlugIns( true );
-    
+//    SendSKConfigToAllPlugIns();  // Not used SignalK
+
     // Inform Plugins of OpenGL configuration, if enabled
     if(g_bopengl){
         if(gFrame->GetPrimaryCanvas()->GetglCanvas())
@@ -768,6 +769,12 @@ bool PlugInManager::UpdatePlugIns()
             pic->m_version_major = pic->m_pplugin->GetPlugInVersionMajor();
             pic->m_version_minor = pic->m_pplugin->GetPlugInVersionMinor();
             pic->m_bitmap = pic->m_pplugin->GetPlugInBitmap();
+
+            if(g_options && g_boptionsactive){
+              if (pic->m_cap_flag & INSTALLS_TOOLBAR_TOOL)
+                g_options->SetForceNewToolbarOnCancel( true );
+            }
+
             bret = true;
         }
         else if(!pic->m_bEnabled && pic->m_bInitState)
@@ -778,6 +785,17 @@ bool PlugInManager::UpdatePlugIns()
     }
 
     UpDateChartDataTypes();
+
+    // Tell all the PlugIns about the current OCPN configuration
+  SendBaseConfigToAllPlugIns();
+  SendS52ConfigToAllPlugIns(true);
+//  SendSKConfigToAllPlugIns();  // Nt used SignalK
+
+  // Inform Plugins of OpenGL configuration, if enabled
+  if (g_bopengl) {
+    if (gFrame->GetPrimaryCanvas()->GetglCanvas())
+      gFrame->GetPrimaryCanvas()->GetglCanvas()->SendJSONConfigMessage();
+  }
 
     return bret;
 }
@@ -822,6 +840,10 @@ bool PlugInManager::DeactivatePlugIn(PlugInContainer *pic)
             if((pic->m_cap_flag & INSTALLS_PLUGIN_CHART) || (pic->m_cap_flag & INSTALLS_PLUGIN_CHART_GL)){
                 ChartData->PurgeCachePlugins();
                 gFrame->InvalidateAllQuilts();
+            }
+            if(g_pOptions && g_boptionsactive){
+              if (pic->m_cap_flag & INSTALLS_TOOLBAR_TOOL)
+                g_pOptions->SetForceNewToolbarOnCancel( true );
             }
 
             pic->m_bInitState = false;
@@ -2192,8 +2214,18 @@ void PlugInManager::PrepareAllPluginContextMenus()
         }
     }
 }
+/* Not used SignalK
+void PlugInManager::SendSKConfigToAllPlugIns() {
+  // Send the current ownship MMSI, encoded as sK,  to all PlugIns
+  wxJSONValue v;
+  v[_T("self")] = g_ownshipMMSI_SK;
 
-
+  wxJSONWriter w;
+  wxString out;
+  w.Write(v, out);
+  SendMessageToAllPlugins(wxString(_T("OCPN_CORE_SIGNALK")), out);
+}
+*/
 void PlugInManager::SendBaseConfigToAllPlugIns()
 {
     // Send the current run-time configuration to all PlugIns

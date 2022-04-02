@@ -374,6 +374,7 @@ class options : private Uncopyable,
   void OnDialogInit(wxInitDialogEvent& event);
 
   void SetSelectedConnectionPanel( ConnectionParamsPanel *panel );
+  void SetForceNewToolbarOnCancel(bool val) { m_bForceNewToolbaronCancel = val; }
 
   // Should we show tooltips?
   static bool ShowToolTips(void);
@@ -628,6 +629,7 @@ class options : private Uncopyable,
   MyFrame *pParent;
 
   int k_plugins;
+  bool m_bForceNewToolbaronCancel;
 
   // Sounds panel
   wxCheckBox *m_pCheck_AnchorAudio, *m_pCheck_AISAudio, *m_pCheck_SARTAudio, *m_pCheck_DSCAudio;
