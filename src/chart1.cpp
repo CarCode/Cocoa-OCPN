@@ -7509,10 +7509,10 @@ void MyFrame::OnFrameTimer1( wxTimerEvent& event )
                 
                 if(g_bopengl) {
 #ifdef ocpnUSE_GL
-					if (cc->GetglCanvas()) {
-						if (m_fixtime - cc->GetglCanvas()->m_last_render_time > 0)
-							bnew_view = true;
-					}
+                    if (cc->GetglCanvas()) {
+                        if (m_fixtime - cc->GetglCanvas()->m_last_render_time > 0)
+                            bnew_view = true;
+                    }
 
                     if( AnyAISTargetsOnscreen( cc, cc->GetVP() ) )
                         bnew_view = true;
@@ -9149,24 +9149,23 @@ void MyFrame::PostProcessNMEA(bool pos_valid, bool sog_valid,
         }
         
         wxString sogcog;
-        if(sog_valid){
-          if (!std::isnan(gSog))
-                sogcog.Printf( _T("SOG %2.2f ") + getUsrSpeedUnit() + _T("  "), toUsrSpeed(gSog));
-          else
-            sogcog.Printf(_T("SOG --- ")) ;
-        }
+        if (!std::isnan(gSog))
+          sogcog.Printf(_T("SOG %2.2f ") + getUsrSpeedUnit() + _T("  "),
+                      toUsrSpeed(gSog));
+        else
+          sogcog.Printf(_T("SOG --- ")) ;
+
         wxString cogs;
-        if (cog_valid){
           // We show COG only if SOG is > 0
-          if (!std::isnan(gCog) && !std::isnan(gSog) && (gSog > 0)){
-                if( g_bShowTrue )
-                    cogs << wxString::Format(wxString("COG %03d%c  "), (int)gCog, 0x00B0 );
-                if( g_bShowMag )
-                    cogs << wxString::Format(wxString("COG %03d%c(M)  "),                                  (int)GetMag(gCog), 0x00B0);
+        if (!std::isnan(gCog) && !std::isnan(gSog) && (gSog > 0)){
+          if (g_bShowTrue)
+            cogs << wxString::Format(wxString("COG %03d%c  "), (int)gCog, 0x00B0);
+          if (g_bShowMag)
+            cogs << wxString::Format(wxString("COG %03d%c(M)  "),
+                                   (int)GetMag(gCog), 0x00B0);
           }
         else
           cogs.Printf(("COG ---%c"), 0x00B0);
-        }
 
         sogcog.Append(cogs);
         SetStatusText(sogcog, STAT_FIELD_SOGCOG);

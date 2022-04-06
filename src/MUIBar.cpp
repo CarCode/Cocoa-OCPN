@@ -722,7 +722,7 @@ void MUIBar::CreateControls()
         barSizer->AddSpacer(2);
 
         //  Scale 
-        m_scaleTextBox = new wxStaticText(this, wxID_ANY, _("1:400000"));
+        m_scaleTextBox = new wxStaticText(this, wxID_ANY, _T("1:400000"));
 #ifdef __WXOSX__
         m_scaleTextBox->SetToolTip( _("Scale"));
 #endif

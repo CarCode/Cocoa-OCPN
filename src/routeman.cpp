@@ -110,6 +110,7 @@ extern bool             g_bAdvanceRouteWaypointOnArrivalOnly;
 extern Route            *pAISMOBRoute;
 extern bool             g_btouch;
 extern float            g_ChartScaleFactorExp;
+extern int              g_maxWPNameLength;
 
 bool g_bPluginHandleAutopilotRoute;
 
@@ -648,6 +649,11 @@ bool Routeman::DeactivateRoute( bool b_arrival )
 bool Routeman::UpdateAutopilot()
 {
    //Send all known Autopilot messages upstream
+
+    // Set max WP name length
+  int maxName = 6;
+  if ((g_maxWPNameLength >= 3) && (g_maxWPNameLength <= 32))
+    maxName = g_maxWPNameLength;
 
    //Avoid a possible not initiated SOG/COG. APs can be confused if in NAV mode wo valid GPS
    double r_Sog(0.0), r_Cog(0.0);

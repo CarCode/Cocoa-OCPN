@@ -3404,6 +3404,8 @@ void options::CreatePanel_ChartsLoad(size_t parent, int border_size,
   m_compressBtn = NULL;
 #endif
 
+  cmdButtonSizer->AddSpacer( GetCharHeight());
+
   wxStaticBox* itemStaticBoxUpdateStatic =
       new wxStaticBox(chartPanelWin, wxID_ANY, _("Update Control"));
   wxStaticBoxSizer* itemStaticBoxSizerUpdate =
@@ -6095,7 +6097,7 @@ void options::CreatePanel_UI(size_t parent, int border_size, int group_item_spac
     m_pSlider_Text_Factor->GetHandle()->setStyleSheet(getQtStyleSheet());
 #endif
 
-    sliderSizer->Add(new wxStaticText(itemPanelFont, wxID_ANY, "Mouse wheel zoom sensitivity"), inputFlags);
+    sliderSizer->Add(new wxStaticText(itemPanelFont, wxID_ANY, _("Mouse wheel zoom sensitivity")), inputFlags);
 #ifdef __WXOSX__
     m_pMouse_Zoom_Slider = new MouseZoomSlider(itemPanelFont, wxSize(slider_width, 50));
 #else
