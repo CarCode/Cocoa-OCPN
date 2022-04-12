@@ -51,8 +51,8 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    überhaupt keine OpenCPN Version mehr geben können, da die Grafik-
    Bibliothek OpenGL von Apple bald nicht mehr unterstützt wird.
 
-b. Diese Version basiert auf Release-Version von wxWidgets 3.1.5 mit
-   entsprechenden dylibs vom 08. März 2021. Die Einbindung der Libs als
+b. Diese Version basiert auf Release-Version von wxWidgets 3.1.7 mit
+   entsprechenden dylibs vom 10. Apil 2022. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -99,7 +99,8 @@ Im Terminal in dies Verzeichnis wechseln und konfigurieren mit:
 ../configure --with-expat=builtin --enable-unicode --enable-shared --enable-debug --disable-compat28 --with-osx-cocoa --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk --without-liblzma --with-zlib=builtin --with-libpng=builtin --with-libjpeg=builtin --without-libtiff CXXFLAGS=-stdlib=libc++ OBJCXXFLAGS=-stdlib=libc++ LDFLAGS=-stdlib=libc++ CXX=clang++ CC=clang
 
 Dann Eingabe von: make
-und schließlich Eingabe von: sudo make install
+und schließlich Eingabe von: sudo make install (Das scheint in wxWidgets 3.1.7
+ nun defekt zu sein, bitte "make install" nicht mehr verwenden!
 
 Die dylibs und Header werden installiert in: /usr/local/Lib/
 bzw. /usr/local/include/wx-3.1
@@ -117,5 +118,5 @@ Die Datei /data/gshhs/poly-f-1.dat mit ~172 MB muß daher separat geholt werden
 und nach /data/gshhs/ kopiert werden:
 https://topperdiek.de/dl/ocpn/poly-f-1.dat
 -----------------------------------------------------------------------
-10. März 2021
+10. April 2022
 

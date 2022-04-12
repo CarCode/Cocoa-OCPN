@@ -325,8 +325,11 @@ static TrackPoint * GPXLoadTrackPoint1( pugi::xml_node &wpt_node )
         } //extensions
     }   // for
 
-    // Create waypoint
-    return new TrackPoint( rlat, rlon, TimeString );
+    // Create waypoint, if all data are available
+    if(TimeString.Length())
+      return new TrackPoint(rlat, rlon, TimeString);
+    else
+      return NULL;
 }
 
 static Track *GPXLoadTrack1( pugi::xml_node &trk_node, bool b_fullviz,
@@ -359,8 +362,10 @@ static Track *GPXLoadTrack1( pugi::xml_node &trk_node, bool b_fullviz,
                     wxString tpChildName = wxString::FromUTF8( tpchild.name() );
                     if( tpChildName == _T("trkpt") ) {
                         pWp = ::GPXLoadTrackPoint1(tpchild);
-                        pTentTrack->AddPoint( pWp );          // defer BBox calculation
-                        pWp->m_GPXTrkSegNo = GPXSeg;
+                        if (pWp){
+                          pTentTrack->AddPoint(pWp);  // defer BBox calculation
+                          pWp->m_GPXTrkSegNo = GPXSeg;
+                        }
                     }
                 }
             }
@@ -1744,7 +1749,7 @@ bool NavObjectChanges::ApplyChanges(void)
 
                     Track *pExistingTrack = TrackExists( track_GUID );
 
-                    if(!strcmp(child.first_child().value(), "add") && pExistingTrack ) {
+                    if (!strcmp(child.first_child().value(), "add") && pExistingTrack && pWp) {
                         pExistingTrack->AddPoint( pWp );
                         pWp->m_GPXTrkSegNo = pExistingTrack->GetCurrentTrackSeg() + 1;
                     }
