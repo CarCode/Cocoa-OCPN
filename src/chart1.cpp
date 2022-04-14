@@ -5659,6 +5659,9 @@ void MyFrame::RegisterGlobalMenuItems()
 #endif
 #ifdef __WXOSX__
     wxMenu* window_menu = new wxMenu();
+    window_menu->Append(wxID_ANY, _("Minimize"));
+    window_menu->Append(wxID_ANY, _("Zoom"));
+    window_menu->Append(wxID_ANY, _("Bring All to Front"));
     m_pMenuBar->Append( window_menu, _("&Window") );
 #endif
     wxMenu* help_menu = new wxMenu();
