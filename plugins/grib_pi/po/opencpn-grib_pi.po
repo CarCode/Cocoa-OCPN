@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-28 13:51+0300\n"
-"PO-Revision-Date: 2020-04-28 13:53+0300\n"
+"PO-Revision-Date: 2022-05-23 17:47+0200\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.3\n"
 "X-Crowdin-Project: opencpn\n"
 "X-Crowdin-Language: de\n"
 "X-Crowdin-File: /plugins/grib_pi/po/grib_pi.pot\n"
@@ -1184,7 +1184,7 @@ msgstr ""
 #
 #: ../src/GribTable.cpp:95
 msgid "Wind,Dir"
-msgstr "Wind, Richtg."
+msgstr "Windrichtg."
 
 #
 #: ../src/GribTable.cpp:101
@@ -1194,22 +1194,22 @@ msgstr "Windgeschw."
 #
 #: ../src/GribTable.cpp:109
 msgid "Wind,Gust"
-msgstr "Wind,Boen"
+msgstr "Windboen"
 
 #
 #: ../src/GribTable.cpp:134
 msgid "Waves,Dir"
-msgstr "Wellen, Richtg."
+msgstr "Wellenrichtg."
 
 #
 #: ../src/GribTable.cpp:139
 msgid "Waves,Hsig"
-msgstr "Wellen, Höhe sign."
+msgstr "Wellenhöhe"
 
 #
 #: ../src/GribTable.cpp:144
 msgid "Waves,Per"
-msgstr "Wellen, Periode"
+msgstr "Wellenperiode"
 
 #
 #: ../src/GribTable.cpp:168

@@ -151,11 +151,6 @@ class AISTargetTrackPoint
             time_t      m_time;
 };
 
-
-WX_DECLARE_LIST(AISTargetTrackPoint, AISTargetTrackList);
-
-
-
 // IMO Circ. 289 Area Notices, based on libais
 const size_t AIS8_001_22_NUM_NAMES=128;
 const size_t AIS8_001_22_SUBAREA_SIZE=87;
@@ -208,10 +203,6 @@ struct Ais8_001_22
 };
 
 
-// key is link_id, which should be unique for a given mmsi
-WX_DECLARE_HASH_MAP( int, Ais8_001_22, wxIntegerHash, wxIntegerEqual, AIS_Area_Notice_Hash );
-
-
 //---------------------------------------------------------------------------------
 //
 //  AIS_Decoder Helpers
@@ -221,8 +212,6 @@ WX_DEFINE_SORTED_ARRAY(AIS_Target_Data *, ArrayOfAISTarget);
 
 
 //      Implement the AISTargetList as a wxHashMap
-
-WX_DECLARE_HASH_MAP( int, AIS_Target_Data*, wxIntegerHash, wxIntegerEqual, AIS_Target_Hash );
 
 wxString trimAISField( char *data );
 wxString ais_get_status(int index);

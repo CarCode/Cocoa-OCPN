@@ -54,6 +54,7 @@
 #include "Route.h"
 #include "chart1.h"
 #include "TCWin.h"
+#include "svg_utils.h"
 
 #ifdef __OCPN__ANDROID__
 #include "androidUTIL.h"
@@ -85,20 +86,6 @@ extern wxColour           g_colourWaypointRangeRingsColour;
 
 extern int                g_iWpt_ScaMin;
 extern bool               g_bUseWptScaMin;
-
-//  Helper utilities
-static wxBitmap LoadSVG( const wxString filename, unsigned int width, unsigned int height )
-{
-    #ifdef ocpnUSE_SVG
-    wxSVGDocument svgDoc;
-    if( svgDoc.Load(filename) )
-        return wxBitmap( svgDoc.Render( width, height, NULL, true, true ) );
-    else
-        return wxBitmap(width, height);
-    #else
-        return wxBitmap(width, height);
-    #endif // ocpnUSE_SVG
-}
 
 WX_DECLARE_LIST(wxBitmap, BitmapList);
 #include <wx/listimpl.cpp>
@@ -272,8 +259,20 @@ MarkInfoDlg::MarkInfoDlg( wxWindow* parent, wxWindowID id, const wxString& title
     SetColorScheme( (ColorScheme) 0 );
     m_pRoutePoint = NULL;
     CenterOnScreen();
+#ifdef __WXOSX__
+    Connect(wxEVT_ACTIVATE, wxActivateEventHandler(MarkInfoDlg::OnActivate), NULL,
+            this);
+#endif
 }
 
+void MarkInfoDlg::OnActivate(wxActivateEvent& event) {
+  wxFrame* pWin = wxDynamicCast(event.GetEventObject(), wxFrame);
+  long int style = pWin->GetWindowStyle();
+  if (event.GetActive())
+    pWin->SetWindowStyle(style | wxSTAY_ON_TOP);
+  else
+    pWin->SetWindowStyle(style ^ wxSTAY_ON_TOP);
+}
 
 void MarkInfoDlg::initialize_images(void)
 {  // TODO use svg instead of bitmap

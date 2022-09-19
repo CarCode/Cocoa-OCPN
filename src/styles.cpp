@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Chart Symbols
@@ -37,10 +37,7 @@
 #include "styles.h"
 #include "chart1.h"
 #include "wx28compat.h"
-
-#ifdef ocpnUSE_SVG
-#include "wxSVG/svg.h"
-#endif // ocpnUSE_SVG
+#include "svg_utils.h"
 
 extern OCPNPlatform     *g_Platform;
 
@@ -50,19 +47,6 @@ void bmdump(wxBitmap bm, wxString name)
 {
     wxImage img = bm.ConvertToImage();
     img.SaveFile( name << _T(".png"), wxBITMAP_TYPE_PNG );
-}
-
-static wxBitmap LoadSVG( const wxString filename, unsigned int width, unsigned int height )
-{
-#ifdef ocpnUSE_SVG
-    wxSVGDocument svgDoc;
-    if( svgDoc.Load(filename) )
-        return wxBitmap( svgDoc.Render( width, height, NULL, true, true ) );
-    else
-        return wxBitmap(width, height);
-#else
-    return wxBitmap(width, height);
-#endif // ocpnUSE_SVG
 }
 
 // This function can be used to create custom bitmap blending for all platforms

@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  S57 SENC File Object
@@ -43,6 +43,7 @@
 #include <stdint.h>
 #include <vector>
 #include <mutex>
+#include <unordered_map>
 
 WX_DEFINE_ARRAY_PTR(float *, SENCFloatPtrArray);
 
@@ -336,8 +337,6 @@ typedef std::vector<S57Obj *> S57ObjVector;
 typedef std::vector<VE_Element *> VE_ElementVector;
 typedef std::vector<VC_Element *> VC_ElementVector;
 
-WX_DECLARE_HASH_MAP( int, int, wxIntegerHash, wxIntegerEqual, VectorHelperHash );
-
 //--------------------------------------------------------------------------
 //      Osenc_instream definition
 //--------------------------------------------------------------------------
@@ -559,7 +558,7 @@ private:
     wxString            m_readFileCreateDate;
     
     double              m_ref_lat, m_ref_lon;             // Common reference point, derived from FullExtent
-    VectorHelperHash    m_vector_helper_hash;
+    std::unordered_map<int, int> m_vector_helper_hash;
     double              m_LOD_meters;
     S57ClassRegistrar   *m_poRegistrar;
     wxArrayString       m_tmpup_array;

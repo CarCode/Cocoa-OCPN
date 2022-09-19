@@ -57,6 +57,7 @@
 #include "rudder_angle.h"
 #include "gps.h"
 #include "depth.h"
+#include "altitude.h"
 #include "clock.h"
 #include "wind_history.h"
 #include "baro_history.h"
@@ -249,6 +250,7 @@ public:
       wxSpinCtrlDouble             *m_pSpinDBTOffset;
       wxChoice                     *m_pChoiceDistanceUnit;
       wxChoice                     *m_pChoiceWindSpeedUnit;
+      wxChoice                     *m_pChoiceTempUnit;
 
 private:
       void UpdateDashboardButtonsState(void);

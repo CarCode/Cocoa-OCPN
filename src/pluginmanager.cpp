@@ -86,6 +86,7 @@
 #include "OCPN_AUIManager.h"
 #include "chcanv.h"
 #include "canvasMenu.h"
+#include "svg_utils.h"
 
 #ifdef __OCPN__ANDROID__
 #include "androidUTIL.h"
@@ -117,9 +118,6 @@ void catch_signals_PIM(int signo) {
 
 #endif
 
-
-extern wxImage LoadSVGIcon(wxString filename, int width, int height);
-
 extern MyConfig        *pConfig;
 extern AIS_Decoder     *g_pAIS;
 extern OCPN_AUIManager  *g_pauimgr;
@@ -141,7 +139,7 @@ extern WayPointman     *pWayPointMan;
 extern Select          *pSelect;
 extern RouteManagerDialog *pRouteManagerDialog;
 extern RouteList       *pRouteList;
-extern TrackList       *pTrackList;
+extern std::vector<Track*> g_TrackList;
 extern PlugInManager   *g_pi_manager;
 extern s52plib         *ps52plib;
 extern wxString         ChartListFileName;
@@ -2895,16 +2893,7 @@ wxString GetActiveStyleName()
 
 wxBitmap GetBitmapFromSVGFile(wxString filename, unsigned int width, unsigned int height)
 {
-#ifdef ocpnUSE_SVG
-    wxSVGDocument svgDoc;
-    if ( (width > 0) && (height > 0) && svgDoc.Load(filename))
-        return wxBitmap(svgDoc.Render(width, height, NULL, false, true));
-    else
-        return wxBitmap();
-    
-#else        
-        return wxBitmap();
-#endif // ocpnUSE_SVG   
+    return LoadSVG(filename, width, height);
 }
 
 bool IsTouchInterface_PlugIn(void)
@@ -2938,13 +2927,8 @@ ArrayOfPlugIn_AIS_Targets *GetAISTargetArray(void)
     ArrayOfPlugIn_AIS_Targets *pret = new ArrayOfPlugIn_AIS_Targets;
 
     //      Iterate over the AIS Target Hashmap
-    AIS_Target_Hash::iterator it;
-
-    AIS_Target_Hash *current_targets = g_pAIS->GetTargetList();
-
-    for ( it = ( *current_targets ).begin(); it != ( *current_targets ).end(); ++it )
-    {
-        AIS_Target_Data *td = it->second;
+    for (const auto &it : g_pAIS->GetTargetList()) {
+      AIS_Target_Data *td = it.second;
         PlugIn_AIS_Target *ptarget = Create_PI_AIS_Target(td);
         pret->Add(ptarget);
     }
@@ -3666,14 +3650,8 @@ wxArrayString GetRouteGUIDArray(void) {
 
 wxArrayString GetTrackGUIDArray(void) {
   wxArrayString result;
-  TrackList *list = pTrackList;
-
-  wxTrackListNode *prpnode = list->GetFirst();
-  while (prpnode) {
-    Track *ptrack = prpnode->GetData();
+  for (Track *ptrack : g_TrackList) {
     result.Add(ptrack->m_GUID);
-
-    prpnode = prpnode->GetNext();  // Track
   }
 
   return result;
@@ -3817,7 +3795,7 @@ bool AddPlugInTrack( PlugIn_Track *ptrack, bool b_permanent )
     track->m_GUID = ptrack->m_GUID;
     track->m_btemp = (b_permanent == false);
 
-    pTrackList->Append( track );
+    g_TrackList.push_back(track);
 
     if(b_permanent)
         pConfig->AddNewTrack( track );

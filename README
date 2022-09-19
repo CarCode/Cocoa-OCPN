@@ -89,6 +89,18 @@ Target: x86_64-apple-darwin19.6.0
 SDK 10.15 Catalina
 Thread model: posix
 
+Neben den wxWidgets Bibliotheken sind einige Dritt-Programme erforderlich,
+die Homebrew zur Verfügung stellt. Dazu werden im Terminal Programm folgende
+Befehle der Reihe nach eingegeben:
+$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+$ brew install cmake
+$ brew install gettext
+$ echo 'export PATH="/usr/local/opt/gettext/bin:$PATH"'>> ~/.bash_profile
+$ brew install tinyxml
+$ brew install cairo
+$ brew install libexif
+$ brew install xz libarchive
+
 wxWidgets Direktive:
 Sourcen holen von https://github.com/wxWidgets/wxWidgets.git branch master
 Ich verwende die SourceTree.app für Mac OS X.

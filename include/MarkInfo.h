@@ -353,6 +353,7 @@ class MarkInfoDlg : public wxFrame
         bool UpdateProperties( bool positionOnly = false );
         void ValidateMark(void);
         bool SaveChanges();
+        void OnActivate(wxActivateEvent& event);
         wxSimpleHtmlListBox *GetSimpleBox()
             { return wxDynamicCast(m_htmlList, wxSimpleHtmlListBox); }
         void OnHtmlCellClicked(wxHtmlCellEvent &event);

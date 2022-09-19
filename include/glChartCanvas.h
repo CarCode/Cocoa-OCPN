@@ -67,7 +67,7 @@ class ChartCanvas;
 
 #define GESTURE_EVENT_TIMER 78334
 
-typedef class{
+class OCPN_GLCaps {
   public:
     wxString Renderer;
     GLenum TextureRectangleFormat;
@@ -98,7 +98,7 @@ typedef class{
     PFNGLGETCOMPRESSEDTEXIMAGEPROC      m_glGetCompressedTexImage;
 
 
-}OCPN_GLCaps;
+};
 
 void GetglEntryPoints( OCPN_GLCaps *pcaps );
 GLboolean QueryExtension( const char *extName );
@@ -183,6 +183,7 @@ public:
 
     wxString GetRendererString(){ return m_renderer; }
     wxString GetVersionString(){ return m_version; }
+    wxString GetGLSLVersionString() { return m_GLSLversion; }
     void EnablePaint(bool b_enable){ m_b_paint_enable = b_enable; }
 
     void Invalidate();
@@ -242,7 +243,7 @@ protected:
     bool m_bsetup;
 
     wxString m_renderer;
-    wxString m_version;
+    wxString m_version, m_GLSLversion;
     wxString m_extensions;    
 
     ViewPort    m_cache_vp;
@@ -295,6 +296,8 @@ protected:
     int          m_currentTexWidth;
     int          m_currentTexHeight;
     int          m_displayScale;
+
+    bool m_bUseGLSL;
 
     ChartCanvas *m_pParentCanvas;
 

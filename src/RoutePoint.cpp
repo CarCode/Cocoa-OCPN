@@ -39,6 +39,7 @@
 #include "Select.h"
 #include "chart1.h"
 #include "Route.h"
+#include "svg_utils.h"
 
 extern WayPointman  *pWayPointMan;
 extern bool         g_bIsNewLayer;
@@ -59,8 +60,6 @@ extern float        g_ChartScaleFactorExp;
 extern int          g_iWpt_ScaMin;
 extern bool         g_bUseWptScaMin;
 extern bool         g_bOverruleScaMin;
-
-extern wxImage LoadSVGIcon( wxString filename, int width, int height );
 
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST ( RoutePointList );
@@ -361,11 +360,8 @@ void RoutePoint::EnableDragHandle(bool bEnable)
             // What icon?
             wxString UserIconPath = g_Platform->GetSharedDataDir() + _T("uidata") + wxFileName::GetPathSeparator();
 
-            wxImage iconSVG = LoadSVGIcon( UserIconPath  + _T("DragHandle.svg"), bm_size, bm_size );
-            if(iconSVG.IsOk())
-                m_dragIcon = wxBitmap(iconSVG);
-            else
-                m_dragIcon = *m_pbmIcon;                // Drag handle icon not found
+            m_dragIcon = LoadSVG(UserIconPath + _T("DragHandle.svg"), bm_size,
+                                 bm_size, m_pbmIcon);
 
             // build a texture
 #ifdef ocpnUSE_GL
@@ -379,7 +375,7 @@ void RoutePoint::EnableDragHandle(bool bEnable)
                 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
 
 
-                wxImage image = iconSVG;
+                wxImage image = m_dragIcon.ConvertToImage();
                 int w = image.GetWidth(), h = image.GetHeight();
 
                 m_dragIconTextureWidth = NextPow2(w);
@@ -418,7 +414,7 @@ void RoutePoint::EnableDragHandle(bool bEnable)
 #endif
 
             // set the drawing metrics
-            if(iconSVG.IsOk()){
+            if (m_dragIcon.IsOk()) {
                 m_drag_line_length_man = bm_size;
                 m_drag_icon_offset = bm_size;
             }
@@ -808,8 +804,7 @@ void RoutePoint::DrawGL( ViewPort &vp, ChartCanvas *canvas, bool use_cached_scre
         pbm = m_pbmIcon;
 
     //  If icon is corrupt, there is really nothing else to do...
-    if(!pbm->IsOk())
-        return;
+    if (!pbm || !pbm->IsOk()) return;
 
     int sx2 = pbm->GetWidth() / 2;
     int sy2 = pbm->GetHeight() / 2;

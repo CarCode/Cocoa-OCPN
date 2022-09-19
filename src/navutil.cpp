@@ -94,7 +94,7 @@ extern double           g_ChartNotRenderScaleFactor;
 extern int              g_restore_stackindex;
 extern int              g_restore_dbindex;
 extern RouteList        *pRouteList;
-extern TrackList        *pTrackList;
+extern std::vector<Track*> g_TrackList;
 extern LayerList        *pLayerList;
 extern int              g_LayerIdx;
 extern MyConfig         *pConfig;
@@ -184,6 +184,7 @@ extern double           g_MarkLost_Mins;
 extern bool             g_bRemoveLost;
 extern double           g_RemoveLost_Mins;
 extern bool             g_bShowCOG;
+extern bool             g_bSyncCogPredictors;
 extern double           g_ShowCOG_Mins;
 extern bool             g_bAISShowTracks;
 extern bool             g_bTrackCarryOver;
@@ -381,7 +382,7 @@ extern bool             g_bresponsive;
 extern bool             g_bGLexpert;
 
 extern int              g_SENC_LOD_pixels;
-extern ArrayOfMMSIProperties   g_MMSI_Props_Array;
+extern ArrayOfMMSIProperties g_MMSI_Props_Array;
 
 extern int              g_chart_zoom_modifier;
 extern int              g_chart_zoom_modifier_vector;
@@ -1107,6 +1108,8 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
 
     Read( _T ( "bShowCOGArrows" ), &g_bShowCOG );
 
+    Read(_T ("bSyncCogPredictors"), &g_bSyncCogPredictors);
+
     Read( _T ( "CogArrowMinutes" ), &s );
     s.ToDouble( &g_ShowCOG_Mins );
 
@@ -1491,7 +1494,7 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
         while( bCont ) {
             pConfig->Read( str, &val );              // Get an entry
 
-            MMSIProperties *pProps = new MMSIProperties( val );
+            MMSIProperties *pProps = new MMSIProperties(val);
             g_MMSI_Props_Array.Add(pProps);
 
             bCont = pConfig->GetNextEntry( str, dummy );
@@ -2766,7 +2769,7 @@ void MyConfig::UpdateSettings()
 
     DeleteGroup(_T ( "/MMSIProperties" ));
     SetPath( _T ( "/MMSIProperties" ) );
-    for(unsigned int i=0 ; i < g_MMSI_Props_Array.GetCount() ; i++){
+    for (unsigned int i = 0; i < g_MMSI_Props_Array.GetCount(); i++) {
         wxString p;
         p.Printf(_T("Props%d"), i);
         Write( p, g_MMSI_Props_Array[i]->Serialize() );
@@ -2857,7 +2860,7 @@ bool ExportGPXRoutes( wxWindow* parent, RouteList *pRoutes, const wxString sugge
     return false;
 }
 
-bool ExportGPXTracks( wxWindow* parent, TrackList *pTracks, const wxString suggestedName )
+bool ExportGPXTracks(wxWindow *parent, std::vector<Track*> *pTracks, const wxString suggestedName )
 {
     wxFileName fn = exportFileName(parent, suggestedName);
     if (fn.IsOk()) {
@@ -2952,10 +2955,7 @@ void ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
             node1 = node1->GetNext();
         }
 
-        wxTrackListNode *node2 = pTrackList->GetFirst();
-        while( node2 ) {
-            Track *pTrack = node2->GetData();
-
+        for (Track* pTrack : g_TrackList) {
             bool b_add = true;
 
             if( bviz_only && !pTrack->IsVisible() )
@@ -2966,7 +2966,6 @@ void ExportGPX( wxWindow* parent, bool bviz_only, bool blayer )
 
             if( b_add )
                     pgpx->AddGPXTrack( pTrack );
-            node2 = node2->GetNext();
         }
 
 
@@ -3265,14 +3264,8 @@ Route *RouteExists( Route * pTentRoute )
 
 Track *TrackExists( const wxString& guid )
 {
-    wxTrackListNode *track_node = pTrackList->GetFirst();
-
-    while( track_node ) {
-        Track *ptrack = track_node->GetData();
-
+    for (Track* ptrack : g_TrackList) {
         if( guid == ptrack->m_GUID ) return ptrack;
-
-        track_node = track_node->GetNext();
     }
     return NULL;
 }

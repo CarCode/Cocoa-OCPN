@@ -212,7 +212,8 @@ enum {
   ID_AISALERTDIALOG,
   ID_AISALERTSELECTSOUND,
   ID_AISALERTTESTSOUND,
-  ID_TEMPUNITSCHOICE
+  ID_TEMPUNITSCHOICE,
+  ID_BUTTONMIGRATE
 };
 
 /* Define an int bit field for dialog return value
@@ -307,6 +308,7 @@ class options : private Uncopyable,
   void OnButtondeleteClick(wxCommandEvent &event);
   void OnButtonParseENC(wxCommandEvent &event);
   void OnButtoncompressClick(wxCommandEvent &event);
+  void OnButtonmigrateClick(wxCommandEvent &event);
   void OnRadioboxSelected(wxCommandEvent &event);
   void OnApplyClick(wxCommandEvent &event);
   void OnXidOkClick(wxCommandEvent &event);
@@ -314,6 +316,7 @@ class options : private Uncopyable,
   void OnChooseFont(wxCommandEvent &event);
   void OnFontChoice(wxCommandEvent &event);
   void OnCPAWarnClick(wxCommandEvent &event);
+  void OnSyncCogPredClick(wxCommandEvent &event);
   void OnSizeAutoButton(wxCommandEvent &event);
   void OnSizeManualButton(wxCommandEvent &event);
 
@@ -472,7 +475,7 @@ class options : private Uncopyable,
   void OnNetProtocolSelected(wxCommandEvent &event);
   void OnBaudrateChoice(wxCommandEvent &event) { OnConnValChange(event); }
   void OnProtocolChoice(wxCommandEvent &event) { OnConnValChange(event); }
-  void OnCrcCheck(wxCommandEvent &event) { OnValChange(event); }
+  void OnCrcCheck(wxCommandEvent &event) { OnConnValChange(event); }
   void OnRbAcceptInput(wxCommandEvent &event);
   void OnRbIgnoreInput(wxCommandEvent &event);
   void OnBtnIStcs(wxCommandEvent &event);
@@ -531,6 +534,7 @@ class options : private Uncopyable,
   wxCheckBox *pUpdateCheckBox, *pScanCheckBox;
   wxButton *pParseENCButton;
   wxButton *m_removeBtn, *m_compressBtn;
+  wxButton *m_migrateBtn;
   int k_charts;
   int m_nCharWidthMax;
 
@@ -539,7 +543,8 @@ class options : private Uncopyable,
 
   // For the "AIS" page
   wxCheckBox *m_pCheck_CPA_Max, *m_pCheck_CPA_Warn, *m_pCheck_CPA_WarnT;
-  wxCheckBox *m_pCheck_Mark_Lost, *m_pCheck_Remove_Lost, *m_pCheck_Show_COG;
+  wxCheckBox *m_pCheck_Mark_Lost, *m_pCheck_Remove_Lost;
+  wxCheckBox *m_pCheck_Show_COG, *m_pCheck_Sync_OCOG_ACOG;
   wxCheckBox *m_pCheck_Show_Tracks, *m_pCheck_Hide_Moored, *m_pCheck_Scale_Priority;
   wxCheckBox *m_pCheck_AlertDialog, *m_pCheck_AlertAudio;
   wxCheckBox *m_pCheck_Alert_Moored, *m_pCheck_Rollover_Class;

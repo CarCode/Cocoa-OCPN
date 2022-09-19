@@ -65,6 +65,7 @@ DashboardInstrument_GPS::DashboardInstrument_GPS( wxWindow *parent, wxWindowID i
     b_shift = false;
     s_gTalker = wxEmptyString;
     m_iMaster = 1; //Start with the GPS system
+    m_MaxSatCount = 0;
 }
 
 wxSize DashboardInstrument_GPS::GetSize( int orient, wxSize hint )
@@ -112,6 +113,7 @@ void DashboardInstrument_GPS::SetSatInfo(int cnt, int seq, wxString talk, SAT_IN
                 if (lastUpdate.GetSeconds() < 6) {
                     m_iMaster = i;
                     b_shift = false;
+                    m_MaxSatCount = 0;
                     break;
                 }
                 if (i == 5 && !secondturn) {
@@ -123,31 +125,50 @@ void DashboardInstrument_GPS::SetSatInfo(int cnt, int seq, wxString talk, SAT_IN
         if (talkerID == _T("GP")) {
             m_Gtime[1] = now;
             if (m_iMaster != 1) return;
+            // If two groups of messages in this sequence
+            // show only the first one with most(12) satellites
+            if (m_MaxSatCount > m_SatCount) return;
+            else m_MaxSatCount = m_SatCount;
             s_gTalker = wxString::Format(_T("GPS\n%d"), m_SatCount);
         }
         else if (talkerID == _T("GL")){
             m_Gtime[2] = now;
             if (m_iMaster != 2) return;
+            // See "GP" above
+            if (m_MaxSatCount > m_SatCount) return;
+            else m_MaxSatCount = m_SatCount;
             s_gTalker = wxString::Format(_T("GLONASS\n%d"), m_SatCount);
         }
         else if (talkerID == _T("GA")){
             m_Gtime[3] = now;
             if (m_iMaster != 3) return;
+            // See "GP" above
+            if (m_MaxSatCount > m_SatCount) return;
+            else m_MaxSatCount = m_SatCount;
             s_gTalker = wxString::Format(_T("Galileo\n%d"), m_SatCount);
         }
-        else if (talkerID == _T("GB")) { // BeiDou  BDS
+        else if (talkerID == _T("GB") || talkerID == _T("BD")) {  // BeiDou  BDS
             m_Gtime[4] = now;
             if (m_iMaster != 4) return;
+            // See "GP" above
+            if (m_MaxSatCount > m_SatCount) return;
+            else m_MaxSatCount = m_SatCount;
             s_gTalker = wxString::Format(_T("BeiDou\n%d"), m_SatCount);
         }
         else if (talkerID == _T("GI")) {
             m_Gtime[5] = now;
             if (m_iMaster != 5) return;
+            // See "GP" above
+            if (m_MaxSatCount > m_SatCount) return;
+            else m_MaxSatCount = m_SatCount;
             s_gTalker = wxString::Format(_T("NavIC\n%d"), m_SatCount);
         }
         else if (talkerID == _T("GQ")) {
             m_Gtime[0] = now;
             if (m_iMaster != 0) return;
+            // See "GP" above
+            if (m_MaxSatCount > m_SatCount) return;
+            else m_MaxSatCount = m_SatCount;
             s_gTalker = wxString::Format(_T("QZSS\n%d"), m_SatCount);
         }
         else {
@@ -280,8 +301,17 @@ void DashboardInstrument_GPS::DrawBackground(wxGCDC* dc)
 
     for (int idx = 0; idx < 12; idx++)
     {
-        if (m_SatInfo[idx].SatNumber)
-            tdc.DrawText(wxString::Format(_T("%02d"), m_SatInfo[idx].SatNumber), idx*16+5, 0);
+//        if (m_SatInfo[idx].SatNumber)  // Hakan 03.06.2022
+//            tdc.DrawText(wxString::Format(_T("%02d"), m_SatInfo[idx].SatNumber), idx*16+5, 0);
+        if (m_SatInfo[idx].SatNumber) {
+              wxString satno = wxString::Format(_T("%02d"), m_SatInfo[idx].SatNumber);
+              //Avoid three digit sat-number here. Especially for BeiDou(GB/BD)
+              satno = satno.Right(2);
+              tdc.DrawText(satno, idx * 16 + 5, 0);
+            }
+            else
+              tdc.DrawText(" -", idx * 16 + 5, 0);
+
     }
 
     tdc.SelectObject( wxNullBitmap );

@@ -106,12 +106,6 @@ enum {
 
 
 // Class declarations
-
-
-
-
-
-// Class declarations
 class OCP_DataStreamInput_Thread;
 class DataStream;
 class GarminProtocolHandler;
@@ -120,6 +114,7 @@ extern  const wxEventType wxEVT_OCPN_DATASTREAM;
 extern  const wxEventType wxEVT_OCPN_THREADMSG;
 
 bool CheckSumCheck(const std::string& sentence);
+std::string SetChecksum(const std::string& sentence);
 
 //----------------------------------------------------------------------------
 // DataStream
@@ -176,6 +171,7 @@ public:
     void SetOutputFilterType(ListType filter_type) { m_output_filter_type = filter_type; }
     bool SentencePassesFilter(const wxString& sentence, FilterDirection direction);
     bool ChecksumOK(const std::string& sentence);
+    std::string FixChecksum(const std::string &sentence) const;
     bool GetGarminMode(){ return m_bGarmin_GRMN_mode; }
 
     wxString GetBaudRate(){ return m_BaudRate; }

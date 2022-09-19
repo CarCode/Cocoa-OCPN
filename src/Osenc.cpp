@@ -303,7 +303,6 @@ void Osenc::init( void )
     CPLPushErrorHandler( OpenCPN_OGR_OSENC_ErrorHandler );
 
     lockCR = std::unique_lock<std::mutex>(m, std::defer_lock);
-
 }
 
 void Osenc::setVerbose(bool verbose )
@@ -1765,8 +1764,6 @@ int Osenc::createSenc200(const wxString& FullPath000, const wxString& SENCFileNa
     lockCR.unlock();
 
     return ret_code;
-
-
 }
 
 bool Osenc::CreateCovrRecords(Osenc_outstream *stream)

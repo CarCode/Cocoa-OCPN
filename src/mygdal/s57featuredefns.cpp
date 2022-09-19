@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *****************************************************************************
  *
  * Project:  S-57 Translator
  * Purpose:  Implements methods to create OGRFeatureDefns for various
@@ -50,9 +50,9 @@
 #include "cpl_string.h"
 
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                     S57GenerateGeomFeatureDefn()                     */
-/************************************************************************/
+/* ***********************************************************************/
 
 OGRFeatureDefn *S57GenerateGeomFeatureDefn( OGRwkbGeometryType eGType,
                                             int nOptionFlags )
@@ -93,9 +93,9 @@ OGRFeatureDefn *S57GenerateGeomFeatureDefn( OGRwkbGeometryType eGType,
     return poFDefn;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*               S57GenerateVectorPrimitiveFeatureDefn()                */
-/************************************************************************/
+/* ***********************************************************************/
 
 OGRFeatureDefn *
 S57GenerateVectorPrimitiveFeatureDefn( int nRCNM, int nOptionFlags )
@@ -189,9 +189,9 @@ S57GenerateVectorPrimitiveFeatureDefn( int nRCNM, int nOptionFlags )
     return poFDefn;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                     S57GenerateObjectClassDefn()                     */
-/************************************************************************/
+/* ***********************************************************************/
 
 OGRFeatureDefn *S57GenerateObjectClassDefn( S57ClassRegistrar *poCR,
                                             int nOBJL, int nOptionFlags )
@@ -313,11 +313,11 @@ OGRFeatureDefn *S57GenerateObjectClassDefn( S57ClassRegistrar *poCR,
     return poFDefn;
 }
 
-/************************************************************************/
+/* ***********************************************************************/
 /*                   S57GenerateStandardAttributes()                    */
 /*                                                                      */
 /*      Attach standard feature attributes to a feature definition.     */
-/************************************************************************/
+/* ***********************************************************************/
 
 void S57GenerateStandardAttributes( OGRFeatureDefn *poFDefn, int nOptionFlags )
 

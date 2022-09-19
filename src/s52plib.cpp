@@ -2649,11 +2649,17 @@ bool s52plib::RenderHPGL( ObjRazRules *rzRules, Rule *prule, wxPoint &r, ViewPor
 
     //  Very special case for ATON flare lights at 135 degrees, the standard render angle.
     //  We don't want them to rotate with the viewport.
-    if(rzRules->obj->bIsAton && (!strncmp(rzRules->obj->FeatureName, "LIGHTS", 6))  && (fabs(rot_angle - 135.0) < 1.) ){
-        render_angle -= vp->rotation * 180./PI;
+    if(rzRules->obj->bIsAton &&       (!strncmp(rzRules->obj->FeatureName, "LIGHTS", 6))){
+        
+#ifdef __OCPN__ANDROID__
+      //  Due to popular request, we make the flare lights a little bit
+      //  smaller than S52 specifications
+      xscale = xscale * 5. / 7.;
+#endif
 
-        //  And, due to popular request, we make the flare lights a little bit smaller than S52 specifications
-        xscale = xscale * 6. / 7.;
+      if( fabs(rot_angle - 135.0) < 1.)
+        render_angle -= vp->rotation * 180. / PI;
+
     }
 
     int width = prule->pos.symb.bnbox_x.SBXC + prule->pos.symb.bnbox_w.SYHL;
@@ -4173,11 +4179,9 @@ int s52plib::RenderLSLegacy( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
 
     if( rzRules->obj->m_n_lsindex ) {
-        VE_Hash *ve_hash; 
-        VC_Hash *vc_hash; 
-        ve_hash = (VE_Hash *)rzRules->obj->m_chart_context->m_pve_hash;             // This is cm93 
-        vc_hash = (VC_Hash *)rzRules->obj->m_chart_context->m_pvc_hash; 
-
+        // This is cm93
+        auto ve_hash = rzRules->obj->m_chart_context->m_pve_hash;
+        auto vc_hash = rzRules->obj->m_chart_context->m_pvc_hash;
 
         //  Get the current display priority
         //  Default comes from the LUP, unless overridden
@@ -4776,9 +4780,8 @@ int s52plib::RenderLCLegacy( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
         priority_current = rzRules->obj->m_DPRI;
 
     if( rzRules->obj->m_n_lsindex ) {
-
-        VE_Hash *ve_hash = (VE_Hash *)rzRules->obj->m_chart_context->m_pve_hash;
-        VC_Hash *vc_hash = (VC_Hash *)rzRules->obj->m_chart_context->m_pvc_hash;
+        auto ve_hash = rzRules->obj->m_chart_context->m_pve_hash;
+        auto vc_hash = rzRules->obj->m_chart_context->m_pvc_hash;
 
         unsigned int nls_max;
         if( rzRules->obj->m_n_edge_max_points > 0 ) // size has been precalculated on SENC load

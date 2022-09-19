@@ -102,6 +102,7 @@ extern GLuint g_raster_format;
 
 #include "OCPNPlatform.h"
 #include "ConfigMgr.h"
+#include "svg_utils.h"
 
 #if !defined(__WXOSX__)  
 #define SLIDER_STYLE  wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS
@@ -167,6 +168,7 @@ extern bool g_bRemoveLost;
 extern double g_RemoveLost_Mins;
 extern bool g_bShowCOG;
 extern double g_ShowCOG_Mins;
+extern bool g_bSyncCogPredictors;
 extern bool g_bAISShowTracks;
 extern double g_AISShowTracks_Mins;
 extern double g_ShowMoored_Kts;
@@ -335,7 +337,7 @@ extern int      g_iWpt_ScaMin;
 extern bool     g_bUseWptScaMin;
 bool            g_bOverruleScaMin;
 extern int      osMajor, osMinor;
-extern MyConfig *pConfig;
+extern MyConfig* pConfig;
 
 extern "C" bool CheckSerialAccess(void);
 extern  wxString GetShipNameFromFile(int);
@@ -369,17 +371,16 @@ static int lang_list[] = {
     //    wxLANGUAGE_CHINESE_SINGAPORE,
     wxLANGUAGE_CHINESE_TAIWAN, wxLANGUAGE_CORSICAN, wxLANGUAGE_CROATIAN,
     wxLANGUAGE_CZECH, wxLANGUAGE_DANISH, wxLANGUAGE_DUTCH,
-    wxLANGUAGE_DUTCH_BELGIAN, wxLANGUAGE_ENGLISH, wxLANGUAGE_ENGLISH_UK,
-    wxLANGUAGE_ENGLISH_US, wxLANGUAGE_ENGLISH_AUSTRALIA,
-    wxLANGUAGE_ENGLISH_BELIZE, wxLANGUAGE_ENGLISH_BOTSWANA,
-    wxLANGUAGE_ENGLISH_CANADA, wxLANGUAGE_ENGLISH_CARIBBEAN,
-    wxLANGUAGE_ENGLISH_DENMARK, wxLANGUAGE_ENGLISH_EIRE,
-    wxLANGUAGE_ENGLISH_JAMAICA, wxLANGUAGE_ENGLISH_NEW_ZEALAND,
-    wxLANGUAGE_ENGLISH_PHILIPPINES, wxLANGUAGE_ENGLISH_SOUTH_AFRICA,
-    wxLANGUAGE_ENGLISH_TRINIDAD, wxLANGUAGE_ENGLISH_ZIMBABWE,
-    wxLANGUAGE_ESPERANTO, wxLANGUAGE_ESTONIAN, wxLANGUAGE_FAEROESE,
-    wxLANGUAGE_FARSI, wxLANGUAGE_FIJI, wxLANGUAGE_FINNISH, wxLANGUAGE_FRENCH,
-    wxLANGUAGE_FRENCH_BELGIAN, wxLANGUAGE_FRENCH_CANADIAN,
+    wxLANGUAGE_DUTCH_BELGIAN, wxLANGUAGE_ENGLISH_UK, wxLANGUAGE_ENGLISH_US,
+    wxLANGUAGE_ENGLISH_AUSTRALIA, wxLANGUAGE_ENGLISH_BELIZE,
+    wxLANGUAGE_ENGLISH_BOTSWANA, wxLANGUAGE_ENGLISH_CANADA,
+    wxLANGUAGE_ENGLISH_CARIBBEAN, wxLANGUAGE_ENGLISH_DENMARK,
+    wxLANGUAGE_ENGLISH_EIRE, wxLANGUAGE_ENGLISH_JAMAICA,
+    wxLANGUAGE_ENGLISH_NEW_ZEALAND, wxLANGUAGE_ENGLISH_PHILIPPINES,
+    wxLANGUAGE_ENGLISH_SOUTH_AFRICA, wxLANGUAGE_ENGLISH_TRINIDAD,
+    wxLANGUAGE_ENGLISH_ZIMBABWE, wxLANGUAGE_ESPERANTO, wxLANGUAGE_ESTONIAN,
+    wxLANGUAGE_FAEROESE, wxLANGUAGE_FARSI, wxLANGUAGE_FIJI, wxLANGUAGE_FINNISH,
+    wxLANGUAGE_FRENCH, wxLANGUAGE_FRENCH_BELGIAN, wxLANGUAGE_FRENCH_CANADIAN,
     wxLANGUAGE_FRENCH_LUXEMBOURG, wxLANGUAGE_FRENCH_MONACO,
     wxLANGUAGE_FRENCH_SWISS, wxLANGUAGE_FRISIAN, wxLANGUAGE_GALICIAN,
     wxLANGUAGE_GEORGIAN, wxLANGUAGE_GERMAN, wxLANGUAGE_GERMAN_AUSTRIAN,
@@ -435,22 +436,6 @@ static int lang_list[] = {
     wxLANGUAGE_VOLAPUK, wxLANGUAGE_WELSH, wxLANGUAGE_WOLOF, wxLANGUAGE_XHOSA,
     wxLANGUAGE_YIDDISH, wxLANGUAGE_YORUBA, wxLANGUAGE_ZHUANG, wxLANGUAGE_ZULU};
 #endif
-
-
-//  Helper utilities
-static wxBitmap LoadSVG( const wxString filename, unsigned int width, unsigned int height )
-{
-    #ifdef ocpnUSE_SVG
-    wxSVGDocument svgDoc;
-    if( svgDoc.Load(filename) )
-        return wxBitmap( svgDoc.Render( width, height, NULL, true, true ) );
-    else
-        return wxBitmap(width, height);
-    #else
-        return wxBitmap(width, height);
-        #endif // ocpnUSE_SVG
-}
-
 
 // sort callback for Connections list  Sort by priority.
 #if wxCHECK_VERSION(2, 9, 0)
@@ -856,7 +841,7 @@ MMSIListCtrl::~MMSIListCtrl(void) {}
 
 wxString MMSIListCtrl::OnGetItemText(long item, long column) const {
   wxString ret;
-  MMSIProperties* props = g_MMSI_Props_Array[item];
+    MMSIProperties* props = g_MMSI_Props_Array[item];
 
   if (!props) return ret;
   switch (column) {
@@ -905,20 +890,19 @@ wxString MMSIListCtrl::OnGetItemText(long item, long column) const {
 void MMSIListCtrl::OnListItemClick(wxListEvent& event) {}
 
 void MMSIListCtrl::OnListItemActivated(wxListEvent& event) {
-  MMSIProperties* props = g_MMSI_Props_Array.Item(event.GetIndex());
-  MMSIProperties* props_new = new MMSIProperties(*props);
+    MMSIProperties* props = g_MMSI_Props_Array.Item(event.GetIndex());
+    MMSIProperties* props_new = new MMSIProperties(*props);
 
-  MMSIEditDialog* pd =
-      new MMSIEditDialog(props_new, m_parent, -1, _("Edit MMSI Properties"),
-                         wxDefaultPosition, wxSize(200, 200));
+    MMSIEditDialog* pd =
+          new MMSIEditDialog(props_new, m_parent, -1, _("Edit MMSI Properties"),
+                             wxDefaultPosition, wxSize(200, 200));
 
   if (pd->ShowModal() == wxID_OK) {
-    g_MMSI_Props_Array.RemoveAt(event.GetIndex());
-    delete props;
-    g_MMSI_Props_Array.Insert(props_new, event.GetIndex());
-  }
-  else
-    delete props_new;
+      g_MMSI_Props_Array.RemoveAt(event.GetIndex());
+          delete props;
+          g_MMSI_Props_Array.Insert(props_new, event.GetIndex());
+        } else
+          delete props_new;
 
   pd->Destroy();
 }
@@ -943,39 +927,39 @@ void MMSIListCtrl::OnListItemRightClick(wxListEvent& event) {
   wxPoint p = ScreenToClient(wxGetMousePosition());
   PopupMenu(menu, p.x, p.y);
 
-  SetItemCount(g_MMSI_Props_Array.GetCount());
+    SetItemCount(g_MMSI_Props_Array.GetCount());
   Refresh(TRUE);
 }
 
 void MMSIListCtrl::PopupMenuHandler(wxCommandEvent& event) {
   int context_item = m_context_item;
-  MMSIProperties* props = g_MMSI_Props_Array[context_item];
+    MMSIProperties* props = g_MMSI_Props_Array[context_item];
 
   if (!props) 
       return;
 
   switch (event.GetId()) {
     case ID_DEF_MENU_MMSI_EDIT: {
-      MMSIProperties* props_new = new MMSIProperties(*props);
-      MMSIEditDialog* pd = new MMSIEditDialog(props_new, m_parent, -1, _("Edit MMSI Properties"),
-                             wxDefaultPosition, wxSize(200, 200));
+        MMSIProperties* props_new = new MMSIProperties(*props);
+              MMSIEditDialog* pd =
+                  new MMSIEditDialog(props_new, m_parent, -1, _("Edit MMSI Properties"),
+                                     wxDefaultPosition, wxSize(200, 200));
 
       if (pd->ShowModal() == wxID_OK) {
-        g_MMSI_Props_Array.RemoveAt(context_item);
-        delete props;
-        props_new->m_ShipName = GetShipNameFromFile(props_new->MMSI);
-        g_MMSI_Props_Array.Insert(props_new, context_item);
-      }
-      else {
-        delete props_new;
+          g_MMSI_Props_Array.RemoveAt(context_item);
+          delete props;
+          props_new->m_ShipName = GetShipNameFromFile(props_new->MMSI);
+          g_MMSI_Props_Array.Insert(props_new, context_item);
+        } else {
+            delete props_new;
       }
       pd->Destroy();
       break;
     }
     case ID_DEF_MENU_MMSI_DELETE:
-      g_MMSI_Props_Array.RemoveAt(context_item);
-      delete props;
-      break;
+          g_MMSI_Props_Array.RemoveAt(context_item);
+          delete props;
+          break;
   }
 }
 
@@ -1088,16 +1072,15 @@ MMSI_Props_Panel::MMSI_Props_Panel(wxWindow* parent)
 MMSI_Props_Panel::~MMSI_Props_Panel(void) {}
 
 void MMSI_Props_Panel::OnNewButton(wxCommandEvent& event) {
-  MMSIProperties* props = new MMSIProperties(-1);
+    MMSIProperties* props = new MMSIProperties(-1);
 
   MMSIEditDialog* pd =
-      new MMSIEditDialog(props, m_parent, -1, _("Add MMSI Properties"),
-                         wxDefaultPosition, wxSize(200, 200));
+    new MMSIEditDialog(props, m_parent, -1, _("Add MMSI Properties"), wxDefaultPosition, wxSize(200, 200));
 
   DimeControl( pd );
-  pd->ShowWindowModalThenDo([this, pd, props](int retcode){
-        if ( retcode == wxID_OK ) {
-            g_MMSI_Props_Array.Add(props);
+    pd->ShowWindowModalThenDo([this, pd, props](int retcode) {
+        if (retcode == wxID_OK) {
+          g_MMSI_Props_Array.Add(props);
         }
         else {
             delete props;
@@ -1116,12 +1099,12 @@ void MMSI_Props_Panel::UpdateMMSIList(void) {
   if (selItemID != wxNOT_FOUND)
     selMMSI = g_MMSI_Props_Array[selItemID]->MMSI;
 
-  m_pListCtrlMMSI->SetItemCount(g_MMSI_Props_Array.GetCount());
+    m_pListCtrlMMSI->SetItemCount(g_MMSI_Props_Array.GetCount());
 
   // Restore selected item
   long item_sel = wxNOT_FOUND;
   if (selItemID != wxNOT_FOUND && selMMSI != wxNOT_FOUND) {
-    for (unsigned int i = 0; i < g_MMSI_Props_Array.GetCount(); i++) {
+      for (unsigned int i = 0; i < g_MMSI_Props_Array.GetCount(); i++) {
       if (g_MMSI_Props_Array[i]->MMSI == selMMSI) {
         item_sel = i;
         break;
@@ -1129,7 +1112,7 @@ void MMSI_Props_Panel::UpdateMMSIList(void) {
     }
   }
 
-  if (g_MMSI_Props_Array.GetCount() > 0)
+    if (g_MMSI_Props_Array.GetCount() > 0)
     m_pListCtrlMMSI->SetItemState(item_sel,
                                   wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED,
                                   wxLIST_STATE_SELECTED | wxLIST_STATE_FOCUSED);
@@ -1204,8 +1187,7 @@ options::options(MyFrame* parent, wxWindowID id, const wxString& caption,
 
     // Protect against unreasonable small size
     // And also handle the empty config file init case.
-    if ( ( (size.x < 200) || (size.y < 200) ) && !g_bresponsive)
-      Fit();
+    if (((size.x < 200) || (size.y < 200) ) && !g_bresponsive) Fit();
 
   Center();
 /*
@@ -2075,7 +2057,7 @@ void options::CreatePanel_NMEA_Compact(size_t parent, int border_size,
                               wxCommandEventHandler(options::OnBtnOStcs), NULL,
                               this);
   m_cbCheckCRC->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED,
-                        wxCommandEventHandler(options::OnConnValChange), NULL, this);
+                        wxCommandEventHandler(options::OnCrcCheck), NULL, this);
   pOpenGL->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED,
                    wxCommandEventHandler(options::OnGLClicked), NULL, this);
 
@@ -2741,7 +2723,7 @@ void options::CreatePanel_NMEA(size_t parent, int border_size,
                               wxCommandEventHandler(options::OnBtnOStcs), NULL,
                               this);
   m_cbCheckCRC->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED,
-                        wxCommandEventHandler(options::OnConnValChange), NULL, this);
+                        wxCommandEventHandler(options::OnCrcCheck), NULL, this);
 
   pOpenGL->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED,
                    wxCommandEventHandler(options::OnGLClicked), NULL, this);
@@ -2888,14 +2870,15 @@ void options::CreatePanel_Ownship(size_t parent, int border_size,
       itemPanelShip, wxID_ANY, _("COG Predictor Length (min)"));
   dispOptionsGrid->Add(pStatic_OSCOG_Predictor, 0);
 
-  m_pText_OSCOG_Predictor = new wxTextCtrl(itemPanelShip, wxID_ANY);
+//  m_pText_OSCOG_Predictor = new wxTextCtrl(itemPanelShip, wxID_ANY);  // Felder zu klein
+    m_pText_OSCOG_Predictor = new wxTextCtrl(itemPanelShip, wxID_ANY, _T(""), wxDefaultPosition, wxSize(100, -1));
   dispOptionsGrid->Add(m_pText_OSCOG_Predictor, 0, wxALIGN_RIGHT);
 
   wxStaticText* pStatic_OSHDT_Predictor = new wxStaticText(
       itemPanelShip, wxID_ANY, _("Heading Predictor Length (NMi)"));
   dispOptionsGrid->Add(pStatic_OSHDT_Predictor, 0);
 
-  m_pText_OSHDT_Predictor = new wxTextCtrl(itemPanelShip, wxID_ANY);
+  m_pText_OSHDT_Predictor = new wxTextCtrl(itemPanelShip, wxID_ANY, _T(""), wxDefaultPosition, wxSize(100, -1));
   dispOptionsGrid->Add(m_pText_OSHDT_Predictor, 0, wxALIGN_RIGHT);
 
   wxStaticText* iconTypeTxt =
@@ -2918,31 +2901,31 @@ void options::CreatePanel_Ownship(size_t parent, int border_size,
   realSizes->Add(
       new wxStaticText(itemPanelShip, wxID_ANY, _("Length Over All (m)")), 1,
       wxALIGN_LEFT);
-  m_pOSLength = new wxTextCtrl(itemPanelShip, 1);
+  m_pOSLength = new wxTextCtrl(itemPanelShip, 1, _T(""), wxDefaultPosition, wxSize(100, -1));
   realSizes->Add(m_pOSLength, 1, wxALIGN_RIGHT | wxALL, group_item_spacing);
 
   realSizes->Add(
       new wxStaticText(itemPanelShip, wxID_ANY, _("Width Over All (m)")), 1,
       wxALIGN_LEFT);
-  m_pOSWidth = new wxTextCtrl(itemPanelShip, wxID_ANY);
+  m_pOSWidth = new wxTextCtrl(itemPanelShip, wxID_ANY, _T(""), wxDefaultPosition, wxSize(100, -1));
   realSizes->Add(m_pOSWidth, 1, wxALIGN_RIGHT | wxALL, group_item_spacing);
 
   realSizes->Add(
       new wxStaticText(itemPanelShip, wxID_ANY, _("GPS Offset from Bow (m)")),
       1, wxALIGN_LEFT);
-  m_pOSGPSOffsetY = new wxTextCtrl(itemPanelShip, wxID_ANY);
+  m_pOSGPSOffsetY = new wxTextCtrl(itemPanelShip, wxID_ANY, _T(""), wxDefaultPosition, wxSize(100, -1));
   realSizes->Add(m_pOSGPSOffsetY, 1, wxALIGN_RIGHT | wxALL, group_item_spacing);
 
   realSizes->Add(new wxStaticText(itemPanelShip, wxID_ANY,
                                   _("GPS Offset from Midship (m)")),
                  1, wxALIGN_LEFT);
-  m_pOSGPSOffsetX = new wxTextCtrl(itemPanelShip, wxID_ANY);
+  m_pOSGPSOffsetX = new wxTextCtrl(itemPanelShip, wxID_ANY, _T(""), wxDefaultPosition, wxSize(100, -1));
   realSizes->Add(m_pOSGPSOffsetX, 1, wxALIGN_RIGHT | wxALL, group_item_spacing);
 
   realSizes->Add(
       new wxStaticText(itemPanelShip, wxID_ANY, _("Minimum Screen Size (mm)")),
       1, wxALIGN_LEFT);
-  m_pOSMinSize = new wxTextCtrl(itemPanelShip, wxID_ANY);
+  m_pOSMinSize = new wxTextCtrl(itemPanelShip, wxID_ANY, _T(""), wxDefaultPosition, wxSize(100, -1));
   realSizes->Add(m_pOSMinSize, 1, wxALIGN_RIGHT | wxALL, group_item_spacing);
 
   // Radar rings
@@ -3142,7 +3125,8 @@ void options::CreatePanel_Routes(size_t parent, int border_size,
       itemPanelRoutes, wxID_STATIC, _("Waypoint Arrival Circle Radius (NMi)"));
   pRouteGrid->Add(raText, 1, wxEXPAND | wxALL, group_item_spacing);
 
-  m_pText_ACRadius = new wxTextCtrl(itemPanelRoutes, -1);
+//  m_pText_ACRadius = new wxTextCtrl(itemPanelRoutes, -1);  //  Felder zu klein
+  m_pText_ACRadius = new wxTextCtrl(itemPanelRoutes, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pRouteGrid->Add(m_pText_ACRadius, 0, wxALL | wxALIGN_RIGHT,
                   group_item_spacing);
 
@@ -3199,7 +3183,7 @@ void options::CreatePanel_Routes(size_t parent, int border_size,
   pScaMinChckB = new wxCheckBox(itemPanelRoutes, wxID_ANY,
                      _("Show waypoints only at a chartscale greater than 1 :"));
   ScaMinSizer->Add(pScaMinChckB, 0);
-  m_pText_ScaMin = new wxTextCtrl(itemPanelRoutes, -1);
+  m_pText_ScaMin = new wxTextCtrl(itemPanelRoutes, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   ScaMinSizer->Add(m_pText_ScaMin, 0, wxALL | wxALIGN_RIGHT,
                   group_item_spacing);
 
@@ -5602,7 +5586,8 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("No (T)CPA Alerts if target range is greater than (NMi)"));
   pCPAGrid->Add(m_pCheck_CPA_Max, 0, wxALL, group_item_spacing);
 
-  m_pText_CPA_Max = new wxTextCtrl(panelAIS, -1);
+//  m_pText_CPA_Max = new wxTextCtrl(panelAIS, -1); Felder zu klein
+  m_pText_CPA_Max = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pCPAGrid->Add(m_pText_CPA_Max, 0, wxALL | wxALIGN_RIGHT, group_item_spacing);
 
   m_pCheck_CPA_Warn =
@@ -5610,7 +5595,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
   pCPAGrid->Add(m_pCheck_CPA_Warn, 0, wxALL, group_item_spacing);
 
   m_pText_CPA_Warn =
-      new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(-1, -1));
+      new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pCPAGrid->Add(m_pText_CPA_Warn, 0, wxALL | wxALIGN_RIGHT, group_item_spacing);
 
   m_pCheck_CPA_Warn->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED,
@@ -5621,7 +5606,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       new wxCheckBox(panelAIS, -1, _("...and TCPA is less than (min)"));
   pCPAGrid->Add(m_pCheck_CPA_WarnT, 0, wxALL, group_item_spacing);
 
-  m_pText_CPA_WarnT = new wxTextCtrl(panelAIS, -1);
+  m_pText_CPA_WarnT = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pCPAGrid->Add(m_pText_CPA_WarnT, 0, wxALL | wxALIGN_RIGHT,
                 group_item_spacing);
 
@@ -5638,14 +5623,14 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       new wxCheckBox(panelAIS, -1, _("Mark targets as lost after (min)"));
   pLostGrid->Add(m_pCheck_Mark_Lost, 1, wxALL, group_item_spacing);
 
-  m_pText_Mark_Lost = new wxTextCtrl(panelAIS, -1);
+  m_pText_Mark_Lost = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pLostGrid->Add(m_pText_Mark_Lost, 1, wxALL | wxALIGN_RIGHT,
                  group_item_spacing);
 
   m_pCheck_Remove_Lost = new wxCheckBox(panelAIS, -1, _("Remove lost targets after (min)"));
   pLostGrid->Add(m_pCheck_Remove_Lost, 1, wxALL, group_item_spacing);
 
-  m_pText_Remove_Lost = new wxTextCtrl(panelAIS, -1);
+  m_pText_Remove_Lost = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pLostGrid->Add(m_pText_Remove_Lost, 1, wxALL | wxALIGN_RIGHT,
                  group_item_spacing);
 
@@ -5665,15 +5650,25 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("Show target COG predictor arrow, length (min)"));
   pDisplayGrid->Add(m_pCheck_Show_COG, 1, wxALL | wxEXPAND, group_item_spacing);
 
-  m_pText_COG_Predictor = new wxTextCtrl(panelAIS, -1);
+  m_pText_COG_Predictor = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_COG_Predictor, 1, wxALL | wxALIGN_RIGHT,
                     group_item_spacing);
+
+    m_pCheck_Sync_OCOG_ACOG = new wxCheckBox(
+      panelAIS, -1, _("Sync AIS arrow length with own ship's COG predictor"));
+    pDisplayGrid->Add(m_pCheck_Sync_OCOG_ACOG, 1, wxALL, group_item_spacing);
+    m_pCheck_Sync_OCOG_ACOG->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED,
+                               wxCommandEventHandler(options::OnSyncCogPredClick),
+                               NULL, this);
+
+    wxStaticText* pStatic_Dummy4a = new wxStaticText(panelAIS, -1, _T(""));
+    pDisplayGrid->Add(pStatic_Dummy4a, 1, wxALL, group_item_spacing);
 
   m_pCheck_Show_Tracks =
       new wxCheckBox(panelAIS, -1, _("Show target tracks, length (min)"));
   pDisplayGrid->Add(m_pCheck_Show_Tracks, 1, wxALL, group_item_spacing);
 
-  m_pText_Track_Length = new wxTextCtrl(panelAIS, -1);
+  m_pText_Track_Length = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_Track_Length, 1, wxALL | wxALIGN_RIGHT,
                     group_item_spacing);
 
@@ -5681,7 +5676,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("Suppress anchored/moored targets, speed max (kn)"));
   pDisplayGrid->Add(m_pCheck_Hide_Moored, 1, wxALL, group_item_spacing);
 
-  m_pText_Moored_Speed = new wxTextCtrl(panelAIS, -1);
+  m_pText_Moored_Speed = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_Moored_Speed, 1, wxALL | wxALIGN_RIGHT,
                     group_item_spacing);
 
@@ -5689,7 +5684,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
     panelAIS, -1, _("Draw AIS realtime prediction, target speed min (kn)"));
   pDisplayGrid->Add(m_pCheck_Draw_Realtime_Prediction, 1, wxALL, group_item_spacing);
 
-  m_pText_RealtPred_Speed = new wxTextCtrl(panelAIS, -1);
+  m_pText_RealtPred_Speed = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_RealtPred_Speed, 1, wxALL | wxALIGN_RIGHT,
     group_item_spacing);
 
@@ -5697,7 +5692,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("Allow attenuation of less critical targets if more than ... targets"));
   pDisplayGrid->Add(m_pCheck_Scale_Priority, 1, wxALL, group_item_spacing);
 
-  m_pText_Scale_Priority = new wxTextCtrl(panelAIS, -1);
+  m_pText_Scale_Priority = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_Scale_Priority, 1, wxALL | wxALIGN_RIGHT,
                     group_item_spacing);
 
@@ -5719,7 +5714,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("Show names with AIS targets at scale greater than 1:"));
   pDisplayGrid->Add(m_pCheck_Show_Target_Name, 1, wxALL, group_item_spacing);
 
-  m_pText_Show_Target_Name_Scale = new wxTextCtrl(panelAIS, -1);
+  m_pText_Show_Target_Name_Scale = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_Show_Target_Name_Scale, 1, wxALL | wxALIGN_RIGHT,
                     group_item_spacing);
 
@@ -5805,7 +5800,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("Enable Target Alert Acknowledge timeout (min)"));
   pAlertGrid->Add(m_pCheck_Ack_Timout, 1, wxALL, group_item_spacing);
 
-  m_pText_ACK_Timeout = new wxTextCtrl(panelAIS, -1);
+  m_pText_ACK_Timeout = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pAlertGrid->Add(m_pText_ACK_Timeout, 1, wxALL | wxALIGN_RIGHT,
                   group_item_spacing);
 
@@ -6807,6 +6802,9 @@ void options::SetInitialSettings(void) {
   s.Printf(_T("%4.0f"), g_ShowCOG_Mins);
   m_pText_COG_Predictor->SetValue(s);
 
+    m_pCheck_Sync_OCOG_ACOG->SetValue(g_bSyncCogPredictors);
+    if(g_bSyncCogPredictors) m_pText_COG_Predictor->Disable();
+
   m_pCheck_Show_Tracks->SetValue(g_bAISShowTracks);
 
   s.Printf(_T("%4.0f"), g_AISShowTracks_Mins);
@@ -7192,6 +7190,19 @@ void options::OnCPAWarnClick(wxCommandEvent& event) {
   } else {
     m_pCheck_CPA_WarnT->SetValue(FALSE);
     m_pCheck_CPA_WarnT->Disable();
+  }
+}
+
+void options::OnSyncCogPredClick(wxCommandEvent &event) {
+  if (m_pCheck_Sync_OCOG_ACOG->GetValue()) {
+    m_pText_COG_Predictor->SetValue(m_pText_OSCOG_Predictor->GetValue());
+    m_pText_COG_Predictor->Disable();
+  }
+  else {
+    wxString s;
+    s.Printf(_T("%4.0f"), g_ShowCOG_Mins);
+    m_pText_COG_Predictor->SetValue(s);
+    m_pText_COG_Predictor->Enable();
   }
 }
 
@@ -7971,6 +7982,11 @@ void options::OnApplyClick(wxCommandEvent& event) {
 
   //   Display
   g_bShowCOG = m_pCheck_Show_COG->GetValue();
+    // If synchronized with own ship predictor
+    g_bSyncCogPredictors = m_pCheck_Sync_OCOG_ACOG->GetValue();
+    if (g_bSyncCogPredictors) {
+      m_pText_COG_Predictor->SetValue(m_pText_OSCOG_Predictor->GetValue());
+    }
   m_pText_COG_Predictor->GetValue().ToDouble(&g_ShowCOG_Mins);
 
   g_bAISShowTracks = m_pCheck_Show_Tracks->GetValue();
@@ -7978,11 +7994,27 @@ void options::OnApplyClick(wxCommandEvent& event) {
 
   //   Update all the current targets
   if (g_pAIS) {
-    AIS_Target_Hash::iterator it;
-    AIS_Target_Hash* current_targets = g_pAIS->GetTargetList();
-    for (it = current_targets->begin(); it != current_targets->end(); ++it) {
-      AIS_Target_Data* pAISTarget = it->second;
-      if (NULL != pAISTarget) pAISTarget->b_show_track = g_bAISShowTracks;
+      for (const auto& it : g_pAIS->GetTargetList()) {
+        AIS_Target_Data* pAISTarget = it.second;
+          if (NULL != pAISTarget) {
+            pAISTarget->b_show_track = g_bAISShowTracks;
+            // Check for exceptions in MMSI properties
+              for (unsigned int i = 0; i < g_MMSI_Props_Array.GetCount(); i++) {
+                if (pAISTarget->MMSI == g_MMSI_Props_Array[i]->MMSI) {
+                    MMSIProperties *props = g_MMSI_Props_Array[i];
+                if (TRACKTYPE_NEVER == props->TrackType) {
+                  pAISTarget->b_show_track = false;
+                  break;
+                }
+                else if (TRACKTYPE_ALWAYS == props->TrackType) {
+                  pAISTarget->b_show_track = true;
+                  break;
+                }
+                else
+                  break;
+              }
+            }
+          }
     }
   }
 
@@ -9639,6 +9671,10 @@ void ChartGroupsUI::OnDeleteGroup(wxCommandEvent& event) {
     if (m_pGroupArray) m_pGroupArray->RemoveAt(m_GroupSelectedPage - 1);
     m_GroupNB->DeletePage(m_GroupSelectedPage);
     modified = TRUE;
+  }
+  if (m_GroupSelectedPage <= 0) {
+      m_pAddButton->Disable();
+      m_pDeleteGroupButton->Disable();
   }
 }
 

@@ -26,6 +26,7 @@
 
 #include <wx/string.h>
 #include <wx/datetime.h>
+#include <unordered_map>
 
 #include "ais.h"
 
@@ -113,9 +114,9 @@ public:
     bool                      b_positionOnceValid;
     bool                      b_nameValid;
     bool                      b_isFollower;
-    bool b_isDSCtarget; // DSC flag to a possible simultaneous AIS target
-    int  m_dscNature;
-    int  m_dscTXmmsi;   // MMSI for the DSC relay issuer
+    bool                      b_isDSCtarget; // DSC flag to a possible simultaneous AIS target
+    int                       m_dscNature;
+    int                       m_dscTXmmsi;   // MMSI for the DSC relay issuer
 
     //                     MMSI Properties
     bool                      b_NoTrack;
@@ -144,16 +145,16 @@ public:
 
     bool                      b_show_track;
 
-    AISTargetTrackList        *m_ptrack;
+    std::vector<AISTargetTrackPoint> m_ptrack;
 
-    AIS_Area_Notice_Hash     area_notices;
+    std::unordered_map<int, Ais8_001_22> area_notices;
     bool                     b_SarAircraftPosnReport;
     int                      altitude;                  // Metres, from special position report(9)
     bool                     b_nameFromCache;
     float                    importance;
     short                    last_scale[AIS_TARGETDATA_MAX_CANVAS]; // where AIS_TARGETDATA_MAX_CANVAS is the max number of chartcanvas
-    wxDateTime dtAlertExpireTime;
-    long dsc_NatureOfDistress;
+    wxDateTime               dtAlertExpireTime;
+    long                     dsc_NatureOfDistress;
 };
 
 #endif

@@ -48,7 +48,7 @@ extern wxString g_default_wp_icon;
 extern Select *pSelect;
 extern MyConfig *pConfig;
 extern RouteManagerDialog *pRouteManagerDialog;
-extern TrackList *pTrackList;
+extern std::vector<Track*> g_TrackList;
 extern OCPNPlatform  *g_Platform;
 extern MyFrame *gFrame;
 
@@ -159,41 +159,37 @@ void AISTargetQueryDialog::OnIdTrkCreateClick( wxCommandEvent& event )
             }
             else
             {
-                TrackPoint *tp = NULL;
-                TrackPoint *tp1 = NULL;
+            TrackPoint *tp = NULL;
+            TrackPoint *tp1 = NULL;
 
-                Track *t = new Track();
+            Track *t = new Track();
 
-                t->SetName( wxString::Format( _T("AIS %s (%u) %s %s"), td->GetFullName().c_str(), td->MMSI, wxDateTime::Now().FormatISODate().c_str(), wxDateTime::Now().FormatISOTime().c_str() ) );
-                wxAISTargetTrackListNode *node = td->m_ptrack->GetFirst();
-                while( node )
-                {
-                    AISTargetTrackPoint *ptrack_point = node->GetData();
-                    vector2D point( ptrack_point->m_lon, ptrack_point->m_lat );
-                    tp1 = t->AddNewPoint( point, wxDateTime(ptrack_point->m_time).ToUTC() );
+            t->SetName( wxString::Format( _T("AIS %s (%u) %s %s"), td->GetFullName().c_str(), td->MMSI, wxDateTime::Now().FormatISODate().c_str(), wxDateTime::Now().FormatISOTime().c_str() ) );
+            for (const AISTargetTrackPoint &ptrack_point : td->m_ptrack) {
+                  vector2D point(ptrack_point.m_lon, ptrack_point.m_lat);
+                  tp1 = t->AddNewPoint(point, wxDateTime(ptrack_point.m_time).ToUTC());
                     if( tp )
                     {
                         pSelect->AddSelectableTrackSegment( tp->m_lat, tp->m_lon, tp1->m_lat,
                             tp1->m_lon, tp, tp1, t );
                     }
                     tp = tp1;
-                    node = node->GetNext();
-                }
+            }
 
-                pTrackList->Append( t );
-                pConfig->AddNewTrack( t );
+            g_TrackList.push_back(t);
+            pConfig->AddNewTrack( t );
 //                t->RebuildGUIDList(); // ensure the GUID list is intact and good
 
-                if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
+            if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
                     pRouteManagerDialog->UpdateTrkListCtrl();
-                Refresh( false );
+            Refresh( false );
 
-                if( wxID_YES == OCPNMessageBox(NULL,
+            if( wxID_YES == OCPNMessageBox(NULL,
                     _("The recently captured track of this target has been recorded.\nDo you want to continue recording until the end of the current OpenCPN session?"),
 #ifdef __WXOSX__
-                    _("OpenCPN Info"), wxYES_NO | wxCENTER| wxICON_QUESTION, 60 ) )
+                _("OpenCPN Info"), wxYES_NO | wxCENTER| wxICON_QUESTION, 60 ) )
 #else
-                    _("OpenCPN Info"), wxYES_NO | wxCENTER, 60 ) )
+                _("OpenCPN Info"), wxYES_NO | wxCENTER, 60 ) )
 #endif
                 {
                     td->b_PersistTrack = true;

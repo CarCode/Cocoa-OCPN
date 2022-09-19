@@ -35,6 +35,13 @@
 #include <wx/clipbrd.h>
 #include <wx/aui/aui.h>
 #include "wx/progdlg.h"
+
+#if defined(__OCPN__ANDROID__)
+#include <GLES2/gl2.h>
+#elif defined(__WXQT__) || defined(__WXGTK__)
+#include <GL/glew.h>
+#endif
+
 #include "dychart.h"
 #include "OCPNPlatform.h"
 
@@ -119,8 +126,6 @@
 #ifndef __WXMSW__
 #include <signal.h>
 #include <setjmp.h>
-
-
 #endif
 
 extern float  g_ChartScaleFactorExp;
@@ -163,7 +168,7 @@ extern ConsoleCanvas    *console;
 extern OCPNPlatform     *g_Platform;
 
 extern RouteList        *pRouteList;
-extern TrackList        *pTrackList;
+extern std::vector<Track*> g_TrackList;
 extern MyConfig         *pConfig;
 extern Select           *pSelect;
 extern Routeman         *g_pRouteMan;
@@ -1386,8 +1391,6 @@ void ChartCanvas::canvasChartsRefresh( int dbi_hint )
                 GetpCurrentStack()->CurrentStackEntry = ChartData->GetStackEntry( GetpCurrentStack(),
                                                                                   m_singleChart->GetFullPath() );
             }
-            //else
-                //SetChartThumbnail( dbi_hint );       // need to reset thumbnail on failed chart open
         }
 
         //refresh_Piano();
@@ -1973,8 +1976,6 @@ void ChartCanvas::SetupCanvasQuiltMode( void )
             SelectQuiltRefdbChart( -1, false );
 
         m_singleChart = NULL;                  // Bye....
-
-            //TODOSetChartThumbnail( -1 );            //Turn off thumbnails for sure
 
             //  Re-qualify the quilt reference chart selection
             AdjustQuiltRefChart(  );
@@ -3755,7 +3756,6 @@ void ChartCanvas::OnRolloverPopupTimerEvent( wxTimerEvent& event )
                         double varBrg = gFrame->GetMag( brg, latAverage, lonAverage);
 
                         s << wxString::Format( wxString("%03d%c ", wxConvUTF8 ), (int)varBrg, 0x00B0 );
-
                     }
 
                     s << FormatDistanceAdaptive( dist );
@@ -3810,18 +3810,17 @@ void ChartCanvas::OnRolloverPopupTimerEvent( wxTimerEvent& event )
 
                     wxSize win_size = GetSize();
                     if( console && console->IsShown() ) win_size.x -= console->GetSize().x;
-                    m_pRouteRolloverWin->SetBestPosition( mouse_x, mouse_y, 16, 16, LEG_ROLLOVER,
-                                                     win_size );
+                    m_pRouteRolloverWin->SetBestPosition( mouse_x, mouse_y, 16, 16, LEG_ROLLOVER, win_size );
                     m_pRouteRolloverWin->SetBitmap( LEG_ROLLOVER );
                     m_pRouteRolloverWin->IsActive( true );
                     b_need_refresh = true;
                     showRouteRollover = true;
                     break;
-                }
-            } else
+                } // ist nicht m_pRouteRolloverWin->IsActive()
+            } else  // pr und pr->IsVisible Ende
                 node = node->GetNext();
-        }
-    } else {
+        }  // while(node) Ende
+    } else {  // wenn  m_pRolloverRouteSeg
         //    Is the cursor still in select radius, and not timed out?
         if( !pSelect->IsSelectableSegmentSelected( this, m_cursor_lat, m_cursor_lon, m_pRolloverRouteSeg ) )
             showRouteRollover = false;
@@ -4249,7 +4248,7 @@ bool ChartCanvas::GetCanvasPointPixVP( ViewPort &vp, double rlat, double rlon, w
         return false;
     }
 
-    if( (abs(p.m_x) < 10e6) && (abs(p.m_y) < 10e6) )
+    if( (abs(p.m_x) < 1e6) && (abs(p.m_y) < 1e6) )
       *r = wxPoint(wxRound(p.m_x), wxRound(p.m_y));
     else
       *r = wxPoint(INVALID_COORD, INVALID_COORD);
@@ -6372,8 +6371,7 @@ void ChartCanvas::UpdateAIS()
 
     //  If more than "some number", it will be cheaper to refresh the entire screen
     //  than to build update rectangles for each target.
-    AIS_Target_Hash *current_targets = g_pAIS->GetTargetList();
-    if( current_targets->size() > 10 ) {
+    if (g_pAIS->GetTargetList().size() > 10) {
         ais_rect = wxRect( 0, 0, sx, sy );            // full screen
     } else {
         //  Need a bitmap
@@ -9167,15 +9165,13 @@ void ChartCanvas::ShowObjectQueryWindow( int x, int y, float zlat, float zlon )
     std::vector<Ais8_001_22*> area_notices;
 
     if( g_pAIS && m_bShowAIS && g_bShowAreaNotices ) {
-        AIS_Target_Hash* an_sources = g_pAIS->GetAreaNoticeSourcesList();
-
         float vp_scale = GetVPScale();
 
-        for( AIS_Target_Hash::iterator target = an_sources->begin(); target != an_sources->end(); ++target ) {
-            AIS_Target_Data* target_data = target->second;
+        for (const auto &target : g_pAIS->GetAreaNoticeSourcesList()) {
+          AIS_Target_Data *target_data = target.second;
             if( !target_data->area_notices.empty() ) {
-                for( AIS_Area_Notice_Hash::iterator ani = target_data->area_notices.begin(); ani != target_data->area_notices.end(); ++ani ) {
-                    Ais8_001_22& area_notice = ani->second;
+                for (auto &ani : target_data->area_notices) {
+                  Ais8_001_22 &area_notice = ani.second;
 
                     wxBoundingBox bbox;
 
@@ -9667,7 +9663,7 @@ void pupHandler_PasteTrack() {
         prevPoint = newPoint;
     }
 
-    pTrackList->Append( newTrack );
+    g_TrackList.push_back(newTrack);
     pConfig->AddNewTrack( newTrack );
 
     gFrame->InvalidateAllGL();
@@ -11548,10 +11544,7 @@ emboss_data *ChartCanvas::CreateEmbossMapData( wxFont &font, int width, int heig
 void ChartCanvas::DrawAllTracksInBBox( ocpnDC& dc, LLBBox& BltBBox )
 {
     Track *active_track = NULL;
-    for(wxTrackListNode *node = pTrackList->GetFirst();
-        node; node = node->GetNext()) {
-        Track *pTrackDraw = node->GetData();
-
+    for (Track* pTrackDraw : g_TrackList) {
         if( g_pActiveTrack == pTrackDraw ) {
             active_track = pTrackDraw;
             continue;
@@ -11568,10 +11561,7 @@ void ChartCanvas::DrawAllTracksInBBox( ocpnDC& dc, LLBBox& BltBBox )
 void ChartCanvas::DrawActiveTrackInBBox( ocpnDC& dc, LLBBox& BltBBox )
 {
     Track *active_track = NULL;
-    for(wxTrackListNode *node = pTrackList->GetFirst();
-        node; node = node->GetNext()) {
-        Track *pTrackDraw = node->GetData();
-
+    for (Track* pTrackDraw : g_TrackList) {
         if( g_pActiveTrack == pTrackDraw ) {
             active_track = pTrackDraw;
             break;
@@ -12874,8 +12864,6 @@ void ChartCanvas::SelectChartFromStack( int index, bool bDir, ChartTypeEnum New_
 
             GetpCurrentStack()->CurrentStackEntry = ChartData->GetStackEntry( GetpCurrentStack(), m_singleChart->GetFullPath() );
         }
-        //else
-        //    SetChartThumbnail( -1 );   // need to reset thumbnail on failed chart open
 
             //      Setup the view
             double zLat, zLon;
@@ -12933,8 +12921,6 @@ void ChartCanvas::SelectdbChart( int dbindex )
 
             GetpCurrentStack()->CurrentStackEntry = ChartData->GetStackEntry( GetpCurrentStack(),  m_singleChart->GetFullPath() );
         }
-        //else
-        //    SetChartThumbnail( -1 );       // need to reset thumbnail on failed chart open
 
             //      Setup the view
         double zLat, zLon;
@@ -13176,7 +13162,6 @@ void ChartCanvas::HandlePianoRollover( int selected_index, int selected_dbIndex 
     wxPoint key_location = m_Piano->GetKeyOrigin( selected_index );
 
     if( !GetQuiltMode() ) {
-        //SetChartThumbnail( selected_index );
         ShowChartInfoWindow( key_location.x, selected_dbIndex );
     } else {
         std::vector<int>  piano_chart_index_array = GetQuiltExtendedStackdbIndexArray();
@@ -13195,7 +13180,6 @@ void ChartCanvas::HandlePianoRollover( int selected_index, int selected_dbIndex 
                 ShowChartInfoWindow( key_location.x, selected_dbIndex );
             }
         }
-        //SetChartThumbnail( -1 );        // hide all thumbs in quilt mode
     }
 }
 
@@ -13275,7 +13259,6 @@ void ChartCanvas::UpdateCanvasControlBar( void )
 
     wxString new_hash = m_Piano->GenerateAndStoreNewHash();
     if(new_hash != old_hash) {
-        //SetChartThumbnail( -1 );
         HideChartInfoWindow();
         m_Piano->ResetRollover();
         SetQuiltChartHiLiteIndex( -1 );

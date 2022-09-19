@@ -54,8 +54,8 @@ private:
 
 #if defined(__OCPN__ANDROID__)
 #include "androidUTIL.h"
-#elif defined(__WXQT__)
-#include <GL/glx.h>
+#elif defined(__WXQT__) || defined(__WXGTK__)
+#include <GL/glew.h>
 #endif
 
 #include "dychart.h"
@@ -89,6 +89,7 @@ private:
 #include "mbtiles.h"
 #include <vector>
 #include <algorithm>
+// #include "shaders.h"  // Wo???
 
 #ifndef GL_ETC1_RGB8_OES
 #define GL_ETC1_RGB8_OES             0x8D64
@@ -151,7 +152,7 @@ extern PlugInManager* g_pi_manager;
 
 extern WayPointman      *pWayPointMan;
 extern RouteList        *pRouteList;
-extern TrackList        *pTrackList;
+extern std::vector<Track*> g_TrackList;
 extern bool             b_inCompressAllCharts;
 extern bool             g_bGLexpert;
 extern bool             g_bcompression_wait;
@@ -174,6 +175,20 @@ ocpnGLOptions g_GLOptions;
 bool         g_b_EnableVBO;
 bool         g_b_needFinish;  //Need glFinish() call on each frame?
 
+// MacOS has some missing parts:
+#ifndef APIENTRY
+#define APIENTRY
+#endif
+#ifndef APIENTRYP
+#define APIENTRYP APIENTRY *
+#endif
+#ifndef GLAPI
+#define GLAPI extern
+#endif
+
+#ifndef GL_COMPRESSED_RGB_FXT1_3DFX
+#define GL_COMPRESSED_RGB_FXT1_3DFX  0x86B0
+#endif
 
 PFNGLGENFRAMEBUFFERSEXTPROC         s_glGenFramebuffers;
 PFNGLGENRENDERBUFFERSEXTPROC        s_glGenRenderbuffers;
@@ -788,6 +803,13 @@ void glChartCanvas::SetupOpenGL()
     msg += m_version;
     wxLogMessage( msg );
 
+    char GLSL_version_string[80];
+    strncpy(GLSL_version_string, (char *)glGetString(GL_SHADING_LANGUAGE_VERSION), 79);
+    msg.Printf(_T("OpenGL-> GLSL Version reported:  "));
+    m_GLSLversion = wxString(GLSL_version_string, wxConvUTF8);
+    msg += m_GLSLversion;
+    wxLogMessage(msg);
+
     const GLubyte *ext_str = glGetString(GL_EXTENSIONS);
     m_extensions = wxString( (const char *)ext_str, wxConvUTF8 );
 #ifdef __WXQT__    
@@ -997,6 +1019,9 @@ void glChartCanvas::SetupOpenGL()
 
     //  If stencil seems to be a problem, force use of depth buffer clipping for Area Patterns
     s_b_useStencilAP = s_b_useStencil & !bad_stencil_code;
+
+    //  Check and determine if GLSL is to be used
+    m_bUseGLSL = true;
 
     if( m_b_BuiltFBO ) {
         wxLogMessage( _T("OpenGL-> Using Framebuffer Objects") );
@@ -1334,9 +1359,7 @@ void glChartCanvas::DrawStaticRoutesTracksAndWaypoints( ViewPort &vp )
         return;
     ocpnDC dc(*this);
 
-    for(wxTrackListNode *node = pTrackList->GetFirst();
-        node; node = node->GetNext() ) {
-        Track *pTrackDraw = node->GetData();
+    for (Track* pTrackDraw : g_TrackList) {
                 /* defer rendering active tracks until later */
         ActiveTrack *pActiveTrack = dynamic_cast<ActiveTrack *>(pTrackDraw);
         if(pActiveTrack && pActiveTrack->IsRunning() )
@@ -1378,12 +1401,11 @@ void glChartCanvas::DrawDynamicRoutesTracksAndWaypoints( ViewPort &vp )
 {
     ocpnDC dc(*this);
 
-    for(wxTrackListNode *node = pTrackList->GetFirst();
-        node; node = node->GetNext() ) {
-        Track *pTrackDraw = node->GetData();
+    for (Track* pTrackDraw : g_TrackList) {
         ActiveTrack *pActiveTrack = dynamic_cast<ActiveTrack *>(pTrackDraw);
         if(pActiveTrack && pActiveTrack->IsRunning() )
-            pTrackDraw->Draw( m_pParentCanvas, dc, vp, vp.GetBBox() );     // We need Track::Draw() to dynamically render last (ownship) point.
+            pTrackDraw->Draw( m_pParentCanvas, dc, vp, vp.GetBBox() );
+        // We need Track::Draw() to dynamically render last (ownship) point.
     }
 
     for(wxRouteListNode *node = pRouteList->GetFirst(); node; node = node->GetNext() ) {

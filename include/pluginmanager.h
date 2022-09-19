@@ -40,6 +40,7 @@
 //#include "chcanv.h"                 // for ViewPort
 #include "OCPN_Sound.h"
 #include "chartimg.h"
+//#include "plugin_blacklist.h" // Not used
 
 #ifdef USE_S57
 #include "s57chart.h"               // for Object list
@@ -81,12 +82,14 @@ class PluginListPanel;
 class PluginPanel;
 
 typedef struct {
-    wxString name;      // name of the plugin
-    int version_major;  // major version
-    int version_minor;  // minor version
-    bool hard;          // hard blacklist - if true, don't load it at all, if false, load it and just warn the user
-    bool all_lower;     // if true, blacklist also all the lower versions of the plugin
-    bool mute_dialog;  // if true, don't warn the user by dialog.
+  wxString name;      // name of the plugin
+  int version_major;  // major version
+  int version_minor;  // minor version
+  bool hard;  // hard blacklist - if true, don't load it at all, if false, load
+              // it and just warn the user
+  bool all_lower;  // if true, blacklist also all the lower versions of the
+                   // plugin
+  bool mute_dialog;  // if true, don't warn the user by dialog.
 } BlackListedPlugin;
 
 const BlackListedPlugin PluginBlacklist[] = {
@@ -96,10 +99,11 @@ const BlackListedPlugin PluginBlacklist[] = {
     {_T("squiddio_pi"), 0, 2, true, true, false},
     {_T("objsearch_pi"), 0, 3, true, true, false},
 #ifdef __WXOSX__
-    { _T("s63_pi"), 0, 6, true, true, false},
+    {_T("s63_pi"), 0, 6, true, true, false},
 #endif
     {_T("oesenc_pi"), 4, 3, true, true, true},
     {_T("oernc_pi"), 1, 2, true, true, true},
+
 };
 
 //----------------------------------------------------------------------------
@@ -311,7 +315,11 @@ public:
 
       void SendBaseConfigToAllPlugIns();
       void SendS52ConfigToAllPlugIns( bool bReconfig = false );
-      
+//      void SendSKConfigToAllPlugIns();  // Not used SignalK
+//      void UpdateManagedPlugins();      // Not used Neuer Plugin Updater
+
+//      bool CheckBlacklistedPlugin(const PluginMetadata plugin);  // Not used New Blacklist
+
       wxArrayString GetPlugInChartClassNameArray(void);
 
       ListOfPI_S57Obj *GetPlugInObjRuleListAtLatLon( ChartPlugInWrapper *target, float zlat, float zlon,
@@ -346,14 +354,14 @@ private:
       int               m_plugin_menu_item_id_next;
       wxBitmap          m_cached_overlay_bm;
 
-      bool              m_benable_blackdialog;
-      bool              m_benable_blackdialog_done;
-      wxArrayString     m_deferred_blacklist_messages;
-      
+      bool m_benable_blackdialog;
+      bool m_benable_blackdialog_done;
+      wxArrayString m_deferred_blacklist_messages;
+
       wxArrayString     m_plugin_order;
       void SetPluginOrder( wxString serialized_names );
       wxString GetPluginOrder();
-    
+
 #ifndef __OCPN__ANDROID__
 #ifdef __OCPN_USE_CURL__
       

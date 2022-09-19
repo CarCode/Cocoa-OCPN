@@ -1,11 +1,11 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  OpenCPN ViewPort
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2015 by David S. Register   *
+ *   Copyright (C) 2015 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,12 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- *
- *
- *
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #ifndef __OCPNVIEWPORT_H__
 #define __OCPNVIEWPORT_H__
@@ -133,6 +129,24 @@ class ViewPort
             int      m_projection_type;
             bool     b_MercatorProjectionOverride;
             wxRect   rv_rect;
+
+    bool operator==(const ViewPort& rhs) const
+    {
+      return (clat == rhs.clat)
+        && (clon == rhs.clon)
+        && (view_scale_ppm == rhs.view_scale_ppm)
+        && (skew == rhs.skew)
+        && (rotation == rhs.rotation)
+        && (tilt == rhs.tilt)
+        && (chart_scale == rhs.chart_scale)
+        && (ref_scale == rhs.ref_scale)
+        && (pix_width == rhs.pix_width)
+        && (pix_height == rhs.pix_height)
+        && (b_quilt == rhs.b_quilt)
+        && (b_FullScreenQuilt == rhs.b_FullScreenQuilt)
+        && (m_projection_type == rhs.m_projection_type)
+        && (b_MercatorProjectionOverride == rhs.b_MercatorProjectionOverride);
+    }
 
       private:
             LLBBox   vpBBox;                // An un-skewed rectangular lat/lon bounding box

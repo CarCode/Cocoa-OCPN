@@ -138,6 +138,7 @@ extern double                    g_MarkLost_Mins;
 extern bool                      g_bRemoveLost;
 extern double                    g_RemoveLost_Mins;
 extern bool                      g_bShowCOG;
+extern bool                      g_bSyncCogPredictors;
 extern double                    g_ShowCOG_Mins;
 extern bool                      g_bHideMoored;
 extern double                    g_ShowMoored_Kts;
@@ -623,6 +624,9 @@ void OCPNPlatform::Initialize_3( void )
     bcapable = false;
 #endif
 
+    if(!bcapable)
+      g_bopengl = false;
+
     // Try to automatically switch to guaranteed usable GL mode on an OCPN upgrade or fresh install
 
     if( (g_bFirstRun || g_bUpgradeInProcess) && bcapable){
@@ -673,9 +677,7 @@ void OCPNPlatform::OnExit_2( void ){
 //    crUninstall();
 #endif
 #endif
-
 }
-
 
 bool OCPNPlatform::BuildGLCaps( void *pbuf )
 {
@@ -1007,6 +1009,7 @@ void OCPNPlatform::SetDefaultOptions( void )
     g_RemoveLost_Mins = 10;
     g_bShowCOG = true;
     g_ShowCOG_Mins = 6;
+    g_bSyncCogPredictors = false;
     g_bHideMoored = false;
     g_ShowMoored_Kts = 0.2;
     g_bTrackDaily = false;

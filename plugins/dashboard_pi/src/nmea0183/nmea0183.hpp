@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  NMEA0183 Support Classes
@@ -20,7 +20,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
  *
  *   S Blackburn's original source license:                                *
@@ -114,6 +114,7 @@
 #include "vlw.hpp"
 #include "xdr.hpp" //transducer data
 #include "xte.hpp"
+#include "pwr.hpp"
 /*
 #include "ROT.hpp"
 #include "RPM.hpp"
@@ -211,6 +212,7 @@ class NMEA0183
       P   Proprietary;
       RMA Rma;
 */
+      PWR Pwr;
       RMB Rmb;
       RMC Rmc;
 /*

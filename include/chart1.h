@@ -342,7 +342,7 @@ class MyApp: public wxApp
     bool OnExceptionInMainLoop();
 #endif
 
-    void TrackOff(void);
+    Track* TrackOff(void);
 
     wxSingleInstanceChecker *m_checker;
 
@@ -432,7 +432,6 @@ class MyFrame: public wxFrame
     void RegisterGlobalMenuItems();
     void UpdateGlobalMenuItems();
     void UpdateGlobalMenuItems( ChartCanvas *cc);
-    void SetChartThumbnail(int index);
     int  DoOptionsDialog();
     bool  ProcessOptionsDialog(int resultFlags, ArrayOfCDI *pNewDirArray );
     void DoPrint(void);

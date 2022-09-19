@@ -211,7 +211,6 @@ void ocpnDC::SetGLAttrs( bool highQuality )
 #ifdef ocpnUSE_GL
 void ocpnDC::SetGLStipple() const
 {
-#ifdef __WXOSX__
     switch( m_pen.GetStyle() ) {
         case wxPENSTYLE_DOT: {
             glLineStipple( 1, 0x3333 );
@@ -235,31 +234,6 @@ void ocpnDC::SetGLStipple() const
         }
         default: break;
     }
-#else
-    switch( m_pen.GetStyle() ) {
-        case wxDOT: {
-            glLineStipple( 1, 0x3333 );
-            glEnable( GL_LINE_STIPPLE );
-            break;
-        }
-        case wxLONG_DASH: {
-            glLineStipple( 1, 0xFFF8 );
-            glEnable( GL_LINE_STIPPLE );
-            break;
-        }
-        case wxSHORT_DASH: {
-            glLineStipple( 1, 0x3F3F );
-            glEnable( GL_LINE_STIPPLE );
-            break;
-        }
-        case wxDOT_DASH: {
-            glLineStipple( 1, 0x8FF1 );
-            glEnable( GL_LINE_STIPPLE );
-            break;
-        }
-        default: break;
-    }
-#endif    
 }
 #endif
 

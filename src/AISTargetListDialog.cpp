@@ -314,7 +314,7 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
                 .FloatingSize(400, 200).BestSize(700, GetCharHeight() * 10);
 
  
-        //      Force and/or override any perspective information that is not applicable
+//      Force and/or override any perspective information that is not applicable
         paneproto.Caption( wxGetTranslation( _("AIS target list") ) );
         paneproto.Name( _T("AISTargetList") );
         paneproto.DestroyOnClose( true );
@@ -364,7 +364,7 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
                 b_reset_pos = true;
 #else
 
-            //    Make sure drag bar (title bar) of window intersects wxClient Area of screen, with a little slop...
+//    Make sure drag bar (title bar) of window intersects wxClient Area of screen, with a little slop...
             wxRect window_title_rect;// conservative estimate
             window_title_rect.x = pane.floating_pos.x;
             window_title_rect.y = pane.floating_pos.y;
@@ -660,7 +660,7 @@ void AISTargetListDialog::CreateControls()
     m_pButtonHideAllTracks->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
                                      wxCommandEventHandler( AISTargetListDialog::OnHideAllTracks ), NULL, this );
     bsRouteButtonsInner->Add( m_pButtonHideAllTracks, 0, wxEXPAND | wxALL, 0 );
-    
+
     m_pButtonShowAllTracks = new wxButton( winr, wxID_ANY, _("Show All Tracks"), wxDefaultPosition,
                                            wxDefaultSize, wxBU_AUTODRAW );
     m_pButtonShowAllTracks->Connect( wxEVT_COMMAND_BUTTON_CLICKED,
@@ -707,8 +707,9 @@ void AISTargetListDialog::CreateControls()
     bsRouteButtonsInner->Add( m_pStaticTextCount, 0, wxALL, 0 );
 
     bsRouteButtonsInner->AddSpacer( 2 );
-    m_pTextTargetCount = new wxTextCtrl( winr, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize,
-                                         wxTE_READONLY );
+    m_pTextTargetCount = new wxTextCtrl( winr, wxID_ANY, _T(""), wxDefaultPosition, wxSize( 30, -1 ), wxTE_READONLY );
+//    m_pTextTargetCount = new wxTextCtrl( winr, wxID_ANY, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+// wxDefaultSize mit ("") zu klein, daher geändert auf wxSize()
     bsRouteButtonsInner->Add( m_pTextTargetCount, 0, wxALL, 0 );
 
     bsRouteButtonsInner->AddSpacer( 10 );
@@ -916,10 +917,8 @@ void AISTargetListDialog::OnTargetCreateWpt( wxCommandEvent& event )
 void AISTargetListDialog::OnShowAllTracks( wxCommandEvent& event )
 {
     if(m_pdecoder){
-        AIS_Target_Hash::iterator it;
-        AIS_Target_Hash *current_targets = m_pdecoder->GetTargetList();
-        for( it = ( *current_targets ).begin(); it != ( *current_targets ).end(); ++it ) {
-            AIS_Target_Data *pAISTarget = it->second;
+        for (const auto &it : m_pdecoder->GetTargetList()) {
+          AIS_Target_Data *pAISTarget = it.second;
             if( NULL != pAISTarget ) {
                 pAISTarget->b_show_track = true;
             }
@@ -931,10 +930,8 @@ void AISTargetListDialog::OnShowAllTracks( wxCommandEvent& event )
 void AISTargetListDialog::OnHideAllTracks( wxCommandEvent& event )
 {
     if(m_pdecoder){
-        AIS_Target_Hash::iterator it;
-        AIS_Target_Hash *current_targets = m_pdecoder->GetTargetList();
-        for( it = ( *current_targets ).begin(); it != ( *current_targets ).end(); ++it ) {
-            AIS_Target_Data *pAISTarget = it->second;
+        for (const auto &it : m_pdecoder->GetTargetList()) {
+          AIS_Target_Data *pAISTarget = it.second;
             if( NULL != pAISTarget ) {
                 pAISTarget->b_show_track = false;
             }
@@ -1008,14 +1005,13 @@ void AISTargetListDialog::UpdateAISTargetList( void )
         int selMMSI = -1;
         if( selItemID != -1 ) selMMSI = m_pMMSI_array->Item( selItemID );
 
-        AIS_Target_Hash::iterator it;
-        AIS_Target_Hash *current_targets = m_pdecoder->GetTargetList();
+        const auto &current_targets = m_pdecoder->GetTargetList();
         wxListItem item;
 
         int index = 0;
         m_pMMSI_array->Clear();
 
-        for( it = ( *current_targets ).begin(); it != ( *current_targets ).end(); ++it, ++index ) {
+        for (auto it = current_targets.begin(); it != current_targets.end(); ++it, ++index ) {
             AIS_Target_Data *pAISTarget = it->second;
             item.SetId( index );
 
@@ -1083,14 +1079,13 @@ void AISTargetListDialog::UpdateNVAISTargetList( void )
         int selMMSI = -1;
         if( selItemID != -1 ) selMMSI = m_pMMSI_array->Item( selItemID );
 
-        AIS_Target_Hash::iterator it;
-        AIS_Target_Hash *current_targets = m_pdecoder->GetTargetList();
+        const auto &current_targets = m_pdecoder->GetTargetList();
         wxListItem item;
 
         int index = 0;
         m_pMMSI_array->Clear();
 
-        for( it = ( *current_targets ).begin(); it != ( *current_targets ).end(); ++it, ++index ) {
+        for (auto it = current_targets.begin(); it != current_targets.end(); ++it, ++index ) {
             AIS_Target_Data *pAISTarget = it->second;
             item.SetId( index );
 

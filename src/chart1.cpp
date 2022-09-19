@@ -23,7 +23,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  **************************************************************************/
 
-#include <memory>
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
@@ -33,97 +32,114 @@
 //#include "c:\\Program Files\\visual leak detector\\include\\vld.h"
 #endif
 
-
-#include <wx/settings.h>
-#include <wx/print.h>
-#include <wx/printdlg.h>
-#include <wx/artprov.h>
-#include <wx/stdpaths.h>
-#include <wx/intl.h>
-#include <wx/listctrl.h>
-#include <wx/aui/aui.h>
-#include <wx/dialog.h>
-#include <wx/progdlg.h>
-#include <wx/clrpicker.h>
-#include <wx/tokenzr.h>
-#include <wx/dir.h>
-#include <wx/dialog.h>
-
-#include "dychart.h"
-
-#include <limits.h>
 #include <algorithm>
+#include <limits.h>
+#include <memory>
 
 #ifdef __WXMSW__
-#include <stdlib.h>
 #include <math.h>
-#include <time.h>
 #include <psapi.h>
+#include <stdlib.h>
+#include <time.h>
 #endif
 
 #ifndef __WXMSW__
-#include <signal.h>
 #include <setjmp.h>
+#include <signal.h>
 #endif
 
 #ifdef OCPN_HAVE_X11
-#include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#include <X11/Xlib.h>
 #endif
 
-#include "config.h"
-#include "chart1.h"
-#include "chcanv.h"
-#include "chartdb.h"
-#include "logger.h"
-#include "navutil.h"
-#include "styles.h"
-#include "routeman.h"
-#include "piano.h"
-#include "concanv.h"
-#include "options.h"
+#include <wx/apptrait.h>
+#include <wx/arrimpl.cpp>
+#include <wx/artprov.h>
+#include <wx/aui/aui.h>
+#include <wx/clrpicker.h>
+#include <wx/dialog.h>
+#include <wx/dialog.h>
+#include <wx/dir.h>
+#include <wx/image.h>
+#include <wx/intl.h>
+#include <wx/ipc.h>
+#include <wx/jsonreader.h>
+#include <wx/listctrl.h>
+#include <wx/printdlg.h>
+#include <wx/print.h>
+#include <wx/progdlg.h>
+#include <wx/settings.h>
+#include <wx/stdpaths.h>
+#include <wx/tokenzr.h>
+
 #include "AboutFrameImpl.h"
-#include "thumbwin.h"
-#include "tcmgr.h"
-#include "ais.h"
-#include "chartimg.h"               // for ChartBaseBSB
-#include "MarkInfo.h"
-#include "RoutePropDlgImpl.h"
-#include "toolbar.h"
-#include "compass.h"
-#include "datastream.h"
-#include "OCPN_DataStreamEvent.h"
-#include "multiplexer.h"
-#include "routeprintout.h"
-#include "Select.h"
-#include "FontMgr.h"
-#include "NMEALogWindow.h"
-#include "Layer.h"
-#include "NavObjectCollection.h"
-#include "AISTargetListDialog.h"
-#include "AISTargetAlertDialog.h"
+
 #include "AIS_Decoder.h"
-#include "OCP_DataStreamInput_Thread.h"
-#include "TrackPropDlg.h"
-#include "gshhs.h"
-#include "cutil.h"
-#include "routemanagerdialog.h"
-#include "pluginmanager.h"
+#include "ais.h"
+#include "AISTargetAlertDialog.h"
 #include "AIS_Target_Data.h"
-#include "OCPNPlatform.h"
+#include "AISTargetListDialog.h"
 #include "AISTargetQueryDialog.h"
-#include "S57QueryDialog.h"
+#include "CanvasConfig.h"
+#include "chart1.h"
+#include "chartdb.h"
+#include "chartimg.h"               // for ChartBaseBSB
+#include "chcanv.h"
+#include "cm93.h"
+#include "compass.h"
+#include "concanv.h"
+#include "config.h"
+#include "ConfigMgr.h"
+#include "cutil.h"
+#include "datastream.h"
+#include "dychart.h"
+#include "FontMgr.h"
+//#include "gdal/cpl_csv.h"
 #include "glTexCache.h"
-#include "Track.h"
+#include "gshhs.h"
+//#include "gui_lib.h"
 #include "iENCToolbar.h"
+#include "Layer.h"
+#include "logger.h"
+#include "MarkInfo.h"
+#include "MUIBar.h"
+#include "multiplexer.h"
+#include "NavObjectCollection.h"
+#include "navutil.h"
+#include "NMEALogWindow.h"
+#include "OCP_DataStreamInput_Thread.h"
+#include "OCPN_AUIManager.h"
+#include "OCPN_DataStreamEvent.h"
+#include "OCPNPlatform.h"
+//#include "OCPN_SignalKEvent.h"
+#include "OCPN_Sound.h"
+#include "options.h"
+#include "piano.h"
+//#include "PluginHandler.h"
+#include "pluginmanager.h"
 #include "Quilt.h"
 #include "Route.h"
-#include "OCPN_AUIManager.h"
-#include "CanvasConfig.h"
-#include "ConfigMgr.h"
-#include "MUIBar.h"
-#include "OCPN_Sound.h"
+#include "routemanagerdialog.h"
+#include "routeman.h"
+#include "routeprintout.h"
+#include "RoutePropDlgImpl.h"
+#include "s52plib.h"
+#include "s52utils.h"
+#include "s57chart.h"
+#include "S57QueryDialog.h"
+//#include "safe_mode.h"
+#include "Select.h"
+//#include "SignalKEventHandler.h"
 #include "SoundFactory.h"
+#include "styles.h"
+#include "SystemCmdSound.h"
+#include "tcmgr.h"
+#include "thumbwin.h"
+#include "toolbar.h"
+#include "Track.h"
+#include "TrackPropDlg.h"
+//#include "usb_devices.h"
 
 #ifdef ocpnUSE_GL
 #include "glChartCanvas.h"
@@ -150,31 +166,24 @@
 #endif
 
 #ifdef __WXMSW__
-//#define __MSVC__LEAK
-#ifdef __MSVC__LEAK
+#include "GarminProtocolHandler.h"  // Used for port probing on Windows
+void RedirectIOToConsole();
+#endif
+
+#if defined(__WXMSW__) && defined (__MSVC__LEAK)
 #include "Stackwalker.h"
-#endif
-#endif
-
-#include <wx/jsonreader.h>
-
-#ifdef __OCPN__ANDROID__
-#include "androidUTIL.h"
 #endif
 
 #ifdef LINUX_CRASHRPT
 #include "crashprint.h"
 #endif
 
-#ifdef ocpnUSE_NEWSERIAL
-#include "serial/serial.h"
+#ifdef __OCPN__ANDROID__
+#include "androidUTIL.h"
 #endif
 
-#include <wx/arrimpl.cpp>
-WX_DEFINE_OBJARRAY( ArrayOfCDI );
-
-#ifdef __WXMSW__
-void RedirectIOToConsole();
+#ifdef ocpnUSE_NEWSERIAL
+#include "serial/serial.h"
 #endif
 
 //------------------------------------------------------------------------------
@@ -185,6 +194,8 @@ void RedirectIOToConsole();
 //------------------------------------------------------------------------------
 //      Static variable definition
 //------------------------------------------------------------------------------
+
+WX_DEFINE_OBJARRAY(ArrayOfCDI);
 
 OCPNPlatform              *g_Platform;
 
@@ -213,7 +224,7 @@ double                    g_ChartNotRenderScaleFactor;
 int                       g_nDepthUnitDisplay;
 
 RouteList                 *pRouteList;
-TrackList                 *pTrackList;
+std::vector<Track*>       g_TrackList;
 LayerList                 *pLayerList;
 bool                      g_bIsNewLayer;
 int                       g_LayerIdx;
@@ -591,6 +602,7 @@ double                    g_MarkLost_Mins;
 bool                      g_bRemoveLost;
 double                    g_RemoveLost_Mins;
 bool                      g_bShowCOG;
+bool                      g_bSyncCogPredictors;
 double                    g_ShowCOG_Mins;
 bool                      g_bAISShowTracks;
 double                    g_AISShowTracks_Mins;
@@ -1835,9 +1847,6 @@ bool MyApp::OnInit()
     pLayerList = new LayerList;
     //  Routes
     pRouteList = new RouteList;
-    // Tracks
-    pTrackList = new TrackList;
-
 
 //      (Optionally) Capture the user and file(effective) ids
 //  Some build environments may need root privileges for hardware
@@ -1908,7 +1917,7 @@ bool MyApp::OnInit()
     //      Init the WayPoint Manager
     pWayPointMan = NULL;
 
-    g_display_size_mm = wxMax(100, g_Platform->GetDisplaySizeMM());
+    g_display_size_mm = wxMax(50, g_Platform->GetDisplaySizeMM());
     wxString msg;
     msg.Printf(_T("Detected display size (horizontal): %d mm"), (int) g_display_size_mm);
     wxLogMessage(msg);
@@ -1921,6 +1930,8 @@ bool MyApp::OnInit()
         wxLogMessage(msg);
         g_Platform->SetDisplaySizeMM(g_display_size_mm);
     }
+
+//    g_display_size_mm = wxMax(50, g_display_size_mm); Erforderlich?
 
     if(g_btouch){
         int SelectPixelRadius = 50;
@@ -2581,13 +2592,10 @@ int MyApp::OnExit()
     delete phost_name;
     delete pInit_Chart_Dir;
 
-    if (pTrackList)
-    {
-        pTrackList->DeleteContents(true);
-        pTrackList->Clear();
-        delete pTrackList;
-        pTrackList = NULL;
+    for (Track* track : g_TrackList) {
+      delete track;
     }
+    g_TrackList.clear();
 
     delete g_pRouteMan;
     delete pWayPointMan;
@@ -2647,9 +2655,12 @@ void MyApp::OnFatalException () {
 }
 #endif
 
-void MyApp::TrackOff( void )
+Track* MyApp::TrackOff(void)
 {
-    if( gFrame ) gFrame->TrackOff();
+  if (gFrame)
+    return gFrame->TrackOff();
+  else
+    return nullptr;
 }
 
 
@@ -3093,8 +3104,6 @@ void MyFrame::SetAndApplyColorScheme( ColorScheme cs )
 
     if( ChartData )
         ChartData->ApplyColorSchemeToCachedCharts( cs );
-
-    SetChartThumbnail( -1 );
 
 
     if( g_options ) {
@@ -5047,12 +5056,13 @@ void MyFrame::TrackOn( void )
     g_bTrackActive = true;
     g_pActiveTrack = new ActiveTrack();
 
-    pTrackList->Append( g_pActiveTrack );
+    g_TrackList.push_back(g_pActiveTrack);
     if(pConfig)
         pConfig->AddNewTrack( g_pActiveTrack );
 
     g_pActiveTrack->Start();
 
+    // The main toolbar may still be NULL here and we will do nothing...
     SetMasterToolbarItemState( ID_TRACK, g_bTrackActive );
     if( g_MainToolbar )
         g_MainToolbar->SetToolShortHelp( ID_TRACK, _("Disable Tracking") );
@@ -6321,11 +6331,11 @@ bool MyFrame::ProcessOptionsDialog( int rr, ArrayOfCDI *pNewDirArray )
     }
 #endif
 
-    if(g_config_display_size_mm > 0){
+    if ((g_config_display_size_mm > 0)  && g_config_display_size_manual){
         g_display_size_mm = g_config_display_size_mm;
     }
     else{
-        g_display_size_mm = wxMax(100, g_Platform->GetDisplaySizeMM());
+        g_display_size_mm = wxMax(50, g_Platform->GetDisplaySizeMM());
     }
 
     for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){
@@ -7889,119 +7899,6 @@ void MyFrame::SetChartUpdatePeriod( )
     m_ChartUpdatePeriod = g_ChartUpdatePeriod;
 }
 
-void MyFrame::SetChartThumbnail( int index )
-{/*
-    //TODO
-#if 0
-    if( bDBUpdateInProgress ) return;
-
-    if( NULL == pCurrentStack ) return;
-    assert(ChartData != 0);
-
-    if( NULL == pthumbwin ) return;
-
-    if( NULL == cc1 ) return;
-
-    bool bneedmove = false;
-
-    if( index == -1 ) {
-        wxRect thumb_rect_in_parent = pthumbwin->GetRect();
-
-        pthumbwin->pThumbChart = NULL;
-        pthumbwin->Show( false );
-        cc1->RefreshRect( thumb_rect_in_parent, FALSE );
-    }
-
-<<<<<<< HEAD
-    //    Search the no-show array
-    bool b_is_in_noshow = false;
-    for( unsigned int i = 0; i < g_quilt_noshow_index_array.size(); i++ ) {
-        if( g_quilt_noshow_index_array[i] == selected_dbIndex ) // chart is in the noshow list
-=======
-    else
-        if( index < pCurrentStack->nEntry ) {
-            if( ( ChartData->GetCSChartType( pCurrentStack, index ) == CHART_TYPE_KAP )
-                    || ( ChartData->GetCSChartType( pCurrentStack, index ) == CHART_TYPE_GEO )
-                    || ( ChartData->GetCSChartType( pCurrentStack, index ) == CHART_TYPE_PLUGIN ) ) {
-                ChartBase *new_pThumbChart = ChartData->OpenChartFromStack( pCurrentStack, index );
-                if( new_pThumbChart )         // chart opened ok
->>>>>>> multicanvas
-                {
-
-                    ThumbData *pTD = new_pThumbChart->GetThumbData( 150, 150, gLat, gLon );
-                    if( pTD ) {
-                        pthumbwin->pThumbChart = new_pThumbChart;
-
-                        pthumbwin->Resize();
-                        pthumbwin->Show( true );
-                        pthumbwin->Refresh( FALSE );
-                        pthumbwin->Move( wxPoint( 4, 4 ) );
-                        bneedmove = true;
-                    }
-
-                    else {
-                        wxLogMessage(
-                                _T("    chart1.cpp:SetChartThumbnail...Could not create thumbnail") );
-                        pthumbwin->pThumbChart = NULL;
-                        pthumbwin->Show( false );
-                        cc1->Refresh( FALSE );
-                    }
-
-                } else                            // some problem opening chart
-                {
-                    wxString fp = ChartData->GetFullPath( pCurrentStack, index );
-                    fp.Prepend( _T("    chart1.cpp:SetChartThumbnail...Could not open chart ") );
-                    wxLogMessage( fp );
-                    pthumbwin->pThumbChart = NULL;
-                    pthumbwin->Show( false );
-                    cc1->Refresh( FALSE );
-                }
-
-            } else {
-                ChartBase *new_pThumbChart = ChartData->OpenChartFromStack( pCurrentStack, index,
-                        THUMB_ONLY );
-
-                pthumbwin->pThumbChart = new_pThumbChart;
-
-                if( new_pThumbChart ) {
-                    ThumbData *pTD = new_pThumbChart->GetThumbData( 200, 200, gLat, gLon );
-                    if( pTD ) {
-                        pthumbwin->Resize();
-                        pthumbwin->Show( true );
-                        pthumbwin->Refresh( true );
-                        pthumbwin->Move( wxPoint( 4, 4 ) );
-                        bneedmove = true;
-                    } else
-                        pthumbwin->Show( false );
-
-                    cc1->Refresh( FALSE );
-                }
-            }
-
-            if(bneedmove && pthumbwin){         // Adjust position to avoid bad overlap
-                wxPoint pos = wxPoint(4,4);
-                
-                wxPoint tLocn = ClientToScreen(pos);
-                wxRect tRect = wxRect(tLocn.x, tLocn.y, pthumbwin->GetSize().x, pthumbwin->GetSize().y);
-
-                // Simplistic overlap avoidance works best when toolbar is horizontal near the top of screen.
-                // Other difficult cases simply center the thumbwin on the canvas....
-                if( g_MainToolbar && !g_MainToolbar->isSubmergedToGrabber()){
-                    if( g_MainToolbar->GetScreenRect().Intersects( tRect ) ) {
-                        wxPoint tbpos = cc1->ScreenToClient(g_MainToolbar->GetPosition());
-                        pos = wxPoint(4, g_MainToolbar->GetSize().y + tbpos.y + 4);
-                        tLocn = ClientToScreen(pos);
-                    }
-                }
-
-                pthumbwin->Move( pos );
-                
-            }
-
-        }
-#endif */
-}
-
 void MyFrame::UpdateControlBar( ChartCanvas *cc )
 {
     if( !cc )
@@ -8435,15 +8332,13 @@ void MyFrame::OnEvtPlugInMessage( OCPN_MsgEvent & event )
 
         wxJSONValue v;
         v[_T("Track_ID")] = trk_id;
-        for(TrackList::iterator it = pTrackList->begin(); it != pTrackList->end(); it++)
-        {
+        for (Track* ptrack : g_TrackList) {
             wxString name = wxEmptyString;
-            if((*it)->m_GUID == trk_id)
-            {
-                name = (*it)->GetName();
+            if (ptrack->m_GUID == trk_id) {
+              name = ptrack->GetName();
                 if(name.IsEmpty())
                 {
-                    TrackPoint *rp = (*it)->GetPoint( 0 );
+                    TrackPoint *rp = ptrack->GetPoint(0);
                     if( rp && rp->GetCreateTime().IsValid() )
                         name = rp->GetCreateTime().FormatISODate() + _T(" ") + rp->GetCreateTime().FormatISOTime();
                     else
@@ -8453,10 +8348,9 @@ void MyFrame::OnEvtPlugInMessage( OCPN_MsgEvent & event )
 /*                To avoid memory problems send a single trackpoint. It's up to the plugin to collect the data. */
                 int i = 1;
                 v[_T("error")] = false;
-                v[_T("TotalNodes")] = (*it)->GetnPoints();
-                for(int j = 0; j< (*it)->GetnPoints(); j++)
-                {
-                    TrackPoint *tp = (*it)->GetPoint(j);
+                v[_T("TotalNodes")] = ptrack->GetnPoints();
+                for (int j = 0; j < ptrack->GetnPoints(); j++) {
+                  TrackPoint *tp = ptrack->GetPoint(j);
                     v[_T("lat")] = tp->m_lat;
                     v[_T("lon")] = tp->m_lon;
                     v[_T("NodeNr")] = i;
@@ -8566,12 +8460,11 @@ void MyFrame::OnEvtPlugInMessage( OCPN_MsgEvent & event )
                     i++;
                 }
             } else { // track
-                for(TrackList::iterator it = pTrackList->begin(); it != pTrackList->end(); it++)
-                {
-                    wxString name = (*it)->GetName();
+                for (Track *ptrack : g_TrackList) {
+                  wxString name = ptrack->GetName();
                     if(name.IsEmpty())
                     {
-                        TrackPoint *tp = (*it)->GetPoint( 0 );
+                        TrackPoint *tp = ptrack->GetPoint(0);
                         if( tp && tp->GetCreateTime().IsValid() )
                             name = tp->GetCreateTime().FormatISODate() + _T(" ")
                                 + tp->GetCreateTime().FormatISOTime();
@@ -8580,8 +8473,8 @@ void MyFrame::OnEvtPlugInMessage( OCPN_MsgEvent & event )
                     }
                     v[i][_T("error")] = false;
                     v[i][_T("name")] = name;
-                    v[i][_T("GUID")] = (*it)->m_GUID;
-                    v[i][_T("active")] = g_pActiveTrack == (*it);
+                    v[i][_T("GUID")] = ptrack->m_GUID;
+                    v[i][_T("active")] = g_pActiveTrack == ptrack;
                     i++;
 
                 }
@@ -9132,7 +9025,7 @@ void MyFrame::PostProcessNMEA(bool pos_valid, bool sog_valid,
         }
     }
 
-//    Show gLat/gLon in StatusWindow0
+    //    Show gLat/gLon in StatusWindow0
 
     if( NULL != GetStatusBar() ) {
         if(pos_valid) {
@@ -10254,6 +10147,10 @@ ocpnToolBarSimple *MyFrame::CreateMasterToolbar()
             tb->ToggleTool( pttc->id, pttc->b_toggle );
     }
 
+    SetMasterToolbarItemState(ID_TRACK, g_bTrackActive);
+    if(g_bTrackActive) {
+      g_MainToolbar->SetToolShortHelp(ID_TRACK, _("Disable Tracking"));
+    }
 
     return tb;
 }

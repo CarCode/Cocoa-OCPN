@@ -87,8 +87,8 @@ RoutePropDlg::RoutePropDlg( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_stPlanSpeed->Wrap( -1 );
 	bSizerSpeed->Add( m_stPlanSpeed, 0, wxALL, 5 );
 
-	m_tcPlanSpeed = new wxTextCtrl( m_pnlBasic, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
-    m_tcPlanSpeed->SetMaxSize( wxSize( maxFieldSize,-1 ) );
+	m_tcPlanSpeed = new wxTextCtrl( m_pnlBasic, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(50,-1), wxTE_PROCESS_ENTER );
+//    m_tcPlanSpeed->SetMaxSize( wxSize( maxFieldSize,-1 ) ); // wxDefaultSize zu klein
 
 	bSizerSpeed->Add( m_tcPlanSpeed, 0, wxALL, 5 );
 
@@ -102,8 +102,8 @@ RoutePropDlg::RoutePropDlg( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_stEnroute->Wrap( -1 );
 	bSizerEnroute->Add( m_stEnroute, 0, wxALL, 5 );
 
-	m_tcEnroute = new wxTextCtrl( m_pnlBasic, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
-    m_tcEnroute->SetMaxSize( wxSize( maxFieldSize,-1 ) );
+	m_tcEnroute = new wxTextCtrl( m_pnlBasic, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(65,-1), wxTE_READONLY );
+//    m_tcEnroute->SetMaxSize( wxSize( maxFieldSize,-1 ) ); // wxDefaultSize zu klein
 
 	bSizerEnroute->Add( m_tcEnroute, 0, wxALL, 5 );
 

@@ -39,10 +39,6 @@
 #include "CanvasOptions.h"
 #include "OCPNPlatform.h"
 
-#ifdef ocpnUSE_SVG
-#include "wxsvg/include/wxSVG/svg.h"
-#endif // ocpnUSE_SVG
-
 #ifdef __OCPN__ANDROID__
 #include "androidUTIL.h"
 #endif

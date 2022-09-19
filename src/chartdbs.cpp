@@ -1457,12 +1457,14 @@ wxString ChartDatabase::GetFullChartInfo(ChartBase *pc, int dbIndex, int *char_w
                   lc++;
 
                   line.Empty();
-                  line = _(" Updated:  ");
                   wxDateTime ed = pc->GetEditionDate();
+                if (ed.IsValid()) {
+                  line = _(" Updated:  ");
                   line += ed.FormatISODate();
                   line += _T("\n");
                   max_width = wxMax(max_width, line.Len());
                   r += line;
+                }
                   lc++;
             }
 

@@ -74,6 +74,7 @@ millions of points.
 
 #include "wx/wxprec.h"
 
+#include "dychart.h"
 
 #include "Route.h"
 #include "Track.h"
@@ -126,9 +127,6 @@ private:
     timespec tp;
 };
 #endif
-
-#include <wx/listimpl.cpp>
-WX_DEFINE_LIST ( TrackList );
 
 TrackPoint::TrackPoint(double lat, double lon, wxString ts)
     : m_lat(lat), m_lon(lon), m_GPXTrkSegNo(1), m_timestring(NULL)
@@ -338,7 +336,7 @@ void ActiveTrack::Stop( bool do_add_point )
     m_track_run = 0;
 }
 
-extern TrackList        *pTrackList;
+extern std::vector<Track*> g_TrackList;
 Track *ActiveTrack::DoExtendDaily()
 {
     Track *pExtendTrack = NULL;
@@ -346,10 +344,7 @@ Track *ActiveTrack::DoExtendDaily()
 
     TrackPoint *pLastPoint = GetPoint( 0 );
 
-    wxTrackListNode *track_node = pTrackList->GetFirst();
-    while( track_node ) {
-        Track *ptrack = track_node->GetData();
-
+    for (Track* ptrack : g_TrackList) {
         if( !ptrack->m_bIsInLayer && ptrack->m_GUID != m_GUID ) {
             TrackPoint *track_node = ptrack->GetLastPoint();
             if( track_node->GetCreateTime() <= pLastPoint->GetCreateTime() ) {
@@ -359,7 +354,6 @@ Track *ActiveTrack::DoExtendDaily()
                 }
             }
         }
-        track_node = track_node->GetNext();                         // next track
     }
     if( pExtendTrack
         && pExtendTrack->GetPoint( 0 )->GetCreateTime().FromTimezone( wxDateTime::GMT0 ).IsSameDate(pLastPoint->GetCreateTime().FromTimezone( wxDateTime::GMT0 ) ) ) {

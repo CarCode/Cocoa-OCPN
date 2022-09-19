@@ -39,6 +39,7 @@
 #include <wx/regex.h>
 
 #include <algorithm>
+#include <unordered_map>
 
 #include "mygdal/ogr_api.h"
 #include "s57chart.h"
@@ -276,35 +277,35 @@ OCPNRegion M_COVR_Desc::GetRegion ( const ViewPort &vp, wxPoint *pwp )
 // relating to cm93 cell MCOVR objects of a particular scale
 //----------------------------------------------------------------------------
 
-WX_DECLARE_HASH_MAP ( int, int, wxIntegerHash, wxIntegerEqual, cm93cell_hash );
-
 char sig_version[] = "COVR1002";
 
 class covr_set
 {
-      public:
-            covr_set ( cm93chart *parent );
-            ~covr_set();
+public:
+    covr_set ( cm93chart *parent );
+    ~covr_set();
 
-            bool Init ( wxChar scale_char, wxString &prefix );
-            unsigned int GetCoverCount() { return m_covr_array_outlines.GetCount(); }
-            M_COVR_Desc *GetCover ( unsigned int im ) { return &m_covr_array_outlines[im]; }
-            void Add_MCD ( M_COVR_Desc *pmcd );
-            bool Add_Update_MCD ( M_COVR_Desc *pmcd );
-            bool IsCovrLoaded ( int cell_index );
-            int Find_MCD ( M_COVR_Desc *pmcd );
-            M_COVR_Desc *Find_MCD ( int cell_index, int object_id, int sbcell );
+    bool Init ( wxChar scale_char, wxString &prefix );
+    unsigned int GetCoverCount() { return m_covr_array_outlines.GetCount(); }
+    M_COVR_Desc *GetCover ( unsigned int im ) { return &m_covr_array_outlines[im]; }
+    void Add_MCD ( M_COVR_Desc *pmcd );
+    bool Add_Update_MCD ( M_COVR_Desc *pmcd );
+    bool IsCovrLoaded ( int cell_index );
+    int Find_MCD ( M_COVR_Desc *pmcd );
+    M_COVR_Desc *Find_MCD ( int cell_index, int object_id, int sbcell );
 
-            cm93chart         *m_pParent;
-            wxChar            m_scale_char;
-            int               m_scale;
+    cm93chart         *m_pParent;
+    wxChar            m_scale_char;
+    int               m_scale;
 
-            wxString          m_cachefile;
+    wxString          m_cachefile;
 
-            Array_Of_M_COVR_Desc    m_covr_array_outlines;        // array, for chart outline rendering
+    // array, for chart outline rendering
+    Array_Of_M_COVR_Desc m_covr_array_outlines;
 
-            cm93cell_hash     m_cell_hash;                        // This is a hash, indexed by cell index, elements contain the number of M_COVRs
-            // found on this particular cell
+    // This is a hash, indexed by cell index, elements
+    // contain the number of M_COVRs found on this particular cell
+    std::unordered_map<int, int> m_cell_hash;
 };
 
 covr_set::covr_set ( cm93chart *parent )
@@ -2132,6 +2133,9 @@ bool cm93chart::AdjustVP ( ViewPort &vp_last, ViewPort &vp_proposed )
 
 void cm93chart::SetVPParms ( const ViewPort &vpt )
 {
+    if (m_vp_current == vpt) {
+      return;
+    }
       //    Save a copy for later reference
 
       m_vp_current = vpt;
@@ -2223,9 +2227,9 @@ void cm93chart::SetVPParms ( const ViewPort &vpt )
                   AssembleLineGeometry();
 
                       //  Set up the chart context
-                    m_this_chart_context->m_pvc_hash = (void *)&Get_vc_hash();
-                    m_this_chart_context->m_pve_hash = (void *)&Get_ve_hash();
-                    
+                    m_this_chart_context->m_pvc_hash = &Get_vc_hash();
+                    m_this_chart_context->m_pve_hash = &Get_ve_hash();
+
                     m_this_chart_context->pFloatingATONArray = pFloatingATONArray;
                     m_this_chart_context->pRigidATONArray = pRigidATONArray;
                     m_this_chart_context->chart = this;
@@ -2326,7 +2330,7 @@ std::vector<int> cm93chart::GetVPCellArray ( const ViewPort &vpt )
 void cm93chart::ProcessVectorEdges ( void )
 {
       //    Create the vector(edge) map for this cell, appending to the existing member hash map
-      VE_Hash &vehash = Get_ve_hash();
+      auto &vehash = Get_ve_hash();
 
       m_current_cell_vearray_offset = vehash.size();           // keys start at the current size
       geometry_descriptor *pgd = m_CIB.edge_vector_descriptor_block;
@@ -3304,9 +3308,7 @@ void cm93chart::translate_colmar(const wxString &sclass, S57attVal *pattValTmp)
             free ( pattValTmp->value );                       // free the old int pointer
 
             pattValTmp->valType = OGR_STR;
-            pattValTmp->value = ( char * ) malloc ( lstring.Len() + 1 );      // create a new Lstring attribute
-            strcpy ( ( char * ) pattValTmp->value, lstring.mb_str() );
-
+            pattValTmp->value = strdup(lstring.mb_str());
       }
 }
 
@@ -3440,17 +3442,13 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
                         break;
 
                   case 'S':
-                        nlen = strlen ( ( const char * ) aval );
-                        pAVS = ( char * ) malloc ( nlen + 1 );          ;
-                        strcpy ( pAVS, ( char * ) aval );
+                        pAVS = strdup((char*)aval);
                         pattValTmp->valType = OGR_STR;
                         pattValTmp->value   = pAVS;
                         break;
 
                   case 'C':
-                        nlen = strlen ( ( const char * ) &aval[3] );
-                        pAVS = ( char * ) malloc ( nlen + 1 );          ;
-                        strcpy ( pAVS, ( const char * ) &aval[3] );
+                        pAVS = strdup((const char*)&aval[3]);
                         pattValTmp->valType = OGR_STR;
                         pattValTmp->value   = pAVS;
                         break;
@@ -3468,9 +3466,7 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
                         if ( strlen ( val ) )
                               val[strlen ( val )-1] = 0;      // strip last ","
 
-                        int nlen = strlen ( val );
-                        pAVS = ( char * ) malloc ( nlen + 1 );          ;
-                        strcpy ( pAVS, val );
+                        pAVS = strdup(val);
                         pattValTmp->valType = OGR_STR;
                         pattValTmp->value   = pAVS;
                         break;
@@ -3514,9 +3510,7 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
                   int v = *(int*)pattValTmp->value;
                   free(pattValTmp->value);
                   sprintf ( val, "%d", v );
-                  int nlen = strlen ( val );
-                  pAVS = ( char * ) malloc ( nlen + 1 );          ;
-                  strcpy ( pAVS, val );
+                  pAVS = strdup(val);
                   pattValTmp->valType = OGR_STR;
                   pattValTmp->value   = pAVS;
             }
@@ -3527,8 +3521,7 @@ S57Obj *cm93chart::CreateS57Obj ( int cell_index, int iobject, int subcell, Obje
                   if ( !strcmp ( ( char * ) pattValTmp->value, "II25" ) )
                   {
                         free ( pattValTmp->value );
-                        pattValTmp->value   = ( char * ) malloc ( strlen ( "BACKGROUND" ) + 1 );
-                        strcpy ( ( char * ) pattValTmp->value, "BACKGROUND" );
+                        pattValTmp->value = strdup("BACKGROUND");
                   }
             }
 
@@ -5026,7 +5019,7 @@ void cm93compchart::SetVPParms ( const ViewPort &vpt )
       //    Continuoesly update the composite chart edition date to the latest cell decoded
       if ( m_pcm93chart_array[cmscale] )
       {
-            if ( m_pcm93chart_array[cmscale]->GetEditionDate().IsLaterThan ( m_EdDate ) )
+          if (!m_EdDate.IsValid() || !m_pcm93chart_array[cmscale]->GetEditionDate().IsValid() || m_pcm93chart_array[cmscale]->GetEditionDate().IsLaterThan(m_EdDate))
                   m_EdDate = m_pcm93chart_array[cmscale]->GetEditionDate();
       }
 }
@@ -6353,7 +6346,7 @@ void cm93compchart::UpdateLUPs ( s57chart *pOwner )
       }
 }
 
-ListOfS57Obj *cm93compchart::GetAssociatedObjects ( S57Obj *obj )
+std::list<S57Obj*> *cm93compchart::GetAssociatedObjects(S57Obj *obj)
 {
       if ( m_pcm93chart_current )
             return  m_pcm93chart_current->GetAssociatedObjects ( obj );
@@ -6436,12 +6429,12 @@ ListOfObjRazRules *cm93compchart::GetObjRuleListAtLatLon ( float lat, float lon,
 
 }
 
-VE_Hash& cm93compchart::Get_ve_hash ( void )
+std::unordered_map<unsigned, VE_Element *> &cm93compchart::Get_ve_hash(void)
 {
       return m_pcm93chart_current->Get_ve_hash();
 }
 
-VC_Hash& cm93compchart::Get_vc_hash ( void )
+std::unordered_map<unsigned, VC_Element *> &cm93compchart::Get_vc_hash(void)
 {
       return m_pcm93chart_current->Get_vc_hash();
 }

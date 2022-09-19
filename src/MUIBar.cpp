@@ -39,10 +39,7 @@
 #include "CanvasOptions.h"
 #include "styles.h"
 #include "navutil.h"
-
-#ifdef ocpnUSE_SVG
-#include "wxsvg/include/wxSVG/svg.h"
-#endif // ocpnUSE_SVG
+#include "svg_utils.h"
 
 #ifdef __OCPN__ANDROID__
 #include "androidUTIL.h"
@@ -58,22 +55,7 @@ extern OCPNPlatform              *g_Platform;
 extern ChartCanvas               *g_focusCanvas;
 extern ocpnStyle::StyleManager*   g_StyleManager;
 
-//  Helper utilities
-static wxBitmap LoadSVG( const wxString filename, unsigned int width, unsigned int height )
-{
-#ifdef ocpnUSE_SVG
-    wxSVGDocument svgDoc;
-    if( svgDoc.Load(filename) )
-        return wxBitmap( svgDoc.Render( width, height, NULL, true, true ) );
-    else
-        return wxBitmap(width, height);
-#else
-        return wxBitmap(width, height);
-#endif // ocpnUSE_SVG
-}
-
 double getValue(int animationType, double t);
-
 
 //  Helper classes
 
@@ -586,7 +568,7 @@ MUIBar::MUIBar(ChartCanvas* parent, int orientation, float size_factor, wxWindow
     //SetBackgroundStyle( wxBG_STYLE_TRANSPARENT );
     //wxWindow::Create(parent, id, pos, size, style, name);
     //long mstyle = wxSIMPLE_BORDER;
-    long mstyle = wxNO_BORDER | wxFRAME_NO_TASKBAR | wxFRAME_SHAPED | wxFRAME_FLOAT_ON_PARENT;
+    long mstyle = wxNO_BORDER | wxFRAME_NO_TASKBAR | wxFRAME_SHAPED | wxFRAME_FLOAT_ON_PARENT | wxFRAME_TOOL_WINDOW;
 
     m_scaleFactor = size_factor;
     m_cs = (ColorScheme)-1;
@@ -670,12 +652,12 @@ void MUIBar::OnScaleSelected( wxMouseEvent &event )
             dScale = wxMax(dScale, 1000);
             double displayScaleNow = pcc->GetScaleValue();
             double factor = displayScaleNow / dScale;
-            pcc->DoZoomCanvas( factor );
+            pcc->DoZoomCanvas( factor, false );
 
             // Run the calculation again, to reduce roundoff error in large scale jumps.
             displayScaleNow = pcc->GetScaleValue();
             factor = displayScaleNow / dScale;
-            pcc->DoZoomCanvas( factor );
+            pcc->DoZoomCanvas( factor, false );
         }
     }
 }

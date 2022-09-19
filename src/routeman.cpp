@@ -64,10 +64,7 @@
 #include "OCPNPlatform.h"
 #include "Track.h"
 #include "chcanv.h"
-
-#ifdef ocpnUSE_SVG
-#include "wxSVG/svg.h"
-#endif // ocpnUSE_SVG
+#include "svg_utils.h"
 
 // void appendOSDirSlash(wxString* pString);  // Wofür????
 
@@ -76,7 +73,7 @@ extern OCPNPlatform     *g_Platform;
 extern ConsoleCanvas    *console;
 
 extern RouteList        *pRouteList;
-extern TrackList        *pTrackList;
+extern std::vector<Track*> g_TrackList;
 extern Select           *pSelect;
 extern MyConfig         *pConfig;
 extern Routeman         *g_pRouteMan;
@@ -127,22 +124,6 @@ WX_DEFINE_LIST(markicon_description_list_type);
 
 //Helper conditional file name dir slash
 void appendOSDirSlash(wxString* pString);
-
-wxImage LoadSVGIcon( wxString filename, int width, int height )
-{
-#ifdef ocpnUSE_SVG
-    wxSVGDocument svgDoc;
-    if( svgDoc.Load(filename) )
-        return  svgDoc.Render( width, height, NULL, true, true ) ;
-    else{
-        wxLogMessage(filename);
-        return wxImage(32, 32);
-    }
-#else
-        return wxImage(32, 32);
-#endif // ocpnUSE_SVG
-}
-
 
 static int CompareMarkIcons( MarkIcon *mi1, MarkIcon *mi2 )
 {
@@ -992,12 +973,11 @@ void Routeman::DeleteAllTracks( void )
 {
     ::wxBeginBusyCursor();
 
-    //    Iterate on the RouteList
-    wxTrackListNode *node = pTrackList->GetFirst();
-    while( node ) {
-        Track *ptrack = node->GetData();
-            node = node->GetNext();
-
+    // Iterate on the RouteList, we delete from g_TrackList in DeleteTrack,
+    // bigger refactoring is viable, but for now, we simply make a copy
+    // that goes out of scope soon.
+    std::vector<Track*> to_del = g_TrackList;
+    for (Track *ptrack : to_del) {
         if( ptrack->m_bIsInLayer )
             continue;
 
@@ -1034,36 +1014,15 @@ void Routeman::DeleteTrack( Track *pTrack )
                 pTrackPropDialog->Hide();
         }
 
+        if (pTrack == g_pActiveTrack && g_pActiveTrack->IsRunning()) {
+          pTrack = m_pparent_app->TrackOff();
+        }
         //    Remove the track from associated lists
         pSelect->DeleteAllSelectableTrackSegments( pTrack );
-        pTrackList->DeleteObject( pTrack );
-
-#if 0
-        // walk the track, deleting points used by this track
-        int ic = 0;
-        wxTrackPointListNode *pnode = ( pTrack->pTrackPointList )->GetFirst();
-        while( pnode )
-        {
-            if(pprog)
-            {
-                wxString msg;
-                msg.Printf(_T("%d/%d"), ic, count);
-                if(ic % 100 == 0)
-                   pprog->Update( ic, msg );
-                ic++;
-            }
-
-            TrackPoint *prp = pnode->GetData();
-            delete prp;
-
-            pnode = pnode->GetNext();
+        auto it = std::find(g_TrackList.begin(), g_TrackList.end(), pTrack);
+        if (it != g_TrackList.end()) {
+          g_TrackList.erase(it);
         }
-#endif
-        if( pTrack == g_pActiveTrack ) {
-            g_pActiveTrack = NULL;
-            m_pparent_app->TrackOff();
-        }
-
         delete pTrack;
 
         ::wxEndBusyCursor();
@@ -1142,13 +1101,9 @@ Route *Routeman::FindRouteByGUID(const wxString &guid)
 
 Track *Routeman::FindTrackByGUID(const wxString &guid)
 {
-    wxTrackListNode *node1 = pTrackList->GetFirst();
-    while( node1 ) {
-        Track *pTrack = node1->GetData();
-
+    for (Track* pTrack : g_TrackList) {
         if( pTrack->m_GUID == guid )
             return pTrack;
-        node1 = node1->GetNext();
     }
 
     return NULL;
@@ -1317,9 +1272,12 @@ void WayPointman::ProcessUserIcons( ocpnStyle::Style* style )
                 }
             }
             if( fn.GetExt().Lower() == _T("svg") ) {
-                //double bm_size = 16.0 * g_Platform->GetDisplayDPmm() * g_ChartScaleFactorExp;
-                double bm_size = 62 * g_ChartScaleFactorExp;
-                wxBitmap iconSVG = LoadSVGIcon( name, bm_size, bm_size );
+                unsigned int w, h;
+                SVGDocumentPixelSize(name, w, h);
+                w = wxMax(wxMax(w, h), 15);  // We want certain minimal size for the
+                                             // icons, 15px (approx 3mm) be it
+                const unsigned int bm_size = SVGPixelsToDisplay(w);
+                wxBitmap iconSVG = LoadSVG(name, bm_size, bm_size);
                 MarkIcon * pmi = ProcessIcon( iconSVG, iconname, iconname );
                 if(pmi)
                     pmi->preScaled = true;
@@ -1429,7 +1387,7 @@ void WayPointman::ProcessDefaultIcons()
     else
         m_pExtendedIconArray = new SortedArrayOfMarkIcon(CompareMarkIcons);
 
-
+#if 0
     wxArrayString FileList;
     double bm_size = -1;
 
@@ -1445,7 +1403,7 @@ void WayPointman::ProcessDefaultIcons()
             wxFileName fn( name );
 
             if( fn.GetExt().Lower() == _T("svg") ) {
-                wxBitmap bmt = LoadSVGIcon(name, -1, -1 );
+                wxBitmap bmt = LoadSVG(name, -1, -1 );
                 bm_size = bmt.GetWidth() * g_ChartScaleFactorExp;
                 break;
             }
@@ -1461,14 +1419,49 @@ void WayPointman::ProcessDefaultIcons()
         wxBitmap icon1;
 
         if( fn.GetExt().Lower() == _T("svg") ) {
-            wxImage iconSVG = LoadSVGIcon( name, (int)bm_size, (int)bm_size );
+            wxImage iconSVG = LoadSVG( name, (int)bm_size, (int)bm_size );
             MarkIcon * pmi = ProcessExtendedIcon( iconSVG, iconname, iconname );
             if(pmi)
                 pmi->preScaled = true;
         }
     }
+#else
+    wxArrayString FileList;
+    double bm_size =
+        wxMax(4.0, floor(g_Platform->GetDisplayDPmm() *
+                         12.0));  // nominal size, but not less than 4 pixel
+    bm_size *= g_ChartScaleFactorExp;
 
+    int n_files = wxDir::GetAllFiles(iconDir, &FileList);
 
+    g_Platform->ShowBusySpinner();
+
+    for (int ifile = 0; ifile < n_files; ifile++) {
+      wxString name = FileList[ifile];
+
+      wxFileName fn(name);
+      wxString iconname = fn.GetName();
+      wxBitmap icon1;
+
+      if (fn.GetExt().Lower() == _T("svg")) {
+        unsigned int w, h;
+        SVGDocumentPixelSize(name, w, h);
+        w = wxMax(wxMax(w, h), 15);  // We want certain minimal size for the
+                                     // icons, 15px (approx 3mm) be it
+        bm_size = SVGPixelsToDisplay(w);
+        wxBitmap bmp = LoadSVG(name, (int)bm_size, (int)bm_size);
+        if (bmp.IsOk()) {
+          wxImage iconSVG = bmp.ConvertToImage();
+
+          MarkIcon *pmi = ProcessExtendedIcon(iconSVG, iconname, iconname);
+          if (pmi) pmi->preScaled = true;
+        } else {
+          wxLogMessage("Failed loading mark icon " + name);
+        }
+      }
+    }
+    g_Platform->HideBusySpinner();
+#endif
     // Walk the two sorted lists, adding icons to the un-sorted master list
 
     for( unsigned int i = 0; i < m_pLegacyIconArray->GetCount(); i++ ) {
@@ -1490,11 +1483,8 @@ void WayPointman::ProcessDefaultIcons()
         }
         if(!noAdd)
             m_pIconArray->Add( pmi );
-
     }
 }
-
-
 
 MarkIcon *WayPointman::ProcessIcon(wxBitmap pimage, const wxString & key, const wxString & description)
 {
@@ -1570,12 +1560,19 @@ MarkIcon *WayPointman::ProcessExtendedIcon(wxImage &image, const wxString & key,
 MarkIcon *WayPointman::ProcessLegacyIcon( wxString fileName, const wxString & key, const wxString & description)
 {
     double bm_size = -1.0;
+#ifndef ocpnUSE_wxBitmapBundle
     if( fabs(g_ChartScaleFactorExp - 1.0) > 0.1){
-        wxImage img = LoadSVGIcon(fileName, -1, -1 );
+        wxBitmap img = LoadSVG(fileName, -1, -1 );
         bm_size = img.GetWidth() * g_ChartScaleFactorExp;
     }
-
-    wxImage image = LoadSVGIcon(fileName, (int)bm_size, (int)bm_size );
+#else
+    unsigned int w, h;
+    SVGDocumentPixelSize(fileName, w, h);
+    w = wxMax(wxMax(w, h), 15);  // We want certain minimal size for the icons,
+                                 // 15px (approx 3mm) be it
+    bm_size = SVGPixelsToDisplay(w);
+#endif
+    wxImage image = LoadSVG(fileName, (int)bm_size, (int)bm_size).ConvertToImage();
     wxRect rClip = CropImageOnAlpha(image);
     wxImage imageClip = image.GetSubImage(rClip);
 

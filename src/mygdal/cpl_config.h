@@ -68,7 +68,8 @@
 #define HAVE_LOCALE_H 1
 
 /* Define to 1 if you have the `localtime_r' function. */
-#undef HAVE_LOCALTIME_R
+//#undef HAVE_LOCALTIME_R
+#define HAVE_LOCALTIME_R 1
 
 #undef HAVE_DLFCN_H
 #undef HAVE_DBMALLOC_H

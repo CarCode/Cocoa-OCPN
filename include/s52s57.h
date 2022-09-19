@@ -1,11 +1,11 @@
-/******************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCP
  * Purpose:  S52 PLIB and S57 Chart data types
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,10 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- *
- */
-
+ ***************************************************************************/
 
 #ifndef _S52S57_H_
 #define _S52S57_H_
@@ -32,6 +29,7 @@
 #include "bbox.h"
 #include "ocpn_types.h"
 
+#include <unordered_map>
 #include <vector>
 
 #define CURRENT_SENC_FORMAT_VERSION  200
@@ -42,6 +40,8 @@
 class wxArrayOfS57attVal;
 class OGREnvelope;
 class OGRGeometry;
+class VE_Element;
+class VC_Element;
 
 // name of the addressed look up table set (fifth letter)
 typedef enum _LUPname{
@@ -294,9 +294,9 @@ class PolyTessGeo;
 class line_segment_element;
 class PI_line_segment_element;
 
-typedef struct _chart_context{
-    void                    *m_pvc_hash;
-    void                    *m_pve_hash;
+struct chart_context {
+    std::unordered_map<unsigned, VC_Element *> *m_pvc_hash;
+    std::unordered_map<unsigned, VE_Element *> *m_pve_hash;
     double                  ref_lat;
     double                  ref_lon;
     wxArrayPtrVoid          *pFloatingATONArray;
@@ -305,7 +305,7 @@ typedef struct _chart_context{
     double                  safety_contour; 
     float                   *vertex_buffer;
     
-}chart_context;
+};
 
 
 
@@ -569,10 +569,6 @@ public:
 };
 
 #endif
-
-
-WX_DECLARE_HASH_MAP( unsigned int, VE_Element *, wxIntegerHash, wxIntegerEqual, VE_Hash );
-WX_DECLARE_HASH_MAP( unsigned int, VC_Element *, wxIntegerHash, wxIntegerEqual, VC_Hash );
 
 class connector_key
 {
