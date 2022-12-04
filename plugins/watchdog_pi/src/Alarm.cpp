@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  watch dog Plugin
@@ -37,7 +37,7 @@
 #include "WatchdogDialog.h"
 #include "AIS_Target_Info.h"
 
-///////// The Alarm classes /////////
+// /////// The Alarm classes /////////
 class LandFallAlarm : public Alarm
 {
 public:
@@ -1542,7 +1542,7 @@ private:
     std::list<double> m_SOGqueue;
 };
 
-////////// Alarm Base Class /////////////////
+// //////// Alarm Base Class /////////////////
 std::vector<Alarm*> Alarm::s_Alarms;
 
 void Alarm::RenderAll(wdDC &dc, PlugIn_ViewPort &vp)

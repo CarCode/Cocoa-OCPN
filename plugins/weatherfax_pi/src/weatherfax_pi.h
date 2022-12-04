@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
@@ -33,8 +33,9 @@
 //#include "version.h"
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    6
-
+#define     PLUGIN_VERSION_MINOR    8
+#define     PLUGIN_VERSION_PATCH    "001"
+#define     PLUGIN_VERSION_DATE     "2018-02-08"
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    13
 
@@ -98,7 +99,9 @@ public:
       int m_iExportColors;
       bool m_bExportDepthMeters;
       wxString m_sExportSoundingDatum;
-
+#ifndef __WXOSX__
+      wxString m_UpdateDataBaseUrl;
+#endif
       PlugIn_Position_Fix_Ex m_lastfix;
 
       WeatherFax      *m_pWeatherFax;

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: weatherfax_pi 3.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-04-03 18:02+0100\n"
-"PO-Revision-Date: 2015-07-04 13:19+0200\n"
+"PO-Revision-Date: 2020-02-02 19:30+0100\n"
 "Last-Translator: CarCode <carcode@me.com>\n"
 "Language-Team: CarCode <carcode@me.com>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.2\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #: ../src/DecoderOptionsDialog.cpp:124
 msgid "Failed to configure capture."
@@ -425,7 +425,7 @@ msgstr "Fax"
 
 #: ../src/WeatherFaxUI.cpp:42
 msgid "Transparency"
-msgstr "Tranparenz"
+msgstr "Transparenz"
 
 #: ../src/WeatherFaxUI.cpp:58
 msgid "Invert"

@@ -102,10 +102,17 @@ SchedulesDialog::~SchedulesDialog()
         StopExternalProcess();
     }
 }
-
+#ifdef __WXOSX__
 void SchedulesDialog::Load()
+#else
+void SchedulesDialog::Load(bool force)
+#endif
 {
+#ifdef __WXOSX__
     if(m_bLoaded)
+#else
+    if(m_bLoaded && !force)
+#endif
         return;
 
     m_bLoaded = true;
@@ -215,7 +222,10 @@ void SchedulesDialog::Load()
     m_weatherfax_dir.Append(_T("/opencpn/plugins/weatherfax/data/"));
     OpenXML(m_weatherfax_dir + _T("WeatherFaxSchedules.xml"));
 #else
-    OpenXML(*GetpSharedDataLocation() + _T("plugins")
+    if( wxFileExists( m_weatherfax_pi.StandardPath() + _T("WeatherFaxSchedules.xml") ) )
+        OpenXML( m_weatherfax_pi.StandardPath() + _T("WeatherFaxSchedules.xml") );
+    else
+        OpenXML(*GetpSharedDataLocation() + _T("plugins")
             + s + _T("weatherfax_pi") + s + _T("data") + s
             + _T("WeatherFaxSchedules.xml"));
 #endif
@@ -431,7 +441,7 @@ void SchedulesDialog::OnSchedulesLeftDown( wxMouseEvent& event )
 static int sortcol, sortorder = 1;
 // sort callback. Sort by body.
 #if wxCHECK_VERSION(2, 9, 0)
-int wxCALLBACK SortSchedules(long item1, long item2, wxIntPtr list)
+int wxCALLBACK SortSchedules(wxIntPtr item1, wxIntPtr item2, wxIntPtr list)
 #else
 int wxCALLBACK SortSchedules(long item1, long item2, long list)
 #endif            

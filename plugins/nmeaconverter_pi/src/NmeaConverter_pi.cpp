@@ -60,26 +60,24 @@ int NmeaConverter_pi::Init(void)
     //    And load the configuration items
     LoadConfig();
 
-        //find and store share path
+    //find and store share path
 #ifdef __WXOSX__
     g_shareLocn =*GetpPrivateApplicationDataLocation() +
 #else
     g_shareLocn =*GetpSharedDataLocation() +
 #endif
-            _T("plugins") + wxFileName::GetPathSeparator() +
-            _T("nmeaconverter_pi") + wxFileName::GetPathSeparator()
-            +_T("data") + wxFileName::GetPathSeparator();
+        _T("plugins") + wxFileName::GetPathSeparator() +
+        _T("nmeaconverter_pi") + wxFileName::GetPathSeparator()
+        +_T("data") + wxFileName::GetPathSeparator();
 
-        //    This PlugIn needs a toolbar icon, so request its insertion
-        wxString active = g_shareLocn + _T("active.svg");
-        wxString toggled = g_shareLocn + _T("toggled.svg");
+//    This PlugIn needs a toolbar icon, so request its insertion
+    wxString active = g_shareLocn + _T("active.svg");
+    wxString toggled = g_shareLocn + _T("toggled.svg");
 
-        if( wxFile::Exists( active) && wxFile::Exists( toggled) )
-            m_leftclick_tool_id  = InsertPlugInToolSVG(_T(""), active, active, toggled,
-                        wxITEM_CHECK, _("NmeaKonverter"), _T(""), NULL, NMEACONVERTER_TOOL_POSITION, 0, this);
-        else // kein toggled:
-            m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_nmeaconverter_pi, _img_nmeaconverter_pi,
-                            wxITEM_CHECK, _("NmeaKonverter"), _T(""), NULL, NMEACONVERTER_TOOL_POSITION, 0, this);
+    if( wxFile::Exists( active) && wxFile::Exists( toggled) )
+        m_leftclick_tool_id  = InsertPlugInToolSVG(_T(""), active, active, toggled, wxITEM_CHECK, _("NmeaKonverter"), _T(""), NULL, NMEACONVERTER_TOOL_POSITION, 0, this);
+    else // kein toggled:
+        m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_nmeaconverter_pi, _img_nmeaconverter_pi, wxITEM_CHECK, _("NmeaKonverter"), _T(""), NULL, NMEACONVERTER_TOOL_POSITION, 0, this);
 
     return
         ( WANTS_NMEA_SENTENCES    |
@@ -87,7 +85,8 @@ int NmeaConverter_pi::Init(void)
           INSTALLS_TOOLBAR_TOOL   |
           WANTS_PREFERENCES       |
           WANTS_PLUGIN_MESSAGING  |
-          WANTS_CONFIG);
+          WANTS_CONFIG
+        );
 }
 
 bool NmeaConverter_pi::DeInit(void)
@@ -202,7 +201,7 @@ int NmeaConverter_pi::AddObjectToMap( nmeaSendObj* object, SentenceSendMode Mode
 #ifdef __WXOSX__
         index = (int)ObjectMap.size();
 #else
-    index = ObjectMap.size();
+        index = ObjectMap.size();
 #endif
     ObjectMap[index] = object;
     object->SetSendMode( Mode );
@@ -259,7 +258,8 @@ void NmeaConverter_pi::ShowPreferencesDialog( wxWindow* parent )
     { wxPuts(_("Dlg already deleted:_)"));}
 
     prefDlg = NULL;
-//    p_nmeaSendObjectDlg=NULL;    
+//    p_nmeaSendObjectDlg=NULL;
+//    delete prefDlg;
 }
 
 bool NmeaConverter_pi::SaveConfig( void )
@@ -315,7 +315,42 @@ bool NmeaConverter_pi::LoadConfig( void )
     } else
         return false;
 }
+/*
+int NmeaConverter_pi::GetToolbarToolCount(void)
+{
+    return 1;
+}
 
+void NmeaConverter_pi::OnToolbarToolCallback( int id )
+{
+    if (prefDlg) {
+        wxMessageBox("Pref Dialog ist da.");
+        SetToolbarItemState(m_leftclick_tool_id, false);
+        CloseDataTable();
+    }
+    else {
+        wxMessageBox("Pref Dialog ist nicht da. 1v3");
+        SetToolbarItemState(m_leftclick_tool_id, true);
+        LoadConfig();
+//        PreferenceDlg(); geht auch nicht
+        prefDlg = new PreferenceDlg();  // Crash, siehe Zeile 660
+        if (prefDlg) wxMessageBox("Jetzt da? 2v3");
+//        prefDlg->Show();
+        if (prefDlg) wxMessageBox("Und wird sie gezeigt? 3v3");
+//        ShowPreferencesDialog( parent );
+    }
+}
+
+void NmeaConverter_pi::CloseDataTable()
+{
+    SetToolbarItemState(m_leftclick_tool_id, false);
+    if (prefDlg) {
+        prefDlg->Destroy();
+        delete prefDlg;
+        prefDlg = NULL;
+    }
+}
+*/
 //************************************************************************************
 nmeaSendObj::nmeaSendObj()
 {
@@ -520,8 +555,8 @@ void nmeaSendObj::ComputeOutputSentence()
             if ( (calc.GetLastError() == wxECE_NOERROR) & IsValidNumber )
             {
                  formattokenarray[j] = result;
-            }else
-                formattokenarray[j] = _("#Error#");
+            }//else
+             //   formattokenarray[j] = _("#Error#");
         }
     }
     // finaly glue the seperate tokens back to one sentence

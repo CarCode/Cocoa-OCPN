@@ -32,7 +32,16 @@
 
 #include <wx/progdlg.h>
 
-#include "ocpn_plugin.h"
+//#include "ocpn_plugin.h"
+// Load the ocpn_plugin. On OS X this generates many warnings, suppress these.
+#ifdef __WXOSX__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
+#include "../../../include/ocpn_plugin.h"
+#ifdef __WXOSX__
+#pragma clang diagnostic pop
+#endif
 
 #ifndef __OCPN__ANDROID__
 #include <GL/gl.h>

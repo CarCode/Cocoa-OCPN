@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  * $Id: vdr_pi.cpp, v0.2 2011/05/23 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -31,6 +31,8 @@
 #ifndef  WX_PRECOMP
   #include "wx/wx.h"
 #endif //precompiled headers
+
+#include <wx/stdpaths.h>
 
 #include <typeinfo>
 #include "vdr_pi.h"
@@ -77,10 +79,10 @@ int vdr_pi::Init(void)
       LoadConfig();
 
       //    This PlugIn needs two toolbar icons
-      m_tb_item_id_record = InsertPlugInTool(_T(""), _img_vdr_record, _img_vdr_record, wxITEM_CHECK,
-            _("Record"), _T(""), NULL, VDR_TOOL_POSITION, 0, this);
-      m_tb_item_id_play = InsertPlugInTool(_T(""), _img_vdr_play, _img_vdr_play, wxITEM_CHECK,
-            _("Play"), _T(""), NULL, VDR_TOOL_POSITION, 0, this);
+    m_tb_item_id_record = InsertPlugInTool(_T(""), _img_vdr_record, _img_vdr_record, wxITEM_CHECK,
+          _("Record"), _T(""), NULL, VDR_TOOL_POSITION, 0, this);
+    m_tb_item_id_play = InsertPlugInTool(_T(""), _img_vdr_play, _img_vdr_play, wxITEM_CHECK,
+          _("Play"), _T(""), NULL, VDR_TOOL_POSITION, 0, this);
       m_recording = false;
 
       return (
@@ -238,7 +240,7 @@ void vdr_pi::OnToolbarToolCallback(int id)
                   if (! m_pvdrcontrol )
                   {
                         m_pvdrcontrol = new VDRControl( GetOCPNCanvasWindow(), wxID_ANY, this, 1000/m_interval, m_istream.GetLineCount() );
-                      wxAuiPaneInfo pane = wxAuiPaneInfo().Name(_T("VDR")).Caption(wxString::Format(_("VDR replay: %s"), fdlg.GetFilename())).CaptionVisible(true).Float().FloatingPosition(50,100).Dockable(false).Fixed().CloseButton(false).Show(true);
+                        wxAuiPaneInfo pane = wxAuiPaneInfo().Name(_T("VDR")).Caption(wxString::Format(_("VDR replay: %s"), fdlg.GetFilename())).CaptionVisible(true).Float().FloatingPosition(50,100).Dockable(false).Fixed().CloseButton(false).Show(true);
                         m_pauimgr->AddPane( m_pvdrcontrol, pane );
                         m_pauimgr->Update();
                   }

@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -75,8 +74,11 @@ public:
 
     SchedulesDialog( weatherfax_pi &_weatherfax_pi, wxWindow* parent);
     ~SchedulesDialog();
-
+#ifdef __WXOSX__
     void Load();
+#else
+    void Load(bool force = false);
+#endif
     void ClearSchedules();
     bool OpenXML(wxString filename);
 

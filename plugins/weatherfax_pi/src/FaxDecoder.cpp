@@ -518,8 +518,6 @@ bool FaxDecoder::DecodeFaxFromPortAudio()
         return false;
     }
 
-    int i = Pa_GetDeviceCount();
-    
     if(m_DeviceIndex == -1)
         m_DeviceIndex = Pa_GetDefaultInputDevice();
     

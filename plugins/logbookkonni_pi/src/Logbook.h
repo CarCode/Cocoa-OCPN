@@ -5,7 +5,17 @@
 #include "wx/wx.h"
 #endif //precompiled headers
 
+//#include "../../../include/ocpn_plugin.h"
+// Load the ocpn_plugin. On OS X this generates many warnings, suppress these.
+#ifdef __WXOSX__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 #include "../../../include/ocpn_plugin.h"
+#ifdef __WXOSX__
+#pragma clang diagnostic pop
+#endif
+
 #include "LogbookHTML.h"
 #include "../../../src/nmea0183/nmea0183.h"
 
@@ -277,9 +287,9 @@ class PBVEDialog : public wxFrame
 };
 
 #include <wx/datectrl.h>
-///////////////////////////////////////////////////////////////////////////////
-/// Class LogbookSearch
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class LogbookSearch
+// /////////////////////////////////////////////////////////////////////////////
 class LogbookSearch : public wxDialog 
 {
 	private:

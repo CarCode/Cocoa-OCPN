@@ -39,7 +39,16 @@
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    8
 
+//#include "../../../include/ocpn_plugin.h"
+// Load the ocpn_plugin. On OS X this generates many warnings, suppress these.
+#ifdef __WXOSX__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 #include "../../../include/ocpn_plugin.h"
+#ifdef __WXOSX__
+#pragma clang diagnostic pop
+#endif
 
 #include "ec_defs.h"
 #include "ec_engine.h"
@@ -87,7 +96,7 @@ public:
 #ifdef __WXOSX__
     //toolbar variables
     int          m_leftclick_tool_id;
-//    unsigned int m_ToolIconType;
+//    void CloseDataTable();
 
 #endif
 //    The optional method overrides
@@ -95,6 +104,10 @@ public:
     void SendNMEASentence(wxString sentence);
 //    The override PlugIn Methods
     void ShowPreferencesDialog( wxWindow* parent );
+#ifndef __WXOSX__
+    int  GetToolbarToolCount(void);
+    void OnToolbarToolCallback(int id);
+#endif
     bool SaveConfig( void );
     bool LoadConfig( void );
     bool nmeaIsValid( wxString &sentence);
@@ -204,7 +217,9 @@ public:
     // / Constructors
     PreferenceDlg();
     PreferenceDlg( NmeaConverter_pi* plugin, wxWindow* parent, wxWindowID id = SYMBOL_PREFERENCEDLG_IDNAME, const wxString& caption = SYMBOL_PREFERENCEDLG_TITLE, const wxPoint& pos = SYMBOL_PREFERENCEDLG_POSITION, const wxSize& size = SYMBOL_PREFERENCEDLG_SIZE, long style = SYMBOL_PREFERENCEDLG_STYLE );
-
+#ifndef __WXOSX__
+    ~PreferenceDlg();
+#endif
     // / Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_PREFERENCEDLG_IDNAME, const wxString& caption = SYMBOL_PREFERENCEDLG_TITLE, const wxPoint& pos = SYMBOL_PREFERENCEDLG_POSITION, const wxSize& size = SYMBOL_PREFERENCEDLG_SIZE, long style = SYMBOL_PREFERENCEDLG_STYLE );
 

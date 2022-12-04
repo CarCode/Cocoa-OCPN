@@ -1,8 +1,0 @@
-src/SARgui.h
-src/SARgui.cpp
-src/SAR_pi.cpp
-src/SAR_pi.h
-src/SARgui_impl.cpp
-src/NavFunc.cpp
-src/NavFunc.h
-src/SARgui_impl.h

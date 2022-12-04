@@ -4,19 +4,19 @@
 	Copyright (C) 2000, Silicon Graphics, Inc.
 
 	This library is free software; you can redistribute it and/or
-	modify it under the terms of the GNU Library General Public
+	modify it under the terms of the GNU Lesser General Public
 	License as published by the Free Software Foundation; either
-	version 2 of the License, or (at your option) any later version.
+	version 2.1 of the License, or (at your option) any later version.
 
 	This library is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	Library General Public License for more details.
+	Lesser General Public License for more details.
 
-	You should have received a copy of the GNU Library General Public
+	You should have received a copy of the GNU Lesser General Public
 	License along with this library; if not, write to the
-	Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-	Boston, MA  02111-1307  USA.
+	Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+	Boston, MA  02110-1301  USA
 */
 
 /*
@@ -53,7 +53,7 @@ void _af_print_pvlist (AUpvlist list)
 	assert(list);
 
 	printf("list.valid: %d\n", list->valid);
-	printf("list.count: %lu\n", (unsigned long)list->count);
+	printf("list.count: %zu\n", list->count);
 
 	for (unsigned i=0; i<list->count; i++)
 	{
@@ -155,47 +155,26 @@ void _af_print_tracks (AFfilehandle filehandle)
 		_af_print_audioformat(&track->f);
 		printf(" virtual format\n");
 		_af_print_audioformat(&track->v);
-#ifdef __WXOSX__
-        printf(" total file frames: %jd\n",
-               (intmax_t) track->totalfframes);
-        printf(" total virtual frames: %jd\n",
-               (intmax_t) track->totalvframes);
-        printf(" next file frame: %jd\n",
-               (intmax_t) track->nextfframe);
-        printf(" next virtual frame: %jd\n",
-               (intmax_t) track->nextvframe);
-        printf(" frames to ignore: %jd\n",
-               (intmax_t) track->frames2ignore);
-        
-        printf(" data_size: %jd\n",
-               (intmax_t) track->data_size);
-        printf(" fpos_first_frame: %jd\n",
-               (intmax_t) track->fpos_first_frame);
-        printf(" fpos_next_frame: %jd\n",
-               (intmax_t) track->fpos_next_frame);
-        printf(" fpos_after_data: %jd\n",
-               (intmax_t) track->fpos_after_data);
-#else
-		printf(" total file frames: %"PRId64"\n",
+		printf(" total file frames: %jd\n",
 			(intmax_t) track->totalfframes);
-		printf(" total virtual frames: %"PRId64"\n",
+		printf(" total virtual frames: %jd\n",
 			(intmax_t) track->totalvframes);
-		printf(" next file frame: %"PRId64"\n",
+		printf(" next file frame: %jd\n",
 			(intmax_t) track->nextfframe);
-		printf(" next virtual frame: %"PRId64"\n",
+		printf(" next virtual frame: %jd\n",
 			(intmax_t) track->nextvframe);
-		printf(" frames to ignore: %"PRId64"\n",
+		printf(" frames to ignore: %jd\n",
 			(intmax_t) track->frames2ignore);
 
-		printf(" data_size: %"PRId64"\n",
+		printf(" data_size: %jd\n",
 			(intmax_t) track->data_size);
-		printf(" fpos_first_frame: %"PRId64"\n",
+		printf(" fpos_first_frame: %jd\n",
 			(intmax_t) track->fpos_first_frame);
-		printf(" fpos_next_frame: %"PRId64"\n",
+		printf(" fpos_next_frame: %jd\n",
 			(intmax_t) track->fpos_next_frame);
-		printf(" fpos_after_data: %"PRId64"\n",
+		printf(" fpos_after_data: %jd\n",
 			(intmax_t) track->fpos_after_data);
-#endif
+
 		printf(" channel matrix:");
 		_af_print_channel_matrix(track->channelMatrix,
 			track->f.channelCount, track->v.channelCount);
@@ -270,11 +249,9 @@ void _af_print_frame (AFframecount frameno, double *frame, int nchannels,
 	linebuf[0] = '|';
 	linebuf[wavewidth-1] = '|';
 	linebuf[wavewidth] = 0;
-#ifdef __WXOSX__
-    printf("%05jd ", (intmax_t) frameno);
-#else
-	printf("%05"PRId64" ", (intmax_t) frameno);
-#endif
+
+	printf("%05jd ", (intmax_t) frameno);
+
 	for (c=0; c < nchannels; c++)
 	{
 		double pcm = frame[c];

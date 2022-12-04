@@ -100,12 +100,8 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
 
     m_staticline8 = new wxStaticLine( m_panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL|wxLI_VERTICAL );
     bSizer6->Add( m_staticline8, 0, wxEXPAND | wxALL, 5 );
-#ifdef __WXOSX__
-    wxBitmap bitmap(wxT("forward.xpm"), wxBITMAP_TYPE_XPM);
-    m_bpButtonShowHideLayout = new wxBitmapButton( m_panel2, wxID_ANY, bitmap, wxDefaultPosition, wxSize( -1,-1 ), wxBU_AUTODRAW );
-#else
+
     m_bpButtonShowHideLayout = new wxBitmapButton( m_panel2, wxID_ANY, forward_xpm, wxDefaultPosition, wxSize( -1,-1 ), wxBU_AUTODRAW );
-#endif
     m_bpButtonShowHideLayout->SetToolTip( _("Show Layout Selection Mode") );
 
     bSizer6->Add( m_bpButtonShowHideLayout, 0, wxALIGN_CENTER_VERTICAL, 0 );
@@ -207,8 +203,7 @@ LogbookDialog::LogbookDialog(logbookkonni_pi * d, wxTimer* t, LogbookTimer* lt, 
     m_staticline411 = new wxStaticLine( m_panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
    bSizer6->Add( m_staticline411, 0, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 5 );
 
-    wxBitmap bitmapu(wxT("up.xpm"), wxBITMAP_TYPE_XPM);
-    m_bpButtonShowHideStatusGlobal = new wxBitmapButton( m_panel2, wxID_ANY, bitmapu, wxDefaultPosition, wxSize( -1,-1 ), wxBU_AUTODRAW );
+    m_bpButtonShowHideStatusGlobal = new wxBitmapButton( m_panel2, wxID_ANY, up_xpm, wxDefaultPosition, wxSize( -1,-1 ), wxBU_AUTODRAW );
     m_bpButtonShowHideStatusGlobal->SetToolTip( _("Show/Hide Statusbar") );
 
     bSizer6->Add( m_bpButtonShowHideStatusGlobal, 0, wxALIGN_CENTER_VERTICAL, 5 );
@@ -2659,16 +2654,14 @@ void LogbookDialog::OnButtomClickShowHideLayout(wxCommandEvent& event)
         m_panelLayout->Show();
         m_panelEngine->Hide();
         logbookPlugIn->opt->layoutShow = true;
-        wxBitmap bitmapb(wxT("back.xpm"), wxBITMAP_TYPE_XPM);
-        m_bpButtonShowHideLayout->SetBitmapLabel(bitmapb);
+        m_bpButtonShowHideLayout->SetBitmapLabel( back_xpm );
     }
     else
     {
         m_panelEngine->Show();
         m_panelLayout->Hide();
         logbookPlugIn->opt->layoutShow = false;
-        wxBitmap bitmapf(wxT("forward.xpm"), wxBITMAP_TYPE_XPM);
-        m_bpButtonShowHideLayout->SetBitmapLabel(bitmapf);
+        m_bpButtonShowHideLayout->SetBitmapLabel( forward_xpm);
     }
     m_bpButtonShowHideLayout->SetToolTip(panelOnOff[!logbookPlugIn->opt->layoutShow]);
     m_panel2->Layout();
@@ -2682,15 +2675,13 @@ void LogbookDialog::OnButtomClickStatusbarGlobal( wxCommandEvent& event )
     {
         Statusbar->Hide();
         logbookPlugIn->opt->statusbarGlobal = false;
-        wxBitmap bitmapd(wxT("down.xpm"), wxBITMAP_TYPE_XPM);
-        m_bpButtonShowHideStatusGlobal->SetBitmapLabel(bitmapd);
+        m_bpButtonShowHideStatusGlobal->SetBitmapLabel( down_xpm );
     }
     else
     {
         Statusbar->Show();
         logbookPlugIn->opt->statusbarGlobal = true;
-        wxBitmap bitmapu(wxT("up.xpm"), wxBITMAP_TYPE_XPM);
-        m_bpButtonShowHideStatusGlobal->SetBitmapLabel(bitmapu);
+        m_bpButtonShowHideStatusGlobal->SetBitmapLabel( down_xpm );
     }
     m_panel2->Layout();
 }
@@ -5251,14 +5242,11 @@ void LogbookDialog::getIniValues()
             this->m_radioBtnActuellLogbook->SetValue(true); // at startup theres no seleted logbook = crash, set to actuell logbook
             break;
     }
-// xyz Warum geht das hier nicht?
-//  if(logbookPlugIn->opt->statusbarGlobal)
-//        wxBitmap bitmapup(wxT("up.xpm"), wxBITMAP_TYPE_XPM);//
-//  m_bpButtonShowHideStatusGlobal->SetBitmapLabel(bitmapup);
-//  else
-//        wxBitmap bitmapdo(wxT("down.xpm"), wxBITMAP_TYPE_XPM);
-//  m_bpButtonShowHideStatusGlobal->SetBitmapLabel(bitmapdo);
 
+    if(logbookPlugIn->opt->statusbarGlobal)
+        m_bpButtonShowHideStatusGlobal->SetBitmapLabel( up_xpm );
+    else
+        m_bpButtonShowHideStatusGlobal->SetBitmapLabel( down_xpm );
 }
 
 void LogbookDialog::sortGrid(wxGrid* grid, int col, bool ascending)

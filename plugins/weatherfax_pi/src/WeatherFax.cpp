@@ -1,12 +1,11 @@
-/**************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -138,10 +137,16 @@ static void LoadCoordinatesFromXml(WeatherFaxImageCoordinateList &coords, wxStri
 
     wxString error;
     wxString coordinatesets_path = weatherfax_pi::StandardPath();
+// = ~/Library/Preferences/opencpn/plugins/weatherfax/
     wxString s = wxFileName::GetPathSeparator();
+#ifdef __WXOSX__
+    wxString default_coordinatesets_path = coordinatesets_path + _T("data/");
+// = ~/Library/Preferences/opencpn/plugins/weatherfax/data/
+#else
     wxString default_coordinatesets_path = *GetpSharedDataLocation() + _T("plugins")
         + s + _T("weatherfax_pi") + s + _T("data") + s;
-
+// = plugins/weatherfax_pi/data/
+#endif
     if(!doc.LoadFile((coordinatesets_path + coordinatesets).mb_str()) &&
        !doc.LoadFile((default_coordinatesets_path + coordinatesets).mb_str()))
         FAIL(_("Failed to load coordinate sets"));
@@ -275,7 +280,12 @@ static void SaveCoordinatesToXml(WeatherFaxImageCoordinateList &coords, wxString
     }
 
     wxString coordinatesets_path = weatherfax_pi::StandardPath();
-    if(!doc.SaveFile((coordinatesets_path + filename).mb_str()))
+#ifdef __WXOSX__
+    wxString default_coordinatesets_path = coordinatesets_path + _T("data/");
+    if(!doc.SaveFile((default_coordinatesets_path + filename).mb_str()))
+#else
+        if(!doc.SaveFile((coordinatesets_path + filename).mb_str()))
+#endif
         wxLogMessage(_("Weather Fax") + wxString(_T(": ")) + _("Failed to save xml file: ") + filename);
 }
 
@@ -663,7 +673,7 @@ void WeatherFax::OnInvert( wxCommandEvent& event )
 void WeatherFax::OnCapture( wxCommandEvent& event )
 {
 #ifdef __WXOSX__
-    wxMessageBox("Noch nicht bei Mac OS X implementiert.");
+    wxMessageBox(_("Noch nicht bei macOS implementiert."),_("Nachricht"));
     return;
 #else
     OpenWav(_T(""));
@@ -687,7 +697,57 @@ void WeatherFax::OnAbout( wxCommandEvent& event )
     AboutDialog dlg(this);
     dlg.ShowModal();
 }
+#ifndef __WXOSX__
+bool WeatherFax::DownloadFile( wxString filename )
+{
+    const wxString url = m_weatherfax_pi.m_UpdateDataBaseUrl + filename;
+    const wxString target_filename = m_weatherfax_pi.StandardPath() + filename;
+    const wxString tmp_filename = wxFileName::CreateTempFileName( _T("weatherfax_") );
+    _OCPN_DLStatus res = OCPN_downloadFile( url, tmp_filename, _("WeatherFax Data update"),
+                                           _("Reading Headers: ") + url, wxNullBitmap, this,
+                                           OCPN_DLDS_CAN_PAUSE|OCPN_DLDS_CAN_ABORT|OCPN_DLDS_SHOW_ALL|OCPN_DLDS_AUTO_CLOSE, 10 );
+    
+    switch( res )
+    {
+        case OCPN_DL_NO_ERROR:
+            if( wxFileExists( target_filename ) )
+                wxRenameFile(target_filename, target_filename + _T(".bak"));
+            wxRenameFile(tmp_filename, target_filename);
+            break;
+        case OCPN_DL_FAILED:
+        {
+            wxMessageDialog mdlg(this, _("Failed to Download: ") +
+                                 url + _T("\n") +
+                                 _("Verify there is a working internet connection.") + _T("\n") +
+                                 _("If the url is incorrect please edit the xml and/or post a bug report."),
+                                 _("Weather Fax"), wxOK | wxICON_ERROR);
+            mdlg.ShowModal();
+            wxRemoveFile( filename );
+            return false;
+        }
+#ifdef __WXOSX__
+        case OCPN_DL_UNKNOWN:
+        case OCPN_DL_STARTED:
+        case OCPN_DL_USER_TIMEOUT:
+#endif
+        case OCPN_DL_ABORTED:
+            return false;
+    }
+    return true;
+}
 
+void WeatherFax::OnUpdateData( wxCommandEvent& event )
+{
+    if( DownloadFile( _T("WeatherFaxInternetRetrieval.xml") ) &&
+       DownloadFile( _T("CoordinateSets.xml") ) ) {
+        m_InternetRetrievalDialog.Load(true);
+    }
+    if( DownloadFile( _T("WeatherFaxSchedules.xml") ) ) {
+        m_SchedulesDialog.Load(true);
+    }
+    
+}
+#endif
 bool WeatherFax::Show( bool show )
 {
     for(std::list<WeatherFaxWizard *>::iterator it = m_AudioWizards.begin();

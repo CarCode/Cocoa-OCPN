@@ -1,12 +1,11 @@
-/**************************************************************************
+/***************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -53,15 +52,16 @@ public:
     FaxDecoder(wxWindow &parent, wxString filename)
         : m_imgdata(NULL), m_imagewidth(-1),
         m_inputtype(NONE), datadouble(NULL),
-        m_SampleRate(0), m_parent(parent),
-        m_Filename(filename), sample(NULL), data(NULL), phasingPos(NULL) {}
+        m_SampleRate(0), m_DeviceIndex(0), m_Filename(filename),
+        m_parent(parent), sample(NULL), data(NULL), phasingPos(NULL) {}
     ~FaxDecoder() { FreeImage(); CleanUpBuffers(); }
 
     bool Configure(int imagewidth, int BitsPerPixel, int carrier,
                    int deviation, enum firfilter::Bandwidth bandwidth,
                    double minus_saturation_threshold,
                    bool bSkipHeaderDetection, bool bIncludeHeadersInImages,
-                   int SampleRate, bool reset);
+                   int SampleRate, int DeviceIndex, bool reset);
+    int DeviceCount();
 
     bool DecodeFaxFromFilename(wxString filename);
     bool DecodeFaxFromDSP();
@@ -88,7 +88,9 @@ public:
     double m_minus_saturation_threshold;
     enum InputType {NONE, FILENAME, DSP, PORTAUDIO} m_inputtype;
     double *datadouble;
-    int m_SampleRate;
+    int m_SampleRate, m_DeviceIndex;
+    
+    wxString m_Filename;
 
 private:
     wxWindow &m_parent;
@@ -102,7 +104,6 @@ private:
 
 #ifdef OCPN_USE_PORTAUDIO
     PaStream *pa_stream;
-//    int16_t *pa_data;
 #endif
 
     enum Header {IMAGE, START, STOP};
@@ -126,8 +127,6 @@ private:
     int m_StartFrequency, m_StopFrequency;
     int m_StartLength, m_StopLength;
     int m_phasingLines;
-
-    wxString m_Filename;
 
     /* internal state machine */
     wxInt16 *sample;

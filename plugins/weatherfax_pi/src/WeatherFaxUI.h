@@ -85,6 +85,9 @@ class WeatherFaxBase : public wxFrame
 		virtual void OnCapture( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSchedules( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnInternet( wxCommandEvent& event ) { event.Skip(); }
+#ifndef __WXOSX__
+        virtual void OnUpdateData( wxCommandEvent& event ) { event.Skip(); }
+#endif
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
 		
 	
@@ -161,8 +164,8 @@ class SchedulesDialogBase : public wxDialog
 		
 	
 	public:
-		
-		SchedulesDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("HF Radio Schedules"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER ); 
+
+    SchedulesDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("HF Radio Schedules"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER );
 		~SchedulesDialogBase();
 	
 };
@@ -212,8 +215,8 @@ class InternetRetrievalDialogBase : public wxDialog
 		
 	
 	public:
-		
-		InternetRetrievalDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Internet Retrieval"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 680,480 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+
+        InternetRetrievalDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Internet Retrieval"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 680,480 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 		~InternetRetrievalDialogBase();
 		
 		void m_splitter1OnIdle( wxIdleEvent& )
@@ -333,8 +336,8 @@ class WeatherFaxWizardBase : public wxWizard
 	
 	public:
 		wxFlexGridSizer* m_fgSizer434;
-		
-		WeatherFaxWizardBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Weather Fax Image"), const wxBitmap& bitmap = wxNullBitmap, const wxPoint& pos = wxDefaultPosition, long style = wxCAPTION|wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER|wxSYSTEM_MENU );
+
+        WeatherFaxWizardBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Weather Fax Image"), const wxBitmap& bitmap = wxNullBitmap, const wxPoint& pos = wxDefaultPosition, long style = wxCAPTION|wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER|wxSYSTEM_MENU );
 		WizardPages m_pages;
 		~WeatherFaxWizardBase();
 	
@@ -384,6 +387,8 @@ class DecoderOptionsDialogBase : public wxDialog
 		wxStaticText* m_staticText41;
 		wxStaticText* m_staticText39;
 		wxChoice* m_cSampleRate;
+        wxStaticText* m_staticText42;
+        wxSpinCtrl* m_sDeviceIndex;
 		wxButton* m_bDone;
 		
 		// Virtual event handlers, overide them in your derived class
@@ -402,8 +407,8 @@ class DecoderOptionsDialogBase : public wxDialog
 		wxSpinCtrl* m_sMinusSaturationThreshold;
 		wxCheckBox* m_cbSkip;
 		wxCheckBox* m_cbInclude;
-		
-		DecoderOptionsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Fax Decoding Options"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
+
+        DecoderOptionsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Fax Decoding Options"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~DecoderOptionsDialogBase();
 	
 };
@@ -428,8 +433,8 @@ class AboutDialogBase : public wxDialog
 		
 	
 	public:
-		
-		AboutDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("About Weatherfax"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
+
+        AboutDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("About Weatherfax"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
 		~AboutDialogBase();
 	
 };

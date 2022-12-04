@@ -1,4 +1,4 @@
-/******************************************************************************
+/* **************************************************************************
  * $Id: vdr_pi.h, v0.2 2011/05/23 SethDart Exp $
  *
  * Project:  OpenCPN
@@ -6,8 +6,8 @@
  * Author:   Jean-Eudes Onfray
  *
  ***************************************************************************
- *   Copyright (C) 2011 by Jean-Eudes Onfray   *
- *   $EMAIL$   *
+ *   Copyright (C) 2011 by Jean-Eudes Onfray                               *
+ *   $EMAIL$                                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,8 +23,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #ifndef _VDRPI_H_
 #define _VDRPI_H_
@@ -45,7 +44,16 @@
 #include <wx/filepicker.h>
 #include <wx/file.h>
 #include <wx/aui/aui.h>
+//#include "../../../include/ocpn_plugin.h"
+// Load the ocpn_plugin. On OS X this generates many warnings, suppress these.
+#ifdef __WXOSX__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 #include "../../../include/ocpn_plugin.h"
+#ifdef __WXOSX__
+#pragma clang diagnostic pop
+#endif
 
 #define VDR_TOOL_POSITION -1          // Request default positioning of toolbar tool
 

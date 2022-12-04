@@ -43,7 +43,7 @@ private:
 	wxTextFile*		equipFile;
 	wxTextFile*		boatLayoutFile;
 	wxFile*			boatHTMLFile;
-	wxFile*			boatODTFile;
+//	wxFile*			boatODTFile;  //  Not used ????
 	wxString		data_locn;
 	wxString		equip_locn;
 	wxString		lay;

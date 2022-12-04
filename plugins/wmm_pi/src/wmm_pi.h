@@ -41,15 +41,24 @@
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    8
 
-#include "ocpn_plugin.h"
+//#include "ocpn_plugin.h"
+// Load the ocpn_plugin. On OS X this generates many warnings, suppress these.
+#ifdef __WXOSX__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
+#include "../../../include/ocpn_plugin.h"
+#ifdef __WXOSX__
+#pragma clang diagnostic pop
+#endif
 
 #include "GeomagnetismHeader.h"
 #include "EGM9615.h"
 #include "WmmUIDialog.h"
 #include "MagneticPlotMap.h"
 
-#include "jsonreader.h"
-#include "jsonwriter.h"
+#include "../../../include/wx/jsonreader.h"
+#include "../../../include/wx/jsonwriter.h"
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition

@@ -1,0 +1,171 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the JavaScript_pi package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: JavaScript_pi 20.01.01\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-06 10:59+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/functions.cpp:235
+msgid "CLOSE "
+msgstr ""
+
+#: ../src/functions.cpp:236
+msgid "DONE "
+msgstr ""
+
+#: ../src/functions.cpp:237
+msgid "HAD_ERROR "
+msgstr ""
+
+#: ../src/functions.cpp:238
+msgid "MORE "
+msgstr ""
+
+#: ../src/functions.cpp:239
+msgid "STOPPED "
+msgstr ""
+
+#: ../src/functions.cpp:240
+msgid "TOCHAIN "
+msgstr ""
+
+#: ../src/JavaScript_pi.cpp:267
+msgid "Run JavaScripts and interact with OpenCPN"
+msgstr ""
+
+#: ../src/JavaScript_pi.cpp:276
+msgid ""
+"Run JavaScript and interact with OpenCPN\n"
+"              v 0.6  24.01.2022"
+msgstr ""
+
+#: ../src/JavaScriptgui_impl.cpp:57
+msgid "File to load"
+msgstr ""
+
+#: ../src/JavaScriptgui_impl.cpp:90
+msgid "Saving your script"
+msgstr ""
+
+#: ../src/JavaScriptgui_impl.h:280
+msgid "Load file "
+msgstr ""
+
+#: ../src/JavaScriptgui_impl.h:280
+msgid "File does not exist"
+msgstr ""
+
+#: ../src/JavaScriptgui_impl.h:290
+msgid "print(\"Hello from the JavaScript plugin v"
+msgstr ""
+
+#: ../src/JavaScriptgui_impl.h:290
+msgid ""
+"\\n\");\n"
+"\"All OK\";"
+msgstr ""
+
+#: ../src/JavaScriptgui_impl.h:424
+msgid "Run"
+msgstr ""
+
+#: ../src/JavaScriptgui_impl.h:434
+msgid "script was stopped"
+msgstr ""
+
+#: ../src/JSExtensions.cpp:131
+msgid "JavaScript alert"
+msgstr ""
+
+#: ../src/JSExtensions.cpp:140
+msgid "Dismiss"
+msgstr ""
+
+#: ../src/ocpn_duk.h:21
+msgid "Error object with "
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:34
+msgid "Add a new console with name  "
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:63
+msgid "Add"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:88
+msgid "Consoles"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:100
+msgid "Current directory"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:112
+msgid "Change..."
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:129
+msgid "Will be directory string"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:152
+msgid ""
+"Receive an NMEA message into plugin         (will not be seen by OpenCPN)"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:183 ../src/toolsDialogGui.cpp:184
+#: ../src/toolsDialogGui.cpp:231
+msgid "Receive"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:204
+msgid ""
+"Receive an OPCN message into plugin         (will not be seen by OpenCPN)"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:214
+msgid "Message ID"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:245 ../src/toolsDialogGui.cpp:266
+msgid "Message"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:281
+msgid ""
+"For help using these functions, see the section âPreferences panel "
+"diagnostics tabâ  in the plugin technical guide."
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:297
+msgid "Plugin and consoles diagnostic information"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:327
+msgid "Clean and dump string"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:339
+msgid "Clean"
+msgstr ""
+
+#: ../src/toolsDialogGui.cpp:355
+msgid "Diagnostics"
+msgstr ""
+
+#: ../src/toolsDialogImp.cpp:65
+msgid "Console "
+msgstr ""

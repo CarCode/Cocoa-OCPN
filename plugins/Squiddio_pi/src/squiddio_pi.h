@@ -134,7 +134,17 @@ std::cout << x  << std::endl ; } while (0)
 #include <wx/aui/aui.h>
 #include <wx/aui/framemanager.h>
 
+//#include "../../../include/ocpn_plugin.h"
+// Load the ocpn_plugin. On OS X this generates many warnings, suppress these.
+#ifdef __WXOSX__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 #include "../../../include/ocpn_plugin.h"
+#ifdef __WXOSX__
+#pragma clang diagnostic pop
+#endif
+
 #include "icons.h"
 #include "Layer.h"
 #include "Hyperlink.h"

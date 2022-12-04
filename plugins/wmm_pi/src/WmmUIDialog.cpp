@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 // C++ code generated with wxFormBuilder (version Oct  8 2012)
 // http://www.wxformbuilder.org/
 //
@@ -8,6 +8,10 @@
 #include "WmmUIDialog.h"
 
 // /////////////////////////////////////////////////////////////////////////
+
+BEGIN_EVENT_TABLE ( WmmUIDialogBase, wxDialog )
+    EVT_CHAR_HOOK(WmmUIDialogBase::OnKey)
+END_EVENT_TABLE()
 
 WmmUIDialogBase::WmmUIDialogBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
@@ -261,7 +265,14 @@ WmmUIDialogBase::~WmmUIDialogBase()
 	// Disconnect Events
 	m_cbEnablePlot->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( WmmUIDialogBase::EnablePlotChanged ), NULL, this );
 	m_bPlotSettings->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( WmmUIDialogBase::PlotSettings ), NULL, this );
-	
+}
+
+void WmmUIDialogBase::OnKey( wxKeyEvent& ke )
+{
+    if ( ke.GetKeyCode() == WXK_ESCAPE )
+        Close( true );
+    else
+        ke.Skip();
 }
 
 WmmPrefsDialog::WmmPrefsDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )

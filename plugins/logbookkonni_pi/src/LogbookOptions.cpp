@@ -1,9 +1,9 @@
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 // C++ code generated with wxFormBuilder (version Sep  8 2010)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 
 #include "logbook_pi.h"
 #include "Logbook.h"
@@ -23,7 +23,7 @@
 #include "folder.xpm"
 using namespace std;
 
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi* log_pi, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->opt = opt;
@@ -927,62 +927,62 @@ LogbookOptions::LogbookOptions( wxWindow* parent, Options* opt, logbookkonni_pi*
 	fgSizer321->Add( 0, 40, 1, wxEXPAND, 5 );
 	fgSizer321->Add( 0, 0, 1, wxEXPAND, 5 );
 	fgSizer321->Add( 0, 0, 1, wxEXPAND, 5 );
-	
+
 	m_staticText761 = new wxStaticText( m_panel17, wxID_ANY, _("Path to ODT-Editor"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText761->Wrap( -1 );
 	fgSizer321->Add( m_staticText761, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_textCtrlODTEditor = new wxTextCtrl( m_panel17, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 420,-1 ), 0 );
 	m_textCtrlODTEditor->SetToolTip( _("to use MS-Word, append %s like this:\n\"C:\\yourPathToWinword\\WINWORD.EXE\" %s") );
 
 	fgSizer321->Add( m_textCtrlODTEditor, 0, wxALL|wxEXPAND, 5 );
-	
+
 	m_bpButtonODT = new wxBitmapButton( m_panel17, wxID_ANY, wxBitmap( folder ), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
 	fgSizer321->Add( m_bpButtonODT, 0, wxALL|wxALIGN_CENTER_VERTICAL, 0 );
-	
+
 	m_staticText77 = new wxStaticText( m_panel17, wxID_ANY, _("Path to Datamanager"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText77->Wrap( -1 );
 	fgSizer321->Add( m_staticText77, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-    
+
 #ifdef __WXOSX__
     m_textCtrlDataManager = new wxTextCtrl( m_panel17, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 420,-1 ), 0 );
 #else
 	m_textCtrlDataManager = new wxTextCtrl( m_panel17, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0 );
 #endif
 	fgSizer321->Add( m_textCtrlDataManager, 0, wxALL|wxEXPAND, 5 );
-	
+
 	m_bpButtonDatamanager = new wxBitmapButton( m_panel17, wxID_ANY, wxBitmap( folder ), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
 	fgSizer321->Add( m_bpButtonDatamanager, 0, wxALL|wxALIGN_CENTER_VERTICAL, 0 );
-	
+
 	m_staticText78 = new wxStaticText( m_panel17, wxID_ANY, _("Path to MailClient"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText78->Wrap( -1 );
 	fgSizer321->Add( m_staticText78, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 #ifdef __WXOSX__
     m_textCtrlMailClient = new wxTextCtrl( m_panel17, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 420,-1 ), 0 );
 #else
 	m_textCtrlMailClient = new wxTextCtrl( m_panel17, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0 );
 #endif
 	fgSizer321->Add( m_textCtrlMailClient, 0, wxALL|wxEXPAND, 5 );
-	
+
 	m_bpButtonMail = new wxBitmapButton( m_panel17, wxID_ANY, wxBitmap( folder ), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
 	fgSizer321->Add( m_bpButtonMail, 0, wxALL|wxALIGN_CENTER_VERTICAL, 0 );
-	
+
 	m_staticText79 = new wxStaticText( m_panel17, wxID_ANY, _("Path to HTML-Editor\n(optional)"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText79->Wrap( -1 );
 	fgSizer321->Add( m_staticText79, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_textCtrlHTMLEditorPath = new wxTextCtrl( m_panel17, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 420,-1 ), 0 );
 	fgSizer321->Add( m_textCtrlHTMLEditorPath, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
+
 	m_bpButtonHTMLEditor = new wxBitmapButton( m_panel17, wxID_ANY, wxBitmap( folder ), wxDefaultPosition, wxDefaultSize, wxBU_AUTODRAW );
 	fgSizer321->Add( m_bpButtonHTMLEditor, 0, wxALL|wxALIGN_CENTER_VERTICAL, 0 );
-	
+
 	fgSizer322->Add( fgSizer321, 1, wxEXPAND, 5 );
-	
+
 	m_buttonResetPath = new wxButton( m_panel17, wxID_ANY, _("Reset Paths"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer322->Add( m_buttonResetPath, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
-	
+
 	m_panel17->SetSizer( fgSizer322 );
 	m_panel17->Layout();
 	fgSizer322->Fit( m_panel17 );

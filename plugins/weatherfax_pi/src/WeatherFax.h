@@ -5,8 +5,7 @@
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -86,6 +85,9 @@ public:
     void OnCapture( wxCommandEvent& event );
     void OnSchedules( wxCommandEvent& event );
     void OnInternet( wxCommandEvent& event );
+#ifndef __WXOSX__
+    void OnUpdateData( wxCommandEvent& event );
+#endif
     void OnAbout( wxCommandEvent& event );
 
     bool Show( bool show = true );
@@ -111,6 +113,10 @@ protected:
     wxTimer m_tDeleteAudioWizard;
 
     weatherfax_pi &m_weatherfax_pi;
+#ifndef __WXOSX__
+private:
+    bool DownloadFile( wxString filename );
+#endif
 };
 
 class FaxDecoder;

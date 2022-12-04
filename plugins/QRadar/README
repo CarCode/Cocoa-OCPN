@@ -1,5 +1,0 @@
-This program will connect to Lowrance and Simrad 3G and 4G radar antennas. And will show the radar image on the screen. It also contains buttons to change zoomlevels and filters however not every filter are implemented yet. It also contains a little http server that outputs a radar image to be used with other devices like android/iphone and so fourth.  
-
-
-@TODO
-Add arpa to track objects 

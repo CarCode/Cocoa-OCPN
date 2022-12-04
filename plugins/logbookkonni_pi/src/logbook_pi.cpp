@@ -781,6 +781,7 @@ void logbookkonni_pi::ShowPreferencesDialog( wxWindow* parent )
         }
         SaveConfig();
     }
+    delete optionsDialog;
 }
 
 void logbookkonni_pi::OnToolbarToolCallback(int id)

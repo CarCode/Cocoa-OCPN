@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  * $Id: logbookkonni_pi.h,v 1.8 2010/06/21 01:54:37 bdbcat Exp $
  *
  * Project:  OpenCPN
@@ -41,7 +41,17 @@
 #define     MY_API_VERSION_MINOR    7
 
 
+//#include "../../../include/ocpn_plugin.h"
+// Load the ocpn_plugin. On OS X this generates many warnings, suppress these.
+#ifdef __WXOSX__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 #include "../../../include/ocpn_plugin.h"
+#ifdef __WXOSX__
+#pragma clang diagnostic pop
+#endif
+
 #include "Options.h"
 #include "../../../src/nmea0183/nmea0183.h"
 

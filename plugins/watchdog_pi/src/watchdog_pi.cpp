@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  watchdog Plugin
@@ -27,6 +27,11 @@
 #include <wx/stdpaths.h>
 
 #include "../../../include/wx/jsonreader.h"
+
+#ifdef __WXOSX__
+#include "../../../include/GL/gl.h"
+#include "../../../include/GL/glu.h"
+#endif
 
 #include "wddc.h"
 
@@ -133,11 +138,16 @@ int watchdog_pi::Init(void)
     AddLocaleCatalog( _T("opencpn-watchdog_pi") );
     
     Alarm::LoadConfigAll();
-    
+
+#ifndef wxUSE_SVG  //  SVG kriege ich immer noch nicht hin
+    m_leftclick_tool_id = InsertPlugInToolSVG( "Watchdog" , _svg_watchdog, _svg_watchdog,
+                                              _svg_watchdog, wxITEM_CHECK, _("Watchdog"), _T(""), NULL, WATCHDOG_TOOL_POSITION, 0, this);
+#else
     m_leftclick_tool_id  = InsertPlugInTool
     (_T(""), _img_watchdog, _img_watchdog, wxITEM_NORMAL,
      _("Watchdog"), _T(""), NULL, WATCHDOG_TOOL_POSITION, 0, this);
-    
+#endif
+
     m_WatchdogDialog = NULL;
     m_ConfigurationDialog = NULL;
     m_Timer.Connect(wxEVT_TIMER, wxTimerEventHandler
@@ -350,7 +360,7 @@ void watchdog_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix)
 {
     if(pfix.FixTime && pfix.nSats)
         m_LastFixTime = wxDateTime::Now();
-    
+
     m_lastfix = pfix;
 }
 
@@ -532,7 +542,7 @@ wxString watchdog_pi::StandardPath()
 {
     wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
     wxString s = wxFileName::GetPathSeparator();
-    
+
 #ifdef __WXMSW__
     wxString stdPath  = std_path.GetConfigDir();
 #endif
@@ -542,13 +552,13 @@ wxString watchdog_pi::StandardPath()
 #ifdef __WXOSX__
     wxString stdPath  = (std_path.GetUserConfigDir() + s + _T("opencpn"));
 #endif
-    
+
     stdPath += s + _T("plugins");
     if (!wxDirExists(stdPath))
         wxMkdir(stdPath);
-    
+
     stdPath += s + _T("watchdog");
-    
+
 #ifdef __WXOSX__
     // Compatibility with pre-OCPN-4.2; move config dir to
     // ~/Library/Preferences/opencpn if it exists
@@ -558,10 +568,10 @@ wxString watchdog_pi::StandardPath()
         wxRenameFile(oldPath, stdPath);
     }
 #endif
-    
+
     if (!wxDirExists(stdPath))
         wxMkdir(stdPath);
-    
+
     stdPath += s; // is this necessary?
     return stdPath;
 }

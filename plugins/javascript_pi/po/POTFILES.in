@@ -1,0 +1,17 @@
+../src/functions.cpp
+../src/JavaScript_pi.cpp
+../src/JavaScript_pi.h
+../src/duktape.cpp
+../src/duktape.h
+../src/JavaScriptgui_impl.cpp
+../src/JavaScriptgui_impl.h
+../src/JavaScriptgui.cpp
+../src/JavaScriptgui.h
+../src/JSdialog.cpp
+../src/JSExtensions.cpp
+../src/ocpn_duk.h
+../src/OPCNapis.cpp
+../src/toolsDialogGui.cpp
+../src/toolsDialogGui.h
+../src/toolsDialogImp.cpp
+../src/toolsDialogImp.h

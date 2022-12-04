@@ -1,7 +1,0 @@
-#
-# See http://clang.llvm.org/docs/ClangFormatStyleOptions.html
-#
-BasedOnStyle:                                   Google
-PenaltyBreakString:                             999999999
-ColumnLimit:                                    132
-

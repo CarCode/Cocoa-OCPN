@@ -10,11 +10,13 @@
 extern void initialize_images(void);
 
 extern wxBitmap *_img_active;
-extern wxBitmap *_img_activewpt;
-extern wxBitmap *_img_inactive;
-extern wxBitmap *_img_setting;
 extern wxBitmap *_img_target;
-extern wxBitmap *_img_targetwpt;
 extern wxBitmap *_img_toggled;
+
+#ifdef navdata_USE_SVG
+extern wxString _svg_navdata;
+extern wxString _svg_navdata_rollover;
+extern wxString _svg_navdata_toggled;
+#endif
 
 #endif /* ICONS_H */

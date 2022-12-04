@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  watchdog Plugin
@@ -90,7 +90,7 @@ WatchdogDialog::WatchdogDialog( watchdog_pi &_watchdog_pi, wxWindow* parent)
     : WatchdogDialogBase( parent ), m_watchdog_pi(_watchdog_pi)
 {
     wxFileConfig *pConf = GetOCPNConfigObject();
-    
+
     pConf->SetPath ( _T( "/Settings/Watchdog" ) );
 
 #ifdef __WXGTK__
@@ -119,12 +119,11 @@ WatchdogDialog::~WatchdogDialog()
 {
     wxFileConfig *pConf = GetOCPNConfigObject();
     pConf->SetPath ( _T ( "/Settings/Watchdog" ) );
-    
+
     wxPoint p = GetPosition();
-    
+
     pConf->Write ( _T ( "DialogPosX" ), p.x );
     pConf->Write ( _T ( "DialogPosY" ), p.y );
-
 }
 
 void WatchdogDialog::UpdateAlarms()
@@ -133,13 +132,12 @@ void WatchdogDialog::UpdateAlarms()
         wxListItem item;
         m_lStatus->InsertItem(0, item);
     }
-    
+
     while(m_lStatus->GetItemCount() > (int)Alarm::s_Alarms.size())
         m_lStatus->DeleteItem(0);
-    
+
     for(unsigned int i=0; i<Alarm::s_Alarms.size(); i++)
         UpdateStatus(i);
-
 }
 
 void WatchdogDialog::UpdateStatus(int index)
@@ -154,7 +152,6 @@ void WatchdogDialog::UpdateStatus(int index)
     m_lStatus->SetItem(index, ALARM_STATUS, alarm->GetStatus());
     m_lStatus->SetItemTextColour(index, alarm->m_bFired ? *wxRED: *wxBLACK);
     m_lStatus->SetColumnWidth(ALARM_STATUS, wxLIST_AUTOSIZE);
-
 }
 
 void WatchdogDialog::OnLeftDown( wxMouseEvent& event )
@@ -167,7 +164,7 @@ void WatchdogDialog::OnLeftDown( wxMouseEvent& event )
     long index = m_lStatus->HitTest(pos, flags);
     if(index < 0)
         return;
-    
+
     Alarm *alarm = Alarm::s_Alarms[index];
     alarm->m_bEnabled = !alarm->m_bEnabled;
     if(!alarm->m_bEnabled) {
@@ -181,13 +178,13 @@ void WatchdogDialog::OnDoubleClick( wxMouseEvent& event )
 {
     if(event.GetX() < m_lStatus->GetColumnWidth(0))
         return;
-    
+
     wxPoint pos = event.GetPosition();
     int flags = 0;
     long index = m_lStatus->HitTest(pos, flags);
     if(index < 0)
         return;
-    
+
     Alarm *alarm = Alarm::s_Alarms[index];
     EditAlarmDialog dlg(this, alarm);
     if(dlg.ShowModal() == wxID_OK)

@@ -1,12 +1,11 @@
-/******************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
  * Author:   Sean D'Epagnier, based on imgkap.c by M'dJ
  *
  ***************************************************************************
- *   Copyright (C) 2013 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,8 +21,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #define VERS   "1.0b"
 
@@ -389,9 +387,11 @@ static void HistReduceLevel(reduce *r, histogram *h, int level)
                 uint64_t c,cc;
 
                 c = r->count; cc = c >> 1 ;
+                if(c>0){
                 pixel.q.rgbRed = (uint8_t)((r->red + cc) / c);
                 pixel.q.rgbGreen = (uint8_t)((r->green + cc) / c);
                 pixel.q.rgbBlue = (uint8_t)((r->blue + cc) / c);
+                }
                 pixel.q.rgbReserved = 0;
 
                 e = HistAddColor(r->h,pixel);
@@ -579,7 +579,7 @@ int bsb_compress_row(const uint8_t *buf_in, uint8_t *buf_out, uint16_t bits_out,
     /*      write the line number */
     ibuf = bsb_compress_nb(buf_out,line,0,0x7F);
 
- 	ipixelin = ipixelout = 0;
+    ipixelin = ipixelout = 0;
 
 	while ( ipixelin < widthin )
 	{
@@ -701,7 +701,7 @@ int bsb_uncompress_row(int typein, FILE *in, uint8_t *buf_out, uint16_t bits_in,
 static void read_line(uint8_t *in, uint16_t bits, int width, uint8_t *colors, histogram *hist, uint8_t *out)
 {
     int i;
-    uint8_t c;
+    uint8_t c = 0;
 
     switch (bits)
     {
@@ -738,8 +738,13 @@ static void read_line(uint8_t *in, uint16_t bits, int width, uint8_t *colors, hi
 //                    c = HistGetColorNum(hist, cur);  // Not used
                     c = colors[HistGetColorNum(hist, cur)];  // What for?
                     last = cur;
+#ifdef __WXOSX__
+                    out[i] = c;
+                }
+#else
                 }
                 out[i] = c;
+#endif
                 in += 3;
             }
         }
@@ -866,8 +871,7 @@ static int writewximgkap(FILE *out, wxImage &img, uint16_t widthout, uint16_t he
         if (cur != last)
         {
             last = cur;
-            read_line(img.GetData() + /*(heightin-cur-1)*/cur*widthin*3,
-                      bits_in, widthin, colors, hist,buf_in);
+            read_line(img.GetData() + /*(heightin-cur-1)*/ cur*widthin*3, bits_in, widthin, colors, hist, buf_in);
         }
         
         /* Compress raster and write to BSB file */
@@ -896,8 +900,8 @@ static int writewximgkap(FILE *out, wxImage &img, uint16_t widthout, uint16_t he
 
 int wximgtokap(WeatherFaxImage &image, int colors, int units, const char *sd, const char *fileout)
 {
-    uint16_t    dpi,widthout,heightout;
-    uint32_t    widthin,heightin;
+    uint16_t    dpi,widthout,heightout;  // unsigned short
+    uint32_t    widthin,heightin;        // unsigned int
     double      scale;
     double dx,dy ;
     char        datej[20];

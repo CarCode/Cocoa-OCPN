@@ -1,12 +1,11 @@
-/**************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
  * Author:   Sean D'Epagnier
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Sean D'Epagnier                                 *
- *   sean at depagnier dot com                                             *
+ *   Copyright (C) 2015 by Sean D'Epagnier                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -45,6 +44,8 @@ struct FaxUrl
     wxString area_name;
 
     FaxArea Area;
+
+    int hour_offset, hour_round, hour_round_offset;
 };
 
 struct FaxRegion
@@ -71,8 +72,11 @@ public:
 
     InternetRetrievalDialog( weatherfax_pi &_weatherfax_pi, wxWindow* parent);
     ~InternetRetrievalDialog();
-
+#ifdef __WXOSX__
     void Load();
+#else
+    void Load(bool force = false);
+#endif
     void ClearInternetRetrieval();
     bool OpenXML(wxString filename);
 

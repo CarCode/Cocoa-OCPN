@@ -1,9 +1,9 @@
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 // C++ code generated with wxFormBuilder (version Oct  8 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 
 #ifndef __WATCHDOGUI_H__
 #define __WATCHDOGUI_H__
@@ -33,40 +33,40 @@
 #include <wx/slider.h>
 #include <wx/choice.h>
 
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class WatchdogDialogBase
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class WatchdogDialogBase
+// /////////////////////////////////////////////////////////////////////////////
 class WatchdogDialogBase : public wxDialog 
 {
-	private:
+private:
 
-	protected:
-        wxListCtrl* m_lStatus;
-        wxButton* m_bConfiguration;
-		wxButton* m_bReset;
-		wxButton* m_bClose;
+protected:
+    wxListCtrl* m_lStatus;
+    wxButton* m_bConfiguration;
+    wxButton* m_bReset;
+    wxButton* m_bClose;
 
-		// Virtual event handlers, overide them in your derived class
-        virtual void OnDoubleClick( wxMouseEvent& event ) { event.Skip(); }
-        virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
-        virtual void OnConfiguration( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnReset( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnClose( wxCommandEvent& event ) { event.Skip(); }
+    // Virtual event handlers, overide them in your derived class
+    virtual void OnDoubleClick( wxMouseEvent& event ) { event.Skip(); }
+    virtual void OnLeftDown( wxMouseEvent& event ) { event.Skip(); }
+    virtual void OnConfiguration( wxCommandEvent& event ) { event.Skip(); }
+    virtual void OnReset( wxCommandEvent& event ) { event.Skip(); }
+    virtual void OnClose( wxCommandEvent& event ) { event.Skip(); }
 
 
-	public:
+public:
 
     WatchdogDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("WatchDog"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxTAB_TRAVERSAL );
-		~WatchdogDialogBase();
+    ~WatchdogDialogBase();
 
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class ConfigurationDialogBase
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class ConfigurationDialogBase
+// /////////////////////////////////////////////////////////////////////////////
 class ConfigurationDialogBase : public wxDialog
 {
 private:
@@ -95,17 +95,15 @@ protected:
     virtual void AlarmSelected( wxListEvent& event ) { event.Skip(); }
     virtual void OnAboutAuthor( wxCommandEvent& event ) { event.Skip(); }
 
-
 public:
-
-    ConfigurationDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Watchdog Configuration"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+    ConfigurationDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Watchdog Configuration"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,-1 ), long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
     ~ConfigurationDialogBase();
 
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class NewAlarmDialogBase
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class NewAlarmDialogBase
+// /////////////////////////////////////////////////////////////////////////////
 class NewAlarmDialogBase : public wxDialog
 {
 private:
@@ -118,7 +116,6 @@ protected:
     // Virtual event handlers, overide them in your derived class
     virtual void OnDoubleClick( wxMouseEvent& event ) { event.Skip(); }
 
-
 public:
     wxListCtrl* m_lAlarmType;
 
@@ -127,9 +124,9 @@ public:
 
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class EditAlarmDialogBase
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class EditAlarmDialogBase
+// /////////////////////////////////////////////////////////////////////////////
 class EditAlarmDialogBase : public wxDialog
 {
 private:
@@ -148,7 +145,6 @@ protected:
     virtual void OnTestAlarm( wxCommandEvent& event ) { event.Skip(); }
     virtual void OnInformation( wxCommandEvent& event ) { event.Skip(); }
 
-
 public:
     wxCheckBox* m_cbSound;
     wxFilePickerCtrl* m_fpSound;
@@ -160,21 +156,20 @@ public:
 
     EditAlarmDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Edit Alarm"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP );
     ~EditAlarmDialogBase();
-
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class LandFallPanel
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class LandFallPanel
+// /////////////////////////////////////////////////////////////////////////////
 class LandFallPanel : public wxPanel 
 {
 private:
 
 protected:
-		wxStaticText* m_staticText30;
-		wxStaticText* m_staticText7;
-		wxStaticText* m_staticText39122;
-        wxStaticText* m_staticText45;
+    wxStaticText* m_staticText30;
+    wxStaticText* m_staticText7;
+    wxStaticText* m_staticText39122;
+    wxStaticText* m_staticText45;
 
 public:
     wxRadioButton* m_rbTime;
@@ -182,14 +177,13 @@ public:
     wxRadioButton* m_rbDistance;
     wxTextCtrl* m_tDistance;
 
-    LandFallPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+    LandFallPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,-1 ), long style = wxTAB_TRAVERSAL );
     ~LandFallPanel();
-
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class BoundaryPanel
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class BoundaryPanel
+// /////////////////////////////////////////////////////////////////////////////
 class BoundaryPanel : public wxPanel
 {
 private:
@@ -222,69 +216,65 @@ public:
     wxTextCtrl* m_tGuardZoneGUID;
     wxSlider* m_sliderCheckFrequency;
 
-    BoundaryPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+    BoundaryPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,-1 ), long style = wxTAB_TRAVERSAL );
     ~BoundaryPanel();
-    
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class NMEADataPanel
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class NMEADataPanel
+// /////////////////////////////////////////////////////////////////////////////
 class NMEADataPanel : public wxPanel
 {
 private:
 
 protected:
-		wxStaticText* m_staticText34;
-		wxStaticText* m_staticText35;
-		wxStaticText* m_staticText13;
+    wxStaticText* m_staticText34;
+    wxStaticText* m_staticText35;
+    wxStaticText* m_staticText13;
 
 public:
     wxTextCtrl* m_tSentences;
     wxSpinCtrl* m_sSeconds;
 
-    NMEADataPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+    NMEADataPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,-1 ), long style = wxTAB_TRAVERSAL );
     ~NMEADataPanel();
-
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class DeadmanPanel
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class DeadmanPanel
+// /////////////////////////////////////////////////////////////////////////////
 class DeadmanPanel : public wxPanel
 {
 private:
 
 protected:
-		wxStaticText* m_staticText33;
-		wxStaticText* m_staticText6;
+    wxStaticText* m_staticText33;
+    wxStaticText* m_staticText6;
 
 public:
     wxSpinCtrl* m_sMinutes;
 
-    DeadmanPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+    DeadmanPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,-1 ), long style = wxTAB_TRAVERSAL );
     ~DeadmanPanel();
-
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class AnchorPanel
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class AnchorPanel
+// /////////////////////////////////////////////////////////////////////////////
 class AnchorPanel : public wxPanel
 {
 private:
 
 protected:
-		wxStaticText* m_staticText71;
-		wxStaticText* m_staticText8;
-		wxButton* m_bSyncToBoat;
-		wxStaticText* m_staticText9;
-		wxStaticText* m_staticText39;
-		wxStaticText* m_staticText39121;
+    wxStaticText* m_staticText71;
+    wxStaticText* m_staticText8;
+    wxButton* m_bSyncToBoat;
+    wxStaticText* m_staticText9;
+    wxStaticText* m_staticText39;
+    wxStaticText* m_staticText39121;
 
     // Virtual event handlers, overide them in your derived class
     void OnSyncToBoat( wxCommandEvent& event );
-
 
 public:
     wxTextCtrl* m_tLatitude;
@@ -292,43 +282,40 @@ public:
     wxSpinCtrl* m_sRadius;
     wxCheckBox* m_cbAutoSync;
 
-    AnchorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+    AnchorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,-1 ), long style = wxTAB_TRAVERSAL );
     ~AnchorPanel();
-
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class CoursePanel
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class CoursePanel
+// /////////////////////////////////////////////////////////////////////////////
 class CoursePanel : public wxPanel
 {
 private:
 
 protected:
     wxStaticText* m_staticText50;
-		wxStaticText* m_staticText32;
-		wxStaticText* m_staticText18;
-		wxStaticText* m_staticText21;
-		wxButton* m_bCurrentCourse;
-		wxStaticText* m_staticText3912;
-		
-		// Virtual event handlers, overide them in your derived class
-        void OnCurrentCourse( wxCommandEvent& event );
+    wxStaticText* m_staticText32;
+    wxStaticText* m_staticText18;
+    wxStaticText* m_staticText21;
+    wxButton* m_bCurrentCourse;
+    wxStaticText* m_staticText3912;
 
+    // Virtual event handlers, overide them in your derived class
+    void OnCurrentCourse( wxCommandEvent& event );
 
-	public:
-        wxChoice* m_cMode;
-        wxSpinCtrl* m_sTolerance;
-		wxSpinCtrl* m_sCourse;
+public:
+    wxChoice* m_cMode;
+    wxSpinCtrl* m_sTolerance;
+    wxSpinCtrl* m_sCourse;
 
-    CoursePanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+    CoursePanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,-1 ), long style = wxTAB_TRAVERSAL );
     ~CoursePanel();
-
 };
 
-///////////////////////////////////////////////////////////////////////////////
-/// Class SpeedPanel
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
+// / Class SpeedPanel
+// /////////////////////////////////////////////////////////////////////////////
 class SpeedPanel : public wxPanel
 {
 private:
@@ -345,9 +332,8 @@ public:
     wxTextCtrl* m_tSpeed;
     wxSlider* m_sliderSOGAverageNumber;
 
-    SpeedPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxTAB_TRAVERSAL );
+    SpeedPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,-1 ), long style = wxTAB_TRAVERSAL );
     ~SpeedPanel();
-	
 };
 
 #endif //__WATCHDOGUI_H__

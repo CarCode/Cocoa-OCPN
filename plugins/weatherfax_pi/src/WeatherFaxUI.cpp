@@ -1,13 +1,13 @@
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 // C++ code generated with wxFormBuilder (version Oct  8 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 
 #include "WeatherFaxUI.h"
 
-///////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////
 
 WeatherFaxBase::WeatherFaxBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
@@ -111,7 +111,13 @@ WeatherFaxBase::WeatherFaxBase( wxWindow* parent, wxWindowID id, const wxString&
 	wxMenuItem* m_menuItem6;
 	m_menuItem6 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("&Internet") ) + wxT('\t') + wxT("ctrl+i"), wxEmptyString, wxITEM_NORMAL );
 	m_menu2->Append( m_menuItem6 );
-	
+#ifndef __WXOSX__
+    m_menu2->AppendSeparator();
+
+    wxMenuItem* m_menuItemUpdate;
+    m_menuItemUpdate = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("&Update data sources") ) + wxT('\t') + wxT("ctrl+u"), wxEmptyString, wxITEM_NORMAL );
+    m_menu2->Append( m_menuItemUpdate );
+#endif
 	m_menubar1->Append( m_menu2, _("&Retrieve") ); 
 	
 	m_menu3 = new wxMenu();
@@ -160,6 +166,9 @@ WeatherFaxBase::WeatherFaxBase( wxWindow* parent, wxWindowID id, const wxString&
 	this->Connect( m_menuItem5->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( WeatherFaxBase::OnSchedules ) );
 	this->Connect( m_menuItem6->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( WeatherFaxBase::OnInternet ) );
 	this->Connect( m_menuItem7->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( WeatherFaxBase::OnAbout ) );
+#ifndef __WXOSX__
+    this->Connect( m_menuItemUpdate->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( WeatherFaxBase::OnUpdateData ) );
+#endif
 }
 
 WeatherFaxBase::~WeatherFaxBase()
@@ -198,7 +207,9 @@ WeatherFaxBase::~WeatherFaxBase()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( WeatherFaxBase::OnSchedules ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( WeatherFaxBase::OnInternet ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( WeatherFaxBase::OnAbout ) );
-	
+#ifndef __WXOSX__
+    this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( WeatherFaxBase::OnUpdateData ) );
+#endif
 }
 
 SchedulesDialogBase::SchedulesDialogBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
@@ -1583,7 +1594,13 @@ DecoderOptionsDialogBase::DecoderOptionsDialogBase( wxWindow* parent, wxWindowID
 	m_cSampleRate->SetSelection( 0 );
 	fgSizer58->Add( m_cSampleRate, 0, wxALL, 5 );
 	
-	
+    m_staticText42 = new wxStaticText( this, wxID_ANY, _("Device Index"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_staticText42->Wrap( -1 );
+    fgSizer58->Add( m_staticText42, 0, wxALL, 5 );
+    
+    m_sDeviceIndex = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, -1, 10, 0 );
+    fgSizer58->Add( m_sDeviceIndex, 0, wxALL, 5 );
+
 	sbSizer19->Add( fgSizer58, 1, wxEXPAND, 5 );
 	
 	

@@ -1,4 +1,4 @@
-﻿#ifndef WX_PRECOMP
+#ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
 
@@ -1328,6 +1328,9 @@ void Logbook::convertTo_1_2()
 		l++;
 		*out << s+_T("\n");
 	}
+#ifdef __WXOSX__
+    delete out;
+#endif
 	stream2.Close();
 	if(b)
 	{

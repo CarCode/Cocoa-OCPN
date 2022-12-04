@@ -1,4 +1,4 @@
-/**************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  weather fax Plugin
@@ -22,6 +22,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************/
+
+#include <wx/stdpaths.h>
 
 #include "weatherfax_pi.h"
 #include "WeatherFaxImage.h"
@@ -62,11 +64,32 @@ weatherfax_pi::weatherfax_pi(void *ppimgr)
 int weatherfax_pi::Init(void)
 {
     AddLocaleCatalog( _T("opencpn-weatherfax_pi") );
+//#if (wxUSE_SVG)
+#ifdef __WXOSX__
+    wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
+    wxString shareLocn  = std_path.GetUserConfigDir();   // should be ~/Library/Preferences
+    shareLocn.Append(_T("/opencpn/plugins/weatherfax/data/"));
+#else
+    wxString shareLocn = *GetpSharedDataLocation() +
+    _T("plugins") + wxFileName::GetPathSeparator() +
+    _T("weatherfax") + wxFileName::GetPathSeparator()
+    + _T("data") + wxFileName::GetPathSeparator();
+#endif
+//    wxString normalIcon = shareLocn + _T("weatherfax.svg");
+    //  For journeyman styles, we prefer the built-in raster icons which match the rest of the toolbar.
+//    if (GetActiveStyleName().Lower() != _T("traditional")){
+//        normalIcon = _T("");
+//    }
+
+//    wxLogMessage(normalIcon);
+//    m_leftclick_tool_id = InsertPlugInToolSVG(_T(""), normalIcon, normalIcon, normalIcon,wxITEM_CHECK,
+//                                              _("WeatherFax"), _T(""), NULL, WEATHERFAX_TOOL_POSITION, 0, this);
+//#else
     m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_weatherfax,
                                             _img_weatherfax, wxITEM_NORMAL,
                                             _("WeatherFax"), _T(""), NULL,
                                             WEATHERFAX_TOOL_POSITION, 0, this);
-
+//#endif
     m_pWeatherFax = NULL;
 
     return (WANTS_OVERLAY_CALLBACK |
@@ -299,7 +322,10 @@ bool weatherfax_pi::SaveConfig(void)
     pConf->Write ( _T ( "Colors" ), m_iExportColors );
     pConf->Write ( _T ( "DepthMeters" ), m_bExportDepthMeters );
     pConf->Write ( _T ( "SoundingDatum" ), m_sExportSoundingDatum );
-
+#ifndef __WXOSX__
+    pConf->SetPath ( _T ( "/Settings/WeatherFax/Updates" ) );
+    pConf->Read( _T("UpdateDataBaseUrl"), &m_UpdateDataBaseUrl, _T("https://raw.githubusercontent.com/seandepagnier/weatherfax_pi/master/data/") );
+#endif
     return true;
 }
 

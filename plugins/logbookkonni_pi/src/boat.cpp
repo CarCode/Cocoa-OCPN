@@ -25,215 +25,211 @@ using namespace std;
 
 Boat::Boat( LogbookDialog* d, wxString data, wxString lay, wxString layoutODT )
 {
-	parent = d;
-	modified = false;
-	this->layout = lay;
-	this->ODTLayout = layoutODT;
+    parent = d;
+    modified = false;
+    this->layout = lay;
+    this->ODTLayout = layoutODT;
 
-	createFiles(data,lay);
-	createTextCtrlConnections();
-	createStaticTextList();
+    createFiles(data,lay);
+    createTextCtrlConnections();
+    createStaticTextList();
 }
 
 Boat::~Boat( void )
 {
-	saveData();
-	for(unsigned int i = 0; i < ctrl.GetCount(); i++)
-	{
-		if(ctrl[i]->IsKindOf(CLASSINFO(wxTextCtrl)))
-		{
-			ctrl[i]->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, 
-				wxCommandEventHandler(LogbookDialog::boatNameOnTextEnter),NULL,parent );
-		}
-	}
+    saveData();
+    for(unsigned int i = 0; i < ctrl.GetCount(); i++)
+    {
+        if(ctrl[i]->IsKindOf(CLASSINFO(wxTextCtrl)))
+        {
+            ctrl[i]->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(LogbookDialog::boatNameOnTextEnter),NULL,parent );
+        }
+    }
 
 }
 
 void Boat::setLayoutLocation(wxString loc)
 {
-	bool radio = parent->m_radioBtnHTMLBoat->GetValue();
-	if(radio)
-		layout_locn = layout;
-	else
-		layout_locn = ODTLayout;
-	wxString boatLay = layout_locn;
+    bool radio = parent->m_radioBtnHTMLBoat->GetValue();
+    if(radio)
+        layout_locn = layout;
+    else
+        layout_locn = ODTLayout;
+    wxString boatLay = layout_locn;
 
-	layout_locn.Append(_T("boat"));
-	parent->appendOSDirSlash(&layout_locn);
+    layout_locn.Append(_T("boat"));
+    parent->appendOSDirSlash(&layout_locn);
 
-	parent->loadLayoutChoice(LogbookDialog::BOAT,layout_locn,parent->boatChoice,parent->logbookPlugIn->opt->layoutPrefix[LogbookDialog::BOAT]);
-	if(radio)
-		parent->boatChoice->SetSelection(parent->logbookPlugIn->opt->boatGridLayoutChoice);
-	else
-		parent->boatChoice->SetSelection(parent->logbookPlugIn->opt->boatGridLayoutChoiceODT);
+    parent->loadLayoutChoice(LogbookDialog::BOAT,layout_locn,parent->boatChoice,parent->logbookPlugIn->opt->layoutPrefix[LogbookDialog::BOAT]);
+    if(radio)
+        parent->boatChoice->SetSelection(parent->logbookPlugIn->opt->boatGridLayoutChoice);
+    else
+        parent->boatChoice->SetSelection(parent->logbookPlugIn->opt->boatGridLayoutChoiceODT);
 }
 
 void Boat::createFiles(wxString data, wxString lay)
 {
-	data_locn = data;
-	data_locn.Append(_T("boat.txt"));
-	boatFile = new wxTextFile(data_locn);
-	wxFileName wxHomeFiledir = data_locn ;
+    data_locn = data;
+    data_locn.Append(_T("boat.txt"));
+    boatFile = new wxTextFile(data_locn);
+    wxFileName wxHomeFiledir = data_locn ;
 
-	if(true != wxHomeFiledir.FileExists())
-	{				
-		boatFile->Create();
-	}
+    if(true != wxHomeFiledir.FileExists())
+    {
+        boatFile->Create();
+    }
 
-	equip_locn = data;
-	equip_locn.Append(_T("equipment.txt"));
-	equipFile = new wxTextFile(equip_locn);
-	wxHomeFiledir = equip_locn ;
+    equip_locn = data;
+    equip_locn.Append(_T("equipment.txt"));
+    equipFile = new wxTextFile(equip_locn);
+    wxHomeFiledir = equip_locn ;
 
-	if(true != wxHomeFiledir.FileExists())
-	{				
-		equipFile->Create();
-	}
+    if(true != wxHomeFiledir.FileExists())
+    {
+        equipFile->Create();
+    }
 
-	setLayoutLocation(lay);
+    setLayoutLocation(lay);
 }
 
 void Boat::createTextCtrlConnections()
 {
-	wxWindowList l = parent->m_panel72->GetWindowChildren();
+    wxWindowList l = parent->m_panel72->GetWindowChildren();
 
-	for(unsigned int i = 0; i < l.GetCount(); i++)
-	{
-		if(l[i]->IsKindOf(CLASSINFO(wxTextCtrl)))
-		{
-			l[i]->Connect( wxEVT_COMMAND_TEXT_UPDATED, 
-				wxCommandEventHandler(LogbookDialog::boatNameOnTextEnter),NULL,parent);		
-			ctrl.Append(l[i]);
-		}
-	}
+    for(unsigned int i = 0; i < l.GetCount(); i++)
+    {
+        if(l[i]->IsKindOf(CLASSINFO(wxTextCtrl)))
+        {
+            l[i]->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(LogbookDialog::boatNameOnTextEnter),NULL,parent);
+            ctrl.Append(l[i]);
+        }
+    }
 }
 
 void Boat::createStaticTextList()
 {
-	wxWindowList l = parent->m_panel72->GetWindowChildren();
+    wxWindowList l = parent->m_panel72->GetWindowChildren();
 
-	for(unsigned int i = 0; i < l.GetCount(); i++)
-	{
-		if(l[i]->IsKindOf(CLASSINFO(wxStaticText)))
-			ctrlStaticText.Append(l[i]);
-	}
+    for(unsigned int i = 0; i < l.GetCount(); i++)
+    {
+        if(l[i]->IsKindOf(CLASSINFO(wxStaticText)))
+            ctrlStaticText.Append(l[i]);
+    }
 }
 
 void Boat::loadData()
 {
-	wxString line;
-	
-	boatFile->Open();
+    wxString line;
 
-	if(boatFile->GetLineCount() > 0) 
-	{
-		line = boatFile->GetLine(0);
-		if(line.Contains(_T("#1.2#")))
-			line = boatFile->GetLine(1);
+    boatFile->Open();
 
-		wxStringTokenizer tkz(line, _T("\t"),wxTOKEN_RET_EMPTY );
-		
-		int c = 0;
+    if(boatFile->GetLineCount() > 0)
+    {
+        line = boatFile->GetLine(0);
+        if(line.Contains(_T("#1.2#")))
+            line = boatFile->GetLine(1);
 
-		while ( tkz.HasMoreTokens() )
-		{
-			wxString s;
-			s += tkz.GetNextToken().RemoveLast();
-			s = parent->restoreDangerChar(s);
-			if(c == 18)
-				s = parent->maintenance->getDateString(s);
-			wxTextCtrl* t = wxDynamicCast(ctrl[c++], wxTextCtrl);
-			t->ChangeValue(s);	
-		}
-	}
-	boatFile->Close();
+        wxStringTokenizer tkz(line, _T("\t"),wxTOKEN_RET_EMPTY );
 
-	equipFile->Open();
-	if(equipFile->GetLineCount() <= 0) { equipFile->Close(); return; }
-	if(parent->m_gridEquipment->GetNumberRows() > 0)
-		parent->m_gridEquipment->DeleteRows(0,parent->m_gridEquipment->GetNumberRows()-1);
+        int c = 0;
 
-	for(unsigned int i = 0; i <  equipFile->GetLineCount(); i++)
-	{
-		line = 	equipFile->GetLine(i);
+        while ( tkz.HasMoreTokens() )
+        {
+            wxString s;
+            s += tkz.GetNextToken().RemoveLast();
+            s = parent->restoreDangerChar(s);
+            if(c == 18)
+                s = parent->maintenance->getDateString(s);
+            wxTextCtrl* t = wxDynamicCast(ctrl[c++], wxTextCtrl);
+            t->ChangeValue(s);
+        }
+    }
+    boatFile->Close();
 
-		parent->m_gridEquipment->AppendRows();
+    equipFile->Open();
+    if(equipFile->GetLineCount() <= 0) { equipFile->Close(); return; }
+    if(parent->m_gridEquipment->GetNumberRows() > 0)
+        parent->m_gridEquipment->DeleteRows(0,parent->m_gridEquipment->GetNumberRows()-1);
 
-		wxStringTokenizer tkz(line, _T("\t"),wxTOKEN_RET_EMPTY );
-		int c = 0;
+    for(unsigned int i = 0; i <  equipFile->GetLineCount(); i++)
+    {
+        line = 	equipFile->GetLine(i);
 
-		while ( tkz.HasMoreTokens() )
-		{
-			wxString s;
-			s = tkz.GetNextToken().RemoveLast();
-			s = parent->restoreDangerChar(s);
-			parent->m_gridEquipment->SetCellValue(i,c++,s);
-		}
-	}
-	equipFile->Close();
+        parent->m_gridEquipment->AppendRows();
+
+        wxStringTokenizer tkz(line, _T("\t"),wxTOKEN_RET_EMPTY );
+        int c = 0;
+
+        while ( tkz.HasMoreTokens() )
+        {
+            wxString s;
+            s = tkz.GetNextToken().RemoveLast();
+            s = parent->restoreDangerChar(s);
+            parent->m_gridEquipment->SetCellValue(i,c++,s);
+        }
+    }
+    equipFile->Close();
 }
 
 void Boat::saveData()
 {
-	if(!modified) return;
-	modified = false;
+    if(!modified) return;
+    modified = false;
 
-	wxString t,s;
+    wxString t,s;
 
-	boatFile->Open();
-	boatFile->Clear();
+    boatFile->Open();
+    boatFile->Clear();
 
-	for(unsigned int i = 0; i < ctrl.GetCount(); i++)
-	{
-		if(ctrl[i]->IsKindOf(CLASSINFO(wxTextCtrl)))
-		{
-			wxTextCtrl* te = wxDynamicCast(ctrl[i], wxTextCtrl);
-			wxString temp = te->GetValue();
-			temp = parent->replaceDangerChar(temp);	
-			if(i == 18 && (!temp.IsEmpty() && temp.GetChar(0) != ' '))
-			{
-				wxDateTime dt;
-				parent->myParseDate(temp,dt);
-				t += wxString::Format(_T("%i/%i/%i \t"),dt.GetMonth(), dt.GetDay(), dt.GetYear());
-			}
-			else
-				t += temp+wxT(" \t");
-		}
-	}
-	t.RemoveLast();
+    for(unsigned int i = 0; i < ctrl.GetCount(); i++)
+    {
+        if(ctrl[i]->IsKindOf(CLASSINFO(wxTextCtrl)))
+        {
+            wxTextCtrl* te = wxDynamicCast(ctrl[i], wxTextCtrl);
+            wxString temp = te->GetValue();
+            temp = parent->replaceDangerChar(temp);
+            if(i == 18 && (!temp.IsEmpty() && temp.GetChar(0) != ' '))
+            {
+                wxDateTime dt;
+                parent->myParseDate(temp,dt);
+                t += wxString::Format(_T("%i/%i/%i \t"),dt.GetMonth(), dt.GetDay(), dt.GetYear());
+            }
+            else
+                t += temp+wxT(" \t");
+        }
+    }
+    t.RemoveLast();
 
-	boatFile->AddLine(t);
-	boatFile->Write();
-	boatFile->Close();
+    boatFile->AddLine(t);
+    boatFile->Write();
+    boatFile->Close();
 
-	equipFile->Open();
-	equipFile->Clear();
+    equipFile->Open();
+    equipFile->Clear();
 
-	int count = parent->m_gridEquipment->GetNumberRows();
-	for(int r = 0; r < count; r++)
-	{
-		s = _T("");
-		for(int i= 0; i < parent->m_gridEquipment->GetNumberCols(); i++)
-		{
-			s += parent->replaceDangerChar(
-						 parent->m_gridEquipment->GetCellValue(r,i))
-				+wxT(" \t");
-		}
-		equipFile->AddLine(s);
-	}
+    int count = parent->m_gridEquipment->GetNumberRows();
+    for(int r = 0; r < count; r++)
+    {
+        s = _T("");
+        for(int i= 0; i < parent->m_gridEquipment->GetNumberCols(); i++)
+        {
+            s += parent->replaceDangerChar( parent->m_gridEquipment->GetCellValue(r,i)) + wxT(" \t");
+        }
+        equipFile->AddLine(s);
+    }
 
-	equipFile->Write();
-	equipFile->Close();
+    equipFile->Write();
+    equipFile->Close();
 }
 
 wxString Boat::readLayoutFileODT(wxString layout)
 {
-	wxString odt = _T("");
+    wxString odt = _T("");
 
-	wxString filename = layout_locn + layout + _T(".odt");
+    wxString filename = layout_locn + layout + _T(".odt");
 
-	if(wxFileExists(filename))
-	{
+    if(wxFileExists(filename))
+    {
 //#ifdef __WXOSX__
         auto_ptr<wxZipEntry> entry;
         static const wxString fn = _T("content.xml");
@@ -249,104 +245,104 @@ wxString Boat::readLayoutFileODT(wxString layout)
         {
             wxTextInputStream txt(zip,_T("\n"),wxConvUTF8);
             while(!zip.Eof())
-	            odt += txt.ReadLine();
+                odt += txt.ReadLine();
         }
 //#else
-	/*	static const wxString fn = _T("content.xml");
-		wxFileInputStream in(filename);
-		wxZipInputStream zip(in);
-		wxTextInputStream txt(zip);
-		while(!zip.Eof())
-			odt += txt.ReadLine();*/
+        /*	static const wxString fn = _T("content.xml");
+         wxFileInputStream in(filename);
+         wxZipInputStream zip(in);
+         wxTextInputStream txt(zip);
+         while(!zip.Eof())
+          odt += txt.ReadLine();*/
 //#endif
-	}
-	return odt;
+    }
+    return odt;
 }
 
 void Boat::viewODT(wxString path,wxString layout,bool mode)
 {
-	if(parent->logbookPlugIn->opt->filterLayout)
+    if(parent->logbookPlugIn->opt->filterLayout)
         layout.Prepend(parent->logbookPlugIn->opt->layoutPrefix[LogbookDialog::BOAT]);
 
     toODT(path, layout, mode);
-	if(layout != _T(""))
-	{
-	    wxString fn = data_locn;
-	    fn.Replace(_T("txt"),_T("odt"));
-		parent->startApplication(fn,_T(".odt"));
-	}
+    if(layout != _T(""))
+    {
+        wxString fn = data_locn;
+        fn.Replace(_T("txt"),_T("odt"));
+        parent->startApplication(fn,_T(".odt"));
+    }
 }
 
 wxString Boat::toODT(wxString path,wxString layout,bool mode)
 {
-	wxString s, odt;
+    wxString s, odt;
 
-	if(layout == _T(""))
+    if(layout == _T(""))
+    {
+        wxMessageBox(_("Sorry, no Layout installed"),_("Information"),wxOK | wxICON_EXCLAMATION);
+        return _T("");
+    }
+
+    saveData();
+
+    odt = readLayoutFileODT(layout);
+
+    for(unsigned int i = 0; i < ctrl.GetCount(); i++)
 	{
-		wxMessageBox(_("Sorry, no Layout installed"),_("Information"),wxOK | wxICON_EXCLAMATION);
-		return _T("");
-	}
+        if(ctrl[i]->IsKindOf(CLASSINFO(wxTextCtrl)))
+        {
+            wxTextCtrl* te = wxDynamicCast(ctrl[i], wxTextCtrl);
 
-	saveData();
-
-	odt = readLayoutFileODT(layout);
-
-	for(unsigned int i = 0; i < ctrl.GetCount(); i++)
-	{
-		if(ctrl[i]->IsKindOf(CLASSINFO(wxTextCtrl)))
-		{
-			wxTextCtrl* te = wxDynamicCast(ctrl[i], wxTextCtrl);
-
-			switch(i)
-			{
-			case 0: 
-				odt.Replace(wxT("#BOATNAME#"),Export::replaceNewLine(true,te->GetValue(),false));
-				odt.Replace(wxT("#LBOATNAME#"),Export::replaceNewLine(true,parent->bname->GetLabel(),true));
-				break;
-			case 1: 
-				odt.Replace(wxT("#HOMEPORT#"),Export::replaceNewLine(true,te->GetValue(),false));
-				odt.Replace(wxT("#LHOMEPORT#"),Export::replaceNewLine(true,parent->m_staticText114->GetLabel(),true));
-				break;
-			case 2: 
-				odt.Replace(wxT("#CALLSIGN#"),Export::replaceNewLine(true,te->GetValue(),false));
-				odt.Replace(wxT("#LCALLSIGN#"),Export::replaceNewLine(true,parent->m_staticText115->GetLabel(),true));
-				break;
-			case 3: 
-				odt.Replace(wxT("#HIN#"),Export::replaceNewLine(true,te->GetValue(),false));
-				odt.Replace(wxT("#LHIN#"),Export::replaceNewLine(true,parent->m_staticText116->GetLabel(),true));
-				break;
-			case 4: 
-				odt.Replace(wxT("#SAILNO#"),Export::replaceNewLine(true,te->GetValue(),false));
-				odt.Replace(wxT("#LSAILNO#"),Export::replaceNewLine(true,parent->m_staticText117->GetLabel(),true));
-				break;
-			case 6: 
-				odt.Replace(wxT("#REGISTRATION#"),Export::replaceNewLine(true,te->GetValue(),false));
-				odt.Replace(wxT("#LREGISTRATION#"),Export::replaceNewLine(true,parent->m_staticText118->GetLabel(),true));
-				break;
-			case 5: 
-				odt.Replace(wxT("#INSURANCE#"),Export::replaceNewLine(true,te->GetValue(),false));
-				odt.Replace(wxT("#LINSURANCE#"),Export::replaceNewLine(true,parent->m_staticText119->GetLabel(),true));
-				break;
-			case 7: 
-				odt.Replace(wxT("#POLICY#"),Export::replaceNewLine(true,te->GetValue(),false));
-				odt.Replace(wxT("#LPOLICY#"),Export::replaceNewLine(true,parent->m_staticText120->GetLabel(),true));
-				break;
-			case 8: 
-				odt.Replace(wxT("#MMSI#"),Export::replaceNewLine(true,te->GetValue(),false));
-				odt.Replace(wxT("#LMMSI#"),Export::replaceNewLine(true,parent->m_staticText53->GetLabel(),true));
-				break;
-			case 9: 
-				odt.Replace(wxT("#ONAME#"),Export::replaceNewLine(true,te->GetValue(),false));
-				odt.Replace(wxT("#LONAME#"),Export::replaceNewLine(true,parent->m_staticText90->GetLabel(),true));
-				break;
-			case 10: 
-				odt.Replace(wxT("#OFIRST#"),Export::replaceNewLine(true,te->GetValue(),false));
-				odt.Replace(wxT("#LOFIRST#"),Export::replaceNewLine(true,parent->m_staticText91->GetLabel(),true));
-				break;
-			case 11: 
-				odt.Replace(wxT("#TELEPHONE#"),Export::replaceNewLine(true,te->GetValue(), false));
-				odt.Replace(wxT("#LTELEPHONE#"),Export::replaceNewLine(true,parent->m_staticText95->GetLabel(),true));
-				break;
+            switch(i)
+            {
+                case 0:
+                    odt.Replace(wxT("#BOATNAME#"),Export::replaceNewLine(true,te->GetValue(),false));
+                    odt.Replace(wxT("#LBOATNAME#"),Export::replaceNewLine(true,parent->bname->GetLabel(),true));
+                    break;
+                case 1:
+                    odt.Replace(wxT("#HOMEPORT#"),Export::replaceNewLine(true,te->GetValue(),false));
+                    odt.Replace(wxT("#LHOMEPORT#"),Export::replaceNewLine(true,parent->m_staticText114->GetLabel(),true));
+                    break;
+                case 2:
+                    odt.Replace(wxT("#CALLSIGN#"),Export::replaceNewLine(true,te->GetValue(),false));
+                    odt.Replace(wxT("#LCALLSIGN#"),Export::replaceNewLine(true,parent->m_staticText115->GetLabel(),true));
+                    break;
+                case 3:
+                    odt.Replace(wxT("#HIN#"),Export::replaceNewLine(true,te->GetValue(),false));
+                    odt.Replace(wxT("#LHIN#"),Export::replaceNewLine(true,parent->m_staticText116->GetLabel(),true));
+                    break;
+                case 4:
+                    odt.Replace(wxT("#SAILNO#"),Export::replaceNewLine(true,te->GetValue(),false));
+                    odt.Replace(wxT("#LSAILNO#"),Export::replaceNewLine(true,parent->m_staticText117->GetLabel(),true));
+                    break;
+                case 5:
+                    odt.Replace(wxT("#INSURANCE#"),Export::replaceNewLine(true,te->GetValue(),false));
+                    odt.Replace(wxT("#LINSURANCE#"),Export::replaceNewLine(true,parent->m_staticText119->GetLabel(),true));
+                    break;
+                case 6:
+                    odt.Replace(wxT("#REGISTRATION#"),Export::replaceNewLine(true,te->GetValue(),false));
+                    odt.Replace(wxT("#LREGISTRATION#"),Export::replaceNewLine(true,parent->m_staticText118->GetLabel(),true));
+                    break;
+                case 7:
+                    odt.Replace(wxT("#POLICY#"),Export::replaceNewLine(true,te->GetValue(),false));
+                    odt.Replace(wxT("#LPOLICY#"),Export::replaceNewLine(true,parent->m_staticText120->GetLabel(),true));
+                    break;
+                case 8:
+                    odt.Replace(wxT("#MMSI#"),Export::replaceNewLine(true,te->GetValue(),false));
+                    odt.Replace(wxT("#LMMSI#"),Export::replaceNewLine(true,parent->m_staticText53->GetLabel(),true));
+                    break;
+                case 9:
+                    odt.Replace(wxT("#ONAME#"),Export::replaceNewLine(true,te->GetValue(),false));
+                    odt.Replace(wxT("#LONAME#"),Export::replaceNewLine(true,parent->m_staticText90->GetLabel(),true));
+                    break;
+                case 10:
+                    odt.Replace(wxT("#OFIRST#"),Export::replaceNewLine(true,te->GetValue(),false));
+                    odt.Replace(wxT("#LOFIRST#"),Export::replaceNewLine(true,parent->m_staticText91->GetLabel(),true));
+                    break;
+                case 11:
+                    odt.Replace(wxT("#TELEPHONE#"),Export::replaceNewLine(true,te->GetValue(), false));
+                    odt.Replace(wxT("#LTELEPHONE#"),Export::replaceNewLine(true,parent->m_staticText95->GetLabel(),true));
+                    break;
 			case 12: 
 				odt.Replace(wxT("#STREET#"),Export::replaceNewLine(true,te->GetValue(),false));
 				odt.Replace(wxT("#LSTREET#"),Export::replaceNewLine(true,parent->m_staticText92->GetLabel(),true));

@@ -31,7 +31,8 @@
 
 #include <list>
 
-#include "../../../src/wxcurl/wx/curl/dialog.h"
+//#include "../../../src/wxcurl/wx/curl/dialog.h"
+//#include "wx/curl/dialog.h"
 #include "../../../include/tinyxml.h"
 
 #include "weatherfax_pi.h"
@@ -81,10 +82,17 @@ InternetRetrievalDialog::~InternetRetrievalDialog()
 */
     ClearInternetRetrieval();
 }
-
+#ifdef __WXOSX__
 void InternetRetrievalDialog::Load()
+#else
+void InternetRetrievalDialog::Load(bool force)
+#endif
 {
+#ifdef __WXOSX__
     if(m_bLoaded)
+#else
+    if(m_bLoaded && !force)
+#endif
         return;
 
     m_bLoaded = true;
@@ -148,7 +156,10 @@ void InternetRetrievalDialog::Load()
     m_weatherfax_dir.Append(_T("/opencpn/plugins/weatherfax/data/"));
     OpenXML(m_weatherfax_dir + _T("WeatherFaxInternetRetrieval.xml"));
 #else
-    OpenXML(*GetpSharedDataLocation() + _T("plugins")
+    if( wxFileExists( m_weatherfax_pi.StandardPath() + _T("WeatherFaxInternetRetrieval.xml") ) )
+        OpenXML( m_weatherfax_pi.StandardPath() + _T("WeatherFaxInternetRetrieval.xml") );
+    else
+        OpenXML(*GetpSharedDataLocation() + _T("plugins")
             + s + _T("weatherfax_pi") + s + _T("data") + s
             + _T("WeatherFaxInternetRetrieval.xml"));
 #endif
@@ -202,7 +213,10 @@ bool InternetRetrievalDialog::OpenXML(wxString filename)
 {
     ClearInternetRetrieval();
     m_lServers->Clear();
-
+#ifndef __WXOSX__
+    m_Servers.clear();
+    m_Regions.clear();
+#endif
     TiXmlDocument doc;
     wxString error;
     wxProgressDialog *progressdialog = NULL;
@@ -392,7 +406,7 @@ void InternetRetrievalDialog::OnUrlsLeftDown( wxMouseEvent& event )
 static int sortcol, sortorder = 1;
 // sort callback. Sort by body.
 #if wxCHECK_VERSION(2, 9, 0)
-int wxCALLBACK SortUrl(long item1, long item2, wxIntPtr list)
+int wxCALLBACK SortUrl(wxIntPtr item1, wxIntPtr item2, wxIntPtr list)
 #else
 int wxCALLBACK SortUrl(long item1, long item2, long list)
 #endif            
@@ -563,10 +577,26 @@ void InternetRetrievalDialog::OnRetrieve( wxCommandEvent& event )
                 continue;
 
         count++;
+// NEU: Heftige Überarbeitung nötig!!!
+        /* compute actual url */
+        wxString url = faxurl->Url;
+//        wxDateTime now = wxDateTime::Now();
 
+        // now deal with hour
+//        int hour = now.GetHour(wxDateTime::UTC);
+//        if(faxurl->hour_round) {
+//            int nhour = wxRound(((double)hour+faxurl->hour_offset-faxurl->hour_round_offset)/faxurl->hour_round)*faxurl->hour_round+faxurl->hour_round_offset;
+//            now+=wxTimeSpan::Hours(nhour - hour);
+//        }
+// Scheint Mist zu sein:
+//        wxString formats[] = {"%Y", "%y", "%m", "%d", "%H"};
+//        for(unsigned int i=0; i<(sizeof formats) / (sizeof *formats); i++)
+//            url.Replace(formats[i], now.Format(formats[i], wxDateTime::UTC));
+// Ende NEU
         wxString path = weatherfax_pi::StandardPath();
 
         wxString filename = faxurl->Url;
+//        wxString filename = url;
         filename.Replace(_T("/"), _T("!"));
         filename.Replace(_T(":"), _T("!"));
 
@@ -587,6 +617,7 @@ Use existing file?"), _("Weather Fax"), wxYES | wxNO | wxCANCEL);
         }
 
         {
+/*
 #if 0  // was 0
             wxProgressDialog progressdialog(_("WeatherFax InternetRetrieval"),
                                             _("Reading Headers: ") + faxurl->Contents, 1000, this,
@@ -658,7 +689,34 @@ Use existing file?"), _("Weather Fax"), wxYES | wxNO | wxCANCEL);
         case wxCDRF_USER_ABORTED: return;
         }
 #endif
-    }
+*/
+        _OCPN_DLStatus res = OCPN_downloadFile( url, filename, _("WeatherFax InternetRetrieval"),
+                                      _("Reading Headers: ") + faxurl->Contents, wxNullBitmap, this,
+                                    OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_ESTIMATED_TIME|OCPN_DLDS_REMAINING_TIME|
+                                    OCPN_DLDS_SPEED|OCPN_DLDS_SIZE|OCPN_DLDS_URL|
+                                    OCPN_DLDS_CAN_PAUSE|OCPN_DLDS_CAN_ABORT|
+                                    OCPN_DLDS_AUTO_CLOSE, 10 );
+
+                switch( res )
+                {
+                case OCPN_DL_NO_ERROR: break;
+                case OCPN_DL_STARTED: break;
+                case OCPN_DL_FAILED:
+                case OCPN_DL_UNKNOWN:
+                case OCPN_DL_USER_TIMEOUT:
+                {
+                    wxMessageDialog mdlg(this, _("Failed to Download: ") +
+                                         faxurl->Contents + _T("\n") +
+                                         url + _T("\n") +
+                                         _("Verify there is a working internet connection.") + _T("\n") +
+                                         _("If the url is incorrect please edit the xml and/or post a bug report."),
+                                         _("Weather Fax"), wxOK | wxICON_ERROR);
+                    mdlg.ShowModal();
+                    wxRemoveFile( filename );
+                }
+                case OCPN_DL_ABORTED: return;
+                }
+            }
 
 loadimage:
         m_weatherfax_pi.m_pWeatherFax->OpenImage

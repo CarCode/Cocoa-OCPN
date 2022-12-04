@@ -1,4 +1,4 @@
-/***************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Layer to perform wxDC drawing using wxDC or opengl
@@ -49,7 +49,10 @@
     #endif
 
 #endif
-
+#ifdef __WXOSX__
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
 #ifdef ocpnUSE_GL
 #include <wx/glcanvas.h>
 #endif
@@ -73,7 +76,7 @@ wdDC::wdDC( wxGLCanvas &canvas ) :
 #endif
 #ifdef ocpnUSE_GL
     m_textforegroundcolour = wxColour( 0, 0, 0 );
-#endif    
+#endif
 }
 
 wdDC::wdDC( wxDC &pdc ) :
@@ -209,7 +212,7 @@ void wdDC::SetGLStipple(int style, bool needs_blend)
 
             for(int j=0; j<16; j++)
                 stippleData[j] = (stipplePattern[i] >> j) & 1 ? 255 : 0;
-           
+
             glBindTexture(GL_TEXTURE_2D, gl_stipple_textures[i]);
             glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -336,7 +339,6 @@ void DrawGLThickLine( float x1, float y1, float x2, float y2, wxPen pen, bool b_
             DrawEndCap( x1, y1, t1, angle);
             DrawEndCap( x2, y2, t1, angle + M_PI);
         }
-
     }
 
     glEnd();
@@ -376,7 +378,7 @@ void wdDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hiqu
             } else
                 glLineWidth( pen_width );
         }
-        
+
         if( b_draw_thick )
             DrawGLThickLine( x1, y1, x2, y2, m_pen, b_hiqual );
         else {
@@ -392,14 +394,14 @@ void wdDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hiqu
                 float cosa = cosf( angle );
                 float sina = sinf( angle );
                 float t1 = m_pen.GetWidth();
-                    
+
                 float lpix = sqrtf( powf(x1 - x2, 2) + powf(y1 - y2, 2) );
                 float lrun = 0.;
                 float xa = x1;
                 float ya = y1;
                 float ldraw = t1 * dashes[0];
                 float lspace = t1 * dashes[1];
-                    
+
                 glBegin( GL_LINES );
                 while( lrun < lpix ) {
                     //    Dash
@@ -437,7 +439,7 @@ void wdDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hiqu
             glDisable( GL_BLEND );
         }
     }
-#endif    
+#endif
 }
 
 // Draws thick lines from triangles
@@ -591,7 +593,7 @@ void wdDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset,
                 glDisable( GL_POLYGON_SMOOTH );
             }
     }
-#endif    
+#endif
 }
 
 void wdDC::StrokeLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2 )
@@ -651,7 +653,7 @@ void wdDC::DrawRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h )
             glEnd();
         }
     }
-#endif    
+#endif
 }
 
 /* draw the arc along corners */
@@ -662,7 +664,7 @@ static void drawrrhelper( wxCoord x, wxCoord y, wxCoord r, float st, float et )
     float dt = ( et - st ) / slices;
     for( float t = st; t <= et + dt; t += dt )
         glVertex2f( x + r * cos( t ), y + r * sin( t ) );
-#endif        
+#endif
 }
 
 void wdDC::DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, wxCoord r )
@@ -674,7 +676,7 @@ void wdDC::DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, wxC
         wxCoord x0 = x, x1 = x + r, x2 = x + w - r, x3 = x + w;
         wxCoord y0 = y, y1 = y + r, y2 = y + h - r, y3 = y + h;
         if( ConfigureBrush() ) {
-            
+
             glBegin( GL_QUADS );
             glVertex2i( x0, y1 );
             glVertex2i( x1, y1 );
@@ -711,7 +713,6 @@ void wdDC::DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, wxC
             glVertex2i( x1, y1 );
             drawrrhelper( x1, y1, r, (float)-M_PI, (float)-M_PI / 2. );
             glEnd();
-            
         }
 
         if( ConfigurePen() ) {
@@ -722,9 +723,8 @@ void wdDC::DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, wxC
             drawrrhelper( x1, y1, r, (float)M_PI / 2., (float)M_PI );
             glEnd();
         }
-        
     }
-#endif    
+#endif
 }
 
 void wdDC::DrawCircle( wxCoord x, wxCoord y, wxCoord radius )
@@ -783,7 +783,7 @@ void wdDC::DrawEllipse( wxCoord x, wxCoord y, wxCoord width, wxCoord height )
 
         glDisable( GL_BLEND );
     }
-#endif    
+#endif
 }
 
 void wdDC::DrawPolygon( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffset )
@@ -904,7 +904,7 @@ void wdDC::DrawBitmap( const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usemas
             glPixelZoom( 1, 1 );
         }
     }
-#endif    
+#endif
 }
 
 void wdDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
@@ -915,11 +915,11 @@ void wdDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
     else {
        wxCoord w = 0;
         wxCoord h = 0;
-        
+
         m_texfont.Build( m_font );      // make sure the font is ready
         m_texfont.GetTextExtent(text, &w, &h);
-        
-/*        
+
+/*
 #ifdef __WXMAC__
         wxBitmap tbmp(200, 200);
         wxMemoryDC mac_dc(tbmp);
@@ -940,7 +940,7 @@ void wdDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
             
             glColor3ub( m_textforegroundcolour.Red(), m_textforegroundcolour.Green(),
                         m_textforegroundcolour.Blue() );
-            
+
 
             m_texfont.RenderString(text);
             glPopMatrix();
@@ -948,9 +948,7 @@ void wdDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
             glDisable( GL_TEXTURE_2D );
             glDisable( GL_BLEND );
 
-            
-#if 0            
-            
+#if 0
             /* create bitmap of appropriate size and select it */
             wxBitmap bmp( w, h );
             wxMemoryDC temp_dc;
@@ -992,10 +990,10 @@ void wdDC::DrawText( const wxString &text, wxCoord x, wxCoord y )
                     m_textforegroundcolour.Blue(), 255 );
             GLDrawBlendData( x, y, w, h, GL_ALPHA, data );
             delete[] data;
-#endif            
+#endif
         }
     }
-#endif    
+#endif
 }
 
 void wdDC::GetTextExtent( const wxString &string, wxCoord *w, wxCoord *h, wxCoord *descent,
@@ -1004,7 +1002,7 @@ void wdDC::GetTextExtent( const wxString &string, wxCoord *w, wxCoord *h, wxCoor
     //  Give at least reasonable results on failure.
     if(w) *w = 100;
     if(h) *h = 100;
-    
+
     if( dc ) dc->GetTextExtent( string, w, h, descent, externalLeading, font );
     else {
         wxFont f = m_font;
@@ -1012,9 +1010,9 @@ void wdDC::GetTextExtent( const wxString &string, wxCoord *w, wxCoord *h, wxCoor
 
         wxMemoryDC temp_dc;
         temp_dc.GetTextExtent( string, w, h, descent, externalLeading, &f );
-        
+
      }
-     
+
      //  Sometimes GetTextExtent returns really wrong, uninitialized results.
      //  Dunno why....
      if( w && (*w > 500) ) *w = 500;
@@ -1041,7 +1039,7 @@ bool wdDC::ConfigurePen()
     int width = m_pen.GetWidth();
     glColor4ub( c.Red(), c.Green(), c.Blue(), c.Alpha() );
     glLineWidth( wxMax(g_GLMinSymbolLineWidth, width) );
-#endif    
+#endif
     return true;
 }
 
@@ -1052,7 +1050,7 @@ bool wdDC::ConfigureBrush()
 #ifdef ocpnUSE_GL
     wxColour c = m_brush.GetColour();
     glColor4ub( c.Red(), c.Green(), c.Blue(), c.Alpha() );
-#endif    
+#endif
     return true;
 }
 

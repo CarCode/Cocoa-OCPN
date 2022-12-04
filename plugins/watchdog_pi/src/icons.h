@@ -11,4 +11,8 @@ extern void initialize_images(void);
 
 extern wxBitmap *_img_watchdog;
 
+#ifdef wxUSE_SVG
+extern wxString _svg_watchdog;
+#endif
+
 #endif /* ICONS_H */
