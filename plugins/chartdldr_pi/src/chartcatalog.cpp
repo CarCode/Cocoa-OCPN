@@ -29,11 +29,10 @@
 #include <wx/tokenzr.h>
 
 #include <wx/arrimpl.cpp>
-    //WX_DEFINE_OBJARRAY(wxArrayOfNoticeToMariners);
-    WX_DEFINE_OBJARRAY(wxArrayOfVertexes);
-    WX_DEFINE_OBJARRAY(wxArrayOfPanels);
-    WX_DEFINE_OBJARRAY(wxArrayOfCharts);
-
+// WX_DEFINE_OBJARRAY(wxArrayOfNoticeToMariners);
+WX_DEFINE_OBJARRAY(wxArrayOfVertexes);
+WX_DEFINE_OBJARRAY(wxArrayOfPanels);
+WX_DEFINE_OBJARRAY(wxArrayOfCharts);
 
 // Chart Catalog implementation
 bool ChartCatalog::LoadFromFile( wxString path, bool headerOnly )

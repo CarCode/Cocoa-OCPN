@@ -1410,11 +1410,16 @@ After downloading the charts, please extract them to %s"), pPlugIn->m_pChartCata
         OCPN_downloadFileBackground( url.BuildURI(), file_path, this, &handle);
 
         if (idx >= 0) {
-            pPlugIn->ProcessFile(downloaded_p.GetFullPath(), downloaded_p.GetPath(), true, 
-                                      pPlugIn->m_pChartCatalog->charts.Item(idx).GetUpdateDatetime());
-
-            cs->ChartUpdated( pPlugIn->m_pChartCatalog->charts.Item(idx).number, 
-                                      pPlugIn->m_pChartCatalog->charts.Item(idx).GetUpdateDatetime().GetTicks() );
+            if (pPlugIn->ProcessFile(
+                    downloaded_p.GetFullPath(), downloaded_p.GetPath(), true,
+                    pPlugIn->m_pChartCatalog->charts.Item(idx).GetUpdateDatetime())) {
+              cs->ChartUpdated(pPlugIn->m_pChartCatalog->charts.Item(idx).number,
+                               pPlugIn->m_pChartCatalog->charts.Item(idx)
+                                   .GetUpdateDatetime()
+                                   .GetTicks());
+            } else {
+              m_failed_downloads++;
+            }
             idx = -1;
         }
 
@@ -1452,11 +1457,16 @@ After downloading the charts, please extract them to %s"), pPlugIn->m_pChartCata
         }
     }
     if (idx >= 0) {
-        pPlugIn->ProcessFile(downloaded_p.GetFullPath(), downloaded_p.GetPath(), true, 
-                                      pPlugIn->m_pChartCatalog->charts.Item(idx).GetUpdateDatetime());
-
-        cs->ChartUpdated( pPlugIn->m_pChartCatalog->charts.Item(idx).number, 
-                                      pPlugIn->m_pChartCatalog->charts.Item(idx).GetUpdateDatetime().GetTicks() );
+        if (pPlugIn->ProcessFile(
+                downloaded_p.GetFullPath(), downloaded_p.GetPath(), true,
+                pPlugIn->m_pChartCatalog->charts.Item(idx).GetUpdateDatetime())) {
+          cs->ChartUpdated(pPlugIn->m_pChartCatalog->charts.Item(idx).number,
+                           pPlugIn->m_pChartCatalog->charts.Item(idx)
+                               .GetUpdateDatetime()
+                               .GetTicks());
+        } else {
+          m_failed_downloads++;
+        }
     }
     DisableForDownload( true );
     m_bDnldCharts->SetLabel( _("Download selected charts") );

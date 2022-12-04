@@ -1,0 +1,220 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: findit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-02 17:32+0200\n"
+"PO-Revision-Date: 2022-09-02 17:37+0200\n"
+"Last-Translator: CarCode <carcode@me.com>\n"
+"Language-Team: \n"
+"Language: pi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: C:/Users/Konni/Documents/Visual Studio 2010/Projects/"
+"opencpn/plugins/FindIt_pi/src\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 2.4.3\n"
+"X-Poedit-SearchPath-0: C:/Users/Konni/Documents/Visual Studio 2010/Projects/"
+"opencpn/plugins/FindIt_pi/src\n"
+
+#
+#: ../src/findit_pi.cpp:111 ../src/findit_pi.cpp:174 ../src/gui.h:104
+msgid "FindIt"
+msgstr "FindIt"
+
+#
+#: ../src/findit_pi.cpp:179
+msgid "Stowage PlugIn for OpenCPN"
+msgstr "Stauraum-Plugin für OpenCPN"
+
+#
+#: ../src/findit_pi.cpp:184
+msgid "Stowage PlugIn for OpenCPN\n"
+msgstr "Stauraum-Plugin für OpenCPN\n"
+
+#
+#: ../src/findit.cpp:348 ../src/findit.cpp:369 ../src/findit.cpp:416
+#: ../src/findit.cpp:437 ../src/findit.cpp:833 ../src/findit.cpp:835
+#: ../src/findit.cpp:874 ../src/findit.cpp:876 ../src/findit.cpp:1230
+#: ../src/findit.cpp:1252 ../src/gui.cpp:409
+msgid "Yes"
+msgstr "Ja"
+
+#
+#: ../src/findit.cpp:356 ../src/findit.cpp:372 ../src/findit.cpp:424
+#: ../src/findit.cpp:440 ../src/findit.cpp:455 ../src/findit.cpp:490
+#: ../src/findit.cpp:522 ../src/findit.cpp:551 ../src/findit.cpp:835
+#: ../src/findit.cpp:876 ../src/findit.cpp:1150 ../src/findit.cpp:1157
+#: ../src/findit.cpp:1199 ../src/findit.cpp:1206 ../src/findit.cpp:1237
+#: ../src/findit.cpp:1259 ../src/gui.cpp:409
+msgid "No"
+msgstr "Nein"
+
+#
+#: ../src/findit.cpp:459 ../src/gui.cpp:194
+msgid "Provisions"
+msgstr "Proviant"
+
+#
+#: ../src/findit.cpp:494 ../src/gui.cpp:107
+msgid "Material"
+msgstr "Material"
+
+#
+#: ../src/findit.cpp:1229 ../src/findit.cpp:1251
+#, c-format
+msgid "%i"
+msgstr "%i"
+
+#
+#: ../src/gui.h:133
+msgid "FindIt Options"
+msgstr "FindIt Optionen"
+
+#
+#: ../src/gui.cpp:27 ../src/gui.cpp:115 ../src/gui.cpp:202 ../src/gui.cpp:254
+msgid "Add Line"
+msgstr "Zeile hinzufügen"
+
+#
+#: ../src/gui.cpp:28 ../src/gui.cpp:116
+msgid ""
+"Append a row\n"
+"Delete a row = Key <Del>"
+msgstr ""
+"Zeile anfügen\n"
+"Zeile löschen = Taste <Entf>"
+
+#
+#: ../src/gui.cpp:32 ../src/gui.cpp:120
+msgid "Enter Searchstring:"
+msgstr "Suchbegriff eingeben:"
+
+#
+#: ../src/gui.cpp:37 ../src/gui.cpp:125
+msgid "Separate more than one string with a blank"
+msgstr "mehrere Suchbegriffe durch Leertaste trennen"
+
+#
+#: ../src/gui.cpp:42 ../src/gui.cpp:130
+msgid "Buy it"
+msgstr "Kaufe es"
+
+#
+#: ../src/gui.cpp:43 ../src/gui.cpp:131
+msgid ""
+"If the logbook-plugin is installed send a list\n"
+"with checked items to 'Logbook/Maintenace/Buy Parts'"
+msgstr ""
+"Wenn das Logbuch-Plugin installiert/aktiviert wurde\n"
+"sende eine Liste mit Einträgen zu 'Logbuch/Instandhaltung/Kaufe Teile'"
+
+#
+#: ../src/gui.cpp:76 ../src/gui.cpp:164
+msgid "Buy"
+msgstr "Kaufe"
+
+#
+#: ../src/gui.cpp:77 ../src/gui.cpp:165
+msgid "Priority"
+msgstr "Priorität"
+
+#
+#: ../src/gui.cpp:78 ../src/gui.cpp:166
+msgid "Quota"
+msgstr "Soll"
+
+#
+#: ../src/gui.cpp:79 ../src/gui.cpp:167
+msgid "Actuell"
+msgstr "Ist"
+
+#
+#: ../src/gui.cpp:80 ../src/gui.cpp:168
+msgid "Balance"
+msgstr "Differenz"
+
+#
+#: ../src/gui.cpp:81 ../src/gui.cpp:169 ../src/gui.cpp:273
+msgid "Unit"
+msgstr "Einheit"
+
+#
+#: ../src/gui.cpp:82 ../src/gui.cpp:170
+msgid "Text"
+msgstr "Text"
+
+#
+#: ../src/gui.cpp:83 ../src/gui.cpp:171 ../src/gui.cpp:224
+msgid "Location1"
+msgstr "Stauraum1"
+
+#
+#: ../src/gui.cpp:84 ../src/gui.cpp:172 ../src/gui.cpp:225
+msgid "Location2"
+msgstr "Stauraum2"
+
+#
+#: ../src/gui.cpp:85 ../src/gui.cpp:173 ../src/gui.cpp:226
+msgid "Location3"
+msgstr "Stauraum3"
+
+#
+#: ../src/gui.cpp:86 ../src/gui.cpp:174 ../src/gui.cpp:227
+msgid "Location4"
+msgstr "Stauraum4"
+
+#
+#: ../src/gui.cpp:87 ../src/gui.cpp:175 ../src/gui.cpp:228
+msgid "Location5"
+msgstr "Stauraum5"
+
+#
+#: ../src/gui.cpp:88 ../src/gui.cpp:176 ../src/gui.cpp:229
+msgid "Location6"
+msgstr "Stauraum6"
+
+#
+#: ../src/gui.cpp:89 ../src/gui.cpp:177
+msgid "Remarks"
+msgstr "Bemerkungen"
+
+#
+#: ../src/gui.cpp:246
+msgid "Locations"
+msgstr "Stauräume"
+
+#
+#: ../src/gui.cpp:290
+msgid "Units"
+msgstr "Einheiten"
+
+#
+#: ../src/gui.cpp:397 ../src/gui.cpp:403
+msgid "blank"
+msgstr "Leer"
+
+#
+#: ../src/gui.cpp:399
+msgid "If Value of Column \"Balance\" = 0, set Value to"
+msgstr "Wenn Spalte \"Differenz\" = 0, setze"
+
+#
+#: ../src/gui.cpp:403
+msgid "\"No\""
+msgstr "\"Nein\""
+
+#
+#: ../src/gui.cpp:405
+msgid "If Value of Column \"Buy\" = No, set Value to"
+msgstr "Wenn Spalte \"Kaufe\" = Nein, setze ein"
+
+#
+#: ../src/gui.cpp:411
+msgid "Use last row values  as default for new row"
+msgstr "Setze die Beträge der letzten Zeile in neue Zeile"
+
+#
+#~ msgid "Show FindIt Icon"
+#~ msgstr "Zeige FindIt Icon"

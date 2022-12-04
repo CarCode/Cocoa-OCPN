@@ -1,11 +1,11 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  GRIB Plugin
  * Author:   David Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register   *
+ *   Copyright (C) 2010 by David S. Register                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,9 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
- ***************************************************************************
- */
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
+ ***************************************************************************/
 
 #ifndef _GRIBPI_H_
 #define _GRIBPI_H_
@@ -147,10 +146,10 @@ private:
       GribTimelineRecordSet *m_pLastTimelineSet;
 
       // preference data
-      bool              m_bGRIBUseHiDef;
-      bool              m_bGRIBUseGradualColors;
-      bool              m_bDrawBarbedArrowHead;
-      bool              m_bZoomToCenterAtInit;
+      bool             m_bGRIBUseHiDef;
+      bool             m_bGRIBUseGradualColors;
+      bool             m_bDrawBarbedArrowHead;
+      bool             m_bZoomToCenterAtInit;
       int              m_bTimeZone;
       bool             m_bCopyFirstCumRec;
       bool             m_bCopyMissWaveRec;
@@ -165,7 +164,7 @@ private:
 
       bool             m_bGRIBShowIcon;
 
-      bool        m_bShowGrib;
+      bool             m_bShowGrib;
       PlugIn_ViewPort  m_current_vp;
       wxBitmap         m_panelBitmap;
 };

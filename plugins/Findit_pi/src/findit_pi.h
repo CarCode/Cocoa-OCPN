@@ -41,7 +41,17 @@
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    9  // for OpenCPN > 3.x
+//#include "../../../include/ocpn_plugin.h"
+// Load the ocpn_plugin. On OS X this generates many warnings, suppress these.
+#ifdef __WXOSX__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 #include "../../../include/ocpn_plugin.h"
+#ifdef __WXOSX__
+#pragma clang diagnostic pop
+#endif
+
 #include "findit.h"
 
 class MainDialog;
@@ -54,57 +64,52 @@ class findit_pi;
 class findit_pi : public opencpn_plugin_19
 {
 public:
-      findit_pi(void *ppimgr);//:opencpn_plugin(ppimgr){}
-	  ~findit_pi();
+    findit_pi(void *ppimgr);//:opencpn_plugin(ppimgr){}
+    ~findit_pi();
 
 //    The required PlugIn Methods
-      int Init(void);
-      bool DeInit(void);
+    int Init(void);
+    bool DeInit(void);
 
-      int GetAPIVersionMajor();
-      int GetAPIVersionMinor();
-      int GetPlugInVersionMajor();
-      int GetPlugInVersionMinor();
-	  wxBitmap* GetPlugInBitmap();
+    int GetAPIVersionMajor();
+    int GetAPIVersionMinor();
+    int GetPlugInVersionMajor();
+    int GetPlugInVersionMinor();
+    wxBitmap* GetPlugInBitmap();
 
-      wxString GetCommonName();
-      wxString GetShortDescription();
-      wxString GetLongDescription();
+    wxString GetCommonName();
+    wxString GetShortDescription();
+    wxString GetLongDescription();
 
 //    The optional method overrides
-      void OnToolbarToolCallback(int id);
-      void SetColorScheme(PI_ColorScheme cs);
-	  void SetPluginMessage(wxString &message_id, wxString &message_body);
-	  void ShowPreferencesDialog( wxWindow* parent );
-      void UpdateAuiStatus(void);
-      
-	  void OnDialogClose();
+    void OnToolbarToolCallback(int id);
+    void SetColorScheme(PI_ColorScheme cs);
+    void SetPluginMessage(wxString &message_id, wxString &message_body);
+    void ShowPreferencesDialog( wxWindow* parent );
+    void UpdateAuiStatus(void);
 
-	  bool isLogbookReady;
-	  bool isLogbookWindowShown;
+    void OnDialogClose();
 
-	  int		buyNo;
-	  int		toBuyZero;
-	  int		lastRowDefault;
+    bool isLogbookReady;
+    bool isLogbookWindowShown;
+
+    int		buyNo;
+    int		toBuyZero;
+    int		lastRowDefault;
 
 private:
-      wxWindow         *m_parent_window;
+    wxWindow         *m_parent_window;
 
-      MainDialog       *m_pFindItWindow;
+    MainDialog       *m_pFindItWindow;
 #ifdef __WXOSX__  // Test WXOSX
 //     wxAuiManager     *m_AUImgr;
 #endif
-	  wxFileConfig     *m_pconfig;
+    wxFileConfig     *m_pconfig;
 
-	  int				m_leftclick_tool_id;
+    int             m_leftclick_tool_id;
 
-	  void				SaveConfig();
-	  void				LoadConfig();
+    void            SaveConfig();
+    void            LoadConfig();
 };
 
-
-
 #endif
-
-
-

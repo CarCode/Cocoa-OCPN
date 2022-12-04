@@ -62,6 +62,7 @@ class AISTargetListDialog: public wxPanel
             void UpdateAISTargetList( );     // Rebuild AIS target list
             void UpdateNVAISTargetList( );
             void CopyMMSItoClipBoard(int);
+            void CenterToTarget(bool);
             AIS_Target_Data   *GetpTarget(unsigned int list_item);
 
             OCPNListCtrl      *m_pListCtrlAISTargets;
@@ -80,6 +81,7 @@ class AISTargetListDialog: public wxPanel
             void OnTargetQuery( wxCommandEvent& event );
             void OnTargetListColumnClicked( wxListEvent &event );
             void OnTargetScrollTo( wxCommandEvent& event );
+            void OnTargetScrollToClose(wxCommandEvent &event);
             void OnTargetCreateWpt( wxCommandEvent& event );
             void OnShowAllTracks( wxCommandEvent& event );
             void OnHideAllTracks( wxCommandEvent& event );
@@ -95,6 +97,7 @@ class AISTargetListDialog: public wxPanel
             wxAuiManager      *m_pAuiManager;
             wxButton          *m_pButtonInfo;
             wxButton          *m_pButtonJumpTo;
+            wxButton *m_pButtonJumpTo_Close;
             wxButton          *m_pButtonCreateWpt;
             wxButton          *m_pButtonHideAllTracks;
             wxButton          *m_pButtonShowAllTracks;

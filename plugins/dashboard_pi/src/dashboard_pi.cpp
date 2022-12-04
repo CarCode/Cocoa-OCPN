@@ -369,6 +369,7 @@ int dashboard_pi::Init( void )
     mPriWTP = 99;
     mPriSatStatus = 99;
     mPriSatUsed = 99;
+    mPriAlt = 99;
     m_config_version = -1;
     mHDx_Watchdog = 2;
     mHDT_Watchdog = 2;
@@ -388,6 +389,9 @@ int dashboard_pi::Init( void )
     mMDA_Watchdog = 2;
     mPITCH_Watchdog = 2;
     mHEEL_Watchdog = 2;
+    mALT_Watchdog = 2;
+    mLOG_Watchdog = 2;
+    mTrLOG_Watchdog = 2;
 
     g_pFontTitle = new wxFont( 10, wxFONTFAMILY_SWISS, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_NORMAL );
     g_pFontData = new wxFont( 14, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
@@ -622,6 +626,22 @@ void dashboard_pi::Notify()
     if (mHEEL_Watchdog <= 0) {
         SendSentenceToAllInstruments(OCPN_DBP_STC_HEEL, NAN, _T("-"));
     }
+    mALT_Watchdog--;
+    if (mALT_Watchdog <= 0) {
+      mPriAlt = 99;
+      SendSentenceToAllInstruments(OCPN_DBP_STC_ALTI, NAN, _T("-"));
+      mALT_Watchdog = gps_watchdog_timeout_ticks;
+    }
+    mLOG_Watchdog--;
+    if (mLOG_Watchdog <= 0) {
+      SendSentenceToAllInstruments(OCPN_DBP_STC_VLW2, NAN, _T("-"));
+      mLOG_Watchdog = no_nav_watchdog_timeout_ticks;
+    }
+    mTrLOG_Watchdog--;
+    if (mTrLOG_Watchdog <= 0) {
+      SendSentenceToAllInstruments(OCPN_DBP_STC_VLW1, NAN, _T("-"));
+      mTrLOG_Watchdog = no_nav_watchdog_timeout_ticks;
+    }
 
 }
 
@@ -761,7 +781,7 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
                       mPriPosition, mPriSatUsed,
                       m_NMEA0183.Gga.NumberOfSatellitesInUse,
                       m_NMEA0183.Gga.AntennaAltitudeMeters);
-            if (mPriPosition >= 1 || mPriSatUsed >= 1) {
+            if (mPriAlt >= 2 && (mPriPosition >= 1 || mPriSatUsed >= 1)) {
               if (m_NMEA0183.Parse()) {
                 if (m_NMEA0183.Gga.GPSQuality > 0 &&
                     m_NMEA0183.Gga.NumberOfSatellitesInUse >= 5) {
@@ -769,6 +789,8 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
                   // typically less accurate than lon and lat.
                   double alt = m_NMEA0183.Gga.AntennaAltitudeMeters;
                   SendSentenceToAllInstruments(OCPN_DBP_STC_ALTI, alt, _T("m"));
+                  mPriAlt = 2;
+                  mALT_Watchdog = gps_watchdog_timeout_ticks;
                 }
               }
             }
@@ -1013,8 +1035,10 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
                  double   m_NMEA0183.Vlw.TripMileage;
                 */
                 SendSentenceToAllInstruments( OCPN_DBP_STC_VLW1, toUsrDistance_Plugin( m_NMEA0183.Vlw.TripMileage, g_iDashDistanceUnit ), getUsrDistanceUnit_Plugin( g_iDashDistanceUnit ) );
+                mTrLOG_Watchdog = no_nav_watchdog_timeout_ticks;
 
                 SendSentenceToAllInstruments( OCPN_DBP_STC_VLW2, toUsrDistance_Plugin( m_NMEA0183.Vlw.TotalMileage, g_iDashDistanceUnit ), getUsrDistanceUnit_Plugin( g_iDashDistanceUnit ) );
+                mLOG_Watchdog = no_nav_watchdog_timeout_ticks;
             }
 
         }
@@ -1288,6 +1312,17 @@ void dashboard_pi::SetNMEASentence( wxString &sentence )
  -            SendSatInfoToAllInstruments(m_NMEA0183.Gsv.SatsInView,
  -                m_NMEA0183.Gsv.MessageNumber, m_NMEA0183.Gsv.SatInfo);
  -
+ 
+ } else if (update_path == _T("navigation.gnss.antennaAltitude")) {
+   if (mPriAlt >= 1) {
+     double m_alt = GetJsonDouble(value);
+     if (std::isnan(m_alt)) return;
+
+     SendSentenceToAllInstruments(OCPN_DBP_STC_ALTI, m_alt, _T("m"));
+     mPriAlt = 1;
+     mALT_Watchdog = gps_watchdog_timeout_ticks;
+   }
+ 
           else if (update_path == _T("navigation.datetime")) {
               if (mPriDateTime >= 1) {
                   mPriDateTime = 1;

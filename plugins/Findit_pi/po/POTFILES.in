@@ -1,4 +1,6 @@
-src/findit_pi.h
-src/findit_pi.cpp
-src/gui.h
-src/gui.cpp
+../src/findit_pi.h
+../src/findit_pi.cpp
+../src/findit.h
+../src/findit.cpp
+../src/gui.h
+../src/gui.cpp

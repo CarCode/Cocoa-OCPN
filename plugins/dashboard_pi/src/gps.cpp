@@ -301,8 +301,6 @@ void DashboardInstrument_GPS::DrawBackground(wxGCDC* dc)
 
     for (int idx = 0; idx < 12; idx++)
     {
-//        if (m_SatInfo[idx].SatNumber)  // Hakan 03.06.2022
-//            tdc.DrawText(wxString::Format(_T("%02d"), m_SatInfo[idx].SatNumber), idx*16+5, 0);
         if (m_SatInfo[idx].SatNumber) {
               wxString satno = wxString::Format(_T("%02d"), m_SatInfo[idx].SatNumber);
               //Avoid three digit sat-number here. Especially for BeiDou(GB/BD)

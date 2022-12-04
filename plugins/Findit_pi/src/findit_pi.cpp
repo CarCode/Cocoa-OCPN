@@ -56,7 +56,7 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 
 findit_pi::findit_pi(void *ppimgr)
       :opencpn_plugin_19(ppimgr)
-{	
+{
       // Create the PlugIn icons
       initialize_images();
 }
@@ -72,16 +72,16 @@ findit_pi::~findit_pi()
 
 int findit_pi::Init(void)
 {
-	  AddLocaleCatalog( _T("opencpn-findit_pi") );
+    AddLocaleCatalog( _T("opencpn-findit_pi") );
 
-	  isLogbookReady = FALSE;;
-	  isLogbookWindowShown = FALSE;
+    isLogbookReady = FALSE;;
+    isLogbookWindowShown = FALSE;
 
-      // Get a pointer to the opencpn display canvas, to use as a parent for windows created
-      m_parent_window = GetOCPNCanvasWindow();
+    // Get a pointer to the opencpn display canvas, to use as a parent for windows created
+    m_parent_window = GetOCPNCanvasWindow();
 
-	  m_pconfig = GetOCPNConfigObject();
-	  LoadConfig();
+    m_pconfig = GetOCPNConfigObject();
+    LoadConfig();
 /*
       // Create the Context Menu Items
 
@@ -89,7 +89,7 @@ int findit_pi::Init(void)
       //    we need to create a dummy menu to act as a surrogate parent of the created MenuItems
       //    The Items will be re-parented when added to the real context meenu
       wxMenu dummy_menu;
-    
+
     wxString shareLocn = *GetpSharedDataLocation() +
     _T("plugins") + wxFileName::GetPathSeparator() +
     _T("findit") + wxFileName::GetPathSeparator()
@@ -105,7 +105,7 @@ int findit_pi::Init(void)
         toggledIcon = _T("");
         rolloverIcon = _T("");
     }
-    
+
     wxLogMessage(normalIcon); */
     m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_findit, _img_findit, wxITEM_NORMAL,
                      _("FindIt"), _T(""), NULL,
@@ -113,40 +113,40 @@ int findit_pi::Init(void)
 
     m_pFindItWindow = NULL;
     return (
-			WANTS_TOOLBAR_CALLBACK    |
+            WANTS_TOOLBAR_CALLBACK    |
             INSTALLS_TOOLBAR_TOOL     |
-		    WANTS_PREFERENCES         |
-			WANTS_PLUGIN_MESSAGING 
+            WANTS_PREFERENCES         |
+            WANTS_PLUGIN_MESSAGING
             );
 }
 
 bool findit_pi::DeInit(void)
 {
-      if(m_pFindItWindow)
-      {
-            m_pFindItWindow->Destroy();
-			m_pFindItWindow = NULL;
-      }
-      return true;
+    if(m_pFindItWindow)
+    {
+        m_pFindItWindow->Destroy();
+        m_pFindItWindow = NULL;
+    }
+    return true;
 }
 
 void findit_pi::SetPluginMessage(wxString &message_id, wxString &message_body)
 {
-	if(message_id == _T("LOGBOOK_READY_FOR_REQUESTS"))
-	{
-		this->isLogbookReady = (message_body == _T("TRUE"))?true:false;
+    if(message_id == _T("LOGBOOK_READY_FOR_REQUESTS"))
+    {
+        this->isLogbookReady = (message_body == _T("TRUE"))?true:false;
 
-		if(m_pFindItWindow)
-			m_pFindItWindow->setLogbookColumns(isLogbookReady);
-	}
-	else if(message_id == _T("LOGBOOK_WINDOW_SHOWN"))
-	{
-		isLogbookWindowShown = true;
-	}
-	else if(message_id == _T("LOGBOOK_WINDOW_HIDDEN"))
-	{
-		isLogbookWindowShown = false;
-	}
+        if(m_pFindItWindow)
+            m_pFindItWindow->setLogbookColumns(isLogbookReady);
+    }
+    else if(message_id == _T("LOGBOOK_WINDOW_SHOWN"))
+    {
+        isLogbookWindowShown = true;
+    }
+    else if(message_id == _T("LOGBOOK_WINDOW_HIDDEN"))
+    {
+        isLogbookWindowShown = false;
+    }
 }
 
 int findit_pi::GetAPIVersionMajor()
@@ -197,12 +197,12 @@ void findit_pi::SetColorScheme(PI_ColorScheme cs)
 
 void findit_pi::OnToolbarToolCallback(int id)
 {
-	SendPluginMessage(_T("LOGBOOK_IS_READY_FOR_REQUEST"), wxEmptyString);
-	if(NULL == m_pFindItWindow)
-		m_pFindItWindow = new MainDialog(this->m_parent_window,this);
-	
+    SendPluginMessage(_T("LOGBOOK_IS_READY_FOR_REQUEST"), wxEmptyString);
+    if(NULL == m_pFindItWindow)
+        m_pFindItWindow = new MainDialog(this->m_parent_window,this);
+
     SetColorScheme(PI_ColorScheme());
-    
+
     m_pFindItWindow->Show( !m_pFindItWindow->IsShown() );
 }
 
@@ -219,11 +219,11 @@ void findit_pi::UpdateAuiStatus(void)
 
 void findit_pi::ShowPreferencesDialog( wxWindow* parent )
 {
-	int buyNotemp = buyNo;
-	int  toBuyZerotemp = toBuyZero;
-	int lastRowDefaulttemp = lastRowDefault;
+    int buyNotemp = buyNo;
+    int  toBuyZerotemp = toBuyZero;
+    int lastRowDefaulttemp = lastRowDefault;
 
-	OptionsDialog* dlg = new OptionsDialog(parent,this);
+    OptionsDialog* dlg = new OptionsDialog(parent,this);
 
     wxColour cl;
     GetGlobalColor(_T("DILG1"), &cl);
@@ -236,11 +236,11 @@ void findit_pi::ShowPreferencesDialog( wxWindow* parent )
         buyNo = dlg->m_radioBox11->GetSelection();
         toBuyZero = dlg->m_radioBox1->GetSelection();
         lastRowDefault = dlg->m_radioBox5->GetSelection();
-        
+
         if((buyNo != buyNotemp) || (toBuyZero != toBuyZerotemp) || (lastRowDefault != lastRowDefaulttemp))
             if(m_pFindItWindow)
                 m_pFindItWindow->reloadData();
-        
+
         SaveConfig();
     }
     else
@@ -248,39 +248,37 @@ void findit_pi::ShowPreferencesDialog( wxWindow* parent )
         if(buyNo != buyNotemp || toBuyZero != toBuyZerotemp || lastRowDefault != lastRowDefaulttemp)
             if(m_pFindItWindow)
                 m_pFindItWindow->reloadData();
-	 }
-	 delete dlg;
+    }
+    delete dlg;
 }
 
 void findit_pi::SaveConfig()
 {
       if(m_pconfig)
       {
-			m_pconfig->SetPath ( _T ( "/PlugIns/FindIt" ) );
-			m_pconfig->Write ( _T( "buyNo" ), buyNo );
-			m_pconfig->Write ( _T( "toBuyZero" ), toBuyZero );
-			m_pconfig->Write ( _T( "lastRowDefault" ), lastRowDefault );
-	  }
+          m_pconfig->SetPath ( _T ( "/PlugIns/FindIt" ) );
+          m_pconfig->Write ( _T( "buyNo" ), buyNo );
+          m_pconfig->Write ( _T( "toBuyZero" ), toBuyZero );
+          m_pconfig->Write ( _T( "lastRowDefault" ), lastRowDefault );
+      }
 }
 
 void findit_pi::LoadConfig()
 {
       if(m_pconfig)
       {
-            m_pconfig->SetPath ( _T( "/PlugIns/FindIt" ) );
-			m_pconfig->Read ( _T( "buyNo" ),  &buyNo, 0 );
-			m_pconfig->Read ( _T( "toBuyZero" ),  &toBuyZero, 0 );
-			m_pconfig->Read ( _T( "lastRowDefault" ), &lastRowDefault, 0 );
-	  }
+          m_pconfig->SetPath ( _T( "/PlugIns/FindIt" ) );
+          m_pconfig->Read ( _T( "buyNo" ),  &buyNo, 0 );
+          m_pconfig->Read ( _T( "toBuyZero" ),  &toBuyZero, 0 );
+          m_pconfig->Read ( _T( "lastRowDefault" ), &lastRowDefault, 0 );
+      }
 }
 // ////////////////////OptionsDialog ////////////////////
 // //////////////////////////////////////////////////////
 void OptionsDialog::OnInitDialog(wxInitDialogEvent& event)
 {
-//	this->m_checkBoxFindItIcon->SetValue(parent->m_bFINDITShowIcon);
-	this->m_radioBox1->SetSelection(parent->toBuyZero);
-	this->m_radioBox11->SetSelection(parent->buyNo);
-	this->m_radioBox5->SetSelection(parent->lastRowDefault);
+//  this->m_checkBoxFindItIcon->SetValue(parent->m_bFINDITShowIcon);
+    this->m_radioBox1->SetSelection(parent->toBuyZero);
+    this->m_radioBox11->SetSelection(parent->buyNo);
+    this->m_radioBox5->SetSelection(parent->lastRowDefault);
 }
-
-

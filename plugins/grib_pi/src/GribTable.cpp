@@ -545,7 +545,7 @@ wxString GRIBTable::GetTimeRowsStrings( wxDateTime date_time, int time_zone, int
                 if(GetLocaleCanonicalName() == _T("en_US"))
                     return t.Format( _T(" %a-%m/%d/%y  "), wxDateTime::Local);
                 else
-                    return t.Format( _T(" %a-%d/%m/%y  "), wxDateTime::Local);
+                    return t.Format( _T(" %a. %d.%m.%y  "), wxDateTime::Local);  // war / statt .
             }
         case 1:
             switch( type ){
@@ -555,7 +555,7 @@ wxString GRIBTable::GetTimeRowsStrings( wxDateTime date_time, int time_zone, int
                 if(GetLocaleCanonicalName() == _T("en_US"))
                     return t.Format( _T(" %a-%m/%d/%y  "), wxDateTime::UTC );
                 else
-                    return t.Format( _T(" %a-%d/%m/%y  "), wxDateTime::UTC );
+                    return t.Format( _T(" %a. %d.%m.%y  "), wxDateTime::UTC );
             }
         default:
             return wxEmptyString;
