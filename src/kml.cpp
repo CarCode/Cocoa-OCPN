@@ -560,6 +560,7 @@ void Kml::CopyRouteToClipboard( Route* route ) {
         ::wxEndBusyCursor();
     }
         delete formatDlg;
+    wxMessageBox("Ergebnis im Clipboard");
 }
 
 void Kml::CopyTrackToClipboard( Track* track ) {

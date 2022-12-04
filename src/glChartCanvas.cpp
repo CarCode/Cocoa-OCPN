@@ -2251,7 +2251,7 @@ void glChartCanvas::DrawFloatingOverlayObjects( ocpnDC &dc )
     g_overlayCanvas = m_pParentCanvas;
     if (g_pi_manager) {
          g_pi_manager->SendViewPortToRequestingPlugIns(vp);
-         g_pi_manager->RenderAllGLCanvasOverlayPlugIns(m_pcontext, vp, m_pParentCanvas->m_canvasIndex);
+         g_pi_manager->RenderAllGLCanvasOverlayPlugIns(m_pcontext, vp, m_pParentCanvas->m_canvasIndex, OVERLAY_LEGACY);
     }
 
     // all functions called with m_pParentCanvas-> are still slow because they go through ocpndc
@@ -2269,6 +2269,10 @@ void glChartCanvas::DrawFloatingOverlayObjects( ocpnDC &dc )
 #ifdef USE_S57
     s57_DrawExtendedLightSectors( dc, m_pParentCanvas->VPoint, m_pParentCanvas->extendedSectorLegs );
 #endif
+    if (g_pi_manager) {
+      g_pi_manager->RenderAllGLCanvasOverlayPlugIns(
+          m_pcontext, vp, m_pParentCanvas->m_canvasIndex, OVERLAY_OVER_SHIPS);
+    }
 }
 
 void glChartCanvas::DrawChartBar( ocpnDC &dc )
@@ -3491,6 +3495,9 @@ void glChartCanvas::Render()
 
     OCPNRegion screen_region(wxRect(0, 0, VPoint.pix_width, VPoint.pix_height));
 
+    // Force the GL window height to be even number, avoiding artifacts
+//    gl_height -= gl_height & 1;
+
     glViewport( 0, 0, (GLint) gl_width * m_displayScale, (GLint) gl_height * m_displayScale );
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity();
@@ -3595,7 +3602,8 @@ void glChartCanvas::Render()
                     b_whole_pixel = false;
 
                 accelerated_pan = b_whole_pixel && abs(dx) < m_cache_tex_x && abs(dy) < m_cache_tex_y
-                                  && sx == m_cache_tex_x && sy == m_cache_tex_y;
+//                                  && sx == m_cache_tex_x && sy == m_cache_tex_y;
+                                    && (abs(dx) > 0 || (abs(dy) > 0));
             }
 
             //  FBO swapping has trouble with Retina display on MacOS Monterey.
@@ -3605,7 +3613,8 @@ void glChartCanvas::Render()
 
             // do we allow accelerated panning?  can we perform it here?
             if(accelerated_pan && !g_GLOptions.m_bUseCanvasPanning) {
-                if((dx != 0) || (dy != 0)){   // Anything to do?
+                if((dx != 0) || (dy != 0))
+                {   // Anything to do?
                     m_cache_page = !m_cache_page; /* page flip */
 
                     /* perform accelerated pan rendering to the new framebuffer */
@@ -4002,6 +4011,13 @@ void glChartCanvas::Render()
     DrawEmboss(m_pParentCanvas->EmbossDepthScale() );
     DrawEmboss(m_pParentCanvas->EmbossOverzoomIndicator( gldc ) );
 
+    if (g_pi_manager) {
+      ViewPort &vp = m_pParentCanvas->GetVP();
+      g_pi_manager->SendViewPortToRequestingPlugIns(vp);
+      g_pi_manager->RenderAllGLCanvasOverlayPlugIns(
+          m_pcontext, vp, m_pParentCanvas->m_canvasIndex, OVERLAY_OVER_EMBOSS);
+    }
+
     if( m_pParentCanvas->m_pTrackRolloverWin )
         m_pParentCanvas->m_pTrackRolloverWin->Draw(gldc);
 
@@ -4071,6 +4087,13 @@ void glChartCanvas::Render()
         m_pParentCanvas->m_Compass->Paint(gldc);
 
     RenderGLAlertMessage();
+
+    if (g_pi_manager) {
+      ViewPort &vp = m_pParentCanvas->GetVP();
+      g_pi_manager->SendViewPortToRequestingPlugIns(vp);
+      g_pi_manager->RenderAllGLCanvasOverlayPlugIns(
+          m_pcontext, vp, m_pParentCanvas->m_canvasIndex, OVERLAY_OVER_UI);
+    }
 
     //quiting?
     if( g_bquiting )

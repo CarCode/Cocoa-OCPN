@@ -1071,11 +1071,15 @@ AIS_Error AIS_Decoder::Decode( const wxString& str )
 
             m_pLatestTargetData = pTargetData;
 
-            if( str.Mid( 3, 3 ).IsSameAs( _T("VDO") ) )            
+            if (!str.IsEmpty()) {       // NMEA0183 message
+              if (str.Mid(3, 3).IsSameAs(_T("VDO")))
                 pTargetData->b_OwnShip = true;
-            else{ 
-                //set  mmsi-props to default values
+              else
                 pTargetData->b_OwnShip = false;
+            }
+
+            if (!pTargetData->b_OwnShip) {
+                //set  mmsi-props to default values
                 if ( 0 == m_persistent_tracks.count( mmsi ) ) {
                     //Normal target
                     pTargetData->b_PersistTrack = false;

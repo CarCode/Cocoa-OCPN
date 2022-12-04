@@ -568,7 +568,10 @@ MUIBar::MUIBar(ChartCanvas* parent, int orientation, float size_factor, wxWindow
     //SetBackgroundStyle( wxBG_STYLE_TRANSPARENT );
     //wxWindow::Create(parent, id, pos, size, style, name);
     //long mstyle = wxSIMPLE_BORDER;
-    long mstyle = wxNO_BORDER | wxFRAME_NO_TASKBAR | wxFRAME_SHAPED | wxFRAME_FLOAT_ON_PARENT | wxFRAME_TOOL_WINDOW;
+    long mstyle = wxNO_BORDER | wxFRAME_NO_TASKBAR | wxFRAME_SHAPED | wxFRAME_FLOAT_ON_PARENT;
+#ifdef __WXOSX__
+  mstyle |= wxFRAME_TOOL_WINDOW;
+#endif
 
     m_scaleFactor = size_factor;
     m_cs = (ColorScheme)-1;

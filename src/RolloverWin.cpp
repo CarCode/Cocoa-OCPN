@@ -39,6 +39,7 @@ extern bool             g_bopengl;
 #ifdef ocpnUSE_GL    
 extern GLenum       g_texture_rectangle_format;
 #endif
+extern MyFrame *gFrame;
 
 BEGIN_EVENT_TABLE(RolloverWin, wxWindow) EVT_PAINT(RolloverWin::OnPaint)
     EVT_TIMER(ROLLOVER_TIMER, RolloverWin::OnTimer)
@@ -376,15 +377,18 @@ void RolloverWin::SetBestPosition( int x, int y, int off_x, int off_y, int rollo
     m_plabelFont = FontMgr::Get().FindOrCreateFont( font_size, dFont->GetFamily(),
                          dFont->GetStyle(), dFont->GetWeight(), false, dFont->GetFaceName() );
 
+    wxSize sizeM;
     if(m_plabelFont && m_plabelFont->IsOk()) {
 #ifdef __WXMAC__
         wxScreenDC sdc;
         sdc.SetFont(*m_plabelFont);
         sdc.GetMultiLineTextExtent(m_string, &w, &h, NULL, m_plabelFont);
+        sizeM = sdc.GetTextExtent("M");
 #else
         wxClientDC cdc( GetParent() );
         cdc.SetFont(*m_plabelFont);
         cdc.GetMultiLineTextExtent( m_string, &w, &h, NULL, m_plabelFont );
+        sizeM = cdc.GetTextExtent("M");
 #endif
     }
     else {
@@ -392,8 +396,12 @@ void RolloverWin::SetBestPosition( int x, int y, int off_x, int off_y, int rollo
         h = 10;
     }
 
-    m_size.x = w + 8;
-    m_size.y = h + 8;
+    m_size.x = w + 1 * sizeM.x;
+    m_size.y = h + 1 * sizeM.y;
+
+#ifdef WX316PLUS
+    m_size = gFrame->ToDIP(m_size);
+#endif
 
     int xp, yp;
     if( ( x + off_x + m_size.x ) > parent_size.x ) {

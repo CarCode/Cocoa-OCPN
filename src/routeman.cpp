@@ -858,7 +858,7 @@ bool Routeman::DoesRouteContainSharedPoints( Route *pRoute )
   
 
 
-bool Routeman::DeleteRoute( Route *pRoute )
+bool Routeman::DeleteRoute(Route *pRoute)
 {
     if( pRoute ) {
         if( pRoute == pAISMOBRoute )
@@ -1276,7 +1276,9 @@ void WayPointman::ProcessUserIcons( ocpnStyle::Style* style )
                 SVGDocumentPixelSize(name, w, h);
                 w = wxMax(wxMax(w, h), 15);  // We want certain minimal size for the
                                              // icons, 15px (approx 3mm) be it
-                const unsigned int bm_size = SVGPixelsToDisplay(w);
+//                const unsigned int bm_size = SVGPixelsToDisplay(w);
+//               const unsigned int bm_size = w * g_ChartScaleFactorExp; //SVGPixelsToDisplay(w);
+                const unsigned int bm_size = w; //SVGPixelsToDisplay(w);
                 wxBitmap iconSVG = LoadSVG(name, bm_size, bm_size);
                 MarkIcon * pmi = ProcessIcon( iconSVG, iconname, iconname );
                 if(pmi)

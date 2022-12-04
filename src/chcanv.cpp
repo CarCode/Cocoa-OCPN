@@ -10273,7 +10273,7 @@ void ChartCanvas::UpdateCanvasS52PLIBConfig()
         v[_T("OpenCPN S52PLIB SoundingsFactor")] = g_ENCSoundingScaleFactor;
 
         // Global options
-/*        
+/*
         v[_T("OpenCPN S52PLIB MetaDisplay")] = ps52plib->m_bShowMeta;
         v[_T("OpenCPN S52PLIB DeclutterText")] = ps52plib->m_bDeClutterText;
         v[_T("OpenCPN S52PLIB ShowNationalText")] = ps52plib->m_bShowNationalTexts;
@@ -10282,7 +10282,16 @@ void ChartCanvas::UpdateCanvasS52PLIBConfig()
         v[_T("OpenCPN S52PLIB SymbolStyle")] = ps52plib->m_nSymbolStyle;
         v[_T("OpenCPN S52PLIB BoundaryStyle")] = ps52plib->m_nBoundaryStyle;
         v[_T("OpenCPN S52PLIB ColorShades")] = S52_getMarinerParam( S52_MAR_TWO_SHADES );
-*/        
+*/
+        v[_T("OpenCPN S52PLIB MetaDisplay")] = ps52plib->m_bShowMeta;
+        v[_T("OpenCPN S52PLIB DeclutterText")] = ps52plib->m_bDeClutterText;
+        v[_T("OpenCPN S52PLIB ShowNationalText")] = ps52plib->m_bShowNationalTexts;
+        v[_T("OpenCPN S52PLIB ShowImportantTextOnly")] = ps52plib->m_bShowS57ImportantTextOnly;
+        v[_T("OpenCPN S52PLIB UseSCAMIN")] = ps52plib->m_bUseSCAMIN;
+        v[_T("OpenCPN S52PLIB SymbolStyle")] = ps52plib->m_nSymbolStyle;
+        v[_T("OpenCPN S52PLIB BoundaryStyle")] = ps52plib->m_nBoundaryStyle;
+        v[_T("OpenCPN S52PLIB ColorShades")] = S52_getMarinerParam( S52_MAR_TWO_SHADES );
+
         wxJSONWriter w;
         wxString out;
         w.Write(v, out);
@@ -11290,12 +11299,10 @@ void ChartCanvas::DrawOverlayObjects( ocpnDC &dc, const wxRegion& ru )
 
     if( g_pi_manager ) {
         g_pi_manager->SendViewPortToRequestingPlugIns( GetVP() );
-        g_pi_manager->RenderAllCanvasOverlayPlugIns( dc, GetVP(), m_canvasIndex);
+        g_pi_manager->RenderAllCanvasOverlayPlugIns( dc, GetVP(), m_canvasIndex, OVERLAY_LEGACY);
     }
 
     AISDrawAreaNotices( dc, GetVP(), this);
-    DrawEmboss( dc, EmbossDepthScale( ) );
-    DrawEmboss( dc, EmbossOverzoomIndicator( dc ) );
 
     wxDC *pdc = dc.GetDC();
     if( pdc ) {
@@ -11325,6 +11332,15 @@ void ChartCanvas::DrawOverlayObjects( ocpnDC &dc, const wxRegion& ru )
 #ifdef USE_S57
     s57_DrawExtendedLightSectors( dc, VPoint, extendedSectorLegs );
 #endif
+    if (g_pi_manager) {
+      g_pi_manager->RenderAllCanvasOverlayPlugIns(dc, GetVP(), m_canvasIndex, OVERLAY_OVER_SHIPS);
+    }
+
+    DrawEmboss(dc, EmbossDepthScale());
+    DrawEmboss(dc, EmbossOverzoomIndicator(dc));
+    if (g_pi_manager) {
+      g_pi_manager->RenderAllCanvasOverlayPlugIns(dc, GetVP(), m_canvasIndex, OVERLAY_OVER_EMBOSS);
+    }
 
     if( m_pTrackRolloverWin ) {
         m_pTrackRolloverWin->Draw(dc);
@@ -11339,6 +11355,10 @@ void ChartCanvas::DrawOverlayObjects( ocpnDC &dc, const wxRegion& ru )
     if( m_pAISRolloverWin ) {
         m_pAISRolloverWin->Draw(dc);
         m_brepaint_piano = true;
+    }
+
+    if (g_pi_manager) {
+      g_pi_manager->RenderAllCanvasOverlayPlugIns(dc, GetVP(), m_canvasIndex, OVERLAY_OVER_UI);
     }
 }
 

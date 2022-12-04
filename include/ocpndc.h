@@ -52,79 +52,79 @@ class wxGLCanvas;
 class DECL_EXP ocpnDC
 {
 public:
-     ocpnDC(wxGLCanvas &canvas);
-     ocpnDC(wxDC &pdc);
-     ocpnDC();
+    ocpnDC(wxGLCanvas &canvas);
+    ocpnDC(wxDC &pdc);
+    ocpnDC();
 
-     ~ocpnDC();
+    ~ocpnDC();
 
-     void SetBackground( const wxBrush &brush );
-     void SetPen( const wxPen &pen);
-     void SetBrush( const wxBrush &brush);
-     void SetTextForeground(const wxColour &colour);
-     void SetFont(const wxFont& font);
-     static void SetGLAttrs( bool highQuality ); 
-     void SetGLStipple() const;
+    void SetBackground( const wxBrush &brush );
+    void SetPen( const wxPen &pen);
+    void SetBrush( const wxBrush &brush);
+    void SetTextForeground(const wxColour &colour);
+    void SetFont(const wxFont& font);
+    static void SetGLAttrs( bool highQuality );
+    void SetGLStipple() const;
 
-     const wxPen& GetPen() const;
-     const wxBrush& GetBrush() const;
-     const wxFont& GetFont() const;
+    const wxPen& GetPen() const;
+    const wxBrush& GetBrush() const;
+    const wxFont& GetFont() const;
 
-     void GetSize(wxCoord *width, wxCoord *height) const;
+    void GetSize(wxCoord *width, wxCoord *height) const;
 
-     void DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hiqual = true);
-     void DrawLines( int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0, bool b_hiqual = true);
+    void DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hiqual = true);
+    void DrawLines( int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0, bool b_hiqual = true);
 
-     void StrokeLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
-     void StrokeLine( wxPoint a, wxPoint b) { StrokeLine(a.x, a.y, b.x, b.y); }
-     void StrokeLines( int n, wxPoint *points);
+    void StrokeLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
+    void StrokeLine( wxPoint a, wxPoint b) { StrokeLine(a.x, a.y, b.x, b.y); }
+    void StrokeLines( int n, wxPoint *points);
 
-     void Clear();
-     void DrawRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h );
-     void DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, wxCoord rr );
-     void DrawCircle(wxCoord x, wxCoord y, wxCoord radius);
-     void DrawCircle(const wxPoint &pt, wxCoord radius) { DrawCircle(pt.x, pt.y, radius); }
-     void StrokeCircle(wxCoord x, wxCoord y, wxCoord radius);
+    void Clear();
+    void DrawRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h );
+    void DrawRoundedRectangle( wxCoord x, wxCoord y, wxCoord w, wxCoord h, wxCoord rr );
+    void DrawCircle(wxCoord x, wxCoord y, wxCoord radius);
+    void DrawCircle(const wxPoint &pt, wxCoord radius) { DrawCircle(pt.x, pt.y, radius); }
+    void StrokeCircle(wxCoord x, wxCoord y, wxCoord radius);
 
-     void DrawEllipse(wxCoord x, wxCoord y, wxCoord width, wxCoord height);
-     void DrawPolygon(int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0, float scale =1.0);
-     void DrawPolygonTessellated(int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0);
-     void StrokePolygon(int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0, float scale = 1.0);
+    void DrawEllipse(wxCoord x, wxCoord y, wxCoord width, wxCoord height);
+    void DrawPolygon(int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0, float scale =1.0);
+    void DrawPolygonTessellated(int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0);
+    void StrokePolygon(int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0, float scale = 1.0);
 
-     void DrawBitmap(const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usemask);
+    void DrawBitmap(const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usemask);
 
-     void DrawText(const wxString &text, wxCoord x, wxCoord y);
-     void GetTextExtent(const wxString &string, wxCoord *w, wxCoord *h, wxCoord *descent = NULL,
+    void DrawText(const wxString &text, wxCoord x, wxCoord y);
+    void GetTextExtent(const wxString &string, wxCoord *w, wxCoord *h, wxCoord *descent = NULL,
                         wxCoord *externalLeading = NULL, wxFont *font = NULL);
 
-     void ResetBoundingBox();
-     void CalcBoundingBox(wxCoord x, wxCoord y);
+    void ResetBoundingBox();
+    void CalcBoundingBox(wxCoord x, wxCoord y);
 
-     void DestroyClippingRegion() {}
+    void DestroyClippingRegion() {}
 
-     wxDC *GetDC() const { return dc; }
+    wxDC *GetDC() const { return dc; }
 
 protected:
-     bool ConfigurePen();
-     bool ConfigureBrush();
+    bool ConfigurePen();
+    bool ConfigureBrush();
 
-     void GLDrawBlendData(wxCoord x, wxCoord y, wxCoord w, wxCoord h,
+    void GLDrawBlendData(wxCoord x, wxCoord y, wxCoord w, wxCoord h,
                           int format, const unsigned char *data);
 
-     wxGLCanvas *glcanvas;
-     wxDC *dc;
-     wxPen m_pen;
-     wxBrush m_brush;
-     wxColour m_textforegroundcolour;
-     wxFont m_font;
+    wxGLCanvas *glcanvas;
+    wxDC *dc;
+    wxPen m_pen;
+    wxBrush m_brush;
+    wxColour m_textforegroundcolour;
+    wxFont m_font;
 
 #ifdef ocpnUSE_GL     
-     TexFont m_texfont;
+    TexFont m_texfont;
 #endif
-     bool m_buseTex;
+    bool m_buseTex;
 
 #if  wxUSE_GRAPHICS_CONTEXT
-     wxGraphicsContext *pgc;
+    wxGraphicsContext *pgc;
 #endif
 };
 

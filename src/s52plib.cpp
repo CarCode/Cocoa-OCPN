@@ -2510,7 +2510,7 @@ int s52plib::RenderT_All( ObjRazRules *rzRules, Rules *rules, ViewPort *vp, bool
                     if( fontSize > 13 ) fontSize -= 3;
 
                 // Now factor in the users selected font size.
-                fontSize += templateFont->GetPointSize() - 10;
+                fontSize += templateFont->GetPointSize() - 8;  // -10
 
                 // In no case should font size be less than 10, since it becomes unreadable
                 fontSize = wxMax(10, fontSize);
@@ -3355,6 +3355,7 @@ bool s52plib::RenderSoundingSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &
     bool not_done = true;
     wxScreenDC sdc;
     int charWidth, charHeight, charDescent;
+    charWidth = 1;
     while((point_size < 20) && not_done){
         wxFont *tentativeFont = FindOrCreateFont_PlugIn( point_size, wxFONTFAMILY_SWISS,  wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
         sdc.GetTextExtent( _T("0"), &charWidth, &charHeight, &charDescent, NULL, tentativeFont ); // measure the text
