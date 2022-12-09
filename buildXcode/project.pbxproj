@@ -2718,7 +2718,6 @@
 		1AAE09A47FD04D4EAB4C3130 /* jsonwriter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jsonwriter.h; path = include/wx/jsonwriter.h; sourceTree = SOURCE_ROOT; };
 		1AC8CF81DA2A4FCFAE05033B /* Symbol-Star-Orange.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Star-Orange.svg"; path = "data/svg/markicons/Symbol-Star-Orange.svg"; sourceTree = SOURCE_ROOT; };
 		1AD4E9567C2B4E9692893192 /* styles.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = styles.h; path = include/styles.h; sourceTree = SOURCE_ROOT; };
-		1AF79B019DE34FFB93E11A45 /* gpsapp.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsapp.h; path = src/garmin/jeeps/gpsapp.h; sourceTree = SOURCE_ROOT; };
 		1AFB0F424235414B970DE7DC /* chartdldr_pi.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = chartdldr_pi.cpp; path = plugins/chartdldr_pi/src/chartdldr_pi.cpp; sourceTree = SOURCE_ROOT; };
 		1AFE8E8CF4D2489A92A15502 /* down.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = down.svg; path = data/svg/traditional/down.svg; sourceTree = SOURCE_ROOT; };
 		1B12516320B54951AE189BE6 /* ChInfoWin.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ChInfoWin.h; path = include/ChInfoWin.h; sourceTree = SOURCE_ROOT; };
@@ -2877,7 +2876,6 @@
 		363950E3C6FE4390BF9423B4 /* wind.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = wind.cpp; path = plugins/dashboard_pi/src/wind.cpp; sourceTree = SOURCE_ROOT; };
 		363B577D813C40F186899255 /* Symbol-X-Large-Magenta.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-X-Large-Magenta.svg"; path = "data/svg/markicons/Symbol-X-Large-Magenta.svg"; sourceTree = SOURCE_ROOT; };
 		36530C46054F430CB5B89B31 /* jas_icc.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jas_icc.h; path = plugins/grib_pi/src/jasper/include/jasper/jas_icc.h; sourceTree = SOURCE_ROOT; };
-		368C7C3AB8C440859357EDDA /* gpsproj.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsproj.h; path = src/garmin/jeeps/gpsproj.h; sourceTree = SOURCE_ROOT; };
 		36A2C60343694C63AD40FEE2 /* Info-No-Discharge.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Info-No-Discharge.svg"; path = "data/svg/markicons/Info-No-Discharge.svg"; sourceTree = SOURCE_ROOT; };
 		36F80D26023546688B5F5D08 /* AISTargetAlertDialog.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = AISTargetAlertDialog.cpp; path = src/AISTargetAlertDialog.cpp; sourceTree = SOURCE_ROOT; };
 		36F826D2BD6340CFB600916C /* SVGMatrix.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SVGMatrix.cpp; path = src/wxsvg/src/SVGMatrix.cpp; sourceTree = SOURCE_ROOT; };
@@ -2974,7 +2972,6 @@
 		4824BB5F95A442028123990D /* iENCToolbar.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = iENCToolbar.h; path = include/iENCToolbar.h; sourceTree = SOURCE_ROOT; };
 		483A7B5E0FB94C3E9FD3A619 /* ddfrecord.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ddfrecord.cpp; path = src/myiso8211/ddfrecord.cpp; sourceTree = SOURCE_ROOT; };
 		485EBEE3109F44A39E0E5ED0 /* Transaction.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Transaction.h; path = src/SQLiteCpp/include/SQLiteCpp/Transaction.h; sourceTree = SOURCE_ROOT; };
-		486D00F3A0BE4F9B81324B12 /* gpsread.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsread.h; path = src/garmin/jeeps/gpsread.h; sourceTree = SOURCE_ROOT; };
 		48B0456E37DB41E0821CD876 /* Sea-Floor-Text-Mud.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Sea-Floor-Text-Mud.svg"; path = "data/svg/markicons/Sea-Floor-Text-Mud.svg"; sourceTree = SOURCE_ROOT; };
 		49171B5E1DD0414BA7BB2302 /* lat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = lat.cpp; path = plugins/dashboard_pi/src/nmea0183/lat.cpp; sourceTree = SOURCE_ROOT; };
 		491EBEB5C5504C0BBF11FFE7 /* Marks-Safe-Water.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Marks-Safe-Water.svg"; path = "data/svg/markicons/Marks-Safe-Water.svg"; sourceTree = SOURCE_ROOT; };
@@ -3069,7 +3066,6 @@
 		5C97F08C15DD4D9BA29E550A /* Symbol-Square-Orange.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Square-Orange.svg"; path = "data/svg/markicons/Symbol-Square-Orange.svg"; sourceTree = SOURCE_ROOT; };
 		5CB3D2345C2F4B7894CC9C0F /* iconRPlus.png */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = image; name = iconRPlus.png; path = src/bitmaps/iconRPlus.png; sourceTree = SOURCE_ROOT; };
 		5CC5CA059F5D445A9D1B37E8 /* Symbol-Exclamation-Red.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Exclamation-Red.svg"; path = "data/svg/markicons/Symbol-Exclamation-Red.svg"; sourceTree = SOURCE_ROOT; };
-		5D0529C2DBB6434C83287A5F /* gpsmem.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsmem.h; path = src/garmin/jeeps/gpsmem.h; sourceTree = SOURCE_ROOT; };
 		5D30D85EC571426EBE26007B /* Ppmd8.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = Ppmd8.c; path = plugins/chartdldr_pi/src/unarr/lzmasdk/Ppmd8.c; sourceTree = SOURCE_ROOT; };
 		5D56236435094CA7A38C977D /* custalloc.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = custalloc.c; path = plugins/chartdldr_pi/src/unarr/common/custalloc.c; sourceTree = SOURCE_ROOT; };
 		5DFB661C81EC4980813BACAC /* vlw.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = vlw.cpp; path = plugins/dashboard_pi/src/nmea0183/vlw.cpp; sourceTree = SOURCE_ROOT; };
@@ -3094,7 +3090,6 @@
 		618449EED3AB49BAADC4BE38 /* TCDS_Ascii_Harmonic.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = TCDS_Ascii_Harmonic.h; path = include/TCDS_Ascii_Harmonic.h; sourceTree = SOURCE_ROOT; };
 		61CE97D88CE84426BFEC2323 /* gpsGry.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = gpsGry.svg; path = data/svg/journeyman/gpsGry.svg; sourceTree = SOURCE_ROOT; };
 		61F0A8548D7D4E3AB82DBB7F /* Symbol-Tick-White.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Tick-White.svg"; path = "data/svg/markicons/Symbol-Tick-White.svg"; sourceTree = SOURCE_ROOT; };
-		62056BBF729B41229235F67B /* garmin_gps.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = garmin_gps.h; path = src/garmin/jeeps/garmin_gps.h; sourceTree = SOURCE_ROOT; };
 		62CD32456A904490992337AC /* Hazard-Obstruction-Shallow.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Hazard-Obstruction-Shallow.svg"; path = "data/svg/markicons/Hazard-Obstruction-Shallow.svg"; sourceTree = SOURCE_ROOT; };
 		62D880A9A9E54669986D940C /* CpuArch.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = CpuArch.c; path = plugins/chartdldr_pi/src/unarr/lzmasdk/CpuArch.c; sourceTree = SOURCE_ROOT; };
 		6326F6205CDF429692399E55 /* Symbol-Pin-Black.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Pin-Black.svg"; path = "data/svg/markicons/Symbol-Pin-Black.svg"; sourceTree = SOURCE_ROOT; };
@@ -3133,7 +3128,6 @@
 		67CE04ABD1094F179A690D26 /* Symbol-Arrow-Orange.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Arrow-Orange.svg"; path = "data/svg/markicons/Symbol-Arrow-Orange.svg"; sourceTree = SOURCE_ROOT; };
 		67F48177B3134ADFBE0A174E /* jsonval.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = jsonval.cpp; path = src/wxJSON/jsonval.cpp; sourceTree = SOURCE_ROOT; };
 		67F62AB6B2864417AE401426 /* iconRMinus.png */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = image; name = iconRMinus.png; path = src/bitmaps/iconRMinus.png; sourceTree = SOURCE_ROOT; };
-		681B85FCA4CD4E49A4B41B88 /* garmin_wrapper_utils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = garmin_wrapper_utils.h; path = src/garmin/jeeps/garmin_wrapper_utils.h; sourceTree = SOURCE_ROOT; };
 		68988BED707944EDB4EEA8F8 /* NodeList.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = NodeList.cpp; path = src/wxsvg/src/NodeList.cpp; sourceTree = SOURCE_ROOT; };
 		694AF2EC82464AE690ABA2C4 /* Response.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = Response.hpp; path = plugins/dashboard_pi/src/nmea0183/Response.hpp; sourceTree = SOURCE_ROOT; };
 		69693D130A9E43FCAB5DF9C1 /* Marks-Light-Red.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Marks-Light-Red.svg"; path = "data/svg/markicons/Marks-Light-Red.svg"; sourceTree = SOURCE_ROOT; };
@@ -3177,7 +3171,6 @@
 		70F124BCF43447269A0015DA /* SoundFactory.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SoundFactory.cpp; path = src/SoundFactory.cpp; sourceTree = SOURCE_ROOT; };
 		711EF0CA3DCD4A08BF9EED07 /* scin_rollover.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = scin_rollover.svg; path = data/svg/traditional/scin_rollover.svg; sourceTree = SOURCE_ROOT; };
 		7137FE1C6D904B7DAEB49B64 /* datastream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = datastream.h; path = include/datastream.h; sourceTree = SOURCE_ROOT; };
-		720803892C00468CA679421E /* gpsfmt.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsfmt.h; path = src/garmin/jeeps/gpsfmt.h; sourceTree = SOURCE_ROOT; };
 		72210016E3D344ED9A95C1D9 /* rar.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = rar.h; path = plugins/chartdldr_pi/src/unarr/rar/rar.h; sourceTree = SOURCE_ROOT; };
 		724F7ECF5D2341ECA8878FDF /* Sea-Current-S-Eastbound.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Sea-Current-S-Eastbound.svg"; path = "data/svg/markicons/Sea-Current-S-Eastbound.svg"; sourceTree = SOURCE_ROOT; };
 		72AE1C3915854BD59018FC91 /* gpsdevice_ser.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = gpsdevice_ser.c; path = src/garmin/jeeps/gpsdevice_ser.c; sourceTree = SOURCE_ROOT; };
@@ -3185,7 +3178,6 @@
 		73438096C23B4744BCD733A2 /* hexvalue.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = hexvalue.cpp; path = src/nmea0183/hexvalue.cpp; sourceTree = SOURCE_ROOT; };
 		738C2C6A573E47A0B0B6AB2A /* OCPNRegion.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = OCPNRegion.h; path = include/OCPNRegion.h; sourceTree = SOURCE_ROOT; };
 		73CF3B924DD941D698671406 /* dial.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = dial.cpp; path = plugins/dashboard_pi/src/dial.cpp; sourceTree = SOURCE_ROOT; };
-		73E6C6CBFCCD4CD29BC101AA /* gpsrqst.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsrqst.h; path = src/garmin/jeeps/gpsrqst.h; sourceTree = SOURCE_ROOT; };
 		73FAE8D623FF4FCC8DED7555 /* Marks-Lateral-Starboard-IALA-B-Lighted.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Marks-Lateral-Starboard-IALA-B-Lighted.svg"; path = "data/svg/markicons/Marks-Lateral-Starboard-IALA-B-Lighted.svg"; sourceTree = SOURCE_ROOT; };
 		7429D6408BB54FE182C96857 /* Ppmd.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Ppmd.h; path = plugins/chartdldr_pi/src/unarr/lzmasdk/Ppmd.h; sourceTree = SOURCE_ROOT; };
 		74626FD1D95C46C79A5E3868 /* Symbol-Diamond-Red.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Diamond-Red.svg"; path = "data/svg/markicons/Symbol-Diamond-Red.svg"; sourceTree = SOURCE_ROOT; };
@@ -3216,7 +3208,6 @@
 		784F886944A14F1C905351A4 /* AISTargetQueryDialog.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = AISTargetQueryDialog.h; path = include/AISTargetQueryDialog.h; sourceTree = SOURCE_ROOT; };
 		785085FCE92341369E3E36D7 /* svgctrl.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = svgctrl.cpp; path = src/wxsvg/src/svgctrl.cpp; sourceTree = SOURCE_ROOT; };
 		789F8F5DB593447A9B7180CB /* error.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = error.c; path = src/glu/libutil/error.c; sourceTree = SOURCE_ROOT; };
-		78D78DDFEFBF474F8755C98D /* gpsprot.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsprot.h; path = src/garmin/jeeps/gpsprot.h; sourceTree = SOURCE_ROOT; };
 		78D82852DB4C4647AF31BB03 /* Ppmd7.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = Ppmd7.c; path = plugins/chartdldr_pi/src/unarr/lzmasdk/Ppmd7.c; sourceTree = SOURCE_ROOT; };
 		78E31F78FD054310BADEC521 /* jp2_enc.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jp2_enc.c; path = plugins/grib_pi/src/jasper/jp2/jp2_enc.c; sourceTree = SOURCE_ROOT; };
 		78EC096FDBA146B4AFB5977D /* Marks-Lateral-Port-IALA-A.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Marks-Lateral-Port-IALA-A.svg"; path = "data/svg/markicons/Marks-Lateral-Port-IALA-A.svg"; sourceTree = SOURCE_ROOT; };
@@ -3278,7 +3269,6 @@
 		8279476072A64958BB7F4ABC /* OCPNPlatform.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = OCPNPlatform.h; path = include/OCPNPlatform.h; sourceTree = SOURCE_ROOT; };
 		8317A9E85E0E4355AA794D4B /* MUI_follow_active.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = MUI_follow_active.svg; path = data/svg/MUI_flat/MUI_follow_active.svg; sourceTree = SOURCE_ROOT; };
 		832105AF31384CF887CD3E7F /* ogr_s57.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ogr_s57.h; path = src/mygdal/ogr_s57.h; sourceTree = SOURCE_ROOT; };
-		8350A4A2423A4E1F8A60A9B2 /* garminusb.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = garminusb.h; path = src/garmin/jeeps/garminusb.h; sourceTree = SOURCE_ROOT; };
 		83642FF132F74DB9B7CAA2D5 /* AboutFrame.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = AboutFrame.h; path = include/AboutFrame.h; sourceTree = SOURCE_ROOT; };
 		837DF8E28D934F9395499E5A /* vwt.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = vwt.cpp; path = plugins/dashboard_pi/src/nmea0183/vwt.cpp; sourceTree = SOURCE_ROOT; };
 		8381411C603B4E98857B8FF5 /* AIS_Disabled.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = AIS_Disabled.svg; path = data/svg/traditional/AIS_Disabled.svg; sourceTree = SOURCE_ROOT; };
@@ -3334,7 +3324,6 @@
 		8C3F4CA080CD419F9A41F48C /* lzss.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = lzss.h; path = plugins/chartdldr_pi/src/unarr/rar/lzss.h; sourceTree = SOURCE_ROOT; };
 		8C49BE6C037846B6BF9850CA /* base.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = base.cpp; path = src/wxcurl/base.cpp; sourceTree = SOURCE_ROOT; };
 		8C5540E5713042BCABDADBC5 /* SVGPolygonElement.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SVGPolygonElement.cpp; path = src/wxsvg/src/SVGPolygonElement.cpp; sourceTree = SOURCE_ROOT; };
-		8CBFCB22E52A456A92740413 /* gpsusbcommon.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsusbcommon.h; path = src/garmin/jeeps/gpsusbcommon.h; sourceTree = SOURCE_ROOT; };
 		8D10E12F81B1440698FCCCA3 /* Symbol-Glow-Small-Black.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Glow-Small-Black.svg"; path = "data/svg/markicons/Symbol-Glow-Small-Black.svg"; sourceTree = SOURCE_ROOT; };
 		8D1E035487F747069F8A91D8 /* cm93.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = cm93.cpp; path = src/cm93.cpp; sourceTree = SOURCE_ROOT; };
 		8D48F3C38C124373B5145A27 /* opencpn.icns */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = opencpn.icns; path = buildosx/opencpn.icns; sourceTree = SOURCE_ROOT; };
@@ -3846,7 +3835,6 @@
 		A6B34268278EF1E3008FB1E1 /* RME120Control.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RME120Control.cpp; path = "plugins/opencpn-radar_pi/src/raymarine/RME120Control.cpp"; sourceTree = "<group>"; };
 		A6B34269278EF1E3008FB1E1 /* RME120ControlsDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RME120ControlsDialog.cpp; path = "plugins/opencpn-radar_pi/src/raymarine/RME120ControlsDialog.cpp"; sourceTree = "<group>"; };
 		A6B34C392801DB7400483E59 /* liblogbookkonni_pi.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = liblogbookkonni_pi.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		A6B6727C24A664410079653F /* gps_wx_logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gps_wx_logging.h; path = src/garmin/jeeps/gps_wx_logging.h; sourceTree = "<group>"; };
 		A6BA2A472892D9A600F80C4E /* libwx_osx_cocoau_html-3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_osx_cocoau_html-3.3.dylib"; sourceTree = "<group>"; };
 		A6BA2A482892D9A600F80C4E /* libwx_osx_cocoau_aui-3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_osx_cocoau_aui-3.3.dylib"; sourceTree = "<group>"; };
 		A6BA2A492892D9A700F80C4E /* libwx_baseu-3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libwx_baseu-3.3.dylib"; sourceTree = "<group>"; };
@@ -3869,7 +3857,7 @@
 		A6D147D424267A580091EE3A /* icons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = icons.cpp; path = plugins/navdata_pi/src/icons.cpp; sourceTree = "<group>"; };
 		A6D6838224239586008B86BE /* DepthFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DepthFont.cpp; path = src/DepthFont.cpp; sourceTree = "<group>"; };
 		A6D6838424239676008B86BE /* DepthFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DepthFont.h; path = include/DepthFont.h; sourceTree = "<group>"; };
-		A6DC526A28D1D6B0007FCED0 /* svg_utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = svg_utils.cpp; path = src/svg_utils.cpp; sourceTree = "<group>"; };
+		A6DC526A28D1D6B0007FCED0 /* svg_utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = svg_utils.cpp; path = src/svg_utils.cpp; sourceTree = SOURCE_ROOT; };
 		A6E4E2B2278DAF0F00A78311 /* vector2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vector2D.h; path = plugins/navdata_pi/src/vector2D.h; sourceTree = "<group>"; };
 		A6E4E2B3278DAF1000A78311 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		A6E4E51A278E22D600A78311 /* radar_pi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = radar_pi.h; path = "plugins/opencpn-radar_pi/include/radar_pi.h"; sourceTree = "<group>"; };
@@ -3994,7 +3982,6 @@
 		AD99D9F26CC54F3F9D785E7E /* Service-Fuel-Jerry-Diesel.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Service-Fuel-Jerry-Diesel.svg"; path = "data/svg/markicons/Service-Fuel-Jerry-Diesel.svg"; sourceTree = SOURCE_ROOT; };
 		ADB9D1EE573E438F86D2CBF8 /* zip.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = zip.c; path = plugins/chartdldr_pi/src/unarr/zip/zip.c; sourceTree = SOURCE_ROOT; };
 		ADF9110EA3BE41A987D4F1EC /* cpl_string.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = cpl_string.h; path = src/mygdal/cpl_string.h; sourceTree = SOURCE_ROOT; };
-		AE4009C063034007BED4B8B1 /* gpsport.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsport.h; path = src/garmin/jeeps/gpsport.h; sourceTree = SOURCE_ROOT; };
 		AE4A71809C9A439D8D6E7457 /* Sea-DepthB-White.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Sea-DepthB-White.svg"; path = "data/svg/markicons/Sea-DepthB-White.svg"; sourceTree = SOURCE_ROOT; };
 		AE76B5F25F4A4A479BAD87C7 /* Track.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = Track.h; path = include/Track.h; sourceTree = SOURCE_ROOT; };
 		AEBD65BA6BA9467CA9FC20A7 /* ChartDataInputStream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ChartDataInputStream.h; path = include/ChartDataInputStream.h; sourceTree = SOURCE_ROOT; };
@@ -4008,11 +3995,9 @@
 		AFE114D1818C42CE8527526E /* Activity-Diving-Scuba-Tank.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Activity-Diving-Scuba-Tank.svg"; path = "data/svg/markicons/Activity-Diving-Scuba-Tank.svg"; sourceTree = SOURCE_ROOT; };
 		B0136843E4FA474FB53372EA /* compass.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = compass.h; path = plugins/dashboard_pi/src/compass.h; sourceTree = SOURCE_ROOT; };
 		B032645EEB9646209062A6E3 /* Sea-DepthA-Green.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Sea-DepthA-Green.svg"; path = "data/svg/markicons/Sea-DepthA-Green.svg"; sourceTree = SOURCE_ROOT; };
-		B07B0C86207F4ED78DC5FF8F /* gpsdatum.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsdatum.h; path = src/garmin/jeeps/gpsdatum.h; sourceTree = SOURCE_ROOT; };
 		B08F62121EEF4F58AA629E8D /* Symbol-Circle-Magenta.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Circle-Magenta.svg"; path = "data/svg/markicons/Symbol-Circle-Magenta.svg"; sourceTree = SOURCE_ROOT; };
 		B09E0737833F4CD4A712D407 /* CursorData.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = CursorData.h; path = plugins/grib_pi/src/CursorData.h; sourceTree = SOURCE_ROOT; };
 		B0A34FC67A9348FC919DE87D /* CompassRose.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = CompassRose.svg; path = data/svg/journeyman_flat/CompassRose.svg; sourceTree = SOURCE_ROOT; };
-		B0E7C609E83542C7B622F1E5 /* gpsdevice.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsdevice.h; path = src/garmin/jeeps/gpsdevice.h; sourceTree = SOURCE_ROOT; };
 		B11DE181540C463A909134BB /* Marks-Cardinal-South.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Marks-Cardinal-South.svg"; path = "data/svg/markicons/Marks-Cardinal-South.svg"; sourceTree = SOURCE_ROOT; };
 		B12810A174534C0E8C9ECA79 /* Osenc.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Osenc.cpp; path = src/Osenc.cpp; sourceTree = SOURCE_ROOT; };
 		B128F7EC31CE4391B8A94076 /* Exception.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Exception.cpp; path = src/SQLiteCpp/src/Exception.cpp; sourceTree = SOURCE_ROOT; };
@@ -4115,9 +4100,7 @@
 		C36CFC5CDCBD43C6BB2CD7C0 /* CanvasConfig.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = CanvasConfig.cpp; path = src/CanvasConfig.cpp; sourceTree = SOURCE_ROOT; };
 		C37BAE267575485BB3ABD4B9 /* TrackPropDlg.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = TrackPropDlg.cpp; path = src/TrackPropDlg.cpp; sourceTree = SOURCE_ROOT; };
 		C3DCF6533E0B49AEBCB76434 /* SVGNumberList.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SVGNumberList.cpp; path = src/wxsvg/src/SVGNumberList.cpp; sourceTree = SOURCE_ROOT; };
-		C41F8667BB7A4E97B1E3FF46 /* gpsusbint.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsusbint.h; path = src/garmin/jeeps/gpsusbint.h; sourceTree = SOURCE_ROOT; };
 		C426733EB7EC4441A411EC88 /* iirfilter.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = iirfilter.cpp; path = plugins/dashboard_pi/src/iirfilter.cpp; sourceTree = SOURCE_ROOT; };
-		C4494D47AB6541F79FCE204F /* gpsinput.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsinput.h; path = src/garmin/jeeps/gpsinput.h; sourceTree = SOURCE_ROOT; };
 		C45D27AB4421454CA287ED6C /* toolbar.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = toolbar.cpp; path = src/toolbar.cpp; sourceTree = SOURCE_ROOT; };
 		C48AE2FC34854C9E9A374698 /* jsonval.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = jsonval.cpp; path = src/wxJSON/jsonval.cpp; sourceTree = SOURCE_ROOT; };
 		C49F1B6FDAA349A0AF1F6DE9 /* inflate.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = inflate.c; path = plugins/chartdldr_pi/src/unarr/zip/inflate.c; sourceTree = SOURCE_ROOT; };
@@ -4178,7 +4161,6 @@
 		CF296A77170243FABE27CA1C /* chartdbs.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = chartdbs.h; path = include/chartdbs.h; sourceTree = SOURCE_ROOT; };
 		CF4EAC0AF61E4A718C36AD15 /* rte.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = rte.cpp; path = plugins/dashboard_pi/src/nmea0183/rte.cpp; sourceTree = SOURCE_ROOT; };
 		CFA4A59DEE044996B8DFA5B3 /* jas_stream.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jas_stream.c; path = plugins/grib_pi/src/jasper/base/jas_stream.c; sourceTree = SOURCE_ROOT; };
-		CFB616562BF14494A1090CE2 /* gpscom.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpscom.h; path = src/garmin/jeeps/gpscom.h; sourceTree = SOURCE_ROOT; };
 		D001612051F248469039E70C /* Service-Fuel-Jerry-Petrol.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Service-Fuel-Jerry-Petrol.svg"; path = "data/svg/markicons/Service-Fuel-Jerry-Petrol.svg"; sourceTree = SOURCE_ROOT; };
 		D008BF99254945E3BB4091AF /* Landmarks-Stream-River.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Landmarks-Stream-River.svg"; path = "data/svg/markicons/Landmarks-Stream-River.svg"; sourceTree = SOURCE_ROOT; };
 		D0090472DF1D46E88321A931 /* tess.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = tess.h; path = src/libtess2/Source/tess.h; sourceTree = SOURCE_ROOT; };
@@ -4223,7 +4205,6 @@
 		D785404352C54C74A7687C75 /* Symbol-Exclamation-White.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Exclamation-White.svg"; path = "data/svg/markicons/Symbol-Exclamation-White.svg"; sourceTree = SOURCE_ROOT; };
 		D7AA5FFBC91240829A4A8711 /* base64.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = base64.h; path = plugins/chartdldr_pi/src/base64.h; sourceTree = SOURCE_ROOT; };
 		D7C6CD7E74674E1BB1BAA701 /* gps.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = gps.cpp; path = plugins/dashboard_pi/src/gps.cpp; sourceTree = SOURCE_ROOT; };
-		D80CEF6BE24142669067EA75 /* gpsutil.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsutil.h; path = src/garmin/jeeps/gpsutil.h; sourceTree = SOURCE_ROOT; };
 		D81363A8CC704C8A94A64CAC /* jpc_t2cod.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jpc_t2cod.h; path = plugins/grib_pi/src/jasper/jpc/jpc_t2cod.h; sourceTree = SOURCE_ROOT; };
 		D84A6E46F02D491CAC3DC715 /* SencManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SencManager.cpp; path = src/SencManager.cpp; sourceTree = SOURCE_ROOT; };
 		D8585EAA361A480CA0203174 /* TTYScroll.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = TTYScroll.h; path = include/TTYScroll.h; sourceTree = SOURCE_ROOT; };
@@ -4246,7 +4227,6 @@
 		DBD46227A19A4759AB8BD964 /* scout_rollover.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = scout_rollover.svg; path = data/svg/traditional/scout_rollover.svg; sourceTree = SOURCE_ROOT; };
 		DC5F3540FBA9495BA54871DE /* RoutePoint.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = RoutePoint.h; path = include/RoutePoint.h; sourceTree = SOURCE_ROOT; };
 		DC74E2A8D799465E9388E4E3 /* FontMgr.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = FontMgr.cpp; path = src/FontMgr.cpp; sourceTree = SOURCE_ROOT; };
-		DC7B2FE6E33A44F9B0A23324 /* gpssend.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpssend.h; path = src/garmin/jeeps/gpssend.h; sourceTree = SOURCE_ROOT; };
 		DCB460687BCC4368910D87B7 /* 1st-No-Anchoring.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "1st-No-Anchoring.svg"; path = "data/svg/markicons/1st-No-Anchoring.svg"; sourceTree = SOURCE_ROOT; };
 		DCE42783F03C4E2CBFFE478D /* GoToPositionDialog.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = GoToPositionDialog.h; path = include/GoToPositionDialog.h; sourceTree = SOURCE_ROOT; };
 		DD947D0236CD48BCB73040E1 /* sentence.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = sentence.cpp; path = plugins/dashboard_pi/src/nmea0183/sentence.cpp; sourceTree = SOURCE_ROOT; };
@@ -4415,7 +4395,6 @@
 		FD5805FDED4046E789266651 /* WmmUIDialog.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = WmmUIDialog.h; path = plugins/wmm_pi/src/WmmUIDialog.h; sourceTree = SOURCE_ROOT; };
 		FDAAED1532EB49BCAD2DD0DD /* SVGLineElement.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SVGLineElement.cpp; path = src/wxsvg/src/SVGLineElement.cpp; sourceTree = SOURCE_ROOT; };
 		FDC11AFDE48C413AB65BB482 /* render.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = render.c; path = src/glu/libtess/render.c; sourceTree = SOURCE_ROOT; };
-		FDD8F9D5C7184D61818252CA /* gpsserial.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsserial.h; path = src/garmin/jeeps/gpsserial.h; sourceTree = SOURCE_ROOT; };
 		FE072E648AE74CC4B1FC9ED2 /* Symbol-Square-White.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Square-White.svg"; path = "data/svg/markicons/Symbol-Square-White.svg"; sourceTree = SOURCE_ROOT; };
 		FE48AD1DC281409BB93AE28A /* Symbol-Circle-Red.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Symbol-Circle-Red.svg"; path = "data/svg/markicons/Symbol-Circle-Red.svg"; sourceTree = SOURCE_ROOT; };
 		FE5F9415E928472F91FFF185 /* jpc_mqenc.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jpc_mqenc.h; path = plugins/grib_pi/src/jasper/jpc/jpc_mqenc.h; sourceTree = SOURCE_ROOT; };
@@ -4424,7 +4403,6 @@
 		FECBC18CD2A048DB82FC250B /* AIS_Decoder.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = AIS_Decoder.h; path = include/AIS_Decoder.h; sourceTree = SOURCE_ROOT; };
 		FED00C2BB925406DBE956702 /* jsonval.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = jsonval.cpp; path = plugins/dashboard_pi/src/wxJSON/jsonval.cpp; sourceTree = SOURCE_ROOT; };
 		FF2C06E3DEB14E26AEB31E4B /* gga.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = gga.cpp; path = src/nmea0183/gga.cpp; sourceTree = SOURCE_ROOT; };
-		FF78D00D96A04618A2C07161 /* gpsmath.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = gpsmath.h; path = src/garmin/jeeps/gpsmath.h; sourceTree = SOURCE_ROOT; };
 		FFB8EFE1050E47AA8504A46B /* GribOverlayFactory.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = GribOverlayFactory.cpp; path = plugins/grib_pi/src/GribOverlayFactory.cpp; sourceTree = SOURCE_ROOT; };
 		FFC811FB596C41DBB599DEC2 /* dict.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = dict.h; path = src/libtess2/Source/dict.h; sourceTree = SOURCE_ROOT; };
 		FFD8C7ADBC694DC3BCB5ABFC /* Service-Ice3.svg */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "Service-Ice3.svg"; path = "data/svg/markicons/Service-Ice3.svg"; sourceTree = SOURCE_ROOT; };
@@ -4729,7 +4707,6 @@
 		2C6060C62421474AA1023C61 = {
 			isa = PBXGroup;
 			children = (
-				A6DC526A28D1D6B0007FCED0 /* svg_utils.cpp */,
 				A6E58601239BC6750007E4A1 /* de.lproj */,
 				A6019BF5239ACD00005D41C0 /* Frameworks */,
 				E3C850942FDA4CE7B7953DE3 /* ALL_BUILD */,
@@ -5024,29 +5001,7 @@
 		4AFFF817E1AF4EB0AE05F919 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
-				62056BBF729B41229235F67B /* garmin_gps.h */,
 				A28FC937D435450FB16CD638 /* garmin_wrapper.h */,
-				681B85FCA4CD4E49A4B41B88 /* garmin_wrapper_utils.h */,
-				A6B6727C24A664410079653F /* gps_wx_logging.h */,
-				8350A4A2423A4E1F8A60A9B2 /* garminusb.h */,
-				1AF79B019DE34FFB93E11A45 /* gpsapp.h */,
-				CFB616562BF14494A1090CE2 /* gpscom.h */,
-				B07B0C86207F4ED78DC5FF8F /* gpsdatum.h */,
-				B0E7C609E83542C7B622F1E5 /* gpsdevice.h */,
-				720803892C00468CA679421E /* gpsfmt.h */,
-				C4494D47AB6541F79FCE204F /* gpsinput.h */,
-				FF78D00D96A04618A2C07161 /* gpsmath.h */,
-				5D0529C2DBB6434C83287A5F /* gpsmem.h */,
-				AE4009C063034007BED4B8B1 /* gpsport.h */,
-				368C7C3AB8C440859357EDDA /* gpsproj.h */,
-				78D78DDFEFBF474F8755C98D /* gpsprot.h */,
-				486D00F3A0BE4F9B81324B12 /* gpsread.h */,
-				73E6C6CBFCCD4CD29BC101AA /* gpsrqst.h */,
-				DC7B2FE6E33A44F9B0A23324 /* gpssend.h */,
-				FDD8F9D5C7184D61818252CA /* gpsserial.h */,
-				8CBFCB22E52A456A92740413 /* gpsusbcommon.h */,
-				C41F8667BB7A4E97B1E3FF46 /* gpsusbint.h */,
-				D80CEF6BE24142669067EA75 /* gpsutil.h */,
 			);
 			name = "Header Files";
 			sourceTree = "<group>";
@@ -7269,6 +7224,7 @@
 				51747F603F574773A526AA04 /* SoundLoaderFactory.cpp */,
 				8E8679DB1C294C5786F135D9 /* Station_Data.cpp */,
 				4DEB224221624E40A56A0AB1 /* styles.cpp */,
+				A6DC526A28D1D6B0007FCED0 /* svg_utils.cpp */,
 				E49F723B0D474682B0C95440 /* SystemCmdSound.cpp */,
 				534348A7626A401CBA8255C7 /* TCDataFactory.cpp */,
 				9BE449D3D7FE4898AA3AB6CB /* TCDataSource.cpp */,
