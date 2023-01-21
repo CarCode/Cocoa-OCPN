@@ -2829,10 +2829,10 @@ void DashboardWindow::SetInstrumentList( wxArrayInt list )
                 ( (DashboardInstrument_Dial *) instrument )->SetOptionExtraValue( OCPN_DBP_STC_STW, _T("STW\n%.2f"), DIAL_POSITION_BOTTOMLEFT );
                 break;
             case ID_DBP_I_COG:
-                instrument = new DashboardInstrument_Single( this, wxID_ANY, getInstrumentCaption( id ), OCPN_DBP_STC_COG, _T("%.0f") );
+                instrument = new DashboardInstrument_Single( this, wxID_ANY, getInstrumentCaption( id ), OCPN_DBP_STC_COG, _T("%3.0f") );
                 break;
             case ID_DBP_M_COG:
-                instrument = new DashboardInstrument_Single( this, wxID_ANY, getInstrumentCaption( id ), OCPN_DBP_STC_MCOG, _T("%.0f") );
+                instrument = new DashboardInstrument_Single( this, wxID_ANY, getInstrumentCaption( id ), OCPN_DBP_STC_MCOG, _T("%3.0f") );
                 break;
             case ID_DBP_D_COG:
                 instrument = new DashboardInstrument_Compass( this, wxID_ANY, getInstrumentCaption( id ), OCPN_DBP_STC_COG );
@@ -2851,10 +2851,10 @@ void DashboardWindow::SetInstrumentList( wxArrayInt list )
                 break;
             case ID_DBP_I_HDT: //true heading
                 // TODO: Option True or Magnetic
-                instrument = new DashboardInstrument_Single( this, wxID_ANY, getInstrumentCaption( id ), OCPN_DBP_STC_HDT, _T("%.0f") );
+                instrument = new DashboardInstrument_Single( this, wxID_ANY, getInstrumentCaption( id ), OCPN_DBP_STC_HDT, _T("%3           .0f") );
                 break;
             case ID_DBP_I_HDM:  //magnetic heading
-                instrument = new DashboardInstrument_Single( this, wxID_ANY, getInstrumentCaption( id ), OCPN_DBP_STC_HDM, _T("%.0f") );
+                instrument = new DashboardInstrument_Single( this, wxID_ANY, getInstrumentCaption( id ), OCPN_DBP_STC_HDM, _T("%3.0f") );
                 break;
             case ID_DBP_D_AW:
             case ID_DBP_D_AWA:

@@ -621,7 +621,7 @@ void AISTargetListDialog::CreateControls()
     topSizer->Add( m_pListCtrlAISTargets, 1, wxEXPAND | wxALL, 0 );
 
     wxBoxSizer* boxSizer02 = new wxBoxSizer( wxVERTICAL );
-    boxSizer02->AddSpacer( 22 );
+    boxSizer02->AddSpacer( 3 );  // war 22
     topSizer->Add( boxSizer02, 0, wxEXPAND | wxALL, 2 );
 
     wxScrolledWindow *winr = new wxScrolledWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize,

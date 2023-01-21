@@ -1310,7 +1310,11 @@ bool NavObjectCollection1::CreateNavObjGPXPoints( void )
 
         if( ( pr->m_bIsolatedMark ) && !( pr->m_bIsInLayer ) && !(pr->m_btemp) )
         {
-            GPXCreateWpt(m_gpx_root.append_child("wpt"), pr, OPT_WPT);
+            pugi::xml_node doc = root();
+            pugi::xml_node gpx = doc.first_child();
+            pugi::xml_node new_node = gpx.append_child("wpt");
+
+            GPXCreateWpt(new_node, pr, OPT_WPT);
         }
         node = node->GetNext();
     }
@@ -1325,8 +1329,14 @@ bool NavObjectCollection1::CreateNavObjGPXRoutes( void )
     while( node1 ) {
         Route *pRoute = node1->GetData();
 
-        if( !pRoute->m_bIsInLayer && !pRoute->m_btemp )
-            GPXCreateRoute(m_gpx_root.append_child("rte"), pRoute);
+        if (!pRoute->m_bIsInLayer && !pRoute->m_btemp){
+          pugi::xml_node doc = root();
+          pugi::xml_node gpx = doc.first_child();
+          pugi::xml_node new_node = gpx.append_child("rte");
+
+          GPXCreateRoute(new_node, pRoute);
+        }
+
         node1 = node1->GetNext();
     }
 
@@ -1338,8 +1348,13 @@ bool NavObjectCollection1::CreateNavObjGPXTracks( void )
     // Tracks
     for (Track *pTrack : g_TrackList) {
         if( pTrack->GetnPoints() ) {
-            if( !pTrack->m_bIsInLayer && !pTrack->m_btemp ) 
-                GPXCreateTrk(m_gpx_root.append_child("trk"), pTrack, 0);
+            if (!pTrack->m_bIsInLayer && !pTrack->m_btemp){
+              pugi::xml_node doc = root();
+              pugi::xml_node gpx = doc.first_child();
+              pugi::xml_node new_node = gpx.append_child("trk");
+
+              GPXCreateTrk(new_node, pTrack, 0);
+            }
         }
     }
 
@@ -1361,21 +1376,33 @@ bool NavObjectCollection1::CreateAllGPXObjects()
 bool NavObjectCollection1::AddGPXRoute(Route *pRoute)
 {
     SetRootGPXNode();
-    GPXCreateRoute(m_gpx_root.append_child("rte"), pRoute);
+    pugi::xml_node doc = root();
+    pugi::xml_node gpx = doc.first_child();
+    pugi::xml_node new_node = gpx.append_child("rte");
+
+    GPXCreateRoute(new_node, pRoute);
     return true;
 }
 
 bool NavObjectCollection1::AddGPXTrack(Track *pTrk)
 {
     SetRootGPXNode();
-    GPXCreateTrk(m_gpx_root.append_child("trk"), pTrk, 0 );
+    pugi::xml_node doc = root();
+    pugi::xml_node gpx = doc.first_child();
+    pugi::xml_node new_node = gpx.append_child("trk");
+
+    GPXCreateTrk(new_node, pTrk, 0);
     return true;
 }
 
 bool NavObjectCollection1::AddGPXWaypoint(RoutePoint *pWP )
 {
     SetRootGPXNode();
-    GPXCreateWpt(m_gpx_root.append_child("wpt"), pWP, OPT_WPT);
+    pugi::xml_node doc = root();
+    pugi::xml_node gpx = doc.first_child();
+    pugi::xml_node new_node = gpx.append_child("wpt");
+
+    GPXCreateWpt(new_node, pWP, OPT_WPT);
     return true;
 }
 
@@ -1418,15 +1445,16 @@ bool NavObjectCollection1::AddGPXPointsList( RoutePointList *pRoutePoints )
 
 void NavObjectCollection1::SetRootGPXNode(void)
 {
-    if(!strlen(m_gpx_root.name())) {
-        m_gpx_root = append_child("gpx");
-        m_gpx_root.append_attribute ( "version" ) = "1.1";
-        m_gpx_root.append_attribute ( "creator" ) = "OpenCPN";
-        m_gpx_root.append_attribute( "xmlns:xsi" ) = "http://www.w3.org/2001/XMLSchema-instance";
-        m_gpx_root.append_attribute( "xmlns" ) = "http://www.topografix.com/GPX/1/1";
-        m_gpx_root.append_attribute( "xmlns:gpxx" ) =  "http://www.garmin.com/xmlschemas/GpxExtensions/v3";
-        m_gpx_root.append_attribute( "xsi:schemaLocation" ) = "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd";
-        m_gpx_root.append_attribute( "xmlns:opencpn" ) = "http://www.opencpn.org";
+    if (!strlen(first_child().name())) {
+      pugi::xml_node gpx_root = append_child("gpx");
+      gpx_root.append_attribute("version") = "1.1";
+      gpx_root.append_attribute("creator") = "OpenCPN";
+      gpx_root.append_attribute("xmlns:xsi") = "http://www.w3.org/2001/XMLSchema-instance";
+        gpx_root.append_attribute("xmlns") = "http://www.topografix.com/GPX/1/1";
+        gpx_root.append_attribute("xmlns:gpxx") = "http://www.garmin.com/xmlschemas/GpxExtensions/v3";
+        gpx_root.append_attribute("xsi:schemaLocation") =
+            "http://www.topografix.com/GPX/1/ http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd";
+        gpx_root.append_attribute("xmlns:opencpn") = "http://www.opencpn.org";
     }
 }
 
@@ -1561,7 +1589,7 @@ void NavObjectChanges::AddRoute( Route *pr, const char *action )
 {
     SetRootGPXNode();
 
-    pugi::xml_node object = m_gpx_root.append_child("rte");
+    pugi::xml_node object = root().append_child("rte");
     GPXCreateRoute(object, pr );
 
     pugi::xml_node xchild = object.child("extensions");
@@ -1578,7 +1606,7 @@ void NavObjectChanges::AddTrack( Track *pr, const char *action )
 {
     SetRootGPXNode();
 
-    pugi::xml_node object = m_gpx_root.append_child("trk");
+    pugi::xml_node object = root().append_child("trk");
     GPXCreateTrk(object, pr, RT_OUT_NO_RTPTS );         // emit a void track, no waypoints
 
     pugi::xml_node xchild = object.child("extensions");
@@ -1594,7 +1622,7 @@ void NavObjectChanges::AddWP( RoutePoint *pWP, const char *action )
 {
     SetRootGPXNode();
 
-    pugi::xml_node object = m_gpx_root.append_child("wpt");
+    pugi::xml_node object = root().append_child("wpt");
     GPXCreateWpt(object, pWP, OPT_WPT);
 
     pugi::xml_node xchild = object.child("extensions");
@@ -1610,7 +1638,7 @@ void NavObjectChanges::AddTrackPoint( TrackPoint *pWP, const char *action, const
 {
     SetRootGPXNode();
 
-    pugi::xml_node object = m_gpx_root.append_child("tkpt");
+    pugi::xml_node object = root().append_child("tkpt");
     GPXCreateTrkpt(object, pWP, OPT_TRACKPT);
 
     pugi::xml_node xchild = object.append_child("extensions");

@@ -68,7 +68,7 @@ END_EVENT_TABLE()
 // Define a constructor
 Piano::Piano(ChartCanvas *parent)
 {
-    m_parentCanvas = parent;;
+    m_parentCanvas = parent;
     
     m_index_last = -1;
     m_iactive = -1;
@@ -607,7 +607,9 @@ void Piano::BuildGLTexture()
 void Piano::DrawGL(int off)
 {
 #ifdef ocpnUSE_GL    
-    unsigned int w = m_parentCanvas->GetClientSize().x, h = GetHeight(), endx = 0;
+    unsigned int w = m_parentCanvas->GetClientSize().x * m_parentCanvas->GetContentScaleFactor();
+    int h = GetHeight();
+    int endx = 0;
  
     if(m_tex_piano_height != h)
         BuildGLTexture();
@@ -913,16 +915,16 @@ wxString &Piano::GetStoredHash()
 void Piano::FormatKeys( void )
 {
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
-    int width = m_parentCanvas->GetClientSize().x, height = GetHeight();
+    int width = m_parentCanvas->GetClientSize().x * m_parentCanvas->GetContentScaleFactor();
+    int height = GetHeight();
     width *= g_btouch ? 0.98f : 0.6f;
 
     int nKeys = m_key_array.size();
     int kw = style->chartStatusIconWidth;
     if( nKeys ) {
-        if( !kw )
-            kw = width / nKeys;
+        if( !kw ) kw = width / nKeys;
 
-        kw = wxMin(kw, (m_parentCanvas->GetClientSize().x * 3 / 4) / nKeys);
+        kw = wxMin(kw, (width * 3 / 4) / nKeys);
         kw = wxMax(kw, 6);
         
 //    Build the Key Regions
@@ -1054,7 +1056,7 @@ void Piano::ResetRollover( void )
 
 int Piano::GetHeight()
 {
-    int height = 22;
+    int height = 22 * m_parentCanvas->GetContentScaleFactor();  // default desktop value
     if(g_btouch){
         double size_mult =  exp( g_GUIScaleFactor * 0.0953101798043 ); //ln(1.1)
         height *= size_mult;

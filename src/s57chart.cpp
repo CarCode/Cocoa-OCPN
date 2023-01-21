@@ -3598,7 +3598,9 @@ int s57chart::GetUpdateFileArray( const wxFileName file000, wxArrayString *UpFil
                     umdate.ParseFormat( sumdate, _T("%Y%m%d") );
                     if( !umdate.IsValid() ) umdate.ParseFormat( _T("20000101"), _T("%Y%m%d") );
 
-                                     umdate.ResetTime();
+                    umdate.ResetTime();
+                    if (!umdate.IsValid())
+                        int yyp = 4;
 
                     //    Fetch the EDTN(Edition) field
                                      if( pr ) {
@@ -5589,8 +5591,18 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
                     ts.Append(tk.GetNextToken()).Append(_T("</b> at <b>")).Append(ts1);
                     ts.Append(/*tk.GetNextToken()).Append(*/_T("</b><br><table >"))  ;
                     int i = -6;
-                    while ( tk.HasMoreTokens() ){ // fill the current table
-                        ts.Append(_T("<tr><td>")).Append( wxString::Format(wxT("%i"),i)).Append(_T("</td><td>"))                .Append(tk.GetNextToken()).Append(_T("&#176</td><td>")).Append(tk.GetNextToken()).Append(_T("</td></tr>"));
+                    while ( tk.HasMoreTokens() ) { // fill the current table
+                        ts.Append(_T("<tr><td>"));
+                        wxString s1; s1.Format(wxT("%i"), i);
+                        ts.Append(s1);
+                        ts.Append(_T("</td><td>"));
+                        s1 = tk.GetNextToken();
+                        ts.Append(s1);
+                        s1 = "&#176</td><td>";
+                        ts.Append(s1);
+                        s1 = tk.GetNextToken();
+                        ts.Append(s1);
+                        ts.Append(_T("</td></tr>"));
                         i++;
                     }
                         ts.Append(_T("</table>"));
@@ -6023,8 +6035,12 @@ void s57_DrawExtendedLightSectors( ocpnDC& dc, ViewPort& viewport, std::vector<s
 
             rangePx = rangePx * rangeScale;
 
+            int penWidth = rangePx / 8;
+            penWidth = wxMin(20, penWidth);
+            penWidth = wxMax(5, penWidth);
+
             int legOpacity;
-            wxPen *arcpen = wxThePenList->FindOrCreatePen( sectorlegs[i].color, 12, wxPENSTYLE_SOLID );
+            wxPen *arcpen = wxThePenList->FindOrCreatePen( sectorlegs[i].color, penWidth, wxPENSTYLE_SOLID );
             arcpen->SetCap( wxCAP_BUTT );
             dc.SetPen( *arcpen );
 

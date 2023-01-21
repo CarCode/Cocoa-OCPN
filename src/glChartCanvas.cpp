@@ -1472,7 +1472,7 @@ static void GetLatLonCurveDist(const ViewPort &vp, float &lat_dist, float &lon_d
     }
 }
 
-void glChartCanvas::RenderChartOutline( int dbIndex, ViewPort &vp )
+void glChartCanvas::RenderChartOutline( ocpnDC &dc, int dbIndex, ViewPort &vp )
 {
     if( ChartData->GetDBChartType( dbIndex ) == CHART_TYPE_PLUGIN &&
         !ChartData->IsChartAvailable( dbIndex ) )
@@ -1622,7 +1622,7 @@ void glChartCanvas::GridDraw( )
         wxFont *dFont = FontMgr::Get().GetFont( _("ChartTexts"), 0 );
         wxFont font = *dFont;
 #ifdef __WXOSX__
-        font.SetPointSize(18);
+        font.SetPointSize(20);  // neu: 10 * displayScale
 #else
         font.SetPointSize(8);
 #endif
@@ -2277,7 +2277,17 @@ void glChartCanvas::DrawFloatingOverlayObjects( ocpnDC &dc )
 
 void glChartCanvas::DrawChartBar( ocpnDC &dc )
 {
-    if(m_pParentCanvas->GetPiano())
+/*
+    if (m_pParentCanvas->GetPiano()) {
+
+      int canvas_height = GetClientSize().y;
+      // FIXME Monterey
+      canvas_height *= 2;
+
+    m_pParentCanvas->GetPiano()->DrawGL(canvas_height - m_pParentCanvas->GetPiano()->GetHeight());
+    }
+*/
+    if (m_pParentCanvas->GetPiano())
         m_pParentCanvas->GetPiano()->DrawGL(m_pParentCanvas->GetClientSize().y - m_pParentCanvas->GetPiano()->GetHeight());
 }
 
@@ -3487,18 +3497,24 @@ void glChartCanvas::Render()
     ocpnDC gldc( *this );
 
     int gl_width, gl_height;
-    GetClientSize( &gl_width, &gl_height );
+//    GetClientSize( &gl_width, &gl_height );
+    gl_width = m_pParentCanvas->VPoint.pix_width;
+    gl_height = m_pParentCanvas->VPoint.pix_height;
 
-#ifdef __WXOSX__    
-    gl_height = m_pParentCanvas->GetClientSize().y;
-#endif    
+    // Take a copy for use later by DC
+    m_glcanvas_width = gl_width;
+    m_glcanvas_height = gl_height;
+
+//#ifdef __WXOSX__  // Ggelöscht mit Commit vom 08.12.2022 05:29
+//    gl_height = m_pParentCanvas->GetClientSize().y;
+//#endif
 
     OCPNRegion screen_region(wxRect(0, 0, VPoint.pix_width, VPoint.pix_height));
 
     // Force the GL window height to be even number, avoiding artifacts
 //    gl_height -= gl_height & 1;
 
-    glViewport( 0, 0, (GLint) gl_width * m_displayScale, (GLint) gl_height * m_displayScale );
+    glViewport( 0, 0, (GLint) gl_width, (GLint) gl_height );
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity();
 
@@ -3945,7 +3961,9 @@ void glChartCanvas::Render()
 
     // Render static overlay objects
     for(OCPNRegionIterator upd ( screen_region ); upd.HaveRects(); upd.NextRect()) {
-         LLRegion region = VPoint.GetLLRegion(upd.GetRect());
+//         LLRegion region = VPoint.GetLLRegion(upd.GetRect());
+        wxRect rt = upd.GetRect();
+        LLRegion region = VPoint.GetLLRegion(rt);
          ViewPort cvp = ClippedViewport(VPoint, region);
          DrawGroundedOverlayObjects(gldc, cvp);
     }

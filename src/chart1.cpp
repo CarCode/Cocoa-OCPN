@@ -2781,7 +2781,7 @@ MyFrame::MyFrame( wxFrame *frame, const wxString& title, const wxPoint& pos, con
     for (int i = 0; i < MAX_COG_AVERAGE_SECONDS; i++ )
         COGTable[i] = NAN;
 
-    m_fixtime = 0;
+    m_fixtime = -1;
 
     m_bpersistent_quilt = false;
 
@@ -4622,7 +4622,10 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
                 TrackOn();
                 g_bTrackCarryOver = true;
             } else {
-                TrackOff( true );
+                TrackOff(true);  // catch the last point
+                if (pConfig && pConfig->IsChangesFileDirty()) {
+                  pConfig->UpdateNavObj(true);
+                }
                 g_bTrackCarryOver = false;
                 RefreshAllCanvas( true );
             }
@@ -5125,9 +5128,8 @@ Track *MyFrame::TrackOff( bool do_add_point )
                 }
             }
         }
+        g_pActiveTrack = NULL;
     }
-
-    g_pActiveTrack = NULL;
 
     g_bTrackActive = false;
 
@@ -5199,6 +5201,10 @@ void MyFrame::TrackDailyRestart( void )
         return;
 
     Track *pPreviousTrack = TrackOff( true );
+    if (pConfig && pConfig->IsChangesFileDirty()) {
+      pConfig->UpdateNavObj(true);
+    }
+
     TrackOn();
 
     //  Set the restarted track's current state such that the current track point's attributes match the
@@ -5577,7 +5583,7 @@ void MyFrame::RegisterGlobalMenuItems()
     m_pMenuBar->Append( nav_menu, _("&Navigate") );
 #endif
 
-    wxMenu* view_menu = new wxMenu();
+    wxMenu *view_menu = new wxMenu();
 #ifndef __WXOSX__
     view_menu->AppendCheckItem( ID_MENU_CHART_QUILTING, _menuText(_("Enable Chart Quilting"), _T("Q")) );
     view_menu->AppendCheckItem( ID_MENU_CHART_OUTLINES, _menuText(_("Show Chart Outlines"), _T("O")) );
@@ -5621,10 +5627,13 @@ void MyFrame::RegisterGlobalMenuItems()
 #else
     view_menu->Append(ID_MENU_UI_FULLSCREEN, _menuText(_("Enter Full Screen"), _T("F11")) );
 #endif
+#ifdef __WXOSX__
+    m_pMenuBar->Append( view_menu, _("View") );
+#else
     m_pMenuBar->Append( view_menu, _("&View") );
+#endif
 
-
-    wxMenu* ais_menu = new wxMenu();
+    wxMenu *ais_menu = new wxMenu();
     ais_menu->AppendCheckItem( ID_MENU_AIS_TARGETS, _("Show AIS Targets") );
     ais_menu->AppendCheckItem( ID_MENU_AIS_SCALED_TARGETS, _("Attenuate less critical AIS targets") );
     ais_menu->AppendSeparator();
@@ -5639,7 +5648,8 @@ void MyFrame::RegisterGlobalMenuItems()
 #else
     m_pMenuBar->Append( ais_menu, _("&AIS") );
 #endif
-    wxMenu* tools_menu = new wxMenu();
+
+    wxMenu *tools_menu = new wxMenu();
 #ifndef __WXOSX__
     tools_menu->Append( ID_MENU_TOOL_MEASURE, _menuText(_("Measure Distance"), _T("M")) );
 #else
@@ -5656,7 +5666,7 @@ void MyFrame::RegisterGlobalMenuItems()
 #ifdef __WXOSX__
     tools_menu->Append( ID_MENU_MARK_MOB, _menuText(_("Drop MOB Marker"), _T("Alt-Space")) ); // NOTE Cmd+Space is reserved for Spotlight
     tools_menu->AppendSeparator();
-    tools_menu->Append( wxID_PREFERENCES, _menuText(_("Preferences") + _T("..."), _T("Ctrl-,")) );
+//    tools_menu->Append( wxID_PREFERENCES, _menuText(_("Preferences") + _T("..."), _T("Ctrl-,")) );
 #else
     tools_menu->Append( ID_MENU_MARK_MOB, _menuText(_("Drop MOB Marker"), _T("Ctrl-Space")) );
     tools_menu->AppendSeparator();
@@ -5667,24 +5677,37 @@ void MyFrame::RegisterGlobalMenuItems()
 #else
     m_pMenuBar->Append( tools_menu, _("&Tools") );
 #endif
+
 #ifdef __WXOSX__
-    wxMenu* window_menu = new wxMenu();
+    wxMenu *window_menu = new wxMenu();
     window_menu->Append(wxID_ANY, _("Minimize"));
     window_menu->Append(wxID_ANY, _("Zoom"));
     window_menu->Append(wxID_ANY, _("Bring All to Front"));
-    m_pMenuBar->Append( window_menu, _("&Window") );
+// Auskommentiert aber trotzdem da und übersetzt. Jetzt wieder reingenommen.
+// Warum nicht für Services, Hide OpenCPN, Hide Others, Show All und Quit OpenCPN ?
+// Siehe dazu Zeilen 157 pp. von wx/osx/menu.h und Zeile 479 von src/osx/menu_osx.cpp
+// Fehler in dieser wxWidgets Version? In den Sample Beispielen ist auch Mist in den Menüs.
+
+    m_pMenuBar->Append( window_menu, _("Window") );
 #endif
-    wxMenu* help_menu = new wxMenu();
+
+    wxMenu *help_menu = new wxMenu();
     help_menu->Append( wxID_ABOUT, _("About OpenCPN") );
+    help_menu->Append(wxID_PREFERENCES, _menuText(_("Preferences") + _T("..."), _T("Ctrl-,")) );
 #ifdef __WXOSX__
     help_menu->Append( wxID_HELP, _menuText(_("OpenCPN Hilfe"), _T("Ctrl-J")) );
     m_pMenuBar->Append( help_menu, _("Help"));
-        
+
 #if USE_SPARKLE
     wxMenu *apple = m_pMenuBar->OSXGetAppleMenu();
     if (!apple)
         return; // huh
     Sparkle_AddMenuItem(apple->GetHMenu(), _("Check for Updates...").utf8_str());
+//    apple->Append(wxID_ANY, _("Services"));
+//    appleMenu->Append(wxID_ANY, _("Hide %s"));
+//    appleMenu->Append(wxID_ANY, _("Hide Others"));
+//    appleMenu->Append(wxID_ANY, _("Show All"));
+//    appleMenu->Append(wxID_ANY, _("Quit %s"));
 #endif
 #else
     help_menu->Append( wxID_HELP, _("OpenCPN Help") );
@@ -6355,6 +6378,11 @@ bool MyFrame::ProcessOptionsDialog( int rr, ArrayOfCDI *pNewDirArray )
         g_MainToolbar->SetAutoHide(g_bAutoHideToolbar);
         g_MainToolbar->SetAutoHideTimer(g_nAutoHideToolbar);
     }
+
+    // update S52 PLIB scale factors
+//    if (ps52plib){
+//      ps52plib->SetGuiScaleFactors(g_Platform->getChartScaleFactorExp(g_ChartScaleFactor), g_chart_zoom_modifier_vector);
+//    }
 
     // Apply any needed updates to each canvas
     for(unsigned int i=0 ; i < g_canvasArray.GetCount() ; i++){

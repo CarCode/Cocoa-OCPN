@@ -46,16 +46,13 @@ const static std::map<wxLogLevel, const char*> name_by_level = {
     { wxLOG_Progress,   "PROGRESS"}
 };
 
-
 static std::map<std::string, wxLogLevel> level_by_name;
-
 
 static std::string basename(const std::string path)
 {
     size_t pos = path.rfind(wxFileName::GetPathSeparator(), path.length());
     return pos == std::string::npos ? path : path.substr(pos + 1);
 }
-
 
 static void init_level_by_name()
 {
@@ -64,7 +61,6 @@ static void init_level_by_name()
     }
 }
 
- 
 static std::string timeStamp()
 {
     wxDateTime now = wxDateTime::UNow();
@@ -77,13 +73,11 @@ static std::string timeStamp()
     return stamp.str();
 }
 
-
 std::string OcpnLog::level2str(wxLogLevel level)
 {
     auto search = name_by_level.find(level);
     return search == name_by_level.end() ? "Unknown level" : search->second;
 }
-
 
 wxLogLevel OcpnLog::str2level(const char* string)
 {
@@ -96,12 +90,10 @@ wxLogLevel OcpnLog::str2level(const char* string)
     return search == level_by_name.end() ? LOG_BADLEVEL : search->second;
 }
 
-
 OcpnLog::OcpnLog(const char* path)
 {
     log.open(path, std::fstream::out | std::fstream::app);
 }
-
 
 OcpnLog::~OcpnLog()
 {
@@ -114,9 +106,7 @@ void OcpnLog::Flush()
     log.flush();
 }
 
-void OcpnLog::DoLogRecord(wxLogLevel level,
-		          const wxString& msg,
-		          const wxLogRecordInfo& info)
+void OcpnLog::DoLogRecord(wxLogLevel level, const wxString& msg, const wxLogRecordInfo& info)
 {
     std::ostringstream oss;
     oss << timeStamp() << " "
@@ -125,7 +115,6 @@ void OcpnLog::DoLogRecord(wxLogLevel level,
         << msg << std::endl;
     log << oss.str();
 }
-
 
 Logger::Logger()
     :info("", 0, "", ""), level(wxLOG_Info) {};
@@ -140,7 +129,6 @@ Logger::~Logger()
     }
 }
 
-
 std::ostream& Logger::get(wxLogLevel l, const char* path, int line)
 {
     info.filename = path;
@@ -149,10 +137,7 @@ std::ostream& Logger::get(wxLogLevel l, const char* path, int line)
     return os;
 }
 
-
-void Logger::logRecord(wxLogLevel level,
-                       const char* msg,
-                       const wxLogRecordInfo info)
+void Logger::logRecord(wxLogLevel level, const char* msg, const wxLogRecordInfo info)
 {
     wxLog* log = wxLog::GetActiveTarget();
     auto ocpnLog = dynamic_cast<OcpnLog*>(log);
@@ -161,9 +146,7 @@ void Logger::logRecord(wxLogLevel level,
     }
 }
 
-
-void Logger::logMessage(wxLogLevel level, const char* path, int line,
-                        const char* fmt, ...)
+void Logger::logMessage(wxLogLevel level, const char* path, int line, const char* fmt, ...)
 {
     wxLogRecordInfo info(__FILE__, __LINE__, "", "");
     char buf[1024];

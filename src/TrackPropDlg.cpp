@@ -663,27 +663,27 @@ void TrackPropDlg::CreateControls( void )
       wxStaticBoxSizer* sbSizerPoints;
       sbSizerPoints = new wxStaticBoxSizer( new wxStaticBox( m_panel0, wxID_ANY, _("Recorded points") ), wxVERTICAL );
       bSizer1->Add( sbSizerPoints, 1, wxALL|wxEXPAND, 5 );
-/*
+
       wxBoxSizer* bSizerShowTime;
       bSizerShowTime = new wxBoxSizer( wxHORIZONTAL );
 
-      m_stShowTime = new wxStaticText( m_panelBasic, wxID_ANY, _("Time shown as"), wxDefaultPosition, wxDefaultSize, 0 );
+      m_stShowTime = new wxStaticText( m_panel0, wxID_ANY, _("Time shown as"), wxDefaultPosition, wxDefaultSize, 0 );
       //m_stShowTime->Wrap( -1 );
       bSizerShowTime->Add( m_stShowTime, 0, wxALL, 5 );
 
-      m_rbShowTimeUTC = new wxRadioButton( m_panelBasic, wxID_ANY, _("UTC"), wxDefaultPosition, wxDefaultSize, 0 );
+      m_rbShowTimeUTC = new wxRadioButton( m_panel0, wxID_ANY, _("UTC"), wxDefaultPosition, wxDefaultSize, 0 );
       bSizerShowTime->Add( m_rbShowTimeUTC, 0, 0, 5 );
 
-      m_rbShowTimePC = new wxRadioButton( m_panelBasic, wxID_ANY, _("Local @ PC"), wxDefaultPosition, wxDefaultSize, 0 );
+      m_rbShowTimePC = new wxRadioButton( m_panel0, wxID_ANY, _("Local @ PC"), wxDefaultPosition, wxDefaultSize, 0 );
       bSizerShowTime->Add( m_rbShowTimePC, 0, 0, 5 );
 
-      m_rbShowTimeLocal = new wxRadioButton( m_panelBasic, wxID_ANY, _("LMT @ Track Start"), wxDefaultPosition, wxDefaultSize, 0 );
+      m_rbShowTimeLocal = new wxRadioButton( m_panel0, wxID_ANY, _("LMT @ Track Start"), wxDefaultPosition, wxDefaultSize, 0 );
       bSizerShowTime->Add( m_rbShowTimeLocal, 0, 0, 5 );
 
       m_rbShowTimePC->SetValue(true);
- Ab hier Crash Warum????  Zeitumwandlung nun komplett auskommentiert.
+
       sbSizerPoints->Add( bSizerShowTime, 0, wxEXPAND, 5 );
-*/
+
       long flags = wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxLC_EDIT_LABELS;
 #ifndef __WXQT__                // Does not support Virtual list boxes....
       flags |= wxLC_VIRTUAL;

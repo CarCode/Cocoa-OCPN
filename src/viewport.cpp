@@ -129,7 +129,12 @@ ViewPort::ViewPort()
     b_MercatorProjectionOverride = false;
     lat0_cache = NAN;
     m_projection_type = PROJECTION_MERCATOR;
+}
 
+void ViewPort::PixelScale(float scale){
+  pix_width *= scale;
+  pix_height *= scale;
+  view_scale_ppm *= scale;
 }
 
 // TODO: eliminate the use of this function

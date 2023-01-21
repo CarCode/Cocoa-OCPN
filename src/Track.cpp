@@ -129,37 +129,33 @@ private:
 #endif
 
 TrackPoint::TrackPoint(double lat, double lon, wxString ts)
-    : m_lat(lat), m_lon(lon), m_GPXTrkSegNo(1), m_timestring(NULL)
+    : m_lat(lat), m_lon(lon), m_GPXTrkSegNo(1)
 {
     SetCreateTime(ts);
 }
 
 TrackPoint::TrackPoint(double lat, double lon, wxDateTime dt)
-    : m_lat(lat), m_lon(lon), m_GPXTrkSegNo(1), m_timestring(NULL)
+        : m_lat(lat), m_lon(lon), m_GPXTrkSegNo(1)
 {
     SetCreateTime(dt);
 }
 
 // Copy Constructor
 TrackPoint::TrackPoint( TrackPoint* orig )
-    : m_lat(orig->m_lat), m_lon(orig->m_lon), m_GPXTrkSegNo(1), m_timestring(NULL)
+    : m_lat(orig->m_lat), m_lon(orig->m_lon), m_GPXTrkSegNo(1)
 {
     SetCreateTime(orig->GetCreateTime());
 }
 
 TrackPoint::~TrackPoint()
 {
-    delete [] m_timestring;
 }
 
 wxDateTime TrackPoint::GetCreateTime()
 {
     wxDateTime CreateTimeX;
 
-    if(m_timestring) {
-        wxString ts = m_timestring;
-        ParseGPXDateTime( CreateTimeX, ts );
-    }
+    ParseGPXDateTime(CreateTimeX, wxString(m_stimestring.c_str()));
     return CreateTimeX;
 }
 
@@ -174,12 +170,10 @@ void TrackPoint::SetCreateTime( wxDateTime dt )
 
 void TrackPoint::SetCreateTime( wxString ts )
 {
-    delete [] m_timestring;
     if(ts.Length()) {
-        m_timestring = new char[ts.Length()+1];
-        strcpy(m_timestring, ts.mb_str());
+        m_stimestring = ts.mb_str();
     } else
-        m_timestring = NULL;
+        m_stimestring = "";
 }
 
 void TrackPoint::Draw(ChartCanvas *cc, ocpnDC& dc )
@@ -343,10 +337,14 @@ Track *ActiveTrack::DoExtendDaily()
     TrackPoint *pExtendPoint = NULL;
 
     TrackPoint *pLastPoint = GetPoint( 0 );
+    if (!pLastPoint->GetCreateTime().IsValid())
+      return NULL;
 
     for (Track* ptrack : g_TrackList) {
         if( !ptrack->m_bIsInLayer && ptrack->m_GUID != m_GUID ) {
             TrackPoint *track_node = ptrack->GetLastPoint();
+            if (!track_node->GetCreateTime().IsValid())
+              continue;     // Skip this bad track
             if( track_node->GetCreateTime() <= pLastPoint->GetCreateTime() ) {
                 if( !pExtendPoint  || track_node->GetCreateTime() > pExtendPoint->GetCreateTime() ) {
                     pExtendPoint = track_node;

@@ -4867,7 +4867,7 @@ void DimeControl( wxWindow* ctrl, wxColour col, wxColour window_back_color, wxCo
     if ( depth == 0 ) {   // only for the window root, not for every child
         // If the color scheme is DAY or RGB, use the default platform native colour for backgrounds
         if ( !darkMode ) {
-            window_back_color = wxSystemSettings::GetColour(wxSYS_COLOUR_DESKTOP);  // was: wxNullColour
+            window_back_color = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);  // was: wxNullColour, _DESKTOP
             col = wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOX);
             uitext = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
         }

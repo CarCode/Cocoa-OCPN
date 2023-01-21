@@ -544,6 +544,37 @@ void ocpnFloatingToolbarDialog::SetDefaultPosition()
     }
 }
 
+void ocpnFloatingToolbarDialog::Submerge() {
+//  m_bsubmerged = true;
+  Hide();
+  if (m_ptoolbar) m_ptoolbar->KillTooltip();
+}
+
+void ocpnFloatingToolbarDialog::Surface() {
+//  if (m_pRecoverwin) {
+    // SurfaceFromGrabber();
+//    m_pRecoverwin->Show();
+//    m_pRecoverwin->Raise();
+//  } else {
+//    m_bsubmerged = false;
+#ifdef __WXMSW__
+    Hide();
+    Move(0, 0);
+#endif
+
+    RestoreRelativePosition(g_maintoolbar_x, g_maintoolbar_y);
+    Show();
+    if (m_ptoolbar) m_ptoolbar->EnableTooltips();
+
+#ifdef __WXQT__
+    Raise();
+#endif
+//  }
+  if (m_bAutoHideToolbar && (m_nAutoHideToolbar > 0)) {
+      m_fade_timer.Start(m_nAutoHideToolbar * 1000);
+  }
+}
+
 void ocpnFloatingToolbarDialog::HideTooltip()
 {
 #ifndef __OCPN__ANDROID__
@@ -1349,8 +1380,12 @@ void ToolTipWin::SetBitmap()
     wxFont *plabelFont = FontMgr::Get().GetFont( _("ToolTips") );
     cdc.GetTextExtent( m_string, &w, &h, NULL, NULL, plabelFont );
 
-    m_size.x = w + 8;
-    m_size.y = h + 4;
+//    m_size.x = w + 8;
+//    m_size.y = h + 4;
+    m_size.x = w + GetCharWidth() * 2;
+    m_size.y = h + GetCharHeight() / 2;
+//    m_size.x *= scaler;  // scaler gibt es hier noch nicht
+//    m_size.y *= scaler;
 
     wxMemoryDC mdc;
 
@@ -1376,7 +1411,12 @@ void ToolTipWin::SetBitmap()
     mdc.SetTextForeground( m_text_color );
     mdc.SetTextBackground( m_back_color );
 
-    mdc.DrawText( m_string, 4, 2 );
+    int offx = GetCharWidth();
+    int offy = GetCharHeight()/4;
+//    offx *= scaler;
+//    offy *= scaler;
+    mdc.DrawText(m_string, offx, offy);
+//    mdc.DrawText( m_string, 4, 2 );
 
     SetSize( m_position.x, m_position.y, m_size.x, m_size.y );
 }

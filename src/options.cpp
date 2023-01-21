@@ -2870,7 +2870,7 @@ void options::CreatePanel_Ownship(size_t parent, int border_size,
       itemPanelShip, wxID_ANY, _("COG Predictor Length (min)"));
   dispOptionsGrid->Add(pStatic_OSCOG_Predictor, 0);
 
-//  m_pText_OSCOG_Predictor = new wxTextCtrl(itemPanelShip, wxID_ANY);  // Felder zu klein
+//  m_pText_OSCOG_Predictor = new wxTextCtrl(itemPanelShip, wxID_ANY, "TEXT");  // Felder zu klein ???
     m_pText_OSCOG_Predictor = new wxTextCtrl(itemPanelShip, wxID_ANY, _T(""), wxDefaultPosition, wxSize(100, -1));
   dispOptionsGrid->Add(m_pText_OSCOG_Predictor, 0, wxALIGN_RIGHT);
 
@@ -3021,7 +3021,7 @@ void options::CreatePanel_Ownship(size_t parent, int border_size,
       new wxCheckBox(itemPanelShip, ID_TRACKHILITE, _("Highlight Tracks"));
   hTrackGrid->Add(pTrackHighlite, 1, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, border_size);
   wxStaticText* trackColourText =
-      new wxStaticText( itemPanelShip, wxID_STATIC, _("Track Colour"));
+      new wxStaticText( itemPanelShip, wxID_STATIC, _("Highlight Colour"));
   hTrackGrid->Add(trackColourText, 1, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL, border_size);
   m_colourTrackLineColour = new wxColourPickerCtrl(
       itemPanelShip, wxID_STATIC, *wxRED, wxDefaultPosition, wxDefaultSize, 0,
@@ -3125,7 +3125,7 @@ void options::CreatePanel_Routes(size_t parent, int border_size,
       itemPanelRoutes, wxID_STATIC, _("Waypoint Arrival Circle Radius (NMi)"));
   pRouteGrid->Add(raText, 1, wxEXPAND | wxALL, group_item_spacing);
 
-//  m_pText_ACRadius = new wxTextCtrl(itemPanelRoutes, -1);  //  Felder zu klein
+//  m_pText_ACRadius = new wxTextCtrl(itemPanelRoutes, -1, "TEXT ");  //  Felder zu klein ???
   m_pText_ACRadius = new wxTextCtrl(itemPanelRoutes, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pRouteGrid->Add(m_pText_ACRadius, 0, wxALL | wxALIGN_RIGHT,
                   group_item_spacing);
@@ -3183,6 +3183,7 @@ void options::CreatePanel_Routes(size_t parent, int border_size,
   pScaMinChckB = new wxCheckBox(itemPanelRoutes, wxID_ANY,
                      _("Show waypoints only at a chartscale greater than 1 :"));
   ScaMinSizer->Add(pScaMinChckB, 0);
+//   m_pText_ScaMin = new wxTextCtrl(itemPanelRoutes, -1, "TEXTTEXTTEXT"); ???
   m_pText_ScaMin = new wxTextCtrl(itemPanelRoutes, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   ScaMinSizer->Add(m_pText_ScaMin, 0, wxALL | wxALIGN_RIGHT,
                   group_item_spacing);
@@ -5586,7 +5587,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("No (T)CPA Alerts if target range is greater than (NMi)"));
   pCPAGrid->Add(m_pCheck_CPA_Max, 0, wxALL, group_item_spacing);
 
-//  m_pText_CPA_Max = new wxTextCtrl(panelAIS, -1); Felder zu klein
+//  m_pText_CPA_Max = new wxTextCtrl(panelAIS, -1, "TEXT"); Felder zu klein  ???
   m_pText_CPA_Max = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pCPAGrid->Add(m_pText_CPA_Max, 0, wxALL | wxALIGN_RIGHT, group_item_spacing);
 
@@ -5595,6 +5596,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
   pCPAGrid->Add(m_pCheck_CPA_Warn, 0, wxALL, group_item_spacing);
 
   m_pText_CPA_Warn =
+//   new wxTextCtrl(panelAIS, -1,"TEXT  ", wxDefaultPosition, wxSize(-1, -1)); ???
       new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pCPAGrid->Add(m_pText_CPA_Warn, 0, wxALL | wxALIGN_RIGHT, group_item_spacing);
 
@@ -5606,6 +5608,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       new wxCheckBox(panelAIS, -1, _("...and TCPA is less than (min)"));
   pCPAGrid->Add(m_pCheck_CPA_WarnT, 0, wxALL, group_item_spacing);
 
+//  m_pText_CPA_WarnT = new wxTextCtrl(panelAIS, -1, "TEXT  ");  ???
   m_pText_CPA_WarnT = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pCPAGrid->Add(m_pText_CPA_WarnT, 0, wxALL | wxALIGN_RIGHT,
                 group_item_spacing);
@@ -5623,6 +5626,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       new wxCheckBox(panelAIS, -1, _("Mark targets as lost after (min)"));
   pLostGrid->Add(m_pCheck_Mark_Lost, 1, wxALL, group_item_spacing);
 
+//   m_pText_Mark_Lost = new wxTextCtrl(panelAIS, -1, "TEXT  ");  ???
   m_pText_Mark_Lost = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pLostGrid->Add(m_pText_Mark_Lost, 1, wxALL | wxALIGN_RIGHT,
                  group_item_spacing);
@@ -5650,6 +5654,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("Show target COG predictor arrow, length (min)"));
   pDisplayGrid->Add(m_pCheck_Show_COG, 1, wxALL | wxEXPAND, group_item_spacing);
 
+//   m_pText_COG_Predictor = new wxTextCtrl(panelAIS, -1, "TEXT  "); ???
   m_pText_COG_Predictor = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_COG_Predictor, 1, wxALL | wxALIGN_RIGHT,
                     group_item_spacing);
@@ -5668,6 +5673,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       new wxCheckBox(panelAIS, -1, _("Show target tracks, length (min)"));
   pDisplayGrid->Add(m_pCheck_Show_Tracks, 1, wxALL, group_item_spacing);
 
+//  m_pText_Track_Length = new wxTextCtrl(panelAIS, -1, "TEXT  ");  ???
   m_pText_Track_Length = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_Track_Length, 1, wxALL | wxALIGN_RIGHT,
                     group_item_spacing);
@@ -5676,6 +5682,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("Suppress anchored/moored targets, speed max (kn)"));
   pDisplayGrid->Add(m_pCheck_Hide_Moored, 1, wxALL, group_item_spacing);
 
+//   m_pText_Moored_Speed = new wxTextCtrl(panelAIS, -1, "TEXT  ");  ???
   m_pText_Moored_Speed = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_Moored_Speed, 1, wxALL | wxALIGN_RIGHT,
                     group_item_spacing);
@@ -5684,6 +5691,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
     panelAIS, -1, _("Draw AIS realtime prediction, target speed min (kn)"));
   pDisplayGrid->Add(m_pCheck_Draw_Realtime_Prediction, 1, wxALL, group_item_spacing);
 
+//   m_pText_RealtPred_Speed = new wxTextCtrl(panelAIS, -1, "TEXT  ");  ???
   m_pText_RealtPred_Speed = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_RealtPred_Speed, 1, wxALL | wxALIGN_RIGHT,
     group_item_spacing);
@@ -5692,6 +5700,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("Allow attenuation of less critical targets if more than ... targets"));
   pDisplayGrid->Add(m_pCheck_Scale_Priority, 1, wxALL, group_item_spacing);
 
+//   m_pText_Scale_Priority = new wxTextCtrl(panelAIS, -1, "TEXT  ");  ???
   m_pText_Scale_Priority = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_Scale_Priority, 1, wxALL | wxALIGN_RIGHT,
                     group_item_spacing);
@@ -5714,6 +5723,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("Show names with AIS targets at scale greater than 1:"));
   pDisplayGrid->Add(m_pCheck_Show_Target_Name, 1, wxALL, group_item_spacing);
 
+//   m_pText_Show_Target_Name_Scale = new wxTextCtrl(panelAIS, -1, "TEXT     ");  ???
   m_pText_Show_Target_Name_Scale = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pDisplayGrid->Add(m_pText_Show_Target_Name_Scale, 1, wxALL | wxALIGN_RIGHT,
                     group_item_spacing);
@@ -5722,8 +5732,11 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
     pDisplayGrid->Add(m_pCheck_use_Wpl, 1, wxALL, group_item_spacing);
 
   wxString Wpl_Action[] = {_("APRS position report"), _("Create mark")};
-  m_pWplAction = new wxChoice(panelAIS, wxID_ANY, wxDefaultPosition,                                m_pShipIconType->GetSize(), 2, Wpl_Action);
-  pDisplayGrid->Add(m_pWplAction, 0, wxALIGN_RIGHT | wxALL, group_item_spacing);
+  m_pWplAction = new wxChoice(panelAIS, wxID_ANY, wxDefaultPosition,
+//                              m_pShipIconType->GetSize(), 2, Wpl_Action);
+                              wxDefaultSize, 2, Wpl_Action);
+    pDisplayGrid->Add(m_pWplAction, 1, wxALIGN_RIGHT | wxALL, group_item_spacing);
+//  pDisplayGrid->Add(m_pWplAction, 0, wxALIGN_RIGHT | wxALL, group_item_spacing);
 
   // Rollover
   wxStaticBox* rolloverBox = new wxStaticBox(panelAIS, wxID_ANY, _("Rollover"));
@@ -5800,6 +5813,7 @@ void options::CreatePanel_AIS(size_t parent, int border_size,
       panelAIS, -1, _("Enable Target Alert Acknowledge timeout (min)"));
   pAlertGrid->Add(m_pCheck_Ack_Timout, 1, wxALL, group_item_spacing);
 
+//   m_pText_ACK_Timeout = new wxTextCtrl(panelAIS, -1, "TEXT  "); ???
   m_pText_ACK_Timeout = new wxTextCtrl(panelAIS, -1, _T(""), wxDefaultPosition, wxSize(100, -1));
   pAlertGrid->Add(m_pText_ACK_Timeout, 1, wxALL | wxALIGN_RIGHT,
                   group_item_spacing);
