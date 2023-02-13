@@ -48,6 +48,8 @@ public:
     bool GetGLTextureRect(wxRect &texrect, int symIndex);
     wxSize GLTextureSize(){ return wxSize(tex_w, tex_h); };
     double GetScale(){ return m_scaleFactor; }
+    void SetContentScaleFactor(double s){m_ContentScaleFactor = s;}
+
 private:
 
     wxFont m_font;
@@ -63,6 +65,7 @@ private:
     float m_dx;
     float m_dy;
     double m_scaleFactor;
+    double m_ContentScaleFactor;
 };
 
 

@@ -10,7 +10,7 @@
 
 // dav.h: interface for the wxCurlDAV class.
 //
-//////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////
 
 #ifndef _WXCURLDAV_H__INCLUDED_
 #define _WXCURLDAV_H__INCLUDED_
@@ -28,7 +28,7 @@
 class wxXmlNode;
 
 
-//! A specialized interface to WebDAV derived from wxCurlBase.
+// A specialized interface to WebDAV derived from wxCurlBase.
 class WXDLLIMPEXP_CURL wxCurlDAV : public wxCurlHTTP
 {
 public:

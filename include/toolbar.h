@@ -395,6 +395,12 @@ public:
 
       void SetCornerRadius( int radius){ m_cornerRadius = radius; }
 
+//      void SetGrabberEnable(bool bShow) { m_bGrabberEnable = bShow; }
+      void Submerge();
+      void SubmergeToGrabber();
+      bool isSubmergedToGrabber();
+      void Surface();
+      void SurfaceFromGrabber();
       void HideTooltip();
       void ShowTooltips();
       void EnableTooltips() { if(m_ptoolbar) m_ptoolbar->EnableTooltips(); }

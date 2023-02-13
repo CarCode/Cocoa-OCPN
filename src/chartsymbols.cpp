@@ -76,6 +76,7 @@ void ChartSymbols::InitializeGlobals( void )
     if( !symbolGraphicLocations ) symbolGraphicLocations = new symbolGraphicsHashMap;
     rasterSymbolsLoadedColorMapNumber = -1;
     ColorTableIndex = 0;
+    rasterSymbolsTexture = 0;  //  Neu und erforderlich ???
 }
 
 void ChartSymbols::DeleteGlobals( void )

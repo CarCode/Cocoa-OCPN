@@ -175,12 +175,14 @@ public:
     wxString GetPLIBColorScheme( void ) { return m_ColorScheme; }
 
     void SetGLRendererString(const wxString &renderer);
+    wxString GetGLRendererString() {return m_renderer_string;}
     void SetGLOptions(bool b_useStencil,
                       bool b_useStencilAP,
                       bool b_useScissors,
                       bool b_useFBO,
                       bool b_useVBO,
                       int  nTextureFormat);
+//    void SetUseGLSL(bool useGLSL) { m_useGLSL = useGLSL; } KEIN m_useGLSL ???
 
     bool ObjectRenderCheck( ObjRazRules *rzRules, ViewPort *vp );
     bool ObjectRenderCheckRules( ObjRazRules *rzRules, ViewPort *vp, bool check_noshow = false );
@@ -377,7 +379,7 @@ private:
         ViewPort *vp );
 
     bool RenderHPGL( ObjRazRules *rzRules, Rule * rule_in, wxPoint &r,
-        ViewPort *vp, float rot_angle = 0. );
+        ViewPort *vp, float rot_angle = 0., double uScale = 1.0 );
     bool RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
         ViewPort *vp, float rot_angle = 0. );
     bool RenderSoundingSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
@@ -481,12 +483,16 @@ private:
     bool m_useScissors;
     bool m_useFBO;
     bool m_useVBO;
+    bool m_GLAC_VBO;
     int  m_TextureFormat;
     bool m_GLLineSmoothing;
     bool m_GLPolygonSmoothing;
     wxFont *m_soundFont;
 
     double m_displayScale;
+    
+    wxString m_renderer_string;
+
 };
 
 

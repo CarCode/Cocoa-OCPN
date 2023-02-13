@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        dialog.h
 // Purpose:     wxCurlDownloadDialog, wxCurlUploadDialog
 // Author:      Francesco Montorsi
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: dialog.h 1240 2010-03-10 23:54:25Z frm $
 // Copyright:   (c) 2007 Francesco Montorsi
 // Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 #ifndef _WXCURL_DIALOG_H_
 #define _WXCURL_DIALOG_H_
@@ -22,7 +22,7 @@
 //class WXDLLIMPEXP_CORE wxStaticBitmap;
 
 
-//! Possible wxCurlTransferDialog styles.
+// ! Possible wxCurlTransferDialog styles.
 enum wxCurlTransferDialogStyle
 {
     wxCTDS_ELAPSED_TIME = 0x0001,       //!< The dialog shows the elapsed time.
@@ -66,7 +66,7 @@ enum wxCurlDialogReturnFlag
 // wxCurlTransferDialog
 // ----------------------------------------------------------------------------
 
-//! The base class for wxCurlDownloadDialog and wxCurlUploadDialog.
+// The base class for wxCurlDownloadDialog and wxCurlUploadDialog.
 class WXDLLIMPEXP_CURL wxCurlTransferDialog : public wxDialog
 {
 public:
@@ -105,9 +105,9 @@ public:
         }
 
 
-    //! Shows the dialog as modal. If the wxCTDS_CAN_START flag was not given,
-    //! then the transfer starts automatically.
-    //! Note that you should use this function instead of wxDialog::ShowModal().
+    // Shows the dialog as modal. If the wxCTDS_CAN_START flag was not given,
+    // then the transfer starts automatically.
+    // Note that you should use this function instead of wxDialog::ShowModal().
     wxCurlDialogReturnFlag RunModal();
 
 /* not yet tested
@@ -115,18 +115,18 @@ public:
     bool Show(const bool show);
 */
 
-    //! Returns true if the creation of the dialog was successful.
+    // Returns true if the creation of the dialog was successful.
     bool IsOk() const { return m_pThread != NULL && m_pThread->IsOk(); }
 
-    //! Returns the exit code of the dialog (call after #RunModal).
+    // Returns the exit code of the dialog (call after #RunModal).
     virtual wxCurlDialogReturnFlag GetReturnCode() const
         { return (wxCurlDialogReturnFlag)wxDialog::GetReturnCode(); }
 
-    //! Sets the internal wxCurlBase object to be verbose.
+    // Sets the internal wxCurlBase object to be verbose.
     void SetVerbose(bool enable)
         { m_bVerbose=enable; }
 
-    //! Returns true if the internal wxCurlBase is verbose (on by default in debug builds).
+    // Returns true if the internal wxCurlBase is verbose (on by default in debug builds).
     bool IsVerbose() const
         { return m_bVerbose; }
 
@@ -229,8 +229,8 @@ public:
                 wxWindow *parent = NULL,
                 long style = wxCTDS_DEFAULT_STYLE);
 
-    //! Returns the output stream where data has been downloaded.
-    //! This function can be used only when the download has been completed.
+    // Returns the output stream where data has been downloaded.
+    // This function can be used only when the download has been completed.
     wxOutputStream *GetOutputStream() const
         { return wx_static_cast(wxCurlDownloadThread*, m_pThread)->GetOutputStream(); }
 
@@ -248,7 +248,7 @@ private:
 // wxCurlUploadDialog
 // ----------------------------------------------------------------------------
 
-//! An highly-configurable dialog which shows progress about an upload.
+// An highly-configurable dialog which shows progress about an upload.
 class WXDLLIMPEXP_CURL wxCurlUploadDialog : public wxCurlTransferDialog
 {
 public:
@@ -286,8 +286,8 @@ private:
 // wxCurlConnectionSettingsDialog
 // ----------------------------------------------------------------------------
 
-//! A dialog which simply wraps a wxCurlConnectionSettingsPanel.
-//! For a list of supported styles, please see wxCurlConnectionSettingsPanel.
+// A dialog which simply wraps a wxCurlConnectionSettingsPanel.
+// For a list of supported styles, please see wxCurlConnectionSettingsPanel.
 class WXDLLIMPEXP_CURL wxCurlConnectionSettingsDialog : public wxDialog
 {
 public:
@@ -306,8 +306,8 @@ public:
 
 public:
 
-    //! Runs this dialog as modal and updates the given wxCurlBase instance if needed
-    //! (i.e. if the user hits OK and not Cancel).
+    // Runs this dialog as modal and updates the given wxCurlBase instance if needed
+    // (i.e. if the user hits OK and not Cancel).
     void RunModal(wxCurlBase *pcurl);
 
 protected:

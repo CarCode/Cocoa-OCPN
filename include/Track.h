@@ -58,14 +58,18 @@ public:
       wxDateTime GetCreateTime(void);
       void SetCreateTime( wxDateTime dt );
       void Draw(ChartCanvas *cc, ocpnDC& dc );
-      const char *GetTimeString() { return m_timestring; }
-      bool HasValidTimestamp() { if (m_timestring == NULL || strlen(m_timestring) != strlen("YYYY-MM-DDTHH:MM:SSZ")) return false; return true; };
+      const char *GetTimeString() { return m_stimestring.c_str(); }
+      bool HasValidTimestamp() {
+          if (m_stimestring.size() != strlen("YYYY-MM-DDTHH:MM:SSZ"))
+              return false;
+          return true;
+      };
 
       double            m_lat, m_lon;
       int               m_GPXTrkSegNo;
 private:
       void SetCreateTime( wxString ts );
-      char             *m_timestring;
+      std::string        m_stimestring;
 };
 
 //----------------------------------------------------------------------------

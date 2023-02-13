@@ -36,7 +36,8 @@
  #include <GL/glu.h>
 #endif
 
-#if 0
+#if 0  // Commit "Improve PLIB scaled window display logic" vom 28.01.2023 05:21 noch NICHT übernommen
+// Nur DepthFont.h, sonst nichts
 #define TXF_CACHE 8
 static TexFontCache s_txf[TXF_CACHE];
 
@@ -66,13 +67,13 @@ DepthFont::DepthFont( )
     texobj = 0;
     m_built = false;
     m_scaleFactor = 0;
+    m_ContentScaleFactor = 1.0;
 }
 
 DepthFont::~DepthFont( )
 {
     Delete( );
 }
-
 
 void DepthFont::Build( wxFont *font, double scale )
 {

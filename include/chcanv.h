@@ -211,8 +211,7 @@ public:
       void SetupCanvasQuiltMode( void );
       void ApplyCanvasConfig(canvasConfig *pcc);
 
-      void SetVPRotation(double angle) { VPoint.rotation = angle; }
-
+      bool SetVPRotation(double angle);
       double GetVPRotation(void) { return GetVP().rotation; }
       double GetVPSkew(void) { return GetVP().skew; }
       double GetVPTilt(void) { return GetVP().tilt; }
@@ -232,6 +231,7 @@ public:
       void UpdateShips();
       void UpdateAIS();
       void UpdateAlerts();                          // pjotrc 2010.02.22
+      void ToggleCPAWarn();
 
       bool IsMeasureActive(){ return m_bMeasure_Active; }
       wxBitmap &GetTideBitmap(){ return m_cTideBitmap; }
@@ -375,6 +375,8 @@ public:
       void ApplyGlobalSettings();
       void SetShowGPSCompassWindow( bool bshow );
 
+      void FreezePiano() { m_pianoFrozen = true; }
+      void ThawPiano() { m_pianoFrozen = false; }
 
       //Todo build more accessors
       bool        m_bFollow;
@@ -448,6 +450,8 @@ public:
       void SetToolbarOrientation( long orient );
       long GetToolbarOrientation();
 
+      void SubmergeToolbar(void);
+      void SurfaceToolbar(void);
       void ToggleToolbar( bool b_smooth = false );
       bool IsToolbarShown();
       void DestroyToolbar();
@@ -534,6 +538,8 @@ public:
       void AddTileOverlayIndexToNoShow( int index );
 
       std::vector<int> GetQuiltNoshowIindexArray(){ return m_quilt_noshow_index_array; }
+      double GetDisplayScale(){ return m_displayScale; }
+
 private:
       int AdjustQuiltRefChart();
 
@@ -667,6 +673,7 @@ private:
       void ScaleBarDraw( ocpnDC& dc );
 
       void DrawOverlayObjects ( ocpnDC &dc, const wxRegion& ru );
+      void RenderShipToActive(ocpnDC &dc, bool Use_Opengl);
 
       emboss_data *EmbossDepthScale();
       emboss_data *CreateEmbossMapData(wxFont &font, int width, int height, const wxString &str, ColorScheme cs);
@@ -903,11 +910,13 @@ private:
       wxString     m_alertString;
       wxRect       m_scaleBarRect;
       bool         m_bShowCompassWin;
-
+      bool         m_pianoFrozen;
+    
       double       m_sector_glat, m_sector_glon;
       std::vector<s57Sector_t> m_sectorlegsVisible;
       bool         m_bShowVisibleSectors;
-
+      double       m_displayScale;
+      
 DECLARE_EVENT_TABLE()
 };
 

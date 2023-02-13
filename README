@@ -42,7 +42,7 @@ Warum überhaupt diese eigene OpenCPN Version?
   Apple gewohnten Umfeld. Weitere Abweichungen zum Original Code sind:
 
 a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
-   (jetzt macOS) Mojave (10.14) und Catalina (10.15).
+   (jetzt macOS) Catalina (10.15).
    Es soll soweit wie möglich das macOS Betriebssystem unterstützt werden,
    einschl. Mac Menüs, Mac Hilfe usw. Nur noch Mojave und Catalina werden
    unterstützt, ältere Versionen nicht mehr. Weder Big Sur noch Macs mit
@@ -51,8 +51,8 @@ a. Diese Version von OCPN ist eine rein deutsche Version für Mac OS X
    überhaupt keine OpenCPN Version mehr geben können, da die Grafik-
    Bibliothek OpenGL von Apple bald nicht mehr unterstützt wird.
 
-b. Diese Version basiert auf Release-Version von wxWidgets 3.1.7 mit
-   entsprechenden dylibs vom 10. Apil 2022. Die Einbindung der Libs als
+b. Diese Version basiert auf Release-Version von wxWidgets 3.2.2 mit
+   entsprechenden dylibs vom 10. Februar 2023. Die Einbindung der Libs als
    statisch wurde verworfen, da damit das Gesamt-Paket unnötig aufgebläht
    werden würde.
 
@@ -108,14 +108,13 @@ Ich verwende die SourceTree.app für Mac OS X.
 Im Sourcen-Tree neues Verzeichnis erstellen z.B. "build-cocoa-debug".
 Im Terminal in dies Verzeichnis wechseln und konfigurieren mit:
 
-../configure --with-expat=builtin --enable-unicode --enable-shared --enable-debug --disable-compat28 --with-osx-cocoa --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk --without-liblzma --with-zlib=builtin --with-libpng=builtin --with-libjpeg=builtin --without-libtiff CXXFLAGS=-stdlib=libc++ OBJCXXFLAGS=-stdlib=libc++ LDFLAGS=-stdlib=libc++ CXX=clang++ CC=clang
+../configure --enable-debug --with-macosx-version-min=10.15
 
 Dann Eingabe von: make
-und schließlich Eingabe von: sudo make install (Das scheint in wxWidgets 3.1.7
- nun defekt zu sein, bitte "make install" nicht mehr verwenden!
+und schließlich Eingabe von: sudo make install 
 
 Die dylibs und Header werden installiert in: /usr/local/Lib/
-bzw. /usr/local/include/wx-3.1
+bzw. /usr/local/include/wx-3.2
 
 Um eine eigenständige OpenCPN-Version zu erhalten, müssen OpenCPN und die
 dylibs (im Contents/Frameworks/ Verzeichnis bzw. Contents/Plugins/ Verzeichnis)
@@ -130,5 +129,5 @@ Die Datei /data/gshhs/poly-f-1.dat mit ~172 MB muß daher separat geholt werden
 und nach /data/gshhs/ kopiert werden:
 https://topperdiek.de/dl/ocpn/poly-f-1.dat
 -----------------------------------------------------------------------
-10. April 2022
+10. Februar 2023
 

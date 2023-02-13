@@ -429,13 +429,19 @@ void grib_pi::OnToolbarToolCallback(int id)
 
     }
 
-    if( m_pGribCtrlBar->GetFont() != *OCPNGetFont(_("Dialog"), 10) ) starting = true;
-
     //Toggle GRIB overlay display
     m_bShowGrib = !m_bShowGrib;
 
     //    Toggle dialog?
     if(m_bShowGrib) {
+        //A new file could have been added since grib plugin opened
+        if (!starting && m_bLoadLastOpenFile == 0) {
+          m_pGribCtrlBar->OpenFile(true);
+          starting = true;
+        }
+        //the dialog font could have been changed since grib plugin opened
+        if (m_pGribCtrlBar->GetFont() != *OCPNGetFont(_("Dialog"), 10))
+          starting = true;
         if( starting ) {
             SetDialogFont( m_pGribCtrlBar );
             m_GUIScaleFactor = scale_factor;

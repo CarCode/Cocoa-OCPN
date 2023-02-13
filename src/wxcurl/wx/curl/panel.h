@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 // Name:        panel.h
 // Purpose:     wxCurlConnectionSettingsPanel
 // Author:      Francesco Montorsi
@@ -6,7 +6,7 @@
 // RCS-ID:      $Id: panel.h 1237 2010-03-10 21:52:47Z frm $
 // Copyright:   (c) 2007 Francesco Montorsi
 // Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////
 
 #ifndef _WXCURL_PANEL_H_
 #define _WXCURL_PANEL_H_
@@ -24,7 +24,7 @@
 // wxCurlConnectionSettingsPanel
 // ----------------------------------------------------------------------------
 
-//! Possible wxCurlConnectionSettingsPanel styles.
+// Possible wxCurlConnectionSettingsPanel styles.
 enum
 {
     wxCCSP_PROXY_OPTIONS = 0x0040,               //!< Shows the proxy options.
@@ -34,9 +34,9 @@ enum
     wxCCSP_DEFAULT_STYLE = wxCCSP_PROXY_OPTIONS|wxCCSP_AUTHENTICATION_OPTIONS|wxCCSP_PORT_OPTION
 };
 
-//! A configurable panel which shows connection settings which can be
-//! modified by the user (whose changes will be reflected on a libCURL handle,
-//! i.e. on the wxCurlBase class passed to #SetCURLOptions).
+// A configurable panel which shows connection settings which can be
+// modified by the user (whose changes will be reflected on a libCURL handle,
+// i.e. on the wxCurlBase class passed to #SetCURLOptions).
 class WXDLLIMPEXP_CURL wxCurlConnectionSettingsPanel : public wxPanel
 {
 public:
@@ -66,7 +66,7 @@ public:
                 long style = wxCCSP_DEFAULT_STYLE, const wxString& name = wxS("connsettingspanel"));
 
 
-    //! Sets all user-defined options of this panel into the given curl object.
+    // Sets all user-defined options of this panel into the given curl object.
     void SetCURLOptions(wxCurlBase *);
 
 

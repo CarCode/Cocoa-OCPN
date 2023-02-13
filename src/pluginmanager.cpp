@@ -2379,7 +2379,11 @@ void PlugInManager::SendS52ConfigToAllPlugIns( bool bReconfig )
         v[_T("OpenCPN S52PLIB UseSCAMIN")] = ps52plib->m_bUseSCAMIN;
         v[_T("OpenCPN S52PLIB SymbolStyle")] = ps52plib->m_nSymbolStyle;
         v[_T("OpenCPN S52PLIB BoundaryStyle")] = ps52plib->m_nBoundaryStyle;
-        v[_T("OpenCPN S52PLIB ColorShades")] = S52_getMarinerParam( S52_MAR_TWO_SHADES );
+//        v[_T("OpenCPN S52PLIB ColorShades")] = S52_getMarinerParam( S52_MAR_TWO_SHADES );
+        v[_T("OpenCPN S52PLIB ColorShades")] = S52_getMarinerParam(S52_MAR_TWO_SHADES);
+        v[_T("OpenCPN S52PLIB Safety Depth")] = (double)S52_getMarinerParam(S52_MAR_SAFETY_DEPTH);
+        v[_T("OpenCPN S52PLIB Shallow Contour")] = (double)S52_getMarinerParam(S52_MAR_SHALLOW_CONTOUR);
+        v[_T("OpenCPN S52PLIB Deep Contour")] = (double)S52_getMarinerParam(S52_MAR_DEEP_CONTOUR);
     }
 
     // Notify plugins that S52PLIB may have reconfigured global options
@@ -2983,7 +2987,17 @@ wxString GetActiveStyleName()
 
 wxBitmap GetBitmapFromSVGFile(wxString filename, unsigned int width, unsigned int height)
 {
-    return LoadSVG(filename, width, height);
+    wxBitmap bmp = LoadSVG(filename, width, height);
+
+    if(bmp.IsOk())
+      return bmp;
+    else {
+    // On error in requested width/height parameters,
+    // try to find and use dimensions embedded in the SVG file
+      unsigned int w, h;
+      SVGDocumentPixelSize(filename, w, h);
+      return LoadSVG(filename, w, h);
+    }
 }
 
 bool IsTouchInterface_PlugIn(void)
@@ -5889,6 +5903,8 @@ bool AddSingleWaypointEx(PlugIn_Waypoint_Ex *pwaypointex, bool b_permanent) {
 
   RoutePoint *pWP = CreateNewPoint( pwaypointex, b_permanent );
 
+  pWP->SetShowWaypointRangeRings(pwaypointex->nrange_rings > 0);
+
   pSelect->AddSelectableRoutePoint(pWP->m_lat, pWP->m_lon, pWP);
   if (b_permanent) pConfig->AddNewWayPoint(pWP, -1);
 
@@ -5938,16 +5954,17 @@ bool UpdateSingleWaypointEx(PlugIn_Waypoint_Ex *pwaypoint) {
           linknode = linknode->GetNext();
         }
       }
-
-        // Extended fields
-      prp->SetWaypointRangeRingsNumber( pwaypoint->nrange_rings );
-      prp->SetWaypointRangeRingsStep( pwaypoint->RangeRingSpace );
-      prp->SetWaypointRangeRingsColour( pwaypoint->RangeRingColor );
-      prp->SetScaMin( pwaypoint->scamin);
-      prp->SetUseSca( pwaypoint->b_useScamin );
-      prp->SetNameShown( pwaypoint->IsNameVisible );
-
     }
+
+      // Extended fields
+      prp->SetWaypointRangeRingsNumber(pwaypoint->nrange_rings);
+      prp->SetWaypointRangeRingsStep(pwaypoint->RangeRingSpace);
+      prp->SetWaypointRangeRingsColour(pwaypoint->RangeRingColor);
+      prp->SetScaMin(pwaypoint->scamin);
+      prp->SetUseSca(pwaypoint->b_useScamin);
+      prp->SetNameShown(pwaypoint->IsNameVisible);
+
+      prp->SetShowWaypointRangeRings(pwaypoint->nrange_rings > 0);
 
     if (prp) prp->ReLoadIcon();
 

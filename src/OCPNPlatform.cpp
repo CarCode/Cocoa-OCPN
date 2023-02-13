@@ -771,15 +771,21 @@ bool OCPNPlatform::BuildGLCaps( void *pbuf )
 
 bool OCPNPlatform::IsGLCapable()
 {
+//    GL_Caps = new OCPN_GLCaps;  // Noch keine GL_Caps
     OCPN_GLCaps *pcaps = new OCPN_GLCaps;
 
+//    BuildGLCaps(GL_Caps);  // Noch keine GL_Caps
     BuildGLCaps(pcaps);
 
     // and so we decide....
 
+    // Require a modern GLSL implementation
+//    if (!GL_Caps->bCanDoGLSL) return false;  // Noch keine GL_Caps
+//    if (!pcaps->bCanDoGLSL) return false;  // Auch noch keine bCanDoGLSL
+
     // We insist on FBO support, since otherwise DC mode is always faster on canvas panning..
-    if(!pcaps->bCanDoFBO)
-        return false;    
+//    if (!GL_Caps->bCanDoFBO) return false;  // Noch keine GL_Caps
+    if (!pcaps->bCanDoFBO) return false;
 
     return true;
 }
@@ -1573,10 +1579,12 @@ wxString *OCPNPlatform::GetPluginDirPtr()
 }
 wxString *OCPNPlatform::GetSharedDataDirPtr()
 {
+    if (m_SData_Dir.IsEmpty()) GetSharedDataDir();
     return &m_SData_Dir;
 }
 wxString *OCPNPlatform::GetPrivateDataDirPtr()
 {
+    if (m_PrivateDataDir.IsEmpty()) GetPrivateDataDir();
     return &m_PrivateDataDir;
 }
 

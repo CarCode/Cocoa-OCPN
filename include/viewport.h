@@ -93,6 +93,7 @@ class ViewPort
             ViewPort BuildExpandedVP(int width, int height);
             
             void SetBoxes(void);
+            void PixelScale(float factor);
 
 //  Accessors
             void Invalidate() { bValid = false; }

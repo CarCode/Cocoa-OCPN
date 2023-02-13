@@ -398,6 +398,7 @@ s52plib::s52plib( const wxString& PLib, bool b_forceLegacy )
     m_useStencilAP = false;
     m_useScissors = false;
     m_useFBO = false;
+    m_GLAC_VBO = false;
     m_useVBO = false;
     m_TextureFormat = -1;
 
@@ -599,8 +600,19 @@ bool s52plib::GetQualityOfData()
     return (old_vis != 0);
 }
 
-void s52plib::SetGLRendererString(const wxString &renderer)
-{
+void s52plib::SetGLRendererString(const wxString &renderer) {
+  m_renderer_string = renderer;
+
+  // No chart type in current use requires VBO for GLAC rendering
+  // Experimentation has shown that VBO is slower for GLAC rendering,
+  //  since the per-object state change of glBindBuffer() is slow
+  //  on most hardware, especially RPi.
+  // However, we have found that NVidea GPUs
+  //  perform much better with VBO on GLAC operations, so set that up.
+
+  if ((renderer.Upper().Contains("NVIDIA")) ||
+      (renderer.Upper().Contains("GEFORCE")))
+    m_GLAC_VBO = true;
 }
 
 /*
@@ -627,8 +639,8 @@ void s52plib::GenerateStateHash()
     unsigned char state_buffer[512];  // Needs to be at least this big...
     memset(state_buffer, 0, sizeof(state_buffer));
 
-    int time = ::wxGetUTCTime();
-    memcpy(state_buffer, &time, sizeof(int));
+//    int time = ::wxGetUTCTime();
+//    memcpy(state_buffer, &time, sizeof(int));
 
     size_t offset = sizeof(int);           // skipping the time int, first element
 
@@ -2544,7 +2556,7 @@ int s52plib::RenderTE( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     return RenderT_All( rzRules, rules, vp, false );
 }
 
-bool s52plib::RenderHPGL( ObjRazRules *rzRules, Rule *prule, wxPoint &r, ViewPort *vp, float rot_angle )
+bool s52plib::RenderHPGL( ObjRazRules *rzRules, Rule *prule, wxPoint &r, ViewPort *vp, float rot_angle, double uScale )
 {
     float fsf = 100 / canvas_pix_per_mm;
 
@@ -2570,7 +2582,7 @@ bool s52plib::RenderHPGL( ObjRazRules *rzRules, Rule *prule, wxPoint &r, ViewPor
         fsf *= xscale;
     }
 
-    xscale *= g_ChartScaleFactorExp;
+    xscale *= uScale;
 
     //  Special case for GEO_AREA objects with centred symbols
     if( rzRules->obj->Primitive_type == GEO_AREA ) {
@@ -3243,7 +3255,7 @@ int s52plib::RenderSY( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
          //  Render a raster or vector symbol, as specified by LUP rules
         if( rules->razRule->definition.SYDF == 'V' ){
-            RenderHPGL( rzRules, rules->razRule, r, vp, angle );
+            RenderHPGL( rzRules, rules->razRule, r, vp, angle );  // Not m_ChartScaleFactorExp ???
         }
         else{
             if( rules->razRule->definition.SYDF == 'R' )
@@ -5305,6 +5317,12 @@ int s52plib::RenderMPS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
                 if( !m_pdc && !strncmp(rules->razRule->name.SYNM, "SOUNDSA1", 8))
                     dryAngle = -vp->rotation * 180./PI;
                 RenderHPGL( rzRules, rules->razRule, r, vp, dryAngle );
+                // Es fehlt vp mit double Wert:
+                //FIXME (dave) Patch to chartsymbols.xml
+                // Remove on Release of 5.8.0
+//                rules->razRule->pos.symb.pivot_x.SYCL = 750;
+
+//                RenderHPGL(rzRules, rules->razRule, r, dryAngle, m_SoundingsScaleFactor);
             }
             else if( rules->razRule->definition.SYDF == 'R' )
 
@@ -7469,10 +7487,10 @@ int s52plib::RenderToGLAC( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     double margin = BBView.GetLonRange() * .05;
     BBView.EnLarge( margin );
 
-    bool b_useVBO = m_useVBO && !rzRules->obj->auxParm1 && vp->m_projection_type == PROJECTION_MERCATOR;
+    //  Use VBO if instructed by hardware renderer specification
+    bool b_useVBO = m_GLAC_VBO && !rzRules->obj->auxParm1;
 
     if( rzRules->obj->pPolyTessGeo ) {
-
         bool b_temp_vbo = false;
         bool b_transform = false;
 

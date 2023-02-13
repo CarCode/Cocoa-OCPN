@@ -46,7 +46,7 @@
 
 // base.h: wxWidgets Declarations for Event Types.
 //
-//////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////
 
 BEGIN_DECLARE_EVENT_TYPES()
     DECLARE_EXPORTED_EVENT_TYPE(WXDLLIMPEXP_CURL, wxCURL_DOWNLOAD_EVENT, 6578)
@@ -59,7 +59,7 @@ END_DECLARE_EVENT_TYPES()
 class WXDLLIMPEXP_CURL wxCurlBase;
 
 
-//! Private internal class used as base class for wxCurlDownloadEvent and wxCurlUploadEvent.
+// Private internal class used as base class for wxCurlDownloadEvent and wxCurlUploadEvent.
 class WXDLLIMPEXP_CURL wxCurlProgressBaseEvent : public wxEvent
 {
 public:
@@ -70,49 +70,49 @@ public:
 
 public:     // misc getters
 
-    //! Returns the curl session which generated this event.
+    // Returns the curl session which generated this event.
     wxCurlBase *GetCurlSession() const { return m_pCURL; }
 
-    //! Returns the date & time at which this event was generated.
+    // Returns the date & time at which this event was generated.
     wxDateTime GetDateTime() const { return m_dt; }
 
-    //! Returns a number in [0;100] range indicating how much has been transferred so far.
+    // Returns a number in [0;100] range indicating how much has been transferred so far.
     double GetPercent() const 
         { return GetTotalBytes() == 0 ? 0 : (100.0 * (GetTransferredBytes()/GetTotalBytes())); }
 
-    //! Returns the current transfer speed in bytes/second.
+    // Returns the current transfer speed in bytes/second.
     virtual double GetSpeed() const
         { return GetTransferredBytes()/GetElapsedTime().GetSeconds().ToDouble(); }
 
 public:     // wxTimeSpan getters
 
-    //! Returns the time elapsed since the beginning of the download up
-    //! to the time this function is called.
+    // Returns the time elapsed since the beginning of the download up
+    // to the time this function is called.
     virtual wxTimeSpan GetElapsedTime() const;
 
-    //! Returns the estimated time for the total download since it started.
+    // Returns the estimated time for the total download since it started.
     virtual wxTimeSpan GetEstimatedTime() const;
 
-    //! Returns the estimated remaining time to the completion of the download.
+    // Returns the estimated remaining time to the completion of the download.
     virtual wxTimeSpan GetEstimatedRemainingTime() const;
 
 
 public:     // wxString getters
 
-    //! Returns the URL you are transfering from.
+    // Returns the URL you are transfering from.
     std::string GetURL() const { return m_szURL; }
 
-    //! Returns the current download/upload speed in a human readable format.
+    // Returns the current download/upload speed in a human readable format.
     std::string GetHumanReadableSpeed(const std::string &inv = GetNAText(), int prec = 1) const;
 
-    //! Returns the total bytes to download in a human-readable format.
+    // Returns the total bytes to download in a human-readable format.
     std::string GetHumanReadableTotalBytes(const std::string &inv = GetNAText(), int prec = 1) const
         {
             wxString s(inv.c_str(), wxConvUTF8);
             return std::string(wxFileName::GetHumanReadableSize(wxULongLong((unsigned long)GetTotalBytes()), s, prec).mb_str());
         }
 
-    //! Returns the currently transferred bytes in a human-readable format.
+    // Returns the currently transferred bytes in a human-readable format.
     std::string GetHumanReadableTransferredBytes(const std::string &inv = GetNAText(), int prec = 1) const
         {
             wxString s(inv.c_str(), wxConvUTF8);
@@ -122,10 +122,10 @@ public:     // wxString getters
 
 public:     // pure virtual functions
 
-    //! Returns the total bytes to transfer.
+    // Returns the total bytes to transfer.
     virtual double GetTotalBytes() const = 0;
 
-    //! Returns the bytes transferred so far.
+    // Returns the bytes transferred so far.
     virtual double GetTransferredBytes() const = 0;
 
 protected:
@@ -148,13 +148,13 @@ public:
 
 // base.h: interface for the wxCurlDownloadEvent class.
 //
-//////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////
 
-//! This event gets posted by wxCURL with a frequent interval during operation
-//! (roughly once per second) no matter if data is being transfered or not.
-//! Unknown/unused argument values passed to the callback will be set to zero 
-//! (like if you only download data, the upload size will remain 0).
-//! Use the EVT_CURL_PROGRESS(id, function) macro to intercept this event.
+// This event gets posted by wxCURL with a frequent interval during operation
+// (roughly once per second) no matter if data is being transfered or not.
+// Unknown/unused argument values passed to the callback will be set to zero
+// (like if you only download data, the upload size will remain 0).
+// Use the EVT_CURL_PROGRESS(id, function) macro to intercept this event.
 class WXDLLIMPEXP_CURL wxCurlDownloadEvent : public wxCurlProgressBaseEvent
 {
 public:
@@ -167,14 +167,14 @@ public:
     virtual wxEvent* Clone() const { return new wxCurlDownloadEvent(*this); }
 
 
-    //! Returns the number of bytes downloaded so far.
+    // Returns the number of bytes downloaded so far.
     double GetDownloadedBytes() const { return m_rDownloadNow; }
     double GetTransferredBytes() const { return m_rDownloadNow; }
 
-    //! Returns the total number of bytes to download.
+    // Returns the total number of bytes to download.
     double GetTotalBytes() const { return m_rDownloadTotal; }
 
-    //! Returns the currently downloaded bytes in a human-readable format.
+    // Returns the currently downloaded bytes in a human-readable format.
     std::string GetHumanReadableDownloadedBytes(const std::string &inv = wxCurlProgressBaseEvent::GetNAText(), int prec = 1) const
         {
             wxString s(inv.c_str(), wxConvUTF8);
@@ -198,11 +198,11 @@ typedef void (wxEvtHandler::*wxCurlDownloadEventFunction)(wxCurlDownloadEvent&);
     wx__DECLARE_EVT1(wxCURL_DOWNLOAD_EVENT, id, wxCurlDownloadEventHandler(fn))
 
 
-//! This event gets posted by wxCURL with a frequent interval during operation
-//! (roughly once per second) no matter if data is being transfered or not.
-//! Unknown/unused argument values passed to the callback will be set to zero 
-//! (like if you only download data, the upload size will remain 0).
-//! Use the EVT_CURL_PROGRESS(id, function) macro to intercept this event.
+// This event gets posted by wxCURL with a frequent interval during operation
+// (roughly once per second) no matter if data is being transfered or not.
+// Unknown/unused argument values passed to the callback will be set to zero
+// (like if you only download data, the upload size will remain 0).
+// Use the EVT_CURL_PROGRESS(id, function) macro to intercept this event.
 class WXDLLIMPEXP_CURL wxCurlUploadEvent : public wxCurlProgressBaseEvent
 {
 public:
@@ -215,14 +215,14 @@ public:
     virtual wxEvent* Clone() const { return new wxCurlUploadEvent(*this); }
 
 
-    //! Returns the number of bytes uploaded so far.
+    // Returns the number of bytes uploaded so far.
     double GetUploadedBytes() const { return m_rUploadNow; }
     double GetTransferredBytes() const { return m_rUploadNow; }
 
-    //! Returns the total number of bytes to upload.
+    // Returns the total number of bytes to upload.
     double GetTotalBytes() const { return m_rUploadTotal; }
 
-    //! Returns the currently uploaded bytes in a human-readable format.
+    // Returns the currently uploaded bytes in a human-readable format.
     std::string GetHumanReadableUploadedBytes(const std::string &inv = wxCurlProgressBaseEvent::GetNAText(), int prec = 1) const
         {
             wxString s(inv.c_str(), wxConvUTF8);
@@ -248,10 +248,10 @@ typedef void (wxEvtHandler::*wxCurlUploadEventFunction)(wxCurlUploadEvent&);
 
 // base.h: interface for the wxCurlBeginPerformEvent class.
 //
-//////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////
 
-//! This event get posted before the beginning of any tranfer operation.
-//! Use the EVT_CURL_BEGIN_PERFORM(id, function) macro to intercept this event.
+// This event get posted before the beginning of any tranfer operation.
+// Use the EVT_CURL_BEGIN_PERFORM(id, function) macro to intercept this event.
 class WXDLLIMPEXP_CURL wxCurlBeginPerformEvent : public wxEvent
 {
 public:
@@ -261,7 +261,7 @@ public:
 
     virtual wxEvent* Clone() const { return new wxCurlBeginPerformEvent(*this); }
 
-    //! Returns the URL you are going to transfering from/to.
+    // Returns the URL you are going to transfering from/to.
     std::string GetURL() const { return m_szURL; }
 
 protected:
@@ -283,10 +283,10 @@ typedef void (wxEvtHandler::*wxCurlBeginPerformEventFunction)(wxCurlBeginPerform
 
 // base.h: interface for the wxCurlEndPerformEvent class.
 //
-//////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////
 
-//! This event get posted at the end of any tranfer operation.
-//! Use the EVT_CURL_END_PERFORM(id, function) macro to intercept this event.
+// This event get posted at the end of any tranfer operation.
+// Use the EVT_CURL_END_PERFORM(id, function) macro to intercept this event.
 class WXDLLIMPEXP_CURL wxCurlEndPerformEvent : public wxEvent
 {
 public:
@@ -296,13 +296,13 @@ public:
 
     virtual wxEvent* Clone() const { return new wxCurlEndPerformEvent(*this); }
 
-    //! Returns the URL you are going to transfering from/to.
+    // Returns the URL you are going to transfering from/to.
     std::string GetURL() const { return m_szURL; }
 
-    //! Returns the response code for the operation.
+    // Returns the response code for the operation.
     long GetResponseCode() const { return m_iResponseCode; }
 
-    //! Returns true if the response code indicates a valid transfer.
+    // Returns true if the response code indicates a valid transfer.
     bool IsSuccessful() const { return ((m_iResponseCode > 199) && (m_iResponseCode < 300)); }
 
 protected:
@@ -324,7 +324,7 @@ typedef void (wxEvtHandler::*wxCurlEndPerformEventFunction)(wxCurlEndPerformEven
 
 // C Function Declarations for LibCURL
 //
-//////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////
 
 extern "C"
 {
@@ -343,27 +343,27 @@ extern "C"
 
 // base.h: interface for the wxCurlBase class.
 //
-//////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////
 
-//! Tells wxCurlBase to send wxCurlDownloadEvent events
+// Tells wxCurlBase to send wxCurlDownloadEvent events
 #define wxCURL_SEND_PROGRESS_EVENTS     0x01
 
-//! Tells wxCurlBase to send wxCurlBeginPerformEvent and wxCurlEndPerformEvent events
+// Tells wxCurlBase to send wxCurlBeginPerformEvent and wxCurlEndPerformEvent events
 #define wxCURL_SEND_BEGINEND_EVENTS     0x02
 
-//! By default wxCurlBase won't send events
+// By default wxCurlBase won't send events
 #define wxCURL_DEFAULT_FLAGS            (0)
 
-//! The "easy" unspecialized interface to libCURL.
-//! You may want to look at wxCurlFTP, wxCurlHTTP, wxCurlDAV if you want to have a specialized
-//! interface for respectively the FTP, HTTP and WebDAV protocols.
-//!
-//! wxCurlBase represents a libCURL handle to a "session".
-//! To use this interface you should:
-//! - create an instance of wxCurlBase
-//! - use #SetOpt to set libCURL options you're interested to
-//!   or alternatively the other various Set*() functions
-//! - call #Perform to perform the operation
+// The "easy" unspecialized interface to libCURL.
+// You may want to look at wxCurlFTP, wxCurlHTTP, wxCurlDAV if you want to have a specialized
+// interface for respectively the FTP, HTTP and WebDAV protocols.
+//
+// wxCurlBase represents a libCURL handle to a "session".
+// To use this interface you should:
+// - create an instance of wxCurlBase
+// - use #SetOpt to set libCURL options you're interested to
+//   or alternatively the other various Set*() functions
+// - call #Perform to perform the operation
 class WXDLLIMPEXP_CURL wxCurlBase
 {
 public:
@@ -378,139 +378,139 @@ public:
 
     // LibCURL Abstraction Methods - Wrapping curl_easy calls...
 
-    //! Sets a transfer option for this libCURL session instance.
-    //! See the curl_easy_setopt() function call for more info.
+    // Sets a transfer option for this libCURL session instance.
+    // See the curl_easy_setopt() function call for more info.
     bool SetOpt(CURLoption option, ...);
 
-    //! Gets an info from this libCURL session instance.
-    //! See the curl_easy_getinfo() function call for more info.
+    // Gets an info from this libCURL session instance.
+    // See the curl_easy_getinfo() function call for more info.
     bool GetInfo(CURLINFO info, ...) const;
 
-    //! Start the operation as described by the options set previously with #SetOpt.
-    //! If you set CURLOPT_UPLOAD to zero and the CURLOPT_WRITEFUNCTION and CURLOPT_WRITEDATA
-    //! options to suitable values, a download will be performed.
-    //! If you set CURLOPT_UPLOAD to nonzero and the CURLOPT_READFUNCTION and CURLOPT_READDATA
-    //! options to suitable values, an upload will be performed.
-    //! See the curl_easy_perform() function call for more info.
+    // Start the operation as described by the options set previously with #SetOpt.
+    // If you set CURLOPT_UPLOAD to zero and the CURLOPT_WRITEFUNCTION and CURLOPT_WRITEDATA
+    // options to suitable values, a download will be performed.
+    // If you set CURLOPT_UPLOAD to nonzero and the CURLOPT_READFUNCTION and CURLOPT_READDATA
+    // options to suitable values, an upload will be performed.
+    // See the curl_easy_perform() function call for more info.
     bool Perform();
 
 
     // Internal handle management:
 
-    //! Initializes the internal libCURL handle. This function is automatically called by
-    //! the constructor.
+    // Initializes the internal libCURL handle. This function is automatically called by
+    // the constructor.
     bool InitHandle();
 
-    //! Closes this libCURL session. This will effectively close all connections this handle 
-    //! has used and possibly has kept open until now.
-    //! This function is automatically called by the destructor.
+    // Closes this libCURL session. This will effectively close all connections this handle
+    // has used and possibly has kept open until now.
+    // This function is automatically called by the destructor.
     bool CleanupHandle();
 
-    //! Reinit the handle of this libCURL session. Equivalent to call #CleanupHandle and then #InitHandle.
+    // Reinit the handle of this libCURL session. Equivalent to call #CleanupHandle and then #InitHandle.
     bool ReInitHandle();
 
-    //! Re-initializes all options previously set on this libCURL session to the default values.
+    // Re-initializes all options previously set on this libCURL session to the default values.
     bool ResetHandle();
 
-    //! Is the underlying libCURL handle valid?
+    // Is the underlying libCURL handle valid?
     bool IsOk() const { return m_pCURL != NULL; }
 
     // Member Data Access Methods (MDA)
 
-    //! Sets the event handler to which the wxCurlDownloadEvent, wxCurlBeginPerformEvent and
-    //! wxCurlEndPerformEvent will be sent if they are enabled (see #SetFlags).
+    // Sets the event handler to which the wxCurlDownloadEvent, wxCurlBeginPerformEvent and
+    // wxCurlEndPerformEvent will be sent if they are enabled (see #SetFlags).
     bool			SetEvtHandler(wxEvtHandler* pParent, int id = wxID_ANY);
     wxEvtHandler*	GetEvtHandler() const;
     int             GetId() const;
 	void SetAbort(bool a);
 	bool GetAbort() const;
 
-    //! Sets the "event policy" of wxCURL: if you pass zero, then no events will ever be sent.
-    //! The wxCURL_SEND_PROGRESS_EVENTS and wxCURL_SEND_BEGINEND_EVENTS flags instead tell
-    //! wxCURL to send respectively the wxCurlDownloadEvent and wxCurlBeginPerformEvent,
-    //! wxCurlEndPerformEvent events.
+    // Sets the "event policy" of wxCURL: if you pass zero, then no events will ever be sent.
+    // The wxCURL_SEND_PROGRESS_EVENTS and wxCURL_SEND_BEGINEND_EVENTS flags instead tell
+    // wxCURL to send respectively the wxCurlDownloadEvent and wxCurlBeginPerformEvent,
+    // wxCurlEndPerformEvent events.
     void		SetFlags(long flags);
     long        GetFlags() const;
 
-    //! Sets the base URL. This allows you to specify a 'base' URL if you
-    //! are performing multiple actions.
+    // Sets the base URL. This allows you to specify a 'base' URL if you
+    // are performing multiple actions.
     void		SetBaseURL(const wxString& szBaseURL);
     std::string	GetBaseURL() const;
 
-    //! Sets the current URL. The 'base url' will be prepended to the given string.
+    // Sets the current URL. The 'base url' will be prepended to the given string.
     void        SetURL(const wxString &szRelativeURL);
 
-    //! Returns the current 'full' URL. I.e. the real URL being used for the transfer.
+    // Returns the current 'full' URL. I.e. the real URL being used for the transfer.
     std::string    GetURL() const;
 
-    //! Sets the host Port.  This allows you to specify a specific (non-
-    //! default port) if you like.  The value -1 means that the default port
-    //! will be used.
+    // Sets the host Port.  This allows you to specify a specific (non-
+    // default port) if you like.  The value -1 means that the default port
+    // will be used.
     void		SetPort(const long& iPort);
     long		GetPort() const;
 
-    //! Sets the Username. If no username is
-    //! needed, simply assign an empty string (which is the default).
+    // Sets the Username. If no username is
+    // needed, simply assign an empty string (which is the default).
     void		SetUsername(const wxString& szUsername);
     std::string	GetUsername() const;
 
-    //! Sets the Password. If no password is
-    //! needed, simply assign an empty string (which is the default).
+    // Sets the Password. If no password is
+    // needed, simply assign an empty string (which is the default).
     void		SetPassword(const wxString& szPassword);
     std::string	GetPassword() const;
 
-    //! Returns the header of the response.
+    // Returns the header of the response.
     std::string	GetResponseHeader() const;
     std::string	GetResponseBody() const;		// May only contain data on NON-GET calls.
     long		GetResponseCode() const;
 
-    //! Should the proxy be used?
+    // Should the proxy be used?
     void		UseProxy(const bool& bUseProxy);
     bool		UseProxy() const;
 
-    //! Sets proxy host.
+    // Sets proxy host.
     void		SetProxyHost(const wxString& szProxyHost);
     std::string	GetProxyHost() const;
 
-    //! Sets the username for proxy access (if needed).
+    // Sets the username for proxy access (if needed).
     void		SetProxyUsername(const wxString& szProxyUsername);
     std::string	GetProxyUsername() const;
 
-    //! Sets the password for proxy access (if needed).
+    // Sets the password for proxy access (if needed).
     void		SetProxyPassword(const wxString& szProxyPassword);
     std::string	GetProxyPassword() const;
 
-    //! Sets the port for proxy access.
+    // Sets the port for proxy access.
     void		SetProxyPort(const long& iProxyPort);
     long		GetProxyPort() const;
 
-    //! Sets verbose mode on/off. Note that in verbose mode a lot of info
-    //! will be printed into an internal memory stream which can be queried
-    //! using #GetVerboseStream and #GetVerboseString.
+    // Sets verbose mode on/off. Note that in verbose mode a lot of info
+    // will be printed into an internal memory stream which can be queried
+    // using #GetVerboseStream and #GetVerboseString.
     void		SetVerbose(const bool& bVerbose);
     bool		IsVerbose() const;
 
-    //! Writes into the given stream the verbose messages collected so far.
+    // Writes into the given stream the verbose messages collected so far.
     bool		GetVerboseStream(wxOutputStream& destStream) const;
 
-    //! Appends to the given stream the verbose messages collected so far.
+    // Appends to the given stream the verbose messages collected so far.
     bool		GetVerboseString(wxString& szStream) const;
 
-    //! Returns a generic, short string describing the last occurred error.
+    // Returns a generic, short string describing the last occurred error.
     std::string    GetErrorString() const;
 
-    //! Returns a short string with a detailed description of last occurred error.
-    //! This is typically something technical which you may want to hide from the
-    //! end users of your application (and e.g. show only in log files).
+    // Returns a short string with a detailed description of last occurred error.
+    // This is typically something technical which you may want to hide from the
+    // end users of your application (and e.g. show only in log files).
     std::string    GetDetailedErrorString() const;
 
 
     // Static LibCURL Initialization Methods - Call At Program Init and Close...
 
-    //! Initializes the libCURL. Call this only once at the beginning of your program.
+    // Initializes the libCURL. Call this only once at the beginning of your program.
     static void Init();
 
-    //! Clean up libCURL. Call this only once at the end of your program.
+    // Clean up libCURL. Call this only once at the end of your program.
     static void Shutdown();
 
 
@@ -529,31 +529,31 @@ protected:      // protected utils used by wxCurl*Thread classes
     friend class wxCurlSizeQueryThread;
     friend class wxCurlProgressBaseEvent;
 
-    //! Sets a custom callback as the progress callback.
-    //! Note that using this function you'll break the dispatching of
-    //! wxCurlDownloadEvent and wxCurlUploadEvent unless your own callback
-    //! does dispatch the events itself.
-    //! wxCURL users should never need to use this function.
+    // Sets a custom callback as the progress callback.
+    // Note that using this function you'll break the dispatching of
+    // wxCurlDownloadEvent and wxCurlUploadEvent unless your own callback
+    // does dispatch the events itself.
+    // wxCURL users should never need to use this function.
     void OverrideProgressCallback(curl_progress_callback newcallback, void *data)
         { m_progressCallback=newcallback; m_progressData=data; }
 
-    //! Returns the time at which started the last transfer "span".
+    // Returns the time at which started the last transfer "span".
     wxDateTime GetBeginTransferSpan() const
         { return m_dtBeginTransferSpan; }
 
-    //! Returns the current time offset, i.e. the time elapsed in all previous
-    //! transfer spans.
+    // Returns the current time offset, i.e. the time elapsed in all previous
+    // transfer spans.
     wxTimeSpan GetElapsedTimeOffset() const
         { return m_tsElapsedOffset; }
 
-    //! A transfer span has been completed (i.e. the user paused the transfer).
+    // A transfer span has been completed (i.e. the user paused the transfer).
     void EndTransferSpan()
     {
         wxDateTime now = wxDateTime::Now();
         m_tsElapsedOffset += now - m_dtBeginTransferSpan;
     }
 
-    //! A new transfer span has begun (i.e. the user resumed the transfer).
+    // A new transfer span has begun (i.e. the user resumed the transfer).
     void BeginTransferSpan()
     {
         m_dtBeginTransferSpan = wxDateTime::Now();

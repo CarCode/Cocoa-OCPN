@@ -165,6 +165,9 @@ public:
 
     void SetContext(wxGLContext *pcontext) { m_pcontext = pcontext; }
 
+    int GetGLCanvasWidth() { return m_glcanvas_width; }
+    int GetGLCanvasHeight() { return m_glcanvas_height; }
+
     void OnPaint(wxPaintEvent& event);
     void OnEraseBG(wxEraseEvent& evt);
     void Render();
@@ -197,7 +200,7 @@ public:
     void DrawStaticRoutesTracksAndWaypoints( ViewPort &vp );
 
     void RenderAllChartOutlines( ocpnDC &dc, ViewPort &VP );
-    void RenderChartOutline( int dbIndex, ViewPort &VP );
+    void RenderChartOutline( ocpnDC &dc, int dbIndex, ViewPort &VP );
 
     void DrawEmboss( emboss_data *emboss );
     void ShipDraw(ocpnDC& dc);
@@ -296,6 +299,9 @@ protected:
     int          m_currentTexWidth;
     int          m_currentTexHeight;
     int          m_displayScale;
+
+    int m_glcanvas_width;
+    int m_glcanvas_height;
 
     bool m_bUseGLSL;
 

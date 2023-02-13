@@ -4487,6 +4487,7 @@ void options::CreatePanel_TidesCurrents(size_t parent, int border_size,
   col0.SetWidth(500);
   tcDataSelected->InsertColumn(0, col0);
 
+    int w = 400, w1, h;
   for (unsigned int id = 0; id < TideCurrentDataSet.Count(); id++) {
     wxListItem li;
     li.SetId( id );
@@ -4494,7 +4495,10 @@ void options::CreatePanel_TidesCurrents(size_t parent, int border_size,
 
     wxString setName = TideCurrentDataSet[id];
     tcDataSelected->SetItem(id, 0, setName);
+      GetTextExtent(setName, &w1, &h);
+      w = w1 > w ? w1 : w;
   }
+    tcDataSelected->SetColumnWidth(0, 20 + w);
 
   //    Add the "Insert/Remove" buttons
   wxButton* insertButton =
@@ -6164,15 +6168,17 @@ void options::CreateListbookIcons()
     ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
 
     if(!g_bresponsive){
-        m_topImgList = new wxImageList(40, 40, TRUE, 1);
+        int sx = 40;
+        int sy = 40;
+        m_topImgList = new wxImageList(sx, sy, TRUE, 0);
 
 #if wxCHECK_VERSION(2, 8, 12)
-        m_topImgList->Add(style->GetIcon(_T("Display")));
-        m_topImgList->Add(style->GetIcon(_T("Charts")));
-        m_topImgList->Add(style->GetIcon(_T("Connections")));
-        m_topImgList->Add(style->GetIcon(_T("Ship")));
-        m_topImgList->Add(style->GetIcon(_T("UI")));
-        m_topImgList->Add(style->GetIcon(_T("Plugins")));
+        m_topImgList->Add(style->GetIcon(_T("Display"), sx, sy));
+        m_topImgList->Add(style->GetIcon(_T("Charts"), sx, sy));
+        m_topImgList->Add(style->GetIcon(_T("Connections"), sx, sy));
+        m_topImgList->Add(style->GetIcon(_T("Ship"), sx, sy));
+        m_topImgList->Add(style->GetIcon(_T("UI"), sx, sy));
+        m_topImgList->Add(style->GetIcon(_T("Plugins"), sx, sy));
 #else
         wxBitmap bmp;
         wxImage img;
@@ -6376,29 +6382,6 @@ void options::CreateControls(void) {
 //     QTabBar QToolButton::left-arrow {
 //         image: url(leftarrow.png);
 //     }
-#endif
-
-#ifdef __WXMSW__
-  //  Windows clips the width of listbook selectors to about twice icon size
-  //  This makes the text render with ellipses if too large
-
-  //  So, Measure and reduce the Font size on ListBook(ListView) selectors
-  //  to allow text layout without ellipsis...
-  wxBitmap tbmp = g_StyleManager->GetCurrentStyle()->GetIcon(_T("Display"));
-  wxScreenDC sdc;
-  int text_width = tbmp.GetWidth();
-  if (sdc.IsOk())
-    sdc.GetTextExtent(_("Connections"), &text_width, NULL, NULL, NULL,
-                      dialogFont);
-
-  if (text_width > tbmp.GetWidth() * 2) {
-    wxListView* lv = m_pListbook->GetListView();
-    wxFont* qFont = dialogFont;  // to get type, weight, etc...
-
-    wxFont* sFont = FontMgr::Get().FindOrCreateFont(
-        10, qFont->GetFamily(), qFont->GetStyle(), qFont->GetWeight());
-    lv->SetFont(*sFont);
-  }
 #endif
 
   CreateListbookIcons();

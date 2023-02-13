@@ -91,6 +91,7 @@ int                     g_ScaledNumWeightSizeOfT;
 int                     g_ScaledSizeMinimal;
 
 extern ArrayOfMMSIProperties g_MMSI_Props_Array;
+extern bool g_bopengl;
 
 extern float            g_ShipScaleFactorExp;
 
@@ -1287,7 +1288,12 @@ static void AISDrawTarget( AIS_Target_Data *td, ocpnDC& dc, ViewPort& vp, ChartC
                         wxPen narrow_pen( UBLCK, AIS_width_cogpredictor_line );
                         if( targetscale < 75 ){
                             narrow_pen.SetWidth(1);
-                            narrow_pen.SetStyle(wxPENSTYLE_DOT);
+//                            narrow_pen.SetStyle(wxPENSTYLE_DOT);  // ALT
+                            narrow_pen.SetStyle(wxPENSTYLE_USER_DASH);
+                            wxDash dash_dot[2];
+                            dash_dot[0] = 2;
+                            dash_dot[1] = 2;
+                            narrow_pen.SetDashes(2, dash_dot);
                         }
                         dc.SetPen( narrow_pen );
                         dc.StrokeLine( pixx, pixy, pixx1, pixy1 );
@@ -1296,9 +1302,10 @@ static void AISDrawTarget( AIS_Target_Data *td, ocpnDC& dc, ViewPort& vp, ChartC
                     if(dc.GetDC()) {      
                         dc.SetBrush( target_brush );
                         if (targetscale >= 75)
-                            dc.StrokeCircle( PredPoint.x, PredPoint.y, 5 );
+                          dc.StrokeCircle(PredPoint.x, PredPoint.y, 5);
                         else
-                            dc.StrokeCircle( PredPoint.x, PredPoint.y, 2 );
+                          dc.StrokeCircle(PredPoint.x, PredPoint.y, 2);
+//                        dc.StrokeCircle(PredPoint.x, PredPoint.y, 5* targetscale / 100); // NEU??? 29.1.23
                     } else {
 #ifdef ocpnUSE_GL
 

@@ -569,7 +569,7 @@ ChartCanvas::ChartCanvas ( wxFrame *frame, int canvasIndex ) :
 
     SetCursor( *pCursorArrow );
 
-    pPanTimer = new wxTimer( this, PAN_TIMER );
+    pPanTimer = new wxTimer( this, m_MouseDragging );
     pPanTimer->Stop();
 
     pMovementTimer = new wxTimer( this, MOVEMENT_TIMER );
@@ -6652,11 +6652,12 @@ void ChartCanvas::ShowChartInfoWindow( int x, int dbIndex )
             m_pCIWin->FitToChars( char_width, char_height );
 
             wxPoint p;
-            p.x = x;
-            if( ( p.x + m_pCIWin->GetWinSize().x ) > m_canvas_width )
-                 p.x = (m_canvas_width - m_pCIWin->GetWinSize().x) / 2;    // centered
+            p.x = x / GetContentScaleFactor();
+            if ((p.x + m_pCIWin->GetWinSize().x) > (m_canvas_width / GetContentScaleFactor()))
+              p.x = ((m_canvas_width / GetContentScaleFactor())
+                      - m_pCIWin->GetWinSize().x) / 2;  // centered
 
-            p.y = m_canvas_height - m_Piano->GetHeight() - 4 - m_pCIWin->GetWinSize().y;
+            p.y = (m_canvas_height - m_Piano->GetHeight()) / GetContentScaleFactor() - 4 - m_pCIWin->GetWinSize().y;
 
             m_pCIWin->dbIndex = dbIndex;
             m_pCIWin->SetPosition( p );
@@ -9109,12 +9110,15 @@ bool ChartCanvas::MouseEventProcessCanvas( wxMouseEvent& event )
             }
 
             if( ( last_drag.x != x ) || ( last_drag.y != y ) ) {
-                m_bChartDragging = true;
-                StartTimedMovement();
-                m_pan_drag.x += last_drag.x - x;
-                m_pan_drag.y += last_drag.y - y;
+                if(!m_routeState){        // Correct fault on wx32/gtk3, uncommanded dragging on route create.
+                                          //   github #2994
+                  m_bChartDragging = true;
+                  StartTimedMovement();
+                  m_pan_drag.x += last_drag.x - x;
+                  m_pan_drag.y += last_drag.y - y;
 
-                last_drag.x = x, last_drag.y = y;
+                    last_drag.x = x, last_drag.y = y;
+                  }
 
                 if( g_btouch ) {
                     if(( m_bMeasure_Active && m_nMeasureState ) || ( m_routeState )) {
