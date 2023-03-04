@@ -1430,13 +1430,98 @@ void s57chart::BuildLineVBO( void )
         (s_glBindBuffer)(GL_ARRAY_BUFFER, vboId);
 
         // upload data to VBO
+        // Choice:  Line VBO only, or full VBO with areas.
+
+#if 1
         glEnableClientState(GL_VERTEX_ARRAY);             // activate vertex coords array
         (s_glBufferData)(GL_ARRAY_BUFFER, m_vbo_byte_length, m_line_vertex_buffer, GL_STATIC_DRAW);
+#else
+    // get the size of VBO data block needed for all AREA objects
+    ObjRazRules *top, *crnt;
+    int vbo_area_size_bytes = 0;
+    for (int i = 0; i < PRIO_NUM; ++i) {
+      if (ps52plib->m_nBoundaryStyle == SYMBOLIZED_BOUNDARIES)
+        top = razRules[i][4];  // Area Symbolized Boundaries
+      else
+        top = razRules[i][3];  // Area Plain Boundaries
+
+      while (top != NULL) {
+        crnt = top;
+        top = top->next;  // next object
+
+        //  Get the vertex data for this object
+        PolyTriGroup *ppg_vbo = crnt->obj->pPolyTessGeo->Get_PolyTriGroup_head();
+        //add the byte length
+        vbo_area_size_bytes += ppg_vbo->single_buffer_size;
+      }
+    }
+
+    glGetError();     //clear it
+
+    // Allocate the VBO
+    glBufferData(GL_ARRAY_BUFFER, m_vbo_byte_length + vbo_area_size_bytes,
+                 NULL, GL_STATIC_DRAW);
+
+    GLenum err = glGetError();
+          if (err) {
+            wxString msg;
+            msg.Printf(_T("S57 VBO Error 1: %d"), err);
+            wxLogMessage(msg);
+            printf("S57 VBO Error 1: %d", err);
+          }
+
+    // Upload the line vertex data
+    glBufferSubData(GL_ARRAY_BUFFER, 0, m_vbo_byte_length, m_line_vertex_buffer);
+
+    err = glGetError();
+          if (err) {
+            wxString msg;
+            msg.Printf(_T("S57 VBO Error 2: %d"), err);
+            wxLogMessage(msg);
+            printf("S57 VBO Error 2: %d", err);
+          }
+
+
+    // Get the Area Object vertices, and add to the VBO, one by one
+    int vbo_load_offset = m_vbo_byte_length;
+
+    for (int i = 0; i < PRIO_NUM; ++i) {
+      if (ps52plib->m_nBoundaryStyle == SYMBOLIZED_BOUNDARIES)
+        top = razRules[i][4];  // Area Symbolized Boundaries
+      else
+        top = razRules[i][3];  // Area Plain Boundaries
+
+      while (top != NULL) {
+        crnt = top;
+        top = top->next;  // next object
+
+        //  Get the vertex data for this object
+        PolyTriGroup *ppg_vbo = crnt->obj->pPolyTessGeo->Get_PolyTriGroup_head();
+
+        // append  data to VBO
+        glBufferSubData(GL_ARRAY_BUFFER, vbo_load_offset,
+                        ppg_vbo->single_buffer_size,
+                        ppg_vbo->single_buffer);
+        // store the VBO offset in the object
+        crnt->obj->vboAreaOffset = vbo_load_offset;
+        vbo_load_offset += ppg_vbo->single_buffer_size;
+      }
+    }
+
+    err = glGetError();
+          if (err) {
+            wxString msg;
+            msg.Printf(_T("S57 VBO Error 3: %d"), err);
+            wxLogMessage(msg);
+            printf("S57 VBO Error 3: %d", err);
+          }
+#endif
 
         glDisableClientState(GL_VERTEX_ARRAY);            // deactivate vertex array
         (s_glBindBuffer)(GL_ARRAY_BUFFER, 0);
 
         //  Loop and populate all the objects
+        //  with the name of the line/area vertex VBO
         for( int i = 0; i < PRIO_NUM; ++i ) {
             for( int j = 0; j < LUPNAME_NUM; j++ ) {
                 ObjRazRules *top = razRules[i][j];
@@ -1449,7 +1534,7 @@ void s57chart::BuildLineVBO( void )
         }
 
         m_LineVBO_name = vboId;
-
+        m_this_chart_context->vboID = vboId;
     }
 #endif
 }
@@ -1555,7 +1640,7 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
     ps52plib->ClearTextList();
 
     ViewPort vp = VPoint;
-
+    // printf("\n");
     // region always has either 1 or 2 rectangles (full screen or panning rectangles)
     for(OCPNRegionIterator upd ( RectRegion ); upd.HaveRects(); upd.NextRect()) {
         LLRegion chart_region = vp.GetLLRegion(upd.GetRect());
@@ -1566,7 +1651,11 @@ bool s57chart::DoRenderRegionViewOnGL( const wxGLContext &glc, const ViewPort& V
             //TODO  I think this needs nore work for alternate Projections...
             //  cm93 vpoint crossing Greenwich, panning east, was rendering areas incorrectly.
             ViewPort cvp = glChartCanvas::ClippedViewport(VPoint, chart_region);
-
+//  printf("CVP:  %g %g       %g %g\n",
+//         cvp.GetBBox().GetMinLat(),
+//         cvp.GetBBox().GetMaxLat(),
+//         cvp.GetBBox().GetMinLon(),
+//         cvp.GetBBox().GetMaxLon());
             if(CHART_TYPE_CM93 == GetChartType()){
                 // for now I will revert to the faster rectangle clipping now that rendering order is resolved
 //                glChartCanvas::SetClipRegion(cvp, chart_region);
@@ -1669,6 +1758,8 @@ bool s57chart::DoRenderOnGLText( const wxGLContext &glc, const ViewPort& VPoint 
 
 #if 0    
     //      Render the areas quickly
+    // bind VBO in order to use   // #if 1 ???
+
     for( i = 0; i < PRIO_NUM; ++i ) {
         if( ps52plib->m_nBoundaryStyle == SYMBOLIZED_BOUNDARIES )
             top = razRules[i][4]; // Area Symbolized Boundaries
@@ -1679,7 +1770,7 @@ bool s57chart::DoRenderOnGLText( const wxGLContext &glc, const ViewPort& VPoint 
                 crnt = top;
                 top = top->next;               // next object
                 crnt->sm_transform_parms = &vp_transform;
-///                ps52plib->RenderAreaToGL( glc, crnt, &tvp );
+//                ps52plib->RenderAreaToGL( glc, crnt, &tvp );
             }
     }
 #endif
@@ -5629,16 +5720,26 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
                 if ( curAttrName == _T("TS_TSP")){ //Tidal current applet
                     wxArrayString as;
                     wxString ts, ts1;
+                    // value does look like: , 310, 310, 44, 44, 116, 116, 119, 119, 122,
+                    // 122, 125, 125, 130, 130, 270, 270, 299, 299, 300, 300, 301, 301,
+                    // 303, 303, 307,307509A,Helgoland,HW,310,0.9,044,0.2,116,1.5,
+                    // 119,2.2,122,1.9,125,1.5,130,0.9,270,0.1,299,1.4,300,2.1,301,2.0,303,1.7,307,1.2
                     wxStringTokenizer tk(value,  wxT(","));
-                    ts = tk.GetNextToken(); //we don't show this part (the TT entry number)'
-                    ts1 = tk.GetNextToken(); //Now has the tidal reference port name'
+                    ts1 =
+                    tk.GetNextToken();  // get first token this will be skipped always
+                    long l;
+                    do {  // Skip up upto the first non number. This is Port Name
+                      ts1 = tk.GetNextToken().Trim(false);
+                      // some harbourID do have an alpha extension, therefore only check
+                      // the left(2)
+                    } while ((ts1.Left(2).ToLong(&l)));
                     ts =  _T("Tidal Streams referred to<br><b>");
                     ts.Append(tk.GetNextToken()).Append(_T("</b> at <b>")).Append(ts1);
-                    ts.Append(/*tk.GetNextToken()).Append(*/_T("</b><br><table >"))  ;
+                    ts.Append(_T("</b><br><table >"));
                     int i = -6;
                     while ( tk.HasMoreTokens() ) { // fill the current table
                         ts.Append(_T("<tr><td>"));
-                        wxString s1; s1.Format(wxT("%i"), i);
+                        wxString s1(wxString::Format(_T("%+dh "), i));
                         ts.Append(s1);
                         ts.Append(_T("</td><td>"));
                         s1 = tk.GetNextToken();
@@ -5647,6 +5748,7 @@ wxString s57chart::CreateObjDescriptions( ListOfObjRazRules* rule_list )
                         ts.Append(s1);
                         s1 = tk.GetNextToken();
                         ts.Append(s1);
+                        ts.Append(" kn");
                         ts.Append(_T("</td></tr>"));
                         i++;
                     }

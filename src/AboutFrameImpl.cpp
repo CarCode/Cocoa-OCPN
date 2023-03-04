@@ -41,7 +41,7 @@ extern OCPNPlatform  *g_Platform;
 AboutFrameImpl::AboutFrameImpl( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : AboutFrame( parent, id, title, pos, size, style )
 {
     m_staticTextVersion->SetLabel(VERSION_FULL);
-    m_staticTextCopyYears->SetLabel("\u00A9 2000-2022");
+    m_staticTextCopyYears->SetLabel("\u00A9 2000-2023");
     m_hyperlinkIniFile->SetLabel(g_Platform->GetConfigFileName());
     m_hyperlinkIniFile->SetURL(g_Platform->GetConfigFileName());
     m_hyperlinkLogFile->SetLabel(g_Platform->GetLogFileName());

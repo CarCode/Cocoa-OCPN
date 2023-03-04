@@ -858,9 +858,9 @@ void wmm_pi::ShowPreferencesDialog( wxWindow* parent )
 {
     WmmPrefsDialog *dialog = new WmmPrefsDialog( parent, wxID_ANY, _("WMM Preferences"), wxPoint( m_wmm_dialog_x, m_wmm_dialog_y), wxDefaultSize, wxDEFAULT_DIALOG_STYLE );
     dialog->Fit();
-    wxColour cl;
-    GetGlobalColor(_T("DILG1"), &cl);
-    dialog->SetBackgroundColour(cl);
+//    wxColour cl;
+//    GetGlobalColor(_T("DILG1"), &cl);
+//    dialog->SetBackgroundColour(cl);
 
     dialog->m_rbViewType->SetSelection(m_iViewType);
     dialog->m_cbShowPlotOptions->SetValue(m_bShowPlotOptions);
@@ -893,9 +893,9 @@ void wmm_pi::ShowPlotSettings()
     dialog->SetFont(*pFont);
     
     dialog->Fit();
-    wxColour cl;
-    GetGlobalColor(_T("DILG1"), &cl);
-    dialog->SetBackgroundColour(cl);
+//    wxColour cl;
+//    GetGlobalColor(_T("DILG1"), &cl);
+//    dialog->SetBackgroundColour(cl);
 
     dialog->m_cbDeclination->SetValue(m_DeclinationMap.m_bEnabled);
     dialog->m_scDeclinationSpacing->SetValue(m_DeclinationMap.m_Spacing);

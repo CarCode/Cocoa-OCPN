@@ -297,14 +297,15 @@ class PI_line_segment_element;
 struct chart_context {
     std::unordered_map<unsigned, VC_Element *> *m_pvc_hash;
     std::unordered_map<unsigned, VE_Element *> *m_pve_hash;
-    double                  ref_lat;
-    double                  ref_lon;
-    wxArrayPtrVoid          *pFloatingATONArray;
-    wxArrayPtrVoid          *pRigidATONArray;
-    s57chart                *chart;
-    double                  safety_contour; 
-    float                   *vertex_buffer;
-    
+    double          ref_lat;
+    double          ref_lon;
+    wxArrayPtrVoid  *pFloatingATONArray;
+    wxArrayPtrVoid  *pRigidATONArray;
+    s57chart        *chart;
+    double          safety_contour;
+    float           *vertex_buffer;
+    int             vboID;
+
 };
 
 

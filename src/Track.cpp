@@ -1109,6 +1109,7 @@ int Track::Simplify( double maxDelta )
     DouglasPeuckerReducer( pointlist, keeplist, 0, pointlist.size()-1, maxDelta );
 
     pSelect->DeleteAllSelectableTrackSegments( this );
+    SubTracks.clear();
     TrackPoints.clear();
 
     for( size_t i=0; i<pointlist.size(); i++ ) {
@@ -1119,6 +1120,7 @@ int Track::Simplify( double maxDelta )
             reduction++;
         }
     }
+    Finalize();
 
     pSelect->AddAllSelectableTrackSegments( this );
 

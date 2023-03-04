@@ -187,6 +187,7 @@ public:
     bool ObjectRenderCheck( ObjRazRules *rzRules, ViewPort *vp );
     bool ObjectRenderCheckRules( ObjRazRules *rzRules, ViewPort *vp, bool check_noshow = false );
     bool ObjectRenderCheckPos( ObjRazRules *rzRules, ViewPort *vp );
+    bool ObjectRenderCheckPosReduced(ObjRazRules *rzRules);
     bool ObjectRenderCheckCat( ObjRazRules *rzRules, ViewPort *vp );
     bool ObjectRenderCheckCS( ObjRazRules *rzRules, ViewPort *vp );
     bool ObjectRenderCheckDates( ObjRazRules *rzRules );
@@ -323,6 +324,8 @@ public:
     double lastLightLat;
     double lastLightLon;
 
+    void SetReducedBBox(LLBBox box){ reducedBBox = box;}
+
 private:
     int S52_load_Plib( const wxString& PLib, bool b_forceLegacy );
     bool S52_flush_Plib();
@@ -425,6 +428,8 @@ private:
     void GetPixPointSingle( int pixx, int pixy, double *plat, double *plon, ViewPort *vp );
     void GetPixPointSingleNoRotate( int pixx, int pixy, double *plat, double *plon, ViewPort *vpt );
 
+    LLBBox GetReducedBBox() { return reducedBBox; }
+
     wxString m_plib_file;
 
     float canvas_pix_per_mm; // Set by parent, used to scale symbols/lines/patterns
@@ -492,6 +497,8 @@ private:
     double m_displayScale;
     
     wxString m_renderer_string;
+
+    LLBBox reducedBBox;
 
 };
 

@@ -64,9 +64,9 @@ public:
     void SetTimeFactors();
 
 private:
-    wxTextCtrl   *m_ptextctrl;
-    wxTimer	  m_TCWinPopupTimer;
-    RolloverWin  *m_pTCRolloverWin;
+    wxTextCtrl    *m_ptextctrl;
+    wxTimer       m_TCWinPopupTimer;
+    RolloverWin   *m_pTCRolloverWin;
     int           curs_x;
     int           curs_y;
     int           m_plot_type;
@@ -78,6 +78,7 @@ private:
     int           m_tsx;      // test button width
     int           m_tsy;      // test button height
     float         m_tcwin_scaler; // factor to scale TCWin and contents by
+    int           m_choiceSize_x;
 
     IDX_entry   *pIDX;
     wxButton    *OK_button;
@@ -109,22 +110,23 @@ private:
 
     SplineList  m_sList;
 
-    wxFont *pSFont;
-    wxFont *pSMFont;
-    wxFont *pMFont;
-    wxFont *pLFont;
+    wxFont      *pSFont;
+    wxFont      *pSMFont;
+    wxFont      *pMFont;
+    wxFont      *pLFont;
 
-    wxPen *pblack_1;
-    wxPen *pblack_2;
-    wxPen *pblack_3;
-    wxPen *pred_2;
-    wxBrush *pltgray;
-    wxBrush *pltgray2;
+    wxPen       *pblack_1;
+    wxPen       *pblack_2;
+    wxPen       *pblack_3;
+    wxPen       *pred_2;
+    wxBrush     *pltgray;
+    wxBrush     *pltgray2;
 
     int         m_button_height;
+    int         m_refTextHeight;
 
-    int xSpot;
-    int ySpot;
+    int         xSpot;
+    int         ySpot;
 
 DECLARE_EVENT_TABLE()
 };

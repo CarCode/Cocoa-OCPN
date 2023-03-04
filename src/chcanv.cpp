@@ -3998,12 +3998,18 @@ void ChartCanvas::OnRolloverPopupTimerEvent( wxTimerEvent& event )
                     double tlenght = pt->Length();
                     s << _T("\n") << _("Total Track: ") << FormatDistanceAdaptive(tlenght);
                     if( pt->GetLastPoint()->GetTimeString() && pt->GetPoint(0)->GetTimeString() ) {
-                        wxTimeSpan ttime = pt->GetLastPoint()->GetCreateTime() - pt->GetPoint(0)->GetCreateTime();
-                        double htime = ttime.GetSeconds().ToDouble() / 3600.;
-                        s << wxString::Format( _T("  %.1f "), (float)(tlenght / htime) ) << getUsrSpeedUnit();
-                        s << wxString(htime > 24.? ttime.Format(_T("  %Dd %H:%M")): ttime.Format(_T("  %H:%M")));
+                        wxDateTime lastPointTime = pt->GetLastPoint()->GetCreateTime();
+                        wxDateTime zeroPointTime = pt->GetPoint(0)->GetCreateTime();
+                        if (lastPointTime.IsValid() && zeroPointTime.IsValid()){
+                          wxTimeSpan ttime = lastPointTime - zeroPointTime;
+                          double htime = ttime.GetSeconds().ToDouble() / 3600.;
+                          s << wxString::Format(_T("  %.1f "), (float)(tlenght / htime))
+                            << getUsrSpeedUnit();
+                          s << wxString(htime > 24. ? ttime.Format(_T("  %Dd %H:%M"))
+                                                  : ttime.Format(_T("  %H:%M")));
+                        }
                     }
-                    if (g_bShowTrackPointTime && segShow_point_b->GetTimeString())
+                    if (g_bShowTrackPointTime && strlen(segShow_point_b->GetTimeString()))
                         s << _T("\n") << _("Segment Created: ") << segShow_point_b->GetTimeString();
 
                     s << _T("\n");
@@ -4021,8 +4027,14 @@ void ChartCanvas::OnRolloverPopupTimerEvent( wxTimerEvent& event )
                     s << FormatDistanceAdaptive( dist );
 
                     if(segShow_point_a->GetTimeString() && segShow_point_b->GetTimeString()) {
-                        double segmentSpeed = toUsrSpeed( dist / ( (segShow_point_b->GetCreateTime() - segShow_point_a->GetCreateTime()).GetSeconds().ToDouble() / 3600.) );
-                        s << wxString::Format( _T("  %.1f "), (float)segmentSpeed ) << getUsrSpeedUnit();
+                        wxDateTime apoint = segShow_point_a->GetCreateTime();
+                        wxDateTime bpoint = segShow_point_b->GetCreateTime();
+                        if (apoint.IsValid() && bpoint.IsValid()){
+                          double segmentSpeed =
+                            toUsrSpeed(dist / ((bpoint - apoint).GetSeconds().ToDouble() / 3600.));
+                            s << wxString::Format(_T("  %.1f "), (float)segmentSpeed)
+                              << getUsrSpeedUnit();
+                          }
                     }
 
                     m_pTrackRolloverWin->SetString( s );
@@ -11946,9 +11958,8 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
     scale_factor *= user_scale_factor;
 
     {
-        double lon_last = 0.;
-        double lat_last = 0.;
         double marge = 0.05;
+        std::vector<LLBBox> drawn_boxes;
         for( int i = 1; i < ptcmgr->Get_max_IDX() + 1; i++ ) {
             const IDX_entry *pIDX = ptcmgr->GetIDX_entry( i );
 
@@ -11959,6 +11970,23 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
                 double lat = pIDX->IDX_lat;
 
                 if (BBox.ContainsMarge(lat, lon, marge)) {
+                    // Avoid drawing detailed graphic for duplicate tide stations
+                    if (GetVP().chart_scale < 500000){
+                      bool bdrawn = false;
+                      for (size_t i = 0; i < drawn_boxes.size(); i++){
+                        if (drawn_boxes[i].Contains(lat, lon)){
+                          bdrawn = true;
+                          break;
+                        }
+                      }
+                      if (bdrawn)
+                        continue;   // the station loop
+
+                      LLBBox this_box;
+                      this_box.Set(lat, lon, lat, lon);
+                      this_box.EnLarge(.005);
+                      drawn_boxes.push_back(this_box);
+                    }
                     wxPoint r;
                     GetCanvasPointPix( lat, lon, &r );
                     //draw standard icons
@@ -12094,8 +12122,6 @@ void ChartCanvas::DrawAllTidesInBBox( ocpnDC& dc, LLBBox& BBox )
                         }
                     }
                 }
-                lon_last = lon;
-                lat_last = lat;
             }
         }
     }
