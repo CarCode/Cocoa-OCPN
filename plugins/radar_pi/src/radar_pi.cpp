@@ -31,9 +31,8 @@
 
 #define RADAR_PI_GLOBALS
 
-#include "nmea0183.h"
-#include "nmea0183.hpp"
 #include "../include/radar_pi.h"
+
 #include "../include/GuardZone.h"
 #include "../include/GuardZoneBogey.h"
 #include "../include/Kalman.h"
@@ -45,7 +44,8 @@
 
 #include "navico/NavicoLocate.h"
 
-
+#include "nmea0183.h"
+#include "nmea0183.hpp"
 #include "raymarine/RaymarineLocate.h"
 
 namespace RadarPlugin {
@@ -88,7 +88,7 @@ double local_bearing(GeoPosition pos1, GeoPosition pos2) {
   double y = sin(theta) * cos(s2);
   double x = cos(s1) * sin(s2) - sin(s1) * cos(s2) * cos(theta);
 
-  double brg = fmod(rad2deg(atan2(y, x)) + 360.0, 360.0);
+    double brg = MOD_DEGREES_FLOAT(rad2deg(atan2(y, x)));
   return brg;
 }
 
@@ -111,11 +111,11 @@ static double radar_distance(GeoPosition pos1, GeoPosition pos2, char unit) {
   return dist;
 }
 
-//---------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------
 //
 //    Radar PlugIn Implementation
 //
-//---------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------
 
 enum { TIMER_ID = 51 };
 enum { UPDATE_TIMER_ID = 52 };
@@ -126,19 +126,19 @@ EVT_TIMER(TIMER_ID, radar_pi::OnTimerNotify)
 EVT_TIMER(UPDATE_TIMER_ID, radar_pi::TimedUpdate)
 END_EVENT_TABLE()
 
-//---------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------
 //
 //          PlugIn initialization and de-init
 //
-//---------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------
 
-radar_pi::radar_pi(void *ppimgr) 
-  : opencpn_plugin_116(ppimgr)
-  , m_raymarine_locator(0) 
+radar_pi::radar_pi(void *ppimgr) : opencpn_plugin_116(ppimgr), m_raymarine_locator(0)
 {
   m_boot_time = wxGetUTCTimeMillis();
   m_initialized = false;
   m_predicted_position_initialised = false;
+
+//  M_SETTINGS = {0}; // Error ??? "Expected Expression
 
   // Create the PlugIn icons
   initialize_images();
@@ -241,13 +241,14 @@ int radar_pi::Init(void) {
 
   // Set default settings before we load config. Prevents random behavior on uninitalized behavior.
   // For instance, LOG_XXX messages before config is loaded.
-  m_settings.verbose = 0;
+  m_settings.verbose = 3;
   m_settings.overlay_transparency = DEFAULT_OVERLAY_TRANSPARENCY;
   m_settings.refreshrate = 1;
   m_settings.threshold_blue = 255;
   m_settings.threshold_red = 255;
   m_settings.threshold_green = 255;
-  m_settings.radar_count = 0;
+    m_settings.enable_cog_heading = false;
+    m_settings.AISatARPAoffset = 50;
 
   // Get a pointer to the opencpn display canvas, to use as a parent for the UI
   // dialog
@@ -259,42 +260,42 @@ int radar_pi::Init(void) {
 #endif
   m_pMessageBox = new MessageBox;
   m_pMessageBox->Create(m_parent_window, this);
-  LOG_INFO(wxT(PLUGIN_VERSION_WITH_DATE));
+//  LOG_INFO(wxT(PLUGIN_VERSION_WITH_DATE));   // Crash ???
 
   m_navico_locator = 0;
   m_raymarine_locator = 0;
 
   // Create objects before config, so config can set data in it
   // This does not start any threads or generate any UI.
-#ifdef __WXOSX__
-  for (int r = 0; r < RADARS; r++) {
-#else
   for (size_t r = 0; r < RADARS; r++) {
-#endif
     m_radar[r] = new RadarInfo(this, r);
     m_settings.show_radar[r] = true;
     m_settings.dock_radar[r] = false;
     m_settings.window_pos[r] = wxPoint(30 + 540 * r, 120);
+
+      // #206: Discussion on whether at this point the contour length
+      // is really 6. The assert() proves this in debug (alpha) releases.
+      assert(m_radar[r]->m_min_contour_length == 6);
   }
 
   m_GPS_filter = new GPSKalmanFilter();
 
   //    And load the configuration items
   if (LoadConfig()) {
-    LOG_INFO(wxT("Configuration file values initialised"));
-    LOG_INFO(wxT("Log verbosity = %d. To modify, set VerboseLog to sum of:"), m_settings.verbose);
-    LOG_INFO(wxT("VERBOSE  = %d"), LOGLEVEL_VERBOSE);
-    LOG_INFO(wxT("DIALOG   = %d"), LOGLEVEL_DIALOG);
-    LOG_INFO(wxT("TRANSMIT = %d"), LOGLEVEL_TRANSMIT);
-    LOG_INFO(wxT("RECEIVE  = %d"), LOGLEVEL_RECEIVE);
-    LOG_INFO(wxT("GUARD    = %d"), LOGLEVEL_GUARD);
-    LOG_INFO(wxT("ARPA     = %d"), LOGLEVEL_ARPA);
-    LOG_VERBOSE(wxT("VERBOSE  log is enabled"));
-    LOG_DIALOG(wxT("DIALOG   log is enabled"));
-    LOG_TRANSMIT(wxT("TRANSMIT log is enabled"));
-    LOG_RECEIVE(wxT("RECEIVE  log is enabled"));
-    LOG_GUARD(wxT("GUARD    log is enabled"));
-    LOG_ARPA(wxT("ARPA     log is enabled"));
+      LOG_INFO(wxT("Configuration file values initialised"));
+      LOG_INFO(wxT("Log verbosity = %d. To modify, set VerboseLog to sum of:"), m_settings.verbose);
+      LOG_INFO(wxT("VERBOSE  = %d"), LOGLEVEL_VERBOSE);
+      LOG_INFO(wxT("DIALOG   = %d"), LOGLEVEL_DIALOG);
+      LOG_INFO(wxT("TRANSMIT = %d"), LOGLEVEL_TRANSMIT);
+      LOG_INFO(wxT("RECEIVE  = %d"), LOGLEVEL_RECEIVE);
+      LOG_INFO(wxT("GUARD    = %d"), LOGLEVEL_GUARD);
+      LOG_INFO(wxT("ARPA     = %d"), LOGLEVEL_ARPA);
+      LOG_VERBOSE(wxT("VERBOSE  log is enabled"));
+      LOG_DIALOG(wxT("DIALOG   log is enabled"));
+      LOG_TRANSMIT(wxT("TRANSMIT log is enabled"));
+      LOG_RECEIVE(wxT("RECEIVE  log is enabled"));
+      LOG_GUARD(wxT("GUARD    log is enabled"));
+      LOG_ARPA(wxT("ARPA     log is enabled"));
   } else {
     wxLogError(wxT("configuration file values initialisation failed"));
     return 0;  // give up
@@ -304,8 +305,7 @@ int radar_pi::Init(void) {
   wxString svg_normal = m_shareLocn + wxT("radar_standby.svg");
   wxString svg_rollover = m_shareLocn + wxT("radar_searching.svg");
   wxString svg_toggled = m_shareLocn + wxT("radar_active.svg");
-  m_tool_id = InsertPlugInToolSVG(wxT("Radar"), svg_normal, svg_rollover, svg_toggled, wxITEM_NORMAL, wxT("Radar"),
-                                  _("Radar plugin with support for multiple radars"), NULL, RADAR_TOOL_POSITION, 0, this);
+  m_tool_id = InsertPlugInToolSVG(wxT("Radar"), svg_normal, svg_rollover, svg_toggled, wxITEM_NORMAL, wxT("Radar"), _("Radar plugin with support for multiple radars"), NULL, RADAR_TOOL_POSITION, 0, this);
 
   // CacheSetToolbarToolBitmaps(BM_ID_RED, BM_ID_BLANK);
   // Now that the settings are made we can initialize the RadarInfos
@@ -387,7 +387,23 @@ void radar_pi::StartRadarLocators(size_t r) {
   }
 }
 
-/**
+void radar_pi::StopRadarLocators() {
+    if (m_navico_locator) {
+        m_navico_locator->Shutdown();
+        m_navico_locator->Wait();
+        delete m_navico_locator;
+        m_navico_locator = 0;
+    }
+
+    if (m_raymarine_locator) {
+        m_raymarine_locator->Shutdown();
+        m_raymarine_locator->Wait();
+        delete m_raymarine_locator;
+        m_raymarine_locator = 0;
+    }
+}
+
+/* *
  * DeInit() is called when OpenCPN is quitting or when the user disables the plugin.
  *
  * This should get rid of all on-screen objects and deallocate memory.
@@ -413,25 +429,16 @@ bool radar_pi::DeInit(void) {
     m_update_timer = 0;
   }
 
-  if (m_navico_locator) {
-    m_navico_locator->Shutdown();
-    m_navico_locator->Wait();
-  }
-  delete m_navico_locator;
-  m_navico_locator = 0;
+    StopRadarLocators();
 
-  if (m_raymarine_locator) {
-    m_raymarine_locator->Shutdown();
-    m_raymarine_locator->Wait();
-  }
-  delete m_raymarine_locator;
-  m_raymarine_locator = 0;
   // Stop processing in all radars.
   // This waits for the receive threads to stop and removes the dialog, so that its settings
   // can be saved.
   for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
     m_radar[r]->Shutdown();
   }
+
+    StopRadarLocators();
 
   if (m_bogey_dialog) {
     delete m_bogey_dialog;  // This will also save its current pos in m_settings
@@ -447,20 +454,13 @@ bool radar_pi::DeInit(void) {
   LOG_INFO(wxT("radar_pi Context menus removed"));
 
   // Delete the RadarInfo objects. This will call their destructor and delete all data.
-  for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
+    // To guard against recursive entry for redraw set the global radar_count to zero.
+    size_t radar_count = M_SETTINGS.radar_count;
+    for (size_t r = 0; r < radar_count; r++) {
     delete m_radar[r];
     m_radar[r] = 0;
   }
-
-  if (m_navico_locator != NULL) {
-    delete m_navico_locator;
-    m_navico_locator = 0;
-  }
-
-  if (m_raymarine_locator != NULL) {
-    delete m_raymarine_locator;
-    m_raymarine_locator = 0;
-  }
+    M_SETTINGS.radar_count = 0;
 
   if (m_pMessageBox) {
     delete m_pMessageBox;
@@ -521,32 +521,17 @@ bool radar_pi::EnsureRadarSelectionComplete(bool force) {
 
 bool radar_pi::MakeRadarSelection() {
   bool ret = false;
-#ifdef __WXOSX__
-    int r;
-#else
-  size_t r;
-#endif
+    
+    size_t radar_count;
+    size_t r;
+
   m_initialized = false;
   SelectDialog dlg(m_parent_window, this);
   if (dlg.ShowModal() == wxID_OK) {
-    // stop the locators, otherwise they keep running without radars
-    if (m_navico_locator) {
-      m_navico_locator->Shutdown();
-      m_navico_locator->Wait();
-    }
-    delete m_navico_locator;
-    m_navico_locator = 0;
-    LOG_INFO(wxT("Navico locator deleted by MakeRadarSelection"));
-    if (m_raymarine_locator) {
-      m_raymarine_locator->Shutdown();
-      m_raymarine_locator->Wait();
-    }
-    delete m_raymarine_locator;
-    m_raymarine_locator = 0;
-    LOG_INFO(wxT("Raymarine locator deleted by MakeRadarSelection"));
-
+      StopRadarLocators();
     // delete all radars
-    for (size_t r = 0; r < m_settings.radar_count; r++) {
+      radar_count = m_settings.radar_count;
+      for (size_t r = 0; r < radar_count; r++) {
       if (m_radar[r]) {
         m_radar[r]->Shutdown();
         LOG_INFO(wxT("Shutdown radar %i done"), r);
@@ -570,7 +555,7 @@ bool radar_pi::MakeRadarSelection() {
         m_radar[r]->m_radar_type = (RadarType)i;  // modify type of existing radar ?
         StartRadarLocators(r);
         r++;
-        m_settings.radar_count = r;
+          M_SETTINGS.radar_count = r;
         ret = true;
       }
     }
@@ -597,7 +582,7 @@ void radar_pi::ShowPreferencesDialog(wxWindow *parent) {
   LOG_DIALOG(wxT("ShowPreferencesDialog"));
 
   bool oldShow = M_SETTINGS.show;
-  M_SETTINGS.show = 0;
+  M_SETTINGS.show = false;
   M_SETTINGS.reset_radars = false;
   NotifyRadarWindowViz();
 
@@ -641,7 +626,7 @@ void radar_pi::SetRadarWindowViz(bool reparent) {
   }
 }
 
-/**
+/* *
  * OpenCPN is about to show a context menu.
  *
  * Adjust our context menu items so that they are correct for the given canvas.
@@ -1007,22 +992,23 @@ void radar_pi::UpdateHeadingPositionState() {
  */
 void radar_pi::ScheduleWindowRefresh() {
   int drawTime = 0;
-  int millis;
+  int millis = 0;
   int renderPPI[RADARS];
   int render_overlay[MAX_CHART_CANVAS];
   int doppler_count = 0;
 
+  CLEAR_STRUCT(renderPPI);
+  CLEAR_STRUCT(render_overlay);
+
   for (size_t r = 0; r < M_SETTINGS.radar_count; r++) {
     m_radar[r]->RefreshDisplay();
-    drawTime += m_radar[r]->GetDrawTime();
-    renderPPI[r] = m_radar[r]->GetDrawTime();
+    drawTime += (renderPPI[r] = m_radar[r]->GetDrawTime());
     doppler_count += m_radar[r]->GetDopplerCount();
   }
 
   int max_canvas = GetCanvasCount();
   for (int r = 0; r < max_canvas; r++) {
-    drawTime += m_draw_time_overlay_ms[r];
-    render_overlay[r] = m_draw_time_overlay_ms[r];
+      drawTime += (render_overlay[r] = m_draw_time_overlay_ms[r]);
   }
 
   int refreshrate = m_settings.refreshrate.GetValue();
@@ -1109,8 +1095,16 @@ void radar_pi::TimedControlUpdate() {
           t << wxString::Format(wxT("Magnetron current %d\n"), m_radar[r]->m_magnetron_current.GetValue());
           double mag_hours = (double)m_radar[r]->m_magnetron_time.GetValue() / 10.;
           t << wxString::Format(wxT("Magnetron hours %5.1f\n"), mag_hours);
-          t << wxString::Format(wxT("Rotation period %d msec\n"), m_radar[r]->m_rotation_period.GetValue());
           t << wxString::Format(wxT("Signal strength %d\n"), m_radar[r]->m_signal_strength.GetValue());
+        }
+
+        int rot = m_radar[r]->m_rotation_period.GetValue();
+        double rpm = 60000.0 / rot;
+
+        LOG_RECEIVE(wxT("Radar RPM=%f rot=%d ms\n"), rpm, rot);
+
+        if (rpm >= 10.0 && rpm <= 180.0) {  // Print when speed seems okay
+            t << wxString::Format(wxT("RPM %3.1f (%d ms)\n"), rpm, rot);
         }
       }
     }
@@ -1194,12 +1188,12 @@ void radar_pi::TimedUpdate(wxTimerEvent &event) {
     return;
   }
   
-   // // for testing only, simple trick to get position and heading
-   //wxString nmea;
-   //nmea = wxT("$APHDM,000.0,M*33");
-   //PushNMEABuffer(nmea);
-   //nmea = wxT("$GPRMC,123519,A,5326.038,N,00611.000,E,022.4,,230394,,W,*41<0x0D><0x0A>");
-   //PushNMEABuffer(nmea);
+    // for testing only, simple trick to get position and heading
+    /*wxString nmea;
+    nmea = wxT("$APHDM,000.0,M*33");
+    PushNMEABuffer(nmea);
+    nmea = wxT("$GPRMC,123519,A,5326.038,N,00611.000,E,022.4,,230394,,W,*41<0x0D><0x0A>");
+    PushNMEABuffer(nmea);*/
 
   // update own ship position to best estimate
   ExtendedPosition intermediate_pos;
@@ -1429,7 +1423,7 @@ bool radar_pi::RenderGLOverlayMultiCanvas(wxGLContext *pcontext, PlugIn_ViewPort
       // v_scale_ppm = vertical pixels per meter
       v_scale_ppm = vp->pix_height / dist_y;  // pixel height of screen div by equivalent meters
     }
-    double rotation = fmod(rad2deg(vp->rotation + vp->skew * m_settings.skew_factor) + 720.0, 360);
+      double rotation = MOD_DEGREES_FLOAT(rad2deg(vp->rotation + vp->skew * m_settings.skew_factor));
     LOG_DIALOG(wxT("RenderRadarOverlay lat=%g lon=%g v_scale_ppm=%g vp_rotation=%g skew=%g scale=%f rot=%g"), vp->clat, vp->clon,
                vp->view_scale_ppm, vp->rotation, vp->skew, v_scale_ppm, rotation);
     m_radar[current_overlay_radar]->RenderRadarImage1(boat_center, v_scale_ppm, rotation, true);
@@ -1468,15 +1462,16 @@ bool radar_pi::LoadConfig(void) {
 
     pConf->Read(wxT("VerboseLog"), &m_settings.verbose, 0);
 
-    pConf->Read(wxT("RadarCount"), &v, 0);
-    M_SETTINGS.radar_count = v;
-
     pConf->Read(wxT("DockSize"), &v, 0);
     m_settings.dock_size = v;
 
     size_t n = 0;
-    for (int r = 0; r < (int)M_SETTINGS.radar_count; r++) {
+      for (int r = 0; r < RADARS; r++) {
       RadarInfo *ri = m_radar[n];
+          if (ri == NULL) {
+            wxLogError(wxT("Cannot load radar %d as the object is not initialised"), r + 1);
+            continue;
+          }
       pConf->Read(wxString::Format(wxT("Radar%dType"), r), &s, "unknown");
       ri->m_radar_type = RT_MAX;  // = not used
       for (int i = 0; i < RT_MAX; i++) {
@@ -1513,11 +1508,13 @@ bool radar_pi::LoadConfig(void) {
       if (ri->m_min_contour_length > 10) ri->m_min_contour_length = 6;  // Prevent user and system error
       pConf->Read(wxString::Format(wxT("Radar%dDopplerAutoTrack"), r), &v, 0);
       ri->m_autotrack_doppler.Update(v);
+      pConf->Read(wxString::Format(wxT("Radar%dThreshold"), r), &v, 0);
+      ri->m_threshold.Update(v);
 
-      RadarControlItem item;
       pConf->Read(wxString::Format(wxT("Radar%dTrailsState"), r), &state, RCS_OFF);
       pConf->Read(wxString::Format(wxT("Radar%dTrails"), r), &v, 0);
       ri->m_target_trails.Update(v, (RadarControlState)state);
+      LOG_VERBOSE(wxT("Radar %d Target trails value %d state %d read from ini file"), r, v, state);
       pConf->Read(wxString::Format(wxT("Radar%dTrueTrailsMotion"), r), &v, 1);
       ri->m_trails_motion.Update(v);
       pConf->Read(wxString::Format(wxT("Radar%dMainBangSize"), r), &v, 0);
@@ -1573,6 +1570,8 @@ bool radar_pi::LoadConfig(void) {
       n++;
     }
     m_settings.radar_count = n;
+      wxLogError(wxT("Config Loaded RadarCount=%d"), v);
+
     pConf->Read(wxT("AlertAudioFile"), &m_settings.alert_audio_file, m_shareLocn + wxT("alarm.wav"));
     pConf->Read(wxT("ColourStrong"), &s, "red");
     m_settings.strong_colour = wxColour(s);
@@ -1608,7 +1607,7 @@ bool radar_pi::LoadConfig(void) {
     pConf->Read(wxT("ScanMaxAge"), &m_settings.max_age, 6);
     pConf->Read(wxT("Show"), &m_settings.show, true);
     pConf->Read(wxT("SkewFactor"), &m_settings.skew_factor, 1);
-    pConf->Read(wxT("ThresholdBlue"), &m_settings.threshold_blue, 50);
+    pConf->Read(wxT("ThresholdBlue"), &m_settings.threshold_blue, 32);
     // Make room for BLOB_HISTORY_MAX history values
     m_settings.threshold_blue = MAX(m_settings.threshold_blue, BLOB_HISTORY_MAX + 1);
     pConf->Read(wxT("ThresholdGreen"), &m_settings.threshold_green, 100);
@@ -1677,6 +1676,7 @@ bool radar_pi::SaveConfig(void) {
     pConf->Write(wxT("RadarCount"), m_settings.radar_count);
     pConf->Write(wxT("DockSize"), m_settings.dock_size);
 
+//    wxLogError(wxT("Config Save RadarCount=%d"), (int)m_settings.radar_count);  // char int Mismatch????
     for (int r = 0; r < (int)m_settings.radar_count; r++) {
       pConf->Write(wxString::Format(wxT("Radar%dType"), r), RadarTypeName[m_radar[r]->m_radar_type]);
       pConf->Write(wxString::Format(wxT("Radar%dLocationInfo"), r), m_radar[r]->GetRadarLocationInfo().to_string());
@@ -1689,6 +1689,7 @@ bool radar_pi::SaveConfig(void) {
       pConf->Write(wxString::Format(wxT("Radar%dWindowDock"), r), m_settings.dock_radar[r]);
       pConf->Write(wxString::Format(wxT("Radar%dControlShow"), r), m_settings.show_radar_control[r]);
       pConf->Write(wxString::Format(wxT("Radar%dTargetShow"), r), m_radar[r]->m_target_on_ppi.GetValue());
+      pConf->Write(wxString::Format(wxT("Radar%dThreshold"), r), m_radar[r]->m_threshold.GetValue());
       pConf->Write(wxString::Format(wxT("Radar%dTrailsState"), r), (int)m_radar[r]->m_target_trails.GetState());
       pConf->Write(wxString::Format(wxT("Radar%dTrails"), r), m_radar[r]->m_target_trails.GetValue());
       pConf->Write(wxString::Format(wxT("Radar%dTrueTrailsMotion"), r), m_radar[r]->m_trails_motion.GetValue());
@@ -1872,11 +1873,7 @@ void radar_pi::UpdateCOGAvg(double cog) {
     }
     sum /= count;
 
-    if (sum < 0.) {
-      sum += 360.;
-    } else if (sum >= 360.) {
-      sum -= 360.;
-    }
+      sum = MOD_DEGREES_FLOAT(sum);
     m_COGAvg = sum;
   } else {
     m_COGAvg = cog;

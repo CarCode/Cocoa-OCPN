@@ -134,13 +134,12 @@ static uint8_t rd_msg_5s[] = {
 
 uint8_t rd_msg_1s[] = {
     // E120
-	  0x00, 0x80, 0x01, 0x00, 0x52, 0x41, 0x44, 0x41, 0x52, 0x00, 0x00, 0x00
-};
+    0x00, 0x80, 0x01, 0x00, 0x52, 0x41, 0x44, 0x41, 0x52, 0x00, 0x00, 0x00};
 
 bool RME120Control::RadarStayAlive() {
   static int count = 4;
 
-  if(count++ >= 4) {
+  if (count++ >= 4) {
     TransmitCmd(rd_msg_5s, sizeof(rd_msg_5s));
     count = 0;
   }
@@ -180,25 +179,36 @@ bool RME120Control::SetControlValue(ControlType controlType, RadarControlItem &i
   }
 
   switch (controlType) {
+    case CT_ACCENT_LIGHT:
+    case CT_ALL_TO_AUTO:
     case CT_ANTENNA_FORWARD:
     case CT_ANTENNA_HEIGHT:
     case CT_ANTENNA_STARBOARD:
     case CT_AUTOTTRACKDOPPLER:
     case CT_CENTER_VIEW:
+    case CT_COLOR_GAIN:
     case CT_DOPPLER:
     case CT_LOCAL_INTERFERENCE_REJECTION:
     case CT_MAIN_BANG_SIZE:
     case CT_MAX:
+    case CT_MODE:
     case CT_NOISE_REJECTION:
     case CT_NONE:
-    case CT_NO_TRANSMIT_END:
-    case CT_NO_TRANSMIT_START:
+    case CT_NO_TRANSMIT_END_1:
+    case CT_NO_TRANSMIT_END_2:
+    case CT_NO_TRANSMIT_END_3:
+    case CT_NO_TRANSMIT_END_4:
+    case CT_NO_TRANSMIT_START_1:
+    case CT_NO_TRANSMIT_START_2:
+    case CT_NO_TRANSMIT_START_3:
+    case CT_NO_TRANSMIT_START_4:
     case CT_ORIENTATION:
     case CT_OVERLAY_CANVAS:
     case CT_RANGE:
     case CT_RANGE_ADJUSTMENT:
     case CT_REFRESHRATE:
     case CT_SCAN_SPEED:
+    case CT_SEA_STATE:
     case CT_SIDE_LOBE_SUPPRESSION:
     case CT_STC:
     case CT_STC_CURVE:
@@ -206,18 +216,15 @@ bool RME120Control::SetControlValue(ControlType controlType, RadarControlItem &i
     case CT_TARGET_ON_PPI:
     case CT_TARGET_SEPARATION:
     case CT_TARGET_TRAILS:
+    case CT_THRESHOLD:
     case CT_TIMED_IDLE:
     case CT_TIMED_RUN:
     case CT_TRAILS_MOTION:
     case CT_TRANSPARENCY:
     case CT_TUNE_COARSE:
     case CT_TUNE_FINE:
-#ifdef __WXOSX__
-    case CT_ALL_TO_AUTO:
-    case CT_COLOR_GAIN:
-    case CT_MODE:
-#endif
-      // The above are not settings that are not radar commands or not supported by Navico radar.
+
+      // The above are not settings that are not radar commands or not supported by Raymarine E120 radar.
       // Made them explicit so the compiler can catch missing control types.
       break;
 
@@ -226,11 +233,7 @@ bool RME120Control::SetControlValue(ControlType controlType, RadarControlItem &i
 
     case CT_BEARING_ALIGNMENT: {  // to be consistent with the local bearing alignment of the pi
                                   // this bearing alignment works opposite to the one an a Lowrance display
-#if 0
-      if (value < 0) {
-        value += 360;
-      }
-#endif
+
       uint8_t rd_msg_bearing_offset[] = {0x07, 0x82, 0x01, 0x00, 0x14, 0x00, 0x00, 0x00};
       rd_msg_bearing_offset[4] = value & 0xff;
       rd_msg_bearing_offset[5] = (value >> 8) & 0xff;

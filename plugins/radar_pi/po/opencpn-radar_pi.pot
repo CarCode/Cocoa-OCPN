@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: radar_pi 20.01.01\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-12 12:00+0100\n"
+"POT-Creation-Date: 2023-03-08 16:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,397 +17,413 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/ControlsDialog.cpp:217 ../src/ControlsDialog.cpp:644
-#: ../src/RadarCanvas.cpp:204 ../src/RadarInfo.cpp:1489
+#: ../src/ControlsDialog.cpp:246 ../src/ControlsDialog.cpp:678
+#: ../src/RadarCanvas.cpp:204 ../src/RadarInfo.cpp:1538
 #: ../src/raymarine/RaymarineReceive.cpp:394
-#: ../src/raymarine/RaymarineReceive.cpp:791 ../include/SoftwareControlSet.h:44
+#: ../src/raymarine/RaymarineReceive.cpp:795 ../include/SoftwareControlSet.h:44
 #: ../include/SoftwareControlSet.h:141 ../include/SoftwareControlSet.h:145
-#: ../src/navico/NavicoControlSet.h:56 ../src/navico/NavicoControlSet.h:60
-#: ../src/navico/NavicoControlSet.h:76 ../src/raymarine/RME120ControlSet.h:58
-#: ../src/raymarine/RME120ControlSet.h:62
-#: ../src/raymarine/RMQuantumControlSet.h:58
-#: ../src/raymarine/RMQuantumControlSet.h:62
+#: ../src/navico/NavicoControlSet.h:54 ../src/navico/NavicoControlSet.h:60
+#: ../src/navico/NavicoControlSet.h:66 ../src/navico/NavicoControlSet.h:84
+#: ../src/raymarine/RME120ControlSet.h:57 ../src/raymarine/RME120ControlSet.h:61
+#: ../src/raymarine/RMQuantumControlSet.h:57
+#: ../src/raymarine/RMQuantumControlSet.h:61
 msgid "Off"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:247 ../src/ControlsDialog.cpp:251
-#: ../src/ControlsDialog.cpp:640 ../src/RadarCanvas.cpp:219
-#: ../src/RadarInfo.cpp:1203 ../include/SoftwareControlSet.h:40
+#: ../src/ControlsDialog.cpp:276 ../src/ControlsDialog.cpp:280
+#: ../src/ControlsDialog.cpp:674 ../src/RadarCanvas.cpp:219
+#: ../src/RadarInfo.cpp:1252 ../include/SoftwareControlSet.h:40
 msgid "Auto"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:351
+#: ../src/ControlsDialog.cpp:389
 msgid "Arc"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:352
+#: ../src/ControlsDialog.cpp:390
 msgid "Circle"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:432
+#: ../src/ControlsDialog.cpp:470
 msgid "Guard Zone 1 Green"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:435
+#: ../src/ControlsDialog.cpp:473
 msgid "Guard Zone 2 Blue"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:482 ../src/ControlsDialog.cpp:492
-#: ../include/GuardZoneBogey.h:52
+#: ../src/ControlsDialog.cpp:516 ../src/ControlsDialog.cpp:526
+#: ../include/GuardZoneBogey.h:53
 msgid "Alarm"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:485 ../src/ControlsDialog.cpp:495
+#: ../src/ControlsDialog.cpp:519 ../src/ControlsDialog.cpp:529
 msgid "Arpa"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:488 ../src/ControlsDialog.cpp:498
+#: ../src/ControlsDialog.cpp:522 ../src/ControlsDialog.cpp:532
 msgid " Off"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:501 ../src/ControlsDialog.cpp:504
+#: ../src/ControlsDialog.cpp:535 ../src/ControlsDialog.cpp:538
 msgid "Guard zone"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:533
+#: ../src/ControlsDialog.cpp:567
 msgid "Back"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:551
+#: ../src/ControlsDialog.cpp:585
 msgid "Antenna starboard of GPS"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:552 ../src/ControlsDialog.cpp:814
+#: ../src/ControlsDialog.cpp:586 ../src/ControlsDialog.cpp:894
 msgid "Local interference rej."
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:553
+#: ../src/ControlsDialog.cpp:587
 msgid "Off/Relative/True trails"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:554 ../src/ControlsDialog.cpp:1024
+#: ../src/ControlsDialog.cpp:588 ../src/ControlsDialog.cpp:1116
 msgid "Overlay transparency"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:555 ../src/ControlsDialog.cpp:1123
+#: ../src/ControlsDialog.cpp:589 ../src/ControlsDialog.cpp:1215
 msgid "Timed Transmit"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:621
+#: ../src/ControlsDialog.cpp:655
 msgid "Value"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:662
+#: ../src/ControlsDialog.cpp:695
 msgid "Noise rejection"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:668
+#: ../src/ControlsDialog.cpp:700
+msgid "Threshold"
+msgstr ""
+
+#: ../src/ControlsDialog.cpp:706
 msgid "Target expansion"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:675
+#: ../src/ControlsDialog.cpp:713
 msgid "STC"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:681
+#: ../src/ControlsDialog.cpp:719
 msgid "Fine tune"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:688
+#: ../src/ControlsDialog.cpp:726
 msgid "Coarse tune"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:694
+#: ../src/ControlsDialog.cpp:732
 msgid "STC curve"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:701
+#: ../src/ControlsDialog.cpp:739
 msgid "Interference rejection"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:708
+#: ../src/ControlsDialog.cpp:746
 msgid "Target separation"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:716
-msgid "Scan speed"
+#: ../src/ControlsDialog.cpp:754
+msgid "Fast scan"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:723
+#: ../src/ControlsDialog.cpp:761
 msgid "Target boost"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:728
+#: ../src/ControlsDialog.cpp:766
 msgid "Installation"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:732
+#: ../src/ControlsDialog.cpp:770
 msgid "Preferences"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:749
+#: ../src/ControlsDialog.cpp:787
 msgid "Bearing alignment"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:756
+#: ../src/ControlsDialog.cpp:794
 msgid "Range adjustment"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:763
+#: ../src/ControlsDialog.cpp:801
 msgid "Display timing"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:769
+#: ../src/ControlsDialog.cpp:807
 msgid "Main bang suppression"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:776
+#: ../src/ControlsDialog.cpp:818
+msgid "No-transmit Zones"
+msgstr ""
+
+#: ../src/ControlsDialog.cpp:828 ../src/ControlsDialog.cpp:850
 msgid "No transmit start"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:784
+#: ../src/ControlsDialog.cpp:839 ../src/ControlsDialog.cpp:860
 msgid "No transmit end"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:790
+#: ../src/ControlsDialog.cpp:870
 msgid "Antenna height"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:791 ../src/ControlsDialog.cpp:799
-#: ../src/ControlsDialog.cpp:807
+#: ../src/ControlsDialog.cpp:871 ../src/ControlsDialog.cpp:879
+#: ../src/ControlsDialog.cpp:887
 msgid "m"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:798
+#: ../src/ControlsDialog.cpp:878
 msgid "Antenna forward"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:799 ../src/ControlsDialog.cpp:807
+#: ../src/ControlsDialog.cpp:879 ../src/ControlsDialog.cpp:887
 msgid "relative to GPS"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:799
+#: ../src/ControlsDialog.cpp:879
 msgid "negative = behind"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:806
+#: ../src/ControlsDialog.cpp:886
 msgid "Antenna starboard"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:807
+#: ../src/ControlsDialog.cpp:887
 msgid "negative = port"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:821
+#: ../src/ControlsDialog.cpp:901
 msgid "Side lobe suppression"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:828
+#: ../src/ControlsDialog.cpp:908
 msgid "Main bang size"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:829
+#: ../src/ControlsDialog.cpp:909
 msgid "pixels"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:844 ../src/ControlsDialog.cpp:1187
+#: ../src/ControlsDialog.cpp:915
+msgid "Accent light"
+msgstr ""
+
+#: ../src/ControlsDialog.cpp:930 ../src/ControlsDialog.cpp:1279
 msgid "Guard zones"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:847
+#: ../src/ControlsDialog.cpp:933
 msgid "Zone type"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:858
+#: ../src/ControlsDialog.cpp:944
 msgid "Inner range"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:865
+#: ../src/ControlsDialog.cpp:951
 msgid "Outer range"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:872
+#: ../src/ControlsDialog.cpp:958
 msgid "Start bearing"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:879
+#: ../src/ControlsDialog.cpp:965
 msgid "End bearing"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:887
+#: ../src/ControlsDialog.cpp:973
 msgid "ARPA On"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:892
+#: ../src/ControlsDialog.cpp:978
 msgid "Alarm On"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:909
+#: ../src/ControlsDialog.cpp:995
 msgid "Range"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:915 ../src/RadarCanvas.cpp:183
+#: ../src/ControlsDialog.cpp:1001 ../src/RadarCanvas.cpp:183
 msgid "Gain"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:921
+#: ../src/ControlsDialog.cpp:1007
 msgid "Color Gain"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:927
+#: ../src/ControlsDialog.cpp:1013
 msgid "Sea clutter"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:933
+#: ../src/ControlsDialog.cpp:1019
+msgid "Sea state"
+msgstr ""
+
+#: ../src/ControlsDialog.cpp:1025
 msgid "Rain clutter"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:939
+#: ../src/ControlsDialog.cpp:1031
 msgid "FTC"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:945
-msgid "MODE"
+#: ../src/ControlsDialog.cpp:1037
+msgid "Mode"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:952
+#: ../src/ControlsDialog.cpp:1044
 msgid "All_To_Auto"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:968
+#: ../src/ControlsDialog.cpp:1060
 msgid "Clear cursor"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:972
+#: ../src/ControlsDialog.cpp:1064
 msgid "Acquire Target"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:976
+#: ../src/ControlsDialog.cpp:1068
 msgid "Delete target"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:980
+#: ../src/ControlsDialog.cpp:1072
 msgid "Delete all targets"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:985 ../src/ControlsDialog.cpp:1987
+#: ../src/ControlsDialog.cpp:1077 ../src/ControlsDialog.cpp:2169
 msgid "Place EBL/VRM"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1015
+#: ../src/ControlsDialog.cpp:1107
 msgid "Overlay "
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1029
+#: ../src/ControlsDialog.cpp:1121
 msgid "Info"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1046
+#: ../src/ControlsDialog.cpp:1138
 msgid "AIS/ARPA on PPI"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1051
+#: ../src/ControlsDialog.cpp:1143
 msgid "Doppler"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1057
+#: ../src/ControlsDialog.cpp:1149
 msgid "DopplerAutoTrack"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1065 ../src/OptionsDialog.cpp:133
+#: ../src/ControlsDialog.cpp:1157 ../src/OptionsDialog.cpp:133
 msgid "Target trails"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1072
+#: ../src/ControlsDialog.cpp:1164
 msgid "Trails motion"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1078
+#: ../src/ControlsDialog.cpp:1170
 msgid "Clear trails"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1084
+#: ../src/ControlsDialog.cpp:1176
 msgid "Orientation"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1090
+#: ../src/ControlsDialog.cpp:1182
 msgid "PPI Forward Aft View"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1096
+#: ../src/ControlsDialog.cpp:1188
 msgid "Refresh rate"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1117
+#: ../src/ControlsDialog.cpp:1209
 msgid "Timed Standby"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1171
+#: ../src/ControlsDialog.cpp:1263
 msgid "Adjust"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1175
+#: ../src/ControlsDialog.cpp:1267
 msgid "Advanced"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1179
+#: ../src/ControlsDialog.cpp:1271
 msgid "View"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1183
+#: ../src/ControlsDialog.cpp:1275
 msgid "Cursor"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1191
+#: ../src/ControlsDialog.cpp:1283
 msgid "Window"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1196
+#: ../src/ControlsDialog.cpp:1288
 msgid "Timed transmit"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1201 ../src/RadarInfo.cpp:1033
+#: ../src/ControlsDialog.cpp:1293 ../src/RadarInfo.cpp:1082
 #: ../include/SoftwareControlSet.h:109
 msgid "Unknown"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1677
+#: ../src/ControlsDialog.cpp:1772
 msgid "Radar Overlay"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1682
+#: ../src/ControlsDialog.cpp:1777
 msgid "Overlay 1"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1963
+#: ../src/ControlsDialog.cpp:2141
 msgid "Start/Stop radar"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1974
+#: ../src/ControlsDialog.cpp:2156
 msgid "Hide/Show PPI"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1975
+#: ../src/ControlsDialog.cpp:2157
 msgid "Shown"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1975
+#: ../src/ControlsDialog.cpp:2157
 msgid "Hidden"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1978
+#: ../src/ControlsDialog.cpp:2160
 msgid "Float/Dock PPI"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1979
+#: ../src/ControlsDialog.cpp:2161
 msgid "Docked"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1979
+#: ../src/ControlsDialog.cpp:2161
 msgid "Floating"
 msgstr ""
 
-#: ../src/ControlsDialog.cpp:1984
+#: ../src/ControlsDialog.cpp:2166
 msgid "Clear EBL/VRM"
 msgstr ""
 
@@ -419,59 +435,59 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: ../src/MessageBox.cpp:143
+#: ../src/MessageBox.cpp:145
 msgid "Required OpenCPN option"
 msgstr ""
 
-#: ../src/MessageBox.cpp:148
-msgid "Accelerated Graphics (OpenGL)"
+#: ../src/MessageBox.cpp:151
+msgid "Use Accelerated Graphics (OpenGL)"
 msgstr ""
 
-#: ../src/MessageBox.cpp:154
+#: ../src/MessageBox.cpp:156
 msgid "For radar overlay also required"
 msgstr ""
 
-#: ../src/MessageBox.cpp:162
+#: ../src/MessageBox.cpp:164
 msgid "Boat position"
 msgstr ""
 
-#: ../src/MessageBox.cpp:168
+#: ../src/MessageBox.cpp:170
 msgid "and"
 msgstr ""
 
-#: ../src/MessageBox.cpp:173
+#: ../src/MessageBox.cpp:175
 msgid "True Heading"
 msgstr ""
 
-#: ../src/MessageBox.cpp:178
+#: ../src/MessageBox.cpp:180
 msgid "or"
 msgstr ""
 
-#: ../src/MessageBox.cpp:182 ../src/MessageBox.cpp:430
+#: ../src/MessageBox.cpp:184 ../src/MessageBox.cpp:436
 msgid "Magnetic heading"
 msgstr ""
 
-#: ../src/MessageBox.cpp:189 ../src/MessageBox.cpp:437
+#: ../src/MessageBox.cpp:191 ../src/MessageBox.cpp:443
 msgid "Variation"
 msgstr ""
 
-#: ../src/MessageBox.cpp:194 ../src/MessageBox.cpp:199
+#: ../src/MessageBox.cpp:196 ../src/MessageBox.cpp:201
 msgid "Statistics"
 msgstr ""
 
-#: ../src/MessageBox.cpp:204 ../src/OptionsDialog.cpp:291
+#: ../src/MessageBox.cpp:206 ../src/OptionsDialog.cpp:291
 msgid "Select radar types"
 msgstr ""
 
-#: ../src/MessageBox.cpp:209
+#: ../src/MessageBox.cpp:211
 msgid "&Hide Radar"
 msgstr ""
 
-#: ../src/MessageBox.cpp:215
+#: ../src/MessageBox.cpp:217
 msgid "&Close"
 msgstr ""
 
-#: ../src/MessageBox.cpp:423
+#: ../src/MessageBox.cpp:429
 msgid "True heading"
 msgstr ""
 
@@ -655,75 +671,75 @@ msgstr ""
 msgid "WAV files (*.wav)|*.wav|All files (*.*)|*.*"
 msgstr ""
 
-#: ../src/radar_pi.cpp:301
+#: ../src/radar_pi.cpp:308
 msgid "Radar plugin with support for multiple radars"
 msgstr ""
 
-#: ../src/radar_pi.cpp:329
+#: ../src/radar_pi.cpp:336
 msgid "Show radar"
 msgstr ""
 
-#: ../src/radar_pi.cpp:330
+#: ../src/radar_pi.cpp:337
 msgid "Hide radar"
 msgstr ""
 
-#: ../src/radar_pi.cpp:332
+#: ../src/radar_pi.cpp:339
 msgid "Acquire radar target"
 msgstr ""
 
-#: ../src/radar_pi.cpp:333
+#: ../src/radar_pi.cpp:340
 msgid "Delete radar target"
 msgstr ""
 
-#: ../src/radar_pi.cpp:334
+#: ../src/radar_pi.cpp:341
 msgid "Delete all radar targets"
 msgstr ""
 
-#: ../src/radar_pi.cpp:337 ../src/RadarCanvas.cpp:118 ../src/RadarInfo.cpp:235
+#: ../src/radar_pi.cpp:344 ../src/RadarCanvas.cpp:118 ../src/RadarInfo.cpp:249
 msgid "Menu"
 msgstr ""
 
-#: ../src/radar_pi.cpp:485
+#: ../src/radar_pi.cpp:492
 msgid "Radar PlugIn"
 msgstr ""
 
-#: ../src/radar_pi.cpp:488
+#: ../src/radar_pi.cpp:495
 msgid "Radar PlugIn with support for Garmin, Raymarine and Navico radars"
 msgstr ""
 
-#: ../src/radar_pi.cpp:865
+#: ../src/radar_pi.cpp:863
 msgid " Zone"
 msgstr ""
 
-#: ../src/radar_pi.cpp:909
+#: ../src/radar_pi.cpp:907
 msgid "Next alarm in"
 msgstr ""
 
-#: ../src/radar_pi.cpp:1134
+#: ../src/radar_pi.cpp:1141
 msgid "COG"
 msgstr ""
 
-#: ../src/radar_pi.cpp:1138
+#: ../src/radar_pi.cpp:1145
 msgid "HDT"
 msgstr ""
 
-#: ../src/radar_pi.cpp:1141 ../src/radar_pi.cpp:1164 ../src/RadarPanel.cpp:40
+#: ../src/radar_pi.cpp:1148 ../src/radar_pi.cpp:1171 ../src/RadarPanel.cpp:40
 msgid "RADAR"
 msgstr ""
 
-#: ../src/radar_pi.cpp:1158
+#: ../src/radar_pi.cpp:1165
 msgid "HDM"
 msgstr ""
 
-#: ../src/radar_pi.cpp:1722
+#: ../src/radar_pi.cpp:1744
 msgid "GPS"
 msgstr ""
 
-#: ../src/radar_pi.cpp:1884
+#: ../src/radar_pi.cpp:1902
 msgid "WMM"
 msgstr ""
 
-#: ../src/radar_pi.cpp:2033
+#: ../src/radar_pi.cpp:2051
 msgid "NMEA"
 msgstr ""
 
@@ -751,93 +767,93 @@ msgstr ""
 msgid "Shader"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:230
+#: ../src/RadarInfo.cpp:244
 msgid " "
 msgstr ""
 
-#: ../src/RadarInfo.cpp:231
+#: ../src/RadarInfo.cpp:245
 msgid "Control "
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1021 ../src/RadarInfo.cpp:1024
+#: ../src/RadarInfo.cpp:1070 ../src/RadarInfo.cpp:1073
 msgid "Head Up"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1021
+#: ../src/RadarInfo.cpp:1070
 msgid "Relative Bearings"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1024
+#: ../src/RadarInfo.cpp:1073
 msgid "Stabilized"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1027
+#: ../src/RadarInfo.cpp:1076
 msgid "COG Up"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1030
+#: ../src/RadarInfo.cpp:1079
 msgid "North Up"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1118
+#: ../src/RadarInfo.cpp:1167
 msgid "Zone"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1120
+#: ../src/RadarInfo.cpp:1169
 msgid "(Confirmed)"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1188
+#: ../src/RadarInfo.cpp:1237
 msgid "No radar"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1416
+#: ../src/RadarInfo.cpp:1465
 msgid "Uninitialized"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1492 ../src/garminhd/GarminHDReceive.cpp:469
-#: ../src/garminxhd/GarminxHDReceive.cpp:506
-#: ../src/navico/NavicoReceive.cpp:1101
+#: ../src/RadarInfo.cpp:1541 ../src/garminhd/GarminHDReceive.cpp:468
+#: ../src/garminxhd/GarminxHDReceive.cpp:505
+#: ../src/navico/NavicoReceive.cpp:1149
 #: ../src/raymarine/RaymarineReceive.cpp:399
-#: ../src/raymarine/RaymarineReceive.cpp:796
+#: ../src/raymarine/RaymarineReceive.cpp:800
 msgid "Standby"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1495 ../src/raymarine/RaymarineReceive.cpp:404
-#: ../src/raymarine/RaymarineReceive.cpp:801
+#: ../src/RadarInfo.cpp:1544 ../src/raymarine/RaymarineReceive.cpp:404
+#: ../src/raymarine/RaymarineReceive.cpp:805
 msgid "Warming up"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1498
+#: ../src/RadarInfo.cpp:1547
 msgid "Timed idle"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1501 ../src/garminhd/GarminHDReceive.cpp:475
-#: ../src/garminxhd/GarminxHDReceive.cpp:512
+#: ../src/RadarInfo.cpp:1550 ../src/garminhd/GarminHDReceive.cpp:474
+#: ../src/garminxhd/GarminxHDReceive.cpp:511
 msgid "Spinning up"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1504
+#: ../src/RadarInfo.cpp:1553
 msgid "Transmitting"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1507
+#: ../src/RadarInfo.cpp:1556
 msgid "for targets"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1512 ../src/garminxhd/GarminxHDReceive.cpp:523
+#: ../src/RadarInfo.cpp:1561 ../src/garminxhd/GarminxHDReceive.cpp:522
 msgid "Stopping"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1515 ../src/garminxhd/GarminxHDReceive.cpp:533
+#: ../src/RadarInfo.cpp:1564 ../src/garminxhd/GarminxHDReceive.cpp:532
 msgid "Starting"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1518 ../src/garminxhd/GarminxHDReceive.cpp:528
+#: ../src/RadarInfo.cpp:1567 ../src/garminxhd/GarminxHDReceive.cpp:527
 msgid "Spinning down"
 msgstr ""
 
-#: ../src/RadarInfo.cpp:1522
+#: ../src/RadarInfo.cpp:1571
 #, c-format
 msgid "for %ds"
 msgstr ""
@@ -859,69 +875,73 @@ msgstr ""
 msgid "Select (max) %d radar scanner types"
 msgstr ""
 
-#: ../src/socketutil.cpp:180
+#: ../src/socketutil.cpp:182
 msgid "Cannot create UDP socket"
 msgstr ""
 
-#: ../src/socketutil.cpp:184
+#: ../src/socketutil.cpp:186
 msgid "Cannot set reuse address option on socket"
 msgstr ""
 
-#: ../src/socketutil.cpp:189
+#: ../src/socketutil.cpp:191
 msgid "Cannot bind UDP socket to port "
 msgstr ""
 
-#: ../src/socketutil.cpp:194
-msgid "Invalid IP address for UDP multicast"
+#: ../src/socketutil.cpp:216
+msgid "failed to add multicast reception for "
 msgstr ""
 
-#: ../src/emulator/EmulatorReceive.cpp:206
+#: ../src/socketutil.cpp:216
+msgid " on "
+msgstr ""
+
+#: ../src/emulator/EmulatorReceive.cpp:209
 msgid "OK"
+msgstr ""
+
+#: ../src/garminhd/GarminHDReceive.cpp:211
+#: ../src/garminxhd/GarminxHDReceive.cpp:184
+msgid "No interface found"
 msgstr ""
 
 #: ../src/garminhd/GarminHDReceive.cpp:212
 #: ../src/garminxhd/GarminxHDReceive.cpp:185
-msgid "No interface found"
-msgstr ""
-
-#: ../src/garminhd/GarminHDReceive.cpp:213
-#: ../src/garminxhd/GarminxHDReceive.cpp:186
 msgid "Interface must match"
 msgstr ""
 
-#: ../src/garminhd/GarminHDReceive.cpp:239
-#: ../src/garminxhd/GarminxHDReceive.cpp:212 ../src/navico/NavicoReceive.cpp:487
+#: ../src/garminhd/GarminHDReceive.cpp:238
+#: ../src/garminxhd/GarminxHDReceive.cpp:211 ../src/navico/NavicoReceive.cpp:503
 #: ../src/raymarine/RaymarineReceive.cpp:156
 msgid "Scanning interface"
 msgstr ""
 
-#: ../src/garminhd/GarminHDReceive.cpp:464
-#: ../src/garminxhd/GarminxHDReceive.cpp:501
+#: ../src/garminhd/GarminHDReceive.cpp:463
+#: ../src/garminxhd/GarminxHDReceive.cpp:500
 msgid "Warmup"
 msgstr ""
 
-#: ../src/garminhd/GarminHDReceive.cpp:480
-#: ../src/garminxhd/GarminxHDReceive.cpp:517
-#: ../src/navico/NavicoReceive.cpp:1106
+#: ../src/garminhd/GarminHDReceive.cpp:479
+#: ../src/garminxhd/GarminxHDReceive.cpp:516
+#: ../src/navico/NavicoReceive.cpp:1154
 #: ../src/raymarine/RaymarineReceive.cpp:409
-#: ../src/raymarine/RaymarineReceive.cpp:806
+#: ../src/raymarine/RaymarineReceive.cpp:810
 msgid "Transmit"
 msgstr ""
 
-#: ../src/garminhd/GarminHDReceive.cpp:483
-#: ../src/garminxhd/GarminxHDReceive.cpp:537
-#: ../src/navico/NavicoReceive.cpp:1115
+#: ../src/garminhd/GarminHDReceive.cpp:482
+#: ../src/garminxhd/GarminxHDReceive.cpp:536
+#: ../src/navico/NavicoReceive.cpp:1163
 #: ../src/raymarine/RaymarineReceive.cpp:414
-#: ../src/raymarine/RaymarineReceive.cpp:811
+#: ../src/raymarine/RaymarineReceive.cpp:815
 msgid "Unknown status"
 msgstr ""
 
-#: ../src/navico/NavicoReceive.cpp:475 ../src/navico/NavicoReceive.cpp:1122
+#: ../src/navico/NavicoReceive.cpp:491 ../src/navico/NavicoReceive.cpp:1170
 #: ../src/raymarine/RaymarineReceive.cpp:146
 msgid "Serial #"
 msgstr ""
 
-#: ../src/navico/NavicoReceive.cpp:1111
+#: ../src/navico/NavicoReceive.cpp:1159
 msgid "Waking up"
 msgstr ""
 
@@ -941,11 +961,11 @@ msgstr ""
 msgid " Serial #"
 msgstr ""
 
-#: ../src/raymarine/RaymarineReceive.cpp:818
+#: ../src/raymarine/RaymarineReceive.cpp:822
 msgid "IF-Serial #"
 msgstr ""
 
-#: ../include/ControlsDialog.h:236
+#: ../include/ControlsDialog.h:252
 msgid "Radar"
 msgstr ""
 
@@ -1021,99 +1041,104 @@ msgstr ""
 msgid "On"
 msgstr ""
 
-#: ../include/SoftwareControlSet.h:159
+#: ../include/SoftwareControlSet.h:160
 msgid "* 0.1 %"
 msgstr ""
 
-#: ../src/garminhd/GarminHDControlSet.h:36
-#: ../src/garminxhd/GarminxHDControlSet.h:36 ../src/navico/NavicoControlSet.h:56
-#: ../src/navico/NavicoControlSet.h:60 ../src/raymarine/RME120ControlSet.h:58
-#: ../src/raymarine/RME120ControlSet.h:62
-#: ../src/raymarine/RMQuantumControlSet.h:58
-#: ../src/raymarine/RMQuantumControlSet.h:62
+#: ../src/garminhd/GarminHDControlSet.h:35
+#: ../src/garminxhd/GarminxHDControlSet.h:35 ../src/navico/NavicoControlSet.h:54
+#: ../src/navico/NavicoControlSet.h:66 ../src/raymarine/RME120ControlSet.h:57
+#: ../src/raymarine/RME120ControlSet.h:61
+#: ../src/raymarine/RMQuantumControlSet.h:57
+#: ../src/raymarine/RMQuantumControlSet.h:61
 msgid "Low"
 msgstr ""
 
-#: ../src/garminhd/GarminHDControlSet.h:36
-#: ../src/garminxhd/GarminxHDControlSet.h:36 ../src/navico/NavicoControlSet.h:56
-#: ../src/navico/NavicoControlSet.h:60 ../src/raymarine/RME120ControlSet.h:58
-#: ../src/raymarine/RME120ControlSet.h:62
-#: ../src/raymarine/RMQuantumControlSet.h:58
-#: ../src/raymarine/RMQuantumControlSet.h:62
+#: ../src/garminhd/GarminHDControlSet.h:35
+#: ../src/garminxhd/GarminxHDControlSet.h:35 ../src/navico/NavicoControlSet.h:54
+#: ../src/navico/NavicoControlSet.h:60 ../src/navico/NavicoControlSet.h:66
+#: ../src/raymarine/RME120ControlSet.h:57 ../src/raymarine/RME120ControlSet.h:61
+#: ../src/raymarine/RMQuantumControlSet.h:57
+#: ../src/raymarine/RMQuantumControlSet.h:61
 msgid "High"
 msgstr ""
 
-#: ../src/garminhd/GarminHDControlSet.h:41
-#: ../src/garminxhd/GarminxHDControlSet.h:41
+#: ../src/garminhd/GarminHDControlSet.h:40
+#: ../src/garminxhd/GarminxHDControlSet.h:40 ../src/navico/NavicoControlSet.h:78
 msgid "Calm"
 msgstr ""
 
-#: ../src/garminhd/GarminHDControlSet.h:41
-#: ../src/garminxhd/GarminxHDControlSet.h:41 ../src/navico/NavicoControlSet.h:56
-#: ../src/raymarine/RME120ControlSet.h:58
-#: ../src/raymarine/RMQuantumControlSet.h:58
+#: ../src/garminhd/GarminHDControlSet.h:40
+#: ../src/garminxhd/GarminxHDControlSet.h:40 ../src/navico/NavicoControlSet.h:54
+#: ../src/navico/NavicoControlSet.h:60 ../src/raymarine/RME120ControlSet.h:57
+#: ../src/raymarine/RMQuantumControlSet.h:57
 msgid "Medium"
 msgstr ""
 
-#: ../src/garminhd/GarminHDControlSet.h:41
-#: ../src/garminxhd/GarminxHDControlSet.h:41
+#: ../src/garminhd/GarminHDControlSet.h:40
+#: ../src/garminxhd/GarminxHDControlSet.h:40 ../src/navico/NavicoControlSet.h:78
 msgid "Rough"
 msgstr ""
 
-#: ../src/garminhd/GarminHDControlSet.h:46
-#: ../src/garminxhd/GarminxHDControlSet.h:46 ../src/navico/NavicoControlSet.h:64
-#: ../src/raymarine/RME120ControlSet.h:67
-#: ../src/raymarine/RMQuantumControlSet.h:67
+#: ../src/garminhd/GarminHDControlSet.h:45
+#: ../src/raymarine/RME120ControlSet.h:66
+#: ../src/raymarine/RMQuantumControlSet.h:66
 msgid "Slow"
 msgstr ""
 
-#: ../src/garminhd/GarminHDControlSet.h:46
-#: ../src/garminxhd/GarminxHDControlSet.h:46 ../src/navico/NavicoControlSet.h:64
-#: ../src/raymarine/RME120ControlSet.h:67
-#: ../src/raymarine/RMQuantumControlSet.h:67
+#: ../src/garminhd/GarminHDControlSet.h:45
+#: ../src/raymarine/RME120ControlSet.h:66
+#: ../src/raymarine/RMQuantumControlSet.h:66
 msgid "Fast"
 msgstr ""
 
-#: ../src/garminhd/GarminHDReceive.h:58 ../src/garminxhd/GarminxHDReceive.h:57
-#: ../src/navico/NavicoReceive.h:68 ../src/raymarine/RaymarineReceive.h:69
+#: ../src/garminhd/GarminHDReceive.h:57 ../src/garminxhd/GarminxHDReceive.h:56
+#: ../src/navico/NavicoReceive.h:84 ../src/raymarine/RaymarineReceive.h:68
 msgid "Initializing"
 msgstr ""
 
-#: ../src/navico/NavicoControlSet.h:68 ../src/navico/NavicoControlSet.h:72
-#: ../src/raymarine/RME120ControlSet.h:71
+#: ../src/navico/NavicoControlSet.h:72 ../src/raymarine/RME120ControlSet.h:70
 msgid "Harbour"
 msgstr ""
 
-#: ../src/navico/NavicoControlSet.h:68 ../src/navico/NavicoControlSet.h:72
-#: ../src/raymarine/RME120ControlSet.h:71
-#: ../src/raymarine/RMQuantumControlSet.h:71
-#: ../src/raymarine/RMQuantumControlSet.h:76
+#: ../src/navico/NavicoControlSet.h:72 ../src/navico/NavicoControlSet.h:90
+#: ../src/raymarine/RME120ControlSet.h:70
+#: ../src/raymarine/RMQuantumControlSet.h:70
+#: ../src/raymarine/RMQuantumControlSet.h:75
 msgid "Offshore"
 msgstr ""
 
-#: ../src/navico/NavicoControlSet.h:72 ../src/raymarine/RMQuantumControlSet.h:76
-msgid "Weather"
+#: ../src/navico/NavicoControlSet.h:78
+msgid "Moderate"
 msgstr ""
 
-#: ../src/navico/NavicoControlSet.h:72
-msgid "Bird"
-msgstr ""
-
-#: ../src/navico/NavicoControlSet.h:76
+#: ../src/navico/NavicoControlSet.h:84
 msgid "Normal"
 msgstr ""
 
-#: ../src/navico/NavicoControlSet.h:76
+#: ../src/navico/NavicoControlSet.h:84
 msgid "Approaching"
 msgstr ""
 
-#: ../src/raymarine/RME120ControlSet.h:71
-#: ../src/raymarine/RMQuantumControlSet.h:71
-#: ../src/raymarine/RMQuantumControlSet.h:76
-msgid "Coastal"
+#: ../src/navico/NavicoControlSet.h:90
+msgid "Custom"
 msgstr ""
 
-#: ../src/raymarine/RMQuantumControlSet.h:71
-#: ../src/raymarine/RMQuantumControlSet.h:76
+#: ../src/navico/NavicoControlSet.h:90 ../src/raymarine/RMQuantumControlSet.h:70
+#: ../src/raymarine/RMQuantumControlSet.h:75
 msgid "Harbor"
+msgstr ""
+
+#: ../src/navico/NavicoControlSet.h:90 ../src/raymarine/RMQuantumControlSet.h:75
+msgid "Weather"
+msgstr ""
+
+#: ../src/navico/NavicoControlSet.h:91
+msgid "Bird"
+msgstr ""
+
+#: ../src/raymarine/RME120ControlSet.h:70
+#: ../src/raymarine/RMQuantumControlSet.h:70
+#: ../src/raymarine/RMQuantumControlSet.h:75
+msgid "Coastal"
 msgstr ""

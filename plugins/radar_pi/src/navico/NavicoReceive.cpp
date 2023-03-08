@@ -1,4 +1,4 @@
-/******************************************************************************
+/* *************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Radar Plugin
@@ -27,8 +27,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************
- */
+ ***************************************************************************/
 
 #include "NavicoReceive.h"
 
@@ -48,14 +47,6 @@ PLUGIN_BEGIN_NAMESPACE
 #define SECONDS_SELECT(x) ((x)*MILLISECONDS_PER_SECOND / MILLIS_PER_SELECT)
 #define IS_HALO (m_ri->m_radar_type == RT_HaloA || m_ri->m_radar_type == RT_HaloB)
 
-//
-// Navico radars use an internal spoke ID that has range [0..4096> but they
-// only send half of them
-//
-#define SPOKES (4096)
-#define SCALE_RAW_TO_DEGREES(raw) ((raw) * (double)DEGREES_PER_ROTATION / SPOKES)
-#define SCALE_DEGREES_TO_RAW(angle) ((int)((angle) * (double)SPOKES / DEGREES_PER_ROTATION))
-
 // A marker that uniquely identifies BR24 generation scanners, as opposed to 4G(eneration)
 // Note that 3G scanners are BR24's with better power, so they are more BR24+ than 4G-.
 // As far as we know they 3G's use exactly the same command set.
@@ -66,10 +57,11 @@ PLUGIN_BEGIN_NAMESPACE
  - Marcus: 3G, RI, true heading: 0x45be
  - Kees: 4G, RI, mag heading: 0x07d6 = 2006 = 176,6 deg
  - Kees: 4G, RI, no heading: 0x8000 = -1 = negative
+ - Kees: Halo, true heading: 0x4xxx => true
  Known values for heading value:
 */
 #define HEADING_TRUE_FLAG 0x4000
-#define HEADING_MASK (SPOKES - 1)
+#define HEADING_MASK (NAVICO_SPOKES_RAW - 1)
 #define HEADING_VALID(x) (((x) & ~(HEADING_TRUE_FLAG | HEADING_MASK)) == 0)
 
 // One MFD or OpenCPN shall send the radar timing and heading info
@@ -137,13 +129,16 @@ struct halo_mystery_packet {
   // 72
 };
 
+#define SCAN_MAX (256)
+
 struct common_header {
-  uint8_t headerLen;       // 1 bytes
-  uint8_t status;          // 1 bytes
-  uint8_t scan_number[2];  // 2 bytes, 0-4095
-  uint8_t u00[4];          // 4 bytes
-  uint8_t angle[2];        // 2 bytes
-  uint8_t heading[2];      // 2 bytes heading with RI-10/11. See bitmask explanation above.
+    uint8_t headerLen;    // 1 bytes
+    uint8_t status;       // 1 bytes
+    uint8_t scan_number;  // 1 byte
+    uint8_t u00[1];       // 1 byte, 2nd byte of scan_number on 4G and older
+    uint8_t u01[4];       // 4 bytes
+    uint8_t angle[2];     // 2 bytes
+    uint8_t heading[2];   // 2 bytes heading with RI-10/11. See bitmask explanation above.
 };
 
 struct br24_header {
@@ -204,45 +199,65 @@ enum LookupSpokeEnum {
 
 static uint8_t lookupData[6][256];
 
+// Make space for BLOB_HISTORY_COLORS
+static const uint8_t lookupNibbleToByte[16] = {
+    0,     // 0
+    0x32,  // 1
+    0x40,  // 2
+    0x4e,  // 3
+    0x5c,  // 4
+    0x6a,  // 5
+    0x78,  // 6
+    0x86,  // 7
+    0x94,  // 8
+    0xa2,  // 9
+    0xb0,  // a
+    0xbe,  // b
+    0xcc,  // c
+    0xda,  // d
+    0xe8,  // e
+    0xf4,  // f
+};
+
 void NavicoReceive::InitializeLookupData() {
   if (lookupData[5][255] == 0) {
     for (int j = 0; j <= UINT8_MAX; j++) {
-      uint8_t low = (j & 0x0f) << 4;
-      uint8_t high = (j & 0xf0);
+        uint8_t low = lookupNibbleToByte[(j & 0x0f)];
+        uint8_t high = lookupNibbleToByte[(j & 0xf0) >> 4];
 
-      lookupData[LOOKUP_SPOKE_LOW_NORMAL][j] = low;
-      lookupData[LOOKUP_SPOKE_HIGH_NORMAL][j] = high;
+        lookupData[LOOKUP_SPOKE_LOW_NORMAL][j] = (uint8_t)low;
+        lookupData[LOOKUP_SPOKE_HIGH_NORMAL][j] = (uint8_t)high;
 
       switch (low) {
-        case 0xf0:
+        case 0xf4:
           lookupData[LOOKUP_SPOKE_LOW_BOTH][j] = 0xff;
           lookupData[LOOKUP_SPOKE_LOW_APPROACHING][j] = 0xff;
           break;
 
-        case 0xe0:
+        case 0xe8:
           lookupData[LOOKUP_SPOKE_LOW_BOTH][j] = 0xfe;
-          lookupData[LOOKUP_SPOKE_LOW_APPROACHING][j] = low;
+          lookupData[LOOKUP_SPOKE_LOW_APPROACHING][j] = (uint8_t)low;
           break;
 
         default:
-          lookupData[LOOKUP_SPOKE_LOW_BOTH][j] = low;
-          lookupData[LOOKUP_SPOKE_LOW_APPROACHING][j] = low;
+          lookupData[LOOKUP_SPOKE_LOW_BOTH][j] = (uint8_t)low;
+          lookupData[LOOKUP_SPOKE_LOW_APPROACHING][j] = (uint8_t)low;
       }
 
       switch (high) {
-        case 0xf0:
+        case 0xf4:
           lookupData[LOOKUP_SPOKE_HIGH_BOTH][j] = 0xff;
           lookupData[LOOKUP_SPOKE_HIGH_APPROACHING][j] = 0xff;
           break;
 
-        case 0xe0:
+        case 0xe8:
           lookupData[LOOKUP_SPOKE_HIGH_BOTH][j] = 0xfe;
-          lookupData[LOOKUP_SPOKE_HIGH_APPROACHING][j] = high;
+          lookupData[LOOKUP_SPOKE_HIGH_APPROACHING][j] = (uint8_t)high;
           break;
 
         default:
-          lookupData[LOOKUP_SPOKE_HIGH_BOTH][j] = high;
-          lookupData[LOOKUP_SPOKE_HIGH_APPROACHING][j] = high;
+          lookupData[LOOKUP_SPOKE_HIGH_BOTH][j] = (uint8_t)high;
+          lookupData[LOOKUP_SPOKE_HIGH_APPROACHING][j] = (uint8_t)high;
       }
     }
   }
@@ -288,27 +303,28 @@ void NavicoReceive::ProcessFrame(const uint8_t *data, size_t len) {
     radar_line *line = &packet->line[scanline];
 
     // Validate the spoke
-    int spoke = line->common.scan_number[0] | (line->common.scan_number[1] << 8);
+    uint8_t scan = line->common.scan_number;
     m_ri->m_statistics.spokes++;
     if (line->common.headerLen != 0x18) {
       LOG_RECEIVE(wxT("%s strange header length %d"), m_ri->m_name.c_str(), line->common.headerLen);
       // Do not draw something with this...
-      m_ri->m_statistics.missing_spokes++;
-      m_next_spoke = (spoke + 1) % SPOKES;
+      m_ri->m_statistics.broken_spokes++;
+      m_next_scan = scan + 1;  // We use automatic rollover of uint8_t here
       continue;
     }
     if (line->common.status != 0x02 && line->common.status != 0x12) {
       LOG_RECEIVE(wxT("%s strange status %02x"), m_ri->m_name.c_str(), line->common.status);
       m_ri->m_statistics.broken_spokes++;
     }
-    if (m_next_spoke >= 0 && spoke != m_next_spoke) {
-      if (spoke > m_next_spoke) {
-        m_ri->m_statistics.missing_spokes += spoke - m_next_spoke;
+      LOG_RECEIVE(wxT("%s scan=%d m_next_scan=%d"), m_ri->m_name.c_str(), scan, m_next_scan);
+      if (m_next_scan >= 0 && scan != m_next_scan) {
+        if (scan > m_next_scan) {
+          m_ri->m_statistics.missing_spokes += scan - m_next_scan;
       } else {
-        m_ri->m_statistics.missing_spokes += SPOKES + spoke - m_next_spoke;
+          m_ri->m_statistics.missing_spokes += SCAN_MAX + scan - m_next_scan;
       }
     }
-    m_next_spoke = (spoke + 1) % SPOKES;
+    m_next_scan = scan + 1;  // We use automatic rollover of uint8_t here
 
     int range_raw = 0;
     int angle_raw = 0;
@@ -391,7 +407,7 @@ void NavicoReceive::ProcessFrame(const uint8_t *data, size_t len) {
     // Guess the heading for the spoke. This is updated much less frequently than the
     // data from the radar (which is accurate 10x per second), likely once per second.
     bearing_raw = angle_raw + heading_raw;
-    // until here all is based on 4096 (SPOKES) scanlines
+      // until here all is based on 4096 (NAVICO_SPOKES_RAW) scanlines
 
     SpokeBearing a = MOD_SPOKES(angle_raw / 2);    // divide by 2 to map on 2048 scanlines
     SpokeBearing b = MOD_SPOKES(bearing_raw / 2);  // divide by 2 to map on 2048 scanlines
@@ -482,7 +498,7 @@ SOCKET NavicoReceive::GetNewReportSocket() {
     wxString addr = m_interface_addr.FormatNetworkAddress();
     wxString rep_addr = m_info.report_addr.FormatNetworkAddressPort();
 
-    LOG_RECEIVE(wxT("%s scanning interface %s for data from %s"), m_ri->m_name.c_str(), addr.c_str(), rep_addr.c_str());
+    LOG_RECEIVE(wxT("%s listening on interface %s for reports from %s"), m_ri->m_name.c_str(), addr.c_str(), rep_addr.c_str());
 
     s << _("Scanning interface") << wxT(" ") << addr;
     SetInfoStatus(s);
@@ -785,12 +801,12 @@ void *NavicoReceive::Entry(void) {
             LOG_RECEIVE(wxT("%s active mfd detected at %s"), m_ri->m_name.c_str(), mfd_address.FormatNetworkAddress());
             m_halo_received_info = wxGetUTCTimeMillis();
           }
-          IF_LOG_AT(LOGLEVEL_RECEIVE, m_pi->logBinaryData(wxT("halo receive"), data, r));
+          IF_LOG_AT(LOGLEVEL_RECEIVE, m_pi->logBinaryData(m_ri->m_name, data, r));
 
           halo_heading_packet *msg = (halo_heading_packet *)data;
 
           if (msg->u02[0] == 0x12 && msg->u02[1] == 0xf1) {
-            double heading = (double)msg->heading * 360.0 / 63488.0;  // assume that this is a true heading ?
+              double heading = (double)msg->heading * 360.0 / ((double)0xf800);  // assume that this is a true heading ?
             if (m_pi->m_heading_source <= HEADING_FIX_COG || m_pi->m_heading_source >= HEADING_RADAR_HDM) {
               LOG_RECEIVE(wxT("Received and set radar_heading from network %f"), heading);
               m_pi->SetRadarHeading(heading, true);  // only set HEADING_RADAR_HDT if nothing better is available
@@ -798,7 +814,7 @@ void *NavicoReceive::Entry(void) {
 
             LOG_RECEIVE(wxT("msg.counter = %u"), msg->counter);
             LOG_RECEIVE(wxT("msg.epoch   = %lld"), msg->epoch);
-            LOG_RECEIVE(wxT("msg.heading = %u -> %f"), msg->heading, (double)msg->heading * 360.0 / 63488.0);
+            LOG_RECEIVE(wxT("msg.heading = %u -> %f"), msg->heading, heading);
             LOG_RECEIVE(wxT("msg.u05a    = %x"), msg->u05a);
             LOG_RECEIVE(wxT("msg.u05b    = %x"), msg->u05b);
           } else {
@@ -952,13 +968,14 @@ struct RadarReport_02C4_99 {       // length 99
   uint8_t what;                    // 0   0x02
   uint8_t command;                 // 1 0xC4
   uint32_t range;                  //  2-3   0x06 0x09
-  uint16_t field4;                 // 6-7    0
+  uint8_t field4;                  // 6    0
+  uint8_t mode;                    // 7    mode (0 = custom, 1 = harbor, 2 = offshore, 4 = bird, 5 = weather)
   uint32_t field8;                 // 8-11   1
   uint8_t gain;                    // 12
   uint8_t sea_auto;                // 13  0 = off, 1 = harbour, 2 = offshore
   uint8_t field14;                 // 14
   uint16_t field15;                // 15-16
-  uint32_t sea;                    // 17-20   sea state (17)
+  uint32_t sea;                    // 17-20   sea clutter (17)
   uint8_t field21;                 // 21
   uint8_t rain;                    // 22   rain clutter
   uint8_t field23;                 // 23
@@ -999,12 +1016,41 @@ struct RadarReport_04C4_66 {   // 04 C4 with length 66
   uint16_t bearing_alignment;  // 6-7
   uint16_t field8;             // 8-9
   uint16_t antenna_height;     // 10-11
+    uint32_t field12;            // 12-15  0x00
+    uint8_t field16[3];          // 16-18  0x00
+    uint8_t accent_light;        // 19     accent light 0..3
+};
+
+struct SectorBlankingReport {
+  uint8_t enabled;
+  uint16_t start_angle;
+  uint16_t end_angle;
+};
+
+struct RadarReport_06C4_68 {         // 06 C4 with length 68
+  uint8_t what;                      // 0   0x04
+  uint8_t command;                   // 1   0xC4
+  uint32_t field1;                   // 2-5
+  char name[6];                      // 6-11 "Halo;\0"
+  uint8_t field2[24];                // 12-35 unknown
+  SectorBlankingReport blanking[4];  // 36-55
+  uint8_t field3[12];                // 56-67
+};
+
+struct RadarReport_06C4_74 {         // 06 C4 with length 74
+  uint8_t what;                      // 0   0x04
+  uint8_t command;                   // 1   0xC4
+  uint32_t field1;                   // 2-5
+  char name[6];                      // 6-11 "Halo;\0"
+  uint8_t field2[30];                // 12-41 unknown
+  SectorBlankingReport blanking[4];  // 42-61
+  uint8_t field3[12];                // 62-73
 };
 
 struct RadarReport_08C4_18 {             // 08 c4  length 18
   uint8_t what;                          // 0  0x08
   uint8_t command;                       // 1  0xC4
-  uint8_t field2;                        // 2
+    uint8_t sea_state;                     // 2
   uint8_t local_interference_rejection;  // 3
   uint8_t scan_speed;                    // 4
   uint8_t sls_auto;                      // 5 installation: sidelobe suppression auto
@@ -1015,8 +1061,8 @@ struct RadarReport_08C4_18 {             // 08 c4  length 18
   uint16_t field10;                      // 10-11
   uint8_t noise_rejection;               // 12    noise rejection
   uint8_t target_sep;                    // 13
-  uint8_t field11;                       // 14
-  uint8_t field12;                       // 15
+    uint8_t sea_clutter;                   // 14 sea clutter on Halo
+    int8_t auto_sea_clutter;               // 15 auto sea clutter on Halo
   uint8_t field13;                       // 16
   uint8_t field14;                       // 17
 };
@@ -1084,6 +1130,8 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
 
   m_ri->resetTimeout(now);
 
+    LOG_BINARY_REPORTS(wxString::Format(wxT("%s report"), m_ri->m_name.c_str()), report, len);
+
   if (report[1] == 0xC4) {
     // Looks like a radar report. Is it a known one?
     switch ((len << 8) + report[0]) {
@@ -1138,6 +1186,7 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
         state = (RadarControlState)(RCS_MANUAL + s->sea_auto);
         m_ri->m_sea.Update(s->sea * 100 / 255, state);
 
+        m_ri->m_mode.Update(s->mode);
         m_ri->m_target_boost.Update(s->target_boost);
         m_ri->m_interference_rejection.Update(s->interference_rejection);
         m_ri->m_target_expansion.Update(s->target_expansion);
@@ -1204,20 +1253,20 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
       }
 
       case (66 << 8) + 0x04: {  // 66 bytes starting with 04 C4
-        if (m_pi->m_settings.verbose >= 2) {
-          LOG_BINARY_RECEIVE(wxT("received RadarReport_04C4_66"), report, len);
-        }
         RadarReport_04C4_66 *data = (RadarReport_04C4_66 *)report;
 
         // bearing alignment
         int ba = (int)data->bearing_alignment / 10;
-        if (ba > 180) {
-          ba = ba - 360;
-        }
-        m_ri->m_bearing_alignment.Update(ba);
+        m_ri->m_bearing_alignment.Update(MOD_DEGREES_180(ba));
 
         // antenna height
         m_ri->m_antenna_height.Update(data->antenna_height / 1000);
+
+          // accent light
+          m_ri->m_accent_light.Update(data->accent_light);
+
+          LOG_RECEIVE(wxT("%s bearing_alignment=%f antenna_height=%umm accent_light=%u"), m_ri->m_name.c_str(),
+                      (int)data->bearing_alignment / 10.0, data->antenna_height, data->accent_light);
         break;
       }
 
@@ -1235,40 +1284,84 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
       }
 #endif
 
+        case (68 << 8) + 0x06: {  // 68 bytes starting with 04 C4
+                                  // Seen on HALO 4 (Vlissingen)
+          RadarReport_06C4_68 *data = (RadarReport_06C4_68 *)report;
+          for (int i = 0; i <= 3; i++) {
+            LOG_INFO(wxT("%s radar blanking sector %u: enabled=%u start=%u end=%u\n"), m_ri->m_name.c_str(), i + 1,
+                     data->blanking[i].enabled, data->blanking[i].start_angle, data->blanking[i].end_angle);
+            m_ri->m_no_transmit_start[i].Update(MOD_DEGREES_180(SCALE_DECIDEGREES_TO_DEGREES(data->blanking[i].start_angle)),
+                                                data->blanking[i].enabled ? RCS_MANUAL : RCS_OFF);
+            m_ri->m_no_transmit_end[i].Update(MOD_DEGREES_180(SCALE_DECIDEGREES_TO_DEGREES(data->blanking[i].end_angle)),
+                                              data->blanking[i].enabled ? RCS_MANUAL : RCS_OFF);
+          }
+          m_ri->m_no_transmit_zones = 4;
+          LOG_BINARY_RECEIVE(wxT("received sector blanking message"), report, len);
+          break;
+        }
+
+        case (74 << 8) + 0x06: {  // 74 bytes starting with 04 C4
+                                  // Seen on HALO 24 (Merrimac)
+          RadarReport_06C4_74 *data = (RadarReport_06C4_74 *)report;
+          for (int i = 0; i <= 3; i++) {
+            LOG_INFO(wxT("%s radar blanking sector %u: enabled=%u start=%u end=%u\n"), m_ri->m_name.c_str(), i + 1,
+                     data->blanking[i].enabled, data->blanking[i].start_angle, data->blanking[i].end_angle);
+            m_ri->m_no_transmit_start[i].Update(MOD_DEGREES_180(SCALE_DECIDEGREES_TO_DEGREES(data->blanking[i].start_angle)),
+                                                data->blanking[i].enabled ? RCS_MANUAL : RCS_OFF);
+            m_ri->m_no_transmit_end[i].Update(MOD_DEGREES_180(SCALE_DECIDEGREES_TO_DEGREES(data->blanking[i].end_angle)),
+                                              data->blanking[i].enabled ? RCS_MANUAL : RCS_OFF);
+          }
+            m_ri->m_no_transmit_zones = 4;
+          LOG_BINARY_RECEIVE(wxT("received sector blanking message"), report, len);
+          break;
+        }
+
+        /* Over time we have seen this report with 3 various lengths!!
+        */
+
+      case (22 << 8) + 0x08:    // FALLTHRU
       case (21 << 8) + 0x08: {  // length 21, 08 C4
                                 // contains Doppler data in extra 3 bytes
         RadarReport_08C4_21 *s08 = (RadarReport_08C4_21 *)report;
 
-        LOG_RECEIVE(wxT("%s %u 08C4: doppler=%d speed=%d, state=%d"), m_ri->m_name.c_str(), m_ri->m_radar, s08->doppler_state,
+          LOG_RECEIVE(wxT("%s %u 08C4: doppler=%d speed=%d, state=%d"), m_ri->m_name.c_str(), len, s08->doppler_state,
                     s08->doppler_speed, s08->doppler_state);
         // TODO: Doppler speed
 
         m_ri->m_doppler.Update(s08->doppler_state);
-        m_ri->ComputeColourMap();
-      }  // FALLTHRU to old length
+          if (m_ri->m_doppler.IsModified()) {
+            m_ri->ComputeColourMap();
+          }
+      }  // FALLTHRU to old length, no break!
 
       case (18 << 8) + 0x08: {  // length 18, 08 C4
         // contains scan speed, noise rejection and target_separation and sidelobe suppression
         RadarReport_08C4_18 *s08 = (RadarReport_08C4_18 *)report;
 
-        LOG_RECEIVE(wxT("%s %u 08C4: scanspeed=%d noise=%u target_sep=%u"), m_ri->m_name.c_str(), m_ri->m_radar, s08->scan_speed,
-                    s08->noise_rejection, s08->target_sep);
-        LOG_RECEIVE(wxT("%s %u 08C4: f2=%u f6=%u f7=%u f8=%u f10=%u"), m_ri->m_name.c_str(), m_ri->m_radar, s08->field2,
-                    s08->field6, s08->field7, s08->field8, s08->field10);
-        LOG_RECEIVE(wxT("%s %u 08C4: f11=%u f12=%u f13=%u f14=%u"), m_ri->m_name.c_str(), m_ri->m_radar, s08->field11, s08->field12,
-                    s08->field13, s08->field14);
+          LOG_RECEIVE(wxT("%s %u 08C4: seastate=%u scanspeed=%d noise=%u target_sep=%u seaclutter=%u auto-seaclutter=%d"),
+                      m_ri->m_name.c_str(), len, s08->sea_state, s08->scan_speed, s08->noise_rejection, s08->target_sep,
+                      s08->sea_clutter, (int)s08->auto_sea_clutter);
+          LOG_RECEIVE(wxT("%s %u 08C4: f6=%u f7=%u f8=%u f10=%u"), m_ri->m_name.c_str(), len, s08->field6, s08->field7, s08->field8,
+                      s08->field10);
+          LOG_RECEIVE(wxT("%s %u 08C4: f12=%u f13=%u f14=%u"), m_ri->m_name.c_str(), m_ri->m_radar, s08->field13, s08->field14);
+
         LOG_RECEIVE(wxT("%s %u 08C4: if=%u slsa=%u sls=%u"), m_ri->m_name.c_str(), m_ri->m_radar, s08->local_interference_rejection,
                     s08->sls_auto, s08->side_lobe_suppression);
 
+          if (IS_HALO) {
+            m_ri->m_sea_state.Update(s08->sea_state);
+            if (m_ri->m_sea.GetState() == RCS_MANUAL) {
+              m_ri->m_sea.Update(s08->sea_clutter);
+            } else {
+              m_ri->m_sea.Update(s08->auto_sea_clutter, RCS_AUTO_1);
+            }
+          }
         m_ri->m_scan_speed.Update(s08->scan_speed);
         m_ri->m_noise_rejection.Update(s08->noise_rejection);
         m_ri->m_target_separation.Update(s08->target_sep);
         m_ri->m_side_lobe_suppression.Update(s08->side_lobe_suppression * 100 / 255, s08->sls_auto ? RCS_AUTO_1 : RCS_MANUAL);
         m_ri->m_local_interference_rejection.Update(s08->local_interference_rejection);
 
-        if (m_pi->m_settings.verbose >= 2) {
-          LOG_BINARY_RECEIVE(wxT("received RadarReport_08C4_18"), report, len);
-        }
         break;
       }
 
@@ -1283,7 +1376,9 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
 
       default: {
         if (m_pi->m_settings.verbose >= 2) {
-          LOG_BINARY_RECEIVE(wxT("received unknown report"), report, len);
+            wxString rep;
+
+            rep << m_ri->m_name << wxT(" received unknown report");
         }
         break;
       }
@@ -1294,9 +1389,6 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
     // Looks like a radar report. Is it a known one?
     switch ((len << 8) + report[0]) {
       case (16 << 8) + 0x0f:
-        if (m_pi->m_settings.verbose >= 2) {
-          LOG_BINARY_RECEIVE(wxT("received BR24 report"), report, len);
-        }
         if (m_ri->m_radar_type == RT_UNKNOWN) {
           LOG_INFO(wxT("%s radar report tells us this a Navico BR24"), m_ri->m_name.c_str());
           m_ri->m_radar_type = RT_BR24;
@@ -1309,15 +1401,9 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
       case (10 << 8) + 0x12:
       case (46 << 8) + 0x13:
         // Content unknown, but we know that BR24 radomes send this
-        if (m_pi->m_settings.verbose >= 2) {
-          LOG_BINARY_RECEIVE(wxT("received familiar report"), report, len);
-        }
         break;
 
       default:
-        if (m_pi->m_settings.verbose >= 2) {
-          LOG_BINARY_RECEIVE(wxT("received unknown report"), report, len);
-        }
         break;
     }
 #endif
@@ -1325,9 +1411,6 @@ bool NavicoReceive::ProcessReport(const uint8_t *report, size_t len) {
   } else if (report[0] == 0x11 && report[1] == 0xC6) {
     LOG_RECEIVE(wxT("%s received heartbeat"), m_ri->m_name.c_str());
   } else if (report[0] == 01 && report[1] == 0xB2) {  // Common Navico message from 4G++
-    if (m_pi->m_settings.verbose >= 2) {
-      LOG_BINARY_RECEIVE(wxT("received RadarReport_01B2"), report, len);
-    }
     RadarReport_01B2 *data = (RadarReport_01B2 *)report;
 
 #define LOG_ADDR_N(n) LOG_RECEIVE(wxT("%s addr%d = %s"), m_ri->m_name.c_str(), n, FormatPackedAddress(data->addr##n));
@@ -1373,12 +1456,23 @@ void NavicoReceive::Shutdown() {
 }
 
 wxString NavicoReceive::GetInfoStatus() {
+  wxString r;
+
   wxCriticalSectionLocker lock(m_lock);
+
+  r << m_status;
+
   // Called on the UI thread, so be gentle
   if (m_firmware.length() > 0) {
-    return m_status + wxT("\n") + m_firmware;
+      r << wxT("\n");
+      r << m_firmware;
+    }
+
+    if (m_radar_status == 0 && m_pi->m_navico_locator) {
+      m_pi->m_navico_locator->AppendErrors(r);
   }
-  return m_status;
+
+  return r;
 }
 
 PLUGIN_END_NAMESPACE

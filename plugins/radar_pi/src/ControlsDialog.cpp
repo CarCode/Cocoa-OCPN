@@ -72,6 +72,7 @@ EVT_BUTTON(ID_OFF, ControlsDialog::OnOffClick)
 EVT_BUTTON(ID_CONTROL_BUTTON, ControlsDialog::OnRadarControlButtonClick)
 
 EVT_BUTTON(ID_INSTALLATION, ControlsDialog::OnInstallationButtonClick)
+EVT_BUTTON(ID_NO_TRANSMIT, ControlsDialog::OnNoTransmitButtonClick)
 EVT_BUTTON(ID_PREFERENCES, ControlsDialog::OnPreferencesButtonClick)
 
 EVT_BUTTON(ID_POWER, ControlsDialog::OnPowerButtonClick)
@@ -110,7 +111,7 @@ EVT_CLOSE(ControlsDialog::OnClose)
 END_EVENT_TABLE()
 
 // The following are only for logging, so don't care about translations.
-string ControlTypeNames[CT_MAX] = {
+const string ControlTypeNames[CT_MAX] = {
     "Unused",
 #define CONTROL_TYPE(x, y) y,
 #include "ControlType.h"
@@ -122,17 +123,42 @@ wxString guard_zone_names[2];
 void RadarControlButton::AdjustValue(int adjustment) {
   int oldValue = m_item->GetValue();
   int newValue = oldValue;
+    int minValue = m_ci.minValue;
+    int maxValue = m_ci.maxValue;
+    RadarControlState state = m_item->GetState();
 
-  if (m_item->GetState() == RCS_OFF) {
+    if (m_ci.hasAutoAdjustable && state > RCS_MANUAL) {
+      minValue = m_ci.minAdjustValue;
+      maxValue = m_ci.maxAdjustValue;
+    }
+
+    if (state == RCS_OFF) {
+        LOG_VERBOSE(wxT("%s Button '%s' changing state from OFF to MANUAL (value is still %d"), m_parent->m_log_name.c_str(),
+                    ControlTypeNames[m_ci.type], m_item->GetValue());
     m_item->UpdateState(RCS_MANUAL);
   } else {
-    newValue += adjustment;
-    if (newValue < m_ci.minValue) {
-      newValue = m_ci.minValue;
-    } else if (newValue > m_ci.maxValue) {
-      newValue = m_ci.maxValue;
+      LOG_VERBOSE(wxT("%s Button '%s' changing value %d to %d"), m_parent->m_log_name.c_str(), ControlTypeNames[m_ci.type], newValue,
+                  newValue + adjustment);
+      newValue += adjustment;
+      if (m_ci.names) {
+          while (m_ci.names[newValue].length() == 0 && newValue < m_ci.maxValue && newValue > m_ci.minValue) {
+            LOG_VERBOSE(wxT("%s Button '%s' skipping empty name for %d"), m_parent->m_log_name.c_str(), ControlTypeNames[m_ci.type],
+                        newValue);
+          newValue += adjustment;
+          }
+      }
+
+      if (newValue < minValue || (m_no_edit && newValue > maxValue)) {
+        newValue = minValue;
+      } else if (newValue > maxValue) {
+        newValue = maxValue;
+      }
+
+      if (m_ci.hasAutoAdjustable) {
+        m_item->Update(newValue, state);
+      } else {
+        m_item->Update(newValue, RCS_MANUAL);
     }
-    m_item->Update(newValue, RCS_MANUAL);
   }
 
   if (m_item->IsModified()) {
@@ -145,17 +171,9 @@ void RadarControlButton::AdjustValue(int adjustment) {
 
 bool RadarControlButton::ToggleValue() {
   if (m_no_edit) {
-    int oldValue = m_item->GetValue();
-    int newValue = oldValue;
 
     if (m_item->GetState() == RCS_MANUAL) {
-      newValue += 1;
-      if (newValue < m_ci.minValue) {
-        newValue = m_ci.minValue;
-      } else if (newValue > m_ci.maxValue) {
-        newValue = m_ci.minValue;
-      }
-      m_item->Update(newValue);
+        AdjustValue(m_ci.stepValue);
     }
     SetState(RCS_MANUAL);
     UpdateLabel();
@@ -167,11 +185,21 @@ bool RadarControlButton::ToggleValue() {
 bool RadarControlButton::ToggleState() {
   RadarControlState state = m_item->GetState();
 
+    LOG_VERBOSE(wxT("%s Button '%s' ToggleState %d, max=%d"), m_parent->m_log_name.c_str(), ControlTypeNames[m_ci.type], state,
+                m_ci.autoValues);
+
   if (m_ci.autoValues == 0) {
     if (state != RCS_MANUAL) {
       state = RCS_MANUAL;
     } else {
       state = RCS_OFF;
+    }
+  } else if (m_ci.hasAutoAdjustable) {
+    if (state > RCS_MANUAL) {
+      state = RCS_MANUAL;
+    } else {
+      state = RCS_AUTO_1;
+      m_item->Update(0, state);
     }
   } else if (state >= RCS_AUTO_1 && state < RCS_MANUAL + m_ci.autoValues) {
     state = (RadarControlState)(state + 1);
@@ -183,9 +211,10 @@ bool RadarControlButton::ToggleState() {
 }
 
 void RadarControlButton::SetState(RadarControlState state) {
-  m_item->UpdateState(state);
   LOG_VERBOSE(wxT("%s Button '%s' SetState %d value %d, max=%d"), m_parent->m_log_name.c_str(), ControlTypeNames[m_ci.type], state,
               m_item->GetValue(), m_ci.autoValues);
+
+    m_item->UpdateState(state);
   m_parent->m_ri->SetControlValue(m_ci.type, *m_item, this);
 }
 
@@ -250,8 +279,8 @@ void RadarControlButton::UpdateLabel(bool force) {
         } else {
           label << _("Auto");
         }
-        if (m_parent->m_ri->m_showManualValueInAuto) {
-          label << wxString::Format(wxT(" %d"), value);
+            if ((value != 0 && m_ci.hasAutoAdjustable) || m_parent->m_ri->m_showManualValueInAuto) {
+              label << wxString::Format(wxT("%+d"), value);
           if (m_ci.unit.length() > 0) {
             label << wxT(" ") << m_ci.unit;
           }
@@ -322,6 +351,15 @@ ControlsDialog::~ControlsDialog() {
     m_pi->m_settings.control_pos[m_ri->m_radar] = pos;
     LOG_DIALOG(wxT("%s saved position %d,%d"), m_log_name.c_str(), pos.x, pos.y);
   }
+
+    for (size_t i = 0; i < ARRAY_SIZE(m_ctrl); i++) {
+      if (m_ctrl[i].names) {
+        delete[] m_ctrl[i].names;
+      }
+      if (m_ctrl[i].autoNames) {
+        delete[] m_ctrl[i].autoNames;
+      }
+    }
 }
 
 bool ControlsDialog::Create(wxWindow* parent, radar_pi* ppi, RadarInfo* ri, wxWindowID id, const wxString& caption,
@@ -440,14 +478,10 @@ void ControlsDialog::ShowGuardZone(int zone) {
   m_inner_range->SetValue(wxString::Format(wxT("%2.2f"), m_guard_zone->m_inner_range / conversionFactor));
   m_outer_range->SetValue(wxString::Format(wxT("%2.2f"), m_guard_zone->m_outer_range / conversionFactor));
 
-  AngleDegrees bearing = m_guard_zone->m_start_bearing;
+    AngleDegrees bearing = MOD_DEGREES_180(m_guard_zone->m_start_bearing);
   m_start_bearing->SetValue(wxString::Format(wxT("%d"), bearing));
 
-  bearing = m_guard_zone->m_end_bearing;
-  while (bearing >= 180.0) {
-    bearing -= 360.;
-  }
-  bearing = round(bearing);
+    bearing = MOD_DEGREES_180(m_guard_zone->m_end_bearing);
   m_end_bearing->SetValue(wxString::Format(wxT("%d"), bearing));
   m_alarm->SetValue(m_guard_zone->m_alarm_on ? 1 : 0);
   m_arpa_box->SetValue(m_guard_zone->m_arpa_on ? 1 : 0);
@@ -657,11 +691,15 @@ void ControlsDialog::CreateControls() {
   m_advanced_sizer->Add(bAdvancedBack, 0, wxALL, BORDER);
 
   if (m_ctrl[CT_NOISE_REJECTION].type) {
-    // The NOISE REJECTION button
     m_noise_rejection_button =
         new RadarControlButton(this, ID_CONTROL_BUTTON, _("Noise rejection"), m_ctrl[CT_NOISE_REJECTION], &m_ri->m_noise_rejection);
     m_advanced_sizer->Add(m_noise_rejection_button, 0, wxALL, BORDER);
   }
+
+    if (m_ctrl[CT_THRESHOLD].type) {
+      m_threshold_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("Threshold"), m_ctrl[CT_THRESHOLD], &m_ri->m_threshold);
+      m_advanced_sizer->Add(m_threshold_button, 0, wxALL, BORDER);
+    }
 
   // The TARGET EXPANSION button
   if (m_ctrl[CT_TARGET_EXPANSION].type) {
@@ -713,7 +751,7 @@ void ControlsDialog::CreateControls() {
   // The SCAN SPEED button
   if (m_ctrl[CT_SCAN_SPEED].type) {
     m_scan_speed_button =
-        new RadarControlButton(this, ID_CONTROL_BUTTON, _("Scan speed"), m_ctrl[CT_SCAN_SPEED], &m_ri->m_scan_speed);
+      new RadarControlButton(this, ID_CONTROL_BUTTON, _("Fast scan"), m_ctrl[CT_SCAN_SPEED], &m_ri->m_scan_speed);
     m_advanced_sizer->Add(m_scan_speed_button, 0, wxALL, BORDER);
   }
 
@@ -771,18 +809,60 @@ void ControlsDialog::CreateControls() {
     m_installation_sizer->Add(m_main_bang_suppression_button, 0, wxALL, BORDER);
   }
 
-  // The NO TRANSMIT START button
-  if (m_ctrl[CT_NO_TRANSMIT_START].type) {
-    m_no_transmit_start_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("No transmit start"),
-                                                        m_ctrl[CT_NO_TRANSMIT_START], &m_ri->m_no_transmit_start);
-    m_installation_sizer->Add(m_no_transmit_start_button, 0, wxALL, BORDER);
-  }
+    // When there are two or more NO TRANSMIT ZONES, we put them on a separate sizer
+    if (m_ctrl[CT_NO_TRANSMIT_START_1 + 1].type) {
+      m_no_transmit_sizer = new wxBoxSizer(wxVERTICAL);
+      m_top_sizer->Add(m_no_transmit_sizer, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, BORDER);
 
-  // The NO TRANSMIT END button
-  if (m_ctrl[CT_NO_TRANSMIT_END].type) {
-    m_no_transmit_end_button =
-        new RadarControlButton(this, ID_CONTROL_BUTTON, _("No transmit end"), m_ctrl[CT_NO_TRANSMIT_END], &m_ri->m_no_transmit_end);
-    m_installation_sizer->Add(m_no_transmit_end_button, 0, wxALL, BORDER);
+      // The NO TRANSMIT button
+      m_no_transmit_button = new RadarButton(this, ID_NO_TRANSMIT, g_buttonSize, _("No-transmit Zones"));
+      m_installation_sizer->Add(m_no_transmit_button, 0, wxALL, BORDER);
+
+      // The Back button
+      RadarButton* bNoTransmitBack = new RadarButton(this, ID_BACK, g_buttonSize, backButtonStr);
+      m_no_transmit_sizer->Add(bNoTransmitBack, 0, wxALL, BORDER);
+
+      for (size_t z = 0; z < NO_TRANSMIT_ZONES; z++) {
+        // The NO TRANSMIT START button
+        if (m_ctrl[CT_NO_TRANSMIT_START_1 + z].type) {
+          wxString label = _("No transmit start");
+          label << wxString::Format(wxT("%d"), z + 1);
+
+          m_no_transmit_start_button[z] = new RadarControlButton(this, ID_CONTROL_BUTTON, label, m_ctrl[CT_NO_TRANSMIT_START_1 + z],
+                                                                 &m_ri->m_no_transmit_start[z]);
+          m_no_transmit_sizer->Add(m_no_transmit_start_button[z], 0, wxALL, BORDER);
+          m_ri->m_no_transmit_zones = wxMax(m_ri->m_no_transmit_zones, z + 1);
+        }
+
+        // The NO TRANSMIT END button
+        if (m_ctrl[CT_NO_TRANSMIT_END_1 + z].type) {
+          wxString label = _("No transmit end");
+          label << wxString::Format(wxT("%d"), z + 1);
+
+          m_no_transmit_end_button[z] =
+              new RadarControlButton(this, ID_CONTROL_BUTTON, label, m_ctrl[CT_NO_TRANSMIT_END_1 + z], &m_ri->m_no_transmit_end[z]);
+          m_no_transmit_sizer->Add(m_no_transmit_end_button[z], 0, wxALL, BORDER);
+        }
+      }
+      m_top_sizer->Hide(m_no_transmit_sizer);
+    } else {
+      if (m_ctrl[CT_NO_TRANSMIT_START_1].type) {
+        wxString label = _("No transmit start");
+
+        m_no_transmit_start_button[0] =
+            new RadarControlButton(this, ID_CONTROL_BUTTON, label, m_ctrl[CT_NO_TRANSMIT_START_1], &m_ri->m_no_transmit_start[0]);
+        m_installation_sizer->Add(m_no_transmit_start_button[0], 0, wxALL, BORDER);
+        m_ri->m_no_transmit_zones = 1;
+      }
+
+        // The NO TRANSMIT END button
+        if (m_ctrl[CT_NO_TRANSMIT_END_1].type) {
+          wxString label = _("No transmit end");
+
+          m_no_transmit_end_button[0] =
+              new RadarControlButton(this, ID_CONTROL_BUTTON, label, m_ctrl[CT_NO_TRANSMIT_END_1], &m_ri->m_no_transmit_end[0]);
+          m_installation_sizer->Add(m_no_transmit_end_button[0], 0, wxALL, BORDER);
+        }
   }
 
   // The ANTENNA HEIGHT button
@@ -829,6 +909,12 @@ void ControlsDialog::CreateControls() {
                                                      &m_ri->m_main_bang_size, _("pixels"));
     m_installation_sizer->Add(m_main_bang_size_button, 0, wxALL, BORDER);
   }
+
+    if (m_ctrl[CT_ACCENT_LIGHT].type) {
+      m_accent_light_button =
+          new RadarControlButton(this, ID_CONTROL_BUTTON, _("Accent light"), m_ctrl[CT_ACCENT_LIGHT], &m_ri->m_accent_light);
+      m_installation_sizer->Add(m_accent_light_button, 0, wxALL, BORDER);
+    }
 
   m_top_sizer->Hide(m_installation_sizer);
 
@@ -928,6 +1014,12 @@ void ControlsDialog::CreateControls() {
     m_adjust_sizer->Add(m_sea_button, 0, wxALL, BORDER);
   }
 
+    // The SEA STATE button
+    if (m_ctrl[CT_SEA_STATE].type) {
+      m_sea_state_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("Sea state"), m_ctrl[CT_SEA_STATE], &m_ri->m_sea_state);
+      m_adjust_sizer->Add(m_sea_state_button, 0, wxALL, BORDER);
+    }
+
   // The RAIN button
   if (m_ctrl[CT_RAIN].type) {
     m_rain_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("Rain clutter"), m_ctrl[CT_RAIN], &m_ri->m_rain);
@@ -940,9 +1032,9 @@ void ControlsDialog::CreateControls() {
     m_adjust_sizer->Add(m_ftc_button, 0, wxALL, BORDER);
   }
 
-  // The MODE button (Quantum only)
+    // The MODE button (Quantum and HALO only)
   if (m_ctrl[CT_MODE].type) {
-    m_mode_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("MODE"), m_ctrl[CT_MODE], &m_ri->m_mode);
+      m_mode_button = new RadarControlButton(this, ID_CONTROL_BUTTON, _("Mode"), m_ctrl[CT_MODE], &m_ri->m_mode);
     m_adjust_sizer->Add(m_mode_button, 0, wxALL, BORDER);
   }
 
@@ -1242,6 +1334,8 @@ void ControlsDialog::OnBackClick(wxCommandEvent& event) {
   if (m_current_sizer == m_edit_sizer) {
     SwitchTo(m_from_sizer, wxT("from (back click)"));
     m_from_control = 0;
+  } else if (m_current_sizer == m_no_transmit_sizer) {
+    SwitchTo(m_installation_sizer, wxT("installation (back click)"));
   } else if (m_current_sizer == m_installation_sizer) {
     SwitchTo(m_advanced_sizer, wxT("advanced (back click)"));
   } else {
@@ -1250,7 +1344,7 @@ void ControlsDialog::OnBackClick(wxCommandEvent& event) {
 }
 
 void ControlsDialog::OnAutoClick(wxCommandEvent& event) {
-  if (m_from_control->ToggleState()) {
+    if (m_from_control->ToggleState() || m_from_control->m_ci.hasAutoAdjustable) {
     m_auto_button->Enable();
   } else {
     m_auto_button->Disable();
@@ -1293,6 +1387,7 @@ void ControlsDialog::OnWindowButtonClick(wxCommandEvent& event) { SwitchTo(m_win
 void ControlsDialog::OnViewButtonClick(wxCommandEvent& event) { SwitchTo(m_view_sizer, wxT("view")); }
 
 void ControlsDialog::OnInstallationButtonClick(wxCommandEvent& event) { SwitchTo(m_installation_sizer, wxT("installation")); }
+void ControlsDialog::OnNoTransmitButtonClick(wxCommandEvent& event) { SwitchTo(m_no_transmit_sizer, wxT("no transmit")); }
 
 void ControlsDialog::OnPowerButtonClick(wxCommandEvent& event) { SwitchTo(m_power_sizer, wxT("power")); }
 
@@ -1376,7 +1471,7 @@ void ControlsDialog::EnterEditMode(RadarControlButton* button) {
 
   if (hasAuto) {
     m_auto_button->Show();
-    if (state > RCS_MANUAL && m_from_control->m_ci.autoValues == 1) {
+      if (state > RCS_MANUAL && m_from_control->m_ci.autoValues == 1 && !m_from_control->m_ci.hasAutoAdjustable) {
       m_auto_button->Disable();
     } else {
       m_auto_button->Enable();
@@ -1384,7 +1479,7 @@ void ControlsDialog::EnterEditMode(RadarControlButton* button) {
   } else {
     m_auto_button->Hide();
   }
-  if (m_from_control->m_ci.maxValue > 20) {
+    if (m_from_control->m_ci.maxValue / m_from_control->m_ci.stepValue >= 20) {
     m_plus_ten_button->Show();
     m_minus_ten_button->Show();
   } else {
@@ -1751,6 +1846,9 @@ void ControlsDialog::DisableRadarControls() {
   if (m_sea_button) {
     m_sea_button->Disable();
   }
+    if (m_sea_state_button) {
+      m_sea_state_button->Disable();
+    }
   if (m_gain_button) {
     m_gain_button->Disable();
   }
@@ -1769,6 +1867,9 @@ void ControlsDialog::DisableRadarControls() {
   if (m_interference_rejection_button) {
     m_interference_rejection_button->Disable();
   }
+    if (m_threshold_button) {
+      m_threshold_button->Disable();
+    }
   if (m_target_separation_button) {
     m_target_separation_button->Disable();
   }
@@ -1790,11 +1891,16 @@ void ControlsDialog::DisableRadarControls() {
   if (m_range_adjustment_button) {
     m_range_adjustment_button->Disable();
   }
-  if (m_no_transmit_start_button) {
-    m_no_transmit_start_button->Disable();
+    if (m_no_transmit_button) {
+      m_no_transmit_button->Disable();
   }
-  if (m_no_transmit_end_button) {
-    m_no_transmit_end_button->Disable();
+    for (size_t z = 0; z < NO_TRANSMIT_ZONES; z++) {
+      if (m_no_transmit_start_button[z]) {
+        m_no_transmit_start_button[z]->Disable();
+      }
+      if (m_no_transmit_end_button[z]) {
+        m_no_transmit_end_button[z]->Disable();
+      }
   }
   if (m_antenna_height_button) {
     m_antenna_height_button->Disable();
@@ -1838,6 +1944,9 @@ void ControlsDialog::DisableRadarControls() {
   if (m_main_bang_suppression_button) {
     m_main_bang_suppression_button->Disable();
   }
+    if (m_accent_light_button) {
+      m_accent_light_button->Disable();
+    }
 }
 
 void ControlsDialog::EnableRadarControls() {
@@ -1847,6 +1956,9 @@ void ControlsDialog::EnableRadarControls() {
   if (m_sea_button) {
     m_sea_button->Enable();
   }
+    if (m_sea_state_button) {
+      m_sea_state_button->Enable();
+    }
   if (m_gain_button) {
     m_gain_button->Enable();
   }
@@ -1865,6 +1977,9 @@ void ControlsDialog::EnableRadarControls() {
   if (m_interference_rejection_button) {
     m_interference_rejection_button->Enable();
   }
+    if (m_threshold_button) {
+      m_threshold_button->Enable();
+    }
   if (m_target_separation_button) {
     m_target_separation_button->Enable();
   }
@@ -1886,11 +2001,16 @@ void ControlsDialog::EnableRadarControls() {
   if (m_range_adjustment_button) {
     m_range_adjustment_button->Enable();
   }
-  if (m_no_transmit_start_button) {
-    m_no_transmit_start_button->Enable();
+    if (m_no_transmit_button) {
+      m_no_transmit_button->Enable();
   }
-  if (m_no_transmit_end_button) {
-    m_no_transmit_end_button->Enable();
+    for (size_t z = 0; z < NO_TRANSMIT_ZONES; z++) {
+      if (m_no_transmit_start_button[z]) {
+        m_no_transmit_start_button[z]->Enable();
+      }
+      if (m_no_transmit_end_button[z]) {
+        m_no_transmit_end_button[z]->Enable();
+      }
   }
   if (m_antenna_height_button) {
     m_antenna_height_button->Enable();
@@ -1934,6 +2054,64 @@ void ControlsDialog::EnableRadarControls() {
   if (m_main_bang_suppression_button) {
     m_main_bang_suppression_button->Enable();
   }
+    if (m_accent_light_button) {
+      m_accent_light_button->Enable();
+    }
+}
+
+//
+// Radar is in an "automatic" mode, disable certain controls.
+//
+void ControlsDialog::LimitRadarControls() {
+    ModeType mode = (ModeType)m_ri->m_mode.GetValue();
+
+    int threshold = -1;
+    switch (mode) {
+      case MODE_CUSTOM:
+      case MODE_UNUSED:
+        break;
+      case MODE_HARBOR:
+      case MODE_OFFSHORE:
+        threshold = 30;
+        break;
+        threshold = 30;
+      case MODE_WEATHER:
+      case MODE_BIRD:
+        threshold = 0;
+        break;
+    }
+    if (threshold >= 0) {
+      LOG_DIALOG(wxT("%s mode %d -> threshold %d"), m_log_name.c_str(), (int)mode, threshold);
+      m_ri->m_threshold.Update(threshold);
+    }
+
+  if (m_interference_rejection_button) {
+    m_interference_rejection_button->Disable();
+  }
+    if (m_threshold_button) {
+      m_threshold_button->Disable();
+    }
+  if (m_target_separation_button) {
+    m_target_separation_button->Disable();
+  }
+  if (m_noise_rejection_button) {
+    m_noise_rejection_button->Disable();
+  }
+  if (m_target_boost_button) {
+    m_target_boost_button->Disable();
+  }
+  if (m_target_expansion_button) {
+    m_target_expansion_button->Disable();
+  }
+  if (m_scan_speed_button) {
+    m_scan_speed_button->Disable();
+  }
+  if (m_local_interference_rejection_button) {
+    m_local_interference_rejection_button->Disable();
+  }
+  if (m_side_lobe_suppression_button) {
+    m_side_lobe_suppression_button->Disable();
+  }
 }
 
 void ControlsDialog::UpdateControlValues(bool refreshAll) {
@@ -1966,6 +2144,10 @@ void ControlsDialog::UpdateControlValues(bool refreshAll) {
     DisableRadarControls();
   } else {
     EnableRadarControls();
+      if ((m_ri->m_radar_type == RT_HaloA || m_ri->m_radar_type == RT_HaloB) && m_mode_button &&
+          m_mode_button->m_item->GetValue() > 0) {
+        LimitRadarControls();
+      }
   }
   m_power_button->SetLabel(o);
   if (m_power_sizer) {
@@ -2029,6 +2211,11 @@ void ControlsDialog::UpdateControlValues(bool refreshAll) {
     m_sea_button->UpdateLabel();
   }
 
+    //   sea state
+    if (m_sea_state_button) {
+      m_sea_state_button->UpdateLabel();
+    }
+
   //   mode (RM_Quantum)
   if (m_mode_button) {
     m_mode_button->UpdateLabel();
@@ -2085,11 +2272,13 @@ void ControlsDialog::UpdateControlValues(bool refreshAll) {
   }
 
   //  no transmit zone
-  if (m_no_transmit_start_button) {
-    m_no_transmit_start_button->UpdateLabel();
-  }
-  if (m_no_transmit_end_button) {
-    m_no_transmit_end_button->UpdateLabel();
+    for (size_t z = 0; z < NO_TRANSMIT_ZONES; z++) {
+      if (m_no_transmit_start_button[z]) {
+        m_no_transmit_start_button[z]->UpdateLabel();
+      }
+      if (m_no_transmit_end_button[z]) {
+        m_no_transmit_end_button[z]->UpdateLabel();
+      }
   }
 
   //  local interference rejection
@@ -2105,6 +2294,11 @@ void ControlsDialog::UpdateControlValues(bool refreshAll) {
   if (m_main_bang_size_button) {
     m_main_bang_size_button->UpdateLabel();
   }
+
+    if (m_accent_light_button) {
+      m_accent_light_button->UpdateLabel();
+    }
+
   if (m_antenna_starboard_button) {
     m_antenna_starboard_button->UpdateLabel();
   }
@@ -2201,9 +2395,9 @@ void ControlsDialog::UpdateDialogShown(bool resize) {
   if (!IsShown()) {
     if (!m_top_sizer->IsShown(m_control_sizer) && !m_top_sizer->IsShown(m_advanced_sizer) && !m_top_sizer->IsShown(m_view_sizer) &&
         !m_top_sizer->IsShown(m_edit_sizer) && !m_top_sizer->IsShown(m_installation_sizer) &&
-        !m_top_sizer->IsShown(m_window_sizer) && !m_top_sizer->IsShown(m_guard_sizer) && !m_top_sizer->IsShown(m_guardzone_sizer) &&
-        !m_top_sizer->IsShown(m_adjust_sizer) && !m_top_sizer->IsShown(m_cursor_sizer) &&
-        (m_power_sizer && !m_top_sizer->IsShown(m_power_sizer))) {
+        (m_no_transmit_sizer != 0 && !m_top_sizer->IsShown(m_no_transmit_sizer)) && !m_top_sizer->IsShown(m_window_sizer) &&
+        !m_top_sizer->IsShown(m_guard_sizer) && !m_top_sizer->IsShown(m_guardzone_sizer) && !m_top_sizer->IsShown(m_adjust_sizer) &&
+        !m_top_sizer->IsShown(m_cursor_sizer) && (m_power_sizer && !m_top_sizer->IsShown(m_power_sizer))) {
       SwitchTo(m_control_sizer, wxT("main (manual open)"));
     }
     Show();
@@ -2293,9 +2487,6 @@ void ControlsDialog::OnStart_Bearing_Value(wxCommandEvent& event) {
 
   temp.ToLong(&t);
   t = MOD_DEGREES(t);
-  while (t < 0) {
-    t += 360;
-  }
   m_guard_zone->SetStartBearing(t);
 }
 
@@ -2307,9 +2498,6 @@ void ControlsDialog::OnEnd_Bearing_Value(wxCommandEvent& event) {
 
   temp.ToLong(&t);
   t = MOD_DEGREES(t);
-  while (t < 0) {
-    t += 360;
-  }
   m_guard_zone->SetEndBearing(t);
 }
 

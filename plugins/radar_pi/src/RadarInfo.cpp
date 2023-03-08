@@ -76,6 +76,7 @@ RadarInfo::RadarInfo(radar_pi *pi, int radar) {
   m_trails = 0;
   m_idle_standby = 0;
   m_idle_transmit = 0;
+  m_doppler_count = 0;
   m_showManualValueInAuto = false;
   m_timed_idle_hardware = false;
   m_status_text_hide = false;
@@ -85,6 +86,9 @@ RadarInfo::RadarInfo(radar_pi *pi, int radar) {
   m_radar_location_info = RadarLocationInfo(empty_info);
   m_radar_interface_address = NetworkAddress();
   m_radar_address = NetworkAddress();
+  m_last_rotation_time = 0;
+  m_last_angle = 0;
+    m_no_transmit_zones = 0;
 
   m_mouse_pos.lat = NAN;
   m_mouse_pos.lon = NAN;
@@ -123,6 +127,16 @@ RadarInfo::RadarInfo(radar_pi *pi, int radar) {
 
   m_range_adjustment.Update(0, RCS_MANUAL);
   m_quantum2type = false;
+    m_min_contour_length = 6;
+    m_threshold.Update(0);
+    m_main_bang_size.Update(0);
+    m_antenna_forward.Update(0);
+    m_antenna_starboard.Update(0);
+    m_range_adjustment.Update(0);
+    m_timed_run.Update(1);
+    for (int i = 0; i < MAX_CHART_CANVAS; i++) {
+      m_overlay_canvas[i].Update(0);
+    }
 
   for (size_t z = 0; z < GUARD_ZONES; z++) {
     m_guard_zone[z] = new GuardZone(m_pi, this, z);
@@ -415,6 +429,23 @@ void RadarInfo::ResetSpokes() {
   }
 }
 
+void RadarInfo::CalculateRotationSpeed(SpokeBearing angle) {
+  if (m_radar_type == RM_E120) {
+    // Nothing, we learn the rotation speed directly from the radar.
+  } else if (angle < m_last_angle) {
+    wxLongLong now = wxGetUTCTimeMillis();
+
+    if (m_last_rotation_time != 0 && now > m_last_rotation_time + 100) {
+      wxLongLong delta = now - m_last_rotation_time;
+      int deltaInt = (int)delta.GetValue();
+
+      m_rotation_period.Update(deltaInt);
+    }
+    m_last_rotation_time = now;
+  }
+  m_last_angle = angle;
+}
+
 /*
  * A spoke of data has been received by the receive thread and it calls this (in
  * the context of the receive thread, so no UI actions can be performed here.)
@@ -429,18 +460,30 @@ void RadarInfo::ResetSpokes() {
 void RadarInfo::ProcessRadarSpoke(SpokeBearing angle, SpokeBearing bearing, uint8_t *data, size_t len, int range_meters,
                                   wxLongLong time_rec) {
   int orientation;
+  int i;
 
-  // calculate course as the moving average of m_hdt over one revolution
-  SampleCourse(angle);  // used for course_up mode
+    SampleCourse(angle);            // Calculate course as the moving average of m_hdt over one revolution
+    CalculateRotationSpeed(angle);  // Find out how fast the radar is rotating
 
-  for (int i = 0; i < m_main_bang_size.GetValue(); i++) {
-    data[i] = 0;
-  }
   // Recompute 'pixels_per_meter' based on the actual spoke length and range in meters.
-  if (range_meters == 0){
+  if (range_meters == 0) {
     LOG_INFO(wxT("Error ProcessRadarSpoke range is zero"));
     return;
+  }
+
+    for (i = 0; i < m_main_bang_size.GetValue(); i++) {
+      data[i] = 0;
     }
+    int threshold = m_threshold.GetValue();
+    if (threshold > 0) {
+        threshold = threshold * (255 - BLOB_HISTORY_MAX) / 100 + BLOB_HISTORY_MAX;
+      for (; i < (int)len; i++) {
+        if (data[i] < threshold) {
+          data[i] = 0;
+        }
+      }
+    }
+
   double pixels_per_meter = (len / (double)range_meters) * (1. - (double)m_range_adjustment.GetValue() * 0.001);
 
   if (m_pixels_per_meter != pixels_per_meter) {
@@ -548,7 +591,7 @@ void RadarInfo::SampleCourse(int angle) {
     for (int i = 0; i < COURSE_SAMPLES; i++) {
       sum += m_course_log[i];
     }
-    m_course = fmod(sum / COURSE_SAMPLES + 720., 360);
+      m_course = MOD_DEGREES_FLOAT(sum / COURSE_SAMPLES);
   }
 }
 
@@ -643,18 +686,23 @@ void RadarInfo::RenderGuardZone() {
     blue = 200;
   }
 
-  start_bearing = m_no_transmit_start.GetValue();
-  end_bearing = m_no_transmit_end.GetValue();
   int range = m_range.GetValue();
-  if (start_bearing != end_bearing && start_bearing >= -180 && end_bearing >= -180 && range != 0) {
-    if (start_bearing < 0) {
-      start_bearing += 360;
+    if (range == 0) {
+      range = 4000;
     }
-    if (end_bearing < 0) {
-      end_bearing += 360;
+
+    for (size_t z = 0; z < m_no_transmit_zones; z++) {
+      if (m_no_transmit_start[z].GetState() != RCS_OFF) {
+        start_bearing = m_no_transmit_start[z].GetValue();
+        end_bearing = m_no_transmit_end[z].GetValue();
+
+        if (start_bearing != end_bearing && start_bearing >= -180 && end_bearing >= -180) {
+            start_bearing = MOD_DEGREES(start_bearing);
+            end_bearing = MOD_DEGREES(end_bearing);
+          glColor4ub(250, 255, 255, alpha);
+          DrawFilledArc(range, 0, start_bearing, end_bearing);
+        }
     }
-    glColor4ub(250, 255, 255, alpha);
-    DrawFilledArc(range, 0, m_no_transmit_start.GetValue(), m_no_transmit_end.GetValue());
   }
 }
 
@@ -1090,7 +1138,7 @@ wxString RadarInfo::FormatAngle(double angle) {
   wxString s;
 
   wxString relative;
-  if (angle > 360) angle -= 360;
+    angle = MOD_DEGREES_FLOAT(angle);
   if (GetOrientation() != ORIENTATION_HEAD_UP) {
     relative = wxT("T");
   } else {
@@ -1134,7 +1182,7 @@ wxString RadarInfo::GetCanvasTextBottomLeft() {
       if (!isnan(m_vrm[b]) && !isnan(bearing)) {
         if (orientation == ORIENTATION_STABILIZED_UP) {
           bearing += m_course;
-          if (bearing >= 360) bearing -= 360;
+            bearing = MOD_DEGREES_FLOAT(bearing);
         }
 
         if (s.length()) {
@@ -1154,7 +1202,7 @@ wxString RadarInfo::GetCanvasTextBottomLeft() {
       } else if (orientation == ORIENTATION_COG_UP) {
         bearing += m_pi->GetCOG();
       }
-      if (bearing >= 360) bearing -= 360;
+        bearing = MOD_DEGREES_FLOAT(bearing);
 
     } else if (!isnan(m_mouse_pos.lat) && !isnan(m_mouse_pos.lon) && GetRadarPosition(&radar_pos)) {
       // Can't compute this upfront, ownship may move...
@@ -1411,8 +1459,8 @@ void RadarInfo::ComputeTargetTrails() {
 }
 
 wxString RadarInfo::GetInfoStatus() {
-  if (m_receive) {
-    return m_receive->GetInfoStatus();
+  if (m_receive) {    // Was ist m_receive ??? Siehe RadarInfo.h + RadarInfo.cpp
+      return m_receive->GetInfoStatus();
   }
   return _("Uninitialized");
 }
