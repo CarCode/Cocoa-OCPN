@@ -8838,9 +8838,14 @@ bool s52plib::ObjectRenderCheckCat( ObjRazRules *rzRules, ViewPort *vp )
     // only for objects whose decoded S52 display category (by LUP) is also OTHER
     if( m_nDisplayCategory == OTHER ){
         if(OTHER == obj_cat){
-            if( !strncmp( rzRules->LUP->OBCL, "M_", 2 ) )
-                if( !m_bShowMeta &&  strncmp( rzRules->LUP->OBCL, "M_QUAL", 6 ))
-                    return false;
+            if (!strncmp(rzRules->LUP->OBCL, "M_", 2)){
+              if (!m_bShowMeta)
+                return false;
+              else {
+                if (!strncmp(rzRules->LUP->OBCL, "M_QUAL", 6) && !m_qualityOfDataOn)
+                  return false;
+              }
+            }
         }
     }
     else{
@@ -9373,14 +9378,9 @@ void s52plib::SetAnchorOn(bool val)
 
 void s52plib::SetQualityOfData(bool val)
 {
-    int old_vis = GetQualityOfData();
-    if(old_vis == val)
-        return;
-
-    if(old_vis && !val){                            // On, going off
+    if (!val) {  // going off
         AddObjNoshow("M_QUAL");
-    }
-    else if(!old_vis && val){                                   // Off, going on
+    } else {  // Off, going on
         RemoveObjNoshow("M_QUAL");
 
         for( unsigned int iPtr = 0; iPtr < pOBJLArray->GetCount(); iPtr++ ) {

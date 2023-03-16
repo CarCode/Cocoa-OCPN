@@ -25,14 +25,17 @@
 
 
 // For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
 #include "wx/wx.h"
 #endif
 
-#include <wx/progdlg.h>
 #include "wx/wxsqlite3.h"
+#include <wx/filedlg.h>
+#include <wx/log.h>
+#include <wx/msgdlg.h>
+#include <wx/progdlg.h>
 //#include <sqlite3.h>  // Siehe CommitsOptimierSeit1712.txt
 #ifdef __WXOSX__
 #include <wx/stdpaths.h>
@@ -43,7 +46,6 @@
 #include <algorithm>
 #include "csv_parser.h"
 #include "objsearch_pi.h"
-#include "icons.h"
 
 //SQLite user functions
 
@@ -94,8 +96,6 @@ extern "C" DECL_EXP void destroy_pi ( opencpn_plugin* p )
 //
 //---------------------------------------------------------------------------------------------------------
 
-#include "icons.h"
-
 //---------------------------------------------------------------------------------------------------------
 //
 //          PlugIn initialization and de-init
@@ -139,10 +139,10 @@ wxSQLite3Database* objsearch_pi::initDB(void)
     }
     
     if ( m_bDBUsable )
-	{
+    {
         db->CreateFunction(_T("distanceMercator"), 4, distMercFunc, true);
         //sqlite3_create_function(db, "distanceMercator", 4, SQLITE_UTF8, NULL, &distanceMercatorFunc, NULL, NULL));
-		QueryDB( db, _T("PRAGMA synchronous=OFF") );
+        QueryDB( db, _T("PRAGMA synchronous=OFF") );
         QueryDB( db, _T("PRAGMA count_changes=OFF") );
         QueryDB( db, _T("PRAGMA journal_mode=MEMORY") );
         QueryDB( db, _T("PRAGMA temp_store=MEMORY") );
@@ -152,8 +152,8 @@ wxSQLite3Database* objsearch_pi::initDB(void)
         QueryDB( db, _T("UPDATE object SET lon = lon + 360 WHERE lon < - 180") );
         QueryDB( db, _T("DELETE FROM object WHERE lon < - 180 OR lon > 180 OR lat < -90 OR lat > 90") );
  */
-	}
-	
+    }
+
     return db;
 }
 
@@ -174,7 +174,7 @@ int objsearch_pi::QueryDB(wxSQLite3Database* db, const wxString& sql)
         wxLogMessage( _T("OBJSEARCH_PI: Unknown exception during '%s'"), sql.c_str() );
         m_bDBUsable = false;
     }
-    
+
     return ret;
 }
 
@@ -208,20 +208,19 @@ void objsearch_pi::clearDB(wxSQLite3Database* db)
 
 objsearch_pi::objsearch_pi ( void *ppimgr )
     : opencpn_plugin_113 ( ppimgr )
+    , m_shown(false)
 {
     // Create the PlugIn icons
-    initialize_images();
-    
     m_db_thread_running = false;
-    
+
     m_bDBUsable = true;
-    
+
     m_bWaitForDB = true;
-    
+
     finishing = false;
 
     m_db = initDB();
-    
+
     wxSQLite3ResultSet set;
 
     m_vpppm = 0.1;
@@ -255,16 +254,12 @@ objsearch_pi::objsearch_pi ( void *ppimgr )
         }
         set.Finalize();
     }
-    
+
     m_bWaitForDB = false;
+    m_logo = GetBitmapFromSVGFile(GetDataDir() + "objsearch_pi.svg", 32, 32);
 }
 
-objsearch_pi::~objsearch_pi ( void )
-{
-    clearDB(m_db);
-    delete _img_objsearch_pi;
-    delete _img_objsearch;
-}
+objsearch_pi::~objsearch_pi() { clearDB(m_db); }
 
 int objsearch_pi::Init ( void )
 {
@@ -274,26 +269,36 @@ int objsearch_pi::Init ( void )
 
     //    Get a pointer to the opencpn configuration object
     m_pconfig = GetOCPNConfigObject();
-    
+
     //    And load the configuration items
     LoadConfig();
 
     // Get a pointer to the opencpn display canvas, to use as a parent for the OBJSEARCH dialog
     m_parent_window = GetOCPNCanvasWindow();
 
-#ifndef ocpnUSE_SVG  // externes svg will nicht anzeigen
-    m_leftclick_tool_id = InsertPlugInToolSVG( _T( "Object Search" ), _svg_objsearch, _svg_objsearch_rollover, _svg_objsearch_toggled, wxITEM_CHECK, _( "Object Search" ), _T( "" ), NULL, OBJSEARCH_TOOL_POSITION, 0, this);
-#else
-    m_leftclick_tool_id = InsertPlugInTool ( _T ( "" ), _img_objsearch, _img_objsearch, wxITEM_CHECK,
-                                            _( "Object Search" ), _T ( "" ), NULL, OBJSEARCH_TOOL_POSITION, 0, this );
-#endif
+    wxString m_shareloc = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator()+ wxT("plugins/objsearch/data/");
+    wxString _svg_objsearch = m_shareloc + wxT("objsearch_pi.svg");
+    wxString _svg_objsearch_rollover = m_shareloc + wxT("objsearch_pi_rollover.svg");
+    wxString _svg_objsearch_toggled = m_shareloc + wxT("objsearch_pi_toggled.svg");
+
+    if (m_shown) {
+        m_leftclick_tool_id = InsertPlugInToolSVG(_T( "Object Search" ),
+            _svg_objsearch_toggled, _svg_objsearch_rollover, _svg_objsearch,
+            wxITEM_CHECK, _("Object Search"), _T( "" ), nullptr,
+            OBJSEARCH_TOOL_POSITION, 0, this);
+    } else {
+        m_leftclick_tool_id = InsertPlugInToolSVG(_T( "Object Search" ),
+            _svg_objsearch, _svg_objsearch_rollover, _svg_objsearch_toggled,
+            wxITEM_CHECK, _("Object Search"), _T( "" ), nullptr,
+            OBJSEARCH_TOOL_POSITION, 0, this);
+    }
 
     m_pObjSearchDialog = new ObjSearchDialogImpl( this, m_parent_window );
-    
+
     m_chartLoading = wxEmptyString;
-    
+
     m_bWaitForDB = false;
-    
+
     m_boatlat = NAN;
     m_boatlon = NAN;
 
@@ -326,7 +331,7 @@ bool objsearch_pi::DeInit ( void )
         m_pObjSearchDialog = NULL;
         SaveConfig();
     }
-    
+
     {
         wxCriticalSectionLocker enter(m_pThreadCS);
         if (m_pThread) // does the thread still exist?
@@ -350,18 +355,18 @@ bool objsearch_pi::DeInit ( void )
         }
         // wait for thread completion
     }
-    
+
     //Last resort check for thread completion, wait if it looks bad
     #define THREAD_WAIT_SECONDS  5
     //  Try to wait a bit to see if all compression threads exit nicely
     wxDateTime now = wxDateTime::Now();
     time_t stall = now.GetTicks();
     time_t end = stall + THREAD_WAIT_SECONDS;
-    
+
     while(m_db_thread_running && stall < end ){
         wxDateTime later = wxDateTime::Now();
         stall = later.GetTicks();
-        
+
         wxYield();
         wxSleep(1);
         if(!m_db_thread_running)
@@ -393,7 +398,7 @@ int objsearch_pi::GetPlugInVersionMinor()
 
 wxBitmap *objsearch_pi::GetPlugInBitmap()
 {
-    return _img_objsearch_pi;
+    return &m_logo;
 }
 
 wxString objsearch_pi::GetCommonName()
@@ -421,11 +426,13 @@ int objsearch_pi::GetToolbarToolCount ( void )
 
 void objsearch_pi::OnToolbarToolCallback ( int id )
 {
+    m_shown = !m_shown;
+
     SetToolbarItemState( id, false );
     m_pObjSearchDialog->ClearFeatures();
     for(std::map<wxString, int>::iterator it = m_featuresInDb.begin(); it != m_featuresInDb.end(); ++it)
         m_pObjSearchDialog->AddFeature(it->first);
-    
+
     m_pObjSearchDialog->Show();
 }
 
@@ -504,7 +511,7 @@ void objsearch_pi::SendVectorChartObjectInfo(wxString &chart, wxString &feature,
         m_featuresInDb[feature] = feature_id;
         m_bWaitForDB = false;
     }
-        
+
     if ( chart == m_chartLoading )
         StoreNewObject( chart_id, feature_id, objname, lat, lon );
 }
@@ -518,7 +525,7 @@ Chart objsearch_pi::StoreNewChart(wxString chart, double scale, int nativescale)
     ch.name = chartname.GetName();
     ch.scale = scale;
     ch.nativescale = nativescale;
-    
+
     m_chartLoading = chart;
     QueryDB( m_db, wxString::Format(_T("INSERT INTO chart(chartname, scale, nativescale) VALUES ('%s', %f, %i)"), ch.name.c_str(), ch.scale, ch.nativescale) );
     ch.id = m_db->GetLastRowId();
@@ -537,17 +544,17 @@ void objsearch_pi::StoreNewObject(long chart_id, long feature_id, wxString objna
 {
     if ( !m_bDBUsable )
         return;
-    
+
     // get object on the world chart...    
     if( lon < -180. )
         lon += 360.;
     else if( lon > 180. )
         lon -= 360.;
-    
+
     // if it is still off the map, forget about it...
     if ( lon > 180. || lon < -180. || lat > 90. || lat < -90.)
         return;
-                
+
     while ( m_bWaitForDB )
         wxMilliSleep(1);
     if ( objname.Len() > 1 )
@@ -569,7 +576,7 @@ long objsearch_pi::GetChartId(wxString chart)
         return -1;
     wxFileName chartname(chart);
     wxString chrt = chartname.GetName();
-    
+
     if(m_chartsInDb.find(chrt) == m_chartsInDb.end())
         return 0;
     else
@@ -649,7 +656,7 @@ void objsearch_pi::ScanArea( int latmin, int lonmin, int latmax, int lonmax, int
     double lat_step;
     double lon_step;
     double ppm_scale;
-    
+
     while( !finishing && lat <= latmax )
     {
         JumpToPosition( lat, lon, m_vpppm );
@@ -673,7 +680,7 @@ void objsearch_pi::ScanArea( int latmin, int lonmin, int latmax, int lonmax, int
         lon = lonmin;
         lat += lat_step;
     }
-    
+
     finishing = false;
 }
 
@@ -681,16 +688,16 @@ ObjSearchDialogImpl::ObjSearchDialogImpl( objsearch_pi* plugin, wxWindow* parent
 : ObjSearchDialog(parent, id, title, pos, size, style )
 {
     p_plugin = plugin;
-    
+
     m_btnShowOnChart->Enable(false);
-    
-	// Set popup interface right away, otherwise some of the calls
-	// below may fail
-	m_clcPopup = new CheckListComboPopup();
-	m_choiceFeature->SetPopupControl(m_clcPopup);
-	
-	m_cAutoClose->SetValue(p_plugin->GetAutoClose());
-	m_scRange->SetValue(p_plugin->GetRangeLimit());
+
+    // Set popup interface right away, otherwise some of the calls
+    // below may fail
+    m_clcPopup = new CheckListComboPopup();
+    m_choiceFeature->SetPopupControl(m_clcPopup);
+
+    m_cAutoClose->SetValue(p_plugin->GetAutoClose());
+    m_scRange->SetValue(p_plugin->GetRangeLimit());
 }
 
 ObjSearchDialogImpl::~ObjSearchDialogImpl()
@@ -704,7 +711,7 @@ void ObjSearchDialogImpl::ClearFeatures()
     {
         m_clcPopup->Clear();
         m_choiceFeature->SetValue(_("All"));
-        ((wxCheckListBox*)m_clcPopup)->Append(_("All"));
+        ((wxCheckListBox*)m_clcPopup)->Append(_("All"));  // Crash
         m_clcPopup->Check(0);
     }
 }
@@ -752,37 +759,37 @@ void ObjSearchDialogImpl::ClearObjects()
     col2.SetText( _("Lat") );
     col2.SetWidth(80);
     m_listCtrlResults->InsertColumn(2, col2);
-    
+
     wxListItem col3;
     col3.SetId(3);
     col3.SetText( _("Lon") );
     col3.SetWidth(80);
     m_listCtrlResults->InsertColumn(3, col3);
-    
+
     wxListItem col4;
     col4.SetId(4);
     col4.SetText( wxString::Format( _("Dist (%s)"), getUsrDistanceUnit_Plugin(-1).c_str() ) );
     col4.SetWidth(80);
     m_listCtrlResults->InsertColumn(4, col4);
-    
+
     wxListItem col5;
     col5.SetId(5);
     col5.SetText( _("Scale") );
     col5.SetWidth(0);
     m_listCtrlResults->InsertColumn(5, col5);
-    
+
     wxListItem col6;
     col6.SetId(6);
     col6.SetText( _("Scale") );
     col6.SetWidth(80);
     m_listCtrlResults->InsertColumn(6, col6);
-    
+
     wxListItem col7;
     col7.SetId(7);
     col7.SetText( _("Chart") );
     col7.SetWidth(80);
     m_listCtrlResults->InsertColumn(7, col7);
-    
+
     m_btnShowOnChart->Enable(false);
 }
 
@@ -794,7 +801,7 @@ void ObjSearchDialogImpl::AddObject(const wxString& feature, const wxString& obj
     item.SetText( objectname );
 
     m_listCtrlResults->InsertItem( item );
-    
+
     m_listCtrlResults->SetItem(n, 0, HumanizeFeatureName(feature));
     m_listCtrlResults->SetItem(n, 1, objectname);
     m_listCtrlResults->SetItem(n, 2, toSDMM_PlugIn(1, lat));
@@ -893,27 +900,61 @@ void ObjSearchDialogImpl::OnShowOnChart( wxCommandEvent& event )
     long itemIndex = -1;
     itemIndex = m_listCtrlResults->GetNextItem(itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (itemIndex == -1) return;
-    
+
     wxListItem     row_info;  
     wxString       cell_contents_string;
- 
+
     row_info.m_itemId = itemIndex;
     row_info.m_col = 2;
     row_info.m_mask = wxLIST_MASK_TEXT;
     m_listCtrlResults->GetItem( row_info );
     double lat = fromDMM(row_info.m_text);
-    
+
     row_info.m_col = 3;
     m_listCtrlResults->GetItem( row_info );
     double lon = fromDMM(row_info.m_text);
-    
+
     row_info.m_col = 5;
     m_listCtrlResults->GetItem( row_info );
     double scale;
     row_info.m_text.ToDouble(&scale);
     if (scale < 0.001)
         scale = 0.001;
-        
+
+    event.Skip();
+    JumpToPosition(lat, lon, scale);
+    if (m_cAutoClose->GetValue())
+        Hide();
+}
+
+void ObjSearchDialogImpl::OnLeftDClick(wxMouseEvent& event)
+{
+    long itemIndex = -1;
+    itemIndex = m_listCtrlResults->GetNextItem(
+        itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (itemIndex == -1)
+        return;
+
+    wxListItem row_info;
+    wxString cell_contents_string;
+
+    row_info.m_itemId = itemIndex;
+    row_info.m_col = 2;
+    row_info.m_mask = wxLIST_MASK_TEXT;
+    m_listCtrlResults->GetItem(row_info);
+    double lat = fromDMM(row_info.m_text);
+
+    row_info.m_col = 3;
+    m_listCtrlResults->GetItem(row_info);
+    double lon = fromDMM(row_info.m_text);
+
+    row_info.m_col = 5;
+    m_listCtrlResults->GetItem(row_info);
+    double scale;
+    row_info.m_text.ToDouble(&scale);
+    if (scale < 0.001)
+        scale = 0.001;
+
     event.Skip();
     JumpToPosition(lat, lon, scale);
     if (m_cAutoClose->GetValue())
@@ -1273,7 +1314,7 @@ int wxCALLBACK ObjectDistanceCompareFunction(wxIntPtr item1, wxIntPtr item2, wxI
   	if (item1 > item2)
         return 1;
 
- 	return 0;
+    return 0;
 }
 
 void ObjSearchDialogImpl::SortResults()
@@ -1373,7 +1414,7 @@ void SettingsDialogImpl::CreateObject( double lat, double lon, wxString& name, w
 int SettingsDialogImpl::ProcessCsvLine(void * frm, int cnt, const char ** cv)
 {
     SettingsDialogImpl* p_frm=(SettingsDialogImpl*)frm;
-    
+
     if( cnt < 5 )
         return 0; //At least Lat, Lon, Object name, Feature name and "Source" name are needed
     double lat = 0.0;
@@ -1439,7 +1480,7 @@ void SettingsDialogImpl::OnOk(wxCommandEvent& event)
                                             wxString::Format( _("Importing data from %s."), m_tPath->GetValue().c_str() ),
                                             linecount, this	);
             m_prgdlg->Show();
-            
+
             FILE *fp;
             if ( NULL==(fp=fopen (m_tPath->GetValue().mb_str(),"r") ) )
             {
@@ -1455,9 +1496,9 @@ void SettingsDialogImpl::OnOk(wxCommandEvent& event)
                     //fprintf(stderr,"Error parsing csv: ill-formatted quoted string.\n");
                     break;
             }
-            
+
             fclose (fp);
-            
+
             m_prgdlg->Close();
             delete m_prgdlg;
             m_iProcessed = 0;

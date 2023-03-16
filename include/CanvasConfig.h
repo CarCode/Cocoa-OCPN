@@ -75,6 +75,7 @@ public:
     bool bShowENCLights;
     bool bShowENCVisibleSectorLights;
     bool bShowENCAnchorInfo;
+    bool bShowENCDataQuality;
 };
 
 WX_DEFINE_ARRAY_PTR(canvasConfig*, arrayofCanvasConfigPtr);

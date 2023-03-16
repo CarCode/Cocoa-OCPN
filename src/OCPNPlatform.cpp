@@ -207,7 +207,7 @@ extern wxArrayString             g_locale_catalog_array;
 extern int                       options_lastPage;
 extern int                        g_maintoolbar_x;
 extern int                        g_maintoolbar_y;
-extern wxArrayString TideCurrentDataSet;
+extern std::vector<std::string> TideCurrentDataSet;
 
 //  OCPN Platform implementation
 
@@ -1307,7 +1307,7 @@ void OCPNPlatform::SetUpgradeOptions( wxString vNew, wxString vOld )
         g_maintoolbar_x = -1;
 
         // Force a reload of updated default tide/current datasets
-        TideCurrentDataSet.Clear();
+        TideCurrentDataSet.clear();
     }
 }
 
@@ -1491,8 +1491,10 @@ wxString &OCPNPlatform::GetPluginDir()
         wxStandardPaths& std_path = GetStdPaths();
 
         //  Get the PlugIns directory location
-        m_PluginsDir = std_path.GetPluginsDir();   // linux:   {prefix}/lib/opencpn
+        m_PluginsDir = std_path.GetPluginsDir();
+        // linux:   {prefix}/lib/opencpn
         // Mac:     appname.app/Contents/PlugIns
+//        wxMessageBox("Von OCPNPlatform Z.1497: " + m_PluginsDir);
 #ifdef __WXMSW__
         m_PluginsDir += _T("\\plugins");             // Windows: {exe dir}/plugins
 #endif
@@ -1507,10 +1509,7 @@ wxString &OCPNPlatform::GetPluginDir()
         fdir.RemoveLastDir();
         m_PluginsDir = fdir.GetPath();
 #endif
-
-
     }
-
     return m_PluginsDir;
 }
 
@@ -1520,7 +1519,7 @@ wxString OCPNPlatform::NormalizePath(const wxString &full_path) {
   } else {
     wxString path(full_path);
     wxFileName f(path);
-    // If not on another voulme etc. make the portable relative path
+    // If not on another volume etc. make the portable relative path
     if (f.MakeRelativeTo(g_Platform->GetPrivateDataDir())) {
       path = f.GetFullPath();
     }

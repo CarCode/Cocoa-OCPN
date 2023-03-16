@@ -1,4 +1,4 @@
-/***************************************************************************
+/* **************************************************************************
  *
  * Project:  OpenCPN
  * Purpose:  Vector Chart Object Search Plugin
@@ -26,11 +26,7 @@
 #ifndef _CLCPOPUP_H_
 #define _CLCPOPUP_H_
 
-#include "wx/wxprec.h"
-
-#ifndef  WX_PRECOMP
-#include "wx/wx.h"
-#endif //precompiled headers
+#include <wx/wxprec.h>
 
 #include <wx/checklst.h>
 #include <wx/combo.h>

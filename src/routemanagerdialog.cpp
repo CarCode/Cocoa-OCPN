@@ -1302,9 +1302,10 @@ void RouteManagerDialog::OnRtePropertiesClick( wxCommandEvent &event )
 
     pRoutePropDialog->SetRouteAndUpdate( route );
 
-
     if( !pRoutePropDialog->IsShown() )
         pRoutePropDialog->Show();
+
+    pRoutePropDialog->Raise();
 
     m_bNeedConfigFlush = true;
 }

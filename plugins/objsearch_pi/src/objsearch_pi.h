@@ -26,11 +26,7 @@
 #ifndef _OBJSEARCHPI_H_
 #define _OBJSEARCHPI_H_
 
-#include "wx/wxprec.h"
-
-#ifndef  WX_PRECOMP
-#include "wx/wx.h"
-#endif //precompiled headers
+#include <wx/wxprec.h>
 
 #include <map>
 #include <queue>
@@ -136,7 +132,20 @@ protected:
     void OnItemSelected( wxListEvent& event );
     void OnClose( wxCommandEvent& event );
     void OnShowOnChart( wxCommandEvent& event );
+    void OnLeftDClick(wxMouseEvent& event);
     void OnSettings( wxCommandEvent& event );
+    void ObjSearchDialogOnCharHook(wxKeyEvent& event)
+    {
+        if (event.GetKeyCode() == WXK_ESCAPE) {
+            Hide();
+        }
+        event.Skip();
+    }
+    void ObjSearchDialogOnShow(wxShowEvent& event)
+    {
+        m_textCtrlSearchTerm->SetFocus();
+        event.Skip();
+    }
 
 private:
     wxString HumanizeFeatureName(const wxString& feature_name);
@@ -172,6 +181,15 @@ public:
     void ShowPreferencesDialog(wxWindow * parent);
 
 // Other public methods
+    wxString GetDataDir()
+    {
+#ifdef __WXOSX__
+        return *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator() + _T("plugins") + wxFileName::GetPathSeparator() + _T("objsearch_pi") + wxFileName::GetPathSeparator() + _T("data") + wxFileName::GetPathSeparator();
+#else
+        return GetPluginDataDir("objsearch_pi") + wxFileName::GetPathSeparator()
+            + "data" + wxFileName::GetPathSeparator();
+#endif
+    }
     void SetColorScheme ( PI_ColorScheme cs );
     
     void FindObjects( const wxString& feature_filter, const wxString& search_string, double lat, double lon, double dist );
@@ -252,6 +270,8 @@ private:
     DistanceMercatorFunc distMercFunc;
 
     double CalculatePPM(float scale);
+    wxBitmap m_logo;
+    bool m_shown;
 };
 
 #endif

@@ -230,6 +230,14 @@ CanvasOptions::CanvasOptions( wxWindow *parent)
     boxENC->Add(pCBENCVisibleSectors, verticalInputFlags);
     pCBENCVisibleSectors->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CanvasOptions::OnOptionChange ), NULL, this );
 
+    pCBENCDataQuality =
+    new wxCheckBox(pDisplayPanel, IDCO_ENCDATAQUALITY_CHECKBOX,
+                   _("Show chart data quality"));
+    boxENC->Add(pCBENCDataQuality, verticalInputFlags);
+    pCBENCDataQuality->Connect(
+      wxEVT_COMMAND_CHECKBOX_CLICKED,
+      wxCommandEventHandler(CanvasOptions::OnOptionChange), NULL, this);
+
         // spacer
     boxENC->Add(0, interGroupSpace);
 
@@ -308,9 +316,9 @@ void CanvasOptions::RefreshControlValues( void )
     pCBENCLights->SetValue(parentCanvas->GetShowENCLights());
     pCBENCAnchorDetails->SetValue(parentCanvas->GetShowENCAnchor());
     pCBENCVisibleSectors->SetValue(parentCanvas->GetShowVisibleSectors());
+    pCBENCDataQuality->SetValue(parentCanvas->GetShowENCDataQual());
 
     //pCBENCLightDesc->Enable(parentCanvas->GetShowENCLights());
-
 
     //  Display category
     int nset = 2;  // default OTHER
@@ -341,7 +349,9 @@ void CanvasOptions::RefreshControlValues( void )
     pCBENCLights->Enable(m_ENCAvail);
     pCBENCVisibleSectors->SetValue(parentCanvas->GetShowVisibleSectors());
 
-    //  Anchor conditions are only available if display category is "All" or "User Standard"
+    //  Anchor conditions  and dateQuality are only available if display category
+    //  is "All" or "User Standard"
+    pCBENCDataQuality->Enable(m_ENCAvail && (nset > 1));
     pCBENCAnchorDetails->Enable(m_ENCAvail && (nset > 1));  
 
     //  Many options are not valid if display category is "Base"
@@ -352,6 +362,7 @@ void CanvasOptions::RefreshControlValues( void )
         pCBENCBuoyLabels->Disable();
         pCBENCLights->Disable();
         pCBENCVisibleSectors->Disable();
+        pCBENCDataQuality->Disable();
     }
 
     m_pDispCat->Enable(m_ENCAvail);
@@ -450,7 +461,13 @@ void CanvasOptions::UpdateCanvasOptions( void )
         parentCanvas->SetShowVisibleSectors(pCBENCVisibleSectors->GetValue());
         b_needReLoad = true;
     }
- 
+
+    if (pCBENCDataQuality->GetValue() !=
+      parentCanvas->GetShowENCDataQual()) {
+      parentCanvas->SetShowENCDataQual(pCBENCDataQuality->GetValue());
+    b_needReLoad = true;
+      }
+
  int newMode = NORTH_UP_MODE;
     if(pCBCourseUp->GetValue())
         newMode = COURSE_UP_MODE;

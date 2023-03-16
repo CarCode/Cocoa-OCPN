@@ -104,10 +104,10 @@ extern GLuint g_raster_format;
 #include "ConfigMgr.h"
 #include "svg_utils.h"
 
-#if !defined(__WXOSX__)  
-#define SLIDER_STYLE  wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS
+#if !defined(__WXOSX__)
+    #define SLIDER_STYLE wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS
 #else
-#define SLIDER_STYLE  wxSL_HORIZONTAL | wxSL_AUTOTICKS
+    #define SLIDER_STYLE wxSL_HORIZONTAL | wxSL_AUTOTICKS
 #endif
 
 wxString GetOCPNKnownLanguage(const wxString lang_canonical,
@@ -303,7 +303,7 @@ extern bool g_bGLexpert;
 
 extern wxArrayString* EnumerateSerialPorts(void);  // in chart1.cpp
 
-extern wxArrayString TideCurrentDataSet;
+extern std::vector<std::string> TideCurrentDataSet;
 extern wxString g_TCData_Dir;
 
 extern AIS_Decoder* g_pAIS;
@@ -4066,7 +4066,7 @@ void options::CreatePanel_VectorCharts(size_t parent, int border_size,
 
 
     // display options
-    optionsColumn->Add(new wxStaticText(ps57Ctl, wxID_ANY, _("Display")), groupLabelFlags);
+    optionsColumn->Add(new wxStaticText(ps57Ctl, wxID_ANY, _T("")), groupLabelFlags);
 
     wxBoxSizer* miscSizer = new wxBoxSizer(wxVERTICAL);
     optionsColumn->Add(miscSizer, groupInputFlags);
@@ -4077,10 +4077,10 @@ void options::CreatePanel_VectorCharts(size_t parent, int border_size,
         miscSizer->Add(pCheck_SOUNDG, verticleInputFlags);
     }
 
-    pCheck_META = new wxCheckBox(ps57Ctl, ID_METACHECKBOX, _("Chart Information Objects"));
-    pCheck_META->SetValue(FALSE);
-    miscSizer->Add(pCheck_META, verticleInputFlags);
-
+      pCheck_META = new wxCheckBox(ps57Ctl, ID_METACHECKBOX,
+                                   _("Chart Information Objects"));
+      pCheck_META->SetValue(FALSE);
+      miscSizer->Add(pCheck_META, verticleInputFlags);
 
     if(!g_useMUI){
         optionsColumn->Add(new wxStaticText(ps57Ctl, wxID_ANY, _("Buoys/Lights")), groupLabelFlags);
@@ -4488,15 +4488,17 @@ void options::CreatePanel_TidesCurrents(size_t parent, int border_size,
   tcDataSelected->InsertColumn(0, col0);
 
     int w = 400, w1, h;
-  for (unsigned int id = 0; id < TideCurrentDataSet.Count(); id++) {
+    unsigned int id = 0;
+    for (auto ds : TideCurrentDataSet) {
     wxListItem li;
     li.SetId( id );
-    long idx = tcDataSelected->InsertItem( li );
+    tcDataSelected->InsertItem(li);
 
-    wxString setName = TideCurrentDataSet[id];
+    wxString setName = ds;
     tcDataSelected->SetItem(id, 0, setName);
-      GetTextExtent(setName, &w1, &h);
-      w = w1 > w ? w1 : w;
+    GetTextExtent(setName, &w1, &h);
+    w = w1 > w ? w1 : w;
+    ++id;
   }
     tcDataSelected->SetColumnWidth(0, 20 + w);
 
@@ -8240,11 +8242,11 @@ void options::OnApplyClick(wxCommandEvent& event) {
 
   // Pick up all the entries in the Tide/current DataSelected control
   // and update the global static array
-  TideCurrentDataSet.Clear();
+  TideCurrentDataSet.clear();
   int nEntry = tcDataSelected->GetItemCount();
   for (int i = 0; i < nEntry; i++) {
       wxString setName = tcDataSelected->GetItemText(i);
-      TideCurrentDataSet.Add(setName);
+      TideCurrentDataSet.push_back(setName.ToStdString());
   }
 
   if (event.GetId() != ID_APPLY)                // only on ID_OK

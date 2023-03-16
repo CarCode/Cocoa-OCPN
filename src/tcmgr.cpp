@@ -355,11 +355,6 @@ double time2asecondary (time_t t, IDX_entry *pIDX) {
     }
 }
 
-
-
-
-
-
 /*
  * We will need a function for tidal height as a function of time
  * which is continuous (and has continuous first and second derivatives)
@@ -477,7 +472,6 @@ double blend_tide (time_t t, unsigned int deriv, int first_year, double blend, I
     double        f;
     unsigned int  n;
 
-
     /*
      * If we are already happy_new_year()ed into one of the two years
      * of interest, compute that years tide values first.
@@ -513,8 +507,7 @@ double blend_tide (time_t t, unsigned int deriv, int first_year, double blend, I
     /*
      * Do the blending.
      */
-    
-    
+
     f = fl[deriv];
     for (n = 0; n <= deriv; n++)
     {
@@ -546,7 +539,6 @@ double  time2dt_tide (time_t t, int deriv, IDX_entry *pIDX)
         s_this_epoch = pIDX->epoch;
     }
 
-
     /*
      * If we're close to either the previous or the next
      * new years we must blend the two years tides.
@@ -571,8 +563,6 @@ double  time2dt_tide (time_t t, int deriv, IDX_entry *pIDX)
 
     return _time2dt_tide(t, deriv, pIDX);
 }
-
-
 
 /* Figure out max amplitude over all the years in the node factors table. */
 /* This function by Geoffrey T. Dairiki */
@@ -602,7 +592,6 @@ void figure_multipliers (IDX_entry *pIDX, int year)
         pIDX->m_work_buffer[a] = pIDX->pref_sta_data->amplitude[a] * pIDX->m_cst_nodes[a][year-pIDX->first_year] / pIDX->max_amplitude;  // BOGUS_amplitude?
     }
 }
-
 
 /* This idiotic function is needed by the new tm2gmt. */
 #define compare_int(a,b) (((int)(a))-((int)(b)))
@@ -674,7 +663,6 @@ int yearoftimet (time_t t)
     return ((gmtime (&t))->tm_year) + 1900;
 }
 
-
 /* Calculate time_t of the epoch. */
 void set_epoch (IDX_entry *pIDX, int year)
 {
@@ -706,35 +694,28 @@ TCMgr::~TCMgr()
 
 void TCMgr::PurgeData()
 {
-    //  Index entries are owned by the data sources
-    //  so we need to clear them from the combined list without
-    //  deleting them
-    while(m_Combined_IDX_array.GetCount()) {
-        m_Combined_IDX_array.Detach(0);
-    }
+    m_Combined_IDX_array.clear();
 
     //  Delete all the data sources
     m_source_array.Clear();
 }
 
-TC_Error_Code TCMgr::LoadDataSources(wxArrayString &sources)
+TC_Error_Code TCMgr::LoadDataSources(std::vector<std::string> &sources)
 {
     PurgeData();
 
     //  Take a copy of dataset file name array
-    m_sourcefile_array.Clear();
+    m_sourcefile_array.clear();
     m_sourcefile_array = sources;
 
-    //  Arrange for the index array to begin counting at "one"
-    m_Combined_IDX_array.Add((IDX_entry *)(NULL));
-    int num_IDX = 1;
+    int num_IDX = 0;
 
-    for(unsigned int i=0 ; i < sources.GetCount() ; i++) {
+    for (auto src : sources) {
         TCDataSource *s = new TCDataSource;
-        TC_Error_Code r = s->LoadData(sources[i]);
+        TC_Error_Code r = s->LoadData(src);
         if(r != TC_NO_ERROR) {
             wxString msg;
-            msg.Printf(_T("   Error loading Tide/Currect data source %s "), sources[i].c_str());
+            msg.Printf(_T("   Error loading Tide/Currect data source %s "), src.c_str());
             if( r == TC_FILE_NOT_FOUND)
                 msg += _T("Error Code: TC_FILE_NOT_FOUND");
             else {
@@ -752,14 +733,14 @@ TC_Error_Code TCMgr::LoadDataSources(wxArrayString &sources)
                 IDX_entry *pIDX = s->GetIndexEntry(k);
                 pIDX->IDX_rec_num = num_IDX;
                 num_IDX++;
-                m_Combined_IDX_array.Add(pIDX);
+                m_Combined_IDX_array.push_back(pIDX);
             }
         }
     }
 
     bTCMReady = true;
     
-    if (m_Combined_IDX_array.Count() <= 1)
+    if (m_Combined_IDX_array.empty())
         OCPNMessageBox( NULL, _("It seems you have no tide/current harmonic data installed."),
                         _("OpenCPN Info"), wxOK | wxCENTER );
 
@@ -776,9 +757,9 @@ void TCMgr::ScrubCurrentDepths() {
 
   currentDepth_index_hash hash1;
 
-  for (unsigned int i = 1; i < m_Combined_IDX_array.Count(); i++) {
-    IDX_entry *a = (IDX_entry *)GetIDX_entry(i);
-
+    unsigned int i = 0;
+    for (auto a : m_Combined_IDX_array) {
+      ++i;
     if (a->IDX_type == 'C') {
       if (a->current_depth > 0) {
         int depth_a = a->current_depth;
@@ -816,8 +797,8 @@ void TCMgr::ScrubCurrentDepths() {
 
 const IDX_entry *TCMgr::GetIDX_entry(int index) const
 {
-    if((unsigned int)index < m_Combined_IDX_array.GetCount())
-        return &m_Combined_IDX_array[index];
+    if ((unsigned int)index < m_Combined_IDX_array.size())
+      return m_Combined_IDX_array[index];
     else
         return NULL;
 }
@@ -830,7 +811,7 @@ bool TCMgr::GetTideOrCurrent(time_t t, int idx, float &tcvalue, float& dir)
     tcvalue = 0;
 
     //    Load up this location data
-    IDX_entry *pIDX = &m_Combined_IDX_array[idx];    // point to the index entry
+    IDX_entry *pIDX = m_Combined_IDX_array[idx];  // point to the index entry
 
     if( !pIDX ) {
         dir = 0;
@@ -872,7 +853,7 @@ extern wxDateTime gTimeSource;
 bool TCMgr::GetTideOrCurrent15(time_t t_d, int idx, float &tcvalue, float& dir, bool &bnew_val)
 {
     int ret;
-    IDX_entry *pIDX = &m_Combined_IDX_array[idx];             // point to the index entry
+    IDX_entry *pIDX = m_Combined_IDX_array[idx];  // point to the index entry
 
     if( !pIDX ) {
         dir = 0;
@@ -953,7 +934,7 @@ bool TCMgr::GetTideFlowSens(time_t t, int sch_step, int idx, float &tcvalue_now,
 
 
     //    Load up this location data
-    IDX_entry *pIDX = &m_Combined_IDX_array[idx];             // point to the index entry
+    IDX_entry *pIDX = m_Combined_IDX_array[idx];  // point to the index entry
 
     if( !pIDX )
         return false;
@@ -987,7 +968,7 @@ void TCMgr::GetHightOrLowTide(time_t t, int sch_step_1, int sch_step_2, float ti
     tctime = t;
 
     //    Load up this location data
-    IDX_entry *pIDX = &m_Combined_IDX_array[idx];             // point to the index entry
+    IDX_entry *pIDX = m_Combined_IDX_array[idx];  // point to the index entry
 
     if( !pIDX )
         return;

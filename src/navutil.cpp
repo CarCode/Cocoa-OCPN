@@ -373,7 +373,7 @@ extern bool             g_bGarminHostUpload;
 extern wxString         g_uploadConnection;
 
 extern ocpnStyle::StyleManager* g_StyleManager;
-extern wxArrayString    TideCurrentDataSet;
+extern std::vector<std::string> TideCurrentDataSet;
 extern wxString         g_TCData_Dir;
 
 extern bool             g_btouch;
@@ -841,8 +841,7 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
         Read( _T ( "UseNMEA_GLL" ), &g_bUseGLL );
         Read( _T ( "UseMagAPB" ), &g_bMagneticAPB );
         Read(_T ( "TrackContinuous" ), &g_btrackContinuous, false);
-        Read(_T ( "FilterTrackDropLargeJump" ), &g_trackFilterMax, 0);
-
+        Read(_T ( "FilterTrackDropLargeJump" ), &g_trackFilterMax, 1000);
     }
 
     Read( _T ( "ShowTrue" ), &g_bShowTrue );
@@ -1385,18 +1384,20 @@ int MyConfig::LoadMyConfigRaw( bool bAsTemplate )
 //  Tide/Current Data Sources
     SetPath( _T ( "/TideCurrentDataSources" ) );
     if( GetNumberOfEntries() ) {
-        TideCurrentDataSet.Clear();
+        TideCurrentDataSet.clear();
         wxString str, val;
         long dummy;
         bool bCont = GetFirstEntry( str, dummy );
         while( bCont ) {
-            Read( str, &val );              // Get a file name
-            TideCurrentDataSet.Add(val);
+            Read(str, &val);  // Get a file name and add it to the list just in case it is not repeated
+            // We have seen duplication of dataset entries in https://github.com/OpenCPN/OpenCPN/issues/3042, this
+            // effectively gets rid of them.
+            if (std::find(TideCurrentDataSet.begin(), TideCurrentDataSet.end(), val.ToStdString()) == TideCurrentDataSet.end()) {
+              TideCurrentDataSet.push_back(val.ToStdString());
+            }
             bCont = GetNextEntry( str, dummy );
         }
     }
-
-
 
     //    Groups
     LoadConfigGroups( g_pGroupArray );
@@ -2143,6 +2144,7 @@ void MyConfig::LoadConfigCanvas( canvasConfig *cConfig, bool bApplyAsTemplate )
     Read( _T ( "canvasENCShowLights" ), &cConfig->bShowENCLights, 1 );
     Read( _T ( "canvasENCShowVisibleSectorLights" ), &cConfig->bShowENCVisibleSectorLights, 0 );
     Read(_T ( "canvasENCShowAnchorInfo" ), &cConfig->bShowENCAnchorInfo, 0);
+    Read(_T ( "canvasENCShowDataQuality" ), &cConfig->bShowENCDataQuality, 0);
 
     int sx, sy;
     Read( _T ( "canvasSizeX" ), &sx, 0 );
@@ -2254,6 +2256,7 @@ void MyConfig::SaveConfigCanvas( canvasConfig *cConfig )
         Write( _T ( "canvasENCShowVisibleSectorLights" ), cConfig->canvas->GetShowVisibleSectors() );
         Write(_T ( "canvasENCShowAnchorInfo" ), cConfig->canvas->GetShowENCAnchor());
 
+        Read(_T ( "canvasENCShowDataQuality" ), &cConfig->bShowENCDataQuality, 0);
         Write( _T ( "canvasCourseUp" ), cConfig->canvas->GetUpMode() == COURSE_UP_MODE );
         Write( _T ( "canvasHeadUp" ), cConfig->canvas->GetUpMode() == HEAD_UP_MODE );
         Write( _T ( "canvasLookahead" ), cConfig->canvas->GetLookahead() );
@@ -2724,11 +2727,12 @@ void MyConfig::UpdateSettings()
     //  Tide/Current Data Sources
     DeleteGroup( _T ( "/TideCurrentDataSources" ) );
     SetPath( _T ( "/TideCurrentDataSources" ) );
-    unsigned int iDirMax = TideCurrentDataSet.Count();
-    for( unsigned int id = 0 ; id < iDirMax ; id++ ) {
+    unsigned int id = 0;
+    for (auto val : TideCurrentDataSet) {
         wxString key;
         key.Printf(_T("tcds%d"), id);
-        Write( key, TideCurrentDataSet[id] );
+        Write(key, wxString(val));
+        ++id;
     }
 
     SetPath( _T ( "/Settings/Others" ) );

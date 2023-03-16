@@ -535,9 +535,8 @@ wxString                  g_GPS_Ident;
 
 S57QueryDialog            *g_pObjectQueryDialog;
 
-wxArrayString             TideCurrentDataSet;
+std::vector<std::string> TideCurrentDataSet;
 wxString                  g_TCData_Dir;
-
 
 bool                      g_boptionsactive;
 options                   *g_options;
@@ -2101,20 +2100,20 @@ bool MyApp::OnInit()
         (g_Platform->GetSharedDataDir() + _T("tcdata") +
          wxFileName::GetPathSeparator() + _T("HARMONICS_NO_US.IDX"));
     
-    if(!TideCurrentDataSet.GetCount()) {
-        TideCurrentDataSet.Add(g_Platform->NormalizePath(default_tcdata0));
-        TideCurrentDataSet.Add(g_Platform->NormalizePath(default_tcdata1));
+    //TODO: What are we trying to do here?
+      if (TideCurrentDataSet.empty()) {
+        TideCurrentDataSet.push_back(g_Platform->NormalizePath(default_tcdata0).ToStdString());
+        TideCurrentDataSet.push_back(g_Platform->NormalizePath(default_tcdata1).ToStdString());
     }
     else {
         wxString first_tide = TideCurrentDataSet[0];
         wxFileName ft(first_tide);
         if(!ft.FileExists()){
-            TideCurrentDataSet.RemoveAt(0);
-            TideCurrentDataSet.Insert(g_Platform->NormalizePath(default_tcdata0), 0);
-            TideCurrentDataSet.Add(g_Platform->NormalizePath(default_tcdata1));
+            TideCurrentDataSet.erase(TideCurrentDataSet.begin());
+            TideCurrentDataSet.push_back(g_Platform->NormalizePath(default_tcdata0).ToStdString());
+            TideCurrentDataSet.push_back(g_Platform->NormalizePath(default_tcdata1).ToStdString());
         }
     }
-
 
     //  Check the global AIS alarm sound file
     //  If empty, preset default
@@ -3508,12 +3507,12 @@ int MyFrame::GetCanvasIndexUnderMouse()
 bool MyFrame::DropMarker( bool atOwnShip )
 {
     double lat, lon;
+    ChartCanvas *canvas = GetCanvasUnderMouse();
     if(atOwnShip){
         lat = gLat;
         lon = gLon;
     }
     else{
-        ChartCanvas *canvas = GetCanvasUnderMouse();
         if(!canvas)
             return false;
 
@@ -3525,8 +3524,9 @@ bool MyFrame::DropMarker( bool atOwnShip )
     pWP->m_bIsolatedMark = true;                      // This is an isolated mark
     pSelect->AddSelectableRoutePoint( lat, lon, pWP );
     pConfig->AddNewWayPoint( pWP, -1 );    // use auto next num
-    if( !pWP->IsVisibleSelectable( GetCanvasUnderMouse() ) )
-        pWP->ShowScaleWarningMessage(GetCanvasUnderMouse());
+    if (canvas)
+        if (!pWP->IsVisibleSelectable(canvas))
+          pWP->ShowScaleWarningMessage(canvas);
     if( pRouteManagerDialog && pRouteManagerDialog->IsShown() )
         pRouteManagerDialog->UpdateWptListCtrl();
 //     undo->BeforeUndoableAction( Undo_CreateWaypoint, pWP, Undo_HasParent, NULL );
@@ -4237,17 +4237,20 @@ void MyFrame::ODoSetSize( void )
     if( g_MainToolbar){
         bool bShow = g_MainToolbar->IsShown();
         wxSize szBefore = g_MainToolbar->GetSize();
-#ifdef __WXGTK__
+
         // For large vertical size changes on some platforms, it is necessary to hide the toolbar
         // in order to correctly set its rounded-rectangle shape
         // It will be shown again before exit of this method.
         double deltay = g_nframewin_y - GetSize().y;
         if((fabs(deltay) > (g_Platform->getDisplaySize().y / 5)))
             g_MainToolbar->Hide();
-#endif
+
         g_MainToolbar->RestoreRelativePosition(  g_maintoolbar_x, g_maintoolbar_y );
-        //g_MainToolbar->SetGeometry(false, wxRect());
-        g_MainToolbar->Realize();
+        g_MainToolbar->SetGeometry(GetPrimaryCanvas()->GetCompass()->IsShown(), GetPrimaryCanvas()->GetCompass()->GetRect());
+
+        if (fabs(deltay))
+          g_MainToolbar->Realize();
+
         if(szBefore != g_MainToolbar->GetSize())
             g_MainToolbar->Refresh(true);
         g_MainToolbar->Show( bShow);
@@ -6243,7 +6246,7 @@ int MyFrame::DoOptionsDialog()
 
     g_boptionsactive = false;
 
-    //  If we had a config chage, then schedule a re-entry to the settings dialog
+    //  If we had a config change, then schedule a re-entry to the settings dialog
     if(rr & CONFIG_CHANGED){
         options_subpage = 3;            // Back to the "templates" page
         ScheduleSettingsDialog();
@@ -9270,11 +9273,10 @@ void MyFrame::LoadHarmonics()
         bool b_newdataset = false;
 
         //      Test both ways
-        wxArrayString test = ptcmgr->GetDataSet();
-        for(unsigned int i=0 ; i < test.GetCount() ; i++) {
+        for (auto a : ptcmgr->GetDataSet()) {
             bool b_foundi = false;
-            for(unsigned int j=0 ; j < TideCurrentDataSet.GetCount() ; j++) {
-                if(TideCurrentDataSet[j] == test[i]) {
+            for (auto b : TideCurrentDataSet) {
+              if (a == b) {
                     b_foundi = true;
                     break;              // j loop
                 }
@@ -9285,11 +9287,10 @@ void MyFrame::LoadHarmonics()
             }
         }
 
-        test = TideCurrentDataSet;
-        for(unsigned int i=0 ; i < test.GetCount() ; i++) {
+        for (auto a : TideCurrentDataSet) {
             bool b_foundi = false;
-            for(unsigned int j=0 ; j < ptcmgr->GetDataSet().GetCount() ; j++) {
-                if(ptcmgr->GetDataSet()[j] == test[i]) {
+            for (auto b : ptcmgr->GetDataSet()) {
+              if (a == b) {
                     b_foundi = true;
                     break;              // j loop
                 }
