@@ -3337,7 +3337,7 @@ bool s52plib::RenderSoundingSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &
 
     // Build the texDepth object, if required
     if(!m_pdc){                         // OpenGL
-        if(!m_texSoundings.IsBuilt() || (fabs(m_texSoundings.GetScale() - scale_factor) > 0.1) ){
+        if(!m_texSoundings.IsBuilt() || (fabs(m_texSoundings.GetScale() - scale_factor) > 0.05) ){
             m_texSoundings.Delete();
 
             m_soundFont = FindOrCreateFont_PlugIn( point_size, wxFONTFAMILY_SWISS,  wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );

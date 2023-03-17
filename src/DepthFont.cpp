@@ -102,9 +102,12 @@ void DepthFont::Build( wxFont *font, double scale )
         tgi[i].height = gh; // - descent;
 
         tgi[i].advance = gw;
+// Noch nicht implementiert: double dip_factor = OCPN_GetWinDIPScaleFactor() bzw. GetDisplayDIPMult()
+//        tgi[i].advance *= dip_factor;
+        if (i == 1)
+          m_width_one = gw;
 
-
-        m_maxglyphw = wxMax(tgi[i].width,  m_maxglyphw);
+        m_maxglyphw = wxMax(tgi[i].width + tgi[i].advance, m_maxglyphw);
         m_maxglyphh = wxMax(tgi[i].height, m_maxglyphh);
     }
 

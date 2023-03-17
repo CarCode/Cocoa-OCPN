@@ -106,9 +106,9 @@ wxSQLite3Database* objsearch_pi::initDB(void)
 {
     bool have_to_create = false;
 #ifdef __WXOSX__
-    wxString sDBName = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator()+ wxT("plugins/objsearch/objsearch_pi.db");
+    wxString sDBName = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator() + wxT("plugins/objsearch/objsearch_pi.db");
 #else
-    wxString sDBName = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator()+ wxT("objsearch_pi.db");
+    wxString sDBName = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator() + wxT("objsearch_pi.db");
 #endif
     wxLogMessage( _T("OBJSEARCH_PI: Database file to be used: %s"), sDBName.c_str() );
     if ( !wxFileExists(sDBName) )
@@ -256,7 +256,14 @@ objsearch_pi::objsearch_pi ( void *ppimgr )
     }
 
     m_bWaitForDB = false;
+#ifdef __WXOSX__
+    wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
+    wxString m_shareloc  = std_path.GetUserConfigDir();   // should be ~/Library/Preferences
+    m_shareloc.Append(_T("/opencpn/plugins/objsearch/data/"));
+    m_logo = GetBitmapFromSVGFile(m_shareloc + "objsearch_pi.svg", 32, 32);
+#else
     m_logo = GetBitmapFromSVGFile(GetDataDir() + "objsearch_pi.svg", 32, 32);
+#endif
 }
 
 objsearch_pi::~objsearch_pi() { clearDB(m_db); }
@@ -276,7 +283,13 @@ int objsearch_pi::Init ( void )
     // Get a pointer to the opencpn display canvas, to use as a parent for the OBJSEARCH dialog
     m_parent_window = GetOCPNCanvasWindow();
 
-    wxString m_shareloc = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator()+ wxT("plugins/objsearch/data/");
+#ifdef __WXOSX__
+    wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
+    wxString m_shareloc  = std_path.GetUserConfigDir();   // should be ~/Library/Preferences
+    m_shareloc.Append(_T("/opencpn/plugins/objsearch/data/"));
+#else
+    wxString m_shareloc = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator() + wxT("plugins/objsearch/data/");
+#endif
     wxString _svg_objsearch = m_shareloc + wxT("objsearch_pi.svg");
     wxString _svg_objsearch_rollover = m_shareloc + wxT("objsearch_pi_rollover.svg");
     wxString _svg_objsearch_toggled = m_shareloc + wxT("objsearch_pi_toggled.svg");
