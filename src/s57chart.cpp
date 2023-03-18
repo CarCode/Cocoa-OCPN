@@ -4259,6 +4259,8 @@ int s57chart::BuildRAZFromSENCFile( const wxString& FullPath )
     m_this_chart_context = (chart_context *)calloc( sizeof(chart_context), 1);
     m_this_chart_context->chart = this;
     m_this_chart_context->vertex_buffer = GetLineVertexBuffer();
+    m_this_chart_context->pFloatingATONArray = pFloatingATONArray;
+    m_this_chart_context->pRigidATONArray = pRigidATONArray;
 
     //  Loop and populate all the objects
     for( int i = 0; i < PRIO_NUM; ++i ) {

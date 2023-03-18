@@ -3279,7 +3279,7 @@ bool s52plib::RenderSoundingSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &
     scale_factor *=  g_ChartScaleFactorExp;
     scale_factor *= g_scaminScale;
 
-    if(m_display_size_mm < 200){                //about 8 inches, implying some sort of smaller mobile device
+    if(m_display_size_mm < 200) {                //about 8 inches, implying some sort of smaller mobile device
         //  Set the onscreen size of the symbol
         //  Compensate for various display resolutions
         //  Develop empirically, making a buoy about 4 mm tall
@@ -3313,15 +3313,12 @@ bool s52plib::RenderSoundingSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &
     wxScreenDC sdc;
     int charWidth, charHeight, charDescent;
     charWidth = 1;
-    while((point_size < 20) && not_done){
+    while((point_size < 20) && not_done) {
         wxFont *tentativeFont = FindOrCreateFont_PlugIn( point_size, wxFONTFAMILY_SWISS,  wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
         sdc.GetTextExtent( _T("0"), &charWidth, &charHeight, &charDescent, NULL, tentativeFont ); // measure the text
         double font_size_mm = (double)(charHeight- charDescent) / GetPPMM();
-#ifdef __WXOSX__
+
         if(font_size_mm >= (2.0 * scale_factor)){  // war 3.0
-#else
-        if(font_size_mm >= (3.0 * scale_factor)){
-#endif
             not_done = false;
             break;
         }
@@ -3455,8 +3452,7 @@ bool s52plib::RenderSoundingSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &
             }
 
             glColor3ub( symColor.Red(), symColor.Green(), symColor.Blue() );
- 
-            {
+             {
                 glPushMatrix();
 
                 glTranslatef(r.x, r.y, 0);
@@ -3591,7 +3587,6 @@ bool s52plib::RenderSoundingSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &
             m_pdc->SetTextForeground( symColor );
 
             m_pdc->DrawText(text, r.x - pivot_x, r.y - pivot_y);
-
     }
 
     return true;
@@ -3785,12 +3780,10 @@ int s52plib::RenderGLLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
     glDisable( GL_LINE_STIPPLE );
     glDisable( GL_LINE_SMOOTH );
     glDisable( GL_BLEND );
-
 #endif                  // OpenGL
 
     return 1;
 }
-
 
 // Line Simple Style
 int s52plib::RenderLS( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )

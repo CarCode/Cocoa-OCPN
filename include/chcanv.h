@@ -916,7 +916,8 @@ private:
       std::vector<s57Sector_t> m_sectorlegsVisible;
       bool         m_bShowVisibleSectors;
       double       m_displayScale;
-      
+      wxString     m_lastS52PLIBPluginMessage;
+
 DECLARE_EVENT_TABLE()
 };
 

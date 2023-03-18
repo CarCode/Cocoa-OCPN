@@ -1,7 +1,7 @@
 ../src/clcpopup.cpp
 ../src/clcpopup.h
-../src/icons.cpp
-../src/icons.h
+../src/csv_parser.cpp
+../src/csv_parser.h
 ../src/ObjSearchDialog.cpp
 ../src/ObjSearchDialog.h
 ../src/objsearch_pi.cpp

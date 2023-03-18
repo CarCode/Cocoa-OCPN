@@ -109,6 +109,7 @@ class PixelCache;
 
 class RenderFromHPGL;
 class TexFont;
+class wxFileConfig;
 
 class noshow_element
 {
@@ -140,7 +141,6 @@ private:
     wxArrayOfLUPrec             *LUPArray;          // Sorted Array
     LUPArrayIndexHash           IndexHash;
 };
-
 
 //-----------------------------------------------------------------------------
 //    s52plib definition
@@ -324,6 +324,8 @@ public:
     double lastLightLat;
     double lastLightLon;
 
+    void PLIB_LoadS57GlobalConfig(wxFileConfig *pconfig);
+    void PLIB_LoadS57ObjectConfig(wxFileConfig *pconfig);
     void SetReducedBBox(LLBBox box){ reducedBBox = box;}
 
 private:
