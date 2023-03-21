@@ -687,6 +687,16 @@ void s52plib::GenerateStateHash()
     if(offset + sizeof(bool) < sizeof(state_buffer))
         { memcpy(&state_buffer[offset], &m_nSoundingFactor, sizeof(int));  offset += sizeof(int); }
 
+//    if (offset + sizeof(bool) < sizeof(state_buffer)) {
+//        memcpy(&state_buffer[offset], &m_nTextFactor, sizeof(int));  // m_nTextFactor neu ???
+//        offset += sizeof(int);
+//      }
+
+    if (offset + sizeof(bool) < sizeof(state_buffer)) {
+      memcpy(&state_buffer[offset], &m_nDisplayCategory, sizeof(int));
+      offset += sizeof(int);
+    }
+
     m_state_hash = crc32buf(state_buffer, offset );
 }
 

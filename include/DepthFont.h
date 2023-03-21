@@ -67,6 +67,7 @@ private:
     double m_scaleFactor;
     double m_ContentScaleFactor;
     int m_width_one;
+    double m_dip_factor;
 };
 
 

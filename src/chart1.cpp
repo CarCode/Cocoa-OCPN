@@ -4517,6 +4517,12 @@ void MyFrame::OnToolLeftClick( wxCommandEvent& event )
             break;
         }
 
+        case ID_MENU_AIS_CPAWARNING: {
+          if (GetPrimaryCanvas()) GetPrimaryCanvas()->ToggleCPAWarn();
+          SetMenubarItemState(ID_MENU_AIS_CPAWARNING, g_bCPAWarn);
+          break;
+        }
+
         case wxID_PREFERENCES:
         case ID_SETTINGS: {
             DoSettings();
@@ -5651,6 +5657,14 @@ void MyFrame::RegisterGlobalMenuItems()
     ais_menu->AppendCheckItem( ID_MENU_AIS_TRACKS, _("Show AIS Target Tracks") );
     ais_menu->AppendCheckItem( ID_MENU_AIS_CPADIALOG, _("Show CPA Alert Dialogs") );
     ais_menu->AppendCheckItem( ID_MENU_AIS_CPASOUND, _("Sound CPA Alarms") );
+#ifndef __WXOSX__
+  ais_menu->AppendCheckItem(ID_MENU_AIS_CPAWARNING,
+                    _menuText(_("Show CPA Warnings"), _T("W")));
+#else
+  ais_menu->AppendCheckItem(ID_MENU_AIS_CPAWARNING,
+                    _menuText(_("Show CPA Warnings"), _T("Alt-W")));
+#endif
+
     ais_menu->AppendSeparator();
     ais_menu->Append( ID_MENU_AIS_TARGETLIST, _("AIS target list") + _T("...") );
 #ifdef __WXOSX__
@@ -5747,6 +5761,7 @@ void MyFrame::UpdateGlobalMenuItems()
     m_pMenuBar->FindItem( ID_MENU_AIS_TRACKS )->Check( g_bAISShowTracks );
     m_pMenuBar->FindItem( ID_MENU_AIS_CPADIALOG )->Check( g_bAIS_CPA_Alert );
     m_pMenuBar->FindItem( ID_MENU_AIS_CPASOUND )->Check( g_bAIS_CPA_Alert_Audio );
+    m_pMenuBar->FindItem(ID_MENU_AIS_CPAWARNING)->Check(g_bCPAWarn);
     m_pMenuBar->FindItem( ID_MENU_SHOW_NAVOBJECTS )->Check( GetPrimaryCanvas()->m_bShowNavobjects );
 
 #ifdef USE_S57
@@ -5910,8 +5925,24 @@ void MyFrame::UpdateCanvasConfigDescriptors()
                 cc->DBindex = chart->GetQuiltReferenceChartIndex();
                 cc->GroupID = chart->m_groupIndex;
                 cc->canvasSize = chart->GetSize();
-            }
 
+                cc->bQuilt = chart->GetQuiltMode();
+                cc->bShowTides = chart->GetbShowTide();
+                cc->bShowCurrents = chart->GetbShowCurrent();
+                cc->bShowGrid = chart->GetShowGrid();
+                cc->bShowOutlines = chart->GetShowOutlines();
+                cc->bShowDepthUnits = chart->GetShowDepthUnits();
+
+                cc->bFollow = chart->m_bFollow;
+                cc->bLookahead = chart->m_bLookAhead;
+                cc->bCourseUp = false;
+                cc->bHeadUp = false;;
+                int upmode = chart->GetUpMode();
+                if (upmode == COURSE_UP_MODE)
+                  cc->bCourseUp = true;
+                else if (upmode == HEAD_UP_MODE)
+                  cc->bHeadUp = true;
+            }
         }
     }
 }
