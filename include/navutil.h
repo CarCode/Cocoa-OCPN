@@ -162,8 +162,8 @@ public:
 class MyConfig:public wxFileConfig
 {
 public:
-
       MyConfig(const wxString &LocalFileName);
+      ~MyConfig();
 
       int LoadMyConfig();
       void LoadS57Config();

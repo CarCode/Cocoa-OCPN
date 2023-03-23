@@ -1505,12 +1505,14 @@ int Osenc::createSenc200(const wxString& FullPath000, const wxString& SENCFileNa
     if( !stream->Open( tmp_file) ) {
         errorMessage = _T("Unable to create temp SENC file: ");
         errorMessage += tmp_file;
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_CANNOT_CREATE_TEMP_SENC_FILE;
     }
 
     //  Take a quick scan of the 000 file to get some basic attributes of the exchange set.
-    if(!GetBaseFileAttr( FullPath000 ) ){
+    if(!GetBaseFileAttr( FullPath000 ) ) {
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_BASEFILE_ATTRIBUTES;
     }
@@ -1519,12 +1521,11 @@ int Osenc::createSenc200(const wxString& FullPath000, const wxString& SENCFileNa
     OGRS57DataSource *poS57DS = &S57DS;
     poS57DS->SetS57Registrar( m_poRegistrar );
 
-
-
     //  Ingest the .000 cell, with updates applied
 
-    if(ingestCell( poS57DS, FullPath000, SENCfile.GetPath())){
+    if(ingestCell( poS57DS, FullPath000, SENCfile.GetPath())) {
         errorMessage = _T("Error ingesting: ") + FullPath000;
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_INGESTING000;
     }
@@ -1532,7 +1533,8 @@ int Osenc::createSenc200(const wxString& FullPath000, const wxString& SENCFileNa
     S57Reader *poReader = poS57DS->GetModule( 0 );
 
     //  Create the Coverage table Records, which also calculates the chart extents
-    if(!CreateCOVRTables( poReader, m_poRegistrar )){
+    if(!CreateCOVRTables( poReader, m_poRegistrar )) {
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_SENCFILE_ABORT;
     }
@@ -1559,51 +1561,56 @@ int Osenc::createSenc200(const wxString& FullPath000, const wxString& SENCFileNa
     if(buffer.data()) 
         sname = buffer.data();
 
-    if( !WriteHeaderRecord200( stream, HEADER_SENC_VERSION, (uint16_t)m_senc_file_create_version) ){
+    if( !WriteHeaderRecord200( stream, HEADER_SENC_VERSION, (uint16_t)m_senc_file_create_version) ) {
         stream->Close();
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_SENCFILE_ABORT;
     }
 
     if( !WriteHeaderRecord200( stream, HEADER_CELL_NAME, sname) ){
         stream->Close();
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_SENCFILE_ABORT;
     }
 
     wxString date000 = m_date000.Format( _T("%Y%m%d") );
     string sdata = date000.ToStdString();
-    if( !WriteHeaderRecord200( stream, HEADER_CELL_PUBLISHDATE, sdata) ){
+    if( !WriteHeaderRecord200( stream, HEADER_CELL_PUBLISHDATE, sdata) ) {
         stream->Close();
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_SENCFILE_ABORT;
     }
 
-
     long n000 = 0;
     m_edtn000.ToLong( &n000 );
-    if( !WriteHeaderRecord200( stream, HEADER_CELL_EDITION, (uint16_t)n000) ){
+    if( !WriteHeaderRecord200( stream, HEADER_CELL_EDITION, (uint16_t)n000) ) {
         stream->Close();
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_SENCFILE_ABORT;
     }
 
     sdata = m_LastUpdateDate.ToStdString();
-    if( !WriteHeaderRecord200( stream, HEADER_CELL_UPDATEDATE, sdata) ){
+    if( !WriteHeaderRecord200( stream, HEADER_CELL_UPDATEDATE, sdata) ) {
         stream->Close();
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_SENCFILE_ABORT;
     }
 
-
-    if( !WriteHeaderRecord200( stream, HEADER_CELL_UPDATE, (uint16_t)m_last_applied_update) ){
+    if( !WriteHeaderRecord200( stream, HEADER_CELL_UPDATE, (uint16_t)m_last_applied_update) ) {
         stream->Close();
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_SENCFILE_ABORT;
     }
 
-    if( !WriteHeaderRecord200( stream, HEADER_CELL_NATIVESCALE, (uint32_t)m_native_scale) ){
+    if( !WriteHeaderRecord200( stream, HEADER_CELL_NATIVESCALE, (uint32_t)m_native_scale) ) {
         stream->Close();
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_SENCFILE_ABORT;
     }
@@ -1611,24 +1618,22 @@ int Osenc::createSenc200(const wxString& FullPath000, const wxString& SENCFileNa
     wxDateTime now = wxDateTime::Now();
     wxString dateNow = now.Format( _T("%Y%m%d") );
     sdata = dateNow.ToStdString();
-    if( !WriteHeaderRecord200( stream, HEADER_CELL_SENCCREATEDATE, sdata) ){
+    if( !WriteHeaderRecord200( stream, HEADER_CELL_SENCCREATEDATE, sdata) ) {
         stream->Close();
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_SENCFILE_ABORT;
     }
-
 
     //  Write the Coverage table Records
-    if(!CreateCovrRecords(stream)){
+    if(!CreateCovrRecords(stream)) {
         stream->Close();
+        delete m_pOutstream;
         lockCR.unlock();
         return ERROR_SENCFILE_ABORT;
     }
 
-
-
     poReader->Rewind();
-
 
     //        Prepare Vector Edge Helper table
     //        And fill in the table
@@ -1664,7 +1669,6 @@ int Osenc::createSenc200(const wxString& FullPath000, const wxString& SENCFileNa
         m_ProgDialog->Create( Title, Message, nProg, NULL, wxPD_AUTO_HIDE | wxPD_SMOOTH );
     }
 #endif    
-
 
     //  Loop in the S57 reader, extracting Features one-by-one
     OGRFeature *objectDef;
@@ -1728,9 +1732,9 @@ int Osenc::createSenc200(const wxString& FullPath000, const wxString& SENCFileNa
         CreateSENCVectorConnectedTableRecord200( stream, poReader );
     }
 
-
     //          All done, so clean up
     stream->Close();
+    delete m_pOutstream;
 
     //  Delete any temporary (working) real and dummy update files,
     //  as well as .000 file created by ValidateAndCountUpdates()

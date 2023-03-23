@@ -184,8 +184,9 @@ typedef struct _Rules{
 
 // LOOKUP MODULE CLASS
 
-class LUPrec{
+class LUPrec {
 public:
+    ~LUPrec() { ATTArray.clear(); };
    int            RCID;             // record identifier
    char           OBCL[7];          // Name (6 char) '\0' terminated
    Object_t       FTYP;             // 'A' Area, 'L' Line, 'P' Point

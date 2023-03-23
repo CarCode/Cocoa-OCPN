@@ -33,6 +33,8 @@
 class  OCPNwxFontList: public wxGDIObjListBase
 {
 public:
+//    ~OCPNwxFontList() { FreeAll(); }  // Speicherleck ??? Ist das hier richtig ???
+
     wxFont *FindOrCreateFont(int pointSize,
                              wxFontFamily family,
                              wxFontStyle style,

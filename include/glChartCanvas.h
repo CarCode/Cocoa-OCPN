@@ -75,6 +75,7 @@ class OCPN_GLCaps {
     bool bOldIntel;
     bool bCanDoVBO;
     bool bCanDoFBO;
+    bool bCanDoGLSL;
 
     //      Vertex Buffer Object (VBO) support
     PFNGLGENBUFFERSPROC                 m_glGenBuffers;

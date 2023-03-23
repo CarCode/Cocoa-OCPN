@@ -151,31 +151,31 @@ extern  const wxEventType wxEVT_OCPN_MSG;
 //-----------------------------------------------------------------------------------------------------
 class PlugInContainer
 {
-      public:
-            PlugInContainer(){ m_pplugin = NULL;
-                               m_bEnabled = false;
-                               m_bInitState = false;
-                               m_bToolboxPanel = false;
-                               m_bitmap = NULL; }
+public:
+    PlugInContainer(){ m_pplugin = NULL;
+        m_bEnabled = false;
+        m_bInitState = false;
+        m_bToolboxPanel = false;
+        m_bitmap = NULL; }
+//    ~PlugInContainer() { delete m_bitmap; }  // Crash weil kein m_bitmap???? class etwas drollig implementiert!!!
 
-            opencpn_plugin    *m_pplugin;
-            bool              m_bEnabled;
-            bool              m_bInitState;
-            bool              m_bToolboxPanel;
-            int               m_cap_flag;             // PlugIn Capabilities descriptor
-            wxString          m_plugin_file;          // The full file path
-            wxString          m_plugin_filename;      // The short file path
-            wxDateTime        m_plugin_modification;  // used to detect upgraded plugins
-            destroy_t         *m_destroy_fn;
-            wxDynamicLibrary  *m_plibrary;
-            wxString          m_common_name;            // A common name string for the plugin
-            wxString          m_short_description;
-            wxString          m_long_description;
-            int               m_api_version;
-            int               m_version_major;
-            int               m_version_minor;
-            wxBitmap         *m_bitmap;
-
+    opencpn_plugin    *m_pplugin;
+    bool              m_bEnabled;
+    bool              m_bInitState;
+    bool              m_bToolboxPanel;
+    int               m_cap_flag;             // PlugIn Capabilities descriptor
+    wxString          m_plugin_file;          // The full file path
+    wxString          m_plugin_filename;      // The short file path
+    wxDateTime        m_plugin_modification;  // used to detect upgraded plugins
+    destroy_t         *m_destroy_fn;
+    wxDynamicLibrary  *m_plibrary;
+    wxString          m_common_name;            // A common name string for the plugin
+    wxString          m_short_description;
+    wxString          m_long_description;
+    int               m_api_version;
+    int               m_version_major;
+    int               m_version_minor;
+    wxBitmap         *m_bitmap;
 };
 
 //    Declare an array of PlugIn Containers

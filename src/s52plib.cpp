@@ -431,6 +431,11 @@ s52plib::~s52plib()
     ChartSymbols::DeleteGlobals();
 
     delete HPGL;
+//    for(int i = 0; i < TXF_CACHE; i++) {  // Kein Speicherleck erkennbar ???
+//      if(s_txf[i].cache) {
+//        delete(s_txf[i].cache);
+//      }
+//    }
 }
 
 void s52plib::SetOCPNVersion(int major, int minor, int patch)

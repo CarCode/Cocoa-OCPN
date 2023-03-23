@@ -881,6 +881,9 @@ ChartCanvas::~ChartCanvas()
     m_muiBar = 0;
     delete muiBar;
     delete m_pQuilt;
+    delete m_pCurrentStack;
+    delete m_Compass;
+    delete m_Piano;
 }
 
 void ChartCanvas::RebuildCursors() {
@@ -4935,7 +4938,6 @@ int ChartCanvas::AdjustQuiltRefChart()
 void ChartCanvas::UpdateCanvasOnGroupChange( void )
 {
     delete m_pCurrentStack;
-    m_pCurrentStack = NULL;
     m_pCurrentStack = new ChartStack;
     wxASSERT(ChartData);
     ChartData->BuildChartStack( m_pCurrentStack, VPoint.clat, VPoint.clon, m_groupIndex );

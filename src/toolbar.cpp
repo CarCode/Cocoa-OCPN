@@ -213,6 +213,7 @@ ocpnFloatingToolbarDialog::ocpnFloatingToolbarDialog( wxWindow *parent, wxPoint 
 // A top-level sizer
     m_topSizer = new wxBoxSizer( wxHORIZONTAL );
     SetSizer( m_topSizer );
+    m_topSizer->Add(m_ptoolbar);
 
     //    Set initial "Dock" parameters
     m_dock_x = 0;
@@ -721,9 +722,6 @@ void ocpnFloatingToolbarDialog::Realize()
     if( m_ptoolbar ) {
         m_ptoolbar->Realize();
 
-        m_topSizer->Clear();
-        m_topSizer->Add( m_ptoolbar );
-
         m_topSizer->Layout();
         Fit();
 
@@ -911,9 +909,10 @@ void ocpnFloatingToolbarDialog::DestroyToolBar()
         delete m_ptoolbar;                  //->Destroy();
         m_ptoolbar = NULL;
     }
-
+    for (auto it = m_Items.cbegin(); it != m_Items.cend(); it++) {
+      delete *it;
+    }
     m_Items.clear();
-
 }
 
 #include "s52plib.h"

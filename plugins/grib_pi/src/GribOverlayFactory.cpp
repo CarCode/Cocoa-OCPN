@@ -1308,8 +1308,7 @@ void GRIBOverlayFactory::FillGrid(GribRecord *pGR)
     //    Get the the grid
     int imax = pGR->getNi();                  // Longitude
     int jmax = pGR->getNj();                  // Latitude
-    
-    
+
     for( int i = 0; i < imax; i++ ) {
         for( int j = 1; j < jmax-1; j++ ) {
             if(pGR->getValue(i, j) == GRIB_NOTDEF){
@@ -1347,13 +1346,9 @@ void GRIBOverlayFactory::FillGrid(GribRecord *pGR)
             }            
         }
     }
-    
+
     pGR->setFilled(true);
 }
-
-
-
-
 
 void GRIBOverlayFactory::RenderGribDirectionArrows( int settings, GribRecord **pGR,
                                                     PlugIn_ViewPort *vp )
@@ -1376,7 +1371,7 @@ void GRIBOverlayFactory::RenderGribDirectionArrows( int settings, GribRecord **p
         FillGrid(pGRX);
     if(!pGRY->isFilled())
         FillGrid(pGRY);
-    
+
     // Set arrows Size
     int arrowWidth = 2;
     int arrowSize, arrowSizeIdx = m_Settings.Settings[settings].m_iDirectionArrowSize;
@@ -1453,7 +1448,7 @@ void GRIBOverlayFactory::RenderGribDirectionArrows( int settings, GribRecord **p
         //set minimum spacing between arrows
         double minspace = wxMax( m_Settings.Settings[settings].m_iDirArrSpacing, m_Settings.Settings[settings].m_iDirectionArrowSize * 1.2 );
         double minspace2 = square(minspace);
-                
+
         //    Get the the grid
         int imax = pGRX->getNi();                  // Longitude
         int jmax = pGRX->getNj();                  // Latitude
@@ -1474,11 +1469,11 @@ void GRIBOverlayFactory::RenderGribDirectionArrows( int settings, GribRecord **p
 
             if( square( pl.x - oldpx.x ) + square(pl.y - oldpx.y ) < minspace2)
                 continue;
-            
+
             oldpx = pl;
             if (i == 0)
                 firstpx = pl;
-                
+
             for( int j = 0; j < jmax; j++ ) {
                 double lon,  lat; 
                 pGRX->getXY( i,j, &lon, &lat );
@@ -1559,8 +1554,7 @@ void GRIBOverlayFactory::RenderGribOverlayMap( int settings, GribRecord **pGR, P
 
     if(!pGRA->isFilled())
         FillGrid(pGRA);
-    
-    
+
     wxPoint porg;
     GetCanvasPixLL( vp, &porg, pGRA->getLatMax(), pGRA->getLonMin() );
 
@@ -2421,8 +2415,9 @@ void GRIBOverlayFactory::DrawGLTexture( GribOverlay *pGO, GribRecord *pGR, PlugI
     int xsquares = ceil(vp->pix_width/pw), ysquares = ceil(vp->pix_height/pw);
 
     // optimization for non-rotated mercator, since longitude is linear
-    if(vp->rotation == 0 && vp->m_projection_type == PI_PROJECTION_MERCATOR)
-        xsquares = 1;
+    // not include the extem zoom out to ovoid artifact
+    if (vp->rotation == 0 && vp->m_projection_type == PI_PROJECTION_MERCATOR)
+      xsquares = vp->lon_max - vp->lon_min >= 180 ? xsquares : 1;
 
     // It is possible to have only 1 square when the viewport covers more than
     // 180 longitudes but there is more logic needed.  This is simpler.
